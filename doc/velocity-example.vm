@@ -1,0 +1,52 @@
+##这是一行注释，不会输出
+#*
+	这是多行注释，不会输出
+	多行注释
+*#
+// ---------- 1.变量赋值输出------------
+Welcome $name to Javayou.com!
+today is $date.
+tdday is $mydae.//未被定义的变量将当成字符串
+
+// -----------2.设置变量值,所有变量都以$开头----------------
+#set( $iAmVariable = "good!" )
+Welcome $name to Javayou.com!
+today is $date.
+$iAmVariable
+
+//-------------3.if,else判断--------------------------
+#set ($admin = "admin")
+#set ($user = "user")
+#if ($admin == $user)
+	Welcome admin!
+#else
+	Welcome user!
+#end
+
+//--------------4.迭代数据List---------------------
+#foreach( $product in $list )
+	$product
+#end
+
+// ------------5.迭代数据HashSet-----------------
+#foreach($key in $hashVariable.keySet() )  
+	$key ‘s value: $ hashVariable.get($key)
+#end
+
+//-----------6.迭代数据List Bean($velocityCount为列举序号，默认从1开始，可调整)
+#foreach ($s in $listBean)
+	<$velocityCount> Address: $s.address
+#end
+
+//-------------7.模板嵌套---------------------
+#foreach ($element in $list)
+	#foreach ($element in $list)
+		inner:This is ($velocityCount)- $element.
+	#end
+outer:This is ($velocityCount)- $element.
+#end
+
+//-----------8.导入其它文件,多个文件用逗号隔开（非模板静态）--------------
+#include("com/test2/test.txt")
+//-----------8.导入其它文件,多个文件用逗号隔开（模板文件）--------------
+#parse("com/test2/test.txt")
