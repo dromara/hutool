@@ -5,7 +5,7 @@
 
 	<packaging>jar</packaging>
 
-	<groupId>looly.github.hutool</groupId>
+	<groupId>looly.github</groupId>
 	<artifactId>hutool</artifactId>
 	<version>1.0.0</version>
 	<description>提供最基础的工具类</description>
