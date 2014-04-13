@@ -5,10 +5,10 @@
 
 	<packaging>jar</packaging>
 
-	<groupId>com.sohu.fortune</groupId>
+	<groupId>looly.github.hutool</groupId>
 	<artifactId>hutool</artifactId>
 	<version>1.0.0</version>
-	<description>糊涂框架：提供最基础的工具类</description>
+	<description>提供最基础的工具类</description>
 
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
