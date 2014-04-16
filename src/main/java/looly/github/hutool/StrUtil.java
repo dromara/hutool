@@ -199,7 +199,7 @@ public class StrUtil {
 			return null;
 		}
 		
-		return str.replaceAll("\\s*", str);
+		return str.replaceAll("\\s*", EMPTY);
 	}
 	
 	/**

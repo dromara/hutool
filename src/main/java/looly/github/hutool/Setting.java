@@ -364,6 +364,21 @@ public class Setting extends HashMap<String, String> {
 	/**
 	 * 获得数组型
 	 * @param key 属性名
+	 * @param defaultValue 默认的值
+	 * @return 属性值
+	 */
+	public String[] getStringsWithDefault(String key, String[] defaultValue) {
+		String[] value = getStrings(key, null);
+		if(null == value) {
+			value = defaultValue; 
+		}
+		
+		return value;
+	}
+	
+	/**
+	 * 获得数组型
+	 * @param key 属性名
 	 * @param group 分组名
 	 * @return 属性值
 	 */
