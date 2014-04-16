@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.0.13</version>
+			<version>1.1.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-servlet-api</artifactId>
-			<version>7.0.42</version>
+			<version>8.0.5</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
