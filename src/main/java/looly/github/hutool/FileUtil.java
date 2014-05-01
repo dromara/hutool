@@ -450,8 +450,9 @@ public class FileUtil {
 		BufferedReader reader = null;
 		try {
 			reader = getReader(path, charset);
+			String line;
 			while(true){
-				String line = reader.readLine();
+				line = reader.readLine();
 				if(line == null) break;
 				collection.add(line);
 			}
