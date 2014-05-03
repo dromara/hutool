@@ -185,12 +185,17 @@ public class NetUtil {
 	
 	/**
 	 * 构建InetSocketAddress<br>
-	 * 当host中包含端口时（用“：”隔开），使用host中的端口，否则使用默认端口
+	 * 当host中包含端口时（用“：”隔开），使用host中的端口，否则使用默认端口<br>
+	 * 给定host为空时使用本地host（127.0.0.1）
 	 * @param host Host
 	 * @param defaultPort 默认端口
 	 * @return InetSocketAddress
 	 */
 	public static InetSocketAddress buildInetSocketAddress(String host, int defaultPort) {
+		if(StrUtil.isBlank(host)) {
+			host = LOCAL_IP;
+		}
+		
 		String destHost = null;
 		int port = 0;
 		int index = host.indexOf(":");

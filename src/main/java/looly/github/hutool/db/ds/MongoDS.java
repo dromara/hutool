@@ -11,6 +11,7 @@ import java.util.Map;
 import looly.github.hutool.CharsetUtil;
 import looly.github.hutool.CollectionUtil;
 import looly.github.hutool.Log;
+import looly.github.hutool.NetUtil;
 import looly.github.hutool.Setting;
 import looly.github.hutool.StrUtil;
 import looly.github.hutool.exceptions.NotInitedException;
@@ -330,19 +331,8 @@ public class MongoDS implements Closeable{
 			throw new NotInitedException("Host name is empy of group: " + group);
 		}
 		
-		String host = null;
-		int port = 0;
-		int index = tmpHost.indexOf(":");
-		if (index != -1) {
-			// host:port形式
-			host = tmpHost.substring(0, index);
-			port = Integer.parseInt(tmpHost.substring(index + 1));
-		} else {
-			host = tmpHost;
-			port = setting.getInt("port", group, 27017);
-		}
-		
-		return createServerAddress(host, port);
+		final int defaultPort = setting.getInt("port", group, 27017);
+		return new ServerAddress(NetUtil.buildInetSocketAddress(tmpHost, defaultPort));
 	}
 	
 	/**
