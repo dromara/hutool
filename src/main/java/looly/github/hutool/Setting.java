@@ -116,6 +116,7 @@ public class Setting extends HashMap<String, String> {
 		if(url == null) {
 			throw new RuntimeException("Can not find Setting file: ["+path+"]");
 		}
+		
 		this.init(url, charset, isUseVariable);
 	}
 
@@ -131,6 +132,14 @@ public class Setting extends HashMap<String, String> {
 			throw new RuntimeException("Null url define!");
 		}
 		this.init(url, charset, isUseVariable);
+	}
+	
+	/**
+	 * 构造
+	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
+	 */
+	public Setting(String pathBaseClassLoader) {
+		this(pathBaseClassLoader, DEFAULT_CHARSET, false);
 	}
 
 	/*--------------------------公有方法 start-------------------------------*/
