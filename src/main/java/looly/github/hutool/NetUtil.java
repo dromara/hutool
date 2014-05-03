@@ -2,6 +2,7 @@ package looly.github.hutool;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
@@ -181,6 +182,30 @@ public class NetUtil {
 	public static String hideIpPart(long ip) {
 		return hideIpPart(longToIpv4(ip));
 	}
+	
+	/**
+	 * 构建InetSocketAddress<br>
+	 * 当host中包含端口时（用“：”隔开），使用host中的端口，否则使用默认端口
+	 * @param host Host
+	 * @param defaultPort 默认端口
+	 * @return InetSocketAddress
+	 */
+	public static InetSocketAddress buildInetSocketAddress(String host, int defaultPort) {
+		String destHost = null;
+		int port = 0;
+		int index = host.indexOf(":");
+		if (index != -1) {
+			// host:port形式
+			destHost = host.substring(0, index);
+			port = Integer.parseInt(host.substring(index + 1));
+		} else {
+			destHost = host;
+			port = defaultPort;
+		}
+		
+		return new InetSocketAddress(destHost, port);
+	}
+	
 	//----------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 指定IP的long是否在指定范围内
