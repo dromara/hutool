@@ -27,10 +27,6 @@ public class SingleEntityHandler implements RsHandler<Entity>{
 		final ResultSetMetaData  meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 		
-		if(rs.next()) {
-			return HandleHelper.handleRow(columnCount, meta, rs);
-		}
-		
-		return null;
+		return rs.next() ? HandleHelper.handleRow(columnCount, meta, rs) : null;
 	}
 }

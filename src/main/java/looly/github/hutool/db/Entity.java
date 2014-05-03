@@ -2,6 +2,7 @@ package looly.github.hutool.db;
 
 import java.util.HashMap;
 
+import looly.github.hutool.Conver;
 import looly.github.hutool.InjectUtil;
 import looly.github.hutool.StrUtil;
 import looly.github.hutool.exceptions.UtilException;
@@ -41,5 +42,30 @@ public class Entity extends HashMap<String, Object>{
 		}
 		InjectUtil.injectFromMap(vo, this);
 		return vo;
+	}
+	
+	//-------------------------------------------------------------------- 特定类型值
+	/**
+	 * @param key 键
+	 * @return 获得字符串类型值
+	 */
+	public String getStr(String key) {
+		return Conver.toStr(get(key), null);
+	}
+	
+	/**
+	 * @param key 键
+	 * @return 获得字符串类型值
+	 */
+	public Integer getInt(String key) {
+		return Conver.toInt(get(key), null);
+	}
+	
+	/**
+	 * @param key 键
+	 * @return 获得字符串类型值
+	 */
+	public Long getLong(String key) {
+		return Conver.toLong(get(key), null);
 	}
 }

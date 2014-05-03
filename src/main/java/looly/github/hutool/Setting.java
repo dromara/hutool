@@ -411,7 +411,7 @@ public class Setting extends HashMap<String, String> {
 	public Integer getInt(String key) throws NumberFormatException {
 		return getInt(key, null);
 	}
-
+	
 	/**
 	 * 获取数字型型属性值
 	 * 

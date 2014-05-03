@@ -244,6 +244,10 @@ public class DateUtil {
 	 * @return 日期
 	 */
 	public static DateTime parse(String dateStr) {
+		if(null == dateStr) {
+			return null;
+		}
+		dateStr = dateStr.trim();
 		int length = dateStr.length();
 		try {
 			if(length == NORM_DATETIME_PATTERN.length()) {

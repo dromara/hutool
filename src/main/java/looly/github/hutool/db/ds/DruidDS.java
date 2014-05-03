@@ -25,7 +25,7 @@ import com.alibaba.druid.pool.DruidDataSource;
  * @author Luxiaolei
  * 
  */
-public class DruidDs {
+public class DruidDS {
 	private static Logger logger = Log.get();
 	
 	/** 默认的Druid配置文件路径 */
@@ -43,10 +43,6 @@ public class DruidDs {
 	/** 数据源池 */
 	private static Map<String, DruidDataSource> dsMap;
 	/*--------------------------私有变量 end-------------------------------*/
-
-	static {
-		init(null, null);
-	}
 
 	/**
 	 * 初始化数据库连接配置文件
@@ -84,6 +80,11 @@ public class DruidDs {
 	 * @throws ConnException
 	 */
 	synchronized public static DataSource getDataSource(String group) {
+		if(null == dsMap) {
+			//如果用户未指定配置文件，使用默认
+			init(null, null);
+		}
+		
 		if(dbSetting == null) {
 			throw new UtilException("No setting found, please init it!");
 		}
@@ -92,13 +93,13 @@ public class DruidDs {
 		}
 
 		// 如果已经存在已有数据源（连接池）直接返回
-		DruidDataSource existedDataSource = dsMap.get(group);
+		final DruidDataSource existedDataSource = dsMap.get(group);
 		if (existedDataSource != null) {
 			return existedDataSource;
 		}
 
 		// 基本连接信息
-		DruidDataSource dds = new DruidDataSource();
+		final DruidDataSource dds = new DruidDataSource();
 		if(druidSetting != null) {
 			try {
 				// 连接池参数注入
@@ -111,7 +112,7 @@ public class DruidDs {
 		dds.setName(group); // 数据源名称为连接名称
 		dds.setDriverClassName(dbSetting.getStringWithDefault("driver", group, DEFAULT_DRIVER));
 		
-		String jdbcUrl = dbSetting.getString("url", group);
+		final String jdbcUrl = dbSetting.getString("url", group);
 		Log.debug("JDBC url: {}", jdbcUrl);
 		dds.setUrl(jdbcUrl);
 		dds.setUsername(dbSetting.getString("user", group));
