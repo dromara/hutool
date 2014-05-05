@@ -53,6 +53,20 @@ public class StrUtil {
 	}
 	
 	/**
+	 * 是否包含空字符串
+	 * @param strs 字符串列表
+	 * @return 是否包含空字符串
+	 */
+	public static boolean hasBlank(String... strs) {
+		for (String str : strs) {
+			if(isBlank(str)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * 字符串是否为空，空的定义如下
 	 * 1、为null <br>
 	 * 2、为""<br>
@@ -73,6 +87,20 @@ public class StrUtil {
 	 */
 	public static boolean isNotEmpty(String str) {
 		return false == isEmpty(str);
+	}
+	
+	/**
+	 * 是否包含空字符串
+	 * @param strs 字符串列表
+	 * @return 是否包含空字符串
+	 */
+	public static boolean hasEmpty(String... strs) {
+		for (String str : strs) {
+			if(isEmpty(str)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

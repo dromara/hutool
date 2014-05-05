@@ -167,6 +167,15 @@ public class CollectionUtil {
 	public static <T, K> HashMap<T, K> newHashMap() {
 		return new HashMap<T, K>();
 	}
+	
+	/**
+	 * 新建一个HashMap
+	 * @param size 初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75
+	 * @return HashMap对象
+	 */
+	public static <T, K> HashMap<T, K> newHashMap(int size) {
+		return new HashMap<T, K>((int)(size / 0.75));
+	}
 
 	/**
 	 * 新建一个HashSet
@@ -384,11 +393,20 @@ public class CollectionUtil {
 	
 	/**
 	 * 数组是否为空
-	 * @param array 数字
+	 * @param array 数组
 	 * @return 是否为空
 	 */
 	public static <T> boolean isEmpty(T[] array) {
 		return array == null || array.length == 0;
+	}
+	
+	/**
+	 * 数组是否为非空
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static <T> boolean isNotEmpty(T[] array) {
+		return false == isEmpty(array);
 	}
 	
 	/**
@@ -398,5 +416,67 @@ public class CollectionUtil {
 	 */
 	public static <T> boolean isEmpty(Collection<T> collection) {
 		return collection == null || collection.isEmpty();
+	}
+	
+	/**
+	 * 集合是否为非空
+	 * @param collection 集合
+	 * @return 是否为非空
+	 */
+	public static <T> boolean isNotEmpty(Collection<T> collection) {
+		return false == isEmpty(collection);
+	}
+	
+	/**
+	 * 映射键值（参考Python的zip()函数）<br>
+	 * 例如：<br>
+	 * 		keys =    [a,b,c,d]<br>
+	 *		values = [1,2,3,4]<br>
+	 * 则得到的Map是 {a=1, b=2, c=3, d=4}<br>
+	 * 如果两个数组长度不同，则只对应最短部分
+	 * @param keys 键列表
+	 * @param values 值列表
+	 * @return Map
+	 */
+	public static <T, K> Map<T, K> zip(T[] keys, K[] values) {
+		if(isEmpty(keys) || isEmpty(values)) {
+			return null;
+		}
+		
+		final int size = Math.min(keys.length, values.length);
+		final Map<T, K> map = new HashMap<T, K>((int)(size / 0.75));
+		for(int i = 0; i < size; i++) {
+			map.put(keys[i], values[i]);
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * 映射键值（参考Python的zip()函数）<br>
+	 * 例如：<br>
+	 * 		keys =    [a,b,c,d]<br>
+	 *		values = [1,2,3,4]<br>
+	 * 则得到的Map是 {a=1, b=2, c=3, d=4}<br>
+	 * 如果两个数组长度不同，则只对应最短部分
+	 * @param keys 键列表
+	 * @param values 值列表
+	 * @return Map
+	 */
+	public static <T, K> Map<T, K> zip(Collection<T> keys, Collection<K> values) {
+		if(isEmpty(keys) || isEmpty(values)) {
+			return null;
+		}
+		
+		final List<T> keyList = new ArrayList<T>(keys);
+		final List<K> valueList = new ArrayList<K>(values);
+		
+		final int size = Math.min(keys.size(), values.size());
+		final Map<T, K> map = new HashMap<T, K>((int)(size / 0.75));
+		for(int i = 0; i < size; i++) {
+			map.put(keyList.get(i), valueList.get(i));
+		}
+		
+		return map;
 	}
 }
