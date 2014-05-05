@@ -399,6 +399,15 @@ public class DateUtil {
 		return System.currentTimeMillis() - preTime;
 	}
 	
+	/**
+	 * 格式化成yyMMddHHmm后转换为int型
+	 * @param date 日期
+	 * @return int
+	 */
+	public static int toIntSecond(Date date) {
+		return Integer.parseInt(DateUtil.format(date, "yyMMddHHmm"));
+	}
+	
 	//------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>
