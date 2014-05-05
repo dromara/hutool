@@ -756,6 +756,20 @@ public class FileUtil {
 		writeStream(touch(fullFilePath), in);
 	}
 	
+	/**
+	 * 判断文件是否被改动<br>
+	 * 如果文件对象为 null 或者文件不存在，被视为改动
+	 * @param file 文件对象
+	 * @param lastModifyTime 上次的改动时间
+	 * @return 是否被改动
+	 */
+	public static boolean isModifed(File file, long lastModifyTime) {
+		if(null == file || false == file.exists()) {
+			return true;
+		}
+		return file.lastModified() != lastModifyTime;
+	}
+	
 	//-------------------------------------------------------------------------- Interface
 	/**
 	 * Reader处理接口
