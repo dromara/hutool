@@ -386,9 +386,28 @@ public class StrUtil {
 		return new String(newStrArray);
 	}
 	
-//	public static String subExcludeHtml(String content, int length) {
-//		
-//	}
+	/**
+	 * 切割前部分
+	 * @param string 字符串
+	 * @param toIndex 切割到的位置（不包括）
+	 * @return 切割后的字符串
+	 */
+	public static String subPre(String string, int toIndex) {
+		return sub(string, 0, toIndex);
+	}
+	
+	/**
+	 * 切割后部分
+	 * @param string 字符串
+	 * @param toIndex 切割开始的位置（包括）
+	 * @return 切割后的字符串
+	 */
+	public static String subSuf(String string, int fromIndex) {
+		if(isEmpty(string)) {
+			return null;
+		}
+		return sub(string, fromIndex, string.length());
+	}
 	
 	/**
 	 * 重复某个字符
