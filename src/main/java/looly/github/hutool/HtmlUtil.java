@@ -73,6 +73,35 @@ public class HtmlUtil {
 	public static String cleanHtmlTag(String content) {
 		return content.replaceAll(RE_HTML_MARK, "");
 	}
+	
+	/**
+	 * 清除指定HTML标签和被标签包围的内容<br>
+	 * 不区分大小写
+	 * @param content 文本
+	 * @param tagNames 要清除的标签
+	 * @return
+	 */
+	public static String removeHtmlTag(String content, String... tagNames) {
+		String regex1 = null;
+		String regex2 = null;
+		for (String tagName : tagNames) {
+			if(StrUtil.isBlank(tagName)) {
+				continue;
+			}
+			tagName = tagName.toLowerCase();
+			regex1 = StrUtil.format("<{}\\s?.*?/>", tagName);
+			regex2 = StrUtil.format("<{}\\s?.*?>.*?</{}>", tagName, tagName);
+			
+			System.out.println(regex1 + " " + regex2);
+			
+			content = content
+					.replaceAll(regex1, StrUtil.EMPTY)									//自闭标签小写
+					.replaceAll(regex1.toUpperCase(), StrUtil.EMPTY)			//自闭标签大写
+					.replaceAll(regex2, StrUtil.EMPTY)									//非自闭标签小写
+					.replaceAll(regex2.toUpperCase(), StrUtil.EMPTY);			//非自闭标签大写
+		}
+		return content;
+	}
 
 	/**
 	 * Encoder.
