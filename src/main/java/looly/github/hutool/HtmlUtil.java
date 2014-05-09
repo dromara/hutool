@@ -88,7 +88,7 @@ public class HtmlUtil {
 			if(StrUtil.isBlank(tagName)) {
 				continue;
 			}
-			tagName = tagName.toLowerCase();
+			tagName = tagName.trim().toLowerCase();
 			regex1 = StrUtil.format("<{}\\s?.*?/>", tagName);
 			regex2 = StrUtil.format("<{}\\s?.*?>.*?</{}>", tagName, tagName);
 			
