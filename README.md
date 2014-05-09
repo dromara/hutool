@@ -12,7 +12,7 @@ A simple tool package like common-tools, make things more useful and convenient.
 1. 减少代码录入。
 2. 常用功能组合起来，实现一个功能只用一个方法。
 3. 简化Java API，原来需要几个类实现的功能我也只是用一个类甚至一个方法（想想为了个线程池我得new多少类……而且名字还不好记）
-4. 对于null的处理我没有可以回避，而是采取“你给我null我也给你返回null”这种思想，尽量不在工具类里抛空指针异常（这思想稍猥琐啊……直接把抱负扔给调用者了，好吧，谁让你给我null了）。
+4. 对于null的处理我没有可以回避，而是采取“你给我null我也给你返回null”这种思想，尽量不在工具类里抛空指针异常（这思想稍猥琐啊……直接把包袱扔给调用者了，好吧，谁让你给我null了）。
 
 
 ### 文档请移步 [Hutool Wiki](https://github.com/looly/hutool/wiki) ###
