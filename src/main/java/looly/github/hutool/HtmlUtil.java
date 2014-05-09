@@ -92,8 +92,6 @@ public class HtmlUtil {
 			regex1 = StrUtil.format("<{}\\s?.*?/>", tagName);
 			regex2 = StrUtil.format("<{}\\s?.*?>.*?</{}>", tagName, tagName);
 			
-			System.out.println(regex1 + " " + regex2);
-			
 			content = content
 					.replaceAll(regex1, StrUtil.EMPTY)									//自闭标签小写
 					.replaceAll(regex1.toUpperCase(), StrUtil.EMPTY)			//自闭标签大写
