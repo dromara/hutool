@@ -196,6 +196,20 @@ public class CollectionUtil {
 	}
 	
 	/**
+	 * 新建一个ArrayList
+	 * 
+	 * @return ArrayList对象
+	 */
+	public static <T> ArrayList<T> newArrayList(T... values) {
+		ArrayList<T> list = new ArrayList<T>(values.length);
+		for (T t : values) {
+			list.add(t);
+		}
+		
+		return list;
+	}
+	
+	/**
 	 * 将新元素添加到已有数组中<br/>
 	 * 添加新元素会生成一个新的数组，不影响原数组
 	 * 
