@@ -118,7 +118,7 @@ public class ClassUtil {
 		String packagePath = packageName.replace(StrUtil.DOT, StrUtil.SLASH);
 		Enumeration<URL> resources;
 		try {
-			resources = Thread.currentThread().getContextClassLoader().getResources(packagePath);
+			resources = getClassLoader().getResources(packagePath);
 		} catch (IOException e) {
 			throw new UtilException(StrUtil.format("Loading classPath [{}] error!", packagePath), e);
 		}
@@ -284,7 +284,7 @@ public class ClassUtil {
 		try {
 			return (T) Class.forName(clazz).newInstance();
 		} catch (Exception e) {
-			throw new RuntimeException(StrUtil.format("Instance class [{}] error!", clazz), e);
+			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}
 	}
 
