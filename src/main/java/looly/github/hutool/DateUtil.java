@@ -419,8 +419,4 @@ public class DateUtil {
 	}
 	//------------------------------------------------------------------------ Private method end
 	
-	public static void main(String[] args) {
-		LinkedHashSet<String> yearAndSeasons = yearAndSeasons(DateUtil.parse("2013-03-01"), DateUtil.parse("2014-04-01"));
-		System.out.println(yearAndSeasons);
-	}
 }
