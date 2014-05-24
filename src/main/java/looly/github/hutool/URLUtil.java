@@ -67,7 +67,7 @@ public class URLUtil {
 	 * 
 	 * @param baseUrl 基准URL
 	 * @param relativePath 相对URL
-	 * @return
+	 * @return 相对路径
 	 */
 	public static String complateUrl(String baseUrl, String relativePath) {
 		baseUrl = formatUrl(baseUrl);

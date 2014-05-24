@@ -43,7 +43,7 @@ public class SecureUtil {
 	 * md5编码
 	 * @param source 字符串
 	 * @param charset 字符集，为空使用系统默认字符集
-	 * @return
+	 * @return md5
 	 */
 	public static String md5(String source, String charset) {
 		if(source == null) {

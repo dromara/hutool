@@ -96,7 +96,7 @@ public class BloomFilter2 {
 	/**
 	 * 将字符串的字节表示进行多哈希编码.
 	 * 
-	 * @param bytes 待添加进过滤器的字符串字节表示.
+	 * @param str 待添加进过滤器的字符串字节表示.
 	 * @param hashNumber 要经过的哈希个数.
 	 * @return 各个哈希的结果数组.
 	 */

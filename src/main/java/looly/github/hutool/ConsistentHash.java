@@ -22,7 +22,7 @@ public class ConsistentHash<T> {
 	
 	/**
 	 * 构造，使用Java默认的Hash算法
-	 * @param numberOfReplicasa 复制的节点个数，增加每个节点的复制节点有利于负载均衡
+	 * @param numberOfReplicas 复制的节点个数，增加每个节点的复制节点有利于负载均衡
 	 * @param nodes 节点对象
 	 */
 	public ConsistentHash(int numberOfReplicas, Collection<T> nodes) {

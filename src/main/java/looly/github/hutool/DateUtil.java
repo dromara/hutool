@@ -90,7 +90,7 @@ public class DateUtil {
 	/**
 	 * Long类型时间转为Date
 	 * @param date Long类型Date（Unix时间戳）
-	 * @return
+	 * @return 时间对象
 	 */
 	public static DateTime date(long date) {
 		return new DateTime(date);
@@ -227,7 +227,7 @@ public class DateUtil {
 	
 	/**
 	 * 格式HH:mm:ss
-	 * @param dateString 标准形式的日期字符串
+	 * @param timeString 标准形式的日期字符串
 	 * @return 日期对象
 	 */
 	public static DateTime parseTime(String timeString){

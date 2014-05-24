@@ -186,7 +186,7 @@ public class SqlRunner {
 	 * @param tableName 表名
 	 * @param isReplace 是否替换（会调用SQL的replace into方法）
 	 * @param record 记录
-	 * @return
+	 * @return 主键
 	 * @throws SQLException
 	 */
 	public Long insert(Connection conn, String tableName,  boolean isReplace, Entity record) throws SQLException {
@@ -213,7 +213,7 @@ public class SqlRunner {
 	 * @param tableName 表名
 	 * @param isReplace 是否替换（会调用SQL的replace into方法）
 	 * @param record 记录
-	 * @return
+	 * @return 主键
 	 * @throws SQLException
 	 */
 	public Long insert(String tableName, boolean isReplace, Entity record) throws SQLException {
@@ -234,7 +234,7 @@ public class SqlRunner {
 	 * @param tableName 表名
 	 * @param isReplace 是否替换（会调用SQL的replace into方法）
 	 * @param records 记录
-	 * @return
+	 * @return 行数
 	 * @throws SQLException
 	 */
 	public int[] insertBatch(Connection conn, String tableName, boolean isReplace, Entity... records) throws SQLException {
@@ -263,7 +263,7 @@ public class SqlRunner {
 	 * @param tableName 表名
 	 * @param isReplace 是否替换（会调用SQL的replace into方法）
 	 * @param records 记录
-	 * @return
+	 * @return 行数
 	 * @throws SQLException
 	 */
 	public int[] insertBatch(String tableName, boolean isReplace, Entity... records) throws SQLException {
@@ -308,14 +308,14 @@ public class SqlRunner {
 	
 	/**
 	 * 构建Insert的PreparedStatement
-	 * @param ps PreparedStatement
+	 * @param conn Connection
 	 * @param tableName 表名
 	 * @param isReplace 是否使用Replace方式插入
 	 * @param records 插入的记录
-	 * @return 
+	 * @return PreparedStatement
 	 * @throws SQLException 
 	 */
-	public PreparedStatement psForInsert(Connection conn, String tableName, boolean isReplace, Entity... records) throws SQLException {
+	private PreparedStatement psForInsert(Connection conn, String tableName, boolean isReplace, Entity... records) throws SQLException {
 		if(records == null || records.length == 0) {
 			throw new UtilException("Records can not be null!");
 		}

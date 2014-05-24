@@ -27,7 +27,7 @@ public class Entity extends HashMap<String, Object>{
 	
 	/**
 	 * 填充Value Object对象
-	 * @param vo Value Object（或者POJO）
+	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
 	 */
 	public <T> T toVo(Class<T> clazz) {

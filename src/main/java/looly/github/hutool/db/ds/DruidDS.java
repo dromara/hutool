@@ -76,7 +76,7 @@ public class DruidDS {
 	/**
 	 * 获得一个数据源
 	 * 
-	 * @param dsName 数据源分组
+	 * @param group 数据源分组
 	 * @throws ConnException
 	 */
 	synchronized public static DataSource getDataSource(String group) {
@@ -136,7 +136,6 @@ public class DruidDS {
 	 * 获得一个数据库连接池中的连接
 	 * 
 	 * @param datasource 数据源名称，此名称在配置文件中定义
-	 * @param sshName SSH连接名称
 	 * @return 连接对象
 	 * @throws SQLException
 	 * @throws ConnException

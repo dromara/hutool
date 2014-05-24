@@ -60,7 +60,7 @@ public class ReUtil {
 	 * @param pattern 匹配正则
 	 * @param content 被匹配的内容
 	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
-	 * @return
+	 * @return 新字符串
 	 */
 	public static String extractMulti(Pattern pattern, String content, String template) {
 		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
@@ -88,7 +88,7 @@ public class ReUtil {
 	 * @param pattern 匹配正则
 	 * @param contents 被匹配的内容，数组0为内容正文
 	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
-	 * @return
+	 * @return 新字符串
 	 */
 	public static String extractMultiAndDelPre(Pattern pattern, String[] contents, String template) {
 		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
@@ -134,12 +134,12 @@ public class ReUtil {
 	 * 		return 			2013-5
 	 * 
 	 * @param regex 匹配正则字符串
-	 * @param content 被匹配的内容
+	 * @param contents 被匹配的内容
 	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
 	 * @return 按照template拼接后的字符串
 	 */
 	public static String extractMultiAndDelPre(String regex, String[] contents, String template) {
-		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		return extractMultiAndDelPre(pattern, contents, template);
 	}
 

@@ -155,7 +155,7 @@ public class XmlUtil {
 	/**
 	 * 创建XML文档
 	 * @param rootElementName 根节点名称
-	 * @return
+	 * @return XML文档
 	 */
 	public static Document createXml(String rootElementName) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

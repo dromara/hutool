@@ -71,7 +71,7 @@ public class CollectionUtil {
 	 * @param numPerPage 每页的条目数
 	 * @param comparator 比较器
 	 * @param colls 集合数组
-	 * @return
+	 * @return 分页后的段落内容
 	 */
 	public static <T> List<T> sortPageAll(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
 		final List<T> result = new ArrayList<T>();
@@ -96,7 +96,7 @@ public class CollectionUtil {
 	 * @param numPerPage 每页的条目数
 	 * @param comparator 比较器
 	 * @param colls 集合数组
-	 * @return
+	 * @return 分业后的段落内容
 	 */
 	public static <T> List<T> sortPageAll2(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
 		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<T>(pageNo * numPerPage);
@@ -241,7 +241,7 @@ public class CollectionUtil {
 	 * 新建一个空数组
 	 * @param componentType 元素类型
 	 * @param newSize 大小
-	 * @return
+	 * @return 空数组
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T[] newArray(Class<?> componentType, int newSize) {
@@ -264,8 +264,7 @@ public class CollectionUtil {
 	 * 将多个数组合并在一起<br>
 	 * 忽略null的数组
 	 * 
-	 * @param array1 数组1
-	 * @param array2 数组2
+	 * @param arrays 数组集合
 	 * @return 合并后的数组
 	 */
 	public static <T> T[] addAll(T[]... arrays) {
@@ -296,7 +295,7 @@ public class CollectionUtil {
 	/**
 	 * 克隆数组
 	 * @param array 被克隆的数组
-	 * @return
+	 * @return 新数组
 	 */
 	public static <T> T[] clone(T[] array) {
 		if (array == null) {
@@ -320,7 +319,7 @@ public class CollectionUtil {
 	 * 自动判定正序反序
 	 * @param includedStart 开始的数字（包含）
 	 * @param excludedEnd 结束的数字（不包含）
-	 * @return
+	 * @return 数字列表
 	 */
 	public static int[] range(int includedStart, int excludedEnd) {
 		return range(includedStart, excludedEnd, 1);

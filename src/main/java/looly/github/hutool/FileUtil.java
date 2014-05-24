@@ -184,7 +184,7 @@ public class FileUtil {
 	 * @param suffix 后缀，如果null则使用默认.tmp
 	 * @param dir 临时文件创建的所在目录
 	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
-	 * @return
+	 * @return 临时文件
 	 * @throws IOException
 	 */
 	public static File createTempFile(String prefix, String suffix, File dir, boolean isReCreat) throws IOException {
@@ -551,7 +551,7 @@ public class FileUtil {
 	/**
 	 * 获得最后一个文件路径分隔符的位置
 	 * @param filePath 文件路径
-	 * @return
+	 * @return 最后一个文件路径分隔符的位置
 	 */
 	public static int indexOfLastSeparator(String filePath) {
 		if (filePath == null) {
@@ -654,8 +654,8 @@ public class FileUtil {
 	//-------------------------------------------------------------------------- Write and read bytes
 	/**
 	 * 写数据到文件中
-	 * @param dest 目标文件
 	 * @param data 数据
+	 * @param path 目标文件
 	 * @throws IOException
 	 */
 	public static void writeBytes(byte[] data, String path) throws IOException {

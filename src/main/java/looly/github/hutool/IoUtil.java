@@ -59,7 +59,6 @@ public class IoUtil {
 	 * 拷贝流，使用默认Buffer大小
 	 * @param in 输入流
 	 * @param out 输出流
-	 * @param bufferSize 缓存大小
 	 * @throws IOException
 	 */
 	public static int copy(InputStream in, OutputStream out) throws IOException {
@@ -125,7 +124,7 @@ public class IoUtil {
 	 * String 转为 流
 	 * @param content 内容
 	 * @param charset 编码
-	 * @return
+	 * @return 字节流
 	 */
 	public static ByteArrayInputStream toStream(String content, String charset) {
 		if(content == null) {

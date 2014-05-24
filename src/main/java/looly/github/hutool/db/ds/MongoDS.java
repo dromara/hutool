@@ -88,7 +88,7 @@ public class MongoDS implements Closeable{
 	
 	/**
 	 * 获取MongoDB数据源<br>
-	 * @param group 分组列表
+	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */
 	public static MongoDS getDS(Collection<String> groups) {
@@ -115,7 +115,7 @@ public class MongoDS implements Closeable{
 	
 	/**
 	 * 获取MongoDB数据源<br>
-	 * @param group 分组列表
+	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */
 	public static MongoDS getDS(Setting setting, Collection<String> groups) {
@@ -161,7 +161,7 @@ public class MongoDS implements Closeable{
 	 * 构造MongoDB数据源<br>
 	 * 当提供多个数据源时，这些数据源将为一个副本集或者多个mongos<br>
 	 * 调用者必须持有MongoDS实例，否则会被垃圾回收导致写入失败！
-	 * @see http://docs.mongodb.org/manual/administration/replica-sets/
+	 * 官方文档： http://docs.mongodb.org/manual/administration/replica-sets/
 	 * @param groups 分组列表，当为null或空时使用无分组配置，一个分组使用单一模式，否则使用副本集模式
 	 */
 	public MongoDS(String... groups) {
@@ -172,8 +172,8 @@ public class MongoDS implements Closeable{
 	/**
 	 * 构造MongoDB数据源<br>
 	 * 当提供多个数据源时，这些数据源将为一个副本集或者mongos<br>
-	 * 调用者必须持有MongoDS实例，否则会被垃圾回收导致写入失败！
-	 * @see http://docs.mongodb.org/manual/administration/replica-sets/
+	 * 调用者必须持有MongoDS实例，否则会被垃圾回收导致写入失败！<br>
+	 * 官方文档： http://docs.mongodb.org/manual/administration/replica-sets/
 	 * @param mongoSetting MongoDB的配置文件，必须有
 	 * @param groups 分组列表，当为null或空时使用无分组配置，一个分组使用单一模式，否则使用副本集模式
 	 */
@@ -274,7 +274,6 @@ public class MongoDS implements Closeable{
 	
 	/**
 	 * 设定MongoDB配置文件
-	 * @return
 	 */
 	public void setSetting(Setting setting) {
 		this.setting = setting;

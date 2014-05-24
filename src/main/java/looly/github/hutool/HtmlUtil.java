@@ -79,7 +79,7 @@ public class HtmlUtil {
 	 * 不区分大小写
 	 * @param content 文本
 	 * @param tagNames 要清除的标签
-	 * @return
+	 * @return 去除标签后的文本
 	 */
 	public static String removeHtmlTag(String content, String... tagNames) {
 		String regex1 = null;
@@ -95,9 +95,7 @@ public class HtmlUtil {
 			
 			content = content
 					.replaceAll(regex1, StrUtil.EMPTY)									//自闭标签小写
-//					.replaceAll(regex1.toUpperCase(), StrUtil.EMPTY)			//自闭标签大写
 					.replaceAll(regex2, StrUtil.EMPTY);									//非自闭标签小写
-//					.replaceAll(regex2.toUpperCase(), StrUtil.EMPTY);			//非自闭标签大写
 		}
 		return content;
 	}

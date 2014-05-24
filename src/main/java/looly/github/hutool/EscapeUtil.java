@@ -8,7 +8,7 @@ public class EscapeUtil {
 	/**
 	 * Escape编码（Unicode）
 	 * @param content
-	 * @return
+	 * @return 编码后的字符串
 	 */
 	public static String escape(String content) {
 		if(StrUtil.isBlank(content)) {
@@ -41,7 +41,7 @@ public class EscapeUtil {
 	/**
 	 * Escape解码
 	 * @param content
-	 * @return
+	 * @return 解码后的字符串
 	 */
 	public static String unescape(String content) {
 		if(StrUtil.isBlank(content)) {
@@ -78,8 +78,8 @@ public class EscapeUtil {
 	
 	/**
 	 * 安全的unescape文本，当文本不是被escape的时候，返回原文。
-	 * @param content
-	 * @return
+	 * @param content 内容
+	 * @return 解码后的字符串，如果解码失败返回原字符串
 	 */
 	public static String safeUnescape(String content) {
 		try {

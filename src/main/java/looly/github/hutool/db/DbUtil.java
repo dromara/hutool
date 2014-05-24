@@ -117,7 +117,7 @@ public class DbUtil {
 	/**
 	 * 获得结果集的所有列名
 	 * @param rs 结果集
-	 * @return
+	 * @return 列名数组
 	 */
 	public static String[] getColumns(ResultSet rs) {
 		try {

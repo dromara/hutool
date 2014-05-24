@@ -145,7 +145,7 @@ public class HttpUtil {
 	 * @param paramMap post表单数据
 	 * @param customCharset 自定义请求字符集，发送时使用此字符集，获取返回内容如果字符集获取不到，使用此字符集
 	 * @param isPassCodeError 是否跳过非200异常
-	 * @return
+	 * @return 返回数据
 	 * @throws IOException
 	 */
 	public static String post(String urlString, Map<String, Object> paramMap, String customCharset, boolean isPassCodeError) throws IOException {
@@ -158,7 +158,7 @@ public class HttpUtil {
 	 * @param params post表单数据
 	 * @param customCharset 自定义请求字符集，发送时使用此字符集，获取返回内容如果字符集获取不到，使用此字符集
 	 * @param isPassCodeError 是否跳过非200异常
-	 * @return
+	 * @return 返回数据
 	 * @throws IOException
 	 */
 	public static String post(String urlString, String params, String customCharset, boolean isPassCodeError) throws IOException {
@@ -190,7 +190,7 @@ public class HttpUtil {
 	 * 获得远程String
 	 * @param url 请求的url
 	 * @param customCharset 自定义的字符集
-	 * @return
+	 * @return 文本
 	 * @throws IOException
 	 */
 	public static String downloadString(String url, String customCharset) throws IOException {
@@ -201,7 +201,7 @@ public class HttpUtil {
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式
 	 * @param paramMap 表单数据
-	 * @return
+	 * @return url参数
 	 */
 	public static String toParams(Map<String, Object> paramMap) {
 		return CollectionUtil.join(paramMap.entrySet(), "&");

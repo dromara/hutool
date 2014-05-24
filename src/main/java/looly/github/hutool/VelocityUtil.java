@@ -42,7 +42,7 @@ public class VelocityUtil {
 	/**
 	 * 新建Velocity模板引擎
 	 * @param templateDir 模板所在目录，绝对路径
-	 * @return
+	 * @return VelocityEngine
 	 */
 	public static VelocityEngine newEngine(String templateDir, String charset) {
 		VelocityEngine ve = new VelocityEngine();
@@ -152,7 +152,6 @@ public class VelocityUtil {
 	/**
 	 * 生成内容写入流<br>
 	 * 会自动关闭Writer
-	 * @param ve 引擎
 	 * @param templateFileName 模板文件名
 	 * @param context 上下文
 	 * @param writer 流

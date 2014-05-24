@@ -174,7 +174,7 @@ public class StrUtil {
 	 * 大写首字母<br>
 	 * 例如：str = name, return Name
 	 * @param str 字符串
-	 * @return
+	 * @return 字符串
 	 */
 	public static String upperFirst(String str) {
 		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
@@ -184,7 +184,7 @@ public class StrUtil {
 	 * 小写首字母<br>
 	 * 例如：str = Name, return name
 	 * @param str 字符串
-	 * @return
+	 * @return 字符串
 	 */
 	public static String lowerFirst(String str) {
 		return Character.toLowerCase(str.charAt(0)) + str.substring(1);
@@ -311,7 +311,7 @@ public class StrUtil {
 	 * from jodd
 	 * @param str 被切分的字符串
 	 * @param delimiter 分隔符
-	 * @return
+	 * @return 字符串
 	 */
 	public static String[] split(String str, String delimiter) {
 		if(str == null) {
@@ -399,7 +399,7 @@ public class StrUtil {
 	/**
 	 * 切割后部分
 	 * @param string 字符串
-	 * @param toIndex 切割开始的位置（包括）
+	 * @param fromIndex 切割开始的位置（包括）
 	 * @return 切割后的字符串
 	 */
 	public static String subSuf(String string, int fromIndex) {
@@ -476,8 +476,8 @@ public class StrUtil {
 	 * @param values 参数值
 	 * @return 格式化后的文本
 	 */
-	public static String format(String template, Object... value) {
-		if(value == null || value.length == 0 || isBlank(template)) {
+	public static String format(String template, Object... values) {
+		if(CollectionUtil.isEmpty(values) || isBlank(template)) {
 			return template;
 		}
 		
@@ -487,7 +487,7 @@ public class StrUtil {
 		int valueIndex = 0;
 		char currentChar;
 		for(int i = 0; i < length; i++) {
-			if(valueIndex >= value.length) {
+			if(valueIndex >= values.length) {
 				sb.append(sub(template, i, length));
 				break;
 			}
@@ -496,7 +496,7 @@ public class StrUtil {
 			if(currentChar == '{') {
 				final char nextChar = template.charAt(++i);
 				if(nextChar == '}') {
-					sb.append(value[valueIndex ++]);
+					sb.append(values[valueIndex ++]);
 				}else {
 					sb.append('{').append(nextChar);
 				}

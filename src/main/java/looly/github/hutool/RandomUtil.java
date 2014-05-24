@@ -24,7 +24,7 @@ public class RandomUtil {
 	 * 获得指定范围内的随机数
 	 * @param min 最小数
 	 * @param max 最大数
-	 * @return
+	 * @return 随机数
 	 */
 	public static int randomInt(int min, int max) {
 		return random.nextInt(max - min) + min;
@@ -41,7 +41,7 @@ public class RandomUtil {
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
 	 * @param limit 限制随机数的范围，不包括这个数
-	 * @return
+	 * @return 随机数
 	 */
 	public static int randomInt(int limit) {
 		return random.nextInt(limit);
@@ -51,7 +51,7 @@ public class RandomUtil {
 	 * 随机获得列表中的元素
 	 * @param <T> 元素类型
 	 * @param list 列表
-	 * @return 
+	 * @return 随机元素
 	 */
 	public static <T> T randomEle(List<T> list) {
 		return randomEle(list, list.size());
@@ -62,7 +62,7 @@ public class RandomUtil {
 	 * @param <T> 元素类型
 	 * @param list 列表
 	 * @param limit 限制列表的前N项
-	 * @return 
+	 * @return  随机元素
 	 */
 	public static <T> T randomEle(List<T> list, int limit) {
 		return list.get(randomInt(limit));
@@ -73,7 +73,7 @@ public class RandomUtil {
 	 * @param <T> 元素类型
 	 * @param list 列表
 	 * @param count 随机取出的个数
-	 * @return 
+	 * @return 随机元素
 	 */
 	public static <T> List<T> randomEles(List<T> list, int count) {
 		final List<T> result = new ArrayList<T>(count);

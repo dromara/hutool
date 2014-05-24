@@ -152,7 +152,7 @@ public class NetUtil {
 	 * 相对URL转换为绝对URL
 	 * @param absoluteBasePath 基准路径，绝对
 	 * @param relativePath 相对路径
-	 * @return
+	 * @return 绝对URL
 	 */
 	public static String toAbsoluteUrl(String absoluteBasePath, String relativePath) {
 		try {
