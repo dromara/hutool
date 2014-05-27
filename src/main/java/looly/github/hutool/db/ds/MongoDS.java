@@ -51,6 +51,7 @@ public class MongoDS implements Closeable{
 	//MongoDB客户端对象
 	private MongoClient mongo;
 	
+	//------------------------------------------------------------------------ Get DS start
 	/**
 	 * 获取MongoDB数据源<br>
 	 * @param host 主机
@@ -121,6 +122,7 @@ public class MongoDS implements Closeable{
 	public static MongoDS getDS(Setting setting, Collection<String> groups) {
 		return getDS(setting, groups.toArray(new String[groups.size()]));
 	}
+	//------------------------------------------------------------------------ Get DS end
 	
 	/**
 	 * 关闭全部连接
@@ -425,6 +427,7 @@ public class MongoDS implements Closeable{
 		
 		return builder;
 	}
+	
 	//--------------------------------------------------------------------------- Private method end
 	
 	/**
