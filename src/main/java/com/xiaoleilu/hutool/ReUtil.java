@@ -1,0 +1,246 @@
+package com.xiaoleilu.hutool;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * 正则相关工具类
+ * 
+ * @author xiaoleilu
+ */
+public class ReUtil {
+	
+	public final static Pattern NUMBER =  Pattern.compile("\\d+", Pattern.DOTALL);
+	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)", Pattern.DOTALL);
+	public final static Pattern IPV4 =  Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b", Pattern.DOTALL);
+
+	private ReUtil() {
+		//阻止实例化
+	}
+
+	/**
+	 * 获得匹配的字符串
+	 * 
+	 * @param regex 匹配的正则
+	 * @param content 被匹配的内容
+	 * @param groupIndex 匹配正则的分组序号
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 */
+	public static String get(String regex, String content, int groupIndex) {
+		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		return get(pattern, content, groupIndex);
+	}
+	
+	/**
+	 * 获得匹配的字符串
+	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被匹配的内容
+	 * @param groupIndex 匹配正则的分组序号
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 */
+	public static String get(Pattern pattern, String content, int groupIndex) {
+		Matcher matcher = pattern.matcher(content);
+		if (matcher.find()) {
+			return matcher.group(groupIndex);
+		}
+		return null;
+	}
+	
+	/**
+	 * 从content中匹配出多个值并根据template生成新的字符串<br>
+	 * 例如：<br>
+	 * 		content		2013年5月
+	 * 		pattern			(.*?})年(.*?)月
+	 * 		template：	$1-$2
+	 * 		return 			2013-5
+	 * 
+	 * @param pattern 匹配正则
+	 * @param content 被匹配的内容
+	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
+	 * @return 新字符串
+	 */
+	public static String extractMulti(Pattern pattern, String content, String template) {
+		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
+		
+		Matcher matcher = pattern.matcher(content);
+		if (matcher.find()) {
+			for (String var : varNums) {
+				int group = Integer.parseInt(var);
+				template = template.replace("$" + var, matcher.group(group));
+			}
+			return template;
+		}
+		return null;
+	}
+	
+	/**
+	 * 从content中匹配出多个值并根据template生成新的字符串<br>
+	 * 匹配结束后会删除匹配内容之前的内容（包括匹配内容）<br>
+	 * 例如：<br>
+	 * 		content		2013年5月
+	 * 		pattern			(.*?})年(.*?)月
+	 * 		template：	$1-$2
+	 * 		return 			2013-5
+	 * 
+	 * @param pattern 匹配正则
+	 * @param contents 被匹配的内容，数组0为内容正文
+	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
+	 * @return 新字符串
+	 */
+	public static String extractMultiAndDelPre(Pattern pattern, String[] contents, String template) {
+		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
+		
+		final String content = contents[0];
+		Matcher matcher = pattern.matcher(content);
+		if (matcher.find()) {
+			for (String var : varNums) {
+				int group = Integer.parseInt(var);
+				template = template.replace("$" + var, matcher.group(group));
+			}
+			contents[0] = StrUtil.sub(content, matcher.end(), content.length());
+			return template;
+		}
+		return null;
+	}
+	
+	/**
+	 * 从content中匹配出多个值并根据template生成新的字符串<br>
+	 * 匹配结束后会删除匹配内容之前的内容（包括匹配内容）<br>
+	 * 例如：<br>
+	 * 		content		2013年5月
+	 * 		pattern			(.*?})年(.*?)月
+	 * 		template：	$1-$2
+	 * 		return 			2013-5
+	 * 
+	 * @param regex 匹配正则字符串
+	 * @param content 被匹配的内容
+	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
+	 * @return 按照template拼接后的字符串
+	 */
+	public static String extractMulti(String regex, String content, String template) {
+		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		return extractMulti(pattern, content, template);
+	}
+	
+	/**
+	 * 从content中匹配出多个值并根据template生成新的字符串<br>
+	 * 例如：<br>
+	 * 		content		2013年5月
+	 * 		pattern			(.*?})年(.*?)月
+	 * 		template：	$1-$2
+	 * 		return 			2013-5
+	 * 
+	 * @param regex 匹配正则字符串
+	 * @param contents 被匹配的内容
+	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
+	 * @return 按照template拼接后的字符串
+	 */
+	public static String extractMultiAndDelPre(String regex, String[] contents, String template) {
+		final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		return extractMultiAndDelPre(pattern, contents, template);
+	}
+
+	/**
+	 * 删除匹配的内容
+	 * 
+	 * @param regex 正则
+	 * @param content 被匹配的内容
+	 * @return 删除后剩余的内容
+	 */
+	public static String delFirst(String regex, String content) {
+		return content.replaceFirst(regex, "");
+	}
+
+	/**
+	 * 删除正则匹配到的内容之前的字符 如果没有找到，则返回原文
+	 * 
+	 * @param regex 定位正则
+	 * @param content 被查找的内容
+	 * @return 删除前缀后的新内容
+	 */
+	public static String delPreLocation(String regex, String content) {
+		Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(content);
+		if (matcher.find()) {
+			return StrUtil.sub(content, matcher.end(), content.length());
+//			return content.substring(matcher.end(), content.length());
+		}
+		return content;
+	}
+
+	/**
+	 * 取得内容中匹配的所有结果
+	 * 
+	 * @param regex 正则
+	 * @param content 被查找的内容
+	 * @param group 正则的分组
+	 * @param collection 返回的集合类型
+	 * @return 结果集
+	 */
+	public static <T extends Collection<String>> T findAll(String regex, String content, int group, T collection) {
+		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		return findAll(pattern, content, group, collection);
+	}
+	
+	/**
+	 * 取得内容中匹配的所有结果
+	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被查找的内容
+	 * @param group 正则的分组
+	 * @param collection 返回的集合类型
+	 * @return 结果集
+	 */
+	public static <T extends Collection<String>> T findAll(Pattern pattern, String content, int group, T collection) {
+		Matcher matcher = pattern.matcher(content);
+		while(matcher.find()){
+			collection.add(matcher.group(group));
+		}
+		return collection;
+	}
+
+	/**
+	 * 从字符串中获得第一个整数
+	 * 
+	 * @param StringWithNumber 带数字的字符串
+	 * @return 整数
+	 */
+	public static int getFirstNumber(String StringWithNumber) {
+		return Integer.parseInt(get(NUMBER, StringWithNumber, 0));
+	}
+	
+	/**
+	 * 判断该字符串是否是IPV4地址
+	 * 
+	 * @param ip IP地址
+	 * @return 是否是IPV4
+	 */
+	public static boolean isIpv4(String ip) {
+		if(StrUtil.isBlank(ip)){
+			return false;
+		}
+		return IPV4.matcher(ip).matches();
+	}
+	
+	/**
+	 * 给定内容是否匹配正则
+	 * @param regex 正则
+	 * @param content 内容
+	 * @return 正则为null或者""则不检查，返回true，内容为null返回false
+	 */
+	public static boolean isMatch(String regex, String content) {
+		if(content == null) {
+			//提供null的字符串为不匹配
+			return false;
+		}
+		
+		if(StrUtil.isEmpty(regex)) {
+			//正则不存在则为全匹配
+			return true;
+		}
+		
+		return Pattern.matches(regex, content);
+	}
+}

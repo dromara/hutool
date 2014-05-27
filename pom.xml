@@ -4,7 +4,7 @@
 
 	<packaging>jar</packaging>
 
-	<groupId>looly.github</groupId>
+	<groupId>com.xiaoleilu</groupId>
 	<artifactId>hutool</artifactId>
 	<version>1.0.0</version>
 	<description>提供最基础的工具类</description>
@@ -104,6 +104,10 @@
 	<profiles>
 		<profile>
 			<id>release</id>
+			<properties>
+				<gpg.executable>gpg2</gpg.executable>
+				<gpg.passphrase>the_pass_phrase</gpg.passphrase>
+			</properties>
 			<distributionManagement>
 				<snapshotRepository>
 					<id>oss</id>
@@ -140,6 +144,20 @@
 								<phase>package</phase>
 								<goals>
 									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
 								</goals>
 							</execution>
 						</executions>
