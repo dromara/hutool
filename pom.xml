@@ -104,10 +104,6 @@
 	<profiles>
 		<profile>
 			<id>release</id>
-			<properties>
-				<gpg.executable>gpg2</gpg.executable>
-				<gpg.passphrase>the_pass_phrase</gpg.passphrase>
-			</properties>
 			<distributionManagement>
 				<snapshotRepository>
 					<id>oss</id>
