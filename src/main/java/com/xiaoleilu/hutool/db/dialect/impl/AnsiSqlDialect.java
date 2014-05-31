@@ -55,7 +55,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final List<Object> paramValues = new ArrayList<Object>(entity.size());
 		final StringBuilder sql = new StringBuilder();
-		sql.append("DELETE FROM `").append(entity.getTableName()).append(DbUtil.buildEqualsWhere(entity, paramValues));
+		sql.append("DELETE FROM `").append(entity.getTableName()).append("`").append(DbUtil.buildEqualsWhere(entity, paramValues));
 
 		final PreparedStatement ps = conn.prepareStatement(sql.toString());
 		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
@@ -79,8 +79,9 @@ public class AnsiSqlDialect implements Dialect {
 			sql.append("`").append(entry.getKey()).append("` = ? ");
 			paramValues.add(entry.getValue());
 		}
-		sql.append(DbUtil.buildEqualsWhere(entity, paramValues));
+		sql.append(DbUtil.buildEqualsWhere(where, paramValues));
 
+		System.out.println(sql);
 		final PreparedStatement ps = conn.prepareStatement(sql.toString());
 		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
 		return ps;
@@ -124,7 +125,7 @@ public class AnsiSqlDialect implements Dialect {
 		} else {
 			sql.append(CollectionUtil.join(fields, ","));
 		}
-		sql.append(" FROM ").append(where.getTableName()).append(DbUtil.buildEqualsWhere(where, paramValues));
+		sql.append(" FROM `").append(where.getTableName()).append("`").append(DbUtil.buildEqualsWhere(where, paramValues));
 
 		return sql;
 	}

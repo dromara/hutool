@@ -332,7 +332,7 @@ public class SqlRunner extends SqlExecutor{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return page(fields, where, page, numPerPage, rsh);
+			return page(conn, fields, where, page, numPerPage, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -358,6 +358,24 @@ public class SqlRunner extends SqlExecutor{
 			throw e;
 		} finally {
 			DbUtil.close(rs, ps);
+		}
+	}
+	
+	/**
+	 * 结果的条目数
+	 * @param where 查询条件
+	 * @return 复合条件的结果数
+	 * @throws SQLException
+	 */
+	public int count(Entity where) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return count(conn, where);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
 		}
 	}
 	//---------------------------------------------------------------------------- CRUD end

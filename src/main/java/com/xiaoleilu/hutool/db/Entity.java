@@ -23,6 +23,12 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 public class Entity extends HashMap<String, Object>{
 	private static final long serialVersionUID = -1951012511464327448L;
 	
+	//--------------------------------------------------------------- Static method start
+	public static Entity create(String tableName) {
+		return new Entity(tableName);
+	}
+	//--------------------------------------------------------------- Static method end
+	
 	private String tableName;
 	
 	//--------------------------------------------------------------- Constructor start
@@ -48,9 +54,11 @@ public class Entity extends HashMap<String, Object>{
 	/**
 	 * 设置表名
 	 * @param tableName 表名
+	 * @return 本身
 	 */
-	public void setTableName(String tableName) {
+	public Entity setTableName(String tableName) {
 		this.tableName = tableName;
+		return this;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
 	
@@ -84,6 +92,17 @@ public class Entity extends HashMap<String, Object>{
 	}
 	
 	//-------------------------------------------------------------------- 特定类型值
+	/**
+	 * 添加列
+	 * @param attr 属性
+	 * @param value 值
+	 * @return 本身
+	 */
+	public Entity add(String attr, Object value) {
+		super.put(attr, value);
+		return this;
+	}
+	
 	/**
 	 * 获得特定类型值
 	 * @param attr 字段名

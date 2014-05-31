@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
@@ -45,6 +46,17 @@ public class DbUtil {
 	 */
 	public static SqlRunner newSqlRunner(DataSource ds) {
 		return new SqlRunner(ds);
+	}
+	
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param ds 数据源
+	 * @param dialect SQL方言
+	 * @return SQL执行类
+	 */
+	public static SqlRunner newSqlRunner(DataSource ds, Dialect dialect) {
+		return new SqlRunner(ds, dialect);
 	}
 	
 	/**
@@ -173,7 +185,6 @@ public class DbUtil {
 	public static Long getGeneratedKey(PreparedStatement ps) throws SQLException {
 		ResultSet rs = null;
 		try {
-			ps.executeUpdate();
 			rs = ps.getGeneratedKeys(); 
 			Long generatedKey = null;
 			if(rs != null && rs.next()) {
@@ -200,9 +211,12 @@ public class DbUtil {
 		}
 		
 		final StringBuilder sb = new StringBuilder(" WHERE ");
+		boolean isNotFirst = false;
 		for (Entry<String, Object> entry : entity.entrySet()) {
-			if(paramValues.size() > 0) {
+			if(isNotFirst) {
 				sb.append(" and ");
+			}else {
+				isNotFirst = true;
 			}
 			sb.append("`").append(entry.getKey()).append("`").append(" = ?");
 			paramValues.add(entry.getValue());
