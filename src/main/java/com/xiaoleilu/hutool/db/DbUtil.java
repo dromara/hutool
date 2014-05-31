@@ -2,13 +2,16 @@ package com.xiaoleilu.hutool.db;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -131,6 +134,81 @@ public class DbUtil {
 		} catch (Exception e) {
 			throw new UtilException("Get colunms error!", e);
 		}
+	}
+	
+	/**
+	 * 填充SQL的参数。
+	 * 
+	 * @param ps PreparedStatement
+	 * @param params SQL参数
+	 * @throws SQLException
+	 */
+	public static void fillParams(PreparedStatement ps, Object... params) throws SQLException {
+		if (params == null) {
+			return;
+		}
+		ParameterMetaData pmd = ps.getParameterMetaData();
+		for (int i = 0; i < params.length; i++) {
+			int paramIndex = i + 1;
+			if (params[i] != null) {
+				ps.setObject(paramIndex, params[i]);
+			} else {
+				int sqlType = Types.VARCHAR;
+				try {
+					sqlType = pmd.getParameterType(paramIndex);
+				} catch (SQLException e) {
+					log.warn("Param get type fail, by: " + e.getMessage());
+				}
+				ps.setNull(paramIndex, sqlType);
+			}
+		}
+	}
+	
+	/**
+	 * 获得自增键的值
+	 * @param ps PreparedStatement
+	 * @return 自增键的值
+	 * @throws SQLException
+	 */
+	public static Long getGeneratedKey(PreparedStatement ps) throws SQLException {
+		ResultSet rs = null;
+		try {
+			ps.executeUpdate();
+			rs = ps.getGeneratedKeys(); 
+			Long generatedKey = null;
+			if(rs != null && rs.next()) {
+				generatedKey = rs.getLong(1);
+			}
+			return generatedKey;
+		} catch (SQLException e) {
+			throw e;
+		}finally {
+			close(rs);
+		}
+	}
+	
+	/**
+	 * 构件相等条件的where语句<br>
+	 * 如果没有条件语句，泽返回空串，表示没有条件
+	 * @param entity 条件实体
+	 * @param paramValues 条件值得存放List
+	 * @return 带where关键字的SQL部分
+	 */
+	public static String buildEqualsWhere(Entity entity, List<Object> paramValues) {
+		if(null == entity || entity.isEmpty()) {
+			return StrUtil.EMPTY;
+		}
+		
+		final StringBuilder sb = new StringBuilder(" WHERE ");
+		for (Entry<String, Object> entry : entity.entrySet()) {
+			if(paramValues.size() > 0) {
+				sb.append(" and ");
+			}
+			sb.append("`").append(entry.getKey()).append("`").append(" = ?");
+			paramValues.add(entry.getValue());
+		}
+		
+		return sb.toString();
 	}
 	
 	//---------------------------------------------------------------------------- Private method start

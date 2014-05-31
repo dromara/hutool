@@ -46,6 +46,6 @@ public class PageUtil {
 		if(numPerPage == 0) {
 			return 0;
 		}
-		return totalCount % numPerPage == 0 ? totalCount / numPerPage : totalCount / numPerPage + 1;
+		return totalCount % numPerPage == 0 ? (totalCount / numPerPage) : (totalCount / numPerPage + 1);
 	}
 }

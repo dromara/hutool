@@ -1,5 +1,10 @@
 package com.xiaoleilu.hutool.db;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 import com.xiaoleilu.hutool.Conver;
@@ -8,12 +13,46 @@ import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
- * 数据实体对象
+ * 数据实体对象<br>
+ * 数据实体类充当两个角色：<br>
+ * 1. 数据的载体，一个Entity对应数据库中的一个row<br>
+ * 2. SQL条件，Entity中的每一个字段对应一个条件，字段值对应条件的值
  * @author loolly
  *
  */
 public class Entity extends HashMap<String, Object>{
 	private static final long serialVersionUID = -1951012511464327448L;
+	
+	private String tableName;
+	
+	//--------------------------------------------------------------- Constructor start
+	public Entity() {
+	}
+	
+	/**
+	 * 构造
+	 * @param tableName 数据表名
+	 */
+	public Entity(String tableName) {
+		this.tableName = tableName;
+	}
+	//--------------------------------------------------------------- Constructor end
+	
+	//--------------------------------------------------------------- Getters and Setters start
+	/**
+	 * @return 获得表名
+	 */
+	public String getTableName() {
+		return tableName;
+	}
+	/**
+	 * 设置表名
+	 * @param tableName 表名
+	 */
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+	//--------------------------------------------------------------- Getters and Setters end
 	
 	/**
 	 * 填充Value Object对象
@@ -46,26 +85,110 @@ public class Entity extends HashMap<String, Object>{
 	
 	//-------------------------------------------------------------------- 特定类型值
 	/**
-	 * @param key 键
-	 * @return 获得字符串类型值
+	 * 获得特定类型值
+	 * @param attr 字段名
+	 * @param defaultValue 默认值
+	 * @return 字段值
 	 */
-	public String getStr(String key) {
-		return Conver.toStr(get(key), null);
+	@SuppressWarnings("unchecked")
+	public <T> T get(String attr, T defaultValue) {
+		final Object result = get(attr);
+		return (T)(result != null ? result : defaultValue);
 	}
 	
 	/**
-	 * @param key 键
-	 * @return 获得字符串类型值
+	 * @param attr 字段名
+	 * @return 字段值
 	 */
-	public Integer getInt(String key) {
-		return Conver.toInt(get(key), null);
+	public String getStr(String attr) {
+		return Conver.toStr(get(attr), null);
 	}
 	
 	/**
-	 * @param key 键
-	 * @return 获得字符串类型值
+	 * @param attr 字段名
+	 * @return 字段值
 	 */
-	public Long getLong(String key) {
-		return Conver.toLong(get(key), null);
+	public Integer getInt(String attr) {
+		return Conver.toInt(get(attr), null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public Long getLong(String attr) {
+		return Conver.toLong(get(attr), null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public Float getFloat(String attr) {
+		return Conver.toFloat(get(attr), null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public Boolean getBool(String attr) {
+		return Conver.toBool(get(attr), null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public byte[] getBytes(String attr) {
+		return get(attr, null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public Date getDate(String attr) {
+		return get(attr, null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public Time getTime(String attr) {
+		return get(attr, null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public Timestamp getTimestamp(String attr) {
+		return get(attr, null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public Number getNumber(String attr) {
+		return get(attr, null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public BigDecimal getBigDecimal(String attr) {
+		return get(attr, null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	public BigInteger getBigInteger(String attr) {
+		return get(attr, null);
 	}
 }

@@ -1,39 +1,49 @@
 package com.xiaoleilu.hutool.db;
 
 import java.sql.Connection;
-import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-
-import com.xiaoleilu.hutool.Log;
-import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.db.dialect.Dialect;
+import com.xiaoleilu.hutool.db.dialect.impl.AnsiSqlDialect;
+import com.xiaoleilu.hutool.db.handler.NumberHandler;
 
 /**
- * SQL执行类
+ * SQL执行类<br>
+ * 通过给定的数据源执行给定SQL或者给定数据源和方言，执行相应的CRUD操作
  * 
  * @author Luxiaolei
  * 
  */
-public class SqlRunner {
-	private static Logger log = Log.get();
-
+public class SqlRunner extends SqlExecutor{
 	private DataSource ds;
+	private Dialect dialect;
 
+	//------------------------------------------------------- Constructor start
+	/**
+	 * 构造，使用ANSI的SQL方言
+	 * @param ds 数据源
+	 */
 	public SqlRunner(DataSource ds) {
 		this.ds = ds;
+		//默认使用ANSI的SQL方言
+		dialect = new AnsiSqlDialect();
 	}
+	
+	/**
+	 * 构造
+	 * @param ds 数据源
+	 * @param dialect 方言
+	 */
+	public SqlRunner(DataSource ds, Dialect dialect) {
+		this.ds = ds;
+		this.dialect = dialect;
+	}
+	//------------------------------------------------------- Constructor end
 
 	/**
 	 * 查询
@@ -48,7 +58,7 @@ public class SqlRunner {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return this.query(conn, sql, rsh, params);
+			return query(conn, sql, rsh, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -57,79 +67,44 @@ public class SqlRunner {
 	}
 
 	/**
-	 * 查询<br/>
-	 * 发查询语句包括 插入、更新、删除<br/>
-	 * 此方法不会关闭Connection
-	 * 
-	 * @param conn 数据库连接对象
-	 * @param sql 查询语句
-	 * @param rsh 结果集处理对象
-	 * @param params 参数
-	 * @return 结果对象
-	 * @throws SQLException
-	 */
-	public <T> T query(Connection conn, String sql, RsHandler<T> rsh, Object... params) throws SQLException {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			ps = conn.prepareStatement(sql);
-			this.fillParams(ps, params);
-			rs = ps.executeQuery();
-			return rsh.handle(rs);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(rs, ps);
-		}
-	}
-
-	/**
-	 * 执行非查询语句<br/>
-	 * 发查询语句包括 插入、更新、删除
+	 * 执行非查询语句<br>
+	 * 语句包括 插入、更新、删除
 	 * 
 	 * @param sql SQL
 	 * @param params 参数
 	 * @return 主键
 	 * @throws SQLException
 	 */
-	public Long execute(String sql, Object... params) throws SQLException {
+	public int execute(String sql, Object... params) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return this.execute(conn, sql, params);
+			return execute(conn, sql, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			DbUtil.close(conn);
 		}
 	}
-
+	
 	/**
-	 * 执行非查询语句<br/>
-	 * 发查询语句包括 插入、更新、删除<br/>
-	 * 此方法不会关闭Connection
+	 * 执行非查询语句<br>
+	 * 语句包括 插入、更新、删除
 	 * 
-	 * @param conn 数据库连接对象
 	 * @param sql SQL
 	 * @param params 参数
 	 * @return 主键
 	 * @throws SQLException
 	 */
-	public Long execute(Connection conn, String sql, Object... params) throws SQLException {
-		PreparedStatement ps = null;
+	public Long executeForGeneratedKey(String sql, Object... params) throws SQLException {
+		Connection conn = null;
 		try {
-			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			this.fillParams(ps, params);
-			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys(); 
-			if(rs != null) {
-				return rs.getLong(1);
-			}
-			return null;
+			conn = ds.getConnection();
+			return executeForGeneratedKey(conn, sql, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			DbUtil.close(ps);
+			DbUtil.close(conn);
 		}
 	}
 
@@ -145,7 +120,7 @@ public class SqlRunner {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return this.executeBatch(conn, sql, paramsBatch);
+			return executeBatch(conn, sql, paramsBatch);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -153,26 +128,59 @@ public class SqlRunner {
 		}
 	}
 
+	//---------------------------------------------------------------------------- CRUD start
 	/**
-	 * 批量执行非查询语句<br/>
-	 * 发查询语句包括 插入、更新、删除<br/>
+	 * 插入数据<br>
 	 * 此方法不会关闭Connection
-	 * 
-	 * @param conn 数据库连接对象
-	 * @param sql SQL
-	 * @param paramsBatch 批量的参数
-	 * @return 每个SQL执行影响的行数
+	 * @param conn 数据库连接
+	 * @param record 记录
+	 * @return 主键
 	 * @throws SQLException
 	 */
-	public int[] executeBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
+	public Long insert(Connection conn, Entity record) throws SQLException {
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement(sql);
-			for (Object[] params : paramsBatch) {
-				this.fillParams(ps, params);
-				ps.addBatch();
-			}
-			return ps.executeBatch();
+			ps = dialect.psForInsert(conn, record);
+			ps.executeUpdate();
+			return DbUtil.getGeneratedKey(ps);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+
+	/**
+	 * 插入数据
+	 * @param record 记录
+	 * @return 主键
+	 * @throws SQLException
+	 */
+	public Long insert(Entity record) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return insert(conn, record);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
+	 * 删除数据<br>
+	 * 此方法不会关闭Connection
+	 * @param conn 数据库连接
+	 * @param where 条件
+	 * @return 主键
+	 * @throws SQLException
+	 */
+	public int del(Connection conn, Entity where) throws SQLException {
+		PreparedStatement ps = null;
+		try {
+			ps = dialect.psForDelete(conn, where);
+			return ps.executeUpdate();
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -181,182 +189,179 @@ public class SqlRunner {
 	}
 	
 	/**
-	 * 插入数据
+	 * 删除数据
+	 * @param where 条件
+	 * @return 主键
+	 * @throws SQLException
+	 */
+	public int del(Entity where) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return del(conn, where);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
+	 * 更新数据<br>
+	 * 此方法不会关闭Connection
 	 * @param conn 数据库连接
-	 * @param tableName 表名
-	 * @param isReplace 是否替换（会调用SQL的replace into方法）
 	 * @param record 记录
 	 * @return 主键
 	 * @throws SQLException
 	 */
-	public Long insert(Connection conn, String tableName,  boolean isReplace, Entity record) throws SQLException {
+	public int update(Connection conn, Entity record, Entity where) throws SQLException {
+		PreparedStatement ps = null;
+		try {
+			ps = dialect.psForUpdate(conn, record, where);
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 更新数据
+	 * @param record 记录
+	 * @return 主键
+	 * @throws SQLException
+	 */
+	public int update(Entity record, Entity where) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return update(conn, record, where);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
+	 * 查询<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public <T> T find(Connection conn, Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = this.psForInsert(conn, tableName, isReplace, record);
-			ps.executeUpdate();
-			rs = ps.getGeneratedKeys(); 
-			Long primaryKey = null;
-			if(rs != null && rs.next()) {
-				primaryKey = rs.getLong(1);
-			}
-			return primaryKey;
+			ps = dialect.psForFind(conn, fields, where);
+			rs = ps.executeQuery();
+			return rsh.handle(rs);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			DbUtil.close(rs, ps);
 		}
 	}
-
-	/**
-	 * 插入数据
-	 * @param tableName 表名
-	 * @param isReplace 是否替换（会调用SQL的replace into方法）
-	 * @param record 记录
-	 * @return 主键
-	 * @throws SQLException
-	 */
-	public Long insert(String tableName, boolean isReplace, Entity record) throws SQLException {
-		Connection conn = null;
-		try {
-			conn = ds.getConnection();
-			return insert(conn, tableName, isReplace, record);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(conn);
-		}
-	}
 	
 	/**
-	 * 批量插入数据
-	 * @param conn 数据库连接
-	 * @param tableName 表名
-	 * @param isReplace 是否替换（会调用SQL的replace into方法）
-	 * @param records 记录
-	 * @return 行数
-	 * @throws SQLException
-	 */
-	public int[] insertBatch(Connection conn, String tableName, boolean isReplace, Entity... records) throws SQLException {
-		if(records == null || records.length == 0) {
-			return null;
-		}
-		
-		if(records.length == 1) {
-			insert(conn, tableName, isReplace, records[0]);
-			return new int[]{1};
-		}
-		
-		PreparedStatement ps = null;
-		try {
-			ps = this.psForInsert(conn, tableName, isReplace, records);
-			return ps.executeBatch();
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(ps);
-		}
-	}
-	
-	/**
-	 * 批量插入数据
-	 * @param tableName 表名
-	 * @param isReplace 是否替换（会调用SQL的replace into方法）
-	 * @param records 记录
-	 * @return 行数
-	 * @throws SQLException
-	 */
-	public int[] insertBatch(String tableName, boolean isReplace, Entity... records) throws SQLException {
-		Connection conn = null;
-		try {
-			conn = ds.getConnection();
-			return insertBatch(conn, tableName, isReplace, records);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(conn);
-		}
-	}
-	//---------------------------------------------------------------------------- Private method start
-	/**
-	 * 填充SQL的参数。
+	 * 查询
 	 * 
-	 * @param ps PreparedStatement
-	 * @param params SQL参数
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
 	 * @throws SQLException
 	 */
-	private void fillParams(PreparedStatement ps, Object... params) throws SQLException {
-		if (params == null) {
-			return;
-		}
-		ParameterMetaData pmd = ps.getParameterMetaData();
-		for (int i = 0; i < params.length; i++) {
-			int paramIndex = i + 1;
-			if (params[i] != null) {
-				ps.setObject(paramIndex, params[i]);
-			} else {
-				int sqlType = Types.VARCHAR;
-				try {
-					sqlType = pmd.getParameterType(paramIndex);
-				} catch (SQLException e) {
-					log.warn("Param get type fail, by: " + e.getMessage());
-				}
-				ps.setNull(paramIndex, sqlType);
-			}
+	public <T> T find(Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return find(conn, fields, where, rsh);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
 		}
 	}
 	
 	/**
-	 * 构建Insert的PreparedStatement
-	 * @param conn Connection
-	 * @param tableName 表名
-	 * @param isReplace 是否使用Replace方式插入
-	 * @param records 插入的记录
-	 * @return PreparedStatement
-	 * @throws SQLException 
+	 * 分页查询<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException
 	 */
-	private PreparedStatement psForInsert(Connection conn, String tableName, boolean isReplace, Entity... records) throws SQLException {
-		if(records == null || records.length == 0) {
-			throw new UtilException("Records can not be null!");
+	public <T> T page(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, RsHandler<T> rsh) throws SQLException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = dialect.psForPage(conn, fields, where, page, numPerPage);
+			rs = ps.executeQuery();
+			return rsh.handle(rs);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(rs, ps);
 		}
-		
-		Map<String, Object> record = records[0];
-		final List<Object> firstItemParams = new ArrayList<Object>(record.size());
-		final StringBuilder sql = new StringBuilder();
-		
-		sql.append(isReplace ? "replace" : "insert");
-		sql.append(" into `");
-		sql.append(tableName.trim()).append("`(");
-		StringBuilder temp = new StringBuilder();
-		temp.append(") values(");
-		
-		for (Entry<String, Object> entry: record.entrySet()) {
-			if (firstItemParams.size() > 0) {
-				sql.append(", ");
-				temp.append(", ");
-			}
-			sql.append("`").append(entry.getKey()).append("`");
-			temp.append("?");
-			firstItemParams.add(entry.getValue());
-		}
-		sql.append(temp.toString()).append(")");
-		
-		final PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-		if(records.length > 1) {
-			for (Entity map : records) {
-				Collection<Object> params = map.values();
-				if(params.size() != firstItemParams.size()) {
-					insert(conn, tableName, isReplace, map);
-					continue;
-				}
-				fillParams(ps, params.toArray(new Object[record.size()]));
-				//只有多于一条才是批量模式
-				ps.addBatch();
-			}
-		}else {
-			fillParams(ps, firstItemParams.toArray(new Object[firstItemParams.size()]));
-		}
-		return ps;
 	}
+	
+	/**
+	 * 分页查询<br/>
+	 * 
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public <T> T page(Collection<String> fields, Entity where, int page, int numPerPage, RsHandler<T> rsh) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return page(fields, where, page, numPerPage, rsh);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
+	 * 结果的条目数
+	 * @param conn 数据库连接对象
+	 * @param where 查询条件
+	 * @return 复合条件的结果数
+	 * @throws SQLException
+	 */
+	public int count(Connection conn, Entity where) throws SQLException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = dialect.psForCount(conn, where);
+			rs = ps.executeQuery();
+			return new NumberHandler().handle(rs).intValue();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(rs, ps);
+		}
+	}
+	//---------------------------------------------------------------------------- CRUD end
+	
+	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method start
 }

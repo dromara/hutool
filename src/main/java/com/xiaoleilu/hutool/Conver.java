@@ -18,7 +18,13 @@ public class Conver {
 	 * @return 结果
 	 */
 	public static String toStr(Object value, String defaultValue) {
-		return value == null ? defaultValue : value.toString();
+		if(null == value) {
+			return defaultValue;
+		}
+		if(value instanceof String) {
+			return (String)value;
+		}
+		return value.toString();
 	}
 
 	/**
@@ -32,6 +38,9 @@ public class Conver {
 	 */
 	public static Integer toInt(Object value, Integer defaultValue) {
 		if (value == null) return defaultValue;
+		if(value instanceof Integer) {
+			return (Integer)value;
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)) return defaultValue;
 		try {
@@ -52,6 +61,9 @@ public class Conver {
 	 */
 	public static Long toLong(Object value, Long defaultValue) {
 		if (value == null) return defaultValue;
+		if(value instanceof Long) {
+			return (Long)value;
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)) return defaultValue;
 		try {
@@ -72,10 +84,36 @@ public class Conver {
 	 */
 	public static Double toDouble(Object value, Double defaultValue) {
 		if (value == null) return defaultValue;
+		if(value instanceof Double) {
+			return (Double)value;
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)) return defaultValue;
 		try {
 			return Double.parseDouble(valueStr);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * 转换为Float<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static Float toFloat(Object value, Float defaultValue) {
+		if (value == null) return defaultValue;
+		if(value instanceof Float) {
+			return (Float)value;
+		}
+		final String valueStr = value.toString();
+		if (StrUtil.isBlank(valueStr)) return defaultValue;
+		try {
+			return Float.parseFloat(valueStr);
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -92,6 +130,9 @@ public class Conver {
 	 */
 	public static Boolean toBool(Object value, Boolean defaultValue) {
 		if (value == null) return defaultValue;
+		if(value instanceof Boolean) {
+			return (Boolean)value;
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)) return defaultValue;
 		try {
