@@ -20,8 +20,8 @@ public class HandleHelper {
 	 * @return 每一行的Map
 	 * @throws SQLException
 	 */
-	public static Entity handleRow(int columnCount, ResultSetMetaData  meta, ResultSet rs) throws SQLException {
-		final Entity row = new Entity();
+	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
+		final Entity row = Entity.create(meta.getTableName(1));
 		String columnLabel;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);

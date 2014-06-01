@@ -15,6 +15,8 @@ import com.xiaoleilu.hutool.FileUtil;
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.Setting;
 import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.db.DbUtil;
+import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.exceptions.SettingException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -25,14 +27,14 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 
  */
 public class DruidDS {
-	private static Logger logger = Log.get();
+	private static Logger log = Log.get();
 	
 	/** 默认的Druid配置文件路径 */
 	public final static String DEFAULT_DRUID_CONFIG_PATH = "config/druid.setting";
 	/** 默认的数据库连接配置文件路径 */
 	public final static String DEFAULT_DB_CONFIG_PATH = "config/db.setting";
 	/** 默认的数据库连接驱动（MySQL） */
-	public final static String DEFAULT_DRIVER = "com.mysql.jdbc.Driver";
+	public final static String DEFAULT_DRIVER = DialectFactory.DRIVER_MYSQL;
 
 	/*--------------------------私有变量 start-------------------------------*/
 	/** JDBC配置对象 */
@@ -58,7 +60,7 @@ public class DruidDS {
 			try {
 				druidSetting = new Setting(DEFAULT_DRUID_CONFIG_PATH, Setting.DEFAULT_CHARSET, true);
 			}catch(Exception e) {
-				logger.info("Druid setting file {} not found.", DEFAULT_DRUID_CONFIG_PATH);
+				log.info("Druid setting file {} not found.", DEFAULT_DRUID_CONFIG_PATH);
 			}
 		}
 		// 初始化数据库连接配置文件
@@ -67,7 +69,7 @@ public class DruidDS {
 			try {
 				dbSetting = new Setting(DEFAULT_DB_CONFIG_PATH, Setting.DEFAULT_CHARSET, true);
 			}catch(Exception e) {
-				logger.info("No default DB config file {} found, custom to init it.", DEFAULT_DB_CONFIG_PATH);
+				log.info("No default DB config file {} found, custom to init it.", DEFAULT_DB_CONFIG_PATH);
 			}
 		}
 	}
@@ -99,23 +101,22 @@ public class DruidDS {
 
 		// 基本连接信息
 		final DruidDataSource dds = new DruidDataSource();
-		if(druidSetting != null) {
-			try {
-				// 连接池参数注入
-				druidSetting.toObject(dds);
-			} catch (SettingException e) {
-				throw new UtilException("Read Druid setting error!", e);
-			}
-		}
-		// 基本连接信息
+		injectSetting(druidSetting, dds);
+		
 		dds.setName(group); // 数据源名称为连接名称
-		dds.setDriverClassName(dbSetting.getStringWithDefault("driver", group, DEFAULT_DRIVER));
 		
 		final String jdbcUrl = dbSetting.getString("url", group);
-		Log.debug("JDBC url: {}", jdbcUrl);
+		Log.debug(log, "JDBC url: {}", jdbcUrl);
+		dds.setDriverClassName(dbSetting.getStringWithDefault("driver", group, DbUtil.identifyDriver(jdbcUrl)));
 		dds.setUrl(jdbcUrl);
 		dds.setUsername(dbSetting.getString("user", group));
 		dds.setPassword(dbSetting.getString("pass", group));
+		
+		//此连接自定义的连接池配置
+		String dsSettingPath = dbSetting.getString("ds.setting.path");
+		if(StrUtil.isNotBlank(dsSettingPath)) {
+			injectSetting(new Setting(dsSettingPath), dds);
+		}
 		
 		// 添加到数据源池中，以备下次使用
 		dsMap.put(group, dds);
@@ -127,7 +128,7 @@ public class DruidDS {
 	 * 
 	 * @return 数据源
 	 */
-	synchronized public static DataSource getDataSource() {
+	public static DataSource getDataSource() {
 		return getDataSource(null);
 	}
 
@@ -139,7 +140,7 @@ public class DruidDS {
 	 * @throws SQLException
 	 * @throws ConnException
 	 */
-	synchronized public static Connection getConnection(String datasource) throws SQLException {
+	public static Connection getConnection(String datasource) throws SQLException {
 		return getDataSource(datasource).getConnection();
 	}
 
@@ -150,7 +151,7 @@ public class DruidDS {
 	 * @throws SQLException
 	 * @throws ConnException
 	 */
-	synchronized public static Connection getConnection() throws SQLException {
+	public static Connection getConnection() throws SQLException {
 		return getConnection(null);
 	}
 
@@ -190,4 +191,17 @@ public class DruidDS {
 		}
 		dsMap.clear();
 	}
+	
+	//------------------------------------------------------------------- Private method start
+	private static void injectSetting(Setting setting, DruidDataSource dds) {
+		if(null != setting) {
+			try {
+				// 连接池参数注入
+				setting.toObject(dds);
+			} catch (SettingException e) {
+				throw new UtilException("Read Druid setting error!", e);
+			}
+		}
+	}
+	//------------------------------------------------------------------- Private method end
 }

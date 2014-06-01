@@ -512,4 +512,26 @@ public class CollectionUtil {
 		
 		return map;
 	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 */
+	public static <T> boolean contains(T[] array, T value) {
+		final Class<?> componetType = array.getClass().getComponentType();
+		boolean isPrimitive = false;
+		if(null != componetType) {
+			isPrimitive = componetType.isPrimitive();
+		}
+		for (T t : array) {
+			if(t == value) {
+				return true;
+			}else if(false == isPrimitive && null != value && value.equals(t)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

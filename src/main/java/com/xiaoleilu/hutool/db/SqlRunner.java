@@ -9,6 +9,7 @@ import java.util.Collection;
 import javax.sql.DataSource;
 
 import com.xiaoleilu.hutool.db.dialect.Dialect;
+import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.dialect.impl.AnsiSqlDialect;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
 
@@ -22,6 +23,35 @@ import com.xiaoleilu.hutool.db.handler.NumberHandler;
 public class SqlRunner extends SqlExecutor{
 	private DataSource ds;
 	private Dialect dialect;
+	
+	/**
+	 * 创建SqlRunner，使用ANSI的SQL方言
+	 * @param ds 数据源
+	 * @return SqlRunner
+	 */
+	public static SqlRunner create(DataSource ds) {
+		return new SqlRunner(ds);
+	}
+	
+	/**
+	 * 创建SqlRunner，使用ANSI的SQL方言
+	 * @param ds 数据源
+	 * @param dialect 方言
+	 * @return SqlRunner
+	 */
+	public static SqlRunner create(DataSource ds, Dialect dialect) {
+		return new SqlRunner(ds, dialect);
+	}
+	
+	/**
+	 * 创建SqlRunner，使用ANSI的SQL方言
+	 * @param ds 数据源
+	 * @param driverClassName 数据库连接驱动类名
+	 * @return SqlRunner
+	 */
+	public static SqlRunner create(DataSource ds, String driverClassName) {
+		return new SqlRunner(ds, DialectFactory.newDialect(driverClassName));
+	}
 
 	//------------------------------------------------------- Constructor start
 	/**
@@ -29,9 +59,8 @@ public class SqlRunner extends SqlExecutor{
 	 * @param ds 数据源
 	 */
 	public SqlRunner(DataSource ds) {
-		this.ds = ds;
 		//默认使用ANSI的SQL方言
-		dialect = new AnsiSqlDialect();
+		this(ds, new AnsiSqlDialect());
 	}
 	
 	/**
@@ -72,7 +101,7 @@ public class SqlRunner extends SqlExecutor{
 	 * 
 	 * @param sql SQL
 	 * @param params 参数
-	 * @return 主键
+	 * @return 影响行数
 	 * @throws SQLException
 	 */
 	public int execute(String sql, Object... params) throws SQLException {
@@ -173,7 +202,7 @@ public class SqlRunner extends SqlExecutor{
 	 * 此方法不会关闭Connection
 	 * @param conn 数据库连接
 	 * @param where 条件
-	 * @return 主键
+	 * @return 影响行数
 	 * @throws SQLException
 	 */
 	public int del(Connection conn, Entity where) throws SQLException {
@@ -191,7 +220,7 @@ public class SqlRunner extends SqlExecutor{
 	/**
 	 * 删除数据
 	 * @param where 条件
-	 * @return 主键
+	 * @return 影响行数
 	 * @throws SQLException
 	 */
 	public int del(Entity where) throws SQLException {
@@ -211,7 +240,7 @@ public class SqlRunner extends SqlExecutor{
 	 * 此方法不会关闭Connection
 	 * @param conn 数据库连接
 	 * @param record 记录
-	 * @return 主键
+	 * @return 影响行数
 	 * @throws SQLException
 	 */
 	public int update(Connection conn, Entity record, Entity where) throws SQLException {
@@ -229,7 +258,7 @@ public class SqlRunner extends SqlExecutor{
 	/**
 	 * 更新数据
 	 * @param record 记录
-	 * @return 主键
+	 * @return 影响行数
 	 * @throws SQLException
 	 */
 	public int update(Entity record, Entity where) throws SQLException {

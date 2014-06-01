@@ -3,7 +3,15 @@
 # ----- 数据库配置文件 -----
 # -------------------------------------------------------------
 
-[vmware]
+#中括表示一个分组，其下面的所有属性归属于这个分组，在此分组名为demo，也可以没有分组
+[demo]
+#自定义数据源设置文件，这个文件会针对当前分组生效，用于给当前分组配置单独的数据库连接池参数，没有则使用全局的配置
+ds.setting.path = config/other.setting
+#数据库驱动名，如果不指定，则会根据url自动判定
+driver = com.mysql.jdbc.Driver
+#JDBC url，必须
 url = jdbc:mysql://fedora.vmware:3306/extractor
+#用户名，必须
 user = root
+#密码，必须，如果密码为空，请填写 pass = 
 pass = 123456

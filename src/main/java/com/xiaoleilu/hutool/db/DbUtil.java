@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -23,6 +22,9 @@ import org.slf4j.Logger;
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
+import com.xiaoleilu.hutool.db.dialect.DialectFactory;
+import com.xiaoleilu.hutool.db.meta.Column;
+import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
@@ -93,8 +95,7 @@ public class DbUtil {
 	 */
 	public static DataSource getJndiDs(String jndiName) {
 		try {
-			Context ctx = new InitialContext();
-			return (DataSource) ctx.lookup(jndiName);
+			return (DataSource) new InitialContext().lookup(jndiName);
 		} catch (NamingException e) {
 			log.error("Find JNDI datasource error!", e);
 		}
@@ -134,18 +135,77 @@ public class DbUtil {
 	 * @param rs 结果集
 	 * @return 列名数组
 	 */
-	public static String[] getColumns(ResultSet rs) {
+	public static String[] getColumnNames(ResultSet rs) {
 		try {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
-			String[] labelNames = new String[columnCount + 1];
-			for (int i=1; i<labelNames.length; i++) {
-				labelNames[i] = rsmd.getColumnLabel(i);
+			String[] labelNames = new String[columnCount];
+			for (int i=0; i<labelNames.length; i++) {
+				labelNames[i] = rsmd.getColumnLabel(i +1);
 			}
 			return labelNames;
 		} catch (Exception e) {
 			throw new UtilException("Get colunms error!", e);
 		}
+	}
+	
+	/**
+	 * 获得表的所有列名
+	 * @param ds 数据源
+	 * @param tableName 表名
+	 * @return 列数组
+	 * @throws SQLException
+	 */
+	public static String[] getColumnNames(DataSource ds, String tableName) {
+		List<String> columnNames = new ArrayList<String>();
+		Connection conn = null;
+		ResultSet rs = null;
+		try {
+			conn = ds.getConnection();
+			final DatabaseMetaData metaData = conn.getMetaData();
+			rs = metaData.getColumns(conn.getCatalog(), null, tableName, null);
+			while(rs.next()) {
+				columnNames.add(rs.getString("COLUMN_NAME"));
+			}
+			return columnNames.toArray(new String[columnNames.size()]);
+		} catch (Exception e) {
+			throw new UtilException("Get columns error!", e);
+		}finally {
+			close(rs, conn);
+		}
+	}
+	
+	/**
+	 * 获得表的元信息
+	 * @param ds 数据源
+	 * @param tableName 表名
+	 * @return Table对象
+	 */
+	public static Table getTableMeta(DataSource ds, String tableName) {
+		final Table table = Table.create(tableName);
+		Connection conn = null;
+		ResultSet rs = null;
+		try {
+			conn = ds.getConnection();
+			final DatabaseMetaData metaData = conn.getMetaData();
+			//获得主键
+			rs = metaData.getPrimaryKeys(conn.getCatalog(), null, tableName);
+			while(rs.next()) {
+				table.addPk("COLUMN_NAME");
+			}
+			
+			//获得列
+			rs = metaData.getColumns(conn.getCatalog(), null, tableName, null);
+			while(rs.next()) {
+				table.setColumn(Column.create(tableName, rs));
+			}
+		} catch (Exception e) {
+			throw new UtilException("Get columns error!", e);
+		}finally {
+			close(rs, conn);
+		}
+		
+		return table;
 	}
 	
 	/**
@@ -223,6 +283,31 @@ public class DbUtil {
 		}
 		
 		return sb.toString();
+	}
+	
+	/**
+	 * 识别JDBC驱动名
+	 * @param jdbcUrl jdbc连接字符串
+	 * @return 驱动
+	 */
+	public static String identifyDriver(String jdbcUrl) {
+		if(StrUtil.isBlank(jdbcUrl)) {
+			return null;
+		}
+		jdbcUrl = jdbcUrl.toLowerCase();
+		
+		String driver = null;
+		if(jdbcUrl.contains("mysql")) {
+			driver = DialectFactory.DRIVER_MYSQL;
+		}else if(jdbcUrl.contains("oracle")) {
+			driver = DialectFactory.DRIVER_ORACLE;
+		}else if(jdbcUrl.contains("postgresql")) {
+			driver = DialectFactory.DRIVER_POSTGRESQL;
+		}else if(jdbcUrl.contains("sqllite")) {
+			driver = DialectFactory.DRIVER_SQLLITE3;
+		}
+		
+		return driver;
 	}
 	
 	//---------------------------------------------------------------------------- Private method start

@@ -228,6 +228,10 @@ public class ClassUtil {
 	 * @return 基本类型类
 	 */
 	public static Class<?> castToPrimitive(Class<?> clazz) {
+		if(null == clazz || clazz.isPrimitive()) {
+			return clazz;
+		}
+		
 		BASIC_TYPE basicType;
 		try {
 			basicType = BASIC_TYPE.valueOf(clazz.getSimpleName().toUpperCase());

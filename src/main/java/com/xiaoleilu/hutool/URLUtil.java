@@ -21,8 +21,7 @@ public class URLUtil {
 	 * @return URL
 	 */
 	public static URL getURL(String pathBaseClassLoader) {
-		ClassLoader classLoader = ClassUtil.getClassLoader();
-		return classLoader.getResource(pathBaseClassLoader);
+		return ClassUtil.getClassLoader().getResource(pathBaseClassLoader);
 	}
 
 	/**

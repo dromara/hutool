@@ -93,12 +93,12 @@ public class Entity extends HashMap<String, Object>{
 	
 	//-------------------------------------------------------------------- 特定类型值
 	/**
-	 * 添加列
+	 * 设置列
 	 * @param attr 属性
 	 * @param value 值
 	 * @return 本身
 	 */
-	public Entity add(String attr, Object value) {
+	public Entity set(String attr, Object value) {
 		super.put(attr, value);
 		return this;
 	}
