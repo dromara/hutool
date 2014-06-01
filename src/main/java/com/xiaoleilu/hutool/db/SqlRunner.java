@@ -8,9 +8,9 @@ import java.util.Collection;
 
 import javax.sql.DataSource;
 
+import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
-import com.xiaoleilu.hutool.db.dialect.impl.AnsiSqlDialect;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
 
 /**
@@ -25,7 +25,8 @@ public class SqlRunner extends SqlExecutor{
 	private Dialect dialect;
 	
 	/**
-	 * 创建SqlRunner，使用ANSI的SQL方言
+	 * 创建SqlRunner<br>
+	 * 会根据数据源连接的元信息识别目标数据库类型，进而使用合适的数据源
 	 * @param ds 数据源
 	 * @return SqlRunner
 	 */
@@ -59,8 +60,7 @@ public class SqlRunner extends SqlExecutor{
 	 * @param ds 数据源
 	 */
 	public SqlRunner(DataSource ds) {
-		//默认使用ANSI的SQL方言
-		this(ds, new AnsiSqlDialect());
+		this(ds, DialectFactory.newDialect(ds));
 	}
 	
 	/**
@@ -69,6 +69,8 @@ public class SqlRunner extends SqlExecutor{
 	 * @param dialect 方言
 	 */
 	public SqlRunner(DataSource ds, Dialect dialect) {
+		Log.info("Use Dialect: [{}].", dialect.getClass().getSimpleName());
+		
 		this.ds = ds;
 		this.dialect = dialect;
 	}

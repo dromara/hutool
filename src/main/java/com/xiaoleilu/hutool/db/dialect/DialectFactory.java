@@ -1,6 +1,9 @@
 package com.xiaoleilu.hutool.db.dialect;
 
+import javax.sql.DataSource;
+
 import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.dialect.impl.AnsiSqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.MysqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.OracleDialect;
@@ -42,5 +45,14 @@ public class DialectFactory {
 		}
 		
 		return new AnsiSqlDialect();
+	}
+	
+	/**
+	 * 创建方言
+	 * @param ds 数据源
+	 * @return 方言
+	 */
+	public static Dialect newDialect(DataSource ds) {
+		return newDialect(DbUtil.identifyDriver(ds));
 	}
 }

@@ -287,24 +287,47 @@ public class DbUtil {
 	
 	/**
 	 * 识别JDBC驱动名
-	 * @param jdbcUrl jdbc连接字符串
+	 * @param nameContainsProductInfo 包含数据库标识的字符串
 	 * @return 驱动
 	 */
-	public static String identifyDriver(String jdbcUrl) {
-		if(StrUtil.isBlank(jdbcUrl)) {
+	public static String identifyDriver(String nameContainsProductInfo) {
+		if(StrUtil.isBlank(nameContainsProductInfo)) {
 			return null;
 		}
-		jdbcUrl = jdbcUrl.toLowerCase();
+		nameContainsProductInfo = nameContainsProductInfo.toLowerCase();
 		
 		String driver = null;
-		if(jdbcUrl.contains("mysql")) {
+		if(nameContainsProductInfo.contains("mysql")) {
 			driver = DialectFactory.DRIVER_MYSQL;
-		}else if(jdbcUrl.contains("oracle")) {
+		}else if(nameContainsProductInfo.contains("oracle")) {
 			driver = DialectFactory.DRIVER_ORACLE;
-		}else if(jdbcUrl.contains("postgresql")) {
+		}else if(nameContainsProductInfo.contains("postgresql")) {
 			driver = DialectFactory.DRIVER_POSTGRESQL;
-		}else if(jdbcUrl.contains("sqllite")) {
+		}else if(nameContainsProductInfo.contains("sqllite")) {
 			driver = DialectFactory.DRIVER_SQLLITE3;
+		}
+		
+		return driver;
+	}
+	
+	/**
+	 * 识别JDBC驱动名
+	 * @param ds 数据源
+	 * @return 驱动
+	 */
+	public static String identifyDriver(DataSource ds) {
+		Connection conn = null;
+		String driver = null;
+		try {
+			conn = ds.getConnection();
+			DatabaseMetaData meta = conn.getMetaData();
+			driver =  identifyDriver(meta.getDatabaseProductName());
+			if(StrUtil.isBlank(driver)) {
+				driver =  identifyDriver(meta.getDriverName());
+			}
+		} catch (SQLException e) {
+		}finally {
+			close(conn);
 		}
 		
 		return driver;

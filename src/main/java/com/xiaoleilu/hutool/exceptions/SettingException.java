@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.exceptions;
 
+import com.xiaoleilu.hutool.StrUtil;
+
 /**
  * 设置异常
  * @author xiaoleilu
@@ -15,7 +17,15 @@ public class SettingException extends Exception{
 		super(message);
 	}
 	
+	public SettingException(String messageTemplate, Object... params) {
+		super(StrUtil.format(messageTemplate, params));
+	}
+	
 	public SettingException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+	
+	public SettingException(Throwable throwable, String messageTemplate, Object... params) {
+		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

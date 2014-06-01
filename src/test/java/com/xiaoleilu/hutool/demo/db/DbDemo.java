@@ -16,6 +16,7 @@ import com.xiaoleilu.hutool.db.SqlExecutor;
 import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.ds.DruidDS;
+import com.xiaoleilu.hutool.db.ds.SimpleDataSource;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
 
@@ -27,8 +28,14 @@ import com.xiaoleilu.hutool.db.meta.Table;
  */
 public class DbDemo {
 	private final static Logger log = Log.get();
+	
+	private static String TABLE_NAME = "test_table";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
+		DataSource ds = new SimpleDataSource("test");
+		SqlRunner runner = SqlRunner.create(ds);
+		int c = runner.count(Entity.create("gs_epg"));
+		System.out.println(c);
 	}
 	
 	/**
@@ -53,7 +60,7 @@ public class DbDemo {
 		 * 	如果没有druid.setting文件，使用连接池默认的参数
 		 * 	可以配置多个数据源，用分组隔离 
 		 */
-		DataSource ds = DruidDS.getDataSource("demo");
+		DataSource ds = DruidDS.getDataSource("test");
 
 		/* 当然，如果你不喜欢用DruidDS类，你也可以自己去实例化连接池的数据源
 			具体的配置参数请参阅Druid官方文档 */
@@ -77,15 +84,14 @@ public class DbDemo {
 		try {
 			conn = ds.getConnection();
 			// 执行非查询语句，返回影响的行数
-			int count = SqlExecutor.execute(conn, "UPDATE table_name set field1 = ? where id = ?", 0, 0);
+			int count = SqlExecutor.execute(conn, "UPDATE " + TABLE_NAME + " set field1 = ? where id = ?", 0, 0);
 			log.info("影响行数：{}", count);
 			// 执行非查询语句，返回自增的键，如果有多个自增键，只返回第一个
-			Long generatedKey = SqlExecutor.executeForGeneratedKey(conn, "UPDATE table_name set field1 = ? where id = ?", 0, 0);
+			Long generatedKey = SqlExecutor.executeForGeneratedKey(conn, "UPDATE " + TABLE_NAME + " set field1 = ? where id = ?", 0, 0);
 			log.info("主键：{}", generatedKey);
 
-			/* 执行查询语句，返回实体列表，一个Entity对象表示一行的数据
-				Entity对象是一个继承自HashMap的对象，存储的key为字段名，value为字段值 */
-			List<Entity> entityList = SqlExecutor.query(conn, "select * from table_name where param1 = ?", new EntityHandler(), "值");
+			/* 执行查询语句，返回实体列表，一个Entity对象表示一行的数据，Entity对象是一个继承自HashMap的对象，存储的key为字段名，value为字段值 */
+			List<Entity> entityList = SqlExecutor.query(conn, "select * from " + TABLE_NAME + " where param1 = ?", new EntityHandler(), "值");
 			log.info("{}", entityList);
 		} catch (SQLException e) {
 			Log.error(log, e, "SQL error!");
@@ -108,8 +114,8 @@ public class DbDemo {
 			// 指定数据库方言，在此为MySQL
 			runner = SqlRunner.create(ds, DialectFactory.DRIVER_MYSQL);
 
-			Entity entity = Entity.create("table_name").set("字段1", "值").set("字段2", 2);
-			Entity where = Entity.create("table_name").set("条件1", "条件值");
+			Entity entity = Entity.create(TABLE_NAME).set("字段1", "值").set("字段2", 2);
+			Entity where = Entity.create(TABLE_NAME).set("条件1", "条件值");
 
 			// 增，生成SQL为 INSERT INTO `table_name` SET(`字段1`, `字段2`) VALUES(?,?)
 			runner.insert(entity);
@@ -150,7 +156,7 @@ public class DbDemo {
 		 * 获得表结构
 		 * 表结构封装为一个表对象，里面有Column对象表示一列，列中有列名、类型、大小、是否允许为空等信息
 		 */
-		Table table = DbUtil.getTableMeta(ds, "table_name");
+		Table table = DbUtil.getTableMeta(ds, TABLE_NAME);
 		Log.info("{}", table);
 	}
 }

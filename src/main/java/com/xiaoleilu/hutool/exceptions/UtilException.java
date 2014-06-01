@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.exceptions;
 
+import com.xiaoleilu.hutool.StrUtil;
+
 /**
  * 未初始化异常
  * @author xiaoleilu
@@ -15,7 +17,15 @@ public class UtilException extends RuntimeException{
 		super(message);
 	}
 	
+	public UtilException(String messageTemplate, Object... params) {
+		super(StrUtil.format(messageTemplate, params));
+	}
+	
 	public UtilException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+	
+	public UtilException(Throwable throwable, String messageTemplate, Object... params) {
+		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }

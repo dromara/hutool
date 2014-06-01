@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.exceptions;
 
+import com.xiaoleilu.hutool.StrUtil;
+
 /**
  * 未初始化异常
  * @author xiaoleilu
@@ -15,7 +17,15 @@ public class NotInitedException extends RuntimeException{
 		super(message);
 	}
 	
+	public NotInitedException(String messageTemplate, Object... params) {
+		super(StrUtil.format(messageTemplate, params));
+	}
+	
 	public NotInitedException(String message, Throwable throwable) {
 		super(message, throwable);
+	}
+	
+	public NotInitedException(Throwable throwable, String messageTemplate, Object... params) {
+		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 }
