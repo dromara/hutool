@@ -15,7 +15,6 @@ import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Session;
 import com.xiaoleilu.hutool.db.SqlExecutor;
 import com.xiaoleilu.hutool.db.SqlRunner;
-import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.ds.DruidDS;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
@@ -96,7 +95,7 @@ public class DbDemo {
 	}
 
 	/**
-	 * SqlRunner是继承自SqlExecutor的，所以相应的方法也继承了下来，可以像S去了Executor一样使用<br>
+	 * SqlRunner是继承自SqlExecutor的，所以相应的方法也继承了下来，可以像SqlExecutor一样使用<br>
 	 * 当然，SqlRunner更强大的功能在于对Entity对象做CRUD，避免写SQL语句。 SqlRunner需要实例化
 	 * 
 	 * SqlRunner同时提供了带Connection参数的CRUD方法，方便外部提供Connection对象而由使用者提供事务的操作
@@ -110,7 +109,7 @@ public class DbDemo {
 		try {
 			SqlRunner runner = SqlRunner.create(ds);
 			// 指定数据库方言，在此为MySQL
-			runner = SqlRunner.create(ds, DialectFactory.DRIVER_MYSQL);
+			runner = SqlRunner.create(ds);
 
 			// 增，生成SQL为 INSERT INTO `table_name` SET(`字段1`, `字段2`) VALUES(?,?)
 			runner.insert(entity);
