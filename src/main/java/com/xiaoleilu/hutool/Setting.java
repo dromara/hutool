@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.xiaoleilu.hutool.exceptions.SettingException;
 
@@ -34,7 +33,7 @@ import com.xiaoleilu.hutool.exceptions.SettingException;
  */
 public class Setting extends HashMap<String, String> {
 	private static final long serialVersionUID = -477527787843971824L;
-	private static Logger log = LoggerFactory.getLogger(Setting.class);
+	private static Logger log = Log.get();
 
 	/** 默认字符集 */
 	public final static String DEFAULT_CHARSET = "utf8";
