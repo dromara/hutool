@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xiaoleilu.hutool.db.Entity;
-import com.xiaoleilu.hutool.db.RsHandler;
 
 /**
  * 结果集处理类 ，处理出的结果为Entity列表

@@ -5,7 +5,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import com.xiaoleilu.hutool.db.Entity;
-import com.xiaoleilu.hutool.db.RsHandler;
 
 /**
  * 

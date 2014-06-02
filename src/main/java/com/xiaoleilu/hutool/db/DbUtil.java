@@ -25,6 +25,7 @@ import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
+import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
@@ -106,7 +107,7 @@ public class DbUtil {
 	 * 获得所有表名
 	 */
 	public static List<String> getTables(DataSource ds) {
-		List<String> tables = new ArrayList<String>();
+		final List<String> tables = new ArrayList<String>();
 		Connection conn = null;
 		ResultSet rs = null;
 		try {
@@ -320,14 +321,31 @@ public class DbUtil {
 		String driver = null;
 		try {
 			conn = ds.getConnection();
+			driver = identifyDriver(conn);
+		} catch (Exception e) {
+			throw new DbRuntimeException("Identify driver error!", e);
+		}finally {
+			close(conn);
+		}
+		
+		return driver;
+	}
+	
+	/**
+	 * 识别JDBC驱动名
+	 * @param conn 数据库连接对象
+	 * @return 驱动
+	 */
+	public static String identifyDriver(Connection conn) {
+		String driver = null;
+		try {
 			DatabaseMetaData meta = conn.getMetaData();
 			driver =  identifyDriver(meta.getDatabaseProductName());
 			if(StrUtil.isBlank(driver)) {
 				driver =  identifyDriver(meta.getDriverName());
 			}
 		} catch (SQLException e) {
-		}finally {
-			close(conn);
+			throw new DbRuntimeException("Identify driver error!", e);
 		}
 		
 		return driver;

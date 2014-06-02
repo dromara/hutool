@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.db.dialect;
 
+import java.sql.Connection;
+
 import javax.sql.DataSource;
 
 import com.xiaoleilu.hutool.StrUtil;
@@ -54,5 +56,14 @@ public class DialectFactory {
 	 */
 	public static Dialect newDialect(DataSource ds) {
 		return newDialect(DbUtil.identifyDriver(ds));
+	}
+	
+	/**
+	 * 创建方言
+	 * @param conn 数据库连接对象
+	 * @return 方言
+	 */
+	public static Dialect newDialect(Connection conn) {
+		return newDialect(DbUtil.identifyDriver(conn));
 	}
 }

@@ -3,8 +3,6 @@ package com.xiaoleilu.hutool.db.handler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.xiaoleilu.hutool.db.RsHandler;
-
 /**
  * 
  * @author loolly

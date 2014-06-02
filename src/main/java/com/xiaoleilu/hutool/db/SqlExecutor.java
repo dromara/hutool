@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.xiaoleilu.hutool.db.handler.RsHandler;
+
 /**
  * SQL执行器，全部为静态方法，执行查询或非查询的SQL语句
  * @author loolly

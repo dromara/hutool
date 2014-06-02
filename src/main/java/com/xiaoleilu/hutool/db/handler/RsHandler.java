@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool.db.handler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

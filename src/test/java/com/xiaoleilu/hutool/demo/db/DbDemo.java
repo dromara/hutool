@@ -16,7 +16,6 @@ import com.xiaoleilu.hutool.db.SqlExecutor;
 import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.ds.DruidDS;
-import com.xiaoleilu.hutool.db.ds.SimpleDataSource;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
 
@@ -32,10 +31,6 @@ public class DbDemo {
 	private static String TABLE_NAME = "test_table";
 
 	public static void main(String[] args) throws SQLException {
-		DataSource ds = new SimpleDataSource("test");
-		SqlRunner runner = SqlRunner.create(ds);
-		int c = runner.count(Entity.create("gs_epg"));
-		System.out.println(c);
 	}
 	
 	/**
