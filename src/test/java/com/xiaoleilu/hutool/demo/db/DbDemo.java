@@ -12,6 +12,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.Session;
 import com.xiaoleilu.hutool.db.SqlExecutor;
 import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
@@ -27,20 +28,21 @@ import com.xiaoleilu.hutool.db.meta.Table;
  */
 public class DbDemo {
 	private final static Logger log = Log.get();
-	
+
 	private static String TABLE_NAME = "test_table";
 
 	public static void main(String[] args) throws SQLException {
 	}
-	
+
 	/**
 	 * 样例
 	 */
 	public static void demo() {
 		DataSource ds = getDataSource();
-		
+
 		sqlExecutorDemo(ds);
 		sqlRunnerDemo(ds);
+		sessionDemo(ds);
 		getTableMetaInfo(ds);
 	}
 
@@ -48,23 +50,21 @@ public class DbDemo {
 	 * @return 获得数据源样例方法
 	 */
 	private static DataSource getDataSource() {
-		/* 
+		/*
 		 * 获得数据源，可以使用Druid、DBCP或者C3P0数据源
-		 * 我封装了Druid的数据源，在classpath下放置db.setting和druid.setting文件
-		 * 详细格式请参考doc/db-example.setting和doc/db/example.setting
-		 * 	如果没有druid.setting文件，使用连接池默认的参数
-		 * 	可以配置多个数据源，用分组隔离 
+		 * 我封装了Druid的数据源，在classpath下放置db.setting和druid.setting文件 
+		 * 详细格式请参考doc/db-example.setting和doc/db/example.setting 
+		 * 如果没有druid.setting文件，使用连接池默认的参数 可以配置多个数据源，用分组隔离
 		 */
 		DataSource ds = DruidDS.getDataSource("test");
 
-		/* 当然，如果你不喜欢用DruidDS类，你也可以自己去实例化连接池的数据源
-			具体的配置参数请参阅Druid官方文档 */
+		//当然，如果你不喜欢用DruidDS类，你也可以自己去实例化连接池的数据源 具体的配置参数请参阅Druid官方文档
 		DruidDataSource ds2 = new DruidDataSource();
 		ds2.setUrl("jdbc:mysql://fedora.vmware:3306/extractor");
 		ds2.setUsername("root");
 		ds2.setPassword("123456");
 		ds = ds2;
-		
+
 		return ds;
 	}
 
@@ -104,13 +104,13 @@ public class DbDemo {
 	 * @param ds 数据源
 	 */
 	private static void sqlRunnerDemo(DataSource ds) {
+		Entity entity = Entity.create(TABLE_NAME).set("字段1", "值").set("字段2", 2);
+		Entity where = Entity.create(TABLE_NAME).set("条件1", "条件值");
+
 		try {
 			SqlRunner runner = SqlRunner.create(ds);
 			// 指定数据库方言，在此为MySQL
 			runner = SqlRunner.create(ds, DialectFactory.DRIVER_MYSQL);
-
-			Entity entity = Entity.create(TABLE_NAME).set("字段1", "值").set("字段2", 2);
-			Entity where = Entity.create(TABLE_NAME).set("条件1", "条件值");
 
 			// 增，生成SQL为 INSERT INTO `table_name` SET(`字段1`, `字段2`) VALUES(?,?)
 			runner.insert(entity);
@@ -121,8 +121,7 @@ public class DbDemo {
 			// 改，生成SQL为 UPDATE `table_name` SET `字段1` = ?, `字段2` = ? WHERE `条件1` = ?
 			runner.update(entity, where);
 
-			/* 查，生成SQL为 SELECT * FROM `table_name` WHERE WHERE `条件1` = ?
-				第一个参数为返回的字段列表，如果null则返回所有字段 */
+			// 查，生成SQL为 SELECT * FROM `table_name` WHERE WHERE `条件1` = ? 第一个参数为返回的字段列表，如果null则返回所有字段
 			List<Entity> entityList = runner.find(null, where, new EntityHandler());
 			log.info("{}", entityList);
 
@@ -137,19 +136,52 @@ public class DbDemo {
 		} finally {
 		}
 	}
-	
+
+	private static void sessionDemo(DataSource ds) {
+		Entity entity = Entity.create(TABLE_NAME).set("字段1", "值").set("字段2", 2);
+		Entity where = Entity.create(TABLE_NAME).set("条件1", "条件值");
+
+		Session session = Session.create(ds);
+		try {
+			session.beginTransaction();
+
+			// 增，生成SQL为 INSERT INTO `table_name` SET(`字段1`, `字段2`) VALUES(?,?)
+			session.insert(entity);
+
+			// 删，生成SQL为 DELETE FROM `table_name` WHERE `条件1` = ?
+			session.del(where);
+
+			// 改，生成SQL为 UPDATE `table_name` SET `字段1` = ?, `字段2` = ? WHERE `条件1` = ?
+			session.update(entity, where);
+
+			// 查，生成SQL为 SELECT * FROM `table_name` WHERE WHERE `条件1` = ? 第一个参数为返回的字段列表，如果null则返回所有字段
+			List<Entity> entityList = session.find(null, where, new EntityHandler());
+			log.info("{}", entityList);
+
+			// 分页，注意，ANSI SQL中不支持分页！
+			List<Entity> pagedEntityList = session.page(null, where, 0, 20, new EntityHandler());
+			log.info("{}", pagedEntityList);
+
+			session.commit();
+		} catch (Exception e) {
+			session.quietRollback();
+		} finally {
+			session.close();
+		}
+	}
+
 	/**
 	 * 获得表的元数据
+	 * 
 	 * @param ds 数据源
 	 */
 	private static void getTableMetaInfo(DataSource ds) {
-		//获得当前库的所有表的表名
+		// 获得当前库的所有表的表名
 		List<String> tableNames = DbUtil.getTables(ds);
 		Log.info("{}", tableNames);
-		
+
 		/*
-		 * 获得表结构
-		 * 表结构封装为一个表对象，里面有Column对象表示一列，列中有列名、类型、大小、是否允许为空等信息
+		 * 获得表结构 表结构封装为一个表对象，里面有Column对象表示一列，列中有列名、类型、大小、是否允许为空等信息
 		 */
 		Table table = DbUtil.getTableMeta(ds, TABLE_NAME);
 		Log.info("{}", table);

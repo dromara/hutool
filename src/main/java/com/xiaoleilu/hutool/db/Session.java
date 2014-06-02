@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.db;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
@@ -9,6 +8,9 @@ import java.util.Collection;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+
+import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
@@ -22,6 +24,7 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
  *
  */
 public class Session implements Closeable{
+	private final static Logger log = Log.get();
 	
 	private Connection conn = null;
 	private SqlConnRunner runner = null;
@@ -103,17 +106,50 @@ public class Session implements Closeable{
 	 * @throws SQLException
 	 */
 	public void commit() throws SQLException{
-		conn.commit();
-		conn.setAutoCommit(true);			//事务结束，恢复自动提交
+		try {
+			conn.commit();
+		} catch (SQLException e) {
+			throw e;
+		}finally {
+			conn.setAutoCommit(true);			//事务结束，恢复自动提交
+		}
 	}
 	
 	/**
 	 * 回滚事务
-	 * @throws SQLException
+	 * @throws Exception
 	 */
 	public void rollback() throws SQLException {
-		conn.rollback();
-		conn.setAutoCommit(true);		//事务结束，恢复自动提交
+		try {
+			conn.rollback();
+		} catch (SQLException e) {
+			throw e;
+		}finally {
+			try {
+				conn.setAutoCommit(true);	//事务结束，恢复自动提交
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+	}
+	
+	/**
+	 * 静默回滚事务<br>
+	 * 回滚事务
+	 * @throws SQLException
+	 */
+	public void quietRollback() {
+		try {
+			conn.rollback();
+		} catch (Exception e) {
+			Log.error(log, e);
+		}finally {
+			try {
+				conn.setAutoCommit(true);	//事务结束，恢复自动提交
+			} catch (SQLException e) {
+				Log.error(log, e);
+			}
+		}
 	}
 	
 	/**
@@ -122,8 +158,36 @@ public class Session implements Closeable{
 	 * @throws SQLException
 	 */
 	public void rollback(Savepoint savepoint) throws SQLException {
-		conn.rollback(savepoint);
-		conn.setAutoCommit(true);		//事务结束，恢复自动提交
+		try {
+			conn.rollback(savepoint);
+		} catch (SQLException e) {
+			throw e;
+		}finally {
+			try {
+				conn.setAutoCommit(true);	//事务结束，恢复自动提交
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+	}
+	
+	/**
+	 * 静默回滚到某个保存点，保存点的设置请使用setSavepoint方法
+	 * @param savepoint 保存点
+	 * @throws SQLException
+	 */
+	public void quietRollback(Savepoint savepoint) throws SQLException {
+		try {
+			conn.rollback(savepoint);
+		} catch (Exception e) {
+			Log.error(log, e);
+		}finally {
+			try {
+				conn.setAutoCommit(true);	//事务结束，恢复自动提交
+			} catch (SQLException e) {
+				Log.error(log, e);
+			}
+		}
 	}
 	
 	/**
@@ -289,7 +353,7 @@ public class Session implements Closeable{
 	//---------------------------------------------------------------------------- CRUD end
 	
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		DbUtil.close(conn);
 	}
 	
