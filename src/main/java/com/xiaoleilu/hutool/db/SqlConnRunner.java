@@ -25,7 +25,6 @@ public class SqlConnRunner extends SqlExecutor{
 	//------------------------------------------------------- Constructor start
 	/**
 	 * 构造
-	 * @param ds 数据源
 	 * @param dialect 方言
 	 */
 	public SqlConnRunner(Dialect dialect) {
@@ -36,7 +35,6 @@ public class SqlConnRunner extends SqlExecutor{
 	
 	/**
 	 * 构造
-	 * @param ds 数据源
 	 * @param driverClassName 驱动类名，，用于识别方言
 	 */
 	public SqlConnRunner(String driverClassName) {
