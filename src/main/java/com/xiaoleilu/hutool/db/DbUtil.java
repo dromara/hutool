@@ -304,7 +304,7 @@ public class DbUtil {
 			driver = DialectFactory.DRIVER_ORACLE;
 		}else if(nameContainsProductInfo.contains("postgresql")) {
 			driver = DialectFactory.DRIVER_POSTGRESQL;
-		}else if(nameContainsProductInfo.contains("sqllite")) {
+		}else if(nameContainsProductInfo.contains("sqlite")) {
 			driver = DialectFactory.DRIVER_SQLLITE3;
 		}
 		
