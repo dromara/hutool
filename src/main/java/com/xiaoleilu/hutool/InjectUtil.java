@@ -4,8 +4,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
@@ -15,8 +13,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  */
 public class InjectUtil {
 	
-	private InjectUtil() {
-	}
+	private InjectUtil() {}
 	
 	/**
 	 * 注入Request参数<br>
@@ -25,7 +22,7 @@ public class InjectUtil {
 	 * @param request 请求对象
 	 * @param isWithModelName 参数是否包含模型名称
 	 */
-	public static void injectFromRequest(Object model, HttpServletRequest request, boolean isWithModelName) {
+	public static void injectFromRequest(Object model, javax.servlet.ServletRequest request, boolean isWithModelName) {
 		injectFromRequest(model, model.getClass().getSimpleName(), request, isWithModelName);
 	}
 	
@@ -36,22 +33,24 @@ public class InjectUtil {
 	 * @param request 请求对象
 	 * @param isWithModelName 参数是否包含模型名称
 	 */
-	public static void injectFromRequest(Object model, String modelName, HttpServletRequest request, boolean isWithModelName) {
+	public static void injectFromRequest(Object model, String modelName, javax.servlet.ServletRequest request, boolean isWithModelName) {
 		Method[] methods = model.getClass().getMethods();
 		for (Method method : methods) {
 			String methodName = method.getName();
 			if (! methodName.startsWith("set")) {
+				//只查找Set方法
 				continue;
 			}
 			
 			Class<?>[] types = method.getParameterTypes();
 			if (types.length != 1)	{
+				//Set方法只允许一个参数
 				continue;
 			}
 			
-			String fieldName = StrUtil.lowerFirst(methodName.substring(3));
-			String paramName = isWithModelName ? (modelName + StrUtil.DOT + fieldName) : fieldName;
-			String value = request.getParameter(paramName);
+			final String fieldName = StrUtil.getGeneralField(methodName);
+			final String paramName = isWithModelName ? (modelName + StrUtil.DOT + fieldName) : fieldName;
+			final String value = request.getParameter(paramName);
 			if (StrUtil.isEmpty(value)) {
 				//此处取得的值为空时跳过，包括null和""
 				continue;
@@ -83,7 +82,7 @@ public class InjectUtil {
 				continue;
 			}
 			
-			String fieldName = StrUtil.lowerFirst(methodName.substring(3));
+			String fieldName = StrUtil.getGeneralField(methodName);
 			Object value = map.get(fieldName);
 			if (value == null) {
 				continue;
@@ -102,15 +101,15 @@ public class InjectUtil {
 	 * @param model 模型
 	 * @param isOnlyBasicType 是否只允许基本类型，包括String
 	 */
-	public static void toMap(Object model, boolean isOnlyBasicType) {
+	public static Map<String, Object> toMap(Object model, boolean isOnlyBasicType) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		final Method[] methods = model.getClass().getMethods();
 		for (Method method : methods) {
 			final String methodName = method.getName();
-			if (! methodName.startsWith("get")) {
+			if (false == methodName.startsWith("get")) {
 				continue;
 			}
-			final String fieldName = StrUtil.lowerFirst(methodName.substring(3));
+			final String fieldName = StrUtil.getGeneralField(methodName);
 			
 			Object value = null;
 			try {
@@ -119,14 +118,13 @@ public class InjectUtil {
 				throw new UtilException(StrUtil.format("Inject map [{}] error!", fieldName), e);
 			}
 			if(value != null) {
-				if(value instanceof String) {
+				if(value instanceof String || value.getClass().isPrimitive() || false == isOnlyBasicType) {
+					//字段有效的三个条件：1、String 2、基本类型 3、或者允许非基本类型
 					map.put(fieldName, value);
-				}else if(isOnlyBasicType) {
-					if(value.getClass().isPrimitive() == false) {
-						map.put(fieldName, value);
-					}
 				}
 			}
 		}
+		
+		return map;
 	}
 }
