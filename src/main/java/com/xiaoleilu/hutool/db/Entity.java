@@ -91,6 +91,21 @@ public class Entity extends HashMap<String, Object>{
 		return vo;
 	}
 	
+	/**
+	 * 将值对象转换为Entity<br>
+	 * 类名会被当作表名，小写第一个字母
+	 * @param vo 值对象
+	 * @return 自己
+	 */
+	public Entity parse(Object vo) {
+		String tableName = vo.getClass().getSimpleName();
+		tableName = StrUtil.lowerFirst(tableName);
+		this.setTableName(tableName);
+		
+		this.putAll(InjectUtil.toMap(vo, false));
+		return this;
+	}
+	
 	//-------------------------------------------------------------------- 特定类型值
 	/**
 	 * 设置列
