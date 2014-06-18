@@ -281,10 +281,29 @@ public class ClassUtil {
 		return classLoader;
 	}
 
+	/**
+	 * 实例化对象
+	 * @param clazz 类名
+	 * @return 对象
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(String clazz) {
 		try {
 			return (T) Class.forName(clazz).newInstance();
+		} catch (Exception e) {
+			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
+		}
+	}
+	
+	/**
+	 * 实例化对象
+	 * @param clazz 类
+	 * @return 对象
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T newInstance(Class<?> clazz) {
+		try {
+			return (T) clazz.newInstance();
 		} catch (Exception e) {
 			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}
