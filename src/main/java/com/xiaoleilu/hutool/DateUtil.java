@@ -408,6 +408,30 @@ public class DateUtil {
 		return Integer.parseInt(DateUtil.format(date, "yyMMddHHmm"));
 	}
 	
+	/**
+	 * 计算指定指定时间区间内的周数
+	 * @param start 开始时间
+	 * @param end 结束时间
+	 * @return 周数
+	 */
+	public static int weekCount(Date start, Date end) {
+		final Calendar startCalendar = Calendar.getInstance();
+		startCalendar.setTime(start);
+		final Calendar endCalendar = Calendar.getInstance();
+		endCalendar.setTime(end);
+		
+		final int startWeekofYear = startCalendar.get(Calendar.WEEK_OF_YEAR);
+		final int endWeekofYear = endCalendar.get(Calendar.WEEK_OF_YEAR);
+		
+		int count = endWeekofYear - startWeekofYear + 1;
+		
+		if(Calendar.SUNDAY != startCalendar.get(Calendar.DAY_OF_WEEK)) {
+			count --;
+		}
+		
+		return count;
+	}
+	
 	//------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>
@@ -418,5 +442,4 @@ public class DateUtil {
 		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
 	}
 	//------------------------------------------------------------------------ Private method end
-	
 }
