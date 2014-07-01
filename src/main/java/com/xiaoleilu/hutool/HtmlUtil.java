@@ -102,13 +102,13 @@ public class HtmlUtil {
 			}
 			tagName = tagName.trim();
 			//(?i)表示其后面的表达式忽略大小写
-			regex1 = StrUtil.format("(?i)<{}\\s?.*?/>", tagName);	
+			regex1 = StrUtil.format("(?i)<{}\\s?[^>]*?/>", tagName);	
 			if(withTagContent) {
 				//标签及其包含内容
-				regex2 = StrUtil.format("(?i)<{}\\s?.*?>.*?</{}>", tagName, tagName);
+				regex2 = StrUtil.format("(?i)<{}\\s*?[^>]*?>[^<]*?</{}>", tagName, tagName);
 			}else {
 				//标签不包含内容
-				regex2 = StrUtil.format("(?i)<{}\\s?.*?>|</{}\\s?.*?>", tagName, tagName);
+				regex2 = StrUtil.format("(?i)<{}\\s*?[^>]*?>|</{}>", tagName, tagName);
 			}
 			
 			content = content
