@@ -82,6 +82,18 @@ public class HtmlUtil {
 	 * @return 去除标签后的文本
 	 */
 	public static String removeHtmlTag(String content, String... tagNames) {
+		return removeHtmlTag(content, true, tagNames);
+	}
+	
+	/**
+	 * 清除指定HTML标签<br>
+	 * 不区分大小写
+	 * @param content 文本
+	 * @param withTagContent 是否去掉被包含在标签中的内容
+	 * @param tagNames 要清除的标签
+	 * @return 去除标签后的文本
+	 */
+	public static String removeHtmlTag(String content, boolean withTagContent, String... tagNames) {
 		String regex1 = null;
 		String regex2 = null;
 		for (String tagName : tagNames) {
@@ -91,7 +103,13 @@ public class HtmlUtil {
 			tagName = tagName.trim();
 			//(?i)表示其后面的表达式忽略大小写
 			regex1 = StrUtil.format("(?i)<{}\\s?.*?/>", tagName);	
-			regex2 = StrUtil.format("(?i)<{}\\s?.*?>.*?</{}>", tagName, tagName);
+			if(withTagContent) {
+				//标签及其包含内容
+				regex2 = StrUtil.format("(?i)<{}\\s?.*?>.*?</{}>", tagName, tagName);
+			}else {
+				//标签不包含内容
+				regex2 = StrUtil.format("(?i)<{}\\s?.*?>|</{}\\s?.*?>", tagName, tagName);
+			}
 			
 			content = content
 					.replaceAll(regex1, StrUtil.EMPTY)									//自闭标签小写
@@ -99,7 +117,7 @@ public class HtmlUtil {
 		}
 		return content;
 	}
-
+	
 	/**
 	 * Encoder.
 	 */
@@ -119,5 +137,4 @@ public class HtmlUtil {
 		}
 		return buffer.toString();
 	}
-	
 }
