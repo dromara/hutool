@@ -81,7 +81,6 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		sql.append(DbUtil.buildEqualsWhere(where, paramValues));
 
-		System.out.println(sql);
 		final PreparedStatement ps = conn.prepareStatement(sql.toString());
 		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
 		return ps;
