@@ -54,11 +54,12 @@ public class Conver {
 	
 	/**
 	 * 转换为Integer数组<br>
+	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	public static Integer[] toIntArray(boolean isIgnoreConvertError, Object... values) {
+	public static <T> Integer[] toIntArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
 		}
@@ -98,11 +99,12 @@ public class Conver {
 	
 	/**
 	 * 转换为Long数组<br>
+	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	public static Long[] toLongArray(boolean isIgnoreConvertError, Object... values) {
+	public static <T> Long[] toLongArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
 		}
@@ -142,11 +144,12 @@ public class Conver {
 	
 	/**
 	 * 转换为Double数组<br>
+	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	public static Double[] toDoubleArray(boolean isIgnoreConvertError, Object... values) {
+	public static <T> Double[] toDoubleArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
 		}
@@ -186,11 +189,12 @@ public class Conver {
 	
 	/**
 	 * 转换为Float数组<br>
+	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	public static Float[] toFloatArray(boolean isIgnoreConvertError, Object... values) {
+	public static <T> Float[] toFloatArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
 		}
@@ -230,11 +234,12 @@ public class Conver {
 	
 	/**
 	 * 转换为Boolean数组<br>
+	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	public static Boolean[] toBooleanArray(boolean isIgnoreConvertError, Object... values) {
+	public static <T> Boolean[] toBooleanArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
 		}
