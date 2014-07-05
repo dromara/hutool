@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool;
 
+import com.xiaoleilu.hutool.exceptions.UtilException;
+
 /**
  * 类型转换器
  * 
@@ -49,6 +51,27 @@ public class Conver {
 			return defaultValue;
 		}
 	}
+	
+	/**
+	 * 转换为Integer数组<br>
+	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
+	 * @param values 被转换的值
+	 * @return 结果
+	 */
+	public static Integer[] toIntArray(boolean isIgnoreConvertError, Object... values) {
+		if(CollectionUtil.isEmpty(values)) {
+			return null;
+		}
+		final Integer[] ints = new Integer[values.length];
+		for(int i = 0; i < values.length; i++) {
+			final Integer v = toInt(values[i], null);
+			if(null == v && isIgnoreConvertError == false) {
+				throw new UtilException(StrUtil.format("Convert [{}] to Integer error!", values[i]));
+			}
+			ints[i] = v;
+		}
+		return ints;
+	}
 
 	/**
 	 * 转换为long<br>
@@ -71,6 +94,27 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为Long数组<br>
+	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
+	 * @param values 被转换的值
+	 * @return 结果
+	 */
+	public static Long[] toLongArray(boolean isIgnoreConvertError, Object... values) {
+		if(CollectionUtil.isEmpty(values)) {
+			return null;
+		}
+		final Long[] longs = new Long[values.length];
+		for(int i = 0; i < values.length; i++) {
+			final Long v = toLong(values[i], null);
+			if(null == v && isIgnoreConvertError == false) {
+				throw new UtilException(StrUtil.format("Convert [{}] to Long error!", values[i]));
+			}
+			longs[i] = v;
+		}
+		return longs;
 	}
 
 	/**
@@ -97,6 +141,27 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为Double数组<br>
+	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
+	 * @param values 被转换的值
+	 * @return 结果
+	 */
+	public static Double[] toDoubleArray(boolean isIgnoreConvertError, Object... values) {
+		if(CollectionUtil.isEmpty(values)) {
+			return null;
+		}
+		final Double[] doubles = new Double[values.length];
+		for(int i = 0; i < values.length; i++) {
+			final Double v = toDouble(values[i], null);
+			if(null == v && isIgnoreConvertError == false) {
+				throw new UtilException(StrUtil.format("Convert [{}] to Double error!", values[i]));
+			}
+			doubles[i] = v;
+		}
+		return doubles;
+	}
+	
+	/**
 	 * 转换为Float<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
@@ -117,6 +182,27 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为Float数组<br>
+	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
+	 * @param values 被转换的值
+	 * @return 结果
+	 */
+	public static Float[] toFloatArray(boolean isIgnoreConvertError, Object... values) {
+		if(CollectionUtil.isEmpty(values)) {
+			return null;
+		}
+		final Float[] floats = new Float[values.length];
+		for(int i = 0; i < values.length; i++) {
+			final Float v = toFloat(values[i], null);
+			if(null == v && isIgnoreConvertError == false) {
+				throw new UtilException(StrUtil.format("Convert [{}] to Float error!", values[i]));
+			}
+			floats[i] = v;
+		}
+		return floats;
 	}
 
 	/**
@@ -140,6 +226,27 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为Boolean数组<br>
+	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
+	 * @param values 被转换的值
+	 * @return 结果
+	 */
+	public static Boolean[] toBooleanArray(boolean isIgnoreConvertError, Object... values) {
+		if(CollectionUtil.isEmpty(values)) {
+			return null;
+		}
+		final Boolean[] bools = new Boolean[values.length];
+		for(int i = 0; i < values.length; i++) {
+			final Boolean v = toBool(values[i], null);
+			if(null == v && isIgnoreConvertError == false) {
+				throw new UtilException(StrUtil.format("Convert [{}] to Boolean error!", values[i]));
+			}
+			bools[i] = v;
+		}
+		return bools;
 	}
 
 	// ----------------------------------------------------------------------- 全角半角转换
