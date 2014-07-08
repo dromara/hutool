@@ -409,21 +409,6 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 清空一个目录
-	 * @param dirPath 需要删除的文件夹路径
-	 */
-	public static void cleanDir(String dirPath){
-		File dir = new File(dirPath);
-		if(dir.exists() && dir.isDirectory()){
-			File[] files = dir.listFiles();
-			for (File file : files) {
-				if(file.isDirectory()) cleanDir(file.getAbsolutePath());
-				file.delete();
-			}
-		}
-	}
-	
-	/**
 	 * 获得一个文件读取器
 	 * @param path 绝对路径
 	 * @param charset 字符集
