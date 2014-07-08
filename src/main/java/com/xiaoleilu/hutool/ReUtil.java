@@ -12,6 +12,9 @@ import java.util.regex.Pattern;
  */
 public class ReUtil {
 	
+	/** 正则表达式匹配中文 */
+	public final static String RE_CHINESE = "[u4e00-u9fa5]";
+	
 	public final static Pattern NUMBER =  Pattern.compile("\\d+", Pattern.DOTALL);
 	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)", Pattern.DOTALL);
 	public final static Pattern IPV4 =  Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b", Pattern.DOTALL);
