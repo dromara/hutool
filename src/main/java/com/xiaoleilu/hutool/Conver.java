@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool;
 
+import java.math.BigDecimal;
+
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
@@ -91,7 +93,7 @@ public class Conver {
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)) return defaultValue;
 		try {
-			return Long.parseLong(valueStr);
+			return new BigDecimal(valueStr).longValue();
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -136,7 +138,7 @@ public class Conver {
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)) return defaultValue;
 		try {
-			return Double.parseDouble(valueStr);
+			return new BigDecimal(valueStr).doubleValue();
 		} catch (Exception e) {
 			return defaultValue;
 		}
