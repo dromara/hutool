@@ -19,14 +19,25 @@ public class DateTime extends Date{
 		return new DateTime(date);
 	}
 	
+	/**
+	 * 当前时间
+	 */
 	public DateTime() {
 		super();
 	}
 	
+	/**
+	 * 给定日期的构造
+	 * @param date 日期
+	 */
 	public DateTime(Date date) {
 		this(date.getTime());
 	}
 	
+	/**
+	 * 给定日期毫秒数的构造
+	 * @param timeMillis 日期毫秒数
+	 */
 	public DateTime(long timeMillis) {
 		super(timeMillis);
 	}
@@ -34,5 +45,12 @@ public class DateTime extends Date{
 	@Override
 	public String toString() {
 		return DateUtil.formatDateTime(this);
+	}
+	
+	/**
+	 * @return 输出精确到毫秒的标准日期形式
+	 */
+	public String toMsStr() {
+		return DateUtil.format(this, DateUtil.NORM_DATETIME_MS_PATTERN);
 	}
 }
