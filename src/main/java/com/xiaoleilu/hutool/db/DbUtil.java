@@ -182,6 +182,7 @@ public class DbUtil {
 	 * @param tableName 表名
 	 * @return Table对象
 	 */
+	@SuppressWarnings("resource")
 	public static Table getTableMeta(DataSource ds, String tableName) {
 		final Table table = Table.create(tableName);
 		Connection conn = null;
