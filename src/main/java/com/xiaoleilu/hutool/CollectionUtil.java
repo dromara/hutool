@@ -73,6 +73,7 @@ public class CollectionUtil {
 	 * @param colls 集合数组
 	 * @return 分页后的段落内容
 	 */
+	@SafeVarargs
 	public static <T> List<T> sortPageAll(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
 		final List<T> result = new ArrayList<T>();
 		for (Collection<T> coll : colls) {
@@ -98,6 +99,7 @@ public class CollectionUtil {
 	 * @param colls 集合数组
 	 * @return 分业后的段落内容
 	 */
+	@SafeVarargs
 	public static <T> List<T> sortPageAll2(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
 		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<T>(pageNo * numPerPage);
 		for (Collection<T> coll : colls) {
@@ -200,6 +202,7 @@ public class CollectionUtil {
 	 * 
 	 * @return ArrayList对象
 	 */
+	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
 		ArrayList<T> list = new ArrayList<T>(values.length);
 		for (T t : values) {
@@ -267,6 +270,7 @@ public class CollectionUtil {
 	 * @param arrays 数组集合
 	 * @return 合并后的数组
 	 */
+	@SafeVarargs
 	public static <T> T[] addAll(T[]... arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];

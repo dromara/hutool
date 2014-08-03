@@ -61,6 +61,7 @@ public class Conver {
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
+	@SafeVarargs
 	public static <T> Integer[] toIntArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
@@ -106,6 +107,7 @@ public class Conver {
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
+	@SafeVarargs
 	public static <T> Long[] toLongArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
@@ -151,6 +153,7 @@ public class Conver {
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
+	@SafeVarargs
 	public static <T> Double[] toDoubleArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
@@ -196,6 +199,7 @@ public class Conver {
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
+	@SafeVarargs
 	public static <T> Float[] toFloatArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
@@ -241,6 +245,7 @@ public class Conver {
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
+	@SafeVarargs
 	public static <T> Boolean[] toBooleanArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
