@@ -77,9 +77,13 @@ public class Setting extends HashMap<String, String> {
 	 * @param isUseVariable 是否使用变量
 	 */
 	public Setting(String pathBaseClassLoader, String charset, boolean isUseVariable) {
-		URL url = URLUtil.getURL(pathBaseClassLoader);
+		if(null == pathBaseClassLoader) {
+			pathBaseClassLoader = StrUtil.EMPTY;
+		}
+		
+		final URL url = URLUtil.getURL(pathBaseClassLoader);
 		if(url == null) {
-			throw new RuntimeException("Can not find Setting file: ["+pathBaseClassLoader+"]");
+			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", pathBaseClassLoader));
 		}
 		this.init(url, charset, isUseVariable);
 	}
@@ -95,9 +99,9 @@ public class Setting extends HashMap<String, String> {
 		if (configFile == null) {
 			throw new RuntimeException("Null Setting file!");
 		}
-		URL url = URLUtil.getURL(configFile);
+		final URL url = URLUtil.getURL(configFile);
 		if(url == null) {
-			throw new RuntimeException("Can not find Setting file: ["+configFile.getAbsolutePath()+"]");
+			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", configFile.getAbsolutePath()));
 		}
 		this.init(url, charset, isUseVariable);
 	}
@@ -111,11 +115,10 @@ public class Setting extends HashMap<String, String> {
 	 * @param isUseVariable 是否使用变量
 	 */
 	public Setting(String path, Class<?> clazz, String charset, boolean isUseVariable) {
-		URL url = URLUtil.getURL(path, clazz);
+		final URL url = URLUtil.getURL(path, clazz);
 		if(url == null) {
-			throw new RuntimeException("Can not find Setting file: ["+path+"]");
+			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", path));
 		}
-		
 		this.init(url, charset, isUseVariable);
 	}
 
@@ -427,12 +430,8 @@ public class Setting extends HashMap<String, String> {
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Integer getInt(String key, String group) throws NumberFormatException {
-		final String value = get(key, group);
-		if(StrUtil.isBlank(value)) {
-			return null;
-		}
-		return Integer.parseInt(value);
+	public Integer getInt(String key, String group) {
+		return getInt(key, group, null);
 	}
 	
 	/**
@@ -465,12 +464,8 @@ public class Setting extends HashMap<String, String> {
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Boolean getBool(String key, String group) throws NumberFormatException {
-		final String value = get(key, group);
-		if(StrUtil.isBlank(value)) {
-			return null;
-		}
-		return Boolean.parseBoolean(value);
+	public Boolean getBool(String key, String group) {
+		return getBool(key, group, null);
 	}
 	
 	/**
@@ -503,12 +498,8 @@ public class Setting extends HashMap<String, String> {
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Long getLong(String key, String group) throws NumberFormatException {
-		final String value = get(key, group);
-		if(StrUtil.isBlank(value)) {
-			return null;
-		}
-		return Long.parseLong(value);
+	public Long getLong(String key, String group) {
+		return getLong(key, group, null);
 	}
 	
 	/**
@@ -555,7 +546,7 @@ public class Setting extends HashMap<String, String> {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public Double getDouble(String key) throws NumberFormatException {
+	public Double getDouble(String key) {
 		return getDouble(key, null);
 	}
 
@@ -566,12 +557,8 @@ public class Setting extends HashMap<String, String> {
 	 * @param group 分组名
 	 * @return 属性值
 	 */
-	public Double getDouble(String key, String group) throws NumberFormatException {
-		final String value = get(key, group);
-		if(StrUtil.isBlank(value)) {
-			return null;
-		}
-		return Double.parseDouble(value);
+	public Double getDouble(String key, String group) {
+		return getDouble(key, group, null);
 	}
 	
 	/**
