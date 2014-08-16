@@ -289,7 +289,17 @@ public class Setting extends HashMap<String, String> {
 	 * @return 值
 	 */
 	public String getWithLog(String key) {
-		final String value = super.get(key);
+		return get(key, null);
+	}
+	
+	/**
+	 * 带有日志提示的get，如果没有定义指定的KEY，则打印debug日志
+	 * 
+	 * @param key 键
+	 * @return 值
+	 */
+	public String getWithLog(String key, String group) {
+		final String value = get(key, group);
 		if (value == null) {
 			log.debug("No key define for [{}]!", key);
 		}
