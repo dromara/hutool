@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -147,5 +149,13 @@ public class SimpleDataSource implements DataSource, Cloneable{
 	@Override
 	public Connection getConnection(String username, String password) throws SQLException {
 		return DriverManager.getConnection(this.url, username, password);
+	}
+
+	/**
+	 * Support from JDK7
+	 */
+	@Override
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		throw new SQLFeatureNotSupportedException("Simple DataSource can't support getParentLogger method!");
 	}
 }

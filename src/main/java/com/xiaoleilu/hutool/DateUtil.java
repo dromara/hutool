@@ -28,10 +28,12 @@ public class DateUtil {
 	public final static String NORM_DATE_PATTERN = "yyyy-MM-dd";
 	/** 标准时间格式 */
 	public final static String NORM_TIME_PATTERN = "HH:mm:ss";
-	/** 标准日期时间格式 */
-	public final static String NORM_DATETIME_NO_SS_PATTERN = "yyyy-MM-dd HH:mm";
-	/** 标准日期时间格式 */
+	/** 标准日期时间格式，精确到分 */
+	public final static String NORM_DATETIME_MINUTE_PATTERN = "yyyy-MM-dd HH:mm";
+	/** 标准日期时间格式，精确到秒 */
 	public final static String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	/** 标准日期时间格式，精确到毫秒 */
+	public final static String NORM_DATETIME_MS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
 	/** HTTP头中日期时间格式 */
 	public final static String HTTP_DATETIME_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
 	
@@ -256,8 +258,10 @@ public class DateUtil {
 				return parseDate(dateStr);
 			}else if(length == NORM_TIME_PATTERN.length()){
 				return parseTime(dateStr);
-			}else if(length == NORM_DATETIME_NO_SS_PATTERN.length()){
-				return parse(dateStr, NORM_DATETIME_NO_SS_PATTERN);
+			}else if(length == NORM_DATETIME_MINUTE_PATTERN.length()){
+				return parse(dateStr, NORM_DATETIME_MINUTE_PATTERN);
+			}else if(length == NORM_DATETIME_MS_PATTERN.length()){
+				return parse(dateStr, NORM_DATETIME_MS_PATTERN);
 			}
 		}catch(Exception e) {
 			throw new UtilException(StrUtil.format("Parse [{}] with format normal error!", dateStr));

@@ -221,7 +221,7 @@ public class VelocityUtil {
 	/**
 	 * 新建一个初始化后的属性对象
 	 * @param templateDir 模板所在目录
-	 * @return
+	 * @return 初始化后的属性对象
 	 */
 	private static Properties _newInitedProp(String templateDir, String charset){
 		final Properties properties = new Properties();

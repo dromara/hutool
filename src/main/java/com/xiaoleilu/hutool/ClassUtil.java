@@ -347,7 +347,7 @@ public class ClassUtil {
 	 * 那class里面com开头的class类也会被扫描进去,其实名称后面或前面需要一个 ".",来添加包的特征
 	 * 
 	 * @param packageName
-	 * @return
+	 * @return 格式化后的包名
 	 */
 	private static String getWellFormedPackageName(String packageName) {
 		return packageName.lastIndexOf(StrUtil.DOT) != packageName.length() - 1 ? packageName + StrUtil.DOT : packageName;

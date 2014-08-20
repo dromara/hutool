@@ -339,7 +339,7 @@ public class MongoDS implements Closeable{
 	 * 创建ServerAddress对象
 	 * @param host 主机域名或者IP（如果为空默认127.0.0.1）
 	 * @param port 端口（如果为空默认为）
-	 * @return
+	 * @return ServerAddress
 	 */
 	private ServerAddress createServerAddress(String host, int port) {
 		try {
