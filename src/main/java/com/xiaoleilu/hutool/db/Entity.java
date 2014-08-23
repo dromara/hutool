@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.InjectUtil;
@@ -104,6 +105,21 @@ public class Entity extends HashMap<String, Object>{
 		
 		this.putAll(InjectUtil.toMap(vo, false));
 		return this;
+	}
+	
+	/**
+	 * 与给定实体对比并去除相同的部分<br>
+	 * 此方法用于在更新操作时避免所有字段被更新，跳过不需要更新的字段
+	 * version from 2.0.0
+	 * @param entity
+	 */
+	public <T extends Entity> void removeEqual(T entity) {
+		for(Entry<String, Object> entry : entity.entrySet()) {
+			final Object value = this.get(entry.getKey());
+			if(null != value && value.equals(entry.getValue())) {
+				this.remove(entry.getKey());
+			}
+		}
 	}
 	
 	//-------------------------------------------------------------------- 特定类型值
