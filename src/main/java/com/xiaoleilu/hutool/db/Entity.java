@@ -135,6 +135,19 @@ public class Entity extends HashMap<String, Object>{
 	}
 	
 	/**
+	 * 设置列，当键或值为null时忽略
+	 * @param attr 属性
+	 * @param value 值
+	 * @return 本身
+	 */
+	public Entity setIgnoreNull(String attr, Object value) {
+		if(null != attr && null != value) {
+			set(attr, value);
+		}
+		return this;
+	}
+	
+	/**
 	 * 获得特定类型值
 	 * @param attr 字段名
 	 * @param defaultValue 默认值
