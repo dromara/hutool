@@ -361,6 +361,31 @@ public class ClassUtil {
 		}
 	}
 	
+	/**
+	 * 加载类
+	 * @param className 类名
+	 * @param isInitialized 是否初始化
+	 * @return 类
+	 */
+	public static Class<?> loadClass(String className, boolean isInitialized) {
+		Class<?> clazz;
+		try {
+			clazz = Class.forName(className, isInitialized, getClassLoader());
+		}catch (ClassNotFoundException e) {
+			throw new UtilException(e);
+		}
+		return clazz;
+	}
+	
+	/**
+	 * 加载类并初始化
+	 * @param className 类名 
+	 * @return 类
+	 */
+	public static Class<?> loadClass(String className) {
+		return loadClass(className, true);
+	}
+	
 	//--------------------------------------------------------------------------------------------------- Private method start
 	/** 
 	 * 文件过滤器，过滤掉不需要的文件<br>
