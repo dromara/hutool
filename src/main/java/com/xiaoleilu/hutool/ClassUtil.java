@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -53,6 +54,36 @@ public class ClassUtil {
 	public static Set<Class<?>> scanPackage(String packageName) {
 		log.debug("Scan classes from package [{}]...", packageName);
 		return scanPackage(packageName, null);
+	}
+	
+	/**
+	 * 扫描指定包路径下所有包含指定注解的类
+	 * @param packageName 包路径
+	 * @param annotationClass 注解类
+	 * @return 类集合
+	 */
+	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
+		return scanPackage(packageName, new ClassFilter() {
+			@Override
+			public boolean accept(Class<?> clazz) {
+				return clazz.isAnnotationPresent(annotationClass);
+			}
+		});
+	}
+	
+	/**
+	 * 扫描指定包路径下所有指定类的子类
+	 * @param packageName 包路径
+	 * @param superClass 父类 
+	 * @return 类集合
+	 */
+	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
+		return scanPackage(packageName, new ClassFilter() {
+			@Override
+			public boolean accept(Class<?> clazz) {
+				return superClass.isAssignableFrom(clazz) && !superClass.equals(clazz);
+			}
+		});
 	}
 	
 	/**
