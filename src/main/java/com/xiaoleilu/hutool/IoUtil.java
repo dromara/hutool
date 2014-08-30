@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
@@ -118,6 +119,18 @@ public class IoUtil {
 		}
 
 		return content.toString();
+	}
+	
+	/**
+	 * 从FileChannel中读取内容
+	 * @param fileChannel 文件管道
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String getString(FileChannel fileChannel, String charset) throws IOException {
+		final MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
+		return CharsetUtil.str(buffer, charset);
 	}
 	
 	/**

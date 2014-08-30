@@ -1,6 +1,8 @@
 package com.xiaoleilu.hutool;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -42,11 +44,13 @@ public class CharsetUtil {
 	}
 	
 	/**
-	 * 将编码的byte数据转换为字符串
+	 * 将编码的byte数据转换为字符串<br>
+	 * 已废弃，请使用StrUtil.decode
 	 * @param data 数据
 	 * @param charset 字符集，如果为空使用当前系统字符集
 	 * @return 字符串
 	 */
+	@Deprecated
 	public static String str(byte[] data, String charset) {
 		if(data == null) {
 			return null;
@@ -61,5 +65,37 @@ public class CharsetUtil {
 		} catch (UnsupportedEncodingException e) {
 			throw new UtilException(e);
 		}
+	}
+	
+	/**
+	 * 将编码的byteBuffer数据转换为字符串
+	 * @param data 数据
+	 * @param charset 字符集，如果为空使用当前系统字符集
+	 * @return 字符串
+	 */
+	public static String str(ByteBuffer data, String charset){
+		if(data == null) {
+			return null;
+		}
+		
+		Charset cs;
+		
+		if(StrUtil.isBlank(charset)) {
+			cs = Charset.defaultCharset();
+		}else {
+			cs = Charset.forName(charset);
+		}
+		
+		return cs.decode(data).toString();
+	}
+	
+	/**
+	 * 字符串转换为byteBuffer
+	 * @param str 字符串
+	 * @param charset 编码
+	 * @return byteBuffer
+	 */
+	public static ByteBuffer toByteBuffer(String str, String charset) {
+		return ByteBuffer.wrap(StrUtil.encode(str, charset));
 	}
 }
