@@ -130,6 +130,21 @@ public class HtmlUtil {
 	}
 	
 	/**
+	 * 去除HTML标签中的属性
+	 * @param content 文本
+	 * @param attrs 属性名（不区分大小写）
+	 * @return 处理后的文本
+	 */
+	public static String removeHtmlAttr(String content, String... attrs) {
+		String regex = null;
+		for (String attr : attrs) {
+			regex = StrUtil.format("(?i)\\s*{}=[\"'].*?[\"']", attr);
+			content = content.replaceAll(regex, StrUtil.EMPTY);
+		}
+		return content;
+	}
+	
+	/**
 	 * Encoder.
 	 */
 	private static String encode(String text, char[][] array) {
