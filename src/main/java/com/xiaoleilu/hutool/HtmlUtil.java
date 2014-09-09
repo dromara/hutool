@@ -154,7 +154,7 @@ public class HtmlUtil {
 		String regex = null;
 		for (String tagName : tagNames) {
 			regex = StrUtil.format("(?i)<{}[^>]*?>", tagName);
-			content.replaceAll(regex, StrUtil.format("<{}>", tagName);
+			content.replaceAll(regex, StrUtil.format("<{}>", tagName));
 		}
 		return content;
 	}
