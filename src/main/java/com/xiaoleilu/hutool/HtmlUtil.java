@@ -145,6 +145,21 @@ public class HtmlUtil {
 	}
 	
 	/**
+	 * 去除指定标签的所有属性
+	 * @param content 内容
+	 * @param tagNames 指定标签
+	 * @return
+	 */
+	public static String removeAllHtmlAttr(String content, String... tagNames) {
+		String regex = null;
+		for (String tagName : tagNames) {
+			regex = StrUtil.format("(?i)<{}[^>]*?>", tagName);
+			content.replaceAll(regex, StrUtil.format("<{}>", tagName);
+		}
+		return content;
+	}
+	
+	/**
 	 * Encoder.
 	 */
 	private static String encode(String text, char[][] array) {
