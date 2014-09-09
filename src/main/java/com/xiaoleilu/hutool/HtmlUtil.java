@@ -86,6 +86,17 @@ public class HtmlUtil {
 	}
 	
 	/**
+	 * 清除指定HTML标签，不包括内容<br>
+	 * 不区分大小写
+	 * @param content 文本
+	 * @param tagNames 要清除的标签
+	 * @return 去除标签后的文本
+	 */
+	public static String unwrapHtmlTag(String content, String... tagNames) {
+		return removeHtmlTag(content, false, tagNames);
+	}
+	
+	/**
 	 * 清除指定HTML标签<br>
 	 * 不区分大小写
 	 * @param content 文本
