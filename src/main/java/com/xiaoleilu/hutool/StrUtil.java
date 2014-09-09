@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * 字符串工具类
@@ -507,6 +510,23 @@ public class StrUtil {
 		}
 		
 		return sb.toString();
+	}
+	
+	/**
+	 * 格式化文本
+	 * @param template 文本模板，被替换的部分用 {key} 表示
+	 * @param map 参数值对
+	 * @return 格式化后的文本
+	 */
+	public static String format(String template, Map<String, Object> map) {
+		if(null == map || map.isEmpty()) {
+			return template;
+		}
+		
+		for (Entry<String, Object> entry : map.entrySet()) {
+			template.replace("{" + entry.getKey() + "}", entry.getValue().toString());
+		}
+		return template;
 	}
 	
 	/**
