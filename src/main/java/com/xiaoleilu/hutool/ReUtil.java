@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class ReUtil {
 	
 	/** 正则表达式匹配中文 */
-	public final static String RE_CHINESE = "[u4e00-u9fa5]";
+	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";
 	
 	public final static Pattern NUMBER =  Pattern.compile("\\d+", Pattern.DOTALL);
 	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)", Pattern.DOTALL);
@@ -168,11 +168,10 @@ public class ReUtil {
 	 * @param content 被查找的内容
 	 * @return 删除前缀后的新内容
 	 */
-	public static String delPreLocation(String regex, String content) {
+	public static String delPre(String regex, String content) {
 		Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(content);
 		if (matcher.find()) {
 			return StrUtil.sub(content, matcher.end(), content.length());
-//			return content.substring(matcher.end(), content.length());
 		}
 		return content;
 	}
@@ -214,8 +213,8 @@ public class ReUtil {
 	 * @param StringWithNumber 带数字的字符串
 	 * @return 整数
 	 */
-	public static int getFirstNumber(String StringWithNumber) {
-		return Integer.parseInt(get(NUMBER, StringWithNumber, 0));
+	public static Integer getFirstNumber(String StringWithNumber) {
+		return Conver.toInt(get(NUMBER, StringWithNumber, 0), null);
 	}
 	
 	/**
@@ -252,7 +251,8 @@ public class ReUtil {
 	}
 	
 	/**
-	 * 正则替换指定值
+	 * 正则替换指定值<br>
+	 * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
 	 * @param content 文本
 	 * @param regex 正则
 	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
