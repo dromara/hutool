@@ -187,6 +187,20 @@ public class CollectionUtil {
 	public static <T> HashSet<T> newHashSet() {
 		return new HashSet<T>();
 	}
+	
+	/**
+	 * 新建一个HashSet
+	 * 
+	 * @return HashSet对象
+	 */
+	@SafeVarargs
+	public static <T> HashSet<T> newHashSet(T... ts) {
+		HashSet<T> set = new HashSet<T>();
+		for (T t : ts) {
+			set.add(t);
+		}
+		return set;
+	}
 
 	/**
 	 * 新建一个ArrayList

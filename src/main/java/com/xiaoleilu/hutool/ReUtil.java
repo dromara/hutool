@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,9 @@ public class ReUtil {
 	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)", Pattern.DOTALL);
 	public final static Pattern IPV4 =  Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b", Pattern.DOTALL);
 
+	/** 正则中需要被转义的关键字 */
+	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[]{'$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'});
+	
 	private ReUtil() {
 		//阻止实例化
 	}
@@ -245,5 +249,60 @@ public class ReUtil {
 		}
 		
 		return Pattern.matches(regex, content);
+	}
+	
+	/**
+	 * 正则替换指定值
+	 * @param content 文本
+	 * @param regex 正则
+	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
+	 * @return
+	 */
+	public static String replaceAll(String content, String regex, String replacementTemplate) {
+		if(StrUtil.isEmpty(content)){
+			return content;
+		}
+		
+		final Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(content);
+		matcher.reset();
+		boolean result = matcher.find();
+		if (result) {
+			final Set<String> varNums = findAll(GROUP_VAR, replacementTemplate, 1, new HashSet<String>());
+			final StringBuffer sb = new StringBuffer();
+			do {
+				String replacement = replacementTemplate;
+				for (String var : varNums) {
+					int group = Integer.parseInt(var);
+					replacement = replacement.replace("$" + var, matcher.group(group));
+				}
+				matcher.appendReplacement(sb, escape(replacement));
+				result = matcher.find();
+			} while (result);
+			matcher.appendTail(sb);
+			return sb.toString();
+		}
+		return content;
+	}
+	
+	/**
+	 * 转义字符串，将正则的关键字转义
+	 * @param content 文本
+	 * @return 转义后的文本
+	 */
+	public static String escape(String content) {
+		if(StrUtil.isBlank(content)){
+			return content;
+		}
+		
+		final StringBuilder builder = new StringBuilder();
+		char current;
+		for(int i = 0; i < content.length(); i++) {
+			current = content.charAt(i);
+			if(RE_KEYS.contains(current)) {
+				builder.append('\\');
+			}
+			builder.append(current);
+		}
+		return builder.toString();
 	}
 }
