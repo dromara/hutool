@@ -41,11 +41,11 @@ public class Setting extends HashMap<String, String> {
 	public final static String DEFAULT_DELIMITER= ",";
 
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
-	private final static String COMMENT_FLAG_PRE = "#";
+	protected final static String COMMENT_FLAG_PRE = "#";
 	/** 赋值分隔符（用于分隔键值对） */
-	private final static String ASSIGN_FLAG = "=";
+	protected final static String ASSIGN_FLAG = "=";
 	/** 分组行识别的环绕标记 */
-	private final static char[] GROUP_SURROUND = { '[', ']' };
+	protected final static char[] GROUP_SURROUND = { '[', ']' };
 	/** 变量名称的正则 */
 	private String reg_var = "\\$\\{(.*?)\\}";
 
@@ -210,57 +210,51 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public boolean load(InputStream settingStream, boolean isUseVariable) throws IOException {
 		this.clear();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(settingStream, charset));
-		
-		// 分组
-		String group = null;
-
-		while (true) {
-			String line = reader.readLine();
-			if (line == null) {
-				break;
-			}
-			line = line.trim();
-			// 跳过注释行和空行
-			if (StrUtil.isBlank(line) || line.startsWith(COMMENT_FLAG_PRE)) {
-				continue;
-			}
-
-			// 记录分组名
-			if (line.charAt(0) == GROUP_SURROUND[0] && line.charAt(line.length() - 1) == GROUP_SURROUND[1]) {
-				group = line.substring(1, line.length() - 1).trim();
-				this.groups.add(group);
-				continue;
-			}
-
-			String[] keyValue = line.split(ASSIGN_FLAG, 2);
-			// 跳过不符合简直规范的行
-			if (keyValue.length < 2) {
-				continue;
-			}
-
-			String key = keyValue[0].trim();
-			if (!StrUtil.isBlank(group)) {
-				key = group + "." + key;
-			}
-			String value = keyValue[1].trim();
-
-			// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
-			if (isUseVariable) {
-				// 找到所有变量标识
-				Set<String> vars = ReUtil.findAll(reg_var, value, 0, new HashSet<String>());
-				for (String var : vars) {
-					// 查找变量名对应的值
-					String varValue = this.get(ReUtil.get(reg_var, var, 1));
-					if (varValue != null) {
-						// 替换标识
-						value = value.replace(var, varValue);
-					}
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(settingStream, charset));
+			// 分组
+			String group = null;
+			
+			while (true) {
+				String line = reader.readLine();
+				if (line == null) {
+					break;
 				}
+				line = line.trim();
+				// 跳过注释行和空行
+				if (StrUtil.isBlank(line) || line.startsWith(COMMENT_FLAG_PRE)) {
+					continue;
+				}
+				
+				// 记录分组名
+				if (line.charAt(0) == GROUP_SURROUND[0] && line.charAt(line.length() - 1) == GROUP_SURROUND[1]) {
+					group = line.substring(1, line.length() - 1).trim();
+					this.groups.add(group);
+					continue;
+				}
+				
+				String[] keyValue = line.split(ASSIGN_FLAG, 2);
+				// 跳过不符合简直规范的行
+				if (keyValue.length < 2) {
+					continue;
+				}
+				
+				String key = keyValue[0].trim();
+				if (false == StrUtil.isBlank(group)) {
+					key = group + StrUtil.DOT + key;
+				}
+				String value = keyValue[1].trim();
+				
+				// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
+				if (isUseVariable) {
+					value = replaceVar(value);
+				}
+				put(key, value);
 			}
-			put(key, value);
+		} finally {
+			FileUtil.close(reader);
 		}
-		FileUtil.close(reader);
 		return true;
 	}
 
@@ -676,4 +670,26 @@ public class Setting extends HashMap<String, String> {
 		return this.groups;
 	}
 	/*--------------------------公有方法 end-------------------------------*/
+	
+	/*--------------------------Private Method start-------------------------------*/
+	/**
+	 * 替换给定值中的变量标识
+	 * @param value 值
+	 * @return 替换后的字符串
+	 */
+	private String replaceVar(String value) {
+		// 找到所有变量标识
+		final Set<String> vars = ReUtil.findAll(reg_var, value, 0, new HashSet<String>());
+		for (String var : vars) {
+			// 查找变量名对应的值
+			String varValue = this.get(ReUtil.get(reg_var, var, 1));
+			if (null != varValue) {
+				// 替换标识
+				value = value.replace(var, varValue);
+			}
+		}
+		return value;
+	}
+	
+	/*--------------------------Private Method end-------------------------------*/
 }

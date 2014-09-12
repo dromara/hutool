@@ -16,6 +16,7 @@ public class StrUtil {
 
 	public static final String DOT = ".";
 	public static final String SLASH = "/";
+	public static final String BACKSLASH = "\\";
 	public static final String EMPTY = "";
 	public static final String CRLF = "\r\n";
 	public static final String NEWLINE = "\n";
@@ -103,6 +104,15 @@ public class StrUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * 去除字符串两边的空格符，如果为null返回null
+	 * @param str 字符串
+	 * @return 处理后的字符串
+	 */
+	public static String trim(String str) {
+		return (null == str) ? null : str.trim();
 	}
 
 	/**
