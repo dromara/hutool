@@ -590,6 +590,10 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static String readString(URL url, String charset) throws IOException {
+		if(url == null) {
+			throw new RuntimeException("Empty url provided!");
+		}
+		
 		InputStream in = null;
 		try {
 			in = url.openStream();
