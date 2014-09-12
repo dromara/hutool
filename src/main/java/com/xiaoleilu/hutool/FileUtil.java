@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -416,11 +415,7 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static BufferedReader getReader(String path, String charset) throws IOException{
-		if(StrUtil.isBlank(charset)) {
-			return new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		}else {
-			return new BufferedReader(new InputStreamReader(new FileInputStream(path), charset));
-		}
+		return IoUtil.getReader(new FileInputStream(path), charset);
 	}
 	
 	/**
@@ -456,17 +451,12 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static <T extends Collection<String>> T readLines(URL url, String charset, T collection) throws IOException{
-		BufferedReader reader = null;
+		InputStream in = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(url.openStream()));
-			while(true){
-				String line = reader.readLine();
-				if(line == null) break;
-				collection.add(line);
-			}
-			return collection;
+			in = url.openStream();
+			return IoUtil.getLines(in, charset, collection);
 		} finally {
-			close(reader);
+			close(in);
 		}
 	}
 	
@@ -590,6 +580,23 @@ public class FileUtil {
 	 */
 	public static String readString(String path, String charset) throws IOException {
 		return new String(readBytes(new File(path)), charset);
+	}
+	
+	/**
+	 * 读取文件内容
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readString(URL url, String charset) throws IOException {
+		InputStream in = null;
+		try {
+			in = url.openStream();
+			return IoUtil.getString(in, charset);
+		} finally {
+			close(in);
+		}
 	}
 	
 	/**

@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Collection;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -99,6 +100,24 @@ public class IoUtil {
 		return inChannel.transferTo(0, inChannel.size(), outChannel);
 	}
 	//-------------------------------------------------------------------------------------- Copy end
+	
+	/**
+	 * 获得一个文件读取器
+	 * @param in 输入流
+	 * @param charset 字符集
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedReader getReader(InputStream in, String charset) throws IOException{
+		InputStreamReader reader = null;
+		if(StrUtil.isBlank(charset)) {
+			reader = new InputStreamReader(in);
+		}else {
+			reader = new InputStreamReader(in, charset);
+		}
+		
+		return new BufferedReader(reader);
+	}
 
 	/**
 	 * 从流中读取内容
@@ -109,16 +128,34 @@ public class IoUtil {
 	 * @throws IOException
 	 */
 	public static String getString(InputStream in, String charset) throws IOException {
-		StringBuilder content = new StringBuilder(); // 存储返回的内容
+		final long len = in.available();
+		if (len >= Integer.MAX_VALUE) {
+			throw new IOException("File is larger then max array size");
+		}
 
+		byte[] bytes = new byte[(int) len];
+		in.read(bytes);
+		return new String(bytes, charset);
+	}
+	
+	/**
+	 * 从流中读取内容
+	 * 
+	 * @param in 输入流
+	 * @param charset 字符集
+	 * @param collection 返回集合
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static <T extends Collection<String>> T getLines(InputStream in, String charset, T collection) throws IOException {
 		// 从返回的内容中读取所需内容
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
 		String line = null;
 		while ((line = reader.readLine()) != null) {
-			content.append(line);
+			collection.add(line);
 		}
 
-		return content.toString();
+		return collection;
 	}
 	
 	/**
