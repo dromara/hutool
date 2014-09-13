@@ -527,13 +527,13 @@ public class StrUtil {
 	 * @param map 参数值对
 	 * @return 格式化后的文本
 	 */
-	public static String format(String template, Map<String, Object> map) {
+	public static String format(String template, Map<?, ?> map) {
 		if(null == map || map.isEmpty()) {
 			return template;
 		}
 		
-		for (Entry<String, Object> entry : map.entrySet()) {
-			template.replace("{" + entry.getKey() + "}", entry.getValue().toString());
+		for (Entry<?, ?> entry : map.entrySet()) {
+			template = template.replace("{" + entry.getKey() + "}", entry.getValue().toString());
 		}
 		return template;
 	}
