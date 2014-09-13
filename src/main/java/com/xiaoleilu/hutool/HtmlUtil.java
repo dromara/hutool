@@ -116,7 +116,7 @@ public class HtmlUtil {
 			regex1 = StrUtil.format("(?i)<{}\\s?[^>]*?/>", tagName);	
 			if(withTagContent) {
 				//标签及其包含内容
-				regex2 = StrUtil.format("(?i)<{}\\s*?[^>]*?>[^<]*?</{}>", tagName, tagName);
+				regex2 = StrUtil.format("(?i)(?s)<{}\\s*?[^>]*?>.*?</{}>", tagName, tagName);
 			}else {
 				//标签不包含内容
 				regex2 = StrUtil.format("(?i)<{}\\s*?[^>]*?>|</{}>", tagName, tagName);
