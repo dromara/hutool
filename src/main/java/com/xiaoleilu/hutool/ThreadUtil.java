@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -55,6 +56,14 @@ public class ThreadUtil {
 	}
 	
 	/**
+	 * 获得一个新的线程池，只有单个线程
+	 * @return ExecutorService
+	 */
+	public static ExecutorService newSingleExecutor(){
+		return Executors.newSingleThreadExecutor();
+	}
+	
+	/**
 	 * 执行异步方法
 	 * @param runnable 需要执行的方法体
 	 * @return 执行的方法体
@@ -97,6 +106,11 @@ public class ThreadUtil {
 		return new ExecutorCompletionService<T>(executor);
 	}
 	
+	/**
+	 * 新建一个CountDownLatch
+	 * @param threadCount 线程数量
+	 * @return CountDownLatch
+	 */
 	public static CountDownLatch newCountDownLatch(int threadCount) {
 		return new CountDownLatch(threadCount);
 	}
