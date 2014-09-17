@@ -138,7 +138,7 @@ public class HtmlUtil {
 	public static String removeHtmlAttr(String content, String... attrs) {
 		String regex = null;
 		for (String attr : attrs) {
-			regex = StrUtil.format("(?i)\\s*{}=[\"'].*?[\"']", attr);
+			regex = StrUtil.format("(?i)\\s*{}=([\"']).*?\\1", attr);
 			content = content.replaceAll(regex, StrUtil.EMPTY);
 		}
 		return content;
