@@ -83,7 +83,6 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param path 相对路径
 	 * @param clazz 基准类
 	 * @param charset 字符集
-	 * @param isUseVariable 是否使用变量
 	 */
 	public GroupedSet(String path, Class<?> clazz, String charset) {
 		final URL url = URLUtil.getURL(path, clazz);
@@ -98,7 +97,6 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * 
 	 * @param url 设定文件的URL
 	 * @param charset 字符集
-	 * @param isUseVariable 是否使用变量
 	 */
 	public GroupedSet(URL url, String charset) {
 		if(url == null) {

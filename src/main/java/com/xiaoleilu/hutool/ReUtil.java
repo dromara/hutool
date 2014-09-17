@@ -256,7 +256,7 @@ public class ReUtil {
 	 * @param content 文本
 	 * @param regex 正则
 	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
-	 * @return
+	 * @return 处理后的文本
 	 */
 	public static String replaceAll(String content, String regex, String replacementTemplate) {
 		if(StrUtil.isEmpty(content)){

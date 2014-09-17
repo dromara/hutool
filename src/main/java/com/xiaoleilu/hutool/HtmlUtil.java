@@ -148,7 +148,7 @@ public class HtmlUtil {
 	 * 去除指定标签的所有属性
 	 * @param content 内容
 	 * @param tagNames 指定标签
-	 * @return
+	 * @return 处理后的文本
 	 */
 	public static String removeAllHtmlAttr(String content, String... tagNames) {
 		String regex = null;

@@ -584,7 +584,7 @@ public class FileUtil {
 	
 	/**
 	 * 读取文件内容
-	 * @param path 文件路径
+	 * @param url 文件URL
 	 * @param charset 字符集
 	 * @return 内容
 	 * @throws IOException
