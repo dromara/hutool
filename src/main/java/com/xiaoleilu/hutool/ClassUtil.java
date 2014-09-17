@@ -52,7 +52,6 @@ public class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackage(String packageName) {
-		log.debug("Scan classes from package [{}]...", packageName);
 		return scanPackage(packageName, null);
 	}
 	
@@ -96,7 +95,10 @@ public class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackage(String packageName, ClassFilter classFilter) {
-		if(StrUtil.isBlank(packageName)) throw new NullPointerException("packageName can't be blank!");
+		if(StrUtil.isBlank(packageName)) {
+			packageName = StrUtil.EMPTY;
+		}
+		log.debug("Scan classes from package [{}]...", packageName);
 		packageName = getWellFormedPackageName(packageName);
 		
 		final Set<Class<?>> classes = new HashSet<Class<?>>();
