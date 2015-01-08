@@ -23,7 +23,7 @@ public class DateUtil {
 	public final static long HOUR_MS = MINUTE_MS * 60;
 	/** 每天的毫秒数 */
 	public final static long DAY_MS = HOUR_MS * 24;
-	
+
 	/** 标准日期格式 */
 	public final static String NORM_DATE_PATTERN = "yyyy-MM-dd";
 	/** 标准时间格式 */
@@ -36,7 +36,7 @@ public class DateUtil {
 	public final static String NORM_DATETIME_MS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
 	/** HTTP头中日期时间格式 */
 	public final static String HTTP_DATETIME_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
-	
+
 	/** 标准日期（不含时间）格式化器 */
 //	private final static SimpleDateFormat NORM_DATE_FORMAT = new SimpleDateFormat(NORM_DATE_PATTERN);
 	private static ThreadLocal<SimpleDateFormat> NORM_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>(){
@@ -65,7 +65,7 @@ public class DateUtil {
 			return new SimpleDateFormat(HTTP_DATETIME_PATTERN, Locale.US);
 		};
 	};
-	
+
 	/**
 	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
 	 * @return 当前时间的标准形式字符串
@@ -73,7 +73,7 @@ public class DateUtil {
 	public static String now() {
 		return formatDateTime(new DateTime());
 	}
-	
+
 	/**
 	 * 当前日期，格式 yyyy-MM-dd
 	 * @return 当前日期的标准形式字符串
@@ -81,14 +81,14 @@ public class DateUtil {
 	public static String today() {
 		return formatDate(new DateTime());
 	}
-	
+
 	/**
 	 * @return 当前时间
 	 */
 	public static DateTime date() {
 		return new DateTime();
 	}
-	
+
 	/**
 	 * Long类型时间转为Date
 	 * @param date Long类型Date（Unix时间戳）
@@ -97,7 +97,7 @@ public class DateUtil {
 	public static DateTime date(long date) {
 		return new DateTime(date);
 	}
-	
+
 	/**
 	 * 获得指定日期年份和季节<br>
 	 * 格式：[20131]表示2013年第一季度
@@ -107,10 +107,10 @@ public class DateUtil {
 	public static String yearAndSeason(Date date) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		
+
 		return yearAndSeason(cal);
 	}
-	
+
 	/**
 	 * 获得指定日期区间内的年份和季节<br>
 	 * @param startDate 其实日期（包含）
@@ -122,8 +122,8 @@ public class DateUtil {
 		if(startDate == null || endDate == null) {
 			return seasons;
 		}
-		
-		
+
+
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(startDate);
 		while(true) {
@@ -131,17 +131,17 @@ public class DateUtil {
 			if(startDate.after(endDate)) {
 				startDate = endDate;
 			}
-			
+
 			seasons.add(yearAndSeason(cal));
-			
+
 			if(startDate.equals(endDate)) {
 				break;
 			}
-			
+
 			cal.add(Calendar.MONTH, 3);
 			startDate = cal.getTime();
 		}
-		
+
 		return seasons;
 	}
 	// ------------------------------------ Format start ----------------------------------------------
@@ -154,7 +154,7 @@ public class DateUtil {
 	public static String format(Date date, String format){
 		return new SimpleDateFormat(format).format(date);
 	}
-	
+
 	/**
 	 * 格式 yyyy-MM-dd HH:mm:ss
 	 * @param date 被格式化的日期
@@ -163,7 +163,7 @@ public class DateUtil {
 	public static String formatDateTime(Date date) {
 		return NORM_DATETIME_FORMAT.get().format(date);
 	}
-	
+
 	/**
 	 * 格式 yyyy-MM-dd
 	 * @param date 被格式化的日期
@@ -172,7 +172,7 @@ public class DateUtil {
 	public static String formatDate(Date date) {
 		return NORM_DATE_FORMAT.get().format(date);
 	}
-	
+
 	/**
 	 * 格式化为Http的标准日期格式
 	 * @param date 被格式化的日期
@@ -182,9 +182,9 @@ public class DateUtil {
 		return HTTP_DATETIME_FORMAT.get().format(date);
 	}
 	// ------------------------------------ Format end ----------------------------------------------
-	
+
 	// ------------------------------------ Parse start ----------------------------------------------
-	
+
 	/**
 	 * 构建DateTime对象
 	 * @param dateStr Date字符串
@@ -198,7 +198,7 @@ public class DateUtil {
 			throw new UtilException(StrUtil.format("Parse [{}] with format [{}] error!", dateStr, simpleDateFormat.toPattern()), e);
 		}
 	}
-	
+
 	/**
 	 * 将特定格式的日期转换为Date对象
 	 * @param dateString 特定格式的日期
@@ -208,7 +208,7 @@ public class DateUtil {
 	public static DateTime parse(String dateString, String format){
 		return parse(dateString, new SimpleDateFormat(format));
 	}
-	
+
 	/**
 	 * 格式yyyy-MM-dd HH:mm:ss
 	 * @param dateString 标准形式的时间字符串
@@ -217,7 +217,7 @@ public class DateUtil {
 	public static DateTime parseDateTime(String dateString){
 		return parse(dateString, NORM_DATETIME_FORMAT.get());
 	}
-	
+
 	/**
 	 * 格式yyyy-MM-dd
 	 * @param dateString 标准形式的日期字符串
@@ -226,7 +226,7 @@ public class DateUtil {
 	public static DateTime parseDate(String dateString){
 		return parse(dateString, NORM_DATE_FORMAT.get());
 	}
-	
+
 	/**
 	 * 格式HH:mm:ss
 	 * @param timeString 标准形式的日期字符串
@@ -235,7 +235,7 @@ public class DateUtil {
 	public static DateTime parseTime(String timeString){
 		return parse(timeString, NORM_TIME_FORMAT.get());
 	}
-	
+
 	/**
 	 * 格式：<br>
 	 * 1、yyyy-MM-dd HH:mm:ss<br>
@@ -266,12 +266,12 @@ public class DateUtil {
 		}catch(Exception e) {
 			throw new UtilException(StrUtil.format("Parse [{}] with format normal error!", dateStr));
 		}
-		
+
 		//没有更多匹配的时间格式
 		throw new UtilException(StrUtil.format(" [{}] format is not fit for date pattern!", dateStr));
 	}
 	// ------------------------------------ Parse end ----------------------------------------------
-	
+
 	// ------------------------------------ Offset start ----------------------------------------------
 	/**
 	 * 获取某天的开始时间
@@ -287,7 +287,7 @@ public class DateUtil {
 		calendar.set(Calendar.MILLISECOND, 0);
 		return new DateTime(calendar.getTime());
 	}
-	
+
 	/**
 	 * 获取某天的结束时间
 	 * @param date 日期
@@ -302,7 +302,7 @@ public class DateUtil {
 		calendar.set(Calendar.MILLISECOND, 999);
 		return new DateTime(calendar.getTime());
 	}
-	
+
 	/**
 	 * 昨天
 	 * @return 昨天
@@ -310,7 +310,7 @@ public class DateUtil {
 	public static DateTime yesterday() {
 		return offsiteDay(new DateTime(), -1);
 	}
-	
+
 	/**
 	 * 上周
 	 * @return 上周
@@ -318,7 +318,7 @@ public class DateUtil {
 	public static DateTime lastWeek() {
 		return offsiteWeek(new DateTime(), -1);
 	}
-	
+
 	/**
 	 * 上个月
 	 * @return 上个月
@@ -326,7 +326,7 @@ public class DateUtil {
 	public static DateTime lastMouth() {
 		return offsiteMonth(new DateTime(), -1);
 	}
-	
+
 	/**
 	 * 偏移天
 	 * @param date 日期
@@ -334,9 +334,9 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteDay(Date date, int offsite) {
-		return offsiteDate(new DateTime(), Calendar.DAY_OF_YEAR, offsite);
+		return offsiteDate(date, Calendar.DAY_OF_YEAR, offsite);
 	}
-	
+
 	/**
 	 * 偏移周
 	 * @param date 日期
@@ -344,9 +344,9 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteWeek(Date date, int offsite) {
-		return offsiteDate(new DateTime(), Calendar.WEEK_OF_YEAR, offsite);
+		return offsiteDate(date, Calendar.WEEK_OF_YEAR, offsite);
 	}
-	
+
 	/**
 	 * 偏移月
 	 * @param date 日期
@@ -354,9 +354,9 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteMonth(Date date, int offsite) {
-		return offsiteDate(new DateTime(), Calendar.MONTH, offsite);
+		return offsiteDate(date, Calendar.MONTH, offsite);
 	}
-	
+
 	/**
 	 * 获取指定日期偏移指定时间后的时间
 	 * @param date 基准日期
@@ -371,7 +371,7 @@ public class DateUtil {
 		return new DateTime(cal.getTime());
 	}
 	// ------------------------------------ Offset end ----------------------------------------------
-	
+
 	/**
 	 * 判断两个日期相差的时长<br/>
 	 * 返回 minuend - subtrahend 的差
@@ -380,11 +380,11 @@ public class DateUtil {
 	 * @param diffField 相差的选项：相差的天、小时
 	 * @return 日期差
 	 */
-	public static long diff(Date subtrahend, Date minuend, long diffField){ 
+	public static long diff(Date subtrahend, Date minuend, long diffField){
 	  long diff = minuend.getTime() - subtrahend.getTime();
-	  return diff/diffField; 
+	  return diff/diffField;
 	}
-	
+
 	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：纳秒
 	 * @param preTime 之前记录的时间
@@ -393,7 +393,7 @@ public class DateUtil {
 	public static long spendNt(long preTime) {
 		return System.nanoTime() - preTime;
 	}
-	
+
 	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：毫秒
 	 * @param preTime 之前记录的时间
@@ -402,7 +402,7 @@ public class DateUtil {
 	public static long spendMs(long preTime) {
 		return System.currentTimeMillis() - preTime;
 	}
-	
+
 	/**
 	 * 格式化成yyMMddHHmm后转换为int型
 	 * @param date 日期
@@ -411,7 +411,7 @@ public class DateUtil {
 	public static int toIntSecond(Date date) {
 		return Integer.parseInt(DateUtil.format(date, "yyMMddHHmm"));
 	}
-	
+
 	/**
 	 * 计算指定指定时间区间内的周数
 	 * @param start 开始时间
@@ -423,19 +423,19 @@ public class DateUtil {
 		startCalendar.setTime(start);
 		final Calendar endCalendar = Calendar.getInstance();
 		endCalendar.setTime(end);
-		
+
 		final int startWeekofYear = startCalendar.get(Calendar.WEEK_OF_YEAR);
 		final int endWeekofYear = endCalendar.get(Calendar.WEEK_OF_YEAR);
-		
+
 		int count = endWeekofYear - startWeekofYear + 1;
-		
+
 		if(Calendar.SUNDAY != startCalendar.get(Calendar.DAY_OF_WEEK)) {
 			count --;
 		}
-		
+
 		return count;
 	}
-	
+
 	//------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>
