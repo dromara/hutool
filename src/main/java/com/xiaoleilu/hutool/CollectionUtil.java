@@ -552,4 +552,17 @@ public class CollectionUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 将Entry集合转换为HashMap
+	 * @param entryCollection entry集合
+	 * @return Map
+	 */
+	public static <T, K> HashMap<T, K> toMap(Collection<Entry<T, K>> entryCollection) {
+		HashMap<T,K> map = new HashMap<T, K>();
+		for (Entry<T, K> entry : entryCollection) {
+			map.put(entry.getKey(), entry.getValue());
+		}
+		return map;
+	}
 }
