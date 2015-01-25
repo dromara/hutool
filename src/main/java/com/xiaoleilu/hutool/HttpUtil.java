@@ -215,6 +215,12 @@ public class HttpUtil {
 		return CollectionUtil.join(paramMap.entrySet(), "&");
 	}
 
+	/**
+	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
+	 * @param paramsStr 参数字符串（或者带参数的Path）
+	 * @param charset 字符集
+	 * @return 参数Map
+	 */
 	public static Map<String, List<String>> decodeParams(String paramsStr, String charset) {
 		if (StrUtil.isBlank(paramsStr)) {
 			return Collections.emptyMap();
