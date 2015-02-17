@@ -1,9 +1,8 @@
 package com.xiaoleilu.hutool;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.log.LogWrapper;
 
 public class Log {
 	/**
@@ -11,8 +10,8 @@ public class Log {
 	 * @param clazz 日志发出的类
 	 * @return Logger
 	 */
-	public static Logger get(Class<?> clazz) {
-		return LoggerFactory.getLogger(clazz);
+	public static LogWrapper get(Class<?> clazz) {
+		return new LogWrapper(clazz);
 	}
 
 	/**
@@ -20,16 +19,16 @@ public class Log {
 	 * @param name 自定义的日志发出者名称
 	 * @return Logger
 	 */
-	public static Logger get(String name) {
-		return LoggerFactory.getLogger(name);
+	public static LogWrapper get(String name) {
+		return new LogWrapper(name);
 	}
 	
 	/**
 	 * @return 获得日志，自动判定日志发出者
 	 */
-	public static Logger get() {
+	public static LogWrapper get() {
 		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		return LoggerFactory.getLogger(stackTrace[2].getClassName());
+		return get(stackTrace[2].getClassName());
 	}
 	
 	//----------------------------------------------------------- Logger method start
@@ -205,9 +204,9 @@ public class Log {
 	/**
 	 * @return 获得日志，自动判定日志发出者
 	 */
-	private static Logger innerGet() {
+	private static LogWrapper innerGet() {
 		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		return LoggerFactory.getLogger(stackTrace[3].getClassName());
+		return get(stackTrace[3].getClassName());
 	}
 	//----------------------------------------------------------- Private method end
 }
