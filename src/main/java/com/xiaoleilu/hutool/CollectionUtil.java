@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeSet;
 
 /**
  * 集合相关工具类，包括数组
@@ -564,5 +565,31 @@ public class CollectionUtil {
 			map.put(entry.getKey(), entry.getValue());
 		}
 		return map;
+	}
+	
+	/**
+	 * 将集合转换为排序后的TreeSet
+	 * @param collection 集合
+	 * @param comparator 比较器
+	 * @return treeSet
+	 */
+	public static <T> TreeSet<T> toTreeSet(Collection<T> collection, Comparator<T> comparator){
+		final TreeSet<T> treeSet = new TreeSet<T>(comparator);
+		for (T t : collection) {
+			treeSet.add(t);
+		}
+		return treeSet;
+	}
+	
+	/**
+	 * 排序集合
+	 * @param collection 集合
+	 * @param comparator 比较器
+	 * @return treeSet
+	 */
+	public static <T> List<T> sort(Collection<T> collection, Comparator<T> comparator){
+		List<T> list = new ArrayList<T>(collection);
+		Collections.sort(list, comparator);
+		return list;
 	}
 }
