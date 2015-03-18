@@ -105,7 +105,7 @@ public class SecureUtil {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public String sha1(String source, String charset){
+	public static String sha1(String source, String charset){
 		return encrypt(source, SHA1, charset);
 	}
 }
