@@ -1,25 +1,32 @@
 package com.xiaoleilu.hutool;
 
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
  * 安全相关工具类
+ * 
  * @author xiaoleilu
  *
  */
 public class SecureUtil {
 
+	public final static String MD5 = "MD5";
+	public final static String SHA1 = "SHA-1";
+
 	/**
 	 * md5编码
+	 * 
 	 * @param source 需要计算md5的byte数组
 	 * @return MD5
 	 */
 	public static String md5(byte[] source) {
 		String s = null;
 		// 用来将字节转换成 16 进制表示的字符
-		char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 		try {
 			java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
 			md.update(source);
@@ -38,26 +45,60 @@ public class SecureUtil {
 		}
 		return s;
 	}
-	
+
 	/**
 	 * md5编码
+	 * 
 	 * @param source 字符串
 	 * @param charset 字符集，为空使用系统默认字符集
 	 * @return md5
 	 */
 	public static String md5(String source, String charset) {
-		if(source == null) {
+		if (source == null) {
 			return null;
 		}
-		
-		if(StrUtil.isBlank(charset)) {
+
+		if (StrUtil.isBlank(charset)) {
 			return md5(source.getBytes());
 		}
-		
+
 		try {
 			return md5(source.getBytes(charset));
 		} catch (UnsupportedEncodingException e) {
 			throw new UtilException("Unsupported encoding: " + charset, e);
 		}
+	}
+
+	/**
+	 * 加密
+	 * 
+	 * @param source 被加密的字符串
+	 * @param algorithmName 算法名
+	 * @param charset 字符集
+	 * @return 被加密后的值
+	 */
+	public static String encrypt(String source, String algorithmName, String charset) {
+		final byte[] bt = StrUtil.encode(source, charset);
+		MessageDigest md = null;
+		try {
+			if (StrUtil.isBlank(algorithmName)) {
+				algorithmName = "MD5";
+			}
+			md = MessageDigest.getInstance(algorithmName);
+		} catch (NoSuchAlgorithmException e) {
+			throw new UtilException(StrUtil.format("No such algorithm name for: {}", algorithmName));
+		}
+		md.update(bt);
+		return Conver.toHex(md.digest());
+	}
+	
+	/**
+	 * SHA-1算法加密
+	 * @param source 被加密的字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public String sha1(String source, String charset){
+		return encrypt(source, SHA1, charset);
 	}
 }

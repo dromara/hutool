@@ -332,4 +332,22 @@ public class Conver {
 		
 		return returnString;
 	}
+	
+	/**
+	 * byte数组转16进制串
+	 * @param bytes 被转换的byte数组
+	 * @return 转换后的值
+	 */
+	public static String toHex(byte[] bytes) {
+		final StringBuilder des = new StringBuilder();
+		String tmp = null;
+		for (int i = 0; i < bytes.length; i++) {
+			tmp = (Integer.toHexString(bytes[i] & 0xFF));
+			if (tmp.length() == 1) {
+				des.append("0");
+			}
+			des.append(tmp);
+		}
+		return des.toString();
+	}
 }
