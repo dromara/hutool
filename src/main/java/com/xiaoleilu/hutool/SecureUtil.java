@@ -14,8 +14,15 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  */
 public class SecureUtil {
 
+	public final static String MD2 = "MD2";
+	public final static String MD4 = "MD4";
 	public final static String MD5 = "MD5";
+	
 	public final static String SHA1 = "SHA-1";
+	public final static String SHA256 = "SHA-256";
+	
+	public final static String RIPEMD128 = "RIPEMD128";
+	public final static String RIPEMD160 = "RIPEMD160";
 
 	/**
 	 * md5编码
