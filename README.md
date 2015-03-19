@@ -15,4 +15,8 @@ hutool
 4. 对于null的处理我没有可以回避，而是采取“你给我null我也给你返回null”这种思想，尽量不在工具类里抛空指针异常（这思想稍猥琐啊……直接把包袱扔给调用者了，好吧，谁让你给我null了）。
 
 
-### 文档请移步 [Hutool Wiki](https://github.com/looly/hutool/wiki) ###
+### 文档请移步 
+
+[Hutool Wiki @ github](https://github.com/looly/hutool/wiki)
+
+[Hutool Wiki @ osc](http://hutool.mydoc.io/)
