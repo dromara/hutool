@@ -41,7 +41,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
@@ -121,7 +121,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version>
+						<version>2.4</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -135,7 +135,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version>
+						<version>2.10.2</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -145,6 +145,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- Gpg Signature -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
