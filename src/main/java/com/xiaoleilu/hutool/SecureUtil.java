@@ -16,7 +16,7 @@ public class SecureUtil {
 	public final static String MD2 = "MD2";
 	public final static String MD4 = "MD4";
 	public final static String MD5 = "MD5";
-
+	
 	public final static String SHA1 = "SHA-1";
 	public final static String SHA256 = "SHA-256";
 
@@ -192,7 +192,7 @@ public class SecureUtil {
 	 * Base64的解码;
 	 * 
 	 * @param bytes
-	 * @return
+	 * @return 解码后的字符串
 	 */
 	public static String decodeBase64(byte[] bytes) {
 
