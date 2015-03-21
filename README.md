@@ -1,7 +1,9 @@
 hutool
 ======
 
-一个类似于[jodd](http://jodd.org/)和[Apache commons lang](http://commons.apache.org/)的Java工具类。
+<center>![封面](http://img.hb.aicdn.com/61f84090279e1aaf49a11301dea2b3f453d2ad9028aaf4-R12vgs_fw658)</center>
+
+一个Java基础工具类，类似于[jodd](http://jodd.org/)和[Apache commons lang](http://commons.apache.org/)的Java工具类。
 
 ## 简介
 [Hutool](https://github.com/looly/hutool)是一个工具包，我日常写项目的一些积累，参考了一些[Apache Commons Lang](http://commons.apache.org/)和[JODD](http://jodd.org/)里的一些写法，不过大部分还是自己写的，希望你看了之后会有所启发或者能给你工作中带来帮助。说实话我现在写代码已经离不开自己这个工具包了，叫做Hutool也有“糊涂”之意，表示很多功能糊里糊涂就实现了。好吧，言归正传，说说里面一些好玩的方法（工具包中大部分是一些静态方法）。
@@ -33,12 +35,11 @@ hutool
 注：工具包的**版本**可以通过 [http://search.maven.org/](http://search.maven.org/) 搜索`hutool`找到项目。
 
 ### 非Maven项目
-可以从[http://search.maven.org/](http://search.maven.org/) 搜索`hutool`找到项目，点击对应版本，下面就是响应的Jar包，导入即可使用。
+可以从[http://search.maven.org/](http://search.maven.org/) 搜索`hutool`找到项目，点击对应版本，下面是相应的Jar包，导入即可使用。
 
-最新的2.4.1版本Jar下载地址：
-[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.1/hutool-2.4.1.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.1/hutool-2.4.1.jar)
+最新的2.4.2版本Jar下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2.jar)
 
-Java doc下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.1/hutool-2.4.1-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.1/hutool-2.4.1-javadoc.jar)
+Java doc下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2-javadoc.jar)
 
 ## 文档请移步 
 
