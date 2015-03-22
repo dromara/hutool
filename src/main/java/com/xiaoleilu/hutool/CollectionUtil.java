@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -219,12 +220,7 @@ public class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		ArrayList<T> list = new ArrayList<T>(values.length);
-		for (T t : values) {
-			list.add(t);
-		}
-		
-		return list;
+		return (ArrayList<T>) Arrays.asList(values);
 	}
 	
 	/**
@@ -591,5 +587,118 @@ public class CollectionUtil {
 		List<T> list = new ArrayList<T>(collection);
 		Collections.sort(list, comparator);
 		return list;
+	}
+	
+	//------------------------------------------------------------------- 基本类型的数组转换为包装类型数组
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Integer[] wrap(int... values){
+		final int length = values.length;
+		Integer[] array = new Integer[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Long[] wrap(long... values){
+		final int length = values.length;
+		Long[] array = new Long[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Character[] wrap(char... values){
+		final int length = values.length;
+		Character[] array = new Character[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Byte[] wrap(byte... values){
+		final int length = values.length;
+		Byte[] array = new Byte[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Short[] wrap(short... values){
+		final int length = values.length;
+		Short[] array = new Short[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Float[] wrap(float... values){
+		final int length = values.length;
+		Float[] array = new Float[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Double[] wrap(double... values){
+		final int length = values.length;
+		Double[] array = new Double[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Boolean[] wrap(boolean... values){
+		final int length = values.length;
+		Boolean[] array = new Boolean[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
 	}
 }
