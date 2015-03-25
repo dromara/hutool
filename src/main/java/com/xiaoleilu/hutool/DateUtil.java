@@ -242,6 +242,7 @@ public class DateUtil {
 	 * 2、yyyy-MM-dd<br>
 	 * 3、HH:mm:ss<br>
 	 * 4、yyyy-MM-dd HH:mm
+	 * 5、yyyy-MM-dd HH:mm:ss.SSS
 	 * @param dateStr 日期字符串
 	 * @return 日期
 	 */
@@ -260,7 +261,7 @@ public class DateUtil {
 				return parseTime(dateStr);
 			}else if(length == NORM_DATETIME_MINUTE_PATTERN.length()){
 				return parse(dateStr, NORM_DATETIME_MINUTE_PATTERN);
-			}else if(length == NORM_DATETIME_MS_PATTERN.length()){
+			}else if(length >= NORM_DATETIME_MS_PATTERN.length() -2){
 				return parse(dateStr, NORM_DATETIME_MS_PATTERN);
 			}
 		}catch(Exception e) {
