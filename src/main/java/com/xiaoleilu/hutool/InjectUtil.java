@@ -57,7 +57,7 @@ public class InjectUtil {
 			}
 			
 			try {
-				method.invoke(model, ClassUtil.parse(types[0], value));
+				method.invoke(model, Conver.parse(types[0], value));
 			} catch (Exception e) {
 				throw new UtilException(StrUtil.format("Inject [{}] error!", paramName), e);
 			}
@@ -89,7 +89,7 @@ public class InjectUtil {
 			}
 			
 			try {
-				method.invoke(model, ClassUtil.parse(types[0], value));
+				method.invoke(model, Conver.parse(types[0], value));
 			} catch (Exception e) {
 				throw new UtilException(StrUtil.format("Inject [{}] error!", fieldName), e);
 			}
