@@ -9,9 +9,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.PageUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.SqlBuilder;
+import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
+import com.xiaoleilu.hutool.db.SqlBuilder.Order;
 
 /**
  * Oracle 方言
@@ -19,6 +23,7 @@ import com.xiaoleilu.hutool.db.Entity;
  *
  */
 public class OracleDialect extends AnsiSqlDialect{
+	
 	@Override
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
 		final StringBuilder sql = new StringBuilder();
@@ -52,19 +57,30 @@ public class OracleDialect extends AnsiSqlDialect{
 	
 	@Override
 	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
-		final List<Object> paramValues = new ArrayList<Object>(where.size());
-		final StringBuilder select = buildSelectQuery(fields, where, paramValues);
+		return psForPage(conn, fields, where, page, numPerPage, null, null);
+	}
+	
+	@Override
+	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, Collection<String> orderFields, Order order) throws SQLException {
+		final SqlBuilder find = SqlBuilder.create(wrapper)
+				.select(fields)
+				.from(where.getTableName())
+				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 		
+		if(null != order && CollectionUtil.isNotEmpty(orderFields)) {
+			find.orderBy(order, orderFields.toArray(new String[orderFields.size()]));
+		}
 		
 		int[] startEnd = PageUtil.transToStartEnd(page, numPerPage);
 		final StringBuilder sql = new StringBuilder();
 		sql.append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")
-			.append(select).append(" ) row_ where rownum <= ").append(startEnd[1])
+			.append(find)
+			.append(" ) row_ where rownum <= ").append(startEnd[1])
 			.append(") table_alias")
 			.append(" where table_alias.rownum_ >= ").append(startEnd[0]);
 		
 		final PreparedStatement ps = conn.prepareStatement(sql.toString());
-		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
+		DbUtil.fillParams(ps, find.getParamValueArray());
 		return ps;
 	}
 }

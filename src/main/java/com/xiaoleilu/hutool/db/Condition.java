@@ -7,7 +7,7 @@ import com.xiaoleilu.hutool.StrUtil;
  * @author Looly
  *
  */
-public class Condition {
+public class Condition implements Cloneable{
 	
 	/** 字段 */
 	private String field;
@@ -120,6 +120,16 @@ public class Condition {
 		this.isPlaceHolder = isPlaceHolder;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
+	
+	@Override
+	public Condition clone() {
+		try {
+			return (Condition) super.clone();
+		} catch (CloneNotSupportedException e) {
+			//不会发生
+			return null;
+		}
+	}
 	
 	@Override
 	public String toString() {

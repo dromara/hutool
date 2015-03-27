@@ -684,4 +684,57 @@ public class StrUtil {
 		} else
 			return name;
 	}
+	
+	/**
+	 * 包装指定字符串
+	 * @param str 被包装的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 包装后的字符串
+	 */
+	public static String wrap(String str, String prefix, String suffix) {
+		return format("{}{}{}", prefix, str, suffix);
+	}
+	
+	/**
+	 * 指定字符串是否被包装
+	 * @param str 字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 是否被包装
+	 */
+	public static boolean isWrap(String str, String prefix, String suffix) {
+		return str.startsWith(prefix) && str.endsWith(suffix);
+	}
+	
+	/**
+	 * 指定字符串是否被同一字符包装（前后都有这些字符串）
+	 * @param str 字符串
+	 * @param wrapper 包装字符串
+	 * @return 是否被包装
+	 */
+	public static boolean isWrap(String str, String wrapper) {
+		return isWrap(str, wrapper, wrapper);
+	}
+	
+	/**
+	 * 指定字符串是否被同一字符包装（前后都有这些字符串）
+	 * @param str 字符串
+	 * @param wrapper 包装字符
+	 * @return 是否被包装
+	 */
+	public static boolean isWrap(String str, char wrapper) {
+		return isWrap(str, wrapper, wrapper);
+	}
+	
+	/**
+	 * 指定字符串是否被包装
+	 * @param str 字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 是否被包装
+	 */
+	public static boolean isWrap(String str, char prefixChar, char suffixChar) {
+		return str.charAt(0) == prefixChar && str.charAt(str.length() -1) == suffixChar;
+	}
 }

@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.SqlBuilder;
 import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
+import com.xiaoleilu.hutool.db.SqlBuilder.Order;
+import com.xiaoleilu.hutool.db.Wrapper;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 
 /**
@@ -22,11 +23,11 @@ import com.xiaoleilu.hutool.db.dialect.Dialect;
  */
 public class AnsiSqlDialect implements Dialect {
 	
-	private final static char WRAP_QUOTE = '`';
+	protected Wrapper wrapper = new Wrapper('`');
 
 	@Override
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
-		final SqlBuilder insert = SqlBuilder.create().insert(DbUtil.wrap(entity, WRAP_QUOTE));
+		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entity);
 
 		final PreparedStatement ps = conn.prepareStatement(insert.build(), Statement.RETURN_GENERATED_KEYS);
 		DbUtil.fillParams(ps, insert.getParamValueArray());
@@ -39,8 +40,8 @@ public class AnsiSqlDialect implements Dialect {
 			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No condition define, we can't build delete query for del everything.");
 		}
-
-		final SqlBuilder delete = SqlBuilder.create()
+		
+		final SqlBuilder delete = SqlBuilder.create(wrapper)
 			.delete(entity.getTableName())
 			.where(LogicalOperator.AND, DbUtil.buildConditions(entity));
 
@@ -56,7 +57,7 @@ public class AnsiSqlDialect implements Dialect {
 			throw new SQLException("No condition define, we can't build update query for update everything.");
 		}
 		
-		final SqlBuilder update = SqlBuilder.create()
+		final SqlBuilder update = SqlBuilder.create(wrapper)
 				.update(entity)
 				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 
@@ -67,8 +68,9 @@ public class AnsiSqlDialect implements Dialect {
 
 	@Override
 	public PreparedStatement psForFind(Connection conn, Collection<String> fields, Entity where) throws SQLException {
-		final SqlBuilder find = SqlBuilder.create()
-			.select(fields.toArray(new String[fields.size()]))
+		
+		final SqlBuilder find = SqlBuilder.create(wrapper)
+			.select(fields)
 			.from(where.getTableName())
 			.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 
@@ -81,6 +83,11 @@ public class AnsiSqlDialect implements Dialect {
 	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
 		throw new SQLException("ANSI SQL is not support for page query!");
 	}
+	
+	@Override
+	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, Collection<String> orderFields, Order order) throws SQLException {
+		throw new SQLException("ANSI SQL is not support for page query!");
+	}
 
 	@Override
 	public PreparedStatement psForCount(Connection conn, Entity where) throws SQLException {
@@ -90,25 +97,6 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	// ---------------------------------------------------------------------------- Protected method start
-	/**
-	 * 构件查询语句
-	 * 
-	 * @param fields 返回的字段，空则返回所有字段
-	 * @param where 条件
-	 * @param paramValues 存放值的列表
-	 * @return 查询语句
-	 */
-	protected StringBuilder buildSelectQuery(Collection<String> fields, Entity where, List<Object> paramValues) {
-		final StringBuilder sql = new StringBuilder("SELECT ");
-		if (CollectionUtil.isEmpty(fields)) {
-			sql.append("*");
-		} else {
-			sql.append(CollectionUtil.join(fields, ","));
-		}
-		sql.append(" FROM `").append(where.getTableName()).append("`").append(DbUtil.buildEqualsWhere(where, paramValues));
-
-		return sql;
-	}
 	// ---------------------------------------------------------------------------- Protected method end
 
 }

@@ -372,44 +372,19 @@ public class DbUtil {
 	}
 	
 	/**
-	 * 包装字段名<br>
-	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
-	 * @param field 字段名
-	 * @param wrapQuote 包装的引号（单引号还是反引号）
-	 * @return 包装后的字段名
+	 * 验证实体类对象的有效性
+	 * @param entity 实体类对象
 	 */
-	public static String wrap(String field, char wrapQuote){
-		if(StrUtil.isBlank(field)) {
-			return field;
+	public static void validateEntity(Entity entity){
+		if(null == entity) {
+			throw new DbRuntimeException("Entity is null !");
 		}
-		
-		//如果已经被包装，返回原字符
-		if(field.charAt(0) == wrapQuote && field.charAt(field.length() -1) == wrapQuote) {
-			return field;
+		if(StrUtil.isBlank(entity.getTableName())) {
+			throw new DbRuntimeException("Entity`s table name is null !");
 		}
-		
-		return StrUtil.format("{}{}{}", wrapQuote, field, wrapQuote);
-	}
-	
-	/**
-	 * 包装字段名<br>
-	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
-	 * @param entity 被包装的实体
-	 * @param wrapQuote 包装的引号（单引号还是反引号）
-	 * @return 包装后的字段名
-	 */
-	public static Entity wrap(Entity entity, char wrapQuote){
-		final Entity wrapedEntity = new Entity();
-		
-		//wrap table name
-		wrapedEntity.setTableName(wrap(entity.getTableName(), wrapQuote));
-		
-		//wrap fields
-		for (Entry<String, Object> entry : entity.entrySet()) {
-			wrapedEntity.set(wrap(entry.getKey(), wrapQuote), entry.getValue());
+		if(entity.isEmpty()) {
+			throw new DbRuntimeException("No filed and value in this entity !");
 		}
-		
-		return wrapedEntity;
 	}
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end

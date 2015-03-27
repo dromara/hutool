@@ -135,18 +135,6 @@ public class Entity extends HashMap<String, Object>{
 	}
 	
 	/**
-	 * 设置列，包装字段名<br>
-	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
-	 * @param attr 属性
-	 * @param value 值
-	 * @param wrapQuote 包装的引号（单引号还是反引号）
-	 * @return 本身
-	 */
-	public Entity wrapSet(String attr, Object value, char wrapQuote) {
-		return set(DbUtil.wrap(attr, wrapQuote), value);
-	}
-	
-	/**
 	 * 设置列，当键或值为null时忽略
 	 * @param attr 属性
 	 * @param value 值

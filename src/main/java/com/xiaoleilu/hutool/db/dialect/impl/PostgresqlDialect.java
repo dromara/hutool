@@ -10,16 +10,21 @@ import com.xiaoleilu.hutool.PageUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.SqlBuilder;
+import com.xiaoleilu.hutool.db.Wrapper;
 import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.db.SqlBuilder.Order;
 
+
 /**
- * MySQL方言
+ * SqlLite3方言
  * @author loolly
  *
  */
-public class MysqlDialect extends AnsiSqlDialect{
-
+public class PostgresqlDialect extends AnsiSqlDialect{
+	public PostgresqlDialect() {
+		wrapper = new Wrapper('"');
+	}
+	
 	@Override
 	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
 		return psForPage(conn, fields, where, page, numPerPage, null, null);
@@ -37,7 +42,7 @@ public class MysqlDialect extends AnsiSqlDialect{
 		}
 		
 		int[] startEnd = PageUtil.transToStartEnd(page, numPerPage);
-		find.append(" LIMIT ").append(startEnd[0]).append(", ").append(numPerPage);
+		find.append(" limit ").append(startEnd[0]).append(" offset ").append(numPerPage);
 		
 		final PreparedStatement ps = conn.prepareStatement(find.build());
 		DbUtil.fillParams(ps, find.getParamValueArray());
