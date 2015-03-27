@@ -15,12 +15,21 @@ public class Condition {
 	private String operator;
 	/** 值 */
 	private Object value;
-	
+	/** 是否使用条件值占位符 */
+	private boolean isPlaceHolder = true;
 	//--------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
 	 */
 	public Condition() {
+	}
+	
+	/**
+	 * 构造
+	 * @param isPlaceHolder 是否使用条件值占位符
+	 */
+	public Condition(boolean isPlaceHolder) {
+		this.isPlaceHolder = isPlaceHolder;
 	}
 	
 	/**
@@ -94,6 +103,21 @@ public class Condition {
 	 */
 	public void setValue(Object value) {
 		this.value = value;
+	}
+	
+	/**
+	 * 是否使用条件占位符
+	 * @return 是否使用条件占位符
+	 */
+	public boolean isPlaceHolder() {
+		return isPlaceHolder;
+	}
+	/**
+	 * 设置是否使用条件占位符
+	 * @param isPlaceHolder 是否使用条件占位符
+	 */
+	public void setPlaceHolder(boolean isPlaceHolder) {
+		this.isPlaceHolder = isPlaceHolder;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
 	

@@ -288,6 +288,25 @@ public class DbUtil {
 	}
 	
 	/**
+	 * 通过实体对象构建条件对象
+	 * @param entity 实体对象
+	 * @return 条件对象
+	 */
+	public static Condition[] buildConditions(Entity entity){
+		if(null == entity || entity.isEmpty()) {
+			return null;
+		}
+		
+		final Condition[] conditions = new Condition[entity.size()];
+		int i = 0;
+		for (Entry<String, Object> entry : entity.entrySet()) {
+			conditions[i++] = new Condition(entry.getKey(), entry.getValue());
+		}
+		
+		return conditions;
+	}
+	
+	/**
 	 * 识别JDBC驱动名
 	 * @param nameContainsProductInfo 包含数据库标识的字符串
 	 * @return 驱动
@@ -353,12 +372,13 @@ public class DbUtil {
 	}
 	
 	/**
-	 * 包装字段名
+	 * 包装字段名<br>
+	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
 	 * @param field 字段名
 	 * @param wrapQuote 包装的引号（单引号还是反引号）
 	 * @return 包装后的字段名
 	 */
-	public static String wrapField(String field, char wrapQuote){
+	public static String wrap(String field, char wrapQuote){
 		if(StrUtil.isBlank(field)) {
 			return field;
 		}
@@ -372,25 +392,25 @@ public class DbUtil {
 	}
 	
 	/**
-	 * 包装字段名
+	 * 包装字段名<br>
+	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
 	 * @param entity 被包装的实体
 	 * @param wrapQuote 包装的引号（单引号还是反引号）
 	 * @return 包装后的字段名
 	 */
-	public static Entity wrapField(Entity entity, char wrapQuote){
+	public static Entity wrap(Entity entity, char wrapQuote){
 		final Entity wrapedEntity = new Entity();
 		
 		//wrap table name
-		wrapedEntity.setTableName(wrapField(entity.getTableName(), wrapQuote));
+		wrapedEntity.setTableName(wrap(entity.getTableName(), wrapQuote));
 		
 		//wrap fields
 		for (Entry<String, Object> entry : entity.entrySet()) {
-			wrapedEntity.set(wrapField(entry.getKey(), wrapQuote), entry.getValue());
+			wrapedEntity.set(wrap(entry.getKey(), wrapQuote), entry.getValue());
 		}
 		
 		return wrapedEntity;
 	}
-	
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end
 }

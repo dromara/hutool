@@ -7,11 +7,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.SqlBuilder;
+import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 
 /**
@@ -20,29 +21,15 @@ import com.xiaoleilu.hutool.db.dialect.Dialect;
  *
  */
 public class AnsiSqlDialect implements Dialect {
+	
+	private final static char WRAP_QUOTE = '`';
 
 	@Override
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
-		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO `").append(entity.getTableName()).append("`(");
+		final SqlBuilder insert = SqlBuilder.create().insert(DbUtil.wrap(entity, WRAP_QUOTE));
 
-		final StringBuilder placeHolder = new StringBuilder();
-		placeHolder.append(") values(");
-
-		final List<Object> paramValues = new ArrayList<Object>(entity.size());
-		for (Entry<String, Object> entry : entity.entrySet()) {
-			if (paramValues.size() > 0) {
-				sql.append(", ");
-				placeHolder.append(", ");
-			}
-			sql.append("`").append(entry.getKey()).append("`");
-			placeHolder.append("?");
-			paramValues.add(entry.getValue());
-		}
-		sql.append(placeHolder.toString()).append(")");
-
-		final PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
+		final PreparedStatement ps = conn.prepareStatement(insert.build(), Statement.RETURN_GENERATED_KEYS);
+		DbUtil.fillParams(ps, insert.getParamValueArray());
 		return ps;
 	}
 
@@ -53,12 +40,12 @@ public class AnsiSqlDialect implements Dialect {
 			throw new SQLException("No condition define, we can't build delete query for del everything.");
 		}
 
-		final List<Object> paramValues = new ArrayList<Object>(entity.size());
-		final StringBuilder sql = new StringBuilder();
-		sql.append("DELETE FROM `").append(entity.getTableName()).append("`").append(DbUtil.buildEqualsWhere(entity, paramValues));
+		final SqlBuilder delete = SqlBuilder.create()
+			.delete(entity.getTableName())
+			.where(LogicalOperator.AND, DbUtil.buildConditions(entity));
 
-		final PreparedStatement ps = conn.prepareStatement(sql.toString());
-		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
+		final PreparedStatement ps = conn.prepareStatement(delete.build());
+		DbUtil.fillParams(ps, delete.getParamValueArray());
 		return ps;
 	}
 
@@ -68,31 +55,25 @@ public class AnsiSqlDialect implements Dialect {
 			// 对于无条件的更新语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No condition define, we can't build update query for update everything.");
 		}
+		
+		final SqlBuilder update = SqlBuilder.create()
+				.update(entity)
+				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 
-		final List<Object> paramValues = new ArrayList<Object>(entity.size());
-		final StringBuilder sql = new StringBuilder();
-		sql.append("UPDATE `").append(entity.getTableName()).append("` SET ");
-		for (Entry<String, Object> entry : entity.entrySet()) {
-			if (paramValues.size() > 0) {
-				sql.append(", ");
-			}
-			sql.append("`").append(entry.getKey()).append("` = ? ");
-			paramValues.add(entry.getValue());
-		}
-		sql.append(DbUtil.buildEqualsWhere(where, paramValues));
-
-		final PreparedStatement ps = conn.prepareStatement(sql.toString());
-		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
+		final PreparedStatement ps = conn.prepareStatement(update.build());
+		DbUtil.fillParams(ps, update.getParamValueArray());
 		return ps;
 	}
 
 	@Override
 	public PreparedStatement psForFind(Connection conn, Collection<String> fields, Entity where) throws SQLException {
-		final List<Object> paramValues = new ArrayList<Object>(where.size());
-		final StringBuilder sql = buildSelectQuery(fields, where, paramValues);
+		final SqlBuilder find = SqlBuilder.create()
+			.select(fields.toArray(new String[fields.size()]))
+			.from(where.getTableName())
+			.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 
-		final PreparedStatement ps = conn.prepareStatement(sql.toString());
-		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
+		final PreparedStatement ps = conn.prepareStatement(find.build());
+		DbUtil.fillParams(ps, find.getParamValueArray());
 		return ps;
 	}
 

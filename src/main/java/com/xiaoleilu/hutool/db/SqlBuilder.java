@@ -17,13 +17,26 @@ import com.xiaoleilu.hutool.StrUtil;
  */
 public class SqlBuilder {
 	
+	//--------------------------------------------------------------- Static methods start
+	/**
+	 * 创建SQL构建器
+	 * @return SQL构建器
+	 */
+	public static SqlBuilder create(){
+		return new SqlBuilder();
+	}
+	//--------------------------------------------------------------- Static methods end
+	
+	//--------------------------------------------------------------- Enums start
 	/**
 	 * 逻辑运算符
 	 * @author Looly
 	 *
 	 */
 	public static enum LogicalOperator{
+		/** 且，两个条件都满足 */
 		AND,
+		/** 或，满足多个条件的一个即可 */
 		OR
 	}
 	
@@ -39,15 +52,33 @@ public class SqlBuilder {
 		DESC
 	}
 	
+	/**
+	 * SQL中多表关联用的关键字
+	 * @author Looly
+	 *
+	 */
+	public static enum Join{
+		/** 如果表中有至少一个匹配，则返回行 */
+		INNER,
+		/** 即使右表中没有匹配，也从左表返回所有的行 */
+		LEFT,
+		/** 即使左表中没有匹配，也从右表返回所有的行 */
+		RIGHT,
+		/** 只要其中一个表中存在匹配，就返回行 */
+		FULL
+	}
+	//--------------------------------------------------------------- Enums end
+	
 	private StringBuilder sql = new StringBuilder();
 	/** 占位符对应的值列表 */
 	private List<Object> paramValues = new ArrayList<Object>();
 	
+	//--------------------------------------------------------------- Builder start
 	/**
 	 * 插入
 	 * @param entity 实体
 	 */
-	public void insert(Entity entity){
+	public SqlBuilder insert(Entity entity){
 		sql.append("INSERT INTO ").append(entity.getTableName()).append(" (");
 
 		final StringBuilder placeHolder = new StringBuilder(") VALUES (");
@@ -64,21 +95,25 @@ public class SqlBuilder {
 			paramValues.add(entry.getValue());
 		}
 		sql.append(placeHolder.toString()).append(")");
+		
+		return this;
 	}
 	
 	/**
 	 * 删除
 	 * @param tableName 表名
 	 */
-	public void delete(String tableName){
+	public SqlBuilder delete(String tableName){
 		sql.append("DELETE FROM ").append(tableName);
+		
+		return this;
 	}
 	
 	/**
 	 * 更新
 	 * @param entity 要更新的实体
 	 */
-	public void update(Entity entity){
+	public SqlBuilder update(Entity entity){
 		sql.append("UPDATE ").append(entity.getTableName()).append(" SET ");
 		for (Entry<String, Object> entry : entity.entrySet()) {
 			if (paramValues.size() > 0) {
@@ -87,6 +122,8 @@ public class SqlBuilder {
 			sql.append(entry.getKey()).append(" = ? ");
 			paramValues.add(entry.getValue());
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -94,7 +131,7 @@ public class SqlBuilder {
 	 * @param isDistinct 是否添加DISTINCT关键字（查询唯一结果）
 	 * @param fields 查询的字段
 	 */
-	public void select(boolean isDistinct, String... fields){
+	public SqlBuilder select(boolean isDistinct, String... fields){
 		sql.append("SELECT ");
 		if(isDistinct) {
 			sql.append("DISTINCT ");
@@ -105,14 +142,26 @@ public class SqlBuilder {
 		} else {
 			sql.append(CollectionUtil.join(fields, StrUtil.COMMA));
 		}
+		
+		return this;
+	}
+	
+	/**
+	 * 查询（非Distinct）
+	 * @param fields 查询的字段
+	 */
+	public SqlBuilder select(String... fields){
+		return select(false, fields);
 	}
 	
 	/**
 	 * 添加 from语句
 	 * @param tableName 表名列表（多个表名用于多表查询）
 	 */
-	public void from(String... tableNames){
+	public SqlBuilder from(String... tableNames){
 		sql.append(" FROM ").append(CollectionUtil.join(tableNames, StrUtil.COMMA));
+		
+		return this;
 	}
 	
 	/**
@@ -121,8 +170,106 @@ public class SqlBuilder {
 	 * @param logicalOperator 逻辑运算符
 	 * @param conditions 条件
 	 */
-	public void where(LogicalOperator logicalOperator, Condition... conditions){
-		StringBuilder conditionStr = new StringBuilder();
+	public SqlBuilder where(LogicalOperator logicalOperator, Condition... conditions){
+		sql.append(" WHERE ").append(buildCondition(logicalOperator, conditions));
+		
+		return this;
+	}
+	
+	/**
+	 * 分组
+	 * @param field 字段
+	 */
+	public SqlBuilder groupBy(String... field){
+		sql.append(" GROUP BY ").append(CollectionUtil.join(field, StrUtil.COMMA));
+		
+		return this;
+	}
+	
+	/**
+	 * 添加Having语句
+	 * @param logicalOperator 逻辑运算符
+	 * @param conditions 条件
+	 */
+	public SqlBuilder having(LogicalOperator logicalOperator, Condition... conditions){
+		sql.append(" HAVING ").append(buildCondition(logicalOperator, conditions));
+		
+		return this;
+	}
+	
+	/**
+	 * 排序
+	 * @param field 按照哪个字段排序
+	 * @param order 排序方式（升序还是降序）
+	 */
+	public SqlBuilder orderBy(Order order, String... fields){
+		sql.append(" ORDER BY ").append(CollectionUtil.join(fields, StrUtil.COMMA)).append(StrUtil.SPACE).append(order);
+		
+		return this;
+	}
+	
+	/**
+	 * 多表关联
+	 * @param tableName 被关联的表名
+	 * @param join 内联方式
+	 */
+	public SqlBuilder join(String tableName, Join join){
+		sql.append(StrUtil.SPACE).append(join.toString()).append(" JOIN ").append(tableName);
+		
+		return this;
+	}
+	
+	/**
+	 * 配合JOIN的 ON语句，多表关联的条件语句<br>
+	 * 只支持单一的逻辑运算符（例如多个条件之间）
+	 * @param logicalOperator 逻辑运算符
+	 * @param conditions 条件
+	 */
+	public SqlBuilder on(LogicalOperator logicalOperator, Condition... conditions){
+		sql.append(" ON ").append(buildCondition(logicalOperator, conditions));
+		
+		return this;
+	}
+	//--------------------------------------------------------------- Builder end
+	
+	/**
+	 * 获得占位符对应的值列表<br>
+	 * @return 占位符对应的值列表
+	 */
+	public List<Object> getParamValues() {
+		return paramValues;
+	}
+	
+	/**
+	 * 获得占位符对应的值列表<br>
+	 * @return 占位符对应的值列表
+	 */
+	public Object[] getParamValueArray() {
+		return paramValues.toArray(new Object[paramValues.size()]);
+	}
+	
+	/**
+	 * 构建
+	 * @return 构建好的SQL语句
+	 */
+	public String build(){
+		return this.sql.toString();
+	}
+	
+	@Override
+	public String toString() {
+		return this.build();
+	}
+	
+	//--------------------------------------------------------------- private method start
+	/**
+	 * 构建组合条件
+	 * @param logicalOperator 逻辑运算符
+	 * @param conditions 条件对象
+	 * @return 构建后的SQL语句条件部分
+	 */
+	private String buildCondition(LogicalOperator logicalOperator, Condition... conditions){
+		final StringBuilder conditionStr = new StringBuilder();
 		boolean isFirst = true;
 		for (Condition condition : conditions) {
 			//添加逻辑运算符
@@ -133,48 +280,19 @@ public class SqlBuilder {
 			}
 			
 			//添加条件表达式
-			conditionStr.append(condition.getField()).append(StrUtil.SPACE).append(condition.getOperator()).append(" ?");
-			paramValues.add(condition.getValue());
+			conditionStr.append(condition.getField()).append(StrUtil.SPACE).append(condition.getOperator());
+			
+			if(condition.isPlaceHolder()) {
+				//使用条件表达式占位符
+				conditionStr.append(" ?");
+				paramValues.add(condition.getValue());
+			}else {
+				//直接使用条件值
+				conditionStr.append(condition.getValue());
+			}
 		}
+		
+		return conditionStr.toString();
 	}
-	
-	/**
-	 * 分组
-	 * @param field 字段
-	 */
-	public void groupBy(String... field){
-		sql.append(" GROUP BY ").append(CollectionUtil.join(field, StrUtil.COMMA));
-	}
-	
-	/**
-	 * 添加Having语句
-	 * @param logicalOperator 逻辑运算符
-	 * @param conditions 条件
-	 */
-	public void having(LogicalOperator logicalOperator, Condition... conditions){
-		sql.append(" HAVING ").append(CollectionUtil.join(conditions, StrUtil.SPACE + logicalOperator + StrUtil.SPACE));
-	}
-	
-	/**
-	 * 排序
-	 * @param field 按照哪个字段排序
-	 * @param order 排序方式（升序还是降序）
-	 */
-	public void orderBy(Order order, String... fields){
-		sql.append(" ORDER BY ").append(CollectionUtil.join(fields, StrUtil.COMMA)).append(StrUtil.SPACE).append(order);
-	}
-	
-	/**
-	 * 获得占位符对应的值列表
-	 * @return 占位符对应的值列表
-	 */
-	public List<Object> getParamValues() {
-		return paramValues;
-	}
-	
-	@Override
-	public String toString() {
-		return this.sql.toString();
-	}
-	
+	//--------------------------------------------------------------- private method end
 }
