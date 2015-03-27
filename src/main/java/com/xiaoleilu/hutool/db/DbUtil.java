@@ -352,6 +352,45 @@ public class DbUtil {
 		return driver;
 	}
 	
+	/**
+	 * 包装字段名
+	 * @param field 字段名
+	 * @param wrapQuote 包装的引号（单引号还是反引号）
+	 * @return 包装后的字段名
+	 */
+	public static String wrapField(String field, char wrapQuote){
+		if(StrUtil.isBlank(field)) {
+			return field;
+		}
+		
+		//如果已经被包装，返回原字符
+		if(field.charAt(0) == wrapQuote && field.charAt(field.length() -1) == wrapQuote) {
+			return field;
+		}
+		
+		return StrUtil.format("{}{}{}", wrapQuote, field, wrapQuote);
+	}
+	
+	/**
+	 * 包装字段名
+	 * @param entity 被包装的实体
+	 * @param wrapQuote 包装的引号（单引号还是反引号）
+	 * @return 包装后的字段名
+	 */
+	public static Entity wrapField(Entity entity, char wrapQuote){
+		final Entity wrapedEntity = new Entity();
+		
+		//wrap table name
+		wrapedEntity.setTableName(wrapField(entity.getTableName(), wrapQuote));
+		
+		//wrap fields
+		for (Entry<String, Object> entry : entity.entrySet()) {
+			wrapedEntity.set(wrapField(entry.getKey(), wrapQuote), entry.getValue());
+		}
+		
+		return wrapedEntity;
+	}
+	
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end
 }

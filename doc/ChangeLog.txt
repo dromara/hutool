@@ -1,0 +1,8 @@
+2.5.0
+1. 修复了在实体类转Pojo类导致的类型转换错误
+2. 将parse方法从ClassUtil迁移到Conver类中。
+3. 修复包装类转基本类型的关于Integer的一个bug
+
+2.6.0:
+1. 增加SqlBuilder
+2. 增加Mail功能

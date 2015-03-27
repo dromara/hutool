@@ -15,6 +15,7 @@ import java.util.Map.Entry;
  */
 public class StrUtil {
 
+	public static final String SPACE = " ";
 	public static final String DOT = ".";
 	public static final String SLASH = "/";
 	public static final String BACKSLASH = "\\";
@@ -22,6 +23,7 @@ public class StrUtil {
 	public static final String CRLF = "\r\n";
 	public static final String NEWLINE = "\n";
 	public static final String UNDERLINE = "_";
+	public static final String COMMA = ",";
 
 	public static final String HTML_NBSP = "&nbsp;";
 	public static final String HTML_AMP = "&amp";
