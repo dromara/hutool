@@ -730,8 +730,8 @@ public class StrUtil {
 	/**
 	 * 指定字符串是否被包装
 	 * @param str 字符串
-	 * @param prefix 前缀
-	 * @param suffix 后缀
+	 * @param prefixChar 前缀
+	 * @param suffixChar 后缀
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(String str, char prefixChar, char suffixChar) {

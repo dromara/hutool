@@ -232,7 +232,7 @@ public class SqlBuilder {
 	
 	/**
 	 * 添加 from语句
-	 * @param tableName 表名列表（多个表名用于多表查询）
+	 * @param tableNames 表名列表（多个表名用于多表查询）
 	 * @return 自己
 	 */
 	public SqlBuilder from(String... tableNames){
@@ -309,8 +309,8 @@ public class SqlBuilder {
 	
 	/**
 	 * 排序
-	 * @param field 按照哪个字段排序
 	 * @param order 排序方式（升序还是降序）
+	 * @param fields 按照哪个字段排序
 	 * @return 自己
 	 */
 	public SqlBuilder orderBy(Order order, String... fields){

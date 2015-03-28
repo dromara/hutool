@@ -74,7 +74,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 * 添加多个元素<br>
 	 * 参数为集合的情况请使用{@link PriorityQueue#addAll}
 	 * @param c 元素数组
-	 * @return
+	 * @return 是否发生改变
 	 */
 	public boolean addAll(E[] c) {
 		return this.addAll(Arrays.asList(c));
