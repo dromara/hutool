@@ -6,3 +6,6 @@
 2.6.0:
 1. 增加SqlBuilder
 2. 增加HttpUtil.request方法
+
+2.6.1
+SecureUtil中的base64EncodeTable改为私有
