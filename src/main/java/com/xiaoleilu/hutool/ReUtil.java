@@ -16,21 +16,9 @@ public class ReUtil {
 	/** 正则表达式匹配中文 */
 	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";
 	
-	/** 数字 */
-	public final static Pattern NUMBER =  Pattern.compile("\\d+", Pattern.DOTALL);
 	/** 分组 */
-	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)", Pattern.DOTALL);
-	/** IP v4 */
-	public final static Pattern IPV4 =  Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b", Pattern.DOTALL);
-	/** 货币 */
-	public final static Pattern MONEY =  Pattern.compile("^(\\d+(?:\\.\\d+)?)$", Pattern.DOTALL);
-	/** 邮件 */
-	public final static Pattern EMAIL =  Pattern.compile("(\\w|.)+@\\w+(\\.\\w+){1,2}", Pattern.DOTALL);
-	/** 移动电话 */
-	public final static Pattern MOBILE =  Pattern.compile("1\\d{10}", Pattern.DOTALL);
-	/** 身份证号码 */
-	public final static Pattern CITIZEN_ID =  Pattern.compile("[1-9]\\d{5}[1-2]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|X|x)", Pattern.DOTALL);
-
+	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)");
+	
 	/** 正则中需要被转义的关键字 */
 	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[]{'$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'});
 	
@@ -225,7 +213,7 @@ public class ReUtil {
 	 * @return 整数
 	 */
 	public static Integer getFirstNumber(String StringWithNumber) {
-		return Conver.toInt(get(NUMBER, StringWithNumber, 0), null);
+		return Conver.toInt(get(Validator.NUMBER, StringWithNumber, 0), null);
 	}
 	
 	/**
@@ -316,70 +304,5 @@ public class ReUtil {
 			builder.append(current);
 		}
 		return builder.toString();
-	}
-	
-	/**
-	 * 判断该字符串是否是IPV4地址
-	 * 
-	 * @param ip IP地址
-	 * @return 是否是IPV4
-	 */
-	public static boolean isIpv4(String ip) {
-		if(StrUtil.isBlank(ip)){
-			return false;
-		}
-		return isMatch(IPV4, ip);
-	}
-	
-	/**
-	 * 判断该字符串是否是数字
-	 * 
-	 * @param content 字符串内容
-	 * @return 是否是数字
-	 */
-	public static boolean isNumber(String content) {
-		if(StrUtil.isBlank(content)){
-			return false;
-		}
-		return isMatch(NUMBER, content);
-	}
-	
-	/**
-	 * 判断该字符串是否是邮箱地址
-	 * 
-	 * @param content 字符串内容
-	 * @return 是否是邮箱地址
-	 */
-	public static boolean isEmail(String content) {
-		if(StrUtil.isBlank(content)){
-			return false;
-		}
-		return isMatch(EMAIL, content);
-	}
-	
-	/**
-	 * 判断该字符串是否是身份证号码
-	 * 
-	 * @param content 字符串内容
-	 * @return 是否是身份证号码
-	 */
-	public static boolean isCitizenId(String content) {
-		if(StrUtil.isBlank(content)){
-			return false;
-		}
-		return isMatch(CITIZEN_ID, content);
-	}
-	
-	/**
-	 * 判断该字符串是否是货币
-	 * 
-	 * @param content 字符串内容
-	 * @return 是否是货币
-	 */
-	public static boolean isMoney(String content) {
-		if(StrUtil.isBlank(content)){
-			return false;
-		}
-		return isMatch(MONEY, content);
 	}
 }

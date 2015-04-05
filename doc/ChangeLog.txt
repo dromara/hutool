@@ -17,4 +17,5 @@ SecureUtil中的base64EncodeTable改为私有
 ----------------------------------------------------------------------
 
 2.7.0
-增加缓存（com.xiaoleilu.hutool.cache）
+1. 增加缓存（com.xiaoleilu.hutool.cache）
+2. 增加Validator验证器，用于表单验证

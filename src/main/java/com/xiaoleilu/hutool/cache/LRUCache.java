@@ -5,55 +5,56 @@ import java.util.Map;
 import java.util.Iterator;
 
 /**
- * LRU (least recently used) cache.
+ * LRU (least recently used)最近最久未使用缓存<br>
+ * 根据使用时间来判定对象是否被持续缓存<br>
+ * 当对象被访问时放入缓存，当缓存满了，最久未被使用的对象将被移除。<br>
+ * 此缓存基于LinkedHashMap，因此当被缓存的对象每被访问一次，这个对象的key就到链表头部。<br>
+ * 这个算法简单并且非常快，他比FIFO有一个显著优势是经常使用的对象不太可能被移除缓存。<br>
+ * 缺点是当缓存满时，不能被很快的访问。
+ * @author Looly,jodd
  *
- * <p>
- * Items are added to the cache as they are accessed; when the cache is full, the least recently used item is ejected. This type of cache is typically implemented as a linked list, so that an item in
- * cache, when it is accessed again, can be moved back up to the head of the queue; items are ejected from the tail of the queue. Cache access overhead is again constant time. This algorithm is simple
- * and fast, and it has a significant advantage over FIFO in being able to adapt somewhat to the data access pattern; frequently used items are less likely to be ejected from the cache. The main
- * disadvantage is that it can still get filled up with items that are unlikely to be reaccessed soon; in particular, it can become useless in the face of scanning type accesses. Nonetheless, this is
- * by far the most frequently used caching algorithm.
- * <p>
- * Implementation note: unfortunately, it was not possible to have <code>onRemove</code> callback method, since <code>LinkedHashMap</code> has its removal methods private.
- * <p>
- * Summary for LRU: fast, adaptive, not scan resistant.
+ * @param <K> 键类型
+ * @param <V> 值类型
  */
 public class LRUCache<K, V> extends AbstractCache<K, V> {
 
-	public LRUCache(int cacheSize) {
-		this(cacheSize, 0);
+	/**
+	 * 构造<br>
+	 * 默认无超时
+	 * @param capacity 容量
+	 */
+	public LRUCache(int capacity) {
+		this(capacity, 0);
 	}
 
 	/**
-	 * Creates a new LRU cache.
+	 * 构造
+	 * @param capacity 容量
+	 * @param timeout 默认超时时间
 	 */
 	public LRUCache(int capacity, long timeout) {
 		this.capacity = capacity;
 		this.timeout = timeout;
+		
+		//链表key按照访问顺序排序，调用get方法后，会将这次访问的元素移至头部
 		cacheMap = new LinkedHashMap<K, CacheObj<K, V>>(capacity + 1, 1.0f, true){
 			private static final long serialVersionUID = -1806954614512571136L;
 
 			@Override
 			protected boolean removeEldestEntry(Map.Entry<K, CacheObj<K, V>> eldest) {
-				return LRUCache.this.removeEldestEntry(size());
+				if(LRUCache.this.capacity == 0) {
+					return false;
+				}
+				//当链表元素大于容量时，移除最老（最久未被使用）的元素
+				return size() > LRUCache.this.capacity;
 			}
 		};
-	}
-
-	/**
-	 * Removes the eldest entry if current cache size exceed cache size.
-	 */
-	protected boolean removeEldestEntry(int currentSize) {
-		if (this.capacity == 0) {
-			return false;
-		}
-		return currentSize > this.capacity;
 	}
 
 	// ---------------------------------------------------------------- prune
 
 	/**
-	 * Prune only expired objects, <code>LinkedHashMap</code> will take care of LRU if needed.
+	 * 只清理超时对象，LRU的实现会交给<code>LinkedHashMap</code>
 	 */
 	@Override
 	protected int pruneCache() {
@@ -62,9 +63,10 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 		}
 		int count = 0;
 		Iterator<CacheObj<K, V>> values = cacheMap.values().iterator();
+		CacheObj<K, V> co;
 		while (values.hasNext()) {
-			CacheObj<K, V> co = values.next();
-			if (co.isExpired() == true) {
+			co = values.next();
+			if (co.isExpired()) {
 				values.remove();
 				count++;
 			}

@@ -48,7 +48,7 @@ public class NetUtil {
 	 * @return long值
 	 */
 	public static long ipv4ToLong(String strIP) {
-		if (ReUtil.isIpv4(strIP)) {
+		if (Validator.isIpv4(strIP)) {
 			long[] ip = new long[4];
 			// 先找到IP地址字符串中.的位置
 			int position1 = strIP.indexOf(".");

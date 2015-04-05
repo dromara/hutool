@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.ReUtil;
+import com.xiaoleilu.hutool.Validator;
 
 /**
  * 正则表达式工具类Demo
@@ -63,7 +64,7 @@ public class ReUtilDemo {
 		log.debug("---------------------------------------------------------");
 		
 		//格式是否符合Ipv4格式
-		log.debug("isIpv4: {}", ReUtil.isIpv4("127.0.0.1"));
+		log.debug("isIpv4: {}", Validator.isIpv4("127.0.0.1"));
 		
 		log.debug("---------------------------------------------------------");
 		

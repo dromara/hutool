@@ -189,5 +189,10 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 	public boolean isEmpty() {
 		return cacheMap.isEmpty();
 	}
+	
+	@Override
+	public String toString() {
+		return this.cacheMap.toString();
+	}
 	// ---------------------------------------------------------------- common end
 }

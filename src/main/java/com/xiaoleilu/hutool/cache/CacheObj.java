@@ -41,4 +41,9 @@ public class CacheObj<K, V> {
 		accessCount++;
 		return obj;
 	}
+
+	@Override
+	public String toString() {
+		return "CacheObj [key=" + key + ", obj=" + obj + ", lastAccess=" + lastAccess + ", accessCount=" + accessCount + ", ttl=" + ttl + "]";
+	}
 }

@@ -6,30 +6,43 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Timed cache. Not limited by size, objects are removed only when they are expired.
- * Prune is not invoked explicitly by standard {@link Cache} methods, however,
- * it is possible to schedule prunes on fined-rate delays.
+ * 定时缓存<br>
+ * 此缓存没有容量限制，对象只有在过期后才会被移除
+ * 
+ * @author Looly
+ *
+ * @param <K> 键类型
+ * @param <V> 值类型
  */
 public class TimedCache<K, V> extends AbstractCache<K, V> {
+	
+	/** 定时器 */
+	protected Timer pruneTimer;
 
+	/**
+	 * 构造
+	 * 
+	 * @param timeout 过期时长
+	 */
 	public TimedCache(long timeout) {
 		this.capacity = 0;
 		this.timeout = timeout;
-		cacheMap = new HashMap<K, CacheObj<K,V>>();
+		cacheMap = new HashMap<K, CacheObj<K, V>>();
 	}
 
 	// ---------------------------------------------------------------- prune
-
 	/**
-	 * Prunes expired elements from the cache. Returns the number of removed objects.
+	 * 清理过期对象
+	 * @return  清理数
 	 */
 	@Override
 	protected int pruneCache() {
-        int count = 0;
-		Iterator<CacheObj<K,V>> values = cacheMap.values().iterator();
+		int count = 0;
+		Iterator<CacheObj<K, V>> values = cacheMap.values().iterator();
+		CacheObj<K, V> co;
 		while (values.hasNext()) {
-			CacheObj<K, V> co = values.next();
-			if (co.isExpired() == true) {
+			co = values.next();
+			if (co.isExpired()) {
 				values.remove();
 				count++;
 			}
@@ -37,31 +50,26 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 		return count;
 	}
 
-
 	// ---------------------------------------------------------------- auto prune
-
-	protected Timer pruneTimer;
-
 	/**
-	 * Schedules prune.
+	 * 定时清理
+	 * @param delay 间隔时长
 	 */
 	public void schedulePrune(long delay) {
 		if (pruneTimer != null) {
 			pruneTimer.cancel();
 		}
 		pruneTimer = new Timer();
-		pruneTimer.schedule(
-				new TimerTask() {
-					@Override
-					public void run() {
-						prune();
-					}
-				}, delay, delay
-		);
+		pruneTimer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				prune();
+			}
+		}, delay, delay);
 	}
 
 	/**
-	 * Cancels prune schedules.
+	 * 取消定时清理
 	 */
 	public void cancelPruneSchedule() {
 		if (pruneTimer != null) {

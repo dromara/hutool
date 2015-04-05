@@ -6,93 +6,101 @@ import java.io.IOException;
 import com.xiaoleilu.hutool.FileUtil;
 
 /**
- * Files LFU cache stores files content in memory to dramatically
- * speed up performances for frequently read files.
+ * 使用LFU缓存文件，以解决频繁读取文件引起的性能问题
+ * @author Looly,jodd
+ *
  */
 public class FileLFUCache {
 
+	/** LFU缓存 */
 	protected final LFUCache<File, byte[]> cache;
-	protected final int maxSize;
+	/** 容量 */
+	protected final int capacity;
+	/** 缓存的最大文件大小，文件大于此大小时将不被缓存 */
 	protected final int maxFileSize;
 
+	/** 已使用缓存空间 */
 	protected int usedSize;
 
 	/**
-	 * Creates file LFU cache with specified size. Sets
-	 * {@link #maxFileSize max available file size} to half of this value.
+	 * 构造<br>
+	 * 最大文件大小为缓存容量的一半<br>
+	 * 默认无超时
+	 * @param capacity 缓存容量
 	 */
-	public FileLFUCache(int maxSize) {
-		this(maxSize, maxSize / 2, 0);
-	}
-
-	public FileLFUCache(int maxSize, int maxFileSize) {
-		this(maxSize, maxFileSize, 0);
+	public FileLFUCache(int capacity) {
+		this(capacity, capacity / 2, 0);
 	}
 
 	/**
-	 * Creates new File LFU cache.
-	 * @param maxSize total cache size in bytes
-	 * @param maxFileSize max available file size in bytes, may be 0
-	 * @param timeout timeout, may be 0
+	 * 构造<br>
+	 * 默认无超时
+	 * @param capacity 缓存容量
+	 * @param maxFileSize 最大文件大小
 	 */
-	public FileLFUCache(int maxSize, int maxFileSize, long timeout) {
+	public FileLFUCache(int capacity, int maxFileSize) {
+		this(capacity, maxFileSize, 0);
+	}
+
+	/**
+	 * 构造
+	 * @param capacity 缓存容量
+	 * @param maxFileSize 文件最大大小
+	 * @param timeout 默认超时时间，0表示无默认超时
+	 */
+	public FileLFUCache(int capacity, int maxFileSize, long timeout) {
 		this.cache = new LFUCache<File, byte[]>(0, timeout) {
 			@Override
 			public boolean isFull() {
-				return usedSize > FileLFUCache.this.maxSize;
+				return usedSize > this.capacity;
 			}
-
 			@Override
 			protected void onRemove(File key, byte[] cachedObject) {
 				usedSize -= cachedObject.length;
 			}
-
 		};
-		this.maxSize = maxSize;
+		
+		this.capacity = capacity;
 		this.maxFileSize = maxFileSize;
 	}
 
-	// ---------------------------------------------------------------- get
-
 	/**
-	 * Returns max cache size in bytes.
+	 * @return 缓存容量（byte数）
 	 */
-	public int getMaxSize() {
-		return maxSize;
+	public int capacity() {
+		return capacity;
 	}
 
 	/**
-	 * Returns actually used size in bytes.
+	 * @return 已使用空间大小（byte数）
 	 */
 	public int getUsedSize() {
 		return usedSize;
 	}
 
 	/**
-	 * Returns maximum allowed file size that can be added to the cache.
-	 * Files larger than this value will be not added, even if there is
-	 * enough room.
+	 * @return 允许被缓存文件的最大byte数
 	 */
-	public int getMaxFileSize() {
+	public int maxFileSize() {
 		return maxFileSize;
 	}
 
 	/**
-	 * Returns number of cached files.
+	 * @return 缓存的文件数
 	 */
 	public int getCachedFilesCount() {
 		return cache.size();
 	}
 
 	/**
-	 * Returns timeout.
+	 * @return 超时时间
 	 */
 	public long timeout() {
 		return cache.timeout;
 	}
 
 	/**
-	 * Clears the cache.
+	 * 清空缓存
 	 */
 	public void clear() {
 		cache.clear();
@@ -101,12 +109,21 @@ public class FileLFUCache {
 
 	// ---------------------------------------------------------------- get
 
-	public byte[] getFileBytes(String fileName) throws IOException {
-		return getFileBytes(new File(fileName));
+	/**
+	 * 获得缓存过的文件bytes
+	 * @param path 文件路径
+	 * @return 缓存过的文件bytes
+	 * @throws IOException
+	 */
+	public byte[] getFileBytes(String path) throws IOException {
+		return getFileBytes(new File(path));
 	}
 
 	/**
-	 * Returns cached file bytes.
+	 * 获得缓存过的文件bytes
+	 * @param file 文件
+	 * @return 缓存过的文件bytes
+	 * @throws IOException
 	 */
 	public byte[] getFileBytes(File file) throws IOException {
 		byte[] bytes = cache.get(file);
@@ -118,14 +135,13 @@ public class FileLFUCache {
 		bytes = FileUtil.readBytes(file);
 
 		if ((maxFileSize != 0) && (file.length() > maxFileSize)) {
-			// don't cache files that size exceed max allowed file size
+			//大于缓存空间，不缓存，直接返回
 			return bytes;
 		}
 
 		usedSize += bytes.length;
 
-		// put file into cache
-		// if used size > total, purge() will be invoked
+		//文件放入缓存，如果usedSize > capacity，purge()方法将被调用
 		cache.put(file, bytes);
 
 		return bytes;
