@@ -9,3 +9,12 @@
 
 2.6.1
 SecureUtil中的base64EncodeTable改为私有
+
+2.6.2
+丰富ReUtil方法
+增加Func类提供一些常用函数（equals或者length）
+
+----------------------------------------------------------------------
+
+2.7.0
+增加缓存（com.xiaoleilu.hutool.cache）
