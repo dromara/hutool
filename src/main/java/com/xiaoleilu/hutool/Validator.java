@@ -47,7 +47,7 @@ public class Validator {
 	 * 
 	 * @param value 值
 	 * @return 是否为空
-	 * @return
+	 * @return 是否为空
 	 */
 	public static <T> boolean isEmpty(T value) {
 		return (null == value || (value instanceof String && StrUtil.isEmpty((String) value)));
