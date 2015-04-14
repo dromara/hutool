@@ -25,3 +25,6 @@ SecureUtil中的base64EncodeTable改为私有
 2. StrUtil的convertCharset迁移到Conver类中
 3. StrUtil增加 padPre 和 padEnd
 4. StrUtil的repeat方法提高性能
+
+2.7.2
+1. 去除无用依赖
