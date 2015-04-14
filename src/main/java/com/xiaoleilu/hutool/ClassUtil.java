@@ -33,6 +33,7 @@ public class ClassUtil {
 	private static Logger log = Log.get();
 	
 	private ClassUtil() {
+		// 静态类不可实例化
 	}
 	
 	/**

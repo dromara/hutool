@@ -98,6 +98,26 @@ public class StrUtil {
 	}
 
 	/**
+	 * 当给定字符串为null时，转换为Empty
+	 * 
+	 * @param str 被转换的字符串
+	 * @return 转换后的字符串
+	 */
+	public static String nullToEmpty(String str) {
+		return str == null ? EMPTY : str;
+	}
+
+	/**
+	 * 当给定字符串为空字符串时，转换为<code>null</code>
+	 * 
+	 * @param str 被转换的字符串
+	 * @return 转换后的字符串
+	 */
+	public static String emptyToNull(String str) {
+		return isEmpty(str) ? null : str;
+	}
+
+	/**
 	 * 是否包含空字符串
 	 * 
 	 * @param strs 字符串列表
@@ -465,31 +485,22 @@ public class StrUtil {
 	 */
 	public static String repeat(String str, int count) {
 
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < count; i++) {
-			sb.append(str);
+		// 检查
+		final int len = str.length();
+		final long longSize = (long) len * (long) count;
+		final int size = (int) longSize;
+		if (size != longSize) {
+			throw new ArrayIndexOutOfBoundsException("Required String length is too large: " + longSize);
 		}
-		return sb.toString();
-	}
 
-	/**
-	 * 给定字符串转换字符编码<br/>
-	 * 如果参数为空，则返回原字符串，不报错。
-	 * 
-	 * @param str 被转码的字符串
-	 * @param sourceCharset 原字符集
-	 * @param destCharset 目标字符集
-	 * @return 转换后的字符串
-	 */
-	public static String convertCharset(String str, String sourceCharset, String destCharset) {
-		if (isBlank(str) || isBlank(sourceCharset) || isBlank(destCharset)) {
-			return str;
+		final char[] array = new char[size];
+		str.getChars(0, len, array, 0);
+		int n;
+		for (n = len; n < size - n; n <<= 1) {//n <<= 1相当于n *2
+			System.arraycopy(array, 0, array, n, n);
 		}
-		try {
-			return new String(str.getBytes(sourceCharset), destCharset);
-		} catch (UnsupportedEncodingException e) {
-			return str;
-		}
+		System.arraycopy(array, 0, array, n, size - n);
+		return new String(array);
 	}
 
 	/**
@@ -618,8 +629,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br> 
-	 * 例如：HelloWorld->hello_world
+	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br> 例如：HelloWorld->hello_world
 	 *
 	 * @param camelCaseStr 转换前的驼峰式命名的字符串
 	 * @return 转换后下划线大写方式命名的字符串
@@ -628,7 +638,7 @@ public class StrUtil {
 		if (camelCaseStr == null) {
 			return null;
 		}
-		
+
 		final int length = camelCaseStr.length();
 		StringBuilder sb = new StringBuilder();
 		char c;
@@ -653,8 +663,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br> 
-	 * 例如：hello_world->HelloWorld
+	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br> 例如：hello_world->HelloWorld
 	 *
 	 * @param name 转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串
@@ -684,9 +693,10 @@ public class StrUtil {
 		} else
 			return name;
 	}
-	
+
 	/**
 	 * 包装指定字符串
+	 * 
 	 * @param str 被包装的字符串
 	 * @param prefix 前缀
 	 * @param suffix 后缀
@@ -695,9 +705,10 @@ public class StrUtil {
 	public static String wrap(String str, String prefix, String suffix) {
 		return format("{}{}{}", prefix, str, suffix);
 	}
-	
+
 	/**
 	 * 指定字符串是否被包装
+	 * 
 	 * @param str 字符串
 	 * @param prefix 前缀
 	 * @param suffix 后缀
@@ -706,9 +717,10 @@ public class StrUtil {
 	public static boolean isWrap(String str, String prefix, String suffix) {
 		return str.startsWith(prefix) && str.endsWith(suffix);
 	}
-	
+
 	/**
 	 * 指定字符串是否被同一字符包装（前后都有这些字符串）
+	 * 
 	 * @param str 字符串
 	 * @param wrapper 包装字符串
 	 * @return 是否被包装
@@ -716,9 +728,10 @@ public class StrUtil {
 	public static boolean isWrap(String str, String wrapper) {
 		return isWrap(str, wrapper, wrapper);
 	}
-	
+
 	/**
 	 * 指定字符串是否被同一字符包装（前后都有这些字符串）
+	 * 
 	 * @param str 字符串
 	 * @param wrapper 包装字符
 	 * @return 是否被包装
@@ -726,15 +739,87 @@ public class StrUtil {
 	public static boolean isWrap(String str, char wrapper) {
 		return isWrap(str, wrapper, wrapper);
 	}
-	
+
 	/**
 	 * 指定字符串是否被包装
+	 * 
 	 * @param str 字符串
 	 * @param prefixChar 前缀
 	 * @param suffixChar 后缀
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(String str, char prefixChar, char suffixChar) {
-		return str.charAt(0) == prefixChar && str.charAt(str.length() -1) == suffixChar;
+		return str.charAt(0) == prefixChar && str.charAt(str.length() - 1) == suffixChar;
+	}
+
+	/**
+	 * 补充字符串以满足最小长度 StrUtil.padPre("1", 3, '0');//"001"
+	 * 
+	 * @param str 字符串
+	 * @param minLength 最小长度
+	 * @param padChar 补充的字符
+	 * @return
+	 */
+	public static String padPre(String str, int minLength, char padChar) {
+		if (str.length() >= minLength) {
+			return str;
+		}
+		StringBuilder sb = new StringBuilder(minLength);
+		for (int i = str.length(); i < minLength; i++) {
+			sb.append(padChar);
+		}
+		sb.append(str);
+		return sb.toString();
+	}
+
+	/**
+	 * 补充字符串以满足最小长度 StrUtil.padEnd("1", 3, '0');//"100"
+	 * 
+	 * @param str 字符串
+	 * @param minLength 最小长度
+	 * @param padChar 补充的字符
+	 * @return
+	 */
+	public static String padEnd(String str, int minLength, char padChar) {
+		if (str.length() >= minLength) {
+			return str;
+		}
+		StringBuilder sb = new StringBuilder(minLength);
+		sb.append(str);
+		for (int i = str.length(); i < minLength; i++) {
+			sb.append(padChar);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 创建StringBuilder对象
+	 * 
+	 * @return StringBuilder对象
+	 */
+	public static StringBuilder builder() {
+		return new StringBuilder();
+	}
+
+	/**
+	 * 创建StringBuilder对象
+	 * 
+	 * @return StringBuilder对象
+	 */
+	public static StringBuilder builder(int capacity) {
+		return new StringBuilder(capacity);
+	}
+
+	/**
+	 * 创建StringBuilder对象
+	 * 
+	 * @return StringBuilder对象
+	 */
+	public static StringBuilder builder(String... strs) {
+		final StringBuilder sb = new StringBuilder();
+		for (String str : strs) {
+			sb.append(str);
+		}
+		return sb;
 	}
 }

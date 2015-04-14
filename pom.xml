@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
 
 	<groupId>com.xiaoleilu</groupId>
 	<artifactId>hutool</artifactId>
-	<version>2.7.0</version>
+	<version>2.7.1</version>
 	<name>hutool</name>
 	<description>提供最基础的工具类</description>
 	<url>https://github.com/looly/hutool</url>
@@ -94,6 +95,12 @@
 			<groupId>it.sauronsoftware.cron4j</groupId>
 			<artifactId>cron4j</artifactId>
 			<version>2.2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.janusproject.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>19.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

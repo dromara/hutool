@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
@@ -13,6 +14,10 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 
  */
 public class Conver {
+	
+	private Conver() {
+		// 静态类不可实例化
+	}
 	
 	/**
 	 * 强制转换类型
@@ -447,5 +452,26 @@ public class Conver {
 			des.append(tmp);
 		}
 		return des.toString();
+	}
+	
+	/**
+	 * 给定字符串转换字符编码<br/>
+	 * 如果参数为空，则返回原字符串，不报错。
+	 * 
+	 * @param str 被转码的字符串
+	 * @param sourceCharset 原字符集
+	 * @param destCharset 目标字符集
+	 * @return 转换后的字符串
+	 */
+	public static String convertCharset(String str, String sourceCharset, String destCharset) {
+		if(StrUtil.hasBlank(str, sourceCharset, destCharset)) {
+			return str;
+		}
+		
+		try {
+			return new String(str.getBytes(sourceCharset), destCharset);
+		} catch (UnsupportedEncodingException e) {
+			return str;
+		}
 	}
 }
