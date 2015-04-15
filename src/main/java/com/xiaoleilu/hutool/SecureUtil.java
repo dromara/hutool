@@ -1,7 +1,13 @@
 package com.xiaoleilu.hutool;
 
+import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -13,16 +19,18 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  */
 public class SecureUtil {
 
-	public final static String MD2 = "MD2";
-	public final static String MD4 = "MD4";
-	public final static String MD5 = "MD5";
-	
-	public final static String SHA1 = "SHA-1";
-	public final static String SHA256 = "SHA-256";
+	public static final String MD2 = "MD2";
+	public static final String MD4 = "MD4";
+	public static final String MD5 = "MD5";
 
-	public final static String RIPEMD128 = "RIPEMD128";
-	public final static String RIPEMD160 = "RIPEMD160";
-	
+	public static final String SHA1 = "SHA-1";
+	public static final String SHA256 = "SHA-256";
+
+	public static final String HMAC_SHA1 = "HmacSHA1";
+
+	public static final String RIPEMD128 = "RIPEMD128";
+	public static final String RIPEMD160 = "RIPEMD160";
+
 	/** base64码表 */
 	private static char[] base64EncodeTable = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/' };
 
@@ -80,6 +88,63 @@ public class SecureUtil {
 		return encrypt(source, SHA1, charset);
 	}
 
+	// ------------------------------------------------------------------------ MAC
+	/**
+	 * MAC 算法加密
+	 * 
+	 * @param algorithm 算法
+	 * @param data 待加密的数据
+	 * @param key 加密使用的key
+	 * @return 被加密后的bytes
+	 */
+	public static byte[] mac(String algorithm, byte[] data, byte[] key) {
+		Mac mac = null;
+		try {
+			mac = Mac.getInstance(HMAC_SHA1);
+			mac.init(new SecretKeySpec(key, HMAC_SHA1));
+		} catch (NoSuchAlgorithmException e) {
+			throw new UtilException(e, "No such algorithm: {}", algorithm);
+		} catch (InvalidKeyException e) {
+			throw new UtilException(e, "Invalid key: {}", key);
+		}
+		return mac == null ? null : mac.doFinal(data);
+	}
+
+	/**
+	 * MAC SHA-1算法加密
+	 * 
+	 * @param data 待加密的数据
+	 * @param key 加密使用的key
+	 * @return 被加密后的bytes
+	 */
+	public static byte[] sha1(byte[] data, byte[] key) {
+		return mac(HMAC_SHA1, data, key);
+	}
+
+	/**
+	 * MAC SHA-1算法加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @param key 加密使用的key
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String sha1(String data, String key, String charset) {
+		final Charset charsetObj = Charset.forName(charset);
+		final byte[] bytes = mac(HMAC_SHA1, data.getBytes(charsetObj), key.getBytes(charsetObj));
+		return base64(bytes);
+	}
+
+	/**
+	 * 初始化HMAC密钥
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public static String initMacKey(String algorithm) throws Exception {
+		return base64(KeyGenerator.getInstance(algorithm).generateKey().getEncoded());
+	}
+
 	/**
 	 * MD5算法加密
 	 * 
@@ -90,7 +155,7 @@ public class SecureUtil {
 	public static String md5(String source, String charset) {
 		return encrypt(source, MD5, charset);
 	}
-	
+
 	/**
 	 * base64编码
 	 * 
@@ -176,7 +241,7 @@ public class SecureUtil {
 
 		return sb.toString();
 	}
-	
+
 	/**
 	 * base64解码
 	 * 

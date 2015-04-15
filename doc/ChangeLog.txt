@@ -28,3 +28,5 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.7.2
 1. 去除无用依赖
+2.7.3
+1. SecureUtil中增加mac算法的加密
