@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -626,6 +627,16 @@ public class StrUtil {
 			sb.append(obj);
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * 将byte数组转为字符串
+	 * @param bytes byte数组
+	 * @param charset 字符集
+	 * @return 字符串
+	 */
+	public static String str(byte[] bytes, String charset) {
+		return new String(bytes, Charset.forName(charset));
 	}
 
 	/**

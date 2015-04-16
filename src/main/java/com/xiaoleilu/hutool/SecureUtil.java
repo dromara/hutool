@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
@@ -34,6 +35,15 @@ public class SecureUtil {
 	/** base64码表 */
 	private static char[] base64EncodeTable = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/' };
 
+	private static final int[] INV = new int[256];
+	static {
+		Arrays.fill(INV, -1);
+		for (int i = 0, iS = base64EncodeTable.length; i < iS; i++) {
+			INV[base64EncodeTable[i]] = i;
+		}
+		INV['='] = 0;
+	}
+	
 	/**
 	 * 加密
 	 * 
@@ -93,15 +103,15 @@ public class SecureUtil {
 	 * MAC 算法加密
 	 * 
 	 * @param algorithm 算法
-	 * @param data 待加密的数据
 	 * @param key 加密使用的key
+	 * @param data 待加密的数据
 	 * @return 被加密后的bytes
 	 */
-	public static byte[] mac(String algorithm, byte[] data, byte[] key) {
+	public static byte[] mac(String algorithm, byte[] key, byte[] data) {
 		Mac mac = null;
 		try {
-			mac = Mac.getInstance(HMAC_SHA1);
-			mac.init(new SecretKeySpec(key, HMAC_SHA1));
+			mac = Mac.getInstance(algorithm);
+			mac.init(new SecretKeySpec(key, algorithm));
 		} catch (NoSuchAlgorithmException e) {
 			throw new UtilException(e, "No such algorithm: {}", algorithm);
 		} catch (InvalidKeyException e) {
@@ -113,36 +123,38 @@ public class SecureUtil {
 	/**
 	 * MAC SHA-1算法加密
 	 * 
-	 * @param data 待加密的数据
 	 * @param key 加密使用的key
+	 * @param data 待加密的数据
 	 * @return 被加密后的bytes
 	 */
-	public static byte[] sha1(byte[] data, byte[] key) {
-		return mac(HMAC_SHA1, data, key);
+	public static byte[] sha1(byte[] key, byte[] data) {
+		return mac(HMAC_SHA1, key, data);
 	}
 
 	/**
 	 * MAC SHA-1算法加密
 	 * 
-	 * @param data 被加密的字符串
 	 * @param key 加密使用的key
+	 * @param data 被加密的字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String sha1(String data, String key, String charset) {
+	public static String sha1(String key, String data, String charset) {
 		final Charset charsetObj = Charset.forName(charset);
-		final byte[] bytes = mac(HMAC_SHA1, data.getBytes(charsetObj), key.getBytes(charsetObj));
-		return base64(bytes);
+		final byte[] bytes = sha1(key.getBytes(charsetObj), data.getBytes(charsetObj));
+		return base64(bytes, charset);
 	}
 
 	/**
 	 * 初始化HMAC密钥
 	 * 
-	 * @return
+	 * @param algorithm 算法
+	 * @param charset 字符集
+	 * @return key
 	 * @throws Exception
 	 */
-	public static String initMacKey(String algorithm) throws Exception {
-		return base64(KeyGenerator.getInstance(algorithm).generateKey().getEncoded());
+	public static String initMacKey(String algorithm, String charset) throws Exception {
+		return base64(KeyGenerator.getInstance(algorithm).generateKey().getEncoded(), charset);
 	}
 
 	/**
@@ -167,89 +179,69 @@ public class SecureUtil {
 	}
 
 	/**
+	 * 编码为Base64
+	 * @param arr 被编码的数组
+	 * @param lineSep 在76个char之后是CRLF还是EOF
+	 * @return
+	 */
+	public static byte[] base64(byte[] arr, boolean lineSep) {
+		int len = arr != null ? arr.length : 0;
+		if (len == 0) {
+			return new byte[0];
+		}
+
+		int evenlen = (len / 3) * 3;
+		int cnt = ((len - 1) / 3 + 1) << 2;
+		int destlen = cnt + (lineSep ? (cnt - 1) / 76 << 1 : 0);
+		byte[] dest = new byte[destlen];
+
+		for (int s = 0, d = 0, cc = 0; s < evenlen;) {
+			int i = (arr[s++] & 0xff) << 16 | (arr[s++] & 0xff) << 8 | (arr[s++] & 0xff);
+
+			dest[d++] = (byte) base64EncodeTable[(i >>> 18) & 0x3f];
+			dest[d++] = (byte) base64EncodeTable[(i >>> 12) & 0x3f];
+			dest[d++] = (byte) base64EncodeTable[(i >>> 6) & 0x3f];
+			dest[d++] = (byte) base64EncodeTable[i & 0x3f];
+
+			if (lineSep && ++cc == 19 && d < destlen - 2) {
+				dest[d++] = '\r';
+				dest[d++] = '\n';
+				cc = 0;
+			}
+		}
+
+		int left = len - evenlen;
+		if (left > 0) {
+			int i = ((arr[evenlen] & 0xff) << 10) | (left == 2 ? ((arr[len - 1] & 0xff) << 2) : 0);
+
+			dest[destlen - 4] = (byte) base64EncodeTable[i >> 12];
+			dest[destlen - 3] = (byte) base64EncodeTable[(i >>> 6) & 0x3f];
+			dest[destlen - 2] = left == 2 ? (byte) base64EncodeTable[i & 0x3f] : (byte) '=';
+			dest[destlen - 1] = '=';
+		}
+		return dest;
+	}
+	
+	/**
 	 * base64编码
 	 * 
-	 * @param source 被编码的字符串
+	 * @param source 被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
 	public static String base64(String source, String charset) {
-		return base64(StrUtil.encode(source, charset));
+		return new String(base64(StrUtil.encode(source, charset), false), Charset.forName(charset));
 	}
-
+	
 	/**
-	 * Base64的编码;
+	 * base64编码
 	 * 
-	 * @param bytes 被编码的byte数组
-	 * @return 编码后的值
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
 	 */
-	public static String base64(byte[] bytes) {
-		StringBuilder sb = new StringBuilder();
-		// 获取编码字节是3的倍数;
-		int len = bytes.length;
-		int len3 = len / 3;
-		// 先处理没有加换行符;
-		for (int i = 0; i < len3; i++) {
-
-			// 得到第一个字符;
-			int b1 = (bytes[i * 3] >> 2) & 0x3F;
-			char c1 = base64EncodeTable[b1];
-			sb.append(c1);
-
-			// 得到第二个字符;
-			int b2 = ((bytes[i * 3] << 4 & 0x3F) + (bytes[i * 3 + 1] >> 4)) & 0x3F;
-			char c2 = base64EncodeTable[b2];
-			sb.append(c2);
-
-			// 得到第三个字符;
-			int b3 = ((bytes[i * 3 + 1] << 2 & 0x3C) + (bytes[i * 3 + 2] >> 6)) & 0x3F;
-			char c3 = base64EncodeTable[b3];
-			sb.append(c3);
-
-			// 得到第四个字符;
-			int b4 = bytes[i * 3 + 2] & 0x3F;
-			char c4 = base64EncodeTable[b4];
-			sb.append(c4);
-
-		}
-
-		// 如果有剩余的字符就补0;
-		// 剩余的个数;
-		int less = len % 3;
-		if (less == 1) {// 剩余一个字符--补充两个等号;;
-
-			// 得到第一个字符;
-			int b1 = bytes[len3 * 3] >> 2 & 0x3F;
-			char c1 = base64EncodeTable[b1];
-			sb.append(c1);
-
-			// 得到第二个字符;
-			int b2 = (bytes[len3 * 3] << 4 & 0x30) & 0x3F;
-			char c2 = base64EncodeTable[b2];
-			sb.append(c2);
-			sb.append("==");
-
-		} else if (less == 2) {// 剩余两个字符--补充一个等号;
-
-			// 得到第一个字符;
-			int b1 = bytes[len3 * 3] >> 2 & 0x3F;
-			char c1 = base64EncodeTable[b1];
-			sb.append(c1);
-
-			// 得到第二个字符;
-			int b2 = ((bytes[len3 * 3] << 4 & 0x30) + (bytes[len3 * 3 + 1] >> 4)) & 0x3F;
-			char c2 = base64EncodeTable[b2];
-			sb.append(c2);
-
-			// 得到第三个字符;
-			int b3 = (bytes[len3 * 3 + 1] << 2 & 0x3C) & 0x3F;
-			char c3 = base64EncodeTable[b3];
-			sb.append(c3);
-			sb.append("=");
-
-		}
-
-		return sb.toString();
+	public static String base64(byte[] source, String charset) {
+		return new String(base64(source, false), Charset.forName(charset));
 	}
 
 	/**
@@ -260,79 +252,51 @@ public class SecureUtil {
 	 * @return 被加密后的字符串
 	 */
 	public static String decodeBase64(String source, String charset) {
-		return decodeBase64(StrUtil.encode(source, charset));
+		return new String(decodeBase64(StrUtil.encode(source, charset)), Charset.forName(charset));
 	}
 
 	/**
-	 * Base64的解码;
-	 * 
-	 * @param bytes
-	 * @return 解码后的字符串
+	 * 解码Base64
+	 * @param arr byte数组
+	 * @return 解码后的byte数组
 	 */
-	public static String decodeBase64(byte[] bytes) {
-
-		// 每四个一组进行解码;
-		int len = bytes.length;
-		int len4 = len / 4;
-		StringBuilder sb = new StringBuilder();
-		// 除去末尾的四个可能特殊的字符;
-		int i = 0;
-		for (i = 0; i < len4 - 1; i++) {
-
-			// 第一个字符;
-			byte b1 = (byte) ((char2Index((char) bytes[i * 4]) << 2) + (char2Index((char) bytes[i * 4 + 1]) >> 4));
-			sb.append((char) b1);
-			// 第二个字符;
-			byte b2 = (byte) ((char2Index((char) bytes[i * 4 + 1]) << 4) + (char2Index((char) bytes[i * 4 + 2]) >> 2));
-			sb.append((char) b2);
-			// 第三个字符;
-			byte b3 = (byte) ((char2Index((char) bytes[i * 4 + 2]) << 6) + (char2Index((char) bytes[i * 4 + 3])));
-			sb.append((char) b3);
-
+	public static byte[] decodeBase64(byte[] arr) {
+		int length = arr.length;
+		if (length == 0) {
+			return new byte[0];
 		}
 
-		// 处理最后的四个字符串;
-		for (int j = 0; j < 3; j++) {
-			int index = i * 4 + j;
-			if ((char) bytes[index + 1] != '=') {
+		int sndx = 0, endx = length - 1;
+		int pad = arr[endx] == '=' ? (arr[endx - 1] == '=' ? 2 : 1) : 0;
+		int cnt = endx - sndx + 1;
+		int sepCnt = length > 76 ? (arr[76] == '\r' ? cnt / 78 : 0) << 1 : 0;
+		int len = ((cnt - sepCnt) * 6 >> 3) - pad;
+		byte[] dest = new byte[len];
 
-				if (j == 0) {
-					byte b = (byte) ((char2Index((char) bytes[index]) << 2) + (char2Index((char) bytes[index + 1]) >> 4));
-					sb.append((char) b);
-				} else if (j == 1) {
-					byte b = (byte) ((char2Index((char) bytes[index]) << 4) + (char2Index((char) bytes[index + 1]) >> 2));
-					sb.append((char) b);
-				} else if (j == 2) {
-					byte b = (byte) ((char2Index((char) bytes[index]) << 6) + (char2Index((char) bytes[index + 1])));
-					sb.append((char) b);
-				}
+		int d = 0;
+		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
+			int i = INV[arr[sndx++]] << 18 | INV[arr[sndx++]] << 12 | INV[arr[sndx++]] << 6 | INV[arr[sndx++]];
 
-			} else {
-				break;
+			dest[d++] = (byte) (i >> 16);
+			dest[d++] = (byte) (i >> 8);
+			dest[d++] = (byte) i;
+
+			if (sepCnt > 0 && ++cc == 19) {
+				sndx += 2;
+				cc = 0;
 			}
 		}
 
-		return sb.toString();
-	}
-
-	/**
-	 * 将码表中的字符映射到索引值;
-	 * 
-	 * @param ch 字符
-	 * @return 索引值
-	 */
-	private static int char2Index(char ch) {
-		if (ch >= 'A' && ch <= 'Z') {
-			return ch - 'A';
-		} else if (ch >= 'a' && ch <= 'z') {
-			return 26 + ch - 'a';
-		} else if (ch >= '0' && ch <= '9') {
-			return 52 + ch - '0';
-		} else if (ch == '+') {
-			return 62;
-		} else if (ch == '/') {
-			return 63;
+		if (d < len) {
+			int i = 0;
+			for (int j = 0; sndx <= endx - pad; j++) {
+				i |= INV[arr[sndx++]] << (18 - j * 6);
+			}
+			for (int r = 16; d < len; r -= 8) {
+				dest[d++] = (byte) (i >> r);
+			}
 		}
-		return 0;
+
+		return dest;
 	}
 }
