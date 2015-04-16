@@ -769,7 +769,7 @@ public class StrUtil {
 	 * @param str 字符串
 	 * @param minLength 最小长度
 	 * @param padChar 补充的字符
-	 * @return
+	 * @return 补充后的字符串
 	 */
 	public static String padPre(String str, int minLength, char padChar) {
 		if (str.length() >= minLength) {
@@ -789,7 +789,7 @@ public class StrUtil {
 	 * @param str 字符串
 	 * @param minLength 最小长度
 	 * @param padChar 补充的字符
-	 * @return
+	 * @return 补充后的字符串
 	 */
 	public static String padEnd(String str, int minLength, char padChar) {
 		if (str.length() >= minLength) {

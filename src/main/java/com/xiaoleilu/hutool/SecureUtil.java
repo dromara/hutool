@@ -182,7 +182,7 @@ public class SecureUtil {
 	 * 编码为Base64
 	 * @param arr 被编码的数组
 	 * @param lineSep 在76个char之后是CRLF还是EOF
-	 * @return
+	 * @return 编码后的bytes
 	 */
 	public static byte[] base64(byte[] arr, boolean lineSep) {
 		int len = arr != null ? arr.length : 0;
