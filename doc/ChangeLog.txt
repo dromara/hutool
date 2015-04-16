@@ -30,3 +30,5 @@ SecureUtil中的base64EncodeTable改为私有
 1. 去除无用依赖
 2.7.3
 1. SecureUtil中增加mac算法的加密
+2.7.4
+1. 增加针对byte的md5方法

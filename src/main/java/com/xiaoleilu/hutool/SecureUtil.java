@@ -149,6 +149,16 @@ public class SecureUtil {
 	 * MD5算法加密
 	 * 
 	 * @param source 被加密的字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String md5(byte[] source) {
+		return encrypt(source, MD5);
+	}
+	
+	/**
+	 * MD5算法加密
+	 * 
+	 * @param source 被加密的字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
