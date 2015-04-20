@@ -446,7 +446,7 @@ public class CollectionUtil {
 	 * @param collection 集合
 	 * @return 是否为空
 	 */
-	public static <T> boolean isEmpty(Collection<T> collection) {
+	public static boolean isEmpty(Collection<?> collection) {
 		return collection == null || collection.isEmpty();
 	}
 	
@@ -455,8 +455,26 @@ public class CollectionUtil {
 	 * @param collection 集合
 	 * @return 是否为非空
 	 */
-	public static <T> boolean isNotEmpty(Collection<T> collection) {
+	public static boolean isNotEmpty(Collection<?> collection) {
 		return false == isEmpty(collection);
+	}
+	
+	/**
+	 * Map是否为空
+	 * @param map 集合
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(Map<?, ?> map) {
+		return map == null || map.isEmpty();
+	}
+	
+	/**
+	 * Map是否为非空
+	 * @param map 集合
+	 * @return 是否为非空
+	 */
+	public static <T> boolean isNotEmpty(Map<?, ?> map) {
+		return false == isEmpty(map);
 	}
 	
 	/**

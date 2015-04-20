@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +20,11 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.xiaoleilu.hutool.CollectionUtil;
+import com.xiaoleilu.hutool.IoUtil;
+import com.xiaoleilu.hutool.Log;
+import com.xiaoleilu.hutool.ReUtil;
+import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
@@ -99,6 +104,15 @@ public class HttpUtil {
 	}
 	
 	/**
+	 * 检测是否https
+	 * @param url URL
+	 * @return 是否https
+	 */
+	public static boolean isHttps(String url) {
+		return url.toLowerCase().startsWith("https");
+	}
+	
+	/**
 	 * 请求
 	 * @param method 方法
 	 * @param urlString URL
@@ -138,7 +152,7 @@ public class HttpUtil {
 		}
 
 		/* 获取内容 */
-		String charset = getCharsetFromConn(conn);
+		String charset = getCharset(conn);
 		boolean isGetCharsetFromContent = false;
 		if (StrUtil.isBlank(charset)) {
 			charset = customCharset;
@@ -208,7 +222,7 @@ public class HttpUtil {
 		}
 
 		/* 获取内容 */
-		String charset = getCharsetFromConn(conn);
+		String charset = getCharset(conn);
 		String content = IoUtil.getString(conn.getInputStream(), StrUtil.isBlank(charset) ? customCharset : charset);
 		conn.disconnect();
 
@@ -293,14 +307,13 @@ public class HttpUtil {
 		return params;
 	}
 
-	// ----------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 从Http连接的头信息中获得字符集
 	 * 
 	 * @param conn HTTP连接对象
 	 * @return 字符集
 	 */
-	private static String getCharsetFromConn(HttpURLConnection conn) {
+	public static String getCharset(HttpURLConnection conn) {
 		String charset = conn.getContentEncoding();
 		if (charset == null || "".equals(charset.trim())) {
 			String contentType = conn.getContentType();
@@ -308,17 +321,17 @@ public class HttpUtil {
 		}
 		return charset;
 	}
-
+	
 	/**
 	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br/>
 	 * 
 	 * @param checkString 被检测的字符串
 	 * @return 是否未知
 	 */
-	private static boolean isUnknow(String checkString) {
+	public static boolean isUnknow(String checkString) {
 		return StrUtil.isBlank(checkString) || UNKNOW.equalsIgnoreCase(checkString);
 	}
-
+	
 	/**
 	 * 从流中读取内容
 	 * 
@@ -327,9 +340,9 @@ public class HttpUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
-	private static String getString(InputStream in, String charset, boolean isGetCharsetFromContent) throws IOException {
+	public static String getString(InputStream in, String charset, boolean isGetCharsetFromContent) throws IOException {
 		StringBuilder content = new StringBuilder(); // 存储返回的内容
-
+		
 		// 从返回的内容中读取所需内容
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
 		String line = null;
@@ -340,13 +353,14 @@ public class HttpUtil {
 				if (StrUtil.isBlank(charsetInContent) == false) {
 					charset = charsetInContent;
 					reader = new BufferedReader(new InputStreamReader(in, charset));
-					isGetCharsetFromContent = true;
+					isGetCharsetFromContent = false;
 				}
 			}
 		}
-
+		
 		return content.toString();
 	}
+	// ----------------------------------------------------------------------------------------- Private method start
 
 	/**
 	 * 将键值对加入到值为List类型的Map中
