@@ -24,12 +24,15 @@ public enum Header {
 	ETAG("ETag"),
 	/**Connection*/
 	CONNECTION("Connection"),
-	/**Keep-Alive*/
-	KEEP_ALIVE("Keep-Alive"),
 	/**Cookie*/
 	COOKIE("Cookie"),
 	/**Cookie*/
 	SET_COOKIE("Set-Cookie"),
+	
+	/**Keep-Alive*/
+	KEEP_ALIVE("Keep-Alive"),
+	/**未知标识*/
+	UNKNOW("unknown"),
 	/**Close*/
 	CLOSE("Close");
 	

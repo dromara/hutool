@@ -6,5 +6,5 @@ package com.xiaoleilu.hutool.http;
  *
  */
 public enum Method {
-	GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE
+	GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE, CONNECT;
 }

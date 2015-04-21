@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.exceptions.UtilException;
+
 /**
  * 字符串工具类
  * 
@@ -832,5 +834,21 @@ public class StrUtil {
 			sb.append(str);
 		}
 		return sb;
+	}
+	
+	/**
+	 * 获得字符串对应字符集的byte数组
+	 * @param str 字符串
+	 * @param charset 字符集编码
+	 * @return byte数组
+	 */
+	public static byte[] bytes(String str, String charset) {
+		if(null == str) {
+			return null;
+		}
+		if(isBlank(charset)) {
+			throw new UtilException("Empty charset !");
+		}
+		return str.getBytes(Charset.forName(charset));
 	}
 }

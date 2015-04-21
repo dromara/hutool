@@ -11,18 +11,15 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.IoUtil;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.ReUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
@@ -34,12 +31,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  */
 public class HttpUtil {
 
-	/** 未知的标识 */
-	public final static String UNKNOW = "unknown";
-
 	public final static Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
-
-	private static Map<String, String> cookies = new HashMap<String, String>();
 
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded
@@ -113,58 +105,6 @@ public class HttpUtil {
 	}
 	
 	/**
-	 * 请求
-	 * @param method 方法
-	 * @param urlString URL
-	 * @param customCharset 自定义的编码
-	 * @param isPassCodeError 是否跳过非200异常
-	 * @param headers 请求头
-	 * @return 返回内容
-	 * @throws IOException
-	 */
-	public static String request(String method, String urlString, String customCharset, boolean isPassCodeError, Map<String, Object> headers) throws IOException {
-		final URL url = new URL(urlString);
-		final String host = url.getHost();
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-		//Add headers
-		for (Entry<String, Object> entry : headers.entrySet()) {
-			conn.addRequestProperty(entry.getKey(), StrUtil.str(entry.getValue()));
-		}
-		
-		//Add Cookies
-		final String cookie = cookies.get(host);
-		if (cookie != null) conn.addRequestProperty("Cookie", cookie);
-		
-		conn.setRequestMethod(method);
-		
-		if (conn.getResponseCode() != 200) {
-			if (!isPassCodeError) {
-				throw new IOException("Status code not 200!");
-			}
-		}
-
-		//Get Cookies
-		final String setCookie = conn.getHeaderField("Set-Cookie");
-		if (StrUtil.isBlank(setCookie) == false) {
-			Log.debug("Set cookie: [{}]", setCookie);
-			cookies.put(host, setCookie);
-		}
-
-		/* 获取内容 */
-		String charset = getCharset(conn);
-		boolean isGetCharsetFromContent = false;
-		if (StrUtil.isBlank(charset)) {
-			charset = customCharset;
-			isGetCharsetFromContent = true;
-		}
-		String content = getString(conn.getInputStream(), charset, isGetCharsetFromContent);
-		conn.disconnect();
-
-		return content;
-	}
-
-	/**
 	 * 发送get请求
 	 * 
 	 * @param urlString 网址
@@ -173,11 +113,8 @@ public class HttpUtil {
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @throws IOException
 	 */
-	public static String get(String urlString, String customCharset, boolean isPassCodeError) throws IOException {
-		HashMap<String, Object> headers = new HashMap<String, Object>();
-		headers.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1");
-		
-		return request("GET", urlString, customCharset, isPassCodeError, headers);
+	public static String get(String urlString, String customCharset) throws IOException {
+		return HttpRequest.get(urlString).charset(customCharset).execute().body();
 	}
 
 	/**
@@ -306,6 +243,35 @@ public class HttpUtil {
 
 		return params;
 	}
+	
+	/**
+	 * 将表单数据加到URL中（用于GET表单提交）
+	 * @param url URL
+	 * @param form 表单数据
+	 * @return
+	 */
+	public static String urlWithForm(String url, Map<String, Object> form) {
+		final String queryString = HttpUtil.toParams(form);
+		return urlWithForm(url, queryString);
+	}
+	
+	/**
+	 * 将表单数据字符串加到URL中（用于GET表单提交）
+	 * @param url URL
+	 * @param queryString 表单数据字符串
+	 * @return 拼接后的字符串
+	 */
+	public static String urlWithForm(String url, String queryString) {
+		if(StrUtil.isNotBlank(queryString)){
+			if(url.contains("?")) {
+				//原URL已经带参数
+				url += "&" + queryString;
+			}
+			url += url.endsWith("?") ? queryString : "?" + queryString;
+		}
+		
+		return url;
+	}
 
 	/**
 	 * 从Http连接的头信息中获得字符集
@@ -314,10 +280,13 @@ public class HttpUtil {
 	 * @return 字符集
 	 */
 	public static String getCharset(HttpURLConnection conn) {
+		if(conn == null){
+			return null;
+		}
+
 		String charset = conn.getContentEncoding();
-		if (charset == null || "".equals(charset.trim())) {
-			String contentType = conn.getContentType();
-			charset = ReUtil.get("charset=(.*)", contentType, 1);
+		if (StrUtil.isBlank(charset)) {
+			charset = ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
 		}
 		return charset;
 	}
@@ -329,7 +298,7 @@ public class HttpUtil {
 	 * @return 是否未知
 	 */
 	public static boolean isUnknow(String checkString) {
-		return StrUtil.isBlank(checkString) || UNKNOW.equalsIgnoreCase(checkString);
+		return StrUtil.isBlank(checkString) || Header.UNKNOW.toString().equalsIgnoreCase(checkString);
 	}
 	
 	/**

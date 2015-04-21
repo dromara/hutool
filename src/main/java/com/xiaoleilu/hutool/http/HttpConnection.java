@@ -10,7 +10,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,9 +21,11 @@ import javax.net.ssl.TrustManager;
 import org.slf4j.Logger;
 
 import com.xiaoleilu.hutool.CollectionUtil;
+import com.xiaoleilu.hutool.Func;
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.URLUtil;
+import com.xiaoleilu.hutool.Validator;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.http.ssl.DefaultTrustManager;
 import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
@@ -38,16 +39,20 @@ import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 public class HttpConnection {
 	private final static Logger log = Log.get();
 
-	private HttpURLConnection conn;
-
-	private static Map<String, String> cookies = new HashMap<String, String>();
-
-	/** 超时，单位：毫秒 */
-	private int timeout;
 	private URL url;
-
 	/** method请求方法 */
-	private Method method = Method.GET;
+	private Method method;
+	private HttpURLConnection conn;
+	
+	/**
+	 * 创建HttpConnection
+	 * @param urlStr URL
+	 * @param method HTTP方法
+	 * @return
+	 */
+	public static HttpConnection create(String urlStr, Method method) {
+		return new HttpConnection(urlStr, method);
+	}
 
 	// --------------------------------------------------------------- Constructor start
 	/**
@@ -57,8 +62,15 @@ public class HttpConnection {
 	 * @param method HTTP方法
 	 */
 	public HttpConnection(String urlStr, Method method) {
+		if(StrUtil.isBlank(urlStr)) {
+			throw new HttpException("Url is blank !");
+		}
+		if(Validator.isUrl(urlStr) == false) {
+			throw new HttpException("{} is not a url !", urlStr);
+		}
+		
 		this.url = URLUtil.url(urlStr);
-		this.method = method;
+		this.method = Func.isNull(method) ? Method.GET : method;
 
 		try {
 			this.conn = HttpUtil.isHttps(urlStr) ? openHttps() : openHttp();
@@ -73,8 +85,9 @@ public class HttpConnection {
 
 	/**
 	 * 初始化连接相关信息
+	 * @return HttpConnection
 	 */
-	public void initConn() {
+	public HttpConnection initConn() {
 		// method
 		try {
 			this.conn.setRequestMethod(this.method.toString());
@@ -89,15 +102,14 @@ public class HttpConnection {
 		}
 		this.conn.setDoInput(true);
 
-		// header
+		// default header
 		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
 		header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded", true);
-		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0", true);
+		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0 Hutool", true);
+		//Cookie
+		setCookie(CookiePool.get(this.url.getHost()));
 
-		// cookie
-		// Add Cookies
-		final String cookie = cookies.get(this.url.getHost());
-		if (cookie != null) header(Header.COOKIE, cookie, true);
+		return this;
 	}
 
 	// --------------------------------------------------------------- Getters And Setters start
@@ -138,24 +150,6 @@ public class HttpConnection {
 	}
 
 	/**
-	 * 获取超时
-	 * 
-	 * @return 超时
-	 */
-	public int getTimeout() {
-		return timeout;
-	}
-
-	/**
-	 * 设置超时
-	 * 
-	 * @param timeout 超时
-	 */
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
-	}
-
-	/**
 	 * 获取HttpURLConnection对象
 	 * 
 	 * @return HttpURLConnection
@@ -166,28 +160,7 @@ public class HttpConnection {
 
 	// --------------------------------------------------------------- Getters And Setters end
 
-	/**
-	 * 设置连接超时
-	 * 
-	 * @param timeout 超时
-	 */
-	public void setConnectTimeout(int timeout) {
-		if (null != this.conn) {
-			this.conn.setConnectTimeout(timeout);
-		}
-	}
-
-	/**
-	 * 设置读取超时
-	 * 
-	 * @param timeout 超时
-	 */
-	public void setReadTimeout(int timeout) {
-		if (null != this.conn) {
-			this.conn.setReadTimeout(timeout);
-		}
-	}
-
+	// ---------------------------------------------------------------- Headers start
 	/**
 	 * 设置请求头<br>
 	 * 当请求头存在时，覆盖之
@@ -196,7 +169,7 @@ public class HttpConnection {
 	 * @param value 头值
 	 * @param 是否覆盖旧值
 	 */
-	public void header(String header, String value, boolean isOverride) {
+	public HttpConnection header(String header, String value, boolean isOverride) {
 		if (null != this.conn) {
 			if (isOverride) {
 				this.conn.setRequestProperty(header, value);
@@ -204,6 +177,8 @@ public class HttpConnection {
 				this.conn.addRequestProperty(header, value);
 			}
 		}
+		
+		return this;
 	}
 
 	/**
@@ -214,8 +189,8 @@ public class HttpConnection {
 	 * @param value 头值
 	 * @param 是否覆盖旧值
 	 */
-	public void header(Header header, String value, boolean isOverride) {
-		header(header.toString(), value, isOverride);
+	public HttpConnection header(Header header, String value, boolean isOverride) {
+		return header(header.toString(), value, isOverride);
 	}
 
 	/**
@@ -224,18 +199,17 @@ public class HttpConnection {
 	 * 
 	 * @param headers 请求头
 	 */
-	public void header(Map<String, List<String>> headers) {
-		if(CollectionUtil.isEmpty(headers)) {
-			return;
-		}
-		
-		String name;
-		for (Entry<String, List<String>> entry : headers.entrySet()) {
-			name = entry.getKey();
-			for (String value : entry.getValue()) {
-				this.header(name, StrUtil.nullToEmpty(value), false);
+	public HttpConnection header(Map<String, List<String>> headers) {
+		if(CollectionUtil.isNotEmpty(headers)) {
+			String name;
+			for (Entry<String, List<String>> entry : headers.entrySet()) {
+				name = entry.getKey();
+				for (String value : entry.getValue()) {
+					this.header(name, StrUtil.nullToEmpty(value), false);
+				}
 			}
 		}
+		return this;
 	}
 
 	/**
@@ -267,29 +241,82 @@ public class HttpConnection {
 	public Map<String, List<String>> headers() {
 		return this.conn.getHeaderFields();
 	}
+	// ---------------------------------------------------------------- Headers end
+	
+	/**
+	 * 设置连接超时
+	 * 
+	 * @param timeout 超时
+	 */
+	public HttpConnection setConnectTimeout(int timeout) {
+		if (timeout > 0 && null != this.conn) {
+			this.conn.setConnectTimeout(timeout);
+		}
+		
+		return this;
+	}
+
+	/**
+	 * 设置读取超时
+	 * 
+	 * @param timeout 超时
+	 */
+	public HttpConnection setReadTimeout(int timeout) {
+		if (timeout > 0 && null != this.conn) {
+			this.conn.setReadTimeout(timeout);
+		}
+		
+		return this;
+	}
+	
+	/**
+	 * 设置连接和读取的超时时间
+	 * @param timeout 超时时间
+	 */
+	public HttpConnection setConnectionAndReadTimeout(int timeout) {
+		setConnectTimeout(timeout);
+		setReadTimeout(timeout);
+		
+		return this;
+	}
+	
+	/**
+	 * 设置Cookie
+	 * @param cookie Cookie
+	 * @return HttpConnection
+	 */
+	public HttpConnection setCookie(String cookie){
+		if(cookie != null) {
+			header(Header.COOKIE, cookie, true);
+		}
+		return this;
+	}
 	
 	/**
 	 * 连接
 	 * 
 	 * @throws IOException
 	 */
-	public void connect() throws IOException {
+	public HttpConnection connect() throws IOException {
 		if (null != this.conn) {
 			this.conn.connect();
 		}
+		return this;
 	}
 
 	/**
 	 * 断开连接
 	 */
-	public void disconnect() {
+	public HttpConnection disconnect() {
 		if (null != this.conn) {
 			this.conn.disconnect();
 		}
+		return this;
 	}
 
 	/**
-	 * 获得输入流对象
+	 * 获得输入流对象<br>
+	 * 输入流对象用于读取数据
 	 * @return 输入流对象
 	 * @throws IOException
 	 */
@@ -298,7 +325,7 @@ public class HttpConnection {
 		final String setCookie = header(Header.SET_COOKIE);
 		if (StrUtil.isBlank(setCookie) == false) {
 			log.debug("Set cookie: [{}]", setCookie);
-			cookies.put(url.getHost(), setCookie);
+			CookiePool.put(url.getHost(), setCookie);
 		}
 
 		if (null != this.conn) {
@@ -309,7 +336,7 @@ public class HttpConnection {
 
 	/**
 	 * 获取输出流对象
-	 * 
+	 * 输出流对象用于发送数据
 	 * @return OutputStream
 	 * @throws IOException
 	 */
@@ -331,6 +358,14 @@ public class HttpConnection {
 			return this.conn.getResponseCode();
 		}
 		return 0;
+	}
+	
+	/**
+	 * 获得字符集编码
+	 * @return 字符集编码
+	 */
+	public String charset() {
+		return HttpUtil.getCharset(conn);
 	}
 	
 	// --------------------------------------------------------------- Private Method start

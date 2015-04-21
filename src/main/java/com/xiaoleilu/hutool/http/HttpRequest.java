@@ -1,62 +1,53 @@
 package com.xiaoleilu.hutool.http;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.IoUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 
 /**
  * http请求类
- * @author biezhi
+ * @author Looly
  */
 public class HttpRequest extends HttpBase<HttpRequest>{
 
-	/**
-	 * method
-	 */
 	protected Method method = Method.GET;
-	
-	/**
-	 * URL
-	 */
 	private String url = "";
-	
-	/**
-	 * 默认超时
-	 */
+	/** 默认超时 */
 	private int timeout = -1;
+	/**存储表单数据*/
+	protected Map<String, Object> form = new HashMap<String, Object>();
 	
-	/**
-	 * 连接对象
-	 */
+	/** 连接对象 */
 	private HttpConnection httpConnection;
 	
 	/**
-	 * 设置请求方法
-	 * @param method
-	 * @return HttpRequest
-	 */
-	private HttpRequest method(Method method) {
-		this.method = method;
-		return this;
-	}
-	
-	/**
-	 * 设置请求URL
-	 * @param url
+	 * 构造
+	 * @param url URL
 	 */
 	public HttpRequest(String url) {
 		this.url = url;
 	}
 	
+	// ---------------------------------------------------------------- Http Method start
+	/**
+	 * 设置请求方法
+	 * @param method HTTP方法
+	 * @return HttpRequest
+	 */
+	public HttpRequest method(Method method) {
+		this.method = method;
+		return this;
+	}
+	
 	/**
 	 * POST请求
-	 * @param url
+	 * @param url URL
 	 * @return HttpRequest
 	 */
 	public static HttpRequest post(String url) {
@@ -65,12 +56,131 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	
 	/**
 	 * GET请求
-	 * @param url
+	 * @param url URL
 	 * @return HttpRequest
 	 */
 	public static HttpRequest get(String url) {
 		return new HttpRequest(url).method(Method.GET);
 	}
+	
+	/**
+	 * HEAD请求
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest head(String url) {
+		return new HttpRequest(url).method(Method.HEAD);
+	}
+	
+	/**
+	 * OPTIONS请求
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest options(String url) {
+		return new HttpRequest(url).method(Method.OPTIONS);
+	}
+	
+	/**
+	 * PUT请求
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest put(String url) {
+		return new HttpRequest(url).method(Method.PUT);
+	}
+	
+	/**
+	 * DELETE请求
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest delete(String url) {
+		return new HttpRequest(url).method(Method.DELETE);
+	}
+	
+	/**
+	 * TRACE请求
+	 * @param url URL
+	 * @return HttpRequest
+	 */
+	public static HttpRequest trace(String url) {
+		return new HttpRequest(url).method(Method.TRACE);
+	}
+	// ---------------------------------------------------------------- Http Method end
+	
+	// ---------------------------------------------------------------- Form start
+	/**
+	 * 设置表单数据
+	 * @param name 名
+	 * @param value 值
+	 */
+	public HttpRequest form(String name, Object value) {
+		form.put(name, Conver.toStr(value, null));
+
+		return this;
+	}
+	/**
+	 * 设置表单数据
+	 * @param name 名
+	 * @param value 值
+	 * @param parameters 参数对，奇数为名，偶数为值
+
+	 */
+	public HttpRequest form(String name, Object value, Object... parameters) {
+		form(name, value);
+
+		for (int i = 0; i < parameters.length; i += 2) {
+			name = parameters[i].toString();
+			form(name, parameters[i + 1]);
+		}
+		return this;
+	}
+
+	/**
+	 * 设置map类型表单数据
+	 * @param formMap
+
+	 */
+	public HttpRequest form(Map<String, Object> formMap) {
+		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
+			form(entry.getKey(), entry.getValue());
+		}
+		return this;
+	}
+
+	/**
+	 * 获取表单数据
+	 * @return Map<String, Object>
+	 */
+	public Map<String, Object> form() {
+		return form;
+	}
+	// ---------------------------------------------------------------- Form end
+	
+	// ---------------------------------------------------------------- Body start
+	/**
+	 * 设置内容主体
+	 * @param body
+
+	 */
+	public HttpRequest body(String body) {
+		this.body = body;
+		this.form = null;
+		contentLength(body.length());
+		return this;
+	}
+
+	/**
+	 * 设置主体字节码
+	 * @param content
+	 * @param contentType
+	 */
+	public HttpRequest body(byte[] content, String contentType) {
+		this.contentType(contentType);
+		return body(StrUtil.str(content, charset));
+	}
+	// ---------------------------------------------------------------- Body end
 	
 	/**
 	 * 设置超时
@@ -87,47 +197,32 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * @return HttpResponse
 	 */
 	public HttpResponse execute(){
-		
-		if(this.method.equals(Method.GET)){
-			withUrl();
-		}
-		// init connection
-		this.httpConnection = new HttpConnection(this.url, this.method);
-		
-		// response
-		HttpResponse httpResponse = null;
-		if(this.timeout != -1){
-			// connect timeout
-			this.httpConnection.setConnectTimeout(this.timeout);
-			// read timeout
-			this.httpConnection.setReadTimeout(this.timeout);
+		if(Method.GET.equals(method)){
+			this.url = HttpUtil.urlWithForm(this.url, this.form);
 		}
 		
-		// set header
-		this.httpConnection.header(this.headers);
+		//初始化 connection
+		this.httpConnection = HttpConnection.create(url, method)
+				.setConnectionAndReadTimeout(timeout)
+				.header(this.headers);
 		
+		//发送请求
 		try {
-			if(this.method.equals(Method.POST)){
-				sendTo(httpConnection.getOutputStream());
+			if(Method.POST.equals(method)){
+				send();
 			} else {
 				this.httpConnection.connect();
 			}
 			
-			InputStream inputStream = this.httpConnection.getInputStream();
-			Map<String, List<String>> headers = this.httpConnection.headers();
-			
-			httpResponse = HttpResponse.readResponse(inputStream);
-			
-			httpResponse.setHeader(headers);
-			httpResponse.setStatusCode(this.httpConnection.responseCode());
-			httpResponse.setHttpRequest(this);
-			
-		} catch (IOException ioex) {
-			throw new HttpException(ioex);
+		} catch (IOException e) {
+			throw new HttpException(e.getMessage(), e);
 		}
 		
+		// 获取响应
+		HttpResponse httpResponse = HttpResponse.readResponse(httpConnection);
+		
+		//关闭或保持
 		if (httpResponse.isKeepAlive() == false) {
-			// closes connection if keep alive is false, or if counter reached 0
 			this.httpConnection.disconnect();
 			this.httpConnection = null;
 		}
@@ -135,26 +230,17 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		return httpResponse;
 	}
 	
-	/**
-	 * 转换URL
-	 */
-	private void withUrl(){
-		final String queryString = HttpUtil.toParams(this.form);
-		if(StrUtil.isNotBlank(queryString)){
-			this.url += this.url.endsWith("?") ? queryString : "?" + queryString;
-		}
-	}
-	
+	// ---------------------------------------------------------------- Private method start
 	/**
 	 * 发送数据流
-	 * @param outputStream
 	 * @throws IOException
 	 */
-	private void sendTo(OutputStream outputStream) throws IOException {
-		if(null != outputStream){
-			String queryString = HttpUtil.toParams(this.form);
-			IoUtil.write(outputStream, this.formEncoding, true, queryString);
+	private void send() throws IOException {
+		final OutputStream out = this.httpConnection.getOutputStream();
+		if(null != out){
+			IoUtil.write(out, this.charset, true, HttpUtil.toParams(this.form));
 		}
 	}
+	// ---------------------------------------------------------------- Private method end
 	
 }

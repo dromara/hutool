@@ -123,4 +123,22 @@ public class Func {
 		}
 		return false;
 	}
+	
+	/**
+	 * 检查对象是否为null
+	 * @param obj 对象
+	 * @return 是否为null
+	 */
+	public static boolean isNull(Object  obj) {
+		return null == obj;
+	}
+	
+	/**
+	 * 检查对象是否不为null
+	 * @param obj 对象
+	 * @return 是否为null
+	 */
+	public static boolean isNotNull(Object  obj) {
+		return null != obj;
+	}
 }
