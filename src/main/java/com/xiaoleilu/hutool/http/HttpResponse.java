@@ -1,9 +1,13 @@
 package com.xiaoleilu.hutool.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
 import com.xiaoleilu.hutool.CharsetUtil;
+import com.xiaoleilu.hutool.IoUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 
@@ -81,6 +85,34 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 */
 	private void  readBody(InputStream in) throws IOException{
 		this.body = HttpUtil.getString(in, CharsetUtil.UTF_8, charset == null);
+		unzip();
+	}
+	
+	/**
+	 * 当返回内容为压缩内容时，解压，并去除Gzip头标识
+	 * @return
+	 */
+	private HttpResponse unzip() {
+		String contentEncoding = contentEncoding();
+		
+		if (contentEncoding != null && contentEncoding().equals("gzip")) {
+			if (body != null) {
+				removeHeader(Header.CONTENT_ENCODING);
+				try {
+					ByteArrayInputStream in = new ByteArrayInputStream(StrUtil.bytes(this.body, charset));
+					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
+					
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					
+					IoUtil.copy(gzipInputStream, out);
+					
+					this.body = out.toString(charset);
+				} catch (IOException ioex) {
+					throw new HttpException(ioex);
+				}
+			}
+		}
+		return this;
 	}
 	// ---------------------------------------------------------------- Private method end
 }

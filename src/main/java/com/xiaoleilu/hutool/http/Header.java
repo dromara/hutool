@@ -28,6 +28,8 @@ public enum Header {
 	COOKIE("Cookie"),
 	/**Cookie*/
 	SET_COOKIE("Set-Cookie"),
+	/**Charset*/
+	CHAESET("Charset"),
 	
 	/**Keep-Alive*/
 	KEEP_ALIVE("Keep-Alive"),

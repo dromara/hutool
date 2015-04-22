@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.IoUtil;
+import com.xiaoleilu.hutool.SecureUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 
@@ -204,6 +205,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		//初始化 connection
 		this.httpConnection = HttpConnection.create(url, method)
 				.setConnectionAndReadTimeout(timeout)
+				.header(Header.CHAESET, this.charset, true)
 				.header(this.headers);
 		
 		//发送请求
@@ -228,6 +230,21 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		}
 		
 		return httpResponse;
+	}
+	
+	/**
+	 * 简单验证
+	 * @param username 用户名
+	 * @param password 密码
+	 * @return
+	 */
+	public HttpRequest basicAuth(String username, String password) {
+		final String data = username.concat(":").concat(password);
+		final String base64 = SecureUtil.base64(data, charset);
+
+		header("Authorization", "Basic " + base64, true);
+
+		return this;
 	}
 	
 	// ---------------------------------------------------------------- Private method start

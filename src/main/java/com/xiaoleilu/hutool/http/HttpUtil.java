@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -251,7 +252,7 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String urlWithForm(String url, Map<String, Object> form) {
-		final String queryString = HttpUtil.toParams(form);
+		final String queryString = toParams(form);
 		return urlWithForm(url, queryString);
 	}
 	
@@ -328,6 +329,15 @@ public class HttpUtil {
 		}
 		
 		return content.toString();
+	}
+	
+	/**
+	 * 根据文件扩展名获得MimeType
+	 * @param filePath 文件路径或文件名
+	 * @return MimeType
+	 */
+	public static String getMimeType(String filePath) {
+		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
 	}
 	// ----------------------------------------------------------------------------------------- Private method start
 

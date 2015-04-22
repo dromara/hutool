@@ -231,7 +231,8 @@ public abstract class HttpBase<T> {
 		return (T) this;
 	}
 	/**
-	 * 设置mediaType包含字符集
+	 * 设置Content-Type<br>
+	 * 同时设置Charset
 	 * @param mediaType mediaType
 	 * @param charset 字符集
 	 * @return T 自己
@@ -249,8 +250,7 @@ public abstract class HttpBase<T> {
 			contentType += ";charset=" + charset;
 		}
 
-		header(Header.CONTENT_TYPE, contentType);
-		return (T) this;
+		return contentType(contentType);
 	}
 	
 	/**
