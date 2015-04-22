@@ -293,6 +293,17 @@ public class HttpConnection {
 	}
 	
 	/**
+	 * 采用流方式上传数据，无需本地缓存数据。<br>
+	 * HttpUrlConnection默认是将所有数据读到本地缓存，然后再发送给服务器，这样上传大文件时就会导致内存溢出。
+	 * @param blockSize 块大小（bytes数）
+	 * @return HttpConnection
+	 */
+	public HttpConnection setChunkedStreamingMode(int blockSize) {
+		conn.setChunkedStreamingMode(blockSize);
+		return this;
+	}
+	
+	/**
 	 * 连接
 	 * 
 	 * @throws IOException
@@ -385,7 +396,7 @@ public class HttpConnection {
 		// 验证域
 		httpsURLConnection.setHostnameVerifier(new TrustAnyHostnameVerifier());
 
-		SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+		SSLContext sslContext = SSLContext.getInstance("TLS");
 		sslContext.init(null, new TrustManager[] { new DefaultTrustManager() }, new SecureRandom());
 		httpsURLConnection.setSSLSocketFactory(sslContext.getSocketFactory());
 		
