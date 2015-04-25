@@ -288,6 +288,25 @@ public class DbUtil {
 	}
 	
 	/**
+	 * 通过实体对象构建条件对象
+	 * @param entity 实体对象
+	 * @return 条件对象
+	 */
+	public static Condition[] buildConditions(Entity entity){
+		if(null == entity || entity.isEmpty()) {
+			return null;
+		}
+		
+		final Condition[] conditions = new Condition[entity.size()];
+		int i = 0;
+		for (Entry<String, Object> entry : entity.entrySet()) {
+			conditions[i++] = new Condition(entry.getKey(), entry.getValue());
+		}
+		
+		return conditions;
+	}
+	
+	/**
 	 * 识别JDBC驱动名
 	 * @param nameContainsProductInfo 包含数据库标识的字符串
 	 * @return 驱动
@@ -352,6 +371,21 @@ public class DbUtil {
 		return driver;
 	}
 	
+	/**
+	 * 验证实体类对象的有效性
+	 * @param entity 实体类对象
+	 */
+	public static void validateEntity(Entity entity){
+		if(null == entity) {
+			throw new DbRuntimeException("Entity is null !");
+		}
+		if(StrUtil.isBlank(entity.getTableName())) {
+			throw new DbRuntimeException("Entity`s table name is null !");
+		}
+		if(entity.isEmpty()) {
+			throw new DbRuntimeException("No filed and value in this entity !");
+		}
+	}
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end
 }

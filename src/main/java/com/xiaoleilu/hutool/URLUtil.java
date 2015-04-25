@@ -13,6 +13,19 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 
  */
 public class URLUtil {
+	
+	/**
+	 * 创建URL对象
+	 * @param url URL
+	 * @return URL对象
+	 */
+	public static URL url(String url){
+		try {
+			return new URL(url);
+		} catch (MalformedURLException e) {
+			throw new UtilException(e.getMessage(), e);
+		}
+	}
 
 	/**
 	 * 获得URL

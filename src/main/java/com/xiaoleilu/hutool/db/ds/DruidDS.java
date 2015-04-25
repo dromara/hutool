@@ -27,7 +27,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 
  */
 public class DruidDS {
-	private static Logger log = Log.get();
+	private final static Logger log = Log.get();
 	
 	/** 默认的Druid配置文件路径 */
 	public final static String DEFAULT_DRUID_CONFIG_PATH = "config/druid.setting";

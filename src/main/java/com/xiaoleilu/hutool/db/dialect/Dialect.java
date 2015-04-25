@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.SqlBuilder.Order;
 
 /**
  * SQL方言，不同的数据库由于在某些SQL上有所区别，故为每种数据库配置不同的方言。
@@ -64,6 +65,20 @@ public interface Dialect {
 	 * @throws SQLException
 	 */
 	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException;
+	
+	/**
+	 * 构建用于分页查询的PreparedStatement
+	 * @param conn 数据库连接对象
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @param orderFields 排序字段
+	 * @param order 排序方式
+	 * @return PreparedStatement
+	 * @throws SQLException
+	 */
+	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, Collection<String> orderFields, Order order) throws SQLException;
 	
 	/**
 	 * 构建用于查询行数的PreparedStatement

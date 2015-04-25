@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeSet;
 
 /**
  * 集合相关工具类，包括数组
@@ -218,12 +220,7 @@ public class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		ArrayList<T> list = new ArrayList<T>(values.length);
-		for (T t : values) {
-			list.add(t);
-		}
-		
-		return list;
+		return (ArrayList<T>) Arrays.asList(values);
 	}
 	
 	/**
@@ -449,7 +446,7 @@ public class CollectionUtil {
 	 * @param collection 集合
 	 * @return 是否为空
 	 */
-	public static <T> boolean isEmpty(Collection<T> collection) {
+	public static boolean isEmpty(Collection<?> collection) {
 		return collection == null || collection.isEmpty();
 	}
 	
@@ -458,8 +455,26 @@ public class CollectionUtil {
 	 * @param collection 集合
 	 * @return 是否为非空
 	 */
-	public static <T> boolean isNotEmpty(Collection<T> collection) {
+	public static boolean isNotEmpty(Collection<?> collection) {
 		return false == isEmpty(collection);
+	}
+	
+	/**
+	 * Map是否为空
+	 * @param map 集合
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(Map<?, ?> map) {
+		return map == null || map.isEmpty();
+	}
+	
+	/**
+	 * Map是否为非空
+	 * @param map 集合
+	 * @return 是否为非空
+	 */
+	public static <T> boolean isNotEmpty(Map<?, ?> map) {
+		return false == isEmpty(map);
 	}
 	
 	/**
@@ -551,5 +566,157 @@ public class CollectionUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * 将Entry集合转换为HashMap
+	 * @param entryCollection entry集合
+	 * @return Map
+	 */
+	public static <T, K> HashMap<T, K> toMap(Collection<Entry<T, K>> entryCollection) {
+		HashMap<T,K> map = new HashMap<T, K>();
+		for (Entry<T, K> entry : entryCollection) {
+			map.put(entry.getKey(), entry.getValue());
+		}
+		return map;
+	}
+	
+	/**
+	 * 将集合转换为排序后的TreeSet
+	 * @param collection 集合
+	 * @param comparator 比较器
+	 * @return treeSet
+	 */
+	public static <T> TreeSet<T> toTreeSet(Collection<T> collection, Comparator<T> comparator){
+		final TreeSet<T> treeSet = new TreeSet<T>(comparator);
+		for (T t : collection) {
+			treeSet.add(t);
+		}
+		return treeSet;
+	}
+	
+	/**
+	 * 排序集合
+	 * @param collection 集合
+	 * @param comparator 比较器
+	 * @return treeSet
+	 */
+	public static <T> List<T> sort(Collection<T> collection, Comparator<T> comparator){
+		List<T> list = new ArrayList<T>(collection);
+		Collections.sort(list, comparator);
+		return list;
+	}
+	
+	//------------------------------------------------------------------- 基本类型的数组转换为包装类型数组
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Integer[] wrap(int... values){
+		final int length = values.length;
+		Integer[] array = new Integer[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Long[] wrap(long... values){
+		final int length = values.length;
+		Long[] array = new Long[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Character[] wrap(char... values){
+		final int length = values.length;
+		Character[] array = new Character[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Byte[] wrap(byte... values){
+		final int length = values.length;
+		Byte[] array = new Byte[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Short[] wrap(short... values){
+		final int length = values.length;
+		Short[] array = new Short[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Float[] wrap(float... values){
+		final int length = values.length;
+		Float[] array = new Float[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Double[] wrap(double... values){
+		final int length = values.length;
+		Double[] array = new Double[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
+	}
+	
+	/**
+	 * 将基本类型数组包装为包装类型
+	 * @param values 基本类型数组
+	 * @return 包装类型数组
+	 */
+	public static Boolean[] wrap(boolean... values){
+		final int length = values.length;
+		Boolean[] array = new Boolean[length];
+		for(int i = 0; i < length; i++){
+			array[i] = values[i];
+		}
+		return array;
 	}
 }

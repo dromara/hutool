@@ -1,0 +1,41 @@
+2.5.0
+1. 修复了在实体类转Pojo类导致的类型转换错误
+2. 将parse方法从ClassUtil迁移到Conver类中。
+3. 修复包装类转基本类型的关于Integer的一个bug
+
+2.6.0:
+1. 增加SqlBuilder
+2. 增加HttpUtil.request方法
+
+2.6.1
+SecureUtil中的base64EncodeTable改为私有
+
+2.6.2
+丰富ReUtil方法
+增加Func类提供一些常用函数（equals或者length）
+
+----------------------------------------------------------------------
+
+2.7.0
+1. 增加缓存（com.xiaoleilu.hutool.cache）
+2. 增加Validator验证器，用于表单验证
+
+2.7.1
+1. StrUtil增加 nullToEmpty和emptyToNull方法
+2. StrUtil的convertCharset迁移到Conver类中
+3. StrUtil增加 padPre 和 padEnd
+4. StrUtil的repeat方法提高性能
+
+2.7.2
+1. 去除无用依赖
+
+2.7.3
+1. SecureUtil中增加mac算法的加密
+
+2.7.4
+1. 增加针对byte的md5方法
+2.增加StrUtil.str(byte[])
+3. 修复SecureUtil中base64方法
+
+2.8.0
+1.增加HTTP模块

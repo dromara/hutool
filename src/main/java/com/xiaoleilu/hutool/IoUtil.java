@@ -205,7 +205,7 @@ public class IoUtil {
 			osw = new OutputStreamWriter(out, charset);
 			for (Object content : contents) {
 				if(content != null) {
-					osw.write(content.toString());
+					osw.write(Conver.toStr(content, StrUtil.EMPTY));
 				}
 			}
 		} catch (Exception e) {

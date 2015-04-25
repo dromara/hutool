@@ -9,6 +9,7 @@ import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.dialect.impl.AnsiSqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.MysqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.OracleDialect;
+import com.xiaoleilu.hutool.db.dialect.impl.PostgresqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.Sqllite3Dialect;
 
 /**
@@ -39,10 +40,12 @@ public class DialectFactory {
 		if(StrUtil.isNotBlank(driverName)) {
 			if(DRIVER_MYSQL.equalsIgnoreCase(driverName)) {
 				return new MysqlDialect();
-			}else	if(DRIVER_ORACLE.equalsIgnoreCase(driverName)) {
+			}else if(DRIVER_ORACLE.equalsIgnoreCase(driverName)) {
 				return new OracleDialect();
-			}else	if(DRIVER_SQLLITE3.equalsIgnoreCase(driverName)) {
+			}else if(DRIVER_SQLLITE3.equalsIgnoreCase(driverName)) {
 				return new Sqllite3Dialect();
+			}else if(DRIVER_POSTGRESQL.equalsIgnoreCase(driverName)) {
+				return new PostgresqlDialect();
 			}
 		}
 		
@@ -66,4 +69,5 @@ public class DialectFactory {
 	public static Dialect newDialect(Connection conn) {
 		return newDialect(DbUtil.identifyDriver(conn));
 	}
+	
 }

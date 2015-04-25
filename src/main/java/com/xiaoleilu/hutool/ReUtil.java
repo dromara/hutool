@@ -16,10 +16,9 @@ public class ReUtil {
 	/** 正则表达式匹配中文 */
 	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";
 	
-	public final static Pattern NUMBER =  Pattern.compile("\\d+", Pattern.DOTALL);
-	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)", Pattern.DOTALL);
-	public final static Pattern IPV4 =  Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b", Pattern.DOTALL);
-
+	/** 分组 */
+	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)");
+	
 	/** 正则中需要被转义的关键字 */
 	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[]{'$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'});
 	
@@ -214,20 +213,7 @@ public class ReUtil {
 	 * @return 整数
 	 */
 	public static Integer getFirstNumber(String StringWithNumber) {
-		return Conver.toInt(get(NUMBER, StringWithNumber, 0), null);
-	}
-	
-	/**
-	 * 判断该字符串是否是IPV4地址
-	 * 
-	 * @param ip IP地址
-	 * @return 是否是IPV4
-	 */
-	public static boolean isIpv4(String ip) {
-		if(StrUtil.isBlank(ip)){
-			return false;
-		}
-		return IPV4.matcher(ip).matches();
+		return Conver.toInt(get(Validator.NUMBER, StringWithNumber, 0), null);
 	}
 	
 	/**
@@ -248,6 +234,20 @@ public class ReUtil {
 		}
 		
 		return Pattern.matches(regex, content);
+	}
+	
+	/**
+	 * 给定内容是否匹配正则
+	 * @param pattern 模式  
+	 * @param content 内容
+	 * @return 正则为null或者""则不检查，返回true，内容为null返回false
+	 */
+	public static boolean isMatch(Pattern pattern, String content) {
+		if(content == null || pattern == null) {
+			//提供null的字符串为不匹配
+			return false;
+		}
+		return pattern.matcher(content).matches();
 	}
 	
 	/**

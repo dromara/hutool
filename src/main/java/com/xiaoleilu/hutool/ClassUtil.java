@@ -10,10 +10,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,19 +32,21 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 public class ClassUtil {
 	private static Logger log = Log.get();
 	
-	/**
-	 * 基本变量类型的枚举
-	 * @author xiaoleilu
-	 */
-	private static enum BASIC_TYPE {
-		BYTE, SHORT, INT, INTEGER, LONG, DOUBLE, FLOAT, BOOLEAN, CHAR, CHARACTER, STRING;
-	}
-	
 	private ClassUtil() {
+		// 静态类不可实例化
 	}
 	
 	/**
-	 * 扫面改包路径下所有class文件
+	 * 扫面该包路径下所有class文件
+	 * 
+	 * @return 类集合
+	 */
+	public static Set<Class<?>> scanPackage() {
+		return scanPackage(StrUtil.EMPTY, null);
+	}
+	
+	/**
+	 * 扫面该包路径下所有class文件
 	 * 
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @return 类集合
@@ -171,91 +171,6 @@ public class ClassUtil {
 	}
 	
 	/**
-	 * 强制转换类型
-	 * @param clazz 被转换成的类型
-	 * @param value 需要转换的对象
-	 * @return 转换后的对象
-	 */
-	public static Object parse(Class<?> clazz, Object value) {
-		try {
-			return clazz.cast(value);
-		} catch (ClassCastException e) {
-			String valueStr = String.valueOf(value);
-			
-			Object result = parseBasic(clazz, valueStr);
-			if(result != null) {
-				return result;
-			}
-			
-			if(Date.class.isAssignableFrom(clazz)) {
-				//判断标准日期
-				return DateUtil.parse(valueStr);
-			} else if(clazz == BigDecimal.class) {
-				//数学计算数字
-				return new BigDecimal(valueStr);
-			}else if(clazz == byte[].class) {
-				//流，由于有字符编码问题，在此使用系统默认
-				return valueStr.getBytes();
-			}
-			
-			//未找到可转换的类型，返回原值
-			return value;
-		}
-	}
-	
-	/**
-	 * 转换基本类型
-	 * @param clazz 转换到的类
-	 * @param valueStr 被转换的字符串
-	 * @return 转换后的对象，如果非基本类型，返回null
-	 */
-	public static Object parseBasic(Class<?> clazz, String valueStr) {
-		switch (BASIC_TYPE.valueOf(clazz.getSimpleName().toUpperCase())) {
-			case STRING:
-				return valueStr;
-			case BYTE:
-				if(clazz == byte.class) {
-					return Byte.parseByte(valueStr);
-				}
-				return Byte.valueOf(valueStr);
-			case SHORT:
-				if(clazz == short.class) {
-					return Short.parseShort(valueStr);
-				}
-				return Short.valueOf(valueStr);
-			case INT:
-				return Integer.parseInt(valueStr);
-			case INTEGER:
-				return Integer.valueOf(valueStr);
-			case LONG:
-				if(clazz == long.class) {
-					return Long.parseLong(valueStr);
-				}
-				return Long.valueOf(valueStr);
-			case DOUBLE:
-				if(clazz == double.class) {
-					return Double.parseDouble(valueStr);
-				}
-			case FLOAT:
-				if(clazz == float.class) {
-					return Float.parseFloat(valueStr);
-				}
-				return Float.valueOf(valueStr);
-			case BOOLEAN:
-				if(clazz == boolean.class) {
-					return Boolean.parseBoolean(valueStr);
-				}
-				return Boolean.valueOf(valueStr);
-			case CHAR:
-				return valueStr.charAt(0);
-			case CHARACTER:
-				return Character.valueOf(valueStr.charAt(0));
-			default:
-				return null;
-		}
-	}
-	
-	/**
 	 * 转换基本类型
 	 * @param clazz 被转换为基本类型的类，必须为包装类型
 	 * @return 基本类型类
@@ -265,19 +180,20 @@ public class ClassUtil {
 			return clazz;
 		}
 		
-		BASIC_TYPE basicType;
+		BasicType basicType;
 		try {
-			basicType = BASIC_TYPE.valueOf(clazz.getSimpleName().toUpperCase());
+			basicType = BasicType.valueOf(clazz.getSimpleName().toUpperCase());
 		}catch(Exception e) {
 			return clazz;
 		}
+		
 		//基本类型
 		switch (basicType) {
 			case BYTE:
 				return byte.class;
 			case SHORT:
 				return short.class;
-			case INT:
+			case INTEGER:
 				return int.class;
 			case LONG:
 				return long.class;
@@ -519,7 +435,8 @@ public class ClassUtil {
 					classes.add(clazz);
 				}
 			} catch (Throwable ex) {
-				Log.error(log, ex, "Load class [{}] error!", className);
+				//Log.error(log, ex, "Load class [{}] error!", className);
+				//Pass Load Error.
 			}
 		}
 	}

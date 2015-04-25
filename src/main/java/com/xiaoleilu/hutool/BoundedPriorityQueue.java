@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -24,6 +25,11 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 		this(capacity, null);
 	}
 	
+	/**
+	 * 构造
+	 * @param capacity 容量
+	 * @param comparator 比较器
+	 */
 	public BoundedPriorityQueue(int capacity, final Comparator<? super E> comparator) {
 		super(capacity, new Comparator<E>(){
 
@@ -46,6 +52,11 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 		this.comparator = comparator;
 	}
 
+	/**
+	 * 加入元素，当队列满时，淘汰末尾元素
+	 * @param e 元素
+	 * @return 加入成功与否
+	 */
 	@Override
 	public boolean offer(E e) {
 		if(size() >= capacity) {
@@ -57,6 +68,16 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 			poll();
 		}
 		return super.offer(e);
+	}
+	
+	/**
+	 * 添加多个元素<br>
+	 * 参数为集合的情况请使用{@link PriorityQueue#addAll}
+	 * @param c 元素数组
+	 * @return 是否发生改变
+	 */
+	public boolean addAll(E[] c) {
+		return this.addAll(Arrays.asList(c));
 	}
 	
 	/**

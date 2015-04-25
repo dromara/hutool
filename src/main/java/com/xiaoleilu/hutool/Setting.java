@@ -641,7 +641,7 @@ public class Setting extends HashMap<String, String> {
 						if(parameterTypes.length != 1) {
 							continue;
 						}
-						Object castedValue = ClassUtil.parse(parameterTypes[0], value);
+						Object castedValue = Conver.parse(parameterTypes[0], value);
 						method.invoke(object, castedValue);
 						log.debug("Parse setting to object field [{}={}]", field, value);
 					}
