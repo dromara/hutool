@@ -4,7 +4,7 @@
 package com.xiaoleilu.hutool.tuple;
 
 /**
- * @author zxx
+ * @author from Internet
  *
  */
 public class TupleUtil {
