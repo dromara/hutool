@@ -436,7 +436,17 @@ public class DateUtil {
 
 		return count;
 	}
-
+	/**
+	 * 判断开始时间是否大于或等于结束时间。
+	 * @param start
+	 * @param end
+	 * @return 开始大于或者等于结束返回true，反之false
+	 */
+	public static boolean compareTime(Date start, Date end) {
+		long sl = start.getTime();
+		long el = end.getTime();
+		return sl >= el ? true : false;
+	}
 	//------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>
