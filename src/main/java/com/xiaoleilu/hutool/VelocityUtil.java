@@ -190,7 +190,7 @@ public class VelocityUtil {
 		final VelocityContext context = parseRequest(request);
 		Writer writer = null;
 		try {
-			response.getWriter();
+			writer = response.getWriter();
 			toWriter(templateFileName, context, writer);
 		} catch (Exception e) {
 			throw new UtilException(StrUtil.format("Write Velocity content template by [{}] to response error!", templateFileName), e);
