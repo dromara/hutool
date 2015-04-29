@@ -39,3 +39,4 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.8.0
 1.增加HTTP模块
+2. 修复VelocityUtil空指针问题
