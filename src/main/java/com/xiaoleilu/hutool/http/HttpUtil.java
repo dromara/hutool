@@ -123,7 +123,6 @@ public class HttpUtil {
 	 * 
 	 * @param urlString 网址
 	 * @param paramMap post表单数据
-	 * @param customCharset 自定义请求字符集，发送时使用此字符集，获取返回内容如果字符集获取不到，使用此字符集
 	 * @return 返回数据
 	 * @throws IOException
 	 */
