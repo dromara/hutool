@@ -90,7 +90,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	
 	/**
 	 * 当返回内容为压缩内容时，解压，并去除Gzip头标识
-	 * @return
+	 * @return HttpResponse
 	 */
 	private HttpResponse unzip() {
 		String contentEncoding = contentEncoding();

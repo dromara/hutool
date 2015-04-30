@@ -111,7 +111,6 @@ public class HttpUtil {
 	 * 
 	 * @param urlString 网址
 	 * @param customCharset 自定义请求字符集，如果字符集获取不到，使用此字符集
-	 * @param isPassCodeError 是否跳过非200异常
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @throws IOException
 	 */
@@ -125,7 +124,6 @@ public class HttpUtil {
 	 * @param urlString 网址
 	 * @param paramMap post表单数据
 	 * @param customCharset 自定义请求字符集，发送时使用此字符集，获取返回内容如果字符集获取不到，使用此字符集
-	 * @param isPassCodeError 是否跳过非200异常
 	 * @return 返回数据
 	 * @throws IOException
 	 */
@@ -232,7 +230,7 @@ public class HttpUtil {
 	 * 将表单数据加到URL中（用于GET表单提交）
 	 * @param url URL
 	 * @param form 表单数据
-	 * @return
+	 * @return 合成后的URL
 	 */
 	public static String urlWithForm(String url, Map<String, Object> form) {
 		final String queryString = toParams(form);

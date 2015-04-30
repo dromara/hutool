@@ -246,7 +246,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * 简单验证
 	 * @param username 用户名
 	 * @param password 密码
-	 * @return
+	 * @return HttpRequest
 	 */
 	public HttpRequest basicAuth(String username, String password) {
 		final String data = username.concat(":").concat(password);
