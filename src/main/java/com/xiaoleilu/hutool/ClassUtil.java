@@ -113,7 +113,7 @@ public class ClassUtil {
 			for (String classPath : getJavaClassPaths()) {
 				log.debug("Scan java classpath: [{}]", classPath);
 				// 填充 classes
-				fillClasses(new File(classPath), packageName, classFilter, classes);
+				fillClasses(classPath, new File(classPath), packageName, classFilter, classes);
 			}
 		}
 		return classes;
@@ -345,23 +345,24 @@ public class ClassUtil {
 			path = StrUtil.removePrefix(path, FileUtil.PATH_FILE_PRE);	//去掉文件前缀
 			processJarFile(new File(path), packageName, classFilter, classes);
 		}else {
-			fillClasses(new File(path), packageName, classFilter, classes);
+			fillClasses(path, new File(path), packageName, classFilter, classes);
 		}
 	}
 	
 	/**
 	 * 填充满足条件的class 填充到 classes
 	 * 
+	 * @param classPath 类文件所在目录，当包名为空时使用此参数，用于截掉类名前面的文件路径
 	 * @param file Class文件或者所在目录Jar包文件
 	 * @param packageName 需要扫面的包名
 	 * @param classFilter class过滤器
 	 * @param classes List 集合
 	 */
-	private static void fillClasses(File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void fillClasses(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
 		if (file.isDirectory()) {
-			processDirectory(file, packageName, classFilter, classes);
+			processDirectory(classPath, file, packageName, classFilter, classes);
 		} else if (isClassFile(file)) {
-			processClassFile(file, packageName, classFilter, classes);
+			processClassFile(classPath, file, packageName, classFilter, classes);
 		} else if (isJarFile(file)) {
 			processJarFile(file, packageName, classFilter, classes);
 		}
@@ -375,25 +376,36 @@ public class ClassUtil {
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processDirectory(File directory, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void processDirectory(String classPath, File directory, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
 		for (File file : directory.listFiles(fileFilter)) {
-			fillClasses(file, packageName, classFilter, classes);
+			fillClasses(classPath, file, packageName, classFilter, classes);
 		}
 	}
 
 	/**
 	 * 处理为class文件的情况,填充满足条件的class 到 classes
 	 * 
+	 * @param classPath 类文件所在目录，当包名为空时使用此参数，用于截掉类名前面的文件路径
 	 * @param file class文件
 	 * @param packageName 包名
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processClassFile(File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
-		final String filePathWithDot = file.getAbsolutePath().replace(File.separator, StrUtil.DOT);
+	private static void processClassFile(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+		if(false == classPath.endsWith(File.separator)) {
+			classPath += File.separator;
+		}
+		String path = file.getAbsolutePath();
+		if(StrUtil.isEmpty(packageName)) {
+			path = StrUtil.removePrefix(path, classPath);
+		}
+		final String filePathWithDot = path.replace(File.separator, StrUtil.DOT);
+		
 		int subIndex = -1;
 		if ((subIndex = filePathWithDot.indexOf(packageName)) != -1) {
-			final String className = filePathWithDot.substring(subIndex).replace(FileUtil.CLASS_EXT, StrUtil.EMPTY);
+			final int endIndex = filePathWithDot.lastIndexOf(FileUtil.CLASS_EXT);
+			
+			final String className = filePathWithDot.substring(subIndex, endIndex);
 			fillClass(className, packageName, classes, classFilter);
 		}
 	}
