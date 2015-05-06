@@ -43,3 +43,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.8.1
 1. 修复ClassUtil中报名前缀为空时扫描类失败的错误
+
+2.8.2
+1. 修复Strutil.hasBlank方法

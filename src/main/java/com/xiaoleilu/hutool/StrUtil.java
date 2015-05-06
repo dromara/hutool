@@ -69,6 +69,10 @@ public class StrUtil {
 	 * @return 是否包含空字符串
 	 */
 	public static boolean hasBlank(String... strs) {
+		if(CollectionUtil.isEmpty(strs)) {
+			return true;
+		}
+		
 		for (String str : strs) {
 			if (isBlank(str)) {
 				return true;
