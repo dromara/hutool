@@ -17,7 +17,8 @@ import com.xiaoleilu.hutool.db.handler.RsHandler;
  * @author Luxiaolei
  * 
  */
-public class SqlRunner extends SqlConnRunner{
+public class SqlRunner{
+	SqlConnRunner sqlConnRunner;
 	private DataSource ds;
 	
 	/**
@@ -65,7 +66,7 @@ public class SqlRunner extends SqlConnRunner{
 	 * @param dialect 方言
 	 */
 	public SqlRunner(DataSource ds, Dialect dialect) {
-		super(dialect);
+		sqlConnRunner = new SqlConnRunner(dialect);
 		this.ds = ds;
 	}
 	
@@ -75,7 +76,7 @@ public class SqlRunner extends SqlConnRunner{
 	 * @param driverClassName 数据库连接驱动类名，用于识别方言
 	 */
 	public SqlRunner(DataSource ds, String driverClassName) {
-		super(driverClassName);
+		sqlConnRunner = new SqlConnRunner(driverClassName);
 		this.ds = ds;
 	}
 	//------------------------------------------------------- Constructor end
@@ -93,7 +94,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return query(conn, sql, rsh, params);
+			return SqlExecutor.query(conn, sql, rsh, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -114,7 +115,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return execute(conn, sql, params);
+			return SqlExecutor.execute(conn, sql, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -135,7 +136,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return executeForGeneratedKey(conn, sql, params);
+			return SqlExecutor.executeForGeneratedKey(conn, sql, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -155,7 +156,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return executeBatch(conn, sql, paramsBatch);
+			return SqlExecutor.executeBatch(conn, sql, paramsBatch);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -174,7 +175,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return insert(conn, record);
+			return sqlConnRunner.insert(conn, record);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -192,7 +193,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return del(conn, where);
+			return sqlConnRunner.del(conn, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -210,7 +211,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return update(conn, record, where);
+			return sqlConnRunner.update(conn, record, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -231,12 +232,25 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return find(conn, fields, where, rsh);
+			return sqlConnRunner.find(conn, fields, where, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			DbUtil.close(conn);
 		}
+	}
+	
+	/**
+	 * 查询，返回所有字段
+	 * 
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public <T> T find(Entity where, RsHandler<T> rsh) throws SQLException {
+		return find(null, where, rsh);
 	}
 	
 	/**
@@ -254,7 +268,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return page(conn, fields, where, page, numPerPage, rsh);
+			return sqlConnRunner.page(conn, fields, where, page, numPerPage, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -272,7 +286,7 @@ public class SqlRunner extends SqlConnRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return count(conn, where);
+			return sqlConnRunner.count(conn, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {

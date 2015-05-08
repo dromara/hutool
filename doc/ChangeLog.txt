@@ -46,3 +46,7 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.8.2
 1. 修复Strutil.hasBlank方法
+
+2.8.3
+1. 增加DaoTemplate
+2. 调整SqlExecutor、SqlConnRunner、SqlRunner三个类的功能区分，去除继承依赖

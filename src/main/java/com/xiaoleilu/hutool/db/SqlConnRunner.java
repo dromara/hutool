@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.db.handler.RsHandler;
  * @author Luxiaolei
  * 
  */
-public class SqlConnRunner extends SqlExecutor{
+public class SqlConnRunner{
 	private Dialect dialect;
 	
 	//------------------------------------------------------- Constructor start
@@ -127,6 +127,20 @@ public class SqlConnRunner extends SqlExecutor{
 		} finally {
 			DbUtil.close(rs, ps);
 		}
+	}
+	
+	/**
+	 * 查询，返回所有字段<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param where 条件实体类（包含表名）
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public <T> T find(Connection conn, Entity where, RsHandler<T> rsh) throws SQLException {
+		return find(conn, null, where, rsh);
 	}
 	
 	/**
