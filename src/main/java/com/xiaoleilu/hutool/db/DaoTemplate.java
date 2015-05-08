@@ -41,9 +41,9 @@ public class DaoTemplate {
 	
 	/**
 	 * 删除
-	 * @param <T>
+	 * @param <T> 主键类型
 	 * 
-	 * @param pks 主键列表
+	 * @param pk 主键
 	 * @return 删除行数
 	 * @throws SQLException
 	 */

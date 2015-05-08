@@ -243,7 +243,6 @@ public class SqlRunner{
 	/**
 	 * 查询，返回所有字段
 	 * 
-	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
 	 * @param rsh 结果集处理对象
 	 * @return 结果对象
