@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.Conver;
@@ -112,9 +113,19 @@ public class Entity extends HashMap<String, Object>{
 	 * 此方法用于在更新操作时避免所有字段被更新，跳过不需要更新的字段
 	 * version from 2.0.0
 	 * @param entity
+	 * @param withoutNames 不需要去除的字段名
 	 */
-	public <T extends Entity> void removeEqual(T entity) {
+	public <T extends Entity> void removeEqual(T entity, String... withoutNames) {
+		HashSet<String> withoutSet = new HashSet<String>();
+		for (String name : withoutNames) {
+			withoutSet.add(name);
+		}
+		
 		for(Entry<String, Object> entry : entity.entrySet()) {
+			if(withoutSet.contains(entry.getKey())) {
+				continue;
+			}
+			
 			final Object value = this.get(entry.getKey());
 			if(null != value && value.equals(entry.getValue())) {
 				this.remove(entry.getKey());

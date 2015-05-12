@@ -27,6 +27,12 @@ public class DaoTemplate {
 		this.tableName = tableName;
 		this.primaryKeyField = primaryKeyField;
 	}
+	
+	public DaoTemplate(String tableName, String primaryKeyField, SqlRunner runner) {
+		this.tableName = tableName;
+		this.primaryKeyField = primaryKeyField;
+		this.runner = runner;
+	}
 	//--------------------------------------------------------------- Constructor end
 	
 	/**
@@ -63,7 +69,7 @@ public class DaoTemplate {
 	 * @return 更新行数
 	 * @throws SQLException
 	 */
-	protected int update(Entity entity) throws SQLException {
+	public int update(Entity entity) throws SQLException {
 		Object pk = entity.get(primaryKeyField);
 		if (null == pk) {
 			throw new SQLException(StrUtil.format("Please determine `{}` for update", primaryKeyField));
