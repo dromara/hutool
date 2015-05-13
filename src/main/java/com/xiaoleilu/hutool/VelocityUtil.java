@@ -200,18 +200,32 @@ public class VelocityUtil {
 	}
 	
 	/**
-	 * 将Request中的数据转换为模板引擎
+	 * 将Request中的数据转换为模板引擎<br>
+	 * 取值包括Session和Request
 	 * @param request 请求对象
 	 * @return 模板引擎
 	 */
 	public static VelocityContext parseRequest(HttpServletRequest request) {
 		VelocityContext context = new VelocityContext();
 		
+		//将Session中的值放入模板上下文
+		final Enumeration<String> sessionAttrs = request.getSession().getAttributeNames();
+		if(sessionAttrs != null) {
+			String attrName = null;
+			while (sessionAttrs.hasMoreElements()) {
+				attrName = sessionAttrs.nextElement();
+				context.put(attrName, request.getAttribute(attrName));
+			}
+		}
+		
+		//将Request中的值放入模板上下文，如果和Session冲突，则覆盖之
 		final Enumeration<String> attrs = request.getAttributeNames();
-		String attrName = null;
-		while (attrs.hasMoreElements()) {
-			attrName = attrs.nextElement();
-			context.put(attrName, request.getAttribute(attrName));
+		if(sessionAttrs != null) {
+			String attrName = null;
+			while (attrs.hasMoreElements()) {
+				attrName = attrs.nextElement();
+				context.put(attrName, request.getAttribute(attrName));
+			}
 		}
 		
 		return context;
