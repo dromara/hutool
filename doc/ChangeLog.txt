@@ -56,3 +56,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.8.5
 1. 为VelocityUtil增加Session参数的读取
+
+2.8.6
+1. 修复VelocityUtil中Session参数的bug
