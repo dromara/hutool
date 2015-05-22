@@ -59,3 +59,5 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.8.6
 1. 修复VelocityUtil中Session参数的bug
+
+2.8.7 DaoTemplate增加addOrUpdate方法

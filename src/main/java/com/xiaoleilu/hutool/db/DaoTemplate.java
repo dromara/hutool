@@ -83,6 +83,21 @@ public class DaoTemplate {
 	}
 	
 	/**
+	 * 增加或者更新实体
+	 * @param entity 实体，当包含主键时更新，否则新增
+	 * @return 新增或更新条数
+	 * @throws SQLException
+	 */
+	public int addOrUpdate(Entity entity) throws SQLException {
+		if(entity.get(primaryKeyField) == null) {
+			entity.set(primaryKeyField, add(entity));
+			return 1;
+		}else {
+			 return update(entity);
+		}
+	}
+	
+	/**
 	 * 获取单个记录
 	 * @param <T>
 	 * 
