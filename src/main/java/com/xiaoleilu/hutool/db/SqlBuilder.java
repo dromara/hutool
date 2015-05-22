@@ -253,20 +253,34 @@ public class SqlBuilder {
 	/**
 	 * 添加Where语句<br>
 	 * 只支持单一的逻辑运算符（例如多个条件之间）
+	 * 
 	 * @param logicalOperator 逻辑运算符
-	 * @param conditions 条件
+	 * @param conditions 条件，当条件为空时，只添加WHERE关键字
 	 * @return 自己
 	 */
 	public SqlBuilder where(LogicalOperator logicalOperator, Condition... conditions){
+		sql.append(" WHERE ");
 		if(CollectionUtil.isNotEmpty(conditions)) {
 			if(null != wrapper) {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);
 			}
 			
-			sql.append(" WHERE ").append(buildCondition(logicalOperator, conditions));
+			sql.append(buildCondition(logicalOperator, conditions));
 		}
 		
+		return this;
+	}
+	
+	/**
+	 * 多值选择
+	 * @param field 字段名
+	 * @param values 值列表
+	 * @return 自身
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> SqlBuilder in(String field, T... values) {
+		sql.append(wrapper.wrap(field)).append(" IN ").append("(").append(CollectionUtil.join(values, StrUtil.COMMA)).append(")");
 		return this;
 	}
 	
