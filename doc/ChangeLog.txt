@@ -63,3 +63,6 @@ SecureUtil中的base64EncodeTable改为私有
 2.8.7
 1. DaoTemplate增加addOrUpdate方法
 2. SqlBuilder增加IN，修复WHERE条件为空时WHERE关键字丢失问题
+
+2.9.0
+1. 为Velocity添加全局上下文功能

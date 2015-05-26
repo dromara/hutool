@@ -5,6 +5,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.velocity.Template;
@@ -26,6 +29,19 @@ public class VelocityUtil {
 
 	/** 是否初始化了默认引擎 */
 	private static boolean isInited;
+	
+	/** 全局上下文，当设定值时，对于每个模板都有效 */
+	private static Map<String, Object>  globalContext = new HashMap<String, Object>();
+	
+	/**
+	 * 设置Velocity全局上下文<br>
+	 * 当设定值时，对于每个模板都有效
+	 * @param name 名
+	 * @param value 值
+	 */
+	public void putGlobalContext(String name, Object value) {
+		globalContext.put(name, value);
+	}
 
 	/**
 	 * 初始化Velocity全局属性
@@ -35,7 +51,19 @@ public class VelocityUtil {
 	synchronized public static void init(String templateDir, String charset) {
 		Velocity.init(_newInitedProp(templateDir, charset));
 		Velocity.setProperty(Velocity.FILE_RESOURCE_LOADER_CACHE, true); // 使用缓存
+		
 		isInited = true; // 标记完成初始化
+	}
+	
+	/**
+	 * 初始化全局属性
+	 * @param templateDir 模板目录
+	 * @param charset 字符集编码
+	 * @param initedGlobalContext 初始的全局上下文
+	 */
+	public static void init(String templateDir, String charset, Map<String, Object> initedGlobalContext) {
+		globalContext.putAll(initedGlobalContext);
+		init(templateDir, charset);
 	}
 
 	/**
@@ -45,7 +73,7 @@ public class VelocityUtil {
 	 * @return VelocityEngine
 	 */
 	public static VelocityEngine newEngine(String templateDir, String charset) {
-		VelocityEngine ve = new VelocityEngine();
+		final VelocityEngine ve = new VelocityEngine();
 		ve.setProperty(Velocity.FILE_RESOURCE_LOADER_CACHE, true); // 使用缓存
 
 		ve.init(_newInitedProp(templateDir, charset));
@@ -132,7 +160,7 @@ public class VelocityUtil {
 		PrintWriter writer = null;
 		try {
 			writer = FileUtil.getPrintWriter(destPath, Velocity.getProperty(Velocity.OUTPUT_ENCODING).toString(), false);
-			template.merge(context, writer);
+			merge(template, context, writer);
 		} catch (IOException e) {
 			throw new UtilException(StrUtil.format("Write Velocity content to [{}] error!", destPath), e);
 		} finally {
@@ -151,7 +179,7 @@ public class VelocityUtil {
 	 */
 	public static void toWriter(VelocityEngine ve, String templateFileName, VelocityContext context, Writer writer) {
 		final Template template = ve.getTemplate(templateFileName);
-		template.merge(context, writer);
+		merge(template, context, writer);
 	}
 
 	/**
@@ -166,24 +194,7 @@ public class VelocityUtil {
 		assertInit();
 
 		final Template template = Velocity.getTemplate(templateFileName);
-		template.merge(context, writer);
-	}
-
-	/**
-	 * 融合模板和内容
-	 * 
-	 * @param templateContent 模板的内容字符串
-	 * @param context 上下文
-	 * @return 模板和内容匹配后的内容
-	 */
-	public static String merge(String templateContent, VelocityContext context) {
-		final StringWriter writer = new StringWriter();
-		try {
-			Velocity.evaluate(context, writer, RandomUtil.randomUUID(), templateContent);
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
-		return writer.toString();
+		merge(template, context, writer);
 	}
 
 	/**
@@ -208,6 +219,45 @@ public class VelocityUtil {
 		} finally {
 			FileUtil.close(writer);
 		}
+	}
+	
+	/**
+	 * 融合模板和内容
+	 * 
+	 * @param templateContent 模板的内容字符串
+	 * @param context 上下文
+	 * @return 模板和内容匹配后的内容
+	 */
+	public static String merge(String templateContent, VelocityContext context) {
+		final StringWriter writer = new StringWriter();
+		try {
+			Velocity.evaluate(context, writer, RandomUtil.randomUUID(), templateContent);
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
+		return writer.toString();
+	}
+	
+	/**
+	 * 融合模板和内容并写入到Writer
+	 * @param template 模板
+	 * @param context 内容
+	 * @param writer Writer
+	 */
+	public static void merge(Template template, VelocityContext context, Writer writer) {
+		if(template == null) {
+			throw new UtilException("Template is null");
+		}
+		if(context == null) {
+			context = new VelocityContext(globalContext);
+		}else {
+			//加入全局上下文
+			for (Entry<String, Object> entry : globalContext.entrySet()) {
+				context.put(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		template.merge(context, writer);
 	}
 
 	/**
