@@ -259,8 +259,8 @@ public class SqlBuilder {
 	 * @return 自己
 	 */
 	public SqlBuilder where(LogicalOperator logicalOperator, Condition... conditions){
-		sql.append(" WHERE ");
 		if(CollectionUtil.isNotEmpty(conditions)) {
+			sql.append(" WHERE ");
 			if(null != wrapper) {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);

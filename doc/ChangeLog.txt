@@ -66,3 +66,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.0
 1. 为Velocity添加全局上下文功能
+
+2.9.1
+1. 修复db的SqlBuilder中where语句为空导致语法错误
