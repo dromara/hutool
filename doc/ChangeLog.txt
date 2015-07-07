@@ -69,3 +69,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.1
 1. 修复db的SqlBuilder中where语句为空导致语法错误
+
+2.9.2
+1. 优化Singleton类，轻量化同步

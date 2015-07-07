@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -12,7 +12,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  *
  */
 public final class Singleton {
-	private static Map<Class<?>, Object> pool = new HashMap<Class<?>, Object>();
+	private static Map<Class<?>, Object> pool = new ConcurrentHashMap<Class<?>, Object>();
 	
 	private Singleton() {}
 	
@@ -24,12 +24,17 @@ public final class Singleton {
 	 * @return 单例对象
 	 */
 	@SuppressWarnings("unchecked")
-	synchronized public static <T> T get(Class<?> clazz) {
+	public static <T> T get(Class<?> clazz) {
 		T obj = (T) pool.get(clazz);
 		
 		if(null == obj) {
-			obj = ClassUtil.newInstance(clazz);
-			pool.put(clazz, obj);
+			synchronized(Singleton.class) {
+				obj = (T) pool.get(clazz);
+				if(null == obj) {
+					obj = ClassUtil.newInstance(clazz);
+					pool.put(clazz, obj);
+				}
+			}
 		}
 		
 		return obj;
@@ -57,14 +62,14 @@ public final class Singleton {
 	 * 移除指定Singleton对象
 	 * @param clazz 类
 	 */
-	synchronized public static void remove(Class<?> clazz) {
+	public static void remove(Class<?> clazz) {
 		pool.remove(clazz);
 	}
 	
 	/**
 	 * 清除所有Singleton对象
 	 */
-	synchronized public static void destroy() {
+	public static void destroy() {
 		pool.clear();
 	}
 }
