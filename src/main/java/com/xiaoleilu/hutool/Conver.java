@@ -145,12 +145,16 @@ public class Conver {
 	 * @return 结果
 	 */
 	public static Integer toInt(Object value, Integer defaultValue) {
-		if (value == null) return defaultValue;
+		if (value == null){
+			return defaultValue;
+		}
 		if(value instanceof Integer) {
 			return (Integer)value;
 		}
 		final String valueStr = value.toString();
-		if (StrUtil.isBlank(valueStr)) return defaultValue;
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
 		try {
 			return Integer.parseInt(valueStr);
 		} catch (Exception e) {
@@ -168,7 +172,7 @@ public class Conver {
 	@SafeVarargs
 	public static <T> Integer[] toIntArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
-			return null;
+			return new Integer[]{};
 		}
 		final Integer[] ints = new Integer[values.length];
 		for(int i = 0; i < values.length; i++) {
@@ -191,12 +195,16 @@ public class Conver {
 	 * @return 结果
 	 */
 	public static Long toLong(Object value, Long defaultValue) {
-		if (value == null) return defaultValue;
+		if (value == null){
+			return defaultValue;
+		}
 		if(value instanceof Long) {
 			return (Long)value;
 		}
 		final String valueStr = value.toString();
-		if (StrUtil.isBlank(valueStr)) return defaultValue;
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
 		try {
 			return new BigDecimal(valueStr).longValue();
 		} catch (Exception e) {
@@ -214,7 +222,7 @@ public class Conver {
 	@SafeVarargs
 	public static <T> Long[] toLongArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
-			return null;
+			return new Long[]{};
 		}
 		final Long[] longs = new Long[values.length];
 		for(int i = 0; i < values.length; i++) {
@@ -237,12 +245,16 @@ public class Conver {
 	 * @return 结果
 	 */
 	public static Double toDouble(Object value, Double defaultValue) {
-		if (value == null) return defaultValue;
+		if (value == null){
+			return defaultValue;
+		}
 		if(value instanceof Double) {
 			return (Double)value;
 		}
 		final String valueStr = value.toString();
-		if (StrUtil.isBlank(valueStr)) return defaultValue;
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
 		try {
 			return new BigDecimal(valueStr).doubleValue();
 		} catch (Exception e) {
@@ -260,7 +272,7 @@ public class Conver {
 	@SafeVarargs
 	public static <T> Double[] toDoubleArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
-			return null;
+			return new Double[]{};
 		}
 		final Double[] doubles = new Double[values.length];
 		for(int i = 0; i < values.length; i++) {
@@ -283,12 +295,16 @@ public class Conver {
 	 * @return 结果
 	 */
 	public static Float toFloat(Object value, Float defaultValue) {
-		if (value == null) return defaultValue;
+		if (value == null){
+			return defaultValue;
+		}
 		if(value instanceof Float) {
 			return (Float)value;
 		}
 		final String valueStr = value.toString();
-		if (StrUtil.isBlank(valueStr)) return defaultValue;
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
 		try {
 			return Float.parseFloat(valueStr);
 		} catch (Exception e) {
@@ -306,7 +322,7 @@ public class Conver {
 	@SafeVarargs
 	public static <T> Float[] toFloatArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
-			return null;
+			return new Float[]{};
 		}
 		final Float[] floats = new Float[values.length];
 		for(int i = 0; i < values.length; i++) {
@@ -329,12 +345,16 @@ public class Conver {
 	 * @return 结果
 	 */
 	public static Boolean toBool(Object value, Boolean defaultValue) {
-		if (value == null) return defaultValue;
+		if (value == null){
+			return defaultValue;
+		}
 		if(value instanceof Boolean) {
 			return (Boolean)value;
 		}
 		final String valueStr = value.toString();
-		if (StrUtil.isBlank(valueStr)) return defaultValue;
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
 		try {
 			return Boolean.parseBoolean(valueStr);
 		} catch (Exception e) {
@@ -352,7 +372,7 @@ public class Conver {
 	@SafeVarargs
 	public static <T> Boolean[] toBooleanArray(boolean isIgnoreConvertError, T... values) {
 		if(CollectionUtil.isEmpty(values)) {
-			return null;
+			return new Boolean[]{};
 		}
 		final Boolean[] bools = new Boolean[values.length];
 		for(int i = 0; i < values.length; i++) {

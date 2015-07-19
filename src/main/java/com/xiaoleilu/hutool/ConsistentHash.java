@@ -32,7 +32,7 @@ public class ConsistentHash<T> {
 			@Override
 			public Integer hash(Object key) {
 				//默认使用FNV1hash算法
-				return Hashs.FNVHash(key.toString());
+				return Hashs.fnvHash(key.toString());
 			}
 		};
 		//初始化节点

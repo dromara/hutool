@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -23,6 +24,11 @@ import java.util.TreeSet;
  * 
  */
 public class CollectionUtil {
+	
+	private CollectionUtil() {
+		// 静态类不可实例化
+	}
+	
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
 	 * 
@@ -129,8 +135,12 @@ public class CollectionUtil {
 
 			@Override
 			public int compare(Entry<Long, Long> o1, Entry<Long, Long> o2) {
-				if (o1.getValue() > o2.getValue()) return 1;
-				if (o1.getValue() < o2.getValue()) return -1;
+				if (o1.getValue() > o2.getValue()){
+					return 1;
+				}
+				if (o1.getValue() < o2.getValue()){
+					return -1;
+				}
 				return 0;
 			}
 		});
@@ -146,9 +156,39 @@ public class CollectionUtil {
 	 * @return 切取出的数据或null
 	 */
 	public static <T> List<T> popPart(Stack<T> surplusAlaDatas, int partSize) {
-		if (surplusAlaDatas == null || surplusAlaDatas.size() <= 0) return null;
+		if (surplusAlaDatas == null || surplusAlaDatas.size() <= 0){
+			return null;
+		}
 
-		List<T> currentAlaDatas = new ArrayList<T>();
+		final List<T> currentAlaDatas = new ArrayList<T>();
+		int size = surplusAlaDatas.size();
+		// 切割
+		if (size > partSize) {
+			for (int i = 0; i < partSize; i++) {
+				currentAlaDatas.add(surplusAlaDatas.pop());
+			}
+		} else {
+			for (int i = 0; i < size; i++) {
+				currentAlaDatas.add(surplusAlaDatas.pop());
+			}
+		}
+		return currentAlaDatas;
+	}
+	
+	/**
+	 * 切取部分数据
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param surplusAlaDatas 原数据
+	 * @param partSize 每部分数据的长度
+	 * @return 切取出的数据或null
+	 */
+	public static <T> List<T> popPart(Deque<T> surplusAlaDatas, int partSize) {
+		if (surplusAlaDatas == null || surplusAlaDatas.size() <= 0){
+			return null;
+		}
+
+		final List<T> currentAlaDatas = new ArrayList<T>();
 		int size = surplusAlaDatas.size();
 		// 切割
 		if (size > partSize) {

@@ -14,7 +14,7 @@ public class FNVFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.FNVHash(str);
+		return Hashs.fnvHash(str);
 	}
 
 }

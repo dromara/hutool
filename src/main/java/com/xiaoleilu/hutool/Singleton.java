@@ -14,7 +14,9 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 public final class Singleton {
 	private static Map<Class<?>, Object> pool = new ConcurrentHashMap<Class<?>, Object>();
 	
-	private Singleton() {}
+	private Singleton() {
+		//类对象
+	}
 	
 	/**
 	 * 获得指定类的单例对象<br>

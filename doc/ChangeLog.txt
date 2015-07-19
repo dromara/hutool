@@ -72,3 +72,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.2
 1. 优化Singleton类，轻量化同步
+
+2.9.3
+1. 优化代码格局

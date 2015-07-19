@@ -14,7 +14,7 @@ public class RSFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.RSHash(str) % size;
+		return Hashs.rsHash(str) % size;
 	}
 
 }

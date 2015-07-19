@@ -118,21 +118,21 @@ public class BloomFilter2 {
 	public static int hash(String str, int k) {
 		switch (k) {
 			case 0:
-				return Hashs.RSHash(str);
+				return Hashs.rsHash(str);
 			case 1:
-				return Hashs.JSHash(str);
+				return Hashs.jsHash(str);
 			case 2:
-				return Hashs.ELFHash(str);
+				return Hashs.elfHash(str);
 			case 3:
-				return Hashs.BKDRHash(str);
+				return Hashs.bkdrHash(str);
 			case 4:
-				return Hashs.APHash(str);
+				return Hashs.apHash(str);
 			case 5:
-				return Hashs.DJBHash(str);
+				return Hashs.djbHash(str);
 			case 6:
-				return Hashs.SDBMHash(str);
+				return Hashs.sdbmHash(str);
 			case 7:
-				return Hashs.PJWHash(str);
+				return Hashs.pjwHash(str);
 		}
 		return 0;
 	}

@@ -14,7 +14,7 @@ public class SDBMFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.SDBMHash(str) % size;
+		return Hashs.sdbmHash(str) % size;
 	}
 
 }

@@ -14,7 +14,7 @@ public class PJWFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.PJWHash(str) % size;
+		return Hashs.pjwHash(str) % size;
 	}
 
 }

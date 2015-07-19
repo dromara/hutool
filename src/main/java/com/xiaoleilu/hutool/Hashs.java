@@ -7,6 +7,10 @@ package com.xiaoleilu.hutool;
  * @author Goodzzp 2006-11-20
  */
 public class Hashs {
+	
+	private Hashs(){
+		//类对象
+	}
 
 	/**
 	 * 加法hash
@@ -17,9 +21,10 @@ public class Hashs {
 	 */
 	public static int additiveHash(String key, int prime) {
 		int hash, i;
-		for (hash = key.length(), i = 0; i < key.length(); i++)
+		for (hash = key.length(), i = 0; i < key.length(); i++){
 			hash += key.charAt(i);
-		return (hash % prime);
+		}
+		return hash % prime;
 	}
 
 	/**
@@ -31,13 +36,14 @@ public class Hashs {
 	 */
 	public static int rotatingHash(String key, int prime) {
 		int hash, i;
-		for (hash = key.length(), i = 0; i < key.length(); ++i)
+		for (hash = key.length(), i = 0; i < key.length(); ++i){
 			hash = (hash << 4) ^ (hash >> 28) ^ key.charAt(i);
+		}
 
 		// 使用：hash = (hash ^ (hash>>10) ^ (hash>>20)) & mask;
 		// 替代：hash %= prime;
-		return (hash % prime);
 		// return (hash ^ (hash>>10) ^ (hash>>20));
+		return hash % prime;
 	}
 
 	/**
@@ -69,8 +75,9 @@ public class Hashs {
 	public static int bernstein(String key) {
 		int hash = 0;
 		int i;
-		for (i = 0; i < key.length(); ++i)
+		for (i = 0; i < key.length(); ++i){
 			hash = 33 * hash + key.charAt(i);
+		}
 		return hash;
 	}
 
@@ -86,14 +93,30 @@ public class Hashs {
 		int hash = key.length, i, len = key.length;
 		for (i = 0; i < (len << 3); i += 8) {
 			char k = key[i >> 3];
-			if ((k & 0x01) == 0) hash ^= tab[i + 0];
-			if ((k & 0x02) == 0) hash ^= tab[i + 1];
-			if ((k & 0x04) == 0) hash ^= tab[i + 2];
-			if ((k & 0x08) == 0) hash ^= tab[i + 3];
-			if ((k & 0x10) == 0) hash ^= tab[i + 4];
-			if ((k & 0x20) == 0) hash ^= tab[i + 5];
-			if ((k & 0x40) == 0) hash ^= tab[i + 6];
-			if ((k & 0x80) == 0) hash ^= tab[i + 7];
+			if ((k & 0x01) == 0){
+				hash ^= tab[i + 0];
+			}
+			if ((k & 0x02) == 0){
+				hash ^= tab[i + 1];
+			}
+			if ((k & 0x04) == 0){
+				hash ^= tab[i + 2];
+			}
+			if ((k & 0x08) == 0){
+				hash ^= tab[i + 3];
+			}
+			if ((k & 0x10) == 0){
+				hash ^= tab[i + 4];
+			}
+			if ((k & 0x20) == 0){
+				hash ^= tab[i + 5];
+			}
+			if ((k & 0x40) == 0){
+				hash ^= tab[i + 6];
+			}
+			if ((k & 0x80) == 0){
+				hash ^= tab[i + 7];
+			}
 		}
 		return (hash & mask);
 	}
@@ -108,8 +131,9 @@ public class Hashs {
 	 */
 	public static int zobrist(char[] key, int mask, int[][] tab) {
 		int hash, i;
-		for (hash = key.length, i = 0; i < key.length; ++i)
+		for (hash = key.length, i = 0; i < key.length; ++i){
 			hash ^= tab[i][key[i]];
+		}
 		return (hash & mask);
 	}
 
@@ -119,11 +143,12 @@ public class Hashs {
 	 * @param data 数组
 	 * @return hash结果
 	 */
-	public static int FNVHash(byte[] data) {
+	public static int fnvHash(byte[] data) {
 		final int p = 16777619;
 		int hash = (int) 2166136261L;
-		for (byte b : data)
+		for (byte b : data){
 			hash = (hash ^ b) * p;
+		}
 		hash += hash << 13;
 		hash ^= hash >> 7;
 		hash += hash << 3;
@@ -138,11 +163,12 @@ public class Hashs {
 	 * @param data 字符串
 	 * @return hash结果
 	 */
-	public static int FNVHash(String data) {
+	public static int fnvHash(String data) {
 		final int p = 16777619;
 		int hash = (int) 2166136261L;
-		for (int i = 0; i < data.length(); i++)
+		for (int i = 0; i < data.length(); i++){
 			hash = (hash ^ data.charAt(i)) * p;
+		}
 		hash += hash << 13;
 		hash ^= hash >> 7;
 		hash += hash << 3;
@@ -173,7 +199,7 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int RSHash(String str) {
+	public static int rsHash(String str) {
 		int b = 378551;
 		int a = 63689;
 		int hash = 0;
@@ -183,7 +209,7 @@ public class Hashs {
 			a = a * b;
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -192,14 +218,14 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int JSHash(String str) {
+	public static int jsHash(String str) {
 		int hash = 1315423911;
 
 		for (int i = 0; i < str.length(); i++) {
 			hash ^= ((hash << 5) + str.charAt(i) + (hash >> 2));
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -208,23 +234,23 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int PJWHash(String str) {
-		int BitsInUnsignedInt = 32;
-		int ThreeQuarters = (BitsInUnsignedInt * 3) / 4;
-		int OneEighth = BitsInUnsignedInt / 8;
-		int HighBits = 0xFFFFFFFF << (BitsInUnsignedInt - OneEighth);
+	public static int pjwHash(String str) {
+		int bitsInUnsignedInt = 32;
+		int threeQuarters = (bitsInUnsignedInt * 3) / 4;
+		int oneEighth = bitsInUnsignedInt / 8;
+		int highBits = 0xFFFFFFFF << (bitsInUnsignedInt - oneEighth);
 		int hash = 0;
 		int test = 0;
 
 		for (int i = 0; i < str.length(); i++) {
-			hash = (hash << OneEighth) + str.charAt(i);
+			hash = (hash << oneEighth) + str.charAt(i);
 
-			if ((test = hash & HighBits) != 0) {
-				hash = ((hash ^ (test >> ThreeQuarters)) & (~HighBits));
+			if ((test = hash & highBits) != 0) {
+				hash = ((hash ^ (test >> threeQuarters)) & (~highBits));
 			}
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -233,7 +259,7 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int ELFHash(String str) {
+	public static int elfHash(String str) {
 		int hash = 0;
 		int x = 0;
 
@@ -245,7 +271,7 @@ public class Hashs {
 			}
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -254,7 +280,7 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int BKDRHash(String str) {
+	public static int bkdrHash(String str) {
 		int seed = 131; // 31 131 1313 13131 131313 etc..
 		int hash = 0;
 
@@ -262,7 +288,7 @@ public class Hashs {
 			hash = (hash * seed) + str.charAt(i);
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -271,14 +297,14 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int SDBMHash(String str) {
+	public static int sdbmHash(String str) {
 		int hash = 0;
 
 		for (int i = 0; i < str.length(); i++) {
 			hash = str.charAt(i) + (hash << 6) + (hash << 16) - hash;
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -287,14 +313,14 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int DJBHash(String str) {
+	public static int djbHash(String str) {
 		int hash = 5381;
 
 		for (int i = 0; i < str.length(); i++) {
 			hash = ((hash << 5) + hash) + str.charAt(i);
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -303,14 +329,14 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int DEKHash(String str) {
+	public static int dekHash(String str) {
 		int hash = str.length();
 
 		for (int i = 0; i < str.length(); i++) {
 			hash = ((hash << 5) ^ (hash >> 27)) ^ str.charAt(i);
 		}
 
-		return (hash & 0x7FFFFFFF);
+		return hash & 0x7FFFFFFF;
 	}
 
 	/**
@@ -319,7 +345,7 @@ public class Hashs {
 	 * @param str 字符串
 	 * @return hash值
 	 */
-	public static int APHash(String str) {
+	public static int apHash(String str) {
 		int hash = 0;
 
 		for (int i = 0; i < str.length(); i++) {
@@ -339,13 +365,15 @@ public class Hashs {
 		long hash = 0;
 
 		int iLength = str.length();
-		if (iLength == 0)
+		if (iLength == 0){
 			return 0;
+		}
 
-		if (iLength <= 256)
+		if (iLength <= 256){
 			hash = 16777216L * (iLength - 1);
-		else
+		}else{
 			hash = 4278190080L;
+		}
 
 		int i;
 
@@ -362,8 +390,9 @@ public class Hashs {
 		} else {
 			for (i = 1; i <= 96; i++) {
 				ucChar = str.charAt(i + iLength - 96 - 1);
-				if (ucChar <= 'Z' && ucChar >= 'A')
+				if (ucChar <= 'Z' && ucChar >= 'A'){
 					ucChar = (char) (ucChar + 32);
+				}
 				hash += (3 * i * ucChar * ucChar + 5 * i * ucChar + 7 * i + 11 * ucChar) % 16777216;
 			}
 		}
@@ -398,7 +427,7 @@ public class Hashs {
 	public static long mixHash(String str) {
 		long hash = str.hashCode();
 		hash <<= 32;
-		hash |= FNVHash(str);
+		hash |= fnvHash(str);
 		return hash;
 	}
 }

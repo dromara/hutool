@@ -14,7 +14,7 @@ public class ELFFilter extends AbstractFilter {
 	
 	@Override
 	public long hash(String str) {
-		return Hashs.ELFHash(str) % size;
+		return Hashs.elfHash(str) % size;
 	}
 
 }
