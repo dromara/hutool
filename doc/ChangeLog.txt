@@ -75,3 +75,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.3
 1. 优化代码格局
+
+2.9.4
+1. 增加HandleHelper.HandleRow方法，只接受一个ResultSet对象
