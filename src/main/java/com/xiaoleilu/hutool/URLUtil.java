@@ -1,8 +1,11 @@
 package com.xiaoleilu.hutool;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -93,6 +96,34 @@ public class URLUtil {
 			return parseUrl.toString();
 		} catch (MalformedURLException e) {
 			throw new UtilException(e);
+		}
+	}
+	
+	/**
+	 * 编码URL
+	 * @param url URL
+	 * @param charset 编码
+	 * @return 编码后的URL
+	 */
+	public static String encode(String url, String charset) {
+		try {
+			return URLEncoder.encode(url, charset);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 解码URL
+	 * @param url URL
+	 * @param charset 编码
+	 * @return 解码后的URL
+	 */
+	public static String decode(String url, String charset) {
+		try {
+			return URLDecoder.decode(url, charset);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

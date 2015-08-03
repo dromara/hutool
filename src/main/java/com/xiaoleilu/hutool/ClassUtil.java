@@ -103,6 +103,9 @@ public class ClassUtil {
 		
 		final Set<Class<?>> classes = new HashSet<Class<?>>();
 		for (String classPath : getClassPaths(packageName)) {
+			//bug修复，由于路径中空格和中文导致的Jar找不到
+			classPath = URLUtil.decode(classPath, CharsetUtil.systemCharset());
+			
 			log.debug("Scan classpath: [{}]", classPath);
 			// 填充 classes
 			fillClasses(classPath, packageName, classFilter, classes);
@@ -111,6 +114,9 @@ public class ClassUtil {
 		//如果在项目的ClassPath中未找到，去系统定义的ClassPath里找
 		if(classes.isEmpty()) {
 			for (String classPath : getJavaClassPaths()) {
+				//bug修复，由于路径中空格和中文导致的Jar找不到
+				classPath = URLUtil.decode(classPath, CharsetUtil.systemCharset());
+				
 				log.debug("Scan java classpath: [{}]", classPath);
 				// 填充 classes
 				fillClasses(classPath, new File(classPath), packageName, classFilter, classes);

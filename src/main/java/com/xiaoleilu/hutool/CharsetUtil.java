@@ -102,4 +102,15 @@ public class CharsetUtil {
 	public static ByteBuffer toByteBuffer(String str, String charset) {
 		return ByteBuffer.wrap(StrUtil.encode(str, charset));
 	}
+	
+	/**
+	 * @return 系统字符集编码
+	 */
+	public static String systemCharset() {
+		String charset = System.getProperty("file.encoding");
+		if(StrUtil.isBlank(charset)) {
+			charset = UTF_8;
+		}
+		return charset;
+	}
 }

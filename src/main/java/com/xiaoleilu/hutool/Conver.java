@@ -134,6 +134,27 @@ public class Conver {
 		}
 		return value.toString();
 	}
+	
+	/**
+	 * 转换为字符<br>
+	 * 如果给定的值为null，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static Character toChar(Object value, Character defaultValue) {
+		if(null == value) {
+			return defaultValue;
+		}
+		if(value instanceof Character) {
+			return (Character)value;
+		}
+		
+		final String valueStr = value.toString();
+		return StrUtil.isEmpty(valueStr) ? defaultValue : valueStr.charAt(0);
+	}
 
 	/**
 	 * 转换为int<br>
@@ -157,6 +178,60 @@ public class Conver {
 		}
 		try {
 			return Integer.parseInt(valueStr);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * 转换为byte<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static Byte toByte(Object value, Byte defaultValue) {
+		if (value == null){
+			return defaultValue;
+		}
+		if(value instanceof Byte) {
+			return (Byte)value;
+		}
+		final String valueStr = value.toString();
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
+		try {
+			return Byte.parseByte(valueStr);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * 转换为Short<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static Short toShort(Object value, Short defaultValue) {
+		if (value == null){
+			return defaultValue;
+		}
+		if(value instanceof Short) {
+			return (Short)value;
+		}
+		final String valueStr = value.toString();
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
+		try {
+			return Short.parseShort(valueStr);
 		} catch (Exception e) {
 			return defaultValue;
 		}

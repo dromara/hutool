@@ -78,3 +78,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.4
 1. 增加HandleHelper.HandleRow方法，只接受一个ResultSet对象
+
+2.9.5
+1. 修复ClassPath带空格和中文导致的Class文件找不到

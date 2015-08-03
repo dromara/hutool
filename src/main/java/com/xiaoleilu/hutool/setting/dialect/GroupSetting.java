@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.setting.dialect;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,14 +15,22 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
 
+import com.xiaoleilu.hutool.Conver;
+import com.xiaoleilu.hutool.FileUtil;
+import com.xiaoleilu.hutool.Log;
+import com.xiaoleilu.hutool.ReUtil;
+import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.URLUtil;
 import com.xiaoleilu.hutool.exceptions.SettingException;
+import com.xiaoleilu.hutool.setting.AbsSetting;
 
 /**
- * 设置工具类。 用于支持设置文件<br>
+ * 分组设置工具类。 用于支持设置文件<br>
  *  1、支持变量，默认变量命名为 ${变量名}，变量只能识别读入行的变量，例如第6行的变量在第三行无法读取
  *  2、支持分组，分组为中括号括起来的内容，中括号以下的行都为此分组的内容，无分组相当于空字符分组<br>
  *  		若某个key是name，加上分组后的键相当于group.name
@@ -31,24 +39,25 @@ import com.xiaoleilu.hutool.exceptions.SettingException;
  * @author xiaoleilu
  * 
  */
-public class Setting extends HashMap<String, String> {
-	private static final long serialVersionUID = -477527787843971824L;
+public class GroupSetting extends AbsSetting{
 	private static Logger log = Log.get();
-
+	
+	final Map<String, String> map = new HashMap<String, String>();
+	
 	/** 默认字符集 */
 	public final static String DEFAULT_CHARSET = "utf8";
 	/** 数组类型值默认分隔符 */
 	public final static String DEFAULT_DELIMITER= ",";
 
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
-	protected final static String COMMENT_FLAG_PRE = "#";
+	private final static String COMMENT_FLAG_PRE = "#";
 	/** 赋值分隔符（用于分隔键值对） */
-	protected final static String ASSIGN_FLAG = "=";
+	private final static String ASSIGN_FLAG = "=";
 	/** 分组行识别的环绕标记 */
-	protected final static char[] GROUP_SURROUND = { '[', ']' };
+	private final static char[] GROUP_SURROUND = { '[', ']' };
 	/** 变量名称的正则 */
 	private String reg_var = "\\$\\{(.*?)\\}";
-
+	
 	/** 本设置对象的字符集 */
 	private Charset charset;
 	/** 是否使用变量 */
@@ -57,7 +66,7 @@ public class Setting extends HashMap<String, String> {
 	private URL settingUrl;
 	
 	private LinkedList<String> groups = new LinkedList<String>();
-
+	
 	/**
 	 * 基本构造<br/>
 	 * 需自定义初始化配置文件<br/>
@@ -65,7 +74,7 @@ public class Setting extends HashMap<String, String> {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(Charset charset, boolean isUseVariable) {
+	public GroupSetting(Charset charset, boolean isUseVariable) {
 		this.charset = charset;
 		this.isUseVariable = isUseVariable;
 	}
@@ -77,7 +86,7 @@ public class Setting extends HashMap<String, String> {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(String pathBaseClassLoader, String charset, boolean isUseVariable) {
+	public GroupSetting(String pathBaseClassLoader, String charset, boolean isUseVariable) {
 		if(null == pathBaseClassLoader) {
 			pathBaseClassLoader = StrUtil.EMPTY;
 		}
@@ -96,7 +105,7 @@ public class Setting extends HashMap<String, String> {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(File configFile, String charset, boolean isUseVariable) {
+	public GroupSetting(File configFile, String charset, boolean isUseVariable) {
 		if (configFile == null) {
 			throw new RuntimeException("Null Setting file!");
 		}
@@ -115,7 +124,7 @@ public class Setting extends HashMap<String, String> {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(String path, Class<?> clazz, String charset, boolean isUseVariable) {
+	public GroupSetting(String path, Class<?> clazz, String charset, boolean isUseVariable) {
 		final URL url = URLUtil.getURL(path, clazz);
 		if(url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", path));
@@ -130,7 +139,7 @@ public class Setting extends HashMap<String, String> {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(URL url, String charset, boolean isUseVariable) {
+	public GroupSetting(URL url, String charset, boolean isUseVariable) {
 		if(url == null) {
 			throw new RuntimeException("Null url define!");
 		}
@@ -141,10 +150,10 @@ public class Setting extends HashMap<String, String> {
 	 * 构造
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 */
-	public Setting(String pathBaseClassLoader) {
+	public GroupSetting(String pathBaseClassLoader) {
 		this(pathBaseClassLoader, DEFAULT_CHARSET, false);
 	}
-
+	
 	/*--------------------------公有方法 start-------------------------------*/
 	/**
 	 * 初始化设定文件
@@ -210,7 +219,7 @@ public class Setting extends HashMap<String, String> {
 	 * @throws IOException
 	 */
 	public boolean load(InputStream settingStream, boolean isUseVariable) throws IOException {
-		this.clear();
+		map.clear();
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new InputStreamReader(settingStream, charset));
@@ -251,7 +260,7 @@ public class Setting extends HashMap<String, String> {
 				if (isUseVariable) {
 					value = replaceVar(value);
 				}
-				put(key, value);
+				map.put(key, value);
 			}
 		} finally {
 			FileUtil.close(reader);
@@ -276,31 +285,16 @@ public class Setting extends HashMap<String, String> {
 		return settingUrl.getPath();
 	}
 
-	//--------------------------------------------------------------- Get
-	/**
-	 * 带有日志提示的get，如果没有定义指定的KEY，则打印debug日志
-	 * 
-	 * @param key 键
-	 * @return 值
-	 */
-	public String getWithLog(String key) {
-		return get(key, null);
-	}
-	
-	/**
-	 * 带有日志提示的get，如果没有定义指定的KEY，则打印debug日志
-	 * 
-	 * @param key 键
-	 * @return 值
-	 */
-	public String getWithLog(String key, String group) {
-		final String value = get(key, group);
-		if (value == null) {
-			log.debug("No key define for [{}]!", key);
-		}
-		return value;
+	@Override
+	public int size() {
+		return map.size();
 	}
 
+	@Override
+	public String getStr(String key) {
+		return map.get(key);
+	}
+	
 	/**
 	 * 获得指定分组的键对应值
 	 * 
@@ -308,276 +302,14 @@ public class Setting extends HashMap<String, String> {
 	 * @param group 分组
 	 * @return 值
 	 */
-	public String get(String key, String group) {
+	public String getByGroup(String key, String group) {
 		String keyWithGroup = key;
 		if (!StrUtil.isBlank(group)) {
 			keyWithGroup = group + "." + keyWithGroup;
 		}
-		return get(keyWithGroup);
-	}
-
-	//--------------------------------------------------------------- Get String
-	/**
-	 * 获取字符型型属性值
-	 * 
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public String getString(String key) {
-		return getString(key, null);
+		return getStr(keyWithGroup);
 	}
 	
-	/**
-	 * 获取字符型型属性值<br>
-	 * 若获得的值为不可见字符，使用默认值
-	 * 
-	 * @param key 属性名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public String getStringWithDefault(String key, String defaultValue) {
-		return getStringWithDefault(key, null, defaultValue);
-	}
-
-	/**
-	 * 获取字符型型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public String getString(String key, String group) {
-		return get(key, group);
-	}
-	
-	/**
-	 * 获取字符型型属性值<br>
-	 * 若获得的值为不可见字符，使用默认值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public String getStringWithDefault(String key, String group, String defaultValue) {
-		final String value = getString(key, group);
-		if(StrUtil.isBlank(value)) {
-			return defaultValue;
-		}
-		return value;
-	}
-
-	//--------------------------------------------------------------- Get string array
-	/**
-	 * 获得数组型
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public String[] getStrings(String key) {
-		return getStrings(key, null);
-	}
-	
-	/**
-	 * 获得数组型
-	 * @param key 属性名
-	 * @param defaultValue 默认的值
-	 * @return 属性值
-	 */
-	public String[] getStringsWithDefault(String key, String[] defaultValue) {
-		String[] value = getStrings(key, null);
-		if(null == value) {
-			value = defaultValue; 
-		}
-		
-		return value;
-	}
-	
-	/**
-	 * 获得数组型
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public String[] getStrings(String key, String group) {
-		return getStrings(key, group, DEFAULT_DELIMITER);
-	}
-	
-	/**
-	 * 获得数组型
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @param delimiter 分隔符
-	 * @return 属性值
-	 */
-	public String[] getStrings(String key, String group, String delimiter) {
-		final String value = getString(key, group);
-		if(StrUtil.isBlank(value)) {
-			return null;
-		}
-		return StrUtil.split(value, delimiter);
-	}
-	
-	//--------------------------------------------------------------- Get int
-	/**
-	 * 获取数字型型属性值
-	 * 
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public Integer getInt(String key) throws NumberFormatException {
-		return getInt(key, null);
-	}
-	
-	/**
-	 * 获取数字型型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public Integer getInt(String key, String group) {
-		return getInt(key, group, null);
-	}
-	
-	/**
-	 * 获取数字型型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public Integer getInt(String key, String group, Integer defaultValue) {
-		return Conver.toInt(get(key, group), defaultValue);
-	}
-
-	//--------------------------------------------------------------- Get bool
-	/**
-	 * 获取波尔型属性值
-	 * 
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public Boolean getBool(String key) throws NumberFormatException {
-		return getBool(key, null);
-	}
-
-	/**
-	 * 获取波尔型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public Boolean getBool(String key, String group) {
-		return getBool(key, group, null);
-	}
-	
-	/**
-	 * 获取波尔型型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public Boolean getBool(String key, String group, Boolean defaultValue) {
-		return Conver.toBool(get(key, group), defaultValue);
-	}
-
-	//--------------------------------------------------------------- Get long
-	/**
-	 * 获取long类型属性值
-	 * 
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public Long getLong(String key) throws NumberFormatException {
-		return getLong(key, null);
-	}
-
-	/**
-	 * 获取long类型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public Long getLong(String key, String group) {
-		return getLong(key, group, null);
-	}
-	
-	/**
-	 * 获取long类型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public Long getLong(String key, String group, Long defaultValue) {
-		return Conver.toLong(get(key, group), defaultValue);
-	}
-	//--------------------------------------------------------------- Get char
-	/**
-	 * 获取char类型属性值
-	 * 
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public Character getChar(String key) {
-		return getChar(key, null);
-	}
-
-	/**
-	 * 获取char类型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public Character getChar(String key, String group) {
-		final String value = get(key, group);
-		if(StrUtil.isBlank(value)) {
-			return null;
-		}
-		return value.charAt(0);
-	}
-
-	//--------------------------------------------------------------- Get double
-	/**
-	 * 获取double类型属性值
-	 * 
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public Double getDouble(String key) {
-		return getDouble(key, null);
-	}
-
-	/**
-	 * 获取double类型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public Double getDouble(String key, String group) {
-		return getDouble(key, group, null);
-	}
-	
-	/**
-	 * 获取double类型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public Double getDouble(String key, String group, Double defaultValue) {
-		return Conver.toDouble(get(key, group), defaultValue);
-	}
-
 	//--------------------------------------------------------------- Set
 	/**
 	 * 设置值，无给定键创建之。设置后未持久化
@@ -586,7 +318,7 @@ public class Setting extends HashMap<String, String> {
 	 * @param value 值
 	 */
 	public void setSetting(String key, Object value) {
-		put(key, value.toString());
+		map.put(key, value.toString());
 	}
 
 	//--------------------------------------------------------------------------------- Functions
@@ -600,7 +332,7 @@ public class Setting extends HashMap<String, String> {
 			FileUtil.touch(absolutePath);
 			OutputStream out = FileUtil.getOutputStream(absolutePath);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, charset));
-			Set<java.util.Map.Entry<String, String>> entrySet = this.entrySet();
+			Set<java.util.Map.Entry<String, String>> entrySet = map.entrySet();
 			for (java.util.Map.Entry<String, String> entry : entrySet) {
 				writer.write(entry.getKey() + ASSIGN_FLAG + entry.getValue());
 			}
@@ -636,7 +368,7 @@ public class Setting extends HashMap<String, String> {
 				String methodName = method.getName();
 				if (methodName.startsWith("set")) {
 					String field = StrUtil.getGeneralField(methodName);
-					Object value = get(field, group);
+					Object value = getByGroup(field, group);
 					if (value != null) {
 						Class<?>[] parameterTypes = method.getParameterTypes();
 						if(parameterTypes.length != 1) {
@@ -670,8 +402,7 @@ public class Setting extends HashMap<String, String> {
 	public LinkedList<String> getGroups() {
 		return this.groups;
 	}
-	/*--------------------------公有方法 end-------------------------------*/
-	
+
 	/*--------------------------Private Method start-------------------------------*/
 	/**
 	 * 替换给定值中的变量标识
@@ -683,7 +414,7 @@ public class Setting extends HashMap<String, String> {
 		final Set<String> vars = ReUtil.findAll(reg_var, value, 0, new HashSet<String>());
 		for (String var : vars) {
 			// 查找变量名对应的值
-			String varValue = this.get(ReUtil.get(reg_var, var, 1));
+			String varValue = map.get(ReUtil.get(reg_var, var, 1));
 			if (null != varValue) {
 				// 替换标识
 				value = value.replace(var, varValue);
