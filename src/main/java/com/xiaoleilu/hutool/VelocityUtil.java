@@ -265,7 +265,6 @@ public class VelocityUtil {
 	 * 取值包括Session和Request
 	 * @param context 内容
 	 * @param request 请求对象
-	 * @return 模板引擎
 	 */
 	public static void parseRequest(VelocityContext context, javax.servlet.http.HttpServletRequest request) {
 		final Enumeration<String> attrs = request.getAttributeNames();
