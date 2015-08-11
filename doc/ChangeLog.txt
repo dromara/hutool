@@ -81,3 +81,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.5
 1. 修复ClassPath带空格和中文导致的Class文件找不到
+
+2.9.6
+1. 更新依赖的包版本为最新

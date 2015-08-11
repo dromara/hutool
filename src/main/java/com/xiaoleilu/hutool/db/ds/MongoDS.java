@@ -1,21 +1,21 @@
 package com.xiaoleilu.hutool.db.ds;
 
 import java.io.Closeable;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.Document;
 import org.slf4j.Logger;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientOptions.Builder;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.xiaoleilu.hutool.CharsetUtil;
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.Log;
@@ -292,8 +292,8 @@ public class MongoDS implements Closeable{
 	 * @param dbName DB
 	 * @return DB
 	 */
-	public DB getDb(String dbName) {
-		return mongo.getDB(dbName);
+	public MongoDatabase getDb(String dbName) {
+		return mongo.getDatabase(dbName);
 	}
 	
 	/**
@@ -302,7 +302,7 @@ public class MongoDS implements Closeable{
 	 * @param collectionName 集合名
 	 * @return DBCollection
 	 */
-	public DBCollection getCollection(String dbName, String collectionName) {
+	public MongoCollection<Document> getCollection(String dbName, String collectionName) {
 		return getDb(dbName).getCollection(collectionName);
 	}
 	
@@ -342,11 +342,7 @@ public class MongoDS implements Closeable{
 	 * @return ServerAddress
 	 */
 	private ServerAddress createServerAddress(String host, int port) {
-		try {
-			return new ServerAddress(host, port);
-		} catch (UnknownHostException e) {
-			throw new UtilException(StrUtil.format("Unknow Host: [{}]", host), e);
-		}
+		return new ServerAddress(host, port);
 	}
 	
 	/**
