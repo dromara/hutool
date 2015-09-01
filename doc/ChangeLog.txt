@@ -88,3 +88,7 @@ SecureUtil中的base64EncodeTable改为私有
 2.9.7
 1. 修复Oracle的SQL语句中反引号导致的错误
 2. 修复空Where语句导致的表名找不到引起的空指针问题（优化错误提示）
+
+2.9.8
+1. 修复DaoTemplate中add和update方法默认获取不到当前表名的问题
+2. 修复Entity的fillVo方法返回对象错误问题

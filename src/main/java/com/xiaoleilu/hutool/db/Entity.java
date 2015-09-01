@@ -26,8 +26,24 @@ public class Entity extends HashMap<String, Object>{
 	private static final long serialVersionUID = -1951012511464327448L;
 	
 	//--------------------------------------------------------------- Static method start
+	/**
+	 * 创建Entity
+	 * @param tableName 表名
+	 * @return Entity
+	 */
 	public static Entity create(String tableName) {
 		return new Entity(tableName);
+	}
+	
+	/**
+	 * 将PO对象转为Entity
+	 * @param <T>
+	 * @param tableName 表名
+	 * @param po
+	 * @return
+	 */
+	public static <T> Entity parse(T po) {
+		return create(null).fromVo(po);
 	}
 	//--------------------------------------------------------------- Static method end
 	
@@ -66,12 +82,13 @@ public class Entity extends HashMap<String, Object>{
 	
 	/**
 	 * 填充Value Object对象
+	 * @param <T>
 	 * @param vo Value Object（或者POJO）
-	 * @return vo
+	 * @return Entity
 	 */
-	public <T> T fillVo(T vo) {
+	public <T> Entity fillVo(T vo) {
 		InjectUtil.injectFromMap(vo, this);
-		return vo;
+		return this;
 	}
 	
 	/**
@@ -96,10 +113,11 @@ public class Entity extends HashMap<String, Object>{
 	/**
 	 * 将值对象转换为Entity<br>
 	 * 类名会被当作表名，小写第一个字母
+	 * @param <T>
 	 * @param vo 值对象
 	 * @return 自己
 	 */
-	public Entity parse(Object vo) {
+	public <T> Entity fromVo(T vo) {
 		String tableName = vo.getClass().getSimpleName();
 		tableName = StrUtil.lowerFirst(tableName);
 		this.setTableName(tableName);

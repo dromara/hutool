@@ -42,6 +42,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public Long add(Entity entity) throws SQLException {
+		entity.setTableName(tableName);
 		return runner.insert(entity);
 	}
 	
@@ -70,6 +71,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public int update(Entity entity) throws SQLException {
+		entity.setTableName(tableName);
 		Object pk = entity.get(primaryKeyField);
 		if (null == pk) {
 			throw new SQLException(StrUtil.format("Please determine `{}` for update", primaryKeyField));
