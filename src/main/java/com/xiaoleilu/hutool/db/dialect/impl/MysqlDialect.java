@@ -7,11 +7,13 @@ import java.util.Collection;
 
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.PageUtil;
+import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.SqlBuilder;
 import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.db.SqlBuilder.Order;
+import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 
 /**
  * MySQL方言
@@ -27,6 +29,11 @@ public class MysqlDialect extends AnsiSqlDialect{
 	
 	@Override
 	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, Collection<String> orderFields, Order order) throws SQLException {
+		//验证
+		if(where == null || StrUtil.isBlank(where.getTableName())) {
+			throw new DbRuntimeException("Table name is null !");
+		}
+		
 		final SqlBuilder find = SqlBuilder.create(wrapper)
 				.select(fields)
 				.from(where.getTableName())

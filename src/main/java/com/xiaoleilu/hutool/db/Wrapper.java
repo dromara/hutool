@@ -16,9 +16,12 @@ import com.xiaoleilu.hutool.StrUtil;
 public class Wrapper {
 	
 	/** 包装的引号（单引号还是反引号） */
-	private char wrapQuote;
+	private Character wrapQuote;
 	
-	public Wrapper(char wrapQuote) {
+	public Wrapper() {
+	}
+	
+	public Wrapper(Character wrapQuote) {
 		this.wrapQuote = wrapQuote;
 	}
 	
@@ -33,7 +36,7 @@ public class Wrapper {
 	 * 设置包装的引号（单引号还是反引号）
 	 * @param wrapQuote 包装的引号（单引号还是反引号）
 	 */
-	public void setWrapQuote(char wrapQuote) {
+	public void setWrapQuote(Character wrapQuote) {
 		this.wrapQuote = wrapQuote;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
@@ -45,7 +48,7 @@ public class Wrapper {
 	 * @return 包装后的字段名
 	 */
 	public String wrap(String field){
-		if(StrUtil.isBlank(field)) {
+		if(wrapQuote == null || StrUtil.isBlank(field)) {
 			return field;
 		}
 		

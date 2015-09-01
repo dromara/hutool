@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.SqlBuilder;
@@ -15,6 +16,7 @@ import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.db.SqlBuilder.Order;
 import com.xiaoleilu.hutool.db.Wrapper;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
+import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 
 /**
  * ANSI SQL 方言
@@ -68,6 +70,10 @@ public class AnsiSqlDialect implements Dialect {
 
 	@Override
 	public PreparedStatement psForFind(Connection conn, Collection<String> fields, Entity where) throws SQLException {
+		//验证
+		if(where == null || StrUtil.isBlank(where.getTableName())) {
+			throw new DbRuntimeException("Table name is null !");
+		}
 		
 		final SqlBuilder find = SqlBuilder.create(wrapper)
 			.select(fields)

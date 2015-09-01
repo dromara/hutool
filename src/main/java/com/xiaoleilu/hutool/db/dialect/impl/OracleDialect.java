@@ -11,11 +11,14 @@ import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.PageUtil;
+import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.SqlBuilder;
+import com.xiaoleilu.hutool.db.Wrapper;
 import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.db.SqlBuilder.Order;
+import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 
 /**
  * Oracle 方言
@@ -24,10 +27,14 @@ import com.xiaoleilu.hutool.db.SqlBuilder.Order;
  */
 public class OracleDialect extends AnsiSqlDialect{
 	
+	public OracleDialect() {
+		wrapper = new Wrapper();
+	}
+	
 	@Override
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO `").append(entity.getTableName()).append("`(");
+		sql.append("INSERT INTO ").append(entity.getTableName()).append("(");
 
 		final StringBuilder placeHolder = new StringBuilder();
 		placeHolder.append(") values(");
@@ -38,7 +45,7 @@ public class OracleDialect extends AnsiSqlDialect{
 				sql.append(", ");
 				placeHolder.append(", ");
 			}
-			sql.append("`").append(entry.getKey()).append("`");
+			sql.append(entry.getKey());
 			final Object value = entry.getValue();
 			if(value instanceof String && ((String)value).endsWith(".nextval")) {
 				//Oracle的特殊自增键，通过字段名.nextval获得下一个值
@@ -62,6 +69,11 @@ public class OracleDialect extends AnsiSqlDialect{
 	
 	@Override
 	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, Collection<String> orderFields, Order order) throws SQLException {
+		//验证
+		if(where == null || StrUtil.isBlank(where.getTableName())) {
+			throw new DbRuntimeException("Table name is null !");
+		}
+		
 		final SqlBuilder find = SqlBuilder.create(wrapper)
 				.select(fields)
 				.from(where.getTableName())
