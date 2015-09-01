@@ -39,11 +39,11 @@ public class Entity extends HashMap<String, Object>{
 	 * 将PO对象转为Entity
 	 * @param <T>
 	 * @param tableName 表名
-	 * @param po
-	 * @return
+	 * @param vo 值对象
+	 * @return Entity
 	 */
-	public static <T> Entity parse(T po) {
-		return create(null).fromVo(po);
+	public static <T> Entity parse(T vo) {
+		return create(null).fromVo(vo);
 	}
 	//--------------------------------------------------------------- Static method end
 	
