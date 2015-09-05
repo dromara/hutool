@@ -38,7 +38,6 @@ public class Entity extends HashMap<String, Object>{
 	/**
 	 * 将PO对象转为Entity
 	 * @param <T>
-	 * @param tableName 表名
 	 * @param vo 值对象
 	 * @return Entity
 	 */
