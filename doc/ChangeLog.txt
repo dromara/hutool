@@ -92,3 +92,7 @@ SecureUtil中的base64EncodeTable改为私有
 2.9.8
 1. 修复DaoTemplate中add和update方法默认获取不到当前表名的问题
 2. 修复Entity的fillVo方法返回对象错误问题
+
+2.9.9
+1. StrUtil.encode和byte方法重了，并修改方法内容，使charset为空时使用平台相关字符集
+2. 
