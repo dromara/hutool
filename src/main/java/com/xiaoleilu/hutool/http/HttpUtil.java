@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.FileUtil;
 import com.xiaoleilu.hutool.IoUtil;
@@ -76,7 +74,7 @@ public class HttpUtil {
 	 * @param request 请求对象
 	 * @return IP地址
 	 */
-	public static String getClientIP(HttpServletRequest request) {
+	public static String getClientIP(javax.servlet.http.HttpServletRequest request) {
 		String ip = request.getHeader("X-Forwarded-For");
 		if (isUnknow(ip)) {
 			ip = request.getHeader("Proxy-Client-IP");
@@ -90,11 +88,7 @@ public class HttpUtil {
 		if (isUnknow(ip)) {
 			ip = request.getRemoteAddr();
 		}
-		// 多级反向代理检测
-		if (ip != null && ip.indexOf(",") > 0) {
-			ip = ip.trim().split(",")[0];
-		}
-		return ip;
+		return getMultistageReverseProxyIp(ip);
 	}
 	
 	/**
@@ -270,6 +264,25 @@ public class HttpUtil {
 			charset = ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
 		}
 		return charset;
+	}
+	
+	/**
+	 * 从多级反向代理中获得第一个非unknown IP地址
+	 * @param ip 获得的IP地址
+	 * @return 第一个非unknown IP地址
+	 */
+	public static String getMultistageReverseProxyIp(String ip){
+		// 多级反向代理检测
+		if (ip != null && ip.indexOf(",") > 0) {
+			final String[] ips = ip.trim().split(",");
+			for (String subIp : ips) {
+				if(false == isUnknow(subIp)){
+					ip = subIp;
+					break; 
+				}
+			}
+		}
+		return ip;
 	}
 	
 	/**

@@ -95,4 +95,4 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.9
 1. StrUtil.encode和byte方法重了，并修改方法内容，使charset为空时使用平台相关字符集
-2. 
+2. HttpUtil中获得客户端IP地址处理多级反向代理
