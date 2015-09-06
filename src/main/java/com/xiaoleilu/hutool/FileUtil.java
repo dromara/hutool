@@ -889,7 +889,7 @@ public class FileUtil {
 	/**
 	 * 获得相对子路径
 	 * @param rootDir 绝对父路径
-	 * @param file 文件
+	 * @param filePath 文件路径
 	 * @return 相对子路径
 	 */
 	public static String subPath(String rootDir, String filePath){
