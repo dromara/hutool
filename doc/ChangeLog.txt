@@ -99,3 +99,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.9.10
 1.修复Oracle无自增主键insert报错问题
+
+2.10.0
+1. 扩展insert方法，使之返回插入行数、主键、Long型自增主键并存

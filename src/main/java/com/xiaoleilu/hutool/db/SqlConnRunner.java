@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
@@ -48,15 +49,56 @@ public class SqlConnRunner{
 	 * 此方法不会关闭Connection
 	 * @param conn 数据库连接
 	 * @param record 记录
-	 * @return 主键
+	 * @return 插入行数
 	 * @throws SQLException
 	 */
-	public Long insert(Connection conn, Entity record) throws SQLException {
+	public int insert(Connection conn, Entity record) throws SQLException {
+		PreparedStatement ps = null;
+		try {
+			ps = dialect.psForInsert(conn, record);
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 插入数据<br>
+	 * 此方法不会关闭Connection
+	 * @param conn 数据库连接
+	 * @param record 记录
+	 * @return 主键列表
+	 * @throws SQLException
+	 */
+	public List<Object> insertForGeneratedKeys(Connection conn, Entity record) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = dialect.psForInsert(conn, record);
 			ps.executeUpdate();
-			return DbUtil.getGeneratedKey(ps);
+			return DbUtil.getGeneratedKeys(ps);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 插入数据<br>
+	 * 此方法不会关闭Connection
+	 * @param conn 数据库连接
+	 * @param record 记录
+	 * @return 自增主键
+	 * @throws SQLException
+	 */
+	public Long insertForGeneratedKey(Connection conn, Entity record) throws SQLException {
+		PreparedStatement ps = null;
+		try {
+			ps = dialect.psForInsert(conn, record);
+			ps.executeUpdate();
+			return DbUtil.getGeneratedKeyOfLong(ps);
 		} catch (SQLException e) {
 			throw e;
 		} finally {

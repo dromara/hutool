@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.db;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.handler.SingleEntityHandler;
@@ -38,12 +39,34 @@ public class DaoTemplate {
 	/**
 	 * 添加
 	 * @param entity 实体对象
+	 * @return 插入行数
+	 * @throws SQLException
+	 */
+	public int add(Entity entity) throws SQLException {
+		entity.setTableName(tableName);
+		return runner.insert(entity);
+	}
+	
+	/**
+	 * 添加
+	 * @param entity 实体对象
+	 * @return 主键列表
+	 * @throws SQLException
+	 */
+	public List<Object> addForGeneratedKeys(Entity entity) throws SQLException {
+		entity.setTableName(tableName);
+		return runner.insertForGeneratedKeys(entity);
+	}
+	
+	/**
+	 * 添加
+	 * @param entity 实体对象
 	 * @return 自增主键
 	 * @throws SQLException
 	 */
-	public Long add(Entity entity) throws SQLException {
+	public Long addForGeneratedKey(Entity entity) throws SQLException {
 		entity.setTableName(tableName);
-		return runner.insert(entity);
+		return runner.insertForGeneratedKey(entity);
 	}
 	
 	/**

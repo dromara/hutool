@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -168,14 +169,50 @@ public class SqlRunner{
 	/**
 	 * 插入数据
 	 * @param record 记录
-	 * @return 主键
+	 * @return 插入行数
 	 * @throws SQLException
 	 */
-	public Long insert(Entity record) throws SQLException {
+	public int insert(Entity record) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 			return sqlConnRunner.insert(conn, record);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
+	 * 插入数据
+	 * @param record 记录
+	 * @return 主键列表
+	 * @throws SQLException
+	 */
+	public List<Object> insertForGeneratedKeys(Entity record) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return sqlConnRunner.insertForGeneratedKeys(conn, record);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
+	 * 插入数据
+	 * @param record 记录
+	 * @return 主键
+	 * @throws SQLException
+	 */
+	public Long insertForGeneratedKey(Entity record) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return sqlConnRunner.insertForGeneratedKey(conn, record);
 		} catch (SQLException e) {
 			throw e;
 		} finally {

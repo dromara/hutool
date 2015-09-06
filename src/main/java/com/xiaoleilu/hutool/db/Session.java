@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.Collection;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -286,11 +287,31 @@ public class Session implements Closeable{
 	/**
 	 * 插入数据
 	 * @param record 记录
-	 * @return 主键
+	 * @return 插入行数
 	 * @throws SQLException
 	 */
-	public Long insert(Entity record) throws SQLException {
+	public int insert(Entity record) throws SQLException {
 		return runner.insert(conn, record);
+	}
+	
+	/**
+	 * 插入数据
+	 * @param record 记录
+	 * @return 主键列表
+	 * @throws SQLException
+	 */
+	public List<Object> insertForGeneratedKeys(Entity record) throws SQLException {
+		return runner.insertForGeneratedKeys(conn, record);
+	}
+	
+	/**
+	 * 插入数据
+	 * @param record 记录
+	 * @return 数字主键
+	 * @throws SQLException
+	 */
+	public Long insertForGeneratedKey(Entity record) throws SQLException {
+		return runner.insertForGeneratedKey(conn, record);
 	}
 	
 	/**
