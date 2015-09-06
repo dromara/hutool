@@ -189,15 +189,11 @@ public class DaoTemplate {
 	
 	/**
 	 * 查询当前表的所有记录
-	 * @param <T>
-	 * 
-	 * @param field 字段名
-	 * @param value 字段值
 	 * @return 记录
 	 * @throws SQLException
 	 * @throws SQLException
 	 */
-	public <T> List<Entity> findAll() throws SQLException {
+	public List<Entity> findAll() throws SQLException {
 		return runner.find(null,
 				Entity.create(tableName),
 				new EntityHandler());
