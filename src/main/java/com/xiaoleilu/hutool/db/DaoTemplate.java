@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.SingleEntityHandler;
 
 /**
@@ -85,6 +86,23 @@ public class DaoTemplate {
 		return runner.del(Entity.create(tableName).set(primaryKeyField, pk));
 	}
 	
+	/**
+	 * 删除
+	 * @param <T> 主键类型
+	 * 
+	 * @param field 字段名
+	 * @param value 字段值
+	 * @return 删除行数
+	 * @throws SQLException
+	 */
+	public <T> int del(String field, T value) throws SQLException {
+		if (StrUtil.isBlank(field)) {
+			return 0;
+		}
+
+		return runner.del(Entity.create(tableName).set(field, value));
+	}
+	
 	
 	/**
 	 * 更新职位信息
@@ -123,7 +141,7 @@ public class DaoTemplate {
 	}
 	
 	/**
-	 * 获取单个记录
+	 * 根据主键获取单个记录
 	 * @param <T>
 	 * 
 	 * @param pk 主键值
@@ -135,5 +153,53 @@ public class DaoTemplate {
 		return runner.find(null,
 				Entity.create(tableName).set(primaryKeyField, pk),
 				new SingleEntityHandler());
+	}
+	
+	/**
+	 * 根据某个字段（最好是唯一字段）查询单个记录
+	 * @param <T>
+	 * 
+	 * @param field 字段名
+	 * @param value 字段值
+	 * @return 记录
+	 * @throws SQLException
+	 * @throws SQLException
+	 */
+	public <T> Entity get(String field, T value) throws SQLException {
+		return runner.find(null,
+				Entity.create(tableName).set(field, value),
+				new SingleEntityHandler());
+	}
+	
+	/**
+	 * 根据某个字段值查询结果
+	 * @param <T>
+	 * 
+	 * @param field 字段名
+	 * @param value 字段值
+	 * @return 记录
+	 * @throws SQLException
+	 * @throws SQLException
+	 */
+	public <T> List<Entity> find(String field, T value) throws SQLException {
+		return runner.find(null,
+				Entity.create(tableName).set(field, value),
+				new EntityHandler());
+	}
+	
+	/**
+	 * 查询当前表的所有记录
+	 * @param <T>
+	 * 
+	 * @param field 字段名
+	 * @param value 字段值
+	 * @return 记录
+	 * @throws SQLException
+	 * @throws SQLException
+	 */
+	public <T> List<Entity> findAll() throws SQLException {
+		return runner.find(null,
+				Entity.create(tableName),
+				new EntityHandler());
 	}
 }

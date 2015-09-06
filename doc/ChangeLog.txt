@@ -102,3 +102,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.10.0
 1. 扩展insert方法，使之返回插入行数、主键、Long型自增主键并存
+
+2.10.1
+1. 扩展DaoTemplate方法
