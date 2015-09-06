@@ -239,7 +239,8 @@ public class DbUtil {
 	}
 	
 	/**
-	 * 获得自增键的值
+	 * 获得自增键的值<br>
+	 * 此方法对于Oracle无效
 	 * @param ps PreparedStatement
 	 * @return 自增键的值
 	 * @throws SQLException
@@ -250,7 +251,11 @@ public class DbUtil {
 			rs = ps.getGeneratedKeys(); 
 			Long generatedKey = null;
 			if(rs != null && rs.next()) {
-				generatedKey = rs.getLong(1);
+				try{
+					generatedKey = rs.getLong(1);
+				}catch (SQLException e){
+					//自增主键不为数字或者为Oracle的rowid，跳过
+				}
 			}
 			return generatedKey;
 		} catch (SQLException e) {
