@@ -25,7 +25,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
  * XML工具类<br>
- * 此工具使用w3c dom工具，不需要依赖第三方包。
+ * 此工具使用w3c dom工具，不需要依赖第三方包。<br>
  * 
  * @author xiaoleilu
  * 
@@ -175,7 +175,8 @@ public class XmlUtil {
 
 	// -------------------------------------------------------------------------------------- Create
 	/**
-	 * 创建XML文档
+	 * 创建XML文档<br>
+	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，既XML在转为文本的时候才定义编码
 	 * @param rootElementName 根节点名称
 	 * @return XML文档
 	 */
