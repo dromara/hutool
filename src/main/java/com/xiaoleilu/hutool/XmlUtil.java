@@ -1,9 +1,9 @@
 package com.xiaoleilu.hutool;
 
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -83,7 +84,7 @@ public class XmlUtil {
 	 * @param charset 
 	 * @return XML文档
 	 */
-	public static Document parseXml(String xmlStr, String charset) {
+	public static Document parseXml(String xmlStr) {
 		if (StrUtil.isBlank(xmlStr)) {
 			throw new UtilException("Xml content string is empty !");
 		}
@@ -92,21 +93,11 @@ public class XmlUtil {
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			final DocumentBuilder builder = dbf.newDocumentBuilder();
-			return builder.parse(IoUtil.toStream(xmlStr, charset));
+			return builder.parse( new InputSource(StrUtil.getReader(xmlStr)));
 		} catch (Exception e) {
 			throw new UtilException("Parse xml file [" + xmlStr + "] error!", e);
 		}
 	}
-	/**
-	 * 将String类型的XML转换为XML文档
-	 * 
-	 * @param xmlStr XML字符串
-	 * @return XML文档
-	 */
-	public static Document parseXml(String xmlStr) {
-		return parseXml(xmlStr, null);
-	}
-
 	// -------------------------------------------------------------------------------------- Write
 	/**
 	 * 将XML文档转换为String
@@ -114,35 +105,66 @@ public class XmlUtil {
 	 * @param doc XML文档
 	 * @return XML字符串
 	 */
-	public static String xmlToStr(Document doc) {
+	public static String toStr(Document doc) {
+		return toStr(doc, CharsetUtil.UTF_8);
+	}
+	
+	/**
+	 * 将XML文档转换为String<br>
+	 * 此方法会修改Document中的字符集
+	 * 
+	 * @param doc XML文档
+	 * @param charset 自定义XML的字符集
+	 * @return XML字符串
+	 */
+	public static String toStr(Document doc, String charset) {
 		try {
-			Source source = new DOMSource(doc);
-			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			StringWriter writer = StrUtil.getWriter();
 
 			final Transformer xformer = TransformerFactory.newInstance().newTransformer();
-			// xformer.setOutputProperty(OutputKeys.ENCODING, encoding);
-			xformer.transform(source, new StreamResult(outStream));
+			 xformer.setOutputProperty(OutputKeys.ENCODING, charset);
+			 xformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			xformer.transform(new DOMSource(doc), new StreamResult(writer));
 
-			return outStream.toString();
+			return writer.toString();
 		} catch (Exception e) {
 			throw new UtilException("Trans xml document to string error!", e);
 		}
 	}
-
+	
 	/**
-	 * 将XML文档写入到文件
+	 * 将XML文档写入到文件<br>
+	 * 使用Document中的编码
 	 * 
 	 * @param doc XML文档
 	 * @param absolutePath 文件绝对路径，不存在会自动创建
-	 * @param charset 字符集
 	 */
-	public static void xmlToFile(Document doc, String absolutePath, String charset) {
+	public static void toFile(Document doc, String absolutePath) {
+		toFile(doc, absolutePath, null);
+	}
+
+	/**
+	 * 将XML文档写入到文件<br>
+	 * 
+	 * @param doc XML文档
+	 * @param absolutePath 文件绝对路径，不存在会自动创建
+	 * @param charset 自定义XML文件的编码
+	 */
+	public static void toFile(Document doc, String absolutePath, String charset) {
+		if(StrUtil.isBlank(charset)) {
+			charset = doc.getXmlEncoding();
+		}
+		if(StrUtil.isBlank(charset)) {
+			charset = CharsetUtil.UTF_8;
+		}
+		
 		BufferedWriter writer = null;
 		try {
 			writer = FileUtil.getBufferedWriter(absolutePath, charset, false);
 			Source source = new DOMSource(doc);
 			final Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.setOutputProperty(OutputKeys.ENCODING, charset);
+			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			xformer.transform(source, new StreamResult(writer));
 		} catch (Exception e) {
 			throw new UtilException("Trans xml document to string error!", e);
@@ -158,7 +180,7 @@ public class XmlUtil {
 	 * @return XML文档
 	 */
 	public static Document createXml(String rootElementName) {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		try {
 			builder = dbf.newDocumentBuilder();

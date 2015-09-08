@@ -109,3 +109,6 @@ SecureUtil中的base64EncodeTable改为私有
 2.11.0
 1. FileUtil中增加normalizePath方法
 2. 增加ZipUtil
+
+2.11.1
+1. 修改XmlUtil

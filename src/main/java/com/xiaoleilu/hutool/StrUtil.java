@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -853,5 +855,22 @@ public class StrUtil {
 	 */
 	public static byte[] bytes(String str, String charset) {
 		return encode(str, charset);
+	}
+	
+	/**
+	 * 获得StringReader
+	 * @param str 字符串
+	 * @return StringReader
+	 */
+	public static StringReader getReader(String str) {
+		return new StringReader(str);
+	}
+	
+	/**
+	 * 获得StringWriter
+	 * @return StringWriter
+	 */
+	public static StringWriter getWriter() {
+		return new StringWriter();
 	}
 }
