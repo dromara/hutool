@@ -112,3 +112,7 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.11.1
 1. 修改XmlUtil
+
+2.11.2
+1. 增加getAbsolutePath方法
+2. 增加URLUtil.getPath方法

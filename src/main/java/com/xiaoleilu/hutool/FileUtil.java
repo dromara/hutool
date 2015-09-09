@@ -399,6 +399,23 @@ public class FileUtil {
 		String reultPath= url != null ? url.getPath() : classLoader.getResource(StrUtil.EMPTY).getPath() + path;
 		return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
 	}
+	
+	/**
+	 * 获取标准的绝对路径
+	 * @param file 文件
+	 * @return 绝对路径
+	 */
+	public static String getAbsolutePath(File file){
+		if(file == null){
+			return null;
+		}
+		
+		try {
+			return file.getCanonicalPath();
+		} catch (IOException e) {
+			return file.getAbsolutePath();
+		}
+	}
 
 	/**
 	 * 文件是否存在

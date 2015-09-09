@@ -81,7 +81,6 @@ public class XmlUtil {
 	 * 将String类型的XML转换为XML文档
 	 * 
 	 * @param xmlStr XML字符串
-	 * @param charset 
 	 * @return XML文档
 	 */
 	public static Document parseXml(String xmlStr) {

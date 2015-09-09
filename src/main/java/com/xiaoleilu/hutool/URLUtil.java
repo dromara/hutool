@@ -3,6 +3,8 @@ package com.xiaoleilu.hutool;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -56,6 +58,7 @@ public class URLUtil {
 	 * 
 	 * @param configFile URL对应的文件对象
 	 * @return URL
+	 * @exception UtilException MalformedURLException
 	 */
 	public static URL getURL(File configFile) {
 		try {
@@ -72,8 +75,12 @@ public class URLUtil {
 	 * @return 格式化后的URL，如果提供了null或者空串，返回null
 	 */
 	public static String formatUrl(String url) {
-		if (StrUtil.isBlank(url)) return null;
-		if (url.startsWith("http://") || url.startsWith("https://")) return url;
+		if (StrUtil.isBlank(url)){
+			return null;
+		}
+		if (url.startsWith("http://") || url.startsWith("https://")){
+			return url;
+		}
 		return "http://" + url;
 	}
 
@@ -83,6 +90,7 @@ public class URLUtil {
 	 * @param baseUrl 基准URL
 	 * @param relativePath 相对URL
 	 * @return 相对路径
+	 * @exception UtilException MalformedURLException
 	 */
 	public static String complateUrl(String baseUrl, String relativePath) {
 		baseUrl = formatUrl(baseUrl);
@@ -104,12 +112,13 @@ public class URLUtil {
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
 	 */
 	public static String encode(String url, String charset) {
 		try {
 			return URLEncoder.encode(url, charset);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new UtilException(e);
 		}
 	}
 	
@@ -118,12 +127,37 @@ public class URLUtil {
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 解码后的URL
+	 * @exception UtilException UnsupportedEncodingException
 	 */
 	public static String decode(String url, String charset) {
 		try {
 			return URLDecoder.decode(url, charset);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new UtilException(e);
 		}
+	}
+	
+	/**
+	 * 获得path部分<br>
+	 * URI -> http://www.aaa.bbb/search?scope=ccc&q=ddd
+	 * PATH -> /search
+	 * 
+	 * @param uriStr URI路径
+	 * @return path
+	 * @exception UtilException URISyntaxException
+	 */
+	public static String getPath(String uriStr){
+		URI uri = null;
+		try {
+			uri = new URI(uriStr);
+		} catch (URISyntaxException e) {
+			throw new UtilException(e);
+		}
+		
+		return uri == null ? null : uri.getPath();
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(getPath("http://www.oschina.net/search?scope=blog&q=netty"));
 	}
 }
