@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -18,22 +19,24 @@ public class InjectUtil {
 	/**
 	 * 注入Request参数<br>
 	 * 使用模型名称
+	 * @param <T>
 	 * @param model 模型
 	 * @param request 请求对象
 	 * @param isWithModelName 参数是否包含模型名称
 	 */
-	public static void injectFromRequest(Object model, javax.servlet.ServletRequest request, boolean isWithModelName) {
+	public static <T> void injectFromRequest(T model, javax.servlet.ServletRequest request, boolean isWithModelName) {
 		injectFromRequest(model, model.getClass().getSimpleName(), request, isWithModelName);
 	}
 	
 	/**
 	 * 注入Request参数
+	 * @param <T>
 	 * @param model 模型
 	 * @param modelName 模型名称
 	 * @param request 请求对象
 	 * @param isWithModelName 参数是否包含模型名称
 	 */
-	public static void injectFromRequest(Object model, String modelName, javax.servlet.ServletRequest request, boolean isWithModelName) {
+	public static <T> void injectFromRequest(T model, String modelName, javax.servlet.ServletRequest request, boolean isWithModelName) {
 		Method[] methods = model.getClass().getMethods();
 		for (Method method : methods) {
 			String methodName = method.getName();
@@ -65,11 +68,32 @@ public class InjectUtil {
 	}
 	
 	/**
-	 * 从Map注入
+	 * 从Map注入，如果key为String类型，忽略大小写
+	 * @param <T>
 	 * @param model 模型
 	 * @param map map对象
 	 */
-	public static void injectFromMap(Object model, Map<?, ?> map) {
+	public static <T> void injectFromMapIgnoreCase(T model, Map<?, ?> map) {
+		final Map<Object, Object> map2 = new HashMap<Object, Object>();
+		for (Entry<?, ?> entry : map.entrySet()) {
+			final Object key = entry.getKey();
+			if(key instanceof String) {
+				final String keyStr = (String)key;
+				map2.put(keyStr.toLowerCase(), entry.getValue());
+			}else{
+				map2.put(key, entry.getValue());
+			}
+		}
+		injectFromMap(model, map2);
+	}
+	
+	/**
+	 * 从Map注入
+	 * @param <T>
+	 * @param model 模型
+	 * @param map map对象
+	 */
+	public static <T> void injectFromMap(T model, Map<?, ?> map) {
 		Method[] methods = model.getClass().getMethods();
 		for (Method method : methods) {
 			String methodName = method.getName();
@@ -98,10 +122,11 @@ public class InjectUtil {
 	
 	/**
 	 * 转换为Map
+	 * @param <T>
 	 * @param model 模型
 	 * @param isOnlyBasicType 是否只允许基本类型，包括String
 	 */
-	public static Map<String, Object> toMap(Object model, boolean isOnlyBasicType) {
+	public static <T> Map<String, Object> toMap(T model, boolean isOnlyBasicType) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		final Method[] methods = model.getClass().getMethods();
 		for (Method method : methods) {
