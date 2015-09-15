@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec mvn clean source:jar install -Dmaven.test.skip=true
+exec mvn clean source:jar javadoc:javadoc install -Dmaven.test.skip=true
