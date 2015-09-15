@@ -93,9 +93,10 @@ public class Entity extends HashMap<String, Object>{
 	/**
 	 * 填充Value Object对象
 	 * @param clazz Value Object（或者POJO）的类
+	 * @param ignoreCase 是否忽略大小写
 	 * @return vo
 	 */
-	public <T> T toVo(Class<T> clazz) {
+	public <T> T toVo(Class<T> clazz, boolean ignoreCase) {
 		if(clazz == null) {
 			throw new NullPointerException("Provided Class is null!");
 		}
@@ -107,6 +108,24 @@ public class Entity extends HashMap<String, Object>{
 		}
 		InjectUtil.injectFromMap(vo, this);
 		return vo;
+	}
+	
+	/**
+	 * 填充Value Object对象
+	 * @param clazz Value Object（或者POJO）的类
+	 * @return vo
+	 */
+	public <T> T toVo(Class<T> clazz) {
+		return toVo(clazz, false);
+	}
+	
+	/**
+	 * 填充Value Object对象，忽略大小写
+	 * @param clazz Value Object（或者POJO）的类
+	 * @return vo
+	 */
+	public <T> T toVoIgnoreCase(Class<T> clazz) {
+		return toVo(clazz, true);
 	}
 	
 	/**

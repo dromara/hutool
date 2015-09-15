@@ -119,3 +119,6 @@ SecureUtil中的base64EncodeTable改为私有
 
 2.11.3
 1. 修改InjectUtil，支持忽略大小写
+
+2.11.4
+Entity中toVo区别是否忽略大小写
