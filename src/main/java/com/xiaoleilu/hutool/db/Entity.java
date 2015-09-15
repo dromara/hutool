@@ -106,7 +106,13 @@ public class Entity extends HashMap<String, Object>{
 		} catch (Exception e) {
 			throw new UtilException(StrUtil.format("Instance Value Object [] error!", clazz.getName()));
 		}
-		InjectUtil.injectFromMap(vo, this);
+		
+		if(ignoreCase){
+			InjectUtil.injectFromMapIgnoreCase(vo, this);
+		}else{
+			InjectUtil.injectFromMap(vo, this);
+		}
+		
 		return vo;
 	}
 	
