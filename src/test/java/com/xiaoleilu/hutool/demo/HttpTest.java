@@ -5,7 +5,7 @@ import com.xiaoleilu.hutool.http.HttpResponse;
 
 public class HttpTest {
 	public static void main(String[] args) {
-		HttpRequest request = HttpRequest.get("http://my.oschina.net/xinxingegeya/blog");
+		HttpRequest request = HttpRequest.get("http://my.oschina.net/looly");
 		HttpResponse response = request.execute();
 		System.out.println(response.body());
 	}

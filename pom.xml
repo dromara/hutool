@@ -7,7 +7,7 @@
 
 	<groupId>com.xiaoleilu</groupId>
 	<artifactId>hutool</artifactId>
-	<version>2.11.4</version>
+	<version>2.11.5</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
@@ -132,7 +132,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.2</version>
+						<version>2.10.3</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -146,7 +146,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
