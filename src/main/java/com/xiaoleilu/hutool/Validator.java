@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool;
 
+import java.net.MalformedURLException;
 import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.ReUtil;
@@ -239,7 +240,12 @@ public class Validator {
 	 * @return 是否为URL
 	 */
 	public static boolean isUrl(String value) {
-		return isByRegex(URL, value);
+		try {
+			new java.net.URL(value);
+		} catch (MalformedURLException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

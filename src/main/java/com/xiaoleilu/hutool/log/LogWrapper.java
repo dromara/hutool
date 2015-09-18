@@ -342,8 +342,8 @@ public class LogWrapper implements Logger {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void warn(Throwable e, String format, Object... arguments) {
-		warn(e, StrUtil.format(format, arguments));
+	public void warn(Throwable e, String format, Object... arguments) {
+		warn(StrUtil.format(format, arguments), e);
 	}
 	
 	/**
@@ -352,8 +352,8 @@ public class LogWrapper implements Logger {
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
-	public static void error(Throwable e, String format, Object... arguments) {
-		error(e, StrUtil.format(format, arguments));
+	public void error(Throwable e, String format, Object... arguments) {
+		error(StrUtil.format(format, arguments), e);
 	}
 	//------------------------ Added method end
 }

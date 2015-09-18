@@ -124,4 +124,8 @@ SecureUtil中的base64EncodeTable改为私有
 Entity中toVo区别是否忽略大小写
 
 2.11.5
-修复HTTP模块中空参数导致的空指针问题
+1、修复HTTP模块中空参数导致的空指针问题
+
+2.11.6
+1、修复LogWraper的问题
+2、修复isURL验证错误问题
