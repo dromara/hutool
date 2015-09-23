@@ -56,16 +56,36 @@ public class URLUtil {
 	/**
 	 * 获得URL，常用于使用绝对路径时的情况
 	 * 
-	 * @param configFile URL对应的文件对象
+	 * @param file URL对应的文件对象
 	 * @return URL
 	 * @exception UtilException MalformedURLException
 	 */
-	public static URL getURL(File configFile) {
+	public static URL getURL(File file) {
 		try {
-			return configFile.toURI().toURL();
+			return file.toURI().toURL();
 		} catch (MalformedURLException e) {
 			throw new UtilException("Error occured when get URL!", e);
 		}
+	}
+	
+	/**
+	 * 获得URL，常用于使用绝对路径时的情况
+	 * 
+	 * @param files URL对应的文件对象
+	 * @return URL
+	 * @exception UtilException MalformedURLException
+	 */
+	public static URL[] getURLs(File... files) {
+		final URL[] urls = new URL[files.length];
+		try {
+			for(int i = 0; i < files.length; i++){
+				urls[i] = files[i].toURI().toURL();
+			}
+		} catch (MalformedURLException e) {
+			throw new UtilException("Error occured when get URL!", e);
+		}
+		
+		return urls;
 	}
 	
 	/**

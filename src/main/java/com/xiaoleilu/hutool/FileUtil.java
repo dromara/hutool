@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -62,6 +63,42 @@ public class FileUtil {
 			return file.listFiles();
 		}
 		throw new UtilException(StrUtil.format("Path [{}] is not directory!", path));
+	}
+	
+	/**
+	 * 递归遍历目录以及子目录中的所有文件
+	 * 
+	 * @param file 当前遍历文件
+	 * @param fileFilter 文件过滤规则对象，选择要保留的文件
+	 */
+	public static List<File> loopFiles(File file, FileFilter fileFilter) {
+		List<File> fileList = new ArrayList<File>();
+		if(file == null){
+			return fileList;
+		}else if(file.exists() == false){
+			return fileList;
+		}
+		
+		if (file.isDirectory()) {
+			for (File tmp : file.listFiles()) {
+				fileList.addAll(loopFiles(tmp, fileFilter));
+			}
+		}else{
+			if(fileFilter != null && fileFilter.accept(file)){
+				fileList.add(file);
+			}
+		}
+		
+		return fileList;
+	}
+	
+	/**
+	 * 递归遍历目录以及子目录中的所有文件
+	 * 
+	 * @param file 当前遍历文件
+	 */
+	public static List<File> loopFiles(File file) {
+		return loopFiles(file, null);
 	}
 	
 	/**
