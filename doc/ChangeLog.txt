@@ -133,3 +133,6 @@ Entity中toVo区别是否忽略大小写
 2.12.0
 1、FileUtil增加递归获取文件目录的方法
 2、增加JarClassLoader类，用于加载外部Jar文件
+
+2.12.1
+1、修复Oracle引号包围和nextval的大小写问题

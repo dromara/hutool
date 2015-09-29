@@ -28,13 +28,18 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 public class OracleDialect extends AnsiSqlDialect{
 	
 	public OracleDialect() {
-		wrapper = new Wrapper();
+		wrapper = new Wrapper('"');	//Oracle所有字段名用双引号包围，防止字段名或表名与系统关键字冲突
 	}
 	
 	@Override
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
+		if(null != wrapper) {
+			//包装字段名
+			entity = wrapper.wrap(entity);
+		}
+		
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ").append(entity.getTableName()).append("(");
+		sql.append("INSERT INTO ").append(entity.getTableName()).append(" (");
 
 		final StringBuilder placeHolder = new StringBuilder();
 		placeHolder.append(") values(");
@@ -47,7 +52,7 @@ public class OracleDialect extends AnsiSqlDialect{
 			}
 			sql.append(entry.getKey());
 			final Object value = entry.getValue();
-			if(value instanceof String && ((String)value).endsWith(".nextval")) {
+			if(value instanceof String && ((String)value).toLowerCase().endsWith(".nextval")) {
 				//Oracle的特殊自增键，通过字段名.nextval获得下一个值
 				placeHolder.append(value);
 			}else {
