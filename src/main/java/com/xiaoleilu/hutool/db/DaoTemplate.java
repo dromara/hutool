@@ -3,6 +3,8 @@ package com.xiaoleilu.hutool.db;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.SingleEntityHandler;
@@ -28,6 +30,10 @@ public class DaoTemplate {
 	public DaoTemplate(String tableName, String primaryKeyField) {
 		this.tableName = tableName;
 		this.primaryKeyField = primaryKeyField;
+	}
+	
+	public DaoTemplate(String tableName, String primaryKeyField, DataSource ds) {
+		this(tableName, primaryKeyField,  DbUtil.newSqlRunner(ds));
 	}
 	
 	public DaoTemplate(String tableName, String primaryKeyField, SqlRunner runner) {
