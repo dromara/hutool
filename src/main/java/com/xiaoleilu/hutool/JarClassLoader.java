@@ -18,7 +18,7 @@ public class JarClassLoader extends URLClassLoader{
 
 	//------------------------------------------------------------------- Constructor start
 	public JarClassLoader() {
-		super(new URL[]{}, ClassUtil.getClassLoader());
+		this(new URL[]{});
 	}
 	
 	public JarClassLoader(URL[] urls) {
@@ -28,7 +28,7 @@ public class JarClassLoader extends URLClassLoader{
 	/**
 	 * 加载Jar到ClassPath
 	 * @param jarFile jar文件或所在目录
-	 * @return 
+	 * @return JarClassLoader
 	 */
 	public static JarClassLoader loadJar(File jarFile){
 		final JarClassLoader loader = new JarClassLoader();
