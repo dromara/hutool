@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.db;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Arrays;
