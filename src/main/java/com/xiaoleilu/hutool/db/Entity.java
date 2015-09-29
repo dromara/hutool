@@ -5,10 +5,13 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.InjectUtil;
 import com.xiaoleilu.hutool.StrUtil;
@@ -46,7 +49,10 @@ public class Entity extends HashMap<String, Object>{
 	}
 	//--------------------------------------------------------------- Static method end
 	
+	/*表名*/
 	private String tableName;
+	/*字段名列表，用于限制加入的字段的值*/
+	private List<String> fieldNames;
 	
 	//--------------------------------------------------------------- Constructor start
 	public Entity() {
@@ -77,6 +83,30 @@ public class Entity extends HashMap<String, Object>{
 		this.tableName = tableName;
 		return this;
 	}
+	
+	/**
+	 * 
+	 * @return 字段列表
+	 */
+	public List<String> getFieldNames() {
+		return fieldNames;
+	}
+	/**
+	 * 设置字段列表
+	 * @param fieldNames 字段列表
+	 */
+	public void setFieldNames(List<String> fieldNames) {
+		this.fieldNames = fieldNames;
+	}
+	
+	/**
+	 * 设置字段列表
+	 * @param fieldNames 字段列表
+	 */
+	public void setFieldNames(String... fieldNames) {
+		this.fieldNames = Arrays.asList(fieldNames);
+	}
+	
 	//--------------------------------------------------------------- Getters and Setters end
 	
 	/**
@@ -183,7 +213,9 @@ public class Entity extends HashMap<String, Object>{
 	 * @return 本身
 	 */
 	public Entity set(String attr, Object value) {
-		super.put(attr, value);
+		if(CollectionUtil.isEmpty(fieldNames) || fieldNames.contains(attr)){
+			super.put(attr, value);
+		}
 		return this;
 	}
 	
