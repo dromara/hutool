@@ -81,7 +81,21 @@ public class DateUtil {
 	public static String today() {
 		return formatDate(new DateTime());
 	}
-
+	
+	/**
+	 * @return 当前月份
+	 */
+	public static int thisMonth() {
+		return month(date());
+	}
+	
+	/**
+	 * @return 今年
+	 */
+	public static int thisYear() {
+		return year(date());
+	}
+	
 	/**
 	 * @return 当前时间
 	 */
@@ -99,16 +113,51 @@ public class DateUtil {
 	}
 
 	/**
+	 * 转换为Calendar对象
+	 * @param date 日期对象
+	 * @return Calendar对象
+	 */
+	public static Calendar toCalendar(Date date){
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal;
+	}
+	
+	/**
+	 * 获得月份
+	 * @param date 日期
+	 * @return 月份
+	 */
+	public static int month(Date date){
+		return toCalendar(date).get(Calendar.MONTH) + 1;
+	}
+	
+	/**
+	 * 获得年
+	 * @param date 日期
+	 * @return 月份
+	 */
+	public static int year(Date date){
+		return toCalendar(date).get(Calendar.YEAR);
+	}
+	
+	/**
+	 * 获得年
+	 * @param date 日期
+	 * @return 月份
+	 */
+	public static int season(Date date){
+		return toCalendar(date).get(Calendar.MONTH) / 3 +1;
+	}
+	
+	/**
 	 * 获得指定日期年份和季节<br>
 	 * 格式：[20131]表示2013年第一季度
 	 * @param date 日期
 	 * @return Season ，类似于 20132
 	 */
 	public static String yearAndSeason(Date date) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-
-		return yearAndSeason(cal);
+		return yearAndSeason(toCalendar(date));
 	}
 
 	/**
