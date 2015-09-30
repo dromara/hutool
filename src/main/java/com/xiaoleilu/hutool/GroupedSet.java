@@ -200,11 +200,6 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 				
 				// 记录分组名
 				if (line.charAt(0) == Setting.GROUP_SURROUND[0] && line.charAt(line.length() - 1) == Setting.GROUP_SURROUND[1]) {
-					//存储无分组值集合
-					if(null == group && null != valueSet) {
-						super.put(StrUtil.EMPTY, valueSet);
-					}
-					
 					//开始新的分组取值，当出现重名分组时候，合并分组值
 					group = line.substring(1, line.length() - 1).trim();
 					valueSet = super.get(group);
@@ -219,6 +214,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 				if(null == valueSet) {
 					//当出现无分组值的时候，会导致valueSet为空，此时group为""
 					valueSet = new LinkedHashSet<String>();
+					super.put(StrUtil.EMPTY, valueSet);
 				}
 				valueSet.add(line);
 			}

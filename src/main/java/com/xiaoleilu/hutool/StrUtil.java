@@ -467,6 +467,42 @@ public class StrUtil {
 		}
 		return sub(string, fromIndex, string.length());
 	}
+	
+	/**
+	 * 给定字符串是否被字符包围
+	 * @param str 字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 是否包围，空串不包围
+	 */
+	public static boolean isSurround(String str, String prefix, String suffix){
+		if(StrUtil.isBlank(str)){
+			return false;
+		}
+		if(str.length() < (prefix.length() + suffix.length())){
+			return false;
+		}
+		
+		return str.startsWith(prefix) && str.endsWith(suffix);
+	}
+	
+	/**
+	 * 给定字符串是否被字符包围
+	 * @param str 字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 是否包围，空串不包围
+	 */
+	public static boolean isSurround(String str, char prefix, char suffix){
+		if(StrUtil.isBlank(str)){
+			return false;
+		}
+		if(str.length() < 2){
+			return false;
+		}
+		
+		return str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix;
+	}
 
 	/**
 	 * 重复某个字符
