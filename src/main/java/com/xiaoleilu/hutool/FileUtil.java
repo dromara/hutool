@@ -590,9 +590,21 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static <T extends Collection<String>> T readLines(String path, String charset, T collection) throws IOException{
+		return readLines(file(path), charset, collection);
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * @param file	文件路径
+	 * @param charset	字符集
+	 * @param collection	集合
+	 * @return	文件中的每行内容的集合
+	 * @throws IOException
+	 */
+	public static <T extends Collection<String>> T readLines(File file, String charset, T collection) throws IOException{
 		BufferedReader reader = null;
 		try {
-			reader = getReader(path, charset);
+			reader = getReader(file, charset);
 			String line;
 			while(true){
 				line = reader.readLine();
@@ -643,6 +655,17 @@ public class FileUtil {
 	 */
 	public static List<String> readLines(String path, String charset) throws IOException {
 		return readLines(path, charset, new ArrayList<String>());
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * @param file	文件
+	 * @param charset	字符集
+	 * @return	文件中的每行内容的集合List
+	 * @throws IOException
+	 */
+	public static List<String> readLines(File file, String charset) throws IOException {
+		return readLines(file, charset, new ArrayList<String>());
 	}
 	
 	/**
@@ -736,13 +759,24 @@ public class FileUtil {
 	
 	/**
 	 * 读取文件内容
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readString(File file, String charset) throws IOException {
+		return new String(readBytes(file), charset);
+	}
+	
+	/**
+	 * 读取文件内容
 	 * @param path 文件路径
 	 * @param charset 字符集
 	 * @return 内容
 	 * @throws IOException
 	 */
 	public static String readString(String path, String charset) throws IOException {
-		return new String(readBytes(file(path)), charset);
+		return readString(file(path), charset);
 	}
 	
 	/**

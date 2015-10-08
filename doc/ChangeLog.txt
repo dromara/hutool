@@ -139,3 +139,4 @@ Entity中toVo区别是否忽略大小写
 2、Entity加入字段限制机制
 3、增加一些日期方法
 4、修复空组GroupedSet的bug
+5、增加FileUtil从文件中读取字符串和行
