@@ -1,12 +1,13 @@
 package com.xiaoleilu.hutool;
 
-import it.sauronsoftware.cron4j.Scheduler;
-
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+
+import it.sauronsoftware.cron4j.Scheduler;
+import it.sauronsoftware.cron4j.Task;
 
 /**
  * 定时任务工具类
@@ -20,14 +21,14 @@ public class CronUtil {
 	public final static String CRONTAB_CONFIG_PATH = "config/cron4j.setting";
 	
 	private final static Scheduler scheduler = new Scheduler();
-	private static Setting crontab;
+	private static Setting crontabSetting;
 	
 	/**
 	 * 自定义定时任务配置文件
 	 * @param cronSetting 定时任务配置文件 
 	 */
 	public static void setCronSetting(Setting cronSetting) {
-		crontab = cronSetting;
+		crontabSetting = cronSetting;
 	}
 	
 	/**
@@ -35,16 +36,27 @@ public class CronUtil {
 	 * @param cronSettingPath 定时任务配置文件路径（相对绝对都可）
 	 */
 	public static void setCronSetting(String cronSettingPath) {
-		crontab = new Setting(cronSettingPath, Setting.DEFAULT_CHARSET, false);
+		crontabSetting = new Setting(cronSettingPath, Setting.DEFAULT_CHARSET, false);
 	}
 	
 	/**
 	 * 加入定时任务
 	 * @param schedulingPattern 定时任务执行时间的crontab表达式
 	 * @param task 任务
+	 * @return 定时任务ID
 	 */
-	public static void schedule(String schedulingPattern, Runnable task) {
-		scheduler.schedule(schedulingPattern, task);
+	public static String schedule(String schedulingPattern, Task task) {
+		return scheduler.schedule(schedulingPattern, task);
+	}
+	
+	/**
+	 * 加入定时任务
+	 * @param schedulingPattern 定时任务执行时间的crontab表达式
+	 * @param task 任务
+	 * @return 定时任务ID
+	 */
+	public static String schedule(String schedulingPattern, Runnable task) {
+		return scheduler.schedule(schedulingPattern, task);
 	}
 	
 	/**
@@ -66,17 +78,46 @@ public class CronUtil {
 	}
 	
 	/**
+	 * 移除任务
+	 * @param schedulerId 任务ID
+	 */
+	public void remove(String schedulerId){
+		scheduler.deschedule(schedulerId);
+	}
+	
+	/**
+	 * @return 获得cron4j的Scheduler对象
+	 */
+	public Scheduler getScheduler(){
+		return scheduler;
+	}
+	
+	/**
 	 * 开始
 	 */
 	synchronized public static void start() {
-		if(null == crontab) {
+		if(null == crontabSetting) {
 			setCronSetting(CRONTAB_CONFIG_PATH);
 		}
 		if(scheduler.isStarted()) {
 			throw new UtilException("Scheduler has been started, please stop it first!");
 		}
 		
-		schedule(crontab);
+		schedule(crontabSetting);
+		scheduler.start();
+	}
+	
+	/**
+	 * 重新启动定时任务<br>
+	 * 重新启动定时任务会清除动态加载的任务
+	 */
+	synchronized public static void restart(){
+		if(null != crontabSetting){
+			crontabSetting.reload();
+		}
+		if(scheduler.isStarted()){
+			scheduler.stop();
+		}
 		scheduler.start();
 	}
 	
