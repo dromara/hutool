@@ -27,6 +27,11 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	private static final long serialVersionUID = -8430706353275835496L;
 	private static Logger log = Log.get();
 	
+	/** 注释符号（当有此符号在行首，表示此行为注释） */
+	private final static String COMMENT_FLAG_PRE = "#";
+	/** 分组行识别的环绕标记 */
+	private final static char[] GROUP_SURROUND = { '[', ']' };
+	
 	/** 本设置对象的字符集 */
 	private Charset charset;
 	/** 设定文件的URL */
@@ -190,16 +195,16 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 				}
 				line = line.trim();
 				// 跳过注释行和空行
-				if (StrUtil.isBlank(line) || line.startsWith(Setting.COMMENT_FLAG_PRE)) {
+				if (StrUtil.isBlank(line) || line.startsWith(COMMENT_FLAG_PRE)) {
 					//空行和注释忽略
 					continue;
-				}else if(line.startsWith(StrUtil.BACKSLASH + Setting.COMMENT_FLAG_PRE)) {
+				}else if(line.startsWith(StrUtil.BACKSLASH + COMMENT_FLAG_PRE)) {
 					//对于值中出现开头为#的字符串，需要转义处理，在此做反转义
 					line = line.substring(1);
 				}
 				
 				// 记录分组名
-				if (line.charAt(0) == Setting.GROUP_SURROUND[0] && line.charAt(line.length() - 1) == Setting.GROUP_SURROUND[1]) {
+				if (line.charAt(0) == GROUP_SURROUND[0] && line.charAt(line.length() - 1) == GROUP_SURROUND[1]) {
 					//开始新的分组取值，当出现重名分组时候，合并分组值
 					group = line.substring(1, line.length() - 1).trim();
 					valueSet = super.get(group);

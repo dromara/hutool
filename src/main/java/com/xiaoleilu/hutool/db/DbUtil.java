@@ -177,6 +177,18 @@ public class DbUtil {
 	}
 	
 	/**
+	 * 创建带有字段限制的Entity对象<br>
+	 * 此方法读取数据库中对应表的字段列表，加入到Entity中，当Entity被设置内容时，会忽略对应表字段外的所有KEY
+	 * @param ds 数据源
+	 * @param tableName 表名
+	 * @return Entity对象
+	 */
+	public static Entity createLimitedEntity(DataSource ds, String tableName){
+		String[] columnNames = getColumnNames(ds, tableName);
+		return Entity.create(tableName).setFieldNames(columnNames);
+	}
+	
+	/**
 	 * 获得表的元信息
 	 * @param ds 数据源
 	 * @param tableName 表名

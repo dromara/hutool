@@ -140,3 +140,8 @@ Entity中toVo区别是否忽略大小写
 3、增加一些日期方法
 4、修复空组GroupedSet的bug
 5、增加FileUtil从文件中读取字符串和行
+
+2.12.2
+1、Setting继承于BasicSetting，并改用HashTable防止并发问题
+2、在Entity中增加clone方法和toString()方法
+3、DbUtil中增加方法，用于将表字段加入到Entity，限制Entity内容范围
