@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.InjectUtil;
 import com.xiaoleilu.hutool.StrUtil;
 
 /**
@@ -131,23 +130,26 @@ public class Entity extends Dict{
 		tableName = StrUtil.lowerFirst(tableName);
 		this.setTableName(tableName);
 		
-		this.putAll(InjectUtil.toMap(vo, false));
-		return this;
+		return (Entity) super.fromVo(vo);
 	}
 	
 	//-------------------------------------------------------------------- 特定类型值
-	/**
-	 * 设置列
-	 * @param attr 属性
-	 * @param value 值
-	 * @return 本身
-	 */
+	@Override
+	public Object put(String key, Object value) {
+		if(CollectionUtil.isEmpty(fieldNames) || fieldNames.contains(key)){
+			super.put(key, value);
+		}
+		return super.put(key, value);
+	}
+	
 	@Override
 	public Entity set(String attr, Object value) {
-		if(CollectionUtil.isEmpty(fieldNames) || fieldNames.contains(attr)){
-			this.put(attr, value);
-		}
-		return this;
+		return (Entity) super.set(attr, value);
+	}
+	
+	@Override
+	public Entity setIgnoreNull(String attr, Object value) {
+		return (Entity) super.setIgnoreNull(attr, value);
 	}
 	//-------------------------------------------------------------------- 特定类型值
 	@Override
