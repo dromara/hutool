@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.db.handler.RsHandler;
  * 
  */
 public class SqlRunner{
-	SqlConnRunner sqlConnRunner;
+	protected SqlConnRunner sqlConnRunner;
 	private DataSource ds;
 	
 	/**
@@ -29,7 +29,7 @@ public class SqlRunner{
 	 * @return SqlRunner
 	 */
 	public static SqlRunner create(DataSource ds) {
-		return new SqlRunner(ds);
+		return ds == null ? null : new SqlRunner(ds);
 	}
 	
 	/**

@@ -33,6 +33,13 @@ public class SimpleDataSource implements DataSource, Cloneable{
 	//-------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
+	 */
+	public SimpleDataSource() {
+		this(null);
+	}
+	
+	/**
+	 * 构造
 	 * @param group 数据库配置文件中的分组
 	 */
 	public SimpleDataSource(String group) {

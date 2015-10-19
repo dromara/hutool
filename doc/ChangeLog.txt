@@ -146,3 +146,6 @@ Entity中toVo区别是否忽略大小写
 2、在Entity中增加clone方法和toString()方法
 3、DbUtil中增加方法，用于将表字段加入到Entity，限制Entity内容范围
 4、增加CronUtil的一些管理方法，暴露Scheduler对象给用户
+
+2.12.3
+1、为DaoTemplate增加一些方法
