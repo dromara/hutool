@@ -177,7 +177,7 @@ public class Conver {
 			return defaultValue;
 		}
 		try {
-			return Integer.parseInt(valueStr);
+			return Integer.parseInt(valueStr.trim());
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -231,7 +231,7 @@ public class Conver {
 			return defaultValue;
 		}
 		try {
-			return Short.parseShort(valueStr);
+			return Short.parseShort(valueStr.trim());
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -281,7 +281,7 @@ public class Conver {
 			return defaultValue;
 		}
 		try {
-			return new BigDecimal(valueStr).longValue();
+			return new BigDecimal(valueStr.trim()).longValue();
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -331,7 +331,7 @@ public class Conver {
 			return defaultValue;
 		}
 		try {
-			return new BigDecimal(valueStr).doubleValue();
+			return new BigDecimal(valueStr.trim()).doubleValue();
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -381,7 +381,7 @@ public class Conver {
 			return defaultValue;
 		}
 		try {
-			return Float.parseFloat(valueStr);
+			return Float.parseFloat(valueStr.trim());
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -431,7 +431,7 @@ public class Conver {
 			return defaultValue;
 		}
 		try {
-			return Boolean.parseBoolean(valueStr);
+			return Boolean.parseBoolean(valueStr.trim());
 		} catch (Exception e) {
 			return defaultValue;
 		}
