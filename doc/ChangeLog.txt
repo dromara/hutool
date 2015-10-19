@@ -148,7 +148,4 @@ Entity中toVo区别是否忽略大小写
 4、增加CronUtil的一些管理方法，暴露Scheduler对象给用户
 5、丰富DaoTemplate方法
 6、Conver.toXXX转换为数字的方法加入trim
-
-2.12.3
-1、为DaoTemplate增加一些方法
-2\
+7、增加EntitySetHandler，用于返回唯一性的结果集

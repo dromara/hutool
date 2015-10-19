@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.db.handler;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import com.xiaoleilu.hutool.db.Entity;
 
@@ -30,6 +31,7 @@ public class HandleHelper {
 		return row;
 	}
 	
+	
 	/**
 	 * 处理单条数据
 	 * @param rs 数据集
@@ -39,12 +41,25 @@ public class HandleHelper {
 	public static Entity handleRow(ResultSet rs) throws SQLException {
 		final ResultSetMetaData meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
-		final Entity row = Entity.create(meta.getTableName(1));
-		String columnLabel;
-		for (int i = 1; i <= columnCount; i++) {
-			columnLabel = meta.getColumnLabel(i);
-			row.put(columnLabel, rs.getObject(columnLabel));
+		return handleRow(columnCount, meta, rs);
+	}
+	
+	/**
+	 * 处理多条数据
+	 * @param <T>
+	 * @param rs 数据集
+	 * @param collection 数据集
+	 * @return Entity列表
+	 * @throws SQLException
+	 */
+	public static <T extends Collection<Entity>> T handleRs(ResultSet rs, T collection) throws SQLException {
+		final ResultSetMetaData  meta = rs.getMetaData();
+		final int columnCount = meta.getColumnCount();
+		
+		while(rs.next()) {
+			collection.add(HandleHelper.handleRow(columnCount, meta, rs));
 		}
-		return row;
+		
+		return collection;
 	}
 }

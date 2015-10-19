@@ -2,8 +2,7 @@ package com.xiaoleilu.hutool.db.handler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 import com.xiaoleilu.hutool.db.Entity;
 
@@ -12,18 +11,18 @@ import com.xiaoleilu.hutool.db.Entity;
  * @author loolly
  *
  */
-public class EntityListHandler implements RsHandler<List<Entity>>{
+public class EntitySetHandler implements RsHandler<LinkedHashSet<Entity>>{
 	
 	/**
 	 * 创建一个 EntityHandler对象
 	 * @return EntityHandler对象
 	 */
-	public static EntityListHandler create() {
-		return new EntityListHandler();
+	public static EntitySetHandler create() {
+		return new EntitySetHandler();
 	}
 
 	@Override
-	public List<Entity> handle(ResultSet rs) throws SQLException {
-		return HandleHelper.handleRs(rs, new ArrayList<Entity>());
+	public LinkedHashSet<Entity> handle(ResultSet rs) throws SQLException {
+		return HandleHelper.handleRs(rs, new LinkedHashSet<Entity>());
 	}
 }
