@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.db.handler.RsHandler;
  * 
  */
 public class SqlRunner{
-	protected SqlConnRunner sqlConnRunner;
+	protected SqlConnRunner runner;
 	private DataSource ds;
 	
 	/**
@@ -67,7 +67,7 @@ public class SqlRunner{
 	 * @param dialect 方言
 	 */
 	public SqlRunner(DataSource ds, Dialect dialect) {
-		sqlConnRunner = new SqlConnRunner(dialect);
+		runner = new SqlConnRunner(dialect);
 		this.ds = ds;
 	}
 	
@@ -77,7 +77,7 @@ public class SqlRunner{
 	 * @param driverClassName 数据库连接驱动类名，用于识别方言
 	 */
 	public SqlRunner(DataSource ds, String driverClassName) {
-		sqlConnRunner = new SqlConnRunner(driverClassName);
+		runner = new SqlConnRunner(driverClassName);
 		this.ds = ds;
 	}
 	//------------------------------------------------------- Constructor end
@@ -176,7 +176,25 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.insert(conn, record);
+			return runner.insert(conn, record);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
+	 * 批量插入数据
+	 * @param records 记录列表
+	 * @return 插入行数
+	 * @throws SQLException
+	 */
+	public int[] insert(Collection<Entity> records) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return runner.insert(conn, records);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -194,7 +212,7 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.insertForGeneratedKeys(conn, record);
+			return runner.insertForGeneratedKeys(conn, record);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -212,7 +230,7 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.insertForGeneratedKey(conn, record);
+			return runner.insertForGeneratedKey(conn, record);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -230,7 +248,7 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.del(conn, where);
+			return runner.del(conn, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -248,7 +266,7 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.update(conn, record, where);
+			return runner.update(conn, record, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -269,7 +287,7 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.find(conn, fields, where, rsh);
+			return runner.find(conn, fields, where, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -304,7 +322,7 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.page(conn, fields, where, page, numPerPage, rsh);
+			return runner.page(conn, fields, where, page, numPerPage, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -322,7 +340,7 @@ public class SqlRunner{
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return sqlConnRunner.count(conn, where);
+			return runner.count(conn, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -330,6 +348,15 @@ public class SqlRunner{
 		}
 	}
 	//---------------------------------------------------------------------------- CRUD end
+	
+	//---------------------------------------------------------------------------- Getters and Setters end
+	public SqlConnRunner getRunner() {
+		return runner;
+	}
+	public void setRunner(SqlConnRunner runner) {
+		this.runner = runner;
+	}
+	//---------------------------------------------------------------------------- Getters and Setters end
 	
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method start

@@ -295,6 +295,16 @@ public class Session implements Closeable{
 	}
 	
 	/**
+	 * 批量插入数据
+	 * @param records 记录列表
+	 * @return 插入行数
+	 * @throws SQLException
+	 */
+	public int[] insert(Collection<Entity> records) throws SQLException {
+		return runner.insert(conn, records);
+	}
+	
+	/**
 	 * 插入数据
 	 * @param record 记录
 	 * @return 主键列表

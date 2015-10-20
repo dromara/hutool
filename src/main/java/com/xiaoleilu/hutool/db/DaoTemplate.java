@@ -27,19 +27,40 @@ public class DaoTemplate {
 	protected String primaryKeyField = "id";
 	
 	//--------------------------------------------------------------- Constructor start
+	/**
+	 * 构造，此构造需要自定义SqlRunner，主键默认为id
+	 * @param tableName 数据库表名
+	 */
 	public DaoTemplate(String tableName) {
 		this.tableName = tableName;
 	}
 	
+	/**
+	 * 构造，此构造需要自定义SqlRunner
+	 * @param tableName 数据库表名
+	 * @param primaryKeyField 主键字段名
+	 */
 	public DaoTemplate(String tableName, String primaryKeyField) {
 		this.tableName = tableName;
 		this.primaryKeyField = primaryKeyField;
 	}
 	
+	/**
+	 * 构造
+	 * @param tableName 表名
+	 * @param primaryKeyField 主键字段名
+	 * @param ds 数据源
+	 */
 	public DaoTemplate(String tableName, String primaryKeyField, DataSource ds) {
 		this(tableName, primaryKeyField, DbUtil.newSqlRunner(ds));
 	}
 	
+	/**
+	 * 构造
+	 * @param tableName 表名
+	 * @param primaryKeyField 主键字段名
+	 * @param runner SqlRunner对象
+	 */
 	public DaoTemplate(String tableName, String primaryKeyField, SqlRunner runner) {
 		this.tableName = tableName;
 		this.primaryKeyField = primaryKeyField;

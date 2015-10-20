@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
@@ -57,6 +58,35 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForInsert(conn, record);
 			return ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 批量插入数据<br>
+	 * 此方法不会关闭Connection
+	 * @param conn 数据库连接
+	 * @param records 记录列表
+	 * @return 插入行数
+	 * @throws SQLException
+	 */
+	public int[] insert(Connection conn, Collection<Entity> records) throws SQLException {
+		if(CollectionUtil.isEmpty(records)){
+			return new int[]{0};
+		}
+		Entity template = records.iterator().next();
+		PreparedStatement ps = null;
+		try {
+			ps = dialect.psForInsert(conn, template);
+			ps.clearBatch();
+			for (Entity entity : records) {
+				DbUtil.fillParams(ps, entity.values().toArray(new Object[entity.size()]));
+				ps.addBatch();
+			}
+			return ps.executeBatch();
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -234,6 +264,22 @@ public class SqlConnRunner{
 	}
 	
 	//---------------------------------------------------------------------------- CRUD end
+	
+	//---------------------------------------------------------------------------- Getters and Setters end
+	/**
+	 * @return SQL方言
+	 */
+	public Dialect getDialect() {
+		return dialect;
+	}
+	/**
+	 * 设置SQL方言
+	 * @param dialect 方言
+	 */
+	public void setDialect(Dialect dialect) {
+		this.dialect = dialect;
+	}
+	//---------------------------------------------------------------------------- Getters and Setters end
 	
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method start
