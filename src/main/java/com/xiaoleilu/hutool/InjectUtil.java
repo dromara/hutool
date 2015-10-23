@@ -131,9 +131,10 @@ public class InjectUtil {
 		final Method[] methods = model.getClass().getMethods();
 		for (Method method : methods) {
 			final String methodName = method.getName();
-			if (false == methodName.startsWith("get")) {
+			if (false == methodName.startsWith("get") || "getClass".equals(methodName)) {
 				continue;
 			}
+			
 			final String fieldName = StrUtil.getGeneralField(methodName);
 			
 			Object value = null;
@@ -143,7 +144,8 @@ public class InjectUtil {
 				throw new UtilException(StrUtil.format("Inject map [{}] error!", fieldName), e);
 			}
 			if(value != null) {
-				if(value instanceof String || value.getClass().isPrimitive() || false == isOnlyBasicType) {
+				Class<?> valuePprimitive = ClassUtil.castToPrimitive(value.getClass());
+				if(value instanceof String || valuePprimitive.isPrimitive() || false == isOnlyBasicType) {
 					//字段有效的三个条件：1、String 2、基本类型 3、或者允许非基本类型
 					map.put(fieldName, value);
 				}

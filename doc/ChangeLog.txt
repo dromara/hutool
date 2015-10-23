@@ -149,3 +149,6 @@ Entity中toVo区别是否忽略大小写
 5、丰富DaoTemplate方法
 6、Conver.toXXX转换为数字的方法加入trim
 7、增加EntitySetHandler，用于返回唯一性的结果集
+
+2.12.3
+1、修复InjectUtil中toMap方法返回getClass的问题
