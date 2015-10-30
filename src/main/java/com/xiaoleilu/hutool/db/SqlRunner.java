@@ -308,6 +308,24 @@ public class SqlRunner{
 	}
 	
 	/**
+	 * 结果的条目数
+	 * @param where 查询条件
+	 * @return 复合条件的结果数
+	 * @throws SQLException
+	 */
+	public int count(Entity where) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+			return runner.count(conn, where);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(conn);
+		}
+	}
+	
+	/**
 	 * 分页查询<br/>
 	 * 
 	 * @param fields 返回的字段列表，null则返回所有字段
@@ -331,22 +349,27 @@ public class SqlRunner{
 	}
 	
 	/**
-	 * 结果的条目数
-	 * @param where 查询条件
-	 * @return 复合条件的结果数
+	 * 分页查询<br/>
+	 * 
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @return 结果对象
 	 * @throws SQLException
 	 */
-	public int count(Entity where) throws SQLException {
+	public PageResult<Entity> page(Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
-			return runner.count(conn, where);
+			return runner.page(conn, fields, where, page, numPerPage);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			DbUtil.close(conn);
 		}
 	}
+	
 	//---------------------------------------------------------------------------- CRUD end
 	
 	//---------------------------------------------------------------------------- Getters and Setters end

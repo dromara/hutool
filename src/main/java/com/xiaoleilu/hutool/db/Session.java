@@ -358,6 +358,16 @@ public class Session implements Closeable{
 	}
 	
 	/**
+	 * 结果的条目数
+	 * @param where 查询条件
+	 * @return 复合条件的结果数
+	 * @throws SQLException
+	 */
+	public int count(Entity where) throws SQLException {
+		return runner.count(conn, where);
+	}
+	
+	/**
 	 * 分页查询<br/>
 	 * 
 	 * @param fields 返回的字段列表，null则返回所有字段
@@ -373,13 +383,17 @@ public class Session implements Closeable{
 	}
 	
 	/**
-	 * 结果的条目数
-	 * @param where 查询条件
-	 * @return 复合条件的结果数
+	 * 分页查询<br/>
+	 * 
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @return 结果对象
 	 * @throws SQLException
 	 */
-	public int count(Entity where) throws SQLException {
-		return runner.count(conn, where);
+	public PageResult<Entity> page(Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
+		return runner.page(conn, fields, where, page, numPerPage);
 	}
 	//---------------------------------------------------------------------------- CRUD end
 	

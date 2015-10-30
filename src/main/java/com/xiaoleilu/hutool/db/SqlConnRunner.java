@@ -12,6 +12,7 @@ import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
+import com.xiaoleilu.hutool.db.handler.PageResultHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 
 /**
@@ -216,6 +217,27 @@ public class SqlConnRunner{
 	}
 	
 	/**
+	 * 结果的条目数
+	 * @param conn 数据库连接对象
+	 * @param where 查询条件
+	 * @return 复合条件的结果数
+	 * @throws SQLException
+	 */
+	public int count(Connection conn, Entity where) throws SQLException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = dialect.psForCount(conn, where);
+			rs = ps.executeQuery();
+			return new NumberHandler().handle(rs).intValue();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(rs, ps);
+		}
+	}
+	
+	/**
 	 * 分页查询<br>
 	 * 此方法不会关闭Connection
 	 * 
@@ -243,24 +265,21 @@ public class SqlConnRunner{
 	}
 	
 	/**
-	 * 结果的条目数
+	 * 分页查询<br>
+	 * 此方法不会关闭Connection
+	 * 
 	 * @param conn 数据库连接对象
-	 * @param where 查询条件
-	 * @return 复合条件的结果数
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @return 结果对象
 	 * @throws SQLException
 	 */
-	public int count(Connection conn, Entity where) throws SQLException {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			ps = dialect.psForCount(conn, where);
-			rs = ps.executeQuery();
-			return new NumberHandler().handle(rs).intValue();
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(rs, ps);
-		}
+	public PageResult<Entity> page(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
+		final int count = count(conn, where);
+		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<Entity>(page, numPerPage, count));
+		return this.page(conn, fields, where, page, numPerPage, pageResultHandler);
 	}
 	
 	//---------------------------------------------------------------------------- CRUD end
