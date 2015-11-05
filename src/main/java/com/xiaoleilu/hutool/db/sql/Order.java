@@ -26,7 +26,6 @@ public class Order {
 	/**
 	 * 构造
 	 * @param orderFields 排序字段
-	 * @param direction 排序方式
 	 */
 	public Order(Collection<String> orderFields) {
 		this.orderFields = orderFields;
@@ -35,7 +34,6 @@ public class Order {
 	/**
 	 * 构造
 	 * @param orderField 排序字段
-	 * @param direction 排序方式
 	 */
 	public Order(String orderField) {
 		if(null == this.orderFields){
