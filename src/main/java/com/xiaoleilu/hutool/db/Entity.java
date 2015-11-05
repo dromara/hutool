@@ -21,7 +21,6 @@ public class Entity extends Dict{
 	//--------------------------------------------------------------- Static method start
 	/**
 	 * 创建Entity
-	 * @param tableName 表名
 	 * @return Entity
 	 */
 	public static Entity create() {

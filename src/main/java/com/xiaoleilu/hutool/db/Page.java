@@ -35,8 +35,7 @@ public class Page {
 
 	/**
 	 * 设置页码
-	 * 
-	 * @param page 页码
+	 * @param pageNumber 页码
 	 */
 	public void setPageNumber(int pageNumber) {
 		this.pageNumber = pageNumber;
@@ -96,8 +95,6 @@ public class Page {
 	 * 页码：2，每页10 -> [10, 20]<br>
 	 * 。。。<br>
 	 * 
-	 * @param pageNo 页码（从1计数）
-	 * @param countPerPage 每页条目数
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */
 	public int[] getStartEnd() {

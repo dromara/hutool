@@ -327,8 +327,7 @@ public class SqlBuilder {
 	
 	/**
 	 * 排序
-	 * @param direction 排序方式（升序还是降序）
-	 * @param fields 按照哪个字段排序
+	 * @param order 排序对象
 	 * @return 自己
 	 */
 	public SqlBuilder orderBy(Order order){
