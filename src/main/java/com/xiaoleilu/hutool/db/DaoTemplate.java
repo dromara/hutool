@@ -165,7 +165,18 @@ public class DaoTemplate {
 	
 	//------------------------------------------------------------- Update start
 	/**
-	 * 更新职位信息
+	 * 按照条件更新
+	 * @param record 更新的内容
+	 * @param where 条件
+	 * @return 更新条目数
+	 * @throws SQLException
+	 */
+	public int update(Entity record, Entity where) throws SQLException{
+		return runner.update(record, where);
+	}
+	
+	/**
+	 * 更新
 	 * 
 	 * @param entity 实体对象，必须包含主键
 	 * @return 更新行数
