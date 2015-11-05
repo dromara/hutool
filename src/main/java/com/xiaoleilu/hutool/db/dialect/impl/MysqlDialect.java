@@ -5,14 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.PageUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
-import com.xiaoleilu.hutool.db.SqlBuilder;
-import com.xiaoleilu.hutool.db.SqlBuilder.LogicalOperator;
-import com.xiaoleilu.hutool.db.SqlBuilder.Order;
+import com.xiaoleilu.hutool.db.Page;
+import com.xiaoleilu.hutool.db.Wrapper;
+import com.xiaoleilu.hutool.db.sql.Order;
+import com.xiaoleilu.hutool.db.sql.SqlBuilder;
+import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 
 /**
@@ -21,14 +21,13 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
  *
  */
 public class MysqlDialect extends AnsiSqlDialect{
+	
+	public MysqlDialect() {
+		wrapper = new Wrapper('`');
+	}
 
 	@Override
-	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
-		return psForPage(conn, fields, where, page, numPerPage, null, null);
-	}
-	
-	@Override
-	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, Collection<String> orderFields, Order order) throws SQLException {
+	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, Page page) throws SQLException {
 		//验证
 		if(where == null || StrUtil.isBlank(where.getTableName())) {
 			throw new DbRuntimeException("Table name is null !");
@@ -39,12 +38,12 @@ public class MysqlDialect extends AnsiSqlDialect{
 				.from(where.getTableName())
 				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 		
-		if(null != order && CollectionUtil.isNotEmpty(orderFields)) {
-			find.orderBy(order, orderFields.toArray(new String[orderFields.size()]));
+		final Order order = page.getOrder();
+		if(null != order){
+			find.orderBy(order);
 		}
 		
-		int[] startEnd = PageUtil.transToStartEnd(page, numPerPage);
-		find.append(" LIMIT ").append(startEnd[0]).append(", ").append(numPerPage);
+		find.append(" LIMIT ").append(page.getStartPosition()).append(", ").append(page.getNumPerPage());
 		
 		final PreparedStatement ps = conn.prepareStatement(find.build());
 		DbUtil.fillParams(ps, find.getParamValueArray());

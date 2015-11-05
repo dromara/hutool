@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-import com.xiaoleilu.hutool.Conver;
-import com.xiaoleilu.hutool.InjectUtil;
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**

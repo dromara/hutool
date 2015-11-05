@@ -15,29 +15,60 @@ import com.xiaoleilu.hutool.StrUtil;
  */
 public class Wrapper {
 	
-	/** 包装的引号（单引号还是反引号） */
-	private Character wrapQuote;
+	/** 前置包装符号 */
+	private Character preWrapQuote;
+	/** 后置包装符号 */
+	private Character sufWrapQuote;
 	
 	public Wrapper() {
 	}
 	
+	/**
+	 * 构造
+	 * @param wrapQuote 单包装字符
+	 */
 	public Wrapper(Character wrapQuote) {
-		this.wrapQuote = wrapQuote;
+		this.preWrapQuote = wrapQuote;
+		this.sufWrapQuote = wrapQuote;
+	}
+	
+	/**
+	 * 包装符号
+	 * @param preWrapQuote 前置包装符号
+	 * @param sufWrapQuote 后置包装符号
+	 */
+	public Wrapper(Character preWrapQuote, Character sufWrapQuote) {
+		this.preWrapQuote = preWrapQuote;
+		this.sufWrapQuote = sufWrapQuote;
 	}
 	
 	//--------------------------------------------------------------- Getters and Setters start
 	/**
-	 * @return 包装的引号（单引号还是反引号）
+	 * @return 前置包装符号
 	 */
-	public char getWrapQuote() {
-		return wrapQuote;
+	public char getPreWrapQuote() {
+		return preWrapQuote;
 	}
 	/**
-	 * 设置包装的引号（单引号还是反引号）
-	 * @param wrapQuote 包装的引号（单引号还是反引号）
+	 * 设置前置包装的符号
+	 * @param preWrapQuote 前置包装符号
 	 */
-	public void setWrapQuote(Character wrapQuote) {
-		this.wrapQuote = wrapQuote;
+	public void setPreWrapQuote(Character preWrapQuote) {
+		this.preWrapQuote = preWrapQuote;
+	}
+	
+	/**
+	 * @return 后置包装符号
+	 */
+	public char getSufWrapQuote() {
+		return sufWrapQuote;
+	}
+	/**
+	 * 设置后置包装的符号
+	 * @param sufWrapQuote 后置包装符号
+	 */
+	public void setSufWrapQuote(Character sufWrapQuote) {
+		this.sufWrapQuote = sufWrapQuote;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
 
@@ -48,12 +79,12 @@ public class Wrapper {
 	 * @return 包装后的字段名
 	 */
 	public String wrap(String field){
-		if(wrapQuote == null || StrUtil.isBlank(field)) {
+		if(preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
 			return field;
 		}
 		
 		//如果已经包含包装的引号，返回原字符
-		if(field.contains(String.valueOf(wrapQuote))) {
+		if(StrUtil.isSurround(field, preWrapQuote, sufWrapQuote)){
 			return field;
 		}
 		
@@ -62,7 +93,7 @@ public class Wrapper {
 			return field;
 		}
 		
-		return StrUtil.format("{}{}{}", wrapQuote, field, wrapQuote);
+		return StrUtil.format("{}{}{}", preWrapQuote, field, sufWrapQuote);
 	}
 	
 	/**
