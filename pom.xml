@@ -80,14 +80,14 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
-			<version>1.0.15</version>
+			<version>1.0.16</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- MongoDB Java客户端 -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>3.0.3</version>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- 定时任务包，类似crontab -->

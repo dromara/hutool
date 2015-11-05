@@ -23,6 +23,15 @@ public class Entity extends Dict{
 	 * @param tableName 表名
 	 * @return Entity
 	 */
+	public static Entity create() {
+		return new Entity();
+	}
+	
+	/**
+	 * 创建Entity
+	 * @param tableName 表名
+	 * @return Entity
+	 */
 	public static Entity create(String tableName) {
 		return new Entity(tableName);
 	}
