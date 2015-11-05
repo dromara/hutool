@@ -25,7 +25,6 @@ public class Dict extends HashMap<String, Object>{
 	//--------------------------------------------------------------- Static method start
 	/**
 	 * 创建Dict
-	 * @param tableName 表名
 	 * @return Dict
 	 */
 	public static Dict create() {

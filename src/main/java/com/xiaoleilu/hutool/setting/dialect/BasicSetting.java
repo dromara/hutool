@@ -439,7 +439,7 @@ public class BasicSetting extends AbsSetting{
 	 * 组合Key和Group，组合后为group.key
 	 * @param key
 	 * @param group
-	 * @return
+	 * @return 组合后的KEY
 	 */
 	private static  String keyWithGroup(String key, String group){
 		String keyWithGroup = key;
