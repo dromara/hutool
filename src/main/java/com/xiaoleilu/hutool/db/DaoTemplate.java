@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.db;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -76,10 +77,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public int add(Entity entity) throws SQLException {
-		if(StrUtil.isBlank(entity.getTableName())){
-			entity.setTableName(tableName);
-		}
-		return runner.insert(entity);
+		return runner.insert(fixEntity(entity));
 	}
 	
 	/**
@@ -89,10 +87,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public List<Object> addForGeneratedKeys(Entity entity) throws SQLException {
-		if(StrUtil.isBlank(entity.getTableName())){
-			entity.setTableName(tableName);
-		}
-		return runner.insertForGeneratedKeys(entity);
+		return runner.insertForGeneratedKeys(fixEntity(entity));
 	}
 	
 	/**
@@ -102,10 +97,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public Long addForGeneratedKey(Entity entity) throws SQLException {
-		if(StrUtil.isBlank(entity.getTableName())){
-			entity.setTableName(tableName);
-		}
-		return runner.insertForGeneratedKey(entity);
+		return runner.insertForGeneratedKey(fixEntity(entity));
 	}
 	//------------------------------------------------------------- Add end
 	
@@ -122,7 +114,6 @@ public class DaoTemplate {
 		if (pk == null) {
 			return 0;
 		}
-
 		return this.del(Entity.create(tableName).set(primaryKeyField, pk));
 	}
 	
@@ -155,11 +146,7 @@ public class DaoTemplate {
 		if (CollectionUtil.isEmpty(where)) {
 			return 0;
 		}
-		if(StrUtil.isBlank(where.getTableName())){
-			where.setTableName(tableName);
-		}
-
-		return runner.del(where);
+		return runner.del(fixEntity(where));
 	}
 	//------------------------------------------------------------- Delete end
 	
@@ -172,25 +159,30 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public int update(Entity record, Entity where) throws SQLException{
-		return runner.update(record, where);
+		if (CollectionUtil.isEmpty(record)) {
+			return 0;
+		}
+		return runner.update(fixEntity(record), where);
 	}
 	
 	/**
 	 * 更新
-	 * 
 	 * @param entity 实体对象，必须包含主键
 	 * @return 更新行数
 	 * @throws SQLException
 	 */
 	public int update(Entity entity) throws SQLException {
-		entity.setTableName(tableName);
+		if (CollectionUtil.isEmpty(entity)) {
+			return 0;
+		}
+		entity = fixEntity(entity);
 		Object pk = entity.get(primaryKeyField);
 		if (null == pk) {
 			throw new SQLException(StrUtil.format("Please determine `{}` for update", primaryKeyField));
 		}
 
-		Entity where = Entity.create(tableName).set(primaryKeyField, pk);
-		Entity record = (Entity) entity.clone();
+		final Entity where = Entity.create(tableName).set(primaryKeyField, pk);
+		final Entity record = (Entity) entity.clone();
 		record.remove(primaryKeyField);
 
 		return runner.update(record, where);
@@ -203,12 +195,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public int addOrUpdate(Entity entity) throws SQLException {
-		if(entity.get(primaryKeyField) == null) {
-			entity.set(primaryKeyField, add(entity));
-			return 1;
-		}else {
-			 return update(entity);
-		}
+		return null == entity.get(primaryKeyField) ? add(entity) : update(entity);
 	}
 	//------------------------------------------------------------- Update end
 	
@@ -247,14 +234,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public Entity get(Entity where) throws SQLException {
-		if(null == where){
-			where = Entity.create(tableName);
-		}
-		
-		if(StrUtil.isBlank(where.getTableName())){
-			where.setTableName(tableName);
-		}
-		return runner.find(null, where, new EntityHandler());
+		return runner.find(null, fixEntity(where), new EntityHandler());
 	}
 	//------------------------------------------------------------- Get end
 	
@@ -289,7 +269,30 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public List<Entity> find(Entity where) throws SQLException {
-		return runner.find(null, where, new EntityListHandler());
+		return runner.find(null, fixEntity(where), new EntityListHandler());
+	}
+	
+	/**
+	 * 分页
+	 * @param where 条件
+	 * @param page 分页对象
+	 * @param selectFields 查询的字段列表
+	 * @return 分页结果集
+	 * @throws SQLException
+	 */
+	public PageResult<Entity> page(Entity where, Page page, String... selectFields) throws SQLException{
+		return runner.page(Arrays.asList(selectFields), fixEntity(where), page);
+	}
+	
+	/**
+	 * 分页
+	 * @param where 条件
+	 * @param page 分页对象
+	 * @return
+	 * @throws SQLException
+	 */
+	public PageResult<Entity> page(Entity where, Page page) throws SQLException{
+		return runner.page(fixEntity(where), page);
 	}
 	
 	/**
@@ -299,7 +302,7 @@ public class DaoTemplate {
 	 * @throws SQLException
 	 */
 	public int count(Entity where) throws SQLException{
-		return runner.count(where);
+		return runner.count(fixEntity(where));
 	}
 	
 	/**
@@ -312,4 +315,18 @@ public class DaoTemplate {
 		return this.count(where) > 0;
 	}
 	//------------------------------------------------------------- Find end
+	
+	/**
+	 * 修正Entity对象，避免null和填充表名
+	 * @param entity 实体类
+	 * @return 修正后的实体类
+	 */
+	private Entity fixEntity(Entity entity){
+		if(null == entity){
+			entity = Entity.create(tableName);
+		}else if(StrUtil.isBlank(entity.getTableName())){
+			entity.setTableName(tableName);
+		}
+		return entity;
+	}
 }

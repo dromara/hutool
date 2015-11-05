@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool.db.sql;
 
 import com.xiaoleilu.hutool.StrUtil;
 

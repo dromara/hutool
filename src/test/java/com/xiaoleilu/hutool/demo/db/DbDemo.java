@@ -13,11 +13,11 @@ import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Session;
-import com.xiaoleilu.hutool.db.SqlExecutor;
 import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.ds.DruidDS;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
+import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 
 /**
  * DB使用样例

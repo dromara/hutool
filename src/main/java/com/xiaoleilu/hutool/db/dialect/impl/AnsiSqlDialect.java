@@ -12,10 +12,10 @@ import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
-import com.xiaoleilu.hutool.db.Wrapper;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
+import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 

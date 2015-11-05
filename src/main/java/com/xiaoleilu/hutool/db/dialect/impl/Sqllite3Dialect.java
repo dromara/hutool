@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.db.dialect.impl;
 
-import com.xiaoleilu.hutool.db.Wrapper;
+import com.xiaoleilu.hutool.db.sql.Wrapper;
 
 /**
  * SqlLite3方言

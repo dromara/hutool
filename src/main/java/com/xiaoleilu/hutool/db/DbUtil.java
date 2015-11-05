@@ -25,6 +25,7 @@ import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
+import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 

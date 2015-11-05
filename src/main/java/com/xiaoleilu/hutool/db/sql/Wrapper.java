@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool.db.sql;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.db.Entity;
 
 /**
  * 包装器<br>

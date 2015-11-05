@@ -3,6 +3,11 @@ package com.xiaoleilu.hutool.db;
 import com.xiaoleilu.hutool.PageUtil;
 import com.xiaoleilu.hutool.db.sql.Order;
 
+/**
+ * 分页对象
+ * @author Looly
+ *
+ */
 public class Page {
 
 	/** 页码 */
@@ -20,8 +25,20 @@ public class Page {
 	 * @param numPerPage 每页结果数
 	 */
 	public Page(int pageNumber, int numPerPage) {
-		this.pageNumber = pageNumber;
-		this.numPerPage = numPerPage;
+		this.pageNumber = pageNumber < 0 ? 0 : pageNumber;
+		this.numPerPage = numPerPage <= 0 ? PageResult.DEFAULT_NUMBER_PER_PAGE : numPerPage;
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param pageNumber 页码
+	 * @param numPerPage 每页结果数
+	 * @param order 排序对象
+	 */
+	public Page(int pageNumber, int numPerPage, Order order) {
+		this(pageNumber, numPerPage);
+		this.order = order;
 	}
 	// ---------------------------------------------------------- Constructor start
 
@@ -38,7 +55,7 @@ public class Page {
 	 * @param pageNumber 页码
 	 */
 	public void setPageNumber(int pageNumber) {
-		this.pageNumber = pageNumber;
+		this.pageNumber = pageNumber < 0 ? 0 : pageNumber;
 	}
 
 	/**
@@ -54,7 +71,7 @@ public class Page {
 	 * @param numPerPage 每页结果数
 	 */
 	public void setNumPerPage(int numPerPage) {
-		this.numPerPage = numPerPage;
+		this.numPerPage = numPerPage <= 0 ? PageResult.DEFAULT_NUMBER_PER_PAGE : numPerPage;
 	}
 
 	/**

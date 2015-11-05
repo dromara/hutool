@@ -15,6 +15,7 @@ import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
+import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 
 /**
@@ -387,6 +388,20 @@ public class Session implements Closeable{
 	 * 
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
+	 * @param page 分页对象
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public <T> T page(Collection<String> fields, Entity where, Page page, RsHandler<T> rsh) throws SQLException {
+		return runner.page(conn, fields, where, page, rsh);
+	}
+	
+	/**
+	 * 分页查询<br/>
+	 * 
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
 	 * @param page 页码
 	 * @param numPerPage 每页条目数
 	 * @return 结果对象
@@ -394,6 +409,31 @@ public class Session implements Closeable{
 	 */
 	public PageResult<Entity> page(Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
 		return runner.page(conn, fields, where, page, numPerPage);
+	}
+	
+	/**
+	 * 分页查询<br/>
+	 * 
+	 * @param fields 返回的字段列表，null则返回所有字段
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public PageResult<Entity> page(Collection<String> fields, Entity where, Page page) throws SQLException {
+		return runner.page(conn, fields, where, page);
+	}
+	
+	/**
+	 * 分页查询<br/>
+	 * 
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public PageResult<Entity> page(Entity where, Page page) throws SQLException {
+		return runner.page(conn, where, page);
 	}
 	//---------------------------------------------------------------------------- CRUD end
 	

@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool.db.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 
 /**

@@ -3,10 +3,10 @@ package com.xiaoleilu.hutool.demo.db;
 import org.slf4j.Logger;
 
 import com.xiaoleilu.hutool.Log;
-import com.xiaoleilu.hutool.db.Condition;
 import com.xiaoleilu.hutool.db.Entity;
-import com.xiaoleilu.hutool.db.Wrapper;
+import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
+import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Join;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
