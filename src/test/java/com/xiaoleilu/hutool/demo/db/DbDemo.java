@@ -6,18 +6,21 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.Page;
+import com.xiaoleilu.hutool.db.PageResult;
 import com.xiaoleilu.hutool.db.Session;
 import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.ds.DruidDS;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
+import com.xiaoleilu.hutool.db.sql.Order;
+import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
+import com.xiaoleilu.hutool.log.LogWrapper;
 
 /**
  * DB使用样例
@@ -26,7 +29,7 @@ import com.xiaoleilu.hutool.db.sql.SqlExecutor;
  * 
  */
 public class DbDemo {
-	private final static Logger log = Log.get();
+	private final static LogWrapper log = Log.get();
 
 	private static String TABLE_NAME = "test_table";
 
@@ -124,15 +127,19 @@ public class DbDemo {
 			List<Entity> entityList = runner.find(null, where, new EntityListHandler());
 			log.info("{}", entityList);
 
-			// 分页，注意，ANSI SQL中不支持分页！
+			// 分页
 			List<Entity> pagedEntityList = runner.page(null, where, 0, 20, new EntityListHandler());
 			log.info("{}", pagedEntityList);
+			
+			//分页，提供了Page对象满足更多的排序条件要求
+			PageResult<Entity> pageResult = runner.page(where, new Page(0, 20, new Order(Direction.DESC, "字段名")));
+			log.info("{}", pageResult);
 
 			// 满足条件的结果数，生成SQL为 SELECT count(1) FROM `table_name` WHERE WHERE `条件1` = ?
 			int count = runner.count(where);
 			log.info("count: {}", count);
 		} catch (SQLException e) {
-			Log.error(log, e, "SQL error!");
+			log.error(e, "SQL error!");
 		} finally {
 		}
 	}
@@ -158,7 +165,7 @@ public class DbDemo {
 			List<Entity> entityList = session.find(null, where, new EntityListHandler());
 			log.info("{}", entityList);
 
-			// 分页，注意，ANSI SQL中不支持分页！
+			// 分页
 			List<Entity> pagedEntityList = session.page(null, where, 0, 20, new EntityListHandler());
 			log.info("{}", pagedEntityList);
 
