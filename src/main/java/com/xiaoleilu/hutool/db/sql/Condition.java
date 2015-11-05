@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.db.sql;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.xiaoleilu.hutool.StrUtil;
 
 /**
@@ -8,6 +11,10 @@ import com.xiaoleilu.hutool.StrUtil;
  *
  */
 public class Condition implements Cloneable{
+	
+	private static final List<String> OPERATORS = Arrays.asList("<>", "<=", "< ", ">=", "> ", "= ", "!=", "IN");
+	
+	private static final String OPERATOR_LIKE = "LIKE";
 	
 	/** 字段 */
 	private String field;
@@ -38,10 +45,8 @@ public class Condition implements Cloneable{
 	 * @param value 值
 	 */
 	public Condition(String field, Object value) {
-		super();
-		this.field = field;
-		this.operator = "=";
-		this.value = value;
+		this(field, "=", value);
+		parseValue();
 	}
 	
 	/**
@@ -51,7 +56,6 @@ public class Condition implements Cloneable{
 	 * @param value 值
 	 */
 	public Condition(String field, String operator, Object value) {
-		super();
 		this.field = field;
 		this.operator = operator;
 		this.value = value;
@@ -98,11 +102,22 @@ public class Condition implements Cloneable{
 		return value;
 	}
 	/**
-	 * 设置值
+	 * 设置值，不解析表达式
 	 * @param value 值
 	 */
 	public void setValue(Object value) {
+		setValue(value, false);
+	}
+	/**
+	 * 设置值
+	 * @param value 值
+	 * @param isParse 是否解析值表达式
+	 */
+	public void setValue(Object value, boolean isParse) {
 		this.value = value;
+		if(isParse){
+			parseValue();
+		}
 	}
 	
 	/**
@@ -134,5 +149,47 @@ public class Condition implements Cloneable{
 	@Override
 	public String toString() {
 		return StrUtil.format("`{}` {} {}", this.field, this.operator, this.value);
+	}
+	
+	/**
+	 * 解析值表达式
+	 */
+	private void parseValue() {
+		//当值无时，视为空判定
+		if(null == this.value){
+			this.operator = "IS";
+			this.value = "NULL";
+			return;
+		}
+		
+		//其他类型值，跳过
+		if(false == (this.value instanceof String)){
+			return;
+		}
+		
+		String valueStr = ((String)value);
+		if(StrUtil.isBlank(valueStr)){
+			return;
+		}
+		
+		valueStr = valueStr.trim();
+		List<String> strs = StrUtil.split(valueStr, ' ', 2);
+		if(strs.size() < 2){
+			return;
+		}
+		
+		//处理常用符号
+		final String firstPart = strs.get(0).trim().toUpperCase();
+		if(OPERATORS.contains(firstPart)){
+			this.operator = firstPart;
+			this.value = strs.get(1);
+			return;
+		}
+		
+		//处理LIKE
+		if(valueStr.toUpperCase().startsWith(OPERATOR_LIKE)){
+			this.operator = OPERATOR_LIKE;
+			this.value = StrUtil.removePrefix(valueStr, OPERATOR_LIKE).trim();
+		}
 	}
 }
