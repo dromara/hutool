@@ -288,7 +288,7 @@ public class DaoTemplate {
 	 * 分页
 	 * @param where 条件
 	 * @param page 分页对象
-	 * @return
+	 * @return 分页结果集
 	 * @throws SQLException
 	 */
 	public PageResult<Entity> page(Entity where, Page page) throws SQLException{

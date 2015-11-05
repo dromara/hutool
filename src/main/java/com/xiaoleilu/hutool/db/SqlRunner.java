@@ -417,10 +417,9 @@ public class SqlRunner{
 	/**
 	 * 分页查询<br/>
 	 * 
-	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
 	 * @param page 页码
-	 * @return 结果对象
+	 * @return 分页结果集
 	 * @throws SQLException
 	 */
 	public PageResult<Entity> page(Entity where, Page page) throws SQLException {
