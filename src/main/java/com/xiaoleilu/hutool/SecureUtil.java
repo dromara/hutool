@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -36,6 +39,7 @@ public class SecureUtil {
 	private static char[] base64EncodeTable = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/' };
 
 	private static final int[] INV = new int[256];
+
 	static {
 		Arrays.fill(INV, -1);
 		for (int i = 0, iS = base64EncodeTable.length; i < iS; i++) {
@@ -43,7 +47,7 @@ public class SecureUtil {
 		}
 		INV['='] = 0;
 	}
-	
+
 	/**
 	 * 加密
 	 * 
@@ -75,6 +79,16 @@ public class SecureUtil {
 	 * @return 被加密后的值
 	 */
 	public static byte[] encryptWithoutHex(byte[] bytes, String algorithmName) {
+		return createMessageDigest(algorithmName).digest(bytes);
+	}
+	
+	/**
+	 * 创建MessageDigest
+	 * 
+	 * @param algorithmName 算法名
+	 * @return 被加密后的值
+	 */
+	public static MessageDigest createMessageDigest(String algorithmName) {
 		MessageDigest md = null;
 		try {
 			if (StrUtil.isBlank(algorithmName)) {
@@ -84,7 +98,7 @@ public class SecureUtil {
 		} catch (NoSuchAlgorithmException e) {
 			throw new UtilException(StrUtil.format("No such algorithm name for: {}", algorithmName));
 		}
-		return md.digest(bytes);
+		return md;
 	}
 
 	/**
@@ -170,6 +184,30 @@ public class SecureUtil {
 	/**
 	 * MD5算法加密
 	 * 
+	 * @param file 被加密的文字
+	 * @return 被加密后的字符串
+	 */
+	public static String md5(File file) {
+		final byte[] buffer = new byte[8192];
+		MessageDigest md = createMessageDigest(MD5);
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			int length;
+			while ((length = in.read(buffer)) != -1) {
+				md.update(buffer, 0, length);
+			}
+		} catch (IOException e) {
+			throw new UtilException(e);
+		}finally{
+			FileUtil.close(in);
+		}
+		return Conver.toHex(md.digest());
+	}	
+
+	/**
+	 * MD5算法加密
+	 * 
 	 * @param source 被加密的字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
@@ -180,6 +218,7 @@ public class SecureUtil {
 
 	/**
 	 * 编码为Base64
+	 * 
 	 * @param arr 被编码的数组
 	 * @param lineSep 在76个char之后是CRLF还是EOF
 	 * @return 编码后的bytes
@@ -221,7 +260,7 @@ public class SecureUtil {
 		}
 		return dest;
 	}
-	
+
 	/**
 	 * base64编码
 	 * 
@@ -232,7 +271,7 @@ public class SecureUtil {
 	public static String base64(String source, String charset) {
 		return new String(base64(StrUtil.encode(source, charset), false), Charset.forName(charset));
 	}
-	
+
 	/**
 	 * base64编码
 	 * 
@@ -257,6 +296,7 @@ public class SecureUtil {
 
 	/**
 	 * 解码Base64
+	 * 
 	 * @param arr byte数组
 	 * @return 解码后的byte数组
 	 */

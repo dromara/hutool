@@ -156,3 +156,6 @@ Entity中toVo区别是否忽略大小写
 2.12.4
 1、db增加分页，会根据总结果数计算分页的各种参数
 2、LogWrapper增加只有一个Throwable参数的日志方法
+3、SqlExecutor增加call方法
+4、Entity类型的Where参数支持表达式
+5、增加计算文件MD5方法（SecureUtil.md5）
