@@ -29,7 +29,7 @@ public class Condition implements Cloneable{
 	 * 解析为Condition
 	 * @param field 字段名
 	 * @param expression 表达式或普通值
-	 * @return
+	 * @return Condition
 	 */
 	public static Condition parse(String field, Object expression){
 		return new Condition(field, expression);

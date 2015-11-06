@@ -39,7 +39,7 @@ public class ClassUtil {
 	/**
 	 * 获得指定类名的类
 	 * @param className 类名
-	 * @return
+	 * @return 类
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> forName(String className){
