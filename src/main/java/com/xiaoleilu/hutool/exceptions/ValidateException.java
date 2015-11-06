@@ -3,29 +3,41 @@ package com.xiaoleilu.hutool.exceptions;
 import com.xiaoleilu.hutool.StrUtil;
 
 /**
- * 设置异常
+ * 验证异常
+ * 
  * @author xiaoleilu
  */
-public class ValidateException extends Exception{
-	private static final long serialVersionUID = 7295625949787710179L;
+public class ValidateException extends StatefulException {
+	private static final long serialVersionUID = 6057602589533840889L;
 
-	public ValidateException(Throwable e) {
-		super(e);
+	public ValidateException() {
 	}
-	
-	public ValidateException(String message) {
-		super(message);
+
+	public ValidateException(String msg) {
+		super(msg);
 	}
 	
 	public ValidateException(String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
-	
-	public ValidateException(String message, Throwable throwable) {
-		super(message, throwable);
+
+	public ValidateException(Throwable throwable) {
+		super(throwable);
 	}
-	
-	public ValidateException(Throwable throwable, String messageTemplate, Object... params) {
-		super(StrUtil.format(messageTemplate, params), throwable);
+
+	public ValidateException(String msg, Throwable throwable) {
+		super(msg, throwable);
+	}
+
+	public ValidateException(int status, String msg) {
+		super(status, msg);
+	}
+
+	public ValidateException(int status, Throwable throwable) {
+		super(status, throwable);
+	}
+
+	public ValidateException(int status, String msg, Throwable throwable) {
+		super(status, msg, throwable);
 	}
 }

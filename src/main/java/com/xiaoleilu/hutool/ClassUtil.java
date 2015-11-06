@@ -37,6 +37,33 @@ public class ClassUtil {
 	}
 	
 	/**
+	 * 获得指定类名的类
+	 * @param className 类名
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> forName(String className){
+		try {
+			return (Class<T>) Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new UtilException(e);
+		}
+	}
+	
+	/**
+	 * 获得对象数组的类数组
+	 * @param objects 对象数组
+	 * @return 类数组
+	 */
+	public static Class<?>[] getClasses(Object... objects){
+		Class<?>[] classes = new Class<?>[objects.length];
+		for (int i = 0; i < objects.length; i++) {
+			classes[i] = objects[i].getClass();
+		}
+		return classes;
+	}
+	
+	/**
 	 * 扫面该包路径下所有class文件
 	 * 
 	 * @return 类集合
@@ -255,10 +282,26 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 对象
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T newInstance(Class<?> clazz) {
+	public static <T> T newInstance(Class<T> clazz) {
 		try {
 			return (T) clazz.newInstance();
+		} catch (Exception e) {
+			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
+		}
+	}
+	
+	/**
+	 * 实例化对象
+	 * @param clazz 类
+	 * @return 对象
+	 */
+	public static <T> T newInstance(Class<T> clazz, Object... params) {
+		if(CollectionUtil.isEmpty(params)){
+			return newInstance(clazz);
+		}
+		
+		try {
+			return clazz.getDeclaredConstructor(getClasses(params)).newInstance(params);
 		} catch (Exception e) {
 			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}

@@ -3,8 +3,6 @@ package com.xiaoleilu.hutool;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.xiaoleilu.hutool.exceptions.UtilException;
-
 /**
  * 单例类<br>
  * 提供单例对象的统一管理，当调用get方法时，如果对象池中存在此对象，返回此对象，否则创建新对象返回
@@ -21,19 +19,18 @@ public final class Singleton {
 	/**
 	 * 获得指定类的单例对象<br>
 	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
-	 * 创建对象时调用其默认的无参构造方法，如果对象无此构造方法，会创建失败。
 	 * @param clazz 类
 	 * @return 单例对象
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T get(Class<?> clazz) {
+	public static <T> T get(Class<T> clazz, Object... params) {
 		T obj = (T) pool.get(clazz);
 		
 		if(null == obj) {
 			synchronized(Singleton.class) {
 				obj = (T) pool.get(clazz);
 				if(null == obj) {
-					obj = ClassUtil.newInstance(clazz);
+					obj = ClassUtil.newInstance(clazz, params);
 					pool.put(clazz, obj);
 				}
 			}
@@ -45,19 +42,13 @@ public final class Singleton {
 	/**
 	 * 获得指定类的单例对象<br>
 	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
-	 * 创建对象时调用其默认的无参构造方法，如果对象无此构造方法，会创建失败。
 	 * @param className 类名
+	 * @param params 构造参数
 	 * @return 单例对象
 	 */
-	public static <T> T get(String className) {
-		Class<?> clazz = null;
-		try {
-			clazz = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			throw new UtilException(e);
-		}
-		
-		return get(clazz);
+	public static <T> T get(String className, Object... params) {
+		final Class<T> clazz = ClassUtil.forName(className);
+		return get(clazz, params);
 	}
 	
 	/**
