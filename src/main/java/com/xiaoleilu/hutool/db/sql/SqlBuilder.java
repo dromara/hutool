@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.CollectionUtil;
+import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
+import com.xiaoleilu.hutool.log.LogWrapper;
 
 /**
  * SQL构建器<br>
@@ -21,6 +23,7 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
  *
  */
 public class SqlBuilder {
+	private static final LogWrapper log = Log.get();
 	
 	//--------------------------------------------------------------- Static methods start
 	/**
@@ -436,7 +439,20 @@ public class SqlBuilder {
 	 * @return 构建好的SQL语句
 	 */
 	public String build(){
-		return this.sql.toString().trim();
+		return this.build(false);
+	}
+	
+	/**
+	 * 构建
+	 * @param isShowDebugSql 显示SQL的debug日志
+	 * @return 构建好的SQL语句
+	 */
+	public String build(boolean isShowDebugSql){
+		final String sqlStr = this.sql.toString().trim();
+		if(isShowDebugSql){
+			log.debug("\n{}", sqlStr);
+		}
+		return sqlStr;
 	}
 	
 	@Override
