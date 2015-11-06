@@ -33,7 +33,7 @@ public class AnsiSqlDialect implements Dialect {
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entity);
 
 		final PreparedStatement ps = conn.prepareStatement(insert.build(), Statement.RETURN_GENERATED_KEYS);
-		DbUtil.fillParams(ps, insert.getParamValueArray());
+		DbUtil.fillParams(ps, insert.getParamValues());
 		return ps;
 	}
 
@@ -49,7 +49,7 @@ public class AnsiSqlDialect implements Dialect {
 			.where(LogicalOperator.AND, DbUtil.buildConditions(entity));
 
 		final PreparedStatement ps = conn.prepareStatement(delete.build());
-		DbUtil.fillParams(ps, delete.getParamValueArray());
+		DbUtil.fillParams(ps, delete.getParamValues());
 		return ps;
 	}
 
@@ -65,7 +65,7 @@ public class AnsiSqlDialect implements Dialect {
 				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 
 		final PreparedStatement ps = conn.prepareStatement(update.build());
-		DbUtil.fillParams(ps, update.getParamValueArray());
+		DbUtil.fillParams(ps, update.getParamValues());
 		return ps;
 	}
 
@@ -82,7 +82,7 @@ public class AnsiSqlDialect implements Dialect {
 			.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 
 		final PreparedStatement ps = conn.prepareStatement(find.build());
-		DbUtil.fillParams(ps, find.getParamValueArray());
+		DbUtil.fillParams(ps, find.getParamValues());
 		return ps;
 	}
 
@@ -107,7 +107,7 @@ public class AnsiSqlDialect implements Dialect {
 		find.append(" limit ").append(page.getNumPerPage()).append(" offset ").append(page.getStartPosition());
 		
 		final PreparedStatement ps = conn.prepareStatement(find.build());
-		DbUtil.fillParams(ps, find.getParamValueArray());
+		DbUtil.fillParams(ps, find.getParamValues());
 		return ps;
 	}
 

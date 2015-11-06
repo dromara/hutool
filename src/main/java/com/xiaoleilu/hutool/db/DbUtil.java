@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -221,6 +222,17 @@ public class DbUtil {
 		}
 		
 		return table;
+	}
+	
+	/**
+	 * 填充SQL的参数。
+	 * 
+	 * @param ps PreparedStatement
+	 * @param params SQL参数
+	 * @throws SQLException
+	 */
+	public static void fillParams(PreparedStatement ps, Collection<Object> params) throws SQLException {
+		fillParams(ps, params.toArray(new Object[params.size()]));
 	}
 	
 	/**

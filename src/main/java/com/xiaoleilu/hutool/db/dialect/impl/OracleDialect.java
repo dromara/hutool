@@ -62,7 +62,7 @@ public class OracleDialect extends AnsiSqlDialect{
 		sql.append(placeHolder.toString()).append(")");
 
 		final PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-		DbUtil.fillParams(ps, paramValues.toArray(new Object[paramValues.size()]));
+		DbUtil.fillParams(ps, paramValues);
 		return ps;
 	}
 	
@@ -92,7 +92,7 @@ public class OracleDialect extends AnsiSqlDialect{
 			.append(" where table_alias.rownum_ >= ").append(startEnd[0]);
 		
 		final PreparedStatement ps = conn.prepareStatement(sql.toString());
-		DbUtil.fillParams(ps, find.getParamValueArray());
+		DbUtil.fillParams(ps, find.getParamValues());
 		return ps;
 	}
 }
