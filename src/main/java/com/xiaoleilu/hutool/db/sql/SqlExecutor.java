@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.db.sql;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,6 +34,29 @@ public class SqlExecutor {
 			ps = conn.prepareStatement(sql);
 			DbUtil.fillParams(ps, params);
 			return ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 执行调用存储过程<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sql SQL
+	 * @param params 参数
+	 * @return 影响的行数
+	 * @throws SQLException
+	 */
+	public static boolean call(Connection conn, String sql, Object... params) throws SQLException {
+		CallableStatement ps = null;
+		try {
+			ps = conn.prepareCall(sql);
+			DbUtil.fillParams(ps, params);
+			return ps.execute();
 		} catch (SQLException e) {
 			throw e;
 		} finally {

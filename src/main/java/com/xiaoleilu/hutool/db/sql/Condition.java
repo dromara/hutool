@@ -24,6 +24,17 @@ public class Condition implements Cloneable{
 	private Object value;
 	/** 是否使用条件值占位符 */
 	private boolean isPlaceHolder = true;
+	
+	/**
+	 * 解析为Condition
+	 * @param field 字段名
+	 * @param expression 表达式或普通值
+	 * @return
+	 */
+	public static Condition parse(String field, Object expression){
+		return new Condition(field, expression);
+	}
+	
 	//--------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
@@ -152,7 +163,10 @@ public class Condition implements Cloneable{
 	}
 	
 	/**
-	 * 解析值表达式
+	 * 解析值表达式<br>
+	 * 支持"<>", "<=", "< ", ">=", "> ", "= ", "!=", "IN","LIKE"表达式<br>
+	 * 如果无法识别表达式，则表达式为"="，表达式与值用空格隔开<br>
+	 * 例如字段为name，那value可以为："> 1"或者 "LIKE %Tom"此类
 	 */
 	private void parseValue() {
 		//当值无时，视为空判定
