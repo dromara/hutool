@@ -83,6 +83,31 @@ public class SecureUtil {
 	}
 	
 	/**
+	 * 加密文件
+	 * 
+	 * @param file 被加密的文字
+	 * @param algorithmName 算法名
+	 * @return 被加密后的字符串
+	 */
+	public static String encrypt(File file, String algorithmName) {
+		final byte[] buffer = new byte[8192];
+		MessageDigest md = createMessageDigest(algorithmName);
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			int length;
+			while ((length = in.read(buffer)) != -1) {
+				md.update(buffer, 0, length);
+			}
+		} catch (IOException e) {
+			throw new UtilException(e);
+		}finally{
+			FileUtil.close(in);
+		}
+		return Conver.toHex(md.digest());
+	}	
+	
+	/**
 	 * 创建MessageDigest
 	 * 
 	 * @param algorithmName 算法名
@@ -110,6 +135,16 @@ public class SecureUtil {
 	 */
 	public static String sha1(String source, String charset) {
 		return encrypt(source, SHA1, charset);
+	}
+	
+	/**
+	 * SHA-1算法加密
+	 * 
+	 * @param file 被加密的字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String sha1(File file) {
+		return encrypt(file, SHA1);
 	}
 
 	// ------------------------------------------------------------------------ MAC
@@ -184,27 +219,13 @@ public class SecureUtil {
 	/**
 	 * MD5算法加密
 	 * 
-	 * @param file 被加密的文字
+	 * @param file 被加密的文件
 	 * @return 被加密后的字符串
 	 */
 	public static String md5(File file) {
-		final byte[] buffer = new byte[8192];
-		MessageDigest md = createMessageDigest(MD5);
-		BufferedInputStream in = null;
-		try {
-			in = FileUtil.getInputStream(file);
-			int length;
-			while ((length = in.read(buffer)) != -1) {
-				md.update(buffer, 0, length);
-			}
-		} catch (IOException e) {
-			throw new UtilException(e);
-		}finally{
-			FileUtil.close(in);
-		}
-		return Conver.toHex(md.digest());
-	}	
-
+		return encrypt(file, MD5);
+	}
+	
 	/**
 	 * MD5算法加密
 	 * 
