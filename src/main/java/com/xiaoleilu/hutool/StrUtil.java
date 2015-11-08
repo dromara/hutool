@@ -360,7 +360,7 @@ public class StrUtil {
 				sb.append(c);
 			}
 		}
-		list.add(sb.toString());
+		list.add(sb.toString());//加入尾串
 		return list;
 	}
 

@@ -12,7 +12,7 @@ import com.xiaoleilu.hutool.StrUtil;
  */
 public class Condition implements Cloneable{
 	
-	private static final List<String> OPERATORS = Arrays.asList("<>", "<=", "< ", ">=", "> ", "= ", "!=", "IN");
+	private static final List<String> OPERATORS = Arrays.asList("<>", "<=", "<", ">=", ">", "=", "!=", "IN");
 	
 	private static final String OPERATOR_LIKE = "LIKE";
 	
