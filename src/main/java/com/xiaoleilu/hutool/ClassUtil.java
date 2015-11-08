@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -34,20 +35,6 @@ public class ClassUtil {
 	
 	private ClassUtil() {
 		// 静态类不可实例化
-	}
-	
-	/**
-	 * 获得指定类名的类
-	 * @param className 类名
-	 * @return 类
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> Class<T> forName(String className){
-		try {
-			return (Class<T>) Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			throw new UtilException(e);
-		}
 	}
 	
 	/**
@@ -330,14 +317,16 @@ public class ClassUtil {
 	
 	/**
 	 * 加载类
+	 * @param <T>
 	 * @param className 类名
 	 * @param isInitialized 是否初始化
 	 * @return 类
 	 */
-	public static Class<?> loadClass(String className, boolean isInitialized) {
-		Class<?> clazz;
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> loadClass(String className, boolean isInitialized) {
+		Class<T> clazz;
 		try {
-			clazz = Class.forName(className, isInitialized, getClassLoader());
+			clazz = (Class<T>) Class.forName(className, isInitialized, getClassLoader());
 		}catch (ClassNotFoundException e) {
 			throw new UtilException(e);
 		}
@@ -346,11 +335,96 @@ public class ClassUtil {
 	
 	/**
 	 * 加载类并初始化
+	 * @param <T>
 	 * @param className 类名 
 	 * @return 类
 	 */
-	public static Class<?> loadClass(String className) {
+	public static <T> Class<T> loadClass(String className) {
 		return loadClass(className, true);
+	}
+	
+	/**
+	 * 执行方法<br>
+	 * 可执行Private方法，也可执行static方法<br>
+	 * 执行非static方法时，必须满足对象有默认构造方法<br>
+	 * 非单例模式，如果是非静态方法，每次创建一个新对象
+	 * @param <T>
+	 * @param classNameDotMethodName 类名和方法名表达式，例如：com.xiaoleilu.hutool.StrUtil.isEmpty
+	 * @param args 参数，必须严格对应指定方法的参数类型和数量
+	 * @return 返回结果
+	 */
+	public static <T> T invoke(String classNameDotMethodName, Object... args){
+		return invoke(classNameDotMethodName, false, args);
+	}
+	
+	/**
+	 * 执行方法<br>
+	 * 可执行Private方法，也可执行static方法<br>
+	 * 执行非static方法时，必须满足对象有默认构造方法<br>
+	 * @param <T>
+	 * @param classNameDotMethodName 类名和方法名表达式，例如：com.xiaoleilu.hutool.StrUtil.isEmpty
+	 * @param isSingleton 是否为单例对象，如果此参数为false，每次执行方法时创建一个新对象
+	 * @param args 参数，必须严格对应指定方法的参数类型和数量
+	 * @return 返回结果
+	 */
+	public static <T> T invoke(String classNameDotMethodName, boolean isSingleton, Object... args){
+		if(StrUtil.isBlank(classNameDotMethodName)){
+			throw new UtilException("Blank classNameDotMethodName!");
+		}
+		final int dotIndex = classNameDotMethodName.lastIndexOf('.');
+		if(dotIndex <= 0){
+			throw new UtilException("Invalid classNameDotMethodName [{}]!", classNameDotMethodName);
+		}
+		
+		final String className = classNameDotMethodName.substring(0, dotIndex);
+		final String methodName = classNameDotMethodName.substring(dotIndex + 1);
+		
+		return invoke(className, methodName, isSingleton, args);
+	}
+	
+	/**
+	 * 执行方法<br>
+	 * 可执行Private方法，也可执行static方法<br>
+	 * 执行非static方法时，必须满足对象有默认构造方法<br>
+	 * 非单例模式，如果是非静态方法，每次创建一个新对象
+	 * @param <T>
+	 * @param className 类名，完整类路径
+	 * @param methodName 方法名
+	 * @param args 参数，必须严格对应指定方法的参数类型和数量
+	 * @return 返回结果
+	 */
+	public static <T> T invoke(String className, String methodName, Object... args){
+		return invoke(className, methodName, false, args);
+	}
+	
+	/**
+	 * 执行方法<br>
+	 * 可执行Private方法，也可执行static方法<br>
+	 * 执行非static方法时，必须满足对象有默认构造方法<br>
+	 * @param <T>
+	 * @param className 类名，完整类路径
+	 * @param methodName 方法名
+	 * @param isSingleton 是否为单例对象，如果此参数为false，每次执行方法时创建一个新对象
+	 * @param args 参数，必须严格对应指定方法的参数类型和数量
+	 * @return 返回结果
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object... args){
+		Class<Object> clazz = loadClass(className);
+		try {
+			Method method = clazz.getDeclaredMethod(methodName, getClasses(args));
+			int modifiers = method.getModifiers();
+			if(Modifier.isPrivate(modifiers)){
+				method.setAccessible(true);
+			}
+			if(Modifier.isStatic(modifiers)){
+				return (T) method.invoke(null, args);
+			}else{
+				return (T) method.invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), args);
+			}
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
 	}
 	
 	//--------------------------------------------------------------------------------------------------- Private method start

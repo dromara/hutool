@@ -47,7 +47,7 @@ public final class Singleton {
 	 * @return 单例对象
 	 */
 	public static <T> T get(String className, Object... params) {
-		final Class<T> clazz = ClassUtil.forName(className);
+		final Class<T> clazz = ClassUtil.loadClass(className);
 		return get(clazz, params);
 	}
 	

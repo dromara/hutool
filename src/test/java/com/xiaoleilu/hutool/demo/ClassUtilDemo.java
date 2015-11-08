@@ -1,7 +1,5 @@
 package com.xiaoleilu.hutool.demo;
 
-import java.util.Set;
-
 import com.xiaoleilu.hutool.ClassUtil;
 
 /**
@@ -11,12 +9,12 @@ import com.xiaoleilu.hutool.ClassUtil;
  */
 public class ClassUtilDemo {
 	public static void main(String[] args) throws ClassNotFoundException {
-		//获得指定包下所有类
-		Set<Class<?>> packageSet = ClassUtil.scanPackage("");
-		
-		for (Class<?> clazz : packageSet) {
-			System.out.println(clazz);
-		}
+//		//获得指定包下所有类
+//		Set<Class<?>> packageSet = ClassUtil.scanPackage("");
+//		
+//		for (Class<?> clazz : packageSet) {
+//			System.out.println(clazz);
+//		}
 		
 //		//转换包装类型为基本类型
 //		Class<?> primitive = ClassUtil.castToPrimitive(Integer.class);
@@ -36,5 +34,9 @@ public class ClassUtilDemo {
 //		DateTime dateTime1 = new DateTime();
 //		DateTime dateTime2 = ClassUtil.cloneObj(dateTime1);
 //		System.out.println(StrUtil.format("Is dateTime1 equals dateTime2: {}", dateTime1 == dateTime2));
+		
+		//执行方法
+		boolean result = ClassUtil.invoke("com.xiaoleilu.hutool.StrUtil.isBlank", new Object[]{""});
+		System.out.println(result);
 	}
 }
