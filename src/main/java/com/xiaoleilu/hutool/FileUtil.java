@@ -769,7 +769,7 @@ public class FileUtil {
 	/**
 	 * 将String写入文件，覆盖模式
 	 * @param content 写入的内容
-	 * @param path 文件路径
+	 * @param file 文件
 	 * @param charset 字符集
 	 * @throws IOException
 	 */
@@ -807,11 +807,11 @@ public class FileUtil {
 	 * @param charset 字符集
 	 * @throws IOException
 	 */
-	public static void appendString(File file, String path, String charset) throws IOException {
+	public static void appendString(String content, File file, String charset) throws IOException {
 		PrintWriter writer = null;
 		try {
-			writer = getPrintWriter(path, charset, true);
-			writer.print(file);
+			writer = getPrintWriter(file, charset, true);
+			writer.print(content);
 		}finally {
 			close(writer);
 		}
