@@ -784,7 +784,7 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param path 文件路径
 	 * @param charset 字符集
-	 * @return 
+	 * @return 写入的文件
 	 * @throws IOException
 	 */
 	public static File appendString(String content, String path, String charset) throws IOException {
@@ -796,7 +796,7 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param file 文件
 	 * @param charset 字符集
-	 * @return 
+	 * @return 写入的文件
 	 * @throws IOException
 	 */
 	public static File appendString(String content, File file, String charset) throws IOException {
