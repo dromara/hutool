@@ -520,10 +520,24 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static BufferedWriter getBufferedWriter(String path, String charset, boolean isAppend) throws IOException {
+		return getBufferedWriter(touch(path), charset, isAppend);
+	}
+	
+	/**
+	 * 获得一个带缓存的写入对象
+	 * @param file 输出文件
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedWriter getBufferedWriter(File file, String charset, boolean isAppend) throws IOException {
+		if(false == file.exists()){
+			file.createNewFile();
+		}
 		return new BufferedWriter(
 					new OutputStreamWriter(
-							new FileOutputStream(touch(path), isAppend), charset
-					)
+							new FileOutputStream(file, isAppend), charset)
 		);
 	}
 	
@@ -537,6 +551,18 @@ public class FileUtil {
 	 */
 	public static PrintWriter getPrintWriter(String path, String charset, boolean isAppend) throws IOException {
 		return new PrintWriter(getBufferedWriter(path, charset, isAppend));
+	}
+	
+	/**
+	 * 获得一个打印写入对象，可以有print
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 打印对象
+	 * @throws IOException
+	 */
+	public static PrintWriter getPrintWriter(File file, String charset, boolean isAppend) throws IOException {
+		return new PrintWriter(getBufferedWriter(file, charset, isAppend));
 	}
 	
 	/**
@@ -741,6 +767,23 @@ public class FileUtil {
 	}
 	
 	/**
+	 * 将String写入文件，覆盖模式
+	 * @param content 写入的内容
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @throws IOException
+	 */
+	public static void writeString(String content, File file, String charset) throws IOException {
+		PrintWriter writer = null;
+		try {
+			writer = getPrintWriter(file, charset, false);
+			writer.print(content);
+		}finally {
+			close(writer);
+		}
+	}
+	
+	/**
 	 * 将String写入文件，追加模式
 	 * @param content 写入的内容
 	 * @param path 文件路径
@@ -752,6 +795,23 @@ public class FileUtil {
 		try {
 			writer = getPrintWriter(path, charset, true);
 			writer.print(content);
+		}finally {
+			close(writer);
+		}
+	}
+	
+	/**
+	 * 将String写入文件，追加模式
+	 * @param content 写入的内容
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @throws IOException
+	 */
+	public static void appendString(File file, String path, String charset) throws IOException {
+		PrintWriter writer = null;
+		try {
+			writer = getPrintWriter(path, charset, true);
+			writer.print(file);
 		}finally {
 			close(writer);
 		}
