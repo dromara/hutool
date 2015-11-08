@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.CharsetUtil;
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.StrUtil;
 
@@ -26,7 +27,7 @@ public abstract class HttpBase<T> {
 	/**存储头信息*/
 	protected Map<String, List<String>> headers = new HashMap<String, List<String>>();
 	/**编码*/
-	protected String charset;
+	protected String charset = CharsetUtil.UTF_8;
 	/**http版本*/
 	protected String httpVersion = HTTP_1_1;
 	/**mediaType*/
