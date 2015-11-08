@@ -754,16 +754,11 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param path 文件路径
 	 * @param charset 字符集
+	 * @return 写入的文件
 	 * @throws IOException
 	 */
-	public static void writeString(String content, String path, String charset) throws IOException {
-		PrintWriter writer = null;
-		try {
-			writer = getPrintWriter(path, charset, false);
-			writer.print(content);
-		}finally {
-			close(writer);
-		}
+	public static File writeString(String content, String path, String charset) throws IOException {
+		return writeString(content, touch(path), charset);
 	}
 	
 	/**
@@ -773,7 +768,7 @@ public class FileUtil {
 	 * @param charset 字符集
 	 * @throws IOException
 	 */
-	public static void writeString(String content, File file, String charset) throws IOException {
+	public static File writeString(String content, File file, String charset) throws IOException {
 		PrintWriter writer = null;
 		try {
 			writer = getPrintWriter(file, charset, false);
@@ -781,6 +776,7 @@ public class FileUtil {
 		}finally {
 			close(writer);
 		}
+		return file;
 	}
 	
 	/**
@@ -788,16 +784,11 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param path 文件路径
 	 * @param charset 字符集
+	 * @return 
 	 * @throws IOException
 	 */
-	public static void appendString(String content, String path, String charset) throws IOException {
-		PrintWriter writer = null;
-		try {
-			writer = getPrintWriter(path, charset, true);
-			writer.print(content);
-		}finally {
-			close(writer);
-		}
+	public static File appendString(String content, String path, String charset) throws IOException {
+		return appendString(content, touch(path), charset);
 	}
 	
 	/**
@@ -805,9 +796,10 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param file 文件
 	 * @param charset 字符集
+	 * @return 
 	 * @throws IOException
 	 */
-	public static void appendString(String content, File file, String charset) throws IOException {
+	public static File appendString(String content, File file, String charset) throws IOException {
 		PrintWriter writer = null;
 		try {
 			writer = getPrintWriter(file, charset, true);
@@ -815,6 +807,7 @@ public class FileUtil {
 		}finally {
 			close(writer);
 		}
+		return file;
 	}
 	
 	/**
