@@ -205,13 +205,13 @@ public class StaticLog {
 	public static Log get(Class<?> clazz) {
 		try {
 			return new Slf4jLog(clazz);
-		} catch (Exception e) {
+		} catch (Error e) {
 			try {
 				return new Log4jLog(clazz);
-			} catch (Exception e2) {
+			} catch (Error e2) {
 				try {
 					return new ApacheCommonsLog(clazz);
-				} catch (Exception e3) {
+				} catch (Error e3) {
 					return new JdkLog(clazz);
 				}
 			}
@@ -226,13 +226,13 @@ public class StaticLog {
 	public static Log get(String name) {
 		try {
 			return new Slf4jLog(name);
-		} catch (Exception e) {
+		} catch (Error e) {
 			try {
 				return new Log4jLog(name);
-			} catch (Exception e2) {
+			} catch (Error e2) {
 				try {
 					return new ApacheCommonsLog(name);
-				} catch (Exception e3) {
+				} catch (Error e3) {
 					return new JdkLog(name);
 				}
 			}
