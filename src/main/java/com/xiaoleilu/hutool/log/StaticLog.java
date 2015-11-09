@@ -1,5 +1,9 @@
 package com.xiaoleilu.hutool.log;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.xiaoleilu.hutool.ClassUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLog;
 import com.xiaoleilu.hutool.log.dialect.JdkLog;
@@ -12,6 +16,7 @@ import com.xiaoleilu.hutool.log.dialect.Slf4jLog;
  *
  */
 public class StaticLog {
+	
 	// ----------------------------------------------------------- Log method start
 	// ------------------------ Trace
 	/**
@@ -197,25 +202,15 @@ public class StaticLog {
 	}
 	// ----------------------------------------------------------- Log method end
 	
+	private static Log initialLog;
+	
 	/**
 	 * 获得Log
 	 * @param clazz 日志发出的类
 	 * @return Log
 	 */
 	public static Log get(Class<?> clazz) {
-		try {
-			return new Slf4jLog(clazz);
-		} catch (Error e) {
-			try {
-				return new Log4jLog(clazz);
-			} catch (Error e2) {
-				try {
-					return new ApacheCommonsLog(clazz);
-				} catch (Error e3) {
-					return new JdkLog(clazz);
-				}
-			}
-		}
+		return innerGet(initialLog, clazz);
 	}
 
 	/**
@@ -224,19 +219,7 @@ public class StaticLog {
 	 * @return Log
 	 */
 	public static Log get(String name) {
-		try {
-			return new Slf4jLog(name);
-		} catch (Error e) {
-			try {
-				return new Log4jLog(name);
-			} catch (Error e2) {
-				try {
-					return new ApacheCommonsLog(name);
-				} catch (Error e3) {
-					return new JdkLog(name);
-				}
-			}
-		}
+		return innerGet(initialLog, name);
 	}
 	
 	/**
@@ -248,6 +231,81 @@ public class StaticLog {
 	}
 	
 	//----------------------------------------------------------- Private method start
+	/**
+	 * 根据已有的Log类型创建Log<br>
+	 * 此方法存在的原因是可以减少Log类型的判断，提高性能
+	 * @param log 已经创建的日志对象
+	 * @param name 日志名
+	 * @return Log
+	 */
+	private static Log innerGet(Log log, String name){
+		if(null == log){
+			return innerGet(name);
+		}
+		
+		if(log instanceof Slf4jLog){
+			return new Slf4jLog(name);
+		}
+		if(log instanceof Log4jLog){
+			return new Log4jLog(name);
+		}
+		if(log instanceof ApacheCommonsLog){
+			return new ApacheCommonsLog(name);
+		}
+		return new JdkLog(name);
+	}
+	
+	/**
+	 * 根据已有的Log类型创建Log<br>
+	 * 此方法存在的原因是可以减少Log类型的判断，提高性能
+	 * @param log 已经创建的日志对象
+	 * @param name 打印日志的类
+	 * @return Log
+	 */
+	private static Log innerGet(Log log, Class<?> clazz){
+		if(null == log){
+			return innerGet(clazz);
+		}
+		
+		if(log instanceof Slf4jLog){
+			return new Slf4jLog(clazz);
+		}
+		if(log instanceof Log4jLog){
+			return new Log4jLog(clazz);
+		}
+		if(log instanceof ApacheCommonsLog){
+			return new ApacheCommonsLog(clazz);
+		}
+		return new JdkLog(clazz);
+	}
+	
+	/**
+	 * 获得Log
+	 * @param param 参数，String或者Class类型
+	 * @return Log
+	 */
+	private static Log innerGet(Object param){
+		List<Class<? extends AbstractLog>> logClassList = Arrays.asList(
+				Slf4jLog.class,
+				Log4jLog.class, 
+				ApacheCommonsLog.class, 
+				JdkLog.class
+		);
+		
+		Log log = null;
+		for (Class<? extends AbstractLog> logClass : logClassList) {
+			try {
+				log = ClassUtil.newInstance(logClass, param);
+				System.out.println("Use :" + log.getClass().getName());
+			} catch (Exception e) {
+				continue;
+			}
+			break;
+		}
+		
+		return log;
+	}
+	
 	/**
 	 * @return 获得日志，自动判定日志发出者
 	 */
