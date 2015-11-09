@@ -160,3 +160,5 @@ Entity中toVo区别是否忽略大小写
 4、Entity类型的Where参数支持表达式
 5、增加计算文件MD5方法（SecureUtil.md5）
 6、ClassUtil增加invoke方法，用于动态执行指定对象或类的方法
+7、修复Http编码空指针问题
+8、修复newArrayList的大坑！

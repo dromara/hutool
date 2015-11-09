@@ -260,7 +260,7 @@ public class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		return (ArrayList<T>) Arrays.asList(values);
+		return new ArrayList<T>(Arrays.asList(values));
 	}
 	
 	/**

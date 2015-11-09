@@ -24,6 +24,7 @@ public class JarClassLoader extends URLClassLoader{
 	public JarClassLoader(URL[] urls) {
 		super(urls, ClassUtil.getClassLoader());
 	}
+	//------------------------------------------------------------------- Constructor end
 	
 	/**
 	 * 加载Jar到ClassPath
@@ -39,8 +40,6 @@ public class JarClassLoader extends URLClassLoader{
 		}
 		return loader;
 	}
-	
-	//------------------------------------------------------------------- Constructor end
 	
 	/**
 	 * 加载Jar文件，或者加载目录
