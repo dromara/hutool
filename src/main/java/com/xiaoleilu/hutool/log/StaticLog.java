@@ -7,6 +7,7 @@ import com.xiaoleilu.hutool.ClassUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLog;
 import com.xiaoleilu.hutool.log.dialect.JdkLog;
+import com.xiaoleilu.hutool.log.dialect.Log4j2Log;
 import com.xiaoleilu.hutool.log.dialect.Log4jLog;
 import com.xiaoleilu.hutool.log.dialect.Slf4jLog;
 
@@ -273,9 +274,13 @@ public class StaticLog {
 		if(log instanceof Log4jLog){
 			return new Log4jLog(clazz);
 		}
+		if(log instanceof Log4j2Log){
+			return new Log4j2Log(clazz);
+		}
 		if(log instanceof ApacheCommonsLog){
 			return new ApacheCommonsLog(clazz);
 		}
+		
 		return new JdkLog(clazz);
 	}
 	
@@ -288,6 +293,7 @@ public class StaticLog {
 		List<Class<? extends AbstractLog>> logClassList = Arrays.asList(
 				Slf4jLog.class,
 				Log4jLog.class, 
+				Log4j2Log.class, 
 				ApacheCommonsLog.class, 
 				JdkLog.class
 		);
@@ -296,8 +302,7 @@ public class StaticLog {
 		for (Class<? extends AbstractLog> logClass : logClassList) {
 			try {
 				log = ClassUtil.newInstance(logClass, param);
-				System.out.println("Use :" + log.getClass().getName());
-			} catch (Exception e) {
+			} catch (Error e) {
 				continue;
 			}
 			break;

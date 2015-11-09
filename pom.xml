@@ -90,7 +90,7 @@
 			<version>2.2.5</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- 通用日志接口，可以适应不用的日志方式 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -110,6 +110,18 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.4.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.4.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Common Logging -->
