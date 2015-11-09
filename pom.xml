@@ -90,6 +90,7 @@
 			<version>2.2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		
 		<!-- 通用日志接口，可以适应不用的日志方式 -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -116,6 +117,7 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
