@@ -162,3 +162,6 @@ Entity中toVo区别是否忽略大小写
 6、ClassUtil增加invoke方法，用于动态执行指定对象或类的方法
 7、修复Http编码空指针问题
 8、修复newArrayList的大坑！
+
+2.13.0
+1、强化Log模块，无配置下支持多日志框架

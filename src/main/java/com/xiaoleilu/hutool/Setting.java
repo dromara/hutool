@@ -4,8 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import org.slf4j.Logger;
-
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.dialect.BasicSetting;
 
 /**
@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.setting.dialect.BasicSetting;
  * 
  */
 public class Setting extends BasicSetting {
-	private static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	/**
 	 * 基本构造<br/>

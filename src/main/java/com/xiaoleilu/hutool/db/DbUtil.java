@@ -18,9 +18,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
@@ -29,6 +26,8 @@ import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 数据库操作工具类
@@ -37,7 +36,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 
  */
 public class DbUtil {
-	private static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 
 	private DbUtil() {
 		// 非可实例化类

@@ -3,11 +3,10 @@ package com.xiaoleilu.hutool.demo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.ReUtil;
 import com.xiaoleilu.hutool.Validator;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 正则表达式工具类Demo
@@ -15,7 +14,7 @@ import com.xiaoleilu.hutool.Validator;
  *
  */
 public class ReUtilDemo {
-	private final static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	public static void main(String[] args) {
 		String content = "ZZZaaabbbccc中文1234";

@@ -2,9 +2,9 @@ package com.xiaoleilu.hutool;
 
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 import it.sauronsoftware.cron4j.Scheduler;
 import it.sauronsoftware.cron4j.Task;
@@ -15,7 +15,7 @@ import it.sauronsoftware.cron4j.Task;
  *
  */
 public class CronUtil {
-	private static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	/** Crontab配置文件 */
 	public final static String CRONTAB_CONFIG_PATH = "config/cron4j.setting";
@@ -72,7 +72,7 @@ public class CronUtil {
 				schedule(pattern, job);
 				log.info("Schedule [{} {}] added.", pattern, jobClass);
 			} catch (Exception e) {
-				Log.error(log, e, "Schedule [%s %s] add error!", pattern, jobClass);
+				log.error(e, "Schedule [%s %s] add error!", pattern, jobClass);
 			}
 		}
 	}

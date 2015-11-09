@@ -8,13 +8,13 @@ import java.util.Collection;
 import java.util.List;
 
 import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
 import com.xiaoleilu.hutool.db.handler.PageResultHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * SQL执行类<br>
@@ -32,7 +32,7 @@ public class SqlConnRunner{
 	 * @param dialect 方言
 	 */
 	public SqlConnRunner(Dialect dialect) {
-		Log.info("Use Dialect: [{}].", dialect.getClass().getSimpleName());
+		StaticLog.info("Use Dialect: [{}].", dialect.getClass().getSimpleName());
 		
 		this.dialect = dialect;
 	}

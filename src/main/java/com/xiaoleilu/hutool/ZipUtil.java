@@ -12,12 +12,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import org.slf4j.Logger;
-
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 public class ZipUtil {
-	private static final Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	/**
 	 * 对文件或文件目录进行压缩<br>

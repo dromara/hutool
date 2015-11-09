@@ -7,7 +7,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
@@ -20,7 +19,8 @@ import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
-import com.xiaoleilu.hutool.log.LogWrapper;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * DB使用样例
@@ -29,7 +29,7 @@ import com.xiaoleilu.hutool.log.LogWrapper;
  * 
  */
 public class DbDemo {
-	private final static LogWrapper log = Log.get();
+	private final static Log log = StaticLog.get();
 
 	private static String TABLE_NAME = "test_table";
 
@@ -91,7 +91,7 @@ public class DbDemo {
 			List<Entity> entityList = SqlExecutor.query(conn, "select * from " + TABLE_NAME + " where param1 = ?", new EntityListHandler(), "值");
 			log.info("{}", entityList);
 		} catch (SQLException e) {
-			Log.error(log, e, "SQL error!");
+			log.error(e, "SQL error!");
 		} finally {
 			DbUtil.close(conn);
 		}
@@ -185,12 +185,12 @@ public class DbDemo {
 	private static void getTableMetaInfo(DataSource ds) {
 		// 获得当前库的所有表的表名
 		List<String> tableNames = DbUtil.getTables(ds);
-		Log.info("{}", tableNames);
+		log.info("{}", tableNames);
 
 		/*
 		 * 获得表结构 表结构封装为一个表对象，里面有Column对象表示一列，列中有列名、类型、大小、是否允许为空等信息
 		 */
 		Table table = DbUtil.getTableMeta(ds, TABLE_NAME);
-		Log.info("{}", table);
+		log.info("{}", table);
 	}
 }

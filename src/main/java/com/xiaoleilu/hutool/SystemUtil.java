@@ -4,6 +4,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Properties;
 
+import com.xiaoleilu.hutool.log.StaticLog;
+
 /**
  * Java的System类封装工具类。
  * 
@@ -102,7 +104,7 @@ public class SystemUtil {
 				});
 			}
 		} catch (Exception e) {
-			Log.warn(e, "Unable to retrieve a system property '{}'; default values will be used.", key);
+			StaticLog.warn(e, "Unable to retrieve a system property '{}'; default values will be used.", key);
 		}
 
 		if (null == value) {
@@ -187,7 +189,7 @@ public class SystemUtil {
 				});
 			}
 		} catch (Exception e) {
-			Log.warn(e, "Unable to retrieve a system propertys; default values will be used.");
+			StaticLog.warn(e, "Unable to retrieve a system propertys; default values will be used.");
 		}
 		return props;
 	}

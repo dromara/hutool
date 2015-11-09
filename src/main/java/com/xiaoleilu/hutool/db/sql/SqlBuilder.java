@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
-import com.xiaoleilu.hutool.log.LogWrapper;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * SQL构建器<br>
@@ -23,7 +23,7 @@ import com.xiaoleilu.hutool.log.LogWrapper;
  *
  */
 public class SqlBuilder {
-	private static final LogWrapper log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	//--------------------------------------------------------------- Static methods start
 	/**

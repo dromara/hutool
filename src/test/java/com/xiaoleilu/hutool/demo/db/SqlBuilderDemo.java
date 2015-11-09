@@ -1,15 +1,14 @@
 package com.xiaoleilu.hutool.demo.db;
 
-import org.slf4j.Logger;
-
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
-import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Join;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
+import com.xiaoleilu.hutool.db.sql.Wrapper;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * SQL构建器样例
@@ -17,7 +16,7 @@ import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
  *
  */
 public class SqlBuilderDemo {
-	private final static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	public static void main(String[] args) {
 		//主要用于字段名的包装（在字段名的前后加字符，例如反引号来避免与数据库的关键字冲突）

@@ -19,9 +19,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.slf4j.Logger;
-
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 类工具类
@@ -31,7 +31,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  *
  */
 public class ClassUtil {
-	private static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	private ClassUtil() {
 		// 静态类不可实例化

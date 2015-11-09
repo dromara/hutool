@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool;
 
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 分页工具类
@@ -27,7 +28,7 @@ public class PageUtil {
 		
 		if(countPerPage < 1) {
 			countPerPage = 0;
-			Log.warn("Count per page  [{}] is not valid!", countPerPage);
+			StaticLog.warn("Count per page  [{}] is not valid!", countPerPage);
 		}
 		
 		int start = (pageNo -1) * countPerPage;

@@ -8,17 +8,16 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.Setting;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.exceptions.SettingException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 封装Druid数据源
@@ -27,7 +26,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 
  */
 public class DruidDS {
-	private final static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	/** 默认的Druid配置文件路径 */
 	public final static String DEFAULT_DRUID_CONFIG_PATH = "config/druid.setting";
@@ -106,7 +105,7 @@ public class DruidDS {
 		dds.setName(group); // 数据源名称为连接名称
 		
 		final String jdbcUrl = dbSetting.getString("url", group);
-		Log.debug(log, "JDBC url: {}", jdbcUrl);
+		log.debug("JDBC url: {}", jdbcUrl);
 		dds.setDriverClassName(dbSetting.getStringWithDefault("driver", group, DbUtil.identifyDriver(jdbcUrl)));
 		dds.setUrl(jdbcUrl);
 		dds.setUsername(dbSetting.getString("user", group));

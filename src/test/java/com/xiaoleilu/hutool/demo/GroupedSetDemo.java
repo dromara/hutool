@@ -4,10 +4,9 @@ import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-
 import com.xiaoleilu.hutool.GroupedSet;
-import com.xiaoleilu.hutool.Log;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 分组集合Demo
@@ -15,7 +14,7 @@ import com.xiaoleilu.hutool.Log;
  *
  */
 public class GroupedSetDemo {
-	private final static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	public static void main(String[] args) {
 		GroupedSet set = new GroupedSet("config/demo.set");

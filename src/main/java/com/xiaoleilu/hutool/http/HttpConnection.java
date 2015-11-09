@@ -18,17 +18,16 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import org.slf4j.Logger;
-
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.Func;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.URLUtil;
 import com.xiaoleilu.hutool.Validator;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.http.ssl.DefaultTrustManager;
 import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * http连接对象
@@ -37,7 +36,7 @@ import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
  *
  */
 public class HttpConnection {
-	private final static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 
 	private URL url;
 	/** method请求方法 */

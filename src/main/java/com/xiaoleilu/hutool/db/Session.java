@@ -9,14 +9,13 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 数据库SQL执行会话<br>
@@ -26,7 +25,7 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
  *
  */
 public class Session implements Closeable{
-	private final static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	private Connection conn = null;
 	private SqlConnRunner runner = null;
@@ -144,12 +143,12 @@ public class Session implements Closeable{
 		try {
 			conn.rollback();
 		} catch (Exception e) {
-			Log.error(log, e);
+			log.error(e);
 		}finally {
 			try {
 				conn.setAutoCommit(true);	//事务结束，恢复自动提交
 			} catch (SQLException e) {
-				Log.error(log, e);
+				log.error(e);
 			}
 		}
 	}
@@ -182,12 +181,12 @@ public class Session implements Closeable{
 		try {
 			conn.rollback(savepoint);
 		} catch (Exception e) {
-			Log.error(log, e);
+			log.error(e);
 		}finally {
 			try {
 				conn.setAutoCommit(true);	//事务结束，恢复自动提交
 			} catch (SQLException e) {
-				Log.error(log, e);
+				log.error(e);
 			}
 		}
 	}

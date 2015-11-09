@@ -7,7 +7,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import org.slf4j.Logger;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * Properties文件读取封装类
@@ -15,7 +16,7 @@ import org.slf4j.Logger;
  */
 public final class Props extends Properties{
 	private static final long serialVersionUID = 1935981579709590740L;
-	private static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	//----------------------------------------------------------------------- 私有属性 start
 	/** 属性文件的URL */
@@ -250,7 +251,7 @@ public final class Props extends Properties{
 		} catch (FileNotFoundException e) {
 			//不会出现这个异常
 		} catch (IOException e) {
-			Log.error(log, e, "Store properties to [{}] error!", absolutePath);
+			log.error(e, "Store properties to [{}] error!", absolutePath);
 		}
 	}
 	

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
-import org.slf4j.Logger;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -18,12 +17,13 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.xiaoleilu.hutool.CharsetUtil;
 import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.NetUtil;
 import com.xiaoleilu.hutool.Setting;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.NotInitedException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * MongoDB工具类
@@ -31,7 +31,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  *
  */
 public class MongoDS implements Closeable{
-	private final static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	/** 默认配置文件 */
 	public final static String MONGO_CONFIG_PATH = "config/mongo.setting";

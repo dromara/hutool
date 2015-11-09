@@ -20,15 +20,14 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.slf4j.Logger;
-
 import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.Log;
 import com.xiaoleilu.hutool.ReUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.URLUtil;
 import com.xiaoleilu.hutool.exceptions.SettingException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
 
 /**
@@ -42,7 +41,7 @@ import com.xiaoleilu.hutool.setting.AbsSetting;
  * 
  */
 public class BasicSetting extends AbsSetting{
-	private static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	final Map<String, String> map = new Hashtable<String, String>();
 	

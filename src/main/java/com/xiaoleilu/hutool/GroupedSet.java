@@ -14,7 +14,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 分组化的Set集合类<br>
@@ -25,7 +26,7 @@ import org.slf4j.Logger;
  */
 public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	private static final long serialVersionUID = -8430706353275835496L;
-	private static Logger log = Log.get();
+	private final static Log log = StaticLog.get();
 	
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
 	private final static String COMMENT_FLAG_PRE = "#";
