@@ -66,6 +66,26 @@ public class FileUtil {
 	}
 	
 	/**
+	 * 目录是否为空
+	 * @param file 目录
+	 * @return 是否为空，当提供非目录时，返回false
+	 */
+	public static boolean isEmpty(File file) {
+		if(null == file){
+			return true;
+		}
+		
+		if(file.isDirectory()){
+			String[] subFiles = file.list();
+			if(CollectionUtil.isEmpty(subFiles)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * 递归遍历目录以及子目录中的所有文件
 	 * 
 	 * @param file 当前遍历文件
