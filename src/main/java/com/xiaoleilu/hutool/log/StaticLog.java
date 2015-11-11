@@ -1,15 +1,7 @@
 package com.xiaoleilu.hutool.log;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.xiaoleilu.hutool.ClassUtil;
 import com.xiaoleilu.hutool.StrUtil;
-import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLog;
-import com.xiaoleilu.hutool.log.dialect.JdkLog;
-import com.xiaoleilu.hutool.log.dialect.Log4j2Log;
-import com.xiaoleilu.hutool.log.dialect.Log4jLog;
-import com.xiaoleilu.hutool.log.dialect.Slf4jLog;
+import com.xiaoleilu.hutool.ThreadUtil;
 
 /**
  * 静态日志类，用于在不引入日志对象的情况下打印日志
@@ -203,15 +195,13 @@ public class StaticLog {
 	}
 	// ----------------------------------------------------------- Log method end
 	
-	private static Log initialLog;
-	
 	/**
 	 * 获得Log
 	 * @param clazz 日志发出的类
 	 * @return Log
 	 */
 	public static Log get(Class<?> clazz) {
-		return innerGet(initialLog, clazz);
+		return LogFactory.getLog(clazz);
 	}
 
 	/**
@@ -220,103 +210,22 @@ public class StaticLog {
 	 * @return Log
 	 */
 	public static Log get(String name) {
-		return innerGet(initialLog, name);
+		return LogFactory.getLog(name);
 	}
 	
 	/**
 	 * @return 获得日志，自动判定日志发出者
 	 */
 	public static Log get() {
-		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		return get(stackTrace[2].getClassName());
+		return get(ThreadUtil.getStackTraceElement(2).getClassName());
 	}
 	
 	//----------------------------------------------------------- Private method start
 	/**
-	 * 根据已有的Log类型创建Log<br>
-	 * 此方法存在的原因是可以减少Log类型的判断，提高性能
-	 * @param log 已经创建的日志对象
-	 * @param name 日志名
-	 * @return Log
-	 */
-	private static Log innerGet(Log log, String name){
-		if(null == log){
-			return innerGet(name);
-		}
-		
-		if(log instanceof Slf4jLog){
-			return new Slf4jLog(name);
-		}
-		if(log instanceof Log4jLog){
-			return new Log4jLog(name);
-		}
-		if(log instanceof ApacheCommonsLog){
-			return new ApacheCommonsLog(name);
-		}
-		return new JdkLog(name);
-	}
-	
-	/**
-	 * 根据已有的Log类型创建Log<br>
-	 * 此方法存在的原因是可以减少Log类型的判断，提高性能
-	 * @param log 已经创建的日志对象
-	 * @param name 打印日志的类
-	 * @return Log
-	 */
-	private static Log innerGet(Log log, Class<?> clazz){
-		if(null == log){
-			return innerGet(clazz);
-		}
-		
-		if(log instanceof Slf4jLog){
-			return new Slf4jLog(clazz);
-		}
-		if(log instanceof Log4jLog){
-			return new Log4jLog(clazz);
-		}
-		if(log instanceof Log4j2Log){
-			return new Log4j2Log(clazz);
-		}
-		if(log instanceof ApacheCommonsLog){
-			return new ApacheCommonsLog(clazz);
-		}
-		
-		return new JdkLog(clazz);
-	}
-	
-	/**
-	 * 获得Log
-	 * @param param 参数，String或者Class类型
-	 * @return Log
-	 */
-	private static Log innerGet(Object param){
-		List<Class<? extends AbstractLog>> logClassList = Arrays.asList(
-				Slf4jLog.class,
-				Log4jLog.class, 
-				Log4j2Log.class, 
-				ApacheCommonsLog.class, 
-				JdkLog.class
-		);
-		
-		Log log = null;
-		for (Class<? extends AbstractLog> logClass : logClassList) {
-			try {
-				log = ClassUtil.newInstance(logClass, param);
-			} catch (Error e) {
-				continue;
-			}
-			break;
-		}
-		
-		return log;
-	}
-	
-	/**
 	 * @return 获得日志，自动判定日志发出者
 	 */
 	private static Log innerGet() {
-		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		return get(stackTrace[3].getClassName());
+		return get(ThreadUtil.getStackTraceElement(3).getClassName());
 	}
 	//----------------------------------------------------------- Private method end
 }

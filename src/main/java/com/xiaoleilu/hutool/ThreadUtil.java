@@ -131,4 +131,20 @@ public class ThreadUtil {
 		}
 		return true;
 	}
+	
+	/**
+	 * @return 获得堆栈列表
+	 */
+	public static StackTraceElement[] getStackTrace(){
+		return Thread.currentThread().getStackTrace();
+	}
+	
+	/**
+	 * 获得堆栈项
+	 * @param i 第几个堆栈项
+	 * @return 堆栈项
+	 */
+	public static StackTraceElement getStackTraceElement(int i){
+		return getStackTrace()[i];
+	}
 }
