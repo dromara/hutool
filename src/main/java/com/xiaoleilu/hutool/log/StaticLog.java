@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.log;
 
 import com.xiaoleilu.hutool.StrUtil;
-import com.xiaoleilu.hutool.ThreadUtil;
 
 /**
  * 静态日志类，用于在不引入日志对象的情况下打印日志
@@ -20,7 +19,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void trace(String format, Object... arguments) {
-		trace(innerGet(), format, arguments);
+		trace(LogFactory.get(), format, arguments);
 	}
 
 	/**
@@ -43,7 +42,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void debug(String format, Object... arguments) {
-		debug(innerGet(), format, arguments);
+		debug(LogFactory.get(), format, arguments);
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void info(String format, Object... arguments) {
-		info(innerGet(), format, arguments);
+		info(LogFactory.get(), format, arguments);
 	}
 
 	/**
@@ -89,7 +88,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(String format, Object... arguments) {
-		warn(innerGet(), format, arguments);
+		warn(LogFactory.get(), format, arguments);
 	}
 
 	/**
@@ -112,7 +111,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Throwable e, String format, Object... arguments) {
-		warn(innerGet(), e, StrUtil.format(format, arguments));
+		warn(LogFactory.get(), e, StrUtil.format(format, arguments));
 	}
 
 	/**
@@ -136,7 +135,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(String format, Object... arguments) {
-		error(innerGet(), format, arguments);
+		error(LogFactory.get(), format, arguments);
 	}
 
 	/**
@@ -159,7 +158,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Throwable e, String format, Object... arguments) {
-		error(innerGet(), e, StrUtil.format(format, arguments));
+		error(LogFactory.get(), e, StrUtil.format(format, arguments));
 	}
 
 	/**
@@ -191,7 +190,7 @@ public class StaticLog {
 	 * @param e 需在日志中堆栈打印的异常
 	 */
 	public static void error(Throwable e) {
-		innerGet().error(e.getMessage(), e);
+		get().error(e.getMessage(), e);
 	}
 	// ----------------------------------------------------------- Log method end
 	
@@ -217,15 +216,6 @@ public class StaticLog {
 	 * @return 获得日志，自动判定日志发出者
 	 */
 	public static Log get() {
-		return get(ThreadUtil.getStackTraceElement(2).getClassName());
+		return LogFactory.get();
 	}
-	
-	//----------------------------------------------------------- Private method start
-	/**
-	 * @return 获得日志，自动判定日志发出者
-	 */
-	private static Log innerGet() {
-		return get(ThreadUtil.getStackTraceElement(3).getClassName());
-	}
-	//----------------------------------------------------------- Private method end
 }
