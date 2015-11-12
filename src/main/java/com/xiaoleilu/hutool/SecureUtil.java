@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.UUID;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
@@ -359,5 +360,12 @@ public class SecureUtil {
 		}
 
 		return dest;
+	}
+	
+	/**
+	 * @return 简化的UUID，去掉了横线
+	 */
+	public static String simpleUUID(){
+		return UUID.randomUUID().toString().replace("-", "");
 	}
 }
