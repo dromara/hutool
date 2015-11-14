@@ -74,17 +74,7 @@ public class InjectUtil {
 	 * @param map map对象
 	 */
 	public static <T> void injectFromMapIgnoreCase(T model, Map<?, ?> map) {
-		final Map<Object, Object> map2 = new HashMap<Object, Object>();
-		for (Entry<?, ?> entry : map.entrySet()) {
-			final Object key = entry.getKey();
-			if(key instanceof String) {
-				final String keyStr = (String)key;
-				map2.put(keyStr.toLowerCase(), entry.getValue());
-			}else{
-				map2.put(key, entry.getValue());
-			}
-		}
-		injectFromMap(model, map2);
+		injectFromMap(model, map, true);
 	}
 	
 	/**
@@ -94,6 +84,33 @@ public class InjectUtil {
 	 * @param map map对象
 	 */
 	public static <T> void injectFromMap(T model, Map<?, ?> map) {
+		injectFromMap(model, map, false);
+	}
+	
+	/**
+	 * 从Map注入
+	 * @param <T>
+	 * @param model 模型
+	 * @param map map对象
+	 * @param isIgnoreCase 是否忽略大小写
+	 */
+	public static <T> void injectFromMap(T model, Map<?, ?> map, boolean isIgnoreCase) {
+		
+		//如果大小写不明感，需将所有key转为小写
+		if(isIgnoreCase){
+			final Map<Object, Object> map2 = new HashMap<Object, Object>();
+			for (Entry<?, ?> entry : map.entrySet()) {
+				final Object key = entry.getKey();
+				if(key instanceof String) {
+					final String keyStr = (String)key;
+					map2.put(keyStr.toLowerCase(), entry.getValue());
+				}else{
+					map2.put(key, entry.getValue());
+				}
+			}
+			map = map2;
+		}
+		
 		Method[] methods = model.getClass().getMethods();
 		for (Method method : methods) {
 			String methodName = method.getName();
@@ -107,6 +124,9 @@ public class InjectUtil {
 			}
 			
 			String fieldName = StrUtil.getGeneralField(methodName);
+			if(isIgnoreCase){
+				fieldName = fieldName.toLowerCase();
+			}
 			Object value = map.get(fieldName);
 			if (value == null) {
 				continue;

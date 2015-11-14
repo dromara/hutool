@@ -169,3 +169,4 @@ Entity中toVo区别是否忽略大小写
 2.13.1
 1、FileUtil增加方法判断目录是否为空
 2、SecureUtil增加simpleUUID方法
+3、修复Map转对象的时候忽略大小写问题（InjectUtil.injectFromMap）
