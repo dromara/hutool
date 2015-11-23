@@ -302,6 +302,30 @@ public class FileUtil {
 	
 	/**
 	 * 创建临时文件<br>
+	 * 创建后的文件名为 prefix[Randon].tmp
+	 * @param dir 临时文件创建的所在目录
+	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
+	 * @return 临时文件
+	 * @throws IOException
+	 */
+	public static File createTempFile(File dir) throws IOException {
+		return createTempFile("hutool", null, dir, true);
+	}
+	
+	/**
+	 * 创建临时文件<br>
+	 * 创建后的文件名为 prefix[Randon].tmp
+	 * @param dir 临时文件创建的所在目录
+	 * @param isReCreat 是否重新创建文件（删掉原来的，创建新的）
+	 * @return 临时文件
+	 * @throws IOException
+	 */
+	public static File createTempFile(File dir, boolean isReCreat) throws IOException {
+		return createTempFile("hutool", null, dir, isReCreat);
+	}
+	
+	/**
+	 * 创建临时文件<br>
 	 * 创建后的文件名为 prefix[Randon].suffix
 	 * From com.jodd.io.FileUtil
 	 * @param prefix 前缀，至少3个字符

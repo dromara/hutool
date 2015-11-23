@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.setting;
 
-interface IArraySetting {
+public interface IArraySetting {
 	/*-------------------------- 数组类型 start -------------------------------*/
 	String[] getStrs(String key);
 	

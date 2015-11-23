@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.setting;
 
 import java.util.List;
 
-interface IListSetting {
+public interface IListSetting {
 	/*-------------------------- List类型 start -------------------------------*/
 	List<String> getStrList(String key);
 	

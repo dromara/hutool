@@ -8,7 +8,7 @@ import java.math.BigInteger;
  * @author Looly
  *
  */
-interface IBasicSetting {
+public interface IBasicSetting {
 	/*-------------------------- 基本类型 start -------------------------------*/
 	/**
 	 * 获取字符串型属性值
