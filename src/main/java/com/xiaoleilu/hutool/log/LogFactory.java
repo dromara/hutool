@@ -69,9 +69,16 @@ public class LogFactory {
 	}
 	
 	/**
-	 * @return 获得日志，自动判定日志发出者
+	 * @return 获得调用者的日志
 	 */
 	public static Log get() {
+		return getLog(new Exception().getStackTrace()[1].getClassName());
+	}
+	
+	/**
+	 * @return 获得调用者的调用者的日志（用于内部辗转调用）
+	 */
+	protected static Log indirectGet() {
 		return getLog(new Exception().getStackTrace()[2].getClassName());
 	}
 }

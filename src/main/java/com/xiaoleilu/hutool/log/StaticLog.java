@@ -19,7 +19,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void trace(String format, Object... arguments) {
-		trace(LogFactory.get(), format, arguments);
+		trace(LogFactory.indirectGet(), format, arguments);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void debug(String format, Object... arguments) {
-		debug(LogFactory.get(), format, arguments);
+		debug(LogFactory.indirectGet(), format, arguments);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void info(String format, Object... arguments) {
-		info(LogFactory.get(), format, arguments);
+		info(LogFactory.indirectGet(), format, arguments);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(String format, Object... arguments) {
-		warn(LogFactory.get(), format, arguments);
+		warn(LogFactory.indirectGet(), format, arguments);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Throwable e, String format, Object... arguments) {
-		warn(LogFactory.get(), e, StrUtil.format(format, arguments));
+		warn(LogFactory.indirectGet(), e, StrUtil.format(format, arguments));
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(String format, Object... arguments) {
-		error(LogFactory.get(), format, arguments);
+		error(LogFactory.indirectGet(), format, arguments);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Throwable e, String format, Object... arguments) {
-		error(LogFactory.get(), e, StrUtil.format(format, arguments));
+		error(LogFactory.indirectGet(), e, StrUtil.format(format, arguments));
 	}
 
 	/**
@@ -216,6 +216,6 @@ public class StaticLog {
 	 * @return 获得日志，自动判定日志发出者
 	 */
 	public static Log get() {
-		return LogFactory.get();
+		return LogFactory.indirectGet();
 	}
 }
