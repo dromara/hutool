@@ -37,9 +37,9 @@ hutool
 ### 非Maven项目
 可以从[http://search.maven.org/](http://search.maven.org/) 搜索`hutool`找到项目，点击对应版本，下面是相应的Jar包，导入即可使用。
 
-最新的2.4.2版本Jar下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2.jar)
+最新的2.13.1版本Jar下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.13.1/hutool-2.13.1.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.13.1/hutool-2.13.1.jar)
 
-Java doc下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.4.2/hutool-2.4.2-javadoc.jar)
+Java doc下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.13.1/hutool-2.13.1-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.13.1/hutool-2.13.1-javadoc.jar)
 
 ## 文档请移步 
 
