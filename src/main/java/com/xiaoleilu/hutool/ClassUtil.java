@@ -9,8 +9,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -425,6 +427,18 @@ public class ClassUtil {
 		} catch (Exception e) {
 			throw new UtilException(e);
 		}
+	}
+	
+	/**
+	 * 新建代理对象<br>
+	 * 动态代理类对象用于动态创建一个代理对象，可以在调用接口方法的时候动态执行相应逻辑
+	 * @param interfaceClass 被代理接口
+	 * @param invocationHandler 代理执行类，此类用于实现具体的接口方法
+	 * @return 被代理接口
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T newProxyInstance(Class<T> interfaceClass, InvocationHandler invocationHandler){
+		return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{ interfaceClass}, invocationHandler);
 	}
 	
 	//--------------------------------------------------------------------------------------------------- Private method start

@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'com.xiaoleilu'
-version = '2.12.4'
+version = '2.13.1'
 
 sourceCompatibility = 1.7
 targetCompatibility=1.7
@@ -16,19 +16,19 @@ repositories {
 
 dependencies {
 	compile(
-		'org.slf4j:slf4j-api:1.7.12'
 	)
 	
 	provided(
+		'org.slf4j:slf4j-api:1.7.12',
 		'javax.servlet:javax.servlet-api:3.1.0',
 		'mysql:mysql-connector-java:5.1.32',
-		'com.alibaba:druid:1.0.15',
-		'org.mongodb:mongo-java-driver:3.0.3',
+		'com.alibaba:druid:1.0.16',
+		'org.mongodb:mongo-java-driver:3.1.0',
 		'it.sauronsoftware.cron4j:cron4j:2.2.5',
 		'org.apache.velocity:velocity:1.7'
 	)
 	
 	testCompile(
-		'ch.qos.logback:logback-classic:1.1.2'
+		'ch.qos.logback:logback-classic:1.1.3'
 	)
 }
