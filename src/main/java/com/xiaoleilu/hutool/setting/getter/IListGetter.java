@@ -1,8 +1,13 @@
-package com.xiaoleilu.hutool.setting;
+package com.xiaoleilu.hutool.setting.getter;
 
 import java.util.List;
 
-public interface IListSetting {
+/**
+ * 列表类型的Get接口
+ * @author Looly
+ *
+ */
+public interface IListGetter {
 	/*-------------------------- List类型 start -------------------------------*/
 	List<String> getStrList(String key);
 	

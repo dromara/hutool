@@ -7,8 +7,14 @@ import java.nio.charset.Charset;
 
 import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.setting.getter.IBasicGetter;
 
-public abstract class AbsSetting implements IBasicSetting{
+/**
+ * 设定抽象类
+ * @author Looly
+ *
+ */
+public abstract class AbsSetting implements IBasicGetter{
 	
 	/** 本设置对象的字符集 */
 	protected Charset charset;

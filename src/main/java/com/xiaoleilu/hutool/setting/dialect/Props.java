@@ -15,13 +15,13 @@ import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.URLUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
-import com.xiaoleilu.hutool.setting.IBasicSetting;
+import com.xiaoleilu.hutool.setting.getter.IBasicGetter;
 
 /**
  * Properties文件读取封装类
  * @author loolly
  */
-public final class Props extends Properties implements IBasicSetting{
+public final class Props extends Properties implements IBasicGetter{
 	private static final long serialVersionUID = 1935981579709590740L;
 	private final static Log log = StaticLog.get();
 	

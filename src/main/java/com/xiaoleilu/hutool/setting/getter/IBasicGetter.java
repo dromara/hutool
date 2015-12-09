@@ -1,14 +1,14 @@
-package com.xiaoleilu.hutool.setting;
+package com.xiaoleilu.hutool.setting.getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * 基础类型设定接口
+ * 基本类型的get接口
  * @author Looly
  *
  */
-public interface IBasicSetting {
+public interface IBasicGetter {
 	/*-------------------------- 基本类型 start -------------------------------*/
 	/**
 	 * 获取字符串型属性值

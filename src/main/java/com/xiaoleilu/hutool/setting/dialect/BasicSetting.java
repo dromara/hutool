@@ -12,13 +12,14 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.FileUtil;
@@ -43,7 +44,7 @@ import com.xiaoleilu.hutool.setting.AbsSetting;
 public class BasicSetting extends AbsSetting{
 	private final static Log log = StaticLog.get();
 	
-	final Map<String, String> map = new Hashtable<String, String>();
+	final Map<String, String> map = new ConcurrentHashMap<String, String>();
 	
 	/** 默认字符集 */
 	public final static String DEFAULT_CHARSET = "utf8";
@@ -305,6 +306,29 @@ public class BasicSetting extends AbsSetting{
 	 */
 	public String getByGroup(String key, String group) {
 		return getStr(keyWithGroup(key, group));
+	}
+	
+	/**
+	 * 获得所有键值对
+	 * @return map
+	 */
+	public Map<String, String> getMap(){
+		return this.map;
+	}
+	
+	/**
+	 * 获得指定分组的所有键值对
+	 * @param group 分组
+	 * @return map
+	 */
+	public Map<String, String> getMap(String group){
+		Map<String, String> map2 = new HashMap<String, String>();
+		for (String key : map.keySet()) {
+			if(StrUtil.isNotBlank(key) && key.startsWith(group)){
+				map2.put(key, map.get(key));
+			}
+		}
+		return map2;
 	}
 	
 	//--------------------------------------------------------------- Set
