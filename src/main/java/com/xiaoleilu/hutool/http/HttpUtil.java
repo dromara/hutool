@@ -69,25 +69,33 @@ public class HttpUtil {
 	}
 
 	/**
-	 * 获取客户端IP
+	 * 获取客户端IP<br>
+	 * 默认检测的Header：<br>
+	 * 1、X-Forwarded-For<br>
+	 * 2、X-Real-IP<br>
+	 * 3、Proxy-Client-IP<br>
+	 * 4、WL-Proxy-Client-IP<br>
+	 * otherHeaderNames参数用于自定义检测的Header
 	 * 
 	 * @param request 请求对象
+	 * @param otherHeaderNames 其他自定义头文件
 	 * @return IP地址
 	 */
-	public static String getClientIP(javax.servlet.http.HttpServletRequest request) {
-		String ip = request.getHeader("X-Forwarded-For");
-		if (isUnknow(ip)) {
-			ip = request.getHeader("Proxy-Client-IP");
+	public static String getClientIP(javax.servlet.http.HttpServletRequest request, String... otherHeaderNames) {
+		String[] headers = new String[]{"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
+		if(CollectionUtil.isNotEmpty(otherHeaderNames)){
+			headers = CollectionUtil.addAll(headers, otherHeaderNames);
 		}
-		if (isUnknow(ip)) {
-			ip = request.getHeader("WL-Proxy-Client-IP");
+		
+		String ip;
+		for (String header : headers) {
+			ip = request.getHeader(header);
+			if(false == isUnknow(ip)){
+				return getMultistageReverseProxyIp(ip);
+			}
 		}
-		if (isUnknow(ip)) {
-			ip = request.getHeader("X-Real-IP");
-		}
-		if (isUnknow(ip)) {
-			ip = request.getRemoteAddr();
-		}
+		
+		ip = request.getRemoteAddr();
 		return getMultistageReverseProxyIp(ip);
 	}
 	
