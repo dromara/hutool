@@ -1,9 +1,11 @@
 package com.xiaoleilu.hutool.http;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -159,6 +161,27 @@ public class HttpUtil {
 			return IoUtil.getString(in, customCharset);
 		} finally {
 			FileUtil.close(in);
+		}
+	}
+	
+	/**
+	 * 获得远程String
+	 * 
+	 * @param url 请求的url
+	 * @param customCharset 自定义的字符集
+	 * @return 文本
+	 * @throws IOException
+	 */
+	public static int downloadFile(String url, File destFile) throws IOException {
+		InputStream in = null;
+		OutputStream out = null;
+		try {
+			in = new URL(url).openStream();
+			out = FileUtil.getOutputStream(destFile);
+			return IoUtil.copy(in, out);
+		} finally {
+			FileUtil.close(in);
+			FileUtil.close(out);
 		}
 	}
 

@@ -171,3 +171,4 @@ Entity中toVo区别是否忽略大小写
 2、SecureUtil增加simpleUUID方法
 3、修复Map转对象的时候忽略大小写问题（InjectUtil.injectFromMap）
 4、修复LogFactory.get()栈溢出问题
+5、增加downloadFile方法 for HttpUtil

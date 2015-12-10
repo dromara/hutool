@@ -43,6 +43,11 @@ public class IoUtil {
 	
 	/**
 	 * 将Reader中的内容复制到Writer中
+	 * @param reader Reader
+	 * @param writer Writer
+	 * @param bufferSize 缓存大小
+	 * @return 传输的byte数
+	 * @throws IOException
 	 */
 	public static int copy(Reader reader, Writer writer, int bufferSize) throws IOException {
 		char[] buffer = new char[bufferSize];
@@ -61,6 +66,7 @@ public class IoUtil {
 	 * 拷贝流，使用默认Buffer大小
 	 * @param in 输入流
 	 * @param out 输出流
+	 * @return 传输的byte数
 	 * @throws IOException
 	 */
 	public static int copy(InputStream in, OutputStream out) throws IOException {
@@ -72,6 +78,7 @@ public class IoUtil {
 	 * @param in 输入流
 	 * @param out 输出流
 	 * @param bufferSize 缓存大小
+	 * @return 传输的byte数
 	 * @throws IOException
 	 */
 	public static int copy(InputStream in, OutputStream out, int bufferSize) throws IOException {
