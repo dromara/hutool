@@ -28,8 +28,9 @@ public class ZipUtil {
 	 * 打包到当前目录
 	 * @param srcPath 源文件路径
 	 * @return 打包好的压缩文件
+	 * @throws IOException 
 	 */
-	public static File zip(String srcPath) throws UtilException{
+	public static File zip(String srcPath) throws IOException {
 		return zip(FileUtil.file(srcPath));
 	}
 	
@@ -37,8 +38,9 @@ public class ZipUtil {
 	 * 打包到当前目录
 	 * @param srcFile 源文件或目录
 	 * @return 打包好的压缩文件
+	 * @throws IOException 
 	 */
-	public static File zip(File srcFile) throws UtilException{
+	public static File zip(File srcFile) throws IOException{
 		File zipFile = FileUtil.file(srcFile.getParentFile(), FileUtil.mainName(srcFile) + ".zip");
 		zip(srcFile, zipFile, true);
 		return zipFile;
@@ -50,9 +52,9 @@ public class ZipUtil {
 	 * @param srcPath 要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @return 压缩好的Zip文件
-	 * @throws UtilException
+	 * @throws IOException 
 	 */
-	public static File zip(String srcPath, String zipPath) throws UtilException {
+	public static File zip(String srcPath, String zipPath) throws IOException {
 		return zip(srcPath, zipPath, true);
 	}
 	
@@ -61,9 +63,10 @@ public class ZipUtil {
 	 * @param srcPath 要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
+	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public static File zip(String srcPath, String zipPath, boolean withSrcDir) throws UtilException {
+	public static File zip(String srcPath, String zipPath, boolean withSrcDir) throws IOException {
 		File srcFile = FileUtil.file(srcPath);
 		File zipFile = FileUtil.file(zipPath);
 		zip(srcFile, zipFile, withSrcDir);
@@ -75,9 +78,9 @@ public class ZipUtil {
 	 * @param srcFile 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public static void zip(File srcFile, File zipFile, boolean withSrcDir) throws UtilException {
+	public static void zip(File srcFile, File zipFile, boolean withSrcDir) throws IOException {
 		validateFile(srcFile, zipFile);
 		
 		ZipOutputStream out = null;
@@ -92,8 +95,8 @@ public class ZipUtil {
 			// 调用递归压缩方法进行目录或文件压缩
 			zip(srcRootDir, srcFile, out);
 			out.flush();
-		} catch (Exception e) {
-			throw new UtilException(e);
+		} catch (IOException e) {
+			throw e;
 		} finally {
 			FileUtil.close(out);
 		}
