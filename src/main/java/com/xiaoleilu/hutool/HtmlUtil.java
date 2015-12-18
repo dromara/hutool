@@ -163,7 +163,7 @@ public class HtmlUtil {
 	 * Encoder
 	 * @param text 被编码的文本
 	 * @param array 特殊字符集合
-	 * @return
+	 * @return 编码后的字符
 	 */
 	private static String encode(String text, char[][] array) {
 		int len;
