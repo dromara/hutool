@@ -508,6 +508,57 @@ public class FileUtil {
 	}
 	
 	/**
+	 * 返回主文件名
+	 * @param file 文件
+	 * @return 主文件名
+	 */
+	public static String mainName(File file){
+		if(file.isDirectory()){
+			return file.getName();
+		}
+		return mainName(file.getName());
+	}
+	
+	/**
+	 * 返回主文件名
+	 * @param fileName 完整文件名
+	 * @return 主文件名
+	 */
+	public static String mainName(String fileName){
+		if(StrUtil.isBlank(fileName) || false == fileName.contains(StrUtil.DOT)){
+			return fileName;
+		}
+		return StrUtil.subPre(fileName, fileName.lastIndexOf(StrUtil.DOT));
+	}
+	
+	/**
+	 * 获取文件扩展名
+	 * @param file 文件
+	 * @return 扩展名
+	 */
+	public static String extName(File file){
+		if(null == file){
+			return null;
+		}
+		if(file.isDirectory()){
+			return null;
+		}
+		return extName(file.getName());
+	}
+	
+	/**
+	 * 返回扩展名
+	 * @param fileName 完整文件名
+	 * @return 扩展名
+	 */
+	public static String extName(String fileName){
+		if(StrUtil.isBlank(fileName) || false == fileName.contains(StrUtil.DOT)){
+			return null;
+		}
+		return StrUtil.subSuf(fileName, fileName.lastIndexOf(StrUtil.DOT) + 1);
+	}
+	
+	/**
 	 * 关闭
 	 * @param closeable 被关闭的对象
 	 */
