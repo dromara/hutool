@@ -168,8 +168,8 @@ public class HttpUtil {
 	 * 获得远程String
 	 * 
 	 * @param url 请求的url
-	 * @param customCharset 自定义的字符集
-	 * @return 文本
+	 * @param destFile 目标文件
+	 * @return 文件大小
 	 * @throws IOException
 	 */
 	public static int downloadFile(String url, File destFile) throws IOException {
