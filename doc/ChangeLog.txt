@@ -173,3 +173,4 @@ Entity中toVo区别是否忽略大小写
 4、修复LogFactory.get()栈溢出问题
 5、增加downloadFile方法 for HttpUtil
 6、扩充ZipUtil
+7、增加数据库连接池

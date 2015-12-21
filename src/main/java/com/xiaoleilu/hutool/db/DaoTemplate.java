@@ -273,6 +273,23 @@ public class DaoTemplate {
 	}
 	
 	/**
+	 * 根据SQL语句查询结果<br>
+	 * SQL语句可以是非完整SQL语句，可以只提供查询的条件部分（例如WHERE部分）<br>
+	 * 此方法会自动补全SELECT * FROM [tableName] 部分，这样就无需关心表名，直接提供条件即可
+	 * 
+	 * @param sql SQL语句
+	 * @return 记录
+	 * @throws SQLException
+	 */
+	public List<Entity> findBySql(String sql, Object... params) throws SQLException {
+		String selectKeyword = StrUtil.subPre(sql.trim(), 6).toLowerCase();
+		if(false == "select".equals(selectKeyword)){
+			sql = "SELECT * FROM " + this.tableName + " " + sql;
+		}
+		return runner.query(sql, new EntityListHandler(), params);
+	}
+	
+	/**
 	 * 分页
 	 * @param where 条件
 	 * @param page 分页对象
