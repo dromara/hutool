@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
@@ -34,7 +35,11 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			httpResponse.charset = httpConnection.charset();
 			httpResponse.readBody(httpConnection.getInputStream());
 		} catch (IOException e) {
-			throw new HttpException(e.getMessage(), e);
+			if(e instanceof FileNotFoundException){
+				//服务器无返回内容，忽略之
+			}else{
+				throw new HttpException(e.getMessage(), e);
+			}
 		}
 		
 		return httpResponse;
