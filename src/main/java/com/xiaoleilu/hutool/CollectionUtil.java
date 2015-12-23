@@ -759,4 +759,13 @@ public class CollectionUtil {
 		}
 		return array;
 	}
+	
+	/**
+	 * 判定给定对象是否为数组类型
+	 * @param obj 对象
+	 * @return 是否为数组类型
+	 */
+	public static boolean isArray(Object obj){
+		return obj.getClass().isArray();
+	}
 }

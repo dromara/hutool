@@ -1,10 +1,13 @@
 package com.xiaoleilu.hutool.http;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.Conver;
 import com.xiaoleilu.hutool.IoUtil;
 import com.xiaoleilu.hutool.SecureUtil;
@@ -23,6 +26,8 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	private int timeout = -1;
 	/**存储表单数据*/
 	protected Map<String, Object> form;
+	/** 文件表单对象，用于文件上传 */
+	protected Map<String, File> fileForm;
 	
 	/** 连接对象 */
 	private HttpConnection httpConnection;
@@ -123,8 +128,25 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 			this.body =null;
 		}
 		
-		form.put(name, Conver.toStr(value, null));
-
+		if(value instanceof File){
+			//文件对象
+			this.fileForm.put(name, (File)value);
+			return this;
+		}
+		
+		String strValue;
+		if(value instanceof List){
+			//列表对象
+			strValue = CollectionUtil.join((List<?>)value, ",");
+		}else if(CollectionUtil.isArray(value)){
+			//数组对象
+			strValue = CollectionUtil.join((Object[])value, ",");
+		}else{
+			//其他对象一律转换为字符串
+			strValue = Conver.toStr(value, null);
+		}
+		
+		form.put(name, strValue);
 		return this;
 	}
 	/**

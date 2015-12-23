@@ -176,8 +176,4 @@ public class URLUtil {
 		
 		return uri == null ? null : uri.getPath();
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(getPath("http://www.oschina.net/search?scope=blog&q=netty"));
-	}
 }
