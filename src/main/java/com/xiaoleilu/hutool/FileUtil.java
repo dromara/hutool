@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URI;
@@ -1076,7 +1077,7 @@ public class FileUtil {
 	 * @param in 输入流
 	 * @throws IOException
 	 */
-	public static void writeStream(File dest, InputStream in) throws IOException {
+	public static void writeFromStream(InputStream in, File dest) throws IOException {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(dest);
@@ -1088,12 +1089,38 @@ public class FileUtil {
 	
 	/**
 	 * 将流的内容写入文件<br>
-	 * @param fullFilePath 文件绝对路径
 	 * @param in 输入流
+	 * @param fullFilePath 文件绝对路径
 	 * @throws IOException
 	 */
-	public static void writeStream(String fullFilePath, InputStream in) throws IOException {
-		writeStream(touch(fullFilePath), in);
+	public static void writeFromStream(InputStream in, String fullFilePath) throws IOException {
+		writeFromStream(in, touch(fullFilePath));
+	}
+	
+	/**
+	 * 将文件写入流中
+	 * @param file 文件
+	 * @param out 流
+	 * @throws IOException
+	 */
+	public static void writeToStream(File file, OutputStream out) throws IOException{
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(file);
+			IoUtil.copy(in, out);
+		} finally {
+			close(out);
+		}
+	}
+	
+	/**
+	 * 将流的内容写入文件<br>
+	 * @param fullFilePath 文件绝对路径
+	 * @param out 输出流
+	 * @throws IOException
+	 */
+	public static void writeToStream(String fullFilePath, OutputStream out) throws IOException {
+		writeToStream(touch(fullFilePath), out);
 	}
 	
 	/**

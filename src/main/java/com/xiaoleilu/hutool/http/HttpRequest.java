@@ -6,9 +6,11 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.Conver;
+import com.xiaoleilu.hutool.FileUtil;
 import com.xiaoleilu.hutool.IoUtil;
 import com.xiaoleilu.hutool.SecureUtil;
 import com.xiaoleilu.hutool.StrUtil;
@@ -19,6 +21,11 @@ import com.xiaoleilu.hutool.exceptions.HttpException;
  * @author Looly
  */
 public class HttpRequest extends HttpBase<HttpRequest>{
+	
+	private static final String BOUNDARY = "--------------------Hutool" + SecureUtil.simpleUUID();
+	private static final String BOUNDARY_CRLF = "\r\n" + BOUNDARY +"\r\n";
+	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n\r\n";
+	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n\r\n";
 
 	protected Method method = Method.GET;
 	private String url = "";
@@ -122,16 +129,18 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * @param value 值
 	 */
 	public HttpRequest form(String name, Object value) {
-		if(this.form == null) {
-			form = new HashMap<String, Object>();
-			//停用body
-			this.body =null;
-		}
+		//停用body
+		this.body =null;
 		
 		if(value instanceof File){
+			if(this.fileForm == null) {
+				fileForm = new HashMap<String, File>();
+			}
 			//文件对象
 			this.fileForm.put(name, (File)value);
 			return this;
+		}else if(this.form == null) {
+			form = new HashMap<String, Object>();
 		}
 		
 		String strValue;
@@ -288,12 +297,50 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		final OutputStream out = this.httpConnection.getOutputStream();
 		//Write的时候会优先使用body中的内容，write时自动关闭OutputStream
 		if(null != out){
-			if(StrUtil.isNotBlank(this.body)) {
+			if(CollectionUtil.isNotEmpty(fileForm)){
+				sendMltipart(out);
+			}else if(StrUtil.isNotBlank(this.body)) {
 				IoUtil.write(out, this.charset, true, this.body);
 			}else {
 				IoUtil.write(out, this.charset, true, HttpUtil.toParams(this.form));
 			}
 		}
+	}
+	
+	/**
+	 * 发送多组件请求（例如包含文件的表单）
+	 * @throws IOException 
+	 */
+	private void sendMltipart(OutputStream out) throws IOException{
+		this.httpConnection.header(Header.CONTENT_TYPE, "multipart/form-data;boundary=" + BOUNDARY, true);
+		this.httpConnection.header(Header.CONNECTION, "Keep-Alive", true);
+		this.httpConnection.getHttpURLConnection().setUseCaches(false);
+		
+		//普通表单内容
+		if(CollectionUtil.isNotEmpty(this.form)){
+			StringBuilder builder = StrUtil.builder();
+			for (Entry<String, Object> entry : this.form.entrySet()) {
+				builder.append(BOUNDARY_CRLF);
+				builder.append(StrUtil.format(CONTENT_DISPOSITION_TEMPLATE, entry.getKey()));
+				builder.append(entry.getValue());
+			}
+			IoUtil.write(out, this.charset, false, builder.toString());
+		}
+		
+		//文件
+		File file;
+		for (Entry<String, File> entry : this.fileForm.entrySet()) {
+			file = entry.getValue();
+			StringBuilder builder = StrUtil.builder().append(BOUNDARY_CRLF);
+			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), file.getName()));
+			IoUtil.write(out, this.charset, false, builder.toString());
+			FileUtil.writeToStream(file, out);
+		}
+		
+		//结尾
+		out.write(("\r\n" + BOUNDARY + "--\r\n").getBytes());
+		out.flush();
+		FileUtil.close(out);
 	}
 	// ---------------------------------------------------------------- Private method end
 	
