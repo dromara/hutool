@@ -175,3 +175,5 @@ Entity中toVo区别是否忽略大小写
 6、扩充ZipUtil
 7、增加数据库连接池
 8、修复Http的form多类型问题
+9、修复IoUtil.copy未flush的bug
+10、Http增加文件上传

@@ -15,17 +15,19 @@ import com.xiaoleilu.hutool.IoUtil;
 import com.xiaoleilu.hutool.SecureUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.HttpException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.LogFactory;
 
 /**
  * http请求类
  * @author Looly
  */
 public class HttpRequest extends HttpBase<HttpRequest>{
-	
-	private static final String BOUNDARY = "--------------------Hutool" + SecureUtil.simpleUUID();
+	private static final String BOUNDARY = "--------------------Hutool_" + SecureUtil.simpleUUID();
 	private static final String BOUNDARY_CRLF = "\r\n" + BOUNDARY +"\r\n";
 	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n\r\n";
-	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n\r\n";
+	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n";
+	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type:{}\r\n\r\n";
 
 	protected Method method = Method.GET;
 	private String url = "";
@@ -133,12 +135,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		this.body =null;
 		
 		if(value instanceof File){
-			if(this.fileForm == null) {
-				fileForm = new HashMap<String, File>();
-			}
-			//文件对象
-			this.fileForm.put(name, (File)value);
-			return this;
+			return this.form(name, (File)value);
 		}else if(this.form == null) {
 			form = new HashMap<String, Object>();
 		}
@@ -184,6 +181,31 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
 			form(entry.getKey(), entry.getValue());
 		}
+		return this;
+	}
+	
+	/**
+	 * 文件表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * @param name 名
+	 * @param file 文件
+	 * @return HttpRequest
+	 */
+	public HttpRequest form(String name, File file){
+		if(null == file){
+			return this;
+		}
+		
+		if(false == isKeepAlive()){
+			keepAlive(true);
+		}
+		header(Header.CONTENT_TYPE, "multipart/form-data;boundary=" + BOUNDARY);
+		
+		if(this.fileForm == null) {
+			fileForm = new HashMap<String, File>();
+		}
+		//文件对象
+		this.fileForm.put(name, file);
 		return this;
 	}
 
@@ -251,7 +273,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		
 		//发送请求
 		try {
-			if(Method.POST.equals(method)){
+			if(Method.POST.equals(method) || Method.PUT.equals(method)){
 				send();//发送数据
 			} else {
 				this.httpConnection.connect();
@@ -294,16 +316,17 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * @throws IOException
 	 */
 	private void send() throws IOException {
-		final OutputStream out = this.httpConnection.getOutputStream();
-		//Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		if(null != out){
-			if(CollectionUtil.isNotEmpty(fileForm)){
-				sendMltipart(out);
-			}else if(StrUtil.isNotBlank(this.body)) {
-				IoUtil.write(out, this.charset, true, this.body);
+		if(CollectionUtil.isNotEmpty(fileForm)){
+			sendMltipart();
+		}else{
+			//Write的时候会优先使用body中的内容，write时自动关闭OutputStream
+			String content;
+			if(StrUtil.isNotBlank(this.body)) {
+				content = this.body;
 			}else {
-				IoUtil.write(out, this.charset, true, HttpUtil.toParams(this.form));
+				content = HttpUtil.toParams(this.form);
 			}
+			IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
 		}
 	}
 	
@@ -311,10 +334,9 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * 发送多组件请求（例如包含文件的表单）
 	 * @throws IOException 
 	 */
-	private void sendMltipart(OutputStream out) throws IOException{
-		this.httpConnection.header(Header.CONTENT_TYPE, "multipart/form-data;boundary=" + BOUNDARY, true);
-		this.httpConnection.header(Header.CONNECTION, "Keep-Alive", true);
+	private void sendMltipart() throws IOException{
 		this.httpConnection.getHttpURLConnection().setUseCaches(false);
+		final OutputStream out = this.httpConnection.getOutputStream();
 		
 		//普通表单内容
 		if(CollectionUtil.isNotEmpty(this.form)){
@@ -333,6 +355,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 			file = entry.getValue();
 			StringBuilder builder = StrUtil.builder().append(BOUNDARY_CRLF);
 			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), file.getName()));
+			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(file.getName())));
 			IoUtil.write(out, this.charset, false, builder.toString());
 			FileUtil.writeToStream(file, out);
 		}
@@ -340,6 +363,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		//结尾
 		out.write(("\r\n" + BOUNDARY + "--\r\n").getBytes());
 		out.flush();
+		
 		FileUtil.close(out);
 	}
 	// ---------------------------------------------------------------- Private method end

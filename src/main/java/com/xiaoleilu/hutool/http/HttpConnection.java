@@ -352,10 +352,10 @@ public class HttpConnection {
 	 * @throws IOException
 	 */
 	public OutputStream getOutputStream() throws IOException {
-		if (null != this.conn) {
-			return this.conn.getOutputStream();
+		if (null == this.conn) {
+			throw new IOException("HttpURLConnection has not been initialized.");
 		}
-		return null;
+		return this.conn.getOutputStream();
 	}
 
 	/**

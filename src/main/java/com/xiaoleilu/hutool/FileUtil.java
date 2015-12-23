@@ -1109,7 +1109,7 @@ public class FileUtil {
 			in = new FileInputStream(file);
 			IoUtil.copy(in, out);
 		} finally {
-			close(out);
+			close(in);
 		}
 	}
 	

@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.http;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -91,8 +91,10 @@ public abstract class HttpBase<T> {
 	public T header(String name, String value, boolean isOverride) {
 		if(null != name && null != value){
 			final List<String> values = headers.get(name.trim());
-			if(CollectionUtil.isEmpty(values)) {
-				headers.put(name.trim(), Arrays.asList(value.trim()));
+			if(isOverride || CollectionUtil.isEmpty(values)) {
+				final ArrayList<String> valueList = new ArrayList<String>();
+				valueList.add(value);
+				headers.put(name.trim(), valueList);
 			}else {
 				values.add(value.trim());
 			}

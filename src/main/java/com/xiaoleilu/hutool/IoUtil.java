@@ -56,8 +56,8 @@ public class IoUtil {
 		while ((readSize = reader.read(buffer, 0, bufferSize)) >= 0) {
 			writer.write(buffer, 0, readSize);
 			count += readSize;
+			writer.flush();
 		}
-		writer.flush();
 		
 		return count;
 	}
@@ -87,8 +87,8 @@ public class IoUtil {
 		for (int n = -1; (n = in.read(buffer)) != -1;) {
 			out.write(buffer, 0, n);
 			count += n;
+			out.flush();
 		}
-		out.flush();
 		
 		return count;
 	}
@@ -213,6 +213,7 @@ public class IoUtil {
 			for (Object content : contents) {
 				if(content != null) {
 					osw.write(Conver.toStr(content, StrUtil.EMPTY));
+					osw.flush();
 				}
 			}
 		} catch (Exception e) {
