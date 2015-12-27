@@ -122,6 +122,57 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	}
 	// ---------------------------------------------------------------- Http Method end
 	
+	// ---------------------------------------------------------------- Http Request Header start
+	/**
+	 * 设置contentType
+	 * @param contentType contentType
+	 * @return HttpRequest
+	 */
+	public HttpRequest contentType(String contentType) {
+		header(Header.CONTENT_TYPE, contentType);
+		return this;
+	}
+	
+	/**
+	 * 设置是否为长连接
+	 * @param isKeepAlive 是否长连接
+	 * @return HttpRequest
+	 */
+	public HttpRequest keepAlive(boolean isKeepAlive) {
+		header(Header.CONNECTION, isKeepAlive ? "Keep-Alive" : "Close");
+		return this;
+	}
+	
+	/**
+	 * @return 获取是否为长连接
+	 */
+	public boolean isKeepAlive() {
+		String connection = header(Header.CONNECTION);
+		if (connection == null) {
+			return !httpVersion.equalsIgnoreCase(HTTP_1_0);
+		}
+
+		return !connection.equalsIgnoreCase("close");
+	}
+	
+	/**
+	 * 获取内容长度
+	 * @return String
+	 */
+	public String contentLength() {
+		return header(Header.CONTENT_LENGTH);
+	}
+	/**
+	 * 设置内容长度
+	 * @param value 长度
+	 * @return HttpRequest
+	 */
+	public HttpRequest contentLength(int value) {
+		header(Header.CONTENT_LENGTH, String.valueOf(value));
+		return this;
+	}
+	// ---------------------------------------------------------------- Http Request Header end
+	
 	// ---------------------------------------------------------------- Form start
 	/**
 	 * 设置表单数据
@@ -234,7 +285,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * @param contentType
 	 */
 	public HttpRequest body(byte[] content, String contentType) {
-		this.contentType(contentType);
+//		this.contentType(contentType);
 		return body(StrUtil.str(content, charset));
 	}
 	// ---------------------------------------------------------------- Body end
@@ -266,7 +317,6 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		//初始化 connection
 		this.httpConnection = HttpConnection.create(url, method)
 				.setConnectionAndReadTimeout(timeout)
-				.header(Header.CHAESET, this.charset, true)
 				.header(this.headers);
 		
 		//发送请求
@@ -284,12 +334,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		// 获取响应
 		HttpResponse httpResponse = HttpResponse.readResponse(httpConnection);
 		
-		//关闭或保持
-		if (httpResponse.isKeepAlive() == false) {
-			this.httpConnection.disconnect();
-			this.httpConnection = null;
-		}
-		
+		this.httpConnection.disconnect();
 		return httpResponse;
 	}
 	
@@ -333,7 +378,9 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * @throws IOException 
 	 */
 	private void sendMltipart() throws IOException{
-		this.httpConnection.getHttpURLConnection().setUseCaches(false);
+		contentType("multipart/form-data");//设置表单类型
+		
+		this.httpConnection.disableCache();
 		final OutputStream out = this.httpConnection.getOutputStream();
 		
 		//普通表单内容

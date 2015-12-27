@@ -326,7 +326,7 @@ public class HttpUtil {
 	 * @return 是否未知
 	 */
 	public static boolean isUnknow(String checkString) {
-		return StrUtil.isBlank(checkString) || Header.UNKNOW.toString().equalsIgnoreCase(checkString);
+		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 	
 	/**

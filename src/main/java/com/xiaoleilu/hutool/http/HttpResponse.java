@@ -60,6 +60,16 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		return status;
 	}
 	
+	// ---------------------------------------------------------------- Http Response Header start
+	/**
+	 * 获取内容编码
+	 * @return String
+	 */
+	public String contentEncoding() {
+		return header(Header.CONTENT_ENCODING);
+	}
+	// ---------------------------------------------------------------- Http Response Header end
+	
 	// ---------------------------------------------------------------- Body start
 	/**
 	 * 获取响应流字节码

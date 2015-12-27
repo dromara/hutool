@@ -242,6 +242,14 @@ public class HttpConnection {
 		return this.conn.getHeaderFields();
 	}
 	// ---------------------------------------------------------------- Headers end
+	/**
+	 * 关闭缓存
+	 * @return HttpConnection
+	 */
+	public HttpConnection disableCache(){
+		this.conn.setUseCaches(false);
+		return this;
+	}
 	
 	/**
 	 * 设置连接超时
