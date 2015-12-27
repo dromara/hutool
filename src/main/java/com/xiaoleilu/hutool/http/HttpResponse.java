@@ -98,7 +98,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @return 自身
 	 * @throws IOException
 	 */
-	private void  readBody(InputStream in) throws IOException{
+	private void readBody(InputStream in) throws IOException{
 		this.body = HttpUtil.getString(in, CharsetUtil.UTF_8, charset == null);
 		unzip();
 	}

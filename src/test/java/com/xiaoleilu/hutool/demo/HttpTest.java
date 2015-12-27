@@ -7,7 +7,7 @@ import com.xiaoleilu.hutool.http.HttpRequest;
 public class HttpTest {
 	public static void main(String[] args) throws IOException {
 		HttpRequest request = HttpRequest.get("http://www.cnblogs.com/zhuawang/archive/2012/12/08/2809380.html");
-		request.charset("utf-8");
+//		request.charset("utf-8");
 		System.out.println(request.execute().body());
 		
 //		HttpUtil.get("http://www.cnblogs.com/zhuawang/archive/2012/12/08/2809380.html", "utf-8");

@@ -121,7 +121,18 @@ public class HttpUtil {
 	public static String get(String urlString, String customCharset) throws IOException {
 		return HttpRequest.get(urlString).charset(customCharset).execute().body();
 	}
-
+	
+	/**
+	 * 发送get请求
+	 * 
+	 * @param urlString 网址
+	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
+	 * @throws IOException
+	 */
+	public static String get(String urlString) throws IOException {
+		return HttpRequest.get(urlString).execute().body();
+	}
+	
 	/**
 	 * 发送post请求
 	 * 
