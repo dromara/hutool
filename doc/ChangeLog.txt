@@ -177,3 +177,7 @@ Entity中toVo区别是否忽略大小写
 8、修复Http的form多类型问题
 9、修复IoUtil.copy未flush的bug
 10、Http增加文件上传
+
+2.13.2
+1、FileUtil中加入flush
+2、修复FileUtil的touch方法创建父目录空指针问题
