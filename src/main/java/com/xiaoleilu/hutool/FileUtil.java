@@ -244,11 +244,24 @@ public class FileUtil {
 			return null;
 		}
 		
-		file.getParentFile().mkdirs();
+		mkParentDirs(file);
 		if(false == file.exists()) {
 			file.createNewFile();
 		}
 		return file;
+	}
+	
+	/**
+	 * 创建所给文件或目录的父目录
+	 * @param file 文件或目录
+	 * @return 父目录
+	 */
+	public static File mkParentDirs(File file){
+		final File parentFile = file.getParentFile();
+		if(null != parentFile){
+			parentFile.mkdirs();
+		}
+		return parentFile;
 	}
 	
 	/**
