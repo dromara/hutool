@@ -868,6 +868,7 @@ public class FileUtil {
 		try {
 			writer = getPrintWriter(file, charset, false);
 			writer.print(content);
+			writer.flush();
 		}finally {
 			close(writer);
 		}
@@ -899,6 +900,7 @@ public class FileUtil {
 		try {
 			writer = getPrintWriter(file, charset, true);
 			writer.print(content);
+			writer.flush();
 		}finally {
 			close(writer);
 		}
@@ -985,6 +987,7 @@ public class FileUtil {
 			for (T t : list) {
 				if(t != null) {
 					writer.println(t.toString());
+					writer.flush();
 				}
 			}
 		}finally {
@@ -1032,6 +1035,7 @@ public class FileUtil {
 		try {
 			out = new FileOutputStream(dest, append);
 			out.write(data, off, len);
+			out.flush();
 		} finally {
 			close(out);
 		}
