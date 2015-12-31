@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.db;
 
+import java.sql.Clob;
 import java.util.Arrays;
 import java.util.List;
 
@@ -142,7 +143,7 @@ public class Entity extends Dict{
 		return (Entity) super.fromVo(vo);
 	}
 	
-	//-------------------------------------------------------------------- 特定类型值
+	//-------------------------------------------------------------------- Put and Set start
 	@Override
 	public Object put(String key, Object value) {
 		if(CollectionUtil.isEmpty(fieldNames) || fieldNames.contains(key)){
@@ -160,12 +161,27 @@ public class Entity extends Dict{
 	public Entity setIgnoreNull(String attr, Object value) {
 		return (Entity) super.setIgnoreNull(attr, value);
 	}
-	//-------------------------------------------------------------------- 特定类型值
+	//-------------------------------------------------------------------- Put and Set end
+	
+	//-------------------------------------------------------------------- Get start
+	
+	/**
+	 * 获得Clob类型结果
+	 * @param attr 参数
+	 * @return Clob
+	 */
+	public Clob getClob(String attr){
+		return get(attr, null);
+	}
+	
+	//-------------------------------------------------------------------- Get end
+	
+	//-------------------------------------------------------------------- 特殊方法 start
 	@Override
 	public Entity clone() {
 		return (Entity) super.clone();
 	}
-	//-------------------------------------------------------------------- 特定类型值
+	//-------------------------------------------------------------------- 特殊方法 end
 	
 	@Override
 	public String toString() {
