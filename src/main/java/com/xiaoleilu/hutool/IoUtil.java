@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Collection;
@@ -143,6 +144,21 @@ public class IoUtil {
 		byte[] bytes = new byte[(int) len];
 		in.read(bytes);
 		return new String(bytes, charset);
+	}
+	
+	/**
+	 * 从Reader中读取String
+	 * @param reader Reader
+	 * @return String
+	 * @throws IOException
+	 */
+	public static String getString(Reader reader) throws IOException{
+		final StringBuilder builder = StrUtil.builder();
+		final CharBuffer buffer = CharBuffer.allocate(DEFAULT_BUFFER_SIZE);
+		while(-1 != reader.read(buffer)){
+			builder.append(buffer.flip().toString());
+		}
+		return builder.toString();
 	}
 	
 	/**
