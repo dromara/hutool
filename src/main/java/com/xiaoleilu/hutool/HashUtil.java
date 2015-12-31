@@ -6,9 +6,9 @@ package com.xiaoleilu.hutool;
  * 
  * @author Goodzzp 2006-11-20
  */
-public class Hashs {
+public class HashUtil {
 	
-	private Hashs(){
+	private HashUtil(){
 		//类对象
 	}
 

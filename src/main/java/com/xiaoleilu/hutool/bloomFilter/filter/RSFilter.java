@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.Hashs;
+import com.xiaoleilu.hutool.HashUtil;
 
 public class RSFilter extends AbstractFilter {
 
@@ -14,7 +14,7 @@ public class RSFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.rsHash(str) % size;
+		return HashUtil.rsHash(str) % size;
 	}
 
 }

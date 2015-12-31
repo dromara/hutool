@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.Dict;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
+import com.xiaoleilu.hutool.lang.Dict;
 
 /**
  * 数据实体对象<br>

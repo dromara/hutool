@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.xiaoleilu.hutool.GroupedSet;
+import com.xiaoleilu.hutool.lang.GroupedSet;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 

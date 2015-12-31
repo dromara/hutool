@@ -1,8 +1,10 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import com.xiaoleilu.hutool.HashUtil;
 
 /**
  * 一致性Hash算法
@@ -32,7 +34,7 @@ public class ConsistentHash<T> {
 			@Override
 			public Integer hash(Object key) {
 				//默认使用FNV1hash算法
-				return Hashs.fnvHash(key.toString());
+				return HashUtil.fnvHash(key.toString());
 			}
 		};
 		//初始化节点

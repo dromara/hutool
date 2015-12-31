@@ -19,7 +19,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.Func;
+import com.xiaoleilu.hutool.ObjectUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.URLUtil;
 import com.xiaoleilu.hutool.Validator;
@@ -69,7 +69,7 @@ public class HttpConnection {
 		}
 		
 		this.url = URLUtil.url(urlStr);
-		this.method = Func.isNull(method) ? Method.GET : method;
+		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
 
 		try {
 			this.conn = HttpUtil.isHttps(urlStr) ? openHttps() : openHttp();

@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Looly
  *
  */
-public class Func {
+public class ObjectUtil {
 	/**
 	 * 比较两个对象是否相等。<br>
 	 * 相同的条件有两个，满足其一即可：<br>

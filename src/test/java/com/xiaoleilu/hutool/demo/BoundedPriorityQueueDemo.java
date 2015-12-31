@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.demo;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import com.xiaoleilu.hutool.BoundedPriorityQueue;
+import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
 
 /**
  * 有界优先队列Demo

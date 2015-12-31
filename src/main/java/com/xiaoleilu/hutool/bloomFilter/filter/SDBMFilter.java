@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.Hashs;
+import com.xiaoleilu.hutool.HashUtil;
 
 public class SDBMFilter extends AbstractFilter {
 
@@ -14,7 +14,7 @@ public class SDBMFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.sdbmHash(str) % size;
+		return HashUtil.sdbmHash(str) % size;
 	}
 
 }

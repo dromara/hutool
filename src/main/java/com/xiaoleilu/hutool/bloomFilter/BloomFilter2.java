@@ -8,7 +8,7 @@ import java.util.BitSet;
 import java.util.List;
 
 import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.Hashs;
+import com.xiaoleilu.hutool.HashUtil;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>
@@ -118,21 +118,21 @@ public class BloomFilter2 {
 	public static int hash(String str, int k) {
 		switch (k) {
 			case 0:
-				return Hashs.rsHash(str);
+				return HashUtil.rsHash(str);
 			case 1:
-				return Hashs.jsHash(str);
+				return HashUtil.jsHash(str);
 			case 2:
-				return Hashs.elfHash(str);
+				return HashUtil.elfHash(str);
 			case 3:
-				return Hashs.bkdrHash(str);
+				return HashUtil.bkdrHash(str);
 			case 4:
-				return Hashs.apHash(str);
+				return HashUtil.apHash(str);
 			case 5:
-				return Hashs.djbHash(str);
+				return HashUtil.djbHash(str);
 			case 6:
-				return Hashs.sdbmHash(str);
+				return HashUtil.sdbmHash(str);
 			case 7:
-				return Hashs.pjwHash(str);
+				return HashUtil.pjwHash(str);
 		}
 		return 0;
 	}

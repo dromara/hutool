@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.demo;
 
-import com.xiaoleilu.hutool.DateTime;
 import com.xiaoleilu.hutool.DateUtil;
+import com.xiaoleilu.hutool.lang.DateTime;
 
 /**
  * 日期工具Demo

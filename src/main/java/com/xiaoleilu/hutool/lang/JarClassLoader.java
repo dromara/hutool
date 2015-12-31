@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -7,6 +7,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
+import com.xiaoleilu.hutool.ClassUtil;
+import com.xiaoleilu.hutool.FileUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**

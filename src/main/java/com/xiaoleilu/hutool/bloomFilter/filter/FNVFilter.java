@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.Hashs;
+import com.xiaoleilu.hutool.HashUtil;
 
 public class FNVFilter extends AbstractFilter {
 
@@ -14,7 +14,7 @@ public class FNVFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.fnvHash(str);
+		return HashUtil.fnvHash(str);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.Hashs;
+import com.xiaoleilu.hutool.HashUtil;
 
 /**
  * 默认Bloom过滤器，使用Java自带的Hash算法
@@ -19,6 +19,6 @@ public class DefaultFilter extends AbstractFilter {
 	
 	@Override
 	public long hash(String str) {
-		return Hashs.javaDefaultHash(str) % size;
+		return HashUtil.javaDefaultHash(str) % size;
 	}
 }

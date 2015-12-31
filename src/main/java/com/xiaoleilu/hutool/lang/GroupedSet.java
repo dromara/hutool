@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +14,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.CollectionUtil;
+import com.xiaoleilu.hutool.FileUtil;
+import com.xiaoleilu.hutool.Setting;
+import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.URLUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 

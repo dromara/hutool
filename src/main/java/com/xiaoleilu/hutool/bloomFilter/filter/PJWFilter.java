@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.Hashs;
+import com.xiaoleilu.hutool.HashUtil;
 
 public class PJWFilter extends AbstractFilter {
 
@@ -14,7 +14,7 @@ public class PJWFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.pjwHash(str) % size;
+		return HashUtil.pjwHash(str) % size;
 	}
 
 }

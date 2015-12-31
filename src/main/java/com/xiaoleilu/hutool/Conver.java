@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.lang.BasicType;
 
 /**
  * 类型转换器

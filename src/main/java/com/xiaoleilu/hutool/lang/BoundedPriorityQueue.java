@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 import java.util.ArrayList;
 import java.util.Arrays;

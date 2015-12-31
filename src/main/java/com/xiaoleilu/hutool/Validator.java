@@ -63,7 +63,7 @@ public class Validator {
 	 * @return 当两值都为null或相等返回true
 	 */
 	public static boolean equals(Object t1, Object t2) {
-		return Func.equals(t1, t2);
+		return ObjectUtil.equals(t1, t2);
 	}
 
 	/**

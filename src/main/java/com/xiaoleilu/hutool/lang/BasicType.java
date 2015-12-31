@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 /**
  * 基本变量类型的枚举

@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.Hashs;
+import com.xiaoleilu.hutool.HashUtil;
 
 
 public class TianlFilter extends AbstractFilter {
@@ -15,7 +15,7 @@ public class TianlFilter extends AbstractFilter {
 
 	@Override
 	public long hash(String str) {
-		return Hashs.tianlHash(str) % size;
+		return HashUtil.tianlHash(str) % size;
 	}
 
 }
