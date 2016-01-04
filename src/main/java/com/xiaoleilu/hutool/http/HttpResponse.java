@@ -1,14 +1,12 @@
 package com.xiaoleilu.hutool.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.zip.GZIPInputStream;
 
 import com.xiaoleilu.hutool.CharsetUtil;
-import com.xiaoleilu.hutool.IoUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 
@@ -33,7 +31,14 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			httpResponse.status = httpConnection.responseCode();
 			httpResponse.headers =  httpConnection.headers();
 			httpResponse.charset = httpConnection.charset();
-			httpResponse.readBody(httpConnection.getInputStream());
+			
+			InputStream in;
+			if(httpResponse.status < HttpURLConnection.HTTP_BAD_REQUEST){
+				in = httpConnection.getInputStream();
+			}else{
+				in = httpConnection.getErrorStream();
+			}
+			httpResponse.readBody(in);
 		} catch (IOException e) {
 			if(e instanceof FileNotFoundException){
 				//服务器无返回内容，忽略之
@@ -68,6 +73,14 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	public String contentEncoding() {
 		return header(Header.CONTENT_ENCODING);
 	}
+	
+	/**
+	 * @return 是否为gzip压缩过的内容
+	 */
+	public boolean isGzip(){
+		String contentEncoding = contentEncoding();
+		return contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip");
+	}
 	// ---------------------------------------------------------------- Http Response Header end
 	
 	// ---------------------------------------------------------------- Body start
@@ -99,35 +112,10 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @throws IOException
 	 */
 	private void readBody(InputStream in) throws IOException{
-		this.body = HttpUtil.getString(in, CharsetUtil.UTF_8, charset == null);
-		unzip();
-	}
-	
-	/**
-	 * 当返回内容为压缩内容时，解压，并去除Gzip头标识
-	 * @return HttpResponse
-	 */
-	private HttpResponse unzip() {
-		String contentEncoding = contentEncoding();
-		
-		if (contentEncoding != null && contentEncoding().equals("gzip")) {
-			if (body != null) {
-				removeHeader(Header.CONTENT_ENCODING);
-				try {
-					ByteArrayInputStream in = new ByteArrayInputStream(StrUtil.bytes(this.body, charset));
-					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
-					
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					
-					IoUtil.copy(gzipInputStream, out);
-					
-					this.body = out.toString(charset);
-				} catch (IOException ioex) {
-					throw new HttpException(ioex);
-				}
-			}
+		if(isGzip()){
+			in = new GZIPInputStream(in);
 		}
-		return this;
+		this.body = HttpUtil.getString(in, CharsetUtil.UTF_8, charset == null);
 	}
 	// ---------------------------------------------------------------- Private method end
 }

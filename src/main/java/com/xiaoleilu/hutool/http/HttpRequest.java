@@ -175,11 +175,23 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	
 	// ---------------------------------------------------------------- Form start
 	/**
-	 * 设置表单数据
+	 * 设置表单数据<br>
+	 * 自动编码数据
 	 * @param name 名
 	 * @param value 值
 	 */
 	public HttpRequest form(String name, Object value) {
+		return form(name, value, this.charset);
+	}
+	
+	/**
+	 * 设置表单数据<br>
+	 * 自动编码数据
+	 * @param name 名
+	 * @param value 值
+	 * @param charset 编码
+	 */
+	public HttpRequest form(String name, Object value, String charset) {
 		//停用body
 		this.body =null;
 		
@@ -201,7 +213,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 			strValue = Conver.toStr(value, null);
 		}
 		
-		form.put(name, strValue);
+		form.put(HttpUtil.encode(name, charset), HttpUtil.encode(strValue, charset));
 		return this;
 	}
 	/**

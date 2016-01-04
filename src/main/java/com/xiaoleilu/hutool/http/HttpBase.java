@@ -30,8 +30,6 @@ public abstract class HttpBase<T> {
 	protected String charset = CharsetUtil.UTF_8;
 	/**http版本*/
 	protected String httpVersion = HTTP_1_1;
-	/**mediaType*/
-//	protected String mediaType;
 	/**存储主体*/
 	protected String body;
 	

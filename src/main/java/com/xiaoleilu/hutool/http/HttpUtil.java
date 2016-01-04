@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -17,6 +16,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.CollectionUtil;
@@ -208,6 +208,32 @@ public class HttpUtil {
 		}
 		return CollectionUtil.join(paramMap.entrySet(), "&");
 	}
+	
+	/**
+	 * 将Map形式的Form表单数据转换为Url参数形式<br>
+	 * 编码键和值对
+	 * 
+	 * @param paramMap 表单数据
+	 * @param charset 编码
+	 * @return url参数
+	 */
+	public static String toParams(Map<String, Object> paramMap, String charset) {
+		if(CollectionUtil.isEmpty(paramMap)){
+			return StrUtil.EMPTY;
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (Entry<String, Object> item : paramMap.entrySet()) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append("&");
+			}
+			sb.append(encode(item.getKey(), charset)).append("=").append(encode(item.getValue().toString(), charset));
+		}
+		return sb.toString();
+	}
 
 	/**
 	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
@@ -348,21 +374,24 @@ public class HttpUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
+	@SuppressWarnings("resource")
 	public static String getString(InputStream in, String charset, boolean isGetCharsetFromContent) throws IOException {
+		if(false == isGetCharsetFromContent){
+			return IoUtil.read(in, charset);
+		}
+		
 		StringBuilder content = new StringBuilder(); // 存储返回的内容
 		
 		// 从返回的内容中读取所需内容
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
+		BufferedReader reader = IoUtil.getReader(in, charset);
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			content.append(line).append('\n');
-			if (isGetCharsetFromContent) {
-				String charsetInContent = ReUtil.get(CHARSET_PATTERN, line, 1);
-				if (StrUtil.isBlank(charsetInContent) == false) {
-					charset = charsetInContent;
-					reader = new BufferedReader(new InputStreamReader(in, charset));
-					isGetCharsetFromContent = false;
-				}
+			String charsetInContent = ReUtil.get(CHARSET_PATTERN, line, 1);
+			if (StrUtil.isNotBlank(charsetInContent)) {
+				charset = charsetInContent;
+				reader = IoUtil.getReader(in, charset);
+				isGetCharsetFromContent = false;
 			}
 		}
 		

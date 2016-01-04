@@ -103,6 +103,7 @@ public class HttpConnection {
 
 		// default header
 		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
+		header(Header.ACCEPT_ENCODING, "gzip", true);
 		header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded", true);
 		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0 Hutool", true);
 		//Cookie
@@ -352,7 +353,19 @@ public class HttpConnection {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 当返回错误代码时，获得错误内容流
+	 * @return 错误内容
+	 * @throws IOException
+	 */
+	public InputStream getErrorStream() throws IOException{
+		if (null != this.conn) {
+			return this.conn.getErrorStream();
+		}
+		return null;
+	}
+	
 	/**
 	 * 获取输出流对象
 	 * 输出流对象用于发送数据

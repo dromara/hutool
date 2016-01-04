@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -136,14 +137,9 @@ public class IoUtil {
 	 * @throws IOException
 	 */
 	public static String read(InputStream in, String charset) throws IOException {
-		final long len = in.available();
-		if (len >= Integer.MAX_VALUE) {
-			throw new IOException("File is larger then max array size");
-		}
-
-		byte[] bytes = new byte[(int) len];
-		in.read(bytes);
-		return new String(bytes, charset);
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		copy(in, out);
+		return out.toString(charset);
 	}
 	
 	/**
