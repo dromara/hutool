@@ -183,3 +183,4 @@ Entity中toVo区别是否忽略大小写
 2、修复FileUtil的touch方法创建父目录空指针问题
 3、getClob Method
 4、增加转换为大写方法
+5、完善SystemUtil，并集中于system包中

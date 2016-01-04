@@ -69,10 +69,10 @@ public class StrUtil {
 	 * @return 是否包含空字符串
 	 */
 	public static boolean hasBlank(String... strs) {
-		if(CollectionUtil.isEmpty(strs)) {
+		if (CollectionUtil.isEmpty(strs)) {
 			return true;
 		}
-		
+
 		for (String str : strs) {
 			if (isBlank(str)) {
 				return true;
@@ -111,7 +111,26 @@ public class StrUtil {
 	 * @return 转换后的字符串
 	 */
 	public static String nullToEmpty(String str) {
-		return str == null ? EMPTY : str;
+		return nullToDefault(str, EMPTY);
+	}
+
+	/**
+	 * 如果字符串是<code>null</code>，则返回指定默认字符串，否则返回字符串本身。
+	 * 
+	 * <pre>
+	 * nullToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+	 * nullToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;&quot;
+	 * nullToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
+	 * nullToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+	 * </pre>
+	 * 
+	 * @param str 要转换的字符串
+	 * @param defaultStr 默认字符串
+	 * 
+	 * @return 字符串本身或指定的默认字符串
+	 */
+	public static String nullToDefault(String str, String defaultStr) {
+		return (str == null) ? defaultStr : str;
 	}
 
 	/**
@@ -361,7 +380,7 @@ public class StrUtil {
 				sb.append(c);
 			}
 		}
-		list.add(sb.toString());//加入尾串
+		list.add(sb.toString());// 加入尾串
 		return list;
 	}
 
@@ -468,40 +487,42 @@ public class StrUtil {
 		}
 		return sub(string, fromIndex, string.length());
 	}
-	
+
 	/**
 	 * 给定字符串是否被字符包围
+	 * 
 	 * @param str 字符串
 	 * @param prefix 前缀
 	 * @param suffix 后缀
 	 * @return 是否包围，空串不包围
 	 */
-	public static boolean isSurround(String str, String prefix, String suffix){
-		if(StrUtil.isBlank(str)){
+	public static boolean isSurround(String str, String prefix, String suffix) {
+		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		if(str.length() < (prefix.length() + suffix.length())){
+		if (str.length() < (prefix.length() + suffix.length())) {
 			return false;
 		}
-		
+
 		return str.startsWith(prefix) && str.endsWith(suffix);
 	}
-	
+
 	/**
 	 * 给定字符串是否被字符包围
+	 * 
 	 * @param str 字符串
 	 * @param prefix 前缀
 	 * @param suffix 后缀
 	 * @return 是否包围，空串不包围
 	 */
-	public static boolean isSurround(String str, char prefix, char suffix){
-		if(StrUtil.isBlank(str)){
+	public static boolean isSurround(String str, char prefix, char suffix) {
+		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		if(str.length() < 2){
+		if (str.length() < 2) {
 			return false;
 		}
-		
+
 		return str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix;
 	}
 
@@ -540,7 +561,7 @@ public class StrUtil {
 		final char[] array = new char[size];
 		str.getChars(0, len, array, 0);
 		int n;
-		for (n = len; n < size - n; n <<= 1) {//n <<= 1相当于n *2
+		for (n = len; n < size - n; n <<= 1) {// n <<= 1相当于n *2
 			System.arraycopy(array, 0, array, n, n);
 		}
 		System.arraycopy(array, 0, array, n, size - n);
@@ -631,7 +652,7 @@ public class StrUtil {
 			return null;
 		}
 
-		if(isBlank(charset)) {
+		if (isBlank(charset)) {
 			return str.getBytes();
 		}
 		try {
@@ -653,7 +674,7 @@ public class StrUtil {
 			return null;
 		}
 
-		if(isBlank(charset)) {
+		if (isBlank(charset)) {
 			return new String(data);
 		}
 		try {
@@ -677,9 +698,10 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 将byte数组转为字符串
+	 * 
 	 * @param bytes byte数组
 	 * @param charset 字符集
 	 * @return 字符串
@@ -689,7 +711,8 @@ public class StrUtil {
 	}
 
 	/**
-	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br> 例如：HelloWorld->hello_world
+	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br>
+	 * 例如：HelloWorld->hello_world
 	 *
 	 * @param camelCaseStr 转换前的驼峰式命名的字符串
 	 * @return 转换后下划线大写方式命名的字符串
@@ -723,7 +746,8 @@ public class StrUtil {
 	}
 
 	/**
-	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br> 例如：hello_world->HelloWorld
+	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br>
+	 * 例如：hello_world->HelloWorld
 	 *
 	 * @param name 转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串
@@ -882,10 +906,11 @@ public class StrUtil {
 		}
 		return sb;
 	}
-	
+
 	/**
 	 * 获得字符串对应字符集的byte数组<br>
 	 * 调用encode方法
+	 * 
 	 * @param str 字符串
 	 * @param charset 字符集编码
 	 * @return byte数组
@@ -893,18 +918,20 @@ public class StrUtil {
 	public static byte[] bytes(String str, String charset) {
 		return encode(str, charset);
 	}
-	
+
 	/**
 	 * 获得StringReader
+	 * 
 	 * @param str 字符串
 	 * @return StringReader
 	 */
 	public static StringReader getReader(String str) {
 		return new StringReader(str);
 	}
-	
+
 	/**
 	 * 获得StringWriter
+	 * 
 	 * @return StringWriter
 	 */
 	public static StringWriter getWriter() {

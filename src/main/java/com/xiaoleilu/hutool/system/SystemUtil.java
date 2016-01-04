@@ -1,9 +1,11 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.system;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.io.PrintWriter;
 import java.util.Properties;
 
+import com.xiaoleilu.hutool.Conver;
+import com.xiaoleilu.hutool.Singleton;
+import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
@@ -79,39 +81,38 @@ public class SystemUtil {
 	// 用户的当前工作目录
 	public final static String USER_DIR = "user.dir";
 
+	private SystemUtil() {
+	}
+
+	//----------------------------------------------------------------------- Basic start
+	
 	/**
-	 * 获得System属性（调用System.getProperty）
-	 * 
-	 * @param key 属性名
+	 * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 <code>null</code>。
+	 * @param name 属性名
 	 * @param defaultValue 默认值
-	 * @return 值
+	 * @return 属性值或<code>null</code>
 	 */
-	public static String get(final String key, String defaultValue) {
-		if (StrUtil.isBlank(key)) {
+	public static String get(String name, String defaultValue){
+		return StrUtil.nullToDefault(get(name, false), defaultValue);
+	}
+	
+	/**
+	 * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 <code>null</code>。
+	 * 
+	 * @param name 属性名
+	 * @param quiet 安静模式，不将出错信息打在<code>System.err</code>中
+	 * 
+	 * @return 属性值或<code>null</code>
+	 */
+	public static String get(String name, boolean quiet) {
+		try {
+			return System.getProperty(name);
+		} catch (SecurityException e) {
+			if (!quiet) {
+				StaticLog.error("Caught a SecurityException reading the system property '{}'; the SystemUtil property value will default to null.", name);
+			}
 			return null;
 		}
-
-		String value = null;
-		try {
-			if (null == System.getSecurityManager()) {
-				value = System.getProperty(key);
-			} else {
-				value = AccessController.doPrivileged(new PrivilegedAction<String>(){
-					@Override
-					public String run() {
-						return System.getProperty(key);
-					}
-				});
-			}
-		} catch (Exception e) {
-			StaticLog.warn(e, "Unable to retrieve a system property '{}'; default values will be used.", key);
-		}
-
-		if (null == value) {
-			return defaultValue;
-		}
-
-		return value;
 	}
 
 	/**
@@ -126,6 +127,7 @@ public class SystemUtil {
 
 	/**
 	 * 获得boolean类型值
+	 * 
 	 * @param key 键
 	 * @param defaultValue 默认值
 	 * @return 值
@@ -151,9 +153,10 @@ public class SystemUtil {
 
 		return defaultValue;
 	}
-	
+
 	/**
 	 * 获得int类型值
+	 * 
 	 * @param key 键
 	 * @param defaultValue 默认值
 	 * @return 值
@@ -161,9 +164,10 @@ public class SystemUtil {
 	public static long getInt(String key, int defaultValue) {
 		return Conver.toInt(get(key), defaultValue);
 	}
-	
+
 	/**
 	 * 获得long类型值
+	 * 
 	 * @param key 键
 	 * @param defaultValue 默认值
 	 * @return 值
@@ -171,29 +175,128 @@ public class SystemUtil {
 	public static long getLong(String key, long defaultValue) {
 		return Conver.toLong(get(key), defaultValue);
 	}
-	
+
 	/**
 	 * @return 属性列表
 	 */
 	public static Properties props() {
-		Properties props = null;
-		try {
-			if (null == System.getSecurityManager()) {
-				props = System.getProperties();
-			} else {
-				props = AccessController.doPrivileged(new PrivilegedAction<Properties>(){
-					@Override
-					public Properties run() {
-						return System.getProperties();
-					}
-				});
-			}
-		} catch (Exception e) {
-			StaticLog.warn(e, "Unable to retrieve a system propertys; default values will be used.");
-		}
-		return props;
+		return System.getProperties();
+	}
+	//----------------------------------------------------------------------- Basic end
+
+	/**
+	 * 取得Java Virtual Machine Specification的信息。
+	 * 
+	 * @return <code>JvmSpecInfo</code>对象
+	 */
+	public static final JvmSpecInfo getJvmSpecInfo() {
+		return Singleton.get(JvmSpecInfo.class);
+	}
+
+	/**
+	 * 取得Java Virtual Machine Implementation的信息。
+	 * 
+	 * @return <code>JvmInfo</code>对象
+	 */
+	public static final JvmInfo getJvmInfo() {
+		return Singleton.get(JvmInfo.class);
+	}
+
+	/**
+	 * 取得Java Specification的信息。
+	 * 
+	 * @return <code>JavaSpecInfo</code>对象
+	 */
+	public static final JavaSpecInfo getJavaSpecInfo() {
+		return Singleton.get(JavaSpecInfo.class);
+	}
+
+	/**
+	 * 取得Java Implementation的信息。
+	 * 
+	 * @return <code>JavaInfo</code>对象
+	 */
+	public static final JavaInfo getJavaInfo() {
+		return Singleton.get(JavaInfo.class);
+	}
+
+	/**
+	 * 取得当前运行的JRE的信息。
+	 * 
+	 * @return <code>JreInfo</code>对象
+	 */
+	public static final JavaRuntimeInfo getJavaRuntimeInfo() {
+		return Singleton.get(JavaRuntimeInfo.class);
+	}
+
+	/**
+	 * 取得OS的信息。
+	 * 
+	 * @return <code>OsInfo</code>对象
+	 */
+	public static final OsInfo getOsInfo() {
+		return Singleton.get(OsInfo.class);
+	}
+
+	/**
+	 * 取得User的信息。
+	 * 
+	 * @return <code>UserInfo</code>对象
+	 */
+	public static final UserInfo getUserInfo() {
+		return Singleton.get(UserInfo.class);
+	}
+
+	/**
+	 * 取得Host的信息。
+	 * 
+	 * @return <code>HostInfo</code>对象
+	 */
+	public static final HostInfo getHostInfo() {
+		return Singleton.get(HostInfo.class);
+	}
+
+	/**
+	 * 将系统信息输出到指定<code>PrintWriter</code>中。
+	 */
+	public static final void dumpSystemInfo() {
+		dumpSystemInfo(new PrintWriter(System.out));
+	}
+
+	/**
+	 * 将系统信息输出到指定<code>PrintWriter</code>中。
+	 * 
+	 * @param out <code>PrintWriter</code>输出流
+	 */
+	public static final void dumpSystemInfo(PrintWriter out) {
+		out.println("--------------");
+		out.println(getJvmSpecInfo());
+		out.println("--------------");
+		out.println(getJvmInfo());
+		out.println("--------------");
+		out.println(getJavaSpecInfo());
+		out.println("--------------");
+		out.println(getJavaInfo());
+		out.println("--------------");
+		out.println(getJavaRuntimeInfo());
+		out.println("--------------");
+		out.println(getOsInfo());
+		out.println("--------------");
+		out.println(getUserInfo());
+		out.println("--------------");
+		out.println(getHostInfo());
+		out.println("--------------");
+		out.flush();
 	}
 	
-	public static void main(String[] args) {
+	/**
+	 * 输出到<code>StringBuilder</code>。
+	 * 
+	 * @param builder <code>StringBuilder</code>对象
+	 * @param caption 标题
+	 * @param value 值
+	 */
+	protected static void append(StringBuilder builder, String caption, String value) {
+		builder.append(caption).append(StrUtil.nullToDefault(value, "[n/a]")).append("\n");
 	}
 }
