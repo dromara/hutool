@@ -1,11 +1,15 @@
 package com.xiaoleilu.hutool.db;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 import com.xiaoleilu.hutool.CollectionUtil;
+import com.xiaoleilu.hutool.FileUtil;
+import com.xiaoleilu.hutool.IoUtil;
 import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.lang.Dict;
@@ -181,14 +185,14 @@ public class Entity extends Dict{
 		Object obj = get(attr);
 		if(obj instanceof Clob){
 			Clob clob = (Clob)obj;
+			Reader reader = null;
 			try {
-				long length = clob.length();
-				if(length > Integer.MAX_VALUE){
-					throw new DbRuntimeException("Clob is too large for result！");
-				}
-				return clob.getSubString(0, (int)clob.length());
-			} catch (SQLException e) {
+				reader = clob.getCharacterStream();
+				return IoUtil.read(reader);
+			} catch (SQLException | IOException e) {
 				throw new DbRuntimeException(e);
+			}finally{
+				FileUtil.close(reader);
 			}
 		}
 		return super.getStr(attr);
