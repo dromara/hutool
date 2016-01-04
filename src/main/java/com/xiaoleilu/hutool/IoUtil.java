@@ -135,7 +135,7 @@ public class IoUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
-	public static String getString(InputStream in, String charset) throws IOException {
+	public static String read(InputStream in, String charset) throws IOException {
 		final long len = in.available();
 		if (len >= Integer.MAX_VALUE) {
 			throw new IOException("File is larger then max array size");
@@ -152,13 +152,25 @@ public class IoUtil {
 	 * @return String
 	 * @throws IOException
 	 */
-	public static String getString(Reader reader) throws IOException{
+	public static String read(Reader reader) throws IOException{
 		final StringBuilder builder = StrUtil.builder();
 		final CharBuffer buffer = CharBuffer.allocate(DEFAULT_BUFFER_SIZE);
 		while(-1 != reader.read(buffer)){
 			builder.append(buffer.flip().toString());
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * 从FileChannel中读取内容
+	 * @param fileChannel 文件管道
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String read(FileChannel fileChannel, String charset) throws IOException {
+		final MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
+		return CharsetUtil.str(buffer, charset);
 	}
 	
 	/**
@@ -170,7 +182,7 @@ public class IoUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
-	public static <T extends Collection<String>> T getLines(InputStream in, String charset, T collection) throws IOException {
+	public static <T extends Collection<String>> T readLines(InputStream in, String charset, T collection) throws IOException {
 		// 从返回的内容中读取所需内容
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
 		String line = null;
@@ -179,18 +191,6 @@ public class IoUtil {
 		}
 
 		return collection;
-	}
-	
-	/**
-	 * 从FileChannel中读取内容
-	 * @param fileChannel 文件管道
-	 * @param charset 字符集
-	 * @return 内容
-	 * @throws IOException
-	 */
-	public static String getString(FileChannel fileChannel, String charset) throws IOException {
-		final MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
-		return CharsetUtil.str(buffer, charset);
 	}
 	
 	/**

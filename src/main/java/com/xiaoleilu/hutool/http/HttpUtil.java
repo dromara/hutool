@@ -169,7 +169,7 @@ public class HttpUtil {
 		InputStream in = null;
 		try {
 			in = new URL(url).openStream();
-			return IoUtil.getString(in, customCharset);
+			return IoUtil.read(in, customCharset);
 		} finally {
 			FileUtil.close(in);
 		}
