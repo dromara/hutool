@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.HashUtil;
+import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.HashUtil;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>

@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.db;
 
 import java.util.ArrayList;
 
-import com.xiaoleilu.hutool.PageUtil;
+import com.xiaoleilu.hutool.util.PageUtil;
 
 /**
  * 分页数据结果集

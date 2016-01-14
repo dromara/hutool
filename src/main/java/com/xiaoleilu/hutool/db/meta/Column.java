@@ -3,8 +3,8 @@ package com.xiaoleilu.hutool.db.meta;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 数据库表的列信息

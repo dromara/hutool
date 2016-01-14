@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -6,7 +6,9 @@ import java.util.Date;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.lang.BasicType;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.DateUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 类型转换器

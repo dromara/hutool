@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.xiaoleilu.hutool.HashUtil;
+import com.xiaoleilu.hutool.util.HashUtil;
 
 /**
  * 一致性Hash算法

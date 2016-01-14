@@ -1,10 +1,11 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 import java.net.MalformedURLException;
 import java.util.regex.Pattern;
 
-import com.xiaoleilu.hutool.ReUtil;
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.util.ObjectUtil;
+import com.xiaoleilu.hutool.util.ReUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 字段验证器

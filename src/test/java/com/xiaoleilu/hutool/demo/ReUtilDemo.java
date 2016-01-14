@@ -3,10 +3,10 @@ package com.xiaoleilu.hutool.demo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.xiaoleilu.hutool.ReUtil;
-import com.xiaoleilu.hutool.Validator;
+import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.ReUtil;
 
 /**
  * 正则表达式工具类Demo

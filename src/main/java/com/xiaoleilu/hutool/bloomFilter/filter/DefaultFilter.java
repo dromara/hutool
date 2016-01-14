@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.HashUtil;
+import com.xiaoleilu.hutool.util.HashUtil;
 
 /**
  * 默认Bloom过滤器，使用Java自带的Hash算法

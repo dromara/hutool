@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.exceptions;
 
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  *HTTP异常

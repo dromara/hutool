@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.db;
 
-import com.xiaoleilu.hutool.PageUtil;
 import com.xiaoleilu.hutool.db.sql.Order;
+import com.xiaoleilu.hutool.util.PageUtil;
 
 /**
  * 分页对象

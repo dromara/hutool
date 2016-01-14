@@ -19,12 +19,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.IoUtil;
-import com.xiaoleilu.hutool.ReUtil;
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
+import com.xiaoleilu.hutool.util.ReUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * Http请求工具类

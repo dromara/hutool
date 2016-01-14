@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.demo;
 
 import java.io.IOException;
 
-import com.xiaoleilu.hutool.FileUtil;
+import com.xiaoleilu.hutool.util.FileUtil;
 
 public class FileUtilDemo {
 	public static void main(String[] args) throws IOException {

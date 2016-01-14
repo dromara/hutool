@@ -9,13 +9,13 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.util.Properties;
 
-import com.xiaoleilu.hutool.Conver;
-import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.StrUtil;
-import com.xiaoleilu.hutool.URLUtil;
+import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.getter.IBasicGetter;
+import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * Properties文件读取封装类

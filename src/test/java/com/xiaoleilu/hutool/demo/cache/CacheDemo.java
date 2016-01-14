@@ -1,10 +1,10 @@
 package com.xiaoleilu.hutool.demo.cache;
 
-import com.xiaoleilu.hutool.DateUtil;
 import com.xiaoleilu.hutool.cache.FIFOCache;
 import com.xiaoleilu.hutool.cache.LFUCache;
 import com.xiaoleilu.hutool.cache.LRUCache;
 import com.xiaoleilu.hutool.cache.TimedCache;
+import com.xiaoleilu.hutool.util.DateUtil;
 
 /**
  * 缓存使用Demo

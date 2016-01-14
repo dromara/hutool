@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.xiaoleilu.hutool.CharsetUtil;
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * http基类

@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

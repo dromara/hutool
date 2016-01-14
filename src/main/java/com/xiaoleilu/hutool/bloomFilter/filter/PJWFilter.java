@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.bloomFilter.filter;
 
-import com.xiaoleilu.hutool.HashUtil;
+import com.xiaoleilu.hutool.util.HashUtil;
 
 public class PJWFilter extends AbstractFilter {
 

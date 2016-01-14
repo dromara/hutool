@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.log.dialect;
 
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.log.AbstractLog;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * <a href="http://www.slf4j.org/">SLF4J</a> log.<br>

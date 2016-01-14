@@ -4,13 +4,13 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.dialect.impl.AnsiSqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.MysqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.OracleDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.PostgresqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.Sqllite3Dialect;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 方言工厂类

@@ -18,16 +18,16 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.ObjectUtil;
-import com.xiaoleilu.hutool.StrUtil;
-import com.xiaoleilu.hutool.URLUtil;
-import com.xiaoleilu.hutool.Validator;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.http.ssl.DefaultTrustManager;
 import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
+import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ObjectUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * http连接对象

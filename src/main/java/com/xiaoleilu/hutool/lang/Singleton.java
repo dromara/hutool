@@ -1,7 +1,9 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.lang;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
  * 单例类<br>

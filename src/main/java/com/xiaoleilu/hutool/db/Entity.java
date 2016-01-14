@@ -7,12 +7,12 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.IoUtil;
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.lang.Dict;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 数据实体对象<br>

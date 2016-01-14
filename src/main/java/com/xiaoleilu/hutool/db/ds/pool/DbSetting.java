@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.db.ds.pool;
 
-import com.xiaoleilu.hutool.Setting;
 import com.xiaoleilu.hutool.db.DbUtil;
+import com.xiaoleilu.hutool.setting.Setting;
 
 /**
  * 数据库配置文件类

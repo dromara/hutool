@@ -3,12 +3,12 @@ package com.xiaoleilu.hutool.log;
 import java.util.Arrays;
 import java.util.List;
 
-import com.xiaoleilu.hutool.ClassUtil;
 import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLog;
 import com.xiaoleilu.hutool.log.dialect.JdkLog;
 import com.xiaoleilu.hutool.log.dialect.Log4j2Log;
 import com.xiaoleilu.hutool.log.dialect.Log4jLog;
 import com.xiaoleilu.hutool.log.dialect.Slf4jLog;
+import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
  * 日志工厂类

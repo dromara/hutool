@@ -1,10 +1,13 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.util;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Validator;
 
 /**
  * 正则相关工具类

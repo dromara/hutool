@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.Conver;
-import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.IoUtil;
-import com.xiaoleilu.hutool.SecureUtil;
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.HttpException;
+import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
+import com.xiaoleilu.hutool.util.SecureUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * http请求类

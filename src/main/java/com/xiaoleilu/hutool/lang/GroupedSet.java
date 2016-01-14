@@ -14,13 +14,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.FileUtil;
-import com.xiaoleilu.hutool.Setting;
-import com.xiaoleilu.hutool.StrUtil;
-import com.xiaoleilu.hutool.URLUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * 分组化的Set集合类<br>

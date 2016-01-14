@@ -5,9 +5,9 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import com.xiaoleilu.hutool.Conver;
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.setting.getter.IBasicGetter;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 设定抽象类

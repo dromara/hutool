@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.util;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.lang.Validator;
 
 /**
  * 网络相关工具

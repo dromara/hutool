@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import com.xiaoleilu.hutool.StrUtil;
-import com.xiaoleilu.hutool.ThreadUtil;
 import com.xiaoleilu.hutool.db.ds.AbstractDataSource;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
  * 池化数据源

@@ -1,12 +1,14 @@
-package com.xiaoleilu.hutool;
+package com.xiaoleilu.hutool.setting;
 
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.dialect.BasicSetting;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 设置工具类。 用于支持设置文件<br>

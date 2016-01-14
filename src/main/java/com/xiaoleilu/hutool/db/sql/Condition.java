@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.db.sql;
 import java.util.Arrays;
 import java.util.List;
 
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 条件对象<br>

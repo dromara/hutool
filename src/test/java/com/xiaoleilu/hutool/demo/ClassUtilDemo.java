@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.demo;
 
-import com.xiaoleilu.hutool.ClassUtil;
+import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
  * ClassUtil Demo

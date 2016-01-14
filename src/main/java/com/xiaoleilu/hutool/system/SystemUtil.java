@@ -3,10 +3,10 @@ package com.xiaoleilu.hutool.system;
 import java.io.PrintWriter;
 import java.util.Properties;
 
-import com.xiaoleilu.hutool.Conver;
-import com.xiaoleilu.hutool.Singleton;
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Singleton;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * Java的System类封装工具类。

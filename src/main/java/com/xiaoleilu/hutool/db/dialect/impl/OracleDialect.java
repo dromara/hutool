@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
@@ -18,6 +17,7 @@ import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * Oracle 方言

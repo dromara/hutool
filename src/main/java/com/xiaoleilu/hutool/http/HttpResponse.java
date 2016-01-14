@@ -6,9 +6,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.zip.GZIPInputStream;
 
-import com.xiaoleilu.hutool.CharsetUtil;
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.HttpException;
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * Http响应类

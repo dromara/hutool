@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.demo;
 
 import java.io.IOException;
 
-import com.xiaoleilu.hutool.ZipUtil;
+import com.xiaoleilu.hutool.util.ZipUtil;
 
 /**
  * ZipUtil测试类

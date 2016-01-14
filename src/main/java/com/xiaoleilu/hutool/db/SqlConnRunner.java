@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-import com.xiaoleilu.hutool.CollectionUtil;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
@@ -15,6 +14,7 @@ import com.xiaoleilu.hutool.db.handler.NumberHandler;
 import com.xiaoleilu.hutool.db.handler.PageResultHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * SQL执行类<br>

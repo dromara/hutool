@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-import com.xiaoleilu.hutool.Conver;
-import com.xiaoleilu.hutool.InjectUtil;
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.util.InjectUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 1、字典对象，扩充了HashMap中的方法

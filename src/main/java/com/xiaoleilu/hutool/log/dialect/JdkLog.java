@@ -4,8 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.log.AbstractLog;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a> log.

@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.system;
 
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 代表当前运行的JRE的信息。

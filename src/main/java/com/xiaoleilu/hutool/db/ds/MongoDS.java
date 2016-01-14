@@ -15,15 +15,15 @@ import com.mongodb.MongoClientOptions.Builder;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.xiaoleilu.hutool.CharsetUtil;
-import com.xiaoleilu.hutool.CollectionUtil;
-import com.xiaoleilu.hutool.NetUtil;
-import com.xiaoleilu.hutool.Setting;
-import com.xiaoleilu.hutool.StrUtil;
 import com.xiaoleilu.hutool.exceptions.NotInitedException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.NetUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * MongoDB工具类

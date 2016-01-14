@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.demo;
 
-import com.xiaoleilu.hutool.Singleton;
+import com.xiaoleilu.hutool.lang.Singleton;
 
 /**
  * 单例样例

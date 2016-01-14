@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.demo;
 
 import java.util.List;
 
-import com.xiaoleilu.hutool.StrUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 public class StrUtilDemo {
 	public static void main(String[] args) {
