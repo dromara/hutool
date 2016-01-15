@@ -186,3 +186,7 @@ Entity中toVo区别是否忽略大小写
 5、完善SystemUtil，并集中于system包中
 6、Http模块加入gzip支持
 7、解决IoUtil读取文本的问题
+
+2.14.0
+1、明确分类
+2、加入filter

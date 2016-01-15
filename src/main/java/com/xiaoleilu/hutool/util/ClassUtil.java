@@ -1,13 +1,8 @@
 package com.xiaoleilu.hutool.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -298,27 +293,6 @@ public class ClassUtil {
 		}
 	}
 
-	/**
-	 * 克隆对象
-	 * @param obj 被克隆对象
-	 * @return 克隆后的对象
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T cloneObj(T obj) {
-		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream(); 
-		
-		try {
-			final ObjectOutputStream out = new ObjectOutputStream(byteOut); 
-			out.writeObject(obj); 
-			final ObjectInputStream in =new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
-			return (T) in.readObject();
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
-	}
-	
 	/**
 	 * 加载类
 	 * @param <T>

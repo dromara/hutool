@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
+import com.xiaoleilu.hutool.lang.Filter;
 
 import java.util.Set;
 import java.util.Stack;
@@ -464,6 +465,22 @@ public class CollectionUtil {
 		}
 		
 		return sub(new ArrayList<T>(list), start, end);
+	}
+	
+	/**
+	 * 过滤
+	 * @param array 数组
+	 * @param filter 过滤器接口
+	 * @return 过滤后的数组
+	 */
+	public static <T> T[] filter(T[] array, Filter<T> filter){
+		ArrayList<T> list = new ArrayList<T>();
+		for (T t : array) {
+			if(filter.accept(t)){
+				list.add(t);
+			}
+		}
+		return list.toArray(Arrays.copyOf(array, list.size()));
 	}
 	
 	/**

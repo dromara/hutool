@@ -1,10 +1,18 @@
 package com.xiaoleilu.hutool.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
  * 一些通用的函数
@@ -140,5 +148,26 @@ public class ObjectUtil {
 	 */
 	public static boolean isNotNull(Object  obj) {
 		return null != obj;
+	}
+	
+	/**
+	 * 克隆对象
+	 * @param obj 被克隆对象
+	 * @return 克隆后的对象
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Serializable> T clone(T obj) {
+		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream(); 
+		
+		try {
+			final ObjectOutputStream out = new ObjectOutputStream(byteOut); 
+			out.writeObject(obj); 
+			final ObjectInputStream in =new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
+			return (T) in.readObject();
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
 	}
 }
