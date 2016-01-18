@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.util;
 
+import com.xiaoleilu.hutool.http.HTMLFilter;
+
 /**
  * HTML工具类
  * 
@@ -180,5 +182,14 @@ public class HtmlUtil {
 			}
 		}
 		return buffer.toString();
+	}
+	
+	/**
+	 * 过滤HTML文本，防止XSS攻击
+	 * @param htmlContent HTML内容
+	 * @return 过滤后的内容
+	 */
+	public static String filter(String htmlContent){
+		return new HTMLFilter().filter(htmlContent);
 	}
 }
