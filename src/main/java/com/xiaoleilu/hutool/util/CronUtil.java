@@ -119,6 +119,8 @@ public class CronUtil {
 		if(scheduler.isStarted()){
 			scheduler.stop();
 		}
+		
+		schedule(crontabSetting);
 		scheduler.start();
 	}
 	
