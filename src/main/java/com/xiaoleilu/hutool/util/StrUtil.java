@@ -36,6 +36,7 @@ public class StrUtil {
 
 	public static final String EMPTY_JSON = "{}";
 
+	// ------------------------------------------------------------------------ Blank
 	/**
 	 * 字符串是否为空白 空白的定义如下： <br>
 	 * 1、为null <br>
@@ -46,7 +47,20 @@ public class StrUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isBlank(String str) {
-		return str == null || str.trim().length() == 0;
+		int length;
+
+		if ((str == null) || ((length = str.length()) == 0)) {
+			return true;
+		}
+
+		for (int i = 0; i < length; i++) {
+			// 只要有一个非空字符即为非空字符串
+			if (false == Character.isWhitespace(str.charAt(i))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -81,6 +95,26 @@ public class StrUtil {
 		return false;
 	}
 
+	/**
+	 * 给定所有字符串是否为空白
+	 * 
+	 * @param strs 字符串
+	 * @return 所有字符串是否为空白
+	 */
+	public static boolean isAllBlank(String... strs) {
+		if (CollectionUtil.isEmpty(strs)) {
+			return true;
+		}
+
+		for (String str : strs) {
+			if (isNotBlank(str)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// ------------------------------------------------------------------------ Empty
 	/**
 	 * 字符串是否为空，空的定义如下 1、为null <br>
 	 * 2、为""<br>
@@ -150,6 +184,10 @@ public class StrUtil {
 	 * @return 是否包含空字符串
 	 */
 	public static boolean hasEmpty(String... strs) {
+		if (CollectionUtil.isEmpty(strs)) {
+			return true;
+		}
+
 		for (String str : strs) {
 			if (isEmpty(str)) {
 				return true;
@@ -159,13 +197,153 @@ public class StrUtil {
 	}
 
 	/**
-	 * 去除字符串两边的空格符，如果为null返回null
+	 * 是否全部为空字符串
 	 * 
-	 * @param str 字符串
-	 * @return 处理后的字符串
+	 * @param strs 字符串列表
+	 * @return 是否全部为空字符串
+	 */
+	public static boolean isAllEmpty(String... strs) {
+		if (CollectionUtil.isEmpty(strs)) {
+			return true;
+		}
+
+		for (String str : strs) {
+			if (isNotEmpty(str)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// ------------------------------------------------------------------------ Trim
+	/**
+	 * 除去字符串头尾部的空白，如果字符串是<code>null</code>，依然返回<code>null</code>。
+	 * 
+	 * <p>
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>Character.isWhitespace</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 
+	 * <pre>
+	 * trim(null)          = null
+	 * trim(&quot;&quot;)            = &quot;&quot;
+	 * trim(&quot;     &quot;)       = &quot;&quot;
+	 * trim(&quot;abc&quot;)         = &quot;abc&quot;
+	 * trim(&quot;    abc    &quot;) = &quot;abc&quot;
+	 * </pre>
+	 * 
+	 * </p>
+	 * 
+	 * @param str 要处理的字符串
+	 * 
+	 * @return 除去空白的字符串，如果原字串为<code>null</code>，则返回<code>null</code>
 	 */
 	public static String trim(String str) {
-		return (null == str) ? null : str.trim();
+		return (null == str) ? null : trim(str, 0);
+	}
+
+	/**
+	 * 给定字符串数组全部做去首尾空格
+	 * 
+	 * @param strs 字符串数组
+	 */
+	public static void trim(String[] strs) {
+		if (null == strs) {
+			return;
+		}
+		String str;
+		for (int i = 0; i < strs.length; i++) {
+			str = strs[i];
+			if (null != str) {
+				strs[i] = str.trim();
+			}
+		}
+	}
+
+	/**
+	 * 除去字符串头部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
+	 * 
+	 * <p>
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>Character.isWhitespace</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 
+	 * <pre>
+	 * trimStart(null)         = null
+	 * trimStart(&quot;&quot;)           = &quot;&quot;
+	 * trimStart(&quot;abc&quot;)        = &quot;abc&quot;
+	 * trimStart(&quot;  abc&quot;)      = &quot;abc&quot;
+	 * trimStart(&quot;abc  &quot;)      = &quot;abc  &quot;
+	 * trimStart(&quot; abc &quot;)      = &quot;abc &quot;
+	 * </pre>
+	 * 
+	 * </p>
+	 * 
+	 * @param str 要处理的字符串
+	 * 
+	 * @return 除去空白的字符串，如果原字串为<code>null</code>或结果字符串为<code>""</code>，则返回 <code>null</code>
+	 */
+	public static String trimStart(String str) {
+		return trim(str, -1);
+	}
+
+	/**
+	 * 除去字符串尾部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
+	 * 
+	 * <p>
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>Character.isWhitespace</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 
+	 * <pre>
+	 * trimEnd(null)       = null
+	 * trimEnd(&quot;&quot;)         = &quot;&quot;
+	 * trimEnd(&quot;abc&quot;)      = &quot;abc&quot;
+	 * trimEnd(&quot;  abc&quot;)    = &quot;  abc&quot;
+	 * trimEnd(&quot;abc  &quot;)    = &quot;abc&quot;
+	 * trimEnd(&quot; abc &quot;)    = &quot; abc&quot;
+	 * </pre>
+	 * 
+	 * </p>
+	 * 
+	 * @param str 要处理的字符串
+	 * 
+	 * @return 除去空白的字符串，如果原字串为<code>null</code>或结果字符串为<code>""</code>，则返回 <code>null</code>
+	 */
+	public static String trimEnd(String str) {
+		return trim(str, 1);
+	}
+
+	/**
+	 * 除去字符串头尾部的空白符，如果字符串是<code>null</code>，依然返回<code>null</code>。
+	 * 
+	 * @param str 要处理的字符串
+	 * @param mode <code>-1</code>表示trimStart，<code>0</code>表示trim全部， <code>1</code>表示trimEnd
+	 * 
+	 * @return 除去指定字符后的的字符串，如果原字串为<code>null</code>，则返回<code>null</code>
+	 */
+	public static String trim(String str, int mode) {
+		if (str == null) {
+			return null;
+		}
+
+		int length = str.length();
+		int start = 0;
+		int end = length;
+
+		// 扫描字符串头部
+		if (mode <= 0) {
+			while ((start < end) && (Character.isWhitespace(str.charAt(start)))) {
+				start++;
+			}
+		}
+
+		// 扫描字符串尾部
+		if (mode >= 0) {
+			while ((start < end) && (Character.isWhitespace(str.charAt(end - 1)))) {
+				end--;
+			}
+		}
+
+		if ((start > 0) || (end < length)) {
+			return str.substring(start, end);
+		}
+
+		return str;
 	}
 
 	/**
@@ -569,17 +747,51 @@ public class StrUtil {
 	}
 
 	/**
-	 * 比较两个字符串是否相同，如果为null或者空串则算不同
+	 * 比较两个字符串（大小写敏感）。
 	 * 
-	 * @param str1 字符串1
-	 * @param str2 字符串2
-	 * @return 是否非空相同
+	 * <pre>
+	 * equals(null, null)   = true
+	 * equals(null, &quot;abc&quot;)  = false
+	 * equals(&quot;abc&quot;, null)  = false
+	 * equals(&quot;abc&quot;, &quot;abc&quot;) = true
+	 * equals(&quot;abc&quot;, &quot;ABC&quot;) = false
+	 * </pre>
+	 * 
+	 * @param str1 要比较的字符串1
+	 * @param str2 要比较的字符串2
+	 * 
+	 * @return 如果两个字符串相同，或者都是<code>null</code>，则返回<code>true</code>
 	 */
-	public static boolean equalsNotEmpty(String str1, String str2) {
-		if (isEmpty(str1)) {
-			return false;
+	public static boolean equals(String str1, String str2) {
+		if (str1 == null) {
+			return str2 == null;
 		}
+
 		return str1.equals(str2);
+	}
+
+	/**
+	 * 比较两个字符串（大小写不敏感）。
+	 * 
+	 * <pre>
+	 * equalsIgnoreCase(null, null)   = true
+	 * equalsIgnoreCase(null, &quot;abc&quot;)  = false
+	 * equalsIgnoreCase(&quot;abc&quot;, null)  = false
+	 * equalsIgnoreCase(&quot;abc&quot;, &quot;abc&quot;) = true
+	 * equalsIgnoreCase(&quot;abc&quot;, &quot;ABC&quot;) = true
+	 * </pre>
+	 * 
+	 * @param str1 要比较的字符串1
+	 * @param str2 要比较的字符串2
+	 * 
+	 * @return 如果两个字符串相同，或者都是<code>null</code>，则返回<code>true</code>
+	 */
+	public static boolean equalsIgnoreCase(String str1, String str2) {
+		if (str1 == null) {
+			return str2 == null;
+		}
+
+		return str1.equalsIgnoreCase(str2);
 	}
 
 	/**

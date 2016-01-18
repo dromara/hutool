@@ -191,3 +191,4 @@ Entity中toVo区别是否忽略大小写
 1、明确分类
 2、加入filter
 3、修复Crontab restart不能加载配置文件的bug
+4、扩充StrUtil
