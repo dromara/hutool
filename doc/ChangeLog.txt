@@ -194,3 +194,4 @@ Entity中toVo区别是否忽略大小写
 4、扩充StrUtil
 5、Add HTMLFilter
 6、修改getLog为get
+7、增加一些工具方法

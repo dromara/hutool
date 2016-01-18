@@ -1,7 +1,13 @@
 package com.xiaoleilu.hutool.util;
 
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -92,11 +98,12 @@ public class XmlUtil {
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			final DocumentBuilder builder = dbf.newDocumentBuilder();
-			return builder.parse( new InputSource(StrUtil.getReader(xmlStr)));
+			return builder.parse(new InputSource(StrUtil.getReader(xmlStr)));
 		} catch (Exception e) {
 			throw new UtilException("Parse xml file [" + xmlStr + "] error!", e);
 		}
 	}
+
 	// -------------------------------------------------------------------------------------- Write
 	/**
 	 * 将XML文档转换为String
@@ -107,7 +114,7 @@ public class XmlUtil {
 	public static String toStr(Document doc) {
 		return toStr(doc, CharsetUtil.UTF_8);
 	}
-	
+
 	/**
 	 * 将XML文档转换为String<br>
 	 * 此方法会修改Document中的字符集
@@ -121,8 +128,8 @@ public class XmlUtil {
 			StringWriter writer = StrUtil.getWriter();
 
 			final Transformer xformer = TransformerFactory.newInstance().newTransformer();
-			 xformer.setOutputProperty(OutputKeys.ENCODING, charset);
-			 xformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			xformer.setOutputProperty(OutputKeys.ENCODING, charset);
+			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			xformer.transform(new DOMSource(doc), new StreamResult(writer));
 
 			return writer.toString();
@@ -130,7 +137,7 @@ public class XmlUtil {
 			throw new UtilException("Trans xml document to string error!", e);
 		}
 	}
-	
+
 	/**
 	 * 将XML文档写入到文件<br>
 	 * 使用Document中的编码
@@ -150,13 +157,13 @@ public class XmlUtil {
 	 * @param charset 自定义XML文件的编码
 	 */
 	public static void toFile(Document doc, String absolutePath, String charset) {
-		if(StrUtil.isBlank(charset)) {
+		if (StrUtil.isBlank(charset)) {
 			charset = doc.getXmlEncoding();
 		}
-		if(StrUtil.isBlank(charset)) {
+		if (StrUtil.isBlank(charset)) {
 			charset = CharsetUtil.UTF_8;
 		}
-		
+
 		BufferedWriter writer = null;
 		try {
 			writer = FileUtil.getBufferedWriter(absolutePath, charset, false);
@@ -176,6 +183,7 @@ public class XmlUtil {
 	/**
 	 * 创建XML文档<br>
 	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，既XML在转为文本的时候才定义编码
+	 * 
 	 * @param rootElementName 根节点名称
 	 * @return XML文档
 	 */
@@ -189,7 +197,7 @@ public class XmlUtil {
 		}
 		Document doc = builder.newDocument();
 		doc.appendChild(doc.createElement(rootElementName));
-		
+
 		return doc;
 	}
 
@@ -204,9 +212,10 @@ public class XmlUtil {
 		if (xmlContent == null) return null;
 		return xmlContent.replaceAll(INVALID_REGEX, "");
 	}
-	
+
 	/**
 	 * 根据节点名获得子节点列表
+	 * 
 	 * @param element 节点
 	 * @param tagName 节点名
 	 * @return 节点列表
@@ -215,30 +224,32 @@ public class XmlUtil {
 		final NodeList nodeList = element.getElementsByTagName(tagName);
 		return transElements(element, nodeList);
 	}
-	
+
 	/**
 	 * 根据节点名获得第一个子节点
+	 * 
 	 * @param element 节点
 	 * @param tagName 节点名
 	 * @return 节点
 	 */
 	public static Element getElement(Element element, String tagName) {
 		final NodeList nodeList = element.getElementsByTagName(tagName);
-		if(nodeList == null || nodeList.getLength() < 1) {
+		if (nodeList == null || nodeList.getLength() < 1) {
 			return null;
 		}
 		int length = nodeList.getLength();
-		for(int i = 0; i < length; i++) {
-			Element childEle = (Element)nodeList.item(i);
-			if(childEle == null || childEle.getParentNode() == element) {
+		for (int i = 0; i < length; i++) {
+			Element childEle = (Element) nodeList.item(i);
+			if (childEle == null || childEle.getParentNode() == element) {
 				return childEle;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 根据节点名获得第一个子节点
+	 * 
 	 * @param element 节点
 	 * @param tagName 节点名
 	 * @return 节点中的值
@@ -247,9 +258,10 @@ public class XmlUtil {
 		Element child = getElement(element, tagName);
 		return child == null ? null : child.getTextContent();
 	}
-	
+
 	/**
 	 * 根据节点名获得第一个子节点
+	 * 
 	 * @param element 节点
 	 * @param tagName 节点名
 	 * @return 节点中的值
@@ -258,18 +270,20 @@ public class XmlUtil {
 		Element child = getElement(element, tagName);
 		return child == null ? defaultValue : child.getTextContent();
 	}
-	
+
 	/**
 	 * 将NodeList转换为Element列表
+	 * 
 	 * @param nodeList NodeList
 	 * @return Element列表
 	 */
 	public static List<Element> transElements(NodeList nodeList) {
 		return transElements(null, nodeList);
 	}
-	
+
 	/**
 	 * 将NodeList转换为Element列表
+	 * 
 	 * @param parentEle 父节点，如果指定将返回此节点的所有直接子节点，nul返回所有就节点
 	 * @param nodeList NodeList
 	 * @return Element列表
@@ -277,16 +291,65 @@ public class XmlUtil {
 	public static List<Element> transElements(Element parentEle, NodeList nodeList) {
 		final ArrayList<Element> elements = new ArrayList<Element>();
 		int length = nodeList.getLength();
-		for(int i = 0; i < length; i++) {
-			Element element = (Element)nodeList.item(i);
-			if(parentEle == null || element.getParentNode() == parentEle) {
+		for (int i = 0; i < length; i++) {
+			Element element = (Element) nodeList.item(i);
+			if (parentEle == null || element.getParentNode() == parentEle) {
 				elements.add(element);
 			}
 		}
-		
+
 		return elements;
+	}
+
+	/**
+	 * 将可序列化的对象转换为XML写入文件，已经存在的文件将被覆盖<br>
+	 * Writes serializable object to a XML file. Existing file will be overwritten
+	 * @param <T>
+	 * @param dest 目标文件
+	 * @param t 对象
+	 * @throws IOException
+	 */
+	public static <T> void writeObjectAsXml(File dest, T t) throws IOException {
+		FileOutputStream fos = null;
+		XMLEncoder xmlenc = null;
+		try {
+			fos = new FileOutputStream(dest);
+			xmlenc = new XMLEncoder(new BufferedOutputStream(fos));
+			xmlenc.writeObject(t);
+		} finally {
+			FileUtil.close(fos);
+			if (xmlenc != null) {
+				xmlenc.close();
+			}
+		}
+	}
+
+	/**
+	 * 从XML中读取对象
+	 * Reads serialized object from the XML file.
+	 * @param <T>
+	 * @param source XML文件
+	 * @return 对象
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T readObjectFromXml(File source) throws IOException {
+		Object result = null;
+		FileInputStream fis = null;
+		XMLDecoder xmldec = null;
+		try {
+			fis = new FileInputStream(source);
+			xmldec = new XMLDecoder(new BufferedInputStream(fis));
+			result = xmldec.readObject();
+		} finally {
+			FileUtil.close(fis);
+			if (xmldec != null) {
+				xmldec.close();
+			}
+		}
+		return (T) result;
 	}
 	// ---------------------------------------------------------------------------------------- Private method start
 	// ---------------------------------------------------------------------------------------- Private method end
-	
+
 }

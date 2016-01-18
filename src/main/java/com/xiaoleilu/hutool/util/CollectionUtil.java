@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -838,5 +839,50 @@ public class CollectionUtil {
 	 */
 	public static boolean isArray(Object obj) {
 		return obj.getClass().isArray();
+	}
+	
+	/**
+	 * Iterator转换为Enumeration
+	 * Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
+	 * @param iter Iterator
+	 * @return Enumeration
+	 */
+	public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
+		return new Enumeration<E>() {
+			@Override
+			public boolean hasMoreElements() {
+				return iter.hasNext();
+			}
+
+			@Override
+			public E nextElement() {
+				return iter.next();
+			}
+		};
+	}
+
+	/**
+	 * Enumeration转换为Iterator<br>
+	 * Adapt the specified <code>Enumeration</code> to the <code>Iterator</code> interface
+	 * @param e Enumeration
+	 * @return Iterator
+	 */
+	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
+		return new Iterator<E>(){
+			@Override
+			public boolean hasNext() {
+				return e.hasMoreElements();
+			}
+			
+			@Override
+			public E next() {
+				return e.nextElement();
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
 	}
 }

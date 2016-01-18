@@ -92,6 +92,17 @@ public class SecureUtil {
 	 * @return 被加密后的字符串
 	 */
 	public static String encrypt(File file, String algorithmName) {
+		return Conver.toHex(encryptWithoutHex(file, algorithmName));
+	}
+	
+	/**
+	 * 加密文件，不对结果做Hex处理
+	 * 
+	 * @param file 被加密的文字
+	 * @param algorithmName 算法名
+	 * @return 被加密后的值
+	 */
+	public static byte[] encryptWithoutHex(File file, String algorithmName) {
 		final byte[] buffer = new byte[8192];
 		MessageDigest md = createMessageDigest(algorithmName);
 		BufferedInputStream in = null;
@@ -106,8 +117,8 @@ public class SecureUtil {
 		}finally{
 			FileUtil.close(in);
 		}
-		return Conver.toHex(md.digest());
-	}	
+		return md.digest();
+	}
 	
 	/**
 	 * 创建MessageDigest
