@@ -200,7 +200,7 @@ public class StaticLog {
 	 * @return Log
 	 */
 	public static Log get(Class<?> clazz) {
-		return LogFactory.getLog(clazz);
+		return LogFactory.get(clazz);
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class StaticLog {
 	 * @return Log
 	 */
 	public static Log get(String name) {
-		return LogFactory.getLog(name);
+		return LogFactory.get(name);
 	}
 	
 	/**

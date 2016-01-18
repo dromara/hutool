@@ -55,7 +55,7 @@ public class LogFactory {
 	 * @param name 日志对象名
 	 * @return 日志对象
 	 */
-	public static Log getLog(String name){
+	public static Log get(String name){
 		return ClassUtil.newInstance(currentLogClass, name);
 	}
 	
@@ -64,7 +64,7 @@ public class LogFactory {
 	 * @param clazz 日志对应类
 	 * @return 日志对象
 	 */
-	public static Log getLog(Class<?> clazz){
+	public static Log get(Class<?> clazz){
 		return ClassUtil.newInstance(currentLogClass, clazz);
 	}
 	
@@ -72,13 +72,13 @@ public class LogFactory {
 	 * @return 获得调用者的日志
 	 */
 	public static Log get() {
-		return getLog(new Exception().getStackTrace()[1].getClassName());
+		return get(new Exception().getStackTrace()[1].getClassName());
 	}
 	
 	/**
 	 * @return 获得调用者的调用者的日志（用于内部辗转调用）
 	 */
 	protected static Log indirectGet() {
-		return getLog(new Exception().getStackTrace()[2].getClassName());
+		return get(new Exception().getStackTrace()[2].getClassName());
 	}
 }
