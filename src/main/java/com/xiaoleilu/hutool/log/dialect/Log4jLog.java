@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.log.dialect;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import com.xiaoleilu.hutool.log.AbstractLog;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -12,19 +15,19 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class Log4jLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
 
-	private final transient org.apache.log4j.Logger logger;
+	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Log4jLog(org.apache.log4j.Logger logger) {
+	public Log4jLog(Logger logger) {
 		this.logger = logger;
 	}
 
 	public Log4jLog(Class<?> clazz) {
-		this.logger = org.apache.log4j.Logger.getLogger(clazz);
+		this(Logger.getLogger(clazz));
 	}
 
 	public Log4jLog(String name) {
-		this.logger = org.apache.log4j.Logger.getLogger(name);
+		this(Logger.getLogger(name));
 	}
 
 	@Override
@@ -95,7 +98,7 @@ public class Log4jLog extends AbstractLog {
 	// ------------------------------------------------------------------------- Warn
 	@Override
 	public boolean isWarnEnabled() {
-		return logger.isEnabledFor(org.apache.log4j.Level.WARN);
+		return logger.isEnabledFor(Level.WARN);
 	}
 
 	@Override
@@ -115,7 +118,7 @@ public class Log4jLog extends AbstractLog {
 	// ------------------------------------------------------------------------- Error
 	@Override
 	public boolean isErrorEnabled() {
-		return logger.isEnabledFor(org.apache.log4j.Level.ERROR);
+		return logger.isEnabledFor(Level.ERROR);
 	}
 
 	@Override

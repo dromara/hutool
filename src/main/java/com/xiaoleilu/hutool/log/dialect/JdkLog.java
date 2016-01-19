@@ -24,11 +24,11 @@ public class JdkLog extends AbstractLog {
 	}
 
 	public JdkLog(Class<?> clazz) {
-		this.logger = Logger.getLogger(clazz.getName());
+		this(clazz.getName());
 	}
 
 	public JdkLog(String name) {
-		this.logger = Logger.getLogger(name);
+		this(Logger.getLogger(name));
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void trace(Throwable t, String format, Object... arguments) {
-		if(isTraceEnabled()){
+		if (isTraceEnabled()) {
 			log(SELF, Level.FINEST, StrUtil.format(format, arguments), t);
 		}
 	}
@@ -64,14 +64,14 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void debug(String format, Object... arguments) {
-		if(isDebugEnabled()){
+		if (isDebugEnabled()) {
 			log(SELF, Level.FINE, StrUtil.format(format, arguments), null);
 		}
 	}
 
 	@Override
 	public void debug(Throwable t, String format, Object... arguments) {
-		if(isDebugEnabled()){
+		if (isDebugEnabled()) {
 			log(SELF, Level.FINE, StrUtil.format(format, arguments), t);
 		}
 	}
@@ -84,14 +84,14 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void info(String format, Object... arguments) {
-		if(isInfoEnabled()){
+		if (isInfoEnabled()) {
 			log(SELF, Level.INFO, StrUtil.format(format, arguments), null);
 		}
 	}
 
 	@Override
 	public void info(Throwable t, String format, Object... arguments) {
-		if(isInfoEnabled()){
+		if (isInfoEnabled()) {
 			log(SELF, Level.INFO, StrUtil.format(format, arguments), null);
 		}
 	}
@@ -104,14 +104,14 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void warn(String format, Object... arguments) {
-		if(isWarnEnabled()){
+		if (isWarnEnabled()) {
 			log(SELF, Level.WARNING, StrUtil.format(format, arguments), null);
 		}
 	}
 
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
-		if(isWarnEnabled()){
+		if (isWarnEnabled()) {
 			log(SELF, Level.WARNING, StrUtil.format(format, arguments), t);
 		}
 	}
@@ -124,14 +124,14 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void error(String format, Object... arguments) {
-		if(isErrorEnabled()){
+		if (isErrorEnabled()) {
 			log(SELF, Level.SEVERE, StrUtil.format(format, arguments), null);
 		}
 	}
 
 	@Override
 	public void error(Throwable t, String format, Object... arguments) {
-		if(isErrorEnabled()){
+		if (isErrorEnabled()) {
 			log(SELF, Level.SEVERE, StrUtil.format(format, arguments), t);
 		}
 	}
@@ -139,10 +139,11 @@ public class JdkLog extends AbstractLog {
 	// ------------------------------------------------------------------------- Private method
 	/**
 	 * 打印对应等级的日志
+	 * 
 	 * @param callerFQCN
 	 * @param level 等级
 	 * @param msg 消息
-	 * @param t 
+	 * @param t
 	 */
 	private void log(String callerFQCN, Level level, String msg, Throwable t) {
 		LogRecord record = new LogRecord(level, msg);
@@ -151,14 +152,14 @@ public class JdkLog extends AbstractLog {
 		fillCallerData(callerFQCN, record);
 		logger.log(record);
 	}
-	
+
 	private static final String SELF = JdkLog.class.getName();
 	private static final String SUPER = JdkLog.class.getSuperclass().getName();
 
 	/**
 	 * Fill in caller data if possible.
 	 *
-	 *@param callerFQCN 调用者
+	 * @param callerFQCN 调用者
 	 * @param record The record to update
 	 */
 	private static void fillCallerData(String callerFQCN, LogRecord record) {

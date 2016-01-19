@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.log.dialect;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.xiaoleilu.hutool.log.AbstractLog;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -12,19 +15,19 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class Log4j2Log extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
 
-	private final transient org.apache.logging.log4j.Logger logger;
+	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Log4j2Log(org.apache.logging.log4j.Logger logger) {
+	public Log4j2Log(Logger logger) {
 		this.logger = logger;
 	}
 
 	public Log4j2Log(Class<?> clazz) {
-		this.logger = org.apache.logging.log4j.LogManager.getLogger(clazz);
+		this(LogManager.getLogger(clazz));
 	}
 
 	public Log4j2Log(String name) {
-		this.logger = org.apache.logging.log4j.LogManager.getLogger(name);
+		this(LogManager.getLogger(name));
 	}
 
 	@Override

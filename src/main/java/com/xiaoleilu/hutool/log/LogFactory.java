@@ -1,53 +1,63 @@
 package com.xiaoleilu.hutool.log;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLog;
-import com.xiaoleilu.hutool.log.dialect.JdkLog;
-import com.xiaoleilu.hutool.log.dialect.Log4j2Log;
-import com.xiaoleilu.hutool.log.dialect.Log4jLog;
-import com.xiaoleilu.hutool.log.dialect.Slf4jLog;
-import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLogFactory;
+import com.xiaoleilu.hutool.log.dialect.JdkLogFactory;
+import com.xiaoleilu.hutool.log.dialect.Log4j2LogFactory;
+import com.xiaoleilu.hutool.log.dialect.Log4jLogFactory;
+import com.xiaoleilu.hutool.log.dialect.Slf4jLogFactory;
 
 /**
  * 日志工厂类
  * @author Looly
  *
  */
-public class LogFactory {
+public abstract class LogFactory {
 	
-	private static final Class<? extends AbstractLog> currentLogClass = detectLog();
+	private String logFramworkName;
 	
-	/**
-	 * 决定日志实现
-	 * @return 日志实现类
-	 */
-	public static Class<? extends AbstractLog> detectLog(){
-		List<Class<? extends AbstractLog>> logClassList = Arrays.asList(
-				Slf4jLog.class,
-				Log4jLog.class, 
-				Log4j2Log.class, 
-				ApacheCommonsLog.class, 
-				JdkLog.class
-		);
-		
-		for (Class<? extends AbstractLog> clazz : logClassList) {
-			try {
-				clazz.getConstructor(Class.class).newInstance(LogFactory.class).info("Use Log Framework: [{}]", clazz.getSimpleName());
-				return clazz;
-			} catch (Error | Exception e) {
-				continue;
-			}
-		}
-		return JdkLog.class;
+	public LogFactory(String logFramworkName) {
+		this.logFramworkName = logFramworkName;
 	}
 	
 	/**
-	 * @return 当前使用的日志系统
+	 * 获得日志对象
+	 * @param name 日志对象名
+	 * @return 日志对象
 	 */
-	public static Class<? extends AbstractLog> getCurrentLogClass(){
-		return currentLogClass;
+	public abstract Log getLog(String name);
+	
+	/**
+	 * 获得日志对象
+	 * @param clazz 日志对应类
+	 * @return 日志对象
+	 */
+	public abstract Log getLog(Class<?> clazz);
+	
+	//------------------------------------------------------------------------- Static start
+	private static volatile LogFactory currentLogFactory;
+	private static final Object lock = new Object();
+
+	/**
+	 * @return 当前使用的日志工厂
+	 */
+	public static LogFactory getCurrentLogFactory(){
+		if(null == currentLogFactory){
+			synchronized (lock) {
+				if(null == currentLogFactory){
+					currentLogFactory = detectLogFactory();
+				}
+			}
+		}
+		return currentLogFactory;
+	}
+	
+	/**
+	 * 自定义日志实现
+	 * @param logFactory 日志工厂类
+	 */
+	public static void setCurrentLogFactory(LogFactory logFactory){
+		logFactory.getLog(LogFactory.class).debug("Custom Use [{}] Logger.", logFactory.logFramworkName);
+		currentLogFactory = logFactory;
 	}
 	
 	/**
@@ -56,7 +66,7 @@ public class LogFactory {
 	 * @return 日志对象
 	 */
 	public static Log get(String name){
-		return ClassUtil.newInstance(currentLogClass, name);
+		return getCurrentLogFactory().getLog(name);
 	}
 	
 	/**
@@ -65,7 +75,7 @@ public class LogFactory {
 	 * @return 日志对象
 	 */
 	public static Log get(Class<?> clazz){
-		return ClassUtil.newInstance(currentLogClass, clazz);
+		return getCurrentLogFactory().getLog(clazz);
 	}
 	
 	/**
@@ -81,4 +91,37 @@ public class LogFactory {
 	protected static Log indirectGet() {
 		return get(new Exception().getStackTrace()[2].getClassName());
 	}
+	
+	/**
+	 * 决定日志实现
+	 * @return 日志实现类
+	 */
+	private static LogFactory detectLogFactory(){
+		LogFactory logFactory;
+		try{
+			logFactory = new Slf4jLogFactory(true);
+			logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+		}catch(Throwable e){
+			try {
+				logFactory = new Log4jLogFactory();
+				logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+			} catch (Throwable e2) {
+				try {
+					logFactory = new Log4j2LogFactory();
+					logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+				} catch (Throwable e3) {
+					try {
+						logFactory = new ApacheCommonsLogFactory();
+						logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+					} catch (Throwable e4) {
+						logFactory = new JdkLogFactory();
+						logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+					}
+				}
+			}
+		}
+		
+		return logFactory;
+	}
+	//------------------------------------------------------------------------- Static end
 }

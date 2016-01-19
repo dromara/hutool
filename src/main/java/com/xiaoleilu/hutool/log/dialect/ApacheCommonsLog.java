@@ -1,11 +1,13 @@
 package com.xiaoleilu.hutool.log.dialect;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.xiaoleilu.hutool.log.AbstractLog;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * <a href="http://logging.apache.org/log4j/1.2/index.html">Apache Log4J</a> log.<br>
- * 
+ * Apache Commons Logging
  * @author Looly
  *
  */
@@ -16,19 +18,17 @@ public class ApacheCommonsLog extends AbstractLog {
 	private final String name;
 
 	// ------------------------------------------------------------------------- Constructor
-	public ApacheCommonsLog(org.apache.commons.logging.Log logger, String name) {
+	public ApacheCommonsLog(Log logger, String name) {
 		this.logger = logger;
 		this.name = name;
 	}
 
 	public ApacheCommonsLog(Class<?> clazz) {
-		this.logger = org.apache.commons.logging.LogFactory.getLog(clazz);
-		this.name = clazz.getName();
+		this(LogFactory.getLog(clazz), clazz.getName());
 	}
 
 	public ApacheCommonsLog(String name) {
-		this.logger = org.apache.commons.logging.LogFactory.getLog(name);
-		this.name = name;
+		this(LogFactory.getLog(name), name);
 	}
 
 	@Override
