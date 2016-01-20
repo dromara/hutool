@@ -487,8 +487,10 @@ public class CollectionUtil {
 	 */
 	public static <T> T[] filter(T[] array, Filter<T> filter) {
 		ArrayList<T> list = new ArrayList<T>();
+		T modified;
 		for (T t : array) {
-			if (filter.accept(t)) {
+			modified = filter.modify(t);
+			if (null != modified) {
 				list.add(t);
 			}
 		}
@@ -505,8 +507,12 @@ public class CollectionUtil {
 	 */
 	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
 		Collection<T> collection2 = ObjectUtil.clone(collection);
+		collection2.clear();
+		
+		T modified;
 		for (T t : collection) {
-			if(filter.accept(t)){
+			modified = filter.modify(t);
+			if (null != modified) {
 				collection2.add(t);
 			}
 		}
@@ -522,8 +528,11 @@ public class CollectionUtil {
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter){
 		Map<K, V> map2 = ObjectUtil.clone(map);
 		map2.clear();
+		
+		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
-			if(filter.accept(entry)){
+			modified = filter.modify(entry);
+			if (null != modified) {
 				map2.put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -537,7 +546,7 @@ public class CollectionUtil {
 	 * @return 是否为空
 	 */
 	public static <T> boolean isEmpty(T[] array) {
-		return array == null || array.length == 0;
+		return array == null || array.length <= 0;
 	}
 
 	/**

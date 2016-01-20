@@ -52,7 +52,7 @@ public class EntityDemo {
 			.set("name", "Lucy")
 			.set("age", 24);
 
-		DemoPojo vo = entity.toVo(DemoPojo.class);
+		DemoPojo vo = entity.toBean(DemoPojo.class);
 		System.out.println(vo);
 	}
 }

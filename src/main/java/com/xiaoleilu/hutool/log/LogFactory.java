@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.log;
 
 import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLogFactory;
+import com.xiaoleilu.hutool.log.dialect.ConsoleLogFactory;
 import com.xiaoleilu.hutool.log.dialect.JdkLogFactory;
 import com.xiaoleilu.hutool.log.dialect.Log4j2LogFactory;
 import com.xiaoleilu.hutool.log.dialect.Log4jLogFactory;
@@ -114,8 +115,13 @@ public abstract class LogFactory {
 						logFactory = new ApacheCommonsLogFactory();
 						logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 					} catch (Throwable e4) {
-						logFactory = new JdkLogFactory();
-						logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+						try {
+							logFactory = new JdkLogFactory();
+							logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+						} catch (Throwable e5) {
+							logFactory = new ConsoleLogFactory();
+							logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+						}
 					}
 				}
 			}

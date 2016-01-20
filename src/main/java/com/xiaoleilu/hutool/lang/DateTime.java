@@ -49,6 +49,10 @@ public class DateTime extends Date{
 		return DateUtil.formatDateTime(this);
 	}
 	
+	public String toString(String format) {
+		return DateUtil.format(this, format);
+	}
+	
 	/**
 	 * @return 输出精确到毫秒的标准日期形式
 	 */

@@ -46,11 +46,11 @@ public class Entity extends Dict{
 	/**
 	 * 将PO对象转为Entity
 	 * @param <T>
-	 * @param vo 值对象
+	 * @param bean Bean对象
 	 * @return Entity
 	 */
-	public static <T> Entity parse(T vo) {
-		return create(null).fromVo(vo);
+	public static <T> Entity parse(T bean) {
+		return create(null).parseBean(bean);
 	}
 	//--------------------------------------------------------------- Static method end
 	
@@ -137,16 +137,16 @@ public class Entity extends Dict{
 	 * 将值对象转换为Entity<br>
 	 * 类名会被当作表名，小写第一个字母
 	 * @param <T>
-	 * @param vo 值对象
+	 * @param bean Bean对象
 	 * @return 自己
 	 */
 	@Override
-	public <T> Entity fromVo(T vo) {
-		String tableName = vo.getClass().getSimpleName();
+	public <T> Entity parseBean(T bean) {
+		String tableName = bean.getClass().getSimpleName();
 		tableName = StrUtil.lowerFirst(tableName);
 		this.setTableName(tableName);
 		
-		return (Entity) super.fromVo(vo);
+		return (Entity) super.parseBean(bean);
 	}
 	
 	//-------------------------------------------------------------------- Put and Set start

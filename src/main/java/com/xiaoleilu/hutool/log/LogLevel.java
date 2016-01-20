@@ -5,7 +5,7 @@ package com.xiaoleilu.hutool.log;
  * @author Looly
  *
  */
-public enum LogLevel {
+public enum LogLevel{
 	/**
 	 * 'TRACE' log level.
 	 */

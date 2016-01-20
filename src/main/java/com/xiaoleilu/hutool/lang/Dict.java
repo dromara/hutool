@@ -9,9 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.util.InjectUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.BeanUtil;
 
 /**
  * 1、字典对象，扩充了HashMap中的方法
@@ -33,11 +31,11 @@ public class Dict extends HashMap<String, Object>{
 	/**
 	 * 将PO对象转为Dict
 	 * @param <T>
-	 * @param vo 值对象
+	 * @param bean Bean对象
 	 * @return Vo
 	 */
-	public static <T> Dict parse(T vo) {
-		return create().fromVo(vo);
+	public static <T> Dict parse(T bean) {
+		return create().parseBean(bean);
 	}
 	//--------------------------------------------------------------- Static method end
 	
@@ -50,40 +48,14 @@ public class Dict extends HashMap<String, Object>{
 	//--------------------------------------------------------------- Getters and Setters end
 	
 	/**
-	 * 填充Value Object对象
+	 * 转换为Bean对象
 	 * @param <T>
-	 * @param vo Value Object（或者POJO）
-	 * @return Dict
+	 * @param bean Bean
+	 * @return Bean
 	 */
-	public <T> Dict fillVo(T vo) {
-		InjectUtil.injectFromMap(vo, this);
-		return this;
-	}
-	
-	/**
-	 * 填充Value Object对象
-	 * @param clazz Value Object（或者POJO）的类
-	 * @param ignoreCase 是否忽略大小写
-	 * @return vo
-	 */
-	public <T> T toVo(Class<T> clazz, boolean ignoreCase) {
-		if(clazz == null) {
-			throw new NullPointerException("Provided Class is null!");
-		}
-		T vo;
-		try {
-			vo = clazz.newInstance();
-		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Instance Value Object [] error!", clazz.getName()));
-		}
-		
-		if(ignoreCase){
-			InjectUtil.injectFromMapIgnoreCase(vo, this);
-		}else{
-			InjectUtil.injectFromMap(vo, this);
-		}
-		
-		return vo;
+	public <T> T toBean(T bean) {
+		BeanUtil.fillBeanWithMap(this, bean);
+		return bean;
 	}
 	
 	/**
@@ -91,8 +63,8 @@ public class Dict extends HashMap<String, Object>{
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
 	 */
-	public <T> T toVo(Class<T> clazz) {
-		return toVo(clazz, false);
+	public <T> T toBean(Class<T> clazz) {
+		return BeanUtil.mapToBean(this, clazz);
 	}
 	
 	/**
@@ -100,19 +72,19 @@ public class Dict extends HashMap<String, Object>{
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
 	 */
-	public <T> T toVoIgnoreCase(Class<T> clazz) {
-		return toVo(clazz, true);
+	public <T> T toBeanIgnoreCase(Class<T> clazz) {
+		return BeanUtil.mapToBeanIgnoreCase(this, clazz);
 	}
 	
 	/**
 	 * 将值对象转换为Dict<br>
 	 * 类名会被当作表名，小写第一个字母
 	 * @param <T>
-	 * @param vo 值对象
+	 * @param bean 值对象
 	 * @return 自己
 	 */
-	public <T> Dict fromVo(T vo) {
-		this.putAll(InjectUtil.toMap(vo, false));
+	public <T> Dict parseBean(T bean) {
+		this.putAll(BeanUtil.beanToMap(bean));
 		return this;
 	}
 	

@@ -37,6 +37,41 @@ public class ClassUtil {
 	}
 	
 	/**
+	 * 查找方法
+	 * @param clazz 类
+	 * @param methodName 方法名
+	 * @param paramTypes 参数类型
+	 * @return 方法
+	 */
+	public static Method findMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
+		try {
+			return clazz.getMethod(methodName, paramTypes);
+		}
+		catch (NoSuchMethodException ex) {
+			return findDeclaredMethod(clazz, methodName, paramTypes);
+		}
+	}
+	
+	/**
+	 * 查找所有方法
+	 * @param clazz 类
+	 * @param methodName 方法名
+	 * @param paramTypes 参数类型
+	 * @return Method
+	 */
+	public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
+		try {
+			return clazz.getDeclaredMethod(methodName, paramTypes);
+		}
+		catch (NoSuchMethodException ex) {
+			if (clazz.getSuperclass() != null) {
+				return findDeclaredMethod(clazz.getSuperclass(), methodName, paramTypes);
+			}
+			return null;
+		}
+	}
+	
+	/**
 	 * 获得对象数组的类数组
 	 * @param objects 对象数组
 	 * @return 类数组
