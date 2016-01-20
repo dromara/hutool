@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -151,21 +150,61 @@ public class ObjectUtil {
 	}
 	
 	/**
-	 * 克隆对象
+	 * 克隆对象<br>
+	 * 对象必须实现Serializable接口
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T clone(T obj) {
+	public static <T> T clone(T obj) {
 		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream(); 
 		
 		try {
 			final ObjectOutputStream out = new ObjectOutputStream(byteOut); 
 			out.writeObject(obj); 
+			out.flush();
 			final ObjectInputStream in =new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
 			return (T) in.readObject();
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
+	}
+	
+	/**
+	 * 序列化<br>
+	 * 对象必须实现Serializable接口
+	 * @param <T>
+	 * @param t 要被序列化的对象
+	 * @return 序列化后的字节码
+	 */
+	public static <T> byte[] serialize(T t) {
+		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(byteOut);
+			oos.writeObject(t);
+			oos.flush();
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
+		return byteOut.toByteArray();
+	}
+
+	/**
+	 * 反序列化<br>
+	 * 对象必须实现Serializable接口
+	 * @param <T>
+	 * @param bytes 反序列化的字节码
+	 * @return 反序列化后的对象
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T unserialize(byte[] bytes) {
+		ObjectInputStream ois = null;
+		try {
+			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+			ois = new ObjectInputStream(bais);
+			return (T) ois.readObject();
 		} catch (Exception e) {
 			throw new UtilException(e);
 		}

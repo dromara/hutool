@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.util;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -248,5 +249,18 @@ public class IoUtil {
 			System.out.println(content);
 		}
 		System.out.println(StrUtil.format(content.toString(), param));
+	}
+	
+	/**
+	 * 关闭
+	 * 
+	 * @param closeable 被关闭的对象
+	 */
+	public static void close(Closeable closeable) {
+		if (closeable == null) return;
+		try {
+			closeable.close();
+		} catch (IOException e) {
+		}
 	}
 }

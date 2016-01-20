@@ -504,14 +504,30 @@ public class CollectionUtil {
 	 * @return 过滤后的数组
 	 */
 	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
-		Iterator<T> it = collection.iterator();
-		while (it.hasNext()) {
-			T t = it.next();
-			if (false == filter.accept(t)) {
-				it.remove();
+		Collection<T> collection2 = ObjectUtil.clone(collection);
+		for (T t : collection) {
+			if(filter.accept(t)){
+				collection2.add(t);
 			}
 		}
-		return collection;
+		return collection2;
+	}
+	
+	/**
+	 * 过滤
+	 * @param map Map
+	 * @param filter 过滤器
+	 * @return 过滤后的Map
+	 */
+	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter){
+		Map<K, V> map2 = ObjectUtil.clone(map);
+		map2.clear();
+		for (Entry<K, V> entry : map.entrySet()) {
+			if(filter.accept(entry)){
+				map2.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return map2;
 	}
 
 	/**
