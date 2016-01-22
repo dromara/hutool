@@ -2,6 +2,8 @@ package com.xiaoleilu.hutool.log;
 
 import java.io.Serializable;
 
+import com.xiaoleilu.hutool.log.level.Level;
+
 /**
  * 抽象日志类
  * 
@@ -12,7 +14,7 @@ public abstract class AbstractLog implements Log, Serializable{
 	private static final long serialVersionUID = -3211115409504005616L;
 	
 	@Override
-	public boolean isEnabled(LogLevel level) {
+	public boolean isEnabled(Level level) {
 		switch (level) {
 			case TRACE:
 				return isTraceEnabled();
@@ -30,7 +32,7 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void log(LogLevel level, String format, Object... arguments) {
+	public void log(Level level, String format, Object... arguments) {
 		switch (level) {
 			case TRACE:
 				trace(format, arguments);
@@ -53,7 +55,7 @@ public abstract class AbstractLog implements Log, Serializable{
 	}
 
 	@Override
-	public void log(LogLevel level, Throwable t, String format, Object... arguments) {
+	public void log(Level level, Throwable t, String format, Object... arguments) {
 		switch (level) {
 			case TRACE:
 				trace(t, format, arguments);

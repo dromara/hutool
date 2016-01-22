@@ -1,11 +1,11 @@
-package com.xiaoleilu.hutool.log;
+package com.xiaoleilu.hutool.log.level;
 
 /**
  * DEBUG级别日志接口
  * @author Looly
  *
  */
-interface DebugLog {
+public interface DebugLog {
 	/**
 	 * @return DEBUG 等级是否开启
 	 */

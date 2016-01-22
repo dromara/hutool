@@ -1,11 +1,11 @@
-package com.xiaoleilu.hutool.log;
+package com.xiaoleilu.hutool.log.level;
 
 /**
  * ERROR级别日志接口
  * @author Looly
  *
  */
-interface ErrorLog {
+public interface ErrorLog {
 	/**
 	 * @return ERROR 等级是否开启
 	 */

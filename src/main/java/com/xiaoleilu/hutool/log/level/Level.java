@@ -1,11 +1,11 @@
-package com.xiaoleilu.hutool.log;
+package com.xiaoleilu.hutool.log.level;
 
 /**
  * 日志等级
  * @author Looly
  *
  */
-public enum LogLevel{
+public enum Level{
 	/**
 	 * 'TRACE' log level.
 	 */

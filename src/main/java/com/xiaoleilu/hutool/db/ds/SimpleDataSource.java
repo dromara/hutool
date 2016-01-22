@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -24,6 +26,16 @@ public class SimpleDataSource extends AbstractDataSource{
 	private String user;			//用户名
 	private String pass;			//密码
 	//-------------------------------------------------------------------- Fields end
+	
+	/**
+	 * 获得一个数据源
+	 * 
+	 * @param group 数据源分组
+	 * @throws ConnException
+	 */
+	synchronized public static DataSource getDataSource(String group) {
+		return new SimpleDataSource(group);
+	}
 	
 	//-------------------------------------------------------------------- Constructor start
 	/**
