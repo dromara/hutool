@@ -198,3 +198,4 @@ Entity中toVo区别是否忽略大小写
 8、增加BeanUtil
 9、增加ConsoleLog
 10、CharsetUtil调整
+11、调整BloomFilter API

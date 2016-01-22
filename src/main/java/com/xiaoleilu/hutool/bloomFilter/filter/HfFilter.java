@@ -10,7 +10,7 @@ public class HfFilter extends AbstractFilter {
 	public HfFilter(long maxValue) {
 		super(maxValue);
 	}
-
+	
 	@Override
 	public long hash(String str) {
 		int length = str.length() ;

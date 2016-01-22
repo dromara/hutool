@@ -1,11 +1,8 @@
 package com.xiaoleilu.hutool.bloomFilter;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.List;
 
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.HashUtil;
@@ -16,7 +13,7 @@ import com.xiaoleilu.hutool.util.HashUtil;
  * @author loolly
  *
  */
-public class BloomFilter2 {
+public class BitSetBloomFilter implements BloomFilter{
 	private BitSet bitSet;
 	private int bitSetSize;
 	private int addedElements;
@@ -29,7 +26,7 @@ public class BloomFilter2 {
 	 * @param n 当前过滤器预计所要包含的记录.
 	 * @param k 哈希函数的个数，等同每条记录要占用的bit数.
 	 */
-	public BloomFilter2(int c, int n, int k) {
+	public BitSetBloomFilter(int c, int n, int k) {
 		this.hashFunctionNumber = k;
 		this.bitSetSize = (int) Math.ceil(c * k);
 		this.addedElements = n;
@@ -50,30 +47,33 @@ public class BloomFilter2 {
 			while(true) {
 				line = reader.readLine();
 				if(line == null) break;
-				this.put(line);
+				this.add(line);
 			}
 		}finally {
 			FileUtil.close(reader);
 		}
 	}
+	
+	@Override
+	public boolean add(String str) {
+		if (contains(str)) {
+			return false;
+		}
 
-	/**
-	 * 将字符串加入到BloomFilter中
-	 * @param str 字符串
-	 */
-	public void put(String str) {
 		int[] positions = createHashes(str, hashFunctionNumber);
 		for (int i = 0; i < positions.length; i++) {
 			int position = Math.abs(positions[i] % bitSetSize);
 			bitSet.set(position, true);
 		}
+		return true;
 	}
-
+	
 	/**
 	 * 判定是否包含指定字符串
 	 * @param str 字符串
 	 * @return 是否包含，存在误差
 	 */
+	@Override
 	public boolean contains(String str) {
 		int[] positions = createHashes(str, hashFunctionNumber);
 		for (int i : positions) {
@@ -84,7 +84,7 @@ public class BloomFilter2 {
 		}
 		return true;
 	}
-
+	
 	/**
 	 * @return 得到当前过滤器的错误率.
 	 */
@@ -135,28 +135,5 @@ public class BloomFilter2 {
 				return HashUtil.pjwHash(str);
 		}
 		return 0;
-	}
-	
-	public static void main(String[] args) throws Exception {
-		BloomFilter2 bloomfilter = new BloomFilter2(30000000, 10000000, 8);
-		System.out.println("Bloom Filter Initialize ... ");
-		bloomfilter.init("data/base.txt", "utf8");
-		System.out.println("Bloom Filter Ready");
-		System.out.println("False Positive Probability : " + bloomfilter.getFalsePositiveProbability());
-		// 查找新数据
-		List<String> result = new ArrayList<String>();
-		long t1 = System.currentTimeMillis();
-		BufferedReader reader = new BufferedReader(new FileReader("data/input.txt"));
-		String line = reader.readLine();
-		while (line != null && line.length() > 0) {
-			if (!bloomfilter.contains(line)) {
-				result.add(line);
-			}
-			line = reader.readLine();
-		}
-		reader.close();
-		long t2 = System.currentTimeMillis();
-		System.out.println("Parse 9900000 items, Time : " + (t2 - t1) + "ms , find " + result.size() + " new items.");
-		System.out.println("Average : " + 9900000 / ((t2 - t1) / 1000) + " items/second");
 	}
 }
