@@ -163,4 +163,12 @@ public class ThreadUtil {
 		}
 		return stackTrace[i];
 	}
+	
+	/**
+	 * 创建本地线程对象
+	 * @return 本地线程
+	 */
+	public static <T> ThreadLocal<T> createThreadLocal(){
+		return new ThreadLocal<>();
+	}
 }
