@@ -197,3 +197,4 @@ Entity中toVo区别是否忽略大小写
 7、增加一些工具方法
 8、增加BeanUtil
 9、增加ConsoleLog
+10、CharsetUtil调整

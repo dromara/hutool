@@ -59,7 +59,7 @@ public class SecureUtil {
 	 * @return 被加密后的值
 	 */
 	public static String encrypt(String source, String algorithmName, String charset) {
-		return encrypt(StrUtil.encode(source, charset), algorithmName);
+		return encrypt(StrUtil.bytes(source, charset), algorithmName);
 	}
 
 	/**
@@ -303,7 +303,7 @@ public class SecureUtil {
 	 * @return 被加密后的字符串
 	 */
 	public static String base64(String source, String charset) {
-		return new String(base64(StrUtil.encode(source, charset), false), Charset.forName(charset));
+		return StrUtil.str(base64(StrUtil.bytes(source, charset), false), charset);
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class SecureUtil {
 	 * @return 被加密后的字符串
 	 */
 	public static String base64(byte[] source, String charset) {
-		return new String(base64(source, false), Charset.forName(charset));
+		return StrUtil.str(base64(source, false), charset);
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class SecureUtil {
 	 * @return 被加密后的字符串
 	 */
 	public static String decodeBase64(String source, String charset) {
-		return new String(decodeBase64(StrUtil.encode(source, charset)), Charset.forName(charset));
+		return StrUtil.str(decodeBase64(StrUtil.bytes(source, charset)), charset);
 	}
 
 	/**

@@ -168,7 +168,7 @@ public class IoUtil {
 	 */
 	public static String read(FileChannel fileChannel, String charset) throws IOException {
 		final MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
-		return CharsetUtil.str(buffer, charset);
+		return StrUtil.str(buffer, charset);
 	}
 	
 	/**

@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.util;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -851,6 +851,17 @@ public class StrUtil {
 		}
 		return template;
 	}
+	
+	/**
+	 * 编码字符串
+	 * 
+	 * @param str 字符串
+	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+	 * @return 编码后的字节码
+	 */
+	public static byte[] bytes(String str, String charset) {
+		return bytes(str, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+	}
 
 	/**
 	 * 编码字符串
@@ -859,19 +870,26 @@ public class StrUtil {
 	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
 	 * @return 编码后的字节码
 	 */
-	public static byte[] encode(String str, String charset) {
+	public static byte[] bytes(String str, Charset charset) {
 		if (str == null) {
 			return null;
 		}
 
-		if (isBlank(charset)) {
+		if (null == charset) {
 			return str.getBytes();
 		}
-		try {
-			return str.getBytes(charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(format("Charset [{}] unsupported!", charset));
-		}
+		return str.getBytes(charset);
+	}
+	
+	/**
+	 * 将byte数组转为字符串
+	 * 
+	 * @param bytes byte数组
+	 * @param charset 字符集
+	 * @return 字符串
+	 */
+	public static String str(byte[] bytes, String charset) {
+		return str(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
 	}
 
 	/**
@@ -881,47 +899,75 @@ public class StrUtil {
 	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
 	 * @return 解码后的字符串
 	 */
-	public static String decode(byte[] data, String charset) {
+	public static String str(byte[] data, Charset charset) {
 		if (data == null) {
 			return null;
 		}
 
-		if (isBlank(charset)) {
+		if (null == charset) {
 			return new String(data);
 		}
-		try {
-			return new String(data, charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(format("Charset [{}] unsupported!", charset));
+		return new String(data, charset);
+	}
+	
+	/**
+	 * 将编码的byteBuffer数据转换为字符串
+	 * @param data 数据
+	 * @param charset 字符集，如果为空使用当前系统字符集
+	 * @return 字符串
+	 */
+	public static String str(ByteBuffer data, String charset){
+		if(data == null) {
+			return null;
 		}
+		
+		return str(data, Charset.forName(charset));
+	}
+	
+	/**
+	 * 将编码的byteBuffer数据转换为字符串
+	 * @param data 数据
+	 * @param charset 字符集，如果为空使用当前系统字符集
+	 * @return 字符串
+	 */
+	public static String str(ByteBuffer data, Charset charset){
+		if(null == charset) {
+			charset = Charset.defaultCharset();
+		}
+		return charset.decode(data).toString();
+	}
+	
+	/**
+	 * 字符串转换为byteBuffer
+	 * @param str 字符串
+	 * @param charset 编码
+	 * @return byteBuffer
+	 */
+	public static ByteBuffer byteBuffer(String str, String charset) {
+		return ByteBuffer.wrap(StrUtil.bytes(str, charset));
 	}
 
 	/**
-	 * 将多个对象字符化<br>
-	 * 每个对象字符化后直接拼接，无分隔符
+	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 * 
-	 * @param objs 对象数组
-	 * @return 字符串
+	 * @param conjunction 分隔符
+	 * @param objs 数组
+	 * @return 连接后的字符串
 	 */
-	public static String str(Object... objs) {
+	public static String join(String conjunction, Object... objs) {
 		StringBuilder sb = new StringBuilder();
-		for (Object obj : objs) {
-			sb.append(obj);
+		boolean isFirst = true;
+		for (Object item : objs) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
 		}
 		return sb.toString();
 	}
-
-	/**
-	 * 将byte数组转为字符串
-	 * 
-	 * @param bytes byte数组
-	 * @param charset 字符集
-	 * @return 字符串
-	 */
-	public static String str(byte[] bytes, String charset) {
-		return new String(bytes, Charset.forName(charset));
-	}
-
+	
 	/**
 	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br>
 	 * 例如：HelloWorld->hello_world
@@ -1117,18 +1163,6 @@ public class StrUtil {
 			sb.append(str);
 		}
 		return sb;
-	}
-
-	/**
-	 * 获得字符串对应字符集的byte数组<br>
-	 * 调用encode方法
-	 * 
-	 * @param str 字符串
-	 * @param charset 字符集编码
-	 * @return byte数组
-	 */
-	public static byte[] bytes(String str, String charset) {
-		return encode(str, charset);
 	}
 
 	/**
