@@ -158,7 +158,7 @@ public class BeanUtil {
 	}
 	
 	/**
-	 * ServletRequest 参数转Bean
+	 * 填充Bean
 	 * @param <T>
 	 * @param bean Bean
 	 * @param valueProvider 值提供者

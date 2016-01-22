@@ -13,7 +13,9 @@ import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.PageResult;
 import com.xiaoleilu.hutool.db.Session;
 import com.xiaoleilu.hutool.db.SqlRunner;
-import com.xiaoleilu.hutool.db.ds.DruidDS;
+import com.xiaoleilu.hutool.db.ds.SimpleDataSource;
+import com.xiaoleilu.hutool.db.ds.druid.DruidDS;
+import com.xiaoleilu.hutool.db.ds.pool.PooledDataSource;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Order;
@@ -66,6 +68,14 @@ public class DbDemo {
 		ds2.setUsername("root");
 		ds2.setPassword("123456");
 		ds = ds2;
+		
+		//无连接池的数据源
+		SimpleDataSource ds3 = SimpleDataSource.getDataSource();
+		ds = ds3;
+		
+		//简易连接池
+		DataSource ds4 = PooledDataSource.getDataSource();
+		ds = ds4;
 
 		return ds;
 	}

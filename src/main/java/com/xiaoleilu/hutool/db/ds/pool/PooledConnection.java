@@ -19,12 +19,12 @@ public class PooledConnection extends ConnectionWraper{
 	public PooledConnection(PooledDataSource ds) throws SQLException {
 		this.ds = ds;
 		DbConfig config = ds.getConfig();
-		this.realConn = DriverManager.getConnection(config.getUrl(), config.getUser(), config.getPass());
+		this.raw = DriverManager.getConnection(config.getUrl(), config.getUser(), config.getPass());
 	}
 	
 	public PooledConnection(PooledDataSource ds, Connection conn) {
 		this.ds = ds;
-		this.realConn = conn;
+		this.raw = conn;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class PooledConnection extends ConnectionWraper{
 	 */
 	@Override
 	public boolean isClosed() throws SQLException {
-		return isClosed || realConn.isClosed();
+		return isClosed || raw.isClosed();
 	}
 	
 	/**
@@ -58,6 +58,6 @@ public class PooledConnection extends ConnectionWraper{
 	 * 释放连接
 	 */
 	protected void release() {
-		DbUtil.close(this.realConn);
+		DbUtil.close(this.raw);
 	}
 }

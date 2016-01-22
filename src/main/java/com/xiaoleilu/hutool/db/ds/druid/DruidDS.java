@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db.ds;
+package com.xiaoleilu.hutool.db.ds.druid;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,9 +9,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.xiaoleilu.hutool.db.DbUtil;
-import com.xiaoleilu.hutool.db.dialect.DialectFactory;
-import com.xiaoleilu.hutool.exceptions.SettingException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
@@ -28,20 +25,13 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class DruidDS {
 	private final static Log log = StaticLog.get();
 	
-	/** 默认的Druid配置文件路径 */
-	public final static String DEFAULT_DRUID_CONFIG_PATH = "config/druid.setting";
-	/** 默认的数据库连接配置文件路径 */
-	public final static String DEFAULT_DB_CONFIG_PATH = "config/db.setting";
-	/** 默认的数据库连接驱动（MySQL） */
-	public final static String DEFAULT_DRIVER = DialectFactory.DRIVER_MYSQL;
-
 	/*--------------------------私有变量 start-------------------------------*/
 	/** JDBC配置对象 */
 	private static Setting dbSetting;
 	private static Setting druidSetting;
 
 	/** 数据源池 */
-	private static Map<String, DruidDataSource> dsMap;
+	private static Map<String, SettingDruidDataSource> dsMap;
 	/*--------------------------私有变量 end-------------------------------*/
 
 	/**
@@ -51,24 +41,24 @@ public class DruidDS {
 	 * @param db_setting 数据库配置文件
 	 */
 	synchronized public static void init(Setting druid_setting, Setting db_setting) {
-		dsMap = new HashMap<String, DruidDataSource>();
+		dsMap = new HashMap<>();
 
 		// 初始化Druid配置文件
 		druidSetting = druid_setting;
 		if (druidSetting == null) {
 			try {
-				druidSetting = new Setting(DEFAULT_DRUID_CONFIG_PATH, Setting.DEFAULT_CHARSET, true);
+				druidSetting = new Setting(SettingDruidDataSource.DEFAULT_DRUID_CONFIG_PATH, Setting.DEFAULT_CHARSET, true);
 			}catch(Exception e) {
-				log.info("Druid setting file {} not found.", DEFAULT_DRUID_CONFIG_PATH);
+				log.info("Druid setting file {} not found.", SettingDruidDataSource.DEFAULT_DRUID_CONFIG_PATH);
 			}
 		}
 		// 初始化数据库连接配置文件
 		dbSetting = db_setting;
 		if (dbSetting == null) {
 			try {
-				dbSetting = new Setting(DEFAULT_DB_CONFIG_PATH, Setting.DEFAULT_CHARSET, true);
+				dbSetting = new Setting(SettingDruidDataSource.DEFAULT_DB_CONFIG_PATH, Setting.DEFAULT_CHARSET, true);
 			}catch(Exception e) {
-				log.info("No default DB config file {} found, custom to init it.", DEFAULT_DB_CONFIG_PATH);
+				log.info("No default DB config file {} found, custom to init it.", SettingDruidDataSource.DEFAULT_DB_CONFIG_PATH);
 			}
 		}
 	}
@@ -98,24 +88,7 @@ public class DruidDS {
 			return existedDataSource;
 		}
 
-		// 基本连接信息
-		final DruidDataSource dds = new DruidDataSource();
-		injectSetting(druidSetting, dds);
-		
-		dds.setName(group); // 数据源名称为连接名称
-		
-		final String jdbcUrl = dbSetting.getString("url", group);
-		log.debug("JDBC url: {}", jdbcUrl);
-		dds.setDriverClassName(dbSetting.getStringWithDefault("driver", group, DbUtil.identifyDriver(jdbcUrl)));
-		dds.setUrl(jdbcUrl);
-		dds.setUsername(dbSetting.getString("user", group));
-		dds.setPassword(dbSetting.getString("pass", group));
-		
-		//此连接自定义的连接池配置
-		String dsSettingPath = dbSetting.getString("ds.setting.path");
-		if(StrUtil.isNotBlank(dsSettingPath)) {
-			injectSetting(new Setting(dsSettingPath), dds);
-		}
+		final SettingDruidDataSource dds = new SettingDruidDataSource(druidSetting, dbSetting, group);
 		
 		// 添加到数据源池中，以备下次使用
 		dsMap.put(group, dds);
@@ -182,7 +155,7 @@ public class DruidDS {
 	 * 关闭所有连接池
 	 */
 	synchronized public static void closeAll() {
-		Collection<DruidDataSource> values = dsMap.values();
+		Collection<SettingDruidDataSource> values = dsMap.values();
 		for (DruidDataSource dds : values) {
 			if (dds != null) {
 				dds.close();
@@ -190,17 +163,4 @@ public class DruidDS {
 		}
 		dsMap.clear();
 	}
-	
-	//------------------------------------------------------------------- Private method start
-	private static void injectSetting(Setting setting, DruidDataSource dds) {
-		if(null != setting) {
-			try {
-				// 连接池参数注入
-				setting.toObject(dds);
-			} catch (SettingException e) {
-				throw new UtilException("Read Druid setting error!", e);
-			}
-		}
-	}
-	//------------------------------------------------------------------- Private method end
 }

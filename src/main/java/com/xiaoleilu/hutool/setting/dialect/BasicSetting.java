@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -21,11 +20,11 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.xiaoleilu.hutool.exceptions.SettingException;
-import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
+import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -379,42 +378,30 @@ public class BasicSetting extends AbsSetting{
 	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
 	 * 只支持基本类型的转换
 	 * 
-	 * @param object 被调用的对象
-	 * @throws SettingException
+	 * @param bean Bean
+	 * @return Bean
 	 */
-	public void toObject(String group, Object object) throws SettingException {
-		try {
-			Method[] methods = object.getClass().getMethods();
-			for (Method method : methods) {
-				String methodName = method.getName();
-				if (methodName.startsWith("set")) {
-					String field = StrUtil.getGeneralField(methodName);
-					Object value = getByGroup(field, group);
-					if (value != null) {
-						Class<?>[] parameterTypes = method.getParameterTypes();
-						if(parameterTypes.length != 1) {
-							continue;
-						}
-						Object castedValue = Conver.parse(parameterTypes[0], value);
-						method.invoke(object, castedValue);
-						log.debug("Parse setting to object field [{}={}]", field, value);
-					}
-				}
+	public Object toBean(final String group, Object bean) {
+		return BeanUtil.fill(bean, new ValueProvider(){
+			
+			@Override
+			public Object value(String name) {
+				final String value = getByGroup(name, group);
+				log.debug("Parse setting to object field [{}={}]", name, value);
+				return value;
 			}
-		} catch (Exception e) {
-			throw new SettingException("Parse setting to object error!", e);
-		}
+		});
 	}
 
 	/**
 	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
 	 * 只支持基本类型的转换
 	 * 
-	 * @param object
-	 * @throws SettingException
+	 * @param bean Bean
+	 * @return Bean
 	 */
-	public void toObject(Object object) throws SettingException {
-		toObject(null, object);
+	public Object toBean(Object bean) {
+		return toBean(null, bean);
 	}
 	
 	/**

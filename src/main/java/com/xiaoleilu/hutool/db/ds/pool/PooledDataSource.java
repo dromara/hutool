@@ -22,6 +22,25 @@ public class PooledDataSource extends AbstractDataSource{
 	
 	private DbConfig config;
 	
+	/**
+	 * 获得一个数据源
+	 * 
+	 * @param group 数据源分组
+	 * @throws ConnException
+	 */
+	synchronized public static PooledDataSource getDataSource(String group) {
+		return new PooledDataSource(group);
+	}
+	
+	/**
+	 * 获得一个数据源
+	 * 
+	 * @throws ConnException
+	 */
+	synchronized public static PooledDataSource getDataSource() {
+		return new PooledDataSource();
+	}
+	
 	//-------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造，读取默认的配置文件和默认分组

@@ -26,272 +26,272 @@ import java.util.concurrent.Executor;
  */
 public abstract class ConnectionWraper implements Connection{
 	
-	protected Connection realConn;//真正的连接
+	protected Connection raw;//真正的连接
 
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
-		return realConn.unwrap(iface);
+		return raw.unwrap(iface);
 	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		return realConn.isWrapperFor(iface);
+		return raw.isWrapperFor(iface);
 	}
 
 	@Override
 	public Statement createStatement() throws SQLException {
-		return realConn.createStatement();
+		return raw.createStatement();
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql) throws SQLException {
-		return realConn.prepareStatement(sql);
+		return raw.prepareStatement(sql);
 	}
 
 	@Override
 	public CallableStatement prepareCall(String sql) throws SQLException {
-		return realConn.prepareCall(sql);
+		return raw.prepareCall(sql);
 	}
 
 	@Override
 	public String nativeSQL(String sql) throws SQLException {
-		return realConn.nativeSQL(sql);
+		return raw.nativeSQL(sql);
 	}
 
 	@Override
 	public void setAutoCommit(boolean autoCommit) throws SQLException {
-		realConn.setAutoCommit(autoCommit);
+		raw.setAutoCommit(autoCommit);
 	}
 
 	@Override
 	public boolean getAutoCommit() throws SQLException {
-		return realConn.getAutoCommit();
+		return raw.getAutoCommit();
 	}
 
 	@Override
 	public void commit() throws SQLException {
-		realConn.commit();
+		raw.commit();
 	}
 
 	@Override
 	public void rollback() throws SQLException {
-		realConn.rollback();
+		raw.rollback();
 	}
 
 	@Override
 	public DatabaseMetaData getMetaData() throws SQLException {
-		return realConn.getMetaData();
+		return raw.getMetaData();
 	}
 
 	@Override
 	public void setReadOnly(boolean readOnly) throws SQLException {
-		realConn.setReadOnly(readOnly);
+		raw.setReadOnly(readOnly);
 	}
 
 	@Override
 	public boolean isReadOnly() throws SQLException {
-		return realConn.isReadOnly();
+		return raw.isReadOnly();
 	}
 
 	@Override
 	public void setCatalog(String catalog) throws SQLException {
-		realConn.setCatalog(catalog);
+		raw.setCatalog(catalog);
 	}
 
 	@Override
 	public String getCatalog() throws SQLException {
-		return realConn.getCatalog();
+		return raw.getCatalog();
 	}
 
 	@Override
 	public void setTransactionIsolation(int level) throws SQLException {
-		realConn.setTransactionIsolation(level);
+		raw.setTransactionIsolation(level);
 	}
 
 	@Override
 	public int getTransactionIsolation() throws SQLException {
-		return realConn.getTransactionIsolation();
+		return raw.getTransactionIsolation();
 	}
 
 	@Override
 	public SQLWarning getWarnings() throws SQLException {
-		return realConn.getWarnings();
+		return raw.getWarnings();
 	}
 
 	@Override
 	public void clearWarnings() throws SQLException {
-		realConn.clearWarnings();
+		raw.clearWarnings();
 	}
 
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-		return realConn.createStatement(resultSetType, resultSetConcurrency);
+		return raw.createStatement(resultSetType, resultSetConcurrency);
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-		return realConn.prepareStatement(sql, resultSetType, resultSetConcurrency);
+		return raw.prepareStatement(sql, resultSetType, resultSetConcurrency);
 	}
 
 	@Override
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-		return realConn.prepareCall(sql, resultSetType, resultSetConcurrency);
+		return raw.prepareCall(sql, resultSetType, resultSetConcurrency);
 	}
 
 	@Override
 	public Map<String, Class<?>> getTypeMap() throws SQLException {
-		return realConn.getTypeMap();
+		return raw.getTypeMap();
 	}
 
 	@Override
 	public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-		realConn.setTypeMap(map);
+		raw.setTypeMap(map);
 	}
 
 	@Override
 	public void setHoldability(int holdability) throws SQLException {
-		realConn.setHoldability(holdability);
+		raw.setHoldability(holdability);
 	}
 
 	@Override
 	public int getHoldability() throws SQLException {
-		return realConn.getHoldability();
+		return raw.getHoldability();
 	}
 
 	@Override
 	public Savepoint setSavepoint() throws SQLException {
-		return realConn.setSavepoint();
+		return raw.setSavepoint();
 	}
 
 	@Override
 	public Savepoint setSavepoint(String name) throws SQLException {
-		return realConn.setSavepoint(name);
+		return raw.setSavepoint(name);
 	}
 
 	@Override
 	public void rollback(Savepoint savepoint) throws SQLException {
-		realConn.rollback(savepoint);
+		raw.rollback(savepoint);
 	}
 
 	@Override
 	public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-		realConn.releaseSavepoint(savepoint);
+		raw.releaseSavepoint(savepoint);
 	}
 
 	@Override
 	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-		return realConn.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
+		return raw.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-		return realConn.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+		return raw.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 	}
 
 	@Override
 	public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-		return realConn.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+		return raw.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-		return realConn.prepareStatement(sql, autoGeneratedKeys);
+		return raw.prepareStatement(sql, autoGeneratedKeys);
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-		return realConn.prepareStatement(sql, columnIndexes);
+		return raw.prepareStatement(sql, columnIndexes);
 	}
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-		return realConn.prepareStatement(sql, columnNames);
+		return raw.prepareStatement(sql, columnNames);
 	}
 
 	@Override
 	public Clob createClob() throws SQLException {
-		return realConn.createClob();
+		return raw.createClob();
 	}
 
 	@Override
 	public Blob createBlob() throws SQLException {
-		return realConn.createBlob();
+		return raw.createBlob();
 	}
 
 	@Override
 	public NClob createNClob() throws SQLException {
-		return realConn.createNClob();
+		return raw.createNClob();
 	}
 
 	@Override
 	public SQLXML createSQLXML() throws SQLException {
-		return realConn.createSQLXML();
+		return raw.createSQLXML();
 	}
 
 	@Override
 	public boolean isValid(int timeout) throws SQLException {
-		return realConn.isValid(timeout);
+		return raw.isValid(timeout);
 	}
 
 	@Override
 	public void setClientInfo(String name, String value) throws SQLClientInfoException {
-		realConn.setClientInfo(name, value);
+		raw.setClientInfo(name, value);
 	}
 
 	@Override
 	public void setClientInfo(Properties properties) throws SQLClientInfoException {
-		realConn.setClientInfo(properties);
+		raw.setClientInfo(properties);
 	}
 
 	@Override
 	public String getClientInfo(String name) throws SQLException {
-		return realConn.getClientInfo(name);
+		return raw.getClientInfo(name);
 	}
 
 	@Override
 	public Properties getClientInfo() throws SQLException {
-		return realConn.getClientInfo();
+		return raw.getClientInfo();
 	}
 
 	@Override
 	public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
-		return realConn.createArrayOf(typeName, elements);
+		return raw.createArrayOf(typeName, elements);
 	}
 
 	@Override
 	public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
-		return realConn.createStruct(typeName, attributes);
+		return raw.createStruct(typeName, attributes);
 	}
 
 	@Override
 	public void setSchema(String schema) throws SQLException {
-		realConn.setSchema(schema);
+		raw.setSchema(schema);
 	}
 
 	@Override
 	public String getSchema() throws SQLException {
-		return realConn.getSchema();
+		return raw.getSchema();
 	}
 
 	@Override
 	public void abort(Executor executor) throws SQLException {
-		realConn.abort(executor);
+		raw.abort(executor);
 	}
 
 	@Override
 	public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
-		realConn.setNetworkTimeout(executor, milliseconds);
+		raw.setNetworkTimeout(executor, milliseconds);
 	}
 
 	@Override
 	public int getNetworkTimeout() throws SQLException {
-		return realConn.getNetworkTimeout();
+		return raw.getNetworkTimeout();
 	}
 
 	/**
 	 * @return 实际的连接对象
 	 */
-	public Connection getRealConnection(){
-		return this.realConn;
+	public Connection getRaw(){
+		return this.raw;
 	}
 }
