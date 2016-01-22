@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
@@ -31,7 +29,7 @@ public class DruidDS {
 	private static Setting druidSetting;
 
 	/** 数据源池 */
-	private static Map<String, SettingDruidDataSource> dsMap;
+	private static Map<String, DruidDataSource> dsMap;
 	/*--------------------------私有变量 end-------------------------------*/
 
 	/**
@@ -69,7 +67,7 @@ public class DruidDS {
 	 * @param group 数据源分组
 	 * @throws ConnException
 	 */
-	synchronized public static DataSource getDataSource(String group) {
+	synchronized public static DruidDataSource getDataSource(String group) {
 		if(null == dsMap) {
 			//如果用户未指定配置文件，使用默认
 			init(null, null);
@@ -100,7 +98,7 @@ public class DruidDS {
 	 * 
 	 * @return 数据源
 	 */
-	public static DataSource getDataSource() {
+	public static DruidDataSource getDataSource() {
 		return getDataSource(null);
 	}
 
@@ -155,7 +153,7 @@ public class DruidDS {
 	 * 关闭所有连接池
 	 */
 	synchronized public static void closeAll() {
-		Collection<SettingDruidDataSource> values = dsMap.values();
+		Collection<DruidDataSource> values = dsMap.values();
 		for (DruidDataSource dds : values) {
 			if (dds != null) {
 				dds.close();

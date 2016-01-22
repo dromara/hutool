@@ -199,3 +199,4 @@ Entity中toVo区别是否忽略大小写
 9、增加ConsoleLog
 10、CharsetUtil调整
 11、调整BloomFilter API
+12、增加SettingDruidDatasource
