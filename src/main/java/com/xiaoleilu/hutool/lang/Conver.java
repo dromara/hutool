@@ -175,6 +175,9 @@ public class Conver {
 		if(value instanceof Integer) {
 			return (Integer)value;
 		}
+		if(value instanceof Number){
+			return ((Number) value).intValue();
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
@@ -202,6 +205,9 @@ public class Conver {
 		if(value instanceof Byte) {
 			return (Byte)value;
 		}
+		if(value instanceof Number){
+			return ((Number) value).byteValue();
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
@@ -228,6 +234,9 @@ public class Conver {
 		}
 		if(value instanceof Short) {
 			return (Short)value;
+		}
+		if(value instanceof Number){
+			return ((Number) value).shortValue();
 		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)){
@@ -279,6 +288,9 @@ public class Conver {
 		if(value instanceof Long) {
 			return (Long)value;
 		}
+		if(value instanceof Number){
+			return ((Number) value).longValue();
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
@@ -329,6 +341,9 @@ public class Conver {
 		if(value instanceof Double) {
 			return (Double)value;
 		}
+		if(value instanceof Number){
+			return ((Number) value).doubleValue();
+		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
@@ -378,6 +393,9 @@ public class Conver {
 		}
 		if(value instanceof Float) {
 			return (Float)value;
+		}
+		if(value instanceof Number){
+			return ((Number) value).floatValue();
 		}
 		final String valueStr = value.toString();
 		if (StrUtil.isBlank(valueStr)){
