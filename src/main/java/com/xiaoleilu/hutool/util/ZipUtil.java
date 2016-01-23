@@ -17,6 +17,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 
@@ -195,7 +196,7 @@ public class ZipUtil {
 	 * @throws IOException
 	 */
 	public static byte[] gzip(byte[] val) throws IOException {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(val.length);
+		FastByteArrayOutputStream bos = new FastByteArrayOutputStream(val.length);
 		GZIPOutputStream gos = null;
 		try {
 			gos = new GZIPOutputStream(bos);

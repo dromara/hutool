@@ -2,7 +2,6 @@ package com.xiaoleilu.hutool.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,6 +19,7 @@ import java.nio.channels.FileChannel;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.lang.Conver;
 
 /**
@@ -129,6 +129,19 @@ public class IoUtil {
 		
 		return new BufferedReader(reader);
 	}
+	
+	/**
+	 * 从流中读取bytes
+	 * 
+	 * @param in 输入流
+	 * @return bytes
+	 * @throws IOException
+	 */
+	public static byte[] readBytes(InputStream in) throws IOException {
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		copy(in, out);
+		return out.toByteArray();
+	}
 
 	/**
 	 * 从流中读取内容
@@ -139,7 +152,7 @@ public class IoUtil {
 	 * @throws IOException
 	 */
 	public static String read(InputStream in, String charset) throws IOException {
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(in, out);
 		return out.toString(charset);
 	}

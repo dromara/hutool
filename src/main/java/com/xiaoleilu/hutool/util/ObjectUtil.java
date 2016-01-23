@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,6 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 
 /**
  * 一些通用的函数
@@ -159,16 +159,18 @@ public class ObjectUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T clone(T obj) {
-		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream(); 
-		
+		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream(); 
+		ObjectOutputStream out = null;
 		try {
-			final ObjectOutputStream out = new ObjectOutputStream(byteOut); 
+			out = new ObjectOutputStream(byteOut); 
 			out.writeObject(obj); 
 			out.flush();
 			final ObjectInputStream in =new ObjectInputStream(new ByteArrayInputStream(byteOut.toByteArray()));
 			return (T) in.readObject();
 		} catch (Exception e) {
 			throw new UtilException(e);
+		}finally{
+			IoUtil.close(out);
 		}
 	}
 	
@@ -180,13 +182,16 @@ public class ObjectUtil {
 	 * @return 序列化后的字节码
 	 */
 	public static <T> byte[] serialize(T t) {
-		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+		FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
+		ObjectOutputStream oos = null;
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream(byteOut);
+			oos = new ObjectOutputStream(byteOut);
 			oos.writeObject(t);
 			oos.flush();
 		} catch (Exception e) {
 			throw new UtilException(e);
+		}finally{
+			IoUtil.close(oos);
 		}
 		return byteOut.toByteArray();
 	}

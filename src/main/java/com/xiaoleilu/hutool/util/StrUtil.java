@@ -436,6 +436,9 @@ public class StrUtil {
 	 * @return 字符串
 	 */
 	public static String lowerFirst(String str) {
+		if(isBlank(str)){
+			return str;
+		}
 		return Character.toLowerCase(str.charAt(0)) + str.substring(1);
 	}
 
@@ -447,7 +450,11 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若前缀不是 preffix， 返回原字符串
 	 */
 	public static String removePrefix(String str, String prefix) {
-		if (str != null && str.startsWith(prefix)) {
+		if(isEmpty(str) || isEmpty(prefix)){
+			return str;
+		}
+		
+		if (str.startsWith(prefix)) {
 			return str.substring(prefix.length());
 		}
 		return str;
@@ -461,7 +468,11 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
 	public static String removePrefixIgnoreCase(String str, String prefix) {
-		if (str != null && str.toLowerCase().startsWith(prefix.toLowerCase())) {
+		if(isEmpty(str) || isEmpty(prefix)){
+			return str;
+		}
+		
+		if (str.toLowerCase().startsWith(prefix.toLowerCase())) {
 			return str.substring(prefix.length());
 		}
 		return str;
@@ -475,7 +486,11 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
 	 */
 	public static String removeSuffix(String str, String suffix) {
-		if (str != null && str.endsWith(suffix)) {
+		if(isEmpty(str) || isEmpty(suffix)){
+			return str;
+		}
+		
+		if (str.endsWith(suffix)) {
 			return str.substring(0, str.length() - suffix.length());
 		}
 		return str;
@@ -489,7 +504,11 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
 	 */
 	public static String removeSuffixIgnoreCase(String str, String suffix) {
-		if (str != null && str.toLowerCase().endsWith(suffix.toLowerCase())) {
+		if(isEmpty(str) || isEmpty(suffix)){
+			return str;
+		}
+		
+		if (str.toLowerCase().endsWith(suffix.toLowerCase())) {
 			return str.substring(0, str.length() - suffix.length());
 		}
 		return str;
