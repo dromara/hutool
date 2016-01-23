@@ -213,7 +213,7 @@ public class ZipUtil {
 	/**
 	 * Gzip压缩文件
 	 * 
-	 * @param val 被压缩的字节流
+	 * @param file 被压缩的文件
 	 * @return 压缩后的字节流
 	 * @throws IOException
 	 */
@@ -246,8 +246,8 @@ public class ZipUtil {
 	/**
 	 * Gzip解压处理
 	 * 
-	 * @param buf
-	 * @return
+	 * @param buf buf
+	 * @return bytes
 	 * @throws IOException
 	 */
 	public static byte[] unGzip(byte[] buf) throws IOException {
