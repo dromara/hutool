@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -42,6 +43,10 @@ public class HttpConnection {
 	/** method请求方法 */
 	private Method method;
 	private HttpURLConnection conn;
+	
+	// for https
+	private HostnameVerifier hostnameVerifier;
+	private TrustManager[] trustManagers;
 	
 	/**
 	 * 创建HttpConnection
@@ -129,6 +134,27 @@ public class HttpConnection {
 	 */
 	public void setMethod(Method method) {
 		this.method = method;
+	}
+	
+	/**
+	 * 设置域名验证器<br>
+	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
+	 * 
+	 * @param hostnameVerifier HostnameVerifier
+	 */
+	public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+		// 验证域
+		this.hostnameVerifier = hostnameVerifier;
+	}
+	
+	/**
+	 * 设置信任信息
+	 * @param trustManagers TrustManager列表
+	 */
+	public void setTrustManagers(TrustManager... trustManagers){
+		if(CollectionUtil.isNotEmpty(trustManagers)){
+			this.trustManagers = trustManagers;
+		}
 	}
 
 	/**
@@ -415,10 +441,11 @@ public class HttpConnection {
 		final HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
 
 		// 验证域
-		httpsURLConnection.setHostnameVerifier(new TrustAnyHostnameVerifier());
+		httpsURLConnection.setHostnameVerifier(null != this.hostnameVerifier ? this.hostnameVerifier : new TrustAnyHostnameVerifier());
 
 		SSLContext sslContext = SSLContext.getInstance("TLS");
-		sslContext.init(null, new TrustManager[] { new DefaultTrustManager() }, new SecureRandom());
+		final TrustManager[] trustManagers = CollectionUtil.isNotEmpty(this.trustManagers) ? this.trustManagers : new TrustManager[] { new DefaultTrustManager() };
+		sslContext.init(null, trustManagers, new SecureRandom());
 		httpsURLConnection.setSSLSocketFactory(sslContext.getSocketFactory());
 		
 		return httpsURLConnection;

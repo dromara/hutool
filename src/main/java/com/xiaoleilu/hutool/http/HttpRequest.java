@@ -27,8 +27,8 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type:{}\r\n\r\n";
 
-	protected Method method = Method.GET;
 	private String url = "";
+	private Method method = Method.GET;
 	/** 默认超时 */
 	private int timeout = -1;
 	/**存储表单数据*/

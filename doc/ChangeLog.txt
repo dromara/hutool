@@ -201,3 +201,4 @@ Entity中toVo区别是否忽略大小写
 11、调整BloomFilter API
 12、增加SettingDruidDatasource
 13、修复Conver
+14、对Https验证增加自定义方法

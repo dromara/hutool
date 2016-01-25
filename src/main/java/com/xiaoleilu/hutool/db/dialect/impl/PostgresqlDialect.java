@@ -4,7 +4,7 @@ import com.xiaoleilu.hutool.db.sql.Wrapper;
 
 
 /**
- * SqlLite3方言
+ * Postgree方言
  * @author loolly
  *
  */
