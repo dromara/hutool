@@ -487,7 +487,7 @@ public class Conver {
 	 * @param clazz Enum的Class
 	 * @param value 值
 	 * @param defaultValue 默认值
-	 * @return
+	 * @return Enum
 	 */
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
 		if (value == null){

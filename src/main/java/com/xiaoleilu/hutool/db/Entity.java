@@ -206,7 +206,7 @@ public class Entity extends Dict{
 	/**
 	 * 获得rowid
 	 * @param attr rowid属性名
-	 * @return
+	 * @return RowId
 	 */
 	public RowId getRowId(){
 		return getRowId("ROWID");
@@ -215,7 +215,7 @@ public class Entity extends Dict{
 	/**
 	 * 获得rowid
 	 * @param attr rowid属性名
-	 * @return
+	 * @return RowId
 	 */
 	public RowId getRowId(String attr){
 		Object obj = this.get(attr);
