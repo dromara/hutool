@@ -480,6 +480,34 @@ public class Conver {
 		}
 		return bools;
 	}
+	
+	/**
+	 * 转换为Enum对象<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * @param clazz Enum的Class
+	 * @param value 值
+	 * @param defaultValue 默认值
+	 * @return
+	 */
+	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
+		if (value == null){
+			return defaultValue;
+		}
+		if (clazz.isAssignableFrom(value.getClass())) {
+			@SuppressWarnings("unchecked")
+			E myE = (E) value;
+			return myE;
+		}
+		final String valueStr = value.toString();
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
+		try {
+			return Enum.valueOf(clazz,valueStr);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
 
 	// ----------------------------------------------------------------------- 全角半角转换
 	/**

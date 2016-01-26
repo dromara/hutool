@@ -1,11 +1,11 @@
-package com.xiaoleilu.hutool.setting.getter;
+package com.xiaoleilu.hutool.getter;
 
 /**
  * 数组类型的Get接口
  * @author Looly
  *
  */
-public interface IArrayGetter {
+public interface ArrayTypeGetter {
 	/*-------------------------- 数组类型 start -------------------------------*/
 	String[] getStrs(String key);
 	

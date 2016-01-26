@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.setting.getter;
+package com.xiaoleilu.hutool.getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -8,7 +8,7 @@ import java.math.BigInteger;
  * @author Looly
  *
  */
-public interface IGroupGetter {
+public interface GroupedTypeGetter {
 	/*-------------------------- 基本类型 start -------------------------------*/
 	/**
 	 * 获取字符串型属性值<br>

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.getter.BasicTypeGetter;
 import com.xiaoleilu.hutool.util.BeanUtil;
 
 /**
@@ -16,7 +17,7 @@ import com.xiaoleilu.hutool.util.BeanUtil;
  * @author loolly
  *
  */
-public class Dict extends HashMap<String, Object>{
+public class Dict extends HashMap<String, Object> implements BasicTypeGetter{
 	private static final long serialVersionUID = 6135423866861206530L;
 
 	//--------------------------------------------------------------- Static method start
@@ -43,9 +44,6 @@ public class Dict extends HashMap<String, Object>{
 	public Dict() {
 	}
 	//--------------------------------------------------------------- Constructor end
-	
-	//--------------------------------------------------------------- Getters and Setters start
-	//--------------------------------------------------------------- Getters and Setters end
 	
 	/**
 	 * 转换为Bean对象
@@ -113,7 +111,7 @@ public class Dict extends HashMap<String, Object>{
 		}
 	}
 	
-	//-------------------------------------------------------------------- 特定类型值
+	//-------------------------------------------------------------------- Set start
 	/**
 	 * 设置列
 	 * @param attr 属性
@@ -137,7 +135,9 @@ public class Dict extends HashMap<String, Object>{
 		}
 		return this;
 	}
+	//-------------------------------------------------------------------- Set end
 	
+	//-------------------------------------------------------------------- Get start
 	/**
 	 * 获得特定类型值
 	 * @param attr 字段名
@@ -154,6 +154,7 @@ public class Dict extends HashMap<String, Object>{
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
+	@Override
 	public String getStr(String attr) {
 		return Conver.toStr(get(attr), null);
 	}
@@ -162,6 +163,7 @@ public class Dict extends HashMap<String, Object>{
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
+	@Override
 	public Integer getInt(String attr) {
 		return Conver.toInt(get(attr), null);
 	}
@@ -170,6 +172,7 @@ public class Dict extends HashMap<String, Object>{
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
+	@Override
 	public Long getLong(String attr) {
 		return Conver.toLong(get(attr), null);
 	}
@@ -178,14 +181,36 @@ public class Dict extends HashMap<String, Object>{
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
+	@Override
 	public Float getFloat(String attr) {
 		return Conver.toFloat(get(attr), null);
+	}
+	
+	@Override
+	public Short getShort(String attr) {
+		return Conver.toShort(get(attr), null);
+	}
+
+	@Override
+	public Character getChar(String attr) {
+		return Conver.toChar(get(attr), null);
+	}
+
+	@Override
+	public Double getDouble(String attr) {
+		return Conver.toDouble(get(attr), null);
+	}
+
+	@Override
+	public Byte getByte(String attr) {
+		return Conver.toByte(get(attr), null);
 	}
 	
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
+	@Override
 	public Boolean getBool(String attr) {
 		return Conver.toBool(get(attr), null);
 	}
@@ -245,13 +270,11 @@ public class Dict extends HashMap<String, Object>{
 	public BigInteger getBigInteger(String attr) {
 		return get(attr, null);
 	}
-	
-	//-------------------------------------------------------------------- 特定类型值
+	//-------------------------------------------------------------------- Get end
 	
 	
 	@Override
 	public Dict clone() {
 		return (Dict) super.clone();
 	}
-	//-------------------------------------------------------------------- 特定类型值
 }

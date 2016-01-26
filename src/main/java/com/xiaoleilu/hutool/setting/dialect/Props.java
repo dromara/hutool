@@ -9,10 +9,11 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.util.Properties;
 
+import com.xiaoleilu.hutool.getter.BasicTypeGetter;
+import com.xiaoleilu.hutool.getter.OptBasicTypeGetter;
 import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
-import com.xiaoleilu.hutool.setting.getter.IBasicGetter;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
@@ -21,7 +22,7 @@ import com.xiaoleilu.hutool.util.URLUtil;
  * Properties文件读取封装类
  * @author loolly
  */
-public final class Props extends Properties implements IBasicGetter{
+public final class Props extends Properties implements BasicTypeGetter, OptBasicTypeGetter{
 	private static final long serialVersionUID = 1935981579709590740L;
 	private final static Log log = StaticLog.get();
 	
@@ -165,6 +166,16 @@ public final class Props extends Properties implements IBasicGetter{
 	@Override
 	public Character getChar(String key) {
 		return getChar(key, null);
+	}
+	
+	@Override
+	public Float getFloat(String key) {
+		return getFloat(key, null);
+	}
+	
+	@Override
+	public Float getFloat(String key, Float defaultValue) {
+		return Conver.toFloat(getStr(key), defaultValue);
 	}
 	
 	@Override

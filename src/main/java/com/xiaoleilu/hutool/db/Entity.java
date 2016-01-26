@@ -3,12 +3,14 @@ package com.xiaoleilu.hutool.db;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Clob;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.lang.Dict;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.IoUtil;
@@ -182,7 +184,7 @@ public class Entity extends Dict{
 	
 	@Override
 	public String getStr(String attr) {
-		Object obj = get(attr);
+		final Object obj = get(attr);
 		if(obj instanceof Clob){
 			Clob clob = (Clob)obj;
 			Reader reader = null;
@@ -194,8 +196,36 @@ public class Entity extends Dict{
 			}finally{
 				FileUtil.close(reader);
 			}
+		}else if(obj instanceof RowId){
+			final RowId rowId = (RowId)obj;
+			return StrUtil.str(rowId.getBytes(), CharsetUtil.UTF_8);
 		}
 		return super.getStr(attr);
+	}
+	
+	/**
+	 * 获得rowid
+	 * @param attr rowid属性名
+	 * @return
+	 */
+	public RowId getRowId(){
+		return getRowId("ROWID");
+	}
+	
+	/**
+	 * 获得rowid
+	 * @param attr rowid属性名
+	 * @return
+	 */
+	public RowId getRowId(String attr){
+		Object obj = this.get(attr);
+		if(null == obj){
+			return null;
+		}
+		if(obj instanceof RowId){
+			return (RowId)obj;
+		}
+		throw new DbRuntimeException("Value with name [{}] is not a rowid!", attr);
 	}
 	
 	//-------------------------------------------------------------------- Get end

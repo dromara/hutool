@@ -290,12 +290,16 @@ public class BasicSetting extends AbsSetting{
 	public int size() {
 		return map.size();
 	}
-
-	@Override
-	public String getStr(String key) {
-		return map.get(key);
-	}
 	
+	@Override
+	public String getStr(String key, String defaultValue) {
+		final String value = getStr(key);
+		if(StrUtil.isBlank(value)) {
+			return defaultValue;
+		}
+		return value;
+	}
+
 	/**
 	 * 获得指定分组的键对应值
 	 * 
