@@ -1,6 +1,6 @@
 #------------------------------------------------
 #Druid 配置文件样例
-# @see http://code.alibabatech.com/wiki/pages/viewpage.action?pageId=7669006
+# @see https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%88%97%E8%A1%A8
 #------------------------------------------------
 
 # 配置初始化大小、最小、最大

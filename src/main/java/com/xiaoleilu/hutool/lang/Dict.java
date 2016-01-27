@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.getter.BasicTypeGetter;
 import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * 1、字典对象，扩充了HashMap中的方法
@@ -94,11 +95,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter{
 	 * @param withoutNames 不需要去除的字段名
 	 */
 	public <T extends Dict> void removeEqual(T dict, String... withoutNames) {
-		HashSet<String> withoutSet = new HashSet<String>();
-		for (String name : withoutNames) {
-			withoutSet.add(name);
-		}
-		
+		HashSet<String> withoutSet = CollectionUtil.newHashSet(withoutNames);
 		for(Entry<String, Object> entry : dict.entrySet()) {
 			if(withoutSet.contains(entry.getKey())) {
 				continue;

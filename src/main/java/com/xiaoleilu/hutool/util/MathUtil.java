@@ -2,7 +2,11 @@ package com.xiaoleilu.hutool.util;
 
 import java.math.BigDecimal;
 
-
+/**
+ * 数字相关工具类
+ * @author Looly
+ *
+ */
 public class MathUtil {
 	/**
 	 * 保留小数位
