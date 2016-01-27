@@ -205,7 +205,6 @@ public class Entity extends Dict{
 	
 	/**
 	 * 获得rowid
-	 * @param attr rowid属性名
 	 * @return RowId
 	 */
 	public RowId getRowId(){
