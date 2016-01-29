@@ -45,7 +45,7 @@ public class SqlConnRunner{
 		this(DialectFactory.newDialect(driverClassName));
 	}
 	//------------------------------------------------------- Constructor end
-
+	
 	//---------------------------------------------------------------------------- CRUD start
 	/**
 	 * 插入数据<br>

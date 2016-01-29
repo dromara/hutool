@@ -203,3 +203,6 @@ Entity中toVo区别是否忽略大小写
 13、修复Conver
 14、对Https验证增加自定义方法
 15、抽象不同类型对象的getter方法
+
+2.15.0
+1、修复SqlBuilder中 Order不支持多字段多向排序问题

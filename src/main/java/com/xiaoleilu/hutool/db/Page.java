@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.db;
 
+import java.util.Arrays;
+
 import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.util.PageUtil;
 
@@ -15,7 +17,7 @@ public class Page {
 	/** 每页结果数 */
 	private int numPerPage;
 	/** 排序 */
-	private Order order;
+	private Order[] orders;
 
 	// ---------------------------------------------------------- Constructor start
 	/**
@@ -38,7 +40,7 @@ public class Page {
 	 */
 	public Page(int pageNumber, int numPerPage, Order order) {
 		this(pageNumber, numPerPage);
-		this.order = order;
+		this.orders = new Order[]{order};
 	}
 	// ---------------------------------------------------------- Constructor start
 
@@ -77,17 +79,17 @@ public class Page {
 	/**
 	 * @return 排序
 	 */
-	public Order getOrder() {
-		return order;
+	public Order[] getOrders() {
+		return this.orders;
 	}
 
 	/**
 	 * 设置排序
 	 * 
-	 * @param order 排序
+	 * @param orders 排序
 	 */
-	public void setOrder(Order order) {
-		this.order = order;
+	public void setOrder(Order... orders) {
+		this.orders = orders;
 	}
 	// ---------------------------------------------------------- Getters and Setters end
 
@@ -120,6 +122,6 @@ public class Page {
 
 	@Override
 	public String toString() {
-		return "Page [page=" + pageNumber + ", numPerPage=" + numPerPage + ", order=" + order + "]";
+		return "Page [page=" + pageNumber + ", numPerPage=" + numPerPage + ", order=" + Arrays.toString(orders) + "]";
 	}
 }

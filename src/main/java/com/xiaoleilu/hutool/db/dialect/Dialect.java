@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
+import com.xiaoleilu.hutool.db.sql.Wrapper;
 
 /**
  * SQL方言，不同的数据库由于在某些SQL上有所区别，故为每种数据库配置不同的方言。
@@ -14,6 +15,18 @@ import com.xiaoleilu.hutool.db.Page;
  *
  */
 public interface Dialect {
+	
+	/**
+	 * @return 包装器
+	 */
+	public Wrapper getWrapper();
+	
+	/**
+	 * 设置包装器
+	 * @param 包装器
+	 */
+	public void setWrapper(Wrapper wrapper);
+	
 	//-------------------------------------------- Execute
 	/**
 	 * 构建用于插入的PreparedStatement

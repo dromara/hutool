@@ -38,9 +38,9 @@ public class MysqlDialect extends AnsiSqlDialect{
 				.from(where.getTableName())
 				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
 		
-		final Order order = page.getOrder();
-		if(null != order){
-			find.orderBy(order);
+		final Order[] orders = page.getOrders();
+		if(null != orders){
+			find.orderBy(orders);
 		}
 		
 		find.append(" LIMIT ").append(page.getStartPosition()).append(", ").append(page.getNumPerPage());

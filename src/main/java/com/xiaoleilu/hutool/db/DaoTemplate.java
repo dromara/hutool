@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.db.ds.pool.PooledDataSource;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 
 /**
@@ -20,12 +21,13 @@ import com.xiaoleilu.hutool.db.handler.EntityHandler;
  *
  */
 public class DaoTemplate {
-	protected SqlRunner runner;
 	
 	/** 表名 */
 	protected String tableName;
 	/** 本表的主键字段，请在子类中覆盖或构造方法中指定，默认为id */
 	protected String primaryKeyField = "id";
+	/** SQL运行器 */
+	protected SqlRunner runner;
 	
 	//--------------------------------------------------------------- Constructor start
 	/**
@@ -33,17 +35,16 @@ public class DaoTemplate {
 	 * @param tableName 数据库表名
 	 */
 	public DaoTemplate(String tableName) {
-		this.tableName = tableName;
+		this(tableName, null);
 	}
 	
 	/**
-	 * 构造，此构造需要自定义SqlRunner
+	 * 构造，使用默认的池化连接池，读取默认配置文件的空分组，适用于只有一个数据库的情况
 	 * @param tableName 数据库表名
 	 * @param primaryKeyField 主键字段名
 	 */
 	public DaoTemplate(String tableName, String primaryKeyField) {
-		this.tableName = tableName;
-		this.primaryKeyField = primaryKeyField;
+		this(tableName, primaryKeyField, PooledDataSource.getDataSource());
 	}
 	
 	/**
@@ -64,7 +65,9 @@ public class DaoTemplate {
 	 */
 	public DaoTemplate(String tableName, String primaryKeyField, SqlRunner runner) {
 		this.tableName = tableName;
-		this.primaryKeyField = primaryKeyField;
+		if(StrUtil.isNotBlank(primaryKeyField)){
+			this.primaryKeyField = primaryKeyField;
+		}
 		this.runner = runner;
 	}
 	//--------------------------------------------------------------- Constructor end

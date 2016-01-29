@@ -328,35 +328,39 @@ public class SqlBuilder {
 	
 	/**
 	 * 排序
-	 * @param order 排序对象
+	 * @param orders 排序对象
 	 * @return 自己
 	 */
-	public SqlBuilder orderBy(Order order){
-		Collection<String> fields = order.getOrderFields();
-		if(CollectionUtil.isNotEmpty(fields)) {
-			if(null != wrapper) {
-				//包装字段名
-				fields = wrapper.wrap(fields);
-			}
-			
-			sql.append(" ORDER BY ").append(CollectionUtil.join(fields, StrUtil.COMMA)).append(StrUtil.SPACE);
-			final Direction direction = order.getDirection();
-			if(null != direction){
-				sql.append(direction);
-			}
+	public SqlBuilder orderBy(Order... orders){
+		if(CollectionUtil.isEmpty(orders)){
+			return this;
 		}
 		
+		sql.append(" ORDER BY ");
+		String field = null;
+		boolean isFirst = true;
+		for (Order order : orders) {
+			if(null != wrapper) {
+				//包装字段名
+				field = wrapper.wrap(order.getField());
+			}
+			if(StrUtil.isBlank(field)){
+				continue;
+			}
+			
+			//只有在非第一项前添加逗号
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sql.append(StrUtil.COMMA);
+			}
+			sql.append(field);
+			final Direction direction = order.getDirection();
+			if(null != direction){
+				sql.append(StrUtil.SPACE).append(direction);
+			}
+		}
 		return this;
-	}
-	
-	/**
-	 * 排序
-	 * @param direction 排序方式（升序还是降序）
-	 * @param orderFields 按照哪个字段排序
-	 * @return 自己
-	 */
-	public SqlBuilder orderBy(Direction direction, String... orderFields){
-		return this.orderBy(new Order(direction, orderFields));
 	}
 	
 	/**

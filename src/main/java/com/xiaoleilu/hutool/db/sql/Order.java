@@ -1,11 +1,6 @@
 package com.xiaoleilu.hutool.db.sql;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -15,7 +10,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class Order {
 	/** 排序的字段 */
-	private Collection<String> orderFields;
+	private String field;
 	/** 排序方式（正序还是反序） */
 	private Direction direction;
 	
@@ -25,21 +20,10 @@ public class Order {
 	
 	/**
 	 * 构造
-	 * @param orderFields 排序字段
+	 * @param field 排序字段
 	 */
-	public Order(Collection<String> orderFields) {
-		this.orderFields = orderFields;
-	}
-	
-	/**
-	 * 构造
-	 * @param orderField 排序字段
-	 */
-	public Order(String orderField) {
-		if(null == this.orderFields){
-			this.orderFields = new ArrayList<String>();
-		}
-		this.orderFields.add(orderField);
+	public Order(String field) {
+		this.field = field;
 	}
 	
 	/**
@@ -47,35 +31,26 @@ public class Order {
 	 * @param orderFields 排序字段
 	 * @param direction 排序方式
 	 */
-	public Order(Collection<String> orderFields, Direction direction) {
-		this.orderFields = orderFields;
+	public Order(String field, Direction direction) {
+		this(field);
 		this.direction = direction;
 	}
 	
-	/**
-	 * 构造
-	 * @param orderFields 排序字段
-	 * @param direction 排序方式
-	 */
-	public Order(Direction direction, String... orderFields) {
-		this.orderFields = Arrays.asList(orderFields);
-		this.direction = direction;
-	}
 	//---------------------------------------------------------- Constructor end
 
 	//---------------------------------------------------------- Getters and Setters start
 	/**
 	 * @return 排序字段
 	 */
-	public Collection<String> getOrderFields() {
-		return orderFields;
+	public String getField() {
+		return this.field;
 	}
 	/**
 	 * 设置排序字段
-	 * @param orderFields 排序字段
+	 * @param field 排序字段
 	 */
-	public void setOrderFields(Collection<String> orderFields) {
-		this.orderFields = orderFields;
+	public void setField(String field) {
+		this.field = field;
 	}
 
 	/**
@@ -93,28 +68,8 @@ public class Order {
 	}
 	//---------------------------------------------------------- Getters and Setters end
 	
-	//---------------------------------------------------------- Function start
-	/**
-	 * 增加排序字段
-	 * @param filelds 排序字段
-	 * @return 自身
-	 */
-	public Order addOrderFields(String... filelds){
-		if(null == this.orderFields){
-			this.orderFields = new ArrayList<String>();
-		}
-		for (String field : filelds) {
-			if(StrUtil.isNotBlank(field)){
-				this.orderFields.add(field);
-			}
-		}
-		return this;
-	}
-	//---------------------------------------------------------- Function end
-	
 	@Override
 	public String toString() {
-		return StrUtil.builder().append(" ORDER BY ").append(CollectionUtil.join(orderFields, StrUtil.COMMA)).append(StrUtil.SPACE)
-		.append(null == direction ? StrUtil.EMPTY : direction).toString();
+		return StrUtil.builder().append(this.field).append(StrUtil.SPACE).append(null == direction ? StrUtil.EMPTY : direction).toString();
 	}
 }

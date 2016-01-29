@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.demo.db;
 
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.sql.Condition;
+import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Join;
@@ -76,7 +77,7 @@ public class SqlBuilderDemo {
 		SqlBuilder select3 = SqlBuilder.create(wrapper)
 				.select()
 				.from("User")
-				.orderBy(Direction.DESC, "name");
+				.orderBy(new Order("name", Direction.DESC));
 		log.debug("Select SQL: {}, paramValues: {}", select3.build(), select3.getParamValues());
 		
 		//build select，查询多表
