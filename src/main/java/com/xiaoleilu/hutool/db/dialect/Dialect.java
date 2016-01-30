@@ -23,7 +23,7 @@ public interface Dialect {
 	
 	/**
 	 * 设置包装器
-	 * @param 包装器
+	 * @param wrapper 包装器
 	 */
 	public void setWrapper(Wrapper wrapper);
 	

@@ -41,7 +41,7 @@ public class ResourceUtil {
 	 * 获得资源的URL
 	 * 
 	 * @param resource 资源（相对Classpath的路径）
-	 * @return
+	 * @return 资源URL
 	 */
 	public static URL getURL(String resource) {
 		return ClassUtil.getClassLoader().getResource(resource);
