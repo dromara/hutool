@@ -16,6 +16,7 @@ import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
@@ -115,13 +116,28 @@ public class IoUtil {
 	/**
 	 * 获得一个文件读取器
 	 * @param in 输入流
+	 * @param charsetName 字符集名称
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedReader getReader(InputStream in, String charsetName) throws IOException{
+		return getReader(in, Charset.forName(charsetName));
+	}
+	
+	/**
+	 * 获得一个文件读取器
+	 * @param in 输入流
 	 * @param charset 字符集
 	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
-	public static BufferedReader getReader(InputStream in, String charset) throws IOException{
+	public static BufferedReader getReader(InputStream in, Charset charset) throws IOException{
+		if(null == in){
+			return null;
+		}
+		
 		InputStreamReader reader = null;
-		if(StrUtil.isBlank(charset)) {
+		if(null == charset) {
 			reader = new InputStreamReader(in);
 		}else {
 			reader = new InputStreamReader(in, charset);

@@ -206,3 +206,4 @@ Entity中toVo区别是否忽略大小写
 
 2.15.0
 1、修复SqlBuilder中 Order不支持多字段多向排序问题
+2、增加ResourceUtil

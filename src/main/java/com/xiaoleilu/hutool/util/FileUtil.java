@@ -177,7 +177,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * 创建File对象
+	 * 创建File对象，自动识别相对或绝对路径，相对路径将自动从ClassPath下寻找
 	 * 
 	 * @param path 文件路径
 	 * @return File
@@ -186,7 +186,7 @@ public class FileUtil {
 		if (StrUtil.isBlank(path)) {
 			throw new NullPointerException("File path is blank!");
 		}
-		return new File(path);
+		return new File(getAbsolutePath(path));
 	}
 
 	/**
@@ -625,13 +625,14 @@ public class FileUtil {
 				// 给定的路径已经是绝对路径了
 				return path;
 			}
-
 		}
 
+		//相对路径
 		ClassLoader classLoader = ClassUtil.getClassLoader();
 		URL url = classLoader.getResource(path);
-		String reultPath = url != null ? url.getPath() : classLoader.getResource(StrUtil.EMPTY).getPath() + path;
-		return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
+		String reultPath = url != null ? url.getPath() : ResourceUtil.getClassPath() + path;
+//		return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
+		return reultPath;
 	}
 
 	/**
