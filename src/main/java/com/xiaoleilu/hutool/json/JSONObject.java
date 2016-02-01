@@ -6,7 +6,8 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.math.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -17,12 +18,14 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.util.BeanUtil;
 
 /**
  * JSONObject是一个无序键值对. 它是一个由大括号包围的，使用冒号分隔name和value的字符串，每个键值对使用逗号隔开。<br>
  * 此对象使用 <code>get</code> 和 <code>opt</code> 方法通过name获得value, 使用 <code>put</code>方法增加或替换值。<br>
- * value支持的类型如下： <code>Boolean</code>, <code>JSONArray</code>, <code>JSONObject</code>, <code>Number</code>, <code>String</code>, 或者 <code>JSONObject.NULL</code> <br>
+ * value支持的类型如下： <code>Boolean</code>, <code>JSONArray</code>, <code>JSONObject</code>, <code>Number</code>, <code>String</code>, 或者 <code>JSONNull.NULL</code> <br>
  * 
  * <code>put</code> 方法示例：<br>
  * 
@@ -40,19 +43,12 @@ import com.xiaoleilu.hutool.lang.Conver;
  *
  * @author JSON.org，looly
  */
-public class JSONObject {
+public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 
 	/**
 	 * The map where the JSONObject's properties are kept.
 	 */
 	private final Map<String, Object> map;
-
-	/**
-	 * <code>NULL</code> 对象用于减少歧义来表示Java 中的<code>null</code> <br>
-	 * <code>JSONObject.NULL.equals(null)</code> 返回 <code>true</code>. <br>
-	 * <code>JSONObject.NULL.toString()</code> 返回 <code>"null"</code>.
-	 */
-	public static final Object NULL = new Null();
 
 	/**
 	 * 空构造
@@ -140,7 +136,7 @@ public class JSONObject {
 			for (final Entry<?, ?> e : map.entrySet()) {
 				final Object value = e.getValue();
 				if (value != null) {
-					this.map.put(String.valueOf(e.getKey()), wrap(value));
+					this.map.put(String.valueOf(e.getKey()), JSONUtil.wrap(value));
 				}
 			}
 		}
@@ -353,7 +349,7 @@ public class JSONObject {
 		} else if (value instanceof Float) {
 			this.put(key, (Float) value + 1);
 		} else {
-			throw new JSONException("Unable to increment [" + quote(key) + "].");
+			throw new JSONException("Unable to increment [" + JSONUtil.quote(key) + "].");
 		}
 		return this;
 	}
@@ -362,10 +358,10 @@ public class JSONObject {
 	 * Determine if the value associated with the key is null or if there is no value.
 	 *
 	 * @param key A key string.
-	 * @return true if there is no value associated with the key or if the value is the JSONObject.NULL object.
+	 * @return true if there is no value associated with the key or if the value is the JSONNull.NULL object.
 	 */
 	public boolean isNull(String key) {
-		return JSONObject.NULL.equals(this.get(key));
+		return JSONNull.NULL.equals(this.get(key));
 	}
 
 	/**
@@ -437,166 +433,46 @@ public class JSONObject {
 	}
 
 	/**
-	 * Get an optional value associated with a key.
+	 * 获得指定KEY对应的值
 	 *
-	 * @param key A key string.
-	 * @return An object which is the value, or null if there is no value.
+	 * @param key KEY
+	 * @return 值，无对应值返回Null
 	 */
 	public Object get(String key) {
-		return key == null ? null : this.map.get(key);
+		return getObj(key);
+	}
+	
+	@Override
+	public Object getObj(String key, Object defaultValue) {
+		Object obj = this.map.get(key);
+		return null == obj ? defaultValue : obj;
 	}
 
 	/**
-	 * Get the enum value associated with a key.
-	 * 
-	 * @param clazz The type of enum to retrieve.
-	 * @param key A key string.
-	 * @return The enum value associated with the key or null if not found
+	 * 获得Enum类型的值
+	 * @param clazz Enum的Class
+	 * @param key KEY
+	 * @return Enum类型的值，无则返回Null
 	 */
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
 		return this.getEnum(clazz, key, null);
 	}
 
 	/**
-	 * Get the enum value associated with a key.
-	 * 
-	 * @param clazz The type of enum to retrieve.
-	 * @param key A key string.
-	 * @param defaultValue The default in case the value is not found
-	 * @return The enum value associated with the key or defaultValue if the value is not found or cannot be assigned to clazz
+	 * 获得Enum类型的值
+	 * @param clazz Enum的Class
+	 * @param key KEY
+	 * @param defaultValue 默认值
+	 * @return Enum类型的值，无则返回Null
 	 */
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key, E defaultValue) {
-		try {
-			Object val = this.get(key);
-			if (NULL.equals(val)) {
-				return defaultValue;
-			}
-			if (clazz.isAssignableFrom(val.getClass())) {
-				// we just checked it!
-				@SuppressWarnings("unchecked")
-				E myE = (E) val;
-				return myE;
-			}
-			return Enum.valueOf(clazz, val.toString());
-		} catch (IllegalArgumentException | NullPointerException e) {
-			return defaultValue;
-		}
+		return Conver.toEnum(clazz, this.get(key), defaultValue);
 	}
 
 	/**
-	 * Get an optional boolean associated with a key. It returns false if there is no such key, or if the value is not Boolean.TRUE or the String "true".
-	 *
-	 * @param key A key string.
-	 * @return The truth.
-	 */
-	public boolean getBoolean(String key) {
-		return this.getBoolean(key, false);
-	}
-
-	/**
-	 * Get an optional boolean associated with a key. It returns the defaultValue if there is no such key, or if it is not a Boolean or the String "true" or "false" (case insensitive).
-	 *
-	 * @param key A key string.
-	 * @param defaultValue The default.
-	 * @return The truth.
-	 */
-	public boolean getBoolean(String key, boolean defaultValue) {
-		try {
-			return Conver.toBool(get(key), defaultValue);
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Get an optional double associated with a key, or NaN if there is no such key or if its value is not a number. If the value is a string, an attempt will be made to evaluate it as a number.
-	 *
-	 * @param key A string which is the key.
-	 * @return An object which is the value.
-	 */
-	public double getDouble(String key) {
-		return this.getDouble(key, Double.NaN);
-	}
-
-	/**
-	 * Get an optional BigInteger associated with a key, or the defaultValue if there is no such key or if its value is not a number. If the value is a string, an attempt will be made to evaluate it
-	 * as a number.
-	 *
-	 * @param key A key string.
-	 * @param defaultValue The default.
-	 * @return An object which is the value.
-	 */
-	public BigInteger getBigInteger(String key, BigInteger defaultValue) {
-		try {
-			return Conver.toBigInteger(get(key), defaultValue);
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Get an optional BigDecimal associated with a key, or the defaultValue if there is no such key or if its value is not a number. If the value is a string, an attempt will be made to evaluate it
-	 * as a number.
-	 *
-	 * @param key A key string.
-	 * @param defaultValue The default.
-	 * @return An object which is the value.
-	 */
-	public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
-		try {
-			return Conver.toBigDecimal(get(key), defaultValue);
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Get an optional double associated with a key, or the defaultValue if there is no such key or if its value is not a number. If the value is a string, an attempt will be made to evaluate it as a
-	 * number.
-	 *
-	 * @param key A key string.
-	 * @param defaultValue The default.
-	 * @return An object which is the value.
-	 */
-	public double getDouble(String key, double defaultValue) {
-		try {
-			return Conver.toDouble(get(key), defaultValue);
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Get an optional int value associated with a key, or zero if there is no such key or if the value is not a number. If the value is a string, an attempt will be made to evaluate it as a number.
-	 *
-	 * @param key A key string.
-	 * @return An object which is the value.
-	 */
-	public int getInt(String key) {
-		return this.getInt(key, 0);
-	}
-
-	/**
-	 * Get an optional int value associated with a key, or the default if there is no such key or if the value is not a number. If the value is a string, an attempt will be made to evaluate it as a
-	 * number.
-	 *
-	 * @param key A key string.
-	 * @param defaultValue The default.
-	 * @return An object which is the value.
-	 */
-	public int getInt(String key, int defaultValue) {
-		try {
-			return Conver.toInt(get(key), defaultValue);
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Get an optional JSONArray associated with a key. It returns null if there is no such key, or if its value is not a JSONArray.
-	 *
-	 * @param key A key string.
-	 * @return A JSONArray which is the value.
+	 * 获得JSONArray对象
+	 * @param key KEY
+	 * @return JSONArray对象，如果值为null或者非JSONArray类型，返回null
 	 */
 	public JSONArray getJSONArray(String key) {
 		Object o = this.get(key);
@@ -604,62 +480,13 @@ public class JSONObject {
 	}
 
 	/**
-	 * Get an optional JSONObject associated with a key. It returns null if there is no such key, or if its value is not a JSONObject.
-	 *
-	 * @param key A key string.
-	 * @return A JSONObject which is the value.
+	 * 获得JSONObject对象
+	 * @param key KEY
+	 * @return JSONArray对象，如果值为null或者非JSONObject类型，返回null
 	 */
 	public JSONObject getJSONObject(String key) {
 		Object object = this.get(key);
 		return object instanceof JSONObject ? (JSONObject) object : null;
-	}
-
-	/**
-	 * Get an optional long value associated with a key, or zero if there is no such key or if the value is not a number. If the value is a string, an attempt will be made to evaluate it as a number.
-	 *
-	 * @param key A key string.
-	 * @return An object which is the value.
-	 */
-	public long getLong(String key) {
-		return this.getLong(key, 0);
-	}
-
-	/**
-	 * Get an optional long value associated with a key, or the default if there is no such key or if the value is not a number. If the value is a string, an attempt will be made to evaluate it as a
-	 * number.
-	 *
-	 * @param key A key string.
-	 * @param defaultValue The default.
-	 * @return An object which is the value.
-	 */
-	public long getLong(String key, long defaultValue) {
-		try {
-			return Conver.toLong(get(key), defaultValue);
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-
-	/**
-	 * Get an optional string associated with a key. It returns an empty string if there is no such key. If the value is not a string and is not null, then it is converted to a string.
-	 *
-	 * @param key A key string.
-	 * @return A string which is the value.
-	 */
-	public String getString(String key) {
-		return this.getString(key, "");
-	}
-
-	/**
-	 * Get an optional string associated with a key. It returns the defaultValue if there is no such key.
-	 *
-	 * @param key A key string.
-	 * @param defaultValue The default.
-	 * @return A string which is the value.
-	 */
-	public String getString(String key, String defaultValue) {
-		Object object = this.get(key);
-		return NULL.equals(object) ? defaultValue : object.toString();
 	}
 
 	private void populateMap(Object bean) {
@@ -694,7 +521,7 @@ public class JSONObject {
 
 						Object result = method.invoke(bean, (Object[]) null);
 						if (result != null) {
-							this.map.put(key, wrap(result));
+							this.map.put(key, JSONUtil.wrap(result));
 						}
 					}
 				}
@@ -785,7 +612,7 @@ public class JSONObject {
 	 * Put a key/value pair in the JSONObject. If the value is null, then the key will be removed from the JSONObject if it is present.
 	 *
 	 * @param key A key string.
-	 * @param value An object which is the value. It should be of one of these types: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONObject.NULL object.
+	 * @param value An object which is the value. It should be of one of these types: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL object.
 	 * @return this.
 	 * @throws JSONException If the value is non-finite number or if the key is null.
 	 */
@@ -812,7 +639,7 @@ public class JSONObject {
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
 		if (key != null && value != null) {
-			if (this.get(key) != null) {
+			if (map.containsKey(key)) {
 				throw new JSONException("Duplicate key \"" + key + "\"");
 			}
 			this.put(key, value);
@@ -824,7 +651,7 @@ public class JSONObject {
 	 * Put a key/value pair in the JSONObject, but only if the key and the value are both non-null.
 	 *
 	 * @param key A key string.
-	 * @param value An object which is the value. It should be of one of these types: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONObject.NULL object.
+	 * @param value An object which is the value. It should be of one of these types: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL object.
 	 * @return this.
 	 * @throws JSONException If the value is a non-finite number.
 	 */
@@ -833,83 +660,6 @@ public class JSONObject {
 			this.put(key, value);
 		}
 		return this;
-	}
-
-	/**
-	 * Produce a string in double quotes with backslash sequences in all the right places. A backslash will be inserted within </, producing <\/, allowing JSON text to be delivered in HTML. In JSON
-	 * text, a string cannot contain a control character or an unescaped quote or backslash.
-	 *
-	 * @param string A String
-	 * @return A String correctly formatted for insertion in a JSON text.
-	 */
-	public static String quote(String string) {
-		StringWriter sw = new StringWriter();
-		synchronized (sw.getBuffer()) {
-			try {
-				return quote(string, sw).toString();
-			} catch (IOException ignored) {
-				// will never happen - we are writing to a string writer
-				return "";
-			}
-		}
-	}
-
-	public static Writer quote(String string, Writer w) throws IOException {
-		if (string == null || string.length() == 0) {
-			w.write("\"\"");
-			return w;
-		}
-
-		char b;
-		char c = 0;
-		String hhhh;
-		int i;
-		int len = string.length();
-
-		w.write('"');
-		for (i = 0; i < len; i += 1) {
-			b = c;
-			c = string.charAt(i);
-			switch (c) {
-				case '\\':
-				case '"':
-					w.write('\\');
-					w.write(c);
-					break;
-				case '/':
-					if (b == '<') {
-						w.write('\\');
-					}
-					w.write(c);
-					break;
-				case '\b':
-					w.write("\\b");
-					break;
-				case '\t':
-					w.write("\\t");
-					break;
-				case '\n':
-					w.write("\\n");
-					break;
-				case '\f':
-					w.write("\\f");
-					break;
-				case '\r':
-					w.write("\\r");
-					break;
-				default:
-					if (c < ' ' || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
-						w.write("\\u");
-						hhhh = Integer.toHexString(c);
-						w.write("0000", 0, 4 - hhhh.length());
-						w.write(hhhh);
-					} else {
-						w.write(c);
-					}
-			}
-		}
-		w.write('"');
-		return w;
 	}
 
 	/**
@@ -978,7 +728,7 @@ public class JSONObject {
 			return Boolean.FALSE;
 		}
 		if (string.equalsIgnoreCase("null")) {
-			return JSONObject.NULL;
+			return JSONNull.NULL;
 		}
 
 		/*
@@ -1045,6 +795,15 @@ public class JSONObject {
 			ja.put(this.get(names.getString(i)));
 		}
 		return ja;
+	}
+	
+	/**
+	 * 转为实体类对象
+	 * @param clazz 实体类
+	 * @return 实体类对象
+	 */
+	public <T> T toBean(Class<T> clazz){
+		return BeanUtil.mapToBean(this.map, clazz);
 	}
 
 	/**
@@ -1127,47 +886,7 @@ public class JSONObject {
 		if (value.getClass().isArray()) {
 			return new JSONArray(value).toString();
 		}
-		return quote(value.toString());
-	}
-
-	/**
-	 * Wrap an object, if necessary. If the object is null, return the NULL object. If it is an array or collection, wrap it in a JSONArray. If it is a map, wrap it in a JSONObject. If it is a
-	 * standard property (Double, String, et al) then it is already wrapped. Otherwise, if it comes from one of the java packages, turn it into a string. And if it doesn't, try to wrap it in a
-	 * JSONObject. If the wrapping fails, then null is returned.
-	 *
-	 * @param object The object to wrap
-	 * @return The wrapped value
-	 */
-	public static Object wrap(Object object) {
-		try {
-			if (object == null) {
-				return NULL;
-			}
-			if (object instanceof JSONObject || object instanceof JSONArray || NULL.equals(
-					object) || object instanceof JSONString || object instanceof Byte || object instanceof Character || object instanceof Short || object instanceof Integer || object instanceof Long || object instanceof Boolean || object instanceof Float || object instanceof Double || object instanceof String || object instanceof BigInteger || object instanceof BigDecimal) {
-				return object;
-			}
-
-			if (object instanceof Collection) {
-				Collection<?> coll = (Collection<?>) object;
-				return new JSONArray(coll);
-			}
-			if (object.getClass().isArray()) {
-				return new JSONArray(object);
-			}
-			if (object instanceof Map) {
-				Map<?, ?> map = (Map<?, ?>) object;
-				return new JSONObject(map);
-			}
-			Package objectPackage = object.getClass().getPackage();
-			String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
-			if (objectPackageName.startsWith("java.") || objectPackageName.startsWith("javax.") || object.getClass().getClassLoader() == null) {
-				return object.toString();
-			}
-			return new JSONObject(object);
-		} catch (Exception exception) {
-			return null;
-		}
+		return JSONUtil.quote(value.toString());
 	}
 
 	/**
@@ -1208,9 +927,9 @@ public class JSONObject {
 			} catch (Exception e) {
 				throw new JSONException(e);
 			}
-			writer.write(o != null ? o.toString() : quote(value.toString()));
+			writer.write(o != null ? o.toString() : JSONUtil.quote(value.toString()));
 		} else {
-			quote(value.toString(), writer);
+			JSONUtil.quote(value.toString(), writer);
 		}
 		return writer;
 	}
@@ -1241,7 +960,7 @@ public class JSONObject {
 
 			if (length == 1) {
 				Object key = keys.next();
-				writer.write(quote(key.toString()));
+				writer.write(JSONUtil.quote(key.toString()));
 				writer.write(':');
 				if (indentFactor > 0) {
 					writer.write(' ');
@@ -1258,7 +977,7 @@ public class JSONObject {
 						writer.write('\n');
 					}
 					indent(writer, newindent);
-					writer.write(quote(key.toString()));
+					writer.write(JSONUtil.quote(key.toString()));
 					writer.write(':');
 					if (indentFactor > 0) {
 						writer.write(' ');
@@ -1275,42 +994,6 @@ public class JSONObject {
 			return writer;
 		} catch (IOException exception) {
 			throw new JSONException(exception);
-		}
-	}
-
-	/**
-	 * JSONObject.NULL is equivalent to the value that JavaScript calls null, whilst Java's null is equivalent to the value that JavaScript calls undefined.
-	 */
-	private static final class Null {
-
-		/**
-		 * There is only intended to be a single instance of the NULL object, so the clone method returns itself.
-		 *
-		 * @return NULL.
-		 */
-		@Override
-		protected final Object clone() {
-			return this;
-		}
-
-		/**
-		 * A Null object is equal to the null value and to itself.
-		 *
-		 * @param object An object to test for nullness.
-		 * @return true if the object parameter is the JSONObject.NULL object or null.
-		 */
-		@Override
-		public boolean equals(Object object) {
-			return object == null || object == this;
-		}
-
-		/**
-		 * Get the "null" string value.
-		 *
-		 * @return The string "null".
-		 */
-		public String toString() {
-			return "null";
 		}
 	}
 }

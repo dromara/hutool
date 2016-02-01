@@ -16,7 +16,7 @@ public interface OptBasicTypeGetter {
 	 * 获取Object属性值
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Object getObj(String key, Object defaultValue);
 	
@@ -26,7 +26,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	String getStr(String key, String defaultValue);
 	
@@ -36,7 +36,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Integer getInt(String key, Integer defaultValue);
 	
@@ -46,7 +46,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Short getShort(String key, Short defaultValue);
 	
@@ -56,7 +56,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Boolean getBool(String key, Boolean defaultValue);
 	
@@ -66,7 +66,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Long getLong(String key, Long defaultValue);
 	
@@ -76,7 +76,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Character getChar(String key, Character defaultValue);
 	
@@ -86,7 +86,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Float getFloat(String key, Float defaultValue);
 	
@@ -96,7 +96,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Double getDouble(String key, Double defaultValue);
 	
@@ -106,7 +106,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	Byte getByte(String key, Byte defaultValue);
 	
@@ -116,7 +116,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	BigDecimal getBigDecimal(String key, BigDecimal defaultValue);
 	
@@ -126,7 +126,7 @@ public interface OptBasicTypeGetter {
 	 * 
 	 * @param key 属性名
 	 * @param defaultValue 默认值
-	 * @return 属性值
+	 * @return 属性值，无对应值返回defaultValue
 	 */
 	BigInteger getBigInteger(String key, BigInteger defaultValue);
 	

@@ -14,7 +14,7 @@ import com.xiaoleilu.hutool.lang.Conver;
 public abstract class OptNullBasicTypeFromObjectGetter extends OptNullBasicTypeGetter{
 	
 	@Override
-	public abstract String getObj(String key);
+	public abstract Object getObj(String key, Object defaultValue);
 	
 	@Override
 	public String getStr(String key, String defaultValue) {
