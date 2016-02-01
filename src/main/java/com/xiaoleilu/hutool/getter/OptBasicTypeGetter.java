@@ -11,6 +11,15 @@ import java.math.BigInteger;
  */
 public interface OptBasicTypeGetter {
 	/*-------------------------- 基本类型 start -------------------------------*/
+	
+	/**
+	 * 获取Object属性值
+	 * @param key 属性名
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 */
+	Object getObj(String key, Object defaultValue);
+	
 	/**
 	 * 获取字符串型属性值<br>
 	 * 若获得的值为不可见字符，使用默认值

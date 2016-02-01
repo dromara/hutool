@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.lang;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Set;
 
@@ -42,14 +43,16 @@ public class Conver {
 			if(Date.class.isAssignableFrom(clazz)) {
 				//判断标准日期
 				return DateUtil.parse(valueStr);
-			} else if(clazz == BigDecimal.class) {
+			}else if(clazz == BigInteger.class){
+				//数学计算数字
+				return new BigInteger(valueStr);
+			}else if(clazz == BigDecimal.class) {
 				//数学计算数字
 				return new BigDecimal(valueStr);
 			}else if(clazz == byte[].class) {
 				//流，由于有字符编码问题，在此使用系统默认
 				return valueStr.getBytes();
 			}
-			
 			//未找到可转换的类型，返回原值
 			return value;
 		}
@@ -155,7 +158,7 @@ public class Conver {
 			return (Character)value;
 		}
 		
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		return StrUtil.isEmpty(valueStr) ? defaultValue : valueStr.charAt(0);
 	}
 
@@ -178,7 +181,7 @@ public class Conver {
 		if(value instanceof Number){
 			return ((Number) value).intValue();
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
@@ -208,7 +211,7 @@ public class Conver {
 		if(value instanceof Number){
 			return ((Number) value).byteValue();
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
@@ -238,7 +241,7 @@ public class Conver {
 		if(value instanceof Number){
 			return ((Number) value).shortValue();
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
@@ -291,11 +294,12 @@ public class Conver {
 		if(value instanceof Number){
 			return ((Number) value).longValue();
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
 		try {
+			//支持科学计数法
 			return new BigDecimal(valueStr.trim()).longValue();
 		} catch (Exception e) {
 			return defaultValue;
@@ -344,11 +348,12 @@ public class Conver {
 		if(value instanceof Number){
 			return ((Number) value).doubleValue();
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
 		try {
+			//支持科学计数法
 			return new BigDecimal(valueStr.trim()).doubleValue();
 		} catch (Exception e) {
 			return defaultValue;
@@ -397,7 +402,7 @@ public class Conver {
 		if(value instanceof Number){
 			return ((Number) value).floatValue();
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
@@ -447,7 +452,7 @@ public class Conver {
 		if(value instanceof Boolean) {
 			return (Boolean)value;
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
@@ -498,12 +503,78 @@ public class Conver {
 			E myE = (E) value;
 			return myE;
 		}
-		final String valueStr = value.toString();
+		final String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
 		try {
 			return Enum.valueOf(clazz,valueStr);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * 转换为BigInteger<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static BigInteger toBigInteger(Object value, BigInteger defaultValue) {
+		if (value == null){
+			return defaultValue;
+		}
+		if(value instanceof BigInteger) {
+			return (BigInteger)value;
+		}
+		if(value instanceof Long) {
+			return BigInteger.valueOf((Long)value);
+		}
+		final String valueStr = toStr(value, null);
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
+		try {
+			return new BigInteger(valueStr);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * 转换为BigDecimal<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static BigDecimal toBigDecimal(Object value, BigDecimal defaultValue) {
+		if (value == null){
+			return defaultValue;
+		}
+		if(value instanceof BigDecimal) {
+			return (BigDecimal)value;
+		}
+		if(value instanceof Long) {
+			return new BigDecimal((Long)value);
+		}
+		if(value instanceof Double) {
+			return new BigDecimal((Double)value);
+		}
+		if(value instanceof Integer) {
+			return new BigDecimal((Integer)value);
+		}
+		final String valueStr = toStr(value, null);
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
+		try {
+			return new BigDecimal(valueStr);
 		} catch (Exception e) {
 			return defaultValue;
 		}

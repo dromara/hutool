@@ -115,6 +115,16 @@ public final class Props extends Properties implements BasicTypeGetter, OptBasic
 	
 	//----------------------------------------------------------------------- Get start
 	@Override
+	public Object getObj(String key, Object defaultValue) {
+		return getStr(key, null == defaultValue ? null : defaultValue.toString());
+	}
+
+	@Override
+	public Object getObj(String key) {
+		return getObj(key, null);
+	}
+	
+	@Override
 	public String getStr(String key, String defaultValue){
 		return super.getProperty(key, defaultValue);
 	}

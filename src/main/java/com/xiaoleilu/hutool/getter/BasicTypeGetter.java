@@ -11,6 +11,14 @@ import java.math.BigInteger;
  */
 public interface BasicTypeGetter {
 	/*-------------------------- 基本类型 start -------------------------------*/
+	
+	/**
+	 * 获取Object属性值
+	 * @param key 属性名
+	 * @return 属性值
+	 */
+	Object getObj(String key);
+	
 	/**
 	 * 获取字符串型属性值
 	 * 

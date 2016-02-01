@@ -135,6 +135,12 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter{
 	//-------------------------------------------------------------------- Set end
 	
 	//-------------------------------------------------------------------- Get start
+	
+	@Override
+	public Object getObj(String key) {
+		return get(key);
+	}
+	
 	/**
 	 * 获得特定类型值
 	 * @param attr 字段名

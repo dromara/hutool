@@ -11,6 +11,12 @@ import java.math.BigInteger;
  * @author Looly
  */
 public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasicTypeGetter{
+	
+	@Override
+	public Object getObj(String key) {
+		return getObj(key, null);
+	}
+	
 	/**
 	 * 获取字符串型属性值<br>
 	 * 无值或获取错误返回null

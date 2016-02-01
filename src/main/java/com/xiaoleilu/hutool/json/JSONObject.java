@@ -17,6 +17,8 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.lang.Conver;
+
 /**
  * JSONObject是一个无序键值对. 它是一个由大括号包围的，使用冒号分隔name和value的字符串，每个键值对使用逗号隔开。<br>
  * 此对象使用 <code>get</code> 和 <code>opt</code> 方法通过name获得value, 使用 <code>put</code>方法增加或替换值。<br>
@@ -69,7 +71,7 @@ public class JSONObject {
 		this();
 		for (String name : names) {
 			try {
-				this.putOnce(name, jsonObject.opt(name));
+				this.putOnce(name, jsonObject.get(name));
 			} catch (Exception ignore) {
 			}
 		}
@@ -216,7 +218,7 @@ public class JSONObject {
 				JSONObject target = this;
 				for (int i = 0; i < last; i += 1) {
 					String segment = path[i];
-					JSONObject nextTarget = target.optJSONObject(segment);
+					JSONObject nextTarget = target.getJSONObject(segment);
 					if (nextTarget == null) {
 						nextTarget = new JSONObject();
 						target.put(segment, nextTarget);
@@ -241,7 +243,7 @@ public class JSONObject {
 	 */
 	public JSONObject accumulate(String key, Object value) throws JSONException {
 		testValidity(value);
-		Object object = this.opt(key);
+		Object object = this.get(key);
 		if (object == null) {
 			this.put(key, value instanceof JSONArray ? new JSONArray().put(value) : value);
 		} else if (object instanceof JSONArray) {
@@ -263,7 +265,7 @@ public class JSONObject {
 	 */
 	public JSONObject append(String key, Object value) throws JSONException {
 		testValidity(value);
-		Object object = this.opt(key);
+		Object object = this.get(key);
 		if (object == null) {
 			this.put(key, new JSONArray().put(value));
 		} else if (object instanceof JSONArray) {
@@ -272,195 +274,6 @@ public class JSONObject {
 			throw new JSONException("JSONObject[" + key + "] is not a JSONArray.");
 		}
 		return this;
-	}
-
-	/**
-	 * Produce a string from a double. The string "null" will be returned if the number is not finite.
-	 *
-	 * @param d A double.
-	 * @return A String.
-	 */
-	public static String doubleToString(double d) {
-		if (Double.isInfinite(d) || Double.isNaN(d)) {
-			return "null";
-		}
-
-		// Shave off trailing zeros and decimal point, if possible.
-
-		String string = Double.toString(d);
-		if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && string.indexOf('E') < 0) {
-			while (string.endsWith("0")) {
-				string = string.substring(0, string.length() - 1);
-			}
-			if (string.endsWith(".")) {
-				string = string.substring(0, string.length() - 1);
-			}
-		}
-		return string;
-	}
-
-	/**
-	 * Get the value object associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return The object associated with the key.
-	 * @throws JSONException if the key is not found.
-	 */
-	public Object get(String key) throws JSONException {
-		if (key == null) {
-			throw new JSONException("Null key.");
-		}
-		Object object = this.opt(key);
-		if (object == null) {
-			throw new JSONException("JSONObject[" + quote(key) + "] not found.");
-		}
-		return object;
-	}
-
-	/**
-	 * Get the enum value associated with a key.
-	 * 
-	 * @param clazz The type of enum to retrieve.
-	 * @param key A key string.
-	 * @return The enum value associated with the key
-	 * @throws JSONException if the key is not found or if the value cannot be converted to an enum.
-	 */
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) throws JSONException {
-		E val = optEnum(clazz, key);
-		if (val == null) {
-			// JSONException should really take a throwable argument.
-			// If it did, I would re-implement this with the Enum.valueOf
-			// method and place any thrown exception in the JSONException
-			throw new JSONException("JSONObject[" + quote(key) + "] is not an enum of type " + quote(clazz.getSimpleName()) + ".");
-		}
-		return val;
-	}
-
-	/**
-	 * Get the boolean value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return The truth.
-	 * @throws JSONException if the value is not a Boolean or the String "true" or "false".
-	 */
-	public boolean getBoolean(String key) throws JSONException {
-		Object object = this.get(key);
-		if (object.equals(Boolean.FALSE) || (object instanceof String && ((String) object).equalsIgnoreCase("false"))) {
-			return false;
-		} else if (object.equals(Boolean.TRUE) || (object instanceof String && ((String) object).equalsIgnoreCase("true"))) {
-			return true;
-		}
-		throw new JSONException("JSONObject[" + quote(key) + "] is not a Boolean.");
-	}
-
-	/**
-	 * Get the BigInteger value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return The numeric value.
-	 * @throws JSONException if the key is not found or if the value cannot be converted to BigInteger.
-	 */
-	public BigInteger getBigInteger(String key) throws JSONException {
-		Object object = this.get(key);
-		try {
-			return new BigInteger(object.toString());
-		} catch (Exception e) {
-			throw new JSONException("JSONObject[" + quote(key) + "] could not be converted to BigInteger.");
-		}
-	}
-
-	/**
-	 * Get the BigDecimal value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return The numeric value.
-	 * @throws JSONException if the key is not found or if the value cannot be converted to BigDecimal.
-	 */
-	public BigDecimal getBigDecimal(String key) throws JSONException {
-		Object object = this.get(key);
-		try {
-			return new BigDecimal(object.toString());
-		} catch (Exception e) {
-			throw new JSONException("JSONObject[" + quote(key) + "] could not be converted to BigDecimal.");
-		}
-	}
-
-	/**
-	 * Get the double value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return The numeric value.
-	 * @throws JSONException if the key is not found or if the value is not a Number object and cannot be converted to a number.
-	 */
-	public double getDouble(String key) throws JSONException {
-		Object object = this.get(key);
-		try {
-			return object instanceof Number ? ((Number) object).doubleValue() : Double.parseDouble((String) object);
-		} catch (Exception e) {
-			throw new JSONException("JSONObject[" + quote(key) + "] is not a number.");
-		}
-	}
-
-	/**
-	 * Get the int value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return The integer value.
-	 * @throws JSONException if the key is not found or if the value cannot be converted to an integer.
-	 */
-	public int getInt(String key) throws JSONException {
-		Object object = this.get(key);
-		try {
-			return object instanceof Number ? ((Number) object).intValue() : Integer.parseInt((String) object);
-		} catch (Exception e) {
-			throw new JSONException("JSONObject[" + quote(key) + "] is not an int.");
-		}
-	}
-
-	/**
-	 * Get the JSONArray value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return A JSONArray which is the value.
-	 * @throws JSONException if the key is not found or if the value is not a JSONArray.
-	 */
-	public JSONArray getJSONArray(String key) throws JSONException {
-		Object object = this.get(key);
-		if (object instanceof JSONArray) {
-			return (JSONArray) object;
-		}
-		throw new JSONException("JSONObject[" + quote(key) + "] is not a JSONArray.");
-	}
-
-	/**
-	 * Get the JSONObject value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return A JSONObject which is the value.
-	 * @throws JSONException if the key is not found or if the value is not a JSONObject.
-	 */
-	public JSONObject getJSONObject(String key) throws JSONException {
-		Object object = this.get(key);
-		if (object instanceof JSONObject) {
-			return (JSONObject) object;
-		}
-		throw new JSONException("JSONObject[" + quote(key) + "] is not a JSONObject.");
-	}
-
-	/**
-	 * Get the long value associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return The long value.
-	 * @throws JSONException if the key is not found or if the value cannot be converted to a long.
-	 */
-	public long getLong(String key) throws JSONException {
-		Object object = this.get(key);
-		try {
-			return object instanceof Number ? ((Number) object).longValue() : Long.parseLong((String) object);
-		} catch (Exception e) {
-			throw new JSONException("JSONObject[" + quote(key) + "] is not a long.");
-		}
 	}
 
 	/**
@@ -506,22 +319,7 @@ public class JSONObject {
 	}
 
 	/**
-	 * Get the string associated with a key.
-	 *
-	 * @param key A key string.
-	 * @return A string which is the value.
-	 * @throws JSONException if there is no string value for the key.
-	 */
-	public String getString(String key) throws JSONException {
-		Object object = this.get(key);
-		if (object instanceof String) {
-			return (String) object;
-		}
-		throw new JSONException("JSONObject[" + quote(key) + "] not a string.");
-	}
-
-	/**
-	 * Determine if the JSONObject contains a specific key.
+	 *是否存在指定KEY
 	 *
 	 * @param key A key string.
 	 * @return true if the key exists in the JSONObject.
@@ -539,7 +337,7 @@ public class JSONObject {
 	 * @throws JSONException If there is already a property with this name that is not an Integer, Long, Double, or Float.
 	 */
 	public JSONObject increment(String key) throws JSONException {
-		Object value = this.opt(key);
+		Object value = this.get(key);
 		if (value == null) {
 			this.put(key, 1);
 		} else if (value instanceof BigInteger) {
@@ -567,7 +365,7 @@ public class JSONObject {
 	 * @return true if there is no value associated with the key or if the value is the JSONObject.NULL object.
 	 */
 	public boolean isNull(String key) {
-		return JSONObject.NULL.equals(this.opt(key));
+		return JSONObject.NULL.equals(this.get(key));
 	}
 
 	/**
@@ -644,7 +442,7 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return An object which is the value, or null if there is no value.
 	 */
-	public Object opt(String key) {
+	public Object get(String key) {
 		return key == null ? null : this.map.get(key);
 	}
 
@@ -655,8 +453,8 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return The enum value associated with the key or null if not found
 	 */
-	public <E extends Enum<E>> E optEnum(Class<E> clazz, String key) {
-		return this.optEnum(clazz, key, null);
+	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
+		return this.getEnum(clazz, key, null);
 	}
 
 	/**
@@ -667,9 +465,9 @@ public class JSONObject {
 	 * @param defaultValue The default in case the value is not found
 	 * @return The enum value associated with the key or defaultValue if the value is not found or cannot be assigned to clazz
 	 */
-	public <E extends Enum<E>> E optEnum(Class<E> clazz, String key, E defaultValue) {
+	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key, E defaultValue) {
 		try {
-			Object val = this.opt(key);
+			Object val = this.get(key);
 			if (NULL.equals(val)) {
 				return defaultValue;
 			}
@@ -691,8 +489,8 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return The truth.
 	 */
-	public boolean optBoolean(String key) {
-		return this.optBoolean(key, false);
+	public boolean getBoolean(String key) {
+		return this.getBoolean(key, false);
 	}
 
 	/**
@@ -702,9 +500,9 @@ public class JSONObject {
 	 * @param defaultValue The default.
 	 * @return The truth.
 	 */
-	public boolean optBoolean(String key, boolean defaultValue) {
+	public boolean getBoolean(String key, boolean defaultValue) {
 		try {
-			return this.getBoolean(key);
+			return Conver.toBool(get(key), defaultValue);
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -716,8 +514,8 @@ public class JSONObject {
 	 * @param key A string which is the key.
 	 * @return An object which is the value.
 	 */
-	public double optDouble(String key) {
-		return this.optDouble(key, Double.NaN);
+	public double getDouble(String key) {
+		return this.getDouble(key, Double.NaN);
 	}
 
 	/**
@@ -728,9 +526,9 @@ public class JSONObject {
 	 * @param defaultValue The default.
 	 * @return An object which is the value.
 	 */
-	public BigInteger optBigInteger(String key, BigInteger defaultValue) {
+	public BigInteger getBigInteger(String key, BigInteger defaultValue) {
 		try {
-			return this.getBigInteger(key);
+			return Conver.toBigInteger(get(key), defaultValue);
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -744,9 +542,9 @@ public class JSONObject {
 	 * @param defaultValue The default.
 	 * @return An object which is the value.
 	 */
-	public BigDecimal optBigDecimal(String key, BigDecimal defaultValue) {
+	public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
 		try {
-			return this.getBigDecimal(key);
+			return Conver.toBigDecimal(get(key), defaultValue);
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -760,9 +558,9 @@ public class JSONObject {
 	 * @param defaultValue The default.
 	 * @return An object which is the value.
 	 */
-	public double optDouble(String key, double defaultValue) {
+	public double getDouble(String key, double defaultValue) {
 		try {
-			return this.getDouble(key);
+			return Conver.toDouble(get(key), defaultValue);
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -774,8 +572,8 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return An object which is the value.
 	 */
-	public int optInt(String key) {
-		return this.optInt(key, 0);
+	public int getInt(String key) {
+		return this.getInt(key, 0);
 	}
 
 	/**
@@ -786,9 +584,9 @@ public class JSONObject {
 	 * @param defaultValue The default.
 	 * @return An object which is the value.
 	 */
-	public int optInt(String key, int defaultValue) {
+	public int getInt(String key, int defaultValue) {
 		try {
-			return this.getInt(key);
+			return Conver.toInt(get(key), defaultValue);
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -800,8 +598,8 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return A JSONArray which is the value.
 	 */
-	public JSONArray optJSONArray(String key) {
-		Object o = this.opt(key);
+	public JSONArray getJSONArray(String key) {
+		Object o = this.get(key);
 		return o instanceof JSONArray ? (JSONArray) o : null;
 	}
 
@@ -811,8 +609,8 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return A JSONObject which is the value.
 	 */
-	public JSONObject optJSONObject(String key) {
-		Object object = this.opt(key);
+	public JSONObject getJSONObject(String key) {
+		Object object = this.get(key);
 		return object instanceof JSONObject ? (JSONObject) object : null;
 	}
 
@@ -822,8 +620,8 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return An object which is the value.
 	 */
-	public long optLong(String key) {
-		return this.optLong(key, 0);
+	public long getLong(String key) {
+		return this.getLong(key, 0);
 	}
 
 	/**
@@ -834,9 +632,9 @@ public class JSONObject {
 	 * @param defaultValue The default.
 	 * @return An object which is the value.
 	 */
-	public long optLong(String key, long defaultValue) {
+	public long getLong(String key, long defaultValue) {
 		try {
-			return this.getLong(key);
+			return Conver.toLong(get(key), defaultValue);
 		} catch (Exception e) {
 			return defaultValue;
 		}
@@ -848,8 +646,8 @@ public class JSONObject {
 	 * @param key A key string.
 	 * @return A string which is the value.
 	 */
-	public String optString(String key) {
-		return this.optString(key, "");
+	public String getString(String key) {
+		return this.getString(key, "");
 	}
 
 	/**
@@ -859,8 +657,8 @@ public class JSONObject {
 	 * @param defaultValue The default.
 	 * @return A string which is the value.
 	 */
-	public String optString(String key, String defaultValue) {
-		Object object = this.opt(key);
+	public String getString(String key, String defaultValue) {
+		Object object = this.get(key);
 		return NULL.equals(object) ? defaultValue : object.toString();
 	}
 
@@ -1014,7 +812,7 @@ public class JSONObject {
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
 		if (key != null && value != null) {
-			if (this.opt(key) != null) {
+			if (this.get(key) != null) {
 				throw new JSONException("Duplicate key \"" + key + "\"");
 			}
 			this.put(key, value);
@@ -1244,7 +1042,7 @@ public class JSONObject {
 		}
 		JSONArray ja = new JSONArray();
 		for (int i = 0; i < names.length(); i += 1) {
-			ja.put(this.opt(names.getString(i)));
+			ja.put(this.get(names.getString(i)));
 		}
 		return ja;
 	}

@@ -6,6 +6,8 @@ public class ConverDemo {
 	public static void main(String[] args) {
 		System.out.println(Conver.toInt("  120   ", 0));
 		System.out.println(Conver.toLong("  120   ", 0L));
+		//支持科学计数法
+		System.out.println(Conver.toDouble("  12345E-10   ", 0D));
 
 		// 整数
 		System.out.println(Conver.digitUppercase(0)); // 零元整
