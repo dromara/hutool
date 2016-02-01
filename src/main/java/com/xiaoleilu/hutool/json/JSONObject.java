@@ -805,6 +805,15 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 	public <T> T toBean(Class<T> clazz){
 		return BeanUtil.mapToBean(this.map, clazz);
 	}
+	
+	/**
+	 * 转为实体类对象
+	 * @param bean 实体类
+	 * @return 实体类对象
+	 */
+	public <T> T toBean(T bean){
+		return BeanUtil.fillBeanWithMap(this.map, bean);
+	}
 
 	/**
 	 * Make a JSON text of this JSONObject. For compactness, no whitespace is added. If this would not result in a syntactically correct JSON text, then null will be returned instead.
