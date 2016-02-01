@@ -69,6 +69,10 @@ public class Conver {
 			return null;
 		}
 		
+		if(clazz.isAssignableFrom(String.class)){
+			return valueStr;
+		}
+		
 		BasicType basicType = null;
 		try {
 			basicType = BasicType.valueOf(clazz.getSimpleName().toUpperCase());
@@ -78,8 +82,6 @@ public class Conver {
 		}
 		
 		switch (basicType) {
-			case STRING:
-				return valueStr;
 			case BYTE:
 				if(clazz == byte.class) {
 					return Byte.parseByte(valueStr);
@@ -96,12 +98,12 @@ public class Conver {
 				return Integer.valueOf(valueStr);
 			case LONG:
 				if(clazz == long.class) {
-					return Long.parseLong(valueStr);
+					return new BigDecimal(valueStr).longValue();
 				}
 				return Long.valueOf(valueStr);
 			case DOUBLE:
 				if(clazz == double.class) {
-					return Double.parseDouble(valueStr);
+					return new BigDecimal(valueStr).doubleValue();
 				}
 			case FLOAT:
 				if(clazz == float.class) {
