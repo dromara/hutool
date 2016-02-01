@@ -45,7 +45,7 @@ public class JSONUtil {
 	
 	/**
 	 * 转为JSON字符串
-	 * @param json JSONArray
+	 * @param jsonArray JSONArray
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(JSONArray jsonArray) {
