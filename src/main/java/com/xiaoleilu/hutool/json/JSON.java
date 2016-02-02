@@ -33,7 +33,7 @@ public interface JSON{
 	
 	/**
 	 * 转换为JSON字符串
-	 * @param indentFactor每一级别的缩进
+	 * @param indentFactor 每一级别的缩进
 	 * @return JSON字符串
 	 * @throws JSONException
 	 */

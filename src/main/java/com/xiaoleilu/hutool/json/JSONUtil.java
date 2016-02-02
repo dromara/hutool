@@ -207,7 +207,7 @@ public class JSONUtil {
 	 * @param value 值
 	 * @param indentFactor
 	 * @param indent 缩进空格数
-	 * @return
+	 * @return Writer
 	 * @throws JSONException
 	 * @throws IOException
 	 */
