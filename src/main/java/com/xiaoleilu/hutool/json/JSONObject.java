@@ -43,7 +43,7 @@ import com.xiaoleilu.hutool.util.BeanUtil;
  *
  * @author JSON.org，looly
  */
-public class JSONObject extends OptNullBasicTypeFromObjectGetter{
+public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> implements JSON{
 
 	/**
 	 * The map where the JSONObject's properties are kept.
@@ -238,7 +238,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 	 * @throws JSONException If the value is an invalid number or if the key is null.
 	 */
 	public JSONObject accumulate(String key, Object value) throws JSONException {
-		testValidity(value);
+		JSONUtil.testValidity(value);
 		Object object = this.get(key);
 		if (object == null) {
 			this.put(key, value instanceof JSONArray ? new JSONArray().put(value) : value);
@@ -260,7 +260,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 	 * @throws JSONException If the key is null or if the current value associated with the key is not a JSONArray.
 	 */
 	public JSONObject append(String key, Object value) throws JSONException {
-		testValidity(value);
+		JSONUtil.testValidity(value);
 		Object object = this.get(key);
 		if (object == null) {
 			this.put(key, new JSONArray().put(value));
@@ -403,33 +403,6 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 			ja.put(keys.next());
 		}
 		return ja.length() == 0 ? null : ja;
-	}
-
-	/**
-	 * Produce a string from a Number.
-	 *
-	 * @param number A Number
-	 * @return A String.
-	 * @throws JSONException If n is a non-finite number.
-	 */
-	public static String numberToString(Number number) throws JSONException {
-		if (number == null) {
-			throw new JSONException("Null pointer");
-		}
-		testValidity(number);
-
-		// Shave off trailing zeros and decimal point, if possible.
-
-		String string = number.toString();
-		if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && string.indexOf('E') < 0) {
-			while (string.endsWith("0")) {
-				string = string.substring(0, string.length() - 1);
-			}
-			if (string.endsWith(".")) {
-				string = string.substring(0, string.length() - 1);
-			}
-		}
-		return string;
 	}
 
 	/**
@@ -621,7 +594,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 			throw new NullPointerException("Null key.");
 		}
 		if (value != null) {
-			testValidity(value);
+			JSONUtil.testValidity(value);
 			this.map.put(key, value);
 		} else {
 			this.remove(key);
@@ -760,26 +733,6 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 	}
 
 	/**
-	 * Throw an exception if the object is a NaN or infinite number.
-	 *
-	 * @param o The object to test.
-	 * @throws JSONException If o is a non-finite number.
-	 */
-	public static void testValidity(Object o) throws JSONException {
-		if (o != null) {
-			if (o instanceof Double) {
-				if (((Double) o).isInfinite() || ((Double) o).isNaN()) {
-					throw new JSONException("JSON does not allow non-finite numbers.");
-				}
-			} else if (o instanceof Float) {
-				if (((Float) o).isInfinite() || ((Float) o).isNaN()) {
-					throw new JSONException("JSON does not allow non-finite numbers.");
-				}
-			}
-		}
-	}
-
-	/**
 	 * Produce a JSONArray containing the values of the members of this JSONObject.
 	 *
 	 * @param names A JSONArray containing a list of key strings. This determines the sequence of the values in the result.
@@ -792,7 +745,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 		}
 		JSONArray ja = new JSONArray();
 		for (int i = 0; i < names.length(); i += 1) {
-			ja.put(this.get(names.getString(i)));
+			ja.put(this.get(names.getStr(i)));
 		}
 		return ja;
 	}
@@ -823,9 +776,10 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 	 * @return a printable, displayable, portable, transmittable representation of the object, beginning with <code>{</code>&nbsp;<small>(left brace)</small> and ending with <code>}</code>&nbsp;
 	 *         <small>(right brace)</small>.
 	 */
+	@Override
 	public String toString() {
 		try {
-			return this.toString(0);
+			return this.toJSONString(0);
 		} catch (Exception e) {
 			return null;
 		}
@@ -841,125 +795,20 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 	 *         <small>(right brace)</small>.
 	 * @throws JSONException If the object contains an invalid number.
 	 */
-	public String toString(int indentFactor) throws JSONException {
+	@Override
+	public String toJSONString(int indentFactor) throws JSONException {
 		StringWriter w = new StringWriter();
 		synchronized (w.getBuffer()) {
 			return this.write(w, indentFactor, 0).toString();
 		}
 	}
 
-	/**
-	 * Make a JSON text of an Object value. If the object has an value.toJSONString() method, then that method will be used to produce the JSON text. The method is required to produce a strictly
-	 * conforming text. If the object does not contain a toJSONString method (which is the most common case), then a text will be produced by other means. If the value is an array or Collection, then
-	 * a JSONArray will be made from it and its toJSONString method will be called. If the value is a MAP, then a JSONObject will be made from it and its toJSONString method will be called. Otherwise,
-	 * the value's toString method will be called, and the result will be quoted.
-	 *
-	 * <p>
-	 * Warning: This method assumes that the data structure is acyclical.
-	 *
-	 * @param value The value to be serialized.
-	 * @return a printable, displayable, transmittable representation of the object, beginning with <code>{</code>&nbsp;<small>(left brace)</small> and ending with <code>}</code>&nbsp;<small>(right
-	 *         brace)</small>.
-	 * @throws JSONException If the value is or contains an invalid number.
-	 */
-	public static String valueToString(Object value) throws JSONException {
-		if (value == null || value.equals(null)) {
-			return "null";
-		}
-		if (value instanceof JSONString) {
-			Object object;
-			try {
-				object = ((JSONString) value).toJSONString();
-			} catch (Exception e) {
-				throw new JSONException(e);
-			}
-			if (object instanceof String) {
-				return (String) object;
-			}
-			throw new JSONException("Bad value from toJSONString: " + object);
-		}
-		if (value instanceof Number) {
-			return numberToString((Number) value);
-		}
-		if (value instanceof Boolean || value instanceof JSONObject || value instanceof JSONArray) {
-			return value.toString();
-		}
-		if (value instanceof Map) {
-			Map<?, ?> map = (Map<?, ?>) value;
-			return new JSONObject(map).toString();
-		}
-		if (value instanceof Collection) {
-			Collection<?> coll = (Collection<?>) value;
-			return new JSONArray(coll).toString();
-		}
-		if (value.getClass().isArray()) {
-			return new JSONArray(value).toString();
-		}
-		return JSONUtil.quote(value.toString());
-	}
-
-	/**
-	 * Write the contents of the JSONObject as JSON text to a writer. For compactness, no whitespace is added.
-	 * <p>
-	 * Warning: This method assumes that the data structure is acyclical.
-	 *
-	 * @return The writer.
-	 * @throws JSONException
-	 */
+	@Override
 	public Writer write(Writer writer) throws JSONException {
 		return this.write(writer, 0, 0);
 	}
 
-	static final Writer writeValue(Writer writer, Object value, int indentFactor, int indent) throws JSONException, IOException {
-		if (value == null || value.equals(null)) {
-			writer.write("null");
-		} else if (value instanceof JSONObject) {
-			((JSONObject) value).write(writer, indentFactor, indent);
-		} else if (value instanceof JSONArray) {
-			((JSONArray) value).write(writer, indentFactor, indent);
-		} else if (value instanceof Map) {
-			Map<?, ?> map = (Map<?, ?>) value;
-			new JSONObject(map).write(writer, indentFactor, indent);
-		} else if (value instanceof Collection) {
-			Collection<?> coll = (Collection<?>) value;
-			new JSONArray(coll).write(writer, indentFactor, indent);
-		} else if (value.getClass().isArray()) {
-			new JSONArray(value).write(writer, indentFactor, indent);
-		} else if (value instanceof Number) {
-			writer.write(numberToString((Number) value));
-		} else if (value instanceof Boolean) {
-			writer.write(value.toString());
-		} else if (value instanceof JSONString) {
-			Object o;
-			try {
-				o = ((JSONString) value).toJSONString();
-			} catch (Exception e) {
-				throw new JSONException(e);
-			}
-			writer.write(o != null ? o.toString() : JSONUtil.quote(value.toString()));
-		} else {
-			JSONUtil.quote(value.toString(), writer);
-		}
-		return writer;
-	}
-
-	static final void indent(Writer writer, int indent) throws IOException {
-		for (int i = 0; i < indent; i += 1) {
-			writer.write(' ');
-		}
-	}
-
-	/**
-	 * Write the contents of the JSONObject as JSON text to a writer. For compactness, no whitespace is added.
-	 * <p>
-	 * Warning: This method assumes that the data structure is acyclical.
-	 *
-	 * @param writer Writes the serialized JSON
-	 * @param indentFactor The number of spaces to add to each level of indentation.
-	 * @param indent The indention of the top level.
-	 * @return The writer.
-	 * @throws JSONException
-	 */
+	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
 		try {
 			boolean commanate = false;
@@ -974,7 +823,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 				if (indentFactor > 0) {
 					writer.write(' ');
 				}
-				writeValue(writer, this.map.get(key), indentFactor, indent);
+				JSONUtil.writeValue(writer, this.map.get(key), indentFactor, indent);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
 				while (keys.hasNext()) {
@@ -985,19 +834,19 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter{
 					if (indentFactor > 0) {
 						writer.write('\n');
 					}
-					indent(writer, newindent);
+					JSONUtil.indent(writer, newindent);
 					writer.write(JSONUtil.quote(key.toString()));
 					writer.write(':');
 					if (indentFactor > 0) {
 						writer.write(' ');
 					}
-					writeValue(writer, this.map.get(key), indentFactor, newindent);
+					JSONUtil.writeValue(writer, this.map.get(key), indentFactor, newindent);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
 					writer.write('\n');
 				}
-				indent(writer, indent);
+				JSONUtil.indent(writer, indent);
 			}
 			writer.write('}');
 			return writer;

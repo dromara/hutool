@@ -278,5 +278,4 @@ public class Validator {
 	public static boolean isUUID(String value) {
 		return isByRegex(UUID, value);
 	}
-
 }

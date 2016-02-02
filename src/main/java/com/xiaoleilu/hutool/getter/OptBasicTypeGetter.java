@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * 如果值不存在或获取错误，返回默认值
  * @author Looly
  */
-public interface OptBasicTypeGetter {
+public interface OptBasicTypeGetter<K> {
 	/*-------------------------- 基本类型 start -------------------------------*/
 	
 	/**
@@ -18,7 +18,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Object getObj(String key, Object defaultValue);
+	Object getObj(K key, Object defaultValue);
 	
 	/**
 	 * 获取字符串型属性值<br>
@@ -28,7 +28,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	String getStr(String key, String defaultValue);
+	String getStr(K key, String defaultValue);
 	
 	/**
 	 * 获取int型属性值<br>
@@ -38,7 +38,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Integer getInt(String key, Integer defaultValue);
+	Integer getInt(K key, Integer defaultValue);
 	
 	/**
 	 * 获取short型属性值<br>
@@ -48,7 +48,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Short getShort(String key, Short defaultValue);
+	Short getShort(K key, Short defaultValue);
 	
 	/**
 	 * 获取boolean型属性值<br>
@@ -58,7 +58,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Boolean getBool(String key, Boolean defaultValue);
+	Boolean getBool(K key, Boolean defaultValue);
 	
 	/**
 	 * 获取Long型属性值<br>
@@ -68,7 +68,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Long getLong(String key, Long defaultValue);
+	Long getLong(K key, Long defaultValue);
 	
 	/**
 	 * 获取char型属性值<br>
@@ -78,7 +78,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Character getChar(String key, Character defaultValue);
+	Character getChar(K key, Character defaultValue);
 	
 	/**
 	 * 获取float型属性值<br>
@@ -88,7 +88,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Float getFloat(String key, Float defaultValue);
+	Float getFloat(K key, Float defaultValue);
 	
 	/**
 	 * 获取double型属性值<br>
@@ -98,7 +98,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Double getDouble(String key, Double defaultValue);
+	Double getDouble(K key, Double defaultValue);
 	
 	/**
 	 * 获取byte型属性值<br>
@@ -108,7 +108,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	Byte getByte(String key, Byte defaultValue);
+	Byte getByte(K key, Byte defaultValue);
 	
 	/**
 	 * 获取BigDecimal型属性值<br>
@@ -118,7 +118,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	BigDecimal getBigDecimal(String key, BigDecimal defaultValue);
+	BigDecimal getBigDecimal(K key, BigDecimal defaultValue);
 	
 	/**
 	 * 获取BigInteger型属性值<br>
@@ -128,7 +128,7 @@ public interface OptBasicTypeGetter {
 	 * @param defaultValue 默认值
 	 * @return 属性值，无对应值返回defaultValue
 	 */
-	BigInteger getBigInteger(String key, BigInteger defaultValue);
+	BigInteger getBigInteger(K key, BigInteger defaultValue);
 	
 	/*-------------------------- 基本类型 end -------------------------------*/
 }

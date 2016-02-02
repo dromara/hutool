@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * 如果值不存在或获取错误，返回默认值
  * @author Looly
  */
-public interface BasicTypeGetter {
+public interface BasicTypeGetter<K> {
 	/*-------------------------- 基本类型 start -------------------------------*/
 	
 	/**
@@ -17,7 +17,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Object getObj(String key);
+	Object getObj(K key);
 	
 	/**
 	 * 获取字符串型属性值
@@ -25,7 +25,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	String getStr(String key);
+	String getStr(K key);
 	
 	/**
 	 * 获取int型属性值
@@ -33,7 +33,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Integer getInt(String key);
+	Integer getInt(K key);
 	
 	/**
 	 * 获取short型属性值
@@ -41,7 +41,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Short getShort(String key);
+	Short getShort(K key);
 	
 	/**
 	 * 获取boolean型属性值
@@ -49,7 +49,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Boolean getBool(String key);
+	Boolean getBool(K key);
 	
 	/**
 	 * 获取long型属性值
@@ -57,7 +57,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Long getLong(String key);
+	Long getLong(K key);
 	
 	/**
 	 * 获取char型属性值
@@ -65,7 +65,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Character getChar(String key);
+	Character getChar(K key);
 	
 	/**
 	 * 获取float型属性值<br>
@@ -73,7 +73,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Float getFloat(String key);
+	Float getFloat(K key);
 	
 	/**
 	 * 获取double型属性值
@@ -81,7 +81,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Double getDouble(String key);
+	Double getDouble(K key);
 	
 	/**
 	 * 获取byte型属性值
@@ -89,7 +89,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	Byte getByte(String key);
+	Byte getByte(K key);
 	
 	/**
 	 * 获取BigDecimal型属性值
@@ -97,7 +97,7 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	BigDecimal getBigDecimal(String key);
+	BigDecimal getBigDecimal(K key);
 	
 	/**
 	 * 获取BigInteger型属性值
@@ -105,6 +105,6 @@ public interface BasicTypeGetter {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	BigInteger getBigInteger(String key);
+	BigInteger getBigInteger(K key);
 	/*-------------------------- 基本类型 end -------------------------------*/
 }

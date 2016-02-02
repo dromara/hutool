@@ -10,7 +10,7 @@ import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromStringGetter;
  * @author Looly
  *
  */
-public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter{
+public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String>{
 	
 	/** 本设置对象的字符集 */
 	protected Charset charset;

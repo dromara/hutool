@@ -22,7 +22,7 @@ import com.xiaoleilu.hutool.util.URLUtil;
  * Properties文件读取封装类
  * @author loolly
  */
-public final class Props extends Properties implements BasicTypeGetter, OptBasicTypeGetter{
+public final class Props extends Properties implements BasicTypeGetter<String>, OptBasicTypeGetter<String>{
 	private static final long serialVersionUID = 1935981579709590740L;
 	private final static Log log = StaticLog.get();
 	

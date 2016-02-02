@@ -11,63 +11,63 @@ import com.xiaoleilu.hutool.lang.Conver;
  * 在不提供默认值的情况下， 如果值不存在或获取错误，返回null<br>
  * @author Looly
  */
-public abstract class OptNullBasicTypeFromObjectGetter extends OptNullBasicTypeGetter{
+public abstract class OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGetter<K>{
 	
 	@Override
-	public abstract Object getObj(String key, Object defaultValue);
+	public abstract Object getObj(K key, Object defaultValue);
 	
 	@Override
-	public String getStr(String key, String defaultValue) {
+	public String getStr(K key, String defaultValue) {
 		return Conver.toStr(getObj(key), defaultValue);
 	}
 	
 	@Override
-	public Integer getInt(String key, Integer defaultValue) {
+	public Integer getInt(K key, Integer defaultValue) {
 		return Conver.toInt(getObj(key), defaultValue);
 	}
 
 	@Override
-	public Short getShort(String key, Short defaultValue) {
+	public Short getShort(K key, Short defaultValue) {
 		return Conver.toShort(getObj(key), defaultValue);
 	}
 
 	@Override
-	public Boolean getBool(String key, Boolean defaultValue) {
+	public Boolean getBool(K key, Boolean defaultValue) {
 		return Conver.toBool(getObj(key), defaultValue);
 	}
 
 	@Override
-	public Long getLong(String key, Long defaultValue) {
+	public Long getLong(K key, Long defaultValue) {
 		return Conver.toLong(getObj(key), defaultValue);
 	}
 
 	@Override
-	public Character getChar(String key, Character defaultValue) {
+	public Character getChar(K key, Character defaultValue) {
 		return Conver.toChar(getObj(key), defaultValue);
 	}
 	
 	@Override
-	public Float getFloat(String key, Float defaultValue) {
+	public Float getFloat(K key, Float defaultValue) {
 		return Conver.toFloat(getObj(key), defaultValue);
 	}
 
 	@Override
-	public Double getDouble(String key, Double defaultValue) {
+	public Double getDouble(K key, Double defaultValue) {
 		return Conver.toDouble(getObj(key), defaultValue);
 	}
 
 	@Override
-	public Byte getByte(String key, Byte defaultValue) {
+	public Byte getByte(K key, Byte defaultValue) {
 		return Conver.toByte(getObj(key), defaultValue);
 	}
 
 	@Override
-	public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
+	public BigDecimal getBigDecimal(K key, BigDecimal defaultValue) {
 		return Conver.toBigDecimal(getObj(key), defaultValue);
 	}
 
 	@Override
-	public BigInteger getBigInteger(String key, BigInteger defaultValue) {
+	public BigInteger getBigInteger(K key, BigInteger defaultValue) {
 		return Conver.toBigInteger(getObj(key), defaultValue);
 	}
 }

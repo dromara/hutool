@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.lang;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Set;
 
@@ -165,36 +166,6 @@ public class Conver {
 	}
 
 	/**
-	 * 转换为int<br>
-	 * 如果给定的值为空，或者转换失败，返回默认值<br>
-	 * 转换失败不会报错
-	 * 
-	 * @param value 被转换的值
-	 * @param defaultValue 转换错误时的默认值
-	 * @return 结果
-	 */
-	public static Integer toInt(Object value, Integer defaultValue) {
-		if (value == null){
-			return defaultValue;
-		}
-		if(value instanceof Integer) {
-			return (Integer)value;
-		}
-		if(value instanceof Number){
-			return ((Number) value).intValue();
-		}
-		final String valueStr = toStr(value, null);
-		if (StrUtil.isBlank(valueStr)){
-			return defaultValue;
-		}
-		try {
-			return Integer.parseInt(valueStr.trim());
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-	
-	/**
 	 * 转换为byte<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
@@ -255,14 +226,69 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为Number<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static Number toNumber(Object value, Number defaultValue) {
+		if (value == null){
+			return defaultValue;
+		}
+		if(value instanceof Number) {
+			return (Number)value;
+		}
+		final String valueStr = toStr(value, null);
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
+		try {
+			return NumberFormat.getInstance().parse(valueStr);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	/**
+	 * 转换为int<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 */
+	public static Integer toInt(Object value, Integer defaultValue) {
+		if (value == null){
+			return defaultValue;
+		}
+		if(value instanceof Integer) {
+			return (Integer)value;
+		}
+		if(value instanceof Number){
+			return ((Number) value).intValue();
+		}
+		final String valueStr = toStr(value, null);
+		if (StrUtil.isBlank(valueStr)){
+			return defaultValue;
+		}
+		try {
+			return Integer.parseInt(valueStr.trim());
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	/**
 	 * 转换为Integer数组<br>
-	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	@SafeVarargs
-	public static <T> Integer[] toIntArray(boolean isIgnoreConvertError, T... values) {
+	public static Integer[] toIntArray(boolean isIgnoreConvertError, Object... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return new Integer[]{};
 		}
@@ -310,13 +336,11 @@ public class Conver {
 	
 	/**
 	 * 转换为Long数组<br>
-	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	@SafeVarargs
-	public static <T> Long[] toLongArray(boolean isIgnoreConvertError, T... values) {
+	public static Long[] toLongArray(boolean isIgnoreConvertError, Object... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return new Long[]{};
 		}
@@ -364,13 +388,11 @@ public class Conver {
 	
 	/**
 	 * 转换为Double数组<br>
-	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	@SafeVarargs
-	public static <T> Double[] toDoubleArray(boolean isIgnoreConvertError, T... values) {
+	public static Double[] toDoubleArray(boolean isIgnoreConvertError, Object... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return new Double[]{};
 		}
@@ -417,13 +439,11 @@ public class Conver {
 	
 	/**
 	 * 转换为Float数组<br>
-	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	@SafeVarargs
-	public static <T> Float[] toFloatArray(boolean isIgnoreConvertError, T... values) {
+	public static <T> Float[] toFloatArray(boolean isIgnoreConvertError, Object... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return new Float[]{};
 		}
@@ -467,13 +487,11 @@ public class Conver {
 	
 	/**
 	 * 转换为Boolean数组<br>
-	 * @param <T>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
 	 * @return 结果
 	 */
-	@SafeVarargs
-	public static <T> Boolean[] toBooleanArray(boolean isIgnoreConvertError, T... values) {
+	public static Boolean[] toBooleanArray(boolean isIgnoreConvertError, Object... values) {
 		if(CollectionUtil.isEmpty(values)) {
 			return new Boolean[]{};
 		}

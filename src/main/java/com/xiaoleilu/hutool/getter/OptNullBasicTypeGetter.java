@@ -10,10 +10,10 @@ import java.math.BigInteger;
  * 用户只需实现{@code com.xiaoleilu.hutool.getter.OptBasicTypeGetter}接口即可
  * @author Looly
  */
-public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasicTypeGetter{
+public abstract class OptNullBasicTypeGetter<K> implements BasicTypeGetter<K>, OptBasicTypeGetter<K>{
 	
 	@Override
-	public Object getObj(String key) {
+	public Object getObj(K key) {
 		return getObj(key, null);
 	}
 	
@@ -25,7 +25,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public String getStr(String key){
+	public String getStr(K key){
 		return this.getStr(key, null);
 	}
 	
@@ -37,7 +37,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Integer getInt(String key) {
+	public Integer getInt(K key) {
 		return this.getInt(key, null);
 	}
 	
@@ -49,7 +49,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Short getShort(String key){
+	public Short getShort(K key){
 		return this.getShort(key, null);
 	}
 	
@@ -61,7 +61,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Boolean getBool(String key){
+	public Boolean getBool(K key){
 		return this.getBool(key, null);
 	}
 	
@@ -73,7 +73,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Long getLong(String key){
+	public Long getLong(K key){
 		return this.getLong(key, null);
 	}
 	
@@ -85,7 +85,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Character getChar(String key){
+	public Character getChar(K key){
 		return this.getChar(key, null);
 	}
 	
@@ -97,7 +97,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Float getFloat(String key){
+	public Float getFloat(K key){
 		return this.getFloat(key, null);
 	}
 	
@@ -109,7 +109,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Double getDouble(String key){
+	public Double getDouble(K key){
 		return this.getDouble(key, null);
 	}
 	
@@ -121,7 +121,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public Byte getByte(String key){
+	public Byte getByte(K key){
 		return this.getByte(key, null);
 	}
 	
@@ -133,7 +133,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public BigDecimal getBigDecimal(String key){
+	public BigDecimal getBigDecimal(K key){
 		return this.getBigDecimal(key, null);
 	}
 	
@@ -145,7 +145,7 @@ public abstract class OptNullBasicTypeGetter implements BasicTypeGetter, OptBasi
 	 * @return 属性值
 	 */
 	@Override
-	public BigInteger getBigInteger(String key){
+	public BigInteger getBigInteger(K key){
 		return this.getBigInteger(key, null);
 	}
 }
