@@ -38,6 +38,10 @@ public class ReUtil {
 	 * @return 匹配后得到的字符串，未匹配返回null
 	 */
 	public static String get(String regex, String content, int groupIndex) {
+		if(null == content || null == regex){
+			return null;
+		}
+		
 		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		return get(pattern, content, groupIndex);
 	}
@@ -51,9 +55,10 @@ public class ReUtil {
 	 * @return 匹配后得到的字符串，未匹配返回null
 	 */
 	public static String get(Pattern pattern, String content, int groupIndex) {
-		if(null == content){
+		if(null == content || null == pattern){
 			return null;
 		}
+		
 		Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
 			return matcher.group(groupIndex);
@@ -75,6 +80,10 @@ public class ReUtil {
 	 * @return 新字符串
 	 */
 	public static String extractMulti(Pattern pattern, String content, String template) {
+		if(null == content || null == pattern || null == template){
+			return null;
+		}
+		
 		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
 		
 		Matcher matcher = pattern.matcher(content);
@@ -103,6 +112,10 @@ public class ReUtil {
 	 * @return 新字符串
 	 */
 	public static String extractMultiAndDelPre(Pattern pattern, String[] contents, String template) {
+		if(null == contents || null == pattern || null == template){
+			return null;
+		}
+		
 		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
 		
 		final String content = contents[0];
@@ -133,6 +146,10 @@ public class ReUtil {
 	 * @return 按照template拼接后的字符串
 	 */
 	public static String extractMulti(String regex, String content, String template) {
+		if(null == content || null == regex || null == template){
+			return null;
+		}
+		
 		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		return extractMulti(pattern, content, template);
 	}
@@ -151,6 +168,10 @@ public class ReUtil {
 	 * @return 按照template拼接后的字符串
 	 */
 	public static String extractMultiAndDelPre(String regex, String[] contents, String template) {
+		if(null == contents || null == regex || null == template){
+			return null;
+		}
+		
 		final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		return extractMultiAndDelPre(pattern, contents, template);
 	}
@@ -163,6 +184,10 @@ public class ReUtil {
 	 * @return 删除后剩余的内容
 	 */
 	public static String delFirst(String regex, String content) {
+		if(null == content || null == regex){
+			return content;
+		}
+		
 		return content.replaceFirst(regex, "");
 	}
 
@@ -174,6 +199,10 @@ public class ReUtil {
 	 * @return 删除前缀后的新内容
 	 */
 	public static String delPre(String regex, String content) {
+		if(null == content || null == regex){
+			return content;
+		}
+		
 		Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(content);
 		if (matcher.find()) {
 			return StrUtil.sub(content, matcher.end(), content.length());
@@ -191,6 +220,10 @@ public class ReUtil {
 	 * @return 结果集
 	 */
 	public static <T extends Collection<String>> T findAll(String regex, String content, int group, T collection) {
+		if(null == regex){
+			return null;
+		}
+		
 		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		return findAll(pattern, content, group, collection);
 	}
@@ -205,6 +238,14 @@ public class ReUtil {
 	 * @return 结果集
 	 */
 	public static <T extends Collection<String>> T findAll(Pattern pattern, String content, int group, T collection) {
+		if(null == pattern || null == content){
+			return null;
+		}
+		
+		if(null == collection){
+			throw new NullPointerException("Null collection param provided!");
+		}
+		
 		Matcher matcher = pattern.matcher(content);
 		while(matcher.find()){
 			collection.add(matcher.group(group));
