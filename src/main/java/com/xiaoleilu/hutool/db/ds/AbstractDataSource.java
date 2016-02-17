@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.db.ds;
 
+import java.io.Closeable;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ import javax.sql.DataSource;
  * @author Looly
  *
  */
-public abstract class AbstractDataSource implements DataSource, Cloneable{
+public abstract class AbstractDataSource implements DataSource, Cloneable, Closeable{
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
 		return DriverManager.getLogWriter();
@@ -46,9 +47,10 @@ public abstract class AbstractDataSource implements DataSource, Cloneable{
 
 	/**
 	 * Support from JDK7
+	 * @since 1.7
 	 */
 	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		throw new SQLFeatureNotSupportedException("Simple DataSource can't support getParentLogger method!");
+		throw new SQLFeatureNotSupportedException("DataSource can't support getParentLogger method!");
 	}
 }

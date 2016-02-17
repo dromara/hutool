@@ -115,7 +115,7 @@ public class SecureUtil {
 		} catch (IOException e) {
 			throw new UtilException(e);
 		}finally{
-			FileUtil.close(in);
+			IoUtil.close(in);
 		}
 		return md.digest();
 	}

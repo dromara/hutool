@@ -26,6 +26,7 @@ import com.xiaoleilu.hutool.setting.AbsSetting;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
 import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
@@ -199,7 +200,7 @@ public class BasicSetting extends AbsSetting{
 			log.error("Load setting error!", e);
 			return false;
 		} finally {
-			FileUtil.close(settingStream);
+			IoUtil.close(settingStream);
 		}
 		return true;
 	}
@@ -264,7 +265,7 @@ public class BasicSetting extends AbsSetting{
 				map.put(key, value);
 			}
 		} finally {
-			FileUtil.close(reader);
+			IoUtil.close(reader);
 		}
 		return true;
 	}

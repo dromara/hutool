@@ -18,7 +18,7 @@ import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
@@ -166,7 +166,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 			log.error("Load GroupSet error!", e);
 			return false;
 		} finally {
-			FileUtil.close(settingStream);
+			IoUtil.close(settingStream);
 		}
 		return true;
 	}
@@ -230,7 +230,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 				valueSet.add(line);
 			}
 		} finally {
-			FileUtil.close(reader);
+			IoUtil.close(reader);
 		}
 		return true;
 	}

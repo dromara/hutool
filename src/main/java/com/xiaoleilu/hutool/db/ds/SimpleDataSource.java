@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.db.ds;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -140,5 +141,10 @@ public class SimpleDataSource extends AbstractDataSource{
 	@Override
 	public Connection getConnection(String username, String password) throws SQLException {
 		return DriverManager.getConnection(this.url, username, password);
+	}
+
+	@Override
+	public void close() throws IOException {
+		//Not need to close;
 	}
 }

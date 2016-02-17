@@ -263,7 +263,7 @@ public class IoUtil {
 			throw new IOException("Write content to OutputStream error!", e);
 		}finally {
 			if(isCloseOut) {
-				FileUtil.close(osw);
+				close(osw);
 			}
 		}
 	}
@@ -282,14 +282,26 @@ public class IoUtil {
 	
 	/**
 	 * 关闭
-	 * 
 	 * @param closeable 被关闭的对象
 	 */
 	public static void close(Closeable closeable) {
 		if (closeable == null) return;
 		try {
 			closeable.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
+		}
+	}
+	
+	/**
+	 * 关闭
+	 * @param closeable 被关闭的对象
+	 * @since 1.7
+	 */
+	public static void close(AutoCloseable closeable) {
+		if (closeable == null) return;
+		try {
+			closeable.close();
+		} catch (Exception e) {
 		}
 	}
 }

@@ -171,7 +171,7 @@ public class HttpUtil {
 			in = new URL(url).openStream();
 			return IoUtil.read(in, customCharset);
 		} finally {
-			FileUtil.close(in);
+			IoUtil.close(in);
 		}
 	}
 	
@@ -191,8 +191,8 @@ public class HttpUtil {
 			out = FileUtil.getOutputStream(destFile);
 			return IoUtil.copy(in, out);
 		} finally {
-			FileUtil.close(in);
-			FileUtil.close(out);
+			IoUtil.close(in);
+			IoUtil.close(out);
 		}
 	}
 

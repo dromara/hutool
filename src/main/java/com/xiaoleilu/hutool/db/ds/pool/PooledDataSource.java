@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.db.ds.pool;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -7,6 +8,8 @@ import java.util.Queue;
 
 import com.xiaoleilu.hutool.db.ds.AbstractDataSource;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
@@ -145,12 +148,33 @@ public class PooledDataSource extends AbstractDataSource{
 		return getConnectionDirect();
 	}
 	
+	@Override
+	synchronized public void close() throws IOException{
+		if(CollectionUtil.isNotEmpty(this.freePool)){
+			for (PooledConnection pooledConnection : freePool) {
+				IoUtil.close(pooledConnection);
+			}
+			
+			this.freePool.clear();
+			this.freePool = null;
+		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		IoUtil.close(this);
+	}
+	
 	/**
 	 * 直接从连接池中获取连接，如果池中无连接直接抛出异常
 	 * @return PooledConnection
 	 * @throws SQLException
 	 */
 	private PooledConnection getConnectionDirect() throws SQLException{
+		if(null == freePool){
+			throw new SQLException("PooledDataSource is closed!");
+		}
+		
 		int maxActive = config.getMaxActive();
 		if(maxActive <= 0 || maxActive < this.activeCount){
 			//超过最大使用限制
@@ -164,4 +188,5 @@ public class PooledDataSource extends AbstractDataSource{
 		activeCount++;
 		return conn.open();
 	}
+
 }

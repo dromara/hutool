@@ -421,7 +421,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		out.write(("\r\n" + BOUNDARY + "--\r\n").getBytes());
 		out.flush();
 		
-		FileUtil.close(out);
+		IoUtil.close(out);
 	}
 	// ---------------------------------------------------------------- Private method end
 	

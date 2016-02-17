@@ -211,3 +211,4 @@ Entity中toVo区别是否忽略大小写
 4、对Getter增加类型
 5、修改JSON部分，抽象JSON接口
 6、正则工具类中增加空值判断
+7、规范Close函数，删除FileUtil.close()，统一使用IoUtil.close()

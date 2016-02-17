@@ -10,6 +10,7 @@ import java.util.List;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 
 /**
  * 外部Jar的类加载器
@@ -38,7 +39,7 @@ public class JarClassLoader extends URLClassLoader{
 		try {
 			loader.addJar(jarFile);
 		} finally {
-			FileUtil.close(loader);
+			IoUtil.close(loader);
 		}
 		return loader;
 	}

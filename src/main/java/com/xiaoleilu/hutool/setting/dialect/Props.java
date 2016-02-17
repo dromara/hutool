@@ -15,6 +15,7 @@ import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
@@ -101,7 +102,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		} catch (IOException e) {
 			log.error("Load properties error!", e);
 		}finally{
-			FileUtil.close(in);
+			IoUtil.close(in);
 		}
 		this.propertiesFileUrl = propertiesFileUrl;
 	}

@@ -109,7 +109,7 @@ public class ZipUtil {
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			FileUtil.close(out);
+			IoUtil.close(out);
 		}
 	}
 
@@ -172,7 +172,7 @@ public class ZipUtil {
 				copy(zipFileObj, zipEntry, outItemFile);
 			}
 		}
-		FileUtil.close(zipFileObj);
+		IoUtil.close(zipFileObj);
 		return outFile;
 	}
 	
@@ -289,7 +289,7 @@ public class ZipUtil {
 			} catch (IOException e) {
 				throw new UtilException(e);
 			} finally {
-				FileUtil.close(in);
+				IoUtil.close(in);
 				closeEntry(out);
 			}
 		} else {// 如果是目录，则压缩压缩目录中的文件或子目录
@@ -352,8 +352,8 @@ public class ZipUtil {
 			out = FileUtil.getOutputStream(outItemFile);
 			IoUtil.copy(in, out);
 		} finally {
-			FileUtil.close(out);
-			FileUtil.close(in);
+			IoUtil.close(out);
+			IoUtil.close(in);
 		}
 	}
 	// ---------------------------------------------------------------------------------------------- Private method end

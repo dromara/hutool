@@ -6,6 +6,7 @@ import java.util.BitSet;
 
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.HashUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>
@@ -50,7 +51,7 @@ public class BitSetBloomFilter implements BloomFilter{
 				this.add(line);
 			}
 		}finally {
-			FileUtil.close(reader);
+			IoUtil.close(reader);
 		}
 	}
 	

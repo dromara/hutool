@@ -5,7 +5,7 @@ import java.util.logging.LogManager;
 
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 
 /**
  *  <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a> log.
@@ -49,7 +49,7 @@ public class JdkLogFactory extends LogFactory{
 				e.printStackTrace();
 			}
 		} finally {
-			FileUtil.close(in);
+			IoUtil.close(in);
 		}
 	}
 }

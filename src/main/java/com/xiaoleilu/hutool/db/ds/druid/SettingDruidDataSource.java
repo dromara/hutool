@@ -8,6 +8,7 @@ import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -125,4 +126,9 @@ public class SettingDruidDataSource extends DruidDataSource {
 		}
 	}
 	// ------------------------------------------------------------------- Private method end
+	
+	@Override
+	protected void finalize() throws Throwable {
+		IoUtil.close(this);
+	}
 }

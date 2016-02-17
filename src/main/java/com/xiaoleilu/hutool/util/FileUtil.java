@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -535,8 +534,8 @@ public class FileUtil {
 		try {
 			IoUtil.copy(input, output);
 		} finally {
-			close(output);
-			close(input);
+			IoUtil.close(output);
+			IoUtil.close(input);
 		}
 
 		if (src.length() != dest.length()) {
@@ -749,19 +748,6 @@ public class FileUtil {
 	}
 
 	/**
-	 * 关闭
-	 * 
-	 * @param closeable 被关闭的对象
-	 */
-	public static void close(Closeable closeable) {
-		if (closeable == null) return;
-		try {
-			closeable.close();
-		} catch (IOException e) {
-		}
-	}
-
-	/**
 	 * 检查两个文件是否是同一个文件
 	 * 
 	 * @param file1 文件1
@@ -935,7 +921,7 @@ public class FileUtil {
 			}
 			return collection;
 		} finally {
-			close(reader);
+			IoUtil.close(reader);
 		}
 	}
 
@@ -954,7 +940,7 @@ public class FileUtil {
 			in = url.openStream();
 			return IoUtil.readLines(in, charset, collection);
 		} finally {
-			close(in);
+			IoUtil.close(in);
 		}
 	}
 
@@ -1012,7 +998,7 @@ public class FileUtil {
 		} catch (IOException e) {
 			throw new IOException(e);
 		} finally {
-			close(reader);
+			IoUtil.close(reader);
 		}
 		return result;
 	}
@@ -1080,7 +1066,7 @@ public class FileUtil {
 			writer.print(content);
 			writer.flush();
 		} finally {
-			close(writer);
+			IoUtil.close(writer);
 		}
 		return file;
 	}
@@ -1114,7 +1100,7 @@ public class FileUtil {
 			writer.print(content);
 			writer.flush();
 		} finally {
-			close(writer);
+			IoUtil.close(writer);
 		}
 		return file;
 	}
@@ -1161,7 +1147,7 @@ public class FileUtil {
 			in = url.openStream();
 			return IoUtil.read(in, charset);
 		} finally {
-			close(in);
+			IoUtil.close(in);
 		}
 	}
 
@@ -1209,7 +1195,7 @@ public class FileUtil {
 				}
 			}
 		} finally {
-			close(writer);
+			IoUtil.close(writer);
 		}
 	}
 
@@ -1258,7 +1244,7 @@ public class FileUtil {
 			out.write(data, off, len);
 			out.flush();
 		} finally {
-			close(out);
+			IoUtil.close(out);
 		}
 	}
 
@@ -1290,7 +1276,7 @@ public class FileUtil {
 			in = new FileInputStream(file);
 			in.read(bytes);
 		} finally {
-			close(in);
+			IoUtil.close(in);
 		}
 
 		return bytes;
@@ -1310,7 +1296,7 @@ public class FileUtil {
 			out = new FileOutputStream(dest);
 			IoUtil.copy(in, out);
 		} finally {
-			close(out);
+			IoUtil.close(out);
 		}
 	}
 
@@ -1338,7 +1324,7 @@ public class FileUtil {
 			in = new FileInputStream(file);
 			IoUtil.copy(in, out);
 		} finally {
-			close(in);
+			IoUtil.close(in);
 		}
 	}
 

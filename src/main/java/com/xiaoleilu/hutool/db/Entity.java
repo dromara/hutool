@@ -12,7 +12,6 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -194,7 +193,7 @@ public class Entity extends Dict{
 			} catch (SQLException | IOException e) {
 				throw new DbRuntimeException(e);
 			}finally{
-				FileUtil.close(reader);
+				IoUtil.close(reader);
 			}
 		}else if(obj instanceof RowId){
 			final RowId rowId = (RowId)obj;

@@ -164,7 +164,7 @@ public class VelocityUtil {
 		} catch (IOException e) {
 			throw new UtilException(StrUtil.format("Write Velocity content to [{}] error!", destPath), e);
 		} finally {
-			FileUtil.close(writer);
+			IoUtil.close(writer);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class VelocityUtil {
 		} catch (Exception e) {
 			throw new UtilException(StrUtil.format("Write Velocity content template by [{}] to response error!", templateFileName), e);
 		} finally {
-			FileUtil.close(writer);
+			IoUtil.close(writer);
 		}
 	}
 	

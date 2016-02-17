@@ -175,7 +175,7 @@ public class XmlUtil {
 		} catch (Exception e) {
 			throw new UtilException("Trans xml document to string error!", e);
 		} finally {
-			FileUtil.close(writer);
+			IoUtil.close(writer);
 		}
 	}
 
@@ -317,7 +317,7 @@ public class XmlUtil {
 			xmlenc = new XMLEncoder(new BufferedOutputStream(fos));
 			xmlenc.writeObject(t);
 		} finally {
-			FileUtil.close(fos);
+			IoUtil.close(fos);
 			if (xmlenc != null) {
 				xmlenc.close();
 			}
@@ -342,7 +342,7 @@ public class XmlUtil {
 			xmldec = new XMLDecoder(new BufferedInputStream(fis));
 			result = xmldec.readObject();
 		} finally {
-			FileUtil.close(fis);
+			IoUtil.close(fis);
 			if (xmldec != null) {
 				xmldec.close();
 			}

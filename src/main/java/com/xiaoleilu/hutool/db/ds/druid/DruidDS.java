@@ -11,7 +11,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -137,7 +137,7 @@ public class DruidDS {
 		
 		DruidDataSource dds = dsMap.get(dsName);
 		if (dds != null) {
-			FileUtil.close(dds);
+			IoUtil.close(dds);
 			dsMap.remove(dsName);
 		}
 	}
