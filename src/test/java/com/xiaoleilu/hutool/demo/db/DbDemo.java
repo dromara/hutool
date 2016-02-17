@@ -63,6 +63,7 @@ public class DbDemo {
 		DataSource ds = DruidDS.getDataSource("test");
 
 		//当然，如果你不喜欢用DruidDS类，你也可以自己去实例化连接池的数据源 具体的配置参数请参阅Druid官方文档
+		@SuppressWarnings("resource")
 		DruidDataSource ds2 = new DruidDataSource();
 		ds2.setUrl("jdbc:mysql://fedora.vmware:3306/extractor");
 		ds2.setUsername("root");
