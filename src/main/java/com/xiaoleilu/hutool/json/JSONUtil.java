@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.util.ObjectUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * JSON工具类
@@ -82,7 +83,7 @@ public class JSONUtil {
 
 	/**
 	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
-	 * 为了能在HTML中较好的显示，会将</转义为<\/<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
 	 * @param string A String
@@ -100,67 +101,76 @@ public class JSONUtil {
 		}
 	}
 
-	public static Writer quote(String string, Writer w) throws IOException {
-		if (string == null || string.length() == 0) {
-			w.write("\"\"");
-			return w;
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 *  为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 *  JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 * @param string A String
+	 * @param writer Writer
+	 * @return A String correctly formatted for insertion in a JSON text.
+	 * @throws IOException
+	 */
+	public static Writer quote(String string, Writer writer) throws IOException {
+		if (StrUtil.isEmpty(string)) {
+			writer.write("\"\"");
+			return writer;
 		}
 
-		char b;
-		char c = 0;
+		char b;		//back char
+		char c = 0; //current char
 		String hhhh;
 		int i;
 		int len = string.length();
 
-		w.write('"');
+		writer.write('"');
 		for (i = 0; i < len; i++) {
 			b = c;
 			c = string.charAt(i);
 			switch (c) {
 				case '\\':
 				case '"':
-					w.write('\\');
-					w.write(c);
+					writer.write('\\');
+					writer.write(c);
 					break;
 				case '/':
 					if (b == '<') {
-						w.write('\\');
+						writer.write('\\');
 					}
-					w.write(c);
+					writer.write(c);
 					break;
 				case '\b':
-					w.write("\\b");
+					writer.write("\\b");
 					break;
 				case '\t':
-					w.write("\\t");
+					writer.write("\\t");
 					break;
 				case '\n':
-					w.write("\\n");
+					writer.write("\\n");
 					break;
 				case '\f':
-					w.write("\\f");
+					writer.write("\\f");
 					break;
 				case '\r':
-					w.write("\\r");
+					writer.write("\\r");
 					break;
 				default:
 					if (c < ' ' || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
-						w.write("\\u");
+						writer.write("\\u");
 						hhhh = Integer.toHexString(c);
-						w.write("0000", 0, 4 - hhhh.length());
-						w.write(hhhh);
+						writer.write("0000", 0, 4 - hhhh.length());
+						writer.write(hhhh);
 					} else {
-						w.write(c);
+						writer.write(c);
 					}
 			}
 		}
-		w.write('"');
-		return w;
+		writer.write('"');
+		return writer;
 	}
 	
 	/**
-	 * Wrap an object, if necessary. <br>
-	 * If the object is null, return the JSONNull.NULL object. <br>
+	 * 在需要的时候包装对象<br>
+	 * If <code>null</code> -> <code>JSONNull.NULL</code><br>
 	 * If it is an array or collection, wrap it in a JSONArray. <br>
 	 * If it is a map, wrap it in a JSONObject. <br>
 	 * If it is a standard property (Double, String, et al) then it is already wrapped. <br>
@@ -183,7 +193,7 @@ public class JSONUtil {
 				Collection<?> coll = (Collection<?>) object;
 				return new JSONArray(coll);
 			}
-			if (object.getClass().isArray()) {
+			if (ObjectUtil.isArray(object)) {
 				return new JSONArray(object);
 			}
 			if (object instanceof Map) {
@@ -292,10 +302,13 @@ public class JSONUtil {
 	}
 	
 	/**
-	 * Make a JSON text of an Object value. If the object has an value.toJSONString() method, then that method will be used to produce the JSON text. The method is required to produce a strictly
-	 * conforming text. If the object does not contain a toJSONString method (which is the most common case), then a text will be produced by other means. If the value is an array or Collection, then
-	 * a JSONArray will be made from it and its toJSONString method will be called. If the value is a MAP, then a JSONObject will be made from it and its toJSONString method will be called. Otherwise,
-	 * the value's toString method will be called, and the result will be quoted.
+	 * Make a JSON text of an Object value. <br>
+	 * If the object has an value.toJSONString() method, then that method will be used to produce the JSON text. <br>
+	 * The method is required to produce a strictly conforming text. <br>
+	 * If the object does not contain a toJSONString method (which is the most common case), then a text will be produced by other means. <br>
+	 * If the value is an array or Collection, then a JSONArray will be made from it and its toJSONString method will be called. <br>
+	 * If the value is a MAP, then a JSONObject will be made from it and its toJSONString method will be called. <br>
+	 * Otherwise, the value's toString method will be called, and the result will be quoted.<br>
 	 *
 	 * <p>
 	 * Warning: This method assumes that the data structure is acyclical.
@@ -339,5 +352,55 @@ public class JSONUtil {
 			return new JSONArray(value).toString();
 		}
 		return quote(value.toString());
+	}
+	
+	/**
+	 * Try to convert a string into a number, boolean, or null. If the string can't be converted, return the string.
+	 *
+	 * @param string A String.
+	 * @return A simple JSON value.
+	 */
+	protected static Object stringToValue(String string) {
+		Double d;
+		if(null == string || "null".equalsIgnoreCase(string)){
+			return JSONNull.NULL;
+		}
+		
+		if (StrUtil.EMPTY.equals(string)) {
+			return string;
+		}
+		if ("true".equalsIgnoreCase(string)) {
+			return Boolean.TRUE;
+		}
+		if ("false".equalsIgnoreCase(string)) {
+			return Boolean.FALSE;
+		}
+
+		/*
+		 * If it might be a number, try converting it. If a number cannot be produced, then the value will just be a string.
+		 */
+
+		char b = string.charAt(0);
+		if ((b >= '0' && b <= '9') || b == '-') {
+			try {
+				if (string.indexOf('.') > -1 || string.indexOf('e') > -1 || string.indexOf('E') > -1) {
+					d = Double.valueOf(string);
+					if (!d.isInfinite() && !d.isNaN()) {
+						return d;
+					}
+				} else {
+					Long myLong = new Long(string);
+					if (string.equals(myLong.toString())) {
+						if (myLong == myLong.intValue()) {
+							return myLong.intValue();
+						} else {
+							return myLong;
+						}
+					}
+				}
+			} catch (Exception ignore) {
+			}
+		}
+		return string;
 	}
 }

@@ -3,7 +3,6 @@ package com.xiaoleilu.hutool.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
@@ -270,48 +269,6 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 			throw new JSONException("JSONObject[" + key + "] is not a JSONArray.");
 		}
 		return this;
-	}
-
-	/**
-	 * Get an array of field names from a JSONObject.
-	 *
-	 * @return An array of field names, or null if there are no names.
-	 */
-	public static String[] getNames(JSONObject jo) {
-		int length = jo.length();
-		if (length == 0) {
-			return null;
-		}
-		Iterator<String> iterator = jo.keys();
-		String[] names = new String[length];
-		int i = 0;
-		while (iterator.hasNext()) {
-			names[i] = iterator.next();
-			i += 1;
-		}
-		return names;
-	}
-
-	/**
-	 * Get an array of field names from an Object.
-	 *
-	 * @return An array of field names, or null if there are no names.
-	 */
-	public static String[] getNames(Object object) {
-		if (object == null) {
-			return null;
-		}
-		Class<?> klass = object.getClass();
-		Field[] fields = klass.getFields();
-		int length = fields.length;
-		if (length == 0) {
-			return null;
-		}
-		String[] names = new String[length];
-		for (int i = 0; i < length; i += 1) {
-			names[i] = fields[i].getName();
-		}
-		return names;
 	}
 
 	/**
@@ -681,55 +638,6 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 		} catch (Throwable exception) {
 			return false;
 		}
-	}
-
-	/**
-	 * Try to convert a string into a number, boolean, or null. If the string can't be converted, return the string.
-	 *
-	 * @param string A String.
-	 * @return A simple JSON value.
-	 */
-	public static Object stringToValue(String string) {
-		Double d;
-		if (string.equals("")) {
-			return string;
-		}
-		if (string.equalsIgnoreCase("true")) {
-			return Boolean.TRUE;
-		}
-		if (string.equalsIgnoreCase("false")) {
-			return Boolean.FALSE;
-		}
-		if (string.equalsIgnoreCase("null")) {
-			return JSONNull.NULL;
-		}
-
-		/*
-		 * If it might be a number, try converting it. If a number cannot be produced, then the value will just be a string.
-		 */
-
-		char b = string.charAt(0);
-		if ((b >= '0' && b <= '9') || b == '-') {
-			try {
-				if (string.indexOf('.') > -1 || string.indexOf('e') > -1 || string.indexOf('E') > -1) {
-					d = Double.valueOf(string);
-					if (!d.isInfinite() && !d.isNaN()) {
-						return d;
-					}
-				} else {
-					Long myLong = new Long(string);
-					if (string.equals(myLong.toString())) {
-						if (myLong == myLong.intValue()) {
-							return myLong.intValue();
-						} else {
-							return myLong;
-						}
-					}
-				}
-			} catch (Exception ignore) {
-			}
-		}
-		return string;
 	}
 
 	/**

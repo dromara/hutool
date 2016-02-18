@@ -58,7 +58,9 @@ public class JSONTokener {
 	}
 
 	/**
-	 * Back up one character. This provides a sort of lookahead capability, so that you can test for a digit or letter before attempting to parse the next number or identifier.
+	 * Back up one character. <br>
+	 * This provides a sort of lookahead capability, <br>
+	 * so that you can test for a digit or letter before attempting to parse the next number or identifier.
 	 */
 	public void back() throws JSONException {
 		if (this.usePrevious || this.index <= 0) {
@@ -199,8 +201,8 @@ public class JSONTokener {
 	}
 
 	/**
-	 * Return the characters up to the next close quote character. Backslash processing is done. The formal JSON format does not allow strings in single quotes, but an implementation is allowed to
-	 * accept them.
+	 * Return the characters up to the next close quote character. Backslash processing is done. <br>
+	 * The formal JSON format does not allow strings in single quotes, but an implementation is allowed to accept them.
 	 * 
 	 * @param quote The quoting character, either <code>"</code>&nbsp;<small>(double quote)</small> or <code>'</code>&nbsp;<small>(single quote)</small>.
 	 * @return A String.
@@ -336,7 +338,7 @@ public class JSONTokener {
 		if ("".equals(string)) {
 			throw this.syntaxError("Missing value");
 		}
-		return JSONObject.stringToValue(string);
+		return JSONUtil.stringToValue(string);
 	}
 
 	/**
