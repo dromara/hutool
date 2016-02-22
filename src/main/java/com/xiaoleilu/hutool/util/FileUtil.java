@@ -16,6 +16,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -691,7 +692,107 @@ public class FileUtil {
 	public static boolean isFile(File file) {
 		return (file == null) ? false : file.isDirectory();
 	}
+	
+	/**
+	 * 检查两个文件是否是同一个文件
+	 * 
+	 * @param file1 文件1
+	 * @param file2 文件2
+	 * @return 是否相同
+	 */
+	public static boolean equals(File file1, File file2) {
+		try {
+			file1 = file1.getCanonicalFile();
+			file2 = file2.getCanonicalFile();
+		} catch (IOException ignore) {
+			return false;
+		}
+		return file1.equals(file2);
+	}
+	
+	/**
+	 * 获得最后一个文件路径分隔符的位置
+	 * 
+	 * @param filePath 文件路径
+	 * @return 最后一个文件路径分隔符的位置
+	 */
+	public static int indexOfLastSeparator(String filePath) {
+		if (filePath == null) {
+			return -1;
+		}
+		int lastUnixPos = filePath.lastIndexOf(UNIX_SEPARATOR);
+		int lastWindowsPos = filePath.lastIndexOf(WINDOWS_SEPARATOR);
+		return (lastUnixPos >= lastWindowsPos) ? lastUnixPos : lastWindowsPos;
+	}
+	
+	/**
+	 * 判断文件是否被改动<br>
+	 * 如果文件对象为 null 或者文件不存在，被视为改动
+	 * 
+	 * @param file 文件对象
+	 * @param lastModifyTime 上次的改动时间
+	 * @return 是否被改动
+	 */
+	public static boolean isModifed(File file, long lastModifyTime) {
+		if (null == file || false == file.exists()) {
+			return true;
+		}
+		return file.lastModified() != lastModifyTime;
+	}
 
+	/**
+	 * 修复路径<br>
+	 * 1. 统一用 / <br>
+	 * 2. 多个 / 转换为一个
+	 * 
+	 * @param path 原路径
+	 * @return 修复后的路径
+	 */
+	public static String normalize(String path) {
+		return path.replaceAll("[/\\\\]{1,}", "/");
+	}
+
+	/**
+	 * 获得相对子路径
+	 * 
+	 * @param rootDir 绝对父路径
+	 * @param filePath 文件路径
+	 * @return 相对子路径
+	 */
+	public static String subPath(String rootDir, String filePath) {
+		return subPath(rootDir, file(filePath));
+	}
+
+	/**
+	 * 获得相对子路径
+	 * 
+	 * @param rootDir 绝对父路径
+	 * @param file 文件
+	 * @return 相对子路径
+	 */
+	public static String subPath(String rootDir, File file) {
+		if (StrUtil.isEmpty(rootDir)) {
+		}
+
+		String subPath = null;
+		try {
+			subPath = file.getCanonicalPath();
+		} catch (IOException e) {
+			throw new UtilException(e);
+		}
+
+		if (StrUtil.isNotEmpty(rootDir) && StrUtil.isNotEmpty(subPath)) {
+			rootDir = normalize(rootDir);
+			subPath = normalize(subPath);
+
+			if (subPath != null && subPath.toLowerCase().startsWith(subPath.toLowerCase())) {
+				subPath = subPath.substring(rootDir.length() + 1);
+			}
+		}
+		return subPath;
+	}
+
+	//-------------------------------------------------------------------------------------------- name start
 	/**
 	 * 返回主文件名
 	 * 
@@ -735,35 +836,27 @@ public class FileUtil {
 	}
 
 	/**
-	 * 返回扩展名
+	 * 获得文件的扩展名
 	 * 
-	 * @param fileName 完整文件名
+	 * @param fileName 文件名
 	 * @return 扩展名
 	 */
 	public static String extName(String fileName) {
-		if (StrUtil.isBlank(fileName) || false == fileName.contains(StrUtil.DOT)) {
+		if (fileName == null) {
 			return null;
 		}
-		return StrUtil.subSuf(fileName, fileName.lastIndexOf(StrUtil.DOT) + 1);
-	}
-
-	/**
-	 * 检查两个文件是否是同一个文件
-	 * 
-	 * @param file1 文件1
-	 * @param file2 文件2
-	 * @return 是否相同
-	 */
-	public static boolean equals(File file1, File file2) {
-		try {
-			file1 = file1.getCanonicalFile();
-			file2 = file2.getCanonicalFile();
-		} catch (IOException ignore) {
-			return false;
+		int index = fileName.lastIndexOf(StrUtil.DOT);
+		if (index == -1) {
+			return StrUtil.EMPTY;
+		} else {
+			String ext = fileName.substring(index + 1);
+			// 扩展名中不能包含路径相关的符号
+			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
 		}
-		return file1.equals(file2);
 	}
+	//-------------------------------------------------------------------------------------------- name end
 
+	//-------------------------------------------------------------------------------------------- in start
 	/**
 	 * 获得输入流
 	 * 
@@ -785,84 +878,41 @@ public class FileUtil {
 	public static BufferedInputStream getInputStream(String path) throws FileNotFoundException {
 		return getInputStream(file(path));
 	}
-
+	
 	/**
-	 * 获得一个带缓存的写入对象
+	 * 获得一个文件读取器
 	 * 
-	 * @param path 输出路径，绝对路径
-	 * @param charset 字符集
-	 * @param isAppend 是否追加
+	 * @param file 文件
 	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
-	public static BufferedWriter getBufferedWriter(String path, String charset, boolean isAppend) throws IOException {
-		return getBufferedWriter(touch(path), charset, isAppend);
+	public static BufferedReader getUtf8Reader(File file) throws IOException {
+		return getReader(file, CharsetUtil.CHARSET_UTF_8);
 	}
-
+	
 	/**
-	 * 获得一个带缓存的写入对象
+	 * 获得一个文件读取器
 	 * 
-	 * @param file 输出文件
-	 * @param charset 字符集
-	 * @param isAppend 是否追加
+	 * @param path 文件路径
 	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
-	public static BufferedWriter getBufferedWriter(File file, String charset, boolean isAppend) throws IOException {
-		if (false == file.exists()) {
-			file.createNewFile();
-		}
-		return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, isAppend), charset));
+	public static BufferedReader getUtf8Reader(String path) throws IOException {
+		return getReader(path, CharsetUtil.CHARSET_UTF_8);
 	}
-
+	
 	/**
-	 * 获得一个打印写入对象，可以有print
-	 * 
-	 * @param path 输出路径，绝对路径
-	 * @param charset 字符集
-	 * @param isAppend 是否追加
-	 * @return 打印对象
-	 * @throws IOException
-	 */
-	public static PrintWriter getPrintWriter(String path, String charset, boolean isAppend) throws IOException {
-		return new PrintWriter(getBufferedWriter(path, charset, isAppend));
-	}
-
-	/**
-	 * 获得一个打印写入对象，可以有print
+	 * 获得一个文件读取器
 	 * 
 	 * @param file 文件
-	 * @param charset 字符集
-	 * @param isAppend 是否追加
-	 * @return 打印对象
+	 * @param charsetName 字符集
+	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
-	public static PrintWriter getPrintWriter(File file, String charset, boolean isAppend) throws IOException {
-		return new PrintWriter(getBufferedWriter(file, charset, isAppend));
+	public static BufferedReader getReader(File file, String charsetName) throws IOException {
+		return IoUtil.getReader(getInputStream(file), charsetName);
 	}
-
-	/**
-	 * 获得一个输出流对象
-	 * 
-	 * @param file 文件
-	 * @return 输出流对象
-	 * @throws IOException
-	 */
-	public static BufferedOutputStream getOutputStream(File file) throws IOException {
-		return new BufferedOutputStream(new FileOutputStream(file));
-	}
-
-	/**
-	 * 获得一个输出流对象
-	 * 
-	 * @param path 输出到的文件路径，绝对路径
-	 * @return 输出流对象
-	 * @throws IOException
-	 */
-	public static BufferedOutputStream getOutputStream(String path) throws IOException {
-		return getOutputStream(touch(path));
-	}
-
+	
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -871,10 +921,22 @@ public class FileUtil {
 	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
-	public static BufferedReader getReader(File file, String charset) throws IOException {
+	public static BufferedReader getReader(File file, Charset charset) throws IOException {
 		return IoUtil.getReader(getInputStream(file), charset);
 	}
 
+	/**
+	 * 获得一个文件读取器
+	 * 
+	 * @param path 绝对路径
+	 * @param charsetName 字符集
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedReader getReader(String path, String charsetName) throws IOException {
+		return getReader(file(path), charsetName);
+	}
+	
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -883,10 +945,138 @@ public class FileUtil {
 	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
-	public static BufferedReader getReader(String path, String charset) throws IOException {
+	public static BufferedReader getReader(String path, Charset charset) throws IOException {
 		return getReader(file(path), charset);
 	}
+	
+	//-------------------------------------------------------------------------------------------- in end
+	
+	/**
+	 * 读取文件所有数据<br>
+	 * 文件的长度不能超过Integer.MAX_VALUE
+	 * 
+	 * @param file 文件
+	 * @return 字节码
+	 * @throws IOException
+	 */
+	public static byte[] readBytes(File file) throws IOException {
+		// check
+		if (!file.exists()) {
+			throw new FileNotFoundException("File not exist: " + file);
+		}
+		if (!file.isFile()) {
+			throw new IOException("Not a file:" + file);
+		}
 
+		long len = file.length();
+		if (len >= Integer.MAX_VALUE) {
+			throw new IOException("File is larger then max array size");
+		}
+
+		byte[] bytes = new byte[(int) len];
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(file);
+			in.read(bytes);
+		} finally {
+			IoUtil.close(in);
+		}
+
+		return bytes;
+	}
+	
+	/**
+	 * 读取文件内容
+	 * 
+	 * @param file 文件
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readUtf8String(File file) throws IOException {
+		return readString(file, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 读取文件内容
+	 * 
+	 * @param path 文件路径
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readUtf8String(String path) throws IOException {
+		return readString(path, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 读取文件内容
+	 * 
+	 * @param file 文件
+	 * @param charsetName 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readString(File file, String charsetName) throws IOException {
+		return new String(readBytes(file), charsetName);
+	}
+	
+	/**
+	 * 读取文件内容
+	 * 
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readString(File file, Charset charset) throws IOException {
+		return new String(readBytes(file), charset);
+	}
+	
+	/**
+	 * 读取文件内容
+	 * 
+	 * @param path 文件路径
+	 * @param charsetName 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readString(String path, String charsetName) throws IOException {
+		return readString(file(path), charsetName);
+	}
+
+	/**
+	 * 读取文件内容
+	 * 
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readString(String path, Charset charset) throws IOException {
+		return readString(file(path), charset);
+	}
+
+	/**
+	 * 读取文件内容
+	 * 
+	 * @param url 文件URL
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String readString(URL url, String charset) throws IOException {
+		if (url == null) {
+			throw new RuntimeException("Empty url provided!");
+		}
+
+		InputStream in = null;
+		try {
+			in = url.openStream();
+			return IoUtil.read(in, charset);
+		} finally {
+			IoUtil.close(in);
+		}
+	}
+	
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1003,39 +1193,121 @@ public class FileUtil {
 		return result;
 	}
 
+	//-------------------------------------------------------------------------------------------- out start
 	/**
-	 * 获得文件的扩展名
+	 * 获得一个输出流对象
 	 * 
-	 * @param fileName 文件名
-	 * @return 扩展名
+	 * @param file 文件
+	 * @return 输出流对象
+	 * @throws IOException
 	 */
-	public static String getExtension(String fileName) {
-		if (fileName == null) {
-			return null;
-		}
-		int index = fileName.lastIndexOf(StrUtil.DOT);
-		if (index == -1) {
-			return StrUtil.EMPTY;
-		} else {
-			String ext = fileName.substring(index + 1);
-			// 扩展名中不能包含路径相关的符号
-			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
-		}
+	public static BufferedOutputStream getOutputStream(File file) throws IOException {
+		return new BufferedOutputStream(new FileOutputStream(file));
 	}
 
 	/**
-	 * 获得最后一个文件路径分隔符的位置
+	 * 获得一个输出流对象
 	 * 
-	 * @param filePath 文件路径
-	 * @return 最后一个文件路径分隔符的位置
+	 * @param path 输出到的文件路径，绝对路径
+	 * @return 输出流对象
+	 * @throws IOException
 	 */
-	public static int indexOfLastSeparator(String filePath) {
-		if (filePath == null) {
-			return -1;
+	public static BufferedOutputStream getOutputStream(String path) throws IOException {
+		return getOutputStream(touch(path));
+	}
+	
+	/**
+	 * 获得一个带缓存的写入对象
+	 * 
+	 * @param path 输出路径，绝对路径
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedWriter getWriter(String path, String charset, boolean isAppend) throws IOException {
+		return getWriter(touch(path), charset, isAppend);
+	}
+	
+	/**
+	 * 获得一个带缓存的写入对象
+	 * 
+	 * @param file 输出文件
+	 * @param charsetName 字符集
+	 * @param isAppend 是否追加
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedWriter getWriter(File file, String charsetName, boolean isAppend) throws IOException {
+		return getWriter(file, Charset.forName(charsetName), isAppend);
+	}
+
+	/**
+	 * 获得一个带缓存的写入对象
+	 * 
+	 * @param file 输出文件
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedWriter getWriter(File file, Charset charset, boolean isAppend) throws IOException {
+		if (false == file.exists()) {
+			file.createNewFile();
 		}
-		int lastUnixPos = filePath.lastIndexOf(UNIX_SEPARATOR);
-		int lastWindowsPos = filePath.lastIndexOf(WINDOWS_SEPARATOR);
-		return (lastUnixPos >= lastWindowsPos) ? lastUnixPos : lastWindowsPos;
+		return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, isAppend), charset));
+	}
+
+	/**
+	 * 获得一个打印写入对象，可以有print
+	 * 
+	 * @param path 输出路径，绝对路径
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 打印对象
+	 * @throws IOException
+	 */
+	public static PrintWriter getPrintWriter(String path, String charset, boolean isAppend) throws IOException {
+		return new PrintWriter(getWriter(path, charset, isAppend));
+	}
+
+	/**
+	 * 获得一个打印写入对象，可以有print
+	 * 
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 打印对象
+	 * @throws IOException
+	 */
+	public static PrintWriter getPrintWriter(File file, String charset, boolean isAppend) throws IOException {
+		return new PrintWriter(getWriter(file, charset, isAppend));
+	}
+	
+	//-------------------------------------------------------------------------------------------- out end
+
+	/**
+	 * 将String写入文件，覆盖模式，字符集为UTF-8
+	 * 
+	 * @param content 写入的内容
+	 * @param path 文件路径
+	 * @return 写入的文件
+	 * @throws IOException
+	 */
+	public static File writeUtf8String(String content, String path) throws IOException {
+		return writeString(content, path, CharsetUtil.UTF_8);
+	}
+	
+	/**
+	 * 将String写入文件，覆盖模式，字符集为UTF-8
+	 * 
+	 * @param content 写入的内容
+	 * @param file 文件
+	 * @return 写入的文件
+	 * @throws IOException
+	 */
+	public static File writeUtf8String(String content, File file) throws IOException {
+		return writeString(content, file, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -1106,52 +1378,6 @@ public class FileUtil {
 	}
 
 	/**
-	 * 读取文件内容
-	 * 
-	 * @param file 文件
-	 * @param charset 字符集
-	 * @return 内容
-	 * @throws IOException
-	 */
-	public static String readString(File file, String charset) throws IOException {
-		return new String(readBytes(file), charset);
-	}
-
-	/**
-	 * 读取文件内容
-	 * 
-	 * @param path 文件路径
-	 * @param charset 字符集
-	 * @return 内容
-	 * @throws IOException
-	 */
-	public static String readString(String path, String charset) throws IOException {
-		return readString(file(path), charset);
-	}
-
-	/**
-	 * 读取文件内容
-	 * 
-	 * @param url 文件URL
-	 * @param charset 字符集
-	 * @return 内容
-	 * @throws IOException
-	 */
-	public static String readString(URL url, String charset) throws IOException {
-		if (url == null) {
-			throw new RuntimeException("Empty url provided!");
-		}
-
-		InputStream in = null;
-		try {
-			in = url.openStream();
-			return IoUtil.read(in, charset);
-		} finally {
-			IoUtil.close(in);
-		}
-	}
-
-	/**
 	 * 将列表写入文件，覆盖模式
 	 * 
 	 * @param list 列表
@@ -1199,7 +1425,6 @@ public class FileUtil {
 		}
 	}
 
-	// -------------------------------------------------------------------------- Write and read bytes
 	/**
 	 * 写数据到文件中
 	 * 
@@ -1208,7 +1433,7 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static void writeBytes(byte[] data, String path) throws IOException {
-		writeBytes(touch(path), data);
+		writeBytes(data, touch(path));
 	}
 
 	/**
@@ -1218,21 +1443,21 @@ public class FileUtil {
 	 * @param data 数据
 	 * @throws IOException
 	 */
-	public static void writeBytes(File dest, byte[] data) throws IOException {
-		writeBytes(dest, data, 0, data.length, false);
+	public static void writeBytes(byte[] data, File dest) throws IOException {
+		writeBytes(data, dest, 0, data.length, false);
 	}
 
 	/**
 	 * 写入数据到文件
 	 * 
-	 * @param dest 目标文件
 	 * @param data 数据
+	 * @param dest 目标文件
 	 * @param off
 	 * @param len
 	 * @param append
 	 * @throws IOException
 	 */
-	public static void writeBytes(File dest, byte[] data, int off, int len, boolean append) throws IOException {
+	public static void writeBytes(byte[] data, File dest, int off, int len, boolean append) throws IOException {
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
 				throw new IOException("Not a file: " + dest);
@@ -1248,41 +1473,6 @@ public class FileUtil {
 		}
 	}
 
-	/**
-	 * 读取文件所有数据<br>
-	 * 文件的长度不能超过Integer.MAX_VALUE
-	 * 
-	 * @param file 文件
-	 * @return 字节码
-	 * @throws IOException
-	 */
-	public static byte[] readBytes(File file) throws IOException {
-		// check
-		if (!file.exists()) {
-			throw new FileNotFoundException("File not exist: " + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException("Not a file:" + file);
-		}
-
-		long len = file.length();
-		if (len >= Integer.MAX_VALUE) {
-			throw new IOException("File is larger then max array size");
-		}
-
-		byte[] bytes = new byte[(int) len];
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(file);
-			in.read(bytes);
-		} finally {
-			IoUtil.close(in);
-		}
-
-		return bytes;
-	}
-
-	// ---------------------------------------------------------------- stream
 	/**
 	 * 将流的内容写入文件<br>
 	 * 
@@ -1339,74 +1529,7 @@ public class FileUtil {
 		writeToStream(touch(fullFilePath), out);
 	}
 
-	/**
-	 * 判断文件是否被改动<br>
-	 * 如果文件对象为 null 或者文件不存在，被视为改动
-	 * 
-	 * @param file 文件对象
-	 * @param lastModifyTime 上次的改动时间
-	 * @return 是否被改动
-	 */
-	public static boolean isModifed(File file, long lastModifyTime) {
-		if (null == file || false == file.exists()) {
-			return true;
-		}
-		return file.lastModified() != lastModifyTime;
-	}
-
-	/**
-	 * 修复路径<br>
-	 * 1. 统一用 / <br>
-	 * 2. 多个 / 转换为一个
-	 * 
-	 * @param path 原路径
-	 * @return 修复后的路径
-	 */
-	public static String normalize(String path) {
-		return path.replaceAll("[/\\\\]{1,}", "/");
-	}
-
-	/**
-	 * 获得相对子路径
-	 * 
-	 * @param rootDir 绝对父路径
-	 * @param filePath 文件路径
-	 * @return 相对子路径
-	 */
-	public static String subPath(String rootDir, String filePath) {
-		return subPath(rootDir, file(filePath));
-	}
-
-	/**
-	 * 获得相对子路径
-	 * 
-	 * @param rootDir 绝对父路径
-	 * @param file 文件
-	 * @return 相对子路径
-	 */
-	public static String subPath(String rootDir, File file) {
-		if (StrUtil.isEmpty(rootDir)) {
-		}
-
-		String subPath = null;
-		try {
-			subPath = file.getCanonicalPath();
-		} catch (IOException e) {
-			throw new UtilException(e);
-		}
-
-		if (StrUtil.isNotEmpty(rootDir) && StrUtil.isNotEmpty(subPath)) {
-			rootDir = normalize(rootDir);
-			subPath = normalize(subPath);
-
-			if (subPath != null && subPath.toLowerCase().startsWith(subPath.toLowerCase())) {
-				subPath = subPath.substring(rootDir.length() + 1);
-			}
-		}
-		return subPath;
-	}
-
-	// -------------------------------------------------------------------------- Interface
+	// -------------------------------------------------------------------------- Interface start
 	/**
 	 * Reader处理接口
 	 * 
@@ -1417,7 +1540,5 @@ public class FileUtil {
 	public interface ReaderHandler<T> {
 		public T handle(BufferedReader reader) throws IOException;
 	}
-
-	// ---------------------------------------------------------------------------------------- Private method start
-	// ---------------------------------------------------------------------------------------- Private method end
+	// -------------------------------------------------------------------------- Interface end
 }

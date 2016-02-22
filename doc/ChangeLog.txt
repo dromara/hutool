@@ -213,3 +213,4 @@ Entity中toVo区别是否忽略大小写
 6、正则工具类中增加空值判断
 7、规范Close函数，删除FileUtil.close()，统一使用IoUtil.close()
 8、修补JSON模块
+9、规范FileUtil中的方法名，添加utf-8默认读写方法

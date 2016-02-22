@@ -166,7 +166,7 @@ public class XmlUtil {
 
 		BufferedWriter writer = null;
 		try {
-			writer = FileUtil.getBufferedWriter(absolutePath, charset, false);
+			writer = FileUtil.getWriter(absolutePath, charset, false);
 			Source source = new DOMSource(doc);
 			final Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.setOutputProperty(OutputKeys.ENCODING, charset);
