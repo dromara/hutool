@@ -426,14 +426,41 @@ public class ClassUtil {
 		Class<Object> clazz = loadClass(className);
 		try {
 			Method method = clazz.getDeclaredMethod(methodName, getClasses(args));
-			int modifiers = method.getModifiers();
-			if(Modifier.isPrivate(modifiers)){
+			if(false == method.isAccessible()){
 				method.setAccessible(true);
 			}
+			int modifiers = method.getModifiers();
 			if(Modifier.isStatic(modifiers)){
 				return (T) method.invoke(null, args);
 			}else{
 				return (T) method.invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), args);
+			}
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
+	}
+	
+	/**
+	 * 执行方法<br>
+	 * 可执行Private方法，也可执行static方法<br>
+	 * @param <T>
+	 * @param obj 对象
+	 * @param methodName 方法名
+	 * @param args 参数，必须严格对应指定方法的参数类型和数量
+	 * @return 返回结果
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T invoke(Object obj, String methodName, Object... args){
+		try {
+			Method method = obj.getClass().getDeclaredMethod(methodName, getClasses(args));
+			if(false == method.isAccessible()){
+				method.setAccessible(true);
+			}
+			int modifiers = method.getModifiers();
+			if(Modifier.isStatic(modifiers)){
+				return (T) method.invoke(null, args);
+			}else{
+				return (T) method.invoke(obj, args);
 			}
 		} catch (Exception e) {
 			throw new UtilException(e);

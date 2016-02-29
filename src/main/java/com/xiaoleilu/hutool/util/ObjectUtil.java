@@ -155,6 +155,19 @@ public class ObjectUtil {
 	public static boolean isNotNull(Object obj) {
 		return null != obj;
 	}
+	
+	/**
+	 * 克隆对象<br>
+	 * 对象必须实现Serializable接口
+	 * 
+	 * @param obj 被克隆对象
+	 * @return 克隆后的对象
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public static <T extends Cloneable> T clone(T obj) {
+		return ClassUtil.invoke(obj, "clone");
+	}
 
 	/**
 	 * 克隆对象<br>

@@ -901,6 +901,48 @@ public class StrUtil {
 	}
 	
 	/**
+	 * 将对象转为字符串<br>
+	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+	 * 2、对象数组会调用Arrays.toString方法
+	 * 
+	 * @param bytes byte数组
+	 * @param charset 字符集
+	 * @return 字符串
+	 */
+	public static String str(Object obj, String charsetName){
+		return str(obj, Charset.forName(charsetName));
+	}
+	
+	/**
+	 * 将对象转为字符串<br>
+	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+	 * 2、对象数组会调用Arrays.toString方法
+	 * 
+	 * @param bytes byte数组
+	 * @param charset 字符集
+	 * @return 字符串
+	 */
+	public static String str(Object obj, Charset charset){
+		if(null == obj){
+			return null;
+		}
+		
+		if(obj instanceof byte[] || obj instanceof Byte[]){
+			return str((Byte[])obj, charset);
+		}
+		
+		if(obj instanceof ByteBuffer){
+			return str((ByteBuffer)obj, charset);
+		}
+		
+		if(ObjectUtil.isArray(obj)){
+			return Arrays.toString((Object[])obj);
+		}
+		
+		return obj.toString();
+	}
+	
+	/**
 	 * 将byte数组转为字符串
 	 * 
 	 * @param bytes byte数组
