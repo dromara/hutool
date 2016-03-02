@@ -6,6 +6,7 @@ import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
@@ -27,6 +28,7 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -437,6 +439,16 @@ public class DbUtil {
 		if(entity.isEmpty()) {
 			throw new DbRuntimeException("No filed and value in this entity !");
 		}
+	}
+	
+	/**
+	 * 将RowId转为字符串
+	 * @param rowId RowId
+	 * @param charset 编码
+	 * @return
+	 */
+	public static String rowIdToString(RowId rowId){
+		return StrUtil.str(rowId.getBytes(), CharsetUtil.CHARSET_ISO_8859_1);
 	}
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end
