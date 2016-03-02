@@ -906,6 +906,18 @@ public class StrUtil {
 	 * 2、对象数组会调用Arrays.toString方法
 	 * 
 	 * @param bytes byte数组
+	 * @return 字符串
+	 */
+	public static String utf8Str(Object obj){
+		return str(obj, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 将对象转为字符串<br>
+	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
+	 * 2、对象数组会调用Arrays.toString方法
+	 * 
+	 * @param bytes byte数组
 	 * @param charset 字符集
 	 * @return 字符串
 	 */
