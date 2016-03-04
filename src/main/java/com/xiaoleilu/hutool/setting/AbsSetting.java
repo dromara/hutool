@@ -18,6 +18,9 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	protected boolean isUseVariable;
 	/** 设定文件的URL */
 	protected URL settingUrl;
+	
+	@Override
+	public abstract String getStr(String key, String defaultValue);
 
 	/**
 	 * @return 配置文件大小（key的个数）

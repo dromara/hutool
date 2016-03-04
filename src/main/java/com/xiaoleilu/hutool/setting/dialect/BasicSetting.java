@@ -294,7 +294,7 @@ public class BasicSetting extends AbsSetting{
 	
 	@Override
 	public String getStr(String key, String defaultValue) {
-		final String value = getStr(key);
+		final String value = map.get(key);
 		if(StrUtil.isBlank(value)) {
 			return defaultValue;
 		}
