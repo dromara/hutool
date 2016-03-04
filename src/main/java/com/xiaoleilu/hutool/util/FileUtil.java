@@ -1540,8 +1540,8 @@ public class FileUtil {
 	}
 
 	/**
-	 * 可读的文件大小
-	 * @see http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+	 * 可读的文件大小<br>
+	 * 参考 http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
 	 * @param size Long类型大小
 	 * @return 大小
 	 */
