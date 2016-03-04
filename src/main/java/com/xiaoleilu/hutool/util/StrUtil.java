@@ -918,7 +918,7 @@ public class StrUtil {
 	 * 2、对象数组会调用Arrays.toString方法
 	 * 
 	 * @param obj 对象
-	 * @param charset 字符集
+	 * @param charsetName 字符集
 	 * @return 字符串
 	 */
 	public static String str(Object obj, String charsetName){

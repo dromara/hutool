@@ -444,7 +444,6 @@ public class DbUtil {
 	/**
 	 * 将RowId转为字符串
 	 * @param rowId RowId
-	 * @param charset 编码
 	 * @return RowId字符串
 	 */
 	public static String rowIdToString(RowId rowId){
