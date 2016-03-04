@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -459,7 +460,7 @@ public class FileUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 复制文件或目录<br>
 	 * 如果目标文件为目录，则将源文件以相同文件名拷贝到目标目录
@@ -496,12 +497,12 @@ public class FileUtil {
 			throw new IOException("Files '" + src + "' and '" + dest + "' are equal");
 		}
 
-		//复制目录
+		// 复制目录
 		if (src.isDirectory()) {
-			if(dest.isFile()){
+			if (dest.isFile()) {
 				throw new IOException(StrUtil.format("Src [{}] is a directory but Dest [{}] is a file!", src.getPath(), dest.getPath()));
 			}
-			
+
 			if (!dest.exists()) {
 				dest.mkdirs();
 			}
@@ -515,17 +516,17 @@ public class FileUtil {
 			return dest;
 		}
 
-		//检查目标
+		// 检查目标
 		if (dest.exists()) {
 			if (dest.isDirectory()) {
 				dest = new File(dest, src.getName());
 			}
 			if (false == isOverride) {
-				//不覆盖，直接跳过
+				// 不覆盖，直接跳过
 				StaticLog.debug("File [{}] already exist", dest);
 				return dest;
 			}
-		}else{
+		} else {
 			touch(dest);
 		}
 
@@ -542,7 +543,7 @@ public class FileUtil {
 		if (src.length() != dest.length()) {
 			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
 		}
-		
+
 		return dest;
 	}
 
@@ -562,7 +563,7 @@ public class FileUtil {
 		if (dest.exists()) {
 			if (isOverride) {
 				dest.delete();
-			}else{
+			} else {
 				StaticLog.debug("File [{}] already exist", dest);
 			}
 		}
@@ -627,11 +628,11 @@ public class FileUtil {
 			}
 		}
 
-		//相对路径
+		// 相对路径
 		ClassLoader classLoader = ClassUtil.getClassLoader();
 		URL url = classLoader.getResource(path);
 		String reultPath = url != null ? url.getPath() : ResourceUtil.getClassPath() + path;
-//		return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
+		// return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
 		return reultPath;
 	}
 
@@ -692,7 +693,7 @@ public class FileUtil {
 	public static boolean isFile(File file) {
 		return (file == null) ? false : file.isDirectory();
 	}
-	
+
 	/**
 	 * 检查两个文件是否是同一个文件
 	 * 
@@ -709,7 +710,7 @@ public class FileUtil {
 		}
 		return file1.equals(file2);
 	}
-	
+
 	/**
 	 * 获得最后一个文件路径分隔符的位置
 	 * 
@@ -724,7 +725,7 @@ public class FileUtil {
 		int lastWindowsPos = filePath.lastIndexOf(WINDOWS_SEPARATOR);
 		return (lastUnixPos >= lastWindowsPos) ? lastUnixPos : lastWindowsPos;
 	}
-	
+
 	/**
 	 * 判断文件是否被改动<br>
 	 * 如果文件对象为 null 或者文件不存在，被视为改动
@@ -792,7 +793,7 @@ public class FileUtil {
 		return subPath;
 	}
 
-	//-------------------------------------------------------------------------------------------- name start
+	// -------------------------------------------------------------------------------------------- name start
 	/**
 	 * 返回主文件名
 	 * 
@@ -854,9 +855,9 @@ public class FileUtil {
 			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
 		}
 	}
-	//-------------------------------------------------------------------------------------------- name end
+	// -------------------------------------------------------------------------------------------- name end
 
-	//-------------------------------------------------------------------------------------------- in start
+	// -------------------------------------------------------------------------------------------- in start
 	/**
 	 * 获得输入流
 	 * 
@@ -878,7 +879,7 @@ public class FileUtil {
 	public static BufferedInputStream getInputStream(String path) throws FileNotFoundException {
 		return getInputStream(file(path));
 	}
-	
+
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -889,7 +890,7 @@ public class FileUtil {
 	public static BufferedReader getUtf8Reader(File file) throws IOException {
 		return getReader(file, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -900,7 +901,7 @@ public class FileUtil {
 	public static BufferedReader getUtf8Reader(String path) throws IOException {
 		return getReader(path, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -912,7 +913,7 @@ public class FileUtil {
 	public static BufferedReader getReader(File file, String charsetName) throws IOException {
 		return IoUtil.getReader(getInputStream(file), charsetName);
 	}
-	
+
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -936,7 +937,7 @@ public class FileUtil {
 	public static BufferedReader getReader(String path, String charsetName) throws IOException {
 		return getReader(file(path), charsetName);
 	}
-	
+
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -948,9 +949,9 @@ public class FileUtil {
 	public static BufferedReader getReader(String path, Charset charset) throws IOException {
 		return getReader(file(path), charset);
 	}
-	
-	//-------------------------------------------------------------------------------------------- in end
-	
+
+	// -------------------------------------------------------------------------------------------- in end
+
 	/**
 	 * 读取文件所有数据<br>
 	 * 文件的长度不能超过Integer.MAX_VALUE
@@ -984,7 +985,7 @@ public class FileUtil {
 
 		return bytes;
 	}
-	
+
 	/**
 	 * 读取文件内容
 	 * 
@@ -995,7 +996,7 @@ public class FileUtil {
 	public static String readUtf8String(File file) throws IOException {
 		return readString(file, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 读取文件内容
 	 * 
@@ -1006,7 +1007,7 @@ public class FileUtil {
 	public static String readUtf8String(String path) throws IOException {
 		return readString(path, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 读取文件内容
 	 * 
@@ -1018,7 +1019,7 @@ public class FileUtil {
 	public static String readString(File file, String charsetName) throws IOException {
 		return new String(readBytes(file), charsetName);
 	}
-	
+
 	/**
 	 * 读取文件内容
 	 * 
@@ -1030,7 +1031,7 @@ public class FileUtil {
 	public static String readString(File file, Charset charset) throws IOException {
 		return new String(readBytes(file), charset);
 	}
-	
+
 	/**
 	 * 读取文件内容
 	 * 
@@ -1076,7 +1077,7 @@ public class FileUtil {
 			IoUtil.close(in);
 		}
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1193,7 +1194,7 @@ public class FileUtil {
 		return result;
 	}
 
-	//-------------------------------------------------------------------------------------------- out start
+	// -------------------------------------------------------------------------------------------- out start
 	/**
 	 * 获得一个输出流对象
 	 * 
@@ -1215,7 +1216,7 @@ public class FileUtil {
 	public static BufferedOutputStream getOutputStream(String path) throws IOException {
 		return getOutputStream(touch(path));
 	}
-	
+
 	/**
 	 * 获得一个带缓存的写入对象
 	 * 
@@ -1228,7 +1229,7 @@ public class FileUtil {
 	public static BufferedWriter getWriter(String path, String charset, boolean isAppend) throws IOException {
 		return getWriter(touch(path), charset, isAppend);
 	}
-	
+
 	/**
 	 * 获得一个带缓存的写入对象
 	 * 
@@ -1283,8 +1284,8 @@ public class FileUtil {
 	public static PrintWriter getPrintWriter(File file, String charset, boolean isAppend) throws IOException {
 		return new PrintWriter(getWriter(file, charset, isAppend));
 	}
-	
-	//-------------------------------------------------------------------------------------------- out end
+
+	// -------------------------------------------------------------------------------------------- out end
 
 	/**
 	 * 将String写入文件，覆盖模式，字符集为UTF-8
@@ -1297,7 +1298,7 @@ public class FileUtil {
 	public static File writeUtf8String(String content, String path) throws IOException {
 		return writeString(content, path, CharsetUtil.UTF_8);
 	}
-	
+
 	/**
 	 * 将String写入文件，覆盖模式，字符集为UTF-8
 	 * 
@@ -1527,6 +1528,28 @@ public class FileUtil {
 	 */
 	public static void writeToStream(String fullFilePath, OutputStream out) throws IOException {
 		writeToStream(touch(fullFilePath), out);
+	}
+	
+	/**
+	 * 可读的文件大小
+	 * @param file 文件
+	 * @return 大小
+	 */
+	public static String readableFileSize(File file) {
+		return readableFileSize(file.length());
+	}
+
+	/**
+	 * 可读的文件大小
+	 * @see http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+	 * @param size Long类型大小
+	 * @return 大小
+	 */
+	public static String readableFileSize(long size) {
+		if (size <= 0) return "0";
+		final String[] units = new String[] { "B", "kB", "MB", "GB", "TB", "EB"};
+		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+		return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
 
 	// -------------------------------------------------------------------------- Interface start
