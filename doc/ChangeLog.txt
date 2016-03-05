@@ -216,3 +216,4 @@ Entity中toVo区别是否忽略大小写
 9、规范FileUtil中的方法名，添加utf-8默认读写方法
 10、StrUtil增加str方法，讲Object转为String
 11、修复Setting中循环引用问题
+12、修改Setting store方法

@@ -1,14 +1,12 @@
 package com.xiaoleilu.hutool.setting.dialect;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -353,12 +351,11 @@ public class BasicSetting extends AbsSetting{
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
+		Writer writer = null;
 		try {
-			FileUtil.touch(absolutePath);
-			OutputStream out = FileUtil.getOutputStream(absolutePath);
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, charset));
-			Set<java.util.Map.Entry<String, String>> entrySet = map.entrySet();
-			for (java.util.Map.Entry<String, String> entry : entrySet) {
+			writer = FileUtil.getWriter(absolutePath, charset, false);
+			Set<Entry<String, String>> entrySet = map.entrySet();
+			for (Entry<String, String> entry : entrySet) {
 				writer.write(entry.getKey() + ASSIGN_FLAG + entry.getValue());
 			}
 			writer.close();
@@ -366,6 +363,8 @@ public class BasicSetting extends AbsSetting{
 			throw new RuntimeException(StrUtil.format("Can not find file [{}]!", absolutePath), e);
 		} catch (IOException e) {
 			throw new RuntimeException("Store Setting error!", e);
+		}finally{
+			IoUtil.close(writer);
 		}
 	}
 

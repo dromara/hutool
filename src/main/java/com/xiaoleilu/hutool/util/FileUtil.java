@@ -1216,6 +1216,19 @@ public class FileUtil {
 	public static BufferedOutputStream getOutputStream(String path) throws IOException {
 		return getOutputStream(touch(path));
 	}
+	
+	/**
+	 * 获得一个带缓存的写入对象
+	 * 
+	 * @param path 输出路径，绝对路径
+	 * @param charsetName 字符集
+	 * @param isAppend 是否追加
+	 * @return BufferedReader对象
+	 * @throws IOException
+	 */
+	public static BufferedWriter getWriter(String path, String charsetName, boolean isAppend) throws IOException {
+		return getWriter(touch(path), Charset.forName(charsetName), isAppend);
+	}
 
 	/**
 	 * 获得一个带缓存的写入对象
@@ -1226,7 +1239,7 @@ public class FileUtil {
 	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
-	public static BufferedWriter getWriter(String path, String charset, boolean isAppend) throws IOException {
+	public static BufferedWriter getWriter(String path, Charset charset, boolean isAppend) throws IOException {
 		return getWriter(touch(path), charset, isAppend);
 	}
 
