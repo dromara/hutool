@@ -3,7 +3,19 @@ hutool
 
 <center>![封面](http://img.hb.aicdn.com/61f84090279e1aaf49a11301dea2b3f453d2ad9028aaf4-R12vgs_fw658)</center>
 
-一个Java基础工具类，类似于[jodd](http://jodd.org/)和[Apache commons lang](http://commons.apache.org/)的Java工具类。
+## Hutool交流QQ群：** 537116831 **
+
+## 功能
+一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
+1. 布隆过滤
+2. 缓存
+3. 数据库ORM（基于ActiveRecord思想）
+4. HTTP客户端
+5. IO
+6. JSON
+7. 日志
+8. System（JVM和系统信息等）
+9. Setting（一种扩展Properties的配置文件）
 
 ## 简介
 [Hutool](https://github.com/looly/hutool)是一个工具包，我日常写项目的一些积累，参考了一些[Apache Commons Lang](http://commons.apache.org/)和[JODD](http://jodd.org/)里的一些写法，不过大部分还是自己写的，希望你看了之后会有所启发或者能给你工作中带来帮助。说实话我现在写代码已经离不开自己这个工具包了，叫做Hutool也有“糊涂”之意，表示很多功能糊里糊涂就实现了。好吧，言归正传，说说里面一些好玩的方法（工具包中大部分是一些静态方法）。
