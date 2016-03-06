@@ -533,11 +533,12 @@ public class ClassUtil {
 	}
 	
 	/**
-	 * 是否简单值类型
-	 * @param clazz
-	 * @return
+	 * 是否简单值类型或简单值类型的数组<br>
+	 * 包括：原始类型,、String、other CharSequence, a Number, a Date, a URI, a URL, a Locale or a Class及其数组
+	 * @param clazz 属性类
+	 * @return 是否简单值类型或简单值类型的数组
 	 */
-	public static boolean isSimpleProperty(Class<?> clazz) {
+	public static boolean isSimpleTypeOrArray(Class<?> clazz) {
 		if(null == clazz){
 			return false;
 		}
@@ -632,7 +633,7 @@ public class ClassUtil {
 	
 	/**
 	 * 指定方法是否为非public
-	 * @param clazz 类
+	 * @param method 方法
 	 * @return 是否为非public
 	 */
 	public static boolean isNotPublic(Method method){
