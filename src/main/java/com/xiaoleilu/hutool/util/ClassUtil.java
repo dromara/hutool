@@ -8,10 +8,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -217,6 +220,32 @@ public class ClassUtil {
 	}
 	
 	/**
+	 * 获得ClassPath
+	 * @return ClassPath
+	 */
+	public static String getClassPath() {
+		return getClassPathURL().getPath();
+	}
+	
+	/**
+	 * 获得ClassPath URL
+	 * @return ClassPath URL
+	 */
+	public static URL getClassPathURL() {
+		return getURL(StrUtil.EMPTY);
+	}
+	
+	/**
+	 * 获得资源的URL
+	 * 
+	 * @param resource 资源（相对Classpath的路径）
+	 * @return 资源URL
+	 */
+	public static URL getURL(String resource) {
+		return ClassUtil.getClassLoader().getResource(resource);
+	}
+	
+	/**
 	 * @return 获得Java ClassPath路径，不包括 jre
 	 */
 	public static String[] getJavaClassPaths() {
@@ -225,8 +254,8 @@ public class ClassUtil {
 	}
 	
 	/**
-	 * 转换基本类型
-	 * @param clazz 被转换为基本类型的类，必须为包装类型
+	 * 转换为原始类型
+	 * @param clazz 被转换为原始类型的类，必须为包装类型的类
 	 * @return 基本类型类
 	 */
 	public static Class<?> castToPrimitive(Class<?> clazz) {
@@ -477,6 +506,149 @@ public class ClassUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T newProxyInstance(Class<T> interfaceClass, InvocationHandler invocationHandler){
 		return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[]{ interfaceClass}, invocationHandler);
+	}
+	
+	/**
+	 * 是否为包装类型
+	 * @param clazz 类
+	 * @return 是否为包装类型
+	 */
+	public static boolean isPrimitiveWrapper(Class<?> clazz) {
+		if(null == clazz){
+			return false;
+		}
+		return BasicType.wrapperPrimitiveMap.containsKey(clazz);
+	}
+	
+	/**
+	 * 是否为基本类型（包括包装类和原始类）
+	 * @param clazz 类
+	 * @return 是否为基本类型
+	 */
+	public static boolean isBasicType(Class<?> clazz) {
+		if(null == clazz){
+			return false;
+		}
+		return (clazz.isPrimitive() || isPrimitiveWrapper(clazz));
+	}
+	
+	/**
+	 * 是否简单值类型
+	 * @param clazz
+	 * @return
+	 */
+	public static boolean isSimpleProperty(Class<?> clazz) {
+		if(null == clazz){
+			return false;
+		}
+		return isSimpleValueType(clazz) || (clazz.isArray() && isSimpleValueType(clazz.getComponentType()));
+	}
+	
+	/**
+	 * 是否为简单值类型<br>
+	 * 包括：原始类型,、String、other CharSequence, a Number, a Date, a URI, a URL, a Locale or a Class.
+	 * @param clazz 类
+	 * @return 是否为简单值类型
+	 */
+	public static boolean isSimpleValueType(Class<?> clazz) {
+		return isBasicType(clazz) || clazz.isEnum() ||
+				CharSequence.class.isAssignableFrom(clazz) ||
+				Number.class.isAssignableFrom(clazz) ||
+				Date.class.isAssignableFrom(clazz) ||
+				clazz.equals(URI.class) || clazz.equals(URL.class) ||
+				clazz.equals(Locale.class) || clazz.equals(Class.class);
+	}
+	
+	/**
+	 * 检查目标类是否可以从原类转化<br>
+	 * 转化包括：<br>
+	 * 1、原类是对象，目标类型是原类型实现的接口<br>
+	 * 2、目标类型是原类型的父类<br>
+	 * 3、两者是原始类型或者包装类型（相互转换）
+	 * @param targetType 目标类型
+	 * @param sourceType 原类型
+	 * @return 是否可转化
+	 */
+	public static boolean isAssignable(Class<?> targetType, Class<?> sourceType) {
+		if(null == targetType || null == sourceType){
+			return false;
+		}
+		
+		//对象类型
+		if (targetType.isAssignableFrom(sourceType)) {
+			return true;
+		}
+		
+		//基本类型
+		if (targetType.isPrimitive()) {
+			//原始类型
+			Class<?> resolvedPrimitive = BasicType.wrapperPrimitiveMap.get(sourceType);
+			if (resolvedPrimitive != null && targetType.equals(resolvedPrimitive)) {
+				return true;
+			}
+		}
+		else {
+			//包装类型
+			Class<?> resolvedWrapper = BasicType.primitiveWrapperMap.get(sourceType);
+			if (resolvedWrapper != null && targetType.isAssignableFrom(resolvedWrapper)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 指定类是否为Public
+	 * @param clazz 类
+	 * @return 是否为public
+	 */
+	public static boolean isPublic(Class<?> clazz){
+		if(null == clazz){
+			throw new NullPointerException("Class to provided is null.");
+		}
+		return Modifier.isPublic(clazz.getModifiers());
+	}
+	
+	/**
+	 * 指定方法是否为Public
+	 * @param method 方法
+	 * @return 是否为public
+	 */
+	public static boolean isPublic(Method method){
+		if(null == method){
+			throw new NullPointerException("Method to provided is null.");
+		}
+		return isPublic(method.getDeclaringClass());
+	}
+	
+	/**
+	 * 指定类是否为非public
+	 * @param clazz 类
+	 * @return 是否为非public
+	 */
+	public static boolean isNotPublic(Class<?> clazz){
+		return false == isPublic(clazz);
+	}
+	
+	/**
+	 * 指定方法是否为非public
+	 * @param clazz 类
+	 * @return 是否为非public
+	 */
+	public static boolean isNotPublic(Method method){
+		return false == isPublic(method);
+	}
+	
+	/**
+	 * 设置方法为可访问
+	 * @param method 方法
+	 * @return 方法
+	 */
+	public static Method setAccessible(Method method){
+		if(null != method && ClassUtil.isNotPublic(method)){
+			method.setAccessible(true);
+		}
+		return method;
 	}
 	
 	//--------------------------------------------------------------------------------------------------- Private method start

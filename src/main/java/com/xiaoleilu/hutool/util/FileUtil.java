@@ -189,7 +189,7 @@ public class FileUtil {
 		}
 		return new File(getAbsolutePath(path));
 	}
-
+	
 	/**
 	 * 创建File对象
 	 * 
@@ -631,7 +631,7 @@ public class FileUtil {
 		// 相对路径
 		ClassLoader classLoader = ClassUtil.getClassLoader();
 		URL url = classLoader.getResource(path);
-		String reultPath = url != null ? url.getPath() : ResourceUtil.getClassPath() + path;
+		String reultPath = url != null ? url.getPath() : ClassUtil.getClassPath() + path;
 		// return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
 		return reultPath;
 	}

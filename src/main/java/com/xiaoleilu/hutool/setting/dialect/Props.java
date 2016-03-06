@@ -33,6 +33,17 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	//----------------------------------------------------------------------- 私有属性 end
 	
 	//----------------------------------------------------------------------- 构造方法 start
+	
+	/**
+	 * 获得Classpath下的Properties文件
+	 * 
+	 * @param resource 资源（相对Classpath的路径）
+	 * @return Properties
+	 */
+	public static Properties getProp(String resource) {
+		return new Props(resource);
+	}
+	
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）

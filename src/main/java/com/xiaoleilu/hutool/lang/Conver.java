@@ -60,8 +60,9 @@ public class Conver {
 	}
 	
 	/**
-	 * 转换基本类型
-	 * @param clazz 转换到的类
+	 * 转换基本类型<br>
+	 * 讲字符串转换为原始类型或包装类型
+	 * @param clazz 转换到的类，可以是原始类型类，也可以是包装类型类
 	 * @param valueStr 被转换的字符串
 	 * @return 转换后的对象，如果非基本类型，返回null
 	 */

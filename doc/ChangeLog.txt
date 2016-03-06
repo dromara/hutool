@@ -217,3 +217,5 @@ Entity中toVo区别是否忽略大小写
 10、StrUtil增加str方法，讲Object转为String
 11、修复Setting中循环引用问题
 12、修改Setting store方法
+13、增加Assert类
+14、增加Bean属性拷贝
