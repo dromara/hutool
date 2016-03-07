@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.lang;
 import java.net.MalformedURLException;
 import java.util.regex.Pattern;
 
+import com.xiaoleilu.hutool.exceptions.ValidateException;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -18,7 +19,7 @@ public class Validator {
 	/** 英文字母 、数字和下划线 */
 	public final static Pattern GENERAL = Pattern.compile("^\\w+$");
 	/** 数字 */
-	public final static Pattern NUMBER = Pattern.compile("\\d+");
+	public final static Pattern NUMBERS = Pattern.compile("\\d+");
 	/** 分组 */
 	public final static Pattern GROUP_VAR = Pattern.compile("\\$(\\d+)");
 	/** IP v4 */
@@ -42,6 +43,8 @@ public class Validator {
 	public final static Pattern GENERAL_WITH_CHINESE = Pattern.compile("^[\\u0391-\\uFFE5\\w]+$");
 	/** UUID */
 	public final static Pattern UUID = Pattern.compile("^[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$");
+	/** 不带横线的UUID */
+	public final static Pattern UUID_SIMPLE = Pattern.compile("^[0-9a-z]{32}$");
 
 	/**
 	 * 验证是否为空<br>
@@ -53,6 +56,32 @@ public class Validator {
 	 */
 	public static <T> boolean isEmpty(T value) {
 		return (null == value || (value instanceof String && StrUtil.isEmpty((String) value)));
+	}
+	
+	/**
+	 * 验证是否为空<br>
+	 * 对于String类型判定是否为empty(null 或 "")<br>
+	 * 
+	 * @param value 值
+	 * @return 是否为空
+	 * @return 是否为空
+	 */
+	public static <T> boolean isNotEmpty(T value) {
+		return false == isEmpty(value);
+	}
+	
+	/**
+	 * 验证是否为空，为空时抛出异常<br>
+	 * 对于String类型判定是否为empty(null 或 "")<br>
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static <T> void validateNotEmpty(T value, String errorMsg) throws ValidateException {
+		if (isEmpty(value)) {
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -66,6 +95,64 @@ public class Validator {
 	public static boolean equals(Object t1, Object t2) {
 		return ObjectUtil.equals(t1, t2);
 	}
+	
+	/**
+	 * 验证是否相等，不相等抛出异常<br>
+	 * 
+	 * @param t1 对象1
+	 * @param t2 对象2
+	 * @param errorMsg 错误信息
+	 * @throws ValidateException
+	 */
+	public static <T> void validateEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+		if (false == equals(t1, t2)) {
+			throw new ValidateException(errorMsg);
+		}
+	}
+	
+	/**
+	 * 验证是否不等，相等抛出异常<br>
+	 * 
+	 * @param t1 对象1
+	 * @param t2 对象2
+	 * @param errorMsg 错误信息
+	 * @throws ValidateException
+	 */
+	public static <T> void validateNotEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+		if (equals(t1, t2)) {
+			throw new ValidateException(errorMsg);
+		}
+	}
+	
+	/**
+	 * 验证是否非空且与指定值相等<br>
+	 * 当数据为空时抛出验证异常<br>
+	 * 当两值不等时抛出异常
+	 * 
+	 * @param t1 对象1
+	 * @param t2 对象2
+	 * @param errorMsg 错误信息
+	 * @throws ValidateException
+	 */
+	public static <T> void validateNotEmptyAndEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+		validateNotEmpty(t1, errorMsg);
+		validateEqual(t1, t2, errorMsg);
+	}
+	
+	/**
+	 * 验证是否非空且与指定值相等<br>
+	 * 当数据为空时抛出验证异常<br>
+	 * 当两值相等时抛出异常
+	 * 
+	 * @param t1 对象1
+	 * @param t2 对象2
+	 * @param errorMsg 错误信息
+	 * @throws ValidateException
+	 */
+	public static <T> void validateNotEmptyAndNotEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+		validateNotEmpty(t1, errorMsg);
+		validateNotEqual(t1, t2, errorMsg);
+	}
 
 	/**
 	 * 通过正则表达式验证
@@ -74,8 +161,23 @@ public class Validator {
 	 * @param value 值
 	 * @return 是否匹配正则
 	 */
-	public static boolean isByRegex(String regex, String value) {
+	public static boolean isMactchRegex(String regex, String value) {
 		return ReUtil.isMatch(regex, value);
+	}
+	
+	/**
+	 * 通过正则表达式验证<br>
+	 * 不符合正则
+	 * 
+	 * @param regex 正则
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateMatchRegex(String regex, String value, String errorMsg) throws ValidateException {
+		if (false == isMactchRegex(regex, value)) {
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -85,7 +187,7 @@ public class Validator {
 	 * @param value 值
 	 * @return 是否匹配正则
 	 */
-	public static boolean isByRegex(Pattern pattern, String value) {
+	public static boolean isMactchRegex(Pattern pattern, String value) {
 		return ReUtil.isMatch(pattern, value);
 	}
 
@@ -96,7 +198,20 @@ public class Validator {
 	 * @return 是否为英文字母 、数字和下划线
 	 */
 	public static boolean isGeneral(String value) {
-		return isByRegex(GENERAL, value);
+		return isMactchRegex(GENERAL, value);
+	}
+	
+	/**
+	 * 验证是否为英文字母 、数字和下划线
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateGeneral(String value, String errorMsg) throws ValidateException {
+		if(false == isGeneral(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -115,9 +230,24 @@ public class Validator {
 		if (max <= 0) {
 			reg = "^\\w{" + min + ",}$";
 		}
-		return isByRegex(reg, value);
+		return isMactchRegex(reg, value);
 	}
-
+	
+	/**
+	 * 验证是否为给定长度范围的英文字母 、数字和下划线
+	 * 
+	 * @param value 值
+	 * @param min 最小长度，负数自动识别为0
+	 * @param max 最大长度，0或负数表示不限制最大长度
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateGeneral(String value, int min, int max, String errorMsg) throws ValidateException {
+		if(false == isGeneral(value, min, max)){
+			throw new ValidateException(errorMsg);
+		}
+	}
+	
 	/**
 	 * 验证是否为给定最小长度的英文字母 、数字和下划线
 	 * 
@@ -128,7 +258,19 @@ public class Validator {
 	public static boolean isGeneral(String value, int min) {
 		return isGeneral(value, min, 0);
 	}
-
+	
+	/**
+	 * 验证是否为给定最小长度的英文字母 、数字和下划线
+	 * 
+	 * @param value 值
+	 * @param min 最小长度，负数自动识别为0
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateGeneral(String value, int min, String errorMsg) throws ValidateException {
+		validateGeneral(value, min, 0, errorMsg);
+	}
+	
 	/**
 	 * 验证该字符串是否是数字
 	 * 
@@ -139,7 +281,20 @@ public class Validator {
 		if (StrUtil.isBlank(value)) {
 			return false;
 		}
-		return isByRegex(NUMBER, value);
+		return isMactchRegex(NUMBERS, value);
+	}
+	
+	/**
+	 * 验证是否为数字
+	 * 
+	 * @param value 表单值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateNumbers(String value, String errorMsg) throws ValidateException {
+		if(false == isNumber(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -149,7 +304,20 @@ public class Validator {
 	 * @return 是否为货币
 	 */
 	public static boolean isMoney(String value) {
-		return isByRegex(MONEY, value);
+		return isMactchRegex(MONEY, value);
+	}
+	
+	/**
+	 * 验证是否为货币
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateMoney(String value, String errorMsg) throws ValidateException {
+		if(false == isMoney(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -159,7 +327,20 @@ public class Validator {
 	 * @return 是否为邮政编码（中国）
 	 */
 	public static boolean isZipCode(String value) {
-		return isByRegex(ZIP_CODE, value);
+		return isMactchRegex(ZIP_CODE, value);
+	}
+	
+	/**
+	 * 验证是否为邮政编码（中国）
+	 * 
+	 * @param value 表单值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateZipCode(String value, String errorMsg) throws ValidateException {
+		if(false == isZipCode(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -169,7 +350,20 @@ public class Validator {
 	 * @return 否为可用邮箱地址
 	 */
 	public static boolean isEmail(String value) {
-		return isByRegex(EMAIL, value);
+		return isMactchRegex(EMAIL, value);
+	}
+	
+	/**
+	 * 验证是否为可用邮箱地址
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateEmail(String value, String errorMsg) throws ValidateException {
+		if(false == isEmail(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -179,7 +373,20 @@ public class Validator {
 	 * @return 是否为手机号码（中国）
 	 */
 	public static boolean isMobile(String value) {
-		return isByRegex(MOBILE, value);
+		return isMactchRegex(MOBILE, value);
+	}
+	
+	/**
+	 * 验证是否为手机号码（中国）
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateMobile(String value, String errorMsg) throws ValidateException {
+		if(false == isMobile(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -190,7 +397,21 @@ public class Validator {
 	 * @return 是否为身份证号码（18位中国）
 	 */
 	public static boolean isCitizenId(String value) {
-		return isByRegex(CITIZEN_ID, value);
+		return isMactchRegex(CITIZEN_ID, value);
+	}
+	
+	/**
+	 * 验证是否为身份证号码（18位中国）<br>
+	 * 出生日期只支持到到2999年
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateCitizenIdNumber(String value, String errorMsg) throws ValidateException {
+		if(false == isCitizenId(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -200,7 +421,7 @@ public class Validator {
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(String value) {
-		if (isByRegex(BIRTHDAY, value)) {
+		if (isMactchRegex(BIRTHDAY, value)) {
 			int year = Integer.parseInt(value.substring(0, 4));
 			int month = Integer.parseInt(value.substring(5, 7));
 			int day = Integer.parseInt(value.substring(8, 10));
@@ -223,6 +444,19 @@ public class Validator {
 		}
 		return true;
 	}
+	
+	/**
+	 * 验证验证是否为生日<br>
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateBirthday(String value, String errorMsg) throws ValidateException {
+		if(false == isBirthday(value)){
+			throw new ValidateException(errorMsg);
+		}
+	}
 
 	/**
 	 * 验证是否为IPV4地址
@@ -231,7 +465,20 @@ public class Validator {
 	 * @return 是否为IPV4地址
 	 */
 	public static boolean isIpv4(String value) {
-		return isByRegex(IPV4, value);
+		return isMactchRegex(IPV4, value);
+	}
+	
+	/**
+	 * 验证是否为IPV4地址
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateIpv4(String value, String errorMsg) throws ValidateException {
+		if(false == isIpv4(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -248,6 +495,19 @@ public class Validator {
 		}
 		return true;
 	}
+	
+	/**
+	 * 验证是否为URL
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateUrl(String value, String errorMsg) throws ValidateException {
+		if(false == isUrl(value)){
+			throw new ValidateException(errorMsg);
+		}
+	}
 
 	/**
 	 * 验证是否为汉字
@@ -256,7 +516,20 @@ public class Validator {
 	 * @return 是否为汉字
 	 */
 	public static boolean isChinese(String value) {
-		return isByRegex("^" + ReUtil.RE_CHINESE + "+$", value);
+		return isMactchRegex("^" + ReUtil.RE_CHINESE + "+$", value);
+	}
+	
+	/**
+	 * 验证是否为汉字
+	 * 
+	 * @param value 表单值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateChinese(String value, String errorMsg) throws ValidateException {
+		if(false == isChinese(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
@@ -266,16 +539,44 @@ public class Validator {
 	 * @return 是否为中文字、英文字母、数字和下划线
 	 */
 	public static boolean isGeneralWithChinese(String value) {
-		return isByRegex(GENERAL_WITH_CHINESE, value);
+		return isMactchRegex(GENERAL_WITH_CHINESE, value);
+	}
+	
+	/**
+	 * 验证是否为中文字、英文字母、数字和下划线
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateGeneralWithChinese(String value, String errorMsg) throws ValidateException {
+		if(false == isGeneralWithChinese(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 
 	/**
-	 * 验证是否为UUID
+	 * 验证是否为UUID<br>
+	 * 包括带横线标准格式和不带横线的简单模式
 	 * 
 	 * @param value 值
 	 * @return 是否为UUID
 	 */
 	public static boolean isUUID(String value) {
-		return isByRegex(UUID, value);
+		return isMactchRegex(UUID, value) || isMactchRegex(UUID_SIMPLE, value);
+	}
+	
+	/**
+	 * 验证是否为UUID<br>
+	 * 包括带横线标准格式和不带横线的简单模式
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException
+	 */
+	public static void validateUUID(String value, String errorMsg) throws ValidateException {
+		if(false == isUUID(value)){
+			throw new ValidateException(errorMsg);
+		}
 	}
 }

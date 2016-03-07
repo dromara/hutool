@@ -260,7 +260,7 @@ public class ReUtil {
 	 * @return 整数
 	 */
 	public static Integer getFirstNumber(String StringWithNumber) {
-		return Conver.toInt(get(Validator.NUMBER, StringWithNumber, 0), null);
+		return Conver.toInt(get(Validator.NUMBERS, StringWithNumber, 0), null);
 	}
 	
 	/**
