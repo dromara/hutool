@@ -26,7 +26,6 @@ public class OsInfo{
 	private final boolean IS_OS_WINDOWS_XP = getOSMatches("Windows", "5.1");
 
 	// 由于改变file.encoding属性并不会改变系统字符编码，为了保持一致，通过LocaleUtil取系统默认编码。
-	// FIXME
 	private final String FILE_SEPARATOR = SystemUtil.get("file.separator", false);
 	private final String LINE_SEPARATOR = SystemUtil.get("line.separator", false);
 	private final String PATH_SEPARATOR = SystemUtil.get("path.separator", false);

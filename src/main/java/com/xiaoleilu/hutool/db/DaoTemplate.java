@@ -35,7 +35,7 @@ public class DaoTemplate {
 	 * @param tableName 数据库表名
 	 */
 	public DaoTemplate(String tableName) {
-		this(tableName, null);
+		this(tableName, (String)null);
 	}
 	
 	/**
@@ -45,6 +45,10 @@ public class DaoTemplate {
 	 */
 	public DaoTemplate(String tableName, String primaryKeyField) {
 		this(tableName, primaryKeyField, PooledDataSource.getDataSource());
+	}
+	
+	public DaoTemplate(String tableName, DataSource ds) {
+		this(tableName, null, ds);
 	}
 	
 	/**

@@ -391,7 +391,9 @@ public class BasicSetting extends AbsSetting{
 			@Override
 			public Object value(String name) {
 				final String value = getByGroup(name, group);
-				log.debug("Parse setting to object field [{}={}]", name, value);
+				if(null != value){
+					log.debug("Parse setting to object field [{}={}]", name, value);
+				}
 				return value;
 			}
 		});
@@ -427,6 +429,11 @@ public class BasicSetting extends AbsSetting{
 	
 	public Set<Entry<String, String>> entrySet(){
 		return map.entrySet();
+	}
+	
+	@Override
+	public String toString() {
+		return map.toString();
 	}
 
 	/*--------------------------Private Method start-------------------------------*/

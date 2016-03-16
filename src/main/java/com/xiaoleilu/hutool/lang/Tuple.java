@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @author Looly
  *
  */
-public class Tuple implements Cloneable, Serializable{
+public class Tuple extends CloneSupport<Tuple> implements Serializable{
 	private static final long serialVersionUID = -7689304393482182157L;
 	
 	private Object[] members;
@@ -25,14 +25,5 @@ public class Tuple implements Cloneable, Serializable{
 	@Override
 	public String toString() {
 		return Arrays.toString(members);
-	}
-	
-	@Override
-	public Tuple clone() {
-		try {
-			return (Tuple) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
 	}
 }
