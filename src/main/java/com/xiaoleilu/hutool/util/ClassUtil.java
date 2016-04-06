@@ -11,10 +11,12 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -22,6 +24,7 @@ import java.util.jar.JarFile;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BasicType;
+import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Singleton;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
@@ -186,7 +189,7 @@ public class ClassUtil {
 	 * 
 	 * @param clazz 类
 	 */
-	public final static Set<String> getMethods(Class<?> clazz) {
+	public static Set<String> getMethodNames(Class<?> clazz) {
 		HashSet<String> methodSet = new HashSet<String>();
 		Method[] methodArray = clazz.getMethods();
 		for (Method method : methodArray) {
@@ -195,7 +198,80 @@ public class ClassUtil {
 		}
 		return methodSet;
 	}
+	
+	/**
+	 * 获得指定类过滤后的方法列表
+	 * @param clazz 查找方法的类
+	 * @return 过滤后的方法列表
+	 */
+	public static List<Method> getMethods(Class<?> clazz){
+		return getMethods(clazz, (Filter<Method>)null);
+	}
 
+	/**
+	 * 获得指定类过滤后的方法列表
+	 * @param clazz 查找方法的类
+	 * @param filter 过滤器
+	 * @return 过滤后的方法列表
+	 */
+	public static List<Method> getMethods(Class<?> clazz, Filter<Method> filter){
+		if(null == clazz){
+			return null;
+		}
+		
+		Method[] methods = clazz.getMethods();
+		List<Method> methodList;
+		if(null != filter){
+			methodList = new ArrayList<>();
+			Method filteredMethod;
+			for (Method method : methods) {
+				filteredMethod = filter.modify(method);
+				if(null != filteredMethod){
+					methodList.add(method);
+				}
+			}
+		}else{
+			methodList = CollectionUtil.newArrayList(methods);
+		}
+		return methodList;
+	}
+	
+	/**
+	 * 获得指定类过滤后的方法列表
+	 * @param clazz 查找方法的类
+	 * @param excludeMethods 不包括的方法
+	 * @return 过滤后的方法列表
+	 */
+	public static List<Method> getMethods(Class<?> clazz, Method... excludeMethods){
+		final HashSet<Method> excludeMethodSet = CollectionUtil.newHashSet(excludeMethods);
+		Filter<Method> filter = new Filter<Method>(){
+			@Override
+			public Method modify(Method method) {
+				return excludeMethodSet.contains(method) ? null : method;
+			}
+		};
+		
+		return getMethods(clazz, filter);
+	}
+	
+	/**
+	 * 获得指定类过滤后的方法列表
+	 * @param clazz 查找方法的类
+	 * @param excludeMethodNames 不包括的方法名列表
+	 * @return 过滤后的方法列表
+	 */
+	public static List<Method> getMethods(Class<?> clazz, String... excludeMethodNames){
+		final HashSet<String> excludeMethodNameSet = CollectionUtil.newHashSet(excludeMethodNames);
+		Filter<Method> filter = new Filter<Method>(){
+			@Override
+			public Method modify(Method method) {
+				return excludeMethodNameSet.contains(method.getName()) ? null : method;
+			}
+		};
+		
+		return getMethods(clazz, filter);
+	}
+	
 	/**
 	 * 获得ClassPath
 	 * 

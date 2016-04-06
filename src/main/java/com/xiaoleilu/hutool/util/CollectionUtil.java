@@ -231,16 +231,7 @@ public class CollectionUtil {
 
 	/**
 	 * 新建一个HashSet
-	 * 
-	 * @return HashSet对象
-	 */
-	public static <T> HashSet<T> newHashSet() {
-		return new HashSet<T>();
-	}
-
-	/**
-	 * 新建一个HashSet
-	 * 
+	 * @param ts 元素数组
 	 * @return HashSet对象
 	 */
 	@SafeVarargs
@@ -251,24 +242,39 @@ public class CollectionUtil {
 		}
 		return set;
 	}
-
+	
 	/**
-	 * 新建一个ArrayList
+	 * 新建一个HashSet
 	 * 
-	 * @return ArrayList对象
+	 * @return HashSet对象
 	 */
-	public static <T> ArrayList<T> newArrayList() {
-		return new ArrayList<T>();
+	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
+		HashSet<T> set = new HashSet<T>();
+		set.addAll(collection);
+		return set;
 	}
 
 	/**
 	 * 新建一个ArrayList
-	 * 
+	 * @param values 数组
 	 * @return ArrayList对象
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		return new ArrayList<T>(Arrays.asList(values));
+		ArrayList<T> arrayList = new ArrayList<T>();
+		for (T t : values) {
+			arrayList.add(t);
+		}
+		return arrayList;
+	}
+	
+	/**
+	 * 新建一个ArrayList
+	 * @param collection 集合
+	 * @return ArrayList对象
+	 */
+	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
+		return new ArrayList<T>(collection);
 	}
 
 	/**
