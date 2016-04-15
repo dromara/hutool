@@ -223,3 +223,4 @@ Entity中toVo区别是否忽略大小写
 2.15.1
 1、对Setting parse 的null不打印日志
 2、对对象克隆做了强化，修复无法反射调用父类方法的问题
+3、FileUtil中某些方法返回File对象，方便操作

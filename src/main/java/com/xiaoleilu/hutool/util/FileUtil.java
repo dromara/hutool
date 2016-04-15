@@ -1444,10 +1444,11 @@ public class FileUtil {
 	 * 
 	 * @param data 数据
 	 * @param path 目标文件
+	 * @return 
 	 * @throws IOException
 	 */
-	public static void writeBytes(byte[] data, String path) throws IOException {
-		writeBytes(data, touch(path));
+	public static File writeBytes(byte[] data, String path) throws IOException {
+		return writeBytes(data, touch(path));
 	}
 
 	/**
@@ -1455,10 +1456,11 @@ public class FileUtil {
 	 * 
 	 * @param dest 目标文件
 	 * @param data 数据
+	 * @return dest
 	 * @throws IOException
 	 */
-	public static void writeBytes(byte[] data, File dest) throws IOException {
-		writeBytes(data, dest, 0, data.length, false);
+	public static File writeBytes(byte[] data, File dest) throws IOException {
+		return writeBytes(data, dest, 0, data.length, false);
 	}
 
 	/**
@@ -1469,9 +1471,10 @@ public class FileUtil {
 	 * @param off
 	 * @param len
 	 * @param append
+	 * @return dest
 	 * @throws IOException
 	 */
-	public static void writeBytes(byte[] data, File dest, int off, int len, boolean append) throws IOException {
+	public static File writeBytes(byte[] data, File dest, int off, int len, boolean append) throws IOException {
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
 				throw new IOException("Not a file: " + dest);
@@ -1485,6 +1488,7 @@ public class FileUtil {
 		} finally {
 			IoUtil.close(out);
 		}
+		return dest;
 	}
 
 	/**
@@ -1492,9 +1496,10 @@ public class FileUtil {
 	 * 
 	 * @param dest 目标文件
 	 * @param in 输入流
+	 * @return dest
 	 * @throws IOException
 	 */
-	public static void writeFromStream(InputStream in, File dest) throws IOException {
+	public static File writeFromStream(InputStream in, File dest) throws IOException {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(dest);
@@ -1502,6 +1507,7 @@ public class FileUtil {
 		} finally {
 			IoUtil.close(out);
 		}
+		return dest;
 	}
 
 	/**
@@ -1509,10 +1515,11 @@ public class FileUtil {
 	 * 
 	 * @param in 输入流
 	 * @param fullFilePath 文件绝对路径
+	 * @return dest
 	 * @throws IOException
 	 */
-	public static void writeFromStream(InputStream in, String fullFilePath) throws IOException {
-		writeFromStream(in, touch(fullFilePath));
+	public static File writeFromStream(InputStream in, String fullFilePath) throws IOException {
+		return writeFromStream(in, touch(fullFilePath));
 	}
 
 	/**
