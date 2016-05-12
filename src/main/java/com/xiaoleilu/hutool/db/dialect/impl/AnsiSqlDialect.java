@@ -98,11 +98,6 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException {
-		return psForPage(conn, fields, where, new Page(page, numPerPage));
-	}
-	
-	@Override
 	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, Page page) throws SQLException {
 		final SqlBuilder find = SqlBuilder.create(wrapper)
 				.select(fields)

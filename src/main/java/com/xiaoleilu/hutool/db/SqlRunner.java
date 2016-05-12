@@ -14,7 +14,8 @@ import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 
 /**
  * SQL执行类<br>
- * 通过给定的数据源执行给定SQL或者给定数据源和方言，执行相应的CRUD操作
+ * 通过给定的数据源执行给定SQL或者给定数据源和方言，执行相应的CRUD操作<br>
+ * SqlRunner中每一个方法都会打开和关闭一个链接
  * 
  * @author Luxiaolei
  * 

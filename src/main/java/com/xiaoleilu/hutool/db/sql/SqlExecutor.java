@@ -32,8 +32,7 @@ public class SqlExecutor {
 		PreparedStatement ps = null;
 		try {
 			ps = conn.prepareStatement(sql);
-			DbUtil.fillParams(ps, params);
-			return ps.executeUpdate();
+			return executeUpdate(ps, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -48,15 +47,14 @@ public class SqlExecutor {
 	 * @param conn 数据库连接对象
 	 * @param sql SQL
 	 * @param params 参数
-	 * @return 影响的行数
+	 * @return 是否成功
 	 * @throws SQLException
 	 */
 	public static boolean call(Connection conn, String sql, Object... params) throws SQLException {
 		CallableStatement ps = null;
 		try {
 			ps = conn.prepareCall(sql);
-			DbUtil.fillParams(ps, params);
-			return ps.execute();
+			return execute(ps, params);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -79,8 +77,7 @@ public class SqlExecutor {
 		PreparedStatement ps = null;
 		try {
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			DbUtil.fillParams(ps, params);
-			ps.executeUpdate();
+			executeUpdate(ps, params);
 			ResultSet rs = ps.getGeneratedKeys(); 
 			if(rs != null && rs.next()) {
 				try {
@@ -137,16 +134,86 @@ public class SqlExecutor {
 	 */
 	public static <T> T query(Connection conn, String sql, RsHandler<T> rsh, Object... params) throws SQLException {
 		PreparedStatement ps = null;
-		ResultSet rs = null;
 		try {
 			ps = conn.prepareStatement(sql);
+			return query(ps, rsh, params);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+	
+	//-------------------------------------------------------------------------------------- Execute With PreparedStatement
+	/**
+	 * 执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭PreparedStatement
+	 * 
+	 * @param ps PreparedStatement对象
+	 * @param params 参数
+	 * @return 影响的行数
+	 * @throws SQLException
+	 */
+	public static int executeUpdate(PreparedStatement ps, Object... params) throws SQLException {
+		DbUtil.fillParams(ps, params);
+		return ps.executeUpdate();
+	}
+	
+	/**
+	 * 执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭PreparedStatement
+	 * 
+	 * @param ps PreparedStatement对象
+	 * @param params 参数
+	 * @return 影响的行数
+	 * @throws SQLException
+	 */
+	public static boolean execute(PreparedStatement ps, Object... params) throws SQLException {
+		DbUtil.fillParams(ps, params);
+		return ps.execute();
+	}
+	
+	/**
+	 * 执行查询语句<br>
+	 * 此方法不会关闭PreparedStatement
+	 * 
+	 * @param ps PreparedStatement
+	 * @param rsh 结果集处理对象
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public static <T> T query(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
+		ResultSet rs = null;
+		try {
 			DbUtil.fillParams(ps, params);
 			rs = ps.executeQuery();
 			return rsh.handle(rs);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			DbUtil.close(rs, ps);
+			DbUtil.close(rs);
+		}
+	}
+	
+	/**
+	 * 执行查询语句并关闭PreparedStatement
+	 * 
+	 * @param ps PreparedStatement
+	 * @param rsh 结果集处理对象
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public static <T> T queryAndClosePs(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
+		try {
+			return query(ps, rsh, params);
+		} catch (SQLException e) {
+			throw e;
+		}finally{
+			DbUtil.close(ps);
 		}
 	}
 }

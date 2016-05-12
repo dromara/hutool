@@ -29,6 +29,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -47,11 +48,41 @@ public class DbUtil {
 	/**
 	 * 实例化一个新的SQL运行对象
 	 * 
+	 * @param dialect 数据源
+	 * @return SQL执行类
+	 */
+	public static SqlConnRunner newSqlConnRunner(Dialect dialect) {
+		return SqlConnRunner.create(dialect);
+	}
+	
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param ds 数据源
+	 * @return SQL执行类
+	 */
+	public static SqlConnRunner newSqlConnRunner(DataSource ds) {
+		return SqlConnRunner.create(ds);
+	}
+	
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param conn 数据库连接对象
+	 * @return SQL执行类
+	 */
+	public static SqlConnRunner newSqlConnRunner(Connection conn) {
+		return SqlConnRunner.create(DialectFactory.newDialect(conn));
+	}
+	
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
 	 * @param ds 数据源
 	 * @return SQL执行类
 	 */
 	public static SqlRunner newSqlRunner(DataSource ds) {
-		return new SqlRunner(ds);
+		return SqlRunner.create(ds);
 	}
 	
 	/**
@@ -62,7 +93,25 @@ public class DbUtil {
 	 * @return SQL执行类
 	 */
 	public static SqlRunner newSqlRunner(DataSource ds, Dialect dialect) {
-		return new SqlRunner(ds, dialect);
+		return SqlRunner.create(ds, dialect);
+	}
+	
+	/**
+	 * 新建数据库会话
+	 * @param ds 数据源
+	 * @return 数据库会话
+	 */
+	public static Session newSession(DataSource ds){
+		return Session.create(ds);
+	}
+	
+	/**
+	 * 新建数据库会话
+	 * @param conn 数据库连接对象
+	 * @return 数据库会话
+	 */
+	public static Session newSession(Connection conn){
+		return Session.create(conn);
 	}
 	
 	/**
@@ -244,8 +293,8 @@ public class DbUtil {
 	 * @throws SQLException
 	 */
 	public static void fillParams(PreparedStatement ps, Object... params) throws SQLException {
-		if (params == null) {
-			return;
+		if (CollectionUtil.isEmpty(params)) {
+			return;//无参数
 		}
 		ParameterMetaData pmd = ps.getParameterMetaData();
 		for (int i = 0; i < params.length; i++) {

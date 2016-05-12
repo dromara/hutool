@@ -2,10 +2,11 @@ package com.xiaoleilu.hutool.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
@@ -13,6 +14,7 @@ import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
 import com.xiaoleilu.hutool.db.handler.PageResultHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
+import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
@@ -25,6 +27,36 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
  */
 public class SqlConnRunner{
 	private Dialect dialect;
+	
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param dialect 方言
+	 * @return SQL执行类
+	 */
+	public static SqlConnRunner create(Dialect dialect) {
+		return new SqlConnRunner(dialect);
+	}
+	
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param ds 数据源
+	 * @return SQL执行类
+	 */
+	public static SqlConnRunner create(DataSource ds) {
+		return new SqlConnRunner(DialectFactory.newDialect(ds));
+	}
+	
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param driverClassName 驱动类名
+	 * @return SQL执行类
+	 */
+	public static SqlConnRunner create(String driverClassName) {
+		return new SqlConnRunner(driverClassName);
+	}
 	
 	//------------------------------------------------------- Constructor start
 	/**
@@ -223,15 +255,13 @@ public class SqlConnRunner{
 		checkConn(conn);
 		
 		PreparedStatement ps = null;
-		ResultSet rs = null;
 		try {
 			ps = dialect.psForFind(conn, fields, where);
-			rs = ps.executeQuery();
-			return rsh.handle(rs);
+			return SqlExecutor.query(ps, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			DbUtil.close(rs, ps);
+			DbUtil.close(ps);
 		}
 	}
 	
@@ -260,15 +290,13 @@ public class SqlConnRunner{
 		checkConn(conn);
 		
 		PreparedStatement ps = null;
-		ResultSet rs = null;
 		try {
 			ps = dialect.psForCount(conn, where);
-			rs = ps.executeQuery();
-			return new NumberHandler().handle(rs).intValue();
+			return SqlExecutor.query(ps, new NumberHandler()).intValue();
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			DbUtil.close(rs, ps);
+			DbUtil.close(ps);
 		}
 	}
 	
@@ -279,26 +307,15 @@ public class SqlConnRunner{
 	 * @param conn 数据库连接对象
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
-	 * @param page 页码
+	 * @param pageNumber 页码
 	 * @param numPerPage 每页条目数
 	 * @param rsh 结果集处理对象
 	 * @return 结果对象
 	 * @throws SQLException
 	 */
-	public <T> T page(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage, RsHandler<T> rsh) throws SQLException {
+	public <T> T page(Connection conn, Collection<String> fields, Entity where, int pageNumber, int numPerPage, RsHandler<T> rsh) throws SQLException {
 		checkConn(conn);
-		
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			ps = dialect.psForPage(conn, fields, where, page, numPerPage);
-			rs = ps.executeQuery();
-			return rsh.handle(rs);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(rs, ps);
-		}
+		return page(conn, fields, where, new Page(pageNumber, numPerPage), rsh);
 	}
 	
 	/**
@@ -319,17 +336,7 @@ public class SqlConnRunner{
 			return this.find(conn, fields, where, rsh);
 		}
 		
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			ps = dialect.psForPage(conn, fields, where, page);
-			rs = ps.executeQuery();
-			return rsh.handle(rs);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(rs, ps);
-		}
+		return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, fields, where, page), rsh);
 	}
 	
 	/**

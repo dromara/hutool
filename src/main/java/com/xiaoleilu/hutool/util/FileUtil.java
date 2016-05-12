@@ -111,7 +111,7 @@ public class FileUtil {
 				fileList.addAll(loopFiles(tmp, fileFilter));
 			}
 		} else {
-			if (fileFilter != null && fileFilter.accept(file)) {
+			if (null == fileFilter || fileFilter.accept(file)) {
 				fileList.add(file);
 			}
 		}

@@ -10,7 +10,9 @@ import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
 
 /**
- * SQL方言，不同的数据库由于在某些SQL上有所区别，故为每种数据库配置不同的方言。
+ * SQL方言，不同的数据库由于在某些SQL上有所区别，故为每种数据库配置不同的方言。<br>
+ * 由于不同数据库间SQL语句的差异，导致无法统一拼接SQL，<br>
+ * Dialect接口旨在根据不同的数据库，使用不同的方言实现类，来拼接对应的SQL，并将SQL和参数放入PreparedStatement中
  * @author loolly
  *
  */
@@ -66,18 +68,6 @@ public interface Dialect {
 	 * @throws SQLException
 	 */
 	public PreparedStatement psForFind(Connection conn, Collection<String> fields, Entity where) throws SQLException;
-	
-	/**
-	 * 构建用于分页查询的PreparedStatement
-	 * @param conn 数据库连接对象
-	 * @param fields 返回的字段列表，null则返回所有字段
-	 * @param where 条件实体类
-	 * @param page 页码
-	 * @param numPerPage 每页条目数
-	 * @return PreparedStatement
-	 * @throws SQLException
-	 */
-	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, int page, int numPerPage) throws SQLException;
 	
 	/**
 	 * 构建用于分页查询的PreparedStatement
