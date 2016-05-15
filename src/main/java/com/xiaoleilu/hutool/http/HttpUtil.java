@@ -183,7 +183,7 @@ public class HttpUtil {
 	 * @return 文件大小
 	 * @throws IOException
 	 */
-	public static int downloadFile(String url, File destFile) throws IOException {
+	public static long downloadFile(String url, File destFile) throws IOException {
 		InputStream in = null;
 		OutputStream out = null;
 		try {
