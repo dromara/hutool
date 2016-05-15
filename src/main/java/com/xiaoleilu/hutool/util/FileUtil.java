@@ -1444,7 +1444,7 @@ public class FileUtil {
 	 * 
 	 * @param data 数据
 	 * @param path 目标文件
-	 * @return 
+	 * @return File
 	 * @throws IOException
 	 */
 	public static File writeBytes(byte[] data, String path) throws IOException {

@@ -226,3 +226,4 @@ Entity中toVo区别是否忽略大小写
 3、FileUtil中某些方法返回File对象，方便操作
 4、对Db中的方法做修正
 5、修复FileUtil.loopFiles方法过滤条件为空时全部过滤问题
+6、增加startWith和endWith方法

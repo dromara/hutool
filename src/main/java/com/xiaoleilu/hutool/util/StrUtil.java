@@ -345,6 +345,36 @@ public class StrUtil {
 
 		return str;
 	}
+	
+	/**
+	 * 是否以指定字符串开头
+	 * @param str 被监测字符串
+	 * @param prefix 开头字符串
+	 * @param isIgnoreCase 是否忽略大小写
+	 * @return 是否以指定字符串开头
+	 */
+	public static boolean startWith(String str, String prefix, boolean isIgnoreCase){
+		if(isIgnoreCase){
+			return str.toLowerCase().startsWith(prefix.toLowerCase());
+		}else{
+			return str.startsWith(prefix);
+		}
+	}
+	
+	/**
+	 * 是否以指定字符串结尾
+	 * @param str 被监测字符串
+	 * @param suffix 结尾字符串
+	 * @param isIgnoreCase 是否忽略大小写
+	 * @return 是否以指定字符串结尾
+	 */
+	public static boolean endWith(String str, String suffix, boolean isIgnoreCase){
+		if(isIgnoreCase){
+			return str.toLowerCase().endsWith(suffix.toLowerCase());
+		}else{
+			return str.endsWith(suffix);
+		}
+	}
 
 	/**
 	 * 获得set或get方法对应的标准属性名<br/>
