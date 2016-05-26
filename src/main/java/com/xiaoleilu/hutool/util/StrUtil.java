@@ -844,7 +844,8 @@ public class StrUtil {
 	}
 
 	/**
-	 * 格式化文本
+	 * 格式化文本, {} 表示占位符<br>
+	 * 例如：format("aaa {} ccc", "bbb")   ---->    aaa bbb ccc
 	 * 
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param values 参数值
@@ -884,7 +885,9 @@ public class StrUtil {
 	}
 
 	/**
-	 * 格式化文本
+	 * 格式化文本，使用 {varName} 占位<br>
+	 * map = {a: "aValue", b: "bValue"}
+	 * format("{a} and {b}", map)    ---->    aValue and bValue
 	 * 
 	 * @param template 文本模板，被替换的部分用 {key} 表示
 	 * @param map 参数值对

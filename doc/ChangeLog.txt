@@ -228,3 +228,4 @@ Entity中toVo区别是否忽略大小写
 5、修复FileUtil.loopFiles方法过滤条件为空时全部过滤问题
 6、增加startWith和endWith方法
 7、IoUtil.copy返回值使用long，防止溢出
+8、增加Console类
