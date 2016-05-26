@@ -44,6 +44,16 @@ public class Setting extends BasicSetting {
 	public Setting(String pathBaseClassLoader, String charset, boolean isUseVariable) {
 		super(pathBaseClassLoader, charset, isUseVariable);
 	}
+	
+	/**
+	 * 构造，使用相对于Class文件根目录的相对路径
+	 * 
+	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
+	 * @param isUseVariable 是否使用变量
+	 */
+	public Setting(String pathBaseClassLoader, boolean isUseVariable) {
+		super(pathBaseClassLoader, DEFAULT_CHARSET, isUseVariable);
+	}
 
 	/**
 	 * 构造
