@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.IoUtil;
@@ -329,7 +330,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 		//初始化 connection
 		this.httpConnection = HttpConnection.create(url, method)
 				.setConnectionAndReadTimeout(timeout)
-				.header(this.headers);
+				.header(this.headers, true);	//覆盖默认Header
 		
 		//发送请求
 		try {
@@ -390,8 +391,6 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 	 * @throws IOException 
 	 */
 	private void sendMltipart() throws IOException{
-		contentType("multipart/form-data");//设置表单类型
-		
 		this.httpConnection.disableCache();
 		final OutputStream out = this.httpConnection.getOutputStream();
 		
@@ -403,6 +402,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 				builder.append(StrUtil.format(CONTENT_DISPOSITION_TEMPLATE, entry.getKey()));
 				builder.append(entry.getValue());
 			}
+			StaticLog.debug("{}", builder);
 			IoUtil.write(out, this.charset, false, builder.toString());
 		}
 		
@@ -413,6 +413,7 @@ public class HttpRequest extends HttpBase<HttpRequest>{
 			StringBuilder builder = StrUtil.builder().append(BOUNDARY_CRLF);
 			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), file.getName()));
 			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(file.getName())));
+			StaticLog.debug("Form: {}", builder);
 			IoUtil.write(out, this.charset, false, builder.toString());
 			FileUtil.writeToStream(file, out);
 		}

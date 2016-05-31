@@ -196,4 +196,18 @@ public abstract class HttpBase<T> {
 		this.charset = null;
 		return (T) this;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = StrUtil.builder();
+		sb.append("Request Headers: ").append(StrUtil.CRLF);
+		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
+			sb.append("    ").append(entry).append(StrUtil.CRLF);
+		}
+		
+		sb.append("Request Body: ").append(StrUtil.CRLF);
+		sb.append("    ").append(this.body).append(StrUtil.CRLF);
+		
+		return sb.toString();
+	}
 }

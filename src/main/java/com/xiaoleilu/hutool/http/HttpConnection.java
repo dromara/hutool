@@ -100,11 +100,11 @@ public class HttpConnection {
 		}
 
 		// do input and output
+		this.conn.setDoInput(true);
 		if (this.method.equals(Method.POST)) {
 			this.conn.setDoOutput(true);
 			this.conn.setUseCaches(false);
 		}
-		this.conn.setDoInput(true);
 
 		// default header
 		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
@@ -227,13 +227,13 @@ public class HttpConnection {
 	 * 
 	 * @param headers 请求头
 	 */
-	public HttpConnection header(Map<String, List<String>> headers) {
+	public HttpConnection header(Map<String, List<String>> headers, boolean isOverride) {
 		if(CollectionUtil.isNotEmpty(headers)) {
 			String name;
 			for (Entry<String, List<String>> entry : headers.entrySet()) {
 				name = entry.getKey();
 				for (String value : entry.getValue()) {
-					this.header(name, StrUtil.nullToEmpty(value), false);
+					this.header(name, StrUtil.nullToEmpty(value), isOverride);
 				}
 			}
 		}
@@ -424,6 +424,19 @@ public class HttpConnection {
 	 */
 	public String charset() {
 		return HttpUtil.getCharset(conn);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = StrUtil.builder();
+		sb.append("Request URL: ").append(this.url).append(StrUtil.CRLF);
+		sb.append("Request Method: ").append(this.method).append(StrUtil.CRLF);
+//		sb.append("Request Headers: ").append(StrUtil.CRLF);
+//		for (Entry<String, List<String>> entry : this.conn.getHeaderFields().entrySet()) {
+//			sb.append("    ").append(entry).append(StrUtil.CRLF);
+//		}
+		
+		return sb.toString();
 	}
 	
 	// --------------------------------------------------------------- Private Method start
