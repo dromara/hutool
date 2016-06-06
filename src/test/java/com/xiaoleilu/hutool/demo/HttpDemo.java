@@ -1,17 +1,7 @@
 package com.xiaoleilu.hutool.demo;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.velocity.texen.util.FileUtil;
 
@@ -40,11 +30,11 @@ public class HttpDemo {
 		// HttpResponse response = post.execute();
 		// System.out.println(response.body());
 
-		uploadFile(FileUtil.file("E:\\HOME\\Pictures\\logo.png"));
+		uploadFile(FileUtil.file("D:\\face.jpg"));
 	}
 
 	private static String uploadFile(File file) {
-		HttpRequest request = HttpRequest.post("http://localhost:8080/file/upload?fileType=img").form("file", file).form("fileType", "audio");
+		HttpRequest request = HttpRequest.post("http://localhost:8080/file/upload").form("file", file).form("fileType", "img");
 		HttpResponse response = request.execute();
 		System.out.println(response.body());
 		return null;

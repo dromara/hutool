@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -34,38 +35,62 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class HttpUtil {
 
 	public final static Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
+	
+	/**
+	 * 编码字符为 application/x-www-form-urlencoded
+	 * 
+	 * @param content 被编码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 */
+	public static String encode(String content, Charset charset) {
+		return encode(content, charset.name());
+	}
 
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded
 	 * 
 	 * @param content 被编码内容
+	 * @param charsetStr 编码
 	 * @return 编码后的字符
 	 */
-	public static String encode(String content, String charset) {
+	public static String encode(String content, String charsetStr) {
 		if (StrUtil.isBlank(content)) return content;
 
 		String encodeContent = null;
 		try {
-			encodeContent = URLEncoder.encode(content, charset);
+			encodeContent = URLEncoder.encode(content, charsetStr);
 		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(StrUtil.format("Unsupported encoding: [{}]", charset), e);
+			throw new UtilException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
 		}
 		return encodeContent;
+	}
+	
+	/**
+	 * 解码application/x-www-form-urlencoded字符
+	 * 
+	 * @param content 被解码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 */
+	public static String decode(String content, Charset charset) {
+		return decode(content, charset.name());
 	}
 
 	/**
 	 * 解码application/x-www-form-urlencoded字符
 	 * 
-	 * @param content 被编码内容
+	 * @param content 被解码内容
+	 * @param charsetStr 编码
 	 * @return 编码后的字符
 	 */
-	public static String decode(String content, String charset) {
+	public static String decode(String content, String charsetStr) {
 		if (StrUtil.isBlank(content)) return content;
 		String encodeContnt = null;
 		try {
-			encodeContnt = URLDecoder.decode(content, charset);
+			encodeContnt = URLDecoder.decode(content, charsetStr);
 		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(StrUtil.format("Unsupported encoding: [{}]", charset), e);
+			throw new UtilException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
 		}
 		return encodeContnt;
 	}

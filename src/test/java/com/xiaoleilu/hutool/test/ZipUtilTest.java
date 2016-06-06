@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.demo;
+package com.xiaoleilu.hutool.test;
 
 import java.io.IOException;
 

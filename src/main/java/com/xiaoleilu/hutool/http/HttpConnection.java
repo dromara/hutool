@@ -31,7 +31,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
- * http连接对象
+ * http连接对象，对HttpURLConnection的包装
  * 
  * @author Looly
  *
