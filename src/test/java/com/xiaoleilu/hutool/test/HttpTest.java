@@ -163,7 +163,7 @@ public class HttpTest {
 	public static void main(String[] args) throws Exception {
 		HttpTest u = new HttpTest("http://localhost:8080/file/upload");
 		u.addFileParameter("file", new File("D:\\face.jpg"));
-		u.addTextParameter("fileType", "img");
+		u.addTextParameter("fileType", "图片");
 		byte[] b = u.send();
 		String result = new String(b);
 		System.out.println(result);

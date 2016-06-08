@@ -26,6 +26,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final byte[] BOUNDARY_END = StrUtil.format("--{}--\r\n", BOUNDARY).getBytes();
 	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n\r\n";
 	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n";
+	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
 
 	private String url = "";
@@ -166,7 +167,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		return !connection.equalsIgnoreCase("close");
 	}
-
+	
 	/**
 	 * 获取内容长度
 	 * 
@@ -191,24 +192,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Form start
 	/**
 	 * 设置表单数据<br>
-	 * 自动编码数据
-	 * 
-	 * @param name 名
-	 * @param value 值
-	 */
-	public HttpRequest form(String name, Object value) {
-		return form(name, value, this.charset);
-	}
-
-	/**
-	 * 设置表单数据<br>
-	 * 自动编码数据
 	 * 
 	 * @param name 名
 	 * @param value 值
 	 * @param charset 编码
 	 */
-	public HttpRequest form(String name, Object value, String charset) {
+	public HttpRequest form(String name, Object value) {
 		// 停用body
 		this.body = null;
 
@@ -230,7 +219,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			strValue = Conver.toStr(value, null);
 		}
 
-		form.put(HttpUtil.encode(name, charset), HttpUtil.encode(strValue, charset));
+//		form.put(HttpUtil.encode(name, charset), HttpUtil.encode(strValue, charset));
+		form.put(name, strValue);
 		return this;
 	}
 
@@ -281,7 +271,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (false == isKeepAlive()) {
 			keepAlive(true);
 		}
-		header(Header.CONTENT_TYPE, "multipart/form-data; boundary=" + BOUNDARY);
 
 		if (this.fileForm == null) {
 			fileForm = new HashMap<String, File>();
@@ -353,7 +342,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 
 		// 初始化 connection
-		this.httpConnection = HttpConnection.create(url, method).setConnectionAndReadTimeout(timeout).header(this.headers, true); // 覆盖默认Header
+		this.httpConnection = HttpConnection.create(url, method, timeout).header(this.headers, true); // 覆盖默认Header
 
 		// 发送请求
 		try {
@@ -417,6 +406,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException
 	 */
 	private void sendMltipart() throws IOException {
+		setMultipart();//设置表单类型为Multipart
 		this.httpConnection.disableCache();
 		
 		final OutputStream out = this.httpConnection.getOutputStream();
@@ -476,6 +466,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private void formEnd(OutputStream out) throws IOException {
 		out.write(BOUNDARY_END);
 		out.flush();
+	}
+	
+	/**
+	 * 设置表单类型为Multipart（文件上传）
+	 * @return HttpConnection
+	 */
+	private void setMultipart(){
+		this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_MULTIPART_PREFIX + BOUNDARY, true);
 	}
 	// ---------------------------------------------------------------- Private method end
 

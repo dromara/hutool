@@ -34,7 +34,7 @@ public class HttpDemo {
 	}
 
 	private static String uploadFile(File file) {
-		HttpRequest request = HttpRequest.post("http://localhost:8080/file/upload").form("file", file).form("fileType", "img");
+		HttpRequest request = HttpRequest.post("http://localhost:8080/file/upload").form("file", file).form("fileType", "图片");
 		HttpResponse response = request.execute();
 		System.out.println(response.body());
 		return null;

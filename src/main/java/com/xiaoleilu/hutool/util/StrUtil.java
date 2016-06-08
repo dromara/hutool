@@ -375,6 +375,20 @@ public class StrUtil {
 			return str.endsWith(suffix);
 		}
 	}
+	
+	/**
+	 * 是否包含特定字符，忽略大小写，如果给定两个参数都为<code>null</code>，返回true
+	 * @param str 被检测字符串
+	 * @param testStr 被测试是否包含的字符串
+	 * @return 是否包含
+	 */
+	public static boolean containsIgnoreCase(String str, String testStr){
+		if(null == str){
+			//如果被监测字符串和 
+			return null == testStr;
+		}
+		return str.toLowerCase().contains(testStr.toLowerCase());
+	}
 
 	/**
 	 * 获得set或get方法对应的标准属性名<br/>

@@ -38,7 +38,7 @@ import com.xiaoleilu.hutool.util.URLUtil;
  */
 public class HttpConnection {
 	private final static Log log = StaticLog.get();
-
+	
 	private URL url;
 	/** method请求方法 */
 	private Method method;
@@ -57,8 +57,30 @@ public class HttpConnection {
 	public static HttpConnection create(String urlStr, Method method) {
 		return new HttpConnection(urlStr, method);
 	}
+	
+	/**
+	 * 创建HttpConnection
+	 * @param urlStr URL
+	 * @param method HTTP方法
+	 * @return HttpConnection
+	 */
+	public static HttpConnection create(String urlStr, Method method, int timeout) {
+		return new HttpConnection(urlStr, method, timeout);
+	}
 
 	// --------------------------------------------------------------- Constructor start
+	/**
+	 * 构造HttpConnection
+	 * 
+	 * @param urlStr URL
+	 * @param method HTTP方法
+	 * @param timeout 超时时长
+	 */
+	public HttpConnection(String urlStr, Method method, int timeout) {
+		this(urlStr, method);
+		this.setConnectionAndReadTimeout(timeout);
+	}
+	
 	/**
 	 * 构造HttpConnection
 	 * 
@@ -268,7 +290,9 @@ public class HttpConnection {
 	public Map<String, List<String>> headers() {
 		return this.conn.getHeaderFields();
 	}
+	
 	// ---------------------------------------------------------------- Headers end
+
 	/**
 	 * 关闭缓存
 	 * @return HttpConnection
