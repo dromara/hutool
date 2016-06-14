@@ -234,3 +234,4 @@ Entity中toVo区别是否忽略大小写
 2.15.3
 1、修复Http编码问题
 2、StrUtil增加containsIgnoreCase方法
+3、修复Entity的限制字段bug

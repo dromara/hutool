@@ -5,8 +5,9 @@ import java.io.Reader;
 import java.sql.Clob;
 import java.sql.RowId;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.lang.Dict;
@@ -58,7 +59,7 @@ public class Entity extends Dict{
 	/*表名*/
 	private String tableName;
 	/*字段名列表，用于限制加入的字段的值*/
-	private List<String> fieldNames;
+	private Set<String> fieldNames;
 	
 	//--------------------------------------------------------------- Constructor start
 	public Entity() {
@@ -93,10 +94,10 @@ public class Entity extends Dict{
 	
 	/**
 	 * 
-	 * @return 字段列表
+	 * @return 字段集合
 	 */
-	public List<String> getFieldNames() {
-		return fieldNames;
+	public Set<String> getFieldNames() {
+		return this.fieldNames;
 	}
 	/**
 	 * 设置字段列表
@@ -104,7 +105,9 @@ public class Entity extends Dict{
 	 * @return 自身
 	 */
 	public Entity setFieldNames(List<String> fieldNames) {
-		this.fieldNames = fieldNames;
+		if(CollectionUtil.isNotEmpty(fieldNames)){
+			this.fieldNames = new HashSet<String>(fieldNames);
+		}
 		return this;
 	}
 	
@@ -114,7 +117,9 @@ public class Entity extends Dict{
 	 * @return 自身
 	 */
 	public Entity setFieldNames(String... fieldNames) {
-		this.fieldNames = Arrays.asList(fieldNames);
+		if(CollectionUtil.isNotEmpty(fieldNames)){
+			this.fieldNames = CollectionUtil.newHashSet(fieldNames);
+		}
 		return this;
 	}
 	
@@ -124,11 +129,14 @@ public class Entity extends Dict{
 	 * @return 自身
 	 */
 	public Entity addFieldNames(String... fieldNames) {
-		final List<String> fieldList = Arrays.asList(fieldNames);
-		if(null == this.fieldNames){
-			this.fieldNames = fieldList;
-		}else{
-			this.fieldNames.addAll(fieldList);
+		if(CollectionUtil.isNotEmpty(fieldNames)){
+			if(null == this.fieldNames){
+				return setFieldNames(fieldNames);
+			}else{
+				for (String fieldName : fieldNames) {
+					this.fieldNames.add(fieldName);
+				}
+			}
 		}
 		return this;
 	}
@@ -151,12 +159,17 @@ public class Entity extends Dict{
 	}
 	
 	//-------------------------------------------------------------------- Put and Set start
+	/**
+	 * PUT方法做了过滤限制，如果此实体限制了属性名，则忽略限制名列表外的字段名
+	 * @param key 名
+	 * @param value 值
+	 */
 	@Override
 	public Object put(String key, Object value) {
 		if(CollectionUtil.isEmpty(fieldNames) || fieldNames.contains(key)){
 			super.put(key, value);
 		}
-		return super.put(key, value);
+		return null;
 	}
 	
 	@Override
