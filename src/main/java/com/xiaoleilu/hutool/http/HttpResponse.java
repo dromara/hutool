@@ -1,13 +1,18 @@
 package com.xiaoleilu.hutool.http;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
 import com.xiaoleilu.hutool.exceptions.HttpException;
-import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
+import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -17,6 +22,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class HttpResponse extends HttpBase<HttpResponse> {
+	
+	/** 读取服务器返回的流保存至内存 */
+	private FastByteArrayOutputStream out;
 
 	/**
 	 * 读取响应信息
@@ -85,14 +93,22 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	
 	// ---------------------------------------------------------------- Body start
 	/**
+	 * 获得服务区响应流
+	 * @return 响应流
+	 */
+	public InputStream bodyStream(){
+		return new ByteArrayInputStream(this.out.toByteArray());
+	}
+	
+	/**
 	 * 获取响应流字节码
 	 * @return byte[]
 	 */
 	public byte[] bodyBytes() {
-		if (body == null) {
+		if(null == this.out){
 			return null;
 		}
-		return StrUtil.bytes(body, charset);
+		return this.out.toByteArray();
 	}
 
 	/**
@@ -100,9 +116,27 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @return String
 	 */
 	public String body() {
-		return body;
+		try {
+			return HttpUtil.getString(bodyStream(), this.charset, null == this.charset);
+		} catch (IOException e) {
+			throw new HttpException(e);
+		}
 	}
 	// ---------------------------------------------------------------- Body end
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = StrUtil.builder();
+		sb.append("Request Headers: ").append(StrUtil.CRLF);
+		for (Entry<String, List<String>> entry : this.headers.entrySet()) {
+			sb.append("    ").append(entry).append(StrUtil.CRLF);
+		}
+		
+		sb.append("Request Body: ").append(StrUtil.CRLF);
+		sb.append("    ").append(this.body()).append(StrUtil.CRLF);
+		
+		return sb.toString();
+	}
 	
 	// ---------------------------------------------------------------- Private method start
 	/**
@@ -115,7 +149,11 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		if(isGzip()){
 			in = new GZIPInputStream(in);
 		}
-		this.body = HttpUtil.getString(in, CharsetUtil.UTF_8, charset == null);
+		
+//		this.body = HttpUtil.getString(in, CharsetUtil.UTF_8, charset == null);
+		int contentLength  = Conver.toInt(header(Header.CONTENT_LENGTH), 0);
+		this.out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
+		IoUtil.copy(in, this.out);
 	}
 	// ---------------------------------------------------------------- Private method end
 }

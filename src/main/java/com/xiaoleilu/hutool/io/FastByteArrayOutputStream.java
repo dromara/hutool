@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 /**
  * 基于快速缓冲FastByteBuffer的OutputStream，随着数据的增长自动扩充缓冲区
@@ -73,6 +74,10 @@ public class FastByteArrayOutputStream extends OutputStream {
 
 	public String toString(String enc) throws UnsupportedEncodingException {
 		return new String(toByteArray(), enc);
+	}
+	
+	public String toString(Charset charset) {
+		return new String(toByteArray(), charset);
 	}
 
 }

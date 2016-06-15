@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.IoUtil;
@@ -412,11 +413,14 @@ public class HttpUtil {
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			content.append(line).append('\n');
-			String charsetInContent = ReUtil.get(CHARSET_PATTERN, line, 1);
-			if (StrUtil.isNotBlank(charsetInContent)) {
-				charset = charsetInContent;
-				reader = IoUtil.getReader(in, charset);
-				isGetCharsetFromContent = false;
+			if(isGetCharsetFromContent){
+				String charsetInContent = ReUtil.get(CHARSET_PATTERN, line, 1);
+				if (StrUtil.isNotBlank(charsetInContent)) {
+					StaticLog.debug("Charset：{}", charsetInContent);
+					charset = charsetInContent;
+					reader = IoUtil.getReader(in, charset);
+					isGetCharsetFromContent = false;
+				}
 			}
 		}
 		
