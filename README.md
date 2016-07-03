@@ -1,7 +1,7 @@
 hutool
 ======
 
-<center>![封面](http://img.hb.aicdn.com/61f84090279e1aaf49a11301dea2b3f453d2ad9028aaf4-R12vgs_fw658)</center>
+<center>![封面](http://looly-blog.qiniudn.com/hutool.jpg)</center>
 
 ## Hutool交流QQ群：** 537116831 **
 
