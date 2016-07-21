@@ -16,13 +16,14 @@ import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.ds.SimpleDataSource;
 import com.xiaoleilu.hutool.db.ds.druid.DruidDS;
 import com.xiaoleilu.hutool.db.ds.pool.PooledDataSource;
+import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.log.LogFactory;
 
 /**
  * DB使用样例
@@ -31,7 +32,7 @@ import com.xiaoleilu.hutool.log.StaticLog;
  * 
  */
 public class DbDemo {
-	private final static Log log = StaticLog.get();
+	private final static Log log = LogFactory.get();
 
 	private static String TABLE_NAME = "test_table";
 
@@ -137,6 +138,14 @@ public class DbDemo {
 			// 查，生成SQL为 SELECT * FROM `table_name` WHERE WHERE `条件1` = ? 第一个参数为返回的字段列表，如果null则返回所有字段
 			List<Entity> entityList = runner.find(null, where, new EntityListHandler());
 			log.info("{}", entityList);
+			
+			//查询所有字段
+			entityList = runner.find(where, new EntityListHandler());
+			log.info("{}", entityList);
+			
+			//查询第一个结果
+			Entity entityResult = runner.find(where, new EntityHandler());
+			log.info("{}", entityResult);
 
 			// 分页
 			List<Entity> pagedEntityList = runner.page(null, where, 0, 20, new EntityListHandler());
@@ -175,7 +184,7 @@ public class DbDemo {
 			// 查，生成SQL为 SELECT * FROM `table_name` WHERE WHERE `条件1` = ? 第一个参数为返回的字段列表，如果null则返回所有字段
 			List<Entity> entityList = session.find(null, where, new EntityListHandler());
 			log.info("{}", entityList);
-
+			
 			// 分页
 			List<Entity> pagedEntityList = session.page(null, where, 0, 20, new EntityListHandler());
 			log.info("{}", pagedEntityList);

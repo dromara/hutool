@@ -103,6 +103,32 @@ public class BeanUtil {
 			}
 		});
 	}
+	
+	/**
+	 * 使用Map填充Bean对象，可配置将下划线转换为驼峰
+	 * 
+	 * @param map Map
+	 * @param bean Bean
+	 * @param isToCamelCase 是否将下划线模式转换为驼峰模式
+	 * @return Bean
+	 */
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase) {
+		if(isToCamelCase){
+			final Map<Object, Object> map2 = new HashMap<Object, Object>();
+			for (Entry<?, ?> entry : map.entrySet()) {
+				final Object key = entry.getKey();
+				if (null != key && key instanceof String) {
+					final String keyStr = (String) key;
+					map2.put(StrUtil.toCamelCase(keyStr), entry.getValue());
+				} else {
+					map2.put(key, entry.getValue());
+				}
+			}
+			return fillBeanWithMap(map2, bean);
+		}
+		
+		return fillBeanWithMap(map, bean);
+	}
 
 	/**
 	 * 使用Map填充Bean对象，忽略大小写

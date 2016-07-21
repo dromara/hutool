@@ -13,6 +13,7 @@ import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.IoUtil;
+import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.SecureUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -26,6 +27,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final byte[] BOUNDARY_END = StrUtil.format("--{}--\r\n", BOUNDARY).getBytes();
 	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n\r\n";
 	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n";
+	
+	private static final String CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX = "application/x-www-form-urlencoded;charset=";
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
 
@@ -198,6 +201,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param charset 编码
 	 */
 	public HttpRequest form(String name, Object value) {
+		if(StrUtil.isBlank(name) || ObjectUtil.isNull(value)){
+			return this;	//忽略非法的form表单项内容;
+		}
+		
 		// 停用body
 		this.body = null;
 
@@ -386,18 +393,31 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException
 	 */
 	private void send() throws IOException {
-		if (CollectionUtil.isNotEmpty(fileForm)) {
-			sendMltipart();
+		if (CollectionUtil.isEmpty(fileForm)) {
+			sendFormUrlEncoded();//普通表单
 		} else {
-			// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-			String content;
-			if (StrUtil.isNotBlank(this.body)) {
-				content = this.body;
-			} else {
-				content = HttpUtil.toParams(this.form);
-			}
-			IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
+			sendMltipart();	//文件上传表单
 		}
+	}
+	
+	/**
+	 * 发送普通表单
+	 * @throws IOException
+	 */
+	private void sendFormUrlEncoded() throws IOException{
+		if(StrUtil.isBlank(this.httpConnection.header(Header.CONTENT_TYPE))){
+			//如果未自定义Content-Type，使用默认的application/x-www-form-urlencoded
+			this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX + this.charset, true);
+		}
+		
+		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
+		String content;
+		if (StrUtil.isNotBlank(this.body)) {
+			content = this.body;
+		} else {
+			content = HttpUtil.toParams(this.form);
+		}
+		IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
 	}
 
 	/**

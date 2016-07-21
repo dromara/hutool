@@ -53,7 +53,18 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 * @return Bean
 	 */
 	public <T> T toBean(T bean) {
-		BeanUtil.fillBeanWithMap(this, bean);
+		return toBean(bean, false);
+	}
+	
+	/**
+	 * 转换为Bean对象
+	 * @param <T>
+	 * @param bean Bean
+	 * @param isToCamelCase 是否转换为驼峰模式
+	 * @return Bean
+	 */
+	public <T> T toBean(T bean, boolean isToCamelCase) {
+		BeanUtil.fillBeanWithMap(this, bean, isToCamelCase);
 		return bean;
 	}
 	

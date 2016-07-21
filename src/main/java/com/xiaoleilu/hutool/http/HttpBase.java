@@ -193,7 +193,9 @@ public abstract class HttpBase<T> {
 	 * @return T 自己
 	 */
 	public T charset(String charset) {
-		this.charset = null;
+		if(StrUtil.isNotBlank(charset)){
+			this.charset = charset;
+		}
 		return (T) this;
 	}
 	

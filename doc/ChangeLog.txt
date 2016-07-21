@@ -236,3 +236,6 @@ Entity中toVo区别是否忽略大小写
 2、StrUtil增加containsIgnoreCase方法
 3、修复Entity的限制字段bug
 4、修复使用HttpResponse读取二进制流转码问题
+5、Http模块的Post方法使用默认的Content-Type
+6、Http模块设置字符编码无效bug
+7、Dict增加toEntity方法，可选参数是否转换为驼峰模式
