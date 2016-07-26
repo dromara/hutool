@@ -243,7 +243,7 @@ public class BeanUtil {
 		}
 		return bean;
 	}
-
+	
 	/**
 	 * 对象转Map
 	 * 
@@ -251,6 +251,17 @@ public class BeanUtil {
 	 * @return Map
 	 */
 	public static <T> Map<String, Object> beanToMap(T bean) {
+		return beanToMap(bean, false);
+	}
+
+	/**
+	 * 对象转Map
+	 * 
+	 * @param bean bean对象
+	 * @param isToUnderlineCase 是否转换为下划线模式
+	 * @return Map
+	 */
+	public static <T> Map<String, Object> beanToMap(T bean, boolean isToUnderlineCase) {
 
 		if (bean == null) {
 			return null;
@@ -266,7 +277,7 @@ public class BeanUtil {
 					Method getter = property.getReadMethod();
 					Object value = getter.invoke(bean);
 					if (null != value) {
-						map.put(key, value);
+						map.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
 					}
 				}
 			}

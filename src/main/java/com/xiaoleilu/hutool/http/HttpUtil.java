@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.IoUtil;
@@ -402,6 +403,9 @@ public class HttpUtil {
 	 */
 	@SuppressWarnings("resource")
 	public static String getString(InputStream in, String charset, boolean isGetCharsetFromContent) throws IOException {
+		if(StrUtil.isBlank(charset)){
+			charset  = CharsetUtil.UTF_8;
+		}
 		if(false == isGetCharsetFromContent){
 			return IoUtil.read(in, charset);
 		}

@@ -347,7 +347,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				this.url = HttpUtil.urlWithForm(this.url, this.form);
 			}
 		}
-
+		
 		// 初始化 connection
 		this.httpConnection = HttpConnection.create(url, method, timeout).header(this.headers, true); // 覆盖默认Header
 

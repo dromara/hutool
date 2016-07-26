@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.xiaoleilu.hutool.http.HttpRequest;
 import com.xiaoleilu.hutool.http.HttpResponse;
+import com.xiaoleilu.hutool.http.HttpUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 
 public class HttpDemo {
@@ -18,7 +19,8 @@ public class HttpDemo {
 		// }
 		// System.out.println(res.body());
 
-		// HttpUtil.get("http://www.cnblogs.com/zhuawang/archive/2012/12/08/2809380.html", "utf-8");
+		 String str = HttpUtil.get("http://www.baidu.com/");
+		 System.out.println(str);
 
 		// HttpRequest post = HttpRequest.post("http://localhost:8091/ga-weixin/file/upload");
 		// post.form("test", "testValue");
