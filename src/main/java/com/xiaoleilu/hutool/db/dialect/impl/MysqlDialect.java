@@ -8,6 +8,7 @@ import java.util.Collection;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
+import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
@@ -48,5 +49,10 @@ public class MysqlDialect extends AnsiSqlDialect{
 		final PreparedStatement ps = conn.prepareStatement(find.build());
 		DbUtil.fillParams(ps, find.getParamValueArray());
 		return ps;
+	}
+	
+	@Override
+	public DialectName dialectName() {
+		return DialectName.MYSQL;
 	}
 }

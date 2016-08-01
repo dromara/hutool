@@ -24,6 +24,7 @@ import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Condition;
+import com.xiaoleilu.hutool.db.sql.SqlFormatter;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
@@ -497,6 +498,15 @@ public class DbUtil {
 	 */
 	public static String rowIdToString(RowId rowId){
 		return StrUtil.str(rowId.getBytes(), CharsetUtil.CHARSET_ISO_8859_1);
+	}
+	
+	/**
+	 * 格式化SQL
+	 * @param sql SQL
+	 * @return 格式化后的SQL
+	 */
+	public static String formatSql(String sql){
+		return SqlFormatter.format(sql);
 	}
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end

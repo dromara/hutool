@@ -3,19 +3,16 @@ package com.xiaoleilu.hutool.db.dialect.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
+import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
-import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
+import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -28,42 +25,6 @@ public class OracleDialect extends AnsiSqlDialect{
 	
 	public OracleDialect() {
 		wrapper = new Wrapper('"');	//Oracle所有字段名用双引号包围，防止字段名或表名与系统关键字冲突
-	}
-	
-	@Override
-	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
-		if(null != wrapper) {
-			//包装字段名
-			entity = wrapper.wrap(entity);
-		}
-		
-		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ").append(entity.getTableName()).append(" (");
-
-		final StringBuilder placeHolder = new StringBuilder();
-		placeHolder.append(") values(");
-
-		final List<Object> paramValues = new ArrayList<Object>(entity.size());
-		for (Entry<String, Object> entry : entity.entrySet()) {
-			if (paramValues.size() > 0) {
-				sql.append(", ");
-				placeHolder.append(", ");
-			}
-			sql.append(entry.getKey());
-			final Object value = entry.getValue();
-			if(value instanceof String && ((String)value).toLowerCase().endsWith(".nextval")) {
-				//Oracle的特殊自增键，通过字段名.nextval获得下一个值
-				placeHolder.append(value);
-			}else {
-				placeHolder.append("?");
-				paramValues.add(value);
-			}
-		}
-		sql.append(placeHolder.toString()).append(")");
-
-		final PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-		DbUtil.fillParams(ps, paramValues);
-		return ps;
 	}
 	
 	@Override
@@ -84,15 +45,20 @@ public class OracleDialect extends AnsiSqlDialect{
 		}
 		
 		int[] startEnd = page.getStartEnd();
-		final StringBuilder sql = new StringBuilder();
+		final SqlBuilder sql = SqlBuilder.create(wrapper);
 		sql.append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")
 			.append(find)
 			.append(" ) row_ where rownum <= ").append(startEnd[1])
 			.append(") table_alias")
 			.append(" where table_alias.rownum_ >= ").append(startEnd[0]);
 		
-		final PreparedStatement ps = conn.prepareStatement(sql.toString());
+		final PreparedStatement ps = conn.prepareStatement(sql.build());
 		DbUtil.fillParams(ps, find.getParamValues());
 		return ps;
+	}
+	
+	@Override
+	public DialectName dialectName() {
+		return DialectName.ORACLE;
 	}
 }

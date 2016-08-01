@@ -3,19 +3,18 @@ package com.xiaoleilu.hutool.db.dialect.impl;
 import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
 
-
 /**
- * Postgree方言
+ * SqlLite3方言
  * @author loolly
  *
  */
-public class PostgresqlDialect extends AnsiSqlDialect{
-	public PostgresqlDialect() {
-		wrapper = new Wrapper('"');
+public class Sqlite3Dialect extends AnsiSqlDialect{
+	public Sqlite3Dialect() {
+		wrapper = new Wrapper('[', ']');
 	}
-
+	
 	@Override
 	public DialectName dialectName() {
-		return DialectName.POSTGREESQL;
+		return DialectName.SQLITE3;
 	}
 }

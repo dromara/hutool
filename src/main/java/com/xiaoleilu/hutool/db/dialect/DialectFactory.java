@@ -9,7 +9,7 @@ import com.xiaoleilu.hutool.db.dialect.impl.AnsiSqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.MysqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.OracleDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.PostgresqlDialect;
-import com.xiaoleilu.hutool.db.dialect.impl.Sqllite3Dialect;
+import com.xiaoleilu.hutool.db.dialect.impl.Sqlite3Dialect;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -43,7 +43,7 @@ public class DialectFactory {
 			}else if(DRIVER_ORACLE.equalsIgnoreCase(driverName)) {
 				return new OracleDialect();
 			}else if(DRIVER_SQLLITE3.equalsIgnoreCase(driverName)) {
-				return new Sqllite3Dialect();
+				return new Sqlite3Dialect();
 			}else if(DRIVER_POSTGRESQL.equalsIgnoreCase(driverName)) {
 				return new PostgresqlDialect();
 			}

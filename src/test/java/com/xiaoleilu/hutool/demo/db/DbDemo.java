@@ -148,11 +148,11 @@ public class DbDemo {
 			log.info("{}", entityResult);
 
 			// 分页
-			List<Entity> pagedEntityList = runner.page(null, where, 0, 20, new EntityListHandler());
+			List<Entity> pagedEntityList = runner.page(null, where, 1, 20, new EntityListHandler());
 			log.info("{}", pagedEntityList);
 			
 			//分页，提供了Page对象满足更多的排序条件要求
-			PageResult<Entity> pageResult = runner.page(where, new Page(0, 20, new Order("字段名", Direction.DESC)));
+			PageResult<Entity> pageResult = runner.page(where, new Page(1, 20, new Order("字段名", Direction.DESC)));
 			log.info("{}", pageResult);
 
 			// 满足条件的结果数，生成SQL为 SELECT count(1) FROM `table_name` WHERE WHERE `条件1` = ?
@@ -186,7 +186,7 @@ public class DbDemo {
 			log.info("{}", entityList);
 			
 			// 分页
-			List<Entity> pagedEntityList = session.page(null, where, 0, 20, new EntityListHandler());
+			List<Entity> pagedEntityList = session.page(null, where, 1, 20, new EntityListHandler());
 			log.info("{}", pagedEntityList);
 
 			session.commit();

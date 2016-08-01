@@ -12,6 +12,7 @@ import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
+import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
@@ -41,7 +42,7 @@ public class AnsiSqlDialect implements Dialect {
 
 	@Override
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
-		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entity);
+		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entity, this.dialectName());
 
 		final PreparedStatement ps = conn.prepareStatement(insert.build(), Statement.RETURN_GENERATED_KEYS);
 		DbUtil.fillParams(ps, insert.getParamValues());
@@ -122,6 +123,11 @@ public class AnsiSqlDialect implements Dialect {
 		List<String> fields = new ArrayList<String>();
 		fields.add("count(1)");
 		return psForFind(conn, fields, where);
+	}
+	
+	@Override
+	public DialectName dialectName() {
+		return DialectName.ANSI;
 	}
 
 	// ---------------------------------------------------------------------------- Protected method start

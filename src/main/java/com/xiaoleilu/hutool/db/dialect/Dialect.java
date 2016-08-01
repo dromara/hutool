@@ -88,4 +88,10 @@ public interface Dialect {
 	 * @throws SQLException
 	 */
 	public PreparedStatement psForCount(Connection conn, Entity where) throws SQLException;
+	
+	/**
+	 * 方言名
+	 * @return 方言名
+	 */
+	public DialectName dialectName();
 }

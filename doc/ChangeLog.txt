@@ -240,3 +240,11 @@ Entity中toVo区别是否忽略大小写
 6、Http模块设置字符编码无效bug
 7、Dict增加toEntity方法，可选参数是否转换为驼峰模式
 8、修复Http Get方法的bug
+
+2.15.4
+1、Bean转Map可选是否转为下划线模式，Map转Bean可选是否转驼峰模式
+
+2.15.5
+1、优化Oracle SQL拼接，使之统一使用SqlBuilder构建SQL
+2、debug方式显示SQL
+3、SQL格式化功能

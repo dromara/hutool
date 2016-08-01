@@ -8,10 +8,12 @@ import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -24,6 +26,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class SqlBuilder {
 	private final static Log log = StaticLog.get();
+	
+	private static boolean showSql;
+	private static boolean formatSql;
 	
 	//--------------------------------------------------------------- Static methods start
 	/**
@@ -41,6 +46,16 @@ public class SqlBuilder {
 	 */
 	public static SqlBuilder create(Wrapper wrapper){
 		return new SqlBuilder(wrapper);
+	}
+	
+	/**
+	 * 设置全局配置：是否通过debug日志显示SQL
+	 * @param isShowSql 是否显示SQL
+	 * @param isFormatSql 是否格式化显示的SQL
+	 */
+	public static void setShowSql(boolean isShowSql, boolean isFormatSql){
+		showSql = isShowSql;
+		formatSql = isFormatSql;
 	}
 	//--------------------------------------------------------------- Static methods end
 	
@@ -102,12 +117,23 @@ public class SqlBuilder {
 	//--------------------------------------------------------------- Constructor end
 	
 	//--------------------------------------------------------------- Builder start
+	
 	/**
-	 * 插入
+	 * 插入，使用默认的ANSI方言
 	 * @param entity 实体
 	 * @return 自己
 	 */
 	public SqlBuilder insert(Entity entity){
+		return this.insert(entity, DialectName.ANSI);
+	}
+	
+	/**
+	 * 插入
+	 * @param entity 实体
+	 * @param dialectName 方言名
+	 * @return 自己
+	 */
+	public SqlBuilder insert(Entity entity, DialectName dialectName){
 		//验证
 		DbUtil.validateEntity(entity);
 		
@@ -128,8 +154,17 @@ public class SqlBuilder {
 			}
 			
 			sql.append(entry.getKey());
-			placeHolder.append("?");
-			paramValues.add(entry.getValue());
+			
+			final Object value = entry.getValue();
+			if(ObjectUtil.equals(dialectName, DialectName.ORACLE) //对Oracle的特殊处理
+					&& value instanceof String 
+					&& ((String)value).toLowerCase().endsWith(".nextval")) {
+				//Oracle的特殊自增键，通过字段名.nextval获得下一个值
+				placeHolder.append(value);
+			}else {
+				placeHolder.append("?");
+				paramValues.add(value);
+			}
 		}
 		sql.append(placeHolder.toString()).append(")");
 		
@@ -443,7 +478,7 @@ public class SqlBuilder {
 	 * @return 构建好的SQL语句
 	 */
 	public String build(){
-		return this.build(false);
+		return this.build(showSql);
 	}
 	
 	/**
@@ -454,7 +489,7 @@ public class SqlBuilder {
 	public String build(boolean isShowDebugSql){
 		final String sqlStr = this.sql.toString().trim();
 		if(isShowDebugSql){
-			log.debug("\n{}", sqlStr);
+			log.debug("\n{}", formatSql ? SqlFormatter.format(sqlStr) : sqlStr);
 		}
 		return sqlStr;
 	}
