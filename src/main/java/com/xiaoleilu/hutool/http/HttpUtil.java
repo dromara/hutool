@@ -193,6 +193,10 @@ public class HttpUtil {
 	 * @throws IOException
 	 */
 	public static String downloadString(String url, String customCharset) throws IOException {
+		if(StrUtil.isBlank(url)){
+			throw new NullPointerException("[url] is null!");
+		}
+		
 		InputStream in = null;
 		try {
 			in = new URL(url).openStream();
@@ -211,6 +215,13 @@ public class HttpUtil {
 	 * @throws IOException
 	 */
 	public static long downloadFile(String url, File destFile) throws IOException {
+		if(StrUtil.isBlank(url)){
+			throw new NullPointerException("[url] is null!");
+		}
+		if(null == destFile){
+			throw new NullPointerException("[destFile] is null!");
+		}
+		
 		InputStream in = null;
 		OutputStream out = null;
 		try {

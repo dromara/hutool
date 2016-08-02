@@ -248,3 +248,4 @@ Entity中toVo区别是否忽略大小写
 1、优化Oracle SQL拼接，使之统一使用SqlBuilder构建SQL
 2、debug方式显示SQL
 3、SQL格式化功能
+4、修复IoUtil中的空指针问题（增加了空指针的消息内容，便于排查）

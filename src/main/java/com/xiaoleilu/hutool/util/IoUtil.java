@@ -87,6 +87,16 @@ public class IoUtil {
 	 * @throws IOException
 	 */
 	public static long copy(InputStream in, OutputStream out, int bufferSize) throws IOException {
+		if(null == in){
+			throw new NullPointerException("InputStream is null!");
+		}
+		if(null == out){
+			throw new NullPointerException("OutputStream is null!");
+		}
+		if(bufferSize <= 0){
+			bufferSize = DEFAULT_BUFFER_SIZE;
+		}
+		
 		byte[] buffer = new byte[bufferSize];
 		long count = 0;
 		for (int n = -1; (n = in.read(buffer)) != -1;) {
@@ -106,6 +116,13 @@ public class IoUtil {
 	 * @throws IOException
 	 */
 	public static long copy(FileInputStream in, FileOutputStream out) throws IOException {
+		if(null == in){
+			throw new NullPointerException("FileInputStream is null!");
+		}
+		if(null == out){
+			throw new NullPointerException("FileOutputStream is null!");
+		}
+		
 		FileChannel inChannel = in.getChannel();
 		FileChannel outChannel = out.getChannel();
 		
@@ -158,6 +175,19 @@ public class IoUtil {
 		copy(in, out);
 		return out.toByteArray();
 	}
+	
+	/**
+	 * 从流中读取内容
+	 * 
+	 * @param in 输入流
+	 * @param charsetName 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String read(InputStream in, String charsetName) throws IOException {
+		FastByteArrayOutputStream out = read(in);
+		return StrUtil.isBlank(charsetName) ? out.toString() : out.toString(charsetName);
+	}
 
 	/**
 	 * 从流中读取内容
@@ -167,10 +197,22 @@ public class IoUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
-	public static String read(InputStream in, String charset) throws IOException {
+	public static String read(InputStream in, Charset charset) throws IOException {
+		FastByteArrayOutputStream out = read(in);
+		return null == charset ? out.toString() : out.toString(charset);
+	}
+	
+	/**
+	 * 从流中读取内容，读到输出流中
+	 * 
+	 * @param in 输入流
+	 * @return 输出流
+	 * @throws IOException
+	 */
+	public static FastByteArrayOutputStream read(InputStream in) throws IOException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(in, out);
-		return out.toString(charset);
+		return out;
 	}
 	
 	/**

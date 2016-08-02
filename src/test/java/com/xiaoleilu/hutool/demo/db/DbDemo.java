@@ -20,6 +20,7 @@ import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Order;
+import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.log.Log;
@@ -43,6 +44,9 @@ public class DbDemo {
 	 * 样例
 	 */
 	public static void demo() {
+		
+		SqlBuilder.setShowSql(true, true);
+		
 		DataSource ds = getDataSource();
 
 		sqlExecutorDemo(ds);

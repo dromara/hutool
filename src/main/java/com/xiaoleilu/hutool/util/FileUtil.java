@@ -1203,7 +1203,7 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static BufferedOutputStream getOutputStream(File file) throws IOException {
-		return new BufferedOutputStream(new FileOutputStream(file));
+		return new BufferedOutputStream(new FileOutputStream(touch(file)));
 	}
 
 	/**
