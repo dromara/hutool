@@ -291,4 +291,5 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Dict clone() {
 		return (Dict) super.clone();
 	}
+	
 }

@@ -54,6 +54,15 @@ public class JSONUtil {
 	}
 	
 	/**
+	 * 转换为JSON字符串
+	 * @param bean Bean对象
+	 * @return JSON字符串
+	 */
+	public static String toJsonStr(Object bean){
+		return toJsonStr(new JSONObject(bean));
+	}
+	
+	/**
 	 * 转为格式化后的JSON字符串
 	 * @param jsonObject JSONObject
 	 * @return JSON字符串
@@ -69,6 +78,15 @@ public class JSONUtil {
 	 */
 	public static String toJsonPrettyStr(JSONArray jsonArray) {
 		return jsonArray.toJSONString(4);
+	}
+	
+	/**
+	 * 转换为格式化后的JSON字符串
+	 * @param bean Bean对象
+	 * @return JSON字符串
+	 */
+	public static String toJsonPrettyStr(Object bean){
+		return toJsonPrettyStr(new JSONObject(bean));
 	}
 	
 	/**
