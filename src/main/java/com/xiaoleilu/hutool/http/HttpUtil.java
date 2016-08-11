@@ -358,7 +358,8 @@ public class HttpUtil {
 	}
 
 	/**
-	 * 从Http连接的头信息中获得字符集
+	 * 从Http连接的头信息中获得字符集<br>
+	 * 从ContentType中获取
 	 * 
 	 * @param conn HTTP连接对象
 	 * @return 字符集
@@ -368,10 +369,7 @@ public class HttpUtil {
 			return null;
 		}
 
-		String charset = conn.getContentEncoding();
-		if (StrUtil.isBlank(charset)) {
-			charset = ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
-		}
+		String charset = ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
 		return charset;
 	}
 	

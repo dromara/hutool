@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import com.xiaoleilu.hutool.http.HttpRequest;
 import com.xiaoleilu.hutool.http.HttpResponse;
-import com.xiaoleilu.hutool.http.HttpUtil;
+import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.util.FileUtil;
 
 public class HttpDemo {
@@ -19,8 +19,10 @@ public class HttpDemo {
 		// }
 		// System.out.println(res.body());
 
-		 String str = HttpUtil.get("http://www.baidu.com/");
-		 System.out.println(str);
+		 HttpRequest request = HttpRequest
+				 .get("https://www.baidu.com")
+		 		.setSSLProtocol(SSLSocketFactoryBuilder.TLSv12);
+		 System.out.println(request.execute().body());
 
 		// HttpRequest post = HttpRequest.post("http://localhost:8091/ga-weixin/file/upload");
 		// post.form("test", "testValue");
@@ -32,10 +34,10 @@ public class HttpDemo {
 		// System.out.println(response.body());
 
 		uploadFile(FileUtil.file("D:\\face.jpg"));
-		
-		HttpRequest request = HttpRequest.get("http://www.wepe.com.cn/about.html");
-		HttpResponse res = request.execute();
-		System.out.println(res.body());
+//		
+//		HttpRequest request = HttpRequest.get("http://www.wepe.com.cn/about.html");
+//		HttpResponse res = request.execute();
+//		System.out.println(res.body());
 	}
 
 	private static String uploadFile(File file) {

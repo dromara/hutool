@@ -8,19 +8,16 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
+import javax.net.ssl.SSLSocketFactory;
 
 import com.xiaoleilu.hutool.exceptions.HttpException;
-import com.xiaoleilu.hutool.http.ssl.DefaultTrustManager;
+import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.log.Log;
@@ -38,18 +35,15 @@ import com.xiaoleilu.hutool.util.URLUtil;
  */
 public class HttpConnection {
 	private final static Log log = StaticLog.get();
-	
+
 	private URL url;
 	/** method请求方法 */
 	private Method method;
 	private HttpURLConnection conn;
-	
-	// for https
-	private HostnameVerifier hostnameVerifier;
-	private TrustManager[] trustManagers;
-	
+
 	/**
 	 * 创建HttpConnection
+	 * 
 	 * @param urlStr URL
 	 * @param method HTTP方法
 	 * @return HttpConnection
@@ -57,15 +51,39 @@ public class HttpConnection {
 	public static HttpConnection create(String urlStr, Method method) {
 		return new HttpConnection(urlStr, method);
 	}
-	
+
 	/**
 	 * 创建HttpConnection
+	 * 
 	 * @param urlStr URL
 	 * @param method HTTP方法
+	 * @param timeout 超时时长
 	 * @return HttpConnection
 	 */
 	public static HttpConnection create(String urlStr, Method method, int timeout) {
 		return new HttpConnection(urlStr, method, timeout);
+	}
+	
+	/**
+	 * 创建HttpConnection
+	 * 
+	 * @param urlStr URL
+	 * @param method HTTP方法
+	 * @return HttpConnection
+	 */
+	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) {
+		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, 0);
+	}
+	
+	/**
+	 * 创建HttpConnection
+	 * 
+	 * @param urlStr URL
+	 * @param method HTTP方法
+	 * @return HttpConnection
+	 */
+	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout) {
+		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, timeout);
 	}
 
 	// --------------------------------------------------------------- Constructor start
@@ -74,11 +92,9 @@ public class HttpConnection {
 	 * 
 	 * @param urlStr URL
 	 * @param method HTTP方法
-	 * @param timeout 超时时长
 	 */
-	public HttpConnection(String urlStr, Method method, int timeout) {
-		this(urlStr, method);
-		this.setConnectionAndReadTimeout(timeout);
+	public HttpConnection(String urlStr, Method method) {
+		this(urlStr, method, null, null, 0);
 	}
 	
 	/**
@@ -86,24 +102,41 @@ public class HttpConnection {
 	 * 
 	 * @param urlStr URL
 	 * @param method HTTP方法
+	 * @param timeout 超时时长
 	 */
-	public HttpConnection(String urlStr, Method method) {
-		if(StrUtil.isBlank(urlStr)) {
+	public HttpConnection(String urlStr, Method method, int timeout) {
+		this(urlStr, method, null, null, timeout);
+	}
+	
+	/**
+	 * 构造HttpConnection
+	 * 
+	 * @param urlStr URL
+	 * @param method HTTP方法
+	 * @param hostnameVerifier 域名验证器
+	 * @param ssf SSLSocketFactory
+	 * @param timeout 超时时长
+	 */
+	public HttpConnection(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout) {
+		if (StrUtil.isBlank(urlStr)) {
 			throw new HttpException("Url is blank !");
 		}
-		if(Validator.isUrl(urlStr) == false) {
+		if (Validator.isUrl(urlStr) == false) {
 			throw new HttpException("{} is not a url !", urlStr);
 		}
-		
+
 		this.url = URLUtil.url(urlStr);
 		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
 
 		try {
-			this.conn = HttpUtil.isHttps(urlStr) ? openHttps() : openHttp();
+			this.conn = HttpUtil.isHttps(urlStr) ? openHttps(hostnameVerifier, ssf) : openHttp();
 		} catch (Exception e) {
 			throw new HttpException(e.getMessage(), e);
 		}
-		
+		if(timeout > 0){
+			this.setConnectionAndReadTimeout(timeout);
+		}
+
 		initConn();
 	}
 
@@ -111,6 +144,7 @@ public class HttpConnection {
 
 	/**
 	 * 初始化连接相关信息
+	 * 
 	 * @return HttpConnection
 	 */
 	public HttpConnection initConn() {
@@ -133,7 +167,7 @@ public class HttpConnection {
 		header(Header.ACCEPT_ENCODING, "gzip", true);
 		header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded", true);
 		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0 Hutool", true);
-		//Cookie
+		// Cookie
 		setCookie(CookiePool.get(this.url.getHost()));
 
 		return this;
@@ -153,30 +187,11 @@ public class HttpConnection {
 	 * 设置请求方法
 	 * 
 	 * @param method 请求方法
+	 * @return 
 	 */
-	public void setMethod(Method method) {
+	public HttpConnection setMethod(Method method) {
 		this.method = method;
-	}
-	
-	/**
-	 * 设置域名验证器<br>
-	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
-	 * 
-	 * @param hostnameVerifier HostnameVerifier
-	 */
-	public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
-		// 验证域
-		this.hostnameVerifier = hostnameVerifier;
-	}
-	
-	/**
-	 * 设置信任信息
-	 * @param trustManagers TrustManager列表
-	 */
-	public void setTrustManagers(TrustManager... trustManagers){
-		if(CollectionUtil.isNotEmpty(trustManagers)){
-			this.trustManagers = trustManagers;
-		}
+		return this;
 	}
 
 	/**
@@ -192,9 +207,11 @@ public class HttpConnection {
 	 * 设置请求URL
 	 * 
 	 * @param url 请求URL
+	 * @return 
 	 */
-	public void setUrl(URL url) {
+	public HttpConnection setUrl(URL url) {
 		this.url = url;
+		return this;
 	}
 
 	/**
@@ -226,7 +243,7 @@ public class HttpConnection {
 				this.conn.addRequestProperty(header, value);
 			}
 		}
-		
+
 		return this;
 	}
 
@@ -250,7 +267,7 @@ public class HttpConnection {
 	 * @param headers 请求头
 	 */
 	public HttpConnection header(Map<String, List<String>> headers, boolean isOverride) {
-		if(CollectionUtil.isNotEmpty(headers)) {
+		if (CollectionUtil.isNotEmpty(headers)) {
 			String name;
 			for (Entry<String, List<String>> entry : headers.entrySet()) {
 				name = entry.getKey();
@@ -271,7 +288,7 @@ public class HttpConnection {
 	public String header(String name) {
 		return this.conn.getHeaderField(name);
 	}
-	
+
 	/**
 	 * 获取Http请求头
 	 * 
@@ -290,18 +307,19 @@ public class HttpConnection {
 	public Map<String, List<String>> headers() {
 		return this.conn.getHeaderFields();
 	}
-	
+
 	// ---------------------------------------------------------------- Headers end
 
 	/**
 	 * 关闭缓存
+	 * 
 	 * @return HttpConnection
 	 */
-	public HttpConnection disableCache(){
+	public HttpConnection disableCache() {
 		this.conn.setUseCaches(false);
 		return this;
 	}
-	
+
 	/**
 	 * 设置连接超时
 	 * 
@@ -311,7 +329,7 @@ public class HttpConnection {
 		if (timeout > 0 && null != this.conn) {
 			this.conn.setConnectTimeout(timeout);
 		}
-		
+
 		return this;
 	}
 
@@ -324,36 +342,39 @@ public class HttpConnection {
 		if (timeout > 0 && null != this.conn) {
 			this.conn.setReadTimeout(timeout);
 		}
-		
+
 		return this;
 	}
-	
+
 	/**
 	 * 设置连接和读取的超时时间
+	 * 
 	 * @param timeout 超时时间
 	 */
 	public HttpConnection setConnectionAndReadTimeout(int timeout) {
 		setConnectTimeout(timeout);
 		setReadTimeout(timeout);
-		
+
 		return this;
 	}
-	
+
 	/**
 	 * 设置Cookie
+	 * 
 	 * @param cookie Cookie
 	 * @return HttpConnection
 	 */
-	public HttpConnection setCookie(String cookie){
-		if(cookie != null) {
+	public HttpConnection setCookie(String cookie) {
+		if (cookie != null) {
 			header(Header.COOKIE, cookie, true);
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 采用流方式上传数据，无需本地缓存数据。<br>
 	 * HttpUrlConnection默认是将所有数据读到本地缓存，然后再发送给服务器，这样上传大文件时就会导致内存溢出。
+	 * 
 	 * @param blockSize 块大小（bytes数）
 	 * @return HttpConnection
 	 */
@@ -361,7 +382,7 @@ public class HttpConnection {
 		conn.setChunkedStreamingMode(blockSize);
 		return this;
 	}
-	
+
 	/**
 	 * 连接
 	 * 
@@ -387,6 +408,7 @@ public class HttpConnection {
 	/**
 	 * 获得输入流对象<br>
 	 * 输入流对象用于读取数据
+	 * 
 	 * @return 输入流对象
 	 * @throws IOException
 	 */
@@ -403,22 +425,23 @@ public class HttpConnection {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 当返回错误代码时，获得错误内容流
+	 * 
 	 * @return 错误内容
 	 * @throws IOException
 	 */
-	public InputStream getErrorStream() throws IOException{
+	public InputStream getErrorStream() throws IOException {
 		if (null != this.conn) {
 			return this.conn.getErrorStream();
 		}
 		return null;
 	}
-	
+
 	/**
-	 * 获取输出流对象
-	 * 输出流对象用于发送数据
+	 * 获取输出流对象 输出流对象用于发送数据
+	 * 
 	 * @return OutputStream
 	 * @throws IOException
 	 */
@@ -441,28 +464,29 @@ public class HttpConnection {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 获得字符集编码
+	 * 
 	 * @return 字符集编码
 	 */
 	public String charset() {
 		return HttpUtil.getCharset(conn);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
 		sb.append("Request URL: ").append(this.url).append(StrUtil.CRLF);
 		sb.append("Request Method: ").append(this.method).append(StrUtil.CRLF);
-//		sb.append("Request Headers: ").append(StrUtil.CRLF);
-//		for (Entry<String, List<String>> entry : this.conn.getHeaderFields().entrySet()) {
-//			sb.append("    ").append(entry).append(StrUtil.CRLF);
-//		}
-		
+		// sb.append("Request Headers: ").append(StrUtil.CRLF);
+		// for (Entry<String, List<String>> entry : this.conn.getHeaderFields().entrySet()) {
+		// sb.append(" ").append(entry).append(StrUtil.CRLF);
+		// }
+
 		return sb.toString();
 	}
-	
+
 	// --------------------------------------------------------------- Private Method start
 	/**
 	 * 初始化http请求参数
@@ -472,19 +496,17 @@ public class HttpConnection {
 	}
 
 	/**
-	 * 初始化http请求参数
+	 * 初始化https请求参数
+	 * @param hostnameVerifier 域名验证器
+	 * @param ssf SSLSocketFactory
 	 */
-	private HttpsURLConnection openHttps() throws IOException, NoSuchAlgorithmException, NoSuchProviderException, KeyManagementException {
+	private HttpsURLConnection openHttps(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
 		final HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
 
 		// 验证域
-		httpsURLConnection.setHostnameVerifier(null != this.hostnameVerifier ? this.hostnameVerifier : new TrustAnyHostnameVerifier());
+		httpsURLConnection.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
+		httpsURLConnection.setSSLSocketFactory(null != ssf ? ssf : SSLSocketFactoryBuilder.create().build());
 
-		SSLContext sslContext = SSLContext.getInstance("TLS");
-		final TrustManager[] trustManagers = CollectionUtil.isNotEmpty(this.trustManagers) ? this.trustManagers : new TrustManager[] { new DefaultTrustManager() };
-		sslContext.init(null, trustManagers, new SecureRandom());
-		httpsURLConnection.setSSLSocketFactory(sslContext.getSocketFactory());
-		
 		return httpsURLConnection;
 	}
 	// --------------------------------------------------------------- Private Method end

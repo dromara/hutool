@@ -150,7 +150,6 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			in = new GZIPInputStream(in);
 		}
 		
-//		this.body = HttpUtil.getString(in, CharsetUtil.UTF_8, charset == null);
 		int contentLength  = Conver.toInt(header(Header.CONTENT_LENGTH), 0);
 		this.out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
 		IoUtil.copy(in, this.out);

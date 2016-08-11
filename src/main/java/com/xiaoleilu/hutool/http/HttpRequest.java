@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
+
 import com.xiaoleilu.hutool.exceptions.HttpException;
+import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
@@ -43,6 +47,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/** 连接对象 */
 	private HttpConnection httpConnection;
+	
+	/** SSLSocketFactory，用于HTTPS安全连接 */
+	private HostnameVerifier hostnameVerifier;
+	/** SSLSocketFactory，用于HTTPS安全连接 */
+	private SSLSocketFactory ssf;
 
 	/**
 	 * 构造
@@ -332,6 +341,47 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.timeout = milliseconds;
 		return this;
 	}
+	
+	/**
+	 * 设置域名验证器<br>
+	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
+	 * 
+	 * @param hostnameVerifier HostnameVerifier
+	 */
+	public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+		// 验证域
+		this.hostnameVerifier = hostnameVerifier;
+	}
+	
+	/**
+	 * 设置SSLSocketFactory<br>
+	 * 只针对HTTPS请求，如果不设置，使用默认的SSLSocketFactory<br>
+	 * 默认SSLSocketFactory为：SSLSocketFactoryBuilder.create().build();
+	 * 
+	 * @param ssf SSLScketFactory
+	 * @return 自己
+	 */
+	public HttpRequest setSSLSocketFactory(SSLSocketFactory ssf){
+		this.ssf = ssf;
+		return this;
+	}
+	
+	/**
+	 * 设置HTTPS安全连接协议，只针对HTTPS请求<br>
+	 * @see SSLSocketFactoryBuilder
+	 * @param protocol 协议
+	 * @return 自己
+	 */
+	public HttpRequest setSSLProtocol(String protocol){
+		if(null == this.ssf){
+			try {
+				this.ssf = SSLSocketFactoryBuilder.create().setProtocol(protocol).build();
+			} catch (Exception e) {
+				throw new HttpException(e);
+			}
+		}
+		return this;
+	}
 
 	/**
 	 * 执行Reuqest请求
@@ -349,7 +399,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 		
 		// 初始化 connection
-		this.httpConnection = HttpConnection.create(url, method, timeout).header(this.headers, true); // 覆盖默认Header
+		this.httpConnection = HttpConnection
+				.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout)
+				.header(this.headers, true); // 覆盖默认Header
 
 		// 发送请求
 		try {
