@@ -187,7 +187,7 @@ public class HttpConnection {
 	 * 设置请求方法
 	 * 
 	 * @param method 请求方法
-	 * @return 
+	 * @return 自己
 	 */
 	public HttpConnection setMethod(Method method) {
 		this.method = method;
@@ -207,7 +207,7 @@ public class HttpConnection {
 	 * 设置请求URL
 	 * 
 	 * @param url 请求URL
-	 * @return 
+	 * @return 自己
 	 */
 	public HttpConnection setUrl(URL url) {
 		this.url = url;

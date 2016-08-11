@@ -207,7 +207,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @param name 名
 	 * @param value 值
-	 * @param charset 编码
 	 */
 	public HttpRequest form(String name, Object value) {
 		if(StrUtil.isBlank(name) || ObjectUtil.isNull(value)){
