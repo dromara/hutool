@@ -557,6 +557,38 @@ public class StrUtil {
 		}
 		return str;
 	}
+	
+	/**
+	 * 如果给定字符串不是以prefix开头的，在开头补充 prefix
+	 * @param str 字符串
+	 * @param prefix 前缀
+	 * @return 补充后的字符串
+	 */
+	public static String addPrefixIfNot(String str, String prefix){
+		if(isEmpty(str) || isEmpty(prefix)){
+			return str;
+		}
+		if(false == str.startsWith(prefix)){
+			str = prefix + str;
+		}
+		return str;
+	}
+	
+	/**
+	 * 如果给定字符串不是以suffix结尾的，在尾部补充 suffix
+	 * @param str 字符串
+	 * @param suffix 后缀
+	 * @return 补充后的字符串
+	 */
+	public static String addSuffixIfNot(String str, String suffix){
+		if(isEmpty(str) || isEmpty(suffix)){
+			return str;
+		}
+		if(false == str.endsWith(suffix)){
+			str += suffix;
+		}
+		return str;
+	}
 
 	/**
 	 * 清理空白字符
