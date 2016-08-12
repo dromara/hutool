@@ -99,32 +99,22 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 	}
 
 	/**
-	 * Construct a JSONArray from a Collection.
-	 *
-	 * @param collection A Collection.
-	 */
-	public JSONArray(Collection<?> collection) {
-		this.myArrayList = new ArrayList<Object>();
-		if (collection != null) {
-			for (Object o : collection) {
-				this.myArrayList.add(JSONUtil.wrap(o));
-			}
-		}
-	}
-
-	/**
-	 * Construct a JSONArray from an array
+	 * Construct a JSONArray from an array or Collection
 	 *
 	 * @throws JSONException If not an array.
 	 */
-	public JSONArray(Object array) throws JSONException {
+	public JSONArray(Object arrayOrCollection) throws JSONException {
 		this();
-		if (array.getClass().isArray()) {
-			int length = Array.getLength(array);
+		if (arrayOrCollection.getClass().isArray()) {//数组
+			int length = Array.getLength(arrayOrCollection);
 			for (int i = 0; i < length; i += 1) {
-				this.put(JSONUtil.wrap(Array.get(array, i)));
+				this.put(JSONUtil.wrap(Array.get(arrayOrCollection, i)));
 			}
-		} else {
+		} else if(arrayOrCollection instanceof Collection){//Collection
+			for (Object o : (Collection<?>)arrayOrCollection) {
+				this.put(JSONUtil.wrap(o));
+			}
+		}else{
 			throw new JSONException("JSONArray initial value should be a string or collection or array.");
 		}
 	}

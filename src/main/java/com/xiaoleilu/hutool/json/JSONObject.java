@@ -125,37 +125,23 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	}
 
 	/**
-	 * Construct a JSONObject from a Map.
-	 *
-	 * @param map A map object that can be used to initialize the contents of the JSONObject.
+	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
+	 * @param beanOrMap JavaBean或者Map对象
 	 */
-	public JSONObject(Map<?, ?> map) {
+	public JSONObject(Object beanOrMap) {
 		this();
-		if (map != null) {
-			for (final Entry<?, ?> e : map.entrySet()) {
-				final Object value = e.getValue();
-				if (value != null) {
-					this.map.put(String.valueOf(e.getKey()), JSONUtil.wrap(value));
+		if(null != beanOrMap){
+			if(beanOrMap instanceof Map){
+				for (final Entry<?, ?> e : ((Map<?, ?>)beanOrMap).entrySet()) {
+					final Object value = e.getValue();
+					if (value != null) {
+						this.map.put(Conver.toStr(e.getKey()), JSONUtil.wrap(value));
+					}
 				}
+			}else{
+				this.populateMap(beanOrMap);
 			}
-		}
-	}
-
-	/**
-	 * Construct a JSONObject from an Object using bean getters. It reflects on all of the public methods of the object. For each of the methods with no parameters and a name starting with
-	 * <code>"get"</code> or <code>"is"</code> followed by an uppercase letter, the method is invoked, and a key and the value returned from the getter method are put into the new JSONObject.
-	 *
-	 * The key is formed by removing the <code>"get"</code> or <code>"is"</code> prefix. If the second remaining character is not upper case, then the first character is converted to lower case.
-	 *
-	 * For example, if an object has a method named <code>"getName"</code>, and if the result of calling <code>object.getName()</code> is <code>"Larry Fine"</code>, then the JSONObject will contain
-	 * <code>"name": "Larry Fine"</code>.
-	 *
-	 * @param bean An object that has getter methods that should be used to make a JSONObject.
-	 */
-	public JSONObject(Object bean) {
-		this();
-		if(null != bean){
-			this.populateMap(bean);
 		}
 	}
 

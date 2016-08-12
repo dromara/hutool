@@ -146,6 +146,18 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为字符串<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static String toStr(Object value) {
+		return toStr(value, null);
+	}
+	
+	/**
 	 * 转换为字符<br>
 	 * 如果给定的值为null，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
@@ -165,10 +177,22 @@ public class Conver {
 		final String valueStr = toStr(value, null);
 		return StrUtil.isEmpty(valueStr) ? defaultValue : valueStr.charAt(0);
 	}
+	
+	/**
+	 * 转换为字符<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Character toChar(Object value) {
+		return toChar(value, null);
+	}
 
 	/**
 	 * 转换为byte<br>
-	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 * 
 	 * @param value 被转换的值
@@ -197,8 +221,20 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为byte<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Byte toByte(Object value) {
+		return toByte(value, null);
+	}
+	
+	/**
 	 * 转换为Short<br>
-	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 * 
 	 * @param value 被转换的值
@@ -224,6 +260,18 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为Short<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Short toShort(Object value) {
+		return toShort(value, null);
 	}
 	
 	/**
@@ -254,6 +302,18 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为Number<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Number toNumber(Object value) {
+		return toNumber(value, null);
+	}
+	
+	/**
 	 * 转换为int<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
@@ -281,6 +341,18 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为int<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Integer toInt(Object value) {
+		return toInt(value, null);
 	}
 	
 	/**
@@ -336,6 +408,18 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为long<br>
+	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Long toLong(Object value) {
+		return toLong(value, null);
+	}
+	
+	/**
 	 * 转换为Long数组<br>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
@@ -385,6 +469,18 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为double<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Double toDouble(Object value) {
+		return toDouble(value, null);
 	}
 	
 	/**
@@ -439,6 +535,18 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为Float<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Float toFloat(Object value) {
+		return toFloat(value, null);
+	}
+	
+	/**
 	 * 转换为Float数组<br>
 	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
 	 * @param values 被转换的值
@@ -484,6 +592,18 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为boolean<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static Boolean toBool(Object value) {
+		return toBool(value, null);
 	}
 	
 	/**
@@ -536,6 +656,17 @@ public class Conver {
 	}
 	
 	/**
+	 * 转换为Enum对象<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
+	 * @param clazz Enum的Class
+	 * @param value 值
+	 * @return Enum
+	 */
+	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value) {
+		return toEnum(clazz, value, null);
+	}
+	
+	/**
 	 * 转换为BigInteger<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
@@ -563,6 +694,18 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为BigInteger<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static BigInteger toBigInteger(Object value) {
+		return toBigInteger(value, null);
 	}
 	
 	/**
@@ -599,6 +742,18 @@ public class Conver {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+	
+	/**
+	 * 转换为BigDecimal<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static BigDecimal toBigDecimal(Object value) {
+		return toBigDecimal(value, null);
 	}
 
 	// ----------------------------------------------------------------------- 全角半角转换

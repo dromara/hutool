@@ -17,12 +17,13 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class JSONUtil {
 	
+	//-------------------------------------------------------------------- Pause start
 	/**
 	 * JSON字符串转JSONObject对象
 	 * @param jsonStr JSON字符串
 	 * @return JSONObject
 	 */
-	public static JSONObject parse(String jsonStr) {
+	public static JSONObject parseObj(String jsonStr) {
 		return new JSONObject(jsonStr);
 	}
 
@@ -34,61 +35,90 @@ public class JSONUtil {
 	public static JSONArray parseArray(String jsonStr) {
 		return new JSONArray(jsonStr);
 	}
+	
+	/**
+	 * 转换对象为JSON<br>
+	 * 支持的对象：<br>
+	 * String: 转换为相应的对象<br>
+	 * Array Collection：转换为JSONArray<br>
+	 * Bean对象：转为JSONObject
+	 * @param obj 对象
+	 * @return JSON
+	 */
+	public static JSON parse(Object obj){
+		if(null == obj){
+			return null;
+		}
+		
+		JSON json = null;
+		if(obj instanceof JSON){
+			json = (JSON) obj;
+		}else if(obj instanceof String){
+			String jsonStr = ((String)obj).trim();
+			if(jsonStr.startsWith("[")){
+				json = parseArray(jsonStr);
+			}else{
+				json = parseObj(jsonStr);
+			}
+		}else if(obj instanceof Collection || obj.getClass().isArray()){//列表
+			json = new JSONArray(obj);
+		}else{//对象
+			json = new JSONObject(obj);
+		}
+		
+		return json;
+	}
+	//-------------------------------------------------------------------- Pause end
 
+	//-------------------------------------------------------------------- toString start
 	/**
 	 * 转为JSON字符串
-	 * @param jsonObject JSONObject
+	 * @param json JSON
+	 * @param indentFactor 每一级别的缩进
 	 * @return JSON字符串
 	 */
-	public static String toJsonStr(JSONObject jsonObject) {
-		return jsonObject.toString();
+	public static String toJsonStr(JSON json, int indentFactor) {
+		return json.toJSONString(indentFactor);
 	}
 	
 	/**
 	 * 转为JSON字符串
-	 * @param jsonArray JSONArray
+	 * @param json JSON
 	 * @return JSON字符串
 	 */
-	public static String toJsonStr(JSONArray jsonArray) {
-		return jsonArray.toString();
+	public static String toJsonStr(JSON json) {
+		return json.toJSONString(0);
+	}
+	
+	/**
+	 * 转为JSON字符串
+	 * @param json JSON
+	 * @return JSON字符串
+	 */
+	public static String toJsonPrettyStr(JSON json) {
+		return json.toJSONString(4);
 	}
 	
 	/**
 	 * 转换为JSON字符串
-	 * @param bean Bean对象
+	 * @param obj 被转为JSON的对象
 	 * @return JSON字符串
 	 */
-	public static String toJsonStr(Object bean){
-		return toJsonStr(new JSONObject(bean));
-	}
-	
-	/**
-	 * 转为格式化后的JSON字符串
-	 * @param jsonObject JSONObject
-	 * @return JSON字符串
-	 */
-	public static String toJsonPrettyStr(JSONObject jsonObject) {
-		return jsonObject.toJSONString(4);
-	}
-	
-	/**
-	 * 转为格式化后的JSON字符串
-	 * @param jsonArray JSONArray
-	 * @return JSON字符串
-	 */
-	public static String toJsonPrettyStr(JSONArray jsonArray) {
-		return jsonArray.toJSONString(4);
+	public static String toJsonStr(Object obj){
+		return toJsonStr(parse(obj));
 	}
 	
 	/**
 	 * 转换为格式化后的JSON字符串
-	 * @param bean Bean对象
+	 * @param obj Bean对象
 	 * @return JSON字符串
 	 */
-	public static String toJsonPrettyStr(Object bean){
-		return toJsonPrettyStr(new JSONObject(bean));
+	public static String toJsonPrettyStr(Object obj){
+		return toJsonPrettyStr(parse(obj));
 	}
+	//-------------------------------------------------------------------- toString end
 	
+	//-------------------------------------------------------------------- toBean start
 	/**
 	 * 转为实体类对象
 	 * @param json JSONObject
@@ -98,6 +128,7 @@ public class JSONUtil {
 	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
 		return null == json ? null : json.toBean(beanClass);
 	}
+	//-------------------------------------------------------------------- toBean end
 
 	/**
 	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
