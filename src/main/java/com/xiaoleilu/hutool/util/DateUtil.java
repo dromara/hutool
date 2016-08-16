@@ -152,17 +152,17 @@ public class DateUtil {
 	 * 获得年
 	 * 
 	 * @param date 日期
-	 * @return 月份
+	 * @return 年
 	 */
 	public static int year(Date date) {
 		return toCalendar(date).get(Calendar.YEAR);
 	}
 
 	/**
-	 * 获得年
+	 * 获得季节
 	 * 
 	 * @param date 日期
-	 * @return 月份
+	 * @return 第几个季节
 	 */
 	public static int season(Date date) {
 		return toCalendar(date).get(Calendar.MONTH) / 3 + 1;
