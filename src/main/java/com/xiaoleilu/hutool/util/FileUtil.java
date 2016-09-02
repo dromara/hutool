@@ -410,7 +410,7 @@ public class FileUtil {
 	/**
 	 * 创建父文件夹，如果存在直接返回此文件夹
 	 * 
-	 * @param dirPath 文件夹路径，使用POSIX格式，无论哪个平台
+	 * @param path 文件夹路径，使用POSIX格式，无论哪个平台
 	 * @return 创建的目录
 	 */
 	public static File mkParentDirs(String path) {
