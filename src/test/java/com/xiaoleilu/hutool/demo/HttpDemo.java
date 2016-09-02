@@ -21,6 +21,7 @@ public class HttpDemo {
 
 		 HttpRequest request = HttpRequest
 				 .get("https://www.baidu.com")
+				 .disableCache()
 		 		.setSSLProtocol(SSLSocketFactoryBuilder.TLSv12);
 		 System.out.println(request.execute().body());
 
@@ -33,7 +34,7 @@ public class HttpDemo {
 		// HttpResponse response = post.execute();
 		// System.out.println(response.body());
 
-		uploadFile(FileUtil.file("D:\\face.jpg"));
+//		uploadFile(FileUtil.file("D:\\face.jpg"));
 //		
 //		HttpRequest request = HttpRequest.get("http://www.wepe.com.cn/about.html");
 //		HttpResponse res = request.execute();

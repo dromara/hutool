@@ -260,3 +260,4 @@ Entity中toVo区别是否忽略大小写
 3、StrUtil添加addPrefixIfNot和addSuffixIfNot两个方法
 4、FileUtil增加mkParentDirs方法
 5、修复DateUtil的注释
+6、修复Http Post问题

@@ -47,6 +47,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/** 连接对象 */
 	private HttpConnection httpConnection;
+	/** 是否禁用缓存 */
+	private boolean isDisableCache;
 	
 	/** SSLSocketFactory，用于HTTPS安全连接 */
 	private HostnameVerifier hostnameVerifier;
@@ -342,6 +344,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
+	 * 禁用缓存
+	 */
+	public HttpRequest disableCache() {
+		this.isDisableCache = true;
+		return this;
+	}
+	
+	/**
 	 * 设置域名验证器<br>
 	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
 	 * 
@@ -401,6 +411,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.httpConnection = HttpConnection
 				.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout)
 				.header(this.headers, true); // 覆盖默认Header
+		//是否禁用缓存
+		if(this.isDisableCache){
+			this.httpConnection.disableCache();
+		}
 
 		// 发送请求
 		try {
@@ -436,7 +450,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		return this;
 	}
-
+	
 	// ---------------------------------------------------------------- Private method start
 	/**
 	 * 发送数据流
@@ -456,7 +470,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException
 	 */
 	private void sendFormUrlEncoded() throws IOException{
-		if(StrUtil.isBlank(this.httpConnection.header(Header.CONTENT_TYPE))){
+		if(StrUtil.isBlank(this.header(Header.CONTENT_TYPE))){
 			//如果未自定义Content-Type，使用默认的application/x-www-form-urlencoded
 			this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX + this.charset, true);
 		}
@@ -478,7 +492,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private void sendMltipart() throws IOException {
 		setMultipart();//设置表单类型为Multipart
-		this.httpConnection.disableCache();
 		
 		final OutputStream out = this.httpConnection.getOutputStream();
 		try {
