@@ -19,6 +19,22 @@ public class JSONUtil {
 	
 	//-------------------------------------------------------------------- Pause start
 	/**
+	 * 创建JSONObject
+	 * @return JSONObject
+	 */
+	public static JSONObject createObj(){
+		return new JSONObject();
+	}
+	
+	/**
+	 * 创建 JSONArray
+	 * @return JSONArray
+	 */
+	public static JSONArray createArray(){
+		return new JSONArray();
+	}
+	
+	/**
 	 * JSON字符串转JSONObject对象
 	 * @param jsonStr JSON字符串
 	 * @return JSONObject

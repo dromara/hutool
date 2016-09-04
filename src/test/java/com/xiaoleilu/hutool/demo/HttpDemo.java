@@ -34,7 +34,7 @@ public class HttpDemo {
 		// HttpResponse response = post.execute();
 		// System.out.println(response.body());
 
-//		uploadFile(FileUtil.file("D:\\face.jpg"));
+		uploadFile(FileUtil.file("D:\\face.jpg"));
 //		
 //		HttpRequest request = HttpRequest.get("http://www.wepe.com.cn/about.html");
 //		HttpResponse res = request.execute();

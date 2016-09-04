@@ -261,3 +261,6 @@ Entity中toVo区别是否忽略大小写
 4、FileUtil增加mkParentDirs方法
 5、修复DateUtil的注释
 6、修复Http Post问题
+
+2.15.8
+1、JSONUtil中增加创建JSON对象和JSON数组方法，方便链式构建JSON
