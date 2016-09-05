@@ -27,6 +27,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.json.JSON;
+import com.xiaoleilu.hutool.json.JSONArray;
+import com.xiaoleilu.hutool.json.JSONObject;
+import com.xiaoleilu.hutool.json.JSONUtil;
 import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
@@ -1182,6 +1186,72 @@ public class FileUtil {
 	 */
 	public static List<String> readLines(File file, String charset) throws IOException {
 		return readLines(file, charset, new ArrayList<String>());
+	}
+	
+	/**
+	 * 读取JSON
+	 * @param file JSON文件
+	 * @param charset 编码
+	 * @return JSON（包括JSONObject和JSONArray）
+	 * @throws IOException
+	 */
+	public static JSON readJSON(File file, Charset charset) throws IOException{
+		return JSONUtil.parse(readString(file, charset));
+	}
+	
+	/**
+	 * 读取JSON
+	 * @param file JSON文件
+	 * @param charsetName 编码
+	 * @return JSON（包括JSONObject和JSONArray）
+	 * @throws IOException
+	 */
+	public static JSON readJSON(File file, String charsetName) throws IOException{
+		return JSONUtil.parse(readString(file, charsetName));
+	}
+	
+	/**
+	 * 读取JSONObject
+	 * @param file JSON文件
+	 * @param charset 编码
+	 * @return JSONObject
+	 * @throws IOException
+	 */
+	public static JSONObject readJSONObject(File file, Charset charset) throws IOException{
+		return JSONUtil.parseObj(readString(file, charset));
+	}
+	
+	/**
+	 * 读取JSONObject
+	 * @param file JSON文件
+	 * @param charsetName 编码
+	 * @return JSONObject
+	 * @throws IOException
+	 */
+	public static JSONObject readJSONObject(File file, String charsetName) throws IOException{
+		return JSONUtil.parseObj(readString(file, charsetName));
+	}
+	
+	/**
+	 * 读取JSONArray
+	 * @param file JSON文件
+	 * @param charset 编码
+	 * @return JSONArray
+	 * @throws IOException
+	 */
+	public static JSONArray readJSONArray(File file, Charset charset) throws IOException{
+		return JSONUtil.parseArray(readString(file, charset));
+	}
+	
+	/**
+	 * 读取JSONArray
+	 * @param file JSON文件
+	 * @param charsetName 编码
+	 * @return JSONArray
+	 * @throws IOException
+	 */
+	public static JSONArray readJSONArray(File file, String charsetName) throws IOException{
+		return JSONUtil.parseArray(readString(file, charsetName));
 	}
 
 	/**
