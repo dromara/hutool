@@ -348,10 +348,23 @@ public class FileUtil {
 	 */
 	public static File mkParentDirs(File file) {
 		final File parentFile = file.getParentFile();
-		if (null != parentFile) {
+		if (null != parentFile && false == parentFile.exists()) {
 			parentFile.mkdirs();
 		}
 		return parentFile;
+	}
+	
+	/**
+	 * 创建父文件夹，如果存在直接返回此文件夹
+	 * 
+	 * @param path 文件夹路径，使用POSIX格式，无论哪个平台
+	 * @return 创建的目录
+	 */
+	public static File mkParentDirs(String path) {
+		if (path == null) {
+			return null;
+		}
+		return mkParentDirs(file(path));
 	}
 
 	/**
@@ -407,24 +420,6 @@ public class FileUtil {
 		return dir;
 	}
 	
-	/**
-	 * 创建父文件夹，如果存在直接返回此文件夹
-	 * 
-	 * @param path 文件夹路径，使用POSIX格式，无论哪个平台
-	 * @return 创建的目录
-	 */
-	public static File mkParentDirs(String path) {
-		if (path == null) {
-			return null;
-		}
-		File file = file(path);
-		File parentFile = file.getParentFile();
-		if (false == parentFile.exists()) {
-			parentFile.mkdirs();
-		}
-		return file;
-	}
-
 	/**
 	 * 创建临时文件<br>
 	 * 创建后的文件名为 prefix[Randon].tmp

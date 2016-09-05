@@ -264,3 +264,4 @@ Entity中toVo区别是否忽略大小写
 
 2.15.8
 1、JSONUtil中增加创建JSON对象和JSON数组方法，方便链式构建JSON
+2、FileUtil.mkParentDirs方法修正
