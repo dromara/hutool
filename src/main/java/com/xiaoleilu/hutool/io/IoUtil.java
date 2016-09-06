@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.util;
+package com.xiaoleilu.hutool.io;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -20,8 +20,8 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * IO工具类
@@ -57,16 +57,36 @@ public class IoUtil {
 	 * @throws IOException
 	 */
 	public static long copy(Reader reader, Writer writer, int bufferSize) throws IOException {
+		return copy(reader, writer, bufferSize, null);
+	}
+	
+	/**
+	 * 将Reader中的内容复制到Writer中
+	 * @param reader Reader
+	 * @param writer Writer
+	 * @param bufferSize 缓存大小
+	 * @return 传输的byte数
+	 * @throws IOException
+	 */
+	public static long copy(Reader reader, Writer writer, int bufferSize, StreamProgress streamProgress) throws IOException {
 		char[] buffer = new char[bufferSize];
-		long count = 0;
+		long size = 0;
 		int readSize;
+		if(null != streamProgress){
+			streamProgress.start();
+		}
 		while ((readSize = reader.read(buffer, 0, bufferSize)) != EOF) {
 			writer.write(buffer, 0, readSize);
-			count += readSize;
+			size += readSize;
 			writer.flush();
+			if(null != streamProgress){
+				streamProgress.progress(size);
+			}
 		}
-		
-		return count;
+		if(null != streamProgress){
+			streamProgress.finish();
+		}
+		return size;
 	}
 	
 	/**
@@ -89,6 +109,19 @@ public class IoUtil {
 	 * @throws IOException
 	 */
 	public static long copy(InputStream in, OutputStream out, int bufferSize) throws IOException {
+		return copy(in, out, bufferSize, null);
+	}
+	
+	/**
+	 * 拷贝流
+	 * @param in 输入流
+	 * @param out 输出流
+	 * @param bufferSize 缓存大小
+	 * @param streamProgress 进度条
+	 * @return 传输的byte数
+	 * @throws IOException
+	 */
+	public static long copy(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IOException {
 		if(null == in){
 			throw new NullPointerException("InputStream is null!");
 		}
@@ -100,14 +133,22 @@ public class IoUtil {
 		}
 		
 		byte[] buffer = new byte[bufferSize];
-		long count = 0;
-		for (int n = -1; (n = in.read(buffer)) != EOF;) {
-			out.write(buffer, 0, n);
-			count += n;
-			out.flush();
+		long size = 0;
+		if(null != streamProgress){
+			streamProgress.start();
 		}
-		
-		return count;
+		for (int readSize = -1; (readSize = in.read(buffer)) != EOF;) {
+			out.write(buffer, 0, readSize);
+			size += readSize;
+			out.flush();
+			if(null != streamProgress){
+				streamProgress.progress(size);
+			}
+		}
+		if(null != streamProgress){
+			streamProgress.finish();
+		}
+		return size;
 	}
 	
 	/**

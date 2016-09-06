@@ -268,3 +268,4 @@ Entity中toVo区别是否忽略大小写
 3、FileUtil增加readJSON
 4、强化FileUtil中isEmpty方法，增加isDirEmpty方法（只支持JDK7）
 5、[bug fix]修复Http中GzipEOF错误导致的异常（忽略此错误）
+6、强化IoUtil和HttpUtil，增加进度条

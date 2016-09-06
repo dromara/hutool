@@ -17,6 +17,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import com.xiaoleilu.hutool.exceptions.NotInitedException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IoUtil;
 
 /**
  * Velocity模板引擎工具类<br>

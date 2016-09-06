@@ -8,9 +8,9 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
-import com.xiaoleilu.hutool.util.IoUtil;
 
 /**
  * 外部Jar的类加载器

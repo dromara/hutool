@@ -30,6 +30,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.json.JSONArray;
 import com.xiaoleilu.hutool.json.JSONObject;

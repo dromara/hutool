@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.demo;
+package com.xiaoleilu.hutool.demo.http;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.IOException;
 import com.xiaoleilu.hutool.http.HttpRequest;
 import com.xiaoleilu.hutool.http.HttpResponse;
 import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
-import com.xiaoleilu.hutool.util.FileUtil;
 
 public class HttpDemo {
 	public static void main(String[] args) throws IOException {
@@ -34,14 +33,14 @@ public class HttpDemo {
 		// HttpResponse response = post.execute();
 		// System.out.println(response.body());
 
-		uploadFile(FileUtil.file("D:\\face.jpg"));
+//		uploadFile(FileUtil.file("D:\\face.jpg"));
 //		
 //		HttpRequest request = HttpRequest.get("http://www.wepe.com.cn/about.html");
 //		HttpResponse res = request.execute();
 //		System.out.println(res.body());
 	}
-
-	private static String uploadFile(File file) {
+	
+	public static String uploadFile(File file) {
 		HttpRequest request = HttpRequest.post("http://localhost:8080/file/upload").form("file", file).form("fileType", "图片");
 		HttpResponse response = request.execute();
 		System.out.println(response.body());

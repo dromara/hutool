@@ -13,10 +13,10 @@ import javax.net.ssl.SSLSocketFactory;
 
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
-import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.SecureUtil;
 import com.xiaoleilu.hutool.util.StrUtil;

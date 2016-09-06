@@ -8,8 +8,8 @@ import java.util.Queue;
 
 import com.xiaoleilu.hutool.db.ds.AbstractDataSource;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 

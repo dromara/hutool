@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
+import com.xiaoleilu.hutool.io.IoUtil;
 
 /**
  * 一些通用的函数

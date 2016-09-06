@@ -20,12 +20,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.StreamProgress;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
-import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -145,7 +147,7 @@ public class HttpUtil {
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @throws IOException
 	 */
-	public static String get(String urlString, String customCharset) throws IOException {
+	public static String get(String urlString, String customCharset) {
 		return HttpRequest.get(urlString).charset(customCharset).execute().body();
 	}
 	
@@ -156,7 +158,7 @@ public class HttpUtil {
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @throws IOException
 	 */
-	public static String get(String urlString) throws IOException {
+	public static String get(String urlString) {
 		return HttpRequest.get(urlString).execute().body();
 	}
 	
@@ -168,7 +170,7 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @throws IOException
 	 */
-	public static String post(String urlString, Map<String, Object> paramMap) throws IOException {
+	public static String post(String urlString, Map<String, Object> paramMap) {
 		return HttpRequest.post(urlString).form(paramMap).execute().body();
 	}
 
@@ -180,19 +182,19 @@ public class HttpUtil {
 	 * @return 返回数据
 	 * @throws IOException
 	 */
-	public static String post(String urlString, String params) throws IOException {
+	public static String post(String urlString, String params) {
 		return HttpRequest.post(urlString).body(params).execute().body();
 	}
 
 	/**
-	 * 获得远程String
+	 * 下载远程文本
 	 * 
 	 * @param url 请求的url
 	 * @param customCharset 自定义的字符集
 	 * @return 文本
 	 * @throws IOException
 	 */
-	public static String downloadString(String url, String customCharset) throws IOException {
+	public static String downloadString(String url, String customCharset) {
 		if(StrUtil.isBlank(url)){
 			throw new NullPointerException("[url] is null!");
 		}
@@ -201,25 +203,47 @@ public class HttpUtil {
 		try {
 			in = new URL(url).openStream();
 			return IoUtil.read(in, customCharset);
-		} finally {
+		}catch(IOException e){
+			throw new HttpException(e);
+		}finally {
 			IoUtil.close(in);
 		}
 	}
 	
 	/**
-	 * 获得远程String
+	 * 下载远程文件
 	 * 
 	 * @param url 请求的url
-	 * @param destFile 目标文件
+	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
 	 * @throws IOException
 	 */
-	public static long downloadFile(String url, File destFile) throws IOException {
+	public static long downloadFile(String url, File destFile) {
+		return downloadFile(url, destFile, null);
+	}
+	
+	/**
+	 * 下载远程文件
+	 * 
+	 * @param url 请求的url
+	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param streamProgress 进度条
+	 * @return 文件大小
+	 * @throws IOException
+	 */
+	public static long downloadFile(String url, File destFile, StreamProgress streamProgress) {
 		if(StrUtil.isBlank(url)){
 			throw new NullPointerException("[url] is null!");
 		}
 		if(null == destFile){
 			throw new NullPointerException("[destFile] is null!");
+		}
+		if(destFile.isDirectory()){
+			String fileName = StrUtil.subSuf(url, url.lastIndexOf('/') + 1);
+			if(StrUtil.isBlank(fileName)){
+				fileName = HttpUtil.encode(url, CharsetUtil.CHARSET_UTF_8);
+			}
+			destFile = FileUtil.file(destFile, fileName);
 		}
 		
 		InputStream in = null;
@@ -227,8 +251,10 @@ public class HttpUtil {
 		try {
 			in = new URL(url).openStream();
 			out = FileUtil.getOutputStream(destFile);
-			return IoUtil.copy(in, out);
-		} finally {
+			return IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
+		}catch(IOException e){
+			throw new HttpException(e);
+		}finally {
 			IoUtil.close(in);
 			IoUtil.close(out);
 		}
@@ -425,11 +451,11 @@ public class HttpUtil {
 		BufferedReader reader = IoUtil.getReader(in, charset);
 		String line = null;
 		while ((line = reader.readLine()) != null) {
-			content.append(line).append('\n');
+			content.append(line).append(StrUtil.NEWLINE);
 			if(isGetCharsetFromContent){
 				String charsetInContent = ReUtil.get(CHARSET_PATTERN, line, 1);
 				if (StrUtil.isNotBlank(charsetInContent)) {
-					StaticLog.debug("Charset：{}", charsetInContent);
+					StaticLog.debug("Http content charset：{}", charsetInContent);
 					charset = charsetInContent;
 					reader = IoUtil.getReader(in, charset);
 					isGetCharsetFromContent = false;

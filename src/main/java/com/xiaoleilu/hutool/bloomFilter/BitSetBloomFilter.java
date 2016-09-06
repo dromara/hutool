@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.BitSet;
 
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.HashUtil;
-import com.xiaoleilu.hutool.util.IoUtil;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>

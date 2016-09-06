@@ -3,9 +3,9 @@ package com.xiaoleilu.hutool.log.dialect;
 import java.io.InputStream;
 import java.util.logging.LogManager;
 
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.IoUtil;
 
 /**
  *  <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a> log.

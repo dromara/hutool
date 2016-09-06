@@ -11,11 +11,11 @@ import java.util.Properties;
 
 import com.xiaoleilu.hutool.getter.BasicTypeGetter;
 import com.xiaoleilu.hutool.getter.OptBasicTypeGetter;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.FileUtil;
-import com.xiaoleilu.hutool.util.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
