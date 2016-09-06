@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.http;
 
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -152,7 +153,11 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		
 		int contentLength  = Conver.toInt(header(Header.CONTENT_LENGTH), 0);
 		this.out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
-		IoUtil.copy(in, this.out);
+		try {
+			IoUtil.copy(in, this.out);
+		} catch (EOFException e) {
+			//忽略读取HTTP流中的EOF错误
+		}
 	}
 	// ---------------------------------------------------------------- Private method end
 }
