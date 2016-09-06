@@ -31,7 +31,9 @@ import com.xiaoleilu.hutool.lang.Conver;
 public class IoUtil {
 
 	/** 默认缓存大小 */
-	public final static int DEFAULT_BUFFER_SIZE = 1024;
+	public static final int DEFAULT_BUFFER_SIZE = 1024;
+	/** 数据流末尾 */
+	public static final int EOF = -1;
 
 	//-------------------------------------------------------------------------------------- Copy start
 	/**
@@ -58,7 +60,7 @@ public class IoUtil {
 		char[] buffer = new char[bufferSize];
 		long count = 0;
 		int readSize;
-		while ((readSize = reader.read(buffer, 0, bufferSize)) >= 0) {
+		while ((readSize = reader.read(buffer, 0, bufferSize)) != EOF) {
 			writer.write(buffer, 0, readSize);
 			count += readSize;
 			writer.flush();
@@ -99,7 +101,7 @@ public class IoUtil {
 		
 		byte[] buffer = new byte[bufferSize];
 		long count = 0;
-		for (int n = -1; (n = in.read(buffer)) != -1;) {
+		for (int n = -1; (n = in.read(buffer)) != EOF;) {
 			out.write(buffer, 0, n);
 			count += n;
 			out.flush();
