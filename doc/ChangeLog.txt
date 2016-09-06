@@ -266,3 +266,4 @@ Entity中toVo区别是否忽略大小写
 1、JSONUtil中增加创建JSON对象和JSON数组方法，方便链式构建JSON
 2、FileUtil.mkParentDirs方法修正
 3、FileUtil增加readJSON
+4、强化FileUtil中isEmpty方法，增加isDirEmpty方法（只支持JDK7）

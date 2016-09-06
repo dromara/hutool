@@ -17,6 +17,9 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,9 +79,11 @@ public class FileUtil {
 	}
 
 	/**
-	 * 目录是否为空
+	 * 文件是否为空<br>
+	 * 目录：里面没有文件时为空
+	 * 文件：文件大小为0时为空
 	 * 
-	 * @param file 目录
+	 * @param file 文件
 	 * @return 是否为空，当提供非目录时，返回false
 	 */
 	public static boolean isEmpty(File file) {
@@ -91,9 +96,44 @@ public class FileUtil {
 			if (CollectionUtil.isEmpty(subFiles)) {
 				return true;
 			}
+		}else if(file.isFile()){
+			return file.length() <= 0;
 		}
 
 		return false;
+	}
+
+	/**
+	 * 目录是否为空
+	 * 
+	 * @param file 目录
+	 * @return 是否为空，当提供非目录时，返回false
+	 */
+	public static boolean isNotEmpty(File file) {
+		return false == isEmpty(file);
+	}
+
+	/**
+	 * 目录是否为空
+	 * @param dirPath 目录
+	 * @return 是否为空
+	 * @exception UtilException IOException
+	 */
+	public static boolean isDirEmpty(Path dirPath) {
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirPath)) {
+			return false == dirStream.iterator().hasNext();
+		} catch (IOException e) {
+			throw new UtilException(e);
+		}
+	}
+	
+	/**
+	 * 目录是否为空
+	 * @param dir 目录
+	 * @return 是否为空
+	 */
+	public static boolean isDirEmpty(File dir) {
+		return isDirEmpty(dir.toPath());
 	}
 
 	/**
@@ -193,7 +233,7 @@ public class FileUtil {
 		}
 		return new File(getAbsolutePath(path));
 	}
-	
+
 	/**
 	 * 创建File对象
 	 * 
@@ -357,7 +397,7 @@ public class FileUtil {
 		}
 		return parentFile;
 	}
-	
+
 	/**
 	 * 创建父文件夹，如果存在直接返回此文件夹
 	 * 
@@ -423,7 +463,7 @@ public class FileUtil {
 		}
 		return dir;
 	}
-	
+
 	/**
 	 * 创建临时文件<br>
 	 * 创建后的文件名为 prefix[Randon].tmp
@@ -1187,70 +1227,76 @@ public class FileUtil {
 	public static List<String> readLines(File file, String charset) throws IOException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 读取JSON
+	 * 
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSON（包括JSONObject和JSONArray）
 	 * @throws IOException
 	 */
-	public static JSON readJSON(File file, Charset charset) throws IOException{
+	public static JSON readJSON(File file, Charset charset) throws IOException {
 		return JSONUtil.parse(readString(file, charset));
 	}
-	
+
 	/**
 	 * 读取JSON
+	 * 
 	 * @param file JSON文件
 	 * @param charsetName 编码
 	 * @return JSON（包括JSONObject和JSONArray）
 	 * @throws IOException
 	 */
-	public static JSON readJSON(File file, String charsetName) throws IOException{
+	public static JSON readJSON(File file, String charsetName) throws IOException {
 		return JSONUtil.parse(readString(file, charsetName));
 	}
-	
+
 	/**
 	 * 读取JSONObject
+	 * 
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSONObject
 	 * @throws IOException
 	 */
-	public static JSONObject readJSONObject(File file, Charset charset) throws IOException{
+	public static JSONObject readJSONObject(File file, Charset charset) throws IOException {
 		return JSONUtil.parseObj(readString(file, charset));
 	}
-	
+
 	/**
 	 * 读取JSONObject
+	 * 
 	 * @param file JSON文件
 	 * @param charsetName 编码
 	 * @return JSONObject
 	 * @throws IOException
 	 */
-	public static JSONObject readJSONObject(File file, String charsetName) throws IOException{
+	public static JSONObject readJSONObject(File file, String charsetName) throws IOException {
 		return JSONUtil.parseObj(readString(file, charsetName));
 	}
-	
+
 	/**
 	 * 读取JSONArray
+	 * 
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSONArray
 	 * @throws IOException
 	 */
-	public static JSONArray readJSONArray(File file, Charset charset) throws IOException{
+	public static JSONArray readJSONArray(File file, Charset charset) throws IOException {
 		return JSONUtil.parseArray(readString(file, charset));
 	}
-	
+
 	/**
 	 * 读取JSONArray
+	 * 
 	 * @param file JSON文件
 	 * @param charsetName 编码
 	 * @return JSONArray
 	 * @throws IOException
 	 */
-	public static JSONArray readJSONArray(File file, String charsetName) throws IOException{
+	public static JSONArray readJSONArray(File file, String charsetName) throws IOException {
 		return JSONUtil.parseArray(readString(file, charsetName));
 	}
 
@@ -1299,7 +1345,7 @@ public class FileUtil {
 	public static BufferedOutputStream getOutputStream(String path) throws IOException {
 		return getOutputStream(touch(path));
 	}
-	
+
 	/**
 	 * 获得一个带缓存的写入对象
 	 * 
@@ -1632,9 +1678,10 @@ public class FileUtil {
 	public static void writeToStream(String fullFilePath, OutputStream out) throws IOException {
 		writeToStream(touch(fullFilePath), out);
 	}
-	
+
 	/**
 	 * 可读的文件大小
+	 * 
 	 * @param file 文件
 	 * @return 大小
 	 */
@@ -1645,12 +1692,13 @@ public class FileUtil {
 	/**
 	 * 可读的文件大小<br>
 	 * 参考 http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+	 * 
 	 * @param size Long类型大小
 	 * @return 大小
 	 */
 	public static String readableFileSize(long size) {
 		if (size <= 0) return "0";
-		final String[] units = new String[] { "B", "kB", "MB", "GB", "TB", "EB"};
+		final String[] units = new String[] { "B", "kB", "MB", "GB", "TB", "EB" };
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
