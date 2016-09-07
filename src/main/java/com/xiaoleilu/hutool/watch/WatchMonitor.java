@@ -127,7 +127,7 @@ public class WatchMonitor {
 				}else if(kind == StandardWatchEventKinds.ENTRY_DELETE){
 					listener.onDelete(event);
 				}else if(kind == StandardWatchEventKinds.OVERFLOW){
-					
+					listener.onOverflow(event);
 				}
 			}
 			wk.reset();
