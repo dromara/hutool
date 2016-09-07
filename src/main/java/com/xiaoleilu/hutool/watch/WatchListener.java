@@ -5,8 +5,6 @@ import java.nio.file.WatchEvent;
 /**
  * 监测
  * @author Looly
- *
- * @param <T>
  */
 public interface WatchListener {
 	/**
