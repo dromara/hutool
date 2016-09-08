@@ -14,6 +14,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class Log4jLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
+	private static final String FQCN = Log4jLog.class.getName();
 
 	private final transient Logger logger;
 
@@ -43,16 +44,12 @@ public class Log4jLog extends AbstractLog {
 
 	@Override
 	public void trace(String format, Object... arguments) {
-		if (isTraceEnabled()) {
-			logger.trace(StrUtil.format(format, arguments));
-		}
+		trace(null, format, arguments);
 	}
 
 	@Override
 	public void trace(Throwable t, String format, Object... arguments) {
-		if(isTraceEnabled()){
-			logger.trace(StrUtil.format(format, arguments), t);
-		}
+		logger.log(FQCN, Level.TRACE, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Debug
@@ -63,16 +60,12 @@ public class Log4jLog extends AbstractLog {
 
 	@Override
 	public void debug(String format, Object... arguments) {
-		if(isDebugEnabled()){
-			logger.debug(StrUtil.format(format, arguments));
-		}
+		debug(null, format, arguments);
 	}
 
 	@Override
 	public void debug(Throwable t, String format, Object... arguments) {
-		if(isDebugEnabled()){
-			logger.debug(StrUtil.format(format, arguments), t);
-		}
+		logger.log(FQCN, Level.DEBUG, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Info
@@ -83,16 +76,12 @@ public class Log4jLog extends AbstractLog {
 
 	@Override
 	public void info(String format, Object... arguments) {
-		if(isInfoEnabled()){
-			logger.info(StrUtil.format(format, arguments));
-		}
+		info(null, format, arguments);
 	}
 
 	@Override
 	public void info(Throwable t, String format, Object... arguments) {
-		if(isInfoEnabled()){
-			logger.info(StrUtil.format(format, arguments), t);
-		}
+		logger.log(FQCN, Level.INFO, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Warn
@@ -103,16 +92,12 @@ public class Log4jLog extends AbstractLog {
 
 	@Override
 	public void warn(String format, Object... arguments) {
-		if(isWarnEnabled()){
-			logger.warn(StrUtil.format(format, arguments));
-		}
+		warn(null, format, arguments);
 	}
 
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
-		if(isWarnEnabled()){
-			logger.warn(StrUtil.format(format, arguments), t);
-		}
+		logger.log(FQCN, Level.WARN, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Error
@@ -123,18 +108,13 @@ public class Log4jLog extends AbstractLog {
 
 	@Override
 	public void error(String format, Object... arguments) {
-		if(isErrorEnabled()){
-			logger.error(StrUtil.format(format, arguments));
-		}
+		error(null, format, arguments);
 	}
 
 	@Override
 	public void error(Throwable t, String format, Object... arguments) {
-		if(isErrorEnabled()){
-			logger.warn(StrUtil.format(format, arguments), t);
-		}
+		logger.log(FQCN, Level.ERROR, StrUtil.format(format, arguments), t);
 	}
-
+	
 	// ------------------------------------------------------------------------- Private method
-
 }

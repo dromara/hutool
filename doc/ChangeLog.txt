@@ -273,3 +273,5 @@ Entity中toVo区别是否忽略大小写
 
 2.15.9
 1、WatchMonitor增加overflow处理
+2、升级依赖以及Maven插件
+3、修复Log的FQCN问题（显示行号错误）

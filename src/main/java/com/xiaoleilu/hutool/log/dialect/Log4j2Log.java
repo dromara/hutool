@@ -1,7 +1,9 @@
 package com.xiaoleilu.hutool.log.dialect;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.spi.AbstractLogger;
 
 import com.xiaoleilu.hutool.log.AbstractLog;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -14,6 +16,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class Log4j2Log extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
+	
+	private static final String FQCN = Log4j2Log.class.getName();
 
 	private final transient Logger logger;
 
@@ -43,14 +47,12 @@ public class Log4j2Log extends AbstractLog {
 
 	@Override
 	public void trace(String format, Object... arguments) {
-		if (isTraceEnabled()) {
-			logger.trace(StrUtil.format(format, arguments));
-		}
+		trace(null, format, arguments);
 	}
 
 	@Override
 	public void trace(Throwable t, String format, Object... arguments) {
-		if(isTraceEnabled()){
+		if(false == logIfEnabled(Level.TRACE, format, arguments, t)){
 			logger.trace(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -63,14 +65,12 @@ public class Log4j2Log extends AbstractLog {
 
 	@Override
 	public void debug(String format, Object... arguments) {
-		if(isDebugEnabled()){
-			logger.debug(StrUtil.format(format, arguments));
-		}
+		debug(null, format, arguments);
 	}
 
 	@Override
 	public void debug(Throwable t, String format, Object... arguments) {
-		if(isDebugEnabled()){
+		if(false == logIfEnabled(Level.DEBUG, format, arguments, t)){
 			logger.debug(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -83,14 +83,12 @@ public class Log4j2Log extends AbstractLog {
 
 	@Override
 	public void info(String format, Object... arguments) {
-		if(isInfoEnabled()){
-			logger.info(StrUtil.format(format, arguments));
-		}
+		info(null, format, arguments);
 	}
 
 	@Override
 	public void info(Throwable t, String format, Object... arguments) {
-		if(isInfoEnabled()){
+		if(false == logIfEnabled(Level.INFO, format, arguments, t)){
 			logger.info(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -103,14 +101,12 @@ public class Log4j2Log extends AbstractLog {
 
 	@Override
 	public void warn(String format, Object... arguments) {
-		if(isWarnEnabled()){
-			logger.warn(StrUtil.format(format, arguments));
-		}
+		warn(null, format, arguments);
 	}
 
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
-		if(isWarnEnabled()){
+		if(false == logIfEnabled(Level.WARN, format, arguments, t)){
 			logger.warn(StrUtil.format(format, arguments), t);
 		}
 	}
@@ -123,18 +119,33 @@ public class Log4j2Log extends AbstractLog {
 
 	@Override
 	public void error(String format, Object... arguments) {
-		if(isErrorEnabled()){
-			logger.error(StrUtil.format(format, arguments));
-		}
+		error(null, format, arguments);
 	}
 
 	@Override
 	public void error(Throwable t, String format, Object... arguments) {
-		if(isErrorEnabled()){
+		if(false == logIfEnabled(Level.ERROR, format, arguments, t)){
 			logger.warn(StrUtil.format(format, arguments), t);
 		}
 	}
 
 	// ------------------------------------------------------------------------- Private method
+	/**
+	 * 打印日志<br>
+	 * 此方法用于兼容底层日志实现，通过传入当前包装类名，以解决打印日志中行号错误问题
+	 * @param level 日志级别，使用org.apache.logging.log4j.Level中的常量
+	 * @param msgTemplate 消息模板
+	 * @param arguments 参数
+	 * @param t 异常
+	 * @return 是否支持 LocationAwareLogger对象，如果不支持需要日志方法调用被包装类的相应方法
+	 */
+	private boolean logIfEnabled(Level level, String msgTemplate, Object[] arguments, Throwable t) {
+		if(this.logger instanceof AbstractLogger){
+			((AbstractLogger)this.logger).logIfEnabled(FQCN, level, null, StrUtil.format(msgTemplate, arguments), t);
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 }

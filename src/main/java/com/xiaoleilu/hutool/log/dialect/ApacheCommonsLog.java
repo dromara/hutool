@@ -13,8 +13,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class ApacheCommonsLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
-
-	private final transient org.apache.commons.logging.Log logger;
+	
+	private final transient Log logger;
 	private final String name;
 
 	// ------------------------------------------------------------------------- Constructor
@@ -137,5 +137,4 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	// ------------------------------------------------------------------------- Private method
-
 }
