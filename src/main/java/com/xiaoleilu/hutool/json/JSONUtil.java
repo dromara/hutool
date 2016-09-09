@@ -84,6 +84,15 @@ public class JSONUtil {
 		
 		return json;
 	}
+	
+	/**
+	 * XML字符串转为JSONObject
+	 * @param xmlStr XML字符串
+	 * @return JSONObject
+	 */
+	public static JSONObject parseFromXml(String xmlStr){
+		return XML.toJSONObject(xmlStr);
+	}
 	//-------------------------------------------------------------------- Pause end
 
 	//-------------------------------------------------------------------- toString start
@@ -131,6 +140,15 @@ public class JSONUtil {
 	 */
 	public static String toJsonPrettyStr(Object obj){
 		return toJsonPrettyStr(parse(obj));
+	}
+	
+	/**
+	 * 转换为XML字符串
+	 * @param json JSON
+	 * @return XML字符串
+	 */
+	public static String toXmlStr(JSON json){
+		return XML.toString(json);
 	}
 	//-------------------------------------------------------------------- toString end
 	
