@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -241,21 +239,12 @@ public class ObjectUtil {
 
 	/**
 	 * 是否为基本类型，包括包装类型和非包装类型
+	 * @see ClassUtil#isBasicType(Class)
 	 * @param object 被检查对象
 	 * @return 是否为基本类型
 	 */
 	public static boolean isBasicType(Object object){
-		return object instanceof Byte || 
-				object instanceof Character || 
-				object instanceof Short || 
-				object instanceof Integer || 
-				object instanceof Long || 
-				object instanceof Boolean || 
-				object instanceof Float || 
-				object instanceof Double || 
-				object instanceof String || 
-				object instanceof BigInteger || 
-				object instanceof BigDecimal;
+		return ClassUtil.isBasicType(object.getClass());
 	}
 	
 	/**
@@ -278,17 +267,5 @@ public class ObjectUtil {
 			}
 		}
 		return true;
-	}
-	
-	/**
-	 * 对象是否为数组对象
-	 * @param obj 对象
-	 * @return 是否为数组对象
-	 */
-	public static boolean isArray(Object obj) {
-		if(null == obj){
-			throw new NullPointerException("Object check for isArray is null");
-		}
-		return obj.getClass().isArray();
 	}
 }

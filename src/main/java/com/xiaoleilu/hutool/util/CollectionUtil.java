@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
 import com.xiaoleilu.hutool.lang.Filter;
 
@@ -231,6 +232,7 @@ public class CollectionUtil {
 
 	/**
 	 * 新建一个HashSet
+	 * 
 	 * @param ts 元素数组
 	 * @return HashSet对象
 	 */
@@ -242,7 +244,7 @@ public class CollectionUtil {
 		}
 		return set;
 	}
-	
+
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -256,6 +258,7 @@ public class CollectionUtil {
 
 	/**
 	 * 新建一个ArrayList
+	 * 
 	 * @param values 数组
 	 * @return ArrayList对象
 	 */
@@ -267,9 +270,10 @@ public class CollectionUtil {
 		}
 		return arrayList;
 	}
-	
+
 	/**
 	 * 新建一个ArrayList
+	 * 
 	 * @param collection 集合
 	 * @return ArrayList对象
 	 */
@@ -282,12 +286,17 @@ public class CollectionUtil {
 	 * 添加新元素会生成一个新的数组，不影响原数组
 	 * 
 	 * @param buffer 已有数组
-	 * @param newElement 新元素
+	 * @param newElements 新元素
 	 * @return 新数组
 	 */
-	public static <T> T[] append(T[] buffer, T newElement) {
-		T[] t = resize(buffer, buffer.length + 1, newElement.getClass());
-		t[buffer.length] = newElement;
+	@SafeVarargs
+	public static <T> T[] append(T[] buffer, T... newElements) {
+		if (isEmpty(newElements)) {
+			return buffer;
+		}
+
+		T[] t = resize(buffer, buffer.length + newElements.length);
+		System.arraycopy(newElements, 0, t, buffer.length, newElements.length);
 		return t;
 	}
 
@@ -301,7 +310,9 @@ public class CollectionUtil {
 	 */
 	public static <T> T[] resize(T[] buffer, int newSize, Class<?> componentType) {
 		T[] newArray = newArray(componentType, newSize);
-		System.arraycopy(buffer, 0, newArray, 0, buffer.length >= newSize ? newSize : buffer.length);
+		if (isNotEmpty(buffer)) {
+			System.arraycopy(buffer, 0, newArray, 0, Math.min(buffer.length, newSize));
+		}
 		return newArray;
 	}
 
@@ -514,7 +525,7 @@ public class CollectionUtil {
 	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
 		Collection<T> collection2 = ObjectUtil.clone(collection);
 		collection2.clear();
-		
+
 		T modified;
 		for (T t : collection) {
 			modified = filter.modify(t);
@@ -524,17 +535,18 @@ public class CollectionUtil {
 		}
 		return collection2;
 	}
-	
+
 	/**
 	 * 过滤
+	 * 
 	 * @param map Map
 	 * @param filter 过滤器
 	 * @return 过滤后的Map
 	 */
-	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter){
+	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
 		Map<K, V> map2 = ObjectUtil.clone(map);
 		map2.clear();
-		
+
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
 			modified = filter.modify(entry);
@@ -861,25 +873,64 @@ public class CollectionUtil {
 		}
 		return array;
 	}
-
-	/**
-	 * 判定给定对象是否为数组类型
-	 * 
-	 * @param obj 对象
-	 * @return 是否为数组类型
-	 */
-	public static boolean isArray(Object obj) {
-		return obj.getClass().isArray();
-	}
 	
 	/**
-	 * Iterator转换为Enumeration
-	 * Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
+	 * 包装数组对象
+	 * @param obj 对象，可以是对象数组或者基本类型数组
+	 * @return 包装类型数组或对象数组
+	 * @throws UtilException 对象为非数组
+	 */
+	public static Object[] wrap(Object obj){
+		if(isArray(obj)){
+			try {
+				return (Object[])obj;
+			} catch (Exception e) {
+				final String className = obj.getClass().getComponentType().getName();
+				switch (className) {
+					case "long":
+						return wrap((long[])obj);
+					case "int":
+						return wrap((int[])obj);
+					case "short":
+						return wrap((short[])obj);
+					case "char":
+						return wrap((char[])obj);
+					case "byte":
+						return wrap((byte[])obj);
+					case "boolean":
+						return wrap((boolean[])obj);
+					case "float":
+						return wrap((float[])obj);
+					case "double":
+						return wrap((double[])obj);
+					default:
+						throw new UtilException(e);
+				}
+			}
+		}
+		throw new UtilException(StrUtil.format("[{}] is not Array!", obj.getClass()));
+	}
+
+	/**
+	 * 对象是否为数组对象
+	 * @param obj 对象
+	 * @return 是否为数组对象
+	 */
+	public static boolean isArray(Object obj) {
+		if(null == obj){
+			throw new NullPointerException("Object check for isArray is null");
+		}
+		return obj.getClass().isArray();
+	}
+
+	/**
+	 * Iterator转换为Enumeration Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
+	 * 
 	 * @param iter Iterator
 	 * @return Enumeration
 	 */
 	public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
-		return new Enumeration<E>() {
+		return new Enumeration<E>(){
 			@Override
 			public boolean hasMoreElements() {
 				return iter.hasNext();
@@ -895,6 +946,7 @@ public class CollectionUtil {
 	/**
 	 * Enumeration转换为Iterator<br>
 	 * Adapt the specified <code>Enumeration</code> to the <code>Iterator</code> interface
+	 * 
 	 * @param e Enumeration
 	 * @return Iterator
 	 */
@@ -904,7 +956,7 @@ public class CollectionUtil {
 			public boolean hasNext() {
 				return e.hasMoreElements();
 			}
-			
+
 			@Override
 			public E next() {
 				return e.nextElement();
@@ -915,5 +967,45 @@ public class CollectionUtil {
 				throw new UnsupportedOperationException();
 			}
 		};
+	}
+	
+	/**
+	 * 数组或集合转String
+	 * @param obj 集合或数组对象
+	 * @return 数组字符串，与集合转字符串格式相同
+	 */
+	public static String toString(Object obj){
+		if(null == obj){
+			return null;
+		}
+		if(isArray(obj)){
+			Class<?> componentType = obj.getClass().getComponentType();
+			if(ClassUtil.isPrimitiveWrapper(componentType)){
+				return Arrays.deepToString((Object[])obj);
+			}else{
+				final String className = componentType.getName();
+				switch (className) {
+					case "long":
+						return Arrays.toString((long[])obj);
+					case "int":
+						return Arrays.toString((int[])obj);
+					case "short":
+						return Arrays.toString((short[])obj);
+					case "char":
+						return Arrays.toString((char[])obj);
+					case "byte":
+						return Arrays.toString((byte[])obj);
+					case "boolean":
+						return Arrays.toString((boolean[])obj);
+					case "float":
+						return Arrays.toString((float[])obj);
+					case "double":
+						return Arrays.toString((double[])obj);
+					default:
+						break;
+				}
+			}
+		}
+		return obj.toString();
 	}
 }

@@ -917,7 +917,7 @@ public class StrUtil {
 			if (currentChar == '{') {
 				final char nextChar = template.charAt(++i);
 				if (nextChar == '}') {
-					sb.append(values[valueIndex++]);
+					sb.append(utf8Str(values[valueIndex++]));
 				} else {
 					sb.append('{').append(nextChar);
 				}
@@ -1026,8 +1026,8 @@ public class StrUtil {
 			return str((ByteBuffer)obj, charset);
 		}
 		
-		if(ObjectUtil.isArray(obj)){
-			return Arrays.toString((Object[])obj);
+		if(CollectionUtil.isArray(obj)){
+			return CollectionUtil.toString(obj);
 		}
 		
 		return obj.toString();
@@ -1335,4 +1335,5 @@ public class StrUtil {
 	public static StringWriter getWriter() {
 		return new StringWriter();
 	}
+
 }

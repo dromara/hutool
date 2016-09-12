@@ -277,3 +277,5 @@ Entity中toVo区别是否忽略大小写
 3、修复Log的FQCN问题（显示行号错误）
 4、增加XML和JSON互相转换支持
 5、ThreadUtil中sleep方法参数变为Number类型
+6、增加对数组toString的方法（CollectionUtil.toString），同时StrUtil.format等格式化的方法支持数组直接格式化
+7、db部分的Page对象增加addOrder方法

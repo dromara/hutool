@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -268,7 +269,12 @@ public class JSONUtil {
 			if (object == null) {
 				return JSONNull.NULL;
 			}
-			if (object instanceof JSONObject || object instanceof JSONArray || JSONNull.NULL.equals(object) || object instanceof JSONString || ObjectUtil.isBasicType(object)) {
+			if (object instanceof JSON
+					|| JSONNull.NULL.equals(object) 
+					|| object instanceof JSONString 
+					|| object instanceof CharSequence
+					|| object instanceof Number
+					|| ObjectUtil.isBasicType(object)) {
 				return object;
 			}
 
@@ -276,7 +282,7 @@ public class JSONUtil {
 				Collection<?> coll = (Collection<?>) object;
 				return new JSONArray(coll);
 			}
-			if (ObjectUtil.isArray(object)) {
+			if (CollectionUtil.isArray(object)) {
 				return new JSONArray(object);
 			}
 			if (object instanceof Map) {

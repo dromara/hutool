@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.db;
 import java.util.Arrays;
 
 import com.xiaoleilu.hutool.db.sql.Order;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.PageUtil;
 
 /**
@@ -89,6 +90,18 @@ public class Page {
 	 * @param orders 排序
 	 */
 	public void setOrder(Order... orders) {
+		this.orders = orders;
+	}
+	
+	/**
+	 * 设置排序
+	 * 
+	 * @param orders 排序
+	 */
+	public void addOrder(Order... orders) {
+		if(null != this.orders){
+			CollectionUtil.append(this.orders, orders);
+		}
 		this.orders = orders;
 	}
 	// ---------------------------------------------------------- Getters and Setters end
