@@ -979,11 +979,10 @@ public class CollectionUtil {
 			return null;
 		}
 		if(isArray(obj)){
-			Class<?> componentType = obj.getClass().getComponentType();
-			if(ClassUtil.isPrimitiveWrapper(componentType)){
+			try {
 				return Arrays.deepToString((Object[])obj);
-			}else{
-				final String className = componentType.getName();
+			} catch (Exception e) {
+				final String className = obj.getClass().getComponentType().getName();
 				switch (className) {
 					case "long":
 						return Arrays.toString((long[])obj);
@@ -1002,7 +1001,7 @@ public class CollectionUtil {
 					case "double":
 						return Arrays.toString((double[])obj);
 					default:
-						break;
+						throw new UtilException(e);
 				}
 			}
 		}
