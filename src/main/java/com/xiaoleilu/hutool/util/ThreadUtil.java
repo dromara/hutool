@@ -130,19 +130,19 @@ public class ThreadUtil {
 	 * @param millis 挂起的毫秒数
 	 * @return 被中断返回false，否则true
 	 */
-	public static boolean sleep(Long millis) {
-		if (millis == null || millis <= 0) {
+	public static boolean sleep(Number millis) {
+		if (millis == null) {
 			return true;
 		}
 
 		try {
-			Thread.sleep(millis);
+			Thread.sleep(millis.longValue());
 		} catch (InterruptedException e) {
 			return false;
 		}
 		return true;
 	}
-
+	
 	/**
 	 * @return 获得堆栈列表
 	 */

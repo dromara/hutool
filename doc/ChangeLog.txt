@@ -276,3 +276,4 @@ Entity中toVo区别是否忽略大小写
 2、升级依赖以及Maven插件
 3、修复Log的FQCN问题（显示行号错误）
 4、增加XML和JSON互相转换支持
+5、ThreadUtil中sleep方法参数变为Number类型
