@@ -141,6 +141,8 @@ public class Conver {
 		}
 		if(value instanceof String) {
 			return (String)value;
+		}else if(CollectionUtil.isArray(value)){
+			return CollectionUtil.toString(value);
 		}
 		return value.toString();
 	}

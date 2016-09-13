@@ -1018,15 +1018,13 @@ public class StrUtil {
 			return null;
 		}
 		
-		if(obj instanceof byte[] || obj instanceof Byte[]){
+		if(obj instanceof String) {
+			return (String)obj;
+		}else if(obj instanceof byte[] || obj instanceof Byte[]){
 			return str((Byte[])obj, charset);
-		}
-		
-		if(obj instanceof ByteBuffer){
+		}else if(obj instanceof ByteBuffer){
 			return str((ByteBuffer)obj, charset);
-		}
-		
-		if(CollectionUtil.isArray(obj)){
+		}else if(CollectionUtil.isArray(obj)){
 			return CollectionUtil.toString(obj);
 		}
 		

@@ -279,3 +279,4 @@ Entity中toVo区别是否忽略大小写
 5、ThreadUtil中sleep方法参数变为Number类型
 6、增加对数组toString的方法（CollectionUtil.toString），同时StrUtil.format等格式化的方法支持数组直接格式化
 7、db部分的Page对象增加addOrder方法
+8、CollectionUtil针对基本类型数组isEmpty

@@ -557,26 +557,87 @@ public class CollectionUtil {
 		return map2;
 	}
 
+	//---------------------------------------------------------------------- isEmpty
 	/**
 	 * 数组是否为空
 	 * 
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static <T> boolean isEmpty(T[] array) {
-		return array == null || array.length <= 0;
+	public static <T> boolean isEmpty(final T[] array) {
+		return array == null || array.length == 0;
 	}
 
 	/**
-	 * 数组是否为非空
+	 * 数组是否为空
 	 * 
 	 * @param array 数组
-	 * @return 是否为非空
+	 * @return 是否为空
 	 */
-	public static <T> boolean isNotEmpty(T[] array) {
-		return false == isEmpty(array);
+	public static boolean isEmpty(final long[] array) {
+		return array == null || array.length == 0;
 	}
 
+	/**
+	 * 数组是否为空
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final short[] array) {
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 数组是否为空
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final char[] array) {
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 数组是否为空
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final byte[] array) {
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 数组是否为空
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final double[] array) {
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 数组是否为空
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final float[] array) {
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 数组是否为空
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final boolean[] array) {
+		return array == null || array.length == 0;
+	}
+	
 	/**
 	 * 集合是否为空
 	 * 
@@ -585,6 +646,104 @@ public class CollectionUtil {
 	 */
 	public static boolean isEmpty(Collection<?> collection) {
 		return collection == null || collection.isEmpty();
+	}
+	
+	/**
+	 * Map是否为空
+	 * 
+	 * @param map 集合
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(Map<?, ?> map) {
+		return map == null || map.isEmpty();
+	}
+
+	//---------------------------------------------------------------------- isNotEmpty
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static <T> boolean isNotEmpty(final T[] array) {
+		return (array != null && array.length != 0);
+	}
+	
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final long[] array) {
+		return (array != null && array.length != 0);
+	}
+	
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final int[] array) {
+		return (array != null && array.length != 0);
+	}
+	
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final short[] array) {
+		return (array != null && array.length != 0);
+	}
+	
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final char[] array) {
+		return (array != null && array.length != 0);
+	}
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final byte[] array) {
+		return (array != null && array.length != 0);
+	}
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final double[] array) {
+		return (array != null && array.length != 0);
+	}
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final float[] array) {
+		return (array != null && array.length != 0);
+	}
+	
+	/**
+	 * 数组是否为非空
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final boolean[] array) {
+		return (array != null && array.length != 0);
 	}
 
 	/**
@@ -595,16 +754,6 @@ public class CollectionUtil {
 	 */
 	public static boolean isNotEmpty(Collection<?> collection) {
 		return false == isEmpty(collection);
-	}
-
-	/**
-	 * Map是否为空
-	 * 
-	 * @param map 集合
-	 * @return 是否为空
-	 */
-	public static boolean isEmpty(Map<?, ?> map) {
-		return map == null || map.isEmpty();
 	}
 
 	/**
@@ -873,36 +1022,37 @@ public class CollectionUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 包装数组对象
+	 * 
 	 * @param obj 对象，可以是对象数组或者基本类型数组
 	 * @return 包装类型数组或对象数组
 	 * @throws UtilException 对象为非数组
 	 */
-	public static Object[] wrap(Object obj){
-		if(isArray(obj)){
+	public static Object[] wrap(Object obj) {
+		if (isArray(obj)) {
 			try {
-				return (Object[])obj;
+				return (Object[]) obj;
 			} catch (Exception e) {
 				final String className = obj.getClass().getComponentType().getName();
 				switch (className) {
 					case "long":
-						return wrap((long[])obj);
+						return wrap((long[]) obj);
 					case "int":
-						return wrap((int[])obj);
+						return wrap((int[]) obj);
 					case "short":
-						return wrap((short[])obj);
+						return wrap((short[]) obj);
 					case "char":
-						return wrap((char[])obj);
+						return wrap((char[]) obj);
 					case "byte":
-						return wrap((byte[])obj);
+						return wrap((byte[]) obj);
 					case "boolean":
-						return wrap((boolean[])obj);
+						return wrap((boolean[]) obj);
 					case "float":
-						return wrap((float[])obj);
+						return wrap((float[]) obj);
 					case "double":
-						return wrap((double[])obj);
+						return wrap((double[]) obj);
 					default:
 						throw new UtilException(e);
 				}
@@ -913,11 +1063,12 @@ public class CollectionUtil {
 
 	/**
 	 * 对象是否为数组对象
+	 * 
 	 * @param obj 对象
 	 * @return 是否为数组对象
 	 */
 	public static boolean isArray(Object obj) {
-		if(null == obj){
+		if (null == obj) {
 			throw new NullPointerException("Object check for isArray is null");
 		}
 		return obj.getClass().isArray();
@@ -968,38 +1119,39 @@ public class CollectionUtil {
 			}
 		};
 	}
-	
+
 	/**
 	 * 数组或集合转String
+	 * 
 	 * @param obj 集合或数组对象
 	 * @return 数组字符串，与集合转字符串格式相同
 	 */
-	public static String toString(Object obj){
-		if(null == obj){
+	public static String toString(Object obj) {
+		if (null == obj) {
 			return null;
 		}
-		if(isArray(obj)){
+		if (isArray(obj)) {
 			try {
-				return Arrays.deepToString((Object[])obj);
+				return Arrays.deepToString((Object[]) obj);
 			} catch (Exception e) {
 				final String className = obj.getClass().getComponentType().getName();
 				switch (className) {
 					case "long":
-						return Arrays.toString((long[])obj);
+						return Arrays.toString((long[]) obj);
 					case "int":
-						return Arrays.toString((int[])obj);
+						return Arrays.toString((int[]) obj);
 					case "short":
-						return Arrays.toString((short[])obj);
+						return Arrays.toString((short[]) obj);
 					case "char":
-						return Arrays.toString((char[])obj);
+						return Arrays.toString((char[]) obj);
 					case "byte":
-						return Arrays.toString((byte[])obj);
+						return Arrays.toString((byte[]) obj);
 					case "boolean":
-						return Arrays.toString((boolean[])obj);
+						return Arrays.toString((boolean[]) obj);
 					case "float":
-						return Arrays.toString((float[])obj);
+						return Arrays.toString((float[]) obj);
 					case "double":
-						return Arrays.toString((double[])obj);
+						return Arrays.toString((double[]) obj);
 					default:
 						throw new UtilException(e);
 				}
