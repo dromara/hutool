@@ -43,6 +43,15 @@ public class JSONUtil {
 	public static JSONObject parseObj(String jsonStr) {
 		return new JSONObject(jsonStr);
 	}
+	
+	/**
+	 * JSON字符串转JSONObject对象
+	 * @param obj Bean对象或者Map
+	 * @return JSONObject
+	 */
+	public static JSONObject parseObj(Object obj) {
+		return new JSONObject(obj);
+	}
 
 	/**
 	 * JSON字符串转JSONArray
