@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.demo;
 
+import java.util.Date;
+
 import com.xiaoleilu.hutool.lang.DateTime;
 import com.xiaoleilu.hutool.util.DateUtil;
 
@@ -16,5 +18,11 @@ public class DateUtilDemo {
 		
 		DateTime date = DateUtil.date(1420774989);
 		System.out.println(date.toString());
+		
+		String dateStr = DateUtil.date().toString();
+		System.out.println(dateStr);
+		
+		String datetimeStr = DateUtil.formatDateTime(new Date());
+		System.out.println(datetimeStr);
 	}
 }
