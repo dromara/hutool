@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.http;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -187,6 +188,7 @@ public abstract class HttpBase<T> {
 	public String charset() {
 		return charset;
 	}
+	
 	/**
 	 * 设置字符集
 	 * @param charset 字符集
@@ -195,6 +197,18 @@ public abstract class HttpBase<T> {
 	public T charset(String charset) {
 		if(StrUtil.isNotBlank(charset)){
 			this.charset = charset;
+		}
+		return (T) this;
+	}
+	
+	/**
+	 * 设置字符集
+	 * @param charset 字符集
+	 * @return T 自己
+	 */
+	public T charset(Charset charset) {
+		if(null != charset){
+			this.charset = charset.name();
 		}
 		return (T) this;
 	}

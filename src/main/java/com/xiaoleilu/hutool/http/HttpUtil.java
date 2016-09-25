@@ -163,6 +163,18 @@ public class HttpUtil {
 	}
 	
 	/**
+	 * 发送get请求
+	 * 
+	 * @param urlString 网址
+	 * @param paramMap post表单数据
+	 * @return 返回数据
+	 * @throws IOException
+	 */
+	public static String get(String urlString, Map<String, Object> paramMap) {
+		return HttpRequest.get(urlString).form(paramMap).execute().body();
+	}
+	
+	/**
 	 * 发送post请求
 	 * 
 	 * @param urlString 网址

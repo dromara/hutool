@@ -477,6 +477,7 @@ public class ClassUtil {
 		return loadClass(className, true);
 	}
 
+	//---------------------------------------------------------------------------------------------------- Invoke start
 	/**
 	 * 执行方法<br>
 	 * 可执行Private方法，也可执行static方法<br>
@@ -580,17 +581,21 @@ public class ClassUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
 	 * @return 结果
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
+	 * @throws UtilException IllegalAccessException and IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException{
 		if (false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
-		return (T) method.invoke(isStatic(method) ? null : obj, args);
+		try {
+			return (T) method.invoke(isStatic(method) ? null : obj, args);
+		} catch (IllegalAccessException | IllegalArgumentException e) {
+			throw new UtilException(e);
+		}
 	}
+	//---------------------------------------------------------------------------------------------------- Invoke end
 	
 	/**
 	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
