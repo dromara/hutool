@@ -571,6 +571,7 @@ public class Conver {
 
 	/**
 	 * 转换为boolean<br>
+	 * String支持的值为：true、false、yes、ok、no，1,0
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
 	 * 
@@ -585,14 +586,28 @@ public class Conver {
 		if(value instanceof Boolean) {
 			return (Boolean)value;
 		}
-		final String valueStr = toStr(value, null);
+		String valueStr = toStr(value, null);
 		if (StrUtil.isBlank(valueStr)){
 			return defaultValue;
 		}
-		try {
-			return Boolean.parseBoolean(valueStr.trim());
-		} catch (Exception e) {
-			return defaultValue;
+		valueStr = valueStr.trim().toLowerCase();
+		switch (valueStr) {
+			case "true":
+				return true;
+			case "false":
+				return false;
+			case "yes":
+				return true;
+			case "ok":
+				return true;
+			case "no":
+				return false;
+			case "1":
+				return true;
+			case "0":
+				return false;
+			default:
+				return defaultValue;
 		}
 	}
 	

@@ -283,3 +283,4 @@ Entity中toVo区别是否忽略大小写
 9、JSONUtil增加pauseObj方法
 10、增加Charset对象支持
 11、增加DFA模块，用于关键词查找
+12、Conver.toBool支持更多类型的字符串形式
