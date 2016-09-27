@@ -298,6 +298,21 @@ public class BasicSetting extends AbsSetting{
 		}
 		return value;
 	}
+	
+	/**
+	 * 获得字符串类型值
+	 * @param key KEY
+	 * @param group 分组
+	 * @param defaultValue 默认值
+	 * @return
+	 */
+	public String getStr(String key, String group, String defaultValue) {
+		final String value = getByGroup(key, group);
+		if(StrUtil.isBlank(value)) {
+			return defaultValue;
+		}
+		return value;
+	}
 
 	/**
 	 * 获得指定分组的键对应值

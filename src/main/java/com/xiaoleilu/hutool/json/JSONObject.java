@@ -20,6 +20,7 @@ import java.util.Set;
 import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
  * JSONObject是一个无序键值对. 它是一个由大括号包围的，使用冒号分隔name和value的字符串，每个键值对使用逗号隔开。<br>
@@ -145,7 +146,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 */
 	public JSONObject(String baseName, Locale locale) throws JSONException {
 		this();
-		ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, Thread.currentThread().getContextClassLoader());
+		ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, ClassUtil.getContextClassLoader());
 
 		// Iterate through the keys in the bundle.
 
