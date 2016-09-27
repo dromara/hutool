@@ -44,6 +44,7 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 	 */
 	private final ArrayList<Object> myArrayList;
 
+	//-------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * Construct an empty JSONArray.
 	 */
@@ -118,6 +119,7 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 			throw new JSONException("JSONArray initial value should be a string or collection or array.");
 		}
 	}
+	//-------------------------------------------------------------------------------------------------------------------- Constructor start
 
 	@Override
 	public Iterator<Object> iterator() {

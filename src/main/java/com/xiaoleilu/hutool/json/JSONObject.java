@@ -42,7 +42,7 @@ import com.xiaoleilu.hutool.util.BeanUtil;
  *
  * @author JSON.org，looly
  */
-public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> implements JSON{
+public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> implements JSON {
 
 	/**
 	 * The map where the JSONObject's properties are kept.
@@ -53,9 +53,10 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 * 空构造
 	 */
 	public JSONObject() {
-		this.map = new HashMap<String, Object>();
+		this.map = new HashMap<>();
 	}
 
+	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。
 	 *
@@ -80,67 +81,29 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 */
 	public JSONObject(JSONTokener x) throws JSONException {
 		this();
-		char c;
-		String key;
-
-		if (x.nextClean() != '{') {
-			throw x.syntaxError("A JSONObject text must begin with '{'");
-		}
-		for (;;) {
-			c = x.nextClean();
-			switch (c) {
-				case 0:
-					throw x.syntaxError("A JSONObject text must end with '}'");
-				case '}':
-					return;
-				default:
-					x.back();
-					key = x.nextValue().toString();
-			}
-
-			// The key is followed by ':'.
-
-			c = x.nextClean();
-			if (c != ':') {
-				throw x.syntaxError("Expected a ':' after a key");
-			}
-			this.putOnce(key, x.nextValue());
-
-			// Pairs are separated by ','.
-
-			switch (x.nextClean()) {
-				case ';':
-				case ',':
-					if (x.nextClean() == '}') {
-						return;
-					}
-					x.back();
-					break;
-				case '}':
-					return;
-				default:
-					throw x.syntaxError("Expected a ',' or '}'");
-			}
-		}
+		init(x);
 	}
 
 	/**
 	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
-	 * @param beanOrMap JavaBean或者Map对象
+	 * 
+	 * @param source JavaBean或者Map对象或者String
 	 */
-	public JSONObject(Object beanOrMap) {
+	public JSONObject(Object source) {
 		this();
-		if(null != beanOrMap){
-			if(beanOrMap instanceof Map){
-				for (final Entry<?, ?> e : ((Map<?, ?>)beanOrMap).entrySet()) {
+		if (null != source) {
+			if (source instanceof Map) {
+				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 					final Object value = e.getValue();
 					if (value != null) {
 						this.map.put(Conver.toStr(e.getKey()), JSONUtil.wrap(value));
 					}
 				}
-			}else{
-				this.populateMap(beanOrMap);
+			}else if(source instanceof String){
+				init((String)source);
+			} else {
+				this.populateMap(source);
 			}
 		}
 	}
@@ -155,8 +118,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	public JSONObject(Object object, String[] names) {
 		this();
 		Class<?> c = object.getClass();
-		for (int i = 0; i < names.length; i += 1) {
-			String name = names[i];
+		for (String name : names) {
 			try {
 				this.putOpt(name, c.getField(name).get(object));
 			} catch (Exception ignore) {
@@ -212,12 +174,10 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 			}
 		}
 	}
-
+	// -------------------------------------------------------------------------------------------------------------------- Constructor end
+	
 	/**
-	 * Accumulate values under a key. It is similar to the put method except that if there is already an object stored under the key then a JSONArray is stored under the key to hold all of the
-	 * accumulated values. If there is already a JSONArray, then the new value is appended to it. In contrast, the put method replaces the previous value.
-	 *
-	 * If only one value is accumulated that is not a JSONArray, then the result will be the same as using put. But if multiple values are accumulated, then the result will be like append.
+	 * 积累值。类似于put，当key对应value已经存在时，与value组成新的JSONArray. 如果只有一个值，此值就是value，如果多个值，则是添加到新的JSONArray中
 	 *
 	 * @param key A key string.
 	 * @param value An object to be accumulated under the key.
@@ -238,13 +198,12 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	}
 
 	/**
-	 * Append values to the array under a key. If the key does not exist in the JSONObject, then the key is put in the JSONObject with its value being a JSONArray containing the value parameter. If
-	 * the key was already associated with a JSONArray, then the value parameter is appended to it.
+	 * 追加值，如果key无对应值，就添加一个JSONArray，其元素只有value，如果值已经是一个JSONArray，则添加到值JSONArray中。
 	 *
 	 * @param key A key string.
 	 * @param value An object to be accumulated under the key.
 	 * @return this.
-	 * @throws JSONException If the key is null or if the current value associated with the key is not a JSONArray.
+	 * @throws JSONException 如果给定键为<code>null</code>或者键对应的值存在且为非JSONArray
 	 */
 	public JSONObject append(String key, Object value) throws JSONException {
 		JSONUtil.testValidity(value);
@@ -260,7 +219,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	}
 
 	/**
-	 *是否存在指定KEY
+	 * 是否存在指定KEY
 	 *
 	 * @param key A key string.
 	 * @return true if the key exists in the JSONObject.
@@ -270,8 +229,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	}
 
 	/**
-	 * Increment a property of a JSONObject. If there is no such property, create one with a value of 1. If there is such a property, and if it is an Integer, Long, Double, or Float, then add one to
-	 * it.
+	 * 对值加一，如果值不存在，赋值1，如果为数字类型，做加一操作
 	 *
 	 * @param key A key string.
 	 * @return this.
@@ -359,7 +317,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	public Object get(String key) {
 		return getObj(key);
 	}
-	
+
 	@Override
 	public Object getObj(String key, Object defaultValue) {
 		Object obj = this.map.get(key);
@@ -368,6 +326,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 
 	/**
 	 * 获得Enum类型的值
+	 * 
 	 * @param clazz Enum的Class
 	 * @param key KEY
 	 * @return Enum类型的值，无则返回Null
@@ -378,6 +337,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 
 	/**
 	 * 获得Enum类型的值
+	 * 
 	 * @param clazz Enum的Class
 	 * @param key KEY
 	 * @param defaultValue 默认值
@@ -389,6 +349,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 
 	/**
 	 * 获得JSONArray对象
+	 * 
 	 * @param key KEY
 	 * @return JSONArray对象，如果值为null或者非JSONArray类型，返回null
 	 */
@@ -399,53 +360,13 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 
 	/**
 	 * 获得JSONObject对象
+	 * 
 	 * @param key KEY
 	 * @return JSONArray对象，如果值为null或者非JSONObject类型，返回null
 	 */
 	public JSONObject getJSONObject(String key) {
 		Object object = this.get(key);
 		return object instanceof JSONObject ? (JSONObject) object : null;
-	}
-
-	private void populateMap(Object bean) {
-		Class<?> klass = bean.getClass();
-
-		// If klass is a System class then set includeSuperClass to false.
-
-		boolean includeSuperClass = klass.getClassLoader() != null;
-
-		Method[] methods = includeSuperClass ? klass.getMethods() : klass.getDeclaredMethods();
-		for (int i = 0; i < methods.length; i += 1) {
-			try {
-				Method method = methods[i];
-				if (Modifier.isPublic(method.getModifiers())) {
-					String name = method.getName();
-					String key = "";
-					if (name.startsWith("get")) {
-						if ("getClass".equals(name) || "getDeclaringClass".equals(name)) {
-							key = "";
-						} else {
-							key = name.substring(3);
-						}
-					} else if (name.startsWith("is")) {
-						key = name.substring(2);
-					}
-					if (key.length() > 0 && Character.isUpperCase(key.charAt(0)) && method.getParameterTypes().length == 0) {
-						if (key.length() == 1) {
-							key = key.toLowerCase();
-						} else if (!Character.isUpperCase(key.charAt(1))) {
-							key = key.substring(0, 1).toLowerCase() + key.substring(1);
-						}
-
-						Object result = method.invoke(bean, (Object[]) null);
-						if (result != null) {
-							this.map.put(key, JSONUtil.wrap(result));
-						}
-					}
-				}
-			} catch (Exception ignore) {
-			}
-		}
 	}
 
 	/**
@@ -645,22 +566,24 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 		}
 		return ja;
 	}
-	
+
 	/**
 	 * 转为实体类对象
+	 * 
 	 * @param clazz 实体类
 	 * @return 实体类对象
 	 */
-	public <T> T toBean(Class<T> clazz){
+	public <T> T toBean(Class<T> clazz) {
 		return BeanUtil.mapToBean(this.map, clazz);
 	}
-	
+
 	/**
 	 * 转为实体类对象
+	 * 
 	 * @param bean 实体类
 	 * @return 实体类对象
 	 */
-	public <T> T toBean(T bean){
+	public <T> T toBean(T bean) {
 		return BeanUtil.fillBeanWithMap(this.map, bean);
 	}
 
@@ -750,4 +673,109 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 			throw new JSONException(exception);
 		}
 	}
+
+	// ------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * Bean对象转Map
+	 * 
+	 * @param bean Bean对象
+	 */
+	private void populateMap(Object bean) {
+		Class<?> clazz = bean.getClass();
+
+		// If klass is a System class then set includeSuperClass to false.
+
+		boolean includeSuperClass = clazz.getClassLoader() != null;
+
+		Method[] methods = includeSuperClass ? clazz.getMethods() : clazz.getDeclaredMethods();
+		for (int i = 0; i < methods.length; i += 1) {
+			try {
+				Method method = methods[i];
+				if (Modifier.isPublic(method.getModifiers())) {
+					String name = method.getName();
+					String key = "";
+					if (name.startsWith("get")) {
+						if ("getClass".equals(name) || "getDeclaringClass".equals(name)) {
+							key = "";
+						} else {
+							key = name.substring(3);
+						}
+					} else if (name.startsWith("is")) {
+						key = name.substring(2);
+					}
+					if (key.length() > 0 && Character.isUpperCase(key.charAt(0)) && method.getParameterTypes().length == 0) {
+						if (key.length() == 1) {
+							key = key.toLowerCase();
+						} else if (!Character.isUpperCase(key.charAt(1))) {
+							key = key.substring(0, 1).toLowerCase() + key.substring(1);
+						}
+
+						Object result = method.invoke(bean, (Object[]) null);
+						if (result != null) {
+							this.map.put(key, JSONUtil.wrap(result));
+						}
+					}
+				}
+			} catch (Exception ignore) {
+			}
+		}
+	}
+	
+	/**
+	 * 初始化
+	 * @param source JSON字符串
+	 */
+	private void init(String source){
+		init(new JSONTokener(source));
+	}
+
+	/**
+	 * 初始化
+	 * @param x JSONTokener
+	 */
+	private void init(JSONTokener x) {
+		char c;
+		String key;
+
+		if (x.nextClean() != '{') {
+			throw x.syntaxError("A JSONObject text must begin with '{'");
+		}
+		for (;;) {
+			c = x.nextClean();
+			switch (c) {
+				case 0:
+					throw x.syntaxError("A JSONObject text must end with '}'");
+				case '}':
+					return;
+				default:
+					x.back();
+					key = x.nextValue().toString();
+			}
+
+			// The key is followed by ':'.
+
+			c = x.nextClean();
+			if (c != ':') {
+				throw x.syntaxError("Expected a ':' after a key");
+			}
+			this.putOnce(key, x.nextValue());
+
+			// Pairs are separated by ','.
+
+			switch (x.nextClean()) {
+				case ';':
+				case ',':
+					if (x.nextClean() == '}') {
+						return;
+					}
+					x.back();
+					break;
+				case '}':
+					return;
+				default:
+					throw x.syntaxError("Expected a ',' or '}'");
+			}
+		}
+	}
+	// ------------------------------------------------------------------------------------------------- Private method end
 }
