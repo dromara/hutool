@@ -304,7 +304,7 @@ public class BasicSetting extends AbsSetting{
 	 * @param key KEY
 	 * @param group 分组
 	 * @param defaultValue 默认值
-	 * @return
+	 * @return 值或默认值
 	 */
 	public String getStr(String key, String group, String defaultValue) {
 		final String value = getByGroup(key, group);
