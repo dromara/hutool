@@ -6,7 +6,7 @@
 
 	<groupId>com.xiaoleilu</groupId>
 	<artifactId>hutool</artifactId>
-	<version>2.15.10</version>
+	<version>2.15.11</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>

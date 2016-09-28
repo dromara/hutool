@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'com.xiaoleilu'
-version = '2.15.9'
+version = '2.15.11'
 
 sourceCompatibility = 1.7
 targetCompatibility=1.7
