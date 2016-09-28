@@ -286,3 +286,4 @@ Entity中toVo区别是否忽略大小写
 12、Conver.toBool支持更多类型的字符串形式
 13、JSON修复构造方法
 14、Setting增加getStr方法，分组默认值
+15、修复StrUtil.sub中to超出字符串长度出现空格的问题

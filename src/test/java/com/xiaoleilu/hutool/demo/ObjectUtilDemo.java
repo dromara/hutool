@@ -26,5 +26,9 @@ public class ObjectUtilDemo {
 		A a = new A();
 		A a2 = ObjectUtil.clone(a);
 		System.out.println(a2);
+		
+		//判断是否为基本类型
+		int b = 0;
+		System.out.println(ObjectUtil.isBasicType(b));
 	}
 }

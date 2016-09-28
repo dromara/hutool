@@ -699,7 +699,12 @@ public class StrUtil {
 	/**
 	 * 改进JDK subString<br>
 	 * index从0开始计算，最后一个字符为-1<br>
-	 * 如果from和to位置一样，返回 "" example: abcdefgh 2 3 -> c abcdefgh 2 -3 -> cde
+	 * 如果from和to位置一样，返回 "" <br>
+	 * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
+	 * 如果经过修正的index中from大于to，则互换from和to
+	 * example: <br>
+	 * 	abcdefgh 2 3 -> c <br>
+	 * 	abcdefgh 2 -3 -> cde <br>
 	 * 
 	 * @param string String
 	 * @param fromIndex 开始的index（包括）
@@ -711,14 +716,20 @@ public class StrUtil {
 
 		if (fromIndex < 0) {
 			fromIndex = len + fromIndex;
-
-			if (toIndex == 0) {
-				toIndex = len;
+			if(fromIndex < 0 ){
+				fromIndex = 0;
 			}
+		}else if(fromIndex >= len){
+			fromIndex = len -1;
 		}
 
 		if (toIndex < 0) {
 			toIndex = len + toIndex;
+			if(toIndex < 0){
+				toIndex = len;
+			}
+		}else if(toIndex > len){
+			toIndex = len;
 		}
 
 		if (toIndex < fromIndex) {
