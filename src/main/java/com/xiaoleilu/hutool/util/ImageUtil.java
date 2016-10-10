@@ -257,19 +257,16 @@ public class ImageUtil {
 	/**
 	 * 图像类型转换：GIF->JPG、GIF->PNG、PNG->JPG、PNG->GIF(X)、BMP->PNG
 	 * 
-	 * @param srcImageFile 源图像地址
+	 * @param srcImageFile 源图像文件
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
-	 * @param destImageFile 目标图像地址
+	 * @param destImageFile 目标图像文件
 	 */
-	public final static void convert(String srcImageFile, String formatName, String destImageFile) {
+	public final static void convert(File srcImageFile, String formatName, File destImageFile) {
 		try {
-			File f = new File(srcImageFile);
-			f.canRead();
-			f.canWrite();
-			BufferedImage src = ImageIO.read(f);
-			ImageIO.write(src, formatName, new File(destImageFile));
+			BufferedImage src = ImageIO.read(srcImageFile);
+			ImageIO.write(src, formatName, destImageFile);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new UtilException(e);
 		}
 	}
 
@@ -298,7 +295,7 @@ public class ImageUtil {
 	 * @param srcImageFile 源图像地址
 	 * @param destImageFile 目标图像地址
 	 * @param fontName 水印的字体名称
-	 * @param fontStyle 水印的字体样式
+	 * @param fontStyle 水印的字体样式，例如Font.BOLD
 	 * @param color 水印的字体颜色
 	 * @param fontSize 水印的字体大小
 	 * @param x 修正值
@@ -337,7 +334,7 @@ public class ImageUtil {
 	 */
 	public final static void pressImage(File pressImgFile, File srcImageFile, File destImageFile, int x, int y, float alpha) {
 		try {
-			Image src = ImageIO.read(pressImgFile);
+			Image src = ImageIO.read(srcImageFile);
 			int wideth = src.getWidth(null);
 			int height = src.getHeight(null);
 			BufferedImage image = new BufferedImage(wideth, height, BufferedImage.TYPE_INT_RGB);
