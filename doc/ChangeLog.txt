@@ -291,3 +291,5 @@ Entity中toVo区别是否忽略大小写
 5、修复StrUtil.sub中to超出字符串长度出现空格的问题
 
 2.15.11
+1、DateUtil增加计算年龄的方法
+2、增加ImageUtil类

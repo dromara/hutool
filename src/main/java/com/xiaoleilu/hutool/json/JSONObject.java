@@ -567,6 +567,14 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 		}
 		return ja;
 	}
+	
+	/**
+	 * 转为Map
+	 * @return Map
+	 */
+	public Map<String, Object> toMap(){
+		return this.map;
+	}
 
 	/**
 	 * 转为实体类对象
@@ -587,7 +595,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	public <T> T toBean(T bean) {
 		return BeanUtil.fillBeanWithMap(this.map, bean);
 	}
-
+	
 	/**
 	 * Make a JSON text of this JSONObject. For compactness, no whitespace is added. If this would not result in a syntactically correct JSON text, then null will be returned instead.
 	 * <p>

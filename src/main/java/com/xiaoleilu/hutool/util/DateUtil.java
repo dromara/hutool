@@ -76,13 +76,14 @@ public class DateUtil {
 	public static String now() {
 		return formatDateTime(new DateTime());
 	}
-	
+
 	/**
 	 * 当前时间long
+	 * 
 	 * @param isNano 是否为高精度时间
 	 * @return 时间
 	 */
-	public static long current(boolean isNano){
+	public static long current(boolean isNano) {
 		return isNano ? System.nanoTime() : System.currentTimeMillis();
 	}
 
@@ -139,7 +140,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获得月份
+	 * 获得月份，从1月开始计数
 	 * 
 	 * @param date 日期
 	 * @return 月份
@@ -532,11 +533,57 @@ public class DateUtil {
 	/**
 	 * 计时器<br>
 	 * 计算某个过程话费的时间，精确到毫秒
+	 * 
 	 * @return Timer
 	 */
 	public static Timer timer() {
 		return new Timer();
 
+	}
+	
+	/**
+	 * 生日转为年龄，计算法定年龄
+	 * @param birthDay 生日，标准日期字符串
+	 * @return 年龄
+	 * @throws Exception
+	 */
+	public static int birthdayToAge(String birthDay) {
+		return birthdayToAge(parse(birthDay));
+	}
+
+	/**
+	 * 生日转为年龄，计算法定年龄
+	 * @param birthDay 生日
+	 * @return 年龄
+	 * @throws Exception
+	 */
+	public static int birthdayToAge(Date birthDay) {
+		Calendar cal = Calendar.getInstance();
+
+		if (cal.before(birthDay)) {
+			throw new IllegalArgumentException("The birthday is before now!");
+		}
+
+		int yearNow = cal.get(Calendar.YEAR);
+		int monthNow = cal.get(Calendar.MONTH);
+		int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);
+
+		cal.setTime(birthDay);
+		int age = yearNow - cal.get(Calendar.YEAR);
+		
+		int monthBirth = cal.get(Calendar.MONTH);
+		if (monthNow == monthBirth) {
+			int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
+			if (dayOfMonthNow < dayOfMonthBirth) {
+				//如果生日在当月，但是未达到生日当天的日期，年龄减一
+				age--;
+			}
+		} else if (monthNow < monthBirth){
+			//如果当前月份未达到生日的月份，年龄计算减一
+			age--;
+		}
+
+		return age;
 	}
 
 	/**
@@ -549,7 +596,7 @@ public class DateUtil {
 	public static class Timer {
 		private long time;
 		private boolean isNano;
-		
+
 		public Timer() {
 			this(false);
 		}
