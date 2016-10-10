@@ -547,8 +547,8 @@ public class DateUtil {
 	 * @return 年龄
 	 * @throws Exception
 	 */
-	public static int birthdayToAge(String birthDay) {
-		return birthdayToAge(parse(birthDay));
+	public static int ageOfNow(String birthDay) {
+		return ageOfNow(parse(birthDay));
 	}
 
 	/**
@@ -557,28 +557,40 @@ public class DateUtil {
 	 * @return 年龄
 	 * @throws Exception
 	 */
-	public static int birthdayToAge(Date birthDay) {
+	public static int ageOfNow(Date birthDay) {
+		return age(birthDay,date());
+	}
+	
+	/**
+	 * 计算相对于dateToCompare的年龄，长用于计算指定生日在某年的年龄
+	 * @param birthDay 生日
+	 * @param dateToCompare 需要对比的日期
+	 * @return 年龄
+	 * @throws Exception
+	 */
+	public static int age(Date birthDay, Date dateToCompare) {
 		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateToCompare);
 
 		if (cal.before(birthDay)) {
-			throw new IllegalArgumentException("The birthday is before now!");
+			throw new IllegalArgumentException(StrUtil.format("Birthday is after date {}!", formatDate(dateToCompare)));
 		}
 
-		int yearNow = cal.get(Calendar.YEAR);
-		int monthNow = cal.get(Calendar.MONTH);
-		int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
 
 		cal.setTime(birthDay);
-		int age = yearNow - cal.get(Calendar.YEAR);
+		int age = year - cal.get(Calendar.YEAR);
 		
 		int monthBirth = cal.get(Calendar.MONTH);
-		if (monthNow == monthBirth) {
+		if (month == monthBirth) {
 			int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
-			if (dayOfMonthNow < dayOfMonthBirth) {
+			if (dayOfMonth < dayOfMonthBirth) {
 				//如果生日在当月，但是未达到生日当天的日期，年龄减一
 				age--;
 			}
-		} else if (monthNow < monthBirth){
+		} else if (month < monthBirth){
 			//如果当前月份未达到生日的月份，年龄计算减一
 			age--;
 		}
