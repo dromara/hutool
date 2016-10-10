@@ -26,7 +26,7 @@ public class DateUtilDemo {
 		System.out.println(datetimeStr);
 		
 		//计算年龄
-		int age = DateUtil.birthdayToAge(DateUtil.parse("1988-12-23"));
+		int age = DateUtil.ageOfNow(DateUtil.parse("1988-12-23"));
 		System.out.println(age);
 	}
 }
