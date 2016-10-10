@@ -1,8 +1,10 @@
 package com.xiaoleilu.hutool.exceptions;
 
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 
+import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -39,5 +41,41 @@ public class ExceptionUtil {
 				return unwrapped;
 			}
 		}
+	}
+	
+	/**
+	 * 堆栈转为完整字符串
+	 * @param throwable 异常对象
+	 * @return 堆栈转为的字符串
+	 */
+	public static String stacktraceToString(Throwable throwable, int limit){
+		final FastByteArrayOutputStream baos = new FastByteArrayOutputStream();
+		throwable.printStackTrace(new PrintStream(baos));
+		String exceptionStr = baos.toString();
+		int length = exceptionStr.length();
+		if(limit > 0 && limit < length){
+			length = limit;
+		}
+		
+		final StringBuilder sb = StrUtil.builder();
+		char c;
+		for(int i = 0; i < length; i++){
+			c = exceptionStr.charAt(i);
+			switch (c) {
+				case '\r':
+					break;
+				case '\n':
+					sb.append(' ');
+					break;
+				case '	':
+					sb.append(' ');
+					break;
+				default:
+					sb.append(c);
+					break;
+			}
+		}
+		
+		return sb.toString();
 	}
 }
