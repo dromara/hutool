@@ -463,7 +463,7 @@ public class HttpUtil {
 		BufferedReader reader = IoUtil.getReader(in, charset);
 		String line = null;
 		while ((line = reader.readLine()) != null) {
-			content.append(line).append(StrUtil.NEWLINE);
+			content.append(line).append(StrUtil.LF);
 			if(isGetCharsetFromContent){
 				String charsetInContent = ReUtil.get(CHARSET_PATTERN, line, 1);
 				if (StrUtil.isNotBlank(charsetInContent)) {

@@ -252,6 +252,41 @@ public class ReUtil {
 		}
 		return collection;
 	}
+	
+	/**
+	 * 计算指定字符串中，匹配pattern的个数
+	 * @param regex 正则表达式
+	 * @param content 被查找的内容
+	 * @return 匹配个数
+	 */
+	public static int count(String regex, String content){
+		if(null == regex){
+			return 0;
+		}
+		
+		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		return count(pattern, content);
+	}
+	
+	/**
+	 * 计算指定字符串中，匹配pattern的个数
+	 * @param pattern 编译后的正则模式
+	 * @param content 被查找的内容
+	 * @return 匹配个数
+	 */
+	public static int count(Pattern pattern, String content){
+		if(null == pattern || null == content){
+			return 0;
+		}
+		
+		int count = 0;
+		Matcher matcher = pattern.matcher(content);
+		while(matcher.find()){
+			count++;
+		}
+		
+		return count;
+	}
 
 	/**
 	 * 从字符串中获得第一个整数

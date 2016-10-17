@@ -18,13 +18,23 @@ import java.util.Map.Entry;
  */
 public class StrUtil {
 
+	public static final char C_SPACE = ' ';
+	public static final char C_DOT = '.';
+	public static final char C_SLASH = '/';
+	public static final char C_BACKSLASH = '\\';
+	public static final char C_CR = '\r';
+	public static final char C_LF = '\n';
+	public static final char C_UNDERLINE = '_';
+	public static final char C_COMMA = ',';
 	public static final String SPACE = " ";
+	
 	public static final String DOT = ".";
 	public static final String SLASH = "/";
 	public static final String BACKSLASH = "\\";
 	public static final String EMPTY = "";
+	public static final String CR = "\r";
+	public static final String LF = "\n";
 	public static final String CRLF = "\r\n";
-	public static final String NEWLINE = "\n";
 	public static final String UNDERLINE = "_";
 	public static final String COMMA = ",";
 
@@ -1345,4 +1355,35 @@ public class StrUtil {
 		return new StringWriter();
 	}
 
+	/**
+	 * 统计指定内容中包含指定字符串的数量
+	 * @param content 内容
+	 * @param strForSearch 被统计的字符串
+	 * @return 包含数量
+	 */
+	public static int count(String content, String strForSearch){
+		int contentLength = content.length();
+		if(null == content || null == strForSearch || strForSearch.length() > contentLength){
+			return 0;
+		}
+		
+		return contentLength - content.replace(strForSearch, EMPTY).length();
+	}
+	
+	/**
+	 * 统计指定内容中包含指定字符的数量
+	 * @param content 内容
+	 * @param charForSearch 被统计的字符
+	 * @return 包含数量
+	 */
+	public static int count(String content, char charForSearch){
+		int count = 0;
+		int contentLength = content.length();
+		for (int i = 0; i < contentLength; i++) {
+			if(charForSearch == content.charAt(i)){
+				count ++;
+			}
+		}
+		return count;
+	}
 }
