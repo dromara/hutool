@@ -25,7 +25,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 /**
  * 图片处理工具类：<br>
  * 功能：缩放图像、切割图像、图像类型转换、彩色转黑白、文字水印、图片水印等
- * @see http://blog.csdn.net/zhangzhikaixinya/article/details/8459400
+ * 参考：http://blog.csdn.net/zhangzhikaixinya/article/details/8459400
  * @author Looly
  */
 public class ImageUtil {
@@ -72,7 +72,7 @@ public class ImageUtil {
 	 * 缩放图像（按高度和宽度缩放）
 	 * 
 	 * @param srcImageFile 源图像文件地址
-	 * @param result 缩放后的图像地址
+	 * @param destImageFile 缩放后的图像地址
 	 * @param height 缩放后的高度
 	 * @param width 缩放后的宽度
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
