@@ -739,7 +739,7 @@ public class FileUtil {
 	 * @return 如果为文件true
 	 */
 	public static boolean isFile(String path) {
-		return (path == null) ? false : file(path).isDirectory();
+		return (path == null) ? false : file(path).isFile();
 	}
 
 	/**
@@ -749,7 +749,7 @@ public class FileUtil {
 	 * @return 如果为文件true
 	 */
 	public static boolean isFile(File file) {
-		return (file == null) ? false : file.isDirectory();
+		return (file == null) ? false : file.isFile();
 	}
 
 	/**
