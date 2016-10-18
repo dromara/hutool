@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 public class StrUtil {
 
 	public static final char C_SPACE = ' ';
+	public static final char C_TAB = '	';
 	public static final char C_DOT = '.';
 	public static final char C_SLASH = '/';
 	public static final char C_BACKSLASH = '\\';
@@ -26,8 +27,9 @@ public class StrUtil {
 	public static final char C_LF = '\n';
 	public static final char C_UNDERLINE = '_';
 	public static final char C_COMMA = ',';
-	public static final String SPACE = " ";
 	
+	public static final String SPACE = " ";
+	public static final String TAB = "	";
 	public static final String DOT = ".";
 	public static final String SLASH = "/";
 	public static final String BACKSLASH = "\\";

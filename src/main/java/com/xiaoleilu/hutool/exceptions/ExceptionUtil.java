@@ -3,8 +3,11 @@ package com.xiaoleilu.hutool.exceptions;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -44,11 +47,56 @@ public class ExceptionUtil {
 	}
 	
 	/**
+	 * 堆栈转为单行完整字符串
+	 * @param throwable 异常对象
+	 * @return 堆栈转为的字符串
+	 */
+	public static String stacktraceToOneLineString(Throwable throwable){
+		return stacktraceToOneLineString(throwable, 3000);
+	}
+	
+	/**
+	 * 堆栈转为单行完整字符串
+	 * @param throwable 异常对象
+	 * @param limit 限制最大长度
+	 * @return 堆栈转为的字符串
+	 */
+	public static String stacktraceToOneLineString(Throwable throwable, int limit){
+		Map<Character, String> replaceCharToStrMap = new HashMap<>();
+		replaceCharToStrMap.put(StrUtil.C_CR, StrUtil.SPACE);
+		replaceCharToStrMap.put(StrUtil.C_LF, StrUtil.SPACE);
+		replaceCharToStrMap.put(StrUtil.C_TAB, StrUtil.SPACE);
+		
+		return stacktraceToString(throwable, limit, replaceCharToStrMap);
+	}
+	
+	/**
 	 * 堆栈转为完整字符串
 	 * @param throwable 异常对象
 	 * @return 堆栈转为的字符串
 	 */
+	public static String stacktraceToString(Throwable throwable){
+		return stacktraceToString(throwable, 3000);
+	}
+	
+	/**
+	 * 堆栈转为完整字符串
+	 * @param throwable 异常对象
+	 * @param limit 限制最大长度
+	 * @return 堆栈转为的字符串
+	 */
 	public static String stacktraceToString(Throwable throwable, int limit){
+		return stacktraceToString(throwable, limit, null);
+	}
+	
+	/**
+	 * 堆栈转为完整字符串
+	 * @param throwable 异常对象
+	 * @param limit 限制最大长度
+	 * @param replaceCharToStrMap 替换字符为指定字符串
+	 * @return 堆栈转为的字符串
+	 */
+	public static String stacktraceToString(Throwable throwable, int limit, Map<Character, String> replaceCharToStrMap){
 		final FastByteArrayOutputStream baos = new FastByteArrayOutputStream();
 		throwable.printStackTrace(new PrintStream(baos));
 		String exceptionStr = baos.toString();
@@ -57,25 +105,23 @@ public class ExceptionUtil {
 			length = limit;
 		}
 		
-		final StringBuilder sb = StrUtil.builder();
-		char c;
-		for(int i = 0; i < length; i++){
-			c = exceptionStr.charAt(i);
-			switch (c) {
-				case '\r':
-					break;
-				case '\n':
-					sb.append(' ');
-					break;
-				case '	':
-					sb.append(' ');
-					break;
-				default:
+		if(CollectionUtil.isNotEmpty(replaceCharToStrMap)){
+			final StringBuilder sb = StrUtil.builder();
+			char c;
+			String value;
+			for(int i = 0; i < length; i++){
+				c = exceptionStr.charAt(i);
+				value = replaceCharToStrMap.get(c);
+				if(null != value){
+					sb.append(value);
+				}else{
 					sb.append(c);
-					break;
+				}
 			}
+			return sb.toString();
+		}else{
+			return exceptionStr;
 		}
 		
-		return sb.toString();
 	}
 }
