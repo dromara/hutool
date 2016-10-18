@@ -1,11 +1,11 @@
 package com.xiaoleilu.hutool.log;
 
-import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLogFactory;
-import com.xiaoleilu.hutool.log.dialect.ConsoleLogFactory;
-import com.xiaoleilu.hutool.log.dialect.JdkLogFactory;
-import com.xiaoleilu.hutool.log.dialect.Log4j2LogFactory;
-import com.xiaoleilu.hutool.log.dialect.Log4jLogFactory;
-import com.xiaoleilu.hutool.log.dialect.Slf4jLogFactory;
+import com.xiaoleilu.hutool.log.dialect.commons.ApacheCommonsLogFactory;
+import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
+import com.xiaoleilu.hutool.log.dialect.jdk.JdkLogFactory;
+import com.xiaoleilu.hutool.log.dialect.log4j.Log4jLogFactory;
+import com.xiaoleilu.hutool.log.dialect.log4j2.Log4j2LogFactory;
+import com.xiaoleilu.hutool.log.dialect.slf4j.Slf4jLogFactory;
 
 /**
  * 日志工厂类

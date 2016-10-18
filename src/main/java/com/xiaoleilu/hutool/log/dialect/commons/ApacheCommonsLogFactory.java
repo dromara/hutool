@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.log.dialect;
+package com.xiaoleilu.hutool.log.dialect.commons;
 
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;

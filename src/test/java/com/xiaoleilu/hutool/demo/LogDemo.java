@@ -2,9 +2,9 @@ package com.xiaoleilu.hutool.demo;
 
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.log.dialect.ApacheCommonsLogFactory;
-import com.xiaoleilu.hutool.log.dialect.ConsoleLogFactory;
-import com.xiaoleilu.hutool.log.dialect.JdkLogFactory;
+import com.xiaoleilu.hutool.log.dialect.commons.ApacheCommonsLogFactory;
+import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
+import com.xiaoleilu.hutool.log.dialect.jdk.JdkLogFactory;
 import com.xiaoleilu.hutool.log.level.Level;
 
 public class LogDemo {

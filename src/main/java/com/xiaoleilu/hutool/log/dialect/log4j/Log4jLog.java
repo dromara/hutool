@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.log.dialect;
+package com.xiaoleilu.hutool.log.dialect.log4j;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

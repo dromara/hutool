@@ -296,3 +296,4 @@ Entity中toVo区别是否忽略大小写
 2.15.12
 1、ReUtil和StrUtil中增加count方法，用于统计字符串中指定字符串或字符的个数
 2、修复isFile方法
+3、归类Log的方言

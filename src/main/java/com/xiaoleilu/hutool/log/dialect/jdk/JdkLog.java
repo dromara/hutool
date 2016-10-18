@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.log.dialect;
+package com.xiaoleilu.hutool.log.dialect.jdk;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

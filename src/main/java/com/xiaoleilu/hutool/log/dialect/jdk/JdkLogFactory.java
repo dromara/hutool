@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.log.dialect;
+package com.xiaoleilu.hutool.log.dialect.jdk;
 
 import java.io.InputStream;
 import java.util.logging.LogManager;

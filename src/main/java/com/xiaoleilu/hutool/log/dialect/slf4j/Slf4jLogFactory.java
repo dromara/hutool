@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.log.dialect;
+package com.xiaoleilu.hutool.log.dialect.slf4j;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
