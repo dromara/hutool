@@ -4,11 +4,16 @@ import java.util.HashMap;
 
 import com.xiaoleilu.hutool.http.HttpUtil;
 
+/**
+ * Post请求样例
+ * @author Looly
+ *
+ */
 public class HttpPostDemo {
 	public static void main(String[] args) {
 		HashMap<String, Object> paramMap = new HashMap<>();
 		paramMap.put("city", "北京");
-		String post = HttpUtil.get("http://wthrcdn.etouch.cn/weather_mini", paramMap);
-		System.out.println(post);
+		String result1 = HttpUtil.post("http://wthrcdn.etouch.cn/weather_mini", paramMap);
+		System.out.println(result1);
 	}
 }
