@@ -127,7 +127,6 @@ public class WordTree extends HashMap<Character, WordTree>{
 	/**
 	 * 找出所有匹配的关键字
 	 * @param text 被检查的文本
-	 * @param limit 限制匹配个数
 	 * @return 匹配的词列表
 	 */
 	public List<String> matchAll(String text) {
