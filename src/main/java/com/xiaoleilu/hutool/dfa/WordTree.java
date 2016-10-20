@@ -57,7 +57,6 @@ public class WordTree extends HashMap<Character, WordTree>{
 	/**
 	 * 添加单词，使用默认类型
 	 * @param word 单词
-	 * @param group 分组
 	 */
 	public void addWord(String word) {
 		WordTree parent = null;
@@ -87,7 +86,6 @@ public class WordTree extends HashMap<Character, WordTree>{
 	/**
 	 * 指定文本是否包含树中的词
 	 * @param text 被检查的文本
-	 * @param group 类型
 	 * @return 是否包含
 	 */
 	public boolean isMatch(String text){
@@ -126,7 +124,6 @@ public class WordTree extends HashMap<Character, WordTree>{
 	/**
 	 * 获得第一个匹配的关键字
 	 * @param text 被检查的文本
-	 * @param group 分组
 	 * @return 匹配到的关键字
 	 */
 	public String match(String text){
@@ -167,7 +164,6 @@ public class WordTree extends HashMap<Character, WordTree>{
 	/**
 	 * 找出所有匹配的关键字
 	 * @param text 被检查的文本
-	 * @param group 分组
 	 * @return 匹配的词列表
 	 */
 	public List<String> matchAll(String text) {
@@ -212,7 +208,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 	//--------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 是否末尾
-	 * @param group 分组
+	 * @param c 检查的字符
 	 * @return 是否末尾
 	 */
 	private boolean isEnd(Character c){
@@ -221,8 +217,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 	
 	/**
 	 * 设置是否到达末尾
-	 * @param group 分组
-	 * @param isEnd 是否末尾
+	 * @param c 设置结尾的字符
 	 */
 	private void setEnd(Character c){
 		if(null != c){
