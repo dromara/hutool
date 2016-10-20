@@ -72,7 +72,7 @@ public class SensitiveUtil {
 	}
 	
 	/**
-	 * 初始化敏感词树
+	 * 初始化敏感词树，使用逗号分隔每个单词
 	 * @param sensitiveWords 敏感词列表组成的字符串
 	 * @param isAsync 是否异步初始化
 	 */

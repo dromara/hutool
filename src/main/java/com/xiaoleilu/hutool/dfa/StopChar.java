@@ -37,4 +37,13 @@ public class StopChar {
 	public static boolean isStopChar(char ch) {
 		return Character.isWhitespace(ch) || STOP_WORD.contains(ch);
 	}
+	
+	/**
+	 * 是否为合法字符（待处理字符）
+	 * @param ch 指定的词
+	 * @return 是否为合法字符（待处理字符）
+	 */
+	public static boolean isNotStopChar(char ch) {
+		return false == isStopChar(ch);
+	}
 }

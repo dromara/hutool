@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -27,14 +26,10 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class WordTree extends HashMap<Character, WordTree>{
 	private static final long serialVersionUID = -4646423269465809276L;
 	
-	/** 默认的类型 */
-	public final static int DEFAULT_GROUP = 0;
-	
-	/** 
-	 * 关键词类型用于区分不同的
-	 * 关键字类型，是否最后一个字符
+	/**
+	 * 敏感词字符末尾标识，用于标识单词末尾字符
 	 */
-	public Map<Integer, Boolean> groups = new HashMap<>();
+	private Set<Character> endCharacterSet = new HashSet<>();
 	
 	//--------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -42,46 +37,21 @@ public class WordTree extends HashMap<Character, WordTree>{
 	 */
 	public WordTree() {
 	}
-	
-	/**
-	 * 构造方法
-	 * @param group 分组
-	 */
-	public WordTree(int group) {
-		this.groups.put(group, false);
-	}
 	//--------------------------------------------------------------------------------------- Constructor start
 	
 	//------------------------------------------------------------------------------- add word
 	
 	/**
-	 * 增加一组单词，默认分组
+	 * 增加一组单词
 	 * @param words 单词
 	 */
 	public void addWords(Collection<String> words){
-		addWords(words, DEFAULT_GROUP);
-	}
-	
-	/**
-	 * 增加一组单词
-	 * @param words 单词
-	 * @param group 分组
-	 */
-	public void addWords(Collection<String> words, int group){
 		if(false == (words instanceof Set)){
 			words = new HashSet<>(words);
 		}
 		for (String word : words) {
-			addWord(word, group);
+			addWord(word);
 		}
-	}
-	
-	/**
-	 * 添加单词，使用默认类型
-	 * @param word 单词
-	 */
-	public void addWord(String word) {
-		this.addWord(word, DEFAULT_GROUP);
 	}
 	
 	/**
@@ -89,10 +59,11 @@ public class WordTree extends HashMap<Character, WordTree>{
 	 * @param word 单词
 	 * @param group 分组
 	 */
-	public void addWord(String word, int group) {
+	public void addWord(String word) {
+		WordTree parent = null;
 		WordTree current = this;
 		WordTree child;
-		char currentChar;
+		char currentChar = 0;
 		int length = word.length();
 		for(int i = 0; i < length; i++){
 			currentChar = word.charAt(i);
@@ -100,32 +71,26 @@ public class WordTree extends HashMap<Character, WordTree>{
 				child = current.get(currentChar);
 				if(child == null){
 					//无子类，新建一个子节点后存放下一个字符
-					child = new WordTree(group);
+					child = new WordTree();
 					current.put(currentChar, child);
 				}
+				parent = current;
 				current = child;
 			}
-			current.setEnd(group, true);
+		}
+		if(null != parent){
+			parent.setEnd(currentChar);
 		}
 	}
 	
 	//------------------------------------------------------------------------------- match
-	/**
-	 * 指定文本是否包含树中的词，默认类型
-	 * @param text 被检查的文本
-	 * @return 是否包含
-	 */
-	public boolean isMatch(String text) {
-		return isMatch(text, DEFAULT_GROUP);
-	}
-	
 	/**
 	 * 指定文本是否包含树中的词
 	 * @param text 被检查的文本
 	 * @param group 类型
 	 * @return 是否包含
 	 */
-	public boolean isMatch(String text, int group){
+	public boolean isMatch(String text){
 		if(null == text){
 			return false;
 		}
@@ -142,7 +107,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 						//本级关键字不含有则进行下一轮
 						break;
 					}
-					if(current.isEnd(group)){
+					if(current.isEnd(currentChar)){
 						//当所分组达到末尾说明词存在
 						return true;
 					}
@@ -159,21 +124,12 @@ public class WordTree extends HashMap<Character, WordTree>{
 	}
 	
 	/**
-	 * 获得第一个匹配的关键字，默认类型
-	 * @param text 被检查的文本
-	 * @return 匹配到的关键字
-	 */
-	public String match(String text) {
-		return match(text, DEFAULT_GROUP);
-	}
-	
-	/**
 	 * 获得第一个匹配的关键字
 	 * @param text 被检查的文本
 	 * @param group 分组
 	 * @return 匹配到的关键字
 	 */
-	public String match(String text, int group){
+	public String match(String text){
 		if(null == text){
 			return null;
 		}
@@ -192,7 +148,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 						break;
 					}
 					sb.append(currentChar);
-					if(current.isEnd(group)){
+					if(current.isEnd(currentChar)){
 						//当所分组达到末尾说明词存在
 						return sb.toString();
 					}
@@ -209,21 +165,12 @@ public class WordTree extends HashMap<Character, WordTree>{
 	
 	//------------------------------------------------------------------------------- match all
 	/**
-	 * 找出所有匹配的关键字，默认类型
-	 * @param text 被检查的文本
-	 * @return 匹配的词列表
-	 */
-	public List<String> matchAll(String text) {
-		return matchAll(text, DEFAULT_GROUP);
-	}
-	
-	/**
 	 * 找出所有匹配的关键字
 	 * @param text 被检查的文本
 	 * @param group 分组
 	 * @return 匹配的词列表
 	 */
-	public List<String> matchAll(String text, int group) {
+	public List<String> matchAll(String text) {
 		if(null == text){
 			return null;
 		}
@@ -244,7 +191,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 						break;
 					}
 					sb.append(currentChar);
-					if(current.isEnd(group)){
+					if(current.isEnd(currentChar)){
 						//到达单词末尾，关键词成立，从此词的下一个位置开始查找
 						findedWords.add(sb.toString());
 						i = j + 1;
@@ -268,10 +215,8 @@ public class WordTree extends HashMap<Character, WordTree>{
 	 * @param group 分组
 	 * @return 是否末尾
 	 */
-	private boolean isEnd(int group){
-		//已经是关键字的末尾，则结束（即只保留最短字符串）
-		Boolean isEnd = this.groups.get(group);
-		return null != isEnd && isEnd;
+	private boolean isEnd(Character c){
+		return this.endCharacterSet.contains(c);
 	}
 	
 	/**
@@ -279,8 +224,10 @@ public class WordTree extends HashMap<Character, WordTree>{
 	 * @param group 分组
 	 * @param isEnd 是否末尾
 	 */
-	private void setEnd(int group, boolean isEnd){
-		this.groups.put(group, isEnd);
+	private void setEnd(Character c){
+		if(null != c){
+			this.endCharacterSet.add(c);
+		}
 	}
 	//--------------------------------------------------------------------------------------- Private method end
 }
