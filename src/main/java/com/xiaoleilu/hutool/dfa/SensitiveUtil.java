@@ -126,11 +126,39 @@ public class SensitiveUtil {
 	}
 	
 	/**
+	 * 查找敏感词，返回找到的所有敏感词<br>
+	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
+	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
+	 * 
+	 * @param text 文本
+	 * @param isDensityMatch 是否使用密集匹配原则
+	 * @param isGreedMatch 是否使用贪婪匹配（最长匹配）原则
+	 * @return 敏感词
+	 */
+	public static List<String> getFindedAllSensitive(String text, boolean isDensityMatch, boolean isGreedMatch){
+		return sensitiveTree.matchAll(text, -1, isDensityMatch, isGreedMatch);
+	}
+	
+	/**
 	 * 查找敏感词，返回找到的所有敏感词
 	 * @param bean 对象，会被转为JSON
 	 * @return 敏感词
 	 */
 	public static List<String> getFindedAllSensitive(Object bean){
 		return sensitiveTree.matchAll(JSONUtil.toJsonStr(bean));
+	}
+	
+	/**
+	 * 查找敏感词，返回找到的所有敏感词<br>
+	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
+	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
+	 * 
+	 * @param bean 对象，会被转为JSON
+	 * @param isDensityMatch 是否使用密集匹配原则
+	 * @param isGreedMatch 是否使用贪婪匹配（最长匹配）原则
+	 * @return 敏感词
+	 */
+	public static List<String> getFindedAllSensitive(Object bean, boolean isDensityMatch, boolean isGreedMatch){
+		return getFindedAllSensitive(JSONUtil.toJsonStr(bean), isDensityMatch, isGreedMatch);
 	}
 }

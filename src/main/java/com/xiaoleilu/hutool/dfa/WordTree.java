@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -43,13 +44,24 @@ public class WordTree extends HashMap<Character, WordTree>{
 	
 	/**
 	 * 增加一组单词
-	 * @param words 单词
+	 * @param words 单词集合
 	 */
 	public void addWords(Collection<String> words){
 		if(false == (words instanceof Set)){
 			words = new HashSet<>(words);
 		}
 		for (String word : words) {
+			addWord(word);
+		}
+	}
+	
+	/**
+	 * 增加一组单词
+	 * @param words 单词数组
+	 */
+	public void addWords(String... words){
+		HashSet<String> wordsSet = CollectionUtil.newHashSet(words);
+		for (String word : wordsSet) {
 			addWord(word);
 		}
 	}
@@ -92,33 +104,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 		if(null == text){
 			return false;
 		}
-		
-		WordTree current = this;
-		WordTree child;
-		char currentChar;
-		int length = text.length();
-		for (int i = 0; i < length; i++) {
-			for (int j = i; j < length; j++) {
-				currentChar = text.charAt(j);
-				if(false == StopChar.isStopChar(currentChar)){
-					if(false == current.containsKey(currentChar)){
-						//本级关键字不含有则进行下一轮
-						break;
-					}
-					if(current.isEnd(currentChar)){
-						//当所分组达到末尾说明词存在
-						return true;
-					}
-					
-					child = current.get(currentChar);
-					if(null != child){
-						current = child;
-					}
-				}
-			}
-			current = this;
-		}
-		return false;
+		return null != match(text);
 	}
 	
 	/**
@@ -130,32 +116,9 @@ public class WordTree extends HashMap<Character, WordTree>{
 		if(null == text){
 			return null;
 		}
-		WordTree current = this;
-		WordTree child;
-		char currentChar;
-		int length = text.length();
-		StringBuilder sb;
-		for (int i = 0; i < length; i++) {
-			sb = StrUtil.builder();
-			for (int j = i; j < length; j++) {
-				currentChar = text.charAt(j);
-				if(false == StopChar.isStopChar(currentChar)){
-					if(false == current.containsKey(currentChar)){
-						//本级关键字不含有则进行下一轮
-						break;
-					}
-					sb.append(currentChar);
-					if(current.isEnd(currentChar)){
-						//当所分组达到末尾说明词存在
-						return sb.toString();
-					}
-					child = current.get(currentChar);
-					if(null != child){
-						current = child;
-					}
-				}
-			}
-			current = this;
+		List<String> matchAll = matchAll(text, 1);
+		if(CollectionUtil.isNotEmpty(matchAll)){
+			return matchAll.get(0);
 		}
 		return null;
 	}
@@ -164,16 +127,41 @@ public class WordTree extends HashMap<Character, WordTree>{
 	/**
 	 * 找出所有匹配的关键字
 	 * @param text 被检查的文本
+	 * @param limit 限制匹配个数
 	 * @return 匹配的词列表
 	 */
 	public List<String> matchAll(String text) {
+		return matchAll(text, -1);
+	}
+	
+	/**
+	 * 找出所有匹配的关键字
+	 * @param text 被检查的文本
+	 * @param limit 限制匹配个数
+	 * @return 匹配的词列表
+	 */
+	public List<String> matchAll(String text, int limit) {
+		return matchAll(text, limit, false, false);
+	}
+	
+	/**
+	 * 找出所有匹配的关键字<br>
+	 * 密集匹配原则：假如关键词有 ab,b，文本是abab，将匹配 [ab,b,ab]<br>
+	 * 贪婪匹配（最长匹配）原则：假如关键字a,ab，最长匹配将匹配[a, ab]
+	 * 
+	 * @param text 被检查的文本
+	 * @param limit 限制匹配个数
+	 * @param isDensityMatch 是否使用密集匹配原则
+	 * @param isGreedMatch 是否使用贪婪匹配（最长匹配）原则
+	 * @return 匹配的词列表
+	 */
+	public List<String> matchAll(String text, int limit, boolean isDensityMatch, boolean isGreedMatch) {
 		if(null == text){
 			return null;
 		}
 		
 		List<String> findedWords = new ArrayList<String>();
 		WordTree current = this;
-		WordTree child;
 		char currentChar;
 		int length = text.length();
 		StringBuilder sb;
@@ -181,22 +169,31 @@ public class WordTree extends HashMap<Character, WordTree>{
 			sb = StrUtil.builder();
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
-				if(false == StopChar.isStopChar(currentChar)){
-					if(false == current.containsKey(currentChar)){
-						//本级关键字不含有则进行下一轮
+//				Console.log("i: {}, j: {}, currentChar: {}", i, j, currentChar);
+				if(StopChar.isStopChar(currentChar) || false == current.containsKey(currentChar)){
+					//停顿词（略过的词）和非关键字被跳过
+					break;
+				}
+				sb.append(currentChar);
+				if(current.isEnd(currentChar)){
+					//到达单词末尾，关键词成立，从此词的下一个位置开始查找
+					findedWords.add(sb.toString());
+					if(limit > 0 && findedWords.size() >= limit){
+						//超过匹配限制个数，直接返回
+						return findedWords;
+					}
+					if(false == isDensityMatch){
+						//如果非密度匹配，跳过匹配到的词
+						i = j;
+					}
+					if(false == isGreedMatch){
+						//如果懒惰匹配（非贪婪匹配）。当遇到第一个结尾标记就结束本轮匹配
 						break;
 					}
-					sb.append(currentChar);
-					if(current.isEnd(currentChar)){
-						//到达单词末尾，关键词成立，从此词的下一个位置开始查找
-						findedWords.add(sb.toString());
-						i = j + 1;
-						break;
-					}
-					child = current.get(currentChar);
-					if(null != child){
-						current = child;
-					}
+				}
+				current = current.get(currentChar);
+				if(null == current){
+					break;
 				}
 			}
 			current = this;

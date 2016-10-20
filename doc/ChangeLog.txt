@@ -293,8 +293,12 @@ Entity中toVo区别是否忽略大小写
 2.15.11
 1、DateUtil增加计算年龄的方法
 2、增加ImageUtil类
+
 2.15.12
 1、ReUtil和StrUtil中增加count方法，用于统计字符串中指定字符串或字符的个数
 2、修复isFile方法
 3、归类Log的方言
 4、修复DFA截断问题
+
+2.15.13
+1、增加DFA的匹配模式选择

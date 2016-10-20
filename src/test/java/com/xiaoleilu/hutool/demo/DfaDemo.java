@@ -2,8 +2,8 @@ package com.xiaoleilu.hutool.demo;
 
 import java.util.List;
 
-import com.xiaoleilu.hutool.dfa.SensitiveUtil;
 import com.xiaoleilu.hutool.dfa.WordTree;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * DFA关键词查找Demo
@@ -12,23 +12,42 @@ import com.xiaoleilu.hutool.dfa.WordTree;
  */
 public class DfaDemo {
 	public static void main(String[] args) {
-		//方式1，自定义初始化查找树 
 		WordTree tree = new WordTree();
-		tree.addWord("关键");
-		tree.addWord("你好");
-		tree.addWord("你好么");
-		tree.addWord("好像");
-		tree.addWord("你妹");
-		tree.addWord("你大爷");
-		tree.addWord("关    闭");
+		tree.addWord("大");
+		tree.addWord("大土豆");
+		tree.addWord("土豆");
+		tree.addWord("刚出锅");
+		tree.addWord("出锅");
 		
-		String match = tree.match("是对你好像方的关    键身份是的你大爷方式");
-		System.out.println(match);
-		List<String> matchAll = tree.matchAll("是对你好像方的关键身份是你大爷的方式");
-		System.out.println(matchAll);
+		String text = "我有一颗大土豆，刚出锅的";
+		//-----------------------------------------------------------------------------------------------------------------------------------
+		//情况一：标准匹配，匹配到最短关键词，并跳过已经匹配的关键词
+		//匹配到【大】，就不再继续匹配了，因此【大土豆】不匹配
+		//匹配到【刚出锅】，就跳过这三个字了，因此【出锅】不匹配（由于刚首先被匹配，因此长的被匹配，最短匹配只针对第一个字相同选最短）
+		List<String> matchAll = tree.matchAll(text, -1, false, false);
+		Console.log("{}", matchAll);	//[大，土豆, 刚出锅]
 		
-		//方式2，封装查找树为敏感词工具
-		SensitiveUtil.init("你大爷,你妹,你大大,你大舅", false);
-		System.out.println(SensitiveUtil.getFindedAllSensitive("去你大爷的"));
+		//-----------------------------------------------------------------------------------------------------------------------------------
+		//情况二：匹配到最短关键词，不跳过已经匹配的关键词
+		//【大】被匹配，最短匹配原则【大土豆】被跳过，【土豆继续被匹配】
+		//【刚出锅】被匹配，由于不跳过已经匹配的词，【出锅】被匹配
+		matchAll = tree.matchAll(text, -1, true, false);
+		Console.log("{}", matchAll);	//[大, 土豆, 刚出锅, 出锅]
+		
+		//-----------------------------------------------------------------------------------------------------------------------------------
+		//情况三：匹配到最长关键词，跳过已经匹配的关键词
+		//匹配到【大】，由于到最长匹配，因此【大土豆】接着被匹配
+		//由于【大土豆】被匹配，【土豆】被跳过，由于【刚出锅】被匹配，【出锅】被跳过
+		matchAll = tree.matchAll(text, -1, false, true);
+		Console.log("{}", matchAll);	//[大, 大土豆, 刚出锅]
+		
+		//-----------------------------------------------------------------------------------------------------------------------------------
+		//情况四：匹配到最长关键词，不跳过已经匹配的关键词（最全关键词）
+		//匹配到【大】，由于到最长匹配，因此【大土豆】接着被匹配，由于不跳过已经匹配的关键词，土豆继续被匹配
+		//【刚出锅】被匹配，由于不跳过已经匹配的词，【出锅】被匹配
+		matchAll = tree.matchAll(text, -1, true, true);
+		Console.log("{}", matchAll);	//[大, 大土豆, 土豆, 刚出锅, 出锅]
+		
+		
 	}
 }
