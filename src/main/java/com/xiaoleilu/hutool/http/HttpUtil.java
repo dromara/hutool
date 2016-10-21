@@ -252,6 +252,7 @@ public class HttpUtil {
 		}
 		if(destFile.isDirectory()){
 			String fileName = StrUtil.subSuf(url, url.lastIndexOf('/') + 1);
+			StaticLog.debug("FileName: {}", fileName);
 			if(StrUtil.isBlank(fileName)){
 				fileName = HttpUtil.encode(url, CharsetUtil.CHARSET_UTF_8);
 			}

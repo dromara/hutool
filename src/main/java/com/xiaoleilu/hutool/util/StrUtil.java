@@ -731,8 +731,8 @@ public class StrUtil {
 			if(fromIndex < 0 ){
 				fromIndex = 0;
 			}
-		}else if(fromIndex >= len){
-			fromIndex = len -1;
+		}else if(fromIndex > len){
+			fromIndex = len;
 		}
 
 		if (toIndex < 0) {

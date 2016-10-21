@@ -51,7 +51,7 @@ public class ZipUtil {
 	 */
 	public static File zip(File srcFile) throws IOException {
 		File zipFile = FileUtil.file(srcFile.getParentFile(), FileUtil.mainName(srcFile) + ".zip");
-		zip(srcFile, zipFile, false);
+		zip(zipFile, false, srcFile);
 		return zipFile;
 	}
 
@@ -80,33 +80,34 @@ public class ZipUtil {
 	public static File zip(String srcPath, String zipPath, boolean withSrcDir) throws IOException {
 		File srcFile = FileUtil.file(srcPath);
 		File zipFile = FileUtil.file(zipPath);
-		zip(srcFile, zipFile, withSrcDir);
+		zip(zipFile, withSrcDir, srcFile);
 		return zipFile;
 	}
 
 	/**
 	 * 对文件或文件目录进行压缩<br>
 	 * 
-	 * @param srcFile 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
+	 * @param srcFiles 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @throws IOException
 	 */
-	public static void zip(File srcFile, File zipFile, boolean withSrcDir) throws IOException {
-		validateFile(srcFile, zipFile);
+	public static void zip(File zipFile, boolean withSrcDir, File... srcFiles) throws IOException {
+		validateFiles(zipFile, srcFiles);
 
 		ZipOutputStream out = null;
 		try {
 			out = new ZipOutputStream(new CheckedOutputStream(FileUtil.getOutputStream(zipFile), new CRC32()));
-
-			// 如果只是压缩一个文件，则需要截取该文件的父目录
-			String srcRootDir = srcFile.getCanonicalPath();
-			if (srcFile.isFile() || withSrcDir) {
-				srcRootDir = srcFile.getParent();
+			for (File srcFile : srcFiles) {
+				// 如果只是压缩一个文件，则需要截取该文件的父目录
+				String srcRootDir = srcFile.getCanonicalPath();
+				if (srcFile.isFile() || withSrcDir) {
+					srcRootDir = srcFile.getParent();
+				}
+				// 调用递归压缩方法进行目录或文件压缩
+				zip(out, srcRootDir, srcFile);
+				out.flush();
 			}
-			// 调用递归压缩方法进行目录或文件压缩
-			zip(srcRootDir, srcFile, out);
-			out.flush();
 		} catch (IOException e) {
 			throw e;
 		} finally {
@@ -177,6 +178,7 @@ public class ZipUtil {
 		return outFile;
 	}
 	
+	//----------------------------------------------------------------------------- Gzip
 	/**
 	 * Gzip压缩处理
 	 * 
@@ -269,12 +271,12 @@ public class ZipUtil {
 	/**
 	 * 递归压缩文件夹
 	 * 
+	 * @param out 压缩文件存储对象
 	 * @param srcRootDir 压缩文件夹根目录的子路径
 	 * @param file 当前递归压缩的文件或目录对象
-	 * @param out 压缩文件存储对象
 	 * @throws Exception
 	 */
-	private static void zip(String srcRootDir, File file, ZipOutputStream out) {
+	private static void zip(ZipOutputStream out, String srcRootDir, File file) {
 		if (file == null) {
 			return;
 		}
@@ -295,7 +297,7 @@ public class ZipUtil {
 			}
 		} else {// 如果是目录，则压缩压缩目录中的文件或子目录
 			for (File childFile : file.listFiles()) {
-				zip(srcRootDir, childFile, out);
+				zip(out, srcRootDir, childFile);
 			}
 		}
 	}
@@ -306,22 +308,24 @@ public class ZipUtil {
 	 * @param srcFile 被压缩的文件或目录
 	 * @param zipFile 压缩后的产生的文件路径
 	 */
-	private static void validateFile(File srcFile, File zipFile) throws UtilException {
-		if (false == srcFile.exists()) {
-			throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
-		}
-
-		try {
-			// 压缩文件不能位于被压缩的目录内
-			if (srcFile.isDirectory() && zipFile.getParent().contains(srcFile.getCanonicalPath())) {
-				throw new UtilException("[zipPath] must not be the child directory of [srcPath]!");
+	private static void validateFiles(File zipFile, File... srcFiles) throws UtilException {
+		for (File srcFile : srcFiles) {
+			if (false == srcFile.exists()) {
+				throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
 			}
-
-			if (false == zipFile.exists()) {
-				FileUtil.touch(zipFile);
+			
+			try {
+				// 压缩文件不能位于被压缩的目录内
+				if (srcFile.isDirectory() && zipFile.getParent().contains(srcFile.getCanonicalPath())) {
+					throw new UtilException("[zipPath] must not be the child directory of [srcPath]!");
+				}
+				
+				if (false == zipFile.exists()) {
+					FileUtil.touch(zipFile);
+				}
+			} catch (IOException e) {
+				throw new UtilException(e);
 			}
-		} catch (IOException e) {
-			throw new UtilException(e);
 		}
 	}
 

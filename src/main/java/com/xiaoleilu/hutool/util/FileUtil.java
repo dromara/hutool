@@ -353,7 +353,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * 创建文件，如果这个文件存在，直接返回这个文件
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
 	 * 
 	 * @param fullFilePath 文件的全路径，使用POSIX风格
 	 * @return 文件，若路径为null，返回null
@@ -367,7 +367,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * 创建文件，如果这个文件存在，直接返回这个文件
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
 	 * 
 	 * @param file 文件对象
 	 * @return 文件，若路径为null，返回null
@@ -383,6 +383,30 @@ public class FileUtil {
 			file.createNewFile();
 		}
 		return file;
+	}
+	
+	/**
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
+	 * 
+	 * @param parent 父文件对象
+	 * @param path 文件路径
+	 * @return File
+	 * @throws IOException 
+	 */
+	public static File touch(File parent, String path) throws IOException {
+		return touch(file(parent, path));
+	}
+	
+	/**
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
+	 * 
+	 * @param parent 父文件对象
+	 * @param path 文件路径
+	 * @return File
+	 * @throws IOException 
+	 */
+	public static File touch(String parent, String path) throws IOException {
+		return touch(file(parent, path));
 	}
 
 	/**

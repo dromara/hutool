@@ -302,3 +302,7 @@ Entity中toVo区别是否忽略大小写
 
 2.15.13
 1、增加DFA的匹配模式选择
+2.15.4
+1、修复HttpUtil.downloadFile中第二个参数为目录时文件找不到的问题
+2、ZipUtil增加多文件压缩
+3、修复StrUtil.sub中fromIndex计算错误导致的截取异常问题
