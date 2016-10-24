@@ -54,7 +54,7 @@ public class BitMapBloomFilter implements BloomFilter{
 	public boolean add(String str) {
 		boolean flag = true;
 		for (BloomFilter filter : filters) {
-			flag &= filter.add(str);
+			flag |= filter.add(str);
 		}
 		return flag;
 	}

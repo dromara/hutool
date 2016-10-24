@@ -306,3 +306,6 @@ Entity中toVo区别是否忽略大小写
 1、修复HttpUtil.downloadFile中第二个参数为目录时文件找不到的问题
 2、ZipUtil增加多文件压缩
 3、修复StrUtil.sub中fromIndex计算错误导致的截取异常问题
+2.15.15
+1、修复sortPageAll和sortPageAll2方法中越界问题
+2、修复布隆过滤添加返回false的问题

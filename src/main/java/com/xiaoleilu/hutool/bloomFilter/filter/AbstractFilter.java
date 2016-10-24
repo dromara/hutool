@@ -6,7 +6,7 @@ import com.xiaoleilu.hutool.bloomFilter.bitMap.IntMap;
 import com.xiaoleilu.hutool.bloomFilter.bitMap.LongMap;
 
 /**
- * 默认Bloom过滤器，使用Java的Hash算法
+ * 抽象Bloom过滤器
  * 
  * @author loolly
  *

@@ -19,11 +19,27 @@ public class Console {
 	}
 	
 	/**
+	 * 同 System.out.println()方法，打印控制台日志
+	 * @param obj 要打印的对象
+	 */
+	public static void log(Object obj){
+		log("{}", obj);
+	}
+	
+	/**
 	 * 同 System.err.println()方法，打印控制台日志
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param values 值
 	 */
 	public static void error(String template, Object... values){
 		System.err.println(StrUtil.format(template, values));
+	}
+	
+	/**
+	 * 同 System.out.println()方法，打印控制台日志
+	 * @param obj 要打印的对象
+	 */
+	public static void error(Object obj){
+		error("{}", obj);
 	}
 }

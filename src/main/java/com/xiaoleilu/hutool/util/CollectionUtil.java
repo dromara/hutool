@@ -82,7 +82,7 @@ public class CollectionUtil {
 	/**
 	 * 将多个集合排序并显示不同的段落（分页）
 	 * 
-	 * @param pageNo 页码
+	 * @param pageNo 页码，从1开始
 	 * @param numPerPage 每页的条目数
 	 * @param comparator 比较器
 	 * @param colls 集合数组
@@ -97,12 +97,17 @@ public class CollectionUtil {
 
 		Collections.sort(result, comparator);
 
-		// 第一页且数目少于第一页显示的数目
-		if (pageNo <= 1 && result.size() <= numPerPage) {
+		int resultSize = result.size();
+		//每页条目数大于总数直接返回所有
+		if (resultSize <= numPerPage) {
 			return result;
 		}
-
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
+		if(startEnd[1] > resultSize){
+			//越界直接返回空
+			return new ArrayList<>();
+		}
+		
 		return result.subList(startEnd[0], startEnd[1]);
 	}
 
@@ -122,12 +127,17 @@ public class CollectionUtil {
 			queue.addAll(coll);
 		}
 
-		// 第一页且数目少于第一页显示的数目
-		if (pageNo <= 1 && queue.size() <= numPerPage) {
+		int resultSize = queue.size();
+		//每页条目数大于总数直接返回所有
+		if (resultSize <= numPerPage) {
 			return queue.toList();
 		}
-
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
+		if(startEnd[1] > resultSize){
+			//越界直接返回空
+			return new ArrayList<>();
+		}
+		
 		return queue.toList().subList(startEnd[0], startEnd[1]);
 	}
 
@@ -557,7 +567,7 @@ public class CollectionUtil {
 		return map2;
 	}
 
-	//---------------------------------------------------------------------- isEmpty
+	// ---------------------------------------------------------------------- isEmpty
 	/**
 	 * 数组是否为空
 	 * 
@@ -637,7 +647,7 @@ public class CollectionUtil {
 	public static boolean isEmpty(final boolean[] array) {
 		return array == null || array.length == 0;
 	}
-	
+
 	/**
 	 * 集合是否为空
 	 * 
@@ -647,7 +657,7 @@ public class CollectionUtil {
 	public static boolean isEmpty(Collection<?> collection) {
 		return collection == null || collection.isEmpty();
 	}
-	
+
 	/**
 	 * Map是否为空
 	 * 
@@ -658,7 +668,7 @@ public class CollectionUtil {
 		return map == null || map.isEmpty();
 	}
 
-	//---------------------------------------------------------------------- isNotEmpty
+	// ---------------------------------------------------------------------- isNotEmpty
 	/**
 	 * 数组是否为非空
 	 * 
@@ -668,7 +678,7 @@ public class CollectionUtil {
 	public static <T> boolean isNotEmpty(final T[] array) {
 		return (array != null && array.length != 0);
 	}
-	
+
 	/**
 	 * 数组是否为非空
 	 * 
@@ -678,7 +688,7 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(final long[] array) {
 		return (array != null && array.length != 0);
 	}
-	
+
 	/**
 	 * 数组是否为非空
 	 * 
@@ -688,7 +698,7 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(final int[] array) {
 		return (array != null && array.length != 0);
 	}
-	
+
 	/**
 	 * 数组是否为非空
 	 * 
@@ -698,7 +708,7 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(final short[] array) {
 		return (array != null && array.length != 0);
 	}
-	
+
 	/**
 	 * 数组是否为非空
 	 * 
@@ -708,6 +718,7 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(final char[] array) {
 		return (array != null && array.length != 0);
 	}
+
 	/**
 	 * 数组是否为非空
 	 * 
@@ -717,6 +728,7 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(final byte[] array) {
 		return (array != null && array.length != 0);
 	}
+
 	/**
 	 * 数组是否为非空
 	 * 
@@ -726,6 +738,7 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(final double[] array) {
 		return (array != null && array.length != 0);
 	}
+
 	/**
 	 * 数组是否为非空
 	 * 
@@ -735,7 +748,7 @@ public class CollectionUtil {
 	public static boolean isNotEmpty(final float[] array) {
 		return (array != null && array.length != 0);
 	}
-	
+
 	/**
 	 * 数组是否为非空
 	 * 
