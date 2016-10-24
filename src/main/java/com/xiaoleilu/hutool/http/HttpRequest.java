@@ -322,11 +322,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置主体字节码
 	 * 
-	 * @param content
-	 * @param contentType
+	 * @param content 主体
 	 */
-	public HttpRequest body(byte[] content, String contentType) {
-		// this.contentType(contentType);
+	public HttpRequest body(byte[] content) {
 		return body(StrUtil.str(content, charset));
 	}
 	// ---------------------------------------------------------------- Body end
