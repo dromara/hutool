@@ -24,6 +24,7 @@ import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.StreamProgress;
+import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -274,7 +275,7 @@ public class HttpUtil {
 	}
 
 	/**
-	 * 将Map形式的Form表单数据转换为Url参数形式
+	 * 将Map形式的Form表单数据转换为Url参数形式，不做编码
 	 * 
 	 * @param paramMap 表单数据
 	 * @return url参数
@@ -307,7 +308,7 @@ public class HttpUtil {
 			} else {
 				sb.append("&");
 			}
-			sb.append(encode(item.getKey(), charset)).append("=").append(encode(item.getValue().toString(), charset));
+			sb.append(encode(item.getKey(), charset)).append("=").append(encode(Conver.toStr(item.getValue()), charset));
 		}
 		return sb.toString();
 	}
@@ -374,7 +375,7 @@ public class HttpUtil {
 	 * @return 合成后的URL
 	 */
 	public static String urlWithForm(String url, Map<String, Object> form) {
-		final String queryString = toParams(form);
+		final String queryString = toParams(form, CharsetUtil.UTF_8);
 		return urlWithForm(url, queryString);
 	}
 	

@@ -309,3 +309,4 @@ Entity中toVo区别是否忽略大小写
 2.15.15
 1、修复sortPageAll和sortPageAll2方法中越界问题
 2、修复布隆过滤添加返回false的问题
+3、修复HttpUtil的toParam的encode问题

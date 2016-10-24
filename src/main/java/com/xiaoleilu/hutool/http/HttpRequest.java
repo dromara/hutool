@@ -236,7 +236,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			strValue = Conver.toStr(value, null);
 		}
 
-//		form.put(HttpUtil.encode(name, charset), HttpUtil.encode(strValue, charset));
 		form.put(name, strValue);
 		return this;
 	}
@@ -480,7 +479,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (StrUtil.isNotBlank(this.body)) {
 			content = this.body;
 		} else {
-			content = HttpUtil.toParams(this.form);
+			content = HttpUtil.toParams(this.form, this.charset);
 		}
 		IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
 	}
