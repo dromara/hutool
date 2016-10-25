@@ -400,7 +400,7 @@ public class IoUtil {
 	 * @param contents 写入的内容
 	 * @throws IOException
 	 */
-	public static void write(OutputStream out, String charset, boolean isCloseOut, Serializable... contents) throws IOException {
+	public static void writeObjects(OutputStream out, String charset, boolean isCloseOut, Serializable... contents) throws IOException {
 		ObjectOutputStream osw = null;
 		try {
 			osw = out instanceof ObjectOutputStream ? (ObjectOutputStream) out : new ObjectOutputStream(out);

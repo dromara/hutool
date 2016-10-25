@@ -420,7 +420,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			} else {
 				this.httpConnection.connect();
 			}
-
 		} catch (IOException e) {
 			throw new HttpException(e.getMessage(), e);
 		}
@@ -516,7 +515,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				builder.append(StrUtil.format(CONTENT_DISPOSITION_TEMPLATE, entry.getKey()));
 				builder.append(entry.getValue()).append(StrUtil.CRLF);
 			}
-			IoUtil.write(out, this.charset, false, builder.toString());
+			IoUtil.write(out, this.charset, false, builder);
 		}
 	}
 
@@ -532,7 +531,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
 			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), file.getName()));
 			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(file.getName())));
-			IoUtil.write(out, this.charset, false, builder.toString());
+			IoUtil.write(out, this.charset, false, builder);
 			FileUtil.writeToStream(file, out);
 			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
 		}

@@ -281,10 +281,19 @@ public class HttpUtil {
 	 * @return url参数
 	 */
 	public static String toParams(Map<String, Object> paramMap) {
-		if(CollectionUtil.isEmpty(paramMap)){
-			return StrUtil.EMPTY;
-		}
-		return CollectionUtil.join(paramMap.entrySet(), "&");
+		return toParams(paramMap, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 将Map形式的Form表单数据转换为Url参数形式<br>
+	 * 编码键和值对
+	 * 
+	 * @param paramMap 表单数据
+	 * @param charsetName 编码
+	 * @return url参数
+	 */
+	public static String toParams(Map<String, Object> paramMap, String charsetName) {
+		return toParams(paramMap, CharsetUtil.charset(charsetName));
 	}
 	
 	/**
@@ -295,9 +304,12 @@ public class HttpUtil {
 	 * @param charset 编码
 	 * @return url参数
 	 */
-	public static String toParams(Map<String, Object> paramMap, String charset) {
+	public static String toParams(Map<String, Object> paramMap, Charset charset) {
 		if(CollectionUtil.isEmpty(paramMap)){
 			return StrUtil.EMPTY;
+		}
+		if(null == charset){//默认编码为系统编码
+			charset = CharsetUtil.CHARSET_UTF_8;
 		}
 		
 		StringBuilder sb = new StringBuilder();
