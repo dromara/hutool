@@ -14,6 +14,7 @@ import javax.net.ssl.SSLSocketFactory;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.lang.Conver;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
@@ -310,7 +311,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置内容主体
 	 * 
-	 * @param body
+	 * @param body 请求体
 	 */
 	public HttpRequest body(String body) {
 		this.body = body;
@@ -318,14 +319,46 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		contentLength(body.length());
 		return this;
 	}
+	
+	/**
+	 * 设置内容主体
+	 * 
+	 * @param body 请求体
+	 * @param contentType 请求体类型
+	 */
+	public HttpRequest body(String body, String contentType) {
+		this.body(body);
+		this.contentType(contentType);
+		return this;
+	}
+	
+	/**
+	 * 设置JSON内容主体<br>
+	 * 设置默认的Content-Type为 application/json
+	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
+	 * 
+	 * @param json JSON请求体
+	 */
+	public HttpRequest body(JSON json) {
+		this.body(json.toString());
+		
+		String contentTypeJson = "application/json";
+		if(StrUtil.isNotBlank(this.charset)){
+			contentTypeJson = StrUtil.format("{};charset={}", contentTypeJson, this.charset);
+		}
+		this.contentType(contentTypeJson);
+		
+		return this;
+	}
 
 	/**
-	 * 设置主体字节码
+	 * 设置主体字节码<br>
+	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
 	 * 
-	 * @param content 主体
+	 * @param bodyBytes 主体
 	 */
-	public HttpRequest body(byte[] content) {
-		return body(StrUtil.str(content, charset));
+	public HttpRequest body(byte[] bodyBytes) {
+		return body(StrUtil.str(bodyBytes, this.charset));
 	}
 	// ---------------------------------------------------------------- Body end
 
