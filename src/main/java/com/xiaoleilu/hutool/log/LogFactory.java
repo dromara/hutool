@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.log;
 
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 import com.xiaoleilu.hutool.log.dialect.jdk.JdkLogFactory;
@@ -67,6 +68,7 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public static Log get(String name){
+		Console.log(name);
 		return getCurrentLogFactory().getLog(name);
 	}
 	
