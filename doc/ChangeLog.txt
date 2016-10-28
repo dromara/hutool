@@ -319,3 +319,5 @@ Entity中toVo区别是否忽略大小写
 
 2.15.17
 1、HttpRequest增加方法body(String body, String contentType) 和 body(JSON json)
+2、日志部分加入LocationAwareLog，便于再次封装
+3、修复StaticLog打印日志行号错误问题

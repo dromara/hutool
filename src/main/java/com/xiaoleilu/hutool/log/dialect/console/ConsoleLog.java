@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.log.dialect.console;
 
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.log.AbstractLog;
 import com.xiaoleilu.hutool.log.level.Level;
@@ -113,6 +114,7 @@ public class ConsoleLog extends AbstractLog {
 		log(Level.ERROR, t, format, arguments);
 	}
 	
+	//------------------------------------------------------------------------- Log
 	@Override
 	public void log(Level level, String format, Object... arguments) {
 		this.log(level, null, format, arguments);
@@ -134,17 +136,9 @@ public class ConsoleLog extends AbstractLog {
 		
 		//WARN以上级别打印至System.err
 		if(level.ordinal() >= Level.WARN.ordinal()){
-			System.err.println(logMsg);
-			if(null != t){
-				t.printStackTrace(System.err);
-				System.err.flush();
-			}
+			Console.error(t, logMsg);
 		}else{
-			System.out.println(logMsg);
-			if(null != t){
-				t.printStackTrace();
-				System.out.flush();
-			}
+			Console.log(t, logMsg);
 		}
 		
 	}

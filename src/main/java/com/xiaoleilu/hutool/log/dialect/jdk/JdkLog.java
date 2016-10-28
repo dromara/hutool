@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import com.xiaoleilu.hutool.log.AbstractLog;
+import com.xiaoleilu.hutool.log.AbstractLocationAwareLog;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -13,8 +13,11 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class JdkLog extends AbstractLog {
+public class JdkLog extends AbstractLocationAwareLog {
 	private static final long serialVersionUID = -6843151523380063975L;
+	
+	/** 本类的全限定类名 */
+	private static final String FQCN_SELF = JdkLog.class.getName();
 
 	private final transient Logger logger;
 
@@ -30,7 +33,7 @@ public class JdkLog extends AbstractLog {
 	public JdkLog(String name) {
 		this(Logger.getLogger(name));
 	}
-
+	
 	@Override
 	public String getName() {
 		return logger.getName();
@@ -44,16 +47,12 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void trace(String format, Object... arguments) {
-		if (isTraceEnabled()) {
-			log(SELF, Level.FINEST, StrUtil.format(format, arguments), null);
-		}
+		logIfEnabled(Level.FINEST, null, format, arguments);
 	}
 
 	@Override
 	public void trace(Throwable t, String format, Object... arguments) {
-		if (isTraceEnabled()) {
-			log(SELF, Level.FINEST, StrUtil.format(format, arguments), t);
-		}
+		logIfEnabled(Level.FINEST, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Debug
@@ -64,16 +63,12 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void debug(String format, Object... arguments) {
-		if (isDebugEnabled()) {
-			log(SELF, Level.FINE, StrUtil.format(format, arguments), null);
-		}
+		logIfEnabled(Level.FINE, null, format, arguments);
 	}
 
 	@Override
 	public void debug(Throwable t, String format, Object... arguments) {
-		if (isDebugEnabled()) {
-			log(SELF, Level.FINE, StrUtil.format(format, arguments), t);
-		}
+		logIfEnabled(Level.FINE, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Info
@@ -84,16 +79,12 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void info(String format, Object... arguments) {
-		if (isInfoEnabled()) {
-			log(SELF, Level.INFO, StrUtil.format(format, arguments), null);
-		}
+		logIfEnabled(Level.INFO, null, format, arguments);
 	}
 
 	@Override
 	public void info(Throwable t, String format, Object... arguments) {
-		if (isInfoEnabled()) {
-			log(SELF, Level.INFO, StrUtil.format(format, arguments), null);
-		}
+		logIfEnabled(Level.INFO, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Warn
@@ -104,16 +95,12 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void warn(String format, Object... arguments) {
-		if (isWarnEnabled()) {
-			log(SELF, Level.WARNING, StrUtil.format(format, arguments), null);
-		}
+		logIfEnabled(Level.WARNING, null, format, arguments);
 	}
 
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
-		if (isWarnEnabled()) {
-			log(SELF, Level.WARNING, StrUtil.format(format, arguments), t);
-		}
+		logIfEnabled(Level.WARNING, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Error
@@ -124,69 +111,103 @@ public class JdkLog extends AbstractLog {
 
 	@Override
 	public void error(String format, Object... arguments) {
-		if (isErrorEnabled()) {
-			log(SELF, Level.SEVERE, StrUtil.format(format, arguments), null);
-		}
+		logIfEnabled(Level.SEVERE, null, format, arguments);
 	}
 
 	@Override
 	public void error(Throwable t, String format, Object... arguments) {
-		if (isErrorEnabled()) {
-			log(SELF, Level.SEVERE, StrUtil.format(format, arguments), t);
+		logIfEnabled(Level.SEVERE, t, format, arguments);
+	}
+	
+	// ------------------------------------------------------------------------- Log
+	@Override
+	public void log(com.xiaoleilu.hutool.log.level.Level level, String format, Object... arguments) {
+		this.log(level, null, format, arguments);
+	}
+	
+	@Override
+	public void log(com.xiaoleilu.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
+		this.log(FQCN_SELF, level, t, format, arguments);
+	}
+	
+	@Override
+	public void log(String fqcn, com.xiaoleilu.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
+		Level jdkLevel;
+		switch (level) {
+			case TRACE:
+				jdkLevel = Level.FINEST;
+				break;
+			case DEBUG:
+				jdkLevel = Level.FINE;
+				break;
+			case INFO:
+				jdkLevel = Level.INFO;
+				break;
+			case WARN:
+				jdkLevel = Level.WARNING;
+				break;
+			case ERROR:
+				jdkLevel = Level.SEVERE;
+				break;
+			default:
+				throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
+		logIfEnabled(fqcn, jdkLevel, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Private method
 	/**
 	 * 打印对应等级的日志
 	 * 
-	 * @param callerFQCN
 	 * @param level 等级
 	 * @param msg 消息
-	 * @param t
+	 * @param format 消息模板
+	 * @param arguments 参数
 	 */
-	private void log(String callerFQCN, Level level, String msg, Throwable t) {
-		LogRecord record = new LogRecord(level, msg);
-		record.setLoggerName(getName());
-		record.setThrown(t);
-		fillCallerData(callerFQCN, record);
-		logger.log(record);
+	private void logIfEnabled(Level level, Throwable t, String format, Object... arguments){
+		this.logIfEnabled(FQCN_SELF, level, t, format, arguments);
 	}
-
-	private static final String SELF = JdkLog.class.getName();
-	private static final String SUPER = JdkLog.class.getSuperclass().getName();
-
+	
 	/**
-	 * Fill in caller data if possible.
-	 *
-	 * @param callerFQCN 调用者
+	 * 打印对应等级的日志
+	 * 
+	 * @param callerFQCN
+	 * @param level 等级
+	 * @param t 异常
+	 * @param format 消息模板
+	 * @param arguments 参数
+	 */
+	private void logIfEnabled(String callerFQCN, Level level, Throwable t, String format, Object... arguments){
+		if(logger.isLoggable(level)){
+			LogRecord record = new LogRecord(level, StrUtil.format(format, arguments));
+			record.setLoggerName(getName());
+			record.setThrown(t);
+			fillCallerData(callerFQCN, record);
+			logger.log(record);
+		}
+	}
+	
+	/**
+	 * 传入调用日志类的信息
+	 * @param callerFQCN 调用者全限定类名
+	 * @param superFQCN 调用者父类全限定名
 	 * @param record The record to update
 	 */
 	private static void fillCallerData(String callerFQCN, LogRecord record) {
 		StackTraceElement[] steArray = new Throwable().getStackTrace();
 
-		int selfIndex = -1;
-		for (int i = 0; i < steArray.length; i++) {
-			final String className = steArray[i].getClassName();
-			if (className.equals(callerFQCN) || className.equals(SUPER)) {
-				selfIndex = i;
-				break;
-			}
-		}
-
 		int found = -1;
-		for (int i = selfIndex + 1; i < steArray.length; i++) {
-			final String className = steArray[i].getClassName();
-			if (!(className.equals(callerFQCN) || className.equals(SUPER))) {
+		String className;
+		for (int i = 0; i < steArray.length; i++) {
+			className = steArray[i].getClassName();
+			if (className.equals(callerFQCN)) {
 				found = i;
 				break;
 			}
 		}
 
-		if (found != -1) {
-			StackTraceElement ste = steArray[found];
-			// setting the class name has the side effect of setting
-			// the needToInferCaller variable to false.
+		if (found > -1 && found < steArray.length -1) {
+			StackTraceElement ste = steArray[found+1];
 			record.setSourceClassName(ste.getClassName());
 			record.setSourceMethodName(ste.getMethodName());
 		}

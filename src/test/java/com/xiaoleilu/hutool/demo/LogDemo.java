@@ -13,9 +13,10 @@ public class LogDemo {
 	public static void main(String[] args) {
 		Log log = LogFactory.get();
 		
-		
 		Console.log("----------------------------静态方法打印日志------------------------------");
-		StaticLog.debug("This is static log for {}", "looly");
+		StaticLog.debug("This is static log of {}", Level.DEBUG);
+		StaticLog.log(Level.DEBUG, null, "This is static log if {}", "CUSTOM");
+		Console.log();
 		
 		Console.log("----------------------------自动选择日志------------------------------");
 		// 自动选择日志实现
@@ -23,6 +24,9 @@ public class LogDemo {
 		log.info("This is {} log", Level.INFO);
 		log.warn("This is {} log", Level.WARN);
 		log.error("This is {} log", Level.ERROR);
+		
+		log.log(Level.DEBUG, "This is {} log", "CUSTOM");
+		Console.log();
 
 		Console.log("----------------------------自定义为Common Log日志------------------------------");
 		// 自定义日志实现
@@ -32,6 +36,8 @@ public class LogDemo {
 		log.info("This is {} log", Level.INFO);
 		log.warn("This is {} log", Level.WARN);
 		log.error("This is {} log", Level.ERROR);
+		log.log(Level.DEBUG, "This is {} log", "CUSTOM");
+		Console.log();
 		
 		Console.log("----------------------------自定义为JDK Log日志------------------------------");
 		// 自定义日志实现
@@ -41,6 +47,8 @@ public class LogDemo {
 		log.info("This is {} log", Level.INFO);
 		log.warn("This is {} log", Level.WARN);
 		log.error("This is {} log", Level.ERROR);
+		log.log(Level.DEBUG, "This is {} log", "CUSTOM");
+		Console.log();
 
 		Console.log("----------------------------自定义为Console Log日志------------------------------");
 		// 自定义日志实现
@@ -50,5 +58,7 @@ public class LogDemo {
 		log.info("This is {} log", Level.INFO);
 		log.warn("This is {} log", Level.WARN);
 		log.error("This is {} log", Level.ERROR);
+		log.log(Level.DEBUG, "This is {} log", "CUSTOM");
+		Console.log();
 	}
 }

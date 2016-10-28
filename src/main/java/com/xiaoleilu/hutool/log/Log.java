@@ -44,5 +44,4 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	 * @param arguments 参数
 	 */
 	void log(Level level, Throwable t, String format, Object... arguments);
-
 }

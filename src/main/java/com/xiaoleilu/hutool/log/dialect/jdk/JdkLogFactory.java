@@ -8,6 +8,7 @@ import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 
 /**
+ * JDK日志工厂类
  *  <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a> log.
  * @author Looly
  *
@@ -28,7 +29,7 @@ public class JdkLogFactory extends LogFactory{
 	public Log getLog(Class<?> clazz) {
 		return new JdkLog(clazz);
 	}
-
+	
 	/**
 	 * 读取ClassPath下的logging.properties配置文件
 	 */

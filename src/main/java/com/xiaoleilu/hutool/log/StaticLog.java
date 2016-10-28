@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.log;
 
+import com.xiaoleilu.hutool.log.level.Level;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -8,6 +9,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class StaticLog {
+	private static final String FQCN = StaticLog.class.getName();
 	
 	// ----------------------------------------------------------- Log method start
 	// ------------------------ Trace
@@ -30,7 +32,9 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void trace(Log log, String format, Object... arguments) {
-		log.trace(format, arguments);
+		if(false == log(log, Level.TRACE, null, format, arguments)){
+			log.trace(format, arguments);
+		}
 	}
 
 	// ------------------------ debug
@@ -53,7 +57,9 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void debug(Log log, String format, Object... arguments) {
-		log.debug(format, arguments);
+		if(false == log(log, Level.DEBUG, null, format, arguments)){
+			log.debug(format, arguments);
+		}
 	}
 
 	// ------------------------ info
@@ -76,7 +82,9 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void info(Log log, String format, Object... arguments) {
-		log.info(format, arguments);
+		if(false == log(log, Level.INFO, null, format, arguments)){
+			log.info(format, arguments);
+		}
 	}
 
 	// ------------------------ warn
@@ -99,7 +107,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Log log, String format, Object... arguments) {
-		log.warn(format, arguments);
+		warn(log, null, format, arguments);
 	}
 
 	/**
@@ -123,10 +131,32 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Log log, Throwable e, String format, Object... arguments) {
-		log.warn(StrUtil.format(format, arguments), e);
+		if(false == log(log, Level.TRACE, null, format, arguments)){
+			log.warn(StrUtil.format(format, arguments), e);
+		}
 	}
 
 	// ------------------------ error
+	/**
+	 * Error等级日志<br>
+	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
+	 * 
+	 * @param e 需在日志中堆栈打印的异常
+	 */
+	public static void error(Throwable e) {
+		error(LogFactory.indirectGet(), e);
+	}
+	
+	/**
+	 * Error等级日志<br>
+	 * 
+	 * @param log 日志对象
+	 * @param e 需在日志中堆栈打印的异常
+	 */
+	public static void error(Log log, Throwable e) {
+		error(e, e.getMessage());
+	}
+	
 	/**
 	 * Error等级日志<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
@@ -146,7 +176,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Log log, String format, Object... arguments) {
-		log.error(format, arguments);
+		error(log, null, format, arguments);
 	}
 
 	/**
@@ -170,28 +200,42 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Log log, Throwable e, String format, Object... arguments) {
-		log.error(StrUtil.format(format, arguments), e);
+		if(false == log(log, Level.ERROR, null, format, arguments)){
+			log.error(StrUtil.format(format, arguments), e);
+		}
 	}
-
+	
+	// ------------------------ Log
 	/**
-	 * Error等级日志<br>
+	 * 打印日志<br>
+	 * 
+	 * @param level 日志级别
+	 * @param t 需在日志中堆栈打印的异常
+	 * @param format 格式文本，{} 代表变量
+	 * @param arguments 变量对应的参数
+	 */
+	public static boolean log(Level level, Throwable t, String format, Object... arguments) {
+		return log(LogFactory.indirectGet(), level, t, format, arguments);
+	}
+	
+	/**
+	 * 打印日志<br>
 	 * 
 	 * @param log 日志对象
-	 * @param e 需在日志中堆栈打印的异常
+	 * @param level 日志级别
+	 * @param t 需在日志中堆栈打印的异常
+	 * @param format 格式文本，{} 代表变量
+	 * @param arguments 变量对应的参数
 	 */
-	public static void error(Log log, Throwable e) {
-		log.error(e.getMessage(), e);
+	public static boolean log(Log log, Level level, Throwable t, String format, Object... arguments) {
+		if(log instanceof LocationAwareLog){
+			((LocationAwareLog) log).log(FQCN, level, t, format, arguments);
+			return true;
+		}else{
+			return false;
+		}
 	}
-
-	/**
-	 * Error等级日志<br>
-	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
-	 * 
-	 * @param e 需在日志中堆栈打印的异常
-	 */
-	public static void error(Throwable e) {
-		get().error(e.getMessage(), e);
-	}
+	
 	// ----------------------------------------------------------- Log method end
 	
 	/**

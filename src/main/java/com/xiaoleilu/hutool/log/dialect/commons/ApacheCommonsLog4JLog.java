@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.log4j.Level;
 
-import com.xiaoleilu.hutool.log.AbstractLog;
+import com.xiaoleilu.hutool.log.AbstractLocationAwareLog;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -13,7 +13,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class ApacheCommonsLog4JLog extends AbstractLog {
+public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 	private static final long serialVersionUID = -6843151523380063975L;
 	
 	private static final String FQCN = ApacheCommonsLog4JLog.class.getName();
@@ -120,5 +120,40 @@ public class ApacheCommonsLog4JLog extends AbstractLog {
 		logger.getLogger().log(FQCN, Level.ERROR, StrUtil.format(format, arguments), t);
 	}
 
-	// ------------------------------------------------------------------------- Private method
+	// ------------------------------------------------------------------------- Log
+	@Override
+	public void log(com.xiaoleilu.hutool.log.level.Level level, String format, Object... arguments) {
+		this.log(level, null, format, arguments);
+	}
+	
+	@Override
+	public void log(com.xiaoleilu.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
+		this.log(FQCN, level, t, format, arguments);
+	}
+	
+	@Override
+	public void log(String fqcn, com.xiaoleilu.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
+		Level log4jLevel;
+		switch (level) {
+			case TRACE:
+				log4jLevel = Level.TRACE;
+				break;
+			case DEBUG:
+				log4jLevel = Level.DEBUG;
+				break;
+			case INFO:
+				log4jLevel = Level.INFO;
+				break;
+			case WARN:
+				log4jLevel = Level.WARN;
+				break;
+			case ERROR:
+				log4jLevel = Level.ERROR;
+				break;
+			default:
+				throw new Error(StrUtil.format("Can not identify level: {}", level));
+		}
+		logger.getLogger().log(FQCN, log4jLevel, StrUtil.format(format, arguments), t);
+	}
+
 }

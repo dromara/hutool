@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.xiaoleilu.hutool.log.AbstractLog;
+import com.xiaoleilu.hutool.log.level.Level;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -133,6 +134,53 @@ public class ApacheCommonsLog extends AbstractLog {
 	public void error(Throwable t, String format, Object... arguments) {
 		if(isErrorEnabled()){
 			logger.warn(StrUtil.format(format, arguments), t);
+		}
+	}
+	
+	// ------------------------------------------------------------------------- Log
+	@Override
+	public void log(Level level, String format, Object... arguments) {
+		switch (level) {
+			case TRACE:
+				trace(format, arguments);
+				break;
+			case DEBUG:
+				debug(format, arguments);
+				break;
+			case INFO:
+				info(format, arguments);
+				break;
+			case WARN:
+				warn(format, arguments);
+				break;
+			case ERROR:
+				error(format, arguments);
+				break;
+			default:
+				throw new Error(StrUtil.format("Can not identify level: {}", level));
+		}
+	}
+
+	@Override
+	public void log(Level level, Throwable t, String format, Object... arguments) {
+		switch (level) {
+			case TRACE:
+				trace(t, format, arguments);
+				break;
+			case DEBUG:
+				debug(t, format, arguments);
+				break;
+			case INFO:
+				info(t, format, arguments);
+				break;
+			case WARN:
+				warn(t, format, arguments);
+				break;
+			case ERROR:
+				error(t, format, arguments);
+				break;
+			default:
+				throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
 	}
 
