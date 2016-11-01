@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.lang.StrFormatter;
+
 /**
  * 字符串工具类
  * 
@@ -27,6 +29,8 @@ public class StrUtil {
 	public static final char C_LF = '\n';
 	public static final char C_UNDERLINE = '_';
 	public static final char C_COMMA = ',';
+	public static final char C_DELIM_START = '{';
+	public static final char C_DELIM_END = '}';
 	
 	public static final String SPACE = " ";
 	public static final String TAB = "	";
@@ -914,43 +918,22 @@ public class StrUtil {
 
 	/**
 	 * 格式化文本, {} 表示占位符<br>
-	 * 例如：format("aaa {} ccc", "bbb")   ---->    aaa bbb ccc
+	 * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
+	 * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
+	 * 例：<br>
+	 * 		通常使用：format("this is {} for {}", "a", "b") -> this is a for b<br>
+	 * 		转义{}： 	format("this is \\{} for {}", "a", "b") -> this is \{} for a<br>
+	 * 		转义\：		format("this is \\\\{} for {}", "a", "b") -> this is \a for b<br>
 	 * 
 	 * @param template 文本模板，被替换的部分用 {} 表示
-	 * @param values 参数值
+	 * @param params 参数值
 	 * @return 格式化后的文本
 	 */
-	public static String format(String template, Object... values) {
-		if (CollectionUtil.isEmpty(values) || isBlank(template)) {
+	public static String format(String template, Object... params) {
+		if (CollectionUtil.isEmpty(params) || isBlank(template)) {
 			return template;
 		}
-
-		final StringBuilder sb = new StringBuilder();
-		final int length = template.length();
-
-		int valueIndex = 0;
-		char currentChar;
-		for (int i = 0; i < length; i++) {
-			if (valueIndex >= values.length) {
-				sb.append(sub(template, i, length));
-				break;
-			}
-
-			currentChar = template.charAt(i);
-			if (currentChar == '{') {
-				final char nextChar = template.charAt(++i);
-				if (nextChar == '}') {
-					sb.append(utf8Str(values[valueIndex++]));
-				} else {
-					sb.append('{').append(nextChar);
-				}
-			} else {
-				sb.append(currentChar);
-			}
-
-		}
-
-		return sb.toString();
+		return StrFormatter.format(template, params);
 	}
 
 	/**
@@ -968,7 +951,7 @@ public class StrUtil {
 		}
 
 		for (Entry<?, ?> entry : map.entrySet()) {
-			template = template.replace("{" + entry.getKey() + "}", entry.getValue().toString());
+			template = template.replace("{" + entry.getKey() + "}", utf8Str(entry.getValue()));
 		}
 		return template;
 	}

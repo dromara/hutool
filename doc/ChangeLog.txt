@@ -321,3 +321,7 @@ Entity中toVo区别是否忽略大小写
 1、HttpRequest增加方法body(String body, String contentType) 和 body(JSON json)
 2、日志部分加入LocationAwareLog，便于再次封装
 3、修复StaticLog打印日志行号错误问题
+4、修改SecureUtil中sha1为hmacSha1，区别sha1
+5、修复Oracle中TIMESTAMP问题（返回类型为oracle.sql.TIMESTAMP）
+6、ThreadUtil修改方法getThreadLocal为可选ThreadLocal或InheritableThreadLocal
+7、全面优化StrUtil.format方法，增加转义支持

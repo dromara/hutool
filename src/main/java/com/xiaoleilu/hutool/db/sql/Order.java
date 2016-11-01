@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.db.sql;
 
-import com.xiaoleilu.hutool.db.sql.SqlBuilder.Direction;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

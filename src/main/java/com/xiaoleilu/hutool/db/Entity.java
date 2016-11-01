@@ -5,6 +5,9 @@ import java.io.Reader;
 import java.sql.Clob;
 import java.sql.RowId;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +16,7 @@ import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -192,6 +196,51 @@ public class Entity extends Dict{
 	 */
 	public Clob getClob(String attr){
 		return get(attr, null);
+	}
+	
+	@Override
+	public Time getTime(String attr) {
+		Object obj = get(attr);
+		Time result = null;
+		if(null != obj){
+			try {
+				result = (Time)obj;
+			} catch (Exception e) {
+				//try oracle.sql.TIMESTAMP
+				result = ClassUtil.invoke(obj, "timeValue");
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public Date getDate(String attr) {
+		Object obj = get(attr);
+		Date result = null;
+		if(null != obj){
+			try {
+				result = (Date)obj;
+			} catch (Exception e) {
+				//try oracle.sql.TIMESTAMP
+				result = ClassUtil.invoke(obj, "dateValue");
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public Timestamp getTimestamp(String attr) {
+		Object obj = get(attr);
+		Timestamp result = null;
+		if(null != obj){
+			try {
+				result = (Timestamp)obj;
+			} catch (Exception e) {
+				//try oracle.sql.TIMESTAMP
+				result = ClassUtil.invoke(obj, "timestampValue");
+			}
+		}
+		return result;
 	}
 	
 	@Override

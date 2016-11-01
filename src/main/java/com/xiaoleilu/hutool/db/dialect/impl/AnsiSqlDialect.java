@@ -4,21 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectName;
+import com.xiaoleilu.hutool.db.sql.Condition;
+import com.xiaoleilu.hutool.db.sql.LogicalOperator;
 import com.xiaoleilu.hutool.db.sql.Order;
+import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
-import com.xiaoleilu.hutool.db.sql.SqlBuilder.LogicalOperator;
-import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
-import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * ANSI SQL 方言
@@ -50,15 +48,19 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForDelete(Connection conn, Entity entity) throws SQLException {
-		if (null == entity || entity.isEmpty()) {
-			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
-			throw new SQLException("No condition define, we can't build delete query for del everything.");
+	public PreparedStatement psForDelete(Connection conn, Query query) throws SQLException {
+		if (null == query) {
+			throw new NullPointerException("query is null !");
 		}
 		
+		Condition[] where = query.getWhere();
+		if(CollectionUtil.isEmpty(where)){
+			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
+			throw new SQLException("No 'WHERE' condition, we can't prepared statement for delete everything.");
+		}
 		final SqlBuilder delete = SqlBuilder.create(wrapper)
-			.delete(entity.getTableName())
-			.where(LogicalOperator.AND, DbUtil.buildConditions(entity));
+			.delete(query.getFirstTableName())
+			.where(LogicalOperator.AND, where);
 
 		final PreparedStatement ps = conn.prepareStatement(delete.build());
 		DbUtil.fillParams(ps, delete.getParamValues());
@@ -66,15 +68,20 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForUpdate(Connection conn, Entity entity, Entity where) throws SQLException {
-		if (null == entity || entity.isEmpty()) {
-			// 对于无条件的更新语句直接抛出异常禁止，防止误删除
-			throw new SQLException("No condition define, we can't build update query for update everything.");
+	public PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws SQLException {
+		if (null == query) {
+			throw new NullPointerException("query is null !");
+		}
+		
+		Condition[] where = query.getWhere();
+		if(CollectionUtil.isEmpty(where)){
+			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
+			throw new SQLException("No 'WHERE' condition, we can't prepared statement for update everything.");
 		}
 		
 		final SqlBuilder update = SqlBuilder.create(wrapper)
 				.update(entity)
-				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
+				.where(LogicalOperator.AND, where);
 
 		final PreparedStatement ps = conn.prepareStatement(update.build());
 		DbUtil.fillParams(ps, update.getParamValues());
@@ -82,16 +89,16 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForFind(Connection conn, Collection<String> fields, Entity where) throws SQLException {
+	public PreparedStatement psForFind(Connection conn, Query query) throws SQLException {
 		//验证
-		if(where == null || StrUtil.isBlank(where.getTableName())) {
-			throw new DbRuntimeException("Table name is null !");
+		if (null == query) {
+			throw new NullPointerException("query is null !");
 		}
 		
 		final SqlBuilder find = SqlBuilder.create(wrapper)
-			.select(fields)
-			.from(where.getTableName())
-			.where(LogicalOperator.AND, DbUtil.buildConditions(where));
+			.select(query.getFields())
+			.from(query.getTableNames())
+			.where(LogicalOperator.AND, query.getWhere());
 
 		final PreparedStatement ps = conn.prepareStatement(find.build());
 		DbUtil.fillParams(ps, find.getParamValues());
@@ -99,15 +106,18 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForPage(Connection conn, Collection<String> fields, Entity where, Page page) throws SQLException {
+	public PreparedStatement psForPage(Connection conn, Query query) throws SQLException {
 		final SqlBuilder find = SqlBuilder.create(wrapper)
-				.select(fields)
-				.from(where.getTableName())
-				.where(LogicalOperator.AND, DbUtil.buildConditions(where));
+				.select(query.getFields())
+				.from(query.getTableNames())
+				.where(LogicalOperator.AND, query.getWhere());
 		
-		final Order[] orders = page.getOrders();
-		if(null != orders){
-			find.orderBy(orders);
+		final Page page = query.getPage();
+		if(null != page){
+			final Order[] orders = page.getOrders();
+			if(null != orders){
+				find.orderBy(orders);
+			}
 		}
 		
 		//limit  A  offset  B 表示：A就是你需要多少行，B就是查询的起点位置。
@@ -119,10 +129,9 @@ public class AnsiSqlDialect implements Dialect {
 	}
 
 	@Override
-	public PreparedStatement psForCount(Connection conn, Entity where) throws SQLException {
-		List<String> fields = new ArrayList<String>();
-		fields.add("count(1)");
-		return psForFind(conn, fields, where);
+	public PreparedStatement psForCount(Connection conn, Query query) throws SQLException {
+		query.setFields(CollectionUtil.newArrayList("count(1)"));
+		return psForFind(conn, query);
 	}
 	
 	@Override

@@ -168,7 +168,11 @@ public class ThreadUtil {
 	 * 创建本地线程对象
 	 * @return 本地线程
 	 */
-	public static <T> ThreadLocal<T> createThreadLocal(){
-		return new ThreadLocal<>();
+	public static <T> ThreadLocal<T> createThreadLocal(boolean isInheritable){
+		if(isInheritable){
+			return new InheritableThreadLocal<>();
+		}else{
+			return new ThreadLocal<>();
+		}
 	}
 }

@@ -61,30 +61,6 @@ public class SqlBuilder {
 	
 	//--------------------------------------------------------------- Enums start
 	/**
-	 * 逻辑运算符
-	 * @author Looly
-	 *
-	 */
-	public static enum LogicalOperator{
-		/** 且，两个条件都满足 */
-		AND,
-		/** 或，满足多个条件的一个即可 */
-		OR
-	}
-	
-	/**
-	 * 排序方式（升序或者降序）
-	 * @author Looly
-	 *
-	 */
-	public static enum Direction{
-		/** 升序 */
-		ASC,
-		/** 降序 */
-		DESC
-	}
-	
-	/**
 	 * SQL中多表关联用的关键字
 	 * @author Looly
 	 *
@@ -300,15 +276,26 @@ public class SqlBuilder {
 	 */
 	public SqlBuilder where(LogicalOperator logicalOperator, Condition... conditions){
 		if(CollectionUtil.isNotEmpty(conditions)) {
-			sql.append(" WHERE ");
 			if(null != wrapper) {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);
 			}
-			
-			sql.append(buildCondition(logicalOperator, conditions));
+			where(buildCondition(logicalOperator, conditions));
 		}
 		
+		return this;
+	}
+	
+	/**
+	 * 添加Where语句<br>
+	 * 
+	 * @param where WHERE语句之后跟的条件语句字符串
+	 * @return 自己
+	 */
+	public SqlBuilder where(String where){
+		if(StrUtil.isNotBlank(where)){
+			sql.append(" WHERE ").append(where);
+		}
 		return this;
 	}
 	
@@ -354,10 +341,21 @@ public class SqlBuilder {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);
 			}
-			
-			sql.append(" HAVING ").append(buildCondition(logicalOperator, conditions));
+			having(buildCondition(logicalOperator, conditions));
 		}
 		
+		return this;
+	}
+	
+	/**
+	 * 添加Having语句
+	 * @param having 条件语句
+	 * @return 自己
+	 */
+	public SqlBuilder having(String having){
+		if(StrUtil.isNotBlank(having)){
+			sql.append(" HAVING ").append(having);
+		}
 		return this;
 	}
 	
@@ -410,16 +408,13 @@ public class SqlBuilder {
 		}
 		
 		if(null != join) {
-			sql.append(StrUtil.SPACE).append(join);
+			sql.append(StrUtil.SPACE).append(join).append(" JOIN ");
+			if(null != wrapper) {
+				//包装表名
+				tableName = wrapper.wrap(tableName);
+			}
+			sql.append(tableName);
 		}
-		
-		if(null != wrapper) {
-			//包装表名
-			tableName = wrapper.wrap(tableName);
-		}
-		
-		sql.append(" JOIN ").append(tableName);
-		
 		return this;
 	}
 	
@@ -436,10 +431,22 @@ public class SqlBuilder {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);
 			}
-			
-			sql.append(" ON ").append(buildCondition(logicalOperator, conditions));
+			on(buildCondition(logicalOperator, conditions));
 		}
 		
+		return this;
+	}
+	
+	/**
+	 * 配合JOIN的 ON语句，多表关联的条件语句<br>
+	 * 只支持单一的逻辑运算符（例如多个条件之间）
+	 * @param on 条件
+	 * @return 自己
+	 */
+	public SqlBuilder on(String on){
+		if(StrUtil.isNotBlank(on)){
+			this.sql.append(" ON ").append(on);
+		}
 		return this;
 	}
 	

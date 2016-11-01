@@ -190,7 +190,7 @@ public class SecureUtil {
 	 * @param data 待加密的数据
 	 * @return 被加密后的bytes
 	 */
-	public static byte[] sha1(byte[] key, byte[] data) {
+	public static byte[] hmacSha1(byte[] key, byte[] data) {
 		return mac(HMAC_SHA1, key, data);
 	}
 
@@ -202,9 +202,9 @@ public class SecureUtil {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String sha1(String key, String data, String charset) {
+	public static String hmacSha1(String key, String data, String charset) {
 		final Charset charsetObj = Charset.forName(charset);
-		final byte[] bytes = sha1(key.getBytes(charsetObj), data.getBytes(charsetObj));
+		final byte[] bytes = hmacSha1(key.getBytes(charsetObj), data.getBytes(charsetObj));
 		return base64(bytes, charset);
 	}
 

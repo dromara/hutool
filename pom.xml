@@ -6,7 +6,7 @@
 
 	<groupId>com.xiaoleilu</groupId>
 	<artifactId>hutool</artifactId>
-	<version>2.15.17</version>
+	<version>2.15.18</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
@@ -125,12 +125,6 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

@@ -14,6 +14,7 @@ import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
 import com.xiaoleilu.hutool.db.handler.PageResultHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
+import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -200,9 +201,10 @@ public class SqlConnRunner{
 			throw new SQLException("Empty entity provided!");
 		}
 		
+		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
 		PreparedStatement ps = null;
 		try {
-			ps = dialect.psForDelete(conn, where);
+			ps = dialect.psForDelete(conn, query);
 			return ps.executeUpdate();
 		} catch (SQLException e) {
 			throw e;
@@ -229,9 +231,10 @@ public class SqlConnRunner{
 			throw new SQLException("Empty where provided!");
 		}
 		
+		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
 		PreparedStatement ps = null;
 		try {
-			ps = dialect.psForUpdate(conn, record, where);
+			ps = dialect.psForUpdate(conn, record, query);
 			return ps.executeUpdate();
 		} catch (SQLException e) {
 			throw e;
@@ -254,9 +257,11 @@ public class SqlConnRunner{
 	public <T> T find(Connection conn, Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
 		checkConn(conn);
 		
+		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
+		query.setFields(fields);
 		PreparedStatement ps = null;
 		try {
-			ps = dialect.psForFind(conn, fields, where);
+			ps = dialect.psForFind(conn, query);
 			return SqlExecutor.query(ps, rsh);
 		} catch (SQLException e) {
 			throw e;
@@ -289,9 +294,10 @@ public class SqlConnRunner{
 	public int count(Connection conn, Entity where) throws SQLException {
 		checkConn(conn);
 		
+		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
 		PreparedStatement ps = null;
 		try {
-			ps = dialect.psForCount(conn, where);
+			ps = dialect.psForCount(conn, query);
 			return SqlExecutor.query(ps, new NumberHandler()).intValue();
 		} catch (SQLException e) {
 			throw e;
@@ -336,7 +342,10 @@ public class SqlConnRunner{
 			return this.find(conn, fields, where, rsh);
 		}
 		
-		return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, fields, where, page), rsh);
+		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
+		query.setFields(fields);
+		query.setPage(page);
+		return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, query), rsh);
 	}
 	
 	/**
