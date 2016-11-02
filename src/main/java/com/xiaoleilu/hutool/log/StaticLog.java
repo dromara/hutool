@@ -154,7 +154,7 @@ public class StaticLog {
 	 * @param e 需在日志中堆栈打印的异常
 	 */
 	public static void error(Log log, Throwable e) {
-		error(e, e.getMessage());
+		error(log, e.getMessage());
 	}
 	
 	/**
