@@ -35,26 +35,26 @@ public abstract class AbstractLog implements Log, Serializable{
 
 	@Override
 	public void trace(Throwable t) {
-		this.trace(t.getMessage(), t);
+		this.trace(t, t.getMessage());
 	}
 	
 	@Override
 	public void debug(Throwable t) {
-		this.debug(t.getMessage(), t);
+		this.debug(t, t.getMessage());
 	}
 	
 	@Override
 	public void info(Throwable t) {
-		this.info(t.getMessage(), t);
+		this.info(t, t.getMessage());
 	}
 	
 	@Override
 	public void warn(Throwable t) {
-		this.warn(t.getMessage(), t);
+		this.warn(t, t.getMessage());
 	}
 	
 	@Override
 	public void error(Throwable t) {
-		this.error(t.getMessage(), t);
+		this.error(t, t.getMessage());
 	}
 }

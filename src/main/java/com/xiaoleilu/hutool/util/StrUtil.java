@@ -415,7 +415,7 @@ public class StrUtil {
 	 */
 	public static String getGeneralField(String getOrSetMethodName) {
 		if (getOrSetMethodName.startsWith("get") || getOrSetMethodName.startsWith("set")) {
-			return cutPreAndLowerFirst(getOrSetMethodName, 3);
+			return removePreAndLowerFirst(getOrSetMethodName, 3);
 		}
 		return null;
 	}
@@ -449,7 +449,7 @@ public class StrUtil {
 	 * @param preLength 去掉的长度
 	 * @return 处理后的字符串，不符合规范返回null
 	 */
-	public static String cutPreAndLowerFirst(String str, int preLength) {
+	public static String removePreAndLowerFirst(String str, int preLength) {
 		if (str == null) {
 			return null;
 		}
@@ -459,8 +459,21 @@ public class StrUtil {
 				return first + str.substring(preLength + 1);
 			}
 			return String.valueOf(first);
+		}else{
+			return str;
 		}
-		return null;
+	}
+	
+	/**
+	 * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br/>
+	 * 例如：str=setName, prefix=set -> return name
+	 * 
+	 * @param str 被处理的字符串
+	 * @param prefix 前缀
+	 * @return 处理后的字符串，不符合规范返回null
+	 */
+	public static String removePreAndLowerFirst(String str, String prefix) {
+		return lowerFirst(removePrefix(str, prefix));
 	}
 
 	/**
@@ -485,7 +498,10 @@ public class StrUtil {
 	 * @return 字符串
 	 */
 	public static String upperFirst(String str) {
-		return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+		if(StrUtil.isBlank(str)){
+			return str;
+		}
+		return Character.toUpperCase(str.charAt(0)) + subSuf(str, 1);
 	}
 
 	/**
@@ -499,7 +515,7 @@ public class StrUtil {
 		if(isBlank(str)){
 			return str;
 		}
-		return Character.toLowerCase(str.charAt(0)) + str.substring(1);
+		return Character.toLowerCase(str.charAt(0)) + subSuf(str, 1);
 	}
 
 	/**
@@ -515,7 +531,7 @@ public class StrUtil {
 		}
 		
 		if (str.startsWith(prefix)) {
-			return str.substring(prefix.length());
+			return subSuf(str, prefix.length());//截取后半段
 		}
 		return str;
 	}
@@ -533,7 +549,7 @@ public class StrUtil {
 		}
 		
 		if (str.toLowerCase().startsWith(prefix.toLowerCase())) {
-			return str.substring(prefix.length());
+			return subSuf(str, prefix.length());//截取后半段
 		}
 		return str;
 	}
@@ -551,9 +567,20 @@ public class StrUtil {
 		}
 		
 		if (str.endsWith(suffix)) {
-			return str.substring(0, str.length() - suffix.length());
+			return subPre(str, str.length() - suffix.length());//截取前半段
 		}
 		return str;
+	}
+	
+	/**
+	 * 去掉指定后缀，并小写首字母
+	 * 
+	 * @param str 字符串
+	 * @param suffix 后缀
+	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
+	 */
+	public static String removeSufAndLowerFirst(String str, String suffix) {
+		return lowerFirst(removeSuffix(str, suffix));
 	}
 
 	/**
@@ -569,7 +596,7 @@ public class StrUtil {
 		}
 		
 		if (str.toLowerCase().endsWith(suffix.toLowerCase())) {
-			return str.substring(0, str.length() - suffix.length());
+			return subPre(str, str.length() - suffix.length());
 		}
 		return str;
 	}

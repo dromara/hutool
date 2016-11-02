@@ -325,3 +325,7 @@ Entity中toVo区别是否忽略大小写
 5、修复Oracle中TIMESTAMP问题（返回类型为oracle.sql.TIMESTAMP）
 6、ThreadUtil修改方法getThreadLocal为可选ThreadLocal或InheritableThreadLocal
 7、全面优化StrUtil.format方法，增加转义支持
+8、增加BeanUtil.isBean方法用于判断是否为JavaBean
+9、修复StaticLog错误
+10、修复日志无堆栈打印问题
+11、修复DateUtil中返回空指针问题

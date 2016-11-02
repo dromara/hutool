@@ -233,6 +233,9 @@ public class DateUtil {
 	 * @return 格式化后的日期
 	 */
 	public static String formatDateTime(Date date) {
+		if(null == date){
+			return null;
+		}
 		return NORM_DATETIME_FORMAT.get().format(date);
 	}
 
@@ -243,6 +246,9 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String formatDate(Date date) {
+		if(null == date){
+			return null;
+		}
 		return NORM_DATE_FORMAT.get().format(date);
 	}
 
@@ -253,6 +259,9 @@ public class DateUtil {
 	 * @return HTTP标准形式日期字符串
 	 */
 	public static String formatHttpDate(Date date) {
+		if(null == date){
+			return null;
+		}
 		return HTTP_DATETIME_FORMAT.get().format(date);
 	}
 	// ------------------------------------ Format end ----------------------------------------------

@@ -20,6 +20,22 @@ import com.xiaoleilu.hutool.lang.Conver;
  *
  */
 public class BeanUtil {
+	
+	/**
+	 * 判断是否为Bean对象
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 */
+	public static boolean isBean(Class<?> clazz){
+		Method[] methods = clazz.getMethods();
+		for (Method method : methods) {
+			if(method.getParameterTypes().length == 1 && method.getName().startsWith("set")){
+				//检测包含标准的setXXX方法即视为标准的JavaBean
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 获得Bean字段描述数组

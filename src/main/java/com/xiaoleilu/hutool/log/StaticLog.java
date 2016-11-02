@@ -131,8 +131,8 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Log log, Throwable e, String format, Object... arguments) {
-		if(false == log(log, Level.TRACE, null, format, arguments)){
-			log.warn(StrUtil.format(format, arguments), e);
+		if(false == log(log, Level.TRACE, e, format, arguments)){
+			log.warn(e, format, arguments);
 		}
 	}
 
@@ -188,7 +188,7 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Throwable e, String format, Object... arguments) {
-		error(LogFactory.indirectGet(), e, StrUtil.format(format, arguments));
+		error(LogFactory.indirectGet(), e, format, arguments);
 	}
 
 	/**
@@ -200,8 +200,8 @@ public class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Log log, Throwable e, String format, Object... arguments) {
-		if(false == log(log, Level.ERROR, null, format, arguments)){
-			log.error(StrUtil.format(format, arguments), e);
+		if(false == log(log, Level.ERROR, e, format, arguments)){
+			log.error(e, format, arguments);
 		}
 	}
 	

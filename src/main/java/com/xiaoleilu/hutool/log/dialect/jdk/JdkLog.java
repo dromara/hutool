@@ -160,12 +160,12 @@ public class JdkLog extends AbstractLocationAwareLog {
 	 * 打印对应等级的日志
 	 * 
 	 * @param level 等级
-	 * @param msg 消息
+	 * @param throwable 异常对象
 	 * @param format 消息模板
 	 * @param arguments 参数
 	 */
-	private void logIfEnabled(Level level, Throwable t, String format, Object... arguments){
-		this.logIfEnabled(FQCN_SELF, level, t, format, arguments);
+	private void logIfEnabled(Level level, Throwable throwable, String format, Object[] arguments){
+		this.logIfEnabled(FQCN_SELF, level, throwable, format, arguments);
 	}
 	
 	/**
@@ -173,15 +173,15 @@ public class JdkLog extends AbstractLocationAwareLog {
 	 * 
 	 * @param callerFQCN
 	 * @param level 等级
-	 * @param t 异常
+	 * @param throwable 异常对象
 	 * @param format 消息模板
 	 * @param arguments 参数
 	 */
-	private void logIfEnabled(String callerFQCN, Level level, Throwable t, String format, Object... arguments){
+	private void logIfEnabled(String callerFQCN, Level level, Throwable throwable, String format, Object[] arguments){
 		if(logger.isLoggable(level)){
 			LogRecord record = new LogRecord(level, StrUtil.format(format, arguments));
 			record.setLoggerName(getName());
-			record.setThrown(t);
+			record.setThrown(throwable);
 			fillCallerData(callerFQCN, record);
 			logger.log(record);
 		}
