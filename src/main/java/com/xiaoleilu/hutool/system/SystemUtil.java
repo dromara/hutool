@@ -257,7 +257,7 @@ public class SystemUtil {
 	}
 
 	/**
-	 * 将系统信息输出到指定<code>PrintWriter</code>中。
+	 * 将系统信息输出到<code>System.out</code>中。
 	 */
 	public static final void dumpSystemInfo() {
 		dumpSystemInfo(new PrintWriter(System.out));
