@@ -329,3 +329,5 @@ Entity中toVo区别是否忽略大小写
 9、修复StaticLog错误
 10、修复日志无堆栈打印问题
 11、修复DateUtil中返回空指针问题
+12、增加ClassUtil.isNormalClass和isAbstract方法
+13、修复BeanUtil.isBean
