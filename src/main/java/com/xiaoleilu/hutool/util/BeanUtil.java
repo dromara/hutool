@@ -120,7 +120,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean) {
-		return fill(bean, new ValueProvider(){
+		return fillBean(bean, new ValueProvider(){
 			@Override
 			public Object value(String name) {
 				return map.get(name);
@@ -173,7 +173,7 @@ public class BeanUtil {
 			}
 		}
 
-		return fill(bean, new ValueProvider(){
+		return fillBean(bean, new ValueProvider(){
 			@Override
 			public Object value(String name) {
 				return map2.get(name.toLowerCase());
@@ -201,7 +201,7 @@ public class BeanUtil {
 	 */
 	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean) {
 		final String beanName = StrUtil.lowerFirst(bean.getClass().getSimpleName());
-		return fill(bean, new ValueProvider(){
+		return fillBean(bean, new ValueProvider(){
 			@Override
 			public Object value(String name) {
 				String value = request.getParameter(name);
@@ -227,7 +227,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T toBean(Class<T> beanClass, ValueProvider valueProvider) {
-		return fill(ClassUtil.newInstance(beanClass), valueProvider);
+		return fillBean(ClassUtil.newInstance(beanClass), valueProvider);
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class BeanUtil {
 	 * @param valueProvider 值提供者
 	 * @return Bean
 	 */
-	public static <T> T fill(T bean, ValueProvider valueProvider) {
+	public static <T> T fillBean(T bean, ValueProvider valueProvider) {
 		if (null == valueProvider) {
 			return bean;
 		}

@@ -7,55 +7,35 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.ResourceBundle;
 import java.util.Set;
 
-import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.BeanUtil;
-import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * JSONObject是一个无序键值对. 它是一个由大括号包围的，使用冒号分隔name和value的字符串，每个键值对使用逗号隔开。<br>
- * 此对象使用 <code>get</code> 和 <code>opt</code> 方法通过name获得value, 使用 <code>put</code>方法增加或替换值。<br>
- * value支持的类型如下： <code>Boolean</code>, <code>JSONArray</code>, <code>JSONObject</code>, <code>Number</code>, <code>String</code>, 或者 <code>JSONNull.NULL</code> <br>
- * 
- * <code>put</code> 方法示例：<br>
- * 
- * <pre>
+ * JSON对象<br>
+ * 例：<br>
+ *<pre>
  * myString = new JSONObject().put(&quot;JSON&quot;, &quot;Hello, World!&quot;).toString();
  * </pre>
- * 
- * 结果： <code>{"JSON": "Hello, World"}</code>. <br>
- * <code>toString</code> 生成的字符串严格遵循JSON语法格式. 构造访问传入的JSON可以兼容更宽泛的语法:
- * <ul>
- * <li><code>,</code>&nbsp;<small>(逗号)</small> 可以出现在最后一个花括号之前。</li>
- * <li>字符串支持 <code>'</code>&nbsp;<small>(单引号)</small>包围。</li>
- * <li>字符串可以不被引号包围，但是这个字符串不能在字符串开始位置包含引号，不能以空格开始或结尾，不能包含字符<code>{ } [ ] / \ : , #</code>也不能是数字或者<code>true</code>, <code>false</code>, or <code>null</code>这些关键字。</li>
- * </ul>
- *
- * @author JSON.org，looly
+ * @author looly
  */
-public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> implements JSON {
+public class JSONObject extends JSONGetter<String> implements JSON {
 
 	/**
 	 * The map where the JSONObject's properties are kept.
 	 */
-	private final Map<String, Object> map;
+	private final Map<String, Object> map = new HashMap<>();;
 
 	/**
 	 * 空构造
 	 */
 	public JSONObject() {
-		this.map = new HashMap<>();
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
@@ -66,10 +46,9 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 * @param names 需要的name列表
 	 */
 	public JSONObject(JSONObject jsonObject, String... names) {
-		this();
 		for (String name : names) {
 			try {
-				this.putOnce(name, jsonObject.get(name));
+				this.putOnce(name, jsonObject.getObj(name));
 			} catch (Exception ignore) {
 			}
 		}
@@ -82,18 +61,17 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 * @throws JSONException If there is a syntax error in the source string or a duplicated key.
 	 */
 	public JSONObject(JSONTokener x) throws JSONException {
-		this();
 		init(x);
 	}
 
 	/**
-	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
 	 * 
 	 * @param source JavaBean或者Map对象或者String
 	 */
 	public JSONObject(Object source) {
-		this();
 		if (null != source) {
 			if (source instanceof Map) {
 				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
@@ -118,7 +96,6 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 * @param names An array of strings, the names of the fields to be obtained from the object.
 	 */
 	public JSONObject(Object object, String[] names) {
-		this();
 		Class<?> c = object.getClass();
 		for (String name : names) {
 			try {
@@ -137,45 +114,6 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	public JSONObject(String source) throws JSONException {
 		this(new JSONTokener(source));
 	}
-
-	/**
-	 * Construct a JSONObject from a ResourceBundle.
-	 *
-	 * @param baseName The ResourceBundle base name.
-	 * @param locale The Locale to load the ResourceBundle for.
-	 * @throws JSONException If any JSONExceptions are detected.
-	 */
-	public JSONObject(String baseName, Locale locale) throws JSONException {
-		this();
-		ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, ClassUtil.getContextClassLoader());
-
-		// Iterate through the keys in the bundle.
-
-		Enumeration<String> keys = bundle.getKeys();
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			if (key != null) {
-
-				// Go through the path, ensuring that there is a nested JSONObject for each
-				// segment except the last. Add the value using the last segment's name into
-				// the deepest nested JSONObject.
-
-				String[] path = StrUtil.split(key, StrUtil.DOT);
-				int last = path.length - 1;
-				JSONObject target = this;
-				for (int i = 0; i < last; i += 1) {
-					String segment = path[i];
-					JSONObject nextTarget = target.getJSONObject(segment);
-					if (nextTarget == null) {
-						nextTarget = new JSONObject();
-						target.put(segment, nextTarget);
-					}
-					target = nextTarget;
-				}
-				target.put(path[last], bundle.getString((String) key));
-			}
-		}
-	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 	
 	/**
@@ -189,7 +127,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 */
 	public JSONObject accumulate(String key, Object value) throws JSONException {
 		JSONUtil.testValidity(value);
-		Object object = this.get(key);
+		Object object = this.getObj(key);
 		if (object == null) {
 			this.put(key, value instanceof JSONArray ? new JSONArray().put(value) : value);
 		} else if (object instanceof JSONArray) {
@@ -210,7 +148,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 */
 	public JSONObject append(String key, Object value) throws JSONException {
 		JSONUtil.testValidity(value);
-		Object object = this.get(key);
+		Object object = this.getObj(key);
 		if (object == null) {
 			this.put(key, new JSONArray().put(value));
 		} else if (object instanceof JSONArray) {
@@ -239,7 +177,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 * @throws JSONException If there is already a property with this name that is not an Integer, Long, Double, or Float.
 	 */
 	public JSONObject increment(String key) throws JSONException {
-		Object value = this.get(key);
+		Object value = this.getObj(key);
 		if (value == null) {
 			this.put(key, 1);
 		} else if (value instanceof BigInteger) {
@@ -267,7 +205,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	 * @return true if there is no value associated with the key or if the value is the JSONNull.NULL object.
 	 */
 	public boolean isNull(String key) {
-		return JSONNull.NULL.equals(this.get(key));
+		return JSONNull.NULL.equals(this.getObj(key));
 	}
 
 	/**
@@ -328,112 +266,12 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	}
 
 	/**
-	 * 获得JSONArray对象
-	 * 
-	 * @param key KEY
-	 * @return JSONArray对象，如果值为null或者非JSONArray类型，返回null
-	 */
-	public JSONArray getJSONArray(String key) {
-		Object o = this.get(key);
-		return o instanceof JSONArray ? (JSONArray) o : null;
-	}
-
-	/**
-	 * 获得JSONObject对象
-	 * 
-	 * @param key KEY
-	 * @return JSONArray对象，如果值为null或者非JSONObject类型，返回null
-	 */
-	public JSONObject getJSONObject(String key) {
-		Object object = this.get(key);
-		return object instanceof JSONObject ? (JSONObject) object : null;
-	}
-
-	/**
-	 * Put a key/boolean pair in the JSONObject.
+	 * PUT 键值对到JSONObject中，如果值为<code>null</code>，将此键移除
 	 *
 	 * @param key A key string.
-	 * @param value A boolean which is the value.
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
-	 * @throws JSONException If the key is null.
-	 */
-	public JSONObject put(String key, boolean value) throws JSONException {
-		this.put(key, value ? Boolean.TRUE : Boolean.FALSE);
-		return this;
-	}
-
-	/**
-	 * Put a key/value pair in the JSONObject, where the value will be a JSONArray which is produced from a Collection.
-	 *
-	 * @param key A key string.
-	 * @param value A Collection value.
-	 * @return this.
-	 * @throws JSONException
-	 */
-	public JSONObject put(String key, Collection<?> value) throws JSONException {
-		this.put(key, new JSONArray(value));
-		return this;
-	}
-
-	/**
-	 * Put a key/double pair in the JSONObject.
-	 *
-	 * @param key A key string.
-	 * @param value A double which is the value.
-	 * @return this.
-	 * @throws JSONException If the key is null or if the number is invalid.
-	 */
-	public JSONObject put(String key, double value) throws JSONException {
-		this.put(key, new Double(value));
-		return this;
-	}
-
-	/**
-	 * Put a key/int pair in the JSONObject.
-	 *
-	 * @param key A key string.
-	 * @param value An int which is the value.
-	 * @return this.
-	 * @throws JSONException If the key is null.
-	 */
-	public JSONObject put(String key, int value) throws JSONException {
-		this.put(key, new Integer(value));
-		return this;
-	}
-
-	/**
-	 * Put a key/long pair in the JSONObject.
-	 *
-	 * @param key A key string.
-	 * @param value A long which is the value.
-	 * @return this.
-	 * @throws JSONException If the key is null.
-	 */
-	public JSONObject put(String key, long value) throws JSONException {
-		this.put(key, new Long(value));
-		return this;
-	}
-
-	/**
-	 * Put a key/value pair in the JSONObject, where the value will be a JSONObject which is produced from a Map.
-	 *
-	 * @param key A key string.
-	 * @param value A Map value.
-	 * @return this.
-	 * @throws JSONException
-	 */
-	public JSONObject put(String key, Map<?, ?> value) throws JSONException {
-		this.put(key, new JSONObject(value));
-		return this;
-	}
-
-	/**
-	 * Put a key/value pair in the JSONObject. If the value is null, then the key will be removed from the JSONObject if it is present.
-	 *
-	 * @param key A key string.
-	 * @param value An object which is the value. It should be of one of these types: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL object.
-	 * @return this.
-	 * @throws JSONException If the value is non-finite number or if the key is null.
+	 * @throws JSONException 值是无穷数字抛出此异常
 	 */
 	public JSONObject put(String key, Object value) throws JSONException {
 		if (key == null) {
@@ -441,7 +279,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 		}
 		if (value != null) {
 			JSONUtil.testValidity(value);
-			this.map.put(key, value);
+			this.map.put(key, JSONUtil.wrap(value));
 		} else {
 			this.remove(key);
 		}
@@ -449,17 +287,19 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	}
 
 	/**
-	 * Put a key/value pair in the JSONObject, but only if the key and the value are both non-null, and only if there is not already a member with that name.
+	 * Put a key/value pair in the JSONObject, but only if the key and the value are both non-null, <br>
+	 * and only if there is not already a member with that name.
+	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
 	 *
-	 * @param key string
-	 * @param value object
+	 * @param key 键
+	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
-	 * @throws JSONException if the key is a duplicate
+	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
 		if (key != null && value != null) {
 			if (map.containsKey(key)) {
-				throw new JSONException("Duplicate key \"" + key + "\"");
+				throw new JSONException(StrUtil.format("Duplicate key \"{}\"", key));
 			}
 			this.put(key, value);
 		}
@@ -467,12 +307,12 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	}
 
 	/**
-	 * Put a key/value pair in the JSONObject, but only if the key and the value are both non-null.
+	 * 在键和值都为非空的情况下put到JSONObject中
 	 *
-	 * @param key A key string.
-	 * @param value An object which is the value. It should be of one of these types: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL object.
+	 * @param key 键
+	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
-	 * @throws JSONException If the value is a non-finite number.
+	 * @throws JSONException 值是无穷数字
 	 */
 	public JSONObject putOpt(String key, Object value) throws JSONException {
 		if (key != null && value != null) {
@@ -509,8 +349,8 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 			Iterator<String> iterator = set.iterator();
 			while (iterator.hasNext()) {
 				String name = iterator.next();
-				Object valueThis = this.get(name);
-				Object valueOther = ((JSONObject) other).get(name);
+				Object valueThis = this.getObj(name);
+				Object valueOther = ((JSONObject) other).getObj(name);
 				if (valueThis instanceof JSONObject) {
 					if (!((JSONObject) valueThis).similar(valueOther)) {
 						return false;
@@ -542,7 +382,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 		}
 		JSONArray ja = new JSONArray();
 		for (int i = 0; i < names.length(); i += 1) {
-			ja.put(this.get(names.getStr(i)));
+			ja.put(this.getObj(names.getStr(i)));
 		}
 		return ja;
 	}

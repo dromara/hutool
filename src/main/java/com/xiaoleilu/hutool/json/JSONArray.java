@@ -7,36 +7,12 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-
-import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 
 /**
- * A JSONArray is an ordered sequence of values. Its external text form is a string wrapped in square brackets with commas separating the values. The internal form is an object having <code>get</code>
- * and <code>opt</code> methods for accessing the values by index, and <code>put</code> methods for adding or replacing values. The values can be any of these types: <code>Boolean</code>,
- * <code>JSONArray</code>, <code>JSONObject</code>, <code>Number</code>, <code>String</code>, or the <code>JSONNull.NULL object</code>.
- * <p>
- * The constructor can convert a JSON text into a Java object. The <code>toString</code> method converts to JSON text.
- * <p>
- * A <code>get</code> method returns a value if one can be found, and throws an exception if one cannot be found. An <code>opt</code> method returns a default value instead of throwing an exception,
- * and so is useful for obtaining optional values.
- * <p>
- * The generic <code>get()</code> and <code>opt()</code> methods return an object which you can cast or query for type. There are also typed <code>get</code> and <code>opt</code> methods that do type
- * checking and type coercion for you.
- * <p>
- * The texts produced by the <code>toString</code> methods strictly conform to JSON syntax rules. The constructors are more forgiving in the texts they will accept:
- * <ul>
- * <li>An extra <code>,</code>&nbsp;<small>(comma)</small> may appear just before the closing bracket.</li>
- * <li>The <code>null</code> value will be inserted when there is <code>,</code> &nbsp;<small>(comma)</small> elision.</li>
- * <li>Strings may be quoted with <code>'</code>&nbsp;<small>(single quote)</small>.</li>
- * <li>Strings do not need to be quoted at all if they do not begin with a quote or single quote, and if they do not contain leading or trailing spaces, and if they do not contain any of these
- * characters: <code>{ } [ ] / \ : , #</code> and if they do not look like numbers and if they are not the reserved words <code>true</code>, <code>false</code>, or <code>null</code>.</li>
- * </ul>
- *
- * @author JSON.org
- * @version 2015-10-29
+ * JSON数组
+ * @author looly
  */
-public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> implements JSON, Iterable<Object>{
+public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Object>{
 
 	/**
 	 * The arrayList where the JSONArray's properties are kept.
@@ -132,7 +108,7 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 	 * @return true if the value at the index is null, or if there is no value.
 	 */
 	public boolean isNull(int index) {
-		return JSONNull.NULL.equals(this.get(index));
+		return JSONNull.NULL.equals(this.getObj(index));
 	}
 
 	/**
@@ -180,200 +156,31 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 	}
 	
 	/**
-	 * Get the optional JSONArray associated with an index.
-	 *
-	 * @param index subscript
-	 * @return A JSONArray value, or null if the index has no value, or if the value is not a JSONArray.
-	 */
-	public JSONArray getJSONArray(int index) {
-		Object o = this.get(index);
-		return o instanceof JSONArray ? (JSONArray) o : null;
-	}
-
-	/**
-	 * Get the optional JSONObject associated with an index. Null is returned if the key is not found, or null if the index has no value, or if the value is not a JSONObject.
-	 *
-	 * @param index The index must be between 0 and length() - 1.
-	 * @return A JSONObject value.
-	 */
-	public JSONObject getJSONObject(int index) {
-		Object o = this.get(index);
-		return o instanceof JSONObject ? (JSONObject) o : null;
-	}
-
-	/**
-	 * Append a boolean value. This increases the array's length by one.
-	 *
-	 * @param value A boolean value.
-	 * @return this.
-	 */
-	public JSONArray put(boolean value) {
-		this.put(value ? Boolean.TRUE : Boolean.FALSE);
-		return this;
-	}
-
-	/**
-	 * Put a value in the JSONArray, where the value will be a JSONArray which is produced from a Collection.
-	 *
-	 * @param value A Collection value.
-	 * @return this.
-	 */
-	public JSONArray put(Collection<?> value) {
-		this.put(new JSONArray(value));
-		return this;
-	}
-
-	/**
-	 * Append a double value. This increases the array's length by one.
-	 *
-	 * @param value A double value.
-	 * @throws JSONException if the value is not finite.
-	 * @return this.
-	 */
-	public JSONArray put(double value) throws JSONException {
-		Double d = new Double(value);
-		JSONUtil.testValidity(d);
-		this.put(d);
-		return this;
-	}
-
-	/**
-	 * Append an int value. This increases the array's length by one.
-	 *
-	 * @param value An int value.
-	 * @return this.
-	 */
-	public JSONArray put(int value) {
-		this.put(new Integer(value));
-		return this;
-	}
-
-	/**
-	 * Append an long value. This increases the array's length by one.
-	 *
-	 * @param value A long value.
-	 * @return this.
-	 */
-	public JSONArray put(long value) {
-		this.put(new Long(value));
-		return this;
-	}
-
-	/**
-	 * Put a value in the JSONArray, where the value will be a JSONObject which is produced from a Map.
-	 *
-	 * @param value A Map value.
-	 * @return this.
-	 */
-	public JSONArray put(Map<?, ?> value) {
-		this.put(new JSONObject(value));
-		return this;
-	}
-
-	/**
 	 * Append an object value. This increases the array's length by one.
 	 *
 	 * @param value An object value. The value should be a Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL object.
 	 * @return this.
 	 */
 	public JSONArray put(Object value) {
-		this.myArrayList.add(value);
+		this.myArrayList.add(JSONUtil.wrap(value));
 		return this;
 	}
 
 	/**
-	 * Put or replace a boolean value in the JSONArray. If the index is greater than the length of the JSONArray, then null elements will be added as necessary to pad it out.
+	 * 加入或者替换JSONArray中指定Index的值，如果index大于JSONArray的长度，将在指定index设置值，之前的位置填充JSONNull.Null
 	 *
-	 * @param index The subscript.
-	 * @param value A boolean value.
+	 * @param index 位置
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
-	 * @throws JSONException If the index is negative.
-	 */
-	public JSONArray put(int index, boolean value) throws JSONException {
-		this.put(index, value ? Boolean.TRUE : Boolean.FALSE);
-		return this;
-	}
-
-	/**
-	 * Put a value in the JSONArray, where the value will be a JSONArray which is produced from a Collection.
-	 *
-	 * @param index The subscript.
-	 * @param value A Collection value.
-	 * @return this.
-	 * @throws JSONException If the index is negative or if the value is not finite.
-	 */
-	public JSONArray put(int index, Collection<?> value) throws JSONException {
-		this.put(index, new JSONArray(value));
-		return this;
-	}
-
-	/**
-	 * Put or replace a double value. If the index is greater than the length of the JSONArray, then null elements will be added as necessary to pad it out.
-	 *
-	 * @param index The subscript.
-	 * @param value A double value.
-	 * @return this.
-	 * @throws JSONException If the index is negative or if the value is not finite.
-	 */
-	public JSONArray put(int index, double value) throws JSONException {
-		this.put(index, new Double(value));
-		return this;
-	}
-
-	/**
-	 * Put or replace an int value. If the index is greater than the length of the JSONArray, then null elements will be added as necessary to pad it out.
-	 *
-	 * @param index The subscript.
-	 * @param value An int value.
-	 * @return this.
-	 * @throws JSONException If the index is negative.
-	 */
-	public JSONArray put(int index, int value) throws JSONException {
-		this.put(index, new Integer(value));
-		return this;
-	}
-
-	/**
-	 * Put or replace a long value. If the index is greater than the length of the JSONArray, then null elements will be added as necessary to pad it out.
-	 *
-	 * @param index The subscript.
-	 * @param value A long value.
-	 * @return this.
-	 * @throws JSONException If the index is negative.
-	 */
-	public JSONArray put(int index, long value) throws JSONException {
-		this.put(index, new Long(value));
-		return this;
-	}
-
-	/**
-	 * Put a value in the JSONArray, where the value will be a JSONObject that is produced from a Map.
-	 *
-	 * @param index The subscript.
-	 * @param value The Map value.
-	 * @return this.
-	 * @throws JSONException If the index is negative or if the the value is an invalid number.
-	 */
-	public JSONArray put(int index, Map<?, ?> value) throws JSONException {
-		this.put(index, new JSONObject(value));
-		return this;
-	}
-
-	/**
-	 * Put or replace an object value in the JSONArray. If the index is greater than the length of the JSONArray, then null elements will be added as necessary to pad it out.
-	 *
-	 * @param index The subscript.
-	 * @param value The value to put into the array. The value should be a Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL object.
-	 * @return this.
-	 * @throws JSONException If the index is negative or if the the value is an invalid number.
+	 * @throws JSONException index < 0 或者非有限的数字
 	 */
 	public JSONArray put(int index, Object value) throws JSONException {
-		JSONUtil.testValidity(value);
 		if (index < 0) {
 			throw new JSONException("JSONArray[" + index + "] not found.");
 		}
 		if (index < this.length()) {
-			this.myArrayList.set(index, value);
+			JSONUtil.testValidity(value);
+			this.myArrayList.set(index, JSONUtil.wrap(value));
 		} else {
 			while (index != this.length()) {
 				this.put(JSONNull.NULL);
@@ -408,8 +215,8 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 			return false;
 		}
 		for (int i = 0; i < len; i += 1) {
-			Object valueThis = this.get(i);
-			Object valueOther = ((JSONArray) other).get(i);
+			Object valueThis = this.getObj(i);
+			Object valueOther = ((JSONArray) other).getObj(i);
 			if (valueThis instanceof JSONObject) {
 				if (!((JSONObject) valueThis).similar(valueOther)) {
 					return false;
@@ -438,7 +245,7 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 		}
 		JSONObject jo = new JSONObject();
 		for (int i = 0; i < names.length(); i += 1) {
-			jo.put(names.getStr(i), this.get(i));
+			jo.put(names.getStr(i), this.getObj(i));
 		}
 		return jo;
 	}

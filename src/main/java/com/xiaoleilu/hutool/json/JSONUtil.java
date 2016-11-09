@@ -4,8 +4,13 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -102,6 +107,37 @@ public class JSONUtil {
 	 */
 	public static JSONObject parseFromXml(String xmlStr){
 		return XML.toJSONObject(xmlStr);
+	}
+	
+	/**
+	 * Setting文件转化为JSONObject
+	 * @param setting Setting文件
+	 * @return JSONObject
+	 */
+	public static JSONObject parseFromSetting(Setting setting){
+		JSONObject jsonObject = new JSONObject();
+		Set<Entry<String,String>> entrySet = setting.entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			propertyPut(jsonObject, entry.getKey(), entry.getValue());
+		}
+		return jsonObject;
+	}
+	
+	/**
+	 * ResourceBundle转化为JSONObject
+	 * @param setting Setting文件
+	 * @return JSONObject
+	 */
+	public static JSONObject parseFromResourceBundle(ResourceBundle bundle){
+		JSONObject jsonObject = new JSONObject();
+		Enumeration<String> keys = bundle.getKeys();
+		while (keys.hasMoreElements()) {
+			String key = keys.nextElement();
+			if (key != null) {
+				propertyPut(jsonObject, key, bundle.getString(key));
+			}
+		}
+		return jsonObject;
 	}
 	//-------------------------------------------------------------------- Pause end
 
@@ -500,5 +536,31 @@ public class JSONUtil {
 			}
 		}
 		return string;
+	}
+	
+	/**
+	 * 将Property的键转化为JSON形式<br>
+	 * 用于识别类似于：com.luxiaolei.package.hutool这类用电隔开的键
+	 * 
+	 * @param jsonObject
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	private static JSONObject propertyPut(JSONObject jsonObject, String key, String value){
+		String[] path = StrUtil.split(key, StrUtil.DOT);
+		int last = path.length - 1;
+		JSONObject target = jsonObject;
+		for (int i = 0; i < last; i += 1) {
+			String segment = path[i];
+			JSONObject nextTarget = target.getJSONObject(segment);
+			if (nextTarget == null) {
+				nextTarget = new JSONObject();
+				target.put(segment, nextTarget);
+			}
+			target = nextTarget;
+		}
+		target.put(path[last], value);
+		return jsonObject;
 	}
 }

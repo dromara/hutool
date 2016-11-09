@@ -401,7 +401,7 @@ public class BasicSetting extends AbsSetting{
 	 * @return Bean
 	 */
 	public Object toBean(final String group, Object bean) {
-		return BeanUtil.fill(bean, new ValueProvider(){
+		return BeanUtil.fillBean(bean, new ValueProvider(){
 			
 			@Override
 			public Object value(String name) {
