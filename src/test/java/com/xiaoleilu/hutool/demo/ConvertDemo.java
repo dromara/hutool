@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.demo;
 
 import com.xiaoleilu.hutool.lang.Convert;
 
-public class ConverDemo {
+public class ConvertDemo {
 	public static void main(String[] args) {
 		System.out.println(Convert.toInt("  120   ", 0));
 		System.out.println(Convert.toLong("  120   ", 0L));
