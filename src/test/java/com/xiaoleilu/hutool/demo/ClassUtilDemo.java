@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.demo;
 
+import java.lang.reflect.Method;
+
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
@@ -36,7 +39,13 @@ public class ClassUtilDemo {
 //		System.out.println(StrUtil.format("Is dateTime1 equals dateTime2: {}", dateTime1 == dateTime2));
 		
 		//执行方法
-		boolean result = ClassUtil.invoke("com.xiaoleilu.hutool.StrUtil.isBlank", new Object[]{""});
+		boolean result = ClassUtil.invoke("com.xiaoleilu.hutool.util.StrUtil.isBlank", new Object[]{""});
 		System.out.println(result);
+		
+		Console.log("----------------------------------------------------------------------------------");
+		Method[] methods = ClassUtil.getPublicMethods(ClassUtilDemo.class);
+		for (Method method : methods) {
+			Console.log(method.getName());
+		}
 	}
 }

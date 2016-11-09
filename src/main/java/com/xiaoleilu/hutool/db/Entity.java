@@ -207,7 +207,7 @@ public class Entity extends Dict{
 				result = (Time)obj;
 			} catch (Exception e) {
 				//try oracle.sql.TIMESTAMP
-				result = ClassUtil.invoke(obj, "timeValue");
+				result = ClassUtil.invoke(obj, "timeValue", new Object[]{});
 			}
 		}
 		return result;
@@ -222,7 +222,7 @@ public class Entity extends Dict{
 				result = (Date)obj;
 			} catch (Exception e) {
 				//try oracle.sql.TIMESTAMP
-				result = ClassUtil.invoke(obj, "dateValue");
+				result = ClassUtil.invoke(obj, "dateValue", new Object[]{});
 			}
 		}
 		return result;
@@ -237,7 +237,7 @@ public class Entity extends Dict{
 				result = (Timestamp)obj;
 			} catch (Exception e) {
 				//try oracle.sql.TIMESTAMP
-				result = ClassUtil.invoke(obj, "timestampValue");
+				result = ClassUtil.invoke(obj, "timestampValue", new Object[]{});
 			}
 		}
 		return result;

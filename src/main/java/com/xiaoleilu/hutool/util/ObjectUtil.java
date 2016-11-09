@@ -165,7 +165,7 @@ public class ObjectUtil {
 	 * @throws ClassNotFoundException
 	 */
 	public static <T extends Cloneable> T clone(T obj) {
-		return ClassUtil.invoke(obj, "clone");
+		return ClassUtil.invoke(obj, "clone", new Object[]{});
 	}
 
 	/**

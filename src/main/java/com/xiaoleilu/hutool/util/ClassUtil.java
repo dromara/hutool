@@ -44,41 +44,6 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 查找方法
-	 * 
-	 * @param clazz 类
-	 * @param methodName 方法名
-	 * @param paramTypes 参数类型
-	 * @return 方法
-	 */
-	public static Method findMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
-		try {
-			return clazz.getMethod(methodName, paramTypes);
-		} catch (NoSuchMethodException ex) {
-			return findDeclaredMethod(clazz, methodName, paramTypes);
-		}
-	}
-
-	/**
-	 * 查找所有方法
-	 * 
-	 * @param clazz 类
-	 * @param methodName 方法名
-	 * @param paramTypes 参数类型
-	 * @return Method
-	 */
-	public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
-		try {
-			return clazz.getDeclaredMethod(methodName, paramTypes);
-		} catch (NoSuchMethodException ex) {
-			if (clazz.getSuperclass() != null) {
-				return findDeclaredMethod(clazz.getSuperclass(), methodName, paramTypes);
-			}
-			return null;
-		}
-	}
-
-	/**
 	 * 获得对象数组的类数组
 	 * 
 	 * @param objects 对象数组
@@ -92,6 +57,7 @@ public class ClassUtil {
 		return classes;
 	}
 
+	// ----------------------------------------------------------------------------------------- Scan Package
 	/**
 	 * 扫面该包路径下所有class文件
 	 * 
@@ -128,10 +94,10 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 扫描指定包路径下所有指定类的子类
+	 * 扫描指定包路径下所有指定类或接口的子类或实现类
 	 * 
 	 * @param packageName 包路径
-	 * @param superClass 父类
+	 * @param superClass 父类或接口
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
@@ -183,66 +149,70 @@ public class ClassUtil {
 		return classes;
 	}
 
+	// ----------------------------------------------------------------------------------------- Method
 	/**
 	 * 获得指定类中的Public方法名<br>
 	 * 去重重载的方法
 	 * 
 	 * @param clazz 类
 	 */
-	public static Set<String> getMethodNames(Class<?> clazz) {
+	public static Set<String> getPublicMethodNames(Class<?> clazz) {
 		HashSet<String> methodSet = new HashSet<String>();
-		Method[] methodArray = clazz.getMethods();
+		Method[] methodArray = getPublicMethods(clazz);
 		for (Method method : methodArray) {
 			String methodName = method.getName();
 			methodSet.add(methodName);
 		}
 		return methodSet;
 	}
-	
+
 	/**
-	 * 获得指定类过滤后的方法列表
+	 * 获得本类及其父类所有Public方法
+	 * 
 	 * @param clazz 查找方法的类
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getMethods(Class<?> clazz){
-		return getMethods(clazz, (Filter<Method>)null);
+	public static Method[] getPublicMethods(Class<?> clazz) {
+		return clazz.getMethods();
 	}
 
 	/**
-	 * 获得指定类过滤后的方法列表
+	 * 获得指定类过滤后的Public方法列表
+	 * 
 	 * @param clazz 查找方法的类
 	 * @param filter 过滤器
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getMethods(Class<?> clazz, Filter<Method> filter){
-		if(null == clazz){
+	public static List<Method> getPublicMethods(Class<?> clazz, Filter<Method> filter) {
+		if (null == clazz) {
 			return null;
 		}
-		
-		Method[] methods = clazz.getMethods();
+
+		Method[] methods = getPublicMethods(clazz);
 		List<Method> methodList;
-		if(null != filter){
+		if (null != filter) {
 			methodList = new ArrayList<>();
 			Method filteredMethod;
 			for (Method method : methods) {
 				filteredMethod = filter.modify(method);
-				if(null != filteredMethod){
+				if (null != filteredMethod) {
 					methodList.add(method);
 				}
 			}
-		}else{
+		} else {
 			methodList = CollectionUtil.newArrayList(methods);
 		}
 		return methodList;
 	}
-	
+
 	/**
-	 * 获得指定类过滤后的方法列表
+	 * 获得指定类过滤后的Public方法列表
+	 * 
 	 * @param clazz 查找方法的类
 	 * @param excludeMethods 不包括的方法
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getMethods(Class<?> clazz, Method... excludeMethods){
+	public static List<Method> getPublicMethods(Class<?> clazz, Method... excludeMethods) {
 		final HashSet<Method> excludeMethodSet = CollectionUtil.newHashSet(excludeMethods);
 		Filter<Method> filter = new Filter<Method>(){
 			@Override
@@ -250,17 +220,18 @@ public class ClassUtil {
 				return excludeMethodSet.contains(method) ? null : method;
 			}
 		};
-		
-		return getMethods(clazz, filter);
+
+		return getPublicMethods(clazz, filter);
 	}
-	
+
 	/**
-	 * 获得指定类过滤后的方法列表
+	 * 获得指定类过滤后的Public方法列表
+	 * 
 	 * @param clazz 查找方法的类
 	 * @param excludeMethodNames 不包括的方法名列表
 	 * @return 过滤后的方法列表
 	 */
-	public static List<Method> getMethods(Class<?> clazz, String... excludeMethodNames){
+	public static List<Method> getPublicMethods(Class<?> clazz, String... excludeMethodNames) {
 		final HashSet<String> excludeMethodNameSet = CollectionUtil.newHashSet(excludeMethodNames);
 		Filter<Method> filter = new Filter<Method>(){
 			@Override
@@ -268,10 +239,134 @@ public class ClassUtil {
 				return excludeMethodNameSet.contains(method.getName()) ? null : method;
 			}
 		};
-		
-		return getMethods(clazz, filter);
+
+		return getPublicMethods(clazz, filter);
 	}
-	
+
+	/**
+	 * 查找指定Public方法
+	 * 
+	 * @param clazz 类
+	 * @param methodName 方法名
+	 * @param paramTypes 参数类型
+	 * @return 方法
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 */
+	public static Method getPublicMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) throws NoSuchMethodException, SecurityException {
+		try {
+			return clazz.getMethod(methodName, paramTypes);
+		} catch (NoSuchMethodException ex) {
+			return getDeclaredMethod(clazz, methodName, paramTypes);
+		}
+	}
+
+	/**
+	 * 获得指定类中的Public方法名<br>
+	 * 去重重载的方法
+	 * 
+	 * @param clazz 类
+	 */
+	public static Set<String> getDeclaredMethodNames(Class<?> clazz) {
+		HashSet<String> methodSet = new HashSet<String>();
+		Method[] methodArray = getDeclaredMethods(clazz);
+		for (Method method : methodArray) {
+			String methodName = method.getName();
+			methodSet.add(methodName);
+		}
+		return methodSet;
+	}
+
+	/**
+	 * 获得声明的所有方法，包括本类及其父类和接口的所有方法和Object类的方法
+	 * 
+	 * @param clazz 类
+	 * @return 方法数组
+	 */
+	public static Method[] getDeclaredMethods(Class<?> clazz) {
+		Set<Method> methodSet = new HashSet<>();
+		Method[] declaredMethods;
+		for (; null != clazz; clazz = clazz.getSuperclass()) {
+			declaredMethods = clazz.getDeclaredMethods();
+			for (Method method : declaredMethods) {
+				methodSet.add(method);
+			}
+		}
+		return methodSet.toArray(new Method[methodSet.size()]);
+	}
+
+	/**
+	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
+	 * 
+	 * @param obj 被查找的对象
+	 * @param methodName 方法名
+	 * @param args 参数
+	 * @return 方法
+	 * @throws NoSuchMethodException 无此方法
+	 * @throws SecurityException
+	 */
+	public static Method getDeclaredMethod(Object obj, String methodName, Object... args) throws NoSuchMethodException, SecurityException {
+		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
+	}
+
+	/**
+	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法
+	 * 
+	 * @param clazz 被查找的类
+	 * @param methodName 方法名
+	 * @param parameterTypes 参数类型
+	 * @return 方法
+	 * @throws NoSuchMethodException 无此方法
+	 * @throws SecurityException
+	 */
+	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
+		Method method = null;
+		for (; null != clazz; clazz = clazz.getSuperclass()) {
+			try {
+				method = clazz.getDeclaredMethod(methodName, parameterTypes);
+				break;
+			} catch (NoSuchMethodException e) {
+				// 继续向上寻找
+			}
+		}
+		return method;
+	}
+
+	/**
+	 * 是否为equals方法
+	 * 
+	 * @param method 方法
+	 * @return 是否为equals方法
+	 */
+	public static boolean isEqualsMethod(Method method) {
+		if (method == null || !method.getName().equals("equals")) {
+			return false;
+		}
+		Class<?>[] paramTypes = method.getParameterTypes();
+		return (paramTypes.length == 1 && paramTypes[0] == Object.class);
+	}
+
+	/**
+	 * 是否为hashCode方法
+	 * 
+	 * @param method 方法
+	 * @return 是否为hashCode方法
+	 */
+	public static boolean isHashCodeMethod(Method method) {
+		return (method != null && method.getName().equals("hashCode") && method.getParameterTypes().length == 0);
+	}
+
+	/**
+	 * 是否为toString方法
+	 * 
+	 * @param method 方法
+	 * @return 是否为toString方法
+	 */
+	public static boolean isToStringMethod(Method method) {
+		return (method != null && method.getName().equals("toString") && method.getParameterTypes().length == 0);
+	}
+
+	// ----------------------------------------------------------------------------------------- Classpath
 	/**
 	 * 获得ClassPath
 	 * 
@@ -477,7 +572,7 @@ public class ClassUtil {
 		return loadClass(className, true);
 	}
 
-	//---------------------------------------------------------------------------------------------------- Invoke start
+	// ---------------------------------------------------------------------------------------------------- Invoke start
 	/**
 	 * 执行方法<br>
 	 * 可执行Private方法，也可执行static方法<br>
@@ -489,7 +584,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameDotMethodName, Object... args) {
+	public static <T> T invoke(String classNameDotMethodName, Object[] args) {
 		return invoke(classNameDotMethodName, false, args);
 	}
 
@@ -504,7 +599,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameDotMethodName, boolean isSingleton, Object... args) {
+	public static <T> T invoke(String classNameDotMethodName, boolean isSingleton, Object[] args) {
 		if (StrUtil.isBlank(classNameDotMethodName)) {
 			throw new UtilException("Blank classNameDotMethodName!");
 		}
@@ -531,7 +626,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, Object... args) {
+	public static <T> T invoke(String className, String methodName, Object[] args) {
 		return invoke(className, methodName, false, args);
 	}
 
@@ -547,7 +642,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object... args) {
+	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object[] args) {
 		Class<Object> clazz = loadClass(className);
 		try {
 			return invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), methodName, args);
@@ -566,7 +661,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(Object obj, String methodName, Object... args) {
+	public static <T> T invoke(Object obj, String methodName, Object[] args) {
 		try {
 			final Method method = getDeclaredMethod(obj, methodName, args);
 			return invoke(obj, method, args);
@@ -574,9 +669,10 @@ public class ClassUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 执行方法
+	 * 
 	 * @param obj 对象
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
@@ -585,7 +681,7 @@ public class ClassUtil {
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException{
+	public static <T> T invoke(Object obj, Method method, Object[] args) throws InvocationTargetException {
 		if (false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
@@ -595,43 +691,7 @@ public class ClassUtil {
 			throw new UtilException(e);
 		}
 	}
-	//---------------------------------------------------------------------------------------------------- Invoke end
-	
-	/**
-	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
-	 * @param obj 被查找的对象
-	 * @param methodName 方法名
-	 * @param args 参数
-	 * @return 方法
-	 * @throws NoSuchMethodException 无此方法
-	 * @throws SecurityException
-	 */
-	public static Method getDeclaredMethod(Object obj, String methodName, Object... args) throws NoSuchMethodException, SecurityException {
-		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
-	}
-
-	/**
-	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法
-	 * @param clazz 被查找的类
-	 * @param methodName 方法名
-	 * @param parameterTypes 参数类型
-	 * @return 方法
-	 * @throws NoSuchMethodException 无此方法
-	 * @throws SecurityException
-	 */
-	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
-		Method method = null;
-		for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
-			try {
-				method = clazz.getDeclaredMethod(methodName, parameterTypes);
-				return method;
-			} catch (NoSuchMethodException e) {
-				//继续向上寻找
-			}
-		}
-		
-		return Object.class.getDeclaredMethod(methodName, parameterTypes);
-	}
+	// ---------------------------------------------------------------------------------------------------- Invoke end
 
 	/**
 	 * 新建代理对象<br>
@@ -781,13 +841,14 @@ public class ClassUtil {
 	public static boolean isNotPublic(Method method) {
 		return false == isPublic(method);
 	}
-	
+
 	/**
 	 * 是否为静态方法
+	 * 
 	 * @param method 方法
 	 * @return 是否为静态方法
 	 */
-	public static boolean isStatic(Method method){
+	public static boolean isStatic(Method method) {
 		return Modifier.isStatic(method.getModifiers());
 	}
 
@@ -803,37 +864,30 @@ public class ClassUtil {
 		}
 		return method;
 	}
-	
+
 	/**
 	 * 是否为抽象类
+	 * 
 	 * @param clazz 类
 	 * @return 是否为抽象类
 	 */
-	public static boolean isAbstract(Class<?> clazz){
+	public static boolean isAbstract(Class<?> clazz) {
 		return Modifier.isAbstract(clazz.getModifiers());
 	}
 
 	/**
 	 * 是否为标准的类<br>
 	 * 这个类必须：<br>
-	 * 1、非接口
-	 * 2、非抽象类
-	 * 3、非Enum枚举
-	 * 4、非数组
-	 * 5、非注解
-	 * 6、非原始类型（int, long等）
-	 * @param clazz
-	 * @return
+	 * 1、非接口 2、非抽象类 3、非Enum枚举 4、非数组 5、非注解 6、非原始类型（int, long等）
+	 * 
+	 * @param clazz 类
+	 * @return 是否为标准类
 	 */
-	public static boolean isNormalClass(Class<?> clazz){
-		return false == clazz.isInterface()
-				&& false == isAbstract(clazz)
-				&& false == clazz.isEnum()
-				&& false == clazz.isArray()
-				&& false == clazz.isAnnotation()
-				&& false == clazz.isSynthetic()
-				&& false == clazz.isPrimitive();
+	public static boolean isNormalClass(Class<?> clazz) {
+		return null != clazz && false == clazz.isInterface() && false == isAbstract(clazz) && false == clazz.isEnum() && false == clazz.isArray() && false == clazz.isAnnotation() && false == clazz
+				.isSynthetic() && false == clazz.isPrimitive();
 	}
+
 	// --------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 文件过滤器，过滤掉不需要的文件<br>

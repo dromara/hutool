@@ -3,6 +3,8 @@ package com.xiaoleilu.hutool.util;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,6 +39,10 @@ public class BeanUtil {
 			}
 		}
 		return false;
+	}
+	
+	public static PropertyEditor findEditor(Class<?> type){
+		return PropertyEditorManager.findEditor(type);
 	}
 
 	/**
