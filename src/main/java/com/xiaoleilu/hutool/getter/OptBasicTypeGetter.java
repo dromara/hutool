@@ -130,5 +130,14 @@ public interface OptBasicTypeGetter<K> {
 	 */
 	BigInteger getBigInteger(K key, BigInteger defaultValue);
 	
+	/**
+	 * 获得Enum类型的值
+	 * 
+	 * @param clazz Enum的Class
+	 * @param key KEY
+	 * @param defaultValue 默认值
+	 * @return Enum类型的值，无则返回Null
+	 */
+	public <E extends Enum<E>> E getEnum(Class<E> clazz, K key, E defaultValue);
 	/*-------------------------- 基本类型 end -------------------------------*/
 }

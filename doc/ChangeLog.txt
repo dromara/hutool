@@ -331,3 +331,7 @@ Entity中toVo区别是否忽略大小写
 11、修复DateUtil中返回空指针问题
 12、增加ClassUtil.isNormalClass和isAbstract方法
 13、修复BeanUtil.isBean
+14、修复ClassUtil，消除歧义
+15、抽象JSON中的getEnum方法
+16、Conver类变为Convert类
+17、增加Holder接口

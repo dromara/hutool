@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 
 /**
  * Bean工具类
@@ -257,7 +257,7 @@ public class BeanUtil {
 				}
 
 				try {
-					property.getWriteMethod().invoke(bean, Conver.parse(property.getPropertyType(), value));
+					property.getWriteMethod().invoke(bean, Convert.parse(property.getPropertyType(), value));
 				} catch (Exception e) {
 					throw new UtilException(StrUtil.format("Inject [{}] error!", property.getName()), e);
 				}

@@ -13,7 +13,7 @@ import java.util.zip.GZIPInputStream;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -151,7 +151,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			in = new GZIPInputStream(in);
 		}
 		
-		int contentLength  = Conver.toInt(header(Header.CONTENT_LENGTH), 0);
+		int contentLength  = Convert.toInt(header(Header.CONTENT_LENGTH), 0);
 		this.out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
 		try {
 			IoUtil.copy(in, this.out);

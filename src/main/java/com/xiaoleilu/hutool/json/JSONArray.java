@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
-import com.xiaoleilu.hutool.lang.Conver;
 
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a string wrapped in square brackets with commas separating the values. The internal form is an object having <code>get</code>
@@ -180,29 +179,6 @@ public class JSONArray extends OptNullBasicTypeFromObjectGetter<Integer> impleme
 		return (index < 0 || index >= this.length()) ? defaultValue : this.myArrayList.get(index);
 	}
 	
-	/**
-	 * Get the enum value associated with a key.
-	 * 
-	 * @param clazz The type of enum to retrieve.
-	 * @param index The index must be between 0 and length() - 1.
-	 * @return The enum value at the index location or null if not found
-	 */
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, int index) {
-		return this.getEnum(clazz, index, null);
-	}
-
-	/**
-	 * Get the enum value associated with a key.
-	 * 
-	 * @param clazz The type of enum to retrieve.
-	 * @param index The index must be between 0 and length() - 1.
-	 * @param defaultValue The default in case the value is not found
-	 * @return The enum value at the index location or defaultValue if the value is not found or cannot be assigned to clazz
-	 */
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, int index, E defaultValue) {
-		return Conver.toEnum(clazz, this.get(index), defaultValue);
-	}
-
 	/**
 	 * Get the optional JSONArray associated with an index.
 	 *

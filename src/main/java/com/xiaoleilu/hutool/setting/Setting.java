@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.dialect.BasicSetting;
@@ -257,7 +257,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Integer getInt(String key, String group, Integer defaultValue) {
-		return Conver.toInt(get(key, group), defaultValue);
+		return Convert.toInt(get(key, group), defaultValue);
 	}
 
 	//--------------------------------------------------------------- Get bool
@@ -281,7 +281,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Boolean getBool(String key, String group, Boolean defaultValue) {
-		return Conver.toBool(get(key, group), defaultValue);
+		return Convert.toBool(get(key, group), defaultValue);
 	}
 
 	//--------------------------------------------------------------- Get long
@@ -305,7 +305,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Long getLong(String key, String group, Long defaultValue) {
-		return Conver.toLong(get(key, group), defaultValue);
+		return Convert.toLong(get(key, group), defaultValue);
 	}
 	//--------------------------------------------------------------- Get char
 	/**
@@ -344,7 +344,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Double getDouble(String key, String group, Double defaultValue) {
-		return Conver.toDouble(get(key, group), defaultValue);
+		return Convert.toDouble(get(key, group), defaultValue);
 	}
 	/*--------------------------公有方法 end-------------------------------*/
 }

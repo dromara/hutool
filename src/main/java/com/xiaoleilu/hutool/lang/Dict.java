@@ -149,7 +149,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	
 	@Override
 	public Object getObj(String key) {
-		return get(key);
+		return super.get(key);
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 */
 	@Override
 	public String getStr(String attr) {
-		return Conver.toStr(get(attr), null);
+		return Convert.toStr(get(attr), null);
 	}
 	
 	/**
@@ -179,7 +179,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 */
 	@Override
 	public Integer getInt(String attr) {
-		return Conver.toInt(get(attr), null);
+		return Convert.toInt(get(attr), null);
 	}
 	
 	/**
@@ -188,7 +188,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 */
 	@Override
 	public Long getLong(String attr) {
-		return Conver.toLong(get(attr), null);
+		return Convert.toLong(get(attr), null);
 	}
 	
 	/**
@@ -197,27 +197,27 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 */
 	@Override
 	public Float getFloat(String attr) {
-		return Conver.toFloat(get(attr), null);
+		return Convert.toFloat(get(attr), null);
 	}
 	
 	@Override
 	public Short getShort(String attr) {
-		return Conver.toShort(get(attr), null);
+		return Convert.toShort(get(attr), null);
 	}
 
 	@Override
 	public Character getChar(String attr) {
-		return Conver.toChar(get(attr), null);
+		return Convert.toChar(get(attr), null);
 	}
 
 	@Override
 	public Double getDouble(String attr) {
-		return Conver.toDouble(get(attr), null);
+		return Convert.toDouble(get(attr), null);
 	}
 
 	@Override
 	public Byte getByte(String attr) {
-		return Conver.toByte(get(attr), null);
+		return Convert.toByte(get(attr), null);
 	}
 	
 	/**
@@ -226,7 +226,30 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 */
 	@Override
 	public Boolean getBool(String attr) {
-		return Conver.toBool(get(attr), null);
+		return Convert.toBool(get(attr), null);
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	@Override
+	public BigDecimal getBigDecimal(String attr) {
+		return Convert.toBigDecimal(get(attr));
+	}
+	
+	/**
+	 * @param attr 字段名
+	 * @return 字段值
+	 */
+	@Override
+	public BigInteger getBigInteger(String attr) {
+		return Convert.toBigInteger(get(attr));
+	}
+	
+	@Override
+	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
+		return Convert.toEnum(clazz, get(key));
 	}
 	
 	/**
@@ -268,22 +291,6 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Number getNumber(String attr) {
 		return get(attr, null);
 	}
-	
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	public BigDecimal getBigDecimal(String attr) {
-		return get(attr, null);
-	}
-	
-	/**
-	 * @param attr 字段名
-	 * @return 字段值
-	 */
-	public BigInteger getBigInteger(String attr) {
-		return get(attr, null);
-	}
 	//-------------------------------------------------------------------- Get end
 	
 	
@@ -291,5 +298,4 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Dict clone() {
 		return (Dict) super.clone();
 	}
-	
 }

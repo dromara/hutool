@@ -1,10 +1,9 @@
 package com.xiaoleilu.hutool.json;
 
 /**
- * The XMLTokener extends the JSONTokener to provide additional methods for the parsing of XML texts.
+ * XML分析器，继承自JSONTokener，提供XML的语法分析
  * 
  * @author JSON.org
- * @version 2015-12-09
  */
 public class XMLTokener extends JSONTokener {
 

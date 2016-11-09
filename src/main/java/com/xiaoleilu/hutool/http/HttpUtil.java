@@ -24,7 +24,7 @@ import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.StreamProgress;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -320,7 +320,7 @@ public class HttpUtil {
 			} else {
 				sb.append("&");
 			}
-			sb.append(encode(item.getKey(), charset)).append("=").append(encode(Conver.toStr(item.getValue()), charset));
+			sb.append(encode(item.getKey(), charset)).append("=").append(encode(Convert.toStr(item.getValue()), charset));
 		}
 		return sb.toString();
 	}

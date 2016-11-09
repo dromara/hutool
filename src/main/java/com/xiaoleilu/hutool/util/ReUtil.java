@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.lang.Validator;
 
 /**
@@ -295,7 +295,7 @@ public class ReUtil {
 	 * @return 整数
 	 */
 	public static Integer getFirstNumber(String StringWithNumber) {
-		return Conver.toInt(get(Validator.NUMBERS, StringWithNumber, 0), null);
+		return Convert.toInt(get(Validator.NUMBERS, StringWithNumber, 0), null);
 	}
 	
 	/**

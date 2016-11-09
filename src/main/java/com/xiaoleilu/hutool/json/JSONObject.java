@@ -18,9 +18,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * JSONObject是一个无序键值对. 它是一个由大括号包围的，使用冒号分隔name和value的字符串，每个键值对使用逗号隔开。<br>
@@ -98,7 +99,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 					final Object value = e.getValue();
 					if (value != null) {
-						this.map.put(Conver.toStr(e.getKey()), JSONUtil.wrap(value));
+						this.map.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value));
 					}
 				}
 			}else if(source instanceof String){
@@ -152,14 +153,14 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 
 		Enumeration<String> keys = bundle.getKeys();
 		while (keys.hasMoreElements()) {
-			Object key = keys.nextElement();
+			String key = keys.nextElement();
 			if (key != null) {
 
 				// Go through the path, ensuring that there is a nested JSONObject for each
 				// segment except the last. Add the value using the last segment's name into
 				// the deepest nested JSONObject.
 
-				String[] path = ((String) key).split("\\.");
+				String[] path = StrUtil.split(key, StrUtil.DOT);
 				int last = path.length - 1;
 				JSONObject target = this;
 				for (int i = 0; i < last; i += 1) {
@@ -178,7 +179,8 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 	
 	/**
-	 * 积累值。类似于put，当key对应value已经存在时，与value组成新的JSONArray. 如果只有一个值，此值就是value，如果多个值，则是添加到新的JSONArray中
+	 * 积累值。类似于put，当key对应value已经存在时，与value组成新的JSONArray. <br>
+	 * 如果只有一个值，此值就是value，如果多个值，则是添加到新的JSONArray中
 	 *
 	 * @param key A key string.
 	 * @param value An object to be accumulated under the key.
@@ -214,7 +216,7 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 		} else if (object instanceof JSONArray) {
 			this.put(key, ((JSONArray) object).put(value));
 		} else {
-			throw new JSONException("JSONObject[" + key + "] is not a JSONArray.");
+			throw new JSONException("JSONObject [" + key + "] is not a JSONArray.");
 		}
 		return this;
 	}
@@ -323,29 +325,6 @@ public class JSONObject extends OptNullBasicTypeFromObjectGetter<String> impleme
 	public Object getObj(String key, Object defaultValue) {
 		Object obj = this.map.get(key);
 		return null == obj ? defaultValue : obj;
-	}
-
-	/**
-	 * 获得Enum类型的值
-	 * 
-	 * @param clazz Enum的Class
-	 * @param key KEY
-	 * @return Enum类型的值，无则返回Null
-	 */
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
-		return this.getEnum(clazz, key, null);
-	}
-
-	/**
-	 * 获得Enum类型的值
-	 * 
-	 * @param clazz Enum的Class
-	 * @param key KEY
-	 * @param defaultValue 默认值
-	 * @return Enum类型的值，无则返回Null
-	 */
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key, E defaultValue) {
-		return Conver.toEnum(clazz, this.get(key), defaultValue);
 	}
 
 	/**

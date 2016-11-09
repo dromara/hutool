@@ -148,4 +148,17 @@ public abstract class OptNullBasicTypeGetter<K> implements BasicTypeGetter<K>, O
 	public BigInteger getBigInteger(K key){
 		return this.getBigInteger(key, null);
 	}
+	
+	/**
+	 * 获取Enum型属性值<br>
+	 * 无值或获取错误返回null
+	 * 
+	 * @param clazz Enum 的 Class
+	 * @param key 属性名
+	 * @return 属性值
+	 */
+	@Override
+	public <E extends Enum<E>> E getEnum(Class<E> clazz, K key) {
+		return this.getEnum(clazz, key, null);
+	}
 }

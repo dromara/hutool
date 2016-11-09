@@ -12,7 +12,7 @@ import java.util.Properties;
 import com.xiaoleilu.hutool.getter.BasicTypeGetter;
 import com.xiaoleilu.hutool.getter.OptBasicTypeGetter;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.FileUtil;
@@ -148,7 +148,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	
 	@Override
 	public Integer getInt(String key, Integer defaultValue){
-		return Conver.toInt(getStr(key), defaultValue);
+		return Convert.toInt(getStr(key), defaultValue);
 	}
 	
 	@Override
@@ -158,7 +158,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	
 	@Override
 	public Boolean getBool(String key, Boolean defaultValue){
-		return Conver.toBool(getStr(key), defaultValue);
+		return Convert.toBool(getStr(key), defaultValue);
 	}
 	
 	@Override
@@ -168,7 +168,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	
 	@Override
 	public Long getLong(String key, Long defaultValue){
-		return Conver.toLong(getStr(key), defaultValue);
+		return Convert.toLong(getStr(key), defaultValue);
 	}
 	
 	@Override
@@ -197,12 +197,12 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	
 	@Override
 	public Float getFloat(String key, Float defaultValue) {
-		return Conver.toFloat(getStr(key), defaultValue);
+		return Convert.toFloat(getStr(key), defaultValue);
 	}
 	
 	@Override
 	public Double getDouble(String key, Double defaultValue) throws NumberFormatException {
-		return Conver.toDouble(getStr(key), defaultValue);
+		return Convert.toDouble(getStr(key), defaultValue);
 	}
 	
 	@Override
@@ -212,7 +212,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	
 	@Override
 	public Short getShort(String key, Short defaultValue) {
-		return Conver.toShort(getStr(key), defaultValue);
+		return Convert.toShort(getStr(key), defaultValue);
 	}
 	
 	@Override
@@ -222,7 +222,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 
 	@Override
 	public Byte getByte(String key, Byte defaultValue) {
-		return Conver.toByte(getStr(key), defaultValue);
+		return Convert.toByte(getStr(key), defaultValue);
 	}
 	
 	@Override
@@ -266,6 +266,16 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	@Override
 	public BigInteger getBigInteger(String key) {
 		return getBigInteger(key, null);
+	}
+	
+	@Override
+	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key, E defaultValue) {
+		return Convert.toEnum(clazz, getStr(key), defaultValue);
+	}
+
+	@Override
+	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
+		return getEnum(clazz, key, null);
 	}
 	
 	//----------------------------------------------------------------------- Get end

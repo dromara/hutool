@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -378,7 +378,7 @@ public class IoUtil {
 			osw = new OutputStreamWriter(out, charset);
 			for (Object content : contents) {
 				if (content != null) {
-					osw.write(Conver.toStr(content, StrUtil.EMPTY));
+					osw.write(Convert.toStr(content, StrUtil.EMPTY));
 					osw.flush();
 				}
 			}

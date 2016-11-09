@@ -16,7 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 
 /**
  * 安全相关工具类
@@ -71,7 +71,7 @@ public class SecureUtil {
 	 * @return 被加密后的值
 	 */
 	public static String encrypt(byte[] bytes, String algorithmName) {
-		return Conver.toHex(encryptWithoutHex(bytes, algorithmName));
+		return Convert.toHex(encryptWithoutHex(bytes, algorithmName));
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class SecureUtil {
 	 * @return 被加密后的字符串
 	 */
 	public static String encrypt(File file, String algorithmName) {
-		return Conver.toHex(encryptWithoutHex(file, algorithmName));
+		return Convert.toHex(encryptWithoutHex(file, algorithmName));
 	}
 	
 	/**

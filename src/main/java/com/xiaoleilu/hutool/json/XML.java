@@ -3,12 +3,10 @@ package com.xiaoleilu.hutool.json;
 import java.util.Iterator;
 
 /**
- * This provides static methods to convert an XML text into a JSONObject, and to covert a JSONObject into an XML text.
+ * 提供静态方法在XML和JSONObject之间转换
  * 
  * @author JSON.org
- * @version 2016-08-10
  */
-@SuppressWarnings("boxing")
 public class XML {
 
 	/** The Character '&amp;'. */

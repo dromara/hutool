@@ -15,7 +15,7 @@ import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
-import com.xiaoleilu.hutool.lang.Conver;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
@@ -234,7 +234,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			strValue = CollectionUtil.join((Object[]) value, ",");
 		} else {
 			// 其他对象一律转换为字符串
-			strValue = Conver.toStr(value, null);
+			strValue = Convert.toStr(value, null);
 		}
 
 		form.put(name, strValue);
