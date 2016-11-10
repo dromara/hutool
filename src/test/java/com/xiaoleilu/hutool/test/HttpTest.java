@@ -167,7 +167,6 @@ public class HttpTest {
 		byte[] b = u.send();
 		String result = new String(b);
 		System.out.println(result);
-
 	}
 
 }
