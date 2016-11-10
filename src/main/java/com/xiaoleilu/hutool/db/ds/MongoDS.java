@@ -127,10 +127,12 @@ public class MongoDS implements Closeable{
 	 * 关闭全部连接
 	 */
 	public static void closeAll() {
-		for(MongoDS ds : dsMap.values()) {
-			ds.close();
+		if(CollectionUtil.isNotEmpty(dsMap)){
+			for(MongoDS ds : dsMap.values()) {
+				ds.close();
+			}
+			dsMap.clear();
 		}
-		dsMap.clear();
 	}
 	
 	//--------------------------------------------------------------------------- Constructor start

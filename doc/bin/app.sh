@@ -3,8 +3,6 @@
 #该脚本为Linux下启动java程序的通用脚本。即可以作为开机自启动service脚本被调用，
 #也可以作为启动java程序的独立脚本来使用。
 #
-#Author: tudaxia.com, Date: 2011/6/7
-#
 #警告!!!：该脚本stop部分使用系统kill命令来强制终止指定的java程序进程。
 #在杀死进程前，未作任何条件检查。在某些情况下，如程序正在进行文件或数据库写操作，
 #可能会造成数据丢失或数据不完整。如果必须要考虑到这类情况，则需要改写此脚本，
@@ -23,7 +21,7 @@
 #需要根据实际环境以及Java程序名称来修改这些参数
 ###################################
 #JDK所在路径
-JAVA_HOME="/usr/java/jdk"
+#JAVA_HOME="/usr/java/jdk"
 
 #执行程序启动所使用的系统用户，考虑到安全，推荐不使用root帐号
 RUNNING_USER=root
@@ -92,7 +90,8 @@ start() {
       echo "================================"
    else
       echo -n "Starting $APP_MAINCLASS ..."
-      JAVA_CMD="nohup $JAVA_HOME/bin/java $JAVA_OPTS -classpath $CLASSPATH $APP_MAINCLASS >/dev/null 2>&1 &"
+      #JAVA_CMD="nohup $JAVA_HOME/bin/java $JAVA_OPTS -cp $CLASSPATH $APP_MAINCLASS >/dev/null 2>&1 &"
+      JAVA_CMD="nohup $JAVA_HOME/bin/java $JAVA_OPTS -cp $CLASSPATH $APP_MAINCLASS &"
       su - $RUNNING_USER -c "$JAVA_CMD"
       checkpid
       if [ $psid -ne 0 ]; then
@@ -116,7 +115,7 @@ start() {
 #注意：echo -n 表示打印字符后，不换行
 #注意: 在shell编程中，"$?" 表示上一句命令或者一个函数的返回值
 ###################################
-stop() {
+stopkill() {
    checkpid
 
    if [ $psid -ne 0 ]; then
@@ -137,6 +136,35 @@ stop() {
       echo "warn: $APP_MAINCLASS is not running"
       echo "================================"
    fi
+}
+
+stop(){
+    #停止进程
+    if [ -n "$psid" ]; then
+      for PID in $psid; do
+          su - $RUNNING_USER -c "kill $PID"
+          echo "kill $PID"
+      done
+    fi
+
+    #等待50秒
+    for i in 1 10; do
+      if [ ! -n "$psid" ]; then
+        echo "stop server success"
+        echo -------------------------------------------
+        break
+      fi
+      echo "sleep 5s"
+      sleep 5
+    done
+
+    #如果等待50秒还没有停止完，直接杀掉
+    if [ -n "$psid" ]; then
+      for PID in $psid; do
+          su - $RUNNING_USER -c "kill -9 $PID"
+          echo "kill -9 $PID"
+      done
+    fi
 }
 
 ###################################

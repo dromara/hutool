@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class SettingDruidDataSource extends DruidDataSource {
 	private static final long serialVersionUID = 5151196020608949563L;
 	private final static Log log = LogFactory.get();
-
+	
 	/** 默认的Druid配置文件路径 */
 	public final static String DEFAULT_DRUID_CONFIG_PATH = "config/druid.setting";
 	/** 默认的数据库连接配置文件路径 */

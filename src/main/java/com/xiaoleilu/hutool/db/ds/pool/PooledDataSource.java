@@ -111,16 +111,6 @@ public class PooledDataSource extends AbstractDataSource{
 	}
 	
 	/**
-	 * 释放全部连接
-	 */
-	public synchronized void release() {
-		for (PooledConnection conn : freePool) {
-			conn.release();
-		}
-		this.freePool.clear();
-	}
-	
-	/**
 	 * 创建新连接
 	 * @return 新连接
 	 * @throws SQLException
@@ -152,11 +142,10 @@ public class PooledDataSource extends AbstractDataSource{
 	synchronized public void close() throws IOException{
 		if(CollectionUtil.isNotEmpty(this.freePool)){
 			for (PooledConnection pooledConnection : freePool) {
-				IoUtil.close(pooledConnection);
+				pooledConnection.release();
+				this.freePool.clear();
+				this.freePool = null;
 			}
-			
-			this.freePool.clear();
-			this.freePool = null;
 		}
 	}
 	

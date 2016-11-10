@@ -12,6 +12,7 @@ import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -22,6 +23,15 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class DruidDS {
 	private final static Log log = StaticLog.get();
+	
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run() {
+				DruidDS.closeAll();
+			}
+		});
+	}
 	
 	/*--------------------------私有变量 start-------------------------------*/
 	/** JDBC配置对象 */
@@ -153,12 +163,13 @@ public class DruidDS {
 	 * 关闭所有连接池
 	 */
 	synchronized public static void closeAll() {
-		Collection<DruidDataSource> values = dsMap.values();
-		for (DruidDataSource dds : values) {
-			if (dds != null) {
-				dds.close();
+		if(CollectionUtil.isNotEmpty(dsMap)){
+			Collection<DruidDataSource> values = dsMap.values();
+			for (DruidDataSource dds : values) {
+				IoUtil.close(dds);
 			}
+			dsMap.clear();
+			dsMap = null;
 		}
-		dsMap.clear();
 	}
 }

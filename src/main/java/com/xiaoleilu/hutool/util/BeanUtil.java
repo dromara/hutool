@@ -6,9 +6,8 @@ import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -317,7 +316,7 @@ public class BeanUtil {
 	 * @param target 目标Bean对象
 	 */
 	public static void copyProperties(Object source, Object target) {
-		copyProperties(source, target, null, (String[]) null);
+		copyProperties(source, target, CopyOptions.create());
 	}
 	
 	/**
@@ -328,7 +327,7 @@ public class BeanUtil {
 	 * @param ignoreProperties 不拷贝的的属性列表
 	 */
 	public static void copyProperties(Object source, Object target, String... ignoreProperties) {
-		copyProperties(source, target, null, ignoreProperties);
+		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 	}
 	
 	/**
@@ -336,17 +335,20 @@ public class BeanUtil {
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
 	 * @param source 源Bean对象
 	 * @param target 目标Bean对象
-	 * @param editable 限制的类或接口，必须为target对象的实现接口或父类
-	 * @param ignoreProperties 不拷贝的的属性列表
+	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
-	private static void copyProperties(Object source, Object target, Class<?> editable, String... ignoreProperties) {
+	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
+		if(null == copyOptions){
+			copyOptions = new CopyOptions();
+		}
+		
 		Class<?> actualEditable = target.getClass();
-		if (editable != null) {
+		if (copyOptions.editable != null) {
 			//检查限制类是否为target的父类或接口
-			if (!editable.isInstance(target)) {
-				throw new IllegalArgumentException(StrUtil.format("Target class [{}] not assignable to Editable class [{}]", target.getClass().getName(), editable.getName()));
+			if (!copyOptions.editable.isInstance(target)) {
+				throw new IllegalArgumentException(StrUtil.format("Target class [{}] not assignable to Editable class [{}]", target.getClass().getName(), copyOptions.editable.getName()));
 			}
-			actualEditable = editable;
+			actualEditable = copyOptions.editable;
 		}
 		PropertyDescriptor[] targetPds = null;
 		Map<String, PropertyDescriptor> sourcePdMap;
@@ -357,11 +359,10 @@ public class BeanUtil {
 			throw new UtilException(e);
 		}
 		
-		List<String> ignoreList = (ignoreProperties != null ? Arrays.asList(ignoreProperties) : null);
-
+		HashSet<String> ignoreSet = copyOptions.ignoreProperties != null ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
 		for (PropertyDescriptor targetPd : targetPds) {
 			Method writeMethod = targetPd.getWriteMethod();
-			if (writeMethod != null && (ignoreList == null || false == ignoreList.contains(targetPd.getName()))) {
+			if (writeMethod != null && (ignoreSet == null || false == ignoreSet.contains(targetPd.getName()))) {
 				PropertyDescriptor sourcePd = sourcePdMap.get(targetPd.getName());
 				if (sourcePd != null) {
 					Method readMethod = sourcePd.getReadMethod();
@@ -369,7 +370,9 @@ public class BeanUtil {
 					if (readMethod != null && ClassUtil.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())) {
 						try {
 							Object value = ClassUtil.setAccessible(readMethod).invoke(source);
-							ClassUtil.setAccessible(writeMethod).invoke(target, value);
+							if(null != value || false == copyOptions.isIgnoreNullValue){
+								ClassUtil.setAccessible(writeMethod).invoke(target, value);
+							}
 						} catch (Throwable ex) {
 							throw new UtilException(ex, "Copy property [{}] to [{}] error: {}", sourcePd.getName(), targetPd.getName(), ex.getMessage());
 						}
@@ -380,7 +383,9 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 值提供者，用于提供Bean注入时参数对应值得抽象接口
+	 * 值提供者，用于提供Bean注入时参数对应值得抽象接口<br>
+	 * 继承或匿名实例化此接口<br>
+	 * 在Bean注入过程中，Bean获得字段名，通过外部方式根据这个字段名查找相应的字段值，然后注入Bean<br>
 	 * 
 	 * @author Looly
 	 *
@@ -393,5 +398,90 @@ public class BeanUtil {
 		 * @return 对应参数名的值
 		 */
 		public Object value(String name);
+	}
+	
+	/**
+	 * 属性拷贝选项<br>
+	 * 包括：<br>
+	 * 1、限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类<br>
+	 * 2、是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null<br>
+	 * 3、忽略的属性列表，设置一个属性列表，不拷贝这些属性值<br>
+	 * 
+	 * @author Looly
+	 */
+	public static class CopyOptions {
+		/** 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类 */
+		private Class<?> editable;
+		/** 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null */
+		private boolean isIgnoreNullValue;
+		/** 忽略的属性列表，设置一个属性列表，不拷贝这些属性值 */
+		private String[] ignoreProperties;
+		
+		/**
+		 * 创建拷贝选项
+		 * @return 拷贝选项
+		 */
+		public static CopyOptions create(){
+			return new CopyOptions();
+		}
+		
+		/**
+		 * 创建拷贝选项
+		 * @param editable 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
+		 * @param isIgnoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
+		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
+		 * @return 拷贝选项
+		 */
+		public static CopyOptions create(Class<?> editable, boolean isIgnoreNullValue, String... ignoreProperties){
+			return new CopyOptions(editable, isIgnoreNullValue, ignoreProperties);
+		}
+		
+		/**
+		 * 构造拷贝选项
+		 */
+		public CopyOptions() {
+		}
+		
+		/**
+		 * 构造拷贝选项
+		 * @param editable 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
+		 * @param isIgnoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
+		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
+		 */
+		public CopyOptions(Class<?> editable, boolean isIgnoreNullValue, String... ignoreProperties) {
+			this.editable = editable;
+			this.isIgnoreNullValue = isIgnoreNullValue;
+			this.ignoreProperties = ignoreProperties;
+		}
+
+		/**
+		 * 设置限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
+		 * @param editable 限制的类或接口
+		 * @return CopyOptions
+		 */
+		public CopyOptions setEditable(Class<?> editable){
+			this.editable = editable;
+			return this;
+		}
+		
+		/**
+		 * 设置是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
+		 * @param isIgnoreNullVall 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
+		 * @return CopyOptions
+		 */
+		public CopyOptions setIgnoreNullValue(boolean isIgnoreNullVall){
+			this.isIgnoreNullValue = isIgnoreNullVall;
+			return this;
+		}
+		
+		/**
+		 * 设置忽略的属性列表，设置一个属性列表，不拷贝这些属性值
+		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
+		 * @return CopyOptions
+		 */
+		public CopyOptions setIgnoreProperties(String... ignoreProperties){
+			this.ignoreProperties = ignoreProperties;
+			return this;
+		}
 	}
 }
