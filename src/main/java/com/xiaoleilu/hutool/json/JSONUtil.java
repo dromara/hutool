@@ -8,8 +8,10 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
@@ -124,8 +126,22 @@ public class JSONUtil {
 	}
 	
 	/**
+	 * Properties文件转化为JSONObject
+	 * @param properties Setting文件
+	 * @return JSONObject
+	 */
+	public static JSONObject parseFromProperties(Properties properties){
+		JSONObject jsonObject = new JSONObject();
+		Set<Entry<Object, Object>> entrySet = properties.entrySet();
+		for (Entry<Object, Object> entry : entrySet) {
+			propertyPut(jsonObject, Convert.toStr(entry.getKey()), entry.getValue());
+		}
+		return jsonObject;
+	}
+	
+	/**
 	 * ResourceBundle转化为JSONObject
-	 * @param setting Setting文件
+	 * @param bundle ResourceBundle文件
 	 * @return JSONObject
 	 */
 	public static JSONObject parseFromResourceBundle(ResourceBundle bundle){
@@ -542,12 +558,12 @@ public class JSONUtil {
 	 * 将Property的键转化为JSON形式<br>
 	 * 用于识别类似于：com.luxiaolei.package.hutool这类用电隔开的键
 	 * 
-	 * @param jsonObject
-	 * @param key
-	 * @param value
-	 * @return
+	 * @param jsonObject JSONObject
+	 * @param key 键
+	 * @param value 值
+	 * @return JSONObject
 	 */
-	private static JSONObject propertyPut(JSONObject jsonObject, String key, String value){
+	private static JSONObject propertyPut(JSONObject jsonObject, String key, Object value){
 		String[] path = StrUtil.split(key, StrUtil.DOT);
 		int last = path.length - 1;
 		JSONObject target = jsonObject;
