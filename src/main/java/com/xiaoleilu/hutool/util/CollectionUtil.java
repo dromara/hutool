@@ -667,7 +667,25 @@ public class CollectionUtil {
 	public static boolean isEmpty(Map<?, ?> map) {
 		return map == null || map.isEmpty();
 	}
-
+	
+	/**
+	 * Iterable是否为空
+	 * @param iterable Iterable对象
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(Iterable<?> iterable){
+		return null == iterable || isEmpty(iterable.iterator());
+	}
+	
+	/**
+	 * Iterator是否为空
+	 * @param Iterator Iterator对象
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(Iterator<?> Iterator){
+		return null == Iterator || false == Iterator.hasNext();
+	}
+	
 	// ---------------------------------------------------------------------- isNotEmpty
 	/**
 	 * 数组是否为非空
@@ -778,7 +796,26 @@ public class CollectionUtil {
 	public static <T> boolean isNotEmpty(Map<?, ?> map) {
 		return false == isEmpty(map);
 	}
+	
+	/**
+	 * Iterable是否为空
+	 * @param iterable Iterable对象
+	 * @return 是否为空
+	 */
+	public static boolean isNotEmpty(Iterable<?> iterable){
+		return null != iterable && isNotEmpty(iterable.iterator());
+	}
+	
+	/**
+	 * Iterator是否为空
+	 * @param Iterator Iterator对象
+	 * @return 是否为空
+	 */
+	public static boolean isNotEmpty(Iterator<?> Iterator){
+		return null != Iterator && Iterator.hasNext();
+	}
 
+	// ---------------------------------------------------------------------- zip
 	/**
 	 * 映射键值（参考Python的zip()函数）<br>
 	 * 例如：<br>
