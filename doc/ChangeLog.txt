@@ -338,3 +338,4 @@ Entity中toVo区别是否忽略大小写
 18、抽象BeanUtil.copyProperties，支持更多选项
 19、DruidDS增加系统关闭的钩子
 20、增加CollectionUtil中isEmpty和isNotEmpty for Iterator and Iterable
+21、extractMultiAndDelPre使用Holder类代替数组，减少歧义

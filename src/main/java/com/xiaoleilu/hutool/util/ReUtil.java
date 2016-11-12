@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.lang.Convert;
+import com.xiaoleilu.hutool.lang.Holder;
 import com.xiaoleilu.hutool.lang.Validator;
 
 /**
@@ -130,25 +131,25 @@ public class ReUtil {
 	 * 		return 			2013-5
 	 * 
 	 * @param pattern 匹配正则
-	 * @param contents 被匹配的内容，数组0为内容正文，经过这个方法的原文将被去掉匹配之前的内容
+	 * @param contentHolder 被匹配的内容的Holder，value为内容正文，经过这个方法的原文将被去掉匹配之前的内容
 	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
 	 * @return 新字符串
 	 */
-	public static String extractMultiAndDelPre(Pattern pattern, String[] contents, String template) {
-		if(null == contents || null == pattern || null == template){
+	public static String extractMultiAndDelPre(Pattern pattern, Holder<String> contentHolder, String template) {
+		if(null == contentHolder || null == pattern || null == template){
 			return null;
 		}
 		
 		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
 		
-		final String content = contents[0];
+		final String content = contentHolder.value;
 		Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
 			for (String var : varNums) {
 				int group = Integer.parseInt(var);
 				template = template.replace("$" + var, matcher.group(group));
 			}
-			contents[0] = StrUtil.sub(content, matcher.end(), content.length());
+			contentHolder.value = StrUtil.sub(content, matcher.end(), content.length());
 			return template;
 		}
 		return null;
@@ -163,17 +164,17 @@ public class ReUtil {
 	 * 		return 			2013-5
 	 * 
 	 * @param regex 匹配正则字符串
-	 * @param contents 被匹配的内容，数组0为内容正文，使用数组可以修改原文内容，经过这个方法的原文将被去掉匹配之前的内容
+	 * @param contentHolder 被匹配的内容的Holder，value为内容正文，经过这个方法的原文将被去掉匹配之前的内容
 	 * @param template 生成内容模板，变量 $1 表示group1的内容，以此类推
 	 * @return 按照template拼接后的字符串
 	 */
-	public static String extractMultiAndDelPre(String regex, String[] contents, String template) {
-		if(null == contents || null == regex || null == template){
+	public static String extractMultiAndDelPre(String regex, Holder<String> contentHolder, String template) {
+		if(null == contentHolder || null == regex || null == template){
 			return null;
 		}
 		
 		final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
-		return extractMultiAndDelPre(pattern, contents, template);
+		return extractMultiAndDelPre(pattern, contentHolder, template);
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.demo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.xiaoleilu.hutool.lang.Holder;
 import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
@@ -32,9 +33,9 @@ public class ReUtilDemo {
 		log.debug("---------------------------------------------------------");
 		
 		//抽取多个分组然后把原文匹配到位置之前的内容都删除
-		String[] contents = new String[]{content};
-		String resultExtractMultiAndDelPre = ReUtil.extractMultiAndDelPre("(\\w)aa(\\w)", contents, "$1-$2");
-		log.debug("extractMultiAndDelPre: content: {}, extract: {}", contents[0], resultExtractMultiAndDelPre);
+		Holder<String> contentHolder = Holder.of(content);
+		String resultExtractMultiAndDelPre = ReUtil.extractMultiAndDelPre("(\\w)aa(\\w)", contentHolder, "$1-$2");
+		log.debug("extractMultiAndDelPre: content: {}, extract: {}", contentHolder.value, resultExtractMultiAndDelPre);
 		
 		log.debug("---------------------------------------------------------");
 		
