@@ -341,3 +341,4 @@ Entity中toVo区别是否忽略大小写
 21、extractMultiAndDelPre使用Holder类代替数组，减少歧义
 22、增加FileTypeUtil用于判断文件类型
 23、FileUtil迁移至com.xiaoleilu.io中
+24、增加HexUtil，同时在Convert中增加toHex等方法，用于转换为16进制
