@@ -2,9 +2,9 @@ package com.xiaoleilu.hutool.demo;
 
 import java.io.IOException;
 
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.FileUtil;
 
 /**
  * Setting演示样例类

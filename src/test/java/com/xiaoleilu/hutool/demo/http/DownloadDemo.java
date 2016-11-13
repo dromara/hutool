@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.demo.http;
 
 import com.xiaoleilu.hutool.http.HttpUtil;
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
  * 下载样例

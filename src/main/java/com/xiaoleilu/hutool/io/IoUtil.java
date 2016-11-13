@@ -3,7 +3,9 @@ package com.xiaoleilu.hutool.io;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +16,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -24,6 +25,8 @@ import java.util.Collection;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.Convert;
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -221,7 +224,7 @@ public class IoUtil {
 	/**
 	 * 从流中读取bytes
 	 * 
-	 * @param in 输入流
+	 * @param in {@link InputStream}
 	 * @return bytes
 	 * @throws IOException
 	 */
@@ -229,6 +232,51 @@ public class IoUtil {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(in, out);
 		return out.toByteArray();
+	}
+	
+	/**
+	 * 读取指定长度的byte数组
+	 * @param in {@link InputStream}
+	 * @param length 长度
+	 * @return bytes
+	 * @throws IOException
+	 */
+	public static byte[] readBytes(InputStream in, int length) throws IOException {
+		byte[] b = new byte[length];
+		in.read(b);
+		return b;
+	}
+	
+	/**
+	 * 读取进制字符串
+	 * @param in {@link InputStream}
+	 * @param length 长度
+	 * @param toLowerCase true 传换成小写格式 ， false 传换成大写格式
+	 * @return 16进制字符串
+	 * @throws IOException
+	 */
+	public static String readHex(InputStream in, int length, boolean toLowerCase) throws IOException{
+		return HexUtil.encodeHexStr(readBytes(in, length), toLowerCase);
+	}
+	
+	/**
+	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IOException
+	 */
+	public static String readHex28Upper(InputStream in) throws IOException{
+		return readHex(in, 28, false);
+	}
+	
+	/**
+	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IOException
+	 */
+	public static String readHex28Lower(InputStream in) throws IOException{
+		return readHex(in, 28, false);
 	}
 
 	/**
@@ -307,6 +355,18 @@ public class IoUtil {
 		}
 		return builder.toString();
 	}
+	
+	/**
+	 * 从FileChannel中读取内容
+	 * 
+	 * @param fileChannel 文件管道
+	 * @param charsetName 字符集
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static String read(FileChannel fileChannel, String charsetName) throws IOException {
+		return read(fileChannel, CharsetUtil.charset(charsetName));
+	}
 
 	/**
 	 * 从FileChannel中读取内容
@@ -316,9 +376,22 @@ public class IoUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
-	public static String read(FileChannel fileChannel, String charset) throws IOException {
+	public static String read(FileChannel fileChannel, Charset charset) throws IOException {
 		final MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
 		return StrUtil.str(buffer, charset);
+	}
+	
+	/**
+	 * 从流中读取内容
+	 * 
+	 * @param in 输入流
+	 * @param charsetName 字符集
+	 * @param collection 返回集合
+	 * @return 内容
+	 * @throws IOException
+	 */
+	public static <T extends Collection<String>> T readLines(InputStream in, String charsetName, T collection) throws IOException {
+		return readLines(in, CharsetUtil.charset(charsetName), collection);
 	}
 
 	/**
@@ -330,9 +403,9 @@ public class IoUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
-	public static <T extends Collection<String>> T readLines(InputStream in, String charset, T collection) throws IOException {
+	public static <T extends Collection<String>> T readLines(InputStream in, Charset charset, T collection) throws IOException {
 		// 从返回的内容中读取所需内容
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in, charset));
+		BufferedReader reader =getReader(in, charset);
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			collection.add(line);
@@ -340,27 +413,43 @@ public class IoUtil {
 
 		return collection;
 	}
+	
+	/**
+	 * String 转为流
+	 * 
+	 * @param content 内容
+	 * @param charsetName 编码
+	 * @return 字节流
+	 */
+	public static ByteArrayInputStream toStream(String content, String charsetName) {
+		return toStream(content, CharsetUtil.charset(charsetName));
+	}
 
 	/**
-	 * String 转为 流
+	 * String 转为流
 	 * 
 	 * @param content 内容
 	 * @param charset 编码
 	 * @return 字节流
 	 */
-	public static ByteArrayInputStream toStream(String content, String charset) {
+	public static ByteArrayInputStream toStream(String content, Charset charset) {
 		if (content == null) {
 			return null;
 		}
-
-		byte[] data = null;
+		return new ByteArrayInputStream(StrUtil.getBytes(content, charset));
+	}
+	
+	/**
+	 * 文件转为流
+	 * @param file 文件
+	 * @return {@link FileInputStream}
+	 */
+	public static FileInputStream toStream(File file){
 		try {
-			data = StrUtil.isBlank(charset) ? content.getBytes() : content.getBytes(charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(StrUtil.format("Invalid charset [{}] !", charset), e);
+			return new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			throw new UtilException(e);
 		}
-
-		return new ByteArrayInputStream(data);
 	}
 
 	/**

@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.BitSet;
 
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.util.FileUtil;
 import com.xiaoleilu.hutool.util.HashUtil;
 
 /**

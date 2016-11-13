@@ -25,7 +25,12 @@ public class Console {
 	 * @param obj 要打印的对象
 	 */
 	public static void log(Object obj){
-		log("{}", obj);
+		if(obj instanceof Throwable){
+			Throwable e = (Throwable)obj;
+			log(e, e.getMessage());
+		}else{
+			log("{}", obj);
+		}
 	}
 	
 	/**
@@ -64,7 +69,12 @@ public class Console {
 	 * @param obj 要打印的对象
 	 */
 	public static void error(Object obj){
-		error("{}", obj);
+		if(obj instanceof Throwable){
+			Throwable e = (Throwable)obj;
+			error(e, e.getMessage());
+		}else{
+			error("{}", obj);
+		}
 	}
 	
 	/**

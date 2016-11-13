@@ -6,7 +6,7 @@ import java.util.HashMap;
 import com.xiaoleilu.hutool.http.HttpRequest;
 import com.xiaoleilu.hutool.http.HttpResponse;
 import com.xiaoleilu.hutool.http.HttpUtil;
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
  * 上传文件样例

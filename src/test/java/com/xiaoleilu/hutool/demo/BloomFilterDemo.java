@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xiaoleilu.hutool.bloomFilter.BitSetBloomFilter;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.FileUtil;
 
 public class BloomFilterDemo {
 	public static void main(String[] args) throws Exception {

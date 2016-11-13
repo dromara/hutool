@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.demo;
 import java.io.File;
 import java.io.IOException;
 
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
  * 文件工具类样例

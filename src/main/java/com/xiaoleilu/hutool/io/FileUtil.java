@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.util;
+package com.xiaoleilu.hutool.io;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -30,12 +30,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.json.JSONArray;
 import com.xiaoleilu.hutool.json.JSONObject;
 import com.xiaoleilu.hutool.json.JSONUtil;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 文件工具类

@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.demo;
 
 import java.io.IOException;
 
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.util.SecureUtil;
 
 /**

@@ -1398,4 +1398,17 @@ public class StrUtil {
 		}
 		return count;
 	}
+	
+	/**
+	 * 获得字符串对应byte数组
+	 * @param str 字符串
+	 * @param charset 编码，如果为<code>null</code>使用系统默认编码
+	 * @return bytes
+	 */
+	public static byte[] getBytes(String str, Charset charset){
+		if(null == str){
+			return null;
+		}
+		return null == charset ? str.getBytes() : str.getBytes(charset);
+	}
 }

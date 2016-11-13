@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.demo;
 
 import java.io.IOException;
 
-import com.xiaoleilu.hutool.util.FileUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 
 public class XmlUtilDemo {
 	public static void main(String[] args) throws IOException {
