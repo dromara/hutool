@@ -339,10 +339,11 @@ public class BasicSetting extends AbsSetting{
 	 * @return map
 	 */
 	public Map<String, String> getMap(String group){
+		String groupDot = group.concat(StrUtil.DOT);
 		Map<String, String> map2 = new HashMap<String, String>();
 		for (String key : map.keySet()) {
-			if(StrUtil.isNotBlank(key) && key.startsWith(group)){
-				map2.put(key, map.get(key));
+			if(StrUtil.isNotBlank(key) && key.startsWith(groupDot)){
+				map2.put(StrUtil.removePrefix(key, groupDot), map.get(key));
 			}
 		}
 		return map2;

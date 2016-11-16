@@ -327,18 +327,25 @@ Entity中toVo区别是否忽略大小写
 7、全面优化StrUtil.format方法，增加转义支持
 8、增加BeanUtil.isBean方法用于判断是否为JavaBean
 9、修复StaticLog错误
-10、修复日志无堆栈打印问题
-11、修复DateUtil中返回空指针问题
-12、增加ClassUtil.isNormalClass和isAbstract方法
-13、修复BeanUtil.isBean
-14、修复ClassUtil，消除歧义
-15、抽象JSON中的getEnum方法
-16、Conver类变为Convert类
-17、增加Holder接口
-18、抽象BeanUtil.copyProperties，支持更多选项
-19、DruidDS增加系统关闭的钩子
-20、增加CollectionUtil中isEmpty和isNotEmpty for Iterator and Iterable
-21、extractMultiAndDelPre使用Holder类代替数组，减少歧义
-22、增加FileTypeUtil用于判断文件类型
-23、FileUtil迁移至com.xiaoleilu.io中
-24、增加HexUtil，同时在Convert中增加toHex等方法，用于转换为16进制
+
+2.15.18
+1、修复日志无堆栈打印问题
+2、修复DateUtil中返回空指针问题
+3、增加ClassUtil.isNormalClass和isAbstract方法
+4、修复BeanUtil.isBean
+5、修复ClassUtil，消除歧义
+6、抽象JSON中的getEnum方法
+
+2.15.19
+1、Conver类变为Convert类
+2、增加Holder接口
+3、抽象BeanUtil.copyProperties，支持更多选项
+4、DruidDS增加系统关闭的钩子
+5、增加CollectionUtil中isEmpty和isNotEmpty for Iterator and Iterable
+6、extractMultiAndDelPre使用Holder类代替数组，减少歧义
+7、增加FileTypeUtil用于判断文件类型
+8、FileUtil迁移至com.xiaoleilu.io中
+9、增加HexUtil，同时在Convert中增加toHex等方法，用于转换为16进制
+
+2.15.20
+1、修复Setting中的getMap(String group)方法，去除分组头部
