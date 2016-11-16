@@ -32,6 +32,7 @@ public class DbcpDSFactory extends DSFactory {
 	
 	public DbcpDSFactory(Setting setting) {
 		super("Commone-DBCP2");
+		checkCPExist(BasicDataSource.class);
 		if(null == setting){
 			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 		}

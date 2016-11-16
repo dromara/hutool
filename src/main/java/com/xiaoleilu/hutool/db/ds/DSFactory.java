@@ -64,6 +64,13 @@ public abstract class DSFactory {
 	 */
 	public abstract void destroy();
 	
+	/**
+	 * 检查DataSource类是否存在
+	 * @param dsClass DataSource子类
+	 */
+	protected void checkCPExist(Class<? extends DataSource> dsClass){
+		//Do nothing only use datasource class for check exist or not.
+	}
 	//------------------------------------------------------------------------- Static start
 	private static DSFactory currentDSFactory;
 	private static final Object lock = new Object();
@@ -132,22 +139,22 @@ public abstract class DSFactory {
 		DSFactory dsFactory;
 		try {
 			dsFactory = new HikariDSFactory(setting);
-			log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
-		} catch (Throwable e) {
+			log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+		} catch (NoClassDefFoundError e) {
 			try {
 				dsFactory = new DruidDSFactory(setting);
-				log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
-			} catch (Throwable e2) {
+				log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+			} catch (NoClassDefFoundError e2) {
 				try {
 					dsFactory = new DbcpDSFactory(setting);
-					log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
-				} catch (Throwable e3) {
+					log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+				} catch (NoClassDefFoundError e3) {
 					try {
 						dsFactory = new C3p0DSFactory(setting);
-						log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
-					} catch (Throwable e4) {
+						log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+					} catch (NoClassDefFoundError e4) {
 						dsFactory = new PooledDSFactory(setting);
-						log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
+						log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 					}
 				}
 			}

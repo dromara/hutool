@@ -13,6 +13,8 @@ import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.PageResult;
 import com.xiaoleilu.hutool.db.Session;
 import com.xiaoleilu.hutool.db.SqlRunner;
+import com.xiaoleilu.hutool.db.ds.DSFactory;
+import com.xiaoleilu.hutool.db.ds.dbcp.DbcpDSFactory;
 import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
 import com.xiaoleilu.hutool.db.ds.pooled.PooledDataSource;
 import com.xiaoleilu.hutool.db.ds.simple.SimpleDataSource;
@@ -59,18 +61,27 @@ public class DbDemo {
 	 * @return 获得数据源样例方法
 	 */
 	private static DataSource getDataSource() {
+		
+		//--------------------------------------------------连接池和数据源配置---------------------------------------------------------
+		DataSource ds;
+		
+		//自动选择数据库连接池
+		ds = DSFactory.get();
+		
+		//自定义连接池
+		ds = DSFactory.setCurrentDSFactory(new DbcpDSFactory()).getDataSource();
+		
 		/*
 		 * 获得数据源，可以使用Druid、DBCP或者C3P0数据源
-		 * 我封装了Druid的数据源，在classpath下放置db.setting和druid.setting文件 
-		 * 详细格式请参考doc/db-example.setting和doc/db/example.setting 
-		 * 如果没有druid.setting文件，使用连接池默认的参数 可以配置多个数据源，用分组隔离
+		 * 我封装了Druid的数据源，在classpath下放置db.setting
+		 * 详细格式请参考doc/db-example.setting
 		 */
-		DataSource ds = new DruidDSFactory().getDataSource();
+		ds = new DruidDSFactory().getDataSource();
 
 		//当然，如果你不喜欢用DruidDS类，你也可以自己去实例化连接池的数据源 具体的配置参数请参阅Druid官方文档
 		@SuppressWarnings("resource")
 		DruidDataSource ds2 = new DruidDataSource();
-		ds2.setUrl("jdbc:mysql://fedora.vmware:3306/extractor");
+		ds2.setUrl("jdbc:mysql://jdbc:mysql://looly.centos:3306/locms");
 		ds2.setUsername("root");
 		ds2.setPassword("123456");
 		ds = ds2;

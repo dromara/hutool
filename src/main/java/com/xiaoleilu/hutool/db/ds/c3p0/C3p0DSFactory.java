@@ -31,6 +31,7 @@ public class C3p0DSFactory extends DSFactory {
 	
 	public C3p0DSFactory(Setting setting) {
 		super("C3P0");
+		checkCPExist(ComboPooledDataSource.class);
 		if(null == setting){
 			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 		}

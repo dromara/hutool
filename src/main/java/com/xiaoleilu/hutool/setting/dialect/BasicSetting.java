@@ -408,20 +408,18 @@ public class BasicSetting extends AbsSetting{
 	}
 	
 	/**
-	 * 加入键值对
-	 * @param key 键
-	 * @param value 值，会被转换为字符串
+	 * 加入Map中的键值对
+	 * @param map {@link Map}
 	 */
 	public void putAll(Map<?, ?> map){
 		this.map.putAll(map);
 	}
 	
 	/**
-	 * 加入键值对
-	 * @param key 键
-	 * @param value 值，会被转换为字符串
+	 * 加入Properties中的键值对
+	 * @param properties {@link Properties}
 	 */
-	public void putFromProperties(Properties properties){
+	public void putAll(Properties properties){
 			this.map.putAll(properties);
 	}
 
@@ -429,7 +427,8 @@ public class BasicSetting extends AbsSetting{
 	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
 	 * 只支持基本类型的转换
 	 * 
-	 * @param bean Bean
+	 * @param group 分组
+	 * @param bean Bean对象
 	 * @return Bean
 	 */
 	public Object toBean(final String group, Object bean) {

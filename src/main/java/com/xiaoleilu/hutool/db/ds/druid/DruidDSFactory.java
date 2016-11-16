@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.db.ds.druid;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +12,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -32,6 +34,7 @@ public class DruidDSFactory extends DSFactory {
 	
 	public DruidDSFactory(Setting setting) {
 		super("Druid");
+		checkCPExist(DruidDataSource.class);
 		if(null == setting){
 			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 		}
@@ -94,7 +97,31 @@ public class DruidDSFactory extends DSFactory {
 		}
 		
 		final DruidDataSource ds = new DruidDataSource();
-		ds.configFromPropety(config);
+		//基本信息
+		ds.setUrl(config.getProperty("url"));
+		config.remove("url");
+		ds.setUsername(config.getProperty("username", config.getProperty("user")));
+		config.remove("username");
+		config.remove("user");
+		ds.setPassword(config.getProperty("password", config.getProperty("pass")));
+		config.remove("password");
+		config.remove("pass");
+		final String driver = config.getProperty("driver");
+		if(StrUtil.isNotBlank(driver)){
+			config.remove("driver");
+			ds.setDriverClassName(config.getProperty("driver"));
+		}
+		
+		//规范化属性名
+		Properties config2 = new Properties();
+		String keyStr;
+		for (Entry<Object, Object> entry : config.entrySet()) {
+			keyStr = StrUtil.addPrefixIfNot(Convert.toStr(entry.getKey()), "druid.");
+			config2.put(keyStr, entry.getValue());
+		}
+		
+		//连接池信息
+		ds.configFromPropety(config2);
 		return ds;
 	}
 }

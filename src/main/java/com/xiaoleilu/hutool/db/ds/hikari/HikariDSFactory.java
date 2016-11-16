@@ -33,6 +33,7 @@ public class HikariDSFactory extends DSFactory {
 	
 	public HikariDSFactory(Setting setting) {
 		super("HikariCP");
+		checkCPExist(HikariDataSource.class);
 		if(null == setting){
 			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 		}
