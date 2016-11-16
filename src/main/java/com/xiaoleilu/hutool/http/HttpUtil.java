@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.StreamProgress;
@@ -198,29 +199,49 @@ public class HttpUtil {
 	public static String post(String urlString, String params) {
 		return HttpRequest.post(urlString).body(params).execute().body();
 	}
+	
+	//---------------------------------------------------------------------------------------- download
+	/**
+	 * 下载远程文本
+	 * 
+	 * @param url 请求的url
+	 * @param customCharsetName 自定义的字符集
+	 * @return 文本
+	 * @throws IOException
+	 */
+	public static String downloadString(String url, String customCharsetName) {
+		return downloadString(url, CharsetUtil.charset(customCharsetName), null);
+	}
+	
+	/**
+	 * 下载远程文本
+	 * 
+	 * @param url 请求的url
+	 * @param customCharset 自定义的字符集，可以使用{@link CharsetUtil#charset} 方法转换
+	 * @return 文本
+	 * @throws IOException
+	 */
+	public static String downloadString(String url, Charset customCharset) {
+		return downloadString(url, customCharset, null);
+	}
 
 	/**
 	 * 下载远程文本
 	 * 
 	 * @param url 请求的url
-	 * @param customCharset 自定义的字符集
+	 * @param customCharset 自定义的字符集，可以使用{@link CharsetUtil#charset} 方法转换
+	 * @param streamPress 进度条 {@link StreamProgress}
 	 * @return 文本
 	 * @throws IOException
 	 */
-	public static String downloadString(String url, String customCharset) {
+	public static String downloadString(String url, Charset customCharset, StreamProgress streamPress) {
 		if(StrUtil.isBlank(url)){
 			throw new NullPointerException("[url] is null!");
 		}
 		
-		InputStream in = null;
-		try {
-			in = new URL(url).openStream();
-			return IoUtil.read(in, customCharset);
-		}catch(IOException e){
-			throw new HttpException(e);
-		}finally {
-			IoUtil.close(in);
-		}
+		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		download(url, out, true, null);
+		return null == customCharset ? out.toString() : out.toString(customCharset);
 	}
 	
 	/**
@@ -260,17 +281,57 @@ public class HttpUtil {
 			destFile = FileUtil.file(destFile, fileName);
 		}
 		
-		InputStream in = null;
 		OutputStream out = null;
 		try {
-			in = new URL(url).openStream();
 			out = FileUtil.getOutputStream(destFile);
+			return download(url, out, true, streamProgress);
+		}catch(IOException e){
+			throw new HttpException(e);
+		}
+	}
+	
+	/**
+	 * 下载远程文件
+	 * 
+	 * @param url 请求的url
+	 * @param out 将下载内容写到输出流中 {@link OutputStream}
+	 * @param streamProgress 进度条
+	 * @return 文件大小
+	 * @throws IOException
+	 */
+	public static long download(String url, OutputStream out, boolean isCloseOut) {
+		return download(url, out, isCloseOut, null);
+	}
+	
+	/**
+	 * 下载远程文件
+	 * 
+	 * @param url 请求的url
+	 * @param out 将下载内容写到输出流中 {@link OutputStream}
+	 * @param isCloseOut 是否关闭输出流
+	 * @param streamProgress 进度条
+	 * @return 文件大小
+	 * @throws IOException
+	 */
+	public static long download(String url, OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
+		if(StrUtil.isBlank(url)){
+			throw new NullPointerException("[url] is null!");
+		}
+		if(null == out){
+			throw new NullPointerException("[out] is null!");
+		}
+		
+		InputStream in = null;
+		try {
+			in = new URL(url).openStream();
 			return IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
 		}catch(IOException e){
 			throw new HttpException(e);
 		}finally {
 			IoUtil.close(in);
-			IoUtil.close(out);
+			if(isCloseOut){
+				IoUtil.close(out);
+			}
 		}
 	}
 
