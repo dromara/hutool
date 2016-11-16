@@ -2,9 +2,13 @@ package com.xiaoleilu.hutool.db.ds;
 
 import javax.sql.DataSource;
 
+import com.xiaoleilu.hutool.db.ds.c3p0.C3p0DSFactory;
+import com.xiaoleilu.hutool.db.ds.dbcp.DbcpDSFactory;
 import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
 import com.xiaoleilu.hutool.db.ds.hikari.HikariDSFactory;
 import com.xiaoleilu.hutool.db.ds.pooled.PooledDSFactory;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -15,8 +19,15 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public abstract class DSFactory {
+	private static final Log log = LogFactory.get();
 	
 	protected static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
+	
+	private String dataSourceName;
+	
+	public DSFactory(String dataSourceName) {
+		this.dataSourceName = dataSourceName;
+	}
 	
 	/**
 	 * 获得默认数据源
@@ -58,11 +69,34 @@ public abstract class DSFactory {
 	private static final Object lock = new Object();
 	
 	/**
-	 * 获得数据源
+	 * 获得数据源<br>
+	 * 使用默认配置文件的无分组配置
+	 * 
 	 * @return 数据源
 	 */
-	public static DataSource get(Setting setting, String group){
-		return getCurrentDSFactory(setting).getDataSource(group);
+	public static DataSource get(){
+		return get(null);
+	}
+	
+	/**
+	 * 获得数据源
+	 * 
+	 * @param group 配置文件中对应的分组
+	 * @return 数据源
+	 */
+	public static DataSource get(String group){
+		return get(null, group);
+	}
+	
+	/**
+	 * 获得数据源
+	 * 
+	 * @param dbSetting 数据库配置文件，如果为<code>null</code>，查找默认的配置文件
+	 * @param group 配置文件中对应的分组
+	 * @return 数据源
+	 */
+	public static DataSource get(Setting dbSetting, String group){
+		return getCurrentDSFactory(dbSetting).getDataSource(group);
 	}
 	
 	/**
@@ -85,6 +119,7 @@ public abstract class DSFactory {
 	 * @return 自定义的数据源工厂
 	 */
 	public static DSFactory setCurrentDSFactory(DSFactory dsFactory){
+		log.debug("Custom use [{}] datasource.", dsFactory.dataSourceName);
 		currentDSFactory = dsFactory;
 		return currentDSFactory;
 	}
@@ -97,11 +132,24 @@ public abstract class DSFactory {
 		DSFactory dsFactory;
 		try {
 			dsFactory = new HikariDSFactory(setting);
+			log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
 		} catch (Throwable e) {
 			try {
 				dsFactory = new DruidDSFactory(setting);
+				log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
 			} catch (Throwable e2) {
-				dsFactory = new PooledDSFactory(setting);
+				try {
+					dsFactory = new DbcpDSFactory(setting);
+					log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
+				} catch (Throwable e3) {
+					try {
+						dsFactory = new C3p0DSFactory(setting);
+						log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
+					} catch (Throwable e4) {
+						dsFactory = new PooledDSFactory(setting);
+						log.debug("Use [{}] datasource as default", dsFactory.dataSourceName);
+					}
+				}
 			}
 		}
 		return dsFactory;

@@ -26,6 +26,14 @@ public class Setting extends BasicSetting {
 	/**
 	 * 基本构造<br/>
 	 * 需自定义初始化配置文件<br/>
+	 */
+	public Setting() {
+		super();
+	}
+	
+	/**
+	 * 基本构造<br/>
+	 * 需自定义初始化配置文件<br/>
 	 * 
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
@@ -98,6 +106,17 @@ public class Setting extends BasicSetting {
 	}
 
 	/*--------------------------公有方法 start-------------------------------*/
+	
+	/**
+	 * 获得group对应的子Setting
+	 * @param group 分组
+	 * @return {@link Setting}
+	 */
+	public Setting getSetting(String group){
+		final Setting setting = new Setting();
+		setting.putAll(this.getMap(group));
+		return setting;
+	}
 
 	//--------------------------------------------------------------- Get
 	/**

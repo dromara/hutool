@@ -31,6 +31,7 @@ public class DruidDSFactory extends DSFactory {
 	}
 	
 	public DruidDSFactory(Setting setting) {
+		super("Druid");
 		if(null == setting){
 			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 		}
@@ -40,6 +41,10 @@ public class DruidDSFactory extends DSFactory {
 
 	@Override
 	public DataSource getDataSource(String group) {
+		if (group == null) {
+			group = StrUtil.EMPTY;
+		}
+		
 		// 如果已经存在已有数据源（连接池）直接返回
 		final DruidDataSource existedDataSource = dsMap.get(group);
 		if (existedDataSource != null) {
@@ -83,12 +88,13 @@ public class DruidDSFactory extends DSFactory {
 	 * @return Druid数据源 {@link DruidDataSource}
 	 */
 	private DruidDataSource createDataSource(String group){
-		Properties config = setting.getProperties(group);
+		final Properties config = setting.getProperties(group);
 		if(CollectionUtil.isEmpty(config)){
 			throw new DbRuntimeException("No Druid config for group: [{}]", group);
 		}
+		
 		final DruidDataSource ds = new DruidDataSource();
-		ds.configFromPropety(setting.getProperties(group));
+		ds.configFromPropety(config);
 		return ds;
 	}
 }

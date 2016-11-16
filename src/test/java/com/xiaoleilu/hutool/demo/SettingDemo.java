@@ -48,7 +48,7 @@ public class SettingDemo {
 		setting.reload();
 		
 		//当通过代码加入新的键值对的时候，调用store会保存到文件，但是会覆盖原来的文件，并丢失注释
-		setting.setSetting("name1", "value");
+		setting.put("name1", "value");
 		setting.store("/home/looly/XXX.setting");
 
 		//获得所有分组名

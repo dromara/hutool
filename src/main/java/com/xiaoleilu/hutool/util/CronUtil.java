@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.util;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -65,9 +66,9 @@ public class CronUtil {
 	 * @param cronSetting 定时任务设置文件
 	 */
 	public static void schedule(Setting cronSetting) {
-		for (Entry<String, String> entry : cronSetting.entrySet()) {
-			final String jobClass = entry.getKey();
-			final String pattern = entry.getValue();
+		for (Entry<Object, Object> entry : cronSetting.entrySet()) {
+			final String jobClass = Convert.toStr(entry.getKey());
+			final String pattern = Convert.toStr(entry.getValue());
 			try {
 				final Runnable job = ClassUtil.newInstance(jobClass);
 				schedule(pattern, job);

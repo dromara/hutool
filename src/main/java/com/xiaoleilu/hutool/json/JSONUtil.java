@@ -118,8 +118,8 @@ public class JSONUtil {
 	 */
 	public static JSONObject parseFromSetting(Setting setting){
 		JSONObject jsonObject = new JSONObject();
-		Set<Entry<String,String>> entrySet = setting.entrySet();
-		for (Entry<String, String> entry : entrySet) {
+		Set<Entry<Object,Object>> entrySet = setting.entrySet();
+		for (Entry<Object, Object> entry : entrySet) {
 			propertyPut(jsonObject, entry.getKey(), entry.getValue());
 		}
 		return jsonObject;
@@ -563,8 +563,9 @@ public class JSONUtil {
 	 * @param value 值
 	 * @return JSONObject
 	 */
-	private static JSONObject propertyPut(JSONObject jsonObject, String key, Object value){
-		String[] path = StrUtil.split(key, StrUtil.DOT);
+	private static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value){
+		String keyStr = Convert.toStr(key);
+		String[] path = StrUtil.split(keyStr, StrUtil.DOT);
 		int last = path.length - 1;
 		JSONObject target = jsonObject;
 		for (int i = 0; i < last; i += 1) {

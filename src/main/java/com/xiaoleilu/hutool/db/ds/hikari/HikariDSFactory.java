@@ -32,6 +32,7 @@ public class HikariDSFactory extends DSFactory {
 	}
 	
 	public HikariDSFactory(Setting setting) {
+		super("HikariCP");
 		if(null == setting){
 			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 		}
@@ -41,6 +42,10 @@ public class HikariDSFactory extends DSFactory {
 
 	@Override
 	public DataSource getDataSource(String group) {
+		if (group == null) {
+			group = StrUtil.EMPTY;
+		}
+		
 		// 如果已经存在已有数据源（连接池）直接返回
 		final HikariDataSource existedDataSource = dsMap.get(group);
 		if (existedDataSource != null) {
@@ -84,6 +89,10 @@ public class HikariDSFactory extends DSFactory {
 	 * @return Hikari数据源 {@link HikariDataSource}
 	 */
 	private HikariDataSource createDataSource(String group){
+		if (group == null) {
+			group = StrUtil.EMPTY;
+		}
+		
 		Properties config = setting.getProperties(group);
 		if(CollectionUtil.isEmpty(config)){
 			throw new DbRuntimeException("No HikariCP config for group: [{}]", group);

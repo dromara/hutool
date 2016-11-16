@@ -3,14 +3,14 @@ package com.xiaoleilu.hutool.setting;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromStringGetter;
+import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 
 /**
  * 设定抽象类
  * @author Looly
  *
  */
-public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String>{
+public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String>{
 	
 	/** 本设置对象的字符集 */
 	protected Charset charset;
@@ -20,7 +20,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	protected URL settingUrl;
 	
 	@Override
-	public abstract String getStr(String key, String defaultValue);
+	public abstract Object getObj(String key, Object defaultValue);
 
 	/**
 	 * @return 配置文件大小（key的个数）

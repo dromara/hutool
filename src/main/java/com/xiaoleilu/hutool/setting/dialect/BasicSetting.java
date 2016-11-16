@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
@@ -43,7 +44,7 @@ import com.xiaoleilu.hutool.util.URLUtil;
 public class BasicSetting extends AbsSetting{
 	private final static Log log = StaticLog.get();
 	
-	final Map<String, String> map = new ConcurrentHashMap<String, String>();
+	final Map<Object, Object> map = new ConcurrentHashMap<>();
 	
 	/** 默认字符集 */
 	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
@@ -291,9 +292,9 @@ public class BasicSetting extends AbsSetting{
 	}
 	
 	@Override
-	public String getStr(String key, String defaultValue) {
-		final String value = map.get(key);
-		if(StrUtil.isBlank(value)) {
+	public Object getObj(String key, Object defaultValue) {
+		final Object value = map.get(key);
+		if(null == value) {
 			return defaultValue;
 		}
 		return value;
@@ -329,7 +330,7 @@ public class BasicSetting extends AbsSetting{
 	 * 获得所有键值对
 	 * @return map
 	 */
-	public Map<String, String> getMap(){
+	public Map<Object, Object> getMap(){
 		return this.map;
 	}
 	
@@ -338,12 +339,18 @@ public class BasicSetting extends AbsSetting{
 	 * @param group 分组
 	 * @return map
 	 */
-	public Map<String, String> getMap(String group){
+	public Map<?, ?> getMap(String group){
+		if(StrUtil.isBlank(group)){
+			return getMap();
+		}
+		
 		String groupDot = group.concat(StrUtil.DOT);
-		Map<String, String> map2 = new HashMap<String, String>();
-		for (String key : map.keySet()) {
-			if(StrUtil.isNotBlank(key) && key.startsWith(groupDot)){
-				map2.put(StrUtil.removePrefix(key, groupDot), map.get(key));
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		String keyStr;
+		for (Object key : map.keySet()) {
+			keyStr = Convert.toStr(key);
+			if(StrUtil.isNotBlank(keyStr) && keyStr.startsWith(groupDot)){
+				map2.put(StrUtil.removePrefix(keyStr, groupDot), map.get(key));
 			}
 		}
 		return map2;
@@ -359,17 +366,6 @@ public class BasicSetting extends AbsSetting{
 		return properties;
 	}
 	
-	//--------------------------------------------------------------- Set
-	/**
-	 * 设置值，无给定键创建之。设置后未持久化
-	 * 
-	 * @param key 键
-	 * @param value 值
-	 */
-	public void setSetting(String key, Object value) {
-		map.put(key, value.toString());
-	}
-
 	//--------------------------------------------------------------------------------- Functions
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置<br>
@@ -380,11 +376,9 @@ public class BasicSetting extends AbsSetting{
 		Writer writer = null;
 		try {
 			writer = FileUtil.getWriter(absolutePath, charset, false);
-			Set<Entry<String, String>> entrySet = map.entrySet();
-			for (Entry<String, String> entry : entrySet) {
-				writer.write(entry.getKey() + ASSIGN_FLAG + entry.getValue());
+			for (Entry<Object, Object> entry : map.entrySet()) {
+				writer.write(StrUtil.format("{} {} {}", entry.getKey(), ASSIGN_FLAG, entry.getValue()));
 			}
-			writer.close();
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(StrUtil.format("Can not find file [{}]!", absolutePath), e);
 		} catch (IOException e) {
@@ -402,6 +396,33 @@ public class BasicSetting extends AbsSetting{
 	 */
 	public void store(String path, Class<?> clazz) {
 		this.store(FileUtil.getAbsolutePath(path, clazz));
+	}
+	
+	/**
+	 * 加入键值对
+	 * @param key 键
+	 * @param value 值，会被转换为字符串
+	 */
+	public void put(String key, Object value){
+		this.map.put(key, value);
+	}
+	
+	/**
+	 * 加入键值对
+	 * @param key 键
+	 * @param value 值，会被转换为字符串
+	 */
+	public void putAll(Map<?, ?> map){
+		this.map.putAll(map);
+	}
+	
+	/**
+	 * 加入键值对
+	 * @param key 键
+	 * @param value 值，会被转换为字符串
+	 */
+	public void putFromProperties(Properties properties){
+			this.map.putAll(properties);
 	}
 
 	/**
@@ -446,8 +467,6 @@ public class BasicSetting extends AbsSetting{
 		return properties;
 	}
 	
-	
-	
 	/**
 	 * @return 获得所有分组名
 	 */
@@ -455,7 +474,10 @@ public class BasicSetting extends AbsSetting{
 		return this.groups;
 	}
 	
-	public Set<Entry<String, String>> entrySet(){
+	/**
+	 * @return 所有键值对
+	 */
+	public Set<Entry<Object, Object>> entrySet(){
 		return map.entrySet();
 	}
 	
@@ -475,10 +497,10 @@ public class BasicSetting extends AbsSetting{
 		final Set<String> vars = ReUtil.findAll(reg_var, value, 0, new HashSet<String>());
 		for (String var : vars) {
 			// 查找变量名对应的值
-			String varValue = map.get(ReUtil.get(reg_var, var, 1));
-			if (null != varValue) {
+			Object varValue = map.get(ReUtil.get(reg_var, var, 1));
+			if (null != varValue && value instanceof CharSequence) {
 				// 替换标识
-				value = value.replace(var, varValue);
+				value = value.replace(var, (CharSequence)varValue);
 			}
 		}
 		return value;
@@ -493,7 +515,7 @@ public class BasicSetting extends AbsSetting{
 	private static  String keyWithGroup(String key, String group){
 		String keyWithGroup = key;
 		if (!StrUtil.isBlank(group)) {
-			keyWithGroup = group + "." + keyWithGroup;
+			keyWithGroup = group.concat(StrUtil.DOT).concat(key);
 		}
 		return keyWithGroup;
 	}

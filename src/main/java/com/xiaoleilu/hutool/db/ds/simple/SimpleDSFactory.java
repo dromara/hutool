@@ -30,6 +30,7 @@ public class SimpleDSFactory extends DSFactory {
 	}
 	
 	public SimpleDSFactory(Setting setting) {
+		super("Hutool-Simple-Datasource");
 		if(null == setting){
 			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 		}

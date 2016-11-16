@@ -87,6 +87,20 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.5.2</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.1.1</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
 		<!-- MongoDB Java客户端 -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
@@ -104,14 +118,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- 通用日志接口，可以适应不用的日志方式 -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.21</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
 		<!-- LogBack -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
