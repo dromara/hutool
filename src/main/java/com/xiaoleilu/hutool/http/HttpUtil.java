@@ -295,7 +295,7 @@ public class HttpUtil {
 	 * 
 	 * @param url 请求的url
 	 * @param out 将下载内容写到输出流中 {@link OutputStream}
-	 * @param streamProgress 进度条
+	 * @param isCloseOut 是否关闭输出流
 	 * @return 文件大小
 	 * @throws IOException
 	 */

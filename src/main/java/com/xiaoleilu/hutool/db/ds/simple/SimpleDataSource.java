@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db.ds;
+package com.xiaoleilu.hutool.db.ds.simple;
 
 import java.io.IOException;
 import java.sql.Connection;

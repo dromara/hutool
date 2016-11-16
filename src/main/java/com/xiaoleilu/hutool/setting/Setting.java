@@ -41,7 +41,7 @@ public class Setting extends BasicSetting {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(String pathBaseClassLoader, String charset, boolean isUseVariable) {
+	public Setting(String pathBaseClassLoader, Charset charset, boolean isUseVariable) {
 		super(pathBaseClassLoader, charset, isUseVariable);
 	}
 	
@@ -62,7 +62,7 @@ public class Setting extends BasicSetting {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(File configFile, String charset, boolean isUseVariable) {
+	public Setting(File configFile, Charset charset, boolean isUseVariable) {
 		super(configFile, charset, isUseVariable);
 	}
 
@@ -74,7 +74,7 @@ public class Setting extends BasicSetting {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(String path, Class<?> clazz, String charset, boolean isUseVariable) {
+	public Setting(String path, Class<?> clazz, Charset charset, boolean isUseVariable) {
 		super(path, clazz, charset, isUseVariable);
 	}
 
@@ -85,7 +85,7 @@ public class Setting extends BasicSetting {
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public Setting(URL url, String charset, boolean isUseVariable) {
+	public Setting(URL url, Charset charset, boolean isUseVariable) {
 		super(url, charset, isUseVariable);
 	}
 	

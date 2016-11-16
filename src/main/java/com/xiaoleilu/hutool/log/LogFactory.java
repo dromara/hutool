@@ -55,10 +55,12 @@ public abstract class LogFactory {
 	/**
 	 * 自定义日志实现
 	 * @param logFactory 日志工厂类
+	 * @return 自定义的日志工厂类
 	 */
-	public static void setCurrentLogFactory(LogFactory logFactory){
+	public static LogFactory setCurrentLogFactory(LogFactory logFactory){
 		logFactory.getLog(LogFactory.class).debug("Custom Use [{}] Logger.", logFactory.logFramworkName);
 		currentLogFactory = logFactory;
+		return currentLogFactory;
 	}
 	
 	/**

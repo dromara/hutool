@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.db.ds.pool.PooledDataSource;
+import com.xiaoleilu.hutool.db.ds.pooled.PooledDataSource;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 
 /**

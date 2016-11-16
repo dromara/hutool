@@ -20,7 +20,6 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
-import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.NetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -217,7 +216,7 @@ public class MongoDS implements Closeable{
 	synchronized public void initSingle() {
 		if(setting == null) {
 			try {
-				setting = new Setting(MONGO_CONFIG_PATH, CharsetUtil.UTF_8, true);
+				setting = new Setting(MONGO_CONFIG_PATH, true);
 			} catch (Exception e) {
 				//在single模式下，可以没有配置文件。
 			}
@@ -257,7 +256,7 @@ public class MongoDS implements Closeable{
 		
 		if(setting == null) {
 			//若未指定配置文件，则使用默认配置文件
-			setting = new Setting(MONGO_CONFIG_PATH, Setting.DEFAULT_CHARSET, true);
+			setting = new Setting(MONGO_CONFIG_PATH, true);
 		}
 		
 		List<ServerAddress> addrList = new ArrayList<ServerAddress>();

@@ -13,9 +13,9 @@ import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.PageResult;
 import com.xiaoleilu.hutool.db.Session;
 import com.xiaoleilu.hutool.db.SqlRunner;
-import com.xiaoleilu.hutool.db.ds.SimpleDataSource;
-import com.xiaoleilu.hutool.db.ds.druid.DruidDS;
-import com.xiaoleilu.hutool.db.ds.pool.PooledDataSource;
+import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
+import com.xiaoleilu.hutool.db.ds.pooled.PooledDataSource;
+import com.xiaoleilu.hutool.db.ds.simple.SimpleDataSource;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.meta.Table;
@@ -65,7 +65,7 @@ public class DbDemo {
 		 * 详细格式请参考doc/db-example.setting和doc/db/example.setting 
 		 * 如果没有druid.setting文件，使用连接池默认的参数 可以配置多个数据源，用分组隔离
 		 */
-		DataSource ds = DruidDS.getDataSource("test");
+		DataSource ds = new DruidDSFactory().getDataSource();
 
 		//当然，如果你不喜欢用DruidDS类，你也可以自己去实例化连接池的数据源 具体的配置参数请参阅Druid官方文档
 		@SuppressWarnings("resource")

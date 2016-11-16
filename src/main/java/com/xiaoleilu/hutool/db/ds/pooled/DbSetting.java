@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db.ds.pool;
+package com.xiaoleilu.hutool.db.ds.pooled;
 
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -47,10 +47,10 @@ public class DbSetting {
 		config.setPass(setting.getStr("pass", group));
 		
 		//连接池相关信息
-		config.setInitialSize(setting.getInt("initialSize", 0));
-		config.setMinIdle(setting.getInt("minIdle", 0));
-		config.setMaxActive(setting.getInt("maxActive", 8));
-		config.setMaxWait(setting.getLong("maxWait", 6000L));
+		config.setInitialSize(setting.getInt("initialSize", group, 0));
+		config.setMinIdle(setting.getInt("minIdle", group, 0));
+		config.setMaxActive(setting.getInt("maxActive", group, 8));
+		config.setMaxWait(setting.getLong("maxWait", group, 6000L));
 		
 		return config;
 	}

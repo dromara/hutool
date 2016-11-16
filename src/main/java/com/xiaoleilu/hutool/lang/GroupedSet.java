@@ -59,7 +59,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 * @param charset 字符集
 	 */
-	public GroupedSet(String pathBaseClassLoader, String charset) {
+	public GroupedSet(String pathBaseClassLoader, Charset charset) {
 		if(null == pathBaseClassLoader) {
 			pathBaseClassLoader = StrUtil.EMPTY;
 		}
@@ -77,7 +77,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param configFile 配置文件对象
 	 * @param charset 字符集
 	 */
-	public GroupedSet(File configFile, String charset) {
+	public GroupedSet(File configFile, Charset charset) {
 		if (configFile == null) {
 			throw new RuntimeException("Null GroupSet file!");
 		}
@@ -95,7 +95,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param clazz 基准类
 	 * @param charset 字符集
 	 */
-	public GroupedSet(String path, Class<?> clazz, String charset) {
+	public GroupedSet(String path, Class<?> clazz, Charset charset) {
 		final URL url = URLUtil.getURL(path, clazz);
 		if(url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", path));
@@ -109,7 +109,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param url 设定文件的URL
 	 * @param charset 字符集
 	 */
-	public GroupedSet(URL url, String charset) {
+	public GroupedSet(URL url, Charset charset) {
 		if(url == null) {
 			throw new RuntimeException("Null url define!");
 		}
@@ -132,16 +132,11 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param charset 字符集
 	 * @return 成功初始化与否
 	 */
-	public boolean init(URL groupedSetUrl, String charset) {
+	public boolean init(URL groupedSetUrl, Charset charset) {
 		if (groupedSetUrl == null) {
 			throw new RuntimeException("Null GroupSet url or charset define!");
 		}
-		try {
-			this.charset = Charset.forName(charset);
-		} catch (Exception e) {
-			log.warn("User custom charset [{}] parse error, use default charset: [{}]", charset, Setting.DEFAULT_CHARSET);
-			this.charset = Charset.forName(Setting.DEFAULT_CHARSET);
-		}
+		this.charset = charset;
 		this.groupedSetUrl = groupedSetUrl;
 
 		return this.load(groupedSetUrl);

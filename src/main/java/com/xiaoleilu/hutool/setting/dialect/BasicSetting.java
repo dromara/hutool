@@ -25,6 +25,7 @@ import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
@@ -45,7 +46,7 @@ public class BasicSetting extends AbsSetting{
 	final Map<String, String> map = new ConcurrentHashMap<String, String>();
 	
 	/** 默认字符集 */
-	public final static String DEFAULT_CHARSET = "utf8";
+	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	/** 数组类型值默认分隔符 */
 	public final static String DEFAULT_DELIMITER= ",";
 
@@ -67,6 +68,10 @@ public class BasicSetting extends AbsSetting{
 	
 	private LinkedList<String> groups = new LinkedList<String>();
 	
+	public BasicSetting() {
+		this(DEFAULT_CHARSET, false);
+	}
+	
 	/**
 	 * 基本构造<br/>
 	 * 需自定义初始化配置文件<br/>
@@ -86,7 +91,7 @@ public class BasicSetting extends AbsSetting{
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public BasicSetting(String pathBaseClassLoader, String charset, boolean isUseVariable) {
+	public BasicSetting(String pathBaseClassLoader, Charset charset, boolean isUseVariable) {
 		if(null == pathBaseClassLoader) {
 			pathBaseClassLoader = StrUtil.EMPTY;
 		}
@@ -105,9 +110,9 @@ public class BasicSetting extends AbsSetting{
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public BasicSetting(File configFile, String charset, boolean isUseVariable) {
+	public BasicSetting(File configFile, Charset charset, boolean isUseVariable) {
 		if (configFile == null) {
-			throw new RuntimeException("Null Setting file!");
+			throw new NullPointerException("Null Setting file!");
 		}
 		final URL url = URLUtil.getURL(configFile);
 		if(url == null) {
@@ -124,7 +129,7 @@ public class BasicSetting extends AbsSetting{
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public BasicSetting(String path, Class<?> clazz, String charset, boolean isUseVariable) {
+	public BasicSetting(String path, Class<?> clazz, Charset charset, boolean isUseVariable) {
 		final URL url = URLUtil.getURL(path, clazz);
 		if(url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", path));
@@ -139,7 +144,7 @@ public class BasicSetting extends AbsSetting{
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public BasicSetting(URL url, String charset, boolean isUseVariable) {
+	public BasicSetting(URL url, Charset charset, boolean isUseVariable) {
 		if(url == null) {
 			throw new RuntimeException("Null url define!");
 		}
@@ -163,16 +168,11 @@ public class BasicSetting extends AbsSetting{
 	 * @param isUseVariable 是否使用变量
 	 * @return 成功初始化与否
 	 */
-	public boolean init(URL settingUrl, String charset, boolean isUseVariable) {
+	public boolean init(URL settingUrl, Charset charset, boolean isUseVariable) {
 		if (settingUrl == null) {
 			throw new RuntimeException("Null setting url or charset define!");
 		}
-		try {
-			this.charset = Charset.forName(charset);
-		} catch (Exception e) {
-			log.warn("User custom charset [{}] parse error, use default charset: [{}]", charset, DEFAULT_CHARSET);
-			this.charset = Charset.forName(DEFAULT_CHARSET);
-		}
+		this.charset = charset;
 		this.isUseVariable = isUseVariable;
 		this.settingUrl = settingUrl;
 
@@ -349,6 +349,16 @@ public class BasicSetting extends AbsSetting{
 		return map2;
 	}
 	
+	/**
+	 * 转换为Properties对象，原分组变为前缀
+	 * @return Properties对象
+	 */
+	public Properties getProperties(String group){
+		Properties properties = new Properties();
+		properties.putAll(getMap(group));
+		return properties;
+	}
+	
 	//--------------------------------------------------------------- Set
 	/**
 	 * 设置值，无给定键创建之。设置后未持久化
@@ -435,6 +445,8 @@ public class BasicSetting extends AbsSetting{
 		properties.putAll(map);
 		return properties;
 	}
+	
+	
 	
 	/**
 	 * @return 获得所有分组名

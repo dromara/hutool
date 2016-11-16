@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db.ds.pool;
+package com.xiaoleilu.hutool.db.ds.pooled;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

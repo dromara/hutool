@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db.ds.pool;
+package com.xiaoleilu.hutool.db.ds.pooled;
 
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
