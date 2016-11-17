@@ -30,7 +30,7 @@ public class ObjectUtil {
 	 * @param obj2 对象2
 	 * @return 是否相等
 	 */
-	public static boolean equals(Object obj1, Object obj2) {
+	public static boolean equal(Object obj1, Object obj2) {
 		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
 	}
 
@@ -107,7 +107,7 @@ public class ObjectUtil {
 			Iterator<?> iter = (Iterator<?>) obj;
 			while (iter.hasNext()) {
 				Object o = iter.next();
-				if (equals(o, element)) {
+				if (equal(o, element)) {
 					return true;
 				}
 			}
@@ -117,7 +117,7 @@ public class ObjectUtil {
 			Enumeration<?> enumeration = (Enumeration<?>) obj;
 			while (enumeration.hasMoreElements()) {
 				Object o = enumeration.nextElement();
-				if (equals(o, element)) {
+				if (equal(o, element)) {
 					return true;
 				}
 			}
@@ -127,7 +127,7 @@ public class ObjectUtil {
 			int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
 				Object o = Array.get(obj, i);
-				if (equals(o, element)) {
+				if (equal(o, element)) {
 					return true;
 				}
 			}

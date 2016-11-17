@@ -132,7 +132,7 @@ public class SqlBuilder {
 			sql.append(entry.getKey());
 			
 			final Object value = entry.getValue();
-			if(ObjectUtil.equals(dialectName, DialectName.ORACLE) //对Oracle的特殊处理
+			if(ObjectUtil.equal(dialectName, DialectName.ORACLE) //对Oracle的特殊处理
 					&& value instanceof String 
 					&& ((String)value).toLowerCase().endsWith(".nextval")) {
 				//Oracle的特殊自增键，通过字段名.nextval获得下一个值

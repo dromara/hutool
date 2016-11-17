@@ -81,7 +81,7 @@ public class BeanUtil {
 	public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz, final String fieldName) throws IntrospectionException {
 		PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-			if (ObjectUtil.equals(fieldName, propertyDescriptor.getName())) {
+			if (ObjectUtil.equal(fieldName, propertyDescriptor.getName())) {
 				return propertyDescriptor;
 			}
 		}

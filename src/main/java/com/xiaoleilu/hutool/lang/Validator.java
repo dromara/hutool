@@ -92,8 +92,8 @@ public class Validator {
 	 * @param t2 对象2
 	 * @return 当两值都为null或相等返回true
 	 */
-	public static boolean equals(Object t1, Object t2) {
-		return ObjectUtil.equals(t1, t2);
+	public static boolean equal(Object t1, Object t2) {
+		return ObjectUtil.equal(t1, t2);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class Validator {
 	 * @throws ValidateException
 	 */
 	public static <T> void validateEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
-		if (false == equals(t1, t2)) {
+		if (false == equal(t1, t2)) {
 			throw new ValidateException(errorMsg);
 		}
 	}
@@ -119,7 +119,7 @@ public class Validator {
 	 * @throws ValidateException
 	 */
 	public static <T> void validateNotEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
-		if (equals(t1, t2)) {
+		if (equal(t1, t2)) {
 			throw new ValidateException(errorMsg);
 		}
 	}
