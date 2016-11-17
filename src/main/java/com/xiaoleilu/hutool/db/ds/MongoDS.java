@@ -49,6 +49,16 @@ public class MongoDS implements Closeable{
 	//MongoDB客户端对象
 	private MongoClient mongo;
 	
+	//JVM关闭前关闭MongoDB连接
+	static{
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run() {
+				MongoDS.closeAll();
+			}
+		});
+	}
+	
 	//------------------------------------------------------------------------ Get DS start
 	/**
 	 * 获取MongoDB数据源<br>
@@ -425,14 +435,4 @@ public class MongoDS implements Closeable{
 	}
 	
 	//--------------------------------------------------------------------------- Private method end
-	
-	/**
-	 * 在垃圾回收（GC）被调用时关闭MongoDB客户端
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		log.info("MongoDS is finalized!");
-		this.close();
-		super.finalize();
-	}
 }

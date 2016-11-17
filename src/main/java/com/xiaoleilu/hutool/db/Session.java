@@ -440,9 +440,4 @@ public class Session implements Closeable{
 	public void close() {
 		DbUtil.close(conn);
 	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		close();
-	}
 }

@@ -1011,7 +1011,7 @@ public class ClassUtil {
 					fillClass(className, packageName, classes, classFilter);
 				}
 			}
-		} catch (Throwable ex) {
+		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 		}
 	}
@@ -1031,8 +1031,7 @@ public class ClassUtil {
 				if (classFilter == null || classFilter.accept(clazz)) {
 					classes.add(clazz);
 				}
-			} catch (Throwable ex) {
-				// Log.error(log, ex, "Load class [{}] error!", className);
+			} catch (Exception ex) {
 				// Pass Load Error.
 			}
 		}

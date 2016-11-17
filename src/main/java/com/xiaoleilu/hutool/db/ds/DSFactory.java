@@ -72,6 +72,18 @@ public abstract class DSFactory {
 		//Do nothing only use datasource class for check exist or not.
 	}
 	//------------------------------------------------------------------------- Static start
+	//JVM关闭是关闭所有连接池
+	static{
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run() {
+				if(null != currentDSFactory){
+					currentDSFactory.destroy();
+				}
+			}
+		});
+	}
+	
 	private static DSFactory currentDSFactory;
 	private static final Object lock = new Object();
 	
@@ -126,6 +138,11 @@ public abstract class DSFactory {
 	 * @return 自定义的数据源工厂
 	 */
 	public static DSFactory setCurrentDSFactory(DSFactory dsFactory){
+		if(null != currentDSFactory){
+			//自定义数据源工厂前关闭之前的数据源
+			currentDSFactory.destroy();
+		}
+		
 		log.debug("Custom use [{}] datasource.", dsFactory.dataSourceName);
 		currentDSFactory = dsFactory;
 		return currentDSFactory;
