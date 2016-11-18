@@ -21,6 +21,7 @@ import java.util.TreeSet;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
+import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.lang.Filter;
 
 /**
@@ -33,6 +34,185 @@ public class CollectionUtil {
 
 	private CollectionUtil() {
 		// 静态类不可实例化
+	}
+
+	/**
+	 * 两个集合的并集<br>
+	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最多的个数<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
+	 * 
+	 * @param coll1集合1
+	 * @param coll2 集合2
+	 * @return 并集的集合，返回 {@link ArrayList}
+	 */
+	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2) {
+		final ArrayList<T> list = new ArrayList<>();
+		if (isEmpty(coll1)) {
+			list.addAll(coll2);
+		} else if (isEmpty(coll2)) {
+			list.addAll(coll1);
+		} else {
+			final Map<T, Integer> map1 = countMap(coll1);
+			final Map<T, Integer> map2 = countMap(coll2);
+			final Set<T> elts = newHashSet(coll2);
+			for (T t : elts) {
+				for (int i = 0, m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+					list.add(t);
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 多个集合的并集<br>
+	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最多的个数<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
+	 * 
+	 * @param coll1集合1
+	 * @param coll2 集合2
+	 * @param otherColls 其它集合
+	 * @return 并集的集合，返回 {@link ArrayList}
+	 */
+	@SafeVarargs
+	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
+		Collection<T> union = union(coll1, coll2);
+		for (Collection<T> coll : otherColls) {
+			union = union(union, coll);
+		}
+		return union;
+	}
+
+	/**
+	 * 两个集合的交集<br>
+	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最少的个数<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[a, b, c, c]，此结果中只保留了两个c
+	 * 
+	 * @param coll1集合1
+	 * @param coll2 集合2
+	 * @return 交集的集合，返回 {@link ArrayList}
+	 */
+	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2) {
+		final ArrayList<T> list = new ArrayList<>();
+		if (isNotEmpty(coll1) && isNotEmpty(coll2)) {
+			final Map<T, Integer> map1 = countMap(coll1);
+			final Map<T, Integer> map2 = countMap(coll2);
+			final Set<T> elts = newHashSet(coll2);
+			for (T t : elts) {
+				for (int i = 0, m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+					list.add(t);
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 多个集合的交集<br>
+	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最少的个数<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[a, b, c, c]，此结果中只保留了两个c
+	 * 
+	 * @param coll1集合1
+	 * @param coll2 集合2
+	 * @param otherColls 其它集合
+	 * @return 并集的集合，返回 {@link ArrayList}
+	 */
+	@SafeVarargs
+	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
+		Collection<T> intersection = intersection(coll1, coll2);
+		if (isEmpty(intersection)) {
+			return intersection;
+		}
+		for (Collection<T> coll : otherColls) {
+			intersection = intersection(intersection, coll);
+			if (isEmpty(intersection)) {
+				return intersection;
+			}
+		}
+		return intersection;
+	}
+
+	/**
+	 * 两个集合的差集<br>
+	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留两个集合中此元素个数差的个数<br>
+	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
+	 * 结果：[c]，此结果中只保留了一个
+	 * 
+	 * @param coll1集合1
+	 * @param coll2 集合2
+	 * @return 差集的集合，返回 {@link ArrayList}
+	 */
+	public static <T> Collection<T> disjunction(final Collection<T> coll1, final Collection<T> coll2) {
+		final ArrayList<T> list = new ArrayList<>();
+		if (isNotEmpty(coll1) && isNotEmpty(coll2)) {
+			final Map<T, Integer> map1 = countMap(coll1);
+			final Map<T, Integer> map2 = countMap(coll2);
+			final Set<T> elts = newHashSet(coll2);
+			for (T t : elts) {
+				for (int i = 0, m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)) - Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+					list.add(t);
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 其中一个集合在另一个集合中是否至少包含一个元素，既是两个集合是否至少有一个共同的元素
+	 * 
+	 * @param coll1 集合1
+	 * @param coll2 集合2
+	 * @return 其中一个集合在另一个集合中是否至少包含一个元素
+	 * @since 2.1
+	 * @see #intersection
+	 */
+	public static boolean containsAny(final Collection<?> coll1, final Collection<?> coll2) {
+		if (isEmpty(coll1) || isEmpty(coll2)) {
+			return false;
+		}
+		if (coll1.size() < coll2.size()) {
+			for (Object object : coll1) {
+				if (coll2.contains(object)) {
+					return true;
+				}
+			}
+		} else {
+			for (Object object : coll2) {
+				if (coll1.contains(object)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 根据集合返回一个元素计数的 {@link Map}<br>
+	 * 所谓元素计数就是假如这个集合中某个元素出现了n次，那将这个元素做为key，n做为value<br>
+	 * 例如：[a,b,c,c,c] 得到：<br>
+	 * a: 1<br>
+	 * b: 1<br>
+	 * c: 3<br>
+	 * 
+	 * @param collection 集合
+	 * @return {@link Map}
+	 */
+	public static <T> Map<T, Integer> countMap(Collection<T> collection) {
+		HashMap<T, Integer> countMap = new HashMap<>();
+		Integer count;
+		for (T t : collection) {
+			count = countMap.get(t);
+			if (null == count) {
+				countMap.put(t, 1);
+			} else {
+				countMap.put(t, count + 1);
+			}
+		}
+		return countMap;
 	}
 
 	/**
@@ -98,16 +278,16 @@ public class CollectionUtil {
 		Collections.sort(result, comparator);
 
 		int resultSize = result.size();
-		//每页条目数大于总数直接返回所有
+		// 每页条目数大于总数直接返回所有
 		if (resultSize <= numPerPage) {
 			return result;
 		}
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
-		if(startEnd[1] > resultSize){
-			//越界直接返回空
+		if (startEnd[1] > resultSize) {
+			// 越界直接返回空
 			return new ArrayList<>();
 		}
-		
+
 		return result.subList(startEnd[0], startEnd[1]);
 	}
 
@@ -128,16 +308,16 @@ public class CollectionUtil {
 		}
 
 		int resultSize = queue.size();
-		//每页条目数大于总数直接返回所有
+		// 每页条目数大于总数直接返回所有
 		if (resultSize <= numPerPage) {
 			return queue.toList();
 		}
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
-		if(startEnd[1] > resultSize){
-			//越界直接返回空
+		if (startEnd[1] > resultSize) {
+			// 越界直接返回空
 			return new ArrayList<>();
 		}
-		
+
 		return queue.toList().subList(startEnd[0], startEnd[1]);
 	}
 
@@ -667,25 +847,37 @@ public class CollectionUtil {
 	public static boolean isEmpty(Map<?, ?> map) {
 		return map == null || map.isEmpty();
 	}
-	
+
 	/**
 	 * Iterable是否为空
+	 * 
 	 * @param iterable Iterable对象
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Iterable<?> iterable){
+	public static boolean isEmpty(Iterable<?> iterable) {
 		return null == iterable || isEmpty(iterable.iterator());
 	}
-	
+
 	/**
 	 * Iterator是否为空
+	 * 
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(Iterator<?> Iterator){
+	public static boolean isEmpty(Iterator<?> Iterator) {
 		return null == Iterator || false == Iterator.hasNext();
 	}
 	
+	/**
+	 * Enumeration是否为空
+	 * 
+	 * @param enumeration {@link Enumeration}
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(Enumeration<?> enumeration) {
+		return null == enumeration || false == enumeration.hasMoreElements();
+	}
+
 	// ---------------------------------------------------------------------- isNotEmpty
 	/**
 	 * 数组是否为非空
@@ -796,23 +988,35 @@ public class CollectionUtil {
 	public static <T> boolean isNotEmpty(Map<?, ?> map) {
 		return false == isEmpty(map);
 	}
-	
+
 	/**
 	 * Iterable是否为空
+	 * 
 	 * @param iterable Iterable对象
 	 * @return 是否为空
 	 */
-	public static boolean isNotEmpty(Iterable<?> iterable){
+	public static boolean isNotEmpty(Iterable<?> iterable) {
 		return null != iterable && isNotEmpty(iterable.iterator());
 	}
-	
+
 	/**
 	 * Iterator是否为空
+	 * 
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
 	 */
-	public static boolean isNotEmpty(Iterator<?> Iterator){
+	public static boolean isNotEmpty(Iterator<?> Iterator) {
 		return null != Iterator && Iterator.hasNext();
+	}
+	
+	/**
+	 * Enumeration是否为空
+	 * 
+	 * @param enumeration {@link Enumeration}
+	 * @return 是否为空
+	 */
+	public static boolean isNotEmpty(Enumeration<?> enumeration) {
+		return null != enumeration && enumeration.hasMoreElements();
 	}
 
 	// ---------------------------------------------------------------------- zip
@@ -1209,4 +1413,46 @@ public class CollectionUtil {
 		}
 		return obj.toString();
 	}
+	
+	/**
+	 * 加入全部
+	 * @param collection 集合 {@link Collection}
+	 * @param iterator {@link Iterator}
+	 * @return 原集合
+	 */
+	public static <T> Collection<T> addAll(Collection<T> collection, Iterator<T> iterator) {
+		if(null != collection && null != iterator){
+			while (iterator.hasNext()) {
+				collection.add(iterator.next());
+			}
+		}
+		return collection;
+	}
+	
+	/**
+	 * 加入全部
+	 * @param collection 集合 {@link Collection}
+	 * @param iterable {@link Iterable}
+	 * @return 原集合
+	 */
+	public static <T> Collection<T> addAll(Collection<T> collection, Iterable<T> iterable) {
+		return addAll(collection, iterable.iterator());
+	}
+
+	/**
+	 * 加入全部
+	 * @param collection 集合 {@link Collection}
+	 * @param enumeration {@link Enumeration}
+	 * @return 原集合
+	 */
+	public static <T> Collection<T> addAll(Collection<T> collection, Enumeration<T> enumeration) {
+		if(null != collection && null != enumeration){
+			while (enumeration.hasMoreElements()) {
+				collection.add(enumeration.nextElement());
+			}
+		}
+		return collection;
+	}
+	
+	
 }
