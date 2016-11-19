@@ -7,6 +7,7 @@ import com.xiaoleilu.hutool.db.ds.dbcp.DbcpDSFactory;
 import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
 import com.xiaoleilu.hutool.db.ds.hikari.HikariDSFactory;
 import com.xiaoleilu.hutool.db.ds.pooled.PooledDSFactory;
+import com.xiaoleilu.hutool.db.ds.tomcat.TomcatDSFactory;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -155,23 +156,27 @@ public abstract class DSFactory {
 	private static DSFactory detectDSFactory(Setting setting){
 		DSFactory dsFactory;
 		try {
-			dsFactory = new HikariDSFactory(setting);
-			log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
-		} catch (NoClassDefFoundError e) {
+			dsFactory = new TomcatDSFactory(setting);
+		} catch (NoClassDefFoundError e1) {
 			try {
-				dsFactory = new DruidDSFactory(setting);
+				dsFactory = new HikariDSFactory(setting);
 				log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 			} catch (NoClassDefFoundError e2) {
 				try {
-					dsFactory = new DbcpDSFactory(setting);
+					dsFactory = new DruidDSFactory(setting);
 					log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 				} catch (NoClassDefFoundError e3) {
 					try {
-						dsFactory = new C3p0DSFactory(setting);
+						dsFactory = new DbcpDSFactory(setting);
 						log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 					} catch (NoClassDefFoundError e4) {
-						dsFactory = new PooledDSFactory(setting);
-						log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+						try {
+							dsFactory = new C3p0DSFactory(setting);
+							log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+						} catch (NoClassDefFoundError e5) {
+							dsFactory = new PooledDSFactory(setting);
+							log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+						}
 					}
 				}
 			}
