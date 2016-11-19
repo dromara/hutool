@@ -408,8 +408,8 @@ public class BasicSetting extends AbsSetting{
 	 * @param map {@link Map}
 	 */
 	@Override
-	public void putAll(Map<? extends Object, ? extends Object> m) {
-		this.map.putAll(m);
+	public void putAll(Map<? extends Object, ? extends Object> map) {
+		this.map.putAll(map);
 	}
 	
 	/**

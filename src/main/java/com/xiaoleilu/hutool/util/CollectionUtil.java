@@ -42,7 +42,7 @@ public class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
 	 * 
-	 * @param coll1集合1
+	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
@@ -71,7 +71,7 @@ public class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
 	 * 
-	 * @param coll1集合1
+	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @param otherColls 其它集合
 	 * @return 并集的集合，返回 {@link ArrayList}
@@ -91,7 +91,7 @@ public class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c]，此结果中只保留了两个c
 	 * 
-	 * @param coll1集合1
+	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @return 交集的集合，返回 {@link ArrayList}
 	 */
@@ -116,7 +116,7 @@ public class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c]，此结果中只保留了两个c
 	 * 
-	 * @param coll1集合1
+	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @param otherColls 其它集合
 	 * @return 并集的集合，返回 {@link ArrayList}
@@ -142,7 +142,7 @@ public class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[c]，此结果中只保留了一个
 	 * 
-	 * @param coll1集合1
+	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @return 差集的集合，返回 {@link ArrayList}
 	 */
