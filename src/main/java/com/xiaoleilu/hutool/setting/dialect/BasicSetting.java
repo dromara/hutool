@@ -9,11 +9,11 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +24,7 @@ import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
+import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -59,13 +60,6 @@ public class BasicSetting extends AbsSetting{
 	private final static char[] GROUP_SURROUND = { '[', ']' };
 	/** 变量名称的正则 */
 	private String reg_var = "\\$\\{(.*?)\\}";
-	
-	/** 本设置对象的字符集 */
-	private Charset charset;
-	/** 是否使用变量 */
-	private boolean isUseVariable;
-	/** 设定文件的URL */
-	private URL settingUrl;
 	
 	private LinkedList<String> groups = new LinkedList<String>();
 	
@@ -196,7 +190,7 @@ public class BasicSetting extends AbsSetting{
 			settingStream = settingUrl.openStream();
 			load(settingStream, isUseVariable);
 		} catch (IOException e) {
-			log.error("Load setting error!", e);
+			log.error(e, "Load setting error!");
 			return false;
 		} finally {
 			IoUtil.close(settingStream);
@@ -357,6 +351,17 @@ public class BasicSetting extends AbsSetting{
 	}
 	
 	/**
+	 * 获得group对应的子Setting
+	 * @param group 分组
+	 * @return {@link Setting}
+	 */
+	public Setting getSetting(String group){
+		final Setting setting = new Setting();
+		setting.putAll(this.getMap(group));
+		return setting;
+	}
+	
+	/**
 	 * 转换为Properties对象，原分组变为前缀
 	 * @return Properties对象
 	 */
@@ -399,30 +404,14 @@ public class BasicSetting extends AbsSetting{
 	}
 	
 	/**
-	 * 加入键值对
-	 * @param key 键
-	 * @param value 值，会被转换为字符串
-	 */
-	public void put(String key, Object value){
-		this.map.put(key, value);
-	}
-	
-	/**
 	 * 加入Map中的键值对
 	 * @param map {@link Map}
 	 */
-	public void putAll(Map<?, ?> map){
-		this.map.putAll(map);
+	@Override
+	public void putAll(Map<? extends Object, ? extends Object> m) {
+		this.map.putAll(m);
 	}
 	
-	/**
-	 * 加入Properties中的键值对
-	 * @param properties {@link Properties}
-	 */
-	public void putAll(Properties properties){
-			this.map.putAll(properties);
-	}
-
 	/**
 	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
 	 * 只支持基本类型的转换
@@ -476,8 +465,54 @@ public class BasicSetting extends AbsSetting{
 	/**
 	 * @return 所有键值对
 	 */
+	@Override
 	public Set<Entry<Object, Object>> entrySet(){
 		return map.entrySet();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return this.map.isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return this.map.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return this.map.containsValue(value);
+	}
+
+	@Override
+	public Object get(Object key) {
+		return this.map.get(key);
+	}
+
+	@Override
+	public Object put(Object key, Object value) {
+		return this.map.put(key, value);
+	}
+
+	@Override
+	public Object remove(Object key) {
+		return this.map.remove(key);
+	}
+
+	@Override
+	public void clear() {
+		this.map.clear();
+	}
+
+	@Override
+	public Set<Object> keySet() {
+		return this.map.keySet();
+	}
+
+	@Override
+	public Collection<Object> values() {
+		return this.map.values();
 	}
 	
 	@Override
@@ -518,6 +553,6 @@ public class BasicSetting extends AbsSetting{
 		}
 		return keyWithGroup;
 	}
-	
+
 	/*--------------------------Private Method end-------------------------------*/
 }

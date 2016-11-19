@@ -30,19 +30,19 @@ public class SettingDemo {
 		
 		//--------------------------------------------- 使用
 		//获取key为name的值
-		setting.getString("name");
+		setting.getStr("name");
 		//获取分组为group下key为name的值
-		setting.getString("name", "group1");
+		setting.getByGroup("name", "group1");
 		//当获取的值为空（null或者空白字符时，包括多个空格），返回默认值
-		setting.getStringWithDefault("name", "默认值");
+		setting.getStr("name", "默认值");
 		//完整的带有key、分组和默认值的获得值得方法
-		setting.getStringWithDefault("name", "group1", "默认值");
+		setting.getStr("name", "group1", "默认值");
 		
 		//如果想获得其它类型的值，可以调用相应的getXXX方法，参数相似
 		
 		//有时候需要在key对应value不存在的时候（没有这项设置的时候）告知用户，故有此方法打印一个debug日志
 		setting.getWithLog("name");
-		setting.getWithLog("name", "group1");
+		setting.getByGroupWithLog("name", "group1");
 		
 		//重新读取配置文件，可以启用一个定时器调用此方法来定时更新配置
 		setting.reload();

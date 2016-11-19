@@ -158,7 +158,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 			settingStream = groupedSetUrl.openStream();
 			load(settingStream);
 		} catch (IOException e) {
-			log.error("Load GroupSet error!", e);
+			log.error(e, "Load GroupSet error!");
 			return false;
 		} finally {
 			IoUtil.close(settingStream);

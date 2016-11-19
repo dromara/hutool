@@ -40,8 +40,8 @@ public class DbSetting {
 		DbConfig config = new DbConfig();
 		
 		//基本信息
-		final String jdbcUrl = setting.getString("url", group);
-		config.setDriver(setting.getStringWithDefault("driver", group, DbUtil.identifyDriver(jdbcUrl)));
+		final String jdbcUrl = setting.getByGroup("url", group);
+		config.setDriver(setting.getStr("driver", group, DbUtil.identifyDriver(jdbcUrl)));
 		config.setUrl(jdbcUrl);
 		config.setUser(setting.getStr("user", group));
 		config.setPass(setting.getStr("pass", group));

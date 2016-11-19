@@ -16,7 +16,7 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * Druid数据源工厂类
+ * DBCP2数据源工厂类
  * @author Looly
  *
  */

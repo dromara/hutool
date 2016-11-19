@@ -277,7 +277,7 @@ public class MongoDS implements Closeable{
 		try {
 			mongo = new MongoClient(addrList, buildMongoClientOptions(StrUtil.EMPTY));
 		} catch (Exception e) {
-			log.error("Init MongoDB connection error!", e);
+			log.error(e, "Init MongoDB connection error!");
 			return;
 		}
 		
@@ -337,7 +337,7 @@ public class MongoDS implements Closeable{
 			group = StrUtil.EMPTY;
 		}
 		
-		String tmpHost = setting.getString("host", group);
+		String tmpHost = setting.getByGroup("host", group);
 		if(StrUtil.isBlank(tmpHost)) {
 			throw new NotInitedException("Host name is empy of group: " + group);
 		}

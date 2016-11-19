@@ -107,17 +107,6 @@ public class Setting extends BasicSetting {
 
 	/*--------------------------公有方法 start-------------------------------*/
 	
-	/**
-	 * 获得group对应的子Setting
-	 * @param group 分组
-	 * @return {@link Setting}
-	 */
-	public Setting getSetting(String group){
-		final Setting setting = new Setting();
-		setting.putAll(this.getMap(group));
-		return setting;
-	}
-
 	//--------------------------------------------------------------- Get
 	/**
 	 * 带有日志提示的get，如果没有定义指定的KEY，则打印debug日志
@@ -126,7 +115,7 @@ public class Setting extends BasicSetting {
 	 * @return 值
 	 */
 	public String getWithLog(String key) {
-		return get(key, null);
+		return getStr(key);
 	}
 	
 	/**
@@ -135,72 +124,10 @@ public class Setting extends BasicSetting {
 	 * @param key 键
 	 * @return 值
 	 */
-	public String getWithLog(String key, String group) {
-		final String value = get(key, group);
+	public String getByGroupWithLog(String key, String group) {
+		final String value = getByGroup(key, group);
 		if (value == null) {
 			log.debug("No key define for [{}]!", key);
-		}
-		return value;
-	}
-
-	/**
-	 * 获得指定分组的键对应值
-	 * 
-	 * @param key 键
-	 * @param group 分组
-	 * @return 值
-	 */
-	public String get(String key, String group) {
-		return super.getByGroup(key, group);
-	}
-
-	//--------------------------------------------------------------- Get String
-	/**
-	 * 获取字符型型属性值
-	 * 
-	 * @param key 属性名
-	 * @return 属性值
-	 */
-	public String getString(String key) {
-		return super.getStr(key);
-	}
-	
-	/**
-	 * 获取字符型型属性值<br>
-	 * 若获得的值为不可见字符，使用默认值
-	 * 
-	 * @param key 属性名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public String getStringWithDefault(String key, String defaultValue) {
-		return super.getStr(key, defaultValue);
-	}
-
-	/**
-	 * 获取字符型型属性值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @return 属性值
-	 */
-	public String getString(String key, String group) {
-		return super.getByGroup(key, group);
-	}
-	
-	/**
-	 * 获取字符型型属性值<br>
-	 * 若获得的值为不可见字符，使用默认值
-	 * 
-	 * @param key 属性名
-	 * @param group 分组名
-	 * @param defaultValue 默认值
-	 * @return 属性值
-	 */
-	public String getStringWithDefault(String key, String group, String defaultValue) {
-		final String value = getString(key, group);
-		if(StrUtil.isBlank(value)) {
-			return defaultValue;
 		}
 		return value;
 	}
@@ -248,7 +175,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public String[] getStrings(String key, String group, String delimiter) {
-		final String value = getString(key, group);
+		final String value = getByGroup(key, group);
 		if(StrUtil.isBlank(value)) {
 			return null;
 		}
@@ -276,7 +203,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Integer getInt(String key, String group, Integer defaultValue) {
-		return Convert.toInt(get(key, group), defaultValue);
+		return Convert.toInt(getByGroup(key, group), defaultValue);
 	}
 
 	//--------------------------------------------------------------- Get bool
@@ -300,7 +227,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Boolean getBool(String key, String group, Boolean defaultValue) {
-		return Convert.toBool(get(key, group), defaultValue);
+		return Convert.toBool(getByGroup(key, group), defaultValue);
 	}
 
 	//--------------------------------------------------------------- Get long
@@ -324,7 +251,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Long getLong(String key, String group, Long defaultValue) {
-		return Convert.toLong(get(key, group), defaultValue);
+		return Convert.toLong(getByGroup(key, group), defaultValue);
 	}
 	//--------------------------------------------------------------- Get char
 	/**
@@ -335,7 +262,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Character getChar(String key, String group) {
-		final String value = get(key, group);
+		final String value = getByGroup(key, group);
 		if(StrUtil.isBlank(value)) {
 			return null;
 		}
@@ -363,7 +290,7 @@ public class Setting extends BasicSetting {
 	 * @return 属性值
 	 */
 	public Double getDouble(String key, String group, Double defaultValue) {
-		return Convert.toDouble(get(key, group), defaultValue);
+		return Convert.toDouble(getByGroup(key, group), defaultValue);
 	}
 	/*--------------------------公有方法 end-------------------------------*/
 }

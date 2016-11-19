@@ -1012,7 +1012,7 @@ public class ClassUtil {
 				}
 			}
 		} catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
+			log.error(ex);
 		}
 	}
 

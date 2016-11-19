@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.setting;
 
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 
@@ -10,7 +11,7 @@ import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
  * @author Looly
  *
  */
-public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String>{
+public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String> implements Map<Object, Object>{
 	
 	/** 本设置对象的字符集 */
 	protected Charset charset;
@@ -22,15 +23,4 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	@Override
 	public abstract Object getObj(String key, Object defaultValue);
 
-	/**
-	 * @return 配置文件大小（key的个数）
-	 */
-	public abstract int size();
-
-	/**
-	 * @return 是否为空
-	 */
-	public boolean isEmpty() {
-		return size() == 0;
-	}
 }

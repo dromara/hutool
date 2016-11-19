@@ -71,9 +71,9 @@ public class SimpleDataSource extends AbstractDataSource{
 			setting = new Setting(DEFAULT_DB_CONFIG_PATH);
 		}
 		init(
-				setting.getString("url", group), 
-				setting.getString("user", group), 
-				setting.getString("pass", group)
+				setting.getByGroup("url", group), 
+				setting.getByGroup("user", group), 
+				setting.getByGroup("pass", group)
 		);
 	}
 	

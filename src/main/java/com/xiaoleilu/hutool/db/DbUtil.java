@@ -147,13 +147,26 @@ public class DbUtil {
 	 * @param jndiName JNDI名称
 	 * @return 数据源
 	 */
+	public static DataSource getJndiDsWithLog(String jndiName) {
+		try {
+			return getJndiDs(jndiName);
+		} catch (DbRuntimeException e) {
+			log.error(e.getCause(), "Find JNDI datasource error!");
+		}
+		return null;
+	}
+	
+	/**
+	 * 获得JNDI数据源
+	 * @param jndiName JNDI名称
+	 * @return 数据源
+	 */
 	public static DataSource getJndiDs(String jndiName) {
 		try {
 			return (DataSource) new InitialContext().lookup(jndiName);
 		} catch (NamingException e) {
-			log.error("Find JNDI datasource error!", e);
+			throw new DbRuntimeException(e);
 		}
-		return null;
 	}
 	
 	/**

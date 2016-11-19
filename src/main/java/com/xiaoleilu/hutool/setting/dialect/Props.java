@@ -111,7 +111,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 			in = propertiesFileUrl.openStream();
 			super.load(in);
 		} catch (IOException e) {
-			log.error("Load properties error!", e);
+			log.error(e, "Load properties error!");
 		}finally{
 			IoUtil.close(in);
 		}
