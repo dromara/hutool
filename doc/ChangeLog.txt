@@ -358,3 +358,5 @@ Entity中toVo区别是否忽略大小写
 4、ds增加JndiDSFactory，支持JNDI数据源
 5、修复各个包中error日志使用问题导致的无法打印堆栈
 6、Setting中删除大量重复的方法，统一getXXX
+7、扩充HexUtil，增加isHexNumber方法
+8、CollectionUtil增加forEach方法，用于支持Map等类型遍历

@@ -1454,5 +1454,76 @@ public class CollectionUtil {
 		return collection;
 	}
 	
+	//------------------------------------------------------------------------------------------------- forEach
 	
+	/**
+	 * 循环遍历 {@link Iterator}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * @param iterator {@link Iterator}
+	 * @param consumer {@link Consumer} 遍历的每条数据处理器
+	 */
+	public static <T> void forEach(Iterator<T> iterator, Consumer<T> consumer){
+		int index = 0;
+		while(iterator.hasNext()){
+			consumer.accept(iterator.next(), index);
+			index ++;
+		}
+	}
+	
+	/**
+	 * 循环遍历 {@link Enumeration}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * @param enumeration {@link Enumeration}
+	 * @param consumer {@link Consumer} 遍历的每条数据处理器
+	 */
+	public static <T> void forEach(Enumeration<T> enumeration, Consumer<T> consumer){
+		int index = 0;
+		while(enumeration.hasMoreElements()){
+			consumer.accept(enumeration.nextElement(), index);
+			index ++;
+		}
+	}
+	
+	/**
+	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * @param map {@link Map}
+	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
+	 */
+	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer){
+		int index = 0;
+		for(Entry<K, V> entry : map.entrySet()){
+			kvConsumer.accept(entry.getKey(), entry.getValue(), index);
+			index++;
+		}
+	}
+	
+	/**
+	 * 针对一个参数做相应的操作
+	 * @author Looly
+	 *
+	 *@param <T> 处理参数类型
+	 */
+	public static interface Consumer<T>{
+		/**
+		 * 接受并处理一个参数
+		 * @param value 参数值
+		 * @param index 参数在集合中的索引
+		 */
+		void accept(T value, int index);
+	}
+	
+	/**
+	 * 针对两个参数做相应的操作，例如Map中的KEY和VALUE
+	 * @author Looly
+	 *
+	 * @param <K> KEY类型
+	 * @param <V> VALUE类型
+	 */
+	public static interface KVConsumer<K, V>{
+		/**
+		 * 接受并处理一对参数
+		 * @param key 键
+		 * @param value 值
+		 * @param index 参数在集合中的索引
+		 */
+		void accept(K key, V value, int index);
+	}
 }

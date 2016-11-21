@@ -22,6 +22,18 @@ public class HexUtil {
 	 * 用于建立十六进制字符的输出的大写字符数组
 	 */
 	private static final char[] DIGITS_UPPER = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	
+	/**
+	 * 判断给定字符串是否为16进制数<br>
+	 * 如果是，需要使用对应数字类型对象的<code>decode</code>方法解码<br>
+	 * 例如：{@code Integer.decode}方法解码int类型的16进制数字
+	 * @param value 值
+	 * @return 是否为16进制
+	 */
+	public static boolean isHexNumber(String value) {
+		int index = (value.startsWith("-") ? 1 : 0);
+		return (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index));
+	}
 
 	//---------------------------------------------------------------------------------------------------- encode
 	/**

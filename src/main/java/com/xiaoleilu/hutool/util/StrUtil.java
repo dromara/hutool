@@ -643,8 +643,17 @@ public class StrUtil {
 		if (str == null) {
 			return null;
 		}
-
-		return str.replaceAll("\\s*", EMPTY);
+		
+		int len = str.length();
+		StringBuilder sb = new StringBuilder(str.length());
+		char c;
+		for (int i = 0; i < len; i++) {
+			c = str.charAt(i);
+			if (false == Character.isWhitespace(c)) {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
