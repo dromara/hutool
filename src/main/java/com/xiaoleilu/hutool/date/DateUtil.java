@@ -1,13 +1,13 @@
-package com.xiaoleilu.hutool.util;
+package com.xiaoleilu.hutool.date;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.lang.DateTime;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 时间工具类
@@ -15,58 +15,70 @@ import com.xiaoleilu.hutool.lang.DateTime;
  * @author xiaoleilu
  */
 public class DateUtil {
-	/** 毫秒 */
-	public final static long MS = 1;
-	/** 每秒钟的毫秒数 */
-	public final static long SECOND_MS = MS * 1000;
-	/** 每分钟的毫秒数 */
-	public final static long MINUTE_MS = SECOND_MS * 60;
-	/** 每小时的毫秒数 */
-	public final static long HOUR_MS = MINUTE_MS * 60;
-	/** 每天的毫秒数 */
-	public final static long DAY_MS = HOUR_MS * 24;
-
+	
 	/** 标准日期格式 */
-	public final static String NORM_DATE_PATTERN = "yyyy-MM-dd";
+	public final static String NORM_DATE_PATTERN = DatePattern.NORM_DATE_PATTERN;
 	/** 标准时间格式 */
-	public final static String NORM_TIME_PATTERN = "HH:mm:ss";
+	public final static String NORM_TIME_PATTERN = DatePattern.NORM_TIME_PATTERN;
 	/** 标准日期时间格式，精确到分 */
-	public final static String NORM_DATETIME_MINUTE_PATTERN = "yyyy-MM-dd HH:mm";
+	public final static String NORM_DATETIME_MINUTE_PATTERN = DatePattern.NORM_DATETIME_MINUTE_PATTERN;
 	/** 标准日期时间格式，精确到秒 */
-	public final static String NORM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	public final static String NORM_DATETIME_PATTERN = DatePattern.NORM_DATETIME_PATTERN;
 	/** 标准日期时间格式，精确到毫秒 */
-	public final static String NORM_DATETIME_MS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
+	public final static String NORM_DATETIME_MS_PATTERN = DatePattern.NORM_DATETIME_MS_PATTERN;
 	/** HTTP头中日期时间格式 */
-	public final static String HTTP_DATETIME_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
+	public final static String HTTP_DATETIME_PATTERN = DatePattern.HTTP_DATETIME_PATTERN;
 
-	/** 标准日期（不含时间）格式化器 */
-	// private final static SimpleDateFormat NORM_DATE_FORMAT = new SimpleDateFormat(NORM_DATE_PATTERN);
-	private static ThreadLocal<SimpleDateFormat> NORM_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>(){
-		synchronized protected SimpleDateFormat initialValue() {
-			return new SimpleDateFormat(NORM_DATE_PATTERN);
-		};
-	};
-	/** 标准时间格式化器 */
-	// private final static SimpleDateFormat NORM_TIME_FORMAT = new SimpleDateFormat(NORM_TIME_PATTERN);
-	private static ThreadLocal<SimpleDateFormat> NORM_TIME_FORMAT = new ThreadLocal<SimpleDateFormat>(){
-		synchronized protected SimpleDateFormat initialValue() {
-			return new SimpleDateFormat(NORM_TIME_PATTERN);
-		};
-	};
-	/** 标准日期时间格式化器 */
-	// private final static SimpleDateFormat NORM_DATETIME_FORMAT = new SimpleDateFormat(NORM_DATETIME_PATTERN);
-	private static ThreadLocal<SimpleDateFormat> NORM_DATETIME_FORMAT = new ThreadLocal<SimpleDateFormat>(){
-		synchronized protected SimpleDateFormat initialValue() {
-			return new SimpleDateFormat(NORM_DATETIME_PATTERN);
-		};
-	};
-	/** HTTP日期时间格式化器 */
-	// private final static SimpleDateFormat HTTP_DATETIME_FORMAT = new SimpleDateFormat(HTTP_DATETIME_PATTERN, Locale.US);
-	private static ThreadLocal<SimpleDateFormat> HTTP_DATETIME_FORMAT = new ThreadLocal<SimpleDateFormat>(){
-		synchronized protected SimpleDateFormat initialValue() {
-			return new SimpleDateFormat(HTTP_DATETIME_PATTERN, Locale.US);
-		};
-	};
+	/**
+	 * @return 当前时间
+	 */
+	public static DateTime date() {
+		return new DateTime();
+	}
+
+	/**
+	 * Long类型时间转为Date
+	 * 
+	 * @param date Long类型Date（Unix时间戳）
+	 * @return 时间对象
+	 */
+	public static DateTime date(long date) {
+		return new DateTime(date);
+	}
+	
+	/**
+	 * Calendar类型时间转为Date
+	 * 
+	 * @param calendar {@link Calendar}
+	 * @return 时间对象
+	 */
+	public static DateTime date(Calendar calendar) {
+		return new DateTime(calendar.getTime());
+	}
+
+	/**
+	 * 转换为Calendar对象
+	 * 
+	 * @param date 日期对象
+	 * @return Calendar对象
+	 */
+	public static Calendar calendar(Date date) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal;
+	}
+	
+	/**
+	 * 转换为Calendar对象
+	 * 
+	 * @param millis 时间戳
+	 * @return Calendar对象
+	 */
+	public static Calendar calendar(long millis) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(millis);
+		return cal;
+	}
 
 	/**
 	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
@@ -111,42 +123,13 @@ public class DateUtil {
 	}
 
 	/**
-	 * @return 当前时间
-	 */
-	public static DateTime date() {
-		return new DateTime();
-	}
-
-	/**
-	 * Long类型时间转为Date
-	 * 
-	 * @param date Long类型Date（Unix时间戳）
-	 * @return 时间对象
-	 */
-	public static DateTime date(long date) {
-		return new DateTime(date);
-	}
-
-	/**
-	 * 转换为Calendar对象
-	 * 
-	 * @param date 日期对象
-	 * @return Calendar对象
-	 */
-	public static Calendar toCalendar(Date date) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		return cal;
-	}
-
-	/**
 	 * 获得月份，从1月开始计数
 	 * 
 	 * @param date 日期
 	 * @return 月份
 	 */
 	public static int month(Date date) {
-		return toCalendar(date).get(Calendar.MONTH) + 1;
+		return calendar(date).get(Calendar.MONTH) + 1;
 	}
 
 	/**
@@ -156,7 +139,7 @@ public class DateUtil {
 	 * @return 年
 	 */
 	public static int year(Date date) {
-		return toCalendar(date).get(Calendar.YEAR);
+		return calendar(date).get(Calendar.YEAR);
 	}
 
 	/**
@@ -166,7 +149,7 @@ public class DateUtil {
 	 * @return 第几个季节
 	 */
 	public static int season(Date date) {
-		return toCalendar(date).get(Calendar.MONTH) / 3 + 1;
+		return calendar(date).get(Calendar.MONTH) / 3 + 1;
 	}
 
 	/**
@@ -177,7 +160,7 @@ public class DateUtil {
 	 * @return Season ，类似于 20132
 	 */
 	public static String yearAndSeason(Date date) {
-		return yearAndSeason(toCalendar(date));
+		return yearAndSeason(calendar(date));
 	}
 
 	/**
@@ -236,7 +219,7 @@ public class DateUtil {
 		if(null == date){
 			return null;
 		}
-		return NORM_DATETIME_FORMAT.get().format(date);
+		return DatePatternLocal.NORM_DATETIME_FORMAT.get().format(date);
 	}
 
 	/**
@@ -249,7 +232,7 @@ public class DateUtil {
 		if(null == date){
 			return null;
 		}
-		return NORM_DATE_FORMAT.get().format(date);
+		return DatePatternLocal.NORM_DATE_FORMAT.get().format(date);
 	}
 
 	/**
@@ -262,7 +245,7 @@ public class DateUtil {
 		if(null == date){
 			return null;
 		}
-		return HTTP_DATETIME_FORMAT.get().format(date);
+		return DatePatternLocal.HTTP_DATETIME_FORMAT.get().format(date);
 	}
 	// ------------------------------------ Format end ----------------------------------------------
 
@@ -301,7 +284,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseDateTime(String dateString) {
-		return parse(dateString, NORM_DATETIME_FORMAT.get());
+		return parse(dateString, DatePatternLocal.NORM_DATETIME_FORMAT.get());
 	}
 
 	/**
@@ -311,7 +294,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseDate(String dateString) {
-		return parse(dateString, NORM_DATE_FORMAT.get());
+		return parse(dateString, DatePatternLocal.NORM_DATE_FORMAT.get());
 	}
 
 	/**
@@ -321,7 +304,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseTime(String timeString) {
-		return parse(timeString, NORM_TIME_FORMAT.get());
+		return parse(timeString, DatePatternLocal.NORM_TIME_FORMAT.get());
 	}
 
 	/**
@@ -368,14 +351,8 @@ public class DateUtil {
 	 * @param date 日期
 	 * @return 某天的开始时间
 	 */
-	public static DateTime getBeginTimeOfDay(Date date) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-		return new DateTime(calendar.getTime());
+	public static DateTime beginOfDay(Date date) {
+		return beginOfDay(calendar(date));
 	}
 
 	/**
@@ -384,9 +361,31 @@ public class DateUtil {
 	 * @param date 日期
 	 * @return 某天的结束时间
 	 */
-	public static DateTime getEndTimeOfDay(Date date) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+	public static DateTime endOfDay(Date date) {
+		return endOfDay(calendar(date));
+	}
+	
+	/**
+	 * 获取某天的开始时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return 某天的开始时间
+	 */
+	public static DateTime beginOfDay(Calendar calendar) {
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return new DateTime(calendar.getTime());
+	}
+	
+	/**
+	 * 获取某天的结束时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return 某天的结束时间
+	 */
+	public static DateTime endOfDay(Calendar calendar) {
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
@@ -419,6 +418,50 @@ public class DateUtil {
 	 */
 	public static DateTime lastMouth() {
 		return offsiteMonth(new DateTime(), -1);
+	}
+	
+	/**
+	 * 偏移毫秒数
+	 * 
+	 * @param date 日期
+	 * @param offsite 偏移毫秒数，正数向未来偏移，负数向历史偏移
+	 * @return 偏移后的日期
+	 */
+	public static DateTime offsiteMillisecond(Date date, int offsite) {
+		return offsiteDate(date, Calendar.MILLISECOND, offsite);
+	}
+	
+	/**
+	 * 偏移秒数
+	 * 
+	 * @param date 日期
+	 * @param offsite 偏移秒数，正数向未来偏移，负数向历史偏移
+	 * @return 偏移后的日期
+	 */
+	public static DateTime offsiteSecond(Date date, int offsite) {
+		return offsiteDate(date, Calendar.SECOND, offsite);
+	}
+	
+	/**
+	 * 偏移分钟
+	 * 
+	 * @param date 日期
+	 * @param offsite 偏移分钟数，正数向未来偏移，负数向历史偏移
+	 * @return 偏移后的日期
+	 */
+	public static DateTime offsiteMinute(Date date, int offsite) {
+		return offsiteDate(date, Calendar.MINUTE, offsite);
+	}
+	
+	/**
+	 * 偏移小时
+	 * 
+	 * @param date 日期
+	 * @param offsite 偏移小时数，正数向未来偏移，负数向历史偏移
+	 * @return 偏移后的日期
+	 */
+	public static DateTime offsiteHour(Date date, int offsite) {
+		return offsiteDate(date, Calendar.HOUR_OF_DAY, offsite);
 	}
 
 	/**
@@ -476,12 +519,12 @@ public class DateUtil {
 	 * 
 	 * @param subtrahend 减数日期
 	 * @param minuend 被减数日期
-	 * @param diffField 相差的选项：相差的天、小时
+	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
 	 * @return 日期差
 	 */
-	public static long diff(Date subtrahend, Date minuend, long diffField) {
+	public static long diff(Date subtrahend, Date minuend, DateUnit unit) {
 		long diff = minuend.getTime() - subtrahend.getTime();
-		return diff / diffField;
+		return diff / unit.getMillis();
 	}
 
 	/**
@@ -606,53 +649,17 @@ public class DateUtil {
 
 		return age;
 	}
-
+	
 	/**
-	 * 计时器<br>
-	 * 计算某个过程话费的时间，精确到毫秒
+	 * 是否闰年
 	 * 
-	 * @author Looly
-	 *
+	 * @param year 年
+	 * @return 是否闰年
 	 */
-	public static class Timer {
-		private long time;
-		private boolean isNano;
-
-		public Timer() {
-			this(false);
-		}
-
-		public Timer(boolean isNano) {
-			this.isNano = isNano;
-			start();
-		}
-
-		/**
-		 * @return 开始计时并返回当前时间
-		 */
-		public long start() {
-			time = current(isNano);
-			return time;
-		}
-
-		/**
-		 * @return 重新计时并返回从开始到当前的持续时间
-		 */
-		public long durationRestart() {
-			long now = current(isNano);
-			long d = now - time;
-			time = now;
-			return d;
-		}
-
-		/**
-		 * @return 从开始到当前的持续时间
-		 */
-		public long duration() {
-			return current(isNano) - time;
-		}
+	public static boolean isLeapYear(int year){
+		return new GregorianCalendar().isLeapYear(year);
 	}
-
+	
 	// ------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>

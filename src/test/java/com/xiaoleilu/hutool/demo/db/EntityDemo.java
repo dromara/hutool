@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.demo.db;
 
+import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.db.Entity;
-import com.xiaoleilu.hutool.lang.DateTime;
 
 /**
  * 实体使用样例

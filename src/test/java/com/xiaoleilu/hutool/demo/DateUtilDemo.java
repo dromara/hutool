@@ -2,8 +2,8 @@ package com.xiaoleilu.hutool.demo;
 
 import java.util.Date;
 
-import com.xiaoleilu.hutool.lang.DateTime;
-import com.xiaoleilu.hutool.util.DateUtil;
+import com.xiaoleilu.hutool.date.DateTime;
+import com.xiaoleilu.hutool.date.DateUtil;
 
 /**
  * 日期工具Demo

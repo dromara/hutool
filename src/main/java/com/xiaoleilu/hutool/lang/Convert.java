@@ -8,9 +8,9 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.DateUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 

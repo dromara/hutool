@@ -1,10 +1,10 @@
 package com.xiaoleilu.hutool.log.dialect.console;
 
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.log.AbstractLog;
 import com.xiaoleilu.hutool.log.level.Level;
-import com.xiaoleilu.hutool.util.DateUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

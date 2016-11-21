@@ -360,3 +360,4 @@ Entity中toVo区别是否忽略大小写
 6、Setting中删除大量重复的方法，统一getXXX
 7、扩充HexUtil，增加isHexNumber方法
 8、CollectionUtil增加forEach方法，用于支持Map等类型遍历
+9、将DateUtil包变更为date，同时拆分格式化模式为单独的类，优化性能。DateUtil中增加方法

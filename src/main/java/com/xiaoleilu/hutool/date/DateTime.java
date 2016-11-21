@@ -1,8 +1,6 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.date;
 
 import java.util.Date;
-
-import com.xiaoleilu.hutool.util.DateUtil;
 
 /**
  * 封装java.util.Date
