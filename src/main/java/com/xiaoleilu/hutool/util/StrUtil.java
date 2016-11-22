@@ -1141,23 +1141,14 @@ public class StrUtil {
 
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
+	 * @see CollectionUtil#join(String, Object...)
 	 * 
 	 * @param conjunction 分隔符
 	 * @param objs 数组
 	 * @return 连接后的字符串
 	 */
 	public static String join(String conjunction, Object... objs) {
-		StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (Object item : objs) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			sb.append(item);
-		}
-		return sb.toString();
+		return CollectionUtil.join(conjunction, objs);
 	}
 	
 	/**

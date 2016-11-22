@@ -37,5 +37,10 @@ public class StrUtilDemo {
 		Console.log(StrUtil.sub(str, 2, 3));
 		Console.log(StrUtil.sub(str, -4, 0));
 		Console.log();
+		
+		Console.log("-----------------------字符串切分--------------------------------");
+		String name = "华夏民族";
+		char[] charArray = name.toCharArray();
+		System.out.println(StrUtil.join("%", charArray));
 	}
 }
