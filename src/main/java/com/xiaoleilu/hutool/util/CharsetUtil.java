@@ -73,7 +73,7 @@ public class CharsetUtil {
 	/**
 	 * 系统字符集编码，与 {@link CharsetUtil#defaultCharsetName()}功能相同，别名不同
 	 * 
-	 * @see {@link CharsetUtil#defaultCharsetName()}
+	 * @see CharsetUtil#defaultCharsetName()
 	 * @return 系统字符集编码
 	 */
 	public static String systemCharset() {
@@ -82,7 +82,8 @@ public class CharsetUtil {
 	
 	/**
 	 * 系统默认字符集编码
-	 * @see {@link Charset#defaultCharset()}
+	 * 
+	 * @see CharsetUtil#defaultCharsetName()
 	 * @return 系统字符集编码
 	 */
 	public static String defaultCharsetName() {
@@ -91,7 +92,8 @@ public class CharsetUtil {
 	
 	/**
 	 * 系统默认字符集编码
-	 * @see {@link Charset#defaultCharset()}
+	 * 
+	 * @see CharsetUtil#defaultCharsetName()
 	 * @return 系统字符集编码
 	 */
 	public static Charset defaultCharset() {

@@ -134,7 +134,6 @@ public class Base64 {
 	 * base64解码
 	 * 
 	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
 	public static String decodeStr(String source) {
