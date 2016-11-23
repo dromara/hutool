@@ -444,35 +444,18 @@ public class ClassUtil {
 		if (null == clazz || clazz.isPrimitive()) {
 			return clazz;
 		}
-
-		BasicType basicType;
-		try {
-			basicType = BasicType.valueOf(clazz.getSimpleName().toUpperCase());
-		} catch (Exception e) {
-			return clazz;
-		}
-
-		// 基本类型
-		switch (basicType) {
-			case BYTE:
-				return byte.class;
-			case SHORT:
-				return short.class;
-			case INTEGER:
-				return int.class;
-			case LONG:
-				return long.class;
-			case DOUBLE:
-				return double.class;
-			case FLOAT:
-				return float.class;
-			case BOOLEAN:
-				return boolean.class;
-			case CHAR:
-				return char.class;
-			default:
-				return clazz;
-		}
+		
+		return BasicType.wrapperPrimitiveMap.get(clazz);
+	}
+	
+	/**
+	 * 原始类型转换为包装类型
+	 * 
+	 * @param clazz 被转换为包装类型的类，必须为原始类型的类
+	 * @return 基本类型类
+	 */
+	public static Class<?> castToWrapper(Class<?> clazz) {
+		return BasicType.primitiveWrapperMap.get(clazz);
 	}
 
 	/**

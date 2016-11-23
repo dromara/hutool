@@ -366,3 +366,4 @@ Entity中toVo区别是否忽略大小写
 12、CharsetUtil增加defaultCharset方法
 13、增加Base64类，支持url safe的encode和decode
 14、StrUtil.str方法增加支持Byte[]参数支持
+15、ClassUtil中增加原始类和包装类的转换
