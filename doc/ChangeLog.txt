@@ -364,3 +364,5 @@ Entity中toVo区别是否忽略大小写
 10、修复StrUtil.join时传入数组或集合类无法转为字符串问题
 11、SecureUtil中decodeBase64增加重载方法
 12、CharsetUtil增加defaultCharset方法
+13、增加Base64类，支持url safe的encode和decode
+14、StrUtil.str方法增加支持Byte[]参数支持

@@ -993,6 +993,27 @@ public class StrUtil {
 	}
 	
 	/**
+	 * 编码字符串，编码为UTF-8
+	 * 
+	 * @param str 字符串
+	 * @return 编码后的字节码
+	 */
+	public static byte[] utf8Bytes(String str) {
+		return bytes(str, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 编码字符串<br>
+	 * 使用系统默认编码
+	 * 
+	 * @param str 字符串
+	 * @return 编码后的字节码
+	 */
+	public static byte[] bytes(String str) {
+		return bytes(str, Charset.defaultCharset());
+	}
+	
+	/**
 	 * 编码字符串
 	 * 
 	 * @param str 字符串
@@ -1062,7 +1083,9 @@ public class StrUtil {
 		
 		if(obj instanceof String) {
 			return (String)obj;
-		}else if(obj instanceof byte[] || obj instanceof Byte[]){
+		}else if(obj instanceof byte[]){
+			return str((byte[])obj, charset);
+		}else if(obj instanceof Byte[]){
 			return str((Byte[])obj, charset);
 		}else if(obj instanceof ByteBuffer){
 			return str((ByteBuffer)obj, charset);
@@ -1100,6 +1123,39 @@ public class StrUtil {
 			return new String(data);
 		}
 		return new String(data, charset);
+	}
+	
+	/**
+	 * 将Byte数组转为字符串
+	 * 
+	 * @param bytes byte数组
+	 * @param charset 字符集
+	 * @return 字符串
+	 */
+	public static String str(Byte[] bytes, String charset) {
+		return str(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+	}
+	
+	/**
+	 * 解码字节码
+	 * 
+	 * @param data 字符串
+	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+	 * @return 解码后的字符串
+	 */
+	public static String str(Byte[] data, Charset charset) {
+		if (data == null) {
+			return null;
+		}
+		
+		byte[] bytes = new byte[data.length];
+		Byte dataByte;
+		for(int i =0; i < data.length; i++){
+			dataByte = data[i];
+			bytes[i] = (null == dataByte) ? -1 : dataByte.byteValue();
+		}
+		
+		return str(bytes, charset);
 	}
 	
 	/**
@@ -1397,18 +1453,5 @@ public class StrUtil {
 			}
 		}
 		return count;
-	}
-	
-	/**
-	 * 获得字符串对应byte数组
-	 * @param str 字符串
-	 * @param charset 编码，如果为<code>null</code>使用系统默认编码
-	 * @return bytes
-	 */
-	public static byte[] getBytes(String str, Charset charset){
-		if(null == str){
-			return null;
-		}
-		return null == charset ? str.getBytes() : str.getBytes(charset);
 	}
 }

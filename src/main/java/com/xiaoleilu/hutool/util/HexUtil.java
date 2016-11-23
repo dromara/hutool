@@ -54,7 +54,7 @@ public class HexUtil {
 	 * @return 十六进制char[]
 	 */
 	public static char[] encodeHex(String str, Charset charset) {
-		return encodeHex(StrUtil.getBytes(str, charset), true);
+		return encodeHex(StrUtil.bytes(str, charset), true);
 	}
 
 	/**

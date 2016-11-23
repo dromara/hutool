@@ -1,6 +1,10 @@
 hutool
 ======
 
+[![Version](https://img.shields.io/badge/version-2.16.0-brightgreen.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool%22)
+[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg "JDK 1.7")
+
 <center>![封面](http://looly-blog.qiniudn.com/hutool.jpg)</center>
 
 ## Hutool交流QQ群：** 537116831 **

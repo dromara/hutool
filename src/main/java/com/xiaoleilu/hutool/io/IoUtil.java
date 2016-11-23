@@ -436,7 +436,7 @@ public class IoUtil {
 		if (content == null) {
 			return null;
 		}
-		return new ByteArrayInputStream(StrUtil.getBytes(content, charset));
+		return new ByteArrayInputStream(StrUtil.bytes(content, charset));
 	}
 	
 	/**
