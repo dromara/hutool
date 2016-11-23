@@ -362,3 +362,5 @@ Entity中toVo区别是否忽略大小写
 8、CollectionUtil增加forEach方法，用于支持Map等类型遍历
 9、将DateUtil包变更为date，同时拆分格式化模式为单独的类，优化性能。DateUtil中增加方法
 10、修复StrUtil.join时传入数组或集合类无法转为字符串问题
+11、SecureUtil中decodeBase64增加重载方法
+12、CharsetUtil增加defaultCharset方法

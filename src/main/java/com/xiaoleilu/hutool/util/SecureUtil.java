@@ -296,6 +296,16 @@ public class SecureUtil {
 		}
 		return dest;
 	}
+	
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String base64(String source) {
+		return base64(source, Charset.defaultCharset());
+	}
 
 	/**
 	 * base64编码
@@ -317,6 +327,16 @@ public class SecureUtil {
 	 */
 	public static String base64(String source, Charset charset) {
 		return base64(StrUtil.bytes(source, charset), charset);
+	}
+	
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String base64(byte[] source) {
+		return base64(source, Charset.defaultCharset());
 	}
 
 	/**
@@ -340,6 +360,17 @@ public class SecureUtil {
 	public static String base64(byte[] source, Charset charset) {
 		return StrUtil.str(base64(source, false), charset);
 	}
+	
+	/**
+	 * base64解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String decodeBase64Str(String source) {
+		return decodeBase64Str(source, Charset.defaultCharset());
+	}
 
 	/**
 	 * base64解码
@@ -348,8 +379,41 @@ public class SecureUtil {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeBase64(String source, String charset) {
-		return StrUtil.str(decodeBase64(StrUtil.bytes(source, charset)), charset);
+	public static String decodeBase64Str(String source, String charset) {
+		return StrUtil.str(decodeBase64(source, charset), charset);
+	}
+	
+	/**
+	 * base64解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String decodeBase64Str(String source, Charset charset) {
+		return StrUtil.str(decodeBase64(source, charset), charset);
+	}
+	
+	/**
+	 * base64解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static byte[] decodeBase64(String source, String charset) {
+		return decodeBase64(StrUtil.bytes(source, charset));
+	}
+	
+	/**
+	 * base64解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static byte[] decodeBase64(String source, Charset charset) {
+		return decodeBase64(StrUtil.bytes(source, charset));
 	}
 
 	/**

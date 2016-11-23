@@ -71,10 +71,30 @@ public class CharsetUtil {
 	}
 	
 	/**
+	 * 系统字符集编码，与 {@link CharsetUtil#defaultCharsetName()}功能相同，别名不同
+	 * 
+	 * @see {@link CharsetUtil#defaultCharsetName()}
 	 * @return 系统字符集编码
 	 */
 	public static String systemCharset() {
+		return defaultCharsetName();
+	}
+	
+	/**
+	 * 系统默认字符集编码
+	 * @see {@link Charset#defaultCharset()}
+	 * @return 系统字符集编码
+	 */
+	public static String defaultCharsetName() {
 		return Charset.defaultCharset().name();
 	}
-
+	
+	/**
+	 * 系统默认字符集编码
+	 * @see {@link Charset#defaultCharset()}
+	 * @return 系统字符集编码
+	 */
+	public static Charset defaultCharset() {
+		return Charset.defaultCharset();
+	}
 }
