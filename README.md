@@ -7,7 +7,7 @@ hutool
 
 <center>![封面](http://looly-blog.qiniudn.com/hutool.jpg)</center>
 
-## Hutool交流QQ群：** 537116831 **
+## Hutool交流QQ群：== 537116831 == <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="Hutool交流群" title="Hutool交流群"></a>
 
 ## 功能
 一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
@@ -53,9 +53,9 @@ hutool
 ### 非Maven项目
 可以从[http://search.maven.org/](http://search.maven.org/) 搜索`hutool`找到项目，点击对应版本，下面是相应的Jar包，导入即可使用。
 
-最新的2.14.0版本Jar下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.14.0/hutool-2.14.0.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.14.0/hutool-2.14.0.jar)
+[http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool%22](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool%22)
 
-Java doc下载地址：[http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.14.0/hutool-2.14.0-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/xiaoleilu/hutool/2.14.0/hutool-2.14.0-javadoc.jar)
+点击链接后点选择对应版本，点击列表尾部的“Download”下载jar、API文档、源码
 
 ## 文档请移步 
 
