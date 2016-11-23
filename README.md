@@ -7,7 +7,7 @@ hutool
 
 <center>![封面](http://looly-blog.qiniudn.com/hutool.jpg)</center>
 
-## Hutool交流QQ群：== 537116831 == <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="Hutool交流群" title="Hutool交流群"></a>
+## Hutool交流QQ群：== 537116831 == <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="Hutool交流群" title="Hutool交流群"></a>
 
 ## 功能
 一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
