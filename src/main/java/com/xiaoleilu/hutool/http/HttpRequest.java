@@ -16,6 +16,7 @@ import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
+import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
@@ -473,7 +474,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest basicAuth(String username, String password) {
 		final String data = username.concat(":").concat(password);
-		final String base64 = SecureUtil.base64(data, charset);
+		final String base64 = Base64.encode(data, charset);
 
 		header("Authorization", "Basic " + base64, true);
 
