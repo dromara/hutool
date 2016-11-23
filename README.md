@@ -5,7 +5,7 @@ hutool
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg "JDK 1.7")
 
-<center>![封面](http://looly-blog.qiniudn.com/hutool.jpg)</center>
+<center>![封面](http://looly-blog.qiniudn.com/hutool.jpg =200)</center>
 
 ## Hutool交流QQ群：== [537116831](http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810) == 
 
