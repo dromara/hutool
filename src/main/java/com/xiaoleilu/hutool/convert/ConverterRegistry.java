@@ -44,7 +44,7 @@ public class ConverterRegistry {
 	/**
 	 * 登记
 	 * 
-	 * @param type 转换成的目标类型
+	 * @param converter 转换器
 	 * @return {@link ConverterRegistry}
 	 */
 	public ConverterRegistry register(Converter converter) {

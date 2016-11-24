@@ -15,7 +15,6 @@ public class StringConverter extends AbstractConverter{
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected String convertInternal(Object value) {
 		return convertToStr(value);
 	}

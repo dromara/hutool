@@ -42,7 +42,6 @@ public class DateConverter extends AbstractConverter {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Date convertInternal(Object value) {
 		// Handle Calendar
 		if (value instanceof Calendar) {

@@ -16,7 +16,6 @@ public class CharacterConverter extends AbstractConverter{
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Character convertInternal(Object value) {
 		if(char.class == value.getClass()){
 			return Character.valueOf((char)value);

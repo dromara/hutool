@@ -18,7 +18,7 @@ public abstract class AbstractConverter implements Converter{
 		
 		if(targetType.isPrimitive()){
 			//原始类型直接调用内部转换，内部转换永远不会返回null
-			return convertInternal(value);
+			return (T) convertInternal(value);
 		}
 		
 		if(null == value){
@@ -28,8 +28,8 @@ public abstract class AbstractConverter implements Converter{
 			if(targetType.isInstance(value)){
 				return (T) targetType.cast(value);
 			}
-			final T convertInternal = convertInternal(value);
-			return (null == convertInternal) ? defaultValue : convertInternal;
+			final Object convertInternal = convertInternal(value);
+			return (T) ((null == convertInternal) ? defaultValue : convertInternal);
 		}else{
 			throw new IllegalArgumentException(MessageFormat.format("Default value [{0}] is not the instance of [{1}]]", defaultValue, targetType));
 		}
@@ -40,7 +40,7 @@ public abstract class AbstractConverter implements Converter{
 	 * @param value 值
 	 * @return 转换后的类型
 	 */
-	protected abstract <T> T convertInternal(Object value);
+	protected abstract Object convertInternal(Object value);
 	
 	/**
 	 * 值转为String

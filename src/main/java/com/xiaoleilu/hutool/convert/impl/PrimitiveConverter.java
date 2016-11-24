@@ -44,7 +44,6 @@ public class PrimitiveConverter extends AbstractConverter {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Object convertInternal(Object value) {
 		try {
 			if (byte.class == this.targetType) {

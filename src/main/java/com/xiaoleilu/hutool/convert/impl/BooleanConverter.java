@@ -15,7 +15,6 @@ public class BooleanConverter extends AbstractConverter{
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Boolean convertInternal(Object value) {
 		if(boolean.class == value.getClass()){
 			return Boolean.valueOf((boolean)value);

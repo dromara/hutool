@@ -46,7 +46,6 @@ public class NumberConverter extends AbstractConverter {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Number convertInternal(Object value) {
 		try {
 			if (Byte.class == this.targetType) {

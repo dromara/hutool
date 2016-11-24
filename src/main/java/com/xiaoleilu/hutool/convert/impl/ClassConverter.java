@@ -16,7 +16,6 @@ public class ClassConverter extends AbstractConverter{
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Class<?> convertInternal(Object value) {
 		String valueStr = convertToStr(value);
 		try {
