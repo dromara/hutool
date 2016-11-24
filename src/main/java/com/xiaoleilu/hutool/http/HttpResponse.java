@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

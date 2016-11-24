@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.system;
 import java.io.PrintWriter;
 import java.util.Properties;
 
-import com.xiaoleilu.hutool.lang.Convert;
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.lang.Singleton;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.StrUtil;

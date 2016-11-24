@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.convert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,5 +29,31 @@ public enum BasicType {
 		for (Map.Entry<Class<?>, Class<?>> entry : wrapperPrimitiveMap.entrySet()) {
 			primitiveWrapperMap.put(entry.getValue(), entry.getKey());
 		}
+	}
+	
+	/**
+	 * 原始类转为包装类，非原始类返回原类
+	 * @param clazz 原始类
+	 * @return 包装类
+	 */
+	public static Class<?> wrap(Class<?> clazz){
+		if(null == clazz || false == clazz.isPrimitive()){
+			return clazz;
+		}
+		Class<?> result = primitiveWrapperMap.get(clazz);
+		return (null == result) ? clazz : result;
+	}
+	
+	/**
+	 * 包装类转为原始类，非包装类返回原类
+	 * @param clazz 包装类
+	 * @return 原始类
+	 */
+	public static Class<?> unWrap(Class<?> clazz){
+		if(null == clazz || clazz.isPrimitive()){
+			return clazz;
+		}
+		Class<?> result = wrapperPrimitiveMap.get(clazz);
+		return (null == result) ? clazz : result;
 	}
 }

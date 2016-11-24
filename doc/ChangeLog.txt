@@ -367,3 +367,5 @@ Entity中toVo区别是否忽略大小写
 13、增加Base64类，支持url safe的encode和decode
 14、StrUtil.str方法增加支持Byte[]参数支持
 15、ClassUtil中增加原始类和包装类的转换
+16、clone包单独成包
+17、全面优化Convert，单独成包convert，使用Convert以及其实现类实现可扩展的类型转换

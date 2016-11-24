@@ -23,8 +23,8 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.Collection;
 
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;

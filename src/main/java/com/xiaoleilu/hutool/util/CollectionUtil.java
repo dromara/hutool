@@ -19,9 +19,9 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
-import com.xiaoleilu.hutool.lang.Convert;
 import com.xiaoleilu.hutool.lang.Filter;
 
 /**

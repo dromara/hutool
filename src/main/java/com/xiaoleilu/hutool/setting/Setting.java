@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import com.xiaoleilu.hutool.lang.Convert;
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.dialect.BasicSetting;

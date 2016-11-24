@@ -22,9 +22,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.xiaoleilu.hutool.convert.BasicType;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FileUtil;
-import com.xiaoleilu.hutool.lang.BasicType;
 import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Singleton;
 import com.xiaoleilu.hutool.log.Log;
@@ -435,30 +435,6 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 转换为原始类型
-	 * 
-	 * @param clazz 被转换为原始类型的类，必须为包装类型的类
-	 * @return 基本类型类
-	 */
-	public static Class<?> castToPrimitive(Class<?> clazz) {
-		if (null == clazz || clazz.isPrimitive()) {
-			return clazz;
-		}
-		
-		return BasicType.wrapperPrimitiveMap.get(clazz);
-	}
-	
-	/**
-	 * 原始类型转换为包装类型
-	 * 
-	 * @param clazz 被转换为包装类型的类，必须为原始类型的类
-	 * @return 基本类型类
-	 */
-	public static Class<?> castToWrapper(Class<?> clazz) {
-		return BasicType.primitiveWrapperMap.get(clazz);
-	}
-
-	/**
 	 * @return 当前线程的class loader
 	 */
 	public static ClassLoader getContextClassLoader() {
@@ -648,6 +624,9 @@ public class ClassUtil {
 	public static <T> T invoke(Object obj, String methodName, Object[] args) {
 		try {
 			final Method method = getDeclaredMethod(obj, methodName, args);
+			if(null == method){
+				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
+			}
 			return invoke(obj, method, args);
 		} catch (Exception e) {
 			throw new UtilException(e);

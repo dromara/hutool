@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.getter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.xiaoleilu.hutool.lang.Convert;
+import com.xiaoleilu.hutool.convert.Convert;
 
 /**
  * 基本类型的getter接口抽象实现，所有类型的值获取都是通过将getObj获得的值转换而来<br>

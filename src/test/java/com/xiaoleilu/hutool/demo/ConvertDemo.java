@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.demo;
 
-import com.xiaoleilu.hutool.lang.Convert;
+import com.xiaoleilu.hutool.convert.Convert;
 
 public class ConvertDemo {
 	public static void main(String[] args) {

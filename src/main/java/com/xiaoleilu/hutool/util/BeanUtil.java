@@ -11,8 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.lang.Convert;
 
 /**
  * Bean工具类
@@ -256,7 +256,7 @@ public class BeanUtil {
 				}
 
 				try {
-					property.getWriteMethod().invoke(bean, Convert.parse(property.getPropertyType(), value));
+					property.getWriteMethod().invoke(bean, Convert.convert(property.getPropertyType(), value));
 				} catch (Exception e) {
 					throw new UtilException(StrUtil.format("Inject [{}] error!", property.getName()), e);
 				}

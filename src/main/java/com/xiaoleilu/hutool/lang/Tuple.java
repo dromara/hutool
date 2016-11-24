@@ -3,6 +3,8 @@ package com.xiaoleilu.hutool.lang;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import com.xiaoleilu.hutool.clone.CloneSupport;
+
 /**
  * 不可变数组类型，用于多值返回
  * @author Looly

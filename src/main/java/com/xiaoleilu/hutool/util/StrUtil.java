@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -970,6 +971,19 @@ public class StrUtil {
 			return template;
 		}
 		return StrFormatter.format(template, params);
+	}
+	
+	/**
+	 * 有序的格式化文本，使用{number}做为占位符<br>
+	 * 例：<br>
+	 * 		通常使用：format("this is {0} for {1}", "a", "b") -> this is a for b<br>
+	 * 
+	 * @param pattern 文本格式
+	 * @param arguments 参数
+	 * @return 格式化后的文本
+	 */
+	public static String indexedFormat(String pattern, Object... arguments){
+		return MessageFormat.format(pattern, arguments);
 	}
 
 	/**
