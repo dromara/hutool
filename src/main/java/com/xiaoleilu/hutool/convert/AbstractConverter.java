@@ -24,7 +24,7 @@ public abstract class AbstractConverter implements Converter{
 		if(null == value){
 			return defaultValue;
 		}
-		if(targetType.isInstance(defaultValue)){
+		if(null == defaultValue || targetType.isInstance(defaultValue)){
 			if(targetType.isInstance(value)){
 				return (T) targetType.cast(value);
 			}

@@ -4,7 +4,8 @@ import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
- * 类转换器
+ * 类转换器<br>
+ * 将类名转换为类
  * @author Looly
  *
  */

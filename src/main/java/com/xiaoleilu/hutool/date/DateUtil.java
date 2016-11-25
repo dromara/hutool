@@ -588,8 +588,8 @@ public class DateUtil {
 	 * 
 	 * @return Timer
 	 */
-	public static Timer timer() {
-		return new Timer();
+	public static TimeInterval timer() {
+		return new TimeInterval();
 
 	}
 	

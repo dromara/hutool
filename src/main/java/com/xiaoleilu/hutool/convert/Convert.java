@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Set;
 
-import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
@@ -188,7 +187,7 @@ public class Convert {
 		for (int i = 0; i < values.length; i++) {
 			final Integer v = toInt(values[i], null);
 			if (null == v && isIgnoreConvertError == false) {
-				throw new UtilException(StrUtil.format("Convert [{}] to Integer error!", values[i]));
+				throw new ConvertException(StrUtil.format("Convert [{}] to Integer error!", values[i]));
 			}
 			ints[i] = v;
 		}
@@ -235,7 +234,7 @@ public class Convert {
 		for (int i = 0; i < values.length; i++) {
 			final Long v = toLong(values[i], null);
 			if (null == v && isIgnoreConvertError == false) {
-				throw new UtilException(StrUtil.format("Convert [{}] to Long error!", values[i]));
+				throw new ConvertException(StrUtil.format("Convert [{}] to Long error!", values[i]));
 			}
 			longs[i] = v;
 		}
@@ -282,7 +281,7 @@ public class Convert {
 		for (int i = 0; i < values.length; i++) {
 			final Double v = toDouble(values[i], null);
 			if (null == v && isIgnoreConvertError == false) {
-				throw new UtilException(StrUtil.format("Convert [{}] to Double error!", values[i]));
+				throw new ConvertException(StrUtil.format("Convert [{}] to Double error!", values[i]));
 			}
 			doubles[i] = v;
 		}
@@ -329,7 +328,7 @@ public class Convert {
 		for (int i = 0; i < values.length; i++) {
 			final Float v = toFloat(values[i], null);
 			if (null == v && isIgnoreConvertError == false) {
-				throw new UtilException(StrUtil.format("Convert [{}] to Float error!", values[i]));
+				throw new ConvertException(StrUtil.format("Convert [{}] to Float error!", values[i]));
 			}
 			floats[i] = v;
 		}
@@ -376,7 +375,7 @@ public class Convert {
 		for (int i = 0; i < values.length; i++) {
 			final Boolean v = toBool(values[i], null);
 			if (null == v && isIgnoreConvertError == false) {
-				throw new UtilException(StrUtil.format("Convert [{}] to Boolean error!", values[i]));
+				throw new ConvertException(StrUtil.format("Convert [{}] to Boolean error!", values[i]));
 			}
 			bools[i] = v;
 		}
