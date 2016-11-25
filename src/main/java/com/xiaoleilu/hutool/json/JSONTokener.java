@@ -383,6 +383,42 @@ public class JSONTokener {
 	public JSONException syntaxError(String message) {
 		return new JSONException(message + this.toString());
 	}
+	
+	/**
+	 * 转为 {@link JSONArray}
+	 * @return {@link JSONArray}
+	 */
+	public JSONArray toJSONArray(){
+		JSONArray jsonArray = new JSONArray();
+		if (this.nextClean() != '[') {
+			throw this.syntaxError("A JSONArray text must start with '['");
+		}
+		if (this.nextClean() != ']') {
+			this.back();
+			while (true) {
+				if (this.nextClean() == ',') {
+					this.back();
+					jsonArray.add(JSONNull.NULL);
+				} else {
+					this.back();
+					jsonArray.add(this.nextValue());
+				}
+				switch (this.nextClean()) {
+					case ',':
+						if (this.nextClean() == ']') {
+							return jsonArray;
+						}
+						this.back();
+						break;
+					case ']':
+						return jsonArray;
+					default:
+						throw this.syntaxError("Expected a ',' or ']'");
+				}
+			}
+		}
+		return jsonArray;
+	}
 
 	/**
 	 * Make a printable string of this JSONTokener.

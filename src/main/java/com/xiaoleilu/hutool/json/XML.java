@@ -213,7 +213,7 @@ public class XML {
 					if (x.nextToken() != GT) {
 						throw x.syntaxError("Misshaped tag");
 					}
-					if (jsonobject.length() > 0) {
+					if (jsonobject.size() > 0) {
 						context.accumulate(tagName, jsonobject);
 					} else {
 						context.accumulate(tagName, "");
@@ -238,9 +238,9 @@ public class XML {
 						} else if (token == LT) {
 							// Nested element
 							if (parse(x, jsonobject, tagName, keepStrings)) {
-								if (jsonobject.length() == 0) {
+								if (jsonobject.size() == 0) {
 									context.accumulate(tagName, "");
-								} else if (jsonobject.length() == 1 && jsonobject.get("content") != null) {
+								} else if (jsonobject.size() == 1 && jsonobject.get("content") != null) {
 									context.accumulate(tagName, jsonobject.get("content"));
 								} else {
 									context.accumulate(tagName, jsonobject);
@@ -329,7 +329,7 @@ public class XML {
 
 			// Loop thru the keys.
 			jo = (JSONObject) object;
-			keys = jo.keys();
+			keys = jo.keySet().iterator();
 			while (keys.hasNext()) {
 				key = keys.next();
 				value = jo.get(key);

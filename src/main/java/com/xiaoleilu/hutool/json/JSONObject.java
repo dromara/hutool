@@ -7,14 +7,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -25,12 +26,12 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * </pre>
  * @author looly
  */
-public class JSONObject extends JSONGetter<String> implements JSON {
+public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
 
 	/**
 	 * The map where the JSONObject's properties are kept.
 	 */
-	private final Map<String, Object> map = new HashMap<>();;
+	private final Map<String, Object> rawHashMap = new HashMap<>();
 
 	/**
 	 * 空构造
@@ -77,7 +78,7 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 					final Object value = e.getValue();
 					if (value != null) {
-						this.map.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value));
+						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value));
 					}
 				}
 			}else if(source instanceof String){
@@ -115,6 +116,151 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 		this(new JSONTokener(source));
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
+	
+	/**
+	 * Determine if the value associated with the key is null or if there is no value.
+	 *
+	 * @param key A key string.
+	 * @return true if there is no value associated with the key or if the value is the JSONNull.NULL object.
+	 */
+	public boolean isNull(String key) {
+		return JSONNull.NULL.equals(this.getObj(key));
+	}
+
+	/**
+	 * Produce a JSONArray containing the values of the members of this JSONObject.
+	 *
+	 * @param names A JSONArray containing a list of key strings. This determines the sequence of the values in the result.
+	 * @return A JSONArray of values.
+	 * @throws JSONException If any of the values are non-finite numbers.
+	 */
+	public JSONArray toJSONArray(Collection<String> names) throws JSONException {
+		if (CollectionUtil.isEmpty(names)) {
+			return null;
+		}
+		final JSONArray ja = new JSONArray();
+		Object value;
+		for (String name : names) {
+			value = this.get(name);
+			if(null != value){
+				ja.put(value);
+			}
+		}
+		return ja;
+	}
+	
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param clazz 实体类
+	 * @return 实体类对象
+	 */
+	public <T> T toBean(Class<T> clazz) {
+		return BeanUtil.mapToBean(this.rawHashMap, clazz);
+	}
+
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param bean 实体类
+	 * @return 实体类对象
+	 */
+	public <T> T toBean(T bean) {
+		return BeanUtil.fillBeanWithMap(this.rawHashMap, bean);
+	}
+	
+	@Override
+	public int size() {
+		return rawHashMap.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return rawHashMap.isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return rawHashMap.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return rawHashMap.containsValue(value);
+	}
+
+	@Override
+	public Object get(Object key) {
+		return rawHashMap.get(key);
+	}
+	
+	@Override
+	public Object getObj(String key, Object defaultValue) {
+		Object obj = this.rawHashMap.get(key);
+		return null == obj ? defaultValue : obj;
+	}
+
+	/**
+	 * PUT 键值对到JSONObject中，如果值为<code>null</code>，将此键移除
+	 *
+	 * @param key A key string.
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 */
+	@Override
+	public JSONObject put(String key, Object value) throws JSONException {
+		if (key == null) {
+			throw new NullPointerException("Null key.");
+		}
+		if (value != null) {
+			JSONUtil.testValidity(value);
+			this.rawHashMap.put(key, JSONUtil.wrap(value));
+		} else {
+			this.remove(key);
+		}
+		return this;
+	}
+	
+	/**
+	 * Put a key/value pair in the JSONObject, but only if the key and the value are both non-null, <br>
+	 * and only if there is not already a member with that name.
+	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
+	 *
+	 * @param key 键
+	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @return this.
+	 * @throws JSONException 值是无穷数字、键重复抛出异常
+	 */
+	public JSONObject putOnce(String key, Object value) throws JSONException {
+		if (key != null && value != null) {
+			if (rawHashMap.containsKey(key)) {
+				throw new JSONException(StrUtil.format("Duplicate key \"{}\"", key));
+			}
+			this.put(key, value);
+		}
+		return this;
+	}
+
+	/**
+	 * 在键和值都为非空的情况下put到JSONObject中
+	 *
+	 * @param key 键
+	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @return this.
+	 * @throws JSONException 值是无穷数字
+	 */
+	public JSONObject putOpt(String key, Object value) throws JSONException {
+		if (key != null && value != null) {
+			this.put(key, value);
+		}
+		return this;
+	}
+
+	@Override
+	public void putAll(Map<? extends String, ? extends Object> m) {
+		rawHashMap.putAll(m);
+	}
 	
 	/**
 	 * 积累值。类似于put，当key对应value已经存在时，与value组成新的JSONArray. <br>
@@ -160,16 +306,6 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 	}
 
 	/**
-	 * 是否存在指定KEY
-	 *
-	 * @param key A key string.
-	 * @return true if the key exists in the JSONObject.
-	 */
-	public boolean has(String key) {
-		return this.map.containsKey(key);
-	}
-
-	/**
 	 * 对值加一，如果值不存在，赋值1，如果为数字类型，做加一操作
 	 *
 	 * @param key A key string.
@@ -197,147 +333,40 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 		}
 		return this;
 	}
-
-	/**
-	 * Determine if the value associated with the key is null or if there is no value.
-	 *
-	 * @param key A key string.
-	 * @return true if there is no value associated with the key or if the value is the JSONNull.NULL object.
-	 */
-	public boolean isNull(String key) {
-		return JSONNull.NULL.equals(this.getObj(key));
-	}
-
-	/**
-	 * Get an enumeration of the keys of the JSONObject.
-	 *
-	 * @return An iterator of the keys.
-	 */
-	public Iterator<String> keys() {
-		return this.keySet().iterator();
-	}
-
-	/**
-	 * Get a set of keys of the JSONObject.
-	 *
-	 * @return A keySet.
-	 */
-	public Set<String> keySet() {
-		return this.map.keySet();
-	}
-
-	/**
-	 * Get the number of keys stored in the JSONObject.
-	 *
-	 * @return The number of keys in the JSONObject.
-	 */
-	public int length() {
-		return this.map.size();
-	}
-
-	/**
-	 * Produce a JSONArray containing the names of the elements of this JSONObject.
-	 *
-	 * @return A JSONArray containing the key strings, or null if the JSONObject is empty.
-	 */
-	public JSONArray names() {
-		JSONArray ja = new JSONArray();
-		Iterator<String> keys = this.keys();
-		while (keys.hasNext()) {
-			ja.put(keys.next());
-		}
-		return ja.length() == 0 ? null : ja;
-	}
-
-	/**
-	 * 获得指定KEY对应的值
-	 *
-	 * @param key KEY
-	 * @return 值，无对应值返回Null
-	 */
-	public Object get(String key) {
-		return getObj(key);
+	
+	@Override
+	public Object remove(Object key) {
+		return rawHashMap.remove(key);
 	}
 
 	@Override
-	public Object getObj(String key, Object defaultValue) {
-		Object obj = this.map.get(key);
-		return null == obj ? defaultValue : obj;
+	public void clear() {
+		rawHashMap.clear();
+	}
+	
+	@Override
+	public Set<String> keySet() {
+		return this.rawHashMap.keySet();
 	}
 
-	/**
-	 * PUT 键值对到JSONObject中，如果值为<code>null</code>，将此键移除
-	 *
-	 * @param key A key string.
-	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return this.
-	 * @throws JSONException 值是无穷数字抛出此异常
-	 */
-	public JSONObject put(String key, Object value) throws JSONException {
-		if (key == null) {
-			throw new NullPointerException("Null key.");
-		}
-		if (value != null) {
-			JSONUtil.testValidity(value);
-			this.map.put(key, JSONUtil.wrap(value));
-		} else {
-			this.remove(key);
-		}
-		return this;
+	@Override
+	public Collection<Object> values() {
+		return rawHashMap.values();
 	}
 
-	/**
-	 * Put a key/value pair in the JSONObject, but only if the key and the value are both non-null, <br>
-	 * and only if there is not already a member with that name.
-	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
-	 *
-	 * @param key 键
-	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return this.
-	 * @throws JSONException 值是无穷数字、键重复抛出异常
-	 */
-	public JSONObject putOnce(String key, Object value) throws JSONException {
-		if (key != null && value != null) {
-			if (map.containsKey(key)) {
-				throw new JSONException(StrUtil.format("Duplicate key \"{}\"", key));
-			}
-			this.put(key, value);
-		}
-		return this;
+	@Override
+	public Set<Entry<String, Object>> entrySet() {
+		return rawHashMap.entrySet();
 	}
-
+	
 	/**
-	 * 在键和值都为非空的情况下put到JSONObject中
-	 *
-	 * @param key 键
-	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
-	 * @return this.
-	 * @throws JSONException 值是无穷数字
-	 */
-	public JSONObject putOpt(String key, Object value) throws JSONException {
-		if (key != null && value != null) {
-			this.put(key, value);
-		}
-		return this;
-	}
-
-	/**
-	 * Remove a name and its value, if present.
-	 *
-	 * @param key The name to be removed.
-	 * @return The value that was associated with the name, or null if there was no value.
-	 */
-	public Object remove(String key) {
-		return this.map.remove(key);
-	}
-
-	/**
-	 * Determine if two JSONObjects are similar. They must contain the same set of names which must be associated with similar values.
+	 *JSON中的key以及对应的value相等则判定为与此对象相同
 	 *
 	 * @param other The other JSONObject
 	 * @return true if they are equal
 	 */
-	public boolean similar(Object other) {
+	@Override
+	public boolean equals(Object other) {
 		try {
 			if (!(other instanceof JSONObject)) {
 				return false;
@@ -352,11 +381,11 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 				Object valueThis = this.getObj(name);
 				Object valueOther = ((JSONObject) other).getObj(name);
 				if (valueThis instanceof JSONObject) {
-					if (!((JSONObject) valueThis).similar(valueOther)) {
+					if (!((JSONObject) valueThis).equals(valueOther)) {
 						return false;
 					}
 				} else if (valueThis instanceof JSONArray) {
-					if (!((JSONArray) valueThis).similar(valueOther)) {
+					if (!((JSONArray) valueThis).equals(valueOther)) {
 						return false;
 					}
 				} else if (!valueThis.equals(valueOther)) {
@@ -367,52 +396,6 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 		} catch (Throwable exception) {
 			return false;
 		}
-	}
-
-	/**
-	 * Produce a JSONArray containing the values of the members of this JSONObject.
-	 *
-	 * @param names A JSONArray containing a list of key strings. This determines the sequence of the values in the result.
-	 * @return A JSONArray of values.
-	 * @throws JSONException If any of the values are non-finite numbers.
-	 */
-	public JSONArray toJSONArray(JSONArray names) throws JSONException {
-		if (names == null || names.length() == 0) {
-			return null;
-		}
-		JSONArray ja = new JSONArray();
-		for (int i = 0; i < names.length(); i += 1) {
-			ja.put(this.getObj(names.getStr(i)));
-		}
-		return ja;
-	}
-	
-	/**
-	 * 转为Map
-	 * @return Map
-	 */
-	public Map<String, Object> toMap(){
-		return this.map;
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param clazz 实体类
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(Class<T> clazz) {
-		return BeanUtil.mapToBean(this.map, clazz);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param bean 实体类
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(T bean) {
-		return BeanUtil.fillBeanWithMap(this.map, bean);
 	}
 	
 	/**
@@ -459,8 +442,8 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
 		try {
 			boolean commanate = false;
-			final int length = this.length();
-			Iterator<String> keys = this.keys();
+			final int length = this.size();
+			Iterator<String> keys = this.keySet().iterator();
 			writer.write('{');
 
 			if (length == 1) {
@@ -470,7 +453,7 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 				if (indentFactor > 0) {
 					writer.write(' ');
 				}
-				JSONUtil.writeValue(writer, this.map.get(key), indentFactor, indent);
+				JSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, indent);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
 				while (keys.hasNext()) {
@@ -487,7 +470,7 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 					if (indentFactor > 0) {
 						writer.write(' ');
 					}
-					JSONUtil.writeValue(writer, this.map.get(key), indentFactor, newindent);
+					JSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, newindent);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
@@ -540,7 +523,7 @@ public class JSONObject extends JSONGetter<String> implements JSON {
 
 						Object result = method.invoke(bean, (Object[]) null);
 						if (result != null) {
-							this.map.put(key, JSONUtil.wrap(result));
+							this.rawHashMap.put(key, JSONUtil.wrap(result));
 						}
 					}
 				}

@@ -7,24 +7,26 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * JSON数组
  * @author looly
  */
-public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Object>{
+public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>{
 
 	/**
 	 * The arrayList where the JSONArray's properties are kept.
 	 */
-	private final ArrayList<Object> myArrayList;
+	private final ArrayList<Object> rawArrayList;
 
 	//-------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * Construct an empty JSONArray.
 	 */
 	public JSONArray() {
-		this.myArrayList = new ArrayList<Object>();
+		this.rawArrayList = new ArrayList<Object>();
 	}
 
 	/**
@@ -43,10 +45,10 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 			for (;;) {
 				if (x.nextClean() == ',') {
 					x.back();
-					this.myArrayList.add(JSONNull.NULL);
+					this.rawArrayList.add(JSONNull.NULL);
 				} else {
 					x.back();
-					this.myArrayList.add(x.nextValue());
+					this.rawArrayList.add(x.nextValue());
 				}
 				switch (x.nextClean()) {
 					case ',':
@@ -86,9 +88,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 			for (int i = 0; i < length; i += 1) {
 				this.put(JSONUtil.wrap(Array.get(arrayOrCollection, i)));
 			}
-		} else if(arrayOrCollection instanceof Collection){//Collection
+		} else if(arrayOrCollection instanceof Iterable<?>){//Iterable
 			for (Object o : (Collection<?>)arrayOrCollection) {
-				this.put(JSONUtil.wrap(o));
+				this.add(o);
 			}
 		}else{
 			throw new JSONException("JSONArray initial value should be a string or collection or array.");
@@ -96,15 +98,10 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 	}
 	//-------------------------------------------------------------------------------------------------------------------- Constructor start
 
-	@Override
-	public Iterator<Object> iterator() {
-		return myArrayList.iterator();
-	}
-
 	/**
 	 * Determine if the value is null.
 	 *
-	 * @param index The index must be between 0 and length() - 1.
+	 * @param index The index must be between 0 and size() - 1.
 	 * @return true if the value at the index is null, or if there is no value.
 	 */
 	public boolean isNull(int index) {
@@ -119,40 +116,26 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 	 * @throws JSONException If the array contains an invalid number.
 	 */
 	public String join(String separator) throws JSONException {
-		int len = this.length();
+		int len = this.size();
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < len; i += 1) {
 			if (i > 0) {
 				sb.append(separator);
 			}
-			sb.append(JSONUtil.valueToString(this.myArrayList.get(i)));
+			sb.append(JSONUtil.valueToString(this.rawArrayList.get(i)));
 		}
 		return sb.toString();
 	}
 
-	/**
-	 * Get the number of elements in the JSONArray, included nulls.
-	 *
-	 * @return The length (or size).
-	 */
-	public int length() {
-		return this.myArrayList.size();
-	}
-
-	/**
-	 * Get the optional object value associated with an index.
-	 *
-	 * @param index The index must be between 0 and length() - 1.
-	 * @return An object value, or null if there is no object at that index.
-	 */
+	@Override
 	public Object get(int index) {
-		return getObj(index);
+		return this.rawArrayList.get(index);
 	}
 	
 	@Override
 	public Object getObj(Integer index, Object defaultValue) {
-		return (index < 0 || index >= this.length()) ? defaultValue : this.myArrayList.get(index);
+		return (index < 0 || index >= this.size()) ? defaultValue : this.rawArrayList.get(index);
 	}
 	
 	/**
@@ -162,7 +145,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 	 * @return this.
 	 */
 	public JSONArray put(Object value) {
-		this.myArrayList.add(JSONUtil.wrap(value));
+		this.add(value);
 		return this;
 	}
 
@@ -175,29 +158,8 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 	 * @throws JSONException index < 0 或者非有限的数字
 	 */
 	public JSONArray put(int index, Object value) throws JSONException {
-		if (index < 0) {
-			throw new JSONException("JSONArray[" + index + "] not found.");
-		}
-		if (index < this.length()) {
-			JSONUtil.testValidity(value);
-			this.myArrayList.set(index, JSONUtil.wrap(value));
-		} else {
-			while (index != this.length()) {
-				this.put(JSONNull.NULL);
-			}
-			this.put(value);
-		}
+		this.add(index, value);
 		return this;
-	}
-
-	/**
-	 * Remove an index and close the hole.
-	 *
-	 * @param index The index of the element to be removed.
-	 * @return The value that was associated with the index, or null if there was no value.
-	 */
-	public Object remove(int index) {
-		return index >= 0 && index < this.length() ? this.myArrayList.remove(index) : null;
 	}
 
 	/**
@@ -206,23 +168,24 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 	 * @param other The other JSONArray
 	 * @return true if they are equal
 	 */
-	public boolean similar(Object other) {
+	@Override
+	public boolean equals(Object other) {
 		if (!(other instanceof JSONArray)) {
 			return false;
 		}
-		int len = this.length();
-		if (len != ((JSONArray) other).length()) {
+		int len = this.size();
+		if (len != ((JSONArray) other).size()) {
 			return false;
 		}
 		for (int i = 0; i < len; i += 1) {
 			Object valueThis = this.getObj(i);
 			Object valueOther = ((JSONArray) other).getObj(i);
 			if (valueThis instanceof JSONObject) {
-				if (!((JSONObject) valueThis).similar(valueOther)) {
+				if (!((JSONObject) valueThis).equals(valueOther)) {
 					return false;
 				}
 			} else if (valueThis instanceof JSONArray) {
-				if (!((JSONArray) valueThis).similar(valueOther)) {
+				if (!((JSONArray) valueThis).equals(valueOther)) {
 					return false;
 				}
 			} else if (!valueThis.equals(valueOther)) {
@@ -240,11 +203,11 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 	 * @throws JSONException If any of the names are null.
 	 */
 	public JSONObject toJSONObject(JSONArray names) throws JSONException {
-		if (names == null || names.length() == 0 || this.length() == 0) {
+		if (names == null || names.size() == 0 || this.size() == 0) {
 			return null;
 		}
 		JSONObject jo = new JSONObject();
-		for (int i = 0; i < names.length(); i += 1) {
+		for (int i = 0; i < names.size(); i += 1) {
 			jo.put(names.getStr(i), this.getObj(i));
 		}
 		return jo;
@@ -292,11 +255,11 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
 		try {
 			boolean commanate = false;
-			int length = this.length();
+			int length = this.size();
 			writer.write('[');
 
 			if (length == 1) {
-				JSONUtil.writeValue(writer, this.myArrayList.get(0), indentFactor, indent);
+				JSONUtil.writeValue(writer, this.rawArrayList.get(0), indentFactor, indent);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
 
@@ -308,7 +271,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 						writer.write('\n');
 					}
 					JSONUtil.indent(writer, newindent);
-					JSONUtil.writeValue(writer, this.myArrayList.get(i), indentFactor, newindent);
+					JSONUtil.writeValue(writer, this.rawArrayList.get(i), indentFactor, newindent);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
@@ -321,5 +284,131 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, Iterable<Obj
 		} catch (IOException e) {
 			throw new JSONException(e);
 		}
+	}
+	
+	@Override
+	public Iterator<Object> iterator() {
+		return rawArrayList.iterator();
+	}
+
+	@Override
+	public int size() {
+		return rawArrayList.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return rawArrayList.isEmpty();
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return rawArrayList.contains(o);
+	}
+
+	@Override
+	public Object[] toArray() {
+		return rawArrayList.toArray();
+	}
+
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return rawArrayList.toArray(a);
+	}
+
+	@Override
+	public boolean add(Object e) {
+		return this.rawArrayList.add(JSONUtil.wrap(e));
+	}
+	
+	@Override
+	public Object remove(int index) {
+		return index >= 0 && index < this.size() ? this.rawArrayList.remove(index) : null;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		return rawArrayList.remove(o);
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		return rawArrayList.containsAll(c);
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends Object> c) {
+		for (Object obj : c) {
+			this.add(obj);
+		}
+		return rawArrayList.addAll(c);
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends Object> c) {
+		return rawArrayList.addAll(index, c);
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		return this.rawArrayList.removeAll(c);
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		return this.rawArrayList.retainAll(c);
+	}
+
+	@Override
+	public void clear() {
+		this.rawArrayList.clear();
+		
+	}
+
+	@Override
+	public Object set(int index, Object element) {
+		return this.rawArrayList.set(index, JSONUtil.wrap(element));
+	}
+
+	@Override
+	public void add(int index, Object element) {
+		if (index < 0) {
+			throw new JSONException("JSONArray[" + index + "] not found.");
+		}
+		if (index < this.size()) {
+			JSONUtil.testValidity(element);
+			this.rawArrayList.set(index, JSONUtil.wrap(element));
+		} else {
+			while (index != this.size()) {
+				this.add(JSONNull.NULL);
+			}
+			this.put(element);
+		}
+		
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		return this.rawArrayList.indexOf(o);
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		return this.rawArrayList.lastIndexOf(o);
+	}
+
+	@Override
+	public ListIterator<Object> listIterator() {
+		return this.rawArrayList.listIterator();
+	}
+
+	@Override
+	public ListIterator<Object> listIterator(int index) {
+		return this.rawArrayList.listIterator(index);
+	}
+
+	@Override
+	public List<Object> subList(int fromIndex, int toIndex) {
+		return this.rawArrayList.subList(fromIndex, toIndex);
 	}
 }
