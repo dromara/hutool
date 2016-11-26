@@ -5,13 +5,11 @@ import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.exceptions.HttpException;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -42,7 +40,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			httpResponse.charset = httpConnection.charset();
 			
 			InputStream in;
-			if(httpResponse.status < HttpURLConnection.HTTP_BAD_REQUEST){
+			if(httpResponse.status < HttpStatus.HTTP_BAD_REQUEST){
 				in = httpConnection.getInputStream();
 			}else{
 				in = httpConnection.getErrorStream();

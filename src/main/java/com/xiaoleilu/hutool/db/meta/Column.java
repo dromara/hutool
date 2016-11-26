@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.db.meta;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -40,7 +40,7 @@ public class Column implements Cloneable{
 		try {
 			init(tableName, columnMetaRs);
 		} catch (SQLException e) {
-			throw new UtilException(StrUtil.format("Get table [{}] meta info error!", tableName));
+			throw new DbRuntimeException(StrUtil.format("Get table [{}] meta info error!", tableName));
 		}
 	}
 	//----------------------------------------------------- Constructor end

@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.db.ds.pooled;
 
+import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.DbUtil;
-import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
 
 /**
  * 数据库配置

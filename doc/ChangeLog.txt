@@ -370,3 +370,4 @@ Entity中toVo区别是否忽略大小写
 16、clone包单独成包
 17、全面优化Convert，单独成包convert，使用Convert以及其实现类实现可扩展的类型转换
 18、JSONObject实现Map接口，JSONArray实现List接口
+19、增加代理包，新增代理和切面功能

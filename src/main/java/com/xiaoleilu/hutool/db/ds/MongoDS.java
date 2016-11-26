@@ -15,8 +15,8 @@ import com.mongodb.MongoClientOptions.Builder;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.exceptions.NotInitedException;
-import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -191,7 +191,7 @@ public class MongoDS implements Closeable{
 	 */
 	public MongoDS(Setting mongoSetting, String... groups) {
 		if(mongoSetting == null) {
-			throw new UtilException("Mongo setting is null!");
+			throw new DbRuntimeException("Mongo setting is null!");
 		}
 		this.setting = mongoSetting;
 		this.groups = groups;
@@ -242,7 +242,7 @@ public class MongoDS implements Closeable{
 		try {
 			mongo = new MongoClient(serverAddress, buildMongoClientOptions(group));
 		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Init MongoDB pool with connection to [{}] error!", serverAddress), e);
+			throw new DbRuntimeException(StrUtil.format("Init MongoDB pool with connection to [{}] error!", serverAddress), e);
 		}
 		
 		log.info("Init MongoDB pool with connection to [{}]", serverAddress);
@@ -261,7 +261,7 @@ public class MongoDS implements Closeable{
 	 */
 	synchronized public void initCloud() {
 		if(groups == null || groups.length == 0) {
-			throw new UtilException("Please give replication set groups!");
+			throw new DbRuntimeException("Please give replication set groups!");
 		}
 		
 		if(setting == null) {
@@ -330,7 +330,7 @@ public class MongoDS implements Closeable{
 	 */
 	private ServerAddress createServerAddress(String group) {
 		if(setting == null) {
-			throw new UtilException(StrUtil.format("Please indicate setting file or create default [{}], and define group [{}]", MONGO_CONFIG_PATH, group));
+			throw new DbRuntimeException(StrUtil.format("Please indicate setting file or create default [{}], and define group [{}]", MONGO_CONFIG_PATH, group));
 		}
 		
 		if(group == null) {

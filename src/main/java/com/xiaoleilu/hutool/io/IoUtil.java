@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -448,7 +447,7 @@ public class IoUtil {
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 

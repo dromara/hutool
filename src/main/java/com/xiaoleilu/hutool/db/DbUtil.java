@@ -25,8 +25,6 @@ import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
-import com.xiaoleilu.hutool.exceptions.DbRuntimeException;
-import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -190,7 +188,7 @@ public class DbUtil {
 				}
 			}
 		} catch (Exception e) {
-			throw new UtilException("Get tables error!", e);
+			throw new DbRuntimeException("Get tables error!", e);
 		}finally {
 			close(rs, conn);
 		}
@@ -212,7 +210,7 @@ public class DbUtil {
 			}
 			return labelNames;
 		} catch (Exception e) {
-			throw new UtilException("Get colunms error!", e);
+			throw new DbRuntimeException("Get colunms error!", e);
 		}
 	}
 	
@@ -236,7 +234,7 @@ public class DbUtil {
 			}
 			return columnNames.toArray(new String[columnNames.size()]);
 		} catch (Exception e) {
-			throw new UtilException("Get columns error!", e);
+			throw new DbRuntimeException("Get columns error!", e);
 		}finally {
 			close(rs, conn);
 		}
@@ -280,7 +278,7 @@ public class DbUtil {
 				table.setColumn(Column.create(tableName, rs));
 			}
 		} catch (Exception e) {
-			throw new UtilException("Get columns error!", e);
+			throw new DbRuntimeException("Get columns error!", e);
 		}finally {
 			close(rs, conn);
 		}

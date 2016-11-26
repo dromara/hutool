@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.exceptions;
+package com.xiaoleilu.hutool.setting;
 
 import com.xiaoleilu.hutool.util.StrUtil;
 

@@ -21,8 +21,6 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.exceptions.HttpException;
-import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
@@ -67,7 +65,7 @@ public class HttpUtil {
 		try {
 			encodeContent = URLEncoder.encode(content, charsetStr);
 		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
+			throw new HttpException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
 		}
 		return encodeContent;
 	}
@@ -96,7 +94,7 @@ public class HttpUtil {
 		try {
 			encodeContnt = URLDecoder.decode(content, charsetStr);
 		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
+			throw new HttpException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
 		}
 		return encodeContnt;
 	}

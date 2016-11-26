@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.json.JSONArray;
 import com.xiaoleilu.hutool.json.JSONObject;
@@ -79,7 +78,7 @@ public class FileUtil {
 		if (file.isDirectory()) {
 			return file.listFiles();
 		}
-		throw new UtilException(StrUtil.format("Path [{}] is not directory!", path));
+		throw new IORuntimeException(StrUtil.format("Path [{}] is not directory!", path));
 	}
 
 	/**
@@ -121,13 +120,13 @@ public class FileUtil {
 	 * 目录是否为空
 	 * @param dirPath 目录
 	 * @return 是否为空
-	 * @exception UtilException IOException
+	 * @exception IoRuntimeException IOException
 	 */
 	public static boolean isDirEmpty(Path dirPath) {
 		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirPath)) {
 			return false == dirStream.iterator().hasNext();
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 	
@@ -220,7 +219,7 @@ public class FileUtil {
 				}
 			}
 		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Can not read file path of [{}]", path), e);
+			throw new IORuntimeException(StrUtil.format("Can not read file path of [{}]", path), e);
 		}
 		return paths;
 	}
@@ -864,7 +863,7 @@ public class FileUtil {
 		try {
 			subPath = file.getCanonicalPath();
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 
 		if (StrUtil.isNotEmpty(rootDir) && StrUtil.isNotEmpty(subPath)) {

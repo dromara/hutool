@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -501,7 +499,7 @@ public class ClassUtil {
 			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}
 	}
-
+	
 	/**
 	 * 加载类
 	 * 
@@ -641,33 +639,21 @@ public class ClassUtil {
 	 * @param args 参数对象
 	 * @return 结果
 	 * @throws UtilException IllegalAccessException and IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @throws InvocationTargetException 目标方法执行异常
+	 * @throws IllegalArgumentException 参数异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object[] args) throws InvocationTargetException {
+	public static <T> T invoke(Object obj, Method method, Object[] args) throws InvocationTargetException, IllegalArgumentException{
 		if (false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
 		try {
 			return (T) method.invoke(isStatic(method) ? null : obj, args);
-		} catch (IllegalAccessException | IllegalArgumentException e) {
+		} catch (IllegalAccessException e) {
 			throw new UtilException(e);
 		}
 	}
 	// ---------------------------------------------------------------------------------------------------- Invoke end
-
-	/**
-	 * 新建代理对象<br>
-	 * 动态代理类对象用于动态创建一个代理对象，可以在调用接口方法的时候动态执行相应逻辑
-	 * 
-	 * @param interfaceClass 被代理接口
-	 * @param invocationHandler 代理执行类，此类用于实现具体的接口方法
-	 * @return 被代理接口
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T newProxyInstance(Class<T> interfaceClass, InvocationHandler invocationHandler) {
-		return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[] { interfaceClass }, invocationHandler);
-	}
 
 	/**
 	 * 是否为包装类型

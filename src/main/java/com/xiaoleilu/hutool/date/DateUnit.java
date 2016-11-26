@@ -11,11 +11,13 @@ public enum DateUnit {
 	/** 一秒的毫秒数 */
 	SECOND(1000), 
 	/**一分钟的毫秒数 */
-	MINUTE(1000  * 60),
+	MINUTE(SECOND.getMillis() * 60),
 	/**一小时的毫秒数 */
-	HOUR(1000 * 60 * 60),
+	HOUR(MINUTE.getMillis() * 60),
 	/**一天的毫秒数 */
-	DAY(1000 * 60 * 60 * 24);
+	DAY(HOUR.getMillis() * 24),
+	/**一周的毫秒数 */
+	WEEK(DAY.getMillis() * 7);
 	
 	private long millis;
 	DateUnit(long millis){

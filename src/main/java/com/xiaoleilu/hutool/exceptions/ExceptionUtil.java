@@ -27,6 +27,19 @@ public class ExceptionUtil {
 	public static String getMessage(Throwable e) {
 		return StrUtil.format("{}: {}", e.getClass().getSimpleName(), e.getMessage());
 	}
+	
+	/**
+	 * 使用运行时异常包装编译异常
+	 * @param throwable 异常
+	 * @return 运行时异常
+	 */
+	public static RuntimeException wrapRuntime(Throwable throwable){
+		if(throwable instanceof RuntimeException){
+			return (RuntimeException) throwable;
+		}else{
+			return new RuntimeException(throwable);
+		}
+	}
 
 	/**
 	 * 剥离反射引发的InvocationTargetException、UndeclaredThrowableException中间异常，返回业务本身的异常

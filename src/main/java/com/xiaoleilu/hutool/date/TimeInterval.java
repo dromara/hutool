@@ -38,10 +38,53 @@ public class TimeInterval {
 		return d;
 	}
 
+	//----------------------------------------------------------- Interval
 	/**
-	 * @return 从开始到当前的间隔时间
+	 * 从开始到当前的间隔时间（毫秒数）
+	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public long interval() {
 		return DateUtil.current(isNano) - time;
 	}
+	
+	/**
+	 * 从开始到当前的间隔秒数，取绝对值
+	 * @return 从开始到当前的间隔秒数，取绝对值
+	 */
+	public long intervalSecond(){
+		return interval() / DateUnit.SECOND.getMillis();
+	}
+	
+	/**
+	 * 从开始到当前的间隔分钟数，取绝对值
+	 * @return 从开始到当前的间隔分钟数，取绝对值
+	 */
+	public long intervalMinute(){
+		return interval() / DateUnit.MINUTE.getMillis();
+	}
+	
+	/**
+	 * 从开始到当前的间隔小时数，取绝对值
+	 * @return 从开始到当前的间隔小时数，取绝对值
+	 */
+	public long intervalHour(){
+		return interval() / DateUnit.HOUR.getMillis();
+	}
+	
+	/**
+	 * 从开始到当前的间隔天数，取绝对值
+	 * @return 从开始到当前的间隔天数，取绝对值
+	 */
+	public long intervalDay(){
+		return interval() / DateUnit.DAY.getMillis();
+	}
+	
+	/**
+	 * 从开始到当前的间隔周数，取绝对值
+	 * @return 从开始到当前的间隔周数，取绝对值
+	 */
+	public long intervalWeek(){
+		return interval() / DateUnit.WEEK.getMillis();
+	}
+	
 }
