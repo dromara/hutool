@@ -19,6 +19,10 @@ public abstract class Aspect implements InvocationHandler{
 		this.target = target;
 	}
 	
+	public Object getTarget(){
+		return this.target;
+	}
+	
 	/**
 	 * 目标方法执行前的操作
 	 * @param target 目标对象
@@ -46,13 +50,13 @@ public abstract class Aspect implements InvocationHandler{
 	 * @return 是否允许抛出异常
 	 */
 	public abstract boolean afterException(Object target, Method method, Object[] args, Throwable e);
-
+	
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
 		if(before(target, method, args)){
 			try {
-				ClassUtil.invoke(target, method, args);
+				result = ClassUtil.invoke(target, method, args);
 			}catch (InvocationTargetException e) {
 				afterException(args, method, args, e.getTargetException());
 			}catch (Exception e) {

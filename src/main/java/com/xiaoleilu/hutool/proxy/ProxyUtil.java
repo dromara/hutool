@@ -16,12 +16,23 @@ public class ProxyUtil {
 	/**
 	 * 使用切面代理对象
 	 * @param target 目标对象
-	 * @param aspectClass 切面对象
+	 * @param aspectClass 切面对象类
 	 * @return 代理对象
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T proxy(T target, Class<? extends Aspect> aspectClass){
 		final Aspect aspect = ClassUtil.newInstance(aspectClass, target);
+		return (T) newProxyInstance(target.getClass().getClassLoader(), aspect, target.getClass().getInterfaces());
+	}
+	
+	/**
+	 * 使用切面代理对象
+	 * @param aspect 切面对象
+	 * @return 代理对象
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T proxy(Aspect aspect){
+		final Object target = aspect.getTarget();
 		return (T) newProxyInstance(target.getClass().getClassLoader(), aspect, target.getClass().getInterfaces());
 	}
 

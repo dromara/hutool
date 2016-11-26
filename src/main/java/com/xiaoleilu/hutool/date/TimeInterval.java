@@ -40,7 +40,8 @@ public class TimeInterval {
 
 	//----------------------------------------------------------- Interval
 	/**
-	 * 从开始到当前的间隔时间（毫秒数）
+	 * 从开始到当前的间隔时间（毫秒数）<br>
+	 * 如果使用纳秒计时，返回纳秒差，否则返回毫秒差
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public long interval() {
@@ -48,11 +49,19 @@ public class TimeInterval {
 	}
 	
 	/**
+	 * 从开始到当前的间隔时间（毫秒数）
+	 * @return 从开始到当前的间隔时间（毫秒数）
+	 */
+	public long intervalMs() {
+		return isNano ? interval() / 1000000L : interval();
+	}
+	
+	/**
 	 * 从开始到当前的间隔秒数，取绝对值
 	 * @return 从开始到当前的间隔秒数，取绝对值
 	 */
 	public long intervalSecond(){
-		return interval() / DateUnit.SECOND.getMillis();
+		return intervalMs() / DateUnit.SECOND.getMillis();
 	}
 	
 	/**
@@ -60,7 +69,7 @@ public class TimeInterval {
 	 * @return 从开始到当前的间隔分钟数，取绝对值
 	 */
 	public long intervalMinute(){
-		return interval() / DateUnit.MINUTE.getMillis();
+		return intervalMs() / DateUnit.MINUTE.getMillis();
 	}
 	
 	/**
@@ -68,7 +77,7 @@ public class TimeInterval {
 	 * @return 从开始到当前的间隔小时数，取绝对值
 	 */
 	public long intervalHour(){
-		return interval() / DateUnit.HOUR.getMillis();
+		return intervalMs() / DateUnit.HOUR.getMillis();
 	}
 	
 	/**
@@ -76,7 +85,7 @@ public class TimeInterval {
 	 * @return 从开始到当前的间隔天数，取绝对值
 	 */
 	public long intervalDay(){
-		return interval() / DateUnit.DAY.getMillis();
+		return intervalMs() / DateUnit.DAY.getMillis();
 	}
 	
 	/**
@@ -84,7 +93,7 @@ public class TimeInterval {
 	 * @return 从开始到当前的间隔周数，取绝对值
 	 */
 	public long intervalWeek(){
-		return interval() / DateUnit.WEEK.getMillis();
+		return intervalMs() / DateUnit.WEEK.getMillis();
 	}
 	
 }

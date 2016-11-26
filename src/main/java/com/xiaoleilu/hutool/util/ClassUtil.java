@@ -1,32 +1,26 @@
 package com.xiaoleilu.hutool.util;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import com.xiaoleilu.hutool.convert.BasicType;
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.lang.ClassScaner;
 import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Singleton;
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * 类工具类 1、扫描指定包下的所有类<br>
@@ -36,8 +30,6 @@ import com.xiaoleilu.hutool.log.StaticLog;
  *
  */
 public class ClassUtil {
-	private final static Log log = StaticLog.get();
-
 	private ClassUtil() {
 		// 静态类不可实例化
 	}
@@ -55,59 +47,53 @@ public class ClassUtil {
 		}
 		return classes;
 	}
-
-	// ----------------------------------------------------------------------------------------- Scan Package
-	/**
-	 * 扫面该包路径下所有class文件
-	 * 
-	 * @return 类集合
-	 */
-	public static Set<Class<?>> scanPackage() {
-		return scanPackage(StrUtil.EMPTY, null);
-	}
-
-	/**
-	 * 扫面该包路径下所有class文件
-	 * 
-	 * @param packageName 包路径 com | com. | com.abs | com.abs.
-	 * @return 类集合
-	 */
-	public static Set<Class<?>> scanPackage(String packageName) {
-		return scanPackage(packageName, null);
-	}
-
+	
+	// ----------------------------------------------------------------------------------------- Scan classes
 	/**
 	 * 扫描指定包路径下所有包含指定注解的类
 	 * 
 	 * @param packageName 包路径
 	 * @param annotationClass 注解类
 	 * @return 类集合
+	 * @see ClassScaner#scanPackageByAnnotation(String, Class)
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
-		return scanPackage(packageName, new ClassFilter(){
-			@Override
-			public boolean accept(Class<?> clazz) {
-				return clazz.isAnnotationPresent(annotationClass);
-			}
-		});
+		return ClassScaner.scanPackageByAnnotation(packageName, annotationClass);
 	}
-
+	
 	/**
 	 * 扫描指定包路径下所有指定类或接口的子类或实现类
 	 * 
 	 * @param packageName 包路径
 	 * @param superClass 父类或接口
 	 * @return 类集合
+	 * @see ClassScaner#scanPackageBySuper(String, Class)
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
-		return scanPackage(packageName, new ClassFilter(){
-			@Override
-			public boolean accept(Class<?> clazz) {
-				return superClass.isAssignableFrom(clazz) && !superClass.equals(clazz);
-			}
-		});
+		return ClassScaner.scanPackageBySuper(packageName, superClass);
 	}
-
+	
+	/**
+	 * 扫面该包路径下所有class文件
+	 * 
+	 * @return 类集合
+	 * @see ClassScaner#scanPackage()
+	 */
+	public static Set<Class<?>> scanPackage() {
+		return ClassScaner.scanPackage();
+	}
+	
+	/**
+	 * 扫面该包路径下所有class文件
+	 * 
+	 * @param packageName 包路径 com | com. | com.abs | com.abs.
+	 * @return 类集合
+	 * @see ClassScaner#scanPackage(String)
+	 */
+	public static Set<Class<?>> scanPackage(String packageName) {
+		return ClassScaner.scanPackage(packageName);
+	}
+	
 	/**
 	 * 扫面包路径下满足class过滤器条件的所有class文件，</br>
 	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException</br>
@@ -116,36 +102,10 @@ public class ClassUtil {
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
+	 * @see ClassScaner#scanPackage(String, ClassFilter)
 	 */
 	public static Set<Class<?>> scanPackage(String packageName, ClassFilter classFilter) {
-		if (StrUtil.isBlank(packageName)) {
-			packageName = StrUtil.EMPTY;
-		}
-		log.debug("Scan classes from package [{}]...", packageName);
-		packageName = getWellFormedPackageName(packageName);
-
-		final Set<Class<?>> classes = new HashSet<Class<?>>();
-		for (String classPath : getClassPaths(packageName)) {
-			// bug修复，由于路径中空格和中文导致的Jar找不到
-			classPath = URLUtil.decode(classPath, CharsetUtil.systemCharset());
-
-			log.debug("Scan classpath: [{}]", classPath);
-			// 填充 classes
-			fillClasses(classPath, packageName, classFilter, classes);
-		}
-
-		// 如果在项目的ClassPath中未找到，去系统定义的ClassPath里找
-		if (classes.isEmpty()) {
-			for (String classPath : getJavaClassPaths()) {
-				// bug修复，由于路径中空格和中文导致的Jar找不到
-				classPath = URLUtil.decode(classPath, CharsetUtil.systemCharset());
-
-				log.debug("Scan java classpath: [{}]", classPath);
-				// 填充 classes
-				fillClasses(classPath, new File(classPath), packageName, classFilter, classes);
-			}
-		}
-		return classes;
+		return ClassScaner.scanPackage(packageName, classFilter);
 	}
 
 	// ----------------------------------------------------------------------------------------- Method
@@ -493,11 +453,61 @@ public class ClassUtil {
 			return newInstance(clazz);
 		}
 
+		final Class<?>[] paramTypes = getClasses(params);
+		final Constructor<?> constructor = getConstructor(clazz, getClasses(params));
+		if(null == constructor){
+			throw new UtilException("No Constructor matched for parameter types: [{}]", new Object[]{paramTypes});
+		}
 		try {
-			return clazz.getDeclaredConstructor(getClasses(params)).newInstance(params);
+			return getConstructor(clazz, paramTypes).newInstance(params);
 		} catch (Exception e) {
 			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}
+	}
+	
+	/**
+	 * 查找类中的指定参数的构造方法
+	 * @param <T> 
+	 * @param clazz 类
+	 * @param parameterTypes 参数类型，只要任何一个参数是指定参数的父类或接口或相等即可
+	 * @return 构造方法，如果未找到返回null
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes){
+		if(null == clazz){
+			return null;
+		}
+
+		final Constructor<?>[] constructors = clazz.getConstructors();
+		Class<?>[] pts;
+		for (Constructor<?> constructor : constructors) {
+			pts = constructor.getParameterTypes();
+			if(isAllAssignableFrom(pts, parameterTypes)){
+				return (Constructor<T>) constructor;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 比较判断types1和types2两组类，如果types1中所有的类都与types2对应位置的类相同，或者是其父类或接口，则返回<code>true</code>
+	 * @param types1 类组1
+	 * @param types2 类组2
+	 * @return 是否相同、父类或接口
+	 */
+	public static boolean isAllAssignableFrom(Class<?>[] types1, Class<?>[] types2){
+		if(CollectionUtil.isEmpty(types1) && CollectionUtil.isEmpty(types2)){
+			return true;
+		}
+		if(types1.length == types2.length){
+			for(int i = 0; i < types1.length; i++){
+				if(false == types1[i].isAssignableFrom(types2[i])){
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -836,179 +846,6 @@ public class ClassUtil {
 		return null != clazz && false == clazz.isInterface() && false == isAbstract(clazz) && false == clazz.isEnum() && false == clazz.isArray() && false == clazz.isAnnotation() && false == clazz
 				.isSynthetic() && false == clazz.isPrimitive();
 	}
-
-	// --------------------------------------------------------------------------------------------------- Private method start
-	/**
-	 * 文件过滤器，过滤掉不需要的文件<br>
-	 * 只保留Class文件、目录和Jar
-	 */
-	private static FileFilter fileFilter = new FileFilter(){
-		@Override
-		public boolean accept(File pathname) {
-			return isClass(pathname.getName()) || pathname.isDirectory() || isJarFile(pathname);
-		}
-	};
-
-	/**
-	 * 改变 com -> com. 避免在比较的时候把比如 completeTestSuite.class类扫描进去，如果没有"."</br>
-	 * 那class里面com开头的class类也会被扫描进去,其实名称后面或前面需要一个 ".",来添加包的特征
-	 * 
-	 * @param packageName
-	 * @return 格式化后的包名
-	 */
-	private static String getWellFormedPackageName(String packageName) {
-		return packageName.lastIndexOf(StrUtil.DOT) != packageName.length() - 1 ? packageName + StrUtil.DOT : packageName;
-	}
-
-	/**
-	 * 填充满足条件的class 填充到 classes<br>
-	 * 同时会判断给定的路径是否为Jar包内的路径，如果是，则扫描此Jar包
-	 * 
-	 * @param path Class文件路径或者所在目录Jar包路径
-	 * @param packageName 需要扫面的包名
-	 * @param classFilter class过滤器
-	 * @param classes List 集合
-	 */
-	private static void fillClasses(String path, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
-		// 判定给定的路径是否为Jar
-		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
-		if (index != -1) {
-			// Jar文件
-			path = path.substring(0, index + FileUtil.JAR_FILE_EXT.length()); // 截取jar路径
-			path = StrUtil.removePrefix(path, FileUtil.PATH_FILE_PRE); // 去掉文件前缀
-			processJarFile(new File(path), packageName, classFilter, classes);
-		} else {
-			fillClasses(path, new File(path), packageName, classFilter, classes);
-		}
-	}
-
-	/**
-	 * 填充满足条件的class 填充到 classes
-	 * 
-	 * @param classPath 类文件所在目录，当包名为空时使用此参数，用于截掉类名前面的文件路径
-	 * @param file Class文件或者所在目录Jar包文件
-	 * @param packageName 需要扫面的包名
-	 * @param classFilter class过滤器
-	 * @param classes List 集合
-	 */
-	private static void fillClasses(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
-		if (file.isDirectory()) {
-			processDirectory(classPath, file, packageName, classFilter, classes);
-		} else if (isClassFile(file)) {
-			processClassFile(classPath, file, packageName, classFilter, classes);
-		} else if (isJarFile(file)) {
-			processJarFile(file, packageName, classFilter, classes);
-		}
-	}
-
-	/**
-	 * 处理如果为目录的情况,需要递归调用 fillClasses方法
-	 * 
-	 * @param directory 目录
-	 * @param packageName 包名
-	 * @param classFilter 类过滤器
-	 * @param classes 类集合
-	 */
-	private static void processDirectory(String classPath, File directory, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
-		for (File file : directory.listFiles(fileFilter)) {
-			fillClasses(classPath, file, packageName, classFilter, classes);
-		}
-	}
-
-	/**
-	 * 处理为class文件的情况,填充满足条件的class 到 classes
-	 * 
-	 * @param classPath 类文件所在目录，当包名为空时使用此参数，用于截掉类名前面的文件路径
-	 * @param file class文件
-	 * @param packageName 包名
-	 * @param classFilter 类过滤器
-	 * @param classes 类集合
-	 */
-	private static void processClassFile(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
-		if (false == classPath.endsWith(File.separator)) {
-			classPath += File.separator;
-		}
-		String path = file.getAbsolutePath();
-		if (StrUtil.isEmpty(packageName)) {
-			path = StrUtil.removePrefix(path, classPath);
-		}
-		final String filePathWithDot = path.replace(File.separator, StrUtil.DOT);
-
-		int subIndex = -1;
-		if ((subIndex = filePathWithDot.indexOf(packageName)) != -1) {
-			final int endIndex = filePathWithDot.lastIndexOf(FileUtil.CLASS_EXT);
-
-			final String className = filePathWithDot.substring(subIndex, endIndex);
-			fillClass(className, packageName, classes, classFilter);
-		}
-	}
-
-	/**
-	 * 处理为jar文件的情况，填充满足条件的class 到 classes
-	 * 
-	 * @param file jar文件
-	 * @param packageName 包名
-	 * @param classFilter 类过滤器
-	 * @param classes 类集合
-	 */
-	private static void processJarFile(File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
-		try {
-			for (JarEntry entry : Collections.list(new JarFile(file).entries())) {
-				if (isClass(entry.getName())) {
-					final String className = entry.getName().replace(StrUtil.SLASH, StrUtil.DOT).replace(FileUtil.CLASS_EXT, StrUtil.EMPTY);
-					fillClass(className, packageName, classes, classFilter);
-				}
-			}
-		} catch (Exception ex) {
-			log.error(ex);
-		}
-	}
-
-	/**
-	 * 填充class 到 classes
-	 * 
-	 * @param className 类名
-	 * @param packageName 包名
-	 * @param classes 类集合
-	 * @param classFilter 类过滤器
-	 */
-	private static void fillClass(String className, String packageName, Set<Class<?>> classes, ClassFilter classFilter) {
-		if (className.startsWith(packageName)) {
-			try {
-				final Class<?> clazz = Class.forName(className, false, getClassLoader());
-				if (classFilter == null || classFilter.accept(clazz)) {
-					classes.add(clazz);
-				}
-			} catch (Exception ex) {
-				// Pass Load Error.
-			}
-		}
-	}
-
-	/**
-	 * @param file 文件
-	 * @return 是否为类文件
-	 */
-	private static boolean isClassFile(File file) {
-		return isClass(file.getName());
-	}
-
-	/**
-	 * @param fileName 文件名
-	 * @return 是否为类文件
-	 */
-	private static boolean isClass(String fileName) {
-		return fileName.endsWith(FileUtil.CLASS_EXT);
-	}
-
-	/**
-	 * @param file 文件
-	 * @return是否为Jar文件
-	 */
-	private static boolean isJarFile(File file) {
-		return file.getName().endsWith(FileUtil.JAR_FILE_EXT);
-	}
-	// --------------------------------------------------------------------------------------------------- Private method end
 
 	/**
 	 * 类过滤器，用于过滤不需要加载的类<br>
