@@ -16,9 +16,10 @@ public class ClassConverter extends AbstractConverter<Class<?>>{
 		String valueStr = convertToStr(value);
 		try {
 			return ClassUtil.getClassLoader().loadClass(valueStr);
-		} catch (ClassNotFoundException e) {
-			return null;
+		} catch (Exception e) {
+			// Ignore Exception
 		}
+		return null;
 	}
 
 }

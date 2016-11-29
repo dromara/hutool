@@ -43,7 +43,7 @@ public class ConverterRegistry {
 	}
 
 	public ConverterRegistry() {
-		defaultConverter();
+		registerDefaultConverter();
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class ConverterRegistry {
 	 * 注册默认转换器
 	 * @return 转换器
 	 */
-	private ConverterRegistry defaultConverter() {
+	private ConverterRegistry registerDefaultConverter() {
 		defaultConverter = new ConcurrentHashMap<>();
 		
 		//原始类型转换器

@@ -18,6 +18,9 @@ public class ConvertDemo {
 		float c = Convert.toFloat("  120   ", 0F);
 		System.out.println(c);
 		
+		float d = Convert.toFloat("  a   ", 0F);
+		System.out.println(d);
+		
 		//支持科学计数法
 		System.out.println(Convert.toDouble("  12345E-10   ", 0D));
 

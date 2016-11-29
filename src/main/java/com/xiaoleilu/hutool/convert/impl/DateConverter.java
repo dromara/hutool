@@ -50,7 +50,12 @@ public class DateConverter extends AbstractConverter<Date> {
 		}
 
 		final String valueStr = convertToStr(value);
-		return StrUtil.isBlank(format) ? DateUtil.parse(valueStr) : DateUtil.parse(valueStr, format);
+		try {
+			return StrUtil.isBlank(format) ? DateUtil.parse(valueStr) : DateUtil.parse(valueStr, format);
+		} catch (Exception e) {
+			// Ignore Exception
+		}
+		return null;
 	}
 
 }
