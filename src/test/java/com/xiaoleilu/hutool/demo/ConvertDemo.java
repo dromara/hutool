@@ -1,14 +1,27 @@
 package com.xiaoleilu.hutool.demo;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.lang.Console;
 
+/**
+ * 转换工具样例
+ * @author Looly
+ *
+ */
 public class ConvertDemo {
 	public static void main(String[] args) {
-		System.out.println(Convert.toInt("  120   ", 0));
-		System.out.println(Convert.toLong("  120   ", 0L));
+		//转换数字自动去除两边空格，但是并不处理字符串中间的空格
+		int a = Convert.toInt("  120   ", 0);
+		System.out.println(a);
+		long b = Convert.toLong("  120   ", 0L);
+		System.out.println(b);
+		float c = Convert.toFloat("  120   ", 0F);
+		System.out.println(c);
+		
 		//支持科学计数法
 		System.out.println(Convert.toDouble("  12345E-10   ", 0D));
 
+		Console.log("----------------------------------------------------------------------------------------------");
 		// 整数
 		System.out.println(Convert.digitUppercase(0)); // 零元整
 		System.out.println(Convert.digitUppercase(123)); // 壹佰贰拾叁元整

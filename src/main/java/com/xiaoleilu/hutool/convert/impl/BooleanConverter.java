@@ -7,12 +7,7 @@ import com.xiaoleilu.hutool.convert.AbstractConverter;
  * @author Looly
  *
  */
-public class BooleanConverter extends AbstractConverter{
-
-	@Override
-	public Class<Boolean> getTargetType() {
-		return Boolean.class;
-	}
+public class BooleanConverter extends AbstractConverter<Boolean>{
 
 	@Override
 	protected Boolean convertInternal(Object value) {

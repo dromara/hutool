@@ -7,12 +7,7 @@ import com.xiaoleilu.hutool.convert.AbstractConverter;
  * @author Looly
  *
  */
-public class StringConverter extends AbstractConverter{
-
-	@Override
-	public Class<String> getTargetType() {
-		return String.class;
-	}
+public class StringConverter extends AbstractConverter<String>{
 
 	@Override
 	protected String convertInternal(Object value) {

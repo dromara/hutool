@@ -24,7 +24,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class NumberConverter extends AbstractConverter {
+public class NumberConverter extends AbstractConverter<Number> {
 
 	private Class<? extends Number> targetType;
 
@@ -38,11 +38,6 @@ public class NumberConverter extends AbstractConverter {
 	 */
 	public NumberConverter(Class<? extends Number> clazz) {
 		this.targetType = (null == clazz) ? Number.class : clazz;
-	}
-
-	@Override
-	public Class<? extends Number> getTargetType() {
-		return targetType;
 	}
 
 	@Override
@@ -169,5 +164,17 @@ public class NumberConverter extends AbstractConverter {
 			return null;
 		}
 		return new BigInteger(valueStr);
+	}
+	
+	@Override
+	protected String convertToStr(Object value){
+		final String valueStr = super.convertToStr(value);
+		return (null == valueStr) ? null : valueStr.trim();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public Class<Number> getTargetType() {
+		return (Class<Number>) this.targetType;
 	}
 }

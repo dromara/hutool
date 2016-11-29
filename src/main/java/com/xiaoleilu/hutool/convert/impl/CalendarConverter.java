@@ -13,7 +13,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class CalendarConverter extends AbstractConverter {
+public class CalendarConverter extends AbstractConverter<Calendar> {
 
 	/** 日期格式化 */
 	private String format;
@@ -34,11 +34,6 @@ public class CalendarConverter extends AbstractConverter {
 	 */
 	public void setFormat(String format) {
 		this.format = format;
-	}
-
-	@Override
-	public Class<Calendar> getTargetType() {
-		return Calendar.class;
 	}
 
 	@Override

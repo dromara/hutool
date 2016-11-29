@@ -4,16 +4,11 @@ import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * 数字转换器
+ * 字符转换器
  * @author Looly
  *
  */
-public class CharacterConverter extends AbstractConverter{
-
-	@Override
-	public Class<Character> getTargetType() {
-		return Character.class;
-	}
+public class CharacterConverter extends AbstractConverter<Character>{
 
 	@Override
 	protected Character convertInternal(Object value) {

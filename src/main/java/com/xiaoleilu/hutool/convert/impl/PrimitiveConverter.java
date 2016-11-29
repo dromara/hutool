@@ -20,7 +20,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class PrimitiveConverter extends AbstractConverter {
+public class PrimitiveConverter extends AbstractConverter<Object> {
 	
 	private Class<?> targetType;
 
@@ -36,11 +36,6 @@ public class PrimitiveConverter extends AbstractConverter {
 			throw new IllegalArgumentException("[" + clazz + "] is not a primitive class!");
 		}
 		this.targetType = clazz;
-	}
-
-	@Override
-	public Class<?> getTargetType() {
-		return targetType;
 	}
 
 	@Override
@@ -154,5 +149,11 @@ public class PrimitiveConverter extends AbstractConverter {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public Class<Object> getTargetType() {
+		return (Class<Object>) this.targetType;
 	}
 }

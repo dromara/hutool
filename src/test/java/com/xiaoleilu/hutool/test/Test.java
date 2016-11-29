@@ -11,7 +11,7 @@ import com.xiaoleilu.hutool.convert.Convert;
 public class Test {
 	public static void main(String[] args) {
 		Object value = 1;
-		int a = Convert.convert(int.class, value, 2);
-		System.out.println(a);
+		Double double1 = Convert.convert(double.class, value, 0D);
+		System.out.println(double1);
 	}
 }

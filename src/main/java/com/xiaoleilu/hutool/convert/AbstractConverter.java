@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.convert;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.MessageFormat;
 
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -9,16 +11,19 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
  * @author Looly
  *
  */
-public abstract class AbstractConverter implements Converter{
+public abstract class AbstractConverter<T> implements Converter<T>{
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T convert(Object value, T defaultValue) {
-		final Class<?> targetType = getTargetType();
+	public T convert(Object value, T defaultValue) {
+		Class<T> targetType = getTargetType();
+		if(null == targetType){
+			targetType = (Class<T>) defaultValue.getClass();
+		}
 		
 		if(targetType.isPrimitive()){
 			//原始类型直接调用内部转换，内部转换永远不会返回null
-			return (T) convertInternal(value);
+			return convertInternal(value);
 		}
 		
 		if(null == value){
@@ -29,8 +34,8 @@ public abstract class AbstractConverter implements Converter{
 				//已经是目标类型，不需要转换
 				return (T) targetType.cast(value);
 			}
-			final Object convertInternal = convertInternal(value);
-			return (T) ((null == convertInternal) ? defaultValue : convertInternal);
+			final T convertInternal = convertInternal(value);
+			return ((null == convertInternal) ? defaultValue : convertInternal);
 		}else{
 			throw new IllegalArgumentException(MessageFormat.format("Default value [{0}] is not the instance of [{1}]]", defaultValue, targetType));
 		}
@@ -41,7 +46,7 @@ public abstract class AbstractConverter implements Converter{
 	 * @param value 值
 	 * @return 转换后的类型
 	 */
-	protected abstract Object convertInternal(Object value);
+	protected abstract T convertInternal(Object value);
 	
 	/**
 	 * 值转为String
@@ -58,5 +63,25 @@ public abstract class AbstractConverter implements Converter{
 			return CollectionUtil.toString(value);
 		}
 		return value.toString();
+	}
+	
+	/**
+	 * 获得此类实现类的泛型类型
+	 * @return 此类的泛型类型
+	 */
+	@SuppressWarnings("unchecked")
+	public Class<T> getTargetType() {
+		Type superType = getClass().getGenericSuperclass();
+		if(superType instanceof ParameterizedType){
+			ParameterizedType genericSuperclass = (ParameterizedType) superType;
+			Type[] types = genericSuperclass.getActualTypeArguments();
+			if(null != types && types.length > 0){
+				Type type = types[0];
+				if(type instanceof Class){
+					return (Class<T>)type;
+				}
+			}
+		}
+		return null;
 	}
 }

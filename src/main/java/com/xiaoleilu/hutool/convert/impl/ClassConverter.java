@@ -9,13 +9,8 @@ import com.xiaoleilu.hutool.util.ClassUtil;
  * @author Looly
  *
  */
-public class ClassConverter extends AbstractConverter{
+public class ClassConverter extends AbstractConverter<Class<?>>{
 	
-	@Override
-	public Class<?> getTargetType() {
-		return Class.class;
-	}
-
 	@Override
 	protected Class<?> convertInternal(Object value) {
 		String valueStr = convertToStr(value);
