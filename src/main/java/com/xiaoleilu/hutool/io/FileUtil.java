@@ -694,8 +694,9 @@ public class FileUtil {
 	}
 
 	/**
-	 * 获取绝对路径，相对于classes的根目录<br>
-	 * 如果给定就是绝对路径，则返回原路径，原路径把所有\替换为/
+	 * 获取绝对路径，相对于ClassPath的目录<br>
+	 * 如果给定就是绝对路径，则返回原路径，原路径把所有\替换为/<br>
+	 * 兼容Spring风格的路径表示，例如：classpath:config/example.setting也会被识别后转换
 	 * 
 	 * @param path 相对路径
 	 * @return 绝对路径
@@ -706,13 +707,17 @@ public class FileUtil {
 		} else {
 			path = normalize(path);
 
-			if (path.startsWith("/") || path.matches("^[a-zA-Z]:/.*")) {
+			if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:/.*")) {
 				// 给定的路径已经是绝对路径了
 				return path;
 			}
 		}
+		
+		//兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
+		path = StrUtil.removePrefixIgnoreCase(path, "classpath:");
+		path = StrUtil.removePrefix(path, StrUtil.SLASH);
 
-		// 相对路径
+		// 相对于ClassPath路径
 		ClassLoader classLoader = ClassUtil.getClassLoader();
 		URL url = classLoader.getResource(path);
 		String reultPath = url != null ? url.getPath() : ClassUtil.getClassPath() + path;
@@ -829,12 +834,13 @@ public class FileUtil {
 	 * 修复路径<br>
 	 * 1. 统一用 / <br>
 	 * 2. 多个 / 转换为一个
+	 * 3. 去除两边空格
 	 * 
 	 * @param path 原路径
 	 * @return 修复后的路径
 	 */
 	public static String normalize(String path) {
-		return path.replaceAll("[/\\\\]{1,}", "/");
+		return path.replaceAll("[/\\\\]{1,}", "/").trim();
 	}
 
 	/**

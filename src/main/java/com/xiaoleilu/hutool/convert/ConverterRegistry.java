@@ -72,10 +72,11 @@ public class ConverterRegistry {
 	 */
 	public <T> T convert(Class<T> type, Object value, T defaultValue) {
 		Converter converter = getConverter(type);
-		if (null != converter) {
-			return converter.convert(value, defaultValue);
+		if (null == converter) {
+//			return defaultValue;
+			throw new ConvertException("No Converter for type [{}]", type.getName());
 		}
-		return null;
+		return converter.convert(value, defaultValue);
 	}
 
 	/**
@@ -97,6 +98,7 @@ public class ConverterRegistry {
 		register(new PrimitiveConverter(byte.class));
 		register(new PrimitiveConverter(short.class));
 		register(new PrimitiveConverter(int.class));
+		register(new PrimitiveConverter(long.class));
 		register(new PrimitiveConverter(float.class));
 		register(new PrimitiveConverter(double.class));
 		register(new PrimitiveConverter(char.class));
@@ -110,6 +112,7 @@ public class ConverterRegistry {
 		register(new NumberConverter(Byte.class));
 		register(new NumberConverter(Short.class));
 		register(new NumberConverter(Integer.class));
+		register(new NumberConverter(Long.class));
 		register(new NumberConverter(Float.class));
 		register(new NumberConverter(Double.class));
 		register(new NumberConverter(BigDecimal.class));

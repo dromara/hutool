@@ -26,6 +26,7 @@ public abstract class AbstractConverter implements Converter{
 		}
 		if(null == defaultValue || targetType.isInstance(defaultValue)){
 			if(targetType.isInstance(value)){
+				//已经是目标类型，不需要转换
 				return (T) targetType.cast(value);
 			}
 			final Object convertInternal = convertInternal(value);

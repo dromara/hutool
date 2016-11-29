@@ -373,3 +373,5 @@ Entity中toVo区别是否忽略大小写
 19、增加代理包(com.xiaoleilu.hutool.proxy)，新增代理和切面功能
 20、包扫描独立出来为ClassScaner，ClassUtil中对应方法引用此类方法
 21、ClassUil增加getConstructor方法，可匹配继承参数
+22、优化ClassPath路径转为绝对路径
+23、Direction增加方法从字符串转换（大小写不敏感）
