@@ -135,7 +135,6 @@ public class DigestUtil {
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
 	 * @param data 被摘要数据
-	 * @param charset 编码
 	 * @return  MD5摘要的16进制表示
 	 */
 	public static String md5Hex(InputStream data){
@@ -145,7 +144,6 @@ public class DigestUtil {
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
 	 * @param file 被摘要文件
-	 * @param charset 编码
 	 * @return  MD5摘要的16进制表示
 	 */
 	public static String md5Hex(File file){
@@ -249,7 +247,6 @@ public class DigestUtil {
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
 	 * @param data 被摘要数据
-	 * @param charset 编码
 	 * @return  SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(InputStream data){
@@ -259,7 +256,6 @@ public class DigestUtil {
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
 	 * @param file 被摘要文件
-	 * @param charset 编码
 	 * @return  SHA-1摘要的16进制表示
 	 */
 	public static String sha1Hex(File file){

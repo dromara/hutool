@@ -102,9 +102,8 @@ public class ClassUtil {
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
-	 * @see ClassScaner#scanPackage(String, ClassFilter)
 	 */
-	public static Set<Class<?>> scanPackage(String packageName, ClassFilter classFilter) {
+	public static Set<Class<?>> scanPackage(String packageName, Filter<Class<?>> classFilter) {
 		return ClassScaner.scanPackage(packageName, classFilter);
 	}
 
@@ -151,10 +150,8 @@ public class ClassUtil {
 		List<Method> methodList;
 		if (null != filter) {
 			methodList = new ArrayList<>();
-			Method filteredMethod;
 			for (Method method : methods) {
-				filteredMethod = filter.modify(method);
-				if (null != filteredMethod) {
+				if (filter.accept(method)) {
 					methodList.add(method);
 				}
 			}
@@ -173,14 +170,12 @@ public class ClassUtil {
 	 */
 	public static List<Method> getPublicMethods(Class<?> clazz, Method... excludeMethods) {
 		final HashSet<Method> excludeMethodSet = CollectionUtil.newHashSet(excludeMethods);
-		Filter<Method> filter = new Filter<Method>(){
+		return getPublicMethods(clazz, new Filter<Method>(){
 			@Override
-			public Method modify(Method method) {
-				return excludeMethodSet.contains(method) ? null : method;
+			public boolean accept(Method method) {
+				return false == excludeMethodSet.contains(method);
 			}
-		};
-
-		return getPublicMethods(clazz, filter);
+		});
 	}
 
 	/**
@@ -192,14 +187,12 @@ public class ClassUtil {
 	 */
 	public static List<Method> getPublicMethods(Class<?> clazz, String... excludeMethodNames) {
 		final HashSet<String> excludeMethodNameSet = CollectionUtil.newHashSet(excludeMethodNames);
-		Filter<Method> filter = new Filter<Method>(){
+		return getPublicMethods(clazz, new Filter<Method>(){
 			@Override
-			public Method modify(Method method) {
-				return excludeMethodNameSet.contains(method.getName()) ? null : method;
+			public boolean accept(Method method) {
+				return false == excludeMethodNameSet.contains(method.getName());
 			}
-		};
-
-		return getPublicMethods(clazz, filter);
+		});
 	}
 
 	/**
@@ -845,12 +838,5 @@ public class ClassUtil {
 	public static boolean isNormalClass(Class<?> clazz) {
 		return null != clazz && false == clazz.isInterface() && false == isAbstract(clazz) && false == clazz.isEnum() && false == clazz.isArray() && false == clazz.isAnnotation() && false == clazz
 				.isSynthetic() && false == clazz.isPrimitive();
-	}
-
-	/**
-	 * 类过滤器，用于过滤不需要加载的类<br>
-	 */
-	public interface ClassFilter {
-		boolean accept(Class<?> clazz);
 	}
 }

@@ -58,7 +58,6 @@ public class ProxyUtil {
 	/**
 	 * 创建动态代理对象
 	 * 
-	 * @param loader 被代理类对应的ClassLoader
 	 * @param invocationHandler {@link InvocationHandler} ，被代理类通过实现此接口提供动态代理功能
 	 * @param interfaces 代理类中需要实现的被代理类的接口方法
 	 * @return 代理类

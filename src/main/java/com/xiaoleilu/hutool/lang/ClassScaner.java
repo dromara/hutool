@@ -14,7 +14,6 @@ import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.ClassUtil.ClassFilter;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
@@ -34,7 +33,7 @@ public class ClassScaner {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
-		return scanPackage(packageName, new ClassFilter(){
+		return scanPackage(packageName, new Filter<Class<?>>(){
 			@Override
 			public boolean accept(Class<?> clazz) {
 				return clazz.isAnnotationPresent(annotationClass);
@@ -50,7 +49,7 @@ public class ClassScaner {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
-		return scanPackage(packageName, new ClassFilter(){
+		return scanPackage(packageName, new Filter<Class<?>>(){
 			@Override
 			public boolean accept(Class<?> clazz) {
 				return superClass.isAssignableFrom(clazz) && !superClass.equals(clazz);
@@ -86,7 +85,7 @@ public class ClassScaner {
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackage(String packageName, ClassFilter classFilter) {
+	public static Set<Class<?>> scanPackage(String packageName,  Filter<Class<?>> classFilter) {
 		if (StrUtil.isBlank(packageName)) {
 			packageName = StrUtil.EMPTY;
 		}
@@ -140,7 +139,7 @@ public class ClassScaner {
 	 * @param classFilter class过滤器
 	 * @param classes List 集合
 	 */
-	private static void fillClasses(String path, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void fillClasses(String path, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		// 判定给定的路径是否为Jar
 		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
 		if (index != -1) {
@@ -162,7 +161,7 @@ public class ClassScaner {
 	 * @param classFilter class过滤器
 	 * @param classes List 集合
 	 */
-	private static void fillClasses(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void fillClasses(String classPath, File file, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		if (file.isDirectory()) {
 			processDirectory(classPath, file, packageName, classFilter, classes);
 		} else if (isClassFile(file)) {
@@ -180,7 +179,7 @@ public class ClassScaner {
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processDirectory(String classPath, File directory, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void processDirectory(String classPath, File directory, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		for (File file : directory.listFiles(fileFilter)) {
 			fillClasses(classPath, file, packageName, classFilter, classes);
 		}
@@ -195,7 +194,7 @@ public class ClassScaner {
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processClassFile(String classPath, File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void processClassFile(String classPath, File file, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		if (false == classPath.endsWith(File.separator)) {
 			classPath += File.separator;
 		}
@@ -222,7 +221,7 @@ public class ClassScaner {
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processJarFile(File file, String packageName, ClassFilter classFilter, Set<Class<?>> classes) {
+	private static void processJarFile(File file, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		try {
 			for (JarEntry entry : Collections.list(new JarFile(file).entries())) {
 				if (isClass(entry.getName())) {
@@ -243,7 +242,7 @@ public class ClassScaner {
 	 * @param classes 类集合
 	 * @param classFilter 类过滤器
 	 */
-	private static void fillClass(String className, String packageName, Set<Class<?>> classes, ClassFilter classFilter) {
+	private static void fillClass(String className, String packageName, Set<Class<?>> classes, Filter<Class<?>> classFilter) {
 		if (className.startsWith(packageName)) {
 			try {
 				final Class<?> clazz = Class.forName(className, false, ClassUtil.getClassLoader());

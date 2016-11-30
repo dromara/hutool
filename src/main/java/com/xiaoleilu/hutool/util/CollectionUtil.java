@@ -22,7 +22,7 @@ import java.util.TreeSet;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
-import com.xiaoleilu.hutool.lang.Filter;
+import com.xiaoleilu.hutool.lang.Editor;
 
 /**
  * 集合相关工具类，包括数组
@@ -742,14 +742,14 @@ public class CollectionUtil {
 	 * 过滤
 	 * 
 	 * @param array 数组
-	 * @param filter 过滤器接口
+	 * @param editor 编辑器接口
 	 * @return 过滤后的数组
 	 */
-	public static <T> T[] filter(T[] array, Filter<T> filter) {
+	public static <T> T[] filter(T[] array, Editor<T> editor) {
 		ArrayList<T> list = new ArrayList<T>();
 		T modified;
 		for (T t : array) {
-			modified = filter.modify(t);
+			modified = editor.edit(t);
 			if (null != modified) {
 				list.add(t);
 			}
@@ -762,16 +762,16 @@ public class CollectionUtil {
 	 * 过滤会改变原集合的内容
 	 * 
 	 * @param collection 集合
-	 * @param filter 过滤器接口
+	 * @param editor编辑器接口
 	 * @return 过滤后的数组
 	 */
-	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
+	public static <T> Collection<T> filter(Collection<T> collection, Editor<T> editor) {
 		Collection<T> collection2 = ObjectUtil.clone(collection);
 		collection2.clear();
 
 		T modified;
 		for (T t : collection) {
-			modified = filter.modify(t);
+			modified = editor.edit(t);
 			if (null != modified) {
 				collection2.add(t);
 			}
@@ -783,16 +783,16 @@ public class CollectionUtil {
 	 * 过滤
 	 * 
 	 * @param map Map
-	 * @param filter 过滤器
+	 * @param editor 编辑器接口
 	 * @return 过滤后的Map
 	 */
-	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
+	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
 		Map<K, V> map2 = ObjectUtil.clone(map);
 		map2.clear();
 
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
-			modified = filter.modify(entry);
+			modified = editor.edit(entry);
 			if (null != modified) {
 				map2.put(entry.getKey(), entry.getValue());
 			}
