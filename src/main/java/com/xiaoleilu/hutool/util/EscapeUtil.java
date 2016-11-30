@@ -1,12 +1,16 @@
 package com.xiaoleilu.hutool.util;
 
 /**
- * Escape / Unescape
+ * 转义和反转义工具类Escape / Unescape<br>
+ * escape采用ISO Latin字符集对指定的字符串进行编码。<br>
+ * 所有的空格符、标点符号、特殊字符以及其他非ASCII字符都将被转化成%xx格式的字符编码(xx等于该字符在字符集表里面的编码的16进制数字)。
+ * 
  * @author xiaoleilu
  */
 public class EscapeUtil {
 	/**
-	 * Escape编码（Unicode）
+	 * Escape编码（Unicode）<br>
+	 * 该方法不会对 ASCII 字母和数字进行编码，也不会对下面这些 ASCII 标点符号进行编码： * @ - _ + . / 。其他所有的字符都会被转义序列替换。
 	 * @param content
 	 * @return 编码后的字符串
 	 */
@@ -85,6 +89,7 @@ public class EscapeUtil {
 		try {
 			return unescape(content);
 		} catch (Exception e) {
+			//Ignore Exception
 		}
 		return content;
 	}
