@@ -762,7 +762,7 @@ public class CollectionUtil {
 	 * 过滤会改变原集合的内容
 	 * 
 	 * @param collection 集合
-	 * @param editor编辑器接口
+	 * @param editor 编辑器接口
 	 * @return 过滤后的数组
 	 */
 	public static <T> Collection<T> filter(Collection<T> collection, Editor<T> editor) {
