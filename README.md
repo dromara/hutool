@@ -11,18 +11,25 @@ hutool
 
 ## 功能
 一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
-1. 布隆过滤
-2. 缓存
-3. 数据库ORM（基于ActiveRecord思想）
-4. HTTP客户端
-5. IO
-6. JSON
-7. 日志
-8. System（JVM和系统信息等）
-9. Setting（一种扩展Properties的配置文件）
+* 布隆过滤
+* 缓存
+* 克隆接口
+* 类型转换
+* 日期处理
+* 数据库ORM（基于ActiveRecord思想）
+* 基于DFA有限自动机的多个关键字查找
+* HTTP客户端
+* IO和文件
+* 有用的一些数据结构
+* 日志
+* 反射代理类的简化（AOP切面实现）
+* Setting（一种扩展Properties的配置文件）
+* System（JVM和系统信息等）
+* WatchService的封装（文件变动监控）
+* XXXUtil各种有用的工具类
 
 ## 简介
-[Hutool](https://github.com/looly/hutool)是一个工具包，我日常写项目的一些积累，参考了一些[Apache Commons Lang](http://commons.apache.org/)和[JODD](http://jodd.org/)里的一些写法，不过大部分还是自己写的，希望你看了之后会有所启发或者能给你工作中带来帮助。说实话我现在写代码已经离不开自己这个工具包了，叫做Hutool也有“糊涂”之意，表示很多功能糊里糊涂就实现了。好吧，言归正传，说说里面一些好玩的方法（工具包中大部分是一些静态方法）。
+[Hutool](https://github.com/looly/hutool)是一个工具包，我日常写项目的一些积累，希望你看了之后会有所启发或者能给你工作中带来帮助。这个工具包叫做Hutool也有“糊涂”之意，意为很多时候我们并不需要关注细节，专注业务。
 
 ## 设计哲学
 [Hutool](https://github.com/looly/hutool)的设计思想是尽量减少重复的定义，让项目中的`util`这个package尽量少，总的来说有如下的几个思想：
