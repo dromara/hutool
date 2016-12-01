@@ -31,5 +31,6 @@
 
 ### Bug修复
 
-* [bug fix] 修复各个包中error日志使用问题导致的无法打印堆栈
+* 修复各个包中error日志使用问题导致的无法打印堆栈
 * 修复StrUtil.join时传入数组或集合类无法转为字符串问题
+* 修复FileUtil.writeString方法未检查文件的问题

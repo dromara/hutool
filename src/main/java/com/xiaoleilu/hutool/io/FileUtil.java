@@ -33,6 +33,7 @@ import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.json.JSONArray;
 import com.xiaoleilu.hutool.json.JSONObject;
 import com.xiaoleilu.hutool.json.JSONUtil;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
@@ -1508,6 +1509,13 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static File writeString(String content, File file, String charset) throws IOException {
+		Assert.notNull(file, "File to write content is null !");
+		
+		if(false == file.exists()){
+			touch(file);
+		}else if(false == file.isFile()){
+			throw new IOException(StrUtil.format("Target file [{}] is not a file !", getAbsolutePath(file)));
+		}
 		PrintWriter writer = null;
 		try {
 			writer = getPrintWriter(file, charset, false);
