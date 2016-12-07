@@ -35,3 +35,4 @@
 * 修复StrUtil.join时传入数组或集合类无法转为字符串问题
 * 修复FileUtil.writeString方法未检查文件的问题
 * 修复StrUtil.count修复空指针问题，给定null返回0
+* 修复BeanUtil中beanToMap方法，空值可选注入

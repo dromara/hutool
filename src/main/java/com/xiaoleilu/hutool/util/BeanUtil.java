@@ -251,7 +251,7 @@ public class BeanUtil {
 				propertyName = property.getName();
 				value = valueProvider.value(propertyName);
 				if (null == value) {
-					// 此处取得的值为空时跳过，包括null和""
+					// 此处取得的值为空时跳过
 					continue;
 				}
 
@@ -268,13 +268,13 @@ public class BeanUtil {
 	}
 	
 	/**
-	 * 对象转Map
+	 * 对象转Map，不进行驼峰转下划线
 	 * 
 	 * @param bean bean对象
 	 * @return Map
 	 */
 	public static <T> Map<String, Object> beanToMap(T bean) {
-		return beanToMap(bean, false);
+		return beanToMap(bean, false, false);
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class BeanUtil {
 	 * @param isToUnderlineCase 是否转换为下划线模式
 	 * @return Map
 	 */
-	public static <T> Map<String, Object> beanToMap(T bean, boolean isToUnderlineCase) {
+	public static <T> Map<String, Object> beanToMap(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
 
 		if (bean == null) {
 			return null;
@@ -299,7 +299,7 @@ public class BeanUtil {
 					// 得到property对应的getter方法
 					Method getter = property.getReadMethod();
 					Object value = getter.invoke(bean);
-					if (null != value) {
+					if (false == ignoreNullValue || null != value) {
 						map.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
 					}
 				}
