@@ -122,6 +122,8 @@ public class SqlBuilder {
 
 		final StringBuilder placeHolder = new StringBuilder(") VALUES (");
 
+		String key;
+		Object value;
 		for (Entry<String, Object> entry : entity.entrySet()) {
 			//非第一个参数，追加逗号
 			if (paramValues.size() > 0) {
@@ -129,17 +131,19 @@ public class SqlBuilder {
 				placeHolder.append(", ");
 			}
 			
-			sql.append(entry.getKey());
-			
-			final Object value = entry.getValue();
-			if(ObjectUtil.equal(dialectName, DialectName.ORACLE) //对Oracle的特殊处理
-					&& value instanceof String 
-					&& ((String)value).toLowerCase().endsWith(".nextval")) {
-				//Oracle的特殊自增键，通过字段名.nextval获得下一个值
-				placeHolder.append(value);
-			}else {
-				placeHolder.append("?");
-				paramValues.add(value);
+			key = entry.getKey();
+			value = entry.getValue();
+			if(StrUtil.isNotBlank(key) && null != value){//只对值为非空的数据做插入操作
+				sql.append(key);
+				if(ObjectUtil.equal(dialectName, DialectName.ORACLE) //对Oracle的特殊处理
+						&& value instanceof String 
+						&& ((String)value).toLowerCase().endsWith(".nextval")) {
+					//Oracle的特殊自增键，通过字段名.nextval获得下一个值
+					placeHolder.append(value);
+				}else {
+					placeHolder.append("?");
+					paramValues.add(value);
+				}
 			}
 		}
 		sql.append(placeHolder.toString()).append(")");
@@ -182,12 +186,16 @@ public class SqlBuilder {
 		}
 		
 		sql.append("UPDATE ").append(entity.getTableName()).append(" SET ");
+		String key;
 		for (Entry<String, Object> entry : entity.entrySet()) {
-			if (paramValues.size() > 0) {
-				sql.append(", ");
+			key = entry.getKey();
+			if(StrUtil.isNotBlank(key)){
+				if (paramValues.size() > 0) {
+					sql.append(", ");
+				}
+				sql.append(entry.getKey()).append(" = ? ");
+				paramValues.add(entry.getValue());//更新不对空做处理，因为存在清空字段的情况
 			}
-			sql.append(entry.getKey()).append(" = ? ");
-			paramValues.add(entry.getValue());
 		}
 		
 		return this;
