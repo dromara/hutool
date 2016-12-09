@@ -107,10 +107,10 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * Construct a JSONObject from a source JSON text string. This is the most commonly used JSONObject constructor.
+	 * 从JSON字符串解析为JSON对象
 	 *
-	 * @param source A string beginning with <code>{</code>&nbsp;<small>(left brace)</small> and ending with <code>}</code> &nbsp;<small>(right brace)</small>.
-	 * @exception JSONException If there is a syntax error in the source string or a duplicated key.
+	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
+	 * @exception JSONException JSON字符串语法错误
 	 */
 	public JSONObject(String source) throws JSONException {
 		this(new JSONTokener(source));
@@ -128,9 +128,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * Produce a JSONArray containing the values of the members of this JSONObject.
+	 * 将指定KEY列表的值组成新的JSONArray
 	 *
-	 * @param names A JSONArray containing a list of key strings. This determines the sequence of the values in the result.
+	 * @param names KEY列表
 	 * @return A JSONArray of values.
 	 * @throws JSONException If any of the values are non-finite numbers.
 	 */
