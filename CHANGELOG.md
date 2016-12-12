@@ -28,6 +28,7 @@
 * 添加DigestUtil方法，用于md* sha1等摘要算法，同时简化SecureUtil，其中md* sha1方法调用DigestUtil
 * 增加Editor接口，用于规范对象编辑器，主要用于集合元素的统一修改
 * 修改Filter接口，同时去除ClassUtil中的ClassFilter，使过滤器抽象度更高
+* HttpConnection支持Proxy
 
 ### Bug修复
 

@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -38,6 +40,7 @@ public class HttpConnection {
 	private URL url;
 	/** method请求方法 */
 	private Method method;
+	private Proxy proxy;
 	private HttpURLConnection conn;
 
 	/**
@@ -153,10 +156,15 @@ public class HttpConnection {
 		} catch (ProtocolException e) {
 			throw new HttpException(e.getMessage(), e);
 		}
+		
+		//对于非GET请求，默认不支持30X跳转
+		if(false == Method.GET.equals(this.method)){
+			this.conn.setInstanceFollowRedirects(false);
+		}
 
 		// do input and output
 		this.conn.setDoInput(true);
-		if (this.method.equals(Method.POST)) {
+		if (Method.POST.equals(this.conn) || Method.PUT.equals(this.conn) || Method.PATCH.equals(this.conn) || Method.DELETE.equals(this.conn)) {
 			this.conn.setDoOutput(true);
 			this.conn.setUseCaches(false);
 		}
@@ -211,6 +219,22 @@ public class HttpConnection {
 	public HttpConnection setUrl(URL url) {
 		this.url = url;
 		return this;
+	}
+	
+	/**
+	 * 获得代理
+	 * @return {@link Proxy}
+	 */
+	public Proxy getProxy() {
+		return proxy;
+	}
+
+	/**
+	 * 设置代理
+	 * @param proxy {@link Proxy}
+	 */
+	public void setProxy(Proxy proxy) {
+		this.proxy = proxy;
 	}
 
 	/**
@@ -491,7 +515,7 @@ public class HttpConnection {
 	 * 初始化http请求参数
 	 */
 	private HttpURLConnection openHttp() throws IOException {
-		return (HttpURLConnection) url.openConnection();
+		return (HttpURLConnection) openConnection();
 	}
 
 	/**
@@ -500,13 +524,22 @@ public class HttpConnection {
 	 * @param ssf SSLSocketFactory
 	 */
 	private HttpsURLConnection openHttps(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-		final HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
+		final HttpsURLConnection httpsURLConnection = (HttpsURLConnection) openConnection();
 
 		// 验证域
 		httpsURLConnection.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
 		httpsURLConnection.setSSLSocketFactory(null != ssf ? ssf : SSLSocketFactoryBuilder.create().build());
 
 		return httpsURLConnection;
+	}
+	
+	/**
+	 * 建立连接
+	 * @return {@link URLConnection}
+	 * @throws IOException
+	 */
+	private URLConnection openConnection() throws IOException{
+		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
 	}
 	// --------------------------------------------------------------- Private Method end
 }
