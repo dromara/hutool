@@ -61,7 +61,7 @@ public class CharsetUtil {
 		}
 		
 		if(null == destCharset) {
-			srcCharset = StandardCharsets.UTF_8;
+			destCharset = StandardCharsets.UTF_8;
 		}
 		
 		if (StrUtil.isBlank(source) || srcCharset.equals(destCharset)) {

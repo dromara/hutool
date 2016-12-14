@@ -33,7 +33,7 @@ public class VelocityUtil {
 	private static boolean isInited;
 	
 	/** 全局上下文，当设定值时，对于每个模板都有效 */
-	private static Map<String, Object>  globalContext = new HashMap<String, Object>();
+	private static Map<String, Object> globalContext = new HashMap<String, Object>();
 	
 	/**
 	 * 设置Velocity全局上下文<br>

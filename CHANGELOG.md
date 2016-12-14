@@ -38,3 +38,5 @@
 * 修复StrUtil.count修复空指针问题，给定null返回0
 * 修复BeanUtil中beanToMap方法，空值可选注入
 * 修复SqlBuilder中插入和更新对空值得判断
+* 修复Boolean转换的一个错误
+* 修复CharsetUtil中默认的destCharset错误赋值问题
