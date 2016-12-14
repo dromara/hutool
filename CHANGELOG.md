@@ -40,3 +40,4 @@
 * 修复SqlBuilder中插入和更新对空值得判断
 * 修复Boolean转换的一个错误
 * 修复CharsetUtil中默认的destCharset错误赋值问题
+* 修复StrUtil.count方法错误计数问题

@@ -32,7 +32,7 @@ public class StrUtil {
 	public static final char C_COMMA = ',';
 	public static final char C_DELIM_START = '{';
 	public static final char C_DELIM_END = '}';
-	
+
 	public static final String SPACE = " ";
 	public static final String TAB = "	";
 	public static final String DOT = ".";
@@ -63,7 +63,7 @@ public class StrUtil {
 	 * @param str 被检测的字符串
 	 * @return 是否为空
 	 */
-	public static boolean isBlank(String str) {
+	public static boolean isBlank(CharSequence str) {
 		int length;
 
 		if ((str == null) || ((length = str.length()) == 0)) {
@@ -89,7 +89,7 @@ public class StrUtil {
 	 * @param str 被检测的字符串
 	 * @return 是否为非空
 	 */
-	public static boolean isNotBlank(String str) {
+	public static boolean isNotBlank(CharSequence str) {
 		return false == isBlank(str);
 	}
 
@@ -99,12 +99,12 @@ public class StrUtil {
 	 * @param strs 字符串列表
 	 * @return 是否包含空字符串
 	 */
-	public static boolean hasBlank(String... strs) {
+	public static boolean hasBlank(CharSequence... strs) {
 		if (CollectionUtil.isEmpty(strs)) {
 			return true;
 		}
 
-		for (String str : strs) {
+		for (CharSequence str : strs) {
 			if (isBlank(str)) {
 				return true;
 			}
@@ -118,12 +118,12 @@ public class StrUtil {
 	 * @param strs 字符串
 	 * @return 所有字符串是否为空白
 	 */
-	public static boolean isAllBlank(String... strs) {
+	public static boolean isAllBlank(CharSequence... strs) {
 		if (CollectionUtil.isEmpty(strs)) {
 			return true;
 		}
 
-		for (String str : strs) {
+		for (CharSequence str : strs) {
 			if (isNotBlank(str)) {
 				return false;
 			}
@@ -139,7 +139,7 @@ public class StrUtil {
 	 * @param str 被检测的字符串
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(String str) {
+	public static boolean isEmpty(CharSequence str) {
 		return str == null || str.length() == 0;
 	}
 
@@ -151,7 +151,7 @@ public class StrUtil {
 	 * @param str 被检测的字符串
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(String str) {
+	public static boolean isNotEmpty(CharSequence str) {
 		return false == isEmpty(str);
 	}
 
@@ -200,12 +200,12 @@ public class StrUtil {
 	 * @param strs 字符串列表
 	 * @return 是否包含空字符串
 	 */
-	public static boolean hasEmpty(String... strs) {
+	public static boolean hasEmpty(CharSequence... strs) {
 		if (CollectionUtil.isEmpty(strs)) {
 			return true;
 		}
 
-		for (String str : strs) {
+		for (CharSequence str : strs) {
 			if (isEmpty(str)) {
 				return true;
 			}
@@ -219,12 +219,12 @@ public class StrUtil {
 	 * @param strs 字符串列表
 	 * @return 是否全部为空字符串
 	 */
-	public static boolean isAllEmpty(String... strs) {
+	public static boolean isAllEmpty(CharSequence... strs) {
 		if (CollectionUtil.isEmpty(strs)) {
 			return true;
 		}
 
-		for (String str : strs) {
+		for (CharSequence str : strs) {
 			if (isNotEmpty(str)) {
 				return false;
 			}
@@ -362,46 +362,49 @@ public class StrUtil {
 
 		return str;
 	}
-	
+
 	/**
 	 * 是否以指定字符串开头
+	 * 
 	 * @param str 被监测字符串
 	 * @param prefix 开头字符串
 	 * @param isIgnoreCase 是否忽略大小写
 	 * @return 是否以指定字符串开头
 	 */
-	public static boolean startWith(String str, String prefix, boolean isIgnoreCase){
-		if(isIgnoreCase){
+	public static boolean startWith(String str, String prefix, boolean isIgnoreCase) {
+		if (isIgnoreCase) {
 			return str.toLowerCase().startsWith(prefix.toLowerCase());
-		}else{
+		} else {
 			return str.startsWith(prefix);
 		}
 	}
-	
+
 	/**
 	 * 是否以指定字符串结尾
+	 * 
 	 * @param str 被监测字符串
 	 * @param suffix 结尾字符串
 	 * @param isIgnoreCase 是否忽略大小写
 	 * @return 是否以指定字符串结尾
 	 */
-	public static boolean endWith(String str, String suffix, boolean isIgnoreCase){
-		if(isIgnoreCase){
+	public static boolean endWith(String str, String suffix, boolean isIgnoreCase) {
+		if (isIgnoreCase) {
 			return str.toLowerCase().endsWith(suffix.toLowerCase());
-		}else{
+		} else {
 			return str.endsWith(suffix);
 		}
 	}
-	
+
 	/**
 	 * 是否包含特定字符，忽略大小写，如果给定两个参数都为<code>null</code>，返回true
+	 * 
 	 * @param str 被检测字符串
 	 * @param testStr 被测试是否包含的字符串
 	 * @return 是否包含
 	 */
-	public static boolean containsIgnoreCase(String str, String testStr){
-		if(null == str){
-			//如果被监测字符串和 
+	public static boolean containsIgnoreCase(String str, String testStr) {
+		if (null == str) {
+			// 如果被监测字符串和
 			return null == testStr;
 		}
 		return str.toLowerCase().contains(testStr.toLowerCase());
@@ -460,11 +463,11 @@ public class StrUtil {
 				return first + str.substring(preLength + 1);
 			}
 			return String.valueOf(first);
-		}else{
+		} else {
 			return str;
 		}
 	}
-	
+
 	/**
 	 * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br/>
 	 * 例如：str=setName, prefix=set -> return name
@@ -499,7 +502,7 @@ public class StrUtil {
 	 * @return 字符串
 	 */
 	public static String upperFirst(String str) {
-		if(StrUtil.isBlank(str)){
+		if (StrUtil.isBlank(str)) {
 			return str;
 		}
 		return Character.toUpperCase(str.charAt(0)) + subSuf(str, 1);
@@ -513,7 +516,7 @@ public class StrUtil {
 	 * @return 字符串
 	 */
 	public static String lowerFirst(String str) {
-		if(isBlank(str)){
+		if (isBlank(str)) {
 			return str;
 		}
 		return Character.toLowerCase(str.charAt(0)) + subSuf(str, 1);
@@ -527,12 +530,12 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若前缀不是 preffix， 返回原字符串
 	 */
 	public static String removePrefix(String str, String prefix) {
-		if(isEmpty(str) || isEmpty(prefix)){
+		if (isEmpty(str) || isEmpty(prefix)) {
 			return str;
 		}
-		
+
 		if (str.startsWith(prefix)) {
-			return subSuf(str, prefix.length());//截取后半段
+			return subSuf(str, prefix.length());// 截取后半段
 		}
 		return str;
 	}
@@ -545,12 +548,12 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
 	public static String removePrefixIgnoreCase(String str, String prefix) {
-		if(isEmpty(str) || isEmpty(prefix)){
+		if (isEmpty(str) || isEmpty(prefix)) {
 			return str;
 		}
-		
+
 		if (str.toLowerCase().startsWith(prefix.toLowerCase())) {
-			return subSuf(str, prefix.length());//截取后半段
+			return subSuf(str, prefix.length());// 截取后半段
 		}
 		return str;
 	}
@@ -563,16 +566,16 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
 	 */
 	public static String removeSuffix(String str, String suffix) {
-		if(isEmpty(str) || isEmpty(suffix)){
+		if (isEmpty(str) || isEmpty(suffix)) {
 			return str;
 		}
-		
+
 		if (str.endsWith(suffix)) {
-			return subPre(str, str.length() - suffix.length());//截取前半段
+			return subPre(str, str.length() - suffix.length());// 截取前半段
 		}
 		return str;
 	}
-	
+
 	/**
 	 * 去掉指定后缀，并小写首字母
 	 * 
@@ -592,43 +595,45 @@ public class StrUtil {
 	 * @return 切掉后的字符串，若后缀不是 suffix， 返回原字符串
 	 */
 	public static String removeSuffixIgnoreCase(String str, String suffix) {
-		if(isEmpty(str) || isEmpty(suffix)){
+		if (isEmpty(str) || isEmpty(suffix)) {
 			return str;
 		}
-		
+
 		if (str.toLowerCase().endsWith(suffix.toLowerCase())) {
 			return subPre(str, str.length() - suffix.length());
 		}
 		return str;
 	}
-	
+
 	/**
 	 * 如果给定字符串不是以prefix开头的，在开头补充 prefix
+	 * 
 	 * @param str 字符串
 	 * @param prefix 前缀
 	 * @return 补充后的字符串
 	 */
-	public static String addPrefixIfNot(String str, String prefix){
-		if(isEmpty(str) || isEmpty(prefix)){
+	public static String addPrefixIfNot(String str, String prefix) {
+		if (isEmpty(str) || isEmpty(prefix)) {
 			return str;
 		}
-		if(false == str.startsWith(prefix)){
+		if (false == str.startsWith(prefix)) {
 			str = prefix + str;
 		}
 		return str;
 	}
-	
+
 	/**
 	 * 如果给定字符串不是以suffix结尾的，在尾部补充 suffix
+	 * 
 	 * @param str 字符串
 	 * @param suffix 后缀
 	 * @return 补充后的字符串
 	 */
-	public static String addSuffixIfNot(String str, String suffix){
-		if(isEmpty(str) || isEmpty(suffix)){
+	public static String addSuffixIfNot(String str, String suffix) {
+		if (isEmpty(str) || isEmpty(suffix)) {
 			return str;
 		}
-		if(false == str.endsWith(suffix)){
+		if (false == str.endsWith(suffix)) {
 			str += suffix;
 		}
 		return str;
@@ -644,7 +649,7 @@ public class StrUtil {
 		if (str == null) {
 			return null;
 		}
-		
+
 		int len = str.length();
 		StringBuilder sb = new StringBuilder(str.length());
 		char c;
@@ -754,10 +759,9 @@ public class StrUtil {
 	 * index从0开始计算，最后一个字符为-1<br>
 	 * 如果from和to位置一样，返回 "" <br>
 	 * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
-	 * 如果经过修正的index中from大于to，则互换from和to
-	 * example: <br>
-	 * 	abcdefgh 2 3 -> c <br>
-	 * 	abcdefgh 2 -3 -> cde <br>
+	 * 如果经过修正的index中from大于to，则互换from和to example: <br>
+	 * abcdefgh 2 3 -> c <br>
+	 * abcdefgh 2 -3 -> cde <br>
 	 * 
 	 * @param string String
 	 * @param fromIndex 开始的index（包括）
@@ -769,19 +773,19 @@ public class StrUtil {
 
 		if (fromIndex < 0) {
 			fromIndex = len + fromIndex;
-			if(fromIndex < 0 ){
+			if (fromIndex < 0) {
 				fromIndex = 0;
 			}
-		}else if(fromIndex > len){
+		} else if (fromIndex > len) {
 			fromIndex = len;
 		}
 
 		if (toIndex < 0) {
 			toIndex = len + toIndex;
-			if(toIndex < 0){
+			if (toIndex < 0) {
 				toIndex = len;
 			}
-		}else if(toIndex > len){
+		} else if (toIndex > len) {
 			toIndex = len;
 		}
 
@@ -852,7 +856,7 @@ public class StrUtil {
 	 * @param suffix 后缀
 	 * @return 是否包围，空串不包围
 	 */
-	public static boolean isSurround(String str, char prefix, char suffix) {
+	public static boolean isSurround(CharSequence str, char prefix, char suffix) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
@@ -958,9 +962,9 @@ public class StrUtil {
 	 * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
 	 * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
 	 * 例：<br>
-	 * 		通常使用：format("this is {} for {}", "a", "b") -> this is a for b<br>
-	 * 		转义{}： 	format("this is \\{} for {}", "a", "b") -> this is \{} for a<br>
-	 * 		转义\：		format("this is \\\\{} for {}", "a", "b") -> this is \a for b<br>
+	 * 通常使用：format("this is {} for {}", "a", "b") -> this is a for b<br>
+	 * 转义{}： format("this is \\{} for {}", "a", "b") -> this is \{} for a<br>
+	 * 转义\： format("this is \\\\{} for {}", "a", "b") -> this is \a for b<br>
 	 * 
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param params 参数值
@@ -972,24 +976,23 @@ public class StrUtil {
 		}
 		return StrFormatter.format(template, params);
 	}
-	
+
 	/**
 	 * 有序的格式化文本，使用{number}做为占位符<br>
 	 * 例：<br>
-	 * 		通常使用：format("this is {0} for {1}", "a", "b") -> this is a for b<br>
+	 * 通常使用：format("this is {0} for {1}", "a", "b") -> this is a for b<br>
 	 * 
 	 * @param pattern 文本格式
 	 * @param arguments 参数
 	 * @return 格式化后的文本
 	 */
-	public static String indexedFormat(String pattern, Object... arguments){
+	public static String indexedFormat(String pattern, Object... arguments) {
 		return MessageFormat.format(pattern, arguments);
 	}
 
 	/**
 	 * 格式化文本，使用 {varName} 占位<br>
-	 * map = {a: "aValue", b: "bValue"}
-	 * format("{a} and {b}", map)    ---->    aValue and bValue
+	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ----> aValue and bValue
 	 * 
 	 * @param template 文本模板，被替换的部分用 {key} 表示
 	 * @param map 参数值对
@@ -1005,7 +1008,7 @@ public class StrUtil {
 		}
 		return template;
 	}
-	
+
 	/**
 	 * 编码字符串，编码为UTF-8
 	 * 
@@ -1015,7 +1018,7 @@ public class StrUtil {
 	public static byte[] utf8Bytes(String str) {
 		return bytes(str, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 编码字符串<br>
 	 * 使用系统默认编码
@@ -1026,7 +1029,7 @@ public class StrUtil {
 	public static byte[] bytes(String str) {
 		return bytes(str, Charset.defaultCharset());
 	}
-	
+
 	/**
 	 * 编码字符串
 	 * 
@@ -1055,61 +1058,58 @@ public class StrUtil {
 		}
 		return str.getBytes(charset);
 	}
-	
+
 	/**
 	 * 将对象转为字符串<br>
-	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
-	 * 2、对象数组会调用Arrays.toString方法
+	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
 	 * 
 	 * @param obj 对象
 	 * @return 字符串
 	 */
-	public static String utf8Str(Object obj){
+	public static String utf8Str(Object obj) {
 		return str(obj, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 将对象转为字符串<br>
-	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
-	 * 2、对象数组会调用Arrays.toString方法
+	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
 	 * 
 	 * @param obj 对象
 	 * @param charsetName 字符集
 	 * @return 字符串
 	 */
-	public static String str(Object obj, String charsetName){
+	public static String str(Object obj, String charsetName) {
 		return str(obj, Charset.forName(charsetName));
 	}
-	
+
 	/**
 	 * 将对象转为字符串<br>
-	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
-	 * 2、对象数组会调用Arrays.toString方法
+	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组 2、对象数组会调用Arrays.toString方法
 	 * 
 	 * @param obj 对象
 	 * @param charset 字符集
 	 * @return 字符串
 	 */
-	public static String str(Object obj, Charset charset){
-		if(null == obj){
+	public static String str(Object obj, Charset charset) {
+		if (null == obj) {
 			return null;
 		}
-		
-		if(obj instanceof String) {
-			return (String)obj;
-		}else if(obj instanceof byte[]){
-			return str((byte[])obj, charset);
-		}else if(obj instanceof Byte[]){
-			return str((Byte[])obj, charset);
-		}else if(obj instanceof ByteBuffer){
-			return str((ByteBuffer)obj, charset);
-		}else if(CollectionUtil.isArray(obj)){
+
+		if (obj instanceof String) {
+			return (String) obj;
+		} else if (obj instanceof byte[]) {
+			return str((byte[]) obj, charset);
+		} else if (obj instanceof Byte[]) {
+			return str((Byte[]) obj, charset);
+		} else if (obj instanceof ByteBuffer) {
+			return str((ByteBuffer) obj, charset);
+		} else if (CollectionUtil.isArray(obj)) {
 			return CollectionUtil.toString(obj);
 		}
-		
+
 		return obj.toString();
 	}
-	
+
 	/**
 	 * 将byte数组转为字符串
 	 * 
@@ -1138,7 +1138,7 @@ public class StrUtil {
 		}
 		return new String(data, charset);
 	}
-	
+
 	/**
 	 * 将Byte数组转为字符串
 	 * 
@@ -1149,7 +1149,7 @@ public class StrUtil {
 	public static String str(Byte[] bytes, String charset) {
 		return str(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
 	}
-	
+
 	/**
 	 * 解码字节码
 	 * 
@@ -1161,46 +1161,49 @@ public class StrUtil {
 		if (data == null) {
 			return null;
 		}
-		
+
 		byte[] bytes = new byte[data.length];
 		Byte dataByte;
-		for(int i =0; i < data.length; i++){
+		for (int i = 0; i < data.length; i++) {
 			dataByte = data[i];
 			bytes[i] = (null == dataByte) ? -1 : dataByte.byteValue();
 		}
-		
+
 		return str(bytes, charset);
 	}
-	
+
 	/**
 	 * 将编码的byteBuffer数据转换为字符串
+	 * 
 	 * @param data 数据
 	 * @param charset 字符集，如果为空使用当前系统字符集
 	 * @return 字符串
 	 */
-	public static String str(ByteBuffer data, String charset){
-		if(data == null) {
+	public static String str(ByteBuffer data, String charset) {
+		if (data == null) {
 			return null;
 		}
-		
+
 		return str(data, Charset.forName(charset));
 	}
-	
+
 	/**
 	 * 将编码的byteBuffer数据转换为字符串
+	 * 
 	 * @param data 数据
 	 * @param charset 字符集，如果为空使用当前系统字符集
 	 * @return 字符串
 	 */
-	public static String str(ByteBuffer data, Charset charset){
-		if(null == charset) {
+	public static String str(ByteBuffer data, Charset charset) {
+		if (null == charset) {
 			charset = Charset.defaultCharset();
 		}
 		return charset.decode(data).toString();
 	}
-	
+
 	/**
 	 * 字符串转换为byteBuffer
+	 * 
 	 * @param str 字符串
 	 * @param charset 编码
 	 * @return byteBuffer
@@ -1211,6 +1214,7 @@ public class StrUtil {
 
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
+	 * 
 	 * @see CollectionUtil#join(String, Object...)
 	 * 
 	 * @param conjunction 分隔符
@@ -1220,7 +1224,7 @@ public class StrUtil {
 	public static String join(String conjunction, Object... objs) {
 		return CollectionUtil.join(conjunction, objs);
 	}
-	
+
 	/**
 	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br>
 	 * 例如：HelloWorld->hello_world
@@ -1438,35 +1442,53 @@ public class StrUtil {
 	}
 
 	/**
-	 * 统计指定内容中包含指定字符串的数量
-	 * @param content 内容
-	 * @param strForSearch 被统计的字符串
-	 * @return 包含数量
+	 * 统计指定内容中包含指定字符串的数量<br>
+	 * 参数为 {@code null} 或者 "" 返回 {@code 0}.
+	 *
+	 * <pre>
+	 * StrUtil.count(null, *)       = 0
+	 * StrUtil.count("", *)         = 0
+	 * StrUtil.count("abba", null)  = 0
+	 * StrUtil.count("abba", "")    = 0
+	 * StrUtil.count("abba", "a")   = 2
+	 * StrUtil.count("abba", "ab")  = 1
+	 * StrUtil.count("abba", "xxx") = 0
+	 * </pre>
+	 *
+	 * @param content 被查找的字符串
+	 * @param strForSearch 需要查找的字符串
+	 * @return 查找到的个数
 	 */
-	public static int count(String content, String strForSearch){
-		int contentLength = content.length();
-		if(null == content || null == strForSearch || strForSearch.length() > contentLength){
+	public static int count(final String content, final String strForSearch) {
+		if(hasEmpty(content, strForSearch) || strForSearch.length() > content.length()){
 			return 0;
 		}
 		
-		return contentLength - content.replace(strForSearch, EMPTY).length();
+		int count = 0;
+		int idx = 0;
+		while ((idx = content.indexOf(strForSearch, idx)) > -1) {
+			count++;
+			idx += strForSearch.length();
+		}
+		return count;
 	}
 	
 	/**
 	 * 统计指定内容中包含指定字符的数量
+	 * 
 	 * @param content 内容
 	 * @param charForSearch 被统计的字符
 	 * @return 包含数量
 	 */
-	public static int count(String content, char charForSearch){
+	public static int count(String content, char charForSearch) {
 		int count = 0;
-		if(null == content){
+		if (isEmpty(content)) {
 			return 0;
 		}
 		int contentLength = content.length();
 		for (int i = 0; i < contentLength; i++) {
-			if(charForSearch == content.charAt(i)){
-				count ++;
+			if (charForSearch == content.charAt(i)) {
+				count++;
 			}
 		}
 		return count;
