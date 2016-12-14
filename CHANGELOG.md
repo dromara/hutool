@@ -29,6 +29,7 @@
 * 增加Editor接口，用于规范对象编辑器，主要用于集合元素的统一修改
 * 修改Filter接口，同时去除ClassUtil中的ClassFilter，使过滤器抽象度更高
 * HttpConnection支持Proxy
+* StrUtil中某些方法使用CharSequence接口做为参数
 
 ### Bug修复
 
