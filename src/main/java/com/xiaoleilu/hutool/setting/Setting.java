@@ -23,6 +23,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class Setting extends BasicSetting {
 	private final static Log log = StaticLog.get();
 	
+	/** 数组类型值默认分隔符 */
+	public final static String DEFAULT_DELIMITER= ",";
+	
 	/**
 	 * 基本构造<br/>
 	 * 需自定义初始化配置文件<br/>
@@ -31,17 +34,6 @@ public class Setting extends BasicSetting {
 		super();
 	}
 	
-	/**
-	 * 基本构造<br/>
-	 * 需自定义初始化配置文件<br/>
-	 * 
-	 * @param charset 字符集
-	 * @param isUseVariable 是否使用变量
-	 */
-	public Setting(Charset charset, boolean isUseVariable) {
-		super(charset, isUseVariable);
-	}
-
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
@@ -115,7 +107,11 @@ public class Setting extends BasicSetting {
 	 * @return 值
 	 */
 	public String getWithLog(String key) {
-		return getStr(key);
+		final String value = getStr(key);
+		if (value == null) {
+			log.debug("No key define for [{}]!", key);
+		}
+		return value;
 	}
 	
 	/**
@@ -127,7 +123,7 @@ public class Setting extends BasicSetting {
 	public String getByGroupWithLog(String key, String group) {
 		final String value = getByGroup(key, group);
 		if (value == null) {
-			log.debug("No key define for [{}]!", key);
+			log.debug("No key define for [{}] of group [{}] !", key, group);
 		}
 		return value;
 	}

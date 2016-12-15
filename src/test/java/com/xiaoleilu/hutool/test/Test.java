@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.test;
 
-import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.setting.Setting;
 
 /**
  * 仅用于临时测试
@@ -10,8 +11,7 @@ import com.xiaoleilu.hutool.convert.Convert;
  */
 public class Test {
 	public static void main(String[] args) {
-		Object value = 1;
-		Double double1 = Convert.convert(double.class, value, 0D);
-		System.out.println(double1);
+		Setting setting = new Setting("config/db.setting");
+		Console.log(setting);
 	}
 }

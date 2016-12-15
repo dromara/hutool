@@ -115,7 +115,7 @@ public class CronUtil {
 	 */
 	synchronized public static void restart(){
 		if(null != crontabSetting){
-			crontabSetting.reload();
+			crontabSetting.load();
 		}
 		if(scheduler.isStarted()){
 			scheduler.stop();

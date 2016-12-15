@@ -45,7 +45,7 @@ public class SettingDemo {
 		setting.getByGroupWithLog("name", "group1");
 		
 		//重新读取配置文件，可以启用一个定时器调用此方法来定时更新配置
-		setting.reload();
+		setting.load();
 		
 		//当通过代码加入新的键值对的时候，调用store会保存到文件，但是会覆盖原来的文件，并丢失注释
 		setting.put("name1", "value");

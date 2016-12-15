@@ -30,6 +30,7 @@
 * 修改Filter接口，同时去除ClassUtil中的ClassFilter，使过滤器抽象度更高
 * HttpConnection支持Proxy
 * StrUtil中某些方法使用CharSequence接口做为参数
+* Setting 拆分配置文件解析为SettingLoader
 
 ### Bug修复
 
