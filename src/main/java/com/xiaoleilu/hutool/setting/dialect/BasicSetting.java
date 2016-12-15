@@ -12,13 +12,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.setting.SettingLoader;
-import com.xiaoleilu.hutool.util.BeanUtil;
-import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
@@ -32,16 +29,20 @@ import com.xiaoleilu.hutool.util.URLUtil;
  * @author xiaoleilu
  * 
  */
-public class BasicSetting extends AbsSetting{
-	private final static Log log = StaticLog.get();
+public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	
-	final private LinkedList<String> groups = new LinkedList<String>();
-	final Map<Object, Object> map = new ConcurrentHashMap<>();
+	/** 默认字符集 */
+	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+
+	private final LinkedList<String> groups = new LinkedList<String>();
+	private final Map<Object, Object> map = new ConcurrentHashMap<>();
 	
 	/** 本设置对象的字符集 */
 	protected Charset charset;
 	/** 是否使用变量 */
 	protected boolean isUseVariable;
+	/** 设定文件的URL */
+	protected URL settingUrl;
 
 	private SettingLoader settingLoader;
 	
@@ -175,47 +176,13 @@ public class BasicSetting extends AbsSetting{
 	}
 	
 	/**
-	 * 获得字符串类型值
-	 * @param key KEY
-	 * @param group 分组
-	 * @param defaultValue 默认值
-	 * @return 值或默认值
-	 */
-	public String getStr(String key, String group, String defaultValue) {
-		final String value = getByGroup(key, group);
-		if(StrUtil.isBlank(value)) {
-			return defaultValue;
-		}
-		return value;
-	}
-
-	/**
-	 * 获得指定分组的键对应值
-	 * 
-	 * @param key 键
-	 * @param group 分组
-	 * @return 值
-	 */
-	public String getByGroup(String key, String group) {
-		return getStr(keyWithGroup(key, group));
-	}
-	
-	/**
-	 * 获得所有键值对
-	 * @return map
-	 */
-	public Map<Object, Object> getMap(){
-		return this.map;
-	}
-	
-	/**
 	 * 获得指定分组的所有键值对
 	 * @param group 分组
 	 * @return map
 	 */
 	public Map<?, ?> getMap(String group){
 		if(StrUtil.isBlank(group)){
-			return getMap();
+			return this;
 		}
 		
 		String groupDot = group.concat(StrUtil.DOT);
@@ -235,8 +202,8 @@ public class BasicSetting extends AbsSetting{
 	 * @param group 分组
 	 * @return {@link Setting}
 	 */
-	public Setting getSetting(String group){
-		final Setting setting = new Setting();
+	public BasicSetting getSetting(String group){
+		final BasicSetting setting = new BasicSetting();
 		setting.putAll(this.getMap(group));
 		return setting;
 	}
@@ -279,48 +246,6 @@ public class BasicSetting extends AbsSetting{
 	}
 	
 	/**
-	 * 加入Map中的键值对
-	 * @param map {@link Map}
-	 */
-	@Override
-	public void putAll(Map<? extends Object, ? extends Object> map) {
-		this.map.putAll(map);
-	}
-	
-	/**
-	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
-	 * 只支持基本类型的转换
-	 * 
-	 * @param group 分组
-	 * @param bean Bean对象
-	 * @return Bean
-	 */
-	public Object toBean(final String group, Object bean) {
-		return BeanUtil.fillBean(bean, new ValueProvider(){
-			
-			@Override
-			public Object value(String name) {
-				final String value = getByGroup(name, group);
-				if(null != value){
-					log.debug("Parse setting to object field [{}={}]", name, value);
-				}
-				return value;
-			}
-		});
-	}
-
-	/**
-	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
-	 * 只支持基本类型的转换
-	 * 
-	 * @param bean Bean
-	 * @return Bean
-	 */
-	public Object toBean(Object bean) {
-		return toBean(null, bean);
-	}
-	
-	/**
 	 * 转换为Properties对象，原分组变为前缀
 	 * @return Properties对象
 	 */
@@ -337,6 +262,7 @@ public class BasicSetting extends AbsSetting{
 		return this.groups;
 	}
 	
+	//------------------------------------------------- Override Map interface
 	/**
 	 * @return 所有键值对
 	 */
@@ -369,6 +295,15 @@ public class BasicSetting extends AbsSetting{
 	public Object put(Object key, Object value) {
 		return this.map.put(key, value);
 	}
+	
+	/**
+	 * 加入Map中的键值对
+	 * @param map {@link Map}
+	 */
+	@Override
+	public void putAll(Map<? extends Object, ? extends Object> map) {
+		this.map.putAll(map);
+	}
 
 	@Override
 	public Object remove(Object key) {
@@ -394,21 +329,4 @@ public class BasicSetting extends AbsSetting{
 	public String toString() {
 		return map.toString();
 	}
-
-	/*--------------------------Private Method start-------------------------------*/
-	/**
-	 * 组合Key和Group，组合后为group.key
-	 * @param key
-	 * @param group
-	 * @return 组合后的KEY
-	 */
-	private static  String keyWithGroup(String key, String group){
-		String keyWithGroup = key;
-		if (!StrUtil.isBlank(group)) {
-			keyWithGroup = group.concat(StrUtil.DOT).concat(key);
-		}
-		return keyWithGroup;
-	}
-
-	/*--------------------------Private Method end-------------------------------*/
 }

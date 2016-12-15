@@ -9,8 +9,8 @@ import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
@@ -128,7 +128,7 @@ public class SettingLoader {
 				if (isUseVariable) {
 					value = replaceVar(value);
 				}
-				this.setting.getMap().put(key, value);
+				this.setting.put(key, value);
 			}
 		} finally {
 			IoUtil.close(reader);
@@ -166,6 +166,9 @@ public class SettingLoader {
 		}finally{
 			IoUtil.close(writer);
 		}
+	}
+	
+	public void autoReload(){
 	}
 
 	//----------------------------------------------------------------------------------- Private method start
