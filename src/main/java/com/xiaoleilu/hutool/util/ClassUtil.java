@@ -6,6 +6,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -838,5 +840,35 @@ public class ClassUtil {
 	public static boolean isNormalClass(Class<?> clazz) {
 		return null != clazz && false == clazz.isInterface() && false == isAbstract(clazz) && false == clazz.isEnum() && false == clazz.isArray() && false == clazz.isAnnotation() && false == clazz
 				.isSynthetic() && false == clazz.isPrimitive();
+	}
+	
+	/**
+	 * 获得给定类的第一个泛型参数
+	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
+	 * @return {@link Class}
+	 */
+	public static Class<?> getTypeArgument(Class<?> clazz) {
+		return getTypeArgument(clazz, 0);
+	}
+	
+	/**
+	 * 获得给定类的泛型参数
+	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
+	 * @param index 泛型类型的索引号，既第几个泛型类型
+	 * @return {@link Class}
+	 */
+	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
+		Type superType = clazz.getGenericSuperclass();
+		if(superType instanceof ParameterizedType){
+			ParameterizedType genericSuperclass = (ParameterizedType) superType;
+			Type[] types = genericSuperclass.getActualTypeArguments();
+			if(null != types && types.length > index){
+				Type type = types[index];
+				if(type instanceof Class){
+					return (Class<?>)type;
+				}
+			}
+		}
+		return null;
 	}
 }

@@ -149,8 +149,7 @@ public class SettingLoader {
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置<br>
 	 * 持久化会不会保留之前的分组
-	 * @param setting {@link BasicSetting}
-	 * @param absolutePath 设置文件的绝对路径
+ 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
 		Writer writer = null;

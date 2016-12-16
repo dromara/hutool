@@ -31,6 +31,8 @@
 * HttpConnection支持Proxy
 * StrUtil中某些方法使用CharSequence接口做为参数
 * Setting 拆分配置文件解析为SettingLoader
+* ClassUtil增加getTypeArgument方法，用于获取泛型属性类型
+* 大量扩充Converter，支持转换为数组
 
 ### Bug修复
 

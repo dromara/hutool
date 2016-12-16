@@ -11,19 +11,19 @@ import com.xiaoleilu.hutool.convert.AbstractConverter;
  * @author Looly
  *
  */
-public class URLConverter extends AbstractConverter<URL>{
+public class URIConverter extends AbstractConverter<URI>{
 
 	@Override
-	protected URL convertInternal(Object value) {
+	protected URI convertInternal(Object value) {
 		try {
 			if(value instanceof File){
-				return ((File)value).toURI().toURL();
+				return ((File)value).toURI();
 			}
 			
-			if(value instanceof URI){
-				return ((URI)value).toURL();
+			if(value instanceof URL){
+				return ((URL)value).toURI();
 			}
-			return new URL(convertToStr(value));
+			return new URI(convertToStr(value));
 		} catch (Exception e) {
 			// Ignore Exception
 		}

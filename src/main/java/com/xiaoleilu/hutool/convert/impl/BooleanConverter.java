@@ -17,4 +17,5 @@ public class BooleanConverter extends AbstractConverter<Boolean>{
 		String valueStr = convertToStr(value);
 		return Boolean.valueOf(PrimitiveConverter.parseBoolean(valueStr));
 	}
+
 }

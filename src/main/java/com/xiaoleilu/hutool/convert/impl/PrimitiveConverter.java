@@ -138,9 +138,13 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 					return false;
 				case "yes":
 					return true;
+				case "y":
+					return true;
 				case "ok":
 					return true;
 				case "no":
+					return false;
+				case "n":
 					return false;
 				case "1":
 					return true;

@@ -2,19 +2,41 @@ package com.xiaoleilu.hutool.convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
+import com.xiaoleilu.hutool.convert.impl.BooleanArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.BooleanConverter;
+import com.xiaoleilu.hutool.convert.impl.ByteArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.CalendarConverter;
+import com.xiaoleilu.hutool.convert.impl.CharArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.CharacterConverter;
+import com.xiaoleilu.hutool.convert.impl.CharsetConverter;
 import com.xiaoleilu.hutool.convert.impl.ClassConverter;
 import com.xiaoleilu.hutool.convert.impl.DateConverter;
+import com.xiaoleilu.hutool.convert.impl.DateTimeConverter;
+import com.xiaoleilu.hutool.convert.impl.DoubleArrayConverter;
+import com.xiaoleilu.hutool.convert.impl.FloatArrayConverter;
+import com.xiaoleilu.hutool.convert.impl.IntArrayConverter;
+import com.xiaoleilu.hutool.convert.impl.LongArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
 import com.xiaoleilu.hutool.convert.impl.PrimitiveConverter;
+import com.xiaoleilu.hutool.convert.impl.ShortArrayConverter;
+import com.xiaoleilu.hutool.convert.impl.SqlDateConverter;
+import com.xiaoleilu.hutool.convert.impl.SqlTimeConverter;
+import com.xiaoleilu.hutool.convert.impl.SqlTimestampConverter;
 import com.xiaoleilu.hutool.convert.impl.StringConverter;
+import com.xiaoleilu.hutool.convert.impl.TimeZoneConverter;
+import com.xiaoleilu.hutool.convert.impl.URIConverter;
+import com.xiaoleilu.hutool.convert.impl.URLConverter;
+import com.xiaoleilu.hutool.date.DateTime;
 
 /**
  * 转换器登记
@@ -43,7 +65,7 @@ public class ConverterRegistry {
 	}
 
 	public ConverterRegistry() {
-		registerDefaultConverter();
+		defaultConverter();
 	}
 
 	/**
@@ -52,7 +74,7 @@ public class ConverterRegistry {
 	 * @param converter 转换器
 	 * @return {@link ConverterRegistry}
 	 */
-	public ConverterRegistry registerCustom(Class<?> clazz, Converter<?> converter) {
+	public ConverterRegistry putCustom(Class<?> clazz, Converter<?> converter) {
 		if(null == customConverter){
 			synchronized (this) {
 				if(null == customConverter){
@@ -121,7 +143,7 @@ public class ConverterRegistry {
 	 * 注册默认转换器
 	 * @return 转换器
 	 */
-	private ConverterRegistry registerDefaultConverter() {
+	private ConverterRegistry defaultConverter() {
 		defaultConverter = new ConcurrentHashMap<>();
 		
 		//原始类型转换器
@@ -148,10 +170,43 @@ public class ConverterRegistry {
 		defaultConverter.put(BigDecimal.class, new NumberConverter(BigDecimal.class));
 		defaultConverter.put(BigInteger.class, new NumberConverter(BigInteger.class));
 		
-		//其它类型
-		defaultConverter.put(Date.class, new DateConverter());
+		//数组类型转换器
+		defaultConverter.put(Integer[].class, new ArrayConverter<Integer>(Integer.class));
+		defaultConverter.put(Long[].class, new ArrayConverter<Long>(Long.class));
+		defaultConverter.put(Byte[].class, new ArrayConverter<Byte>(Byte.class));
+		defaultConverter.put(Short[].class, new ArrayConverter<Short>(Short.class));
+		defaultConverter.put(Float[].class, new ArrayConverter<Float>(Float.class));
+		defaultConverter.put(Double[].class, new ArrayConverter<Double>(Double.class));
+		defaultConverter.put(Boolean[].class, new ArrayConverter<Boolean>(Boolean.class));
+		defaultConverter.put(Character[].class, new ArrayConverter<Character>(Character.class));
+		defaultConverter.put(String[].class, new ArrayConverter<String>(String.class));
+		
+		//原始类型数组转换器
+		defaultConverter.put(byte[].class, new ByteArrayConverter());
+		defaultConverter.put(short[].class, new ShortArrayConverter());
+		defaultConverter.put(int[].class, new IntArrayConverter());
+		defaultConverter.put(long[].class, new LongArrayConverter());
+		defaultConverter.put(float[].class, new FloatArrayConverter());
+		defaultConverter.put(double[].class, new DoubleArrayConverter());
+		defaultConverter.put(boolean[].class, new BooleanArrayConverter());
+		defaultConverter.put(char[].class, new CharArrayConverter());
+		
+		//URI and URL
+		defaultConverter.put(URI.class, new URIConverter());
+		defaultConverter.put(URL.class, new URLConverter());
+		
+		//日期时间
 		defaultConverter.put(Calendar.class, new CalendarConverter());
+		defaultConverter.put(Date.class, new DateConverter());
+		defaultConverter.put(DateTime.class, new DateTimeConverter());
+		defaultConverter.put(java.sql.Date.class, new SqlDateConverter());
+		defaultConverter.put(java.sql.Time.class, new SqlTimeConverter());
+		defaultConverter.put(java.sql.Timestamp.class, new SqlTimestampConverter());
+		
+		//其它类型
 		defaultConverter.put(Class.class, new ClassConverter());
+		defaultConverter.put(TimeZone.class, new TimeZoneConverter());
+		defaultConverter.put(Charset.class, new CharsetConverter());
 
 		return this;
 	}

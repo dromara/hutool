@@ -1209,123 +1209,243 @@ public class CollectionUtil {
 		return list;
 	}
 
-	// ------------------------------------------------------------------- 基本类型的数组转换为包装类型数组
+	// ------------------------------------------------------------------- Wrap and unwrap
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Integer[] wrap(int... values) {
 		final int length = values.length;
 		Integer[] array = new Integer[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Integer.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static int[] unWrap(Integer... values) {
+		final int length = values.length;
+		int[] array = new int[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].intValue();
 		}
 		return array;
 	}
 
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Long[] wrap(long... values) {
 		final int length = values.length;
 		Long[] array = new Long[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Long.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static long[] unWrap(Long... values) {
+		final int length = values.length;
+		long[] array = new long[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].longValue();
 		}
 		return array;
 	}
 
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Character[] wrap(char... values) {
 		final int length = values.length;
 		Character[] array = new Character[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Character.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static char[] unWrap(Character... values) {
+		final int length = values.length;
+		char[] array = new char[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].charValue();
 		}
 		return array;
 	}
 
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Byte[] wrap(byte... values) {
 		final int length = values.length;
 		Byte[] array = new Byte[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Byte.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static byte[] unWrap(Byte... values) {
+		final int length = values.length;
+		byte[] array = new byte[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].byteValue();
 		}
 		return array;
 	}
 
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Short[] wrap(short... values) {
 		final int length = values.length;
 		Short[] array = new Short[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Short.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static short[] unWrap(Short... values) {
+		final int length = values.length;
+		short[] array = new short[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].shortValue();
 		}
 		return array;
 	}
 
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Float[] wrap(float... values) {
 		final int length = values.length;
 		Float[] array = new Float[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Float.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static float[] unWrap(Float... values) {
+		final int length = values.length;
+		float[] array = new float[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].floatValue();
 		}
 		return array;
 	}
 
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Double[] wrap(double... values) {
 		final int length = values.length;
 		Double[] array = new Double[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Double.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static double[] unWrap(Double... values) {
+		final int length = values.length;
+		double[] array = new double[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].doubleValue();
 		}
 		return array;
 	}
 
 	/**
-	 * 将基本类型数组包装为包装类型
+	 * 将原始类型数组包装为包装类型
 	 * 
-	 * @param values 基本类型数组
+	 * @param values 原始类型数组
 	 * @return 包装类型数组
 	 */
 	public static Boolean[] wrap(boolean... values) {
 		final int length = values.length;
 		Boolean[] array = new Boolean[length];
 		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
+			array[i] = Boolean.valueOf(values[i]);
+		}
+		return array;
+	}
+	
+	/**
+	 * 包装类数组转为原始类型数组
+	 * 
+	 * @param values 包装类型数组
+	 * @return 原始类型数组
+	 */
+	public static boolean[] unWrap(Boolean... values) {
+		final int length = values.length;
+		boolean[] array = new boolean[length];
+		for (int i = 0; i < length; i++) {
+			array[i] = values[i].booleanValue();
 		}
 		return array;
 	}
@@ -1426,7 +1546,7 @@ public class CollectionUtil {
 			}
 		};
 	}
-
+	
 	/**
 	 * 数组或集合转String
 	 * 

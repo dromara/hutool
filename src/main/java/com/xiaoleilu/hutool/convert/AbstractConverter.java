@@ -1,9 +1,8 @@
 package com.xiaoleilu.hutool.convert;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.text.MessageFormat;
 
+import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
@@ -71,17 +70,6 @@ public abstract class AbstractConverter<T> implements Converter<T>{
 	 */
 	@SuppressWarnings("unchecked")
 	public Class<T> getTargetType() {
-		Type superType = getClass().getGenericSuperclass();
-		if(superType instanceof ParameterizedType){
-			ParameterizedType genericSuperclass = (ParameterizedType) superType;
-			Type[] types = genericSuperclass.getActualTypeArguments();
-			if(null != types && types.length > 0){
-				Type type = types[0];
-				if(type instanceof Class){
-					return (Class<T>)type;
-				}
-			}
-		}
-		return null;
+		return (Class<T>) ClassUtil.getTypeArgument(getClass());
 	}
 }
