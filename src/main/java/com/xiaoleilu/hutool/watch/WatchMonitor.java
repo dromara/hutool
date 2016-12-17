@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.watch;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -21,7 +22,7 @@ import com.xiaoleilu.hutool.log.LogFactory;
  * @author Looly
  *
  */
-public class WatchMonitor {
+public class WatchMonitor implements Closeable{
 	private static final Log log = LogFactory.get();
 	
 	/** 监听路径 */
@@ -137,6 +138,7 @@ public class WatchMonitor {
 	/**
 	 * 关闭监听
 	 */
+	@Override
 	public void close(){
 		IoUtil.close(watchService);
 	}

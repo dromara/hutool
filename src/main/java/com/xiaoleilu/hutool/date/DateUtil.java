@@ -525,7 +525,7 @@ public class DateUtil {
 		long diff = minuend.getTime() - subtrahend.getTime();
 		return diff / unit.getMillis();
 	}
-
+	
 	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：纳秒
 	 * 

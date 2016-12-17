@@ -33,6 +33,8 @@
 * Setting 拆分配置文件解析为SettingLoader
 * ClassUtil增加getTypeArgument方法，用于获取泛型属性类型
 * 大量扩充Converter，支持转换为数组
+* 增加PathConverter，转换支持Path对象
+* Setting和Props支持文件变更自动加载
 
 ### Bug修复
 

@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.xiaoleilu.hutool.convert.impl.FloatArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.IntArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.LongArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
+import com.xiaoleilu.hutool.convert.impl.PathConverter;
 import com.xiaoleilu.hutool.convert.impl.PrimitiveConverter;
 import com.xiaoleilu.hutool.convert.impl.ShortArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.SqlDateConverter;
@@ -207,6 +209,7 @@ public class ConverterRegistry {
 		defaultConverter.put(Class.class, new ClassConverter());
 		defaultConverter.put(TimeZone.class, new TimeZoneConverter());
 		defaultConverter.put(Charset.class, new CharsetConverter());
+		defaultConverter.put(Path.class, new PathConverter());
 
 		return this;
 	}

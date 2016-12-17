@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.nio.file.WatchEvent;
 import java.util.Properties;
 
 import com.xiaoleilu.hutool.convert.Convert;
@@ -16,8 +18,11 @@ import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.setting.SettingRuntimeException;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
+import com.xiaoleilu.hutool.watch.SimpleWatchListener;
+import com.xiaoleilu.hutool.watch.WatchMonitor;
 
 /**
  * Properties文件读取封装类
@@ -30,6 +35,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	//----------------------------------------------------------------------- 私有属性 start
 	/** 属性文件的URL */
 	private URL propertiesFileUrl;
+	private WatchMonitor watchMonitor;
 	//----------------------------------------------------------------------- 私有属性 end
 	
 	//----------------------------------------------------------------------- 构造方法 start
@@ -121,8 +127,39 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	/**
 	 * 重新加载配置文件
 	 */
-	public void reload() {
+	public void load() {
 		this.load(propertiesFileUrl);
+	}
+	
+	/**
+	 * 在配置文件变更时自动加载
+	 * @param autoReload 是否自动加载
+	 */
+	public void autoLoad(boolean autoReload){
+		if(autoReload){
+			if(null != this.watchMonitor){
+				this.watchMonitor.close();
+				try {
+					watchMonitor = WatchMonitor.create(Paths.get(this.propertiesFileUrl.toURI()));
+					watchMonitor.start(new SimpleWatchListener(){
+						@Override
+						public void onCreate(WatchEvent<?> event) {
+							load();
+						}
+						
+						@Override
+						public void onModify(WatchEvent<?> event) {
+							load();
+						}
+					});
+				} catch (Exception e) {
+					throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.propertiesFileUrl);
+				}
+			}
+		}else{
+			IoUtil.close(this.watchMonitor);
+			this.watchMonitor = null;
+		}
 	}
 	
 	//----------------------------------------------------------------------- Get start

@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
@@ -673,6 +675,19 @@ public class Convert {
 		}
 		
 		return CharsetUtil.convert(str, sourceCharset, destCharset);
+	}
+	
+	/**
+	 * 转换时间单位
+	 * @param sourceDuration 时长
+	 * @param sourceUnit 源单位
+	 * @param destUnit 目标单位
+	 * @return 目标单位的时长
+	 */
+	public long convertTime(long sourceDuration, TimeUnit sourceUnit, TimeUnit destUnit){
+		Assert.isNull(sourceUnit, "sourceUnit is null !");
+		Assert.isNull(destUnit, "destUnit is null !");
+		return destUnit.convert(sourceDuration, sourceUnit);
 	}
 
 	/**

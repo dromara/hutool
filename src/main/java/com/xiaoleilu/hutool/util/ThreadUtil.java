@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -122,6 +123,22 @@ public class ThreadUtil {
 	 */
 	public static CountDownLatch newCountDownLatch(int threadCount) {
 		return new CountDownLatch(threadCount);
+	}
+	
+	/**
+	 * 挂起当前线程
+	 * 
+	 * @param timeout 挂起的时长
+	 * @param timeUnit 时长单位
+	 * @return 被中断返回false，否则true
+	 */
+	public static boolean sleep(Number timeout, TimeUnit timeUnit) {
+		try {
+			timeUnit.sleep(timeout.longValue());
+		} catch (InterruptedException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

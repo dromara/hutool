@@ -3,6 +3,8 @@ package com.xiaoleilu.hutool.setting.dialect;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
+import java.nio.file.WatchEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,12 +14,16 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.setting.AbsSetting;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.setting.SettingLoader;
+import com.xiaoleilu.hutool.setting.SettingRuntimeException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
+import com.xiaoleilu.hutool.watch.SimpleWatchListener;
+import com.xiaoleilu.hutool.watch.WatchMonitor;
 
 /**
  * 分组设置工具类。 用于支持设置文件<br>
@@ -45,6 +51,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	protected URL settingUrl;
 
 	private SettingLoader settingLoader;
+	private WatchMonitor watchMonitor;
 	
 	public BasicSetting() {
 	}
@@ -152,6 +159,37 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 			settingLoader = new SettingLoader(this, this.charset, this.isUseVariable);
 		}
 		return settingLoader.load(settingUrl);
+	}
+	
+	/**
+	 * 在配置文件变更时自动加载
+	 * @param autoReload 是否自动加载
+	 */
+	public void autoLoad(boolean autoReload){
+		if(autoReload){
+			if(null != this.watchMonitor){
+				this.watchMonitor.close();
+				try {
+					watchMonitor = WatchMonitor.create(Paths.get(this.settingUrl.toURI()));
+					watchMonitor.start(new SimpleWatchListener(){
+						@Override
+						public void onCreate(WatchEvent<?> event) {
+							load();
+						}
+						
+						@Override
+						public void onModify(WatchEvent<?> event) {
+							load();
+						}
+					});
+				} catch (Exception e) {
+					throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.settingUrl);
+				}
+			}
+		}else{
+			IoUtil.close(this.watchMonitor);
+			this.watchMonitor = null;
+		}
 	}
 	
 	/**
