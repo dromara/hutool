@@ -68,14 +68,6 @@ public class ScriptRuntimeException extends RuntimeException {
 		this.columnNumber = columnNumber;
 	}
 	
-	/**
-	 * <code>ScriptException</code> constructor specifying message, filename, line number and column number.
-	 * 
-	 * @param message The message.
-	 * @param fileName The filename
-	 * @param lineNumber the line number.
-	 * @param columnNumber the column number.
-	 */
 	public ScriptRuntimeException(ScriptException e) {
 		super(e);
 		this.fileName = e.getFileName();

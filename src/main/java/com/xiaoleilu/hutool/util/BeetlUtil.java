@@ -41,7 +41,7 @@ public class BeetlUtil {
 	 * 获得模板
 	 * @param groupTemplate {@link GroupTemplate}
 	 * @param source 模板资源，根据不同的 {@link ResourceLoader} 加载不同的模板资源
-	 * @return
+	 * @return {@link Template}
 	 */
 	public static Template getTemplate(GroupTemplate groupTemplate, String source){
 		return groupTemplate.getTemplate(source);
