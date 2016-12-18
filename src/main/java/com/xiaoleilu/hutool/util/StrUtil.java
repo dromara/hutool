@@ -378,6 +378,17 @@ public class StrUtil {
 			return str.startsWith(prefix);
 		}
 	}
+	
+	/**
+	 * 是否以指定字符串开头，忽略大小写
+	 * 
+	 * @param str 被监测字符串
+	 * @param prefix 开头字符串
+	 * @return 是否以指定字符串开头
+	 */
+	public static boolean startWithIgnoreCase(String str, String prefix) {
+		return startWith(str, prefix, true);
+	}
 
 	/**
 	 * 是否以指定字符串结尾
@@ -393,6 +404,17 @@ public class StrUtil {
 		} else {
 			return str.endsWith(suffix);
 		}
+	}
+	
+	/**
+	 * 是否以指定字符串结尾，忽略大小写
+	 * 
+	 * @param str 被监测字符串
+	 * @param suffix 结尾字符串
+	 * @return 是否以指定字符串结尾
+	 */
+	public static boolean endWithIgnoreCase(String str, String suffix) {
+		return endWith(str, suffix, true);
 	}
 
 	/**
