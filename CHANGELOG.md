@@ -36,6 +36,7 @@
 * 增加PathConverter，转换支持Path对象
 * Setting和Props支持文件变更自动加载
 * StrUtil增加startWithIgnoreCase和endWithIgnoreCase
+* script包引擎封装，封装JavaScriptEngine
 
 ### Bug修复
 
