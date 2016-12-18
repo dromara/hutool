@@ -3,10 +3,10 @@ package com.xiaoleilu.hutool.watch;
 import java.nio.file.WatchEvent;
 
 /**
- * 监测
+ * 观察者
  * @author Looly
  */
-public interface WatchListener {
+public interface Watcher {
 	/**
 	 * 文件创建时执行的方法
 	 * @param event 事件

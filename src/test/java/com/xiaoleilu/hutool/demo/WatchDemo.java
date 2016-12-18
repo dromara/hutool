@@ -4,8 +4,9 @@ import java.nio.file.WatchEvent;
 
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.watch.WatchListener;
+import com.xiaoleilu.hutool.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.watch.WatchMonitor;
+import com.xiaoleilu.hutool.watch.Watcher;
 
 /**
  * 监听Demo
@@ -17,7 +18,16 @@ public class WatchDemo {
 	
 	public static void main(String[] args) {
 		WatchMonitor monitor = WatchMonitor.create("e:/data");
-		monitor.start(new WatchListener(){
+		
+		
+		
+		//方法1，阻塞当前线程
+		monitor.setWatcher(new SimpleWatcher()).watch();
+		//方法2，非阻塞当前线程
+		monitor.setWatcher(new SimpleWatcher()).start();
+		
+		//方法3，阻塞当前线程
+		monitor.watch(new Watcher(){
 			
 			@Override
 			public void onOverflow(WatchEvent<?> event) {

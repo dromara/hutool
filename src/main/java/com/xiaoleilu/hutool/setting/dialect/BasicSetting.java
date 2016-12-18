@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.setting.dialect;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.setting.SettingLoader;
@@ -22,7 +23,7 @@ import com.xiaoleilu.hutool.setting.SettingRuntimeException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
-import com.xiaoleilu.hutool.watch.SimpleWatchListener;
+import com.xiaoleilu.hutool.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.watch.WatchMonitor;
 
 /**
@@ -169,23 +170,19 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 		if(autoReload){
 			if(null != this.watchMonitor){
 				this.watchMonitor.close();
-				try {
-					watchMonitor = WatchMonitor.create(Paths.get(this.settingUrl.toURI()));
-					watchMonitor.start(new SimpleWatchListener(){
-						@Override
-						public void onCreate(WatchEvent<?> event) {
-							load();
-						}
-						
-						@Override
-						public void onModify(WatchEvent<?> event) {
-							load();
-						}
-					});
-				} catch (Exception e) {
-					throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.settingUrl);
-				}
 			}
+			try {
+				watchMonitor = WatchMonitor.create(this.settingUrl, StandardWatchEventKinds.ENTRY_MODIFY);
+				watchMonitor.setWatcher(new SimpleWatcher(){
+					@Override
+					public void onModify(WatchEvent<?> event) {
+						load();
+					}
+				}).start();
+			} catch (Exception e) {
+				throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.settingUrl);
+			}
+			StaticLog.debug("Auto load for [{}] listenning...", this.settingUrl);
 		}else{
 			IoUtil.close(this.watchMonitor);
 			this.watchMonitor = null;

@@ -8,7 +8,7 @@ import java.nio.file.WatchEvent;
  * @author Looly
  *
  */
-public class SimpleWatchListener implements WatchListener{
+public class SimpleWatcher implements Watcher{
 
 	@Override
 	public void onCreate(WatchEvent<?> event) {

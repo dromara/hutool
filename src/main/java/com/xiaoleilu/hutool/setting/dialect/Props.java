@@ -21,7 +21,7 @@ import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.SettingRuntimeException;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
-import com.xiaoleilu.hutool.watch.SimpleWatchListener;
+import com.xiaoleilu.hutool.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.watch.WatchMonitor;
 
 /**
@@ -141,17 +141,12 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 				this.watchMonitor.close();
 				try {
 					watchMonitor = WatchMonitor.create(Paths.get(this.propertiesFileUrl.toURI()));
-					watchMonitor.start(new SimpleWatchListener(){
-						@Override
-						public void onCreate(WatchEvent<?> event) {
-							load();
-						}
-						
+					watchMonitor.setWatcher(new SimpleWatcher(){
 						@Override
 						public void onModify(WatchEvent<?> event) {
 							load();
 						}
-					});
+					}).start();
 				} catch (Exception e) {
 					throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.propertiesFileUrl);
 				}
