@@ -37,6 +37,8 @@
 * Setting和Props支持文件变更自动加载
 * StrUtil增加startWithIgnoreCase和endWithIgnoreCase
 * script包引擎封装，封装JavaScriptEngine
+* 增加StrUtil.humanReadableSize方法
+* 增加RuntimeInfo
 
 ### Bug修复
 

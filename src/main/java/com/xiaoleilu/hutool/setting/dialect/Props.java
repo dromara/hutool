@@ -76,7 +76,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		}
 		final URL url = URLUtil.getURL(propertiesFile);
 		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", propertiesFile.getAbsolutePath()));
+			throw new RuntimeException(StrUtil.format("Can not find properties file: [{}]", propertiesFile.getAbsolutePath()));
 		}
 		this.load(url);
 	}
@@ -89,7 +89,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public Props(String path, Class<?> clazz){
 		final URL url = URLUtil.getURL(path, clazz);
 		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", path));
+			throw new RuntimeException(StrUtil.format("Can not find properties file: [{}]", path));
 		}
 		this.load(url);
 	}
@@ -101,6 +101,15 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public Props(URL propertiesUrl){
 		this.load(propertiesUrl);
 	}
+	
+	/**
+	 * 构造，使用URL读取
+	 * @param properties 属性文件路径
+	 */
+	public Props(Properties properties){
+		this.putAll(properties);
+	}
+	
 	//----------------------------------------------------------------------- 构造方法 end
 	
 	/**

@@ -1,11 +1,11 @@
 package com.xiaoleilu.hutool.system;
 
 import java.io.PrintWriter;
-import java.util.Properties;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.lang.Singleton;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.setting.dialect.Props;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -179,8 +179,8 @@ public class SystemUtil {
 	/**
 	 * @return 属性列表
 	 */
-	public static Properties props() {
-		return System.getProperties();
+	public static Props props() {
+		return new Props(System.getProperties());
 	}
 	//----------------------------------------------------------------------- Basic end
 
@@ -255,7 +255,17 @@ public class SystemUtil {
 	public static final HostInfo getHostInfo() {
 		return Singleton.get(HostInfo.class);
 	}
-
+	
+	/**
+	 * 取得Runtime的信息。
+	 * 
+	 * @return <code>RuntimeInfo</code>对象
+	 */
+	public static final RuntimeInfo getRuntimeInfo() {
+		return Singleton.get(RuntimeInfo.class);
+	}
+	
+	//------------------------------------------------------------------ Dump
 	/**
 	 * 将系统信息输出到<code>System.out</code>中。
 	 */
@@ -286,6 +296,8 @@ public class SystemUtil {
 		out.println("--------------");
 		out.println(getHostInfo());
 		out.println("--------------");
+		out.println(getRuntimeInfo());
+		out.println("--------------");
 		out.flush();
 	}
 	
@@ -296,7 +308,7 @@ public class SystemUtil {
 	 * @param caption 标题
 	 * @param value 值
 	 */
-	protected static void append(StringBuilder builder, String caption, String value) {
-		builder.append(caption).append(StrUtil.nullToDefault(value, "[n/a]")).append("\n");
+	protected static void append(StringBuilder builder, String caption, Object value) {
+		builder.append(caption).append(StrUtil.nullToDefault(Convert.toStr(value), "[n/a]")).append("\n");
 	}
 }
