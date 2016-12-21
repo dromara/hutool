@@ -1515,18 +1515,4 @@ public class StrUtil {
 		}
 		return count;
 	}
-	
-	/**
-	 * 将bytes长度转换为可阅读的字符串<br>
-	 * @param size bytes长度
-	 * @param si 使用1000进制还是使用1024进制，<code>true</code>使用1000进制
-	 * @return 可阅读的字符串
-	 */
-	public static String humanReadableSize(long size, boolean si) {
-		int unit = si ? 1000 : 1024;
-		if (size < unit) return size + " B";
-		int exp = (int) (Math.log(size) / Math.log(unit));
-		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-		return String.format("%.1f %sB", size / Math.pow(unit, exp), pre);
-	}
 }

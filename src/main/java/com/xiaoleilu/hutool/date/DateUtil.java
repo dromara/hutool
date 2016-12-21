@@ -516,14 +516,63 @@ public class DateUtil {
 	 * 判断两个日期相差的时长<br/>
 	 * 返回 minuend - subtrahend 的差
 	 * 
-	 * @param subtrahend 减数日期
-	 * @param minuend 被减数日期
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
 	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
 	 * @return 日期差
 	 */
-	public static long diff(Date subtrahend, Date minuend, DateUnit unit) {
-		long diff = minuend.getTime() - subtrahend.getTime();
+	public static long diff(Date beginDate, Date endDate, DateUnit unit) {
+		long diff = Math.abs(endDate.getTime() - beginDate.getTime());
 		return diff / unit.getMillis();
+	}
+	
+	/**
+	 * 格式化日期间隔输出
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级，如果等级为3，则只显示前三个，依此类推
+	 * @return XX天XX小时XX分XX秒
+	 */
+	public static String formatDiff(Date beginDate, Date endDate, int level){
+		return formatDiff(diff(beginDate, endDate, DateUnit.MS), level);
+	}
+	
+	/**
+	 * 格式化日期间隔输出<br>
+	 * 
+	 * @param diffMs 日期间隔
+	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级，如果等级为3，则只显示前三个，依此类推
+	 * @return XX天XX小时XX分XX秒XX毫秒
+	 */
+	public static String formatDiff(long diffMs, int level){
+		if(diffMs == 0){
+			return "0";
+		}
+		
+		long day = diffMs / DateUnit.DAY.getMillis();
+		long hour = diffMs / DateUnit.HOUR.getMillis() - day * 24;
+		long minute = diffMs / DateUnit.MINUTE.getMillis() - day * 24 * 60 - hour * 60;
+		long second = diffMs / DateUnit.SECOND.getMillis() - ((day * 24 + hour) * 60 + minute) * 60;
+		long millisecond = diffMs - (((day * 24 + hour) * 60 + minute) * 60 + second) * 1000;
+		
+		StringBuilder sb = new StringBuilder();
+		if(0 != day && level > 0){
+			sb.append(day).append("天");
+		}
+		if(0 != hour && level > 1){
+			sb.append(hour).append("小时");
+		}
+		if(0 != minute && level > 2){
+			sb.append(minute).append("分");
+		}
+		if(0 != second && level > 3){
+			sb.append(second).append("秒");
+		}
+		if(0 != millisecond && level > 4){
+			sb.append(millisecond).append("毫秒");
+		}
+		
+		return sb.toString();
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.system;
 
-import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 
 public class RuntimeInfo {
 	
@@ -50,10 +50,10 @@ public class RuntimeInfo {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		SystemUtil.append(builder, "Max Memory:    ", StrUtil.humanReadableSize(getMaxMemory(), false));
-		SystemUtil.append(builder, "Total Memory:     ", StrUtil.humanReadableSize(getTotalMemory(), false));
-		SystemUtil.append(builder, "Free Memory:     ", StrUtil.humanReadableSize(getFreeMemory(), false));
-		SystemUtil.append(builder, "Usable Memory:     ", StrUtil.humanReadableSize(getUsableMemory(), false));
+		SystemUtil.append(builder, "Max Memory:    ", FileUtil.readableFileSize(getMaxMemory()));
+		SystemUtil.append(builder, "Total Memory:     ", FileUtil.readableFileSize(getTotalMemory()));
+		SystemUtil.append(builder, "Free Memory:     ", FileUtil.readableFileSize(getFreeMemory()));
+		SystemUtil.append(builder, "Usable Memory:     ", FileUtil.readableFileSize(getUsableMemory()));
 
 		return builder.toString();
 	}
