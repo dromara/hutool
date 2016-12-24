@@ -164,7 +164,7 @@ public class HttpConnection {
 
 		// do input and output
 		this.conn.setDoInput(true);
-		if (Method.POST.equals(this.conn) || Method.PUT.equals(this.conn) || Method.PATCH.equals(this.conn) || Method.DELETE.equals(this.conn)) {
+		if (Method.POST.equals(this.method) || Method.PUT.equals(this.method) || Method.PATCH.equals(this.method) || Method.DELETE.equals(this.method)) {
 			this.conn.setDoOutput(true);
 			this.conn.setUseCaches(false);
 		}

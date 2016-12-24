@@ -89,7 +89,8 @@ public class ConverterRegistry {
 	}
 
 	/**
-	 * 获得转换器
+	 * 获得转换器<br>
+	 * 自定义转换器优先级高于默认转换器
 	 * @param <T>
 	 * 
 	 * @param type 类型
@@ -97,7 +98,11 @@ public class ConverterRegistry {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> Converter<T> getConverter(Class<T> type) {
-		return (Converter<T>) defaultConverter.get(type);
+		Converter<T> converter = this.getCustomConverter(type);
+		if(null == converter){
+			converter = (Converter<T>) defaultConverter.get(type);
+		}
+		return converter;
 	}
 	
 	/**
@@ -120,7 +125,21 @@ public class ConverterRegistry {
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T convert(Class<T> type, Object value, T defaultValue) {
+		if(null == type && null == defaultValue){
+			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
+		}
+		if(null == value ){
+			return defaultValue;
+		}
+		if(null == type){
+			type = (Class<T>) defaultValue.getClass();
+		}
+		if(type.isInstance(value)){
+			return (T)value;
+		}
+		
 		Converter<T> converter = getConverter(type);
 		if (null == converter) {
 //			return defaultValue;

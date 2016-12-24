@@ -51,3 +51,5 @@
 * 修复Boolean转换的一个错误
 * 修复CharsetUtil中默认的destCharset错误赋值问题
 * 修复StrUtil.count方法错误计数问题
+* 修复DbSetting传值Setting不为空空指针问题
+* 修复HttpConnection中判断Http Method 错误

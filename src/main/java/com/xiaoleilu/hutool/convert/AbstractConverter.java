@@ -16,6 +16,9 @@ public abstract class AbstractConverter<T> implements Converter<T>{
 	@SuppressWarnings("unchecked")
 	public T convert(Object value, T defaultValue) {
 		Class<T> targetType = getTargetType();
+		if(null == targetType && null == defaultValue){
+			throw new NullPointerException("[type] and [defaultValue] are both null for Converter ["+this.getClass()+"], we can not know what type to convert !");
+		}
 		if(null == targetType){
 			targetType = (Class<T>) defaultValue.getClass();
 		}

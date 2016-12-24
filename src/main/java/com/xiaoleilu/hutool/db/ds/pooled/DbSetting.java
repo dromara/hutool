@@ -28,6 +28,8 @@ public class DbSetting {
 	public DbSetting(Setting setting) {
 		if(null == setting) {
 			this.setting = new Setting(DEFAULT_DB_CONFIG_PATH);
+		}else{
+			this.setting = setting;
 		}
 	}
 	
