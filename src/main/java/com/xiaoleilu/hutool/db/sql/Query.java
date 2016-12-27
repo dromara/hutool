@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.db.Page;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 
 /**
  * 查询对象，用于传递查询所需的字段值
@@ -136,7 +136,7 @@ public class Query {
 	 * 获得第一个表名
 	 */
 	public String getFirstTableName() throws SQLException{
-		if(CollectionUtil.isEmpty(this.tableNames)){
+		if(ArrayUtil.isEmpty(this.tableNames)){
 			throw new SQLException("No tableName!");
 		}
 		return this.tableNames[0];

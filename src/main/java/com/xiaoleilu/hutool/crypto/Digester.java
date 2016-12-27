@@ -213,11 +213,17 @@ public class Digester {
 	}
 	
 	/**
-	 * 摘要算法类型
+	 * 摘要算法类型<br>
+	 * see: https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#MessageDigest
 	 * @author Looly
 	 */
 	public static enum DigestAlgorithm {
-		MD5("MD5"), SHA256("SHA-256"), SHA348("SHA-348"), SHA512("SHA-512"), SHA1("SHA-1");
+		MD2("MD2"),
+		MD5("MD5"),
+		SHA1("SHA-1"),
+		SHA256("SHA-256"),
+		SHA348("SHA-348"),
+		SHA512("SHA-512");
 
 		private String value;
 

@@ -18,6 +18,7 @@ import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.lang.Base64;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -229,7 +230,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (value instanceof List) {
 			// 列表对象
 			strValue = CollectionUtil.join((List<?>) value, ",");
-		} else if (CollectionUtil.isArray(value)) {
+		} else if (ArrayUtil.isArray(value)) {
 			// 数组对象
 			strValue = CollectionUtil.join((Object[]) value, ",");
 		} else {

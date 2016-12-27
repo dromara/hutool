@@ -42,6 +42,7 @@
 * 增加Matcher接口，用于抽象接口逻辑
 * 新建crypto包，提供摘要算法和对称加密算法
 * CollectionUtil增加count方法
+* CollectionUtil中关于数组方法全部迁移至ArrayUtil
 
 ### Bug修复
 

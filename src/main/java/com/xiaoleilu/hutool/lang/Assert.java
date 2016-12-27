@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.lang;
 import java.util.Collection;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -211,7 +212,7 @@ public class Assert {
 	 * @throws IllegalArgumentException if the object array is {@code null} or has no elements
 	 */
 	public static void notEmpty(Object[] array, String message) {
-		if (CollectionUtil.isEmpty(array)) {
+		if (ArrayUtil.isEmpty(array)) {
 			throw new IllegalArgumentException(message);
 		}
 	}

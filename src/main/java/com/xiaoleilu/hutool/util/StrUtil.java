@@ -100,7 +100,7 @@ public class StrUtil {
 	 * @return 是否包含空字符串
 	 */
 	public static boolean hasBlank(CharSequence... strs) {
-		if (CollectionUtil.isEmpty(strs)) {
+		if (ArrayUtil.isEmpty(strs)) {
 			return true;
 		}
 
@@ -119,7 +119,7 @@ public class StrUtil {
 	 * @return 所有字符串是否为空白
 	 */
 	public static boolean isAllBlank(CharSequence... strs) {
-		if (CollectionUtil.isEmpty(strs)) {
+		if (ArrayUtil.isEmpty(strs)) {
 			return true;
 		}
 
@@ -201,7 +201,7 @@ public class StrUtil {
 	 * @return 是否包含空字符串
 	 */
 	public static boolean hasEmpty(CharSequence... strs) {
-		if (CollectionUtil.isEmpty(strs)) {
+		if (ArrayUtil.isEmpty(strs)) {
 			return true;
 		}
 
@@ -220,7 +220,7 @@ public class StrUtil {
 	 * @return 是否全部为空字符串
 	 */
 	public static boolean isAllEmpty(CharSequence... strs) {
-		if (CollectionUtil.isEmpty(strs)) {
+		if (ArrayUtil.isEmpty(strs)) {
 			return true;
 		}
 
@@ -775,6 +775,33 @@ public class StrUtil {
 		}
 		return result;
 	}
+	
+	/**
+	 * 拆分字符串
+	 */
+	/**
+	 * 根据给定长度，将给定字符串截取为多个部分
+	 * @param str 字符串
+	 * @param len 每一个小节的长度
+	 * @return 截取后的字符串数组
+	 */
+	public static String[] split(String str, int len) {
+		int partCount = str.length() / len;
+		int lastPartCount = str.length() % len;
+		int fixPart = 0;
+		if (lastPartCount != 0) {
+			fixPart = 1;
+		}
+		final String[] strs = new String[partCount + fixPart];
+		for (int i = 0; i < partCount + fixPart; i++) {
+			if (i == partCount + fixPart - 1 && lastPartCount != 0) {
+				strs[i] = str.substring(i * len, i * len + lastPartCount);
+			} else {
+				strs[i] = str.substring(i * len, i * len + len);
+			}
+		}
+		return strs;
+	}
 
 	/**
 	 * 改进JDK subString<br>
@@ -993,7 +1020,7 @@ public class StrUtil {
 	 * @return 格式化后的文本
 	 */
 	public static String format(String template, Object... params) {
-		if (CollectionUtil.isEmpty(params) || isBlank(template)) {
+		if (ArrayUtil.isEmpty(params) || isBlank(template)) {
 			return template;
 		}
 		return StrFormatter.format(template, params);
@@ -1125,8 +1152,8 @@ public class StrUtil {
 			return str((Byte[]) obj, charset);
 		} else if (obj instanceof ByteBuffer) {
 			return str((ByteBuffer) obj, charset);
-		} else if (CollectionUtil.isArray(obj)) {
-			return CollectionUtil.toString(obj);
+		} else if (ArrayUtil.isArray(obj)) {
+			return ArrayUtil.toString(obj);
 		}
 
 		return obj.toString();

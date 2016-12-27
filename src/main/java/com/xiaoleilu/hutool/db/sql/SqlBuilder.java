@@ -12,6 +12,7 @@ import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -260,7 +261,7 @@ public class SqlBuilder {
 	 * @return 自己
 	 */
 	public SqlBuilder from(String... tableNames){
-		if(CollectionUtil.isEmpty(tableNames) || StrUtil.hasBlank(tableNames)) {
+		if(ArrayUtil.isEmpty(tableNames) || StrUtil.hasBlank(tableNames)) {
 			throw new DbRuntimeException("Table name is blank in table names !");
 		}
 		
@@ -283,7 +284,7 @@ public class SqlBuilder {
 	 * @return 自己
 	 */
 	public SqlBuilder where(LogicalOperator logicalOperator, Condition... conditions){
-		if(CollectionUtil.isNotEmpty(conditions)) {
+		if(ArrayUtil.isNotEmpty(conditions)) {
 			if(null != wrapper) {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);
@@ -325,7 +326,7 @@ public class SqlBuilder {
 	 * @return 自己
 	 */
 	public SqlBuilder groupBy(String... fields){
-		if(CollectionUtil.isNotEmpty(fields)) {
+		if(ArrayUtil.isNotEmpty(fields)) {
 			if(null != wrapper) {
 				//包装字段名
 				fields = wrapper.wrap(fields);
@@ -344,7 +345,7 @@ public class SqlBuilder {
 	 * @return 自己
 	 */
 	public SqlBuilder having(LogicalOperator logicalOperator, Condition... conditions){
-		if(CollectionUtil.isNotEmpty(conditions)) {
+		if(ArrayUtil.isNotEmpty(conditions)) {
 			if(null != wrapper) {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);
@@ -373,7 +374,7 @@ public class SqlBuilder {
 	 * @return 自己
 	 */
 	public SqlBuilder orderBy(Order... orders){
-		if(CollectionUtil.isEmpty(orders)){
+		if(ArrayUtil.isEmpty(orders)){
 			return this;
 		}
 		
@@ -434,7 +435,7 @@ public class SqlBuilder {
 	 * @return 自己
 	 */
 	public SqlBuilder on(LogicalOperator logicalOperator, Condition... conditions){
-		if(CollectionUtil.isNotEmpty(conditions)) {
+		if(ArrayUtil.isNotEmpty(conditions)) {
 			if(null != wrapper) {
 				//包装字段名
 				conditions = wrapper.wrap(conditions);
@@ -522,7 +523,7 @@ public class SqlBuilder {
 	 * @return 构建后的SQL语句条件部分
 	 */
 	private String buildCondition(LogicalOperator logicalOperator, Condition... conditions){
-		if(CollectionUtil.isEmpty(conditions)) {
+		if(ArrayUtil.isEmpty(conditions)) {
 			return StrUtil.EMPTY;
 		}
 		if(null == logicalOperator) {

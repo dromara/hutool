@@ -16,6 +16,7 @@ import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
@@ -54,7 +55,7 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		
 		Condition[] where = query.getWhere();
-		if(CollectionUtil.isEmpty(where)){
+		if(ArrayUtil.isEmpty(where)){
 			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No 'WHERE' condition, we can't prepared statement for delete everything.");
 		}
@@ -74,7 +75,7 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		
 		Condition[] where = query.getWhere();
-		if(CollectionUtil.isEmpty(where)){
+		if(ArrayUtil.isEmpty(where)){
 			// 对于无条件的删除语句直接抛出异常禁止，防止误删除
 			throw new SQLException("No 'WHERE' condition, we can't prepared statement for update everything.");
 		}

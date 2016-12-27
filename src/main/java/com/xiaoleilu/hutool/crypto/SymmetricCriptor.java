@@ -176,8 +176,8 @@ public class SymmetricCriptor {
 	}
 
 	/**
-	 * 对称算法类型
-	 * 
+	 * 对称算法类型<br>
+	 * see: https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator
 	 * @author Looly
 	 *
 	 */
@@ -189,7 +189,10 @@ public class SymmetricCriptor {
 		DESede("DESede"), 
 		HmacMD5("HmacMD5"), 
 		HmacSHA1("HmacSHA1"), 
-		HmacSHA256("HmacSHA256");
+		HmacSHA256("HmacSHA256"),
+		HmacSHA384("HmacSHA384"),
+		HmacSHA512("HmacSHA512"),
+		RC2("RC2");
 
 		private String value;
 

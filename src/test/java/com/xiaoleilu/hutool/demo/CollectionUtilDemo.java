@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
@@ -20,7 +21,7 @@ public class CollectionUtilDemo {
 		//-------------------------------------------------------------------------------------------------
 		// 数组添加元素
 		CharSequence[] array1 = { "abc", "123" };
-		CharSequence[] array2 = CollectionUtil.append(array1, new String[] { "def", "456" });
+		CharSequence[] array2 = ArrayUtil.append(array1, new String[] { "def", "456" });
 		Console.log(array2);
 		//-------------------------------------------------------------------------------------------------
 

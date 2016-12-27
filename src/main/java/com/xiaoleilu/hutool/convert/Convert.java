@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -182,7 +182,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Integer[] toIntArray(boolean isIgnoreConvertError, Object... values) {
-		if (CollectionUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values)) {
 			return new Integer[] {};
 		}
 		final Integer[] ints = new Integer[values.length];
@@ -229,7 +229,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Long[] toLongArray(boolean isIgnoreConvertError, Object... values) {
-		if (CollectionUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values)) {
 			return new Long[] {};
 		}
 		final Long[] longs = new Long[values.length];
@@ -276,7 +276,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Double[] toDoubleArray(boolean isIgnoreConvertError, Object... values) {
-		if (CollectionUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values)) {
 			return new Double[] {};
 		}
 		final Double[] doubles = new Double[values.length];
@@ -323,7 +323,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static <T> Float[] toFloatArray(boolean isIgnoreConvertError, Object... values) {
-		if (CollectionUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values)) {
 			return new Float[] {};
 		}
 		final Float[] floats = new Float[values.length];
@@ -370,7 +370,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Boolean[] toBooleanArray(boolean isIgnoreConvertError, Object... values) {
-		if (CollectionUtil.isEmpty(values)) {
+		if (ArrayUtil.isEmpty(values)) {
 			return new Boolean[] {};
 		}
 		final Boolean[] bools = new Boolean[values.length];

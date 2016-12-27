@@ -9,7 +9,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -68,7 +68,7 @@ public class SSLSocketFactoryBuilder{
 	 * @return 自身
 	 */
 	public SSLSocketFactoryBuilder setTrustManagers(TrustManager... trustManagers) {
-		if (CollectionUtil.isNotEmpty(trustManagers)) {
+		if (ArrayUtil.isNotEmpty(trustManagers)) {
 			this.trustManagers = trustManagers;
 		}
 		return this;
@@ -81,7 +81,7 @@ public class SSLSocketFactoryBuilder{
 	 * @return 自身
 	 */
 	public SSLSocketFactoryBuilder setKeyManagers(KeyManager... keyManagers) {
-		if (CollectionUtil.isNotEmpty(keyManagers)) {
+		if (ArrayUtil.isNotEmpty(keyManagers)) {
 			this.keyManagers = keyManagers;
 		}
 		return this;

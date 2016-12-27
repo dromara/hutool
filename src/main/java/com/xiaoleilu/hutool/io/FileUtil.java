@@ -35,9 +35,9 @@ import com.xiaoleilu.hutool.json.JSONObject;
 import com.xiaoleilu.hutool.json.JSONUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -97,7 +97,7 @@ public class FileUtil {
 
 		if (file.isDirectory()) {
 			String[] subFiles = file.list();
-			if (CollectionUtil.isEmpty(subFiles)) {
+			if (ArrayUtil.isEmpty(subFiles)) {
 				return true;
 			}
 		}else if(file.isFile()){

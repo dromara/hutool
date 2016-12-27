@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -104,7 +105,7 @@ public class Wrapper {
 	 * @return 包装后的字段名
 	 */
 	public String[] wrap(String... fields){
-		if(CollectionUtil.isEmpty(fields)) {
+		if(ArrayUtil.isEmpty(fields)) {
 			return fields;
 		}
 		
@@ -162,7 +163,7 @@ public class Wrapper {
 	 */
 	public Condition[] wrap(Condition... conditions){
 		final Condition[] clonedConditions = new Condition[conditions.length];
-		if(CollectionUtil.isNotEmpty(conditions)) {
+		if(ArrayUtil.isNotEmpty(conditions)) {
 			Condition clonedCondition;
 			for(int i = 0; i < conditions.length; i++) {
 				clonedCondition = conditions[i].clone();

@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.lang;
 
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -23,7 +23,7 @@ public class StrFormatter {
 	 * @return 结果
 	 */
 	public static String format(final String strPattern, final Object... argArray) {
-		if (StrUtil.isBlank(strPattern) || CollectionUtil.isEmpty(argArray)) {
+		if (StrUtil.isBlank(strPattern) || ArrayUtil.isEmpty(argArray)) {
 			return strPattern;
 		}
 		final int strPatternLength = strPattern.length();

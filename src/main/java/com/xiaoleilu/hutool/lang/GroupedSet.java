@@ -18,6 +18,7 @@ import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
@@ -265,7 +266,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @return 是否包含
 	 */
 	public boolean contains(String group, String value, String... otherValues) {
-		if(CollectionUtil.isNotEmpty(otherValues)) {
+		if(ArrayUtil.isNotEmpty(otherValues)) {
 			//需要测试多个值的情况
 			final List<String> valueList = Arrays.asList(otherValues);
 			valueList.add(value);

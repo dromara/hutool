@@ -28,8 +28,8 @@ import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -107,7 +107,6 @@ public class DbUtil {
 	
 	/**
 	 * 新建数据库会话，使用默认数据源
-	 * @param ds 数据源
 	 * @return 数据库会话
 	 */
 	public static Session newSession(){
@@ -341,7 +340,7 @@ public class DbUtil {
 	 * @throws SQLException
 	 */
 	public static void fillParams(PreparedStatement ps, Object... params) throws SQLException {
-		if (CollectionUtil.isEmpty(params)) {
+		if (ArrayUtil.isEmpty(params)) {
 			return;//无参数
 		}
 		ParameterMetaData pmd = ps.getParameterMetaData();

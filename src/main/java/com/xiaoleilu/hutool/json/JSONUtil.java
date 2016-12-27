@@ -6,14 +6,14 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.setting.Setting;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -343,7 +343,7 @@ public class JSONUtil {
 				Collection<?> coll = (Collection<?>) object;
 				return new JSONArray(coll);
 			}
-			if (CollectionUtil.isArray(object)) {
+			if (ArrayUtil.isArray(object)) {
 				return new JSONArray(object);
 			}
 			if (object instanceof Map) {

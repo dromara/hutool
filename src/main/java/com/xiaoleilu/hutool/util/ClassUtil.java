@@ -444,7 +444,7 @@ public class ClassUtil {
 	 * @return 对象
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... params) {
-		if (CollectionUtil.isEmpty(params)) {
+		if (ArrayUtil.isEmpty(params)) {
 			return newInstance(clazz);
 		}
 
@@ -491,7 +491,7 @@ public class ClassUtil {
 	 * @return 是否相同、父类或接口
 	 */
 	public static boolean isAllAssignableFrom(Class<?>[] types1, Class<?>[] types2){
-		if(CollectionUtil.isEmpty(types1) && CollectionUtil.isEmpty(types2)){
+		if(ArrayUtil.isEmpty(types1) && ArrayUtil.isEmpty(types2)){
 			return true;
 		}
 		if(types1.length == types2.length){

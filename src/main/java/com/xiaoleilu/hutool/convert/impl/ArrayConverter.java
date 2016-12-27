@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -50,7 +50,7 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 		}else{
 			//非原始类型
 			Object[] array = (Object[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
@@ -68,13 +68,13 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 		T[] result = null;
 		if (value instanceof List) {
 			final List<?> list = (List<?>) value;
-			result = CollectionUtil.newArray(targetComponentType, list.size());
+			result = ArrayUtil.newArray(targetComponentType, list.size());
 			for (int i = 0; i < list.size(); i++) {
 				result[i] = Convert.convert(targetComponentType, list.get(i));
 			}
 		}else  if (value instanceof Collection) {
 			final Collection<?> collection = (Collection<?>) value;
-			result = CollectionUtil.newArray(targetComponentType, collection.size());
+			result = ArrayUtil.newArray(targetComponentType, collection.size());
 
 			int i = 0;
 			for (Object element : collection) {
@@ -88,7 +88,7 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 				list.add(Convert.convert(targetComponentType, element));
 			}
 
-			result = CollectionUtil.newArray(targetComponentType, list.size());
+			result = ArrayUtil.newArray(targetComponentType, list.size());
 			result = list.toArray(result);
 		}
 
@@ -112,49 +112,49 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 
 		if (primitiveComponentType == int.class) {
 			int[] array = (int[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
 		}else if (primitiveComponentType == long.class) {
 			long[] array = (long[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
 		}else if (primitiveComponentType == float.class) {
 			float[] array = (float[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
 		}else if (primitiveComponentType == double.class) {
 			double[] array = (double[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
 		}else if (primitiveComponentType == short.class) {
 			short[] array = (short[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
 		}else if (primitiveComponentType == byte.class) {
 			byte[] array = (byte[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
 		}else if (primitiveComponentType == char.class) {
 			char[] array = (char[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
 		}else if (primitiveComponentType == boolean.class) {
 			boolean[] array = (boolean[]) value;
-			result = CollectionUtil.newArray(targetComponentType, array.length);
+			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = Convert.convert(targetComponentType, array[i]);
 			}
@@ -168,7 +168,7 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 	 * @return 数组，只包含一个元素
 	 */
 	private T[] convertToSingleElementArray(Object value) {
-		final T[] singleElementArray = CollectionUtil.newArray(targetComponentType, 1);
+		final T[] singleElementArray = ArrayUtil.newArray(targetComponentType, 1);
 		singleElementArray[0] = Convert.convert(targetComponentType,value);
 		return singleElementArray;
 	}

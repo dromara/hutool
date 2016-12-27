@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.db;
 import java.util.Arrays;
 
 import com.xiaoleilu.hutool.db.sql.Order;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.PageUtil;
 
 /**
@@ -100,7 +100,7 @@ public class Page {
 	 */
 	public void addOrder(Order... orders) {
 		if(null != this.orders){
-			CollectionUtil.append(this.orders, orders);
+			ArrayUtil.append(this.orders, orders);
 		}
 		this.orders = orders;
 	}

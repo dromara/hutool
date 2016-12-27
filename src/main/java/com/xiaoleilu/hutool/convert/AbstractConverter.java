@@ -2,8 +2,8 @@ package com.xiaoleilu.hutool.convert;
 
 import java.text.MessageFormat;
 
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * 抽象转换器，提供通用的转换逻辑，同时通过
@@ -61,8 +61,8 @@ public abstract class AbstractConverter<T> implements Converter<T>{
 		}
 		if (value instanceof String) {
 			return (String) value;
-		}else if (CollectionUtil.isArray(value)) {
-			return CollectionUtil.toString(value);
+		}else if (ArrayUtil.isArray(value)) {
+			return ArrayUtil.toString(value);
 		}
 		return value.toString();
 	}

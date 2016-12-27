@@ -26,6 +26,7 @@ import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.StreamProgress;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
@@ -114,8 +115,8 @@ public class HttpUtil {
 	 */
 	public static String getClientIP(javax.servlet.http.HttpServletRequest request, String... otherHeaderNames) {
 		String[] headers = new String[]{"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
-		if(CollectionUtil.isNotEmpty(otherHeaderNames)){
-			headers = CollectionUtil.addAll(headers, otherHeaderNames);
+		if(ArrayUtil.isNotEmpty(otherHeaderNames)){
+			headers = ArrayUtil.addAll(headers, otherHeaderNames);
 		}
 		
 		String ip;

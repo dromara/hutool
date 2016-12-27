@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.exceptions.WatchException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 
 /**
  * 路径监听器<br>
@@ -148,7 +148,7 @@ public class WatchMonitor extends Thread implements Closeable{
 		
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
-			path.register(watchService, CollectionUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
+			path.register(watchService, ArrayUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
 		} catch (Exception e) {
 			throw new WatchException(e);
 		}

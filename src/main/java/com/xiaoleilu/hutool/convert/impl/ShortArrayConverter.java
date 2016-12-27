@@ -2,7 +2,7 @@ package com.xiaoleilu.hutool.convert.impl;
 
 import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 
 /**
  * short 类型数组转换器
@@ -14,7 +14,7 @@ public class ShortArrayConverter extends AbstractConverter<short[]>{
 	@Override
 	protected short[] convertInternal(Object value) {
 		final Short[] result = Convert.convert(Short[].class, value);
-		return CollectionUtil.unWrap(result);
+		return ArrayUtil.unWrap(result);
 	}
 
 }

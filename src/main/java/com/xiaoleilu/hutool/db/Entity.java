@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Dict;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -120,7 +121,7 @@ public class Entity extends Dict{
 	 * @return 自身
 	 */
 	public Entity setFieldNames(String... fieldNames) {
-		if(CollectionUtil.isNotEmpty(fieldNames)){
+		if(ArrayUtil.isNotEmpty(fieldNames)){
 			this.fieldNames = CollectionUtil.newHashSet(fieldNames);
 		}
 		return this;
@@ -132,7 +133,7 @@ public class Entity extends Dict{
 	 * @return 自身
 	 */
 	public Entity addFieldNames(String... fieldNames) {
-		if(CollectionUtil.isNotEmpty(fieldNames)){
+		if(ArrayUtil.isNotEmpty(fieldNames)){
 			if(null == this.fieldNames){
 				return setFieldNames(fieldNames);
 			}else{
