@@ -72,6 +72,14 @@ public class BeetlUtil {
 	}
 	
 	/**
+	 * 开始构建 {@link ResourceLoaderBuilder}，调用{@link ResourceLoaderBuilder#build()}完成构建
+	 * @return {@link ResourceLoaderBuilder}
+	 */
+	public static ResourceLoaderBuilder resourceLoaderBuilder(){
+		return new ResourceLoaderBuilder();
+	}
+	
+	/**
 	 * ResourceLoader构建器
 	 * @author Looly
 	 *

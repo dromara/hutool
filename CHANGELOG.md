@@ -39,6 +39,8 @@
 * script包引擎封装，封装JavaScriptEngine
 * 增加RuntimeInfo
 * 增加DateUtil.formatDiff方法
+* 增加Matcher接口，用于抽象接口逻辑
+* 新建crypto包，提供摘要算法和对称加密算法
 
 ### Bug修复
 
