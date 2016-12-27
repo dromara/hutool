@@ -61,7 +61,7 @@ public class JndiDSFactory extends DSFactory {
 
 	@Override
 	public void close(String group) {
-		//JNDI Datasource not support destroy method
+		//JNDI Datasource not support close method
 	}
 
 	@Override

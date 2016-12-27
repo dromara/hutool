@@ -21,6 +21,7 @@ import javax.sql.DataSource;
 
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
+import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Condition;
@@ -75,6 +76,15 @@ public class DbUtil {
 	}
 	
 	/**
+	 * 实例化一个新的SQL运行对象，使用默认数据源
+	 * 
+	 * @return SQL执行类
+	 */
+	public static SqlRunner newSqlRunner() {
+		return SqlRunner.create(getDs());
+	}
+	
+	/**
 	 * 实例化一个新的SQL运行对象
 	 * 
 	 * @param ds 数据源
@@ -93,6 +103,15 @@ public class DbUtil {
 	 */
 	public static SqlRunner newSqlRunner(DataSource ds, Dialect dialect) {
 		return SqlRunner.create(ds, dialect);
+	}
+	
+	/**
+	 * 新建数据库会话，使用默认数据源
+	 * @param ds 数据源
+	 * @return 数据库会话
+	 */
+	public static Session newSession(){
+		return Session.create(getDs());
 	}
 	
 	/**
@@ -138,6 +157,23 @@ public class DbUtil {
 			} catch (SQLException e) {
 			}
 		}
+	}
+	
+	/**
+	 * 获得默认数据源
+	 * @return 默认数据源
+	 */
+	public static DataSource getDs(){
+		return DSFactory.get();
+	}
+	
+	/**
+	 * 获取指定分组的数据源
+	 * @param group 分组
+	 * @return 数据源
+	 */
+	public static DataSource getDs(String group){
+		return DSFactory.get(group);
 	}
 	
 	/**

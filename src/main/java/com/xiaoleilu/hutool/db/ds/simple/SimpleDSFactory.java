@@ -2,12 +2,10 @@ package com.xiaoleilu.hutool.db.ds.simple;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
-import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -83,10 +81,6 @@ public class SimpleDSFactory extends DSFactory {
 	 * @return 简单数据源 {@link SimpleDataSource}
 	 */
 	private SimpleDataSource createDataSource(String group){
-		Properties config = setting.getProperties(group);
-		if(CollectionUtil.isEmpty(config)){
-			throw new DbRuntimeException("No HikariCP config for group: [{}]", group);
-		}
 		final SimpleDataSource ds = new SimpleDataSource(setting, group);
 		return ds;
 	}

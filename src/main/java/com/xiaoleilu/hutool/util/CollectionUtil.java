@@ -23,6 +23,7 @@ import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
 import com.xiaoleilu.hutool.lang.Editor;
+import com.xiaoleilu.hutool.lang.Matcher;
 
 /**
  * 集合相关工具类，包括数组
@@ -798,6 +799,22 @@ public class CollectionUtil {
 			}
 		}
 		return map2;
+	}
+	
+	/**
+	 * 集合中匹配规则的数量
+	 * @param iterable {@link Iterable}
+	 * @param matcher 匹配器，为空则全部匹配
+	 * @return 匹配数量
+	 */
+	public static <T> int count(Iterable<T> iterable, Matcher<T> matcher){
+		int count = 0;
+		for (T t : iterable) {
+			if(null == matcher || matcher.match(t)){
+				count++;
+			}
+		}
+		return count;
 	}
 
 	// ---------------------------------------------------------------------- isEmpty

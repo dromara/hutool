@@ -41,6 +41,7 @@
 * 增加DateUtil.formatDiff方法
 * 增加Matcher接口，用于抽象接口逻辑
 * 新建crypto包，提供摘要算法和对称加密算法
+* CollectionUtil增加count方法
 
 ### Bug修复
 
@@ -55,3 +56,4 @@
 * 修复StrUtil.count方法错误计数问题
 * 修复DbSetting传值Setting不为空空指针问题
 * 修复HttpConnection中判断Http Method 错误
+* 修复PooledDataSource和SimpleDataSource配置文件读取错误问题

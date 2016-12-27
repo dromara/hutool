@@ -8,9 +8,9 @@ import com.xiaoleilu.hutool.crypto.SymmetricCriptor.SymmetricAlgorithm;
 /**
  * 安全相关工具类<br>
  * 加密分为三种：<br>
- * 1、对称加密（symmetric）<br>
- * 2、非对称加密（asymmetric）<br>
- * 3、摘要加密（digest）<br>
+ * 1、对称加密（symmetric），例如：AES、HmacSHA1等<br>
+ * 2、非对称加密（asymmetric），例如：RSA、DSA等<br>
+ * 3、摘要加密（digest），例如：MD5、SHA-1、SHA-256等<br>
  * 
  * @author xiaoleilu
  *

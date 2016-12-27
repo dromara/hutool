@@ -94,7 +94,7 @@ public class PooledDSFactory extends DSFactory {
 		if(null == config || config.isEmpty()){
 			throw new DbRuntimeException("No PooledDataSource config for group: [{}]", group);
 		}
-		final PooledDataSource ds = new PooledDataSource(new DbSetting(config), group);
+		final PooledDataSource ds = new PooledDataSource(new DbSetting(config).getDbConfig(null));
 		return ds;
 	}
 }
