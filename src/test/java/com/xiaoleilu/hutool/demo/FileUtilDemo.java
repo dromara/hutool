@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * 文件工具类样例
@@ -25,8 +26,11 @@ public class FileUtilDemo {
 		//复制目录
 //		FileUtil.copy("D:\\Java\\maven", "D:\\aaa.txt", true);
 		
-		Long a = 44356645566006L;
+		//标准化路径
+		String result = FileUtil.normalize("file:/aaaaa/../bbbb/./cccc.txt");
+		Console.log(result);
 		
+		Long a = 44356645566006L;
 		System.out.println(FileUtil.readableFileSize(a));
 		
 		System.out.println("OK");

@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,10 +31,12 @@ public class StrUtil {
 	public static final char C_COMMA = ',';
 	public static final char C_DELIM_START = '{';
 	public static final char C_DELIM_END = '}';
+	public static final char C_COLON = ':';
 
 	public static final String SPACE = " ";
 	public static final String TAB = "	";
 	public static final String DOT = ".";
+	public static final String DOUBLE_DOT = "..";
 	public static final String SLASH = "/";
 	public static final String BACKSLASH = "\\";
 	public static final String EMPTY = "";
@@ -44,6 +45,9 @@ public class StrUtil {
 	public static final String CRLF = "\r\n";
 	public static final String UNDERLINE = "_";
 	public static final String COMMA = ",";
+	public static final String DELIM_START = "{";
+	public static final String DELIM_END = "}";
+	public static final String COLON = ":";
 
 	public static final String HTML_NBSP = "&nbsp;";
 	public static final String HTML_AMP = "&amp";
@@ -683,6 +687,18 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * 切分字符串
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @return 切分后的集合
+	 */
+	public static String[] splitToArray(String str, char separator) {
+		List<String> result = split(str, separator);
+		return result.toArray(new String[result.size()]);
+	}
 
 	/**
 	 * 切分字符串<br>
@@ -696,7 +712,20 @@ public class StrUtil {
 	public static List<String> split(String str, char separator) {
 		return split(str, separator, 0);
 	}
-
+	
+	/**
+	 * 切分字符串
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数
+	 * @return 切分后的集合
+	 */
+	public static String[] splitToArray(String str, char separator, int limit) {
+		List<String> result = split(str, separator, limit);
+		return result.toArray(new String[result.size()]);
+	}
+	
 	/**
 	 * 切分字符串
 	 * 
@@ -848,9 +877,7 @@ public class StrUtil {
 			return EMPTY;
 		}
 
-		char[] strArray = string.toCharArray();
-		char[] newStrArray = Arrays.copyOfRange(strArray, fromIndex, toIndex);
-		return new String(newStrArray);
+		return string.substring(fromIndex, toIndex);
 	}
 
 	/**
@@ -1264,14 +1291,14 @@ public class StrUtil {
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 * 
-	 * @see CollectionUtil#join(String, Object...)
+	 * @see ArrayUtil#join(Object[], String)
 	 * 
 	 * @param conjunction 分隔符
 	 * @param objs 数组
 	 * @return 连接后的字符串
 	 */
 	public static String join(String conjunction, Object... objs) {
-		return CollectionUtil.join(conjunction, objs);
+		return ArrayUtil.join(objs, conjunction);
 	}
 
 	/**

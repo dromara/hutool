@@ -176,4 +176,28 @@ public class URLUtil {
 		
 		return uri == null ? null : uri.getPath();
 	}
+	
+	/**
+	 * 转URL为URI
+	 * @param url URL
+	 * @return URI
+	 * @throws URISyntaxException
+	 */
+	public static URI toURI(URL url) {
+		return toURI(url.toString());
+	}
+	
+	/**
+	 * 转字符串为URI
+	 * @param location 字符串路径
+	 * @return URI
+	 * @throws URISyntaxException
+	 */
+	public static URI toURI(String location) {
+		try {
+			return new URI(location.replace(" ", "%20"));
+		} catch (URISyntaxException e) {
+			throw new UtilException(e);
+		}
+	}
 }

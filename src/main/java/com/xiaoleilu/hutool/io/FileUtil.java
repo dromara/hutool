@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -38,7 +39,9 @@ import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * 文件工具类
@@ -277,6 +280,16 @@ public class FileUtil {
 			throw new NullPointerException("File uri is null!");
 		}
 		return new File(uri);
+	}
+	
+	/**
+	 * 创建File对象
+	 * 
+	 * @param url 文件URL
+	 * @return File
+	 */
+	public static File file(URL url) {
+		return new File(URLUtil.toURI(url));
 	}
 
 	/**
@@ -836,14 +849,62 @@ public class FileUtil {
 	 * 1. 统一用 / <br>
 	 * 2. 多个 / 转换为一个
 	 * 3. 去除两边空格
+	 * 4. .. 和 . 转换为绝对路径
+	 * 5. 去掉前缀，例如file:
 	 * 
 	 * @param path 原路径
 	 * @return 修复后的路径
 	 */
 	public static String normalize(String path) {
-		return path.replaceAll("[/\\\\]{1,}", "/").trim();
-	}
+		if (path == null) {
+			return null;
+		}
+		String pathToUse = path.replaceAll("[/\\\\]{1,}", "/").trim();
 
+		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
+		String prefix = "";
+		if (prefixIndex != -1) {
+			prefix = pathToUse.substring(0, prefixIndex + 1);
+			if (prefix.contains("/")) {
+				prefix = "";
+			}else {
+				pathToUse = pathToUse.substring(prefixIndex + 1);
+			}
+		}
+		if (pathToUse.startsWith(StrUtil.SLASH)) {
+			prefix = prefix + StrUtil.SLASH;
+			pathToUse = pathToUse.substring(1);
+		}
+
+		List<String> pathList = StrUtil.split(pathToUse, StrUtil.C_SLASH);
+		List<String> pathElements = new LinkedList<String>();
+		int tops = 0;
+
+		for (int i = pathList.size() - 1; i >= 0; i--) {
+			String element = pathList.get(i);
+			if (StrUtil.DOT.equals(element)) {
+				//当前目录，丢弃
+			}else if (StrUtil.DOUBLE_DOT.equals(element)) {
+				tops++;
+			}else {
+				if (tops > 0) {
+					// Merging path element with element corresponding to top path.
+					tops--;
+				}else {
+					// Normal path element found.
+					pathElements.add(0, element);
+				}
+			}
+		}
+
+		// Remaining top paths need to be retained.
+		for (int i = 0; i < tops; i++) {
+			pathElements.add(0, StrUtil.DOUBLE_DOT);
+		}
+
+		return prefix + CollectionUtil.join(pathElements, StrUtil.SLASH);
+	}
+	
 	/**
 	 * 获得相对子路径
 	 * 

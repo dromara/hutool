@@ -20,6 +20,7 @@ import com.xiaoleilu.hutool.exceptions.NotInitedException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.NetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -84,7 +85,7 @@ public class MongoDS implements Closeable{
 	 * @return MongoDB连接
 	 */
 	public static MongoDS getDS(String... groups) {
-		final String key = CollectionUtil.join(groups, GROUP_SEPRATER);
+		final String key = ArrayUtil.join(groups, GROUP_SEPRATER);
 		MongoDS ds = dsMap.get(key);
 		if(null == ds) {
 			//没有在池中加入之
@@ -111,7 +112,7 @@ public class MongoDS implements Closeable{
 	 * @return MongoDB连接
 	 */
 	public static MongoDS getDS(Setting setting, String... groups) {
-		final String key = setting.getSettingPath() + GROUP_SEPRATER + CollectionUtil.join(groups, GROUP_SEPRATER);
+		final String key = setting.getSettingPath() + GROUP_SEPRATER + ArrayUtil.join(groups, GROUP_SEPRATER);
 		MongoDS ds = dsMap.get(key);
 		if(null == ds) {
 			//没有在池中加入之

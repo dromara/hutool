@@ -52,7 +52,7 @@ public class DateUtil {
 	 * @return 时间对象
 	 */
 	public static DateTime date(Calendar calendar) {
-		return new DateTime(calendar.getTime());
+		return new DateTime(calendar);
 	}
 
 	/**
@@ -107,42 +107,19 @@ public class DateUtil {
 		return formatDate(new DateTime());
 	}
 
+	//-------------------------------------------------------------- Part of Date start
 	/**
-	 * @return 当前月份
-	 */
-	public static int thisMonth() {
-		return month(date());
-	}
-
-	/**
-	 * @return 今年
-	 */
-	public static int thisYear() {
-		return year(date());
-	}
-
-	/**
-	 * 获得月份，从1月开始计数
+	 * 获得年的部分
 	 * 
 	 * @param date 日期
-	 * @return 月份
-	 */
-	public static int month(Date date) {
-		return calendar(date).get(Calendar.MONTH) + 1;
-	}
-
-	/**
-	 * 获得年
-	 * 
-	 * @param date 日期
-	 * @return 年
+	 * @return 年的部分
 	 */
 	public static int year(Date date) {
 		return calendar(date).get(Calendar.YEAR);
 	}
 
 	/**
-	 * 获得季节
+	 * 获得指定日期所属季节
 	 * 
 	 * @param date 日期
 	 * @return 第几个季节
@@ -150,6 +127,222 @@ public class DateUtil {
 	public static int season(Date date) {
 		return calendar(date).get(Calendar.MONTH) / 3 + 1;
 	}
+	
+	/**
+	 * 获得月份，从1开始计数
+	 * 
+	 * @param date 日期
+	 * @return 月份
+	 */
+	public static int month(Date date) {
+		return calendar(date).get(Calendar.MONTH) + 1;
+	}
+	
+	/**
+	 * 获得月份
+	 * 
+	 * @param date 日期
+	 * @return {@link Month}
+	 */
+	public static Month monthEnum(Date date) {
+		return Month.of(calendar(date).get(Calendar.MONTH));
+	}
+	
+	/**
+	 * 获得指定日期是所在年份的第几周<br>
+	 * 
+	 * @param date 日期
+	 * @return 周
+	 */
+	public static int weekOfYear(Date date) {
+		return calendar(date).get(Calendar.WEEK_OF_YEAR);
+	}
+	
+	/**
+	 * 获得指定日期是所在月份的第几周<br>
+	 * 
+	 * @param date 日期
+	 * @return 周
+	 */
+	public static int weekOfMonth(Date date) {
+		return calendar(date).get(Calendar.WEEK_OF_MONTH);
+	}
+	
+	/**
+	 * 获得指定日期是这个日期所在月份的第几天<br>
+	 * 
+	 * @param date 日期
+	 * @return 天
+	 */
+	public static int dayOfMonth(Date date) {
+		return calendar(date).get(Calendar.DAY_OF_MONTH);
+	}
+	
+	/**
+	 * 获得指定日期是星期几
+	 * 
+	 * @param date 日期
+	 * @return 天
+	 */
+	public static int dayOfWeek(Date date) {
+		return calendar(date).get(Calendar.DAY_OF_WEEK);
+	}
+	
+	/**
+	 * 获得指定日期是星期几
+	 * 
+	 * @param date 日期
+	 * @return {@link Week}
+	 */
+	public static Week dayOfWeekEnum(Date date) {
+		return Week.of(dayOfWeek(date));
+	}
+	
+	/**
+	 * 获得指定日期的小时数部分<br>
+	 * 
+	 * @param date 日期
+	 * @param is24HourClock 是否24小时制
+	 * @return 小时数
+	 */
+	public static int hour(Date date, boolean is24HourClock) {
+		return calendar(date).get(is24HourClock ? Calendar.HOUR_OF_DAY : Calendar.HOUR);
+	}
+	
+	/**
+	 * 获得指定日期的分钟数部分<br>
+	 * 例如：10:04:15.250 -> 4
+	 * 
+	 * @param date 日期
+	 * @return 分钟数
+	 */
+	public static int minute(Date date) {
+		return calendar(date).get(Calendar.MINUTE);
+	}
+	
+	/**
+	 * 获得指定日期的秒数部分<br>
+	 * 
+	 * @param date 日期
+	 * @return 秒数
+	 */
+	public static int second(Date date) {
+		return calendar(date).get(Calendar.SECOND);
+	}
+	
+	/**
+	 * 获得指定日期的毫秒数部分<br>
+	 * 
+	 * @param date 日期
+	 * @return 毫秒数
+	 */
+	public static int millsecond(Date date) {
+		return calendar(date).get(Calendar.MILLISECOND);
+	}
+	
+	/**
+	 * 是否为上午
+	 * @param date 日期
+	 * @return 是否为上午
+	 */
+	public static boolean isAM(Date date) {
+		return Calendar.AM == calendar(date).get(Calendar.AM_PM);
+	}
+	
+	/**
+	 * 是否为下午
+	 * @param date 日期
+	 * @return 是否为下午
+	 */
+	public static boolean isPM(Date date) {
+		return Calendar.PM == calendar(date).get(Calendar.AM_PM);
+	}
+	
+	/**
+	 * @return 今年
+	 */
+	public static int thisYear() {
+		return year(date());
+	}
+	
+	/**
+	 * @return 当前月份
+	 */
+	public static int thisMonth() {
+		return month(date());
+	}
+	
+	/**
+	 * @return 当前月份 {@link Month}
+	 */
+	public static Month thisMonthEnum() {
+		return monthEnum(date());
+	}
+	
+	/**
+	 * @return 当前日期所在年份的第几周
+	 */
+	public static int thisWeekOfYear() {
+		return weekOfYear(date());
+	}
+	
+	/**
+	 * @return 当前日期所在年份的第几周
+	 */
+	public static int thisWeekOfMonth() {
+		return weekOfMonth(date());
+	}
+	
+	/**
+	 * @return 当前日期是这个日期所在月份的第几天
+	 */
+	public static int thisDayOfMonth() {
+		return dayOfMonth(date());
+	}
+	
+	/**
+	 * @return 当前日期是星期几
+	 */
+	public static int thisDayOfWeek() {
+		return dayOfWeek(date());
+	}
+	
+	/**
+	 * @return 当前日期是星期几 {@link Week}
+	 */
+	public static Week thisDayOfWeekEnum() {
+		return dayOfWeekEnum(date());
+	}
+	
+	/**
+	 * @param is24HourClock 是否24小时制
+	 * @return 当前日期的小时数部分<br>
+	 */
+	public static int thisHour(boolean is24HourClock) {
+		return hour(date(), is24HourClock);
+	}
+	
+	/**
+	 * @return 当前日期的分钟数部分<br>
+	 */
+	public static int thisMinute() {
+		return minute(date());
+	}
+	
+	/**
+	 * @return 当前日期的秒数部分<br>
+	 */
+	public static int thisSecond() {
+		return second(date());
+	}
+	
+	/**
+	 * @return 当前日期的毫秒数部分<br>
+	 */
+	public static int thisMillsecond() {
+		return millsecond(date());
+	}
+	//-------------------------------------------------------------- Part of Date end
 
 	/**
 	 * 获得指定日期年份和季节<br>
@@ -258,22 +451,18 @@ public class DateUtil {
 	 * @return DateTime对象
 	 */
 	public static DateTime parse(String dateStr, SimpleDateFormat simpleDateFormat) {
-		try {
-			return new DateTime(simpleDateFormat.parse(dateStr));
-		} catch (Exception e) {
-			throw new DateException(StrUtil.format("Parse [{}] with format [{}] error!", dateStr, simpleDateFormat.toPattern()), e);
-		}
+		return new DateTime(dateStr, simpleDateFormat);
 	}
 
 	/**
 	 * 将特定格式的日期转换为Date对象
 	 * 
-	 * @param dateString 特定格式的日期
+	 * @param dateStr 特定格式的日期
 	 * @param format 格式，例如yyyy-MM-dd
 	 * @return 日期对象
 	 */
-	public static DateTime parse(String dateString, String format) {
-		return parse(dateString, new SimpleDateFormat(format));
+	public static DateTime parse(String dateStr, String format) {
+		return new DateTime(dateStr, format);
 	}
 
 	/**
@@ -427,7 +616,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteMillisecond(Date date, int offsite) {
-		return offsiteDate(date, Calendar.MILLISECOND, offsite);
+		return offsiteDate(date, DatePart.MILLISECOND, offsite);
 	}
 	
 	/**
@@ -438,7 +627,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteSecond(Date date, int offsite) {
-		return offsiteDate(date, Calendar.SECOND, offsite);
+		return offsiteDate(date, DatePart.SECOND, offsite);
 	}
 	
 	/**
@@ -449,7 +638,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteMinute(Date date, int offsite) {
-		return offsiteDate(date, Calendar.MINUTE, offsite);
+		return offsiteDate(date, DatePart.MINUTE, offsite);
 	}
 	
 	/**
@@ -460,7 +649,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteHour(Date date, int offsite) {
-		return offsiteDate(date, Calendar.HOUR_OF_DAY, offsite);
+		return offsiteDate(date, DatePart.HOUR_OF_DAY, offsite);
 	}
 
 	/**
@@ -471,7 +660,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteDay(Date date, int offsite) {
-		return offsiteDate(date, Calendar.DAY_OF_YEAR, offsite);
+		return offsiteDate(date, DatePart.DAY_OF_YEAR, offsite);
 	}
 
 	/**
@@ -482,7 +671,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteWeek(Date date, int offsite) {
-		return offsiteDate(date, Calendar.WEEK_OF_YEAR, offsite);
+		return offsiteDate(date, DatePart.WEEK_OF_YEAR, offsite);
 	}
 
 	/**
@@ -493,21 +682,21 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteMonth(Date date, int offsite) {
-		return offsiteDate(date, Calendar.MONTH, offsite);
+		return offsiteDate(date, DatePart.MONTH, offsite);
 	}
 
 	/**
 	 * 获取指定日期偏移指定时间后的时间
 	 * 
 	 * @param date 基准日期
-	 * @param calendarField 偏移的粒度大小（小时、天、月等）使用Calendar中的常数
+	 * @param datePart 偏移的粒度大小（小时、天、月等）{@link DatePart}
 	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteDate(Date date, int calendarField, int offsite) {
+	public static DateTime offsiteDate(Date date, DatePart datePart, int offsite) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.add(calendarField, offsite);
+		cal.add(datePart.getValue(), offsite);
 		return new DateTime(cal.getTime());
 	}
 	// ------------------------------------ Offset end ----------------------------------------------
@@ -521,58 +710,30 @@ public class DateUtil {
 	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
 	 * @return 日期差
 	 */
-	public static long diff(Date beginDate, Date endDate, DateUnit unit) {
-		long diff = Math.abs(endDate.getTime() - beginDate.getTime());
-		return diff / unit.getMillis();
+	public static long between(Date beginDate, Date endDate, DateUnit unit) {
+		return new DateBetween(beginDate, endDate).between(unit);
 	}
 	
 	/**
 	 * 格式化日期间隔输出
 	 * @param beginDate 起始日期
 	 * @param endDate 结束日期
-	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级，如果等级为3，则只显示前三个，依此类推
+	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级
 	 * @return XX天XX小时XX分XX秒
 	 */
-	public static String formatDiff(Date beginDate, Date endDate, int level){
-		return formatDiff(diff(beginDate, endDate, DateUnit.MS), level);
+	public static String formatBetween(Date beginDate, Date endDate, BetweenFormater.Level level){
+		return formatBetween(between(beginDate, endDate, DateUnit.MS), level);
 	}
 	
 	/**
 	 * 格式化日期间隔输出<br>
 	 * 
-	 * @param diffMs 日期间隔
-	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级，如果等级为3，则只显示前三个，依此类推
+	 * @param betweenMs 日期间隔
+	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级
 	 * @return XX天XX小时XX分XX秒XX毫秒
 	 */
-	public static String formatDiff(long diffMs, int level){
-		if(diffMs == 0){
-			return "0";
-		}
-		
-		long day = diffMs / DateUnit.DAY.getMillis();
-		long hour = diffMs / DateUnit.HOUR.getMillis() - day * 24;
-		long minute = diffMs / DateUnit.MINUTE.getMillis() - day * 24 * 60 - hour * 60;
-		long second = diffMs / DateUnit.SECOND.getMillis() - ((day * 24 + hour) * 60 + minute) * 60;
-		long millisecond = diffMs - (((day * 24 + hour) * 60 + minute) * 60 + second) * 1000;
-		
-		StringBuilder sb = new StringBuilder();
-		if(0 != day && level > 0){
-			sb.append(day).append("天");
-		}
-		if(0 != hour && level > 1){
-			sb.append(hour).append("小时");
-		}
-		if(0 != minute && level > 2){
-			sb.append(minute).append("分");
-		}
-		if(0 != second && level > 3){
-			sb.append(second).append("秒");
-		}
-		if(0 != millisecond && level > 4){
-			sb.append(millisecond).append("毫秒");
-		}
-		
-		return sb.toString();
+	public static String formatBetween(long betweenMs, BetweenFormater.Level level){
+		return new BetweenFormater(betweenMs, level).format();
 	}
 	
 	/**

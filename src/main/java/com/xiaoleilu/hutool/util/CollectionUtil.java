@@ -253,7 +253,7 @@ public class CollectionUtil {
 			
 			item = iterator.next();
 			if(ArrayUtil.isArray(item)) {
-				sb.append(join(ArrayUtil.wrap(item), conjunction));
+				sb.append(ArrayUtil.join(ArrayUtil.wrap(item), conjunction));
 			} else if(item instanceof Iterable<?>) {
 				sb.append(join((Iterable<?>)item, conjunction));
 			} else if(item instanceof Iterator<?>) {
@@ -263,51 +263,6 @@ public class CollectionUtil {
 			}
 		}
 		return sb.toString();
-	}
-
-	/**
-	 * 以 conjunction 为分隔符将数组转换为字符串
-	 * 
-	 * @param <T> 被处理的集合
-	 * @param array 数组
-	 * @param conjunction 分隔符
-	 * @return 连接后的字符串
-	 */
-	public static <T> String join(T[] array, String conjunction) {
-		if(null == array){
-			return null;
-		}
-		
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		for (T item : array) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-			if(ArrayUtil.isArray(item)) {
-				sb.append(join(ArrayUtil.wrap(item), conjunction));
-			} else if(item instanceof Iterable<?>) {
-				sb.append(join((Iterable<?>)item, conjunction));
-			} else if(item instanceof Iterator<?>) {
-				sb.append(join((Iterator<?>)item, conjunction));
-			} else{
-				sb.append(item);
-			}
-		}
-		return sb.toString();
-	}
-	
-	/**
-	 * 以 conjunction 为分隔符将多个对象转换为字符串
-	 * 
-	 * @param conjunction 分隔符
-	 * @param objs 数组
-	 * @return 连接后的字符串
-	 */
-	public static String join(String conjunction, Object... objs) {
-		return join(objs, conjunction);
 	}
 
 	/**

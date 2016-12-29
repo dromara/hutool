@@ -270,7 +270,7 @@ public class SqlBuilder {
 			tableNames = wrapper.wrap(tableNames);
 		}
 		
-		sql.append(" FROM ").append(CollectionUtil.join(tableNames, StrUtil.COMMA));
+		sql.append(" FROM ").append(ArrayUtil.join(tableNames, StrUtil.COMMA));
 		
 		return this;
 	}
@@ -316,7 +316,7 @@ public class SqlBuilder {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> SqlBuilder in(String field, T... values) {
-		sql.append(wrapper.wrap(field)).append(" IN ").append("(").append(CollectionUtil.join(values, StrUtil.COMMA)).append(")");
+		sql.append(wrapper.wrap(field)).append(" IN ").append("(").append(ArrayUtil.join(values, StrUtil.COMMA)).append(")");
 		return this;
 	}
 	
@@ -332,7 +332,7 @@ public class SqlBuilder {
 				fields = wrapper.wrap(fields);
 			}
 			
-			sql.append(" GROUP BY ").append(CollectionUtil.join(fields, StrUtil.COMMA));
+			sql.append(" GROUP BY ").append(ArrayUtil.join(fields, StrUtil.COMMA));
 		}
 		
 		return this;

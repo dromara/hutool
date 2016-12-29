@@ -404,6 +404,9 @@ public class ClassUtil {
 		ClassLoader classLoader = getContextClassLoader();
 		if (classLoader == null) {
 			classLoader = ClassUtil.class.getClassLoader();
+			if(null == classLoader){
+				classLoader = ClassLoader.getSystemClassLoader();
+			}
 		}
 		return classLoader;
 	}
@@ -870,5 +873,37 @@ public class ClassUtil {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * 获得给定类所在包的名称<br>
+	 * 例如：<br>
+	 * com.xiaoleilu.hutool.util.ClassUtil -> com.xiaoleilu.hutool.util
+	 * 
+	 * @param clazz 类
+	 * @return 包名
+	 */
+	public static String getPackage(Class<?> clazz){
+		if (clazz == null) {
+			return StrUtil.EMPTY;
+		}
+		final String className = clazz.getName();
+		int packageEndIndex = className.lastIndexOf(StrUtil.DOT);
+		if (packageEndIndex == -1) {
+			return StrUtil.EMPTY;
+		}
+		return className.substring(0, packageEndIndex);
+	}
+	
+	/**
+	 * 获得给定类所在包的路径<br>
+	 * 例如：<br>
+	 * com.xiaoleilu.hutool.util.ClassUtil -> com/xiaoleilu/hutool/util
+	 * 
+	 * @param clazz 类
+	 * @return 包名
+	 */
+	public static String getPackagePath(Class<?> clazz){
+		return getPackage(clazz).replace(StrUtil.C_DOT, StrUtil.C_SLASH);
 	}
 }

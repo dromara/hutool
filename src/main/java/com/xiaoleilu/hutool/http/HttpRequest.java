@@ -232,7 +232,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			strValue = CollectionUtil.join((List<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
 			// 数组对象
-			strValue = CollectionUtil.join((Object[]) value, ",");
+			strValue = ArrayUtil.join((Object[]) value, ",");
 		} else {
 			// 其他对象一律转换为字符串
 			strValue = Convert.toStr(value, null);
