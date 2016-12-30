@@ -45,6 +45,7 @@
 * CollectionUtil中关于数组方法全部迁移至ArrayUtil
 * 扩充日期工具，添加月份和周的枚举
 * 强化DateTime类
+* 增加IoUtil.copyByNIO方法
 
 ### Bug修复
 

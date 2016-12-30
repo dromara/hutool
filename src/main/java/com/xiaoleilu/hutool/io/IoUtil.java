@@ -17,9 +17,13 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
+import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.util.Collection;
 
@@ -163,6 +167,22 @@ public class IoUtil {
 	}
 
 	/**
+	 * 拷贝流
+	 * thanks to: https://github.com/venusdrogon/feilong-io/blob/master/src/main/java/com/feilong/io/IOWriteUtil.java
+	 * 
+	 * @param in 输入流
+	 * @param out 输出流
+	 * @param bufferSize 缓存大小
+	 * @param streamProgress 进度条
+	 * @return 传输的byte数
+	 * @throws IOException
+	 */
+	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IOException {
+		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, streamProgress);
+	}
+	
+
+	/**
 	 * 拷贝文件流，使用NIO
 	 * 
 	 * @param in 输入
@@ -182,6 +202,42 @@ public class IoUtil {
 		FileChannel outChannel = out.getChannel();
 
 		return inChannel.transferTo(0, inChannel.size(), outChannel);
+	}
+	
+	/**
+	 * 拷贝流，使用NIO，不会关闭流
+	 * 
+	 * @param in {@link ReadableByteChannel}
+	 * @param out {@link WritableByteChannel}
+	 * @return 拷贝的字节数
+	 * @throws IOException
+	 */
+	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, StreamProgress streamProgress) throws IOException {
+		if (null == in) {
+			throw new NullPointerException("In is null!");
+		}
+		if (null == out) {
+			throw new NullPointerException("Out is null!");
+		}
+
+		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
+		long size = 0;
+		if (null != streamProgress) {
+			streamProgress.start();
+		}
+		while (in.read(byteBuffer) != EOF) {
+			byteBuffer.flip();
+			size += out.write(byteBuffer);
+			byteBuffer.clear();
+			if (null != streamProgress) {
+				streamProgress.progress(size);
+			}
+		}
+		if (null != streamProgress) {
+			streamProgress.finish();
+		}
+		
+		return size;
 	}
 	// -------------------------------------------------------------------------------------- Copy end
 
@@ -232,9 +288,10 @@ public class IoUtil {
 		copy(in, out);
 		return out.toByteArray();
 	}
-	
+
 	/**
 	 * 读取指定长度的byte数组
+	 * 
 	 * @param in {@link InputStream}
 	 * @param length 长度
 	 * @return bytes
@@ -245,36 +302,39 @@ public class IoUtil {
 		in.read(b);
 		return b;
 	}
-	
+
 	/**
 	 * 读取进制字符串
+	 * 
 	 * @param in {@link InputStream}
 	 * @param length 长度
 	 * @param toLowerCase true 传换成小写格式 ， false 传换成大写格式
 	 * @return 16进制字符串
 	 * @throws IOException
 	 */
-	public static String readHex(InputStream in, int length, boolean toLowerCase) throws IOException{
+	public static String readHex(InputStream in, int length, boolean toLowerCase) throws IOException {
 		return HexUtil.encodeHexStr(readBytes(in, length), toLowerCase);
 	}
-	
+
 	/**
 	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
+	 * 
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IOException
 	 */
-	public static String readHex28Upper(InputStream in) throws IOException{
+	public static String readHex28Upper(InputStream in) throws IOException {
 		return readHex(in, 28, false);
 	}
-	
+
 	/**
 	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
+	 * 
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
 	 * @throws IOException
 	 */
-	public static String readHex28Lower(InputStream in) throws IOException{
+	public static String readHex28Lower(InputStream in) throws IOException {
 		return readHex(in, 28, false);
 	}
 
@@ -354,7 +414,7 @@ public class IoUtil {
 		}
 		return builder.toString();
 	}
-	
+
 	/**
 	 * 从FileChannel中读取内容
 	 * 
@@ -379,7 +439,7 @@ public class IoUtil {
 		final MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
 		return StrUtil.str(buffer, charset);
 	}
-	
+
 	/**
 	 * 从流中读取内容
 	 * 
@@ -404,7 +464,7 @@ public class IoUtil {
 	 */
 	public static <T extends Collection<String>> T readLines(InputStream in, Charset charset, T collection) throws IOException {
 		// 从返回的内容中读取所需内容
-		BufferedReader reader =getReader(in, charset);
+		BufferedReader reader = getReader(in, charset);
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			collection.add(line);
@@ -412,7 +472,7 @@ public class IoUtil {
 
 		return collection;
 	}
-	
+
 	/**
 	 * String 转为流
 	 * 
@@ -437,13 +497,14 @@ public class IoUtil {
 		}
 		return new ByteArrayInputStream(StrUtil.bytes(content, charset));
 	}
-	
+
 	/**
 	 * 文件转为流
+	 * 
 	 * @param file 文件
 	 * @return {@link FileInputStream}
 	 */
-	public static FileInputStream toStream(File file){
+	public static FileInputStream toStream(File file) {
 		try {
 			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {

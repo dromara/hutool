@@ -239,7 +239,7 @@ public class HttpUtil {
 		}
 		
 		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-		download(url, out, true, null);
+		download(url, out, true, streamPress);
 		return null == customCharset ? out.toString() : out.toString(customCharset);
 	}
 	
@@ -323,7 +323,7 @@ public class HttpUtil {
 		InputStream in = null;
 		try {
 			in = new URL(url).openStream();
-			return IoUtil.copy(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
+			return IoUtil.copyByNIO(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
 		}catch(IOException e){
 			throw new HttpException(e);
 		}finally {
