@@ -115,7 +115,7 @@ public class DateUtil {
 	 * @return 年的部分
 	 */
 	public static int year(Date date) {
-		return calendar(date).get(Calendar.YEAR);
+		return DateTime.of(date).year();
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class DateUtil {
 	 * @return 第几个季节
 	 */
 	public static int season(Date date) {
-		return calendar(date).get(Calendar.MONTH) / 3 + 1;
+		return DateTime.of(date).season();
 	}
 	
 	/**
@@ -135,7 +135,7 @@ public class DateUtil {
 	 * @return 月份
 	 */
 	public static int month(Date date) {
-		return calendar(date).get(Calendar.MONTH) + 1;
+		return DateTime.of(date).month();
 	}
 	
 	/**
@@ -145,7 +145,7 @@ public class DateUtil {
 	 * @return {@link Month}
 	 */
 	public static Month monthEnum(Date date) {
-		return Month.of(calendar(date).get(Calendar.MONTH));
+		return DateTime.of(date).monthEnum();
 	}
 	
 	/**
@@ -155,7 +155,7 @@ public class DateUtil {
 	 * @return 周
 	 */
 	public static int weekOfYear(Date date) {
-		return calendar(date).get(Calendar.WEEK_OF_YEAR);
+		return DateTime.of(date).weekOfYear();
 	}
 	
 	/**
@@ -165,7 +165,7 @@ public class DateUtil {
 	 * @return 周
 	 */
 	public static int weekOfMonth(Date date) {
-		return calendar(date).get(Calendar.WEEK_OF_MONTH);
+		return DateTime.of(date).weekOfMonth();
 	}
 	
 	/**
@@ -175,7 +175,7 @@ public class DateUtil {
 	 * @return 天
 	 */
 	public static int dayOfMonth(Date date) {
-		return calendar(date).get(Calendar.DAY_OF_MONTH);
+		return DateTime.of(date).dayOfMonth();
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public class DateUtil {
 	 * @return 天
 	 */
 	public static int dayOfWeek(Date date) {
-		return calendar(date).get(Calendar.DAY_OF_WEEK);
+		return DateTime.of(date).dayOfWeek();
 	}
 	
 	/**
@@ -195,7 +195,7 @@ public class DateUtil {
 	 * @return {@link Week}
 	 */
 	public static Week dayOfWeekEnum(Date date) {
-		return Week.of(dayOfWeek(date));
+		return DateTime.of(date).dayOfWeekEnum();
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public class DateUtil {
 	 * @return 小时数
 	 */
 	public static int hour(Date date, boolean is24HourClock) {
-		return calendar(date).get(is24HourClock ? Calendar.HOUR_OF_DAY : Calendar.HOUR);
+		return DateTime.of(date).hour(is24HourClock);
 	}
 	
 	/**
@@ -217,7 +217,7 @@ public class DateUtil {
 	 * @return 分钟数
 	 */
 	public static int minute(Date date) {
-		return calendar(date).get(Calendar.MINUTE);
+		return DateTime.of(date).minute();
 	}
 	
 	/**
@@ -227,7 +227,7 @@ public class DateUtil {
 	 * @return 秒数
 	 */
 	public static int second(Date date) {
-		return calendar(date).get(Calendar.SECOND);
+		return DateTime.of(date).second();
 	}
 	
 	/**
@@ -237,7 +237,7 @@ public class DateUtil {
 	 * @return 毫秒数
 	 */
 	public static int millsecond(Date date) {
-		return calendar(date).get(Calendar.MILLISECOND);
+		return DateTime.of(date).millsecond();
 	}
 	
 	/**
@@ -246,7 +246,7 @@ public class DateUtil {
 	 * @return 是否为上午
 	 */
 	public static boolean isAM(Date date) {
-		return Calendar.AM == calendar(date).get(Calendar.AM_PM);
+		return DateTime.of(date).isAM();
 	}
 	
 	/**
@@ -255,7 +255,7 @@ public class DateUtil {
 	 * @return 是否为下午
 	 */
 	public static boolean isPM(Date date) {
-		return Calendar.PM == calendar(date).get(Calendar.AM_PM);
+		return DateTime.of(date).isPM();
 	}
 	
 	/**
@@ -616,7 +616,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteMillisecond(Date date, int offsite) {
-		return offsiteDate(date, DatePart.MILLISECOND, offsite);
+		return offsiteDate(date, DateField.MILLISECOND, offsite);
 	}
 	
 	/**
@@ -627,7 +627,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteSecond(Date date, int offsite) {
-		return offsiteDate(date, DatePart.SECOND, offsite);
+		return offsiteDate(date, DateField.SECOND, offsite);
 	}
 	
 	/**
@@ -638,7 +638,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteMinute(Date date, int offsite) {
-		return offsiteDate(date, DatePart.MINUTE, offsite);
+		return offsiteDate(date, DateField.MINUTE, offsite);
 	}
 	
 	/**
@@ -649,7 +649,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteHour(Date date, int offsite) {
-		return offsiteDate(date, DatePart.HOUR_OF_DAY, offsite);
+		return offsiteDate(date, DateField.HOUR_OF_DAY, offsite);
 	}
 
 	/**
@@ -660,7 +660,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteDay(Date date, int offsite) {
-		return offsiteDate(date, DatePart.DAY_OF_YEAR, offsite);
+		return offsiteDate(date, DateField.DAY_OF_YEAR, offsite);
 	}
 
 	/**
@@ -671,7 +671,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteWeek(Date date, int offsite) {
-		return offsiteDate(date, DatePart.WEEK_OF_YEAR, offsite);
+		return offsiteDate(date, DateField.WEEK_OF_YEAR, offsite);
 	}
 
 	/**
@@ -682,18 +682,18 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsiteMonth(Date date, int offsite) {
-		return offsiteDate(date, DatePart.MONTH, offsite);
+		return offsiteDate(date, DateField.MONTH, offsite);
 	}
 
 	/**
 	 * 获取指定日期偏移指定时间后的时间
 	 * 
 	 * @param date 基准日期
-	 * @param datePart 偏移的粒度大小（小时、天、月等）{@link DatePart}
+	 * @param datePart 偏移的粒度大小（小时、天、月等）{@link DateField}
 	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteDate(Date date, DatePart datePart, int offsite) {
+	public static DateTime offsiteDate(Date date, DateField datePart, int offsite) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(datePart.getValue(), offsite);

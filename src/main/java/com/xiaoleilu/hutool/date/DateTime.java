@@ -26,13 +26,23 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转换JDK date为 DateTime
+	 * 转换 {@link Calendar} 为 DateTime
 	 * 
-	 * @param calendar JDK Date
+	 * @param calendar {@link Calendar}
 	 * @return DateTime
 	 */
 	public static DateTime of(Calendar calendar) {
 		return new DateTime(calendar);
+	}
+	
+	/**
+	 * 构造
+	 * @see DatePattern
+	 * @param dateStr Date字符串
+	 * @param format 格式
+	 */
+	public static DateTime of(String dateStr, String format){
+		return new DateTime(dateStr, format);
 	}
 
 	/**
@@ -104,11 +114,11 @@ public class DateTime extends Date {
 	/**
 	 * 调整日期和时间
 	 * 
-	 * @param datePart 调整的部分 {@link DatePart}
+	 * @param datePart 调整的部分 {@link DateField}
 	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 自身
 	 */
-	public DateTime offsite(DatePart datePart, int offsite) {
+	public DateTime offsite(DateField datePart, int offsite) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(this);
 		cal.add(datePart.getValue(), offsite);
@@ -119,12 +129,53 @@ public class DateTime extends Date {
 
 	// -------------------------------------------------------------------- Part of Date start
 	/**
+	 * 获得日期的某个部分<br>
+	 * 例如获得年的部分，则使用 getField(DatePart.YEAR)
+	 * @param field 表示日期的哪个部分的枚举 {@link DateField}
+	 * @return 某个部分的值
+	 */
+	public int getField(DateField field){
+		return getField(field.getValue());
+	}
+	
+	/**
+	 * 获得日期的某个部分<br>
+	 * 例如获得年的部分，则使用 getField(Calendar.YEAR)
+	 * @param field 表示日期的哪个部分的int值 {@link Calendar}
+	 * @return 某个部分的值
+	 */
+	public int getField(int field){
+		return toCalendar().get(field);
+	}
+	
+	/**
+	 * 设置日期的某个部分
+	 * @param field 表示日期的哪个部分的枚举 {@link DateField}
+	 * @param value 值
+	 * @return {@link DateTime}
+	 */
+	public DateTime setField(DateField field, int value){
+		return setField(field.getValue(), value);
+	}
+	
+	/**
+	 * 设置日期的某个部分
+	 * @param field 表示日期的哪个部分的int值 {@link Calendar}
+	 * @param value 值
+	 * @return {@link DateTime}
+	 */
+	public DateTime setField(int field, int value){
+		toCalendar().set(field, value);
+		return this;
+	}
+	
+	/**
 	 * 获得年的部分
 	 * 
 	 * @return 年的部分
 	 */
 	public int year() {
-		return DateUtil.year(this);
+		return getField(DateField.YEAR);
 	}
 
 	/**
@@ -133,7 +184,7 @@ public class DateTime extends Date {
 	 * @return 第几个季节
 	 */
 	public int season() {
-		return DateUtil.season(this);
+		return month() /3 + 1;
 	}
 
 	/**
@@ -142,7 +193,7 @@ public class DateTime extends Date {
 	 * @return 月份
 	 */
 	public int month() {
-		return DateUtil.month(this);
+		return getField(DateField.MONTH);
 	}
 
 	/**
@@ -151,7 +202,7 @@ public class DateTime extends Date {
 	 * @return {@link Month}
 	 */
 	public Month monthEnum() {
-		return DateUtil.monthEnum(this);
+		return Month.of(month());
 	}
 
 	/**
@@ -160,7 +211,7 @@ public class DateTime extends Date {
 	 * @return 周
 	 */
 	public int weekOfYear() {
-		return DateUtil.weekOfYear(this);
+		return getField(DateField.WEEK_OF_YEAR);
 	}
 
 	/**
@@ -169,7 +220,7 @@ public class DateTime extends Date {
 	 * @return 周
 	 */
 	public int weekOfMonth() {
-		return DateUtil.weekOfMonth(this);
+		return getField(DateField.WEEK_OF_MONTH);
 	}
 
 	/**
@@ -178,7 +229,7 @@ public class DateTime extends Date {
 	 * @return 天
 	 */
 	public int dayOfMonth() {
-		return DateUtil.dayOfMonth(this);
+		return getField(DateField.DAY_OF_MONTH);
 	}
 
 	/**
@@ -187,7 +238,16 @@ public class DateTime extends Date {
 	 * @return 天
 	 */
 	public int dayOfWeek() {
-		return DateUtil.dayOfWeek(this);
+		return getField(DateField.DAY_OF_WEEK);
+	}
+	
+	/**
+	 * 获得天所在的周是这个月的第几周
+	 * 
+	 * @return 天
+	 */
+	public int dayOfWeekInMonth() {
+		return getField(DateField.DAY_OF_WEEK_IN_MONTH);
 	}
 
 	/**
@@ -196,7 +256,7 @@ public class DateTime extends Date {
 	 * @return {@link Week}
 	 */
 	public Week dayOfWeekEnum() {
-		return DateUtil.dayOfWeekEnum(this);
+		return Week.of(dayOfWeek());
 	}
 
 	/**
@@ -206,7 +266,7 @@ public class DateTime extends Date {
 	 * @return 小时数
 	 */
 	public int hour(boolean is24HourClock) {
-		return DateUtil.hour(this, is24HourClock);
+		return getField(is24HourClock ? DateField.HOUR_OF_DAY : DateField.HOUR);
 	}
 
 	/**
@@ -216,7 +276,7 @@ public class DateTime extends Date {
 	 * @return 分钟数
 	 */
 	public int minute() {
-		return DateUtil.minute(this);
+		return getField(DateField.MINUTE);
 	}
 
 	/**
@@ -225,7 +285,7 @@ public class DateTime extends Date {
 	 * @return 秒数
 	 */
 	public int second() {
-		return DateUtil.season(this);
+		return getField(DateField.SECOND);
 	}
 
 	/**
@@ -234,7 +294,7 @@ public class DateTime extends Date {
 	 * @return 毫秒数
 	 */
 	public int millsecond() {
-		return DateUtil.millsecond(this);
+		return getField(DateField.MILLISECOND);
 	}
 
 	/**
@@ -243,7 +303,7 @@ public class DateTime extends Date {
 	 * @return 是否为上午
 	 */
 	public boolean isAM() {
-		return DateUtil.isAM(this);
+		return Calendar.AM == getField(DateField.AM_PM);
 	}
 
 	/**
@@ -252,19 +312,17 @@ public class DateTime extends Date {
 	 * @return 是否为下午
 	 */
 	public boolean isPM() {
-		return DateUtil.isPM(this);
+		return Calendar.PM == getField(DateField.AM_PM);
 	}
 	// -------------------------------------------------------------------- Part of Date end
 
 	/**
 	 * 是否闰年
-	 * 
 	 * @see DateUtil#isLeapYear(int)
-	 * 
 	 * @return 是否闰年
 	 */
 	public boolean isLeapYear() {
-		return DateUtil.isLeapYear(this.year());
+		return DateUtil.isLeapYear(year());
 	}
 
 	/**

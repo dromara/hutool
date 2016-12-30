@@ -9,7 +9,7 @@ import java.util.Calendar;
  * @author Looly
  *
  */
-public enum DatePart {
+public enum DateField {
 
 	/**
 	 * 年
@@ -52,6 +52,11 @@ public enum DatePart {
 	 */
 	DAY_OF_WEEK_IN_MONTH(Calendar.DAY_OF_WEEK_IN_MONTH),
 	/**
+	 * 上午或者下午
+	 * @see Calendar#AM_PM
+	 */
+	AM_PM(Calendar.AM_PM),
+	/**
 	 * 小时，用于12小时制
 	 * @see Calendar#HOUR
 	 */
@@ -80,7 +85,7 @@ public enum DatePart {
 	// ---------------------------------------------------------------
 	private int value;
 
-	private DatePart(int value) {
+	private DateField(int value) {
 		this.value = value;
 	}
 
@@ -92,9 +97,9 @@ public enum DatePart {
 	 * 将 {@link Calendar}相关值转换为DatePart枚举对象<br>
 	 * 
 	 * @param calendarPartIntValue Calendar中关于Week的int值
-	 * @return {@link DatePart}
+	 * @return {@link DateField}
 	 */
-	public static DatePart of(int calendarPartIntValue) {
+	public static DateField of(int calendarPartIntValue) {
 		switch (calendarPartIntValue) {
 			case Calendar.YEAR:
 				return YEAR;
