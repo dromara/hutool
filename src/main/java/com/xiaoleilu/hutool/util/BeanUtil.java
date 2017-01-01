@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.StaticLog;
 
 /**
  * Bean工具类
@@ -91,12 +92,13 @@ public class BeanUtil {
 	/**
 	 * Map转换为Bean对象
 	 * 
-	 * @param map Map
+	 * @param map {@link Map}
 	 * @param beanClass Bean Class
+	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass) {
-		return fillBeanWithMap(map, ClassUtil.newInstance(beanClass));
+	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
+		return fillBeanWithMap(map, ClassUtil.newInstance(beanClass), isIgnoreError);
 	}
 
 	/**
@@ -105,10 +107,11 @@ public class BeanUtil {
 	 * 
 	 * @param map Map
 	 * @param beanClass Bean Class
+	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T mapToBeanIgnoreCase(Map<?, ?> map, Class<T> beanClass) {
-		return fillBeanWithMapIgnoreCase(map, ClassUtil.newInstance(beanClass));
+	public static <T> T mapToBeanIgnoreCase(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
+		return fillBeanWithMapIgnoreCase(map, ClassUtil.newInstance(beanClass), isIgnoreError);
 	}
 
 	/**
@@ -116,13 +119,19 @@ public class BeanUtil {
 	 * 
 	 * @param map Map
 	 * @param bean Bean
+	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean) {
+	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, final boolean isIgnoreError) {
 		return fillBean(bean, new ValueProvider(){
 			@Override
 			public Object value(String name) {
 				return map.get(name);
+			}
+			
+			@Override
+			public boolean isIgnoreError() {
+				return isIgnoreError;
 			}
 		});
 	}
@@ -133,9 +142,10 @@ public class BeanUtil {
 	 * @param map Map
 	 * @param bean Bean
 	 * @param isToCamelCase 是否将下划线模式转换为驼峰模式
+	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase) {
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, boolean isIgnoreError) {
 		if(isToCamelCase){
 			final Map<Object, Object> map2 = new HashMap<Object, Object>();
 			for (Entry<?, ?> entry : map.entrySet()) {
@@ -147,10 +157,10 @@ public class BeanUtil {
 					map2.put(key, entry.getValue());
 				}
 			}
-			return fillBeanWithMap(map2, bean);
+			return fillBeanWithMap(map2, bean, isIgnoreError);
 		}
 		
-		return fillBeanWithMap(map, bean);
+		return fillBeanWithMap(map, bean, isIgnoreError);
 	}
 
 	/**
@@ -158,9 +168,10 @@ public class BeanUtil {
 	 * 
 	 * @param map Map
 	 * @param bean Bean
+	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean) {
+	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, final boolean isIgnoreError) {
 		final Map<Object, Object> map2 = new HashMap<Object, Object>();
 		for (Entry<?, ?> entry : map.entrySet()) {
 			final Object key = entry.getKey();
@@ -177,6 +188,11 @@ public class BeanUtil {
 			public Object value(String name) {
 				return map2.get(name.toLowerCase());
 			}
+			
+			@Override
+			public boolean isIgnoreError() {
+				return isIgnoreError;
+			}
 		});
 	}
 
@@ -185,10 +201,11 @@ public class BeanUtil {
 	 * 
 	 * @param request ServletRequest
 	 * @param beanClass Bean Class
+	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T requestParamToBean(javax.servlet.ServletRequest request, Class<T> beanClass) {
-		return fillBeanWithRequestParam(request, ClassUtil.newInstance(beanClass));
+	public static <T> T requestParamToBean(javax.servlet.ServletRequest request, Class<T> beanClass, boolean isIgnoreError) {
+		return fillBeanWithRequestParam(request, ClassUtil.newInstance(beanClass), isIgnoreError);
 	}
 
 	/**
@@ -196,9 +213,10 @@ public class BeanUtil {
 	 * 
 	 * @param request ServletRequest
 	 * @param bean Bean
+	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean) {
+	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean, final boolean isIgnoreError) {
 		final String beanName = StrUtil.lowerFirst(bean.getClass().getSimpleName());
 		return fillBean(bean, new ValueProvider(){
 			@Override
@@ -213,6 +231,11 @@ public class BeanUtil {
 					}
 				}
 				return value;
+			}
+			
+			 @Override
+			public boolean isIgnoreError() {
+				return isIgnoreError;
 			}
 		});
 	}
@@ -258,7 +281,12 @@ public class BeanUtil {
 				try {
 					property.getWriteMethod().invoke(bean, Convert.convert(property.getPropertyType(), value));
 				} catch (Exception e) {
-					throw new UtilException(StrUtil.format("Inject [{}] error!", property.getName()), e);
+					if(valueProvider.isIgnoreError()){
+						StaticLog.warn("Inject [{}] error: {}", property.getName(), e.getMessage());
+						continue;
+					}else{
+						throw new UtilException(e, "Inject [{}] error!", property.getName());
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -375,6 +403,10 @@ public class BeanUtil {
 								ClassUtil.setAccessible(writeMethod).invoke(target, value);
 							}
 						} catch (Throwable ex) {
+							if(copyOptions.isIgnoreError){
+								StaticLog.warn("Copy property [{}] to [{}] error: {}", sourcePd.getName(), targetPd.getName(), ex.getMessage());
+								continue;
+							}
 							throw new UtilException(ex, "Copy property [{}] to [{}] error: {}", sourcePd.getName(), targetPd.getName(), ex.getMessage());
 						}
 					}
@@ -399,6 +431,11 @@ public class BeanUtil {
 		 * @return 对应参数名的值
 		 */
 		public Object value(String name);
+		
+		/**
+		 * 是否忽略字段的注入错误
+		 */
+		public boolean isIgnoreError();
 	}
 	
 	/**
@@ -417,6 +454,8 @@ public class BeanUtil {
 		private boolean isIgnoreNullValue;
 		/** 忽略的属性列表，设置一个属性列表，不拷贝这些属性值 */
 		private String[] ignoreProperties;
+		/** 是否忽略字段注入错误 */
+		private boolean isIgnoreError;
 		
 		/**
 		 * 创建拷贝选项
@@ -483,6 +522,14 @@ public class BeanUtil {
 		public CopyOptions setIgnoreProperties(String... ignoreProperties){
 			this.ignoreProperties = ignoreProperties;
 			return this;
+		}
+		
+		/**
+		 * 设置是否忽略字段的注入错误
+		 * @param isIgnoreError 是否忽略
+		 */
+		public void setIgnoreError(boolean isIgnoreError) {
+			this.isIgnoreError = isIgnoreError;
 		}
 	}
 }

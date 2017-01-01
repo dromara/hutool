@@ -156,7 +156,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @return 实体类对象
 	 */
 	public <T> T toBean(Class<T> clazz) {
-		return BeanUtil.mapToBean(this.rawHashMap, clazz);
+		return BeanUtil.mapToBean(this.rawHashMap, clazz, false);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @return 实体类对象
 	 */
 	public <T> T toBean(T bean) {
-		return BeanUtil.fillBeanWithMap(this.rawHashMap, bean);
+		return BeanUtil.fillBeanWithMap(this.rawHashMap, bean, false);
 	}
 	
 	@Override

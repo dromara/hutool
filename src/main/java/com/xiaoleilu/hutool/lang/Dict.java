@@ -75,7 +75,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 * @return vo
 	 */
 	public <T> T toBean(Class<T> clazz) {
-		return BeanUtil.mapToBean(this, clazz);
+		return BeanUtil.mapToBean(this, clazz, false);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 * @return vo
 	 */
 	public <T> T toBeanIgnoreCase(Class<T> clazz) {
-		return BeanUtil.mapToBeanIgnoreCase(this, clazz);
+		return BeanUtil.mapToBeanIgnoreCase(this, clazz, false);
 	}
 	
 	/**

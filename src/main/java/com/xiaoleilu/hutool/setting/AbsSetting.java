@@ -264,6 +264,11 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 				}
 				return value;
 			}
+			
+			@Override
+			public boolean isIgnoreError() {
+				return false;
+			}
 		});
 	}
 
