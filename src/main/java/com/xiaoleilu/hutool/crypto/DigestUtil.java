@@ -3,7 +3,8 @@ package com.xiaoleilu.hutool.crypto;
 import java.io.File;
 import java.io.InputStream;
 
-import com.xiaoleilu.hutool.crypto.Digester.DigestAlgorithm;
+import com.xiaoleilu.hutool.crypto.digest.DigestAlgorithm;
+import com.xiaoleilu.hutool.crypto.digest.Digester;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 

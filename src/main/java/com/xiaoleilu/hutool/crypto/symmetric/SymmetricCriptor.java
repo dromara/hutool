@@ -1,43 +1,61 @@
-package com.xiaoleilu.hutool.crypto;
+package com.xiaoleilu.hutool.crypto.symmetric;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 
+import com.xiaoleilu.hutool.crypto.CryptoException;
+import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 对称加密算法<br>
- * 注意：此对象实例化后为非线程安全！
- * 
  * @author Looly
  *
  */
 public class SymmetricCriptor {
 
-	/** KeyGenerator 提供对称密钥生成器的功能，支持各种算法 */
-	private KeyGenerator keygen;
 	/** SecretKey 负责保存对称密钥 */
 	private SecretKey secretKey;
 	/** Cipher负责完成加密或解密工作 */
 	private Cipher clipher;
+	/** 加密解密参数 */
+	private AlgorithmParameterSpec params;
+	private Lock lock = new ReentrantLock();
 
 	//------------------------------------------------------------------ Constructor start
+	/**
+	 * 构造
+	 * @param algorithm {@link SymmetricAlgorithm}
+	 */
 	public SymmetricCriptor(SymmetricAlgorithm algorithm) {
-		init(algorithm.value);
+		this(algorithm, null);
 	}
 	
+	/**
+	 * 构造
+	 * @param algorithm 算法
+	 */
 	public SymmetricCriptor(String algorithm) {
-		init(algorithm);
+		this(algorithm, null);
 	}
+	
+	/**
+	 * 构造
+	 * @param algorithm {@link SymmetricAlgorithm}
+	 * @param key 自定义KEY
+	 */
 	public SymmetricCriptor(SymmetricAlgorithm algorithm, byte[] key) {
-		init(algorithm.value, key);
+		this(algorithm.getValue(), key);
 	}
 	
 	public SymmetricCriptor(String algorithm, byte[] key) {
@@ -48,26 +66,16 @@ public class SymmetricCriptor {
 	/**
 	 * 初始化
 	 * @param algorithm 算法
-	 * @return {@link SymmetricCriptor}
-	 */
-	public SymmetricCriptor init(String algorithm) {
-		return init(algorithm, null);
-	}
-
-	/**
-	 * 初始化
-	 * @param algorithm 算法
 	 * @param key 密钥，如果为<code>null</code>自动生成一个key
 	 * @return {@link SymmetricCriptor}
 	 */
 	public SymmetricCriptor init(String algorithm, byte[] key) {
+		this.secretKey = SecureUtil.generateKey(algorithm, key);
+		if(algorithm.startsWith("PBE")){
+			//对于PBE算法使用随机数加盐
+			this.params = new PBEParameterSpec(RandomUtil.randomBytes(8), 100);
+		}
 		try {
-			keygen = KeyGenerator.getInstance(algorithm);
-			if(null != key){
-				secretKey = new SecretKeySpec(key, algorithm);
-			}else{
-				secretKey = keygen.generateKey();
-			}
 			clipher = Cipher.getInstance(algorithm);
 		} catch (Exception e) {
 			throw new CryptoException(e);
@@ -82,11 +90,18 @@ public class SymmetricCriptor {
 	 * @return 加密后的bytes
 	 */
 	public byte[] encrypt(byte[] data){
+		lock.lock();
 		try {
-			clipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			if(null == this.params){
+				clipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			}else{
+				clipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
+			}
 			return clipher.doFinal(data);
 		} catch (Exception e) {
 			throw new CryptoException(e);
+		}finally{
+			lock.unlock();
 		}
 	}
 	
@@ -110,7 +125,7 @@ public class SymmetricCriptor {
 	}
 	
 	/**
-	 * 加密，使用UTF-8编码
+	 * 加密
 	 * @param data 被加密的字符串
 	 * @return 加密后的bytes
 	 */
@@ -129,11 +144,18 @@ public class SymmetricCriptor {
 	 * @return 解密后的bytes
 	 */
 	public byte[] decrypt(byte[] bytes){
+		lock.lock();
 		try {
-			clipher.init(Cipher.DECRYPT_MODE, secretKey);
+			if(null == this.params){
+				clipher.init(Cipher.DECRYPT_MODE, secretKey);
+			}else{
+				clipher.init(Cipher.DECRYPT_MODE, secretKey, params);
+			}
 			return clipher.doFinal(bytes);
 		} catch (Exception e) {
 			throw new CryptoException(e);
+		}finally{
+			lock.unlock();
 		}
 	}
 	
@@ -152,14 +174,6 @@ public class SymmetricCriptor {
 	
 	//--------------------------------------------------------------------------------- Getters
 	/**
-	 * 获得 对称密钥生成器的功能，支持各种算法
-	 * @return 对称密钥生成器的功能，支持各种算法
-	 */
-	public KeyGenerator getKeygen() {
-		return keygen;
-	}
-
-	/**
 	 * 获得对称密钥
 	 * @return 获得对称密钥
 	 */
@@ -173,35 +187,5 @@ public class SymmetricCriptor {
 	 */
 	public Cipher getClipher() {
 		return clipher;
-	}
-
-	/**
-	 * 对称算法类型<br>
-	 * see: https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyGenerator
-	 * @author Looly
-	 *
-	 */
-	public static enum SymmetricAlgorithm {
-		AES("AES"), 
-		ARCFOUR("ARCFOUR"), 
-		Blowfish("Blowfish"), 
-		DES("DES"), 
-		DESede("DESede"), 
-		HmacMD5("HmacMD5"), 
-		HmacSHA1("HmacSHA1"), 
-		HmacSHA256("HmacSHA256"),
-		HmacSHA384("HmacSHA384"),
-		HmacSHA512("HmacSHA512"),
-		RC2("RC2");
-
-		private String value;
-
-		private SymmetricAlgorithm(String value) {
-			this.value = value;
-		}
-
-		public String getValue() {
-			return this.value;
-		}
 	}
 }

@@ -39,7 +39,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class HttpUtil {
 
-	public final static Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
+	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
 	
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded
@@ -114,7 +114,7 @@ public class HttpUtil {
 	 * @return IP地址
 	 */
 	public static String getClientIP(javax.servlet.http.HttpServletRequest request, String... otherHeaderNames) {
-		String[] headers = new String[]{"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
+		String[] headers = {"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
 		if(ArrayUtil.isNotEmpty(otherHeaderNames)){
 			headers = ArrayUtil.addAll(headers, otherHeaderNames);
 		}

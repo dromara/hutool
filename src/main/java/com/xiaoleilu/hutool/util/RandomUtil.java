@@ -48,6 +48,17 @@ public class RandomUtil {
 	}
 	
 	/**
+	 * 随机bytes
+	 * @param length 长度
+	 * @return bytes
+	 */
+	public static byte[] randomBytes(int length){
+		byte[] bytes = new byte[length];
+		random.nextBytes(bytes);
+		return bytes;
+	}
+	
+	/**
 	 * 随机获得列表中的元素
 	 * @param <T> 元素类型
 	 * @param list 列表
