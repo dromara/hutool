@@ -8,6 +8,7 @@
 * BeanUtil.fillBean方法的ValueProvider增加方法，用于判断是否忽略注入错误
 * HttpUtil.getClientIP方法增加默认header
 * crypto包中添加非对称加密算法、HMAC算法，优化对称加密算法类
+* 增加StrUtil.removeAll
 
 ### Bug修复
 

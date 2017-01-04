@@ -7,6 +7,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -19,6 +20,7 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.xiaoleilu.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.DigestAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.Digester;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
@@ -180,6 +182,22 @@ public class SecureUtil {
 		}
 		keyPairGen.initialize(1024);
 		return keyPairGen.generateKeyPair();
+	}
+	
+	/**
+	 * 生成签名对象
+	 * @param asymmetricAlgorithm {@link AsymmetricAlgorithm} 非对称加密算法
+	 * @param digestAlgorithm {@link DigestAlgorithm} 摘要算法
+	 * @return {@link Signature}
+	 */
+	public static Signature generateSignature(AsymmetricAlgorithm asymmetricAlgorithm, DigestAlgorithm digestAlgorithm){
+		String digestPart = (null == digestAlgorithm) ? "NONE" : digestAlgorithm.name();
+		String algorithm = StrUtil.format("{}with{}", digestPart, asymmetricAlgorithm.getValue());
+		try {
+			return Signature.getInstance(algorithm);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
 	}
 	
 	// ------------------------------------------------------------------- 对称加密算法

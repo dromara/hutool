@@ -88,7 +88,8 @@ public class AsymmetricCriptor {
 	/**
 	 * 初始化<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
-	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密<br>
+	 * 签名默认使用MD5摘要算法，如果需要自定义签名算法，调用 {@link AsymmetricCriptor#setSignature(Signature)}设置签名对象
 	 * 
 	 * @param algorithm 算法
 	 * @param privateKey 私钥
@@ -106,9 +107,13 @@ public class AsymmetricCriptor {
 		
 		if(null ==privateKey && null == publicKey){
 			initKeys();
-		}else if(null != privateKey){
-			this.privateKey = SecureUtil.generatePrivateKey(algorithm, privateKey);
-			this.publicKey = SecureUtil.generatePublicKey(algorithm, publicKey);
+		}else{
+			if(null != privateKey){
+				this.privateKey = SecureUtil.generatePrivateKey(algorithm, privateKey);
+			}
+			if(null != publicKey){
+				this.publicKey = SecureUtil.generatePublicKey(algorithm, publicKey);
+			}
 		}
 		return this;
 	}
@@ -315,7 +320,7 @@ public class AsymmetricCriptor {
 	}
 
 	/**
-	 * 设置
+	 * 设置签名
 	 * @param signature 签名对象 {@link Signature}
 	 * @return 自身 {@link AsymmetricCriptor}
 	 */

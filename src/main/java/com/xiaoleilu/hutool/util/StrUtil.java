@@ -470,6 +470,17 @@ public class StrUtil {
 	public static String genGetter(String fieldName) {
 		return upperFirstAndAddPre(fieldName, "get");
 	}
+	
+	/**
+	 * 移除字符串中所有给定字符串<br>
+	 * 例：removeAll("aa-bb-cc-dd", "-")  ->  aabbccdd
+	 * @param str 字符串
+	 * @param strToRemove 被移除的字符串
+	 * @return 移除后的字符串
+	 */
+	public static String removeAll(String str, CharSequence strToRemove){
+		return str.replace(strToRemove, EMPTY);
+	}
 
 	/**
 	 * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br/>
