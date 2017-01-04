@@ -394,7 +394,7 @@ public class DateUtil {
 	 * 根据特定格式格式化日期
 	 * 
 	 * @param date 被格式化的日期
-	 * @param format 格式
+	 * @param format 日期格式，常用格式见： {@link DatePattern}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {

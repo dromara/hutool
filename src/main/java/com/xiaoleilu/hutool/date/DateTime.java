@@ -370,6 +370,11 @@ public class DateTime extends Date {
 		return DateUtil.formatDateTime(this);
 	}
 
+	/**
+	 * 转为字符串
+	 * @param format 日期格式，常用格式见： {@link DatePattern}
+	 * @return String
+	 */
 	public String toString(String format) {
 		return DateUtil.format(this, format);
 	}
