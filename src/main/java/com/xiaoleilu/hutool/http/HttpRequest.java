@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.http;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.lang.Base64;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
@@ -56,6 +58,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HostnameVerifier hostnameVerifier;
 	/** SSLSocketFactory，用于HTTPS安全连接 */
 	private SSLSocketFactory ssf;
+	private int redirectCount;
 
 	/**
 	 * 构造
@@ -456,6 +459,27 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			}
 		} catch (IOException e) {
 			throw new HttpException(e.getMessage(), e);
+		}
+		
+		//手动实现重定向
+		if(this.httpConnection.getHttpURLConnection().getInstanceFollowRedirects()){
+			int responseCode;
+			try {
+				responseCode = httpConnection.responseCode();
+			} catch (IOException e) {
+				throw new HttpException(e);
+			}
+			if(responseCode != HttpURLConnection.HTTP_OK){
+				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER){
+					this.url = httpConnection.header(Header.LOCATION);
+					if(redirectCount < 2){
+						redirectCount++;
+						return execute();
+					}else{
+						StaticLog.warn("URL [{}] redirect count more than two !", this.url);
+					}
+				}
+			}
 		}
 
 		// 获取响应

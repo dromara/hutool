@@ -55,7 +55,9 @@ public enum Header {
 	/**Content-Encoding*/
 	CONTENT_ENCODING("Content-Encoding"),
 	/**ETag*/
-	ETAG("ETag");
+	ETAG("ETag"),
+	/** 重定向指示到的URL */
+	LOCATION("Location");
 	
 	private String value;
 	private Header(String value) {
