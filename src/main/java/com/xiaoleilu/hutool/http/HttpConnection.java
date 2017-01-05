@@ -405,6 +405,16 @@ public class HttpConnection {
 		conn.setChunkedStreamingMode(blockSize);
 		return this;
 	}
+	
+	/**
+	 * 设置自动HTTP 30X跳转
+	 * @param isInstanceFollowRedirects 是否自定跳转
+	 * @return {@link HttpConnection}
+	 */
+	public HttpConnection setInstanceFollowRedirects(boolean isInstanceFollowRedirects){
+		conn.setInstanceFollowRedirects(isInstanceFollowRedirects);
+		return this;
+	}
 
 	/**
 	 * 连接
