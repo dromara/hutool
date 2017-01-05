@@ -68,8 +68,6 @@ hutool
 
 [Hutool Wiki @ osc](http://hutool.mydoc.io/)
 
-[Hutool Wiki @ github](https://github.com/looly/hutool/wiki)
-
 ## 版本变更
 
 [CHANGELOG.md](https://github.com/looly/hutool/blob/master/CHANGELOG.md)
