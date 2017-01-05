@@ -434,7 +434,7 @@ public class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(T... ts) {
-		HashSet<T> set = new HashSet<T>();
+		HashSet<T> set = new HashSet<T>(Math.max((int) (ts.length/.75f) + 1, 16));
 		for (T t : ts) {
 			set.add(t);
 		}
@@ -447,8 +447,7 @@ public class CollectionUtil {
 	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
-		HashSet<T> set = new HashSet<T>();
-		set.addAll(collection);
+		HashSet<T> set = new HashSet<T>(collection);
 		return set;
 	}
 
@@ -460,7 +459,7 @@ public class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		ArrayList<T> arrayList = new ArrayList<T>();
+		ArrayList<T> arrayList = new ArrayList<T>(values.length);
 		for (T t : values) {
 			arrayList.add(t);
 		}
