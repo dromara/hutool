@@ -157,10 +157,10 @@ public class HttpConnection {
 			throw new HttpException(e.getMessage(), e);
 		}
 		
-		//对于非GET请求，默认不支持30X跳转
-		if(false == Method.GET.equals(this.method)){
-			this.conn.setInstanceFollowRedirects(false);
-		}
+//		//对于非GET请求，默认不支持30X跳转
+//		if(false == Method.GET.equals(this.method)){
+//			this.conn.setInstanceFollowRedirects(false);
+//		}
 
 		// do input and output
 		this.conn.setDoInput(true);

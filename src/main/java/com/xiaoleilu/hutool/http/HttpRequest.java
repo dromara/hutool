@@ -53,12 +53,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HttpConnection httpConnection;
 	/** 是否禁用缓存 */
 	private boolean isDisableCache;
+	/** 是否允许重定向 */
+	private Boolean isFollowRedirects;
+	/** 重定向次数 */
+	private int redirectCount;
 	
 	/** SSLSocketFactory，用于HTTPS安全连接 */
 	private HostnameVerifier hostnameVerifier;
 	/** SSLSocketFactory，用于HTTPS安全连接 */
 	private SSLSocketFactory ssf;
-	private int redirectCount;
 
 	/**
 	 * 构造
@@ -386,6 +389,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
+	 * 设置是否打开重定向
+	 * @param isFollowRedirects 是否打开重定向
+	 */
+	public HttpRequest setFollowRedirects(Boolean isFollowRedirects) {
+		this.isFollowRedirects = isFollowRedirects;
+		return this;
+	}
+	
+	/**
 	 * 设置域名验证器<br>
 	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
 	 * 
@@ -432,58 +444,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpResponse
 	 */
 	public HttpResponse execute() {
-		if (Method.GET.equals(method)) {
-			// 优先使用body形式的参数，不存在使用form
-			if (StrUtil.isNotBlank(this.body)) {
-				this.url = HttpUtil.urlWithForm(this.url, this.body);
-			} else {
-				this.url = HttpUtil.urlWithForm(this.url, this.form);
-			}
-		}
-		
+		//初始化URL
+		urlWithParamIfGet();
 		// 初始化 connection
-		this.httpConnection = HttpConnection
-				.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout)
-				.header(this.headers, true); // 覆盖默认Header
-		//是否禁用缓存
-		if(this.isDisableCache){
-			this.httpConnection.disableCache();
-		}
+		initConnecton();
 
 		// 发送请求
-		try {
-			if (Method.POST.equals(method) || Method.PUT.equals(method)) {
-				send();// 发送数据
-			} else {
-				this.httpConnection.connect();
-			}
-		} catch (IOException e) {
-			throw new HttpException(e.getMessage(), e);
-		}
+		send();
 		
 		//手动实现重定向
-		if(this.httpConnection.getHttpURLConnection().getInstanceFollowRedirects()){
-			int responseCode;
-			try {
-				responseCode = httpConnection.responseCode();
-			} catch (IOException e) {
-				throw new HttpException(e);
-			}
-			if(responseCode != HttpURLConnection.HTTP_OK){
-				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER){
-					this.url = httpConnection.header(Header.LOCATION);
-					if(redirectCount < 2){
-						redirectCount++;
-						return execute();
-					}else{
-						StaticLog.warn("URL [{}] redirect count more than two !", this.url);
-					}
-				}
-			}
-		}
+		HttpResponse httpResponse = sendRedirectIfPosible();
 
 		// 获取响应
-		HttpResponse httpResponse = HttpResponse.readResponse(httpConnection);
+		if(null == httpResponse){
+			httpResponse = HttpResponse.readResponse(httpConnection);
+		}
 
 		this.httpConnection.disconnect();
 		return httpResponse;
@@ -507,15 +482,84 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	
 	// ---------------------------------------------------------------- Private method start
 	/**
+	 * 初始化网络连接
+	 */
+	private void initConnecton(){
+		// 初始化 connection
+		this.httpConnection = HttpConnection
+				.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout)
+				.header(this.headers, true); // 覆盖默认Header
+		//是否禁用缓存
+		if(this.isDisableCache){
+			this.httpConnection.disableCache();
+		}
+		
+		if(null != isFollowRedirects){
+			//如果自定义了转发，则设置，否则使用默认
+			this.httpConnection.setInstanceFollowRedirects(isFollowRedirects);
+		}
+	}
+	
+	/**
+	 * 对于GET请求将参数加到URL中
+	 */
+	private void urlWithParamIfGet(){
+		if (Method.GET.equals(method)) {
+			// 优先使用body形式的参数，不存在使用form
+			if (StrUtil.isNotBlank(this.body)) {
+				this.url = HttpUtil.urlWithForm(this.url, this.body);
+			} else {
+				this.url = HttpUtil.urlWithForm(this.url, this.form);
+			}
+		}
+	}
+	
+	/**
+	 * 调用转发，如果需要转发返回转发结果，否则返回<code>null</code>
+	 * @return {@link HttpResponse}，无转发返回 <code>null</code>
+	 */
+	private HttpResponse sendRedirectIfPosible(){
+		//手动实现重定向
+		if(this.httpConnection.getHttpURLConnection().getInstanceFollowRedirects()){
+			int responseCode;
+			try {
+				responseCode = httpConnection.responseCode();
+			} catch (IOException e) {
+				throw new HttpException(e);
+			}
+			if(responseCode != HttpURLConnection.HTTP_OK){
+				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER){
+					this.url = httpConnection.header(Header.LOCATION);
+					if(redirectCount < 2){
+						redirectCount++;
+						return execute();
+					}else{
+						StaticLog.warn("URL [{}] redirect count more than two !", this.url);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * 发送数据流
 	 * 
 	 * @throws IOException
 	 */
-	private void send() throws IOException {
-		if (CollectionUtil.isEmpty(fileForm)) {
-			sendFormUrlEncoded();//普通表单
-		} else {
-			sendMltipart();	//文件上传表单
+	private void send() throws HttpException {
+		try {
+			if (Method.POST.equals(method) || Method.PUT.equals(method)) {
+				if (CollectionUtil.isEmpty(fileForm)) {
+					sendFormUrlEncoded();//普通表单
+				} else {
+					sendMltipart();	//文件上传表单
+				}
+			}else{
+				this.httpConnection.connect();
+			}
+		} catch (IOException e) {
+			throw new HttpException(e.getMessage(), e);
 		}
 	}
 	
