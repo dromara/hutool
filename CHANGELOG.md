@@ -10,6 +10,7 @@
 * crypto包中添加非对称加密算法、HMAC算法，优化对称加密算法类
 * 增加StrUtil.removeAll
 * 增加RandomUtil.randomEleSet方法
+* 增加 CollectionUtil.distinct方法
 
 ### Bug修复
 * 修正Http模块无法301和302重定向问题

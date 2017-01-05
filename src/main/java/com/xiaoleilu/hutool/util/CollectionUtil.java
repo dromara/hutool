@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -474,6 +475,21 @@ public class CollectionUtil {
 	 */
 	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
 		return new ArrayList<T>(collection);
+	}
+	
+	/**
+	 * 去重集合
+	 * @param collection 集合
+	 * @return {@link ArrayList}
+	 */
+	public static <T> ArrayList<T> distinct(Collection<T> collection){
+		if(isEmpty(collection)){
+			return new ArrayList<>();
+		}else if(collection instanceof Set){
+			return new ArrayList<>(collection);
+		}else{
+			return new ArrayList<>(new LinkedHashSet<>(collection));
+		}
 	}
 	
 	/**
