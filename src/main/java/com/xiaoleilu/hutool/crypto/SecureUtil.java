@@ -313,7 +313,6 @@ public class SecureUtil {
 	 * Certification为证书文件<br>
 	 * see: http://snowolf.iteye.com/blog/391931
 	 * 
-	 * @param type 类型
 	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
 	 * @param password 密码
 	 * @return {@link KeyStore}
