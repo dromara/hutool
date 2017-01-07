@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'Push to origin master'
-git push origin master
-echo 'Push to osc master'
-git push osc master
+echo 'Push to origin dev'
+git push origin dev
+echo 'Push to osc dev'
+git push osc dev
