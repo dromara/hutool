@@ -119,26 +119,27 @@ public class SqlBuilder {
 			entity = wrapper.wrap(entity);
 		}
 		
-		sql.append("INSERT INTO ").append(entity.getTableName()).append(" (");
+		final boolean isOracle = ObjectUtil.equal(dialectName, DialectName.ORACLE);//对Oracle的特殊处理
+		final StringBuilder fields = new StringBuilder();
+		final StringBuilder placeHolder = new StringBuilder();
 
-		final StringBuilder placeHolder = new StringBuilder(") VALUES (");
-
-		String key;
+		boolean isFirst = true;
+		String field;
 		Object value;
 		for (Entry<String, Object> entry : entity.entrySet()) {
-			//非第一个参数，追加逗号
-			if (paramValues.size() > 0) {
-				sql.append(", ");
-				placeHolder.append(", ");
-			}
-			
-			key = entry.getKey();
+			field = entry.getKey();
 			value = entry.getValue();
-			if(StrUtil.isNotBlank(key) && null != value){//只对值为非空的数据做插入操作
-				sql.append(key);
-				if(ObjectUtil.equal(dialectName, DialectName.ORACLE) //对Oracle的特殊处理
-						&& value instanceof String 
-						&& ((String)value).toLowerCase().endsWith(".nextval")) {
+			if(StrUtil.isNotBlank(field) && null != value){//只对值为非空的数据做插入操作
+				if(isFirst){
+					isFirst = false;
+				}else{
+					//非第一个参数，追加逗号
+					fields.append(", ");
+					placeHolder.append(", ");
+				}
+
+				fields.append(field);
+				if(isOracle && value instanceof String && StrUtil.endWithIgnoreCase((String)value, ".nextval")) {
 					//Oracle的特殊自增键，通过字段名.nextval获得下一个值
 					placeHolder.append(value);
 				}else {
@@ -147,7 +148,9 @@ public class SqlBuilder {
 				}
 			}
 		}
-		sql.append(placeHolder.toString()).append(")");
+		sql.append("INSERT INTO ")
+			.append(entity.getTableName()).append(" (").append(fields).append(") VALUES (")
+			.append(placeHolder.toString()).append(")");
 		
 		return this;
 	}

@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.demo.db;
 
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.Direction;
 import com.xiaoleilu.hutool.db.sql.LogicalOperator;
@@ -28,8 +29,10 @@ public class SqlBuilderDemo {
 		Entity user = Entity.create("User");
 		user
 			.set("name", "Joe")
+			.set("id", "id.nextval")
 			.set("age", 22)
-			.set("gender", "男");
+			.set("gender", "男")
+			.set("ignore", null);
 		
 		//有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
 		
@@ -44,7 +47,7 @@ public class SqlBuilderDemo {
 		Condition havingCondition = new Condition("sum(age)", ">", 100);
 		
 		//build insert
-		SqlBuilder insert = SqlBuilder.create(wrapper).insert(user);
+		SqlBuilder insert = SqlBuilder.create(wrapper).insert(user, DialectName.ORACLE);
 		log.debug("Insert SQL: {}, paramValues: {}", insert.build(), insert.getParamValues());
 		
 		//build delete
