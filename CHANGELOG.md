@@ -19,6 +19,7 @@
 * 增加StrUtil.removeAll
 * 增加RandomUtil.randomEleSet方法
 * 增加 CollectionUtil.distinct方法
+* 增加BASE32实现
 
 ### Bug修复
 * 修正Http模块无法301和302重定向问题
