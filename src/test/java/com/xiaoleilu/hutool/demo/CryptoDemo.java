@@ -7,7 +7,6 @@ import com.xiaoleilu.hutool.crypto.asymmetric.KeyType;
 import com.xiaoleilu.hutool.crypto.asymmetric.RSA;
 import com.xiaoleilu.hutool.crypto.digest.Digester;
 import com.xiaoleilu.hutool.crypto.digest.HMac;
-import com.xiaoleilu.hutool.crypto.digest.HmacAlgorithm;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricCriptor;
 import com.xiaoleilu.hutool.lang.Console;
@@ -43,7 +42,7 @@ public class CryptoDemo {
 		Console.log("-----------------------------------------------------------------------");
 
 		Console.log("------------------------------HmacMD5------------------------------------");
-		HMac hmac = new HMac(HmacAlgorithm.HmacMD5);
+		HMac hmac = SecureUtil.hmacMd5();
 		result = hmac.digest(testStr.getBytes());// 加密
 		Console.log(result);
 		Console.log("-----------------------------------------------------------------------------");
@@ -58,7 +57,7 @@ public class CryptoDemo {
 		Console.log("----------------------------------------------------------------------");
 
 		Console.log("------------------------------DES------------------------------------");
-		SymmetricCriptor des = new SymmetricCriptor(SymmetricAlgorithm.DES);
+		SymmetricCriptor des = SecureUtil.des();
 		result = des.encrypt(testStr.getBytes());// 加密
 		Console.log(result);
 		decryptStr = StrUtil.utf8Str(des.decrypt(result));// 解密，必须使用相同key

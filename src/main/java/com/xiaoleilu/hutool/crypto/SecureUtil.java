@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.crypto;
 
+import java.io.File;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -28,6 +29,8 @@ import javax.crypto.spec.SecretKeySpec;
 import com.xiaoleilu.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.DigestAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.Digester;
+import com.xiaoleilu.hutool.crypto.digest.HMac;
+import com.xiaoleilu.hutool.crypto.digest.HmacAlgorithm;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricCriptor;
 import com.xiaoleilu.hutool.io.FileUtil;
@@ -358,7 +361,10 @@ public class SecureUtil {
 	// ------------------------------------------------------------------- 对称加密算法
 
 	/**
-	 * AES加密
+	 * AES加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricCriptor}对象或者使用相同KEY<br>
+	 * 例：<br>
+	 * 		AES加密：aes().encrypt(data)<br>
+	 * 		AES解密：aes().decrypt(data)<br>
 	 * 
 	 * @return {@link SymmetricCriptor}
 	 */
@@ -367,7 +373,10 @@ public class SecureUtil {
 	}
 
 	/**
-	 * AES加密
+	 * AES加密<br>
+	 * 例：<br>
+	 * 		AES加密：aes(key).encrypt(data)<br>
+	 * 		AES解密：aes(key).decrypt(data)<br>
 	 * 
 	 * @param key 密钥
 	 * @return {@link SymmetricCriptor}
@@ -375,24 +384,149 @@ public class SecureUtil {
 	public static SymmetricCriptor aes(byte[] key) {
 		return new SymmetricCriptor(SymmetricAlgorithm.AES, key);
 	}
+	
+	/**
+	 * DES加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricCriptor}对象或者使用相同KEY<br>
+	 * 例：<br>
+	 * 		DES加密：des().encrypt(data)<br>
+	 * 		DES解密：des().decrypt(data)<br>
+	 * 
+	 * @return {@link SymmetricCriptor}
+	 */
+	public static SymmetricCriptor des() {
+		return new SymmetricCriptor(SymmetricAlgorithm.DES);
+	}
+
+	/**
+	 * DES加密<br>
+	 * 例：<br>
+	 * 		DES加密：des(key).encrypt(data)<br>
+	 * 		DES解密：des(key).decrypt(data)<br>
+	 * 
+	 * @param key 密钥
+	 * @return {@link SymmetricCriptor}
+	 */
+	public static SymmetricCriptor des(byte[] key) {
+		return new SymmetricCriptor(SymmetricAlgorithm.DES, key);
+	}
 
 	// ------------------------------------------------------------------- 摘要算法
 	/**
-	 * MD5加密
+	 * MD5加密<br>
+	 * 例：<br>
+	 * 		MD5加密：md5().digest(data)<br>
+	 * 		MD5加密并转为16进制字符串：md5().digestHex(data)<br>
 	 * 
 	 * @return {@link Digester}
 	 */
 	public static Digester md5() {
 		return new Digester(DigestAlgorithm.MD5);
 	}
+	
+	/**
+	 * MD5加密，生成16进制MD5字符串<br>
+	 * @return MD5字符串
+	 */
+	public static String md5(String data) {
+		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+	}
+	
+	/**
+	 * MD5加密，生成16进制MD5字符串<br>
+	 * @return MD5字符串
+	 */
+	public static String md5(InputStream data) {
+		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+	}
+	
+	/**
+	 * MD5加密文件，生成16进制MD5字符串<br>
+	 * @return MD5字符串
+	 */
+	public static String md5(File dataFile) {
+		return new Digester(DigestAlgorithm.MD5).digestHex(dataFile);
+	}
 
 	/**
-	 * SHA1加密
+	 * SHA1加密<br>
+	 * 例：<br>
+	 * 		SHA1加密：sha1().digest(data)<br>
+	 * 		SHA1加密并转为16进制字符串：sha1().digestHex(data)<br>
 	 * 
 	 * @return {@link Digester}
 	 */
 	public static Digester sha1() {
 		return new Digester(DigestAlgorithm.SHA1);
+	}
+	
+	/**
+	 * SHA1加密，生成16进制SHA1字符串<br>
+	 * @return SHA1字符串
+	 */
+	public static String sha1(String data) {
+		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
+	}
+	
+	/**
+	 * SHA1加密，生成16进制SHA1字符串<br>
+	 * @return SHA1字符串
+	 */
+	public static String sha1(InputStream data) {
+		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
+	}
+	
+	/**
+	 * SHA1加密文件，生成16进制SHA1字符串<br>
+	 * @return SHA1字符串
+	 */
+	public static String sha1(File dataFile) {
+		return new Digester(DigestAlgorithm.SHA1).digestHex(dataFile);
+	}
+	
+	/**
+	 * HmacMD5加密器<br>
+	 * 例：<br>
+	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>
+	 * 		HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
+	 * @param key 加密密钥
+	 * @return {@link HMac}
+	 */
+	public static HMac hmacMd5(byte[] key){
+		return new HMac(HmacAlgorithm.HmacMD5, key);
+	}
+	
+	/**
+	 * HmacMD5加密器，生成随机KEY<br>
+	 * 例：<br>
+	 * 		HmacMD5加密：hmacMd5().digest(data)<br>
+	 * 		HmacMD5加密并转为16进制字符串：hmacMd5().digestHex(data)<br>
+	 * @return {@link HMac}
+	 */
+	public static HMac hmacMd5(){
+		return new HMac(HmacAlgorithm.HmacMD5);
+	}
+	
+	/**
+	 * HmacSHA1加密器<br>
+	 * 例：<br>
+	 * 		HmacSHA1加密：hmacSha1(key).digest(data)<br>
+	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
+	 * @param key 加密密钥
+	 * @return {@link HMac}
+	 */
+	public static HMac hmacSha1(byte[] key){
+		return new HMac(HmacAlgorithm.HmacSHA1, key);
+	}
+	
+	/**
+	 * HmacSHA1加密器，生成随机KEY<br>
+	 * 例：<br>
+	 * 		HmacSHA1加密：hmacSha1().digest(data)<br>
+	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1().digestHex(data)<br>
+	 * @return {@link HMac}
+	 */
+	public static HMac hmacSha1(){
+		return new HMac(HmacAlgorithm.HmacSHA1);
 	}
 
 	// ------------------------------------------------------------------- UUID
