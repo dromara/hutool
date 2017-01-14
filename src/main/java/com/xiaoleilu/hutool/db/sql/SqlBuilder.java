@@ -474,6 +474,18 @@ public class SqlBuilder {
 		
 		return this;
 	}
+	
+	/**
+	 * 构建查询SQL
+	 * @param query {@link Query}
+	 * @return this
+	 */
+	public SqlBuilder query(Query query){
+		return this
+				.select(query.getFields())
+				.from(query.getTableNames())
+				.where(LogicalOperator.AND, query.getWhere());
+	}
 	//--------------------------------------------------------------- Builder end
 	
 	/**

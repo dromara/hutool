@@ -16,6 +16,8 @@ import com.xiaoleilu.hutool.db.handler.PageResultHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
+import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
@@ -248,6 +250,31 @@ public class SqlConnRunner{
 	 * 此方法不会关闭Connection
 	 * 
 	 * @param conn 数据库连接对象
+	 * @param query {@link Query}
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException
+	 */
+	public <T> T find(Connection conn, Query query, RsHandler<T> rsh) throws SQLException {
+		checkConn(conn);
+		Assert.notNull(query, "[query] is null !");
+		
+		PreparedStatement ps = null;
+		try {
+			ps = dialect.psForFind(conn, query);
+			return SqlExecutor.query(ps, rsh);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 查询<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
 	 * @param rsh 结果集处理对象
@@ -259,15 +286,7 @@ public class SqlConnRunner{
 		
 		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
 		query.setFields(fields);
-		PreparedStatement ps = null;
-		try {
-			ps = dialect.psForFind(conn, query);
-			return SqlExecutor.query(ps, rsh);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(ps);
-		}
+		return find(conn, query, rsh);
 	}
 	
 	/**
@@ -282,6 +301,73 @@ public class SqlConnRunner{
 	 */
 	public <T> T find(Connection conn, Entity where, RsHandler<T> rsh) throws SQLException {
 		return find(conn, null, where, rsh);
+	}
+	
+	/**
+	 * 查询数据列表，返回所有字段
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param where 条件实体类（包含表名）
+	 * @return 数据对象列表
+	 * @throws SQLException
+	 */
+	public List<Entity> findAll(Connection conn, Entity where) throws SQLException{
+		return find(conn, where, EntityListHandler.create());
+	}
+	
+	/**
+	 * 查询数据列表，返回所有字段
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param tableName 表名
+	 * @return 数据对象列表
+	 * @throws SQLException
+	 */
+	public List<Entity> findAll(Connection conn, String tableName) throws SQLException{
+		return findAll(conn, Entity.create(tableName));
+	}
+	
+	/**
+	 * 根据某个字段名条件查询数据列表，返回所有字段
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param tableName 表名
+	 * @param field 字段名
+	 * @param value 字段值
+	 * @return 数据对象列表
+	 * @throws SQLException
+	 */
+	public List<Entity> findBy(Connection conn, String tableName, String field, Object value) throws SQLException{
+		return findAll(conn, Entity.create(tableName).set(field, value));
+	}
+	
+	/**
+	 * 根据某个字段名条件查询数据列表，返回所有字段
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param tableName 表名
+	 * @param field 字段名
+	 * @param value 字段值
+	 * @param likeType {@link LikeType}
+	 * @return 数据对象列表
+	 * @throws SQLException
+	 */
+	public List<Entity> findLike(Connection conn, String tableName, String field, String value, LikeType likeType) throws SQLException{
+		return findAll(conn, Entity.create(tableName).set(field, DbUtil.buildLikeValue(value, likeType)));
+	}
+	
+	/**
+	 * 根据某个字段名条件查询数据列表，返回所有字段
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param tableName 表名
+	 * @param field 字段名
+	 * @param values 字段值列表
+	 * @return 数据对象列表
+	 * @throws SQLException
+	 */
+	public List<Entity> findIn(Connection conn, String tableName, String field, Object... values) throws SQLException{
+		return findAll(conn, Entity.create(tableName).set(field, values));
 	}
 	
 	/**
@@ -320,7 +406,6 @@ public class SqlConnRunner{
 	 * @throws SQLException
 	 */
 	public <T> T page(Connection conn, Collection<String> fields, Entity where, int pageNumber, int numPerPage, RsHandler<T> rsh) throws SQLException {
-		checkConn(conn);
 		return page(conn, fields, where, new Page(pageNumber, numPerPage), rsh);
 	}
 	

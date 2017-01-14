@@ -38,6 +38,16 @@ public class ArrayUtil {
 	public static boolean isEmpty(final long[] array) {
 		return array == null || array.length == 0;
 	}
+	
+	/**
+	 * 数组是否为空
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final int[] array) {
+		return array == null || array.length == 0;
+	}
 
 	/**
 	 * 数组是否为空
@@ -810,5 +820,244 @@ public class ArrayUtil {
 			}
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(long[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (long item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(int[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (int item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(short[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (short item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(char[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (char item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(byte[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (byte item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(boolean[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (boolean item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(float[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (float item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(double[] array, String conjunction) {
+		if(null == array){
+			return null;
+		}
+		
+		final StringBuilder sb = new StringBuilder();
+		boolean isFirst = true;
+		for (double item : array) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				sb.append(conjunction);
+			}
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @return 连接后的字符串
+	 */
+	public static String join(Object array, String conjunction) {
+		if (isArray(array)) {
+			final Class<?> componentType = array.getClass().getComponentType();
+			if(componentType.isPrimitive()){
+				final String componentTypeName = componentType.getName();
+				switch (componentTypeName) {
+					case "long":
+						return join((long[]) array, conjunction);
+					case "int":
+						return join((int[]) array, conjunction);
+					case "short":
+						return join((short[]) array, conjunction);
+					case "char":
+						return join((char[]) array, conjunction);
+					case "byte":
+						return join((byte[]) array, conjunction);
+					case "boolean":
+						return join((boolean[]) array, conjunction);
+					case "float":
+						return join((float[]) array, conjunction);
+					case "double":
+						return join((double[]) array, conjunction);
+					default:
+						throw new UtilException("Unknown primitive type: [{}]", componentTypeName);
+				}
+			}else{
+				return join((Object[])array, conjunction);
+			}
+		}
+		throw new UtilException(StrUtil.format("[{}] is not a Array!", array.getClass()));
 	}
 }

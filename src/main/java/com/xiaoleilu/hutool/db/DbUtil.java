@@ -25,6 +25,7 @@ import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Condition;
+import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
@@ -454,6 +455,31 @@ public class DbUtil {
 		}
 		
 		return conditions;
+	}
+	
+	/**
+	 * 创建LIKE语句中的值
+	 * @param value 被查找值
+	 * @param likeType LIKE值类型 {@link LikeType}
+	 * @return 拼接后的like值
+	 */
+	public static String buildLikeValue(String value, LikeType likeType){
+		StringBuilder likeValue = StrUtil.builder("LIKE ");
+		switch (likeType) {
+			case StartWith:
+				likeValue.append('%').append(value);
+				break;
+			case EndWith:
+				likeValue.append(value).append('%');
+				break;
+			case Contains:
+				likeValue.append('%').append(value).append('%');
+				break;
+
+			default:
+				break;
+		}
+		return likeValue.toString();
 	}
 	
 	/**

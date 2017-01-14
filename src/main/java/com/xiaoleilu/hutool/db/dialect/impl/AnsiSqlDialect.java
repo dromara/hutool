@@ -96,11 +96,7 @@ public class AnsiSqlDialect implements Dialect {
 			throw new NullPointerException("query is null !");
 		}
 		
-		final SqlBuilder find = SqlBuilder.create(wrapper)
-			.select(query.getFields())
-			.from(query.getTableNames())
-			.where(LogicalOperator.AND, query.getWhere());
-
+		final SqlBuilder find = SqlBuilder.create(wrapper).query(query);
 		final PreparedStatement ps = conn.prepareStatement(find.build());
 		DbUtil.fillParams(ps, find.getParamValues());
 		return ps;

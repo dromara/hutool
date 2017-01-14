@@ -4,7 +4,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 结果集处理接口
+ * 结果集处理接口<br>
+ * 默认实现有：
+ * @see EntityHandler
+ * @see EntityListHandler
+ * @see EntitySetHandler
+ * @see EntitySetHandler
+ * @see NumberHandler
+ * @see PageResultHandler
+ * 
  * @author Luxiaolei
  *
  */

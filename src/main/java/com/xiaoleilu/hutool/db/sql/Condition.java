@@ -1,8 +1,12 @@
 package com.xiaoleilu.hutool.db.sql;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
+import com.xiaoleilu.hutool.db.DbUtil;
+import com.xiaoleilu.hutool.util.ArrayUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -12,9 +16,26 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class Condition implements Cloneable{
 	
-	private static final List<String> OPERATORS = Arrays.asList("<>", "<=", "<", ">=", ">", "=", "!=", "IN");
+	/**
+	 * SQL中 WHERE 语句查询方式<br>
+	 * @author Looly
+	 *
+	 */
+	public static enum LikeType {
+		/** 以给定值开头，拼接后的SQL "value%" */
+		StartWith, 
+		/** 以给定值开头，拼接后的SQL "%value" */
+		EndWith, 
+		/** 包含给定值，拼接后的SQL "%value%" */
+		Contains
+	}
 	
 	private static final String OPERATOR_LIKE = "LIKE";
+	private static final String OPERATOR_IN = "IN";
+	private static final String OPERATOR_IS = "IS";
+	private static final List<String> OPERATORS = Arrays.asList("<>", "<=", "<", ">=", ">", "=", "!=", OPERATOR_IN);
+	
+	private static final String VALUE_NULL = "NULL";
 	
 	/** 字段 */
 	private String field;
@@ -70,6 +91,18 @@ public class Condition implements Cloneable{
 		this.field = field;
 		this.operator = operator;
 		this.value = value;
+	}
+	
+	/**
+	 * 构造
+	 * @param field 字段
+	 * @param value 值
+	 * @param likeType {@link LikeType}
+	 */
+	public Condition(String field, String value, LikeType likeType) {
+		this.field = field;
+		this.operator = OPERATOR_LIKE;
+		this.value = DbUtil.buildLikeValue(value, likeType);
 	}
 	//--------------------------------------------------------------- Constructor start
 	
@@ -171,8 +204,19 @@ public class Condition implements Cloneable{
 	private void parseValue() {
 		//当值无时，视为空判定
 		if(null == this.value){
-			this.operator = "IS";
-			this.value = "NULL";
+			this.operator = OPERATOR_IS;
+			this.value = VALUE_NULL;
+			return;
+		}
+		
+		//对数组和集合值按照 IN 处理
+		if(this.value instanceof Collection){
+			this.operator = OPERATOR_IN;
+			this.value = CollectionUtil.join((Collection<?>)this.value, StrUtil.COMMA);
+			return;
+		}else if(ArrayUtil.isArray(this.value)){
+			this.operator = OPERATOR_IN;
+			this.value = ArrayUtil.join(this.value, StrUtil.COMMA);
 			return;
 		}
 		
@@ -183,16 +227,17 @@ public class Condition implements Cloneable{
 		
 		String valueStr = ((String)value);
 		if(StrUtil.isBlank(valueStr)){
+			//空字段不做处理
 			return;
 		}
 		
 		valueStr = valueStr.trim();
-		List<String> strs = StrUtil.split(valueStr, ' ', 2);
+		List<String> strs = StrUtil.split(valueStr, StrUtil.C_SPACE, 2);
 		if(strs.size() < 2){
 			return;
 		}
 		
-		//处理常用符号
+		//处理常用符号和IN
 		final String firstPart = strs.get(0).trim().toUpperCase();
 		if(OPERATORS.contains(firstPart)){
 			this.operator = firstPart;

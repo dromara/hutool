@@ -793,7 +793,7 @@ public class DateUtil {
 
 	/**
 	 * 计时器<br>
-	 * 计算某个过程话费的时间，精确到毫秒
+	 * 计算某个过程花费的时间，精确到毫秒
 	 * 
 	 * @return Timer
 	 */

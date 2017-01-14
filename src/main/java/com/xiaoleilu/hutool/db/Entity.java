@@ -177,13 +177,13 @@ public class Entity extends Dict{
 	}
 	
 	@Override
-	public Entity set(String attr, Object value) {
-		return (Entity) super.set(attr, value);
+	public Entity set(String field, Object value) {
+		return (Entity) super.set(field, value);
 	}
 	
 	@Override
-	public Entity setIgnoreNull(String attr, Object value) {
-		return (Entity) super.setIgnoreNull(attr, value);
+	public Entity setIgnoreNull(String field, Object value) {
+		return (Entity) super.setIgnoreNull(field, value);
 	}
 	//-------------------------------------------------------------------- Put and Set end
 	
@@ -191,16 +191,16 @@ public class Entity extends Dict{
 	
 	/**
 	 * 获得Clob类型结果
-	 * @param attr 参数
+	 * @param field 参数
 	 * @return Clob
 	 */
-	public Clob getClob(String attr){
-		return get(attr, null);
+	public Clob getClob(String field){
+		return get(field, null);
 	}
 	
 	@Override
-	public Time getTime(String attr) {
-		Object obj = get(attr);
+	public Time getTime(String field) {
+		Object obj = get(field);
 		Time result = null;
 		if(null != obj){
 			try {
@@ -214,8 +214,8 @@ public class Entity extends Dict{
 	}
 	
 	@Override
-	public Date getDate(String attr) {
-		Object obj = get(attr);
+	public Date getDate(String field) {
+		Object obj = get(field);
 		Date result = null;
 		if(null != obj){
 			try {
@@ -229,8 +229,8 @@ public class Entity extends Dict{
 	}
 	
 	@Override
-	public Timestamp getTimestamp(String attr) {
-		Object obj = get(attr);
+	public Timestamp getTimestamp(String field) {
+		Object obj = get(field);
 		Timestamp result = null;
 		if(null != obj){
 			try {
@@ -244,8 +244,8 @@ public class Entity extends Dict{
 	}
 	
 	@Override
-	public String getStr(String attr) {
-		final Object obj = get(attr);
+	public String getStr(String field) {
+		final Object obj = get(field);
 		if(obj instanceof Clob){
 			Clob clob = (Clob)obj;
 			Reader reader = null;
@@ -261,7 +261,7 @@ public class Entity extends Dict{
 			final RowId rowId = (RowId)obj;
 			return StrUtil.str(rowId.getBytes(), CharsetUtil.UTF_8);
 		}
-		return super.getStr(attr);
+		return super.getStr(field);
 	}
 	
 	/**
@@ -274,18 +274,18 @@ public class Entity extends Dict{
 	
 	/**
 	 * 获得rowid
-	 * @param attr rowid属性名
+	 * @param field rowid属性名
 	 * @return RowId
 	 */
-	public RowId getRowId(String attr){
-		Object obj = this.get(attr);
+	public RowId getRowId(String field){
+		Object obj = this.get(field);
 		if(null == obj){
 			return null;
 		}
 		if(obj instanceof RowId){
 			return (RowId)obj;
 		}
-		throw new DbRuntimeException("Value with name [{}] is not a rowid!", attr);
+		throw new DbRuntimeException("Value of field [{}] is not a rowid!", field);
 	}
 	
 	//-------------------------------------------------------------------- Get end
