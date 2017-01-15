@@ -17,7 +17,6 @@ import com.xiaoleilu.hutool.db.dialect.DialectFactory;
  * 
  */
 public class SqlRunner extends AbstractSqlRunner{
-	protected SqlConnRunner connRunner;
 	private DataSource ds;
 	
 	/**
@@ -65,7 +64,7 @@ public class SqlRunner extends AbstractSqlRunner{
 	 * @param dialect 方言
 	 */
 	public SqlRunner(DataSource ds, Dialect dialect) {
-		connRunner = new SqlConnRunner(dialect);
+		this.runner = new SqlConnRunner(dialect);
 		this.ds = ds;
 	}
 	
@@ -75,17 +74,17 @@ public class SqlRunner extends AbstractSqlRunner{
 	 * @param driverClassName 数据库连接驱动类名，用于识别方言
 	 */
 	public SqlRunner(DataSource ds, String driverClassName) {
-		connRunner = new SqlConnRunner(driverClassName);
+		this.runner = new SqlConnRunner(driverClassName);
 		this.ds = ds;
 	}
 	//------------------------------------------------------- Constructor end
 
 	//---------------------------------------------------------------------------- Getters and Setters start
 	public SqlConnRunner getRunner() {
-		return connRunner;
+		return this.runner;
 	}
 	public void setRunner(SqlConnRunner runner) {
-		this.connRunner = runner;
+		this.runner = runner;
 	}
 	//---------------------------------------------------------------------------- Getters and Setters end
 	

@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -20,11 +20,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class Session extends AbstractSqlRunner implements Closeable{
-	private final static Log log = StaticLog.get();
+	private final static Log log = LogFactory.get();
 	
 	private Connection conn = null;
-	private SqlConnRunner runner = null;
-	
 	private Boolean isSupportTransaction = null;
 	
 	/**

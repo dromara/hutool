@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.db.sql.SqlExecutor;
  * 
  */
 public abstract class AbstractSqlRunner{
-	protected SqlConnRunner connRunner;
+	protected SqlConnRunner runner;
 	
 	//------------------------------------------------------- Constructor start
 	//------------------------------------------------------- Constructor end
@@ -131,7 +131,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.insert(conn, record);
+			return runner.insert(conn, record);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -149,7 +149,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.insert(conn, records);
+			return runner.insert(conn, records);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -167,7 +167,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.insertForGeneratedKeys(conn, record);
+			return runner.insertForGeneratedKeys(conn, record);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -185,7 +185,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.insertForGeneratedKey(conn, record);
+			return runner.insertForGeneratedKey(conn, record);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -215,7 +215,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.del(conn, where);
+			return runner.del(conn, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -233,7 +233,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.update(conn, record, where);
+			return runner.update(conn, record, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -254,7 +254,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.find(conn, fields, where, rsh);
+			return runner.find(conn, fields, where, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -333,7 +333,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.count(conn, where);
+			return runner.count(conn, where);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -356,7 +356,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.page(conn, fields, where, page, numPerPage, rsh);
+			return runner.page(conn, fields, where, page, numPerPage, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -378,7 +378,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.page(conn, fields, where, page, rsh);
+			return runner.page(conn, fields, where, page, rsh);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -400,7 +400,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.page(conn, fields, where, page, numPerPage);
+			return runner.page(conn, fields, where, page, numPerPage);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -421,7 +421,7 @@ public abstract class AbstractSqlRunner{
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			return connRunner.page(conn, fields, where, page);
+			return runner.page(conn, fields, where, page);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -444,10 +444,10 @@ public abstract class AbstractSqlRunner{
 	
 	//---------------------------------------------------------------------------- Getters and Setters start
 	public SqlConnRunner getRunner() {
-		return connRunner;
+		return runner;
 	}
 	public void setRunner(SqlConnRunner runner) {
-		this.connRunner = runner;
+		this.runner = runner;
 	}
 	//---------------------------------------------------------------------------- Getters and Setters end
 	
