@@ -546,6 +546,27 @@ public class CollectionUtil {
 	}
 	
 	/**
+	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
+	 * @param collection 集合
+	 * @param size 每个段的长度
+	 * @return 分段列表
+	 */
+	public static <T> List<List<T>> split(Collection<T> collection, int size){
+		final List<List<T>> result = new ArrayList<>();
+		
+		ArrayList<T> subList = new ArrayList<>(size);
+		for (T t : collection) {
+			if(subList.size() > size){
+				result.add(subList);
+				subList = new ArrayList<>(size);
+			}
+			subList.add(t);
+		}
+		result.add(subList);
+		return result;
+	}
+	
+	/**
 	 * 过滤<br>
 	 * 过滤会改变原集合的内容
 	 * 

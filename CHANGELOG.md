@@ -6,6 +6,7 @@
 * SecureUtil对常用算法静态函数化封装
 * 丰富Sql查询种类
 * 对db中的Session和SqlRunner中的方法抽象到AbstractRunner中
+* 增加CollectionUtil.split方法
 
 ### Bug修复
 
