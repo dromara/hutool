@@ -356,20 +356,70 @@ public class FileUtil {
 	/**
 	 * 指定路径文件最后修改时间
 	 * 
-	 * @param path 路径
+	 * @param path 绝对路径
 	 * @return 最后修改时间
 	 */
 	public static Date lastModifiedTime(String path) {
-		File file = new File(path);
-		if (!exist(file)) {
-			return null;
+		return lastModifiedTime(new File(path));
+	}
+	
+	/**
+	 * 计算目录或文件的总大小<br>
+	 * 当给定对象为文件时，直接调用 {@link File#length()}<br>
+	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
+	 * @param file 目录或文件
+	 * @return 总大小
+	 */
+	public static long size(File file){
+		Assert.notNull(file, "file argument is null !");
+		if(false == file.exists()){
+			throw new IllegalArgumentException(StrUtil.format("File [{}] not exist !", file.getAbsolutePath()));
 		}
-
-		return new Date(file.lastModified());
+		
+		if(file.isDirectory()){
+			long size = 0L;
+			File[] subFiles = file.listFiles();
+			if(ArrayUtil.isEmpty(subFiles)){
+				return 0L;//empty directory
+			}
+			for (int i = 0; i < subFiles.length; i++) {
+				size += size(subFiles[i]);
+			}
+			return size;
+		}else{
+			return file.length();
+		}
+	}
+	
+	/**
+	 * 给定文件或目录的最后修改时间是否晚于给定时间
+	 * @param file 文件或目录
+	 * @param reference 参照文件
+	 * @return 是否晚于给定时间
+	 */
+	public static boolean newerThan(File file, File reference){
+		if(null == file || false == reference.exists()){
+			return true;//文件一定比一个不存在的文件新
+		}
+		return newerThan(file, reference.lastModified());
+	}
+	
+	/**
+	 * 给定文件或目录的最后修改时间是否晚于给定时间
+	 * @param file 文件或目录
+	 * @param timeMillis 做为对比的时间
+	 * @return 是否晚于给定时间
+	 */
+	public static boolean newerThan(File file, long timeMillis){
+		if(null == file || false == file.exists()){
+			return false;//不存在的文件一定比任何时间旧
+		}
+		return file.lastModified() > timeMillis;
 	}
 
 	/**
-	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 * 
 	 * @param fullFilePath 文件的全路径，使用POSIX风格
 	 * @return 文件，若路径为null，返回null
@@ -383,26 +433,31 @@ public class FileUtil {
 	}
 
 	/**
-	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 * 
 	 * @param file 文件对象
 	 * @return 文件，若路径为null，返回null
 	 * @throws IOException
 	 */
-	public static File touch(File file) throws IOException {
+	public static File touch(File file) {
 		if (null == file) {
 			return null;
 		}
-
 		if (false == file.exists()) {
 			mkParentDirs(file);
-			file.createNewFile();
+			try {
+				file.createNewFile();
+			} catch (Exception e) {
+				throw new IORuntimeException(e);
+			}
 		}
 		return file;
 	}
 	
 	/**
-	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 * 
 	 * @param parent 父文件对象
 	 * @param path 文件路径
@@ -414,7 +469,8 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件
+	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 * 
 	 * @param parent 父文件对象
 	 * @param path 文件路径
@@ -451,7 +507,7 @@ public class FileUtil {
 		}
 		return mkParentDirs(file(path));
 	}
-
+	
 	/**
 	 * 删除文件或者文件夹
 	 * 
@@ -489,7 +545,8 @@ public class FileUtil {
 	}
 
 	/**
-	 * 创建文件夹，如果存在直接返回此文件夹
+	 * 创建文件夹，如果存在直接返回此文件夹<br>
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
 	 * 
 	 * @param dirPath 文件夹路径，使用POSIX格式，无论哪个平台
 	 * @return 创建的目录
@@ -498,7 +555,21 @@ public class FileUtil {
 		if (dirPath == null) {
 			return null;
 		}
-		File dir = file(dirPath);
+		final File dir = file(dirPath);
+		return mkdir(dir);
+	}
+	
+	/**
+	 * 创建文件夹，会递归自动创建其不存在的父文件夹，如果存在直接返回此文件夹<br>
+	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
+	 * 
+	 * @param dir 目录
+	 * @return 创建的目录
+	 */
+	public static File mkdir(File dir) {
+		if (dir == null) {
+			return null;
+		}
 		if (false == dir.exists()) {
 			dir.mkdirs();
 		}
@@ -564,7 +635,7 @@ public class FileUtil {
 	 * 如果目标文件为目录，则将源文件以相同文件名拷贝到目标目录
 	 * 
 	 * @param srcPath 源文件或目录
-	 * @param destPath 目标文件或目录
+	 * @param destPath 目标文件或目录，目标不存在会自动创建（目录、文件都创建）
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标目录或文件
 	 * @throws IOException
@@ -581,7 +652,7 @@ public class FileUtil {
 	 * 3、src为文件，dest为目录，将src拷贝到dest目录下<br>
 	 * 
 	 * @param src 源文件
-	 * @param dest 目标文件或目录
+	 * @param dest 目标文件或目录，目标不存在会自动创建（目录、文件都创建）
 	 * @param isOverride 是否覆盖目标文件
 	 * @return 目标目录或文件
 	 * @throws IOException
@@ -601,7 +672,7 @@ public class FileUtil {
 				throw new IOException(StrUtil.format("Src [{}] is a directory but Dest [{}] is a file!", src.getPath(), dest.getPath()));
 			}
 
-			if (!dest.exists()) {
+			if (false == dest.exists()) {
 				dest.mkdirs();
 			}
 			String files[] = src.list();
@@ -625,6 +696,7 @@ public class FileUtil {
 				return dest;
 			}
 		} else {
+			//目标不存在，默认做为文件创建
 			touch(dest);
 		}
 
@@ -638,6 +710,7 @@ public class FileUtil {
 			IoUtil.close(input);
 		}
 
+		//验证
 		if (src.length() != dest.length()) {
 			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
 		}
@@ -1030,6 +1103,17 @@ public class FileUtil {
 	 */
 	public static BufferedInputStream getInputStream(String path) throws FileNotFoundException {
 		return getInputStream(file(path));
+	}
+	
+	/**
+	 * 获得BOM输入流，用于处理带BOM头的文件
+	 * 
+	 * @param file 文件
+	 * @return 输入流
+	 * @throws FileNotFoundException
+	 */
+	public static BOMInputStream getBOMInputStream(File file) throws FileNotFoundException {
+		return new BOMInputStream(new FileInputStream(file));
 	}
 
 	/**

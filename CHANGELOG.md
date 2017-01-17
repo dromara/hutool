@@ -7,6 +7,7 @@
 * 丰富Sql查询种类
 * 对db中的Session和SqlRunner中的方法抽象到AbstractRunner中
 * 增加CollectionUtil.split方法
+* 增加 BOMInputStream.java用于读取带BOM头的文件，同时FileUtil提供getBOMInputStream方法
 
 ### Bug修复
 

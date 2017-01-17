@@ -15,13 +15,14 @@ public class FileUtilDemo {
 	public static void main(String[] args) throws IOException {
 		
 		File file = FileUtil.file("config/demo.set");
-		System.out.println(file.getAbsolutePath());
+		Console.log(file.getAbsolutePath());
 		
 		String absolutePath = FileUtil.getAbsolutePath("config/demo.set");
-		System.out.println(absolutePath);
+		Console.log(absolutePath);
 		
 		//复制文件
-//		FileUtil.copy("D:\\Java\\maven\\README.txt", "D:\\maven", true);
+		FileUtil.copy("D:/a/a.txt", "d:/a/a/a", true);
+		Console.log("Copy OK");
 		
 		//复制目录
 //		FileUtil.copy("D:\\Java\\maven", "D:\\aaa.txt", true);
@@ -31,8 +32,8 @@ public class FileUtilDemo {
 		Console.log(result);
 		
 		Long a = 44356645566006L;
-		System.out.println(FileUtil.readableFileSize(a));
+		Console.log(FileUtil.readableFileSize(a));
 		
-		System.out.println("OK");
+		Console.log("OK");
 	}
 }
