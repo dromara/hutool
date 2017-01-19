@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -416,6 +417,15 @@ public class CollectionUtil {
 	public static <T, K> HashMap<T, K> newHashMap() {
 		return new HashMap<T, K>();
 	}
+	
+	/**
+	 * 新建一个HashMap
+	 * @param isSorted Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+	 * @return HashMap对象
+	 */
+	public static <T, K> HashMap<T, K> newHashMap(boolean isSorted) {
+		return isSorted ? new LinkedHashMap<T, K>() : new HashMap<T, K>();
+	}
 
 	/**
 	 * 新建一个HashMap
@@ -441,6 +451,23 @@ public class CollectionUtil {
 		}
 		return set;
 	}
+	
+	/**
+	 * 新建一个HashSet
+	 * 
+	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回 {@link HashSet}
+	 * @param ts 元素数组
+	 * @return HashSet对象
+	 */
+	@SafeVarargs
+	public static <T> HashSet<T> newHashSet(boolean isSorted, T... ts) {
+		int initialCapacity = Math.max((int) (ts.length/.75f) + 1, 16);
+		HashSet<T> set = isSorted ? new LinkedHashSet<T>(initialCapacity) : new HashSet<T>(initialCapacity);
+		for (T t : ts) {
+			set.add(t);
+		}
+		return set;
+	}
 
 	/**
 	 * 新建一个HashSet
@@ -448,8 +475,16 @@ public class CollectionUtil {
 	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
-		HashSet<T> set = new HashSet<T>(collection);
-		return set;
+		return new HashSet<T>(collection);
+	}
+	
+	/**
+	 * 新建一个HashSet
+	 * 
+	 * @return HashSet对象
+	 */
+	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<T> collection) {
+		return isSorted ? new LinkedHashSet<T>() : new HashSet<T>(collection);
 	}
 
 	/**

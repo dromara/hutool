@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.demo;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.StandardCopyOption;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.lang.Console;
@@ -20,8 +21,12 @@ public class FileUtilDemo {
 		String absolutePath = FileUtil.getAbsolutePath("config/demo.set");
 		Console.log(absolutePath);
 		
+		//复制文件或者目录
+		FileUtil.copy("D:/a/a.txt", "d:/b", false);
+		Console.log("Copy OK");
+		
 		//复制文件
-		FileUtil.copy("D:/a/a.txt", "d:/a/a/a", true);
+		FileUtil.copyFile("D:/a/a.txt", "d:/b", StandardCopyOption.REPLACE_EXISTING);
 		Console.log("Copy OK");
 		
 		//复制目录

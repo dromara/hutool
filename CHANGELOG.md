@@ -8,6 +8,9 @@
 * 对db中的Session和SqlRunner中的方法抽象到AbstractRunner中
 * 增加CollectionUtil.split方法
 * 增加 BOMInputStream.java用于读取带BOM头的文件，同时FileUtil提供getBOMInputStream方法
+* 扩充CollectionUtil
+* 扩充FileUtil，增加针对JDK7新特性的文件拷贝方法
+* 对File的读写抽象为FileReader和FileWriter
 
 ### Bug修复
 

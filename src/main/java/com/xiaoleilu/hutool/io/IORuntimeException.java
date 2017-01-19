@@ -29,4 +29,17 @@ public class IORuntimeException extends RuntimeException{
 	public IORuntimeException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
+	
+	/**
+	 * 导致这个异常的异常是否是指定类型的异常
+	 * @param throwable 异常
+	 * @return 是否为指定类型异常
+	 */
+	public boolean causeInstanceOf(Class<? extends Throwable> clazz){
+		Throwable cause = this.getCause();
+		if(null != cause && clazz.isInstance(cause)){
+			return true;
+		}
+		return false;
+	}
 }

@@ -17,9 +17,12 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +33,9 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.xiaoleilu.hutool.io.file.FileReader;
+import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
+import com.xiaoleilu.hutool.io.file.FileWriter;
 import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.json.JSONArray;
 import com.xiaoleilu.hutool.json.JSONObject;
@@ -425,7 +431,7 @@ public class FileUtil {
 	 * @return 文件，若路径为null，返回null
 	 * @throws IOException
 	 */
-	public static File touch(String fullFilePath) throws IOException {
+	public static File touch(String fullFilePath) throws IORuntimeException {
 		if (fullFilePath == null) {
 			return null;
 		}
@@ -509,7 +515,10 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 删除文件或者文件夹
+	 * 删除文件或者文件夹<br>
+	 * 路径如果为相对路径，会转换为ClassPath路径！
+	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
+	 * 某个文件删除失败会终止删除操作
 	 * 
 	 * @param fullFileOrDirPath 文件或者目录的路径
 	 * @return 成功与否
@@ -520,7 +529,9 @@ public class FileUtil {
 	}
 
 	/**
-	 * 删除文件或者文件夹
+	 * 删除文件或者文件夹<br>
+	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
+	 * 某个文件删除失败会终止删除操作
 	 * 
 	 * @param file 文件对象
 	 * @return 成功与否
@@ -629,6 +640,60 @@ public class FileUtil {
 			}
 		}
 	}
+	
+	/**
+	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * @param src 源文件路径
+	 * @param dest 目标文件或目录路径，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return File
+	 * @throws IOException
+	 */
+	public static File copyFile(String src, String dest, StandardCopyOption... options) throws IOException{
+		Assert.notBlank(src, "Source File path is blank !");
+		Assert.notNull(src, "Destination File path is null !");
+		return copyFile(Paths.get(src), Paths.get(dest), options).toFile();
+	}
+	
+	/**
+	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * @param src 源文件
+	 * @param dest 目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return File
+	 * @throws IOException
+	 */
+	public static File copyFile(File src, File dest, StandardCopyOption... options) throws IOException{
+		// check
+		Assert.notNull(src, "Source File is null !");
+		if (false == src.exists()) {
+			throw new FileNotFoundException("File not exist: " + src);
+		}
+		Assert.notNull(dest, "Destination File or directiory is null !");
+		if (equals(src, dest)) {
+			throw new IOException("Files '" + src + "' and '" + dest + "' are equal");
+		}
+		
+		Path srcPath = src.toPath();
+		Path destPath = dest.isDirectory() ? dest.toPath().resolve(srcPath.getFileName()) : dest.toPath();
+		return Files.copy(srcPath, destPath, options).toFile();
+	}
+	
+	/**
+	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * @param src 源文件路径
+	 * @param dest 目标文件或目录，如果为目录使用与源文件相同的文件名
+	 * @param options {@link StandardCopyOption}
+	 * @return Path
+	 * @throws IOException
+	 */
+	public static Path copyFile(Path src, Path dest, StandardCopyOption... options) throws IOException{
+		Assert.notNull(src, "Source File is null !");
+		Assert.notNull(dest, "Destination File or directiory is null !");
+		
+		Path destPath = dest.toFile().isDirectory() ? dest.resolve(src.getFileName()) : dest;
+		return Files.copy(src, destPath, options);
+	}
 
 	/**
 	 * 复制文件或目录<br>
@@ -659,47 +724,68 @@ public class FileUtil {
 	 */
 	public static File copy(File src, File dest, boolean isOverride) throws IOException {
 		// check
-		if (!src.exists()) {
+		Assert.notNull(src, "Source File is null !");
+		if (false == src.exists()) {
 			throw new FileNotFoundException("File not exist: " + src);
 		}
+		Assert.notNull(dest, "Destination File or directiory is null !");
 		if (equals(src, dest)) {
 			throw new IOException("Files '" + src + "' and '" + dest + "' are equal");
 		}
 
-		// 复制目录
-		if (src.isDirectory()) {
-			if (dest.isFile()) {
-				throw new IOException(StrUtil.format("Src [{}] is a directory but Dest [{}] is a file!", src.getPath(), dest.getPath()));
-			}
-
-			if (false == dest.exists()) {
-				dest.mkdirs();
-			}
-			String files[] = src.list();
-			for (String file : files) {
-				File srcFile = new File(src, file);
-				File destFile = new File(dest, file);
-				// 递归复制
-				copy(srcFile, destFile, isOverride);
-			}
-			return dest;
+		if (src.isDirectory()) {//复制目录
+			internalCopyDir(src, dest, isOverride);
+		}else{//复制文件
+			internalCopyFile(src, dest, isOverride);
+		}
+		return dest;
+	}
+	
+	/**
+	 * 拷贝目录，只用于内部，不做任何安全检查
+	 * @param src 源目录
+	 * @param dest 目标目录
+	 * @param isOverride 是否覆盖
+	 * @throws IOException
+	 */
+	private static void internalCopyDir(File src, File dest, boolean isOverride) throws IOException{
+		if (false == dest.exists()) {
+			dest.mkdirs();
+		}else if(dest.isFile()) {
+			throw new IOException(StrUtil.format("Src [{}] is a directory but dest [{}] is a file!", src.getPath(), dest.getPath()));
 		}
 
-		// 检查目标
-		if (dest.exists()) {
-			if (dest.isDirectory()) {
-				dest = new File(dest, src.getName());
+		final String files[] = src.list();
+		for (String file : files) {
+			File srcFile = new File(src, file);
+			File destFile = new File(dest, file);
+			// 递归复制
+			if(src.isDirectory()){
+				internalCopyDir(srcFile, destFile, isOverride);
+			}else{
+				internalCopyFile(srcFile, destFile, isOverride);
 			}
-			if (false == isOverride) {
-				// 不覆盖，直接跳过
-				StaticLog.debug("File [{}] already exist", dest);
-				return dest;
-			}
-		} else {
-			//目标不存在，默认做为文件创建
+		}
+	}
+	
+	/**
+	 * 拷贝文件，只用于内部，不做任何安全检查
+	 * @param src 源文件，必须为文件
+	 * @param dest 目标文件，必须为文件
+	 * @param isOverride 是否覆盖已有文件
+	 * @throws IOException
+	 */
+	private static void internalCopyFile(File src, File dest, boolean isOverride) throws IOException{
+		//copy
+		if(false == dest.exists()){//目标不存在，默认做为文件创建
 			touch(dest);
+		}else if(dest.isDirectory()){//目标为目录，则在这个目录下创建同名文件
+			dest = new File(dest, src.getName());
+		}else if(false == isOverride){//如果已经存在目标文件，切为不覆盖模式，跳过之
+			StaticLog.debug("File [{}] already exist, ignore it.", dest);
+			return;
 		}
-
+		
 		// do copy file
 		FileInputStream input = new FileInputStream(src);
 		FileOutputStream output = new FileOutputStream(dest);
@@ -714,8 +800,6 @@ public class FileUtil {
 		if (src.length() != dest.length()) {
 			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
 		}
-
-		return dest;
 	}
 
 	/**
@@ -1194,32 +1278,10 @@ public class FileUtil {
 	 * 
 	 * @param file 文件
 	 * @return 字节码
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static byte[] readBytes(File file) throws IOException {
-		// check
-		if (!file.exists()) {
-			throw new FileNotFoundException("File not exist: " + file);
-		}
-		if (!file.isFile()) {
-			throw new IOException("Not a file:" + file);
-		}
-
-		long len = file.length();
-		if (len >= Integer.MAX_VALUE) {
-			throw new IOException("File is larger then max array size");
-		}
-
-		byte[] bytes = new byte[(int) len];
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(file);
-			in.read(bytes);
-		} finally {
-			IoUtil.close(in);
-		}
-
-		return bytes;
+	public static byte[] readBytes(File file) throws IORuntimeException {
+		return FileReader.create(file).readBytes();
 	}
 
 	/**
@@ -1238,9 +1300,9 @@ public class FileUtil {
 	 * 
 	 * @param path 文件路径
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static String readUtf8String(String path) throws IOException {
+	public static String readUtf8String(String path) throws IORuntimeException {
 		return readString(path, CharsetUtil.CHARSET_UTF_8);
 	}
 
@@ -1250,10 +1312,10 @@ public class FileUtil {
 	 * @param file 文件
 	 * @param charsetName 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static String readString(File file, String charsetName) throws IOException {
-		return new String(readBytes(file), charsetName);
+	public static String readString(File file, String charsetName) throws IORuntimeException {
+		return new String(readBytes(file), CharsetUtil.charset(charsetName));
 	}
 
 	/**
@@ -1262,9 +1324,9 @@ public class FileUtil {
 	 * @param file 文件
 	 * @param charset 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static String readString(File file, Charset charset) throws IOException {
+	public static String readString(File file, Charset charset) throws IORuntimeException {
 		return new String(readBytes(file), charset);
 	}
 
@@ -1274,9 +1336,9 @@ public class FileUtil {
 	 * @param path 文件路径
 	 * @param charsetName 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static String readString(String path, String charsetName) throws IOException {
+	public static String readString(String path, String charsetName) throws IORuntimeException {
 		return readString(file(path), charsetName);
 	}
 
@@ -1286,9 +1348,9 @@ public class FileUtil {
 	 * @param path 文件路径
 	 * @param charset 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static String readString(String path, Charset charset) throws IOException {
+	public static String readString(String path, Charset charset) throws IORuntimeException {
 		return readString(file(path), charset);
 	}
 
@@ -1300,7 +1362,7 @@ public class FileUtil {
 	 * @return 内容
 	 * @throws IOException
 	 */
-	public static String readString(URL url, String charset) throws IOException {
+	public static String readString(URL url, String charset) throws IORuntimeException {
 		if (url == null) {
 			throw new RuntimeException("Empty url provided!");
 		}
@@ -1309,6 +1371,8 @@ public class FileUtil {
 		try {
 			in = url.openStream();
 			return IoUtil.read(in, charset);
+		}catch (IOException e) {
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
 		}
@@ -1321,9 +1385,9 @@ public class FileUtil {
 	 * @param charset 字符集
 	 * @param collection 集合
 	 * @return 文件中的每行内容的集合
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static <T extends Collection<String>> T readLines(String path, String charset, T collection) throws IOException {
+	public static <T extends Collection<String>> T readLines(String path, String charset, T collection) throws IORuntimeException {
 		return readLines(file(path), charset, collection);
 	}
 
@@ -1334,22 +1398,10 @@ public class FileUtil {
 	 * @param charset 字符集
 	 * @param collection 集合
 	 * @return 文件中的每行内容的集合
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static <T extends Collection<String>> T readLines(File file, String charset, T collection) throws IOException {
-		BufferedReader reader = null;
-		try {
-			reader = getReader(file, charset);
-			String line;
-			while (true) {
-				line = reader.readLine();
-				if (line == null) break;
-				collection.add(line);
-			}
-			return collection;
-		} finally {
-			IoUtil.close(reader);
-		}
+	public static <T extends Collection<String>> T readLines(File file, String charset, T collection) throws IORuntimeException {
+		return FileReader.create(file, CharsetUtil.charset(charset)).readLines(collection);
 	}
 
 	/**
@@ -1361,11 +1413,13 @@ public class FileUtil {
 	 * @return 文件中的每行内容的集合
 	 * @throws IOException
 	 */
-	public static <T extends Collection<String>> T readLines(URL url, String charset, T collection) throws IOException {
+	public static <T extends Collection<String>> T readLines(URL url, String charset, T collection) throws IORuntimeException {
 		InputStream in = null;
 		try {
 			in = url.openStream();
 			return IoUtil.readLines(in, charset, collection);
+		}catch (IOException e) {
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
 		}
@@ -1377,9 +1431,9 @@ public class FileUtil {
 	 * @param url 文件的URL
 	 * @param charset 字符集
 	 * @return 文件中的每行内容的集合List
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static List<String> readLines(URL url, String charset) throws IOException {
+	public static List<String> readLines(URL url, String charset) throws IORuntimeException {
 		return readLines(url, charset, new ArrayList<String>());
 	}
 
@@ -1389,9 +1443,9 @@ public class FileUtil {
 	 * @param path 文件路径
 	 * @param charset 字符集
 	 * @return 文件中的每行内容的集合List
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static List<String> readLines(String path, String charset) throws IOException {
+	public static List<String> readLines(String path, String charset) throws IORuntimeException {
 		return readLines(path, charset, new ArrayList<String>());
 	}
 
@@ -1401,9 +1455,9 @@ public class FileUtil {
 	 * @param file 文件
 	 * @param charset 字符集
 	 * @return 文件中的每行内容的集合List
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static List<String> readLines(File file, String charset) throws IOException {
+	public static List<String> readLines(File file, String charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
 
@@ -1413,9 +1467,9 @@ public class FileUtil {
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSON（包括JSONObject和JSONArray）
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static JSON readJSON(File file, Charset charset) throws IOException {
+	public static JSON readJSON(File file, Charset charset) throws IORuntimeException {
 		return JSONUtil.parse(readString(file, charset));
 	}
 
@@ -1425,9 +1479,9 @@ public class FileUtil {
 	 * @param file JSON文件
 	 * @param charsetName 编码
 	 * @return JSON（包括JSONObject和JSONArray）
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static JSON readJSON(File file, String charsetName) throws IOException {
+	public static JSON readJSON(File file, String charsetName) throws IORuntimeException {
 		return JSONUtil.parse(readString(file, charsetName));
 	}
 
@@ -1437,9 +1491,9 @@ public class FileUtil {
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSONObject
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static JSONObject readJSONObject(File file, Charset charset) throws IOException {
+	public static JSONObject readJSONObject(File file, Charset charset) throws IORuntimeException {
 		return JSONUtil.parseObj(readString(file, charset));
 	}
 
@@ -1449,9 +1503,9 @@ public class FileUtil {
 	 * @param file JSON文件
 	 * @param charsetName 编码
 	 * @return JSONObject
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static JSONObject readJSONObject(File file, String charsetName) throws IOException {
+	public static JSONObject readJSONObject(File file, String charsetName) throws IORuntimeException {
 		return JSONUtil.parseObj(readString(file, charsetName));
 	}
 
@@ -1461,9 +1515,9 @@ public class FileUtil {
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSONArray
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static JSONArray readJSONArray(File file, Charset charset) throws IOException {
+	public static JSONArray readJSONArray(File file, Charset charset) throws IORuntimeException {
 		return JSONUtil.parseArray(readString(file, charset));
 	}
 
@@ -1473,9 +1527,9 @@ public class FileUtil {
 	 * @param file JSON文件
 	 * @param charsetName 编码
 	 * @return JSONArray
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static JSONArray readJSONArray(File file, String charsetName) throws IOException {
+	public static JSONArray readJSONArray(File file, String charsetName) throws IORuntimeException {
 		return JSONUtil.parseArray(readString(file, charsetName));
 	}
 
@@ -1486,20 +1540,10 @@ public class FileUtil {
 	 * @param path 文件的绝对路径
 	 * @param charset 字符集
 	 * @return 从文件中load出的数据
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static <T> T load(ReaderHandler<T> readerHandler, String path, String charset) throws IOException {
-		BufferedReader reader = null;
-		T result = null;
-		try {
-			reader = getReader(path, charset);
-			result = readerHandler.handle(reader);
-		} catch (IOException e) {
-			throw new IOException(e);
-		} finally {
-			IoUtil.close(reader);
-		}
-		return result;
+	public static <T> T load(ReaderHandler<T> readerHandler, String path, String charset) throws IORuntimeException {
+		return FileReader.create(file(path), CharsetUtil.charset(charset)).read(readerHandler);
 	}
 
 	// -------------------------------------------------------------------------------------------- out start
@@ -1614,9 +1658,9 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param path 文件路径
 	 * @return 写入的文件
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeUtf8String(String content, String path) throws IOException {
+	public static File writeUtf8String(String content, String path) throws IORuntimeException {
 		return writeString(content, path, CharsetUtil.UTF_8);
 	}
 
@@ -1626,9 +1670,9 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param file 文件
 	 * @return 写入的文件
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeUtf8String(String content, File file) throws IOException {
+	public static File writeUtf8String(String content, File file) throws IORuntimeException {
 		return writeString(content, file, CharsetUtil.UTF_8);
 	}
 
@@ -1639,9 +1683,9 @@ public class FileUtil {
 	 * @param path 文件路径
 	 * @param charset 字符集
 	 * @return 写入的文件
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeString(String content, String path, String charset) throws IOException {
+	public static File writeString(String content, String path, String charset) throws IORuntimeException {
 		return writeString(content, touch(path), charset);
 	}
 
@@ -1651,25 +1695,10 @@ public class FileUtil {
 	 * @param content 写入的内容
 	 * @param file 文件
 	 * @param charset 字符集
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeString(String content, File file, String charset) throws IOException {
-		Assert.notNull(file, "File to write content is null !");
-		
-		if(false == file.exists()){
-			touch(file);
-		}else if(false == file.isFile()){
-			throw new IOException(StrUtil.format("Target file [{}] is not a file !", getAbsolutePath(file)));
-		}
-		PrintWriter writer = null;
-		try {
-			writer = getPrintWriter(file, charset, false);
-			writer.print(content);
-			writer.flush();
-		} finally {
-			IoUtil.close(writer);
-		}
-		return file;
+	public static File writeString(String content, File file, String charset) throws IORuntimeException {
+		return FileWriter.create(file, CharsetUtil.charset(charset)).write(content);
 	}
 
 	/**
@@ -1679,9 +1708,9 @@ public class FileUtil {
 	 * @param path 文件路径
 	 * @param charset 字符集
 	 * @return 写入的文件
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File appendString(String content, String path, String charset) throws IOException {
+	public static File appendString(String content, String path, String charset) throws IORuntimeException {
 		return appendString(content, touch(path), charset);
 	}
 
@@ -1692,18 +1721,10 @@ public class FileUtil {
 	 * @param file 文件
 	 * @param charset 字符集
 	 * @return 写入的文件
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File appendString(String content, File file, String charset) throws IOException {
-		PrintWriter writer = null;
-		try {
-			writer = getPrintWriter(file, charset, true);
-			writer.print(content);
-			writer.flush();
-		} finally {
-			IoUtil.close(writer);
-		}
-		return file;
+	public static File appendString(String content, File file, String charset) throws IORuntimeException {
+		return FileWriter.create(file, CharsetUtil.charset(charset)).append(content);
 	}
 
 	/**
@@ -1712,9 +1733,9 @@ public class FileUtil {
 	 * @param list 列表
 	 * @param path 绝对路径
 	 * @param charset 字符集
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static <T> void writeLines(Collection<T> list, String path, String charset) throws IOException {
+	public static <T> void writeLines(Collection<T> list, String path, String charset) throws IORuntimeException {
 		writeLines(list, path, charset, false);
 	}
 
@@ -1724,34 +1745,36 @@ public class FileUtil {
 	 * @param list 列表
 	 * @param path 绝对路径
 	 * @param charset 字符集
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static <T> void appendLines(Collection<T> list, String path, String charset) throws IOException {
+	public static <T> void appendLines(Collection<T> list, String path, String charset) throws IORuntimeException {
 		writeLines(list, path, charset, true);
+	}
+	
+	/**
+	 * 将列表写入文件
+	 * 
+	 * @param list 列表
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @throws IORuntimeException
+	 */
+	public static <T> File writeLines(Collection<T> list, String path, String charset, boolean isAppend) throws IORuntimeException {
+		return writeLines(list, file(path), charset, isAppend);
 	}
 
 	/**
 	 * 将列表写入文件
 	 * 
 	 * @param list 列表
-	 * @param path 绝对路径
+	 * @param file 文件
 	 * @param charset 字符集
 	 * @param isAppend 是否追加
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static <T> void writeLines(Collection<T> list, String path, String charset, boolean isAppend) throws IOException {
-		PrintWriter writer = null;
-		try {
-			writer = getPrintWriter(path, charset, isAppend);
-			for (T t : list) {
-				if (t != null) {
-					writer.println(t.toString());
-					writer.flush();
-				}
-			}
-		} finally {
-			IoUtil.close(writer);
-		}
+	public static <T> File writeLines(Collection<T> list, File file, String charset, boolean isAppend) throws IORuntimeException {
+		return FileWriter.create(file, CharsetUtil.charset(charset)).writeLines(list);
 	}
 
 	/**
@@ -1760,9 +1783,9 @@ public class FileUtil {
 	 * @param data 数据
 	 * @param path 目标文件
 	 * @return File
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeBytes(byte[] data, String path) throws IOException {
+	public static File writeBytes(byte[] data, String path) throws IORuntimeException {
 		return writeBytes(data, touch(path));
 	}
 
@@ -1772,9 +1795,9 @@ public class FileUtil {
 	 * @param dest 目标文件
 	 * @param data 数据
 	 * @return dest
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeBytes(byte[] data, File dest) throws IOException {
+	public static File writeBytes(byte[] data, File dest) throws IORuntimeException {
 		return writeBytes(data, dest, 0, data.length, false);
 	}
 
@@ -1783,27 +1806,14 @@ public class FileUtil {
 	 * 
 	 * @param data 数据
 	 * @param dest 目标文件
-	 * @param off
-	 * @param len
-	 * @param append
-	 * @return dest
-	 * @throws IOException
+	 * @param off 数据开始位置
+	 * @param len 数据长度
+	 * @param append 是否追加模式
+	 * @return File
+	 * @throws IORuntimeException
 	 */
-	public static File writeBytes(byte[] data, File dest, int off, int len, boolean append) throws IOException {
-		if (dest.exists() == true) {
-			if (dest.isFile() == false) {
-				throw new IOException("Not a file: " + dest);
-			}
-		}
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(dest, append);
-			out.write(data, off, len);
-			out.flush();
-		} finally {
-			IoUtil.close(out);
-		}
-		return dest;
+	public static File writeBytes(byte[] data, File dest, int off, int len, boolean append) throws IORuntimeException {
+		return FileWriter.create(dest).write(data, off, len);
 	}
 
 	/**
@@ -1812,17 +1822,10 @@ public class FileUtil {
 	 * @param dest 目标文件
 	 * @param in 输入流
 	 * @return dest
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeFromStream(InputStream in, File dest) throws IOException {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(dest);
-			IoUtil.copy(in, out);
-		} finally {
-			IoUtil.close(out);
-		}
-		return dest;
+	public static File writeFromStream(InputStream in, File dest) throws IORuntimeException {
+		return FileWriter.create(dest).writeFromStream(in);
 	}
 
 	/**
@@ -1831,9 +1834,9 @@ public class FileUtil {
 	 * @param in 输入流
 	 * @param fullFilePath 文件绝对路径
 	 * @return dest
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static File writeFromStream(InputStream in, String fullFilePath) throws IOException {
+	public static File writeFromStream(InputStream in, String fullFilePath) throws IORuntimeException {
 		return writeFromStream(in, touch(fullFilePath));
 	}
 
@@ -1842,16 +1845,11 @@ public class FileUtil {
 	 * 
 	 * @param file 文件
 	 * @param out 流
-	 * @throws IOException
+	 * @return File
+	 * @throws IORuntimeException
 	 */
-	public static void writeToStream(File file, OutputStream out) throws IOException {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(file);
-			IoUtil.copy(in, out);
-		} finally {
-			IoUtil.close(in);
-		}
+	public static File writeToStream(File file, OutputStream out) throws IORuntimeException {
+		return FileReader.create(file).writeToStream(out);
 	}
 
 	/**
@@ -1859,9 +1857,9 @@ public class FileUtil {
 	 * 
 	 * @param fullFilePath 文件绝对路径
 	 * @param out 输出流
-	 * @throws IOException
+	 * @throws IORuntimeException
 	 */
-	public static void writeToStream(String fullFilePath, OutputStream out) throws IOException {
+	public static void writeToStream(String fullFilePath, OutputStream out) throws IORuntimeException {
 		writeToStream(touch(fullFilePath), out);
 	}
 
@@ -1888,17 +1886,4 @@ public class FileUtil {
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
-
-	// -------------------------------------------------------------------------- Interface start
-	/**
-	 * Reader处理接口
-	 * 
-	 * @author Luxiaolei
-	 *
-	 * @param <T>
-	 */
-	public interface ReaderHandler<T> {
-		public T handle(BufferedReader reader) throws IOException;
-	}
-	// -------------------------------------------------------------------------- Interface end
 }
