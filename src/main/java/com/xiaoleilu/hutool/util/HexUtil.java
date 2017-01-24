@@ -77,6 +77,17 @@ public class HexUtil {
 	public static String encodeHexStr(byte[] data) {
 		return encodeHexStr(data, true);
 	}
+	
+	/**
+	 * 将字节数组转换为十六进制字符串，结果为小写
+	 *
+	 * @param data 被编码的字符串
+	 * @param charset 编码
+	 * @return 十六进制String
+	 */
+	public static String encodeHexStr(String data, Charset charset) {
+		return encodeHexStr(StrUtil.bytes(data, charset), true);
+	}
 
 	/**
 	 * 将字节数组转换为十六进制字符串

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.date.format.FastDateFormat;
 import com.xiaoleilu.hutool.lang.Console;
 
 /**
@@ -13,6 +14,12 @@ import com.xiaoleilu.hutool.lang.Console;
  */
 public class DateUtilDemo {
 	public static void main(String[] args) {
+		//日期格式化
+		FastDateFormat instance = FastDateFormat.getInstance("yyyy-MM-dd");
+		String format = instance.format(DateUtil.date());
+		Console.log(format);
+		
+		
 		//字符串转日期
 		DateTime dateTime = DateUtil.parse("2015-03-25 12:04:23.0");
 		Console.log(dateTime);

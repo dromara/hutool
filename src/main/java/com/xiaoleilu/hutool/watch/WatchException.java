@@ -1,5 +1,6 @@
-package com.xiaoleilu.hutool.exceptions;
+package com.xiaoleilu.hutool.watch;
 
+import com.xiaoleilu.hutool.exceptions.ExceptionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

@@ -6,9 +6,11 @@ import java.util.Locale;
 /**
  * 线程安全的时间格式化器
  * @author Looly
- *
+ *@deprecated please use {@link DatePattern}
  */
+@Deprecated
 public class DatePatternLocal {
+	
 	/** 标准日期（不含时间）格式化器 */
 	protected static ThreadLocal<SimpleDateFormat> NORM_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>(){
 		synchronized protected SimpleDateFormat initialValue() {

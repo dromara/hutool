@@ -11,8 +11,13 @@
 * 扩充CollectionUtil
 * 扩充FileUtil，增加针对JDK7新特性的文件拷贝方法
 * 对File的读写抽象为FileReader和FileWriter
+* 添加Season，对季度的Enum支持
+* HexUtil增加重载方法
+* 引入Apache Commons Lang中的FastDateFormat，增强日期format和parse性能
 
 ### Bug修复
+* 修复季度计算错误
+* 修复DateTime.month()注释错误
 
 -------------------------------------------------------------------------------------------------------------
 

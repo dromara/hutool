@@ -1,11 +1,14 @@
 package com.xiaoleilu.hutool.date;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 
+import com.xiaoleilu.hutool.date.format.DateParser;
+import com.xiaoleilu.hutool.date.format.FastDateFormat;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -398,7 +401,7 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {
-		return new SimpleDateFormat(format).format(date);
+		return FastDateFormat.getInstance(format).format(date);
 	}
 
 	/**
@@ -411,7 +414,7 @@ public class DateUtil {
 		if(null == date){
 			return null;
 		}
-		return DatePatternLocal.NORM_DATETIME_FORMAT.get().format(date);
+		return DatePattern.NORM_DATETIME_FORMAT.format(date);
 	}
 
 	/**
@@ -424,7 +427,7 @@ public class DateUtil {
 		if(null == date){
 			return null;
 		}
-		return DatePatternLocal.NORM_DATE_FORMAT.get().format(date);
+		return DatePattern.NORM_DATE_FORMAT.format(date);
 	}
 
 	/**
@@ -437,7 +440,7 @@ public class DateUtil {
 		if(null == date){
 			return null;
 		}
-		return DatePatternLocal.HTTP_DATETIME_FORMAT.get().format(date);
+		return DatePattern.HTTP_DATETIME_FORMAT.format(date);
 	}
 	// ------------------------------------ Format end ----------------------------------------------
 
@@ -447,13 +450,24 @@ public class DateUtil {
 	 * 构建DateTime对象
 	 * 
 	 * @param dateStr Date字符串
-	 * @param simpleDateFormat 格式化器
+	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
 	 * @return DateTime对象
 	 */
-	public static DateTime parse(String dateStr, SimpleDateFormat simpleDateFormat) {
-		return new DateTime(dateStr, simpleDateFormat);
+	public static DateTime parse(String dateStr, DateFormat dateFormat) {
+		return new DateTime(dateStr, dateFormat);
 	}
-
+	
+	/**
+	 * 构建DateTime对象
+	 * 
+	 * @param dateStr Date字符串
+	 * @param parser 格式化器,{@link FastDateFormat}
+	 * @return DateTime对象
+	 */
+	public static DateTime parse(String dateStr, DateParser parser) {
+		return new DateTime(dateStr, parser);
+	}
+	
 	/**
 	 * 将特定格式的日期转换为Date对象
 	 * 
@@ -472,7 +486,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseDateTime(String dateString) {
-		return parse(dateString, DatePatternLocal.NORM_DATETIME_FORMAT.get());
+		return parse(dateString, DatePattern.NORM_DATETIME_FORMAT);
 	}
 
 	/**
@@ -482,7 +496,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseDate(String dateString) {
-		return parse(dateString, DatePatternLocal.NORM_DATE_FORMAT.get());
+		return parse(dateString, DatePattern.NORM_DATE_FORMAT);
 	}
 
 	/**
@@ -492,7 +506,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseTime(String timeString) {
-		return parse(timeString, DatePatternLocal.NORM_TIME_FORMAT.get());
+		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
 	}
 
 	/**

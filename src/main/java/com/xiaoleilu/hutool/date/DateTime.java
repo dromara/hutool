@@ -1,9 +1,12 @@
 package com.xiaoleilu.hutool.date;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.xiaoleilu.hutool.date.format.DateParser;
+import com.xiaoleilu.hutool.date.format.FastDateFormat;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -96,18 +99,29 @@ public class DateTime extends Date {
 	 * @param format 格式
 	 */
 	public DateTime(String dateStr, String format){
-		this(dateStr, new SimpleDateFormat(format));
+		this(dateStr, FastDateFormat.getInstance(format));
 	}
 	
 	/**
 	 * 构造
 	 * @see DatePatternLocal
 	 * @param dateStr Date字符串
-	 * @param simpleDateFormat 格式化器 {@link SimpleDateFormat}
+	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
 	 */
-	public DateTime(String dateStr, SimpleDateFormat simpleDateFormat) {
-		this(parse(dateStr, simpleDateFormat));
+	public DateTime(String dateStr, DateFormat dateFormat) {
+		this(parse(dateStr, dateFormat));
 	}
+	
+	/**
+	 * 构造
+	 * @see DatePatternLocal
+	 * @param dateStr Date字符串
+	 * @param dateFormat 格式化器 {@link FastDateFormat}
+	 */
+	public DateTime(String dateStr, DateParser dateFormat) {
+		this(parse(dateStr, dateFormat));
+	}
+	
 	// -------------------------------------------------------------------- Constructor end
 	
 	// -------------------------------------------------------------------- offsite start
@@ -179,21 +193,43 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 获得当前日期所属季节
+	 * 获得当前日期所属季度<br>
+	 * 1：第一季度<br>
+	 * 2：第二季度<br>
+	 * 3：第三季度<br>
+	 * 4：第四季度<br>
 	 * 
-	 * @return 第几个季节
+	 * @return 第几个季度
 	 */
 	public int season() {
-		return month() /3 + 1;
+		return monthStartFromOne() /3 + 1;
+	}
+	
+	/**
+	 * 获得当前日期所属季度<br>
+	 * @return 第几个季度 {@link Season}
+	 */
+	public Season seasonEnum() {
+		return Season.of(season());
 	}
 
 	/**
-	 * 获得月份，从1开始计数
+	 * 获得月份，从0开始计数
 	 * 
 	 * @return 月份
 	 */
 	public int month() {
 		return getField(DateField.MONTH);
+	}
+	
+	/**
+	 * 获得月份，从1开始计数<br>
+	 * 由于{@link Calendar} 中的月份按照0开始计数，导致某些需求容易误解，因此如果想用1表示一月，2表示二月则调用此方法
+	 * 
+	 * @return 月份
+	 */
+	public int monthStartFromOne() {
+		return month() +1;
 	}
 
 	/**
@@ -390,14 +426,34 @@ public class DateTime extends Date {
 	/**
 	 * 转换字符串为Date
 	 * @param dateStr 日期字符串
-	 * @param simpleDateFormat {@link SimpleDateFormat}
+	 * @param dateFormat {@link SimpleDateFormat}
 	 * @return {@link Date}
 	 */
-	private static Date parse(String dateStr, SimpleDateFormat simpleDateFormat){
+	private static Date parse(String dateStr, DateFormat dateFormat){
 		try {
-			return simpleDateFormat.parse(dateStr);
+			return dateFormat.parse(dateStr);
 		} catch (Exception e) {
-			throw new DateException(StrUtil.format("Parse [{}] with format [{}] error!", dateStr, simpleDateFormat.toPattern()), e);
+			String pattern;
+			if(dateFormat instanceof SimpleDateFormat){
+				pattern = ((SimpleDateFormat)dateFormat).toPattern();
+			}else{
+				pattern = dateFormat.toString();
+			}
+			throw new DateException(StrUtil.format("Parse [{}] with format [{}] error!", dateStr, pattern), e);
+		}
+	}
+	
+	/**
+	 * 转换字符串为Date
+	 * @param dateStr 日期字符串
+	 * @param parser {@link FastDateFormat}
+	 * @return {@link Date}
+	 */
+	private static Date parse(String dateStr, DateParser parser){
+		try {
+			return parser.parse(dateStr);
+		} catch (Exception e) {
+			throw new DateException(StrUtil.format("Parse [{}] with format [{}] error!", dateStr, parser.getPattern()), e);
 		}
 	}
 }
