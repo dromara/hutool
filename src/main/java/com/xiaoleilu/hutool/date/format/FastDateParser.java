@@ -224,6 +224,7 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 	public Object parseObject(final String source) throws ParseException {
 		return parse(source);
 	}
+	
 	@Override
 	public Date parse(final String source) throws ParseException {
 		final ParsePosition pp = new ParsePosition(0);

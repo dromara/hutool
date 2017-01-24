@@ -27,10 +27,7 @@ abstract class FormatCache<F extends Format> {
 	private static final ConcurrentMap<MultipartKey, String> cDateTimeInstanceCache = new ConcurrentHashMap<>(7);
 
 	/**
-	 * <p>
-	 * Gets a formatter instance using the default pattern in the default timezone and locale.
-	 * </p>
-	 * 
+	 * 使用默认的pattern、timezone和locale获得缓存中的实例
 	 * @return a date/time formatter
 	 */
 	public F getInstance() {
@@ -38,15 +35,13 @@ abstract class FormatCache<F extends Format> {
 	}
 
 	/**
-	 * <p>
-	 * Gets a formatter instance using the specified pattern, time zone and locale.
-	 * </p>
+	 * 使用 pattern, time zone and locale 获得对应的 格式化器
 	 * 
-	 * @param pattern {@link java.text.SimpleDateFormat} compatible pattern, non-null
-	 * @param timeZone the time zone, null means use the default TimeZone
-	 * @param locale the locale, null means use the default Locale
-	 * @return a pattern based date/time formatter
-	 * @throws IllegalArgumentException if pattern is invalid or <code>null</code>
+	 * @param pattern 非空日期格式，使用与 {@link java.text.SimpleDateFormat}相同格式
+	 * @param timeZone 时区，默认当前时区
+	 * @param locale 地区，默认使用当前地区
+	 * @return 格式化器
+	 * @throws IllegalArgumentException pattern 无效或<code>null</code>
 	 */
 	public F getInstance(final String pattern, TimeZone timeZone, Locale locale) {
 		if (pattern == null) {
@@ -73,15 +68,13 @@ abstract class FormatCache<F extends Format> {
 	}
 
 	/**
-	 * <p>
-	 * Create a format instance using the specified pattern, time zone and locale.
-	 * </p>
+	 * 创建格式化器
 	 * 
-	 * @param pattern {@link java.text.SimpleDateFormat} compatible pattern, this will not be null.
-	 * @param timeZone time zone, this will not be null.
-	 * @param locale locale, this will not be null.
-	 * @return a pattern based date/time formatter
-	 * @throws IllegalArgumentException if pattern is invalid or <code>null</code>
+	 * @param pattern 非空日期格式，使用与 {@link java.text.SimpleDateFormat}相同格式
+	 * @param timeZone 时区，默认当前时区
+	 * @param locale 地区，默认使用当前地区
+	 * @return 格式化器
+	 * @throws IllegalArgumentException pattern 无效或<code>null</code>
 	 */
 	abstract protected F createInstance(String pattern, TimeZone timeZone, Locale locale);
 
