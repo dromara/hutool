@@ -137,7 +137,7 @@ public class DbDemo {
 		Entity where = Entity.create(TABLE_NAME).set("条件1", "条件值");
 
 		try {
-			SqlRunner runner = SqlRunner.create(ds);
+			SqlRunner runner;
 			// 根据DataSource会自动识别数据库方言
 			runner = SqlRunner.create(ds);
 
@@ -151,6 +151,9 @@ public class DbDemo {
 			runner.update(entity, where);
 
 			// 查，生成SQL为 SELECT * FROM `table_name` WHERE WHERE `条件1` = ? 第一个参数为返回的字段列表，如果null则返回所有字段
+			List<Entity> all = runner.findAll(where);
+			log.info("{}", all);
+			
 			List<Entity> entityList = runner.find(null, where, new EntityListHandler());
 			log.info("{}", entityList);
 			
