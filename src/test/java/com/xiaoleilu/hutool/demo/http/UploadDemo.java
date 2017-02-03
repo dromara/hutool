@@ -19,7 +19,10 @@ public class UploadDemo {
 		File file = FileUtil.file("D:\\face.jpg");
 
 		// 方法一：自定义构建表单
-		HttpRequest request = HttpRequest.post("http://localhost:8080/file/upload").form("file", file).form("fileType", "图片");
+		HttpRequest request = HttpRequest
+				.post("http://localhost:8080/file/upload")
+				.form("file", file)
+				.form("fileType", "图片");
 		HttpResponse response = request.execute();
 		System.out.println(response.body());
 
