@@ -10,9 +10,9 @@
 		<version>3.0.1</version>
 	</parent>
 
-	<artifactId>hutool-cache</artifactId>
+	<artifactId>hutool-cron</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool 缓存</description>
+	<description>Hutool 定时任务</description>
 	
 	<dependencies>
 		<dependency>
