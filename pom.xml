@@ -17,6 +17,7 @@
 		<module>hutool-bloomFilter</module>
 		<module>hutool-cache</module>
 		<module>hutool-core</module>
+		<module>hutool-cron</module>
 		<module>hutool-crypto</module>
 		<module>hutool-db</module>
 		<module>hutool-dfa</module>

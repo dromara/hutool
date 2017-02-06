@@ -161,6 +161,26 @@ public class ThreadUtil {
 	}
 	
 	/**
+	 * 考虑{@link Thread#sleep(long)}方法有可能时间不足给定毫秒数，此方法保证sleep时间不小于给定的毫秒数
+	 * @see ThreadUtil#sleep(Number)
+	 * @param millis 给定的sleep时间
+	 * @return 被中断返回false，否则true
+	 */
+	public static boolean safeSleep(Number millis){
+		long millisLong = millis.longValue();
+		long done = 0;
+		while(done < millisLong){
+			long before = System.currentTimeMillis();
+			if(false == sleep(millisLong - done)){
+				return false;
+			}
+			long after = System.currentTimeMillis();
+			done += (after - before);
+		}
+		return true;
+	}
+	
+	/**
 	 * @return 获得堆栈列表
 	 */
 	public static StackTraceElement[] getStackTrace() {

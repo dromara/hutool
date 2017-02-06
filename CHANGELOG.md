@@ -4,6 +4,7 @@
 
 ### 新特性
 * 拆分项目
+* 增加 ThreadUtil.safeSleep方法
 
 ### Bug修复
 

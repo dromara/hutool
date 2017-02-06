@@ -7,22 +7,17 @@
 	<parent>
 		<groupId>com.xiaoleilu</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version>
 	</parent>
 
-	<artifactId>hutool-setting</artifactId>
+	<artifactId>hutool-cache</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool 配置文件增强</description>
+	<description>Hutool 缓存</description>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.xiaoleilu</groupId>
 			<artifactId>hutool-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.xiaoleilu</groupId>
-			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

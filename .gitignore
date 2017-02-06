@@ -1,15 +1,29 @@
 # Eclipse
 .project
 .classpath
-/.settings
+.settings/
 
 # Maven
-/target
+target/
 
 # Gradle
-/.gradle
-/build
+.gradle/
+build/
 
 #IDEA
-/.idea
+# idea ignore
+.idea/
+*.ipr
 *.iml
+*.iws
+
+# temp ignore
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+# system ignore
+.DS_Store
+Thumbs.db
