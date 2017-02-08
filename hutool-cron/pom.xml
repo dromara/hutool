@@ -20,5 +20,13 @@
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<!-- 定时任务包，类似crontab -->
+		<dependency>
+			<groupId>it.sauronsoftware.cron4j</groupId>
+			<artifactId>cron4j</artifactId>
+			<version>2.2.5</version>
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

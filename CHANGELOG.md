@@ -5,8 +5,15 @@
 ### 新特性
 * 拆分项目
 * 增加 ThreadUtil.safeSleep方法
+* 增加CollectionUtil.addAllIfNotContains方法
+* 增加NumberUtil
+* 增加hutool-cron模块
+* 增加 ThreadUtil.waitForDie
+* 增加DateUtil.betweenDay方法（感谢 @宁静之湖）
+* 增加Snowflake算法
 
 ### Bug修复
+* DateUtil中offsite修正为offset
 
 -------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------

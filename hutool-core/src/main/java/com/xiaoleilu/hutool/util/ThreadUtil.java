@@ -212,4 +212,21 @@ public class ThreadUtil {
 			return new ThreadLocal<>();
 		}
 	}
+	
+	/**
+	 * 等待线程结束. 调用 {@link Thread#join()} 并忽略 {@link InterruptedException}
+	 * 
+	 * @param thread 线程
+	 */
+	public static void waitForDie(Thread thread) {
+		boolean dead = false;
+		do {
+			try {
+				thread.join();
+				dead = true;
+			} catch (InterruptedException e) {
+				//ignore
+			}
+		} while (!dead);
+	}
 }

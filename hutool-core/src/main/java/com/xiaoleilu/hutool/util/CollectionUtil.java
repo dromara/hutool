@@ -939,6 +939,21 @@ public class CollectionUtil {
 		return collection;
 	}
 	
+	/**
+	 * 将另一个列表中的元素加入到列表中，如果列表中已经存在此元素则忽略之
+	 * @param list 列表
+	 * @param otherList 其它列表
+	 * @return 此列表
+	 */
+	public static <T> List<T> addAllIfNotContains(List<T> list, List<T> otherList){
+		for (T t : otherList) {
+			if(false == list.contains(t)){
+				list.add(t);
+			}
+		}
+		return list;
+	}
+	
 	//------------------------------------------------------------------------------------------------- forEach
 	
 	/**

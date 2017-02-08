@@ -551,57 +551,184 @@ public class DateUtil {
 	 * 获取某天的开始时间
 	 * 
 	 * @param date 日期
-	 * @return 某天的开始时间
+	 * @return {@link DateTime}
 	 */
 	public static DateTime beginOfDay(Date date) {
-		return beginOfDay(calendar(date));
+		return new DateTime(beginOfDay(calendar(date)));
 	}
 
 	/**
 	 * 获取某天的结束时间
 	 * 
 	 * @param date 日期
-	 * @return 某天的结束时间
+	 * @return {@link DateTime}
 	 */
 	public static DateTime endOfDay(Date date) {
-		return endOfDay(calendar(date));
+		return new DateTime(endOfDay(calendar(date)));
 	}
 	
 	/**
 	 * 获取某天的开始时间
 	 * 
 	 * @param calendar 日期 {@link Calendar}
-	 * @return 某天的开始时间
+	 * @return {@link Calendar}
 	 */
-	public static DateTime beginOfDay(Calendar calendar) {
+	public static Calendar beginOfDay(Calendar calendar) {
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
-		return new DateTime(calendar.getTime());
+		return calendar;
 	}
 	
 	/**
 	 * 获取某天的结束时间
 	 * 
 	 * @param calendar 日期 {@link Calendar}
-	 * @return 某天的结束时间
+	 * @return {@link Calendar}
 	 */
-	public static DateTime endOfDay(Calendar calendar) {
+	public static Calendar endOfDay(Calendar calendar) {
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
 		calendar.set(Calendar.MILLISECOND, 999);
-		return new DateTime(calendar.getTime());
+		return calendar;
+	}
+	
+	/**
+	 * 获取某周的开始时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfWeek(Date date) {
+		return new DateTime(beginOfWeek(calendar(date)));
 	}
 
+	/**
+	 * 获取某周的结束时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfWeek(Date date) {
+		return new DateTime(endOfWeek(calendar(date)));
+	}
+	
+	/**
+	 * 获取某周的开始时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar beginOfWeek(Calendar calendar) {
+		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		return beginOfDay(calendar);
+	}
+	
+	/**
+	 * 获取某周的结束时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar endOfWeek(Calendar calendar) {
+		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		return endOfDay(calendar);
+	}
+	
+	/**
+	 * 获取某月的开始时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfMonth(Date date) {
+		return new DateTime(beginOfMonth(calendar(date)));
+	}
+
+	/**
+	 * 获取某月的结束时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfMonth(Date date) {
+		return new DateTime(endOfMonth(calendar(date)));
+	}
+	
+	/**
+	 * 获取某月的开始时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar beginOfMonth(Calendar calendar) {
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		return beginOfDay(calendar);
+	}
+	
+	/**
+	 * 获取某月的结束时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar endOfMonth(Calendar calendar) {
+		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return endOfDay(calendar);
+	}
+	
+	/**
+	 * 获取某年的开始时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfYear(Date date) {
+		return new DateTime(beginOfYear(calendar(date)));
+	}
+
+	/**
+	 * 获取某年的结束时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfYear(Date date) {
+		return new DateTime(endOfYear(calendar(date)));
+	}
+	
+	/**
+	 * 获取某年的开始时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar beginOfYear(Calendar calendar) {
+		calendar.set(Calendar.MONTH, 1);
+		return beginOfMonth(calendar);
+	}
+	
+	/**
+	 * 获取某年的结束时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar endOfYear(Calendar calendar) {
+		calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+		return endOfMonth(calendar);
+	}
+
+	//--------------------------------------------------- Offset for now
 	/**
 	 * 昨天
 	 * 
 	 * @return 昨天
 	 */
 	public static DateTime yesterday() {
-		return offsiteDay(new DateTime(), -1);
+		return offsetDay(new DateTime(), -1);
 	}
 
 	/**
@@ -610,7 +737,7 @@ public class DateUtil {
 	 * @return 上周
 	 */
 	public static DateTime lastWeek() {
-		return offsiteWeek(new DateTime(), -1);
+		return offsetWeek(new DateTime(), -1);
 	}
 
 	/**
@@ -619,84 +746,84 @@ public class DateUtil {
 	 * @return 上个月
 	 */
 	public static DateTime lastMouth() {
-		return offsiteMonth(new DateTime(), -1);
+		return offsetMonth(new DateTime(), -1);
 	}
 	
 	/**
 	 * 偏移毫秒数
 	 * 
 	 * @param date 日期
-	 * @param offsite 偏移毫秒数，正数向未来偏移，负数向历史偏移
+	 * @param offset 偏移毫秒数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteMillisecond(Date date, int offsite) {
-		return offsiteDate(date, DateField.MILLISECOND, offsite);
+	public static DateTime offsetMillisecond(Date date, int offset) {
+		return offsetDate(date, DateField.MILLISECOND, offset);
 	}
 	
 	/**
 	 * 偏移秒数
 	 * 
 	 * @param date 日期
-	 * @param offsite 偏移秒数，正数向未来偏移，负数向历史偏移
+	 * @param offset 偏移秒数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteSecond(Date date, int offsite) {
-		return offsiteDate(date, DateField.SECOND, offsite);
+	public static DateTime offsetSecond(Date date, int offset) {
+		return offsetDate(date, DateField.SECOND, offset);
 	}
 	
 	/**
 	 * 偏移分钟
 	 * 
 	 * @param date 日期
-	 * @param offsite 偏移分钟数，正数向未来偏移，负数向历史偏移
+	 * @param offset 偏移分钟数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteMinute(Date date, int offsite) {
-		return offsiteDate(date, DateField.MINUTE, offsite);
+	public static DateTime offsetMinute(Date date, int offset) {
+		return offsetDate(date, DateField.MINUTE, offset);
 	}
 	
 	/**
 	 * 偏移小时
 	 * 
 	 * @param date 日期
-	 * @param offsite 偏移小时数，正数向未来偏移，负数向历史偏移
+	 * @param offset 偏移小时数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteHour(Date date, int offsite) {
-		return offsiteDate(date, DateField.HOUR_OF_DAY, offsite);
+	public static DateTime offsetHour(Date date, int offset) {
+		return offsetDate(date, DateField.HOUR_OF_DAY, offset);
 	}
 
 	/**
 	 * 偏移天
 	 * 
 	 * @param date 日期
-	 * @param offsite 偏移天数，正数向未来偏移，负数向历史偏移
+	 * @param offset 偏移天数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteDay(Date date, int offsite) {
-		return offsiteDate(date, DateField.DAY_OF_YEAR, offsite);
+	public static DateTime offsetDay(Date date, int offset) {
+		return offsetDate(date, DateField.DAY_OF_YEAR, offset);
 	}
 
 	/**
 	 * 偏移周
 	 * 
 	 * @param date 日期
-	 * @param offsite 偏移周数，正数向未来偏移，负数向历史偏移
+	 * @param offset 偏移周数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteWeek(Date date, int offsite) {
-		return offsiteDate(date, DateField.WEEK_OF_YEAR, offsite);
+	public static DateTime offsetWeek(Date date, int offset) {
+		return offsetDate(date, DateField.WEEK_OF_YEAR, offset);
 	}
 
 	/**
 	 * 偏移月
 	 * 
 	 * @param date 日期
-	 * @param offsite 偏移月数，正数向未来偏移，负数向历史偏移
+	 * @param offset 偏移月数，正数向未来偏移，负数向历史偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteMonth(Date date, int offsite) {
-		return offsiteDate(date, DateField.MONTH, offsite);
+	public static DateTime offsetMonth(Date date, int offset) {
+		return offsetDate(date, DateField.MONTH, offset);
 	}
 
 	/**
@@ -704,20 +831,19 @@ public class DateUtil {
 	 * 
 	 * @param date 基准日期
 	 * @param datePart 偏移的粒度大小（小时、天、月等）{@link DateField}
-	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
+	 * @param offset 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsiteDate(Date date, DateField datePart, int offsite) {
+	public static DateTime offsetDate(Date date, DateField datePart, int offset) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.add(datePart.getValue(), offsite);
+		cal.add(datePart.getValue(), offset);
 		return new DateTime(cal.getTime());
 	}
 	// ------------------------------------ Offset end ----------------------------------------------
 
 	/**
 	 * 判断两个日期相差的时长<br/>
-	 * 返回 minuend - subtrahend 的差
 	 * 
 	 * @param beginDate 起始日期
 	 * @param endDate 结束日期
@@ -728,6 +854,23 @@ public class DateUtil {
 		return new DateBetween(beginDate, endDate).between(unit);
 	}
 	
+	/**
+	 * 判断两个日期相差的天数<br/>
+	 * 
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @param isReset 是否重置时间为起始时间
+	 * @return 日期差
+	 * @since 3.0.1
+	 */
+	public static long betweenDay(Date beginDate, Date endDate, boolean isReset) {
+		if(isReset){
+			beginDate = beginOfDay(beginDate);
+			endDate = beginOfDay(endDate);
+		}
+		return between(beginDate, endDate, DateUnit.DAY);
+	}
+
 	/**
 	 * 格式化日期间隔输出
 	 * @param beginDate 起始日期
