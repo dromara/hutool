@@ -48,12 +48,21 @@ public final class CronUtil {
 	}
 	
 	/**
-	 * 是否使用精确到秒的定时，默认不使用
+	 * 设置是否支持秒匹配，默认不使用
 	 * @param isSecondMode <code>true</code>支持，<code>false</code>不支持
 	 * @return this
 	 */
-	public static void setUseSecond(boolean isUseSecond) {
-		scheduler.setUseSecond(isUseSecond);
+	public static void setMatchSecond(boolean isMatchSecond) {
+		scheduler.setMatchSecond(isMatchSecond);
+	}
+	
+	/**
+	 * 设置是否支持年匹配，默认不使用
+	 * @param isSecondMode <code>true</code>支持，<code>false</code>不支持
+	 * @return this
+	 */
+	public static void setMatchYear(boolean isMatchYear) {
+		scheduler.setMatchYear(isMatchYear);
 	}
 	
 	/**

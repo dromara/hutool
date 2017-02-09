@@ -3,7 +3,8 @@ package com.xiaoleilu.hutool.cron.matcher;
 import java.util.List;
 
 /**
- * 每月第几天匹配
+ * 每月第几天匹配<br>
+ * 考虑每月的天数不同，切存在闰年情况，日匹配单独使用
  * @author Looly
  *
  */

@@ -10,7 +10,6 @@ public class CronDemo {
 	public static void main(String[] args) {
 		LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
 		
-		CronUtil.setUseSecond(true);
 		CronUtil.schedule("*/1 * * * *", new Task(){
 			
 			@Override

@@ -6,6 +6,7 @@ import java.util.List;
 import com.xiaoleilu.hutool.cron.CronException;
 import com.xiaoleilu.hutool.cron.parser.DayOfMonthValueParser;
 import com.xiaoleilu.hutool.cron.parser.ValueParser;
+import com.xiaoleilu.hutool.cron.parser.YearValueParser;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -35,8 +36,12 @@ public class ValueMatcherBuilder {
 		}
 
 		if (parser instanceof DayOfMonthValueParser) {
+			//考虑每月的天数不同，切存在闰年情况，日匹配单独使用
 			return new DayOfMonthValueMatcher(values);
-		} else {
+		}else if(parser instanceof YearValueParser){
+			//考虑年数字太大，不适合boolean数组，单独使用列表遍历匹配
+			return new YearValueMatcher(values);
+		}else {
 			return new BoolArrayValueMatcher(values);
 		}
 	}

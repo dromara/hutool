@@ -17,6 +17,7 @@ import com.xiaoleilu.hutool.cron.parser.MinuteValueParser;
 import com.xiaoleilu.hutool.cron.parser.MonthValueParser;
 import com.xiaoleilu.hutool.cron.parser.SecondValueParser;
 import com.xiaoleilu.hutool.cron.parser.ValueParser;
+import com.xiaoleilu.hutool.cron.parser.YearValueParser;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -68,7 +69,7 @@ public class CronPattern {
 	private static final ValueParser DAY_OF_MONTH_VALUE_PARSER = new DayOfMonthValueParser();
 	private static final ValueParser MONTH_VALUE_PARSER = new MonthValueParser();
 	private static final ValueParser DAY_OF_WEEK_VALUE_PARSER = new DayOfWeekValueParser();
-	private static final ValueParser YEAR_VALUE_PARSER = new DayOfWeekValueParser();
+	private static final ValueParser YEAR_VALUE_PARSER = new YearValueParser();
 
 	private String pattern;
 
