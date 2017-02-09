@@ -1,10 +1,9 @@
-package com.xiaoleilu.hutool.cron.task;
+package com.xiaoleilu.hutool.cron;
 
 import java.util.ArrayList;
 import java.util.TimeZone;
 
-import com.xiaoleilu.hutool.cron.CronException;
-import com.xiaoleilu.hutool.cron.CronPattern;
+import com.xiaoleilu.hutool.cron.task.Task;
 
 /**
  * 定时任务表
@@ -12,10 +11,19 @@ import com.xiaoleilu.hutool.cron.CronPattern;
  *
  */
 public class TaskTable {
+	
+	private Scheduler scheduler;
+	private TimeZone timezone;
+	
 	private ArrayList<String> ids = new ArrayList<>();
 	private ArrayList<CronPattern> patterns = new ArrayList<>();
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private int size;
+	
+	public TaskTable(Scheduler scheduler) {
+		this.scheduler = scheduler;
+		this.timezone = scheduler.getTimeZone();
+	}
 	
 	/**
 	 * 新增Task
@@ -53,10 +61,10 @@ public class TaskTable {
 	 * @param timezone 时区
 	 * @param millis 时间毫秒
 	 */
-	public void executeTaskIfMatch(TimeZone timezone, long millis){
+	public void executeTaskIfMatch(long millis){
 		for(int i = 0; i < size; i++){
 			if(patterns.get(i).match(timezone, millis)){
-				new TaskExecutor(tasks.get(i)).start();
+				this.scheduler.spawnExecutor(tasks.get(i));
 			}
 		}
 	}

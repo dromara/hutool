@@ -124,7 +124,7 @@ public class CronPattern {
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
 	public boolean match(GregorianCalendar calendar) {
-		int second = calendar.get(Calendar.SECOND);
+//		int second = calendar.get(Calendar.SECOND);
 		int minute = calendar.get(Calendar.MINUTE);
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -135,14 +135,14 @@ public class CronPattern {
 		ValueMatcher dayOfMonthMatcher;
 		for (int i = 0; i < matcherSize; i++) {
 			dayOfMonthMatcher = dayOfMonthMatchers.get(i);
-			boolean eval = secondMatchers.get(i).match(second)//匹配秒
-					&& minuteMatchers.get(i).match(minute)//匹配分
+			boolean eval = minuteMatchers.get(i).match(minute)//匹配分
 					&& hourMatchers.get(i).match(hour)//匹配时
 					&& ((dayOfMonthMatcher instanceof DayOfMonthValueMatcher) ? ((DayOfMonthValueMatcher) dayOfMonthMatcher)
 							.match(dayOfMonth, month, calendar.isLeapYear(year))
 							: dayOfMonthMatcher.match(dayOfMonth))//匹配日
 					&& monthMatchers.get(i).match(month) //匹配月
 					&& dayOfWeekMatchers.get(i).match(dayOfWeek);//匹配周
+//					&& secondMatchers.get(i).match(second);//匹配秒
 			if (eval) {
 				return true;
 			}

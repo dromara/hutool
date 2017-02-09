@@ -43,12 +43,6 @@ public class CronTimer extends Thread{
 	 * @param millis 当前时间
 	 */
 	private void spawnLauncher(final long millis){
-		ThreadUtil.execute(new Runnable(){
-			
-			@Override
-			public void run() {
-				scheduler.tasks.executeTaskIfMatch(scheduler.getTimeZone(), millis);
-			}
-		});
+		this.scheduler.spawnLauncher(millis);
 	}
 }

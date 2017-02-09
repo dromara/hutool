@@ -1,7 +1,10 @@
-package com.xiaoleilu.hutool.cron.task;
+package com.xiaoleilu.hutool.cron;
+
+import com.xiaoleilu.hutool.cron.task.Task;
 
 /**
- * 任务执行器
+ * 作业执行器<br>
+ * 执行具体的作业，执行完毕销毁
  * @author Looly
  *
  */

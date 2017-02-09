@@ -1,134 +1,65 @@
 package com.xiaoleilu.hutool.cron;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
 import com.xiaoleilu.hutool.cron.task.RunnableTask;
 import com.xiaoleilu.hutool.cron.task.Task;
-import com.xiaoleilu.hutool.cron.task.TaskTable;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
- * 任务调度器
+ * 任务调度器<br>
+ * 
+ * 调度器启动流程：<br>
+ * 
+ * <pre>
+ * 启动Timer -> 启动TaskLauncher -> 启动TaskExecutor
+ * </pre>
+ * 
+ * 调度器关闭流程:<br>
+ * 
+ * <pre>
+ * 关闭Timer -> 关闭所有运行中的TaskLauncher -> 关闭所有运行中的TaskExecutor
+ * </pre>
+ * 
+ * 其中：
+ * 
+ * <pre>
+ * <strong>TaskLauncher</strong>：定时器每分钟调用一次，负责检查<strong>TaskTable</strong>是否有匹配到此时运行的Task
+ * </pre>
+ * 
+ * <pre>
+ * <strong>TaskExecutor</strong>：TaskLauncher匹配成功后，触发TaskExecutor执行具体的作业，执行完毕销毁
+ * </pre>
+ * 
  * @author Looly
  *
  */
 public class Scheduler {
-	
-	private TimeZone timezone;
-	protected boolean daemon;
-	private boolean started = false;
 	private Object lock = new Object();
-	
-	protected TaskTable tasks = new TaskTable();
+
+	/** 时区 */
+	private TimeZone timezone;
+	/** 是否为守护线程 */
+	protected boolean daemon;
+	/** 是否已经启动 */
+	private boolean started = false;
+	/** 定时器 */
 	private CronTimer timer;
-	
-	/**
-	 * 新增Task，使用随机UUID
-	 * @param pattern {@link CronPattern}对应的String表达式
-	 * @param task {@link Runnable}
-	 * @return ID
-	 */
-	public String schedule(String pattern, Runnable task){
-		return schedule(pattern, new RunnableTask(task));
-	}
-	
-	/**
-	 * 新增Task，使用随机UUID
-	 * @param pattern {@link CronPattern}对应的String表达式
-	 * @param task {@link Task}
-	 * @return ID
-	 */
-	public String schedule(String pattern, Task task){
-		String id = UUID.randomUUID().toString();
-		schedule(id, pattern, task);
-		return id;
-	}
-	
-	/**
-	 * 新增Task
-	 * @param id ID，为每一个Task定义一个ID
-	 * @param pattern {@link CronPattern}对应的String表达式
-	 * @param task {@link Runnable}
-	 * @return this
-	 */
-	public Scheduler schedule(String id, String pattern, Runnable task){
-		return schedule(id, new CronPattern(pattern), new RunnableTask(task));
-	}
-	
-	/**
-	 * 新增Task
-	 * @param id ID，为每一个Task定义一个ID
-	 * @param pattern {@link CronPattern}对应的String表达式
-	 * @param task {@link Task}
-	 * @return this
-	 */
-	public Scheduler schedule(String id, String pattern, Task task){
-		return schedule(id, new CronPattern(pattern), task);
-	}
-	
-	/**
-	 * 新增Task
-	 * @param id ID，为每一个Task定义一个ID
-	 * @param pattern {@link CronPattern}
-	 * @param task {@link Task}
-	 * @return this
-	 */
-	public Scheduler schedule(String id, CronPattern pattern, Task task){
-		tasks.add(id, pattern, task);
-		return this;
-	}
-	
-	/**
-	 * 移除Task
-	 * @param id Task的ID
-	 */
-	public synchronized void deschedule(String id) throws IndexOutOfBoundsException {
-		this.tasks.remove(id);
-	}
-	
-	/**
-	 * 启动
-	 * @return this
-	 */
-	public Scheduler start(){
-		synchronized (lock) {
-			
-			//Start CronTimer
-			timer = new CronTimer(this);
-			timer.setDaemon(this.daemon);
-			timer.start();
-			this.started = true;
-		}
-		return this;
-	}
-	
-	/**
-	 * 停止定时任务
-	 * @return this
-	 */
-	public Scheduler stop(){
-		synchronized (lock) {
-			if (!started) {
-				throw new IllegalStateException("Scheduler not started");
-			}
-			this.timer.interrupt();
-			ThreadUtil.waitForDie(this.timer);
-			
-			started = false;
-		}
-		return this;
-	}
-	
-	/**
-	 * @return 是否已经启动
-	 */
-	public boolean isStarted(){
-		return this.started;
-	}
-	
+
+	/** 定时任务表 */
+	TaskTable tasks = new TaskTable(this);
+	/** 启动器列表 */
+	protected List<TaskLauncher> launchers;
+	/** 执行器列表 */
+	protected List<TaskExecutor> executors;
+
+	// --------------------------------------------------------- Getters and Setters start
 	/**
 	 * 设置时区
+	 * 
 	 * @param timezone 时区
 	 * @return this
 	 */
@@ -136,18 +67,20 @@ public class Scheduler {
 		this.timezone = timezone;
 		return this;
 	}
-	
+
 	/**
 	 * 获得时区，默认为 {@link TimeZone#getDefault()}
+	 * 
 	 * @return 时区
 	 */
 	public TimeZone getTimeZone() {
 		return timezone != null ? timezone : TimeZone.getDefault();
 	}
-	
+
 	/**
 	 * 是否为守护线程<br>
 	 * 默认非守护线程
+	 * 
 	 * @param on <code>true</code>为守护线程，否则非守护线程
 	 * @throws CronException
 	 */
@@ -158,5 +91,173 @@ public class Scheduler {
 			}
 			this.daemon = on;
 		}
+	}
+	// --------------------------------------------------------- Getters and Setters end
+
+	// -------------------------------------------------------------------- shcedule start
+	/**
+	 * 新增Task，使用随机UUID
+	 * 
+	 * @param pattern {@link CronPattern}对应的String表达式
+	 * @param task {@link Runnable}
+	 * @return ID
+	 */
+	public String schedule(String pattern, Runnable task) {
+		return schedule(pattern, new RunnableTask(task));
+	}
+
+	/**
+	 * 新增Task，使用随机UUID
+	 * 
+	 * @param pattern {@link CronPattern}对应的String表达式
+	 * @param task {@link Task}
+	 * @return ID
+	 */
+	public String schedule(String pattern, Task task) {
+		String id = UUID.randomUUID().toString();
+		schedule(id, pattern, task);
+		return id;
+	}
+
+	/**
+	 * 新增Task
+	 * 
+	 * @param id ID，为每一个Task定义一个ID
+	 * @param pattern {@link CronPattern}对应的String表达式
+	 * @param task {@link Runnable}
+	 * @return this
+	 */
+	public Scheduler schedule(String id, String pattern, Runnable task) {
+		return schedule(id, new CronPattern(pattern), new RunnableTask(task));
+	}
+
+	/**
+	 * 新增Task
+	 * 
+	 * @param id ID，为每一个Task定义一个ID
+	 * @param pattern {@link CronPattern}对应的String表达式
+	 * @param task {@link Task}
+	 * @return this
+	 */
+	public Scheduler schedule(String id, String pattern, Task task) {
+		return schedule(id, new CronPattern(pattern), task);
+	}
+
+	/**
+	 * 新增Task
+	 * 
+	 * @param id ID，为每一个Task定义一个ID
+	 * @param pattern {@link CronPattern}
+	 * @param task {@link Task}
+	 * @return this
+	 */
+	public Scheduler schedule(String id, CronPattern pattern, Task task) {
+		tasks.add(id, pattern, task);
+		return this;
+	}
+
+	/**
+	 * 移除Task
+	 * 
+	 * @param id Task的ID
+	 */
+	public synchronized void deschedule(String id) throws IndexOutOfBoundsException {
+		this.tasks.remove(id);
+	}
+	// -------------------------------------------------------------------- shcedule end
+
+	/**
+	 * @return 是否已经启动
+	 */
+	public boolean isStarted() {
+		return this.started;
+	}
+
+	/**
+	 * 启动
+	 * 
+	 * @return this
+	 */
+	public Scheduler start() {
+		synchronized (lock) {
+			if (this.started) {
+				throw new CronException("Schedule is started!");
+			}
+
+			this.launchers = new ArrayList<>();
+			this.executors = new ArrayList<>();
+			
+			// Start CronTimer
+			timer = new CronTimer(this);
+			timer.setDaemon(this.daemon);
+			timer.start();
+			this.started = true;
+		}
+		return this;
+	}
+
+	/**
+	 * 停止定时任务
+	 * 
+	 * @return this
+	 */
+	public Scheduler stop() {
+		synchronized (lock) {
+			if (!started) {
+				throw new IllegalStateException("Scheduler not started");
+			}
+
+			// 停止CronTimer
+			ThreadUtil.interupt(this.timer, true);
+			// 停止所有TaskLauncher
+			synchronized (this.launchers) {
+				for (TaskLauncher taskLauncher : launchers) {
+					ThreadUtil.interupt(taskLauncher, true);
+				}
+			}
+			this.launchers =null;
+			
+			// 停止所有TaskExecutor
+			synchronized (this.executors) {
+				for (TaskExecutor taskExecutor : executors) {
+					ThreadUtil.interupt(taskExecutor, true);
+				}
+			}
+			this.executors = null;
+
+			//修改标志
+			started = false;
+		}
+		return this;
+	}
+	
+	/**
+	 * 启动 TaskLauncher
+	 * @param millis 触发事件的毫秒数
+	 * @return {@link TaskLauncher}
+	 */
+	TaskLauncher spawnLauncher(long millis) {
+		final TaskLauncher launcher = new TaskLauncher(this, millis);
+		synchronized (this.launchers) {
+			this.launchers.add(launcher);
+		}
+		launcher.setDaemon(this.daemon);
+		launcher.start();
+		return launcher;
+	}
+	
+	/**
+	 * 启动 TaskExecutor
+	 * @param task {@link Task}
+	 * @return {@link TaskExecutor}
+	 */
+	TaskExecutor spawnExecutor(Task task) {
+		final TaskExecutor executor = new TaskExecutor(task);
+		synchronized (this.executors) {
+			this.executors.add(executor);
+		}
+		executor.setDaemon(this.daemon);
+		executor.start();
+		return executor;
 	}
 }

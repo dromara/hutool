@@ -11,6 +11,8 @@
 * 增加 ThreadUtil.waitForDie
 * 增加DateUtil.betweenDay方法（感谢 @宁静之湖）
 * 增加Snowflake算法
+* 对Util类加final修饰符，并添加private构造方法
+* 增加 ThreadUtil.interupt方法
 
 ### Bug修复
 * DateUtil中offsite修正为offset

@@ -216,6 +216,20 @@ public final class ThreadUtil {
 	}
 	
 	/**
+	 * 结束线程，调用此方法后，线程将抛出 {@link InterruptedException}异常
+	 * @param thread 线程
+	 * @param isJoin 是否等待结束
+	 */
+	public static void interupt(Thread thread, boolean isJoin){
+		if(null != thread && false == thread.isInterrupted()){
+			thread.interrupt();
+			if(isJoin){
+				waitForDie(thread);
+			}
+		}
+	}
+	
+	/**
 	 * 等待线程结束. 调用 {@link Thread#join()} 并忽略 {@link InterruptedException}
 	 * 
 	 * @param thread 线程

@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.cron.task;
 
 /**
- * 定时作业接口，通过实现execute方法执行具体的任务
+ * 定时作业接口，通过实现execute方法执行具体的任务<br>
  * @author Looly
  *
  */
