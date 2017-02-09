@@ -13,6 +13,8 @@
 * 增加Snowflake算法
 * 对Util类加final修饰符，并添加private构造方法
 * 增加 ThreadUtil.interupt方法
+* Setting中对RuntimeException变为SettingRuntimeException
+* [log] LogFactory.setCurrentLogFactory支持传入LogFactory类
 
 ### Bug修复
 * DateUtil中offsite修正为offset

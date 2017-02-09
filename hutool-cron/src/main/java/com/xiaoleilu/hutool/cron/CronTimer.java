@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.cron;
 
+import com.xiaoleilu.hutool.date.DateUnit;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
@@ -9,33 +12,48 @@ import com.xiaoleilu.hutool.util.ThreadUtil;
  *
  */
 public class CronTimer extends Thread{
+	private static final Log log = LogFactory.get();
+	
+	/** 定时单元：秒 */
+	private long TIMER_UNIT_SECOND = DateUnit.SECOND.getMillis();
+	/** 定时单元：分 */
+	private long TIMER_UNIT_MINUTE = DateUnit.MINUTE.getMillis();
 	
 	private Scheduler scheduler;
+	/** 是否使用精确到秒的定时 */
+	private boolean useSecond;
 	
-	public CronTimer(Scheduler scheduler) {
+	/**
+	 * 构造
+	 * @param scheduler {@link Scheduler}
+	 * @param isUseSecond 是否使用精确到秒的定时
+	 */
+	public CronTimer(Scheduler scheduler, boolean isUseSecond) {
 		this.scheduler = scheduler;
+		this.useSecond = isUseSecond;
 	}
 	
 	@Override
 	public void run() {
+		final long timerUnit = useSecond ? TIMER_UNIT_SECOND : TIMER_UNIT_MINUTE;
+		
 		long thisTime = System.currentTimeMillis();
-		long nextMinute;
+		long nextTime;
 		long sleep;
 		while(true){
-			//下一分钟计算是按照上一个执行点开始时间计算的
-			nextMinute = ((thisTime / 60000) + 1) * 60000;//使用整分钟数做为一个判断点
-			sleep = nextMinute - System.currentTimeMillis();
-			if (sleep > 0) {
-				boolean isContinue = ThreadUtil.safeSleep(sleep);
-				if(false == isContinue){
-					break;
-				}
+			//下一时间计算是按照上一个执行点开始时间计算的
+			nextTime = ((thisTime / timerUnit) + 1) * timerUnit;
+			sleep = nextTime - System.currentTimeMillis();
+			if (sleep > 0 && false == ThreadUtil.safeSleep(sleep)) {
+				//等待直到下一个时间点，如果被中断直接退出Timer
+				break;
 			}
 			
 			//执行点，时间记录为执行开始的时间，而非结束时间
 			thisTime = System.currentTimeMillis();
 			spawnLauncher(thisTime);
 		}
+		log.debug("Hutool Cron Timer stoped.");
 	}
 	
 	/**

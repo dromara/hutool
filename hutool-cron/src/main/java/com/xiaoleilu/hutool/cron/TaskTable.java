@@ -60,10 +60,12 @@ public class TaskTable {
 	 * 如果时间匹配则执行相应的Task
 	 * @param timezone 时区
 	 * @param millis 时间毫秒
+	 * @param isMatchSecond 是否匹配秒
+	 * @param isMatchYear 是否匹配年
 	 */
-	public void executeTaskIfMatch(long millis){
+	public void executeTaskIfMatch(long millis, boolean isMatchSecond, boolean isMatchYear){
 		for(int i = 0; i < size; i++){
-			if(patterns.get(i).match(timezone, millis)){
+			if(patterns.get(i).match(timezone, millis, isMatchSecond, isMatchYear)){
 				this.scheduler.spawnExecutor(tasks.get(i));
 			}
 		}

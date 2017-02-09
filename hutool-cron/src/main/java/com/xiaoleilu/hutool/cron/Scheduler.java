@@ -48,6 +48,8 @@ public class Scheduler {
 	private boolean started = false;
 	/** 定时器 */
 	private CronTimer timer;
+	/** 是否使用精确到秒的定时 */
+	protected boolean useSecond = false;
 
 	/** 定时任务表 */
 	TaskTable tasks = new TaskTable(this);
@@ -91,6 +93,24 @@ public class Scheduler {
 			}
 			this.daemon = on;
 		}
+	}
+	
+	/**
+	 * 是否使用精确到秒的定时
+	 * @return <code>true</code>使用，<code>false</code>不使用
+	 */
+	public boolean isUseSecond(){
+		return this.useSecond;
+	}
+	
+	/**
+	 * 是否使用精确到秒的定时，默认不使用
+	 * @param isSecondMode <code>true</code>支持，<code>false</code>不支持
+	 * @return this
+	 */
+	public Scheduler setUseSecond(boolean isUseSecond) {
+		this.useSecond = isUseSecond;
+		return this;
 	}
 	// --------------------------------------------------------- Getters and Setters end
 
@@ -188,7 +208,7 @@ public class Scheduler {
 			this.executors = new ArrayList<>();
 			
 			// Start CronTimer
-			timer = new CronTimer(this);
+			timer = new CronTimer(this, this.useSecond);
 			timer.setDaemon(this.daemon);
 			timer.start();
 			this.started = true;

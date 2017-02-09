@@ -19,6 +19,7 @@ public class TaskLauncher extends Thread{
 	
 	@Override
 	public void run() {
-		scheduler.tasks.executeTaskIfMatch(millis);
+		//匹配秒部分由用户定义决定，始终不匹配年
+		scheduler.tasks.executeTaskIfMatch(millis, scheduler.useSecond, false);
 	}
 }

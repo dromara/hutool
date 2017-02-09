@@ -71,7 +71,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 		
 		final URL url = URLUtil.getURL(pathBaseClassLoader);
 		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", pathBaseClassLoader));
+			throw new SettingRuntimeException(StrUtil.format("Can not find Setting file: [{}]", pathBaseClassLoader));
 		}
 		this.init(url, charset, isUseVariable);
 	}
@@ -97,7 +97,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 		}
 		final URL url = URLUtil.getURL(configFile);
 		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", configFile.getAbsolutePath()));
+			throw new SettingRuntimeException(StrUtil.format("Can not find Setting file: [{}]", configFile.getAbsolutePath()));
 		}
 		this.init(url, charset, isUseVariable);
 	}
@@ -113,7 +113,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	public BasicSetting(String path, Class<?> clazz, Charset charset, boolean isUseVariable) {
 		final URL url = URLUtil.getURL(path, clazz);
 		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find Setting file: [{}]", path));
+			throw new SettingRuntimeException(StrUtil.format("Can not find Setting file: [{}]", path));
 		}
 		this.init(url, charset, isUseVariable);
 	}
@@ -127,7 +127,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 */
 	public BasicSetting(URL url, Charset charset, boolean isUseVariable) {
 		if(url == null) {
-			throw new RuntimeException("Null url define!");
+			throw new NullPointerException("Null url define!");
 		}
 		this.init(url, charset, isUseVariable);
 	}
@@ -143,7 +143,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 */
 	public boolean init(URL settingUrl, Charset charset, boolean isUseVariable) {
 		if (settingUrl == null) {
-			throw new RuntimeException("Null setting url or charset define!");
+			throw new NullPointerException("Null setting url define!");
 		}
 		this.settingUrl = settingUrl;
 		this.charset = charset;

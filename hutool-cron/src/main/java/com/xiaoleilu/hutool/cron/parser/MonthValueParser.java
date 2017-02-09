@@ -17,6 +17,7 @@ public class MonthValueParser extends SimpleValueParser {
 		super(1, 12);
 	}
 	
+	@Override
 	public int parse(String value) throws CronException {
 		try {
 			return super.parse(value);
@@ -25,6 +26,12 @@ public class MonthValueParser extends SimpleValueParser {
 		}
 	}
 
+	/**
+	 * 解析别名
+	 * @param value 别名值
+	 * @return 月份int值
+	 * @throws CronException
+	 */
 	private int parseAlias(String value) throws CronException {
 		for (int i = 0; i < ALIASES.length; i++) {
 			if (ALIASES[i].equalsIgnoreCase(value)) {

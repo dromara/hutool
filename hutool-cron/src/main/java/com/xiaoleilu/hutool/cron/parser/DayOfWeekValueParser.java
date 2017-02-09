@@ -31,6 +31,12 @@ public class DayOfWeekValueParser extends SimpleValueParser {
 		}
 	}
 
+	/**
+	 * 解析别名
+	 * @param value 别名值
+	 * @return 月份int值
+	 * @throws CronException
+	 */
 	private int parseAlias(String value) throws CronException {
 		for (int i = 0; i < ALIASES.length; i++) {
 			if (ALIASES[i].equalsIgnoreCase(value)) {
