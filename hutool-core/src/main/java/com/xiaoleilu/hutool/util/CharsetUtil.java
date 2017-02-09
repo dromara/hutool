@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
  * @author xiaoleilu
  *
  */
-public class CharsetUtil {
+public final class CharsetUtil {
 	
 	/** ISO-8859-1 */
 	public static final String ISO_8859_1 = "ISO-8859-1";
@@ -24,9 +24,7 @@ public class CharsetUtil {
 	/** GBK */
 	public static final Charset CHARSET_GBK = Charset.forName(GBK);
 	
-	private CharsetUtil() {
-		// 静态类不可实例化
-	}
+	private CharsetUtil() {}
 	
 	/**
 	 * 转换为Charset对象

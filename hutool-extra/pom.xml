@@ -31,12 +31,12 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
+		
 		<!-- 模板引擎 -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>1.7</version>
-			<!-- Servlet API，Servlet容器提供 -->
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

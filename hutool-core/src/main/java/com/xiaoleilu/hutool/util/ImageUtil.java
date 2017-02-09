@@ -28,7 +28,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 参考：http://blog.csdn.net/zhangzhikaixinya/article/details/8459400
  * @author Looly
  */
-public class ImageUtil {
+public final class ImageUtil {
 
 	public static String IMAGE_TYPE_GIF = "gif";// 图形交换格式
 	public static String IMAGE_TYPE_JPG = "jpg";// 联合照片专家组
@@ -36,6 +36,8 @@ public class ImageUtil {
 	public static String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
 	public static String IMAGE_TYPE_PNG = "png";// 可移植网络图形
 	public static String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
+	
+	private ImageUtil() {}
 
 	/**
 	 * 缩放图像（按比例缩放）

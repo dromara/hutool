@@ -17,7 +17,9 @@ import org.beetl.core.resource.Matcher;
  * 
  * @author Looly
  */
-public class BeetlUtil {
+public final class BeetlUtil {
+	
+	private BeetlUtil() {}
 	
 	/**
 	 * 创建默认 {@link GroupTemplate}

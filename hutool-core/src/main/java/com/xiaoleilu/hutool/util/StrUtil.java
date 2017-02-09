@@ -18,7 +18,7 @@ import com.xiaoleilu.hutool.lang.StrFormatter;
  * @author xiaoleilu
  *
  */
-public class StrUtil {
+public final class StrUtil {
 
 	public static final char C_SPACE = ' ';
 	public static final char C_TAB = '	';
@@ -56,6 +56,8 @@ public class StrUtil {
 	public static final String HTML_GT = "&gt;";
 
 	public static final String EMPTY_JSON = "{}";
+	
+	private StrUtil() {}
 
 	// ------------------------------------------------------------------------ Blank
 	/**

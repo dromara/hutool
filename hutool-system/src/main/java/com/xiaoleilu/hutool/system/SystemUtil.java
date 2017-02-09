@@ -14,7 +14,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class SystemUtil {
+public final class SystemUtil {
+	
 	/***** Java运行时环境信息 *****/
 	// Java 运行时环境规范名称
 	public final static String SPECIFICATION_NAME = "java.specification.name";
@@ -81,8 +82,7 @@ public class SystemUtil {
 	// 用户的当前工作目录
 	public final static String USER_DIR = "user.dir";
 
-	private SystemUtil() {
-	}
+	private SystemUtil() {}
 
 	//----------------------------------------------------------------------- Basic start
 	

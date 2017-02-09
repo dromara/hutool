@@ -39,12 +39,10 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Luxiaolei
  * 
  */
-public class DbUtil {
+public final class DbUtil {
 	private final static Log log = StaticLog.get();
 
-	private DbUtil() {
-		// 非可实例化类
-	}
+	private DbUtil() {}
 	
 	/**
 	 * 实例化一个新的SQL运行对象

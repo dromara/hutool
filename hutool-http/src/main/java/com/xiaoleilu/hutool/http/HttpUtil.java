@@ -37,9 +37,11 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 
  * @author xiaoleilu
  */
-public class HttpUtil {
+public final class HttpUtil {
 
 	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
+	
+	private HttpUtil(){}
 	
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded

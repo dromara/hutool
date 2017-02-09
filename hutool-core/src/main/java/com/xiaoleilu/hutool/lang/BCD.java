@@ -7,7 +7,10 @@ package com.xiaoleilu.hutool.lang;
  * @author Looly
  *
  */
-public class BCD {
+public final class BCD {
+	
+	private BCD() {}
+	
 	/**
 	 * 字符串转BCD码
 	 * @param asc ASCII字符串

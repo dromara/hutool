@@ -13,7 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Looly
  *
  */
-public class FileTypeUtil {
+public final class FileTypeUtil {
+	
+	private FileTypeUtil(){};
 
 	private static final Map<String, String> fileTypeMap;
 

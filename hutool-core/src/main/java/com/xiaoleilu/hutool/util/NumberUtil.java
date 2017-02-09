@@ -11,12 +11,14 @@ import java.util.Set;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
- * 数字工具类 TODO 待整理
+ * 数字工具类
  * 
  * @author Looly
  *
  */
-public class NumberUtil {
+public final class NumberUtil {
+	
+	private NumberUtil() {}
 
 	/**
 	 * 加法

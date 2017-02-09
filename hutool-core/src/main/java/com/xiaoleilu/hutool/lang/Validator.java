@@ -14,7 +14,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class Validator {
+public final class Validator {
+	
+	private Validator() {}
 
 	/** 英文字母 、数字和下划线 */
 	public final static Pattern GENERAL = Pattern.compile("^\\w+$");

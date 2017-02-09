@@ -20,7 +20,9 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * @author Looly
  *
  */
-public class BeanUtil {
+public final class BeanUtil {
+	
+	private BeanUtil() {}
 	
 	/**
 	 * 判断是否为Bean对象

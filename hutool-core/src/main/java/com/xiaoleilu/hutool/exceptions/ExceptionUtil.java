@@ -16,7 +16,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class ExceptionUtil {
+public final class ExceptionUtil {
+	
+	private ExceptionUtil(){};
 
 	/**
 	 * 获得完整消息，包括异常名

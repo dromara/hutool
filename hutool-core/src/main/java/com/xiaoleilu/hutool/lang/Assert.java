@@ -13,7 +13,10 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class Assert {
+public final class Assert {
+	
+	private Assert() {}
+	
 	/**
 	 * 断言是否为真，如果为 {@code false} 抛出 {@code IllegalArgumentException} 异常<br>
 	 * 

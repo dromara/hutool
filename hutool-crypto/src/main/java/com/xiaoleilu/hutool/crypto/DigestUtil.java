@@ -14,7 +14,9 @@ import com.xiaoleilu.hutool.util.CharsetUtil;
  * @author Looly
  *
  */
-public class DigestUtil {
+public final class DigestUtil {
+	
+	private DigestUtil() {}
 
 	// ------------------------------------------------------------------------------------------- MD5
 	/**

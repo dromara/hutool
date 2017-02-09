@@ -17,7 +17,9 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * @author xiaoleilu
  * 
  */
-public class URLUtil {
+public final class URLUtil {
+	
+	private URLUtil() {}
 	
 	/**
 	 * 创建URL对象

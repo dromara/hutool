@@ -30,11 +30,9 @@ import com.xiaoleilu.hutool.lang.Matcher;
  * @author xiaoleilu
  * 
  */
-public class CollectionUtil {
+public final class CollectionUtil {
 
-	private CollectionUtil() {
-		// 静态类不可实例化
-	}
+	private CollectionUtil() {}
 
 	/**
 	 * 两个集合的并集<br>

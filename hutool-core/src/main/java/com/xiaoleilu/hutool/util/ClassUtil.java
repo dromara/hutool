@@ -31,10 +31,9 @@ import com.xiaoleilu.hutool.lang.Singleton;
  * @author seaside_hi, xiaoleilu
  *
  */
-public class ClassUtil {
-	private ClassUtil() {
-		// 静态类不可实例化
-	}
+public final class ClassUtil {
+	
+	private ClassUtil() {}
 
 	/**
 	 * 获得对象数组的类数组
@@ -560,22 +559,26 @@ public class ClassUtil {
 	 * 执行非static方法时，必须满足对象有默认构造方法<br>
 	 * 
 	 * @param <T>
-	 * @param classNameDotMethodName 类名和方法名表达式，例如：com.xiaoleilu.hutool.StrUtil.isEmpty
+	 * @param classNameWithMethodName 类名和方法名表达式，例如：com.xiaoleilu.hutool.StrUtil#isEmpty或com.xiaoleilu.hutool.StrUtil.isEmpty
 	 * @param isSingleton 是否为单例对象，如果此参数为false，每次执行方法时创建一个新对象
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameDotMethodName, boolean isSingleton, Object[] args) {
-		if (StrUtil.isBlank(classNameDotMethodName)) {
+	public static <T> T invoke(String classNameWithMethodName, boolean isSingleton, Object[] args) {
+		if (StrUtil.isBlank(classNameWithMethodName)) {
 			throw new UtilException("Blank classNameDotMethodName!");
 		}
-		final int dotIndex = classNameDotMethodName.lastIndexOf('.');
-		if (dotIndex <= 0) {
-			throw new UtilException("Invalid classNameDotMethodName [{}]!", classNameDotMethodName);
+		
+		int splitIndex = classNameWithMethodName.lastIndexOf('#');
+		if(splitIndex <= 0){
+			splitIndex = classNameWithMethodName.lastIndexOf('.');
+		}
+		if (splitIndex <= 0) {
+			throw new UtilException("Invalid classNameWithMethodName [{}]!", classNameWithMethodName);
 		}
 
-		final String className = classNameDotMethodName.substring(0, dotIndex);
-		final String methodName = classNameDotMethodName.substring(dotIndex + 1);
+		final String className = classNameWithMethodName.substring(0, splitIndex);
+		final String methodName = classNameWithMethodName.substring(splitIndex + 1);
 
 		return invoke(className, methodName, isSingleton, args);
 	}
@@ -611,7 +614,15 @@ public class ClassUtil {
 	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object[] args) {
 		Class<Object> clazz = loadClass(className);
 		try {
-			return invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), methodName, args);
+			final Method method = getDeclaredMethod(clazz, methodName, args);
+			if(null == method){
+				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
+			}
+			if(isStatic(method)){
+				return invoke(null, method, args);
+			}else{
+				return invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), method, args);
+			}
 		} catch (Exception e) {
 			throw new UtilException(e);
 		}
@@ -638,11 +649,25 @@ public class ClassUtil {
 			throw new UtilException(e);
 		}
 	}
+	
+	/**
+	 * 执行静态方法
+	 * 
+	 * @param method 方法（对象方法或static方法都可）
+	 * @param args 参数对象
+	 * @return 结果
+	 * @throws UtilException IllegalAccessException and IllegalArgumentException
+	 * @throws InvocationTargetException 目标方法执行异常
+	 * @throws IllegalArgumentException 参数异常
+	 */
+	public static <T> T invokeStatic(Method method, Object[] args) throws InvocationTargetException, IllegalArgumentException{
+		return invoke(null, method, args);
+	}
 
 	/**
 	 * 执行方法
 	 * 
-	 * @param obj 对象
+	 * @param obj 对象，如果执行静态方法，此值为<code>null</code>
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
 	 * @return 结果

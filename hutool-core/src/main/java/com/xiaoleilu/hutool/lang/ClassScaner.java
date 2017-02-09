@@ -20,8 +20,10 @@ import com.xiaoleilu.hutool.util.URLUtil;
  * @author Looly
  *
  */
-public class ClassScaner {
+public final class ClassScaner {
 //	private static Log log = LogFactory.get();
+	
+	private ClassScaner() {}
 	
 	/**
 	 * 扫描指定包路径下所有包含指定注解的类

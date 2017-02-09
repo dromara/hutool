@@ -38,10 +38,12 @@ import com.xiaoleilu.hutool.io.IoUtil;
  * @author xiaoleilu
  * 
  */
-public class XmlUtil {
+public final class XmlUtil {
 
 	/** 在XML中无效的字符 正则 */
 	public final static String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
+	
+	private XmlUtil() {}
 
 	// -------------------------------------------------------------------------------------- Read
 	/**

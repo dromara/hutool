@@ -28,43 +28,66 @@
 		<module>hutool-setting</module>
 		<module>hutool-system</module>
 	</modules>
+	
+	<properties>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+		
+		<!-- versions -->
+		<junit.version>4.12</junit.version>
+		<servlet-api.version>3.1.0</servlet-api.version>
+		<slf4j.version>1.7.22</slf4j.version>
+		<logback.version>1.1.7</logback.version>
+		<log4j.version>1.2.17</log4j.version>
+		<log4j2.version>2.6.2</log4j2.version>
+		<commons-logging.version>1.2</commons-logging.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
-				<version>3.1.0</version>
+				<version>${servlet-api.version}</version>
 			</dependency>
 			<!-- Slf4j -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.7.22</version>
+				<version>${slf4j.version}</version>
 			</dependency>
 			<!-- LogBack -->
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
-				<version>1.1.7</version>
+				<version>${logback.version}</version>
 			</dependency>
 			<!-- Log4j 1.2 -->
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
+				<version>${log4j.version}</version>
 			</dependency>
 			<!-- Log4j 2 -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-core</artifactId>
-				<version>2.6.2</version>
+				<version>${log4j2.version}</version>
 			</dependency>
-			<!-- Common Logging -->
+			<!-- Apache Commons Logging -->
 			<dependency>
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
-				<version>1.2</version>
+				<version>${commons-logging.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -93,11 +116,6 @@
 		<developerConnection>scm:git@github.com:looly/hutool.git</developerConnection>
 		<url>git@github.com:looly/hutool.git</url>
 	</scm>
-
-	<properties>
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
-	</properties>
 
 	<build>
 		<plugins>

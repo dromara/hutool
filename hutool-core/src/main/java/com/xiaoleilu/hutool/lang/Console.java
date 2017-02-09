@@ -10,7 +10,9 @@ import static java.lang.System.err;
  * @author Looly
  *
  */
-public class Console {
+public final class Console {
+	
+	private Console() {}
 	
 	//--------------------------------------------------------------------------------- Log
 	/**

@@ -15,7 +15,7 @@ import com.xiaoleilu.hutool.lang.Validator;
  * 
  * @author xiaoleilu
  */
-public class ReUtil {
+public final class ReUtil {
 	
 	/** 正则表达式匹配中文 */
 	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";
@@ -26,9 +26,7 @@ public class ReUtil {
 	/** 正则中需要被转义的关键字 */
 	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[]{'$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'});
 	
-	private ReUtil() {
-		//阻止实例化
-	}
+	private ReUtil() {}
 
 	/**
 	 * 获得匹配的字符串

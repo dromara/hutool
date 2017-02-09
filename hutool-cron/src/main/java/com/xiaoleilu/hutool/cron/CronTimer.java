@@ -9,6 +9,13 @@ import com.xiaoleilu.hutool.util.ThreadUtil;
  *
  */
 public class CronTimer extends Thread{
+	
+	private Scheduler scheduler;
+	
+	public CronTimer(Scheduler scheduler) {
+		this.scheduler = scheduler;
+	}
+	
 	@Override
 	public void run() {
 		long thisTime = System.currentTimeMillis();
@@ -31,7 +38,17 @@ public class CronTimer extends Thread{
 		}
 	}
 	
-	private void spawnLauncher(long time){
-		//TODO
+	/**
+	 * 启动匹配
+	 * @param millis 当前时间
+	 */
+	private void spawnLauncher(final long millis){
+		ThreadUtil.execute(new Runnable(){
+			
+			@Override
+			public void run() {
+				scheduler.tasks.executeTaskIfMatch(scheduler.getTimeZone(), millis);
+			}
+		});
 	}
 }

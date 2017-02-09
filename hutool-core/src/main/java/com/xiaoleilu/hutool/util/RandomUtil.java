@@ -14,7 +14,9 @@ import java.util.UUID;
  * @author xiaoleilu
  *
  */
-public class RandomUtil {
+public final class RandomUtil {
+	
+	private RandomUtil() {}
 
 	/** 用于随机选的数字 */
 	private static final String BASE_NUMBER = "0123456789";

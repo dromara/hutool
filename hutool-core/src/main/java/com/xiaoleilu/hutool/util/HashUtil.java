@@ -4,13 +4,11 @@ package com.xiaoleilu.hutool.util;
  * Hash算法大全<br>
  * 推荐使用FNV1算法
  * 
- * @author Goodzzp 2006-11-20
+ * @author Goodzzp,Looly
  */
-public class HashUtil {
+public final class HashUtil {
 	
-	private HashUtil(){
-		//类对象
-	}
+	private HashUtil(){}
 
 	/**
 	 * 加法hash

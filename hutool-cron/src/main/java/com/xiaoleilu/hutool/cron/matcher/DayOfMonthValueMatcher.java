@@ -7,7 +7,7 @@ import java.util.List;
  * @author Looly
  *
  */
-public class DayOfMonthValueMatcher extends IntArrayValueMatcher{
+public class DayOfMonthValueMatcher extends BoolArrayValueMatcher{
 	
 	private static final int[] LAST_DAYS = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 

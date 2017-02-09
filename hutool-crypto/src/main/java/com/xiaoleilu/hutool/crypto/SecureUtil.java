@@ -49,7 +49,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author xiaoleilu
  *
  */
-public class SecureUtil {
+public final class SecureUtil {
+	
+	private SecureUtil() {}
 
 	/**
 	 * 默认密钥字节数

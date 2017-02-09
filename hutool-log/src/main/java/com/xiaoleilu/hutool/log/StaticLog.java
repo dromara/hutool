@@ -8,8 +8,10 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class StaticLog {
+public final class StaticLog {
 	private static final String FQCN = StaticLog.class.getName();
+	
+	private StaticLog() {}
 	
 	// ----------------------------------------------------------- Log method start
 	// ------------------------ Trace

@@ -7,7 +7,10 @@ import java.math.BigDecimal;
  * @author Looly
  *
  */
-public class MathUtil {
+public final class MathUtil {
+	
+	private MathUtil() {}
+	
 	/**
 	 * 保留小数位
 	 * @param number 被保留小数的数字

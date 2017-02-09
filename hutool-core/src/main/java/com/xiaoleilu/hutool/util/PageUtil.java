@@ -6,7 +6,9 @@ package com.xiaoleilu.hutool.util;
  * @author xiaoleilu
  * 
  */
-public class PageUtil {
+public final class PageUtil {
+	
+	private PageUtil() {}
 
 	/**
 	 * 将页数和每页条目数转换为开始位置和结束位置<br>

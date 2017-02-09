@@ -16,7 +16,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 
  * @author xiaoleilu
  */
-public class DateUtil {
+public final class DateUtil {
+	
+	private DateUtil() {}
 	
 	/** 标准日期格式 */
 	public final static String NORM_DATE_PATTERN = DatePattern.NORM_DATE_PATTERN;

@@ -16,8 +16,10 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * 
  * @author luxiaolei
  */
-public class ThreadUtil {
+public final class ThreadUtil {
 	private static ExecutorService executor = Executors.newCachedThreadPool();
+	
+	private ThreadUtil() {}
 
 	/**
 	 * 直接在公共线程池中执行线程

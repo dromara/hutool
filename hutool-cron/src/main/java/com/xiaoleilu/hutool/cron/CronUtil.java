@@ -1,28 +1,28 @@
-package com.xiaoleilu.hutool.extra;
+package com.xiaoleilu.hutool.cron;
 
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.cron.task.Task;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
-import it.sauronsoftware.cron4j.Scheduler;
-import it.sauronsoftware.cron4j.Task;
-
 /**
  * 定时任务工具类
  * @author xiaoleilu
- *@deprecated Please use [hutool-cron] module
+ *
  */
-public class CronUtil {
+public final class CronUtil {
 //	private final static Log log = StaticLog.get();
 	
 	/** Crontab配置文件 */
-	public final static String CRONTAB_CONFIG_PATH = "config/cron4j.setting";
+	public final static String CRONTAB_CONFIG_PATH = "config/cron.setting";
 	
 	private final static Scheduler scheduler = new Scheduler();
 	private static Setting crontabSetting;
+	
+	private CronUtil() {}
 	
 	/**
 	 * 自定义定时任务配置文件

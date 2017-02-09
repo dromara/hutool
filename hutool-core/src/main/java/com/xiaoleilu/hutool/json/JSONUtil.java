@@ -19,7 +19,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class JSONUtil {
+public final class JSONUtil {
+	
+	private JSONUtil() {}
 	
 	//-------------------------------------------------------------------- Pause start
 	/**

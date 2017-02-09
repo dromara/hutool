@@ -6,7 +6,9 @@ package com.xiaoleilu.hutool.lang;
  * @author Looly
  *
  */
-public class Base32 {
+public final class Base32 {
+	
+	private Base32() {}
 
 	private static final String base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 	private static final int[] base32Lookup = {//

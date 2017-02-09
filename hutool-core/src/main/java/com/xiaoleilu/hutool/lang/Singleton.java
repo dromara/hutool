@@ -14,9 +14,7 @@ import com.xiaoleilu.hutool.util.ClassUtil;
 public final class Singleton {
 	private static Map<Class<?>, Object> pool = new ConcurrentHashMap<Class<?>, Object>();
 	
-	private Singleton() {
-		//类对象
-	}
+	private Singleton() {}
 	
 	/**
 	 * 获得指定类的单例对象<br>

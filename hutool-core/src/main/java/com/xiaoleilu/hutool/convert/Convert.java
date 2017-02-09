@@ -18,11 +18,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author xiaoleilu
  * 
  */
-public class Convert {
+public final class Convert {
 
-	private Convert() {
-		// 静态类不可实例化
-	}
+	private Convert() {}
 
 	/**
 	 * 转换为字符串<br>

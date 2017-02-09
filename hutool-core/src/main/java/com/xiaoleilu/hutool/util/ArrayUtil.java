@@ -16,7 +16,9 @@ import com.xiaoleilu.hutool.lang.Editor;
  * @author Looly
  *
  */
-public class ArrayUtil {
+public final class ArrayUtil {
+	
+	private ArrayUtil() {}
 
 	// ---------------------------------------------------------------------- isEmpty
 	/**
