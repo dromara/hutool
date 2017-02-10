@@ -49,8 +49,7 @@ public final class CronUtil {
 	
 	/**
 	 * 设置是否支持秒匹配，默认不使用
-	 * @param isSecondMode <code>true</code>支持，<code>false</code>不支持
-	 * @return this
+	 * @param isMatchSecond <code>true</code>支持，<code>false</code>不支持
 	 */
 	public static void setMatchSecond(boolean isMatchSecond) {
 		scheduler.setMatchSecond(isMatchSecond);
@@ -58,8 +57,7 @@ public final class CronUtil {
 	
 	/**
 	 * 设置是否支持年匹配，默认不使用
-	 * @param isSecondMode <code>true</code>支持，<code>false</code>不支持
-	 * @return this
+	 * @param isMatchYear <code>true</code>支持，<code>false</code>不支持
 	 */
 	public static void setMatchYear(boolean isMatchYear) {
 		scheduler.setMatchYear(isMatchYear);

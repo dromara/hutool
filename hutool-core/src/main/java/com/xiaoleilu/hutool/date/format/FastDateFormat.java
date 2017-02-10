@@ -134,7 +134,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	 * 获得 {@link FastDateFormat} 实例
 	 *
 	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
-	 * @param 时区{@link TimeZone}
+	 * @param timeZone 时区{@link TimeZone}
 	 * @return 本地化 {@link FastDateFormat}
 	 * @throws IllegalArgumentException
 	 */

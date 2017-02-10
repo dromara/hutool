@@ -21,6 +21,11 @@ public class TaskTable {
 	private ArrayList<Task> tasks = new ArrayList<>();
 	private int size;
 	
+	/**
+	 * 构造
+	 * 
+	 * @param scheduler {@link Scheduler}
+	 */
 	public TaskTable(Scheduler scheduler) {
 		this.scheduler = scheduler;
 		this.timezone = scheduler.getTimeZone();
@@ -28,6 +33,7 @@ public class TaskTable {
 	
 	/**
 	 * 新增Task
+	 * 
 	 * @param id ID
 	 * @param pattern {@link CronPattern}
 	 * @param task {@link Task}
@@ -59,7 +65,6 @@ public class TaskTable {
 	
 	/**
 	 * 如果时间匹配则执行相应的Task
-	 * @param timezone 时区
 	 * @param millis 时间毫秒
 	 * @param isMatchSecond 是否匹配秒
 	 * @param isMatchYear 是否匹配年

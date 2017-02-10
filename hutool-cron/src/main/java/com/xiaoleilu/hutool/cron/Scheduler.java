@@ -112,7 +112,7 @@ public class Scheduler {
 	
 	/**
 	 * 设置是否支持秒匹配，默认不使用
-	 * @param isSecondMode <code>true</code>支持，<code>false</code>不支持
+	 * @param isMatchSecond <code>true</code>支持，<code>false</code>不支持
 	 * @return this
 	 */
 	public Scheduler setMatchSecond(boolean isMatchSecond) {

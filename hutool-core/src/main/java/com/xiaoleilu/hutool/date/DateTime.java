@@ -104,7 +104,7 @@ public class DateTime extends Date {
 	
 	/**
 	 * 构造
-	 * @see DatePatternLocal
+	 * @see DatePattern
 	 * @param dateStr Date字符串
 	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
 	 */
@@ -114,7 +114,7 @@ public class DateTime extends Date {
 	
 	/**
 	 * 构造
-	 * @see DatePatternLocal
+	 * @see DatePattern
 	 * @param dateStr Date字符串
 	 * @param dateFormat 格式化器 {@link FastDateFormat}
 	 */

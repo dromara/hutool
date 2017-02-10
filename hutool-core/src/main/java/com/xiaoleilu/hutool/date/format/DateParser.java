@@ -24,7 +24,7 @@ public interface DateParser extends DateBasic{
 
 	/**
 	 * 将日期字符串解析并转换为  {@link Date} 对象<br>
-	 * 等价于 {@link java.text.DateFormat#parse(String, ParsePosition}
+	 * 等价于 {@link java.text.DateFormat#parse(String, ParsePosition)}
 	 * 
 	 * @param source 日期字符串
 	 * @param pos {@link ParsePosition}

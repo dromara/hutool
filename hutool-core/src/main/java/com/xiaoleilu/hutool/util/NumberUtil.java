@@ -130,7 +130,7 @@ public final class NumberUtil {
 
 	/**
 	 * 是否为数字
-	 * @param value 值
+	 * @param str 字符串值
 	 * @return 是否为数字
 	 */
 	public static boolean isNumber(String str) {

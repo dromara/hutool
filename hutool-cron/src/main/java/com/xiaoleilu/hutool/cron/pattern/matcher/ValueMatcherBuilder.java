@@ -55,7 +55,7 @@ public class ValueMatcherBuilder {
 	 * </ul>
 	 * @param value 子表达式值
 	 * @param parser 针对这个字段的解析器
-	 * @return
+	 * @return 值列表
 	 */
 	private static List<Integer> parseArray(String value, ValueParser parser){
 		final List<Integer> values = new ArrayList<>();
