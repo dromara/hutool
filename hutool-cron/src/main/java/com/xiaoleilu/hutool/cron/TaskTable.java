@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.cron;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
+import com.xiaoleilu.hutool.cron.pattern.CronPattern;
 import com.xiaoleilu.hutool.cron.task.Task;
 
 /**

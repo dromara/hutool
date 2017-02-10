@@ -10,14 +10,24 @@ import com.xiaoleilu.hutool.cron.task.Task;
  */
 public class TaskExecutor extends Thread{
 	
-	Task task;
+	private Scheduler scheduler;
+	private Task task;
 	
-	public TaskExecutor(Task task) {
+	public TaskExecutor(Scheduler scheduler, Task task) {
+		this.scheduler = scheduler;
 		this.task = task;
 	}
 	
 	@Override
 	public void run() {
-		task.execute();
+		try {
+			scheduler.listenerManager.notifyTaskStart(this);
+			task.execute();
+			scheduler.listenerManager.notifyTaskSucceeded(this);
+		} catch (Exception e) {
+			scheduler.listenerManager.notifyTaskFailed(this, e);
+		}finally{
+			scheduler.notifyExecutorCompleted(this);
+		}
 	}
 }

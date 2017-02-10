@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cron.parser;
+package com.xiaoleilu.hutool.cron.pattern.parser;
 
 import com.xiaoleilu.hutool.cron.CronException;
 
@@ -8,7 +8,7 @@ import com.xiaoleilu.hutool.cron.CronException;
  *
  */
 public class SimpleValueParser implements ValueParser {
-
+	
 	/** 最小值（包括） */
 	protected int min;
 	/** 最大值（包括） */

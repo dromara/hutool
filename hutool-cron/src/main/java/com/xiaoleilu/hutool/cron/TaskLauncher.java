@@ -2,7 +2,8 @@ package com.xiaoleilu.hutool.cron;
 
 /**
  * 作业启动器<br>
- * 负责检查<strong>TaskTable</strong>是否有匹配到此时运行的Task
+ * 负责检查<strong>TaskTable</strong>是否有匹配到此时运行的Task<br>
+ * 检查完毕后启动器结束
  * 
  * @author Looly
  *
@@ -20,6 +21,9 @@ public class TaskLauncher extends Thread{
 	@Override
 	public void run() {
 		//匹配秒部分由用户定义决定，始终不匹配年
-		scheduler.tasks.executeTaskIfMatch(millis, scheduler.matchSecond, scheduler.matchYear);
+		scheduler.taskTable.executeTaskIfMatch(millis, scheduler.matchSecond, scheduler.matchYear);
+		
+		//结束通知
+		scheduler.notifyLauncherCompleted(this);
 	}
 }

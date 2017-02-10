@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cron;
+package com.xiaoleilu.hutool.cron.pattern;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -6,30 +6,31 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.xiaoleilu.hutool.cron.matcher.AlwaysTrueValueMatcher;
-import com.xiaoleilu.hutool.cron.matcher.DayOfMonthValueMatcher;
-import com.xiaoleilu.hutool.cron.matcher.ValueMatcher;
-import com.xiaoleilu.hutool.cron.matcher.ValueMatcherBuilder;
-import com.xiaoleilu.hutool.cron.parser.DayOfMonthValueParser;
-import com.xiaoleilu.hutool.cron.parser.DayOfWeekValueParser;
-import com.xiaoleilu.hutool.cron.parser.HourValueParser;
-import com.xiaoleilu.hutool.cron.parser.MinuteValueParser;
-import com.xiaoleilu.hutool.cron.parser.MonthValueParser;
-import com.xiaoleilu.hutool.cron.parser.SecondValueParser;
-import com.xiaoleilu.hutool.cron.parser.ValueParser;
-import com.xiaoleilu.hutool.cron.parser.YearValueParser;
+import com.xiaoleilu.hutool.cron.CronException;
+import com.xiaoleilu.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
+import com.xiaoleilu.hutool.cron.pattern.matcher.DayOfMonthValueMatcher;
+import com.xiaoleilu.hutool.cron.pattern.matcher.ValueMatcher;
+import com.xiaoleilu.hutool.cron.pattern.matcher.ValueMatcherBuilder;
+import com.xiaoleilu.hutool.cron.pattern.parser.DayOfMonthValueParser;
+import com.xiaoleilu.hutool.cron.pattern.parser.DayOfWeekValueParser;
+import com.xiaoleilu.hutool.cron.pattern.parser.HourValueParser;
+import com.xiaoleilu.hutool.cron.pattern.parser.MinuteValueParser;
+import com.xiaoleilu.hutool.cron.pattern.parser.MonthValueParser;
+import com.xiaoleilu.hutool.cron.pattern.parser.SecondValueParser;
+import com.xiaoleilu.hutool.cron.pattern.parser.ValueParser;
+import com.xiaoleilu.hutool.cron.pattern.parser.YearValueParser;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 定时任务表达式<br>
- * 表达式类似于Linux的crontab表达式，表达式使用空格分成5个部分：
+ * 表达式类似于Linux的crontab表达式，表达式使用空格分成5个部分，按顺序依次为：
  * <ol>
  * <li><strong>分</strong>：范围：0~59</li>
  * <li><strong>时</strong>：范围：0~23</li>
  * <li><strong>日</strong>：范围：1~31，<strong>"L"</strong>表示月的最后一天</li>
  * <li><strong>月</strong>：范围：1~12，同时支持别名："jan","feb", "mar", "apr", "may","jun", "jul", "aug", "sep","oct", "nov", "dec"</li>
- * <li><strong>周</strong>：范围：0 (Sunday)~6(Saturday)，7也可以表示周日，同时支持别名："sun","mon", "tue", "wed", "thu","fri", "sat"</li>
+ * <li><strong>周</strong>：范围：0 (Sunday)~6(Saturday)，7也可以表示周日，同时支持别名："sun","mon", "tue", "wed", "thu","fri", "sat"，<strong>"L"</strong>表示周六</li>
  * </ol>
  * 
  * 为了兼容Quartz表达式，同时支持6位和7位表达式，其中：<br>
@@ -39,14 +40,25 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 当为7位时，最后一位表示<strong>年</strong>，范围1970~2099，但是第7位不做解析，也不做匹配
  * </pre>
  * 
- * 当定时任务运行到的时间匹配这5个子表达式后，任务被启动。<br>
+ * 当定时任务运行到的时间匹配这些表达式后，任务被启动。<br>
+ * 注意：
+ * <pre>
+ * 当isMatchSecond为<code>true</code>时才会匹配秒部分
+ * 当isMatchYear为<code>true</code>时才会匹配年部分
+ * 默认都是关闭的
+ * </pre>
+ * 
  * 对于每一个子表达式，同样支持以下形式：
  * <ul>
  * <li><strong>*</strong>：表示匹配这个位置所有的时间</li>
- * <li><strong>*&#47;2</strong>：表示步进，例如在分上，表示每两分钟，同样*可以使用数字列表代替，逗号分隔</li>
- * <li><strong>2-8</strong>：表示范围，例如在分上，表示2,3,4,5,6,7,8分</li>
+ * <li><strong>*&#47;2</strong>：表示间隔时间，例如在分上，表示每两分钟，同样*可以使用数字列表代替，逗号分隔</li>
+ * <li><strong>2-8</strong>：表示连续区间，例如在分上，表示2,3,4,5,6,7,8分</li>
+ * <li><strong>2,3,5,8</strong>：表示列表</li>
  * <li><strong>cronA | cronB</strong>：表示多个定时表达式</li>
  * </ul>
+ * 注意：在每一个子表达式中优先级：
+ * <pre>间隔（/） &gt; 区间（-） &gt; 列表（,） </pre>
+ * 例如 2,3,6/3中，由于“/”优先级高，因此相当于2,3,(6/3)，结果与 2,3,6等价<br><br>
  * 
  * 一些例子：
  * <ul>

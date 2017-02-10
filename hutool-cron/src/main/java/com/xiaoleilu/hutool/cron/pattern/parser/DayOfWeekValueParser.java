@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cron.parser;
+package com.xiaoleilu.hutool.cron.pattern.parser;
 
 import com.xiaoleilu.hutool.cron.CronException;
 
@@ -38,6 +38,11 @@ public class DayOfWeekValueParser extends SimpleValueParser {
 	 * @throws CronException
 	 */
 	private int parseAlias(String value) throws CronException {
+		if(value.equalsIgnoreCase("L")){
+			//最后一天为星期六
+			return ALIASES.length - 1;
+		}
+		
 		for (int i = 0; i < ALIASES.length; i++) {
 			if (ALIASES[i].equalsIgnoreCase(value)) {
 				return i;

@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.cron.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.cron.CronPattern;
+import com.xiaoleilu.hutool.cron.pattern.CronPattern;
 import com.xiaoleilu.hutool.date.DateUtil;
 
 /**

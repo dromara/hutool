@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import com.xiaoleilu.hutool.cron.listener.TaskListener;
+import com.xiaoleilu.hutool.cron.listener.TaskListenerManager;
+import com.xiaoleilu.hutool.cron.pattern.CronPattern;
 import com.xiaoleilu.hutool.cron.task.RunnableTask;
 import com.xiaoleilu.hutool.cron.task.Task;
 import com.xiaoleilu.hutool.util.ThreadUtil;
@@ -42,23 +45,25 @@ public class Scheduler {
 
 	/** 时区 */
 	private TimeZone timezone;
-	/** 是否为守护线程 */
-	protected boolean daemon;
 	/** 是否已经启动 */
 	private boolean started = false;
-	/** 定时器 */
-	private CronTimer timer;
 	/** 是否支持秒匹配 */
 	protected boolean matchSecond = false;
 	/** 是否支持年匹配 */
 	protected boolean matchYear = false;
+	/** 是否为守护线程 */
+	protected boolean daemon;
 
+	/** 定时器 */
+	private CronTimer timer;
 	/** 定时任务表 */
-	TaskTable tasks = new TaskTable(this);
+	protected TaskTable taskTable = new TaskTable(this);
 	/** 启动器列表 */
 	protected List<TaskLauncher> launchers;
 	/** 执行器列表 */
 	protected List<TaskExecutor> executors;
+	/** 监听管理器列表 */
+	protected TaskListenerManager listenerManager;
 
 	// --------------------------------------------------------- Getters and Setters start
 	/**
@@ -132,6 +137,26 @@ public class Scheduler {
 		this.matchYear = isMatchYear;
 		return this;
 	}
+	
+	/**
+	 * 增加监听器
+	 * @param listener {@link TaskListener}
+	 * @return this
+	 */
+	public Scheduler addListener(TaskListener listener){
+		this.listenerManager.addListener(listener);
+		return this;
+	}
+	
+	/**
+	 * 移除监听器
+	 * @param listener {@link TaskListener}
+	 * @return this
+	 */
+	public Scheduler removeListener(TaskListener listener){
+		this.listenerManager.removeListener(listener);
+		return this;
+	}
 	// --------------------------------------------------------- Getters and Setters end
 
 	// -------------------------------------------------------------------- shcedule start
@@ -192,7 +217,7 @@ public class Scheduler {
 	 * @return this
 	 */
 	public Scheduler schedule(String id, CronPattern pattern, Task task) {
-		tasks.add(id, pattern, task);
+		taskTable.add(id, pattern, task);
 		return this;
 	}
 
@@ -202,7 +227,7 @@ public class Scheduler {
 	 * @param id Task的ID
 	 */
 	public synchronized void deschedule(String id) throws IndexOutOfBoundsException {
-		this.tasks.remove(id);
+		this.taskTable.remove(id);
 	}
 	// -------------------------------------------------------------------- shcedule end
 
@@ -276,7 +301,7 @@ public class Scheduler {
 	 * @param millis 触发事件的毫秒数
 	 * @return {@link TaskLauncher}
 	 */
-	TaskLauncher spawnLauncher(long millis) {
+	protected TaskLauncher spawnLauncher(long millis) {
 		final TaskLauncher launcher = new TaskLauncher(this, millis);
 		synchronized (this.launchers) {
 			this.launchers.add(launcher);
@@ -291,8 +316,8 @@ public class Scheduler {
 	 * @param task {@link Task}
 	 * @return {@link TaskExecutor}
 	 */
-	TaskExecutor spawnExecutor(Task task) {
-		final TaskExecutor executor = new TaskExecutor(task);
+	protected TaskExecutor spawnExecutor(Task task) {
+		final TaskExecutor executor = new TaskExecutor(this, task);
 		synchronized (this.executors) {
 			this.executors.add(executor);
 		}
@@ -300,4 +325,26 @@ public class Scheduler {
 		executor.start();
 		return executor;
 	}
+	
+	// -------------------------------------------------------------------- notify start
+	/**
+	 * 启动器启动完毕，启动完毕后从执行器列表中移除
+	 * @param launcher 启动器 {@link TaskLauncher}
+	 */
+	protected void notifyLauncherCompleted(TaskLauncher launcher) {
+		synchronized (launchers) {
+			launchers.remove(launcher);
+		}
+	}
+	
+	/**
+	 * 执行器执行完毕调用此方法，将执行器从执行器列表移除
+	 * @param executor 执行器 {@link TaskExecutor}
+	 */
+	protected void notifyExecutorCompleted(TaskExecutor executor) {
+		synchronized (executors) {
+			executors.remove(executor);
+		}
+	}
+	// -------------------------------------------------------------------- notify end
 }
