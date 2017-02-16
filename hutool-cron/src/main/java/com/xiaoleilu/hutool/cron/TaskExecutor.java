@@ -13,10 +13,20 @@ public class TaskExecutor extends Thread{
 	private Scheduler scheduler;
 	private Task task;
 	
+	/**
+	 * 获得任务对象
+	 * @return 任务对象
+	 */
+	public Task getTask() {
+		return task;
+	}
+
 	public TaskExecutor(Scheduler scheduler, Task task) {
 		this.scheduler = scheduler;
 		this.task = task;
 	}
+	
+	
 	
 	@Override
 	public void run() {

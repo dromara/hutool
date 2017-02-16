@@ -27,6 +27,7 @@
 		<module>hutool-script</module>
 		<module>hutool-setting</module>
 		<module>hutool-system</module>
+		<module>hutool-geo</module>
 	</modules>
 	
 	<properties>
