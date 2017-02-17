@@ -17,8 +17,9 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  *
  */
 public final class NumberUtil {
-	
-	private NumberUtil() {}
+
+	private NumberUtil() {
+	}
 
 	/**
 	 * 加法
@@ -130,6 +131,7 @@ public final class NumberUtil {
 
 	/**
 	 * 是否为数字
+	 * 
 	 * @param str 字符串值
 	 * @return 是否为数字
 	 */
@@ -238,7 +240,7 @@ public final class NumberUtil {
 	 * @param size 指定产生随机数的个数
 	 */
 	public int[] generateRandomNumber(int begin, int end, int size) {
-		if(begin > end){
+		if (begin > end) {
 			int temp = begin;
 			begin = end;
 			end = temp;
@@ -275,7 +277,7 @@ public final class NumberUtil {
 	 * @param size 指定产生随机数的个数
 	 */
 	public Integer[] generateBySet(int begin, int end, int size) {
-		if(begin > end){
+		if (begin > end) {
 			int temp = begin;
 			begin = end;
 			end = temp;
@@ -320,6 +322,7 @@ public final class NumberUtil {
 
 	/**
 	 * 是否是质数
+	 * 
 	 * @param n 数字
 	 * @return 是否是质数
 	 */
@@ -381,6 +384,7 @@ public final class NumberUtil {
 
 	/**
 	 * 最大公约数
+	 * 
 	 * @param m 第一个值
 	 * @param n 第二个值
 	 * @return 最大公约数
@@ -396,6 +400,7 @@ public final class NumberUtil {
 
 	/**
 	 * 最小公倍数
+	 * 
 	 * @param m 第一个值
 	 * @param n 第二个值
 	 * @return 最小公倍数
@@ -403,112 +408,218 @@ public final class NumberUtil {
 	public static int multiple(int m, int n) {
 		return m * n / divisor(m, n);
 	}
-	
+
 	/**
 	 * 给定范围内的整数列表，步进为1
+	 * 
 	 * @param start 开始（包含）
 	 * @param stop 结束（包含）
 	 * @return 整数列表
 	 */
-	public static int[] range(int start, int stop){
+	public static int[] range(int start, int stop) {
 		return range(start, stop, 1);
 	}
-	
+
 	/**
 	 * 给定范围内的整数列表
+	 * 
 	 * @param start 开始（包含）
 	 * @param stop 结束（包含）
 	 * @param step 步进
 	 * @return 整数列表
 	 */
-	public static int[] range(int start, int stop, int step){
-		if(start < stop){
+	public static int[] range(int start, int stop, int step) {
+		if (start < stop) {
 			step = Math.abs(step);
-		}else if(start > stop){
-			step  = - Math.abs(step);
-		}else{//start == end
-			return new int[]{start};
+		} else if (start > stop) {
+			step = -Math.abs(step);
+		} else {// start == end
+			return new int[] { start };
 		}
-		
+
 		int size = Math.abs((stop - start) / step) + 1;
 		int[] values = new int[size];
 		int index = 0;
-		for(int i = start; (step > 0) ? i<=stop : i>=stop; i+=step){
+		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
 			values[index] = i;
 			index++;
 		}
 		return values;
 	}
-	
+
 	/**
 	 * 将给定范围内的整数添加到已有集合中，步进为1
+	 * 
 	 * @param start 开始（包含）
 	 * @param stop 结束（包含）
 	 * @param values 集合
 	 * @return 集合
 	 */
-	public static Collection<Integer> appendRange(int start, int stop, Collection<Integer> values){
+	public static Collection<Integer> appendRange(int start, int stop, Collection<Integer> values) {
 		return appendRange(start, stop, 1, values);
 	}
-	
+
 	/**
 	 * 将给定范围内的整数添加到已有集合中
+	 * 
 	 * @param start 开始（包含）
 	 * @param stop 结束（包含）
 	 * @param step 步进
 	 * @param values 集合
 	 * @return 集合
 	 */
-	public static Collection<Integer> appendRange(int start, int stop, int step, Collection<Integer> values){
-		if(start < stop){
+	public static Collection<Integer> appendRange(int start, int stop, int step, Collection<Integer> values) {
+		if (start < stop) {
 			step = Math.abs(step);
-		}else if(start > stop){
-			step  = - Math.abs(step);
-		}else{//start == end
+		} else if (start > stop) {
+			step = -Math.abs(step);
+		} else {// start == end
 			values.add(start);
 			return values;
 		}
-		
-		for(int i = start; (step > 0) ? i<=stop : i>=stop; i+=step){
+
+		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
 			values.add(i);
 		}
 		return values;
 	}
-	
+
 	/**
 	 * 获得数字对应的二进制字符串
+	 * 
 	 * @param number 数字
 	 * @return 二进制字符串
 	 */
-	public static String getBinaryStr(Number number){
-		if(number instanceof Long){
-			return Long.toBinaryString((Long)number);
-		}else if(number instanceof Integer){
-			return Integer.toBinaryString((Integer)number);
-		}else{
+	public static String getBinaryStr(Number number) {
+		if (number instanceof Long) {
+			return Long.toBinaryString((Long) number);
+		} else if (number instanceof Integer) {
+			return Integer.toBinaryString((Integer) number);
+		} else {
 			return Long.toBinaryString(number.longValue());
 		}
 	}
-	
+
 	/**
 	 * 二进制转int
+	 * 
 	 * @param binaryStr 二进制字符串
 	 * @return int
 	 */
-	public int binaryToInt(String binaryStr){
+	public int binaryToInt(String binaryStr) {
 		return Integer.parseInt(binaryStr, 2);
 	}
-	
+
 	/**
 	 * 二进制转long
+	 * 
 	 * @param binaryStr 二进制字符串
 	 * @return long
 	 */
-	public long binaryToLong(String binaryStr){
+	public long binaryToLong(String binaryStr) {
 		return Long.parseLong(binaryStr, 2);
 	}
+
+	/**
+	 * 对比两个值得大小
+	 * @see Character#compare(char, char)
+	 * 
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @since 3.0.1
+	 */
+	public static int compare(char x, char y) {
+		return x - y;
+	}
 	
-	//--------------------------------------------------------------------- Private method start
+	/**
+	 * 对比两个值得大小
+	 * @see Double#compare(double, double)
+	 * 
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @since 3.0.1
+	 */
+	public static int compare(double x, double y) {
+		return Double.compare(x, y);
+	}
+
+	/**
+	 * 对比两个值得大小
+	 * @see Integer#compare(int, int)
+	 * 
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @since 3.0.1
+	 */
+	public static int compare(int x, int y) {
+		if (x == y) {
+			return 0;
+		}
+		if (x < y) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * 对比两个值得大小
+	 * @see Long#compare(long, long)
+	 * 
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @since 3.0.1
+	 */
+	public static int compare(long x, long y) {
+		if (x == y) {
+			return 0;
+		}
+		if (x < y) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * 对比两个值得大小
+	 * @see Short#compare(short, short)
+	 * 
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @since 3.0.1
+	 */
+	public static int compare(short x, short y) {
+		if (x == y) {
+			return 0;
+		}
+		if (x < y) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * 对比两个值得大小
+	 * @see Byte#compare(byte, byte)
+	 * 
+	 * @param x 第一个值
+	 * @param y 第二个值
+	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @since 3.0.1
+	 */
+	public static int compare(byte x, byte y) {
+		return x - y;
+	}
+
+	// --------------------------------------------------------------------- Private method start
 	private int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
 			return 1;
@@ -524,5 +635,5 @@ public final class NumberUtil {
 			return selectNum * mathNode(selectNum - 1);
 		}
 	}
-	//--------------------------------------------------------------------- Private method end
+	// --------------------------------------------------------------------- Private method end
 }

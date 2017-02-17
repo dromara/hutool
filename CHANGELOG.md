@@ -17,10 +17,13 @@
 * [log] LogFactory.setCurrentLogFactory支持传入LogFactory类
 * [core] 增加CollectionUtil.getFirst
 * [core] NumberUtil中增加binaryToInt、binaryToLong、getBinaryStr
+* 增加Mutable类型
+* HttpUtil.downFile增加String参数方法
 
 ### Bug修复
 * DateUtil中offsite修正为offset
 * ClassUtil.invoke方法在执行无法实例化的静态方法时报错问题
+* 修复克隆方法对数组支持不足问题
 
 -------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------

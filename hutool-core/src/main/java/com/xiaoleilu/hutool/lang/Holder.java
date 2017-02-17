@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.lang;
 
-import java.io.Serializable;
+import com.xiaoleilu.hutool.mutable.MutableObj;
 
 /**
  * 为不可变的对象引用提供一个可变的包装，在java中支持引用传递。
@@ -8,11 +8,9 @@ import java.io.Serializable;
  *
  * @param <T> 所持有值类型
  */
-public final class Holder<T> implements Serializable{
-	private static final long serialVersionUID = 861411261825135385L;
-	
-	public T value;
-	
+public final class Holder<T> extends MutableObj<T>{
+	private static final long serialVersionUID = -3119568580130118011L;
+
 	/**
 	 * 新建Holder类，持有指定值，当值为空时抛出空指针异常
 	 * @param value 值，不能为空
@@ -26,11 +24,19 @@ public final class Holder<T> implements Serializable{
 	}
 	
 	//--------------------------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 */
 	public Holder() {
+		super();
 	}
 	
+	/**
+	 * 构造
+	 * @param value
+	 */
 	public Holder(T value) {
-		this.value = value;
+		super(value);
 	}
 	//--------------------------------------------------------------------------- Constructor end
 }

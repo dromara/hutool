@@ -49,7 +49,7 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
 	 * @param latitude 纬度
 	 * @param longitude 经度
 	 * @param numberOfCharacters 字符数
-	 * @return
+	 * @return {@link GeoHash}
 	 */
 	public static GeoHash withCharacterPrecision(double latitude, double longitude, int numberOfCharacters) {
 		if (numberOfCharacters > MAX_CHARACTER_PRECISION) {

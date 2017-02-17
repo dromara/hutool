@@ -249,6 +249,18 @@ public final class HttpUtil {
 	 * 下载远程文件
 	 * 
 	 * @param url 请求的url
+	 * @param dest 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @return 文件大小
+	 * @throws IOException
+	 */
+	public static long downloadFile(String url, String dest) {
+		return downloadFile(url, FileUtil.file(dest));
+	}
+	
+	/**
+	 * 下载远程文件
+	 * 
+	 * @param url 请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
 	 * @throws IOException

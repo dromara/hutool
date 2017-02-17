@@ -17,8 +17,9 @@ import com.xiaoleilu.hutool.lang.Editor;
  *
  */
 public final class ArrayUtil {
-	
-	private ArrayUtil() {}
+
+	private ArrayUtil() {
+	}
 
 	// ---------------------------------------------------------------------- isEmpty
 	/**
@@ -40,7 +41,7 @@ public final class ArrayUtil {
 	public static boolean isEmpty(final long[] array) {
 		return array == null || array.length == 0;
 	}
-	
+
 	/**
 	 * 数组是否为空
 	 * 
@@ -305,7 +306,34 @@ public final class ArrayUtil {
 		}
 		return array.clone();
 	}
-
+	
+	/**
+	 * 克隆数组，如果非数组返回<code>null</code>
+	 * @param obj 数组对象
+	 * @return 克隆后的数组对象
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T clone(final T obj) {
+		if(null == obj){
+			return null;
+		}
+		if (isArray(obj)) {
+			final Object result;
+			final Class<?> componentType = obj.getClass().getComponentType();
+			if (componentType.isPrimitive()) {//原始类型
+				int length = Array.getLength(obj);
+				result = Array.newInstance(componentType, length);
+				while (length-- > 0) {
+					Array.set(result, length, Array.get(obj, length));
+				}
+			} else {
+				result = ((Object[]) obj).clone();
+			}
+			return (T)result;
+		}
+		return null;
+	}
+	
 	/**
 	 * 生成一个数字列表<br>
 	 * 自动判定正序反序
@@ -749,7 +777,7 @@ public final class ArrayUtil {
 		}
 		return obj.getClass().isArray();
 	}
-	
+
 	/**
 	 * 数组或集合转String
 	 * 
@@ -789,7 +817,7 @@ public final class ArrayUtil {
 		}
 		return obj.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -799,10 +827,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static <T> String join(T[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (T item : array) {
@@ -811,19 +839,19 @@ public final class ArrayUtil {
 			} else {
 				sb.append(conjunction);
 			}
-			if(ArrayUtil.isArray(item)) {
+			if (ArrayUtil.isArray(item)) {
 				sb.append(join(ArrayUtil.wrap(item), conjunction));
-			} else if(item instanceof Iterable<?>) {
-				sb.append(CollectionUtil.join((Iterable<?>)item, conjunction));
-			} else if(item instanceof Iterator<?>) {
-				sb.append(CollectionUtil.join((Iterator<?>)item, conjunction));
-			} else{
+			} else if (item instanceof Iterable<?>) {
+				sb.append(CollectionUtil.join((Iterable<?>) item, conjunction));
+			} else if (item instanceof Iterator<?>) {
+				sb.append(CollectionUtil.join((Iterator<?>) item, conjunction));
+			} else {
 				sb.append(item);
 			}
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -832,10 +860,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(long[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (long item : array) {
@@ -848,7 +876,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -857,10 +885,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(int[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (int item : array) {
@@ -873,7 +901,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -882,10 +910,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(short[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (short item : array) {
@@ -898,7 +926,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -907,10 +935,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(char[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (char item : array) {
@@ -923,7 +951,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -932,10 +960,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(byte[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (byte item : array) {
@@ -948,7 +976,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -957,10 +985,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(boolean[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (boolean item : array) {
@@ -973,7 +1001,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -982,10 +1010,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(float[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (float item : array) {
@@ -998,7 +1026,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -1007,10 +1035,10 @@ public final class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static String join(double[] array, String conjunction) {
-		if(null == array){
+		if (null == array) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		for (double item : array) {
@@ -1023,7 +1051,7 @@ public final class ArrayUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -1034,7 +1062,7 @@ public final class ArrayUtil {
 	public static String join(Object array, String conjunction) {
 		if (isArray(array)) {
 			final Class<?> componentType = array.getClass().getComponentType();
-			if(componentType.isPrimitive()){
+			if (componentType.isPrimitive()) {
 				final String componentTypeName = componentType.getName();
 				switch (componentTypeName) {
 					case "long":
@@ -1056,8 +1084,8 @@ public final class ArrayUtil {
 					default:
 						throw new UtilException("Unknown primitive type: [{}]", componentTypeName);
 				}
-			}else{
-				return join((Object[])array, conjunction);
+			} else {
+				return join((Object[]) array, conjunction);
 			}
 		}
 		throw new UtilException(StrUtil.format("[{}] is not a Array!", array.getClass()));

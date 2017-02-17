@@ -140,14 +140,14 @@ public final class ReUtil {
 		
 		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
 		
-		final String content = contentHolder.value;
+		final String content = contentHolder.get();
 		Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
 			for (String var : varNums) {
 				int group = Integer.parseInt(var);
 				template = template.replace("$" + var, matcher.group(group));
 			}
-			contentHolder.value = StrUtil.sub(content, matcher.end(), content.length());
+			contentHolder.set(StrUtil.sub(content, matcher.end(), content.length()));
 			return template;
 		}
 		return null;
