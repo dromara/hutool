@@ -475,6 +475,39 @@ public final class NumberUtil {
 		return values;
 	}
 	
+	/**
+	 * 获得数字对应的二进制字符串
+	 * @param number 数字
+	 * @return 二进制字符串
+	 */
+	public static String getBinaryStr(Number number){
+		if(number instanceof Long){
+			return Long.toBinaryString((Long)number);
+		}else if(number instanceof Integer){
+			return Integer.toBinaryString((Integer)number);
+		}else{
+			return Long.toBinaryString(number.longValue());
+		}
+	}
+	
+	/**
+	 * 二进制转int
+	 * @param binaryStr 二进制字符串
+	 * @return int
+	 */
+	public int binaryToInt(String binaryStr){
+		return Integer.parseInt(binaryStr, 2);
+	}
+	
+	/**
+	 * 二进制转long
+	 * @param binaryStr 二进制字符串
+	 * @return long
+	 */
+	public long binaryToLong(String binaryStr){
+		return Long.parseLong(binaryStr, 2);
+	}
+	
 	//--------------------------------------------------------------------- Private method start
 	private int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {

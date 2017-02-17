@@ -952,6 +952,32 @@ public final class CollectionUtil {
 		return list;
 	}
 	
+	/**
+	 * 获取集合的第一个元素
+	 * @param iterable {@link Iterable}
+	 * @return 第一个元素
+	 * @since 3.0.1
+	 */
+	public static <T> T getFirst(Iterable<T> iterable){
+		if(null != iterable){
+			return getFirst(iterable.iterator());
+		}
+		return null;
+	}
+	
+	/**
+	 * 获取集合的第一个元素
+	 * @param iterator {@link Iterator}
+	 * @return 第一个元素
+	 * @since 3.0.1
+	 */
+	public static <T> T getFirst(Iterator<T> iterator){
+		if(null != iterator && iterator.hasNext()){
+			return iterator.next();
+		}
+		return null;
+	}
+	
 	//------------------------------------------------------------------------------------------------- forEach
 	
 	/**

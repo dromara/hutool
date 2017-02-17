@@ -15,6 +15,8 @@
 * 增加 ThreadUtil.interupt方法
 * Setting中对RuntimeException变为SettingRuntimeException
 * [log] LogFactory.setCurrentLogFactory支持传入LogFactory类
+* [core] 增加CollectionUtil.getFirst
+* [core] NumberUtil中增加binaryToInt、binaryToLong、getBinaryStr
 
 ### Bug修复
 * DateUtil中offsite修正为offset
