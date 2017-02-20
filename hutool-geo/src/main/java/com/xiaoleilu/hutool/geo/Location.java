@@ -20,10 +20,10 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class Location implements Serializable {
 	private static final long serialVersionUID = 7457963026513014856L;
 	
-	/** 经度 */
-	private final double longitude;
 	/** 纬度 */
 	private final double latitude;
+	/** 经度 */
+	private final double longitude;
 
 	/**
 	 * 构造

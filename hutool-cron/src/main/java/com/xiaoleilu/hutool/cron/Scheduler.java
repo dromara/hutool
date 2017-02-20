@@ -1,15 +1,18 @@
 package com.xiaoleilu.hutool.cron;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.cron.listener.TaskListener;
 import com.xiaoleilu.hutool.cron.listener.TaskListenerManager;
 import com.xiaoleilu.hutool.cron.pattern.CronPattern;
+import com.xiaoleilu.hutool.cron.task.InvokeTask;
 import com.xiaoleilu.hutool.cron.task.RunnableTask;
 import com.xiaoleilu.hutool.cron.task.Task;
+import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
@@ -30,7 +33,8 @@ import com.xiaoleilu.hutool.util.ThreadUtil;
  * 其中：
  * 
  * <pre>
- * <strong>TaskLauncher</strong>：定时器每分钟调用一次，负责检查<strong>TaskTable</strong>是否有匹配到此时运行的Task
+ * <strong>TaskLauncher</strong>：定时器每分钟调用一次（如果{@link Scheduler#isMatchSecond()}为<code>true</code>每秒调用一次），
+ * 负责检查<strong>TaskTable</strong>是否有匹配到此时间运行的Task
  * </pre>
  * 
  * <pre>
@@ -59,11 +63,11 @@ public class Scheduler {
 	/** 定时任务表 */
 	protected TaskTable taskTable = new TaskTable(this);
 	/** 启动器列表 */
-	protected List<TaskLauncher> launchers;
+	protected TaskLauncherManager taskLauncherManager;
 	/** 执行器列表 */
-	protected List<TaskExecutor> executors;
+	protected TaskExecutorManager taskExecutorManager;
 	/** 监听管理器列表 */
-	protected TaskListenerManager listenerManager;
+	protected TaskListenerManager listenerManager = new TaskListenerManager();
 
 	// --------------------------------------------------------- Getters and Setters start
 	/**
@@ -87,7 +91,7 @@ public class Scheduler {
 	}
 
 	/**
-	 * 是否为守护线程<br>
+	 * 设置是否为守护线程<br>
 	 * 默认非守护线程
 	 * 
 	 * @param on <code>true</code>为守护线程，否则非守护线程
@@ -100,6 +104,14 @@ public class Scheduler {
 			}
 			this.daemon = on;
 		}
+	}
+	
+	/**
+	 * 是否为守护线程
+	 * @return 是否为守护线程
+	 */
+	public boolean isDeamon(){
+		return this.daemon;
 	}
 	
 	/**
@@ -160,6 +172,27 @@ public class Scheduler {
 	// --------------------------------------------------------- Getters and Setters end
 
 	// -------------------------------------------------------------------- shcedule start
+	/**
+	 * 批量加入配置文件中的定时任务<br>
+	 * 配置文件格式为：
+	 * xxx.xxx.xxx.Class.method = * * * * *
+	 * @param cronSetting 定时任务设置文件
+	 */
+	public Scheduler schedule(Setting cronSetting) {
+		if(CollectionUtil.isNotEmpty(cronSetting)){
+			for (Entry<Object, Object> entry : cronSetting.entrySet()) {
+				final String jobClass = Convert.toStr(entry.getKey());
+				final String pattern = Convert.toStr(entry.getValue());
+				try {
+					schedule(pattern, new InvokeTask(jobClass));
+				} catch (Exception e) {
+					throw new CronException(e, "Schedule [{}] [{}] error!", pattern, jobClass);
+				}
+			}
+		}
+		return this;
+	}
+	
 	/**
 	 * 新增Task，使用随机UUID
 	 * 
@@ -249,8 +282,8 @@ public class Scheduler {
 				throw new CronException("Schedule is started!");
 			}
 
-			this.launchers = new ArrayList<>();
-			this.executors = new ArrayList<>();
+			this.taskLauncherManager = new TaskLauncherManager(this);
+			this.taskExecutorManager = new TaskExecutorManager(this);
 			
 			// Start CronTimer
 			timer = new CronTimer(this, this.matchSecond);
@@ -274,21 +307,11 @@ public class Scheduler {
 
 			// 停止CronTimer
 			ThreadUtil.interupt(this.timer, true);
-			// 停止所有TaskLauncher
-			synchronized (this.launchers) {
-				for (TaskLauncher taskLauncher : launchers) {
-					ThreadUtil.interupt(taskLauncher, true);
-				}
-			}
-			this.launchers =null;
 			
+			// 停止所有TaskLauncher
+			taskLauncherManager.destroy();
 			// 停止所有TaskExecutor
-			synchronized (this.executors) {
-				for (TaskExecutor taskExecutor : executors) {
-					ThreadUtil.interupt(taskExecutor, true);
-				}
-			}
-			this.executors = null;
+			this.taskExecutorManager.destroy();
 
 			//修改标志
 			started = false;
@@ -296,55 +319,6 @@ public class Scheduler {
 		return this;
 	}
 	
-	/**
-	 * 启动 TaskLauncher
-	 * @param millis 触发事件的毫秒数
-	 * @return {@link TaskLauncher}
-	 */
-	protected TaskLauncher spawnLauncher(long millis) {
-		final TaskLauncher launcher = new TaskLauncher(this, millis);
-		synchronized (this.launchers) {
-			this.launchers.add(launcher);
-		}
-		launcher.setDaemon(this.daemon);
-		launcher.start();
-		return launcher;
-	}
-	
-	/**
-	 * 启动 TaskExecutor
-	 * @param task {@link Task}
-	 * @return {@link TaskExecutor}
-	 */
-	protected TaskExecutor spawnExecutor(Task task) {
-		final TaskExecutor executor = new TaskExecutor(this, task);
-		synchronized (this.executors) {
-			this.executors.add(executor);
-		}
-		executor.setDaemon(this.daemon);
-		executor.start();
-		return executor;
-	}
-	
 	// -------------------------------------------------------------------- notify start
-	/**
-	 * 启动器启动完毕，启动完毕后从执行器列表中移除
-	 * @param launcher 启动器 {@link TaskLauncher}
-	 */
-	protected void notifyLauncherCompleted(TaskLauncher launcher) {
-		synchronized (launchers) {
-			launchers.remove(launcher);
-		}
-	}
-	
-	/**
-	 * 执行器执行完毕调用此方法，将执行器从执行器列表移除
-	 * @param executor 执行器 {@link TaskExecutor}
-	 */
-	protected void notifyExecutorCompleted(TaskExecutor executor) {
-		synchronized (executors) {
-			executors.remove(executor);
-		}
-	}
 	// -------------------------------------------------------------------- notify end
 }

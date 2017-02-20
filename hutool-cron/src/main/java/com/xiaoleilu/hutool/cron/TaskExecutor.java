@@ -26,8 +26,6 @@ public class TaskExecutor extends Thread{
 		this.task = task;
 	}
 	
-	
-	
 	@Override
 	public void run() {
 		try {
@@ -37,7 +35,7 @@ public class TaskExecutor extends Thread{
 		} catch (Exception e) {
 			scheduler.listenerManager.notifyTaskFailed(this, e);
 		}finally{
-			scheduler.notifyExecutorCompleted(this);
+			scheduler.taskExecutorManager.notifyExecutorCompleted(this);
 		}
 	}
 }
