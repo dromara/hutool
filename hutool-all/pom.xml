@@ -106,8 +106,8 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<!-- 剔除测试类 -->
-							<shadeTestJar>true</shadeTestJar>
+							<!-- 创建源码jar -->
+							<createSourcesJar>true</createSourcesJar>
 							<artifactSet>
 								<includes>
 									<include>${project.groupId}:*:*</include>
