@@ -15,6 +15,7 @@ public class JSONNull {
 
 	/**
 	 * There is only intended to be a single instance of the NULL object, so the clone method returns itself.
+	 *克隆方法只返回本身，此对象是个单例对象
 	 *
 	 * @return NULL.
 	 */
@@ -36,6 +37,7 @@ public class JSONNull {
 
 	/**
 	 * Get the "null" string value.
+	 *获得“null”字符串
 	 *
 	 * @return The string "null".
 	 */

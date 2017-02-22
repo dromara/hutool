@@ -118,10 +118,10 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 	
 	/**
-	 * Determine if the value associated with the key is null or if there is no value.
+	 * key对应值是否为<code>null</code>或无此key
 	 *
-	 * @param key A key string.
-	 * @return true if there is no value associated with the key or if the value is the JSONNull.NULL object.
+	 * @param key 键
+	 * @return true 无此key或值为<code>null</code>或{@link JSONNull#NULL}返回<code>false</code>，其它返回<code>true</code>
 	 */
 	public boolean isNull(String key) {
 		return JSONNull.NULL.equals(this.getObj(key));
@@ -416,14 +416,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * Make a prettyprinted JSON text of this JSONObject.
-	 * <p>
-	 * Warning: This method assumes that the data structure is acyclical.
+	 * 格式化输出JSON字符串
 	 *
-	 * @param indentFactor The number of spaces to add to each level of indentation.
-	 * @return a printable, displayable, portable, transmittable representation of the object, beginning with <code>{</code>&nbsp;<small>(left brace)</small> and ending with <code>}</code>&nbsp;
-	 *         <small>(right brace)</small>.
-	 * @throws JSONException If the object contains an invalid number.
+	 * @param indentFactor 每层缩进空格数
+	 * @return JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
 	 */
 	@Override
 	public String toJSONString(int indentFactor) throws JSONException {

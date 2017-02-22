@@ -1,18 +1,14 @@
 
 package com.xiaoleilu.hutool.cron;
 
-import java.util.Map.Entry;
-
-import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.cron.task.Task;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.setting.SettingRuntimeException;
-import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
- * 定时任务工具类
+ * 定时任务工具类<br>
+ * 此工具持有一个全局{@link Scheduler}，所有定时任务在同一个调度器中执行
  * @author xiaoleilu
  *
  */
@@ -88,19 +84,7 @@ public final class CronUtil {
 	 * @param cronSetting 定时任务设置文件
 	 */
 	public static void schedule(Setting cronSetting) {
-		if(CollectionUtil.isEmpty(cronSetting)){
-			return;
-		}
-		for (Entry<Object, Object> entry : cronSetting.entrySet()) {
-			final String jobClass = Convert.toStr(entry.getKey());
-			final String pattern = Convert.toStr(entry.getValue());
-			try {
-				final Runnable job = ClassUtil.newInstance(jobClass);
-				schedule(pattern, job);
-			} catch (Exception e) {
-				throw new CronException(e, "Schedule [{}] [{}] error!", pattern, jobClass);
-			}
-		}
+		scheduler.schedule(cronSetting);
 	}
 	
 	/**
