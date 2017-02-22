@@ -258,7 +258,7 @@ public final class ClassUtil {
 	 * @throws NoSuchMethodException 无此方法
 	 * @throws SecurityException
 	 */
-	public static Method getDeclaredMethod(Object obj, String methodName, Object... args) throws NoSuchMethodException, SecurityException {
+	public static Method getDeclaredMethodOfObj(Object obj, String methodName, Object... args) throws NoSuchMethodException, SecurityException {
 		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
 	}
 
@@ -614,7 +614,7 @@ public final class ClassUtil {
 	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object[] args) {
 		Class<Object> clazz = loadClass(className);
 		try {
-			final Method method = getDeclaredMethod(clazz, methodName, args);
+			final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));
 			if(null == method){
 				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
 			}
@@ -640,7 +640,7 @@ public final class ClassUtil {
 	 */
 	public static <T> T invoke(Object obj, String methodName, Object[] args) {
 		try {
-			final Method method = getDeclaredMethod(obj, methodName, args);
+			final Method method = getDeclaredMethodOfObj(obj, methodName, args);
 			if(null == method){
 				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
 			}
