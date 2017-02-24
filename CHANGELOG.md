@@ -19,6 +19,7 @@
 * [core] NumberUtil中增加binaryToInt、binaryToLong、getBinaryStr
 * 增加Mutable类型
 * HttpUtil.downFile增加String参数方法
+* 修复NumberUtil.round方法传入double某些数字无效问题
 
 ### Bug修复
 * DateUtil中offsite修正为offset

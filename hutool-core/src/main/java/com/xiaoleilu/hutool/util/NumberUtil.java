@@ -29,8 +29,8 @@ public final class NumberUtil {
 	 * @return 和
 	 */
 	public static double add(double v1, double v2) {
-		BigDecimal b1 = new BigDecimal(v1);
-		BigDecimal b2 = new BigDecimal(v2);
+		BigDecimal b1 = new BigDecimal(Double.toString(v1));
+		BigDecimal b2 = new BigDecimal(Double.toString(v2));
 		return b1.add(b2).doubleValue();
 	}
 
@@ -42,8 +42,8 @@ public final class NumberUtil {
 	 * @return 差
 	 */
 	public static double sub(double v1, double v2) {
-		BigDecimal b1 = new BigDecimal(v1);
-		BigDecimal b2 = new BigDecimal(v2);
+		BigDecimal b1 = new BigDecimal(Double.toString(v1));
+		BigDecimal b2 = new BigDecimal(Double.toString(v2));
 		return b1.subtract(b2).doubleValue();
 	}
 
@@ -55,8 +55,8 @@ public final class NumberUtil {
 	 * @return 积
 	 */
 	public static double mul(double v1, double v2) {
-		BigDecimal b1 = new BigDecimal(v1);
-		BigDecimal b2 = new BigDecimal(v2);
+		BigDecimal b1 = new BigDecimal(Double.toString(v1));
+		BigDecimal b2 = new BigDecimal(Double.toString(v2));
 		return b1.multiply(b2).doubleValue();
 	}
 
@@ -68,21 +68,33 @@ public final class NumberUtil {
 	 * @return 商
 	 */
 	public static double div(double v1, double v2) {
-		BigDecimal b1 = new BigDecimal(v1);
-		BigDecimal b2 = new BigDecimal(v2);
+		BigDecimal b1 = new BigDecimal(Double.toString(v1));
+		BigDecimal b2 = new BigDecimal(Double.toString(v2));
 		return b1.divide(b2, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
 	/**
-	 * 保留固定位数小数
+	 * 保留固定位数小数<br>
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}
 	 * 
 	 * @param v 值
 	 * @param scale 保留小数位数
 	 * @return 新值
 	 */
 	public static double round(double v, int scale) {
-		BigDecimal b = new BigDecimal(v);
-		return b.setScale(scale, RoundingMode.HALF_UP).doubleValue();
+		return round(v, scale, RoundingMode.HALF_UP);
+	}
+	
+	/**
+	 * 保留固定位数小数<br>
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}
+	 * 
+	 * @param numberStr 数字值的字符串表现形式
+	 * @param scale 保留小数位数
+	 * @return 新值
+	 */
+	public static double round(String numberStr, int scale) {
+		return round(numberStr, scale, RoundingMode.HALF_UP);
 	}
 
 	/**
@@ -94,7 +106,19 @@ public final class NumberUtil {
 	 * @return 新值
 	 */
 	public static double round(double v, int scale, RoundingMode roundingMode) {
-		BigDecimal b = new BigDecimal(v);
+		return round(Double.toString(v), scale, roundingMode);
+	}
+	
+	/**
+	 * 保留固定位数小数
+	 * 
+	 * @param numberStr 数字值的字符串表现形式
+	 * @param scale 保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 新值
+	 */
+	public static double round(String numberStr, int scale, RoundingMode roundingMode) {
+		final BigDecimal b = new BigDecimal(numberStr);
 		return b.setScale(scale, roundingMode).doubleValue();
 	}
 
