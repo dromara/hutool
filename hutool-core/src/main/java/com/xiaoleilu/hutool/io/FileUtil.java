@@ -1127,7 +1127,7 @@ public final class FileUtil {
 	}
 
 	/**
-	 * 获取文件扩展名
+	 * 获取文件扩展名，扩展名不带“.”
 	 * 
 	 * @param file 文件
 	 * @return 扩展名
@@ -1143,7 +1143,7 @@ public final class FileUtil {
 	}
 
 	/**
-	 * 获得文件的扩展名
+	 * 获得文件的扩展名，扩展名不带“.”
 	 * 
 	 * @param fileName 文件名
 	 * @return 扩展名
@@ -1159,6 +1159,22 @@ public final class FileUtil {
 			String ext = fileName.substring(index + 1);
 			// 扩展名中不能包含路径相关的符号
 			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
+		}
+	}
+	
+	/**
+	 * 根据文件流的头部信息获得文件类型
+	 * @see FileTypeUtil#getType(File)
+	 * 
+	 * @param file 文件 {@link File}
+	 * @return 类型，文件的扩展名，未找到为<code>null</code>
+	 * @throws IORuntimeException
+	 */
+	public static String getType(File file){
+		try {
+			return FileTypeUtil.getType(file);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 	// -------------------------------------------------------------------------------------------- name end

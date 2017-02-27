@@ -11,21 +11,41 @@ import java.util.Set;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
- * 数字工具类
+ * 数字工具类<br>
+ * 对于精确值计算应该使用 {@link BigDecimal}<br>
+ * JDK7中<strong>BigDecimal(double val)</strong>构造方法的结果有一定的不可预知性，例如：
+ * 
+ * <pre>
+ * new BigDecimal(0.1)
+ * </pre>
+ * 
+ * 表示的不是<strong>0.1</strong>而是<strong>0.1000000000000000055511151231257827021181583404541015625</strong>
+ * 
+ * <p>
+ * 这是因为0.1无法准确的表示为double。因此应该使用<strong>new BigDecimal(String)</strong>。
+ * </p>
+ * 相关介绍：
+ * <ul>
+ * <li>http://www.oschina.net/code/snippet_563112_25237</li>
+ * <li>https://github.com/venusdrogon/feilong-core/wiki/one-jdk7-bug-thinking</li>
+ * </ul>
  * 
  * @author Looly
  *
  */
 public final class NumberUtil {
 
+	/** 默认除法运算精度 */
+	private static final int DEFAUT_DIV_SCALE = 10;
+
 	private NumberUtil() {
 	}
 
 	/**
-	 * 加法
+	 * 提供精确的加法运算
 	 * 
-	 * @param v1 第一个值
-	 * @param v2 第二个值
+	 * @param v1 被加数
+	 * @param v2 加数
 	 * @return 和
 	 */
 	public static double add(double v1, double v2) {
@@ -35,10 +55,10 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 减法
+	 * 提供精确的减法运算
 	 * 
-	 * @param v1 第一个值
-	 * @param v2 第二个值
+	 * @param v1 被减数
+	 * @param v2 减数
 	 * @return 差
 	 */
 	public static double sub(double v1, double v2) {
@@ -48,10 +68,10 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 乘法
+	 * 提供精确的乘法运算
 	 * 
-	 * @param v1 第一个值
-	 * @param v2 第二个值
+	 * @param v1 被乘数
+	 * @param v2 乘数
 	 * @return 积
 	 */
 	public static double mul(double v1, double v2) {
@@ -61,16 +81,44 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 除法
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
 	 * 
-	 * @param v1 第一个值
-	 * @param v2 第二个值
-	 * @return 商
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @return 两个参数的商
 	 */
 	public static double div(double v1, double v2) {
+		return div(v1, v2, DEFAUT_DIV_SCALE);
+	}
+
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度,后面的四舍五入
+	 * 
+	 * @param v1被除数
+	 * @param v2除数
+	 * @param scale 精确度，如果为负值，取绝对值
+	 * @return 两个参数的商
+	 */
+	public static double div(double v1, double v2, int scale) {
+		return div(v1, v2, scale, RoundingMode.HALF_UP);
+	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
+	 * 
+	 * @param v1被除数
+	 * @param v2除数
+	 * @param scale 精确度，如果为负值，取绝对值
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 两个参数的商
+	 */
+	public static double div(double v1, double v2, int scale, RoundingMode roundingMode) {
+		if (scale < 0) {
+			scale = -scale;
+		}
 		BigDecimal b1 = new BigDecimal(Double.toString(v1));
 		BigDecimal b2 = new BigDecimal(Double.toString(v2));
-		return b1.divide(b2, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+		return b1.divide(b2, scale, roundingMode).doubleValue();
 	}
 
 	/**
@@ -84,7 +132,7 @@ public final class NumberUtil {
 	public static double round(double v, int scale) {
 		return round(v, scale, RoundingMode.HALF_UP);
 	}
-	
+
 	/**
 	 * 保留固定位数小数<br>
 	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}
@@ -108,7 +156,7 @@ public final class NumberUtil {
 	public static double round(double v, int scale, RoundingMode roundingMode) {
 		return round(Double.toString(v), scale, roundingMode);
 	}
-	
+
 	/**
 	 * 保留固定位数小数
 	 * 
@@ -546,6 +594,7 @@ public final class NumberUtil {
 
 	/**
 	 * 对比两个值得大小
+	 * 
 	 * @see Character#compare(char, char)
 	 * 
 	 * @param x 第一个值
@@ -556,9 +605,10 @@ public final class NumberUtil {
 	public static int compare(char x, char y) {
 		return x - y;
 	}
-	
+
 	/**
 	 * 对比两个值得大小
+	 * 
 	 * @see Double#compare(double, double)
 	 * 
 	 * @param x 第一个值
@@ -572,6 +622,7 @@ public final class NumberUtil {
 
 	/**
 	 * 对比两个值得大小
+	 * 
 	 * @see Integer#compare(int, int)
 	 * 
 	 * @param x 第一个值
@@ -592,6 +643,7 @@ public final class NumberUtil {
 
 	/**
 	 * 对比两个值得大小
+	 * 
 	 * @see Long#compare(long, long)
 	 * 
 	 * @param x 第一个值
@@ -612,6 +664,7 @@ public final class NumberUtil {
 
 	/**
 	 * 对比两个值得大小
+	 * 
 	 * @see Short#compare(short, short)
 	 * 
 	 * @param x 第一个值
@@ -632,6 +685,7 @@ public final class NumberUtil {
 
 	/**
 	 * 对比两个值得大小
+	 * 
 	 * @see Byte#compare(byte, byte)
 	 * 
 	 * @param x 第一个值
