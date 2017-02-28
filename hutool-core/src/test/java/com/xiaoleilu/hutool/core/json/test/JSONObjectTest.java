@@ -1,4 +1,4 @@
-package com.xiaoleilu.core.json.test;
+package com.xiaoleilu.hutool.core.json.test;
 
 import org.junit.Assert;
 import org.junit.Test;
