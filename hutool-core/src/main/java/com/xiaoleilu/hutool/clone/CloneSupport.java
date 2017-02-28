@@ -14,7 +14,7 @@ public class CloneSupport<T> implements Cloneable<T>{
 		try {
 			return (T) super.clone();
 		} catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
+			throw new CloneRuntimeException(e);
 		}
 	}
 	

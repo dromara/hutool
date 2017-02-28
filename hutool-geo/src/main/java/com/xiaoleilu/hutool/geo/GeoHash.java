@@ -348,7 +348,6 @@ public final class GeoHash implements Comparable<GeoHash>, Serializable {
 	 * return the center of this {@link GeoHash}s bounding box. this is rarely
 	 * the same point that was used to build the hash.
 	 */
-	// TODO: make sure this method works as intented for corner cases!
 	public Location getBoundingBoxCenterPoint() {
 		return boundingBox.getCenterPoint();
 	}

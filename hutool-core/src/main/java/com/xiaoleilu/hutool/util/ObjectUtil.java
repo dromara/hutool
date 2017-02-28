@@ -162,12 +162,12 @@ public final class ObjectUtil {
 
 	/**
 	 * 克隆对象<br>
-	 * 对象必须实现Cloneable接口
+	 * 如果对象实现Cloneable接口，调用其clone方法<br>
+	 * 如果实现Serializable接口，执行深度克隆<br>
+	 * 否则返回<code>null</code>
 	 * 
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
-	 * @throws IOException
-	 * @throws ClassNotFoundException
 	 */
 	public static <T> T clone(T obj) {
 		T result = ArrayUtil.clone(obj);

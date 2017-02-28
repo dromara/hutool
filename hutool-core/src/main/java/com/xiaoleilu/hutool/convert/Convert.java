@@ -573,10 +573,11 @@ public final class Convert {
 	 * 字符串转换成十六进制字符串
 	 * 
 	 * @param str 待转换的ASCII字符串
+	 * @param charset 编码
 	 * @return 16进制字符串
 	 */
-	public static String toHex(String str) {
-		return HexUtil.encodeHexStr(str.getBytes());
+	public static String toHex(String str, Charset charset) {
+		return HexUtil.encodeHexStr(str.getBytes(charset));
 	}
 
 	/**
@@ -615,9 +616,8 @@ public final class Convert {
 	 * 
 	 * @param strText 全角字符串
 	 * @return String 每个unicode之间无分隔符
-	 * @throws Exception
 	 */
-	public static String strToUnicode(String strText) throws Exception {
+	public static String strToUnicode(String strText) {
 		char c;
 		StringBuilder str = new StringBuilder();
 		int intAsc;
@@ -682,9 +682,9 @@ public final class Convert {
 	 * @param destUnit 目标单位
 	 * @return 目标单位的时长
 	 */
-	public long convertTime(long sourceDuration, TimeUnit sourceUnit, TimeUnit destUnit){
-		Assert.isNull(sourceUnit, "sourceUnit is null !");
-		Assert.isNull(destUnit, "destUnit is null !");
+	public static long convertTime(long sourceDuration, TimeUnit sourceUnit, TimeUnit destUnit){
+		Assert.notNull(sourceUnit, "sourceUnit is null !");
+		Assert.notNull(destUnit, "destUnit is null !");
 		return destUnit.convert(sourceDuration, sourceUnit);
 	}
 

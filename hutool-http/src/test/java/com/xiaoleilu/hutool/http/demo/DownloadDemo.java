@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.demo.http;
+package com.xiaoleilu.hutool.http.demo;
 
 import com.xiaoleilu.hutool.http.HttpUtil;
 import com.xiaoleilu.hutool.io.FileUtil;
