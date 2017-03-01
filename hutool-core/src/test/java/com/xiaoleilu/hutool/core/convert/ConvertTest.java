@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.core;
+package com.xiaoleilu.hutool.core.convert;
 
 import java.util.concurrent.TimeUnit;
 
@@ -95,5 +95,18 @@ public class ConvertTest {
 		double a = 67556.32;
 		String digitUppercase = Convert.digitUppercase(a);
 		Assert.assertEquals("陆万柒仟伍佰伍拾陆元叁角贰分", digitUppercase);
+	}
+	
+	@Test
+	public void wrapUnwrapTest(){
+		//去包装
+		Class<?> wrapClass = Integer.class;
+		Class<?> unWraped = Convert.unWrap(wrapClass);
+		Assert.assertEquals(int.class, unWraped);
+		
+		//包装
+		Class<?> primitiveClass = long.class;
+		Class<?> wraped = Convert.wrap(primitiveClass);
+		Assert.assertEquals(Long.class, wraped);
 	}
 }

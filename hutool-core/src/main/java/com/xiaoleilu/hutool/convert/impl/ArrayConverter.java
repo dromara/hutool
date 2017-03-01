@@ -25,9 +25,36 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 
 	@Override
 	protected T[] convertInternal(Object value) {
-		return value.getClass().isArray() ? convertObjectToArray(value) : convertArrayToArray(value);
+		return value.getClass().isArray() ? convertArrayToArray(value) : convertObjectToArray(value);
 	}
-
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public Class<T[]> getTargetType() {
+		Class<?> targetType = super.getTargetType();
+		if(null == targetType){
+			if(Integer.class == this.targetComponentType){
+				targetType = Integer[].class;
+			}else if(Long.class == this.targetComponentType){
+				targetType = Long[].class;
+			}else if(Float.class == this.targetComponentType){
+				targetType = Float[].class;
+			}else if(Double.class == this.targetComponentType){
+				targetType = Double[].class;
+			}else if(Short.class == this.targetComponentType){
+				targetType = Short[].class;
+			}else if(Byte.class == this.targetComponentType){
+				targetType = Byte[].class;
+			}else if(Character.class == this.targetComponentType){
+				targetType = Character[].class;
+			}else if(Boolean.class == this.targetComponentType){
+				targetType = Boolean[].class;
+			}else if(String.class == this.targetComponentType){
+				targetType = String[].class;
+			}
+		}
+		return (Class<T[]>) targetType;
+	}
 	
 	//-------------------------------------------------------------------------------------- Private method start
 	/**

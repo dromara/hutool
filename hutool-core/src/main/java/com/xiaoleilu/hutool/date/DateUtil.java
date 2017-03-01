@@ -407,6 +407,7 @@ public final class DateUtil {
 	}
 
 	/**
+	 * 格式化日期时间<br>
 	 * 格式 yyyy-MM-dd HH:mm:ss
 	 * 
 	 * @param date 被格式化的日期
@@ -420,6 +421,7 @@ public final class DateUtil {
 	}
 
 	/**
+	 * 格式化日期部分（不包括时间）<br>
 	 * 格式 yyyy-MM-dd
 	 * 
 	 * @param date 被格式化的日期
@@ -430,6 +432,21 @@ public final class DateUtil {
 			return null;
 		}
 		return DatePattern.NORM_DATE_FORMAT.format(date);
+	}
+	
+	/**
+	 * 格式化时间<br>
+	 * 格式 HH:mm:ss
+	 * 
+	 * @param date 被格式化的日期
+	 * @return 格式化后的字符串
+	 * @since 3.0.1
+	 */
+	public static String formatTime(Date date) {
+		if(null == date){
+			return null;
+		}
+		return DatePattern.NORM_TIME_FORMAT.format(date);
 	}
 
 	/**
@@ -513,10 +530,13 @@ public final class DateUtil {
 
 	/**
 	 * 格式：<br>
-	 * 1、yyyy-MM-dd HH:mm:ss<br>
-	 * 2、yyyy-MM-dd<br>
-	 * 3、HH:mm:ss<br>
-	 * 4、yyyy-MM-dd HH:mm 5、yyyy-MM-dd HH:mm:ss.SSS
+	 * <ol>
+	 * 	<li>yyyy-MM-dd HH:mm:ss</li>
+	 * 	<li>yyyy-MM-dd</li>
+	 * 	<li>HH:mm:ss</li>
+	 * 	<li>yyyy-MM-dd HH:mm</li>
+	 * 	<li>yyyy-MM-dd HH:mm:ss.SSS</li>
+	 * </ol>
 	 * 
 	 * @param dateStr 日期字符串
 	 * @return 日期
@@ -732,6 +752,16 @@ public final class DateUtil {
 	public static DateTime yesterday() {
 		return offsetDay(new DateTime(), -1);
 	}
+	
+	/**
+	 * 明天
+	 * 
+	 * @return 明天
+	 * @since 3.0.1
+	 */
+	public static DateTime tomorrow() {
+		return offsetDay(new DateTime(), 1);
+	}
 
 	/**
 	 * 上周
@@ -740,6 +770,16 @@ public final class DateUtil {
 	 */
 	public static DateTime lastWeek() {
 		return offsetWeek(new DateTime(), -1);
+	}
+	
+	/**
+	 * 下周
+	 * 
+	 * @return 下周
+	 * @since 3.0.1
+	 */
+	public static DateTime nextWeek() {
+		return offsetWeek(new DateTime(), 1);
 	}
 
 	/**
@@ -752,6 +792,16 @@ public final class DateUtil {
 	}
 	
 	/**
+	 * 下个月
+	 * 
+	 * @return 下个月
+	 * @since 3.0.1
+	 */
+	public static DateTime nextMouth() {
+		return offsetMonth(new DateTime(), 1);
+	}
+	
+	/**
 	 * 偏移毫秒数
 	 * 
 	 * @param date 日期
@@ -759,7 +809,7 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsetMillisecond(Date date, int offset) {
-		return offsetDate(date, DateField.MILLISECOND, offset);
+		return offset(date, DateField.MILLISECOND, offset);
 	}
 	
 	/**
@@ -770,7 +820,7 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsetSecond(Date date, int offset) {
-		return offsetDate(date, DateField.SECOND, offset);
+		return offset(date, DateField.SECOND, offset);
 	}
 	
 	/**
@@ -781,7 +831,7 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsetMinute(Date date, int offset) {
-		return offsetDate(date, DateField.MINUTE, offset);
+		return offset(date, DateField.MINUTE, offset);
 	}
 	
 	/**
@@ -792,7 +842,7 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsetHour(Date date, int offset) {
-		return offsetDate(date, DateField.HOUR_OF_DAY, offset);
+		return offset(date, DateField.HOUR_OF_DAY, offset);
 	}
 
 	/**
@@ -803,7 +853,7 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsetDay(Date date, int offset) {
-		return offsetDate(date, DateField.DAY_OF_YEAR, offset);
+		return offset(date, DateField.DAY_OF_YEAR, offset);
 	}
 
 	/**
@@ -814,7 +864,7 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsetWeek(Date date, int offset) {
-		return offsetDate(date, DateField.WEEK_OF_YEAR, offset);
+		return offset(date, DateField.WEEK_OF_YEAR, offset);
 	}
 
 	/**
@@ -825,22 +875,35 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offsetMonth(Date date, int offset) {
-		return offsetDate(date, DateField.MONTH, offset);
+		return offset(date, DateField.MONTH, offset);
 	}
 
 	/**
 	 * 获取指定日期偏移指定时间后的时间
 	 * 
 	 * @param date 基准日期
-	 * @param datePart 偏移的粒度大小（小时、天、月等）{@link DateField}
+	 * @param dateField 偏移的粒度大小（小时、天、月等）{@link DateField}
 	 * @param offset 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 偏移后的日期
 	 */
-	public static DateTime offsetDate(Date date, DateField datePart, int offset) {
+	public static DateTime offset(Date date, DateField dateField, int offset) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.add(datePart.getValue(), offset);
+		cal.add(dateField.getValue(), offset);
 		return new DateTime(cal.getTime());
+	}
+	
+	/**
+	 * 获取指定日期偏移指定时间后的时间
+	 * 
+	 * @param date 基准日期
+	 * @param dateField 偏移的粒度大小（小时、天、月等）{@link DateField}
+	 * @param offset 偏移量，正数为向后偏移，负数为向前偏移
+	 * @return 偏移后的日期
+	 * @deprecated please use {@link DateUtil#offset(Date, DateField, int)}
+	 */
+	public static DateTime offsetDate(Date date, DateField dateField, int offset) {
+		return offset(date, dateField, offset);
 	}
 	// ------------------------------------ Offset end ----------------------------------------------
 
