@@ -787,7 +787,7 @@ public final class DateUtil {
 	 * 
 	 * @return 上个月
 	 */
-	public static DateTime lastMouth() {
+	public static DateTime lastMonth() {
 		return offsetMonth(new DateTime(), -1);
 	}
 	
@@ -797,7 +797,7 @@ public final class DateUtil {
 	 * @return 下个月
 	 * @since 3.0.1
 	 */
-	public static DateTime nextMouth() {
+	public static DateTime nextMonth() {
 		return offsetMonth(new DateTime(), 1);
 	}
 	
