@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.core;
+package com.xiaoleilu.hutool.core.date;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.date.TimeInterval;
  * @author Looly
  *
  */
-public class DateTest {
+public class DateUtilTest {
 
 	@Test
 	public void nowTest() {

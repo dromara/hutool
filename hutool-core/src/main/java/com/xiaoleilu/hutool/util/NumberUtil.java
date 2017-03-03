@@ -94,8 +94,8 @@ public final class NumberUtil {
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度,后面的四舍五入
 	 * 
-	 * @param v1被除数
-	 * @param v2除数
+	 * @param v1 被除数
+	 * @param v2 除数
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @return 两个参数的商
 	 */
@@ -106,8 +106,8 @@ public final class NumberUtil {
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
 	 * 
-	 * @param v1被除数
-	 * @param v2除数
+	 * @param v1 被除数
+	 * @param v2 除数
 	 * @param scale 精确度，如果为负值，取绝对值
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 两个参数的商

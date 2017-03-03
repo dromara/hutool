@@ -188,7 +188,6 @@ public class ConverterRegistry {
 	 * @param type 类型
 	 * @param value 值
 	 * @param defaultValue 默认值
-	 * @param isCustomFirst 是否自定义转换器优先
 	 * @return 转换后的值
 	 */
 	public <T> T convert(Class<T> type, Object value, T defaultValue) {
