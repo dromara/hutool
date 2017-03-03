@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 
 import com.xiaoleilu.hutool.date.format.DateParser;
+import com.xiaoleilu.hutool.date.format.DatePrinter;
 import com.xiaoleilu.hutool.date.format.FastDateFormat;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -403,7 +404,29 @@ public final class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {
-		return FastDateFormat.getInstance(format).format(date);
+		return format(date, FastDateFormat.getInstance(format));
+	}
+	
+	/**
+	 * 根据特定格式格式化日期
+	 * 
+	 * @param date 被格式化的日期
+	 * @param format {@link DatePrinter} 或 {@link FastDateFormat}
+	 * @return 格式化后的字符串
+	 */
+	public static String format(Date date, DatePrinter format) {
+		return format.format(date);
+	}
+	
+	/**
+	 * 根据特定格式格式化日期
+	 * 
+	 * @param date 被格式化的日期
+	 * @param format {@link SimpleDateFormat}
+	 * @return 格式化后的字符串
+	 */
+	public static String format(Date date, DateFormat format) {
+		return format.format(date);
 	}
 
 	/**

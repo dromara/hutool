@@ -4,9 +4,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import com.xiaoleilu.hutool.date.format.DateParser;
+import com.xiaoleilu.hutool.date.format.DatePrinter;
 import com.xiaoleilu.hutool.date.format.FastDateFormat;
+import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -17,6 +21,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class DateTime extends Date {
 	private static final long serialVersionUID = -5395712593979185936L;
+	
+	/** 是否可变对象 */
+	private boolean mutable = true;
 
 	/**
 	 * 转换JDK date为 DateTime
@@ -116,28 +123,31 @@ public class DateTime extends Date {
 	 * 构造
 	 * @see DatePattern
 	 * @param dateStr Date字符串
-	 * @param dateFormat 格式化器 {@link FastDateFormat}
+	 * @param dateParser 格式化器 {@link DateParser}，可以使用 {@link FastDateFormat}
 	 */
-	public DateTime(String dateStr, DateParser dateFormat) {
-		this(parse(dateStr, dateFormat));
+	public DateTime(String dateStr, DateParser dateParser) {
+		this(parse(dateStr, dateParser));
 	}
 	
 	// -------------------------------------------------------------------- Constructor end
 	
 	// -------------------------------------------------------------------- offsite start
 	/**
-	 * 调整日期和时间
+	 * 调整日期和时间<br>
 	 * 
 	 * @param datePart 调整的部分 {@link DateField}
 	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
-	 * @return 自身
+	 * @return 如果此对象为可变对象，返回自身，否则返回新对象
 	 */
 	public DateTime offsite(DateField datePart, int offsite) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(this);
+		final Calendar cal = toCalendar();
 		cal.add(datePart.getValue(), offsite);
-		this.setTime(cal.getTimeInMillis());
-		return this;
+		
+		DateTime dt = this;
+		if(false == mutable){
+			dt = ObjectUtil.clone(this);
+		}
+		return dt.setTimeInternal(cal.getTimeInMillis());
 	}
 	// -------------------------------------------------------------------- offsite end
 
@@ -179,8 +189,23 @@ public class DateTime extends Date {
 	 * @return {@link DateTime}
 	 */
 	public DateTime setField(int field, int value){
-		toCalendar().set(field, value);
-		return this;
+		Calendar calendar = toCalendar();
+		calendar.set(field, value);
+		
+		DateTime dt = this;
+		if(false == mutable){
+			dt = ObjectUtil.clone(this);
+		}
+		return dt.setTimeInternal(calendar.getTimeInMillis());
+	}
+	
+	@Override
+	public void setTime(long time) {
+		if(mutable){
+			super.setTime(time);
+		}else{
+			throw new DateException("This is not a mutable object !");
+		}
 	}
 	
 	/**
@@ -362,12 +387,46 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转换为Calendar
+	 * 转换为Calendar，默认{@link TimeZone}，默认 {@link Locale}
 	 * 
 	 * @return {@link Calendar}
 	 */
 	public Calendar toCalendar() {
-		return DateUtil.calendar(this);
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(this);
+		return cal;
+	}
+	
+	/**
+	 * 转换为Calendar
+	 * @param locale 地域 {@link Locale}
+	 * @return {@link Calendar}
+	 */
+	public Calendar toCalendar(Locale locale) {
+		final Calendar cal = Calendar.getInstance(locale);
+		cal.setTime(this);
+		return cal;
+	}
+	
+	/**
+	 * 转换为Calendar
+	 * @param zone 时区 {@link TimeZone}
+	 * @return {@link Calendar}
+	 */
+	public Calendar toCalendar(TimeZone zone) {
+		return toCalendar(zone, Locale.getDefault(Locale.Category.FORMAT));
+	}
+	
+	/**
+	 * 转换为Calendar
+	 * @param zone 时区 {@link TimeZone}
+	 * @param locale 地域 {@link Locale}
+	 * @return {@link Calendar}
+	 */
+	public Calendar toCalendar(TimeZone zone, Locale locale) {
+		final Calendar cal = Calendar.getInstance(zone, locale);
+		cal.setTime(this);
+		return cal;
 	}
 	
 	/**
@@ -399,11 +458,45 @@ public class DateTime extends Date {
 	public String between(Date date, DateUnit unit, BetweenFormater.Level formatLevel){
 		return new DateBetween(this, date).toString(formatLevel);
 	}
+	
+	/**
+	 * 对象是否可变<br>
+	 * 如果为不可变对象，以下方法将返回新方法：
+	 * <ul>
+	 * 	<li>{@link DateTime#offsite(DateField, int)}</li>
+	 * 	<li>{@link DateTime#setField(DateField, int)}</li>
+	 * 	<li>{@link DateTime#setField(int, int)}</li>
+	 * </ul>
+	 * 如果为不可变对象，{@link DateTime#setTime(long)}将抛出异常
+	 * 
+	 * @return 对象是否可变
+	 */
+	public boolean isMutable() {
+		return mutable;
+	}
+
+	/**
+	 * 设置对象是否可变
+	 * 如果为不可变对象，以下方法将返回新方法：
+	 * <ul>
+	 * 	<li>{@link DateTime#offsite(DateField, int)}</li>
+	 * 	<li>{@link DateTime#setField(DateField, int)}</li>
+	 * 	<li>{@link DateTime#setField(int, int)}</li>
+	 * </ul>
+	 * 如果为不可变对象，{@link DateTime#setTime(long)}将抛出异常
+	 * 
+	 * @param mutable 是否可变
+	 * @return this
+	 */
+	public DateTime setMutable(boolean mutable) {
+		this.mutable = mutable;
+		return this;
+	}
 
 	// -------------------------------------------------------------------- toString start
 	@Override
 	public String toString() {
-		return DateUtil.formatDateTime(this);
+		return toString(DatePattern.NORM_DATETIME_FORMAT);
 	}
 
 	/**
@@ -412,14 +505,32 @@ public class DateTime extends Date {
 	 * @return String
 	 */
 	public String toString(String format) {
-		return DateUtil.format(this, format);
+		return toString(FastDateFormat.getInstance(format));
+	}
+	
+	/**
+	 * 转为字符串
+	 * @param format {@link DatePrinter} 或 {@link FastDateFormat}
+	 * @return String
+	 */
+	public String toString(DatePrinter format) {
+		return format.format(this);
+	}
+	
+	/**
+	 * 转为字符串
+	 * @param format {@link SimpleDateFormat}
+	 * @return String
+	 */
+	public String toString(DateFormat format) {
+		return format.format(this);
 	}
 
 	/**
 	 * @return 输出精确到毫秒的标准日期形式
 	 */
 	public String toMsStr() {
-		return DateUtil.format(this, DateUtil.NORM_DATETIME_MS_PATTERN);
+		return toString(DatePattern.NORM_DATETIME_MS_FORMAT);
 	}
 	// -------------------------------------------------------------------- toString end
 	
@@ -455,5 +566,15 @@ public class DateTime extends Date {
 		} catch (Exception e) {
 			throw new DateException(StrUtil.format("Parse [{}] with format [{}] error!", dateStr, parser.getPattern()), e);
 		}
+	}
+	
+	/**
+	 * 设置日期时间
+	 * @param time 日期时间毫秒
+	 * @return this
+	 */
+	private DateTime setTimeInternal(long time) {
+		super.setTime(time);
+		return this;
 	}
 }
