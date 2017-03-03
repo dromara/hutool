@@ -931,7 +931,7 @@ public final class DateUtil {
 	// ------------------------------------ Offset end ----------------------------------------------
 
 	/**
-	 * 判断两个日期相差的时长<br/>
+	 * 判断两个日期相差的时长
 	 * 
 	 * @param beginDate 起始日期
 	 * @param endDate 结束日期
@@ -943,7 +943,25 @@ public final class DateUtil {
 	}
 	
 	/**
-	 * 判断两个日期相差的天数<br/>
+	 * 判断两个日期相差的毫秒数
+	 * 
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @return 日期差
+	 * @since 3.0.1
+	 */
+	public static long betweenMs(Date beginDate, Date endDate) {
+		return new DateBetween(beginDate, endDate).between(DateUnit.MS);
+	}
+	
+	/**
+	 * 判断两个日期相差的天数<br>
+	 * <pre>
+	 * 有时候我们计算相差天数的时候需要忽略时分秒。
+	 * 比如：2016-02-01 23:59:59和2016-02-02 00:00:00相差一秒
+	 * 如果isReset为<code>false</code>相差天数为0。
+	 * 如果isReset为<code>true</code>相差天数将被计算为1
+	 * </pre>
 	 * 
 	 * @param beginDate 起始日期
 	 * @param endDate 结束日期
@@ -971,7 +989,18 @@ public final class DateUtil {
 	}
 	
 	/**
-	 * 格式化日期间隔输出<br>
+	 * 格式化日期间隔输出，精确到毫秒
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @return XX天XX小时XX分XX秒
+	 * @since 3.0.1
+	 */
+	public static String formatBetween(Date beginDate, Date endDate){
+		return formatBetween(between(beginDate, endDate, DateUnit.MS));
+	}
+	
+	/**
+	 * 格式化日期间隔输出
 	 * 
 	 * @param betweenMs 日期间隔
 	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级
@@ -979,6 +1008,17 @@ public final class DateUtil {
 	 */
 	public static String formatBetween(long betweenMs, BetweenFormater.Level level){
 		return new BetweenFormater(betweenMs, level).format();
+	}
+	
+	/**
+	 * 格式化日期间隔输出，精确到毫秒
+	 * 
+	 * @param betweenMs 日期间隔
+	 * @return XX天XX小时XX分XX秒XX毫秒
+	 * @since 3.0.1
+	 */
+	public static String formatBetween(long betweenMs){
+		return new BetweenFormater(betweenMs, BetweenFormater.Level.MILLSECOND).format();
 	}
 	
 	/**
