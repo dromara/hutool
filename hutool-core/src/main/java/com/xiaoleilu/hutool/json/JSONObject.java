@@ -22,15 +22,13 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * JSON对象<br>
  * 例：<br>
  *<pre>
- * myString = new JSONObject().put(&quot;JSON&quot;, &quot;Hello, World!&quot;).toString();
+ * json = new JSONObject().put(&quot;JSON&quot;, &quot;Hello, World!&quot;).toString();
  * </pre>
  * @author looly
  */
 public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
 
-	/**
-	 * The map where the JSONObject's properties are kept.
-	 */
+	/** JSON的KV持有Map */
 	private final Map<String, Object> rawHashMap = new HashMap<>();
 
 	/**
@@ -56,10 +54,10 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * Construct a JSONObject from a JSONTokener.
+	 * 使用{@link JSONTokener}构建
 	 *
-	 * @param x A JSONTokener object containing the source string.
-	 * @throws JSONException If there is a syntax error in the source string or a duplicated key.
+	 * @param x {@link JSONTokener}
+	 * @throws JSONException 语法错误
 	 */
 	public JSONObject(JSONTokener x) throws JSONException {
 		init(x);
@@ -90,17 +88,17 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * Construct a JSONObject from an Object, using reflection to find the public members. The resulting JSONObject's keys will be the strings from the names array, and the values will be the field
-	 * values associated with those keys in the object. If a key is not found or not visible, then it will not be copied into the new JSONObject.
+	 * 使用反射方式获取public字段名和字段值，构建JSONObject对象<br>
+	 * KEY或VALUE任意一个为null则不加入
 	 *
-	 * @param object An object that has fields that should be used to make a JSONObject.
-	 * @param names An array of strings, the names of the fields to be obtained from the object.
+	 * @param pojo 包含需要字段的Bean对象
+	 * @param names 需要构建JSONObject的字段名列表
 	 */
-	public JSONObject(Object object, String[] names) {
-		Class<?> c = object.getClass();
+	public JSONObject(Object pojo, String[] names) {
+		Class<?> c = pojo.getClass();
 		for (String name : names) {
 			try {
-				this.putOpt(name, c.getField(name).get(object));
+				this.putOpt(name, c.getField(name).get(pojo));
 			} catch (Exception ignore) {
 			}
 		}
@@ -214,7 +212,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			throw new NullPointerException("Null key.");
 		}
 		if (value != null) {
-			JSONUtil.testValidity(value);
+			InternalJSONUtil.testValidity(value);
 			this.rawHashMap.put(key, JSONUtil.wrap(value));
 		} else {
 			this.remove(key);
@@ -272,7 +270,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @throws JSONException If the value is an invalid number or if the key is null.
 	 */
 	public JSONObject accumulate(String key, Object value) throws JSONException {
-		JSONUtil.testValidity(value);
+		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
 			this.put(key, value instanceof JSONArray ? new JSONArray().put(value) : value);
@@ -293,7 +291,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @throws JSONException 如果给定键为<code>null</code>或者键对应的值存在且为非JSONArray
 	 */
 	public JSONObject append(String key, Object value) throws JSONException {
-		JSONUtil.testValidity(value);
+		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
 			this.put(key, new JSONArray().put(value));
@@ -399,12 +397,10 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 	
 	/**
-	 * Make a JSON text of this JSONObject. For compactness, no whitespace is added. If this would not result in a syntactically correct JSON text, then null will be returned instead.
-	 * <p>
-	 * Warning: This method assumes that the data structure is acyclical.
+	 * 返回JSON字符串<br>
+	 * 如果解析错误，返回<code>null</code>
 	 *
-	 * @return a printable, displayable, portable, transmittable representation of the object, beginning with <code>{</code>&nbsp;<small>(left brace)</small> and ending with <code>}</code>&nbsp;
-	 *         <small>(right brace)</small>.
+	 * @return JSON字符串
 	 */
 	@Override
 	public String toString() {
@@ -450,7 +446,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				if (indentFactor > 0) {
 					writer.write(' ');
 				}
-				JSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, indent);
+				InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, indent);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
 				while (keys.hasNext()) {
@@ -461,19 +457,19 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 					if (indentFactor > 0) {
 						writer.write('\n');
 					}
-					JSONUtil.indent(writer, newindent);
+					InternalJSONUtil.indent(writer, newindent);
 					writer.write(JSONUtil.quote(key.toString()));
 					writer.write(':');
 					if (indentFactor > 0) {
 						writer.write(' ');
 					}
-					JSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, newindent);
+					InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, newindent);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
 					writer.write('\n');
 				}
-				JSONUtil.indent(writer, indent);
+				InternalJSONUtil.indent(writer, indent);
 			}
 			writer.write('}');
 			return writer;

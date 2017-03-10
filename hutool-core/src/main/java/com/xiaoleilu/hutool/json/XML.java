@@ -202,7 +202,7 @@ public class XML {
 						if (!(token instanceof String)) {
 							throw x.syntaxError("Missing value");
 						}
-						jsonobject.accumulate(string, keepStrings ? token : JSONUtil.stringToValue((String) token));
+						jsonobject.accumulate(string, keepStrings ? token : InternalJSONUtil.stringToValue((String) token));
 						token = null;
 					} else {
 						jsonobject.accumulate(string, "");
@@ -232,7 +232,7 @@ public class XML {
 						} else if (token instanceof String) {
 							string = (String) token;
 							if (string.length() > 0) {
-								jsonobject.accumulate("content", keepStrings ? token : JSONUtil.stringToValue(string));
+								jsonobject.accumulate("content", keepStrings ? token : InternalJSONUtil.stringToValue(string));
 							}
 
 						} else if (token == LT) {

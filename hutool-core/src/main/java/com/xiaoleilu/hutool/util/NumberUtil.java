@@ -696,6 +696,35 @@ public final class NumberUtil {
 	public static int compare(byte x, byte y) {
 		return x - y;
 	}
+	
+	/**
+	 * 数字转字符串<br>
+	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
+	 *
+	 * @param number A Number
+	 * @return A String.
+	 */
+	public static String toStr(Number number) {
+		if (number == null) {
+			throw new NullPointerException("Number is null !");
+		}
+		
+		if(false == ObjectUtil.isValidIfNumber(number)){
+			throw new IllegalArgumentException("Number is non-finite!");
+		}
+
+		// 去掉小数点儿后多余的0
+		String string = number.toString();
+		if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && string.indexOf('E') < 0) {
+			while (string.endsWith("0")) {
+				string = string.substring(0, string.length() - 1);
+			}
+			if (string.endsWith(".")) {
+				string = string.substring(0, string.length() - 1);
+			}
+		}
+		return string;
+	}
 
 	// --------------------------------------------------------------------- Private method start
 	private int mathSubnode(int selectNum, int minNum) {

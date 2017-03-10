@@ -44,6 +44,8 @@ public final class IoUtil {
 
 	/** 默认缓存大小 */
 	public static final int DEFAULT_BUFFER_SIZE = 1024;
+	/** 默认缓存大小 */
+	public static final int DEFAULT_LARGE_BUFFER_SIZE = 4096;
 	/** 数据流末尾 */
 	public static final int EOF = -1;
 
@@ -182,7 +184,6 @@ public final class IoUtil {
 	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IOException {
 		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, streamProgress);
 	}
-	
 
 	/**
 	 * 拷贝文件流，使用NIO
@@ -243,27 +244,26 @@ public final class IoUtil {
 	}
 	// -------------------------------------------------------------------------------------- Copy end
 
+	// -------------------------------------------------------------------------------------- getReader and getWriter start
 	/**
 	 * 获得一个文件读取器
 	 * 
 	 * @param in 输入流
 	 * @param charsetName 字符集名称
 	 * @return BufferedReader对象
-	 * @throws IOException
 	 */
-	public static BufferedReader getReader(InputStream in, String charsetName) throws IOException {
+	public static BufferedReader getReader(InputStream in, String charsetName) {
 		return getReader(in, Charset.forName(charsetName));
 	}
 
 	/**
-	 * 获得一个文件读取器
+	 * 获得一个Reader
 	 * 
 	 * @param in 输入流
 	 * @param charset 字符集
 	 * @return BufferedReader对象
-	 * @throws IOException
 	 */
-	public static BufferedReader getReader(InputStream in, Charset charset) throws IOException {
+	public static BufferedReader getReader(InputStream in, Charset charset) {
 		if (null == in) {
 			return null;
 		}
@@ -277,69 +277,41 @@ public final class IoUtil {
 
 		return new BufferedReader(reader);
 	}
-
+	
 	/**
-	 * 从流中读取bytes
+	 * 获得一个Writer
 	 * 
-	 * @param in {@link InputStream}
-	 * @return bytes
+	 * @param out 输入流
+	 * @param charsetName 字符集
+	 * @return OutputStreamWriter对象
 	 * @throws IOException
 	 */
-	public static byte[] readBytes(InputStream in) throws IOException {
-		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-		copy(in, out);
-		return out.toByteArray();
+	public static OutputStreamWriter getWriter(OutputStream out, String charsetName){
+		return getWriter(out, Charset.forName(charsetName));
 	}
-
+	
 	/**
-	 * 读取指定长度的byte数组
+	 * 获得一个Writer
 	 * 
-	 * @param in {@link InputStream}
-	 * @param length 长度
-	 * @return bytes
+	 * @param out 输入流
+	 * @param charset 字符集
+	 * @return OutputStreamWriter对象
 	 * @throws IOException
 	 */
-	public static byte[] readBytes(InputStream in, int length) throws IOException {
-		byte[] b = new byte[length];
-		in.read(b);
-		return b;
+	public static OutputStreamWriter getWriter(OutputStream out, Charset charset){
+		if(null == out){
+			return null;
+		}
+		
+		if(null == charset){
+			return new OutputStreamWriter(out);
+		}else{
+			return new OutputStreamWriter(out, charset);
+		}
 	}
-
-	/**
-	 * 读取进制字符串
-	 * 
-	 * @param in {@link InputStream}
-	 * @param length 长度
-	 * @param toLowerCase true 传换成小写格式 ， false 传换成大写格式
-	 * @return 16进制字符串
-	 * @throws IOException
-	 */
-	public static String readHex(InputStream in, int length, boolean toLowerCase) throws IOException {
-		return HexUtil.encodeHexStr(readBytes(in, length), toLowerCase);
-	}
-
-	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
-	 * 
-	 * @param in {@link InputStream}
-	 * @return 16进制字符串
-	 * @throws IOException
-	 */
-	public static String readHex28Upper(InputStream in) throws IOException {
-		return readHex(in, 28, false);
-	}
-
-	/**
-	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
-	 * 
-	 * @param in {@link InputStream}
-	 * @return 16进制字符串
-	 * @throws IOException
-	 */
-	public static String readHex28Lower(InputStream in) throws IOException {
-		return readHex(in, 28, false);
-	}
-
+	// -------------------------------------------------------------------------------------- getReader and getWriter end
+	
+	// -------------------------------------------------------------------------------------- read start
 	/**
 	 * 从流中读取内容
 	 * 
@@ -378,29 +350,7 @@ public final class IoUtil {
 		copy(in, out);
 		return out;
 	}
-
-	/**
-	 * 从流中读取内容，读到输出流中
-	 * 
-	 * @param in 输入流
-	 * @return 输出流
-	 * @throws IOException
-	 */
-	public static <T> T readObj(InputStream in) throws IOException {
-		if (in == null) {
-			throw new IllegalArgumentException("The InputStream must not be null");
-		}
-		ObjectInputStream ois = null;
-		try {
-			ois = new ObjectInputStream(in);
-			@SuppressWarnings("unchecked") // may fail with CCE if serialised form is incorrect
-			final T obj = (T) ois.readObject();
-			return obj;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
-	}
-
+	
 	/**
 	 * 从Reader中读取String
 	 * 
@@ -443,6 +393,90 @@ public final class IoUtil {
 	}
 
 	/**
+	 * 从流中读取bytes
+	 * 
+	 * @param in {@link InputStream}
+	 * @return bytes
+	 * @throws IOException
+	 */
+	public static byte[] readBytes(InputStream in) throws IOException {
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		copy(in, out);
+		return out.toByteArray();
+	}
+
+	/**
+	 * 读取指定长度的byte数组
+	 * 
+	 * @param in {@link InputStream}
+	 * @param length 长度
+	 * @return bytes
+	 * @throws IOException
+	 */
+	public static byte[] readBytes(InputStream in, int length) throws IOException {
+		byte[] b = new byte[length];
+		in.read(b);
+		return b;
+	}
+
+	/**
+	 * 读取16进制字符串
+	 * 
+	 * @param in {@link InputStream}
+	 * @param length 长度
+	 * @param toLowerCase true 传换成小写格式 ， false 传换成大写格式
+	 * @return 16进制字符串
+	 * @throws IOException
+	 */
+	public static String readHex(InputStream in, int length, boolean toLowerCase) throws IOException {
+		return HexUtil.encodeHexStr(readBytes(in, length), toLowerCase);
+	}
+
+	/**
+	 * 从流中读取前28个byte并转换为16进制，字母部分使用大写
+	 * 
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IOException
+	 */
+	public static String readHex28Upper(InputStream in) throws IOException {
+		return readHex(in, 28, false);
+	}
+
+	/**
+	 * 从流中读取前28个byte并转换为16进制，字母部分使用小写
+	 * 
+	 * @param in {@link InputStream}
+	 * @return 16进制字符串
+	 * @throws IOException
+	 */
+	public static String readHex28Lower(InputStream in) throws IOException {
+		return readHex(in, 28, false);
+	}
+
+	/**
+	 * 从流中读取内容，读到输出流中
+	 * 
+	 * @param in 输入流
+	 * @return 输出流
+	 * @throws IOException
+	 */
+	public static <T> T readObj(InputStream in) throws IOException {
+		if (in == null) {
+			throw new IllegalArgumentException("The InputStream must not be null");
+		}
+		ObjectInputStream ois = null;
+		try {
+			ois = new ObjectInputStream(in);
+			@SuppressWarnings("unchecked") // may fail with CCE if serialised form is incorrect
+			final T obj = (T) ois.readObject();
+			return obj;
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
+	}
+
+	/**
 	 * 从流中读取内容
 	 * 
 	 * @param in 输入流
@@ -474,6 +508,7 @@ public final class IoUtil {
 
 		return collection;
 	}
+	// -------------------------------------------------------------------------------------- read end
 
 	/**
 	 * String 转为流
@@ -513,6 +548,24 @@ public final class IoUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 将byte[]写到流中
+	 * 
+	 * @param out 输出流
+	 * @param isCloseOut 写入完毕是否关闭输出流
+	 * @param content 写入的内容
+	 * @throws IOException
+	 */
+	public static void write(OutputStream out, boolean isCloseOut, byte[] content) throws IOException {
+		try {
+			out.write(content);
+		} finally {
+			if (isCloseOut) {
+				close(out);
+			}
+		}
+	}
 
 	/**
 	 * 将多部分内容写到流中，自动转换为字符串
@@ -526,7 +579,7 @@ public final class IoUtil {
 	public static void write(OutputStream out, String charset, boolean isCloseOut, Object... contents) throws IOException {
 		OutputStreamWriter osw = null;
 		try {
-			osw = new OutputStreamWriter(out, charset);
+			osw = getWriter(out, charset);
 			for (Object content : contents) {
 				if (content != null) {
 					osw.write(Convert.toStr(content, StrUtil.EMPTY));
@@ -571,7 +624,8 @@ public final class IoUtil {
 	}
 
 	/**
-	 * 关闭
+	 * 关闭<br>
+	 * 关闭失败不会抛出异常
 	 * 
 	 * @param closeable 被关闭的对象
 	 */
@@ -584,10 +638,10 @@ public final class IoUtil {
 	}
 
 	/**
-	 * 关闭
+	 * 关闭<br>
+	 *  关闭失败不会抛出异常
 	 * 
 	 * @param closeable 被关闭的对象
-	 * @since 1.7
 	 */
 	public static void close(AutoCloseable closeable) {
 		if (closeable == null) return;

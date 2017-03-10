@@ -234,11 +234,7 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException
 	 */
 	public BufferedReader getReader() throws IORuntimeException {
-		try {
-			return IoUtil.getReader(getInputStream(), this.charset);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return IoUtil.getReader(getInputStream(), this.charset);
 	}
 
 	/**

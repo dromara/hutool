@@ -16,23 +16,21 @@ import java.util.ListIterator;
  */
 public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>{
 
-	/**
-	 * The arrayList where the JSONArray's properties are kept.
-	 */
+	/** 持有原始数据的List */
 	private final ArrayList<Object> rawArrayList;
 
 	//-------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
-	 * Construct an empty JSONArray.
+	 * 构造
 	 */
 	public JSONArray() {
 		this.rawArrayList = new ArrayList<Object>();
 	}
 
 	/**
-	 * Construct a JSONArray from a JSONTokener.
+	 * 使用 {@link JSONTokener} 做为参数构造
 	 *
-	 * @param x A JSONTokener
+	 * @param x A {@link JSONTokener}
 	 * @throws JSONException If there is a syntax error.
 	 */
 	public JSONArray(JSONTokener x) throws JSONException {
@@ -67,9 +65,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * Construct a JSONArray from a source JSON text.
+	 * 从String构造（JSONArray字符串）
 	 *
-	 * @param source A string that begins with <code>[</code>&nbsp;<small>(left bracket)</small> and ends with <code>]</code> &nbsp;<small>(right bracket)</small>.
+	 * @param source JSON数组字符串
 	 * @throws JSONException If there is a syntax error.
 	 */
 	public JSONArray(String source) throws JSONException {
@@ -77,9 +75,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * Construct a JSONArray from an array or Collection
+	 * 从数组或{@link Collection}对象构造
 	 *
-	 * @throws JSONException If not an array.
+	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object arrayOrCollection) throws JSONException {
 		this();
@@ -99,9 +97,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	//-------------------------------------------------------------------------------------------------------------------- Constructor start
 
 	/**
-	 * Determine if the value is null.
+	 * 值是否为<code>null</code>
 	 *
-	 * @param index The index must be between 0 and size() - 1.
+	 * @param index 值所在序列
 	 * @return true if the value at the index is null, or if there is no value.
 	 */
 	public boolean isNull(int index) {
@@ -109,21 +107,21 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * Make a string from the contents of this JSONArray. The <code>separator</code> string is inserted between each element. Warning: This method assumes that the data structure is acyclical.
+	 *JSONArray转为以<code>separator</code>为分界符的字符串
 	 *
-	 * @param separator A string that will be inserted between the elements.
+	 * @param separator 分界符
 	 * @return a string.
 	 * @throws JSONException If the array contains an invalid number.
 	 */
 	public String join(String separator) throws JSONException {
-		int len = this.size();
+		int len = this.rawArrayList.size();
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < len; i += 1) {
 			if (i > 0) {
 				sb.append(separator);
 			}
-			sb.append(JSONUtil.valueToString(this.rawArrayList.get(i)));
+			sb.append(InternalJSONUtil.valueToString(this.rawArrayList.get(i)));
 		}
 		return sb.toString();
 	}
@@ -140,8 +138,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	
 	/**
 	 * Append an object value. This increases the array's length by one.
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)} 
 	 *
-	 * @param value An object value. The value should be a Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL object.
+	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
 	 */
 	public JSONArray put(Object value) {
@@ -163,7 +162,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * Determine if two JSONArrays are similar. They must contain similar sequences.
+	 * 是否与其它对象相等，其它对象也必须是JSONArray，对象元素相等且元素顺序一致
 	 *
 	 * @param other The other JSONArray
 	 * @return true if they are equal
@@ -196,11 +195,11 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * Produce a JSONObject by combining a JSONArray of names with the values of this JSONArray.
+	 * 根据给定名列表，与其位置对应的值组成JSONObject
 	 *
-	 * @param names A JSONArray containing a list of key strings. These will be paired with the values.
-	 * @return A JSONObject, or null if there are no names or if this JSONArray has no values.
-	 * @throws JSONException If any of the names are null.
+	 * @param names 名列表，位置与JSONArray中的值位置对应
+	 * @return A JSONObject，无名或值返回null
+	 * @throws JSONException 如果任何一个名为null
 	 */
 	public JSONObject toJSONObject(JSONArray names) throws JSONException {
 		if (names == null || names.size() == 0 || this.size() == 0) {
@@ -214,12 +213,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * Make a JSON text of this JSONArray. For compactness, no unnecessary whitespace is added. If it is not possible to produce a syntactically correct JSON text then null will be returned instead.
-	 * This could occur if the array contains an invalid number.
-	 * <p>
-	 * Warning: This method assumes that the data structure is acyclical.
+	 * 转为JSON字符串，无缩进
 	 *
-	 * @return a printable, displayable, transmittable representation of the array.
+	 * @return JSONArray字符串
 	 */
 	@Override
 	public String toString() {
@@ -231,11 +227,10 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * Make a prettyprinted JSON text of this JSONArray. Warning: This method assumes that the data structure is acyclical.
+	 * 转为JSON字符串，指定缩进值
 	 *
-	 * @param indentFactor The number of spaces to add to each level of indentation.
-	 * @return a printable, displayable, transmittable representation of the object, beginning with <code>[</code>&nbsp;<small>(left bracket)</small> and ending with <code>]</code> &nbsp;<small>(right
-	 *         bracket)</small>.
+	 * @param indentFactor 缩进值，既缩进空格数
+	 * @return JSON字符串
 	 * @throws JSONException
 	 */
 	@Override
@@ -259,7 +254,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			writer.write('[');
 
 			if (length == 1) {
-				JSONUtil.writeValue(writer, this.rawArrayList.get(0), indentFactor, indent);
+				InternalJSONUtil.writeValue(writer, this.rawArrayList.get(0), indentFactor, indent);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
 
@@ -270,14 +265,14 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 					if (indentFactor > 0) {
 						writer.write('\n');
 					}
-					JSONUtil.indent(writer, newindent);
-					JSONUtil.writeValue(writer, this.rawArrayList.get(i), indentFactor, newindent);
+					InternalJSONUtil.indent(writer, newindent);
+					InternalJSONUtil.writeValue(writer, this.rawArrayList.get(i), indentFactor, newindent);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
 					writer.write('\n');
 				}
-				JSONUtil.indent(writer, indent);
+				InternalJSONUtil.indent(writer, indent);
 			}
 			writer.write(']');
 			return writer;
@@ -376,7 +371,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			throw new JSONException("JSONArray[" + index + "] not found.");
 		}
 		if (index < this.size()) {
-			JSONUtil.testValidity(element);
+			InternalJSONUtil.testValidity(element);
 			this.rawArrayList.set(index, JSONUtil.wrap(element));
 		} else {
 			while (index != this.size()) {

@@ -11,7 +11,6 @@ import java.io.StringReader;
  * JSON解析器，用于将JSON字符串解析为JSONObject或者JSONArray
  * 
  * @author JSON.org
- * @version 2014-05-03
  */
 public class JSONTokener {
 
@@ -340,7 +339,7 @@ public class JSONTokener {
 		if ("".equals(string)) {
 			throw this.syntaxError("Missing value");
 		}
-		return JSONUtil.stringToValue(string);
+		return InternalJSONUtil.stringToValue(string);
 	}
 
 	/**
