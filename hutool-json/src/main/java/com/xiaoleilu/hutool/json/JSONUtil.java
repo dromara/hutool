@@ -1,13 +1,17 @@
 package com.xiaoleilu.hutool.json;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -134,6 +138,44 @@ public final class JSONUtil {
 		return jsonObject;
 	}
 	//-------------------------------------------------------------------- Pause end
+	
+	//-------------------------------------------------------------------- Read start
+	/**
+	 * 读取JSON
+	 * 
+	 * @param file JSON文件
+	 * @param charset 编码
+	 * @return JSON（包括JSONObject和JSONArray）
+	 * @throws IORuntimeException
+	 */
+	public static JSON readJSON(File file, Charset charset) throws IORuntimeException {
+		return parse(FileReader.create(file, charset).readString());
+	}
+	
+	/**
+	 * 读取JSONObject
+	 * 
+	 * @param file JSON文件
+	 * @param charset 编码
+	 * @return JSONObject
+	 * @throws IORuntimeException
+	 */
+	public static JSONObject readJSONObject(File file, Charset charset) throws IORuntimeException {
+		return parseObj(FileReader.create(file, charset).readString());
+	}
+	
+	/**
+	 * 读取JSONArray
+	 * 
+	 * @param file JSON文件
+	 * @param charset 编码
+	 * @return JSONArray
+	 * @throws IORuntimeException
+	 */
+	public static JSONArray readJSONArray(File file, Charset charset) throws IORuntimeException {
+		return parseArray(FileReader.create(file, charset).readString());
+	}
+	//-------------------------------------------------------------------- Read end
 
 	//-------------------------------------------------------------------- toString start
 	/**

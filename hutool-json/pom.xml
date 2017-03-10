@@ -10,19 +10,14 @@
 		<version>3.0.1</version>
 	</parent>
 
-	<artifactId>hutool-dfa</artifactId>
+	<artifactId>hutool-json</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool 基于DFA的关键词查找</description>
+	<description>Hutool JSON封装</description>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.xiaoleilu</groupId>
 			<artifactId>hutool-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.xiaoleilu</groupId>
-			<artifactId>hutool-json</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

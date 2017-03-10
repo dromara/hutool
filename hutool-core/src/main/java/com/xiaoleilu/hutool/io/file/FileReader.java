@@ -14,10 +14,6 @@ import java.util.List;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.json.JSON;
-import com.xiaoleilu.hutool.json.JSONArray;
-import com.xiaoleilu.hutool.json.JSONObject;
-import com.xiaoleilu.hutool.json.JSONUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
@@ -174,36 +170,6 @@ public class FileReader extends FileWrapper {
 	 */
 	public List<String> readLines() throws IORuntimeException {
 		return readLines(new ArrayList<String>());
-	}
-
-	/**
-	 * 读取JSON
-	 * 
-	 * @return JSON（包括JSONObject和JSONArray）
-	 * @throws IORuntimeException
-	 */
-	public JSON readJSON() throws IORuntimeException {
-		return JSONUtil.parse(readString());
-	}
-
-	/**
-	 * 读取JSONObject
-	 * 
-	 * @return {@link JSONObject}
-	 * @throws IORuntimeException
-	 */
-	public JSONObject readJSONObject() throws IORuntimeException {
-		return JSONUtil.parseObj(readString());
-	}
-
-	/**
-	 * 读取JSONArray
-	 * 
-	 * @return {@link JSONArray}
-	 * @throws IORuntimeException
-	 */
-	public JSONArray readJSONArray() throws IORuntimeException {
-		return JSONUtil.parseArray(readString());
 	}
 
 	/**

@@ -36,9 +36,6 @@ import java.util.jar.JarFile;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
 import com.xiaoleilu.hutool.io.file.FileWriter;
-import com.xiaoleilu.hutool.json.JSON;
-import com.xiaoleilu.hutool.json.JSONArray;
-import com.xiaoleilu.hutool.json.JSONObject;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -1472,78 +1469,6 @@ public final class FileUtil {
 	 */
 	public static List<String> readLines(File file, String charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
-	}
-
-	/**
-	 * 读取JSON
-	 * 
-	 * @param file JSON文件
-	 * @param charset 编码
-	 * @return JSON（包括JSONObject和JSONArray）
-	 * @throws IORuntimeException
-	 */
-	public static JSON readJSON(File file, Charset charset) throws IORuntimeException {
-		return FileReader.create(file, charset).readJSON();
-	}
-
-	/**
-	 * 读取JSON
-	 * 
-	 * @param file JSON文件
-	 * @param charsetName 编码
-	 * @return JSON（包括JSONObject和JSONArray）
-	 * @throws IORuntimeException
-	 */
-	public static JSON readJSON(File file, String charsetName) throws IORuntimeException {
-		return FileReader.create(file, CharsetUtil.charset(charsetName)).readJSON();
-	}
-
-	/**
-	 * 读取JSONObject
-	 * 
-	 * @param file JSON文件
-	 * @param charset 编码
-	 * @return JSONObject
-	 * @throws IORuntimeException
-	 */
-	public static JSONObject readJSONObject(File file, Charset charset) throws IORuntimeException {
-		return FileReader.create(file, charset).readJSONObject();
-	}
-
-	/**
-	 * 读取JSONObject
-	 * 
-	 * @param file JSON文件
-	 * @param charsetName 编码
-	 * @return JSONObject
-	 * @throws IORuntimeException
-	 */
-	public static JSONObject readJSONObject(File file, String charsetName) throws IORuntimeException {
-		return FileReader.create(file, CharsetUtil.charset(charsetName)).readJSONObject();
-	}
-
-	/**
-	 * 读取JSONArray
-	 * 
-	 * @param file JSON文件
-	 * @param charset 编码
-	 * @return JSONArray
-	 * @throws IORuntimeException
-	 */
-	public static JSONArray readJSONArray(File file, Charset charset) throws IORuntimeException {
-		return FileReader.create(file, charset).readJSONArray();
-	}
-
-	/**
-	 * 读取JSONArray
-	 * 
-	 * @param file JSON文件
-	 * @param charsetName 编码
-	 * @return JSONArray
-	 * @throws IORuntimeException
-	 */
-	public static JSONArray readJSONArray(File file, String charsetName) throws IORuntimeException {
-		return FileReader.create(file, CharsetUtil.charset(charsetName)).readJSONArray();
 	}
 
 	/**

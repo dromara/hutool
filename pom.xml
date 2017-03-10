@@ -28,6 +28,7 @@
 		<module>hutool-setting</module>
 		<module>hutool-system</module>
 		<module>hutool-geo</module>
+		<module>hutool-json</module>
 	</modules>
 	
 	<properties>
