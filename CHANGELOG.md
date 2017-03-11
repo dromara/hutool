@@ -22,6 +22,8 @@
 * 修复NumberUtil.round方法传入double某些数字无效问题
 * 增加FileUtil.getType方法
 * 优化整理JSON部分
+* 增加ThreadUtil.getThreads、getMainThread方法
+* 增强JarClassLoader
 
 ### Bug修复
 * DateUtil中offsite修正为offset

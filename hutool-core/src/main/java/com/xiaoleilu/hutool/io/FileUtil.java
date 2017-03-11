@@ -147,10 +147,11 @@ public final class FileUtil {
 	}
 
 	/**
-	 * 递归遍历目录以及子目录中的所有文件
+	 * 递归遍历目录以及子目录中的所有文件<br>
+	 * 如果提供file为文件，直接返回过滤结果
 	 * 
-	 * @param file 当前遍历文件
-	 * @param fileFilter 文件过滤规则对象，选择要保留的文件
+	 * @param file 当前遍历文件或目录
+	 * @param fileFilter 文件过滤规则对象，选择要保留的文件，只对文件有效，不过滤目录
 	 */
 	public static List<File> loopFiles(File file, FileFilter fileFilter) {
 		List<File> fileList = new ArrayList<File>();
@@ -1157,6 +1158,17 @@ public final class FileUtil {
 			// 扩展名中不能包含路径相关的符号
 			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
 		}
+	}
+	
+	/**
+	 * 判断文件路径是否有指定后缀，忽略大小写<br>
+	 * 常用语判断扩展名
+	 * @param file 文件或目录
+	 * @param suffix 后缀
+	 * @return 是否有指定后缀
+	 */
+	public static boolean pathEndsWith(File file, String suffix){
+		return file.getPath().toLowerCase().endsWith(suffix);
 	}
 	
 	/**

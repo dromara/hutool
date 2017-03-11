@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.system;
 
 import java.io.PrintWriter;
+import java.lang.management.ManagementFactory;
 import java.util.Properties;
 
 import com.xiaoleilu.hutool.convert.Convert;
@@ -181,6 +182,14 @@ public final class SystemUtil {
 	 */
 	public static Properties props() {
 		return System.getProperties();
+	}
+	
+	/**
+	 * 获取当前进程 PID
+	 * @return 当前进程 ID
+	 */
+	public static long getCurrentPID(){
+		return Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
 	}
 	//----------------------------------------------------------------------- Basic end
 

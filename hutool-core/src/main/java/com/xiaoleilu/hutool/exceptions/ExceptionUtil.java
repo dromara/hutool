@@ -62,6 +62,17 @@ public final class ExceptionUtil {
 	}
 	
 	/**
+	 * 获取当前栈信息
+	 * 
+	 * @return 当前栈信息
+	 */
+	public static StackTraceElement[] getStackElements() {
+		return (new Throwable()).getStackTrace();
+	}
+	
+	
+	
+	/**
 	 * 堆栈转为单行完整字符串
 	 * @param throwable 异常对象
 	 * @return 堆栈转为的字符串
@@ -137,6 +148,5 @@ public final class ExceptionUtil {
 		}else{
 			return exceptionStr;
 		}
-		
 	}
 }
