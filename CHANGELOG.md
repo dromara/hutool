@@ -24,6 +24,7 @@
 * 优化整理JSON部分
 * 增加ThreadUtil.getThreads、getMainThread方法
 * 增强JarClassLoader
+* WatchMonitor增加createAll方法
 
 ### Bug修复
 * DateUtil中offsite修正为offset

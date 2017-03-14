@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 
@@ -28,8 +27,20 @@ import com.xiaoleilu.hutool.util.ArrayUtil;
 public class WatchMonitor extends Thread implements Closeable{
 //	private static final Log log = LogFactory.get();
 	
+	/** 事件丢失 */
+	public static final WatchEvent.Kind<?> OVERFLOW = StandardWatchEventKinds.OVERFLOW;
+	/** 修改事件 */
+	public static final WatchEvent.Kind<?> ENTRY_MODIFY = StandardWatchEventKinds.ENTRY_MODIFY;
+	/** 创建事件 */
+	public static final WatchEvent.Kind<?> ENTRY_CREATE = StandardWatchEventKinds.ENTRY_CREATE;
+	/** 删除事件 */
+	public static final WatchEvent.Kind<?> ENTRY_DELETE = StandardWatchEventKinds.ENTRY_DELETE;
 	/** 全部事件 */
-	public static final Kind<?>[] EVENTS_ALL = {StandardWatchEventKinds.OVERFLOW,StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE};
+	public static final WatchEvent.Kind<?>[] EVENTS_ALL = {//
+			StandardWatchEventKinds.OVERFLOW,//事件丢失
+			StandardWatchEventKinds.ENTRY_MODIFY, //修改
+			StandardWatchEventKinds.ENTRY_CREATE, //创建
+			StandardWatchEventKinds.ENTRY_DELETE};//删除
 	
 	/** 监听路径，必须为目录 */
 	private Path path;
@@ -41,7 +52,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	/** 监听器 */
 	private Watcher watcher;
 	/** 监听事件列表 */
-	private Kind<?>[] events;
+	private WatchEvent.Kind<?>[] events;
 	
 	/** 监听是否已经关闭 */
 	private boolean isClosed;
@@ -53,7 +64,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URI uri, Kind<?>... events){
+	public static WatchMonitor create(URI uri, WatchEvent.Kind<?>... events){
 		return create(Paths.get(uri), events);
 	}
 	
@@ -63,7 +74,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URL url, Kind<?>... events){
+	public static WatchMonitor create(URL url, WatchEvent.Kind<?>... events){
 		try {
 			return create(Paths.get(url.toURI()), events);
 		} catch (URISyntaxException e) {
@@ -77,7 +88,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(File file, Kind<?>... events){
+	public static WatchMonitor create(File file, WatchEvent.Kind<?>... events){
 		return new WatchMonitor(file, events);
 	}
 	
@@ -87,18 +98,75 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(String path, Kind<?>... events){
+	public static WatchMonitor create(String path, WatchEvent.Kind<?>... events){
 		return new WatchMonitor(path, events);
 	}
 	
 	/**
 	 * 创建并初始化监听
 	 * @param path 路径
-	 * @param events 监听事件列表
+	 * @param events 监听事件列表, {@link WatchEvent.Kind}
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(Path path, Kind<?>... events){
+	public static WatchMonitor create(Path path, WatchEvent.Kind<?>... events){
 		return new WatchMonitor(path, events);
+	}
+	
+	//--------- createAll
+	/**
+	 * 创建并初始化监听，监听所有事件
+	 * @param uri URI
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 */
+	public static WatchMonitor createAll(URI uri, Watcher watcher){
+		return createAll(Paths.get(uri), watcher);
+	}
+	
+	/**
+	 * 创建并初始化监听，监听所有事件
+	 * @param url URL
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 */
+	public static WatchMonitor createAll(URL url, Watcher watcher){
+		try {
+			return createAll(Paths.get(url.toURI()), watcher);
+		} catch (URISyntaxException e) {
+			throw new WatchException(e);
+		}
+	}
+	
+	/**
+	 * 创建并初始化监听，监听所有事件
+	 * @param file 被监听文件
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 */
+	public static WatchMonitor createAll(File file, Watcher watcher){
+		return createAll(file.toPath(), watcher);
+	}
+	
+	/**
+	 * 创建并初始化监听，监听所有事件
+	 * @param path 路径
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 */
+	public static WatchMonitor createAll(String path, Watcher watcher){
+		return createAll(Paths.get(path), watcher);
+	}
+	
+	/**
+	 * 创建并初始化监听，监听所有事件
+	 * @param path 路径
+	 * @param watcher {@link Watcher}
+	 * @return {@link WatchMonitor}
+	 */
+	public static WatchMonitor createAll(Path path, Watcher watcher){
+		final WatchMonitor watchMonitor = create(path, EVENTS_ALL);
+		watchMonitor.setWatcher(watcher);
+		return watchMonitor;
 	}
 	//------------------------------------------------------ Static method end
 	
@@ -108,7 +176,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param file 文件
 	 * @param events 监听的事件列表
 	 */
-	public WatchMonitor(File file, Kind<?>... events) {
+	public WatchMonitor(File file, WatchEvent.Kind<?>... events) {
 		this(file.toPath(), events);
 	}
 	
@@ -117,7 +185,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param path 字符串路径
 	 * @param events 监听的事件列表
 	 */
-	public WatchMonitor(String path, Kind<?>... events) {
+	public WatchMonitor(String path, WatchEvent.Kind<?>... events) {
 		this(Paths.get(path), events);
 	}
 	
@@ -126,7 +194,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param path 字符串路径
 	 * @param events 监听事件列表
 	 */
-	public WatchMonitor(Path path, Kind<?>... events) {
+	public WatchMonitor(Path path, WatchEvent.Kind<?>... events) {
 		this.path = path;
 		this.events = events;
 		this.init();
@@ -197,7 +265,7 @@ public class WatchMonitor extends Thread implements Closeable{
 				return;
 			}
 			
-			Kind<?> kind;
+			WatchEvent.Kind<?> kind;
 			for (WatchEvent<?> event : wk.pollEvents()) {
 				kind = event.kind();
 				if(null != filePath && false == this.filePath.endsWith(event.context().toString())){
