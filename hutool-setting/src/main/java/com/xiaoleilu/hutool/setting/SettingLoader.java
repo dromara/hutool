@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Writer;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -14,6 +12,7 @@ import java.util.Set;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.resource.UrlResource;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.setting.dialect.BasicSetting;
@@ -58,19 +57,19 @@ public class SettingLoader {
 	/**
 	 * 加载设置文件
 	 * 
-	 * @param settingUrl 配置文件URL
+	 * @param urlResource 配置文件URL
 	 * @return 加载是否成功
 	 */
-	public boolean load(URL settingUrl) {
-		if (settingUrl == null) {
+	public boolean load(UrlResource urlResource) {
+		if (urlResource == null) {
 			throw new NullPointerException("Null setting url define!");
 		}
-		log.debug("Load setting file [{}]", settingUrl.getPath());
+		log.debug("Load setting file [{}]", urlResource);
 		InputStream settingStream = null;
 		try {
-			settingStream = settingUrl.openStream();
+			settingStream = urlResource.getStream();
 			load(settingStream);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(e, "Load setting error!");
 			return false;
 		} finally {
@@ -90,7 +89,7 @@ public class SettingLoader {
 		setting.clear();
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(settingStream, charset));
+			reader = IoUtil.getReader(settingStream, this.charset);
 			// 分组
 			String group = null;
 			

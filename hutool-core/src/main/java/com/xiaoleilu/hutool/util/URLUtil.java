@@ -10,6 +10,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.lang.Assert;
 
 /**
  * 统一资源定位符相关工具类
@@ -63,6 +64,7 @@ public final class URLUtil {
 	 * @exception UtilException MalformedURLException
 	 */
 	public static URL getURL(File file) {
+		Assert.notNull(file, "File is null !");
 		try {
 			return file.toURI().toURL();
 		} catch (MalformedURLException e) {

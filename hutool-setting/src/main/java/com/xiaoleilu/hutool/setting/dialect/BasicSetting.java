@@ -15,8 +15,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.resource.ClassPathResource;
+import com.xiaoleilu.hutool.io.resource.UrlResource;
 import com.xiaoleilu.hutool.io.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.io.watch.WatchMonitor;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.AbsSetting;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -24,7 +27,6 @@ import com.xiaoleilu.hutool.setting.SettingLoader;
 import com.xiaoleilu.hutool.setting.SettingRuntimeException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * 分组设置工具类。 用于支持设置文件<br>
@@ -58,6 +60,14 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	}
 	
 	/**
+	 * 构造
+	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
+	 */
+	public BasicSetting(String pathBaseClassLoader) {
+		this(pathBaseClassLoader, DEFAULT_CHARSET, false);
+	}
+	
+	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
@@ -65,25 +75,10 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 * @param isUseVariable 是否使用变量
 	 */
 	public BasicSetting(String pathBaseClassLoader, Charset charset, boolean isUseVariable) {
-		if(null == pathBaseClassLoader) {
-			pathBaseClassLoader = StrUtil.EMPTY;
-		}
-		
-		final URL url = URLUtil.getURL(pathBaseClassLoader);
-		if(url == null) {
-			throw new SettingRuntimeException(StrUtil.format("Can not find Setting file: [{}]", pathBaseClassLoader));
-		}
-		this.init(url, charset, isUseVariable);
+		Assert.notBlank(pathBaseClassLoader, "Blank setting path !");
+		this.init(new ClassPathResource(pathBaseClassLoader), charset, isUseVariable);
 	}
 	
-	/**
-	 * 构造
-	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
-	 */
-	public BasicSetting(String pathBaseClassLoader) {
-		this(pathBaseClassLoader, DEFAULT_CHARSET, false);
-	}
-
 	/**
 	 * 构造
 	 * 
@@ -92,14 +87,8 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 * @param isUseVariable 是否使用变量
 	 */
 	public BasicSetting(File configFile, Charset charset, boolean isUseVariable) {
-		if (configFile == null) {
-			throw new NullPointerException("Null Setting file!");
-		}
-		final URL url = URLUtil.getURL(configFile);
-		if(url == null) {
-			throw new SettingRuntimeException(StrUtil.format("Can not find Setting file: [{}]", configFile.getAbsolutePath()));
-		}
-		this.init(url, charset, isUseVariable);
+		Assert.notNull(configFile, "Null setting file define!");
+		this.init(new UrlResource(configFile), charset, isUseVariable);
 	}
 
 	/**
@@ -111,11 +100,8 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 * @param isUseVariable 是否使用变量
 	 */
 	public BasicSetting(String path, Class<?> clazz, Charset charset, boolean isUseVariable) {
-		final URL url = URLUtil.getURL(path, clazz);
-		if(url == null) {
-			throw new SettingRuntimeException(StrUtil.format("Can not find Setting file: [{}]", path));
-		}
-		this.init(url, charset, isUseVariable);
+		Assert.notBlank(path, "Blank setting path !");
+		this.init(new ClassPathResource(path, clazz), charset, isUseVariable);
 	}
 
 	/**
@@ -126,26 +112,24 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 * @param isUseVariable 是否使用变量
 	 */
 	public BasicSetting(URL url, Charset charset, boolean isUseVariable) {
-		if(url == null) {
-			throw new NullPointerException("Null url define!");
-		}
-		this.init(url, charset, isUseVariable);
+		Assert.notNull(url, "Null setting url define!");
+		this.init(new UrlResource(url), charset, isUseVariable);
 	}
 	
 	/*--------------------------公有方法 start-------------------------------*/
 	/**
 	 * 初始化设定文件
 	 * 
-	 * @param settingUrl 设定文件的URL
+	 * @param urlResource 设定文件的URL
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 * @return 成功初始化与否
 	 */
-	public boolean init(URL settingUrl, Charset charset, boolean isUseVariable) {
-		if (settingUrl == null) {
+	public boolean init(UrlResource urlResource, Charset charset, boolean isUseVariable) {
+		if (urlResource == null) {
 			throw new NullPointerException("Null setting url define!");
 		}
-		this.settingUrl = settingUrl;
+		this.settingUrl = urlResource.getUrl();
 		this.charset = charset;
 		this.isUseVariable = isUseVariable;
 
@@ -159,7 +143,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 		if(null == this.settingLoader){
 			settingLoader = new SettingLoader(this, this.charset, this.isUseVariable);
 		}
-		return settingLoader.load(settingUrl);
+		return settingLoader.load(new UrlResource(this.settingUrl));
 	}
 	
 	/**
@@ -193,7 +177,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 * @return 获得设定文件的路径
 	 */
 	public String getSettingPath() {
-		return settingUrl.getPath();
+		return (null == this.settingUrl) ? null : this.settingUrl.getPath();
 	}
 
 	@Override

@@ -16,13 +16,16 @@ import com.xiaoleilu.hutool.getter.BasicTypeGetter;
 import com.xiaoleilu.hutool.getter.OptBasicTypeGetter;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.resource.ClassPathResource;
+import com.xiaoleilu.hutool.io.resource.UrlResource;
 import com.xiaoleilu.hutool.io.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.io.watch.WatchMonitor;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.SettingRuntimeException;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * Properties文件读取封装类
@@ -38,8 +41,6 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	private WatchMonitor watchMonitor;
 	//----------------------------------------------------------------------- 私有属性 end
 	
-	//----------------------------------------------------------------------- 构造方法 start
-	
 	/**
 	 * 获得Classpath下的Properties文件
 	 * 
@@ -50,20 +51,21 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		return new Props(resource);
 	}
 	
+	//----------------------------------------------------------------------- 构造方法 start
+	/**
+	 * 构造
+	 */
+	public Props() {
+		super();
+	}
+	
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 */
 	public Props(String pathBaseClassLoader){
-		if(null == pathBaseClassLoader) {
-			pathBaseClassLoader = StrUtil.EMPTY;
-		}
-		
-		final URL url = URLUtil.getURL(pathBaseClassLoader);
-		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find properties file: [{}]", pathBaseClassLoader));
-		}
-		this.load(url);
+		Assert.notBlank(pathBaseClassLoader, "Blank properties file path !");
+		this.load(new ClassPathResource(pathBaseClassLoader));
 	}
 	
 	/**
@@ -71,14 +73,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param propertiesFile 配置文件对象
 	 */
 	public Props(File propertiesFile){
-		if (propertiesFile == null) {
-			throw new RuntimeException("Null properties file!");
-		}
-		final URL url = URLUtil.getURL(propertiesFile);
-		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find properties file: [{}]", propertiesFile.getAbsolutePath()));
-		}
-		this.load(url);
+		Assert.notNull(propertiesFile, "Null properties file!");
+		this.load(new UrlResource(propertiesFile));
 	}
 	
 	/**
@@ -87,11 +83,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param clazz 基准类
 	 */
 	public Props(String path, Class<?> clazz){
-		final URL url = URLUtil.getURL(path, clazz);
-		if(url == null) {
-			throw new RuntimeException(StrUtil.format("Can not find properties file: [{}]", path));
-		}
-		this.load(url);
+		Assert.notBlank(path, "Blank properties file path !");
+		this.load(new ClassPathResource(path, clazz));
 	}
 	
 	/**
@@ -99,7 +92,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param propertiesUrl 属性文件路径
 	 */
 	public Props(URL propertiesUrl){
-		this.load(propertiesUrl);
+		Assert.notNull(propertiesUrl, "Null properties URL !");
+		this.load(new UrlResource(propertiesUrl));
 	}
 	
 	/**
@@ -107,37 +101,39 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param properties 属性文件路径
 	 */
 	public Props(Properties properties){
-		this.putAll(properties);
+		if(CollectionUtil.isNotEmpty(properties)){
+			this.putAll(properties);
+		}
 	}
 	
 	//----------------------------------------------------------------------- 构造方法 end
 	
 	/**
 	 * 初始化配置文件
-	 * @param propertiesFileUrl 配置文件URL
+	 * @param urlResource {@link UrlResource}
 	 */
-	public  void load(URL propertiesFileUrl){
-		if(propertiesFileUrl == null){
-			throw new RuntimeException("Null properties file url define!");
+	public void load(UrlResource urlResource){
+		this.propertiesFileUrl = urlResource.getUrl();
+		if(null == this.propertiesFileUrl) {
+			throw new SettingRuntimeException("Can not find properties file: [{}]", urlResource);
 		}
 		log.debug("Load properties [{}]", propertiesFileUrl.getPath());
 		InputStream in = null;
 		try {
-			in = propertiesFileUrl.openStream();
+			in = urlResource.getStream();
 			super.load(in);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(e, "Load properties error!");
 		}finally{
 			IoUtil.close(in);
 		}
-		this.propertiesFileUrl = propertiesFileUrl;
 	}
 	
 	/**
 	 * 重新加载配置文件
 	 */
 	public void load() {
-		this.load(propertiesFileUrl);
+		this.load(new UrlResource(this.propertiesFileUrl));
 	}
 	
 	/**
