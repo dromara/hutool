@@ -1,8 +1,10 @@
 package com.xiaoleilu.hutool.json;
 
 /**
- * JSONObject.NULL is equivalent to the value that JavaScript calls null,<br>
- * whilst Java's null is equivalent to the value that JavaScript calls undefined.
+ * 用于定义<code>null</code>，与Javascript中null相对应<br>
+ * Java中的<code>null</code>值在js中表示为undefined。
+ * @author Looly
+ *
  */
 public class JSONNull {
 	
@@ -26,6 +28,7 @@ public class JSONNull {
 
 	/**
 	 * A Null object is equal to the null value and to itself.
+	 * 对象与其本身和<code>null</code>值相等
 	 *
 	 * @param object An object to test for nullness.
 	 * @return true if the object parameter is the JSONObject.NULL object or null.

@@ -1,18 +1,18 @@
 package com.xiaoleilu.hutool.json;
+
 /**
- * The <code>JSONString</code> interface allows a <code>toJSONString()</code>
- * method so that a class can change the behavior of
- * <code>JSONObject.toString()</code>, <code>JSONArray.toString()</code>,
- * and <code>JSONWriter.value(</code>Object<code>)</code>. The
- * <code>toJSONString</code> method will be used instead of the default behavior
- * of using the Object's <code>toString()</code> method and quoting the result.
+ * <code>JSONString</code>接口定义了一个<code>toJSONString()</code><br>
+ * 实现此接口的类可以通过实现<code>toJSONString()</code>方法来改变转JSON字符串的方式。
+ * 
+ * @author Looly
+ *
  */
 public interface JSONString {
-    /**
-     * The <code>toJSONString</code> method allows a class to produce its own JSON
-     * serialization.
-     *
-     * @return A strictly syntactically correct JSON text.
-     */
-    public String toJSONString();
+
+	/**
+	 * 自定义转JSON字符串的方法
+	 * 
+	 * @return JSON字符串
+	 */
+	public String toJSONString();
 }
