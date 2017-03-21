@@ -899,8 +899,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 加入全部
-	 * @param collection 集合 {@link Collection}
-	 * @param iterator {@link Iterator}
+	 * @param collection 被加入的集合 {@link Collection}
+	 * @param iterator 要加入的{@link Iterator}
 	 * @return 原集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Iterator<T> iterator) {
@@ -914,8 +914,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 加入全部
-	 * @param collection 集合 {@link Collection}
-	 * @param iterable {@link Iterable}
+	 * @param collection 被加入的集合 {@link Collection}
+	 * @param iterable 要加入的内容{@link Iterable}
 	 * @return 原集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Iterable<T> iterable) {
@@ -924,8 +924,8 @@ public final class CollectionUtil {
 
 	/**
 	 * 加入全部
-	 * @param collection 集合 {@link Collection}
-	 * @param enumeration {@link Enumeration}
+	 * @param collection 被加入的集合 {@link Collection}
+	 * @param enumeration 要加入的内容{@link Enumeration}
 	 * @return 原集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Enumeration<T> enumeration) {

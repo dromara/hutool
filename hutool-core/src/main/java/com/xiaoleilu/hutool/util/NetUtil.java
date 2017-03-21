@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 
@@ -22,8 +24,9 @@ import com.xiaoleilu.hutool.lang.Validator;
  */
 public final class NetUtil {
 	public final static String LOCAL_IP = "127.0.0.1";
-	
-	private NetUtil() {}
+
+	private NetUtil() {
+	}
 
 	/**
 	 * 根据long值获取ip v4地址
@@ -221,6 +224,7 @@ public final class NetUtil {
 
 	/**
 	 * 通过域名得到IP
+	 * 
 	 * @param hostName HOST
 	 * @return ip address or hostName if UnknownHostException
 	 */
@@ -231,18 +235,65 @@ public final class NetUtil {
 			return hostName;
 		}
 	}
-	
+
 	/**
-	 * 获得本机IP地址
-	 * @return 本机IP地址，获取失败返回<code>null</code>
+	 * 获取本机所有网卡
+	 * 
+	 * @return 所有网卡，异常返回<code>null</code>
 	 * @since 3.0.1
 	 */
-	public static String getLocalhost(){
+	public static Collection<NetworkInterface> getNetworkInterfaces() {
+		Enumeration<NetworkInterface> networkInterfaces = null;
 		try {
-			return InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
+			networkInterfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {
 			return null;
 		}
+
+		return CollectionUtil.addAll(new ArrayList<NetworkInterface>(), networkInterfaces);
+	}
+
+	/**
+	 * 获取本机网卡IP地址，这个地址为所有网卡中非回路地址的第一个<br>
+	 * 如果获取失败调用 {@link InetAddress#getLocalHost()}方法获取。<br>
+	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
+	 * 
+	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
+	 * @since 3.0.1
+	 */
+	public static InetAddress getLocalhost() {
+		InetAddress candidateAddress = null;
+		NetworkInterface iface;
+		InetAddress inetAddr;
+		try {
+			for (Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
+				iface = ifaces.nextElement();
+				for (Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
+					inetAddr = inetAddrs.nextElement();
+					if (false == inetAddr.isLoopbackAddress()) {
+						if (inetAddr.isSiteLocalAddress()) {
+							return inetAddr;
+						}else if(null == candidateAddress){
+							//非site-local地址做为候选地址返回
+							candidateAddress = inetAddr;
+						}
+					}
+				}
+			}
+		} catch (SocketException e) {
+			//ignore socket exception, and return null;
+		}
+		
+		if(null == candidateAddress){
+			try {
+				candidateAddress = InetAddress.getLocalHost();
+			} catch (UnknownHostException e) {
+				//ignore
+			}
+		}
+		
+		return candidateAddress;
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start
