@@ -231,6 +231,19 @@ public final class NetUtil {
 			return hostName;
 		}
 	}
+	
+	/**
+	 * 获得本机IP地址
+	 * @return 本机IP地址，获取失败返回<code>null</code>
+	 * @since 3.0.1
+	 */
+	public static String getLocalhost(){
+		try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			return null;
+		}
+	}
 
 	// ----------------------------------------------------------------------------------------- Private method start
 	/**

@@ -25,6 +25,7 @@
 * 增加ThreadUtil.getThreads、getMainThread方法
 * 增强JarClassLoader
 * WatchMonitor增加createAll方法
+* 增加NetUtil.getLocalhost
 
 ### Bug修复
 * DateUtil中offsite修正为offset
