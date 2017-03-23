@@ -26,6 +26,7 @@
 * 增强JarClassLoader
 * WatchMonitor增加createAll方法
 * 增加NetUtil.getLocalhost
+* 优化ClassPathResource错误提示
 
 ### Bug修复
 * DateUtil中offsite修正为offset

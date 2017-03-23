@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.io.resource;
 
 import java.net.URL;
 
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
@@ -85,6 +86,9 @@ public class ClassPathResource extends UrlResource{
 			super.url = this.classLoader.getResource(this.path);
 		}else{
 			super.url = ClassLoader.getSystemResource(this.path);
+		}
+		if(null == super.url){
+			throw new IORuntimeException("Resource of path [{}] not exist!", this.path);
 		}
 	}
 	

@@ -38,7 +38,7 @@ public class PooledDSFactory extends DSFactory {
 	}
 
 	@Override
-	public DataSource getDataSource(String group) {
+	synchronized public DataSource getDataSource(String group) {
 		if (group == null) {
 			group = StrUtil.EMPTY;
 		}

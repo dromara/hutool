@@ -37,7 +37,7 @@ public class SimpleDSFactory extends DSFactory {
 	}
 
 	@Override
-	public DataSource getDataSource(String group) {
+	synchronized public DataSource getDataSource(String group) {
 		// 如果已经存在已有数据源（连接池）直接返回
 		final SimpleDataSource existedDataSource = dsMap.get(group);
 		if (existedDataSource != null) {
