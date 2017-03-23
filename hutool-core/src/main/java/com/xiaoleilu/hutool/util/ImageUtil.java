@@ -330,24 +330,26 @@ public final class ImageUtil {
 	 * @param pressImgFile 水印图片
 	 * @param srcImageFile 源图像文件
 	 * @param destImageFile 目标图像文件
-	 * @param x 修正值。 默认在中间
-	 * @param y 修正值。 默认在中间
+	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
 	public final static void pressImage(File pressImgFile, File srcImageFile, File destImageFile, int x, int y, float alpha) {
 		try {
 			Image src = ImageIO.read(srcImageFile);
-			int wideth = src.getWidth(null);
+			int width = src.getWidth(null);
 			int height = src.getHeight(null);
-			BufferedImage image = new BufferedImage(wideth, height, BufferedImage.TYPE_INT_RGB);
+			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 			Graphics2D g = image.createGraphics();
-			g.drawImage(src, 0, 0, wideth, height, null);
+			g.drawImage(src, 0, 0, width, height, null);
 			// 水印文件
 			Image pressImg = ImageIO.read(pressImgFile);
 			int pressImgWidth = pressImg.getWidth(null);
 			int pressImgHeight = pressImg.getHeight(null);
+			x += (width - pressImgWidth) / 2;
+			y += (height - pressImgHeight) / 2;
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-			g.drawImage(pressImg, (wideth - pressImgWidth) / 2, (height - pressImgHeight) / 2, pressImgWidth, pressImgHeight, null);
+			g.drawImage(pressImg, x, y, pressImgWidth, pressImgHeight, null);
 			// 水印文件结束
 			g.dispose();
 			ImageIO.write((BufferedImage) image, "JPEG", destImageFile);
