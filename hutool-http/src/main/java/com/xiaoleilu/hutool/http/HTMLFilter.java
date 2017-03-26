@@ -32,8 +32,6 @@ import java.util.regex.Pattern;
  * If you find bugs or have suggestions on improvement (especially regarding performance), please contact us. The latest version of this source, and our contact details, can be found at
  * http://xss-html-filter.sf.net
  * 
- * @version 1.6-SNAPSHOT
- *
  * @author Joseph O'Connell
  * @author Cal Hendersen
  * @author Michael Semb Wever

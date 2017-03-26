@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -24,6 +26,7 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
  * http请求类
@@ -58,7 +61,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/** 重定向次数 */
 	private int redirectCount;
 	
-	/** SSLSocketFactory，用于HTTPS安全连接 */
+	/** HostnameVerifier，用于HTTPS安全连接 */
 	private HostnameVerifier hostnameVerifier;
 	/** SSLSocketFactory，用于HTTPS安全连接 */
 	private SSLSocketFactory ssf;
@@ -462,6 +465,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		this.httpConnection.disconnect();
 		return httpResponse;
+	}
+	
+	/**
+	 * 异步请求
+	 * @return 异步对象，使用get方法获取HttpResponse对象
+	 */
+	public Future<HttpResponse> asyncExecute(){
+		return ThreadUtil.execAsync(new Callable<HttpResponse>(){
+			@Override
+			public HttpResponse call() throws Exception {
+				return execute();
+			}
+		});
 	}
 
 	/**

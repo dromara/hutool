@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.util;
 
 import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -306,21 +307,22 @@ public final class ArrayUtil {
 		}
 		return array.clone();
 	}
-	
+
 	/**
 	 * 克隆数组，如果非数组返回<code>null</code>
+	 * 
 	 * @param obj 数组对象
 	 * @return 克隆后的数组对象
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T clone(final T obj) {
-		if(null == obj){
+		if (null == obj) {
 			return null;
 		}
 		if (isArray(obj)) {
 			final Object result;
 			final Class<?> componentType = obj.getClass().getComponentType();
-			if (componentType.isPrimitive()) {//原始类型
+			if (componentType.isPrimitive()) {// 原始类型
 				int length = Array.getLength(obj);
 				result = Array.newInstance(componentType, length);
 				while (length-- > 0) {
@@ -329,11 +331,11 @@ public final class ArrayUtil {
 			} else {
 				result = ((Object[]) obj).clone();
 			}
-			return (T)result;
+			return (T) result;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 生成一个数字列表<br>
 	 * 自动判定正序反序
@@ -1089,5 +1091,25 @@ public final class ArrayUtil {
 			}
 		}
 		throw new UtilException(StrUtil.format("[{}] is not a Array!", array.getClass()));
+	}
+
+	/**
+	 * {@link ByteBuffer} 转byte数组
+	 * @param bytebuffer {@link ByteBuffer}
+	 * @return byte数组
+	 * @since 3.0.1
+	 */
+	public static byte[] toArray(ByteBuffer bytebuffer) {
+		if (false == bytebuffer.hasArray()) {
+			int oldPosition = bytebuffer.position();
+			bytebuffer.position(0);
+			int size = bytebuffer.limit();
+			byte[] buffers = new byte[size];
+			bytebuffer.get(buffers);
+			bytebuffer.position(oldPosition);
+			return buffers;
+		} else {
+			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
+		}
 	}
 }

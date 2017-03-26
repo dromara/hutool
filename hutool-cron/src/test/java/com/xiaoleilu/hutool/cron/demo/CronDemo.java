@@ -6,6 +6,9 @@ import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 
+/**
+ * 定时任务样例
+ */
 public class CronDemo {
 	public static void main(String[] args) {
 		LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
