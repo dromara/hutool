@@ -31,4 +31,15 @@ public class JSONObjectTest {
 		Assert.assertEquals(json1.get("b"), "value22");
 		Assert.assertEquals(json1.get("c"), "value3");
 	}
+	
+	@Test
+	public void parseTest(){
+		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\"}";
+		JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
+		Assert.assertEquals(jsonObject.get("a"), "value1");
+		Assert.assertEquals(jsonObject.get("b"), "value2");
+		
+		Assert.assertEquals(jsonObject.toString(), jsonStr);
+		
+	}
 }

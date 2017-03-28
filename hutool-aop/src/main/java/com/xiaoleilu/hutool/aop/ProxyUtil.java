@@ -44,8 +44,9 @@ public final class ProxyUtil {
 	 * 假设创建的代理对象名为 $Proxy0<br>
 	 * 1、根据传入的interfaces动态生成一个类，实现interfaces中的接口<br>
 	 * 2、通过传入的classloder将刚生成的类加载到jvm中。即将$Proxy0类load<br>
-	 * 3、调用$Proxy0的$Proxy0(InvocationHandler)构造函数 创建$Proxy0的对象，并且用interfaces参数遍历其所有接口的方法，并生成Method对象初始化对象的几个Method成员变量<br>
-	 * 4、将$Proxy0的实例返回给客户端。 5、当调用代理类的相应方法时，相当于调用 {@link InvocationHandler#invoke(Object, Method, Object[])} 方法 实现方式是通过调用
+	 * 3、调用$Proxy0的$Proxy0(InvocationHandler)构造函数 创建$Proxy0的对象，并且用interfaces参数遍历其所有接口的方法，这些实现方法的实现本质上是通过反射调用被代理对象的方法<br>
+	 * 4、将$Proxy0的实例返回给客户端。 <br>
+	 * 5、当调用代理类的相应方法时，相当于调用 {@link InvocationHandler#invoke(Object, Method, Object[])} 方法
 	 * 
 	 * @param classloader 被代理类对应的ClassLoader
 	 * @param invocationHandler {@link InvocationHandler} ，被代理类通过实现此接口提供动态代理功能

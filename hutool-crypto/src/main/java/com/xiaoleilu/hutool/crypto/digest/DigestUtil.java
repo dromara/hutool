@@ -1,10 +1,8 @@
-package com.xiaoleilu.hutool.crypto;
+package com.xiaoleilu.hutool.crypto.digest;
 
 import java.io.File;
 import java.io.InputStream;
 
-import com.xiaoleilu.hutool.crypto.digest.DigestAlgorithm;
-import com.xiaoleilu.hutool.crypto.digest.Digester;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
