@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;

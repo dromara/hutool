@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.impl;
 
 /**
  * 缓存对象

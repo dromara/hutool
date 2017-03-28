@@ -1,9 +1,11 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import com.xiaoleilu.hutool.cache.Cache;
 
 /**
  * 超时和限制大小的缓存的默认实现<br>
@@ -163,10 +165,14 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 	@Override
 	public void remove(K key) {
 		writeLock.lock();
+		CacheObj<K, V> co;
 		try {
-			cacheMap.remove(key);
+			co = cacheMap.remove(key);
 		} finally {
 			writeLock.unlock();
+		}
+		if(null != co){
+			onRemove(co.key, co.obj);
 		}
 	}
 
@@ -195,4 +201,12 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 		return this.cacheMap.toString();
 	}
 	// ---------------------------------------------------------------- common end
+	
+	/**
+	 * 对象移除回调。默认无动作
+	 * @param key 键
+	 * @param cachedObject 被缓存的对象
+	 */
+	protected void onRemove(K key, V cachedObject) {
+	}
 }

@@ -1,46 +1,29 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.file;
 
 import java.io.File;
 import java.io.IOException;
 
+import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.io.FileUtil;
 
 /**
- * 使用LFU缓存文件，以解决频繁读取文件引起的性能问题
- * @author Looly,jodd
+ * 文件缓存，以解决频繁读取文件引起的性能问题
+ * @author Looly
  *
  */
-public class FileLFUCache {
+public abstract class FileCache {
 
-	/** LFU缓存 */
-	protected final LFUCache<File, byte[]> cache;
 	/** 容量 */
 	protected final int capacity;
 	/** 缓存的最大文件大小，文件大于此大小时将不被缓存 */
 	protected final int maxFileSize;
-
+	/** 默认超时时间，0表示无默认超时 */
+	protected final long timeout;
+	/** 缓存实现 */
+	protected final Cache<File, byte[]> cache;
+	
 	/** 已使用缓存空间 */
 	protected int usedSize;
-
-	/**
-	 * 构造<br>
-	 * 最大文件大小为缓存容量的一半<br>
-	 * 默认无超时
-	 * @param capacity 缓存容量
-	 */
-	public FileLFUCache(int capacity) {
-		this(capacity, capacity / 2, 0);
-	}
-
-	/**
-	 * 构造<br>
-	 * 默认无超时
-	 * @param capacity 缓存容量
-	 * @param maxFileSize 最大文件大小
-	 */
-	public FileLFUCache(int capacity, int maxFileSize) {
-		this(capacity, maxFileSize, 0);
-	}
 
 	/**
 	 * 构造
@@ -48,20 +31,11 @@ public class FileLFUCache {
 	 * @param maxFileSize 文件最大大小
 	 * @param timeout 默认超时时间，0表示无默认超时
 	 */
-	public FileLFUCache(int capacity, int maxFileSize, long timeout) {
-		this.cache = new LFUCache<File, byte[]>(0, timeout) {
-			@Override
-			public boolean isFull() {
-				return usedSize > this.capacity;
-			}
-			@Override
-			protected void onRemove(File key, byte[] cachedObject) {
-				usedSize -= cachedObject.length;
-			}
-		};
-		
+	public FileCache(int capacity, int maxFileSize, long timeout) {
 		this.capacity = capacity;
 		this.maxFileSize = maxFileSize;
+		this.timeout = timeout;
+		this.cache = initCache();
 	}
 
 	/**
@@ -96,7 +70,7 @@ public class FileLFUCache {
 	 * @return 超时时间
 	 */
 	public long timeout() {
-		return cache.timeout;
+		return this.timeout;
 	}
 
 	/**
@@ -146,5 +120,13 @@ public class FileLFUCache {
 
 		return bytes;
 	}
+	
+	// ---------------------------------------------------------------- protected method start
+	/**
+	 * 初始化实现文件缓存的缓存对象
+	 * @return {@link Cache}
+	 */
+	protected abstract Cache<File, byte[]> initCache();
+	// ---------------------------------------------------------------- protected method end
 
 }

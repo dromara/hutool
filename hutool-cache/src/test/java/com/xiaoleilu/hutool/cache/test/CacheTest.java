@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.cache.FIFOCache;
-import com.xiaoleilu.hutool.cache.LFUCache;
-import com.xiaoleilu.hutool.cache.LRUCache;
-import com.xiaoleilu.hutool.cache.TimedCache;
+import com.xiaoleilu.hutool.cache.impl.FIFOCache;
+import com.xiaoleilu.hutool.cache.impl.LFUCache;
+import com.xiaoleilu.hutool.cache.impl.LRUCache;
+import com.xiaoleilu.hutool.cache.impl.TimedCache;
 import com.xiaoleilu.hutool.date.DateUnit;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 

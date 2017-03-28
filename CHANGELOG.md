@@ -28,6 +28,8 @@
 * 增加NetUtil.getLocalhost
 * 优化ClassPathResource错误提示
 * 增加 ArrayUtil.toArray方法
+* MathUtil中的方法迁移到NumberUtil，去除MathUtil
+* 针对Cache模块做包结构调整，扩展FileCache
 
 ### Bug修复
 * DateUtil中offsite修正为offset

@@ -1,9 +1,9 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.Iterator;
 
 /**
- * {@link com.xiaoleilu.hutool.cache.AbstractCache} 的值迭代器.
+ * {@link com.xiaoleilu.hutool.cache.impl.AbstractCache} 的值迭代器.
  */
 public class CacheValuesIterator<V> implements Iterator<V> {
 

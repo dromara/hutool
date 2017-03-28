@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -68,6 +68,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 			co = values.next();
 			if (co.isExpired()) {
 				values.remove();
+				onRemove(co.key, co.obj);
 				count++;
 			}
 		}

@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -88,13 +88,4 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
 		
 		return count;
 	}
-	
-	/**
-	 * 对象移除回调。默认无动作
-	 * @param key 键
-	 * @param cachedObject 被缓存的对象
-	 */
-	protected void onRemove(K key, V cachedObject) {
-	}
-
 }
