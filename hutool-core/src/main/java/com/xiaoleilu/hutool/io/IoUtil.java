@@ -229,7 +229,7 @@ public final class IoUtil {
 			streamProgress.start();
 		}
 		while (in.read(byteBuffer) != EOF) {
-			byteBuffer.flip();
+			byteBuffer.flip();//写转读
 			size += out.write(byteBuffer);
 			byteBuffer.clear();
 			if (null != streamProgress) {
