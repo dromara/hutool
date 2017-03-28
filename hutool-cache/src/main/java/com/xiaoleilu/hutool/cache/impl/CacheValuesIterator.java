@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * {@link com.xiaoleilu.hutool.cache.impl.AbstractCache} 的值迭代器.
@@ -42,6 +43,9 @@ public class CacheValuesIterator<V> implements Iterator<V> {
 	 */
 	@Override
 	public V next() {
+		if (false == hasNext()) {
+			throw new NoSuchElementException();
+		}
 		final V cachedObject = nextValue.obj;
 		nextValue();
 		return cachedObject;
