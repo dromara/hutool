@@ -24,7 +24,6 @@ public class CronTimer extends Thread{
 	/**
 	 * 构造
 	 * @param scheduler {@link Scheduler}
-	 * @param isUseSecond 是否使用精确到秒的定时
 	 */
 	public CronTimer(Scheduler scheduler) {
 		this.scheduler = scheduler;
