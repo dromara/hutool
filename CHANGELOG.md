@@ -1,5 +1,48 @@
 # Changelog
 
+## 3.0.1
+
+### 新特性
+* 拆分项目
+* 增加 ThreadUtil.safeSleep方法
+* 增加CollectionUtil.addAllIfNotContains方法
+* 增加NumberUtil
+* 增加hutool-cron模块
+* 增加 ThreadUtil.waitForDie
+* 增加DateUtil.betweenDay方法（感谢 @宁静之湖）
+* 增加Snowflake算法
+* 对Util类加final修饰符，并添加private构造方法
+* 增加 ThreadUtil.interupt方法
+* Setting中对RuntimeException变为SettingRuntimeException
+* [log] LogFactory.setCurrentLogFactory支持传入LogFactory类
+* [core] 增加CollectionUtil.getFirst
+* [core] NumberUtil中增加binaryToInt、binaryToLong、getBinaryStr
+* 增加Mutable类型
+* HttpUtil.downFile增加String参数方法
+* 修复NumberUtil.round方法传入double某些数字无效问题
+* 增加FileUtil.getType方法
+* 优化整理JSON部分
+* 增加ThreadUtil.getThreads、getMainThread方法
+* 增强JarClassLoader
+* WatchMonitor增加createAll方法
+* 增加NetUtil.getLocalhost
+* 优化ClassPathResource错误提示
+* 增加 ArrayUtil.toArray方法
+* MathUtil中的方法迁移到NumberUtil，去除MathUtil
+* 针对Cache模块做包结构调整，扩展FileCache
+
+### Bug修复
+* DateUtil中offsite修正为offset
+* ClassUtil.invoke方法在执行无法实例化的静态方法时报错问题
+* 修复克隆方法对数组支持不足问题
+* Convert修复众多bug
+* 去掉IoUtil.getReader无用的IO异常抛出
+* ImageUtil.pressImage修正值无效问题（感谢@Rainplus）
+* 修复cache模块中CacheValuesIterator对象next()方法没有元素时无抛出异常问题
+
+-------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
+
 ## 2.16.2
 
 ### 新特性

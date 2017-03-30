@@ -2,18 +2,101 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<groupId>com.xiaoleilu</groupId>
-	<artifactId>hutool</artifactId>
-	<version>2.16.2</version>
+	<artifactId>hutool-parent</artifactId>
+	<version>3.0.1</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
 
+	<modules>
+		<module>hutool-all</module>
+		<module>hutool-aop</module>
+		<module>hutool-bloomFilter</module>
+		<module>hutool-cache</module>
+		<module>hutool-core</module>
+		<module>hutool-cron</module>
+		<module>hutool-crypto</module>
+		<module>hutool-db</module>
+		<module>hutool-dfa</module>
+		<module>hutool-extra</module>
+		<module>hutool-http</module>
+		<module>hutool-log</module>
+		<module>hutool-script</module>
+		<module>hutool-setting</module>
+		<module>hutool-system</module>
+		<module>hutool-geo</module>
+		<module>hutool-json</module>
+	</modules>
+	
+	<properties>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+		
+		<!-- versions -->
+		<junit.version>4.12</junit.version>
+		<servlet-api.version>3.1.0</servlet-api.version>
+		<slf4j.version>1.7.22</slf4j.version>
+		<logback.version>1.1.7</logback.version>
+		<log4j.version>1.2.17</log4j.version>
+		<log4j2.version>2.6.2</log4j2.version>
+		<commons-logging.version>1.2</commons-logging.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${servlet-api.version}</version>
+			</dependency>
+			<!-- Slf4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<!-- LogBack -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			<!-- Log4j 1.2 -->
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<!-- Log4j 2 -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j2.version}</version>
+			</dependency>
+			<!-- Apache Commons Logging -->
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>${commons-logging.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<issueManagement>
 		<system>Github Issue</system>
-		<url>https://github.com/looly/hutool/issues</url>
+		<url>https://github.com/looly/hutool3/issues</url>
 	</issueManagement>
 
 	<licenses>
@@ -36,11 +119,6 @@
 		<url>git@github.com:looly/hutool.git</url>
 	</scm>
 
-	<properties>
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
-	</properties>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -52,124 +130,16 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
-	<dependencies>
-		<!-- 单元测试 -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- 模板引擎 -->
-		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.7</version>
-			<!-- Servlet API，Servlet容器提供 -->
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.ibeetl</groupId>
-			<artifactId>beetl</artifactId>
-			<version>2.7.3</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-		<!-- 数据库连接池 -->
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-jdbc</artifactId>
-			<version>8.5.8</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>1.0.26</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP-java7</artifactId>
-			<version>2.4.9</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.5.2</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
-			<version>2.1.1</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<!-- MongoDB Java客户端 -->
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
-			<version>3.3.0</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<!-- 定时任务包，类似crontab -->
-		<dependency>
-			<groupId>it.sauronsoftware.cron4j</groupId>
-			<artifactId>cron4j</artifactId>
-			<version>2.2.5</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<!-- LogBack -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.7</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- Log4j 1.2 -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<!-- Log4j 2 -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.6.2</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<!-- Common Logging -->
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.2</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
 
 	<profiles>
 		<profile>
