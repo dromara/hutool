@@ -30,6 +30,8 @@ public class JSONObjectTest {
 		Assert.assertEquals(json1.get("a"), "value21");
 		Assert.assertEquals(json1.get("b"), "value22");
 		Assert.assertEquals(json1.get("c"), "value3");
+		
+		
 	}
 	
 	@Test
