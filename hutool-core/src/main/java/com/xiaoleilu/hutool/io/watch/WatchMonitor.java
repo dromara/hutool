@@ -105,7 +105,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	/**
 	 * 创建并初始化监听
 	 * @param path 路径
-	 * @param events 监听事件列表, {@link WatchEvent.Kind}
+	 * @param events 监听事件列表
 	 * @return 监听对象
 	 */
 	public static WatchMonitor create(Path path, WatchEvent.Kind<?>... events){

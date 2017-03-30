@@ -60,7 +60,6 @@ public class JarClassLoader extends URLClassLoader {
 	
 	/**
 	 * 加载Jar文件到System ClassLoader中
-	 * @param loader {@link URLClassLoader}
 	 * @param jarFile 被加载的jar
 	 * @return System ClassLoader
 	 */
