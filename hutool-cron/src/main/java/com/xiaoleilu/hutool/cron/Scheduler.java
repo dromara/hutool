@@ -62,9 +62,9 @@ public class Scheduler {
 	private CronTimer timer;
 	/** 定时任务表 */
 	protected TaskTable taskTable = new TaskTable(this);
-	/** 启动器列表 */
+	/** 启动器管理器 */
 	protected TaskLauncherManager taskLauncherManager;
-	/** 执行器列表 */
+	/** 执行器管理器 */
 	protected TaskExecutorManager taskExecutorManager;
 	/** 监听管理器列表 */
 	protected TaskListenerManager listenerManager = new TaskListenerManager();
@@ -286,7 +286,7 @@ public class Scheduler {
 			this.taskExecutorManager = new TaskExecutorManager(this);
 			
 			// Start CronTimer
-			timer = new CronTimer(this, this.matchSecond);
+			timer = new CronTimer(this);
 			timer.setDaemon(this.daemon);
 			timer.start();
 			this.started = true;

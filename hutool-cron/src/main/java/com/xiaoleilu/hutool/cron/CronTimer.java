@@ -20,22 +20,19 @@ public class CronTimer extends Thread{
 	private long TIMER_UNIT_MINUTE = DateUnit.MINUTE.getMillis();
 	
 	private Scheduler scheduler;
-	/** 是否使用精确到秒的定时 */
-	private boolean useSecond;
 	
 	/**
 	 * 构造
 	 * @param scheduler {@link Scheduler}
 	 * @param isUseSecond 是否使用精确到秒的定时
 	 */
-	public CronTimer(Scheduler scheduler, boolean isUseSecond) {
+	public CronTimer(Scheduler scheduler) {
 		this.scheduler = scheduler;
-		this.useSecond = isUseSecond;
 	}
 	
 	@Override
 	public void run() {
-		final long timerUnit = useSecond ? TIMER_UNIT_SECOND : TIMER_UNIT_MINUTE;
+		final long timerUnit = this.scheduler.matchSecond ? TIMER_UNIT_SECOND : TIMER_UNIT_MINUTE;
 		
 		long thisTime = System.currentTimeMillis();
 		long nextTime;
