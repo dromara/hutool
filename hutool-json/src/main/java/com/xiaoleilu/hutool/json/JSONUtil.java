@@ -236,13 +236,23 @@ public final class JSONUtil {
 	
 	//-------------------------------------------------------------------- toBean start
 	/**
-	 * 转为实体类对象
+	 * 转为实体类对象，转换异常将被抛出
 	 * @param json JSONObject
 	 * @param beanClass 实体类对象
 	 * @return 实体类对象
 	 */
 	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
-		return null == json ? null : json.toBean(beanClass);
+		return toBean(json, beanClass, false);
+	}
+	
+	/**
+	 * 转为实体类对象
+	 * @param json JSONObject
+	 * @param beanClass 实体类对象
+	 * @return 实体类对象
+	 */
+	public static <T> T toBean(JSONObject json, Class<T> beanClass, boolean ignoreError) {
+		return null == json ? null : json.toBean(beanClass, ignoreError);
 	}
 	//-------------------------------------------------------------------- toBean end
 

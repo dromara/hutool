@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -148,23 +148,45 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 	
 	/**
-	 * 转为实体类对象
+	 * 转为实体类对象，转换异常将被抛出
 	 * 
 	 * @param clazz 实体类
 	 * @return 实体类对象
 	 */
 	public <T> T toBean(Class<T> clazz) {
-		return BeanUtil.mapToBean(this.rawHashMap, clazz, false);
+		return toBean(clazz, false);
+	}
+	
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param clazz 实体类
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 实体类对象
+	 */
+	public <T> T toBean(Class<T> clazz, boolean ignoreError) {
+		return toBean(ClassUtil.newInstance(clazz), ignoreError);
+	}
+	
+	/**
+	 * 转为实体类对象，转换异常将被抛出
+	 * 
+	 * @param bean 实体类
+	 * @return 实体类对象
+	 */
+	public <T> T toBean(T bean) {
+		return toBean(bean, false);
 	}
 
 	/**
 	 * 转为实体类对象
 	 * 
 	 * @param bean 实体类
+	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 */
-	public <T> T toBean(T bean) {
-		return BeanUtil.fillBeanWithMap(this.rawHashMap, bean, false);
+	public <T> T toBean(T bean, boolean ignoreError) {
+		return InternalJSONUtil.toBean(this, bean, ignoreError);
 	}
 	
 	@Override

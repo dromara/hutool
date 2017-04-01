@@ -157,9 +157,10 @@ public class ConverterRegistry {
 	 * @param defaultValue 默认值
 	 * @param isCustomFirst 是否自定义转换器优先
 	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T convert(Class<T> type, Object value, T defaultValue, boolean isCustomFirst) {
+	public <T> T convert(Class<T> type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException{
 		if(null == type && null == defaultValue){
 			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
 		}
@@ -189,8 +190,9 @@ public class ConverterRegistry {
 	 * @param value 值
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
 	 */
-	public <T> T convert(Class<T> type, Object value, T defaultValue) {
+	public <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
 		return convert(type, value, defaultValue, true);
 	}
 
@@ -200,8 +202,9 @@ public class ConverterRegistry {
 	 * @param type 类型
 	 * @param value 值
 	 * @return 转换后的值，默认为<code>null</code>
+	 * @throws ConvertException 转换器不存在
 	 */
-	public <T> T convert(Class<T> type, Object value) {
+	public <T> T convert(Class<T> type, Object value) throws ConvertException {
 		return convert(type, value, null);
 	}
 

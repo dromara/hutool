@@ -1,11 +1,16 @@
 package com.xiaoleilu.hutool.json;
 
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.convert.ConvertException;
+import com.xiaoleilu.hutool.convert.ConverterRegistry;
+import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -193,5 +198,75 @@ final class InternalJSONUtil {
 		}
 		target.put(path[last], value);
 		return jsonObject;
+	}
+	
+	/**
+	 * JSON或者
+	 * @param jsonObject JSON对象
+	 * @param bean 目标Bean
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 目标Bean
+	 */
+	protected static <T> T toBean(JSONObject jsonObject, T bean, boolean ignoreError){
+		Class<?> beanClass = bean.getClass();
+		try {
+			PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(beanClass);
+			String propertyName;
+			Object value;
+			for (PropertyDescriptor property : propertyDescriptors) {
+				propertyName = property.getName();
+				value = jsonObject.get(propertyName);
+				if (null == value) {
+					// 此处取得的值为空时跳过
+					continue;
+				}
+
+				try {
+					property.getWriteMethod().invoke(bean, jsonConvert(property.getPropertyType(), value));
+				} catch (Exception e) {
+					if(ignoreError){
+//						StaticLog.warn("Inject [{}] error: {}", property.getName(), e.getMessage());
+						continue;
+					}else{
+						throw new JSONException(e, "Inject [{}] error!", property.getName());
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
+		return bean;
+	}
+	
+	/**
+	 * JSON递归转换<br>
+	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
+	 * @param type 目标类型
+	 * @param value 值
+	 * @return 目标类型的值
+	 * @throws ConvertException 转换失败
+	 */
+	private static <T> T jsonConvert(Class<T> type, Object value) throws ConvertException{
+		T targetValue = null;
+		try {
+			targetValue = ConverterRegistry.getInstance().convert(type, value);
+		} catch (ConvertException e) {
+			//ignore
+		}
+		
+		//非标准转换格式
+		if(null == targetValue){
+			
+			//子对象递归转换
+			if(value instanceof JSONObject){
+				targetValue = JSONUtil.toBean((JSONObject)targetValue, type, false);
+			}
+		}
+		
+		if(null == targetValue){
+			throw new ConvertException("Can not convert to type [{}]", type.getName());
+		}
+		
+		return targetValue;
 	}
 }
