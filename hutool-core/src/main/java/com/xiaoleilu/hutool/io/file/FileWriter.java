@@ -107,10 +107,10 @@ public class FileWriter extends FileWrapper{
 	 * @throws IORuntimeException
 	 */
 	public File write(String content, boolean isAppend) throws IORuntimeException {
-		PrintWriter writer = null;
+		BufferedWriter writer = null;
 		try {
-			writer = getPrintWriter(false);
-			writer.print(content);
+			writer = getWriter(isAppend);
+			writer.write(content);
 			writer.flush();
 		}catch(IOException e){
 			throw new IORuntimeException(e);
