@@ -1,10 +1,12 @@
 package com.xiaoleilu.hutool.json;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.json.JSONObject;
-import com.xiaoleilu.hutool.json.JSONUtil;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSONObject单元测试
@@ -43,5 +45,86 @@ public class JSONObjectTest {
 		
 		Assert.assertEquals(jsonObject.toString(), jsonStr);
 		
+	}
+	
+	@Test
+	public void toBeanTest(){
+		JSONObject subJson = JSONUtil.createObj().put("value1", "strValue1").put("value2", "234");
+		JSONObject json = JSONUtil.createObj()
+			.put("strValue", "strTest")
+			.put("intValue", 123)
+			.put("beanValue", subJson)
+			.put("list", JSONUtil.createArray().put("a").put("b"));
+		
+		TestBean bean = json.toBean(TestBean.class);
+		Console.log(bean);
+	}
+	
+	/**
+	 * 测试Bean
+	 * @author Looly
+	 *
+	 */
+	public static class TestBean{
+		private String strValue;
+		private int intValue;
+		private subBean beanValue;
+		private List<String> list;
+		
+		public String getStrValue() {
+			return strValue;
+		}
+		public void setStrValue(String strValue) {
+			this.strValue = strValue;
+		}
+		public int getIntValue() {
+			return intValue;
+		}
+		public void setIntValue(int intValue) {
+			this.intValue = intValue;
+		}
+		public subBean getBeanValue() {
+			return beanValue;
+		}
+		public void setBeanValue(subBean beanValue) {
+			this.beanValue = beanValue;
+		}
+		public List<String> getList() {
+			return list;
+		}
+		public void setList(List<String> list) {
+			this.list = list;
+		}
+		@Override
+		public String toString() {
+			return "TestBean [strValue=" + strValue + ", intValue=" + intValue + ", beanValue=" + beanValue + ", list=" + list + "]";
+		}
+	}
+	
+	/**
+	 * 测试子Bean
+	 * @author Looly
+	 *
+	 */
+	public static class subBean{
+		private String value1;
+		private BigDecimal value2;
+		
+		public String getValue1() {
+			return value1;
+		}
+		public void setValue1(String value1) {
+			this.value1 = value1;
+		}
+		public BigDecimal getValue2() {
+			return value2;
+		}
+		public void setValue2(BigDecimal value2) {
+			this.value2 = value2;
+		}
+		@Override
+		public String toString() {
+			return "subBean [value1=" + value1 + ", value2=" + value2 + "]";
+		}
 	}
 }

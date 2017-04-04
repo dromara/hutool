@@ -12,7 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URL;
@@ -1568,10 +1567,7 @@ public final class FileUtil {
 	 * @throws IOException
 	 */
 	public static BufferedWriter getWriter(File file, Charset charset, boolean isAppend) throws IOException {
-		if (false == file.exists()) {
-			file.createNewFile();
-		}
-		return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, isAppend), charset));
+		return FileWriter.create(file, charset).getWriter(isAppend);
 	}
 
 	/**

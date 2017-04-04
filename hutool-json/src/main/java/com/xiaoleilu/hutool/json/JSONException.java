@@ -1,45 +1,29 @@
 package com.xiaoleilu.hutool.json;
 
+import com.xiaoleilu.hutool.util.StrUtil;
+
 /**
- * The JSONException is thrown by the JSON.org classes when things are amiss.
+ * JSON异常
  *
- * @author JSON.org
- * @version 2015-12-09
+ * @author looly
+ * @since 3.0.2
  */
 public class JSONException extends RuntimeException {
-    /** Serialization ID */
-    private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 0;
 
-    /**
-     * Constructs a JSONException with an explanatory message.
-     *
-     * @param message
-     *            Detail about the reason for the exception.
-     */
-    public JSONException(final String message) {
-        super(message);
-    }
+	public JSONException(final String message) {
+		super(message);
+	}
 
-    /**
-     * Constructs a JSONException with an explanatory message and cause.
-     * 
-     * @param message
-     *            Detail about the reason for the exception.
-     * @param cause
-     *            The cause.
-     */
-    public JSONException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+	public JSONException(final String message, final Throwable cause) {
+		super(message, cause);
+	}
 
-    /**
-     * Constructs a new JSONException with the specified cause.
-     * 
-     * @param cause
-     *            The cause.
-     */
-    public JSONException(final Throwable cause) {
-        super(cause.getMessage(), cause);
-    }
+	public JSONException(final Throwable cause) {
+		super(cause.getMessage(), cause);
+	}
 
+	public JSONException(Throwable throwable, String messageTemplate, Object... params) {
+		super(StrUtil.format(messageTemplate, params), throwable);
+	}
 }

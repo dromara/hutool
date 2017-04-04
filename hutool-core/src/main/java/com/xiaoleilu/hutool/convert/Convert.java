@@ -491,8 +491,9 @@ public final class Convert {
 	 * @param value 值
 	 * @param defaultValue 默认值
 	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Class<T> type, Object value, T defaultValue) {
+	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException{
 		return ConverterRegistry.getInstance().convert(type, value, defaultValue);
 	}
 

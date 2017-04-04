@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 
@@ -124,17 +125,17 @@ public final class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, final boolean isIgnoreError) {
-		return fillBean(bean, new ValueProvider(){
+		return fillBean(bean, new ValueProvider<String>(){
 			@Override
-			public Object value(String name) {
-				return map.get(name);
+			public Object value(String key, Class<?> valueType) {
+				return map.get(key);
 			}
-			
+
 			@Override
-			public boolean isIgnoreError() {
-				return isIgnoreError;
+			public boolean containsKey(String key) {
+				return map.containsKey(key);
 			}
-		});
+		}, CopyOptions.create().setIgnoreError(isIgnoreError));
 	}
 	
 	/**
@@ -173,28 +174,19 @@ public final class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, final boolean isIgnoreError) {
-		final Map<Object, Object> map2 = new HashMap<Object, Object>();
-		for (Entry<?, ?> entry : map.entrySet()) {
-			final Object key = entry.getKey();
-			if (key instanceof String) {
-				final String keyStr = (String) key;
-				map2.put(keyStr.toLowerCase(), entry.getValue());
-			} else {
-				map2.put(key, entry.getValue());
-			}
-		}
+		final CaseInsensitiveMap<Object,Object> caseInsensitiveMap = new CaseInsensitiveMap<>(map);
 
-		return fillBean(bean, new ValueProvider(){
+		return fillBean(bean, new ValueProvider<String>(){
 			@Override
-			public Object value(String name) {
-				return map2.get(name.toLowerCase());
+			public Object value(String key, Class<?> valueType) {
+				return caseInsensitiveMap.get(key);
 			}
-			
+
 			@Override
-			public boolean isIgnoreError() {
-				return isIgnoreError;
+			public boolean containsKey(String key) {
+				return caseInsensitiveMap.containsKey(key);
 			}
-		});
+		}, CopyOptions.create().setIgnoreError(isIgnoreError));
 	}
 
 	/**
@@ -219,13 +211,13 @@ public final class BeanUtil {
 	 */
 	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean, final boolean isIgnoreError) {
 		final String beanName = StrUtil.lowerFirst(bean.getClass().getSimpleName());
-		return fillBean(bean, new ValueProvider(){
+		return fillBean(bean, new ValueProvider<String>(){
 			@Override
-			public Object value(String name) {
-				String value = request.getParameter(name);
+			public Object value(String key, Class<?> valueType) {
+				String value = request.getParameter(key);
 				if (StrUtil.isEmpty(value)) {
 					// 使用类名前缀尝试查找值
-					value = request.getParameter(beanName + StrUtil.DOT + name);
+					value = request.getParameter(beanName + StrUtil.DOT + key);
 					if (StrUtil.isEmpty(value)) {
 						// 此处取得的值为空时跳过，包括null和""
 						value = null;
@@ -233,12 +225,13 @@ public final class BeanUtil {
 				}
 				return value;
 			}
-			
-			 @Override
-			public boolean isIgnoreError() {
-				return isIgnoreError;
+
+			@Override
+			public boolean containsKey(String key) {
+				//对于Servlet来说，返回值null意味着无此参数
+				return null != request.getParameter(key);
 			}
-		});
+		}, CopyOptions.create().setIgnoreError(isIgnoreError));
 	}
 
 	/**
@@ -247,10 +240,11 @@ public final class BeanUtil {
 	 * @param <T>
 	 * @param beanClass Bean Class
 	 * @param valueProvider 值提供者
+	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 * @return Bean
 	 */
-	public static <T> T toBean(Class<T> beanClass, ValueProvider valueProvider) {
-		return fillBean(ClassUtil.newInstance(beanClass), valueProvider);
+	public static <T> T toBean(Class<T> beanClass, ValueProvider<String> valueProvider, CopyOptions copyOptions) {
+		return fillBean(ClassUtil.newInstance(beanClass), valueProvider, copyOptions);
 	}
 
 	/**
@@ -259,32 +253,52 @@ public final class BeanUtil {
 	 * @param <T>
 	 * @param bean Bean
 	 * @param valueProvider 值提供者
+	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 * @return Bean
 	 */
-	public static <T> T fillBean(T bean, ValueProvider valueProvider) {
+	public static <T> T fillBean(T bean, ValueProvider<String> valueProvider, CopyOptions copyOptions) {
 		if (null == valueProvider) {
 			return bean;
 		}
 
-		Class<?> beanClass = bean.getClass();
+		Class<?> actualEditable = bean.getClass();
+		if (copyOptions.editable != null) {
+			//检查限制类是否为target的父类或接口
+			if (!copyOptions.editable.isInstance(bean)) {
+				throw new IllegalArgumentException(StrUtil.format("Target class [{}] not assignable to Editable class [{}]", bean.getClass().getName(), copyOptions.editable.getName()));
+			}
+			actualEditable = copyOptions.editable;
+		}
+		HashSet<String> ignoreSet = copyOptions.ignoreProperties != null ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
 		try {
-			PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(beanClass);
+			final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(actualEditable);
 			String propertyName;
+			Class<?> propertyType;
 			Object value;
 			for (PropertyDescriptor property : propertyDescriptors) {
 				propertyName = property.getName();
-				value = valueProvider.value(propertyName);
-				if (null == value) {
-					// 此处取得的值为空时跳过
-					continue;
+				if((null != ignoreSet && ignoreSet.contains(propertyName)) || false == valueProvider.containsKey(propertyName)){
+					continue;//属性值被忽略或值提供者无此key时跳过
+				}
+				propertyType = property.getPropertyType();
+				value = valueProvider.value(propertyName, propertyType);
+				if (null == value && copyOptions.ignoreNullValue) {
+					continue;//当允许跳过空时，跳过
 				}
 
 				try {
-					property.getWriteMethod().invoke(bean, Convert.convert(property.getPropertyType(), value));
+					//当类型不匹配的时候，执行默认转换
+					if(false == propertyType.isInstance(value)){
+						value = Convert.convert(propertyType, value);
+						if (null == value && copyOptions.ignoreNullValue) {
+							continue;//当允许跳过空时，跳过
+						}
+					}
+//					property.getWriteMethod().invoke(bean, value);
+					ClassUtil.setAccessible(property.getWriteMethod()).invoke(bean, value);
 				} catch (Exception e) {
-					if(valueProvider.isIgnoreError()){
-//						StaticLog.warn("Inject [{}] error: {}", property.getName(), e.getMessage());
-						continue;
+					if(copyOptions.ignoreError){
+						continue;//忽略注入失败
 					}else{
 						throw new UtilException(e, "Inject [{}] error!", property.getName());
 					}
@@ -367,53 +381,42 @@ public final class BeanUtil {
 	 * @param target 目标Bean对象
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
-	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
+	public static void copyProperties(final Object source, Object target, CopyOptions copyOptions) {
 		if(null == copyOptions){
 			copyOptions = new CopyOptions();
 		}
+		final boolean ignoreError = copyOptions.ignoreError;
 		
-		Class<?> actualEditable = target.getClass();
-		if (copyOptions.editable != null) {
-			//检查限制类是否为target的父类或接口
-			if (!copyOptions.editable.isInstance(target)) {
-				throw new IllegalArgumentException(StrUtil.format("Target class [{}] not assignable to Editable class [{}]", target.getClass().getName(), copyOptions.editable.getName()));
-			}
-			actualEditable = copyOptions.editable;
-		}
-		PropertyDescriptor[] targetPds = null;
-		Map<String, PropertyDescriptor> sourcePdMap;
+		final Map<String, PropertyDescriptor> sourcePdMap;
 		try {
 			sourcePdMap = getFieldNamePropertyDescriptorMap(source.getClass());
-			targetPds = getPropertyDescriptors(actualEditable);
 		} catch (IntrospectionException e) {
 			throw new UtilException(e);
 		}
 		
-		HashSet<String> ignoreSet = copyOptions.ignoreProperties != null ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
-		for (PropertyDescriptor targetPd : targetPds) {
-			Method writeMethod = targetPd.getWriteMethod();
-			if (writeMethod != null && (ignoreSet == null || false == ignoreSet.contains(targetPd.getName()))) {
-				PropertyDescriptor sourcePd = sourcePdMap.get(targetPd.getName());
-				if (sourcePd != null) {
-					Method readMethod = sourcePd.getReadMethod();
-					// 源对象字段的getter方法返回值必须可转换为目标对象setter方法的第一个参数
-					if (readMethod != null && ClassUtil.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())) {
-						try {
-							Object value = ClassUtil.setAccessible(readMethod).invoke(source);
-							if(null != value || false == copyOptions.isIgnoreNullValue){
-								ClassUtil.setAccessible(writeMethod).invoke(target, value);
-							}
-						} catch (Throwable ex) {
-							if(copyOptions.isIgnoreError){
-//								StaticLog.warn("Copy property [{}] to [{}] error: {}", sourcePd.getName(), targetPd.getName(), ex.getMessage());
-								continue;
-							}
-							throw new UtilException(ex, "Copy property [{}] to [{}] error: {}", sourcePd.getName(), targetPd.getName(), ex.getMessage());
+		fillBean(target, new ValueProvider<String>(){
+			@Override
+			public Object value(String key, Class<?> valueType) {
+				PropertyDescriptor sourcePd = sourcePdMap.get(key);
+				Method readMethod = sourcePd.getReadMethod();
+				if (readMethod != null && ClassUtil.isAssignable(valueType, readMethod.getReturnType())) {
+					try {
+						return ClassUtil.setAccessible(readMethod).invoke(source);
+					} catch (Exception e) {
+						if(false == ignoreError){
+							throw new UtilException(e, "Inject [{}] error!", key);
 						}
 					}
 				}
+				return null;
 			}
-		}
+
+			@Override
+			public boolean containsKey(String key) {
+				return sourcePdMap.containsKey(key);
+			}
+			
+		}, copyOptions);
 	}
 
 	/**
@@ -422,21 +425,26 @@ public final class BeanUtil {
 	 * 在Bean注入过程中，Bean获得字段名，通过外部方式根据这个字段名查找相应的字段值，然后注入Bean<br>
 	 * 
 	 * @author Looly
+	 * @param <T> KEY类型，一般情况下为 {@link String}
 	 *
 	 */
-	public static interface ValueProvider {
+	public static interface ValueProvider<T>{
 		/**
-		 * 获取值
+		 * 获取值<br>
+		 * 返回值一般需要匹配被注入类型，如果不匹配会调用默认转换 {@link Convert#convert(Class, Object)}实现转换
 		 * 
-		 * @param name Bean对象中参数名
+		 * @param key Bean对象中参数名
+		 * @param valueType 被注入的值得类型
 		 * @return 对应参数名的值
 		 */
-		public Object value(String name);
+		public Object value(T key, Class<?> valueType);
 		
 		/**
-		 * 是否忽略字段的注入错误
+		 * 是否包含指定KEY，如果不包含则忽略注入
+		 * @param key Bean对象中参数名
+		 * @return 是否包含指定KEY
 		 */
-		public boolean isIgnoreError();
+		public boolean containsKey(T key);
 	}
 	
 	/**
@@ -452,11 +460,11 @@ public final class BeanUtil {
 		/** 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类 */
 		private Class<?> editable;
 		/** 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null */
-		private boolean isIgnoreNullValue;
+		private boolean ignoreNullValue;
 		/** 忽略的属性列表，设置一个属性列表，不拷贝这些属性值 */
 		private String[] ignoreProperties;
 		/** 是否忽略字段注入错误 */
-		private boolean isIgnoreError;
+		private boolean ignoreError;
 		
 		/**
 		 * 创建拷贝选项
@@ -469,12 +477,12 @@ public final class BeanUtil {
 		/**
 		 * 创建拷贝选项
 		 * @param editable 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
-		 * @param isIgnoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
+		 * @param ignoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
 		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
 		 * @return 拷贝选项
 		 */
-		public static CopyOptions create(Class<?> editable, boolean isIgnoreNullValue, String... ignoreProperties){
-			return new CopyOptions(editable, isIgnoreNullValue, ignoreProperties);
+		public static CopyOptions create(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties){
+			return new CopyOptions(editable, ignoreNullValue, ignoreProperties);
 		}
 		
 		/**
@@ -486,12 +494,12 @@ public final class BeanUtil {
 		/**
 		 * 构造拷贝选项
 		 * @param editable 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
-		 * @param isIgnoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
+		 * @param ignoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
 		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
 		 */
-		public CopyOptions(Class<?> editable, boolean isIgnoreNullValue, String... ignoreProperties) {
+		public CopyOptions(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
 			this.editable = editable;
-			this.isIgnoreNullValue = isIgnoreNullValue;
+			this.ignoreNullValue = ignoreNullValue;
 			this.ignoreProperties = ignoreProperties;
 		}
 
@@ -507,11 +515,11 @@ public final class BeanUtil {
 		
 		/**
 		 * 设置是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
-		 * @param isIgnoreNullVall 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
+		 * @param ignoreNullVall 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
 		 * @return CopyOptions
 		 */
-		public CopyOptions setIgnoreNullValue(boolean isIgnoreNullVall){
-			this.isIgnoreNullValue = isIgnoreNullVall;
+		public CopyOptions setIgnoreNullValue(boolean ignoreNullVall){
+			this.ignoreNullValue = ignoreNullVall;
 			return this;
 		}
 		
@@ -527,10 +535,12 @@ public final class BeanUtil {
 		
 		/**
 		 * 设置是否忽略字段的注入错误
-		 * @param isIgnoreError 是否忽略
+		 * @param ignoreError 是否忽略
+		 * @return CopyOptions
 		 */
-		public void setIgnoreError(boolean isIgnoreError) {
-			this.isIgnoreError = isIgnoreError;
+		public CopyOptions setIgnoreError(boolean ignoreError) {
+			this.ignoreError = ignoreError;
+			return this;
 		}
 	}
 }
