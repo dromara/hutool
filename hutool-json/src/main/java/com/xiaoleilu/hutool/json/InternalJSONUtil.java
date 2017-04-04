@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.json;
 
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
@@ -9,8 +8,8 @@ import java.util.Map;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConvertException;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
-import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
 import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -207,35 +206,20 @@ final class InternalJSONUtil {
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 目标Bean
 	 */
-	protected static <T> T toBean(JSONObject jsonObject, T bean, boolean ignoreError){
-		Class<?> beanClass = bean.getClass();
-		try {
-			PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(beanClass);
-			String propertyName;
-			Object value;
-			for (PropertyDescriptor property : propertyDescriptors) {
-				propertyName = property.getName();
-				value = jsonObject.get(propertyName);
-				if (null == value) {
-					// 此处取得的值为空时跳过
-					continue;
-				}
+	protected static <T> T toBean(final JSONObject jsonObject, T bean, final boolean ignoreError){
+		return BeanUtil.fillBean(bean, new BeanUtil.ValueProvider<String>(){
 
-				try {
-					property.getWriteMethod().invoke(bean, jsonConvert(property.getPropertyType(), value));
-				} catch (Exception e) {
-					if(ignoreError){
-//						StaticLog.warn("Inject [{}] error: {}", property.getName(), e.getMessage());
-						continue;
-					}else{
-						throw new JSONException(e, "Inject [{}] error!", property.getName());
-					}
-				}
+			@Override
+			public Object value(String key, Class<?> valueType) {
+				return jsonConvert(valueType, jsonObject.get(key), ignoreError);
 			}
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
-		return bean;
+
+			@Override
+			public boolean containsKey(String key) {
+				return jsonObject.containsKey(key);
+			}
+			
+		}, CopyOptions.create().setIgnoreError(ignoreError));
 	}
 	
 	/**
@@ -243,10 +227,15 @@ final class InternalJSONUtil {
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
 	 * @param type 目标类型
 	 * @param value 值
+	 * @param ignoreError 是否忽略转换错误
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
-	private static <T> T jsonConvert(Class<T> type, Object value) throws ConvertException{
+	private static <T> T jsonConvert(Class<T> type, Object value, boolean ignoreError) throws ConvertException{
+		if(null == value){
+			return null;
+		}
+		
 		T targetValue = null;
 		try {
 			targetValue = ConverterRegistry.getInstance().convert(type, value);
@@ -259,7 +248,7 @@ final class InternalJSONUtil {
 			
 			//子对象递归转换
 			if(value instanceof JSONObject){
-				targetValue = JSONUtil.toBean((JSONObject)targetValue, type, false);
+				targetValue = JSONUtil.toBean((JSONObject)value, type, ignoreError);
 			}
 		}
 		

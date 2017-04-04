@@ -3,6 +3,7 @@
 ## 3.0.2
 
 ### 新特性
+* 增加CaseInsensitiveMap
 
 ### Bug修复
 * 解决JSONObject.toBean方法无法多层转换的问题

@@ -5,6 +5,7 @@ import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
 import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -254,22 +255,22 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	 * @return Bean
 	 */
 	public Object toBean(final String group, Object bean) {
-		return BeanUtil.fillBean(bean, new ValueProvider(){
+		return BeanUtil.fillBean(bean, new ValueProvider<String>(){
 
 			@Override
-			public Object value(String name) {
-				final String value = getByGroup(name, group);
+			public Object value(String key, Class<?> valueType) {
+				final String value = getByGroup(key, group);
 				if (null != value) {
-					log.debug("Parse setting to object field [{}={}]", name, value);
+					log.debug("Parse setting to object field [{}={}]", key, value);
 				}
 				return value;
 			}
-			
+
 			@Override
-			public boolean isIgnoreError() {
+			public boolean containsKey(String key) {
 				return false;
 			}
-		});
+		}, CopyOptions.create());
 	}
 
 	/**
