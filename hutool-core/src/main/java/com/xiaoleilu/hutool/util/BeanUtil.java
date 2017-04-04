@@ -5,7 +5,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -403,7 +402,7 @@ public final class BeanUtil {
 				if (readMethod != null && ClassUtil.isAssignable(valueType, readMethod.getReturnType())) {
 					try {
 						return ClassUtil.setAccessible(readMethod).invoke(source);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					} catch (Exception e) {
 						if(false == ignoreError){
 							throw new UtilException(e, "Inject [{}] error!", key);
 						}
