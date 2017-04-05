@@ -184,7 +184,7 @@ public class Digester {
 				digest.update(buffer, 0, read);
 				read = data.read(buffer, 0, bufferLength);
 			}
-			digest.digest();
+			result = digest.digest();
 		} catch (IOException e) {
 			throw new CryptoException(e);
 		}finally{

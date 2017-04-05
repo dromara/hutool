@@ -486,6 +486,28 @@ public final class SecureUtil {
 	}
 	
 	/**
+	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * @param algorithm {@link HmacAlgorithm}
+	 * @param key 密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.0.3
+	 */
+	public static HMac hmac(HmacAlgorithm algorithm, byte[] key){
+		return new HMac(algorithm, key);
+	}
+	
+	/**
+	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * @param algorithm {@link HmacAlgorithm}
+	 * @param key 密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.0.3
+	 */
+	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key){
+		return new HMac(algorithm, key);
+	}
+	
+	/**
 	 * HmacMD5加密器<br>
 	 * 例：<br>
 	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>

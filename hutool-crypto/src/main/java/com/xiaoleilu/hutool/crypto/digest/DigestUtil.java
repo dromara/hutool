@@ -3,6 +3,8 @@ package com.xiaoleilu.hutool.crypto.digest;
 import java.io.File;
 import java.io.InputStream;
 
+import javax.crypto.SecretKey;
+
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
@@ -213,5 +215,28 @@ public final class DigestUtil {
 	 */
 	public static String sha1Hex(File file){
 		return new Digester(DigestAlgorithm.SHA1).digestHex(file);
+	}
+	
+	// ------------------------------------------------------------------------------------------- Hmac
+	/**
+	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * @param algorithm {@link HmacAlgorithm}
+	 * @param key 密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.0.3
+	 */
+	public static HMac hmac(HmacAlgorithm algorithm, byte[] key){
+		return new HMac(algorithm, key);
+	}
+	
+	/**
+	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * @param algorithm {@link HmacAlgorithm}
+	 * @param key 密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.0.3
+	 */
+	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key){
+		return new HMac(algorithm, key);
 	}
 }
