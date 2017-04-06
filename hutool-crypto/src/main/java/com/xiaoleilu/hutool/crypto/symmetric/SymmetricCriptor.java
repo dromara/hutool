@@ -34,7 +34,7 @@ public class SymmetricCriptor {
 
 	//------------------------------------------------------------------ Constructor start
 	/**
-	 * 构造
+	 * 构造，使用随机密钥
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
 	public SymmetricCriptor(SymmetricAlgorithm algorithm) {
@@ -42,7 +42,7 @@ public class SymmetricCriptor {
 	}
 	
 	/**
-	 * 构造
+	 * 构造，使用随机密钥
 	 * @param algorithm 算法
 	 */
 	public SymmetricCriptor(String algorithm) {
@@ -51,13 +51,18 @@ public class SymmetricCriptor {
 	
 	/**
 	 * 构造
-	 * @param algorithm {@link SymmetricAlgorithm}
+	 * @param algorithm 算法 {@link SymmetricAlgorithm}
 	 * @param key 自定义KEY
 	 */
 	public SymmetricCriptor(SymmetricAlgorithm algorithm, byte[] key) {
 		this(algorithm.getValue(), key);
 	}
 	
+	/**
+	 * 构造
+	 * @param algorithm 算法
+	 * @param key 密钥
+	 */
 	public SymmetricCriptor(String algorithm, byte[] key) {
 		init(algorithm, key);
 	}
@@ -70,7 +75,17 @@ public class SymmetricCriptor {
 	 * @return {@link SymmetricCriptor}
 	 */
 	public SymmetricCriptor init(String algorithm, byte[] key) {
-		this.secretKey = SecureUtil.generateKey(algorithm, key);
+		return init(algorithm, SecureUtil.generateKey(algorithm, key));
+	}
+	
+	/**
+	 * 初始化
+	 * @param algorithm 算法
+	 * @param key 密钥，如果为<code>null</code>自动生成一个key
+	 * @return {@link SymmetricCriptor}
+	 */
+	public SymmetricCriptor init(String algorithm, SecretKey key) {
+		this.secretKey = key;
 		if(algorithm.startsWith("PBE")){
 			//对于PBE算法使用随机数加盐
 			this.params = new PBEParameterSpec(RandomUtil.randomBytes(8), 100);

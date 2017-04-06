@@ -31,25 +31,57 @@ public class HMac {
 	private Mac mac;
 	private SecretKey secretKey;
 	
+	// ------------------------------------------------------------------------------------------- Constructor start
+	/**
+	 * 构造，自动生成密钥
+	 * @param algorithm 算法 {@link HmacAlgorithm}
+	 */
 	public HMac(HmacAlgorithm algorithm) {
-		this(algorithm, null);
+		this(algorithm, (SecretKey)null);
 	}
 	
+	/**
+	 * 构造
+	 * @param algorithm 算法 {@link HmacAlgorithm}
+	 * @param key 密钥
+	 */
 	public HMac(HmacAlgorithm algorithm, byte[] key) {
 		init(algorithm.getValue(), key);
 	}
 	
 	/**
+	 * 构造
+	 * @param algorithm 算法 {@link HmacAlgorithm}
+	 * @param key 密钥
+	 */
+	public HMac(HmacAlgorithm algorithm, SecretKey key) {
+		init(algorithm.getValue(), key);
+	}
+	// ------------------------------------------------------------------------------------------- Constructor end
+	
+	/**
 	 * 初始化
 	 * @param algorithm 算法
+	 * @param key 密钥
 	 * @return {@link HMac}
 	 * @throws CryptoException Cause by IOException
 	 */
 	public HMac init(String algorithm, byte[] key){
+		return init(algorithm, (null == key) ? null : new SecretKeySpec(key, algorithm));
+	}
+	
+	/**
+	 * 初始化
+	 * @param algorithm 算法
+	 * @param key 密钥 {@link SecretKey}
+	 * @return {@link HMac}
+	 * @throws CryptoException Cause by IOException
+	 */
+	public HMac init(String algorithm, SecretKey key){
 		try {
 			mac = Mac.getInstance(algorithm);
 			if(null != key){
-				this.secretKey = new SecretKeySpec(key, algorithm);
+				this.secretKey = key;
 			}else{
 				this.secretKey = SecureUtil.generateKey(algorithm);
 			}
@@ -202,7 +234,7 @@ public class HMac {
 				mac.update(buffer, 0, read);
 				read = data.read(buffer, 0, bufferLength);
 			}
-			mac.doFinal();
+			result = mac.doFinal();
 		} catch (IOException e) {
 			throw new CryptoException(e);
 		}finally{
@@ -229,5 +261,14 @@ public class HMac {
 	 */
 	public Mac getMac() {
 		return mac;
+	}
+	
+	/**
+	 * 获得密钥
+	 * @return 密钥
+	 * @since 3.0.3
+	 */
+	public SecretKey getSecretKey() {
+		return secretKey;
 	}
 }
