@@ -1,16 +1,12 @@
 package com.xiaoleilu.hutool.http;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * http基类
@@ -65,18 +61,20 @@ public abstract class HttpBase<T> {
 	 * 移除一个头信息
 	 * @param name Header名
 	 */
-	public void removeHeader(String name) {
+	public T removeHeader(String name) {
 		if(name != null) {
 			headers.remove(name.trim());
 		}
+		return (T) this;
 	}
 	
 	/**
 	 * 移除一个头信息
 	 * @param name Header名
 	 */
-	public void removeHeader(Header name) {
+	public T removeHeader(Header name) {
 		removeHeader(name.toString());
+		return (T) this;
 	}
 
 	/**
@@ -141,9 +139,9 @@ public abstract class HttpBase<T> {
 	 * 
 	 * @param headers 请求头
 	 */
-	public void header(Map<String, List<String>> headers) {
+	public T header(Map<String, List<String>> headers) {
 		if(CollectionUtil.isEmpty(headers)) {
-			return;
+			return (T) this;
 		}
 		
 		String name;
@@ -153,6 +151,7 @@ public abstract class HttpBase<T> {
 				this.header(name, StrUtil.nullToEmpty(value), false);
 			}
 		}
+		return (T) this;
 	}
 
 	/**
