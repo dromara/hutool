@@ -1,21 +1,22 @@
 package com.xiaoleilu.hutool.crypto.symmetric;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.spec.AlgorithmParameterSpec;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.PBEParameterSpec;
-
 import com.xiaoleilu.hutool.crypto.CryptoException;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.PBEParameterSpec;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 对称加密算法<br>
@@ -122,6 +123,15 @@ public class SymmetricCriptor {
 	
 	/**
 	 * 加密
+	 * @param data
+	 * @return 加密后的Hex
+	 */
+	public String encryptHex(byte[] data){
+		return HexUtil.encodeHexStr(encrypt(data));
+	}
+	
+	/**
+	 * 加密
 	 * @param data 被加密的字符串
 	 * @param charset 编码
 	 * @return 加密后的bytes
@@ -131,12 +141,31 @@ public class SymmetricCriptor {
 	}
 	
 	/**
+	 * 加密
+	 * @param data 被加密的字符串
+	 * @param charset 编码
+	 * @return 加密后的Hex
+	 */
+	public String encryptHex(String data, String charset){
+		return HexUtil.encodeHexStr(encrypt(data, charset));
+	}
+	
+	/**
 	 * 加密，使用UTF-8编码
 	 * @param data 被加密的字符串
 	 * @return 加密后的bytes
 	 */
 	public byte[] encrypt(String data){
 		return encrypt(StrUtil.bytes(data, CharsetUtil.CHARSET_UTF_8));
+	}
+	
+	/**
+	 * 加密，使用UTF-8编码
+	 * @param data 被加密的字符串
+	 * @return 加密后的Hex
+	 */
+	public String encryptHex(String data){
+		return HexUtil.encodeHexStr(encrypt(data));
 	}
 	
 	/**
@@ -152,6 +181,14 @@ public class SymmetricCriptor {
 		}
 	}
 	
+	/**
+	 * 加密
+	 * @param data 被加密的字符串
+	 * @return 加密后的Hex
+	 */
+	public String encryptHex(InputStream data){
+		return HexUtil.encodeHexStr(encrypt(data));
+	}
 	//--------------------------------------------------------------------------------- Decrypt
 	/**
 	 * 解密
@@ -176,6 +213,53 @@ public class SymmetricCriptor {
 	
 	/**
 	 * 解密
+	 * @param bytes 被解密的bytes
+	 * @param charset 解密后的charset
+	 * @return 解密后的String
+	 */
+	public String decryptStr(byte[] bytes, Charset charset){
+		return StrUtil.str(decrypt(bytes), charset);
+	}
+	
+	/**
+	 * 解密
+	 * @param bytes 被解密的bytes
+	 * @return 解密后的String
+	 */
+	public String decryptStr(byte[] bytes){
+		return decryptStr(bytes, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 解密
+	 * @param data 被解密的String
+	 * @return 解密后的bytes
+	 */
+	public byte[] decrypt(String data) {
+		return decrypt(HexUtil.decodeHex(data));
+	}
+	
+	/**
+	 * 解密
+	 * @param data 被解密的String
+	 * @param charset 解密后的charset
+	 * @return 解密后的String
+	 */
+	public String decryptStr(String data, Charset charset){
+		return StrUtil.str(decrypt(data), charset);
+	}
+	
+	/**
+	 * 解密
+	 * @param data 被解密的String
+	 * @return 解密后的String
+	 */
+	public String decryptStr(String data){
+		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 解密
 	 * @param data 被解密的bytes
 	 * @return 解密后的bytes
 	 */
@@ -185,6 +269,25 @@ public class SymmetricCriptor {
 		} catch (IOException e) {
 			throw new CryptoException(e);
 		}
+	}
+	
+	/**
+	 * 解密
+	 * @param data 被解密的InputStream
+	 * @param charset 解密后的charset
+	 * @return 解密后的String
+	 */
+	public String decryptStr(InputStream data, Charset charset){
+		return StrUtil.str(decrypt(data), charset);
+	}
+	
+	/**
+	 * 解密
+	 * @param data 被解密的InputStream
+	 * @return 解密后的String
+	 */
+	public String decryptStr(InputStream data){
+		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
 	}
 	
 	//--------------------------------------------------------------------------------- Getters
