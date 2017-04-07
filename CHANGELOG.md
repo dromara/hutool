@@ -9,6 +9,7 @@
 ### Bug修复
 * 修复Digester.digest方法返回null的问题（issue#16@osc）
 * 修复HMac.digest方法返回null的问题
+* HttpBase中的header等添加this返回（感谢github@MaxSherry）
 
 -------------------------------------------------------------------------------------------------------------
 

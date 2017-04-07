@@ -15,7 +15,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
 /**
  * http基类
  * @author Looly
- * @param <T>
+ * @param <T> 子类类型，方便链式编程
  */
 @SuppressWarnings("unchecked")
 public abstract class HttpBase<T> {
@@ -64,19 +64,22 @@ public abstract class HttpBase<T> {
 	/**
 	 * 移除一个头信息
 	 * @param name Header名
+	 * @return this
 	 */
-	public void removeHeader(String name) {
+	public T removeHeader(String name) {
 		if(name != null) {
 			headers.remove(name.trim());
 		}
+		return (T)this;
 	}
 	
 	/**
 	 * 移除一个头信息
 	 * @param name Header名
+	 * @return this
 	 */
-	public void removeHeader(Header name) {
-		removeHeader(name.toString());
+	public T removeHeader(Header name) {
+		return removeHeader(name.toString());
 	}
 
 	/**
@@ -141,9 +144,9 @@ public abstract class HttpBase<T> {
 	 * 
 	 * @param headers 请求头
 	 */
-	public void header(Map<String, List<String>> headers) {
+	public T header(Map<String, List<String>> headers) {
 		if(CollectionUtil.isEmpty(headers)) {
-			return;
+			return (T)this;
 		}
 		
 		String name;
@@ -153,6 +156,7 @@ public abstract class HttpBase<T> {
 				this.header(name, StrUtil.nullToEmpty(value), false);
 			}
 		}
+		return (T)this;
 	}
 
 	/**
