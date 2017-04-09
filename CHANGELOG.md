@@ -7,6 +7,7 @@
 ### Bug修复
 * 修复Convert.toBigDecimal和toBigInteger值传为默认值的问题（感谢@〆得不到的永远在骚动）
 * 修复AsymmetricCriptor.getKeyByType中判断出错问题，感谢（@姚洪涛）
+* 修复Http模块中Proxy设置无效问题，现在Proxy对象在HttpRequest中设置
 
 -------------------------------------------------------------------------------------------------------------
 

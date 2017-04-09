@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private Boolean isFollowRedirects;
 	/** 重定向次数 */
 	private int redirectCount;
+	/** 代理 */
+	private Proxy proxy;
 	
 	/** HostnameVerifier，用于HTTPS安全连接 */
 	private HostnameVerifier hostnameVerifier;
@@ -412,6 +415,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
+	 * 设置代理
+	 * @param proxy 代理 {@link Proxy}
+	 */
+	public void setProxy(Proxy proxy) {
+		this.proxy = proxy;
+	}
+	
+	/**
 	 * 设置SSLSocketFactory<br>
 	 * 只针对HTTPS请求，如果不设置，使用默认的SSLSocketFactory<br>
 	 * 默认SSLSocketFactory为：SSLSocketFactoryBuilder.create().build();
@@ -503,7 +514,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private void initConnecton(){
 		// 初始化 connection
 		this.httpConnection = HttpConnection
-				.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout)
+				.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout, this.proxy)
 				.header(this.headers, true); // 覆盖默认Header
 		//是否禁用缓存
 		if(this.isDisableCache){

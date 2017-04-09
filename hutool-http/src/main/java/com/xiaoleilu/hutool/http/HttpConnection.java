@@ -74,7 +74,7 @@ public class HttpConnection {
 	 * @return HttpConnection
 	 */
 	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) {
-		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, 0);
+		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, 0, null);
 	}
 	
 	/**
@@ -83,9 +83,10 @@ public class HttpConnection {
 	 * @param urlStr URL
 	 * @param method HTTP方法
 	 * @return HttpConnection
+	 * @param proxy 代理
 	 */
-	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout) {
-		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, timeout);
+	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
+		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, timeout, proxy);
 	}
 
 	// --------------------------------------------------------------- Constructor start
@@ -96,7 +97,7 @@ public class HttpConnection {
 	 * @param method HTTP方法
 	 */
 	public HttpConnection(String urlStr, Method method) {
-		this(urlStr, method, null, null, 0);
+		this(urlStr, method, null, null, 0, null);
 	}
 	
 	/**
@@ -107,7 +108,7 @@ public class HttpConnection {
 	 * @param timeout 超时时长
 	 */
 	public HttpConnection(String urlStr, Method method, int timeout) {
-		this(urlStr, method, null, null, timeout);
+		this(urlStr, method, null, null, timeout, null);
 	}
 	
 	/**
@@ -118,8 +119,9 @@ public class HttpConnection {
 	 * @param hostnameVerifier 域名验证器
 	 * @param ssf SSLSocketFactory
 	 * @param timeout 超时时长
+	 * @param proxy 代理
 	 */
-	public HttpConnection(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout) {
+	public HttpConnection(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
 		if (StrUtil.isBlank(urlStr)) {
 			throw new HttpException("Url is blank !");
 		}
@@ -129,6 +131,7 @@ public class HttpConnection {
 
 		this.url = URLUtil.url(urlStr);
 		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
+		this.proxy = proxy;
 
 		try {
 			this.conn = HttpUtil.isHttps(urlStr) ? openHttps(hostnameVerifier, ssf) : openHttp();
@@ -211,30 +214,11 @@ public class HttpConnection {
 	}
 
 	/**
-	 * 设置请求URL
-	 * 
-	 * @param url 请求URL
-	 * @return 自己
-	 */
-	public HttpConnection setUrl(URL url) {
-		this.url = url;
-		return this;
-	}
-	
-	/**
 	 * 获得代理
 	 * @return {@link Proxy}
 	 */
 	public Proxy getProxy() {
 		return proxy;
-	}
-
-	/**
-	 * 设置代理
-	 * @param proxy {@link Proxy}
-	 */
-	public void setProxy(Proxy proxy) {
-		this.proxy = proxy;
 	}
 
 	/**
