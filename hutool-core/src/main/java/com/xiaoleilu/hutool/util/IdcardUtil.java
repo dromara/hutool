@@ -29,7 +29,7 @@ public class IdcardUtil {
 	private static Map<String, Integer> twFirstCode = new HashMap<String, Integer>();
 	/** 香港身份首字母对应数字 */
 	private static Map<String, Integer> hkFirstCode = new HashMap<String, Integer>();
-	
+
 	static {
 		cityCodes.put("11", "北京");
 		cityCodes.put("12", "天津");
@@ -66,7 +66,7 @@ public class IdcardUtil {
 		cityCodes.put("81", "香港");
 		cityCodes.put("82", "澳门");
 		cityCodes.put("91", "国外");
-		
+
 		twFirstCode.put("A", 10);
 		twFirstCode.put("B", 11);
 		twFirstCode.put("C", 12);
@@ -93,7 +93,7 @@ public class IdcardUtil {
 		twFirstCode.put("Z", 33);
 		twFirstCode.put("I", 34);
 		twFirstCode.put("O", 35);
-		
+
 		hkFirstCode.put("A", 1);
 		hkFirstCode.put("B", 2);
 		hkFirstCode.put("C", 3);
@@ -135,6 +135,7 @@ public class IdcardUtil {
 
 	/**
 	 * 是否有效身份证号
+	 * 
 	 * @param idCard 身份证号，支持18位、15位和港澳台的10位
 	 * @return 是否有效
 	 */
@@ -142,15 +143,15 @@ public class IdcardUtil {
 		idCard = idCard.trim();
 		int length = idCard.length();
 		switch (length) {
-			case 18://18位身份证
+			case 18:// 18位身份证
 				return isvalidCard18(idCard);
-			case 15://15位身份证
+			case 15:// 15位身份证
 				return isvalidCard15(idCard);
-			case 10:{//10位身份证，港澳台地区
+			case 10: {// 10位身份证，港澳台地区
 				String[] cardval = isValidCard10(idCard);
 				if (cardval != null && cardval[2].equals("true")) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}
@@ -160,16 +161,42 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 验证18位身份编码是否合法
 	 * 
-	 * @param idCard 身份编码
-	 * @return 是否合法
+	 * <p>
+	 * 判断18位身份证的合法性
+	 * </p>
+	 * 根据〖中华人民共和国国家标准GB11643-1999〗中有关公民身份号码的规定，公民身份号码是特征组合码，由十七位数字本体码和一位数字校验码组成。<br>
+	 * 排列顺序从左至右依次为：六位数字地址码，八位数字出生日期码，三位数字顺序码和一位数字校验码。
+	 * <p>
+	 * 顺序码: 表示在同一地址码所标识的区域范围内，对同年、同月、同 日出生的人编定的顺序号，顺序码的奇数分配给男性，偶数分配 给女性。
+	 * </p>
+	 * <ol>
+	 * <li>第1、2位数字表示：所在省份的代码</li>
+	 * <li>第3、4位数字表示：所在城市的代码</li>
+	 * <li>第5、6位数字表示：所在区县的代码</li>
+	 * <li>第7~14位数字表示：出生年、月、日</li>
+	 * <li>第15、16位数字表示：所在地的派出所的代码</li>
+	 * <li>第17位数字表示性别：奇数表示男性，偶数表示女性</li>
+	 * <li>第18位数字是校检码，用来检验身份证的正确性。校检码可以是0~9的数字，有时也用x表示</li>
+	 * </ol>
+	 * <p>
+	 * 第十八位数字(校验码)的计算方法为：
+	 * <ol>
+	 * <li>将前面的身份证号码17位数分别乘以不同的系数。从第一位到第十七位的系数分别为：7 9 10 5 8 4 2 1 6 3 7 9 10 5 8 4 2</li>
+	 * <li>将这17位数字和系数相乘的结果相加</li>
+	 * <li>用加出来和除以11，看余数是多少</li>
+	 * <li>余数只可能有0 1 2 3 4 5 6 7 8 9 10这11个数字。其分别对应的最后一位身份证的号码为1 0 X 9 8 7 6 5 4 3 2</li>
+	 * <li>通过上面得知如果余数是2，就会在身份证的第18位数字上出现罗马数字的Ⅹ。如果余数是10，身份证的最后一位号码就是2</li>
+	 * </ol>
+	 * 
+	 * @param idcard 待验证的身份证
+	 * @return 是否有效的18位身份证
 	 */
 	public static boolean isvalidCard18(String idCard) {
 		if (CHINA_ID_MAX_LENGTH != idCard.length()) {
 			return false;
 		}
-		
+
 		// 前17位
 		String code17 = idCard.substring(0, 17);
 		// 第18位
@@ -195,13 +222,13 @@ public class IdcardUtil {
 			return false;
 		}
 		if (Validator.isNumber(idCard)) {
-			//省份
+			// 省份
 			String proCode = idCard.substring(0, 2);
 			if (null == cityCodes.get(proCode)) {
 				return false;
 			}
-			
-			//生日
+
+			// 生日
 			DateTime birthDate = DateUtil.parse(idCard.substring(6, 12), "yyMMdd");
 			if (false == Validator.isBirthday(birthDate.year(), birthDate.month(), birthDate.dayOfMonth())) {
 				return false;
@@ -272,7 +299,7 @@ public class IdcardUtil {
 		char[] chars = mid.toCharArray();
 		Integer iflag = 8;
 		for (char c : chars) {
-			sum +=Integer.valueOf(String.valueOf(c)) * iflag;
+			sum += Integer.valueOf(String.valueOf(c)) * iflag;
 			iflag--;
 		}
 		return (sum % 10 == 0 ? 0 : (10 - sum % 10)) == Integer.valueOf(end) ? true : false;
@@ -330,7 +357,7 @@ public class IdcardUtil {
 		}
 		return idCard.substring(6, 14);
 	}
-	
+
 	/**
 	 * 根据身份编号获取年龄
 	 * 
@@ -340,7 +367,7 @@ public class IdcardUtil {
 	public static int getAgeByIdCard(String idCard) {
 		return getAgeByIdCard(idCard, DateUtil.date());
 	}
-	
+
 	/**
 	 * 根据身份编号获取指定日期当时的年龄年龄
 	 * 
@@ -435,18 +462,19 @@ public class IdcardUtil {
 		}
 		return null;
 	}
-	
-	//----------------------------------------------------------------------------------- Private method start
+
+	// ----------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获得18位身份证校验码
-	 * @param code17 18位身份证号中的前17位 
+	 * 
+	 * @param code17 18位身份证号中的前17位
 	 * @return 第18位
 	 */
-	private static char getCheckCode18(String code17){
+	private static char getCheckCode18(String code17) {
 		int sum = getPowerSum(code17.toCharArray());
 		return getCheckCode18(sum);
 	}
-	
+
 	/**
 	 * 将power和值与11取模获得余数进行校验码判断
 	 * 
@@ -492,7 +520,7 @@ public class IdcardUtil {
 		}
 		return sCode;
 	}
-	
+
 	/**
 	 * 将身份证的每位和对应位的加权因子相乘之后，再得到和值
 	 * 
@@ -508,5 +536,5 @@ public class IdcardUtil {
 		}
 		return iSum;
 	}
-	//----------------------------------------------------------------------------------- Private method end
+	// ----------------------------------------------------------------------------------- Private method end
 }
