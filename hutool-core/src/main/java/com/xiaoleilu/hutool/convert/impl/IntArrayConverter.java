@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.convert.impl;
 
 import com.xiaoleilu.hutool.convert.AbstractConverter;
-import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 
 /**
@@ -13,7 +13,7 @@ public class IntArrayConverter extends AbstractConverter<int[]>{
 	
 	@Override
 	protected int[] convertInternal(Object value) {
-		final Integer[] result = Convert.convert(Integer[].class, value);
+		final Integer[] result = ConverterRegistry.getInstance().convert(Integer[].class, value);
 		return ArrayUtil.unWrap(result);
 	}
 
