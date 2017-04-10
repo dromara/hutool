@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.core;
+package com.xiaoleilu.hutool.core.lang;
 
 import java.util.HashSet;
 

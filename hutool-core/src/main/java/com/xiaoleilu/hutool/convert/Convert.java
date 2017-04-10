@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -175,23 +174,11 @@ public final class Convert {
 	/**
 	 * 转换为Integer数组<br>
 	 * 
-	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
-	 * @param values 被转换的值
+	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Integer[] toIntArray(boolean isIgnoreConvertError, Object... values) {
-		if (ArrayUtil.isEmpty(values)) {
-			return new Integer[] {};
-		}
-		final Integer[] ints = new Integer[values.length];
-		for (int i = 0; i < values.length; i++) {
-			final Integer v = toInt(values[i], null);
-			if (null == v && isIgnoreConvertError == false) {
-				throw new ConvertException(StrUtil.format("Convert [{}] to Integer error!", values[i]));
-			}
-			ints[i] = v;
-		}
-		return ints;
+	public static Integer[] toIntArray(Object value) {
+		return convert(Integer[].class, value);
 	}
 
 	/**
@@ -222,23 +209,11 @@ public final class Convert {
 	/**
 	 * 转换为Long数组<br>
 	 * 
-	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
-	 * @param values 被转换的值
+	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Long[] toLongArray(boolean isIgnoreConvertError, Object... values) {
-		if (ArrayUtil.isEmpty(values)) {
-			return new Long[] {};
-		}
-		final Long[] longs = new Long[values.length];
-		for (int i = 0; i < values.length; i++) {
-			final Long v = toLong(values[i], null);
-			if (null == v && isIgnoreConvertError == false) {
-				throw new ConvertException(StrUtil.format("Convert [{}] to Long error!", values[i]));
-			}
-			longs[i] = v;
-		}
-		return longs;
+	public static Long[] toLongArray(Object value) {
+		return convert(Long[].class, value);
 	}
 
 	/**
@@ -269,23 +244,11 @@ public final class Convert {
 	/**
 	 * 转换为Double数组<br>
 	 * 
-	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
-	 * @param values 被转换的值
+	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Double[] toDoubleArray(boolean isIgnoreConvertError, Object... values) {
-		if (ArrayUtil.isEmpty(values)) {
-			return new Double[] {};
-		}
-		final Double[] doubles = new Double[values.length];
-		for (int i = 0; i < values.length; i++) {
-			final Double v = toDouble(values[i], null);
-			if (null == v && isIgnoreConvertError == false) {
-				throw new ConvertException(StrUtil.format("Convert [{}] to Double error!", values[i]));
-			}
-			doubles[i] = v;
-		}
-		return doubles;
+	public static Double[] toDoubleArray(Object value) {
+		return convert(Double[].class, value);
 	}
 
 	/**
@@ -316,23 +279,11 @@ public final class Convert {
 	/**
 	 * 转换为Float数组<br>
 	 * 
-	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
-	 * @param values 被转换的值
+	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static <T> Float[] toFloatArray(boolean isIgnoreConvertError, Object... values) {
-		if (ArrayUtil.isEmpty(values)) {
-			return new Float[] {};
-		}
-		final Float[] floats = new Float[values.length];
-		for (int i = 0; i < values.length; i++) {
-			final Float v = toFloat(values[i], null);
-			if (null == v && isIgnoreConvertError == false) {
-				throw new ConvertException(StrUtil.format("Convert [{}] to Float error!", values[i]));
-			}
-			floats[i] = v;
-		}
-		return floats;
+	public static <T> Float[] toFloatArray(Object value) {
+		return convert(Float[].class, value);
 	}
 
 	/**
@@ -363,23 +314,11 @@ public final class Convert {
 	/**
 	 * 转换为Boolean数组<br>
 	 * 
-	 * @param isIgnoreConvertError 是否忽略转换错误，忽略则给值null
-	 * @param values 被转换的值
+	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static Boolean[] toBooleanArray(boolean isIgnoreConvertError, Object... values) {
-		if (ArrayUtil.isEmpty(values)) {
-			return new Boolean[] {};
-		}
-		final Boolean[] bools = new Boolean[values.length];
-		for (int i = 0; i < values.length; i++) {
-			final Boolean v = toBool(values[i], null);
-			if (null == v && isIgnoreConvertError == false) {
-				throw new ConvertException(StrUtil.format("Convert [{}] to Boolean error!", values[i]));
-			}
-			bools[i] = v;
-		}
-		return bools;
+	public static Boolean[] toBooleanArray(Object value) {
+		return convert(Boolean[].class, value);
 	}
 
 	/**

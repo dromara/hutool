@@ -1,8 +1,11 @@
 package com.xiaoleilu.hutool.lang;
 
 import java.net.MalformedURLException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.exceptions.ValidateException;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
@@ -25,8 +28,7 @@ public final class Validator {
 	/** 分组 */
 	public final static Pattern GROUP_VAR = Pattern.compile("\\$(\\d+)");
 	/** IP v4 */
-	public final static Pattern IPV4 = Pattern
-			.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b");
+	public final static Pattern IPV4 = Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b");
 	/** 货币 */
 	public final static Pattern MONEY = Pattern.compile("^(\\d+(?:\\.\\d+)?)$");
 	/** 邮件 */
@@ -37,8 +39,8 @@ public final class Validator {
 	public final static Pattern CITIZEN_ID = Pattern.compile("[1-9]\\d{5}[1-2]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|X|x)");
 	/** 邮编 */
 	public final static Pattern ZIP_CODE = Pattern.compile("\\d{6}");
-	/** 邮编 */
-	public final static Pattern BIRTHDAY = Pattern.compile("(\\d{4})(/|-|\\.)(\\d{1,2})(/|-|\\.)(\\d{1,2})日?$");
+	/** 生日 */
+	public final static Pattern BIRTHDAY = Pattern.compile("^(\\d{2,4})([/\\-\\.年]?)(\\d{1,2})([/\\-\\.月]?)(\\d{1,2})日?$");
 	/** URL */
 	public final static Pattern URL = Pattern.compile("(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?");
 	/** 中文字、英文字母、数字和下划线 */
@@ -419,32 +421,63 @@ public final class Validator {
 	/**
 	 * 验证是否为生日<br>
 	 * 
+	 * @param year 年
+	 * @param month 月
+	 * @param day 日
+	 * @return 是否为生日
+	 */
+	public static boolean isBirthday(int year, int month, int day) {
+		//验证年
+		int thisYear = DateUtil.thisYear();
+		if(year < 1930 || year > thisYear){
+			return false;
+		}
+		
+		//验证月
+		if (month < 1 || month > 12) {
+			return false;
+		}
+		
+		//验证日
+		if (day < 1 || day > 31) {
+			return false;
+		}
+		if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
+			return false;
+		}
+		if (month == 2) {
+			if (day > 29 || (day == 29 && false ==DateUtil.isLeapYear(year))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * 验证是否为生日<br>
+	 * 只支持以下几种格式：
+	 * <ul>
+	 * 	<li>yyyyMMdd</li>
+	 * 	<li>yyyy-MM-dd</li>
+	 * 	<li>yyyy/MM/dd</li>
+	 * 	<li>yyyyMMdd</li>
+	 * 	<li>yyyy年MM月dd日</li>
+	 * </ul>
+	 * 
 	 * @param value 值
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(String value) {
-		if (isMactchRegex(BIRTHDAY, value)) {
-			int year = Integer.parseInt(value.substring(0, 4));
-			int month = Integer.parseInt(value.substring(5, 7));
-			int day = Integer.parseInt(value.substring(8, 10));
-
-			if (month < 1 || month > 12) {
-				return false;
-			}
-			if (day < 1 || day > 31) {
-				return false;
-			}
-			if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
-				return false;
-			}
-			if (month == 2) {
-				boolean isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-				if (day > 29 || (day == 29 && !isleap)) {
-					return false;
-				}
+		if(isMactchRegex(BIRTHDAY, value)){
+			Matcher matcher = BIRTHDAY.matcher(value);
+			if(matcher.find()){
+				int year = Convert.toInt(matcher.group(1));
+				int month = Convert.toInt(matcher.group(3));
+				int day = Convert.toInt(matcher.group(5));
+				return isBirthday(year, month, day);
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	/**

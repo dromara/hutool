@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
@@ -508,6 +509,16 @@ public final class CollectionUtil {
 	 */
 	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
 		return new ArrayList<T>(collection);
+	}
+	
+	/**
+	 * 新建一个CopyOnWriteArrayList
+	 * 
+	 * @param collection 集合
+	 * @return {@link CopyOnWriteArrayList}
+	 */
+	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
+		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<T>(collection));
 	}
 	
 	/**
