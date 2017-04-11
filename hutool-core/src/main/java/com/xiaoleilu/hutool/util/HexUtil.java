@@ -107,6 +107,16 @@ public final class HexUtil {
 	 * 将十六进制字符数组转换为字符串
 	 *
 	 * @param hexStr 十六进制String
+	 * @return 字符串
+	 */
+	public static String decodeHexStr(String hexStr) {
+		return decodeHexStr(hexStr, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 将十六进制字符数组转换为字符串
+	 *
+	 * @param hexStr 十六进制String
 	 * @param charset 编码
 	 * @return 字符串
 	 */
@@ -155,6 +165,19 @@ public final class HexUtil {
 		}
 
 		return out;
+	}
+	
+	/**
+	 * 将十六进制字符数组转换为字符串
+	 *
+	 * @param hexStr 十六进制String
+	 * @return byte[]
+	 */
+	public static byte[] decodeHex(String hexStr) {
+		if(StrUtil.isEmpty(hexStr)){
+			return null;
+		}
+		return decodeHex(hexStr.toCharArray());
 	}
 	
 	//---------------------------------------------------------------------------------------- Private method start
