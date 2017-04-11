@@ -4,7 +4,6 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -337,8 +336,7 @@ public final class ArrayUtil {
 	}
 
 	/**
-	 * 生成一个数字列表<br>
-	 * 自动判定正序反序
+	 * 生成一个从0开始的数字列表<br>
 	 * 
 	 * @param excludedEnd 结束的数字（不包含）
 	 * @return 数字列表
@@ -393,7 +391,7 @@ public final class ArrayUtil {
 	}
 
 	/**
-	 * 拆分byte数组
+	 * 拆分byte数组为几个等份（最后一份可能小于len）
 	 * 
 	 * @param array 数组
 	 * @param len 每个小节的长度
@@ -449,20 +447,38 @@ public final class ArrayUtil {
 	 * 
 	 * @param keys 键列表
 	 * @param values 值列表
+	 * @param isOrder 是否有序
 	 * @return Map
+	 * @since 3.0.4
 	 */
-	public static <T, K> Map<T, K> zip(T[] keys, K[] values) {
+	public static <T, K> Map<T, K> zip(T[] keys, K[] values, boolean isOrder) {
 		if (isEmpty(keys) || isEmpty(values)) {
 			return null;
 		}
 
 		final int size = Math.min(keys.length, values.length);
-		final Map<T, K> map = new HashMap<T, K>((int) (size / 0.75));
+		final Map<T, K> map = CollectionUtil.newHashMap(size, isOrder);
 		for (int i = 0; i < size; i++) {
 			map.put(keys[i], values[i]);
 		}
 
 		return map;
+	}
+	
+	/**
+	 * 映射键值（参考Python的zip()函数），返回Map无序<br>
+	 * 例如：<br>
+	 * keys = [a,b,c,d]<br>
+	 * values = [1,2,3,4]<br>
+	 * 则得到的Map是 {a=1, b=2, c=3, d=4}<br>
+	 * 如果两个数组长度不同，则只对应最短部分
+	 * 
+	 * @param keys 键列表
+	 * @param values 值列表
+	 * @return Map
+	 */
+	public static <T, K> Map<T, K> zip(T[] keys, K[] values) {
+		return zip(keys, values, false);
 	}
 
 	/**
@@ -772,6 +788,7 @@ public final class ArrayUtil {
 	 * 
 	 * @param obj 对象
 	 * @return 是否为数组对象
+	 * @throws NullPointerException 提供被监测的对象为<code>null</code>
 	 */
 	public static boolean isArray(Object obj) {
 		if (null == obj) {

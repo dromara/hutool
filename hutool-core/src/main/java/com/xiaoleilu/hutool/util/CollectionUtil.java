@@ -419,11 +419,14 @@ public final class CollectionUtil {
 	
 	/**
 	 * 新建一个HashMap
-	 * @param isSorted Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+	 * @param size 初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75
+	 * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
 	 * @return HashMap对象
+	 * @since 3.0.4
 	 */
-	public static <T, K> HashMap<T, K> newHashMap(boolean isSorted) {
-		return isSorted ? new LinkedHashMap<T, K>() : new HashMap<T, K>();
+	public static <T, K> HashMap<T, K> newHashMap(int size, boolean isOrder) {
+		int initialCapacity = (int) (size / 0.75);
+		return isOrder ? new LinkedHashMap<T, K>(initialCapacity) : new HashMap<T, K>(initialCapacity);
 	}
 
 	/**
@@ -433,7 +436,7 @@ public final class CollectionUtil {
 	 * @return HashMap对象
 	 */
 	public static <T, K> HashMap<T, K> newHashMap(int size) {
-		return new HashMap<T, K>((int) (size / 0.75));
+		return newHashMap(size, false);
 	}
 
 	/**
@@ -774,9 +777,27 @@ public final class CollectionUtil {
 	}
 
 	// ---------------------------------------------------------------------- zip
-
+	
 	/**
 	 * 映射键值（参考Python的zip()函数）<br>
+	 * 例如：<br>
+	 * keys = a,b,c,d<br>
+	 * values = 1,2,3,4<br>
+	 * delimiter = , 则得到的Map是 {a=1, b=2, c=3, d=4}<br>
+	 * 如果两个数组长度不同，则只对应最短部分
+	 * 
+	 * @param keys 键列表
+	 * @param values 值列表
+	 * @param isOrder 是否有序
+	 * @return Map
+	 * @since 3.0.4
+	 */
+	public static Map<String, String> zip(String keys, String values, String delimiter, boolean isOrder) {
+		return ArrayUtil.zip(StrUtil.split(keys, delimiter), StrUtil.split(values, delimiter), isOrder);
+	}
+	
+	/**
+	 * 映射键值（参考Python的zip()函数），返回Map无序<br>
 	 * 例如：<br>
 	 * keys = a,b,c,d<br>
 	 * values = 1,2,3,4<br>
@@ -788,7 +809,7 @@ public final class CollectionUtil {
 	 * @return Map
 	 */
 	public static Map<String, String> zip(String keys, String values, String delimiter) {
-		return ArrayUtil.zip(StrUtil.split(keys, delimiter), StrUtil.split(values, delimiter));
+		return zip(keys, values, delimiter, false);
 	}
 
 	/**

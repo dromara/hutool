@@ -6,6 +6,7 @@
 * 新增CollectionUtil.newCopyOnWriteArrayList方法
 * 新增IdcardUtil，身份证验证和相关信息提取
 * Convert内部修改，避免循环引用
+* ArrayUtil.zip方法添加参数isOrder，可选是否有序
 
 ### Bug修复
 * 修复Convert.toBigDecimal和toBigInteger值传为默认值的问题（感谢@〆得不到的永远在骚动）
