@@ -27,5 +27,10 @@ public class SymmetricTest {
 		byte[] decrypt = aes.decrypt(encrypt);
 		
 		Assert.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		
+		String encryptHex = aes.encryptHex(content);
+		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		
+		Assert.assertEquals(content, decryptStr);
 	}
 }
