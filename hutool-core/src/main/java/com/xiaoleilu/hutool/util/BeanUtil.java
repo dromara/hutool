@@ -18,6 +18,8 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 /**
  * Bean工具类
  * 
+ * <p>把一个拥有对属性进行set和get方法的类，我们就可以称之为JavaBean。</p>
+ * 
  * @author Looly
  *
  */
@@ -26,7 +28,8 @@ public final class BeanUtil {
 	private BeanUtil() {}
 	
 	/**
-	 * 判断是否为Bean对象
+	 * 判断是否为Bean对象<br>
+	 * 判定方法是是否存在只有一个参数的setXXX方法
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
 	 */
@@ -43,6 +46,11 @@ public final class BeanUtil {
 		return false;
 	}
 	
+	/**
+	 * 查找类型转换器 {@link PropertyEditor}
+	 * @param type 需要转换的目标类型
+	 * @return {@link PropertyEditor}
+	 */
 	public static PropertyEditor findEditor(Class<?> type){
 		return PropertyEditorManager.findEditor(type);
 	}
@@ -295,7 +303,10 @@ public final class BeanUtil {
 						}
 					}
 //					property.getWriteMethod().invoke(bean, value);
-					ClassUtil.setAccessible(property.getWriteMethod()).invoke(bean, value);
+					Method method = ClassUtil.setAccessible(property.getWriteMethod());
+					if(null != method){
+						method.invoke(bean, value);
+					}
 				} catch (Exception e) {
 					if(copyOptions.ignoreError){
 						continue;//忽略注入失败
