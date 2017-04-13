@@ -19,6 +19,7 @@ public class JavaInfo{
 	private final boolean IS_JAVA_1_5 = getJavaVersionMatches("1.5");
 	private final boolean IS_JAVA_1_6 = getJavaVersionMatches("1.6");
 	private final boolean IS_JAVA_1_7 = getJavaVersionMatches("1.7");
+	private final boolean IS_JAVA_1_8 = getJavaVersionMatches("1.8");
 
 	/**
 	 * 取得当前Java impl.的版本（取自系统属性：<code>java.version</code>）。
@@ -236,6 +237,19 @@ public class JavaInfo{
 	 */
 	public final boolean isJava17() {
 		return IS_JAVA_1_7;
+	}
+	
+	/**
+	 * 判断当前Java的版本。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
+	 * </p>
+	 *
+	 * @return 如果当前Java版本为1.8，则返回<code>true</code>
+	 */
+	public final boolean isJava18() {
+		return IS_JAVA_1_8;
 	}
 
 	/**
