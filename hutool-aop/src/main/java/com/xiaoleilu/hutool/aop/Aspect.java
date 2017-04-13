@@ -58,7 +58,7 @@ public abstract class Aspect implements InvocationHandler{
 			try {
 				result = ClassUtil.invoke(target, method, args);
 			}catch (InvocationTargetException e) {
-				afterException(args, method, args, e.getTargetException());
+				afterException(target, method, args, e.getTargetException());
 			}catch (Exception e) {
 				throw e;//其它异常属于代理的异常，直接抛出
 			}

@@ -418,7 +418,7 @@ public class IdcardUtil {
 	 * @param idCard 身份编号
 	 * @return 生日(dd)
 	 */
-	public static Short getDateByIdCard(String idCard) {
+	public static Short getDayByIdCard(String idCard) {
 		Integer len = idCard.length();
 		if (len < CHINA_ID_MIN_LENGTH) {
 			return null;

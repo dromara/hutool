@@ -90,6 +90,16 @@ public final class HexUtil {
 	public static String encodeHexStr(String data, Charset charset) {
 		return encodeHexStr(StrUtil.bytes(data, charset), true);
 	}
+	
+	/**
+	 * 将字节数组转换为十六进制字符串，结果为小写，默认编码是UTF-8
+	 *
+	 * @param data 被编码的字符串
+	 * @return 十六进制String
+	 */
+	public static String encodeHexStr(String data) {
+		return encodeHexStr(data, CharsetUtil.CHARSET_UTF_8);
+	}
 
 	/**
 	 * 将字节数组转换为十六进制字符串
@@ -104,7 +114,7 @@ public final class HexUtil {
 	
 	//---------------------------------------------------------------------------------------------------- decode
 	/**
-	 * 将十六进制字符数组转换为字符串
+	 * 将十六进制字符数组转换为字符串，默认编码UTF-8
 	 *
 	 * @param hexStr 十六进制String
 	 * @return 字符串
