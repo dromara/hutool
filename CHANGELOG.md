@@ -9,6 +9,7 @@
 * ArrayUtil.zip方法添加参数isOrder，可选是否有序
 * 增加HexUtil.decodeHexStr(String) 感谢（@MaxSherry）pull request #15
 * 增加SymmetricCriptor.encryptHex 感谢（@MaxSherry）pull request #15
+* JavaInfo增加对JDK1.8的判断 感谢（@MaxSherry）pull request #19
 
 ### Bug修复
 * 修复Convert.toBigDecimal和toBigInteger值传为默认值的问题（感谢@〆得不到的永远在骚动）
