@@ -38,10 +38,10 @@
 		<!-- versions -->
 		<junit.version>4.12</junit.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
-		<slf4j.version>1.7.22</slf4j.version>
-		<logback.version>1.1.7</logback.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<logback.version>1.2.2</logback.version>
 		<log4j.version>1.2.17</log4j.version>
-		<log4j2.version>2.6.2</log4j2.version>
+		<log4j2.version>2.8.2</log4j2.version>
 		<commons-logging.version>1.2</commons-logging.version>
 	</properties>
 
