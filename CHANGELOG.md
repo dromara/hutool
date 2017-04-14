@@ -10,6 +10,7 @@
 * 增加HexUtil.decodeHexStr(String) 感谢（@MaxSherry）pull request #15
 * 增加SymmetricCriptor.encryptHex 感谢（@MaxSherry）pull request #15
 * JavaInfo增加对JDK1.8的判断 感谢（@MaxSherry）pull request #19
+* BeanUtil.copyProperties方法增加参数，可选是否忽略大小写 感谢（@talent-aio）
 
 ### Bug修复
 * 修复Convert.toBigDecimal和toBigInteger值传为默认值的问题（感谢@〆得不到的永远在骚动）

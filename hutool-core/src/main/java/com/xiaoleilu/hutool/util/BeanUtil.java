@@ -69,12 +69,16 @@ public final class BeanUtil {
 	/**
 	 * 获得字段名和字段描述Map
 	 * @param clazz Bean类
+	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
 	 * @throws IntrospectionException
 	 */
-	public static Map<String, PropertyDescriptor> getFieldNamePropertyDescriptorMap(Class<?> clazz) throws IntrospectionException{
+	public static Map<String, PropertyDescriptor> getFieldNamePropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws IntrospectionException{
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
-		Map<String, PropertyDescriptor> map = new HashMap<>();
+		Map<String, PropertyDescriptor> map = ignoreCase ?
+				new CaseInsensitiveMap<String, PropertyDescriptor>(propertyDescriptors.length)
+				: new HashMap<String, PropertyDescriptor>((int) (propertyDescriptors.length / 0.75));
+				
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			map.put(propertyDescriptor.getName(), propertyDescriptor);
 		}
@@ -168,9 +172,9 @@ public final class BeanUtil {
 				}
 			}
 			return fillBeanWithMap(map2, bean, isIgnoreError);
+		}else{
+			return fillBeanWithMap(map, bean, isIgnoreError);
 		}
-		
-		return fillBeanWithMap(map, bean, isIgnoreError);
 	}
 
 	/**
@@ -393,6 +397,18 @@ public final class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(final Object source, Object target, CopyOptions copyOptions) {
+		copyProperties(source, target, false, copyOptions);
+	}
+	
+	/**
+	 * 复制Bean对象属性<br>
+	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
+	 * @param source 源Bean对象
+	 * @param target 目标Bean对象
+	 * @param ignoreCase 是否忽略大小写
+	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
+	 */
+	public static void copyProperties(final Object source, Object target, boolean ignoreCase, CopyOptions copyOptions) {
 		if(null == copyOptions){
 			copyOptions = new CopyOptions();
 		}
@@ -400,7 +416,7 @@ public final class BeanUtil {
 		
 		final Map<String, PropertyDescriptor> sourcePdMap;
 		try {
-			sourcePdMap = getFieldNamePropertyDescriptorMap(source.getClass());
+			sourcePdMap = getFieldNamePropertyDescriptorMap(source.getClass(), ignoreCase);
 		} catch (IntrospectionException e) {
 			throw new UtilException(e);
 		}

@@ -11,6 +11,8 @@ public class BetweenFormater {
 	private long betweenMs;
 	/** 格式化级别 */
 	private Level level;
+	/** 格式化级别的最大个数 */
+	private int levelMaxCount;
 	
 	/**
 	 * 构造
@@ -18,8 +20,19 @@ public class BetweenFormater {
 	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级，根据传入等级，格式化到相应级别
 	 */
 	public BetweenFormater(long betweenMs, Level level) {
+		this(betweenMs, level, 0);
+	}
+	
+	/**
+	 * 构造
+	 * @param betweenMs 日期间隔
+	 * @param level 级别，按照天、小时、分、秒、毫秒分为5个等级，根据传入等级，格式化到相应级别
+	 * @param levelMaxCount 格式化级别的最大个数，假如级别个数为1，但是级别到秒，那只显示一个级别
+	 */
+	public BetweenFormater(long betweenMs, Level level, int levelMaxCount) {
 		this.betweenMs = betweenMs;
 		this.level = level;
+		this.levelMaxCount = levelMaxCount;
 	}
 	
 	/**
@@ -40,20 +53,27 @@ public class BetweenFormater {
 		
 		StringBuilder sb = new StringBuilder();
 		final int level = this.level.value;
-		if(0 != day && level > 0){
+		int levelCount = 0;
+		
+		if(isLevelCountValid(levelCount) && 0 != day && level > 0){
 			sb.append(day).append("天");
+			levelCount++;
 		}
-		if(0 != hour && level > 1){
+		if(isLevelCountValid(levelCount) && 0 != hour && level > 1){
 			sb.append(hour).append("小时");
+			levelCount++;
 		}
-		if(0 != minute && level > 2){
+		if(isLevelCountValid(levelCount) && 0 != minute && level > 2){
 			sb.append(minute).append("分");
+			levelCount++;
 		}
-		if(0 != second && level > 3){
+		if(isLevelCountValid(levelCount) && 0 != second && level > 3){
 			sb.append(second).append("秒");
+			levelCount++;
 		}
-		if(0 != millisecond && level > 4){
+		if(isLevelCountValid(levelCount) && 0 != millisecond && level > 4){
 			sb.append(millisecond).append("毫秒");
+			levelCount++;
 		}
 		
 		return sb.toString();
@@ -117,5 +137,21 @@ public class BetweenFormater {
 		public int getValue() {
 			return this.value;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return format();
+	}
+	
+	/**
+	 * 等级数量是否有效<br>
+	 * 有效的定义是：levelMaxCount大于0（被设置），当前等级数量没有超过这个最大值
+	 * 
+	 * @param levelCount 登记数量
+	 * @return 是否有效
+	 */
+	private boolean isLevelCountValid(int levelCount){
+		return this.levelMaxCount > 0 && levelCount < this.levelMaxCount;
 	}
 }
