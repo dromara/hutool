@@ -21,14 +21,14 @@ public class LongMap implements BitMap {
 
 	public void add(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		int c = (int) (i % BitMap.MACHINE64);
-		longs[r] = (int) (longs[r] | (1 << c));
+		long c = i % BitMap.MACHINE64;
+		longs[r] = longs[r] | (1 << c);
 	}
 
 	public boolean contains(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		int c = (int) (i % BitMap.MACHINE64);
-		if (((int) ((longs[r] >>> c)) & 1) == 1) {
+		long c = i % BitMap.MACHINE64;
+		if (((longs[r] >>> c) & 1) == 1) {
 			return true;
 		}
 		return false;
@@ -36,8 +36,8 @@ public class LongMap implements BitMap {
 
 	public void remove(long i) {
 		int r = (int) (i / BitMap.MACHINE64);
-		int c = (int) (i % BitMap.MACHINE64);
-		longs[r] = (int) (longs[r] & (((1 << (c + 1)) - 1) ^ MAX));
+		long c =i % BitMap.MACHINE64;
+		longs[r] = longs[r] & (((1 << (c + 1)) - 1) ^ MAX);
 	}
 
 }
