@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.getter.BasicTypeGetter;
@@ -108,7 +108,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 */
 	public <T extends Dict> void removeEqual(T dict, String... withoutNames) {
 		HashSet<String> withoutSet = CollectionUtil.newHashSet(withoutNames);
-		for(Entry<String, Object> entry : dict.entrySet()) {
+		for(Map.Entry<String, Object> entry : dict.entrySet()) {
 			if(withoutSet.contains(entry.getKey())) {
 				continue;
 			}

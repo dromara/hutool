@@ -44,7 +44,7 @@ public class CaseInsensitiveMap<K, V> extends HashMap<K, V>{
 	 * @param m Map
 	 */
 	public CaseInsensitiveMap(Map<? extends K, ? extends V> m) {
-		this();
+		super((int) (m.size() / 0.75));
 		putAll(m);
 	}
 	
@@ -57,6 +57,13 @@ public class CaseInsensitiveMap<K, V> extends HashMap<K, V>{
 	@Override
 	public V put(K key, V value) {
 		return super.put((K)lowerCaseKey(key), value);
+	}
+	
+	@Override
+	public void putAll(Map<? extends K, ? extends V> m) {
+		for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
+			this.put(entry.getKey(), entry.getValue());
+		}
 	}
 	
 	@Override

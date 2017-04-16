@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
 import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * Bean工具单元测试
@@ -51,9 +52,38 @@ public class BeanUtilTest {
 		Assert.assertEquals(person.getAge(), 18);
 	}
 	
+	@Test
+	public void fillBeanWithMapIgnoreCaseTest(){
+		HashMap<String,Object> map = CollectionUtil.newHashMap();
+		map.put("Name", "Joe");
+		map.put("aGe", 12);
+		map.put("openId", "DFDFSDFWERWER");
+		SubPerson person = BeanUtil.fillBeanWithMapIgnoreCase(map, new SubPerson(), false);
+		Assert.assertEquals(person.getName(), "Joe");
+		Assert.assertEquals(person.getAge(), 12);
+		Assert.assertEquals(person.getOpenid(), "DFDFSDFWERWER");
+	}
+	
+	@Test
+	public void mapToBeanIgnoreCaseTest(){
+		HashMap<String,Object> map = CollectionUtil.newHashMap();
+		map.put("Name", "Joe");
+		map.put("aGe", 12);
+		Person person = BeanUtil.mapToBeanIgnoreCase(map, Person.class, false);
+		Assert.assertEquals(person.getName(), "Joe");
+		Assert.assertEquals(person.getAge(), 12);
+	}
+	
+	
+	//-----------------------------------------------------------------------------------------------------------------
+	public static class SubPerson extends Person{
+		
+	}
+	
 	public static class Person{
 		private String name;
 		private int age;
+		private String openid;
 		
 		public String getName() {
 			return name;
@@ -66,6 +96,12 @@ public class BeanUtilTest {
 		}
 		public void setAge(int age) {
 			this.age = age;
+		}
+		public String getOpenid() {
+			return openid;
+		}
+		public void setOpenid(String openid) {
+			this.openid = openid;
 		}
 	}
 }

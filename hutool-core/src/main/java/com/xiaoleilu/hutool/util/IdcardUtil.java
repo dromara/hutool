@@ -189,7 +189,7 @@ public class IdcardUtil {
 	 * <li>通过上面得知如果余数是2，就会在身份证的第18位数字上出现罗马数字的Ⅹ。如果余数是10，身份证的最后一位号码就是2</li>
 	 * </ol>
 	 * 
-	 * @param idcard 待验证的身份证
+	 * @param idCard 待验证的身份证
 	 * @return 是否有效的18位身份证
 	 */
 	public static boolean isvalidCard18(String idCard) {

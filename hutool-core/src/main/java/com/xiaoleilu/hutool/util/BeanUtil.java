@@ -103,6 +103,7 @@ public final class BeanUtil {
 		return null;
 	}
 	
+	//--------------------------------------------------------------------------------------------- mapToBean
 	/**
 	 * Map转换为Bean对象
 	 * 
@@ -128,15 +129,16 @@ public final class BeanUtil {
 		return fillBeanWithMapIgnoreCase(map, ClassUtil.newInstance(beanClass), isIgnoreError);
 	}
 
+	//--------------------------------------------------------------------------------------------- fillBeanWithMap
 	/**
 	 * 使用Map填充Bean对象
 	 * 
 	 * @param map Map
 	 * @param bean Bean
-	 * @param isIgnoreError 是否忽略注入错误
+	 * @param copyOptions 属性复制选项 {@link CopyOptions}
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, final boolean isIgnoreError) {
+	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, CopyOptions copyOptions) {
 		return fillBean(bean, new ValueProvider<String>(){
 			@Override
 			public Object value(String key, Class<?> valueType) {
@@ -147,7 +149,19 @@ public final class BeanUtil {
 			public boolean containsKey(String key) {
 				return map.containsKey(key);
 			}
-		}, CopyOptions.create().setIgnoreError(isIgnoreError));
+		}, copyOptions);
+	}
+	
+	/**
+	 * 使用Map填充Bean对象
+	 * 
+	 * @param map Map
+	 * @param bean Bean
+	 * @param isIgnoreError 是否忽略注入错误
+	 * @return Bean
+	 */
+	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, final boolean isIgnoreError) {
+		return fillBeanWithMap(map, bean, CopyOptions.create().setIgnoreError(isIgnoreError));
 	}
 	
 	/**
@@ -186,42 +200,20 @@ public final class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, final boolean isIgnoreError) {
-		final CaseInsensitiveMap<Object,Object> caseInsensitiveMap = new CaseInsensitiveMap<>(map);
-
-		return fillBean(bean, new ValueProvider<String>(){
-			@Override
-			public Object value(String key, Class<?> valueType) {
-				return caseInsensitiveMap.get(key);
-			}
-
-			@Override
-			public boolean containsKey(String key) {
-				return caseInsensitiveMap.containsKey(key);
-			}
-		}, CopyOptions.create().setIgnoreError(isIgnoreError));
+		return fillBeanWithMap(new CaseInsensitiveMap<>(map), bean, isIgnoreError);
 	}
 
-	/**
-	 * ServletRequest 参数转Bean
-	 * 
-	 * @param request ServletRequest
-	 * @param beanClass Bean Class
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 */
-	public static <T> T requestParamToBean(javax.servlet.ServletRequest request, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithRequestParam(request, ClassUtil.newInstance(beanClass), isIgnoreError);
-	}
-
+	//--------------------------------------------------------------------------------------------- fillBeanWithRequestParam
 	/**
 	 * ServletRequest 参数转Bean
 	 * 
 	 * @param request ServletRequest
 	 * @param bean Bean
-	 * @param isIgnoreError 是否忽略注入错误
+	 * @param copyOptions 注入时的设置
 	 * @return Bean
+	 * @since 3.0.4
 	 */
-	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean, final boolean isIgnoreError) {
+	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean, CopyOptions copyOptions) {
 		final String beanName = StrUtil.lowerFirst(bean.getClass().getSimpleName());
 		return fillBean(bean, new ValueProvider<String>(){
 			@Override
@@ -243,9 +235,34 @@ public final class BeanUtil {
 				//对于Servlet来说，返回值null意味着无此参数
 				return null != request.getParameter(key);
 			}
-		}, CopyOptions.create().setIgnoreError(isIgnoreError));
+		}, copyOptions);
+	}
+	
+	/**
+	 * ServletRequest 参数转Bean
+	 * 
+	 * @param request ServletRequest
+	 * @param bean Bean
+	 * @param isIgnoreError 是否忽略注入错误
+	 * @return Bean
+	 */
+	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean, final boolean isIgnoreError) {
+		return fillBeanWithRequestParam(request, bean, CopyOptions.create().setIgnoreError(isIgnoreError));
+	}
+	
+	/**
+	 * ServletRequest 参数转Bean
+	 * 
+	 * @param request ServletRequest
+	 * @param beanClass Bean Class
+	 * @param isIgnoreError 是否忽略注入错误
+	 * @return Bean
+	 */
+	public static <T> T requestParamToBean(javax.servlet.ServletRequest request, Class<T> beanClass, boolean isIgnoreError) {
+		return fillBeanWithRequestParam(request, ClassUtil.newInstance(beanClass), isIgnoreError);
 	}
 
+	//--------------------------------------------------------------------------------------------- fillBean
 	/**
 	 * ServletRequest 参数转Bean
 	 * 
@@ -260,9 +277,9 @@ public final class BeanUtil {
 	}
 
 	/**
-	 * 填充Bean
+	 * 填充Bean的核心方法
 	 * 
-	 * @param <T>
+	 * @param <T> Bean类型
 	 * @param bean Bean
 	 * @param valueProvider 值提供者
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
@@ -325,6 +342,7 @@ public final class BeanUtil {
 		return bean;
 	}
 	
+	//--------------------------------------------------------------------------------------------- beanToMap
 	/**
 	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
 	 * 
@@ -369,6 +387,7 @@ public final class BeanUtil {
 		return map;
 	}
 
+	//--------------------------------------------------------------------------------------------- copyProperties
 	/**
 	 * 复制Bean对象属性
 	 * @param source 源Bean对象
@@ -474,6 +493,7 @@ public final class BeanUtil {
 		public boolean containsKey(T key);
 	}
 	
+	//--------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 属性拷贝选项<br>
 	 * 包括：<br>
