@@ -13,7 +13,13 @@ public class DsTest {
 		DruidDSFactory factory = new DruidDSFactory();
 		DataSource ds = factory.getDataSource();
 		SqlRunner runner = SqlRunner.create(ds);
+		
+//		int i = runner.insert(Entity.create("user").set("name", "王五").set("age", 18));
+//		Console.log(i);
+		
 		List<Entity> all = runner.findAll("user");
-		Console.log(all);
+		for (Entity entity : all) {
+			Console.log(entity);
+		}
 	}
 }

@@ -534,9 +534,9 @@ public final class DbUtil {
 		String driver = null;
 		try {
 			DatabaseMetaData meta = conn.getMetaData();
-			driver =  identifyDriver(meta.getDatabaseProductName());
+			driver = identifyDriver(meta.getDatabaseProductName());
 			if(StrUtil.isBlank(driver)) {
-				driver =  identifyDriver(meta.getDriverName());
+				driver = identifyDriver(meta.getDriverName());
 			}
 		} catch (SQLException e) {
 			throw new DbRuntimeException("Identify driver error!", e);

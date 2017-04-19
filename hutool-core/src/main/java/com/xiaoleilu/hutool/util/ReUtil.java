@@ -340,12 +340,25 @@ public final class ReUtil {
 	 * @return 处理后的文本
 	 */
 	public static String replaceAll(String content, String regex, String replacementTemplate) {
+		final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		return replaceAll(content, pattern, replacementTemplate);
+	}
+	
+	/**
+	 * 正则替换指定值<br>
+	 * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
+	 * @param content 文本
+	 * @param pattern {@link Patten}
+	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
+	 * @return 处理后的文本
+	 * @since 3.0.4
+	 */
+	public static String replaceAll(String content, Pattern pattern, String replacementTemplate) {
 		if(StrUtil.isEmpty(content)){
 			return content;
 		}
 		
-		final Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(content);
-		matcher.reset();
+		final Matcher matcher = pattern.matcher(content);
 		boolean result = matcher.find();
 		if (result) {
 			final Set<String> varNums = findAll(GROUP_VAR, replacementTemplate, 1, new HashSet<String>());
