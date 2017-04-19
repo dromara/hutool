@@ -10,6 +10,7 @@ import com.xiaoleilu.hutool.db.ds.pooled.PooledDSFactory;
 import com.xiaoleilu.hutool.db.ds.tomcat.TomcatDSFactory;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
+import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -80,6 +81,7 @@ public abstract class DSFactory {
 			public void run() {
 				if(null != currentDSFactory){
 					currentDSFactory.destroy();
+					StaticLog.debug("Destroy Datasource");
 				}
 			}
 		});

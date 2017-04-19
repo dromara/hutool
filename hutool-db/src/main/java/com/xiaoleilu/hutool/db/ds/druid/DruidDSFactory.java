@@ -81,7 +81,6 @@ public class DruidDSFactory extends DSFactory {
 				IoUtil.close(dds);
 			}
 			dsMap.clear();
-			dsMap = null;
 		}
 	}
 

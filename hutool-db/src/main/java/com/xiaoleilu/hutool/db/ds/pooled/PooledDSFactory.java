@@ -76,7 +76,6 @@ public class PooledDSFactory extends DSFactory {
 				IoUtil.close(ds);
 			}
 			dsMap.clear();
-			dsMap = null;
 		}
 	}
 

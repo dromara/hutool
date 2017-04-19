@@ -78,7 +78,6 @@ public class C3p0DSFactory extends DSFactory {
 				ds.close();
 			}
 			dsMap.clear();
-			dsMap = null;
 		}
 	}
 

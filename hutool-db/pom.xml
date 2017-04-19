@@ -3,17 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
-	
+
 	<parent>
 		<groupId>com.xiaoleilu</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>3.0.4</version>
+		<version>3.0.5</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool 数据库JDBC的ORM封装</description>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.xiaoleilu</groupId>
@@ -67,6 +67,12 @@
 			<artifactId>mongo-java-driver</artifactId>
 			<version>3.4.2</version>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.16.1</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

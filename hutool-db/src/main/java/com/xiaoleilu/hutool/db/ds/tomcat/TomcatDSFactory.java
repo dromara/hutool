@@ -79,7 +79,6 @@ public class TomcatDSFactory extends DSFactory {
 				}
 			}
 			dsMap.clear();
-			dsMap = null;
 		}
 	}
 

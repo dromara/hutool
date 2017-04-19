@@ -79,7 +79,6 @@ public class DbcpDSFactory extends DSFactory {
 				IoUtil.close(ds);
 			}
 			dsMap.clear();
-			dsMap = null;
 		}
 	}
 

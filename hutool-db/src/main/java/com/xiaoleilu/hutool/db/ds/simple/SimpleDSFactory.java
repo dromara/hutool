@@ -71,7 +71,6 @@ public class SimpleDSFactory extends DSFactory {
 				IoUtil.close(ds);
 			}
 			dsMap.clear();
-			dsMap = null;
 		}
 	}
 

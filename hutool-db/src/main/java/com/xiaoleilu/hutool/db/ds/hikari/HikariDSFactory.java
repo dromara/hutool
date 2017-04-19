@@ -80,7 +80,6 @@ public class HikariDSFactory extends DSFactory {
 				IoUtil.close(ds);
 			}
 			dsMap.clear();
-			dsMap = null;
 		}
 	}
 
