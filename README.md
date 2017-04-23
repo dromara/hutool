@@ -1,11 +1,8 @@
-hutool
-======
+![封面](https://raw.githubusercontent.com/looly/hutool/master/docs/resources/hutool.jpg)
 
 [![Version](https://img.shields.io/badge/version-3.0.1-brightgreen.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool%22)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg "JDK 1.7")
-
-<center>![封面](https://raw.githubusercontent.com/looly/hutool/master/docs/resources/hutool.jpg)</center>
 
 ## 全新项目主页：[http://www.hutool.cn/](http://www.hutool.cn/)
 

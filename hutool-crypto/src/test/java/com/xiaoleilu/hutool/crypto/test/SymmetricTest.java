@@ -33,4 +33,22 @@ public class SymmetricTest {
 		
 		Assert.assertEquals(content, decryptStr);
 	}
+	
+	@Test
+	public void desTest(){
+		String content = "test中文";
+		
+		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
+		
+		SymmetricCriptor des = new SymmetricCriptor(SymmetricAlgorithm.DES, key);
+		byte[] encrypt = des.encrypt(content);
+		byte[] decrypt = des.decrypt(encrypt);
+		
+		Assert.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+		
+		String encryptHex = des.encryptHex(content);
+		String decryptStr = des.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+		
+		Assert.assertEquals(content, decryptStr);
+	}
 }
