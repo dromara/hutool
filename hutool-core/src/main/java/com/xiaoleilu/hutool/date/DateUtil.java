@@ -135,10 +135,10 @@ public final class DateUtil {
 	}
 	
 	/**
-	 * 获得月份，从1开始计数
+	 * 获得月份，从0开始计数
 	 * 
 	 * @param date 日期
-	 * @return 月份
+	 * @return 月份，从0开始计数
 	 */
 	public static int month(Date date) {
 		return DateTime.of(date).month();
