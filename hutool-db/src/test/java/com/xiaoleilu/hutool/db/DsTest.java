@@ -5,14 +5,16 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
 import com.xiaoleilu.hutool.lang.Console;
 
 public class DsTest {
 	public static void main(String[] args) throws SQLException {
-		DruidDSFactory factory = new DruidDSFactory();
-		DataSource ds = factory.getDataSource();
+		DSFactory.setCurrentDSFactory(new DruidDSFactory());
+		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
+		runner = SqlRunner.create(ds);
 		
 //		int i = runner.insert(Entity.create("user").set("name", "王五").set("age", 18));
 //		Console.log(i);

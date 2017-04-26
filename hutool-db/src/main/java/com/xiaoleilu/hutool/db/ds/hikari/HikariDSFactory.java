@@ -23,7 +23,8 @@ import com.zaxxer.hikari.HikariDataSource;
  */
 public class HikariDSFactory extends DSFactory {
 	
-	private Setting setting;
+	public static final String DS_NAME = "HikariCP";
+	
 	/** 数据源池 */
 	private Map<String, HikariDataSource> dsMap;
 	
@@ -32,12 +33,8 @@ public class HikariDSFactory extends DSFactory {
 	}
 	
 	public HikariDSFactory(Setting setting) {
-		super("HikariCP");
+		super(DS_NAME, setting);
 		checkCPExist(HikariDataSource.class);
-		if(null == setting){
-			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-		}
-		this.setting = setting;
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

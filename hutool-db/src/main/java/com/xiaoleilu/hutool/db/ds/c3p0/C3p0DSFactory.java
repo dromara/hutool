@@ -21,7 +21,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class C3p0DSFactory extends DSFactory {
 	
-	private Setting setting;
+	public static final String DS_NAME = "C3P0";
+	
 	/** 数据源池 */
 	private Map<String, ComboPooledDataSource> dsMap;
 	
@@ -30,12 +31,8 @@ public class C3p0DSFactory extends DSFactory {
 	}
 	
 	public C3p0DSFactory(Setting setting) {
-		super("C3P0");
+		super(DS_NAME, setting);
 		checkCPExist(ComboPooledDataSource.class);
-		if(null == setting){
-			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-		}
-		this.setting = setting;
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

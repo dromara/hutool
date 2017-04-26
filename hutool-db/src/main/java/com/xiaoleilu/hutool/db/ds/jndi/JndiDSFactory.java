@@ -24,6 +24,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class JndiDSFactory extends DSFactory {
 	
+	public static final String DS_NAME = "JNDI DataSource";
+	
 	private Setting setting;
 	/** 数据源池 */
 	private Map<String, DataSource> dsMap;
@@ -33,11 +35,7 @@ public class JndiDSFactory extends DSFactory {
 	}
 	
 	public JndiDSFactory(Setting setting) {
-		super("JNDI Datasource");
-		if(null == setting){
-			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-		}
-		this.setting = setting;
+		super(DS_NAME, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

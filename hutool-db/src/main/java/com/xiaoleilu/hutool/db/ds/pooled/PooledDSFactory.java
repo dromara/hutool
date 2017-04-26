@@ -20,6 +20,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class PooledDSFactory extends DSFactory {
 	
+	public static final String DS_NAME = "Hutool-Pooled-DataSource";
+	
 	private Setting setting;
 	/** 数据源池 */
 	private Map<String, PooledDataSource> dsMap;
@@ -29,11 +31,7 @@ public class PooledDSFactory extends DSFactory {
 	}
 	
 	public PooledDSFactory(Setting setting) {
-		super("Hutool-Pooled-Datasource");
-		if(null == setting){
-			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-		}
-		this.setting = setting;
+		super(DS_NAME, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

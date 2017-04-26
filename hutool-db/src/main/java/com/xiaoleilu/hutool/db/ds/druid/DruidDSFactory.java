@@ -24,6 +24,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class DruidDSFactory extends DSFactory {
 	
+	public static final String DS_NAME = "Druid";
+	
 	private Setting setting;
 	/** 数据源池 */
 	private Map<String, DruidDataSource> dsMap;
@@ -33,12 +35,8 @@ public class DruidDSFactory extends DSFactory {
 	}
 	
 	public DruidDSFactory(Setting setting) {
-		super("Druid");
+		super(DS_NAME, setting);
 		checkCPExist(DruidDataSource.class);
-		if(null == setting){
-			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-		}
-		this.setting = setting;
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

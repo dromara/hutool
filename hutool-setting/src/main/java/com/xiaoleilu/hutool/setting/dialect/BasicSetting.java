@@ -43,7 +43,9 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	/** 默认字符集 */
 	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 
+	/** 分组 */
 	private final LinkedList<String> groups = new LinkedList<String>();
+	/** 键值对存储 */
 	private final Map<Object, Object> map = new ConcurrentHashMap<>();
 	
 	/** 本设置对象的字符集 */
@@ -346,5 +348,63 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	@Override
 	public String toString() {
 		return map.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((charset == null) ? 0 : charset.hashCode());
+		result = prime * result + ((groups == null) ? 0 : groups.hashCode());
+		result = prime * result + (isUseVariable ? 1231 : 1237);
+		result = prime * result + ((map == null) ? 0 : map.hashCode());
+		result = prime * result + ((settingUrl == null) ? 0 : settingUrl.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj){
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		BasicSetting other = (BasicSetting) obj;
+		if (charset == null) {
+			if (other.charset != null) {
+				return false;
+			}
+		} else if (!charset.equals(other.charset)) {
+			return false;
+		}
+		if (groups == null) {
+			if (other.groups != null) {
+				return false;
+			}
+		} else if (!groups.equals(other.groups)) {
+			return false;
+		}
+		if (isUseVariable != other.isUseVariable) {
+			return false;
+		}
+		if (map == null) {
+			if (other.map != null) {
+				return false;
+			}
+		} else if (!map.equals(other.map)) {
+			return false;
+		}
+		if (settingUrl == null) {
+			if (other.settingUrl != null) {
+				return false;
+			}
+		} else if (!settingUrl.equals(other.settingUrl)) {
+			return false;
+		}
+		return true;
 	}
 }

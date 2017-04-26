@@ -25,10 +25,22 @@ public abstract class DSFactory {
 	
 	protected static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
 	
+	/** 数据源名 */
 	private String dataSourceName;
+	/** 数据库连接配置文件 */
+	protected Setting setting;
 	
-	public DSFactory(String dataSourceName) {
+	/**
+	 * 构造
+	 * @param dataSourceName 数据源名称
+	 * @param setting 数据库连接配置
+	 */
+	public DSFactory(String dataSourceName, Setting setting) {
 		this.dataSourceName = dataSourceName;
+		if(null == setting){
+			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
+		}
+		this.setting = setting;
 	}
 	
 	/**
@@ -67,12 +79,56 @@ public abstract class DSFactory {
 	public abstract void destroy();
 	
 	/**
-	 * 检查DataSource类是否存在
+	 * 检查连接池（Connection Pool）实现是否存在<br>
+	 * 此方法仅用于检查所提供的DataSource类是否存在，当传入的DataSource类不存在时抛出ClassNotFoundException<br>
+	 * 此方法的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
+	 * 
 	 * @param dsClass DataSource子类
 	 */
-	protected void checkCPExist(Class<? extends DataSource> dsClass){
+	protected void checkCPExist(Class<? extends DataSource> dsClass) {
 		//Do nothing only use datasource class for check exist or not.
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dataSourceName == null) ? 0 : dataSourceName.hashCode());
+		result = prime * result + ((setting == null) ? 0 : setting.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null){
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		DSFactory other = (DSFactory) obj;
+		if (dataSourceName == null) {
+			if (other.dataSourceName != null) {
+				return false;
+			}
+		} else if (!dataSourceName.equals(other.dataSourceName)) {
+			return false;
+		}
+		if (setting == null) {
+			if (other.setting != null) {
+				return false;
+			}
+		} else if (!setting.equals(other.setting)) {
+			return false;
+		}
+		return true;
+	}
+
+
+
 	//------------------------------------------------------------------------- Static start
 	//JVM关闭是关闭所有连接池
 	static{
@@ -140,8 +196,11 @@ public abstract class DSFactory {
 	 * @param dsFactory 数据源工厂
 	 * @return 自定义的数据源工厂
 	 */
-	public static DSFactory setCurrentDSFactory(DSFactory dsFactory){
+	synchronized public static DSFactory setCurrentDSFactory(DSFactory dsFactory){
 		if(null != currentDSFactory){
+			if(currentDSFactory.equals(dsFactory)){
+				return currentDSFactory;//数据源不变时返回原数据源
+			}
 			//自定义数据源工厂前关闭之前的数据源
 			currentDSFactory.destroy();
 		}
@@ -152,37 +211,35 @@ public abstract class DSFactory {
 	}
 	
 	/**
-	 * 决定数据源实现工厂
+	 * 决定数据源实现工厂<br>
+	 * 连接池优先级：Hikari > Druid > Tomcat > Dbcp > C3p0 > Hutool Pooled
 	 * @return 日志实现类
 	 */
 	private static DSFactory detectDSFactory(Setting setting){
 		DSFactory dsFactory;
 		try {
-			dsFactory = new TomcatDSFactory(setting);
+			dsFactory = new HikariDSFactory(setting);
 		} catch (NoClassDefFoundError e1) {
 			try {
-				dsFactory = new HikariDSFactory(setting);
-				log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+				dsFactory = new DruidDSFactory(setting);
 			} catch (NoClassDefFoundError e2) {
 				try {
-					dsFactory = new DruidDSFactory(setting);
-					log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
+					dsFactory = new TomcatDSFactory(setting);
 				} catch (NoClassDefFoundError e3) {
 					try {
 						dsFactory = new DbcpDSFactory(setting);
-						log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 					} catch (NoClassDefFoundError e4) {
 						try {
 							dsFactory = new C3p0DSFactory(setting);
-							log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 						} catch (NoClassDefFoundError e5) {
+							//默认使用Hutool实现的简易连接池
 							dsFactory = new PooledDSFactory(setting);
-							log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 						}
 					}
 				}
 			}
 		}
+		log.debug("Use [{}] Datasource As Default", dsFactory.dataSourceName);
 		return dsFactory;
 	}
 	//------------------------------------------------------------------------- Static end

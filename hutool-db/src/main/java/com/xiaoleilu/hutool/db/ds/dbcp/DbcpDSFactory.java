@@ -22,6 +22,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class DbcpDSFactory extends DSFactory {
 	
+	public static final String DS_NAME = "Common-DBCP2";
+	
 	private Setting setting;
 	/** 数据源池 */
 	private Map<String, BasicDataSource> dsMap;
@@ -31,12 +33,8 @@ public class DbcpDSFactory extends DSFactory {
 	}
 	
 	public DbcpDSFactory(Setting setting) {
-		super("Commone-DBCP2");
+		super(DS_NAME, setting);
 		checkCPExist(BasicDataSource.class);
-		if(null == setting){
-			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-		}
-		this.setting = setting;
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 
