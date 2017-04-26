@@ -8,6 +8,7 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 import com.xiaoleilu.hutool.db.DbRuntimeException;
+import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -22,7 +23,6 @@ public class TomcatDSFactory extends DSFactory {
 	
 	public static final String DS_NAME = "Tomcat-Jdbc-Pool";
 	
-	private Setting setting;
 	/** 数据源池 */
 	private Map<String, DataSource> dsMap;
 	
@@ -94,11 +94,39 @@ public class TomcatDSFactory extends DSFactory {
 		if(null == config || config.isEmpty()){
 			throw new DbRuntimeException("No Tomcat jdbc pool config for group: [{}]", group);
 		}
-		PoolProperties poolProps = new PoolProperties();
-		config.toBean(poolProps);
-		final DataSource ds = new DataSource();
-		ds.setPoolProperties(poolProps);
 		
+		final PoolProperties poolProps = new PoolProperties();
+		
+		//基本信息
+		poolProps.setUrl(getAndRemoveProperty(config, "url", "jdbcUrl"));
+		poolProps.setUsername(getAndRemoveProperty(config, "username", "user"));
+		poolProps.setPassword(getAndRemoveProperty(config, "password", "pass"));
+		final String driver = getAndRemoveProperty(config, "driver", "driverClassName");
+		if(StrUtil.isNotBlank(driver)){
+			poolProps.setDriverClassName(driver);
+		}else{
+			poolProps.setDriverClassName(DbUtil.identifyDriver(poolProps.getUrl()));
+		}
+		
+		//扩展属性
+		config.toBean(poolProps);
+		
+		final DataSource ds = new DataSource(poolProps);
 		return ds;
+	}
+	
+	/**
+	 * 获得指定KEY对应的值，key1和key2为属性的两个名字，可以互作别名
+	 * @param properties 属性
+	 * @param key1 属性名
+	 * @param key2 备用属性名
+	 * @return 值
+	 */
+	private String getAndRemoveProperty(Setting setting, String key1, String key2){
+		String value = (String) setting.remove(key1);
+		if(StrUtil.isBlank(value)){
+			value = (String) setting.remove(key2);
+		}
+		return value;
 	}
 }

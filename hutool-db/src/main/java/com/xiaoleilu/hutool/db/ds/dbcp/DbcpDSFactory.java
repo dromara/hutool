@@ -8,7 +8,8 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.xiaoleilu.hutool.db.DbRuntimeException;
+import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -24,7 +25,6 @@ public class DbcpDSFactory extends DSFactory {
 	
 	public static final String DS_NAME = "Common-DBCP2";
 	
-	private Setting setting;
 	/** 数据源池 */
 	private Map<String, BasicDataSource> dsMap;
 	
@@ -83,11 +83,43 @@ public class DbcpDSFactory extends DSFactory {
 	/**
 	 * 创建数据源
 	 * @param group 分组
-	 * @return C3P0数据源 {@link ComboPooledDataSource}
+	 * @return Dbcp数据源 {@link BasicDataSource}
 	 */
 	private BasicDataSource createDataSource(String group){
-		BasicDataSource ds = new BasicDataSource();
-		this.setting.toBean(group, ds);//注入属性
+		final Setting config = setting.getSetting(group);
+		if(CollectionUtil.isEmpty(config)){
+			throw new DbRuntimeException("No DBCP config for group: [{}]", group);
+		}
+		
+		final BasicDataSource ds = new BasicDataSource();
+		
+		//基本信息
+		ds.setUrl(getAndRemoveProperty(config, "url", "jdbcUrl"));
+		ds.setUsername(getAndRemoveProperty(config, "username", "user"));
+		ds.setPassword(getAndRemoveProperty(config, "password", "pass"));
+		final String driver = getAndRemoveProperty(config, "driver", "driverClassName");
+		if(StrUtil.isNotBlank(driver)){
+			ds.setDriverClassName(driver);
+		}else{
+			ds.setDriverClassName(DbUtil.identifyDriver(ds.getUrl()));
+		}
+		
+		config.toBean(ds);//注入属性
 		return ds;
+	}
+	
+	/**
+	 * 获得指定KEY对应的值，key1和key2为属性的两个名字，可以互作别名
+	 * @param properties 属性
+	 * @param key1 属性名
+	 * @param key2 备用属性名
+	 * @return 值
+	 */
+	private String getAndRemoveProperty(Setting setting, String key1, String key2){
+		String value = (String) setting.remove(key1);
+		if(StrUtil.isBlank(value)){
+			value = (String) setting.remove(key2);
+		}
+		return value;
 	}
 }

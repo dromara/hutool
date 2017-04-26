@@ -2,13 +2,13 @@ package com.xiaoleilu.hutool.db.ds.c3p0;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.xiaoleilu.hutool.db.DbRuntimeException;
+import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -84,13 +84,45 @@ public class C3p0DSFactory extends DSFactory {
 	 * @return C3P0数据源 {@link ComboPooledDataSource}
 	 */
 	private ComboPooledDataSource createDataSource(String group){
-		final Properties config = setting.getProperties(group);
+		final Setting config = setting.getSetting(group);
 		if(CollectionUtil.isEmpty(config)){
-			throw new DbRuntimeException("No Druid config for group: [{}]", group);
+			throw new DbRuntimeException("No C3P0 config for group: [{}]", group);
 		}
 		
 		final ComboPooledDataSource ds = new ComboPooledDataSource();
-		ds.setProperties(config);
+		
+		//基本信息
+		ds.setJdbcUrl(getAndRemoveProperty(config, "url", "jdbcUrl"));
+		ds.setUser(getAndRemoveProperty(config, "username", "user"));
+		ds.setPassword(getAndRemoveProperty(config, "password", "pass"));
+		final String driver = getAndRemoveProperty(config, "driver", "driverClassName");
+		try {
+			if(StrUtil.isNotBlank(driver)){
+				ds.setDriverClass(driver);
+			}else{
+				ds.setDriverClass(DbUtil.identifyDriver(ds.getJdbcUrl()));
+			}
+		} catch (Exception e) {
+			throw new DbRuntimeException(e);
+		}
+		
+		config.toBean(ds);//注入属性
+		
 		return ds;
+	}
+	
+	/**
+	 * 获得指定KEY对应的值，key1和key2为属性的两个名字，可以互作别名
+	 * @param properties 属性
+	 * @param key1 属性名
+	 * @param key2 备用属性名
+	 * @return 值
+	 */
+	private String getAndRemoveProperty(Setting setting, String key1, String key2){
+		String value = (String) setting.remove(key1);
+		if(StrUtil.isBlank(value)){
+			value = (String) setting.remove(key2);
+		}
+		return value;
 	}
 }

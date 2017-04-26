@@ -90,10 +90,25 @@ public class HikariDSFactory extends DSFactory {
 			group = StrUtil.EMPTY;
 		}
 		
-		Properties config = setting.getProperties(group);
+		final Properties config = setting.getProperties(group);
 		if(CollectionUtil.isEmpty(config)){
 			throw new DbRuntimeException("No HikariCP config for group: [{}]", group);
 		}
+		
+		//规范化属性名
+		if(false == config.containsKey("jdbcUrl") && config.containsKey("url")){
+			config.put("jdbcUrl", config.remove("url"));
+		}
+		if(false == config.containsKey("username") && config.containsKey("user")){
+			config.put("username", config.remove("user"));
+		}
+		if(false == config.containsKey("password") && config.containsKey("pass")){
+			config.put("password", config.remove("pass"));
+		}
+		if(false == config.containsKey("driverClassName") && config.containsKey("driver")){
+			config.put("driverClassName", config.remove("driver"));
+		}
+		
 		final HikariDataSource ds = new HikariDataSource(new HikariConfig(config));
 		return ds;
 	}

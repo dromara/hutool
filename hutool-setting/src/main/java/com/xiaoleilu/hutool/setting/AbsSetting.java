@@ -268,7 +268,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 
 			@Override
 			public boolean containsKey(String key) {
-				return false;
+				return null != getByGroup(key, group);
 			}
 		}, CopyOptions.create());
 	}

@@ -22,7 +22,6 @@ public class PooledDSFactory extends DSFactory {
 	
 	public static final String DS_NAME = "Hutool-Pooled-DataSource";
 	
-	private Setting setting;
 	/** 数据源池 */
 	private Map<String, PooledDataSource> dsMap;
 	

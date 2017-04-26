@@ -21,7 +21,6 @@ public class SimpleDSFactory extends DSFactory {
 	
 	public static final String DS_NAME = "Hutool-Simple-DataSource";
 	
-	private Setting setting;
 	/** 数据源池 */
 	private Map<String, SimpleDataSource> dsMap;
 	
