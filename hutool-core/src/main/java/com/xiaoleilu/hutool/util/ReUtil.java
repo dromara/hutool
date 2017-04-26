@@ -348,7 +348,7 @@ public final class ReUtil {
 	 * 正则替换指定值<br>
 	 * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
 	 * @param content 文本
-	 * @param pattern {@link Patten}
+	 * @param pattern {@link Pattern}
 	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
 	 * @return 处理后的文本
 	 * @since 3.0.4
