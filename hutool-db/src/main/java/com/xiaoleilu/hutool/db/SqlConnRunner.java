@@ -14,12 +14,13 @@ import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
 import com.xiaoleilu.hutool.db.handler.PageResultHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
+import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
 import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * SQL执行类<br>
@@ -233,7 +234,14 @@ public class SqlConnRunner{
 			throw new SQLException("Empty where provided!");
 		}
 		
-		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
+		//表名可以从被更新记录的Entity中获得，也可以从Where中获得
+		String tableName = record.getTableName();
+		if(StrUtil.isBlank(tableName)){
+			tableName = where.getTableName();
+			record.setTableName(tableName);
+		}
+		
+		final Query query = new Query(DbUtil.buildConditions(where), tableName);
 		PreparedStatement ps = null;
 		try {
 			ps = dialect.psForUpdate(conn, record, query);

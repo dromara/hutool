@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
@@ -240,6 +241,34 @@ public abstract class AbstractSqlRunner{
 			this.closeConnection(conn);
 		}
 	}
+	
+	//------------------------------------------------------------- Get start
+	/**
+	 * 根据某个字段（最好是唯一字段）查询单个记录<br>
+	 * 当有多条返回时，只显示查询到的第一条
+	 * @param <T>
+	 * 
+	 * @param tableName 表名
+	 * @param field 字段名
+	 * @param value 字段值
+	 * @return 记录
+	 * @throws SQLException
+	 */
+	public <T> Entity get(String tableName, String field, T value) throws SQLException {
+		return this.get(Entity.create(tableName).set(field, value));
+	}
+	
+	/**
+	 * 根据条件实体查询单个记录，当有多条返回时，只显示查询到的第一条
+	 * 
+	 * @param where 条件
+	 * @return 记录
+	 * @throws SQLException
+	 */
+	public Entity get(Entity where) throws SQLException {
+		return find(null, where, new EntityHandler());
+	}
+	//------------------------------------------------------------- Get end
 	
 	/**
 	 * 查询
