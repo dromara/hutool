@@ -12,6 +12,7 @@ public class Log4j2LogFactory extends LogFactory{
 	
 	public Log4j2LogFactory() {
 		super("Log4j2");
+		checkLogExist(org.apache.logging.log4j.LogManager.class);
 	}
 
 	@Override

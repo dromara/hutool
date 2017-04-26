@@ -43,6 +43,17 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public abstract Log getLog(Class<?> clazz);
+	
+	/**
+	 * 检查日志实现是否存在<br>
+	 * 此方法仅用于检查所提供的日志相关类是否存在，当传入的日志类类不存在时抛出ClassNotFoundException<br>
+	 * 此方法的作用是在detectLogFactory方法自动检测所用日志时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种日志的检测。
+	 * 
+	 * @param logClassName 日志实现相关类
+	 */
+	protected void checkLogExist(Object logClassName) {
+		//不做任何操作
+	}
 
 	// ------------------------------------------------------------------------- Static start
 	private static volatile LogFactory currentLogFactory;

@@ -12,6 +12,7 @@ public class ApacheCommonsLogFactory extends LogFactory{
 	
 	public ApacheCommonsLogFactory() {
 		super("Apache Common Logging");
+		checkLogExist(org.apache.commons.logging.LogFactory.class);
 	}
 
 	@Override
