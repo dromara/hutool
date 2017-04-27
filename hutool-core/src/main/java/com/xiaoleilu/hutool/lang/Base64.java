@@ -45,6 +45,10 @@ public final class Base64 {
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
+		if(null == arr){
+			return null;
+		}
+		
 		int len = arr != null ? arr.length : 0;
 		if (len == 0) {
 			return new byte[0];
@@ -220,6 +224,10 @@ public final class Base64 {
 	 * @return 解码后的byte数组
 	 */
 	public static byte[] decode(byte[] arr) {
+		if(null == arr){
+			return null;
+		}
+		
 		int length = arr.length;
 		if (length == 0) {
 			return new byte[0];

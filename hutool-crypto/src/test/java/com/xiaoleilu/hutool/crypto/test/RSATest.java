@@ -8,7 +8,6 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.crypto.asymmetric.KeyType;
 import com.xiaoleilu.hutool.crypto.asymmetric.RSA;
-import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -61,11 +60,7 @@ public class RSATest {
 				+ "wfMhrJksfeKbIaMjNLS9b8JynIaXg9iCiyOHmgkMl5gAbPoH/ULXqSKwzBw5mJ2GW1gBlyaSfV3AkA/RJC+adIjsRGg"
 				+ "JOkiRjSmPpGv3FOhl9fsBPjupZBEIuoMWOC8GXK/73DHxwmfNmN7C9+sIi4RBcjEeQ5F5FHZ";
 		
-		String PUBLIC_KEY ="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCC+6W0PuSihmEYcO4xN9YZgH/EOtMm3fs"
-				+ "WbkZrjuZDhQUalxsSk0PU30CPmjFvtJcP5Imys2g/xClfdddO8RN/OKjsuiHLgX2keZb9/TnKKjWeZfg2oeQARp1ZAT/X"
-				+ "yjhYT4IIQZJ00aNP62RRiOkNVB12/uGrT/vizRZQ8piXDwIDAQAB";
-		
-		RSA rsa = new RSA(Base64.decode(PRIVATE_KEY), Base64.decode(PUBLIC_KEY));
+		RSA rsa = new RSA(PRIVATE_KEY, null);
 		
 		String a = "2707F9FD4288CEF302C972058712F24A5F3EC62C5A14AD2FC59DAB93503AA0FA17113A020EE4EA35EB53F"
 				+ "75F36564BA1DABAA20F3B90FD39315C30E68FE8A1803B36C29029B23EB612C06ACF3A34BE815074F5EB5AA3A"
