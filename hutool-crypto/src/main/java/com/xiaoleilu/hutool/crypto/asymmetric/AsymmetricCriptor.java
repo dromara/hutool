@@ -48,7 +48,7 @@ public class AsymmetricCriptor {
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
 	public AsymmetricCriptor(AsymmetricAlgorithm algorithm) {
-		this(algorithm, null, null);
+		this(algorithm, (byte[])null, (byte[])null);
 	}
 	
 	/**
@@ -56,8 +56,21 @@ public class AsymmetricCriptor {
 	 * @param algorithm 算法
 	 */
 	public AsymmetricCriptor(String algorithm) {
-		this(algorithm, null, null);
+		this(algorithm, (byte[])null, (byte[])null);
 	}
+	
+	/**
+	 * 构造
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * @param algorithm {@link SymmetricAlgorithm}
+	 * @param privateKeyBase64 私钥Base64
+	 * @param publicKeyBase64 公钥Base64
+	 */
+	public AsymmetricCriptor(AsymmetricAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
+		this(algorithm.getValue(), Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
+	}
+	
 	/**
 	 * 构造
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -68,6 +81,18 @@ public class AsymmetricCriptor {
 	 */
 	public AsymmetricCriptor(AsymmetricAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
 		this(algorithm.getValue(), privateKey, publicKey);
+	}
+	
+	/**
+	 * 构造
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * @param algorithm 非对称加密算法
+	 * @param privateKeyBase64 私钥Base64
+	 * @param publicKeyBase64 公钥Base64
+	 */
+	public AsymmetricCriptor(String algorithm, String privateKeyBase64, String publicKeyBase64) {
+		this(algorithm, Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
 	}
 
 	/**

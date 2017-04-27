@@ -6,6 +6,7 @@
 * ReUtil.replaceAll扩充支持Pattern对象
 * 优化log模块中自动选择日志实现机制
 * 针对不同连接池添加样例配置文件
+* AsymmetricCriptor类增加构造方法，可以传入Base64编码的私钥和公钥
 
 ### Bug修复
 * db模块报错问题修复（感谢@尘风了了）

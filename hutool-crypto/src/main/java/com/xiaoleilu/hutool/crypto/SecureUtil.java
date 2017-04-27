@@ -65,7 +65,7 @@ public final class SecureUtil {
 	public static final int DEFAULT_KEY_SIZE = 1024;
 
 	/**
-	 * 生成 {@link SecretKey}
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 * 
 	 * @param algorithm 算法，支持PBE算法
 	 * @return {@link SecretKey}
@@ -81,7 +81,7 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成 {@link SecretKey}
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
@@ -106,7 +106,7 @@ public final class SecureUtil {
 	/**
 	 * 生成 {@link SecretKey}
 	 * 
-	 * @param algorithm PBE算法
+	 * @param algorithm DES算法，包括DES、DESede等
 	 * @param key 密钥
 	 * @return {@link SecretKey}
 	 */
@@ -133,7 +133,7 @@ public final class SecureUtil {
 	/**
 	 * 生成PBE {@link SecretKey}
 	 * 
-	 * @param algorithm PBE算法
+	 * @param algorithm PBE算法，包括：PBEWithMD5AndDES、PBEWithSHA1AndDESede、PBEWithSHA1AndRC2_40等
 	 * @param key 密钥
 	 * @return {@link SecretKey}
 	 */
@@ -150,7 +150,7 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成 {@link SecretKey}
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法
 	 * 
 	 * @param algorithm 算法
 	 * @param keySpec {@link KeySpec}
@@ -166,7 +166,7 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成私钥
+	 * 生成私钥，仅用于非对称加密
 	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
@@ -182,7 +182,7 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成私钥
+	 * 生成私钥，仅用于非对称加密
 	 * 
 	 * @param keyStore {@link KeyStore}
 	 * @param alias 别名
@@ -198,7 +198,7 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成公钥
+	 * 生成公钥，仅用于非对称加密
 	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
@@ -214,7 +214,7 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成用于非对称加密的公钥和私钥
+	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密
 	 * 
 	 * @param algorithm 非对称加密算法
 	 * @return {@link KeyPair}
@@ -263,7 +263,7 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成签名对象
+	 * 生成签名对象，仅用于非对称加密
 	 * 
 	 * @param asymmetricAlgorithm {@link AsymmetricAlgorithm} 非对称加密算法
 	 * @param digestAlgorithm {@link DigestAlgorithm} 摘要算法
