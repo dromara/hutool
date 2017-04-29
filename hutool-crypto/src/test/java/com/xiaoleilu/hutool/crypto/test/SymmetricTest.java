@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
-import com.xiaoleilu.hutool.crypto.symmetric.SymmetricCriptor;
+import com.xiaoleilu.hutool.crypto.symmetric.SymmetricCrypto;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -20,10 +20,14 @@ public class SymmetricTest {
 	public void aesTest(){
 		String content = "test中文";
 		
+		//随机生成密钥
 		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
 		
-		SymmetricCriptor aes = new SymmetricCriptor(SymmetricAlgorithm.AES, key);
+		//构建
+		SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, key);
+		//加密
 		byte[] encrypt = aes.encrypt(content);
+		//解密
 		byte[] decrypt = aes.decrypt(encrypt);
 		
 		Assert.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
@@ -40,7 +44,7 @@ public class SymmetricTest {
 		
 		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
 		
-		SymmetricCriptor des = new SymmetricCriptor(SymmetricAlgorithm.DES, key);
+		SymmetricCrypto des = new SymmetricCrypto(SymmetricAlgorithm.DES, key);
 		byte[] encrypt = des.encrypt(content);
 		byte[] decrypt = des.decrypt(encrypt);
 		

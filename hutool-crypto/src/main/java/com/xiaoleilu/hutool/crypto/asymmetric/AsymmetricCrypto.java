@@ -27,7 +27,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class AsymmetricCriptor {
+public class AsymmetricCrypto {
 
 	/** 算法 */
 	protected String algorithm;
@@ -47,7 +47,7 @@ public class AsymmetricCriptor {
 	 * 构造，创建新的私钥公钥对
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
-	public AsymmetricCriptor(AsymmetricAlgorithm algorithm) {
+	public AsymmetricCrypto(AsymmetricAlgorithm algorithm) {
 		this(algorithm, (byte[])null, (byte[])null);
 	}
 	
@@ -55,7 +55,7 @@ public class AsymmetricCriptor {
 	 * 构造，创建新的私钥公钥对
 	 * @param algorithm 算法
 	 */
-	public AsymmetricCriptor(String algorithm) {
+	public AsymmetricCrypto(String algorithm) {
 		this(algorithm, (byte[])null, (byte[])null);
 	}
 	
@@ -67,7 +67,7 @@ public class AsymmetricCriptor {
 	 * @param privateKeyBase64 私钥Base64
 	 * @param publicKeyBase64 公钥Base64
 	 */
-	public AsymmetricCriptor(AsymmetricAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
+	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
 		this(algorithm.getValue(), Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
 	}
 	
@@ -79,7 +79,7 @@ public class AsymmetricCriptor {
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public AsymmetricCriptor(AsymmetricAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
+	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
 		this(algorithm.getValue(), privateKey, publicKey);
 	}
 	
@@ -91,7 +91,7 @@ public class AsymmetricCriptor {
 	 * @param privateKeyBase64 私钥Base64
 	 * @param publicKeyBase64 公钥Base64
 	 */
-	public AsymmetricCriptor(String algorithm, String privateKeyBase64, String publicKeyBase64) {
+	public AsymmetricCrypto(String algorithm, String privateKeyBase64, String publicKeyBase64) {
 		this(algorithm, Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
 	}
 
@@ -105,7 +105,7 @@ public class AsymmetricCriptor {
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
 	 */
-	public AsymmetricCriptor(String algorithm, byte[] privateKey, byte[] publicKey) {
+	public AsymmetricCrypto(String algorithm, byte[] privateKey, byte[] publicKey) {
 		init(algorithm, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
@@ -114,14 +114,14 @@ public class AsymmetricCriptor {
 	 * 初始化<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密<br>
-	 * 签名默认使用MD5摘要算法，如果需要自定义签名算法，调用 {@link AsymmetricCriptor#setSignature(Signature)}设置签名对象
+	 * 签名默认使用MD5摘要算法，如果需要自定义签名算法，调用 {@link AsymmetricCrypto#setSignature(Signature)}设置签名对象
 	 * 
 	 * @param algorithm 算法
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
-	 * @return {@link AsymmetricCriptor}
+	 * @return {@link AsymmetricCrypto}
 	 */
-	public AsymmetricCriptor init(String algorithm, byte[] privateKey, byte[] publicKey) {
+	public AsymmetricCrypto init(String algorithm, byte[] privateKey, byte[] publicKey) {
 		this.algorithm = algorithm;
 		try {
 			this.clipher = Cipher.getInstance(algorithm);
@@ -146,7 +146,7 @@ public class AsymmetricCriptor {
 	/**
 	 * 生成公钥和私钥
 	 */
-	public AsymmetricCriptor initKeys() {
+	public AsymmetricCrypto initKeys() {
 		KeyPair keyPair = SecureUtil.generateKeyPair(this.algorithm);
 		this.publicKey = keyPair.getPublic();
 		this.privateKey = keyPair.getPrivate();
@@ -302,9 +302,9 @@ public class AsymmetricCriptor {
 	 * 设置公钥
 	 * 
 	 * @param publicKey 公钥
-	 * @return 自身 {@link AsymmetricCriptor}
+	 * @return 自身 {@link AsymmetricCrypto}
 	 */
-	public AsymmetricCriptor setPublicKey(PublicKey publicKey) {
+	public AsymmetricCrypto setPublicKey(PublicKey publicKey) {
 		this.publicKey = publicKey;
 		return this;
 	}
@@ -329,9 +329,9 @@ public class AsymmetricCriptor {
 	 * 设置私钥
 	 * 
 	 * @param privateKey 私钥
-	 * @return 自身 {@link AsymmetricCriptor}
+	 * @return 自身 {@link AsymmetricCrypto}
 	 */
-	public AsymmetricCriptor setPrivateKey(PrivateKey privateKey) {
+	public AsymmetricCrypto setPrivateKey(PrivateKey privateKey) {
 		this.privateKey = privateKey;
 		return this;
 	}
@@ -347,9 +347,9 @@ public class AsymmetricCriptor {
 	/**
 	 * 设置签名
 	 * @param signature 签名对象 {@link Signature}
-	 * @return 自身 {@link AsymmetricCriptor}
+	 * @return 自身 {@link AsymmetricCrypto}
 	 */
-	public AsymmetricCriptor setSignature(Signature signature) {
+	public AsymmetricCrypto setSignature(Signature signature) {
 		this.signature = signature;
 		return this;
 	}

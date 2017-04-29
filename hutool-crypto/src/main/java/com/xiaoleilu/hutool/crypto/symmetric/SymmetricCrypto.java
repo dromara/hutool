@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Looly
  *
  */
-public class SymmetricCriptor {
+public class SymmetricCrypto {
 
 	/** SecretKey 负责保存对称密钥 */
 	private SecretKey secretKey;
@@ -38,7 +38,7 @@ public class SymmetricCriptor {
 	 * 构造，使用随机密钥
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
-	public SymmetricCriptor(SymmetricAlgorithm algorithm) {
+	public SymmetricCrypto(SymmetricAlgorithm algorithm) {
 		this(algorithm, null);
 	}
 	
@@ -46,7 +46,7 @@ public class SymmetricCriptor {
 	 * 构造，使用随机密钥
 	 * @param algorithm 算法
 	 */
-	public SymmetricCriptor(String algorithm) {
+	public SymmetricCrypto(String algorithm) {
 		this(algorithm, null);
 	}
 	
@@ -55,7 +55,7 @@ public class SymmetricCriptor {
 	 * @param algorithm 算法 {@link SymmetricAlgorithm}
 	 * @param key 自定义KEY
 	 */
-	public SymmetricCriptor(SymmetricAlgorithm algorithm, byte[] key) {
+	public SymmetricCrypto(SymmetricAlgorithm algorithm, byte[] key) {
 		this(algorithm.getValue(), key);
 	}
 	
@@ -64,7 +64,7 @@ public class SymmetricCriptor {
 	 * @param algorithm 算法
 	 * @param key 密钥
 	 */
-	public SymmetricCriptor(String algorithm, byte[] key) {
+	public SymmetricCrypto(String algorithm, byte[] key) {
 		init(algorithm, key);
 	}
 	//------------------------------------------------------------------ Constructor end
@@ -73,9 +73,9 @@ public class SymmetricCriptor {
 	 * 初始化
 	 * @param algorithm 算法
 	 * @param key 密钥，如果为<code>null</code>自动生成一个key
-	 * @return {@link SymmetricCriptor}
+	 * @return {@link SymmetricCrypto}
 	 */
-	public SymmetricCriptor init(String algorithm, byte[] key) {
+	public SymmetricCrypto init(String algorithm, byte[] key) {
 		return init(algorithm, SecureUtil.generateKey(algorithm, key));
 	}
 	
@@ -83,9 +83,9 @@ public class SymmetricCriptor {
 	 * 初始化
 	 * @param algorithm 算法
 	 * @param key 密钥，如果为<code>null</code>自动生成一个key
-	 * @return {@link SymmetricCriptor}
+	 * @return {@link SymmetricCrypto}
 	 */
-	public SymmetricCriptor init(String algorithm, SecretKey key) {
+	public SymmetricCrypto init(String algorithm, SecretKey key) {
 		this.secretKey = key;
 		if(algorithm.startsWith("PBE")){
 			//对于PBE算法使用随机数加盐

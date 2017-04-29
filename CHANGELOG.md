@@ -13,6 +13,7 @@
 * DateUtil.month方法注释修复 (感谢@〓下页)
 * 对db模块的数据源部分的配置做修复
 * Base64传入null导致空指针异常修复（解决方法为返回null）
+* crypto模块类名存在拼写错误：修正SymmetricCriptor -> SymmetricCrypto，AsymmetricCriptor -> AsymmetricCrypto
 
 -------------------------------------------------------------------------------------------------------------
 

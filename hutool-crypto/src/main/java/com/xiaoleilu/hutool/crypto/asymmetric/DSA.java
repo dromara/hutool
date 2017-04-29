@@ -6,7 +6,7 @@ package com.xiaoleilu.hutool.crypto.asymmetric;
  * @author Looly
  *
  */
-public class DSA extends AsymmetricCriptor {
+public class DSA extends AsymmetricCrypto {
 
 	private static final AsymmetricAlgorithm ALGORITHM_DSA = AsymmetricAlgorithm.DSA;
 

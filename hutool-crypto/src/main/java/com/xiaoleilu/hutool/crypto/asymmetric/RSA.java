@@ -17,7 +17,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class RSA extends AsymmetricCriptor {
+public class RSA extends AsymmetricCrypto {
 
 	private static final AsymmetricAlgorithm ALGORITHM_RSA = AsymmetricAlgorithm.RSA;
 
