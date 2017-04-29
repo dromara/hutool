@@ -32,7 +32,9 @@ public class SymmetricTest {
 		
 		Assert.assertEquals(content, StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 		
+		//加密为16进制表示
 		String encryptHex = aes.encryptHex(content);
+		//解密为字符串
 		String decryptStr = aes.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
 		
 		Assert.assertEquals(content, decryptStr);
