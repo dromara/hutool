@@ -8,11 +8,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.json.JSONObject;
-import com.xiaoleilu.hutool.json.JSONUtil;
 import com.xiaoleilu.hutool.json.test.bean.ExamInfoDict;
 import com.xiaoleilu.hutool.json.test.bean.UserInfoDict;
-import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSON转换单元测试
@@ -58,7 +55,6 @@ public class JSONConvertTest {
 		tempMap.put("toSendManIdCard", 1);
 
 		JSONObject obj = JSONUtil.parseObj(tempMap);
-		Console.log(obj.toJSONString(4));
 		Assert.assertEquals(new Integer(1), obj.getInt("toSendManIdCard"));
 		Assert.assertEquals(new Integer(1), obj.getInt("toSendManIdCard"));
 
