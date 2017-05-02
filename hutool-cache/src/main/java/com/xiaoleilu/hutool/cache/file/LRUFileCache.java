@@ -44,10 +44,10 @@ public class LRUFileCache extends FileCache{
 
 	@Override
 	protected Cache<File, byte[]> initCache() {
-		Cache<File, byte[]> cache = new LRUCache<File, byte[]>(0, super.timeout) {
+		Cache<File, byte[]> cache = new LRUCache<File, byte[]>(this.capacity, super.timeout) {
 			@Override
 			public boolean isFull() {
-				return usedSize > this.capacity;
+				return LRUFileCache.this.usedSize > this.capacity;
 			}
 			
 			@Override

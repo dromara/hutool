@@ -15,6 +15,7 @@
 * 对db模块的数据源部分的配置做修复
 * Base64传入null导致空指针异常修复（解决方法为返回null）
 * crypto模块类名存在拼写错误：修正SymmetricCriptor -> SymmetricCrypto，AsymmetricCriptor -> AsymmetricCrypto
+* FileCache中初始化capacity为0问题。（issue#17@osc）
 
 -------------------------------------------------------------------------------------------------------------
 

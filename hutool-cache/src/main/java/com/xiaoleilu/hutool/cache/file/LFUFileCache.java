@@ -44,10 +44,10 @@ public class LFUFileCache extends FileCache{
 
 	@Override
 	protected Cache<File, byte[]> initCache() {
-		Cache<File, byte[]> cache = new LFUCache<File, byte[]>(0, super.timeout) {
+		Cache<File, byte[]> cache = new LFUCache<File, byte[]>(this.capacity, this.timeout) {
 			@Override
 			public boolean isFull() {
-				return usedSize > this.capacity;
+				return LFUFileCache.this.usedSize > this.capacity;
 			}
 			
 			@Override
