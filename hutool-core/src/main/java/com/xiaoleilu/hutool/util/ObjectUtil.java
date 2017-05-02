@@ -29,7 +29,12 @@ public final class ObjectUtil {
 	/**
 	 * 比较两个对象是否相等。<br>
 	 * 相同的条件有两个，满足其一即可：<br>
-	 * 1. obj1 == null && obj2 == null; 2. obj1.equals(obj2)
+	 * <ol>
+	 * 	<li>obj1 == null && obj2 == null</li>
+	 * <li>obj1.equals(obj2)</li>
+	 * </ol>
+	 * 1. obj1 == null && obj2 == null
+	 * 2. obj1.equals(obj2)
 	 * 
 	 * @param obj1 对象1
 	 * @param obj2 对象2
@@ -40,7 +45,15 @@ public final class ObjectUtil {
 	}
 
 	/**
-	 * 计算对象长度，如果是字符串调用其length函数，集合类调用其size函数，数组调用其length属性，其他可遍历对象遍历计算长度
+	 * 计算对象长度，如果是字符串调用其length函数，集合类调用其size函数，数组调用其length属性，其他可遍历对象遍历计算长度<br>
+	 * 支持的类型包括：
+	 * <ul>
+	 * 	<li>CharSequence</li>
+	 * <li>Map</li>
+	 * <li>Iterator</li>
+	 * <li>Enumeration</li>
+	 * <li>Array</li>
+	 * </ul>
 	 * 
 	 * @param obj 被计算长度的对象
 	 * @return 长度
@@ -85,7 +98,16 @@ public final class ObjectUtil {
 	}
 
 	/**
-	 * 对象中是否包含元素
+	 * 对象中是否包含元素<br>
+	 * 支持的对象类型包括：
+	 * <ul>
+	 * 	<li>String</li>
+	 * <li>Collection</li>
+	 * <li>Map</li>
+	 * <li>Iterator</li>
+	 * <li>Enumeration</li>
+	 * <li>Array</li>
+	 * </ul>
 	 * 
 	 * @param obj 对象
 	 * @param element 元素
@@ -182,7 +204,22 @@ public final class ObjectUtil {
 	}
 	
 	/**
-	 * 克隆对象<br>
+	 * 返回克隆后的对象，如果克隆失败，返回原对象
+	 * @param obj 对象
+	 * @return 克隆后或原对象
+	 */
+	public static <T> T cloneIfPossible(final T obj) {
+		T clone = null;
+		try {
+			clone = clone(obj);
+		} catch (Exception e) {
+			//pass
+		}
+		return clone == null ? obj : clone;
+	}
+	
+	/**
+	 * 序列化后拷贝流的方式克隆<br>
 	 * 对象必须实现Serializable接口
 	 * 
 	 * @param obj 被克隆对象
@@ -208,21 +245,6 @@ public final class ObjectUtil {
 		} finally {
 			IoUtil.close(out);
 		}
-	}
-	
-	/**
-	 * 返回克隆后的对象，如果克隆失败，返回原对象
-	 * @param obj 对象
-	 * @return 克隆后或原对象
-	 */
-	public static <T> T cloneIfPossible(final T obj) {
-		T clone = null;
-		try {
-			clone = clone(obj);
-		} catch (Exception e) {
-			//pass
-		}
-		return clone == null ? obj : clone;
 	}
 
 	/**

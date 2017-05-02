@@ -121,9 +121,11 @@ public final class NumberUtil {
 		return b1.divide(b2, scale, roundingMode).doubleValue();
 	}
 
+	//------------------------------------------------------------------------------------------- round
 	/**
 	 * 保留固定位数小数<br>
-	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
+	 * 例如保留2位小数：123.456789 -> 123.46
 	 * 
 	 * @param v 值
 	 * @param scale 保留小数位数
@@ -135,7 +137,8 @@ public final class NumberUtil {
 
 	/**
 	 * 保留固定位数小数<br>
-	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
+	 * 例如保留2位小数：123.456789 -> 123.46
 	 * 
 	 * @param numberStr 数字值的字符串表现形式
 	 * @param scale 保留小数位数
@@ -146,7 +149,8 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 保留固定位数小数
+	 * 保留固定位数小数<br>
+	 * 例如保留四位小数：123.456789 -> 123.4567
 	 * 
 	 * @param v 值
 	 * @param scale 保留小数位数
@@ -158,7 +162,8 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 保留固定位数小数
+	 * 保留固定位数小数<br>
+	 * 例如保留四位小数：123.456789 -> 123.4567
 	 * 
 	 * @param numberStr 数字值的字符串表现形式
 	 * @param scale 保留小数位数
@@ -171,7 +176,8 @@ public final class NumberUtil {
 	}
 	
 	/**
-	 * 保留小数位
+	 * 保留小数位，采用四舍五入
+	 * 
 	 * @param number 被保留小数的数字
 	 * @param digit 保留的小数位数
 	 * @return 保留小数后的字符串
@@ -180,37 +186,55 @@ public final class NumberUtil {
 		return String.format("%."+digit + 'f', number);
 	}
 	
+	//------------------------------------------------------------------------------------------- decimalFormat
 	/**
-	 * 格式化double
+	 * 格式化double<br>
+	 * 对 {@link DecimalFormat} 做封装<br>
 	 * 
 	 * @param pattern 格式
+	 * 		格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
+	 *		<ul>
+	 * 			<li>0 -> 取一位整数</li>
+	 * 			<li>0.00 -> 取一位整数和两位小数</li>
+	 * 			<li>00.000 -> 取两位整数和三位小数</li>
+	 * 			<li># -> 取所有整数部分</li>
+	 * 			<li>#.##% -> 以百分比方式计数，并取两位小数</li>
+	 * 			<li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
+	 * 			<li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
+	 * 			<li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
+	 * 		</ul>
 	 * @param value 值
 	 * @return 格式化后的值
 	 */
 	public static String decimalFormat(String pattern, double value) {
 		return new DecimalFormat(pattern).format(value);
 	}
-
+	
 	/**
-	 * 格式化double，保留两位小数
+	 * 格式化double<br>
+	 * 对 {@link DecimalFormat} 做封装<br>
 	 * 
+	 * @param pattern 格式
+	 * 		格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
+	 *		<ul>
+	 * 			<li>0 -> 取一位整数</li>
+	 * 			<li>0.00 -> 取一位整数和两位小数</li>
+	 * 			<li>00.000 -> 取两位整数和三位小数</li>
+	 * 			<li># -> 取所有整数部分</li>
+	 * 			<li>#.##% -> 以百分比方式计数，并取两位小数</li>
+	 * 			<li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
+	 * 			<li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
+	 * 			<li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
+	 * 		</ul>
 	 * @param value 值
-	 * @return 结果
+	 * @return 格式化后的值
+	 * @since 3.0.5
 	 */
-	public static String decimalFormat(double value) {
-		return decimalFormat("0.00", value);
+	public static String decimalFormat(String pattern, long value) {
+		return new DecimalFormat(pattern).format(value);
 	}
 
-	/**
-	 * 格式化double，不保留小数
-	 * 
-	 * @param value 值
-	 * @return 结果
-	 */
-	public static String decimalBlankFormat(double value) {
-		return decimalFormat("0", value);
-	}
-
+	//------------------------------------------------------------------------------------------- isXXX
 	/**
 	 * 是否为数字
 	 * 
@@ -315,6 +339,52 @@ public final class NumberUtil {
 	}
 
 	/**
+	 * 判断String是否是整数
+	 * 
+	 * @param s String
+	 * @return 是否为整数
+	 */
+	public boolean isInteger(String s) {
+		if ((s != null) && (s != ""))
+			return s.matches("^[0-9]*$");
+		else
+			return false;
+	}
+
+	/**
+	 * 判断字符串是否是浮点数
+	 * @param s String
+	 * @return 是否为{@link Double}类型
+	 */
+	public boolean isDouble(String s) {
+		try {
+			Double.parseDouble(s);
+			if (s.contains(".")) return true;
+			return false;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * 是否是质数<br>
+	 * 质数表的质数又称素数。指整数在一个大于1的自然数中,除了1和此整数自身外,没法被其他自然数整除的数。
+	 * 
+	 * @param n 数字
+	 * @return 是否是质数
+	 */
+	public static boolean isPrimes(int n) {
+		for (int i = 2; i <= Math.sqrt(n); i++) {
+			if (n % i == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	//------------------------------------------------------------------------------------------- generateXXX
+	
+	/**
 	 * 生成不重复随机数 根据给定的最小数字和最大数字，以及随机数的个数，产生指定的不重复的数组
 	 * 
 	 * @param begin 最小数字（包含该数）
@@ -379,44 +449,83 @@ public final class NumberUtil {
 		return ranArr;
 	}
 
+	//------------------------------------------------------------------------------------------- range
 	/**
-	 * 判断String是否是整数
-	 */
-	public boolean isInteger(String s) {
-		if ((s != null) && (s != ""))
-			return s.matches("^[0-9]*$");
-		else
-			return false;
-	}
-
-	/**
-	 * 判断字符串是否是浮点数
-	 */
-	public boolean isDouble(String value) {
-		try {
-			Double.parseDouble(value);
-			if (value.contains(".")) return true;
-			return false;
-		} catch (NumberFormatException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * 是否是质数
+	 * 给定范围内的整数列表，步进为1
 	 * 
-	 * @param n 数字
-	 * @return 是否是质数
+	 * @param start 开始（包含）
+	 * @param stop 结束（包含）
+	 * @return 整数列表
 	 */
-	public static boolean isPrimes(int n) {
-		for (int i = 2; i <= Math.sqrt(n); i++) {
-			if (n % i == 0) {
-				return false;
-			}
-		}
-		return true;
+	public static int[] range(int start, int stop) {
+		return range(start, stop, 1);
 	}
 
+	/**
+	 * 给定范围内的整数列表
+	 * 
+	 * @param start 开始（包含）
+	 * @param stop 结束（包含）
+	 * @param step 步进
+	 * @return 整数列表
+	 */
+	public static int[] range(int start, int stop, int step) {
+		if (start < stop) {
+			step = Math.abs(step);
+		} else if (start > stop) {
+			step = -Math.abs(step);
+		} else {// start == end
+			return new int[] { start };
+		}
+
+		int size = Math.abs((stop - start) / step) + 1;
+		int[] values = new int[size];
+		int index = 0;
+		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
+			values[index] = i;
+			index++;
+		}
+		return values;
+	}
+
+	/**
+	 * 将给定范围内的整数添加到已有集合中，步进为1
+	 * 
+	 * @param start 开始（包含）
+	 * @param stop 结束（包含）
+	 * @param values 集合
+	 * @return 集合
+	 */
+	public static Collection<Integer> appendRange(int start, int stop, Collection<Integer> values) {
+		return appendRange(start, stop, 1, values);
+	}
+
+	/**
+	 * 将给定范围内的整数添加到已有集合中
+	 * 
+	 * @param start 开始（包含）
+	 * @param stop 结束（包含）
+	 * @param step 步进
+	 * @param values 集合
+	 * @return 集合
+	 */
+	public static Collection<Integer> appendRange(int start, int stop, int step, Collection<Integer> values) {
+		if (start < stop) {
+			step = Math.abs(step);
+		} else if (start > stop) {
+			step = -Math.abs(step);
+		} else {// start == end
+			values.add(start);
+			return values;
+		}
+
+		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
+			values.add(i);
+		}
+		return values;
+	}
+	
+	//------------------------------------------------------------------------------------------- others
 	/**
 	 * 阶乘：n!
 	 * 
@@ -492,81 +601,6 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 给定范围内的整数列表，步进为1
-	 * 
-	 * @param start 开始（包含）
-	 * @param stop 结束（包含）
-	 * @return 整数列表
-	 */
-	public static int[] range(int start, int stop) {
-		return range(start, stop, 1);
-	}
-
-	/**
-	 * 给定范围内的整数列表
-	 * 
-	 * @param start 开始（包含）
-	 * @param stop 结束（包含）
-	 * @param step 步进
-	 * @return 整数列表
-	 */
-	public static int[] range(int start, int stop, int step) {
-		if (start < stop) {
-			step = Math.abs(step);
-		} else if (start > stop) {
-			step = -Math.abs(step);
-		} else {// start == end
-			return new int[] { start };
-		}
-
-		int size = Math.abs((stop - start) / step) + 1;
-		int[] values = new int[size];
-		int index = 0;
-		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
-			values[index] = i;
-			index++;
-		}
-		return values;
-	}
-
-	/**
-	 * 将给定范围内的整数添加到已有集合中，步进为1
-	 * 
-	 * @param start 开始（包含）
-	 * @param stop 结束（包含）
-	 * @param values 集合
-	 * @return 集合
-	 */
-	public static Collection<Integer> appendRange(int start, int stop, Collection<Integer> values) {
-		return appendRange(start, stop, 1, values);
-	}
-
-	/**
-	 * 将给定范围内的整数添加到已有集合中
-	 * 
-	 * @param start 开始（包含）
-	 * @param stop 结束（包含）
-	 * @param step 步进
-	 * @param values 集合
-	 * @return 集合
-	 */
-	public static Collection<Integer> appendRange(int start, int stop, int step, Collection<Integer> values) {
-		if (start < stop) {
-			step = Math.abs(step);
-		} else if (start > stop) {
-			step = -Math.abs(step);
-		} else {// start == end
-			values.add(start);
-			return values;
-		}
-
-		for (int i = start; (step > 0) ? i <= stop : i >= stop; i += step) {
-			values.add(i);
-		}
-		return values;
-	}
-
-	/**
 	 * 获得数字对应的二进制字符串
 	 * 
 	 * @param number 数字
@@ -601,9 +635,11 @@ public final class NumberUtil {
 	public long binaryToLong(String binaryStr) {
 		return Long.parseLong(binaryStr, 2);
 	}
+	
+	//------------------------------------------------------------------------------------------- compare
 
 	/**
-	 * 对比两个值得大小
+	 * 比较两个值的大小
 	 * 
 	 * @see Character#compare(char, char)
 	 * 
@@ -617,7 +653,7 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 对比两个值得大小
+	 * 比较两个值的大小
 	 * 
 	 * @see Double#compare(double, double)
 	 * 
@@ -631,7 +667,7 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 对比两个值得大小
+	 * 比较两个值的大小
 	 * 
 	 * @see Integer#compare(int, int)
 	 * 
@@ -652,7 +688,7 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 对比两个值得大小
+	 * 比较两个值的大小
 	 * 
 	 * @see Long#compare(long, long)
 	 * 
@@ -673,7 +709,7 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 对比两个值得大小
+	 * 比较两个值的大小
 	 * 
 	 * @see Short#compare(short, short)
 	 * 
@@ -694,7 +730,7 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 对比两个值得大小
+	 * 比较两个值的大小
 	 * 
 	 * @see Byte#compare(byte, byte)
 	 * 
@@ -736,7 +772,7 @@ public final class NumberUtil {
 		return string;
 	}
 
-	// --------------------------------------------------------------------- Private method start
+	//------------------------------------------------------------------------------------------- Private method start
 	private int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
 			return 1;
@@ -752,5 +788,5 @@ public final class NumberUtil {
 			return selectNum * mathNode(selectNum - 1);
 		}
 	}
-	// --------------------------------------------------------------------- Private method end
+	//------------------------------------------------------------------------------------------- Private method end
 }

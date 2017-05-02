@@ -27,4 +27,18 @@ public class NumberUtilTest {
 		Assert.assertEquals(round1, 2.68, 0);
 		Assert.assertEquals(round2, 2.68, 0);
 	}
+	
+	@Test
+	public void roundStrTest(){
+		String roundStr = NumberUtil.roundStr(2.647, 2);
+		Assert.assertEquals(roundStr, "2.65");
+	}
+	
+	@Test
+	public void decimalFormatTest(){
+		long c=299792458;//光速
+		
+		String format = NumberUtil.decimalFormat(",###", c);
+		Assert.assertEquals("299,792,458", format);
+	}
 }
