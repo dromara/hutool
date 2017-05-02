@@ -8,6 +8,7 @@
 * 针对不同连接池添加样例配置文件
 * AsymmetricCriptor类增加构造方法，可以传入Base64编码的私钥和公钥
 * SecureUtil增加RSA和DSA快速创建工具方法
+* Hutool-log支持tinylog
 
 ### Bug修复
 * db模块报错问题修复（感谢@尘风了了）

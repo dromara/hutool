@@ -6,6 +6,7 @@ import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 import com.xiaoleilu.hutool.log.dialect.jdk.JdkLogFactory;
+import com.xiaoleilu.hutool.log.dialect.tinylog.TinyLogFactory;
 import com.xiaoleilu.hutool.log.level.Level;
 
 /**
@@ -37,6 +38,12 @@ public class LogTest {
 		LogFactory.setCurrentLogFactory(new ApacheCommonsLogFactory());
 		// 自动选择日志实现
 		log.debug("This is {} log", "custom apache commons logging");
+		Console.log("----------------------------------------------------------------------");
+		
+		//自定义日志实现为TinyLog
+		LogFactory.setCurrentLogFactory(new TinyLogFactory());
+		// 自动选择日志实现
+		log.debug("This is {} log", "custom tinylog");
 		Console.log("----------------------------------------------------------------------");
 		
 		//自定义日志实现为JDK Logging

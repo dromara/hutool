@@ -7,6 +7,10 @@ package com.xiaoleilu.hutool.log.level;
  */
 public enum Level{
 	/**
+	 * 'ALL' log level.
+	 */
+	ALL,
+	/**
 	 * 'TRACE' log level.
 	 */
 	TRACE,
@@ -25,5 +29,13 @@ public enum Level{
 	/**
 	 * 'ERROR' log level.
 	 */
-	ERROR
+	ERROR,
+	/**
+	 * 'FATAL' log level.
+	 */
+	FATAL,
+	/**
+	 * 'OFF' log.
+	 */
+	OFF
 }

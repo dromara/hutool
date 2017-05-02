@@ -47,5 +47,10 @@
 			<artifactId>commons-logging</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

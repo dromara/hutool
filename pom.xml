@@ -30,11 +30,11 @@
 		<module>hutool-geo</module>
 		<module>hutool-json</module>
 	</modules>
-	
+
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
-		
+
 		<!-- versions -->
 		<junit.version>4.12</junit.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
@@ -43,6 +43,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<log4j2.version>2.8.2</log4j2.version>
 		<commons-logging.version>1.2</commons-logging.version>
+		<tinylog.version>1.2</tinylog.version>
 	</properties>
 
 	<dependencies>
@@ -90,6 +91,12 @@
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
 				<version>${commons-logging.version}</version>
+			</dependency>
+			<!-- tinylog -->
+			<dependency>
+				<groupId>org.tinylog</groupId>
+				<artifactId>tinylog</artifactId>
+				<version>${tinylog.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

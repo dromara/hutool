@@ -6,6 +6,7 @@ import com.xiaoleilu.hutool.log.dialect.jdk.JdkLogFactory;
 import com.xiaoleilu.hutool.log.dialect.log4j.Log4jLogFactory;
 import com.xiaoleilu.hutool.log.dialect.log4j2.Log4j2LogFactory;
 import com.xiaoleilu.hutool.log.dialect.slf4j.Slf4jLogFactory;
+import com.xiaoleilu.hutool.log.dialect.tinylog.TinyLogFactory;
 
 /**
  * 日志工厂类
@@ -14,6 +15,7 @@ import com.xiaoleilu.hutool.log.dialect.slf4j.Slf4jLogFactory;
  * @see Log4jLogFactory
  * @see Log4j2LogFactory
  * @see ApacheCommonsLogFactory
+ * @see TinyLogFactory
  * @see JdkLogFactory
  * @see ConsoleLogFactory
  * 
@@ -43,7 +45,7 @@ public abstract class LogFactory {
 	 * @return 日志对象
 	 */
 	public abstract Log getLog(Class<?> clazz);
-	
+
 	/**
 	 * 检查日志实现是否存在<br>
 	 * 此方法仅用于检查所提供的日志相关类是否存在，当传入的日志类类不存在时抛出ClassNotFoundException<br>
@@ -52,7 +54,7 @@ public abstract class LogFactory {
 	 * @param logClassName 日志实现相关类
 	 */
 	protected void checkLogExist(Object logClassName) {
-		//不做任何操作
+		// 不做任何操作
 	}
 
 	// ------------------------------------------------------------------------- Static start
@@ -72,7 +74,7 @@ public abstract class LogFactory {
 		}
 		return currentLogFactory;
 	}
-	
+
 	/**
 	 * 自定义日志实现
 	 * 
@@ -177,11 +179,16 @@ public abstract class LogFactory {
 						logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 					} catch (Throwable e4) {
 						try {
-							logFactory = new JdkLogFactory();
+							logFactory = new TinyLogFactory();
 							logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 						} catch (Throwable e5) {
-							logFactory = new ConsoleLogFactory();
-							logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+							try {
+								logFactory = new JdkLogFactory();
+								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+							} catch (Throwable e6) {
+								logFactory = new ConsoleLogFactory();
+								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
+							}
 						}
 					}
 				}
