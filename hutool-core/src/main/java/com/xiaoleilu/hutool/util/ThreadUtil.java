@@ -124,7 +124,8 @@ public final class ThreadUtil {
 	}
 
 	/**
-	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。，若未完成，则会阻塞
+	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。<br>
+	 * 若未完成，则会阻塞
 	 * 
 	 * @return CompletionService
 	 */
@@ -133,7 +134,7 @@ public final class ThreadUtil {
 	}
 
 	/**
-	 * 新建一个CountDownLatch
+	 * 新建一个CountDownLatch，一个同步辅助类，在完成一组正在其他线程中执行的操作之前，它允许一个或多个线程一直等待。
 	 * 
 	 * @param threadCount 线程数量
 	 * @return CountDownLatch
@@ -220,6 +221,7 @@ public final class ThreadUtil {
 	
 	/**
 	 * 创建本地线程对象
+	 * @param isInheritable 是否为子线程提供从父线程那里继承的值
 	 * @return 本地线程
 	 */
 	public static <T> ThreadLocal<T> createThreadLocal(boolean isInheritable){

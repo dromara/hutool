@@ -10,6 +10,7 @@
 * SecureUtil增加RSA和DSA快速创建工具方法
 * Hutool-log支持tinylog
 * 添加GlobalThreadPool，将公共线程池从ThreadUtil中剥离出来
+* 扩充Base32中的方法
 
 ### Bug修复
 * db模块报错问题修复（感谢@尘风了了）

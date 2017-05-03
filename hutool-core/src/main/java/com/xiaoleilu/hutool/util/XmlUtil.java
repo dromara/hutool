@@ -56,11 +56,11 @@ public final class XmlUtil {
 		if (file == null) {
 			throw new NullPointerException("Xml file is null !");
 		}
-		if (file.exists() == false) {
-			throw new UtilException("File [" + file.getAbsolutePath() + "] not a exist!");
+		if (false == file.exists()) {
+			throw new UtilException("File [{}] not a exist!", file.getAbsolutePath());
 		}
-		if (file.isFile() == false) {
-			throw new UtilException("[" + file.getAbsolutePath() + "] not a file!");
+		if (false == file.isFile()) {
+			throw new UtilException("[{}] not a file!", file.getAbsolutePath());
 		}
 
 		try {

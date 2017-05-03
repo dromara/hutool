@@ -1,7 +1,12 @@
 package com.xiaoleilu.hutool.lang;
 
+import java.nio.charset.Charset;
+
+import com.xiaoleilu.hutool.util.StrUtil;
+
 /**
  * Base32 - encodes and decodes RFC3548 Base32 (see http://www.faqs.org/rfcs/rfc3548.html )<br>
+ * base32就是用32（2的5次方）个特定ASCII码来表示256个ASCII码。所以，5个ASCII字符经过base32编码后会变为8个字符（公约数为40），长度增加3/5.不足8n用“=”补足。
  * see http://blog.csdn.net/earbao/article/details/44453937
  * @author Looly
  *
@@ -24,6 +29,7 @@ public final class Base32 {
 			0x17, 0x18, 0x19, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF // 'x', 'y', 'z', '{', '|', '}', '~', 'DEL'
 	};
 
+	//----------------------------------------------------------------------------------------- encode
 	/**
 	 * 编码
 	 * @param bytes 数据
@@ -62,7 +68,40 @@ public final class Base32 {
 
 		return base32.toString();
 	}
+	
+	/**
+	 * base32编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(String source) {
+		return encode(source, Charset.defaultCharset());
+	}
 
+	/**
+	 * base32编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(String source, String charset) {
+		return encode(StrUtil.bytes(source, charset));
+	}
+
+	/**
+	 * base32编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(String source, Charset charset) {
+		return encode(StrUtil.bytes(source, charset));
+	}
+
+	//----------------------------------------------------------------------------------------- decode
 	/**
 	 * 解码
 	 * @param base32 base32编码
@@ -110,5 +149,37 @@ public final class Base32 {
 			}
 		}
 		return bytes;
+	}
+	
+	/**
+	 * base32解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String decodeStr(String source) {
+		return decodeStr(source, Charset.defaultCharset());
+	}
+
+	/**
+	 * base32解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String decodeStr(String source, String charset) {
+		return StrUtil.str(decode(source), charset);
+	}
+	
+	/**
+	 * base32解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String decodeStr(String source, Charset charset) {
+		return StrUtil.str(decode(source), charset);
 	}
 }

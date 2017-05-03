@@ -23,7 +23,7 @@ public final class URLUtil {
 	private URLUtil() {}
 	
 	/**
-	 * 创建URL对象
+	 * 通过一个字符串形式的URL地址创建URL对象
 	 * @param url URL
 	 * @return URL对象
 	 */
@@ -132,7 +132,9 @@ public final class URLUtil {
 	}
 	
 	/**
-	 * 编码URL
+	 * 编码URL<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 编码后的URL
@@ -147,7 +149,9 @@ public final class URLUtil {
 	}
 	
 	/**
-	 * 解码URL
+	 * 解码URL<br>
+	 * 将%开头的16进制表示的内容解码。
+	 * 
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 解码后的URL

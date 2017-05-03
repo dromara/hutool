@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.lang;
 /**
  * BCD码（Binary-Coded Decimal‎）亦称二进码十进数或二-十进制代码<br>
  * BCD码这种编码形式利用了四个位元来储存一个十进制的数码，使二进制和十进制之间的转换得以快捷的进行<br>
- * see http://blog.chinaunix.net/uid-21273878-id-4733738.html
+ * see http://cuisuqiang.iteye.com/blog/1429956
  * @author Looly
  *
  */
@@ -25,7 +25,7 @@ public final class BCD {
 		}
 		byte abt[] = new byte[len];
 		if (len >= 2) {
-			len = len / 2;
+			len >>= 1;
 		}
 		byte bbt[] = new byte[len];
 		abt = asc.getBytes();
@@ -48,7 +48,6 @@ public final class BCD {
 			int a = (j << 4) + k;
 			byte b = (byte) a;
 			bbt[p] = b;
-			System.out.format("%02X\n", bbt[p]);
 		}
 		return bbt;
 	}
@@ -74,7 +73,6 @@ public final class BCD {
 		for (int i = 0; i < (ascLength + 1) / 2; i++) {
 			bcd[i] = ascToBcd(ascii[j++]);
 			bcd[i] = (byte) (((j >= ascLength) ? 0x00 : ascToBcd(ascii[j++])) + (bcd[i] << 4));
-			System.out.format("%02X\n", bcd[i]);
 		}
 		return bcd;
 	}
@@ -97,6 +95,8 @@ public final class BCD {
 		return new String(temp);
 	}
 	
+	
+	//----------------------------------------------------------------- Private method start
 	/**
 	 * 转换单个byte为BCD
 	 * @param asc ACSII
@@ -115,4 +115,5 @@ public final class BCD {
 			bcd = (byte) (asc - 48);
 		return bcd;
 	}
+	//----------------------------------------------------------------- Private method end
 }
