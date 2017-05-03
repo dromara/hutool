@@ -7,9 +7,11 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.thread.GlobalThreadPool;
 
 /**
  * 线程池工具
@@ -17,30 +19,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * @author luxiaolei
  */
 public final class ThreadUtil {
-	private static ExecutorService executor = Executors.newCachedThreadPool();
-	
 	private ThreadUtil() {}
-
-	/**
-	 * 直接在公共线程池中执行线程
-	 * 
-	 * @param runnable 可运行对象
-	 */
-	public static void execute(Runnable runnable) {
-		try {
-			executor.execute(runnable);
-		} catch (Exception e) {
-			throw new UtilException("Exception when running task!", e);
-		}
-	}
-	
-	/**
-	 * 重启公共线程池
-	 */
-	public static void restart() {
-		executor.shutdownNow();
-		executor = Executors.newCachedThreadPool();
-	}
 
 	/**
 	 * 新建一个线程池
@@ -69,6 +48,29 @@ public final class ThreadUtil {
 	public static ExecutorService newSingleExecutor() {
 		return Executors.newSingleThreadExecutor();
 	}
+	
+	/**
+	 * 获得一个新的线程池<br>
+	 * 如果maximumPoolSize > corePoolSize，在没有新任务加入的情况下，多出的线程将最多保留60s
+	 * 
+	 * @param corePoolSize 初始线程池大小
+	 * @param maximumPoolSize 最大线程池大小
+	 * @return {@link ThreadPoolExecutor}
+	 */
+	public static ThreadPoolExecutor newExecutor(int corePoolSize, int maximumPoolSize) {
+		return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, //
+				60L, TimeUnit.SECONDS, //
+				new LinkedBlockingQueue<Runnable>());
+	}
+	
+	/**
+	 * 直接在公共线程池中执行线程
+	 * 
+	 * @param runnable 可运行对象
+	 */
+	public static void execute(Runnable runnable) {
+		GlobalThreadPool.execute(runnable);
+	}
 
 	/**
 	 * 执行异步方法
@@ -96,7 +98,7 @@ public final class ThreadUtil {
 	 * @return Future
 	 */
 	public static <T> Future<T> execAsync(Callable<T> task) {
-		return executor.submit(task);
+		return GlobalThreadPool.submit(task);
 	}
 	
 	/**
@@ -108,16 +110,17 @@ public final class ThreadUtil {
 	 * @since 3.0.5
 	 */
 	public static Future<?> execAsync(Runnable runnable) {
-		return executor.submit(runnable);
+		return GlobalThreadPool.submit(runnable);
 	}
 
 	/**
-	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。，若未完成，则会阻塞
+	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。<br>
+	 * 若未完成，则会阻塞
 	 * 
 	 * @return CompletionService
 	 */
 	public static <T> CompletionService<T> newCompletionService() {
-		return new ExecutorCompletionService<T>(executor);
+		return new ExecutorCompletionService<T>(GlobalThreadPool.getExecutor());
 	}
 
 	/**
