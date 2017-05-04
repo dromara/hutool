@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.lang;
 
 import java.nio.charset.Charset;
 
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -96,7 +97,7 @@ public final class Base64 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(String source) {
-		return encode(source, Charset.defaultCharset());
+		return encode(source, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -128,7 +129,7 @@ public final class Base64 {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(byte[] source) {
-		return encode(source, Charset.defaultCharset());
+		return encode(source, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -161,7 +162,7 @@ public final class Base64 {
 	 * @return 被加密后的字符串
 	 */
 	public static String decodeStr(String source) {
-		return decodeStr(source, Charset.defaultCharset());
+		return decodeStr(source, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -193,7 +194,7 @@ public final class Base64 {
 	 * @return 被加密后的字符串
 	 */
 	public static byte[] decode(String source) {
-		return decode(source, Charset.defaultCharset());
+		return decode(source, CharsetUtil.UTF_8);
 	}
 
 	/**

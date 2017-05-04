@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
  * @author Looly
  *
  */
-public final class HexUtil {
+public class HexUtil {
 	
 	private HexUtil() {}
 
@@ -212,7 +212,7 @@ public final class HexUtil {
 	private static char[] encodeHex(byte[] data, char[] toDigits) {
 		int l = data.length;
 		char[] out = new char[l << 1];
-		// two characters form the hex value.
+		// two characters from the hex value.
 		for (int i = 0, j = 0; i < l; i++) {
 			out[j++] = toDigits[(0xF0 & data[i]) >>> 4];
 			out[j++] = toDigits[0x0F & data[i]];

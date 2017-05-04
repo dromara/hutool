@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.lang;
 
 import java.nio.charset.Charset;
 
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -72,17 +73,17 @@ public final class Base32 {
 	/**
 	 * base32编码
 	 * 
-	 * @param source 被编码的base64字符串
+	 * @param source 被编码的base32字符串
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(String source) {
-		return encode(source, Charset.defaultCharset());
+		return encode(source, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
 	 * base32编码
 	 * 
-	 * @param source 被编码的base64字符串
+	 * @param source 被编码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
@@ -93,7 +94,7 @@ public final class Base32 {
 	/**
 	 * base32编码
 	 * 
-	 * @param source 被编码的base64字符串
+	 * @param source 被编码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
@@ -154,17 +155,17 @@ public final class Base32 {
 	/**
 	 * base32解码
 	 * 
-	 * @param source 被解码的base64字符串
+	 * @param source 被解码的base32字符串
 	 * @return 被加密后的字符串
 	 */
 	public static String decodeStr(String source) {
-		return decodeStr(source, Charset.defaultCharset());
+		return decodeStr(source, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
 	 * base32解码
 	 * 
-	 * @param source 被解码的base64字符串
+	 * @param source 被解码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
@@ -175,7 +176,7 @@ public final class Base32 {
 	/**
 	 * base32解码
 	 * 
-	 * @param source 被解码的base64字符串
+	 * @param source 被解码的base32字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
