@@ -74,7 +74,7 @@ Hutool始终是一个工具类而不是框架，这意味着它对项目的侵�
 <dependency>
     <groupId>com.xiaoleilu</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>3.0.3</version>
+    <version>3.0.5</version>
 </dependency>
 ```
 
