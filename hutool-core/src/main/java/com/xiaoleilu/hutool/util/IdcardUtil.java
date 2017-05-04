@@ -15,7 +15,7 @@ import com.xiaoleilu.hutool.lang.Validator;
  * @author Looly
  * @since 3.0.4
  */
-public class IdcardUtil {
+public final class IdcardUtil {
 
 	/** 中国公民身份证号码最小长度。 */
 	private static final int CHINA_ID_MIN_LENGTH = 15;
