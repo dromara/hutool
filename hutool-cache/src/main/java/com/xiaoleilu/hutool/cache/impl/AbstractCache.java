@@ -96,8 +96,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 			//过期
 			if (co.isExpired() == true) {
 				// remove(key); // 此方法无法获得锁
-				cacheMap.remove(key);
-
+				removeWithoutLock(key);
 				missCount++;
 				return null;
 			}
@@ -208,5 +207,16 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 	 * @param cachedObject 被缓存的对象
 	 */
 	protected void onRemove(K key, V cachedObject) {
+	}
+	
+	/**
+	 * 移除元素，无锁
+	 * @param key 键
+	 */
+	private void removeWithoutLock(K key) {
+		CacheObj<K, V> co = cacheMap.remove(key);
+		if(null != co){
+			onRemove(co.key, co.obj);
+		}
 	}
 }
