@@ -15,6 +15,7 @@ import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 文件读取器
@@ -115,9 +116,13 @@ public class FileReader extends FileWrapper {
 
 		byte[] bytes = new byte[(int) len];
 		FileInputStream in = null;
+		int readLength;
 		try {
 			in = new FileInputStream(file);
-			in.read(bytes);
+			readLength = in.read(bytes);
+			if(readLength < len){
+				throw new IOException(StrUtil.format("File length is [{}] but read [{}]!", len, readLength));
+			}
 		} catch (Exception e) {
 			throw new IORuntimeException(e);
 		} finally {

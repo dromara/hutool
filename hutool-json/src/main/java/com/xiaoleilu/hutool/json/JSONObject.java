@@ -379,45 +379,38 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		return rawHashMap.entrySet();
 	}
 	
-	/**
-	 *JSON中的key以及对应的value相等则判定为与此对象相同
-	 *
-	 * @param other The other JSONObject
-	 * @return true if they are equal
-	 */
+	
+	
 	@Override
-	public boolean equals(Object other) {
-		try {
-			if (!(other instanceof JSONObject)) {
-				return false;
-			}
-			Set<String> set = this.keySet();
-			if (!set.equals(((JSONObject) other).keySet())) {
-				return false;
-			}
-			Iterator<String> iterator = set.iterator();
-			while (iterator.hasNext()) {
-				String name = iterator.next();
-				Object valueThis = this.getObj(name);
-				Object valueOther = ((JSONObject) other).getObj(name);
-				if (valueThis instanceof JSONObject) {
-					if (!((JSONObject) valueThis).equals(valueOther)) {
-						return false;
-					}
-				} else if (valueThis instanceof JSONArray) {
-					if (!((JSONArray) valueThis).equals(valueOther)) {
-						return false;
-					}
-				} else if (!valueThis.equals(valueOther)) {
-					return false;
-				}
-			}
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((rawHashMap == null) ? 0 : rawHashMap.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
-		} catch (Throwable exception) {
+		}
+		if (obj == null) {
 			return false;
 		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final JSONObject other = (JSONObject) obj;
+		if (rawHashMap == null) {
+			if (other.rawHashMap != null) {
+				return false;
+			}
+		} else if (!rawHashMap.equals(other.rawHashMap)) {
+			return false;
+		}
+		return true;
 	}
-	
+
 	/**
 	 * 返回JSON字符串<br>
 	 * 如果解析错误，返回<code>null</code>

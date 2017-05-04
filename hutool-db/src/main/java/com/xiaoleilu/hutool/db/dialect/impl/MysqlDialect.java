@@ -8,8 +8,6 @@ import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.dialect.DialectName;
-import com.xiaoleilu.hutool.db.sql.LogicalOperator;
-import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
@@ -32,20 +30,15 @@ public class MysqlDialect extends AnsiSqlDialect{
 		if(query == null || StrUtil.hasBlank(query.getTableNames())) {
 			throw new DbRuntimeException("Table name is null !");
 		}
+		final Page page = query.getPage();
+		if(null == page){
+			//无分页信息默认使用find
+			return super.psForFind(conn, query);
+		}
 		
 		final SqlBuilder find = SqlBuilder.create(wrapper)
-				.select(query.getFields())
-				.from(query.getTableNames())
-				.where(LogicalOperator.AND, query.getWhere());
-		
-		
-		final Page page = query.getPage();
-		if(null != page){
-			final Order[] orders = page.getOrders();
-			if(null != orders){
-				find.orderBy(orders);
-			}
-		}
+				.query(query)
+				.orderBy(page.getOrders());
 		
 		find.append(" LIMIT ").append(page.getStartPosition()).append(", ").append(page.getNumPerPage());
 		

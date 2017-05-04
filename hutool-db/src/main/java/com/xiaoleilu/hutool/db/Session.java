@@ -105,7 +105,11 @@ public class Session extends AbstractSqlRunner implements Closeable{
 		} catch (SQLException e) {
 			throw e;
 		}finally {
-			conn.setAutoCommit(true);			//事务结束，恢复自动提交
+			try {
+				conn.setAutoCommit(true);	//事务结束，恢复自动提交
+			} catch (SQLException e) {
+				log.error(e);
+			}
 		}
 	}
 	
@@ -122,7 +126,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 			try {
 				conn.setAutoCommit(true);	//事务结束，恢复自动提交
 			} catch (SQLException e) {
-				throw e;
+				log.error(e);
 			}
 		}
 	}
@@ -160,7 +164,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 			try {
 				conn.setAutoCommit(true);	//事务结束，恢复自动提交
 			} catch (SQLException e) {
-				throw e;
+				log.error(e);
 			}
 		}
 	}

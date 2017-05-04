@@ -162,39 +162,6 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * 是否与其它对象相等，其它对象也必须是JSONArray，对象元素相等且元素顺序一致
-	 *
-	 * @param other The other JSONArray
-	 * @return true if they are equal
-	 */
-	@Override
-	public boolean equals(Object other) {
-		if (!(other instanceof JSONArray)) {
-			return false;
-		}
-		int len = this.size();
-		if (len != ((JSONArray) other).size()) {
-			return false;
-		}
-		for (int i = 0; i < len; i += 1) {
-			Object valueThis = this.getObj(i);
-			Object valueOther = ((JSONArray) other).getObj(i);
-			if (valueThis instanceof JSONObject) {
-				if (!((JSONObject) valueThis).equals(valueOther)) {
-					return false;
-				}
-			} else if (valueThis instanceof JSONArray) {
-				if (!((JSONArray) valueThis).equals(valueOther)) {
-					return false;
-				}
-			} else if (!valueThis.equals(valueOther)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
 	 * 根据给定名列表，与其位置对应的值组成JSONObject
 	 *
 	 * @param names 名列表，位置与JSONArray中的值位置对应
@@ -210,6 +177,36 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			jo.put(names.getStr(i), this.getObj(i));
 		}
 		return jo;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((rawArrayList == null) ? 0 : rawArrayList.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final JSONArray other = (JSONArray) obj;
+		if (rawArrayList == null) {
+			if (other.rawArrayList != null) {
+				return false;
+			}
+		} else if (!rawArrayList.equals(other.rawArrayList)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

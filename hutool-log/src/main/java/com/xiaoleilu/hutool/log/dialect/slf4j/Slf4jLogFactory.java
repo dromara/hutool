@@ -21,7 +21,6 @@ public class Slf4jLogFactory extends LogFactory {
 	
 	public Slf4jLogFactory() {
 		this(false);
-		checkLogExist(org.slf4j.LoggerFactory.class);
 	}
 
 	/**
@@ -31,6 +30,7 @@ public class Slf4jLogFactory extends LogFactory {
 	 */
 	public Slf4jLogFactory(boolean failIfNOP) {
 		super("Slf4j");
+		checkLogExist(org.slf4j.LoggerFactory.class);
 		if(false == failIfNOP){
 			return;
 		}

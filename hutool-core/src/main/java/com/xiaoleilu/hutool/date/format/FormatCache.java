@@ -213,11 +213,23 @@ abstract class FormatCache<F extends Format> {
 		 */
 		@Override
 		public boolean equals(final Object obj) {
-			// Eliminate the usual boilerplate because
-			// this inner static class is only used in a generic ConcurrentHashMap
-			// which will not compare against other Object types
-			return Arrays.equals(keys, ((MultipartKey) obj).keys);
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			final MultipartKey other = (MultipartKey) obj;
+			if (false == Arrays.equals(keys, other.keys)) {
+				return false;
+			}
+			return true;
 		}
+		
+		
 
 		/**
 		 * {@inheritDoc}

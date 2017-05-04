@@ -181,8 +181,7 @@ public final class URLUtil {
 		} catch (URISyntaxException e) {
 			throw new UtilException(e);
 		}
-		
-		return uri == null ? null : uri.getPath();
+		return uri.getPath();
 	}
 	
 	/**

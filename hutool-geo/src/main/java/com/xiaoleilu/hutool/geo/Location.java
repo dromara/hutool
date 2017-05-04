@@ -71,7 +71,8 @@ public class Location implements Serializable {
 	public boolean equals(Object obj) {
 		if (obj instanceof Location) {
 			Location other = (Location) obj;
-			return latitude == other.latitude && longitude == other.longitude;
+			return Double.valueOf(latitude).equals(Double.valueOf(other.latitude)) 
+					&& Double.valueOf(longitude).equals(Double.valueOf(other.longitude));
 		}
 		return false;
 	}

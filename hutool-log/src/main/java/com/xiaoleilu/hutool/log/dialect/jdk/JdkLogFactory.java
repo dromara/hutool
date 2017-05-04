@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.logging.LogManager;
 
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 
@@ -44,11 +45,11 @@ public class JdkLogFactory extends LogFactory{
 		try {
 			LogManager.getLogManager().readConfiguration(in);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Console.error(e, "Read [logging.properties] from classpath error!");
 			try {
 				LogManager.getLogManager().readConfiguration();
 			} catch (Exception e1) {
-				e.printStackTrace();
+				Console.error(e, "Read [logging.properties] from [%JRE_HOME%/lib/logging.properties] error!");
 			}
 		} finally {
 			IoUtil.close(in);

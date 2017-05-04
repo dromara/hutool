@@ -4,6 +4,8 @@ import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
@@ -16,7 +18,7 @@ import it.sauronsoftware.cron4j.Task;
  *@deprecated Please use [hutool-cron] module
  */
 public class CronUtil {
-//	private final static Log log = StaticLog.get();
+	private final static Log log = LogFactory.get();
 	
 	/** Crontab配置文件 */
 	public final static String CRONTAB_CONFIG_PATH = "config/cron4j.setting";
@@ -71,10 +73,9 @@ public class CronUtil {
 			try {
 				final Runnable job = ClassUtil.newInstance(jobClass);
 				schedule(pattern, job);
-//				log.info("Schedule [{} {}] added.", pattern, jobClass);
+				log.info("Schedule [{} {}] added.", pattern, jobClass);
 			} catch (Exception e) {
-				e.printStackTrace();
-//				log.error(e, "Schedule [%s %s] add error!", pattern, jobClass);
+				log.error(e, "Schedule [%s %s] add error!", pattern, jobClass);
 			}
 		}
 	}

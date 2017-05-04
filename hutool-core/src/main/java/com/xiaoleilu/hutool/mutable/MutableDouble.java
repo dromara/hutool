@@ -165,7 +165,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof MutableDouble) {
-			return value == ((MutableDouble) obj).doubleValue();
+			return (Double.doubleToLongBits(((MutableDouble)obj).value) == Double.doubleToLongBits(value));
 		}
 		return false;
 	}

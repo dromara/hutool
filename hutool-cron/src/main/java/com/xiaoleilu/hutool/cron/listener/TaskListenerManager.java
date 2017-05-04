@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xiaoleilu.hutool.cron.TaskExecutor;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * 监听调度器，统一管理监听
@@ -80,7 +81,7 @@ public class TaskListenerManager {
 					listenerl.onFailed(executor, exception);
 				}
 			}else{
-				exception.printStackTrace();
+				Console.log(exception, exception.getMessage());
 			}
 		}
 	}

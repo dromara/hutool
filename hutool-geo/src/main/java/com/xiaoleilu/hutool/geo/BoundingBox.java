@@ -172,8 +172,11 @@ public class BoundingBox implements Serializable {
 			return true;
 		}
 		if (obj instanceof BoundingBox) {
-			BoundingBox that = (BoundingBox) obj;
-			return minLat == that.minLat && minLon == that.minLon && maxLat == that.maxLat && maxLon == that.maxLon;
+			BoundingBox other = (BoundingBox) obj;
+			return Double.valueOf(minLat).equals(Double.valueOf(other.minLat)) 
+					&& Double.valueOf(minLon).equals(Double.valueOf(other.minLon)) 
+					&& Double.valueOf(maxLat).equals(Double.valueOf(other.maxLat)) 
+					&& Double.valueOf(maxLon).equals(Double.valueOf(other.maxLon));
 		} else {
 			return false;
 		}

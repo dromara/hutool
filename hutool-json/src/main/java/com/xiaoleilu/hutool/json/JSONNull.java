@@ -37,6 +37,11 @@ public class JSONNull {
 	public boolean equals(Object object) {
 		return object == null || object == this;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 
 	/**
 	 * Get the "null" string value.

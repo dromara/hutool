@@ -12,7 +12,6 @@ import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.LogicalOperator;
-import com.xiaoleilu.hutool.db.sql.Order;
 import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
@@ -104,18 +103,15 @@ public class AnsiSqlDialect implements Dialect {
 
 	@Override
 	public PreparedStatement psForPage(Connection conn, Query query) throws SQLException {
-		final SqlBuilder find = SqlBuilder.create(wrapper)
-				.select(query.getFields())
-				.from(query.getTableNames())
-				.where(LogicalOperator.AND, query.getWhere());
-		
 		final Page page = query.getPage();
-		if(null != page){
-			final Order[] orders = page.getOrders();
-			if(null != orders){
-				find.orderBy(orders);
-			}
+		if(null == page){
+			//无分页信息默认使用find
+			return this.psForFind(conn, query);
 		}
+		
+		final SqlBuilder find = SqlBuilder.create(wrapper)
+				.query(query)
+				.orderBy(page.getOrders());
 		
 		//limit  A  offset  B 表示：A就是你需要多少行，B就是查询的起点位置。
 		find.append(" limit ").append(page.getNumPerPage()).append(" offset ").append(page.getStartPosition());

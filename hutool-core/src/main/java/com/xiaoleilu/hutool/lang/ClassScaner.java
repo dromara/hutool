@@ -10,6 +10,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -222,16 +223,19 @@ public final class ClassScaner {
 	 * @param classes 类集合
 	 */
 	private static void processJarFile(File file, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
+		JarFile jarFile = null;
 		try {
-			for (JarEntry entry : Collections.list(new JarFile(file).entries())) {
+			jarFile = new JarFile(file);
+			for (JarEntry entry : Collections.list(jarFile.entries())) {
 				if (isClass(entry.getName())) {
 					final String className = entry.getName().replace(StrUtil.SLASH, StrUtil.DOT).replace(FileUtil.CLASS_EXT, StrUtil.EMPTY);
 					fillClass(className, packageName, classes, classFilter);
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-//			log.error(ex);
+			Console.error(ex, ex.getMessage());
+		}finally{
+			IoUtil.close(jarFile);
 		}
 	}
 

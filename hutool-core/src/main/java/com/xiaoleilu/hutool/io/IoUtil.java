@@ -415,8 +415,14 @@ public final class IoUtil {
 	 */
 	public static byte[] readBytes(InputStream in, int length) throws IOException {
 		byte[] b = new byte[length];
-		in.read(b);
-		return b;
+		int readLength = in.read(b);
+		if(readLength < length){
+			byte[] b2 = new byte[length];
+			System.arraycopy(b, 0, b2, 0, readLength);
+			return b2;
+		}else{
+			return b;
+		}
 	}
 
 	/**

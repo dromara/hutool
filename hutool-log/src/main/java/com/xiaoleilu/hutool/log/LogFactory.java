@@ -165,27 +165,27 @@ public abstract class LogFactory {
 		try {
 			logFactory = new Slf4jLogFactory(true);
 			logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-		} catch (Throwable e) {
+		} catch (NoClassDefFoundError e) {
 			try {
 				logFactory = new Log4jLogFactory();
 				logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-			} catch (Throwable e2) {
+			} catch (NoClassDefFoundError e2) {
 				try {
 					logFactory = new Log4j2LogFactory();
 					logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-				} catch (Throwable e3) {
+				} catch (NoClassDefFoundError e3) {
 					try {
 						logFactory = new ApacheCommonsLogFactory();
 						logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-					} catch (Throwable e4) {
+					} catch (NoClassDefFoundError e4) {
 						try {
 							logFactory = new TinyLogFactory();
 							logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-						} catch (Throwable e5) {
+						} catch (NoClassDefFoundError e5) {
 							try {
 								logFactory = new JdkLogFactory();
 								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-							} catch (Throwable e6) {
+							} catch (NoClassDefFoundError e6) {
 								logFactory = new ConsoleLogFactory();
 								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 							}

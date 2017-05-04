@@ -51,7 +51,7 @@ public final class Base64 {
 			return null;
 		}
 		
-		int len = arr != null ? arr.length : 0;
+		int len = arr.length;
 		if (len == 0) {
 			return new byte[0];
 		}

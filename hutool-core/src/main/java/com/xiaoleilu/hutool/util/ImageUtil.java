@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 
 /**
  * 图片处理工具类：<br>
@@ -30,12 +31,12 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  */
 public final class ImageUtil {
 
-	public static String IMAGE_TYPE_GIF = "gif";// 图形交换格式
-	public static String IMAGE_TYPE_JPG = "jpg";// 联合照片专家组
-	public static String IMAGE_TYPE_JPEG = "jpeg";// 联合照片专家组
-	public static String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
-	public static String IMAGE_TYPE_PNG = "png";// 可移植网络图形
-	public static String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
+	public static final String IMAGE_TYPE_GIF = "gif";// 图形交换格式
+	public static final String IMAGE_TYPE_JPG = "jpg";// 联合照片专家组
+	public static final String IMAGE_TYPE_JPEG = "jpeg";// 联合照片专家组
+	public static final String IMAGE_TYPE_BMP = "bmp";// 英文Bitmap（位图）的简写，它是Windows操作系统中的标准图像文件格式
+	public static final String IMAGE_TYPE_PNG = "png";// 可移植网络图形
+	public static final String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
 	
 	private ImageUtil() {}
 
@@ -108,7 +109,7 @@ public final class ImageUtil {
 			}
 			ImageIO.write((BufferedImage) itemp, IMAGE_TYPE_JPEG, destImageFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -251,8 +252,8 @@ public final class ImageUtil {
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -267,8 +268,8 @@ public final class ImageUtil {
 		try {
 			BufferedImage src = ImageIO.read(srcImageFile);
 			ImageIO.write(src, formatName, destImageFile);
-		} catch (Exception e) {
-			throw new UtilException(e);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -286,7 +287,7 @@ public final class ImageUtil {
 			src = op.filter(src, null);
 			ImageIO.write(src, IMAGE_TYPE_JPEG,destImageFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -319,8 +320,8 @@ public final class ImageUtil {
 			g.drawString(pressText, (width - (getLength(pressText) * fontSize)) / 2 + x, (height - fontSize) / 2 + y);
 			g.dispose();
 			ImageIO.write((BufferedImage) image, IMAGE_TYPE_JPEG, destImageFile);// 输出到文件流
-		} catch (Exception e) {
-			throw new UtilException(e);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -353,8 +354,8 @@ public final class ImageUtil {
 			// 水印文件结束
 			g.dispose();
 			ImageIO.write((BufferedImage) image, "JPEG", destImageFile);
-		} catch (Exception e) {
-			throw new UtilException(e);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
