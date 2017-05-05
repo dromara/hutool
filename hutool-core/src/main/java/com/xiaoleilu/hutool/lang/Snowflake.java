@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.lang;
 
+import com.xiaoleilu.hutool.date.SystemClock;
+
 /**
  * Twitter的Snowflake 算法<br>
  * 分布式系统中，有一些需要使用全局唯一ID的场景，有些时候我们希望能使用一种简单一些的ID，并且希望ID能够按照时间有序生成。<br>
@@ -57,7 +59,7 @@ public class Snowflake {
 	 * @return ID
 	 */
 	public synchronized long nextId() {
-		long timestamp = System.currentTimeMillis();
+		long timestamp = SystemClock.now();
 		if (timestamp < lastTimestamp) {
 			throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
 		}
@@ -76,9 +78,9 @@ public class Snowflake {
 	}
 
 	private long tilNextMillis(long lastTimestamp) {
-		long timestamp = System.currentTimeMillis();
+		long timestamp = SystemClock.now();
 		while (timestamp <= lastTimestamp) {
-			timestamp = System.currentTimeMillis();
+			timestamp = SystemClock.now();
 		}
 		return timestamp;
 	}
