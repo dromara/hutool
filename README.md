@@ -78,6 +78,11 @@ Hutool始终是一个工具类而不是框架，这意味着它对项目的侵�
 </dependency>
 ```
 
+### Gradle
+```
+compile 'com.xiaoleilu:hutool-all:3.0.5'
+```
+
 注：工具包的**版本**可以通过 [http://search.maven.org/](http://search.maven.org/) 搜索`hutool-all`找到项目。
 
 ### 非Maven项目

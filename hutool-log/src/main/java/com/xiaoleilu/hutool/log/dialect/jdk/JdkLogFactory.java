@@ -22,12 +22,12 @@ public class JdkLogFactory extends LogFactory{
 	}
 
 	@Override
-	public Log getLog(String name) {
+	public Log createLog(String name) {
 		return new JdkLog(name);
 	}
 
 	@Override
-	public Log getLog(Class<?> clazz) {
+	public Log createLog(Class<?> clazz) {
 		return new JdkLog(clazz);
 	}
 	

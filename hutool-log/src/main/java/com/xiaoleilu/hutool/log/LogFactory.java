@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.log;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.xiaoleilu.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 import com.xiaoleilu.hutool.log.dialect.jdk.JdkLogFactory;
@@ -25,18 +28,27 @@ import com.xiaoleilu.hutool.log.dialect.tinylog.TinyLogFactory;
 public abstract class LogFactory {
 
 	private String logFramworkName;
+	protected Map<Object, Log> logCache;
 
 	public LogFactory(String logFramworkName) {
 		this.logFramworkName = logFramworkName;
+		logCache = new ConcurrentHashMap<>();
 	}
-
+	
 	/**
 	 * 获得日志对象
 	 * 
 	 * @param name 日志对象名
 	 * @return 日志对象
 	 */
-	public abstract Log getLog(String name);
+	public Log getLog(String name){
+		Log log = logCache.get(name);
+		if(null == log){
+			log = createLog(name);
+			logCache.put(name, log);
+		}
+		return log;
+	}
 
 	/**
 	 * 获得日志对象
@@ -44,7 +56,30 @@ public abstract class LogFactory {
 	 * @param clazz 日志对应类
 	 * @return 日志对象
 	 */
-	public abstract Log getLog(Class<?> clazz);
+	public Log getLog(Class<?> clazz){
+		Log log = logCache.get(clazz);
+		if(null == log){
+			log = createLog(clazz);
+			logCache.put(clazz, log);
+		}
+		return log;
+	}
+
+	/**
+	 * 创建日志对象
+	 * 
+	 * @param name 日志对象名
+	 * @return 日志对象
+	 */
+	public abstract Log createLog(String name);
+
+	/**
+	 * 创建日志对象
+	 * 
+	 * @param clazz 日志对应类
+	 * @return 日志对象
+	 */
+	public abstract Log createLog(Class<?> clazz);
 
 	/**
 	 * 检查日志实现是否存在<br>

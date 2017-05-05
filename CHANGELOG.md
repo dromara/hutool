@@ -3,6 +3,8 @@
 ## 3.0.6
 
 ### 新特性
+* ThreadUtil增加newExecutorByBlockingCoefficient方法（感谢：@【北京】仓山有井名为空）
+* 解决LogFactory中频繁创建Log对象造成的性能问题（issue#19@osc）
 
 ### Bug修复
 * 修复AbstractCache.onRemove回调方法在get和pruneCache时不被触发问题（issue#18@osc）

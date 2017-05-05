@@ -16,12 +16,12 @@ public class Log4jLogFactory extends LogFactory{
 	}
 	
 	@Override
-	public Log getLog(String name) {
+	public Log createLog(String name) {
 		return new Log4jLog(name);
 	}
 
 	@Override
-	public Log getLog(Class<?> clazz) {
+	public Log createLog(Class<?> clazz) {
 		return new Log4jLog(clazz);
 	}
 
