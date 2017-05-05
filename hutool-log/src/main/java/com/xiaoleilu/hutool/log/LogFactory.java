@@ -28,7 +28,7 @@ import com.xiaoleilu.hutool.log.dialect.tinylog.TinyLogFactory;
 public abstract class LogFactory {
 
 	private String logFramworkName;
-	protected Map<Object, Log> logCache;
+	private Map<Object, Log> logCache;
 
 	public LogFactory(String logFramworkName) {
 		this.logFramworkName = logFramworkName;
