@@ -129,7 +129,7 @@ public final class RandomUtil {
 		
 		final HashSet<T> result = new HashSet<T>(count);
 		int limit = collection.size();
-		while (result.size() <= count) {
+		while (result.size() < count) {
 			result.add(randomEle(source, limit));
 		}
 
