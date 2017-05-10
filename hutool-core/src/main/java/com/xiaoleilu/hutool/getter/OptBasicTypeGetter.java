@@ -133,6 +133,7 @@ public interface OptBasicTypeGetter<K> {
 	/**
 	 * 获得Enum类型的值
 	 * 
+	 * @param <E> 枚举类型
 	 * @param clazz Enum的Class
 	 * @param key KEY
 	 * @param defaultValue 默认值

@@ -6,11 +6,11 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.xiaoleilu.hutool.db.ds.DSFactory;
+import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.db.ds.pooled.PooledDataSource;
-import com.xiaoleilu.hutool.db.handler.EntityHandler;
 
 /**
  * 数据访问层模板<br>
@@ -44,7 +44,7 @@ public class DaoTemplate {
 	 * @param primaryKeyField 主键字段名
 	 */
 	public DaoTemplate(String tableName, String primaryKeyField) {
-		this(tableName, primaryKeyField, PooledDataSource.getDataSource());
+		this(tableName, primaryKeyField, DSFactory.get());
 	}
 	
 	public DaoTemplate(String tableName, DataSource ds) {

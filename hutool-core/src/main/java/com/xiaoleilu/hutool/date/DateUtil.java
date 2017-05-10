@@ -217,7 +217,7 @@ public final class DateUtil {
 	
 	/**
 	 * 获得指定日期的分钟数部分<br>
-	 * 例如：10:04:15.250 -> 4
+	 * 例如：10:04:15.250 =》 4
 	 * 
 	 * @param date 日期
 	 * @return 分钟数
@@ -1091,7 +1091,6 @@ public final class DateUtil {
 	 * 生日转为年龄，计算法定年龄
 	 * @param birthDay 生日，标准日期字符串
 	 * @return 年龄
-	 * @throws Exception
 	 */
 	public static int ageOfNow(String birthDay) {
 		return ageOfNow(parse(birthDay));
@@ -1101,7 +1100,6 @@ public final class DateUtil {
 	 * 生日转为年龄，计算法定年龄
 	 * @param birthDay 生日
 	 * @return 年龄
-	 * @throws Exception
 	 */
 	public static int ageOfNow(Date birthDay) {
 		return age(birthDay,date());
@@ -1112,7 +1110,6 @@ public final class DateUtil {
 	 * @param birthDay 生日
 	 * @param dateToCompare 需要对比的日期
 	 * @return 年龄
-	 * @throws Exception
 	 */
 	public static int age(Date birthDay, Date dateToCompare) {
 		Calendar cal = Calendar.getInstance();

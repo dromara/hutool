@@ -50,6 +50,7 @@ public class DateTime extends Date {
 	 * @see DatePattern
 	 * @param dateStr Date字符串
 	 * @param format 格式
+	 * @return {@link DateTime}
 	 */
 	public static DateTime of(String dateStr, String format){
 		return new DateTime(dateStr, format);
@@ -332,7 +333,7 @@ public class DateTime extends Date {
 
 	/**
 	 * 获得指定日期的分钟数部分<br>
-	 * 例如：10:04:15.250 -> 4
+	 * 例如：10:04:15.250 =》 4
 	 * 
 	 * @return 分钟数
 	 */

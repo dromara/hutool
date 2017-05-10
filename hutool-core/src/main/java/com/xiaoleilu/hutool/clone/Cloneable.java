@@ -4,7 +4,7 @@ package com.xiaoleilu.hutool.clone;
  * 克隆支持接口
  * @author Looly
  *
- * @param <T>
+ * @param <T> 实现克隆接口的类型
  */
 public interface Cloneable<T> extends java.lang.Cloneable{
 	

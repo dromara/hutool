@@ -344,7 +344,7 @@ public final class NumberUtil {
 	 * @param s String
 	 * @return 是否为整数
 	 */
-	public boolean isInteger(String s) {
+	public static boolean isInteger(String s) {
 		if ((s != null) && (s != ""))
 			return s.matches("^[0-9]*$");
 		else
@@ -356,7 +356,7 @@ public final class NumberUtil {
 	 * @param s String
 	 * @return 是否为{@link Double}类型
 	 */
-	public boolean isDouble(String s) {
+	public static boolean isDouble(String s) {
 		try {
 			Double.parseDouble(s);
 			if (s.contains(".")) return true;
@@ -645,7 +645,7 @@ public final class NumberUtil {
 	 * 
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 * @since 3.0.1
 	 */
 	public static int compare(char x, char y) {
@@ -659,7 +659,7 @@ public final class NumberUtil {
 	 * 
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 * @since 3.0.1
 	 */
 	public static int compare(double x, double y) {
@@ -673,7 +673,7 @@ public final class NumberUtil {
 	 * 
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 * @since 3.0.1
 	 */
 	public static int compare(int x, int y) {
@@ -694,7 +694,7 @@ public final class NumberUtil {
 	 * 
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 * @since 3.0.1
 	 */
 	public static int compare(long x, long y) {
@@ -715,7 +715,7 @@ public final class NumberUtil {
 	 * 
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 * @since 3.0.1
 	 */
 	public static int compare(short x, short y) {
@@ -736,7 +736,7 @@ public final class NumberUtil {
 	 * 
 	 * @param x 第一个值
 	 * @param y 第二个值
-	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 * @since 3.0.1
 	 */
 	public static int compare(byte x, byte y) {

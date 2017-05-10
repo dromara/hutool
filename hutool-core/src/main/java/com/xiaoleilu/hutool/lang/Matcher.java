@@ -4,7 +4,7 @@ package com.xiaoleilu.hutool.lang;
  * 匹配接口
  * @author Looly
  *
- * @param <T>
+ * @param <T> 匹配的对象类型
  */
 public interface Matcher<T>{
 	/**

@@ -253,8 +253,6 @@ public final class StrUtil {
 	 * trim(&quot;    abc    &quot;) = &quot;abc&quot;
 	 * </pre>
 	 * 
-	 * </p>
-	 * 
 	 * @param str 要处理的字符串
 	 * 
 	 * @return 除去空白的字符串，如果原字串为<code>null</code>，则返回<code>null</code>
@@ -296,8 +294,6 @@ public final class StrUtil {
 	 * trimStart(&quot; abc &quot;)      = &quot;abc &quot;
 	 * </pre>
 	 * 
-	 * </p>
-	 * 
 	 * @param str 要处理的字符串
 	 * 
 	 * @return 除去空白的字符串，如果原字串为<code>null</code>或结果字符串为<code>""</code>，则返回 <code>null</code>
@@ -320,8 +316,6 @@ public final class StrUtil {
 	 * trimEnd(&quot;abc  &quot;)    = &quot;abc&quot;
 	 * trimEnd(&quot; abc &quot;)    = &quot; abc&quot;
 	 * </pre>
-	 * 
-	 * </p>
 	 * 
 	 * @param str 要处理的字符串
 	 * 
@@ -439,7 +433,7 @@ public final class StrUtil {
 	}
 
 	/**
-	 * 获得set或get方法对应的标准属性名<br/>
+	 * 获得set或get方法对应的标准属性名<br>
 	 * 例如：setName 返回 name
 	 * 
 	 * @param getOrSetMethodName
@@ -453,7 +447,7 @@ public final class StrUtil {
 	}
 
 	/**
-	 * 生成set方法名<br/>
+	 * 生成set方法名<br>
 	 * 例如：name 返回 setName
 	 * 
 	 * @param fieldName 属性名
@@ -475,7 +469,7 @@ public final class StrUtil {
 	
 	/**
 	 * 移除字符串中所有给定字符串<br>
-	 * 例：removeAll("aa-bb-cc-dd", "-")  ->  aabbccdd
+	 * 例：removeAll("aa-bb-cc-dd", "-")  =》  aabbccdd
 	 * @param str 字符串
 	 * @param strToRemove 被移除的字符串
 	 * @return 移除后的字符串
@@ -485,8 +479,8 @@ public final class StrUtil {
 	}
 
 	/**
-	 * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br/>
-	 * 例如：str=setName, preLength=3 -> return name
+	 * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br>
+	 * 例如：str=setName, preLength=3 =》 return name
 	 * 
 	 * @param str 被处理的字符串
 	 * @param preLength 去掉的长度
@@ -508,8 +502,8 @@ public final class StrUtil {
 	}
 
 	/**
-	 * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br/>
-	 * 例如：str=setName, prefix=set -> return name
+	 * 去掉首部指定长度的字符串并将剩余字符串首字母小写<br>
+	 * 例如：str=setName, prefix=set =》 return name
 	 * 
 	 * @param str 被处理的字符串
 	 * @param prefix 前缀
@@ -520,7 +514,7 @@ public final class StrUtil {
 	}
 
 	/**
-	 * 原字符串首字母大写并在其首部添加指定字符串 例如：str=name, preString=get -> return getName
+	 * 原字符串首字母大写并在其首部添加指定字符串 例如：str=name, preString=get =》 return getName
 	 * 
 	 * @param str 被处理的字符串
 	 * @param preString 添加的首部
@@ -715,8 +709,8 @@ public final class StrUtil {
 
 	/**
 	 * 切分字符串<br>
-	 * a#b#c -> [a,b,c] <br>
-	 * a##b#c -> [a,"",b,c]
+	 * a#b#c =》 [a,b,c] <br>
+	 * a##b#c =》 [a,"",b,c]
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
@@ -851,8 +845,8 @@ public final class StrUtil {
 	 * 如果from和to位置一样，返回 "" <br>
 	 * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
 	 * 如果经过修正的index中from大于to，则互换from和to example: <br>
-	 * abcdefgh 2 3 -> c <br>
-	 * abcdefgh 2 -3 -> cde <br>
+	 * abcdefgh 2 3 =》 c <br>
+	 * abcdefgh 2 -3 =》 cde <br>
 	 * 
 	 * @param string String
 	 * @param fromIndex 开始的index（包括）
@@ -1051,9 +1045,9 @@ public final class StrUtil {
 	 * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
 	 * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
 	 * 例：<br>
-	 * 通常使用：format("this is {} for {}", "a", "b") -> this is a for b<br>
-	 * 转义{}： format("this is \\{} for {}", "a", "b") -> this is \{} for a<br>
-	 * 转义\： format("this is \\\\{} for {}", "a", "b") -> this is \a for b<br>
+	 * 通常使用：format("this is {} for {}", "a", "b") =》 this is a for b<br>
+	 * 转义{}： format("this is \\{} for {}", "a", "b") =》 this is \{} for a<br>
+	 * 转义\： format("this is \\\\{} for {}", "a", "b") =》 this is \a for b<br>
 	 * 
 	 * @param template 文本模板，被替换的部分用 {} 表示
 	 * @param params 参数值
@@ -1069,7 +1063,7 @@ public final class StrUtil {
 	/**
 	 * 有序的格式化文本，使用{number}做为占位符<br>
 	 * 例：<br>
-	 * 通常使用：format("this is {0} for {1}", "a", "b") -> this is a for b<br>
+	 * 通常使用：format("this is {0} for {1}", "a", "b") =》 this is a for b<br>
 	 * 
 	 * @param pattern 文本格式
 	 * @param arguments 参数
@@ -1081,7 +1075,7 @@ public final class StrUtil {
 
 	/**
 	 * 格式化文本，使用 {varName} 占位<br>
-	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ----> aValue and bValue
+	 * map = {a: "aValue", b: "bValue"} format("{a} and {b}", map) ---=》 aValue and bValue
 	 * 
 	 * @param template 文本模板，被替换的部分用 {key} 表示
 	 * @param map 参数值对
@@ -1315,8 +1309,8 @@ public final class StrUtil {
 	}
 
 	/**
-	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br>
-	 * 例如：HelloWorld->hello_world
+	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
+	 * 例如：HelloWorld=》hello_world
 	 *
 	 * @param camelCaseStr 转换前的驼峰式命名的字符串
 	 * @return 转换后下划线大写方式命名的字符串
@@ -1350,8 +1344,8 @@ public final class StrUtil {
 	}
 
 	/**
-	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br>
-	 * 例如：hello_world->HelloWorld
+	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。<br>
+	 * 例如：hello_world=》HelloWorld
 	 *
 	 * @param name 转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串

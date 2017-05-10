@@ -38,7 +38,7 @@ public class SyncFinisher{
 	
 	/**
 	 * 等待所有Worker工作结束，否则阻塞
-	 * @throws InterruptedException
+	 * @throws InterruptedException 用户中断
 	 */
 	public void await() throws InterruptedException {
 		if(countDownLatch == null) {

@@ -44,6 +44,7 @@ public class FileWrapper {
 	/**
 	 * 设置文件
 	 * @param file 文件
+	 * @return 自身
 	 */
 	public FileWrapper setFile(File file) {
 		this.file = file;
@@ -61,6 +62,7 @@ public class FileWrapper {
 	/**
 	 * 设置字符集编码
 	 * @param charset 编码
+	 * @return 自身
 	 */
 	public FileWrapper setCharset(Charset charset) {
 		this.charset = charset;

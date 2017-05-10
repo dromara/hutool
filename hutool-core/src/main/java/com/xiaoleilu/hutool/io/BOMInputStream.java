@@ -73,6 +73,7 @@ public class BOMInputStream extends InputStream {
 	/**
 	 * Read-ahead four bytes and check for BOM marks. <br>
 	 * Extra bytes are unread back to the stream, only BOM bytes are skipped.
+	 * @throws IOException 读取引起的异常
 	 */
 	protected void init() throws IOException {
 		if (isInited) return;

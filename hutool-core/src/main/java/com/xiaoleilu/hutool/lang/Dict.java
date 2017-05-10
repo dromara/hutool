@@ -33,7 +33,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	
 	/**
 	 * 将PO对象转为Dict
-	 * @param <T>
+	 * @param <T> Bean类型
 	 * @param bean Bean对象
 	 * @return Vo
 	 */
@@ -49,7 +49,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	
 	/**
 	 * 转换为Bean对象
-	 * @param <T>
+	 * @param <T> Bean类型
 	 * @param bean Bean
 	 * @return Bean
 	 */
@@ -59,7 +59,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	
 	/**
 	 * 转换为Bean对象
-	 * @param <T>
+	 * @param <T> Bean类型
 	 * @param bean Bean
 	 * @param isToCamelCase 是否转换为驼峰模式
 	 * @return Bean
@@ -71,6 +71,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	
 	/**
 	 * 填充Value Object对象
+	 * @param <T> Bean类型
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
 	 */
@@ -80,6 +81,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	
 	/**
 	 * 填充Value Object对象，忽略大小写
+	 * @param <T> Bean类型
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
 	 */
@@ -90,7 +92,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	/**
 	 * 将值对象转换为Dict<br>
 	 * 类名会被当作表名，小写第一个字母
-	 * @param <T>
+	 * @param <T> Bean类型
 	 * @param bean 值对象
 	 * @return 自己
 	 */
@@ -103,7 +105,9 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 * 与给定实体对比并去除相同的部分<br>
 	 * 此方法用于在更新操作时避免所有字段被更新，跳过不需要更新的字段
 	 * version from 2.0.0
-	 * @param dict
+	 * 
+	 * @param <T> 字典对象类型
+	 * @param dict 字典对象
 	 * @param withoutNames 不需要去除的字段名
 	 */
 	public <T extends Dict> void removeEqual(T dict, String... withoutNames) {
@@ -155,6 +159,8 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	
 	/**
 	 * 获得特定类型值
+	 * 
+	 * @param <T> 值类型
 	 * @param attr 字段名
 	 * @param defaultValue 默认值
 	 * @return 字段值

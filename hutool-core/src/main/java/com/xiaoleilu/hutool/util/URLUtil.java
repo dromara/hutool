@@ -167,12 +167,12 @@ public final class URLUtil {
 	
 	/**
 	 * 获得path部分<br>
-	 * URI -> http://www.aaa.bbb/search?scope=ccc&q=ddd
-	 * PATH -> /search
+	 * URI =》 "http://www.aaa.bbb/search?scope=ccc&q=ddd"
+	 * PATH =》 "/search"
 	 * 
 	 * @param uriStr URI路径
 	 * @return path
-	 * @exception UtilException URISyntaxException
+	 * @exception UtilException 包装URISyntaxException
 	 */
 	public static String getPath(String uriStr){
 		URI uri = null;
@@ -188,7 +188,7 @@ public final class URLUtil {
 	 * 转URL为URI
 	 * @param url URL
 	 * @return URI
-	 * @throws URISyntaxException
+	 * @exception UtilException 包装URISyntaxException
 	 */
 	public static URI toURI(URL url) {
 		return toURI(url.toString());
@@ -198,7 +198,7 @@ public final class URLUtil {
 	 * 转字符串为URI
 	 * @param location 字符串路径
 	 * @return URI
-	 * @throws URISyntaxException
+	 * @exception UtilException 包装URISyntaxException
 	 */
 	public static URI toURI(String location) {
 		try {

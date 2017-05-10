@@ -203,9 +203,9 @@ public class WatchMonitor extends Thread implements Closeable{
 	
 	/**
 	 * 初始化
-	 * @throws IOException
+	 * @throws WatchException 监听异常，IO异常时抛出此异常
 	 */
-	public void init(){
+	public void init() throws WatchException{
 		if(path.toFile().isFile()){
 			this.filePath = this.path;
 			this.path = this.filePath.getParent();
@@ -214,7 +214,7 @@ public class WatchMonitor extends Thread implements Closeable{
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
 			path.register(watchService, ArrayUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new WatchException(e);
 		}
 		
@@ -238,7 +238,6 @@ public class WatchMonitor extends Thread implements Closeable{
 	
 	/**
 	 * 开始监听事件，阻塞当前进程
-	 * @throws InterruptedException
 	 */
 	public void watch(){
 		watch(this.watcher);
@@ -247,9 +246,9 @@ public class WatchMonitor extends Thread implements Closeable{
 	/**
 	 * 开始监听事件，阻塞当前进程
 	 * @param watcher 监听
-	 * @throws InterruptedException
+	 * @throws WatchException 监听异常，如果监听关闭抛出此异常
 	 */
-	public void watch(Watcher watcher){
+	public void watch(Watcher watcher) throws WatchException{
 		if(isClosed){
 			throw new WatchException("Watch Monitor is closed !");
 		}

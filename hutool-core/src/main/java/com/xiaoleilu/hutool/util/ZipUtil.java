@@ -75,7 +75,6 @@ public final class ZipUtil {
 	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
 	 * @throws IOException
-	 * @throws Exception
 	 */
 	public static File zip(String srcPath, String zipPath, boolean withSrcDir) throws IOException {
 		File srcFile = FileUtil.file(srcPath);

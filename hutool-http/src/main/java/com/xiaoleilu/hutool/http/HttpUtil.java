@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.StreamProgress;
 import com.xiaoleilu.hutool.log.StaticLog;
@@ -298,7 +299,7 @@ public final class HttpUtil {
 		try {
 			out = FileUtil.getOutputStream(destFile);
 			return download(url, out, true, streamProgress);
-		}catch(IOException e){
+		}catch(IORuntimeException e){
 			throw new HttpException(e);
 		}
 	}

@@ -106,7 +106,7 @@ public class FileReader extends FileWrapper {
 	 * 文件的长度不能超过 {@link Integer#MAX_VALUE}
 	 * 
 	 * @return 字节码
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
 	public byte[] readBytes() throws IORuntimeException {
 		long len = file.length();
@@ -136,7 +136,7 @@ public class FileReader extends FileWrapper {
 	 * 读取文件内容
 	 * 
 	 * @return 内容
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public String readString() throws IORuntimeException{
 		return new String(readBytes(), this.charset);
@@ -145,9 +145,10 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 从文件中读取每一行数据
 	 * 
+	 * @param <T> 集合类型
 	 * @param collection 集合
 	 * @return 文件中的每行内容的集合
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public <T extends Collection<String>> T readLines(T collection) throws IORuntimeException {
 		BufferedReader reader = null;
@@ -171,7 +172,7 @@ public class FileReader extends FileWrapper {
 	 * 从文件中读取每一行数据
 	 * 
 	 * @return 文件中的每行内容的集合
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public List<String> readLines() throws IORuntimeException {
 		return readLines(new ArrayList<String>());
@@ -180,9 +181,10 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
 	 * 
+	 * @param <T> 读取的结果对象类型
 	 * @param readerHandler Reader处理类
 	 * @return 从文件中read出的数据
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public <T> T read(ReaderHandler<T> readerHandler) throws IORuntimeException {
 		BufferedReader reader = null;
@@ -202,7 +204,7 @@ public class FileReader extends FileWrapper {
 	 * 获得一个文件读取器
 	 * 
 	 * @return BufferedReader对象
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public BufferedReader getReader() throws IORuntimeException {
 		return IoUtil.getReader(getInputStream(), this.charset);
@@ -212,7 +214,7 @@ public class FileReader extends FileWrapper {
 	 * 获得输入流
 	 * 
 	 * @return 输入流
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public BufferedInputStream getInputStream() throws IORuntimeException {
 		try {
@@ -227,7 +229,7 @@ public class FileReader extends FileWrapper {
 	 * 
 	 * @param out 流
 	 * @return File
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public File writeToStream(OutputStream out) throws IORuntimeException {
 		FileInputStream in = null;
@@ -248,7 +250,7 @@ public class FileReader extends FileWrapper {
 	 * 
 	 * @author Luxiaolei
 	 *
-	 * @param <T>
+	 * @param <T> Reader处理返回结果类型
 	 */
 	public interface ReaderHandler<T> {
 		public T handle(BufferedReader reader) throws IOException;
@@ -258,7 +260,7 @@ public class FileReader extends FileWrapper {
 	/**
 	 * 检查文件
 	 * 
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
 	private void checkFile() throws IORuntimeException {
 		if (false == file.exists()) {

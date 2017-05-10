@@ -40,6 +40,7 @@ public class UrlResource {
 	
 	/**
 	 * 获得解析后的{@link URL}
+	 * @return 解析后的{@link URL}
 	 */
 	public final URL getUrl(){
 		return this.url;

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -43,8 +42,8 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	private URL groupedSetUrl;
 	
 	/**
-	 * 基本构造<br/>
-	 * 需自定义初始化配置文件<br/>
+	 * 基本构造<br>
+	 * 需自定义初始化配置文件
 	 * 
 	 * @param charset 字符集
 	 */
@@ -183,7 +182,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 		super.clear();
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(settingStream, charset));
+			reader = IoUtil.getReader(settingStream, charset);
 			// 分组
 			String group = null;
 			LinkedHashSet<String> valueSet = null;

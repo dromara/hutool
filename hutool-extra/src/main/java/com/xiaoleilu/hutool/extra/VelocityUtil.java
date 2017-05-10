@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.extra;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -18,6 +17,7 @@ import org.apache.velocity.app.VelocityEngine;
 import com.xiaoleilu.hutool.exceptions.NotInitedException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -166,7 +166,7 @@ public class VelocityUtil {
 		try {
 			writer = FileUtil.getPrintWriter(destPath, Velocity.getProperty(Velocity.OUTPUT_ENCODING).toString(), false);
 			merge(template, context, writer);
-		} catch (IOException e) {
+		} catch (IORuntimeException e) {
 			throw new UtilException(StrUtil.format("Write Velocity content to [{}] error!", destPath), e);
 		} finally {
 			IoUtil.close(writer);

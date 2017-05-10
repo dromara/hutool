@@ -282,7 +282,7 @@ public final class Convert {
 	 * @param value 被转换的值
 	 * @return 结果
 	 */
-	public static <T> Float[] toFloatArray(Object value) {
+	public static Float[] toFloatArray(Object value) {
 		return convert(Float[].class, value);
 	}
 
@@ -375,6 +375,7 @@ public final class Convert {
 	 * 转换为Enum对象<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
 	 * 
+	 * @param <E> 枚举类型
 	 * @param clazz Enum的Class
 	 * @param value 值
 	 * @param defaultValue 默认值
@@ -404,6 +405,7 @@ public final class Convert {
 	 * 转换为Enum对象<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<code>null</code><br>
 	 * 
+	 * @param <E> 枚举类型
 	 * @param clazz Enum的Class
 	 * @param value 值
 	 * @return Enum
@@ -415,6 +417,7 @@ public final class Convert {
 	/**
 	 * 转换值为指定类型
 	 * 
+	 * @param <T> 目标类型
 	 * @param type 类型
 	 * @param value 值
 	 * @return 转换后的值
@@ -426,6 +429,7 @@ public final class Convert {
 	/**
 	 * 转换值为指定类型
 	 * 
+	 * @param <T> 目标类型
 	 * @param type 类型
 	 * @param value 值
 	 * @param defaultValue 默认值
@@ -599,7 +603,7 @@ public final class Convert {
 	}
 
 	/**
-	 * 给定字符串转换字符编码<br/>
+	 * 给定字符串转换字符编码<br>
 	 * 如果参数为空，则返回原字符串，不报错。
 	 * 
 	 * @param str 被转码的字符串

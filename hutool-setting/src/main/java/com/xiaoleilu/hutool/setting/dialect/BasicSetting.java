@@ -39,7 +39,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 
  */
 public class BasicSetting extends AbsSetting implements Map<Object, Object>{
-	
+	private static final long serialVersionUID = 3618305164959883393L;
+
 	/** 默认字符集 */
 	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 

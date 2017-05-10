@@ -143,14 +143,12 @@ public class HMac {
 	 * @return 摘要bytes
 	 * @throws CryptoException Cause by IOException
 	 */
-	public byte[] digest(File file) {
+	public byte[] digest(File file) throws CryptoException{
 		InputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
 			return digest(in);
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}finally{
+		} finally{
 			IoUtil.close(in);
 		}
 	}

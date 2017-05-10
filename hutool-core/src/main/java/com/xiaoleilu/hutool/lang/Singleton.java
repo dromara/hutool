@@ -19,7 +19,10 @@ public final class Singleton {
 	/**
 	 * 获得指定类的单例对象<br>
 	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
+	 * 
+	 * @param <T> 单例对象类型
 	 * @param clazz 类
+	 * @param params 构造方法参数
 	 * @return 单例对象
 	 */
 	@SuppressWarnings("unchecked")
@@ -42,6 +45,8 @@ public final class Singleton {
 	/**
 	 * 获得指定类的单例对象<br>
 	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
+	 * 
+	 * @param <T> 单例对象类型
 	 * @param className 类名
 	 * @param params 构造参数
 	 * @return 单例对象

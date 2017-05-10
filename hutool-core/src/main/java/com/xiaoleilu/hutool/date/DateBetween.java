@@ -29,7 +29,7 @@ public class DateBetween {
 	}
 	
 	/**
-	 * 判断两个日期相差的时长<br/>
+	 * 判断两个日期相差的时长<br>
 	 * 返回 给定单位的时长差
 	 * 
 	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等

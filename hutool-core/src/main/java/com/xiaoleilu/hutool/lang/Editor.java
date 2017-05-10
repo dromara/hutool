@@ -7,7 +7,7 @@ package com.xiaoleilu.hutool.lang;
  * 2、对对象做修改
  * @author Looly
  *
- * @param <T>
+ * @param <T> 被编辑对象类型
  */
 public interface Editor<T> {
 	/**

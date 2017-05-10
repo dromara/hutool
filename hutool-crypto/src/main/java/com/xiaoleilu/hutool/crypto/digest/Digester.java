@@ -93,14 +93,12 @@ public class Digester {
 	 * @return 摘要bytes
 	 * @throws CryptoException Cause by IOException
 	 */
-	public byte[] digest(File file) {
+	public byte[] digest(File file) throws CryptoException{
 		InputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
 			return digest(in);
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}finally{
+		} finally{
 			IoUtil.close(in);
 		}
 	}
@@ -169,8 +167,9 @@ public class Digester {
 	 * @param data {@link InputStream} 数据流
 	 * @param bufferLength 缓存长度，不足1使用 {@link IoUtil#DEFAULT_BUFFER_SIZE} 做为默认值
 	 * @return 摘要bytes
+	 * @throws CryptoException IO异常
 	 */
-	public byte[] digest(InputStream data, int bufferLength) {
+	public byte[] digest(InputStream data, int bufferLength) throws CryptoException{
 		if (bufferLength < 1) {
 			bufferLength = IoUtil.DEFAULT_BUFFER_SIZE;
 		}

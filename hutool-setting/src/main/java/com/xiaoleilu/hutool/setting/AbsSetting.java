@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.setting;
 
+import java.io.Serializable;
+
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 import com.xiaoleilu.hutool.log.Log;
@@ -15,7 +17,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String> {
+public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String> implements Serializable{
+	private static final long serialVersionUID = 6200156302595905863L;
 	private final static Log log = StaticLog.get();
 
 	/** 数组类型值默认分隔符 */

@@ -109,6 +109,7 @@ public interface BasicTypeGetter<K> {
 	/**
 	 * 获得Enum类型的值
 	 * 
+	 * @param <E> 枚举类型
 	 * @param clazz Enum的Class
 	 * @param key KEY
 	 * @return Enum类型的值，无则返回Null

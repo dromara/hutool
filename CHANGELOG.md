@@ -6,11 +6,14 @@
 * ThreadUtil增加newExecutorByBlockingCoefficient方法（感谢：@【北京】仓山有井名为空）
 * 解决LogFactory中频繁创建Log对象造成的性能问题（issue#19@osc）
 * 解决LFUCache中负载因子导致的扩容rehash问题（issue#18@osc）
+* FileUtil中IOException全部包装为IORuntimeException
+* 针对JDK8文档注释修复
 
 ### Bug修复
 * 修复AbstractCache.onRemove回调方法在get和pruneCache时不被触发问题（issue#18@osc）
 * 技术债务修复：空指针等问题修复
 * 修复RandomUtil.randomEleSet方法获取随机个数出错问题。（感谢@【北京】Sych）
+* NumberUtil的isInteger和isDouble方法非静态问题修复（感谢@【广州】流行の云）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -13,7 +13,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 数组转换器，包括原始类型数组
  * @author Looly
  *
- * @param <T>
+ * @param <T> 转换的目标数组的元素类型
  */
 public class ArrayConverter<T> extends AbstractConverter<T[]>{
 	

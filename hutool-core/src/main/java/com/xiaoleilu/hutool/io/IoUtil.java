@@ -56,7 +56,7 @@ public final class IoUtil {
 	 * @param reader Reader
 	 * @param writer Writer
 	 * @return 拷贝的字节数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(Reader reader, Writer writer) throws IOException {
 		return copy(reader, writer, DEFAULT_BUFFER_SIZE);
@@ -69,7 +69,7 @@ public final class IoUtil {
 	 * @param writer Writer
 	 * @param bufferSize 缓存大小
 	 * @return 传输的byte数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(Reader reader, Writer writer, int bufferSize) throws IOException {
 		return copy(reader, writer, bufferSize, null);
@@ -81,8 +81,9 @@ public final class IoUtil {
 	 * @param reader Reader
 	 * @param writer Writer
 	 * @param bufferSize 缓存大小
+	 * @param streamProgress 进度处理器
 	 * @return 传输的byte数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(Reader reader, Writer writer, int bufferSize, StreamProgress streamProgress) throws IOException {
 		char[] buffer = new char[bufferSize];
@@ -111,7 +112,7 @@ public final class IoUtil {
 	 * @param in 输入流
 	 * @param out 输出流
 	 * @return 传输的byte数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(InputStream in, OutputStream out) throws IOException {
 		return copy(in, out, DEFAULT_BUFFER_SIZE);
@@ -124,7 +125,7 @@ public final class IoUtil {
 	 * @param out 输出流
 	 * @param bufferSize 缓存大小
 	 * @return 传输的byte数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(InputStream in, OutputStream out, int bufferSize) throws IOException {
 		return copy(in, out, bufferSize, null);
@@ -138,7 +139,7 @@ public final class IoUtil {
 	 * @param bufferSize 缓存大小
 	 * @param streamProgress 进度条
 	 * @return 传输的byte数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IOException {
 		if (null == in) {
@@ -179,7 +180,7 @@ public final class IoUtil {
 	 * @param bufferSize 缓存大小
 	 * @param streamProgress 进度条
 	 * @return 传输的byte数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copyByNIO(InputStream in, OutputStream out, int bufferSize, StreamProgress streamProgress) throws IOException {
 		return copy(Channels.newChannel(in), Channels.newChannel(out), bufferSize, streamProgress);
@@ -191,7 +192,7 @@ public final class IoUtil {
 	 * @param in 输入
 	 * @param out 输出
 	 * @return 拷贝的字节数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(FileInputStream in, FileOutputStream out) throws IOException {
 		if (null == in) {
@@ -212,8 +213,10 @@ public final class IoUtil {
 	 * 
 	 * @param in {@link ReadableByteChannel}
 	 * @param out {@link WritableByteChannel}
+	 * @param bufferSize 缓冲大小，如果小于等于0，使用默认
+	 * @param streamProgress {@link StreamProgress}进度处理器
 	 * @return 拷贝的字节数
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, StreamProgress streamProgress) throws IOException {
 		if (null == in) {
@@ -223,7 +226,7 @@ public final class IoUtil {
 			throw new NullPointerException("Out is null!");
 		}
 
-		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
+		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize <= 0 ? DEFAULT_BUFFER_SIZE : bufferSize);
 		long size = 0;
 		if (null != streamProgress) {
 			streamProgress.start();
@@ -284,7 +287,6 @@ public final class IoUtil {
 	 * @param out 输入流
 	 * @param charsetName 字符集
 	 * @return OutputStreamWriter对象
-	 * @throws IOException
 	 */
 	public static OutputStreamWriter getWriter(OutputStream out, String charsetName){
 		return getWriter(out, Charset.forName(charsetName));
@@ -296,7 +298,6 @@ public final class IoUtil {
 	 * @param out 输入流
 	 * @param charset 字符集
 	 * @return OutputStreamWriter对象
-	 * @throws IOException
 	 */
 	public static OutputStreamWriter getWriter(OutputStream out, Charset charset){
 		if(null == out){
@@ -318,7 +319,7 @@ public final class IoUtil {
 	 * @param in 输入流
 	 * @param charsetName 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String read(InputStream in, String charsetName) throws IOException {
 		FastByteArrayOutputStream out = read(in);
@@ -331,7 +332,7 @@ public final class IoUtil {
 	 * @param in 输入流
 	 * @param charset 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String read(InputStream in, Charset charset) throws IOException {
 		FastByteArrayOutputStream out = read(in);
@@ -343,7 +344,7 @@ public final class IoUtil {
 	 * 
 	 * @param in 输入流
 	 * @return 输出流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static FastByteArrayOutputStream read(InputStream in) throws IOException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
@@ -356,7 +357,7 @@ public final class IoUtil {
 	 * 
 	 * @param reader Reader
 	 * @return String
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String read(Reader reader) throws IOException {
 		final StringBuilder builder = StrUtil.builder();
@@ -373,7 +374,7 @@ public final class IoUtil {
 	 * @param fileChannel 文件管道
 	 * @param charsetName 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String read(FileChannel fileChannel, String charsetName) throws IOException {
 		return read(fileChannel, CharsetUtil.charset(charsetName));
@@ -385,7 +386,7 @@ public final class IoUtil {
 	 * @param fileChannel 文件管道
 	 * @param charset 字符集
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String read(FileChannel fileChannel, Charset charset) throws IOException {
 		final MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size()).load();
@@ -397,7 +398,7 @@ public final class IoUtil {
 	 * 
 	 * @param in {@link InputStream}
 	 * @return bytes
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static byte[] readBytes(InputStream in) throws IOException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
@@ -411,7 +412,7 @@ public final class IoUtil {
 	 * @param in {@link InputStream}
 	 * @param length 长度
 	 * @return bytes
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static byte[] readBytes(InputStream in, int length) throws IOException {
 		byte[] b = new byte[length];
@@ -432,7 +433,7 @@ public final class IoUtil {
 	 * @param length 长度
 	 * @param toLowerCase true 传换成小写格式 ， false 传换成大写格式
 	 * @return 16进制字符串
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String readHex(InputStream in, int length, boolean toLowerCase) throws IOException {
 		return HexUtil.encodeHexStr(readBytes(in, length), toLowerCase);
@@ -443,7 +444,7 @@ public final class IoUtil {
 	 * 
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String readHex28Upper(InputStream in) throws IOException {
 		return readHex(in, 28, false);
@@ -454,7 +455,7 @@ public final class IoUtil {
 	 * 
 	 * @param in {@link InputStream}
 	 * @return 16进制字符串
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static String readHex28Lower(InputStream in) throws IOException {
 		return readHex(in, 28, false);
@@ -463,9 +464,10 @@ public final class IoUtil {
 	/**
 	 * 从流中读取内容，读到输出流中
 	 * 
+	 * @param <T> 读取对象的类型
 	 * @param in 输入流
 	 * @return 输出流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static <T> T readObj(InputStream in) throws IOException {
 		if (in == null) {
@@ -485,11 +487,12 @@ public final class IoUtil {
 	/**
 	 * 从流中读取内容
 	 * 
+	 * @param <T> 集合类型
 	 * @param in 输入流
 	 * @param charsetName 字符集
 	 * @param collection 返回集合
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(InputStream in, String charsetName, T collection) throws IOException {
 		return readLines(in, CharsetUtil.charset(charsetName), collection);
@@ -498,11 +501,12 @@ public final class IoUtil {
 	/**
 	 * 从流中读取内容
 	 * 
+	 * @param <T> 集合类型
 	 * @param in 输入流
 	 * @param charset 字符集
 	 * @param collection 返回集合
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(InputStream in, Charset charset, T collection) throws IOException {
 		// 从返回的内容中读取所需内容
@@ -561,7 +565,7 @@ public final class IoUtil {
 	 * @param out 输出流
 	 * @param isCloseOut 写入完毕是否关闭输出流
 	 * @param content 写入的内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static void write(OutputStream out, boolean isCloseOut, byte[] content) throws IOException {
 		try {
@@ -580,7 +584,7 @@ public final class IoUtil {
 	 * @param charset 写出的内容的字符集
 	 * @param isCloseOut 写入完毕是否关闭输出流
 	 * @param contents 写入的内容，调用toString()方法，不包括不会自动换行
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static void write(OutputStream out, String charset, boolean isCloseOut, Object... contents) throws IOException {
 		OutputStreamWriter osw = null;
@@ -608,7 +612,7 @@ public final class IoUtil {
 	 * @param charset 写出的内容的字符集
 	 * @param isCloseOut 写入完毕是否关闭输出流
 	 * @param contents 写入的内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static void writeObjects(OutputStream out, String charset, boolean isCloseOut, Serializable... contents) throws IOException {
 		ObjectOutputStream osw = null;

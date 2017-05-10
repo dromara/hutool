@@ -58,7 +58,7 @@ public final class Validator {
 	 * @return 是否为空
 	 * @return 是否为空
 	 */
-	public static <T> boolean isEmpty(T value) {
+	public static boolean isEmpty(Object value) {
 		return (null == value || (value instanceof String && StrUtil.isEmpty((String) value)));
 	}
 	
@@ -70,7 +70,7 @@ public final class Validator {
 	 * @return 是否为空
 	 * @return 是否为空
 	 */
-	public static <T> boolean isNotEmpty(T value) {
+	public static boolean isNotEmpty(Object value) {
 		return false == isEmpty(value);
 	}
 	
@@ -80,9 +80,9 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
-	public static <T> void validateNotEmpty(T value, String errorMsg) throws ValidateException {
+	public static void validateNotEmpty(Object value, String errorMsg) throws ValidateException {
 		if (isEmpty(value)) {
 			throw new ValidateException(errorMsg);
 		}
@@ -106,9 +106,9 @@ public final class Validator {
 	 * @param t1 对象1
 	 * @param t2 对象2
 	 * @param errorMsg 错误信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
-	public static <T> void validateEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+	public static void validateEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
 		if (false == equal(t1, t2)) {
 			throw new ValidateException(errorMsg);
 		}
@@ -120,9 +120,9 @@ public final class Validator {
 	 * @param t1 对象1
 	 * @param t2 对象2
 	 * @param errorMsg 错误信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
-	public static <T> void validateNotEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+	public static void validateNotEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
 		if (equal(t1, t2)) {
 			throw new ValidateException(errorMsg);
 		}
@@ -136,9 +136,9 @@ public final class Validator {
 	 * @param t1 对象1
 	 * @param t2 对象2
 	 * @param errorMsg 错误信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
-	public static <T> void validateNotEmptyAndEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+	public static void validateNotEmptyAndEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
 		validateNotEmpty(t1, errorMsg);
 		validateEqual(t1, t2, errorMsg);
 	}
@@ -151,9 +151,9 @@ public final class Validator {
 	 * @param t1 对象1
 	 * @param t2 对象2
 	 * @param errorMsg 错误信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
-	public static <T> void validateNotEmptyAndNotEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
+	public static void validateNotEmptyAndNotEqual(Object t1, Object t2, String errorMsg) throws ValidateException {
 		validateNotEmpty(t1, errorMsg);
 		validateNotEqual(t1, t2, errorMsg);
 	}
@@ -176,7 +176,7 @@ public final class Validator {
 	 * @param regex 正则
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateMatchRegex(String regex, String value, String errorMsg) throws ValidateException {
 		if (false == isMactchRegex(regex, value)) {
@@ -210,7 +210,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateGeneral(String value, String errorMsg) throws ValidateException {
 		if(false == isGeneral(value)){
@@ -244,7 +244,7 @@ public final class Validator {
 	 * @param min 最小长度，负数自动识别为0
 	 * @param max 最大长度，0或负数表示不限制最大长度
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateGeneral(String value, int min, int max, String errorMsg) throws ValidateException {
 		if(false == isGeneral(value, min, max)){
@@ -269,7 +269,7 @@ public final class Validator {
 	 * @param value 值
 	 * @param min 最小长度，负数自动识别为0
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateGeneral(String value, int min, String errorMsg) throws ValidateException {
 		validateGeneral(value, min, 0, errorMsg);
@@ -293,7 +293,7 @@ public final class Validator {
 	 * 
 	 * @param value 表单值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateNumbers(String value, String errorMsg) throws ValidateException {
 		if(false == isNumber(value)){
@@ -316,7 +316,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateMoney(String value, String errorMsg) throws ValidateException {
 		if(false == isMoney(value)){
@@ -339,7 +339,7 @@ public final class Validator {
 	 * 
 	 * @param value 表单值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateZipCode(String value, String errorMsg) throws ValidateException {
 		if(false == isZipCode(value)){
@@ -362,7 +362,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateEmail(String value, String errorMsg) throws ValidateException {
 		if(false == isEmail(value)){
@@ -385,7 +385,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateMobile(String value, String errorMsg) throws ValidateException {
 		if(false == isMobile(value)){
@@ -410,7 +410,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateCitizenIdNumber(String value, String errorMsg) throws ValidateException {
 		if(false == isCitizenId(value)){
@@ -485,7 +485,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateBirthday(String value, String errorMsg) throws ValidateException {
 		if(false == isBirthday(value)){
@@ -508,7 +508,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateIpv4(String value, String errorMsg) throws ValidateException {
 		if(false == isIpv4(value)){
@@ -536,7 +536,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateUrl(String value, String errorMsg) throws ValidateException {
 		if(false == isUrl(value)){
@@ -559,7 +559,7 @@ public final class Validator {
 	 * 
 	 * @param value 表单值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateChinese(String value, String errorMsg) throws ValidateException {
 		if(false == isChinese(value)){
@@ -582,7 +582,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateGeneralWithChinese(String value, String errorMsg) throws ValidateException {
 		if(false == isGeneralWithChinese(value)){
@@ -607,7 +607,7 @@ public final class Validator {
 	 * 
 	 * @param value 值
 	 * @param errorMsg 验证错误的信息
-	 * @throws ValidateException
+	 * @throws ValidateException 验证异常
 	 */
 	public static void validateUUID(String value, String errorMsg) throws ValidateException {
 		if(false == isUUID(value)){

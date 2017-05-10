@@ -104,7 +104,8 @@ public class FileWriter extends FileWrapper{
 	 * 
 	 * @param content 写入的内容
 	 * @param isAppend 是否追加
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public File write(String content, boolean isAppend) throws IORuntimeException {
 		BufferedWriter writer = null;
@@ -124,8 +125,8 @@ public class FileWriter extends FileWrapper{
 	 * 将String写入文件，覆盖模式
 	 * 
 	 * @param content 写入的内容
-	 * @return File
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public File write(String content) throws IORuntimeException {
 		return write(content, false);
@@ -136,7 +137,7 @@ public class FileWriter extends FileWrapper{
 	 * 
 	 * @param content 写入的内容
 	 * @return 写入的文件
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public File append(String content) throws IORuntimeException {
 		return write(content, true);
@@ -145,9 +146,10 @@ public class FileWriter extends FileWrapper{
 	/**
 	 * 将列表写入文件，覆盖模式
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param list 列表
-	 * @return File
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public <T> File writeLines(Collection<T> list) throws IORuntimeException {
 		return writeLines(list, false);
@@ -156,9 +158,10 @@ public class FileWriter extends FileWrapper{
 	/**
 	 * 将列表写入文件，追加模式
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param list 列表
-	 * @return File
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public <T> File appendLines(Collection<T> list) throws IORuntimeException {
 		return writeLines(list, true);
@@ -167,10 +170,11 @@ public class FileWriter extends FileWrapper{
 	/**
 	 * 将列表写入文件
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @param isAppend 是否追加
-	 * @return File
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public <T> File writeLines(Collection<T> list, boolean isAppend) throws IORuntimeException {
 		PrintWriter writer = null;
@@ -182,8 +186,6 @@ public class FileWriter extends FileWrapper{
 					writer.flush();
 				}
 			}
-		}catch(IOException e){
-			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(writer);
 		}
@@ -196,8 +198,8 @@ public class FileWriter extends FileWrapper{
 	 * @param data 数据
 	 * @param off 数据开始位置
 	 * @param len 数据长度
-	 * @return File
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public File write(byte[] data, int off, int len) throws IORuntimeException {
 		return write(data, off, len, false);
@@ -209,8 +211,8 @@ public class FileWriter extends FileWrapper{
 	 * @param data 数据
 	 * @param off 数据开始位置
 	 * @param len 数据长度
-	 * @return File
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public File append(byte[] data, int off, int len) throws IORuntimeException {
 		return write(data, off, len, true);
@@ -223,8 +225,8 @@ public class FileWriter extends FileWrapper{
 	 * @param off 数据开始位置
 	 * @param len 数据长度
 	 * @param isAppend 是否追加模式
-	 * @return File
-	 * @throws IORuntimeException
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
 	 */
 	public File write(byte[] data, int off, int len, boolean isAppend) throws IORuntimeException {
 		FileOutputStream out = null;
@@ -246,14 +248,14 @@ public class FileWriter extends FileWrapper{
 	 * 
 	 * @param in 输入流，不关闭
 	 * @return dest
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
 	public File writeFromStream(InputStream in) throws IORuntimeException {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(FileUtil.touch(file));
 			IoUtil.copy(in, out);
-		}catch (Exception e) {
+		}catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(out);
@@ -265,12 +267,12 @@ public class FileWriter extends FileWrapper{
 	 * 获得一个输出流对象
 	 * 
 	 * @return 输出流对象
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
 	public BufferedOutputStream getOutputStream() throws IORuntimeException {
 		try {
 			return new BufferedOutputStream(new FileOutputStream(FileUtil.touch(file)));
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
@@ -280,7 +282,7 @@ public class FileWriter extends FileWrapper{
 	 * 
 	 * @param isAppend 是否追加
 	 * @return BufferedReader对象
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
 	public BufferedWriter getWriter(boolean isAppend) throws IORuntimeException {
 		try {
@@ -295,16 +297,16 @@ public class FileWriter extends FileWrapper{
 	 * 
 	 * @param isAppend 是否追加
 	 * @return 打印对象
-	 * @throws IOException
+	 * @throws IORuntimeException  IO异常
 	 */
-	public PrintWriter getPrintWriter(boolean isAppend) throws IOException {
+	public PrintWriter getPrintWriter(boolean isAppend) throws IORuntimeException {
 		return new PrintWriter(getWriter(isAppend));
 	}
 	
 	/**
 	 * 检查文件
 	 * 
-	 * @throws IOException
+	 * @throws IORuntimeException  IO异常
 	 */
 	private void checkFile() throws IORuntimeException {
 		Assert.notNull(file, "File to write content is null !");

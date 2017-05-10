@@ -76,6 +76,7 @@ public class ConverterRegistry {
 	/**
 	 * 登记自定义转换器
 	 * 
+	 * @param clazz 转换的目标类型
 	 * @param converterClass 转换器类，必须有默认构造方法
 	 * @return {@link ConverterRegistry}
 	 */
@@ -86,6 +87,7 @@ public class ConverterRegistry {
 	/**
 	 * 登记自定义转换器
 	 * 
+	 * @param clazz 转换的目标类型
 	 * @param converter 转换器
 	 * @return {@link ConverterRegistry}
 	 */
@@ -127,8 +129,8 @@ public class ConverterRegistry {
 	
 	/**
 	 * 获得默认转换器
-	 * @param <T>
 	 * 
+	 * @param <T> 转换的目标类型（转换器转换到的类型）
 	 * @param type 类型
 	 * @return 转换器
 	 */
@@ -139,7 +141,7 @@ public class ConverterRegistry {
 	
 	/**
 	 * 获得自定义转换器
-	 * @param <T>
+	 * @param <T> 转换的目标类型（转换器转换到的类型）
 	 * 
 	 * @param type 类型
 	 * @return 转换器
@@ -152,6 +154,7 @@ public class ConverterRegistry {
 	/**
 	 * 转换值为指定类型
 	 * 
+	 * @param <T> 转换的目标类型（转换器转换到的类型）
 	 * @param type 类型
 	 * @param value 值
 	 * @param defaultValue 默认值
@@ -186,6 +189,7 @@ public class ConverterRegistry {
 	 * 转换值为指定类型<br>
 	 * 自定义转换器优先
 	 * 
+	 * @param <T> 转换的目标类型（转换器转换到的类型）
 	 * @param type 类型
 	 * @param value 值
 	 * @param defaultValue 默认值
@@ -199,6 +203,7 @@ public class ConverterRegistry {
 	/**
 	 * 转换值为指定类型
 	 * 
+	 * @param <T> 转换的目标类型（转换器转换到的类型）
 	 * @param type 类型
 	 * @param value 值
 	 * @return 转换后的值，默认为<code>null</code>

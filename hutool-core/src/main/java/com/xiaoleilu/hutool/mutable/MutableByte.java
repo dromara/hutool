@@ -185,7 +185,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 比较
 	 * 
 	 * @param other 其它 {@link MutableByte} 对象
-	 * @return x==y返回0，x<y返回-1，x>y返回1
+	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override
 	public int compareTo(final MutableByte other) {

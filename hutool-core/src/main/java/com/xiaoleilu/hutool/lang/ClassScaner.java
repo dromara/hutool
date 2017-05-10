@@ -78,9 +78,9 @@ public final class ClassScaner {
 	}
 
 	/**
-	 * 扫面包路径下满足class过滤器条件的所有class文件，</br>
-	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException</br>
-	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改</br>
+	 * 扫面包路径下满足class过滤器条件的所有class文件，<br>
+	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException<br>
+	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改<br>
 	 * 
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @param classFilter class过滤器，过滤掉不需要的class
@@ -121,7 +121,7 @@ public final class ClassScaner {
 	
 	// --------------------------------------------------------------------------------------------------- Private method start
 	/**
-	 * 改变 com -> com. 避免在比较的时候把比如 completeTestSuite.class类扫描进去，如果没有"."</br>
+	 * 改变 com -> com. 避免在比较的时候把比如 completeTestSuite.class类扫描进去，如果没有"."<br>
 	 * 那class里面com开头的class类也会被扫描进去,其实名称后面或前面需要一个 ".",来添加包的特征
 	 * 
 	 * @param packageName
