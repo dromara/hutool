@@ -36,7 +36,153 @@ public final class Base64 {
 	public static byte[] encode(byte[] arr, boolean lineSep) {
 		return encode(arr, lineSep, false);
 	}
+	
+	/**
+	 * 编码为Base64，URL安全的
+	 * 
+	 * @param arr 被编码的数组
+	 * @param lineSep 在76个char之后是CRLF还是EOF
+	 * @return 编码后的bytes
+	 * @since 3.0.6
+	 */
+	public static byte[] encodeUrlSafe(byte[] arr, boolean lineSep) {
+		return encode(arr, lineSep, true);
+	}
 
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(String source) {
+		return encode(source, CharsetUtil.UTF_8);
+	}
+	
+	/**
+	 * base64编码，URL安全
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 * @since 3.0.6
+	 */
+	public static String encodeUrlSafe(String source) {
+		return encodeUrlSafe(source, CharsetUtil.UTF_8);
+	}
+
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(String source, String charset) {
+		return encode(StrUtil.bytes(source, charset), charset);
+	}
+	
+	/**
+	 * base64编码,URL安全
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 * @since 3.0.6
+	 */
+	public static String encodeUrlSafe(String source, String charset) {
+		return encodeUrlSafe(StrUtil.bytes(source, charset), charset);
+	}
+
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(String source, Charset charset) {
+		return encode(StrUtil.bytes(source, charset), charset);
+	}
+	
+	/**
+	 * base64编码，URL安全的
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 * @since 3.0.6
+	 */
+	public static String encodeUrlSafe(String source, Charset charset) {
+		return encodeUrlSafe(StrUtil.bytes(source, charset), charset);
+	}
+
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(byte[] source) {
+		return encode(source, CharsetUtil.UTF_8);
+	}
+	
+	/**
+	 * base64编码,URL安全的
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @return 被加密后的字符串
+	 * @since 3.0.6
+	 */
+	public static String encodeUrlSafe(byte[] source) {
+		return encodeUrlSafe(source, CharsetUtil.UTF_8);
+	}
+
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(byte[] source, String charset) {
+		return StrUtil.str(encode(source, false), charset);
+	}
+	
+	/**
+	 * base64编码，URL安全的
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 * @since 3.0.6
+	 */
+	public static String encodeUrlSafe(byte[] source, String charset) {
+		return StrUtil.str(encodeUrlSafe(source, false), charset);
+	}
+
+	/**
+	 * base64编码
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 */
+	public static String encode(byte[] source, Charset charset) {
+		return StrUtil.str(encode(source, false), charset);
+	}
+	
+	/**
+	 * base64编码，URL安全的
+	 * 
+	 * @param source 被编码的base64字符串
+	 * @param charset 字符集
+	 * @return 被加密后的字符串
+	 * @since 3.0.6
+	 */
+	public static String encodeUrlSafe(byte[] source, Charset charset) {
+		return StrUtil.str(encodeUrlSafe(source, false), charset);
+	}
+	
 	/**
 	 * 编码为Base64<br>
 	 * 如果isMultiLine为<code>true</code>，则每76个字符一个换行符，否则在一行显示
@@ -86,6 +232,7 @@ public final class Base64 {
 			dest[destlen - 3] = encodeTable[(i >>> 6) & 0x3f];
 			
 			if(isUrlSafe){
+				//在URL Safe模式下，=为URL中的关键字符，不需要补充。空余的byte位要去掉。
 				int urlSafeLen = destlen - 2;
 				if(2 == left){
 					dest[destlen - 2] = encodeTable[i & 0x3f];
@@ -100,70 +247,6 @@ public final class Base64 {
 			}
 		}
 		return dest;
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(String source) {
-		return encode(source, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(String source, String charset) {
-		return encode(StrUtil.bytes(source, charset), charset);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(String source, Charset charset) {
-		return encode(StrUtil.bytes(source, charset), charset);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(byte[] source) {
-		return encode(source, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(byte[] source, String charset) {
-		return StrUtil.str(encode(source, false), charset);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(byte[] source, Charset charset) {
-		return StrUtil.str(encode(source, false), charset);
 	}
 
 	// -------------------------------------------------------------------- decode
