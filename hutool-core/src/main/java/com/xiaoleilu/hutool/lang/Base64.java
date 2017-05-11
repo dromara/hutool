@@ -66,10 +66,10 @@ public final class Base64 {
 		for (int s = 0, d = 0, cc = 0; s < evenlen;) {
 			int i = (arr[s++] & 0xff) << 16 | (arr[s++] & 0xff) << 8 | (arr[s++] & 0xff);
 
-			dest[d++] = (byte) encodeTable[(i >>> 18) & 0x3f];
-			dest[d++] = (byte) encodeTable[(i >>> 12) & 0x3f];
-			dest[d++] = (byte) encodeTable[(i >>> 6) & 0x3f];
-			dest[d++] = (byte) encodeTable[i & 0x3f];
+			dest[d++] = encodeTable[(i >>> 18) & 0x3f];
+			dest[d++] = encodeTable[(i >>> 12) & 0x3f];
+			dest[d++] = encodeTable[(i >>> 6) & 0x3f];
+			dest[d++] = encodeTable[i & 0x3f];
 
 			if (isMultiLine && ++cc == 19 && d < destlen - 2) {
 				dest[d++] = '\r';
@@ -78,14 +78,26 @@ public final class Base64 {
 			}
 		}
 
-		int left = len - evenlen;
+		int left = len - evenlen;//剩余位数
 		if (left > 0) {
 			int i = ((arr[evenlen] & 0xff) << 10) | (left == 2 ? ((arr[len - 1] & 0xff) << 2) : 0);
 
-			dest[destlen - 4] = (byte) encodeTable[i >> 12];
-			dest[destlen - 3] = (byte) encodeTable[(i >>> 6) & 0x3f];
-			dest[destlen - 2] = left == 2 ? (byte) encodeTable[i & 0x3f] : (byte) '=';
-			dest[destlen - 1] = '=';
+			dest[destlen - 4] = encodeTable[i >> 12];
+			dest[destlen - 3] = encodeTable[(i >>> 6) & 0x3f];
+			
+			if(isUrlSafe){
+				int urlSafeLen = destlen - 2;
+				if(2 == left){
+					dest[destlen - 2] = encodeTable[i & 0x3f];
+					urlSafeLen += 1;
+				}
+				byte[] urlSafeDest = new byte[urlSafeLen];
+				System.arraycopy(dest, 0, urlSafeDest, 0, urlSafeLen);
+				return urlSafeDest;
+			}else{
+				dest[destlen - 2] = left == 2 ? encodeTable[i & 0x3f] : (byte) '=';
+				dest[destlen - 1] = '=';
+			}
 		}
 		return dest;
 	}
