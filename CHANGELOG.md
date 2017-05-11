@@ -9,6 +9,7 @@
 * FileUtil中IOException全部包装为IORuntimeException
 * 针对JDK8文档注释修复
 * 添加SystemClock
+* 增加ArrayUtil.copy方法
 
 ### Bug修复
 * 修复AbstractCache.onRemove回调方法在get和pruneCache时不被触发问题（issue#18@osc）

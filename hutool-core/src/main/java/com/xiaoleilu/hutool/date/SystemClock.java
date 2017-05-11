@@ -5,7 +5,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 系统时钟<br>
@@ -22,7 +21,7 @@ public class SystemClock {
 	/** 时钟更新间隔，单位毫秒 */
 	private final long period;
 	/** 现在时刻的毫秒数 */
-	private final AtomicLong now;
+	private volatile long now;
 
 	/**
 	 * 构造
@@ -30,7 +29,7 @@ public class SystemClock {
 	 */
 	private SystemClock(long period) {
 		this.period = period;
-		this.now = new AtomicLong(System.currentTimeMillis());
+		this.now = System.currentTimeMillis();
 		scheduleClockUpdating();
 	}
 
@@ -47,7 +46,7 @@ public class SystemClock {
 		});
 		scheduler.scheduleAtFixedRate(new Runnable(){
 			public void run() {
-				now.set(System.currentTimeMillis());
+				now = System.currentTimeMillis();
 			}
 		}, period, period, TimeUnit.MILLISECONDS);
 	}
@@ -56,7 +55,7 @@ public class SystemClock {
 	 * @return 当前时间毫秒数
 	 */
 	private long currentTimeMillis() {
-		return now.get();
+		return now;
 	}
 	
 	//------------------------------------------------------------------------ static
