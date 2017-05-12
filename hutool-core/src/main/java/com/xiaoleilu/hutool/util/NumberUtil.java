@@ -102,7 +102,7 @@ public final class NumberUtil {
 	public static double div(double v1, double v2, int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
 	 * 
@@ -121,7 +121,7 @@ public final class NumberUtil {
 		return b1.divide(b2, scale, roundingMode).doubleValue();
 	}
 
-	//------------------------------------------------------------------------------------------- round
+	// ------------------------------------------------------------------------------------------- round
 	/**
 	 * 保留固定位数小数<br>
 	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
@@ -174,7 +174,7 @@ public final class NumberUtil {
 		final BigDecimal b = new BigDecimal(numberStr);
 		return b.setScale(scale, roundingMode).doubleValue();
 	}
-	
+
 	/**
 	 * 保留小数位，采用四舍五入
 	 * 
@@ -183,49 +183,47 @@ public final class NumberUtil {
 	 * @return 保留小数后的字符串
 	 */
 	public static String roundStr(double number, int digit) {
-		return String.format("%."+digit + 'f', number);
+		return String.format("%." + digit + 'f', number);
 	}
-	
-	//------------------------------------------------------------------------------------------- decimalFormat
+
+	// ------------------------------------------------------------------------------------------- decimalFormat
 	/**
 	 * 格式化double<br>
 	 * 对 {@link DecimalFormat} 做封装<br>
 	 * 
-	 * @param pattern 格式
-	 * 		格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
-	 *		<ul>
-	 * 			<li>0 -> 取一位整数</li>
-	 * 			<li>0.00 -> 取一位整数和两位小数</li>
-	 * 			<li>00.000 -> 取两位整数和三位小数</li>
-	 * 			<li># -> 取所有整数部分</li>
-	 * 			<li>#.##% -> 以百分比方式计数，并取两位小数</li>
-	 * 			<li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
-	 * 			<li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
-	 * 			<li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
-	 * 		</ul>
+	 * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
+	 *            <ul>
+	 *            <li>0 -> 取一位整数</li>
+	 *            <li>0.00 -> 取一位整数和两位小数</li>
+	 *            <li>00.000 -> 取两位整数和三位小数</li>
+	 *            <li># -> 取所有整数部分</li>
+	 *            <li>#.##% -> 以百分比方式计数，并取两位小数</li>
+	 *            <li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
+	 *            <li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
+	 *            <li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
+	 *            </ul>
 	 * @param value 值
 	 * @return 格式化后的值
 	 */
 	public static String decimalFormat(String pattern, double value) {
 		return new DecimalFormat(pattern).format(value);
 	}
-	
+
 	/**
 	 * 格式化double<br>
 	 * 对 {@link DecimalFormat} 做封装<br>
 	 * 
-	 * @param pattern 格式
-	 * 		格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
-	 *		<ul>
-	 * 			<li>0 -> 取一位整数</li>
-	 * 			<li>0.00 -> 取一位整数和两位小数</li>
-	 * 			<li>00.000 -> 取两位整数和三位小数</li>
-	 * 			<li># -> 取所有整数部分</li>
-	 * 			<li>#.##% -> 以百分比方式计数，并取两位小数</li>
-	 * 			<li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
-	 * 			<li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
-	 * 			<li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
-	 * 		</ul>
+	 * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
+	 *            <ul>
+	 *            <li>0 -> 取一位整数</li>
+	 *            <li>0.00 -> 取一位整数和两位小数</li>
+	 *            <li>00.000 -> 取两位整数和三位小数</li>
+	 *            <li># -> 取所有整数部分</li>
+	 *            <li>#.##% -> 以百分比方式计数，并取两位小数</li>
+	 *            <li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
+	 *            <li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
+	 *            <li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
+	 *            </ul>
 	 * @param value 值
 	 * @return 格式化后的值
 	 * @since 3.0.5
@@ -234,7 +232,7 @@ public final class NumberUtil {
 		return new DecimalFormat(pattern).format(value);
 	}
 
-	//------------------------------------------------------------------------------------------- isXXX
+	// ------------------------------------------------------------------------------------------- isXXX
 	/**
 	 * 是否为数字
 	 * 
@@ -353,6 +351,7 @@ public final class NumberUtil {
 
 	/**
 	 * 判断字符串是否是浮点数
+	 * 
 	 * @param s String
 	 * @return 是否为{@link Double}类型
 	 */
@@ -381,9 +380,9 @@ public final class NumberUtil {
 		}
 		return true;
 	}
-	
-	//------------------------------------------------------------------------------------------- generateXXX
-	
+
+	// ------------------------------------------------------------------------------------------- generateXXX
+
 	/**
 	 * 生成不重复随机数 根据给定的最小数字和最大数字，以及随机数的个数，产生指定的不重复的数组
 	 * 
@@ -449,7 +448,7 @@ public final class NumberUtil {
 		return ranArr;
 	}
 
-	//------------------------------------------------------------------------------------------- range
+	// ------------------------------------------------------------------------------------------- range
 	/**
 	 * 给定范围内的整数列表，步进为1
 	 * 
@@ -524,8 +523,8 @@ public final class NumberUtil {
 		}
 		return values;
 	}
-	
-	//------------------------------------------------------------------------------------------- others
+
+	// ------------------------------------------------------------------------------------------- others
 	/**
 	 * 阶乘：n!
 	 * 
@@ -635,8 +634,8 @@ public final class NumberUtil {
 	public long binaryToLong(String binaryStr) {
 		return Long.parseLong(binaryStr, 2);
 	}
-	
-	//------------------------------------------------------------------------------------------- compare
+
+	// ------------------------------------------------------------------------------------------- compare
 
 	/**
 	 * 比较两个值的大小
@@ -742,7 +741,7 @@ public final class NumberUtil {
 	public static int compare(byte x, byte y) {
 		return x - y;
 	}
-	
+
 	/**
 	 * 数字转字符串<br>
 	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
@@ -754,8 +753,8 @@ public final class NumberUtil {
 		if (number == null) {
 			throw new NullPointerException("Number is null !");
 		}
-		
-		if(false == ObjectUtil.isValidIfNumber(number)){
+
+		if (false == ObjectUtil.isValidIfNumber(number)) {
 			throw new IllegalArgumentException("Number is non-finite!");
 		}
 
@@ -772,7 +771,35 @@ public final class NumberUtil {
 		return string;
 	}
 
-	//------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 是否空白符<br>
+	 * 空白符包括空格、制表符、全角空格和不间断空格<br>
+	 * 
+	 * @see Character#isWhitespace(int)
+	 * @see Character#isSpaceChar(int)
+	 * @param c 字符
+	 * @return 是否空白符
+	 * @since 3.0.6
+	 */
+	public static boolean isBlankChar(char c) {
+		return isBlankChar((int) c);
+	}
+
+	/**
+	 * 是否空白符<br>
+	 * 空白符包括空格、制表符、全角空格和不间断空格<br>
+	 * 
+	 * @see Character#isWhitespace(int)
+	 * @see Character#isSpaceChar(int)
+	 * @param c 字符
+	 * @return 是否空白符
+	 * @since 3.0.6
+	 */
+	public static boolean isBlankChar(int c) {
+		return Character.isWhitespace(c) || Character.isSpaceChar(c);
+	}
+
+	// ------------------------------------------------------------------------------------------- Private method start
 	private int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
 			return 1;
@@ -788,5 +815,5 @@ public final class NumberUtil {
 			return selectNum * mathNode(selectNum - 1);
 		}
 	}
-	//------------------------------------------------------------------------------------------- Private method end
+	// ------------------------------------------------------------------------------------------- Private method end
 }

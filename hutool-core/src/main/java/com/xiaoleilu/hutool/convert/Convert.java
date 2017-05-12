@@ -19,7 +19,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public final class Convert {
 
-	private Convert() {}
+	private Convert() {
+	}
 
 	/**
 	 * 转换为字符串<br>
@@ -370,7 +371,7 @@ public final class Convert {
 	public static BigDecimal toBigDecimal(Object value) {
 		return toBigDecimal(value, null);
 	}
-	
+
 	/**
 	 * 转换为Enum对象<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -413,7 +414,7 @@ public final class Convert {
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value) {
 		return toEnum(clazz, value, null);
 	}
-	
+
 	/**
 	 * 转换值为指定类型
 	 * 
@@ -425,7 +426,7 @@ public final class Convert {
 	public static <T> T convert(Class<T> type, Object value) {
 		return convert(type, value, null);
 	}
-	
+
 	/**
 	 * 转换值为指定类型
 	 * 
@@ -436,7 +437,7 @@ public final class Convert {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException{
+	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
 		return ConverterRegistry.getInstance().convert(type, value, defaultValue);
 	}
 
@@ -501,7 +502,8 @@ public final class Convert {
 				continue;
 			}
 
-			if (c[i] == '\u3000') {
+			if (c[i] == '\u3000' || c[i] == '\u00a0') {
+				//\u3000是中文全角空格，\u00a0是不间断空格
 				c[i] = ' ';
 			} else if (c[i] > '\uFF00' && c[i] < '\uFF5F') {
 				c[i] = (char) (c[i] - 65248);
@@ -562,18 +564,19 @@ public final class Convert {
 	 * @return String 每个unicode之间无分隔符
 	 */
 	public static String strToUnicode(String strText) {
-		char c;
-		StringBuilder str = new StringBuilder();
-		int intAsc;
+		int strLength = strText.length();
+		final StringBuilder str = new StringBuilder(strLength * 6);
 		String strHex;
-		for (int i = 0; i < strText.length(); i++) {
-			c = strText.charAt(i);
-			intAsc = (int) c;
-			strHex = Integer.toHexString(intAsc);
-			if (intAsc > 128)
-				str.append("\\u" + strHex);
-			else // 低位在前面补00
-				str.append("\\u00" + strHex);
+		int strHexLen;
+		for (int i = 0; i < strLength; i++) {
+			strHex = Integer.toHexString(strText.charAt(i));
+			strHexLen = strHex.length();
+			str.append("\\u");
+			//对不够4位的在前补零
+			if(strHexLen > 0 && strHexLen < 4){
+				str.append(StrUtil.repeat('0', 4 - strHexLen));
+			}
+			str.append(strHex);
 		}
 		return str.toString();
 	}
@@ -584,22 +587,16 @@ public final class Convert {
 	 * @param hex 16进制值字符串 （一个unicode为2byte）
 	 * @return String 全角字符串
 	 */
-	public static String unicodeToStr(String hex) {
-		int t = hex.length() / 6;
-		StringBuilder str = new StringBuilder();
-		for (int i = 0; i < t; i++) {
-			String s = hex.substring(i * 6, (i + 1) * 6);
-			// 高位需要补上00再转
-			String s1 = s.substring(2, 4) + "00";
-			// 低位直接转
-			String s2 = s.substring(4);
-			// 将16进制的string转为int
-			int n = Integer.valueOf(s1, 16) + Integer.valueOf(s2, 16);
-			// 将int转换为字符
-			char[] chars = Character.toChars(n);
-			str.append(new String(chars));
+	public static String unicodeToStr(String unicode) {
+		StringBuffer string = new StringBuffer();
+		String[] hex = StrUtil.split(unicode, "\\u");
+		for (int i = 1; i < hex.length; i++) {
+			// 转换出每一个代码点
+			int data = Integer.parseInt(hex[i], 16);
+			// 追加成string
+			string.append((char) data);
 		}
-		return str.toString();
+		return string.toString();
 	}
 
 	/**
@@ -615,18 +612,19 @@ public final class Convert {
 		if (StrUtil.hasBlank(str, sourceCharset, destCharset)) {
 			return str;
 		}
-		
+
 		return CharsetUtil.convert(str, sourceCharset, destCharset);
 	}
-	
+
 	/**
 	 * 转换时间单位
+	 * 
 	 * @param sourceDuration 时长
 	 * @param sourceUnit 源单位
 	 * @param destUnit 目标单位
 	 * @return 目标单位的时长
 	 */
-	public static long convertTime(long sourceDuration, TimeUnit sourceUnit, TimeUnit destUnit){
+	public static long convertTime(long sourceDuration, TimeUnit sourceUnit, TimeUnit destUnit) {
 		Assert.notNull(sourceUnit, "sourceUnit is null !");
 		Assert.notNull(destUnit, "destUnit is null !");
 		return destUnit.convert(sourceDuration, sourceUnit);
@@ -665,8 +663,8 @@ public final class Convert {
 		}
 		return head + s.replaceAll("(零.)*零元", "元").replaceFirst("(零.)+", "").replaceAll("(零.)+", "零").replaceAll("^整$", "零元整");
 	}
-	
-	//--------------------------------------------------------------- 原始包装类型转换
+
+	// --------------------------------------------------------------- 原始包装类型转换
 	/**
 	 * 原始类转为包装类，非原始类返回原类
 	 * 
@@ -674,10 +672,10 @@ public final class Convert {
 	 * @param clazz 原始类
 	 * @return 包装类
 	 */
-	public static Class<?> wrap(Class<?> clazz){
+	public static Class<?> wrap(Class<?> clazz) {
 		return BasicType.wrap(clazz);
 	}
-	
+
 	/**
 	 * 包装类转为原始类，非包装类返回原类
 	 * 
@@ -685,7 +683,7 @@ public final class Convert {
 	 * @param clazz 包装类
 	 * @return 原始类
 	 */
-	public static Class<?> unWrap(Class<?> clazz){
+	public static Class<?> unWrap(Class<?> clazz) {
 		return BasicType.unWrap(clazz);
 	}
 }

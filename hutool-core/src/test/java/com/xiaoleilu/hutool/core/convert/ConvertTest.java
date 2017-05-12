@@ -96,6 +96,14 @@ public class ConvertTest {
 		
 		String raw = Convert.unicodeToStr(unicode);
 		Assert.assertEquals(raw, a);
+		
+		//针对有特殊空白符的Unicode
+		String str = "你 好";
+		String unicode2 = Convert.strToUnicode(str);
+		Assert.assertEquals("\\u4f60\\u00a0\\u597d", unicode2);
+		
+		String str2 = Convert.unicodeToStr(unicode2);
+		Assert.assertEquals(str, str2);
 	}
 	
 	@Test

@@ -17,6 +17,8 @@
 * 修复RandomUtil.randomEleSet方法获取随机个数出错问题。（感谢@【北京】Sych）
 * NumberUtil的isInteger和isDouble方法非静态问题修复（感谢@【广州】流行の云）
 * Base64的URL Safe模式等号没有替换问题。（issue#20@osc）
+* 修复Convert.strToUnicode转换后位数不足问题
+* 修复针对StrUtil.cleanBlank和Convert.toDBC中不间断空白符无法去除问题（感谢@【山东】质量过关）
 
 -------------------------------------------------------------------------------------------------------------
 

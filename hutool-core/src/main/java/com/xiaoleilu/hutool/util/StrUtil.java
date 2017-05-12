@@ -78,7 +78,7 @@ public final class StrUtil {
 
 		for (int i = 0; i < length; i++) {
 			// 只要有一个非空字符即为非空字符串
-			if (false == Character.isWhitespace(str.charAt(i))) {
+			if (false == NumberUtil.isBlankChar(str.charAt(i))) {
 				return false;
 			}
 		}
@@ -243,7 +243,7 @@ public final class StrUtil {
 	 * 除去字符串头尾部的空白，如果字符串是<code>null</code>，依然返回<code>null</code>。
 	 * 
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>Character.isWhitespace</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>NumberUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 * 
 	 * <pre>
 	 * trim(null)          = null
@@ -283,7 +283,7 @@ public final class StrUtil {
 	 * 除去字符串头部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
 	 * 
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>Character.isWhitespace</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>NumberUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 * 
 	 * <pre>
 	 * trimStart(null)         = null
@@ -306,7 +306,7 @@ public final class StrUtil {
 	 * 除去字符串尾部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
 	 * 
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>Character.isWhitespace</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>NumberUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 * 
 	 * <pre>
 	 * trimEnd(null)       = null
@@ -344,14 +344,14 @@ public final class StrUtil {
 
 		// 扫描字符串头部
 		if (mode <= 0) {
-			while ((start < end) && (Character.isWhitespace(str.charAt(start)))) {
+			while ((start < end) && (NumberUtil.isBlankChar(str.charAt(start)))) {
 				start++;
 			}
 		}
 
 		// 扫描字符串尾部
 		if (mode >= 0) {
-			while ((start < end) && (Character.isWhitespace(str.charAt(end - 1)))) {
+			while ((start < end) && (NumberUtil.isBlankChar(str.charAt(end - 1)))) {
 				end--;
 			}
 		}
@@ -688,7 +688,7 @@ public final class StrUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
-			if (false == Character.isWhitespace(c)) {
+			if (false == NumberUtil.isBlankChar(c)) {
 				sb.append(c);
 			}
 		}
@@ -954,10 +954,14 @@ public final class StrUtil {
 	 * 重复某个字符
 	 * 
 	 * @param c 被重复的字符
-	 * @param count 重复的数目
+	 * @param count 重复的数目，如果小于等于0则返回""
 	 * @return 重复字符字符串
 	 */
 	public static String repeat(char c, int count) {
+		if(count <= 0){
+			return EMPTY;
+		}
+		
 		char[] result = new char[count];
 		for (int i = 0; i < count; i++) {
 			result[i] = c;
@@ -973,6 +977,9 @@ public final class StrUtil {
 	 * @return 重复字符字符串
 	 */
 	public static String repeat(String str, int count) {
+		if(count <= 0){
+			return EMPTY;
+		}
 
 		// 检查
 		final int len = str.length();
