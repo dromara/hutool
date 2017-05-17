@@ -10,6 +10,8 @@
 * 针对JDK8文档注释修复
 * 添加SystemClock
 * 增加ArrayUtil.copy方法
+* 增加FtpUtil
+* 增加FileUtil.clean方法，用于清空目录（感谢@【山东】质量过关）
 
 ### Bug修复
 * 修复AbstractCache.onRemove回调方法在get和pruneCache时不被触发问题（issue#18@osc）

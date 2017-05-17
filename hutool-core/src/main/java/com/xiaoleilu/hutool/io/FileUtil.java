@@ -541,16 +541,35 @@ public final class FileUtil {
 		}
 
 		if (file.isDirectory()) {
-			File[] files = file.listFiles();
-			for (File childFile : files) {
-				boolean isOk = del(childFile);
-				if (isOk == false) {
-					// 删除一个出错则本次删除任务失败
-					return false;
-				}
-			}
+			clean(file);
 		}
 		return file.delete();
+	}
+	
+	/**
+	 * 清空文件夹<br>
+	 * 注意：清空文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
+	 * 某个文件删除失败会终止删除操作
+	 * 
+	 * @param directory 文件夹
+	 * @return 成功与否
+	 * @throws IORuntimeException IO异常
+	 * @since 3.0.6
+	 */
+	public static boolean clean(File directory) throws IORuntimeException {
+		if (directory == null || directory.exists() == false || false == directory.isDirectory()) {
+			return true;
+		}
+		
+		final File[] files = directory.listFiles();
+		for (File childFile : files) {
+			boolean isOk = del(childFile);
+			if (isOk == false) {
+				// 删除一个出错则本次删除任务失败
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
