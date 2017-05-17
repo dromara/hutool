@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -93,6 +94,17 @@ public class Wrapper {
 		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
 		if(field.contains("*") || field.contains("(")) {
 			return field;
+		}
+		
+		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
+		if(field.contains(StrUtil.DOT)){
+			final Collection<String> target = CollectionUtil.filter(StrUtil.split(field, StrUtil.C_DOT), new Editor<String>(){
+				@Override
+				public String edit(String t) {
+					return StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote);
+				}
+			});
+			return CollectionUtil.join(target, StrUtil.DOT);
 		}
 		
 		return StrUtil.format("{}{}{}", preWrapQuote, field, sufWrapQuote);

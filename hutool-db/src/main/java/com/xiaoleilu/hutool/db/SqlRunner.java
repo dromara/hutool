@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
+import com.xiaoleilu.hutool.db.ds.DSFactory;
 
 /**
  * SQL执行类<br>
@@ -18,6 +19,16 @@ import com.xiaoleilu.hutool.db.dialect.DialectFactory;
  */
 public class SqlRunner extends AbstractSqlRunner{
 	private DataSource ds;
+	
+	/**
+	 * 创建SqlRunner<br>
+	 * 使用默认数据源，自动探测数据库连接池
+	 * @return SqlRunner
+	 * @since 3.0.6
+	 */
+	public static SqlRunner create() {
+		return create(DSFactory.get());
+	}
 	
 	/**
 	 * 创建SqlRunner<br>

@@ -12,6 +12,8 @@
 * 增加ArrayUtil.copy方法
 * 增加FtpUtil
 * 增加FileUtil.clean方法，用于清空目录（感谢@【山东】质量过关）
+* 增加SqlRunner.create()方法，使用默认连接
+* 扩充Entity类型
 
 ### Bug修复
 * 修复AbstractCache.onRemove回调方法在get和pruneCache时不被触发问题（issue#18@osc）
@@ -21,6 +23,7 @@
 * Base64的URL Safe模式等号没有替换问题。（issue#20@osc）
 * 修复Convert.strToUnicode转换后位数不足问题
 * 修复针对StrUtil.cleanBlank和Convert.toDBC中不间断空白符无法去除问题（感谢@【山东】质量过关）
+* 修复db模块对表名的包装策略
 
 -------------------------------------------------------------------------------------------------------------
 

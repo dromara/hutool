@@ -1,5 +1,11 @@
 package com.xiaoleilu.hutool.db;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.charset.Charset;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ParameterMetaData;
@@ -26,6 +32,7 @@ import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
@@ -577,6 +584,43 @@ public final class DbUtil {
 	 */
 	public static String formatSql(String sql){
 		return SqlFormatter.format(sql);
+	}
+	
+	/**
+	 * Clob字段值转字符串
+	 * @param clob {@link Clob}
+	 * @return 字符串
+	 * @since 3.0.6
+	 */
+	public static String clobToStr(Clob clob){
+		Reader reader = null;
+		try {
+			reader = clob.getCharacterStream();
+			return IoUtil.read(reader);
+		} catch (SQLException | IOException e) {
+			throw new DbRuntimeException(e);
+		}finally{
+			IoUtil.close(reader);
+		}
+	}
+	
+	/**
+	 * Blob字段值转字符串
+	 * @param blob {@link Blob}
+	 * @param charset 编码
+	 * @return 字符串
+	 * @since 3.0.6
+	 */
+	public static String blobToStr(Blob blob, Charset charset){
+		InputStream in = null;
+		try {
+			in = blob.getBinaryStream();
+			return IoUtil.read(in, charset);
+		} catch (SQLException | IOException e) {
+			throw new DbRuntimeException(e);
+		}finally{
+			IoUtil.close(in);
+		}
 	}
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end

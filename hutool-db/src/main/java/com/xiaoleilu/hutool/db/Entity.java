@@ -1,10 +1,9 @@
 package com.xiaoleilu.hutool.db;
 
-import java.io.IOException;
-import java.io.Reader;
+import java.nio.charset.Charset;
+import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.RowId;
-import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -12,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -198,6 +196,16 @@ public class Entity extends Dict{
 		return get(field, null);
 	}
 	
+	/**
+	 * 获得Blob类型结果
+	 * @param field 参数
+	 * @return Blob
+	 * @since 3.0.6
+	 */
+	public Blob getBlob(String field){
+		return get(field, null);
+	}
+	
 	@Override
 	public Time getTime(String field) {
 		Object obj = get(field);
@@ -245,21 +253,27 @@ public class Entity extends Dict{
 	
 	@Override
 	public String getStr(String field) {
+		return getStr(field, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 获得字符串值<br>
+	 * 支持Clob、Blob、RowId
+	 * 
+	 * @param field 字段名
+	 * @param charset 编码
+	 * @return 字段对应值
+	 * @since 3.0.6
+	 */
+	public String getStr(String field, Charset charset) {
 		final Object obj = get(field);
 		if(obj instanceof Clob){
-			Clob clob = (Clob)obj;
-			Reader reader = null;
-			try {
-				reader = clob.getCharacterStream();
-				return IoUtil.read(reader);
-			} catch (SQLException | IOException e) {
-				throw new DbRuntimeException(e);
-			}finally{
-				IoUtil.close(reader);
-			}
+			return DbUtil.clobToStr((Clob)obj);
+		}else if(obj instanceof Blob){
+			return DbUtil.blobToStr((Blob)obj, charset);
 		}else if(obj instanceof RowId){
 			final RowId rowId = (RowId)obj;
-			return StrUtil.str(rowId.getBytes(), CharsetUtil.UTF_8);
+			return StrUtil.str(rowId.getBytes(), charset);
 		}
 		return super.getStr(field);
 	}
