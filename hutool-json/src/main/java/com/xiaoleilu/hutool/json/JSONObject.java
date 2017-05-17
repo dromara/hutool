@@ -1,10 +1,10 @@
 package com.xiaoleilu.hutool.json;
 
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -500,43 +501,22 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param bean Bean对象
 	 */
 	private void populateMap(Object bean) {
-		Class<?> clazz = bean.getClass();
-
-		// If klass is a System class then set includeSuperClass to false.
-
-		boolean includeSuperClass = clazz.getClassLoader() != null;
-
-		Method[] methods = includeSuperClass ? clazz.getMethods() : clazz.getDeclaredMethods();
-		for (int i = 0; i < methods.length; i += 1) {
-			try {
-				Method method = methods[i];
-				if (Modifier.isPublic(method.getModifiers())) {
-					String name = method.getName();
-					String key = "";
-					if (name.startsWith("get")) {
-						if ("getClass".equals(name) || "getDeclaringClass".equals(name)) {
-							key = "";
-						} else {
-							key = name.substring(3);
-						}
-					} else if (name.startsWith("is")) {
-						key = name.substring(2);
-					}
-					if (key.length() > 0 && Character.isUpperCase(key.charAt(0)) && method.getParameterTypes().length == 0) {
-						if (key.length() == 1) {
-							key = key.toLowerCase();
-						} else if (!Character.isUpperCase(key.charAt(1))) {
-							key = key.substring(0, 1).toLowerCase() + key.substring(1);
-						}
-
-						Object result = method.invoke(bean, (Object[]) null);
-						if (result != null) {
-							this.rawHashMap.put(key, JSONUtil.wrap(result));
-						}
+		try {
+			final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(bean.getClass());
+			for (PropertyDescriptor property : propertyDescriptors) {
+				String key = property.getName();
+				// 过滤class属性
+				if (false == key.equals("class") && false == key.equals("declaringClass")) {
+					// 得到property对应的getter方法
+					final Method getter = property.getReadMethod();
+					final Object value = getter.invoke(bean);
+					if (null != value && false == value.equals(bean)) {
+						this.rawHashMap.put(key, JSONUtil.wrap(value));
 					}
 				}
-			} catch (Exception ignore) {
 			}
+		} catch (Exception ignore) {
+			//忽略失败的对象
 		}
 	}
 	

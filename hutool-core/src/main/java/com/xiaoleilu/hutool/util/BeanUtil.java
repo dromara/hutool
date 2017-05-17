@@ -372,11 +372,11 @@ public final class BeanUtil {
 			for (PropertyDescriptor property : propertyDescriptors) {
 				String key = property.getName();
 				// 过滤class属性
-				if (false == key.equals("class")) {
+				if (false == key.equals("class") && false == key.equals("declaringClass")) {
 					// 得到property对应的getter方法
 					Method getter = property.getReadMethod();
 					Object value = getter.invoke(bean);
-					if (false == ignoreNullValue || null != value) {
+					if (false == ignoreNullValue || (null != value && false == value.equals(bean))) {
 						map.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
 					}
 				}

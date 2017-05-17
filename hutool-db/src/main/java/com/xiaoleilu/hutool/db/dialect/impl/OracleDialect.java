@@ -10,7 +10,6 @@ import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.db.dialect.DialectName;
 import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlBuilder;
-import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -21,7 +20,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class OracleDialect extends AnsiSqlDialect{
 	
 	public OracleDialect() {
-		wrapper = new Wrapper('"');	//Oracle所有字段名用双引号包围，防止字段名或表名与系统关键字冲突
+//		wrapper = new Wrapper('"');	//Oracle所有字段名用双引号包围，防止字段名或表名与系统关键字冲突
 	}
 	
 	@Override
