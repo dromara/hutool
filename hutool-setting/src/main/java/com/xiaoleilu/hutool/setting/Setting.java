@@ -17,6 +17,7 @@ import com.xiaoleilu.hutool.setting.dialect.BasicSetting;
  * 
  */
 public class Setting extends BasicSetting {
+	private static final long serialVersionUID = 6473518262551553107L;
 
 	/**
 	 * 基本构造<br/>

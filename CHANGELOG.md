@@ -14,6 +14,7 @@
 * 增加FileUtil.clean方法，用于清空目录（感谢@【山东】质量过关）
 * 增加SqlRunner.create()方法，使用默认连接
 * 扩充Entity类型
+* Setting添加Profile功能支持（感谢@长沙-渔泯小镇）
 
 ### Bug修复
 * 修复AbstractCache.onRemove回调方法在get和pruneCache时不被触发问题（issue#18@osc）

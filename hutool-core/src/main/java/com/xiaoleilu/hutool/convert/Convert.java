@@ -584,8 +584,8 @@ public final class Convert {
 	/**
 	 * unicode的String转换成String的字符串
 	 * 
-	 * @param hex 16进制值字符串 （一个unicode为2byte）
-	 * @return String 全角字符串
+	 * @param unicode Unicode符
+	 * @return String 字符串
 	 */
 	public static String unicodeToStr(String unicode) {
 		StringBuffer string = new StringBuffer();
