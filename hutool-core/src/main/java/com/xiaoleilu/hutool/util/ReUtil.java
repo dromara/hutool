@@ -13,7 +13,8 @@ import com.xiaoleilu.hutool.lang.Holder;
 import com.xiaoleilu.hutool.lang.Validator;
 
 /**
- * 正则相关工具类
+ * 正则相关工具类<br>
+ * 常用正则请见 {@link Validator}
  * 
  * @author xiaoleilu
  */
@@ -178,20 +179,65 @@ public final class ReUtil {
 	}
 
 	/**
-	 * 删除匹配的内容
+	 * 删除匹配的第一个内容
 	 * 
 	 * @param regex 正则
 	 * @param content 被匹配的内容
 	 * @return 删除后剩余的内容
 	 */
 	public static String delFirst(String regex, String content) {
-		if(null == content || null == regex){
+		if(StrUtil.hasBlank(regex, content)){
 			return content;
 		}
 		
-		return content.replaceFirst(regex, "");
+		return delFirst(Pattern.compile(regex, Pattern.DOTALL), content);
 	}
-
+	
+	/**
+	 * 删除匹配的第一个内容
+	 * 
+	 * @param pattern 正则
+	 * @param content 被匹配的内容
+	 * @return 删除后剩余的内容
+	 */
+	public static String delFirst(Pattern pattern, String content) {
+		if(null == pattern || StrUtil.isBlank(content)){
+			return content;
+		}
+		
+		return pattern.matcher(content).replaceFirst(StrUtil.EMPTY);
+	}
+	
+	/**
+	 * 删除匹配的全部内容
+	 * 
+	 * @param regex 正则
+	 * @param content 被匹配的内容
+	 * @return 删除后剩余的内容
+	 */
+	public static String delAll(String regex, String content) {
+		if(StrUtil.hasBlank(regex, content)){
+			return content;
+		}
+		
+		return delAll(Pattern.compile(regex, Pattern.DOTALL), content);
+	}
+	
+	/**
+	 * 删除匹配的全部内容
+	 * 
+	 * @param pattern 正则
+	 * @param content 被匹配的内容
+	 * @return 删除后剩余的内容
+	 */
+	public static String delAll(Pattern pattern, String content) {
+		if(null == pattern || StrUtil.isBlank(content)){
+			return content;
+		}
+		
+		return pattern.matcher(content).replaceAll(StrUtil.EMPTY);
+	}
+	
 	/**
 	 * 删除正则匹配到的内容之前的字符 如果没有找到，则返回原文
 	 * 
