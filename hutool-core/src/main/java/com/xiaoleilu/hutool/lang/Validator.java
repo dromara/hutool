@@ -49,6 +49,8 @@ public final class Validator {
 	public final static Pattern UUID = Pattern.compile("^[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$");
 	/** 不带横线的UUID */
 	public final static Pattern UUID_SIMPLE = Pattern.compile("^[0-9a-z]{32}$");
+	/** 中国车牌号码 */
+	public final static Pattern PLATE_NUMBER = Pattern.compile("^[京,津,渝,沪,冀,晋,辽,吉,黑,苏,浙,皖,闽,赣,鲁,豫,鄂,湘,粤,琼,川,贵,云,陕,秦,甘,陇,青,台,蒙,桂,宁,新,藏,澳,军,海,航,警][A-Z][0-9,A-Z]{5}$");
 
 	/**
 	 * 验证是否为空<br>
