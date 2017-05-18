@@ -798,6 +798,17 @@ public final class NumberUtil {
 	public static boolean isBlankChar(int c) {
 		return Character.isWhitespace(c) || Character.isSpaceChar(c);
 	}
+	
+	/**
+	 * 计算等份个数
+	 * @param total 总数
+	 * @param part 每份的个数
+	 * @return 分成了几份
+	 * @since 3.0.6
+	 */
+	public static int count(int total, int part){
+		return (total % part == 0) ? (total / part) : (total / part+1);
+	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
 	private int mathSubnode(int selectNum, int minNum) {

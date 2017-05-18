@@ -56,8 +56,9 @@ public final class StrUtil {
 	public static final String HTML_GT = "&gt;";
 
 	public static final String EMPTY_JSON = "{}";
-	
-	private StrUtil() {}
+
+	private StrUtil() {
+	}
 
 	// ------------------------------------------------------------------------ Blank
 	/**
@@ -378,7 +379,7 @@ public final class StrUtil {
 			return str.startsWith(prefix);
 		}
 	}
-	
+
 	/**
 	 * 是否以指定字符串开头，忽略大小写
 	 * 
@@ -405,7 +406,7 @@ public final class StrUtil {
 			return str.endsWith(suffix);
 		}
 	}
-	
+
 	/**
 	 * 是否以指定字符串结尾，忽略大小写
 	 * 
@@ -466,15 +467,16 @@ public final class StrUtil {
 	public static String genGetter(String fieldName) {
 		return upperFirstAndAddPre(fieldName, "get");
 	}
-	
+
 	/**
 	 * 移除字符串中所有给定字符串<br>
-	 * 例：removeAll("aa-bb-cc-dd", "-")  =》  aabbccdd
+	 * 例：removeAll("aa-bb-cc-dd", "-") =》 aabbccdd
+	 * 
 	 * @param str 字符串
 	 * @param strToRemove 被移除的字符串
 	 * @return 移除后的字符串
 	 */
-	public static String removeAll(String str, CharSequence strToRemove){
+	public static String removeAll(String str, CharSequence strToRemove) {
 		return str.replace(strToRemove, EMPTY);
 	}
 
@@ -694,7 +696,7 @@ public final class StrUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 切分字符串
 	 * 
@@ -719,7 +721,7 @@ public final class StrUtil {
 	public static List<String> split(String str, char separator) {
 		return split(str, separator, 0);
 	}
-	
+
 	/**
 	 * 切分字符串
 	 * 
@@ -732,7 +734,7 @@ public final class StrUtil {
 		List<String> result = split(str, separator, limit);
 		return result.toArray(new String[result.size()]);
 	}
-	
+
 	/**
 	 * 切分字符串
 	 * 
@@ -811,12 +813,13 @@ public final class StrUtil {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 拆分字符串
 	 */
 	/**
 	 * 根据给定长度，将给定字符串截取为多个部分
+	 * 
 	 * @param str 字符串
 	 * @param len 每一个小节的长度
 	 * @return 截取后的字符串数组
@@ -958,10 +961,10 @@ public final class StrUtil {
 	 * @return 重复字符字符串
 	 */
 	public static String repeat(char c, int count) {
-		if(count <= 0){
+		if (count <= 0) {
 			return EMPTY;
 		}
-		
+
 		char[] result = new char[count];
 		for (int i = 0; i < count; i++) {
 			result[i] = c;
@@ -977,7 +980,7 @@ public final class StrUtil {
 	 * @return 重复字符字符串
 	 */
 	public static String repeat(String str, int count) {
-		if(count <= 0){
+		if (count <= 0) {
 			return EMPTY;
 		}
 
@@ -1550,10 +1553,10 @@ public final class StrUtil {
 	 * @return 查找到的个数
 	 */
 	public static int count(final String content, final String strForSearch) {
-		if(hasEmpty(content, strForSearch) || strForSearch.length() > content.length()){
+		if (hasEmpty(content, strForSearch) || strForSearch.length() > content.length()) {
 			return 0;
 		}
-		
+
 		int count = 0;
 		int idx = 0;
 		while ((idx = content.indexOf(strForSearch, idx)) > -1) {
@@ -1562,7 +1565,7 @@ public final class StrUtil {
 		}
 		return count;
 	}
-	
+
 	/**
 	 * 统计指定内容中包含指定字符的数量
 	 * 
@@ -1582,5 +1585,41 @@ public final class StrUtil {
 			}
 		}
 		return count;
+	}
+
+	/**
+	 * 将字符串切分为N等份
+	 * @param str 字符串
+	 * @param partLength 每等份的长度
+	 * @return 切分后的数组
+	 * @since 3.0.6
+	 */
+	public static String[] cut(String str, int partLength) {
+		int len = str.length();
+		if(len < partLength){
+			return new String[]{str};
+		}
+		int part = NumberUtil.count(len, partLength);
+		final String[] array = new String[part];
+		
+		for(int i = 0; i < part; i++){
+			array[i] = str.substring(i * partLength, (i == part - 1) ? len : (partLength + i * partLength));
+		}
+		return array;
+	}
+
+	/**
+	 * 将给定字符串，变成 "xxx...xxx" 形式的字符串
+	 * @param str 字符串
+	 * @param maxLength 最大长度
+	 * @return 截取后的字符串
+	 */
+	public static String brief(String str, int maxLength) {
+		if (isBlank(str) || (str.length() + 3) <= maxLength) {
+			return str;
+		}
+		int w = maxLength / 2;
+		int l = str.length();
+		return format("{}...{}", str.substring(0, maxLength - w), str.substring(l - w));
 	}
 }

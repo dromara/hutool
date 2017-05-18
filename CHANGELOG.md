@@ -17,6 +17,7 @@
 * Setting添加Profile功能支持（感谢@长沙-渔泯小镇）
 * ZipUtil增加对输入流和字符串压缩的支持
 * Validator增加中国车牌号码
+* 新增StrUtil.cut方法，等分切割
 
 ### Bug修复
 * 修复AbstractCache.onRemove回调方法在get和pruneCache时不被触发问题（issue#18@osc）

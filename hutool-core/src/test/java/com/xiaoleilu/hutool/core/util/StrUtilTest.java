@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -31,5 +32,12 @@ public class StrUtilTest {
 		String str = "	 你 好　";
 		String cleanBlank = StrUtil.cleanBlank(str);
 		Assert.assertEquals("你好", cleanBlank);
+	}
+	
+	@Test
+	public void cutTest(){
+		String str = "aaabbbcccdddaadfdfsdfsdf0";
+		String[] cut = StrUtil.cut(str, 4);
+		Console.log(cut);
 	}
 }
