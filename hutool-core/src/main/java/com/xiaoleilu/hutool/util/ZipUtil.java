@@ -121,7 +121,7 @@ public final class ZipUtil {
 	 * 
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param path 流数据在压缩文件中的路径或文件名
-	 * @param in 要压缩的源
+	 * @param data 要压缩的数据
 	 * @param charset 编码
 	 * @throws UtilException IO异常
 	 * @since 3.0.6
