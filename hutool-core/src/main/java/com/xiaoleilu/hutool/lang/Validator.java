@@ -517,6 +517,31 @@ public final class Validator {
 			throw new ValidateException(errorMsg);
 		}
 	}
+	
+	/**
+	 * 验证是否为中国车牌号
+	 * 
+	 * @param value 值
+	 * @return 是否为IPV4地址
+	 * @since 3.0.6
+	 */
+	public static boolean isPlateNmber(String value) {
+		return isMactchRegex(PLATE_NUMBER, value);
+	}
+	
+	/**
+	 * 验证是否为中国车牌号
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException 验证异常
+	 * @since 3.0.6
+	 */
+	public static void validatePlateNmber(String value, String errorMsg) throws ValidateException {
+		if(false == isPlateNmber(value)){
+			throw new ValidateException(errorMsg);
+		}
+	}
 
 	/**
 	 * 验证是否为URL

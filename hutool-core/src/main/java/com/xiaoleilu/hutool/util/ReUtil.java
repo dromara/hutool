@@ -1,7 +1,9 @@
 package com.xiaoleilu.hutool.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -208,6 +210,19 @@ public final class ReUtil {
 		}
 		return content;
 	}
+	
+	/**
+	 * 取得内容中匹配的所有结果
+	 * 
+	 * @param regex 正则
+	 * @param content 被查找的内容
+	 * @param group 正则的分组
+	 * @return 结果列表
+	 * @since 3.0.6
+	 */
+	public static List<String> findAll(String regex, String content, int group) {
+		return findAll(regex, content, group, new ArrayList<String>());
+	}
 
 	/**
 	 * 取得内容中匹配的所有结果
@@ -230,6 +245,20 @@ public final class ReUtil {
 	/**
 	 * 取得内容中匹配的所有结果
 	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被查找的内容
+	 * @param group 正则的分组
+	 * @return 结果列表
+	 * @since 3.0.6
+	 */
+	public static List<String> findAll(Pattern pattern, String content, int group) {
+		return findAll(pattern, content, group, new ArrayList<String>());
+	}
+	
+	/**
+	 * 取得内容中匹配的所有结果
+	 * 
+	 * @param <T> 集合类型
 	 * @param pattern 编译后的正则模式
 	 * @param content 被查找的内容
 	 * @param group 正则的分组
