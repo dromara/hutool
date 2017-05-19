@@ -20,7 +20,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
+import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
@@ -336,10 +340,18 @@ public final class HttpUtil {
 		}
 		
 		InputStream in = null;
+		URLConnection conn;
 		try {
-			in = new URL(url).openStream();
+			conn = new URL(url).openConnection();
+			if(isHttps(url)){
+				HttpsURLConnection httpsConn = (HttpsURLConnection)conn;
+				// 验证域
+				httpsConn.setHostnameVerifier(new TrustAnyHostnameVerifier());
+				httpsConn.setSSLSocketFactory(SSLSocketFactoryBuilder.create().build());
+			}
+			in = conn.getInputStream();
 			return IoUtil.copyByNIO(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
-		}catch(IOException e){
+		}catch(Exception e){
 			throw new HttpException(e);
 		}finally {
 			IoUtil.close(in);
