@@ -8,6 +8,7 @@ import java.util.Map;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConvertException;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
 import com.xiaoleilu.hutool.util.NumberUtil;
@@ -223,6 +224,23 @@ final class InternalJSONUtil {
 	}
 	
 	/**
+	 * JSONArray转数组
+	 * @param jsonArray JSONArray
+	 * @param arrayClass 数组元素类型
+	 * @param ignoreError 是否忽略转换异常
+	 * @return 数组对象
+	 */
+	protected static Object[] toArray(final JSONArray jsonArray, Class<?> arrayClass, boolean ignoreError){
+		final Class<?> componentType = arrayClass.isArray() ? arrayClass.getComponentType() : arrayClass;
+		final Object[] objArray = ArrayUtil.newArray(componentType, jsonArray.size());
+		for(int i = 0; i < objArray.length; i++){
+			objArray[i] = jsonConvert(componentType, jsonArray.get(i), ignoreError);
+		}
+		
+		return objArray;
+	}
+	
+	/**
 	 * JSON递归转换<br>
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
 	 * @param type 目标类型
@@ -231,12 +249,12 @@ final class InternalJSONUtil {
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
-	private static <T> T jsonConvert(Class<T> type, Object value, boolean ignoreError) throws ConvertException{
+	private static Object jsonConvert(Class<?> type, Object value, boolean ignoreError) throws ConvertException{
 		if(null == value){
 			return null;
 		}
 		
-		T targetValue = null;
+		Object targetValue = null;
 		try {
 			targetValue = ConverterRegistry.getInstance().convert(type, value);
 		} catch (ConvertException e) {
@@ -248,7 +266,9 @@ final class InternalJSONUtil {
 			
 			//子对象递归转换
 			if(value instanceof JSONObject){
-				targetValue = JSONUtil.toBean((JSONObject)value, type, ignoreError);
+				targetValue = ((JSONObject)value).toBean(type, ignoreError);
+			}else if(value instanceof JSONArray && type.isArray()){
+				targetValue = ((JSONArray)value).toArray(type, ignoreError);
 			}
 		}
 		

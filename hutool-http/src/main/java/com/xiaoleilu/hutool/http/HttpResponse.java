@@ -34,12 +34,12 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	public static HttpResponse readResponse(HttpConnection httpConnection) {
 		final HttpResponse httpResponse = new HttpResponse();
 		
+		InputStream in = null;
 		try {
 			httpResponse.status = httpConnection.responseCode();
 			httpResponse.headers =  httpConnection.headers();
 			httpResponse.charset = httpConnection.charset();
 			
-			InputStream in;
 			if(httpResponse.status < HttpStatus.HTTP_BAD_REQUEST){
 				in = httpConnection.getInputStream();
 			}else{
@@ -52,6 +52,8 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			}else{
 				throw new HttpException(e.getMessage(), e);
 			}
+		}finally{
+			IoUtil.close(in);
 		}
 		
 		return httpResponse;

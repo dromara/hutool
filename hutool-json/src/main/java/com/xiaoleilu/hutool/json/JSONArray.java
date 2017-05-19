@@ -403,4 +403,25 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public List<Object> subList(int fromIndex, int toIndex) {
 		return this.rawArrayList.subList(fromIndex, toIndex);
 	}
-}
+	
+	/**
+	 * 转为Bean数组，转换异常将被抛出
+	 * 
+	 * @param clazz 数组元素类型
+	 * @return 实体类对象
+	 */
+	public Object toArray(Class<?> clazz) {
+		return toArray(clazz, false);
+	}
+	
+	/**
+	 * 转为Bean数组
+	 * 
+	 * @param arrayClass 数组元素类型
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 实体类对象
+	 */
+	public Object[] toArray(Class<?> arrayClass, boolean ignoreError) {
+		return InternalJSONUtil.toArray(this, arrayClass, ignoreError);
+	}
+ }

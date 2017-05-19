@@ -39,6 +39,7 @@ import com.xiaoleilu.hutool.convert.impl.TimeZoneConverter;
 import com.xiaoleilu.hutool.convert.impl.URIConverter;
 import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
@@ -173,13 +174,23 @@ public class ConverterRegistry {
 		if(null == type){
 			type = (Class<T>) defaultValue.getClass();
 		}
+		//默认强转
 		if(type.isInstance(value)){
 			return (T)value;
 		}
 		
+		//数组强转
+		final Class<?> valueClass = value.getClass();
+		if(type.isArray() && valueClass.isArray()){
+			try {
+				return (T)ArrayUtil.cast(type, value);
+			} catch (Exception e) {
+				//强转失败进行下一步
+			}
+		}
+		
 		Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null == converter) {
-//			return defaultValue;
 			throw new ConvertException("No Converter for type [{}]", type.getName());
 		}
 		return converter.convert(value, defaultValue);

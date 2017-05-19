@@ -213,6 +213,36 @@ public final class ArrayUtil {
 	public static <T> T[] newArray(Class<?> componentType, int newSize) {
 		return (T[]) Array.newInstance(componentType, newSize);
 	}
+	
+	/**
+	 * 强转数组类型<br>
+	 * 强制转换的前提是数组元素类型可被强制转换<br>
+	 * 强制转换后会生成一个新数组
+	 * 
+	 * @param type 数组类型或数组元素类型
+	 * @param arrayObj 原数组
+	 * @return 转换后的数组类型
+	 * @throws NullPointerException 提供参数为空
+	 * @throws IllegalArgumentException 参数arrayObj不是数组
+	 * @since 3.0.6
+	 */
+	public static Object[] cast(Class<?> type, Object arrayObj) throws NullPointerException, IllegalArgumentException{
+		if(null == arrayObj){
+			throw new NullPointerException("Argument [arrayObj] is null !");
+		}
+		if(false == arrayObj.getClass().isArray()){
+			throw new IllegalArgumentException("Argument [arrayObj] is not array !");
+		}
+		if(null == type){
+			return (Object[]) arrayObj;
+		}
+		
+		final Class<?> componentType = type.isArray() ? type.getComponentType() : type;
+		final Object[] array = (Object[]) arrayObj;
+		final Object[] result = ArrayUtil.newArray(componentType, array.length);
+		System.arraycopy(array, 0, result, 0, array.length);
+		return result;
+	}
 
 	/**
 	 * 将新元素添加到已有数组中<br/>
