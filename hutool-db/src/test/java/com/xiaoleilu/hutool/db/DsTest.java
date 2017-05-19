@@ -12,6 +12,7 @@ import com.xiaoleilu.hutool.db.ds.c3p0.C3p0DSFactory;
 import com.xiaoleilu.hutool.db.ds.dbcp.DbcpDSFactory;
 import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
 import com.xiaoleilu.hutool.db.ds.hikari.HikariDSFactory;
+import com.xiaoleilu.hutool.db.ds.pooled.PooledDSFactory;
 import com.xiaoleilu.hutool.db.ds.tomcat.TomcatDSFactory;
 import com.xiaoleilu.hutool.lang.Console;
 
@@ -79,6 +80,17 @@ public class DsTest {
 	@Test
 	public void C3p0DsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
+		DataSource ds = DSFactory.get();
+		SqlRunner runner = SqlRunner.create(ds);
+		List<Entity> all = runner.findAll("user");
+		for (Entity entity : all) {
+			Console.log(entity);
+		}
+	}
+	
+	@Test
+	public void HutoolPoolTest() throws SQLException{
+		DSFactory.setCurrentDSFactory(new PooledDSFactory());
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");

@@ -31,8 +31,7 @@ public class C3p0DSFactory extends DSFactory {
 	}
 	
 	public C3p0DSFactory(Setting setting) {
-		super(DS_NAME, setting);
-		checkCPExist(ComboPooledDataSource.class);
+		super(DS_NAME, ComboPooledDataSource.class, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

@@ -35,7 +35,7 @@ public class JndiDSFactory extends DSFactory {
 	}
 	
 	public JndiDSFactory(Setting setting) {
-		super(DS_NAME, setting);
+		super(DS_NAME, null, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

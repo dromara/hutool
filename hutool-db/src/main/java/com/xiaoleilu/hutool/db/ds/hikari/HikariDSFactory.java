@@ -33,8 +33,7 @@ public class HikariDSFactory extends DSFactory {
 	}
 	
 	public HikariDSFactory(Setting setting) {
-		super(DS_NAME, setting);
-		checkCPExist(HikariDataSource.class);
+		super(DS_NAME, HikariDataSource.class, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

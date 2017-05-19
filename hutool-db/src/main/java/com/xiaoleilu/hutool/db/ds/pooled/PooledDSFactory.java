@@ -30,7 +30,7 @@ public class PooledDSFactory extends DSFactory {
 	}
 	
 	public PooledDSFactory(Setting setting) {
-		super(DS_NAME, setting);
+		super(DS_NAME, PooledDataSource.class, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

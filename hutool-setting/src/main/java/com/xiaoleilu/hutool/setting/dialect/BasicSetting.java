@@ -135,7 +135,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 		this.settingUrl = urlResource.getUrl();
 		this.charset = charset;
 		this.isUseVariable = isUseVariable;
-
+		
 		return load();
 	}
 

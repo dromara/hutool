@@ -33,8 +33,7 @@ public class DbcpDSFactory extends DSFactory {
 	}
 	
 	public DbcpDSFactory(Setting setting) {
-		super(DS_NAME, setting);
-		checkCPExist(BasicDataSource.class);
+		super(DS_NAME, BasicDataSource.class, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

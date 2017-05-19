@@ -34,8 +34,7 @@ public class DruidDSFactory extends DSFactory {
 	}
 	
 	public DruidDSFactory(Setting setting) {
-		super(DS_NAME, setting);
-		checkCPExist(DruidDataSource.class);
+		super(DS_NAME, DruidDataSource.class, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 

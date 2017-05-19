@@ -29,7 +29,7 @@ public class SimpleDSFactory extends DSFactory {
 	}
 	
 	public SimpleDSFactory(Setting setting) {
-		super(DS_NAME, setting);
+		super(DS_NAME, SimpleDataSource.class, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 
