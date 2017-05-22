@@ -105,7 +105,10 @@ public final class NetUtil {
 	/**
 	 * 判定是否为内网IP<br>
 	 * 私有IP：A类 10.0.0.0-10.255.255.255 B类 172.16.0.0-172.31.255.255 C类 192.168.0.0-192.168.255.255 当然，还有127这个网段是环回地址
-	 **/
+	 * 
+	 * @param ipAddress IP地址
+	 * @return 是否为内网IP
+	 */
 	public static boolean isInnerIP(String ipAddress) {
 		boolean isInnerIp = false;
 		long ipNum = NetUtil.ipv4ToLong(ipAddress);

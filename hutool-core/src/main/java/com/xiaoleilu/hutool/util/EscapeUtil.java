@@ -14,7 +14,8 @@ public final class EscapeUtil {
 	/**
 	 * Escape编码（Unicode）<br>
 	 * 该方法不会对 ASCII 字母和数字进行编码，也不会对下面这些 ASCII 标点符号进行编码： * @ - _ + . / 。其他所有的字符都会被转义序列替换。
-	 * @param content
+
+	 * @param content 被转义的内容
 	 * @return 编码后的字符串
 	 */
 	public static String escape(String content) {
@@ -47,7 +48,7 @@ public final class EscapeUtil {
 
 	/**
 	 * Escape解码
-	 * @param content
+	 * @param content 被转义的内容
 	 * @return 解码后的字符串
 	 */
 	public static String unescape(String content) {

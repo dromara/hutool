@@ -35,7 +35,7 @@ public final class Holder<T> extends MutableObj<T>{
 	
 	/**
 	 * 构造
-	 * @param value
+	 * @param value 被包装的对象
 	 */
 	public Holder(T value) {
 		super(value);

@@ -25,6 +25,7 @@ public final class ArrayUtil {
 	/**
 	 * 数组是否为空
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 是否为空
 	 */
@@ -115,6 +116,7 @@ public final class ArrayUtil {
 	/**
 	 * 数组是否为非空
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
@@ -205,6 +207,7 @@ public final class ArrayUtil {
 	/**
 	 * 新建一个空数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param componentType 元素类型
 	 * @param newSize 大小
 	 * @return 空数组
@@ -245,9 +248,10 @@ public final class ArrayUtil {
 	}
 
 	/**
-	 * 将新元素添加到已有数组中<br/>
+	 * 将新元素添加到已有数组中<br>
 	 * 添加新元素会生成一个新的数组，不影响原数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param buffer 已有数组
 	 * @param newElements 新元素
 	 * @return 新数组
@@ -266,6 +270,7 @@ public final class ArrayUtil {
 	/**
 	 * 生成一个新的重新设置大小的数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param buffer 原数组
 	 * @param newSize 新的数组大小
 	 * @param componentType 数组元素类型
@@ -280,9 +285,10 @@ public final class ArrayUtil {
 	}
 
 	/**
-	 * 生成一个新的重新设置大小的数组<br/>
+	 * 生成一个新的重新设置大小的数组<br>
 	 * 新数组的类型为原数组的类型
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param buffer 原数组
 	 * @param newSize 新的数组大小
 	 * @return 调整后的新数组
@@ -295,6 +301,7 @@ public final class ArrayUtil {
 	 * 将多个数组合并在一起<br>
 	 * 忽略null的数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param arrays 数组集合
 	 * @return 合并后的数组
 	 */
@@ -359,6 +366,7 @@ public final class ArrayUtil {
 	/**
 	 * 克隆数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 被克隆的数组
 	 * @return 新数组
 	 */
@@ -372,6 +380,7 @@ public final class ArrayUtil {
 	/**
 	 * 克隆数组，如果非数组返回<code>null</code>
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param obj 数组对象
 	 * @return 克隆后的数组对象
 	 */
@@ -483,6 +492,7 @@ public final class ArrayUtil {
 	/**
 	 * 过滤
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @param editor 编辑器接口
 	 * @return 过滤后的数组
@@ -507,19 +517,21 @@ public final class ArrayUtil {
 	 * 则得到的Map是 {a=1, b=2, c=3, d=4}<br>
 	 * 如果两个数组长度不同，则只对应最短部分
 	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
 	 * @param keys 键列表
 	 * @param values 值列表
 	 * @param isOrder 是否有序
 	 * @return Map
 	 * @since 3.0.4
 	 */
-	public static <T, K> Map<T, K> zip(T[] keys, K[] values, boolean isOrder) {
+	public static <K, V> Map<K, V> zip(K[] keys, V[] values, boolean isOrder) {
 		if (isEmpty(keys) || isEmpty(values)) {
 			return null;
 		}
 
 		final int size = Math.min(keys.length, values.length);
-		final Map<T, K> map = CollectionUtil.newHashMap(size, isOrder);
+		final Map<K, V> map = CollectionUtil.newHashMap(size, isOrder);
 		for (int i = 0; i < size; i++) {
 			map.put(keys[i], values[i]);
 		}
@@ -535,17 +547,20 @@ public final class ArrayUtil {
 	 * 则得到的Map是 {a=1, b=2, c=3, d=4}<br>
 	 * 如果两个数组长度不同，则只对应最短部分
 	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
 	 * @param keys 键列表
 	 * @param values 值列表
 	 * @return Map
 	 */
-	public static <T, K> Map<T, K> zip(T[] keys, K[] values) {
+	public static <K, V> Map<K, V> zip(K[] keys, V[] values) {
 		return zip(keys, values, false);
 	}
 
 	/**
 	 * 数组中是否包含元素
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @param value 被检查的元素
 	 * @return 是否包含
@@ -907,7 +922,7 @@ public final class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static <T> String join(T[] array, String conjunction) {
+	public static <T> String join(T[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1140,7 +1155,7 @@ public final class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(Object array, String conjunction) {
+	public static String join(Object array, CharSequence conjunction) {
 		if (isArray(array)) {
 			final Class<?> componentType = array.getClass().getComponentType();
 			if (componentType.isPrimitive()) {

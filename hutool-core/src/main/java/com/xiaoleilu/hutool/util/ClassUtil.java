@@ -97,9 +97,9 @@ public final class ClassUtil {
 	}
 	
 	/**
-	 * 扫面包路径下满足class过滤器条件的所有class文件，</br>
-	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException</br>
-	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改</br>
+	 * 扫面包路径下满足class过滤器条件的所有class文件，<br>
+	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException<br>
+	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改<br>
 	 * 
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @param classFilter class过滤器，过滤掉不需要的class
@@ -115,6 +115,7 @@ public final class ClassUtil {
 	 * 去重重载的方法
 	 * 
 	 * @param clazz 类
+	 * @return 方法名Set
 	 */
 	public static Set<String> getPublicMethodNames(Class<?> clazz) {
 		HashSet<String> methodSet = new HashSet<String>();
@@ -204,8 +205,8 @@ public final class ClassUtil {
 	 * @param methodName 方法名
 	 * @param paramTypes 参数类型
 	 * @return 方法
-	 * @throws SecurityException
-	 * @throws NoSuchMethodException
+	 * @throws SecurityException 无权访问抛出异常
+	 * @throws NoSuchMethodException 无此方法抛出异常
 	 */
 	public static Method getPublicMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) throws NoSuchMethodException, SecurityException {
 		try {
@@ -220,6 +221,7 @@ public final class ClassUtil {
 	 * 去重重载的方法
 	 * 
 	 * @param clazz 类
+	 * @return 方法名Set
 	 */
 	public static Set<String> getDeclaredMethodNames(Class<?> clazz) {
 		HashSet<String> methodSet = new HashSet<String>();
@@ -257,7 +259,7 @@ public final class ClassUtil {
 	 * @param args 参数
 	 * @return 方法
 	 * @throws NoSuchMethodException 无此方法
-	 * @throws SecurityException
+	 * @throws SecurityException 无访问权限抛出异常
 	 */
 	public static Method getDeclaredMethodOfObj(Object obj, String methodName, Object... args) throws NoSuchMethodException, SecurityException {
 		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
@@ -271,7 +273,7 @@ public final class ClassUtil {
 	 * @param parameterTypes 参数类型
 	 * @return 方法
 	 * @throws NoSuchMethodException 无此方法
-	 * @throws SecurityException
+	 * @throws SecurityException 无访问权限抛出异常
 	 */
 	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
 		Method method = null;
@@ -414,6 +416,7 @@ public final class ClassUtil {
 	/**
 	 * 实例化对象
 	 * 
+	 * @param <T> 对象类型
 	 * @param clazz 类名
 	 * @return 对象
 	 */
@@ -429,6 +432,7 @@ public final class ClassUtil {
 	/**
 	 * 实例化对象
 	 * 
+	 * @param <T> 对象类型
 	 * @param clazz 类
 	 * @return 对象
 	 */
@@ -443,7 +447,9 @@ public final class ClassUtil {
 	/**
 	 * 实例化对象
 	 * 
+	 * @param <T> 对象类型
 	 * @param clazz 类
+	 * @param params 构造函数参数
 	 * @return 对象
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... params) {
@@ -465,7 +471,7 @@ public final class ClassUtil {
 	
 	/**
 	 * 查找类中的指定参数的构造方法
-	 * @param <T> 
+	 * @param <T> 对象类型
 	 * @param clazz 类
 	 * @param parameterTypes 参数类型，只要任何一个参数是指定参数的父类或接口或相等即可
 	 * @return 构造方法，如果未找到返回null
@@ -511,7 +517,7 @@ public final class ClassUtil {
 	/**
 	 * 加载类
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param className 类名
 	 * @param isInitialized 是否初始化
 	 * @return 类
@@ -530,7 +536,7 @@ public final class ClassUtil {
 	/**
 	 * 加载类并初始化
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param className 类名
 	 * @return 类
 	 */
@@ -545,7 +551,7 @@ public final class ClassUtil {
 	 * 执行非static方法时，必须满足对象有默认构造方法<br>
 	 * 非单例模式，如果是非静态方法，每次创建一个新对象
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param classNameDotMethodName 类名和方法名表达式，例如：com.xiaoleilu.hutool.StrUtil.isEmpty
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
@@ -559,7 +565,7 @@ public final class ClassUtil {
 	 * 可执行Private方法，也可执行static方法<br>
 	 * 执行非static方法时，必须满足对象有默认构造方法<br>
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param classNameWithMethodName 类名和方法名表达式，例如：com.xiaoleilu.hutool.StrUtil#isEmpty或com.xiaoleilu.hutool.StrUtil.isEmpty
 	 * @param isSingleton 是否为单例对象，如果此参数为false，每次执行方法时创建一个新对象
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
@@ -590,7 +596,7 @@ public final class ClassUtil {
 	 * 执行非static方法时，必须满足对象有默认构造方法<br>
 	 * 非单例模式，如果是非静态方法，每次创建一个新对象
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param className 类名，完整类路径
 	 * @param methodName 方法名
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
@@ -605,7 +611,7 @@ public final class ClassUtil {
 	 * 可执行Private方法，也可执行static方法<br>
 	 * 执行非static方法时，必须满足对象有默认构造方法<br>
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param className 类名，完整类路径
 	 * @param methodName 方法名
 	 * @param isSingleton 是否为单例对象，如果此参数为false，每次执行方法时创建一个新对象
@@ -633,7 +639,7 @@ public final class ClassUtil {
 	 * 执行方法<br>
 	 * 可执行Private方法，也可执行static方法<br>
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param obj 对象
 	 * @param methodName 方法名
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
@@ -654,6 +660,7 @@ public final class ClassUtil {
 	/**
 	 * 执行静态方法
 	 * 
+	 * @param <T> 对象类型
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
 	 * @return 结果
@@ -668,6 +675,7 @@ public final class ClassUtil {
 	/**
 	 * 执行方法
 	 * 
+	 * @param <T> 对象类型
 	 * @param obj 对象，如果执行静态方法，此值为<code>null</code>
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
@@ -904,7 +912,7 @@ public final class ClassUtil {
 	/**
 	 * 获得给定类所在包的名称<br>
 	 * 例如：<br>
-	 * com.xiaoleilu.hutool.util.ClassUtil -> com.xiaoleilu.hutool.util
+	 * com.xiaoleilu.hutool.util.ClassUtil =》 com.xiaoleilu.hutool.util
 	 * 
 	 * @param clazz 类
 	 * @return 包名
@@ -924,7 +932,7 @@ public final class ClassUtil {
 	/**
 	 * 获得给定类所在包的路径<br>
 	 * 例如：<br>
-	 * com.xiaoleilu.hutool.util.ClassUtil -> com/xiaoleilu/hutool/util
+	 * com.xiaoleilu.hutool.util.ClassUtil =》 com/xiaoleilu/hutool/util
 	 * 
 	 * @param clazz 类
 	 * @return 包名

@@ -30,10 +30,10 @@ public final class ObjectUtil {
 	 * 比较两个对象是否相等。<br>
 	 * 相同的条件有两个，满足其一即可：<br>
 	 * <ol>
-	 * 	<li>obj1 == null && obj2 == null</li>
+	 * 	<li>obj1 == null &amp;&amp; obj2 == null</li>
 	 * <li>obj1.equals(obj2)</li>
 	 * </ol>
-	 * 1. obj1 == null && obj2 == null
+	 * 1. obj1 == null &amp;&amp; obj2 == null
 	 * 2. obj1.equals(obj2)
 	 * 
 	 * @param obj1 对象1

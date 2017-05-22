@@ -176,7 +176,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * 
 	 * @param settingStream 文件流
 	 * @return 加载成功与否
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public boolean load(InputStream settingStream) throws IOException {
 		super.clear();

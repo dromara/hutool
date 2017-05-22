@@ -60,7 +60,7 @@ public final class BeanUtil {
 	 * 
 	 * @param clazz Bean类
 	 * @return 字段描述数组
-	 * @throws IntrospectionException
+	 * @throws IntrospectionException 获取属性异常
 	 */
 	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) throws IntrospectionException {
 		return Introspector.getBeanInfo(clazz).getPropertyDescriptors();
@@ -71,7 +71,7 @@ public final class BeanUtil {
 	 * @param clazz Bean类
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
-	 * @throws IntrospectionException
+	 * @throws IntrospectionException 获取属性异常
 	 */
 	public static Map<String, PropertyDescriptor> getFieldNamePropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws IntrospectionException{
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
@@ -91,7 +91,7 @@ public final class BeanUtil {
 	 * @param clazz Bean类
 	 * @param fieldName 字段名
 	 * @return PropertyDescriptor
-	 * @throws IntrospectionException
+	 * @throws IntrospectionException 获取属性异常
 	 */
 	public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz, final String fieldName) throws IntrospectionException {
 		PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
@@ -107,6 +107,7 @@ public final class BeanUtil {
 	/**
 	 * Map转换为Bean对象
 	 * 
+	 * @param <T> Bean类型
 	 * @param map {@link Map}
 	 * @param beanClass Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
@@ -120,6 +121,7 @@ public final class BeanUtil {
 	 * Map转换为Bean对象<br>
 	 * 忽略大小写
 	 * 
+	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param beanClass Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
@@ -133,6 +135,7 @@ public final class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象
 	 * 
+	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
 	 * @param copyOptions 属性复制选项 {@link CopyOptions}
@@ -155,6 +158,7 @@ public final class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象
 	 * 
+	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
 	 * @param isIgnoreError 是否忽略注入错误
@@ -167,6 +171,7 @@ public final class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象，可配置将下划线转换为驼峰
 	 * 
+	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
 	 * @param isToCamelCase 是否将下划线模式转换为驼峰模式
@@ -194,6 +199,7 @@ public final class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象，忽略大小写
 	 * 
+	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
 	 * @param isIgnoreError 是否忽略注入错误
@@ -207,6 +213,7 @@ public final class BeanUtil {
 	/**
 	 * ServletRequest 参数转Bean
 	 * 
+	 * @param <T> Bean类型
 	 * @param request ServletRequest
 	 * @param bean Bean
 	 * @param copyOptions 注入时的设置
@@ -241,6 +248,7 @@ public final class BeanUtil {
 	/**
 	 * ServletRequest 参数转Bean
 	 * 
+	 * @param <T> Bean类型
 	 * @param request ServletRequest
 	 * @param bean Bean
 	 * @param isIgnoreError 是否忽略注入错误
@@ -253,6 +261,7 @@ public final class BeanUtil {
 	/**
 	 * ServletRequest 参数转Bean
 	 * 
+	 * @param <T> Bean类型
 	 * @param request ServletRequest
 	 * @param beanClass Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
@@ -266,7 +275,7 @@ public final class BeanUtil {
 	/**
 	 * ServletRequest 参数转Bean
 	 * 
-	 * @param <T>
+	 * @param <T> Bean类型
 	 * @param beanClass Bean Class
 	 * @param valueProvider 值提供者
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
@@ -346,6 +355,7 @@ public final class BeanUtil {
 	/**
 	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
 	 * 
+	 * @param <T> Bean类型
 	 * @param bean bean对象
 	 * @return Map
 	 */
@@ -356,6 +366,7 @@ public final class BeanUtil {
 	/**
 	 * 对象转Map
 	 * 
+	 * @param <T> Bean类型
 	 * @param bean bean对象
 	 * @param isToUnderlineCase 是否转换为下划线模式
 	 * @param ignoreNullValue 是否忽略值为空的字段

@@ -99,7 +99,6 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 增加值
 	 * @param operand 被增加的值，非空
 	 * @return this
-	 * @throws NullPodoubleerException if the object is null
 	 */
 	public MutableDouble add(final Number operand) {
 		this.value += operand.doubleValue();
@@ -122,7 +121,6 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 
 	 * @param operand 被减的值，非空
 	 * @return this
-	 * @throws NullPodoubleerException if the object is null
 	 */
 	public MutableDouble subtract(final Number operand) {
 		this.value -= operand.doubleValue();

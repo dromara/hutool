@@ -41,6 +41,7 @@ public final class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @return 并集的集合，返回 {@link ArrayList}
@@ -70,6 +71,7 @@ public final class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c, c]，此结果中只保留了三个c
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @param otherColls 其它集合
@@ -90,6 +92,7 @@ public final class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c]，此结果中只保留了两个c
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @return 交集的集合，返回 {@link ArrayList}
@@ -115,6 +118,7 @@ public final class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[a, b, c, c]，此结果中只保留了两个c
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @param otherColls 其它集合
@@ -141,6 +145,7 @@ public final class CollectionUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[c]，此结果中只保留了一个
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param coll1 集合1
 	 * @param coll2 集合2
 	 * @return 差集的集合，返回 {@link ArrayList}
@@ -197,6 +202,7 @@ public final class CollectionUtil {
 	 * b: 1<br>
 	 * c: 3<br>
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @return {@link Map}
 	 */
@@ -217,12 +223,12 @@ public final class CollectionUtil {
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
 	 * 
-	 * @param <T> 被处理的集合
+	 * @param <T> 集合元素类型
 	 * @param iterable {@link Iterable}
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static <T> String join(Iterable<T> iterable, String conjunction) {
+	public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
 		if(null == iterable){
 			return null;
 		}
@@ -232,12 +238,12 @@ public final class CollectionUtil {
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
 	 * 
-	 * @param <T> 被处理的集合
+	 * @param <T> 集合元素类型
 	 * @param iterator 集合
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static <T> String join(Iterator<T> iterator, String conjunction) {
+	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
 		if(null == iterator){
 			return null;
 		}
@@ -269,6 +275,7 @@ public final class CollectionUtil {
 	/**
 	 * 将多个集合排序并显示不同的段落（分页）
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param pageNo 页码，从1开始
 	 * @param numPerPage 每页的条目数
 	 * @param comparator 比较器
@@ -301,6 +308,7 @@ public final class CollectionUtil {
 	/**
 	 * 将多个集合排序并显示不同的段落（分页）
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param pageNo 页码
 	 * @param numPerPage 每页的条目数
 	 * @param comparator 比较器
@@ -411,37 +419,45 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个HashMap
 	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
 	 * @return HashMap对象
 	 */
-	public static <T, K> HashMap<T, K> newHashMap() {
-		return new HashMap<T, K>();
+	public static <K, V> HashMap<K, V> newHashMap() {
+		return new HashMap<K, V>();
 	}
 	
 	/**
 	 * 新建一个HashMap
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
 	 * @param size 初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75
 	 * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
 	 * @return HashMap对象
 	 * @since 3.0.4
 	 */
-	public static <T, K> HashMap<T, K> newHashMap(int size, boolean isOrder) {
+	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isOrder) {
 		int initialCapacity = (int) (size / 0.75);
-		return isOrder ? new LinkedHashMap<T, K>(initialCapacity) : new HashMap<T, K>(initialCapacity);
+		return isOrder ? new LinkedHashMap<K, V>(initialCapacity) : new HashMap<K, V>(initialCapacity);
 	}
 
 	/**
 	 * 新建一个HashMap
 	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
 	 * @param size 初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75
 	 * @return HashMap对象
 	 */
-	public static <T, K> HashMap<T, K> newHashMap(int size) {
+	public static <K, V> HashMap<K, V> newHashMap(int size) {
 		return newHashMap(size, false);
 	}
 
 	/**
 	 * 新建一个HashSet
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param ts 元素数组
 	 * @return HashSet对象
 	 */
@@ -457,6 +473,7 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个HashSet
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回 {@link HashSet}
 	 * @param ts 元素数组
 	 * @return HashSet对象
@@ -474,6 +491,8 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个HashSet
 	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
 	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
@@ -483,6 +502,8 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个HashSet
 	 * 
+	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回{@link HashSet}
+	 * @param collection 集合，用于初始化Set
 	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<T> collection) {
@@ -492,6 +513,7 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个ArrayList
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param values 数组
 	 * @return ArrayList对象
 	 */
@@ -507,6 +529,7 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个ArrayList
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @return ArrayList对象
 	 */
@@ -517,6 +540,7 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个CopyOnWriteArrayList
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @return {@link CopyOnWriteArrayList}
 	 */
@@ -526,6 +550,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 去重集合
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @return {@link ArrayList}
 	 */
@@ -542,6 +568,7 @@ public final class CollectionUtil {
 	/**
 	 * 截取数组的部分
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param list 被截取的数组
 	 * @param start 开始位置（包含）
 	 * @param end 结束位置（不包含）
@@ -579,6 +606,7 @@ public final class CollectionUtil {
 	/**
 	 * 截取集合的部分
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param list 被截取的数组
 	 * @param start 开始位置（包含）
 	 * @param end 结束位置（不包含）
@@ -594,6 +622,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @param size 每个段的长度
 	 * @return 分段列表
@@ -617,6 +647,7 @@ public final class CollectionUtil {
 	 * 过滤<br>
 	 * 过滤会改变原集合的内容
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @param editor 编辑器接口
 	 * @return 过滤后的数组
@@ -638,6 +669,8 @@ public final class CollectionUtil {
 	/**
 	 * 过滤
 	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
 	 * @param map Map
 	 * @param editor 编辑器接口
 	 * @return 过滤后的Map
@@ -658,6 +691,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 集合中匹配规则的数量
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param iterable {@link Iterable}
 	 * @param matcher 匹配器，为空则全部匹配
 	 * @return 匹配数量
@@ -742,7 +777,7 @@ public final class CollectionUtil {
 	 * @param map 集合
 	 * @return 是否为非空
 	 */
-	public static <T> boolean isNotEmpty(Map<?, ?> map) {
+	public static boolean isNotEmpty(Map<?, ?> map) {
 		return false == isEmpty(map);
 	}
 
@@ -788,6 +823,7 @@ public final class CollectionUtil {
 	 * 
 	 * @param keys 键列表
 	 * @param values 值列表
+	 * @param delimiter 分隔符
 	 * @param isOrder 是否有序
 	 * @return Map
 	 * @since 3.0.4
@@ -806,6 +842,7 @@ public final class CollectionUtil {
 	 * 
 	 * @param keys 键列表
 	 * @param values 值列表
+	 * @param delimiter 分隔符
 	 * @return Map
 	 */
 	public static Map<String, String> zip(String keys, String values, String delimiter) {
@@ -820,20 +857,22 @@ public final class CollectionUtil {
 	 * 则得到的Map是 {a=1, b=2, c=3, d=4}<br>
 	 * 如果两个数组长度不同，则只对应最短部分
 	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param keys 键列表
 	 * @param values 值列表
 	 * @return Map
 	 */
-	public static <T, K> Map<T, K> zip(Collection<T> keys, Collection<K> values) {
+	public static <K, V> Map<K, V> zip(Collection<K> keys, Collection<V> values) {
 		if (isEmpty(keys) || isEmpty(values)) {
 			return null;
 		}
 
-		final List<T> keyList = new ArrayList<T>(keys);
-		final List<K> valueList = new ArrayList<K>(values);
+		final List<K> keyList = new ArrayList<K>(keys);
+		final List<V> valueList = new ArrayList<V>(values);
 
 		final int size = Math.min(keys.size(), values.size());
-		final Map<T, K> map = new HashMap<T, K>((int) (size / 0.75));
+		final Map<K, V> map = new HashMap<K, V>((int) (size / 0.75));
 		for (int i = 0; i < size; i++) {
 			map.put(keyList.get(i), valueList.get(i));
 		}
@@ -844,12 +883,14 @@ public final class CollectionUtil {
 	/**
 	 * 将Entry集合转换为HashMap
 	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param entryCollection entry集合
 	 * @return Map
 	 */
-	public static <T, K> HashMap<T, K> toMap(Collection<Entry<T, K>> entryCollection) {
-		HashMap<T, K> map = new HashMap<T, K>();
-		for (Entry<T, K> entry : entryCollection) {
+	public static <K, V> HashMap<K, V> toMap(Collection<Entry<K, V>> entryCollection) {
+		HashMap<K, V> map = new HashMap<K, V>();
+		for (Entry<K, V> entry : entryCollection) {
 			map.put(entry.getKey(), entry.getValue());
 		}
 		return map;
@@ -858,6 +899,7 @@ public final class CollectionUtil {
 	/**
 	 * 将集合转换为排序后的TreeSet
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @param comparator 比较器
 	 * @return treeSet
@@ -873,6 +915,7 @@ public final class CollectionUtil {
 	/**
 	 * 排序集合
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @param comparator 比较器
 	 * @return treeSet
@@ -884,10 +927,12 @@ public final class CollectionUtil {
 	}
 
 	/**
-	 * Iterator转换为Enumeration Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
+	 * Iterator转换为Enumeration <p>
+	 * Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
 	 * 
-	 * @param iter Iterator
-	 * @return Enumeration
+	 * @param <E> 集合元素类型
+	 * @param iter {@link Iterator}
+	 * @return {@link Enumeration}
 	 */
 	public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
 		return new Enumeration<E>(){
@@ -904,11 +949,12 @@ public final class CollectionUtil {
 	}
 
 	/**
-	 * Enumeration转换为Iterator<br>
+	 * Enumeration转换为Iterator<p>
 	 * Adapt the specified <code>Enumeration</code> to the <code>Iterator</code> interface
 	 * 
-	 * @param e Enumeration
-	 * @return Iterator
+	 * @param <E> 集合元素类型
+	 * @param e {@link Enumeration}
+	 * @return {@link Iterator}
 	 */
 	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
 		return new Iterator<E>(){
@@ -931,6 +977,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 加入全部
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 被加入的集合 {@link Collection}
 	 * @param iterator 要加入的{@link Iterator}
 	 * @return 原集合
@@ -946,6 +994,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 加入全部
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 被加入的集合 {@link Collection}
 	 * @param iterable 要加入的内容{@link Iterable}
 	 * @return 原集合
@@ -956,6 +1006,8 @@ public final class CollectionUtil {
 
 	/**
 	 * 加入全部
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param collection 被加入的集合 {@link Collection}
 	 * @param enumeration 要加入的内容{@link Enumeration}
 	 * @return 原集合
@@ -971,6 +1023,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 将另一个列表中的元素加入到列表中，如果列表中已经存在此元素则忽略之
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @param otherList 其它列表
 	 * @return 此列表
@@ -986,6 +1040,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 获取集合的第一个元素
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param iterable {@link Iterable}
 	 * @return 第一个元素
 	 * @since 3.0.1
@@ -999,6 +1055,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 获取集合的第一个元素
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param iterator {@link Iterator}
 	 * @return 第一个元素
 	 * @since 3.0.1
@@ -1014,6 +1072,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 循环遍历 {@link Iterator}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param iterator {@link Iterator}
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
@@ -1027,6 +1087,8 @@ public final class CollectionUtil {
 	
 	/**
 	 * 循环遍历 {@link Enumeration}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 
+	 * @param <T> 集合元素类型
 	 * @param enumeration {@link Enumeration}
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
@@ -1040,6 +1102,9 @@ public final class CollectionUtil {
 	
 	/**
 	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
 	 * @param map {@link Map}
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
 	 */

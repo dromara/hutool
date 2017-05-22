@@ -125,7 +125,7 @@ public final class NumberUtil {
 	/**
 	 * 保留固定位数小数<br>
 	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
-	 * 例如保留2位小数：123.456789 -> 123.46
+	 * 例如保留2位小数：123.456789 => 123.46
 	 * 
 	 * @param v 值
 	 * @param scale 保留小数位数
@@ -138,7 +138,7 @@ public final class NumberUtil {
 	/**
 	 * 保留固定位数小数<br>
 	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
-	 * 例如保留2位小数：123.456789 -> 123.46
+	 * 例如保留2位小数：123.456789 => 123.46
 	 * 
 	 * @param numberStr 数字值的字符串表现形式
 	 * @param scale 保留小数位数
@@ -150,7 +150,7 @@ public final class NumberUtil {
 
 	/**
 	 * 保留固定位数小数<br>
-	 * 例如保留四位小数：123.456789 -> 123.4567
+	 * 例如保留四位小数：123.456789 => 123.4567
 	 * 
 	 * @param v 值
 	 * @param scale 保留小数位数
@@ -163,7 +163,7 @@ public final class NumberUtil {
 
 	/**
 	 * 保留固定位数小数<br>
-	 * 例如保留四位小数：123.456789 -> 123.4567
+	 * 例如保留四位小数：123.456789 => 123.4567
 	 * 
 	 * @param numberStr 数字值的字符串表现形式
 	 * @param scale 保留小数位数
@@ -193,14 +193,14 @@ public final class NumberUtil {
 	 * 
 	 * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
 	 *            <ul>
-	 *            <li>0 -> 取一位整数</li>
-	 *            <li>0.00 -> 取一位整数和两位小数</li>
-	 *            <li>00.000 -> 取两位整数和三位小数</li>
-	 *            <li># -> 取所有整数部分</li>
-	 *            <li>#.##% -> 以百分比方式计数，并取两位小数</li>
-	 *            <li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
-	 *            <li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
-	 *            <li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
+	 *            <li>0 => 取一位整数</li>
+	 *            <li>0.00 => 取一位整数和两位小数</li>
+	 *            <li>00.000 => 取两位整数和三位小数</li>
+	 *            <li># => 取所有整数部分</li>
+	 *            <li>#.##% => 以百分比方式计数，并取两位小数</li>
+	 *            <li>#.#####E0 => 显示为科学计数法，并取五位小数</li>
+	 *            <li>,### => 每三位以逗号进行分隔，例如：299,792,458</li>
+	 *            <li>光速大小为每秒,###米 => 将格式嵌入文本</li>
 	 *            </ul>
 	 * @param value 值
 	 * @return 格式化后的值
@@ -215,14 +215,14 @@ public final class NumberUtil {
 	 * 
 	 * @param pattern 格式 格式中主要以 # 和 0 两种占位符号来指定数字长度。0 表示如果位数不足则以 0 填充，# 表示只要有可能就把数字拉上这个位置。<br>
 	 *            <ul>
-	 *            <li>0 -> 取一位整数</li>
-	 *            <li>0.00 -> 取一位整数和两位小数</li>
-	 *            <li>00.000 -> 取两位整数和三位小数</li>
-	 *            <li># -> 取所有整数部分</li>
-	 *            <li>#.##% -> 以百分比方式计数，并取两位小数</li>
-	 *            <li>#.#####E0 -> 显示为科学计数法，并取五位小数</li>
-	 *            <li>,### -> 每三位以逗号进行分隔，例如：299,792,458</li>
-	 *            <li>光速大小为每秒,###米 -> 将格式嵌入文本</li>
+	 *            <li>0 => 取一位整数</li>
+	 *            <li>0.00 => 取一位整数和两位小数</li>
+	 *            <li>00.000 => 取两位整数和三位小数</li>
+	 *            <li># => 取所有整数部分</li>
+	 *            <li>#.##% => 以百分比方式计数，并取两位小数</li>
+	 *            <li>#.#####E0 => 显示为科学计数法，并取五位小数</li>
+	 *            <li>,### => 每三位以逗号进行分隔，例如：299,792,458</li>
+	 *            <li>光速大小为每秒,###米 => 将格式嵌入文本</li>
 	 *            </ul>
 	 * @param value 值
 	 * @return 格式化后的值
@@ -389,6 +389,7 @@ public final class NumberUtil {
 	 * @param begin 最小数字（包含该数）
 	 * @param end 最大数字（不包含该数）
 	 * @param size 指定产生随机数的个数
+	 * @return 随机int数组
 	 */
 	public int[] generateRandomNumber(int begin, int end, int size) {
 		if (begin > end) {
@@ -426,6 +427,7 @@ public final class NumberUtil {
 	 * @param begin 最小数字（包含该数）
 	 * @param end 最大数字（不包含该数）
 	 * @param size 指定产生随机数的个数
+	 * @return 随机int数组
 	 */
 	public Integer[] generateBySet(int begin, int end, int size) {
 		if (begin > end) {
@@ -562,9 +564,12 @@ public final class NumberUtil {
 	}
 
 	/**
-	 * 可以用于计算双色球、大乐透注数的方法 selectNum：<br>
-	 * 选中了的小球个数 minNum：至少要选中多少个小球 <br>
+	 * 可以用于计算双色球、大乐透注数的方法<br>
 	 * 比如大乐透35选5可以这样调用processMultiple(7,5); 就是数学中的：C75=7*6/2*1
+	 * 
+	 * @param selectNum 选中小球个数
+	 * @param minNum 最少要选中多少个小球
+	 * @return 注数
 	 */
 	public int processMultiple(int selectNum, int minNum) {
 		int result;

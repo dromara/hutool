@@ -258,7 +258,7 @@ public final class ImageUtil {
 	}
 
 	/**
-	 * 图像类型转换：GIF->JPG、GIF->PNG、PNG->JPG、PNG->GIF(X)、BMP->PNG
+	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
 	 * 
 	 * @param srcImageFile 源图像文件
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
