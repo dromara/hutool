@@ -76,6 +76,7 @@ public final class ZipUtil {
 	 * @param srcPath 要压缩的源文件路径。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @param zipPath 压缩文件保存的路径，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
+	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 */
 	public static File zip(String srcPath, String zipPath, boolean withSrcDir) throws UtilException {
@@ -91,9 +92,10 @@ public final class ZipUtil {
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param withSrcDir 是否包含被打包目录
 	 * @param srcFiles 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 */
-	public static void zip(File zipFile, boolean withSrcDir, File... srcFiles) throws UtilException {
+	public static File zip(File zipFile, boolean withSrcDir, File... srcFiles) throws UtilException {
 		validateFiles(zipFile, srcFiles);
 
 		ZipOutputStream out = null;
@@ -114,6 +116,7 @@ public final class ZipUtil {
 		} finally {
 			IoUtil.close(out);
 		}
+		return zipFile;
 	}
 
 	/**
@@ -123,11 +126,12 @@ public final class ZipUtil {
 	 * @param path 流数据在压缩文件中的路径或文件名
 	 * @param data 要压缩的数据
 	 * @param charset 编码
+	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 * @since 3.0.6
 	 */
-	public static void zip(File zipFile, String path, String data, Charset charset) throws UtilException {
-		zip(zipFile, path, IoUtil.toStream(data, charset));
+	public static File zip(File zipFile, String path, String data, Charset charset) throws UtilException {
+		return zip(zipFile, path, IoUtil.toStream(data, charset));
 	}
 
 	/**
@@ -136,10 +140,11 @@ public final class ZipUtil {
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param path 流数据在压缩文件中的路径或文件名
 	 * @param in 要压缩的源
+	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 * @since 3.0.6
 	 */
-	public static void zip(File zipFile, String path, InputStream in) throws UtilException {
+	public static File zip(File zipFile, String path, InputStream in) throws UtilException {
 		ZipOutputStream out = null;
 		try {
 			out = getZipOutputStream(zipFile);
@@ -147,6 +152,7 @@ public final class ZipUtil {
 		} finally {
 			IoUtil.close(out);
 		}
+		return zipFile;
 	}
 
 	/**
@@ -236,7 +242,7 @@ public final class ZipUtil {
 	 * 
 	 * @param val 被压缩的字节流
 	 * @return 压缩后的字节流
-	 * @throws IOException
+	 * @throws UtilException IO异常
 	 */
 	public static byte[] gzip(byte[] val) throws UtilException {
 		FastByteArrayOutputStream bos = new FastByteArrayOutputStream(val.length);

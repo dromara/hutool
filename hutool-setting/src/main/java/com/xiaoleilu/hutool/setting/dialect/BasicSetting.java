@@ -141,6 +141,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 
 	/**
 	 * 重新加载配置文件
+	 * @return 是否加载成功
 	 */
 	synchronized public boolean load() {
 		if(null == this.settingLoader){
@@ -232,6 +233,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	
 	/**
 	 * 转换为Properties对象，原分组变为前缀
+	 * @param group 分组
 	 * @return Properties对象
 	 */
 	public Properties getProperties(String group){
@@ -254,7 +256,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	}
 	
 	/**
-	 * 设置变量的正则<br/>
+	 * 设置变量的正则<br>
 	 * 正则只能有一个group表示变量本身，剩余为字符 例如 \$\{(name)\}表示${name}变量名为name的一个变量表示
 	 * 
 	 * @param regex 正则

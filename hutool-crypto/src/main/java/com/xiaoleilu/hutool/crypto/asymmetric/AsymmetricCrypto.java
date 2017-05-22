@@ -145,6 +145,7 @@ public class AsymmetricCrypto {
 
 	/**
 	 * 生成公钥和私钥
+	 * @return {@link AsymmetricCrypto}
 	 */
 	public AsymmetricCrypto initKeys() {
 		KeyPair keyPair = SecureUtil.generateKeyPair(this.algorithm);

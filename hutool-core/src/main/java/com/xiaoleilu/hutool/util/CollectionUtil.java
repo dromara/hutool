@@ -502,6 +502,7 @@ public final class CollectionUtil {
 	/**
 	 * 新建一个HashSet
 	 * 
+	 * @param <T> 集合元素类型
 	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回{@link HashSet}
 	 * @param collection 集合，用于初始化Set
 	 * @return HashSet对象

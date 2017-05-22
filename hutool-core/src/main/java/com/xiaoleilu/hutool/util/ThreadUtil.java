@@ -51,7 +51,7 @@ public final class ThreadUtil {
 	
 	/**
 	 * 获得一个新的线程池<br>
-	 * 如果maximumPoolSize > corePoolSize，在没有新任务加入的情况下，多出的线程将最多保留60s
+	 * 如果maximumPoolSize =》 corePoolSize，在没有新任务加入的情况下，多出的线程将最多保留60s
 	 * 
 	 * @param corePoolSize 初始线程池大小
 	 * @param maximumPoolSize 最大线程池大小
@@ -101,6 +101,7 @@ public final class ThreadUtil {
 	 * 执行异步方法
 	 * 
 	 * @param runnable 需要执行的方法体
+	 * @param isDeamon 是否守护线程。守护线程会在主线程结束后自动结束
 	 * @return 执行的方法体
 	 */
 	public static Runnable excAsync(final Runnable runnable, boolean isDeamon) {
@@ -119,6 +120,8 @@ public final class ThreadUtil {
 	/**
 	 * 执行有返回值的异步方法<br>
 	 * Future代表一个异步执行的操作，通过get()方法可以获得操作的结果，如果异步操作还没有完成，则，get()会使当前线程阻塞
+	 * 
+	 * @param <T> 回调对象类型
 	 * @param task {@link Callable}
 	 * @return Future
 	 */
@@ -142,6 +145,7 @@ public final class ThreadUtil {
 	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。<br>
 	 * 若未完成，则会阻塞
 	 * 
+	 * @param <T> 回调对象类型
 	 * @return CompletionService
 	 */
 	public static <T> CompletionService<T> newCompletionService() {
@@ -152,6 +156,8 @@ public final class ThreadUtil {
 	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。<br>
 	 * 若未完成，则会阻塞
 	 * 
+	 * @param <T> 回调对象类型
+	 * @param executor 执行器 {@link ExecutorService}
 	 * @return CompletionService
 	 */
 	public static <T> CompletionService<T> newCompletionService(ExecutorService executor) {
@@ -246,6 +252,8 @@ public final class ThreadUtil {
 	
 	/**
 	 * 创建本地线程对象
+	 * 
+	 * @param <T> 持有对象类型
 	 * @param isInheritable 是否为子线程提供从父线程那里继承的值
 	 * @return 本地线程
 	 */

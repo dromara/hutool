@@ -39,7 +39,7 @@ public class BitSetBloomFilter implements BloomFilter{
 	 * 
 	 * @param path 文件路径
 	 * @param charset 字符集
-	 * @throws IOException 
+	 * @throws IOException IO异常
 	 */
 	public void init(String path, String charset) throws IOException {
 		BufferedReader reader = FileUtil.getReader(path, charset);

@@ -138,7 +138,7 @@ public final class DbUtil {
 	}
 	
 	/**
-	 * 连续关闭一系列的SQL相关对象<br/>
+	 * 连续关闭一系列的SQL相关对象<br>
 	 * 这些对象必须按照顺序关闭，否则会出错。
 	 * 
 	 * @param objsToClose 需要关闭的对象
@@ -210,6 +210,9 @@ public final class DbUtil {
 	
 	/**
 	 * 获得所有表名
+	 * 
+	 * @param ds 数据源
+	 * @return 表名列表
 	 */
 	public static List<String> getTables(DataSource ds) {
 		final List<String> tables = new ArrayList<String>();
@@ -238,10 +241,12 @@ public final class DbUtil {
 	
 	/**
 	 * 获得结果集的所有列名
+	 * 
 	 * @param rs 结果集
 	 * @return 列名数组
+	 * @throws DbRuntimeException SQL执行异常
 	 */
-	public static String[] getColumnNames(ResultSet rs) {
+	public static String[] getColumnNames(ResultSet rs) throws DbRuntimeException{
 		try {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
@@ -257,10 +262,11 @@ public final class DbUtil {
 	
 	/**
 	 * 获得表的所有列名
+	 * 
 	 * @param ds 数据源
 	 * @param tableName 表名
 	 * @return 列数组
-	 * @throws SQLException
+	 * @throws DbRuntimeException SQL执行异常
 	 */
 	public static String[] getColumnNames(DataSource ds, String tableName) {
 		List<String> columnNames = new ArrayList<String>();
@@ -332,7 +338,7 @@ public final class DbUtil {
 	 * 
 	 * @param ps PreparedStatement
 	 * @param params SQL参数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static void fillParams(PreparedStatement ps, Collection<Object> params) throws SQLException {
 		fillParams(ps, params.toArray(new Object[params.size()]));
@@ -343,7 +349,7 @@ public final class DbUtil {
 	 * 
 	 * @param ps PreparedStatement
 	 * @param params SQL参数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static void fillParams(PreparedStatement ps, Object... params) throws SQLException {
 		if (ArrayUtil.isEmpty(params)) {
@@ -359,7 +365,7 @@ public final class DbUtil {
 				try {
 					sqlType = pmd.getParameterType(paramIndex);
 				} catch (SQLException e) {
-					log.warn("Param get type fail, by: " + e.getMessage());
+					log.warn("Param get type fail, by: {}", e.getMessage());
 				}
 				ps.setNull(paramIndex, sqlType);
 			}
@@ -371,7 +377,7 @@ public final class DbUtil {
 	 * 此方法对于Oracle无效
 	 * @param ps PreparedStatement
 	 * @return 自增键的值
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static Long getGeneratedKeyOfLong(PreparedStatement ps) throws SQLException {
 		ResultSet rs = null;
@@ -397,7 +403,7 @@ public final class DbUtil {
 	 * 获得所有主键<br>
 	 * @param ps PreparedStatement
 	 * @return 所有主键
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static List<Object> getGeneratedKeys(PreparedStatement ps) throws SQLException {
 		List<Object> keys = new ArrayList<Object>();

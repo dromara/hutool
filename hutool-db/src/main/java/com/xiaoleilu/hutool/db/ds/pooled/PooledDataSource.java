@@ -29,16 +29,15 @@ public class PooledDataSource extends AbstractDataSource{
 	 * 获得一个数据源
 	 * 
 	 * @param group 数据源分组
-	 * @throws ConnException
+	 * @return {@link PooledDataSource}
 	 */
 	synchronized public static PooledDataSource getDataSource(String group) {
 		return new PooledDataSource(group);
 	}
 	
 	/**
-	 * 获得一个数据源
-	 * 
-	 * @throws ConnException
+	 * 获得一个数据源，使用空分组
+	 * @return {@link PooledDataSource}
 	 */
 	synchronized public static PooledDataSource getDataSource() {
 		return new PooledDataSource();
@@ -113,7 +112,7 @@ public class PooledDataSource extends AbstractDataSource{
 	/**
 	 * 创建新连接
 	 * @return 新连接
-	 * @throws SQLException
+	 * @throws SQLException SQL异常
 	 */
 	public PooledConnection newConnection() throws SQLException{
 		return new PooledConnection(this);
@@ -127,7 +126,7 @@ public class PooledDataSource extends AbstractDataSource{
 	 * 获取连接对象
 	 * @param wait 当池中无连接等待的毫秒数
 	 * @return 连接对象
-	 * @throws SQLException
+	 * @throws SQLException SQL异常
 	 */
 	public PooledConnection getConnection(long wait) throws SQLException{
 		try {
@@ -157,7 +156,7 @@ public class PooledDataSource extends AbstractDataSource{
 	/**
 	 * 直接从连接池中获取连接，如果池中无连接直接抛出异常
 	 * @return PooledConnection
-	 * @throws SQLException
+	 * @throws SQLException SQL异常
 	 */
 	private PooledConnection getConnectionDirect() throws SQLException{
 		if(null == freePool){

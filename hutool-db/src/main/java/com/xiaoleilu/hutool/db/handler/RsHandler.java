@@ -23,7 +23,7 @@ public interface RsHandler<T> {
 	 * 结果集处理后不需要关闭
 	 * @param rs 结果集
 	 * @return 处理后生成的对象
-	 * @throws SQLException
+	 * @throws SQLException SQL异常
 	 */
 	public T handle(ResultSet rs) throws SQLException;
 }

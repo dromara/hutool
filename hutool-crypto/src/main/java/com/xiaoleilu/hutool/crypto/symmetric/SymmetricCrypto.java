@@ -123,7 +123,8 @@ public class SymmetricCrypto {
 	
 	/**
 	 * 加密
-	 * @param data
+	 * 
+	 * @param data 数据
 	 * @return 加密后的Hex
 	 */
 	public String encryptHex(byte[] data){

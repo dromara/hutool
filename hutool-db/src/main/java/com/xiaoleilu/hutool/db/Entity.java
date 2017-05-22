@@ -49,7 +49,7 @@ public class Entity extends Dict{
 	
 	/**
 	 * 将PO对象转为Entity
-	 * @param <T>
+	 * @param <T> Bean对象类型
 	 * @param bean Bean对象
 	 * @return Entity
 	 */
@@ -147,7 +147,8 @@ public class Entity extends Dict{
 	/**
 	 * 将值对象转换为Entity<br>
 	 * 类名会被当作表名，小写第一个字母
-	 * @param <T>
+	 * 
+	 * @param <T> Bean对象类型
 	 * @param bean Bean对象
 	 * @return 自己
 	 */

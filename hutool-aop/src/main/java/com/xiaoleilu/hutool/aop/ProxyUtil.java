@@ -17,6 +17,8 @@ public final class ProxyUtil {
 	
 	/**
 	 * 使用切面代理对象
+	 * 
+	 * @param <T> 切面对象类型
 	 * @param target 目标对象
 	 * @param aspectClass 切面对象类
 	 * @return 代理对象
@@ -29,6 +31,8 @@ public final class ProxyUtil {
 	
 	/**
 	 * 使用切面代理对象
+	 * 
+	 * @param <T> 被代理对象类型
 	 * @param aspect 切面对象
 	 * @return 代理对象
 	 */
@@ -48,6 +52,8 @@ public final class ProxyUtil {
 	 * 4、将$Proxy0的实例返回给客户端。 <br>
 	 * 5、当调用代理类的相应方法时，相当于调用 {@link InvocationHandler#invoke(Object, Method, Object[])} 方法
 	 * 
+	 * 
+	 * @param <T> 被代理对象类型
 	 * @param classloader 被代理类对应的ClassLoader
 	 * @param invocationHandler {@link InvocationHandler} ，被代理类通过实现此接口提供动态代理功能
 	 * @param interfaces 代理类中需要实现的被代理类的接口方法
@@ -61,6 +67,7 @@ public final class ProxyUtil {
 	/**
 	 * 创建动态代理对象
 	 * 
+	 * @param <T> 被代理对象类型
 	 * @param invocationHandler {@link InvocationHandler} ，被代理类通过实现此接口提供动态代理功能
 	 * @param interfaces 代理类中需要实现的被代理类的接口方法
 	 * @return 代理类

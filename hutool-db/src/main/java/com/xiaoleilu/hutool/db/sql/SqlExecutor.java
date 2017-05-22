@@ -26,15 +26,13 @@ public class SqlExecutor {
 	 * @param sql SQL
 	 * @param params 参数
 	 * @return 影响的行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static int execute(Connection conn, String sql, Object... params) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = conn.prepareStatement(sql);
 			return executeUpdate(ps, params);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -48,15 +46,13 @@ public class SqlExecutor {
 	 * @param sql SQL
 	 * @param params 参数
 	 * @return 是否成功
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static boolean call(Connection conn, String sql, Object... params) throws SQLException {
 		CallableStatement ps = null;
 		try {
 			ps = conn.prepareCall(sql);
 			return execute(ps, params);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -71,7 +67,7 @@ public class SqlExecutor {
 	 * @param sql SQL
 	 * @param params 参数
 	 * @return 主键
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static Long executeForGeneratedKey(Connection conn, String sql, Object... params) throws SQLException {
 		PreparedStatement ps = null;
@@ -87,8 +83,6 @@ public class SqlExecutor {
 				}
 			}
 			return null;
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -103,7 +97,7 @@ public class SqlExecutor {
 	 * @param sql SQL
 	 * @param paramsBatch 批量的参数
 	 * @return 每个SQL执行影响的行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static int[] executeBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
 		PreparedStatement ps = null;
@@ -114,8 +108,6 @@ public class SqlExecutor {
 				ps.addBatch();
 			}
 			return ps.executeBatch();
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -125,20 +117,19 @@ public class SqlExecutor {
 	 * 执行查询语句<br>
 	 * 此方法不会关闭Connection
 	 * 
+	 * @param <T> 处理结果类型
 	 * @param conn 数据库连接对象
 	 * @param sql 查询语句
 	 * @param rsh 结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static <T> T query(Connection conn, String sql, RsHandler<T> rsh, Object... params) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = conn.prepareStatement(sql);
 			return query(ps, rsh, params);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -153,7 +144,7 @@ public class SqlExecutor {
 	 * @param ps PreparedStatement对象
 	 * @param params 参数
 	 * @return 影响的行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static int executeUpdate(PreparedStatement ps, Object... params) throws SQLException {
 		DbUtil.fillParams(ps, params);
@@ -168,7 +159,7 @@ public class SqlExecutor {
 	 * @param ps PreparedStatement对象
 	 * @param params 参数
 	 * @return 影响的行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static boolean execute(PreparedStatement ps, Object... params) throws SQLException {
 		DbUtil.fillParams(ps, params);
@@ -179,11 +170,12 @@ public class SqlExecutor {
 	 * 执行查询语句<br>
 	 * 此方法不会关闭PreparedStatement
 	 * 
+	 * @param <T> 处理结果类型
 	 * @param ps PreparedStatement
 	 * @param rsh 结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static <T> T query(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
 		ResultSet rs = null;
@@ -191,8 +183,6 @@ public class SqlExecutor {
 			DbUtil.fillParams(ps, params);
 			rs = ps.executeQuery();
 			return rsh.handle(rs);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(rs);
 		}
@@ -201,18 +191,17 @@ public class SqlExecutor {
 	/**
 	 * 执行查询语句并关闭PreparedStatement
 	 * 
+	 * @param <T> 处理结果类型
 	 * @param ps PreparedStatement
 	 * @param rsh 结果集处理对象
 	 * @param params 参数
 	 * @return 结果对象
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static <T> T queryAndClosePs(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
 		try {
 			return query(ps, rsh, params);
-		} catch (SQLException e) {
-			throw e;
-		}finally{
+		} finally{
 			DbUtil.close(ps);
 		}
 	}

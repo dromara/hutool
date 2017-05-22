@@ -268,6 +268,7 @@ public final class XmlUtil {
 	 * 
 	 * @param element 节点
 	 * @param tagName 节点名
+	 * @param defaultValue 默认值
 	 * @return 节点中的值
 	 */
 	public static String elementText(Element element, String tagName, String defaultValue) {
@@ -308,10 +309,10 @@ public final class XmlUtil {
 	/**
 	 * 将可序列化的对象转换为XML写入文件，已经存在的文件将被覆盖<br>
 	 * Writes serializable object to a XML file. Existing file will be overwritten
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param dest 目标文件
 	 * @param t 对象
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static <T> void writeObjectAsXml(File dest, T t) throws IOException {
 		FileOutputStream fos = null;
@@ -331,10 +332,10 @@ public final class XmlUtil {
 	/**
 	 * 从XML中读取对象
 	 * Reads serialized object from the XML file.
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param source XML文件
 	 * @return 对象
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T readObjectFromXml(File source) throws IOException {

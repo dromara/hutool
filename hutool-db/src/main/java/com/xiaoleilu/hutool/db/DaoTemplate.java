@@ -81,7 +81,7 @@ public class DaoTemplate {
 	 * 添加
 	 * @param entity 实体对象
 	 * @return 插入行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public int add(Entity entity) throws SQLException {
 		return runner.insert(fixEntity(entity));
@@ -91,7 +91,7 @@ public class DaoTemplate {
 	 * 添加
 	 * @param entity 实体对象
 	 * @return 主键列表
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public List<Object> addForGeneratedKeys(Entity entity) throws SQLException {
 		return runner.insertForGeneratedKeys(fixEntity(entity));
@@ -101,7 +101,7 @@ public class DaoTemplate {
 	 * 添加
 	 * @param entity 实体对象
 	 * @return 自增主键
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public Long addForGeneratedKey(Entity entity) throws SQLException {
 		return runner.insertForGeneratedKey(fixEntity(entity));
@@ -115,7 +115,7 @@ public class DaoTemplate {
 	 * 
 	 * @param pk 主键
 	 * @return 删除行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public <T> int del(T pk) throws SQLException {
 		if (pk == null) {
@@ -126,12 +126,12 @@ public class DaoTemplate {
 	
 	/**
 	 * 删除
-	 * @param <T> 主键类型
 	 * 
+	 * @param <T> 主键类型
 	 * @param field 字段名
 	 * @param value 字段值
 	 * @return 删除行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public <T> int del(String field, T value) throws SQLException {
 		if (StrUtil.isBlank(field)) {
@@ -143,11 +143,11 @@ public class DaoTemplate {
 	
 	/**
 	 * 删除
-	 * @param <T> 主键类型
 	 * 
+	 * @param <T> 主键类型
 	 * @param where 删除条件，当条件为空时，返回0（防止误删全表）
 	 * @return 删除行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public <T> int del(Entity where) throws SQLException {
 		if (CollectionUtil.isEmpty(where)) {
@@ -163,7 +163,7 @@ public class DaoTemplate {
 	 * @param record 更新的内容
 	 * @param where 条件
 	 * @return 更新条目数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public int update(Entity record, Entity where) throws SQLException{
 		if (CollectionUtil.isEmpty(record)) {
@@ -176,7 +176,7 @@ public class DaoTemplate {
 	 * 更新
 	 * @param entity 实体对象，必须包含主键
 	 * @return 更新行数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public int update(Entity entity) throws SQLException {
 		if (CollectionUtil.isEmpty(entity)) {
@@ -199,7 +199,7 @@ public class DaoTemplate {
 	 * 增加或者更新实体
 	 * @param entity 实体，当包含主键时更新，否则新增
 	 * @return 新增或更新条数
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public int addOrUpdate(Entity entity) throws SQLException {
 		return null == entity.get(primaryKeyField) ? add(entity) : update(entity);
@@ -209,11 +209,11 @@ public class DaoTemplate {
 	//------------------------------------------------------------- Get start
 	/**
 	 * 根据主键获取单个记录
-	 * @param <T>
 	 * 
+	 * @param <T> 主键类型
 	 * @param pk 主键值
 	 * @return 记录
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public <T> Entity get(T pk) throws SQLException {
 		return this.get(primaryKeyField, pk);
@@ -222,12 +222,12 @@ public class DaoTemplate {
 	/**
 	 * 根据某个字段（最好是唯一字段）查询单个记录<br>
 	 * 当有多条返回时，只显示查询到的第一条
-	 * @param <T>
 	 * 
+	 * @param <T> 字段值类型
 	 * @param field 字段名
 	 * @param value 字段值
 	 * @return 记录
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public <T> Entity get(String field, T value) throws SQLException {
 		return this.get(Entity.create(tableName).set(field, value));
@@ -238,7 +238,7 @@ public class DaoTemplate {
 	 * 
 	 * @param where 条件
 	 * @return 记录
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public Entity get(Entity where) throws SQLException {
 		return runner.find(null, fixEntity(where), new EntityHandler());
@@ -248,12 +248,12 @@ public class DaoTemplate {
 	//------------------------------------------------------------- Find start
 	/**
 	 * 根据某个字段值查询结果
-	 * @param <T>
 	 * 
+	 * @param <T> 字段值类型
 	 * @param field 字段名
 	 * @param value 字段值
 	 * @return 记录
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public <T> List<Entity> find(String field, T value) throws SQLException {
 		return this.find(Entity.create(tableName).set(field, value));
@@ -262,7 +262,7 @@ public class DaoTemplate {
 	/**
 	 * 查询当前表的所有记录
 	 * @return 记录
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findAll() throws SQLException {
 		return this.find(Entity.create(tableName));
@@ -273,7 +273,7 @@ public class DaoTemplate {
 	 * 
 	 * @param where 查询条件
 	 * @return 记录
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> find(Entity where) throws SQLException {
 		return runner.find(null, fixEntity(where), new EntityListHandler());
@@ -286,7 +286,7 @@ public class DaoTemplate {
 	 * 
 	 * @param sql SQL语句
 	 * @return 记录
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findBySql(String sql, Object... params) throws SQLException {
 		String selectKeyword = StrUtil.subPre(sql.trim(), 6).toLowerCase();
@@ -298,11 +298,12 @@ public class DaoTemplate {
 	
 	/**
 	 * 分页
+	 * 
 	 * @param where 条件
 	 * @param page 分页对象
 	 * @param selectFields 查询的字段列表
 	 * @return 分页结果集
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public PageResult<Entity> page(Entity where, Page page, String... selectFields) throws SQLException{
 		return runner.page(Arrays.asList(selectFields), fixEntity(where), page);
@@ -310,10 +311,11 @@ public class DaoTemplate {
 	
 	/**
 	 * 分页
+	 * 
 	 * @param where 条件
 	 * @param page 分页对象
 	 * @return 分页结果集
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public PageResult<Entity> page(Entity where, Page page) throws SQLException{
 		return runner.page(fixEntity(where), page);
@@ -321,9 +323,10 @@ public class DaoTemplate {
 	
 	/**
 	 * 满足条件的数据条目数量
+	 * 
 	 * @param where 条件
 	 * @return 数量
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public int count(Entity where) throws SQLException{
 		return runner.count(fixEntity(where));
@@ -331,9 +334,10 @@ public class DaoTemplate {
 	
 	/**
 	 * 指定条件的数据是否存在
+	 * 
 	 * @param where 条件
 	 * @return 是否存在
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public boolean exist(Entity where) throws SQLException{
 		return this.count(where) > 0;

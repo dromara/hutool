@@ -20,8 +20,8 @@ public class Setting extends BasicSetting {
 	private static final long serialVersionUID = 6473518262551553107L;
 
 	/**
-	 * 基本构造<br/>
-	 * 需自定义初始化配置文件<br/>
+	 * 基本构造<br>
+	 * 需自定义初始化配置文件<br>
 	 */
 	public Setting() {
 		super();

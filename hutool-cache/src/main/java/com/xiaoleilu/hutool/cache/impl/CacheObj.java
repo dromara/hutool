@@ -4,8 +4,8 @@ package com.xiaoleilu.hutool.cache.impl;
  * 缓存对象
  * @author Looly
  *
- * @param <K>
- * @param <V>
+ * @param <K> Key类型
+ * @param <V> Value类型
  */
 public class CacheObj<K, V> {
 	

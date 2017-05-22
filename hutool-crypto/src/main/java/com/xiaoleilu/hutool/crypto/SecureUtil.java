@@ -429,6 +429,8 @@ public final class SecureUtil {
 	
 	/**
 	 * MD5加密，生成16进制MD5字符串<br>
+	 * 
+	 * @param data 数据
 	 * @return MD5字符串
 	 */
 	public static String md5(String data) {
@@ -437,6 +439,8 @@ public final class SecureUtil {
 	
 	/**
 	 * MD5加密，生成16进制MD5字符串<br>
+	 * 
+	 * @param data 数据
 	 * @return MD5字符串
 	 */
 	public static String md5(InputStream data) {
@@ -445,6 +449,8 @@ public final class SecureUtil {
 	
 	/**
 	 * MD5加密文件，生成16进制MD5字符串<br>
+	 * 
+	 * @param dataFile 被加密文件
 	 * @return MD5字符串
 	 */
 	public static String md5(File dataFile) {
@@ -465,6 +471,8 @@ public final class SecureUtil {
 	
 	/**
 	 * SHA1加密，生成16进制SHA1字符串<br>
+	 * 
+	 * @param data 数据
 	 * @return SHA1字符串
 	 */
 	public static String sha1(String data) {
@@ -473,6 +481,8 @@ public final class SecureUtil {
 	
 	/**
 	 * SHA1加密，生成16进制SHA1字符串<br>
+	 * 
+	 * @param data 数据
 	 * @return SHA1字符串
 	 */
 	public static String sha1(InputStream data) {
@@ -481,6 +491,8 @@ public final class SecureUtil {
 	
 	/**
 	 * SHA1加密文件，生成16进制SHA1字符串<br>
+	 * 
+	 * @param dataFile 被加密文件
 	 * @return SHA1字符串
 	 */
 	public static String sha1(File dataFile) {
@@ -574,6 +586,7 @@ public final class SecureUtil {
 	 * 
 	 * @param privateKeyBase64 私钥Base64
 	 * @param publicKeyBase64 公钥Base64
+	 * @return {@link RSA}
 	 * @since 3.0.5
 	 */
 	public static RSA rsa(String privateKeyBase64, String publicKeyBase64){
@@ -587,6 +600,7 @@ public final class SecureUtil {
 	 * 
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
+	 * @return {@link RSA}
 	 * @since 3.0.5
 	 */
 	public static RSA rsa(byte[] privateKey, byte[] publicKey){
@@ -610,6 +624,7 @@ public final class SecureUtil {
 	 * 
 	 * @param privateKeyBase64 私钥Base64
 	 * @param publicKeyBase64 公钥Base64
+	 * @return {@link DSA}
 	 * @since 3.0.5
 	 */
 	public static DSA dsa(String privateKeyBase64, String publicKeyBase64){
@@ -623,6 +638,7 @@ public final class SecureUtil {
 	 * 
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
+	 * @return {@link DSA}
 	 * @since 3.0.5
 	 */
 	public static DSA dsa(byte[] privateKey, byte[] publicKey){
@@ -631,6 +647,8 @@ public final class SecureUtil {
 
 	// ------------------------------------------------------------------- UUID
 	/**
+	 * 简化的UUID，去掉了横线
+	 * 
 	 * @return 简化的UUID，去掉了横线
 	 */
 	public static String simpleUUID() {

@@ -83,7 +83,7 @@ public class SettingLoader {
 	 * 
 	 * @param settingStream 文件流
 	 * @return 加载成功与否
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public boolean load(InputStream settingStream) throws IOException {
 		setting.clear();
@@ -136,7 +136,7 @@ public class SettingLoader {
 	}
 
 	/**
-	 * 设置变量的正则<br/>
+	 * 设置变量的正则<br>
 	 * 正则只能有一个group表示变量本身，剩余为字符 例如 \$\{(name)\}表示${name}变量名为name的一个变量表示
 	 * 
 	 * @param regex 正则

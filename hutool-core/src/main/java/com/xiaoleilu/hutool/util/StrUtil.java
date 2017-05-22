@@ -483,7 +483,7 @@ public final class StrUtil {
 	 * 获得set或get方法对应的标准属性名<br>
 	 * 例如：setName 返回 name
 	 * 
-	 * @param getOrSetMethodName
+	 * @param getOrSetMethodName Get或Set方法名
 	 * @return 如果是set或get方法名，返回field， 否则null
 	 */
 	public static String getGeneralField(CharSequence getOrSetMethodName) {
@@ -1390,7 +1390,7 @@ public final class StrUtil {
 	/**
 	 * 以 conjunction 为分隔符将多个对象转换为字符串
 	 * 
-	 * @see ArrayUtil#join(Object[], String)
+	 * @see ArrayUtil#join(Object, CharSequence)
 	 * 
 	 * @param conjunction 分隔符
 	 * @param objs 数组
@@ -1594,6 +1594,7 @@ public final class StrUtil {
 	/**
 	 * 创建StringBuilder对象
 	 * 
+	 * @param capacity 初始大小
 	 * @return StringBuilder对象
 	 */
 	public static StringBuilder builder(int capacity) {
@@ -1603,6 +1604,7 @@ public final class StrUtil {
 	/**
 	 * 创建StringBuilder对象
 	 * 
+	 * @param strs 初始字符串列表
 	 * @return StringBuilder对象
 	 */
 	public static StringBuilder builder(CharSequence... strs) {

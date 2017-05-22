@@ -48,6 +48,7 @@ public class PooledConnection extends ConnectionWraper{
 	
 	/**
 	 * 打开连接
+	 * @return this
 	 */
 	protected PooledConnection open() {
 		this.isClosed = false;
@@ -56,8 +57,10 @@ public class PooledConnection extends ConnectionWraper{
 
 	/**
 	 * 释放连接
+	 * @return this
 	 */
-	protected void release() {
+	protected PooledConnection release() {
 		DbUtil.close(this.raw);
+		return this;
 	}
 }

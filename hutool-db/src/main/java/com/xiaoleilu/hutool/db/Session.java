@@ -28,6 +28,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	/**
 	 * 创建会话
 	 * @param ds 数据源
+	 * @return this
 	 */
 	public static Session create(DataSource ds) {
 		return new Session(ds);
@@ -36,6 +37,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	/**
 	 * 创建会话
 	 * @param conn 数据库连接对象
+	 * @return this
 	 */
 	public static Session create(Connection conn) {
 		return new Session(conn);
@@ -67,15 +69,32 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	//---------------------------------------------------------------------------- Constructor end
 	
 	//---------------------------------------------------------------------------- Getters and Setters end
+	/**
+	 * 获得{@link Connection}
+	 * @return {@link Connection}
+	 */
 	public Connection getConn() {
 		return conn;
 	}
+	/**
+	 * 设置{@link Connection}
+	 * @param conn {@link Connection}
+	 */
 	public void setConn(Connection conn) {
 		this.conn = conn;
 	}
+	
+	/**
+	 * 获得{@link SqlConnRunner}
+	 * @return {@link SqlConnRunner}
+	 */
 	public SqlConnRunner getRunner() {
 		return runner;
 	}
+	/**
+	 * 设置{@link SqlConnRunner}
+	 * @param runner {@link SqlConnRunner}
+	 */
 	public void setRunner(SqlConnRunner runner) {
 		this.runner = runner;
 	}
@@ -84,7 +103,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	//---------------------------------------------------------------------------- Transaction method start
 	/**
 	 * 开始事务
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public void beginTransaction() throws SQLException {
 		if(null == isSupportTransaction) {
@@ -97,7 +116,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	
 	/**
 	 * 提交事务
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public void commit() throws SQLException{
 		try {
@@ -115,7 +134,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	
 	/**
 	 * 回滚事务
-	 * @throws Exception
+	 * @throws SQLException SQL执行异常
 	 */
 	public void rollback() throws SQLException {
 		try {
@@ -134,7 +153,6 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	/**
 	 * 静默回滚事务<br>
 	 * 回滚事务
-	 * @throws SQLException
 	 */
 	public void quietRollback() {
 		try {
@@ -152,8 +170,9 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	
 	/**
 	 * 回滚到某个保存点，保存点的设置请使用setSavepoint方法
+	 * 
 	 * @param savepoint 保存点
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public void rollback(Savepoint savepoint) throws SQLException {
 		try {
@@ -172,7 +191,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	/**
 	 * 静默回滚到某个保存点，保存点的设置请使用setSavepoint方法
 	 * @param savepoint 保存点
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public void quietRollback(Savepoint savepoint) throws SQLException {
 		try {
@@ -191,7 +210,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	/**
 	 * 设置保存点
 	 * @return 保存点对象
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public Savepoint setSavepoint() throws SQLException {
 		return conn.setSavepoint();
@@ -201,7 +220,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	 * 设置保存点
 	 * @param name 保存点的名称
 	 * @return 保存点对象
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public Savepoint setSavepoint(String name) throws SQLException {
 		return conn.setSavepoint(name);
@@ -217,7 +236,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	 * Connection.TRANSACTION_SERIALIZABLE                 禁止脏读、不可重复读和幻读<br>
 	 * 
 	 * @param level 隔离级别
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public void setTransactionIsolation(int level) throws SQLException {
 		if(conn.getMetaData().supportsTransactionIsolationLevel(level) == false) {
@@ -230,6 +249,7 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	/**
 	 * 获得连接，Session中使用同一个连接
 	 * @return {@link Connection}
+	 * @throws SQLException SQL执行异常
 	 */
 	@Override
 	public Connection getConnection() throws SQLException {

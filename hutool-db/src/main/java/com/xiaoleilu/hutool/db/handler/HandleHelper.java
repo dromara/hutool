@@ -19,7 +19,7 @@ public class HandleHelper {
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
 	 * @return 每一行的Entity
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
 		final Entity row = Entity.create(meta.getTableName(1));
@@ -36,7 +36,7 @@ public class HandleHelper {
 	 * 处理单条数据
 	 * @param rs 数据集
 	 * @return 每一行的Entity
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static Entity handleRow(ResultSet rs) throws SQLException {
 		final ResultSetMetaData meta = rs.getMetaData();
@@ -46,11 +46,11 @@ public class HandleHelper {
 	
 	/**
 	 * 处理多条数据
-	 * @param <T>
+	 * @param <T> 集合类型
 	 * @param rs 数据集
 	 * @param collection 数据集
 	 * @return Entity列表
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public static <T extends Collection<Entity>> T handleRs(ResultSet rs, T collection) throws SQLException {
 		final ResultSetMetaData  meta = rs.getMetaData();

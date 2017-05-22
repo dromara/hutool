@@ -73,6 +73,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	 * 带有日志提示的get，如果没有定义指定的KEY，则打印debug日志
 	 * 
 	 * @param key 键
+	 * @param group 分组
 	 * @return 值
 	 */
 	public String getByGroupWithLog(String key, String group) {
@@ -250,7 +251,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	}
 
 	/**
-	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
+	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br>
 	 * 只支持基本类型的转换
 	 * 
 	 * @param group 分组
@@ -277,7 +278,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	}
 
 	/**
-	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
+	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br>
 	 * 只支持基本类型的转换
 	 * 
 	 * @param bean Bean

@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -188,6 +187,7 @@ public final class ObjectUtil {
 	 * 如果实现Serializable接口，执行深度克隆<br>
 	 * 否则返回<code>null</code>
 	 * 
+	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
 	 */
@@ -205,6 +205,8 @@ public final class ObjectUtil {
 	
 	/**
 	 * 返回克隆后的对象，如果克隆失败，返回原对象
+	 * 
+	 * @param <T> 对象类型
 	 * @param obj 对象
 	 * @return 克隆后或原对象
 	 */
@@ -222,10 +224,10 @@ public final class ObjectUtil {
 	 * 序列化后拷贝流的方式克隆<br>
 	 * 对象必须实现Serializable接口
 	 * 
+	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 * @throws UtilException IO异常和ClassNotFoundException封装
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T cloneByStream(T obj) {
@@ -251,7 +253,7 @@ public final class ObjectUtil {
 	 * 序列化<br>
 	 * 对象必须实现Serializable接口
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param obj 要被序列化的对象
 	 * @return 序列化后的字节码
 	 */
@@ -278,7 +280,7 @@ public final class ObjectUtil {
 	 * 反序列化<br>
 	 * 对象必须实现Serializable接口
 	 * 
-	 * @param <T>
+	 * @param <T> 对象类型
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
 	 */

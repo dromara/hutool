@@ -24,47 +24,12 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	
 	/** 读取服务器返回的流保存至内存 */
 	private FastByteArrayOutputStream out;
-
-	/**
-	 * 读取响应信息
-	 * 
-	 * @param httpConnection Http连接对象
-	 * @return HttpResponse
-	 */
-	public static HttpResponse readResponse(HttpConnection httpConnection) {
-		final HttpResponse httpResponse = new HttpResponse();
-		
-		InputStream in = null;
-		try {
-			httpResponse.status = httpConnection.responseCode();
-			httpResponse.headers =  httpConnection.headers();
-			httpResponse.charset = httpConnection.charset();
-			
-			if(httpResponse.status < HttpStatus.HTTP_BAD_REQUEST){
-				in = httpConnection.getInputStream();
-			}else{
-				in = httpConnection.getErrorStream();
-			}
-			httpResponse.readBody(in);
-		} catch (IOException e) {
-			if(e instanceof FileNotFoundException){
-				//服务器无返回内容，忽略之
-			}else{
-				throw new HttpException(e.getMessage(), e);
-			}
-		}finally{
-			IoUtil.close(in);
-		}
-		
-		return httpResponse;
-	}
-
 	/** 响应状态码 */
 	private int status;
 
-	public HttpResponse() {
+	protected HttpResponse() {
 	}
-
+	
 	/**
 	 * 获取状态码
 	 * 
@@ -73,7 +38,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	public int getStatus() {
 		return status;
 	}
-	
+
 	// ---------------------------------------------------------------- Http Response Header start
 	/**
 	 * 获取内容编码
@@ -138,6 +103,42 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		
 		return sb.toString();
 	}
+	
+	// ---------------------------------------------------------------- Protected method start
+	/**
+	 * 读取响应信息
+	 * 
+	 * @param httpConnection Http连接对象
+	 * @return HttpResponse
+	 */
+	protected static HttpResponse readResponse(HttpConnection httpConnection) {
+		final HttpResponse httpResponse = new HttpResponse();
+		
+		InputStream in = null;
+		try {
+			httpResponse.status = httpConnection.responseCode();
+			httpResponse.headers =  httpConnection.headers();
+			httpResponse.charset = httpConnection.charset();
+			
+			if(httpResponse.status < HttpStatus.HTTP_BAD_REQUEST){
+				in = httpConnection.getInputStream();
+			}else{
+				in = httpConnection.getErrorStream();
+			}
+			httpResponse.readBody(in);
+		} catch (IOException e) {
+			if(e instanceof FileNotFoundException){
+				//服务器无返回内容，忽略之
+			}else{
+				throw new HttpException(e.getMessage(), e);
+			}
+		}finally{
+			IoUtil.close(in);
+		}
+		
+		return httpResponse;
+	}
+	// ---------------------------------------------------------------- Protected method end
 	
 	// ---------------------------------------------------------------- Private method start
 	/**

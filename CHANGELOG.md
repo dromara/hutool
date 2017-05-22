@@ -11,7 +11,7 @@
 * 添加SystemClock
 * 增加ArrayUtil.copy方法
 * 增加FtpUtil
-* 增加FileUtil.clean方法，用于清空目录（感谢@【山东】质量过关）
+* 增加FileUtil.clean方法，用于清空目录
 * 增加SqlRunner.create()方法，使用默认连接
 * 扩充Entity类型
 * Setting添加Profile功能支持（感谢@长沙-渔泯小镇）
@@ -27,11 +27,12 @@
 * NumberUtil的isInteger和isDouble方法非静态问题修复（感谢@【广州】流行の云）
 * Base64的URL Safe模式等号没有替换问题。（issue#20@osc）
 * 修复Convert.strToUnicode转换后位数不足问题
-* 修复针对StrUtil.cleanBlank和Convert.toDBC中不间断空白符无法去除问题（感谢@【山东】质量过关）
+* 修复针对StrUtil.cleanBlank和Convert.toDBC中不间断空白符无法去除问题
 * 修复db模块对表名的包装策略
 * 修复BeanToMap和JSON中toMap导致的循环引用
 * 修复在自动侦测数据源的时候重复加载配置文件问题
-* 修复针对JSON转Bean中数组参数转换失败的问题，同时添加ArrayUtil.cast方法用于强制转换数组类型（感谢@【山东】质量过关）
+* 修复针对JSON转Bean中数组参数转换失败的问题，同时添加ArrayUtil.cast方法用于强制转换数组类型
+* 修复NumberUtil.isInteger方法中对空串的判断(#22@osc)
 
 -------------------------------------------------------------------------------------------------------------
 

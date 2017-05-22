@@ -273,6 +273,7 @@ public final class ReUtil {
 	/**
 	 * 取得内容中匹配的所有结果
 	 * 
+	 * @param <T> 集合类型
 	 * @param regex 正则
 	 * @param content 被查找的内容
 	 * @param group 正则的分组

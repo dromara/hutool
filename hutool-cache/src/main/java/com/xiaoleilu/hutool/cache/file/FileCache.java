@@ -87,7 +87,7 @@ public abstract class FileCache {
 	 * 获得缓存过的文件bytes
 	 * @param path 文件路径
 	 * @return 缓存过的文件bytes
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public byte[] getFileBytes(String path) throws IOException {
 		return getFileBytes(new File(path));
@@ -97,7 +97,7 @@ public abstract class FileCache {
 	 * 获得缓存过的文件bytes
 	 * @param file 文件
 	 * @return 缓存过的文件bytes
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public byte[] getFileBytes(File file) throws IOException {
 		byte[] bytes = cache.get(file);

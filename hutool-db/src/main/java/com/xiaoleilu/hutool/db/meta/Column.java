@@ -49,7 +49,7 @@ public class Column implements Cloneable{
 	 * 初始化
 	 * @param tableName 表名
 	 * @param columnMetaRs 列的meta ResultSet
-	 * @throws SQLException
+	 * @throws SQLException SQL执行异常
 	 */
 	public  void init(String tableName, ResultSet columnMetaRs) throws SQLException {
 		this.tableName = tableName;

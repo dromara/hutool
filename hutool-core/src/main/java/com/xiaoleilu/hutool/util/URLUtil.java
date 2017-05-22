@@ -167,8 +167,6 @@ public final class URLUtil {
 	
 	/**
 	 * 获得path部分<br>
-	 * URI =》 "http://www.aaa.bbb/search?scope=ccc&q=ddd"
-	 * PATH =》 "/search"
 	 * 
 	 * @param uriStr URI路径
 	 * @return path

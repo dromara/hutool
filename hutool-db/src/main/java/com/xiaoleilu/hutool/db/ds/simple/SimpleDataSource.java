@@ -30,16 +30,15 @@ public class SimpleDataSource extends AbstractDataSource{
 	 * 获得一个数据源
 	 * 
 	 * @param group 数据源分组
-	 * @throws ConnException
+	 * @return {@link SimpleDataSource}
 	 */
 	synchronized public static SimpleDataSource getDataSource(String group) {
 		return new SimpleDataSource(group);
 	}
 	
 	/**
-	 * 获得一个数据源
-	 * 
-	 * @throws ConnException
+	 * 获得一个数据源，无分组
+	 * @return {@link SimpleDataSource}
 	 */
 	synchronized public static SimpleDataSource getDataSource() {
 		return new SimpleDataSource();

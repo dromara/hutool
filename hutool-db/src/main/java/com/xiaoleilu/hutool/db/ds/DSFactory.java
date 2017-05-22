@@ -72,7 +72,7 @@ public abstract class DSFactory {
 	/**
 	 * 关闭对应数据源
 	 * 
-	 * @param group
+	 * @param group 分组
 	 */
 	public abstract void close(String group);
 

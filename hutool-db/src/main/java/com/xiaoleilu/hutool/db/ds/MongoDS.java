@@ -125,6 +125,7 @@ public class MongoDS implements Closeable{
 	
 	/**
 	 * 获取MongoDB数据源<br>
+	 * @param setting 配置文件
 	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */
@@ -287,6 +288,7 @@ public class MongoDS implements Closeable{
 	
 	/**
 	 * 设定MongoDB配置文件
+	 * @param setting 配置文件
 	 */
 	public void setSetting(Setting setting) {
 		this.setting = setting;

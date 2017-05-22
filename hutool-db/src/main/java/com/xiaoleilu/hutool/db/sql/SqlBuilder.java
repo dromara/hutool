@@ -313,6 +313,8 @@ public class SqlBuilder {
 	
 	/**
 	 * 多值选择
+	 * 
+	 * @param <T> 值类型
 	 * @param field 字段名
 	 * @param values 值列表
 	 * @return 自身

@@ -60,7 +60,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param data 数据
 	 * @param keyType 密钥类型
 	 * @return 加密后的密文
-	 * @throws Exception
+	 * @throws CryptoException 加密异常
 	 */
 	public String encryptStr(String data, KeyType keyType) {
 		Key key = getKeyByType(keyType);

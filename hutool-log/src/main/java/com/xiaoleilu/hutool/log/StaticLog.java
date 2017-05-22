@@ -215,6 +215,7 @@ public final class StaticLog {
 	 * @param t 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
+	 * @return 是否为LocationAwareLog日志
 	 */
 	public static boolean log(Level level, Throwable t, String format, Object... arguments) {
 		return log(LogFactory.indirectGet(), level, t, format, arguments);
@@ -228,6 +229,7 @@ public final class StaticLog {
 	 * @param t 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
+	 * @return 是否为LocationAwareLog日志
 	 */
 	public static boolean log(Log log, Level level, Throwable t, String format, Object... arguments) {
 		if(log instanceof LocationAwareLog){
