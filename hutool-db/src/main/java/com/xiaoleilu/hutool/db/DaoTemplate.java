@@ -285,6 +285,7 @@ public class DaoTemplate {
 	 * 此方法会自动补全SELECT * FROM [tableName] 部分，这样就无需关心表名，直接提供条件即可
 	 * 
 	 * @param sql SQL语句
+	 * @param params SQL占位符中对应的参数
 	 * @return 记录
 	 * @throws SQLException SQL执行异常
 	 */

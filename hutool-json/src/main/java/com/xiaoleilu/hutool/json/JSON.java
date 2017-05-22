@@ -15,7 +15,7 @@ public interface JSON{
 	 * 
 	 * @param writer Writer
 	 * @return Writer
-	 * @throws JSONException
+	 * @throws JSONException JSON相关异常
 	 */
 	public Writer write(Writer writer) throws JSONException;
 	
@@ -27,7 +27,7 @@ public interface JSON{
 	 * @param indentFactor 每一级别的缩进量
 	 * @param indent 顶级别缩进量
 	 * @return Writer
-	 * @throws JSONException
+	 * @throws JSONException JSON相关异常
 	 */
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException;
 	
@@ -35,7 +35,7 @@ public interface JSON{
 	 * 转换为JSON字符串
 	 * @param indentFactor 每一级别的缩进
 	 * @return JSON字符串
-	 * @throws JSONException
+	 * @throws JSONException JSON相关异常
 	 */
 	public String toJSONString(int indentFactor) throws JSONException;
 }

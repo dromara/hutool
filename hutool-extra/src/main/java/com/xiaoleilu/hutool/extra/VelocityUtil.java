@@ -52,6 +52,7 @@ public class VelocityUtil {
 	 * 初始化Velocity全局属性
 	 * 
 	 * @param templateDir 模板所在目录，绝对路径
+	 * @param charset 编码
 	 */
 	synchronized public static void init(String templateDir, String charset) {
 		Velocity.init(_newInitedProp(templateDir, charset));
@@ -75,6 +76,7 @@ public class VelocityUtil {
 	 * 新建Velocity模板引擎
 	 * 
 	 * @param templateDir 模板所在目录，绝对路径
+	 * @param charset 编码
 	 * @return VelocityEngine
 	 */
 	public static VelocityEngine newEngine(String templateDir, String charset) {

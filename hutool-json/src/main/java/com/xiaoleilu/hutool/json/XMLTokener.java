@@ -55,10 +55,11 @@ public class XMLTokener extends JSONTokener {
 	}
 
 	/**
-	 * Get the next XML outer token, trimming whitespace. There are two kinds of tokens: the '<' character which begins a markup tag, and the content text between markup tags.
+	 * Get the next XML outer token, trimming whitespace. 
+	 * There are two kinds of tokens: the '&gt;' character which begins a markup tag, and the content text between markup tags.
 	 *
-	 * @return A string, or a '<' Character, or null if there is no more source text.
-	 * @throws JSONException
+	 * @return A string, or a '&gt;' Character, or null if there is no more source text.
+	 * @throws JSONException JSON
 	 */
 	public Object nextContent() throws JSONException {
 		char c;
@@ -112,10 +113,10 @@ public class XMLTokener extends JSONTokener {
 	}
 
 	/**
-	 * Returns the next XML meta token. This is used for skipping over <!...> and <?...?> structures.
+	 * Returns the next XML meta token. This is used for skipping over &lt;!...&gt; and &lt;?...?&gt; structures.
 	 * 
-	 * @return Syntax characters (<code>< > / = ! ?</code>) are returned as Character, and strings and names are returned as Boolean. We don't care what the values actually are.
-	 * @throws JSONException If a string is not properly closed or if the XML is badly structured.
+	 * @return Syntax characters (<code>&lt; &gt; / = ! ?</code>) are returned as Character, and strings and names are returned as Boolean. We don't care what the values actually are.
+	 * @throws JSONException 字符串中属性未关闭或XML结构错误抛出此异常。If a string is not properly closed or if the XML is badly structured.
 	 */
 	public Object nextMeta() throws JSONException {
 		char c;
@@ -174,7 +175,7 @@ public class XMLTokener extends JSONTokener {
 	}
 
 	/**
-	 * Get the next XML Token. These tokens are found inside of angle brackets. It may be one of these characters: <code>/ > = ! ?</code> or it may be a string wrapped in single quotes or double
+	 * Get the next XML Token. These tokens are found inside of angle brackets. It may be one of these characters: <code>/ &gt; = ! ?</code> or it may be a string wrapped in single quotes or double
 	 * quotes, or it may be a name.
 	 * 
 	 * @return a String or a Character.
@@ -259,7 +260,8 @@ public class XMLTokener extends JSONTokener {
 	 * Skip characters until past the requested string. If it is not found, we are left at the end of the source with a result of false.
 	 * 
 	 * @param to A string to skip past.
-	 * @throws JSONException
+	 * @return 是否成功skip
+	 * @throws JSONException JSON异常
 	 */
 	public boolean skipPast(String to) throws JSONException {
 		boolean b;

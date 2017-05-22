@@ -146,7 +146,7 @@ public final class JSONUtil {
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSON（包括JSONObject和JSONArray）
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public static JSON readJSON(File file, Charset charset) throws IORuntimeException {
 		return parse(FileReader.create(file, charset).readString());
@@ -158,7 +158,7 @@ public final class JSONUtil {
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSONObject
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONObject readJSONObject(File file, Charset charset) throws IORuntimeException {
 		return parseObj(FileReader.create(file, charset).readString());
@@ -170,7 +170,7 @@ public final class JSONUtil {
 	 * @param file JSON文件
 	 * @param charset 编码
 	 * @return JSONArray
-	 * @throws IORuntimeException
+	 * @throws IORuntimeException IO异常
 	 */
 	public static JSONArray readJSONArray(File file, Charset charset) throws IORuntimeException {
 		return parseArray(FileReader.create(file, charset).readString());
@@ -237,6 +237,8 @@ public final class JSONUtil {
 	//-------------------------------------------------------------------- toBean start
 	/**
 	 * 转为实体类对象，转换异常将被抛出
+	 * 
+	 * @param <T> Bean类型
 	 * @param json JSONObject
 	 * @param beanClass 实体类对象
 	 * @return 实体类对象
@@ -247,8 +249,11 @@ public final class JSONUtil {
 	
 	/**
 	 * 转为实体类对象
+	 * 
+	 * @param <T> Bean类型
 	 * @param json JSONObject
 	 * @param beanClass 实体类对象
+	 * @param ignoreError 是否忽略转换过程中某个字段的转换异常
 	 * @return 实体类对象
 	 */
 	public static <T> T toBean(JSONObject json, Class<T> beanClass, boolean ignoreError) {
@@ -283,7 +288,7 @@ public final class JSONUtil {
 	 * @param string A String
 	 * @param writer Writer
 	 * @return A String correctly formatted for insertion in a JSON text.
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public static Writer quote(String string, Writer writer) throws IOException {
 		if (StrUtil.isEmpty(string)) {
@@ -347,12 +352,12 @@ public final class JSONUtil {
 	 * 在需要的时候包装对象<br>
 	 * 包装包括：
 	 * <ul>
-	 * 	<li><code>null</code> -> <code>JSONNull.NULL</code></li>
-	 * 	<li>array or collection -> JSONArray</li>
-	 * 	<li>map -> JSONObject</li>
-	 * 	<li>standard property (Double, String, et al) -> 原对象</li>
-	 * 	<li>来自于java包 -> 字符串</li>
-	 * 	<li>其它 -> 尝试包装为JSONObject，否则返回<code>null</code></li>
+	 * 	<li><code>null</code> =》 <code>JSONNull.NULL</code></li>
+	 * 	<li>array or collection =》 JSONArray</li>
+	 * 	<li>map =》 JSONObject</li>
+	 * 	<li>standard property (Double, String, et al) =》 原对象</li>
+	 * 	<li>来自于java包 =》 字符串</li>
+	 * 	<li>其它 =》 尝试包装为JSONObject，否则返回<code>null</code></li>
 	 * </ul>
 	 * 
 	 * @param object The object to wrap

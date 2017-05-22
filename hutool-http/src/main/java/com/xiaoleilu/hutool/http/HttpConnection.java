@@ -71,6 +71,8 @@ public class HttpConnection {
 	 * 
 	 * @param urlStr URL
 	 * @param method HTTP方法
+	 * @param hostnameVerifier {@link HostnameVerifier}
+	 * @param ssf {@link SSLSocketFactory}
 	 * @return HttpConnection
 	 */
 	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) {
@@ -82,8 +84,11 @@ public class HttpConnection {
 	 * 
 	 * @param urlStr URL
 	 * @param method HTTP方法
-	 * @return HttpConnection
+	 * @param hostnameVerifier {@link HostnameVerifier}
+	 * @param ssf {@link SSLSocketFactory}
+	 * @param timeout 超时时间
 	 * @param proxy 代理
+	 * @return HttpConnection
 	 */
 	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
 		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, timeout, proxy);
@@ -272,6 +277,8 @@ public class HttpConnection {
 	 * 不覆盖原有请求头
 	 * 
 	 * @param headers 请求头
+	 * @param isOverride 是否覆盖
+	 * @return this
 	 */
 	public HttpConnection header(Map<String, List<String>> headers, boolean isOverride) {
 		if (CollectionUtil.isNotEmpty(headers)) {
@@ -320,7 +327,7 @@ public class HttpConnection {
 	/**
 	 * 关闭缓存
 	 * 
-	 * @return HttpConnection
+	 * @return this
 	 */
 	public HttpConnection disableCache() {
 		this.conn.setUseCaches(false);
@@ -331,6 +338,7 @@ public class HttpConnection {
 	 * 设置连接超时
 	 * 
 	 * @param timeout 超时
+	 * @return this
 	 */
 	public HttpConnection setConnectTimeout(int timeout) {
 		if (timeout > 0 && null != this.conn) {
@@ -344,6 +352,7 @@ public class HttpConnection {
 	 * 设置读取超时
 	 * 
 	 * @param timeout 超时
+	 * @return this
 	 */
 	public HttpConnection setReadTimeout(int timeout) {
 		if (timeout > 0 && null != this.conn) {
@@ -357,6 +366,7 @@ public class HttpConnection {
 	 * 设置连接和读取的超时时间
 	 * 
 	 * @param timeout 超时时间
+	 * @return this
 	 */
 	public HttpConnection setConnectionAndReadTimeout(int timeout) {
 		setConnectTimeout(timeout);
@@ -369,7 +379,7 @@ public class HttpConnection {
 	 * 设置Cookie
 	 * 
 	 * @param cookie Cookie
-	 * @return HttpConnection
+	 * @return this
 	 */
 	public HttpConnection setCookie(String cookie) {
 		if (cookie != null) {
@@ -383,7 +393,7 @@ public class HttpConnection {
 	 * HttpUrlConnection默认是将所有数据读到本地缓存，然后再发送给服务器，这样上传大文件时就会导致内存溢出。
 	 * 
 	 * @param blockSize 块大小（bytes数）
-	 * @return HttpConnection
+	 * @return this
 	 */
 	public HttpConnection setChunkedStreamingMode(int blockSize) {
 		conn.setChunkedStreamingMode(blockSize);
@@ -393,7 +403,7 @@ public class HttpConnection {
 	/**
 	 * 设置自动HTTP 30X跳转
 	 * @param isInstanceFollowRedirects 是否自定跳转
-	 * @return {@link HttpConnection}
+	 * @return this
 	 */
 	public HttpConnection setInstanceFollowRedirects(boolean isInstanceFollowRedirects){
 		conn.setInstanceFollowRedirects(isInstanceFollowRedirects);
@@ -403,6 +413,7 @@ public class HttpConnection {
 	/**
 	 * 连接
 	 * 
+	 * @return this
 	 * @throws IOException
 	 */
 	public HttpConnection connect() throws IOException {
@@ -414,6 +425,8 @@ public class HttpConnection {
 
 	/**
 	 * 断开连接
+	 * 
+	 * @return this
 	 */
 	public HttpConnection disconnect() {
 		if (null != this.conn) {
@@ -427,7 +440,7 @@ public class HttpConnection {
 	 * 输入流对象用于读取数据
 	 * 
 	 * @return 输入流对象
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public InputStream getInputStream() throws IOException {
 		// Get Cookies
@@ -447,7 +460,7 @@ public class HttpConnection {
 	 * 当返回错误代码时，获得错误内容流
 	 * 
 	 * @return 错误内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public InputStream getErrorStream() throws IOException {
 		if (null != this.conn) {
@@ -460,7 +473,7 @@ public class HttpConnection {
 	 * 获取输出流对象 输出流对象用于发送数据
 	 * 
 	 * @return OutputStream
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public OutputStream getOutputStream() throws IOException {
 		if (null == this.conn) {
@@ -472,8 +485,8 @@ public class HttpConnection {
 	/**
 	 * 获取响应码
 	 * 
-	 * @return int
-	 * @throws IOException
+	 * @return 响应码
+	 * @throws IOException IO异常
 	 */
 	public int responseCode() throws IOException {
 		if (null != this.conn) {

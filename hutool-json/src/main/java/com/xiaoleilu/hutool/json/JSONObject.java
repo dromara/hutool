@@ -151,6 +151,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 * 
+	 * @param <T> Bean类型
 	 * @param clazz 实体类
 	 * @return 实体类对象
 	 */
@@ -161,6 +162,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 转为实体类对象
 	 * 
+	 * @param <T> Bean类型
 	 * @param clazz 实体类
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
@@ -172,6 +174,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 * 
+	 * @param <T> Bean类型
 	 * @param bean 实体类
 	 * @return 实体类对象
 	 */
@@ -182,6 +185,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 转为实体类对象
 	 * 
+	 * @param <T> Bean类型
 	 * @param bean 实体类
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象

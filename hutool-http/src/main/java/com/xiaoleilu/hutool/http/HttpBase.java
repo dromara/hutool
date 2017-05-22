@@ -143,6 +143,7 @@ public abstract class HttpBase<T> {
 	 * 不覆盖原有请求头
 	 * 
 	 * @param headers 请求头
+	 * @return this
 	 */
 	public T header(Map<String, List<String>> headers) {
 		if(CollectionUtil.isEmpty(headers)) {
@@ -161,7 +162,7 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * 获取headers
-	 * @return Map<String, List<String>>
+	 * @return Headers Map
 	 */
 	public Map<String, List<String>> headers() {
 		return Collections.unmodifiableMap(headers);
@@ -177,8 +178,9 @@ public abstract class HttpBase<T> {
 	}
 	/**
 	 * 设置http版本
-	 * @param httpVersion
-	 * @return T
+	 * 
+	 * @param httpVersion Http版本，{@link HttpBase#HTTP_1_0}，{@link HttpBase#HTTP_1_1}
+	 * @return this
 	 */
 	public T httpVersion(String httpVersion) {
 		this.httpVersion = httpVersion;
@@ -197,6 +199,7 @@ public abstract class HttpBase<T> {
 	 * 设置字符集
 	 * @param charset 字符集
 	 * @return T 自己
+	 * @see CharsetUtil
 	 */
 	public T charset(String charset) {
 		if(StrUtil.isNotBlank(charset)){
@@ -209,6 +212,7 @@ public abstract class HttpBase<T> {
 	 * 设置字符集
 	 * @param charset 字符集
 	 * @return T 自己
+	 * @see CharsetUtil
 	 */
 	public T charset(Charset charset) {
 		if(null != charset){

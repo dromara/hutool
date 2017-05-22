@@ -115,6 +115,7 @@ public class JSONTokener {
 	/**
 	 * 获得源字符串中的下一个字符
 	 * @return 下一个字符, or 0 if past the end of the source string.
+	 * @throws JSONException JSON异常，包装IO异常
 	 */
 	public char next() throws JSONException {
 		int c;

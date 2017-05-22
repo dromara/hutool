@@ -28,6 +28,7 @@ public abstract class AbstractSqlRunner{
 	/**
 	 * 获得链接。根据实现不同，可以自定义获取连接的方式
 	 * @return {@link Connection}
+	 * @throws SQLException 连接获取异常
 	 */
 	public abstract Connection getConnection() throws SQLException;
 	

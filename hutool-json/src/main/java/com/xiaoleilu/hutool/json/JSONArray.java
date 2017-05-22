@@ -77,6 +77,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	/**
 	 * 从数组或{@link Collection}对象构造
 	 *
+	 *@param arrayOrCollection 数组或集合
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object arrayOrCollection) throws JSONException {
@@ -154,7 +155,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @param index 位置
 	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
-	 * @throws JSONException index < 0 或者非有限的数字
+	 * @throws JSONException index &lt; 0 或者非有限的数字
 	 */
 	public JSONArray put(int index, Object value) throws JSONException {
 		this.add(index, value);
@@ -228,7 +229,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 *
 	 * @param indentFactor 缩进值，既缩进空格数
 	 * @return JSON字符串
-	 * @throws JSONException
+	 * @throws JSONException JSON写入异常
 	 */
 	@Override
 	public String toJSONString(int indentFactor) throws JSONException {
