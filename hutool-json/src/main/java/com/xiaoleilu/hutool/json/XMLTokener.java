@@ -89,7 +89,7 @@ public class XMLTokener extends JSONTokener {
 	}
 
 	/**
-	 * Return the next entity. These entities are translated to Characters: <code>&amp;  &apos;  &gt;  &lt;  &quot;</code>.
+	 * Return the next entity. These entities are translated to Characters: <code>&amp;  '  &gt;  &lt;  &quot;</code>.
 	 * 
 	 * @param ampersand An ampersand character.
 	 * @return A Character or an entity String if the entity is not recognized.

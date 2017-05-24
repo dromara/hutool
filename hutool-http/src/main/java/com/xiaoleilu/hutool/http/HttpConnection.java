@@ -414,7 +414,7 @@ public class HttpConnection {
 	 * 连接
 	 * 
 	 * @return this
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public HttpConnection connect() throws IOException {
 		if (null != this.conn) {
