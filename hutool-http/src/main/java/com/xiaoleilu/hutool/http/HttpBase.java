@@ -62,27 +62,6 @@ public abstract class HttpBase<T> {
 	}
 	
 	/**
-	 * 移除一个头信息
-	 * @param name Header名
-	 * @return this
-	 */
-	public T removeHeader(String name) {
-		if(name != null) {
-			headers.remove(name.trim());
-		}
-		return (T)this;
-	}
-	
-	/**
-	 * 移除一个头信息
-	 * @param name Header名
-	 * @return this
-	 */
-	public T removeHeader(Header name) {
-		return removeHeader(name.toString());
-	}
-
-	/**
 	 * 设置一个header<br>
 	 * 如果覆盖模式，则替换之前的值，否则加入到值列表中
 	 * @param name Header名
@@ -158,6 +137,27 @@ public abstract class HttpBase<T> {
 			}
 		}
 		return (T)this;
+	}
+	
+	/**
+	 * 移除一个头信息
+	 * @param name Header名
+	 * @return this
+	 */
+	public T removeHeader(String name) {
+		if(name != null) {
+			headers.remove(name.trim());
+		}
+		return (T)this;
+	}
+	
+	/**
+	 * 移除一个头信息
+	 * @param name Header名
+	 * @return this
+	 */
+	public T removeHeader(Header name) {
+		return removeHeader(name.toString());
 	}
 
 	/**

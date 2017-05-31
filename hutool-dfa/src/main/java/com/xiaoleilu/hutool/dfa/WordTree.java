@@ -161,22 +161,31 @@ public class WordTree extends HashMap<Character, WordTree>{
 		
 		List<String> findedWords = new ArrayList<String>();
 		WordTree current = this;
-		char currentChar;
 		int length = text.length();
-		StringBuilder sb;
+		StringBuilder wordBuffer;//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
+		char currentChar;
 		for (int i = 0; i < length; i++) {
-			sb = StrUtil.builder();
+			wordBuffer = StrUtil.builder();
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
 //				Console.log("i: {}, j: {}, currentChar: {}", i, j, currentChar);
-				if(StopChar.isStopChar(currentChar) || false == current.containsKey(currentChar)){
-					//停顿词（略过的词）和非关键字被跳过
+				if(StopChar.isStopChar(currentChar)){
+					if(wordBuffer.length() > 0){
+						//做为关键词中间的停顿词被当作关键词的一部分被返回
+						wordBuffer.append(currentChar);
+					}else{
+						//停顿词做为关键词的第一个字符时需要跳过
+						i++;
+					}
+					continue;
+				}else if(false == current.containsKey(currentChar)){
+					//非关键字符被整体略过，重新以下个字符开始检查
 					break;
 				}
-				sb.append(currentChar);
+				wordBuffer.append(currentChar);
 				if(current.isEnd(currentChar)){
 					//到达单词末尾，关键词成立，从此词的下一个位置开始查找
-					findedWords.add(sb.toString());
+					findedWords.add(wordBuffer.toString());
 					if(limit > 0 && findedWords.size() >= limit){
 						//超过匹配限制个数，直接返回
 						return findedWords;
