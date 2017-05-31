@@ -60,11 +60,13 @@ public class BOMInputStream extends InputStream {
 		return charset;
 	}
 
+	@Override
 	public void close() throws IOException {
 		isInited = true;
 		in.close();
 	}
 
+	@Override
 	public int read() throws IOException {
 		isInited = true;
 		return in.read();

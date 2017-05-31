@@ -164,8 +164,8 @@ public final class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomString(String baseString, int length) {
-		Random random = new Random();
-		StringBuffer sb = new StringBuffer();
+		final Random random = new Random();
+		final StringBuilder sb = new StringBuilder();
 
 		if (length < 1) {
 			length = 1;

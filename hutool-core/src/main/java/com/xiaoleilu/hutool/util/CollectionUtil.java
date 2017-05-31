@@ -284,7 +284,7 @@ public final class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> List<T> sortPageAll(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		final List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<>();
 		for (Collection<T> coll : colls) {
 			result.addAll(coll);
 		}
@@ -317,7 +317,7 @@ public final class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> List<T> sortPageAll2(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<T>(pageNo * numPerPage);
+		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<>(pageNo * numPerPage, comparator);
 		for (Collection<T> coll : colls) {
 			queue.addAll(coll);
 		}
@@ -343,7 +343,7 @@ public final class CollectionUtil {
 	 * @return 排序后的Set
 	 */
 	public static List<Entry<Long, Long>> sortEntrySetToList(Set<Entry<Long, Long>> set) {
-		List<Entry<Long, Long>> list = new LinkedList<Map.Entry<Long, Long>>(set);
+		List<Entry<Long, Long>> list = new LinkedList<>(set);
 		Collections.sort(list, new Comparator<Entry<Long, Long>>(){
 
 			@Override
@@ -369,11 +369,11 @@ public final class CollectionUtil {
 	 * @return 切取出的数据或null
 	 */
 	public static <T> List<T> popPart(Stack<T> surplusAlaDatas, int partSize) {
-		if (surplusAlaDatas == null || surplusAlaDatas.size() <= 0) {
+		if (isEmpty(surplusAlaDatas)) {
 			return null;
 		}
 
-		final List<T> currentAlaDatas = new ArrayList<T>();
+		final List<T> currentAlaDatas = new ArrayList<>();
 		int size = surplusAlaDatas.size();
 		// 切割
 		if (size > partSize) {
@@ -397,11 +397,11 @@ public final class CollectionUtil {
 	 * @return 切取出的数据或null
 	 */
 	public static <T> List<T> popPart(Deque<T> surplusAlaDatas, int partSize) {
-		if (surplusAlaDatas == null || surplusAlaDatas.size() <= 0) {
+		if (isEmpty(surplusAlaDatas)) {
 			return null;
 		}
 
-		final List<T> currentAlaDatas = new ArrayList<T>();
+		final List<T> currentAlaDatas = new ArrayList<>();
 		int size = surplusAlaDatas.size();
 		// 切割
 		if (size > partSize) {

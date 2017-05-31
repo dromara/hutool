@@ -80,6 +80,7 @@ public class ScriptRuntimeException extends RuntimeException {
 	 * 
 	 * @return The error message.
 	 */
+	@Override
 	public String getMessage() {
 		String ret = super.getMessage();
 		if (fileName != null) {

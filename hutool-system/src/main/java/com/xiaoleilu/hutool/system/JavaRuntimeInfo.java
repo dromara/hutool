@@ -202,6 +202,7 @@ public class JavaRuntimeInfo{
 	 * 
 	 * @return JRE信息的字符串表示
 	 */
+	@Override
 	public final String toString() {
 		StringBuilder builder = new StringBuilder();
 

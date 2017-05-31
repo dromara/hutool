@@ -49,6 +49,7 @@ public class JSONNull {
 	 *
 	 * @return The string "null".
 	 */
+	@Override
 	public String toString() {
 		return "null";
 	}

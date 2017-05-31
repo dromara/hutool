@@ -925,6 +925,7 @@ public final class DateUtil {
 	 * @return 偏移后的日期
 	 * @deprecated please use {@link DateUtil#offset(Date, DateField, int)}
 	 */
+	@Deprecated
 	public static DateTime offsetDate(Date date, DateField dateField, int offset) {
 		return offset(date, dateField, offset);
 	}

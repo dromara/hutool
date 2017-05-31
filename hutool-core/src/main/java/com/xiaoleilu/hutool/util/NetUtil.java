@@ -35,7 +35,7 @@ public final class NetUtil {
 	 * @return IP V4 地址
 	 */
 	public static String longToIpv4(long longIP) {
-		StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		// 直接右移24位
 		sb.append(String.valueOf(longIP >>> 24));
 		sb.append(".");

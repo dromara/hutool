@@ -1776,7 +1776,7 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(Collection<T> list, File file, String charset, boolean isAppend) throws IORuntimeException {
-		return FileWriter.create(file, CharsetUtil.charset(charset)).writeLines(list);
+		return FileWriter.create(file, CharsetUtil.charset(charset)).writeLines(list, isAppend);
 	}
 
 	/**
@@ -1810,12 +1810,12 @@ public final class FileUtil {
 	 * @param dest 目标文件
 	 * @param off 数据开始位置
 	 * @param len 数据长度
-	 * @param append 是否追加模式
+	 * @param isAppend 是否追加模式
 	 * @return File
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File writeBytes(byte[] data, File dest, int off, int len, boolean append) throws IORuntimeException {
-		return FileWriter.create(dest).write(data, off, len);
+	public static File writeBytes(byte[] data, File dest, int off, int len, boolean isAppend) throws IORuntimeException {
+		return FileWriter.create(dest).write(data, off, len, isAppend);
 	}
 
 	/**

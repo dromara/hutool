@@ -159,14 +159,6 @@ public interface Status {
 
 	/**
 	 * HTTP Status-Code 500: Internal Server Error.
-	 * 
-	 * @deprecated it is misplaced and shouldn't have existed.
-	 */
-	@Deprecated
-	public static final int HTTP_SERVER_ERROR = 500;
-
-	/**
-	 * HTTP Status-Code 500: Internal Server Error.
 	 */
 	public static final int HTTP_INTERNAL_ERROR = 500;
 

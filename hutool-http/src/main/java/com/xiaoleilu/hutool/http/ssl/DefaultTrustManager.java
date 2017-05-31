@@ -12,6 +12,7 @@ import javax.net.ssl.X509TrustManager;
  */
 public class DefaultTrustManager implements X509TrustManager {
 
+	@Override
 	public X509Certificate[] getAcceptedIssuers() {
 		return null;
 	}

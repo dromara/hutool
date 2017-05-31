@@ -105,6 +105,8 @@ public final class IdcardUtil {
 		hkFirstCode.put("O", 15);
 		hkFirstCode.put("N", 14);
 	}
+	
+	private IdcardUtil() {}
 
 	/**
 	 * 将15位身份证号码转换为18位
@@ -256,18 +258,14 @@ public final class IdcardUtil {
 		}
 		if (idCard.matches("^[a-zA-Z][0-9]{9}$")) { // 台湾
 			info[0] = "台湾";
-			System.out.println("11111");
 			String char2 = idCard.substring(1, 2);
 			if (char2.equals("1")) {
 				info[1] = "M";
-				System.out.println("MMMMMMM");
 			} else if (char2.equals("2")) {
 				info[1] = "F";
-				System.out.println("FFFFFFF");
 			} else {
 				info[1] = "N";
 				info[2] = "false";
-				System.out.println("NNNN");
 				return info;
 			}
 			info[2] = isValidTWCard(idCard) ? "true" : "false";
@@ -334,7 +332,7 @@ public final class IdcardUtil {
 			sum = sum + Integer.valueOf(String.valueOf(c)) * iflag;
 			iflag--;
 		}
-		if (end.toUpperCase().equals("A")) {
+		if ("A".equals(end.toUpperCase())) {
 			sum += 10;
 		} else {
 			sum += Integer.valueOf(end);
@@ -482,43 +480,32 @@ public final class IdcardUtil {
 	 * @return 校验位
 	 */
 	private static char getCheckCode18(int iSum) {
-		char sCode = StrUtil.C_SPACE;
 		switch (iSum % 11) {
 			case 10:
-				sCode = '2';
-				break;
+				return  '2';
 			case 9:
-				sCode = '3';
-				break;
+				return  '3';
 			case 8:
-				sCode = '4';
-				break;
+				return  '4';
 			case 7:
-				sCode = '5';
-				break;
+				return  '5';
 			case 6:
-				sCode = '6';
-				break;
+				return  '6';
 			case 5:
-				sCode = '7';
-				break;
+				return  '7';
 			case 4:
-				sCode = '8';
-				break;
+				return  '8';
 			case 3:
-				sCode = '9';
-				break;
+				return  '9';
 			case 2:
-				sCode = 'x';
-				break;
+				return  'x';
 			case 1:
-				sCode = '0';
-				break;
+				return  '0';
 			case 0:
-				sCode = '1';
-				break;
+				return  '1';
+			default:
+				return StrUtil.C_SPACE;
 		}
-		return sCode;
 	}
 
 	/**
