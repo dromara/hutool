@@ -153,7 +153,6 @@ public final class HttpUtil {
 	 * @param urlString 网址
 	 * @param customCharset 自定义请求字符集，如果字符集获取不到，使用此字符集
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
-	 * @throws IOException
 	 */
 	public static String get(String urlString, String customCharset) {
 		return HttpRequest.get(urlString).charset(customCharset).execute().body();
@@ -164,7 +163,6 @@ public final class HttpUtil {
 	 * 
 	 * @param urlString 网址
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
-	 * @throws IOException
 	 */
 	public static String get(String urlString) {
 		return HttpRequest.get(urlString).execute().body();
@@ -176,7 +174,6 @@ public final class HttpUtil {
 	 * @param urlString 网址
 	 * @param paramMap post表单数据
 	 * @return 返回数据
-	 * @throws IOException
 	 */
 	public static String get(String urlString, Map<String, Object> paramMap) {
 		return HttpRequest.get(urlString).form(paramMap).execute().body();
@@ -188,7 +185,6 @@ public final class HttpUtil {
 	 * @param urlString 网址
 	 * @param paramMap post表单数据
 	 * @return 返回数据
-	 * @throws IOException
 	 */
 	public static String post(String urlString, Map<String, Object> paramMap) {
 		return HttpRequest.post(urlString).form(paramMap).execute().body();
@@ -200,7 +196,6 @@ public final class HttpUtil {
 	 * @param urlString 网址
 	 * @param params post表单数据
 	 * @return 返回数据
-	 * @throws IOException
 	 */
 	public static String post(String urlString, String params) {
 		return HttpRequest.post(urlString).body(params).execute().body();
@@ -213,7 +208,6 @@ public final class HttpUtil {
 	 * @param url 请求的url
 	 * @param customCharsetName 自定义的字符集
 	 * @return 文本
-	 * @throws IOException
 	 */
 	public static String downloadString(String url, String customCharsetName) {
 		return downloadString(url, CharsetUtil.charset(customCharsetName), null);
@@ -225,7 +219,6 @@ public final class HttpUtil {
 	 * @param url 请求的url
 	 * @param customCharset 自定义的字符集，可以使用{@link CharsetUtil#charset} 方法转换
 	 * @return 文本
-	 * @throws IOException
 	 */
 	public static String downloadString(String url, Charset customCharset) {
 		return downloadString(url, customCharset, null);
@@ -238,7 +231,6 @@ public final class HttpUtil {
 	 * @param customCharset 自定义的字符集，可以使用{@link CharsetUtil#charset} 方法转换
 	 * @param streamPress 进度条 {@link StreamProgress}
 	 * @return 文本
-	 * @throws IOException
 	 */
 	public static String downloadString(String url, Charset customCharset, StreamProgress streamPress) {
 		if(StrUtil.isBlank(url)){
@@ -256,7 +248,6 @@ public final class HttpUtil {
 	 * @param url 请求的url
 	 * @param dest 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
-	 * @throws IOException
 	 */
 	public static long downloadFile(String url, String dest) {
 		return downloadFile(url, FileUtil.file(dest));
@@ -268,7 +259,6 @@ public final class HttpUtil {
 	 * @param url 请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
-	 * @throws IOException
 	 */
 	public static long downloadFile(String url, File destFile) {
 		return downloadFile(url, destFile, null);
@@ -281,7 +271,6 @@ public final class HttpUtil {
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param streamProgress 进度条
 	 * @return 文件大小
-	 * @throws IOException
 	 */
 	public static long downloadFile(String url, File destFile, StreamProgress streamProgress) {
 		if(StrUtil.isBlank(url)){
@@ -315,7 +304,6 @@ public final class HttpUtil {
 	 * @param out 将下载内容写到输出流中 {@link OutputStream}
 	 * @param isCloseOut 是否关闭输出流
 	 * @return 文件大小
-	 * @throws IOException
 	 */
 	public static long download(String url, OutputStream out, boolean isCloseOut) {
 		return download(url, out, isCloseOut, null);
@@ -329,7 +317,6 @@ public final class HttpUtil {
 	 * @param isCloseOut 是否关闭输出流
 	 * @param streamProgress 进度条
 	 * @return 文件大小
-	 * @throws IOException
 	 */
 	public static long download(String url, OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
 		if(StrUtil.isBlank(url)){
@@ -532,7 +519,7 @@ public final class HttpUtil {
 	}
 	
 	/**
-	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br/>
+	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
 	 * 
 	 * @param checkString 被检测的字符串
 	 * @return 是否未知
@@ -546,8 +533,9 @@ public final class HttpUtil {
 	 * 
 	 * @param in 输入流
 	 * @param charset 字符集
+	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
 	 * @return 内容
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	@SuppressWarnings("resource")
 	public static String getString(InputStream in, String charset, boolean isGetCharsetFromContent) throws IOException {

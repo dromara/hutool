@@ -37,7 +37,7 @@ public final class ScriptUtil {
 	 * @param engine 引擎
 	 * @param script 脚本内容
 	 * @return {@link CompiledScript}
-	 * @throws ScriptException
+	 * @throws ScriptException 脚本异常
 	 */
 	public static CompiledScript compile(ScriptEngine engine, String script) throws ScriptException{
 		if(engine instanceof Compilable){

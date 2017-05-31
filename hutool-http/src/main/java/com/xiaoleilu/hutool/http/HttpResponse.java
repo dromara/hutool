@@ -80,8 +80,9 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * 获取响应主体
 	 * @return String
+	 * @throws HttpException 包装IO异常
 	 */
-	public String body() {
+	public String body() throws HttpException{
 		try {
 			return HttpUtil.getString(bodyStream(), this.charset, null == this.charset);
 		} catch (IOException e) {

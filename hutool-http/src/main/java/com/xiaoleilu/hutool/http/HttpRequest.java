@@ -223,6 +223,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @param name 名
 	 * @param value 值
+	 * @return this
 	 */
 	public HttpRequest form(String name, Object value) {
 		if(StrUtil.isBlank(name) || ObjectUtil.isNull(value)){
@@ -260,6 +261,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param name 名
 	 * @param value 值
 	 * @param parameters 参数对，奇数为名，偶数为值
+	 * @return this
 	 * 
 	 */
 	public HttpRequest form(String name, Object value, Object... parameters) {
@@ -275,7 +277,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置map类型表单数据
 	 * 
-	 * @param formMap
+	 * @param formMap 表单内容
+	 * @return this
 	 * 
 	 */
 	public HttpRequest form(Map<String, Object> formMap) {
@@ -291,7 +294,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @param name 名
 	 * @param file 文件
-	 * @return HttpRequest
+	 * @return this
 	 */
 	public HttpRequest form(String name, File file) {
 		if (null == file) {
@@ -313,7 +316,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 获取表单数据
 	 * 
-	 * @return Map<String, Object>
+	 * @return 表单Map
 	 */
 	public Map<String, Object> form() {
 		return form;
@@ -325,6 +328,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置内容主体
 	 * 
 	 * @param body 请求体
+	 * @return this
 	 */
 	public HttpRequest body(String body) {
 		this.body = body;
@@ -338,6 +342,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @param body 请求体
 	 * @param contentType 请求体类型
+	 * @return this
 	 */
 	public HttpRequest body(String body, String contentType) {
 		this.body(body);
@@ -351,6 +356,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
 	 * 
 	 * @param json JSON请求体
+	 * @return this
 	 */
 	public HttpRequest body(JSON json) {
 		this.body(json.toString());
@@ -369,6 +375,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
 	 * 
 	 * @param bodyBytes 主体
+	 * @return this
 	 */
 	public HttpRequest body(byte[] bodyBytes) {
 		return body(StrUtil.str(bodyBytes, this.charset));
@@ -378,8 +385,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置超时
 	 * 
-	 * @param milliseconds
-	 * @return HttpRequest
+	 * @param milliseconds 超时毫秒数
+	 * @return this
 	 */
 	public HttpRequest timeout(int milliseconds) {
 		this.timeout = milliseconds;
@@ -388,6 +395,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	
 	/**
 	 * 禁用缓存
+	 * 
+	 * @return this
 	 */
 	public HttpRequest disableCache() {
 		this.isDisableCache = true;
@@ -397,6 +406,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置是否打开重定向
 	 * @param isFollowRedirects 是否打开重定向
+	 * @return this
 	 */
 	public HttpRequest setFollowRedirects(Boolean isFollowRedirects) {
 		this.isFollowRedirects = isFollowRedirects;
@@ -428,7 +438,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 默认SSLSocketFactory为：SSLSocketFactoryBuilder.create().build();
 	 * 
 	 * @param ssf SSLScketFactory
-	 * @return 自己
+	 * @return this
 	 */
 	public HttpRequest setSSLSocketFactory(SSLSocketFactory ssf){
 		this.ssf = ssf;
@@ -439,7 +449,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置HTTPS安全连接协议，只针对HTTPS请求<br>
 	 * @see SSLSocketFactoryBuilder
 	 * @param protocol 协议
-	 * @return 自己
+	 * @return this
 	 */
 	public HttpRequest setSSLProtocol(String protocol){
 		if(null == this.ssf){

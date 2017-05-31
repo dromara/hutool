@@ -41,6 +41,7 @@ public class TaskExecutorManager {
 	/**
 	 * 执行器执行完毕调用此方法，将执行器从执行器列表移除
 	 * @param executor 执行器 {@link TaskExecutor}
+	 * @return this
 	 */
 	public TaskExecutorManager notifyExecutorCompleted(TaskExecutor executor) {
 		synchronized (executors) {

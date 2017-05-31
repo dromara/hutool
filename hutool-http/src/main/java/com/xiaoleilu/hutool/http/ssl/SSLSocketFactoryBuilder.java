@@ -102,8 +102,8 @@ public class SSLSocketFactoryBuilder{
 	/**
 	 * 构建SSLSocketFactory
 	 * @return SSLSocketFactory
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyManagementException
+	 * @throws NoSuchAlgorithmException 无此算法
+	 * @throws KeyManagementException Key管理异常
 	 */
 	public SSLSocketFactory build() throws NoSuchAlgorithmException, KeyManagementException{
 		SSLContext sslContext = SSLContext.getInstance(protocol);

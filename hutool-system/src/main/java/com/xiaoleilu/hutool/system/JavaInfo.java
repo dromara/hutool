@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.system;
 /**
  * 代表Java Implementation的信息。
  */
-public class JavaInfo{
+public class JavaInfo {
 
 	private final String JAVA_VERSION = SystemUtil.get("java.version", false);
 	private final float JAVA_VERSION_FLOAT = getJavaVersionAsFloat();
@@ -26,7 +26,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"1.4.2"</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
 	 * 
@@ -46,11 +46,8 @@ public class JavaInfo{
 	 * <li>JDK 1.2：<code>1.2f</code>。</li>
 	 * <li>JDK 1.3.1：<code>1.31f</code></li>
 	 * </ul>
-	 * </p>
 	 * 
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>0</code>。
-	 * 
-	 * @since Java 1.1
 	 */
 	public final float getVersionFloat() {
 		return JAVA_VERSION_FLOAT;
@@ -66,7 +63,7 @@ public class JavaInfo{
 	 * <li>JDK 1.2：<code>120</code>。</li>
 	 * <li>JDK 1.3.1：<code>131</code></li>
 	 * </ul>
-	 * </p>
+	 * 
 	 * 
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>0</code>。
 	 * 
@@ -123,7 +120,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"Sun Microsystems Inc."</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
 	 * 
@@ -138,7 +135,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 例如Sun JDK 1.4.2：<code>"http://java.sun.com/"</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 属性值，如果不能取得（因为Java安全限制）或值不存在，则返回<code>null</code>。
 	 * 
@@ -153,7 +150,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 如果当前Java版本为1.1，则返回<code>true</code>
 	 */
@@ -166,7 +163,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 如果当前Java版本为1.2，则返回<code>true</code>
 	 */
@@ -179,7 +176,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 如果当前Java版本为1.3，则返回<code>true</code>
 	 */
@@ -192,7 +189,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 如果当前Java版本为1.4，则返回<code>true</code>
 	 */
@@ -205,7 +202,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 如果当前Java版本为1.5，则返回<code>true</code>
 	 */
@@ -218,7 +215,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 如果当前Java版本为1.6，则返回<code>true</code>
 	 */
@@ -231,20 +228,20 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 * 
 	 * @return 如果当前Java版本为1.7，则返回<code>true</code>
 	 */
 	public final boolean isJava17() {
 		return IS_JAVA_1_7;
 	}
-	
+
 	/**
 	 * 判断当前Java的版本。
 	 *
 	 * <p>
 	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
-	 * </p>
+	 * 
 	 *
 	 * @return 如果当前Java版本为1.8，则返回<code>true</code>
 	 */
@@ -272,7 +269,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 例如：
-	 * </p>
+	 * 
 	 * 
 	 * <ul>
 	 * <li>测试JDK 1.2：<code>isJavaVersionAtLeast(1.2f)</code></li>
@@ -293,7 +290,7 @@ public class JavaInfo{
 	 * 
 	 * <p>
 	 * 例如：
-	 * </p>
+	 * 
 	 * 
 	 * <ul>
 	 * <li>测试JDK 1.2：<code>isJavaVersionAtLeast(120)</code></li>

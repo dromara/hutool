@@ -21,13 +21,13 @@ import com.xiaoleilu.hutool.util.ThreadUtil;
  * 调度器启动流程：<br>
  * 
  * <pre>
- * 启动Timer -> 启动TaskLauncher -> 启动TaskExecutor
+ * 启动Timer =》 启动TaskLauncher =》 启动TaskExecutor
  * </pre>
  * 
  * 调度器关闭流程:<br>
  * 
  * <pre>
- * 关闭Timer -> 关闭所有运行中的TaskLauncher -> 关闭所有运行中的TaskExecutor
+ * 关闭Timer =》 关闭所有运行中的TaskLauncher =》 关闭所有运行中的TaskExecutor
  * </pre>
  * 
  * 其中：
@@ -95,7 +95,7 @@ public class Scheduler {
 	 * 默认非守护线程
 	 * 
 	 * @param on <code>true</code>为守护线程，否则非守护线程
-	 * @throws CronException
+	 * @throws CronException 定时任务已经启动抛出此异常
 	 */
 	public void setDaemon(boolean on) throws CronException {
 		synchronized (lock) {
@@ -177,6 +177,7 @@ public class Scheduler {
 	 * 配置文件格式为：
 	 * xxx.xxx.xxx.Class.method = * * * * *
 	 * @param cronSetting 定时任务设置文件
+	 * @return this
 	 */
 	public Scheduler schedule(Setting cronSetting) {
 		if(CollectionUtil.isNotEmpty(cronSetting)){
