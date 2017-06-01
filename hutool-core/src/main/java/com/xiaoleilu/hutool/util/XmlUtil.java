@@ -2,12 +2,8 @@ package com.xiaoleilu.hutool.util;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -315,17 +311,13 @@ public final class XmlUtil {
 	 * @throws IOException IO异常
 	 */
 	public static <T> void writeObjectAsXml(File dest, T t) throws IOException {
-		FileOutputStream fos = null;
 		XMLEncoder xmlenc = null;
 		try {
-			fos = new FileOutputStream(dest);
-			xmlenc = new XMLEncoder(new BufferedOutputStream(fos));
+			xmlenc = new XMLEncoder(FileUtil.getOutputStream(dest));
 			xmlenc.writeObject(t);
 		} finally {
-			IoUtil.close(fos);
-			if (xmlenc != null) {
-				xmlenc.close();
-			}
+			//关闭XMLEncoder会相应关闭OutputStream
+			IoUtil.close(xmlenc);
 		}
 	}
 
@@ -340,17 +332,12 @@ public final class XmlUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T readObjectFromXml(File source) throws IOException {
 		Object result = null;
-		FileInputStream fis = null;
 		XMLDecoder xmldec = null;
 		try {
-			fis = new FileInputStream(source);
-			xmldec = new XMLDecoder(new BufferedInputStream(fis));
+			xmldec = new XMLDecoder(FileUtil.getInputStream(source));
 			result = xmldec.readObject();
 		} finally {
-			IoUtil.close(fis);
-			if (xmldec != null) {
-				xmldec.close();
-			}
+			IoUtil.close(xmldec);
 		}
 		return (T) result;
 	}

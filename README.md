@@ -1,6 +1,6 @@
 ![封面](https://raw.githubusercontent.com/looly/hutool/master/docs/resources/hutool.jpg)
 
-[![Version](https://img.shields.io/badge/version-3.0.6-brightgreen.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22)
+[![Version](https://img.shields.io/badge/version-3.0.7-brightgreen.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg "JDK 1.7")]()
 
@@ -74,13 +74,13 @@ Hutool始终是一个工具类而不是框架，这意味着它对项目的侵�
 <dependency>
     <groupId>com.xiaoleilu</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>3.0.6</version>
+    <version>3.0.7</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'com.xiaoleilu:hutool-all:3.0.6'
+compile 'com.xiaoleilu:hutool-all:3.0.7'
 ```
 
 注：工具包的**版本**可以通过 [http://search.maven.org/](http://search.maven.org/) 搜索`hutool-all`找到项目。

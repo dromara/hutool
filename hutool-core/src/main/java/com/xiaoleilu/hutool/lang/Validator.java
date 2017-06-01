@@ -525,7 +525,7 @@ public final class Validator {
 	 * @return 是否为IPV4地址
 	 * @since 3.0.6
 	 */
-	public static boolean isPlateNmber(String value) {
+	public static boolean isPlateNumber(String value) {
 		return isMactchRegex(PLATE_NUMBER, value);
 	}
 	
@@ -537,8 +537,8 @@ public final class Validator {
 	 * @throws ValidateException 验证异常
 	 * @since 3.0.6
 	 */
-	public static void validatePlateNmber(String value, String errorMsg) throws ValidateException {
-		if(false == isPlateNmber(value)){
+	public static void validatePlateNumber(String value, String errorMsg) throws ValidateException {
+		if(false == isPlateNumber(value)){
 			throw new ValidateException(errorMsg);
 		}
 	}

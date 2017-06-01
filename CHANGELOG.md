@@ -3,6 +3,15 @@
 ## 3.0.6
 
 ### 新特性
+
+### Bug修复
+* Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 3.0.6
+
+### 新特性
 * ThreadUtil增加newExecutorByBlockingCoefficient方法（感谢：@【北京】仓山有井名为空）
 * 解决LogFactory中频繁创建Log对象造成的性能问题（issue#19@osc）
 * 解决LFUCache中负载因子导致的扩容rehash问题（issue#18@osc）
