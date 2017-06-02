@@ -507,13 +507,17 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	private void populateMap(Object bean) {
 		try {
 			final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(bean.getClass());
+			
+			String key;
+			Method getter;
+			Object value;
 			for (PropertyDescriptor property : propertyDescriptors) {
-				String key = property.getName();
+				key = property.getName();
 				// 过滤class属性
 				if (false == key.equals("class") && false == key.equals("declaringClass")) {
 					// 得到property对应的getter方法
-					final Method getter = property.getReadMethod();
-					final Object value = getter.invoke(bean);
+					getter = property.getReadMethod();
+					value = getter.invoke(bean);
 					if (null != value && false == value.equals(bean)) {
 						this.rawHashMap.put(key, JSONUtil.wrap(value));
 					}

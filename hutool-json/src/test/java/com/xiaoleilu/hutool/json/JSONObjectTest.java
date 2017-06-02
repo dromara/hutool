@@ -21,6 +21,7 @@ public class JSONObjectTest {
 		json1.put("a", "value1");
 		json1.put("b", "value2");
 		json1.put("c", "value3");
+		json1.put("d", true);
 		
 		JSONObject json2 = JSONUtil.createObj();
 		json2.put("a", "value21");
@@ -32,19 +33,16 @@ public class JSONObjectTest {
 		Assert.assertEquals(json1.get("a"), "value21");
 		Assert.assertEquals(json1.get("b"), "value22");
 		Assert.assertEquals(json1.get("c"), "value3");
-		
-		
 	}
 	
 	@Test
 	public void parseTest(){
-		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\"}";
+		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true}";
 		JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
 		Assert.assertEquals(jsonObject.get("a"), "value1");
 		Assert.assertEquals(jsonObject.get("b"), "value2");
-		
-		Assert.assertEquals(jsonObject.toString(), jsonStr);
-		
+		Assert.assertEquals(jsonObject.get("c"), "value3");
+		Assert.assertEquals(jsonObject.get("d"), true);
 	}
 	
 	@Test
