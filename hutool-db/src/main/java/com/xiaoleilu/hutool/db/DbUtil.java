@@ -316,7 +316,7 @@ public final class DbUtil {
 			//获得主键
 			rs = metaData.getPrimaryKeys(conn.getCatalog(), null, tableName);
 			while(rs.next()) {
-				table.addPk("COLUMN_NAME");
+				table.addPk(rs.getString("COLUMN_NAME"));
 			}
 			
 			//获得列
@@ -324,7 +324,7 @@ public final class DbUtil {
 			while(rs.next()) {
 				table.setColumn(Column.create(tableName, rs));
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		}finally {
 			close(rs, conn);

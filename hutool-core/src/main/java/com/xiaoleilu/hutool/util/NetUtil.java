@@ -127,40 +127,6 @@ public final class NetUtil {
 	}
 
 	/**
-	 * 获得本机的IP地址列表<br>
-	 * 返回的IP列表有序，按照系统设备顺序
-	 * 
-	 * @return IP地址列表 {@link LinkedHashSet}
-	 */
-	public static LinkedHashSet<String> localIpv4s() {
-		Enumeration<NetworkInterface> networkInterfaces = null;
-		try {
-			networkInterfaces = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e) {
-			throw new UtilException(e.getMessage(), e);
-		}
-
-		if (networkInterfaces == null) {
-			throw new UtilException("Get network interface error!");
-		}
-
-		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
-
-		while (networkInterfaces.hasMoreElements()) {
-			final NetworkInterface networkInterface = networkInterfaces.nextElement();
-			final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-			while (inetAddresses.hasMoreElements()) {
-				final InetAddress inetAddress = inetAddresses.nextElement();
-				if (inetAddress != null && inetAddress instanceof Inet4Address) {
-					ipSet.add(inetAddress.getHostAddress());
-				}
-			}
-		}
-
-		return ipSet;
-	}
-
-	/**
 	 * 相对URL转换为绝对URL
 	 * 
 	 * @param absoluteBasePath 基准路径，绝对
@@ -254,6 +220,57 @@ public final class NetUtil {
 		}
 
 		return CollectionUtil.addAll(new ArrayList<NetworkInterface>(), networkInterfaces);
+	}
+	
+	/**
+	 * 获得本机的IP地址列表<br>
+	 * 返回的IP列表有序，按照系统设备顺序
+	 * 
+	 * @return IP地址列表 {@link LinkedHashSet}
+	 */
+	public static LinkedHashSet<String> localIpv4s() {
+		Enumeration<NetworkInterface> networkInterfaces = null;
+		try {
+			networkInterfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {
+			throw new UtilException(e.getMessage(), e);
+		}
+
+		if (networkInterfaces == null) {
+			throw new UtilException("Get network interface error!");
+		}
+
+		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
+
+		while (networkInterfaces.hasMoreElements()) {
+			final NetworkInterface networkInterface = networkInterfaces.nextElement();
+			final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+			while (inetAddresses.hasMoreElements()) {
+				final InetAddress inetAddress = inetAddresses.nextElement();
+				if (inetAddress != null && inetAddress instanceof Inet4Address) {
+					ipSet.add(inetAddress.getHostAddress());
+				}
+			}
+		}
+
+		return ipSet;
+	}
+	
+	/**
+	 * 获取本机网卡IP地址，这个地址为所有网卡中非回路地址的第一个<br>
+	 * 如果获取失败调用 {@link InetAddress#getLocalHost()}方法获取。<br>
+	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
+	 * 
+	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
+	 * @since 3.0.7
+	 */
+	public static String getLocalhostStr() {
+		InetAddress localhost = getLocalhost();
+		if(null != localhost){
+			return localhost.getHostAddress();
+		}
+		return null;
 	}
 
 	/**
