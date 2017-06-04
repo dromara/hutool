@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
@@ -283,7 +282,7 @@ public class ConverterRegistry {
 		
 		//日期时间
 		defaultConverterMap.put(Calendar.class, new CalendarConverter());
-		defaultConverterMap.put(Date.class, new DateConverter());
+		defaultConverterMap.put(java.util.Date.class, new DateConverter());
 		defaultConverterMap.put(DateTime.class, new DateTimeConverter());
 		defaultConverterMap.put(java.sql.Date.class, new SqlDateConverter());
 		defaultConverterMap.put(java.sql.Time.class, new SqlTimeConverter());

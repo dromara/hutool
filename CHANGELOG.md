@@ -8,6 +8,7 @@
 ### Bug修复
 * Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）
 * 修复DbUtil.getTableMeta获取主键出错问题
+* 修复ConverterRegistry中默认Date对象错误问题（issue#22@github）
 
 -------------------------------------------------------------------------------------------------------------
 
