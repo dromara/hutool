@@ -811,7 +811,24 @@ public final class CollectionUtil {
 	public static boolean isNotEmpty(Enumeration<?> enumeration) {
 		return null != enumeration && enumeration.hasMoreElements();
 	}
-
+	
+	/**
+	 * 是否包含{@code null}元素
+	 * @param iterable 被检查的Iterable对象
+	 * @return 是否包含{@code null}元素
+	 * @since 3.0.7
+	 */
+	public static <T> boolean hasNull(Iterable<?> iterable){
+		if (isNotEmpty(iterable)) {
+			for (Object element : iterable) {
+				if (null == element) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	// ---------------------------------------------------------------------- zip
 	
 	/**

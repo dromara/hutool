@@ -203,6 +203,23 @@ public final class ArrayUtil {
 	public static boolean isNotEmpty(final boolean[] array) {
 		return (array != null && array.length != 0);
 	}
+	
+	/**
+	 * 是否包含{@code null}元素
+	 * @param array 被检查的数组
+	 * @return 是否包含{@code null}元素
+	 * @since 3.0.7
+	 */
+	public static <T> boolean hasNull(T[] array){
+		if (isNotEmpty(array)) {
+			for (T element : array) {
+				if (null == element) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 新建一个空数组

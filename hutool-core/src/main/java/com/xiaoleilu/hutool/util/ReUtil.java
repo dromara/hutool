@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.lang.Holder;
+import com.xiaoleilu.hutool.lang.PatternPool;
 import com.xiaoleilu.hutool.lang.Validator;
 
 /**
@@ -20,11 +21,10 @@ import com.xiaoleilu.hutool.lang.Validator;
  */
 public final class ReUtil {
 	
-	/** 正则表达式匹配中文 */
+	/** 正则表达式匹配中文汉字 */
 	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";
-	
-	/** 分组 */
-	public final static Pattern GROUP_VAR =  Pattern.compile("\\$(\\d+)");
+	/** 正则表达式匹配中文字符串 */
+	public final static String RE_CHINESES = RE_CHINESE + "+";
 	
 	/** 正则中需要被转义的关键字 */
 	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[]{'$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'});
@@ -86,7 +86,7 @@ public final class ReUtil {
 			return null;
 		}
 		
-		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
+		HashSet<String> varNums = findAll(PatternPool.GROUP_VAR, template, 1, new HashSet<String>());
 		
 		Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
@@ -141,7 +141,7 @@ public final class ReUtil {
 			return null;
 		}
 		
-		HashSet<String> varNums = findAll(GROUP_VAR, template, 1, new HashSet<String>());
+		HashSet<String> varNums = findAll(PatternPool.GROUP_VAR, template, 1, new HashSet<String>());
 		
 		final String content = contentHolder.get();
 		Matcher matcher = pattern.matcher(content);
@@ -437,7 +437,7 @@ public final class ReUtil {
 		final Matcher matcher = pattern.matcher(content);
 		boolean result = matcher.find();
 		if (result) {
-			final Set<String> varNums = findAll(GROUP_VAR, replacementTemplate, 1, new HashSet<String>());
+			final Set<String> varNums = findAll(PatternPool.GROUP_VAR, replacementTemplate, 1, new HashSet<String>());
 			final StringBuffer sb = new StringBuffer();
 			do {
 				String replacement = replacementTemplate;

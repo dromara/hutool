@@ -22,35 +22,68 @@ public final class Validator {
 	private Validator() {}
 
 	/** 英文字母 、数字和下划线 */
-	public final static Pattern GENERAL = Pattern.compile("^\\w+$");
+	public final static Pattern GENERAL = PatternPool.GENERAL;
 	/** 数字 */
-	public final static Pattern NUMBERS = Pattern.compile("\\d+");
+	public final static Pattern NUMBERS = PatternPool.NUMBERS;
 	/** 分组 */
-	public final static Pattern GROUP_VAR = Pattern.compile("\\$(\\d+)");
+	public final static Pattern GROUP_VAR = PatternPool.GROUP_VAR;
 	/** IP v4 */
-	public final static Pattern IPV4 = Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b");
+	public final static Pattern IPV4 = PatternPool.IPV4;
 	/** 货币 */
-	public final static Pattern MONEY = Pattern.compile("^(\\d+(?:\\.\\d+)?)$");
+	public final static Pattern MONEY = PatternPool.MONEY;
 	/** 邮件 */
-	public final static Pattern EMAIL = Pattern.compile("(\\w|.)+@\\w+(\\.\\w+){1,2}");
+	public final static Pattern EMAIL = PatternPool.EMAIL;
 	/** 移动电话 */
-	public final static Pattern MOBILE = Pattern.compile("1\\d{10}");
+	public final static Pattern MOBILE = PatternPool.MOBILE;
 	/** 身份证号码 */
-	public final static Pattern CITIZEN_ID = Pattern.compile("[1-9]\\d{5}[1-2]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|X|x)");
+	public final static Pattern CITIZEN_ID = PatternPool.CITIZEN_ID;
 	/** 邮编 */
-	public final static Pattern ZIP_CODE = Pattern.compile("\\d{6}");
+	public final static Pattern ZIP_CODE = PatternPool.ZIP_CODE;
 	/** 生日 */
-	public final static Pattern BIRTHDAY = Pattern.compile("^(\\d{2,4})([/\\-\\.年]?)(\\d{1,2})([/\\-\\.月]?)(\\d{1,2})日?$");
+	public final static Pattern BIRTHDAY = PatternPool.BIRTHDAY;
 	/** URL */
-	public final static Pattern URL = Pattern.compile("(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?");
+	public final static Pattern URL = PatternPool.URL;
 	/** 中文字、英文字母、数字和下划线 */
-	public final static Pattern GENERAL_WITH_CHINESE = Pattern.compile("^[\\u0391-\\uFFE5\\w]+$");
+	public final static Pattern GENERAL_WITH_CHINESE = PatternPool.GENERAL_WITH_CHINESE;
 	/** UUID */
-	public final static Pattern UUID = Pattern.compile("^[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$");
+	public final static Pattern UUID = PatternPool.UUID;
 	/** 不带横线的UUID */
-	public final static Pattern UUID_SIMPLE = Pattern.compile("^[0-9a-z]{32}$");
+	public final static Pattern UUID_SIMPLE = PatternPool.UUID_SIMPLE;
 	/** 中国车牌号码 */
-	public final static Pattern PLATE_NUMBER = Pattern.compile("^[京,津,渝,沪,冀,晋,辽,吉,黑,苏,浙,皖,闽,赣,鲁,豫,鄂,湘,粤,琼,川,贵,云,陕,秦,甘,陇,青,台,蒙,桂,宁,新,藏,澳,军,海,航,警][A-Z][0-9,A-Z]{5}$");
+	public final static Pattern PLATE_NUMBER = PatternPool.PLATE_NUMBER;
+	
+	/**
+	 * 给定值是否为<code>null</code>
+	 * @param value 值
+	 * @return 是否为<code>null</code>
+	 */
+	public static boolean isNull(Object value){
+		return null == value;
+	}
+	
+	/**
+	 * 给定值是否不为<code>null</code>
+	 * @param value 值
+	 * @return 是否不为<code>null</code>
+	 */
+	public static boolean isNotNull(Object value){
+		return null != value;
+	}
+	
+	/**
+	 * 检查指定值是否为<code>null</code>
+	 * @param value 值
+	 * @param errorMsgTemplate 错误消息内容模板（变量使用{}表示）
+	 * @param params 模板中变量替换后的值
+	 * @return 检查过后的值
+	 * @throws ValidateException 检查不满足条件抛出的异常
+	 */
+	public static <T> T validateNotNull(T value, String errorMsgTemplate, Object... params) throws ValidateException{
+		if(isNull(value)){
+			throw new ValidateException(errorMsgTemplate, params);
+		}
+		return value;
+	}
 
 	/**
 	 * 验证是否为空<br>

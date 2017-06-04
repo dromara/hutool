@@ -10,13 +10,15 @@ import com.xiaoleilu.hutool.util.StrUtil;
 /**
  * 断言<br>
  * 断言某些对象或值是否符合规定，否则抛出异常。经常用于做变量检查
+ * 
  * @author Looly
  *
  */
 public final class Assert {
-	
-	private Assert() {}
-	
+
+	private Assert() {
+	}
+
 	/**
 	 * 断言是否为真，如果为 {@code false} 抛出 {@code IllegalArgumentException} 异常<br>
 	 * 
@@ -25,12 +27,13 @@ public final class Assert {
 	 * </pre>
 	 * 
 	 * @param expression 波尔值
-	 * @param message 错误抛出异常附带的消息
+	 * @param errorMsgTemplate 错误抛出异常附带的消息模板，变量用{}代替
+	 * @param params 参数列表
 	 * @throws IllegalArgumentException if expression is {@code false}
 	 */
-	public static void isTrue(boolean expression, String message) {
-		if (!expression) {
-			throw new IllegalArgumentException(message);
+	public static void isTrue(boolean expression, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+		if (false == expression) {
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
 
@@ -44,329 +47,373 @@ public final class Assert {
 	 * @param expression 波尔值
 	 * @throws IllegalArgumentException if expression is {@code false}
 	 */
-	public static void isTrue(boolean expression) {
+	public static void isTrue(boolean expression) throws IllegalArgumentException {
 		isTrue(expression, "[Assertion failed] - this expression must be true");
 	}
 
 	/**
-	 * Assert that an object is {@code null} .
+	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出{@link IllegalArgumentException} 异常
 	 * 
 	 * <pre class="code">
 	 * Assert.isNull(value, "The value must be null");
 	 * </pre>
 	 * 
-	 * @param object the object to check
-	 * @param message the exception message to use if the assertion fails
+	 * @param object 被检查的对象
+	 * @param errorMsgTemplate 消息模板，变量使用{}表示
+	 * @param params 参数列表
 	 * @throws IllegalArgumentException if the object is not {@code null}
 	 */
-	public static void isNull(Object object, String message) {
+	public static void isNull(Object object, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (object != null) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
 
 	/**
-	 * Assert that an object is {@code null} .
+	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出{@link IllegalArgumentException} 异常
 	 * 
 	 * <pre class="code">
 	 * Assert.isNull(value);
 	 * </pre>
 	 * 
-	 * @param object the object to check
+	 * @param object 被检查对象
 	 * @throws IllegalArgumentException if the object is not {@code null}
 	 */
-	public static void isNull(Object object) {
+	public static void isNull(Object object) throws IllegalArgumentException {
 		isNull(object, "[Assertion failed] - the object argument must be null");
 	}
 
 	/**
-	 * Assert that an object is not {@code null} .
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz, "The class must not be null");
 	 * </pre>
 	 * 
-	 * @param object the object to check
-	 * @param message the exception message to use if the assertion fails
+	 * @param <T> 被检查对象泛型类型
+	 * @param object 被检查对象
+	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
+	 * @param params 参数
+	 * @return 被检查后的对象
 	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
-	public static void notNull(Object object, String message) {
+	public static <T> T notNull(T object, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (object == null) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return object;
 	}
 
 	/**
-	 * Assert that an object is not {@code null} .
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz);
 	 * </pre>
 	 * 
-	 * @param object the object to check
+	 * @param <T> 被检查对象类型
+	 * @param object 被检查对象
 	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
-	public static void notNull(Object object) {
-		notNull(object, "[Assertion failed] - this argument is required; it must not be null");
+	public static <T> T notNull(T object) throws IllegalArgumentException {
+		return notNull(object, "[Assertion failed] - this argument is required; it must not be null");
 	}
 
 	/**
-	 * Assert that the given String is not empty; that is, it must not be {@code null} and not the empty String.
+	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
 	 * 
 	 * <pre class="code">
-	 * Assert.hasLength(name, "Name must not be empty");
+	 * Assert.notEmpty(name, "Name must not be empty");
 	 * </pre>
 	 * 
-	 * @param text the String to check
-	 * @param message the exception message to use if the assertion fails
-	 * @see StrUtil#isNotEmpty
+	 * @param text 被检查字符串
+	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
+	 * @param params 参数
+	 * @see StrUtil#isNotEmpty(CharSequence)
+	 * @throws IllegalArgumentException 被检查字符串为空
 	 */
-	public static void notEmpty(String text, String message) {
+	public static String notEmpty(String text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (StrUtil.isEmpty(text)) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return text;
 	}
 
 	/**
-	 * Assert that the given String is not empty; that is, it must not be {@code null} and not the empty String.
+	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
 	 * 
 	 * <pre class="code">
-	 * Assert.hasLength(name);
+	 * Assert.notEmpty(name);
 	 * </pre>
 	 * 
-	 * @param text the String to check
-	 * @see StrUtil#isNotEmpty
+	 * @param text 被检查字符串
+	 * @return 被检查的字符串
+	 * @see StrUtil#isNotEmpty(CharSequence)
+	 * @throws IllegalArgumentException 被检查字符串为空
 	 */
-	public static void notEmpty(String text) {
-		notEmpty(text, "[Assertion failed] - this String argument must have length; it must not be null or empty");
+	public static String notEmpty(String text) throws IllegalArgumentException {
+		return notEmpty(text, "[Assertion failed] - this String argument must have length; it must not be null or empty");
 	}
 
 	/**
-	 * Assert that the given String has valid text content; that is, it must not be {@code null} and must contain at least one non-whitespace character.
+	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
 	 * 
 	 * <pre class="code">
-	 * Assert.hasText(name, "'name' must not be empty");
+	 * Assert.notBlank(name, "Name must not be blank");
 	 * </pre>
 	 * 
-	 * @param text the String to check
-	 * @param message the exception message to use if the assertion fails
-	 * @see StrUtil#isNotBlank
+	 * @param text 被检查字符串
+	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
+	 * @param params 参数
+	 * @see StrUtil#isNotBlank(CharSequence)
+	 * @throws IllegalArgumentException 被检查字符串为空白
 	 */
-	public static void notBlank(String text, String message) {
+	public static String notBlank(String text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (StrUtil.isBlank(text)) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return text;
 	}
 
 	/**
-	 * Assert that the given String has valid text content; that is, it must not be {@code null} and must contain at least one non-whitespace character.
+	 * 检查给定字符串是否为空白（null、空串或只包含空白符），为空抛出 {@link IllegalArgumentException}
 	 * 
 	 * <pre class="code">
-	 * Assert.hasText(name, "'name' must not be empty");
+	 * Assert.notBlank(name, "Name must not be blank");
 	 * </pre>
 	 * 
-	 * @param text the String to check
-	 * @see StrUtil#isNotBlank
+	 * @param text 被检查字符串
+	 * @see StrUtil#isNotBlank(CharSequence)
+	 * @throws IllegalArgumentException 被检查字符串为空白
 	 */
-	public static void notBlank(String text) {
-		notBlank(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
+	public static String notBlank(String text) throws IllegalArgumentException {
+		return notBlank(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
 	}
 
 	/**
-	 * Assert that the given text does not contain the given substring.
+	 * 断言给定字符串是否被另一个字符串包含（既是否为子串）
 	 * 
 	 * <pre class="code">
 	 * Assert.doesNotContain(name, "rod", "Name must not contain 'rod'");
 	 * </pre>
 	 * 
-	 * @param textToSearch the text to search
-	 * @param substring the substring to find within the text
-	 * @param message the exception message to use if the assertion fails
+	 * @param textToSearch 被搜索的字符串
+	 * @param substring 被检查的子串
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
+	 * @return 被检查的子串
+	 * @throws IllegalArgumentException 非子串抛出异常
 	 */
-	public static void notContain(String textToSearch, String substring, String message) {
+	public static String notContain(String textToSearch, String substring, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (StrUtil.isNotEmpty(textToSearch) && StrUtil.isNotEmpty(substring) && textToSearch.contains(substring)) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return substring;
 	}
 
 	/**
-	 * Assert that the given text does not contain the given substring.
+	 * 断言给定字符串是否被另一个字符串包含（既是否为子串）
 	 * 
 	 * <pre class="code">
-	 * Assert.doesNotContain(name, "rod");
+	 * Assert.doesNotContain(name, "rod", "Name must not contain 'rod'");
 	 * </pre>
 	 * 
-	 * @param textToSearch the text to search
-	 * @param substring the substring to find within the text
+	 * @param textToSearch 被搜索的字符串
+	 * @param substring 被检查的子串
+	 * @return 被检查的子串
+	 * @throws IllegalArgumentException 非子串抛出异常
 	 */
-	public static void notContain(String textToSearch, String substring) {
-		notContain(textToSearch, substring, "[Assertion failed] - this String argument must not contain the substring [" + substring + "]");
+	public static String notContain(String textToSearch, String substring) throws IllegalArgumentException {
+		return notContain(textToSearch, substring, "[Assertion failed] - this String argument must not contain the substring [{}]", substring);
 	}
 
 	/**
-	 * Assert that an array has elements; that is, it must not be {@code null} and must have at least one element.
+	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
 	 * 
 	 * <pre class="code">
 	 * Assert.notEmpty(array, "The array must have elements");
 	 * </pre>
 	 * 
-	 * @param array the array to check
-	 * @param message the exception message to use if the assertion fails
+	 * @param array 被检查的数组
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
+	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array is {@code null} or has no elements
 	 */
-	public static void notEmpty(Object[] array, String message) {
+	public static Object[] notEmpty(Object[] array, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (ArrayUtil.isEmpty(array)) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return array;
 	}
 
 	/**
-	 * Assert that an array has elements; that is, it must not be {@code null} and must have at least one element.
+	 * 断言给定数组是否包含元素，数组必须不为 {@code null} 且至少包含一个元素
 	 * 
 	 * <pre class="code">
-	 * Assert.notEmpty(array);
+	 * Assert.notEmpty(array, "The array must have elements");
 	 * </pre>
 	 * 
-	 * @param array the array to check
+	 * @param array 被检查的数组
+	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array is {@code null} or has no elements
 	 */
-	public static void notEmpty(Object[] array) {
-		notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
+	public static Object[] notEmpty(Object[] array) throws IllegalArgumentException {
+		return notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element");
 	}
 
 	/**
-	 * Assert that an array has no null elements. Note: Does not complain if the array is empty!
+	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
 	 * 
 	 * <pre class="code">
 	 * Assert.noNullElements(array, "The array must have non-null elements");
 	 * </pre>
 	 * 
-	 * @param array the array to check
-	 * @param message the exception message to use if the assertion fails
+	 * @param <T> 数组元素类型
+	 * @param array 被检查的数组
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
+	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array contains a {@code null} element
 	 */
-	public static void noNullElements(Object[] array, String message) {
-		if (array != null) {
-			for (Object element : array) {
-				if (element == null) {
-					throw new IllegalArgumentException(message);
-				}
-			}
+	public static <T> T[] noNullElements(T[] array, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+		if (ArrayUtil.hasNull(array)) {
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return array;
 	}
 
 	/**
-	 * Assert that an array has no null elements. Note: Does not complain if the array is empty!
+	 * 断言给定数组是否不包含{@code null}元素，如果数组为空或 {@code null}将被认为不包含
 	 * 
 	 * <pre class="code">
 	 * Assert.noNullElements(array);
 	 * </pre>
 	 * 
-	 * @param array the array to check
+	 * @param <T> 数组元素类型
+	 * @param array 被检查的数组
+	 * @return 被检查的数组
 	 * @throws IllegalArgumentException if the object array contains a {@code null} element
 	 */
-	public static void noNullElements(Object[] array) {
-		noNullElements(array, "[Assertion failed] - this array must not contain any null elements");
+	public static <T> T[] noNullElements(T[] array) throws IllegalArgumentException {
+		return noNullElements(array, "[Assertion failed] - this array must not contain any null elements");
 	}
 
 	/**
-	 * Assert that a collection has elements; that is, it must not be {@code null} and must have at least one element.
+	 * 断言给定集合非空
 	 * 
 	 * <pre class="code">
 	 * Assert.notEmpty(collection, "Collection must have elements");
 	 * </pre>
 	 * 
-	 * @param collection the collection to check
-	 * @param message the exception message to use if the assertion fails
+	 * @param <T> 集合元素类型
+	 * @param collection 被检查的集合
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
 	 * @throws IllegalArgumentException if the collection is {@code null} or has no elements
 	 */
-	public static void notEmpty(Collection<?> collection, String message) {
+	public static <T> Collection<T> notEmpty(Collection<T> collection, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (CollectionUtil.isEmpty(collection)) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return collection;
 	}
 
 	/**
-	 * Assert that a collection has elements; that is, it must not be {@code null} and must have at least one element.
+	 * 断言给定集合非空
 	 * 
 	 * <pre class="code">
-	 * Assert.notEmpty(collection, "Collection must have elements");
+	 * Assert.notEmpty(collection);
 	 * </pre>
 	 * 
-	 * @param collection the collection to check
+	 * @param <T> 集合元素类型
+	 * @param collection 被检查的集合
+	 * @return 被检查集合
 	 * @throws IllegalArgumentException if the collection is {@code null} or has no elements
 	 */
-	public static void notEmpty(Collection<?> collection) {
-		notEmpty(collection, "[Assertion failed] - this collection must not be empty: it must contain at least 1 element");
+	public static <T> Collection<T> notEmpty(Collection<T> collection) throws IllegalArgumentException {
+		return notEmpty(collection, "[Assertion failed] - this collection must not be empty: it must contain at least 1 element");
 	}
 
 	/**
-	 * Assert that a Map has entries; that is, it must not be {@code null} and must have at least one entry.
+	 * 断言给定Map非空
 	 * 
 	 * <pre class="code">
 	 * Assert.notEmpty(map, "Map must have entries");
 	 * </pre>
 	 * 
-	 * @param map the map to check
-	 * @param message the exception message to use if the assertion fails
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * 
+	 * @param map 被检查的Map
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
+	 * @return 被检查的Map
 	 * @throws IllegalArgumentException if the map is {@code null} or has no entries
 	 */
-	public static void notEmpty(Map<?, ?> map, String message) {
+	public static <K, V> Map<K, V> notEmpty(Map<K, V> map, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (CollectionUtil.isEmpty(map)) {
-			throw new IllegalArgumentException(message);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return map;
 	}
 
 	/**
-	 * Assert that a Map has entries; that is, it must not be {@code null} and must have at least one entry.
+	 * 断言给定Map非空
 	 * 
 	 * <pre class="code">
-	 * Assert.notEmpty(map);
+	 * Assert.notEmpty(map, "Map must have entries");
 	 * </pre>
 	 * 
-	 * @param map the map to check
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * 
+	 * @param map 被检查的Map
+	 * @return 被检查的Map
 	 * @throws IllegalArgumentException if the map is {@code null} or has no entries
 	 */
-	public static void notEmpty(Map<?, ?> map) {
-		notEmpty(map, "[Assertion failed] - this map must not be empty; it must contain at least one entry");
+	public static <K, V> Map<K, V> notEmpty(Map<K, V> map) throws IllegalArgumentException {
+		return notEmpty(map, "[Assertion failed] - this map must not be empty; it must contain at least one entry");
 	}
 
 	/**
-	 * Assert that the provided object is an instance of the provided class.
+	 * 断言给定对象是否是给定类的实例
 	 * 
 	 * <pre class="code">
 	 * Assert.instanceOf(Foo.class, foo);
 	 * </pre>
 	 * 
-	 * @param clazz the required class
-	 * @param obj the object to check
+	 * @param <T> 被检查对象泛型类型
+	 * @param type 被检查对象匹配的类型
+	 * @param obj 被检查对象
 	 * @throws IllegalArgumentException if the object is not an instance of clazz
-	 * @see Class#isInstance
+	 * @see Class#isInstance(Object)
 	 */
-	public static void isInstanceOf(Class<?> clazz, Object obj) {
-		isInstanceOf(clazz, obj, "");
+	public static void isInstanceOf(Class<?> type, Object obj) {
+		isInstanceOf(type, obj, "Object [{}] is not instanceof [{}]", obj, type);
 	}
 
 	/**
-	 * Assert that the provided object is an instance of the provided class.
+	 * 断言给定对象是否是给定类的实例
 	 * 
 	 * <pre class="code">
 	 * Assert.instanceOf(Foo.class, foo);
 	 * </pre>
 	 * 
-	 * @param type the type to check against
-	 * @param obj the object to check
-	 * @param message a message which will be prepended to the message produced by the function itself, and which may be used to provide context. It should normally end in a ": " or ". " so that the
-	 *            function generate message looks ok when prepended to it.
+	 * @param <T> 被检查对象泛型类型
+	 * @param type 被检查对象匹配的类型
+	 * @param obj 被检查对象
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
 	 * @throws IllegalArgumentException if the object is not an instance of clazz
-	 * @see Class#isInstance
+	 * @see Class#isInstance(Object)
 	 */
-	public static void isInstanceOf(Class<?> type, Object obj, String message) {
+	public static <T> T isInstanceOf(Class<?> type, T obj, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		notNull(type, "Type to check against must not be null");
-		if (!type.isInstance(obj)) {
-			throw new IllegalArgumentException(
-					(StrUtil.isNotEmpty(message) ? message + " " : "") + "Object of class [" + (obj != null ? obj.getClass().getName() : "null") + "] must be an instance of " + type);
+		if (false == type.isInstance(obj)) {
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
+		return obj;
 	}
 
 	/**
@@ -380,8 +427,8 @@ public final class Assert {
 	 * @param subType the sub type to check
 	 * @throws IllegalArgumentException if the classes are not assignable
 	 */
-	public static void isAssignable(Class<?> superType, Class<?> subType) {
-		isAssignable(superType, subType, "");
+	public static void isAssignable(Class<?> superType, Class<?> subType) throws IllegalArgumentException{
+		isAssignable(superType, subType, "{} is not assignable to {})", subType, superType);
 	}
 
 	/**
@@ -393,14 +440,14 @@ public final class Assert {
 	 * 
 	 * @param superType the super type to check against
 	 * @param subType the sub type to check
-	 * @param message a message which will be prepended to the message produced by the function itself, and which may be used to provide context. It should normally end in a ": " or ". " so that the
-	 *            function generate message looks ok when prepended to it.
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
 	 * @throws IllegalArgumentException if the classes are not assignable
 	 */
-	public static void isAssignable(Class<?> superType, Class<?> subType, String message) {
+	public static void isAssignable(Class<?> superType, Class<?> subType, String errorMsgTemplate, Object... params) throws IllegalArgumentException{
 		notNull(superType, "Type to check against must not be null");
 		if (subType == null || !superType.isAssignableFrom(subType)) {
-			throw new IllegalArgumentException(message + subType + " is not assignable to " + superType);
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
 
@@ -412,12 +459,13 @@ public final class Assert {
 	 * </pre>
 	 * 
 	 * @param expression a boolean expression
-	 * @param message the exception message to use if the assertion fails
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
 	 * @throws IllegalStateException if expression is {@code false}
 	 */
-	public static void state(boolean expression, String message) {
-		if (!expression) {
-			throw new IllegalStateException(message);
+	public static void state(boolean expression, String errorMsgTemplate, Object... params) throws IllegalStateException{
+		if (false == expression) {
+			throw new IllegalStateException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
 
@@ -433,7 +481,7 @@ public final class Assert {
 	 * @param expression a boolean expression
 	 * @throws IllegalStateException if the supplied expression is {@code false}
 	 */
-	public static void state(boolean expression) {
+	public static void state(boolean expression) throws IllegalStateException{
 		state(expression, "[Assertion failed] - this state invariant must be true");
 	}
 }

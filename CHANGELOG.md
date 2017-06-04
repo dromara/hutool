@@ -4,6 +4,7 @@
 
 ### 新特性
 * 增加NetUtil.getLocalhostStr（感谢【帝都】-宁静）
+* ArrayUtil和CollectionUtil增加hasNull方法
 
 ### Bug修复
 * Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）
