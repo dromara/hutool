@@ -1058,6 +1058,9 @@ public final class StrUtil {
 		if (count <= 0) {
 			return EMPTY;
 		}
+		if (count == 1) {
+			return new String(str);
+		}
 
 		// 检查
 		final int len = str.length();
