@@ -78,7 +78,7 @@ public final class NetUtil {
 	 * @return 是否可用
 	 */
 	public static boolean isUsableLocalPort(int port) {
-		if (!isValidPort(port)) {
+		if (false == isValidPort(port)) {
 			// 给定的IP未在指定端口范围中
 			return false;
 		}
@@ -221,7 +221,7 @@ public final class NetUtil {
 
 		return CollectionUtil.addAll(new ArrayList<NetworkInterface>(), networkInterfaces);
 	}
-	
+
 	/**
 	 * 获得本机的IP地址列表<br>
 	 * 返回的IP列表有序，按照系统设备顺序
@@ -255,19 +255,20 @@ public final class NetUtil {
 
 		return ipSet;
 	}
-	
+
 	/**
 	 * 获取本机网卡IP地址，这个地址为所有网卡中非回路地址的第一个<br>
 	 * 如果获取失败调用 {@link InetAddress#getLocalHost()}方法获取。<br>
 	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
 	 * 
 	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	 * 
 	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
 	 * @since 3.0.7
 	 */
 	public static String getLocalhostStr() {
 		InetAddress localhost = getLocalhost();
-		if(null != localhost){
+		if (null != localhost) {
 			return localhost.getHostAddress();
 		}
 		return null;
@@ -279,6 +280,7 @@ public final class NetUtil {
 	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
 	 * 
 	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	 * 
 	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
 	 * @since 3.0.1
 	 */
@@ -294,26 +296,77 @@ public final class NetUtil {
 					if (false == inetAddr.isLoopbackAddress()) {
 						if (inetAddr.isSiteLocalAddress()) {
 							return inetAddr;
-						}else if(null == candidateAddress){
-							//非site-local地址做为候选地址返回
+						} else if (null == candidateAddress) {
+							// 非site-local地址做为候选地址返回
 							candidateAddress = inetAddr;
 						}
 					}
 				}
 			}
 		} catch (SocketException e) {
-			//ignore socket exception, and return null;
+			// ignore socket exception, and return null;
 		}
-		
-		if(null == candidateAddress){
+
+		if (null == candidateAddress) {
 			try {
 				candidateAddress = InetAddress.getLocalHost();
 			} catch (UnknownHostException e) {
-				//ignore
+				// ignore
 			}
 		}
-		
+
 		return candidateAddress;
+	}
+
+	/**
+	 * 获得本机MAC地址
+	 * @return 本机MAC地址
+	 */
+	public static String getLocalMacAddress() {
+		return getMacAddress(getLocalhost());
+	}
+	
+	/**
+	 * 获得指定地址信息中的MAC地址，使用分隔符“-”
+	 * @param inetAddress {@link InetAddress}
+	 * @param separator 分隔符，推荐使用“-”或者“:”
+	 * @return MAC地址，用-分隔
+	 */
+	public static String getMacAddress(InetAddress inetAddress) {
+		return getMacAddress(inetAddress, "-");
+	}
+
+	/**
+	 * 获得指定地址信息中的MAC地址
+	 * @param inetAddress {@link InetAddress}
+	 * @param separator 分隔符，推荐使用“-”或者“:”
+	 * @return MAC地址，用-分隔
+	 */
+	public static String getMacAddress(InetAddress inetAddress, String separator) {
+		if (null == inetAddress) {
+			return null;
+		}
+
+		byte[] mac;
+		try {
+			mac = NetworkInterface.getByInetAddress(inetAddress).getHardwareAddress();
+		} catch (SocketException e) {
+			throw new UtilException(e);
+		}
+		if(null != mac){
+			final StringBuilder sb = new StringBuilder();
+			String s;
+			for (int i = 0; i < mac.length; i++) {
+				if (i != 0) {
+					sb.append(separator);
+				}
+				// 字节转换为整数
+				s = Integer.toHexString(mac[i] & 0xFF);
+				sb.append(s.length() == 1 ? 0 + s : s);
+			}
+			return sb.toString();
+		}
+		return null;
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start

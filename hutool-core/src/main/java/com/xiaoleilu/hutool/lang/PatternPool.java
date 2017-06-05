@@ -44,4 +44,6 @@ public class PatternPool {
 	public final static Pattern UUID_SIMPLE = Pattern.compile("^[0-9a-z]{32}$");
 	/** 中国车牌号码 */
 	public final static Pattern PLATE_NUMBER = Pattern.compile("^[京,津,渝,沪,冀,晋,辽,吉,黑,苏,浙,皖,闽,赣,鲁,豫,鄂,湘,粤,琼,川,贵,云,陕,秦,甘,陇,青,台,蒙,桂,宁,新,藏,澳,军,海,航,警][A-Z][0-9,A-Z]{5}$");
+	/** MAC地址正则 */
+	public static final Pattern MAC_ADDRESS = Pattern.compile("((?:[A-F0-9]{1,2}[:-]){5}[A-F0-9]{1,2})|(?:0x)(\\d{12})(?:.+ETHER)", Pattern.CASE_INSENSITIVE);
 }
