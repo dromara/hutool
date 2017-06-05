@@ -1055,11 +1055,14 @@ public final class StrUtil {
 	 * @return 重复字符字符串
 	 */
 	public static String repeat(CharSequence str, int count) {
+		if(null == str){
+			return null;
+		}
 		if (count <= 0) {
 			return EMPTY;
 		}
-		if (count == 1) {
-			return new String(str);
+		if (count == 1 || str.length() == 0) {
+			return str.toString();
 		}
 
 		// 检查
