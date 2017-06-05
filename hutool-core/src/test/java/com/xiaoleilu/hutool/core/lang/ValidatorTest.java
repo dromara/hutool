@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.core.lang;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.exceptions.ValidateException;
 import com.xiaoleilu.hutool.lang.Validator;
 
 /**
@@ -36,5 +37,10 @@ public class ValidatorTest {
 	public void isCitizenIdTest(){
 		boolean b = Validator.isCitizenId("150218199012123389");
 		Assert.assertTrue(b);
+	}
+	
+	@Test(expected=ValidateException.class)
+	public void validateTest() throws ValidateException{
+		Validator.validateChinese("我是一段zhongwen", "内容中包含非中文");
 	}
 }

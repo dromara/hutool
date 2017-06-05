@@ -191,7 +191,7 @@ public final class Assert {
 	}
 
 	/**
-	 * 断言给定字符串是否被另一个字符串包含（既是否为子串）
+	 * 断言给定字符串是否不被另一个字符串包含（既是否为子串）
 	 * 
 	 * <pre class="code">
 	 * Assert.doesNotContain(name, "rod", "Name must not contain 'rod'");
@@ -212,7 +212,7 @@ public final class Assert {
 	}
 
 	/**
-	 * 断言给定字符串是否被另一个字符串包含（既是否为子串）
+	 * 断言给定字符串是否不被另一个字符串包含（既是否为子串）
 	 * 
 	 * <pre class="code">
 	 * Assert.doesNotContain(name, "rod", "Name must not contain 'rod'");
