@@ -10,6 +10,8 @@
 * 添加NetUtil.getMacAddress和NetUtil.getLocalMacAddress用于获取MAC地址
 * StrUtil.repeat方法优化
 * 增加comparator包，补充ComparableComparator，ComparatorChain，ReverseComparator
+* 增加BeanResolver，同时增加BeanUtil.getProperty方法
+* 增加WeakCache
 
 ### Bug修复
 * Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）

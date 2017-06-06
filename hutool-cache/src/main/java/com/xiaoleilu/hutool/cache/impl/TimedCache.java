@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,16 +19,26 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	
 	/** 定时器 */
 	protected Timer pruneTimer;
-
+	
 	/**
 	 * 构造
 	 * 
 	 * @param timeout 过期时长
 	 */
 	public TimedCache(long timeout) {
+		this(timeout, new HashMap<K, CacheObj<K, V>>());
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param timeout 过期时长
+	 * @param map 存储缓存对象的map
+	 */
+	public TimedCache(long timeout, Map<K, CacheObj<K, V>> map) {
 		this.capacity = 0;
 		this.timeout = timeout;
-		cacheMap = new HashMap<K, CacheObj<K, V>>();
+		this.cacheMap = map;
 	}
 
 	// ---------------------------------------------------------------- prune

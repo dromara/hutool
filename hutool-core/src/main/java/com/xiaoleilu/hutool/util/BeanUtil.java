@@ -5,16 +5,20 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.lang.BeanResolver;
 
 /**
  * Bean工具类
@@ -116,20 +120,40 @@ public final class BeanUtil {
 		if(null == bean || StrUtil.isBlank(fieldName)){
 			return null;
 		}
+		
 		if(bean instanceof Map){
 			return ((Map<?, ?>)bean).get(fieldName);
-		}
-		
-		Field field;
-		try {
-			field = ClassUtil.getDeclaredField(bean.getClass(), fieldName);
-			if(null != field){
-				return field.get(bean);
+		}else if(bean instanceof List){
+			return ((List<?>)bean).get(Integer.parseInt(fieldName));
+		}else if(bean instanceof Collection){
+			return ((Collection<?>)bean).toArray()[Integer.parseInt(fieldName)];
+		}else if(ArrayUtil.isArray(bean)){
+			return Array.get(bean, Integer.parseInt(fieldName));
+		}else{//普通Bean对象
+			Field field;
+			try {
+				field = ClassUtil.getDeclaredField(bean.getClass(), fieldName);
+				if(null != field){
+					field.setAccessible(true);
+					return field.get(bean);
+				}
+			} catch (Exception e) {
+				throw new UtilException(e);
 			}
-		} catch (Exception e) {
-			throw new UtilException(e);
 		}
 		return null;
+	}
+	
+	/**
+	 * 解析Bean中的属性值
+	 * @param bean Bean对象，支持Map、List、Collection、Array
+	 * @param expression 表达式，例如：person.friend[5].name
+	 * @return Bean属性值
+	 * @see BeanResolver#resolveBean(Object, String)
+	 * @since 3.0.7
+	 */
+	public static Object getProperty(Object bean, String expression){
+		return BeanResolver.resolveBean(bean, expression);
 	}
 	
 	//--------------------------------------------------------------------------------------------- mapToBean

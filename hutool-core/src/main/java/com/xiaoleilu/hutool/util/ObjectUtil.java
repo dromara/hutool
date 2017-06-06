@@ -41,6 +41,18 @@ public final class ObjectUtil {
 	public static boolean equal(Object obj1, Object obj2) {
 		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
 	}
+	
+	/**
+	 * 比较两个对象是否不相等。<br>
+	 * 
+	 * @param obj1 对象1
+	 * @param obj2 对象2
+	 * @return 是否不等
+	 * @since 3.0.7
+	 */
+	public static boolean notEqual(Object obj1, Object obj2) {
+		return false == equal(obj1, obj2);
+	}
 
 	/**
 	 * 计算对象长度，如果是字符串调用其length函数，集合类调用其size函数，数组调用其length属性，其他可遍历对象遍历计算长度<br>

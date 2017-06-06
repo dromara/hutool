@@ -31,6 +31,8 @@ public final class StrUtil {
 	public static final char C_COMMA = ',';
 	public static final char C_DELIM_START = '{';
 	public static final char C_DELIM_END = '}';
+	public static final char C_BRACKET_START = '[';
+	public static final char C_BRACKET_END = ']';
 	public static final char C_COLON = ':';
 
 	public static final String SPACE = " ";
@@ -47,6 +49,8 @@ public final class StrUtil {
 	public static final String COMMA = ",";
 	public static final String DELIM_START = "{";
 	public static final String DELIM_END = "}";
+	public static final String BRACKET_START = "[";
+	public static final String BRACKET_END = "]";
 	public static final String COLON = ":";
 
 	public static final String HTML_NBSP = "&nbsp;";
