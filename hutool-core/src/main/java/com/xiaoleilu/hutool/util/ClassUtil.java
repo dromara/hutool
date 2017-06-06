@@ -308,7 +308,6 @@ public final class ClassUtil {
 	/**
 	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段
 	 * @param clazz 被查找字段的类
-	 * @param fieldName 字段名
 	 * @return 字段
 	 * @throws SecurityException 安全异常
 	 */

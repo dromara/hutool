@@ -34,7 +34,7 @@ public class ComparableComparator<E extends Comparable<? super E>> implements Co
 	 * @param obj1 被比较的第一个对象
 	 * @param obj2 the second object to compare
 	 * @return obj1小返回负数，大返回正数，否则返回0
-	 * @throws NullPointerException obj1为{@link null}或者比较中抛出空指针异常
+	 * @throws NullPointerException obj1为{@code null}或者比较中抛出空指针异常
 	 */
 	@Override
 	public int compare(final E obj1, final E obj2) {

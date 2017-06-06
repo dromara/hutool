@@ -9,6 +9,7 @@
 * 完善Assert类，可变消息参数以及规范注释
 * 添加NetUtil.getMacAddress和NetUtil.getLocalMacAddress用于获取MAC地址
 * StrUtil.repeat方法优化
+* 增加comparator包，补充ComparableComparator，ComparatorChain，ReverseComparator
 
 ### Bug修复
 * Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）

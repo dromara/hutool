@@ -329,7 +329,6 @@ public final class NetUtil {
 	/**
 	 * 获得指定地址信息中的MAC地址，使用分隔符“-”
 	 * @param inetAddress {@link InetAddress}
-	 * @param separator 分隔符，推荐使用“-”或者“:”
 	 * @return MAC地址，用-分隔
 	 */
 	public static String getMacAddress(InetAddress inetAddress) {
