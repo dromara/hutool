@@ -5,6 +5,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -99,6 +100,34 @@ public final class BeanUtil {
 			if (ObjectUtil.equal(fieldName, propertyDescriptor.getName())) {
 				return propertyDescriptor;
 			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
+	 * 对象同样支持Map类型，fieldName即为key
+	 * 
+	 * @param bean Bean对象
+	 * @param fieldName 字段名
+	 * @return 字段值
+	 */
+	public static Object getFieldValue(Object bean, String fieldName){
+		if(null == bean || StrUtil.isBlank(fieldName)){
+			return null;
+		}
+		if(bean instanceof Map){
+			return ((Map<?, ?>)bean).get(fieldName);
+		}
+		
+		Field field;
+		try {
+			field = ClassUtil.getDeclaredField(bean.getClass(), fieldName);
+			if(null != field){
+				return field.get(bean);
+			}
+		} catch (Exception e) {
+			throw new UtilException(e);
 		}
 		return null;
 	}

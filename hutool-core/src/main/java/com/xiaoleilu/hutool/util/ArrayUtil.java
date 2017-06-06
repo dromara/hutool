@@ -203,14 +203,15 @@ public final class ArrayUtil {
 	public static boolean isNotEmpty(final boolean[] array) {
 		return (array != null && array.length != 0);
 	}
-	
+
 	/**
 	 * 是否包含{@code null}元素
+	 * 
 	 * @param array 被检查的数组
 	 * @return 是否包含{@code null}元素
 	 * @since 3.0.7
 	 */
-	public static <T> boolean hasNull(T[] array){
+	public static <T> boolean hasNull(T[] array) {
 		if (isNotEmpty(array)) {
 			for (T element : array) {
 				if (null == element) {
@@ -219,6 +220,24 @@ public final class ArrayUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 返回数组中第一个非空元素
+	 * 
+	 * @param array 数组
+	 * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
+	 * @since 3.0.7
+	 */
+	public static <T> T firstNonNull(T[] array) {
+		if (isNotEmpty(array)) {
+			for (final T val : array) {
+				if (null != val) {
+					return val;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -233,7 +252,7 @@ public final class ArrayUtil {
 	public static <T> T[] newArray(Class<?> componentType, int newSize) {
 		return (T[]) Array.newInstance(componentType, newSize);
 	}
-	
+
 	/**
 	 * 强转数组类型<br>
 	 * 强制转换的前提是数组元素类型可被强制转换<br>
@@ -246,17 +265,17 @@ public final class ArrayUtil {
 	 * @throws IllegalArgumentException 参数arrayObj不是数组
 	 * @since 3.0.6
 	 */
-	public static Object[] cast(Class<?> type, Object arrayObj) throws NullPointerException, IllegalArgumentException{
-		if(null == arrayObj){
+	public static Object[] cast(Class<?> type, Object arrayObj) throws NullPointerException, IllegalArgumentException {
+		if (null == arrayObj) {
 			throw new NullPointerException("Argument [arrayObj] is null !");
 		}
-		if(false == arrayObj.getClass().isArray()){
+		if (false == arrayObj.getClass().isArray()) {
 			throw new IllegalArgumentException("Argument [arrayObj] is not array !");
 		}
-		if(null == type){
+		if (null == type) {
 			return (Object[]) arrayObj;
 		}
-		
+
 		final Class<?> componentType = type.isArray() ? type.getComponentType() : type;
 		final Object[] array = (Object[]) arrayObj;
 		final Object[] result = ArrayUtil.newArray(componentType, array.length);
@@ -347,7 +366,7 @@ public final class ArrayUtil {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
 	 * 数组复制
@@ -360,11 +379,11 @@ public final class ArrayUtil {
 	 * @return 目标数组
 	 * @since 3.0.6
 	 */
-	public static Object copy(Object src, int  srcPos, Object dest, int destPos, int length){
+	public static Object copy(Object src, int srcPos, Object dest, int destPos, int length) {
 		System.arraycopy(src, srcPos, dest, destPos, length);
 		return dest;
 	}
-	
+
 	/**
 	 * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
 	 * 数组复制，缘数组和目标数组都是从位置0开始复制
@@ -375,11 +394,11 @@ public final class ArrayUtil {
 	 * @return 目标数组
 	 * @since 3.0.6
 	 */
-	public static Object copy(Object src, Object dest, int length){
+	public static Object copy(Object src, Object dest, int length) {
 		System.arraycopy(src, 0, dest, 0, length);
 		return dest;
 	}
-	
+
 	/**
 	 * 克隆数组
 	 * 
@@ -555,7 +574,7 @@ public final class ArrayUtil {
 
 		return map;
 	}
-	
+
 	/**
 	 * 映射键值（参考Python的zip()函数），返回Map无序<br>
 	 * 例如：<br>
@@ -1206,6 +1225,7 @@ public final class ArrayUtil {
 
 	/**
 	 * {@link ByteBuffer} 转byte数组
+	 * 
 	 * @param bytebuffer {@link ByteBuffer}
 	 * @return byte数组
 	 * @since 3.0.1

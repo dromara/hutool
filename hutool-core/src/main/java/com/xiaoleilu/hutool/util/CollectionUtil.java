@@ -1086,6 +1086,19 @@ public final class CollectionUtil {
 		return null;
 	}
 	
+	//------------------------------------------------------------------------------------------------- sort
+	/**
+	 * 针对List排序，排序会修改原List
+	 * @param list 被排序的List
+	 * @param c {@link Comparator}
+	 * @return 原list
+	 * @see Collections#sort(List, Comparator)
+	 */
+	public <T> List<T> sort(List<T> list, Comparator<? super T> c){
+		Collections.sort(list, c);
+		return list;
+	}
+	
 	//------------------------------------------------------------------------------------------------- forEach
 	
 	/**

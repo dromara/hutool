@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.util;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -286,6 +287,36 @@ public final class ClassUtil {
 			}
 		}
 		return method;
+	}
+	
+	// ----------------------------------------------------------------------------------------- Field
+	/**
+	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段
+	 * @param clazz 被查找字段的类
+	 * @param fieldName 字段名
+	 * @return 字段
+	 * @throws NoSuchFieldException 无此字段
+	 * @throws SecurityException 安全异常
+	 */
+	public static Field getDeclaredField(Class<?> clazz, String fieldName) throws NoSuchFieldException, SecurityException{
+		if(null == clazz || StrUtil.isBlank(fieldName)){
+			return null;
+		}
+		return clazz.getDeclaredField(fieldName);
+	}
+	
+	/**
+	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段
+	 * @param clazz 被查找字段的类
+	 * @param fieldName 字段名
+	 * @return 字段
+	 * @throws SecurityException 安全异常
+	 */
+	public static Field[] getDeclaredFields(Class<?> clazz) throws SecurityException{
+		if(null == clazz){
+			return null;
+		}
+		return clazz.getDeclaredFields();
 	}
 
 	/**

@@ -29,11 +29,10 @@ public final class ObjectUtil {
 	 * 比较两个对象是否相等。<br>
 	 * 相同的条件有两个，满足其一即可：<br>
 	 * <ol>
-	 * 	<li>obj1 == null &amp;&amp; obj2 == null</li>
+	 * <li>obj1 == null &amp;&amp; obj2 == null</li>
 	 * <li>obj1.equals(obj2)</li>
 	 * </ol>
-	 * 1. obj1 == null &amp;&amp; obj2 == null
-	 * 2. obj1.equals(obj2)
+	 * 1. obj1 == null &amp;&amp; obj2 == null 2. obj1.equals(obj2)
 	 * 
 	 * @param obj1 对象1
 	 * @param obj2 对象2
@@ -47,7 +46,7 @@ public final class ObjectUtil {
 	 * 计算对象长度，如果是字符串调用其length函数，集合类调用其size函数，数组调用其length属性，其他可遍历对象遍历计算长度<br>
 	 * 支持的类型包括：
 	 * <ul>
-	 * 	<li>CharSequence</li>
+	 * <li>CharSequence</li>
 	 * <li>Map</li>
 	 * <li>Iterator</li>
 	 * <li>Enumeration</li>
@@ -100,7 +99,7 @@ public final class ObjectUtil {
 	 * 对象中是否包含元素<br>
 	 * 支持的对象类型包括：
 	 * <ul>
-	 * 	<li>String</li>
+	 * <li>String</li>
 	 * <li>Collection</li>
 	 * <li>Map</li>
 	 * <li>Iterator</li>
@@ -182,6 +181,27 @@ public final class ObjectUtil {
 	}
 
 	/**
+	 * 如果给定对象为{@code null}返回默认值
+	 *
+	 * <pre>
+	 * ObjectUtil.defaultIfNull(null, null)      = null
+	 * ObjectUtil.defaultIfNull(null, "")        = ""
+	 * ObjectUtil.defaultIfNull(null, "zz")      = "zz"
+	 * ObjectUtil.defaultIfNull("abc", *)        = "abc"
+	 * ObjectUtil.defaultIfNull(Boolean.TRUE, *) = Boolean.TRUE
+	 * </pre>
+	 *
+	 * @param <T> 对象类型
+	 * @param object 被检查对象，可能为{@code null}
+	 * @param defaultValue 被检查对象为{@code null}返回的默认值，可以为{@code null}
+	 * @return 被检查对象为{@code null}返回默认值，否则返回原值
+	 * @since 3.0.7
+	 */
+	public static <T> T defaultIfNull(final T object, final T defaultValue) {
+		return (null != object) ? object : defaultValue;
+	}
+
+	/**
 	 * 克隆对象<br>
 	 * 如果对象实现Cloneable接口，调用其clone方法<br>
 	 * 如果实现Serializable接口，执行深度克隆<br>
@@ -194,15 +214,15 @@ public final class ObjectUtil {
 	public static <T> T clone(T obj) {
 		T result = ArrayUtil.clone(obj);
 		if (null == result) {
-			if(obj instanceof Cloneable){
+			if (obj instanceof Cloneable) {
 				result = ClassUtil.invoke(obj, "clone", new Object[] {});
-			}else{
+			} else {
 				result = cloneByStream(obj);
 			}
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 返回克隆后的对象，如果克隆失败，返回原对象
 	 * 
@@ -215,11 +235,11 @@ public final class ObjectUtil {
 		try {
 			clone = clone(obj);
 		} catch (Exception e) {
-			//pass
+			// pass
 		}
 		return clone == null ? obj : clone;
 	}
-	
+
 	/**
 	 * 序列化后拷贝流的方式克隆<br>
 	 * 对象必须实现Serializable接口
@@ -231,7 +251,7 @@ public final class ObjectUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T cloneByStream(T obj) {
-		if(null == obj || false == (obj instanceof Serializable)){
+		if (null == obj || false == (obj instanceof Serializable)) {
 			return null;
 		}
 		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
@@ -258,10 +278,10 @@ public final class ObjectUtil {
 	 * @return 序列化后的字节码
 	 */
 	public static <T> byte[] serialize(T obj) {
-		if(null == obj || false == (obj instanceof Serializable)){
+		if (null == obj || false == (obj instanceof Serializable)) {
 			return null;
 		}
-		
+
 		FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
 		ObjectOutputStream oos = null;
 		try {
@@ -328,5 +348,39 @@ public final class ObjectUtil {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * {@code null}安全的对象比较，{@code null}对象排在末尾
+	 * 
+	 * @param c1 对象1，可以为{@code null}
+	 * @param c2 对象2，可以为{@code null}
+	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
+	 * @since 3.0.7
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> int compare(T c1, T c2) {
+		return compare(c1, c2, false);
+	}
+
+	/**
+	 * {@code null}安全的对象比较
+	 * 
+	 * @param c1 对象1，可以为{@code null}
+	 * @param c2 对象2，可以为{@code null}
+	 * @param nullGreater 当被比较对象为null时是否排在前面
+	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
+	 * @since 3.0.7
+	 * @see java.util.Comparator#compare(Object, Object)
+	 */
+	public static <T extends Comparable<? super T>> int compare(T c1, T c2, boolean nullGreater) {
+		if (c1 == c2) {
+			return 0;
+		} else if (c1 == null) {
+			return nullGreater ? 1 : -1;
+		} else if (c2 == null) {
+			return nullGreater ? -1 : 1;
+		}
+		return c1.compareTo(c2);
 	}
 }
