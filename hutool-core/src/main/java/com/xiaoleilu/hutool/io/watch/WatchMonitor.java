@@ -37,10 +37,11 @@ public class WatchMonitor extends Thread implements Closeable{
 	public static final WatchEvent.Kind<?> ENTRY_DELETE = StandardWatchEventKinds.ENTRY_DELETE;
 	/** 全部事件 */
 	public static final WatchEvent.Kind<?>[] EVENTS_ALL = {//
-			StandardWatchEventKinds.OVERFLOW,//事件丢失
+			StandardWatchEventKinds.OVERFLOW,        //事件丢失
 			StandardWatchEventKinds.ENTRY_MODIFY, //修改
-			StandardWatchEventKinds.ENTRY_CREATE, //创建
-			StandardWatchEventKinds.ENTRY_DELETE};//删除
+			StandardWatchEventKinds.ENTRY_CREATE,  //创建
+			StandardWatchEventKinds.ENTRY_DELETE   //删除
+	};
 	
 	/** 监听路径，必须为目录 */
 	private Path path;

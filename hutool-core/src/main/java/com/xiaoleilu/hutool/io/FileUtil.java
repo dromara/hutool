@@ -49,8 +49,9 @@ import com.xiaoleilu.hutool.util.URLUtil;
  *
  */
 public final class FileUtil {
-	
-	private FileUtil() {}
+
+	private FileUtil() {
+	}
 
 	/** The Unix separator character. */
 	private static final char UNIX_SEPARATOR = '/';
@@ -88,8 +89,7 @@ public final class FileUtil {
 
 	/**
 	 * 文件是否为空<br>
-	 * 目录：里面没有文件时为空
-	 * 文件：文件大小为0时为空
+	 * 目录：里面没有文件时为空 文件：文件大小为0时为空
 	 * 
 	 * @param file 文件
 	 * @return 是否为空，当提供非目录时，返回false
@@ -104,7 +104,7 @@ public final class FileUtil {
 			if (ArrayUtil.isEmpty(subFiles)) {
 				return true;
 			}
-		}else if(file.isFile()){
+		} else if (file.isFile()) {
 			return file.length() <= 0;
 		}
 
@@ -123,6 +123,7 @@ public final class FileUtil {
 
 	/**
 	 * 目录是否为空
+	 * 
 	 * @param dirPath 目录
 	 * @return 是否为空
 	 * @exception IORuntimeException IOException
@@ -134,9 +135,10 @@ public final class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 目录是否为空
+	 * 
 	 * @param dir 目录
 	 * @return 是否为空
 	 */
@@ -191,43 +193,46 @@ public final class FileUtil {
 	 * @return 文件路径列表（如果是jar中的文件，则给定类似.jar!/xxx/xxx的路径）
 	 * @throws IORuntimeException IO异常
 	 */
-	public static List<String> listFileNames(String path) throws IORuntimeException{
+	public static List<String> listFileNames(String path) throws IORuntimeException {
 		if (path == null) {
 			return null;
 		}
 		path = getAbsolutePath(path);
-		if (path.endsWith(String.valueOf(UNIX_SEPARATOR)) == false) {
+		if (false == path.endsWith(String.valueOf(UNIX_SEPARATOR))) {
 			path = path + UNIX_SEPARATOR;
 		}
 
 		List<String> paths = new ArrayList<String>();
 		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
-		try {
-			if (index == -1) {
-				// 普通目录路径
-				File[] files = ls(path);
-				for (File file : files) {
-					if (file.isFile()) {
-						paths.add(file.getName());
-					}
+		if (index == -1) {
+			// 普通目录路径
+			File[] files = ls(path);
+			for (File file : files) {
+				if (file.isFile()) {
+					paths.add(file.getName());
 				}
-			} else {
-				// jar文件中的路径
-				index = index + FileUtil.JAR_FILE_EXT.length();
-				final String jarPath = path.substring(0, index);
+			}
+		} else {
+			// jar文件中的路径
+			index = index + FileUtil.JAR_FILE_EXT.length();
+			JarFile jarFile = null;
+			try {
+				jarFile = new JarFile(path.substring(0, index));
 				final String subPath = path.substring(index + 2);
-				for (JarEntry entry : Collections.list(new JarFile(jarPath).entries())) {
+				for (JarEntry entry : Collections.list(jarFile.entries())) {
 					final String name = entry.getName();
 					if (name.startsWith(subPath)) {
-						String nameSuffix = StrUtil.removePrefix(name, subPath);
+						final String nameSuffix = StrUtil.removePrefix(name, subPath);
 						if (nameSuffix.contains(String.valueOf(UNIX_SEPARATOR)) == false) {
 							paths.add(nameSuffix);
 						}
 					}
 				}
+			} catch (IOException e) {
+				throw new IORuntimeException(StrUtil.format("Can not read file path of [{}]", path), e);
+			} finally {
+				IoUtil.close(jarFile);
 			}
-		} catch (IOException e) {
-			throw new IORuntimeException(StrUtil.format("Can not read file path of [{}]", path), e);
 		}
 		return paths;
 	}
@@ -285,7 +290,7 @@ public final class FileUtil {
 		}
 		return new File(uri);
 	}
-	
+
 	/**
 	 * 创建File对象
 	 * 
@@ -366,57 +371,60 @@ public final class FileUtil {
 	public static Date lastModifiedTime(String path) {
 		return lastModifiedTime(new File(path));
 	}
-	
+
 	/**
 	 * 计算目录或文件的总大小<br>
 	 * 当给定对象为文件时，直接调用 {@link File#length()}<br>
 	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
+	 * 
 	 * @param file 目录或文件
 	 * @return 总大小
 	 */
-	public static long size(File file){
+	public static long size(File file) {
 		Assert.notNull(file, "file argument is null !");
-		if(false == file.exists()){
+		if (false == file.exists()) {
 			throw new IllegalArgumentException(StrUtil.format("File [{}] not exist !", file.getAbsolutePath()));
 		}
-		
-		if(file.isDirectory()){
+
+		if (file.isDirectory()) {
 			long size = 0L;
 			File[] subFiles = file.listFiles();
-			if(ArrayUtil.isEmpty(subFiles)){
-				return 0L;//empty directory
+			if (ArrayUtil.isEmpty(subFiles)) {
+				return 0L;// empty directory
 			}
 			for (int i = 0; i < subFiles.length; i++) {
 				size += size(subFiles[i]);
 			}
 			return size;
-		}else{
+		} else {
 			return file.length();
 		}
 	}
-	
+
 	/**
 	 * 给定文件或目录的最后修改时间是否晚于给定时间
+	 * 
 	 * @param file 文件或目录
 	 * @param reference 参照文件
 	 * @return 是否晚于给定时间
 	 */
-	public static boolean newerThan(File file, File reference){
-		if(null == file || false == reference.exists()){
-			return true;//文件一定比一个不存在的文件新
+	public static boolean newerThan(File file, File reference) {
+		if (null == file || false == reference.exists()) {
+			return true;// 文件一定比一个不存在的文件新
 		}
 		return newerThan(file, reference.lastModified());
 	}
-	
+
 	/**
 	 * 给定文件或目录的最后修改时间是否晚于给定时间
+	 * 
 	 * @param file 文件或目录
 	 * @param timeMillis 做为对比的时间
 	 * @return 是否晚于给定时间
 	 */
-	public static boolean newerThan(File file, long timeMillis){
-		if(null == file || false == file.exists()){
-			return false;//不存在的文件一定比任何时间旧
+	public static boolean newerThan(File file, long timeMillis) {
+		if (null == file || false == file.exists()) {
+			return false;// 不存在的文件一定比任何时间旧
 		}
 		return file.lastModified() > timeMillis;
 	}
@@ -444,7 +452,7 @@ public final class FileUtil {
 	 * @return 文件，若路径为null，返回null
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File touch(File file) throws IORuntimeException{
+	public static File touch(File file) throws IORuntimeException {
 		if (null == file) {
 			return null;
 		}
@@ -458,7 +466,7 @@ public final class FileUtil {
 		}
 		return file;
 	}
-	
+
 	/**
 	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
@@ -471,7 +479,7 @@ public final class FileUtil {
 	public static File touch(File parent, String path) throws IORuntimeException {
 		return touch(file(parent, path));
 	}
-	
+
 	/**
 	 * 创建文件及其父目录，如果这个文件存在，直接返回这个文件<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
@@ -511,11 +519,10 @@ public final class FileUtil {
 		}
 		return mkParentDirs(file(path));
 	}
-	
+
 	/**
 	 * 删除文件或者文件夹<br>
-	 * 路径如果为相对路径，会转换为ClassPath路径！
-	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
+	 * 路径如果为相对路径，会转换为ClassPath路径！ 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
 	 * 某个文件删除失败会终止删除操作
 	 * 
 	 * @param fullFileOrDirPath 文件或者目录的路径
@@ -545,7 +552,7 @@ public final class FileUtil {
 		}
 		return file.delete();
 	}
-	
+
 	/**
 	 * 清空文件夹<br>
 	 * 注意：清空文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
@@ -560,7 +567,7 @@ public final class FileUtil {
 		if (directory == null || directory.exists() == false || false == directory.isDirectory()) {
 			return true;
 		}
-		
+
 		final File[] files = directory.listFiles();
 		for (File childFile : files) {
 			boolean isOk = del(childFile);
@@ -586,7 +593,7 @@ public final class FileUtil {
 		final File dir = file(dirPath);
 		return mkdir(dir);
 	}
-	
+
 	/**
 	 * 创建文件夹，会递归自动创建其不存在的父文件夹，如果存在直接返回此文件夹<br>
 	 * 此方法不对File对象类型做判断，如果File不存在，无法判断其类型
@@ -657,30 +664,32 @@ public final class FileUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * 
 	 * @param src 源文件路径
 	 * @param dest 目标文件或目录路径，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return File
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File copyFile(String src, String dest, StandardCopyOption... options) throws IORuntimeException{
+	public static File copyFile(String src, String dest, StandardCopyOption... options) throws IORuntimeException {
 		Assert.notBlank(src, "Source File path is blank !");
 		Assert.notNull(src, "Destination File path is null !");
 		return copyFile(Paths.get(src), Paths.get(dest), options).toFile();
 	}
-	
+
 	/**
 	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * 
 	 * @param src 源文件
 	 * @param dest 目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return File
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File copyFile(File src, File dest, StandardCopyOption... options) throws IORuntimeException{
+	public static File copyFile(File src, File dest, StandardCopyOption... options) throws IORuntimeException {
 		// check
 		Assert.notNull(src, "Source File is null !");
 		if (false == src.exists()) {
@@ -690,7 +699,7 @@ public final class FileUtil {
 		if (equals(src, dest)) {
 			throw new IORuntimeException("Files '" + src + "' and '" + dest + "' are equal");
 		}
-		
+
 		Path srcPath = src.toPath();
 		Path destPath = dest.isDirectory() ? dest.toPath().resolve(srcPath.getFileName()) : dest.toPath();
 		try {
@@ -699,19 +708,20 @@ public final class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 通过JDK7+的 {@link Files#copy(Path, Path, CopyOption...)} 方法拷贝文件
+	 * 
 	 * @param src 源文件路径
 	 * @param dest 目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
 	 * @return Path
 	 * @throws IORuntimeException IO异常
 	 */
-	public static Path copyFile(Path src, Path dest, StandardCopyOption... options) throws IORuntimeException{
+	public static Path copyFile(Path src, Path dest, StandardCopyOption... options) throws IORuntimeException {
 		Assert.notNull(src, "Source File is null !");
 		Assert.notNull(dest, "Destination File or directiory is null !");
-		
+
 		Path destPath = dest.toFile().isDirectory() ? dest.resolve(src.getFileName()) : dest;
 		try {
 			return Files.copy(src, destPath, options);
@@ -758,25 +768,26 @@ public final class FileUtil {
 			throw new IORuntimeException("Files '" + src + "' and '" + dest + "' are equal");
 		}
 
-		if (src.isDirectory()) {//复制目录
+		if (src.isDirectory()) {// 复制目录
 			internalCopyDir(src, dest, isOverride);
-		}else{//复制文件
+		} else {// 复制文件
 			internalCopyFile(src, dest, isOverride);
 		}
 		return dest;
 	}
-	
+
 	/**
 	 * 拷贝目录，只用于内部，不做任何安全检查
+	 * 
 	 * @param src 源目录
 	 * @param dest 目标目录
 	 * @param isOverride 是否覆盖
 	 * @throws IORuntimeException IO异常
 	 */
-	private static void internalCopyDir(File src, File dest, boolean isOverride) throws IORuntimeException{
+	private static void internalCopyDir(File src, File dest, boolean isOverride) throws IORuntimeException {
 		if (false == dest.exists()) {
 			dest.mkdirs();
-		}else if(dest.isFile()) {
+		} else if (dest.isFile()) {
 			throw new IORuntimeException(StrUtil.format("Src [{}] is a directory but dest [{}] is a file!", src.getPath(), dest.getPath()));
 		}
 
@@ -785,32 +796,33 @@ public final class FileUtil {
 			File srcFile = new File(src, file);
 			File destFile = new File(dest, file);
 			// 递归复制
-			if(src.isDirectory()){
+			if (src.isDirectory()) {
 				internalCopyDir(srcFile, destFile, isOverride);
-			}else{
+			} else {
 				internalCopyFile(srcFile, destFile, isOverride);
 			}
 		}
 	}
-	
+
 	/**
 	 * 拷贝文件，只用于内部，不做任何安全检查
+	 * 
 	 * @param src 源文件，必须为文件
 	 * @param dest 目标文件，必须为文件
 	 * @param isOverride 是否覆盖已有文件
 	 * @throws IORuntimeException IO异常
 	 */
-	private static void internalCopyFile(File src, File dest, boolean isOverride) throws IORuntimeException{
-		//copy
-		if(false == dest.exists()){//目标不存在，默认做为文件创建
+	private static void internalCopyFile(File src, File dest, boolean isOverride) throws IORuntimeException {
+		// copy
+		if (false == dest.exists()) {// 目标不存在，默认做为文件创建
 			touch(dest);
-		}else if(dest.isDirectory()){//目标为目录，则在这个目录下创建同名文件
+		} else if (dest.isDirectory()) {// 目标为目录，则在这个目录下创建同名文件
 			dest = new File(dest, src.getName());
-		}else if(false == isOverride){//如果已经存在目标文件，切为不覆盖模式，跳过之
-//			StaticLog.debug("File [{}] already exist, ignore it.", dest);
+		} else if (false == isOverride) {// 如果已经存在目标文件，切为不覆盖模式，跳过之
+			// StaticLog.debug("File [{}] already exist, ignore it.", dest);
 			return;
 		}
-		
+
 		// do copy file
 		FileInputStream input = null;
 		FileOutputStream output = null;
@@ -818,14 +830,14 @@ public final class FileUtil {
 			input = new FileInputStream(src);
 			output = new FileOutputStream(dest);
 			IoUtil.copy(input, output);
-		}catch(IOException e){
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
-		}finally {
+		} finally {
 			IoUtil.close(output);
 			IoUtil.close(input);
 		}
 
-		//验证
+		// 验证
 		if (src.length() != dest.length()) {
 			throw new IORuntimeException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
 		}
@@ -849,8 +861,8 @@ public final class FileUtil {
 		if (src.isDirectory() && dest.isFile()) {
 			throw new IORuntimeException(StrUtil.format("Can not move directory [{}] to file [{}]", src, dest));
 		}
-		
-		if (isOverride && dest.isFile()) {//只有目标为文件的情况下覆盖之
+
+		if (isOverride && dest.isFile()) {// 只有目标为文件的情况下覆盖之
 			dest.delete();
 		}
 
@@ -870,7 +882,7 @@ public final class FileUtil {
 
 		}
 	}
-	
+
 	/**
 	 * 获取绝对路径<br>
 	 * 此方法不会判定给定路径是否有效（文件或目录存在）
@@ -909,8 +921,8 @@ public final class FileUtil {
 				return path;
 			}
 		}
-		
-		//兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
+
+		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
 		path = StrUtil.removePrefixIgnoreCase(path, "classpath:");
 		path = StrUtil.removePrefix(path, StrUtil.SLASH);
 
@@ -1030,10 +1042,7 @@ public final class FileUtil {
 	/**
 	 * 修复路径<br>
 	 * 1. 统一用 / <br>
-	 * 2. 多个 / 转换为一个
-	 * 3. 去除两边空格
-	 * 4. .. 和 . 转换为绝对路径
-	 * 5. 去掉前缀，例如file:
+	 * 2. 多个 / 转换为一个 3. 去除两边空格 4. .. 和 . 转换为绝对路径 5. 去掉前缀，例如file:
 	 * 
 	 * @param path 原路径
 	 * @return 修复后的路径
@@ -1050,7 +1059,7 @@ public final class FileUtil {
 			prefix = pathToUse.substring(0, prefixIndex + 1);
 			if (prefix.contains("/")) {
 				prefix = "";
-			}else {
+			} else {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
 			}
 		}
@@ -1066,14 +1075,14 @@ public final class FileUtil {
 		for (int i = pathList.size() - 1; i >= 0; i--) {
 			String element = pathList.get(i);
 			if (StrUtil.DOT.equals(element)) {
-				//当前目录，丢弃
-			}else if (StrUtil.DOUBLE_DOT.equals(element)) {
+				// 当前目录，丢弃
+			} else if (StrUtil.DOUBLE_DOT.equals(element)) {
 				tops++;
-			}else {
+			} else {
 				if (tops > 0) {
 					// Merging path element with element corresponding to top path.
 					tops--;
-				}else {
+				} else {
 					// Normal path element found.
 					pathElements.add(0, element);
 				}
@@ -1087,7 +1096,7 @@ public final class FileUtil {
 
 		return prefix + CollectionUtil.join(pathElements, StrUtil.SLASH);
 	}
-	
+
 	/**
 	 * 获得相对子路径
 	 * 
@@ -1190,27 +1199,29 @@ public final class FileUtil {
 			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
 		}
 	}
-	
+
 	/**
 	 * 判断文件路径是否有指定后缀，忽略大小写<br>
 	 * 常用语判断扩展名
+	 * 
 	 * @param file 文件或目录
 	 * @param suffix 后缀
 	 * @return 是否有指定后缀
 	 */
-	public static boolean pathEndsWith(File file, String suffix){
+	public static boolean pathEndsWith(File file, String suffix) {
 		return file.getPath().toLowerCase().endsWith(suffix);
 	}
-	
+
 	/**
 	 * 根据文件流的头部信息获得文件类型
+	 * 
 	 * @see FileTypeUtil#getType(File)
 	 * 
 	 * @param file 文件 {@link File}
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String getType(File file){
+	public static String getType(File file) {
 		try {
 			return FileTypeUtil.getType(file);
 		} catch (IOException e) {
@@ -1245,7 +1256,7 @@ public final class FileUtil {
 	public static BufferedInputStream getInputStream(String path) throws IORuntimeException {
 		return getInputStream(file(path));
 	}
-	
+
 	/**
 	 * 获得BOM输入流，用于处理带BOM头的文件
 	 * 
@@ -1432,7 +1443,7 @@ public final class FileUtil {
 		try {
 			in = url.openStream();
 			return IoUtil.read(in, charset);
-		}catch (IOException e) {
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
@@ -1482,7 +1493,7 @@ public final class FileUtil {
 		try {
 			in = url.openStream();
 			return IoUtil.readLines(in, charset, collection);
-		}catch (IOException e) {
+		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
@@ -1748,7 +1759,7 @@ public final class FileUtil {
 	public static <T> void appendLines(Collection<T> list, String path, String charset) throws IORuntimeException {
 		writeLines(list, path, charset, true);
 	}
-	
+
 	/**
 	 * 将列表写入文件
 	 * 
