@@ -35,7 +35,7 @@ final class InternalJSONUtil {
 	 * @throws IOException
 	 */
 	protected static final Writer writeValue(Writer writer, Object value, int indentFactor, int indent) throws JSONException, IOException {
-		if (value == null || value.equals(null)) {
+		if (value == null || value instanceof JSONNull) {
 			writer.write("null");
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent);
@@ -100,7 +100,7 @@ final class InternalJSONUtil {
 	 * @throws JSONException If the value is or contains an invalid number.
 	 */
 	protected static String valueToString(Object value) throws JSONException {
-		if (value == null || value.equals(null)) {
+		if (value == null || value instanceof JSONNull) {
 			return "null";
 		}
 		if (value instanceof JSONString) {

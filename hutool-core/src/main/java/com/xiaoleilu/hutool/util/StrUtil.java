@@ -265,7 +265,7 @@ public final class StrUtil {
 	public static String trim(CharSequence str) {
 		return (null == str) ? null : trim(str, 0);
 	}
-	
+
 	/**
 	 * 给定字符串数组全部做去首尾空格
 	 * 
@@ -394,7 +394,7 @@ public final class StrUtil {
 	public static boolean startWithIgnoreCase(String str, String prefix) {
 		return startWith(str, prefix, true);
 	}
-	
+
 	/**
 	 * 给定字符串是否以任何一个字符串开始
 	 * 
@@ -403,13 +403,13 @@ public final class StrUtil {
 	 * @return 给定字符串是否以任何一个字符串开始
 	 * @since 3.0.6
 	 */
-	public static boolean startWithAny(CharSequence str, CharSequence... prefixes){
-		if(isEmpty(str) || ArrayUtil.isEmpty(prefixes)){
+	public static boolean startWithAny(CharSequence str, CharSequence... prefixes) {
+		if (isEmpty(str) || ArrayUtil.isEmpty(prefixes)) {
 			return false;
 		}
-		
+
 		for (CharSequence suffix : prefixes) {
-			if(startWith(str, suffix, false)){
+			if (startWith(str, suffix, false)) {
 				return true;
 			}
 		}
@@ -425,10 +425,10 @@ public final class StrUtil {
 	 * @return 是否以指定字符串结尾
 	 */
 	public static boolean endWith(CharSequence str, CharSequence suffix, boolean isIgnoreCase) {
-		if(isBlank(str) || isBlank(suffix)){
+		if (isBlank(str) || isBlank(suffix)) {
 			return false;
 		}
-		
+
 		if (isIgnoreCase) {
 			return str.toString().toLowerCase().endsWith(suffix.toString().toLowerCase());
 		} else {
@@ -446,7 +446,7 @@ public final class StrUtil {
 	public static boolean endWithIgnoreCase(CharSequence str, String suffix) {
 		return endWith(str, suffix, true);
 	}
-	
+
 	/**
 	 * 给定字符串是否以任何一个字符串结尾
 	 * 
@@ -455,13 +455,13 @@ public final class StrUtil {
 	 * @return 给定字符串是否以任何一个字符串结尾
 	 * @since 3.0.6
 	 */
-	public static boolean endWithAny(CharSequence str, CharSequence... suffixes){
-		if(isEmpty(str) || ArrayUtil.isEmpty(suffixes)){
+	public static boolean endWithAny(CharSequence str, CharSequence... suffixes) {
+		if (isEmpty(str) || ArrayUtil.isEmpty(suffixes)) {
 			return false;
 		}
-		
+
 		for (CharSequence suffix : suffixes) {
-			if(endWith(str, suffix, false)){
+			if (endWith(str, suffix, false)) {
 				return true;
 			}
 		}
@@ -588,12 +588,12 @@ public final class StrUtil {
 	 * @return 字符串
 	 */
 	public static String upperFirst(CharSequence str) {
-		if(null == str){
+		if (null == str) {
 			return null;
 		}
-		if(str.length() > 0){
+		if (str.length() > 0) {
 			char firstChar = str.charAt(0);
-			if(Character.isLowerCase(firstChar)){
+			if (Character.isLowerCase(firstChar)) {
 				return Character.toUpperCase(firstChar) + subSuf(str, 1);
 			}
 		}
@@ -608,12 +608,12 @@ public final class StrUtil {
 	 * @return 字符串
 	 */
 	public static String lowerFirst(CharSequence str) {
-		if(null == str){
+		if (null == str) {
 			return null;
 		}
-		if(str.length() > 0){
+		if (str.length() > 0) {
 			char firstChar = str.charAt(0);
-			if(Character.isUpperCase(firstChar)){
+			if (Character.isUpperCase(firstChar)) {
 				return Character.toLowerCase(firstChar) + subSuf(str, 1);
 			}
 		}
@@ -700,7 +700,7 @@ public final class StrUtil {
 			return str.toString();
 		}
 
-		final String str2= str.toString();
+		final String str2 = str.toString();
 		if (str2.toLowerCase().endsWith(suffix.toString().toLowerCase())) {
 			return subPre(str2, str2.length() - suffix.length());
 		}
@@ -718,7 +718,7 @@ public final class StrUtil {
 		if (isEmpty(str) || isEmpty(prefix)) {
 			return str.toString();
 		}
-		
+
 		final String str2 = str.toString();
 		final String prefix2 = prefix.toString();
 		if (false == str2.startsWith(prefix2)) {
@@ -738,7 +738,7 @@ public final class StrUtil {
 		if (isEmpty(str) || isEmpty(suffix)) {
 			return str.toString();
 		}
-		
+
 		final String str2 = str.toString();
 		final String suffix2 = suffix.toString();
 		if (false == str2.endsWith(suffix2)) {
@@ -860,7 +860,7 @@ public final class StrUtil {
 		if (str == null) {
 			return null;
 		}
-		
+
 		final String str2 = str.toString();
 		if (str2.trim().length() == 0) {
 			return new String[] { str2 };
@@ -907,7 +907,7 @@ public final class StrUtil {
 		if (lastPartCount != 0) {
 			fixPart = 1;
 		}
-		
+
 		final String str2 = str.toString();
 		final String[] strs = new String[partCount + fixPart];
 		for (int i = 0; i < partCount + fixPart; i++) {
@@ -1059,7 +1059,7 @@ public final class StrUtil {
 	 * @return 重复字符字符串
 	 */
 	public static String repeat(CharSequence str, int count) {
-		if(null == str){
+		if (null == str) {
 			return null;
 		}
 		if (count <= 0) {
@@ -1149,7 +1149,7 @@ public final class StrUtil {
 	 * @return 格式化后的文本
 	 */
 	public static String format(CharSequence template, Object... params) {
-		if(null == template){
+		if (null == template) {
 			return null;
 		}
 		if (ArrayUtil.isEmpty(params) || isBlank(template)) {
@@ -1180,7 +1180,7 @@ public final class StrUtil {
 	 * @return 格式化后的文本
 	 */
 	public static String format(CharSequence template, Map<?, ?> map) {
-		if(null == template){
+		if (null == template) {
 			return null;
 		}
 		if (null == map || map.isEmpty()) {
@@ -1456,7 +1456,7 @@ public final class StrUtil {
 		if (null == name) {
 			return null;
 		}
-		
+
 		String name2 = name.toString();
 		if (name2.contains(UNDERLINE)) {
 			name2 = name2.toLowerCase();
@@ -1501,7 +1501,7 @@ public final class StrUtil {
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(CharSequence str, String prefix, String suffix) {
-		if(null == str || null == prefix || null == suffix){
+		if (null == str || null == prefix || null == suffix) {
 			return false;
 		}
 		final String str2 = str.toString();
@@ -1539,10 +1539,10 @@ public final class StrUtil {
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(CharSequence str, char prefixChar, char suffixChar) {
-		if(null == str){
+		if (null == str) {
 			return false;
 		}
-		
+
 		return str.charAt(0) == prefixChar && str.charAt(str.length() - 1) == suffixChar;
 	}
 
@@ -1555,12 +1555,12 @@ public final class StrUtil {
 	 * @return 补充后的字符串
 	 */
 	public static String padPre(CharSequence str, int minLength, char padChar) {
-		if(null == str){
-			str = EMPTY; 
-		}else if (str.length() >= minLength) {
+		if (null == str) {
+			str = EMPTY;
+		} else if (str.length() >= minLength) {
 			return str.toString();
 		}
-		
+
 		StringBuilder sb = new StringBuilder(minLength);
 		for (int i = str.length(); i < minLength; i++) {
 			sb.append(padChar);
@@ -1578,12 +1578,12 @@ public final class StrUtil {
 	 * @return 补充后的字符串
 	 */
 	public static String padEnd(CharSequence str, int minLength, char padChar) {
-		if(null == str){
-			str = EMPTY; 
-		}else if (str.length() >= minLength) {
+		if (null == str) {
+			str = EMPTY;
+		} else if (str.length() >= minLength) {
 			return str.toString();
 		}
-		
+
 		StringBuilder sb = new StringBuilder(minLength);
 		sb.append(str);
 		for (int i = str.length(); i < minLength; i++) {
@@ -1632,7 +1632,7 @@ public final class StrUtil {
 	 * @return StringReader
 	 */
 	public static StringReader getReader(CharSequence str) {
-		if(null == str){
+		if (null == str) {
 			return null;
 		}
 		return new StringReader(str.toString());
@@ -1704,24 +1704,25 @@ public final class StrUtil {
 
 	/**
 	 * 将字符串切分为N等份
+	 * 
 	 * @param str 字符串
 	 * @param partLength 每等份的长度
 	 * @return 切分后的数组
 	 * @since 3.0.6
 	 */
 	public static String[] cut(CharSequence str, int partLength) {
-		if(null == str){
+		if (null == str) {
 			return null;
 		}
 		int len = str.length();
-		if(len < partLength){
-			return new String[]{str.toString()};
+		if (len < partLength) {
+			return new String[] { str.toString() };
 		}
 		int part = NumberUtil.count(len, partLength);
 		final String[] array = new String[part];
-		
+
 		final String str2 = str.toString();
-		for(int i = 0; i < part; i++){
+		for (int i = 0; i < part; i++) {
 			array[i] = str2.substring(i * partLength, (i == part - 1) ? len : (partLength + i * partLength));
 		}
 		return array;
@@ -1729,12 +1730,13 @@ public final class StrUtil {
 
 	/**
 	 * 将给定字符串，变成 "xxx...xxx" 形式的字符串
+	 * 
 	 * @param str 字符串
 	 * @param maxLength 最大长度
 	 * @return 截取后的字符串
 	 */
 	public static String brief(CharSequence str, int maxLength) {
-		if(null == str){
+		if (null == str) {
 			return null;
 		}
 		if ((str.length() + 3) <= maxLength) {
@@ -1742,8 +1744,78 @@ public final class StrUtil {
 		}
 		int w = maxLength / 2;
 		int l = str.length();
-		
+
 		final String str2 = str.toString();
 		return format("{}...{}", str2.substring(0, maxLength - w), str2.substring(l - w));
+	}
+
+	/**
+	 * 比较两个字符串，用于排序
+	 * 
+	 * <pre>
+	 * StrUtil.compare(null, null, *)     = 0
+	 * StrUtil.compare(null , "a", true)  &lt; 0
+	 * StrUtil.compare(null , "a", false) &gt; 0
+	 * StrUtil.compare("a", null, true)   &gt; 0
+	 * StrUtil.compare("a", null, false)  &lt; 0
+	 * StrUtil.compare("abc", "abc", *)   = 0
+	 * StrUtil.compare("a", "b", *)       &lt; 0
+	 * StrUtil.compare("b", "a", *)       &gt; 0
+	 * StrUtil.compare("a", "B", *)       &gt; 0
+	 * StrUtil.compare("ab", "abc", *)    &lt; 0
+	 * </pre>
+	 * 
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @param nullIsLess {@code null} 值是否排在前（null是否小于非空值）
+	 * @return 排序值。负数：str1 < str2，正数：str1 > str2, 0：str1 == str2
+	 */
+	public static int compare(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
+		if (str1 == str2) {
+			return 0;
+		}
+		if (str1 == null) {
+			return nullIsLess ? -1 : 1;
+		}
+		if (str2 == null) {
+			return nullIsLess ? 1 : -1;
+		}
+		return str1.toString().compareTo(str2.toString());
+	}
+
+	/**
+	 * 比较两个字符串，用于排序，大小写不敏感
+	 * 
+	 * <pre>
+	 * StrUtil.compareIgnoreCase(null, null, *)     = 0
+	 * StrUtil.compareIgnoreCase(null , "a", true)  &lt; 0
+	 * StrUtil.compareIgnoreCase(null , "a", false) &gt; 0
+	 * StrUtil.compareIgnoreCase("a", null, true)   &gt; 0
+	 * StrUtil.compareIgnoreCase("a", null, false)  &lt; 0
+	 * StrUtil.compareIgnoreCase("abc", "abc", *)   = 0
+	 * StrUtil.compareIgnoreCase("abc", "ABC", *)   = 0
+	 * StrUtil.compareIgnoreCase("a", "b", *)       &lt; 0
+	 * StrUtil.compareIgnoreCase("b", "a", *)       &gt; 0
+	 * StrUtil.compareIgnoreCase("a", "B", *)       &lt; 0
+	 * StrUtil.compareIgnoreCase("A", "b", *)       &lt; 0
+	 * StrUtil.compareIgnoreCase("ab", "abc", *)    &lt; 0
+	 * </pre>
+	 * 
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @param nullIsLess {@code null} 值是否排在前（null是否小于非空值）
+	 * @return 排序值。负数：str1 < str2，正数：str1 > str2, 0：str1 == str2
+	 */
+	public static int compareIgnoreCase(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
+		if (str1 == str2) {
+			return 0;
+		}
+		if (str1 == null) {
+			return nullIsLess ? -1 : 1;
+		}
+		if (str2 == null) {
+			return nullIsLess ? 1 : -1;
+		}
+		return str1.toString().compareToIgnoreCase(str2.toString());
 	}
 }
