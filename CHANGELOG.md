@@ -12,12 +12,14 @@
 * 增加comparator包，补充ComparableComparator，ComparatorChain，ReverseComparator
 * 增加BeanResolver，同时增加BeanUtil.getProperty方法
 * 增加WeakCache
+* HttpRequest中增加cookie方法用于覆盖默认的Cookie行为，自定义Cookie值（感谢@质量过关）
 
 ### Bug修复
 * Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）
 * 修复DbUtil.getTableMeta获取主键出错问题
 * 修复ConverterRegistry中默认Date对象错误问题（issue#22@github）
-
+* 修复NumberUtil中方法非static的问题（感谢[霾都] QQ小冰）
+* 修复FileUtil.equals方法，实现改为JDK7实现。
 -------------------------------------------------------------------------------------------------------------
 
 ## 3.0.6

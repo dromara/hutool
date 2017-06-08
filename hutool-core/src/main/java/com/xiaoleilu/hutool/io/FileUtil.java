@@ -993,20 +993,23 @@ public final class FileUtil {
 	}
 
 	/**
-	 * 检查两个文件是否是同一个文件
+	 * 检查两个文件是否是同一个文件<br>
+	 * 所谓文件相同，是指File对象是否指向同一个文件或文件夹
 	 * 
 	 * @param file1 文件1
 	 * @param file2 文件2
 	 * @return 是否相同
+	 * @throws IORuntimeException IO异常
+	 * @see Files#isSameFile(Path, Path)
 	 */
-	public static boolean equals(File file1, File file2) {
+	public static boolean equals(File file1, File file2) throws IORuntimeException{
+		Assert.notNull(file1);
+		Assert.notNull(file2);
 		try {
-			file1 = file1.getCanonicalFile();
-			file2 = file2.getCanonicalFile();
-		} catch (IOException ignore) {
-			return false;
+			return Files.isSameFile(file1.toPath(), file2.toPath());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
-		return file1.equals(file2);
 	}
 
 	/**
@@ -1436,7 +1439,7 @@ public final class FileUtil {
 	 */
 	public static String readString(URL url, String charset) throws IORuntimeException {
 		if (url == null) {
-			throw new RuntimeException("Empty url provided!");
+			throw new NullPointerException("Empty url provided!");
 		}
 
 		InputStream in = null;

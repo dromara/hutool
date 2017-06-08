@@ -115,4 +115,15 @@ public class DateUtilTest {
 		timer.intervalRestart();//返回花费时间，并重置开始时间
 		timer.intervalMinute();//花费分钟数
 	}
+	
+	@Test
+	public void currentTest(){
+		long current = DateUtil.current(false);
+		String currentStr = String.valueOf(current);
+		Assert.assertEquals(13, currentStr.length());
+		
+		long currentNano = DateUtil.current(true);
+		String currentNanoStr = String.valueOf(currentNano);
+		Assert.assertEquals(16, currentNanoStr.length());
+	}
 }

@@ -77,12 +77,13 @@ public final class Assert {
 	 * </pre>
 	 * 
 	 * @param object 被检查对象
-	 * @throws IllegalArgumentException if the object is not {@code null}
+	 * @throws NullPointerException if the object is not {@code null}
 	 */
-	public static void isNull(Object object) throws IllegalArgumentException {
+	public static void isNull(Object object) throws NullPointerException {
 		isNull(object, "[Assertion failed] - the object argument must be null");
 	}
 
+	//----------------------------------------------------------------------------------------------------------- Check not null
 	/**
 	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
 	 * 
@@ -95,11 +96,11 @@ public final class Assert {
 	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
 	 * @param params 参数
 	 * @return 被检查后的对象
-	 * @throws IllegalArgumentException if the object is {@code null}
+	 * @throws NullPointerException if the object is {@code null}
 	 */
-	public static <T> T notNull(T object, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+	public static <T> T notNull(T object, String errorMsgTemplate, Object... params) throws NullPointerException {
 		if (object == null) {
-			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
+			throw new NullPointerException(StrUtil.format(errorMsgTemplate, params));
 		}
 		return object;
 	}
@@ -113,12 +114,13 @@ public final class Assert {
 	 * 
 	 * @param <T> 被检查对象类型
 	 * @param object 被检查对象
-	 * @throws IllegalArgumentException if the object is {@code null}
+	 * @throws NullPointerException if the object is {@code null}
 	 */
-	public static <T> T notNull(T object) throws IllegalArgumentException {
+	public static <T> T notNull(T object) throws NullPointerException {
 		return notNull(object, "[Assertion failed] - this argument is required; it must not be null");
 	}
 
+	//----------------------------------------------------------------------------------------------------------- Check empty
 	/**
 	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
 	 * 

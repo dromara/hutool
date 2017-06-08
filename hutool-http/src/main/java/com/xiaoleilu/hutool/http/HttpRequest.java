@@ -30,7 +30,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
- * http请求类
+ * http请求类<br>
+ * Http请求类用于构建Http请求并同步获取结果，此类通过 {@link CookiePool}持有域名对应的Cookie值，再次请求时会自动附带Cookie信息
  * 
  * @author Looly
  */
@@ -49,9 +50,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/** 默认超时 */
 	private int timeout = -1;
 	/** 存储表单数据 */
-	protected Map<String, Object> form;
+	private Map<String, Object> form;
 	/** 文件表单对象，用于文件上传 */
-	protected Map<String, File> fileForm;
+	private Map<String, File> fileForm;
+	/** 文件表单对象，用于文件上传 */
+	private String cookie;
 
 	/** 连接对象 */
 	private HttpConnection httpConnection;
@@ -214,6 +217,39 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest contentLength(int value) {
 		header(Header.CONTENT_LENGTH, String.valueOf(value));
 		return this;
+	}
+	
+	/**
+	 * 设置Cookie<br>
+	 * 自定义Cookie后会覆盖Hutool的默认Cookie行为
+	 * 
+	 * @param cookie Cookie值，如果为{@code null}则设置无效，使用默认Cookie行为
+	 * @return this
+	 * @since 3.0.7
+	 */
+	public HttpRequest cookie(String cookie){
+		this.cookie = cookie;
+		return this;
+	}
+	
+	/**
+	 * 禁用默认Cookie行为，此方法调用后会将Cookie置为空。<br>
+	 * 如果想重新启用Cookie，请调用：{@link #cookie(String)}方法自定义Cookie。<br>
+	 * 如果想启动默认的Cookie行为（自动回填服务器传回的Cookie），则调用{@link #enableDefaultCookie()}
+	 * 
+	 * @return this
+	 * @since 3.0.7
+	 */
+	public HttpRequest disableCookie(){
+		return cookie(StrUtil.EMPTY);
+	}
+	
+	/**
+	 * 打开默认的Cookie行为（自动回填服务器传回的Cookie）
+	 * @return this
+	 */
+	public HttpRequest enableDefaultCookie(){
+		return cookie(null);
 	}
 	// ---------------------------------------------------------------- Http Request Header end
 
@@ -526,6 +562,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.httpConnection = HttpConnection
 				.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout, this.proxy)
 				.header(this.headers, true); // 覆盖默认Header
+		
+		//自定义Cookie
+		if(null != this.cookie){
+			this.httpConnection.setCookie(this.cookie);
+		}
+		
 		//是否禁用缓存
 		if(this.isDisableCache){
 			this.httpConnection.disableCache();

@@ -391,7 +391,7 @@ public final class NumberUtil {
 	 * @param size 指定产生随机数的个数
 	 * @return 随机int数组
 	 */
-	public int[] generateRandomNumber(int begin, int end, int size) {
+	public static int[] generateRandomNumber(int begin, int end, int size) {
 		if (begin > end) {
 			int temp = begin;
 			begin = end;
@@ -429,7 +429,7 @@ public final class NumberUtil {
 	 * @param size 指定产生随机数的个数
 	 * @return 随机int数组
 	 */
-	public Integer[] generateBySet(int begin, int end, int size) {
+	public static Integer[] generateBySet(int begin, int end, int size) {
 		if (begin > end) {
 			int temp = begin;
 			begin = end;
@@ -571,7 +571,7 @@ public final class NumberUtil {
 	 * @param minNum 最少要选中多少个小球
 	 * @return 注数
 	 */
-	public int processMultiple(int selectNum, int minNum) {
+	public static int processMultiple(int selectNum, int minNum) {
 		int result;
 		result = mathSubnode(selectNum, minNum) / mathNode(selectNum - minNum);
 		return result;
@@ -626,7 +626,7 @@ public final class NumberUtil {
 	 * @param binaryStr 二进制字符串
 	 * @return int
 	 */
-	public int binaryToInt(String binaryStr) {
+	public static int binaryToInt(String binaryStr) {
 		return Integer.parseInt(binaryStr, 2);
 	}
 
@@ -636,7 +636,7 @@ public final class NumberUtil {
 	 * @param binaryStr 二进制字符串
 	 * @return long
 	 */
-	public long binaryToLong(String binaryStr) {
+	public static long binaryToLong(String binaryStr) {
 		return Long.parseLong(binaryStr, 2);
 	}
 
@@ -816,7 +816,7 @@ public final class NumberUtil {
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
-	private int mathSubnode(int selectNum, int minNum) {
+	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
 			return 1;
 		} else {
@@ -824,7 +824,7 @@ public final class NumberUtil {
 		}
 	}
 
-	private int mathNode(int selectNum) {
+	private static int mathNode(int selectNum) {
 		if (selectNum == 0) {
 			return 1;
 		} else {

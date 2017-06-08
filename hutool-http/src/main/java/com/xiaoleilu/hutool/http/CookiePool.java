@@ -1,3 +1,4 @@
+
 package com.xiaoleilu.hutool.http;
 
 import java.util.Map;
@@ -30,5 +31,13 @@ public class CookiePool {
 	 */
 	public static void put(String host, String cookie) {
 		cookies.put(host, cookie);
+	}
+	
+	/**
+	 * 清空Cookie
+	 * @since 3.0.7
+	 */
+	public static void clear(){
+		cookies.clear();
 	}
 }
