@@ -11,9 +11,8 @@ import com.xiaoleilu.hutool.util.ClassUtil;
 /**
  * 动态Bean，通过反射对Bean的相关方法做操作<br>
  * 支持Map和普通Bean
+ * 
  * @author Looly
- *
- * @param <T> 动态Bean持有的Bean类型
  */
 public class DynaBean {
 	
@@ -38,9 +37,10 @@ public class DynaBean {
 	 * @param <T> 属性值类型
 	 * @param fieldName 字段名
 	 * @return 字段值
+	 * @throws BeanException 反射获取属性值或字段值导致的异常
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T get(String fieldName){
+	public <T> T get(String fieldName) throws BeanException{
 		if(Map.class.isAssignableFrom(beanClass)){
 			return (T) ((Map<?, ?>)bean).get(fieldName);
 		}else{
@@ -64,7 +64,7 @@ public class DynaBean {
 	 * 设置字段值
 	 * @param fieldName 字段名
 	 * @param value 字段值
-	 * @throws BeanException
+	 * @throws BeanException 反射获取属性值或字段值导致的异常
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void set(String fieldName, Object value) throws BeanException{

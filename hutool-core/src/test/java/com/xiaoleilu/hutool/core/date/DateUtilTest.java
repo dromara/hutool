@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.date.BetweenFormater.Level;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.date.DateField;
 import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.date.DateUnit;
@@ -120,10 +121,12 @@ public class DateUtilTest {
 	public void currentTest(){
 		long current = DateUtil.current(false);
 		String currentStr = String.valueOf(current);
+		Console.log(current);
 		Assert.assertEquals(13, currentStr.length());
 		
 		long currentNano = DateUtil.current(true);
+		Console.log(currentNano);
 		String currentNanoStr = String.valueOf(currentNano);
-		Assert.assertEquals(16, currentNanoStr.length());
+		Assert.assertEquals(14, currentNanoStr.length());
 	}
 }

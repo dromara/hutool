@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.bean.BeanInfoCache;
+import com.xiaoleilu.hutool.bean.DynaBean;
 import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
@@ -50,6 +51,17 @@ public final class BeanUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * 创建动态Bean
+	 * 
+	 * @param bean 普通Bean或Map
+	 * @return {@link DynaBean}
+	 * @since 3.0.7
+	 */
+	public static DynaBean createDynaBean(Object bean){
+		return new DynaBean(bean);
 	}
 	
 	/**
