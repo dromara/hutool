@@ -63,7 +63,7 @@ public final class StrUtil {
 
 	private StrUtil() {
 	}
-
+	
 	// ------------------------------------------------------------------------ Blank
 	/**
 	 * 字符串是否为空白 空白的定义如下： <br>
@@ -383,6 +383,17 @@ public final class StrUtil {
 			return str.toString().startsWith(prefix.toString());
 		}
 	}
+	
+	/**
+	 * 是否以指定字符串开头
+	 * 
+	 * @param str 被监测字符串
+	 * @param prefix 开头字符串
+	 * @return 是否以指定字符串开头
+	 */
+	public static boolean startWith(CharSequence str, CharSequence prefix) {
+		return startWith(str, prefix, false);
+	}
 
 	/**
 	 * 是否以指定字符串开头，忽略大小写
@@ -434,6 +445,17 @@ public final class StrUtil {
 		} else {
 			return str.toString().endsWith(suffix.toString());
 		}
+	}
+	
+	/**
+	 * 是否以指定字符串结尾
+	 * 
+	 * @param str 被监测字符串
+	 * @param suffix 结尾字符串
+	 * @return 是否以指定字符串结尾
+	 */
+	public static boolean endWith(CharSequence str, CharSequence suffix) {
+		return endWith(str, suffix, false);
 	}
 
 	/**
@@ -1488,8 +1510,40 @@ public final class StrUtil {
 	 * @param suffix 后缀
 	 * @return 包装后的字符串
 	 */
-	public static String wrap(CharSequence str, String prefix, String suffix) {
-		return format("{}{}{}", prefix, str, suffix);
+	public static String wrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
+	}
+	
+	/**
+	 * 包装指定字符串，如果前缀或后缀已经包含对应的字符串，则不再
+	 * 
+	 * @param str 被包装的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 包装后的字符串
+	 */
+	public static String wrapIfMissing(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		int len = 0;
+		if(isNotEmpty(str)){
+			len += str.length();
+		}
+		if(isNotEmpty(prefix)){
+			len += str.length();
+		}
+		if(isNotEmpty(suffix)){
+			len += str.length();
+		}
+		StringBuilder sb = new StringBuilder(len);
+		if(isNotEmpty(prefix) && false == startWith(str, prefix)){
+			sb.append(prefix);
+		}
+		if(isNotEmpty(str)){
+			sb.append(str);
+		}
+		if(isNotEmpty(suffix) && false == endWith(str, suffix)){
+			sb.append(suffix);
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -1501,7 +1555,7 @@ public final class StrUtil {
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(CharSequence str, String prefix, String suffix) {
-		if (null == str || null == prefix || null == suffix) {
+		if(ArrayUtil.hasNull(str, prefix, suffix)){
 			return false;
 		}
 		final String str2 = str.toString();
@@ -1561,12 +1615,7 @@ public final class StrUtil {
 			return str.toString();
 		}
 
-		StringBuilder sb = new StringBuilder(minLength);
-		for (int i = str.length(); i < minLength; i++) {
-			sb.append(padChar);
-		}
-		sb.append(str);
-		return sb.toString();
+		return repeat(padChar, minLength - str.length()).concat(str.toString());
 	}
 
 	/**
@@ -1584,12 +1633,7 @@ public final class StrUtil {
 			return str.toString();
 		}
 
-		StringBuilder sb = new StringBuilder(minLength);
-		sb.append(str);
-		for (int i = str.length(); i < minLength; i++) {
-			sb.append(padChar);
-		}
-		return sb.toString();
+		return str.toString().concat(repeat(padChar, minLength - str.length()));
 	}
 
 	/**
@@ -1817,5 +1861,168 @@ public final class StrUtil {
 			return nullIsLess ? 1 : -1;
 		}
 		return str1.toString().compareToIgnoreCase(str2.toString());
+	}
+
+	/**
+	 * 指定范围内查找指定字符
+	 * 
+	 * @param str 字符串
+	 * @param searchChar 被查找的字符
+	 * @return 位置
+	 */
+	public static int indexOf(final CharSequence str, char searchChar) {
+		return indexOf(str, searchChar, 0);
+	}
+
+	/**
+	 * 指定范围内查找指定字符
+	 * 
+	 * @param str 字符串
+	 * @param searchChar 被查找的字符
+	 * @param start 起始位置，如果小于0，从0开始查找
+	 * @return 位置
+	 */
+	public static int indexOf(final CharSequence str, char searchChar, int start) {
+		if (str instanceof String) {
+			return ((String) str).indexOf(searchChar, start);
+		} else {
+			return indexOf(str, searchChar, start, -1);
+		}
+	}
+
+	/**
+	 * 指定范围内查找指定字符
+	 * 
+	 * @param str 字符串
+	 * @param searchChar 被查找的字符
+	 * @param start 起始位置，如果小于0，从0开始查找
+	 * @param end 终止位置，如果超过str.length()则默认查找到字符串末尾
+	 * @return 位置
+	 */
+	public static int indexOf(final CharSequence str, char searchChar, int start, int end) {
+		final int len = str.length();
+		if (start < 0 || start > len) {
+			start = 0;
+		}
+		if (end > len || end < 0) {
+			end = len;
+		}
+		for (int i = start; i < end; i++) {
+			if (str.charAt(i) == searchChar) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	//------------------------------------------------------------------------------------------------------------------ Append and prepend
+	/**
+	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>
+	 * 不忽略大小写
+	 *
+	 * @param str 被检查的字符串
+	 * @param suffix 需要添加到结尾的字符串
+	 * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
+	 *
+	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+	 * @since3.0.7
+	 */
+	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final CharSequence... suffixes) {
+		return appendIfMissing(str, suffix, false, suffixes);
+	}
+	
+	/**
+	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>
+	 * 忽略大小写
+	 *
+	 * @param str 被检查的字符串
+	 * @param suffix 需要添加到结尾的字符串
+	 * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
+	 *
+	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+	 * @since3.0.7
+	 */
+	public static String appendIfMissingIgnoreCase(final CharSequence str, final CharSequence suffix, final CharSequence... suffixes) {
+		return appendIfMissing(str, suffix, true, suffixes);
+	}
+
+	/**
+	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串
+	 *
+	 * @param str 被检查的字符串
+	 * @param suffix 需要添加到结尾的字符串
+	 * @param ignoreCase 检查结尾时是否忽略大小写
+	 * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
+	 *
+	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+	 * @since3.0.7
+	 */
+	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final CharSequence... suffixes) {
+		if (str == null || isEmpty(suffix) || endWith(str, suffix, ignoreCase)) {
+			return str.toString();
+		}
+		if (suffixes != null && suffixes.length > 0) {
+			for (final CharSequence s : suffixes) {
+				if (endWith(str, s, ignoreCase)) {
+					return str.toString();
+				}
+			}
+		}
+		return str.toString().concat(suffix.toString());
+	}
+	
+	/**
+	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串<br>
+	 * 不忽略大小写
+	 *
+	 * @param str 被检查的字符串
+	 * @param prefix 需要添加到首部的字符串
+	 * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
+	 *
+	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+	 * @since3.0.7
+	 */
+	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
+		return prependIfMissing(str, prefix, false, prefixes);
+	}
+	
+	/**
+	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串<br>
+	 * 忽略大小写
+	 *
+	 * @param str 被检查的字符串
+	 * @param prefix 需要添加到首部的字符串
+	 * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
+	 *
+	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+	 * @since3.0.7
+	 */
+	public static String prependIfMissingIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
+		return prependIfMissing(str, prefix, true, prefixes);
+	}
+	
+	/**
+	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串
+	 *
+	 * @param str 被检查的字符串
+	 * @param prefix 需要添加到首部的字符串
+	 * @param ignoreCase 检查结尾时是否忽略大小写
+	 * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
+	 *
+	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
+	 * @since3.0.7
+	 */
+	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final CharSequence... prefixes) {
+		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
+			return str.toString();
+		}
+		if (prefixes != null && prefixes.length > 0) {
+			for (final CharSequence s : prefixes) {
+				if (startWith(str, s, ignoreCase)) {
+					return str.toString();
+				}
+			}
+		}
+		return prefix.toString().concat(str.toString());
 	}
 }
