@@ -36,6 +36,16 @@ import com.xiaoleilu.hutool.lang.Singleton;
 public final class ClassUtil {
 	
 	private ClassUtil() {}
+	
+	/**
+	 * {@code null}安全的获取对象类型
+	 * @param obj 对象，如果为{@code null} 返回{@code null}
+	 * @return 对象类型，提供对象如果为{@code null} 返回{@code null}
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> getClass(T obj){
+		return ((null == obj) ? null : (Class<T>)obj.getClass());
+	}
 
 	/**
 	 * 获得对象数组的类数组

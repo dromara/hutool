@@ -13,6 +13,8 @@
 * 增加BeanResolver，同时增加BeanUtil.getProperty方法
 * 增加WeakCache
 * HttpRequest中增加cookie方法用于覆盖默认的Cookie行为，自定义Cookie值（感谢@质量过关）
+* getPropertyDescriptor和getPropertyDescriptorMap增加缓存支持
+* 添加DynaBean，反射方式对Bean做get和set操作
 
 ### Bug修复
 * Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）
