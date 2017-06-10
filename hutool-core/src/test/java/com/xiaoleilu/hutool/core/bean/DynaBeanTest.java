@@ -15,7 +15,7 @@ public class DynaBeanTest {
 	@Test
 	public void beanTest(){
 		User user = new User();
-		DynaBean bean = new DynaBean(user);
+		DynaBean bean = DynaBean.create(user);
 		bean.set("name", "李华");
 		bean.set("age", 12);
 		
@@ -28,6 +28,10 @@ public class DynaBeanTest {
 		DynaBean bean2 = new DynaBean(bean);
 		User user2 = bean2.getBean();
 		Assert.assertEquals(user, user2);
+		
+		//执行指定方法
+		Object invoke = bean2.invoke("testMethod");
+		Assert.assertEquals("test for 李华", invoke);
 	}
 	
 	public static class User{
@@ -45,6 +49,11 @@ public class DynaBeanTest {
 		public void setAge(int age) {
 			this.age = age;
 		}
+		
+		public String testMethod(){
+			return "test for " + this.name;
+		}
+		
 		@Override
 		public String toString() {
 			return "User [name=" + name + ", age=" + age + "]";

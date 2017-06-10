@@ -894,25 +894,6 @@ public final class FileUtil {
 	public static String getAbsolutePath(String path, Class<?> baseClass) {
 		if (path == null) {
 			path = StrUtil.EMPTY;
-		}
-		if (baseClass == null) {
-			return getAbsolutePath(path);
-		}
-		// return baseClass.getResource(path).getPath();
-		return StrUtil.removePrefix(PATH_FILE_PRE, baseClass.getResource(path).getPath());
-	}
-
-	/**
-	 * 获取绝对路径，相对于ClassPath的目录<br>
-	 * 如果给定就是绝对路径，则返回原路径，原路径把所有\替换为/<br>
-	 * 兼容Spring风格的路径表示，例如：classpath:config/example.setting也会被识别后转换
-	 * 
-	 * @param path 相对路径
-	 * @return 绝对路径
-	 */
-	public static String getAbsolutePath(String path) {
-		if (path == null) {
-			path = StrUtil.EMPTY;
 		} else {
 			path = normalize(path);
 
@@ -927,11 +908,29 @@ public final class FileUtil {
 		path = StrUtil.removePrefix(path, StrUtil.SLASH);
 
 		// 相对于ClassPath路径
-		ClassLoader classLoader = ClassUtil.getClassLoader();
-		URL url = classLoader.getResource(path);
-		String reultPath = url != null ? url.getPath() : ClassUtil.getClassPath() + path;
-		// return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
-		return reultPath;
+		final URL url = ClassUtil.getResourceUrl(path, baseClass);
+		if(null != url){
+			return url.getPath();
+		}else{
+			//如果资源不存在，则返回一个拼接的资源绝对路径
+			final String classPath = ClassUtil.getClassPath();
+			if(null == classPath){
+				throw new NullPointerException("ClassPath is null !");
+			}
+			return classPath.concat(path);
+		}
+	}
+
+	/**
+	 * 获取绝对路径，相对于ClassPath的目录<br>
+	 * 如果给定就是绝对路径，则返回原路径，原路径把所有\替换为/<br>
+	 * 兼容Spring风格的路径表示，例如：classpath:config/example.setting也会被识别后转换
+	 * 
+	 * @param path 相对路径
+	 * @return 绝对路径
+	 */
+	public static String getAbsolutePath(String path) {
+		return getAbsolutePath(path, null);
 	}
 
 	/**
@@ -950,6 +949,21 @@ public final class FileUtil {
 		} catch (IOException e) {
 			return file.getAbsolutePath();
 		}
+	}
+	
+	/**
+	 * 给定路径已经是绝对路径<br>
+	 * 此方法并没有针对路径做标准化，建议先执行{@link #normalize(String)}方法标准化路径后判断
+	 * 
+	 * @param path 需要检查的Path
+	 * @return 是否已经是绝对路径
+	 */
+	public static boolean isAbsolutePath(String path){
+		if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:/.*")) {
+			// 给定的路径已经是绝对路径了
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1044,8 +1058,13 @@ public final class FileUtil {
 
 	/**
 	 * 修复路径<br>
-	 * 1. 统一用 / <br>
-	 * 2. 多个 / 转换为一个 3. 去除两边空格 4. .. 和 . 转换为绝对路径 5. 去掉前缀，例如file:
+	 * <ol>
+	 * 	<li>1. 统一用 /</li>
+	 * 	<li>2. 多个 / 转换为一个 /</li>
+	 * 	<li>3. 去除两边空格</li>
+	 * 	<li>4. .. 和 . 转换为绝对路径</li>
+	 * 	<li>5. 去掉前缀，例如file:</li>
+	 * </ol>
 	 * 
 	 * @param path 原路径
 	 * @return 修复后的路径

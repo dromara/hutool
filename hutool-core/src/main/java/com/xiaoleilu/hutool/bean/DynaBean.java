@@ -1,9 +1,11 @@
 package com.xiaoleilu.hutool.bean;
 
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.clone.CloneSupport;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
@@ -13,11 +15,41 @@ import com.xiaoleilu.hutool.util.ClassUtil;
  * 支持Map和普通Bean
  * 
  * @author Looly
+ * @since 3.0.7
  */
-public class DynaBean {
-	
+public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
+	private static final long serialVersionUID = 1197818330017827323L;
+
 	private Class<?> beanClass;
 	private Object bean;
+	
+	/**
+	 * 创建一个{@link DynaBean}
+	 * @param bean 普通Bean
+	 * @return {@link DynaBean}
+	 */
+	public static DynaBean create(Object bean){
+		return new DynaBean(bean);
+	}
+	/**
+	 * 创建一个{@link DynaBean}
+	 * @param beanClass Bean类
+	 * @param params 构造Bean所需要的参数
+	 * @return {@link DynaBean}
+	 */
+	public static DynaBean create(Class<?> beanClass, Object... params){
+		return new DynaBean(beanClass, params);
+	}
+	
+	//------------------------------------------------------------------------ Constructor start
+	/**
+	 * 构造
+	 * @param beanClass Bean类
+	 * @param params 构造Bean所需要的参数
+	 */
+	public DynaBean(Class<?> beanClass, Object... params){
+		this(ClassUtil.newInstance(beanClass, params));
+	}
 	
 	/**
 	 * 构造
@@ -31,6 +63,7 @@ public class DynaBean {
 		this.bean = bean;
 		this.beanClass = ClassUtil.getClass(bean);
 	}
+	//------------------------------------------------------------------------ Constructor end
 	
 	/**
 	 * 获得字段对应值
@@ -86,6 +119,16 @@ public class DynaBean {
 				throw new BeanException(e);
 			}
 		}
+	}
+	
+	/**
+	 * 执行原始Bean中的方法
+	 * @param methodName 方法名
+	 * @param params 参数
+	 * @return 执行结果，可能为null
+	 */
+	public Object invoke(String methodName, Object... params){
+		return ClassUtil.invoke(this.bean, methodName, params);
 	}
 	
 	/**

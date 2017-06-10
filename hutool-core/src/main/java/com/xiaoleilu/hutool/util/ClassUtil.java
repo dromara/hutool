@@ -408,7 +408,7 @@ public final class ClassUtil {
 	 * @return ClassPath URL
 	 */
 	public static URL getClassPathURL() {
-		return getURL(StrUtil.EMPTY);
+		return getResourceURL(StrUtil.EMPTY);
 	}
 
 	/**
@@ -416,9 +416,31 @@ public final class ClassUtil {
 	 * 
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return 资源URL
+	 * @deprecated 方法名歧义，请使用 {@link #getResourceURL(String)}
 	 */
+	@Deprecated
 	public static URL getURL(String resource) {
-		return ClassUtil.getClassLoader().getResource(resource);
+		return getResourceUrl(resource, null);
+	}
+	
+	/**
+	 * 获得资源的URL
+	 * 
+	 * @param resource 资源（相对Classpath的路径）
+	 * @return 资源URL
+	 */
+	public static URL getResourceURL(String resource) {
+		return getResourceUrl(resource, null);
+	}
+	
+	/**
+	 * 获得资源相对路径对应的URL
+	 * @param resource 资源相对路径
+	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
+	 * @return {@link URL}
+	 */
+	public static URL getResourceUrl(String resource, Class<?> baseClass){
+		return (null != baseClass) ? baseClass.getResource(resource) : getClassLoader().getResource(resource);
 	}
 
 	/**
