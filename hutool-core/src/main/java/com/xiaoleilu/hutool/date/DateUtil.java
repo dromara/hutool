@@ -40,9 +40,20 @@ public final class DateUtil {
 	public static DateTime date() {
 		return new DateTime();
 	}
+	
+	/**
+	 * {@link Date}类型时间转为{@link DateTime}
+	 * 
+	 * @param date Long类型Date（Unix时间戳）
+	 * @return 时间对象
+	 * @since 3.0.7
+	 */
+	public static DateTime date(Date date) {
+		return new DateTime(date);
+	}
 
 	/**
-	 * Long类型时间转为Date
+	 * Long类型时间转为{@link DateTime}
 	 * 
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
@@ -52,7 +63,7 @@ public final class DateUtil {
 	}
 	
 	/**
-	 * Calendar类型时间转为Date
+	 * {@link Calendar}类型时间转为{@link DateTime}
 	 * 
 	 * @param calendar {@link Calendar}
 	 * @return 时间对象

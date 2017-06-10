@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.date;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -428,6 +429,22 @@ public class DateTime extends Date {
 		final Calendar cal = Calendar.getInstance(zone, locale);
 		cal.setTime(this);
 		return cal;
+	}
+	
+	/**
+	 * 转为{@link Timestamp}
+	 * @return {@link Timestamp}
+	 */
+	public Timestamp toTimestamp(){
+		return new Timestamp(this.getTime());
+	}
+	
+	/**
+	 * 转为 {@link java.sql.Date}
+	 * @return {@link java.sql.Date}
+	 */
+	public java.sql.Date toSqlDate(){
+		return new java.sql.Date(getTime());
 	}
 	
 	/**

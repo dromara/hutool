@@ -17,6 +17,7 @@
 * 添加DynaBean，反射方式对Bean做get和set操作
 * ArrayUtil中数组参数变为可变参数。提供跟多灵活性
 * StrUtil增加更多实用方法
+* DateUtil.date方法支持java.util.Date参数；DateTime增加toTimestamp和toSqlDate两个方法
 
 ### Bug修复
 * Validator.isPlateNmber 拼写修复为isPlateNumber（感谢：飞天奔月）
