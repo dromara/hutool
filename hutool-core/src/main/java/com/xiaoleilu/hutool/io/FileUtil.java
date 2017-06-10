@@ -796,7 +796,7 @@ public final class FileUtil {
 			File srcFile = new File(src, file);
 			File destFile = new File(dest, file);
 			// 递归复制
-			if (src.isDirectory()) {
+			if (srcFile.isDirectory()) {
 				internalCopyDir(srcFile, destFile, isOverride);
 			} else {
 				internalCopyFile(srcFile, destFile, isOverride);

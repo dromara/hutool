@@ -1925,7 +1925,7 @@ public final class StrUtil {
 	 * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
 	 *
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
-	 * @since3.0.7
+	 * @since 3.0.7
 	 */
 	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final CharSequence... suffixes) {
 		return appendIfMissing(str, suffix, false, suffixes);
@@ -1940,7 +1940,7 @@ public final class StrUtil {
 	 * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
 	 *
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
-	 * @since3.0.7
+	 * @since 3.0.7
 	 */
 	public static String appendIfMissingIgnoreCase(final CharSequence str, final CharSequence suffix, final CharSequence... suffixes) {
 		return appendIfMissing(str, suffix, true, suffixes);
@@ -1955,7 +1955,7 @@ public final class StrUtil {
 	 * @param suffixes 需要额外检查的结尾字符串，如果以这些中的一个为结尾，则不再添加
 	 *
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
-	 * @since3.0.7
+	 * @since 3.0.7
 	 */
 	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final CharSequence... suffixes) {
 		if (str == null || isEmpty(suffix) || endWith(str, suffix, ignoreCase)) {
@@ -1980,7 +1980,7 @@ public final class StrUtil {
 	 * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
 	 *
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
-	 * @since3.0.7
+	 * @since 3.0.7
 	 */
 	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
 		return prependIfMissing(str, prefix, false, prefixes);
@@ -1995,7 +1995,7 @@ public final class StrUtil {
 	 * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
 	 *
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
-	 * @since3.0.7
+	 * @since 3.0.7
 	 */
 	public static String prependIfMissingIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
 		return prependIfMissing(str, prefix, true, prefixes);
@@ -2010,7 +2010,7 @@ public final class StrUtil {
 	 * @param prefixes 需要额外检查的首部字符串，如果以这些中的一个为起始，则不再添加
 	 *
 	 * @return 如果已经结尾，返回原字符串，否则返回添加结尾的字符串
-	 * @since3.0.7
+	 * @since 3.0.7
 	 */
 	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final CharSequence... prefixes) {
 		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {

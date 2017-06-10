@@ -24,6 +24,8 @@
 * 修复ConverterRegistry中默认Date对象错误问题（issue#22@github）
 * 修复NumberUtil中方法非static的问题（感谢[霾都] QQ小冰）
 * 修复FileUtil.equals方法，实现改为JDK7实现。
+* 修复FileUtil.copy 方法判断错误问题（issue#24@github）
+
 -------------------------------------------------------------------------------------------------------------
 
 ## 3.0.6
