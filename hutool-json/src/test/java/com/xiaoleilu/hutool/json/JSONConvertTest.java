@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.json.test.bean.ExamInfoDict;
 import com.xiaoleilu.hutool.json.test.bean.UserInfoDict;
-import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSON转换单元测试
