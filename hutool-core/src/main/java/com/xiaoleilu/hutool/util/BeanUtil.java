@@ -16,11 +16,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.bean.BeanInfoCache;
+import com.xiaoleilu.hutool.bean.BeanResolver;
 import com.xiaoleilu.hutool.bean.DynaBean;
 import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.lang.BeanResolver;
 
 /**
  * Bean工具类

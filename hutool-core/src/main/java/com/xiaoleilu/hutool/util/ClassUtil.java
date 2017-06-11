@@ -46,6 +46,43 @@ public final class ClassUtil {
 	public static <T> Class<T> getClass(T obj){
 		return ((null == obj) ? null : (Class<T>)obj.getClass());
 	}
+	
+	/**
+	 * 获取类名<br>
+	 * 
+	 * @param obj
+	 * @param isSimple 是否简单类名，如果为true，返回不带包名的类名
+	 * @return 类名
+	 * @since 3.0.7
+	 */
+	public static String getClassName(Object obj, boolean isSimple){
+		if(null == obj){
+			return null;
+		}
+		final Class<?> clazz = obj.getClass();
+		return getClassName(clazz, isSimple);
+	}
+	
+	/**
+	 * 获取类名<br>
+	 * 类名并不包含“.class”这个扩展名<br>
+	 * 例如：ClassUtil这个类<br>
+	 * <pre>
+	 * isSimple为false: "com.xiaoleilu.hutool.util.ClassUtil"
+	 * isSimple为true: "ClassUtil"
+	 * </pre>
+	 * 
+	 * @param clazz 类
+	 * @param isSimple 是否简单类名，如果为true，返回不带包名的类名
+	 * @return 类名
+	 * @since 3.0.7
+	 */
+	public static String getClassName(Class<?> clazz, boolean isSimple){
+		if(null == clazz){
+			return null;
+		}
+		return isSimple ? clazz.getSimpleName() : clazz.getName();
+	}
 
 	/**
 	 * 获得对象数组的类数组
@@ -59,6 +96,25 @@ public final class ClassUtil {
 			classes[i] = objects[i].getClass();
 		}
 		return classes;
+	}
+	
+	/**
+	 * 指定类是否与给定的类名相同
+	 * @param clazz 类
+	 * @param className 类名，可以是全类名（包含包名），也可以是简单类名（不包含包名）
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 指定类是否与给定的类名相同
+	 * @since 3.0.7
+	 */
+	public static boolean equals(Class<?> clazz, String className, boolean ignoreCase){
+		if(null == clazz || StrUtil.isBlank(className)){
+			return false;
+		}
+		if(ignoreCase){
+			return className.equalsIgnoreCase(clazz.getName()) || className.equalsIgnoreCase(clazz.getSimpleName());
+		}else{
+			return className.equals(clazz.getName()) || className.equals(clazz.getSimpleName());
+		}
 	}
 	
 	// ----------------------------------------------------------------------------------------- Scan classes

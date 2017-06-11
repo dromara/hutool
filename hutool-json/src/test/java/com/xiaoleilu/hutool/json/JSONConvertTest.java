@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.json.test.bean.ExamInfoDict;
 import com.xiaoleilu.hutool.json.test.bean.UserInfoDict;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSON转换单元测试
@@ -21,8 +22,6 @@ public class JSONConvertTest {
 
 	@Test
 	public void testBean2Json() {
-
-		Map<String, Object> tempMap = new HashMap<String, Object>();
 
 		UserInfoDict userInfoDict = new UserInfoDict();
 		userInfoDict.setId(1);
@@ -51,16 +50,19 @@ public class JSONConvertTest {
 
 		userInfoDict.setExamInfoDict(examInfoDicts);
 
-		tempMap.put("examInfoDicts", userInfoDict);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+		tempMap.put("userInfoDict", userInfoDict);
 		tempMap.put("toSendManIdCard", 1);
 
 		JSONObject obj = JSONUtil.parseObj(tempMap);
 		Assert.assertEquals(new Integer(1), obj.getInt("toSendManIdCard"));
-		Assert.assertEquals(new Integer(1), obj.getInt("toSendManIdCard"));
 
-		JSONObject examInfoDictsJson = obj.getJSONObject("examInfoDicts");
-		Assert.assertEquals(examInfoDictsJson.getInt("id"), new Integer(1));
-		Assert.assertEquals(examInfoDictsJson.getStr("realName"), "质量过关");
+		JSONObject examInfoDictsJson = obj.getJSONObject("userInfoDict");
+		Assert.assertEquals(new Integer(1), examInfoDictsJson.getInt("id"));
+		Assert.assertEquals("质量过关", examInfoDictsJson.getStr("realName"));
+		
+		Object id = JSONUtil.getByExp(obj, "userInfoDict.examInfoDict[0].id");
+		Assert.assertEquals(1, id);
 	}
 
 	@Test

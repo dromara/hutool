@@ -260,6 +260,31 @@ public final class JSONUtil {
 		return null == json ? null : json.toBean(beanClass, ignoreError);
 	}
 	//-------------------------------------------------------------------- toBean end
+	
+	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * 
+	 * 表达式栗子：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * 
+	 * @param json {@link JSON}
+	 * @param expression 表达式
+	 * @return 对象
+	 * @see JSON#getByExp(String)
+	 */
+	public static Object getByExp(JSON json, String expression){
+		return (null == json || StrUtil.isBlank(expression)) ? null : json.getByExp(expression);
+	}
 
 	/**
 	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>

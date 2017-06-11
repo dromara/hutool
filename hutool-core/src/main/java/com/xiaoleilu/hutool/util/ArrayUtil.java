@@ -17,6 +17,9 @@ import com.xiaoleilu.hutool.lang.Editor;
  *
  */
 public final class ArrayUtil {
+	
+	/** 数组中元素未找到的下标，值为-1 */
+	public static final int INDEX_NOT_FOUND = -1;
 
 	private ArrayUtil() {
 	}
@@ -597,30 +600,423 @@ public final class ArrayUtil {
 		return zip(keys, values, false);
 	}
 
+	// ------------------------------------------------------------------- indexOf and lastIndexOf and contains
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param <T> 数组类型
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static <T> int indexOf(T[] array, Object value) {
+		for (int i = 0; i < array.length; i++) {
+			if(ObjectUtil.equal(value, array[i])){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param <T> 数组类型
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static <T> int lastIndexOf(T[] array, Object value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(ObjectUtil.equal(value, array[i])){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
 	/**
 	 * 数组中是否包含元素
-	 * 
 	 * @param <T> 数组元素类型
+	 * 
 	 * @param array 数组
 	 * @param value 被检查的元素
 	 * @return 是否包含
 	 */
 	public static <T> boolean contains(T[] array, T value) {
-		final Class<?> componetType = array.getClass().getComponentType();
-		boolean isPrimitive = false;
-		if (null != componetType) {
-			isPrimitive = componetType.isPrimitive();
-		}
-		for (T t : array) {
-			if (t == value) {
-				return true;
-			} else if (false == isPrimitive && null != value && value.equals(t)) {
-				return true;
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(long[] array, long value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
 			}
 		}
-		return false;
+		return INDEX_NOT_FOUND;
 	}
-
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(long[] array, long value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(long[] array, long value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(int[] array, int value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(int[] array, int value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(int[] array, int value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(short[] array, short value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(short[] array, short value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(short[] array, short value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(char[] array, char value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(char[] array, char value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(char[] array, char value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(byte[] array, byte value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(byte[] array, byte value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(byte[] array, byte value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(double[] array, double value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(double[] array, double value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(double[] array, double value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(float[] array, float value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(float[] array, float value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(float[] array, float value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int indexOf(boolean[] array, boolean value) {
+		for (int i = 0; i < array.length; i++) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.0.7
+	 */
+	public static int lastIndexOf(boolean[] array, boolean value) {
+		for (int i = array.length-1; i >= 0; i--) {
+			if(value == array[i]){
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.0.7
+	 */
+	public static boolean contains(boolean[] array, boolean value) {
+		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
 	// ------------------------------------------------------------------- Wrap and unwrap
 	/**
 	 * 将原始类型数组包装为包装类型

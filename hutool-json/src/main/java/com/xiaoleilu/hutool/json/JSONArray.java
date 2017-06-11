@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.xiaoleilu.hutool.bean.BeanResolver;
+
 /**
  * JSON数组
  * @author looly
@@ -135,6 +137,11 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	@Override
 	public Object getObj(Integer index, Object defaultValue) {
 		return (index < 0 || index >= this.size()) ? defaultValue : this.rawArrayList.get(index);
+	}
+	
+	@Override
+	public Object getByExp(String expression) {
+		return BeanResolver.resolveBean(this, expression);
 	}
 	
 	/**

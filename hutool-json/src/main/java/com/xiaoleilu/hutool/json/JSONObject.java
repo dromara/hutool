@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.bean.BeanResolver;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
@@ -223,6 +224,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	public Object getObj(String key, Object defaultValue) {
 		Object obj = this.rawHashMap.get(key);
 		return null == obj ? defaultValue : obj;
+	}
+	
+	@Override
+	public Object getByExp(String expression) {
+		return BeanResolver.resolveBean(this, expression);
 	}
 
 	/**

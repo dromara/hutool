@@ -9,7 +9,7 @@ import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 
 /**
- * 数组工具单元测试
+ * {@link ArrayUtil} 数组工具单元测试
  * @author Looly
  *
  */
@@ -55,6 +55,39 @@ public class ArrayUtilTest {
 				return (t % 2 == 0) ? t : null;
 			}});
 		Assert.assertArrayEquals(filter, new Integer[]{2,4,6});
+	}
+	
+	@Test
+	public void indexOfTest(){
+		Integer[] a = {1,2,3,4,5,6};
+		int index = ArrayUtil.indexOf(a, 3);
+		Assert.assertEquals(2, index);
+		
+		long[] b = {1,2,3,4,5,6};
+		int index2 = ArrayUtil.indexOf(b, 3);
+		Assert.assertEquals(2, index2);
+	}
+	
+	@Test
+	public void lastIndexOfTest(){
+		Integer[] a = {1,2,3,4,3,6};
+		int index = ArrayUtil.lastIndexOf(a, 3);
+		Assert.assertEquals(4, index);
+		
+		long[] b = {1,2,3,4,3,6};
+		int index2 = ArrayUtil.lastIndexOf(b, 3);
+		Assert.assertEquals(4, index2);
+	}
+	
+	@Test
+	public void containsTest(){
+		Integer[] a = {1,2,3,4,3,6};
+		boolean contains = ArrayUtil.contains(a, 3);
+		Assert.assertTrue(contains);
+		
+		long[] b = {1,2,3,4,3,6};
+		boolean contains2 = ArrayUtil.contains(b, 3);
+		Assert.assertTrue(contains2);
 	}
 	
 	@Test

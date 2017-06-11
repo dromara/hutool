@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.core.lang;
+package com.xiaoleilu.hutool.core.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,9 +8,9 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.bean.BeanResolver;
 import com.xiaoleilu.hutool.core.lang.test.bean.ExamInfoDict;
 import com.xiaoleilu.hutool.core.lang.test.bean.UserInfoDict;
-import com.xiaoleilu.hutool.lang.BeanResolver;
 
 /**
  * {@link BeanResolver} 单元测试
@@ -21,9 +21,7 @@ public class BeanResolverTest {
 	
 	@Test
 	public void beanResolverTest(){
-		Map<String, Object> tempMap = new HashMap<String, Object>();
-
-
+		//------------------------------------------------- 考试信息列表
 		ExamInfoDict examInfoDict = new ExamInfoDict();
 		examInfoDict.setId(1);
 		examInfoDict.setExamType(0);
@@ -44,16 +42,18 @@ public class BeanResolverTest {
 		examInfoDicts.add(examInfoDict1);
 		examInfoDicts.add(examInfoDict2);
 
+		//------------------------------------------------- 用户信息
 		UserInfoDict userInfoDict = new UserInfoDict();
 		userInfoDict.setId(1);
 		userInfoDict.setPhotoPath("yx.mm.com");
 		userInfoDict.setRealName("张三");
 		userInfoDict.setExamInfoDict(examInfoDicts);
 
-		tempMap.put("examInfoDicts", userInfoDict);
-		tempMap.put("toSendManIdCard", 1);
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+		tempMap.put("userInfo", userInfoDict);
+		tempMap.put("flag", 1);
 
-		BeanResolver resolver = new BeanResolver(tempMap, "examInfoDicts.examInfoDict[0].id");
+		BeanResolver resolver = new BeanResolver(tempMap, "userInfo.examInfoDict[0].id");
 		Object result = resolver.resolve();
 		Assert.assertEquals(1, result);
 	}

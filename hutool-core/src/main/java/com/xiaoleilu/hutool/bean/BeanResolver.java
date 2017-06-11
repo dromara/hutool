@@ -1,6 +1,8 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.bean;
 
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -16,7 +18,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * persion
  * persion.name
  * persons[3]
- * person.friend[5].name
+ * person.friends[5].name
  * </pre>
  * 
  * 
@@ -24,6 +26,10 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @since 3.0.7
  */
 public class BeanResolver {
+	
+	/** 表达式边界符号数组 */
+	private static final char[] expChars = {StrUtil.C_DOT, StrUtil.C_BRACKET_START, StrUtil.C_BRACKET_END};
+	
 	private Object bean;
 	private String expression;
 	
@@ -57,11 +63,11 @@ public class BeanResolver {
 
 		StringBuilder sb = new StringBuilder();
 		char c;
-		boolean isNumStart = false;
-		boolean isFirst = true;
+		boolean isNumStart = false;//下标标识符开始
+		boolean isFirst = true;//是否第一个表达式元素
 		for (int i = 0; i < length; i++) {
 			c = expression.charAt(i);
-			if (StrUtil.C_DOT == c || StrUtil.C_BRACKET_START == c || StrUtil.C_BRACKET_END == c) {
+			if (ArrayUtil.contains(expChars, c)) {
 				// 处理边界符号
 				if (StrUtil.C_BRACKET_END == c) {
 					// 中括号结束
@@ -70,19 +76,20 @@ public class BeanResolver {
 					}
 					isNumStart = false;
 				} else {
-					// 非结束中括号情况下发现起始中括号报错（中括号未关闭）
 					if (isNumStart) {
+						// 非结束中括号情况下发现起始中括号报错（中括号未关闭）
 						throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find '[' but no ']' !", expression, i));
 					} else if (StrUtil.C_BRACKET_START == c) {
 						isNumStart = true;
 					}
 				}
+				//每一个边界符之前的表达式是一个完整的KEY，开始处理KEY
 				if (sb.length() > 0) {
 					final String name = sb.toString();
 					subBean = getSubBean(subBean, name);
 					if (null == subBean) {
 						//支持表达式的第一个对象为Bean本身
-						if(isFirst && bean.getClass().getName().equals(StrUtil.upperFirst(name))){
+						if(isFirst && ClassUtil.getClassName(this.bean, true).equals(StrUtil.upperFirst(name))){
 							subBean = bean;
 							isFirst = false;
 						}else{
@@ -94,6 +101,7 @@ public class BeanResolver {
 			} else {
 				// 非边界符号，追加字符
 				if (isNumStart && (c < '0' || c > '9')) {
+					//中括号之后只能跟数字
 					throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, it must number between '[' and ']', but contains '{}' !", expression, i, c));
 				}
 				sb.append(c);
