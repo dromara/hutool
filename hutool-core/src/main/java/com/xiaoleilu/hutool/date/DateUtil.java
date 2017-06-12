@@ -375,7 +375,7 @@ public final class DateUtil {
 	/**
 	 * 获得指定日期区间内的年份和季节<br>
 	 * 
-	 * @param startDate 其实日期（包含）
+	 * @param startDate 起始日期（包含）
 	 * @param endDate 结束日期（包含）
 	 * @return Season列表 ，元素类似于 20132
 	 */

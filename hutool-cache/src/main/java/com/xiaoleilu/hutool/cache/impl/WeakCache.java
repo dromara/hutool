@@ -1,9 +1,6 @@
-package com.xiaoleilu.hutool.cache;
+package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.WeakHashMap;
-
-import com.xiaoleilu.hutool.cache.impl.CacheObj;
-import com.xiaoleilu.hutool.cache.impl.TimedCache;
 
 /**
  * 弱引用缓存<br>

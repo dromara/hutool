@@ -1,7 +1,7 @@
 package com.xiaoleilu.hutool.cache.impl;
 
-import java.util.LinkedHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
  * FIFO(first in first out) 先进先出缓存.
