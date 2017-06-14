@@ -20,7 +20,7 @@ import com.xiaoleilu.hutool.cache.Cache;
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
+public abstract class AbstractCache<K, V> implements Cache<K, V>{
 
 	protected Map<K, CacheObj<K, V>> cacheMap;
 
@@ -30,7 +30,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 
 	/** 返回缓存容量，<code>0</code>表示无大小限制 */
 	protected int capacity;
-	/** 缓存失效时长， <code>0</code> 表示没有设置 */
+	/** 缓存失效时长， <code>0</code> 表示没有设置，单位毫秒 */
 	protected long timeout;
 	
 	/** 每个对象是否有单独的失效时长，用于决定清理过期对象是否有必要。 */
@@ -67,6 +67,32 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 	// ---------------------------------------------------------------- put end
 
 	// ---------------------------------------------------------------- get start
+	@Override
+	public boolean containsKey(K key) {
+		readLock.lock();
+
+		try {
+			//不存在或已移除
+			final CacheObj<K, V> co = cacheMap.get(key);
+			if (co == null) {
+				return false;
+			}
+			
+			//过期
+			if (co.isExpired() == true) {
+				// remove(key); // 此方法无法获得锁
+				removeWithoutLock(key);
+				missCount++;
+				return false;
+			}
+
+			//命中
+			return true;
+		} finally {
+			readLock.unlock();
+		}
+	}
+	
 	/**
 	 * @return 命中数
 	 */
@@ -108,6 +134,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>, Iterable<V>{
 			readLock.unlock();
 		}
 	}
+	
 	// ---------------------------------------------------------------- get end
 
 	@Override

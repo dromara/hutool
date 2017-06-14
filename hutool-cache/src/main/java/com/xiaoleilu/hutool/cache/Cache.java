@@ -9,7 +9,7 @@ import java.util.Iterator;
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public interface Cache<K, V>{
+public interface Cache<K, V> extends Iterable<V>{
 
 	/**
 	 * @return 返回缓存容量，<code>0</code>表示无大小限制
@@ -17,7 +17,7 @@ public interface Cache<K, V>{
 	int capacity();
 
 	/**
-	 * @return 缓存失效时长， <code>0</code> 表示没有设置
+	 * @return 缓存失效时长， <code>0</code> 表示没有设置，单位毫秒
 	 */
 	long timeout();
 
@@ -34,7 +34,7 @@ public interface Cache<K, V>{
 	 * 如果缓存空间满了，{@link #prune()} 将被调用以获得空间来存放新对象
 	 * @param key 键
 	 * @param object 缓存的对象
-	 * @param timeout 失效时长
+	 * @param timeout 失效时长，单位毫秒
 	 * @see Cache#put(Object, Object, long)
 	 */
 	void put(K key, V object, long timeout);
@@ -49,6 +49,7 @@ public interface Cache<K, V>{
 	/**
 	 * @return 返回缓存迭代器
 	 */
+	@Override
 	Iterator<V> iterator();
 
 	/**
@@ -82,4 +83,11 @@ public interface Cache<K, V>{
 	 * @return 缓存是否为空
 	 */
 	boolean isEmpty();
+	
+	/**
+	 * 是否包含key
+	 * @param key KEY
+	 * @return 是否包含key
+	 */
+	boolean containsKey(K key);
 }

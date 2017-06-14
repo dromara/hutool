@@ -1,11 +1,14 @@
 package com.xiaoleilu.hutool.json;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.json.test.bean.UserA;
+import com.xiaoleilu.hutool.json.test.bean.UserB;
 import com.xiaoleilu.hutool.lang.Console;
 
 /**
@@ -56,6 +59,20 @@ public class JSONObjectTest {
 		
 		TestBean bean = json.toBean(TestBean.class);
 		Console.log(bean);
+	}
+	
+	@Test
+	public void beanTransTest(){
+		UserA userA = new UserA();
+		userA.setA("A user");
+		userA.setName("nameTest");
+		userA.setDate(new Date());
+		
+		JSONObject userAJson = JSONUtil.parseObj(userA);
+		UserB userB = JSONUtil.toBean(userAJson, UserB.class);
+		
+		Assert.assertEquals(userA.getName(), userB.getName());
+		Assert.assertEquals(userA.getDate(), userB.getDate());
 	}
 	
 	/**

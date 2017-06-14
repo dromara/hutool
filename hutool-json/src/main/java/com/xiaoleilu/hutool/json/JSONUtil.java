@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -412,6 +414,12 @@ public final class JSONUtil {
 			if (object instanceof Map) {
 				Map<?, ?> map = (Map<?, ?>) object;
 				return new JSONObject(map);
+			}
+			if(object instanceof Date){
+				return ((Date)object).getTime();
+			}
+			if(object instanceof Calendar){
+				return ((Calendar)object).getTimeInMillis();
 			}
 			Package objectPackage = object.getClass().getPackage();
 			String objectPackageName = objectPackage != null ? objectPackage.getName() : "";

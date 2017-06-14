@@ -32,6 +32,11 @@ public class NoCache<K, V> implements Cache<K, V> {
 	public void put(K key, V object, long timeout) {
 		// 跳过
 	}
+	
+	@Override
+	public boolean containsKey(K key) {
+		return false;
+	}
 
 	@Override
 	public V get(K key) {
