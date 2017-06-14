@@ -2,15 +2,13 @@ package com.xiaoleilu.hutool.cache.test;
 
 import java.util.Iterator;
 
-import org.junit.Test;
-
 import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.cache.impl.FIFOCache;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
 public class CacheTest2 {
-	@Test
-	public void fifoCacheTest() {
+	
+	public static void main(String[] args) {
 		final Cache<String, String> fifoCache = new FIFOCache<>(3);
 
 		// 由于缓存容量只有3，当加入第四个元素的时候，根据FIFO规则，最先放入的对象将被移除
@@ -32,7 +30,7 @@ public class CacheTest2 {
 				}
 			}).start();
 		}
-		
+
 		for (int i = 0; i < 4000; i++) {
 			new Thread(new Runnable(){
 				@Override
@@ -41,18 +39,18 @@ public class CacheTest2 {
 				}
 			}).start();
 		}
-		
+
 		System.out.println("==============================");
 		ThreadUtil.sleep(10000);
+
 	}
 
-	private void show(Cache<String, String> fifoCache) {
+	private static void show(Cache<String, String> fifoCache) {
 		Iterator<?> its = fifoCache.iterator();
-		
+
 		while (its.hasNext()) {
 			Object tt = its.next();
 			System.out.println(tt);
-			
 		}
 	}
 }

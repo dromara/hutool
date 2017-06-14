@@ -2,10 +2,12 @@ package com.xiaoleilu.hutool.cache.impl;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import com.xiaoleilu.hutool.cache.Cache;
+import com.xiaoleilu.hutool.collection.CopiedIterator;
 
 /**
  * 超时和限制大小的缓存的默认实现<br>
@@ -25,8 +27,8 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>{
 	protected Map<K, CacheObj<K, V>> cacheMap;
 
 	private final ReentrantReadWriteLock cacheLock = new ReentrantReadWriteLock();
-	private final Lock readLock = cacheLock.readLock();
-	private final Lock writeLock = cacheLock.writeLock();
+	private final ReadLock readLock = cacheLock.readLock();
+	private final WriteLock writeLock = cacheLock.writeLock();
 
 	/** 返回缓存容量，<code>0</code>表示无大小限制 */
 	protected int capacity;
@@ -139,7 +141,14 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>{
 
 	@Override
 	public Iterator<V> iterator() {
-		return new CacheValuesIterator<V>(this);
+		CopiedIterator<CacheObj<K, V>> copiedIterator;
+		readLock.lock();
+		try {
+			copiedIterator = CopiedIterator.copyOf(this.cacheMap.values().iterator());
+		} finally {
+			readLock.unlock();
+		}
+		return new CacheValuesIterator<V>(copiedIterator);
 	}
 
 	// ---------------------------------------------------------------- prune start

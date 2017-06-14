@@ -5,6 +5,7 @@ import com.xiaoleilu.hutool.cache.impl.LFUCache;
 import com.xiaoleilu.hutool.cache.impl.LRUCache;
 import com.xiaoleilu.hutool.cache.impl.NoCache;
 import com.xiaoleilu.hutool.cache.impl.TimedCache;
+import com.xiaoleilu.hutool.cache.impl.WeakCache;
 
 /**
  * 缓存工具类
@@ -102,6 +103,19 @@ public class CacheUtil {
 	}
 	
 	/**
+	 * 创建若引用缓存.
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @param timeout 过期时长
+	 * @return {@link WeakCache}
+	 * @since 3.0.7
+	 */
+	public static <K, V> Cache<K, V> newWeakCache(long timeout){
+		return new WeakCache<K, V>(timeout);
+	}
+	
+	/**
 	 * 创建无缓存实现.
 	 * 
 	 * @param <K> Key类型
@@ -111,4 +125,5 @@ public class CacheUtil {
 	public static <K, V> Cache<K, V> newNoCache(){
 		return new NoCache<K, V>();
 	}
+	
 }

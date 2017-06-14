@@ -8,26 +8,17 @@ import java.util.NoSuchElementException;
  */
 public class CacheValuesIterator<V> implements Iterator<V> {
 
-	private Iterator<? extends CacheObj<?, V>> iterator;
-
+	private final Iterator<? extends CacheObj<?, V>> iterator;
 	private CacheObj<?,V> nextValue;
 
-	CacheValuesIterator(AbstractCache<?,V> abstractCacheMap) {
-		iterator = abstractCacheMap.cacheMap.values().iterator();
-		nextValue();
-	}
-
 	/**
-	 * 下一个值，当不存在则下一个值为null
+	 * 构造
+	 * @param iterator 原{@link Iterator}
+	 * @param readLock 读锁
 	 */
-	private void nextValue() {
-		while (iterator.hasNext()) {
-			nextValue = iterator.next();
-			if (nextValue.isExpired() == false) {
-				return;
-			}
-		}
-		nextValue = null;
+	CacheValuesIterator(Iterator<? extends CacheObj<?, V>> iterator) {
+		this.iterator = iterator;
+		nextValue();
 	}
 
 	/**
@@ -56,6 +47,20 @@ public class CacheValuesIterator<V> implements Iterator<V> {
 	 */
 	@Override
 	public void remove() {
-		iterator.remove();
+//		iterator.remove();
+		throw new UnsupportedOperationException("Cache values Iterator is not support to modify.");
+	}
+	
+	/**
+	 * 下一个值，当不存在则下一个值为null
+	 */
+	private void nextValue() {
+		while (iterator.hasNext()) {
+			nextValue = iterator.next();
+			if (nextValue.isExpired() == false) {
+				return;
+			}
+		}
+		nextValue = null;
 	}
 }
