@@ -17,7 +17,7 @@ import com.xiaoleilu.hutool.lang.Editor;
  *
  */
 public final class ArrayUtil {
-	
+
 	/** 数组中元素未找到的下标，值为-1 */
 	public static final int INDEX_NOT_FOUND = -1;
 
@@ -35,6 +35,19 @@ public final class ArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isEmpty(final T... array) {
 		return array == null || array.length == 0;
+	}
+	
+	/**
+	 * 数组是否为空<br>
+	 * 此方法会匹配单一对象，如果此对象为{@code null}则返回true<br>
+	 * 如果此对象为非数组，理解为此对象为数组的第一个元素，则返回false<br>
+	 * 如果此对象为数组对象，数组长度大于0情况下返回false，否则返回true
+	 * 
+	 * @param array 数组
+	 * @return 是否为空
+	 */
+	public static boolean isEmpty(final Object array) {
+		return array == null || (false == isArray(array)) || Array.getLength(array) > 0;
 	}
 
 	/**
@@ -117,6 +130,7 @@ public final class ArrayUtil {
 		return array == null || array.length == 0;
 	}
 
+	// ---------------------------------------------------------------------- isNotEmpty
 	/**
 	 * 数组是否为非空
 	 * 
@@ -127,6 +141,19 @@ public final class ArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> boolean isNotEmpty(final T... array) {
 		return (array != null && array.length != 0);
+	}
+	
+	/**
+	 * 数组是否为非空<br>
+	 * 此方法会匹配单一对象，如果此对象为{@code null}则返回false<br>
+	 * 如果此对象为非数组，理解为此对象为数组的第一个元素，则返回true<br>
+	 * 如果此对象为数组对象，数组长度大于0情况下返回true，否则返回false
+	 * 
+	 * @param array 数组
+	 * @return 是否为非空
+	 */
+	public static boolean isNotEmpty(final Object array) {
+		return false == isEmpty((Object)array);
 	}
 
 	/**
@@ -612,13 +639,13 @@ public final class ArrayUtil {
 	 */
 	public static <T> int indexOf(T[] array, Object value) {
 		for (int i = 0; i < array.length; i++) {
-			if(ObjectUtil.equal(value, array[i])){
+			if (ObjectUtil.equal(value, array[i])) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -629,16 +656,17 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int lastIndexOf(T[] array, Object value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(ObjectUtil.equal(value, array[i])){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (ObjectUtil.equal(value, array[i])) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
+	 * 
 	 * @param <T> 数组元素类型
 	 * 
 	 * @param array 数组
@@ -648,7 +676,7 @@ public final class ArrayUtil {
 	public static <T> boolean contains(T[] array, T value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -659,13 +687,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(long[] array, long value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -675,14 +703,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(long[] array, long value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -694,7 +722,7 @@ public final class ArrayUtil {
 	public static boolean contains(long[] array, long value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -705,13 +733,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(int[] array, int value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -721,14 +749,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(int[] array, int value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -740,7 +768,7 @@ public final class ArrayUtil {
 	public static boolean contains(int[] array, int value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -751,13 +779,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(short[] array, short value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -767,14 +795,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(short[] array, short value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -786,7 +814,7 @@ public final class ArrayUtil {
 	public static boolean contains(short[] array, short value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -797,13 +825,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(char[] array, char value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -813,14 +841,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(char[] array, char value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -832,7 +860,7 @@ public final class ArrayUtil {
 	public static boolean contains(char[] array, char value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -843,13 +871,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(byte[] array, byte value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -859,14 +887,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(byte[] array, byte value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -878,7 +906,7 @@ public final class ArrayUtil {
 	public static boolean contains(byte[] array, byte value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -889,13 +917,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(double[] array, double value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -905,14 +933,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(double[] array, double value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -924,7 +952,7 @@ public final class ArrayUtil {
 	public static boolean contains(double[] array, double value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -935,13 +963,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(float[] array, float value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -951,14 +979,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(float[] array, float value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -970,7 +998,7 @@ public final class ArrayUtil {
 	public static boolean contains(float[] array, float value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -981,13 +1009,13 @@ public final class ArrayUtil {
 	 */
 	public static int indexOf(boolean[] array, boolean value) {
 		for (int i = 0; i < array.length; i++) {
-			if(value == array[i]){
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -997,14 +1025,14 @@ public final class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(boolean[] array, boolean value) {
-		for (int i = array.length-1; i >= 0; i--) {
-			if(value == array[i]){
+		for (int i = array.length - 1; i >= 0; i--) {
+			if (value == array[i]) {
 				return i;
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素
 	 * 
@@ -1016,7 +1044,7 @@ public final class ArrayUtil {
 	public static boolean contains(boolean[] array, boolean value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	// ------------------------------------------------------------------- Wrap and unwrap
 	/**
 	 * 将原始类型数组包装为包装类型
@@ -1351,6 +1379,32 @@ public final class ArrayUtil {
 	}
 
 	/**
+	 * 获取数组长度<br>
+	 * 如果参数为{@code null}，返回0
+	 * 
+	 * <pre>
+	 * ArrayUtil.length(null)            = 0
+	 * ArrayUtil.length([])              = 0
+	 * ArrayUtil.length([null])          = 1
+	 * ArrayUtil.length([true, false])   = 2
+	 * ArrayUtil.length([1, 2, 3])       = 3
+	 * ArrayUtil.length(["a", "b", "c"]) = 3
+	 * </pre>
+	 * 
+	 * @param array 数组对象
+	 * @return 数组长度
+	 * @throws IllegalArgumentException 如果参数不为数组，抛出此异常
+	 * @since 3.0.8
+	 * @see Array#getLength(Object)
+	 */
+	public static int length(Object array) throws IllegalArgumentException {
+		if (null == array) {
+			return 0;
+		}
+		return Array.getLength(array);
+	}
+
+	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
 	 * @param <T> 被处理的集合
@@ -1642,5 +1696,300 @@ public final class ArrayUtil {
 		} else {
 			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
 		}
+	}
+
+	// ---------------------------------------------------------------------- remove
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * @param <T> 数组元素类型
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] remove(T[] array, int index) throws IllegalArgumentException {
+		return (T[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static long[] remove(long[] array, int index) throws IllegalArgumentException {
+		return (long[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static int[] remove(int[] array, int index) throws IllegalArgumentException {
+		return (int[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static short[] remove(short[] array, int index) throws IllegalArgumentException {
+		return (short[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static char[] remove(char[] array, int index) throws IllegalArgumentException {
+		return (char[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static byte[] remove(byte[] array, int index) throws IllegalArgumentException {
+		return (byte[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static double[] remove(double[] array, int index) throws IllegalArgumentException {
+		return (double[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static float[] remove(float[] array, int index) throws IllegalArgumentException {
+		return (float[]) remove((Object) array, index);
+	}
+	
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static boolean[] remove(boolean[] array, int index) throws IllegalArgumentException {
+		return (boolean[]) remove((Object) array, index);
+	}
+
+	/**
+	 * 移除数组中对应位置的元素<br>
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param index 位置，如果位置小于0或者大于长度，返回原数组
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static Object remove(Object array, int index) throws IllegalArgumentException {
+		if (null == array) {
+			return array;
+		}
+		int length = length(array);
+		if (index < 0 || index >= length) {
+			return array;
+		}
+
+		final Object result = Array.newInstance(array.getClass().getComponentType(), length - 1);
+		System.arraycopy(array, 0, result, 0, index);
+		if (index < length - 1) {
+			// 后半部分
+			System.arraycopy(array, index + 1, result, index, length - index - 1);
+		}
+
+		return result;
+	}
+	
+	// ---------------------------------------------------------------------- remove
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static <T> T[] removeEle(T[] array, T element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static long[] removeEle(long[] array, long element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static int[] removeEle(int[] array, int element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static short[] removeEle(short[] array, short element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static char[] removeEle(char[] array, char element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static byte[] removeEle(byte[] array, byte element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static double[] removeEle(double[] array, double element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static float[] removeEle(float[] array, float element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
+	}
+	
+	/**
+	 * 移除数组中指定的元素<br>
+	 * 只会移除匹配到的第一个元素
+	 * copy from commons-lang
+	 * 
+	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
+	 * @param element 要移除的元素
+	 * @return 去掉指定元素后的新数组或原数组
+	 * @throws IllegalArgumentException 参数对象不为数组对象
+	 * @since 3.0.8
+	 */
+	public static boolean[] removeEle(boolean[] array, boolean element) throws IllegalArgumentException {
+		return remove(array, indexOf(array, element));
 	}
 }

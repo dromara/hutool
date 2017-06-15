@@ -33,7 +33,8 @@ import com.xiaoleilu.hutool.lang.Matcher;
  */
 public final class CollectionUtil {
 
-	private CollectionUtil() {}
+	private CollectionUtil() {
+	}
 
 	/**
 	 * 两个集合的并集<br>
@@ -229,12 +230,12 @@ public final class CollectionUtil {
 	 * @return 连接后的字符串
 	 */
 	public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
-		if(null == iterable){
+		if (null == iterable) {
 			return null;
 		}
 		return join(iterable.iterator(), conjunction);
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
 	 * 
@@ -244,28 +245,28 @@ public final class CollectionUtil {
 	 * @return 连接后的字符串
 	 */
 	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
-		if(null == iterator){
+		if (null == iterator) {
 			return null;
 		}
-		
+
 		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		T item;
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			if (isFirst) {
 				isFirst = false;
 			} else {
 				sb.append(conjunction);
 			}
-			
+
 			item = iterator.next();
-			if(ArrayUtil.isArray(item)) {
+			if (ArrayUtil.isArray(item)) {
 				sb.append(ArrayUtil.join(ArrayUtil.wrap(item), conjunction));
-			} else if(item instanceof Iterable<?>) {
-				sb.append(join((Iterable<?>)item, conjunction));
-			} else if(item instanceof Iterator<?>) {
-				sb.append(join((Iterator<?>)item, conjunction));
-			} else{
+			} else if (item instanceof Iterable<?>) {
+				sb.append(join((Iterable<?>) item, conjunction));
+			} else if (item instanceof Iterator<?>) {
+				sb.append(join((Iterator<?>) item, conjunction));
+			} else {
 				sb.append(item);
 			}
 		}
@@ -426,7 +427,7 @@ public final class CollectionUtil {
 	public static <K, V> HashMap<K, V> newHashMap() {
 		return new HashMap<K, V>();
 	}
-	
+
 	/**
 	 * 新建一个HashMap
 	 * 
@@ -463,13 +464,13 @@ public final class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(T... ts) {
-		HashSet<T> set = new HashSet<T>(Math.max((int) (ts.length/.75f) + 1, 16));
+		HashSet<T> set = new HashSet<T>(Math.max((int) (ts.length / .75f) + 1, 16));
 		for (T t : ts) {
 			set.add(t);
 		}
 		return set;
 	}
-	
+
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -480,7 +481,7 @@ public final class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(boolean isSorted, T... ts) {
-		int initialCapacity = Math.max((int) (ts.length/.75f) + 1, 16);
+		int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
 		HashSet<T> set = isSorted ? new LinkedHashSet<T>(initialCapacity) : new HashSet<T>(initialCapacity);
 		for (T t : ts) {
 			set.add(t);
@@ -498,7 +499,7 @@ public final class CollectionUtil {
 	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
 		return new HashSet<T>(collection);
 	}
-	
+
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -537,7 +538,7 @@ public final class CollectionUtil {
 	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
 		return new ArrayList<T>(collection);
 	}
-	
+
 	/**
 	 * 新建一个CopyOnWriteArrayList
 	 * 
@@ -548,7 +549,7 @@ public final class CollectionUtil {
 	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
 		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<T>(collection));
 	}
-	
+
 	/**
 	 * 去重集合
 	 * 
@@ -556,16 +557,16 @@ public final class CollectionUtil {
 	 * @param collection 集合
 	 * @return {@link ArrayList}
 	 */
-	public static <T> ArrayList<T> distinct(Collection<T> collection){
-		if(isEmpty(collection)){
+	public static <T> ArrayList<T> distinct(Collection<T> collection) {
+		if (isEmpty(collection)) {
 			return new ArrayList<>();
-		}else if(collection instanceof Set){
+		} else if (collection instanceof Set) {
 			return new ArrayList<>(collection);
-		}else{
+		} else {
 			return new ArrayList<>(new LinkedHashSet<>(collection));
 		}
 	}
-	
+
 	/**
 	 * 截取数组的部分
 	 * 
@@ -620,7 +621,7 @@ public final class CollectionUtil {
 
 		return sub(new ArrayList<T>(list), start, end);
 	}
-	
+
 	/**
 	 * 对集合按照指定长度分段，每一个段为单独的集合，返回这个集合的列表
 	 * 
@@ -629,12 +630,12 @@ public final class CollectionUtil {
 	 * @param size 每个段的长度
 	 * @return 分段列表
 	 */
-	public static <T> List<List<T>> split(Collection<T> collection, int size){
+	public static <T> List<List<T>> split(Collection<T> collection, int size) {
 		final List<List<T>> result = new ArrayList<>();
-		
+
 		ArrayList<T> subList = new ArrayList<>(size);
 		for (T t : collection) {
-			if(subList.size() > size){
+			if (subList.size() > size) {
 				result.add(subList);
 				subList = new ArrayList<>(size);
 			}
@@ -643,7 +644,7 @@ public final class CollectionUtil {
 		result.add(subList);
 		return result;
 	}
-	
+
 	/**
 	 * 过滤<br>
 	 * 过滤会改变原集合的内容
@@ -689,7 +690,7 @@ public final class CollectionUtil {
 		}
 		return map2;
 	}
-	
+
 	/**
 	 * 集合中匹配规则的数量
 	 * 
@@ -698,10 +699,10 @@ public final class CollectionUtil {
 	 * @param matcher 匹配器，为空则全部匹配
 	 * @return 匹配数量
 	 */
-	public static <T> int count(Iterable<T> iterable, Matcher<T> matcher){
+	public static <T> int count(Iterable<T> iterable, Matcher<T> matcher) {
 		int count = 0;
 		for (T t : iterable) {
-			if(null == matcher || matcher.match(t)){
+			if (null == matcher || matcher.match(t)) {
 				count++;
 			}
 		}
@@ -748,7 +749,7 @@ public final class CollectionUtil {
 	public static boolean isEmpty(Iterator<?> Iterator) {
 		return null == Iterator || false == Iterator.hasNext();
 	}
-	
+
 	/**
 	 * Enumeration是否为空
 	 * 
@@ -760,7 +761,6 @@ public final class CollectionUtil {
 	}
 
 	// ---------------------------------------------------------------------- isNotEmpty
-	
 
 	/**
 	 * 集合是否为非空
@@ -801,7 +801,7 @@ public final class CollectionUtil {
 	public static boolean isNotEmpty(Iterator<?> Iterator) {
 		return null != Iterator && Iterator.hasNext();
 	}
-	
+
 	/**
 	 * Enumeration是否为空
 	 * 
@@ -811,14 +811,15 @@ public final class CollectionUtil {
 	public static boolean isNotEmpty(Enumeration<?> enumeration) {
 		return null != enumeration && enumeration.hasMoreElements();
 	}
-	
+
 	/**
 	 * 是否包含{@code null}元素
+	 * 
 	 * @param iterable 被检查的Iterable对象
 	 * @return 是否包含{@code null}元素
 	 * @since 3.0.7
 	 */
-	public static <T> boolean hasNull(Iterable<?> iterable){
+	public static <T> boolean hasNull(Iterable<?> iterable) {
 		if (isNotEmpty(iterable)) {
 			for (Object element : iterable) {
 				if (null == element) {
@@ -828,9 +829,9 @@ public final class CollectionUtil {
 		}
 		return false;
 	}
-	
+
 	// ---------------------------------------------------------------------- zip
-	
+
 	/**
 	 * 映射键值（参考Python的zip()函数）<br>
 	 * 例如：<br>
@@ -849,7 +850,7 @@ public final class CollectionUtil {
 	public static Map<String, String> zip(String keys, String values, String delimiter, boolean isOrder) {
 		return ArrayUtil.zip(StrUtil.split(keys, delimiter), StrUtil.split(values, delimiter), isOrder);
 	}
-	
+
 	/**
 	 * 映射键值（参考Python的zip()函数），返回Map无序<br>
 	 * 例如：<br>
@@ -907,9 +908,74 @@ public final class CollectionUtil {
 	 * @return Map
 	 */
 	public static <K, V> HashMap<K, V> toMap(Collection<Entry<K, V>> entryCollection) {
-		HashMap<K, V> map = new HashMap<K, V>();
-		for (Entry<K, V> entry : entryCollection) {
-			map.put(entry.getKey(), entry.getValue());
+		final HashMap<K, V> map = new HashMap<K, V>();
+		if(isNotEmpty(entryCollection)){
+			for (Entry<K, V> entry : entryCollection) {
+				map.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 将数组转换为Map（HashMap），支持数组元素类型为：
+	 * 
+	 * <pre>
+	 * Map.Entry
+	 * 长度大于1的数组（取前两个值），如果不满足跳过此元素
+	 * Iterable 长度也必须大于1（取前两个值），如果不满足跳过此元素
+	 * Iterator 长度也必须大于1（取前两个值），如果不满足跳过此元素
+	 * </pre>
+	 * 
+	 * <pre>
+	 * Map<Object, Object> colorMap = CollectionUtil.toMap(new String[][] {{
+	 *     {"RED", "#FF0000"},
+	 *     {"GREEN", "#00FF00"},
+	 *     {"BLUE", "#0000FF"}});
+	 * </pre>
+	 * 参考：commons-lang
+	 * 
+	 * @param array 数组。元素类型为Map.Entry、数组、Iterable、Iterator
+	 * @return {@link HashMap}
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings("rawtypes")
+	public static HashMap<Object, Object> toMap(Object[] array) {
+		if (array == null) {
+			return null;
+		}
+		final HashMap<Object, Object> map = new HashMap<>((int) (array.length * 1.5));
+		for (int i = 0; i < array.length; i++) {
+			Object object = array[i];
+			if (object instanceof Map.Entry) {
+				Map.Entry entry = (Map.Entry) object;
+				map.put(entry.getKey(), entry.getValue());
+			} else if (object instanceof Object[]) {
+				final Object[] entry = (Object[]) object;
+				if (entry.length > 1) {
+					map.put(entry[0], entry[1]);
+				}
+			} else if (object instanceof Iterable) {
+				Iterator iter = ((Iterable) object).iterator();
+				if (iter.hasNext()) {
+					final Object key = iter.next();
+					if (iter.hasNext()) {
+						final Object value = iter.next();
+						map.put(key, value);
+					}
+				}
+			} else if (object instanceof Iterator) {
+				Iterator iter = ((Iterator) object);
+				if (iter.hasNext()) {
+					final Object key = iter.next();
+					if (iter.hasNext()) {
+						final Object value = iter.next();
+						map.put(key, value);
+					}
+				}
+			} else {
+				throw new IllegalArgumentException(StrUtil.format("Array element {}, '{}', is not type of Map.Entry or Array or Iterable or Iterator", i, object));
+			}
 		}
 		return map;
 	}
@@ -945,7 +1011,8 @@ public final class CollectionUtil {
 	}
 
 	/**
-	 * Iterator转换为Enumeration <p>
+	 * Iterator转换为Enumeration
+	 * <p>
 	 * Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
 	 * 
 	 * @param <E> 集合元素类型
@@ -967,7 +1034,8 @@ public final class CollectionUtil {
 	}
 
 	/**
-	 * Enumeration转换为Iterator<p>
+	 * Enumeration转换为Iterator
+	 * <p>
 	 * Adapt the specified <code>Enumeration</code> to the <code>Iterator</code> interface
 	 * 
 	 * @param <E> 集合元素类型
@@ -992,7 +1060,7 @@ public final class CollectionUtil {
 			}
 		};
 	}
-	
+
 	/**
 	 * 加入全部
 	 * 
@@ -1002,14 +1070,14 @@ public final class CollectionUtil {
 	 * @return 原集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Iterator<T> iterator) {
-		if(null != collection && null != iterator){
+		if (null != collection && null != iterator) {
 			while (iterator.hasNext()) {
 				collection.add(iterator.next());
 			}
 		}
 		return collection;
 	}
-	
+
 	/**
 	 * 加入全部
 	 * 
@@ -1031,14 +1099,14 @@ public final class CollectionUtil {
 	 * @return 原集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Enumeration<T> enumeration) {
-		if(null != collection && null != enumeration){
+		if (null != collection && null != enumeration) {
 			while (enumeration.hasMoreElements()) {
 				collection.add(enumeration.nextElement());
 			}
 		}
 		return collection;
 	}
-	
+
 	/**
 	 * 将另一个列表中的元素加入到列表中，如果列表中已经存在此元素则忽略之
 	 * 
@@ -1047,15 +1115,15 @@ public final class CollectionUtil {
 	 * @param otherList 其它列表
 	 * @return 此列表
 	 */
-	public static <T> List<T> addAllIfNotContains(List<T> list, List<T> otherList){
+	public static <T> List<T> addAllIfNotContains(List<T> list, List<T> otherList) {
 		for (T t : otherList) {
-			if(false == list.contains(t)){
+			if (false == list.contains(t)) {
 				list.add(t);
 			}
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 获取集合的第一个元素
 	 * 
@@ -1064,13 +1132,13 @@ public final class CollectionUtil {
 	 * @return 第一个元素
 	 * @since 3.0.1
 	 */
-	public static <T> T getFirst(Iterable<T> iterable){
-		if(null != iterable){
+	public static <T> T getFirst(Iterable<T> iterable) {
+		if (null != iterable) {
 			return getFirst(iterable.iterator());
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获取集合的第一个元素
 	 * 
@@ -1079,28 +1147,29 @@ public final class CollectionUtil {
 	 * @return 第一个元素
 	 * @since 3.0.1
 	 */
-	public static <T> T getFirst(Iterator<T> iterator){
-		if(null != iterator && iterator.hasNext()){
+	public static <T> T getFirst(Iterator<T> iterator) {
+		if (null != iterator && iterator.hasNext()) {
 			return iterator.next();
 		}
 		return null;
 	}
-	
-	//------------------------------------------------------------------------------------------------- sort
+
+	// ------------------------------------------------------------------------------------------------- sort
 	/**
 	 * 针对List排序，排序会修改原List
+	 * 
 	 * @param list 被排序的List
 	 * @param c {@link Comparator}
 	 * @return 原list
 	 * @see Collections#sort(List, Comparator)
 	 */
-	public <T> List<T> sort(List<T> list, Comparator<? super T> c){
+	public <T> List<T> sort(List<T> list, Comparator<? super T> c) {
 		Collections.sort(list, c);
 		return list;
 	}
-	
-	//------------------------------------------------------------------------------------------------- forEach
-	
+
+	// ------------------------------------------------------------------------------------------------- forEach
+
 	/**
 	 * 循环遍历 {@link Iterator}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
 	 * 
@@ -1108,14 +1177,14 @@ public final class CollectionUtil {
 	 * @param iterator {@link Iterator}
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(Iterator<T> iterator, Consumer<T> consumer){
+	public static <T> void forEach(Iterator<T> iterator, Consumer<T> consumer) {
 		int index = 0;
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			consumer.accept(iterator.next(), index);
-			index ++;
+			index++;
 		}
 	}
-	
+
 	/**
 	 * 循环遍历 {@link Enumeration}，使用{@link Consumer} 接受遍历的每条数据，并针对每条数据做处理
 	 * 
@@ -1123,14 +1192,14 @@ public final class CollectionUtil {
 	 * @param enumeration {@link Enumeration}
 	 * @param consumer {@link Consumer} 遍历的每条数据处理器
 	 */
-	public static <T> void forEach(Enumeration<T> enumeration, Consumer<T> consumer){
+	public static <T> void forEach(Enumeration<T> enumeration, Consumer<T> consumer) {
 		int index = 0;
-		while(enumeration.hasMoreElements()){
+		while (enumeration.hasMoreElements()) {
 			consumer.accept(enumeration.nextElement(), index);
-			index ++;
+			index++;
 		}
 	}
-	
+
 	/**
 	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理
 	 * 
@@ -1139,39 +1208,43 @@ public final class CollectionUtil {
 	 * @param map {@link Map}
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
 	 */
-	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer){
+	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
 		int index = 0;
-		for(Entry<K, V> entry : map.entrySet()){
+		for (Entry<K, V> entry : map.entrySet()) {
 			kvConsumer.accept(entry.getKey(), entry.getValue(), index);
 			index++;
 		}
 	}
-	
+
 	/**
 	 * 针对一个参数做相应的操作
+	 * 
 	 * @author Looly
 	 *
-	 *@param <T> 处理参数类型
+	 * @param <T> 处理参数类型
 	 */
-	public static interface Consumer<T>{
+	public static interface Consumer<T> {
 		/**
 		 * 接受并处理一个参数
+		 * 
 		 * @param value 参数值
 		 * @param index 参数在集合中的索引
 		 */
 		void accept(T value, int index);
 	}
-	
+
 	/**
 	 * 针对两个参数做相应的操作，例如Map中的KEY和VALUE
+	 * 
 	 * @author Looly
 	 *
 	 * @param <K> KEY类型
 	 * @param <V> VALUE类型
 	 */
-	public static interface KVConsumer<K, V>{
+	public static interface KVConsumer<K, V> {
 		/**
 		 * 接受并处理一对参数
+		 * 
 		 * @param key 键
 		 * @param value 值
 		 * @param index 参数在集合中的索引

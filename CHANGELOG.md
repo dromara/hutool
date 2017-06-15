@@ -3,6 +3,9 @@
 ## 3.0.8
 
 ### 新特性
+* ArrayUtil增加remove和removeEle方法（此方法来自commons-lang，按照用户留言要求添加）
+* 增加ArrayIterator
+* Tuple对象实现Iterable接口，支持forEach循环
 
 ### Bug修复
 

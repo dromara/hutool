@@ -18,9 +18,11 @@ public class ArrayUtilTest {
 	@Test
 	public void isEmptyTest(){
 		int[] a = {};
-		int[] b = null;
 		Assert.assertTrue(ArrayUtil.isEmpty(a));
+		int[] b = null;
 		Assert.assertTrue(ArrayUtil.isEmpty(b));
+		Object c = null;
+		Assert.assertTrue(ArrayUtil.isEmpty(c));
 	}
 	
 	@Test
