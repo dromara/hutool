@@ -178,7 +178,7 @@ public final class HexUtil {
 	}
 	
 	/**
-	 * 将十六进制字符数组转换为字符串
+	 * 将十六进制字符串解码为byte[]
 	 *
 	 * @param hexStr 十六进制String
 	 * @return byte[]
