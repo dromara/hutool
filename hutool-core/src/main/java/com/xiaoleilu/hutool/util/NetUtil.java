@@ -22,7 +22,7 @@ import com.xiaoleilu.hutool.lang.Validator;
  * @author xiaoleilu
  *
  */
-public final class NetUtil {
+public class NetUtil {
 	public final static String LOCAL_IP = "127.0.0.1";
 
 	private NetUtil() {

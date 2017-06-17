@@ -20,7 +20,7 @@ import com.xiaoleilu.hutool.io.IoUtil;
  * @author Looly
  *
  */
-public final class ObjectUtil {
+public class ObjectUtil {
 
 	private ObjectUtil() {
 	}

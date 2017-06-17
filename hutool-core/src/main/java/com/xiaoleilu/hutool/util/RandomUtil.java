@@ -14,7 +14,7 @@ import java.util.UUID;
  * @author xiaoleilu
  *
  */
-public final class RandomUtil {
+public class RandomUtil {
 	
 	private RandomUtil() {}
 

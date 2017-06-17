@@ -16,7 +16,7 @@ import com.xiaoleilu.hutool.lang.Editor;
  * @author Looly
  *
  */
-public final class ArrayUtil {
+public class ArrayUtil {
 
 	/** 数组中元素未找到的下标，值为-1 */
 	public static final int INDEX_NOT_FOUND = -1;

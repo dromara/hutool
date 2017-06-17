@@ -19,7 +19,7 @@ import com.xiaoleilu.hutool.lang.Validator;
  * 
  * @author xiaoleilu
  */
-public final class ReUtil {
+public class ReUtil {
 	
 	/** 正则表达式匹配中文汉字 */
 	public final static String RE_CHINESE = "[\u4E00-\u9FFF]";

@@ -18,7 +18,7 @@ import com.xiaoleilu.hutool.lang.StrSpliter;
  * @author xiaoleilu
  *
  */
-public final class StrUtil {
+public class StrUtil {
 
 	public static final char C_SPACE = ' ';
 	public static final char C_TAB = '	';

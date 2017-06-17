@@ -18,7 +18,7 @@ import com.xiaoleilu.hutool.lang.Assert;
  * @author xiaoleilu
  * 
  */
-public final class URLUtil {
+public class URLUtil {
 	
 	private URLUtil() {}
 	

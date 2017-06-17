@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
  * @author Looly
  *
  */
-public final class HexUtil {
+public class HexUtil {
 	
 	private HexUtil() {}
 

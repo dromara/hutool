@@ -42,7 +42,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 
  * @author xiaoleilu
  */
-public final class HttpUtil {
+public class HttpUtil {
 
 	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
 	

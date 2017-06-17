@@ -29,7 +29,7 @@ import com.xiaoleilu.hutool.io.IORuntimeException;
  * 参考：http://blog.csdn.net/zhangzhikaixinya/article/details/8459400
  * @author Looly
  */
-public final class ImageUtil {
+public class ImageUtil {
 
 	public static final String IMAGE_TYPE_GIF = "gif";// 图形交换格式
 	public static final String IMAGE_TYPE_JPG = "jpg";// 联合照片专家组

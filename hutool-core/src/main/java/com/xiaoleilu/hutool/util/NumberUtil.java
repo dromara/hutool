@@ -33,7 +33,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * @author Looly
  *
  */
-public final class NumberUtil {
+public class NumberUtil {
 
 	/** 默认除法运算精度 */
 	private static final int DEFAUT_DIV_SCALE = 10;

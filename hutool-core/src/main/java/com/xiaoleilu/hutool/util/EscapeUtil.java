@@ -7,7 +7,7 @@ package com.xiaoleilu.hutool.util;
  * 
  * @author xiaoleilu
  */
-public final class EscapeUtil {
+public class EscapeUtil {
 	
 	private EscapeUtil() {}
 	

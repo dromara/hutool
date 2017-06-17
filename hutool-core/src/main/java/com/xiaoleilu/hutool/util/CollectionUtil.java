@@ -33,7 +33,7 @@ import com.xiaoleilu.hutool.lang.Matcher;
  * @author xiaoleilu
  * 
  */
-public final class CollectionUtil {
+public class CollectionUtil {
 
 	private CollectionUtil() {
 	}

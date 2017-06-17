@@ -17,7 +17,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 
  * @author xiaoleilu
  */
-public final class DateUtil {
+public class DateUtil {
 	
 	private DateUtil() {}
 	

@@ -28,7 +28,7 @@ import com.xiaoleilu.hutool.io.IoUtil;
  * @author Looly
  *
  */
-public final class ZipUtil {
+public class ZipUtil {
 
 	private ZipUtil() {
 	}

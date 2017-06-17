@@ -30,7 +30,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  * @author Looly
  *
  */
-public final class BeanUtil {
+public class BeanUtil {
 	
 	private BeanUtil() {}
 	

@@ -34,7 +34,7 @@ import com.xiaoleilu.hutool.lang.Singleton;
  * @author seaside_hi, xiaoleilu
  *
  */
-public final class ClassUtil {
+public class ClassUtil {
 	
 	private ClassUtil() {}
 	

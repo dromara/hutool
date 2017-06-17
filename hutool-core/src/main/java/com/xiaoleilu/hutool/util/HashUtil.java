@@ -6,7 +6,7 @@ package com.xiaoleilu.hutool.util;
  * 
  * @author Goodzzp,Looly
  */
-public final class HashUtil {
+public class HashUtil {
 	
 	private HashUtil(){}
 
