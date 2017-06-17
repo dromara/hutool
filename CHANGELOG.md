@@ -6,8 +6,13 @@
 * ArrayUtil增加remove和removeEle方法（此方法来自commons-lang，按照用户留言要求添加）
 * 增加ArrayIterator
 * Tuple对象实现Iterable接口，支持forEach循环
+* 增加ClassUtil.getResources方法
+* 增加StrSpliter
+* 增加EnumerationIterator、IteratorEnumeration
 
 ### Bug修复
+* 修复CollectionUtil.newHashSet方法参数失效的bug
+* 修复DbUtil.getTables方法
 
 -------------------------------------------------------------------------------------------------------------
 

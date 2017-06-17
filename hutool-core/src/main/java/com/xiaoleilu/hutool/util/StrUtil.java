@@ -5,12 +5,12 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.lang.StrFormatter;
+import com.xiaoleilu.hutool.lang.StrSpliter;
 
 /**
  * 字符串工具类
@@ -826,8 +826,34 @@ public final class StrUtil {
 	 * @return 切分后的集合
 	 */
 	public static String[] splitToArray(CharSequence str, char separator, int limit) {
-		List<String> result = split(str, separator, limit);
+		final List<String> result = split(str, separator, limit);
 		return result.toArray(new String[result.size()]);
+	}
+	
+	/**
+	 * 切分字符串，不去除切分后每个元素两边的空白符，不去除空白项
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数
+	 * @return 切分后的集合
+	 */
+	public static List<String> split(CharSequence str, char separator, int limit) {
+		return split(str, separator, limit, false, false);
+	}
+	
+	/**
+	 * 切分字符串，不限制分片数量
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> split(CharSequence str, char separator, boolean isTrim, boolean ignoreEmpty) {
+		return split(str, separator, 0, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -836,39 +862,13 @@ public final class StrUtil {
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
 	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
 	 * @return 切分后的集合
+	 * @since 3.0.8
 	 */
-	public static List<String> split(CharSequence str, char separator, int limit) {
-		if (str == null) {
-			return null;
-		}
-		List<String> list = new ArrayList<String>(limit > 0 ? 16 : limit);
-		if (limit == 1) {
-			list.add(str.toString());
-			return list;
-		}
-
-		boolean isNotEnd = true; // 未结束切分的标志
-		int strLen = str.length();
-		StringBuilder sb = new StringBuilder(strLen);
-		char c;
-		for (int i = 0; i < strLen; i++) {
-			c = str.charAt(i);
-			if (isNotEnd && c == separator) {
-				list.add(sb.toString());
-				// 清空StringBuilder
-				sb.delete(0, sb.length());
-
-				// 当达到切分上限-1的量时，将所剩字符全部作为最后一个串
-				if (limit > 0 && list.size() == limit - 1) {
-					isNotEnd = false;
-				}
-			} else {
-				sb.append(c);
-			}
-		}
-		list.add(sb.toString());// 加入尾串
-		return list;
+	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+		return StrSpliter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
@@ -881,7 +881,7 @@ public final class StrUtil {
 	 */
 	public static String[] split(CharSequence str, CharSequence delimiter) {
 		if (str == null) {
-			return null;
+			return new String[]{};
 		}
 
 		final String str2 = str.toString();
@@ -891,9 +891,9 @@ public final class StrUtil {
 
 		int dellen = delimiter.length(); // del length
 		int maxparts = (str.length() / dellen) + 2; // one more for the last
-		int[] positions = new int[maxparts];
+		int[] positions = new int[maxparts];//记录分隔符位置
 
-		int i, j = 0;
+		int i, j = 0;//i为分隔符开始的位置，j为分隔符结束位置（下一个段开始的位置）
 		int count = 0;
 		positions[0] = -dellen;
 		final String delimiter2 = delimiter.toString();

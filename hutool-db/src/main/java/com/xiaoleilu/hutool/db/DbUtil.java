@@ -30,10 +30,11 @@ import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
+import com.xiaoleilu.hutool.db.meta.TableType;
 import com.xiaoleilu.hutool.db.sql.Condition;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
-import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
@@ -215,19 +216,31 @@ public final class DbUtil {
 	 * @return 表名列表
 	 */
 	public static List<String> getTables(DataSource ds) {
+		return getTables(ds, TableType.TABLE);
+	}
+	
+	/**
+	 * 获得所有表名
+	 * 
+	 * @param ds 数据源
+	 * @param types 表类型
+	 * @return 表名列表
+	 */
+	public static List<String> getTables(DataSource ds, TableType... types) {
 		final List<String> tables = new ArrayList<String>();
 		Connection conn = null;
 		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
 			final DatabaseMetaData metaData = conn.getMetaData();
-			rs = metaData.getTables(conn.getCatalog(), null, null, new String[]{"TABLES"});
+			rs = metaData.getTables(conn.getCatalog(), null, null, toStrTypes(types));
 			if(rs == null) {
 				return null;
 			}
+			String table;
 			while(rs.next()) {
-				final String table = rs.getString("TABLE_NAME");
-				if(StrUtil.isBlank(table) == false) {
+				table = rs.getString("TABLE_NAME");
+				if(StrUtil.isNotBlank(table)) {
 					tables.add(table);
 				}
 			}
@@ -237,6 +250,17 @@ public final class DbUtil {
 			close(rs, conn);
 		}
 		return tables;
+	}
+	
+	private static String[] toStrTypes(TableType... tableTypes){
+		if(null == tableTypes){
+			return null;
+		}
+		String[] types = new String[tableTypes.length];
+		for(int i = 0; i < tableTypes.length; i++){
+			types[i] = tableTypes[i].value();
+		}
+		return types;
 	}
 	
 	/**

@@ -21,6 +21,7 @@ import java.util.Set;
 
 import com.xiaoleilu.hutool.convert.BasicType;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.lang.ClassScaner;
 import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Singleton;
@@ -480,13 +481,39 @@ public final class ClassUtil {
 	}
 	
 	/**
-	 * 获得资源的URL
+	 * 获得资源的URL<br>
+	 * 路径用/分隔，例如:
+	 * <pre>
+	 * config/a/db.config
+	 * spring/xml/test.xml
+	 * </pre>
 	 * 
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return 资源URL
 	 */
-	public static URL getResourceURL(String resource) {
+	public static URL getResourceURL(String resource) throws IORuntimeException{
 		return getResourceUrl(resource, null);
+	}
+	
+	/**
+	 * 获取指定路径下的资源列表<br>
+	 * 路径格式必须为目录格式,用/分隔，例如:
+	 * <pre>
+	 * config/a
+	 * spring/xml
+	 * </pre>
+	 * 
+	 * @param resource 资源路径
+	 * @return 资源列表
+	 */
+	public static List<URL> getResources(String resource){
+		final Enumeration<URL> resources;
+		try {
+			resources = getClassLoader().getResources(resource);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return CollectionUtil.newArrayList(resources);
 	}
 	
 	/**

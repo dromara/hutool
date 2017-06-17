@@ -20,6 +20,8 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.xiaoleilu.hutool.collection.EnumerationIterator;
+import com.xiaoleilu.hutool.collection.IteratorEnumeration;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
 import com.xiaoleilu.hutool.lang.Editor;
@@ -417,6 +419,7 @@ public final class CollectionUtil {
 		return currentAlaDatas;
 	}
 
+	//----------------------------------------------------------------------------------------------- new HashMap
 	/**
 	 * 新建一个HashMap
 	 * 
@@ -455,6 +458,7 @@ public final class CollectionUtil {
 		return newHashMap(size, false);
 	}
 
+	//----------------------------------------------------------------------------------------------- new HashSet
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -464,11 +468,7 @@ public final class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(T... ts) {
-		HashSet<T> set = new HashSet<T>(Math.max((int) (ts.length / .75f) + 1, 16));
-		for (T t : ts) {
-			set.add(t);
-		}
-		return set;
+		return newHashSet(false, ts);
 	}
 
 	/**
@@ -481,6 +481,9 @@ public final class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(boolean isSorted, T... ts) {
+		if(null == ts){
+			return isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
+		}
 		int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
 		HashSet<T> set = isSorted ? new LinkedHashSet<T>(initialCapacity) : new HashSet<T>(initialCapacity);
 		for (T t : ts) {
@@ -497,9 +500,9 @@ public final class CollectionUtil {
 	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
-		return new HashSet<T>(collection);
+		return newHashSet(false, collection);
 	}
-
+	
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -509,9 +512,50 @@ public final class CollectionUtil {
 	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<T> collection) {
-		return isSorted ? new LinkedHashSet<T>() : new HashSet<T>(collection);
+		return isSorted ? new LinkedHashSet<T>(collection) : new HashSet<T>(collection);
+	}
+	
+	/**
+	 * 新建一个HashSet
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回{@link HashSet}
+	 * @param iter {@link Iterator}
+	 * @return HashSet对象
+	 * @since 3.0.8
+	 */
+	public static <T> HashSet<T> newHashSet(boolean isSorted, Iterator<T> iter) {
+		if(null == iter){
+			return newHashSet(isSorted, (T[])null);
+		}
+		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
+		while(iter.hasNext()){
+			set.add(iter.next());
+		}
+		return set;
+	}
+	
+	/**
+	 * 新建一个HashSet
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isSorted 是否有序，有序返回 {@link LinkedHashSet}，否则返回{@link HashSet}
+	 * @param enumration {@link Enumeration}
+	 * @return HashSet对象
+	 * @since 3.0.8
+	 */
+	public static <T> HashSet<T> newHashSet(boolean isSorted, Enumeration<T> enumration) {
+		if(null == enumration){
+			return newHashSet(isSorted, (T[])null);
+		}
+		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
+		while(enumration.hasMoreElements()){
+			set.add(enumration.nextElement());
+		}
+		return set;
 	}
 
+	//----------------------------------------------------------------------------------------------- new ArrayList
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -521,6 +565,9 @@ public final class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
+		if(null == values){
+			return new ArrayList<>();
+		}
 		ArrayList<T> arrayList = new ArrayList<T>(values.length);
 		for (T t : values) {
 			arrayList.add(t);
@@ -536,7 +583,48 @@ public final class CollectionUtil {
 	 * @return ArrayList对象
 	 */
 	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
+		if(null == collection){
+			return new ArrayList<>();
+		}
 		return new ArrayList<T>(collection);
+	}
+	
+	/**
+	 * 新建一个ArrayList
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param iter {@link Iterator}
+	 * @return ArrayList对象
+	 * @since 3.0.8
+	 */
+	public static <T> ArrayList<T> newArrayList(Iterator<T> iter) {
+		final ArrayList<T> list = new ArrayList<>();
+		if(null == iter){
+			return list;
+		}
+		while(iter.hasNext()){
+			list.add(iter.next());
+		}
+		return list;
+	}
+	
+	/**
+	 * 新建一个ArrayList
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param enumration {@link Enumeration}
+	 * @return ArrayList对象
+	 * @since 3.0.8
+	 */
+	public static <T> ArrayList<T> newArrayList(Enumeration<T> enumration) {
+		final ArrayList<T> list = new ArrayList<>();
+		if(null == enumration){
+			return list;
+		}
+		while(enumration.hasMoreElements()){
+			list.add(enumration.nextElement());
+		}
+		return list;
 	}
 
 	/**
@@ -1019,18 +1107,8 @@ public final class CollectionUtil {
 	 * @param iter {@link Iterator}
 	 * @return {@link Enumeration}
 	 */
-	public static <E> Enumeration<E> asEnumeration(final Iterator<E> iter) {
-		return new Enumeration<E>(){
-			@Override
-			public boolean hasMoreElements() {
-				return iter.hasNext();
-			}
-
-			@Override
-			public E nextElement() {
-				return iter.next();
-			}
-		};
+	public static <E> Enumeration<E> asEnumeration(Iterator<E> iter) {
+		return new IteratorEnumeration<E>(iter);
 	}
 
 	/**
@@ -1042,25 +1120,23 @@ public final class CollectionUtil {
 	 * @param e {@link Enumeration}
 	 * @return {@link Iterator}
 	 */
-	public static <E> Iterator<E> asIterator(final Enumeration<E> e) {
-		return new Iterator<E>(){
-			@Override
-			public boolean hasNext() {
-				return e.hasMoreElements();
-			}
-
-			@Override
-			public E next() {
-				return e.nextElement();
-			}
-
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-		};
+	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
+		return new EnumerationIterator<E>(e);
 	}
-
+	
+	/**
+	 * {@link Iterator} 转为 {@link Iterable}
+	 * @param iter {@link Iterator}
+	 * @return {@link Iterable}
+	 */
+	public static <E> Iterable<E> asIterable(final Iterator<E> iter){
+		return new Iterable<E>(){
+			@Override
+			public Iterator<E> iterator() {
+				return iter;
+			}};
+	}
+	
 	/**
 	 * 加入全部
 	 * 

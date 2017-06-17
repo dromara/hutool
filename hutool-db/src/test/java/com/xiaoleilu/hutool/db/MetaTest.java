@@ -1,4 +1,6 @@
 package com.xiaoleilu.hutool.db;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.junit.Assert;
@@ -14,10 +16,17 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
  *
  */
 public class MetaTest {
+	DataSource ds = DSFactory.get();
+	
+	@Test
+	public void getTablesTest(){
+		List<String> tables = DbUtil.getTables(ds);
+		Assert.assertEquals("user", tables.get(1));
+	}
 	
 	@Test
 	public void getTableMetaTest(){
-		DataSource ds = DSFactory.get();
+		
 		Table table = DbUtil.getTableMeta(ds, "user");
 		Assert.assertEquals(CollectionUtil.newHashSet("id"), table.getPkNames());
 	}

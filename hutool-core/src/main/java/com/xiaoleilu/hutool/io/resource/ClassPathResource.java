@@ -9,7 +9,7 @@ import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * ClassPath资源访问类
+ * ClassPath单一资源访问类
  * 
  * @author Looly
  *
