@@ -9,10 +9,11 @@
 * 增加ClassUtil.getResources方法
 * 增加StrSpliter
 * 增加EnumerationIterator、IteratorEnumeration
+* DateUtil增加betweenMonth和betweenYear
 
 ### Bug修复
 * 修复CollectionUtil.newHashSet方法参数失效的bug
-* 修复DbUtil.getTables方法
+* 修复DbUtil.getTables方法获取为空问题（感谢@【天津】〓下页）
 
 -------------------------------------------------------------------------------------------------------------
 
