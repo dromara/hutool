@@ -59,7 +59,6 @@ public class SimpleCache<K, V> {
 	 * 移除缓存
 	 * 
 	 * @param key 键
-	 * @param flags 标识
 	 * @return 移除的值
 	 */
 	public V remove(K key) {
