@@ -44,7 +44,8 @@ public class ReUtil {
 			return null;
 		}
 		
-		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return get(pattern, content, groupIndex);
 	}
 	
@@ -118,7 +119,8 @@ public class ReUtil {
 			return null;
 		}
 		
-		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return extractMulti(pattern, content, template);
 	}
 	
@@ -174,7 +176,8 @@ public class ReUtil {
 			return null;
 		}
 		
-		final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return extractMultiAndDelPre(pattern, contentHolder, template);
 	}
 
@@ -190,7 +193,9 @@ public class ReUtil {
 			return content;
 		}
 		
-		return delFirst(Pattern.compile(regex, Pattern.DOTALL), content);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return delFirst(pattern, content);
 	}
 	
 	/**
@@ -220,7 +225,9 @@ public class ReUtil {
 			return content;
 		}
 		
-		return delAll(Pattern.compile(regex, Pattern.DOTALL), content);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return delAll(pattern, content);
 	}
 	
 	/**
@@ -250,7 +257,9 @@ public class ReUtil {
 			return content;
 		}
 		
-		Matcher matcher = Pattern.compile(regex, Pattern.DOTALL).matcher(content);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
 			return StrUtil.sub(content, matcher.end(), content.length());
 		}
@@ -339,7 +348,8 @@ public class ReUtil {
 			return 0;
 		}
 		
-		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return count(pattern, content);
 	}
 	
@@ -370,7 +380,7 @@ public class ReUtil {
 	 * @return 整数
 	 */
 	public static Integer getFirstNumber(String StringWithNumber) {
-		return Convert.toInt(get(Validator.NUMBERS, StringWithNumber, 0), null);
+		return Convert.toInt(get(PatternPool.NUMBERS, StringWithNumber, 0), null);
 	}
 	
 	/**
@@ -390,7 +400,9 @@ public class ReUtil {
 			return true;
 		}
 		
-		return Pattern.matches(regex, content);
+//		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
+		return isMatch(pattern, content);
 	}
 	
 	/**

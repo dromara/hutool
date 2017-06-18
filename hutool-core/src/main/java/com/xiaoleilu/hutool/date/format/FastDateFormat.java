@@ -59,7 +59,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例，使用默认地区
+	 * 获得 {@link FastDateFormat} 实例，使用默认地区<br>
+	 * 支持缓存
 	 * 
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @return {@link FastDateFormat}
@@ -70,7 +71,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 * 
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 时区{@link TimeZone}
@@ -82,7 +84,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param locale {@link Locale} 日期地理位置
@@ -94,7 +97,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 * 
 	 * @param pattern 使用{@link java.text.SimpleDateFormat} 相同的日期格式
 	 * @param timeZone 时区{@link TimeZone}
@@ -108,7 +112,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 
 	// -----------------------------------------------------------------------
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
 	 * @return 本地化 {@link FastDateFormat}
@@ -118,7 +123,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param locale {@link Locale} 日期地理位置
@@ -129,7 +135,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone 时区{@link TimeZone}
@@ -140,7 +147,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone 时区{@link TimeZone}
@@ -153,7 +161,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 
 	// -----------------------------------------------------------------------
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style time style: FULL, LONG, MEDIUM, or SHORT
 	 * @return 本地化 {@link FastDateFormat}
@@ -163,7 +172,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style time style: FULL, LONG, MEDIUM, or SHORT
 	 * @param locale {@link Locale} 日期地理位置
@@ -174,7 +184,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style time style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone optional time zone, overrides time zone of formatted time
@@ -185,7 +196,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param style time style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeZone optional time zone, overrides time zone of formatted time
@@ -198,7 +210,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 
 	// -----------------------------------------------------------------------
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
@@ -209,7 +222,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
@@ -221,7 +235,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT
@@ -233,7 +248,8 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
 	}
 
 	/**
-	 * 获得 {@link FastDateFormat} 实例
+	 * 获得 {@link FastDateFormat} 实例<br>
+	 * 支持缓存
 	 *
 	 * @param dateStyle date style: FULL, LONG, MEDIUM, or SHORT
 	 * @param timeStyle time style: FULL, LONG, MEDIUM, or SHORT

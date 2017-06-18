@@ -7,9 +7,11 @@
 * 增加ArrayIterator
 * Tuple对象实现Iterable接口，支持forEach循环
 * 增加ClassUtil.getResources方法
-* 增加StrSpliter
+* 增加StrSpliter（支持字符、字符串、正则分隔符），同时StrUtil.split方法实现也指向此类
 * 增加EnumerationIterator、IteratorEnumeration
 * DateUtil增加betweenMonth和betweenYear
+* 增加SimpleCache使用WeakHashMap简易缓存实现
+* 正则Pattern和FastDateFormat添加缓存支持
 
 ### Bug修复
 * 修复CollectionUtil.newHashSet方法参数失效的bug

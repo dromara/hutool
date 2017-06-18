@@ -2,7 +2,10 @@ package com.xiaoleilu.hutool.lang;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -13,6 +16,32 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class StrSpliter {
 	
 	//---------------------------------------------------------------------------------------------- Split by char
+	/**
+	 * 切分字符串路径，仅支持Unix分界符：/
+	 * 
+	 * @param str 被切分的字符串
+	 * @param limit 限制分片数
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> splitPath(String str, int limit){
+		return split(str, StrUtil.C_SLASH, limit, true, true);
+	}
+	
+	/**
+	 * 切分字符串
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> split(String str, char separator, boolean isTrim, boolean ignoreEmpty){
+		return split(str, separator, 0, isTrim, ignoreEmpty);
+	}
+	
 	/**
 	 * 切分字符串
 	 * 
@@ -61,8 +90,7 @@ public class StrSpliter {
 	 * @since 3.0.8
 	 */
 	public static String[] splitToArray(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty){
-		final List<String> result = split(str, separator, limit, isTrim, ignoreEmpty);
-		return result.toArray(new String[result.size()]);
+		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
 	}
 	
 	//---------------------------------------------------------------------------------------------- Split by String
@@ -84,6 +112,12 @@ public class StrSpliter {
 		}
 		if(limit == 1){
 			return addToList(new ArrayList<String>(1), str, isTrim, ignoreEmpty);
+		}
+		
+		if(StrUtil.isEmpty(separator)){//分隔符为空时按照空白符切分
+			return split(str, limit);
+		}else if(separator.length() == 1){//分隔符只有一个字符长度时按照单分隔符切分
+			return split(str, separator.charAt(0), limit, isTrim, ignoreEmpty);
 		}
 		
 		final ArrayList<String> list = new ArrayList<>();
@@ -108,6 +142,144 @@ public class StrSpliter {
 		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty);
 	}
 	
+	/**
+	 * 切分字符串为字符串数组
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static String[] splitToArray(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty){
+		return toArray(split(str, separator, limit, isTrim, ignoreEmpty));
+	}
+	
+	//---------------------------------------------------------------------------------------------- Split by Whitespace
+	
+	/**
+	 * 使用空白符切分字符串<br>
+	 * 切分后的字符串两边不包含空白符，空串货空白符串并不做为元素之一
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> split(String str, int limit){
+		if(StrUtil.isEmpty(str)){
+			return new ArrayList<String>(0);
+		}
+		if(limit == 1){
+			return addToList(new ArrayList<String>(1), str, true, true);
+		}
+		
+		final ArrayList<String> list = new ArrayList<>();
+		int len = str.length();
+		int start = 0;//切分后每个部分的起始
+		for(int i = 0; i < len; i++){
+			if(NumberUtil.isBlankChar(str.charAt(i))){
+				addToList(list, str.substring(start, i), true, true);
+				start = i+1;//i+1同时将start与i保持一致
+				
+				//检查是否超出范围（最大允许limit-1个，剩下一个留给末尾字符串）
+				if(limit > 0 && list.size() > limit-2){
+					break;
+				}
+			}
+		}
+		return addToList(list, str.substring(start, len), true, true);//收尾
+	}
+	
+	/**
+	 * 切分字符串为字符串数组
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static String[] splitToArray(String str, int limit){
+		return toArray(split(str, limit));
+	}
+	
+	//---------------------------------------------------------------------------------------------- Split by regex
+	/**
+	 * 通过正则切分字符串
+	 * @param str 字符串
+	 * @param separatorRegex 分隔符正则
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> splitByRegex(String str, String separatorRegex, int limit, boolean isTrim, boolean ignoreEmpty){
+		final Pattern pattern = PatternPool.get(separatorRegex);
+		return split(str, pattern, limit, isTrim, ignoreEmpty);
+	}
+	
+	/**
+	 * 通过正则切分字符串
+	 * @param str 字符串
+	 * @param separatorPattern 分隔符正则{@link Pattern}
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> split(String str, Pattern separatorPattern, int limit, boolean isTrim, boolean ignoreEmpty){
+		if(StrUtil.isEmpty(str)){
+			return new ArrayList<String>(0);
+		}
+		if(limit == 1){
+			return addToList(new ArrayList<String>(1), str, isTrim, ignoreEmpty);
+		}
+		
+		if(null == separatorPattern){//分隔符为空时按照空白符切分
+			return split(str, limit);
+		}
+		
+		final Matcher matcher = separatorPattern.matcher(str);
+		final ArrayList<String> list = new ArrayList<>();
+		int len = str.length();
+		int start = 0;
+		while(matcher.find()){
+			addToList(list, str.substring(start, matcher.start()), isTrim, ignoreEmpty);
+			start = matcher.end();
+			
+			//检查是否超出范围（最大允许limit-1个，剩下一个留给末尾字符串）
+			if(limit > 0 && list.size() > limit-2){
+				break;
+			}
+		}
+		return addToList(list, str.substring(start, len), isTrim, ignoreEmpty);
+	}
+	
+	/**
+	 * 通过正则切分字符串为字符串数组
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separatorPattern 分隔符正则{@link Pattern}
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static String[] splitToArray(String str, Pattern separatorPattern, int limit, boolean isTrim, boolean ignoreEmpty){
+		return toArray(split(str, separatorPattern, limit, isTrim, ignoreEmpty));
+	}
+	
 	//---------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 将字符串加入List中
@@ -126,6 +298,15 @@ public class StrSpliter {
 			list.add(part);
 		}
 		return list;
+	}
+	
+	/**
+	 * List转Array
+	 * @param list List
+	 * @return Array
+	 */
+	private static String[] toArray(List<String> list){
+		return list.toArray(new String[list.size()]);
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method end
 }
