@@ -274,6 +274,34 @@ public class StrSpliter {
 		return toArray(split(str, separatorPattern, limit, isTrim, ignoreEmpty));
 	}
 	
+	//---------------------------------------------------------------------------------------------- Split by length
+	
+	/**
+	 * 根据给定长度，将给定字符串截取为多个部分
+	 * 
+	 * @param str 字符串
+	 * @param len 每一个小节的长度
+	 * @return 截取后的字符串数组
+	 */
+	public static String[] splitByLenth(String str, int len) {
+		int partCount = str.length() / len;
+		int lastPartCount = str.length() % len;
+		int fixPart = 0;
+		if (lastPartCount != 0) {
+			fixPart = 1;
+		}
+
+		final String[] strs = new String[partCount + fixPart];
+		for (int i = 0; i < partCount + fixPart; i++) {
+			if (i == partCount + fixPart - 1 && lastPartCount != 0) {
+				strs[i] = str.substring(i * len, i * len + lastPartCount);
+			} else {
+				strs[i] = str.substring(i * len, i * len + len);
+			}
+		}
+		return strs;
+	}
+	
 	//---------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 将字符串加入List中

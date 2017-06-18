@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -800,8 +801,7 @@ public class StrUtil {
 	 * @return 切分后的集合
 	 */
 	public static String[] splitToArray(CharSequence str, char separator) {
-		List<String> result = split(str, separator);
-		return result.toArray(new String[result.size()]);
+		return splitToArray(str, separator, 0);
 	}
 
 	/**
@@ -826,8 +826,10 @@ public class StrUtil {
 	 * @return 切分后的集合
 	 */
 	public static String[] splitToArray(CharSequence str, char separator, int limit) {
-		final List<String> result = split(str, separator, limit);
-		return result.toArray(new String[result.size()]);
+		if(null == str){
+			return new String[]{};
+		}
+		return StrSpliter.splitToArray(str.toString(), separator, limit, false, false);
 	}
 	
 	/**
@@ -868,6 +870,9 @@ public class StrUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+		if(null == str){
+			return new ArrayList<>(0);
+		}
 		return StrSpliter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
 	}
 
@@ -888,33 +893,18 @@ public class StrUtil {
 	}
 
 	/**
-	 * 拆分字符串
-	 */
-	/**
 	 * 根据给定长度，将给定字符串截取为多个部分
 	 * 
 	 * @param str 字符串
 	 * @param len 每一个小节的长度
 	 * @return 截取后的字符串数组
+	 * @see StrSpliter#splitByLenth(String, int)
 	 */
 	public static String[] split(CharSequence str, int len) {
-		int partCount = str.length() / len;
-		int lastPartCount = str.length() % len;
-		int fixPart = 0;
-		if (lastPartCount != 0) {
-			fixPart = 1;
+		if(null == str){
+			return new String[]{};
 		}
-
-		final String str2 = str.toString();
-		final String[] strs = new String[partCount + fixPart];
-		for (int i = 0; i < partCount + fixPart; i++) {
-			if (i == partCount + fixPart - 1 && lastPartCount != 0) {
-				strs[i] = str2.substring(i * len, i * len + lastPartCount);
-			} else {
-				strs[i] = str2.substring(i * len, i * len + len);
-			}
-		}
-		return strs;
+		return StrSpliter.splitByLenth(str.toString(), len);
 	}
 
 	/**
