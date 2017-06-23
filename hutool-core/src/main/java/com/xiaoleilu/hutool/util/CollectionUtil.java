@@ -1230,13 +1230,16 @@ public class CollectionUtil {
 	 * 
 	 * @param collection 被加入的集合
 	 * @param value 对象，可能为Iterator、Iterable、Enumeration、Array
-	 * @param elementType 元素类型
+	 * @param elementType 元素类型，为空时，使用Object类型来接纳所有类型
 	 * @return 被加入集合
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Collection<T> addAll(Collection<T> collection, Object value, Class<?> elementType) {
 		if (null == collection || null == value) {
 			return collection;
+		}
+		if(null == elementType){//元素类型为空时，使用Object类型来接纳所有类型
+			elementType = Object.class;
 		}
 
 		final ConverterRegistry convert = ConverterRegistry.getInstance();

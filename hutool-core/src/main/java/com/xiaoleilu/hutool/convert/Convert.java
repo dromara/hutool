@@ -516,14 +516,15 @@ public final class Convert {
 
 	// --------------------------------------------------------------------- hex
 	/**
-	 * 字符串转换成十六进制字符串
+	 * 字符串转换成十六进制字符串，结果为小写
 	 * 
 	 * @param str 待转换的ASCII字符串
 	 * @param charset 编码
 	 * @return 16进制字符串
+	 * @see HexUtil#encodeHexStr(String, Charset)
 	 */
 	public static String toHex(String str, Charset charset) {
-		return HexUtil.encodeHexStr(str.getBytes(charset));
+		return HexUtil.encodeHexStr(str, charset);
 	}
 
 	/**
@@ -531,6 +532,7 @@ public final class Convert {
 	 * 
 	 * @param bytes 被转换的byte数组
 	 * @return 转换后的值
+	 * @see HexUtil#encodeHexStr(byte[])
 	 */
 	public static String toHex(byte[] bytes) {
 		return HexUtil.encodeHexStr(bytes);
@@ -541,6 +543,7 @@ public final class Convert {
 	 * 
 	 * @param src Byte字符串，每个Byte之间没有分隔符
 	 * @return byte[]
+	 * @see HexUtil#decodeHex(char[])
 	 */
 	public static byte[] hexToBytes(String src) {
 		return HexUtil.decodeHex(src.toCharArray());
@@ -552,6 +555,7 @@ public final class Convert {
 	 * @param hexStr Byte字符串(Byte之间无分隔符 如:[616C6B])
 	 * @param charset 编码 {@link Charset}
 	 * @return 对应的字符串
+	 * @see HexUtil#decodeHexStr(String, Charset)
 	 */
 	public static String hexStrToStr(String hexStr, Charset charset) {
 		return HexUtil.decodeHexStr(hexStr, charset);
@@ -607,6 +611,7 @@ public final class Convert {
 	 * @param sourceCharset 原字符集
 	 * @param destCharset 目标字符集
 	 * @return 转换后的字符串
+	 * @see CharsetUtil#convert(String, String, String)
 	 */
 	public static String convertCharset(String str, String sourceCharset, String destCharset) {
 		if (StrUtil.hasBlank(str, sourceCharset, destCharset)) {

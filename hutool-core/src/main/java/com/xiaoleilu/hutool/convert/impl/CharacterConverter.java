@@ -17,11 +17,7 @@ public class CharacterConverter extends AbstractConverter<Character>{
 		}else{
 			final String valueStr = convertToStr(value);
 			if (StrUtil.isNotBlank(valueStr)) {
-				try {
-					return Character.valueOf(valueStr.charAt(0));
-				} catch (Exception e) {
-					//Ignore Exception
-				}
+				return Character.valueOf(valueStr.charAt(0));
 			}
 		}
 		return null;
