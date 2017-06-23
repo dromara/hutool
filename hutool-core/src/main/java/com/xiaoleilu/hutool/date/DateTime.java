@@ -478,6 +478,23 @@ public class DateTime extends Date {
 	}
 	
 	/**
+	 * 当前日期是否在日期指定范围内<br>
+	 * 起始日期和结束日期可以互换
+	 * 
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @return 是否在范围内
+	 * @since 3.0.8
+	 */
+	public boolean isIn(Date beginDate, Date endDate){
+		long beginMills = beginDate.getTime();
+		long endMills = endDate.getTime();
+		long thisMills = this.getTime();
+		
+		return thisMills >= Math.min(beginMills, endMills) && thisMills <= Math.max(beginMills, endMills);
+	}
+	
+	/**
 	 * 对象是否可变<br>
 	 * 如果为不可变对象，以下方法将返回新方法：
 	 * <ul>

@@ -7,9 +7,11 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.json.test.bean.Seq;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
 import com.xiaoleilu.hutool.json.test.bean.UserB;
 import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * JSONObject单元测试
@@ -59,6 +61,20 @@ public class JSONObjectTest {
 		
 		TestBean bean = json.toBean(TestBean.class);
 		Console.log(bean);
+	}
+	
+	@Test
+	public void toBeanTest2(){
+		UserA userA = new UserA();
+		userA.setA("A user");
+		userA.setName("nameTest");
+		userA.setDate(new Date());
+		userA.setSqs(CollectionUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
+
+		JSONObject json = JSONUtil.parseObj(userA);
+		UserA userA2 = JSONUtil.toBean(json, UserA.class);
+//		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+		Console.log(userA2);
 	}
 	
 	@Test

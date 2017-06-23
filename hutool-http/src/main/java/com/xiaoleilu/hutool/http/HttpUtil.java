@@ -65,9 +65,12 @@ public class HttpUtil {
 	 * @param content 被编码内容
 	 * @param charsetStr 编码
 	 * @return 编码后的字符
+	 * @throws HttpException 编码不支持
 	 */
-	public static String encode(String content, String charsetStr) {
-		if (StrUtil.isBlank(content)) return content;
+	public static String encode(String content, String charsetStr) throws HttpException{
+		if (StrUtil.isBlank(content)) {
+			return content;
+		}
 
 		String encodeContent = null;
 		try {
@@ -372,7 +375,11 @@ public class HttpUtil {
 	
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
-	 * 编码键和值对
+	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）
+	 * 
+	 * <pre>
+	 * key1=v1&amp;key2=&amp;key3=v3
+	 * </pre>
 	 * 
 	 * @param paramMap 表单数据
 	 * @param charset 编码
@@ -388,13 +395,23 @@ public class HttpUtil {
 		
 		StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
+		String key;
+		String value;
 		for (Entry<String, Object> item : paramMap.entrySet()) {
 			if (isFirst) {
 				isFirst = false;
 			} else {
 				sb.append("&");
 			}
-			sb.append(encode(item.getKey(), charset)).append("=").append(encode(Convert.toStr(item.getValue()), charset));
+//			sb.append(encode(item.getKey(), charset)).append("=").append(encode(Convert.toStr(item.getValue()), charset));
+			key = item.getKey();
+			value = encode(Convert.toStr(item.getValue()), charset);
+			if(StrUtil.isNotEmpty(key)){
+				sb.append(key).append("=");
+				if(StrUtil.isNotEmpty(value)){
+					sb.append(value);
+				}
+			}
 		}
 		return sb.toString();
 	}

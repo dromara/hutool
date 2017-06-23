@@ -1,10 +1,14 @@
 package com.xiaoleilu.hutool.util;
 
+import java.lang.reflect.Array;
+import java.util.AbstractCollection;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +27,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.xiaoleilu.hutool.collection.EnumerationIterator;
 import com.xiaoleilu.hutool.collection.IteratorEnumeration;
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.convert.ConverterRegistry;
+import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Matcher;
@@ -419,7 +425,7 @@ public class CollectionUtil {
 		return currentAlaDatas;
 	}
 
-	//----------------------------------------------------------------------------------------------- new HashMap
+	// ----------------------------------------------------------------------------------------------- new HashMap
 	/**
 	 * 新建一个HashMap
 	 * 
@@ -458,7 +464,7 @@ public class CollectionUtil {
 		return newHashMap(size, false);
 	}
 
-	//----------------------------------------------------------------------------------------------- new HashSet
+	// ----------------------------------------------------------------------------------------------- new HashSet
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -481,7 +487,7 @@ public class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(boolean isSorted, T... ts) {
-		if(null == ts){
+		if (null == ts) {
 			return isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
 		}
 		int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
@@ -502,7 +508,7 @@ public class CollectionUtil {
 	public static <T> HashSet<T> newHashSet(Collection<T> collection) {
 		return newHashSet(false, collection);
 	}
-	
+
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -514,7 +520,7 @@ public class CollectionUtil {
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<T> collection) {
 		return isSorted ? new LinkedHashSet<T>(collection) : new HashSet<T>(collection);
 	}
-	
+
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -525,16 +531,16 @@ public class CollectionUtil {
 	 * @since 3.0.8
 	 */
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Iterator<T> iter) {
-		if(null == iter){
-			return newHashSet(isSorted, (T[])null);
+		if (null == iter) {
+			return newHashSet(isSorted, (T[]) null);
 		}
 		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			set.add(iter.next());
 		}
 		return set;
 	}
-	
+
 	/**
 	 * 新建一个HashSet
 	 * 
@@ -545,17 +551,17 @@ public class CollectionUtil {
 	 * @since 3.0.8
 	 */
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Enumeration<T> enumration) {
-		if(null == enumration){
-			return newHashSet(isSorted, (T[])null);
+		if (null == enumration) {
+			return newHashSet(isSorted, (T[]) null);
 		}
 		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
-		while(enumration.hasMoreElements()){
+		while (enumration.hasMoreElements()) {
 			set.add(enumration.nextElement());
 		}
 		return set;
 	}
 
-	//----------------------------------------------------------------------------------------------- new ArrayList
+	// ----------------------------------------------------------------------------------------------- new ArrayList
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -565,7 +571,7 @@ public class CollectionUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		if(null == values){
+		if (null == values) {
 			return new ArrayList<>();
 		}
 		ArrayList<T> arrayList = new ArrayList<T>(values.length);
@@ -583,12 +589,12 @@ public class CollectionUtil {
 	 * @return ArrayList对象
 	 */
 	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
-		if(null == collection){
+		if (null == collection) {
 			return new ArrayList<>();
 		}
 		return new ArrayList<T>(collection);
 	}
-	
+
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -599,15 +605,15 @@ public class CollectionUtil {
 	 */
 	public static <T> ArrayList<T> newArrayList(Iterator<T> iter) {
 		final ArrayList<T> list = new ArrayList<>();
-		if(null == iter){
+		if (null == iter) {
 			return list;
 		}
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			list.add(iter.next());
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -618,10 +624,10 @@ public class CollectionUtil {
 	 */
 	public static <T> ArrayList<T> newArrayList(Enumeration<T> enumration) {
 		final ArrayList<T> list = new ArrayList<>();
-		if(null == enumration){
+		if (null == enumration) {
 			return list;
 		}
-		while(enumration.hasMoreElements()){
+		while (enumration.hasMoreElements()) {
 			list.add(enumration.nextElement());
 		}
 		return list;
@@ -638,6 +644,72 @@ public class CollectionUtil {
 		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<T>(collection));
 	}
 
+	/**
+	 * 创建新的集合对象
+	 * 
+	 * @param collectionType 集合类型
+	 * @return 集合类型对应的实例
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> Collection<T> create(Class<?> collectionType) {
+		Collection<T> list = null;
+		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
+			//抽象集合默认使用ArrayList
+			list = new ArrayList<>();
+		} 
+		
+		//Set
+		else if (collectionType.isAssignableFrom(HashSet.class)) {
+			list = new HashSet<>();
+		}else if (collectionType.isAssignableFrom(LinkedHashSet.class)) {
+			list = new LinkedHashSet<>();
+		} else if (collectionType.isAssignableFrom(TreeSet.class)) {
+			list = new TreeSet<>();
+		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
+			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) ClassUtil.getTypeArgument(collectionType));
+		}
+		
+		//List
+		else if (collectionType.isAssignableFrom(ArrayList.class)) {
+			list = new ArrayList<>();
+		}else if (collectionType.isAssignableFrom(LinkedList.class)) {
+			list = new LinkedList<>();
+		} 
+		
+		//Others，直接实例化
+		else {
+			try {
+				list = (Collection<T>) ClassUtil.newInstance(collectionType);
+			} catch (Exception e) {
+				throw new UtilException(e);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 创建Map<br>
+	 * 传入抽象Map{@link AbstractMap}和{@link Map}类将默认创建{@link HashMap}
+	 * 
+	 * @param mapType map类型
+	 * @return {@link Map}实例
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> createMap(Class<?> mapType){
+		if(mapType.isAssignableFrom(AbstractMap.class)){
+			return new HashMap<>();
+		}
+		
+		else{
+			try {
+				return ( Map<K, V>) ClassUtil.newInstance(mapType);
+			} catch (Exception e) {
+				throw new UtilException(e);
+			}
+		}
+	}
+	
 	/**
 	 * 去重集合
 	 * 
@@ -997,7 +1069,7 @@ public class CollectionUtil {
 	 */
 	public static <K, V> HashMap<K, V> toMap(Collection<Entry<K, V>> entryCollection) {
 		final HashMap<K, V> map = new HashMap<K, V>();
-		if(isNotEmpty(entryCollection)){
+		if (isNotEmpty(entryCollection)) {
 			for (Entry<K, V> entry : entryCollection) {
 				map.put(entry.getKey(), entry.getValue());
 			}
@@ -1021,6 +1093,7 @@ public class CollectionUtil {
 	 *     {"GREEN", "#00FF00"},
 	 *     {"BLUE", "#0000FF"}});
 	 * </pre>
+	 * 
 	 * 参考：commons-lang
 	 * 
 	 * @param array 数组。元素类型为Map.Entry、数组、Iterable、Iterator
@@ -1123,20 +1196,79 @@ public class CollectionUtil {
 	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
 		return new EnumerationIterator<E>(e);
 	}
-	
+
 	/**
 	 * {@link Iterator} 转为 {@link Iterable}
+	 * 
 	 * @param iter {@link Iterator}
 	 * @return {@link Iterable}
 	 */
-	public static <E> Iterable<E> asIterable(final Iterator<E> iter){
+	public static <E> Iterable<E> asIterable(final Iterator<E> iter) {
 		return new Iterable<E>(){
 			@Override
 			public Iterator<E> iterator() {
 				return iter;
-			}};
+			}
+		};
 	}
 	
+	/**
+	 * 将指定对象全部加入到集合中<br>
+	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
+	 * 
+	 * @param collection 被加入的集合
+	 * @param value 对象，可能为Iterator、Iterable、Enumeration、Array
+	 * @return 被加入集合
+	 */
+	public static <T> Collection<T> addAll(Collection<T> collection, Object value) {
+		return addAll(collection, value, ClassUtil.getTypeArgument(collection.getClass()));
+	}
+
+	/**
+	 * 将指定对象全部加入到集合中<br>
+	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
+	 * 
+	 * @param collection 被加入的集合
+	 * @param value 对象，可能为Iterator、Iterable、Enumeration、Array
+	 * @param elementType 元素类型
+	 * @return 被加入集合
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> Collection<T> addAll(Collection<T> collection, Object value, Class<?> elementType) {
+		if (null == collection || null == value) {
+			return collection;
+		}
+
+		final ConverterRegistry convert = ConverterRegistry.getInstance();
+		if (elementType.isInstance(value)) {
+			collection.add((T) value);
+		} else if (value instanceof Iterator) {
+			final Iterator iter = (Iterator) value;
+			while (iter.hasNext()) {
+				collection.add((T)convert.convert(elementType, iter.next()));
+			}
+			addAll(collection, (Iterator<T>) value);
+		} else if (value instanceof Iterable) {
+			final Iterator iter = ((Iterable) value).iterator();
+			while (iter.hasNext()) {
+				collection.add((T)convert.convert(elementType, iter.next()));
+			}
+		} else if (value instanceof Enumeration) {
+			final Enumeration enumeration = ((Enumeration) value);
+			while (enumeration.hasMoreElements()) {
+				collection.add((T)convert.convert(elementType, enumeration.nextElement()));
+			}
+		} else if (ArrayUtil.isArray(value)) {
+			final int length = Array.getLength(value);
+			Object item;
+			for (int i = 0; i < length; i++) {
+				item = Array.get(value, i);
+				collection.add((T)convert.convert(elementType, item));
+			}
+		}
+		return collection;
+	}
+
 	/**
 	 * 加入全部
 	 * 
@@ -1178,6 +1310,24 @@ public class CollectionUtil {
 		if (null != collection && null != enumeration) {
 			while (enumeration.hasMoreElements()) {
 				collection.add(enumeration.nextElement());
+			}
+		}
+		return collection;
+	}
+
+	/**
+	 * 加入全部
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 被加入的集合 {@link Collection}
+	 * @param enumeration 要加入的内容{@link Enumeration}
+	 * @return 原集合
+	 * @since 3.0.8
+	 */
+	public static <T> Collection<T> addAll(Collection<T> collection, T[] values) {
+		if (null != collection && null != values) {
+			for (T value : values) {
+				collection.add(value);
 			}
 		}
 		return collection;

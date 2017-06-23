@@ -12,10 +12,13 @@
 * DateUtil增加betweenMonth和betweenYear
 * 增加SimpleCache使用WeakHashMap简易缓存实现
 * 正则Pattern和FastDateFormat添加缓存支持
+* DateTime和DateUtil添加isIn方法（感谢@【合肥】天涯）
+* HexUtil增加方法encodeColor和decodeColor（感谢@【帝都】宁静）
 
 ### Bug修复
 * 修复CollectionUtil.newHashSet方法参数失效的bug
 * 修复DbUtil.getTables方法获取为空问题（感谢@【天津】〓下页）
+* 修复HttpUtil.toParams方法key或value为null的情况下拼接为null字符串的问题（感谢感谢@talent-aio）
 
 -------------------------------------------------------------------------------------------------------------
 

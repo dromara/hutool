@@ -19,6 +19,10 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 	
 	private Class<T> targetComponentType;
 	
+	/**
+	 * 构造
+	 * @param targetComponentType 目标元素类型（数组元素类型）
+	 */
 	public ArrayConverter(Class<T> targetComponentType) {
 		this.targetComponentType = targetComponentType;
 	}
@@ -64,7 +68,7 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 	 */
 	@SuppressWarnings("unchecked")
 	private T[] convertArrayToArray(Object value) {
-		Class<?> valueComponentType = value.getClass().getComponentType();
+		final Class<?> valueComponentType = value.getClass().getComponentType();
 
 		if (valueComponentType == targetComponentType) {
 			return (T[]) value;
@@ -76,7 +80,7 @@ public class ArrayConverter<T> extends AbstractConverter<T[]>{
 			result = convertPrimitiveArrayToArray(value, valueComponentType);
 		}else{
 			//非原始类型
-			Object[] array = (Object[]) value;
+			final Object[] array = (Object[]) value;
 			result = ArrayUtil.newArray(targetComponentType, array.length);
 			for (int i = 0; i < array.length; i++) {
 				result[i] = ConverterRegistry.getInstance().convert(targetComponentType, array[i]);

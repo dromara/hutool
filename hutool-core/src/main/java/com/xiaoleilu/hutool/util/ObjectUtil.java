@@ -395,4 +395,25 @@ public class ObjectUtil {
 		}
 		return c1.compareTo(c2);
 	}
+	
+	/**
+	 * 获得给定类的第一个泛型参数
+	 * @param obj 被检查的对象
+	 * @return {@link Class}
+	 * @since 3.0.8
+	 */
+	public static Class<?> getTypeArgument(Object obj) {
+		return getTypeArgument(obj, 0);
+	}
+	
+	/**
+	 * 获得给定类的第一个泛型参数
+	 * @param obj 被检查的对象
+	 * @param index 泛型类型的索引号，既第几个泛型类型
+	 * @return {@link Class}
+	 * @since 3.0.8
+	 */
+	public static Class<?> getTypeArgument(Object obj, int index) {
+		return ClassUtil.getTypeArgument(obj.getClass(), index);
+	}
 }

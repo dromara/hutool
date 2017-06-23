@@ -2,6 +2,10 @@ package com.xiaoleilu.hutool.json.test.bean;
 
 public class Seq {
 	private String seq;
+	
+	public Seq(String seq) {
+		this.seq = seq;
+	}
 
 	public String getSeq() {
 		return seq;

@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.json;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.convert.Convert;
@@ -249,7 +250,7 @@ final class InternalJSONUtil {
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
-	private static Object jsonConvert(Class<?> type, Object value, boolean ignoreError) throws ConvertException{
+	protected static Object jsonConvert(Class<?> type, Object value, boolean ignoreError) throws ConvertException{
 		if(null == value){
 			return null;
 		}
@@ -263,12 +264,16 @@ final class InternalJSONUtil {
 		
 		//非标准转换格式
 		if(null == targetValue){
-			
 			//子对象递归转换
 			if(value instanceof JSONObject){
 				targetValue = ((JSONObject)value).toBean(type, ignoreError);
-			}else if(value instanceof JSONArray && type.isArray()){
-				targetValue = ((JSONArray)value).toArray(type, ignoreError);
+			}else if(value instanceof JSONArray){
+				final JSONArray jsonArrayValue = (JSONArray)value;
+				if(type.isArray()){
+					//目标为数组
+					targetValue = jsonArrayValue.toArray(type, ignoreError);
+				}else if(type.isAssignableFrom(List.class)){
+				}
 			}
 		}
 		

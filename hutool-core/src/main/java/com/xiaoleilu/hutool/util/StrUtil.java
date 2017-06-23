@@ -368,6 +368,16 @@ public class StrUtil {
 
 		return str.toString();
 	}
+	
+	/**
+	 * 字符串是否以给定字符开始
+	 * @param str 字符串
+	 * @param c 字符
+	 * @return 是否开始
+	 */
+	public static boolean startWith(CharSequence str, char c){
+		return c == str.charAt(0);
+	}
 
 	/**
 	 * 是否以指定字符串开头
@@ -426,6 +436,16 @@ public class StrUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * 字符串是否以给定字符结尾
+	 * @param str 字符串
+	 * @param c 字符
+	 * @return 是否结尾
+	 */
+	public static boolean endWith(CharSequence str, char c){
+		return c == str.charAt(str.length()-1);
 	}
 
 	/**
@@ -904,7 +924,7 @@ public class StrUtil {
 		if(null == str){
 			return new String[]{};
 		}
-		return StrSpliter.splitByLenth(str.toString(), len);
+		return StrSpliter.splitByLength(str.toString(), len);
 	}
 
 	/**

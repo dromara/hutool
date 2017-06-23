@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.util;
 
+import java.awt.Color;
 import java.nio.charset.Charset;
 
 /**
@@ -13,8 +14,9 @@ import java.nio.charset.Charset;
  *
  */
 public class HexUtil {
-	
-	private HexUtil() {}
+
+	private HexUtil() {
+	}
 
 	/**
 	 * 用于建立十六进制字符的输出的小写字符数组
@@ -24,11 +26,12 @@ public class HexUtil {
 	 * 用于建立十六进制字符的输出的大写字符数组
 	 */
 	private static final char[] DIGITS_UPPER = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-	
+
 	/**
 	 * 判断给定字符串是否为16进制数<br>
 	 * 如果是，需要使用对应数字类型对象的<code>decode</code>方法解码<br>
 	 * 例如：{@code Integer.decode}方法解码int类型的16进制数字
+	 * 
 	 * @param value 值
 	 * @return 是否为16进制
 	 */
@@ -37,7 +40,7 @@ public class HexUtil {
 		return (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index));
 	}
 
-	//---------------------------------------------------------------------------------------------------- encode
+	// ---------------------------------------------------------------------------------------------------- encode
 	/**
 	 * 将字节数组转换为十六进制字符数组
 	 *
@@ -47,7 +50,7 @@ public class HexUtil {
 	public static char[] encodeHex(byte[] data) {
 		return encodeHex(data, true);
 	}
-	
+
 	/**
 	 * 将字节数组转换为十六进制字符数组
 	 *
@@ -79,7 +82,7 @@ public class HexUtil {
 	public static String encodeHexStr(byte[] data) {
 		return encodeHexStr(data, true);
 	}
-	
+
 	/**
 	 * 将字节数组转换为十六进制字符串，结果为小写
 	 *
@@ -90,7 +93,7 @@ public class HexUtil {
 	public static String encodeHexStr(String data, Charset charset) {
 		return encodeHexStr(StrUtil.bytes(data, charset), true);
 	}
-	
+
 	/**
 	 * 将字节数组转换为十六进制字符串，结果为小写，默认编码是UTF-8
 	 *
@@ -111,8 +114,8 @@ public class HexUtil {
 	public static String encodeHexStr(byte[] data, boolean toLowerCase) {
 		return encodeHexStr(data, toLowerCase ? DIGITS_LOWER : DIGITS_UPPER);
 	}
-	
-	//---------------------------------------------------------------------------------------------------- decode
+
+	// ---------------------------------------------------------------------------------------------------- decode
 	/**
 	 * 将十六进制字符数组转换为字符串，默认编码UTF-8
 	 *
@@ -122,7 +125,7 @@ public class HexUtil {
 	public static String decodeHexStr(String hexStr) {
 		return decodeHexStr(hexStr, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 将十六进制字符数组转换为字符串
 	 *
@@ -131,12 +134,12 @@ public class HexUtil {
 	 * @return 字符串
 	 */
 	public static String decodeHexStr(String hexStr, Charset charset) {
-		if(StrUtil.isEmpty(hexStr)){
+		if (StrUtil.isEmpty(hexStr)) {
 			return hexStr;
 		}
 		return decodeHexStr(hexStr.toCharArray(), charset);
 	}
-	
+
 	/**
 	 * 将十六进制字符数组转换为字符串
 	 *
@@ -176,7 +179,7 @@ public class HexUtil {
 
 		return out;
 	}
-	
+
 	/**
 	 * 将十六进制字符串解码为byte[]
 	 *
@@ -184,13 +187,62 @@ public class HexUtil {
 	 * @return byte[]
 	 */
 	public static byte[] decodeHex(String hexStr) {
-		if(StrUtil.isEmpty(hexStr)){
+		if (StrUtil.isEmpty(hexStr)) {
 			return null;
 		}
 		return decodeHex(hexStr.toCharArray());
 	}
+
+	// ---------------------------------------------------------------------------------------- Color
+	/**
+	 * 将{@link Color}编码为Hex形式
+	 * @param color {@link Color}
+	 * @return Hex字符串
+	 * @since 3.0.8
+	 */
+	public static String encodeColor(Color color) {
+		return encodeColor(color, "#");
+	}
 	
-	//---------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 将{@link Color}编码为Hex形式
+	 * @param color {@link Color}
+	 * @param prefix 前缀字符串，可以是#、0x等
+	 * @return Hex字符串
+	 * @since 3.0.8
+	 */
+	public static String encodeColor(Color color, String prefix) {
+		final StringBuffer builder = new StringBuffer(prefix);
+		String colorHex;
+		colorHex = Integer.toHexString(color.getRed());
+		if(1 == colorHex.length()){
+			builder.append('0');
+		}
+		builder.append(colorHex);
+		colorHex = Integer.toHexString(color.getGreen());
+		if(1 == colorHex.length()){
+			builder.append('0');
+		}
+		builder.append(colorHex);
+		colorHex = Integer.toHexString(color.getBlue());
+		if(1 == colorHex.length()){
+			builder.append('0');
+		}
+		builder.append(colorHex);
+		return builder.toString();
+	}
+
+	/**
+	 * 将Hex颜色值转为
+	 * @param hexColor 16进制颜色值，可以以#开头，也可以用0x开头
+	 * @return {@link Color}
+	 * @since 3.0.8
+	 */
+	public static Color decodeColor(String hexColor) {
+		return Color.decode(hexColor);
+	}
+
+	// ---------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 将字节数组转换为十六进制字符串
 	 *
@@ -201,7 +253,7 @@ public class HexUtil {
 	private static String encodeHexStr(byte[] data, char[] toDigits) {
 		return new String(encodeHex(data, toDigits));
 	}
-	
+
 	/**
 	 * 将字节数组转换为十六进制字符数组
 	 *
@@ -235,5 +287,5 @@ public class HexUtil {
 		}
 		return digit;
 	}
-	//---------------------------------------------------------------------------------------- Private method end
+	// ---------------------------------------------------------------------------------------- Private method end
 }

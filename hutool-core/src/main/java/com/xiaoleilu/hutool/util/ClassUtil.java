@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
@@ -22,6 +21,7 @@ import java.util.Set;
 import com.xiaoleilu.hutool.convert.BasicType;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.lang.ClassScaner;
 import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Singleton;
@@ -490,9 +490,10 @@ public class ClassUtil {
 	 * 
 	 * @param resource 资源（相对Classpath的路径）
 	 * @return 资源URL
+	 * @see ResourceUtil#getResource(String)
 	 */
 	public static URL getResourceURL(String resource) throws IORuntimeException{
-		return getResourceUrl(resource, null);
+		return ResourceUtil.getResource(resource);
 	}
 	
 	/**
@@ -505,15 +506,10 @@ public class ClassUtil {
 	 * 
 	 * @param resource 资源路径
 	 * @return 资源列表
+	 * @see ResourceUtil#getResources(String)
 	 */
 	public static List<URL> getResources(String resource){
-		final Enumeration<URL> resources;
-		try {
-			resources = getClassLoader().getResources(resource);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		return CollectionUtil.newArrayList(resources);
+		return ResourceUtil.getResources(resource);
 	}
 	
 	/**
@@ -521,9 +517,10 @@ public class ClassUtil {
 	 * @param resource 资源相对路径
 	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
 	 * @return {@link URL}
+	 * @see ResourceUtil#getResource(String, Class)
 	 */
 	public static URL getResourceUrl(String resource, Class<?> baseClass){
-		return (null != baseClass) ? baseClass.getResource(resource) : getClassLoader().getResource(resource);
+		return ResourceUtil.getResource(resource, baseClass);
 	}
 
 	/**
@@ -535,15 +532,23 @@ public class ClassUtil {
 	}
 
 	/**
+	 * 获取当前线程的{@link ClassLoader}
+	 * 
 	 * @return 当前线程的class loader
+	 * @see Thread#getContextClassLoader()
 	 */
 	public static ClassLoader getContextClassLoader() {
 		return Thread.currentThread().getContextClassLoader();
 	}
 
 	/**
-	 * 获得class loader<br>
-	 * 若当前线程class loader不存在，取当前类的class loader
+	 * 获取{@link ClassLoader}<br>
+	 * 获取顺序如下：<br>
+	 * <pre>
+	 * 1、获取当前线程的ContextClassLoader
+	 * 2、获取{@link ClassUtil}类对应的ClassLoader
+	 * 3、获取系统ClassLoader（{@link ClassLoader#getSystemClassLoader()}）
+	 * </pre>
 	 * 
 	 * @return 类加载器
 	 */
@@ -1040,16 +1045,10 @@ public class ClassUtil {
 	 * @return {@link Class}
 	 */
 	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
-		Type superType = clazz.getGenericSuperclass();
-		if(superType instanceof ParameterizedType){
-			ParameterizedType genericSuperclass = (ParameterizedType) superType;
-			Type[] types = genericSuperclass.getActualTypeArguments();
-			if(null != types && types.length > index){
-				Type type = types[index];
-				if(type instanceof Class){
-					return (Class<?>)type;
-				}
-			}
+		final Type superType = clazz.getGenericSuperclass();
+		final Type argumentType = TypeUtil.getTypeArgument(superType, index);
+		if(null != argumentType && argumentType instanceof Class){
+			return (Class<?>)argumentType;
 		}
 		return null;
 	}

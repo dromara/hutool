@@ -13,20 +13,37 @@ import java.util.ListIterator;
 import com.xiaoleilu.hutool.bean.BeanResolver;
 
 /**
- * JSON数组
+ * JSON数组<br>
+ * JSON数组是表示中括号括住的数据表现形式<br>
+ * 对应的JSON字符串格格式例如:
+ * <pre>
+ * ["a", "b", "c", 12]
+ * </pre>
+ * 
  * @author looly
  */
-public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>{
+public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object> {
 
 	/** 持有原始数据的List */
-	private final ArrayList<Object> rawArrayList;
+	private final List<Object> rawList;
 
-	//-------------------------------------------------------------------------------------------------------------------- Constructor start
+	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
-	 * 构造
+	 * 构造<br>
+	 * 默认使用{@link ArrayList} 实现
 	 */
 	public JSONArray() {
-		this.rawArrayList = new ArrayList<Object>();
+		this.rawList = new ArrayList<Object>();
+	}
+
+	/**
+	 * 构造<br>
+	 * 此构造初始化JSONArray的List实现，既传入的List类型是什么，JSONArray的类型就是什么
+	 * 
+	 * @param list 初始化的JSON数组
+	 */
+	public JSONArray(List<Object> list) {
+		this.rawList = list;
 	}
 
 	/**
@@ -45,10 +62,10 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			for (;;) {
 				if (x.nextClean() == ',') {
 					x.back();
-					this.rawArrayList.add(JSONNull.NULL);
+					this.rawList.add(JSONNull.NULL);
 				} else {
 					x.back();
-					this.rawArrayList.add(x.nextValue());
+					this.rawList.add(x.nextValue());
 				}
 				switch (x.nextClean()) {
 					case ',':
@@ -79,25 +96,25 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	/**
 	 * 从数组或{@link Collection}对象构造
 	 *
-	 *@param arrayOrCollection 数组或集合
+	 * @param arrayOrCollection 数组或集合
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object arrayOrCollection) throws JSONException {
 		this();
-		if (arrayOrCollection.getClass().isArray()) {//数组
+		if (arrayOrCollection.getClass().isArray()) {// 数组
 			int length = Array.getLength(arrayOrCollection);
 			for (int i = 0; i < length; i += 1) {
 				this.put(JSONUtil.wrap(Array.get(arrayOrCollection, i)));
 			}
-		} else if(arrayOrCollection instanceof Iterable<?>){//Iterable
-			for (Object o : (Collection<?>)arrayOrCollection) {
+		} else if (arrayOrCollection instanceof Iterable<?>) {// Iterable
+			for (Object o : (Collection<?>) arrayOrCollection) {
 				this.add(o);
 			}
-		}else{
+		} else {
 			throw new JSONException("JSONArray initial value should be a string or collection or array.");
 		}
 	}
-	//-------------------------------------------------------------------------------------------------------------------- Constructor start
+	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 
 	/**
 	 * 值是否为<code>null</code>
@@ -110,43 +127,43 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 *JSONArray转为以<code>separator</code>为分界符的字符串
+	 * JSONArray转为以<code>separator</code>为分界符的字符串
 	 *
 	 * @param separator 分界符
 	 * @return a string.
 	 * @throws JSONException If the array contains an invalid number.
 	 */
 	public String join(String separator) throws JSONException {
-		int len = this.rawArrayList.size();
+		int len = this.rawList.size();
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < len; i += 1) {
 			if (i > 0) {
 				sb.append(separator);
 			}
-			sb.append(InternalJSONUtil.valueToString(this.rawArrayList.get(i)));
+			sb.append(InternalJSONUtil.valueToString(this.rawList.get(i)));
 		}
 		return sb.toString();
 	}
 
 	@Override
 	public Object get(int index) {
-		return this.rawArrayList.get(index);
+		return this.rawList.get(index);
 	}
-	
+
 	@Override
 	public Object getObj(Integer index, Object defaultValue) {
-		return (index < 0 || index >= this.size()) ? defaultValue : this.rawArrayList.get(index);
+		return (index < 0 || index >= this.size()) ? defaultValue : this.rawList.get(index);
 	}
-	
+
 	@Override
 	public Object getByExp(String expression) {
 		return BeanResolver.resolveBean(this, expression);
 	}
-	
+
 	/**
-	 * Append an object value. This increases the array's length by one.
-	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)} 
+	 * Append an object value. This increases the array's length by one. <br>
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
 	 *
 	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
@@ -186,12 +203,12 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		}
 		return jo;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((rawArrayList == null) ? 0 : rawArrayList.hashCode());
+		result = prime * result + ((rawList == null) ? 0 : rawList.hashCode());
 		return result;
 	}
 
@@ -207,11 +224,11 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			return false;
 		}
 		final JSONArray other = (JSONArray) obj;
-		if (rawArrayList == null) {
-			if (other.rawArrayList != null) {
+		if (rawList == null) {
+			if (other.rawList != null) {
 				return false;
 			}
-		} else if (!rawArrayList.equals(other.rawArrayList)) {
+		} else if (!rawList.equals(other.rawList)) {
 			return false;
 		}
 		return true;
@@ -259,7 +276,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			writer.write('[');
 
 			if (length == 1) {
-				InternalJSONUtil.writeValue(writer, this.rawArrayList.get(0), indentFactor, indent);
+				InternalJSONUtil.writeValue(writer, this.rawList.get(0), indentFactor, indent);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
 
@@ -271,7 +288,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 						writer.write('\n');
 					}
 					InternalJSONUtil.indent(writer, newindent);
-					InternalJSONUtil.writeValue(writer, this.rawArrayList.get(i), indentFactor, newindent);
+					InternalJSONUtil.writeValue(writer, this.rawList.get(i), indentFactor, newindent);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
@@ -285,55 +302,55 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			throw new JSONException(e);
 		}
 	}
-	
+
 	@Override
 	public Iterator<Object> iterator() {
-		return rawArrayList.iterator();
+		return rawList.iterator();
 	}
 
 	@Override
 	public int size() {
-		return rawArrayList.size();
+		return rawList.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return rawArrayList.isEmpty();
+		return rawList.isEmpty();
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		return rawArrayList.contains(o);
+		return rawList.contains(o);
 	}
 
 	@Override
 	public Object[] toArray() {
-		return rawArrayList.toArray();
+		return rawList.toArray();
 	}
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		return rawArrayList.toArray(a);
+		return rawList.toArray(a);
 	}
 
 	@Override
 	public boolean add(Object e) {
-		return this.rawArrayList.add(JSONUtil.wrap(e));
+		return this.rawList.add(JSONUtil.wrap(e));
 	}
-	
+
 	@Override
 	public Object remove(int index) {
-		return index >= 0 && index < this.size() ? this.rawArrayList.remove(index) : null;
+		return index >= 0 && index < this.size() ? this.rawList.remove(index) : null;
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		return rawArrayList.remove(o);
+		return rawList.remove(o);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		return rawArrayList.containsAll(c);
+		return rawList.containsAll(c);
 	}
 
 	@Override
@@ -341,33 +358,33 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		for (Object obj : c) {
 			this.add(obj);
 		}
-		return rawArrayList.addAll(c);
+		return rawList.addAll(c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends Object> c) {
-		return rawArrayList.addAll(index, c);
+		return rawList.addAll(index, c);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		return this.rawArrayList.removeAll(c);
+		return this.rawList.removeAll(c);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		return this.rawArrayList.retainAll(c);
+		return this.rawList.retainAll(c);
 	}
 
 	@Override
 	public void clear() {
-		this.rawArrayList.clear();
-		
+		this.rawList.clear();
+
 	}
 
 	@Override
 	public Object set(int index, Object element) {
-		return this.rawArrayList.set(index, JSONUtil.wrap(element));
+		return this.rawList.set(index, JSONUtil.wrap(element));
 	}
 
 	@Override
@@ -377,41 +394,41 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		}
 		if (index < this.size()) {
 			InternalJSONUtil.testValidity(element);
-			this.rawArrayList.set(index, JSONUtil.wrap(element));
+			this.rawList.set(index, JSONUtil.wrap(element));
 		} else {
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);
 			}
 			this.put(element);
 		}
-		
+
 	}
 
 	@Override
 	public int indexOf(Object o) {
-		return this.rawArrayList.indexOf(o);
+		return this.rawList.indexOf(o);
 	}
 
 	@Override
 	public int lastIndexOf(Object o) {
-		return this.rawArrayList.lastIndexOf(o);
+		return this.rawList.lastIndexOf(o);
 	}
 
 	@Override
 	public ListIterator<Object> listIterator() {
-		return this.rawArrayList.listIterator();
+		return this.rawList.listIterator();
 	}
 
 	@Override
 	public ListIterator<Object> listIterator(int index) {
-		return this.rawArrayList.listIterator(index);
+		return this.rawList.listIterator(index);
 	}
 
 	@Override
 	public List<Object> subList(int fromIndex, int toIndex) {
-		return this.rawArrayList.subList(fromIndex, toIndex);
+		return this.rawList.subList(fromIndex, toIndex);
 	}
-	
+
 	/**
 	 * 转为Bean数组，转换异常将被抛出
 	 * 
@@ -421,7 +438,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public Object toArray(Class<?> clazz) {
 		return toArray(clazz, false);
 	}
-	
+
 	/**
 	 * 转为Bean数组
 	 * 
@@ -432,4 +449,4 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public Object[] toArray(Class<?> arrayClass, boolean ignoreError) {
 		return InternalJSONUtil.toArray(this, arrayClass, ignoreError);
 	}
- }
+}

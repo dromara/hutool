@@ -20,12 +20,46 @@ public class StrSpliter {
 	 * 切分字符串路径，仅支持Unix分界符：/
 	 * 
 	 * @param str 被切分的字符串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> splitPath(String str){
+		return splitPath(str, 0);
+	}
+	
+	/**
+	 * 切分字符串路径，仅支持Unix分界符：/
+	 * 
+	 * @param str 被切分的字符串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static String[] splitPathToArray(String str){
+		return toArray(splitPath(str));
+	}
+	
+	/**
+	 * 切分字符串路径，仅支持Unix分界符：/
+	 * 
+	 * @param str 被切分的字符串
 	 * @param limit 限制分片数
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
 	public static List<String> splitPath(String str, int limit){
 		return split(str, StrUtil.C_SLASH, limit, true, true);
+	}
+	
+	/**
+	 * 切分字符串路径，仅支持Unix分界符：/
+	 * 
+	 * @param str 被切分的字符串
+	 * @param limit 限制分片数
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static String[] splitPathToArray(String str, int limit){
+		return toArray(splitPath(str, limit));
 	}
 	
 	/**
@@ -283,7 +317,7 @@ public class StrSpliter {
 	 * @param len 每一个小节的长度
 	 * @return 截取后的字符串数组
 	 */
-	public static String[] splitByLenth(String str, int len) {
+	public static String[] splitByLength(String str, int len) {
 		int partCount = str.length() / len;
 		int lastPartCount = str.length() % len;
 		int fixPart = 0;

@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.core.convert;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -28,39 +29,17 @@ public class ConvertTest {
 	}
 
 	@Test
-	public void toIntArrayTest() {
-		String[] b = { "1", "2", "3", "4" };
-		
-		Integer[] intArray = Convert.toIntArray(b);
-		Assert.assertArrayEquals(intArray, new Integer[]{1,2,3,4});
-		
-		long[] c = {1L,2L,3L,4L,5L};
-		Integer[] intArray2 = Convert.toIntArray(c);
-		Assert.assertArrayEquals(intArray2, new Integer[]{1,2,3,4,5});
+	public void toDateTest(){
+		String a = "2017-05-06";
+		Date value = Convert.convert(Date.class, a);
+		Assert.assertEquals("Sat May 06 00:00:00 CST 2017", value.toString());
 	}
 	
 	@Test
-	public void toLongArrayTest() {
-		String[] b = { "1", "2", "3", "4" };
-		
-		Long[] intArray = Convert.toLongArray(b);
-		Assert.assertArrayEquals(intArray, new Long[]{1L,2L,3L,4L});
-		
-		int[] c = {1,2,3,4,5};
-		Long[] intArray2 = Convert.toLongArray(c);
-		Assert.assertArrayEquals(intArray2, new Long[]{1L,2L,3L,4L,5L});
-	}
-	
-	@Test
-	public void toDoubleArrayTest() {
-		String[] b = { "1", "2", "3", "4" };
-		
-		Double[] intArray = Convert.toDoubleArray(b);
-		Assert.assertArrayEquals(intArray, new Double[]{1D,2D,3D,4D});
-		
-		int[] c = {1,2,3,4,5};
-		Double[] intArray2 = Convert.toDoubleArray(c);
-		Assert.assertArrayEquals(intArray2, new Double[]{1D,2D,3D,4D,5D});
+	public void toSqlDateTest(){
+		String a = "2017-05-06";
+		java.sql.Date value = Convert.convert(java.sql.Date.class, a);
+		Assert.assertEquals("2017-05-06", value.toString());
 	}
 	
 	@Test

@@ -1,17 +1,31 @@
 package com.xiaoleilu.hutool.convert;
 
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Currency;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
+import com.xiaoleilu.hutool.convert.impl.AtomicBooleanConverter;
+import com.xiaoleilu.hutool.convert.impl.AtomicReferenceConverter;
 import com.xiaoleilu.hutool.convert.impl.BooleanArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.BooleanConverter;
 import com.xiaoleilu.hutool.convert.impl.ByteArrayConverter;
@@ -20,8 +34,9 @@ import com.xiaoleilu.hutool.convert.impl.CharArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.CharacterConverter;
 import com.xiaoleilu.hutool.convert.impl.CharsetConverter;
 import com.xiaoleilu.hutool.convert.impl.ClassConverter;
+import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
+import com.xiaoleilu.hutool.convert.impl.CurrencyConverter;
 import com.xiaoleilu.hutool.convert.impl.DateConverter;
-import com.xiaoleilu.hutool.convert.impl.DateTimeConverter;
 import com.xiaoleilu.hutool.convert.impl.DoubleArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.FloatArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.IntArrayConverter;
@@ -29,10 +44,8 @@ import com.xiaoleilu.hutool.convert.impl.LongArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
 import com.xiaoleilu.hutool.convert.impl.PathConverter;
 import com.xiaoleilu.hutool.convert.impl.PrimitiveConverter;
+import com.xiaoleilu.hutool.convert.impl.ReferenceConverter;
 import com.xiaoleilu.hutool.convert.impl.ShortArrayConverter;
-import com.xiaoleilu.hutool.convert.impl.SqlDateConverter;
-import com.xiaoleilu.hutool.convert.impl.SqlTimeConverter;
-import com.xiaoleilu.hutool.convert.impl.SqlTimestampConverter;
 import com.xiaoleilu.hutool.convert.impl.StringConverter;
 import com.xiaoleilu.hutool.convert.impl.TimeZoneConverter;
 import com.xiaoleilu.hutool.convert.impl.URIConverter;
@@ -188,7 +201,7 @@ public class ConverterRegistry {
 			}
 		}
 		
-		Converter<T> converter = getConverter(type, isCustomFirst);
+		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null == converter) {
 			throw new ConvertException("No Converter for type [{}]", type.getName());
 		}
@@ -244,12 +257,15 @@ public class ConverterRegistry {
 		//包装类转换器
 		defaultConverterMap.put(String.class, new StringConverter());
 		defaultConverterMap.put(Boolean.class, new BooleanConverter());
+		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());//since 3.0.8
 		defaultConverterMap.put(Character.class, new CharacterConverter());
 		defaultConverterMap.put(Number.class, new NumberConverter());
 		defaultConverterMap.put(Byte.class, new NumberConverter(Byte.class));
 		defaultConverterMap.put(Short.class, new NumberConverter(Short.class));
 		defaultConverterMap.put(Integer.class, new NumberConverter(Integer.class));
+		defaultConverterMap.put(AtomicInteger.class, new NumberConverter(AtomicInteger.class));//since 3.0.8
 		defaultConverterMap.put(Long.class, new NumberConverter(Long.class));
+		defaultConverterMap.put(AtomicLong.class, new NumberConverter(AtomicLong.class));//since 3.0.8
 		defaultConverterMap.put(Float.class, new NumberConverter(Float.class));
 		defaultConverterMap.put(Double.class, new NumberConverter(Double.class));
 		defaultConverterMap.put(BigDecimal.class, new NumberConverter(BigDecimal.class));
@@ -276,23 +292,39 @@ public class ConverterRegistry {
 		defaultConverterMap.put(boolean[].class, new BooleanArrayConverter());
 		defaultConverterMap.put(char[].class, new CharArrayConverter());
 		
+		//Map类型转换器
+		
+		
+		//集合类型转换器
+		defaultConverterMap.put(Collection.class, new CollectionConverter());
+		defaultConverterMap.put(List.class, new CollectionConverter(List.class));
+		defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
+		defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
+		defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
+		
 		//URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());
 		defaultConverterMap.put(URL.class, new URLConverter());
 		
 		//日期时间
 		defaultConverterMap.put(Calendar.class, new CalendarConverter());
-		defaultConverterMap.put(java.util.Date.class, new DateConverter());
-		defaultConverterMap.put(DateTime.class, new DateTimeConverter());
-		defaultConverterMap.put(java.sql.Date.class, new SqlDateConverter());
-		defaultConverterMap.put(java.sql.Time.class, new SqlTimeConverter());
-		defaultConverterMap.put(java.sql.Timestamp.class, new SqlTimestampConverter());
+		defaultConverterMap.put(java.util.Date.class, new DateConverter(java.util.Date.class));
+		defaultConverterMap.put(DateTime.class, new DateConverter(DateTime.class));
+		defaultConverterMap.put(java.sql.Date.class, new DateConverter(java.sql.Date.class));
+		defaultConverterMap.put(java.sql.Time.class, new DateConverter(java.sql.Time.class));
+		defaultConverterMap.put(java.sql.Timestamp.class, new DateConverter(java.sql.Timestamp.class));
+		
+		//Reference
+		defaultConverterMap.put(WeakReference.class, new ReferenceConverter(WeakReference.class));//since 3.0.8
+		defaultConverterMap.put(SoftReference.class, new ReferenceConverter(SoftReference.class));//since 3.0.8
+		defaultConverterMap.put(AtomicReference.class, new AtomicReferenceConverter());//since 3.0.8
 		
 		//其它类型
 		defaultConverterMap.put(Class.class, new ClassConverter());
 		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
 		defaultConverterMap.put(Path.class, new PathConverter());
+		defaultConverterMap.put(Currency.class, new CurrencyConverter());//since 3.0.8
 
 		return this;
 	}

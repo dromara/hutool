@@ -467,6 +467,20 @@ public class ReUtil {
 	}
 	
 	/**
+	 * 转义字符，将正则的关键字转义
+	 * @param c 字符
+	 * @return 转义后的文本
+	 */
+	public static String escape(char c) {
+		final StringBuilder builder = new StringBuilder();
+		if(RE_KEYS.contains(c)){
+			builder.append('\\');
+		}
+		builder.append(c);
+		return builder.toString();
+	}
+	
+	/**
 	 * 转义字符串，将正则的关键字转义
 	 * @param content 文本
 	 * @return 转义后的文本
@@ -477,8 +491,9 @@ public class ReUtil {
 		}
 		
 		final StringBuilder builder = new StringBuilder();
+		int len = content.length();
 		char current;
-		for(int i = 0; i < content.length(); i++) {
+		for(int i = 0; i < len; i++) {
 			current = content.charAt(i);
 			if(RE_KEYS.contains(current)) {
 				builder.append('\\');

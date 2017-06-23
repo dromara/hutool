@@ -1069,6 +1069,24 @@ public class DateUtil {
 	public static String formatBetween(long betweenMs) {
 		return new BetweenFormater(betweenMs, BetweenFormater.Level.MILLSECOND).format();
 	}
+	
+	/**
+	 * 当前日期是否在日期指定范围内<br>
+	 * 起始日期和结束日期可以互换
+	 * 
+	 * @param date 被检查的日期
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @return 是否在范围内
+	 * @since 3.0.8
+	 */
+	public static boolean isIn(Date date, Date beginDate, Date endDate){
+		if(date instanceof DateTime){
+			return ((DateTime)date).isIn(beginDate, endDate);
+		}else{
+			return new DateTime(date).isIn(beginDate, endDate);
+		}
+	}
 
 	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：纳秒
