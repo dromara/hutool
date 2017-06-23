@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.convert.ConverterRegistry;
+import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
 
 /**
  * 类型转换工具单元测试<br>
@@ -48,5 +50,21 @@ public class ConvertToArrayTest {
 		int[] c = {1,2,3,4,5};
 		Double[] intArray2 = Convert.toDoubleArray(c);
 		Assert.assertArrayEquals(intArray2, new Double[]{1D,2D,3D,4D,5D});
+	}
+	
+	@Test
+	public void toPrimitiveArrayTest(){
+		
+		//数组转数组测试
+		int[] a = new int[]{1,2,3,4};
+		long[] result = ConverterRegistry.getInstance().convert(long[].class, a);
+		Assert.assertArrayEquals(new long[]{1L, 2L, 3L, 4L}, result);
+		
+		//字符串转数组
+		String arrayStr = "1,2,3,4,5";
+		//获取Converter类的方法2，自己实例化相应Converter对象
+		ArrayConverter c3 = new ArrayConverter(int.class);
+		int[] result3 = (int[]) c3.convert(arrayStr, null);
+		Assert.assertArrayEquals(new int[]{1,2,3,4,5}, result3);
 	}
 }

@@ -15,14 +15,6 @@ import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
 public class ConverterRegistryTest {
 	
 	@Test
-	public void convertTest(){
-		int[] a = new int[]{1,2,3,4};
-		ConverterRegistry converterRegistry = ConverterRegistry.getInstance();
-		long[] result = converterRegistry.convert(long[].class, a);
-		Assert.assertArrayEquals(new long[]{1L, 2L, 3L, 4L}, result);
-	}
-	
-	@Test
 	public void arrayConverterTest(){
 		String arrayStr = "1,2,3,4,5";
 		
@@ -36,16 +28,6 @@ public class ConverterRegistryTest {
 		Integer[] result2 = (Integer[]) c2.convert(arrayStr, null);
 		Assert.assertArrayEquals(new Integer[]{1,2,3,4,5}, result2);
 		
-	}
-	
-	@Test
-	public void primitiveArrayTest(){
-		String arrayStr = "1,2,3,4,5";
-		
-		//获取Converter类的方法2，自己实例化相应Converter对象
-		ArrayConverter c3 = new ArrayConverter(int.class);
-		int[] result3 = (int[]) c3.convert(arrayStr, null);
-		Assert.assertArrayEquals(new int[]{1,2,3,4,5}, result3);
 	}
 	
 	@Test
