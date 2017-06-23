@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.convert.ConverterRegistry;
 
 /**
  * 类型转换工具单元测试
@@ -24,6 +25,16 @@ public class ConvertTest {
 		Assert.assertEquals("1", aStr);
 		String bStr = Convert.toStr(b);
 		Assert.assertEquals("[1, 2, 3, 4, 5]", Convert.toStr(bStr));
+	}
+	
+	@Test
+	public void toIntTest(){
+		String a = "34232";
+		Integer value = Convert.toInt(a);
+		Assert.assertEquals(Integer.valueOf(34232), value);
+		
+		int value2 = ConverterRegistry.getInstance().convert(int.class, a);
+		Assert.assertTrue(34232 == value2);
 	}
 	
 	@Test

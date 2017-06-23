@@ -32,9 +32,20 @@ public class ConverterRegistryTest {
 		Assert.assertArrayEquals(new Integer[]{1,2,3,4,5}, result);
 		
 		//获取Converter类的方法2，自己实例化相应Converter对象
-		ArrayConverter<Integer> c2 = new ArrayConverter<>(Integer.class);
-		Integer[] result2 = c2.convert(arrayStr, null);
+		ArrayConverter c2 = new ArrayConverter(Integer.class);
+		Integer[] result2 = (Integer[]) c2.convert(arrayStr, null);
 		Assert.assertArrayEquals(new Integer[]{1,2,3,4,5}, result2);
+		
+	}
+	
+	@Test
+	public void primitiveArrayTest(){
+		String arrayStr = "1,2,3,4,5";
+		
+		//获取Converter类的方法2，自己实例化相应Converter对象
+		ArrayConverter c3 = new ArrayConverter(int.class);
+		int[] result3 = (int[]) c3.convert(arrayStr, null);
+		Assert.assertArrayEquals(new int[]{1,2,3,4,5}, result3);
 	}
 	
 	@Test

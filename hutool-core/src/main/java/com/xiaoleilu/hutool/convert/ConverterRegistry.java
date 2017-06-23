@@ -26,26 +26,18 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.AtomicBooleanConverter;
 import com.xiaoleilu.hutool.convert.impl.AtomicReferenceConverter;
-import com.xiaoleilu.hutool.convert.impl.BooleanArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.BooleanConverter;
-import com.xiaoleilu.hutool.convert.impl.ByteArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.CalendarConverter;
-import com.xiaoleilu.hutool.convert.impl.CharArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.CharacterConverter;
 import com.xiaoleilu.hutool.convert.impl.CharsetConverter;
 import com.xiaoleilu.hutool.convert.impl.ClassConverter;
 import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.convert.impl.CurrencyConverter;
 import com.xiaoleilu.hutool.convert.impl.DateConverter;
-import com.xiaoleilu.hutool.convert.impl.DoubleArrayConverter;
-import com.xiaoleilu.hutool.convert.impl.FloatArrayConverter;
-import com.xiaoleilu.hutool.convert.impl.IntArrayConverter;
-import com.xiaoleilu.hutool.convert.impl.LongArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
 import com.xiaoleilu.hutool.convert.impl.PathConverter;
 import com.xiaoleilu.hutool.convert.impl.PrimitiveConverter;
 import com.xiaoleilu.hutool.convert.impl.ReferenceConverter;
-import com.xiaoleilu.hutool.convert.impl.ShortArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.StringConverter;
 import com.xiaoleilu.hutool.convert.impl.TimeZoneConverter;
 import com.xiaoleilu.hutool.convert.impl.URIConverter;
@@ -56,14 +48,18 @@ import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
  * 转换器登记中心
- * <p>将各种类型Convert对象放入登记中心，通过convert方法查找目标类型对应的转换器，将被转换对象转换之。</p>
- * <p>在此类中，存放着默认转换器和自定义转换器，默认转换器是Hutool中预定义的一些转换器，自定义转换器存放用户自定的转换器。</p>
+ * <p>
+ * 将各种类型Convert对象放入登记中心，通过convert方法查找目标类型对应的转换器，将被转换对象转换之。
+ * </p>
+ * <p>
+ * 在此类中，存放着默认转换器和自定义转换器，默认转换器是Hutool中预定义的一些转换器，自定义转换器存放用户自定的转换器。
+ * </p>
  * 
  * @author Looly
  *
  */
 public class ConverterRegistry {
-	
+
 	/** 默认类型转换器 */
 	private Map<Class<?>, Converter<?>> defaultConverterMap;
 	/** 用户自定义类型转换器 */
@@ -74,18 +70,20 @@ public class ConverterRegistry {
 		/** 静态初始化器，由JVM来保证线程安全 */
 		private static ConverterRegistry instance = new ConverterRegistry();
 	}
+
 	/**
 	 * 获得单例的 {@link ConverterRegistry}
+	 * 
 	 * @return {@link ConverterRegistry}
 	 */
-	public static ConverterRegistry getInstance(){
-		return SingletonHolder.instance; 
+	public static ConverterRegistry getInstance() {
+		return SingletonHolder.instance;
 	}
 
 	public ConverterRegistry() {
 		defaultConverter();
 	}
-	
+
 	/**
 	 * 登记自定义转换器
 	 * 
@@ -105,9 +103,9 @@ public class ConverterRegistry {
 	 * @return {@link ConverterRegistry}
 	 */
 	public ConverterRegistry putCustom(Class<?> clazz, Converter<?> converter) {
-		if(null == customConverterMap){
+		if (null == customConverterMap) {
 			synchronized (this) {
-				if(null == customConverterMap){
+				if (null == customConverterMap) {
 					customConverterMap = new ConcurrentHashMap<>();
 				}
 			}
@@ -118,6 +116,7 @@ public class ConverterRegistry {
 
 	/**
 	 * 获得转换器<br>
+	 * 
 	 * @param <T> 转换的目标类型
 	 * 
 	 * @param type 类型
@@ -126,20 +125,20 @@ public class ConverterRegistry {
 	 */
 	public <T> Converter<T> getConverter(Class<T> type, boolean isCustomFirst) {
 		Converter<T> converter = null;
-		if(isCustomFirst){
+		if (isCustomFirst) {
 			converter = this.getCustomConverter(type);
-			if(null == converter){
+			if (null == converter) {
 				converter = this.getDefaultConverter(type);
 			}
-		}else{
+		} else {
 			converter = this.getDefaultConverter(type);
-			if(null == converter){
+			if (null == converter) {
 				converter = this.getCustomConverter(type);
 			}
 		}
 		return converter;
 	}
-	
+
 	/**
 	 * 获得默认转换器
 	 * 
@@ -149,11 +148,12 @@ public class ConverterRegistry {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> Converter<T> getDefaultConverter(Class<T> type) {
-		return (null == defaultConverterMap) ? null : (Converter<T>)defaultConverterMap.get(type);
+		return (null == defaultConverterMap) ? null : (Converter<T>) defaultConverterMap.get(type);
 	}
-	
+
 	/**
 	 * 获得自定义转换器
+	 * 
 	 * @param <T> 转换的目标类型（转换器转换到的类型）
 	 * 
 	 * @param type 类型
@@ -161,7 +161,7 @@ public class ConverterRegistry {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> Converter<T> getCustomConverter(Class<T> type) {
-		return (null == customConverterMap) ? null : (Converter<T>)customConverterMap.get(type);
+		return (null == customConverterMap) ? null : (Converter<T>) customConverterMap.get(type);
 	}
 
 	/**
@@ -176,38 +176,38 @@ public class ConverterRegistry {
 	 * @throws ConvertException 转换器不存在
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T convert(Class<T> type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException{
-		if(null == type && null == defaultValue){
+	public <T> T convert(Class<T> type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException {
+		if (null == type && null == defaultValue) {
 			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
 		}
-		if(null == value ){
+		if (null == value) {
 			return defaultValue;
 		}
-		if(null == type){
+		if (null == type) {
 			type = (Class<T>) defaultValue.getClass();
 		}
-		//默认强转
-		if(type.isInstance(value)){
-			return (T)value;
+		// 默认强转
+		if (type.isInstance(value)) {
+			return (T) value;
 		}
-		
-		//数组强转
+
+		// 数组强转
 		final Class<?> valueClass = value.getClass();
-		if(type.isArray() && valueClass.isArray()){
+		if (type.isArray() && valueClass.isArray()) {
 			try {
-				return (T)ArrayUtil.cast(type, value);
+				return (T) ArrayUtil.cast(type, value);
 			} catch (Exception e) {
-				//强转失败进行下一步
+				// 强转失败进行下一步
 			}
 		}
-		
+
 		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null == converter) {
 			throw new ConvertException("No Converter for type [{}]", type.getName());
 		}
 		return converter.convert(value, defaultValue);
 	}
-	
+
 	/**
 	 * 转换值为指定类型<br>
 	 * 自定义转换器优先
@@ -236,97 +236,97 @@ public class ConverterRegistry {
 		return convert(type, value, null);
 	}
 
-	//----------------------------------------------------------- Private method start
+	// ----------------------------------------------------------- Private method start
 	/**
 	 * 注册默认转换器
+	 * 
 	 * @return 转换器
 	 */
 	private ConverterRegistry defaultConverter() {
 		defaultConverterMap = new ConcurrentHashMap<>();
-		
-		//原始类型转换器
-		defaultConverterMap.put(byte.class, new PrimitiveConverter(byte.class));
-		defaultConverterMap.put(short.class, new PrimitiveConverter(short.class));
+
+		// 原始类型转换器
 		defaultConverterMap.put(int.class, new PrimitiveConverter(int.class));
 		defaultConverterMap.put(long.class, new PrimitiveConverter(long.class));
+		defaultConverterMap.put(byte.class, new PrimitiveConverter(byte.class));
+		defaultConverterMap.put(short.class, new PrimitiveConverter(short.class));
 		defaultConverterMap.put(float.class, new PrimitiveConverter(float.class));
 		defaultConverterMap.put(double.class, new PrimitiveConverter(double.class));
 		defaultConverterMap.put(char.class, new PrimitiveConverter(char.class));
 		defaultConverterMap.put(boolean.class, new PrimitiveConverter(boolean.class));
-		
-		//包装类转换器
-		defaultConverterMap.put(String.class, new StringConverter());
-		defaultConverterMap.put(Boolean.class, new BooleanConverter());
-		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());//since 3.0.8
-		defaultConverterMap.put(Character.class, new CharacterConverter());
+
+		// 包装类转换器
 		defaultConverterMap.put(Number.class, new NumberConverter());
+		defaultConverterMap.put(Integer.class, new NumberConverter(Integer.class));
+		defaultConverterMap.put(AtomicInteger.class, new NumberConverter(AtomicInteger.class));// since 3.0.8
+		defaultConverterMap.put(Long.class, new NumberConverter(Long.class));
+		defaultConverterMap.put(AtomicLong.class, new NumberConverter(AtomicLong.class));// since 3.0.8
 		defaultConverterMap.put(Byte.class, new NumberConverter(Byte.class));
 		defaultConverterMap.put(Short.class, new NumberConverter(Short.class));
-		defaultConverterMap.put(Integer.class, new NumberConverter(Integer.class));
-		defaultConverterMap.put(AtomicInteger.class, new NumberConverter(AtomicInteger.class));//since 3.0.8
-		defaultConverterMap.put(Long.class, new NumberConverter(Long.class));
-		defaultConverterMap.put(AtomicLong.class, new NumberConverter(AtomicLong.class));//since 3.0.8
 		defaultConverterMap.put(Float.class, new NumberConverter(Float.class));
 		defaultConverterMap.put(Double.class, new NumberConverter(Double.class));
+		defaultConverterMap.put(Character.class, new CharacterConverter());
+		defaultConverterMap.put(Boolean.class, new BooleanConverter());
+		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());// since 3.0.8
 		defaultConverterMap.put(BigDecimal.class, new NumberConverter(BigDecimal.class));
 		defaultConverterMap.put(BigInteger.class, new NumberConverter(BigInteger.class));
-		
-		//数组类型转换器
-		defaultConverterMap.put(Integer[].class, new ArrayConverter<Integer>(Integer.class));
-		defaultConverterMap.put(Long[].class, new ArrayConverter<Long>(Long.class));
-		defaultConverterMap.put(Byte[].class, new ArrayConverter<Byte>(Byte.class));
-		defaultConverterMap.put(Short[].class, new ArrayConverter<Short>(Short.class));
-		defaultConverterMap.put(Float[].class, new ArrayConverter<Float>(Float.class));
-		defaultConverterMap.put(Double[].class, new ArrayConverter<Double>(Double.class));
-		defaultConverterMap.put(Boolean[].class, new ArrayConverter<Boolean>(Boolean.class));
-		defaultConverterMap.put(Character[].class, new ArrayConverter<Character>(Character.class));
-		defaultConverterMap.put(String[].class, new ArrayConverter<String>(String.class));
-		
-		//原始类型数组转换器
-		defaultConverterMap.put(byte[].class, new ByteArrayConverter());
-		defaultConverterMap.put(short[].class, new ShortArrayConverter());
-		defaultConverterMap.put(int[].class, new IntArrayConverter());
-		defaultConverterMap.put(long[].class, new LongArrayConverter());
-		defaultConverterMap.put(float[].class, new FloatArrayConverter());
-		defaultConverterMap.put(double[].class, new DoubleArrayConverter());
-		defaultConverterMap.put(boolean[].class, new BooleanArrayConverter());
-		defaultConverterMap.put(char[].class, new CharArrayConverter());
-		
-		//Map类型转换器
-		
-		
-		//集合类型转换器
+		defaultConverterMap.put(String.class, new StringConverter());
+
+		// 原始类型数组转换器
+		defaultConverterMap.put(int[].class, new ArrayConverter(int.class));
+		defaultConverterMap.put(long[].class, new ArrayConverter(long.class));
+		defaultConverterMap.put(byte[].class, new ArrayConverter(byte.class));
+		defaultConverterMap.put(short[].class, new ArrayConverter(short.class));
+		defaultConverterMap.put(float[].class, new ArrayConverter(float.class));
+		defaultConverterMap.put(double[].class, new ArrayConverter(double.class));
+		defaultConverterMap.put(boolean[].class, new ArrayConverter(boolean.class));
+		defaultConverterMap.put(char[].class, new ArrayConverter(char.class));
+
+		// 包装数组类型转换器
+		defaultConverterMap.put(Integer[].class, new ArrayConverter(Integer.class));
+		defaultConverterMap.put(Long[].class, new ArrayConverter(Long.class));
+		defaultConverterMap.put(Byte[].class, new ArrayConverter(Byte.class));
+		defaultConverterMap.put(Short[].class, new ArrayConverter(Short.class));
+		defaultConverterMap.put(Float[].class, new ArrayConverter(Float.class));
+		defaultConverterMap.put(Double[].class, new ArrayConverter(Double.class));
+		defaultConverterMap.put(Boolean[].class, new ArrayConverter(Boolean.class));
+		defaultConverterMap.put(Character[].class, new ArrayConverter(Character.class));
+		defaultConverterMap.put(String[].class, new ArrayConverter(String.class));
+
+		// Map类型转换器
+
+		// 集合类型转换器
 		defaultConverterMap.put(Collection.class, new CollectionConverter());
 		defaultConverterMap.put(List.class, new CollectionConverter(List.class));
 		defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
 		defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
 		defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
-		
-		//URI and URL
+
+		// URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());
 		defaultConverterMap.put(URL.class, new URLConverter());
-		
-		//日期时间
+
+		// 日期时间
 		defaultConverterMap.put(Calendar.class, new CalendarConverter());
 		defaultConverterMap.put(java.util.Date.class, new DateConverter(java.util.Date.class));
 		defaultConverterMap.put(DateTime.class, new DateConverter(DateTime.class));
 		defaultConverterMap.put(java.sql.Date.class, new DateConverter(java.sql.Date.class));
 		defaultConverterMap.put(java.sql.Time.class, new DateConverter(java.sql.Time.class));
 		defaultConverterMap.put(java.sql.Timestamp.class, new DateConverter(java.sql.Timestamp.class));
-		
-		//Reference
-		defaultConverterMap.put(WeakReference.class, new ReferenceConverter(WeakReference.class));//since 3.0.8
-		defaultConverterMap.put(SoftReference.class, new ReferenceConverter(SoftReference.class));//since 3.0.8
-		defaultConverterMap.put(AtomicReference.class, new AtomicReferenceConverter());//since 3.0.8
-		
-		//其它类型
+
+		// Reference
+		defaultConverterMap.put(WeakReference.class, new ReferenceConverter(WeakReference.class));// since 3.0.8
+		defaultConverterMap.put(SoftReference.class, new ReferenceConverter(SoftReference.class));// since 3.0.8
+		defaultConverterMap.put(AtomicReference.class, new AtomicReferenceConverter());// since 3.0.8
+
+		// 其它类型
 		defaultConverterMap.put(Class.class, new ClassConverter());
 		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
 		defaultConverterMap.put(Path.class, new PathConverter());
-		defaultConverterMap.put(Currency.class, new CurrencyConverter());//since 3.0.8
+		defaultConverterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
 
 		return this;
 	}
-	//----------------------------------------------------------- Private method end
+	// ----------------------------------------------------------- Private method end
 }
