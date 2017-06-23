@@ -12,18 +12,18 @@ import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 数组转换器，包括原始类型数组
+ * 
  * @author Looly
- *
- * @param <T> 转换的目标数组的元素类型
  */
-public class ArrayConverter extends AbstractConverter<Object>{
-	
+public class ArrayConverter extends AbstractConverter<Object> {
+
 	/** 目标元素类型 */
 	private final Class<?> targetComponentType;
-	
+
 	/**
 	 * 构造
-	 * @param targetType 目标数组类型
+	 * 
+	 * @param targetComponentType 目标数组元素类型
 	 */
 	public ArrayConverter(Class<?> targetComponentType) {
 		this.targetComponentType = targetComponentType;
@@ -33,16 +33,17 @@ public class ArrayConverter extends AbstractConverter<Object>{
 	protected Object convertInternal(Object value) {
 		return value.getClass().isArray() ? convertArrayToArray(value) : convertObjectToArray(value);
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Class getTargetType() {
 		return this.targetComponentType;
 	}
-	
-	//-------------------------------------------------------------------------------------- Private method start
+
+	// -------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 数组对数组转换
+	 * 
 	 * @param value 被转换值
 	 * @return 转换后的数组
 	 */
@@ -52,12 +53,12 @@ public class ArrayConverter extends AbstractConverter<Object>{
 		if (valueComponentType == targetComponentType) {
 			return value;
 		}
-		
+
 		final int len = ArrayUtil.length(value);
-		final Object result =  Array.newInstance(targetComponentType, len);
-		
+		final Object result = Array.newInstance(targetComponentType, len);
+
 		final ConverterRegistry converter = ConverterRegistry.getInstance();
-		for(int i = 0; i < len; i++){
+		for (int i = 0; i < len; i++) {
 			Array.set(result, i, converter.convert(targetComponentType, Array.get(value, i)));
 		}
 		return result;
@@ -65,6 +66,7 @@ public class ArrayConverter extends AbstractConverter<Object>{
 
 	/**
 	 * 非数组对数组转换
+	 * 
 	 * @param value 被转换值
 	 * @return 转换后的数组
 	 */
@@ -77,7 +79,7 @@ public class ArrayConverter extends AbstractConverter<Object>{
 			for (int i = 0; i < list.size(); i++) {
 				result[i] = converter.convert(targetComponentType, list.get(i));
 			}
-		}else  if (value instanceof Collection) {
+		} else if (value instanceof Collection) {
 			final Collection<?> collection = (Collection<?>) value;
 			result = ArrayUtil.newArray(targetComponentType, collection.size());
 
@@ -86,7 +88,7 @@ public class ArrayConverter extends AbstractConverter<Object>{
 				result[i] = converter.convert(targetComponentType, element);
 				i++;
 			}
-		}else if (value instanceof Iterable) {
+		} else if (value instanceof Iterable) {
 			final Iterable<?> iterable = (Iterable<?>) value;
 			final List<Object> list = new ArrayList<>();
 			for (Object element : iterable) {
@@ -108,13 +110,14 @@ public class ArrayConverter extends AbstractConverter<Object>{
 
 	/**
 	 * 单元素数组
+	 * 
 	 * @param value 被转换的值
 	 * @return 数组，只包含一个元素
 	 */
 	private Object convertToSingleElementArray(Object value) {
 		final Object[] singleElementArray = ArrayUtil.newArray(targetComponentType, 1);
-		singleElementArray[0] = ConverterRegistry.getInstance().convert(targetComponentType,value);
+		singleElementArray[0] = ConverterRegistry.getInstance().convert(targetComponentType, value);
 		return singleElementArray;
 	}
-	//-------------------------------------------------------------------------------------- Private method  end
+	// -------------------------------------------------------------------------------------- Private method end
 }

@@ -918,7 +918,7 @@ public class StrUtil {
 	 * @param str 字符串
 	 * @param len 每一个小节的长度
 	 * @return 截取后的字符串数组
-	 * @see StrSpliter#splitByLenth(String, int)
+	 * @see StrSpliter#splitByLength(String, int)
 	 */
 	public static String[] split(CharSequence str, int len) {
 		if(null == str){

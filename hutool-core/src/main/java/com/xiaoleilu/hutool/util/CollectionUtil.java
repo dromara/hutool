@@ -1323,7 +1323,7 @@ public class CollectionUtil {
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param collection 被加入的集合 {@link Collection}
-	 * @param enumeration 要加入的内容{@link Enumeration}
+	 * @param values 要加入的内容数组
 	 * @return 原集合
 	 * @since 3.0.8
 	 */
