@@ -21,10 +21,9 @@ public class FieldComparator<T> implements Comparator<T>, Serializable {
 	private final Field field;
 
 	public FieldComparator(Class<T> beanClass, String fieldName) {
-		try {
-			this.field = ClassUtil.getDeclaredField(beanClass, fieldName);
-		} catch (NoSuchFieldException | SecurityException e) {
-			throw new IllegalArgumentException(e);
+		this.field = ClassUtil.getDeclaredField(beanClass, fieldName);
+		if(this.field == null){
+			throw new IllegalArgumentException("字段"+ fieldName+ "在类"+beanClass+"中不存在");
 		}
 	}
 
