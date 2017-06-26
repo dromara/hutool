@@ -11,10 +11,9 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
  * @author Looly
  *
  */
-@SuppressWarnings("rawtypes")
 public class CollectionConverter extends AbstractConverter<Collection<?>>{
 	
-	private final Class<? extends Collection> collectionType;
+	private final Class<?> collectionType;
 	private final Class<?> elementType;
 	
 	/**
@@ -28,7 +27,7 @@ public class CollectionConverter extends AbstractConverter<Collection<?>>{
 	 * 构造
 	 * @param collectionType 集合类型
 	 */
-	public CollectionConverter(Class<? extends Collection> collectionType) {
+	public CollectionConverter(Class<?> collectionType) {
 		this(collectionType, ClassUtil.getTypeArgument(collectionType));
 	}
 	
@@ -37,9 +36,15 @@ public class CollectionConverter extends AbstractConverter<Collection<?>>{
 	 * @param collectionType 集合类型
 	 * @param elementType 集合元素类型
 	 */
-	public CollectionConverter(Class<? extends Collection> collectionType, Class<?> elementType) {
+	public CollectionConverter(Class<?> collectionType, Class<?> elementType) {
 		this.collectionType = collectionType;
 		this.elementType = elementType;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<Collection<?>> getTargetType() {
+		return (Class<Collection<?>>) this.collectionType;
 	}
 
 	@Override

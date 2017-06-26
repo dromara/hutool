@@ -60,6 +60,7 @@ public class JSONObjectTest {
 			.put("list", JSONUtil.createArray().put("a").put("b"));
 		
 		TestBean bean = json.toBean(TestBean.class);
+		Assert.assertEquals("a", bean.getList().get(0));
 		Console.log(bean);
 	}
 	
@@ -72,8 +73,8 @@ public class JSONObjectTest {
 		userA.setSqs(CollectionUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
 
 		JSONObject json = JSONUtil.parseObj(userA);
-		UserA userA2 = JSONUtil.toBean(json, UserA.class);
-//		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+		UserA userA2 = json.toBean(UserA.class);
+		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
 		Console.log(userA2);
 	}
 	

@@ -1045,8 +1045,7 @@ public class ClassUtil {
 	 * @return {@link Class}
 	 */
 	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
-		final Type superType = clazz.getGenericSuperclass();
-		final Type argumentType = TypeUtil.getTypeArgument(superType, index);
+		final Type argumentType = TypeUtil.getTypeArgument(clazz, index);
 		if(null != argumentType && argumentType instanceof Class){
 			return (Class<?>)argumentType;
 		}

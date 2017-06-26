@@ -1241,7 +1241,7 @@ public class CollectionUtil {
 		if(null == elementType){//元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
 		}
-
+		
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
 		if (elementType.isInstance(value)) {
 			collection.add((T) value);
@@ -1382,7 +1382,40 @@ public class CollectionUtil {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 获得{@link iterable}对象的元素类型（通过第一个非空元素判断）
+	 * @param iterator {@link iterable}
+	 * @return 元素类型，当列表为空或元素全部为null时，返回null
+	 * @since 3.0.8
+	 */
+	public static Class<?> getElementType(Iterable<?> iterable){
+		if(null != iterable){
+			Iterator<?> iterator = iterable.iterator();
+			return getElementType(iterator);
+		}
+		return null;
+	}
+	
+	/**
+	 * 获得{@link Iterator}对象的元素类型（通过第一个非空元素判断）
+	 * @param iterator {@link Iterator}
+	 * @return 元素类型，当列表为空或元素全部为null时，返回null
+	 * @since 3.0.8
+	 */
+	public static Class<?> getElementType(Iterator<?> iterator){
+		if(null != iterator){
+			Object t;
+			while(iterator.hasNext()){
+				t = iterator.next();
+				if(null != t){
+					return t.getClass();
+				}
+			}
+		}
+		return null;
+	}
+	
 	// ------------------------------------------------------------------------------------------------- sort
 	/**
 	 * 针对List排序，排序会修改原List

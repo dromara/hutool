@@ -3,6 +3,9 @@ package com.xiaoleilu.hutool.json.test.bean;
 public class Seq {
 	private String seq;
 	
+	public Seq() {
+	}
+	
 	public Seq(String seq) {
 		this.seq = seq;
 	}

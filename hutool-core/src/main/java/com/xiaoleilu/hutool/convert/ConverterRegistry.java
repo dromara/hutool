@@ -8,14 +8,9 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Currency;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +26,6 @@ import com.xiaoleilu.hutool.convert.impl.CalendarConverter;
 import com.xiaoleilu.hutool.convert.impl.CharacterConverter;
 import com.xiaoleilu.hutool.convert.impl.CharsetConverter;
 import com.xiaoleilu.hutool.convert.impl.ClassConverter;
-import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.convert.impl.CurrencyConverter;
 import com.xiaoleilu.hutool.convert.impl.DateConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
@@ -44,6 +38,7 @@ import com.xiaoleilu.hutool.convert.impl.URIConverter;
 import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.util.ArrayUtil;
+import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**
@@ -202,10 +197,17 @@ public class ConverterRegistry {
 		}
 
 		final Converter<T> converter = getConverter(type, isCustomFirst);
-		if (null == converter) {
-			throw new ConvertException("No Converter for type [{}]", type.getName());
+		if (null != converter) {
+			return converter.convert(value, defaultValue);
 		}
-		return converter.convert(value, defaultValue);
+		
+		//尝试转Bean
+		if(BeanUtil.isBean(type) && value instanceof Map){
+			return BeanUtil.mapToBean((Map<?, ?>)value, type, true);
+		}
+		
+		//无法转换
+		throw new ConvertException("No Converter for type [{}]", type.getName());
 	}
 
 	/**
@@ -293,14 +295,12 @@ public class ConverterRegistry {
 		defaultConverterMap.put(Character[].class, new ArrayConverter(Character.class));
 		defaultConverterMap.put(String[].class, new ArrayConverter(String.class));
 
-		// Map类型转换器
-
 		// 集合类型转换器
-		defaultConverterMap.put(Collection.class, new CollectionConverter());
-		defaultConverterMap.put(List.class, new CollectionConverter(List.class));
-		defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
-		defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
-		defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
+//		defaultConverterMap.put(Collection.class, new CollectionConverter());
+//		defaultConverterMap.put(List.class, new CollectionConverter(List.class));
+//		defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
+//		defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
+//		defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
 
 		// URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());

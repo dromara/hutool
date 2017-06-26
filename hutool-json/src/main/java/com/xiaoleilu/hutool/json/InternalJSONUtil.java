@@ -3,12 +3,12 @@ package com.xiaoleilu.hutool.json;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConvertException;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
+import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
@@ -256,25 +256,22 @@ final class InternalJSONUtil {
 		}
 		
 		Object targetValue = null;
-		try {
-			targetValue = ConverterRegistry.getInstance().convert(type, value);
-		} catch (ConvertException e) {
-			//ignore
+		//非标准转换格式
+		if(value instanceof JSONObject){
+			targetValue = ((JSONObject)value).toBean(type, ignoreError);
+		}else if(value instanceof JSONArray){
+			final JSONArray jsonArrayValue = (JSONArray)value;
+			if(type.isArray()){
+				//目标为数组
+				targetValue = jsonArrayValue.toArray(type, ignoreError);
+			}else{
+				targetValue = (new CollectionConverter(type)).convert(value, null);
+			}
 		}
 		
-		//非标准转换格式
+		//子对象递归转换
 		if(null == targetValue){
-			//子对象递归转换
-			if(value instanceof JSONObject){
-				targetValue = ((JSONObject)value).toBean(type, ignoreError);
-			}else if(value instanceof JSONArray){
-				final JSONArray jsonArrayValue = (JSONArray)value;
-				if(type.isArray()){
-					//目标为数组
-					targetValue = jsonArrayValue.toArray(type, ignoreError);
-				}else if(type.isAssignableFrom(List.class)){
-				}
-			}
+			targetValue = ConverterRegistry.getInstance().convert(type, value);
 		}
 		
 		if(null == targetValue){

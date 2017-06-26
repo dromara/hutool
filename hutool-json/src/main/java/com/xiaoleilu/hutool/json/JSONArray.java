@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import com.xiaoleilu.hutool.bean.BeanResolver;
+import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 
 /**
  * JSON数组<br>
@@ -448,5 +449,17 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 */
 	public Object[] toArray(Class<?> arrayClass, boolean ignoreError) {
 		return InternalJSONUtil.toArray(this, arrayClass, ignoreError);
+	}
+	
+	/**
+	 * 转为{@link ArrayList}
+	 * @param elementType 元素类型
+	 * @return {@link ArrayList}
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> ArrayList<T> toList(Class<T> elementType){
+		final CollectionConverter converter = new CollectionConverter(ArrayList.class, elementType);
+		return (ArrayList<T>) converter.convert(this, null);
 	}
 }
