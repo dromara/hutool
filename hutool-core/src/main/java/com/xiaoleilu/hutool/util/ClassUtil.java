@@ -1,5 +1,13 @@
 package com.xiaoleilu.hutool.util;
 
+import com.xiaoleilu.hutool.convert.BasicType;
+import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
+import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.lang.ClassScaner;
+import com.xiaoleilu.hutool.lang.Filter;
+import com.xiaoleilu.hutool.lang.Singleton;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -17,14 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
-import com.xiaoleilu.hutool.convert.BasicType;
-import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.io.IORuntimeException;
-import com.xiaoleilu.hutool.io.resource.ResourceUtil;
-import com.xiaoleilu.hutool.lang.ClassScaner;
-import com.xiaoleilu.hutool.lang.Filter;
-import com.xiaoleilu.hutool.lang.Singleton;
 
 /**
  * 类工具类 <br>
@@ -267,20 +267,19 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 查找指定Public方法
+	 * 查找指定Public方法 如果找不到对应的方法或方法不为public的则返回<code>null</code>
 	 * 
 	 * @param clazz 类
 	 * @param methodName 方法名
 	 * @param paramTypes 参数类型
 	 * @return 方法
 	 * @throws SecurityException 无权访问抛出异常
-	 * @throws NoSuchMethodException 无此方法抛出异常
 	 */
-	public static Method getPublicMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) throws NoSuchMethodException, SecurityException {
+	public static Method getPublicMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) throws SecurityException {
 		try {
 			return clazz.getMethod(methodName, paramTypes);
 		} catch (NoSuchMethodException ex) {
-			return getDeclaredMethod(clazz, methodName, paramTypes);
+			return null;
 		}
 	}
 
@@ -326,24 +325,22 @@ public class ClassUtil {
 	 * @param methodName 方法名
 	 * @param args 参数
 	 * @return 方法
-	 * @throws NoSuchMethodException 无此方法
 	 * @throws SecurityException 无访问权限抛出异常
 	 */
-	public static Method getDeclaredMethodOfObj(Object obj, String methodName, Object... args) throws NoSuchMethodException, SecurityException {
+	public static Method getDeclaredMethodOfObj(Object obj, String methodName, Object... args) throws  SecurityException {
 		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
 	}
 
 	/**
-	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法
+	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法 找不到方法会返回<code>null</code>
 	 * 
 	 * @param clazz 被查找的类
 	 * @param methodName 方法名
 	 * @param parameterTypes 参数类型
 	 * @return 方法
-	 * @throws NoSuchMethodException 无此方法
 	 * @throws SecurityException 无访问权限抛出异常
 	 */
-	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
+	public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) throws SecurityException {
 		Method method = null;
 		for (; null != clazz; clazz = clazz.getSuperclass()) {
 			try {
@@ -358,22 +355,50 @@ public class ClassUtil {
 	
 	// ----------------------------------------------------------------------------------------- Field
 	/**
-	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段
+	 * 查找指定类中的所有字段（包括非public字段）， 字段不存在则返回<code>null</code>
 	 * @param clazz 被查找字段的类
 	 * @param fieldName 字段名
 	 * @return 字段
-	 * @throws NoSuchFieldException 无此字段
 	 * @throws SecurityException 安全异常
 	 */
-	public static Field getDeclaredField(Class<?> clazz, String fieldName) throws NoSuchFieldException, SecurityException{
+	public static Field getDeclaredField(Class<?> clazz, String fieldName) throws  SecurityException{
 		if(null == clazz || StrUtil.isBlank(fieldName)){
 			return null;
 		}
-		return clazz.getDeclaredField(fieldName);
+		try {
+			return clazz.getDeclaredField(fieldName);
+		} catch (NoSuchFieldException e) {
+			//e.printStackTrace();
+		}
+		return null;
 	}
-	
+
 	/**
-	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段
+	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回<code>null</code>
+	 * @param clazz 被查找字段的类,不能为null
+	 * @param fieldName 字段名
+	 * @return 字段
+	 * @throws SecurityException 安全异常
+	 */
+	public static Field getField(Class<?> clazz, String fieldName) throws  SecurityException{
+		Assert.notNull(clazz);
+		if(StrUtil.isBlank(fieldName)){
+			return null;
+		}
+		Class<?> searchType = clazz;
+		while (Object.class != searchType && searchType != null) {
+			Field[] fields = getDeclaredFields(searchType);
+			for (Field field : fields) {
+				if ((fieldName.equals(field.getName()))) {
+					return field;
+				}
+			}
+			searchType = searchType.getSuperclass();
+		}
+		return null;
+	}
+	/**
+	 * 查找指定类中的所有字段（包括非public字段)
 	 * @param clazz 被查找字段的类
 	 * @return 字段
 	 * @throws SecurityException 安全异常
@@ -384,6 +409,7 @@ public class ClassUtil {
 		}
 		return clazz.getDeclaredFields();
 	}
+
 
 	/**
 	 * 是否为equals方法
@@ -706,7 +732,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameDotMethodName, Object[] args) {
+	public static <T> T invoke(String classNameDotMethodName, Object... args) {
 		return invoke(classNameDotMethodName, false, args);
 	}
 
@@ -721,7 +747,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameWithMethodName, boolean isSingleton, Object[] args) {
+	public static <T> T invoke(String classNameWithMethodName, boolean isSingleton, Object... args) {
 		if (StrUtil.isBlank(classNameWithMethodName)) {
 			throw new UtilException("Blank classNameDotMethodName!");
 		}
@@ -752,7 +778,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, Object[] args) {
+	public static <T> T invoke(String className, String methodName, Object... args) {
 		return invoke(className, methodName, false, args);
 	}
 
@@ -768,7 +794,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object[] args) {
+	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object... args) {
 		Class<Object> clazz = loadClass(className);
 		try {
 			final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));
@@ -795,7 +821,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(Object obj, String methodName, Object[] args) {
+	public static <T> T invoke(Object obj, String methodName, Object... args) {
 		try {
 			final Method method = getDeclaredMethodOfObj(obj, methodName, args);
 			if(null == method){
@@ -818,7 +844,7 @@ public class ClassUtil {
 	 * @throws InvocationTargetException 目标方法执行异常
 	 * @throws IllegalArgumentException 参数异常
 	 */
-	public static <T> T invokeStatic(Method method, Object[] args) throws InvocationTargetException, IllegalArgumentException{
+	public static <T> T invokeStatic(Method method, Object... args) throws InvocationTargetException, IllegalArgumentException{
 		return invoke(null, method, args);
 	}
 
@@ -835,8 +861,8 @@ public class ClassUtil {
 	 * @throws IllegalArgumentException 参数异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object[] args) throws InvocationTargetException, IllegalArgumentException{
-		if (false == method.isAccessible()) {
+	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalArgumentException{
+		if (!method.isAccessible()) {
 			method.setAccessible(true);
 		}
 		try {
