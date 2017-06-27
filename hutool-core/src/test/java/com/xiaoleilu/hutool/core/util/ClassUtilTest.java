@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -33,7 +34,23 @@ public class ClassUtilTest {
 		private String subField;
 		private void privateSubMethod(){}
 		public void publicSubMethod(){}
+
 	}
+
+	@Test
+	@Ignore
+	public void invoke() throws Exception {
+		ClassUtil.invoke("Class.method", new String[]{"arg"});
+
+		ClassUtil.invoke("class.method", false, "arg1", "arg2");
+
+		ClassUtil.invoke("class", "method", false, new String[]{"arg1", "arg2"});
+
+		ClassUtil.invoke("Class", "method", "arg1", "arg2");
+
+		ClassUtil.invoke(1, "method", "args1", "arg2");
+	}
+
 	@Test
 	public void getPublicMethod(){
 		Method superPublicMethod = ClassUtil.getPublicMethod(TestSubClass.class, "publicMethod");
