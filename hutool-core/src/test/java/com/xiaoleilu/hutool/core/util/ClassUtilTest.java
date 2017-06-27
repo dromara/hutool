@@ -1,12 +1,13 @@
 package com.xiaoleilu.hutool.core.util;
 
-import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * {@link ClassUtil} 单元测试
@@ -23,17 +24,22 @@ public class ClassUtilTest {
 		String simpleClassName = ClassUtil.getClassName(ClassUtil.class, true);
 		Assert.assertEquals("ClassUtil", simpleClassName);
 	}
+	
+	@SuppressWarnings("unused")
 	class TestClass {
 		private String privateField;
 		protected String field;
 		private void privateMethod(){}
 		public void publicMethod(){}
 	}
+	
+	@SuppressWarnings("unused")
 	class TestSubClass extends TestClass{
 		private String subField;
 		private void privateSubMethod(){}
 		public void publicSubMethod(){}
 	}
+	
 	@Test
 	public void getPublicMethod(){
 		Method superPublicMethod = ClassUtil.getPublicMethod(TestSubClass.class, "publicMethod");

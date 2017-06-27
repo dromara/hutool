@@ -75,7 +75,6 @@ public class JSONObjectTest {
 		JSONObject json = JSONUtil.parseObj(userA);
 		UserA userA2 = json.toBean(UserA.class);
 		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
-		Console.log(userA2);
 	}
 	
 	@Test
