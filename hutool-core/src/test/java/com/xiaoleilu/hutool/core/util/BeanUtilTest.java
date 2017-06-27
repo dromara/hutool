@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.core.util;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 import org.junit.Assert;
@@ -30,7 +31,7 @@ public class BeanUtilTest {
 		Person person = BeanUtil.fillBean(new Person(), new ValueProvider<String>(){
 
 			@Override
-			public Object value(String key, Class<?> valueType) {
+			public Object value(String key, Type valueType) {
 				switch (key) {
 					case "name":
 						return "张三";

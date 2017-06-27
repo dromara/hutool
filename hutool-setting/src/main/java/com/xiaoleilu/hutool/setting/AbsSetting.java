@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.setting;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
@@ -262,7 +263,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 		return BeanUtil.fillBean(bean, new ValueProvider<String>(){
 
 			@Override
-			public Object value(String key, Class<?> valueType) {
+			public Object value(String key, Type valueType) {
 				final String value = getByGroup(key, group);
 				if (null != value) {
 					log.debug("Parse setting to object field [{}={}]", key, value);

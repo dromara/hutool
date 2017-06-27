@@ -27,11 +27,6 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 			return defaultValue;
 		}
 
-		// if(targetType.isPrimitive()){
-		// //原始类型直接调用内部转换，内部转换永远不会返回null
-		// return convertInternal(value);
-		// }
-
 		if (null == defaultValue || targetType.isInstance(defaultValue)) {
 			if (targetType.isInstance(value)) {
 				// 已经是目标类型，不需要转换

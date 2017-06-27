@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.json;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
 import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -212,7 +214,7 @@ final class InternalJSONUtil {
 		return BeanUtil.fillBean(bean, new BeanUtil.ValueProvider<String>(){
 
 			@Override
-			public Object value(String key, Class<?> valueType) {
+			public Object value(String key, Type valueType) {
 				return jsonConvert(valueType, jsonObject.get(key), ignoreError);
 			}
 
@@ -250,10 +252,12 @@ final class InternalJSONUtil {
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
-	protected static Object jsonConvert(Class<?> type, Object value, boolean ignoreError) throws ConvertException{
+	protected static Object jsonConvert(Type type, Object value, boolean ignoreError) throws ConvertException{
 		if(null == value){
 			return null;
 		}
+		
+		final Class<?> rowType = TypeUtil.getRowType(type);
 		
 		Object targetValue = null;
 		//非标准转换格式
@@ -261,9 +265,9 @@ final class InternalJSONUtil {
 			targetValue = ((JSONObject)value).toBean(type, ignoreError);
 		}else if(value instanceof JSONArray){
 			final JSONArray jsonArrayValue = (JSONArray)value;
-			if(type.isArray()){
+			if(rowType.isArray()){
 				//目标为数组
-				targetValue = jsonArrayValue.toArray(type, ignoreError);
+				targetValue = jsonArrayValue.toArray(rowType, ignoreError);
 			}else{
 				targetValue = (new CollectionConverter(type)).convert(value, null);
 			}
@@ -271,11 +275,11 @@ final class InternalJSONUtil {
 		
 		//子对象递归转换
 		if(null == targetValue){
-			targetValue = ConverterRegistry.getInstance().convert(type, value);
+			targetValue = ConverterRegistry.getInstance().convert(rowType, value);
 		}
 		
 		if(null == targetValue){
-			throw new ConvertException("Can not convert to type [{}]", type.getName());
+			throw new ConvertException("Can not convert to type [{}]", rowType.getName());
 		}
 		
 		return targetValue;

@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.convert;
 
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -56,9 +57,9 @@ import com.xiaoleilu.hutool.util.ClassUtil;
 public class ConverterRegistry {
 
 	/** 默认类型转换器 */
-	private Map<Class<?>, Converter<?>> defaultConverterMap;
+	private Map<Type, Converter<?>> defaultConverterMap;
 	/** 用户自定义类型转换器 */
-	private Map<Class<?>, Converter<?>> customConverterMap;
+	private Map<Type, Converter<?>> customConverterMap;
 
 	/** 类级的内部类，也就是静态的成员式内部类，该内部类的实例与外部类的实例 没有绑定关系，而且只有被调用到才会装载，从而实现了延迟加载 */
 	private static class SingletonHolder {
@@ -82,22 +83,22 @@ public class ConverterRegistry {
 	/**
 	 * 登记自定义转换器
 	 * 
-	 * @param clazz 转换的目标类型
+	 * @param type 转换的目标类型
 	 * @param converterClass 转换器类，必须有默认构造方法
 	 * @return {@link ConverterRegistry}
 	 */
-	public ConverterRegistry putCustom(Class<?> clazz, Class<? extends Converter<?>> converterClass) {
-		return putCustom(clazz, ClassUtil.newInstance(converterClass));
+	public ConverterRegistry putCustom(Type type, Class<? extends Converter<?>> converterClass) {
+		return putCustom(type, ClassUtil.newInstance(converterClass));
 	}
 
 	/**
 	 * 登记自定义转换器
 	 * 
-	 * @param clazz 转换的目标类型
+	 * @param type 转换的目标类型
 	 * @param converter 转换器
 	 * @return {@link ConverterRegistry}
 	 */
-	public ConverterRegistry putCustom(Class<?> clazz, Converter<?> converter) {
+	public ConverterRegistry putCustom(Type type, Converter<?> converter) {
 		if (null == customConverterMap) {
 			synchronized (this) {
 				if (null == customConverterMap) {
@@ -105,7 +106,7 @@ public class ConverterRegistry {
 				}
 			}
 		}
-		customConverterMap.put(clazz, converter);
+		customConverterMap.put(type, converter);
 		return this;
 	}
 
@@ -118,7 +119,7 @@ public class ConverterRegistry {
 	 * @param isCustomFirst 是否自定义转换器优先
 	 * @return 转换器
 	 */
-	public <T> Converter<T> getConverter(Class<T> type, boolean isCustomFirst) {
+	public <T> Converter<T> getConverter(Type type, boolean isCustomFirst) {
 		Converter<T> converter = null;
 		if (isCustomFirst) {
 			converter = this.getCustomConverter(type);
@@ -142,7 +143,7 @@ public class ConverterRegistry {
 	 * @return 转换器
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Converter<T> getDefaultConverter(Class<T> type) {
+	public <T> Converter<T> getDefaultConverter(Type type) {
 		return (null == defaultConverterMap) ? null : (Converter<T>) defaultConverterMap.get(type);
 	}
 
@@ -155,7 +156,7 @@ public class ConverterRegistry {
 	 * @return 转换器
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Converter<T> getCustomConverter(Class<T> type) {
+	public <T> Converter<T> getCustomConverter(Type type) {
 		return (null == customConverterMap) ? null : (Converter<T>) customConverterMap.get(type);
 	}
 

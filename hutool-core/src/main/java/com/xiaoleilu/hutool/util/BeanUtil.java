@@ -8,6 +8,7 @@ import java.beans.PropertyEditorManager;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -235,7 +236,7 @@ public class BeanUtil {
 	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, CopyOptions copyOptions) {
 		return fillBean(bean, new ValueProvider<String>(){
 			@Override
-			public Object value(String key, Class<?> valueType) {
+			public Object value(String key, Type valueType) {
 				return map.get(key);
 			}
 
@@ -315,7 +316,7 @@ public class BeanUtil {
 		final String beanName = StrUtil.lowerFirst(bean.getClass().getSimpleName());
 		return fillBean(bean, new ValueProvider<String>(){
 			@Override
-			public Object value(String key, Class<?> valueType) {
+			public Object value(String key, Type valueType) {
 				String value = request.getParameter(key);
 				if (StrUtil.isEmpty(value)) {
 					// 使用类名前缀尝试查找值
@@ -402,31 +403,35 @@ public class BeanUtil {
 		try {
 			final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(actualEditable);
 			String propertyName;
-			Class<?> propertyType;
 			Object value;
+			Method setterMethod;
+			Type propType;
+			Class<?> propRowType;
 			for (PropertyDescriptor property : propertyDescriptors) {
 				propertyName = property.getName();
 				if((null != ignoreSet && ignoreSet.contains(propertyName)) || false == valueProvider.containsKey(propertyName)){
 					continue;//属性值被忽略或值提供者无此key时跳过
 				}
-				propertyType = property.getPropertyType();
-				value = valueProvider.value(propertyName, propertyType);
+				setterMethod = ClassUtil.setAccessible(property.getWriteMethod());
+				propType = TypeUtil.getParamType(setterMethod, 0);
+				value = valueProvider.value(propertyName, propType);
 				if (null == value && copyOptions.ignoreNullValue) {
 					continue;//当允许跳过空时，跳过
 				}
 
 				try {
 					//当类型不匹配的时候，执行默认转换
-					if(false == propertyType.isInstance(value)){
-						value = Convert.convert(propertyType, value);
+					propRowType = property.getPropertyType();
+					if(false == propRowType.isInstance(value)){
+						value = Convert.convert(propRowType, value);
 						if (null == value && copyOptions.ignoreNullValue) {
 							continue;//当允许跳过空时，跳过
 						}
 					}
-//					property.getWriteMethod().invoke(bean, value);
-					Method method = ClassUtil.setAccessible(property.getWriteMethod());
-					if(null != method){
-						method.invoke(bean, value);
+					
+					//执行set方法注入值
+					if(null != setterMethod){
+						setterMethod.invoke(bean, value);
 					}
 				} catch (Exception e) {
 					if(copyOptions.ignoreError){
@@ -523,7 +528,7 @@ public class BeanUtil {
 	
 	/**
 	 * 复制Bean对象属性<br>
-	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
+	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将CopyOptions.editable设置为父类
 	 * @param source 源Bean对象
 	 * @param target 目标Bean对象
 	 * @param ignoreCase 是否忽略大小写
@@ -544,15 +549,17 @@ public class BeanUtil {
 		
 		fillBean(target, new ValueProvider<String>(){
 			@Override
-			public Object value(String key, Class<?> valueType) {
-				PropertyDescriptor sourcePd = sourcePdMap.get(key);
-				Method readMethod = sourcePd.getReadMethod();
-				if (readMethod != null && ClassUtil.isAssignable(valueType, readMethod.getReturnType())) {
-					try {
-						return ClassUtil.setAccessible(readMethod).invoke(source);
-					} catch (Exception e) {
-						if(false == ignoreError){
-							throw new UtilException(e, "Inject [{}] error!", key);
+			public Object value(String key, Type valueType) {
+				final PropertyDescriptor sourcePd = sourcePdMap.get(key);
+				if(null != sourcePd){
+					final Method readMethod = sourcePd.getReadMethod();
+					if (null != readMethod) {
+						try {
+							return ClassUtil.setAccessible(readMethod).invoke(source);
+						} catch (Exception e) {
+							if(false == ignoreError){
+								throw new UtilException(e, "Inject [{}] error!", key);
+							}
 						}
 					}
 				}
@@ -585,7 +592,7 @@ public class BeanUtil {
 		 * @param valueType 被注入的值得类型
 		 * @return 对应参数名的值
 		 */
-		public Object value(T key, Class<?> valueType);
+		public Object value(T key, Type valueType);
 		
 		/**
 		 * 是否包含指定KEY，如果不包含则忽略注入

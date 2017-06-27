@@ -35,19 +35,21 @@ import java.util.Set;
  *
  */
 public class ClassUtil {
-	
-	private ClassUtil() {}
-	
+
+	private ClassUtil() {
+	}
+
 	/**
 	 * {@code null}安全的获取对象类型
+	 * 
 	 * @param obj 对象，如果为{@code null} 返回{@code null}
 	 * @return 对象类型，提供对象如果为{@code null} 返回{@code null}
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Class<T> getClass(T obj){
-		return ((null == obj) ? null : (Class<T>)obj.getClass());
+	public static <T> Class<T> getClass(T obj) {
+		return ((null == obj) ? null : (Class<T>) obj.getClass());
 	}
-	
+
 	/**
 	 * 获取类名<br>
 	 * 
@@ -56,18 +58,19 @@ public class ClassUtil {
 	 * @return 类名
 	 * @since 3.0.7
 	 */
-	public static String getClassName(Object obj, boolean isSimple){
-		if(null == obj){
+	public static String getClassName(Object obj, boolean isSimple) {
+		if (null == obj) {
 			return null;
 		}
 		final Class<?> clazz = obj.getClass();
 		return getClassName(clazz, isSimple);
 	}
-	
+
 	/**
 	 * 获取类名<br>
 	 * 类名并不包含“.class”这个扩展名<br>
 	 * 例如：ClassUtil这个类<br>
+	 * 
 	 * <pre>
 	 * isSimple为false: "com.xiaoleilu.hutool.util.ClassUtil"
 	 * isSimple为true: "ClassUtil"
@@ -78,8 +81,8 @@ public class ClassUtil {
 	 * @return 类名
 	 * @since 3.0.7
 	 */
-	public static String getClassName(Class<?> clazz, boolean isSimple){
-		if(null == clazz){
+	public static String getClassName(Class<?> clazz, boolean isSimple) {
+		if (null == clazz) {
 			return null;
 		}
 		return isSimple ? clazz.getSimpleName() : clazz.getName();
@@ -98,26 +101,27 @@ public class ClassUtil {
 		}
 		return classes;
 	}
-	
+
 	/**
 	 * 指定类是否与给定的类名相同
+	 * 
 	 * @param clazz 类
 	 * @param className 类名，可以是全类名（包含包名），也可以是简单类名（不包含包名）
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 指定类是否与给定的类名相同
 	 * @since 3.0.7
 	 */
-	public static boolean equals(Class<?> clazz, String className, boolean ignoreCase){
-		if(null == clazz || StrUtil.isBlank(className)){
+	public static boolean equals(Class<?> clazz, String className, boolean ignoreCase) {
+		if (null == clazz || StrUtil.isBlank(className)) {
 			return false;
 		}
-		if(ignoreCase){
+		if (ignoreCase) {
 			return className.equalsIgnoreCase(clazz.getName()) || className.equalsIgnoreCase(clazz.getSimpleName());
-		}else{
+		} else {
 			return className.equals(clazz.getName()) || className.equals(clazz.getSimpleName());
 		}
 	}
-	
+
 	// ----------------------------------------------------------------------------------------- Scan classes
 	/**
 	 * 扫描指定包路径下所有包含指定注解的类
@@ -130,7 +134,7 @@ public class ClassUtil {
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
 		return ClassScaner.scanPackageByAnnotation(packageName, annotationClass);
 	}
-	
+
 	/**
 	 * 扫描指定包路径下所有指定类或接口的子类或实现类
 	 * 
@@ -142,7 +146,7 @@ public class ClassUtil {
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
 		return ClassScaner.scanPackageBySuper(packageName, superClass);
 	}
-	
+
 	/**
 	 * 扫面该包路径下所有class文件
 	 * 
@@ -152,7 +156,7 @@ public class ClassUtil {
 	public static Set<Class<?>> scanPackage() {
 		return ClassScaner.scanPackage();
 	}
-	
+
 	/**
 	 * 扫面该包路径下所有class文件
 	 * 
@@ -163,7 +167,7 @@ public class ClassUtil {
 	public static Set<Class<?>> scanPackage(String packageName) {
 		return ClassScaner.scanPackage(packageName);
 	}
-	
+
 	/**
 	 * 扫面包路径下满足class过滤器条件的所有class文件，<br>
 	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException<br>
@@ -327,7 +331,7 @@ public class ClassUtil {
 	 * @return 方法
 	 * @throws SecurityException 无访问权限抛出异常
 	 */
-	public static Method getDeclaredMethodOfObj(Object obj, String methodName, Object... args) throws  SecurityException {
+	public static Method getDeclaredMethodOfObj(Object obj, String methodName, Object... args) throws SecurityException {
 		return getDeclaredMethod(obj.getClass(), methodName, getClasses(args));
 	}
 
@@ -352,42 +356,45 @@ public class ClassUtil {
 		}
 		return method;
 	}
-	
+
 	// ----------------------------------------------------------------------------------------- Field
 	/**
 	 * 查找指定类中的所有字段（包括非public字段）， 字段不存在则返回<code>null</code>
+	 * 
 	 * @param clazz 被查找字段的类
 	 * @param fieldName 字段名
 	 * @return 字段
 	 * @throws SecurityException 安全异常
 	 */
-	public static Field getDeclaredField(Class<?> clazz, String fieldName) throws  SecurityException{
-		if(null == clazz || StrUtil.isBlank(fieldName)){
+	public static Field getDeclaredField(Class<?> clazz, String fieldName) throws SecurityException {
+		if (null == clazz || StrUtil.isBlank(fieldName)) {
 			return null;
 		}
 		try {
 			return clazz.getDeclaredField(fieldName);
 		} catch (NoSuchFieldException e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return null;
 	}
 
 	/**
 	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回<code>null</code>
+	 * 
 	 * @param clazz 被查找字段的类,不能为null
 	 * @param fieldName 字段名
 	 * @return 字段
 	 * @throws SecurityException 安全异常
 	 */
-	public static Field getField(Class<?> clazz, String fieldName) throws  SecurityException{
+	public static Field getField(Class<?> clazz, String fieldName) throws SecurityException {
 		Assert.notNull(clazz);
-		if(StrUtil.isBlank(fieldName)){
+		if (StrUtil.isBlank(fieldName)) {
 			return null;
 		}
 		Class<?> searchType = clazz;
-		while (Object.class != searchType && searchType != null) {
-			Field[] fields = getDeclaredFields(searchType);
+		Field[] fields;
+		while (Object.class != searchType && null != searchType) {
+			fields = getDeclaredFields(searchType);
 			for (Field field : fields) {
 				if ((fieldName.equals(field.getName()))) {
 					return field;
@@ -397,19 +404,20 @@ public class ClassUtil {
 		}
 		return null;
 	}
+
 	/**
 	 * 查找指定类中的所有字段（包括非public字段)
+	 * 
 	 * @param clazz 被查找字段的类
 	 * @return 字段
 	 * @throws SecurityException 安全异常
 	 */
-	public static Field[] getDeclaredFields(Class<?> clazz) throws SecurityException{
-		if(null == clazz){
+	public static Field[] getDeclaredFields(Class<?> clazz) throws SecurityException {
+		if (null == clazz) {
 			return null;
 		}
 		return clazz.getDeclaredFields();
 	}
-
 
 	/**
 	 * 是否为equals方法
@@ -505,10 +513,11 @@ public class ClassUtil {
 	public static URL getURL(String resource) {
 		return getResourceUrl(resource, null);
 	}
-	
+
 	/**
 	 * 获得资源的URL<br>
 	 * 路径用/分隔，例如:
+	 * 
 	 * <pre>
 	 * config/a/db.config
 	 * spring/xml/test.xml
@@ -518,13 +527,14 @@ public class ClassUtil {
 	 * @return 资源URL
 	 * @see ResourceUtil#getResource(String)
 	 */
-	public static URL getResourceURL(String resource) throws IORuntimeException{
+	public static URL getResourceURL(String resource) throws IORuntimeException {
 		return ResourceUtil.getResource(resource);
 	}
-	
+
 	/**
 	 * 获取指定路径下的资源列表<br>
 	 * 路径格式必须为目录格式,用/分隔，例如:
+	 * 
 	 * <pre>
 	 * config/a
 	 * spring/xml
@@ -534,18 +544,19 @@ public class ClassUtil {
 	 * @return 资源列表
 	 * @see ResourceUtil#getResources(String)
 	 */
-	public static List<URL> getResources(String resource){
+	public static List<URL> getResources(String resource) {
 		return ResourceUtil.getResources(resource);
 	}
-	
+
 	/**
 	 * 获得资源相对路径对应的URL
+	 * 
 	 * @param resource 资源相对路径
 	 * @param baseClass 基准Class，获得的相对路径相对于此Class所在路径，如果为{@code null}则相对ClassPath
 	 * @return {@link URL}
 	 * @see ResourceUtil#getResource(String, Class)
 	 */
-	public static URL getResourceUrl(String resource, Class<?> baseClass){
+	public static URL getResourceUrl(String resource, Class<?> baseClass) {
 		return ResourceUtil.getResource(resource, baseClass);
 	}
 
@@ -570,6 +581,7 @@ public class ClassUtil {
 	/**
 	 * 获取{@link ClassLoader}<br>
 	 * 获取顺序如下：<br>
+	 * 
 	 * <pre>
 	 * 1、获取当前线程的ContextClassLoader
 	 * 2、获取{@link ClassUtil}类对应的ClassLoader
@@ -582,7 +594,7 @@ public class ClassUtil {
 		ClassLoader classLoader = getContextClassLoader();
 		if (classLoader == null) {
 			classLoader = ClassUtil.class.getClassLoader();
-			if(null == classLoader){
+			if (null == classLoader) {
 				classLoader = ClassLoader.getSystemClassLoader();
 			}
 		}
@@ -635,8 +647,8 @@ public class ClassUtil {
 
 		final Class<?>[] paramTypes = getClasses(params);
 		final Constructor<?> constructor = getConstructor(clazz, getClasses(params));
-		if(null == constructor){
-			throw new UtilException("No Constructor matched for parameter types: [{}]", new Object[]{paramTypes});
+		if (null == constructor) {
+			throw new UtilException("No Constructor matched for parameter types: [{}]", new Object[] { paramTypes });
 		}
 		try {
 			return getConstructor(clazz, paramTypes).newInstance(params);
@@ -644,17 +656,18 @@ public class ClassUtil {
 			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}
 	}
-	
+
 	/**
 	 * 查找类中的指定参数的构造方法
+	 * 
 	 * @param <T> 对象类型
 	 * @param clazz 类
 	 * @param parameterTypes 参数类型，只要任何一个参数是指定参数的父类或接口或相等即可
 	 * @return 构造方法，如果未找到返回null
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes){
-		if(null == clazz){
+	public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
+		if (null == clazz) {
 			return null;
 		}
 
@@ -662,26 +675,27 @@ public class ClassUtil {
 		Class<?>[] pts;
 		for (Constructor<?> constructor : constructors) {
 			pts = constructor.getParameterTypes();
-			if(isAllAssignableFrom(pts, parameterTypes)){
+			if (isAllAssignableFrom(pts, parameterTypes)) {
 				return (Constructor<T>) constructor;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 比较判断types1和types2两组类，如果types1中所有的类都与types2对应位置的类相同，或者是其父类或接口，则返回<code>true</code>
+	 * 
 	 * @param types1 类组1
 	 * @param types2 类组2
 	 * @return 是否相同、父类或接口
 	 */
-	public static boolean isAllAssignableFrom(Class<?>[] types1, Class<?>[] types2){
-		if(ArrayUtil.isEmpty(types1) && ArrayUtil.isEmpty(types2)){
+	public static boolean isAllAssignableFrom(Class<?>[] types1, Class<?>[] types2) {
+		if (ArrayUtil.isEmpty(types1) && ArrayUtil.isEmpty(types2)) {
 			return true;
 		}
-		if(types1.length == types2.length){
-			for(int i = 0; i < types1.length; i++){
-				if(false == types1[i].isAssignableFrom(types2[i])){
+		if (types1.length == types2.length) {
+			for (int i = 0; i < types1.length; i++) {
+				if (false == types1[i].isAssignableFrom(types2[i])) {
 					return false;
 				}
 			}
@@ -689,7 +703,7 @@ public class ClassUtil {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 加载类
 	 * 
@@ -752,9 +766,9 @@ public class ClassUtil {
 		if (StrUtil.isBlank(classNameWithMethodName)) {
 			throw new UtilException("Blank classNameDotMethodName!");
 		}
-		
+
 		int splitIndex = classNameWithMethodName.lastIndexOf('#');
-		if(splitIndex <= 0){
+		if (splitIndex <= 0) {
 			splitIndex = classNameWithMethodName.lastIndexOf('.');
 		}
 		if (splitIndex <= 0) {
@@ -799,12 +813,12 @@ public class ClassUtil {
 		Class<Object> clazz = loadClass(className);
 		try {
 			final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));
-			if(null == method){
+			if (null == method) {
 				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
 			}
-			if(isStatic(method)){
+			if (isStatic(method)) {
 				return invoke(null, method, args);
-			}else{
+			} else {
 				return invoke(isSingleton ? Singleton.get(clazz) : clazz.newInstance(), method, args);
 			}
 		} catch (Exception e) {
@@ -825,7 +839,7 @@ public class ClassUtil {
 	public static <T> T invoke(Object obj, String methodName, Object[] args) {
 		try {
 			final Method method = getDeclaredMethodOfObj(obj, methodName, args);
-			if(null == method){
+			if (null == method) {
 				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
 			}
 			return invoke(obj, method, args);
@@ -833,7 +847,7 @@ public class ClassUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 执行静态方法
 	 * 
@@ -845,7 +859,7 @@ public class ClassUtil {
 	 * @throws InvocationTargetException 目标方法执行异常
 	 * @throws IllegalArgumentException 参数异常
 	 */
-	public static <T> T invokeStatic(Method method, Object... args) throws InvocationTargetException, IllegalArgumentException{
+	public static <T> T invokeStatic(Method method, Object... args) throws InvocationTargetException, IllegalArgumentException {
 		return invoke(null, method, args);
 	}
 
@@ -862,7 +876,7 @@ public class ClassUtil {
 	 * @throws IllegalArgumentException 参数异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalArgumentException{
+	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalArgumentException {
 		if (!method.isAccessible()) {
 			method.setAccessible(true);
 		}
@@ -1052,33 +1066,41 @@ public class ClassUtil {
 	 * @return 是否为标准类
 	 */
 	public static boolean isNormalClass(Class<?> clazz) {
-		return null != clazz && false == clazz.isInterface() && false == isAbstract(clazz) && false == clazz.isEnum() && false == clazz.isArray() && false == clazz.isAnnotation() && false == clazz
-				.isSynthetic() && false == clazz.isPrimitive();
+		return null != clazz //
+				&& false == clazz.isInterface() //
+				&& false == isAbstract(clazz) //
+				&& false == clazz.isEnum() //
+				&& false == clazz.isArray() //
+				&& false == clazz.isAnnotation() //
+				&& false == clazz.isSynthetic() //
+				&& false == clazz.isPrimitive();//
 	}
-	
+
 	/**
 	 * 获得给定类的第一个泛型参数
+	 * 
 	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
 	 * @return {@link Class}
 	 */
 	public static Class<?> getTypeArgument(Class<?> clazz) {
 		return getTypeArgument(clazz, 0);
 	}
-	
+
 	/**
 	 * 获得给定类的泛型参数
+	 * 
 	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
 	 * @param index 泛型类型的索引号，既第几个泛型类型
 	 * @return {@link Class}
 	 */
 	public static Class<?> getTypeArgument(Class<?> clazz, int index) {
 		final Type argumentType = TypeUtil.getTypeArgument(clazz, index);
-		if(null != argumentType && argumentType instanceof Class){
-			return (Class<?>)argumentType;
+		if (null != argumentType && argumentType instanceof Class) {
+			return (Class<?>) argumentType;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获得给定类所在包的名称<br>
 	 * 例如：<br>
@@ -1087,7 +1109,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 包名
 	 */
-	public static String getPackage(Class<?> clazz){
+	public static String getPackage(Class<?> clazz) {
 		if (clazz == null) {
 			return StrUtil.EMPTY;
 		}
@@ -1098,7 +1120,7 @@ public class ClassUtil {
 		}
 		return className.substring(0, packageEndIndex);
 	}
-	
+
 	/**
 	 * 获得给定类所在包的路径<br>
 	 * 例如：<br>
@@ -1107,7 +1129,7 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @return 包名
 	 */
-	public static String getPackagePath(Class<?> clazz){
+	public static String getPackagePath(Class<?> clazz) {
 		return getPackage(clazz).replace(StrUtil.C_DOT, StrUtil.C_SLASH);
 	}
 }
