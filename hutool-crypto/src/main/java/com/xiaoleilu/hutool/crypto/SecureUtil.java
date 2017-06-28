@@ -33,7 +33,8 @@ import com.xiaoleilu.hutool.crypto.digest.DigestAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.Digester;
 import com.xiaoleilu.hutool.crypto.digest.HMac;
 import com.xiaoleilu.hutool.crypto.digest.HmacAlgorithm;
-import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
+import com.xiaoleilu.hutool.crypto.symmetric.AES;
+import com.xiaoleilu.hutool.crypto.symmetric.DES;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricCrypto;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.lang.Assert;
@@ -365,40 +366,46 @@ public final class SecureUtil {
 	// ------------------------------------------------------------------- 对称加密算法
 
 	/**
-	 * AES加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricCrypto}对象或者使用相同KEY<br>
-	 * 例：<br>
-	 * 		AES加密：aes().encrypt(data)<br>
-	 * 		AES解密：aes().decrypt(data)<br>
+	 * AES加密，生成随机KEY。注意解密时必须使用相同 {@link AES}对象或者使用相同KEY<br>
+	 * 例：
+	 * <pre>
+	 * AES加密：aes().encrypt(data)
+	 * AES解密：aes().decrypt(data)
+	 * </pre>
 	 * 
-	 * @return {@link SymmetricCrypto}
+	 * @return {@link AES}
 	 */
-	public static SymmetricCrypto aes() {
-		return new SymmetricCrypto(SymmetricAlgorithm.AES);
+	public static AES aes() {
+		return new AES();
 	}
 
 	/**
 	 * AES加密<br>
-	 * 例：<br>
-	 * 		AES加密：aes(key).encrypt(data)<br>
-	 * 		AES解密：aes(key).decrypt(data)<br>
+	 * 例：
+	 * <pre>
+	 * AES加密：aes(key).encrypt(data)
+	 * AES解密：aes(key).decrypt(data)
+	 * <pre>
 	 * 
 	 * @param key 密钥
 	 * @return {@link SymmetricCrypto}
 	 */
-	public static SymmetricCrypto aes(byte[] key) {
-		return new SymmetricCrypto(SymmetricAlgorithm.AES, key);
+	public static AES aes(byte[] key) {
+		return new AES(key);
 	}
 	
 	/**
-	 * DES加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricCrypto}对象或者使用相同KEY<br>
-	 * 例：<br>
-	 * 		DES加密：des().encrypt(data)<br>
-	 * 		DES解密：des().decrypt(data)<br>
+	 * DES加密，生成随机KEY。注意解密时必须使用相同 {@link DES}对象或者使用相同KEY<br>
+	 * 例：
+	 * <pre>
+	 * DES加密：des().encrypt(data)
+	 * DES解密：des().decrypt(data)
+	 * <pre>
 	 * 
-	 * @return {@link SymmetricCrypto}
+	 * @return {@link DES}
 	 */
-	public static SymmetricCrypto des() {
-		return new SymmetricCrypto(SymmetricAlgorithm.DES);
+	public static DES des() {
+		return new DES();
 	}
 
 	/**
@@ -408,10 +415,10 @@ public final class SecureUtil {
 	 * 		DES解密：des(key).decrypt(data)<br>
 	 * 
 	 * @param key 密钥
-	 * @return {@link SymmetricCrypto}
+	 * @return {@link DES}
 	 */
-	public static SymmetricCrypto des(byte[] key) {
-		return new SymmetricCrypto(SymmetricAlgorithm.DES, key);
+	public static DES des(byte[] key) {
+		return new DES(key);
 	}
 
 	// ------------------------------------------------------------------- 摘要算法

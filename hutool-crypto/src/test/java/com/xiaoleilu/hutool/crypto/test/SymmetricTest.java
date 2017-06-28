@@ -25,6 +25,7 @@ public class SymmetricTest {
 		
 		//构建
 		SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, key);
+		
 		//加密
 		byte[] encrypt = aes.encrypt(content);
 		//解密

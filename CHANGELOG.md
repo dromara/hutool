@@ -14,6 +14,8 @@
 * 正则Pattern和FastDateFormat添加缓存支持
 * DateTime和DateUtil添加isIn方法（感谢@【合肥】天涯）
 * HexUtil增加方法encodeColor和decodeColor（感谢@【帝都】宁静）
+* 新增AES快捷支持（SymmetricCrypto包装）
+* SymmetricCrypto支持自定义加盐（偏移向量）（感谢【鲁】full）
 
 ### Bug修复
 * 修复CollectionUtil.newHashSet方法参数失效的bug
