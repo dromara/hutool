@@ -49,9 +49,20 @@ public class NumberUtil {
 	 * @return 和
 	 */
 	public static double add(double v1, double v2) {
-		BigDecimal b1 = new BigDecimal(Double.toString(v1));
-		BigDecimal b2 = new BigDecimal(Double.toString(v2));
-		return b1.add(b2).doubleValue();
+		return add(Double.toString(v1), Double.toString(v2)).doubleValue();
+	}
+	
+	/**
+	 * 提供精确的加法运算
+	 * @param v1 被加数
+	 * @param v2 加数
+	 * @return 和
+	 * @since 3.0.8
+	 */
+	public static BigDecimal add(String v1, String v2) {
+		final BigDecimal b1 = new BigDecimal(v1);
+		final BigDecimal b2 = new BigDecimal(v2);
+		return b1.add(b2);
 	}
 
 	/**
@@ -62,9 +73,20 @@ public class NumberUtil {
 	 * @return 差
 	 */
 	public static double sub(double v1, double v2) {
-		BigDecimal b1 = new BigDecimal(Double.toString(v1));
-		BigDecimal b2 = new BigDecimal(Double.toString(v2));
-		return b1.subtract(b2).doubleValue();
+		return sub(Double.toString(v1), Double.toString(v2)).doubleValue();
+	}
+	
+	/**
+	 * 提供精确的减法运算
+	 * @param v1 被减数
+	 * @param v2 减数
+	 * @return 差
+	 * @since 3.0.8
+	 */
+	public static BigDecimal sub(String v1, String v2) {
+		final BigDecimal b1 = new BigDecimal(v1);
+		final BigDecimal b2 = new BigDecimal(v2);
+		return b1.subtract(b2);
 	}
 
 	/**
@@ -75,9 +97,21 @@ public class NumberUtil {
 	 * @return 积
 	 */
 	public static double mul(double v1, double v2) {
-		BigDecimal b1 = new BigDecimal(Double.toString(v1));
-		BigDecimal b2 = new BigDecimal(Double.toString(v2));
-		return b1.multiply(b2).doubleValue();
+		return mul(Double.toString(v1), Double.toString(v2)).doubleValue();
+	}
+	
+	/**
+	 * 提供精确的乘法运算
+	 * 
+	 * @param v1 被乘数
+	 * @param v2 乘数
+	 * @return 积
+	 * @since 3.0.8
+	 */
+	public static BigDecimal mul(String v1, String v2) {
+		final BigDecimal b1 = new BigDecimal(v1);
+		final BigDecimal b2 = new BigDecimal(v2);
+		return b1.multiply(b2);
 	}
 
 	/**
@@ -88,6 +122,17 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(double v1, double v2) {
+		return div(v1, v2, DEFAUT_DIV_SCALE);
+	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
+	 * 
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @return 两个参数的商
+	 */
+	public static BigDecimal div(String v1, String v2) {
 		return div(v1, v2, DEFAUT_DIV_SCALE);
 	}
 
@@ -102,6 +147,18 @@ public class NumberUtil {
 	public static double div(double v1, double v2, int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度,后面的四舍五入
+	 * 
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @param scale 精确度，如果为负值，取绝对值
+	 * @return 两个参数的商
+	 */
+	public static BigDecimal div(String v1, String v2, int scale) {
+		return div(v1, v2, scale, RoundingMode.HALF_UP);
+	}
 
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
@@ -113,12 +170,25 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(double v1, double v2, int scale, RoundingMode roundingMode) {
+		return div(Double.toString(v1), Double.toString(v2), scale, roundingMode).doubleValue();
+	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
+	 * 
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @param scale 精确度，如果为负值，取绝对值
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 两个参数的商
+	 */
+	public static BigDecimal div(String v1, String v2, int scale, RoundingMode roundingMode) {
 		if (scale < 0) {
 			scale = -scale;
 		}
-		BigDecimal b1 = new BigDecimal(Double.toString(v1));
-		BigDecimal b2 = new BigDecimal(Double.toString(v2));
-		return b1.divide(b2, scale, roundingMode).doubleValue();
+		final BigDecimal b1 = new BigDecimal(v1);
+		final BigDecimal b2 = new BigDecimal(v2);
+		return b1.divide(b2, scale, roundingMode);
 	}
 
 	// ------------------------------------------------------------------------------------------- round
