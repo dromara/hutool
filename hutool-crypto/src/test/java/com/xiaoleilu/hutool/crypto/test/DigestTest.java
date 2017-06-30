@@ -45,4 +45,11 @@ public class DigestTest {
 		String sha1Hex2 = DigestUtil.sha1Hex(IoUtil.toStream(testStr, CharsetUtil.CHARSET_UTF_8));
 		Assert.assertEquals("ecabf586cef0d3b11c56549433ad50b81110a836", sha1Hex2);
 	}
+	
+	@Test
+	public void hash256Test() {
+		String testStr = "Test中文";
+		String hex = DigestUtil.sha256Hex(testStr);
+		Assert.assertEquals(64, hex.length());
+	}
 }
