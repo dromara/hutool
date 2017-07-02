@@ -17,6 +17,7 @@
 * 新增AES快捷支持（SymmetricCrypto包装）
 * SymmetricCrypto支持自定义加盐（偏移向量）（感谢【鲁】full）
 * NumberUtil运算使用String参数（感谢：@【北京】仓山有井名为空）
+* XmlUtil增加getRootElement方法
 
 ### Bug修复
 * 修复CollectionUtil.newHashSet方法参数失效的bug
