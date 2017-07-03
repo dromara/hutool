@@ -1429,7 +1429,7 @@ public class CollectionUtil {
 		Collections.sort(list, c);
 		return list;
 	}
-
+	
 	// ------------------------------------------------------------------------------------------------- forEach
 
 	/**

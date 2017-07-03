@@ -24,6 +24,7 @@
 * 修复DbUtil.getTables方法获取为空问题（感谢@【天津】〓下页）
 * 修复HttpUtil.toParams方法key或value为null的情况下拼接为null字符串的问题（感谢@talent-aio）
 * 修复HttpUtil.decodeParams方法全局解码导致的不一致问题（感谢@talent-aio）
+* 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
 
 -------------------------------------------------------------------------------------------------------------
 
