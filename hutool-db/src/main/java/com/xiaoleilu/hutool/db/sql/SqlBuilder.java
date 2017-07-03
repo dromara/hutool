@@ -105,7 +105,9 @@ public class SqlBuilder {
 	}
 	
 	/**
-	 * 插入
+	 * 插入<br>
+	 * 插入会忽略空的字段名及其对应值，但是对于有字段名对应值为{@code null}的情况不忽略
+	 * 
 	 * @param entity 实体
 	 * @param dialectName 方言名
 	 * @return 自己
@@ -129,7 +131,7 @@ public class SqlBuilder {
 		for (Entry<String, Object> entry : entity.entrySet()) {
 			field = entry.getKey();
 			value = entry.getValue();
-			if(StrUtil.isNotBlank(field) && null != value){//只对值为非空的数据做插入操作
+			if(StrUtil.isNotBlank(field) /*&& null != value*/){
 				if(isFirst){
 					isFirst = false;
 				}else{
@@ -148,8 +150,8 @@ public class SqlBuilder {
 				}
 			}
 		}
-		sql.append("INSERT INTO ")
-			.append(entity.getTableName()).append(" (").append(fields).append(") VALUES (")
+		sql.append("INSERT INTO ")//
+			.append(entity.getTableName()).append(" (").append(fields).append(") VALUES (")//
 			.append(placeHolder.toString()).append(")");
 		
 		return this;

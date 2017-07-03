@@ -1416,6 +1416,24 @@ public class CollectionUtil {
 		return null;
 	}
 	
+	/**
+	 * 从Map中获取指定键列表对应的值列表<br>
+	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
+	 * 
+	 * @param map {@link Map}
+	 * @param keys 键列表
+	 * @return 值列表
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, K... keys) {
+		final ArrayList<V> values = new ArrayList<>();
+		for (K k : keys) {
+			values.add(map.get(k));
+		}
+		return values;
+	}
+	
 	// ------------------------------------------------------------------------------------------------- sort
 	/**
 	 * 针对List排序，排序会修改原List
