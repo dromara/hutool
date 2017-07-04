@@ -18,6 +18,7 @@
 * SymmetricCrypto支持自定义加盐（偏移向量）（感谢【鲁】full）
 * NumberUtil运算使用String参数（感谢：@【北京】仓山有井名为空）
 * XmlUtil增加getRootElement方法
+* JSONUtil增加parseArray(Object)方法
 
 ### Bug修复
 * 修复CollectionUtil.newHashSet方法参数失效的bug
@@ -26,6 +27,7 @@
 * 修复HttpUtil.decodeParams方法全局解码导致的不一致问题（感谢@talent-aio）
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
 * 修复批量插入值顺序错乱问题（感谢@【北京】游弋苍茫）
+* 修复JSONObject中toBean参数歧义导致的toBean异常
 
 -------------------------------------------------------------------------------------------------------------
 
