@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -19,6 +20,7 @@ import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * JSON对象<br>
@@ -172,6 +174,36 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		return toBean(ClassUtil.newInstance(clazz), ignoreError);
 	}
 	
+	/**
+	 * 转为实体类对象，转换异常将被抛出
+	 * 
+	 * @param <T> Bean类型
+	 * @param type {@link Type}
+	 * @return 实体类对象
+	 * @since 3.0.8
+	 */
+	public <T> T toBean(Type type) {
+		return toBean(type, false);
+	}
+	
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param type {@link Type}
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 实体类对象
+	 * @since 3.0.8
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T toBean(Type type, boolean ignoreError) {
+		final Class<?> clazz = TypeUtil.getRowType(type);
+		if(null == clazz) {
+			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
+		}
+		return (T) toBean(ClassUtil.newInstance(clazz), ignoreError);
+	}
+
 	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 * 

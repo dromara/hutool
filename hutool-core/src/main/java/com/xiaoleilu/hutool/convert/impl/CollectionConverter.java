@@ -81,9 +81,9 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	}
 
 	/**
-	 * 
-	 * @param value
-	 * @return
+	 * 内部转换
+	 * @param value 值
+	 * @return 转换后的集合对象
 	 */
 	protected Collection<?> convertInternal(Object value) {
 		final Collection<Object> collection = CollectionUtil.create(this.collectionType);

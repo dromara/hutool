@@ -1,16 +1,12 @@
 package com.xiaoleilu.hutool.core.io;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.resource.ClassPathResource;
-import com.xiaoleilu.hutool.lang.Console;
-import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
  * ClassPath资源读取测试
@@ -33,10 +29,11 @@ public class ClassPathResourceTest {
 		//测试读取junit的jar包下的LICENSE-junit.txt文件
 		final ClassPathResource resource = new ClassPathResource("LICENSE-junit.txt");
 		
-		File file = resource.getFile();
-		Console.log(file);
+		String result = resource.readUtf8Str();
+		Assert.assertNotNull(result);
 		
-		String result = IoUtil.read(resource.getStream(), CharsetUtil.CHARSET_UTF_8);
+		//二次读取测试，用于测试关闭流对再次读取的影响
+		result = resource.readUtf8Str();
 		Assert.assertNotNull(result);
 	}
 }

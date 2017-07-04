@@ -1385,7 +1385,7 @@ public class CollectionUtil {
 	
 	/**
 	 * 获得{@link iterable}对象的元素类型（通过第一个非空元素判断）
-	 * @param iterator {@link iterable}
+	 * @param iterable {@link iterable}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @since 3.0.8
 	 */

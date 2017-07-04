@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.db;
 import java.sql.SQLException;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.db.ds.DSFactory;
@@ -14,6 +15,7 @@ public class CRUDTest {
 	 * @throws SQLException
 	 */
 	@Test
+	@Ignore
 	public void crudTest() throws SQLException{
 		SqlRunner runner = SqlRunner.create(DSFactory.get());
 		
