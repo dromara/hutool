@@ -42,6 +42,7 @@ public class ClassUtil {
 	/**
 	 * {@code null}安全的获取对象类型
 	 * 
+	 * @param <T> 对象类型
 	 * @param obj 对象，如果为{@code null} 返回{@code null}
 	 * @return 对象类型，提供对象如果为{@code null} 返回{@code null}
 	 */
@@ -53,7 +54,8 @@ public class ClassUtil {
 	/**
 	 * 获取类名<br>
 	 * 
-	 * @param obj
+	 * @param <T> 对象类型
+	 * @param obj 获取类名对象
 	 * @param isSimple 是否简单类名，如果为true，返回不带包名的类名
 	 * @return 类名
 	 * @since 3.0.7

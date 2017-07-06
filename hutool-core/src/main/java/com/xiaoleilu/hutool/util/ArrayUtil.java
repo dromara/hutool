@@ -239,6 +239,7 @@ public class ArrayUtil {
 	/**
 	 * 是否包含{@code null}元素
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 被检查的数组
 	 * @return 是否包含{@code null}元素
 	 * @since 3.0.7
@@ -258,6 +259,7 @@ public class ArrayUtil {
 	/**
 	 * 返回数组中第一个非空元素
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
 	 * @since 3.0.7

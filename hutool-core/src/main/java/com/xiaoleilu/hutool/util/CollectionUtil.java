@@ -647,6 +647,7 @@ public class CollectionUtil {
 	/**
 	 * 创建新的集合对象
 	 * 
+	 * @param <T> 集合类型
 	 * @param collectionType 集合类型
 	 * @return 集合类型对应的实例
 	 * @since 3.0.8
@@ -692,6 +693,8 @@ public class CollectionUtil {
 	 * 创建Map<br>
 	 * 传入抽象Map{@link AbstractMap}和{@link Map}类将默认创建{@link HashMap}
 	 * 
+	 * @param <K> map键类型
+	 * @param <V> map值类型
 	 * @param mapType map类型
 	 * @return {@link Map}实例
 	 */
@@ -979,7 +982,7 @@ public class CollectionUtil {
 	 * @return 是否包含{@code null}元素
 	 * @since 3.0.7
 	 */
-	public static <T> boolean hasNull(Iterable<?> iterable) {
+	public static boolean hasNull(Iterable<?> iterable) {
 		if (isNotEmpty(iterable)) {
 			for (Object element : iterable) {
 				if (null == element) {
@@ -1088,7 +1091,7 @@ public class CollectionUtil {
 	 * </pre>
 	 * 
 	 * <pre>
-	 * Map<Object, Object> colorMap = CollectionUtil.toMap(new String[][] {{
+	 * Map&lt;Object, Object&gt colorMap = CollectionUtil.toMap(new String[][] {{
 	 *     {"RED", "#FF0000"},
 	 *     {"GREEN", "#00FF00"},
 	 *     {"BLUE", "#0000FF"}});
@@ -1200,6 +1203,7 @@ public class CollectionUtil {
 	/**
 	 * {@link Iterator} 转为 {@link Iterable}
 	 * 
+	 * @param <E> 元素类型
 	 * @param iter {@link Iterator}
 	 * @return {@link Iterable}
 	 */
@@ -1216,6 +1220,7 @@ public class CollectionUtil {
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
 	 * 
+	 * @param <T> 元素类型
 	 * @param collection 被加入的集合
 	 * @param value 对象，可能为Iterator、Iterable、Enumeration、Array
 	 * @return 被加入集合
@@ -1228,6 +1233,7 @@ public class CollectionUtil {
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
 	 * 
+	 * @param <T> 元素类型
 	 * @param collection 被加入的集合
 	 * @param value 对象，可能为Iterator、Iterable、Enumeration、Array
 	 * @param elementType 元素类型，为空时，使用Object类型来接纳所有类型
@@ -1420,6 +1426,8 @@ public class CollectionUtil {
 	 * 从Map中获取指定键列表对应的值列表<br>
 	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
 	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param map {@link Map}
 	 * @param keys 键列表
 	 * @return 值列表
@@ -1438,6 +1446,7 @@ public class CollectionUtil {
 	/**
 	 * 针对List排序，排序会修改原List
 	 * 
+	 * @param <T> 元素类型
 	 * @param list 被排序的List
 	 * @param c {@link Comparator}
 	 * @return 原list

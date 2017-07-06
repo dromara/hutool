@@ -37,6 +37,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * 获取指定类型的对象<br>
 	 * 转换失败或抛出异常
 	 * 
+	 * @param <T> 获取的对象类型
 	 * @param key 键
 	 * @param type 获取对象类型
 	 * @return 对象
@@ -49,6 +50,8 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	
 	/**
 	 * 获取指定类型的对象
+	 * 
+	 * @param <T> 获取的对象类型
 	 * @param key 键
 	 * @param type 获取对象类型
 	 * @param ignoreError 是否跳过转换失败的对象或值

@@ -385,7 +385,7 @@ public final class SecureUtil {
 	 * <pre>
 	 * AES加密：aes(key).encrypt(data)
 	 * AES解密：aes(key).decrypt(data)
-	 * <pre>
+	 * </pre>
 	 * 
 	 * @param key 密钥
 	 * @return {@link SymmetricCrypto}
@@ -400,7 +400,7 @@ public final class SecureUtil {
 	 * <pre>
 	 * DES加密：des().encrypt(data)
 	 * DES解密：des().decrypt(data)
-	 * <pre>
+	 * </pre>
 	 * 
 	 * @return {@link DES}
 	 */
@@ -410,9 +410,11 @@ public final class SecureUtil {
 
 	/**
 	 * DES加密<br>
-	 * 例：<br>
-	 * 		DES加密：des(key).encrypt(data)<br>
-	 * 		DES解密：des(key).decrypt(data)<br>
+	 * 例：
+	 * <pre>
+	 * DES加密：des(key).encrypt(data)
+	 * DES解密：des(key).decrypt(data)
+	 * </pre>
 	 * 
 	 * @param key 密钥
 	 * @return {@link DES}
@@ -424,9 +426,11 @@ public final class SecureUtil {
 	// ------------------------------------------------------------------- 摘要算法
 	/**
 	 * MD5加密<br>
-	 * 例：<br>
-	 * 		MD5加密：md5().digest(data)<br>
-	 * 		MD5加密并转为16进制字符串：md5().digestHex(data)<br>
+	 * 例：
+	 * <pre>
+	 * MD5加密：md5().digest(data)
+	 * MD5加密并转为16进制字符串：md5().digestHex(data)
+	 * </pre>
 	 * 
 	 * @return {@link Digester}
 	 */
