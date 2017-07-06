@@ -52,9 +52,8 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 获取类名<br>
+	 * 获取类名
 	 * 
-	 * @param <T> 对象类型
 	 * @param obj 获取类名对象
 	 * @param isSimple 是否简单类名，如果为true，返回不带包名的类名
 	 * @return 类名
