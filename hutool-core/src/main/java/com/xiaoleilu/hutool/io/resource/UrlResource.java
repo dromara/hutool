@@ -110,7 +110,6 @@ public class UrlResource {
 	 * 读取资源内容，读取完毕后会关闭流<br>
 	 * 关闭流并不影响下一次读取
 	 * 
-	 * @param charset 编码
 	 * @return 读取资源内容
 	 * @throws IORuntimeException 包装{@link IOException}
 	 * @since 3.0.8
