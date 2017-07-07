@@ -48,6 +48,7 @@ public class CRUDTest {
 	}
 	
 	@Test
+	@Ignore
 	public void insertBatchTest() throws SQLException {
 		User user1 = new User();
 		user1.setName("张三");
