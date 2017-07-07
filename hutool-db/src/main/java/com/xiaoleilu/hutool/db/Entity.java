@@ -154,7 +154,7 @@ public class Entity extends Dict{
 	 */
 	@Override
 	public <T> Entity parseBean(T bean) {
-		if(StrUtil.isNotBlank(this.tableName)) {
+		if(StrUtil.isBlank(this.tableName)) {
 			this.setTableName(StrUtil.lowerFirst(bean.getClass().getSimpleName()));
 		}
 		return (Entity) super.parseBean(bean);
