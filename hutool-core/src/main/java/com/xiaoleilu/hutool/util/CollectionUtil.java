@@ -1217,6 +1217,18 @@ public class CollectionUtil {
 	}
 	
 	/**
+	 * {@link Iterable}转为{@link Collection}<br>
+	 * 首先尝试强转，强转失败则构建一个新的{@link ArrayList}
+	 * 
+	 * @param iterable {@link Iterable}
+	 * @return {@link Collection} 或者 {@link ArrayList}
+	 * @since 3.0.9
+	 */
+	public static <E> Collection<E> toCollection(Iterable<E> iterable) {
+		return (iterable instanceof Collection) ? (Collection<E>) iterable : newArrayList(iterable.iterator());
+	}
+	
+	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
 	 * 
@@ -1438,6 +1450,41 @@ public class CollectionUtil {
 		final ArrayList<V> values = new ArrayList<>();
 		for (K k : keys) {
 			values.add(map.get(k));
+		}
+		return values;
+	}
+	
+	/**
+	 * 从Map中获取指定键列表对应的值列表<br>
+	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param map {@link Map}
+	 * @param keys 键列表
+	 * @return 值列表
+	 * @since 3.0.9
+	 */
+	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterable<K> keys) {
+		return valuesOfKeys(map, keys.iterator());
+	}
+	
+	
+	/**
+	 * 从Map中获取指定键列表对应的值列表<br>
+	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param map {@link Map}
+	 * @param keys 键列表
+	 * @return 值列表
+	 * @since 3.0.9
+	 */
+	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
+		final ArrayList<V> values = new ArrayList<>();
+		while(keys.hasNext()) {
+			values.add(map.get(keys.next()));
 		}
 		return values;
 	}

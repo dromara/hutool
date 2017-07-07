@@ -19,6 +19,7 @@ import com.xiaoleilu.hutool.db.sql.Query;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -117,23 +118,29 @@ public class SqlConnRunner{
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
 	 */
-	public int[] insert(Connection conn, Iterable<Entity> records) throws SQLException {
+	public int[] insert(Connection conn, Collection<Entity> records) throws SQLException {
+		return insert(conn, records.toArray(new Entity[records.size()]));
+	}
+	
+	/**
+	 * 批量插入数据<br>
+	 * 批量插入必须严格保持Entity的结构一致，不一致会导致插入数据出现不可预知的结果<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接
+	 * @param records 记录列表，记录KV必须严格一致
+	 * @return 插入行数
+	 * @throws SQLException SQL执行异常
+	 */
+	public int[] insert(Connection conn, Entity... records) throws SQLException {
 		checkConn(conn);
-		if(CollectionUtil.isEmpty(records)){
+		if(ArrayUtil.isEmpty(records)){
 			return new int[]{0};
 		}
-		final Entity template = records.iterator().next();
-		final String[] keys = template.keySet().toArray(new String[template.size()]);
 		
 		PreparedStatement ps = null;
 		try {
-			ps = dialect.psForInsert(conn, template);
-			ps.clearBatch();
-			for (Entity entity : records) {
-				//from 3.0.8 改进批量数据插入值得获取算法
-				DbUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, keys));
-				ps.addBatch();
-			}
+			ps = dialect.psForInsertBatch(conn, records);
 			return ps.executeBatch();
 		} finally {
 			DbUtil.close(ps);
