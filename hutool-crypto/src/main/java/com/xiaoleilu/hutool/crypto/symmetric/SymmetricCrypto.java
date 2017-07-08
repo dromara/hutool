@@ -44,7 +44,7 @@ public class SymmetricCrypto {
 	
 	/**
 	 * 构造，使用随机密钥
-	 * @param algorithm 算法
+	 * @param algorithm 算法，可以是"algorithm/mode/padding"或者"algorithm"
 	 */
 	public SymmetricCrypto(String algorithm) {
 		this(algorithm, null);
@@ -96,6 +96,16 @@ public class SymmetricCrypto {
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
+		return this;
+	}
+	
+	/**
+	 * 设置 {@link AlgorithmParameterSpec}，通常用于加盐或偏移向量
+	 * @param params {@link AlgorithmParameterSpec}
+	 * @return 自身
+	 */
+	public SymmetricCrypto setParams(AlgorithmParameterSpec params){
+		this.params = params;
 		return this;
 	}
 	

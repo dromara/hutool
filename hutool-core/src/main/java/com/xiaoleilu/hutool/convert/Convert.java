@@ -3,9 +3,11 @@ package com.xiaoleilu.hutool.convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
@@ -413,6 +415,18 @@ public final class Convert {
 	 */
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value) {
 		return toEnum(clazz, value, null);
+	}
+	
+	/**
+	 * 转换为集合类
+	 * @param collectionType 集合类型
+	 * @param elementType 集合中元素类型
+	 * @param value 被转换的值
+	 * @return {@link Collection}
+	 * @since 3.0.8
+	 */
+	public static Collection<?> toCollection(Class<?> collectionType, Class<?> elementType, Object value){
+		return new CollectionConverter(collectionType, elementType).convert(value, null);
 	}
 
 	/**

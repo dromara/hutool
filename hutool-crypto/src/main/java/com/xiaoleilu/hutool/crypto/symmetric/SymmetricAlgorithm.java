@@ -8,9 +8,11 @@ package com.xiaoleilu.hutool.crypto.symmetric;
  *
  */
 public enum SymmetricAlgorithm {
+	/** 默认的AES加密方式：AES/CBC/PKCS5Padding */
 	AES("AES"), 
 	ARCFOUR("ARCFOUR"), 
 	Blowfish("Blowfish"), 
+	/** 默认的DES加密方式：DES/ECB/PKCS5Padding */
 	DES("DES"), 
 	DESede("DESede"), 
 	RC2("RC2"),

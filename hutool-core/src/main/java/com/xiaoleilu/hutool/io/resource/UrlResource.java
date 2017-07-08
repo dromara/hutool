@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
@@ -71,6 +72,60 @@ public class UrlResource {
 		return IoUtil.getReader(getStream(), charset);
 	}
 	
+	//------------------------------------------------------------------------------- read
+	/**
+	 * 读取资源内容，读取完毕后会关闭流<br>
+	 * 关闭流并不影响下一次读取
+	 * 
+	 * @param charset 编码
+	 * @return 读取资源内容
+	 * @throws IORuntimeException 包装{@link IOException}
+	 * @since 3.0.8
+	 */
+	public String readStr(Charset charset) throws IORuntimeException{
+		BufferedReader reader = null;
+		try {
+			reader = getReader(charset);
+			return IoUtil.read(reader);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(reader);
+		}
+	}
+	
+	/**
+	 * 读取资源内容，读取完毕后会关闭流<br>
+	 * 关闭流并不影响下一次读取
+	 * 
+	 * @return 读取资源内容
+	 * @throws IORuntimeException 包装{@link IOException}
+	 * @since 3.0.8
+	 */
+	public String readUtf8Str() throws IORuntimeException{
+		return readStr(CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 读取资源内容，读取完毕后会关闭流<br>
+	 * 关闭流并不影响下一次读取
+	 * 
+	 * @return 读取资源内容
+	 * @throws IORuntimeException 包装{@link IOException}
+	 * @since 3.0.8
+	 */
+	public byte[] readBytes() throws IORuntimeException{
+		InputStream in = null;
+		try {
+			in = getStream();
+			return IoUtil.readBytes(in);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(in);
+		}
+	}
+	
 	/**
 	 * 获得File
 	 * @return {@link File}
@@ -79,6 +134,10 @@ public class UrlResource {
 		return FileUtil.file(this.url);
 	}
 	
+	/**
+	 * 返回路径
+	 * @return 返回URL路径
+	 */
 	@Override
 	public String toString() {
 		return (null == this.url) ? "null" : this.url.toString();

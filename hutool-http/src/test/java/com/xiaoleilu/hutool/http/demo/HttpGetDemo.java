@@ -18,7 +18,7 @@ public class HttpGetDemo {
 		// 方法1：最简单的HTTP请求，可以自动通过header等信息判断编码
 		String content = HttpUtil.get(url);
 		Console.log(content);
-
+		
 		// 方法2：从远程直接读取字符串，需要自定义编码，直接调用JDK方法
 		String content2 = HttpUtil.downloadString(url, CharsetUtil.UTF_8);
 		Console.log(content2);

@@ -103,6 +103,17 @@ public class XmlUtil {
 			throw new UtilException("Parse xml file [" + xmlStr + "] error!", e);
 		}
 	}
+	
+	/**
+	 * 获得XML文档根节点
+	 * @param doc {@link Document}
+	 * @return 根节点
+	 * @see Document#getDocumentElement()
+	 * @since 3.0.8
+	 */
+	public static Element getRootElement(Document doc) {
+		return (null == doc) ? null : doc.getDocumentElement();
+	}
 
 	// -------------------------------------------------------------------------------------- Write
 	/**
@@ -217,14 +228,14 @@ public class XmlUtil {
 	 * 根据节点名获得子节点列表
 	 * 
 	 * @param element 节点
-	 * @param tagName 节点名
+	 * @param tagName 节点名，如果节点名为空（null或blank），返回所有子节点
 	 * @return 节点列表
 	 */
 	public static List<Element> getElements(Element element, String tagName) {
-		final NodeList nodeList = element.getElementsByTagName(tagName);
+		final NodeList nodeList = StrUtil.isBlank(tagName) ? element.getChildNodes() : element.getElementsByTagName(tagName);
 		return transElements(element, nodeList);
 	}
-
+	
 	/**
 	 * 根据节点名获得第一个子节点
 	 * 

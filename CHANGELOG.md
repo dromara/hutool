@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.9
+
+### 新特性
+
+### Bug修复
+* 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
+
 ## 3.0.8
 
 ### 新特性
@@ -14,11 +21,21 @@
 * 正则Pattern和FastDateFormat添加缓存支持
 * DateTime和DateUtil添加isIn方法（感谢@【合肥】天涯）
 * HexUtil增加方法encodeColor和decodeColor（感谢@【帝都】宁静）
+* 新增AES快捷支持（SymmetricCrypto包装）
+* SymmetricCrypto支持自定义加盐（偏移向量）（感谢【鲁】full）
+* NumberUtil运算使用String参数（感谢：@【北京】仓山有井名为空）
+* XmlUtil增加getRootElement方法
+* JSONUtil增加parseArray(Object)方法
 
 ### Bug修复
 * 修复CollectionUtil.newHashSet方法参数失效的bug
 * 修复DbUtil.getTables方法获取为空问题（感谢@【天津】〓下页）
-* 修复HttpUtil.toParams方法key或value为null的情况下拼接为null字符串的问题（感谢感谢@talent-aio）
+* 修复HttpUtil.toParams方法key或value为null的情况下拼接为null字符串的问题（感谢@talent-aio）
+* 修复HttpUtil.decodeParams方法全局解码导致的不一致问题（感谢@talent-aio）
+* 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
+* 修复批量插入值顺序错乱问题（感谢@【北京】游弋苍茫）
+* 修复JSONObject中toBean参数歧义导致的toBean异常
+* 修复中文路径下获取ClassPath路径导致的问题（感谢@【重庆】周路、@质量过关）
 
 -------------------------------------------------------------------------------------------------------------
 

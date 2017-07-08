@@ -258,11 +258,14 @@ final class InternalJSONUtil {
 		}
 		
 		final Class<?> rowType = TypeUtil.getRowType(type);
+		if(null == rowType) {
+			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
+		}
 		
 		Object targetValue = null;
 		//非标准转换格式
 		if(value instanceof JSONObject){
-			targetValue = ((JSONObject)value).toBean(type, ignoreError);
+			targetValue = ((JSONObject)value).toBean(rowType, ignoreError);
 		}else if(value instanceof JSONArray){
 			final JSONArray jsonArrayValue = (JSONArray)value;
 			if(rowType.isArray()){

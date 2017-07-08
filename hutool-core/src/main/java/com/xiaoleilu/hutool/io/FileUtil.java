@@ -910,7 +910,8 @@ public final class FileUtil {
 		// 相对于ClassPath路径
 		final URL url = ClassUtil.getResourceUrl(path, baseClass);
 		if(null != url){
-			return url.getPath();
+			//since 3.0.8 解决中文或空格路径被编码的问题
+			return URLUtil.getDecodedPath(url);
 		}else{
 			//如果资源不存在，则返回一个拼接的资源绝对路径
 			final String classPath = ClassUtil.getClassPath();

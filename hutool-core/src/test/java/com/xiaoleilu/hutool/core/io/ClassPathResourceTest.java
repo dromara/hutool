@@ -3,10 +3,10 @@ package com.xiaoleilu.hutool.core.io;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.resource.ClassPathResource;
-import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * ClassPath资源读取测试
@@ -20,6 +20,20 @@ public class ClassPathResourceTest {
 		Properties properties = new Properties();
 		properties.load(resource.getStream());
 		
-		Console.log("Properties: {}", properties);
+		Assert.assertEquals("1", properties.get("a"));
+		Assert.assertEquals("2", properties.get("b"));
+	}
+	
+	@Test
+	public void readFromJarTest() throws IOException{
+		//测试读取junit的jar包下的LICENSE-junit.txt文件
+		final ClassPathResource resource = new ClassPathResource("LICENSE-junit.txt");
+		
+		String result = resource.readUtf8Str();
+		Assert.assertNotNull(result);
+		
+		//二次读取测试，用于测试关闭流对再次读取的影响
+		result = resource.readUtf8Str();
+		Assert.assertNotNull(result);
 	}
 }

@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class HttpUtil {
 	public static String encode(String content, Charset charset) {
 		return encode(content, charset.name());
 	}
-
+	
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded
 	 * 
@@ -100,7 +101,9 @@ public class HttpUtil {
 	 * @return 编码后的字符
 	 */
 	public static String decode(String content, String charsetStr) {
-		if (StrUtil.isBlank(content)) return content;
+		if (StrUtil.isBlank(content)) {
+			return content;
+		}
 		String encodeContnt = null;
 		try {
 			encodeContnt = URLDecoder.decode(content, charsetStr);
@@ -357,7 +360,7 @@ public class HttpUtil {
 	 * @param paramMap 表单数据
 	 * @return url参数
 	 */
-	public static String toParams(Map<String, Object> paramMap) {
+	public static String toParams(Map<String, ?> paramMap) {
 		return toParams(paramMap, CharsetUtil.CHARSET_UTF_8);
 	}
 	
@@ -385,7 +388,7 @@ public class HttpUtil {
 	 * @param charset 编码
 	 * @return url参数
 	 */
-	public static String toParams(Map<String, Object> paramMap, Charset charset) {
+	public static String toParams(Map<String, ?> paramMap, Charset charset) {
 		if(CollectionUtil.isEmpty(paramMap)){
 			return StrUtil.EMPTY;
 		}
@@ -393,23 +396,29 @@ public class HttpUtil {
 			charset = CharsetUtil.CHARSET_UTF_8;
 		}
 		
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		boolean isFirst = true;
 		String key;
-		String value;
-		for (Entry<String, Object> item : paramMap.entrySet()) {
+		Object value;
+		String valueStr;
+		for (Entry<String, ?> item : paramMap.entrySet()) {
 			if (isFirst) {
 				isFirst = false;
 			} else {
 				sb.append("&");
 			}
-//			sb.append(encode(item.getKey(), charset)).append("=").append(encode(Convert.toStr(item.getValue()), charset));
 			key = item.getKey();
-			value = encode(Convert.toStr(item.getValue()), charset);
+			value = item.getValue();
+			if(value instanceof Iterable){
+				value = CollectionUtil.join((Iterable<?>)value, ",");
+			}else if(value instanceof Iterator){
+				value = CollectionUtil.join((Iterator<?>)value, ",");
+			}
+			valueStr = encode(Convert.toStr(value), charset);
 			if(StrUtil.isNotEmpty(key)){
 				sb.append(key).append("=");
-				if(StrUtil.isNotEmpty(value)){
-					sb.append(value);
+				if(StrUtil.isNotEmpty(valueStr)){
+					sb.append(valueStr);
 				}
 			}
 		}
@@ -432,14 +441,14 @@ public class HttpUtil {
 		if (pathEndPos > 0) {
 			paramsStr = StrUtil.subSuf(paramsStr, pathEndPos + 1);
 		}
-		paramsStr = decode(paramsStr, charset);
 
 		final Map<String, List<String>> params = new LinkedHashMap<String, List<String>>();
+		final int len = paramsStr.length();
 		String name = null;
 		int pos = 0; // 未处理字符开始位置
 		int i; // 未处理字符结束位置
 		char c; // 当前字符
-		for (i = 0; i < paramsStr.length(); i++) {
+		for (i = 0; i < len; i++) {
 			c = paramsStr.charAt(i);
 			if (c == '=' && name == null) { // 键值对的分界点
 				if (pos != i) {
@@ -449,23 +458,24 @@ public class HttpUtil {
 			} else if (c == '&' || c == ';') { // 参数对的分界点
 				if (name == null && pos != i) {
 					// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
-					addParam(params, paramsStr.substring(pos, i), StrUtil.EMPTY);
+					addParam(params, paramsStr.substring(pos, i), StrUtil.EMPTY, charset);
 				} else if (name != null) {
-					addParam(params, name, paramsStr.substring(pos, i));
+					addParam(params, name, paramsStr.substring(pos, i), charset);
 					name = null;
 				}
 				pos = i + 1;
 			}
 		}
 
+		//处理结尾
 		if (pos != i) {
 			if (name == null) {
-				addParam(params, paramsStr.substring(pos, i), StrUtil.EMPTY);
+				addParam(params, paramsStr.substring(pos, i), StrUtil.EMPTY, charset);
 			} else {
-				addParam(params, name, paramsStr.substring(pos, i));
+				addParam(params, name, paramsStr.substring(pos, i), charset);
 			}
 		} else if (name != null) {
-			addParam(params, name, StrUtil.EMPTY);
+			addParam(params, name, StrUtil.EMPTY, charset);
 		}
 
 		return params;
@@ -593,24 +603,23 @@ public class HttpUtil {
 		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
 	}
 	// ----------------------------------------------------------------------------------------- Private method start
-
+	
 	/**
 	 * 将键值对加入到值为List类型的Map中
 	 * 
 	 * @param params 参数
 	 * @param name key
 	 * @param value value
-	 * @return 是否成功
+	 * @param charset 编码
 	 */
-	private static boolean addParam(Map<String, List<String>> params, String name, String value) {
+	private static void addParam(Map<String, List<String>> params, String name, String value, String charset) {
 		List<String> values = params.get(name);
 		if (values == null) {
 			values = new ArrayList<String>(1); // 一般是一个参数
 			params.put(name, values);
 		}
-		values.add(value);
-		return true;
+		values.add(decode(value, charset));
 	}
-
+	
 	// ----------------------------------------------------------------------------------------- Private method start end
 }

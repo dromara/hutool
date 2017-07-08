@@ -42,6 +42,7 @@ public class ClassUtil {
 	/**
 	 * {@code null}安全的获取对象类型
 	 * 
+	 * @param <T> 对象类型
 	 * @param obj 对象，如果为{@code null} 返回{@code null}
 	 * @return 对象类型，提供对象如果为{@code null} 返回{@code null}
 	 */
@@ -51,9 +52,9 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 获取类名<br>
+	 * 获取类名
 	 * 
-	 * @param obj
+	 * @param obj 获取类名对象
 	 * @param isSimple 是否简单类名，如果为true，返回不带包名的类名
 	 * @return 类名
 	 * @since 3.0.7
@@ -1131,5 +1132,41 @@ public class ClassUtil {
 	 */
 	public static String getPackagePath(Class<?> clazz) {
 		return getPackage(clazz).replace(StrUtil.C_DOT, StrUtil.C_SLASH);
+	}
+	
+	/**
+	 * 获取指定类型分的默认值<br>
+	 * 默认值规则为：
+	 * <pre>
+	 * 1、如果为原始类型，返回0
+	 * 2、非原始类型返回{@code null}
+	 * </pre>
+	 * 
+	 * @param clazz 类
+	 * @return 默认值
+	 * @since 3.0.8
+	 */
+	public static Object getDefaultValue(Class<?> clazz) {
+		if(clazz.isPrimitive()) {
+			if(long.class == clazz) {
+				return 0L;
+			}else if(int.class == clazz) {
+				return 0;
+			}else if(short.class == clazz) {
+				return (short)0;
+			}else if(char.class == clazz) {
+				return (char)0;
+			}else if(byte.class == clazz) {
+				return (byte)0;
+			}else if(double.class == clazz) {
+				return 0D;
+			}else if(float.class == clazz) {
+				return 0f;
+			}else if(boolean.class == clazz) {
+				return false;
+			}
+		}
+		
+		return null;
 	}
 }

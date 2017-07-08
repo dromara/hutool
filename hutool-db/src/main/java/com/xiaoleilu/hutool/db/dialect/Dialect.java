@@ -21,14 +21,14 @@ public interface Dialect {
 	/**
 	 * @return 包装器
 	 */
-	public Wrapper getWrapper();
+	Wrapper getWrapper();
 
 	/**
 	 * 设置包装器
 	 * 
 	 * @param wrapper 包装器
 	 */
-	public void setWrapper(Wrapper wrapper);
+	void setWrapper(Wrapper wrapper);
 
 	// -------------------------------------------- Execute
 	/**
@@ -39,8 +39,18 @@ public interface Dialect {
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
 	 */
-	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException;
-
+	PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException;
+	
+	/**
+	 * 构建用于批量插入的PreparedStatement
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param entities 数据实体，实体的结构必须全部一致，否则插入结果将不可预知
+	 * @return PreparedStatement
+	 * @throws SQLException SQL执行异常
+	 */
+	PreparedStatement psForInsertBatch(Connection conn, Entity... entities) throws SQLException;
+	
 	/**
 	 * 构建用于删除的PreparedStatement
 	 * 
@@ -49,7 +59,7 @@ public interface Dialect {
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
 	 */
-	public PreparedStatement psForDelete(Connection conn, Query query) throws SQLException;
+	PreparedStatement psForDelete(Connection conn, Query query) throws SQLException;
 
 	/**
 	 * 构建用于更新的PreparedStatement
@@ -60,7 +70,7 @@ public interface Dialect {
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
 	 */
-	public PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws SQLException;
+	PreparedStatement psForUpdate(Connection conn, Entity entity, Query query) throws SQLException;
 
 	// -------------------------------------------- Query
 	/**
@@ -71,7 +81,7 @@ public interface Dialect {
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
 	 */
-	public PreparedStatement psForFind(Connection conn, Query query) throws SQLException;
+	PreparedStatement psForFind(Connection conn, Query query) throws SQLException;
 
 	/**
 	 * 构建用于分页查询的PreparedStatement
@@ -81,7 +91,7 @@ public interface Dialect {
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
 	 */
-	public PreparedStatement psForPage(Connection conn, Query query) throws SQLException;
+	PreparedStatement psForPage(Connection conn, Query query) throws SQLException;
 
 	/**
 	 * 构建用于查询行数的PreparedStatement
@@ -91,12 +101,12 @@ public interface Dialect {
 	 * @return PreparedStatement
 	 * @throws SQLException SQL执行异常
 	 */
-	public PreparedStatement psForCount(Connection conn, Query query) throws SQLException;
+	PreparedStatement psForCount(Connection conn, Query query) throws SQLException;
 
 	/**
 	 * 方言名
 	 * 
 	 * @return 方言名
 	 */
-	public DialectName dialectName();
+	DialectName dialectName();
 }

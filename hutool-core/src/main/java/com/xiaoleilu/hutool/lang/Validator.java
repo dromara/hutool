@@ -72,6 +72,8 @@ public final class Validator {
 	
 	/**
 	 * 检查指定值是否为<code>null</code>
+	 * 
+	 * @param <T> 被检查的对象类型
 	 * @param value 值
 	 * @param errorMsgTemplate 错误消息内容模板（变量使用{}表示）
 	 * @param params 模板中变量替换后的值

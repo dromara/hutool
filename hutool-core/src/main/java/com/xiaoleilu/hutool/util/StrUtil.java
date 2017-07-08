@@ -1797,7 +1797,7 @@ public class StrUtil {
 	 * @param str1 字符串1
 	 * @param str2 字符串2
 	 * @param nullIsLess {@code null} 值是否排在前（null是否小于非空值）
-	 * @return 排序值。负数：str1 < str2，正数：str1 > str2, 0：str1 == str2
+	 * @return 排序值。负数：str1 &lt; str2，正数：str1 &gt; str2, 0：str1 == str2
 	 */
 	public static int compare(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
 		if (str1 == str2) {
@@ -1833,7 +1833,7 @@ public class StrUtil {
 	 * @param str1 字符串1
 	 * @param str2 字符串2
 	 * @param nullIsLess {@code null} 值是否排在前（null是否小于非空值）
-	 * @return 排序值。负数：str1 < str2，正数：str1 > str2, 0：str1 == str2
+	 * @return 排序值。负数：str1 &lt; str2，正数：str1 &gt; str2, 0：str1 == str2
 	 */
 	public static int compareIgnoreCase(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
 		if (str1 == str2) {

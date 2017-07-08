@@ -49,9 +49,9 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 	 * 内部转换器转换后如果转换失败可以做如下操作，处理结果都为返回默认值：
 	 * 
 	 * <pre>
-	 * 1、返回{@code null} 2、抛出一个{@link RuntimeException}异常
-	 * 
-	 * <pre>
+	 * 1、返回{@code null} 
+	 * 2、抛出一个{@link RuntimeException}异常
+	 * </pre>
 	 * 
 	 * @param value 值
 	 * @return 转换后的类型

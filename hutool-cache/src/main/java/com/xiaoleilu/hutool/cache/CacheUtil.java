@@ -20,7 +20,7 @@ public class CacheUtil {
 	 * @param <K> Key类型
 	 * @param <V> Value类型
 	 * @param capacity 容量
-	 * @param timeout 过期时长
+	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link FIFOCache}
 	 */
 	public static <K, V> Cache<K, V> newFIFOCache(int capacity, long timeout){
@@ -45,7 +45,7 @@ public class CacheUtil {
 	 * @param <K> Key类型
 	 * @param <V> Value类型
 	 * @param capacity 容量
-	 * @param timeout 过期时长
+	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link LFUCache}
 	 */
 	public static <K, V> Cache<K, V> newLFUCache(int capacity, long timeout){
@@ -71,7 +71,7 @@ public class CacheUtil {
 	 * @param <K> Key类型
 	 * @param <V> Value类型
 	 * @param capacity 容量
-	 * @param timeout 过期时长
+	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link LRUCache}
 	 */
 	public static <K, V> Cache<K, V> newLRUCache(int capacity, long timeout){
@@ -95,7 +95,7 @@ public class CacheUtil {
 	 * 
 	 * @param <K> Key类型
 	 * @param <V> Value类型
-	 * @param timeout 过期时长
+	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link TimedCache}
 	 */
 	public static <K, V> Cache<K, V> newTimedCache(long timeout){
@@ -107,7 +107,7 @@ public class CacheUtil {
 	 * 
 	 * @param <K> Key类型
 	 * @param <V> Value类型
-	 * @param timeout 过期时长
+	 * @param timeout 过期时长，单位：毫秒
 	 * @return {@link WeakCache}
 	 * @since 3.0.7
 	 */

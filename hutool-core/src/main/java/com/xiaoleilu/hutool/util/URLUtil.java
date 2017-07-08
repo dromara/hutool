@@ -183,6 +183,24 @@ public class URLUtil {
 	}
 	
 	/**
+	 * 从URL对象中获取不被编码的路径Path<br>
+	 * 对于本地路径，URL对象的getPath方法对于包含中文或空格时会被编码，导致本读路径读取错误。<br>
+	 * 此方法将URL转为URI后获取路径用于解决路径被编码的问题
+	 * 
+	 * @param url {@link URL}
+	 * @return 路径
+	 * @since 3.0.8
+	 */
+	public static String getDecodedPath(URL url) {
+		try {
+			//URL对象的getPath方法对于包含中文或空格的问题
+			return URLUtil.toURI(url).getPath();
+		} catch (UtilException e) {
+			return url.getPath();
+		}
+	}
+	
+	/**
 	 * 转URL为URI
 	 * @param url URL
 	 * @return URI

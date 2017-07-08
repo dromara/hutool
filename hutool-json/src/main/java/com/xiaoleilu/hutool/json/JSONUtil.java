@@ -73,6 +73,16 @@ public final class JSONUtil {
 	}
 	
 	/**
+	 * JSON字符串转JSONArray
+	 * @param arrayOrCollection 数组或集合对象
+	 * @return JSONArray
+	 * @since 3.0.8
+	 */
+	public static JSONArray parseArray(Object arrayOrCollection) {
+		return new JSONArray(arrayOrCollection);
+	}
+	
+	/**
 	 * 转换对象为JSON<br>
 	 * 支持的对象：<br>
 	 * String: 转换为相应的对象<br>

@@ -453,6 +453,8 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	
 	/**
 	 * 转为{@link ArrayList}
+	 * 
+	 * @param <T> 元素类型
 	 * @param elementType 元素类型
 	 * @return {@link ArrayList}
 	 * @since 3.0.8

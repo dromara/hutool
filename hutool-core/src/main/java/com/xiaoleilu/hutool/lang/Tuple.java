@@ -29,6 +29,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	
 	/**
 	 * 获取指定位置元素
+	 * @param <T> 返回对象类型
 	 * @param index 位置
 	 * @return 元素
 	 */

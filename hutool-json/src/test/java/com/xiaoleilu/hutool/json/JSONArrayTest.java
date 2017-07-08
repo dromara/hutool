@@ -38,9 +38,7 @@ public class JSONArrayTest {
 	
 	@Test
 	public void parseTest2(){
-		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.CHARSET_UTF_8);
-		
-		JSONArray array = JSONUtil.parseArray(jsonStr);
+		JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.CHARSET_UTF_8);
 		
 		JSONObject obj0 = array.getJSONObject(0);
 		Exam exam = JSONUtil.toBean(obj0, Exam.class);

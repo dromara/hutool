@@ -33,7 +33,8 @@ import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * IO工具类
+ * IO工具类<br>
+ * IO工具类只是辅助流的读写，并不负责关闭流。原因是流可能被多次读写，读写关闭后容易造成问题。
  * 
  * @author xiaoleilu
  *
@@ -327,9 +328,9 @@ public final class IoUtil {
 	}
 
 	/**
-	 * 从流中读取内容
+	 * 从流中读取内容，读取完毕后并不关闭流
 	 * 
-	 * @param in 输入流
+	 * @param in 输入流，读取完毕后并不关闭流
 	 * @param charset 字符集
 	 * @return 内容
 	 * @throws IOException IO异常
@@ -353,7 +354,7 @@ public final class IoUtil {
 	}
 	
 	/**
-	 * 从Reader中读取String
+	 * 从Reader中读取String，读取完毕后并不关闭Reader
 	 * 
 	 * @param reader Reader
 	 * @return String
@@ -369,7 +370,7 @@ public final class IoUtil {
 	}
 
 	/**
-	 * 从FileChannel中读取内容
+	 * 从FileChannel中读取内容，读取完毕后并不关闭Channel
 	 * 
 	 * @param fileChannel 文件管道
 	 * @param charsetName 字符集

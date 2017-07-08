@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -239,6 +240,7 @@ public class ArrayUtil {
 	/**
 	 * 是否包含{@code null}元素
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 被检查的数组
 	 * @return 是否包含{@code null}元素
 	 * @since 3.0.7
@@ -258,6 +260,7 @@ public class ArrayUtil {
 	/**
 	 * 返回数组中第一个非空元素
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
 	 * @since 3.0.7
@@ -1696,6 +1699,40 @@ public class ArrayUtil {
 		} else {
 			return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
 		}
+	}
+	
+	/**
+	 * 将集合转为数组
+	 * @param iterator {@link Iterator}
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] toArray(Iterator<T> iterator, Class<T> componentType) {
+		return toArray(CollectionUtil.newArrayList(iterator), componentType);
+	}
+	
+	/**
+	 * 将集合转为数组
+	 * @param iterable {@link Iterable}
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] toArray(Iterable<T> iterable, Class<T> componentType) {
+		return toArray(CollectionUtil.toCollection(iterable), componentType);
+	}
+	
+	/**
+	 * 将集合转为数组
+	 * @param collection 集合
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] toArray(Collection<T> collection, Class<T> componentType) {
+		final T[] array = newArray(componentType, collection.size());
+		return collection.toArray(array);
 	}
 
 	// ---------------------------------------------------------------------- remove

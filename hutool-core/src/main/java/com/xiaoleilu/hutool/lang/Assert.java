@@ -114,6 +114,7 @@ public final class Assert {
 	 * 
 	 * @param <T> 被检查对象类型
 	 * @param object 被检查对象
+	 * @return 非空对象
 	 * @throws NullPointerException if the object is {@code null}
 	 */
 	public static <T> T notNull(T object) throws NullPointerException {
@@ -131,6 +132,7 @@ public final class Assert {
 	 * @param text 被检查字符串
 	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
 	 * @param params 参数
+	 * @return 非空字符串
 	 * @see StrUtil#isNotEmpty(CharSequence)
 	 * @throws IllegalArgumentException 被检查字符串为空
 	 */
@@ -167,6 +169,7 @@ public final class Assert {
 	 * @param text 被检查字符串
 	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
 	 * @param params 参数
+	 * @return 非空字符串
 	 * @see StrUtil#isNotBlank(CharSequence)
 	 * @throws IllegalArgumentException 被检查字符串为空白
 	 */
@@ -185,6 +188,7 @@ public final class Assert {
 	 * </pre>
 	 * 
 	 * @param text 被检查字符串
+	 * @return 非空字符串
 	 * @see StrUtil#isNotBlank(CharSequence)
 	 * @throws IllegalArgumentException 被检查字符串为空白
 	 */
@@ -312,6 +316,7 @@ public final class Assert {
 	 * @param collection 被检查的集合
 	 * @param errorMsgTemplate 异常时的消息模板
 	 * @param params 参数列表
+	 * @return 非空集合
 	 * @throws IllegalArgumentException if the collection is {@code null} or has no elements
 	 */
 	public static <T> Collection<T> notEmpty(Collection<T> collection, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
@@ -388,6 +393,7 @@ public final class Assert {
 	 * @param <T> 被检查对象泛型类型
 	 * @param type 被检查对象匹配的类型
 	 * @param obj 被检查对象
+	 * @return 被检查的对象
 	 * @throws IllegalArgumentException if the object is not an instance of clazz
 	 * @see Class#isInstance(Object)
 	 */
@@ -407,6 +413,7 @@ public final class Assert {
 	 * @param obj 被检查对象
 	 * @param errorMsgTemplate 异常时的消息模板
 	 * @param params 参数列表
+	 * @return 被检查对象
 	 * @throws IllegalArgumentException if the object is not an instance of clazz
 	 * @see Class#isInstance(Object)
 	 */
