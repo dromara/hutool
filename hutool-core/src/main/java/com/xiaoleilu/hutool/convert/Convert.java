@@ -705,4 +705,15 @@ public final class Convert {
 	public static Class<?> unWrap(Class<?> clazz) {
 		return BasicType.unWrap(clazz);
 	}
+	
+	//-------------------------------------------------------------------------- 数字和英文转换
+	/**
+	 * 将阿拉伯数字转为英文表达式
+	 * @param x {@link Number}对象
+	 * @return 英文表达式
+	 * @since 3.0.9
+	 */
+	public static String numberToWord(Number number) {
+		return NumberWordFormater.format(number);
+	}
 }

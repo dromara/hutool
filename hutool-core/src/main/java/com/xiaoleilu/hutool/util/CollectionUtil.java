@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -279,94 +280,6 @@ public class CollectionUtil {
 			}
 		}
 		return sb.toString();
-	}
-
-	/**
-	 * 将多个集合排序并显示不同的段落（分页）
-	 * 
-	 * @param <T> 集合元素类型
-	 * @param pageNo 页码，从1开始
-	 * @param numPerPage 每页的条目数
-	 * @param comparator 比较器
-	 * @param colls 集合数组
-	 * @return 分页后的段落内容
-	 */
-	@SafeVarargs
-	public static <T> List<T> sortPageAll(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		final List<T> result = new ArrayList<>();
-		for (Collection<T> coll : colls) {
-			result.addAll(coll);
-		}
-
-		Collections.sort(result, comparator);
-
-		int resultSize = result.size();
-		// 每页条目数大于总数直接返回所有
-		if (resultSize <= numPerPage) {
-			return result;
-		}
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
-		if (startEnd[1] > resultSize) {
-			// 越界直接返回空
-			return new ArrayList<>();
-		}
-
-		return result.subList(startEnd[0], startEnd[1]);
-	}
-
-	/**
-	 * 将多个集合排序并显示不同的段落（分页）
-	 * 
-	 * @param <T> 集合元素类型
-	 * @param pageNo 页码
-	 * @param numPerPage 每页的条目数
-	 * @param comparator 比较器
-	 * @param colls 集合数组
-	 * @return 分业后的段落内容
-	 */
-	@SafeVarargs
-	public static <T> List<T> sortPageAll2(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<>(pageNo * numPerPage, comparator);
-		for (Collection<T> coll : colls) {
-			queue.addAll(coll);
-		}
-
-		int resultSize = queue.size();
-		// 每页条目数大于总数直接返回所有
-		if (resultSize <= numPerPage) {
-			return queue.toList();
-		}
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
-		if (startEnd[1] > resultSize) {
-			// 越界直接返回空
-			return new ArrayList<>();
-		}
-
-		return queue.toList().subList(startEnd[0], startEnd[1]);
-	}
-
-	/**
-	 * 将Set排序（根据Entry的值）
-	 * 
-	 * @param set 被排序的Set
-	 * @return 排序后的Set
-	 */
-	public static List<Entry<Long, Long>> sortEntrySetToList(Set<Entry<Long, Long>> set) {
-		List<Entry<Long, Long>> list = new LinkedList<>(set);
-		Collections.sort(list, new Comparator<Entry<Long, Long>>(){
-
-			@Override
-			public int compare(Entry<Long, Long> o1, Entry<Long, Long> o2) {
-				if (o1.getValue() > o2.getValue()) {
-					return 1;
-				}
-				if (o1.getValue() < o2.getValue()) {
-					return -1;
-				}
-				return 0;
-			}
-		});
-		return list;
 	}
 
 	/**
@@ -656,29 +569,29 @@ public class CollectionUtil {
 	public static <T> Collection<T> create(Class<?> collectionType) {
 		Collection<T> list = null;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
-			//抽象集合默认使用ArrayList
+			// 抽象集合默认使用ArrayList
 			list = new ArrayList<>();
-		} 
-		
-		//Set
+		}
+
+		// Set
 		else if (collectionType.isAssignableFrom(HashSet.class)) {
 			list = new HashSet<>();
-		}else if (collectionType.isAssignableFrom(LinkedHashSet.class)) {
+		} else if (collectionType.isAssignableFrom(LinkedHashSet.class)) {
 			list = new LinkedHashSet<>();
 		} else if (collectionType.isAssignableFrom(TreeSet.class)) {
 			list = new TreeSet<>();
 		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
 			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) ClassUtil.getTypeArgument(collectionType));
 		}
-		
-		//List
+
+		// List
 		else if (collectionType.isAssignableFrom(ArrayList.class)) {
 			list = new ArrayList<>();
-		}else if (collectionType.isAssignableFrom(LinkedList.class)) {
+		} else if (collectionType.isAssignableFrom(LinkedList.class)) {
 			list = new LinkedList<>();
-		} 
-		
-		//Others，直接实例化
+		}
+
+		// Others，直接实例化
 		else {
 			try {
 				list = (Collection<T>) ClassUtil.newInstance(collectionType);
@@ -688,7 +601,7 @@ public class CollectionUtil {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 创建Map<br>
 	 * 传入抽象Map{@link AbstractMap}和{@link Map}类将默认创建{@link HashMap}
@@ -699,20 +612,20 @@ public class CollectionUtil {
 	 * @return {@link Map}实例
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> createMap(Class<?> mapType){
-		if(mapType.isAssignableFrom(AbstractMap.class)){
+	public static <K, V> Map<K, V> createMap(Class<?> mapType) {
+		if (mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		}
-		
-		else{
+
+		else {
 			try {
-				return ( Map<K, V>) ClassUtil.newInstance(mapType);
+				return (Map<K, V>) ClassUtil.newInstance(mapType);
 			} catch (Exception e) {
 				throw new UtilException(e);
 			}
 		}
 	}
-	
+
 	/**
 	 * 去重集合
 	 * 
@@ -1161,20 +1074,6 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * 排序集合
-	 * 
-	 * @param <T> 集合元素类型
-	 * @param collection 集合
-	 * @param comparator 比较器
-	 * @return treeSet
-	 */
-	public static <T> List<T> sort(Collection<T> collection, Comparator<T> comparator) {
-		List<T> list = new ArrayList<T>(collection);
-		Collections.sort(list, comparator);
-		return list;
-	}
-
-	/**
 	 * Iterator转换为Enumeration
 	 * <p>
 	 * Adapt the specified <code>Iterator</code> to the <code>Enumeration</code> interface.
@@ -1215,7 +1114,7 @@ public class CollectionUtil {
 			}
 		};
 	}
-	
+
 	/**
 	 * {@link Iterable}转为{@link Collection}<br>
 	 * 首先尝试强转，强转失败则构建一个新的{@link ArrayList}
@@ -1227,7 +1126,7 @@ public class CollectionUtil {
 	public static <E> Collection<E> toCollection(Iterable<E> iterable) {
 		return (iterable instanceof Collection) ? (Collection<E>) iterable : newArrayList(iterable.iterator());
 	}
-	
+
 	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
@@ -1256,35 +1155,35 @@ public class CollectionUtil {
 		if (null == collection || null == value) {
 			return collection;
 		}
-		if(null == elementType){//元素类型为空时，使用Object类型来接纳所有类型
+		if (null == elementType) {// 元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
 		}
-		
+
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
 		if (elementType.isInstance(value)) {
 			collection.add((T) value);
 		} else if (value instanceof Iterator) {
 			final Iterator iter = (Iterator) value;
 			while (iter.hasNext()) {
-				collection.add((T)convert.convert(elementType, iter.next()));
+				collection.add((T) convert.convert(elementType, iter.next()));
 			}
 			addAll(collection, (Iterator<T>) value);
 		} else if (value instanceof Iterable) {
 			final Iterator iter = ((Iterable) value).iterator();
 			while (iter.hasNext()) {
-				collection.add((T)convert.convert(elementType, iter.next()));
+				collection.add((T) convert.convert(elementType, iter.next()));
 			}
 		} else if (value instanceof Enumeration) {
 			final Enumeration enumeration = ((Enumeration) value);
 			while (enumeration.hasMoreElements()) {
-				collection.add((T)convert.convert(elementType, enumeration.nextElement()));
+				collection.add((T) convert.convert(elementType, enumeration.nextElement()));
 			}
 		} else if (ArrayUtil.isArray(value)) {
 			final int length = Array.getLength(value);
 			Object item;
 			for (int i = 0; i < length; i++) {
 				item = Array.get(value, i);
-				collection.add((T)convert.convert(elementType, item));
+				collection.add((T) convert.convert(elementType, item));
 			}
 		}
 		return collection;
@@ -1400,40 +1299,42 @@ public class CollectionUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获得{@link Iterable}对象的元素类型（通过第一个非空元素判断）
+	 * 
 	 * @param iterable {@link Iterable}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @since 3.0.8
 	 */
-	public static Class<?> getElementType(Iterable<?> iterable){
-		if(null != iterable){
+	public static Class<?> getElementType(Iterable<?> iterable) {
+		if (null != iterable) {
 			Iterator<?> iterator = iterable.iterator();
 			return getElementType(iterator);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获得{@link Iterator}对象的元素类型（通过第一个非空元素判断）
+	 * 
 	 * @param iterator {@link Iterator}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @since 3.0.8
 	 */
-	public static Class<?> getElementType(Iterator<?> iterator){
-		if(null != iterator){
+	public static Class<?> getElementType(Iterator<?> iterator) {
+		if (null != iterator) {
 			Object t;
-			while(iterator.hasNext()){
+			while (iterator.hasNext()) {
 				t = iterator.next();
-				if(null != t){
+				if (null != t) {
 					return t.getClass();
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 从Map中获取指定键列表对应的值列表<br>
 	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
@@ -1453,7 +1354,7 @@ public class CollectionUtil {
 		}
 		return values;
 	}
-	
+
 	/**
 	 * 从Map中获取指定键列表对应的值列表<br>
 	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
@@ -1468,8 +1369,7 @@ public class CollectionUtil {
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterable<K> keys) {
 		return valuesOfKeys(map, keys.iterator());
 	}
-	
-	
+
 	/**
 	 * 从Map中获取指定键列表对应的值列表<br>
 	 * 如果key在map中不存在或key对应值为null，则返回值列表对应位置的值也为null
@@ -1483,13 +1383,93 @@ public class CollectionUtil {
 	 */
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, Iterator<K> keys) {
 		final ArrayList<V> values = new ArrayList<>();
-		while(keys.hasNext()) {
+		while (keys.hasNext()) {
 			values.add(map.get(keys.next()));
 		}
 		return values;
 	}
-	
+
 	// ------------------------------------------------------------------------------------------------- sort
+	/**
+	 * 将多个集合排序并显示不同的段落（分页）<br>
+	 * 采用先排序，后截断的方式取分页的部分
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param pageNo 页码，从1开始
+	 * @param numPerPage 每页的条目数
+	 * @param comparator 比较器
+	 * @param colls 集合数组
+	 * @return 分页后的段落内容
+	 */
+	@SafeVarargs
+	public static <T> List<T> sortPageAll(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
+		final List<T> result = new ArrayList<>();
+		for (Collection<T> coll : colls) {
+			result.addAll(coll);
+		}
+
+		Collections.sort(result, comparator);
+
+		int resultSize = result.size();
+		// 每页条目数大于总数直接返回所有
+		if (resultSize <= numPerPage) {
+			return result;
+		}
+		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
+		if (startEnd[1] > resultSize) {
+			// 越界直接返回空
+			return new ArrayList<>();
+		}
+
+		return result.subList(startEnd[0], startEnd[1]);
+	}
+
+	/**
+	 * 将多个集合排序并显示不同的段落（分页）<br>
+	 * 采用{@link BoundedPriorityQueue}实现分页取局部
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param pageNo 页码
+	 * @param numPerPage 每页的条目数
+	 * @param comparator 比较器
+	 * @param colls 集合数组
+	 * @return 分业后的段落内容
+	 */
+	@SafeVarargs
+	public static <T> List<T> sortPageAll2(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
+		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<>(pageNo * numPerPage, comparator);
+		for (Collection<T> coll : colls) {
+			queue.addAll(coll);
+		}
+
+		int resultSize = queue.size();
+		// 每页条目数大于总数直接返回所有
+		if (resultSize <= numPerPage) {
+			return queue.toList();
+		}
+		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
+		if (startEnd[1] > resultSize) {
+			// 越界直接返回空
+			return new ArrayList<>();
+		}
+
+		return queue.toList().subList(startEnd[0], startEnd[1]);
+	}
+
+	/**
+	 * 排序集合，排序不会修改原集合
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param comparator 比较器
+	 * @return treeSet
+	 */
+	public static <T> List<T> sort(Collection<T> collection, Comparator<? super T> comparator) {
+		List<T> list = new ArrayList<T>(collection);
+		Collections.sort(list, comparator);
+		return list;
+	}
+	
 	/**
 	 * 针对List排序，排序会修改原List
 	 * 
@@ -1499,11 +1479,90 @@ public class CollectionUtil {
 	 * @return 原list
 	 * @see Collections#sort(List, Comparator)
 	 */
-	public <T> List<T> sort(List<T> list, Comparator<? super T> c) {
+	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
 		Collections.sort(list, c);
 		return list;
 	}
+
+	/**
+	 * 排序Map
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param map Map
+	 * @param comparator Entry比较器
+	 * @return {@link TreeMap}
+	 * @since 3.0.9
+	 */
+	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
+		TreeMap<K, V> result = new TreeMap<K, V>(comparator);
+		result.putAll(map);
+		return result;
+	}
+
+	/**
+	 * 通过Entry排序，可以按照键排序，也可以按照值排序，亦或者两者综合排序
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param entryCollection Entry集合
+	 * @param comparator {@link Comparator}
+	 * @return {@link LinkedList}
+	 * @since 3.0.9
+	 */
+	public static <K, V> LinkedHashMap<K, V> sortToMap(Collection<Map.Entry<K, V>> entryCollection, Comparator<Map.Entry<K, V>> comparator) {
+		List<Map.Entry<K, V>> list = new LinkedList<>(entryCollection);
+		Collections.sort(list, comparator);
+		
+		LinkedHashMap<K, V> result = new LinkedHashMap<>();
+		for(Map.Entry<K, V> entry : list){
+				result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
+	}
 	
+	/**
+	 * 通过Entry排序，可以按照键排序，也可以按照值排序，亦或者两者综合排序
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param map 被排序的Map
+	 * @param comparator {@link Comparator}
+	 * @return {@link LinkedList}
+	 * @since 3.0.9
+	 */
+	public static <K, V> LinkedHashMap<K, V> sortByEntry(Map<K, V> map, Comparator<Map.Entry<K, V>> comparator){
+		return sortToMap(map.entrySet(), comparator);
+	}
+	
+	/**
+	 * 将Set排序（根据Entry的值）
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param collection 被排序的{@link Collection}
+	 * @return 排序后的Set
+	 */
+	public static <K, V> List<Entry<K, V>> sortEntryToList(Collection<Entry<K, V>> collection) {
+		List<Entry<K, V>> list = new LinkedList<>(collection);
+		Collections.sort(list, new Comparator<Entry<K, V>>(){
+
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			@Override
+			public int compare(Entry<K, V> o1, Entry<K, V> o2) {
+				V v1 = o1.getValue();
+				V v2 = o2.getValue();
+				
+				if(v1 instanceof Comparable) {
+					return ((Comparable)v1).compareTo(v2);
+				}else {
+					return v1.toString().compareTo(v2.toString());
+				}
+			}
+		});
+		return list;
+	}
+
 	// ------------------------------------------------------------------------------------------------- forEach
 
 	/**
