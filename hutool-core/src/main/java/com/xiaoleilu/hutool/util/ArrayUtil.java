@@ -48,7 +48,7 @@ public class ArrayUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isEmpty(final Object array) {
-		return array == null || (false == isArray(array)) || Array.getLength(array) <= 0;
+		return array == null || (false == isArray(array)) || Array.getLength(array) == 0;
 	}
 
 	/**
