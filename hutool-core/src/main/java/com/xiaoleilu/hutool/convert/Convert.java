@@ -709,7 +709,7 @@ public final class Convert {
 	//-------------------------------------------------------------------------- 数字和英文转换
 	/**
 	 * 将阿拉伯数字转为英文表达式
-	 * @param x {@link Number}对象
+	 * @param number {@link Number}对象
 	 * @return 英文表达式
 	 * @since 3.0.9
 	 */
