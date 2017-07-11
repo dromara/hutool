@@ -40,8 +40,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public final class IoUtil {
-	
-	private IoUtil() {}
+
+	private IoUtil() {
+	}
 
 	/** 默认缓存大小 */
 	public static final int DEFAULT_BUFFER_SIZE = 1024;
@@ -173,8 +174,7 @@ public final class IoUtil {
 	}
 
 	/**
-	 * 拷贝流
-	 * thanks to: https://github.com/venusdrogon/feilong-io/blob/master/src/main/java/com/feilong/io/IOWriteUtil.java
+	 * 拷贝流 thanks to: https://github.com/venusdrogon/feilong-io/blob/master/src/main/java/com/feilong/io/IOWriteUtil.java
 	 * 
 	 * @param in 输入流
 	 * @param out 输出流
@@ -208,7 +208,7 @@ public final class IoUtil {
 
 		return inChannel.transferTo(0, inChannel.size(), outChannel);
 	}
-	
+
 	/**
 	 * 拷贝流，使用NIO，不会关闭流
 	 * 
@@ -233,7 +233,7 @@ public final class IoUtil {
 			streamProgress.start();
 		}
 		while (in.read(byteBuffer) != EOF) {
-			byteBuffer.flip();//写转读
+			byteBuffer.flip();// 写转读
 			size += out.write(byteBuffer);
 			byteBuffer.clear();
 			if (null != streamProgress) {
@@ -243,7 +243,7 @@ public final class IoUtil {
 		if (null != streamProgress) {
 			streamProgress.finish();
 		}
-		
+
 		return size;
 	}
 	// -------------------------------------------------------------------------------------- Copy end
@@ -281,7 +281,18 @@ public final class IoUtil {
 
 		return new BufferedReader(reader);
 	}
-	
+
+	/**
+	 * 获得{@link BufferedReader}
+	 * 
+	 * @param reader 普通Reader
+	 * @return {@link BufferedReader}
+	 * @since 3.0.9
+	 */
+	public static BufferedReader getReader(Reader reader) {
+		return (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
+	}
+
 	/**
 	 * 获得一个Writer
 	 * 
@@ -289,10 +300,10 @@ public final class IoUtil {
 	 * @param charsetName 字符集
 	 * @return OutputStreamWriter对象
 	 */
-	public static OutputStreamWriter getWriter(OutputStream out, String charsetName){
+	public static OutputStreamWriter getWriter(OutputStream out, String charsetName) {
 		return getWriter(out, Charset.forName(charsetName));
 	}
-	
+
 	/**
 	 * 获得一个Writer
 	 * 
@@ -300,19 +311,19 @@ public final class IoUtil {
 	 * @param charset 字符集
 	 * @return OutputStreamWriter对象
 	 */
-	public static OutputStreamWriter getWriter(OutputStream out, Charset charset){
-		if(null == out){
+	public static OutputStreamWriter getWriter(OutputStream out, Charset charset) {
+		if (null == out) {
 			return null;
 		}
-		
-		if(null == charset){
+
+		if (null == charset) {
 			return new OutputStreamWriter(out);
-		}else{
+		} else {
 			return new OutputStreamWriter(out, charset);
 		}
 	}
 	// -------------------------------------------------------------------------------------- getReader and getWriter end
-	
+
 	// -------------------------------------------------------------------------------------- read start
 	/**
 	 * 从流中读取内容
@@ -352,7 +363,7 @@ public final class IoUtil {
 		copy(in, out);
 		return out;
 	}
-	
+
 	/**
 	 * 从Reader中读取String，读取完毕后并不关闭Reader
 	 * 
@@ -418,11 +429,11 @@ public final class IoUtil {
 	public static byte[] readBytes(InputStream in, int length) throws IOException {
 		byte[] b = new byte[length];
 		int readLength = in.read(b);
-		if(readLength < length){
+		if (readLength < length) {
 			byte[] b2 = new byte[length];
 			System.arraycopy(b, 0, b2, 0, readLength);
 			return b2;
-		}else{
+		} else {
 			return b;
 		}
 	}
@@ -509,16 +520,58 @@ public final class IoUtil {
 	 * @return 内容
 	 * @throws IOException IO异常
 	 */
-	public static <T extends Collection<String>> T readLines(InputStream in, Charset charset, T collection) throws IOException {
-		// 从返回的内容中读取所需内容
-		BufferedReader reader = getReader(in, charset);
-		String line = null;
-		while ((line = reader.readLine()) != null) {
-			collection.add(line);
-		}
-
+	public static <T extends Collection<String>> T readLines(InputStream in, Charset charset, final T collection) throws IOException {
+		return readLines(getReader(in, charset), collection);
+	}
+	
+	/**
+	 * 从Reader中读取内容
+	 * 
+	 * @param <T> 集合类型
+	 * @param reader {@link Reader}
+	 * @param collection 返回集合
+	 * @return 内容
+	 * @throws IOException IO异常
+	 */
+	public static <T extends Collection<String>> T readLines(Reader reader, final T collection) throws IOException {
+		readLines(reader, new LineHandler(){
+			@Override
+			public void handle(String line) {
+				collection.add(line);
+			}
+		});
 		return collection;
 	}
+	
+	/**
+	 * 按行读取数据，针对每行的数据做处理
+	 * 
+	 * @param in {@link InputStream}
+	 * @param charset {@link Charset}编码
+	 * @param lineHandler 行处理接口，实现handle方法用于编辑一行的数据后入到指定地方
+	 * @throws IOException
+	 * @since 3.0.9
+	 */
+	public static void readLines(InputStream in, Charset charset, LineHandler lineHandler) throws IOException {
+		readLines(getReader(in, charset), lineHandler);
+	}
+
+	/**
+	 * 按行读取数据，针对每行的数据做处理
+	 * 
+	 * @param reader {@link Reader}
+	 * @param lineHandler 行处理接口，实现handle方法用于编辑一行的数据后入到指定地方
+	 * @throws IOException
+	 */
+	public static void readLines(Reader reader, LineHandler lineHandler) throws IOException {
+		// 从返回的内容中读取所需内容
+		BufferedReader bReader = getReader(reader);
+		String line = null;
+		while ((line = bReader.readLine()) != null) {
+			lineHandler.handle(line);
+		}
+	}
+
 	// -------------------------------------------------------------------------------------- read end
 
 	/**
@@ -559,7 +612,7 @@ public final class IoUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 将byte[]写到流中
 	 * 
@@ -641,27 +694,27 @@ public final class IoUtil {
 	 * @param closeable 被关闭的对象
 	 */
 	public static void close(Closeable closeable) {
-		if(null != closeable){
+		if (null != closeable) {
 			try {
 				closeable.close();
 			} catch (Exception e) {
-				//静默关闭
+				// 静默关闭
 			}
 		}
 	}
 
 	/**
 	 * 关闭<br>
-	 *  关闭失败不会抛出异常
+	 * 关闭失败不会抛出异常
 	 * 
 	 * @param closeable 被关闭的对象
 	 */
 	public static void close(AutoCloseable closeable) {
-		if (null != closeable){
+		if (null != closeable) {
 			try {
 				closeable.close();
 			} catch (Exception e) {
-				//静默关闭
+				// 静默关闭
 			}
 		}
 	}

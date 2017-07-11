@@ -1558,6 +1558,17 @@ public final class FileUtil {
 	public static List<String> readLines(File file, String charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
+	
+	/**
+	 * 按行处理文件内容
+	 * @param file 文件
+	 * @param charset 编码
+	 * @param lineHandler {@link LineHandler}行处理器
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void readLines(File file, Charset charset, LineHandler lineHandler) throws IORuntimeException{
+		FileReader.create(file, charset).readLines(lineHandler);
+	}
 
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
