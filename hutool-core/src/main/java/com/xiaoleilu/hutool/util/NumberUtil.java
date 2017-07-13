@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.lang.Assert;
 
 /**
  * 数字工具类<br>
@@ -51,18 +52,31 @@ public class NumberUtil {
 	public static double add(double v1, double v2) {
 		return add(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的加法运算
+	 * 
 	 * @param v1 被加数
 	 * @param v2 加数
 	 * @return 和
 	 * @since 3.0.8
 	 */
 	public static BigDecimal add(String v1, String v2) {
-		final BigDecimal b1 = new BigDecimal(v1);
-		final BigDecimal b2 = new BigDecimal(v2);
-		return b1.add(b2);
+		return add(new BigDecimal(v1), new BigDecimal(v2));
+	}
+	
+	/**
+	 * 提供精确的加法运算
+	 * 
+	 * @param v1 被加数
+	 * @param v2 加数
+	 * @return 和
+	 * @since 3.0.9
+	 */
+	public static BigDecimal add(BigDecimal v1, BigDecimal v2) {
+		Assert.notNull(v1);
+		Assert.notNull(v2);
+		return v1.add(v2);
 	}
 
 	/**
@@ -75,18 +89,31 @@ public class NumberUtil {
 	public static double sub(double v1, double v2) {
 		return sub(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的减法运算
+	 * 
 	 * @param v1 被减数
 	 * @param v2 减数
 	 * @return 差
 	 * @since 3.0.8
 	 */
 	public static BigDecimal sub(String v1, String v2) {
-		final BigDecimal b1 = new BigDecimal(v1);
-		final BigDecimal b2 = new BigDecimal(v2);
-		return b1.subtract(b2);
+		return sub(new BigDecimal(v1), new BigDecimal(v2));
+	}
+	
+	/**
+	 * 提供精确的减法运算
+	 * 
+	 * @param v1 被减数
+	 * @param v2 减数
+	 * @return 差
+	 * @since 3.0.9
+	 */
+	public static BigDecimal sub(BigDecimal v1, BigDecimal v2) {
+		Assert.notNull(v1);
+		Assert.notNull(v2);
+		return v1.subtract(v2);
 	}
 
 	/**
@@ -99,7 +126,7 @@ public class NumberUtil {
 	public static double mul(double v1, double v2) {
 		return mul(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的乘法运算
 	 * 
@@ -109,9 +136,21 @@ public class NumberUtil {
 	 * @since 3.0.8
 	 */
 	public static BigDecimal mul(String v1, String v2) {
-		final BigDecimal b1 = new BigDecimal(v1);
-		final BigDecimal b2 = new BigDecimal(v2);
-		return b1.multiply(b2);
+		return mul(new BigDecimal(v1), new BigDecimal(v2));
+	}
+	
+	/**
+	 * 提供精确的乘法运算
+	 * 
+	 * @param v1 被乘数
+	 * @param v2 乘数
+	 * @return 积
+	 * @since 3.0.9
+	 */
+	public static BigDecimal mul(BigDecimal v1, BigDecimal v2) {
+		Assert.notNull(v1);
+		Assert.notNull(v2);
+		return v1.multiply(v2);
 	}
 
 	/**
@@ -124,7 +163,7 @@ public class NumberUtil {
 	public static double div(double v1, double v2) {
 		return div(v1, v2, DEFAUT_DIV_SCALE);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
 	 * 
@@ -147,7 +186,7 @@ public class NumberUtil {
 	public static double div(double v1, double v2, int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度,后面的四舍五入
 	 * 
@@ -172,7 +211,7 @@ public class NumberUtil {
 	public static double div(double v1, double v2, int scale, RoundingMode roundingMode) {
 		return div(Double.toString(v1), Double.toString(v2), scale, roundingMode).doubleValue();
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
 	 * 
@@ -183,12 +222,26 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static BigDecimal div(String v1, String v2, int scale, RoundingMode roundingMode) {
+		return div(new BigDecimal(v1), new BigDecimal(v1), scale, roundingMode);
+	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
+	 * 
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @param scale 精确度，如果为负值，取绝对值
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 两个参数的商
+	 * @since 3.0.9
+	 */
+	public static BigDecimal div(BigDecimal v1, BigDecimal v2, int scale, RoundingMode roundingMode) {
+		Assert.notNull(v1);
+		Assert.notNull(v2);
 		if (scale < 0) {
 			scale = -scale;
 		}
-		final BigDecimal b1 = new BigDecimal(v1);
-		final BigDecimal b2 = new BigDecimal(v2);
-		return b1.divide(b2, scale, roundingMode);
+		return v1.divide(v2, scale, roundingMode);
 	}
 
 	// ------------------------------------------------------------------------------------------- round
@@ -818,6 +871,75 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 比较大小，参数1>参数2 返回true
+	 * 
+	 * @param bigNum1 数字1
+	 * @param bigNum2 数字2
+	 * @return 是否大于
+	 * @since 3,0.9
+	 */
+	public static boolean isGreater(BigDecimal bigNum1, BigDecimal bigNum2) {
+		Assert.notNull(bigNum1);
+		Assert.notNull(bigNum2);
+		return bigNum1.compareTo(bigNum2) > 0;
+	}
+
+	/**
+	 * 比较大小，参数1>=参数2 返回true
+	 *
+	 * @param bigNum1 数字1
+	 * @param bigNum2 数字2
+	 * @return 是否大于等于
+	 * @since 3,0.9
+	 */
+	public static boolean isGreaterOrEqual(BigDecimal bigNum1, BigDecimal bigNum2) {
+		Assert.notNull(bigNum1);
+		Assert.notNull(bigNum2);
+		return bigNum1.compareTo(bigNum2) >= 0;
+	}
+
+	/**
+	 * 比较大小，参数1<参数2 返回true
+	 *
+	 * @param bigNum1 数字1
+	 * @param bigNum2 数字2
+	 * @return 是否小于
+	 * @since 3,0.9
+	 */
+	public static boolean isLess(BigDecimal bigNum1, BigDecimal bigNum2) {
+		Assert.notNull(bigNum1);
+		Assert.notNull(bigNum2);
+		return bigNum1.compareTo(bigNum2) < 0;
+	}
+
+	/**
+	 * 比较大小，参数1<=参数2 返回true
+	 *
+	 * @param bigNum1 数字1
+	 * @param bigNum2 数字2
+	 * @return 是否小于等于
+	 * @since 3,0.9
+	 */
+	public static boolean isLessOrEqual(BigDecimal bigNum1, BigDecimal bigNum2) {
+		Assert.notNull(bigNum1);
+		Assert.notNull(bigNum2);
+		return bigNum1.compareTo(bigNum2) <= 0;
+	}
+
+	/**
+	 * 比较大小，相等 返回true
+	 * 
+	 * @param bigNum1 数字1
+	 * @param bigNum2 数字2
+	 * @return 是否相等
+	 */
+	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
+		Assert.notNull(bigNum1);
+		Assert.notNull(bigNum2);
+		return bigNum1.equals(bigNum2);
+	}
+
+	/**
 	 * 数字转字符串<br>
 	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
 	 *
@@ -873,16 +995,29 @@ public class NumberUtil {
 	public static boolean isBlankChar(int c) {
 		return Character.isWhitespace(c) || Character.isSpaceChar(c);
 	}
-	
+
 	/**
 	 * 计算等份个数
+	 * 
 	 * @param total 总数
 	 * @param part 每份的个数
 	 * @return 分成了几份
 	 * @since 3.0.6
 	 */
-	public static int count(int total, int part){
-		return (total % part == 0) ? (total / part) : (total / part+1);
+	public static int count(int total, int part) {
+		return (total % part == 0) ? (total / part) : (total / part + 1);
+	}
+
+	/**
+	 * 空转0
+	 * 
+	 * @param decimal {@link BigDecimal}，可以为{@code null}
+	 * @return {@link BigDecimal}参数为空时返回0的值
+	 * @since 3.0.9
+	 */
+	public static BigDecimal null2Zero(BigDecimal decimal) {
+
+		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start

@@ -8,6 +8,7 @@
 * 增加StrUtil.reverse方法
 * 增加NumberWordFormater和Convert.numberToWord方法（感谢@【福建】极速蜗牛）
 * IoUtil和FileUtil增加readLines(LineHandler)方法用于按行处理（感谢@汪汪）
+* 扩充NumberUtil，提供对BigDecimal参数支持（感谢@【杭州】KIWI）
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）

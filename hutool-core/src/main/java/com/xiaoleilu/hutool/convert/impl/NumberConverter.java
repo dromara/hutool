@@ -163,14 +163,13 @@ public class NumberConverter extends AbstractConverter<Number> {
 	private BigDecimal toBigDecimal(Object value) {
 		if (value instanceof Long) {
 			return new BigDecimal((Long) value);
-		} else if (value instanceof Double) {
-			return new BigDecimal((Double) value);
 		} else if (value instanceof Integer) {
 			return new BigDecimal((Integer) value);
 		} else if (value instanceof BigInteger) {
 			return new BigDecimal((BigInteger) value);
 		}
 
+		//对于Double类型，先要转换为String，避免精度问题
 		final String valueStr = convertToStr(value);
 		if (StrUtil.isBlank(valueStr)) {
 			return null;
