@@ -21,7 +21,7 @@ import com.xiaoleilu.hutool.lang.SimpleCache;
  * @since 3.0.9
  */
 public class ReflectUtil {
-	
+
 	/** 构造对象缓存 */
 	private static final SimpleCache<Class<?>, Constructor<?>[]> CONSTRUCTORS_CACHE = new SimpleCache<>();
 	/** 字段缓存 */
@@ -54,7 +54,7 @@ public class ReflectUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获得一个类中所有字段列表
 	 * 
@@ -65,29 +65,30 @@ public class ReflectUtil {
 	 * @throws SecurityException 安全检查异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Constructor<T>[] getConstructors(Class<T> beanClass) throws SecurityException{
+	public static <T> Constructor<T>[] getConstructors(Class<T> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
 		Constructor<?>[] constructors = CONSTRUCTORS_CACHE.get(beanClass);
-		if(null != constructors) {
+		if (null != constructors) {
 			return (Constructor<T>[]) constructors;
 		}
-		
+
 		constructors = getConstructorsDirectly(beanClass);
 		return (Constructor<T>[]) CONSTRUCTORS_CACHE.put(beanClass, constructors);
 	}
-	
+
 	/**
 	 * 获得一个类中所有字段列表，直接反射获取，无缓存
+	 * 
 	 * @param beanClass 类
 	 * @param withSuperClassConstructors 是否包括父类的构造列表
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Constructor<?>[] getConstructorsDirectly(Class<?> beanClass) throws SecurityException{
+	public static Constructor<?>[] getConstructorsDirectly(Class<?> beanClass) throws SecurityException {
 		Assert.notNull(beanClass);
 		return beanClass.getDeclaredConstructors();
 	}
-	
+
 	// --------------------------------------------------------------------------------------------------------- Field
 	/**
 	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回<code>null</code>
@@ -97,7 +98,7 @@ public class ReflectUtil {
 	 * @return 字段
 	 * @throws SecurityException 安全异常
 	 */
-	public static Field getField(Class<?> beanClass, String name) throws SecurityException{
+	public static Field getField(Class<?> beanClass, String name) throws SecurityException {
 		final Field[] fields = getFields(beanClass);
 		for (Field field : fields) {
 			if ((name.equals(field.getName()))) {
@@ -106,50 +107,115 @@ public class ReflectUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获得一个类中所有字段列表，包括其父类中的字段
+	 * 
 	 * @param beanClass 类
 	 * @param withSuperClassFieds 是否包括父类的字段列表
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Field[] getFields(Class<?> beanClass) throws SecurityException{
+	public static Field[] getFields(Class<?> beanClass) throws SecurityException {
 		Field[] allFields = FIELDS_CACHE.get(beanClass);
-		if(null != allFields) {
+		if (null != allFields) {
 			return allFields;
 		}
-		
+
 		allFields = getFieldsDirectly(beanClass, true);
 		return FIELDS_CACHE.put(beanClass, allFields);
 	}
-	
+
 	/**
 	 * 获得一个类中所有字段列表，直接反射获取，无缓存
+	 * 
 	 * @param beanClass 类
 	 * @param withSuperClassFieds 是否包括父类的字段列表
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Field[] getFieldsDirectly(Class<?> beanClass, boolean withSuperClassFieds) throws SecurityException{
+	public static Field[] getFieldsDirectly(Class<?> beanClass, boolean withSuperClassFieds) throws SecurityException {
 		Assert.notNull(beanClass);
-		
+
 		final Field[] allFields = null;
 		Class<?> searchType = beanClass;
 		Field[] declaredFields;
 		while (searchType != null) {
 			declaredFields = searchType.getDeclaredFields();
-			if(null == allFields) {
+			if (null == allFields) {
 				declaredFields = allFields;
-			}else {
+			} else {
 				ArrayUtil.append(allFields, declaredFields);
 			}
 			searchType = withSuperClassFieds ? searchType.getSuperclass() : null;
 		}
-		
+
 		return allFields;
 	}
 	
+	/**
+	 * 获取字段值
+	 * @param obj 对象
+	 * @param fieldName 字段名
+	 * @return 字段值
+	 */
+	public static Object getFieldValue(Object obj, String fieldName) {
+		if (null == obj || StrUtil.isBlank(fieldName)) {
+			return null;
+		}
+		return getFieldValue(obj, getField(obj.getClass(), fieldName));
+	}
+
+	/**
+	 * 获取字段值
+	 * @param obj 对象
+	 * @param field 字段
+	 * @return 字段值
+	 */
+	public static Object getFieldValue(Object obj, Field field) {
+		if (null == obj || null == field) {
+			return null;
+		}
+		field.setAccessible(true);
+		Object result = null;
+		try {
+			result = field.get(obj);
+		} catch (IllegalAccessException e) {
+			throw new UtilException(e, "IllegalAccess for {}.{}", obj.getClass(), field.getName());
+		}
+		return result;
+	}
+	
+	/**
+	 * 设置字段值
+	 * @param obj 对象
+	 * @param field 字段
+	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 */
+	public static void setFieldValue(Object obj, String fieldName, Object value) {
+		Assert.notNull(obj);
+		Assert.notBlank(fieldName);
+		setFieldValue(obj, getField(obj.getClass(), fieldName), value);
+	}
+	
+	/**
+	 * 设置字段值
+	 * @param obj 对象
+	 * @param field 字段
+	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 */
+	public static void setFieldValue(Object obj, Field field, Object value) {
+		Assert.notNull(obj);
+		Assert.notNull(field);
+		field.setAccessible(true);
+		
+		try {
+			field.set(obj, value);
+		} catch (IllegalAccessException e) {
+			throw new UtilException(e, "IllegalAccess for {}.{}", obj.getClass(), field.getName());
+		}
+	}
+
 	// --------------------------------------------------------------------------------------------------------- method
 	/**
 	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
@@ -161,12 +227,12 @@ public class ReflectUtil {
 	 * @throws SecurityException 无访问权限抛出异常
 	 */
 	public static Method getMethodOfObj(Object obj, String methodName, Object... args) throws SecurityException {
-		if(null == obj || StrUtil.isBlank(methodName)) {
+		if (null == obj || StrUtil.isBlank(methodName)) {
 			return null;
 		}
 		return getMethod(obj.getClass(), methodName, ClassUtil.getClasses(args));
 	}
-	
+
 	/**
 	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
 	 * 
@@ -183,15 +249,15 @@ public class ReflectUtil {
 
 		final Method[] methods = getMethods(clazz);
 		for (Method method : methods) {
-			if(methodName.equals(method.getName())) {
-				if(ArrayUtil.isEmpty(paramTypes) || ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
+			if (methodName.equals(method.getName())) {
+				if (ArrayUtil.isEmpty(paramTypes) || ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
 					return method;
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法， 方法不存在则返回<code>null</code>
 	 * 
@@ -200,7 +266,7 @@ public class ReflectUtil {
 	 * @return 方法
 	 * @throws SecurityException 安全异常
 	 */
-	public static Method getMethod(Class<?> beanClass, String name) throws SecurityException{
+	public static Method getMethod(Class<?> beanClass, String name) throws SecurityException {
 		final Method[] methods = getMethods(beanClass);
 		for (Method method : methods) {
 			if ((name.equals(method.getName()))) {
@@ -209,7 +275,7 @@ public class ReflectUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获得指定类中的Public方法名<br>
 	 * 去重重载的方法
@@ -225,7 +291,7 @@ public class ReflectUtil {
 		}
 		return methodSet;
 	}
-	
+
 	/**
 	 * 获得指定类过滤后的Public方法列表
 	 * 
@@ -242,7 +308,7 @@ public class ReflectUtil {
 		if (null == filter) {
 			return methods;
 		}
-		
+
 		final List<Method> methodList = new ArrayList<>();
 		for (Method method : methods) {
 			if (filter.accept(method)) {
@@ -251,50 +317,52 @@ public class ReflectUtil {
 		}
 		return methodList.toArray(new Method[methodList.size()]);
 	}
-	
+
 	/**
 	 * 获得一个类中所有方法列表，包括其父类中的方法
+	 * 
 	 * @param beanClass 类
 	 * @param withSuperClassFieds 是否包括父类的方法列表
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Method[] getMethods(Class<?> beanClass) throws SecurityException{
+	public static Method[] getMethods(Class<?> beanClass) throws SecurityException {
 		Method[] allMethods = METHODS_CACHE.get(beanClass);
-		if(null != allMethods) {
+		if (null != allMethods) {
 			return allMethods;
 		}
-		
+
 		allMethods = getMethodsDirectly(beanClass, true);
 		return METHODS_CACHE.put(beanClass, allMethods);
 	}
-	
+
 	/**
 	 * 获得一个类中所有方法列表，直接反射获取，无缓存
+	 * 
 	 * @param beanClass 类
 	 * @param withSuperClassMethods 是否包括父类的方法列表
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
-	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSuperClassMethods) throws SecurityException{
+	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSuperClassMethods) throws SecurityException {
 		Assert.notNull(beanClass);
-		
+
 		final Method[] allMethods = null;
 		Class<?> searchType = beanClass;
 		Method[] declaredMethods;
 		while (searchType != null) {
 			declaredMethods = searchType.getDeclaredMethods();
-			if(null == allMethods) {
+			if (null == allMethods) {
 				declaredMethods = allMethods;
-			}else {
+			} else {
 				ArrayUtil.append(allMethods, declaredMethods);
 			}
 			searchType = withSuperClassMethods ? searchType.getSuperclass() : null;
 		}
-		
+
 		return allMethods;
 	}
-	
+
 	/**
 	 * 是否为equals方法
 	 * 
@@ -328,7 +396,7 @@ public class ReflectUtil {
 	public static boolean isToStringMethod(Method method) {
 		return (method != null && method.getName().equals("toString") && method.getParameterTypes().length == 0);
 	}
-	
+
 	// --------------------------------------------------------------------------------------------------------- newInstance
 	/**
 	 * 实例化对象
@@ -345,7 +413,7 @@ public class ReflectUtil {
 			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}
 	}
-	
+
 	/**
 	 * 实例化对象
 	 * 
@@ -374,9 +442,10 @@ public class ReflectUtil {
 			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
 		}
 	}
-	
+
 	/**
 	 * 尝试遍历并调用此类的所有构造方法，直到构造成功并返回
+	 * 
 	 * @param beanClass 被构造的类
 	 * @return 构造后的对象
 	 */
@@ -388,13 +457,13 @@ public class ReflectUtil {
 			try {
 				constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
 			} catch (Exception e) {
-				//构造出错时继续尝试下一种构造方式
+				// 构造出错时继续尝试下一种构造方式
 				continue;
 			}
 		}
 		return null;
 	}
-	
+
 	// --------------------------------------------------------------------------------------------------------- invoke
 	/**
 	 * 执行静态方法
