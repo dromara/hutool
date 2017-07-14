@@ -1,13 +1,5 @@
 package com.xiaoleilu.hutool.util;
 
-import com.xiaoleilu.hutool.convert.BasicType;
-import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.io.IORuntimeException;
-import com.xiaoleilu.hutool.io.resource.ResourceUtil;
-import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.lang.ClassScaner;
-import com.xiaoleilu.hutool.lang.Filter;
-import com.xiaoleilu.hutool.lang.Singleton;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -25,6 +17,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import com.xiaoleilu.hutool.convert.BasicType;
+import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
+import com.xiaoleilu.hutool.lang.ClassScaner;
+import com.xiaoleilu.hutool.lang.Filter;
+import com.xiaoleilu.hutool.lang.Singleton;
 
 /**
  * 类工具类 <br>
@@ -92,13 +92,15 @@ public class ClassUtil {
 	/**
 	 * 获得对象数组的类数组
 	 * 
-	 * @param objects 对象数组
+	 * @param objects 对象数组，如果数组中存在{@code null}元素，则此元素被认为是Object类型
 	 * @return 类数组
 	 */
 	public static Class<?>[] getClasses(Object... objects) {
 		Class<?>[] classes = new Class<?>[objects.length];
+		Object obj;
 		for (int i = 0; i < objects.length; i++) {
-			classes[i] = objects[i].getClass();
+			obj = objects[i];
+			classes[i] = (null == obj) ? Object.class : obj.getClass();
 		}
 		return classes;
 	}
@@ -296,13 +298,7 @@ public class ClassUtil {
 	 * @return 方法名Set
 	 */
 	public static Set<String> getDeclaredMethodNames(Class<?> clazz) {
-		HashSet<String> methodSet = new HashSet<String>();
-		Method[] methodArray = getDeclaredMethods(clazz);
-		for (Method method : methodArray) {
-			String methodName = method.getName();
-			methodSet.add(methodName);
-		}
-		return methodSet;
+		return ReflectUtil.getMethodNames(clazz);
 	}
 
 	/**
@@ -312,15 +308,7 @@ public class ClassUtil {
 	 * @return 方法数组
 	 */
 	public static Method[] getDeclaredMethods(Class<?> clazz) {
-		Set<Method> methodSet = new HashSet<>();
-		Method[] declaredMethods;
-		for (; null != clazz; clazz = clazz.getSuperclass()) {
-			declaredMethods = clazz.getDeclaredMethods();
-			for (Method method : declaredMethods) {
-				methodSet.add(method);
-			}
-		}
-		return methodSet.toArray(new Method[methodSet.size()]);
+		return ReflectUtil.getMethods(clazz);
 	}
 
 	/**
@@ -388,22 +376,7 @@ public class ClassUtil {
 	 * @throws SecurityException 安全异常
 	 */
 	public static Field getField(Class<?> clazz, String fieldName) throws SecurityException {
-		Assert.notNull(clazz);
-		if (StrUtil.isBlank(fieldName)) {
-			return null;
-		}
-		Class<?> searchType = clazz;
-		Field[] fields;
-		while (Object.class != searchType && null != searchType) {
-			fields = getDeclaredFields(searchType);
-			for (Field field : fields) {
-				if ((fieldName.equals(field.getName()))) {
-					return field;
-				}
-			}
-			searchType = searchType.getSuperclass();
-		}
-		return null;
+		return ReflectUtil.getField(clazz, fieldName);
 	}
 
 	/**
@@ -427,11 +400,7 @@ public class ClassUtil {
 	 * @return 是否为equals方法
 	 */
 	public static boolean isEqualsMethod(Method method) {
-		if (method == null || !method.getName().equals("equals")) {
-			return false;
-		}
-		Class<?>[] paramTypes = method.getParameterTypes();
-		return (paramTypes.length == 1 && paramTypes[0] == Object.class);
+		return ReflectUtil.isEqualsMethod(method);
 	}
 
 	/**
@@ -441,7 +410,7 @@ public class ClassUtil {
 	 * @return 是否为hashCode方法
 	 */
 	public static boolean isHashCodeMethod(Method method) {
-		return (method != null && method.getName().equals("hashCode") && method.getParameterTypes().length == 0);
+		return ReflectUtil.isHashCodeMethod(method);
 	}
 
 	/**
@@ -451,7 +420,7 @@ public class ClassUtil {
 	 * @return 是否为toString方法
 	 */
 	public static boolean isToStringMethod(Method method) {
-		return (method != null && method.getName().equals("toString") && method.getParameterTypes().length == 0);
+		return ReflectUtil.isToStringMethod(method);
 	}
 
 	// ----------------------------------------------------------------------------------------- Classpath
@@ -609,13 +578,8 @@ public class ClassUtil {
 	 * @param clazz 类名
 	 * @return 对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(String clazz) {
-		try {
-			return (T) Class.forName(clazz).newInstance();
-		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
-		}
+		return ReflectUtil.newInstance(clazz);
 	}
 
 	/**
@@ -626,11 +590,7 @@ public class ClassUtil {
 	 * @return 对象
 	 */
 	public static <T> T newInstance(Class<T> clazz) {
-		try {
-			return (T) clazz.newInstance();
-		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
-		}
+		return ReflectUtil.newInstance(clazz);
 	}
 
 	/**
@@ -642,20 +602,7 @@ public class ClassUtil {
 	 * @return 对象
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... params) {
-		if (ArrayUtil.isEmpty(params)) {
-			return newInstance(clazz);
-		}
-
-		final Class<?>[] paramTypes = getClasses(params);
-		final Constructor<?> constructor = getConstructor(clazz, getClasses(params));
-		if (null == constructor) {
-			throw new UtilException("No Constructor matched for parameter types: [{}]", new Object[] { paramTypes });
-		}
-		try {
-			return getConstructor(clazz, paramTypes).newInstance(params);
-		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
-		}
+		return ReflectUtil.newInstance(clazz, params);
 	}
 
 	/**
@@ -666,21 +613,8 @@ public class ClassUtil {
 	 * @param parameterTypes 参数类型，只要任何一个参数是指定参数的父类或接口或相等即可
 	 * @return 构造方法，如果未找到返回null
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
-		if (null == clazz) {
-			return null;
-		}
-
-		final Constructor<?>[] constructors = clazz.getConstructors();
-		Class<?>[] pts;
-		for (Constructor<?> constructor : constructors) {
-			pts = constructor.getParameterTypes();
-			if (isAllAssignableFrom(pts, parameterTypes)) {
-				return (Constructor<T>) constructor;
-			}
-		}
-		return null;
+		return ReflectUtil.getConstructor(clazz, parameterTypes);
 	}
 
 	/**
@@ -876,16 +810,8 @@ public class ClassUtil {
 	 * @throws InvocationTargetException 目标方法执行异常
 	 * @throws IllegalArgumentException 参数异常
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalArgumentException {
-		if (!method.isAccessible()) {
-			method.setAccessible(true);
-		}
-		try {
-			return (T) method.invoke(isStatic(method) ? null : obj, args);
-		} catch (IllegalAccessException e) {
-			throw new UtilException(e);
-		}
+		return ReflectUtil.invoke(obj, method, args);
 	}
 	// ---------------------------------------------------------------------------------------------------- Invoke end
 
@@ -1168,5 +1094,19 @@ public class ClassUtil {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 获得默认值列表
+	 * @param classes 值类型
+	 * @return 默认值列表
+	 * @since 3.0.9
+	 */
+	public static Object[] getDefaultValues(Class<?>... classes) {
+		final Object[] values = new Object[classes.length];
+		for(int i = 0; i < classes.length; i++) {
+			values[i] = getDefaultValue(classes[i]);
+		}
+		return values;
 	}
 }

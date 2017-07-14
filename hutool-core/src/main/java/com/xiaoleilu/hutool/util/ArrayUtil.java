@@ -2346,4 +2346,265 @@ public class ArrayUtil {
 	public static boolean[] reverse(final boolean[] array) {
 		return reverse(array, 0, array.length);
 	}
+	
+	//------------------------------------------------------------------------------------------------------------ min and max
+	/**
+	 * 取最小值
+	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static <T extends Comparable<? super T>> T min(T[] numberArray) {
+		T min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(ObjectUtil.compare(min, numberArray[i]) > 0) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static long min(long[] numberArray) {
+		long min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static int min(int[] numberArray) {
+		int min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static short min(short[] numberArray) {
+		short min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static char min(char[] numberArray) {
+		char min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static byte min(byte[] numberArray) {
+		byte min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static double min(double[] numberArray) {
+		double min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static float min(float[] numberArray) {
+		float min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
+		T max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(ObjectUtil.compare(max, numberArray[i]) < 0) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static long max(long[] numberArray) {
+		long max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static int max(int[] numberArray) {
+		int max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static short max(short[] numberArray) {
+		short max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static char max(char[] numberArray) {
+		char max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static byte max(byte[] numberArray) {
+		byte max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static double max(double[] numberArray) {
+		double max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static float max(float[] numberArray) {
+		float max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
 }
