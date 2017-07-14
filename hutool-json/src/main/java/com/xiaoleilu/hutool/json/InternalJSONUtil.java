@@ -256,7 +256,9 @@ final class InternalJSONUtil {
 		if(null == value){
 			return null;
 		}
-		
+		if(value instanceof JSONNull){
+			return null;
+		}
 		final Class<?> rowType = TypeUtil.getRowType(type);
 		if(null == rowType) {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
