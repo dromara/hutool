@@ -73,6 +73,24 @@ public class BeanUtil {
 	public static PropertyEditor findEditor(Class<?> type){
 		return PropertyEditorManager.findEditor(type);
 	}
+	
+	public static boolean hasNull(Object bean, boolean ignoreError) {
+		final Field[] fields = ClassUtil.getDeclaredFields(bean.getClass());
+		
+		Object fieldValue = null;
+		for (Field field : fields) {
+			field.setAccessible(true);
+			try {
+				fieldValue = field.get(bean);
+			} catch (Exception e) {
+				
+			}
+			if(null == fieldValue) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	//--------------------------------------------------------------------------------------------------------- PropertyDescriptor
 	/**

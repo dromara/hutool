@@ -938,6 +938,19 @@ public class NumberUtil {
 		Assert.notNull(bigNum2);
 		return bigNum1.equals(bigNum2);
 	}
+	
+	/**
+	 * 数字转字符串<br>
+	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
+	 *
+	 * @param number A Number
+	 * @param defaultValue 如果number参数为{@code null}，返回此默认值
+	 * @return A String.
+	 * @since 3.0.9
+	 */
+	public static String toStr(Number number, String defaultValue) {
+		return (null == number) ? defaultValue : toStr(number);
+	}
 
 	/**
 	 * 数字转字符串<br>
@@ -947,7 +960,7 @@ public class NumberUtil {
 	 * @return A String.
 	 */
 	public static String toStr(Number number) {
-		if (number == null) {
+		if (null == number) {
 			throw new NullPointerException("Number is null !");
 		}
 
