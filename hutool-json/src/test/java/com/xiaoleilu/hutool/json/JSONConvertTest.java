@@ -84,7 +84,7 @@ public class JSONConvertTest {
 		String jsonStr = "{\"id\":null,\"examInfoDict\":[{\"answerIs\":1, \"id\":null}]}";//JSONUtil.toJsonStr(userInfoDict1);
 		JSONObject jsonObject2 = JSONUtil.parseObj(jsonStr);//.getJSONObject("examInfoDicts");
 		UserInfoDict userInfoDict2 = jsonObject2.toBean(UserInfoDict.class);
-
+		Assert.assertNull(userInfoDict2.getId());
 	}
 
 }

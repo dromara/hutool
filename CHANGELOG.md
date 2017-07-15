@@ -17,6 +17,7 @@
 * 修复批量插入值顺序错乱问题（感谢@【北京】游弋苍茫）
 * 修复ComparatorChain的equals方法问题
 * 修复ArrayUtil.isEmpty(Object)方法问题（pull request #28@github）
+* 修复JSONUtil#toBean 和FileUtil#equals中的问题（pull request #31@github）
 
 ## 3.0.8
 
