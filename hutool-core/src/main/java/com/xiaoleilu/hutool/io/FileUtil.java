@@ -1020,6 +1020,10 @@ public final class FileUtil {
 	public static boolean equals(File file1, File file2) throws IORuntimeException{
 		Assert.notNull(file1);
 		Assert.notNull(file2);
+		// 如果其中有一个不存在，则肯定不相等
+		if(!file1.exists() || !file2.exists()){
+			return false;
+		}
 		try {
 			return Files.isSameFile(file1.toPath(), file2.toPath());
 		} catch (IOException e) {
