@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.log;
 
+import com.xiaoleilu.hutool.lang.Caller;
 import com.xiaoleilu.hutool.log.level.Level;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -23,7 +24,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void trace(String format, Object... arguments) {
-		trace(LogFactory.indirectGet(), format, arguments);
+		trace(LogFactory.get(Caller.getCallerCaller()), format, arguments);
 	}
 
 	/**
@@ -48,7 +49,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void debug(String format, Object... arguments) {
-		debug(LogFactory.indirectGet(), format, arguments);
+		debug(LogFactory.get(Caller.getCallerCaller()), format, arguments);
 	}
 
 	/**
@@ -73,7 +74,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void info(String format, Object... arguments) {
-		info(LogFactory.indirectGet(), format, arguments);
+		info(LogFactory.get(Caller.getCallerCaller()), format, arguments);
 	}
 
 	/**
@@ -98,7 +99,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(String format, Object... arguments) {
-		warn(LogFactory.indirectGet(), format, arguments);
+		warn(LogFactory.get(Caller.getCallerCaller()), format, arguments);
 	}
 
 	/**
@@ -121,7 +122,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Throwable e, String format, Object... arguments) {
-		warn(LogFactory.indirectGet(), e, StrUtil.format(format, arguments));
+		warn(LogFactory.get(Caller.getCallerCaller()), e, StrUtil.format(format, arguments));
 	}
 
 	/**
@@ -146,7 +147,7 @@ public final class StaticLog {
 	 * @param e 需在日志中堆栈打印的异常
 	 */
 	public static void error(Throwable e) {
-		error(LogFactory.indirectGet(), e);
+		error(LogFactory.get(Caller.getCallerCaller()), e);
 	}
 	
 	/**
@@ -167,7 +168,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(String format, Object... arguments) {
-		error(LogFactory.indirectGet(), format, arguments);
+		error(LogFactory.get(Caller.getCallerCaller()), format, arguments);
 	}
 
 	/**
@@ -190,7 +191,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Throwable e, String format, Object... arguments) {
-		error(LogFactory.indirectGet(), e, format, arguments);
+		error(LogFactory.get(Caller.getCallerCaller()), e, format, arguments);
 	}
 
 	/**
@@ -218,7 +219,7 @@ public final class StaticLog {
 	 * @return 是否为LocationAwareLog日志
 	 */
 	public static boolean log(Level level, Throwable t, String format, Object... arguments) {
-		return log(LogFactory.indirectGet(), level, t, format, arguments);
+		return log(LogFactory.get(Caller.getCallerCaller()), level, t, format, arguments);
 	}
 	
 	/**
@@ -264,6 +265,6 @@ public final class StaticLog {
 	 * @return 获得日志，自动判定日志发出者
 	 */
 	public static Log get() {
-		return LogFactory.indirectGet();
+		return LogFactory.get(Caller.getCallerCaller());
 	}
 }

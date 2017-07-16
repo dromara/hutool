@@ -1,8 +1,12 @@
 package com.xiaoleilu.hutool.core.util;
 
+import java.lang.reflect.Method;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.core.lang.test.bean.ExamInfoDict;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
@@ -11,15 +15,16 @@ import com.xiaoleilu.hutool.util.ReflectUtil;
  *
  */
 public class ReflectUtilTest {
+	
 	@Test
-	public void getCallerTest() {
-		Class<?> caller = ReflectUtil.getCaller();
-		Assert.assertEquals("com.xiaoleilu.hutool.core.util.ReflectUtilTest", caller.getName());
+	public void getMethodsTest(){
+		Method[] methods = ReflectUtil.getMethods(ExamInfoDict.class);
+		Assert.assertTrue(ArrayUtil.isNotEmpty(methods));
 	}
 	
 	@Test
-	public void getCallerStackTraceTest() {
-		StackTraceElement caller = ReflectUtil.getCallerStackTrace();
-		Assert.assertEquals("com.xiaoleilu.hutool.core.util.ReflectUtilTest", caller.getClassName());
+	public void getMethodTest(){
+		Method method = ReflectUtil.getMethod(ExamInfoDict.class, "getId");
+		Assert.assertEquals("getId", method.getName());
 	}
 }
