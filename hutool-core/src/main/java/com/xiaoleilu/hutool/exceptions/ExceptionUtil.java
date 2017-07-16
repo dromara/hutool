@@ -67,7 +67,8 @@ public final class ExceptionUtil {
 	 * @return 当前栈信息
 	 */
 	public static StackTraceElement[] getStackElements() {
-		return (new Throwable()).getStackTrace();
+//		return (new Throwable()).getStackTrace();
+		return Thread.currentThread().getStackTrace();
 	}
 	
 	

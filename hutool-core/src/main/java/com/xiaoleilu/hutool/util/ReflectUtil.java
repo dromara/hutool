@@ -98,7 +98,7 @@ public class ReflectUtil {
 	 */
 	public static Field getField(Class<?> beanClass, String name) throws SecurityException {
 		final Field[] fields = getFields(beanClass);
-		if(ArrayUtil.isNotEmpty(fields)) {
+		if (ArrayUtil.isNotEmpty(fields)) {
 			for (Field field : fields) {
 				if ((name.equals(field.getName()))) {
 					return field;
@@ -151,9 +151,10 @@ public class ReflectUtil {
 
 		return allFields;
 	}
-	
+
 	/**
 	 * 获取字段值
+	 * 
 	 * @param obj 对象
 	 * @param fieldName 字段名
 	 * @return 字段值
@@ -167,6 +168,7 @@ public class ReflectUtil {
 
 	/**
 	 * 获取字段值
+	 * 
 	 * @param obj 对象
 	 * @param field 字段
 	 * @return 字段值
@@ -184,9 +186,10 @@ public class ReflectUtil {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 设置字段值
+	 * 
 	 * @param obj 对象
 	 * @param fieldName 字段名
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
@@ -196,9 +199,10 @@ public class ReflectUtil {
 		Assert.notBlank(fieldName);
 		setFieldValue(obj, getField(obj.getClass(), fieldName), value);
 	}
-	
+
 	/**
 	 * 设置字段值
+	 * 
 	 * @param obj 对象
 	 * @param field 字段
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
@@ -207,7 +211,7 @@ public class ReflectUtil {
 		Assert.notNull(obj);
 		Assert.notNull(field);
 		field.setAccessible(true);
-		
+
 		try {
 			field.set(obj, value);
 		} catch (IllegalAccessException e) {
@@ -247,7 +251,7 @@ public class ReflectUtil {
 		}
 
 		final Method[] methods = getMethods(clazz);
-		if(ArrayUtil.isNotEmpty(methods)) {
+		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
 				if (methodName.equals(method.getName())) {
 					if (ArrayUtil.isEmpty(paramTypes) || ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
@@ -502,5 +506,63 @@ public class ReflectUtil {
 		} catch (IllegalAccessException e) {
 			throw new UtilException(e);
 		}
+	}
+
+	// --------------------------------------------------------------------------------------------------------- getCaller
+	/**
+	 * 获得此方法的调用者，既运行到当前方法的所在类
+	 * @return 调用者类
+	 * @since 3.0.9
+	 */
+	@SuppressWarnings("restriction")
+	public static Class<?> getCaller() {
+		try {
+			return sun.reflect.Reflection.getCallerClass();
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return ClassUtil.loadClass(getCallerStackTrace().getClassName());
+	}
+	
+	/**
+	 * 获得调用此方法的类的{@link StackTraceElement}，，既运行到当前方法的所在{@link StackTraceElement}
+	 * @return 调用此方法的类的{@link StackTraceElement}
+	 * @since 3.0.9
+	 */
+	public static StackTraceElement getCallerStackTrace() {
+		final StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
+		String currentClassName;
+		for (StackTraceElement ste : stElements) {
+			currentClassName = ste.getClassName();
+			if (false == currentClassName.equals(ReflectUtil.class.getName()) && 
+					false == currentClassName.startsWith("java.lang.Thread")) {
+				return ste;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 获得调用者的调用者{@link StackTraceElement}
+	 * @return 调用此方法的类的{@link StackTraceElement}
+	 * @since 3.0.9
+	 */
+	public static StackTraceElement getCallerCallerStackTrace() {
+		final StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
+		String callerClassName = null;
+		String currentClassName;
+		for (StackTraceElement ste : stElements) {
+			currentClassName = ste.getClassName();
+			if (false == currentClassName.equals(ReflectUtil.class.getName()) && 
+					false == currentClassName.startsWith("java.lang.Thread")) {
+				if (callerClassName == null) {
+					callerClassName = currentClassName;
+				} else if (false == callerClassName.equals(currentClassName)) {
+					return ste;
+				}
+			}
+		}
+		return null;
 	}
 }
