@@ -18,6 +18,7 @@
 * 修复ComparatorChain的equals方法问题
 * 修复ArrayUtil.isEmpty(Object)方法问题（pull request #28@github）
 * 修复JSONUtil#toBean 和FileUtil#equals中的问题（pull request #31@github）
+* 正文获取编码问题修复（@talent-aio）
 
 ## 3.0.8
 

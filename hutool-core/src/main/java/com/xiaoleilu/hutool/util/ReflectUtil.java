@@ -60,7 +60,6 @@ public class ReflectUtil {
 	 * 
 	 * @param <T> 构造的对象类型
 	 * @param beanClass 类
-	 * @param withSuperClassConstructors 是否包括父类的构造列表
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 */
@@ -80,7 +79,6 @@ public class ReflectUtil {
 	 * 获得一个类中所有字段列表，直接反射获取，无缓存
 	 * 
 	 * @param beanClass 类
-	 * @param withSuperClassConstructors 是否包括父类的构造列表
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 */
@@ -100,9 +98,11 @@ public class ReflectUtil {
 	 */
 	public static Field getField(Class<?> beanClass, String name) throws SecurityException {
 		final Field[] fields = getFields(beanClass);
-		for (Field field : fields) {
-			if ((name.equals(field.getName()))) {
-				return field;
+		if(ArrayUtil.isNotEmpty(fields)) {
+			for (Field field : fields) {
+				if ((name.equals(field.getName()))) {
+					return field;
+				}
 			}
 		}
 		return null;
@@ -112,7 +112,6 @@ public class ReflectUtil {
 	 * 获得一个类中所有字段列表，包括其父类中的字段
 	 * 
 	 * @param beanClass 类
-	 * @param withSuperClassFieds 是否包括父类的字段列表
 	 * @return 字段列表
 	 * @throws SecurityException 安全检查异常
 	 */
@@ -137,15 +136,15 @@ public class ReflectUtil {
 	public static Field[] getFieldsDirectly(Class<?> beanClass, boolean withSuperClassFieds) throws SecurityException {
 		Assert.notNull(beanClass);
 
-		final Field[] allFields = null;
+		Field[] allFields = null;
 		Class<?> searchType = beanClass;
 		Field[] declaredFields;
 		while (searchType != null) {
 			declaredFields = searchType.getDeclaredFields();
 			if (null == allFields) {
-				declaredFields = allFields;
+				allFields = declaredFields;
 			} else {
-				ArrayUtil.append(allFields, declaredFields);
+				allFields = ArrayUtil.append(allFields, declaredFields);
 			}
 			searchType = withSuperClassFieds ? searchType.getSuperclass() : null;
 		}
@@ -189,7 +188,7 @@ public class ReflectUtil {
 	/**
 	 * 设置字段值
 	 * @param obj 对象
-	 * @param field 字段
+	 * @param fieldName 字段名
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
 	 */
 	public static void setFieldValue(Object obj, String fieldName, Object value) {
@@ -248,10 +247,12 @@ public class ReflectUtil {
 		}
 
 		final Method[] methods = getMethods(clazz);
-		for (Method method : methods) {
-			if (methodName.equals(method.getName())) {
-				if (ArrayUtil.isEmpty(paramTypes) || ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
-					return method;
+		if(ArrayUtil.isNotEmpty(methods)) {
+			for (Method method : methods) {
+				if (methodName.equals(method.getName())) {
+					if (ArrayUtil.isEmpty(paramTypes) || ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
+						return method;
+					}
 				}
 			}
 		}
@@ -322,7 +323,6 @@ public class ReflectUtil {
 	 * 获得一个类中所有方法列表，包括其父类中的方法
 	 * 
 	 * @param beanClass 类
-	 * @param withSuperClassFieds 是否包括父类的方法列表
 	 * @return 方法列表
 	 * @throws SecurityException 安全检查异常
 	 */
@@ -347,15 +347,15 @@ public class ReflectUtil {
 	public static Method[] getMethodsDirectly(Class<?> beanClass, boolean withSuperClassMethods) throws SecurityException {
 		Assert.notNull(beanClass);
 
-		final Method[] allMethods = null;
+		Method[] allMethods = null;
 		Class<?> searchType = beanClass;
 		Method[] declaredMethods;
 		while (searchType != null) {
 			declaredMethods = searchType.getDeclaredMethods();
 			if (null == allMethods) {
-				declaredMethods = allMethods;
+				allMethods = declaredMethods;
 			} else {
-				ArrayUtil.append(allMethods, declaredMethods);
+				allMethods = ArrayUtil.append(allMethods, declaredMethods);
 			}
 			searchType = withSuperClassMethods ? searchType.getSuperclass() : null;
 		}

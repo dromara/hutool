@@ -45,7 +45,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class HttpUtil {
 
-	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
+	public static final Pattern CHARSET_PATTERN = Pattern.compile("<meta.*?charset=(.*?)\"");
 	
 	private HttpUtil(){}
 	
