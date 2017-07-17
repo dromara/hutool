@@ -192,17 +192,14 @@ public class URLUtil {
 	 * @since 3.0.8
 	 */
 	public static String getDecodedPath(URL url) {
-		String path;
+		String path = null;
 		try {
 			//URL对象的getPath方法对于包含中文或空格的问题
 			path = URLUtil.toURI(url).getPath();
-			if(null == path) {
-				path = url.getPath();
-			}
 		} catch (UtilException e) {
-			path = url.getPath();
+			//ignore
 		}
-		return path;
+		return (null != path) ? path : url.getPath();
 	}
 	
 	/**
@@ -211,8 +208,15 @@ public class URLUtil {
 	 * @return URI
 	 * @exception UtilException 包装URISyntaxException
 	 */
-	public static URI toURI(URL url) {
-		return toURI(url.toString());
+	public static URI toURI(URL url) throws UtilException{
+		if(null == url) {
+			return null;
+		}
+		try {
+			return url.toURI();
+		} catch (URISyntaxException e) {
+			throw new UtilException(e);
+		}
 	}
 	
 	/**
@@ -221,7 +225,7 @@ public class URLUtil {
 	 * @return URI
 	 * @exception UtilException 包装URISyntaxException
 	 */
-	public static URI toURI(String location) {
+	public static URI toURI(String location) throws UtilException{
 		try {
 			return new URI(location.replace(" ", "%20"));
 		} catch (URISyntaxException e) {
