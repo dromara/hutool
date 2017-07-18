@@ -4,7 +4,7 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,6 +28,7 @@ import com.xiaoleilu.hutool.util.TypeUtil;
  *<pre>
  * json = new JSONObject().put(&quot;JSON&quot;, &quot;Hello, World!&quot;).toString();
  * </pre>
+ * 
  * @author looly
  */
 public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
@@ -43,7 +44,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
-	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。
+	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。<br>
+	 * 此构造方法并不忽略空值
 	 *
 	 * @param jsonObject A JSONObject.
 	 * @param names 需要的name列表
@@ -66,6 +68,18 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	public JSONObject(JSONTokener x) throws JSONException {
 		init(x);
 	}
+	
+	/**
+	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"<br>
+	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 * 
+	 * @param source JavaBean或者Map对象或者String
+	 */
+	public JSONObject(Object source) {
+		this(source, true);
+	}
 
 	/**
 	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
@@ -73,37 +87,44 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
 	 * 
 	 * @param source JavaBean或者Map对象或者String
+	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @since 3.0.9
 	 */
-	public JSONObject(Object source) {
+	public JSONObject(Object source, boolean ignoreNullValue) {
 		if (null != source) {
 			if (source instanceof Map) {
 				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 					final Object value = e.getValue();
-					if (value != null) {
+					if (false == ignoreNullValue || value != null) {
 						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value));
 					}
 				}
 			}else if(source instanceof String){
 				init((String)source);
 			} else {
-				this.populateMap(source);
+				this.populateMap(source, ignoreNullValue);
 			}
 		}
 	}
 
 	/**
 	 * 使用反射方式获取public字段名和字段值，构建JSONObject对象<br>
-	 * KEY或VALUE任意一个为null则不加入
+	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入
 	 *
 	 * @param pojo 包含需要字段的Bean对象
 	 * @param names 需要构建JSONObject的字段名列表
 	 */
 	public JSONObject(Object pojo, String[] names) {
 		Class<?> c = pojo.getClass();
+		Field field;
 		for (String name : names) {
 			try {
-				this.putOpt(name, c.getField(name).get(pojo));
+				field = c.getField(name);
+				if(null != field) {
+					this.putOpt(name, field.get(pojo));
+				}
 			} catch (Exception ignore) {
+				//ignore
 			}
 		}
 	}
@@ -541,22 +562,25 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * Bean对象转Map
 	 * 
 	 * @param bean Bean对象
+	 * @param ignoreNullValue 是否忽略空值
 	 */
-	private void populateMap(Object bean) {
+	private void populateMap(Object bean, boolean ignoreNullValue) {
 		try {
 			final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(bean.getClass());
 			
 			String key;
-			Method getter;
 			Object value;
 			for (PropertyDescriptor property : propertyDescriptors) {
 				key = property.getName();
 				// 过滤class属性
 				if (false == key.equals("class") && false == key.equals("declaringClass")) {
 					// 得到property对应的getter方法
-					getter = property.getReadMethod();
-					value = getter.invoke(bean);
-					if (null != value && false == value.equals(bean)) {
+					value = property.getReadMethod().invoke(bean);
+					if(null == value) {
+						if(false == ignoreNullValue) {
+							this.rawHashMap.put(key, JSONUtil.wrap(value));
+						}
+					}else if (false == value.equals(bean)) {
 						this.rawHashMap.put(key, JSONUtil.wrap(value));
 					}
 				}

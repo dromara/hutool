@@ -12,6 +12,7 @@
 * 新增ReflectUtil，将原有ClassUtil部分方法迁入，同时提供针对父类私有字段、方法的访问支持
 * ArrayUtil增加min和max方法（感谢@【贵阳】shadow）
 * 增加Caller类，用于获取调用者类（感谢@【北京】宁静 提供需求）
+* JSONUtil.parse方法支持是否忽略空值的参数
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
