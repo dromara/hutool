@@ -27,7 +27,19 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/** 响应状态码 */
 	private int status;
 
+	/**
+	 * 构造
+	 */
 	protected HttpResponse() {
+	}
+	
+	/**
+	 * 构造
+	 * @param charset 编码
+	 * @since 3.0.9
+	 */
+	protected HttpResponse(String charset) {
+		this.charset = charset;
 	}
 	
 	/**
@@ -110,16 +122,20 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * 读取响应信息
 	 * 
 	 * @param httpConnection Http连接对象
-	 * @return HttpResponse
+	 * @param requestCharset 请求编码
+	 * @return this
 	 */
-	protected static HttpResponse readResponse(HttpConnection httpConnection) {
-		final HttpResponse httpResponse = new HttpResponse();
+	protected static HttpResponse readResponse(HttpConnection httpConnection, String requestCharset) {
+		final HttpResponse httpResponse = new HttpResponse(requestCharset);
 		
 		InputStream in = null;
 		try {
 			httpResponse.status = httpConnection.responseCode();
 			httpResponse.headers =  httpConnection.headers();
-			httpResponse.charset = httpConnection.charset();
+			final String charset = httpConnection.charset();
+			if(StrUtil.isNotBlank(charset)) {
+				httpResponse.charset = charset;
+			}
 			
 			if(httpResponse.status < HttpStatus.HTTP_BAD_REQUEST){
 				in = httpConnection.getInputStream();

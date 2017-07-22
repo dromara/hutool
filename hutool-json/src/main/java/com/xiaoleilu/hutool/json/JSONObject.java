@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,17 +33,40 @@ import com.xiaoleilu.hutool.util.TypeUtil;
  * @author looly
  */
 public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
+	
+	/** 默认初始大小 */
+	public static final int DEFAULT_CAPACITY = 16;
 
 	/** JSON的KV持有Map */
-	private final Map<String, Object> rawHashMap = new HashMap<>();
-
+	private final Map<String, Object> rawHashMap;
+	
+	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
-	 * 空构造
+	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY无序
 	 */
 	public JSONObject() {
+		this(DEFAULT_CAPACITY, false);
+	}
+	
+	/**
+	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}
+	 * @param isOrder 是否有序
+	 * @since 3.0.9
+	 */
+	public JSONObject(boolean isOrder) {
+		this(DEFAULT_CAPACITY, isOrder);
 	}
 
-	// -------------------------------------------------------------------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 * @param capacity 初始大小
+	 * @param isOrder 是否有序
+	 * @since 3.0.9
+	 */
+	public JSONObject(int capacity, boolean isOrder) {
+		this.rawHashMap = isOrder ? new LinkedHashMap<String, Object>(capacity) : new HashMap<String, Object>(capacity);
+	}
+
 	/**
 	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。<br>
 	 * 此构造方法并不忽略空值
@@ -51,6 +75,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param names 需要的name列表
 	 */
 	public JSONObject(JSONObject jsonObject, String... names) {
+		this();
 		for (String name : names) {
 			try {
 				this.putOnce(name, jsonObject.getObj(name));
@@ -66,6 +91,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @throws JSONException 语法错误
 	 */
 	public JSONObject(JSONTokener x) throws JSONException {
+		this();
 		init(x);
 	}
 	
@@ -91,6 +117,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
+		this();
 		if (null != source) {
 			if (source instanceof Map) {
 				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
@@ -101,7 +128,10 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				}
 			}else if(source instanceof String){
 				init((String)source);
-			} else {
+			}else if(source instanceof Number) {
+				//ignore Number
+			} else{
+				//普通Bean
 				this.populateMap(source, ignoreNullValue);
 			}
 		}
@@ -115,6 +145,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param names 需要构建JSONObject的字段名列表
 	 */
 	public JSONObject(Object pojo, String[] names) {
+		this();
 		Class<?> c = pojo.getClass();
 		Field field;
 		for (String name : names) {
@@ -488,6 +519,17 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	
+	/**
+	 * 格式化打印JSON，缩进为4个空格
+	 * @return 格式化后的JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
+	 * @since 3.0.9
+	 */
+	@Override
+	public String toStringPretty() throws JSONException{
+		return this.toJSONString(4);
 	}
 
 	/**

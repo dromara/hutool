@@ -248,6 +248,17 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			return null;
 		}
 	}
+	
+	/**
+	 * 格式化打印JSON，缩进为4个空格
+	 * @return 格式化后的JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
+	 * @since 3.0.9
+	 */
+	@Override
+	public String toStringPretty() throws JSONException{
+		return this.toJSONString(4);
+	}
 
 	/**
 	 * 转为JSON字符串，指定缩进值

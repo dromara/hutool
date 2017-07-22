@@ -517,7 +517,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 获取响应
 		if(null == httpResponse){
-			httpResponse = HttpResponse.readResponse(httpConnection);
+			httpResponse = HttpResponse.readResponse(this.httpConnection, this.charset);
 		}
 
 		this.httpConnection.disconnect();

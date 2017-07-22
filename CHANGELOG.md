@@ -13,6 +13,8 @@
 * ArrayUtil增加min和max方法（感谢@【贵阳】shadow）
 * 增加Caller类，用于获取调用者类（感谢@【北京】宁静 提供需求）
 * JSONUtil.parse方法支持是否忽略空值的参数
+* JSONObject支持初始大小和按照KEY有序（感谢【深圳】Vmo）
+* 对ImageUtil重构以支持更对类型参数
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
@@ -21,6 +23,8 @@
 * 修复ArrayUtil.isEmpty(Object)方法问题（pull request #28@github）
 * 修复JSONUtil#toBean 和FileUtil#equals中的问题（pull request #31@github）
 * 正文获取编码问题修复（@talent-aio）
+* 修复Http部分定义编码不能应用于Response的问题（issue#31@osc）
+* 修复FileUtil.equals方法在两个文件都不存在的情况下判定问题
 
 ## 3.0.8
 

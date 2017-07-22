@@ -66,6 +66,15 @@ public final class FileUtil {
 	public static final String JAR_PATH_EXT = ".jar!";
 	/** 当Path为文件形式时, path会加入一个表示文件的前缀 */
 	public static final String PATH_FILE_PRE = "file:";
+	
+	/**
+	 * 是否为Windows环境
+	 * @return 是否为Windows环境
+	 * @since 3.0.9
+	 */
+	public static boolean isWindows() {
+		return '\\' == File.separatorChar;
+	}
 
 	/**
 	 * 列出目录文件<br>
@@ -765,7 +774,7 @@ public final class FileUtil {
 		}
 		Assert.notNull(dest, "Destination File or directiory is null !");
 		if (equals(src, dest)) {
-			throw new IORuntimeException("Files '" + src + "' and '" + dest + "' are equal");
+			throw new IORuntimeException("Files '{}' and '{}' are equal", src, dest);
 		}
 
 		if (src.isDirectory()) {// 复制目录
@@ -1020,8 +1029,12 @@ public final class FileUtil {
 	public static boolean equals(File file1, File file2) throws IORuntimeException{
 		Assert.notNull(file1);
 		Assert.notNull(file2);
-		// 如果其中有一个不存在，则肯定不相等
-		if(!file1.exists() || !file2.exists()){
+		if(false == file1.exists() || false == file2.exists()){
+			//两个文件都不存在判断其路径是否相同
+			if(false == file1.exists() && false == file2.exists() && pathEquals(file1, file2)) {
+				return true;
+			}
+			//对于一个存在一个不存在的情况，一定不相同
 			return false;
 		}
 		try {
@@ -1029,6 +1042,42 @@ public final class FileUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+	
+	/**
+	 * 文件路径是否相同<br>
+	 * 取两个文件的绝对路径比较，在Windows下忽略大小写，在Linux下不忽略。
+	 * 
+	 * @param file1 文件1
+	 * @param file2 文件2
+	 * @return 文件路径是否相同
+	 * @since 3.0.9
+	 */
+	public static boolean pathEquals(File file1, File file2) {
+		if(isWindows()) {
+			//Windows环境
+			try {
+				if(StrUtil.equalsIgnoreCase(file1.getCanonicalPath(), file2.getCanonicalPath())){
+					return true;
+				}
+			} catch (Exception e) {
+				if(StrUtil.equalsIgnoreCase(file1.getAbsolutePath(), file2.getAbsolutePath())) {
+					return true;
+				}
+			}
+		}else {
+			//类Unix环境
+			try {
+				if(StrUtil.equals(file1.getCanonicalPath(), file2.getCanonicalPath())){
+					return true;
+				}
+			} catch (Exception e) {
+				if(StrUtil.equals(file1.getAbsolutePath(), file2.getAbsolutePath())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

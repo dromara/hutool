@@ -1,7 +1,9 @@
 package com.xiaoleilu.hutool.core.io;
 
 import java.io.File;
+
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.FileUtil;
@@ -13,13 +15,35 @@ public class FileUtilTest {
 		String absolutePath = FileUtil.getAbsolutePath("aaa");
 		Assert.assertNotNull(absolutePath);
 	}
+	
+	@Test
+	@Ignore
+	public void touchTest() {
+		FileUtil.touch("d:\\tea\\a.jpg");
+	}
 
 	@Test
 	public void copyTest() throws Exception {
-		String dir = FileUtilTest.class.getResource("/").getFile();
-		File srcFile = FileUtil.file(dir, "hutool.jpg");
-		File destFile = FileUtil.file(dir, "hutool.copy.jpg");
+		File srcFile = FileUtil.file("hutool.jpg");
+		File destFile = FileUtil.file("hutool.copy.jpg");
 
 		FileUtil.copy(srcFile, destFile, true);
+	}
+	
+	@Test
+	public void equlasTest() {
+		//源文件和目标文件都不存在
+		File srcFile = FileUtil.file("d:/hutool.jpg");
+		File destFile = FileUtil.file("d:/hutool.jpg");
+		
+		boolean equals = FileUtil.equals(srcFile, destFile);
+		Assert.assertTrue(equals);
+		
+		//源文件存在，目标文件不存在
+		File srcFile1 = FileUtil.file("hutool.jpg");
+		File destFile1 = FileUtil.file("d:/hutool.jpg");
+		
+		boolean notEquals = FileUtil.equals(srcFile1, destFile1);
+		Assert.assertFalse(notEquals);
 	}
 }
