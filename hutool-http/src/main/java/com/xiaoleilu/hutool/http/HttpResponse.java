@@ -5,6 +5,8 @@ import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
@@ -38,7 +40,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @param charset 编码
 	 * @since 3.0.9
 	 */
-	protected HttpResponse(String charset) {
+	protected HttpResponse(Charset charset) {
 		this.charset = charset;
 	}
 	
@@ -125,7 +127,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @param requestCharset 请求编码
 	 * @return this
 	 */
-	protected static HttpResponse readResponse(HttpConnection httpConnection, String requestCharset) {
+	protected static HttpResponse readResponse(HttpConnection httpConnection, Charset requestCharset) {
 		final HttpResponse httpResponse = new HttpResponse(requestCharset);
 		
 		InputStream in = null;
@@ -134,7 +136,11 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			httpResponse.headers =  httpConnection.headers();
 			final String charset = httpConnection.charset();
 			if(StrUtil.isNotBlank(charset)) {
-				httpResponse.charset = charset;
+				try {
+					httpResponse.charset = Charset.forName(charset);
+				} catch (UnsupportedCharsetException e) {
+					//ignore
+				}
 			}
 			
 			if(httpResponse.status < HttpStatus.HTTP_BAD_REQUEST){

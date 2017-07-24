@@ -398,8 +398,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.body(json.toString());
 		
 		String contentTypeJson = "application/json";
-		if(StrUtil.isNotBlank(this.charset)){
-			contentTypeJson = StrUtil.format("{};charset={}", contentTypeJson, this.charset);
+		if(null != this.charset){
+			contentTypeJson = StrUtil.format("{};charset={}", contentTypeJson, this.charset.name());
 		}
 		this.contentType(contentTypeJson);
 		

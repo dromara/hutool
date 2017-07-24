@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.util;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 
 /**
  * 字符集工具类
@@ -30,8 +31,9 @@ public class CharsetUtil {
 	 * 转换为Charset对象
 	 * @param charsetName 字符集，为空则返回默认字符集
 	 * @return Charset
+	 * @throws UnsupportedCharsetException 编码不支持
 	 */
-	public static Charset charset(String charsetName){
+	public static Charset charset(String charsetName) throws UnsupportedCharsetException{
 		return StrUtil.isBlank(charsetName) ? Charset.defaultCharset() : Charset.forName(charsetName);
 	}
 	

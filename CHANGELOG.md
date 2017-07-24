@@ -15,6 +15,8 @@
 * JSONUtil.parse方法支持是否忽略空值的参数
 * JSONObject支持初始大小和按照KEY有序（感谢【深圳】Vmo）
 * 对ImageUtil重构以支持更对类型参数
+* DateTime增加offsetNew方法
+* 增加Range类，抽象递增递减列表
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
@@ -25,6 +27,7 @@
 * 正文获取编码问题修复（@talent-aio）
 * 修复Http部分定义编码不能应用于Response的问题（issue#31@osc）
 * 修复FileUtil.equals方法在两个文件都不存在的情况下判定问题
+* 修复Http请求结果多出一个换行的问题（感谢@【北京】仓山有井名为空）
 
 ## 3.0.8
 

@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -630,6 +631,20 @@ public final class IoUtil {
 			}
 		}
 	}
+	
+	/**
+	 * 将多部分内容写到流中，自动转换为字符串
+	 * 
+	 * @param out 输出流
+	 * @param charsetName 写出的内容的字符集
+	 * @param isCloseOut 写入完毕是否关闭输出流
+	 * @param contents 写入的内容，调用toString()方法，不包括不会自动换行
+	 * @throws IOException IO异常
+	 */
+	public static void write(OutputStream out, String charsetName, boolean isCloseOut, Object... contents) throws IOException {
+		Assert.notNull(charsetName, "[charsetName] is null !");
+		write(out, Charset.forName(charsetName), isCloseOut, contents);
+	}
 
 	/**
 	 * 将多部分内容写到流中，自动转换为字符串
@@ -639,8 +654,9 @@ public final class IoUtil {
 	 * @param isCloseOut 写入完毕是否关闭输出流
 	 * @param contents 写入的内容，调用toString()方法，不包括不会自动换行
 	 * @throws IOException IO异常
+	 * @since 3.0.9
 	 */
-	public static void write(OutputStream out, String charset, boolean isCloseOut, Object... contents) throws IOException {
+	public static void write(OutputStream out, Charset charset, boolean isCloseOut, Object... contents) throws IOException {
 		OutputStreamWriter osw = null;
 		try {
 			osw = getWriter(out, charset);
@@ -658,6 +674,20 @@ public final class IoUtil {
 			}
 		}
 	}
+	
+	/**
+	 * 将多部分内容写到流中
+	 * 
+	 * @param out 输出流
+	 * @param charsetName 写出的内容的字符集
+	 * @param isCloseOut 写入完毕是否关闭输出流
+	 * @param contents 写入的内容
+	 * @throws IOException IO异常
+	 */
+	public static void writeObjects(OutputStream out, String charsetName, boolean isCloseOut, Serializable... contents) throws IOException {
+		Assert.notNull(charsetName, "[charsetName] is null !");
+		writeObjects(out, Charset.forName(charsetName), isCloseOut, contents);
+	}
 
 	/**
 	 * 将多部分内容写到流中
@@ -668,7 +698,7 @@ public final class IoUtil {
 	 * @param contents 写入的内容
 	 * @throws IOException IO异常
 	 */
-	public static void writeObjects(OutputStream out, String charset, boolean isCloseOut, Serializable... contents) throws IOException {
+	public static void writeObjects(OutputStream out, Charset charset, boolean isCloseOut, Serializable... contents) throws IOException {
 		ObjectOutputStream osw = null;
 		try {
 			osw = out instanceof ObjectOutputStream ? (ObjectOutputStream) out : new ObjectOutputStream(out);

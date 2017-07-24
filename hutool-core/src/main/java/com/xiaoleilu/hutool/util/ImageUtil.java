@@ -3,12 +3,15 @@ package com.xiaoleilu.hutool.util;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
+import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -83,7 +86,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 缩放图像（按比例缩放）<br>
 	 * 缩放后默认为jpeg格式
@@ -114,7 +117,7 @@ public class ImageUtil {
 	 */
 	public final static void scale(Image srcImg, ImageOutputStream destImageStream, int scale, boolean flag) {
 		try {
-			BufferedImage src = toBufferedImage(srcImg); 
+			BufferedImage src = toBufferedImage(srcImg);
 			int width = src.getWidth(); // 得到源图宽
 			int height = src.getHeight(); // 得到源图长
 			if (flag) {// 放大
@@ -130,7 +133,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式
@@ -148,7 +151,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式
@@ -166,7 +169,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式
@@ -203,9 +206,9 @@ public class ImageUtil {
 			// 计算比例
 			if ((bi.getHeight() > height) || (bi.getWidth() > width)) {
 				if (bi.getHeight() > bi.getWidth()) {
-					ratio = ((double)height) / bi.getHeight();
+					ratio = ((double) height) / bi.getHeight();
 				} else {
-					ratio = ((double)width) / bi.getWidth();
+					ratio = ((double) width) / bi.getWidth();
 				}
 				AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(ratio, ratio), null);
 				itemp = op.filter(bi, null);
@@ -215,11 +218,11 @@ public class ImageUtil {
 				Graphics2D g = image.createGraphics();
 				g.setColor(fixedColor);
 				g.fillRect(0, 0, width, height);
-				
+
 				final int itempHeight = itemp.getHeight(null);
 				final int itempWidth = itemp.getWidth(null);
 				if (width == itempWidth) {
-					//宽度一致
+					// 宽度一致
 					g.drawImage(itemp, 0, (height - itempHeight) / 2, itempWidth, itempHeight, fixedColor, null);
 				} else {
 					g.drawImage(itemp, (width - itempWidth) / 2, 0, itempWidth, itempHeight, fixedColor, null);
@@ -270,7 +273,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)
 	 * 
@@ -324,7 +327,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 图像切片（指定切片的宽度和高度）
 	 * 
@@ -395,7 +398,7 @@ public class ImageUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 图像切割（指定切片的行数和列数）
 	 * 
@@ -411,7 +414,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 图像切割（指定切片的行数和列数）
 	 * 
@@ -482,7 +485,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
 	 * 
@@ -498,7 +501,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
 	 * 
@@ -514,7 +517,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
 	 * 
@@ -545,7 +548,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 彩色转为黑白
 	 * 
@@ -560,7 +563,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 彩色转为黑白
 	 * 
@@ -575,7 +578,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 彩色转为黑白
 	 * 
@@ -614,7 +617,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 给图片添加文字水印
 	 * 
@@ -634,7 +637,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 给图片添加文字水印
 	 * 
@@ -654,7 +657,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 给图片添加文字水印
 	 * 
@@ -687,7 +690,7 @@ public class ImageUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 给图片添加图片水印
 	 * 
@@ -705,7 +708,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 给图片添加图片水印
 	 * 
@@ -723,7 +726,7 @@ public class ImageUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 给图片添加图片水印
 	 * 
@@ -760,7 +763,7 @@ public class ImageUtil {
 			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 			Graphics2D g = image.createGraphics();
 			g.drawImage(src, 0, 0, width, height, null);
-			
+
 			// 水印文件
 			int pressImgWidth = pressImg.getWidth(null);
 			int pressImgHeight = pressImg.getHeight(null);
@@ -796,32 +799,113 @@ public class ImageUtil {
 
 		return bimage;
 	}
-	
+
 	/**
 	 * 将Base64编码的图像信息转为 {@link BufferedImage}
+	 * 
 	 * @param base64 图像的Base64表示
 	 * @return {@link BufferedImage}
 	 * @throws IORuntimeException IO异常
 	 */
-	public static BufferedImage toImage(String base64) throws IORuntimeException{
+	public static BufferedImage toImage(String base64) throws IORuntimeException {
 		byte[] decode = Base64.decode(base64, CharsetUtil.CHARSET_UTF_8);
 		return toImage(decode);
 	}
-	
+
 	/**
 	 * 将Base64编码的图像信息转为 {@link BufferedImage}
+	 * 
 	 * @param imageBytes 图像bytes
 	 * @return {@link BufferedImage}
 	 * @throws IORuntimeException IO异常
 	 */
-	public static BufferedImage toImage(byte[] imageBytes) throws IORuntimeException{
+	public static BufferedImage toImage(byte[] imageBytes) throws IORuntimeException {
 		try {
 			return ImageIO.read(new ByteArrayInputStream(imageBytes));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
+	/**
+	 * 根据文字创建PNG图片
+	 * 
+	 * @param str 文字
+	 * @param font 字体{@link Font}
+	 * @param backgroundColor 背景颜色
+	 * @param fontColor 字体颜色
+	 * @param out 图片输出地
+	 * @throws UtilException IO异常 
+	 */
+	public static void createImage(String str, Font font, Color backgroundColor, Color fontColor, ImageOutputStream out) throws UtilException{
+		// 获取font的样式应用在str上的整个矩形
+		Rectangle2D r = font.getStringBounds(str, new FontRenderContext(AffineTransform.getScaleInstance(1, 1), false, false));
+		int unitHeight = (int) Math.floor(r.getHeight());// 获取单个字符的高度
+		// 获取整个str用了font样式的宽度这里用四舍五入后+1保证宽度绝对能容纳这个字符串作为图片的宽度
+		int width = (int) Math.round(r.getWidth()) + 1;
+		int height = unitHeight + 3;// 把单个字符的高度+3保证高度绝对能容纳字符串作为图片的高度
+		// 创建图片
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
+		Graphics g = image.getGraphics();
+		g.setColor(backgroundColor);
+		g.fillRect(0, 0, width, height);// 先用背景色填充整张图片,也就是背景
+		g.setColor(fontColor);
+		g.setFont(font);// 设置画笔字体
+		g.drawString(str, 0, font.getSize());// 画出字符串
+		g.dispose();
+		try {
+			ImageIO.write(image, IMAGE_TYPE_PNG, out);
+		} catch (IOException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
+	 * 根据文件创建字体<br>
+	 * 首先尝试创建{@link Font#TRUETYPE_FONT}字体，此类字体无效则创建{@link Font#TYPE1_FONT}
+	 * 
+	 * @param fontFile 字体文件
+	 * @return {@link Font}
+	 * @since 3.0.9
+	 */
+	public static Font createFont(File fontFile) {
+		try {
+			return Font.createFont(Font.TRUETYPE_FONT, fontFile);
+		} catch (FontFormatException e) {
+			// True Type字体无效时使用Type1字体
+			try {
+				return Font.createFont(Font.TYPE1_FONT, fontFile);
+			} catch (Exception e1) {
+				throw new UtilException(e);
+			}
+		} catch (IOException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
+	 * 根据文件创建字体<br>
+	 * 首先尝试创建{@link Font#TRUETYPE_FONT}字体，此类字体无效则创建{@link Font#TYPE1_FONT}
+	 * 
+	 * @param fontStream 字体流
+	 * @return {@link Font}
+	 * @since 3.0.9
+	 */
+	public static Font createFont(InputStream fontStream) {
+		try {
+			return Font.createFont(Font.TRUETYPE_FONT, fontStream);
+		} catch (FontFormatException e) {
+			// True Type字体无效时使用Type1字体
+			try {
+				return Font.createFont(Font.TYPE1_FONT, fontStream);
+			} catch (Exception e1) {
+				throw new UtilException(e);
+			}
+		} catch (IOException e) {
+			throw new UtilException(e);
+		}
+	}
+
 	// ---------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 计算text的长度（一个中文算两个字符）

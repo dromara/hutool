@@ -28,7 +28,7 @@ public abstract class HttpBase<T> {
 	/**存储头信息*/
 	protected Map<String, List<String>> headers = new HashMap<String, List<String>>();
 	/**编码*/
-	protected String charset = CharsetUtil.UTF_8;
+	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
 	/**http版本*/
 	protected String httpVersion = HTTP_1_1;
 	/**存储主体*/
@@ -192,7 +192,7 @@ public abstract class HttpBase<T> {
 	 * @return 字符集
 	 */
 	public String charset() {
-		return charset;
+		return charset.name();
 	}
 	
 	/**
@@ -203,7 +203,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T charset(String charset) {
 		if(StrUtil.isNotBlank(charset)){
-			this.charset = charset;
+			this.charset = Charset.forName(charset);
 		}
 		return (T) this;
 	}
@@ -216,7 +216,7 @@ public abstract class HttpBase<T> {
 	 */
 	public T charset(Charset charset) {
 		if(null != charset){
-			this.charset = charset.name();
+			this.charset = charset;
 		}
 		return (T) this;
 	}
