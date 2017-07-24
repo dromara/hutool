@@ -17,6 +17,7 @@
 * 对ImageUtil重构以支持更对类型参数
 * DateTime增加offsetNew方法
 * 增加Range类，抽象递增递减列表
+* 扩充XmlUtil，提供更多重载方法（感谢@【北京】仓山有井名为空）
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
