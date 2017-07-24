@@ -354,6 +354,16 @@ public class NumberUtil {
 	public static String decimalFormat(String pattern, long value) {
 		return new DecimalFormat(pattern).format(value);
 	}
+	
+	/**
+	 * 格式化金额输出，每三位用逗号分隔
+	 * @param value 金额
+	 * @return 格式化后的值
+	 * @since 3.0.9
+	 */
+	public static String decimalFormatMoney(Double value) {
+		return decimalFormat(",###", value);
+	}
 
 	// ------------------------------------------------------------------------------------------- isXXX
 	/**
