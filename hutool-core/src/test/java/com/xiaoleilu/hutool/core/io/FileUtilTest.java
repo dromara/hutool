@@ -8,6 +8,11 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 
+/**
+ * {@link FileUtil} 单元测试类
+ * 
+ * @author Looly
+ */
 public class FileUtilTest {
 	
 	@Test
@@ -20,6 +25,11 @@ public class FileUtilTest {
 	@Ignore
 	public void touchTest() {
 		FileUtil.touch("d:\\tea\\a.jpg");
+	}
+	
+	@Test
+	public void renameTest() {
+		FileUtil.rename(FileUtil.file("hutool.jpg"), "b.png", false, false);
 	}
 
 	@Test

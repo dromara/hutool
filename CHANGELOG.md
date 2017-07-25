@@ -19,6 +19,7 @@
 * 增加Range类，抽象递增递减列表（感谢@【悉尼】C - ActFramework）
 * 扩充XmlUtil，提供更多重载方法（感谢@【北京】仓山有井名为空）
 * NumberUtil增加decimalFormatMoney方法（感谢@【北京】宁静 ）
+* FileUtil增加rename方法
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）

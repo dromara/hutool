@@ -165,9 +165,9 @@ public final class FileUtil {
 	 */
 	public static List<File> loopFiles(File file, FileFilter fileFilter) {
 		List<File> fileList = new ArrayList<File>();
-		if (file == null) {
+		if (null == file) {
 			return fileList;
-		} else if (file.exists() == false) {
+		} else if (false == file.exists()) {
 			return fileList;
 		}
 
@@ -862,8 +862,8 @@ public final class FileUtil {
 	 */
 	public static void move(File src, File dest, boolean isOverride) throws IORuntimeException {
 		// check
-		if (!src.exists()) {
-			throw new IORuntimeException("File already exist: " + src);
+		if (false == src.exists()) {
+			throw new IORuntimeException("File not found: " + src);
 		}
 
 		// 来源为文件夹，目标为文件
@@ -880,7 +880,7 @@ public final class FileUtil {
 			dest = new File(dest, src.getName());
 		}
 
-		if (src.renameTo(dest) == false) {
+		if (false == src.renameTo(dest)) {
 			// 在文件系统不同的情况下，renameTo会失败，此时使用copy，然后删除原文件
 			try {
 				copy(src, dest, isOverride);
@@ -891,7 +891,40 @@ public final class FileUtil {
 
 		}
 	}
-
+	
+	/**
+	 * 修改文件或目录的文件名，变更文件（或目录）所在目录<br>
+	 * 不变更路径，只是简单修改文件名<br>
+	 * 重命名有两种模式：<br>
+	 * 1、isRetainExt为true时，保留原扩展名：
+	 * <pre>
+	 * FileUtil.rename(file, "aaa", true) xx/xx.png =》xx/aaa.png
+	 * </pre>
+	 * 2、isRetainExt为false时，不保留原扩展名，需要在newName中
+	 * <pre>
+	 * FileUtil.rename(file, "aaa.jpg", false) xx/xx.png =》xx/aaa.jpg
+	 * </pre>
+	 * 
+	 * @param file 被修改的文件
+	 * @param newName 新的文件名，包括扩展名
+	 * @param isRetainExt 是否保留原文件的扩展名，如果保留，则newName不需要加扩展名
+	 * @param isOverride 是否覆盖目标文件
+	 * @return 目标文件
+	 * @since 3.0.9
+	 */
+	public static File rename(File file, String newName, boolean isRetainExt, boolean isOverride) {
+		if(isRetainExt) {
+			newName = newName.concat(".").concat(FileUtil.extName(file));
+		}
+		final Path path = file.toPath();
+		final CopyOption[] options = isOverride ? new CopyOption[] {StandardCopyOption.REPLACE_EXISTING} : new CopyOption[] {};
+		try {
+			return Files.move(path, path.resolveSibling(newName), options).toFile();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
 	/**
 	 * 获取绝对路径<br>
 	 * 此方法不会判定给定路径是否有效（文件或目录存在）
