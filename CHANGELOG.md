@@ -20,6 +20,8 @@
 * 扩充XmlUtil，提供更多重载方法（感谢@【北京】仓山有井名为空）
 * NumberUtil增加decimalFormatMoney方法（感谢@【北京】宁静 ）
 * FileUtil增加rename方法
+* 增加Copier接口抽象拷贝
+* 增加FileCopier强化文件拷贝
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）

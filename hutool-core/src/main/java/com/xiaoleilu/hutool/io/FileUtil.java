@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.xiaoleilu.hutool.io.file.FileCopier;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
 import com.xiaoleilu.hutool.io.file.FileWriter;
@@ -66,9 +67,10 @@ public final class FileUtil {
 	public static final String JAR_PATH_EXT = ".jar!";
 	/** 当Path为文件形式时, path会加入一个表示文件的前缀 */
 	public static final String PATH_FILE_PRE = "file:";
-	
+
 	/**
 	 * 是否为Windows环境
+	 * 
 	 * @return 是否为Windows环境
 	 * @since 3.0.9
 	 */
@@ -695,7 +697,7 @@ public final class FileUtil {
 	 * @param src 源文件
 	 * @param dest 目标文件或目录，如果为目录使用与源文件相同的文件名
 	 * @param options {@link StandardCopyOption}
-	 * @return File
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File copyFile(File src, File dest, StandardCopyOption... options) throws IORuntimeException {
@@ -706,16 +708,9 @@ public final class FileUtil {
 		}
 		Assert.notNull(dest, "Destination File or directiory is null !");
 		if (equals(src, dest)) {
-			throw new IORuntimeException("Files '" + src + "' and '" + dest + "' are equal");
+			throw new IORuntimeException("Files '{}' and '{}' are equal", src, dest);
 		}
-
-		Path srcPath = src.toPath();
-		Path destPath = dest.isDirectory() ? dest.toPath().resolve(srcPath.getFileName()) : dest.toPath();
-		try {
-			return Files.copy(srcPath, destPath, options).toFile();
-		} catch (Exception e) {
-			throw new IORuntimeException(e);
-		}
+		return copyFile(src.toPath(), dest.toPath(), options).toFile();
 	}
 
 	/**
@@ -755,10 +750,12 @@ public final class FileUtil {
 
 	/**
 	 * 复制文件或目录<br>
-	 * 情况如下：<br>
-	 * 1、src和dest都为目录，则讲src下所有文件目录拷贝到dest下<br>
-	 * 2、src和dest都为文件，直接复制，名字为dest<br>
-	 * 3、src为文件，dest为目录，将src拷贝到dest目录下<br>
+	 * 情况如下：
+	 * <pre>
+	 * 1、src和dest都为目录，则将src目录及其目录下所有文件目录拷贝到dest下
+	 * 2、src和dest都为文件，直接复制，名字为dest
+	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
+	 * </pre>
 	 * 
 	 * @param src 源文件
 	 * @param dest 目标文件或目录，目标不存在会自动创建（目录、文件都创建）
@@ -767,89 +764,26 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File copy(File src, File dest, boolean isOverride) throws IORuntimeException {
-		// check
-		Assert.notNull(src, "Source File is null !");
-		if (false == src.exists()) {
-			throw new IORuntimeException("File not exist: " + src);
-		}
-		Assert.notNull(dest, "Destination File or directiory is null !");
-		if (equals(src, dest)) {
-			throw new IORuntimeException("Files '{}' and '{}' are equal", src, dest);
-		}
-
-		if (src.isDirectory()) {// 复制目录
-			internalCopyDir(src, dest, isOverride);
-		} else {// 复制文件
-			internalCopyFile(src, dest, isOverride);
-		}
-		return dest;
+		return FileCopier.create(src, dest).setOverride(isOverride).copy();
 	}
 
 	/**
-	 * 拷贝目录，只用于内部，不做任何安全检查
+	 * 复制文件或目录<br>
+	 * 情况如下：
+	 * <pre>
+	 * 1、src和dest都为目录，则讲src下所有文件目录拷贝到dest下
+	 * 2、src和dest都为文件，直接复制，名字为dest
+	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
+	 * </pre>
 	 * 
-	 * @param src 源目录
-	 * @param dest 目标目录
-	 * @param isOverride 是否覆盖
+	 * @param src 源文件
+	 * @param dest 目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param isOverride 是否覆盖目标文件
+	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
 	 */
-	private static void internalCopyDir(File src, File dest, boolean isOverride) throws IORuntimeException {
-		if (false == dest.exists()) {
-			dest.mkdirs();
-		} else if (dest.isFile()) {
-			throw new IORuntimeException(StrUtil.format("Src [{}] is a directory but dest [{}] is a file!", src.getPath(), dest.getPath()));
-		}
-
-		final String files[] = src.list();
-		for (String file : files) {
-			File srcFile = new File(src, file);
-			File destFile = new File(dest, file);
-			// 递归复制
-			if (srcFile.isDirectory()) {
-				internalCopyDir(srcFile, destFile, isOverride);
-			} else {
-				internalCopyFile(srcFile, destFile, isOverride);
-			}
-		}
-	}
-
-	/**
-	 * 拷贝文件，只用于内部，不做任何安全检查
-	 * 
-	 * @param src 源文件，必须为文件
-	 * @param dest 目标文件，必须为文件
-	 * @param isOverride 是否覆盖已有文件
-	 * @throws IORuntimeException IO异常
-	 */
-	private static void internalCopyFile(File src, File dest, boolean isOverride) throws IORuntimeException {
-		// copy
-		if (false == dest.exists()) {// 目标不存在，默认做为文件创建
-			touch(dest);
-		} else if (dest.isDirectory()) {// 目标为目录，则在这个目录下创建同名文件
-			dest = new File(dest, src.getName());
-		} else if (false == isOverride) {// 如果已经存在目标文件，切为不覆盖模式，跳过之
-			// StaticLog.debug("File [{}] already exist, ignore it.", dest);
-			return;
-		}
-
-		// do copy file
-		FileInputStream input = null;
-		FileOutputStream output = null;
-		try {
-			input = new FileInputStream(src);
-			output = new FileOutputStream(dest);
-			IoUtil.copy(input, output);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(output);
-			IoUtil.close(input);
-		}
-
-		// 验证
-		if (src.length() != dest.length()) {
-			throw new IORuntimeException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
-		}
+	public static File copyContent(File src, File dest, boolean isOverride) {
+		return FileCopier.create(src, dest).setCopyContentIfDir(true).setOverride(isOverride).copy();
 	}
 
 	/**
@@ -891,15 +825,18 @@ public final class FileUtil {
 
 		}
 	}
-	
+
 	/**
 	 * 修改文件或目录的文件名，不变更路径，只是简单修改文件名<br>
 	 * 重命名有两种模式：<br>
 	 * 1、isRetainExt为true时，保留原扩展名：
+	 * 
 	 * <pre>
 	 * FileUtil.rename(file, "aaa", true) xx/xx.png =》xx/aaa.png
 	 * </pre>
+	 * 
 	 * 2、isRetainExt为false时，不保留原扩展名，需要在newName中
+	 * 
 	 * <pre>
 	 * FileUtil.rename(file, "aaa.jpg", false) xx/xx.png =》xx/aaa.jpg
 	 * </pre>
@@ -912,18 +849,18 @@ public final class FileUtil {
 	 * @since 3.0.9
 	 */
 	public static File rename(File file, String newName, boolean isRetainExt, boolean isOverride) {
-		if(isRetainExt) {
+		if (isRetainExt) {
 			newName = newName.concat(".").concat(FileUtil.extName(file));
 		}
 		final Path path = file.toPath();
-		final CopyOption[] options = isOverride ? new CopyOption[] {StandardCopyOption.REPLACE_EXISTING} : new CopyOption[] {};
+		final CopyOption[] options = isOverride ? new CopyOption[] { StandardCopyOption.REPLACE_EXISTING } : new CopyOption[] {};
 		try {
 			return Files.move(path, path.resolveSibling(newName), options).toFile();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取绝对路径<br>
 	 * 此方法不会判定给定路径是否有效（文件或目录存在）
@@ -950,13 +887,13 @@ public final class FileUtil {
 
 		// 相对于ClassPath路径
 		final URL url = ClassUtil.getResourceUrl(path, baseClass);
-		if(null != url){
-			//since 3.0.8 解决中文或空格路径被编码的问题
+		if (null != url) {
+			// since 3.0.8 解决中文或空格路径被编码的问题
 			return URLUtil.getDecodedPath(url);
-		}else{
-			//如果资源不存在，则返回一个拼接的资源绝对路径
+		} else {
+			// 如果资源不存在，则返回一个拼接的资源绝对路径
 			final String classPath = ClassUtil.getClassPath();
-			if(null == classPath){
+			if (null == classPath) {
 				throw new NullPointerException("ClassPath is null !");
 			}
 			return classPath.concat(path);
@@ -992,7 +929,7 @@ public final class FileUtil {
 			return file.getAbsolutePath();
 		}
 	}
-	
+
 	/**
 	 * 给定路径已经是绝对路径<br>
 	 * 此方法并没有针对路径做标准化，建议先执行{@link #normalize(String)}方法标准化路径后判断
@@ -1000,7 +937,7 @@ public final class FileUtil {
 	 * @param path 需要检查的Path
 	 * @return 是否已经是绝对路径
 	 */
-	public static boolean isAbsolutePath(String path){
+	public static boolean isAbsolutePath(String path) {
 		if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:/.*")) {
 			// 给定的路径已经是绝对路径了
 			return true;
@@ -1058,15 +995,15 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 * @see Files#isSameFile(Path, Path)
 	 */
-	public static boolean equals(File file1, File file2) throws IORuntimeException{
+	public static boolean equals(File file1, File file2) throws IORuntimeException {
 		Assert.notNull(file1);
 		Assert.notNull(file2);
-		if(false == file1.exists() || false == file2.exists()){
-			//两个文件都不存在判断其路径是否相同
-			if(false == file1.exists() && false == file2.exists() && pathEquals(file1, file2)) {
+		if (false == file1.exists() || false == file2.exists()) {
+			// 两个文件都不存在判断其路径是否相同
+			if (false == file1.exists() && false == file2.exists() && pathEquals(file1, file2)) {
 				return true;
 			}
-			//对于一个存在一个不存在的情况，一定不相同
+			// 对于一个存在一个不存在的情况，一定不相同
 			return false;
 		}
 		try {
@@ -1075,7 +1012,7 @@ public final class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 文件路径是否相同<br>
 	 * 取两个文件的绝对路径比较，在Windows下忽略大小写，在Linux下不忽略。
@@ -1086,25 +1023,25 @@ public final class FileUtil {
 	 * @since 3.0.9
 	 */
 	public static boolean pathEquals(File file1, File file2) {
-		if(isWindows()) {
-			//Windows环境
+		if (isWindows()) {
+			// Windows环境
 			try {
-				if(StrUtil.equalsIgnoreCase(file1.getCanonicalPath(), file2.getCanonicalPath())){
+				if (StrUtil.equalsIgnoreCase(file1.getCanonicalPath(), file2.getCanonicalPath())) {
 					return true;
 				}
 			} catch (Exception e) {
-				if(StrUtil.equalsIgnoreCase(file1.getAbsolutePath(), file2.getAbsolutePath())) {
+				if (StrUtil.equalsIgnoreCase(file1.getAbsolutePath(), file2.getAbsolutePath())) {
 					return true;
 				}
 			}
-		}else {
-			//类Unix环境
+		} else {
+			// 类Unix环境
 			try {
-				if(StrUtil.equals(file1.getCanonicalPath(), file2.getCanonicalPath())){
+				if (StrUtil.equals(file1.getCanonicalPath(), file2.getCanonicalPath())) {
 					return true;
 				}
 			} catch (Exception e) {
-				if(StrUtil.equals(file1.getAbsolutePath(), file2.getAbsolutePath())) {
+				if (StrUtil.equals(file1.getAbsolutePath(), file2.getAbsolutePath())) {
 					return true;
 				}
 			}
@@ -1145,11 +1082,11 @@ public final class FileUtil {
 	/**
 	 * 修复路径<br>
 	 * <ol>
-	 * 	<li>1. 统一用 /</li>
-	 * 	<li>2. 多个 / 转换为一个 /</li>
-	 * 	<li>3. 去除两边空格</li>
-	 * 	<li>4. .. 和 . 转换为绝对路径</li>
-	 * 	<li>5. 去掉前缀，例如file:</li>
+	 * <li>1. 统一用 /</li>
+	 * <li>2. 多个 / 转换为一个 /</li>
+	 * <li>3. 去除两边空格</li>
+	 * <li>4. .. 和 . 转换为绝对路径</li>
+	 * <li>5. 去掉前缀，例如file:</li>
 	 * </ol>
 	 * 
 	 * @param path 原路径
@@ -1643,15 +1580,16 @@ public final class FileUtil {
 	public static List<String> readLines(File file, String charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 按行处理文件内容
+	 * 
 	 * @param file 文件
 	 * @param charset 编码
 	 * @param lineHandler {@link LineHandler}行处理器
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void readLines(File file, Charset charset, LineHandler lineHandler) throws IORuntimeException{
+	public static void readLines(File file, Charset charset, LineHandler lineHandler) throws IORuntimeException {
 		FileReader.create(file, charset).readLines(lineHandler);
 	}
 
