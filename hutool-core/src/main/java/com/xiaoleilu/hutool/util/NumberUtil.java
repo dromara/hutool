@@ -64,7 +64,7 @@ public class NumberUtil {
 	public static BigDecimal add(String v1, String v2) {
 		return add(new BigDecimal(v1), new BigDecimal(v2));
 	}
-	
+
 	/**
 	 * 提供精确的加法运算
 	 * 
@@ -101,7 +101,7 @@ public class NumberUtil {
 	public static BigDecimal sub(String v1, String v2) {
 		return sub(new BigDecimal(v1), new BigDecimal(v2));
 	}
-	
+
 	/**
 	 * 提供精确的减法运算
 	 * 
@@ -138,7 +138,7 @@ public class NumberUtil {
 	public static BigDecimal mul(String v1, String v2) {
 		return mul(new BigDecimal(v1), new BigDecimal(v2));
 	}
-	
+
 	/**
 	 * 提供精确的乘法运算
 	 * 
@@ -224,7 +224,7 @@ public class NumberUtil {
 	public static BigDecimal div(String v1, String v2, int scale, RoundingMode roundingMode) {
 		return div(new BigDecimal(v1), new BigDecimal(v1), scale, roundingMode);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
 	 * 
@@ -354,9 +354,10 @@ public class NumberUtil {
 	public static String decimalFormat(String pattern, long value) {
 		return new DecimalFormat(pattern).format(value);
 	}
-	
+
 	/**
 	 * 格式化金额输出，每三位用逗号分隔
+	 * 
 	 * @param value 金额
 	 * @return 格式化后的值
 	 * @since 3.0.9
@@ -948,7 +949,7 @@ public class NumberUtil {
 		Assert.notNull(bigNum2);
 		return bigNum1.equals(bigNum2);
 	}
-	
+
 	/**
 	 * 数字转字符串<br>
 	 * 调用{@link Number#toString()}，并去除尾小数点儿后多余的0
@@ -1042,7 +1043,7 @@ public class NumberUtil {
 
 		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
-	
+
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
