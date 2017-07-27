@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -108,7 +106,7 @@ public class ZipUtil {
 					srcRootDir = srcFile.getParent();
 				}
 				// 调用递归压缩方法进行目录或文件压缩
-				zip(out, srcRootDir, srcFile);
+				zip(srcFile, srcRootDir, out);
 				out.flush();
 			}
 		} catch (IOException e) {
@@ -133,7 +131,7 @@ public class ZipUtil {
 	public static File zip(File zipFile, String path, String data, Charset charset) throws UtilException {
 		return zip(zipFile, path, IoUtil.toStream(data, charset));
 	}
-
+	
 	/**
 	 * 对流中的数据加入到压缩文件<br>
 	 * 
@@ -145,10 +143,34 @@ public class ZipUtil {
 	 * @since 3.0.6
 	 */
 	public static File zip(File zipFile, String path, InputStream in) throws UtilException {
+		return zip(zipFile, new String[] {path}, new InputStream[] {in});
+	}
+
+	/**
+	 * 对流中的数据加入到压缩文件<br>
+	 * 路径列表和流列表长度必须一致
+	 * 
+	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param paths 流数据在压缩文件中的路径或文件名
+	 * @param ins 要压缩的源
+	 * @return 压缩文件
+	 * @throws UtilException IO异常
+	 * @since 3.0.9
+	 */
+	public static File zip(File zipFile, String[] paths, InputStream[] ins) throws UtilException {
+		if(ArrayUtil.isEmpty(paths) || ArrayUtil.isEmpty(ins)) {
+			throw new IllegalArgumentException("Paths or ins is empty !");
+		}
+		if(paths.length != ins.length) {
+			throw new IllegalArgumentException("Paths length is not equals to ins length !");
+		}
+		
 		ZipOutputStream out = null;
 		try {
 			out = getZipOutputStream(zipFile);
-			zip(out, path, in);
+			for(int i = 0; i < paths.length; i++) {
+				zip(ins[i], paths[i], out);
+			}
 		} finally {
 			IoUtil.close(out);
 		}
@@ -327,7 +349,17 @@ public class ZipUtil {
 	 * @return {@link ZipOutputStream}
 	 */
 	private static ZipOutputStream getZipOutputStream(File zipFile) {
-		return new ZipOutputStream(new CheckedOutputStream(FileUtil.getOutputStream(zipFile), new CRC32()));
+		return getZipOutputStream(FileUtil.getOutputStream(zipFile));
+	}
+	
+	/**
+	 * 获得 {@link ZipOutputStream}
+	 * 
+	 * @param zipFile 压缩文件
+	 * @return {@link ZipOutputStream}
+	 */
+	private static ZipOutputStream getZipOutputStream(OutputStream out) {
+		return new ZipOutputStream(out);
 	}
 
 	/**
@@ -338,7 +370,7 @@ public class ZipUtil {
 	 * @param file 当前递归压缩的文件或目录对象
 	 * @throws UtilException IO异常
 	 */
-	private static void zip(ZipOutputStream out, String srcRootDir, File file) throws UtilException {
+	private static void zip(File file, String srcRootDir, ZipOutputStream out) throws UtilException {
 		if (file == null) {
 			return;
 		}
@@ -348,13 +380,13 @@ public class ZipUtil {
 			BufferedInputStream in = null;
 			try {
 				in = FileUtil.getInputStream(file);
-				zip(out, subPath, in);
+				zip(in, subPath, out);
 			} finally {
 				IoUtil.close(in);
 			}
 		} else {// 如果是目录，则压缩压缩目录中的文件或子目录
 			for (File childFile : file.listFiles()) {
-				zip(out, srcRootDir, childFile);
+				zip(childFile, srcRootDir, out);
 			}
 		}
 	}
@@ -362,12 +394,15 @@ public class ZipUtil {
 	/**
 	 * 递归压缩流中的数据，不关闭输入流
 	 * 
-	 * @param out 压缩文件存储对象
 	 * @param path 压缩的路径
 	 * @param in 需要压缩的输入流
+	 * @param out 压缩文件存储对象
 	 * @throws UtilException IO异常
 	 */
-	private static void zip(ZipOutputStream out, String path, InputStream in) throws UtilException {
+	private static void zip(InputStream in, String path, ZipOutputStream out) throws UtilException {
+		if(null == in) {
+			return;
+		}
 		try {
 			out.putNextEntry(new ZipEntry(path));
 			IoUtil.copy(in, out);
@@ -382,8 +417,8 @@ public class ZipUtil {
 	/**
 	 * 判断压缩文件保存的路径是否为源文件路径的子文件夹，如果是，则抛出异常（防止无限递归压缩的发生）
 	 * 
-	 * @param srcFile 被压缩的文件或目录
 	 * @param zipFile 压缩后的产生的文件路径
+	 * @param srcFile 被压缩的文件或目录
 	 */
 	private static void validateFiles(File zipFile, File... srcFiles) throws UtilException {
 		for (File srcFile : srcFiles) {
