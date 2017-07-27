@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.resource.ClassPathResource;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * ClassPath资源读取测试
@@ -14,6 +15,14 @@ import com.xiaoleilu.hutool.io.resource.ClassPathResource;
  *
  */
 public class ClassPathResourceTest {
+	
+	@Test
+	public void readStringTest() throws IOException{
+		ClassPathResource resource = new ClassPathResource("test.properties");
+		String content = resource.readUtf8Str();
+		Assert.assertTrue(StrUtil.isNotEmpty(content));
+	}
+	
 	@Test
 	public void readTest() throws IOException{
 		ClassPathResource resource = new ClassPathResource("test.properties");
