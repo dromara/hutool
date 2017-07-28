@@ -8,6 +8,8 @@ import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -65,7 +67,7 @@ public class HttpConnection {
 	public static HttpConnection create(String urlStr, Method method, int timeout) {
 		return new HttpConnection(urlStr, method, timeout);
 	}
-	
+
 	/**
 	 * 创建HttpConnection
 	 * 
@@ -78,7 +80,7 @@ public class HttpConnection {
 	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) {
 		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, 0, null);
 	}
-	
+
 	/**
 	 * 创建HttpConnection
 	 * 
@@ -104,7 +106,7 @@ public class HttpConnection {
 	public HttpConnection(String urlStr, Method method) {
 		this(urlStr, method, null, null, 0, null);
 	}
-	
+
 	/**
 	 * 构造HttpConnection
 	 * 
@@ -115,7 +117,7 @@ public class HttpConnection {
 	public HttpConnection(String urlStr, Method method, int timeout) {
 		this(urlStr, method, null, null, timeout, null);
 	}
-	
+
 	/**
 	 * 构造HttpConnection
 	 * 
@@ -143,7 +145,7 @@ public class HttpConnection {
 		} catch (Exception e) {
 			throw new HttpException(e.getMessage(), e);
 		}
-		if(timeout > 0){
+		if (timeout > 0) {
 			this.setConnectionAndReadTimeout(timeout);
 		}
 
@@ -164,11 +166,11 @@ public class HttpConnection {
 		} catch (ProtocolException e) {
 			throw new HttpException(e.getMessage(), e);
 		}
-		
-//		//对于非GET请求，默认不支持30X跳转
-//		if(false == Method.GET.equals(this.method)){
-//			this.conn.setInstanceFollowRedirects(false);
-//		}
+
+		// //对于非GET请求，默认不支持30X跳转
+		// if(false == Method.GET.equals(this.method)){
+		// this.conn.setInstanceFollowRedirects(false);
+		// }
 
 		// do input and output
 		this.conn.setDoInput(true);
@@ -220,6 +222,7 @@ public class HttpConnection {
 
 	/**
 	 * 获得代理
+	 * 
 	 * @return {@link Proxy}
 	 */
 	public Proxy getProxy() {
@@ -399,13 +402,14 @@ public class HttpConnection {
 		conn.setChunkedStreamingMode(blockSize);
 		return this;
 	}
-	
+
 	/**
 	 * 设置自动HTTP 30X跳转
+	 * 
 	 * @param isInstanceFollowRedirects 是否自定跳转
 	 * @return this
 	 */
-	public HttpConnection setInstanceFollowRedirects(boolean isInstanceFollowRedirects){
+	public HttpConnection setInstanceFollowRedirects(boolean isInstanceFollowRedirects) {
 		conn.setInstanceFollowRedirects(isInstanceFollowRedirects);
 		return this;
 	}
@@ -443,13 +447,8 @@ public class HttpConnection {
 	 * @throws IOException IO异常
 	 */
 	public InputStream getInputStream() throws IOException {
-		// Get Cookies
-		final String setCookie = header(Header.SET_COOKIE);
-		if (StrUtil.isBlank(setCookie) == false) {
-			log.debug("Set cookie: [{}]", setCookie);
-			CookiePool.put(url.getHost(), setCookie);
-		}
-
+		storeCookie();
+		
 		if (null != this.conn) {
 			return this.conn.getInputStream();
 		}
@@ -463,6 +462,8 @@ public class HttpConnection {
 	 * @throws IOException IO异常
 	 */
 	public InputStream getErrorStream() throws IOException {
+		storeCookie();
+		
 		if (null != this.conn) {
 			return this.conn.getErrorStream();
 		}
@@ -496,12 +497,35 @@ public class HttpConnection {
 	}
 
 	/**
-	 * 获得字符集编码
+	 * 获得字符集编码<br>
+	 * 从Http连接的头信息中获得字符集<br>
+	 * 从ContentType中获取
 	 * 
 	 * @return 字符集编码
 	 */
-	public String charset() {
+	public String getCharsetName() {
 		return HttpUtil.getCharset(conn);
+	}
+	
+	/**
+	 * 获取字符集编码<br>
+	 * 从Http连接的头信息中获得字符集<br>
+	 * 从ContentType中获取
+	 * 
+	 * @return {@link Charset}编码
+	 * @since 3.0.9
+	 */
+	public Charset getCharset() {
+		Charset charset = null;
+		final String charsetName = getCharsetName();
+		if(StrUtil.isNotBlank(charsetName)) {
+			try {
+				charset = Charset.forName(charsetName);
+			} catch (UnsupportedCharsetException e) {
+				//ignore
+			}
+		}
+		return charset;
 	}
 
 	@Override
@@ -527,6 +551,7 @@ public class HttpConnection {
 
 	/**
 	 * 初始化https请求参数
+	 * 
 	 * @param hostnameVerifier 域名验证器
 	 * @param ssf SSLSocketFactory
 	 */
@@ -539,14 +564,26 @@ public class HttpConnection {
 
 		return httpsURLConnection;
 	}
-	
+
 	/**
 	 * 建立连接
+	 * 
 	 * @return {@link URLConnection}
 	 * @throws IOException
 	 */
-	private URLConnection openConnection() throws IOException{
+	private URLConnection openConnection() throws IOException {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
+	}
+
+	/**
+	 * 存储服务器返回的Cookie到本地
+	 */
+	private void storeCookie() {
+		final String setCookie = header(Header.SET_COOKIE);
+		if (StrUtil.isBlank(setCookie) == false) {
+			log.debug("Set cookie: [{}]", setCookie);
+			CookiePool.put(url.getHost(), setCookie);
+		}
 	}
 	// --------------------------------------------------------------- Private Method end
 }

@@ -802,7 +802,7 @@ public class StrUtil {
 		}
 
 		int len = str.length();
-		StringBuilder sb = new StringBuilder(str.length());
+		final StringBuilder sb = new StringBuilder(len);
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);

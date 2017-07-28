@@ -578,6 +578,20 @@ public class HttpUtil {
 	 */
 	public static String getString(InputStream in, Charset charset, boolean isGetCharsetFromContent) throws IOException {
 		final byte[] contentBytes = IoUtil.readBytes(in);
+		return getString(contentBytes, charset, isGetCharsetFromContent);
+	}
+	
+	/**
+	 * 从流中读取内容<br>
+	 * 首先尝试使用charset编码读取内容（如果为空默认UTF-8），如果isGetCharsetFromContent为true，则通过正则在正文中获取编码信息，转换为指定编码；
+	 * 
+	 * @param contentBytes 内容byte数组
+	 * @param charset 字符集
+	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
+	 * @return 内容
+	 * @throws IOException IO异常
+	 */
+	public static String getString(byte[] contentBytes, Charset charset, boolean isGetCharsetFromContent) throws IOException {
 		if(null == charset){
 			charset  = CharsetUtil.CHARSET_UTF_8;
 		}
