@@ -24,6 +24,7 @@
 * 增加FileCopier强化文件拷贝
 * ZipUtil增加多个流的方法（issue#IE5ZC@osc）
 * HttpResponse支持body异步，既执行executeAsync()方法后不再直接读取body，而是持有http流对象
+* 新增ClassLoaderUtil
 
 ### Bug修复
 * 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）

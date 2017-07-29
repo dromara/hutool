@@ -533,10 +533,10 @@ public class ClassUtil {
 	 * 获取当前线程的{@link ClassLoader}
 	 * 
 	 * @return 当前线程的class loader
-	 * @see Thread#getContextClassLoader()
+	 * @see ClassLoaderUtil#getContextClassLoader();
 	 */
 	public static ClassLoader getContextClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
+		return ClassLoaderUtil.getContextClassLoader();
 	}
 
 	/**
@@ -552,14 +552,7 @@ public class ClassUtil {
 	 * @return 类加载器
 	 */
 	public static ClassLoader getClassLoader() {
-		ClassLoader classLoader = getContextClassLoader();
-		if (classLoader == null) {
-			classLoader = ClassUtil.class.getClassLoader();
-			if (null == classLoader) {
-				classLoader = ClassLoader.getSystemClassLoader();
-			}
-		}
-		return classLoader;
+		return ClassLoaderUtil.getClassLoader();
 	}
 
 	/**
@@ -640,13 +633,7 @@ public class ClassUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> loadClass(String className, boolean isInitialized) {
-		Class<T> clazz;
-		try {
-			clazz = (Class<T>) Class.forName(className, isInitialized, getClassLoader());
-		} catch (ClassNotFoundException e) {
-			throw new UtilException(e);
-		}
-		return clazz;
+		return (Class<T>) ClassLoaderUtil.loadClass(className, isInitialized);
 	}
 
 	/**
@@ -977,8 +964,15 @@ public class ClassUtil {
 
 	/**
 	 * 是否为标准的类<br>
-	 * 这个类必须：<br>
-	 * 1、非接口 2、非抽象类 3、非Enum枚举 4、非数组 5、非注解 6、非原始类型（int, long等）
+	 * 这个类必须：
+	 * <pre>
+	 * 1、非接口 
+	 * 2、非抽象类 
+	 * 3、非Enum枚举 
+	 * 4、非数组 
+	 * 5、非注解 
+	 * 6、非原始类型（int, long等）
+	 * </pre>
 	 * 
 	 * @param clazz 类
 	 * @return 是否为标准类

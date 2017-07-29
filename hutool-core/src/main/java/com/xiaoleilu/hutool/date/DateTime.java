@@ -315,9 +315,9 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 获得指定日期是星期几
+	 * 获得指定日期是星期几，1表示周日，2表示周一
 	 * 
-	 * @return 天
+	 * @return 星期几
 	 */
 	public int dayOfWeek() {
 		return getField(DateField.DAY_OF_WEEK);
