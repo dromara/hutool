@@ -142,6 +142,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public static HttpRequest put(String url) {
 		return new HttpRequest(url).method(Method.PUT);
 	}
+	
+	/**
+	 * PATCH请求
+	 * 
+	 * @param url URL
+	 * @return HttpRequest
+	 * @since 3.0.9
+	 */
+	public static HttpRequest patch(String url) {
+		return new HttpRequest(url).method(Method.PATCH);
+	}
 
 	/**
 	 * DELETE请求
