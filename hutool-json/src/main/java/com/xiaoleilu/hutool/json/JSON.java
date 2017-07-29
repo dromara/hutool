@@ -64,4 +64,12 @@ public interface JSON {
 	 * @throws JSONException JSON相关异常
 	 */
 	public String toJSONString(int indentFactor) throws JSONException;
+	
+	/**
+	 * 格式化打印JSON，缩进为4个空格
+	 * @return 格式化后的JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
+	 * @since 3.0.9
+	 */
+	public String toStringPretty() throws JSONException;
 }

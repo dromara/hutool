@@ -42,7 +42,7 @@ public enum DateField {
 	 */
 	DAY_OF_YEAR(Calendar.DAY_OF_YEAR),
 	/**
-	 *周几
+	 *周几，1表示周日，2表示周一
 	 * @see Calendar#DAY_OF_WEEK
 	 */
 	DAY_OF_WEEK(Calendar.DAY_OF_WEEK),

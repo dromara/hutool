@@ -802,7 +802,7 @@ public class StrUtil {
 		}
 
 		int len = str.length();
-		StringBuilder sb = new StringBuilder(str.length());
+		final StringBuilder sb = new StringBuilder(len);
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
@@ -2009,5 +2009,17 @@ public class StrUtil {
 			}
 		}
 		return prefix.toString().concat(str.toString());
+	}
+	
+	/**
+	 * 反转字符串<br>
+	 * 例如：abcd =》dcba
+	 * 
+	 * @param str 被反转的字符串
+	 * @return 反转后的字符串
+	 * @since 3.0.9
+	 */
+	public static String reverse(String str) {
+		return new String(ArrayUtil.reverse(str.toCharArray()));
 	}
 }

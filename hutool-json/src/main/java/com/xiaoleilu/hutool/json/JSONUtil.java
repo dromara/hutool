@@ -55,12 +55,26 @@ public final class JSONUtil {
 	}
 	
 	/**
-	 * JSON字符串转JSONObject对象
+	 * JSON字符串转JSONObject对象<br>
+	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 * 
 	 * @param obj Bean对象或者Map
 	 * @return JSONObject
 	 */
 	public static JSONObject parseObj(Object obj) {
 		return new JSONObject(obj);
+	}
+	
+	/**
+	 * JSON字符串转JSONObject对象
+	 * 
+	 * @param obj Bean对象或者Map
+	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @return JSONObject
+	 * @since 3.0.9
+	 */
+	public static JSONObject parseObj(Object obj, boolean ignoreNullValue) {
+		return new JSONObject(obj, ignoreNullValue);
 	}
 
 	/**

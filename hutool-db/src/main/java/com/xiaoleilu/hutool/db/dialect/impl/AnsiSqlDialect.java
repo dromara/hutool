@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Page;
@@ -46,7 +47,27 @@ public class AnsiSqlDialect implements Dialect {
 		DbUtil.fillParams(ps, insert.getParamValues());
 		return ps;
 	}
-
+	
+	@Override
+	public PreparedStatement psForInsertBatch(Connection conn, Entity... entities) throws SQLException {
+		if(ArrayUtil.isEmpty(entities)) {
+			throw new DbRuntimeException("Entities for batch insert is empty !");
+		}
+		if(entities.length == 1) {
+			return psForInsert(conn, entities[0]);
+		}
+		
+		// 批量
+		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entities[0], this.dialectName());
+		
+		final PreparedStatement ps = conn.prepareStatement(insert.build(), Statement.RETURN_GENERATED_KEYS);
+		for (Entity entity : entities) {
+			DbUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, insert.getFields()));
+			ps.addBatch();
+		}
+		return ps;
+	}
+	
 	@Override
 	public PreparedStatement psForDelete(Connection conn, Query query) throws SQLException {
 		if (null == query) {

@@ -30,7 +30,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 	/**
 	 * 构造
 	 * @param capacity 容量
-	 * @param timeout 默认超时时间
+	 * @param timeout 默认超时时间，单位：毫秒
 	 */
 	public LRUCache(int capacity, long timeout) {
 		this.capacity = capacity;

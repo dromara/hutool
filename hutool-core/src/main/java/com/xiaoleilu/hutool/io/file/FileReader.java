@@ -14,6 +14,7 @@ import java.util.List;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.LineHandler;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -161,6 +162,25 @@ public class FileReader extends FileWrapper {
 				collection.add(line);
 			}
 			return collection;
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(reader);
+		}
+	}
+	
+	/**
+	 * 按照行处理文件内容
+	 * 
+	 * @param lineHandler 行处理器
+	 * @throws IORuntimeException IO异常
+	 * @since 3.0.9
+	 */
+	public void readLines(LineHandler lineHandler) throws IORuntimeException{
+		BufferedReader reader = null;
+		try {
+			reader = FileUtil.getReader(file, charset);
+			IoUtil.readLines(reader, lineHandler);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {

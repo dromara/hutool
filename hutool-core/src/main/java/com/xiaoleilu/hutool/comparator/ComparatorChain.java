@@ -226,9 +226,9 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
 			return false;
 		}
 		if (object.getClass().equals(this.getClass())) {
-			final ComparatorChain<?> chain = (ComparatorChain<?>) object;
-			return (null == orderingBits ? null == chain.orderingBits : orderingBits.equals(chain.orderingBits)) && (null == chain ? null == chain.chain : chain
-					.equals(chain.chain));
+			final ComparatorChain<?> otherChain = (ComparatorChain<?>) object;
+			return (null == orderingBits ? null == otherChain.orderingBits : this.orderingBits.equals(otherChain.orderingBits)) //
+					&& (null == otherChain ? null == otherChain.chain : this.chain.equals(otherChain.chain));
 		}
 		return false;
 	}

@@ -4,13 +4,14 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,27 +29,53 @@ import com.xiaoleilu.hutool.util.TypeUtil;
  *<pre>
  * json = new JSONObject().put(&quot;JSON&quot;, &quot;Hello, World!&quot;).toString();
  * </pre>
+ * 
  * @author looly
  */
 public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
+	
+	/** 默认初始大小 */
+	public static final int DEFAULT_CAPACITY = 16;
 
 	/** JSON的KV持有Map */
-	private final Map<String, Object> rawHashMap = new HashMap<>();
-
-	/**
-	 * 空构造
-	 */
-	public JSONObject() {
-	}
-
+	private final Map<String, Object> rawHashMap;
+	
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
-	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。
+	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}，KEY无序
+	 */
+	public JSONObject() {
+		this(DEFAULT_CAPACITY, false);
+	}
+	
+	/**
+	 * 构造，初始容量为 {@link #DEFAULT_CAPACITY}
+	 * @param isOrder 是否有序
+	 * @since 3.0.9
+	 */
+	public JSONObject(boolean isOrder) {
+		this(DEFAULT_CAPACITY, isOrder);
+	}
+
+	/**
+	 * 构造
+	 * @param capacity 初始大小
+	 * @param isOrder 是否有序
+	 * @since 3.0.9
+	 */
+	public JSONObject(int capacity, boolean isOrder) {
+		this.rawHashMap = isOrder ? new LinkedHashMap<String, Object>(capacity) : new HashMap<String, Object>(capacity);
+	}
+
+	/**
+	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。<br>
+	 * 此构造方法并不忽略空值
 	 *
 	 * @param jsonObject A JSONObject.
 	 * @param names 需要的name列表
 	 */
 	public JSONObject(JSONObject jsonObject, String... names) {
+		this();
 		for (String name : names) {
 			try {
 				this.putOnce(name, jsonObject.getObj(name));
@@ -64,7 +91,20 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @throws JSONException 语法错误
 	 */
 	public JSONObject(JSONTokener x) throws JSONException {
+		this();
 		init(x);
+	}
+	
+	/**
+	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"<br>
+	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 * 
+	 * @param source JavaBean或者Map对象或者String
+	 */
+	public JSONObject(Object source) {
+		this(source, true);
 	}
 
 	/**
@@ -73,37 +113,49 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
 	 * 
 	 * @param source JavaBean或者Map对象或者String
+	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @since 3.0.9
 	 */
-	public JSONObject(Object source) {
+	public JSONObject(Object source, boolean ignoreNullValue) {
+		this();
 		if (null != source) {
 			if (source instanceof Map) {
 				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 					final Object value = e.getValue();
-					if (value != null) {
+					if (false == ignoreNullValue || value != null) {
 						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value));
 					}
 				}
 			}else if(source instanceof String){
 				init((String)source);
-			} else {
-				this.populateMap(source);
+			}else if(source instanceof Number) {
+				//ignore Number
+			} else{
+				//普通Bean
+				this.populateMap(source, ignoreNullValue);
 			}
 		}
 	}
 
 	/**
 	 * 使用反射方式获取public字段名和字段值，构建JSONObject对象<br>
-	 * KEY或VALUE任意一个为null则不加入
+	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入
 	 *
 	 * @param pojo 包含需要字段的Bean对象
 	 * @param names 需要构建JSONObject的字段名列表
 	 */
 	public JSONObject(Object pojo, String[] names) {
+		this();
 		Class<?> c = pojo.getClass();
+		Field field;
 		for (String name : names) {
 			try {
-				this.putOpt(name, c.getField(name).get(pojo));
+				field = c.getField(name);
+				if(null != field) {
+					this.putOpt(name, field.get(pojo));
+				}
 			} catch (Exception ignore) {
+				//ignore
 			}
 		}
 	}
@@ -468,6 +520,17 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			return null;
 		}
 	}
+	
+	/**
+	 * 格式化打印JSON，缩进为4个空格
+	 * @return 格式化后的JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
+	 * @since 3.0.9
+	 */
+	@Override
+	public String toStringPretty() throws JSONException{
+		return this.toJSONString(4);
+	}
 
 	/**
 	 * 格式化输出JSON字符串
@@ -541,22 +604,25 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * Bean对象转Map
 	 * 
 	 * @param bean Bean对象
+	 * @param ignoreNullValue 是否忽略空值
 	 */
-	private void populateMap(Object bean) {
+	private void populateMap(Object bean, boolean ignoreNullValue) {
 		try {
 			final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(bean.getClass());
 			
 			String key;
-			Method getter;
 			Object value;
 			for (PropertyDescriptor property : propertyDescriptors) {
 				key = property.getName();
 				// 过滤class属性
 				if (false == key.equals("class") && false == key.equals("declaringClass")) {
 					// 得到property对应的getter方法
-					getter = property.getReadMethod();
-					value = getter.invoke(bean);
-					if (null != value && false == value.equals(bean)) {
+					value = property.getReadMethod().invoke(bean);
+					if(null == value) {
+						if(false == ignoreNullValue) {
+							this.rawHashMap.put(key, JSONUtil.wrap(value));
+						}
+					}else if (false == value.equals(bean)) {
 						this.rawHashMap.put(key, JSONUtil.wrap(value));
 					}
 				}

@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.log;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.xiaoleilu.hutool.lang.Caller;
 import com.xiaoleilu.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 import com.xiaoleilu.hutool.log.dialect.jdk.JdkLogFactory;
@@ -174,14 +175,7 @@ public abstract class LogFactory {
 	 * @return 获得调用者的日志
 	 */
 	public static Log get() {
-		return get(new Exception().getStackTrace()[1].getClassName());
-	}
-
-	/**
-	 * @return 获得调用者的调用者的日志（用于内部辗转调用）
-	 */
-	protected static Log indirectGet() {
-		return get(new Exception().getStackTrace()[2].getClassName());
+		return get(Caller.getCallerCaller());
 	}
 
 	/**

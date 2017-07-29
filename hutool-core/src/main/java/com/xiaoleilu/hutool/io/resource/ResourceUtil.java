@@ -6,7 +6,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import com.xiaoleilu.hutool.io.IORuntimeException;
-import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ClassLoaderUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
@@ -44,7 +44,7 @@ public class ResourceUtil {
 	public static List<URL> getResources(String resource){
 		final Enumeration<URL> resources;
 		try {
-			resources = ClassUtil.getClassLoader().getResources(resource);
+			resources = ClassLoaderUtil.getClassLoader().getResources(resource);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -58,6 +58,6 @@ public class ResourceUtil {
 	 * @return {@link URL}
 	 */
 	public static URL getResource(String resource, Class<?> baseClass){
-		return (null != baseClass) ? baseClass.getResource(resource) : ClassUtil.getClassLoader().getResource(resource);
+		return (null != baseClass) ? baseClass.getResource(resource) : ClassLoaderUtil.getClassLoader().getResource(resource);
 	}
 }

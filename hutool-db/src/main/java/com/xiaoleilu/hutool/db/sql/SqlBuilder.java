@@ -79,6 +79,8 @@ public class SqlBuilder {
 	//--------------------------------------------------------------- Enums end
 	
 	final private StringBuilder sql = new StringBuilder();
+	/** 字段列表（仅用于插入和更新） */
+	final private List<String> fields = new ArrayList<String>();
 	/** 占位符对应的值列表 */
 	final private List<Object> paramValues = new ArrayList<Object>();
 	/** 包装器 */
@@ -117,12 +119,13 @@ public class SqlBuilder {
 		DbUtil.validateEntity(entity);
 		
 		if(null != wrapper) {
-			//包装字段名
-			entity = wrapper.wrap(entity);
+			//包装表名
+//			entity = wrapper.wrap(entity);
+			entity.setTableName(wrapper.wrap(entity.getTableName()));
 		}
 		
 		final boolean isOracle = ObjectUtil.equal(dialectName, DialectName.ORACLE);//对Oracle的特殊处理
-		final StringBuilder fields = new StringBuilder();
+		final StringBuilder fieldsPart = new StringBuilder();
 		final StringBuilder placeHolder = new StringBuilder();
 
 		boolean isFirst = true;
@@ -136,22 +139,23 @@ public class SqlBuilder {
 					isFirst = false;
 				}else{
 					//非第一个参数，追加逗号
-					fields.append(", ");
+					fieldsPart.append(", ");
 					placeHolder.append(", ");
 				}
 
-				fields.append(field);
+				this.fields.add(field);
+				fieldsPart.append((null != wrapper) ? wrapper.wrap(field) : field);
 				if(isOracle && value instanceof String && StrUtil.endWithIgnoreCase((String)value, ".nextval")) {
 					//Oracle的特殊自增键，通过字段名.nextval获得下一个值
 					placeHolder.append(value);
 				}else {
 					placeHolder.append("?");
-					paramValues.add(value);
+					this.paramValues.add(value);
 				}
 			}
 		}
 		sql.append("INSERT INTO ")//
-			.append(entity.getTableName()).append(" (").append(fields).append(") VALUES (")//
+			.append(entity.getTableName()).append(" (").append(fieldsPart).append(") VALUES (")//
 			.append(placeHolder.toString()).append(")");
 		
 		return this;
@@ -187,20 +191,22 @@ public class SqlBuilder {
 		DbUtil.validateEntity(entity);
 		
 		if(null != wrapper) {
-			//包装字段名
-			entity = wrapper.wrap(entity);
+			//包装表名
+//			entity = wrapper.wrap(entity);
+			entity.setTableName(wrapper.wrap(entity.getTableName()));
 		}
 		
 		sql.append("UPDATE ").append(entity.getTableName()).append(" SET ");
-		String key;
+		String field;
 		for (Entry<String, Object> entry : entity.entrySet()) {
-			key = entry.getKey();
-			if(StrUtil.isNotBlank(key)){
+			field = entry.getKey();
+			if(StrUtil.isNotBlank(field)){
 				if (paramValues.size() > 0) {
 					sql.append(", ");
 				}
-				sql.append(entry.getKey()).append(" = ? ");
-				paramValues.add(entry.getValue());//更新不对空做处理，因为存在清空字段的情况
+				this.fields.add(field);
+				sql.append((null != wrapper) ? wrapper.wrap(field) : field).append(" = ? ");
+				this.paramValues.add(entry.getValue());//更新不对空做处理，因为存在清空字段的情况
 			}
 		}
 		
@@ -493,11 +499,29 @@ public class SqlBuilder {
 	//--------------------------------------------------------------- Builder end
 	
 	/**
+	 * 获得插入或更新的数据库字段列表
+	 * 
+	 * @return 插入或更新的数据库字段列表
+	 */
+	public List<String> getFields() {
+		return this.fields;
+	}
+	
+	/**
+	 * 获得插入或更新的数据库字段列表
+	 * 
+	 * @return 插入或更新的数据库字段列表
+	 */
+	public String[] getFieldArray() {
+		return this.fields.toArray(new String[this.fields.size()]);
+	}
+	
+	/**
 	 * 获得占位符对应的值列表<br>
 	 * @return 占位符对应的值列表
 	 */
 	public List<Object> getParamValues() {
-		return paramValues;
+		return this.paramValues;
 	}
 	
 	/**
@@ -505,7 +529,7 @@ public class SqlBuilder {
 	 * @return 占位符对应的值列表
 	 */
 	public Object[] getParamValueArray() {
-		return paramValues.toArray(new Object[paramValues.size()]);
+		return this.paramValues.toArray(new Object[this.paramValues.size()]);
 	}
 	
 	/**

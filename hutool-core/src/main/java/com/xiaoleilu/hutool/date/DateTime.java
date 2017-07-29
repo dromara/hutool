@@ -136,6 +136,7 @@ public class DateTime extends Date {
 	// -------------------------------------------------------------------- offsite start
 	/**
 	 * 调整日期和时间<br>
+	 * 如果此对象为可变对象，返回自身，否则返回新对象，设置是否可变对象见{@link #setMutable(boolean)}
 	 * 
 	 * @param datePart 调整的部分 {@link DateField}
 	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
@@ -145,10 +146,24 @@ public class DateTime extends Date {
 		final Calendar cal = toCalendar();
 		cal.add(datePart.getValue(), offsite);
 		
-		DateTime dt = this;
-		if(false == mutable){
-			dt = ObjectUtil.clone(this);
-		}
+		DateTime dt = mutable ? this : ObjectUtil.clone(this);
+		return dt.setTimeInternal(cal.getTimeInMillis());
+	}
+	
+	/**
+	 * 调整日期和时间<br>
+	 * 返回调整后的新{@link DateTime}，不影响原对象
+	 * 
+	 * @param datePart 调整的部分 {@link DateField}
+	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
+	 * @return 如果此对象为可变对象，返回自身，否则返回新对象
+	 * @since 3.0.9
+	 */
+	public DateTime offsiteNew(DateField datePart, int offsite) {
+		final Calendar cal = toCalendar();
+		cal.add(datePart.getValue(), offsite);
+		
+		DateTime dt = ObjectUtil.clone(this);
 		return dt.setTimeInternal(cal.getTimeInMillis());
 	}
 	// -------------------------------------------------------------------- offsite end
@@ -175,7 +190,9 @@ public class DateTime extends Date {
 	}
 	
 	/**
-	 * 设置日期的某个部分
+	 * 设置日期的某个部分<br>
+	 * 如果此对象为可变对象，返回自身，否则返回新对象，设置是否可变对象见{@link #setMutable(boolean)}
+	 * 
 	 * @param field 表示日期的哪个部分的枚举 {@link DateField}
 	 * @param value 值
 	 * @return {@link DateTime}
@@ -185,7 +202,9 @@ public class DateTime extends Date {
 	}
 	
 	/**
-	 * 设置日期的某个部分
+	 * 设置日期的某个部分<br>
+	 * 如果此对象为可变对象，返回自身，否则返回新对象，设置是否可变对象见{@link #setMutable(boolean)}
+	 * 
 	 * @param field 表示日期的哪个部分的int值 {@link Calendar}
 	 * @param value 值
 	 * @return {@link DateTime}
@@ -296,9 +315,9 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 获得指定日期是星期几
+	 * 获得指定日期是星期几，1表示周日，2表示周一
 	 * 
-	 * @return 天
+	 * @return 星期几
 	 */
 	public int dayOfWeek() {
 		return getField(DateField.DAY_OF_WEEK);
@@ -492,6 +511,32 @@ public class DateTime extends Date {
 		long thisMills = this.getTime();
 		
 		return thisMills >= Math.min(beginMills, endMills) && thisMills <= Math.max(beginMills, endMills);
+	}
+	
+	/**
+	 * 是否在给定日期之前或与给定日期相等
+	 * @param date 日期
+	 * @return 是否在给定日期之前或与给定日期相等
+	 * @since 3.0.9
+	 */
+	public boolean isBeforeOrEquals(Date date) {
+		if(null == date) {
+			throw new NullPointerException("Date to compare is null !");
+		}
+		return compareTo(date) <= 0;
+	}
+	
+	/**
+	 * 是否在给定日期之后或与给定日期相等
+	 * @param date 日期
+	 * @return 是否在给定日期之后或与给定日期相等
+	 * @since 3.0.9
+	 */
+	public boolean isAfterOrEquals(Date date) {
+		if(null == date) {
+			throw new NullPointerException("Date to compare is null !");
+		}
+		return compareTo(date) >= 0;
 	}
 	
 	/**

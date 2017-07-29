@@ -78,6 +78,13 @@ public class JSONConvertTest {
 		
 		Assert.assertEquals(userInfoDict.getId(), new Integer(1));
 		Assert.assertEquals(userInfoDict.getRealName(), "质量过关");
+
+		//============
+
+		String jsonStr = "{\"id\":null,\"examInfoDict\":[{\"answerIs\":1, \"id\":null}]}";//JSONUtil.toJsonStr(userInfoDict1);
+		JSONObject jsonObject2 = JSONUtil.parseObj(jsonStr);//.getJSONObject("examInfoDicts");
+		UserInfoDict userInfoDict2 = jsonObject2.toBean(UserInfoDict.class);
+		Assert.assertNull(userInfoDict2.getId());
 	}
 
 }

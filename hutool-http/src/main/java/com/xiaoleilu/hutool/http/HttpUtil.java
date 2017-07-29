@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.http;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +11,7 @@ import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -45,7 +45,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class HttpUtil {
 
-	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*?)\"");
+	public static final Pattern CHARSET_PATTERN = Pattern.compile("<meta.*?charset=(.*?)\"");
 	
 	private HttpUtil(){}
 	
@@ -151,6 +151,17 @@ public class HttpUtil {
 	 */
 	public static boolean isHttps(String url) {
 		return url.toLowerCase().startsWith("https");
+	}
+	
+	/**
+	 * 创建Http请求兑现
+	 * @param method 方法枚举{@link Method}
+	 * @param url 请求的URL，可以使HTTP或者HTTPS
+	 * @return {@link HttpRequest}
+	 * @since 3.0.9
+	 */
+	public static HttpRequest createRequest(Method method, String url) {
+		return new HttpRequest(url).method(method);
 	}
 	
 	/**
@@ -556,7 +567,8 @@ public class HttpUtil {
 	}
 	
 	/**
-	 * 从流中读取内容
+	 * 从流中读取内容<br>
+	 * 首先尝试使用charset编码读取内容（如果为空默认UTF-8），如果isGetCharsetFromContent为true，则通过正则在正文中获取编码信息，转换为指定编码；
 	 * 
 	 * @param in 输入流
 	 * @param charset 字符集
@@ -564,34 +576,41 @@ public class HttpUtil {
 	 * @return 内容
 	 * @throws IOException IO异常
 	 */
-	@SuppressWarnings("resource")
-	public static String getString(InputStream in, String charset, boolean isGetCharsetFromContent) throws IOException {
-		if(StrUtil.isBlank(charset)){
-			charset  = CharsetUtil.UTF_8;
+	public static String getString(InputStream in, Charset charset, boolean isGetCharsetFromContent) throws IOException {
+		final byte[] contentBytes = IoUtil.readBytes(in);
+		return getString(contentBytes, charset, isGetCharsetFromContent);
+	}
+	
+	/**
+	 * 从流中读取内容<br>
+	 * 首先尝试使用charset编码读取内容（如果为空默认UTF-8），如果isGetCharsetFromContent为true，则通过正则在正文中获取编码信息，转换为指定编码；
+	 * 
+	 * @param contentBytes 内容byte数组
+	 * @param charset 字符集
+	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
+	 * @return 内容
+	 * @throws IOException IO异常
+	 */
+	public static String getString(byte[] contentBytes, Charset charset, boolean isGetCharsetFromContent) throws IOException {
+		if(null == charset){
+			charset  = CharsetUtil.CHARSET_UTF_8;
 		}
-		if(false == isGetCharsetFromContent){
-			return IoUtil.read(in, charset);
-		}
-		
-		StringBuilder content = new StringBuilder(); // 存储返回的内容
-		
-		// 从返回的内容中读取所需内容
-		BufferedReader reader = IoUtil.getReader(in, charset);
-		String line = null;
-		while ((line = reader.readLine()) != null) {
-			content.append(line).append(StrUtil.LF);
-			if(isGetCharsetFromContent){
-				String charsetInContent = ReUtil.get(CHARSET_PATTERN, line, 1);
-				if (StrUtil.isNotBlank(charsetInContent)) {
-					StaticLog.debug("Http content charset：{}", charsetInContent);
-					charset = charsetInContent;
-					reader = IoUtil.getReader(in, charset);
-					isGetCharsetFromContent = false;
+		String content = new String(contentBytes, charset);
+		if(isGetCharsetFromContent){
+			final String charsetInContentStr = ReUtil.get(CHARSET_PATTERN, content, 1);
+			if (StrUtil.isNotBlank(charsetInContentStr)) {
+				Charset charsetInContent = null;
+				try {
+					charsetInContent = Charset.forName(charsetInContentStr);
+				} catch (UnsupportedCharsetException e) {
+					//ignore
+				}
+				if(null != charsetInContent && false == charset.equals(charsetInContent)) {
+					content = new String(contentBytes, charsetInContent);
 				}
 			}
 		}
-		
-		return content.toString();
+		return content;
 	}
 	
 	/**

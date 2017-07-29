@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class ArrayUtil {
 	public static <T> boolean isEmpty(final T... array) {
 		return array == null || array.length == 0;
 	}
-	
+
 	/**
 	 * 数组是否为空<br>
 	 * 此方法会匹配单一对象，如果此对象为{@code null}则返回true<br>
@@ -47,7 +48,7 @@ public class ArrayUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isEmpty(final Object array) {
-		return array == null || (false == isArray(array)) || Array.getLength(array) > 0;
+		return array == null || (false == isArray(array)) || Array.getLength(array) == 0;
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class ArrayUtil {
 	public static <T> boolean isNotEmpty(final T... array) {
 		return (array != null && array.length != 0);
 	}
-	
+
 	/**
 	 * 数组是否为非空<br>
 	 * 此方法会匹配单一对象，如果此对象为{@code null}则返回false<br>
@@ -153,7 +154,7 @@ public class ArrayUtil {
 	 * @return 是否为非空
 	 */
 	public static boolean isNotEmpty(final Object array) {
-		return false == isEmpty((Object)array);
+		return false == isEmpty((Object) array);
 	}
 
 	/**
@@ -1700,10 +1701,48 @@ public class ArrayUtil {
 		}
 	}
 
+	/**
+	 * 将集合转为数组
+	 * 
+	 * @param iterator {@link Iterator}
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] toArray(Iterator<T> iterator, Class<T> componentType) {
+		return toArray(CollectionUtil.newArrayList(iterator), componentType);
+	}
+
+	/**
+	 * 将集合转为数组
+	 * 
+	 * @param iterable {@link Iterable}
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] toArray(Iterable<T> iterable, Class<T> componentType) {
+		return toArray(CollectionUtil.toCollection(iterable), componentType);
+	}
+
+	/**
+	 * 将集合转为数组
+	 * 
+	 * @param collection 集合
+	 * @param componentType 集合元素类型
+	 * @return 数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] toArray(Collection<T> collection, Class<T> componentType) {
+		final T[] array = newArray(componentType, collection.size());
+		return collection.toArray(array);
+	}
+
 	// ---------------------------------------------------------------------- remove
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
+	 * 
 	 * @param <T> 数组元素类型
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
@@ -1716,7 +1755,7 @@ public class ArrayUtil {
 	public static <T> T[] remove(T[] array, int index) throws IllegalArgumentException {
 		return (T[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1730,7 +1769,7 @@ public class ArrayUtil {
 	public static long[] remove(long[] array, int index) throws IllegalArgumentException {
 		return (long[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1744,7 +1783,7 @@ public class ArrayUtil {
 	public static int[] remove(int[] array, int index) throws IllegalArgumentException {
 		return (int[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1758,7 +1797,7 @@ public class ArrayUtil {
 	public static short[] remove(short[] array, int index) throws IllegalArgumentException {
 		return (short[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1772,7 +1811,7 @@ public class ArrayUtil {
 	public static char[] remove(char[] array, int index) throws IllegalArgumentException {
 		return (char[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1786,7 +1825,7 @@ public class ArrayUtil {
 	public static byte[] remove(byte[] array, int index) throws IllegalArgumentException {
 		return (byte[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1800,7 +1839,7 @@ public class ArrayUtil {
 	public static double[] remove(double[] array, int index) throws IllegalArgumentException {
 		return (double[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1814,7 +1853,7 @@ public class ArrayUtil {
 	public static float[] remove(float[] array, int index) throws IllegalArgumentException {
 		return (float[]) remove((Object) array, index);
 	}
-	
+
 	/**
 	 * 移除数组中对应位置的元素<br>
 	 * copy from commons-lang
@@ -1857,12 +1896,11 @@ public class ArrayUtil {
 
 		return result;
 	}
-	
+
 	// ---------------------------------------------------------------------- remove
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
@@ -1874,11 +1912,10 @@ public class ArrayUtil {
 	public static <T> T[] removeEle(T[] array, T element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1889,11 +1926,10 @@ public class ArrayUtil {
 	public static long[] removeEle(long[] array, long element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1904,11 +1940,10 @@ public class ArrayUtil {
 	public static int[] removeEle(int[] array, int element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1919,11 +1954,10 @@ public class ArrayUtil {
 	public static short[] removeEle(short[] array, short element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1934,11 +1968,10 @@ public class ArrayUtil {
 	public static char[] removeEle(char[] array, char element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1949,11 +1982,10 @@ public class ArrayUtil {
 	public static byte[] removeEle(byte[] array, byte element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1964,11 +1996,10 @@ public class ArrayUtil {
 	public static double[] removeEle(double[] array, double element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1979,11 +2010,10 @@ public class ArrayUtil {
 	public static float[] removeEle(float[] array, float element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
+
 	/**
 	 * 移除数组中指定的元素<br>
-	 * 只会移除匹配到的第一个元素
-	 * copy from commons-lang
+	 * 只会移除匹配到的第一个元素 copy from commons-lang
 	 * 
 	 * @param array 数组对象，可以是对象数组，也可以原始类型数组
 	 * @param element 要移除的元素
@@ -1993,5 +2023,588 @@ public class ArrayUtil {
 	 */
 	public static boolean[] removeEle(boolean[] array, boolean element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
+	}
+
+	//------------------------------------------------------------------------------------------------------------ Reverse array
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] reverse(final T[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		T tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static <T> T[] reverse(final T[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * 
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static long[] reverse(final long[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		long tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static long[] reverse(final long[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static int[] reverse(final int[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		int tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static int[] reverse(final int[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static short[] reverse(final short[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		short tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static short[] reverse(final short[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static char[] reverse(final char[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		char tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static char[] reverse(final char[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static byte[] reverse(final byte[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		byte tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static byte[] reverse(final byte[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static double[] reverse(final double[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		double tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static double[] reverse(final double[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static float[] reverse(final float[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		float tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static float[] reverse(final float[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @param startIndexInclusive 其实位置（包含）
+	 * @param endIndexExclusive 结束位置（不包含）
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static boolean[] reverse(final boolean[] array, final int startIndexInclusive, final int endIndexExclusive) {
+		if (isEmpty(array)) {
+			return array;
+		}
+		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int j = Math.min(array.length, endIndexExclusive) - 1;
+		boolean tmp;
+		while (j > i) {
+			tmp = array[j];
+			array[j] = array[i];
+			array[i] = tmp;
+			j--;
+			i++;
+		}
+		return array;
+	}
+	
+	/**
+	 * 反转数组，会变更原数组
+	 * @param array 数组，会变更
+	 * @return 变更后的原数组
+	 * @since 3.0.9
+	 */
+	public static boolean[] reverse(final boolean[] array) {
+		return reverse(array, 0, array.length);
+	}
+	
+	//------------------------------------------------------------------------------------------------------------ min and max
+	/**
+	 * 取最小值
+	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static <T extends Comparable<? super T>> T min(T[] numberArray) {
+		T min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(ObjectUtil.compare(min, numberArray[i]) > 0) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static long min(long[] numberArray) {
+		long min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static int min(int[] numberArray) {
+		int min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static short min(short[] numberArray) {
+		short min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static char min(char[] numberArray) {
+		char min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static byte min(byte[] numberArray) {
+		byte min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static double min(double[] numberArray) {
+		double min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static float min(float[] numberArray) {
+		float min = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(min > numberArray[i]) {
+				min = numberArray[i];
+			}
+		}
+		return min;
+	}
+	
+	/**
+	 * 取最小值
+	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 3.0.9
+	 */
+	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
+		T max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(ObjectUtil.compare(max, numberArray[i]) < 0) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static long max(long[] numberArray) {
+		long max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static int max(int[] numberArray) {
+		int max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static short max(short[] numberArray) {
+		short max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static char max(char[] numberArray) {
+		char max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static byte max(byte[] numberArray) {
+		byte max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static double max(double[] numberArray) {
+		double max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * 取最大值
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 3.0.9
+	 */
+	public static float max(float[] numberArray) {
+		float max = numberArray[0];
+		for(int i = 0; i < numberArray.length; i++) {
+			if(max < numberArray[i]) {
+				max = numberArray[i];
+			}
+		}
+		return max;
 	}
 }

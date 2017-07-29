@@ -10,6 +10,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 
 /**
@@ -19,19 +21,61 @@ import com.xiaoleilu.hutool.lang.Assert;
  * 
  */
 public class URLUtil {
-	
-	private URLUtil() {}
-	
+
+	/** 针对ClassPath路径的伪协议前缀（兼容Spring）: "classpath:" */
+	public static final String CLASSPATH_URL_PREFIX = "classpath:";
+	/** URL 前缀表示文件: "file:" */
+	public static final String FILE_URL_PREFIX = "file:";
+	/** URL 前缀表示jar: "jar:" */
+	public static final String JAR_URL_PREFIX = "jar:";
+	/** URL 前缀表示war: "war:" */
+	public static final String WAR_URL_PREFIX = "war:";
+	/** URL 协议表示文件: "file" */
+	public static final String URL_PROTOCOL_FILE = "file";
+	/** URL 协议表示Jar文件: "jar" */
+	public static final String URL_PROTOCOL_JAR = "jar";
+	/** URL 协议表示zip文件: "zip" */
+	public static final String URL_PROTOCOL_ZIP = "zip";
+	/** URL 协议表示WebSphere文件: "wsjar" */
+	public static final String URL_PROTOCOL_WSJAR = "wsjar";
+	/** URL 协议表示JBoss zip文件: "vfszip" */
+	public static final String URL_PROTOCOL_VFSZIP = "vfszip";
+	/** URL 协议表示JBoss文件: "vfsfile" */
+	public static final String URL_PROTOCOL_VFSFILE = "vfsfile";
+	/** URL 协议表示JBoss VFS资源: "vfs" */
+	public static final String URL_PROTOCOL_VFS = "vfs";
+	/** Jar路径以及内部文件路径的分界符: "!/" */
+	public static final String JAR_URL_SEPARATOR = "!/";
+	/** WAR路径及内部文件路径分界符 */
+	public static final String WAR_URL_SEPARATOR = "*/";
+
+	private URLUtil() {
+	}
+
 	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
+	 * 
 	 * @param url URL
 	 * @return URL对象
 	 */
-	public static URL url(String url){
+	public static URL url(String url) {
+		Assert.notNull(url, "URL must not be null");
+
+		// 兼容Spring的ClassPath路径
+		if (url.startsWith(CLASSPATH_URL_PREFIX)) {
+			url = url.substring(CLASSPATH_URL_PREFIX.length());
+			return ClassLoaderUtil.getClassLoader().getResource(url);
+		}
+
 		try {
 			return new URL(url);
 		} catch (MalformedURLException e) {
-			throw new UtilException(e.getMessage(), e);
+			// 尝试文件路径
+			try {
+				return new File(url).toURI().toURL();
+			} catch (MalformedURLException ex2) {
+				throw new UtilException(e);
+			}
 		}
 	}
 
@@ -40,9 +84,10 @@ public class URLUtil {
 	 * 
 	 * @param pathBaseClassLoader 相对路径（相对于classes）
 	 * @return URL
+	 * @see ResourceUtil#getResource(String)
 	 */
 	public static URL getURL(String pathBaseClassLoader) {
-		return ClassUtil.getClassLoader().getResource(pathBaseClassLoader);
+		return ResourceUtil.getResource(pathBaseClassLoader);
 	}
 
 	/**
@@ -51,9 +96,10 @@ public class URLUtil {
 	 * @param path 相对给定 class所在的路径
 	 * @param clazz 指定class
 	 * @return URL
+	 * @see ResourceUtil#getResource(String, Class)
 	 */
 	public static URL getURL(String path, Class<?> clazz) {
-		return clazz.getResource(path);
+		return ResourceUtil.getResource(path, clazz);
 	}
 
 	/**
@@ -71,7 +117,7 @@ public class URLUtil {
 			throw new UtilException("Error occured when get URL!", e);
 		}
 	}
-	
+
 	/**
 	 * 获得URL，常用于使用绝对路径时的情况
 	 * 
@@ -82,16 +128,16 @@ public class URLUtil {
 	public static URL[] getURLs(File... files) {
 		final URL[] urls = new URL[files.length];
 		try {
-			for(int i = 0; i < files.length; i++){
+			for (int i = 0; i < files.length; i++) {
 				urls[i] = files[i].toURI().toURL();
 			}
 		} catch (MalformedURLException e) {
 			throw new UtilException("Error occured when get URL!", e);
 		}
-		
+
 		return urls;
 	}
-	
+
 	/**
 	 * 格式化URL链接
 	 * 
@@ -99,10 +145,10 @@ public class URLUtil {
 	 * @return 格式化后的URL，如果提供了null或者空串，返回null
 	 */
 	public static String formatUrl(String url) {
-		if (StrUtil.isBlank(url)){
+		if (StrUtil.isBlank(url)) {
 			return null;
 		}
-		if (url.startsWith("http://") || url.startsWith("https://")){
+		if (url.startsWith("http://") || url.startsWith("https://")) {
 			return url;
 		}
 		return "http://" + url;
@@ -130,7 +176,7 @@ public class URLUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 编码URL<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
@@ -147,7 +193,7 @@ public class URLUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 解码URL<br>
 	 * 将%开头的16进制表示的内容解码。
@@ -164,7 +210,7 @@ public class URLUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 获得path部分<br>
 	 * 
@@ -172,7 +218,7 @@ public class URLUtil {
 	 * @return path
 	 * @exception UtilException 包装URISyntaxException
 	 */
-	public static String getPath(String uriStr){
+	public static String getPath(String uriStr) {
 		URI uri = null;
 		try {
 			uri = new URI(uriStr);
@@ -181,7 +227,7 @@ public class URLUtil {
 		}
 		return uri.getPath();
 	}
-	
+
 	/**
 	 * 从URL对象中获取不被编码的路径Path<br>
 	 * 对于本地路径，URL对象的getPath方法对于包含中文或空格时会被编码，导致本读路径读取错误。<br>
@@ -192,35 +238,88 @@ public class URLUtil {
 	 * @since 3.0.8
 	 */
 	public static String getDecodedPath(URL url) {
+		String path = null;
 		try {
-			//URL对象的getPath方法对于包含中文或空格的问题
-			return URLUtil.toURI(url).getPath();
+			// URL对象的getPath方法对于包含中文或空格的问题
+			path = URLUtil.toURI(url).getPath();
 		} catch (UtilException e) {
-			return url.getPath();
+			// ignore
 		}
+		return (null != path) ? path : url.getPath();
 	}
-	
+
 	/**
 	 * 转URL为URI
+	 * 
 	 * @param url URL
 	 * @return URI
 	 * @exception UtilException 包装URISyntaxException
 	 */
-	public static URI toURI(URL url) {
-		return toURI(url.toString());
+	public static URI toURI(URL url) throws UtilException {
+		if (null == url) {
+			return null;
+		}
+		try {
+			return url.toURI();
+		} catch (URISyntaxException e) {
+			throw new UtilException(e);
+		}
 	}
-	
+
 	/**
 	 * 转字符串为URI
+	 * 
 	 * @param location 字符串路径
 	 * @return URI
 	 * @exception UtilException 包装URISyntaxException
 	 */
-	public static URI toURI(String location) {
+	public static URI toURI(String location) throws UtilException {
 		try {
 			return new URI(location.replace(" ", "%20"));
 		} catch (URISyntaxException e) {
 			throw new UtilException(e);
 		}
 	}
+
+	/**
+	 * 提供的URL是否为文件<br>
+	 * 文件协议包括"file", "vfsfile" 或 "vfs".
+	 * 
+	 * @param url {@link URL}
+	 * @return 是否为文件
+	 * @since 3.0.9
+	 */
+	public static boolean isFileURL(URL url) {
+		String protocol = url.getProtocol();
+		return (URL_PROTOCOL_FILE.equals(protocol) || //
+				URL_PROTOCOL_VFSFILE.equals(protocol) || //
+				URL_PROTOCOL_VFS.equals(protocol));
+	}
+	
+	/**
+	 * 提供的URL是否为jar包URL
+	 * 协议包括： "jar", "zip", "vfszip" 或 "wsjar".
+	 * @param url {@link URL}
+	 * @return 是否为jar包URL
+	 */
+	public static boolean isJarURL(URL url) {
+		final String protocol = url.getProtocol();
+		return (URL_PROTOCOL_JAR.equals(protocol) || //
+				URL_PROTOCOL_ZIP.equals(protocol) || //
+				URL_PROTOCOL_VFSZIP.equals(protocol) || //
+				URL_PROTOCOL_WSJAR.equals(protocol));
+	}
+
+	/**
+	 * 提供的URL是否为Jar文件URL
+	 * 判断依据为file协议且扩展名为.jar
+	 * @param url the URL to check
+	 * @return whether the URL has been identified as a JAR file URL
+	 * @since 4.1
+	 */
+	public static boolean isJarFileURL(URL url) {
+		return (URL_PROTOCOL_FILE.equals(url.getProtocol()) && //
+				url.getPath().toLowerCase().endsWith(FileUtil.JAR_FILE_EXT));
+	}
+
 }

@@ -43,7 +43,7 @@ public class BeanUtil {
 	 */
 	public static boolean isBean(Class<?> clazz){
 		if(ClassUtil.isNormalClass(clazz)){
-			Method[] methods = clazz.getMethods();
+			final Method[] methods = clazz.getMethods();
 			for (Method method : methods) {
 				if(method.getParameterTypes().length == 1 && method.getName().startsWith("set")){
 					//检测包含标准的setXXX方法即视为标准的JavaBean
@@ -72,6 +72,24 @@ public class BeanUtil {
 	 */
 	public static PropertyEditor findEditor(Class<?> type){
 		return PropertyEditorManager.findEditor(type);
+	}
+	
+	public static boolean hasNull(Object bean, boolean ignoreError) {
+		final Field[] fields = ClassUtil.getDeclaredFields(bean.getClass());
+		
+		Object fieldValue = null;
+		for (Field field : fields) {
+			field.setAccessible(true);
+			try {
+				fieldValue = field.get(bean);
+			} catch (Exception e) {
+				
+			}
+			if(null == fieldValue) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	//--------------------------------------------------------------------------------------------------------- PropertyDescriptor

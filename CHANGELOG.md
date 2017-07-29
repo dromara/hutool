@@ -1,5 +1,44 @@
 # Changelog
 
+## 3.0.9
+
+### 新特性
+* CollectionUtil增肌针对Map的排序（issue#30@osc）
+* 增加ArrayUtil.reverse方法
+* 增加StrUtil.reverse方法
+* 增加NumberWordFormater和Convert.numberToWord方法（感谢@【福建】极速蜗牛）
+* IoUtil和FileUtil增加readLines(LineHandler)方法用于按行处理（感谢@汪汪）
+* 扩充NumberUtil，提供对BigDecimal参数支持（感谢@【杭州】KIWI）
+* 新增ReflectUtil，将原有ClassUtil部分方法迁入，同时提供针对父类私有字段、方法的访问支持
+* ArrayUtil增加min和max方法（感谢@【贵阳】shadow）
+* 增加Caller类，用于获取调用者类（感谢@【北京】宁静 提供需求）
+* JSONUtil.parse方法支持是否忽略空值的参数
+* JSONObject支持初始大小和按照KEY有序（感谢【深圳】Vmo）
+* 对ImageUtil重构以支持更对类型参数
+* DateTime增加offsetNew方法
+* 增加Range类，抽象递增递减列表（感谢@【悉尼】C - ActFramework）
+* 扩充XmlUtil，提供更多重载方法（感谢@【北京】仓山有井名为空）
+* NumberUtil增加decimalFormatMoney方法（感谢@【北京】宁静 ）
+* FileUtil增加rename方法
+* 增加Copier接口抽象拷贝
+* 增加FileCopier强化文件拷贝
+* ZipUtil增加多个流的方法（issue#IE5ZC@osc）
+* HttpResponse支持body异步，既执行executeAsync()方法后不再直接读取body，而是持有http流对象
+* 新增ClassLoaderUtil
+
+### Bug修复
+* 修复Entity.parseEntity方法中获取表名逻辑的问题（感谢@【北京】游弋苍茫）
+* 修复批量插入值顺序错乱问题（感谢@【北京】游弋苍茫）
+* 修复ComparatorChain的equals方法问题
+* 修复ArrayUtil.isEmpty(Object)方法问题（pull request #28@github）
+* 修复JSONUtil#toBean 和FileUtil#equals中的问题（pull request #31@github）
+* 正文获取编码问题修复（@talent-aio）
+* 修复Http部分定义编码不能应用于Response的问题（issue#31@osc）
+* 修复FileUtil.equals方法在两个文件都不存在的情况下判定问题
+* 修复Http请求结果多出一个换行的问题（感谢@【北京】仓山有井名为空）
+* 修复StrUtil.cleanBlank方法中length方法调用两次问题（感谢@【天津】〓下页）
+* 修复IoUtil.readHex28Lower方法参数传入错误（issue#IE81V@osc）
+
 ## 3.0.8
 
 ### 新特性

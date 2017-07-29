@@ -20,4 +20,18 @@ public class XmlUtilTest {
 		String elementText = XmlUtil.elementText(docResult.getDocumentElement(), "returnstatus");
 		Assert.assertEquals("Success", elementText);
 	}
+	
+	@Test
+	public void writeTest() {
+		String result="<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
+				+ "<returnsms>"
+					+ "<returnstatus>Success（成功）</returnstatus>"
+					+ "<message>ok</message>"
+					+ "<remainpoint>1490</remainpoint>"
+					+ "<taskID>885</taskID>"
+					+ "<successCounts>1</successCounts>"
+				+ "</returnsms>";
+		Document docResult=XmlUtil.parseXml(result);
+		XmlUtil.toFile(docResult, "d:/aaa.xml", "utf-8");
+	}
 }

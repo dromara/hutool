@@ -142,6 +142,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public static HttpRequest put(String url) {
 		return new HttpRequest(url).method(Method.PUT);
 	}
+	
+	/**
+	 * PATCH请求
+	 * 
+	 * @param url URL
+	 * @return HttpRequest
+	 * @since 3.0.9
+	 */
+	public static HttpRequest patch(String url) {
+		return new HttpRequest(url).method(Method.PATCH);
+	}
 
 	/**
 	 * DELETE请求
@@ -398,8 +409,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.body(json.toString());
 		
 		String contentTypeJson = "application/json";
-		if(StrUtil.isNotBlank(this.charset)){
-			contentTypeJson = StrUtil.format("{};charset={}", contentTypeJson, this.charset);
+		if(null != this.charset){
+			contentTypeJson = StrUtil.format("{};charset={}", contentTypeJson, this.charset.name());
 		}
 		this.contentType(contentTypeJson);
 		
@@ -497,13 +508,31 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 		return this;
 	}
+	
+	/**
+	 * 执行Reuqest请求
+	 * 
+	 * @return this
+	 */
+	public HttpResponse execute() {
+		return this.execute(false);
+	}
+	
+	/**
+	 * 异步请求
+	 * @return 异步对象，使用get方法获取HttpResponse对象
+	 */
+	public HttpResponse executeAsync(){
+		return this.execute(true);
+	}
 
 	/**
 	 * 执行Reuqest请求
 	 * 
-	 * @return HttpResponse
+	 * @param isAsync 是否异步
+	 * @return this
 	 */
-	public HttpResponse execute() {
+	public HttpResponse execute(boolean isAsync) {
 		//初始化URL
 		urlWithParamIfGet();
 		// 初始化 connection
@@ -517,17 +546,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 获取响应
 		if(null == httpResponse){
-			httpResponse = HttpResponse.readResponse(httpConnection);
+			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync);
 		}
-
-		this.httpConnection.disconnect();
 		return httpResponse;
 	}
 	
 	/**
 	 * 异步请求
 	 * @return 异步对象，使用get方法获取HttpResponse对象
+	 * @deprecated 请使用{@link #executeAsync()}
 	 */
+	@Deprecated
 	public Future<HttpResponse> asyncExecute(){
 		return ThreadUtil.execAsync(new Callable<HttpResponse>(){
 			@Override
