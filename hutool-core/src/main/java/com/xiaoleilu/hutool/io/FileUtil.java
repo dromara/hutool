@@ -66,7 +66,7 @@ public final class FileUtil {
 	/** 在Jar中的路径jar的扩展名形式 */
 	public static final String JAR_PATH_EXT = ".jar!";
 	/** 当Path为文件形式时, path会加入一个表示文件的前缀 */
-	public static final String PATH_FILE_PRE = "file:";
+	public static final String PATH_FILE_PRE = URLUtil.FILE_URL_PREFIX;
 
 	/**
 	 * 是否为Windows环境
