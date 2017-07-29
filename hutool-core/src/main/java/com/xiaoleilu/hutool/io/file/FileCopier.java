@@ -39,7 +39,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	/**
 	 * 新建一个文件复制器
 	 * @param srcPath 源文件路径（相对ClassPath路径或绝对路径）
-	 * @param dest 目标文件路径（相对ClassPath路径或绝对路径）
+	 * @param destPath 目标文件路径（相对ClassPath路径或绝对路径）
 	 * @return {@link FileCopier}
 	 */
 	public static FileCopier create(String srcPath, String destPath) {

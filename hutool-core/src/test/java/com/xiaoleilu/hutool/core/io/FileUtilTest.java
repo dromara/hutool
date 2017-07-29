@@ -28,6 +28,7 @@ public class FileUtilTest {
 	}
 	
 	@Test
+	@Ignore
 	public void renameTest() {
 		FileUtil.rename(FileUtil.file("hutool.jpg"), "b.png", false, false);
 	}

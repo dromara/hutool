@@ -533,7 +533,7 @@ public class ClassUtil {
 	 * 获取当前线程的{@link ClassLoader}
 	 * 
 	 * @return 当前线程的class loader
-	 * @see ClassLoaderUtil#getContextClassLoader();
+	 * @see ClassLoaderUtil#getClassLoader()t
 	 */
 	public static ClassLoader getContextClassLoader() {
 		return ClassLoaderUtil.getContextClassLoader();
