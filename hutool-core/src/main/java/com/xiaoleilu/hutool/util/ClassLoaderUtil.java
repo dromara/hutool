@@ -98,7 +98,6 @@ public class ClassLoaderUtil {
 	 * </pre>
 	 * 
 	 * @param name 类名
-	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
 	 * @return 类名对应的类
 	 * @throws UtilException 包装{@link ClassNotFoundException}，没有类名对应的类时抛出此异常
 	 */
@@ -216,7 +215,7 @@ public class ClassLoaderUtil {
 	// ----------------------------------------------------------------------------------- isPresent
 	/**
 	 * 指定类是否被提供，使用默认ClassLoader<br>
-	 * 通过调用{@link #loadClass(String, ClassLoader)}方法尝试加载指定类名的类，如果加载失败返回{@link false}<br>
+	 * 通过调用{@link #loadClass(String, ClassLoader, boolean)}方法尝试加载指定类名的类，如果加载失败返回false<br>
 	 * 加载失败的原因可能是此类不存在或其关联引用类不存在
 	 * 
 	 * @param className 类名
@@ -228,7 +227,7 @@ public class ClassLoaderUtil {
 
 	/**
 	 * 指定类是否被提供<br>
-	 * 通过调用{@link #loadClass(String, ClassLoader)}方法尝试加载指定类名的类，如果加载失败返回{@link false}<br>
+	 * 通过调用{@link #loadClass(String, ClassLoader, boolean)}方法尝试加载指定类名的类，如果加载失败返回false<br>
 	 * 加载失败的原因可能是此类不存在或其关联引用类不存在
 	 * 
 	 * @param className 类名
