@@ -37,6 +37,7 @@
 * 修复FileUtil.equals方法在两个文件都不存在的情况下判定问题
 * 修复Http请求结果多出一个换行的问题（感谢@【北京】仓山有井名为空）
 * 修复StrUtil.cleanBlank方法中length方法调用两次问题（感谢@【天津】〓下页）
+* 修复IoUtil.readHex28Lower方法参数传入错误（issue#IE81V@osc）
 
 ## 3.0.8
 

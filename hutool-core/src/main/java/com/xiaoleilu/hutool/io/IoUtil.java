@@ -471,7 +471,7 @@ public final class IoUtil {
 	 * @throws IOException IO异常
 	 */
 	public static String readHex28Lower(InputStream in) throws IOException {
-		return readHex(in, 28, false);
+		return readHex(in, 28, true);
 	}
 
 	/**
