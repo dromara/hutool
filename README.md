@@ -1,6 +1,6 @@
 ![封面](https://raw.githubusercontent.com/looly/hutool/master/docs/resources/hutool.jpg)
 
-[![Version](https://img.shields.io/badge/version-3.0.9-brightgreen.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22)
+[![Version](https://img.shields.io/badge/version-3.0.10-brightgreen.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg "JDK 1.7")]()
 
@@ -74,13 +74,13 @@ Hutool始终是一个工具类而不是框架，这意味着它对项目的侵�
 <dependency>
     <groupId>com.xiaoleilu</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>3.0.9</version>
+    <version>3.0.10</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'com.xiaoleilu:hutool-all:3.0.9'
+compile 'com.xiaoleilu:hutool-all:3.0.10'
 ```
 
 注：工具包的**版本**可以通过 [http://search.maven.org/](http://search.maven.org/) 搜索`hutool-all`找到项目。
@@ -91,6 +91,10 @@ compile 'com.xiaoleilu:hutool-all:3.0.9'
 [http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool-all%22](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool-all%22)
 
 点击链接后点选择对应版本，点击列表尾部的“Download”下载jar、API文档、源码
+
+如果中央库访问不便，可以访问阿里云的资源：
+
+[http://maven.aliyun.com/nexus/content/groups/public/com/xiaoleilu/hutool-all/](http://maven.aliyun.com/nexus/content/groups/public/com/xiaoleilu/hutool-all/)
 
 ## 文档请移步 
 
