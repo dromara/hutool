@@ -865,6 +865,19 @@ public class StrUtil {
 	}
 	
 	/**
+	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数
+	 * @return 切分后的集合
+	 * @since 3.1.0
+	 */
+	public static List<String> splitTrim(CharSequence str, char separator, int limit) {
+		return split(str, separator, limit, true, true);
+	}
+	
+	/**
 	 * 切分字符串，不限制分片数量
 	 * 
 	 * @param str 被切分的字符串

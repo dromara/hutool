@@ -1043,7 +1043,7 @@ public class NumberUtil {
 
 		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
-
+	
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {

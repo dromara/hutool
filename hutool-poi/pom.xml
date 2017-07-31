@@ -10,9 +10,9 @@
 		<version>3.1.0</version>
 	</parent>
 
-	<artifactId>hutool-extra</artifactId>
+	<artifactId>hutool-poi</artifactId>
 	<name>${project.artifactId}</name>
-	<description>Hutool 扩展工具类（提供其它类库的封装）</description>
+	<description>Hutool POI工具类（对MS Office操作）</description>
 	
 	<properties>
 		<!-- versions -->
@@ -25,30 +25,13 @@
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.xiaoleilu</groupId>
-			<artifactId>hutool-setting</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
 
-		<!-- 模板引擎 -->
+		<!-- POI -->
 		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.7</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi.version}</version>
 			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.ibeetl</groupId>
-			<artifactId>beetl</artifactId>
-			<version>2.7.3</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

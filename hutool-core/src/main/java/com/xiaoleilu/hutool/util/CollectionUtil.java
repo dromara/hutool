@@ -66,8 +66,11 @@ public class CollectionUtil {
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
+			elts.addAll(coll1);
+			int m;
 			for (T t : elts) {
-				for (int i = 0, m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+				m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
+				for (int i = 0; i < m; i++) {
 					list.add(t);
 				}
 			}
@@ -113,8 +116,10 @@ public class CollectionUtil {
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
+			int m;
 			for (T t : elts) {
-				for (int i = 0, m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+				m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
+				for (int i = 0; i < m; i++) {
 					list.add(t);
 				}
 			}
@@ -166,8 +171,11 @@ public class CollectionUtil {
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
+			elts.addAll(coll1);
+			int m;
 			for (T t : elts) {
-				for (int i = 0, m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)) - Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+				m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)) - Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
+				for (int i = 0; i < m; i++) {
 					list.add(t);
 				}
 			}

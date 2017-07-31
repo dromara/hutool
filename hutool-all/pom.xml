@@ -96,6 +96,11 @@
 			<artifactId>hutool-json</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.xiaoleilu</groupId>
+			<artifactId>hutool-poi</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

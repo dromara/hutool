@@ -5,13 +5,14 @@
 ### 新特性
 
 ### Bug修复
+* 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）
 
 -------------------------------------------------------------------------------------------------------------
 
 ## 3.0.9
 
 ### 新特性
-* CollectionUtil增肌针对Map的排序（issue#30@osc）
+* CollectionUtil新增针对Map的排序（issue#30@osc）
 * 增加ArrayUtil.reverse方法
 * 增加StrUtil.reverse方法
 * 增加NumberWordFormater和Convert.numberToWord方法（感谢@【福建】极速蜗牛）
