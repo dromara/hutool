@@ -32,6 +32,7 @@ import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
 import com.xiaoleilu.hutool.lang.Editor;
+import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Matcher;
 
 /**
@@ -731,7 +732,11 @@ public class CollectionUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤会改变原集合的内容
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param collection 集合
@@ -751,9 +756,86 @@ public class CollectionUtil {
 		}
 		return collection2;
 	}
+	
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * <pre>
+	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
+	 * </pre>
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param filter 过滤器
+	 * @return 过滤后的数组
+	 * @since 3.1.0
+	 */
+	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
+		Collection<T> collection2 = ObjectUtil.clone(collection);
+		collection2.clear();
+		
+		for (T t : collection) {
+			if (filter.accept(t)) {
+				collection2.add(t);
+			}
+		}
+		return collection2;
+	}
+	
+	/**
+	 * 查找第一个匹配元素对象
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param filter 过滤器，满足过滤条件的第一个元素将被返回
+	 * @return 满足过滤条件的第一个元素
+	 * @since 3.1.0
+	 */
+	public static <T> T findOne(Iterable<T> collection, Filter<T> filter) {
+		for (T t : collection) {
+			if(filter.accept(t)) {
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 查找第一个匹配元素对象<br>
+	 * 通过反射比对元素字段名对应的字段值是否相同，相同则返回<br>
+	 * 如果给定字段值参数是{@code null} 且元素对象中的字段值也为{@code null}则认为相同
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param fieldName 集合元素对象的字段名
+	 * @param fieldValue 集合元素对象的字段值
+	 * @return 满足条件的第一个元素
+	 * @since 3.1.0
+	 */
+	public static <T> T findOneByField(Iterable<T> collection, final String fieldName, final Object fieldValue) {
+		return findOne(collection, new Filter<T>(){
+			@Override
+			public boolean accept(T t) {
+				if(t instanceof Map) {
+					Map<?, ?> map = (Map<?, ?>)t;
+					final Object value = map.get(fieldValue);
+					return ObjectUtil.equal(value, fieldValue);
+				}
+				
+				//普通Bean
+				final Object value = ReflectUtil.getFieldValue(t, fieldName);
+				return ObjectUtil.equal(value, fieldValue);
+			}
+		});
+	}
 
 	/**
-	 * 过滤
+	 * 过滤<br>
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
 	 * 
 	 * @param <K> Key类型
 	 * @param <V> Value类型
@@ -762,13 +844,40 @@ public class CollectionUtil {
 	 * @return 过滤后的Map
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
-		Map<K, V> map2 = ObjectUtil.clone(map);
+		final Map<K, V> map2 = ObjectUtil.clone(map);
 		map2.clear();
 
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
 			modified = editor.edit(entry);
 			if (null != modified) {
+				map2.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return map2;
+	}
+	
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @param map Map
+	 * @param filter 编辑器接口
+	 * @return 过滤后的Map
+	 * @since 3.1.0
+	 */
+	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
+		final Map<K, V> map2 = ObjectUtil.clone(map);
+		map2.clear();
+		
+		for (Entry<K, V> entry : map.entrySet()) {
+			if (filter.accept(entry)) {
 				map2.put(entry.getKey(), entry.getValue());
 			}
 		}

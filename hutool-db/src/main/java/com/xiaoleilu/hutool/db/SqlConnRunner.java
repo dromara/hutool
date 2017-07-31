@@ -138,6 +138,11 @@ public class SqlConnRunner{
 			return new int[]{0};
 		}
 		
+		//单条单独处理
+		if(1 == records.length) {
+			return new int[] { insert(conn, records[0])};
+		}
+		
 		PreparedStatement ps = null;
 		try {
 			ps = dialect.psForInsertBatch(conn, records);

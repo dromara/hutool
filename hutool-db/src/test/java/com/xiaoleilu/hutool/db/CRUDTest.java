@@ -72,6 +72,23 @@ public class CRUDTest {
 		Console.log(result);
 	}
 	
+	@Test
+	@Ignore
+	public void insertBatchOneTest() throws SQLException {
+		User user1 = new User();
+		user1.setName("张三");
+		user1.setAge(12);
+		user1.setBirthday("19900112");
+		user1.setGender(true);
+		
+		Entity data1 = Entity.parse(user1);
+		
+		Console.log(data1);
+		
+		int[] result = runner.insert(CollectionUtil.newArrayList(data1));
+		Console.log(result);
+	}
+	
 	public static class User{
 		private Integer id;
 		private String name;
