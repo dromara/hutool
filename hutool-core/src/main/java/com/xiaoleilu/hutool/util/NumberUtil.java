@@ -222,7 +222,7 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static BigDecimal div(String v1, String v2, int scale, RoundingMode roundingMode) {
-		return div(new BigDecimal(v1), new BigDecimal(v1), scale, roundingMode);
+		return div(new BigDecimal(v1), new BigDecimal(v2), scale, roundingMode);
 	}
 
 	/**

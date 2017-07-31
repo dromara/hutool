@@ -11,6 +11,12 @@ import com.xiaoleilu.hutool.util.NumberUtil;
  *
  */
 public class NumberUtilTest {
+	
+	@Test
+	public void divTest() {
+		double result = NumberUtil.div(0, 1);
+		Assert.assertEquals(0.0, result, 0);
+	}
 
 	@Test
 	public void roundTest(){
