@@ -5,6 +5,7 @@
 ### 新特性
 * CollectionUtil增加findOne、findOneByField等方法
 * cron模块支持Quartz的"?"表达式
+* ReUtil增加getAllGroups方法用于获取所有分组匹配
 
 ### Bug修复
 * 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）
