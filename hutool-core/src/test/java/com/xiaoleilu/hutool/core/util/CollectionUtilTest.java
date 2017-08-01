@@ -2,6 +2,9 @@ package com.xiaoleilu.hutool.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -55,5 +58,27 @@ public class CollectionUtilTest {
 		
 		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
 		Assert.assertEquals("[b, x]", disjunction.toString());
+	}
+	
+	@Test
+	public void toMapListAndToListMapTest() {
+		HashMap<String, String> map1 = new HashMap<>();
+		map1.put("a", "值1");
+		map1.put("b", "值1");
+		
+		HashMap<String, String> map2 = new HashMap<>();
+		map2.put("a", "值2");
+		map2.put("c", "值3");
+		
+		//----------------------------------------------------------------------------------------
+		ArrayList<HashMap<String, String>> list = CollectionUtil.newArrayList(map1, map2);
+		Map<String, List<String>> map = CollectionUtil.toMapList(list);
+		Assert.assertEquals("值1", map.get("a").get(0));
+		Assert.assertEquals("值2", map.get("a").get(1));
+		
+		//----------------------------------------------------------------------------------------
+		List<Map<String,String>> listMap = CollectionUtil.toListMap(map);
+		Assert.assertEquals("值1", listMap.get(0).get("a"));
+		Assert.assertEquals("值2", listMap.get(1).get("a"));
 	}
 }

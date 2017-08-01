@@ -516,9 +516,23 @@ public class CollectionUtil {
 		}
 		return new ArrayList<T>(collection);
 	}
+	
+	/**
+	 * 新建一个ArrayList<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @return ArrayList对象
+	 * @since 3.1.0
+	 */
+	public static <T> ArrayList<T> newArrayList(Iterable<T> iterable) {
+		return (null == iterable) ? new ArrayList<T>() : newArrayList(iterable.iterator());
+	}
 
 	/**
-	 * 新建一个ArrayList
+	 * 新建一个ArrayList<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param iter {@link Iterator}
@@ -537,7 +551,8 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * 新建一个ArrayList
+	 * 新建一个ArrayList<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param enumration {@link Enumeration}
@@ -1243,7 +1258,120 @@ public class CollectionUtil {
 	public static <E> Collection<E> toCollection(Iterable<E> iterable) {
 		return (iterable instanceof Collection) ? (Collection<E>) iterable : newArrayList(iterable.iterator());
 	}
-
+	
+	/**
+	 * 行转列，合并相同的键，值合并为列表<br>
+	 * 将Map列表中相同key的值组成列表做为Map的value<br>
+	 * 是{@link #toListMap(Map)}的逆方法<br>
+	 * 比如传入数据：
+	 * <pre>
+	 * [
+	 *  {a: 1, b: 1, c: 1}
+	 *  {a: 2, b: 2}
+	 *  {a: 3, b: 3}
+	 *  {a: 4}
+	 * ]
+	 * </pre>
+	 * 结果是：
+	 * <pre>
+	 * {
+	 *   a: [1,2,3,4]
+	 *   b: [1,2,3,]
+	 *   c: [1]
+	 * }
+	 * </pre>
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param mapList Map列表
+	 * @return Map
+	 */
+	public static <K, V> Map<K, List<V>> toMapList(Iterable<? extends Map<K, V>> mapList){
+		final HashMap<K, List<V>> resultMap = new HashMap<>();
+		if(isEmpty(mapList)) {
+			return resultMap;
+		}
+		
+		Set<Entry<K, V>> entrySet;
+		for (Map<K, V> map : mapList) {
+			entrySet = map.entrySet();
+			K key;
+			List<V> valueList;
+			for (Entry<K, V> entry : entrySet) {
+				key = entry.getKey();
+				valueList = resultMap.get(key);
+				if(null == valueList) {
+					valueList = newArrayList(entry.getValue());
+					resultMap.put(key, valueList);
+				}else {
+					valueList.add(entry.getValue());
+				}
+			}
+		}
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 列转行。将Map中值列表分别按照其位置与key组成新的map。<br>
+	 * 是{@link #toMapList(Iterable)}的逆方法<br>
+	 * 比如传入数据：
+	 * <pre>
+	 * {
+	 *   a: [1,2,3,4]
+	 *   b: [1,2,3,]
+	 *   c: [1]
+	 * }
+	 * </pre>
+	 * 结果是：
+	 * <pre>
+	 * [
+	 *  {a: 1, b: 1, c: 1}
+	 *  {a: 2, b: 2}
+	 *  {a: 3, b: 3}
+	 *  {a: 4}
+	 * ]
+	 * </pre>
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param listMap 列表Map
+	 * @return Map列表
+	 */
+	public static <K, V> List<Map<K, V>> toListMap(Map<K, ? extends Iterable<V>> listMap){
+		final List<Map<K, V>> resultList = new ArrayList<>();
+		if(isEmpty(listMap)) {
+			return resultList;
+		}
+		
+		boolean isEnd = true ;//是否结束。标准是元素列表已耗尽
+		int index = 0;//值索引
+		Map<K, V> map;
+		do {
+			isEnd = true;
+			map = new HashMap<>();
+			List<V> vList;
+			int vListSize;
+			for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
+				vList = newArrayList(entry.getValue());
+				vListSize = vList.size();
+				if(index < vListSize) {
+					map.put(entry.getKey(), vList.get(index));
+					if(index != vListSize -1) {
+						//当值列表中还有更多值（非最后一个），继续循环
+						isEnd = false;
+					}
+				}
+			}
+			if(false == map.isEmpty()) {
+				resultList.add(map);
+			}
+			index++;
+		}while(false == isEnd);
+		
+		return resultList;
+	}
+	
 	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
