@@ -41,6 +41,7 @@ public class WatchMonitorTest {
 			}
 		});
 		
+		monitor.setMaxDepth(3);
 		monitor.start();
 	}
 }
