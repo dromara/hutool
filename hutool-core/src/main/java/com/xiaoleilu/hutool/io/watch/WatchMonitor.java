@@ -7,14 +7,22 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.EnumSet;
 
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.watch.watchers.WatcherChain;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 
 /**
@@ -45,6 +53,8 @@ public class WatchMonitor extends Thread implements Closeable{
 	
 	/** 监听路径，必须为目录 */
 	private Path path;
+	/** 递归目录的最大深度，当0时不递归下层目录 */
+	private int maxDepth;
 	/** 监听的文件，对于单文件监听不为空 */
 	private Path filePath;
 	
@@ -207,23 +217,30 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @throws WatchException 监听异常，IO异常时抛出此异常
 	 */
 	public void init() throws WatchException{
-		if(path.toFile().isFile()){
-			this.filePath = this.path;
-			this.path = this.filePath.getParent();
-		}
-		
+		//初始化监听
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
-			path.register(watchService, ArrayUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
 		} catch (IOException e) {
 			throw new WatchException(e);
+		}
+		
+		//监听目录或文件
+		if(Files.isRegularFile(this.path, LinkOption.NOFOLLOW_LINKS)){
+			this.filePath = this.path;
+			this.path = this.filePath.getParent();
+			registerPath(this.path, 0);//监听文件时不监听子目录
+		}else {
+			//监听子目录
+			registerPath(this.path, this.maxDepth);//监听文件时不监听子目录
 		}
 		
 		isClosed = false;
 	}
 	
 	/**
-	 * 设置监听
+	 * 设置监听<br>
+	 * 多个监听请使用{@link WatcherChain}
+	 * 
 	 * @param watcher 监听
 	 * @return {@link WatchMonitor}
 	 */
@@ -288,6 +305,18 @@ public class WatchMonitor extends Thread implements Closeable{
 	}
 	
 	/**
+	 * 当监听目录时，监听目录的最大深度<br>
+	 * 当设置值为0（或小于0）时，表示不递归监听子目录
+	 * 
+	 * @param maxDepth 最大深度，当设置值为0（或小于0）时，表示不递归监听子目录，监听所有子目录请传{@link Integer#MAX_VALUE}
+	 * @return this
+	 */
+	public WatchMonitor setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
+		return this;
+	}
+	
+	/**
 	 * 关闭监听
 	 */
 	@Override
@@ -295,4 +324,32 @@ public class WatchMonitor extends Thread implements Closeable{
 		isClosed = true;
 		IoUtil.close(watchService);
 	}
+	
+	//------------------------------------------------------ private method start
+	/**
+	 * 将指定路径加入到监听中
+	 * @param path 路径
+	 * @param maxDepth 递归下层目录的最大深度
+	 * @return {@link WatchKey}
+	 */
+	private void registerPath(Path path, int maxDepth) {
+		try {
+			path.register(watchService, ArrayUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
+			if(maxDepth > 0) {
+				//遍历所有子目录并加入监听
+				Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), maxDepth, new SimpleFileVisitor<Path>(){
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						if(Files.isDirectory(file, LinkOption.NOFOLLOW_LINKS)) {
+							registerPath(file, 0);//继续添加目录
+						}
+						return super.visitFile(file, attrs);
+					}
+				});
+			}
+		} catch (IOException e) {
+			throw new WatchException(e);
+		}
+	}
+	//------------------------------------------------------ private method end
 }

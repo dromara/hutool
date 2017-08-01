@@ -7,6 +7,7 @@
 * cron模块支持Quartz的"?"表达式
 * ReUtil增加getAllGroups方法用于获取所有分组匹配
 * CollectionUtil增加toMapList和toListMap方法，提供行列转换（感谢@【北京】宁静）
+* WatchMonitor增加文件递归（子目录）监听支持（感谢@t-io）
 
 ### Bug修复
 * 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）

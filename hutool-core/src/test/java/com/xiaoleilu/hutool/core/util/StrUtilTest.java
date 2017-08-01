@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -51,7 +52,12 @@ public class StrUtilTest {
 		Assert.assertEquals(5, split.size());
 		//测试去掉两边空白符是否生效
 		Assert.assertEquals("b", split.get(1));
-		
-		
+	}
+	
+	@Test
+	public void formatTest() {
+		String template = "你好，我是{name}，我的电话是：{phone}";
+		String result = StrUtil.format(template, Dict.create().set("name", "张三").set("phone", "13888881111"));
+		Console.log(result);
 	}
 }

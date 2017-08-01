@@ -798,6 +798,28 @@ public class CollectionUtil {
 	}
 	
 	/**
+	 * 获取给定Bean列表中指定字段名对应字段值的列表<br>
+	 * 列表元素支持Bean与Map
+	 * 
+	 * @param collection Bean集合或Map集合
+	 * @param fieldName 字段名或map的键
+	 * @return 字段值列表
+	 * @since 3.1.0
+	 */
+	public static List<Object> getFieldValues(Iterable<?> collection, String fieldName){
+		List<Object> fieldValueList = new ArrayList<>();
+		for (Object bean : collection) {
+			if(bean instanceof Map) {
+				fieldValueList.add(((Map<?, ?>)bean).get(fieldName));
+			}else {
+				
+			}
+			fieldValueList.add(ReflectUtil.getFieldValue(bean, fieldName));
+		}
+		return fieldValueList;
+	}
+	
+	/**
 	 * 查找第一个匹配元素对象
 	 * 
 	 * @param <T> 集合元素类型
@@ -817,13 +839,14 @@ public class CollectionUtil {
 	
 	/**
 	 * 查找第一个匹配元素对象<br>
-	 * 通过反射比对元素字段名对应的字段值是否相同，相同则返回<br>
+	 * 如果集合元素是Map，则比对键和值是否相同，相同则返回<br>
+	 * 如果为普通Bean，则通过反射比对元素字段名对应的字段值是否相同，相同则返回<br>
 	 * 如果给定字段值参数是{@code null} 且元素对象中的字段值也为{@code null}则认为相同
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param collection 集合
-	 * @param fieldName 集合元素对象的字段名
-	 * @param fieldValue 集合元素对象的字段值
+	 * @param collection 集合，集合元素可以是Bean或者Map
+	 * @param fieldName 集合元素对象的字段名或map的键
+	 * @param fieldValue 集合元素对象的字段值或map的值
 	 * @return 满足条件的第一个元素
 	 * @since 3.1.0
 	 */

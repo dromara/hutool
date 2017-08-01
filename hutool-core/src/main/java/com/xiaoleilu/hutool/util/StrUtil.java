@@ -1207,9 +1207,9 @@ public class StrUtil {
 			return template.toString();
 		}
 
-		final String template2 = template.toString();
+		String template2 = template.toString();
 		for (Entry<?, ?> entry : map.entrySet()) {
-			template = template2.replace("{" + entry.getKey() + "}", utf8Str(entry.getValue()));
+			template2 = template2.replace("{" + entry.getKey() + "}", utf8Str(entry.getValue()));
 		}
 		return template2;
 	}
@@ -1498,6 +1498,19 @@ public class StrUtil {
 			return sb.toString();
 		} else
 			return name2;
+	}
+	
+	/**
+	 * 包装指定字符串<br>
+	 * 当前缀和后缀一致时使用此方法
+	 * 
+	 * @param str 被包装的字符串
+	 * @param prefix 前缀和后缀
+	 * @return 包装后的字符串
+	 * @since 3.1.0
+	 */
+	public static String wrap(CharSequence str, CharSequence prefixAndSuffix) {
+		return wrap(str, prefixAndSuffix, prefixAndSuffix);
 	}
 
 	/**
