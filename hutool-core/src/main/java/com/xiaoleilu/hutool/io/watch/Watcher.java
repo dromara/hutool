@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.io.watch;
 
+import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
 /**
@@ -10,25 +11,29 @@ public interface Watcher {
 	/**
 	 * 文件创建时执行的方法
 	 * @param event 事件
+	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onCreate(WatchEvent<?> event);
+	public void onCreate(WatchEvent<?> event, Path currentPath);
 	
 	/**
 	 * 文件修改时执行的方法<br>
 	 * 文件修改可能触发多次
 	 * @param event 事件
+	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onModify(WatchEvent<?> event);
+	public void onModify(WatchEvent<?> event, Path currentPath);
 	
 	/**
 	 * 文件删除时执行的方法
 	 * @param event 事件
+	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onDelete(WatchEvent<?> event);
+	public void onDelete(WatchEvent<?> event, Path currentPath);
 	
 	/**
 	 * 事件丢失或出错时执行的方法
 	 * @param event 事件
+	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onOverflow(WatchEvent<?> event);
+	public void onOverflow(WatchEvent<?> event, Path currentPath);
 }

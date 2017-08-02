@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.io.watch.watchers;
 
+import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.util.List;
 
@@ -46,30 +47,30 @@ public class WatcherChain implements Watcher {
 	}
 
 	@Override
-	public void onCreate(WatchEvent<?> event) {
+	public void onCreate(WatchEvent<?> event, Path currentPath) {
 		for (Watcher watcher : chain) {
-			watcher.onCreate(event);
+			watcher.onCreate(event, currentPath);
 		}
 	}
 
 	@Override
-	public void onModify(WatchEvent<?> event) {
+	public void onModify(WatchEvent<?> event, Path currentPath) {
 		for (Watcher watcher : chain) {
-			watcher.onModify(event);
+			watcher.onModify(event, currentPath);
 		}
 	}
 
 	@Override
-	public void onDelete(WatchEvent<?> event) {
+	public void onDelete(WatchEvent<?> event, Path currentPath) {
 		for (Watcher watcher : chain) {
-			watcher.onDelete(event);
+			watcher.onDelete(event, currentPath);
 		}
 	}
 
 	@Override
-	public void onOverflow(WatchEvent<?> event) {
+	public void onOverflow(WatchEvent<?> event, Path currentPath) {
 		for (Watcher watcher : chain) {
-			watcher.onOverflow(event);
+			watcher.onOverflow(event, currentPath);
 		}
 	}
 

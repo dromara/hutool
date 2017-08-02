@@ -1,7 +1,14 @@
 package com.xiaoleilu.hutool.cron.task;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import com.xiaoleilu.hutool.cron.CronException;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.util.ClassLoaderUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 反射执行任务<br>
@@ -13,8 +20,9 @@ import com.xiaoleilu.hutool.util.ClassUtil;
  */
 public class InvokeTask implements Task{
 	
-	private String className;
-	private String methodName;
+	private Class<?> clazz;
+	private Object obj;
+	private Method method;
 	
 	/**
 	 * 构造
@@ -29,12 +37,34 @@ public class InvokeTask implements Task{
 			throw new UtilException("Invalid classNameWithMethodName [{}]!", classNameWithMethodName);
 		}
 
-		this.className = classNameWithMethodName.substring(0, splitIndex);
-		this.methodName = classNameWithMethodName.substring(splitIndex + 1);
+		//类
+		final String className = classNameWithMethodName.substring(0, splitIndex);
+		if(StrUtil.isBlank(className)) {
+			throw new IllegalArgumentException("Class name is blank !");
+		}
+		this.clazz = ClassLoaderUtil.loadClass(className);
+		if(null == this.clazz) {
+			throw new IllegalArgumentException("Load class with name of [" + className + "] fail !");
+		}
+		this.obj = ClassUtil.newInstance(this.clazz);
+		
+		//方法
+		final String methodName = classNameWithMethodName.substring(splitIndex + 1);
+		if(StrUtil.isBlank(methodName)) {
+			throw new IllegalArgumentException("Method name is blank !");
+		}
+		this.method = ClassUtil.getPublicMethod(this.clazz, methodName);
+		if(null == this.method) {
+			throw new IllegalArgumentException("No method with name of [" + methodName + "] !");
+		}
 	}
 
 	@Override
 	public void execute() {
-		ClassUtil.invoke(this.className, this.methodName, new Object[]{});
+		try {
+			ReflectUtil.invoke(this.obj, this.method, new Object[]{});
+		} catch (InvocationTargetException e) {
+			throw new CronException(e);
+		}
 	}
 }

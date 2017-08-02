@@ -20,6 +20,8 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
@@ -71,6 +73,9 @@ public class WatchMonitor extends Thread implements Closeable{
 	
 	/** 监听是否已经关闭 */
 	private boolean isClosed;
+	
+	/** WatchKey 和 Path的对应表 */
+	private Map<WatchKey, Path> watchKeyPathMap = new HashMap<>();
 	
 	//------------------------------------------------------ Static method start
 	/**
@@ -314,22 +319,23 @@ public class WatchMonitor extends Thread implements Closeable{
 				return;
 			}
 			
+			final Path currentPath = watchKeyPathMap.get(wk);
 			WatchEvent.Kind<?> kind;
 			for (WatchEvent<?> event : wk.pollEvents()) {
 				kind = event.kind();
-				if(null != filePath && false == this.filePath.endsWith(event.context().toString())){
+				if(null != this.filePath && false == this.filePath.endsWith(event.context().toString())){
 //					log.debug("[{}] is not fit for [{}], pass it.", event.context(), this.filePath.getFileName());
 					continue;
 				}
 				
 				if(kind == StandardWatchEventKinds.ENTRY_CREATE){
-					watcher.onCreate(event);
+					watcher.onCreate(event, currentPath);
 				}else if(kind == StandardWatchEventKinds.ENTRY_MODIFY){
-					watcher.onModify(event);
+					watcher.onModify(event, currentPath);
 				}else if(kind == StandardWatchEventKinds.ENTRY_DELETE){
-					watcher.onDelete(event);
+					watcher.onDelete(event, currentPath);
 				}else if(kind == StandardWatchEventKinds.OVERFLOW){
-					watcher.onOverflow(event);
+					watcher.onOverflow(event, currentPath);
 				}
 			}
 			wk.reset();
@@ -381,7 +387,8 @@ public class WatchMonitor extends Thread implements Closeable{
 		Console.log("Add watch path: {}", path);
 		
 		try {
-			path.register(watchService, ArrayUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
+			final WatchKey key = path.register(watchService, ArrayUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
+			watchKeyPathMap.put(key, path);
 			if(maxDepth > 1) {
 				//遍历所有子目录并加入监听
 				Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), maxDepth, new SimpleFileVisitor<Path>(){

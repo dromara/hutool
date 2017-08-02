@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.io.watch.watchers;
 
+import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
 import com.xiaoleilu.hutool.io.watch.Watcher;
@@ -14,19 +15,18 @@ import com.xiaoleilu.hutool.io.watch.Watcher;
 public class IgnoreWatcher implements Watcher {
 
 	@Override
-	public void onCreate(WatchEvent<?> event) {
+	public void onCreate(WatchEvent<?> event, Path currentPath) {
 	}
 
 	@Override
-	public void onModify(WatchEvent<?> event) {
+	public void onModify(WatchEvent<?> event, Path currentPath) {
 	}
 
 	@Override
-	public void onDelete(WatchEvent<?> event) {
+	public void onDelete(WatchEvent<?> event, Path currentPath) {
 	}
 
 	@Override
-	public void onOverflow(WatchEvent<?> event) {
+	public void onOverflow(WatchEvent<?> event, Path currentPath) {
 	}
-
 }

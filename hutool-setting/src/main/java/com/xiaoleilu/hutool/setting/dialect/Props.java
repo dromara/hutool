@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.util.Properties;
@@ -148,7 +149,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 					watchMonitor = WatchMonitor.create(Paths.get(this.propertiesFileUrl.toURI()));
 					watchMonitor.setWatcher(new SimpleWatcher(){
 						@Override
-						public void onModify(WatchEvent<?> event) {
+						public void onModify(WatchEvent<?> event, Path currentPath) {
 							load();
 						}
 					}).start();

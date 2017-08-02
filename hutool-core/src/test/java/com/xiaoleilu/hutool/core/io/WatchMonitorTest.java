@@ -1,9 +1,11 @@
 package com.xiaoleilu.hutool.core.io;
 
+import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
 import com.xiaoleilu.hutool.io.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.io.watch.WatchMonitor;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * 文件监听单元测试
@@ -16,28 +18,27 @@ public class WatchMonitorTest {
 	public static void main(String[] args) {
 		WatchMonitor monitor = WatchMonitor.createAll("d:/", new SimpleWatcher(){
 			@Override
-			public void onCreate(WatchEvent<?> event) {
+			public void onCreate(WatchEvent<?> event, Path currentPath) {
 				Object obj = event.context();
-				System.out.println("创建：" + obj);
-
+				Console.log("创建：{}-> {}", currentPath, obj);
 			}
 
 			@Override
-			public void onModify(WatchEvent<?> event) {
+			public void onModify(WatchEvent<?> event, Path currentPath) {
 				Object obj = event.context();
-				System.out.println("修改：" + obj);
+				Console.log("修改：{}-> {}", currentPath, obj);
 			}
 
 			@Override
-			public void onDelete(WatchEvent<?> event) {
+			public void onDelete(WatchEvent<?> event, Path currentPath) {
 				Object obj = event.context();
-				System.out.println("删除：" + obj);
+				Console.log("删除：{}-> {}", currentPath, obj);
 			}
 
 			@Override
-			public void onOverflow(WatchEvent<?> event) {
+			public void onOverflow(WatchEvent<?> event, Path currentPath) {
 				Object obj = event.context();
-				System.out.println("Overflow：" + obj);
+				Console.log("Overflow：{}-> {}", currentPath, obj);
 			}
 		});
 		
