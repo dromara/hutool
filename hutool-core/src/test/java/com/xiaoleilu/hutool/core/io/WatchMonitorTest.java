@@ -5,6 +5,8 @@ import java.nio.file.WatchEvent;
 
 import com.xiaoleilu.hutool.io.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.io.watch.WatchMonitor;
+import com.xiaoleilu.hutool.io.watch.Watcher;
+import com.xiaoleilu.hutool.io.watch.watchers.DelayWatcher;
 import com.xiaoleilu.hutool.lang.Console;
 
 /**
@@ -16,7 +18,7 @@ import com.xiaoleilu.hutool.lang.Console;
 public class WatchMonitorTest {
 
 	public static void main(String[] args) {
-		WatchMonitor monitor = WatchMonitor.createAll("d:/", new SimpleWatcher(){
+		Watcher watcher = new SimpleWatcher(){
 			@Override
 			public void onCreate(WatchEvent<?> event, Path currentPath) {
 				Object obj = event.context();
@@ -40,9 +42,14 @@ public class WatchMonitorTest {
 				Object obj = event.context();
 				Console.log("Overflow：{}-> {}", currentPath, obj);
 			}
-		});
+		};
+		
+		
+		WatchMonitor monitor = WatchMonitor.createAll("d:/", new DelayWatcher(watcher, 500));
 		
 		monitor.setMaxDepth(3);
 		monitor.start();
 	}
+	
+	
 }

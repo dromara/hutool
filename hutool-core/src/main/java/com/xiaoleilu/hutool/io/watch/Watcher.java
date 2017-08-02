@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
 /**
- * 观察者
+ * 观察者（监视器）
  * @author Looly
  */
 public interface Watcher {

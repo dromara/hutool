@@ -28,6 +28,7 @@ import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.watch.watchers.WatcherChain;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.ArrayUtil;
+import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * 路径监听器<br>
@@ -80,26 +81,44 @@ public class WatchMonitor extends Thread implements Closeable{
 	//------------------------------------------------------ Static method start
 	/**
 	 * 创建并初始化监听
-	 * @param uri URI
+	 * @param url URL
 	 * @param events 监听的事件列表
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URI uri, WatchEvent.Kind<?>... events){
-		return create(Paths.get(uri), events);
+	public static WatchMonitor create(URL url, WatchEvent.Kind<?>... events){
+		return create(url, 0, events);
 	}
 	
 	/**
 	 * 创建并初始化监听
 	 * @param url URL
 	 * @param events 监听的事件列表
+	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
 	 * @return 监听对象
 	 */
-	public static WatchMonitor create(URL url, WatchEvent.Kind<?>... events){
-		try {
-			return create(Paths.get(url.toURI()), events);
-		} catch (URISyntaxException e) {
-			throw new WatchException(e);
-		}
+	public static WatchMonitor create(URL url, int maxDepth, WatchEvent.Kind<?>... events){
+		return create(URLUtil.toURI(url), maxDepth, events);
+	}
+	
+	/**
+	 * 创建并初始化监听
+	 * @param uri URI
+	 * @param events 监听的事件列表
+	 * @return 监听对象
+	 */
+	public static WatchMonitor create(URI uri, WatchEvent.Kind<?>... events){
+		return create(uri, 0, events);
+	}
+	
+	/**
+	 * 创建并初始化监听
+	 * @param uri URI
+	 * @param events 监听的事件列表
+	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
+	 * @return 监听对象
+	 */
+	public static WatchMonitor create(URI uri, int maxDepth, WatchEvent.Kind<?>... events){
+		return create(Paths.get(uri), maxDepth, events);
 	}
 	
 	/**
@@ -109,7 +128,18 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @return 监听对象
 	 */
 	public static WatchMonitor create(File file, WatchEvent.Kind<?>... events){
-		return new WatchMonitor(file, events);
+		return create(file, 0, events);
+	}
+	
+	/**
+	 * 创建并初始化监听
+	 * @param file 文件
+	 * @param events 监听的事件列表
+	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
+	 * @return 监听对象
+	 */
+	public static WatchMonitor create(File file, int maxDepth, WatchEvent.Kind<?>... events){
+		return create(file.toPath(), maxDepth, events);
 	}
 	
 	/**
@@ -119,7 +149,18 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @return 监听对象
 	 */
 	public static WatchMonitor create(String path, WatchEvent.Kind<?>... events){
-		return new WatchMonitor(path, events);
+		return create(path, 0, events);
+	}
+	
+	/**
+	 * 创建并初始化监听
+	 * @param path 路径
+	 * @param events 监听的事件列表
+	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
+	 * @return 监听对象
+	 */
+	public static WatchMonitor create(String path, int maxDepth, WatchEvent.Kind<?>... events){
+		return create(Paths.get(path), maxDepth, events);
 	}
 	
 	/**
@@ -129,7 +170,18 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @return 监听对象
 	 */
 	public static WatchMonitor create(Path path, WatchEvent.Kind<?>... events){
-		return new WatchMonitor(path, events);
+		return create(path, 0, events);
+	}
+	
+	/**
+	 * 创建并初始化监听
+	 * @param path 路径
+	 * @param events 监听事件列表
+	 * @param maxDepth 当监听目录时，监听目录的最大深度，当设置值为1（或小于1）时，表示不递归监听子目录
+	 * @return 监听对象
+	 */
+	public static WatchMonitor create(Path path, int maxDepth, WatchEvent.Kind<?>... events){
+		return new WatchMonitor(path, maxDepth, events);
 	}
 	
 	//--------- createAll
@@ -215,9 +267,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @param events 监听事件列表
 	 */
 	public WatchMonitor(Path path, WatchEvent.Kind<?>... events) {
-		this.path = path;
-		this.events = events;
-		this.init();
+		this(path, 0, events);
 	}
 	
 	/**
@@ -246,7 +296,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * 初始化包括：
 	 * <pre>
 	 * 1、解析传入的路径，判断其为目录还是文件
-	 * 2、创建{@link WatchService对象}
+	 * 2、创建{@link WatchService} 对象
 	 * </pre>
 	 * 
 	 * @throws WatchException 监听异常，IO异常时抛出此异常

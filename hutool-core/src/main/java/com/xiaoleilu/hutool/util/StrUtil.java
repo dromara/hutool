@@ -1505,7 +1505,7 @@ public class StrUtil {
 	 * 当前缀和后缀一致时使用此方法
 	 * 
 	 * @param str 被包装的字符串
-	 * @param prefix 前缀和后缀
+	 * @param prefixAndSuffix 前缀和后缀
 	 * @return 包装后的字符串
 	 * @since 3.1.0
 	 */

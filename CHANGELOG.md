@@ -9,6 +9,7 @@
 * CollectionUtil增加toMapList和toListMap方法，提供行列转换（感谢@【北京】宁静）
 * WatchMonitor增加文件递归（子目录）监听支持（感谢@t-io）
 * cron模块中改进InvokeTask，在初始化时验证并加载类和方法（感谢@【南京】toling）
+* 增加ConcurrentHashSet
 
 ### Bug修复
 * 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）
