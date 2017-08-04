@@ -23,8 +23,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
@@ -116,22 +118,31 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public final static void scale(Image srcImg, ImageOutputStream destImageStream, int scale, boolean flag) {
-		try {
-			BufferedImage src = toBufferedImage(srcImg);
-			int width = src.getWidth(); // 得到源图宽
-			int height = src.getHeight(); // 得到源图长
-			if (flag) {// 放大
-				width = width * scale;
-				height = height * scale;
-			} else {// 缩小
-				width = width / scale;
-				height = height / scale;
-			}
-			Image image = src.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-			ImageIO.write(toBufferedImage(image), IMAGE_TYPE_JPEG, destImageStream);// 输出到文件流
-		} catch (IOException e) {
-			throw new UtilException(e);
+		final Image image = scale(srcImg, scale, flag);
+		writeJpg(image, destImageStream);
+	}
+	
+	/**
+	 * 缩放图像（按比例缩放）<br>
+	 * 缩放后默认为jpeg格式
+	 * 
+	 * @param srcImg 源图像来源流
+	 * @param destImageStream 缩放后的图像写出到的流
+	 * @param scale 缩放比例
+	 * @param isZoomIn 缩放选择:true 放大; false 缩小;
+	 * @since 3.1.0
+	 */
+	public final static Image scale(Image srcImg, int scale, boolean isZoomIn) {
+		int width = srcImg.getWidth(null); // 得到源图宽
+		int height = srcImg.getHeight(null); // 得到源图长
+		if (isZoomIn) {// 放大
+			width = width * scale;
+			height = height * scale;
+		} else {// 缩小
+			width = width / scale;
+			height = height / scale;
 		}
+		return srcImg.getScaledInstance(width, height, Image.SCALE_DEFAULT);
 	}
 
 	/**
@@ -199,41 +210,53 @@ public class ImageUtil {
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
 	 */
 	public final static void scale(Image srcImage, ImageOutputStream destImageStream, int height, int width, Color fixedColor) {
-		try {
-			double ratio = 0.0; // 缩放比例
-			BufferedImage bi = toBufferedImage(srcImage);
-			Image itemp = bi.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
-			// 计算比例
-			if ((bi.getHeight() > height) || (bi.getWidth() > width)) {
-				if (bi.getHeight() > bi.getWidth()) {
-					ratio = ((double) height) / bi.getHeight();
-				} else {
-					ratio = ((double) width) / bi.getWidth();
-				}
-				AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(ratio, ratio), null);
-				itemp = op.filter(bi, null);
+		final Image image = scale(srcImage, height, width, fixedColor);
+		writeJpg(image, destImageStream);
+	}
+	
+	/**
+	 * 缩放图像（按高度和宽度缩放）<br>
+	 * 缩放后默认为jpeg格式
+	 * 
+	 * @param srcImage 源图像
+	 * @param height 缩放后的高度
+	 * @param width 缩放后的宽度
+	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
+	 * @return {@link Image}
+	 */
+	public final static Image scale(Image srcImage, int height, int width, Color fixedColor) {
+		double ratio = 0.0; // 缩放比例
+		BufferedImage bi = toBufferedImage(srcImage);
+		Image itemp = bi.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
+		// 计算比例
+		if ((bi.getHeight() > height) || (bi.getWidth() > width)) {
+			if (bi.getHeight() > bi.getWidth()) {
+				ratio = ((double) height) / bi.getHeight();
+			} else {
+				ratio = ((double) width) / bi.getWidth();
 			}
-			if (null != fixedColor) {// 补白
-				final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-				Graphics2D g = image.createGraphics();
-				g.setColor(fixedColor);
-				g.fillRect(0, 0, width, height);
-
-				final int itempHeight = itemp.getHeight(null);
-				final int itempWidth = itemp.getWidth(null);
-				if (width == itempWidth) {
-					// 宽度一致
-					g.drawImage(itemp, 0, (height - itempHeight) / 2, itempWidth, itempHeight, fixedColor, null);
-				} else {
-					g.drawImage(itemp, (width - itempWidth) / 2, 0, itempWidth, itempHeight, fixedColor, null);
-				}
-				g.dispose();
-				itemp = image;
-			}
-			ImageIO.write(toBufferedImage(itemp), IMAGE_TYPE_JPEG, destImageStream);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(ratio, ratio), null);
+			itemp = op.filter(bi, null);
 		}
+		
+		if (null != fixedColor) {// 补白
+			final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g = image.createGraphics();
+			g.setColor(fixedColor);
+			g.fillRect(0, 0, width, height);
+			
+			final int itempHeight = itemp.getHeight(null);
+			final int itempWidth = itemp.getWidth(null);
+			if (width == itempWidth) {
+				// 宽度一致
+				g.drawImage(itemp, 0, (height - itempHeight) / 2, itempWidth, itempHeight, fixedColor, null);
+			} else {
+				g.drawImage(itemp, (width - itempWidth) / 2, 0, itempWidth, itempHeight, fixedColor, null);
+			}
+			g.dispose();
+			itemp = image;
+		}
+		return itemp;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- cut
@@ -305,27 +328,32 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public final static void cut(Image srcImage, ImageOutputStream destImageStream, int x, int y, int width, int height) {
-		try {
-			// 读取源图像
-			BufferedImage bi = toBufferedImage(srcImage);
-			int srcWidth = bi.getHeight(); // 源图宽度
-			int srcHeight = bi.getWidth(); // 源图高度
-			if (srcWidth > 0 && srcHeight > 0) {
-				Image image = bi.getScaledInstance(srcWidth, srcHeight, Image.SCALE_DEFAULT);
-				// 四个参数分别为图像起点坐标和宽高
-				// 即: CropImageFilter(int x,int y,int width,int height)
-				ImageFilter cropFilter = new CropImageFilter(x, y, width, height);
-				Image img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(image.getSource(), cropFilter));
-				BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-				Graphics g = tag.getGraphics();
-				g.drawImage(img, 0, 0, width, height, null); // 绘制切割后的图
-				g.dispose();
-				// 输出为文件
-				ImageIO.write(tag, IMAGE_TYPE_JPEG, destImageStream);
-			}
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
+		final BufferedImage tag = cut(srcImage, x, y, width, height);
+		writeJpg(tag, destImageStream);
+	}
+
+	/**
+	 * 图像切割(按指定起点坐标和宽高切割)
+	 * 
+	 * @param srcImage 源图像
+	 * @param destImageStream 切片后的图像输出流
+	 * @param x 目标切片起点坐标X
+	 * @param y 目标切片起点坐标Y
+	 * @param width 目标切片宽度
+	 * @param height 目标切片高度
+	 * @since 3.1.0
+	 */
+	public final static BufferedImage cut(Image srcImage, int x, int y, int width, int height) {
+//		final Image image = bi.getScaledInstance(srcWidth, srcHeight, Image.SCALE_DEFAULT);
+		ImageFilter cropFilter = new CropImageFilter(x, y, width, height);
+		Image img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
+		
+		final BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = result.getGraphics();
+		g.drawImage(img, 0, 0, width, height, null); // 绘制切割后的图
+		g.dispose();
+		
+		return result;
 	}
 
 	/**
@@ -353,17 +381,17 @@ public class ImageUtil {
 	 * @param destHeight 目标切片高度。默认150
 	 */
 	public final static void slice(Image srcImage, File descDir, int destWidth, int destHeight) {
+		if (destWidth <= 0) {
+			destWidth = 200; // 切片宽度
+		}
+		if (destHeight <= 0) {
+			destHeight = 150; // 切片高度
+		}
+		int srcWidth = srcImage.getHeight(null); // 源图宽度
+		int srcHeight = srcImage.getWidth(null); // 源图高度
+		
 		try {
-			if (destWidth <= 0) destWidth = 200; // 切片宽度
-			if (destHeight <= 0) destHeight = 150; // 切片高度
-			// 读取源图像
-			BufferedImage bi = toBufferedImage(srcImage);
-			int srcWidth = bi.getHeight(); // 源图宽度
-			int srcHeight = bi.getWidth(); // 源图高度
 			if (srcWidth > destWidth && srcHeight > destHeight) {
-				Image img;
-				ImageFilter cropFilter;
-				Image image = bi.getScaledInstance(srcWidth, srcHeight, Image.SCALE_DEFAULT);
 				int cols = 0; // 切片横向数量
 				int rows = 0; // 切片纵向数量
 				// 计算切片的横向和纵向数量
@@ -383,14 +411,9 @@ public class ImageUtil {
 					for (int j = 0; j < cols; j++) {
 						// 四个参数分别为图像起点坐标和宽高
 						// 即: CropImageFilter(int x,int y,int width,int height)
-						cropFilter = new CropImageFilter(j * destWidth, i * destHeight, destWidth, destHeight);
-						img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(image.getSource(), cropFilter));
-						BufferedImage tag = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
-						Graphics g = tag.getGraphics();
-						g.drawImage(img, 0, 0, null); // 绘制缩小后的图
-						g.dispose();
+						BufferedImage tag = cut(srcImage, j * destWidth, i * destHeight, destWidth, destHeight);
 						// 输出为文件
-						ImageIO.write(tag, "JPEG", new File(descDir, "_r" + i + "_c" + j + ".jpg"));
+						ImageIO.write(tag, IMAGE_TYPE_JPEG, new File(descDir, "_r" + i + "_c" + j + ".jpg"));
 					}
 				}
 			}
@@ -432,9 +455,6 @@ public class ImageUtil {
 			int srcWidth = bi.getHeight(); // 源图宽度
 			int srcHeight = bi.getWidth(); // 源图高度
 			if (srcWidth > 0 && srcHeight > 0) {
-				Image img;
-				ImageFilter cropFilter;
-				Image image = bi.getScaledInstance(srcWidth, srcHeight, Image.SCALE_DEFAULT);
 				int destWidth = srcWidth; // 每张切片的宽度
 				int destHeight = srcHeight; // 每张切片的高度
 				// 计算切片的宽度和高度
@@ -452,14 +472,7 @@ public class ImageUtil {
 				// 改进的想法:是否可用多线程加快切割速度
 				for (int i = 0; i < rows; i++) {
 					for (int j = 0; j < cols; j++) {
-						// 四个参数分别为图像起点坐标和宽高
-						// 即: CropImageFilter(int x,int y,int width,int height)
-						cropFilter = new CropImageFilter(j * destWidth, i * destHeight, destWidth, destHeight);
-						img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(image.getSource(), cropFilter));
-						BufferedImage tag = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
-						Graphics g = tag.getGraphics();
-						g.drawImage(img, 0, 0, null); // 绘制缩小后的图
-						g.dispose();
+						BufferedImage tag = cut(srcImage, j * destWidth, i * destHeight, destWidth, destHeight);
 						// 输出为文件
 						ImageIO.write(tag, IMAGE_TYPE_JPEG, new File(descDir, "_r" + i + "_c" + j + ".jpg"));
 					}
@@ -835,9 +848,9 @@ public class ImageUtil {
 	 * @param backgroundColor 背景颜色
 	 * @param fontColor 字体颜色
 	 * @param out 图片输出地
-	 * @throws UtilException IO异常 
+	 * @throws UtilException IO异常
 	 */
-	public static void createImage(String str, Font font, Color backgroundColor, Color fontColor, ImageOutputStream out) throws UtilException{
+	public static void createImage(String str, Font font, Color backgroundColor, Color fontColor, ImageOutputStream out) throws UtilException {
 		// 获取font的样式应用在str上的整个矩形
 		Rectangle2D r = font.getStringBounds(str, new FontRenderContext(AffineTransform.getScaleInstance(1, 1), false, false));
 		int unitHeight = (int) Math.floor(r.getHeight());// 获取单个字符的高度
@@ -904,6 +917,47 @@ public class ImageUtil {
 		} catch (IOException e) {
 			throw new UtilException(e);
 		}
+	}
+	
+	/**
+	 * 写出图像为JPG格式
+	 * @param image {@link Image}
+	 * @param destImageStream 写出到的目标流
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void writeJpg(Image image, ImageOutputStream destImageStream) throws IORuntimeException{
+		try {
+			ImageIO.write(toBufferedImage(image), IMAGE_TYPE_JPEG, destImageStream);// 输出到文件流
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 写出图像为PNG格式
+	 * @param image {@link Image}
+	 * @param destImageStream 写出到的目标流
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void writePng(Image image, ImageOutputStream destImageStream) throws IORuntimeException{
+		try {
+			ImageIO.write(toBufferedImage(image), IMAGE_TYPE_PNG, destImageStream);// 输出到文件流
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 获得{@link ImageReader}
+	 * @param type 图片文件类型，例如 "jpeg" 或 "tiff"
+	 * @return {@link ImageReader}
+	 */
+	public static ImageReader getReader(String type) {
+		Iterator<ImageReader> iterator = ImageIO.getImageReadersByFormatName(type);
+		if(iterator.hasNext()) {
+			return iterator.next();
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------- Private method start

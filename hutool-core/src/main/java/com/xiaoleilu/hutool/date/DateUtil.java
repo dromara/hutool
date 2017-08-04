@@ -768,7 +768,7 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar beginOfYear(Calendar calendar) {
-		calendar.set(Calendar.MONTH, 1);
+		calendar.set(Calendar.MONTH, Calendar.JANUARY);
 		return beginOfMonth(calendar);
 	}
 
