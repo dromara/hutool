@@ -52,6 +52,18 @@ public class NumberUtil {
 	public static double add(double v1, double v2) {
 		return add(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
+	
+	/**
+	 * 提供精确的加法运算
+	 * 
+	 * @param v1 被加数
+	 * @param v2 加数
+	 * @return 和
+	 * @since 3.1.0
+	 */
+	public static BigDecimal add(Number v1, Number v2) {
+		return add(v1.toString(), v2.toString());
+	}
 
 	/**
 	 * 提供精确的加法运算
@@ -88,6 +100,18 @@ public class NumberUtil {
 	 */
 	public static double sub(double v1, double v2) {
 		return sub(Double.toString(v1), Double.toString(v2)).doubleValue();
+	}
+	
+	/**
+	 * 提供精确的减法运算
+	 * 
+	 * @param v1 被减数
+	 * @param v2 减数
+	 * @return 差
+	 * @since 3.1.0
+	 */
+	public static BigDecimal sub(Number v1, Number v2) {
+		return sub(v1.toString(), v2.toString());
 	}
 
 	/**
@@ -126,6 +150,17 @@ public class NumberUtil {
 	public static double mul(double v1, double v2) {
 		return mul(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
+	
+	/**
+	 * 提供精确的乘法运算
+	 * 
+	 * @param v1 被乘数
+	 * @param v2 乘数
+	 * @return 积
+	 */
+	public static BigDecimal mul(Number v1, Number v2) {
+		return mul(v1.toString(), v2.toString());
+	}
 
 	/**
 	 * 提供精确的乘法运算
@@ -163,6 +198,18 @@ public class NumberUtil {
 	public static double div(double v1, double v2) {
 		return div(v1, v2, DEFAUT_DIV_SCALE);
 	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
+	 * 
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @return 两个参数的商
+	 * @since 3.1.0
+	 */
+	public static BigDecimal div(Number v1, Number v2) {
+		return div(v1, v2, DEFAUT_DIV_SCALE);
+	}
 
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
@@ -184,6 +231,19 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(double v1, double v2, int scale) {
+		return div(v1, v2, scale, RoundingMode.HALF_UP);
+	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度,后面的四舍五入
+	 * 
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @param scale 精确度，如果为负值，取绝对值
+	 * @return 两个参数的商
+	 * @since 3.1.0
+	 */
+	public static BigDecimal div(Number v1, Number v2, int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
 
@@ -210,6 +270,20 @@ public class NumberUtil {
 	 */
 	public static double div(double v1, double v2, int scale, RoundingMode roundingMode) {
 		return div(Double.toString(v1), Double.toString(v2), scale, roundingMode).doubleValue();
+	}
+	
+	/**
+	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
+	 * 
+	 * @param v1 被除数
+	 * @param v2 除数
+	 * @param scale 精确度，如果为负值，取绝对值
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 两个参数的商
+	 * @since 3.1.0
+	 */
+	public static BigDecimal div(Number v1, Number v2, int scale, RoundingMode roundingMode) {
+		return div(v1.toString(), v2.toString(), scale, roundingMode);
 	}
 
 	/**
@@ -243,7 +317,7 @@ public class NumberUtil {
 		}
 		return v1.divide(v2, scale, roundingMode);
 	}
-
+	
 	// ------------------------------------------------------------------------------------------- round
 	/**
 	 * 保留固定位数小数<br>

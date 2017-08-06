@@ -2,9 +2,11 @@ package com.xiaoleilu.hutool.io.watch.watchers;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.util.Iterator;
 import java.util.List;
 
 import com.xiaoleilu.hutool.io.watch.Watcher;
+import com.xiaoleilu.hutool.lang.Chain;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
@@ -14,7 +16,7 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
  * @author Looly
  * @since 3.1.0
  */
-public class WatcherChain implements Watcher {
+public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 
 	/** 观察者列表 */
 	final private List<Watcher> chain;
@@ -36,16 +38,6 @@ public class WatcherChain implements Watcher {
 		chain = CollectionUtil.newArrayList(watchers);
 	}
 	
-	/**
-	 * 增加观察者
-	 * @param watcher 观察者
-	 * @return this
-	 */
-	public WatcherChain add(Watcher watcher) {
-		this.chain.add(watcher);
-		return this;
-	}
-
 	@Override
 	public void onCreate(WatchEvent<?> event, Path currentPath) {
 		for (Watcher watcher : chain) {
@@ -72,6 +64,17 @@ public class WatcherChain implements Watcher {
 		for (Watcher watcher : chain) {
 			watcher.onOverflow(event, currentPath);
 		}
+	}
+
+	@Override
+	public Iterator<Watcher> iterator() {
+		return this.chain.iterator();
+	}
+
+	@Override
+	public WatcherChain addChain(Watcher element) {
+		this.chain.add(element);
+		return this;
 	}
 
 }
