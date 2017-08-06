@@ -7,6 +7,7 @@ import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
 import java.awt.font.FontRenderContext;
@@ -343,19 +344,15 @@ public class ImageUtil {
 	 * @param height 目标切片高度
 	 * @since 3.1.0
 	 */
-	public final static BufferedImage cut(Image srcImage, int x, int y, int width, int height) {
-//		final Image image = bi.getScaledInstance(srcWidth, srcHeight, Image.SCALE_DEFAULT);
+	public static BufferedImage cut(Image srcImage, int x, int y, int width, int height) {
 		ImageFilter cropFilter = new CropImageFilter(x, y, width, height);
 		Image img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
 		
-		final BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics g = result.getGraphics();
-		g.drawImage(img, 0, 0, width, height, null); // 绘制切割后的图
-		g.dispose();
-		
+		final BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		draw(result, img, new Rectangle(0, 0, width, height));
 		return result;
 	}
-
+	
 	/**
 	 * 图像切片（指定切片的宽度和高度）
 	 * 
@@ -364,7 +361,7 @@ public class ImageUtil {
 	 * @param destWidth 目标切片宽度。默认200
 	 * @param destHeight 目标切片高度。默认150
 	 */
-	public final static void slice(File srcImageFile, File descDir, int destWidth, int destHeight) {
+	public static void slice(File srcImageFile, File descDir, int destWidth, int destHeight) {
 		try {
 			slice(ImageIO.read(srcImageFile), descDir, destWidth, destHeight);
 		} catch (IOException e) {
@@ -961,6 +958,21 @@ public class ImageUtil {
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 将图片绘制在背景上
+	 * 
+	 * @param backgroundImg 背景图片
+	 * @param img 要绘制的图片
+	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
+	 * @return 绘制后的背景
+	 */
+	private static BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle) {
+		final Graphics g = backgroundImg.getGraphics();
+		g.drawImage(img, rectangle.x, rectangle.y, rectangle.width, rectangle.height, null); // 绘制切割后的图
+		g.dispose();
+		return backgroundImg;
+	}
+	
 	/**
 	 * 计算text的长度（一个中文算两个字符）
 	 * 
