@@ -12,7 +12,7 @@
 * 增加ConcurrentHashSet
 * HttpRequestsetXXX补充返回this（感谢【南京】peckey）
 * Hutool-db增加 BeanHandler、BeanListHandler，find方法增加可变参数（返回字段）
-* 增强手机号码验证正则（感谢@【北京】宁静）
+* 增强手机号码验证正则（感谢@【北京】宁静 @【北京】iisimpler）
 
 ### Bug修复
 * 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）
