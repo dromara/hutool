@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,7 +22,7 @@ public class ExcelReader {
 	/** 是否忽略空行 */
 	private boolean ignoreEmptyRow;
 	/** 是否忽略空行 */
-	private Map<String, String> headerAlias;
+//	private Map<String, String> headerAlias;
 	private Sheet sheet;
 
 	// ------------------------------------------------------------------------------------------------------- Constructor start

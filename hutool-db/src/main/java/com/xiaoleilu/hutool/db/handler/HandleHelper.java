@@ -62,4 +62,25 @@ public class HandleHelper {
 		
 		return collection;
 	}
+	
+	/**
+	 * 处理多条数据并返回一个Bean列表
+	 * @param <T> 集合类型
+	 * @param rs 数据集
+	 * @param collection 数据集
+	 * @param elementBeanType Bean类型
+	 * @return Entity列表
+	 * @throws SQLException SQL执行异常
+	 * @since 3.1.0
+	 */
+	public static <E, T extends Collection<E>> T handleRsToBeanList(ResultSet rs, T collection, Class<E> elementBeanType) throws SQLException {
+		final ResultSetMetaData  meta = rs.getMetaData();
+		final int columnCount = meta.getColumnCount();
+		
+		while(rs.next()) {
+			collection.add(HandleHelper.handleRow(columnCount, meta, rs).toBean(elementBeanType));
+		}
+		
+		return collection;
+	}
 }

@@ -323,11 +323,12 @@ public class SqlConnRunner{
 	 * @param conn 数据库连接对象
 	 * @param where 条件实体类（包含表名）
 	 * @param rsh 结果集处理对象
+	 * @param fields 字段列表，可变长参数如果无值表示查询全部字段
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T find(Connection conn, Entity where, RsHandler<T> rsh) throws SQLException {
-		return find(conn, null, where, rsh);
+	public <T> T find(Connection conn, Entity where, RsHandler<T> rsh, String... fields) throws SQLException {
+		return find(conn, CollectionUtil.newArrayList(fields), where, rsh);
 	}
 	
 	/**

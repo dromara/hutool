@@ -10,12 +10,16 @@
 * WatchMonitor增加文件递归（子目录）监听支持（感谢@t-io）
 * cron模块中改进InvokeTask，在初始化时验证并加载类和方法（感谢@【南京】toling）
 * 增加ConcurrentHashSet
+* HttpRequestsetXXX补充返回this（感谢【南京】peckey）
+* Hutool-db增加 BeanHandler、BeanListHandler，find方法增加可变参数（返回字段）
+* 增强手机号码验证正则（感谢@【北京】宁静）
 
 ### Bug修复
 * 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）
 * 修复批量插入只有一个对象无法插入问题（感谢@【北京】游弋苍茫）
 * 修复NumberUtil.div错误（感谢@【北京】宁静）
-*修复DateUtil.beginOfYear问题（感谢@【北京】iisimpler）
+* 修复DateUtil.beginOfYear问题（感谢@【北京】iisimpler）
+* 修正Email正则，符合RFC 5322规范（感谢@【北京】iisimpler）
 
 -------------------------------------------------------------------------------------------------------------
 

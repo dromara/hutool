@@ -15,8 +15,8 @@ import com.xiaoleilu.hutool.db.Entity;
 public class EntityListHandler implements RsHandler<List<Entity>>{
 	
 	/**
-	 * 创建一个 EntityHandler对象
-	 * @return EntityHandler对象
+	 * 创建一个 EntityListHandler对象
+	 * @return EntityListHandler对象
 	 */
 	public static EntityListHandler create() {
 		return new EntityListHandler();

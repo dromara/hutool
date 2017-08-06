@@ -9,6 +9,7 @@ import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 
 /**
@@ -143,7 +144,10 @@ public abstract class AbstractSqlRunner{
 	}
 	
 	/**
-	 * 批量插入数据
+	 * 批量插入数据<br>
+	 * 需要注意的是，批量插入每一条数据结构必须一致。批量插入数据时会获取第一条数据的字段结构，之后的数据会按照这个格式插入。<br>
+	 * 也就是说假如第一条数据只有2个字段，后边数据多于这两个字段的部分将被抛弃。
+	 * 
 	 * @param records 记录列表
 	 * @return 插入行数
 	 * @throws SQLException SQL执行异常
@@ -304,11 +308,12 @@ public abstract class AbstractSqlRunner{
 	 * @param <T> 需要处理成的结果对象类型
 	 * @param where 条件实体类（包含表名）
 	 * @param rsh 结果集处理对象
+	 * @param fields 字段列表，可变长参数如果无值表示查询全部字段
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
-	public <T> T find(Entity where, RsHandler<T> rsh) throws SQLException {
-		return find(null, where, rsh);
+	public <T> T find(Entity where, RsHandler<T> rsh, String... fields) throws SQLException {
+		return find(CollectionUtil.newArrayList(fields), where, rsh);
 	}
 	
 	/**
