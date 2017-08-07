@@ -7,7 +7,9 @@ import com.xiaoleilu.hutool.crypto.Padding;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * DES加密算法实现
+ * DES加密算法实现<br>
+ * DES全称为Data Encryption Standard，即数据加密标准，是一种使用密钥加密的块算法
+ * 
  * @author Looly
  *@since 3.0.8
  */
