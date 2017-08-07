@@ -28,6 +28,13 @@ public class FileUtilTest {
 	}
 	
 	@Test
+	public void delTest() {
+		//删除一个不存在的文件，应返回false
+		boolean result = FileUtil.del("e:/Hutool_test_3434543533409843.txt");
+		Assert.assertFalse(result);
+	}
+	
+	@Test
 	@Ignore
 	public void renameTest() {
 		FileUtil.rename(FileUtil.file("hutool.jpg"), "b.png", false, false);
@@ -39,6 +46,9 @@ public class FileUtilTest {
 		File destFile = FileUtil.file("hutool.copy.jpg");
 
 		FileUtil.copy(srcFile, destFile, true);
+		
+		Assert.assertTrue(destFile.exists());
+		Assert.assertEquals(srcFile.length(), destFile.length());
 	}
 	
 	@Test

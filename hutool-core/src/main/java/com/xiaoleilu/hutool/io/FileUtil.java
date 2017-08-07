@@ -18,9 +18,11 @@ import java.nio.charset.Charset;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -389,7 +391,7 @@ public final class FileUtil {
 	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
 	 * 
 	 * @param file 目录或文件
-	 * @return 总大小
+	 * @return 总大小，bytes长度
 	 */
 	public static long size(File file) {
 		Assert.notNull(file, "file argument is null !");
@@ -554,14 +556,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static boolean del(File file) throws IORuntimeException {
-		if (file == null || file.exists() == false) {
-			return true;
+		if (file == null || false == file.exists()) {
+			return false;
 		}
 
 		if (file.isDirectory()) {
 			clean(file);
 		}
-		return file.delete();
+		try {
+			Files.delete(file.toPath());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return true;
 	}
 
 	/**
@@ -751,6 +758,7 @@ public final class FileUtil {
 	/**
 	 * 复制文件或目录<br>
 	 * 情况如下：
+	 * 
 	 * <pre>
 	 * 1、src和dest都为目录，则将src目录及其目录下所有文件目录拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
@@ -770,6 +778,7 @@ public final class FileUtil {
 	/**
 	 * 复制文件或目录<br>
 	 * 情况如下：
+	 * 
 	 * <pre>
 	 * 1、src和dest都为目录，则讲src下所有文件目录拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
@@ -966,6 +975,22 @@ public final class FileUtil {
 	}
 
 	/**
+	 * 判断是否为目录，如果file为null，则返回false
+	 * 
+	 * @param path {@link Path}
+	 * @param isFollowLinks 是否追踪到软链对应的真实地址
+	 * @return 如果为目录true
+	 * @since 3.1.0
+	 */
+	public static boolean isDirectory(Path path, boolean isFollowLinks) {
+		if (null == path) {
+			return false;
+		}
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[] { LinkOption.NOFOLLOW_LINKS };
+		return Files.isDirectory(path, options);
+	}
+
+	/**
 	 * 判断是否为文件，如果path为null，则返回false
 	 * 
 	 * @param path 文件路径
@@ -983,6 +1008,20 @@ public final class FileUtil {
 	 */
 	public static boolean isFile(File file) {
 		return (file == null) ? false : file.isFile();
+	}
+
+	/**
+	 * 判断是否为文件，如果file为null，则返回false
+	 * 
+	 * @param path 文件
+	 * @return 如果为文件true
+	 */
+	public static boolean isFile(Path path, boolean isFollowLinks) {
+		if (null == path) {
+			return false;
+		}
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[] { LinkOption.NOFOLLOW_LINKS };
+		return Files.isRegularFile(path, options);
 	}
 
 	/**
@@ -1055,7 +1094,7 @@ public final class FileUtil {
 	 * @param filePath 文件路径
 	 * @return 最后一个文件路径分隔符的位置
 	 */
-	public static int indexOfLastSeparator(String filePath) {
+	public static int lastIndexOfSeparator(String filePath) {
 		if (filePath == null) {
 			return -1;
 		}
@@ -1244,6 +1283,7 @@ public final class FileUtil {
 			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
 		}
 	}
+	// -------------------------------------------------------------------------------------------- name end
 
 	/**
 	 * 判断文件路径是否有指定后缀，忽略大小写<br>
@@ -1273,7 +1313,28 @@ public final class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	// -------------------------------------------------------------------------------------------- name end
+
+	/**
+	 * 获取文件属性
+	 * 
+	 * @param path 文件路径{@link Path}
+	 * @param isFollowLinks 是否跟踪到软链对应的真实路径
+	 * @return {@link BasicFileAttributes}
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.0
+	 */
+	public static BasicFileAttributes getAttributes(Path path, boolean isFollowLinks) throws IORuntimeException {
+		if (null == path) {
+			return null;
+		}
+
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[] { LinkOption.NOFOLLOW_LINKS };
+		try {
+			return Files.readAttributes(path, BasicFileAttributes.class, options);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
 
 	// -------------------------------------------------------------------------------------------- in start
 	/**
