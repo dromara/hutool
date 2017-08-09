@@ -31,6 +31,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.lang.Base64;
 
@@ -967,6 +968,22 @@ public class ImageUtil {
 	public static void writePng(Image image, ImageOutputStream destImageStream) throws IORuntimeException{
 		try {
 			ImageIO.write(toBufferedImage(image), IMAGE_TYPE_PNG, destImageStream);// 输出到文件流
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 写出图像为目标文件扩展名对应的格式
+	 * 
+	 * @param image {@link Image}
+	 * @param targetFile 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.0
+	 */
+	public static void write(Image image, File targetFile) throws IORuntimeException{
+		try {
+			ImageIO.write(toBufferedImage(image), FileUtil.extName(targetFile), targetFile);// 输出到文件
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

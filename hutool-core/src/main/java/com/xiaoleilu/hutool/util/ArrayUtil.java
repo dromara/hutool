@@ -1339,12 +1339,12 @@ public class ArrayUtil {
 	 * 对象是否为数组对象
 	 * 
 	 * @param obj 对象
-	 * @return 是否为数组对象
-	 * @throws NullPointerException 提供被监测的对象为<code>null</code>
+	 * @return 是否为数组对象，如果为{@code null} 返回false
 	 */
 	public static boolean isArray(Object obj) {
 		if (null == obj) {
-			throw new NullPointerException("Object check for isArray is null");
+//			throw new NullPointerException("Object check for isArray is null");
+			return false;
 		}
 		return obj.getClass().isArray();
 	}
@@ -2487,11 +2487,11 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * 取最小值
+	 * 取最大值
 	 * 
 	 * @param <T> 元素类型
 	 * @param numberArray 数字数组
-	 * @return 最小值
+	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static <T extends Comparable<? super T>> T max(T[] numberArray) {

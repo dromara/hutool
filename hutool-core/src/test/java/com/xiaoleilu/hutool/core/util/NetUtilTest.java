@@ -31,4 +31,16 @@ public class NetUtilTest {
 		boolean match = ReUtil.isMatch(PatternPool.MAC_ADDRESS, macAddress);
 		Assert.assertTrue(match);
 	}
+	
+	@Test
+	public void longToIpTest() {
+		String ipv4 = NetUtil.longToIpv4(2130706433L);
+		Assert.assertEquals("127.0.0.1", ipv4);
+	}
+	
+	@Test
+	public void ipToLongTest() {
+		long ipLong = NetUtil.ipv4ToLong("127.0.0.1");
+		Assert.assertEquals(2130706433L, ipLong);
+	}
 }

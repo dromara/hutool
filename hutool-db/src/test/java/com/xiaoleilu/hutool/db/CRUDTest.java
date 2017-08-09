@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.db;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.db.ds.DSFactory;
+import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
@@ -45,6 +47,15 @@ public class CRUDTest {
 		Assert.assertTrue(del > 0);
 		Entity result3 = runner.get("user", "name", "unitTestUser");
 		Assert.assertNull(result3);
+	}
+	
+	@Test
+	@Ignore
+	public void findTest() throws SQLException {
+		List<Entity> find = runner.find(CollectionUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		for (Entity entity : find) {
+			Console.log(entity);
+		}
 	}
 	
 	@Test

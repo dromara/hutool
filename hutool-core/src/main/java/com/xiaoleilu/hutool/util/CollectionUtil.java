@@ -883,8 +883,11 @@ public class CollectionUtil {
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
 		final Map<K, V> map2 = ObjectUtil.clone(map);
+		if(isEmpty(map2)) {
+			return map2;
+		}
+		
 		map2.clear();
-
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
 			modified = editor.edit(entry);
@@ -912,8 +915,11 @@ public class CollectionUtil {
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
 		final Map<K, V> map2 = ObjectUtil.clone(map);
-		map2.clear();
+		if(isEmpty(map2)) {
+			return map2;
+		}
 		
+		map2.clear();
 		for (Entry<K, V> entry : map.entrySet()) {
 			if (filter.accept(entry)) {
 				map2.put(entry.getKey(), entry.getValue());
@@ -932,9 +938,11 @@ public class CollectionUtil {
 	 */
 	public static <T> int count(Iterable<T> iterable, Matcher<T> matcher) {
 		int count = 0;
-		for (T t : iterable) {
-			if (null == matcher || matcher.match(t)) {
-				count++;
+		if(null != iterable) {
+			for (T t : iterable) {
+				if (null == matcher || matcher.match(t)) {
+					count++;
+				}
 			}
 		}
 		return count;
