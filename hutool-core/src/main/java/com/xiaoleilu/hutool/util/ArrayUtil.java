@@ -2479,11 +2479,11 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * 取最小值
+	 * 取最大值
 	 * 
 	 * @param <T> 元素类型
 	 * @param numberArray 数字数组
-	 * @return 最小值
+	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
