@@ -54,10 +54,13 @@ public class CollectionUtilTest {
 	@Test
 	public void disjunctionTest() {
 		ArrayList<String> list1 = CollectionUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d");
+		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 		
 		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
-		Assert.assertEquals("[b, x]", disjunction.toString());
+		Assert.assertEquals("[b, x2, x]", disjunction.toString());
+		
+		Collection<String> disjunction2 = CollectionUtil.disjunction(list2, list1);
+		Assert.assertEquals("[b, x2, x]", disjunction2.toString());
 	}
 	
 	@Test

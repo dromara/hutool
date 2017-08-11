@@ -33,6 +33,33 @@ public interface JSON {
 	 * @see BeanResolver#resolveBean(Object, String)
 	 */
 	public Object getByExp(String expression);
+	
+	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * 
+	 * 表达式栗子：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * 
+	 * 获取表达式对应值后转换为对应类型的值
+	 * 
+	 * @param <T>返回值类型
+	 * @param expression 表达式
+	 * @param resultType 返回值类型
+	 * @return 对象
+	 * @see BeanResolver#resolveBean(Object, String)
+	 * @since 3.1.0
+	 */
+	public <T> T getByExp(String expression, Class<T> resultType);
 
 	/**
 	 * 将JSON内容写入Writer，无缩进<br>

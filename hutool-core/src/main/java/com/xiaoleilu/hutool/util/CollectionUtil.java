@@ -175,7 +175,7 @@ public class CollectionUtil {
 			elts.addAll(coll1);
 			int m;
 			for (T t : elts) {
-				m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)) - Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
+				m = Math.abs(Convert.toInt(map1.get(t), 0) - Convert.toInt(map2.get(t), 0));
 				for (int i = 0; i < m; i++) {
 					list.add(t);
 				}
