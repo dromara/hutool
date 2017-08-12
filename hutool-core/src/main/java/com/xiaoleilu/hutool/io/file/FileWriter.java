@@ -177,12 +177,33 @@ public class FileWriter extends FileWrapper{
 	 * @throws IORuntimeException IO异常
 	 */
 	public <T> File writeLines(Collection<T> list, boolean isAppend) throws IORuntimeException {
+		return writeLines(list, null, isAppend);
+	}
+	
+	/**
+	 * 将列表写入文件
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param isAppend 是否追加
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.0
+	 */
+	public <T> File writeLines(Collection<T> list, LineSeparator lineSeparator, boolean isAppend) throws IORuntimeException {
 		PrintWriter writer = null;
 		try {
 			writer = getPrintWriter(isAppend);
 			for (T t : list) {
 				if (t != null) {
-					writer.println(t.toString());
+					if(null == lineSeparator) {
+						//默认换行符
+						writer.println(t.toString());
+					}else {
+						//自定义换行符
+						writer.print(t.toString());
+						writer.print(lineSeparator.getValue());
+					}
 					writer.flush();
 				}
 			}

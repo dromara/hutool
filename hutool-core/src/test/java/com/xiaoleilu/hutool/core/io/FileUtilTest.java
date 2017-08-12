@@ -7,6 +7,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.file.LineSeparator;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
  * {@link FileUtil} 单元测试类
@@ -66,5 +68,11 @@ public class FileUtilTest {
 		
 		boolean notEquals = FileUtil.equals(srcFile1, destFile1);
 		Assert.assertFalse(notEquals);
+	}
+	
+	@Test
+	@Ignore
+	public void convertLineSeparatorTest() {
+		FileUtil.convertLineSeparator(FileUtil.file("d:/aaa.txt"), CharsetUtil.CHARSET_UTF_8, LineSeparator.WINDOWS);
 	}
 }

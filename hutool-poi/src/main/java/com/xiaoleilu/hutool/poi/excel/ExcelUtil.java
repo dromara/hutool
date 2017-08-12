@@ -93,10 +93,11 @@ public class ExcelUtil {
 	 * 获取单元格值
 	 * 
 	 * @param cell {@link Cell}单元格
+	 * @param isTrimCellValue 如果单元格类型为字符串，是否去掉两边空白符
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
-	public static Object getCellValue(Cell cell) {
-		return getCellValue(cell, cell.getCellTypeEnum());
+	public static Object getCellValue(Cell cell, boolean isTrimCellValue) {
+		return getCellValue(cell, cell.getCellTypeEnum(), isTrimCellValue);
 	}
 
 	/**
@@ -104,9 +105,10 @@ public class ExcelUtil {
 	 * 
 	 * @param cell {@link Cell}单元格
 	 * @param cellType 单元格值类型{@link CellType}枚举
+	 * @param isTrimCellValue 如果单元格类型为字符串，是否去掉两边空白符
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
-	public static Object getCellValue(Cell cell, CellType cellType) {
+	public static Object getCellValue(Cell cell, CellType cellType, boolean isTrimCellValue) {
 		switch (cellType) {
 			case NUMERIC:
 				if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
@@ -117,11 +119,11 @@ public class ExcelUtil {
 				return cell.getBooleanCellValue();
 			case FORMULA:
 				//遇到公式时查找公式结果类型
-				return getCellValue(cell, cell.getCachedFormulaResultTypeEnum());
+				return getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), isTrimCellValue);
 			case BLANK:
 				return StrUtil.EMPTY;
 			default:
-				return cell.getStringCellValue();
+				return isTrimCellValue ? StrUtil.trim(cell.getStringCellValue()) : cell.getStringCellValue();
 		}
 	}
 

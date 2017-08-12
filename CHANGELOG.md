@@ -3,7 +3,7 @@
 ## 3.1.0
 
 ### 新特性
-* CollectionUtil增加findOne、findOneByField等方法
+* CollectionUtil增加findOne、findOneByField、getFieldValues等方法
 * cron模块支持Quartz的"?"表达式
 * ReUtil增加getAllGroups方法用于获取所有分组匹配
 * CollectionUtil增加toMapList和toListMap方法，提供行列转换（感谢@【北京】宁静）
@@ -15,6 +15,7 @@
 * 增强手机号码验证正则（感谢@【北京】宁静 @【北京】iisimpler）
 * 创建Chain接口，用于责任链模式的实现
 * JSON.getByExp方法增加重载方法，可以指定返回值类型（感谢【深圳】富）
+* FileUtil增加转换文件编码和换行符的方法（感谢@【北京】宁静）
 
 ### Bug修复
 * 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）

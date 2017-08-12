@@ -14,9 +14,10 @@ public class PoiTest {
 	@Ignore
 	public void excelReadTest() {
 		ExcelReader reader = new ExcelReader(FileUtil.getInputStream("d:/dwdm.xls"), 0);
-		List<List<Object>> readAll = reader.readAll();
+		reader.setTrimCellValue(true);
+		List<List<Object>> readAll = reader.read();
 		for (List<Object> list : readAll) {
-			Console.log(list);
+			Console.log(list.get(4));
 		}
 	}
 }

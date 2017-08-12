@@ -37,6 +37,7 @@ import com.xiaoleilu.hutool.io.file.FileCopier;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
 import com.xiaoleilu.hutool.io.file.FileWriter;
+import com.xiaoleilu.hutool.io.file.LineSeparator;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -1569,6 +1570,20 @@ public final class FileUtil {
 	public static <T extends Collection<String>> T readLines(String path, String charset, T collection) throws IORuntimeException {
 		return readLines(file(path), charset, collection);
 	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T extends Collection<String>> T readLines(String path, Charset charset, T collection) throws IORuntimeException {
+		return readLines(file(path), charset, collection);
+	}
 
 	/**
 	 * 从文件中读取每一行数据
@@ -1582,6 +1597,20 @@ public final class FileUtil {
 	 */
 	public static <T extends Collection<String>> T readLines(File file, String charset, T collection) throws IORuntimeException {
 		return FileReader.create(file, CharsetUtil.charset(charset)).readLines(collection);
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param file 文件路径
+	 * @param charset 字符集
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T extends Collection<String>> T readLines(File file, Charset charset, T collection) throws IORuntimeException {
+		return FileReader.create(file, charset).readLines(collection);
 	}
 
 	/**
@@ -1639,6 +1668,18 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readLines(File file, String charset) throws IORuntimeException {
+		return readLines(file, charset, new ArrayList<String>());
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 */
+	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
 
@@ -1784,7 +1825,7 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeUtf8String(String content, String path) throws IORuntimeException {
-		return writeString(content, path, CharsetUtil.UTF_8);
+		return writeString(content, path, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -1796,7 +1837,7 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeUtf8String(String content, File file) throws IORuntimeException {
-		return writeString(content, file, CharsetUtil.UTF_8);
+		return writeString(content, file, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -1809,6 +1850,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeString(String content, String path, String charset) throws IORuntimeException {
+		return writeString(content, touch(path), charset);
+	}
+	
+	/**
+	 * 将String写入文件，覆盖模式
+	 * 
+	 * @param content 写入的内容
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File writeString(String content, String path, Charset charset) throws IORuntimeException {
 		return writeString(content, touch(path), charset);
 	}
 
@@ -1825,6 +1879,20 @@ public final class FileUtil {
 	public static File writeString(String content, File file, String charset) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).write(content);
 	}
+	
+	/**
+	 * 将String写入文件，覆盖模式
+	 * 
+	 * 
+	 * @param content 写入的内容
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 被写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File writeString(String content, File file, Charset charset) throws IORuntimeException {
+		return FileWriter.create(file, charset).write(content);
+	}
 
 	/**
 	 * 将String写入文件，追加模式
@@ -1836,6 +1904,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File appendString(String content, String path, String charset) throws IORuntimeException {
+		return appendString(content, touch(path), charset);
+	}
+	
+	/**
+	 * 将String写入文件，追加模式
+	 * 
+	 * @param content 写入的内容
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File appendString(String content, String path, Charset charset) throws IORuntimeException {
 		return appendString(content, touch(path), charset);
 	}
 
@@ -1851,6 +1932,19 @@ public final class FileUtil {
 	public static File appendString(String content, File file, String charset) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).append(content);
 	}
+	
+	/**
+	 * 将String写入文件，追加模式
+	 * 
+	 * @param content 写入的内容
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File appendString(String content, File file, Charset charset) throws IORuntimeException {
+		return FileWriter.create(file, charset).append(content);
+	}
 
 	/**
 	 * 将列表写入文件，覆盖模式
@@ -1864,6 +1958,19 @@ public final class FileUtil {
 	public static <T> void writeLines(Collection<T> list, String path, String charset) throws IORuntimeException {
 		writeLines(list, path, charset, false);
 	}
+	
+	/**
+	 * 将列表写入文件，覆盖模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 绝对路径
+	 * @param charset 字符集
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> void writeLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
+		writeLines(list, path, charset, false);
+	}
 
 	/**
 	 * 将列表写入文件，追加模式
@@ -1875,6 +1982,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> void appendLines(Collection<T> list, String path, String charset) throws IORuntimeException {
+		writeLines(list, path, charset, true);
+	}
+	
+	/**
+	 * 将列表写入文件，追加模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 绝对路径
+	 * @param charset 字符集
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> void appendLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
 		writeLines(list, path, charset, true);
 	}
 
@@ -1892,6 +2012,21 @@ public final class FileUtil {
 	public static <T> File writeLines(Collection<T> list, String path, String charset, boolean isAppend) throws IORuntimeException {
 		return writeLines(list, file(path), charset, isAppend);
 	}
+	
+	/**
+	 * 将列表写入文件
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> File writeLines(Collection<T> list, String path, Charset charset, boolean isAppend) throws IORuntimeException {
+		return writeLines(list, file(path), charset, isAppend);
+	}
 
 	/**
 	 * 将列表写入文件
@@ -1906,6 +2041,21 @@ public final class FileUtil {
 	 */
 	public static <T> File writeLines(Collection<T> list, File file, String charset, boolean isAppend) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).writeLines(list, isAppend);
+	}
+	
+	/**
+	 * 将列表写入文件
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> File writeLines(Collection<T> list, File file, Charset charset, boolean isAppend) throws IORuntimeException {
+		return FileWriter.create(file, charset).writeLines(list, isAppend);
 	}
 
 	/**
@@ -2016,5 +2166,35 @@ public final class FileUtil {
 		final String[] units = new String[] { "B", "kB", "MB", "GB", "TB", "EB" };
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+	}
+	
+	/**
+	 * 转换文件编码<br>
+	 * 此方法用于转换文件编码，读取的文件实际编码必须与指定的srcCharset编码一致，否则导致乱码
+	 * 
+	 * @param file 文件
+	 * @param srcCharset 原文件的编码，必须与文件内容的编码保持一致
+	 * @param destCharset 转码后的编码
+	 * @return 被转换编码的文件
+	 * @see CharsetUtil#convert(File, Charset, Charset)
+	 * @since 3.1.0
+	 */
+	public static File convertCharset(File file, Charset srcCharset, Charset destCharset) {
+		return CharsetUtil.convert(file, srcCharset, destCharset);
+	}
+	
+	/**
+	 * 转换换行符<br>
+	 * 将给定文件的换行符转换为指定换行符
+	 * 
+	 * @param file 文件
+	 * @param charset 编码
+	 * @param lineSeparator 换行符枚举{@link LineSeparator}
+	 * @return 被修改的文件
+	 * @since 3.1.0
+	 */
+	public static File convertLineSeparator(File file, Charset charset, LineSeparator lineSeparator) {
+	final List<String> lines = readLines(file, charset);
+		return FileWriter.create(file, charset).writeLines(lines, lineSeparator, false);
 	}
 }

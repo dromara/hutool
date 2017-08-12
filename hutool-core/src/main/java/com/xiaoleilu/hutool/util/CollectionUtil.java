@@ -516,7 +516,7 @@ public class CollectionUtil {
 		}
 		return new ArrayList<T>(collection);
 	}
-	
+
 	/**
 	 * 新建一个ArrayList<br>
 	 * 提供的参数为null时返回空{@link ArrayList}
@@ -748,6 +748,7 @@ public class CollectionUtil {
 	/**
 	 * 过滤<br>
 	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
 	 * 2、修改元素对象，返回集合中为修改后的对象
@@ -771,10 +772,11 @@ public class CollectionUtil {
 		}
 		return collection2;
 	}
-	
+
 	/**
 	 * 过滤<br>
 	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
 	 * </pre>
@@ -788,7 +790,7 @@ public class CollectionUtil {
 	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
 		Collection<T> collection2 = ObjectUtil.clone(collection);
 		collection2.clear();
-		
+
 		for (T t : collection) {
 			if (filter.accept(t)) {
 				collection2.add(t);
@@ -796,7 +798,23 @@ public class CollectionUtil {
 		}
 		return collection2;
 	}
-	
+
+	/**
+	 * 通过Editor抽取集合元素中的某些值返回为新列表<br>
+	 * 例如提供的是一个Bean列表，通过Editor接口实现获取某个字段值，返回这个字段值组成的新列表
+	 * 
+	 * @param collection 原集合
+	 * @param editor 编辑器
+	 * @return 抽取后的新列表
+	 */
+	public static List<Object> extract(Iterable<?> collection, Editor<Object> editor) {
+		final List<Object> fieldValueList = new ArrayList<>();
+		for (Object bean : collection) {
+			fieldValueList.add(editor.edit(bean));
+		}
+		return fieldValueList;
+	}
+
 	/**
 	 * 获取给定Bean列表中指定字段名对应字段值的列表<br>
 	 * 列表元素支持Bean与Map
@@ -806,19 +824,19 @@ public class CollectionUtil {
 	 * @return 字段值列表
 	 * @since 3.1.0
 	 */
-	public static List<Object> getFieldValues(Iterable<?> collection, String fieldName){
-		List<Object> fieldValueList = new ArrayList<>();
-		for (Object bean : collection) {
-			if(bean instanceof Map) {
-				fieldValueList.add(((Map<?, ?>)bean).get(fieldName));
-			}else {
-				
+	public static List<Object> getFieldValues(Iterable<?> collection, final String fieldName) {
+		return extract(collection, new Editor<Object>(){
+			@Override
+			public Object edit(Object bean) {
+				if (bean instanceof Map) {
+					return ((Map<?, ?>) bean).get(fieldName);
+				} else {
+					return ReflectUtil.getFieldValue(bean, fieldName);
+				}
 			}
-			fieldValueList.add(ReflectUtil.getFieldValue(bean, fieldName));
-		}
-		return fieldValueList;
+		});
 	}
-	
+
 	/**
 	 * 查找第一个匹配元素对象
 	 * 
@@ -830,13 +848,13 @@ public class CollectionUtil {
 	 */
 	public static <T> T findOne(Iterable<T> collection, Filter<T> filter) {
 		for (T t : collection) {
-			if(filter.accept(t)) {
+			if (filter.accept(t)) {
 				return t;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 查找第一个匹配元素对象<br>
 	 * 如果集合元素是Map，则比对键和值是否相同，相同则返回<br>
@@ -854,13 +872,13 @@ public class CollectionUtil {
 		return findOne(collection, new Filter<T>(){
 			@Override
 			public boolean accept(T t) {
-				if(t instanceof Map) {
-					Map<?, ?> map = (Map<?, ?>)t;
+				if (t instanceof Map) {
+					Map<?, ?> map = (Map<?, ?>) t;
 					final Object value = map.get(fieldValue);
 					return ObjectUtil.equal(value, fieldValue);
 				}
-				
-				//普通Bean
+
+				// 普通Bean
 				final Object value = ReflectUtil.getFieldValue(t, fieldName);
 				return ObjectUtil.equal(value, fieldValue);
 			}
@@ -870,6 +888,7 @@ public class CollectionUtil {
 	/**
 	 * 过滤<br>
 	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
 	 * 2、修改元素对象，返回集合中为修改后的对象
@@ -883,10 +902,10 @@ public class CollectionUtil {
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
 		final Map<K, V> map2 = ObjectUtil.clone(map);
-		if(isEmpty(map2)) {
+		if (isEmpty(map2)) {
 			return map2;
 		}
-		
+
 		map2.clear();
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
@@ -897,10 +916,11 @@ public class CollectionUtil {
 		}
 		return map2;
 	}
-	
+
 	/**
 	 * 过滤<br>
 	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
 	 * 2、修改元素对象，返回集合中为修改后的对象
@@ -915,10 +935,10 @@ public class CollectionUtil {
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
 		final Map<K, V> map2 = ObjectUtil.clone(map);
-		if(isEmpty(map2)) {
+		if (isEmpty(map2)) {
 			return map2;
 		}
-		
+
 		map2.clear();
 		for (Entry<K, V> entry : map.entrySet()) {
 			if (filter.accept(entry)) {
@@ -938,7 +958,7 @@ public class CollectionUtil {
 	 */
 	public static <T> int count(Iterable<T> iterable, Matcher<T> matcher) {
 		int count = 0;
-		if(null != iterable) {
+		if (null != iterable) {
 			for (T t : iterable) {
 				if (null == matcher || matcher.match(t)) {
 					count++;
@@ -1289,12 +1309,13 @@ public class CollectionUtil {
 	public static <E> Collection<E> toCollection(Iterable<E> iterable) {
 		return (iterable instanceof Collection) ? (Collection<E>) iterable : newArrayList(iterable.iterator());
 	}
-	
+
 	/**
 	 * 行转列，合并相同的键，值合并为列表<br>
 	 * 将Map列表中相同key的值组成列表做为Map的value<br>
 	 * 是{@link #toListMap(Map)}的逆方法<br>
 	 * 比如传入数据：
+	 * 
 	 * <pre>
 	 * [
 	 *  {a: 1, b: 1, c: 1}
@@ -1303,7 +1324,9 @@ public class CollectionUtil {
 	 *  {a: 4}
 	 * ]
 	 * </pre>
+	 * 
 	 * 结果是：
+	 * 
 	 * <pre>
 	 * {
 	 *   a: [1,2,3,4]
@@ -1317,12 +1340,12 @@ public class CollectionUtil {
 	 * @param mapList Map列表
 	 * @return Map
 	 */
-	public static <K, V> Map<K, List<V>> toMapList(Iterable<? extends Map<K, V>> mapList){
+	public static <K, V> Map<K, List<V>> toMapList(Iterable<? extends Map<K, V>> mapList) {
 		final HashMap<K, List<V>> resultMap = new HashMap<>();
-		if(isEmpty(mapList)) {
+		if (isEmpty(mapList)) {
 			return resultMap;
 		}
-		
+
 		Set<Entry<K, V>> entrySet;
 		for (Map<K, V> map : mapList) {
 			entrySet = map.entrySet();
@@ -1331,22 +1354,23 @@ public class CollectionUtil {
 			for (Entry<K, V> entry : entrySet) {
 				key = entry.getKey();
 				valueList = resultMap.get(key);
-				if(null == valueList) {
+				if (null == valueList) {
 					valueList = newArrayList(entry.getValue());
 					resultMap.put(key, valueList);
-				}else {
+				} else {
 					valueList.add(entry.getValue());
 				}
 			}
 		}
-		
+
 		return resultMap;
 	}
-	
+
 	/**
 	 * 列转行。将Map中值列表分别按照其位置与key组成新的map。<br>
 	 * 是{@link #toMapList(Iterable)}的逆方法<br>
 	 * 比如传入数据：
+	 * 
 	 * <pre>
 	 * {
 	 *   a: [1,2,3,4]
@@ -1354,7 +1378,9 @@ public class CollectionUtil {
 	 *   c: [1]
 	 * }
 	 * </pre>
+	 * 
 	 * 结果是：
+	 * 
 	 * <pre>
 	 * [
 	 *  {a: 1, b: 1, c: 1}
@@ -1369,14 +1395,14 @@ public class CollectionUtil {
 	 * @param listMap 列表Map
 	 * @return Map列表
 	 */
-	public static <K, V> List<Map<K, V>> toListMap(Map<K, ? extends Iterable<V>> listMap){
+	public static <K, V> List<Map<K, V>> toListMap(Map<K, ? extends Iterable<V>> listMap) {
 		final List<Map<K, V>> resultList = new ArrayList<>();
-		if(isEmpty(listMap)) {
+		if (isEmpty(listMap)) {
 			return resultList;
 		}
-		
-		boolean isEnd = true ;//是否结束。标准是元素列表已耗尽
-		int index = 0;//值索引
+
+		boolean isEnd = true;// 是否结束。标准是元素列表已耗尽
+		int index = 0;// 值索引
 		Map<K, V> map;
 		do {
 			isEnd = true;
@@ -1386,23 +1412,23 @@ public class CollectionUtil {
 			for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
 				vList = newArrayList(entry.getValue());
 				vListSize = vList.size();
-				if(index < vListSize) {
+				if (index < vListSize) {
 					map.put(entry.getKey(), vList.get(index));
-					if(index != vListSize -1) {
-						//当值列表中还有更多值（非最后一个），继续循环
+					if (index != vListSize - 1) {
+						// 当值列表中还有更多值（非最后一个），继续循环
 						isEnd = false;
 					}
 				}
 			}
-			if(false == map.isEmpty()) {
+			if (false == map.isEmpty()) {
 				resultList.add(map);
 			}
 			index++;
-		}while(false == isEnd);
-		
+		} while (false == isEnd);
+
 		return resultList;
 	}
-	
+
 	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
@@ -1745,7 +1771,7 @@ public class CollectionUtil {
 		Collections.sort(list, comparator);
 		return list;
 	}
-	
+
 	/**
 	 * 针对List排序，排序会修改原List
 	 * 
@@ -1789,14 +1815,14 @@ public class CollectionUtil {
 	public static <K, V> LinkedHashMap<K, V> sortToMap(Collection<Map.Entry<K, V>> entryCollection, Comparator<Map.Entry<K, V>> comparator) {
 		List<Map.Entry<K, V>> list = new LinkedList<>(entryCollection);
 		Collections.sort(list, comparator);
-		
+
 		LinkedHashMap<K, V> result = new LinkedHashMap<>();
-		for(Map.Entry<K, V> entry : list){
-				result.put(entry.getKey(), entry.getValue());
+		for (Map.Entry<K, V> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 通过Entry排序，可以按照键排序，也可以按照值排序，亦或者两者综合排序
 	 * 
@@ -1807,10 +1833,10 @@ public class CollectionUtil {
 	 * @return {@link LinkedList}
 	 * @since 3.0.9
 	 */
-	public static <K, V> LinkedHashMap<K, V> sortByEntry(Map<K, V> map, Comparator<Map.Entry<K, V>> comparator){
+	public static <K, V> LinkedHashMap<K, V> sortByEntry(Map<K, V> map, Comparator<Map.Entry<K, V>> comparator) {
 		return sortToMap(map.entrySet(), comparator);
 	}
-	
+
 	/**
 	 * 将Set排序（根据Entry的值）
 	 * 
@@ -1828,10 +1854,10 @@ public class CollectionUtil {
 			public int compare(Entry<K, V> o1, Entry<K, V> o2) {
 				V v1 = o1.getValue();
 				V v2 = o2.getValue();
-				
-				if(v1 instanceof Comparable) {
-					return ((Comparable)v1).compareTo(v2);
-				}else {
+
+				if (v1 instanceof Comparable) {
+					return ((Comparable) v1).compareTo(v2);
+				} else {
 					return v1.toString().compareTo(v2.toString());
 				}
 			}
