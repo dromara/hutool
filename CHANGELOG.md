@@ -16,6 +16,7 @@
 * 创建Chain接口，用于责任链模式的实现
 * JSON.getByExp方法增加重载方法，可以指定返回值类型（感谢【深圳】富）
 * FileUtil增加转换文件编码和换行符的方法（感谢@【北京】宁静）
+* 增加IterUtil，将CollectionUtil中部分方法迁入
 
 ### Bug修复
 * 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）

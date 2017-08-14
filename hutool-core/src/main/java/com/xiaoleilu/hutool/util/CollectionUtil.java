@@ -25,7 +25,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.xiaoleilu.hutool.collection.EnumerationIterator;
+import com.xiaoleilu.hutool.collection.IterUtil;
 import com.xiaoleilu.hutool.collection.IteratorEnumeration;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
@@ -224,75 +224,43 @@ public class CollectionUtil {
 	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @return {@link Map}
+	 * @see IterUtil#countMap(Iterable)
 	 */
-	public static <T> Map<T, Integer> countMap(Collection<T> collection) {
-		HashMap<T, Integer> countMap = new HashMap<>();
-		Integer count;
-		for (T t : collection) {
-			count = countMap.get(t);
-			if (null == count) {
-				countMap.put(t, 1);
-			} else {
-				countMap.put(t, count + 1);
-			}
-		}
-		return countMap;
+	public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
+		return IterUtil.countMap(collection);
 	}
 
 	/**
-	 * 以 conjunction 为分隔符将集合转换为字符串
+	 * 以 conjunction 为分隔符将集合转换为字符串<br>
+	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param iterable {@link Iterable}
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
+	 * @see IterUtil#join(Iterable, CharSequence)
 	 */
 	public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
-		if (null == iterable) {
-			return null;
-		}
-		return join(iterable.iterator(), conjunction);
+		return IterUtil.join(iterable, conjunction);
 	}
 
 	/**
-	 * 以 conjunction 为分隔符将集合转换为字符串
+	 * 以 conjunction 为分隔符将集合转换为字符串<br>
+	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param iterator 集合
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
+	 * @see IterUtil#join(Iterator, CharSequence)
 	 */
 	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
-		if (null == iterator) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		T item;
-		while (iterator.hasNext()) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-
-			item = iterator.next();
-			if (ArrayUtil.isArray(item)) {
-				sb.append(ArrayUtil.join(ArrayUtil.wrap(item), conjunction));
-			} else if (item instanceof Iterable<?>) {
-				sb.append(join((Iterable<?>) item, conjunction));
-			} else if (item instanceof Iterator<?>) {
-				sb.append(join((Iterator<?>) item, conjunction));
-			} else {
-				sb.append(item);
-			}
-		}
-		return sb.toString();
+		return IterUtil.join(iterator, conjunction);
 	}
 
 	/**
-	 * 切取部分数据
+	 * 切取部分数据<br>
+	 * 切取后的栈将减少这些元素
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param surplusAlaDatas 原数据
@@ -320,7 +288,8 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * 切取部分数据
+	 * 切取部分数据<br>
+	 * 切取后的栈将减少这些元素
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param surplusAlaDatas 原数据
@@ -994,9 +963,10 @@ public class CollectionUtil {
 	 * 
 	 * @param iterable Iterable对象
 	 * @return 是否为空
+	 * @see IterUtil#isEmpty(Iterable)
 	 */
 	public static boolean isEmpty(Iterable<?> iterable) {
-		return null == iterable || isEmpty(iterable.iterator());
+		return IterUtil.isEmpty(iterable);
 	}
 
 	/**
@@ -1004,9 +974,10 @@ public class CollectionUtil {
 	 * 
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
+	 * @see IterUtil#isEmpty(Iterator)
 	 */
 	public static boolean isEmpty(Iterator<?> Iterator) {
-		return null == Iterator || false == Iterator.hasNext();
+		return IterUtil.isEmpty(Iterator);
 	}
 
 	/**
@@ -1046,9 +1017,10 @@ public class CollectionUtil {
 	 * 
 	 * @param iterable Iterable对象
 	 * @return 是否为空
+	 * @see IterUtil#isNotEmpty(Iterable)
 	 */
 	public static boolean isNotEmpty(Iterable<?> iterable) {
-		return null != iterable && isNotEmpty(iterable.iterator());
+		return IterUtil.isNotEmpty(iterable);
 	}
 
 	/**
@@ -1056,9 +1028,10 @@ public class CollectionUtil {
 	 * 
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
+	 * @see IterUtil#isNotEmpty(Iterator)
 	 */
 	public static boolean isNotEmpty(Iterator<?> Iterator) {
-		return null != Iterator && Iterator.hasNext();
+		return IterUtil.isNotEmpty(Iterator);
 	}
 
 	/**
@@ -1074,19 +1047,13 @@ public class CollectionUtil {
 	/**
 	 * 是否包含{@code null}元素
 	 * 
-	 * @param iterable 被检查的Iterable对象
+	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回false
 	 * @return 是否包含{@code null}元素
 	 * @since 3.0.7
+	 * @see IterUtil#hasNull(Iterable)
 	 */
 	public static boolean hasNull(Iterable<?> iterable) {
-		if (isNotEmpty(iterable)) {
-			for (Object element : iterable) {
-				if (null == element) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return IterUtil.hasNull(iterable);
 	}
 
 	// ---------------------------------------------------------------------- zip
@@ -1163,17 +1130,12 @@ public class CollectionUtil {
 	 * 
 	 * @param <K> 键类型
 	 * @param <V> 值类型
-	 * @param entryCollection entry集合
+	 * @param entryIter entry集合
 	 * @return Map
+	 * @see IterUtil#toMap(Iterable)
 	 */
-	public static <K, V> HashMap<K, V> toMap(Collection<Entry<K, V>> entryCollection) {
-		final HashMap<K, V> map = new HashMap<K, V>();
-		if (isNotEmpty(entryCollection)) {
-			for (Entry<K, V> entry : entryCollection) {
-				map.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return map;
+	public static <K, V> HashMap<K, V> toMap(Iterable<Entry<K, V>> entryIter) {
+		return IterUtil.toMap(entryIter);
 	}
 
 	/**
@@ -1239,7 +1201,7 @@ public class CollectionUtil {
 		}
 		return map;
 	}
-
+	
 	/**
 	 * 将集合转换为排序后的TreeSet
 	 * 
@@ -1277,9 +1239,10 @@ public class CollectionUtil {
 	 * @param <E> 集合元素类型
 	 * @param e {@link Enumeration}
 	 * @return {@link Iterator}
+	 * @see IterUtil#asIterator(Enumeration)
 	 */
 	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
-		return new EnumerationIterator<E>(e);
+		return IterUtil.asIterator(e);
 	}
 
 	/**
@@ -1288,14 +1251,10 @@ public class CollectionUtil {
 	 * @param <E> 元素类型
 	 * @param iter {@link Iterator}
 	 * @return {@link Iterable}
+	 * @see IterUtil#asIterable(Iterator)
 	 */
 	public static <E> Iterable<E> asIterable(final Iterator<E> iter) {
-		return new Iterable<E>(){
-			@Override
-			public Iterator<E> iterator() {
-				return iter;
-			}
-		};
+		return IterUtil.asIterable(iter);
 	}
 
 	/**
@@ -1579,12 +1538,10 @@ public class CollectionUtil {
 	 * @param iterable {@link Iterable}
 	 * @return 第一个元素
 	 * @since 3.0.1
+	 * @see IterUtil#getFirst(Iterable)
 	 */
 	public static <T> T getFirst(Iterable<T> iterable) {
-		if (null != iterable) {
-			return getFirst(iterable.iterator());
-		}
-		return null;
+		return IterUtil.getFirst(iterable);
 	}
 
 	/**
@@ -1594,12 +1551,10 @@ public class CollectionUtil {
 	 * @param iterator {@link Iterator}
 	 * @return 第一个元素
 	 * @since 3.0.1
+	 * @see IterUtil#getFirst(Iterator)
 	 */
 	public static <T> T getFirst(Iterator<T> iterator) {
-		if (null != iterator && iterator.hasNext()) {
-			return iterator.next();
-		}
-		return null;
+		return IterUtil.getFirst(iterator);
 	}
 
 	/**
@@ -1608,13 +1563,10 @@ public class CollectionUtil {
 	 * @param iterable {@link Iterable}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @since 3.0.8
+	 * @see IterUtil#getElementType(Iterable)
 	 */
 	public static Class<?> getElementType(Iterable<?> iterable) {
-		if (null != iterable) {
-			Iterator<?> iterator = iterable.iterator();
-			return getElementType(iterator);
-		}
-		return null;
+		return IterUtil.getElementType(iterable);
 	}
 
 	/**
@@ -1623,18 +1575,10 @@ public class CollectionUtil {
 	 * @param iterator {@link Iterator}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @since 3.0.8
+	 * @see IterUtil#getElementType(Iterator)
 	 */
 	public static Class<?> getElementType(Iterator<?> iterator) {
-		if (null != iterator) {
-			Object t;
-			while (iterator.hasNext()) {
-				t = iterator.next();
-				if (null != t) {
-					return t.getClass();
-				}
-			}
-		}
-		return null;
+		return IterUtil.getElementType(iterator);
 	}
 
 	/**
@@ -1797,7 +1741,7 @@ public class CollectionUtil {
 	 * @since 3.0.9
 	 */
 	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
-		TreeMap<K, V> result = new TreeMap<K, V>(comparator);
+		final TreeMap<K, V> result = new TreeMap<K, V>(comparator);
 		result.putAll(map);
 		return result;
 	}

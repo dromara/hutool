@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.setting;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,25 +23,38 @@ import com.xiaoleilu.hutool.util.URLUtil;
 /**
  * 分组化的Set集合类<br>
  * 在配置文件中可以用中括号分隔不同的分组，每个分组会放在独立的Set中，用group区别<br>
- * 无分组的集合和`[]`分组集合会合并成员，重名的分组也会合并成员
+ * 无分组的集合和`[]`分组集合会合并成员，重名的分组也会合并成员<br>
+ * 分组配置文件如下：
+ * 
+ * <pre>
+ * [group1]
+ * aaa
+ * bbb
+ * ccc
+ * 
+ * [group2]
+ * aaa
+ * ccc
+ * ddd
+ * </pre>
+ * 
  * @author Looly
- *@deprecated 请使用 com.xiaoleilu.hutool.setting.GroupedSet
+ * @since 3.1.0
  */
-@Deprecated
-public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
+public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 	private static final long serialVersionUID = -8430706353275835496L;
-//	private final static Log log = StaticLog.get();
-	
+	// private final static Log log = StaticLog.get();
+
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
 	private final static String COMMENT_FLAG_PRE = "#";
 	/** 分组行识别的环绕标记 */
 	private final static char[] GROUP_SURROUND = { '[', ']' };
-	
+
 	/** 本设置对象的字符集 */
 	private Charset charset;
 	/** 设定文件的URL */
 	private URL groupedSetUrl;
-	
+
 	/**
 	 * 基本构造<br>
 	 * 需自定义初始化配置文件
@@ -51,7 +64,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	public GroupedSet(Charset charset) {
 		this.charset = charset;
 	}
-	
+
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
@@ -59,17 +72,17 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param charset 字符集
 	 */
 	public GroupedSet(String pathBaseClassLoader, Charset charset) {
-		if(null == pathBaseClassLoader) {
+		if (null == pathBaseClassLoader) {
 			pathBaseClassLoader = StrUtil.EMPTY;
 		}
-		
+
 		final URL url = URLUtil.getURL(pathBaseClassLoader);
-		if(url == null) {
+		if (url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", pathBaseClassLoader));
 		}
 		this.init(url, charset);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -81,12 +94,12 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 			throw new RuntimeException("Null GroupSet file!");
 		}
 		final URL url = URLUtil.getURL(configFile);
-		if(url == null) {
+		if (url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", configFile.getAbsolutePath()));
 		}
 		this.init(url, charset);
 	}
-	
+
 	/**
 	 * 构造，相对于classes读取文件
 	 * 
@@ -96,12 +109,12 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 */
 	public GroupedSet(String path, Class<?> clazz, Charset charset) {
 		final URL url = URLUtil.getURL(path, clazz);
-		if(url == null) {
+		if (url == null) {
 			throw new RuntimeException(StrUtil.format("Can not find GroupSet file: [{}]", path));
 		}
 		this.init(url, charset);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -109,20 +122,21 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	 * @param charset 字符集
 	 */
 	public GroupedSet(URL url, Charset charset) {
-		if(url == null) {
+		if (url == null) {
 			throw new RuntimeException("Null url define!");
 		}
 		this.init(url, charset);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 */
 	public GroupedSet(String pathBaseClassLoader) {
 		this(pathBaseClassLoader, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/*--------------------------公有方法 start-------------------------------*/
 	/**
 	 * 初始化设定文件
@@ -140,7 +154,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 
 		return this.load(groupedSetUrl);
 	}
-	
+
 	/**
 	 * 加载设置文件
 	 * 
@@ -151,27 +165,27 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 		if (groupedSetUrl == null) {
 			throw new RuntimeException("Null GroupSet url define!");
 		}
-//		log.debug("Load GroupSet file [{}]", groupedSetUrl.getPath());
+		// log.debug("Load GroupSet file [{}]", groupedSetUrl.getPath());
 		InputStream settingStream = null;
 		try {
 			settingStream = groupedSetUrl.openStream();
 			load(settingStream);
 		} catch (IOException e) {
-//			log.error(e, "Load GroupSet error!");
+			// log.error(e, "Load GroupSet error!");
 			return false;
 		} finally {
 			IoUtil.close(settingStream);
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 重新加载配置文件
 	 */
 	public void reload() {
 		this.load(groupedSetUrl);
 	}
-	
+
 	/**
 	 * 加载设置文件。 此方法不会关闭流对象
 	 * 
@@ -187,7 +201,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 			// 分组
 			String group = null;
 			LinkedHashSet<String> valueSet = null;
-			
+
 			while (true) {
 				String line = reader.readLine();
 				if (line == null) {
@@ -196,28 +210,28 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 				line = line.trim();
 				// 跳过注释行和空行
 				if (StrUtil.isBlank(line) || line.startsWith(COMMENT_FLAG_PRE)) {
-					//空行和注释忽略
+					// 空行和注释忽略
 					continue;
-				}else if(line.startsWith(StrUtil.BACKSLASH + COMMENT_FLAG_PRE)) {
-					//对于值中出现开头为#的字符串，需要转义处理，在此做反转义
+				} else if (line.startsWith(StrUtil.BACKSLASH + COMMENT_FLAG_PRE)) {
+					// 对于值中出现开头为#的字符串，需要转义处理，在此做反转义
 					line = line.substring(1);
 				}
-				
+
 				// 记录分组名
 				if (line.charAt(0) == GROUP_SURROUND[0] && line.charAt(line.length() - 1) == GROUP_SURROUND[1]) {
-					//开始新的分组取值，当出现重名分组时候，合并分组值
+					// 开始新的分组取值，当出现重名分组时候，合并分组值
 					group = line.substring(1, line.length() - 1).trim();
 					valueSet = super.get(group);
-					if(null == valueSet) {
+					if (null == valueSet) {
 						valueSet = new LinkedHashSet<String>();
 					}
 					super.put(group, valueSet);
 					continue;
 				}
-				
-				//添加值
-				if(null == valueSet) {
-					//当出现无分组值的时候，会导致valueSet为空，此时group为""
+
+				// 添加值
+				if (null == valueSet) {
+					// 当出现无分组值的时候，会导致valueSet为空，此时group为""
 					valueSet = new LinkedHashSet<String>();
 					super.put(StrUtil.EMPTY, valueSet);
 				}
@@ -228,71 +242,74 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @return 获得设定文件的路径
 	 */
 	public String getPath() {
 		return groupedSetUrl.getPath();
 	}
-	
+
 	/**
 	 * @return 获得所有分组名
 	 */
 	public Set<String> getGroups() {
 		return super.keySet();
 	}
-	
+
 	/**
 	 * 获得对应分组的所有值
+	 * 
 	 * @param group 分组名
 	 * @return 分组的值集合
 	 */
 	public LinkedHashSet<String> getValues(String group) {
-		if(group == null) {
+		if (group == null) {
 			group = StrUtil.EMPTY;
 		}
 		return super.get(group);
 	}
-	
+
 	/**
 	 * 是否在给定分组的集合中包含指定值<br>
 	 * 如果给定分组对应集合不存在，则返回false
+	 * 
 	 * @param group 分组名
 	 * @param value 测试的值
 	 * @param otherValues 其他值
 	 * @return 是否包含
 	 */
 	public boolean contains(String group, String value, String... otherValues) {
-		if(ArrayUtil.isNotEmpty(otherValues)) {
-			//需要测试多个值的情况
+		if (ArrayUtil.isNotEmpty(otherValues)) {
+			// 需要测试多个值的情况
 			final List<String> valueList = Arrays.asList(otherValues);
 			valueList.add(value);
 			return contains(group, valueList);
-		}else {
-			//测试单个值
+		} else {
+			// 测试单个值
 			final LinkedHashSet<String> valueSet = getValues(group);
-			if(CollectionUtil.isEmpty(valueSet)) {
+			if (CollectionUtil.isEmpty(valueSet)) {
 				return false;
 			}
-			
+
 			return valueSet.contains(value);
 		}
 	}
-	
+
 	/**
 	 * 是否在给定分组的集合中全部包含指定值集合<br>
 	 * 如果给定分组对应集合不存在，则返回false
+	 * 
 	 * @param group 分组名
 	 * @param values 测试的值集合
 	 * @return 是否包含
 	 */
 	public boolean contains(String group, Collection<String> values) {
 		final LinkedHashSet<String> valueSet = getValues(group);
-		if(CollectionUtil.isEmpty(values) || CollectionUtil.isEmpty(valueSet)) {
+		if (CollectionUtil.isEmpty(values) || CollectionUtil.isEmpty(valueSet)) {
 			return false;
 		}
-		
+
 		return valueSet.containsAll(values);
 	}
 }
