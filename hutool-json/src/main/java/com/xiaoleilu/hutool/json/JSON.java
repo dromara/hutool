@@ -52,7 +52,7 @@ public interface JSON {
 	 * 
 	 * 获取表达式对应值后转换为对应类型的值
 	 * 
-	 * @param <T>返回值类型
+	 * @param <T> 返回值类型
 	 * @param expression 表达式
 	 * @param resultType 返回值类型
 	 * @return 对象

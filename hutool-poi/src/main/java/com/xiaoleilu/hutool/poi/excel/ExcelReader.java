@@ -128,7 +128,6 @@ public class ExcelReader {
 	/**
 	 * 读取工作簿中指定的Sheet的所有行列数据
 	 * 
-	 * @param startRowIndex 起始行
 	 * @return 行的集合，一行使用List表示
 	 */
 	public List<List<Object>> read() {

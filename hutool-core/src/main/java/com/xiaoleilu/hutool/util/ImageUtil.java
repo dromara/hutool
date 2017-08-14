@@ -77,8 +77,7 @@ public class ImageUtil {
 	 * 
 	 * @param srcStream 源图像来源流
 	 * @param destStream 缩放后的图像写出到的流
-	 * @param scale 缩放比例
-	 * @param isZoomIn 缩放选择:true 放大; false 缩小;
+	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 * @since 3.0.9
 	 */
 	public static void scale(InputStream srcStream, OutputStream destStream, float scale) {
@@ -346,7 +345,6 @@ public class ImageUtil {
 	 * 图像切割(按指定起点坐标和宽高切割)
 	 * 
 	 * @param srcImage 源图像
-	 * @param destImageStream 切片后的图像输出流
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
 	 * @since 3.1.0
 	 */
