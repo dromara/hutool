@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.poi.excel;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +25,15 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class ExcelReader {
 
+	/** Excel中对应的Sheet */
+	private Sheet sheet;
+	
 	/** 是否忽略空行 */
 	private boolean ignoreEmptyRow;
 	/** 是否去除单元格元素两边空格 */
 	private boolean trimCellValue;
 	/** 标题别名 */
-	private Map<String, String> headerAlias;
-	private Sheet sheet;
+	private Map<String, String> headerAlias = new HashMap<>();
 
 	// ------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -121,6 +124,44 @@ public class ExcelReader {
 	 */
 	public ExcelReader setTrimCellValue(boolean trimCellValue) {
 		this.trimCellValue = trimCellValue;
+		return this;
+	}
+	
+	/**
+	 * 获得标题行的别名Map
+	 * @return 别名Map
+	 */
+	public Map<String, String> getHeaderAlias() {
+		return headerAlias;
+	}
+
+	/**
+	 * 设置标题行的别名Map
+	 * @param headerAlias 别名Map
+	 */
+	public ExcelReader setHeaderAlias(Map<String, String> headerAlias) {
+		this.headerAlias = headerAlias;
+		return this;
+	}
+	
+	/**
+	 * 增加标题别名
+	 * @param header 标题
+	 * @param alias 别名
+	 * @return this
+	 */
+	public ExcelReader addHeaderAlias(String header, String alias) {
+		this.headerAlias.put(header, alias);
+		return this;
+	}
+	
+	/**
+	 * 去除标题别名
+	 * @param header 标题
+	 * @return this
+	 */
+	public ExcelReader removeHeaderAlias(String header) {
+		this.headerAlias.remove(header);
 		return this;
 	}
 	// ------------------------------------------------------------------------------------------------------- Getters and Setters end

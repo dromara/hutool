@@ -27,7 +27,7 @@ public class RangeTest {
 				if(current.isAfterOrEquals(end)) {
 					return null;
 				}
-				return current.offset(DateField.DAY_OF_YEAR, 1);
+				return current.offsetNew(DateField.DAY_OF_YEAR, 1);
 			}
 			
 		});
