@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.poi.excel;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,26 @@ public class ExcelReader {
 	private Map<String, String> headerAlias = new HashMap<>();
 
 	// ------------------------------------------------------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 * 
+	 * @param bookFile Excel文件
+	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 */
+	public ExcelReader(File bookFile, int sheetIndex) {
+		this(ExcelUtil.loadBook(bookFile), sheetIndex);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param bookFile Excel文件
+	 * @param sheetName sheet名，第一个默认是sheet1
+	 */
+	public ExcelReader(File bookFile, String sheetName) {
+		this(ExcelUtil.loadBook(bookFile), sheetName);
+	}
+	
 	/**
 	 * 构造
 	 * 

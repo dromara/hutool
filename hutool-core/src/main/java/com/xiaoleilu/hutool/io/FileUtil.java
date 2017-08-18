@@ -1121,13 +1121,32 @@ public final class FileUtil {
 
 	/**
 	 * 修复路径<br>
+	 * 如果原路径尾部有分隔符，则保留为标准分隔符（/），否则不保留
 	 * <ol>
 	 * <li>1. 统一用 /</li>
 	 * <li>2. 多个 / 转换为一个 /</li>
 	 * <li>3. 去除两边空格</li>
-	 * <li>4. .. 和 . 转换为绝对路径</li>
-	 * <li>5. 去掉前缀，例如file:</li>
+	 * <li>4. .. 和 . 转换为绝对路径，当..多于已有路径时，直接返回根路径</li>
 	 * </ol>
+	 * 
+	 * 栗子：
+	 * <pre>
+	 * "/foo//" =》 "/foo/"
+	 * "/foo/./" =》 "/foo/"
+	 * "/foo/../bar" =》 "/bar"
+	 * "/foo/../bar/" =》 "/bar/"
+	 * "/foo/../bar/../baz" =》 "/baz"
+	 * "/../" =》 "/"
+	 * "foo/bar/.." =》 "foo"
+	 * "foo/../bar" =》 "bar"
+	 * "foo/../../bar" =》 "bar"
+	 * "//server/foo/../bar" =》 "/server/bar"
+	 * "//server/../bar" =》 "/bar"
+	 * "C:\\foo\\..\\bar" =》 "C:/bar"
+	 * "C:\\..\\bar" =》 "C:/bar"
+	 * "~/foo/../bar/" =》 "~/bar/"
+	 * "~/../bar" =》 "bar"
+	 * </pre>
 	 * 
 	 * @param path 原路径
 	 * @return 修复后的路径
@@ -1140,16 +1159,14 @@ public final class FileUtil {
 
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		String prefix = "";
-		if (prefixIndex != -1) {
+		if (prefixIndex > -1) {
 			prefix = pathToUse.substring(0, prefixIndex + 1);
-			if (prefix.contains("/")) {
-				prefix = "";
-			} else {
+			if (false == prefix.contains("/")) {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
 			}
 		}
 		if (pathToUse.startsWith(StrUtil.SLASH)) {
-			prefix = prefix + StrUtil.SLASH;
+			prefix += StrUtil.SLASH;
 			pathToUse = pathToUse.substring(1);
 		}
 
@@ -1157,8 +1174,9 @@ public final class FileUtil {
 		List<String> pathElements = new LinkedList<String>();
 		int tops = 0;
 
+		String element;
 		for (int i = pathList.size() - 1; i >= 0; i--) {
-			String element = pathList.get(i);
+			element = pathList.get(i);
 			if (StrUtil.DOT.equals(element)) {
 				// 当前目录，丢弃
 			} else if (StrUtil.DOUBLE_DOT.equals(element)) {
@@ -1172,11 +1190,6 @@ public final class FileUtil {
 					pathElements.add(0, element);
 				}
 			}
-		}
-
-		// Remaining top paths need to be retained.
-		for (int i = 0; i < tops; i++) {
-			pathElements.add(0, StrUtil.DOUBLE_DOT);
 		}
 
 		return prefix + CollectionUtil.join(pathElements, StrUtil.SLASH);

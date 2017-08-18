@@ -32,4 +32,38 @@ public class PoiTest {
 			Console.log(map);
 		}
 	}
+	
+	@Test
+	public void excelReadToBeanListTest() {
+		ExcelReader reader = new ExcelReader(FileUtil.getInputStream("d:/dwdm.xls"), 0);
+		reader.addHeaderAlias("BH", "bh");
+		reader.addHeaderAlias("ZDZ", "dwmc");
+		
+		List<Dw> all = reader.readAll(Dw.class);
+		for (Dw dw : all) {
+			Console.log(dw);
+		}
+	}
+	
+	public static class Dw{
+		private String bh;
+		private String dwmc;
+		public String getBh() {
+			return bh;
+		}
+		public void setBh(String bh) {
+			this.bh = bh;
+		}
+		public String getDwMc() {
+			return dwmc;
+		}
+		public void setDwmc(String dwmc) {
+			this.dwmc = dwmc;
+		}
+		
+		@Override
+		public String toString() {
+			return "Dw [bh=" + bh + ", dwmc=" + dwmc + "]";
+		}
+	}
 }

@@ -27,10 +27,14 @@ public class CollectionUtilTest {
 		
 		final String[] keys = v1.keySet().toArray(new String[v1.size()]);
 		ArrayList<Object> v1s = CollectionUtil.valuesOfKeys(v1, keys);
-		Assert.assertEquals(v1s, CollectionUtil.newArrayList(12, 23, "张三"));
+		Assert.assertTrue(v1s.contains(12));
+		Assert.assertTrue(v1s.contains(23));
+		Assert.assertTrue(v1s.contains("张三"));
 
 		ArrayList<Object> v2s = CollectionUtil.valuesOfKeys(v2, keys);
-		Assert.assertEquals(v2s, CollectionUtil.newArrayList(15, 13, "李四"));
+		Assert.assertTrue(v2s.contains(15));
+		Assert.assertTrue(v2s.contains(13));
+		Assert.assertTrue(v2s.contains("李四"));
 	}
 	
 	@Test

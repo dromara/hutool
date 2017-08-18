@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.poi.excel;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
@@ -42,7 +43,32 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class ExcelUtil {
-
+	
+	/**
+	 * 加载工作簿
+	 * 
+	 * @param excelFile Excel文件
+	 * @return {@link Workbook}
+	 */
+	public static Workbook loadBook(File excelFile) {
+		return loadBook(excelFile, null);
+	}
+	
+	/**
+	 * 加载工作簿
+	 * 
+	 * @param excelFile Excel文件
+	 * @param password Excel工作簿密码，如果无密码传{@code null}
+	 * @return {@link Workbook}
+	 */
+	public static Workbook loadBook(File excelFile, String password) {
+		try {
+			return WorkbookFactory.create(excelFile, password);
+		} catch (Exception e) {
+			throw new POIException(e);
+		}
+	}
+	
 	/**
 	 * 加载工作簿
 	 * 
