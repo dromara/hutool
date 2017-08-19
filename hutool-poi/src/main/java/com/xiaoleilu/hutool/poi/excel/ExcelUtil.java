@@ -32,6 +32,7 @@ import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
 import com.xiaoleilu.hutool.poi.exceptions.POIException;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -125,6 +126,17 @@ public class ExcelUtil {
 	public static Object getCellValue(Cell cell, boolean isTrimCellValue) {
 		return getCellValue(cell, cell.getCellTypeEnum(), isTrimCellValue);
 	}
+	
+	/**
+	 * 获取单元格值
+	 * 
+	 * @param cell {@link Cell}单元格
+	 * @param cellValueEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
+	 * @return 值，类型可能为：Date、Double、Boolean、String
+	 */
+	public static Object getCellValue(Cell cell, CellEditor cellEditor) {
+		return getCellValue(cell, cell.getCellTypeEnum(), cellEditor);
+	}
 
 	/**
 	 * 获取单元格值
@@ -134,23 +146,43 @@ public class ExcelUtil {
 	 * @param isTrimCellValue 如果单元格类型为字符串，是否去掉两边空白符
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
-	public static Object getCellValue(Cell cell, CellType cellType, boolean isTrimCellValue) {
+	public static Object getCellValue(Cell cell, CellType cellType, final boolean isTrimCellValue) {
+		return getCellValue(cell, cellType, isTrimCellValue ? new TrimEditor() : null);
+	}
+	
+	/**
+	 * 获取单元格值
+	 * 
+	 * @param cell {@link Cell}单元格
+	 * @param cellType 单元格值类型{@link CellType}枚举
+	 * @param cellValueEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
+	 * @return 值，类型可能为：Date、Double、Boolean、String
+	 */
+	public static Object getCellValue(Cell cell, CellType cellType, CellEditor cellEditor) {
+		Object value;
 		switch (cellType) {
 			case NUMERIC:
 				if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
-					return cell.getDateCellValue();
+					value = cell.getDateCellValue();
+				}else {
+					value = cell.getNumericCellValue();
 				}
-				return cell.getNumericCellValue();
+				break;
 			case BOOLEAN:
-				return cell.getBooleanCellValue();
+				value = cell.getBooleanCellValue();
+				break;
 			case FORMULA:
 				//遇到公式时查找公式结果类型
-				return getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), isTrimCellValue);
+				value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), cellEditor);
+				break;
 			case BLANK:
-				return StrUtil.EMPTY;
+				value = StrUtil.EMPTY;
+				break;
 			default:
-				return isTrimCellValue ? StrUtil.trim(cell.getStringCellValue()) : cell.getStringCellValue();
+				value = cell.getStringCellValue(); 
 		}
+		
+		return null == cellEditor ? value : cellEditor.edit(cell, value);
 	}
 
 	/**

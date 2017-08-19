@@ -14,6 +14,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.xiaoleilu.hutool.collection.IterUtil;
+import com.xiaoleilu.hutool.poi.excel.editors.NumericToLongEditor;
+import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -31,8 +33,8 @@ public class ExcelReader {
 	
 	/** 是否忽略空行 */
 	private boolean ignoreEmptyRow;
-	/** 是否去除单元格元素两边空格 */
-	private boolean trimCellValue;
+	/** 单元格值处理接口 */
+	private CellEditor cellEditor;
 	/** 标题别名 */
 	private Map<String, String> headerAlias = new HashMap<>();
 
@@ -129,22 +131,16 @@ public class ExcelReader {
 	}
 
 	/**
-	 * 是否去掉单元格值两边空格
+	 * 设置单元格值处理逻辑<br>
+	 * 当Excel中的值并不能满足我们的读取要求时，通过传入一个编辑接口，可以对单元格值自定义，例如对数字和日期类型值转换为字符串等
 	 * 
-	 * @return 是否去掉单元格值两边空格
-	 */
-	public boolean isTrimCellValue() {
-		return trimCellValue;
-	}
-
-	/**
-	 * 设置是否去掉单元格值两边空格
-	 * 
-	 * @param trimCellValue 是否去掉单元格值两边空格
+	 * @param cellValueEditor 单元格值处理接口
 	 * @return this
+	 * @see TrimEditor
+	 * @see NumericToLongEditor
 	 */
-	public ExcelReader setTrimCellValue(boolean trimCellValue) {
-		this.trimCellValue = trimCellValue;
+	public ExcelReader setCellEditor(CellEditor cellEditor) {
+		this.cellEditor = cellEditor;
 		return this;
 	}
 	
@@ -315,7 +311,7 @@ public class ExcelReader {
 			Cell cell;
 			while (celIter.hasNext()) {
 				cell = celIter.next();
-				cellValues.add(ExcelUtil.getCellValue(cell, this.trimCellValue));
+				cellValues.add(ExcelUtil.getCellValue(cell, cellEditor));
 			}
 		}
 		return cellValues;
