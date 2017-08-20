@@ -134,7 +134,7 @@ public class ExcelReader {
 	 * 设置单元格值处理逻辑<br>
 	 * 当Excel中的值并不能满足我们的读取要求时，通过传入一个编辑接口，可以对单元格值自定义，例如对数字和日期类型值转换为字符串等
 	 * 
-	 * @param cellValueEditor 单元格值处理接口
+	 * @param cellEditor 单元格值处理接口
 	 * @return this
 	 * @see TrimEditor
 	 * @see NumericToLongEditor

@@ -23,7 +23,7 @@ public class PoiTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void excelReadToMapListTest() {
 		ExcelReader reader = new ExcelReader(FileUtil.getInputStream("d:/dwdm.xls"), 0);
 		reader.addHeaderAlias("BH", "编号");
@@ -36,7 +36,7 @@ public class PoiTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void excelReadToBeanListTest() {
 		ExcelReader reader = new ExcelReader(FileUtil.getInputStream("d:/dwdm.xls"), 0);
 		reader.addHeaderAlias("BH", "bh");

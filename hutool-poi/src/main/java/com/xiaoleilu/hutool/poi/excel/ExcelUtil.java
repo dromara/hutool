@@ -46,6 +46,66 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class ExcelUtil {
 	
 	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
+	 * 默认调用第一个sheet
+	 * @param bookFile Excel文件
+	 * @return {@link ExcelReader}
+	 */
+	public static ExcelReader getReader(File bookFile) {
+		return getReader(bookFile, 0);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * @param bookFile Excel文件
+	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 * @return {@link ExcelReader}
+	 */
+	public static ExcelReader getReader(File bookFile, int sheetIndex) {
+		return new ExcelReader(bookFile, sheetIndex);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * @param bookFile Excel文件
+	 * @param sheetName sheet名，第一个默认是sheet1
+	 * @return {@link ExcelReader}
+	 */
+	public static ExcelReader getReader(File bookFile, String sheetName) {
+		return new ExcelReader(bookFile, sheetName);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
+	 * 默认调用第一个sheet
+	 * @param bookStream Excel文件的流
+	 * @return {@link ExcelReader}
+	 */
+	public static ExcelReader getReader(InputStream bookStream) {
+		return getReader(bookStream, 0);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * @param bookStream Excel文件的流
+	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 * @return {@link ExcelReader}
+	 */
+	public static ExcelReader getReader(InputStream bookStream, int sheetIndex) {
+		return new ExcelReader(bookStream, sheetIndex);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * @param bookStream Excel文件的流
+	 * @param sheetName sheet名，第一个默认是sheet1
+	 * @return {@link ExcelReader}
+	 */
+	public static ExcelReader getReader(InputStream bookStream, String sheetName) {
+		return new ExcelReader(bookStream, sheetName);
+	}
+	
+	/**
 	 * 加载工作簿
 	 * 
 	 * @param excelFile Excel文件
