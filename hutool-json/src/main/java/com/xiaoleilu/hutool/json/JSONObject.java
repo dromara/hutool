@@ -314,6 +314,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	public Object getByExp(String expression) {
 		return BeanResolver.resolveBean(this, expression);
 	}
+	
+	@Override
+	public <T> T getByExp(String expression, Class<T> resultType) {
+		return Convert.convert(resultType, getByExp(expression));
+	}
 
 	/**
 	 * PUT 键值对到JSONObject中，如果值为<code>null</code>，将此键移除

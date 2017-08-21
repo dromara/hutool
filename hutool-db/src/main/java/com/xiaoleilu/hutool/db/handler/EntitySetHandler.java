@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import com.xiaoleilu.hutool.db.Entity;
 
 /**
- * 结果集处理类 ，处理出的结果为Entity列表
+ * 结果集处理类 ，处理出的结果为Entity列表，结果不能重复（按照Entity对象去重）
  * @author loolly
  *
  */

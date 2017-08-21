@@ -6,7 +6,7 @@
 
 	<groupId>com.xiaoleilu</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>3.0.9</version>
+	<version>3.1.0</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
@@ -29,6 +29,7 @@
 		<module>hutool-system</module>
 		<module>hutool-geo</module>
 		<module>hutool-json</module>
+		<module>hutool-poi</module>
 	</modules>
 
 	<properties>
@@ -38,12 +39,6 @@
 		<!-- versions -->
 		<junit.version>4.12</junit.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
-		<slf4j.version>1.7.25</slf4j.version>
-		<logback.version>1.2.3</logback.version>
-		<log4j.version>1.2.17</log4j.version>
-		<log4j2.version>2.8.2</log4j2.version>
-		<commons-logging.version>1.2</commons-logging.version>
-		<tinylog.version>1.2</tinylog.version>
 	</properties>
 
 	<dependencies>
@@ -61,42 +56,6 @@
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servlet-api.version}</version>
-			</dependency>
-			<!-- Slf4j -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<!-- LogBack -->
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<!-- Log4j 1.2 -->
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j.version}</version>
-			</dependency>
-			<!-- Log4j 2 -->
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-core</artifactId>
-				<version>${log4j2.version}</version>
-			</dependency>
-			<!-- Apache Commons Logging -->
-			<dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging</artifactId>
-				<version>${commons-logging.version}</version>
-			</dependency>
-			<!-- tinylog -->
-			<dependency>
-				<groupId>org.tinylog</groupId>
-				<artifactId>tinylog</artifactId>
-				<version>${tinylog.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

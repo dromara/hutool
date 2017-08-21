@@ -238,6 +238,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(Object obj){
+		if(obj instanceof String) {
+			return (String)obj;
+		}
 		return toJsonStr(parse(obj));
 	}
 	

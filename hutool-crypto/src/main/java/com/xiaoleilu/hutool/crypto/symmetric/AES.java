@@ -7,9 +7,11 @@ import com.xiaoleilu.hutool.crypto.Padding;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * AES加密算法实现
+ * AES加密算法实现<br>
+ * 高级加密标准（英语：Advanced Encryption Standard，缩写：AES），在密码学中又称Rijndael加密法
+ * 
  * @author Looly
- *@since 3.0.8
+ * @since 3.0.8
  */
 public class AES extends SymmetricCrypto{
 	

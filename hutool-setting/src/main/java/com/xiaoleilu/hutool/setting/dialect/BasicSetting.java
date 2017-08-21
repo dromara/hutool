@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.setting.dialect;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.Collection;
@@ -163,7 +164,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 				watchMonitor = WatchMonitor.create(this.settingUrl, StandardWatchEventKinds.ENTRY_MODIFY);
 				watchMonitor.setWatcher(new SimpleWatcher(){
 					@Override
-					public void onModify(WatchEvent<?> event) {
+					public void onModify(WatchEvent<?> event, Path currentPath) {
 						load();
 					}
 				}).start();

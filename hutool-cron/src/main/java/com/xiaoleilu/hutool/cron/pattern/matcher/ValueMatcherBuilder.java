@@ -26,7 +26,8 @@ public class ValueMatcherBuilder {
 	 * @return List
 	 */
 	public static ValueMatcher build(String value, ValueParser parser) {
-		if (value.length() == 1 && value.equals("*")) {
+		if (1 == value.length() && ("*".equals(value) || "?".equals(value))) {
+			//兼容Quartz的"?"表达式，不会出现互斥情况，与"*"作用相同
 			return new AlwaysTrueValueMatcher();
 		}
 

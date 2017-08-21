@@ -48,7 +48,14 @@ public class ArrayUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isEmpty(final Object array) {
-		return array == null || (false == isArray(array)) || Array.getLength(array) == 0;
+		if(null == array) {
+			return true;
+		}else if(false == isArray(array)) {
+			//非数组，理解为此对象为数组的第一个元素
+			return false;
+		}else {
+			return 0 == Array.getLength(array);
+		}
 	}
 
 	/**
@@ -341,7 +348,8 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 生成一个新的重新设置大小的数组
+	 * 生成一个新的重新设置大小的数组<br>
+	 * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，缩小则截断
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param buffer 原数组
@@ -359,7 +367,7 @@ public class ArrayUtil {
 
 	/**
 	 * 生成一个新的重新设置大小的数组<br>
-	 * 新数组的类型为原数组的类型
+	 * 新数组的类型为原数组的类型，调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，缩小则截断
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param buffer 原数组
@@ -1331,12 +1339,12 @@ public class ArrayUtil {
 	 * 对象是否为数组对象
 	 * 
 	 * @param obj 对象
-	 * @return 是否为数组对象
-	 * @throws NullPointerException 提供被监测的对象为<code>null</code>
+	 * @return 是否为数组对象，如果为{@code null} 返回false
 	 */
 	public static boolean isArray(Object obj) {
 		if (null == obj) {
-			throw new NullPointerException("Object check for isArray is null");
+//			throw new NullPointerException("Object check for isArray is null");
+			return false;
 		}
 		return obj.getClass().isArray();
 	}

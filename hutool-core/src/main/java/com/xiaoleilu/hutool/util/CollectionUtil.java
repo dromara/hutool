@@ -25,13 +25,14 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.xiaoleilu.hutool.collection.EnumerationIterator;
+import com.xiaoleilu.hutool.collection.IterUtil;
 import com.xiaoleilu.hutool.collection.IteratorEnumeration;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
 import com.xiaoleilu.hutool.lang.Editor;
+import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Matcher;
 
 /**
@@ -66,8 +67,11 @@ public class CollectionUtil {
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
+			elts.addAll(coll1);
+			int m;
 			for (T t : elts) {
-				for (int i = 0, m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+				m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
+				for (int i = 0; i < m; i++) {
 					list.add(t);
 				}
 			}
@@ -113,8 +117,10 @@ public class CollectionUtil {
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
+			int m;
 			for (T t : elts) {
-				for (int i = 0, m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+				m = Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0));
+				for (int i = 0; i < m; i++) {
 					list.add(t);
 				}
 			}
@@ -166,8 +172,11 @@ public class CollectionUtil {
 			final Map<T, Integer> map1 = countMap(coll1);
 			final Map<T, Integer> map2 = countMap(coll2);
 			final Set<T> elts = newHashSet(coll2);
+			elts.addAll(coll1);
+			int m;
 			for (T t : elts) {
-				for (int i = 0, m = Math.max(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)) - Math.min(Convert.toInt(map1.get(t), 0), Convert.toInt(map2.get(t), 0)); i < m; i++) {
+				m = Math.abs(Convert.toInt(map1.get(t), 0) - Convert.toInt(map2.get(t), 0));
+				for (int i = 0; i < m; i++) {
 					list.add(t);
 				}
 			}
@@ -215,75 +224,43 @@ public class CollectionUtil {
 	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @return {@link Map}
+	 * @see IterUtil#countMap(Iterable)
 	 */
-	public static <T> Map<T, Integer> countMap(Collection<T> collection) {
-		HashMap<T, Integer> countMap = new HashMap<>();
-		Integer count;
-		for (T t : collection) {
-			count = countMap.get(t);
-			if (null == count) {
-				countMap.put(t, 1);
-			} else {
-				countMap.put(t, count + 1);
-			}
-		}
-		return countMap;
+	public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
+		return IterUtil.countMap(collection);
 	}
 
 	/**
-	 * 以 conjunction 为分隔符将集合转换为字符串
+	 * 以 conjunction 为分隔符将集合转换为字符串<br>
+	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param iterable {@link Iterable}
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
+	 * @see IterUtil#join(Iterable, CharSequence)
 	 */
 	public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
-		if (null == iterable) {
-			return null;
-		}
-		return join(iterable.iterator(), conjunction);
+		return IterUtil.join(iterable, conjunction);
 	}
 
 	/**
-	 * 以 conjunction 为分隔符将集合转换为字符串
+	 * 以 conjunction 为分隔符将集合转换为字符串<br>
+	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param iterator 集合
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
+	 * @see IterUtil#join(Iterator, CharSequence)
 	 */
 	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
-		if (null == iterator) {
-			return null;
-		}
-
-		final StringBuilder sb = new StringBuilder();
-		boolean isFirst = true;
-		T item;
-		while (iterator.hasNext()) {
-			if (isFirst) {
-				isFirst = false;
-			} else {
-				sb.append(conjunction);
-			}
-
-			item = iterator.next();
-			if (ArrayUtil.isArray(item)) {
-				sb.append(ArrayUtil.join(ArrayUtil.wrap(item), conjunction));
-			} else if (item instanceof Iterable<?>) {
-				sb.append(join((Iterable<?>) item, conjunction));
-			} else if (item instanceof Iterator<?>) {
-				sb.append(join((Iterator<?>) item, conjunction));
-			} else {
-				sb.append(item);
-			}
-		}
-		return sb.toString();
+		return IterUtil.join(iterator, conjunction);
 	}
 
 	/**
-	 * 切取部分数据
+	 * 切取部分数据<br>
+	 * 切取后的栈将减少这些元素
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param surplusAlaDatas 原数据
@@ -311,7 +288,8 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * 切取部分数据
+	 * 切取部分数据<br>
+	 * 切取后的栈将减少这些元素
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param surplusAlaDatas 原数据
@@ -509,7 +487,21 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * 新建一个ArrayList
+	 * 新建一个ArrayList<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @return ArrayList对象
+	 * @since 3.1.0
+	 */
+	public static <T> ArrayList<T> newArrayList(Iterable<T> iterable) {
+		return (null == iterable) ? new ArrayList<T>() : newArrayList(iterable.iterator());
+	}
+
+	/**
+	 * 新建一个ArrayList<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param iter {@link Iterator}
@@ -528,7 +520,8 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * 新建一个ArrayList
+	 * 新建一个ArrayList<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param enumration {@link Enumeration}
@@ -723,7 +716,12 @@ public class CollectionUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤会改变原集合的内容
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param collection 集合
@@ -745,7 +743,125 @@ public class CollectionUtil {
 	}
 
 	/**
-	 * 过滤
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
+	 * </pre>
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param filter 过滤器
+	 * @return 过滤后的数组
+	 * @since 3.1.0
+	 */
+	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
+		Collection<T> collection2 = ObjectUtil.clone(collection);
+		collection2.clear();
+
+		for (T t : collection) {
+			if (filter.accept(t)) {
+				collection2.add(t);
+			}
+		}
+		return collection2;
+	}
+
+	/**
+	 * 通过Editor抽取集合元素中的某些值返回为新列表<br>
+	 * 例如提供的是一个Bean列表，通过Editor接口实现获取某个字段值，返回这个字段值组成的新列表
+	 * 
+	 * @param collection 原集合
+	 * @param editor 编辑器
+	 * @return 抽取后的新列表
+	 */
+	public static List<Object> extract(Iterable<?> collection, Editor<Object> editor) {
+		final List<Object> fieldValueList = new ArrayList<>();
+		for (Object bean : collection) {
+			fieldValueList.add(editor.edit(bean));
+		}
+		return fieldValueList;
+	}
+
+	/**
+	 * 获取给定Bean列表中指定字段名对应字段值的列表<br>
+	 * 列表元素支持Bean与Map
+	 * 
+	 * @param collection Bean集合或Map集合
+	 * @param fieldName 字段名或map的键
+	 * @return 字段值列表
+	 * @since 3.1.0
+	 */
+	public static List<Object> getFieldValues(Iterable<?> collection, final String fieldName) {
+		return extract(collection, new Editor<Object>(){
+			@Override
+			public Object edit(Object bean) {
+				if (bean instanceof Map) {
+					return ((Map<?, ?>) bean).get(fieldName);
+				} else {
+					return ReflectUtil.getFieldValue(bean, fieldName);
+				}
+			}
+		});
+	}
+
+	/**
+	 * 查找第一个匹配元素对象
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合
+	 * @param filter 过滤器，满足过滤条件的第一个元素将被返回
+	 * @return 满足过滤条件的第一个元素
+	 * @since 3.1.0
+	 */
+	public static <T> T findOne(Iterable<T> collection, Filter<T> filter) {
+		for (T t : collection) {
+			if (filter.accept(t)) {
+				return t;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 查找第一个匹配元素对象<br>
+	 * 如果集合元素是Map，则比对键和值是否相同，相同则返回<br>
+	 * 如果为普通Bean，则通过反射比对元素字段名对应的字段值是否相同，相同则返回<br>
+	 * 如果给定字段值参数是{@code null} 且元素对象中的字段值也为{@code null}则认为相同
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection 集合，集合元素可以是Bean或者Map
+	 * @param fieldName 集合元素对象的字段名或map的键
+	 * @param fieldValue 集合元素对象的字段值或map的值
+	 * @return 满足条件的第一个元素
+	 * @since 3.1.0
+	 */
+	public static <T> T findOneByField(Iterable<T> collection, final String fieldName, final Object fieldValue) {
+		return findOne(collection, new Filter<T>(){
+			@Override
+			public boolean accept(T t) {
+				if (t instanceof Map) {
+					Map<?, ?> map = (Map<?, ?>) t;
+					final Object value = map.get(fieldValue);
+					return ObjectUtil.equal(value, fieldValue);
+				}
+
+				// 普通Bean
+				final Object value = ReflectUtil.getFieldValue(t, fieldName);
+				return ObjectUtil.equal(value, fieldValue);
+			}
+		});
+	}
+
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
 	 * 
 	 * @param <K> Key类型
 	 * @param <V> Value类型
@@ -754,13 +870,47 @@ public class CollectionUtil {
 	 * @return 过滤后的Map
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
-		Map<K, V> map2 = ObjectUtil.clone(map);
-		map2.clear();
+		final Map<K, V> map2 = ObjectUtil.clone(map);
+		if (isEmpty(map2)) {
+			return map2;
+		}
 
+		map2.clear();
 		Entry<K, V> modified;
 		for (Entry<K, V> entry : map.entrySet()) {
 			modified = editor.edit(entry);
 			if (null != modified) {
+				map2.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return map2;
+	}
+
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @param map Map
+	 * @param filter 编辑器接口
+	 * @return 过滤后的Map
+	 * @since 3.1.0
+	 */
+	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
+		final Map<K, V> map2 = ObjectUtil.clone(map);
+		if (isEmpty(map2)) {
+			return map2;
+		}
+
+		map2.clear();
+		for (Entry<K, V> entry : map.entrySet()) {
+			if (filter.accept(entry)) {
 				map2.put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -777,9 +927,11 @@ public class CollectionUtil {
 	 */
 	public static <T> int count(Iterable<T> iterable, Matcher<T> matcher) {
 		int count = 0;
-		for (T t : iterable) {
-			if (null == matcher || matcher.match(t)) {
-				count++;
+		if (null != iterable) {
+			for (T t : iterable) {
+				if (null == matcher || matcher.match(t)) {
+					count++;
+				}
 			}
 		}
 		return count;
@@ -811,9 +963,10 @@ public class CollectionUtil {
 	 * 
 	 * @param iterable Iterable对象
 	 * @return 是否为空
+	 * @see IterUtil#isEmpty(Iterable)
 	 */
 	public static boolean isEmpty(Iterable<?> iterable) {
-		return null == iterable || isEmpty(iterable.iterator());
+		return IterUtil.isEmpty(iterable);
 	}
 
 	/**
@@ -821,9 +974,10 @@ public class CollectionUtil {
 	 * 
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
+	 * @see IterUtil#isEmpty(Iterator)
 	 */
 	public static boolean isEmpty(Iterator<?> Iterator) {
-		return null == Iterator || false == Iterator.hasNext();
+		return IterUtil.isEmpty(Iterator);
 	}
 
 	/**
@@ -863,9 +1017,10 @@ public class CollectionUtil {
 	 * 
 	 * @param iterable Iterable对象
 	 * @return 是否为空
+	 * @see IterUtil#isNotEmpty(Iterable)
 	 */
 	public static boolean isNotEmpty(Iterable<?> iterable) {
-		return null != iterable && isNotEmpty(iterable.iterator());
+		return IterUtil.isNotEmpty(iterable);
 	}
 
 	/**
@@ -873,9 +1028,10 @@ public class CollectionUtil {
 	 * 
 	 * @param Iterator Iterator对象
 	 * @return 是否为空
+	 * @see IterUtil#isNotEmpty(Iterator)
 	 */
 	public static boolean isNotEmpty(Iterator<?> Iterator) {
-		return null != Iterator && Iterator.hasNext();
+		return IterUtil.isNotEmpty(Iterator);
 	}
 
 	/**
@@ -891,19 +1047,13 @@ public class CollectionUtil {
 	/**
 	 * 是否包含{@code null}元素
 	 * 
-	 * @param iterable 被检查的Iterable对象
+	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回false
 	 * @return 是否包含{@code null}元素
 	 * @since 3.0.7
+	 * @see IterUtil#hasNull(Iterable)
 	 */
 	public static boolean hasNull(Iterable<?> iterable) {
-		if (isNotEmpty(iterable)) {
-			for (Object element : iterable) {
-				if (null == element) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return IterUtil.hasNull(iterable);
 	}
 
 	// ---------------------------------------------------------------------- zip
@@ -980,17 +1130,12 @@ public class CollectionUtil {
 	 * 
 	 * @param <K> 键类型
 	 * @param <V> 值类型
-	 * @param entryCollection entry集合
+	 * @param entryIter entry集合
 	 * @return Map
+	 * @see IterUtil#toMap(Iterable)
 	 */
-	public static <K, V> HashMap<K, V> toMap(Collection<Entry<K, V>> entryCollection) {
-		final HashMap<K, V> map = new HashMap<K, V>();
-		if (isNotEmpty(entryCollection)) {
-			for (Entry<K, V> entry : entryCollection) {
-				map.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return map;
+	public static <K, V> HashMap<K, V> toMap(Iterable<Entry<K, V>> entryIter) {
+		return IterUtil.toMap(entryIter);
 	}
 
 	/**
@@ -1056,7 +1201,7 @@ public class CollectionUtil {
 		}
 		return map;
 	}
-
+	
 	/**
 	 * 将集合转换为排序后的TreeSet
 	 * 
@@ -1094,9 +1239,10 @@ public class CollectionUtil {
 	 * @param <E> 集合元素类型
 	 * @param e {@link Enumeration}
 	 * @return {@link Iterator}
+	 * @see IterUtil#asIterator(Enumeration)
 	 */
 	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
-		return new EnumerationIterator<E>(e);
+		return IterUtil.asIterator(e);
 	}
 
 	/**
@@ -1105,14 +1251,10 @@ public class CollectionUtil {
 	 * @param <E> 元素类型
 	 * @param iter {@link Iterator}
 	 * @return {@link Iterable}
+	 * @see IterUtil#asIterable(Iterator)
 	 */
 	public static <E> Iterable<E> asIterable(final Iterator<E> iter) {
-		return new Iterable<E>(){
-			@Override
-			public Iterator<E> iterator() {
-				return iter;
-			}
-		};
+		return IterUtil.asIterable(iter);
 	}
 
 	/**
@@ -1125,6 +1267,125 @@ public class CollectionUtil {
 	 */
 	public static <E> Collection<E> toCollection(Iterable<E> iterable) {
 		return (iterable instanceof Collection) ? (Collection<E>) iterable : newArrayList(iterable.iterator());
+	}
+
+	/**
+	 * 行转列，合并相同的键，值合并为列表<br>
+	 * 将Map列表中相同key的值组成列表做为Map的value<br>
+	 * 是{@link #toListMap(Map)}的逆方法<br>
+	 * 比如传入数据：
+	 * 
+	 * <pre>
+	 * [
+	 *  {a: 1, b: 1, c: 1}
+	 *  {a: 2, b: 2}
+	 *  {a: 3, b: 3}
+	 *  {a: 4}
+	 * ]
+	 * </pre>
+	 * 
+	 * 结果是：
+	 * 
+	 * <pre>
+	 * {
+	 *   a: [1,2,3,4]
+	 *   b: [1,2,3,]
+	 *   c: [1]
+	 * }
+	 * </pre>
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param mapList Map列表
+	 * @return Map
+	 */
+	public static <K, V> Map<K, List<V>> toMapList(Iterable<? extends Map<K, V>> mapList) {
+		final HashMap<K, List<V>> resultMap = new HashMap<>();
+		if (isEmpty(mapList)) {
+			return resultMap;
+		}
+
+		Set<Entry<K, V>> entrySet;
+		for (Map<K, V> map : mapList) {
+			entrySet = map.entrySet();
+			K key;
+			List<V> valueList;
+			for (Entry<K, V> entry : entrySet) {
+				key = entry.getKey();
+				valueList = resultMap.get(key);
+				if (null == valueList) {
+					valueList = newArrayList(entry.getValue());
+					resultMap.put(key, valueList);
+				} else {
+					valueList.add(entry.getValue());
+				}
+			}
+		}
+
+		return resultMap;
+	}
+
+	/**
+	 * 列转行。将Map中值列表分别按照其位置与key组成新的map。<br>
+	 * 是{@link #toMapList(Iterable)}的逆方法<br>
+	 * 比如传入数据：
+	 * 
+	 * <pre>
+	 * {
+	 *   a: [1,2,3,4]
+	 *   b: [1,2,3,]
+	 *   c: [1]
+	 * }
+	 * </pre>
+	 * 
+	 * 结果是：
+	 * 
+	 * <pre>
+	 * [
+	 *  {a: 1, b: 1, c: 1}
+	 *  {a: 2, b: 2}
+	 *  {a: 3, b: 3}
+	 *  {a: 4}
+	 * ]
+	 * </pre>
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param listMap 列表Map
+	 * @return Map列表
+	 */
+	public static <K, V> List<Map<K, V>> toListMap(Map<K, ? extends Iterable<V>> listMap) {
+		final List<Map<K, V>> resultList = new ArrayList<>();
+		if (isEmpty(listMap)) {
+			return resultList;
+		}
+
+		boolean isEnd = true;// 是否结束。标准是元素列表已耗尽
+		int index = 0;// 值索引
+		Map<K, V> map;
+		do {
+			isEnd = true;
+			map = new HashMap<>();
+			List<V> vList;
+			int vListSize;
+			for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
+				vList = newArrayList(entry.getValue());
+				vListSize = vList.size();
+				if (index < vListSize) {
+					map.put(entry.getKey(), vList.get(index));
+					if (index != vListSize - 1) {
+						// 当值列表中还有更多值（非最后一个），继续循环
+						isEnd = false;
+					}
+				}
+			}
+			if (false == map.isEmpty()) {
+				resultList.add(map);
+			}
+			index++;
+		} while (false == isEnd);
+
+		return resultList;
 	}
 
 	/**
@@ -1277,12 +1538,10 @@ public class CollectionUtil {
 	 * @param iterable {@link Iterable}
 	 * @return 第一个元素
 	 * @since 3.0.1
+	 * @see IterUtil#getFirst(Iterable)
 	 */
 	public static <T> T getFirst(Iterable<T> iterable) {
-		if (null != iterable) {
-			return getFirst(iterable.iterator());
-		}
-		return null;
+		return IterUtil.getFirst(iterable);
 	}
 
 	/**
@@ -1292,12 +1551,10 @@ public class CollectionUtil {
 	 * @param iterator {@link Iterator}
 	 * @return 第一个元素
 	 * @since 3.0.1
+	 * @see IterUtil#getFirst(Iterator)
 	 */
 	public static <T> T getFirst(Iterator<T> iterator) {
-		if (null != iterator && iterator.hasNext()) {
-			return iterator.next();
-		}
-		return null;
+		return IterUtil.getFirst(iterator);
 	}
 
 	/**
@@ -1306,13 +1563,10 @@ public class CollectionUtil {
 	 * @param iterable {@link Iterable}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @since 3.0.8
+	 * @see IterUtil#getElementType(Iterable)
 	 */
 	public static Class<?> getElementType(Iterable<?> iterable) {
-		if (null != iterable) {
-			Iterator<?> iterator = iterable.iterator();
-			return getElementType(iterator);
-		}
-		return null;
+		return IterUtil.getElementType(iterable);
 	}
 
 	/**
@@ -1321,18 +1575,10 @@ public class CollectionUtil {
 	 * @param iterator {@link Iterator}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 * @since 3.0.8
+	 * @see IterUtil#getElementType(Iterator)
 	 */
 	public static Class<?> getElementType(Iterator<?> iterator) {
-		if (null != iterator) {
-			Object t;
-			while (iterator.hasNext()) {
-				t = iterator.next();
-				if (null != t) {
-					return t.getClass();
-				}
-			}
-		}
-		return null;
+		return IterUtil.getElementType(iterator);
 	}
 
 	/**
@@ -1469,7 +1715,7 @@ public class CollectionUtil {
 		Collections.sort(list, comparator);
 		return list;
 	}
-	
+
 	/**
 	 * 针对List排序，排序会修改原List
 	 * 
@@ -1495,7 +1741,7 @@ public class CollectionUtil {
 	 * @since 3.0.9
 	 */
 	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
-		TreeMap<K, V> result = new TreeMap<K, V>(comparator);
+		final TreeMap<K, V> result = new TreeMap<K, V>(comparator);
 		result.putAll(map);
 		return result;
 	}
@@ -1513,14 +1759,14 @@ public class CollectionUtil {
 	public static <K, V> LinkedHashMap<K, V> sortToMap(Collection<Map.Entry<K, V>> entryCollection, Comparator<Map.Entry<K, V>> comparator) {
 		List<Map.Entry<K, V>> list = new LinkedList<>(entryCollection);
 		Collections.sort(list, comparator);
-		
+
 		LinkedHashMap<K, V> result = new LinkedHashMap<>();
-		for(Map.Entry<K, V> entry : list){
-				result.put(entry.getKey(), entry.getValue());
+		for (Map.Entry<K, V> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 通过Entry排序，可以按照键排序，也可以按照值排序，亦或者两者综合排序
 	 * 
@@ -1531,10 +1777,10 @@ public class CollectionUtil {
 	 * @return {@link LinkedList}
 	 * @since 3.0.9
 	 */
-	public static <K, V> LinkedHashMap<K, V> sortByEntry(Map<K, V> map, Comparator<Map.Entry<K, V>> comparator){
+	public static <K, V> LinkedHashMap<K, V> sortByEntry(Map<K, V> map, Comparator<Map.Entry<K, V>> comparator) {
 		return sortToMap(map.entrySet(), comparator);
 	}
-	
+
 	/**
 	 * 将Set排序（根据Entry的值）
 	 * 
@@ -1552,10 +1798,10 @@ public class CollectionUtil {
 			public int compare(Entry<K, V> o1, Entry<K, V> o2) {
 				V v1 = o1.getValue();
 				V v2 = o2.getValue();
-				
-				if(v1 instanceof Comparable) {
-					return ((Comparable)v1).compareTo(v2);
-				}else {
+
+				if (v1 instanceof Comparable) {
+					return ((Comparable) v1).compareTo(v2);
+				} else {
 					return v1.toString().compareTo(v2.toString());
 				}
 			}

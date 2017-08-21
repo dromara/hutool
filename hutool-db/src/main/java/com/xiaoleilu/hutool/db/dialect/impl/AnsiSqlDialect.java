@@ -53,10 +53,6 @@ public class AnsiSqlDialect implements Dialect {
 		if(ArrayUtil.isEmpty(entities)) {
 			throw new DbRuntimeException("Entities for batch insert is empty !");
 		}
-		if(entities.length == 1) {
-			return psForInsert(conn, entities[0]);
-		}
-		
 		// 批量
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entities[0], this.dialectName());
 		

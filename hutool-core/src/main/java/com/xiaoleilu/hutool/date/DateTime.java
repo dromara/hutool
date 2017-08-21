@@ -25,6 +25,8 @@ public class DateTime extends Date {
 	
 	/** 是否可变对象 */
 	private boolean mutable = true;
+	/** 一周的第一天，默认是周一 */
+	private Week firstDayOfWeek = Week.MONDAY;
 
 	/**
 	 * 转换JDK date为 DateTime
@@ -133,18 +135,18 @@ public class DateTime extends Date {
 	
 	// -------------------------------------------------------------------- Constructor end
 	
-	// -------------------------------------------------------------------- offsite start
+	// -------------------------------------------------------------------- offset start
 	/**
 	 * 调整日期和时间<br>
 	 * 如果此对象为可变对象，返回自身，否则返回新对象，设置是否可变对象见{@link #setMutable(boolean)}
 	 * 
 	 * @param datePart 调整的部分 {@link DateField}
-	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
+	 * @param offset 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 如果此对象为可变对象，返回自身，否则返回新对象
 	 */
-	public DateTime offsite(DateField datePart, int offsite) {
+	public DateTime offset(DateField datePart, int offset) {
 		final Calendar cal = toCalendar();
-		cal.add(datePart.getValue(), offsite);
+		cal.add(datePart.getValue(), offset);
 		
 		DateTime dt = mutable ? this : ObjectUtil.clone(this);
 		return dt.setTimeInternal(cal.getTimeInMillis());
@@ -155,18 +157,18 @@ public class DateTime extends Date {
 	 * 返回调整后的新{@link DateTime}，不影响原对象
 	 * 
 	 * @param datePart 调整的部分 {@link DateField}
-	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
+	 * @param offset 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return 如果此对象为可变对象，返回自身，否则返回新对象
 	 * @since 3.0.9
 	 */
-	public DateTime offsiteNew(DateField datePart, int offsite) {
+	public DateTime offsetNew(DateField datePart, int offset) {
 		final Calendar cal = toCalendar();
-		cal.add(datePart.getValue(), offsite);
+		cal.add(datePart.getValue(), offset);
 		
 		DateTime dt = ObjectUtil.clone(this);
 		return dt.setTimeInternal(cal.getTimeInMillis());
 	}
-	// -------------------------------------------------------------------- offsite end
+	// -------------------------------------------------------------------- offset end
 
 	// -------------------------------------------------------------------- Part of Date start
 	/**
@@ -289,8 +291,12 @@ public class DateTime extends Date {
 
 	/**
 	 * 获得指定日期是所在年份的第几周<br>
+	 * 此方法返回值与一周的第一天有关，比如：<br>
+	 * 2016年1月3日为周日，如果一周的第一天为周日，那这天是第二周（返回2）<br>
+	 * 如果一周的第一天为周一，那这天是第一周（返回1）
 	 * 
 	 * @return 周
+	 * @see #setFirstDayOfWeek(Week)
 	 */
 	public int weekOfYear() {
 		return getField(DateField.WEEK_OF_YEAR);
@@ -298,8 +304,12 @@ public class DateTime extends Date {
 
 	/**
 	 * 获得指定日期是所在月份的第几周<br>
+	 * 此方法返回值与一周的第一天有关，比如：<br>
+	 * 2016年1月3日为周日，如果一周的第一天为周日，那这天是第二周（返回2）<br>
+	 * 如果一周的第一天为周一，那这天是第一周（返回1）
 	 * 
 	 * @return 周
+	 * @see #setFirstDayOfWeek(Week)
 	 */
 	public int weekOfMonth() {
 		return getField(DateField.WEEK_OF_MONTH);
@@ -414,6 +424,7 @@ public class DateTime extends Date {
 	 */
 	public Calendar toCalendar() {
 		final Calendar cal = Calendar.getInstance();
+		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
 		cal.setTime(this);
 		return cal;
 	}
@@ -425,6 +436,7 @@ public class DateTime extends Date {
 	 */
 	public Calendar toCalendar(Locale locale) {
 		final Calendar cal = Calendar.getInstance(locale);
+		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
 		cal.setTime(this);
 		return cal;
 	}
@@ -446,6 +458,7 @@ public class DateTime extends Date {
 	 */
 	public Calendar toCalendar(TimeZone zone, Locale locale) {
 		final Calendar cal = Calendar.getInstance(zone, locale);
+		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
 		cal.setTime(this);
 		return cal;
 	}
@@ -543,7 +556,7 @@ public class DateTime extends Date {
 	 * 对象是否可变<br>
 	 * 如果为不可变对象，以下方法将返回新方法：
 	 * <ul>
-	 * 	<li>{@link DateTime#offsite(DateField, int)}</li>
+	 * 	<li>{@link DateTime#offset(DateField, int)}</li>
 	 * 	<li>{@link DateTime#setField(DateField, int)}</li>
 	 * 	<li>{@link DateTime#setField(int, int)}</li>
 	 * </ul>
@@ -559,7 +572,7 @@ public class DateTime extends Date {
 	 * 设置对象是否可变
 	 * 如果为不可变对象，以下方法将返回新方法：
 	 * <ul>
-	 * 	<li>{@link DateTime#offsite(DateField, int)}</li>
+	 * 	<li>{@link DateTime#offset(DateField, int)}</li>
 	 * 	<li>{@link DateTime#setField(DateField, int)}</li>
 	 * 	<li>{@link DateTime#setField(int, int)}</li>
 	 * </ul>
@@ -570,6 +583,29 @@ public class DateTime extends Date {
 	 */
 	public DateTime setMutable(boolean mutable) {
 		this.mutable = mutable;
+		return this;
+	}
+	
+	/**
+	 * 获得一周的第一天，默认为周一
+	 * @return 一周的第一天
+	 */
+	public Week getFirstDayOfWeek() {
+		return firstDayOfWeek;
+	}
+
+	/**
+	 * 设置一周的第一天<br>
+	 * JDK的Calendar中默认一周的第一天是周日，Hutool中将此默认值设置为周一<br>
+	 * 设置一周的第一天主要影响{@link #weekOfMonth()}和{@link #weekOfYear()} 两个方法
+	 * 
+	 * @param firstDayOfWeek 一周的第一天
+	 * @return this
+	 * @see #weekOfMonth()
+	 * @see #weekOfYear()
+	 */
+	public DateTime setFirstDayOfWeek(Week firstDayOfWeek) {
+		this.firstDayOfWeek = firstDayOfWeek;
 		return this;
 	}
 

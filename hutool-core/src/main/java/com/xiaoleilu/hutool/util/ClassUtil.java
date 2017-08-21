@@ -946,7 +946,7 @@ public class ClassUtil {
 	 * @return 方法
 	 */
 	public static Method setAccessible(Method method) {
-		if (null != method && ClassUtil.isNotPublic(method)) {
+		if (null != method && false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
 		return method;

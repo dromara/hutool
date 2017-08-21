@@ -1,9 +1,38 @@
 # Changelog
 
+## 3.1.0
+
+### 新特性
+* CollectionUtil增加findOne、findOneByField、getFieldValues等方法
+* cron模块支持Quartz的"?"表达式
+* ReUtil增加getAllGroups方法用于获取所有分组匹配
+* CollectionUtil增加toMapList和toListMap方法，提供行列转换（感谢@【北京】宁静）
+* WatchMonitor增加文件递归（子目录）监听支持（感谢@t-io）
+* cron模块中改进InvokeTask，在初始化时验证并加载类和方法（感谢@【南京】toling）
+* 增加ConcurrentHashSet
+* HttpRequestsetXXX补充返回this（感谢【南京】peckey）
+* Hutool-db增加 BeanHandler、BeanListHandler，find方法增加可变参数（返回字段）
+* 增强手机号码验证正则（感谢@【北京】宁静 @【北京】iisimpler）
+* 创建Chain接口，用于责任链模式的实现
+* JSON.getByExp方法增加重载方法，可以指定返回值类型（感谢【深圳】富）
+* FileUtil增加转换文件编码和换行符的方法（感谢@【北京】宁静）
+* 增加IterUtil，将CollectionUtil中部分方法迁入
+
+### Bug修复
+* 修复CollectionUtil中并集、差集问题（issue#IE9VH@osc）
+* 修复批量插入只有一个对象无法插入问题（感谢@【北京】游弋苍茫）
+* 修复NumberUtil.div错误（感谢@【北京】宁静）
+* 修复DateUtil.beginOfYear问题（感谢@【北京】iisimpler）
+* 修正Email正则，符合RFC 5322规范（感谢@【北京】iisimpler）
+* 修正ArrayUtil.isEmpty逻辑（感谢@【北京】仓山有井名为空）
+* 修复计算第几周时没有考虑每周第一天的情况（DateTime增加setFirstDayOfWeek方法），并设置默认值为周一（@【北京】仓山有井名为空）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 3.0.9
 
 ### 新特性
-* CollectionUtil增肌针对Map的排序（issue#30@osc）
+* CollectionUtil新增针对Map的排序（issue#30@osc）
 * 增加ArrayUtil.reverse方法
 * 增加StrUtil.reverse方法
 * 增加NumberWordFormater和Convert.numberToWord方法（感谢@【福建】极速蜗牛）

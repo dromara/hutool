@@ -71,6 +71,18 @@ public class CronTest {
 		
 	}
 	
+	@Test
+	public void quartzPatternTest() {
+		CronPattern pattern = new CronPattern("0 4 * * ?");
+		assertMatch(pattern, "2017-02-09 04:00:00");
+		assertMatch(pattern, "2017-02-19 04:00:33");
+		
+		//对于6位Quartz风格表达式，默认忽略第一位秒部分
+		pattern = new CronPattern("0 0 4 * * ?");
+		assertMatch(pattern, "2017-02-09 04:00:00");
+		assertMatch(pattern, "2017-02-19 04:00:33");
+	}
+	
 	/**
 	 * 表达式是否匹配日期
 	 * @param pattern 表达式

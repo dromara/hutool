@@ -8,6 +8,7 @@ import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
 import com.xiaoleilu.hutool.db.ds.hikari.HikariDSFactory;
 import com.xiaoleilu.hutool.db.ds.pooled.PooledDSFactory;
 import com.xiaoleilu.hutool.db.ds.tomcat.TomcatDSFactory;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -23,6 +24,7 @@ public abstract class DSFactory {
 	private static final Log log = LogFactory.get();
 
 	protected static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
+	protected static final String DEFAULT_DB_SETTING_PATH2 = "db.setting";
 
 	/** 数据源名 */
 	private String dataSourceName;
@@ -40,7 +42,12 @@ public abstract class DSFactory {
 	public DSFactory(String dataSourceName, Class<? extends DataSource> dataSourceClass, Setting setting) {
 		this.dataSourceName = dataSourceName;
 		if (null == setting) {
-			setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
+			try {
+				setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
+			} catch (IORuntimeException e) {
+				//尝试ClassPath下直接读取配置问津
+				setting = new Setting(DEFAULT_DB_SETTING_PATH2, true);
+			}
 		}
 		this.setting = setting;
 	}

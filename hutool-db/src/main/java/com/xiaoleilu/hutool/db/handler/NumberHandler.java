@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 
+ * 处理为数字结果，当查询结果为单个数字时使用此处理器（例如select count(1)）
  * @author loolly
  *
  */

@@ -25,8 +25,9 @@ import com.xiaoleilu.hutool.util.URLUtil;
  * 在配置文件中可以用中括号分隔不同的分组，每个分组会放在独立的Set中，用group区别<br>
  * 无分组的集合和`[]`分组集合会合并成员，重名的分组也会合并成员
  * @author Looly
- *
+ *@deprecated 请使用 com.xiaoleilu.hutool.setting.GroupedSet
  */
+@Deprecated
 public class GroupedSet extends HashMap<String, LinkedHashSet<String>>{
 	private static final long serialVersionUID = -8430706353275835496L;
 //	private final static Log log = StaticLog.get();

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.xiaoleilu</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>3.0.9</version>
+		<version>3.1.0</version>
 	</parent>
 
 	<artifactId>hutool-all</artifactId>
@@ -94,6 +94,11 @@
 		<dependency>
 			<groupId>com.xiaoleilu</groupId>
 			<artifactId>hutool-json</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xiaoleilu</groupId>
+			<artifactId>hutool-poi</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

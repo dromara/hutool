@@ -18,9 +18,11 @@ import java.nio.charset.Charset;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +37,7 @@ import com.xiaoleilu.hutool.io.file.FileCopier;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
 import com.xiaoleilu.hutool.io.file.FileWriter;
+import com.xiaoleilu.hutool.io.file.LineSeparator;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -389,7 +392,7 @@ public final class FileUtil {
 	 * 当给定对象为目录时，遍历目录下的所有文件和目录，递归计算其大小，求和返回
 	 * 
 	 * @param file 目录或文件
-	 * @return 总大小
+	 * @return 总大小，bytes长度
 	 */
 	public static long size(File file) {
 		Assert.notNull(file, "file argument is null !");
@@ -554,14 +557,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static boolean del(File file) throws IORuntimeException {
-		if (file == null || file.exists() == false) {
-			return true;
+		if (file == null || false == file.exists()) {
+			return false;
 		}
 
 		if (file.isDirectory()) {
 			clean(file);
 		}
-		return file.delete();
+		try {
+			Files.delete(file.toPath());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		return true;
 	}
 
 	/**
@@ -751,6 +759,7 @@ public final class FileUtil {
 	/**
 	 * 复制文件或目录<br>
 	 * 情况如下：
+	 * 
 	 * <pre>
 	 * 1、src和dest都为目录，则将src目录及其目录下所有文件目录拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
@@ -770,6 +779,7 @@ public final class FileUtil {
 	/**
 	 * 复制文件或目录<br>
 	 * 情况如下：
+	 * 
 	 * <pre>
 	 * 1、src和dest都为目录，则讲src下所有文件目录拷贝到dest下
 	 * 2、src和dest都为文件，直接复制，名字为dest
@@ -966,6 +976,22 @@ public final class FileUtil {
 	}
 
 	/**
+	 * 判断是否为目录，如果file为null，则返回false
+	 * 
+	 * @param path {@link Path}
+	 * @param isFollowLinks 是否追踪到软链对应的真实地址
+	 * @return 如果为目录true
+	 * @since 3.1.0
+	 */
+	public static boolean isDirectory(Path path, boolean isFollowLinks) {
+		if (null == path) {
+			return false;
+		}
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[] { LinkOption.NOFOLLOW_LINKS };
+		return Files.isDirectory(path, options);
+	}
+
+	/**
 	 * 判断是否为文件，如果path为null，则返回false
 	 * 
 	 * @param path 文件路径
@@ -983,6 +1009,20 @@ public final class FileUtil {
 	 */
 	public static boolean isFile(File file) {
 		return (file == null) ? false : file.isFile();
+	}
+
+	/**
+	 * 判断是否为文件，如果file为null，则返回false
+	 * 
+	 * @param path 文件
+	 * @return 如果为文件true
+	 */
+	public static boolean isFile(Path path, boolean isFollowLinks) {
+		if (null == path) {
+			return false;
+		}
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[] { LinkOption.NOFOLLOW_LINKS };
+		return Files.isRegularFile(path, options);
 	}
 
 	/**
@@ -1055,7 +1095,7 @@ public final class FileUtil {
 	 * @param filePath 文件路径
 	 * @return 最后一个文件路径分隔符的位置
 	 */
-	public static int indexOfLastSeparator(String filePath) {
+	public static int lastIndexOfSeparator(String filePath) {
 		if (filePath == null) {
 			return -1;
 		}
@@ -1081,13 +1121,32 @@ public final class FileUtil {
 
 	/**
 	 * 修复路径<br>
+	 * 如果原路径尾部有分隔符，则保留为标准分隔符（/），否则不保留
 	 * <ol>
 	 * <li>1. 统一用 /</li>
 	 * <li>2. 多个 / 转换为一个 /</li>
 	 * <li>3. 去除两边空格</li>
-	 * <li>4. .. 和 . 转换为绝对路径</li>
-	 * <li>5. 去掉前缀，例如file:</li>
+	 * <li>4. .. 和 . 转换为绝对路径，当..多于已有路径时，直接返回根路径</li>
 	 * </ol>
+	 * 
+	 * 栗子：
+	 * <pre>
+	 * "/foo//" =》 "/foo/"
+	 * "/foo/./" =》 "/foo/"
+	 * "/foo/../bar" =》 "/bar"
+	 * "/foo/../bar/" =》 "/bar/"
+	 * "/foo/../bar/../baz" =》 "/baz"
+	 * "/../" =》 "/"
+	 * "foo/bar/.." =》 "foo"
+	 * "foo/../bar" =》 "bar"
+	 * "foo/../../bar" =》 "bar"
+	 * "//server/foo/../bar" =》 "/server/bar"
+	 * "//server/../bar" =》 "/bar"
+	 * "C:\\foo\\..\\bar" =》 "C:/bar"
+	 * "C:\\..\\bar" =》 "C:/bar"
+	 * "~/foo/../bar/" =》 "~/bar/"
+	 * "~/../bar" =》 "bar"
+	 * </pre>
 	 * 
 	 * @param path 原路径
 	 * @return 修复后的路径
@@ -1100,16 +1159,14 @@ public final class FileUtil {
 
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		String prefix = "";
-		if (prefixIndex != -1) {
+		if (prefixIndex > -1) {
 			prefix = pathToUse.substring(0, prefixIndex + 1);
-			if (prefix.contains("/")) {
-				prefix = "";
-			} else {
+			if (false == prefix.contains("/")) {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
 			}
 		}
 		if (pathToUse.startsWith(StrUtil.SLASH)) {
-			prefix = prefix + StrUtil.SLASH;
+			prefix += StrUtil.SLASH;
 			pathToUse = pathToUse.substring(1);
 		}
 
@@ -1117,8 +1174,9 @@ public final class FileUtil {
 		List<String> pathElements = new LinkedList<String>();
 		int tops = 0;
 
+		String element;
 		for (int i = pathList.size() - 1; i >= 0; i--) {
-			String element = pathList.get(i);
+			element = pathList.get(i);
 			if (StrUtil.DOT.equals(element)) {
 				// 当前目录，丢弃
 			} else if (StrUtil.DOUBLE_DOT.equals(element)) {
@@ -1132,11 +1190,6 @@ public final class FileUtil {
 					pathElements.add(0, element);
 				}
 			}
-		}
-
-		// Remaining top paths need to be retained.
-		for (int i = 0; i < tops; i++) {
-			pathElements.add(0, StrUtil.DOUBLE_DOT);
 		}
 
 		return prefix + CollectionUtil.join(pathElements, StrUtil.SLASH);
@@ -1244,6 +1297,7 @@ public final class FileUtil {
 			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
 		}
 	}
+	// -------------------------------------------------------------------------------------------- name end
 
 	/**
 	 * 判断文件路径是否有指定后缀，忽略大小写<br>
@@ -1273,7 +1327,28 @@ public final class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	// -------------------------------------------------------------------------------------------- name end
+
+	/**
+	 * 获取文件属性
+	 * 
+	 * @param path 文件路径{@link Path}
+	 * @param isFollowLinks 是否跟踪到软链对应的真实路径
+	 * @return {@link BasicFileAttributes}
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.0
+	 */
+	public static BasicFileAttributes getAttributes(Path path, boolean isFollowLinks) throws IORuntimeException {
+		if (null == path) {
+			return null;
+		}
+
+		final LinkOption[] options = isFollowLinks ? new LinkOption[0] : new LinkOption[] { LinkOption.NOFOLLOW_LINKS };
+		try {
+			return Files.readAttributes(path, BasicFileAttributes.class, options);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
 
 	// -------------------------------------------------------------------------------------------- in start
 	/**
@@ -1508,6 +1583,20 @@ public final class FileUtil {
 	public static <T extends Collection<String>> T readLines(String path, String charset, T collection) throws IORuntimeException {
 		return readLines(file(path), charset, collection);
 	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T extends Collection<String>> T readLines(String path, Charset charset, T collection) throws IORuntimeException {
+		return readLines(file(path), charset, collection);
+	}
 
 	/**
 	 * 从文件中读取每一行数据
@@ -1521,6 +1610,20 @@ public final class FileUtil {
 	 */
 	public static <T extends Collection<String>> T readLines(File file, String charset, T collection) throws IORuntimeException {
 		return FileReader.create(file, CharsetUtil.charset(charset)).readLines(collection);
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param file 文件路径
+	 * @param charset 字符集
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T extends Collection<String>> T readLines(File file, Charset charset, T collection) throws IORuntimeException {
+		return FileReader.create(file, charset).readLines(collection);
 	}
 
 	/**
@@ -1578,6 +1681,18 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readLines(File file, String charset) throws IORuntimeException {
+		return readLines(file, charset, new ArrayList<String>());
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 */
+	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
 
@@ -1723,7 +1838,7 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeUtf8String(String content, String path) throws IORuntimeException {
-		return writeString(content, path, CharsetUtil.UTF_8);
+		return writeString(content, path, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -1735,7 +1850,7 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeUtf8String(String content, File file) throws IORuntimeException {
-		return writeString(content, file, CharsetUtil.UTF_8);
+		return writeString(content, file, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -1748,6 +1863,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeString(String content, String path, String charset) throws IORuntimeException {
+		return writeString(content, touch(path), charset);
+	}
+	
+	/**
+	 * 将String写入文件，覆盖模式
+	 * 
+	 * @param content 写入的内容
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File writeString(String content, String path, Charset charset) throws IORuntimeException {
 		return writeString(content, touch(path), charset);
 	}
 
@@ -1764,6 +1892,20 @@ public final class FileUtil {
 	public static File writeString(String content, File file, String charset) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).write(content);
 	}
+	
+	/**
+	 * 将String写入文件，覆盖模式
+	 * 
+	 * 
+	 * @param content 写入的内容
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 被写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File writeString(String content, File file, Charset charset) throws IORuntimeException {
+		return FileWriter.create(file, charset).write(content);
+	}
 
 	/**
 	 * 将String写入文件，追加模式
@@ -1775,6 +1917,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File appendString(String content, String path, String charset) throws IORuntimeException {
+		return appendString(content, touch(path), charset);
+	}
+	
+	/**
+	 * 将String写入文件，追加模式
+	 * 
+	 * @param content 写入的内容
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File appendString(String content, String path, Charset charset) throws IORuntimeException {
 		return appendString(content, touch(path), charset);
 	}
 
@@ -1790,6 +1945,19 @@ public final class FileUtil {
 	public static File appendString(String content, File file, String charset) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).append(content);
 	}
+	
+	/**
+	 * 将String写入文件，追加模式
+	 * 
+	 * @param content 写入的内容
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static File appendString(String content, File file, Charset charset) throws IORuntimeException {
+		return FileWriter.create(file, charset).append(content);
+	}
 
 	/**
 	 * 将列表写入文件，覆盖模式
@@ -1803,6 +1971,19 @@ public final class FileUtil {
 	public static <T> void writeLines(Collection<T> list, String path, String charset) throws IORuntimeException {
 		writeLines(list, path, charset, false);
 	}
+	
+	/**
+	 * 将列表写入文件，覆盖模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 绝对路径
+	 * @param charset 字符集
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> void writeLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
+		writeLines(list, path, charset, false);
+	}
 
 	/**
 	 * 将列表写入文件，追加模式
@@ -1814,6 +1995,19 @@ public final class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> void appendLines(Collection<T> list, String path, String charset) throws IORuntimeException {
+		writeLines(list, path, charset, true);
+	}
+	
+	/**
+	 * 将列表写入文件，追加模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 绝对路径
+	 * @param charset 字符集
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> void appendLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
 		writeLines(list, path, charset, true);
 	}
 
@@ -1831,6 +2025,21 @@ public final class FileUtil {
 	public static <T> File writeLines(Collection<T> list, String path, String charset, boolean isAppend) throws IORuntimeException {
 		return writeLines(list, file(path), charset, isAppend);
 	}
+	
+	/**
+	 * 将列表写入文件
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> File writeLines(Collection<T> list, String path, Charset charset, boolean isAppend) throws IORuntimeException {
+		return writeLines(list, file(path), charset, isAppend);
+	}
 
 	/**
 	 * 将列表写入文件
@@ -1845,6 +2054,21 @@ public final class FileUtil {
 	 */
 	public static <T> File writeLines(Collection<T> list, File file, String charset, boolean isAppend) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).writeLines(list, isAppend);
+	}
+	
+	/**
+	 * 将列表写入文件
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 文件
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T> File writeLines(Collection<T> list, File file, Charset charset, boolean isAppend) throws IORuntimeException {
+		return FileWriter.create(file, charset).writeLines(list, isAppend);
 	}
 
 	/**
@@ -1955,5 +2179,35 @@ public final class FileUtil {
 		final String[] units = new String[] { "B", "kB", "MB", "GB", "TB", "EB" };
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+	}
+	
+	/**
+	 * 转换文件编码<br>
+	 * 此方法用于转换文件编码，读取的文件实际编码必须与指定的srcCharset编码一致，否则导致乱码
+	 * 
+	 * @param file 文件
+	 * @param srcCharset 原文件的编码，必须与文件内容的编码保持一致
+	 * @param destCharset 转码后的编码
+	 * @return 被转换编码的文件
+	 * @see CharsetUtil#convert(File, Charset, Charset)
+	 * @since 3.1.0
+	 */
+	public static File convertCharset(File file, Charset srcCharset, Charset destCharset) {
+		return CharsetUtil.convert(file, srcCharset, destCharset);
+	}
+	
+	/**
+	 * 转换换行符<br>
+	 * 将给定文件的换行符转换为指定换行符
+	 * 
+	 * @param file 文件
+	 * @param charset 编码
+	 * @param lineSeparator 换行符枚举{@link LineSeparator}
+	 * @return 被修改的文件
+	 * @since 3.1.0
+	 */
+	public static File convertLineSeparator(File file, Charset charset, LineSeparator lineSeparator) {
+	final List<String> lines = readLines(file, charset);
+		return FileWriter.create(file, charset).writeLines(lines, lineSeparator, false);
 	}
 }

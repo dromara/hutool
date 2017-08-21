@@ -62,11 +62,35 @@ public class ReUtil {
 			return null;
 		}
 		
-		Matcher matcher = pattern.matcher(content);
+		final Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
 			return matcher.group(groupIndex);
 		}
 		return null;
+	}
+	
+	/**
+	 * 获得匹配的字符串匹配到的所有分组
+	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被匹配的内容
+	 * @return 匹配后得到的字符串数组，按照分组顺序依次列出，未匹配到返回空列表，任何一个参数为null返回null
+	 * @since 3.1.0
+	 */
+	public static List<String> getAllGroups(Pattern pattern, String content) {
+		if(null == content || null == pattern){
+			return null;
+		}
+		
+		ArrayList<String> result = new ArrayList<>();
+		final Matcher matcher = pattern.matcher(content);
+		if (matcher.find()) {
+			int groupCount = matcher.groupCount();
+			for(int i = 0; i < groupCount; i++) {
+				result.add(matcher.group(i));
+			}
+		}
+		return result;
 	}
 	
 	/**

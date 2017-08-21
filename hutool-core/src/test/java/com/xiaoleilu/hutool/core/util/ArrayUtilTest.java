@@ -100,4 +100,13 @@ public class ArrayUtilTest {
 		Map<String, Integer> map = ArrayUtil.zip(keys, values, true);
 		Assert.assertEquals(map.toString(), "{a=1, b=2, c=3}");
 	}
+	
+	@Test
+	public void castTest() {
+		Object[] values = {"1", "2", "3"};
+		String[] cast = (String[]) ArrayUtil.cast(String.class, values);
+		Assert.assertEquals(values[0], cast[0]);
+		Assert.assertEquals(values[1], cast[1]);
+		Assert.assertEquals(values[2], cast[2]);
+	}
 }

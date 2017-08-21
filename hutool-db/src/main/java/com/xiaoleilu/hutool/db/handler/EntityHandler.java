@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import com.xiaoleilu.hutool.db.Entity;
 
 /**
+ * Entity对象处理器，只处理第一条数据
  * 
  * @author loolly
  *

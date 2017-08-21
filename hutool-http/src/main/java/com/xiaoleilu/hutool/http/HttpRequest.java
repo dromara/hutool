@@ -466,17 +466,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @param hostnameVerifier HostnameVerifier
 	 */
-	public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+	public HttpRequest setHostnameVerifier(HostnameVerifier hostnameVerifier) {
 		// 验证域
 		this.hostnameVerifier = hostnameVerifier;
+		return this;
 	}
 	
 	/**
 	 * 设置代理
 	 * @param proxy 代理 {@link Proxy}
 	 */
-	public void setProxy(Proxy proxy) {
+	public HttpRequest setProxy(Proxy proxy) {
 		this.proxy = proxy;
+		return this;
 	}
 	
 	/**

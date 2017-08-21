@@ -14,6 +14,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PushbackInputStream;
+import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
@@ -284,7 +286,8 @@ public final class IoUtil {
 	}
 
 	/**
-	 * 获得{@link BufferedReader}
+	 * 获得{@link BufferedReader}<br>
+	 * 如果是{@link BufferedReader}强转返回，否则新建
 	 * 
 	 * @param reader 普通Reader
 	 * @return {@link BufferedReader}
@@ -292,6 +295,19 @@ public final class IoUtil {
 	 */
 	public static BufferedReader getReader(Reader reader) {
 		return (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
+	}
+	
+	/**
+	 * 获得{@link PushbackReader}<br>
+	 * 如果是{@link PushbackReader}强转返回，否则新建
+	 * 
+	 * @param reader 普通Reader
+	 * @param pushBackSize 推后的byte数 
+	 * @return {@link PushbackReader}
+	 * @since 3.1.0
+	 */
+	public static PushbackReader getPushBackReader(Reader reader, int pushBackSize) {
+		return (reader instanceof PushbackReader) ? (PushbackReader) reader : new PushbackReader(reader, pushBackSize);
 	}
 
 	/**
@@ -612,6 +628,19 @@ public final class IoUtil {
 		} catch (FileNotFoundException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+	
+	/**
+	 * 转换为{@link PushbackInputStream}<br>
+	 * 如果传入的输入流已经是{@link PushbackInputStream}，强转返回，否则新建一个
+	 * 
+	 * @param in {@link InputStream}
+	 * @param pushBackSize 推后的byte数
+	 * @return {@link PushbackInputStream}
+	 * @since 3.1.0
+	 */
+	public static PushbackInputStream toPushbackStream(InputStream in, int pushBackSize) {
+		return (in instanceof PushbackInputStream) ? (PushbackInputStream)in : new PushbackInputStream(in, pushBackSize);
 	}
 
 	/**

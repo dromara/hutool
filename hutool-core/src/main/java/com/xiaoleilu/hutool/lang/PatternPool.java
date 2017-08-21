@@ -11,7 +11,7 @@ import com.xiaoleilu.hutool.util.ReUtil;
  *
  */
 public class PatternPool {
-	
+
 	/** 英文字母 、数字和下划线 */
 	public final static Pattern GENERAL = Pattern.compile("^\\w+$");
 	/** 数字 */
@@ -23,14 +23,14 @@ public class PatternPool {
 	/** 分组 */
 	public final static Pattern GROUP_VAR = Pattern.compile("\\$(\\d+)");
 	/** IP v4 */
-	public final static Pattern IPV4 = Pattern.compile(
-			"\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b");
+	public final static Pattern IPV4 = Pattern.compile("\\b((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\.((?!\\d\\d\\d)\\d+|1\\d\\d|2[0-4]\\d|25[0-5])\\b");
 	/** 货币 */
 	public final static Pattern MONEY = Pattern.compile("^(\\d+(?:\\.\\d+)?)$");
-	/** 邮件 */
-	public final static Pattern EMAIL = Pattern.compile("(\\w|.)+@\\w+(\\.\\w+){1,2}");
+	/** 邮件，符合RFC 5322规范，正则来自：http://emailregex.com/ */
+	// public final static Pattern EMAIL = Pattern.compile("(\\w|.)+@\\w+(\\.\\w+){1,2}");
+	public final static Pattern EMAIL = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])");
 	/** 移动电话 */
-	public final static Pattern MOBILE = Pattern.compile("1\\d{10}");
+	public final static Pattern MOBILE = Pattern.compile("(?:0|86|\\+86)?1[34578]\\d{9}");
 	/** 身份证号码 */
 	public final static Pattern CITIZEN_ID = Pattern.compile("[1-9]\\d{5}[1-2]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|X|x)");
 	/** 邮编 */
@@ -53,9 +53,10 @@ public class PatternPool {
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/** Pattern池 */
 	private static final SimpleCache<RegexWithFlag, Pattern> POOL = new SimpleCache<>();
-	
+
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
+	 * 
 	 * @param regex 正则表达式
 	 * @return {@link Pattern}
 	 */
@@ -65,41 +66,44 @@ public class PatternPool {
 
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
+	 * 
 	 * @param regex 正则表达式
 	 * @param flags 正则标识位集合 {@link Pattern}
 	 * @return {@link Pattern}
 	 */
 	public static Pattern get(String regex, int flags) {
 		final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
-		
+
 		Pattern pattern = POOL.get(regexWithFlag);
-		if(null == pattern){
+		if (null == pattern) {
 			pattern = Pattern.compile(regex, flags);
 			POOL.put(regexWithFlag, pattern);
 		}
 		return pattern;
 	}
-	
+
 	/**
 	 * 移除缓存
+	 * 
 	 * @param regex 正则
 	 * @param flags 标识
 	 * @return 移除的{@link Pattern}，可能为{@code null}
 	 */
-	public static Pattern remove(String regex, int flags){
+	public static Pattern remove(String regex, int flags) {
 		return POOL.remove(new RegexWithFlag(regex, flags));
 	}
-	
+
 	/**
 	 * 清空缓存池
 	 */
-	public static void clear(){
+	public static void clear() {
 		POOL.clear();
 	}
 
-	//---------------------------------------------------------------------------------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 正则表达式和正则标识位的包装
+	 * 
 	 * @author Looly
 	 *
 	 */
@@ -109,6 +113,7 @@ public class PatternPool {
 
 		/**
 		 * 构造
+		 * 
 		 * @param regex 正则
 		 * @param flag 标识
 		 */

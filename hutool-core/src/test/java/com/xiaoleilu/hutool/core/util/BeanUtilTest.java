@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.core.util;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -70,15 +71,36 @@ public class BeanUtilTest {
 		HashMap<String,Object> map = CollectionUtil.newHashMap();
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
+		
 		Person person = BeanUtil.mapToBeanIgnoreCase(map, Person.class, false);
 		Assert.assertEquals(person.getName(), "Joe");
 		Assert.assertEquals(person.getAge(), 12);
 	}
 	
+	@Test
+	public void beanToMapTest() {
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+		
+		Map<String, Object> map = BeanUtil.beanToMap(person);
+		Assert.assertEquals(map.get("name"), "测试A11");
+		Assert.assertEquals(map.get("age"), 14);
+	}
+	
 	
 	//-----------------------------------------------------------------------------------------------------------------
 	public static class SubPerson extends Person{
-		
+		private String subName;
+
+		public String getSubName() {
+			return subName;
+		}
+		public void setSubName(String subName) {
+			this.subName = subName;
+		}
 	}
 	
 	public static class Person{

@@ -74,7 +74,7 @@ public class Wrapper {
 		this.sufWrapQuote = sufWrapQuote;
 	}
 	//--------------------------------------------------------------- Getters and Setters end
-
+	
 	/**
 	 * 包装字段名<br>
 	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
@@ -82,6 +82,16 @@ public class Wrapper {
 	 * @return 包装后的字段名
 	 */
 	public String wrap(String field){
+		return wrapWord(field);
+	}
+	
+	/**
+	 * 包装字段名<br>
+	 * 有时字段与SQL的某些关键字冲突，导致SQL出错，因此需要将字段名用单引号或者反引号包装起来，避免冲突
+	 * @param field 字段名
+	 * @return 包装后的字段名
+	 */
+	private String wrapWord(String field){
 		if(preWrapQuote == null || sufWrapQuote == null || StrUtil.isBlank(field)) {
 			return field;
 		}

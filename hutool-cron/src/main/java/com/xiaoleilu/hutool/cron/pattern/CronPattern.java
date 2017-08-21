@@ -29,8 +29,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * <li><strong>分</strong>：范围：0~59</li>
  * <li><strong>时</strong>：范围：0~23</li>
  * <li><strong>日</strong>：范围：1~31，<strong>"L"</strong>表示月的最后一天</li>
- * <li><strong>月</strong>：范围：1~12，同时支持别名："jan","feb", "mar", "apr", "may","jun", "jul", "aug", "sep","oct", "nov", "dec"</li>
- * <li><strong>周</strong>：范围：0 (Sunday)~6(Saturday)，7也可以表示周日，同时支持别名："sun","mon", "tue", "wed", "thu","fri", "sat"，<strong>"L"</strong>表示周六</li>
+ * <li><strong>月</strong>：范围：1~12，同时支持不区分大小写的别名："jan","feb", "mar", "apr", "may","jun", "jul", "aug", "sep","oct", "nov", "dec"</li>
+ * <li><strong>周</strong>：范围：0 (Sunday)~6(Saturday)，7也可以表示周日，同时支持不区分大小写的别名："sun","mon", "tue", "wed", "thu","fri", "sat"，<strong>"L"</strong>表示周六</li>
  * </ol>
  * 
  * 为了兼容Quartz表达式，同时支持6位和7位表达式，其中：<br>
@@ -51,6 +51,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 对于每一个子表达式，同样支持以下形式：
  * <ul>
  * <li><strong>*</strong>：表示匹配这个位置所有的时间</li>
+ * <li><strong>?</strong>：表示匹配这个位置任意的时间（与"*"作用一致）</li>
  * <li><strong>*&#47;2</strong>：表示间隔时间，例如在分上，表示每两分钟，同样*可以使用数字列表代替，逗号分隔</li>
  * <li><strong>2-8</strong>：表示连续区间，例如在分上，表示2,3,4,5,6,7,8分</li>
  * <li><strong>2,3,5,8</strong>：表示列表</li>

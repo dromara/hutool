@@ -42,12 +42,12 @@ public class DateTimeTest {
 		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
 		
 		//默认情况下DateTime为可变对象
-		DateTime offsite = dateTime.offsite(DateField.YEAR, 0);
+		DateTime offsite = dateTime.offset(DateField.YEAR, 0);
 		Assert.assertTrue(offsite == dateTime);
 		
 		//设置为不可变对象后变动将返回新对象
 		dateTime.setMutable(false);
-		offsite = dateTime.offsite(DateField.YEAR, 0);
+		offsite = dateTime.offset(DateField.YEAR, 0);
 		Assert.assertFalse(offsite == dateTime);
 	}
 	

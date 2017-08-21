@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import com.xiaoleilu.hutool.lang.Chain;
+
 /**
  * 比较器链。此链包装了多个比较器，最终比较结果按照比较器顺序综合多个比较器结果。<br>
  * 按照比较器链的顺序分别比较，如果比较出相等则转向下一个比较器，否则直接返回<br>
@@ -15,7 +17,7 @@ import java.util.List;
  * @author looly
  * @since 3.0.7
  */
-public class ComparatorChain<E> implements Comparator<E>, Serializable {
+public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<E>>, Comparator<E>, Serializable {
 	private static final long serialVersionUID = -2426725788913962429L;
 	
 	/** 比较器链. */
@@ -83,9 +85,10 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
 	 * 在链的尾部添加比较器，使用正向排序
 	 *
 	 * @param comparator {@link Comparator} 比较器，正向
+	 * @return this
 	 */
-	public void addComparator(final Comparator<E> comparator) {
-		addComparator(comparator, false);
+	public ComparatorChain<E> addComparator(final Comparator<E> comparator) {
+		return addComparator(comparator, false);
 	}
 
 	/**
@@ -93,14 +96,16 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
 	 *
 	 * @param comparator {@link Comparator} 比较器
 	 * @param reverse 是否反序，true表示正序，false反序
+	 * @return this
 	 */
-	public void addComparator(final Comparator<E> comparator, final boolean reverse) {
+	public ComparatorChain<E> addComparator(final Comparator<E> comparator, final boolean reverse) {
 		checkLocked();
 
 		chain.add(comparator);
 		if (reverse == true) {
 			orderingBits.set(chain.size() - 1);
 		}
+		return this;
 	}
 
 	/**
@@ -108,10 +113,11 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
 	 *
 	 * @param index 位置
 	 * @param comparator {@link Comparator}
+	 * @return this
 	 * @exception IndexOutOfBoundsException if index &lt; 0 or index &gt;= size()
 	 */
-	public void setComparator(final int index, final Comparator<E> comparator) throws IndexOutOfBoundsException {
-		setComparator(index, comparator, false);
+	public ComparatorChain<E> setComparator(final int index, final Comparator<E> comparator) throws IndexOutOfBoundsException {
+		return setComparator(index, comparator, false);
 	}
 
 	/**
@@ -120,8 +126,9 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
 	 * @param index 位置
 	 * @param comparator {@link Comparator}
 	 * @param reverse 是否反序，true表示正序，false反序
+	 * @return this
 	 */
-	public void setComparator(final int index, final Comparator<E> comparator, final boolean reverse) {
+	public ComparatorChain<E> setComparator(final int index, final Comparator<E> comparator, final boolean reverse) {
 		checkLocked();
 
 		chain.set(index, comparator);
@@ -130,26 +137,31 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
 		} else {
 			orderingBits.clear(index);
 		}
+		return this;
 	}
 
 	/**
 	 * 更改指定位置的排序方式为正序
 	 *
 	 * @param index 位置
+	 * @return this
 	 */
-	public void setForwardSort(final int index) {
+	public ComparatorChain<E> setForwardSort(final int index) {
 		checkLocked();
 		orderingBits.clear(index);
+		return this;
 	}
 
 	/**
 	 * 更改指定位置的排序方式为反序
 	 *
 	 * @param index 位置
+	 * @return this
 	 */
-	public void setReverseSort(final int index) {
+	public ComparatorChain<E> setReverseSort(final int index) {
 		checkLocked();
 		orderingBits.set(index);
+		return this;
 	}
 
 	/**
@@ -168,7 +180,16 @@ public class ComparatorChain<E> implements Comparator<E>, Serializable {
 	public boolean isLocked() {
 		return lock;
 	}
+	
+	@Override
+	public Iterator<Comparator<E>> iterator() {
+		return this.chain.iterator();
+	}
 
+	@Override
+	public ComparatorChain<E> addChain(Comparator<E> element) {
+		return this.addComparator(element);
+	}
 	
 	/**
 	 * 执行比较<br>

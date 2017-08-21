@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.db;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.db.ds.DSFactory;
+import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
@@ -49,6 +51,15 @@ public class CRUDTest {
 	
 	@Test
 	@Ignore
+	public void findTest() throws SQLException {
+		List<Entity> find = runner.find(CollectionUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		for (Entity entity : find) {
+			Console.log(entity);
+		}
+	}
+	
+	@Test
+	@Ignore
 	public void insertBatchTest() throws SQLException {
 		User user1 = new User();
 		user1.setName("张三");
@@ -69,6 +80,23 @@ public class CRUDTest {
 		Console.log(data2);
 		
 		int[] result = runner.insert(CollectionUtil.newArrayList(data1, data2));
+		Console.log(result);
+	}
+	
+	@Test
+	@Ignore
+	public void insertBatchOneTest() throws SQLException {
+		User user1 = new User();
+		user1.setName("张三");
+		user1.setAge(12);
+		user1.setBirthday("19900112");
+		user1.setGender(true);
+		
+		Entity data1 = Entity.parse(user1);
+		
+		Console.log(data1);
+		
+		int[] result = runner.insert(CollectionUtil.newArrayList(data1));
 		Console.log(result);
 	}
 	

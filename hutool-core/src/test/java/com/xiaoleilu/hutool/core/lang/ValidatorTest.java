@@ -43,4 +43,26 @@ public class ValidatorTest {
 	public void validateTest() throws ValidateException{
 		Validator.validateChinese("我是一段zhongwen", "内容中包含非中文");
 	}
+	
+	@Test
+	public void isEmailTest() {
+		boolean email = Validator.isEmail("abc_cde@163.com");
+		Assert.assertTrue(email);
+		boolean email1 = Validator.isEmail("abc_%cde@163.com");
+		Assert.assertTrue(email1);
+		boolean email2 = Validator.isEmail("abc_%cde@aaa.c");
+		Assert.assertTrue(email2);
+		boolean email3 = Validator.isEmail("xiaolei.lu@aaa.b");
+		Assert.assertTrue(email3);
+	}
+	
+	@Test
+	public void isMobileTest() {
+		boolean m1 = Validator.isMobile("13900221432");
+		Assert.assertTrue(m1);
+		boolean m2 = Validator.isMobile("015100221432");
+		Assert.assertTrue(m2);
+		boolean m3 = Validator.isMobile("+8618600221432");
+		Assert.assertTrue(m3);
+	}
 }

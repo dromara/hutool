@@ -412,7 +412,7 @@ public class BeanUtil {
 		Class<?> actualEditable = bean.getClass();
 		if (copyOptions.editable != null) {
 			//检查限制类是否为target的父类或接口
-			if (!copyOptions.editable.isInstance(bean)) {
+			if (false == copyOptions.editable.isInstance(bean)) {
 				throw new IllegalArgumentException(StrUtil.format("Target class [{}] not assignable to Editable class [{}]", bean.getClass().getName(), copyOptions.editable.getName()));
 			}
 			actualEditable = copyOptions.editable;

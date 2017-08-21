@@ -37,13 +37,24 @@ public class Snowflake {
 	private long datacenterId;
 	private long sequence = 0L;
 	private long lastTimestamp = -1L;
-
+	private boolean useSystemClock;
+	
 	/**
 	 * 构造
 	 * @param workerId 终端ID
 	 * @param datacenterId 数据中心ID
 	 */
 	public Snowflake(long workerId, long datacenterId) {
+		this(workerId, datacenterId, false);
+	}
+
+	/**
+	 * 构造
+	 * @param workerId 终端ID
+	 * @param datacenterId 数据中心ID
+	 * @param isUseSystemClock 是否使用{@link SystemClock} 获取当前时间戳
+	 */
+	public Snowflake(long workerId, long datacenterId, boolean isUseSystemClock) {
 		if (workerId > maxWorkerId || workerId < 0) {
 			throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
 		}
@@ -52,6 +63,7 @@ public class Snowflake {
 		}
 		this.workerId = workerId;
 		this.datacenterId = datacenterId;
+		this.useSystemClock = isUseSystemClock;
 	}
 
 	/**
@@ -59,7 +71,7 @@ public class Snowflake {
 	 * @return ID
 	 */
 	public synchronized long nextId() {
-		long timestamp = SystemClock.now();
+		long timestamp = useSystemClock ? SystemClock.now() : System.currentTimeMillis();
 		if (timestamp < lastTimestamp) {
 			throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
 		}
@@ -78,9 +90,9 @@ public class Snowflake {
 	}
 
 	private long tilNextMillis(long lastTimestamp) {
-		long timestamp = SystemClock.now();
+		long timestamp = useSystemClock ? SystemClock.now() : System.currentTimeMillis();
 		while (timestamp <= lastTimestamp) {
-			timestamp = SystemClock.now();
+			timestamp = useSystemClock ? SystemClock.now() : System.currentTimeMillis();
 		}
 		return timestamp;
 	}

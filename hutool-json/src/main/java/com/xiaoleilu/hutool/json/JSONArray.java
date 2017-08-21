@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import com.xiaoleilu.hutool.bean.BeanResolver;
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 
 /**
@@ -160,6 +161,11 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	@Override
 	public Object getByExp(String expression) {
 		return BeanResolver.resolveBean(this, expression);
+	}
+	
+	@Override
+	public <T> T getByExp(String expression, Class<T> resultType) {
+		return Convert.convert(resultType, getByExp(expression));
 	}
 
 	/**
