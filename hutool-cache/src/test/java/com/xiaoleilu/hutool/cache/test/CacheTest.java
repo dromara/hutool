@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.cache.impl.FIFOCache;
+import com.xiaoleilu.hutool.cache.CacheUtil;
 import com.xiaoleilu.hutool.cache.impl.LFUCache;
 import com.xiaoleilu.hutool.cache.impl.LRUCache;
 import com.xiaoleilu.hutool.cache.impl.TimedCache;
@@ -20,7 +20,7 @@ public class CacheTest {
 	
 	@Test
 	public void fifoCacheTest(){
-		Cache<String,String> fifoCache = new FIFOCache<String, String>(3, 0);
+		Cache<String,String> fifoCache = CacheUtil.newFIFOCache(3);
 		fifoCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
