@@ -18,6 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.DocumentFactoryHelper;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -211,7 +212,8 @@ public class ExcelUtil {
 	}
 	
 	/**
-	 * 获取单元格值
+	 * 获取单元格值<br>
+	 * 如果单元格值为数字格式，则判断其格式中是否有小数部分，无则返回Long类型，否则返回Double类型
 	 * 
 	 * @param cell {@link Cell}单元格
 	 * @param cellType 单元格值类型{@link CellType}枚举
@@ -225,7 +227,15 @@ public class ExcelUtil {
 				if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
 					value = cell.getDateCellValue();
 				}else {
-					value = cell.getNumericCellValue();
+					double doubleValue = cell.getNumericCellValue();
+					CellStyle style = cell.getCellStyle();
+					String format = style.getDataFormatString();
+					if(null != format && format.indexOf('.') < 0) {
+						//对于无小数部分的数字类型，转为Long
+						value = (long)doubleValue;
+					}else {
+						value = doubleValue;
+					}
 				}
 				break;
 			case BOOLEAN:
