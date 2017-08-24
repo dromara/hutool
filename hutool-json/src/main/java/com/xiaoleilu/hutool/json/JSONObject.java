@@ -1,10 +1,12 @@
 package com.xiaoleilu.hutool.json;
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -612,17 +614,30 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param ignoreNullValue 是否忽略空值
 	 */
 	private void populateMap(Object bean, boolean ignoreNullValue) {
+		PropertyDescriptor[] propertyDescriptors = null;
 		try {
-			final PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(bean.getClass());
-			
-			String key;
-			Object value;
-			for (PropertyDescriptor property : propertyDescriptors) {
-				key = property.getName();
-				// 过滤class属性
-				if (false == key.equals("class") && false == key.equals("declaringClass")) {
-					// 得到property对应的getter方法
-					value = property.getReadMethod().invoke(bean);
+			propertyDescriptors = BeanUtil.getPropertyDescriptors(bean.getClass());
+		} catch (IntrospectionException e) {
+			throw new JSONException(e);
+		}
+		
+		String key;
+		Method readMethod;
+		Object value;
+		for (PropertyDescriptor property : propertyDescriptors) {
+			key = property.getName();
+			// 过滤class属性
+			if (false == key.equals("class") && false == key.equals("declaringClass")) {
+				// 得到property对应的getter方法
+				readMethod = ClassUtil.setAccessible(property.getReadMethod());
+				if(null != readMethod) {
+					//只读取有getter方法的属性
+					try {
+						value = readMethod.invoke(bean);
+					} catch (Exception ignore) {
+						//忽略读取失败的属性
+						continue;
+					}
 					if(null == value) {
 						if(false == ignoreNullValue) {
 							this.rawHashMap.put(key, JSONUtil.wrap(value));
@@ -632,8 +647,6 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 					}
 				}
 			}
-		} catch (Exception ignore) {
-			//忽略失败的对象
 		}
 	}
 	

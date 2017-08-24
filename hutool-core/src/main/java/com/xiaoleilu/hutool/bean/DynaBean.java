@@ -84,12 +84,28 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 				}
 				final Method method = descriptor.getReadMethod();
 				if(null == method){
-					throw new BeanException("No set method for {}", fieldName);
+					throw new BeanException("No get method for {}", fieldName);
 				}
 				return (T) method.invoke(this.bean);
 			} catch (Exception e) {
 				throw new BeanException(e);
 			}
+		}
+	}
+	
+	/**
+	 * 获得字段对应值，获取异常返回{@code null}
+	 * 
+	 * @param <T> 属性值类型
+	 * @param fieldName 字段名
+	 * @return 字段值
+	 * @since 3.1.1
+	 */
+	public <T> T safeGet(String fieldName){
+		try {
+			return get(fieldName);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 	

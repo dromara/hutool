@@ -34,6 +34,20 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	}
 	
 	/**
+	 * 从JSON中直接获取Bean对象<br>
+	 * 先获取JSONObject对象，然后转为Bean对象
+	 * 
+	 * @param key KEY
+	 * @param beanType Bean类型
+	 * @return Bean对象，如果值为null或者非JSONObject类型，返回null
+	 * @since 3.1.1
+	 */
+	public <T> T getBean(K key, Class<T> beanType) {
+		final JSONObject obj = getJSONObject(key);
+		return (null == obj) ? null : obj.toBean(beanType);
+	}
+	
+	/**
 	 * 获取指定类型的对象<br>
 	 * 转换失败或抛出异常
 	 * 
