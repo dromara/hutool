@@ -196,6 +196,9 @@ public class ExcelUtil {
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellEditor cellEditor) {
+		if(null == cell) {
+			return null;
+		}
 		return getCellValue(cell, cell.getCellTypeEnum(), cellEditor);
 	}
 
@@ -216,11 +219,18 @@ public class ExcelUtil {
 	 * 如果单元格值为数字格式，则判断其格式中是否有小数部分，无则返回Long类型，否则返回Double类型
 	 * 
 	 * @param cell {@link Cell}单元格
-	 * @param cellType 单元格值类型{@link CellType}枚举
+	 * @param cellType 单元格值类型{@link CellType}枚举，如果为{@code null}默认使用cell的类型
 	 * @param cellValueEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellType cellType, CellEditor cellEditor) {
+		if(null == cell) {
+			return null;
+		}
+		if(null == cellType) {
+			cellType = cell.getCellTypeEnum();
+		}
+		
 		Object value;
 		switch (cellType) {
 			case NUMERIC:

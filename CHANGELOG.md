@@ -4,12 +4,15 @@
 
 ### 新特性
 * ExcelReader中根据单元格格式判断Double还是Long类型（感谢@act家的excel-reader）
+* Map相关方法剥离为MapUtil
+* 新增CollUtil做为CollectionUtil别名
 
 ### Bug修复
 * NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义
 * 修复Bean转JSONObject时字段无getter方法导致的字段值丢失问题（感谢@猎隼丶止戈，issue#IEIJG@osc）
 * 修复StrUtil.addPrefixIfNot方法问题（感谢@【苏州】咖啡）
 * 修复db部分Session中beginTransaction()逻辑问题（感谢@taoguan）
+*修复POI模块ExcelReader空单元格被忽略问题。
 
 -------------------------------------------------------------------------------------------------------------
 

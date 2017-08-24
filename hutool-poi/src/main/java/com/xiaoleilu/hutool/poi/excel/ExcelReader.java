@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -30,7 +28,7 @@ public class ExcelReader {
 
 	/** Excel中对应的Sheet */
 	private Sheet sheet;
-	
+
 	/** 是否忽略空行 */
 	private boolean ignoreEmptyRow;
 	/** 单元格值处理接口 */
@@ -48,7 +46,7 @@ public class ExcelReader {
 	public ExcelReader(File bookFile, int sheetIndex) {
 		this(ExcelUtil.loadBook(bookFile), sheetIndex);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -58,7 +56,7 @@ public class ExcelReader {
 	public ExcelReader(File bookFile, String sheetName) {
 		this(ExcelUtil.loadBook(bookFile), sheetName);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -143,9 +141,10 @@ public class ExcelReader {
 		this.cellEditor = cellEditor;
 		return this;
 	}
-	
+
 	/**
 	 * 获得标题行的别名Map
+	 * 
 	 * @return 别名Map
 	 */
 	public Map<String, String> getHeaderAlias() {
@@ -154,15 +153,17 @@ public class ExcelReader {
 
 	/**
 	 * 设置标题行的别名Map
+	 * 
 	 * @param headerAlias 别名Map
 	 */
 	public ExcelReader setHeaderAlias(Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;
 		return this;
 	}
-	
+
 	/**
 	 * 增加标题别名
+	 * 
 	 * @param header 标题
 	 * @param alias 别名
 	 * @return this
@@ -171,9 +172,10 @@ public class ExcelReader {
 		this.headerAlias.put(header, alias);
 		return this;
 	}
-	
+
 	/**
 	 * 去除标题别名
+	 * 
 	 * @param header 标题
 	 * @return this
 	 */
@@ -306,13 +308,10 @@ public class ExcelReader {
 	 */
 	private List<Object> readRow(Row row) {
 		final List<Object> cellValues = new ArrayList<>();
-		if (null != row) {
-			final Iterator<Cell> celIter = row.cellIterator();
-			Cell cell;
-			while (celIter.hasNext()) {
-				cell = celIter.next();
-				cellValues.add(ExcelUtil.getCellValue(cell, cellEditor));
-			}
+		
+		short length = row.getLastCellNum();
+		for (short i = 0; i < length; i++) {
+			cellValues.add(ExcelUtil.getCellValue(row.getCell(i), cellEditor));
 		}
 		return cellValues;
 	}

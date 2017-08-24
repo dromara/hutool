@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.io.resource;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -15,6 +16,28 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
  *
  */
 public class ResourceUtil {
+	
+	/**
+	 * 读取Classpath下的资源为字符串，使用UTF-8编码
+	 * @param resource 资源路径，使用相对ClassPath的路径
+	 * @return 资源内容
+	 * @since 3.1.1
+	 */
+	public static String readUtf8Str(String resource) {
+		return new ClassPathResource(resource).readUtf8Str();
+	}
+	
+	/**
+	 * 读取Classpath下的资源为字符串
+	 * @param resource 资源路径，使用相对ClassPath的路径
+	 * @param charset 编码
+	 * @return 资源内容
+	 * @since 3.1.1
+	 */
+	public static String readStr(String resource, Charset charset) {
+		return new ClassPathResource(resource).readStr(charset);
+	}
+	
 	/**
 	 * 获得资源的URL<br>
 	 * 路径用/分隔，例如:

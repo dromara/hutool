@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.resource.ClassPathResource;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.poi.excel.ExcelReader;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 import com.xiaoleilu.hutool.poi.excel.editors.NumericToLongEditor;
@@ -40,6 +41,10 @@ public class ExcelReadTest {
 		reader.setCellEditor(new NumericToLongEditor());
 		
 		List<Map<String,Object>> readAll = reader.readAll();
+		for (Map<String, Object> map : readAll) {
+			Console.log(map);
+		}
+		
 		Assert.assertEquals("张三", readAll.get(0).get("姓名"));
 		Assert.assertEquals("男", readAll.get(0).get("性别"));
 		Assert.assertEquals(11L, readAll.get(0).get("年龄"));
