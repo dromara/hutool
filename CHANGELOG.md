@@ -6,6 +6,7 @@
 * ExcelReader中根据单元格格式判断Double还是Long类型（感谢@act家的excel-reader）
 * Map相关方法剥离为MapUtil
 * 新增CollUtil做为CollectionUtil别名
+* 非对称加密加入PublicKey对象和PrivateKey对象构造，RSA加入N,e,d参数支持
 
 ### Bug修复
 * NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义

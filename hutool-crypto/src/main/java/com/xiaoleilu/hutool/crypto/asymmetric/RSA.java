@@ -1,11 +1,17 @@
 package com.xiaoleilu.hutool.crypto.asymmetric;
 
+import java.math.BigInteger;
 import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.interfaces.RSAKey;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 
 import javax.crypto.Cipher;
 
 import com.xiaoleilu.hutool.crypto.CryptoException;
+import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.lang.BCD;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -20,6 +26,28 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class RSA extends AsymmetricCrypto {
 
 	private static final AsymmetricAlgorithm ALGORITHM_RSA = AsymmetricAlgorithm.RSA;
+	
+	// ------------------------------------------------------------------ Static method start
+	/**
+	 * 生成RSA私钥
+	 * @param modulus N特征值
+	 * @param privateExponent d特征值
+	 * @return {@link PrivateKey}
+	 */
+	public static PrivateKey generatePrivateKey(BigInteger modulus, BigInteger privateExponent) {
+		return SecureUtil.generatePrivateKey(ALGORITHM_RSA.getValue(), new RSAPrivateKeySpec(modulus, privateExponent));
+	}
+	
+	/**
+	 * 生成RSA公钥
+	 * @param modulus N特征值
+	 * @param publicExponent e特征值
+	 * @return {@link PublicKey}
+	 */
+	public static PublicKey generatePublicKey(BigInteger modulus, BigInteger publicExponent) {
+		return SecureUtil.generatePublicKey(ALGORITHM_RSA.getValue(), new RSAPublicKeySpec(modulus, publicExponent));
+	}
+	// ------------------------------------------------------------------ Static method end
 
 	// ------------------------------------------------------------------ Constructor start
 	/**
@@ -50,6 +78,33 @@ public class RSA extends AsymmetricCrypto {
 	 * @param publicKey 公钥
 	 */
 	public RSA(byte[] privateKey, byte[] publicKey) {
+		super(ALGORITHM_RSA, privateKey, publicKey);
+	}
+	
+	/**
+	 * 构造 <br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * 
+	 * @param modulus N特征值
+	 * @param privateExponent d特征值
+	 * @param publicExponent e特征值
+	 * @since 3.1.1
+	 */
+	public RSA(BigInteger modulus, BigInteger privateExponent, BigInteger publicExponent) {
+		this(generatePrivateKey(modulus, privateExponent), generatePublicKey(modulus, publicExponent));
+	}
+	
+	/**
+	 * 构造 <br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * 
+	 * @param privateKey 私钥
+	 * @param publicKey 公钥
+	 * @since 3.1.1
+	 */
+	public RSA(PrivateKey privateKey,PublicKey publicKey) {
 		super(ALGORITHM_RSA, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
@@ -89,7 +144,7 @@ public class RSA extends AsymmetricCrypto {
 	 * 
 	 * @param data 数据
 	 * @param keyType 密钥类型
-	 * @return 加密后的密文
+	 * @return 解密后的密文
 	 */
 	public String decryptStr(String data, KeyType keyType) {
 		Key key = getKeyByType(keyType);
