@@ -13,6 +13,7 @@ import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.setting.SettingRuntimeException;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -29,19 +30,21 @@ import java.util.Properties;
 
 /**
  * Properties文件读取封装类
+ * 
  * @author loolly
  */
-public final class Props extends Properties implements BasicTypeGetter<String>, OptBasicTypeGetter<String>{
+public final class Props extends Properties implements BasicTypeGetter<String>, OptBasicTypeGetter<String> {
 	private static final long serialVersionUID = 1935981579709590740L;
 	private final static Log log = StaticLog.get();
-	
-	//----------------------------------------------------------------------- 私有属性 start
+
+	// ----------------------------------------------------------------------- 私有属性 start
 	/** 属性文件的URL */
 	private URL propertiesFileUrl;
 	private WatchMonitor watchMonitor;
-	private Charset charset = StandardCharsets.ISO_8859_1;
-	//----------------------------------------------------------------------- 私有属性 end
-	
+	/** properties文件编码 */
+	private Charset charset = CharsetUtil.CHARSET_ISO_8859_1;
+	// ----------------------------------------------------------------------- 私有属性 end
+
 	/**
 	 * 获得Classpath下的Properties文件
 	 * 
@@ -51,7 +54,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public static Properties getProp(String resource) {
 		return new Props(resource);
 	}
-	
+
 	/**
 	 * 获得Classpath下的Properties文件
 	 * 
@@ -59,10 +62,10 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param charsetName 字符集
 	 * @return Properties
 	 */
-	public static Properties getProp(String resource, String charsetName){
+	public static Properties getProp(String resource, String charsetName) {
 		return new Props(resource, charsetName);
 	}
-	
+
 	/**
 	 * 获得Classpath下的Properties文件
 	 * 
@@ -73,173 +76,194 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public static Properties getProp(String resource, Charset charset) {
 		return new Props(resource, charset);
 	}
-	
-	//----------------------------------------------------------------------- 构造方法 start
+
+	// ----------------------------------------------------------------------- 构造方法 start
 	/**
 	 * 构造
 	 */
 	public Props() {
 		super();
 	}
-	
+
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
+	 * 
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 */
-	public Props(String pathBaseClassLoader){
-		this(pathBaseClassLoader, StandardCharsets.ISO_8859_1);
+	public Props(String pathBaseClassLoader) {
+		this(pathBaseClassLoader, CharsetUtil.CHARSET_ISO_8859_1);
 	}
-	
+
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
+	 * 
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
 	 * @param charsetName 字符集
 	 */
-	public Props(String pathBaseClassLoader, String charsetName){
-		this(pathBaseClassLoader, Charset.forName(charsetName));
+	public Props(String pathBaseClassLoader, String charsetName) {
+		this(pathBaseClassLoader, CharsetUtil.charset(charsetName));
 	}
-	
+
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
+	 * 
 	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
-	 * @param charset 字符集   
+	 * @param charset 字符集
 	 */
-	public Props(String pathBaseClassLoader, Charset charset){
+	public Props(String pathBaseClassLoader, Charset charset) {
 		Assert.notBlank(pathBaseClassLoader, "Blank properties file path !");
-		this.charset = charset;
+		if(null != charset) {
+			this.charset = charset;
+		}
 		this.load(new ClassPathResource(pathBaseClassLoader));
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param propertiesFile 配置文件对象
 	 */
-	public Props(File propertiesFile){
+	public Props(File propertiesFile) {
 		this(propertiesFile, StandardCharsets.ISO_8859_1);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param propertiesFile 配置文件对象
 	 * @param charsetName 字符集
 	 */
-	public Props(File propertiesFile, String charsetName){
+	public Props(File propertiesFile, String charsetName) {
 		this(propertiesFile, Charset.forName(charsetName));
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param propertiesFile 配置文件对象
 	 * @param charset 字符集
 	 */
-	public Props(File propertiesFile, Charset charset){
+	public Props(File propertiesFile, Charset charset) {
 		Assert.notNull(propertiesFile, "Null properties file!");
 		this.charset = charset;
 		this.load(new UrlResource(propertiesFile));
 	}
-	
+
 	/**
 	 * 构造，相对于classes读取文件
+	 * 
 	 * @param path 相对路径
 	 * @param clazz 基准类
 	 */
-	public Props(String path, Class<?> clazz){
-		this(path, clazz, StandardCharsets.ISO_8859_1);
+	public Props(String path, Class<?> clazz) {
+		this(path, clazz, CharsetUtil.ISO_8859_1);
 	}
-	
+
 	/**
 	 * 构造，相对于classes读取文件
+	 * 
 	 * @param path 相对路径
 	 * @param clazz 基准类
-	 * @param charsetName 字符集   
+	 * @param charsetName 字符集
 	 */
-	public Props(String path, Class<?> clazz, String charsetName){
-		this(path, clazz, Charset.forName(charsetName));
+	public Props(String path, Class<?> clazz, String charsetName) {
+		this(path, clazz, CharsetUtil.charset(charsetName));
 	}
-	
+
 	/**
 	 * 构造，相对于classes读取文件
+	 * 
 	 * @param path 相对路径
 	 * @param clazz 基准类
-	 * @param charset 字符集   
+	 * @param charset 字符集
 	 */
-	public Props(String path, Class<?> clazz, Charset charset){
+	public Props(String path, Class<?> clazz, Charset charset) {
 		Assert.notBlank(path, "Blank properties file path !");
-		this.charset = charset;
+		if(null != charset) {
+			this.charset = charset;
+		}
 		this.load(new ClassPathResource(path, clazz));
 	}
-	
+
 	/**
 	 * 构造，使用URL读取
+	 * 
 	 * @param propertiesUrl 属性文件路径
 	 */
-	public Props(URL propertiesUrl){
+	public Props(URL propertiesUrl) {
 		this(propertiesUrl, StandardCharsets.ISO_8859_1);
 	}
-	
+
 	/**
 	 * 构造，使用URL读取
+	 * 
 	 * @param propertiesUrl 属性文件路径
-	 * @param charsetName 字符集   
+	 * @param charsetName 字符集
 	 */
-	public Props(URL propertiesUrl, String charsetName){
-		this(propertiesUrl, Charset.forName(charsetName));
+	public Props(URL propertiesUrl, String charsetName) {
+		this(propertiesUrl, CharsetUtil.charset(charsetName));
 	}
-	
+
 	/**
 	 * 构造，使用URL读取
+	 * 
 	 * @param propertiesUrl 属性文件路径
-	 * @param charset 字符集   
+	 * @param charset 字符集
 	 */
-	public Props(URL propertiesUrl, Charset charset){
+	public Props(URL propertiesUrl, Charset charset) {
 		Assert.notNull(propertiesUrl, "Null properties URL !");
-		this.charset = charset;
+		if(null != charset) {
+			this.charset = charset;
+		}
 		this.load(new UrlResource(propertiesUrl));
 	}
-	
+
 	/**
 	 * 构造，使用URL读取
+	 * 
 	 * @param properties 属性文件路径
 	 */
-	public Props(Properties properties){
-		if(CollectionUtil.isNotEmpty(properties)){
+	public Props(Properties properties) {
+		if (CollectionUtil.isNotEmpty(properties)) {
 			this.putAll(properties);
 		}
 	}
-	
-	//----------------------------------------------------------------------- 构造方法 end
-	
+
+	// ----------------------------------------------------------------------- 构造方法 end
+
 	/**
 	 * 初始化配置文件
+	 * 
 	 * @param urlResource {@link UrlResource}
 	 */
-	public void load(UrlResource urlResource){
+	public void load(UrlResource urlResource) {
 		this.propertiesFileUrl = urlResource.getUrl();
-		if(null == this.propertiesFileUrl) {
+		if (null == this.propertiesFileUrl) {
 			throw new SettingRuntimeException("Can not find properties file: [{}]", urlResource);
 		}
 		log.debug("Load properties [{}]", propertiesFileUrl.getPath());
-		try(BufferedReader reader = urlResource.getReader(charset)) {
+		try (final BufferedReader reader = urlResource.getReader(charset)) {
 			super.load(reader);
 		} catch (Exception e) {
 			log.error(e, "Load properties error!");
 		}
 	}
-	
+
 	/**
 	 * 重新加载配置文件
 	 */
 	public void load() {
 		this.load(new UrlResource(this.propertiesFileUrl));
 	}
-	
+
 	/**
 	 * 在配置文件变更时自动加载
+	 * 
 	 * @param autoReload 是否自动加载
 	 */
-	public void autoLoad(boolean autoReload){
-		if(autoReload){
-			if(null != this.watchMonitor){
+	public void autoLoad(boolean autoReload) {
+		if (autoReload) {
+			if (null != this.watchMonitor) {
 				this.watchMonitor.close();
 				try {
 					watchMonitor = WatchMonitor.create(Paths.get(this.propertiesFileUrl.toURI()));
@@ -253,13 +277,13 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 					throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.propertiesFileUrl);
 				}
 			}
-		}else{
+		} else {
 			IoUtil.close(this.watchMonitor);
 			this.watchMonitor = null;
 		}
 	}
-	
-	//----------------------------------------------------------------------- Get start
+
+	// ----------------------------------------------------------------------- Get start
 	@Override
 	public Object getObj(String key, Object defaultValue) {
 		return getStr(key, null == defaultValue ? null : defaultValue.toString());
@@ -269,86 +293,86 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public Object getObj(String key) {
 		return getObj(key, null);
 	}
-	
+
 	@Override
-	public String getStr(String key, String defaultValue){
+	public String getStr(String key, String defaultValue) {
 		return super.getProperty(key, defaultValue);
 	}
-	
+
 	@Override
-	public String getStr(String key){
+	public String getStr(String key) {
 		return super.getProperty(key);
 	}
-	
+
 	@Override
-	public Integer getInt(String key, Integer defaultValue){
+	public Integer getInt(String key, Integer defaultValue) {
 		return Convert.toInt(getStr(key), defaultValue);
 	}
-	
+
 	@Override
-	public Integer getInt(String key){
+	public Integer getInt(String key) {
 		return getInt(key, null);
 	}
-	
+
 	@Override
-	public Boolean getBool(String key, Boolean defaultValue){
+	public Boolean getBool(String key, Boolean defaultValue) {
 		return Convert.toBool(getStr(key), defaultValue);
 	}
-	
+
 	@Override
-	public Boolean getBool(String key){
+	public Boolean getBool(String key) {
 		return getBool(key, null);
 	}
-	
+
 	@Override
-	public Long getLong(String key, Long defaultValue){
+	public Long getLong(String key, Long defaultValue) {
 		return Convert.toLong(getStr(key), defaultValue);
 	}
-	
+
 	@Override
-	public Long getLong(String key){
+	public Long getLong(String key) {
 		return getLong(key, null);
 	}
-	
+
 	@Override
 	public Character getChar(String key, Character defaultValue) {
 		final String value = getStr(key);
-		if(StrUtil.isBlank(value)) {
+		if (StrUtil.isBlank(value)) {
 			return defaultValue;
 		}
 		return value.charAt(0);
 	}
-	
+
 	@Override
 	public Character getChar(String key) {
 		return getChar(key, null);
 	}
-	
+
 	@Override
 	public Float getFloat(String key) {
 		return getFloat(key, null);
 	}
-	
+
 	@Override
 	public Float getFloat(String key, Float defaultValue) {
 		return Convert.toFloat(getStr(key), defaultValue);
 	}
-	
+
 	@Override
 	public Double getDouble(String key, Double defaultValue) throws NumberFormatException {
 		return Convert.toDouble(getStr(key), defaultValue);
 	}
-	
+
 	@Override
 	public Double getDouble(String key) throws NumberFormatException {
 		return getDouble(key, null);
 	}
-	
+
 	@Override
 	public Short getShort(String key, Short defaultValue) {
 		return Convert.toShort(getStr(key), defaultValue);
 	}
-	
+
 	@Override
 	public Short getShort(String key) {
 		return getShort(key, null);
@@ -358,7 +382,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public Byte getByte(String key, Byte defaultValue) {
 		return Convert.toByte(getStr(key), defaultValue);
 	}
-	
+
 	@Override
 	public Byte getByte(String key) {
 		return getByte(key, null);
@@ -367,17 +391,17 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	@Override
 	public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
 		final String valueStr = getStr(key);
-		if(StrUtil.isBlank(valueStr)) {
+		if (StrUtil.isBlank(valueStr)) {
 			return defaultValue;
 		}
-		
+
 		try {
 			return new BigDecimal(valueStr);
 		} catch (Exception e) {
 			return defaultValue;
 		}
 	}
-	
+
 	@Override
 	public BigDecimal getBigDecimal(String key) {
 		return getBigDecimal(key, null);
@@ -386,22 +410,22 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	@Override
 	public BigInteger getBigInteger(String key, BigInteger defaultValue) {
 		final String valueStr = getStr(key);
-		if(StrUtil.isBlank(valueStr)) {
+		if (StrUtil.isBlank(valueStr)) {
 			return defaultValue;
 		}
-		
+
 		try {
 			return new BigInteger(valueStr);
 		} catch (Exception e) {
 			return defaultValue;
 		}
 	}
-	
+
 	@Override
 	public BigInteger getBigInteger(String key) {
 		return getBigInteger(key, null);
 	}
-	
+
 	@Override
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key, E defaultValue) {
 		return Convert.toEnum(clazz, getStr(key), defaultValue);
@@ -411,24 +435,26 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
 		return getEnum(clazz, key, null);
 	}
-	
-	//----------------------------------------------------------------------- Get end
-	
-	//----------------------------------------------------------------------- Set start
+
+	// ----------------------------------------------------------------------- Get end
+
+	// ----------------------------------------------------------------------- Set start
 	/**
 	 * 设置值，无给定键创建之。设置后未持久化
+	 * 
 	 * @param key 属性键
 	 * @param value 属性值
 	 */
-	public void setProperty(String key, Object value){
+	public void setProperty(String key, Object value) {
 		super.setProperty(key, value.toString());
 	}
-	
+
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置
+	 * 
 	 * @param absolutePath 设置文件的绝对路径
 	 */
-	public void store(String absolutePath){
+	public void store(String absolutePath) {
 		try {
 			FileUtil.touch(absolutePath);
 			super.store(FileUtil.getWriter(absolutePath, charset, false), null);
@@ -436,14 +462,15 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 			log.error(e, "Store properties to [{}] error!", absolutePath);
 		}
 	}
-	
+
 	/**
 	 * 存储当前设置，会覆盖掉以前的设置
+	 * 
 	 * @param path 相对路径
 	 * @param clazz 相对的类
 	 */
-	public void store(String path, Class<?> clazz){
+	public void store(String path, Class<?> clazz) {
 		this.store(FileUtil.getAbsolutePath(path, clazz));
 	}
-	//----------------------------------------------------------------------- Set end
+	// ----------------------------------------------------------------------- Set end
 }

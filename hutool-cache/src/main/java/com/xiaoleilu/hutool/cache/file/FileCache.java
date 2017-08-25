@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 
 /**
  * 文件缓存，以解决频繁读取文件引起的性能问题
@@ -89,7 +90,7 @@ public abstract class FileCache {
 	 * @return 缓存过的文件bytes
 	 * @throws IOException IO异常
 	 */
-	public byte[] getFileBytes(String path) throws IOException {
+	public byte[] getFileBytes(String path) throws IORuntimeException {
 		return getFileBytes(new File(path));
 	}
 
@@ -99,7 +100,7 @@ public abstract class FileCache {
 	 * @return 缓存过的文件bytes
 	 * @throws IOException IO异常
 	 */
-	public byte[] getFileBytes(File file) throws IOException {
+	public byte[] getFileBytes(File file) throws IORuntimeException {
 		byte[] bytes = cache.get(file);
 		if (bytes != null) {
 			return bytes;

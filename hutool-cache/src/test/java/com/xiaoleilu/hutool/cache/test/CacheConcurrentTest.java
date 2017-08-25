@@ -6,7 +6,7 @@ import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.cache.impl.FIFOCache;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
-public class CacheTest2 {
+public class CacheConcurrentTest {
 	
 	public static void main(String[] args) {
 		final Cache<String, String> fifoCache = new FIFOCache<>(3);

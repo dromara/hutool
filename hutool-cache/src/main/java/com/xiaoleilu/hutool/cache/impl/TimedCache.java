@@ -64,7 +64,7 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	// ---------------------------------------------------------------- auto prune
 	/**
 	 * 定时清理
-	 * @param delay 间隔时长
+	 * @param delay 间隔时长，单位毫秒
 	 */
 	public void schedulePrune(long delay) {
 		if (pruneTimer != null) {
