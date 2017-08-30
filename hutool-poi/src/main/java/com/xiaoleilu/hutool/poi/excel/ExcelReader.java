@@ -12,7 +12,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.xiaoleilu.hutool.collection.IterUtil;
-import com.xiaoleilu.hutool.poi.excel.editors.NumericToLongEditor;
 import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -135,7 +134,6 @@ public class ExcelReader {
 	 * @param cellEditor 单元格值处理接口
 	 * @return this
 	 * @see TrimEditor
-	 * @see NumericToLongEditor
 	 */
 	public ExcelReader setCellEditor(CellEditor cellEditor) {
 		this.cellEditor = cellEditor;

@@ -9,7 +9,6 @@ import com.xiaoleilu.hutool.io.resource.ClassPathResource;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.poi.excel.ExcelReader;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
-import com.xiaoleilu.hutool.poi.excel.editors.NumericToLongEditor;
 
 /**
  * Excel读取单元测试
@@ -37,9 +36,6 @@ public class ExcelReadTest {
 	@Test
 	public void excelReadToMapListTest() {
 		ExcelReader reader = ExcelUtil.getReader(new ClassPathResource("aaa.xlsx").getStream());
-		//设置单元格编辑器。可以将Double类型转为Long类型
-		reader.setCellEditor(new NumericToLongEditor());
-		
 		List<Map<String,Object>> readAll = reader.readAll();
 		for (Map<String, Object> map : readAll) {
 			Console.log(map);

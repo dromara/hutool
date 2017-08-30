@@ -559,12 +559,24 @@ public class DateUtil {
 	}
 
 	/**
-	 * 格式HH:mm:ss
+	 * 解析时间，格式HH:mm:ss，默认为1970-01-01
 	 * 
 	 * @param timeString 标准形式的日期字符串
 	 * @return 日期对象
 	 */
 	public static DateTime parseTime(String timeString) {
+		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
+	}
+	
+	/**
+	 * 解析时间，格式HH:mm:ss，日期默认为今天
+	 * 
+	 * @param timeString 标准形式的日期字符串
+	 * @return 日期对象
+	 * @since 3.1.1
+	 */
+	public static DateTime parseTimeToday(String timeString) {
+		timeString = StrUtil.format("{} {}", today(), timeString);
 		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
 	}
 
