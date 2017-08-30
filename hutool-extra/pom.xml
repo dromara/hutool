@@ -57,6 +57,7 @@
 			<groupId>org.rythmengine</groupId>
 			<artifactId>rythm-engine</artifactId>
 			<version>${rythm.version}</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>
