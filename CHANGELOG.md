@@ -9,13 +9,16 @@
 * 非对称加密加入PublicKey对象和PrivateKey对象构造，RSA加入N,e,d参数支持（感谢@【帝都】小帅帅）
 * Props支持其它编码格式（PR#37@Github）
 * DateBetween增加可选是否取绝对值选项构造（issue#IETE0@gitee）
+* 加入Rythm模板引擎工具类
+* cron模块中增加方法支持获取Task和CronPattern（感谢@Γ平淡ㄎ）
 
 ### Bug修复
 * NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义
 * 修复Bean转JSONObject时字段无getter方法导致的字段值丢失问题（感谢@猎隼丶止戈，issue#IEIJG@osc）
 * 修复StrUtil.addPrefixIfNot方法问题（感谢@【苏州】咖啡）
 * 修复db部分Session中beginTransaction()逻辑问题（感谢@taoguan）
-*修复POI模块ExcelReader空单元格被忽略问题。
+* 修复POI模块ExcelReader空单元格被忽略问题。
+* 修复cron模块中移除Task导致的index错误问题（感谢@Γ平淡ㄎ）
 
 -------------------------------------------------------------------------------------------------------------
 
