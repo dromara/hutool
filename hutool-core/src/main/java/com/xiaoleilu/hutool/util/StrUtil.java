@@ -21,6 +21,8 @@ import com.xiaoleilu.hutool.lang.StrSpliter;
  */
 public class StrUtil {
 
+	public static final int INDEX_NOT_FOUND = -1;
+
 	public static final char C_SPACE = ' ';
 	public static final char C_TAB = '	';
 	public static final char C_DOT = '.';
@@ -64,7 +66,7 @@ public class StrUtil {
 
 	private StrUtil() {
 	}
-	
+
 	// ------------------------------------------------------------------------ Blank
 	/**
 	 * 字符串是否为空白 空白的定义如下： <br>
@@ -368,14 +370,15 @@ public class StrUtil {
 
 		return str.toString();
 	}
-	
+
 	/**
 	 * 字符串是否以给定字符开始
+	 * 
 	 * @param str 字符串
 	 * @param c 字符
 	 * @return 是否开始
 	 */
-	public static boolean startWith(CharSequence str, char c){
+	public static boolean startWith(CharSequence str, char c) {
 		return c == str.charAt(0);
 	}
 
@@ -394,7 +397,7 @@ public class StrUtil {
 			return str.toString().startsWith(prefix.toString());
 		}
 	}
-	
+
 	/**
 	 * 是否以指定字符串开头
 	 * 
@@ -437,15 +440,16 @@ public class StrUtil {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 字符串是否以给定字符结尾
+	 * 
 	 * @param str 字符串
 	 * @param c 字符
 	 * @return 是否结尾
 	 */
-	public static boolean endWith(CharSequence str, char c){
-		return c == str.charAt(str.length()-1);
+	public static boolean endWith(CharSequence str, char c) {
+		return c == str.charAt(str.length() - 1);
 	}
 
 	/**
@@ -467,7 +471,7 @@ public class StrUtil {
 			return str.toString().endsWith(suffix.toString());
 		}
 	}
-	
+
 	/**
 	 * 是否以指定字符串结尾
 	 * 
@@ -846,12 +850,12 @@ public class StrUtil {
 	 * @return 切分后的集合
 	 */
 	public static String[] splitToArray(CharSequence str, char separator, int limit) {
-		if(null == str){
-			return new String[]{};
+		if (null == str) {
+			return new String[] {};
 		}
 		return StrSpliter.splitToArray(str.toString(), separator, limit, false, false);
 	}
-	
+
 	/**
 	 * 切分字符串，不去除切分后每个元素两边的空白符，不去除空白项
 	 * 
@@ -863,7 +867,7 @@ public class StrUtil {
 	public static List<String> split(CharSequence str, char separator, int limit) {
 		return split(str, separator, limit, false, false);
 	}
-	
+
 	/**
 	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项
 	 * 
@@ -876,7 +880,7 @@ public class StrUtil {
 	public static List<String> splitTrim(CharSequence str, char separator, int limit) {
 		return split(str, separator, limit, true, true);
 	}
-	
+
 	/**
 	 * 切分字符串，不限制分片数量
 	 * 
@@ -903,7 +907,7 @@ public class StrUtil {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit, boolean isTrim, boolean ignoreEmpty) {
-		if(null == str){
+		if (null == str) {
 			return new ArrayList<>(0);
 		}
 		return StrSpliter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
@@ -918,9 +922,9 @@ public class StrUtil {
 	 */
 	public static String[] split(CharSequence str, CharSequence separator) {
 		if (str == null) {
-			return new String[]{};
+			return new String[] {};
 		}
-		
+
 		final String separatorStr = (null == separator) ? null : separator.toString();
 		return StrSpliter.splitToArray(str.toString(), separatorStr, 0, false, false);
 	}
@@ -934,8 +938,8 @@ public class StrUtil {
 	 * @see StrSpliter#splitByLength(String, int)
 	 */
 	public static String[] split(CharSequence str, int len) {
-		if(null == str){
-			return new String[]{};
+		if (null == str) {
+			return new String[] {};
 		}
 		return StrSpliter.splitByLength(str.toString(), len);
 	}
@@ -1011,6 +1015,152 @@ public class StrUtil {
 			return null;
 		}
 		return sub(string, fromIndex, string.length());
+	}
+
+	/**
+	 * 截取分隔字符串之前的字符串，不包括分隔字符串<br>
+	 * 如果给定的字符串为空串（null或""）或者分隔字符串为null，返回原字符串<br>
+	 * 如果分隔字符串为空串""，则返回空串，如果分隔字符串未找到，返回原字符串
+	 * 
+	 * 栗子：
+	 * 
+	 * <pre>
+	 * StrUtil.subBefore(null, *)      = null
+	 * StrUtil.subBefore("", *)        = ""
+	 * StrUtil.subBefore("abc", "a")   = ""
+	 * StrUtil.subBefore("abcba", "b") = "a"
+	 * StrUtil.subBefore("abc", "c")   = "ab"
+	 * StrUtil.subBefore("abc", "d")   = "abc"
+	 * StrUtil.subBefore("abc", "")    = ""
+	 * StrUtil.subBefore("abc", null)  = "abc"
+	 * </pre>
+	 * 
+	 * @param string 被查找的字符串
+	 * @param separator 分隔字符串
+	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+	 * @return 切割后的字符串
+	 * @since 3.1.1
+	 */
+	public static String subBefore(CharSequence string, CharSequence separator, boolean isLastSeparator) {
+		if (isEmpty(string) || separator == null) {
+			return null == string ? null : string.toString();
+		}
+
+		final String str = string.toString();
+		final String sep = separator.toString();
+		if (sep.isEmpty()) {
+			return EMPTY;
+		}
+		final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
+		if (pos == INDEX_NOT_FOUND) {
+			return str;
+		}
+		return str.substring(0, pos);
+	}
+
+	/**
+	 * 截取分隔字符串之后的字符串，不包括分隔字符串<br>
+	 * 如果给定的字符串为空串（null或""），返回原字符串<br>
+	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串
+	 *
+	 * 栗子：
+	 * 
+	 * <pre>
+	 * StrUtil.subAfter(null, *)      = null
+	 * StrUtil.subAfter("", *)        = ""
+	 * StrUtil.subAfter(*, null)      = ""
+	 * StrUtil.subAfter("abc", "a")   = "bc"
+	 * StrUtil.subAfter("abcba", "b") = "cba"
+	 * StrUtil.subAfter("abc", "c")   = ""
+	 * StrUtil.subAfter("abc", "d")   = ""
+	 * StrUtil.subAfter("abc", "")    = "abc"
+	 * </pre>
+	 *
+	 * @param string 被查找的字符串
+	 * @param separator 分隔字符串
+	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+	 * @return 切割后的字符串
+	 * @since 3.1.1
+	 */
+	public static String subAfter(CharSequence string, CharSequence separator, boolean isLastSeparator) {
+		if (isEmpty(string)) {
+			return null == string ? null : string.toString();
+		}
+		if (separator == null) {
+			return EMPTY;
+		}
+		final String str = string.toString();
+		final String sep = separator.toString();
+		final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
+		if (pos == INDEX_NOT_FOUND) {
+			return EMPTY;
+		}
+		return str.substring(pos + separator.length());
+	}
+
+	/**
+	 * 截取指定字符串中间部分，不包括标识字符串<br>
+	 * 
+	 * 栗子：
+	 * 
+	 * <pre>
+	 * StrUtil.subBetween("wx[b]yz", "[", "]") = "b"
+	 * StrUtil.subBetween(null, *, *)          = null
+	 * StrUtil.subBetween(*, null, *)          = null
+	 * StrUtil.subBetween(*, *, null)          = null
+	 * StrUtil.subBetween("", "", "")          = ""
+	 * StrUtil.subBetween("", "", "]")         = null
+	 * StrUtil.subBetween("", "[", "]")        = null
+	 * StrUtil.subBetween("yabcz", "", "")     = ""
+	 * StrUtil.subBetween("yabcz", "y", "z")   = "abc"
+	 * StrUtil.subBetween("yabczyabcz", "y", "z")   = "abc"
+	 * </pre>
+	 * 
+	 * @param str 被切割的字符串
+	 * @param before 截取开始的字符串标识
+	 * @param after 截取到的字符串标识
+	 * @return 截取后的字符串
+	 * @since 3.1.1
+	 */
+	public static String subBetween(CharSequence str, CharSequence before, CharSequence after) {
+		if (str == null || before == null || after == null) {
+			return null;
+		}
+
+		final String str2 = str.toString();
+		final String before2 = before.toString();
+		final String after2 = after.toString();
+
+		final int start = str2.indexOf(before2);
+		if (start != INDEX_NOT_FOUND) {
+			final int end = str2.indexOf(after2, start + before2.length());
+			if (end != INDEX_NOT_FOUND) {
+				return str2.substring(start + before2.length(), end);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 截取指定字符串中间部分，不包括标识字符串<br>
+	 * 
+	 * 栗子：
+	 * <pre>
+	 * StrUtil.subBetween(null, *)            = null
+	 * StrUtil.subBetween("", "")             = ""
+	 * StrUtil.subBetween("", "tag")          = null
+	 * StrUtil.subBetween("tagabctag", null)  = null
+	 * StrUtil.subBetween("tagabctag", "")    = ""
+	 * StrUtil.subBetween("tagabctag", "tag") = "abc"
+	 * </pre>
+	 * 
+	 * @param str 被切割的字符串
+	 * @param beforeAndAfter 截取开始和结束的字符串标识
+	 * @return 截取后的字符串
+	 * @since 3.1.1
+	 */
+	public static String subBetween(CharSequence str, CharSequence beforeAndAfter) {
+		return subBetween(str, beforeAndAfter, beforeAndAfter);
 	}
 
 	/**
@@ -1499,7 +1649,7 @@ public class StrUtil {
 		} else
 			return name2;
 	}
-	
+
 	/**
 	 * 包装指定字符串<br>
 	 * 当前缀和后缀一致时使用此方法
@@ -1524,7 +1674,7 @@ public class StrUtil {
 	public static String wrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
 		return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
 	}
-	
+
 	/**
 	 * 包装指定字符串，如果前缀或后缀已经包含对应的字符串，则不再
 	 * 
@@ -1535,23 +1685,23 @@ public class StrUtil {
 	 */
 	public static String wrapIfMissing(CharSequence str, CharSequence prefix, CharSequence suffix) {
 		int len = 0;
-		if(isNotEmpty(str)){
+		if (isNotEmpty(str)) {
 			len += str.length();
 		}
-		if(isNotEmpty(prefix)){
+		if (isNotEmpty(prefix)) {
 			len += str.length();
 		}
-		if(isNotEmpty(suffix)){
+		if (isNotEmpty(suffix)) {
 			len += str.length();
 		}
 		StringBuilder sb = new StringBuilder(len);
-		if(isNotEmpty(prefix) && false == startWith(str, prefix)){
+		if (isNotEmpty(prefix) && false == startWith(str, prefix)) {
 			sb.append(prefix);
 		}
-		if(isNotEmpty(str)){
+		if (isNotEmpty(str)) {
 			sb.append(str);
 		}
-		if(isNotEmpty(suffix) && false == endWith(str, suffix)){
+		if (isNotEmpty(suffix) && false == endWith(str, suffix)) {
 			sb.append(suffix);
 		}
 		return sb.toString();
@@ -1566,7 +1716,7 @@ public class StrUtil {
 	 * @return 是否被包装
 	 */
 	public static boolean isWrap(CharSequence str, String prefix, String suffix) {
-		if(ArrayUtil.hasNull(str, prefix, suffix)){
+		if (ArrayUtil.hasNull(str, prefix, suffix)) {
 			return false;
 		}
 		final String str2 = str.toString();
@@ -1925,8 +2075,8 @@ public class StrUtil {
 		}
 		return -1;
 	}
-	
-	//------------------------------------------------------------------------------------------------------------------ Append and prepend
+
+	// ------------------------------------------------------------------------------------------------------------------ Append and prepend
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>
 	 * 不忽略大小写
@@ -1941,7 +2091,7 @@ public class StrUtil {
 	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final CharSequence... suffixes) {
 		return appendIfMissing(str, suffix, false, suffixes);
 	}
-	
+
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>
 	 * 忽略大小写
@@ -1981,7 +2131,7 @@ public class StrUtil {
 		}
 		return str.toString().concat(suffix.toString());
 	}
-	
+
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串<br>
 	 * 不忽略大小写
@@ -1996,7 +2146,7 @@ public class StrUtil {
 	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
 		return prependIfMissing(str, prefix, false, prefixes);
 	}
-	
+
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串<br>
 	 * 忽略大小写
@@ -2011,7 +2161,7 @@ public class StrUtil {
 	public static String prependIfMissingIgnoreCase(final CharSequence str, final CharSequence prefix, final CharSequence... prefixes) {
 		return prependIfMissing(str, prefix, true, prefixes);
 	}
-	
+
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为开头，则在首部添加起始字符串
 	 *
@@ -2036,7 +2186,7 @@ public class StrUtil {
 		}
 		return prefix.toString().concat(str.toString());
 	}
-	
+
 	/**
 	 * 反转字符串<br>
 	 * 例如：abcd =》dcba

@@ -32,6 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
@@ -242,19 +243,7 @@ public class ExcelUtil {
 		Object value;
 		switch (cellType) {
 			case NUMERIC:
-				if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
-					value = cell.getDateCellValue();
-				} else {
-					double doubleValue = cell.getNumericCellValue();
-					CellStyle style = cell.getCellStyle();
-					String format = style.getDataFormatString();
-					if (null != format && format.indexOf('.') < 0) {
-						// 对于无小数部分的数字类型，转为Long
-						value = (long) doubleValue;
-					} else {
-						value = doubleValue;
-					}
-				}
+				value = getNumericValue(cell);
 				break;
 			case BOOLEAN:
 				value = cell.getBooleanCellValue();
@@ -367,6 +356,67 @@ public class ExcelUtil {
 			}
 		}
 		return sheetIndexPicMap;
+	}
+
+	/**
+	 * 获取数字类型的单元格值
+	 * 
+	 * @param cell 单元格
+	 * @return 单元格值，可能为Long、Double、Date
+	 */
+	private static Object getNumericValue(Cell cell) {
+		final double value = cell.getNumericCellValue();
+
+		final CellStyle style = cell.getCellStyle();
+		if (null == style) {
+			return value;
+		}
+
+		final short formatIndex = style.getDataFormat();
+		final String format = style.getDataFormatString();
+		
+		// 判断是否为日期
+		if (isDateType(formatIndex, format)) {
+			return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
+		}
+
+		// 普通数字
+		if (null != format && format.indexOf('.') < 0) {
+			// 对于无小数部分的数字类型，转为Long
+			return (long) value;
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * 是否为日期格式<br>
+	 * 判断方式：
+	 * <pre>
+	 * 1、指定序号
+	 * 2、org.apache.poi.ss.usermodel.DateUtil.isADateFormat方法判定
+	 * </pre>
+	 * 
+	 * @param formatIndex 格式序号
+	 * @param format 格式字符串
+	 * @return 是否为日期格式
+	 */
+	private static boolean isDateType(int formatIndex, String format) {
+		// yyyy-MM-dd----- 14
+		// yyyy年m月d日---- 31
+		// yyyy年m月------- 57
+		// m月d日 ---------- 58
+		// HH:mm----------- 20
+		// h时mm分 -------- 32
+		if (formatIndex == 14 || formatIndex == 31 || formatIndex == 57 || formatIndex == 58 || formatIndex == 20 || formatIndex == 32) {
+			return true;
+		}
+
+		if (org.apache.poi.ss.usermodel.DateUtil.isADateFormat(formatIndex, format)) {
+			return true;
+		}
+		
+		return false;
 	}
 	// -------------------------------------------------------------------------------------------------------------- Private method end
 }
