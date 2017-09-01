@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
@@ -86,6 +87,28 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	public boolean isGzip(){
 		final String contentEncoding = contentEncoding();
 		return contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip");
+	}
+	
+	/**
+	 * 获取本次请求服务器返回的Cookie信息
+	 * @return Cookie字符串
+	 * @since 3.1.1
+	 */
+	public String getCookieStr() {
+		return header(Header.SET_COOKIE);
+	}
+	
+	/**
+	 * 获取Cookie
+	 * @return Cookie列表
+	 * @since 3.1.1
+	 */
+	public List<HttpCookie> getCookie(){
+		final String cookieStr = getCookieStr();
+		if(StrUtil.isNotBlank(cookieStr)) {
+			return HttpCookie.parse(cookieStr);
+		}
+		return null;
 	}
 	// ---------------------------------------------------------------- Http Response Header end
 	
