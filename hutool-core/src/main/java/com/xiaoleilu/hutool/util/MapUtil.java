@@ -6,8 +6,6 @@ import com.xiaoleilu.hutool.lang.Filter;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Map相关工具类
@@ -512,10 +510,14 @@ public class MapUtil {
 		 * @return 连接字符串
 		 */
 		public String join(String separator, final String keyValueSeparator) {
-			return map.entrySet()
-			          .stream()
-			          .map(e -> String.valueOf(e.getKey()) + keyValueSeparator + String.valueOf(e.getValue()))
-			          .collect(Collectors.joining(separator));
+			StringBuilder strBuilder = StrUtil.builder();
+			for (Entry<K, V> entry : map.entrySet()) {
+				strBuilder.append(String.valueOf(entry.getKey()))
+				          .append(keyValueSeparator)
+				          .append(String.valueOf(entry.getValue()))
+				          .append(separator);
+			}
+			return strBuilder.length() > 0 ? strBuilder.substring(0, strBuilder.length() - 1) : StrUtil.EMPTY;
 		}
 		
 		/**
@@ -524,27 +526,17 @@ public class MapUtil {
 		 * @param keyValueSeparator kv之间的连接符
 		 * @return 连接字符串
 		 */
-		public String joinFilterNull(String separator, final String keyValueSeparator) {
-			return map.entrySet()
-			          .stream()
-			          .filter(e -> Objects.nonNull(e.getKey()) || Objects.nonNull(e.getValue()))
-			          .map(e -> String.valueOf(e.getKey()) + keyValueSeparator + String.valueOf(e.getValue()))
-			          .collect(Collectors.joining(separator));
-		}
-		
-		/**
-		 * 将map转成字符串
-		 * @param separator entry之间的连接符
-		 * @param keyValueSeparator kv之间的连接符
-		 * @param filterPredicate 过滤处理
-		 * @return 连接字符串
-		 */
-		public String join(String separator, String keyValueSeparator, Predicate<? super Entry<K, V>> filterPredicate) {
-			return map.entrySet()
-			          .stream()
-			          .filter(filterPredicate)
-			          .map(e -> String.valueOf(e.getKey()) + keyValueSeparator + String.valueOf(e.getValue()))
-			          .collect(Collectors.joining(separator));
+		public String joinFilteNull(String separator, final String keyValueSeparator) {
+			StringBuilder strBuilder = StrUtil.builder();
+			for (Entry<K, V> entry : map.entrySet()) {
+				if (entry.getKey() != null && entry.getValue() != null) {
+					strBuilder.append(String.valueOf(entry.getKey()))
+					          .append(keyValueSeparator)
+					          .append(String.valueOf(entry.getValue()))
+					          .append(separator);
+				}
+			}
+			return strBuilder.length() > 0 ? strBuilder.substring(0, strBuilder.length() - 1) : StrUtil.EMPTY;
 		}
 		
 	}
