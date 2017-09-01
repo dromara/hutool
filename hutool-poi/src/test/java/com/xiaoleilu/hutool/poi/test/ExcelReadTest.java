@@ -5,11 +5,11 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.resource.ClassPathResource;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.poi.excel.ExcelReader;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
-import com.xiaoleilu.hutool.poi.excel.editors.NumericToLongEditor;
 
 /**
  * Excel读取单元测试
@@ -17,6 +17,15 @@ import com.xiaoleilu.hutool.poi.excel.editors.NumericToLongEditor;
  *
  */
 public class ExcelReadTest {
+	
+	@Test
+	public void excelReadTest2() {
+		ExcelReader reader = ExcelUtil.getReader(FileUtil.file("d:/muban.xlsx"));
+		List<List<Object>> read = reader.read();
+		for (List<Object> list : read) {
+			Console.log(list);
+		}
+	}
 	
 	@Test
 	public void excelReadTest() {
@@ -37,9 +46,6 @@ public class ExcelReadTest {
 	@Test
 	public void excelReadToMapListTest() {
 		ExcelReader reader = ExcelUtil.getReader(new ClassPathResource("aaa.xlsx").getStream());
-		//设置单元格编辑器。可以将Double类型转为Long类型
-		reader.setCellEditor(new NumericToLongEditor());
-		
 		List<Map<String,Object>> readAll = reader.readAll();
 		for (Map<String, Object> map : readAll) {
 			Console.log(map);

@@ -21,8 +21,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.PictureData;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFPicture;
 import org.apache.poi.xssf.usermodel.XSSFShape;
@@ -30,6 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
@@ -45,19 +48,21 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class ExcelUtil {
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet
+	 * 
 	 * @param bookFile Excel文件
 	 * @return {@link ExcelReader}
 	 */
 	public static ExcelReader getReader(File bookFile) {
 		return getReader(bookFile, 0);
 	}
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * 
 	 * @param bookFile Excel文件
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 * @return {@link ExcelReader}
@@ -65,9 +70,10 @@ public class ExcelUtil {
 	public static ExcelReader getReader(File bookFile, int sheetIndex) {
 		return new ExcelReader(bookFile, sheetIndex);
 	}
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * 
 	 * @param bookFile Excel文件
 	 * @param sheetName sheet名，第一个默认是sheet1
 	 * @return {@link ExcelReader}
@@ -75,19 +81,21 @@ public class ExcelUtil {
 	public static ExcelReader getReader(File bookFile, String sheetName) {
 		return new ExcelReader(bookFile, sheetName);
 	}
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet
+	 * 
 	 * @param bookStream Excel文件的流
 	 * @return {@link ExcelReader}
 	 */
 	public static ExcelReader getReader(InputStream bookStream) {
 		return getReader(bookStream, 0);
 	}
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 * @return {@link ExcelReader}
@@ -95,9 +103,10 @@ public class ExcelUtil {
 	public static ExcelReader getReader(InputStream bookStream, int sheetIndex) {
 		return new ExcelReader(bookStream, sheetIndex);
 	}
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetName sheet名，第一个默认是sheet1
 	 * @return {@link ExcelReader}
@@ -105,7 +114,7 @@ public class ExcelUtil {
 	public static ExcelReader getReader(InputStream bookStream, String sheetName) {
 		return new ExcelReader(bookStream, sheetName);
 	}
-	
+
 	/**
 	 * 加载工作簿
 	 * 
@@ -115,7 +124,7 @@ public class ExcelUtil {
 	public static Workbook loadBook(File excelFile) {
 		return loadBook(excelFile, null);
 	}
-	
+
 	/**
 	 * 加载工作簿
 	 * 
@@ -130,7 +139,7 @@ public class ExcelUtil {
 			throw new POIException(e);
 		}
 	}
-	
+
 	/**
 	 * 加载工作簿
 	 * 
@@ -176,7 +185,7 @@ public class ExcelUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取单元格值
 	 * 
@@ -187,7 +196,7 @@ public class ExcelUtil {
 	public static Object getCellValue(Cell cell, boolean isTrimCellValue) {
 		return getCellValue(cell, cell.getCellTypeEnum(), isTrimCellValue);
 	}
-	
+
 	/**
 	 * 获取单元格值
 	 * 
@@ -196,7 +205,7 @@ public class ExcelUtil {
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellEditor cellEditor) {
-		if(null == cell) {
+		if (null == cell) {
 			return null;
 		}
 		return getCellValue(cell, cell.getCellTypeEnum(), cellEditor);
@@ -213,7 +222,7 @@ public class ExcelUtil {
 	public static Object getCellValue(Cell cell, CellType cellType, final boolean isTrimCellValue) {
 		return getCellValue(cell, cellType, isTrimCellValue ? new TrimEditor() : null);
 	}
-	
+
 	/**
 	 * 获取单元格值<br>
 	 * 如果单元格值为数字格式，则判断其格式中是否有小数部分，无则返回Long类型，否则返回Double类型
@@ -224,44 +233,32 @@ public class ExcelUtil {
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellType cellType, CellEditor cellEditor) {
-		if(null == cell) {
+		if (null == cell) {
 			return null;
 		}
-		if(null == cellType) {
+		if (null == cellType) {
 			cellType = cell.getCellTypeEnum();
 		}
-		
+
 		Object value;
 		switch (cellType) {
 			case NUMERIC:
-				if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
-					value = cell.getDateCellValue();
-				}else {
-					double doubleValue = cell.getNumericCellValue();
-					CellStyle style = cell.getCellStyle();
-					String format = style.getDataFormatString();
-					if(null != format && format.indexOf('.') < 0) {
-						//对于无小数部分的数字类型，转为Long
-						value = (long)doubleValue;
-					}else {
-						value = doubleValue;
-					}
-				}
+				value = getNumericValue(cell);
 				break;
 			case BOOLEAN:
 				value = cell.getBooleanCellValue();
 				break;
 			case FORMULA:
-				//遇到公式时查找公式结果类型
+				// 遇到公式时查找公式结果类型
 				value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), cellEditor);
 				break;
 			case BLANK:
 				value = StrUtil.EMPTY;
 				break;
 			default:
-				value = cell.getStringCellValue(); 
+				value = cell.getStringCellValue();
 		}
-		
+
 		return null == cellEditor ? value : cellEditor.edit(cell, value);
 	}
 
@@ -287,6 +284,28 @@ public class ExcelUtil {
 		}
 	}
 
+	/**
+	 * 判断指定的单元格是否是合并单元格
+	 * 
+	 * @param sheet {@link Sheet}
+	 * @param row 行号
+	 * @param column 列号
+	 * @return 是否是合并单元格
+	 * @since 3.1.1
+	 */
+	public static boolean isMergedRegion(Sheet sheet, int row, int column) {
+		final int sheetMergeCount = sheet.getNumMergedRegions();
+		CellRangeAddress ca;
+		for (int i = 0; i < sheetMergeCount; i++) {
+			ca = sheet.getMergedRegion(i);
+			if (row >= ca.getFirstRow() && row <= ca.getLastRow() && column >= ca.getFirstColumn() && column <= ca.getLastColumn()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// -------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获取XLS工作簿指定sheet中图片列表
 	 * 
@@ -338,4 +357,66 @@ public class ExcelUtil {
 		}
 		return sheetIndexPicMap;
 	}
+
+	/**
+	 * 获取数字类型的单元格值
+	 * 
+	 * @param cell 单元格
+	 * @return 单元格值，可能为Long、Double、Date
+	 */
+	private static Object getNumericValue(Cell cell) {
+		final double value = cell.getNumericCellValue();
+
+		final CellStyle style = cell.getCellStyle();
+		if (null == style) {
+			return value;
+		}
+
+		final short formatIndex = style.getDataFormat();
+		final String format = style.getDataFormatString();
+		
+		// 判断是否为日期
+		if (isDateType(formatIndex, format)) {
+			return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
+		}
+
+		// 普通数字
+		if (null != format && format.indexOf('.') < 0) {
+			// 对于无小数部分的数字类型，转为Long
+			return (long) value;
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * 是否为日期格式<br>
+	 * 判断方式：
+	 * <pre>
+	 * 1、指定序号
+	 * 2、org.apache.poi.ss.usermodel.DateUtil.isADateFormat方法判定
+	 * </pre>
+	 * 
+	 * @param formatIndex 格式序号
+	 * @param format 格式字符串
+	 * @return 是否为日期格式
+	 */
+	private static boolean isDateType(int formatIndex, String format) {
+		// yyyy-MM-dd----- 14
+		// yyyy年m月d日---- 31
+		// yyyy年m月------- 57
+		// m月d日 ---------- 58
+		// HH:mm----------- 20
+		// h时mm分 -------- 32
+		if (formatIndex == 14 || formatIndex == 31 || formatIndex == 57 || formatIndex == 58 || formatIndex == 20 || formatIndex == 32) {
+			return true;
+		}
+
+		if (org.apache.poi.ss.usermodel.DateUtil.isADateFormat(formatIndex, format)) {
+			return true;
+		}
+		
+		return false;
+	}
+	// -------------------------------------------------------------------------------------------------------------- Private method end
 }
