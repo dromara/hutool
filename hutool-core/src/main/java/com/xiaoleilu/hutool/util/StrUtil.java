@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.util;
 
+import com.xiaoleilu.hutool.lang.StrFormatter;
+import com.xiaoleilu.hutool.lang.StrSpliter;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
@@ -9,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.xiaoleilu.hutool.lang.StrFormatter;
-import com.xiaoleilu.hutool.lang.StrSpliter;
 
 /**
  * 字符串工具类
@@ -990,6 +990,37 @@ public class StrUtil {
 		}
 
 		return string.toString().substring(fromIndex, toIndex);
+	}
+	
+	/**
+	 * 截取部分字符串，这里一个汉字的长度认为是2
+	 *
+	 * @param str 字符串
+	 * @param len 切割的位置
+	 * @param suffix 切割后加上后缀
+	 * @return 切割后的字符串
+	 */
+	public static String subPreChinese(CharSequence str, int len, String suffix) {
+		try {
+			byte b[];
+			int counterOfDoubleByte = 0;
+			b = str.toString().getBytes("GBK");
+			if (b.length <= len) {
+				return str.toString();
+			}
+			for (int i = 0; i < len; i++) {
+				if (b[i] < 0) {
+					counterOfDoubleByte++;
+				}
+			}
+			if (counterOfDoubleByte % 2 == 0) {
+				return new String(b, 0, len, "GBK") + suffix;
+			} else {
+				return new String(b, 0, len - 1, "GBK") + suffix;
+			}
+		} catch (Exception e) {
+			return str.toString();
+		}
 	}
 
 	/**
