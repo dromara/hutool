@@ -286,6 +286,25 @@ public class StrUtil {
 			}
 		}
 	}
+	
+	/**
+	 * 除去字符串头尾部的空白，如果字符串是<code>null</code>，返回<code>""</code>。
+	 *
+	 * <pre>
+	 * StringUtils.trimToEmpty(null)          = ""
+	 * StringUtils.trimToEmpty("")            = ""
+	 * StringUtils.trimToEmpty("     ")       = ""
+	 * StringUtils.trimToEmpty("abc")         = "abc"
+	 * StringUtils.trimToEmpty("    abc    ") = "abc"
+	 * </pre>
+	 *
+	 * @param str  the String to be trimmed, may be null
+	 * @return the trimmed String, or an empty String if {@code null} input
+	 * @since 2.0
+	 */
+	public static String trimToEmpty(final String str) {
+		return str == null ? EMPTY : trim(str, 0);
+	}
 
 	/**
 	 * 除去字符串头部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
