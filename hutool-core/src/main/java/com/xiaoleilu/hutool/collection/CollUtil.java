@@ -1213,7 +1213,7 @@ public class CollUtil {
 	/**
 	 * 行转列，合并相同的键，值合并为列表<br>
 	 * 将Map列表中相同key的值组成列表做为Map的value<br>
-	 * 是{@link #toListMap(Map)}的逆方法<br>
+	 * 是{@link #toMapList(Map)}的逆方法<br>
 	 * 比如传入数据：
 	 * 
 	 * <pre>
@@ -1247,7 +1247,7 @@ public class CollUtil {
 
 	/**
 	 * 列转行。将Map中值列表分别按照其位置与key组成新的map。<br>
-	 * 是{@link #toMapList(Iterable)}的逆方法<br>
+	 * 是{@link #toListMap(Iterable)}的逆方法<br>
 	 * 比如传入数据：
 	 * 
 	 * <pre>

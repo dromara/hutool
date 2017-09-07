@@ -799,7 +799,6 @@ public final class IoUtil {
 	 * 将多部分内容写到流中
 	 * 
 	 * @param out 输出流
-	 * @param charset 写出的内容的字符集
 	 * @param isCloseOut 写入完毕是否关闭输出流
 	 * @param contents 写入的内容
 	 * @throws IORuntimeException IO异常

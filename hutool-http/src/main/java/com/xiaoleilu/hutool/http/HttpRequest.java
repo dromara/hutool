@@ -235,11 +235,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置Cookie<br>
 	 * 自定义Cookie后会覆盖Hutool的默认Cookie行为
 	 * 
-	 * @param cookie Cookie值，如果为{@code null}则设置无效，使用默认Cookie行为
+	 * @param cookies Cookie值数组，如果为{@code null}则设置无效，使用默认Cookie行为
 	 * @return this
 	 * @since 3.1.1
 	 */
 	public HttpRequest cookie(HttpCookie... cookies){
+		if(ArrayUtil.isEmpty(cookies)) {
+			return disableCookie();
+		}
 		return cookie(ArrayUtil.join(cookies, ";"));
 	}
 	

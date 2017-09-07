@@ -237,7 +237,7 @@ public class ExcelUtil {
 	 * 获取单元格值
 	 * 
 	 * @param cell {@link Cell}单元格
-	 * @param cellValueEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
+	 * @param cellEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellEditor cellEditor) {
@@ -265,7 +265,7 @@ public class ExcelUtil {
 	 * 
 	 * @param cell {@link Cell}单元格
 	 * @param cellType 单元格值类型{@link CellType}枚举，如果为{@code null}默认使用cell的类型
-	 * @param cellValueEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
+	 * @param cellEditor 单元格值编辑器。可以通过此编辑器对单元格值做自定义操作
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, CellType cellType, CellEditor cellEditor) {

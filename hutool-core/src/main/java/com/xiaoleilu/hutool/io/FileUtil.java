@@ -1844,7 +1844,7 @@ public final class FileUtil {
 	 * @param charset 字符集
 	 * @return 从文件中load出的数据
 	 * @throws IORuntimeException IO异常
-	 * @deprecated 使用{@link #load(String, String, ReaderHandler)} 代替
+	 * @deprecated 使用FileUtil#load(String, String, ReaderHandler) 代替
 	 */
 	@Deprecated
 	public static <T> T load(ReaderHandler<T> readerHandler, String path, String charset) throws IORuntimeException {
@@ -1857,7 +1857,6 @@ public final class FileUtil {
 	 * @param <T> 集合类型
 	 * @param readerHandler Reader处理类
 	 * @param path 文件的绝对路径
-	 * @param charset 字符集
 	 * @return 从文件中load出的数据
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.1
@@ -1902,7 +1901,6 @@ public final class FileUtil {
 	 * @param <T> 集合类型
 	 * @param readerHandler Reader处理类
 	 * @param file 文件
-	 * @param charset 字符集
 	 * @return 从文件中load出的数据
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.1

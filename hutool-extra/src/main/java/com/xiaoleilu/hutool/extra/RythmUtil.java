@@ -44,7 +44,6 @@ public class RythmUtil {
 	 * @param engine {@link RythmEngine}
 	 * @param template 模板内容
 	 * @param args 变量值
-	 * @return 渲染后的内容
 	 */
 	public static void render(RythmEngine engine, Writer writer, String template, Object... args) {
 		engine.render(writer, template, args);
@@ -56,7 +55,6 @@ public class RythmUtil {
 	 * @param engine {@link RythmEngine}
 	 * @param template 模板内容
 	 * @param args 变量值
-	 * @return 渲染后的内容
 	 */
 	public static void render(RythmEngine engine, Writer writer, String template, Map<String, Object> args) {
 		engine.render(writer, template, args);
