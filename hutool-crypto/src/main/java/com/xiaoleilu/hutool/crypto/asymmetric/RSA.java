@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.crypto.asymmetric;
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -108,7 +109,7 @@ public class RSA extends AsymmetricCrypto {
 		super(ALGORITHM_RSA, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
-
+	
 	/**
 	 * 分组加密
 	 * 
@@ -118,6 +119,20 @@ public class RSA extends AsymmetricCrypto {
 	 * @throws CryptoException 加密异常
 	 */
 	public String encryptStr(String data, KeyType keyType) {
+		return encryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 分组加密
+	 * 
+	 * @param data 数据
+	 * @param keyType 密钥类型
+	 * @param charset 加密前编码
+	 * @return 加密后的密文
+	 * @throws CryptoException 加密异常
+	 * @since 3.1.1
+	 */
+	public String encryptStr(String data, KeyType keyType, Charset charset) {
 		Key key = getKeyByType(keyType);
 		// 模长
 		int keyLength = ((RSAKey) key).getModulus().bitLength() / 8;
@@ -129,7 +144,7 @@ public class RSA extends AsymmetricCrypto {
 			String[] datas = StrUtil.split(data, keyLength - 11);
 			// 如果明文长度大于模长-11则要分组加密
 			for (String s : datas) {
-				sb.append(BCD.bcdToStr(clipher.doFinal(s.getBytes())));
+				sb.append(BCD.bcdToStr(clipher.doFinal(StrUtil.bytes(s, charset))));
 			}
 		} catch (Exception e) {
 			throw new CryptoException(e);
@@ -147,6 +162,19 @@ public class RSA extends AsymmetricCrypto {
 	 * @return 解密后的密文
 	 */
 	public String decryptStr(String data, KeyType keyType) {
+		return decryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 分组解密
+	 * 
+	 * @param data 数据
+	 * @param keyType 密钥类型
+	 * @param charset 加密前编码
+	 * @return 解密后的密文
+	 * @since 3.1.1
+	 */
+	public String decryptStr(String data, KeyType keyType, Charset charset) {
 		Key key = getKeyByType(keyType);
 		// 模长
 		int keyLength = ((RSAKey) key).getModulus().bitLength() / 8;
@@ -155,11 +183,11 @@ public class RSA extends AsymmetricCrypto {
 		try {
 			clipher.init(Cipher.DECRYPT_MODE, key);
 			// 加密数据长度 <= 模长-11
-			byte[] bcd = BCD.ascToBcd(StrUtil.utf8Bytes(data));
+			byte[] bcd = BCD.ascToBcd(StrUtil.bytes(data, charset));
 			// 如果密文长度大于模长则要分组解密
 			byte[][] arrays = ArrayUtil.split(bcd, keyLength);
 			for (byte[] arr : arrays) {
-				sb.append(StrUtil.str(clipher.doFinal(arr), CharsetUtil.CHARSET_UTF_8));
+				sb.append(StrUtil.str(clipher.doFinal(arr), charset));
 			}
 		} catch (Exception e) {
 			throw new CryptoException(e);

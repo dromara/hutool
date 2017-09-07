@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -31,5 +32,15 @@ public class JSONUtilTest {
 		
 		String str = JSONUtil.toJsonStr(map);
 		Console.log(str);
+	}
+	
+	@Test
+	public void getByExpTest() {
+		String str = FileUtil.readUtf8String("d:/a.json");
+		JSONObject obj = JSONUtil.parseObj(str);
+		JSONObject code = obj.getJSONObject("code");
+		Console.log(code);
+		
+		Console.log(obj.getByExp("code.sentiment"));
 	}
 }
