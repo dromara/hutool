@@ -33,6 +33,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
 import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
@@ -48,6 +49,18 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class ExcelUtil {
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
+	 * 默认调用第一个sheet
+	 * 
+	 * @param bookFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @return {@link ExcelReader}
+	 * @since 3.1.1
+	 */
+	public static ExcelReader getReader(String bookFilePath) {
+		return getReader(bookFilePath, 0);
+	}
 
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
@@ -58,6 +71,18 @@ public class ExcelUtil {
 	 */
 	public static ExcelReader getReader(File bookFile) {
 		return getReader(bookFile, 0);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
+	 * 
+	 * @param bookFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 * @return {@link ExcelReader}
+	 * @since 3.1.1
+	 */
+	public static ExcelReader getReader(String bookFilePath, int sheetIndex) {
+		return new ExcelReader(bookFilePath, sheetIndex);
 	}
 
 	/**
@@ -113,6 +138,17 @@ public class ExcelUtil {
 	 */
 	public static ExcelReader getReader(InputStream bookStream, String sheetName) {
 		return new ExcelReader(bookStream, sheetName);
+	}
+	
+	/**
+	 * 加载工作簿
+	 * 
+	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @return {@link Workbook}
+	 * @since 3.1.1
+	 */
+	public static Workbook loadBook(String excelFilePath) {
+		return loadBook(FileUtil.file(excelFilePath), null);
 	}
 
 	/**

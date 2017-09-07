@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.db;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -631,7 +630,7 @@ public final class DbUtil {
 		try {
 			reader = clob.getCharacterStream();
 			return IoUtil.read(reader);
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}finally{
 			IoUtil.close(reader);
@@ -650,7 +649,7 @@ public final class DbUtil {
 		try {
 			in = blob.getBinaryStream();
 			return IoUtil.read(in, charset);
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}finally{
 			IoUtil.close(in);

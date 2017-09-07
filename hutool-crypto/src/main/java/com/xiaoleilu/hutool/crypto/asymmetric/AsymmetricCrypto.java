@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.crypto.asymmetric;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyPair;
@@ -15,6 +14,7 @@ import javax.crypto.Cipher;
 import com.xiaoleilu.hutool.crypto.CryptoException;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -284,13 +284,10 @@ public class AsymmetricCrypto {
 	 * @param data 被加密的字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
+	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] encrypt(InputStream data, KeyType keyType) {
-		try {
-			return encrypt(IoUtil.readBytes(data), keyType);
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}
+	public byte[] encrypt(InputStream data, KeyType keyType) throws IORuntimeException{
+		return encrypt(IoUtil.readBytes(data), keyType);
 	}
 
 	// --------------------------------------------------------------------------------- Decrypt
@@ -319,13 +316,10 @@ public class AsymmetricCrypto {
 	 * @param data 被解密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 解密后的bytes
+	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] decrypt(InputStream data, KeyType keyType) {
-		try {
-			return decrypt(IoUtil.readBytes(data), keyType);
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}
+	public byte[] decrypt(InputStream data, KeyType keyType) throws IORuntimeException{
+		return decrypt(IoUtil.readBytes(data), keyType);
 	}
 
 	// --------------------------------------------------------------------------------- Getters and Setters

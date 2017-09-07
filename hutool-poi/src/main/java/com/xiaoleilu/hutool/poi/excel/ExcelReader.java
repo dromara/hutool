@@ -39,6 +39,16 @@ public class ExcelReader {
 	/**
 	 * 构造
 	 * 
+	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 */
+	public ExcelReader(String excelFilePath, int sheetIndex) {
+		this(ExcelUtil.loadBook(excelFilePath), sheetIndex);
+	}
+	
+	/**
+	 * 构造
+	 * 
 	 * @param bookFile Excel文件
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */

@@ -13,6 +13,11 @@
 * cron模块中增加方法支持获取Task和CronPattern（感谢@Γ平淡ㄎ）
 * HttpResponse中增加个体Cookie方法
 * Hive驱动识别支持。（@【北京】宁静）
+* IoUtil中IOException替换为IORuntimeException
+* IoUtil和FileUtil增加UTF-8编码重载
+* Http增加headerList方法
+* Http设置Cookie支持HttpCookie对象列表
+* 新增RuntimeUtil，用于执行系统命令的快捷工具类（感谢@【北京】宁静）
 
 ### Bug修复
 * NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义

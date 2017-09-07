@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.http;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.util.HashMap;
@@ -236,6 +237,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @param cookie Cookie值，如果为{@code null}则设置无效，使用默认Cookie行为
 	 * @return this
+	 * @since 3.1.1
+	 */
+	public HttpRequest cookie(HttpCookie... cookies){
+		return cookie(ArrayUtil.join(cookies, ";"));
+	}
+	
+	/**
+	 * 设置Cookie<br>
+	 * 自定义Cookie后会覆盖Hutool的默认Cookie行为
+	 * 
+	 * @param cookie Cookie值，如果为{@code null}则设置无效，使用默认Cookie行为
+	 * @return this
 	 * @since 3.0.7
 	 */
 	public HttpRequest cookie(String cookie){
@@ -260,7 +273,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest enableDefaultCookie(){
-		return cookie(null);
+		return cookie((String)null);
 	}
 	// ---------------------------------------------------------------- Http Request Header end
 

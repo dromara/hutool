@@ -2,8 +2,9 @@ package com.xiaoleilu.hutool.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+
+import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
  * 基于快速缓冲FastByteBuffer的OutputStream，随着数据的增长自动扩充缓冲区
@@ -54,15 +55,30 @@ public class FastByteArrayOutputStream extends OutputStream {
 		buffer.reset();
 	}
 
-	public void writeTo(OutputStream out) throws IOException {
-		int index = buffer.index();
-		for (int i = 0; i < index; i++) {
-			byte[] buf = buffer.array(i);
-			out.write(buf);
+	/**
+	 * 写出
+	 * @param out 输出流
+	 * @throws IORuntimeException IO异常
+	 */
+	public void writeTo(OutputStream out) throws IORuntimeException {
+		final int index = buffer.index();
+		byte[] buf;
+		try {
+			for (int i = 0; i < index; i++) {
+				buf = buffer.array(i);
+				out.write(buf);
+			}
+			out.write(buffer.array(index), 0, buffer.offset());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
-		out.write(buffer.array(index), 0, buffer.offset());
 	}
 
+	
+	/**
+	 * 转为Byte数组
+	 * @return Byte数组
+	 */
 	public byte[] toByteArray() {
 		return buffer.toArray();
 	}
@@ -72,10 +88,20 @@ public class FastByteArrayOutputStream extends OutputStream {
 		return new String(toByteArray());
 	}
 
-	public String toString(String enc) throws UnsupportedEncodingException {
-		return new String(toByteArray(), enc);
+	/**
+	 * 转为字符串
+	 * @param charsetName 编码
+	 * @return 字符串
+	 */
+	public String toString(String charsetName) {
+		return toString(CharsetUtil.charset(charsetName));
 	}
 	
+	/**
+	 * 转为字符串
+	 * @param charset 编码
+	 * @return 字符串
+	 */
 	public String toString(Charset charset) {
 		return new String(toByteArray(), charset);
 	}
