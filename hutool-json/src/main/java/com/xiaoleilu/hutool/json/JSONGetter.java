@@ -12,25 +12,41 @@ import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	
 	/**
-	 * 获得JSONArray对象
+	 * 获得JSONArray对象<br>
+	 * 如果值为其它类型对象，尝试转换为{@link JSONArray}返回，否则抛出异常
 	 * 
 	 * @param key KEY
 	 * @return JSONArray对象，如果值为null或者非JSONArray类型，返回null
 	 */
 	public JSONArray getJSONArray(K key) {
-		final Object o = this.getObj(key);
-		return o instanceof JSONArray ? (JSONArray) o : null;
+		final Object object = this.getObj(key);
+		if(null == object) {
+			return null;
+		}
+		
+		if(object instanceof JSONArray) {
+			return (JSONArray) object;
+		}
+		return new JSONArray(object);
 	}
 
 	/**
-	 * 获得JSONObject对象
+	 * 获得JSONObject对象<br>
+	 * 如果值为其它类型对象，尝试转换为{@link JSONObject}返回，否则抛出异常
 	 * 
 	 * @param key KEY
 	 * @return JSONArray对象，如果值为null或者非JSONObject类型，返回null
 	 */
 	public JSONObject getJSONObject(K key) {
 		final Object object = this.getObj(key);
-		return object instanceof JSONObject ? (JSONObject) object : null;
+		if(null == object) {
+			return null;
+		}
+		
+		if(object instanceof JSONObject) {
+			return (JSONObject) object;
+		}
+		return new JSONObject(object);
 	}
 	
 	/**

@@ -12,6 +12,7 @@
 * 加入Rythm模板引擎工具类
 * cron模块中增加方法支持获取Task和CronPattern（感谢@Γ平淡ㄎ）
 * HttpResponse中增加个体Cookie方法
+* Hive驱动识别支持。（@【北京】宁静）
 
 ### Bug修复
 * NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义

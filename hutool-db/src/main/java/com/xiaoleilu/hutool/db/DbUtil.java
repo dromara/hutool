@@ -537,6 +537,10 @@ public final class DbUtil {
 			driver = DialectFactory.DRIVER_POSTGRESQL;
 		}else if(nameContainsProductInfo.contains("sqlite")) {
 			driver = DialectFactory.DRIVER_SQLLITE3;
+		}else if(nameContainsProductInfo.contains("hive")) {
+			driver = DialectFactory.DRIVER_HIVE;
+		}else if(nameContainsProductInfo.contains("hive2")) {
+			driver = DialectFactory.DRIVER_HIVE2;
 		}
 		
 		return driver;
