@@ -1,18 +1,11 @@
 package com.xiaoleilu.hutool.util;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Filter;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Map相关工具类
@@ -389,5 +382,253 @@ public class MapUtil {
 			}
 		}
 		return map2;
+	}
+	
+	/**
+	 * Map创建类
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 */
+	public static class MapBuilder<K, V> {
+		private Map<K, V> map;
+		
+		/**
+		 * 链式Map创建类
+		 * @param map 要使用的Map实现类
+		 */
+		public MapBuilder(Map<K, V> map) {
+			this.map = map;
+		}
+		
+		/**
+		 * 链式Map创建
+		 * @param k Key类型
+		 * @param v Value类型
+		 * @return 当前类
+		 */
+		public MapBuilder<K, V> put(K k, V v) {
+			map.put(k, v);
+			return this;
+		}
+		
+		/**
+		 * 链式Map创建
+		 * @param k1 Key类型
+		 * @param v1 Value类型
+		 * @param k2 Key类型
+		 * @param v2 Value类型
+		 * @return 当前类
+		 */
+		public MapBuilder<K, V> put(K k1, V v1, K k2, V v2) {
+			map.put(k1, v1);
+			map.put(k2, v2);
+			return this;
+		}
+		
+		/**
+		 * 链式Map创建 
+		 * @param k1 Key类型
+		 * @param v1 Value类型
+		 * @param k2 Key类型
+		 * @param v2 Value类型
+		 * @param k3 Key类型
+		 * @param v3 Value类型
+		 * @return 当前类
+		 */
+		public MapBuilder<K, V> put(K k1, V v1, K k2, V v2, K k3, V v3) {
+			map.put(k1, v1);
+			map.put(k2, v2);
+			map.put(k3, v3);
+			return this;
+		}
+		
+		/**
+		 * 链式Map创建
+		 * @param k1 Key类型
+		 * @param v1 Value类型
+		 * @param k2 Key类型
+		 * @param v2 Value类型
+		 * @param k3 Key类型
+		 * @param v3 Value类型
+		 * @param k4 Key类型
+		 * @param v4 Value类型
+		 * @return 当前类
+		 */
+		public MapBuilder<K, V> put(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+			map.put(k1, v1);
+			map.put(k2, v2);
+			map.put(k3, v3);
+			map.put(k4, v4);
+			return this;
+		}
+		
+		/**
+		 * 链式Map创建
+		 * @param k1 Key类型
+		 * @param v1 Value类型
+		 * @param k2 Key类型
+		 * @param v2 Value类型
+		 * @param k3 Key类型
+		 * @param v3 Value类型
+		 * @param k4 Key类型
+		 * @param v4 Value类型
+		 * @param k5 Key类型
+		 * @param v5 Value类型
+		 * @return 当前类
+		 */
+		public MapBuilder<K, V> put(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+			map.put(k1, v1);
+			map.put(k2, v2);
+			map.put(k3, v3);
+			map.put(k4, v4);
+			map.put(k5, v5);
+			return this;
+		}
+		
+		/**
+		 * 链式Map创建
+		 * @param map 合并map
+		 * @return 当前类
+		 */
+		public MapBuilder<K, V> putAll(Map<K, V> map) {
+			this.map.putAll(map);
+			return this;
+		}
+		
+		/**
+		 * 创建后的map
+		 * @return 创建后的map
+		 */
+		public Map<K, V> map() {
+			return map;
+		}
+		
+		/**
+		 * 将map转成字符串
+		 * @param separator entry之间的连接符
+		 * @param keyValueSeparator kv之间的连接符 
+		 * @return 连接字符串
+		 */
+		public String join(String separator, final String keyValueSeparator) {
+			StringBuilder strBuilder = StrUtil.builder();
+			for (Entry<K, V> entry : map.entrySet()) {
+				strBuilder.append(String.valueOf(entry.getKey()))
+				          .append(keyValueSeparator)
+				          .append(String.valueOf(entry.getValue()))
+				          .append(separator);
+			}
+			return strBuilder.length() > 0 ? strBuilder.substring(0, strBuilder.length() - 1) : StrUtil.EMPTY;
+		}
+		
+		/**
+		 * 将map转成字符串
+		 * @param separator entry之间的连接符
+		 * @param keyValueSeparator kv之间的连接符
+		 * @return 连接字符串
+		 */
+		public String joinFilteNull(String separator, final String keyValueSeparator) {
+			StringBuilder strBuilder = StrUtil.builder();
+			for (Entry<K, V> entry : map.entrySet()) {
+				if (entry.getKey() != null && entry.getValue() != null) {
+					strBuilder.append(String.valueOf(entry.getKey()))
+					          .append(keyValueSeparator)
+					          .append(String.valueOf(entry.getValue()))
+					          .append(separator);
+				}
+			}
+			return strBuilder.length() > 0 ? strBuilder.substring(0, strBuilder.length() - 1) : StrUtil.EMPTY;
+		}
+		
+	}
+	
+	/**
+	 * 创建链接调用map
+	 * @param map 实际使用的map
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @return map创建类
+	 */
+	public static <K, V> MapBuilder<K, V> map(Map<K, V> map) {
+		return new MapBuilder<>(map);
+	}
+	
+	/**
+	 * 创建链接调用map
+	 * @param k   key
+	 * @param v   value
+	 * @param <K> Key类型
+	 * @param <V> Key类型
+	 * @return map创建类
+	 */
+	public static <K, V> MapBuilder<K, V> put(K k, V v) {
+		return (map(new HashMap<K, V>())).put(k, v);
+	}
+	
+	/**
+	 * 创建链接调用map
+	 * @param k1   key
+	 * @param v1   value
+	 * @param k2   key
+	 * @param v2   value
+	 * @param <K> Key类型
+	 * @param <V> Key类型
+	 * @return map创建类
+	 */
+	public static <K, V> MapBuilder<K, V> put(K k1, V v1, K k2, V v2) {
+		return (map(new HashMap<K, V>())).put(k1, v1, k2, v2);
+	}
+	
+	/**
+	 * 创建链接调用map
+	 * @param k1   key
+	 * @param v1   value
+	 * @param k2   key
+	 * @param v2   value
+	 * @param k3   key
+	 * @param v3   value
+	 * @param <K> Key类型
+	 * @param <V> Key类型
+	 * @return map创建类
+	 */
+	public static <K, V> MapBuilder<K, V> put(K k1, V v1, K k2, V v2, K k3, V v3) {
+		return (map(new HashMap<K, V>())).put(k1, v1, k2, v2, k3, v3);
+	}
+	
+	/**
+	 * 创建链接调用map
+	 * @param k1   key
+	 * @param v1   value
+	 * @param k2   key
+	 * @param v2   value
+	 * @param k3   key
+	 * @param v3   value
+	 * @param k4   key
+	 * @param v4   value
+	 * @param <K> Key类型
+	 * @param <V> Key类型
+	 * @return map创建类
+	 */
+	public static <K, V> MapBuilder<K, V> put(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+		return (map(new HashMap<K, V>())).put(k1, v1, k2, v2, k3, v3, k4, v4);
+	}
+	
+	/**
+	 * 创建链接调用map
+	 * @param k1   key
+	 * @param v1   value
+	 * @param k2   key
+	 * @param v2   value
+	 * @param k3   key
+	 * @param v3   value
+	 * @param k4   key
+	 * @param v4   value
+	 * @param k5   key
+	 * @param v5   value
+	 * @param <K> Key类型
+	 * @param <V> Key类型
+	 * @return map创建类
+	 */
+	public static <K, V> MapBuilder<K, V> put(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+		return (map(new HashMap<K, V>())).put(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
 	}
 }
