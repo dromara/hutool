@@ -18,6 +18,7 @@
 * Http增加headerList方法
 * Http设置Cookie支持HttpCookie对象列表
 * 新增RuntimeUtil，用于执行系统命令的快捷工具类（感谢@【北京】宁静）
+* 新增DateUtil.isExpired方法（issue#41@Github）
 
 ### Bug修复
 * NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义
@@ -28,6 +29,7 @@
 * 修复cron模块中移除Task导致的index错误问题（感谢@Γ平淡ㄎ）
 * 修复POI模块中自定义单元格含有中文时无法识别为日期的问题（感谢@【昆明】Tang）
 * 修复RSA算法编码问题（感谢@【长沙】笑小生）
+* Http模块对参数key做编码（issue#IEYLP@gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

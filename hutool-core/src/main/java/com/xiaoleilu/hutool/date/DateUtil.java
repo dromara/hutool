@@ -567,7 +567,7 @@ public class DateUtil {
 	public static DateTime parseTime(String timeString) {
 		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
 	}
-	
+
 	/**
 	 * 解析时间，格式HH:mm:ss，日期默认为今天
 	 * 
@@ -1081,7 +1081,7 @@ public class DateUtil {
 	public static String formatBetween(long betweenMs) {
 		return new BetweenFormater(betweenMs, BetweenFormater.Level.MILLSECOND).format();
 	}
-	
+
 	/**
 	 * 当前日期是否在日期指定范围内<br>
 	 * 起始日期和结束日期可以互换
@@ -1092,10 +1092,10 @@ public class DateUtil {
 	 * @return 是否在范围内
 	 * @since 3.0.8
 	 */
-	public static boolean isIn(Date date, Date beginDate, Date endDate){
-		if(date instanceof DateTime){
-			return ((DateTime)date).isIn(beginDate, endDate);
-		}else{
+	public static boolean isIn(Date date, Date beginDate, Date endDate) {
+		if (date instanceof DateTime) {
+			return ((DateTime) date).isIn(beginDate, endDate);
+		} else {
 			return new DateTime(date).isIn(beginDate, endDate);
 		}
 	}
@@ -1231,6 +1231,20 @@ public class DateUtil {
 	 */
 	public static boolean isLeapYear(int year) {
 		return new GregorianCalendar().isLeapYear(year);
+	}
+
+	/**
+	 * 判定给定开始时间经过某段时间后是否过期
+	 * @param startDate 开始时间
+	 * @param dateField 时间单位
+	 * @param timeLength 时长
+	 * @param checkedDate 被比较的时间。如果经过时长后的时间晚于被检查的时间，就表示过期
+	 * @return 是否过期
+	 * @since 3.1.1
+	 */
+	public static boolean isExpired(Date startDate, DateField dateField, int timeLength, Date checkedDate) {
+		final Date endDate = offset(startDate, dateField, timeLength);
+		return endDate.after(checkedDate);
 	}
 
 	// ------------------------------------------------------------------------ Private method start
