@@ -288,21 +288,21 @@ public class StrUtil {
 	}
 	
 	/**
-	 * 除去字符串头尾部的空白，如果字符串是<code>null</code>，返回<code>""</code>。
+	 * 除去字符串头尾部的空白，如果字符串是{@code null}，返回<code>""</code>。
 	 *
 	 * <pre>
-	 * StringUtils.trimToEmpty(null)          = ""
-	 * StringUtils.trimToEmpty("")            = ""
-	 * StringUtils.trimToEmpty("     ")       = ""
-	 * StringUtils.trimToEmpty("abc")         = "abc"
-	 * StringUtils.trimToEmpty("    abc    ") = "abc"
+	 * StrUtil.trimToEmpty(null)          = ""
+	 * StrUtil.trimToEmpty("")            = ""
+	 * StrUtil.trimToEmpty("     ")       = ""
+	 * StrUtil.trimToEmpty("abc")         = "abc"
+	 * StrUtil.trimToEmpty("    abc    ") = "abc"
 	 * </pre>
 	 *
-	 * @param str  the String to be trimmed, may be null
-	 * @return the trimmed String, or an empty String if {@code null} input
-	 * @since 2.0
+	 * @param str 字符串
+	 * @return 去除两边空白符后的字符串, 如果为null返回""
+	 * @since 3.1.1
 	 */
-	public static String trimToEmpty(final String str) {
+	public static String trimToEmpty(CharSequence str) {
 		return str == null ? EMPTY : trim(str, 0);
 	}
 
@@ -1018,28 +1018,25 @@ public class StrUtil {
 	 * @param len 切割的位置
 	 * @param suffix 切割后加上后缀
 	 * @return 切割后的字符串
+	 * @since 3.1.1
 	 */
-	public static String subPreChinese(CharSequence str, int len, String suffix) {
-		try {
-			byte b[];
-			int counterOfDoubleByte = 0;
-			b = str.toString().getBytes("GBK");
-			if (b.length <= len) {
-				return str.toString();
-			}
-			for (int i = 0; i < len; i++) {
-				if (b[i] < 0) {
-					counterOfDoubleByte++;
-				}
-			}
-			if (counterOfDoubleByte % 2 == 0) {
-				return new String(b, 0, len, "GBK") + suffix;
-			} else {
-				return new String(b, 0, len - 1, "GBK") + suffix;
-			}
-		} catch (Exception e) {
+	public static String subPreGbk(CharSequence str, int len, CharSequence suffix) {
+		byte b[];
+		int counterOfDoubleByte = 0;
+		b = str.toString().getBytes(CharsetUtil.CHARSET_GBK);
+		if (b.length <= len) {
 			return str.toString();
 		}
+		for (int i = 0; i < len; i++) {
+			if (b[i] < 0) {
+				counterOfDoubleByte++;
+			}
+		}
+		
+		if(counterOfDoubleByte % 2 != 0) {
+			len += 1;
+		}
+		return new String(b, 0, len, CharsetUtil.CHARSET_GBK) + suffix;
 	}
 
 	/**
