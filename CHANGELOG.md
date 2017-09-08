@@ -19,6 +19,7 @@
 * Http设置Cookie支持HttpCookie对象列表
 * 新增RuntimeUtil，用于执行系统命令的快捷工具类（感谢@【北京】宁静）
 * 新增DateUtil.isExpired方法（issue#41@Github）
+* 新增MapUtil.join和builder方法（pr#40@Github）
 
 ### Bug修复
 * NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义

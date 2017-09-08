@@ -337,6 +337,7 @@ public class MapUtil {
 	 * 
 	 * @param <K> 键类型
 	 * @param <V> 值类型
+	 * @param map Map
 	 * @param separator entry之间的连接符
 	 * @param keyValueSeparator kv之间的连接符
 	 * @return 连接字符串
@@ -351,6 +352,7 @@ public class MapUtil {
 	 * 
 	 * @param <K> 键类型
 	 * @param <V> 值类型
+	 * @param map Map
 	 * @param separator entry之间的连接符
 	 * @param keyValueSeparator kv之间的连接符
 	 * @return 连接后的字符串
@@ -365,6 +367,7 @@ public class MapUtil {
 	 * 
 	 * @param <K> 键类型
 	 * @param <V> 值类型
+	 * @param map Map
 	 * @param separator entry之间的连接符
 	 * @param keyValueSeparator kv之间的连接符
 	 * @param isIgnoreNull 是否忽略null的键和值
@@ -457,7 +460,6 @@ public class MapUtil {
 	 * 
 	 * @param <K> Key类型
 	 * @param <V> Value类型
-	 * @param map 实际使用的map
 	 * @return map创建类
 	 */
 	public static <K, V> MapBuilder<K, V> builder() {
