@@ -39,6 +39,20 @@ public abstract class AbstractSqlRunner{
 	 * @param conn 连接 {@link Connection}
 	 */
 	public abstract void closeConnection(Connection conn);
+	
+	/**
+	 * 查询
+	 * 
+	 * @param <T> 结果集需要处理的对象类型
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 3.1.1
+	 */
+	public <T> List<Entity> query(String sql, Object... params) throws SQLException {
+		return query(sql, new EntityListHandler(), params);
+	}
 
 	/**
 	 * 查询

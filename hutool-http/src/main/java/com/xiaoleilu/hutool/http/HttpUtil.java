@@ -57,6 +57,9 @@ public class HttpUtil {
 	 * @return 编码后的字符
 	 */
 	public static String encode(String content, Charset charset) {
+		if(null == charset) {
+			charset = CharsetUtil.defaultCharset();
+		}
 		return encode(content, charset.name());
 	}
 	
@@ -425,11 +428,11 @@ public class HttpUtil {
 			}else if(value instanceof Iterator){
 				value = CollectionUtil.join((Iterator<?>)value, ",");
 			}
-			valueStr = encode(Convert.toStr(value), charset);
+			valueStr = Convert.toStr(value);
 			if(StrUtil.isNotEmpty(key)){
-				sb.append(key).append("=");
+				sb.append(encode(key, charset)).append("=");
 				if(StrUtil.isNotEmpty(valueStr)){
-					sb.append(valueStr);
+					sb.append(encode(valueStr, charset));
 				}
 			}
 		}

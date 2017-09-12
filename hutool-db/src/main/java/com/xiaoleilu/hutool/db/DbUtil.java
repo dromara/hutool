@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.db;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -537,6 +536,10 @@ public final class DbUtil {
 			driver = DialectFactory.DRIVER_POSTGRESQL;
 		}else if(nameContainsProductInfo.contains("sqlite")) {
 			driver = DialectFactory.DRIVER_SQLLITE3;
+		}else if(nameContainsProductInfo.contains("hive")) {
+			driver = DialectFactory.DRIVER_HIVE;
+		}else if(nameContainsProductInfo.contains("hive2")) {
+			driver = DialectFactory.DRIVER_HIVE2;
 		}
 		
 		return driver;
@@ -627,7 +630,7 @@ public final class DbUtil {
 		try {
 			reader = clob.getCharacterStream();
 			return IoUtil.read(reader);
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}finally{
 			IoUtil.close(reader);
@@ -646,7 +649,7 @@ public final class DbUtil {
 		try {
 			in = blob.getBinaryStream();
 			return IoUtil.read(in, charset);
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}finally{
 			IoUtil.close(in);

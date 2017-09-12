@@ -4,17 +4,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.xiaoleilu.hutool.collection.IterUtil;
-import com.xiaoleilu.hutool.poi.excel.editors.NumericToLongEditor;
 import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
 import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -30,7 +27,7 @@ public class ExcelReader {
 
 	/** Excel中对应的Sheet */
 	private Sheet sheet;
-	
+
 	/** 是否忽略空行 */
 	private boolean ignoreEmptyRow;
 	/** 单元格值处理接口 */
@@ -42,13 +39,23 @@ public class ExcelReader {
 	/**
 	 * 构造
 	 * 
+	 * @param excelFilePath Excel文件路径，绝对路径或相对于ClassPath路径
+	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 */
+	public ExcelReader(String excelFilePath, int sheetIndex) {
+		this(ExcelUtil.loadBook(excelFilePath), sheetIndex);
+	}
+	
+	/**
+	 * 构造
+	 * 
 	 * @param bookFile Excel文件
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(File bookFile, int sheetIndex) {
 		this(ExcelUtil.loadBook(bookFile), sheetIndex);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -58,7 +65,7 @@ public class ExcelReader {
 	public ExcelReader(File bookFile, String sheetName) {
 		this(ExcelUtil.loadBook(bookFile), sheetName);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -137,15 +144,15 @@ public class ExcelReader {
 	 * @param cellEditor 单元格值处理接口
 	 * @return this
 	 * @see TrimEditor
-	 * @see NumericToLongEditor
 	 */
 	public ExcelReader setCellEditor(CellEditor cellEditor) {
 		this.cellEditor = cellEditor;
 		return this;
 	}
-	
+
 	/**
 	 * 获得标题行的别名Map
+	 * 
 	 * @return 别名Map
 	 */
 	public Map<String, String> getHeaderAlias() {
@@ -154,15 +161,17 @@ public class ExcelReader {
 
 	/**
 	 * 设置标题行的别名Map
+	 * 
 	 * @param headerAlias 别名Map
 	 */
 	public ExcelReader setHeaderAlias(Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;
 		return this;
 	}
-	
+
 	/**
 	 * 增加标题别名
+	 * 
 	 * @param header 标题
 	 * @param alias 别名
 	 * @return this
@@ -171,9 +180,10 @@ public class ExcelReader {
 		this.headerAlias.put(header, alias);
 		return this;
 	}
-	
+
 	/**
 	 * 去除标题别名
+	 * 
 	 * @param header 标题
 	 * @return this
 	 */
@@ -195,8 +205,8 @@ public class ExcelReader {
 	/**
 	 * 读取工作簿中指定的Sheet
 	 * 
-	 * @param startRowIndex 起始行（包含）
-	 * @param endRowIndex 结束行（包含）
+	 * @param startRowIndex 起始行（包含，从0开始计数）
+	 * @param endRowIndex 结束行（包含，从0开始计数）
 	 * @return 行的集合，一行使用List表示
 	 */
 	public List<List<Object>> read(int startRowIndex, int endRowIndex) {
@@ -229,8 +239,8 @@ public class ExcelReader {
 	 * Map表示一行，标题为key，单元格内容为value
 	 * 
 	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略
-	 * @param startRowIndex 起始行（包含）
-	 * @param endRowIndex 读取结束行（包含）
+	 * @param startRowIndex 起始行（包含，从0开始计数）
+	 * @param endRowIndex 读取结束行（包含，从0开始计数）
 	 * @return Map的列表
 	 */
 	public List<Map<String, Object>> read(int headerRowIndex, int startRowIndex, int endRowIndex) {
@@ -277,9 +287,9 @@ public class ExcelReader {
 	 * 读取Excel为Bean的列表
 	 * 
 	 * @param <T> Bean类型
-	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略
-	 * @param startRowIndex 起始行（包含）
-	 * @param endRowIndex 读取结束行（包含）
+	 * @param headerRowIndex 标题所在行，如果标题行在读取的内容行中间，这行做为数据将忽略，，从0开始计数
+	 * @param startRowIndex 起始行（包含，从0开始计数）
+	 * @param endRowIndex 读取结束行（包含，从0开始计数）
 	 * @param beanType 每行对应Bean的类型
 	 * @return Map的列表
 	 */
@@ -306,13 +316,10 @@ public class ExcelReader {
 	 */
 	private List<Object> readRow(Row row) {
 		final List<Object> cellValues = new ArrayList<>();
-		if (null != row) {
-			final Iterator<Cell> celIter = row.cellIterator();
-			Cell cell;
-			while (celIter.hasNext()) {
-				cell = celIter.next();
-				cellValues.add(ExcelUtil.getCellValue(cell, cellEditor));
-			}
+		
+		short length = row.getLastCellNum();
+		for (short i = 0; i < length; i++) {
+			cellValues.add(ExcelUtil.getCellValue(row.getCell(i), cellEditor));
 		}
 		return cellValues;
 	}

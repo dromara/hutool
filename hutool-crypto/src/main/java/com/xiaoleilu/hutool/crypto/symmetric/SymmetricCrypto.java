@@ -1,22 +1,23 @@
 package com.xiaoleilu.hutool.crypto.symmetric;
 
-import com.xiaoleilu.hutool.crypto.CryptoException;
-import com.xiaoleilu.hutool.crypto.SecureUtil;
-import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.HexUtil;
-import com.xiaoleilu.hutool.util.RandomUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
-
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.PBEParameterSpec;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.PBEParameterSpec;
+
+import com.xiaoleilu.hutool.crypto.CryptoException;
+import com.xiaoleilu.hutool.crypto.SecureUtil;
+import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.HexUtil;
+import com.xiaoleilu.hutool.util.RandomUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 对称加密算法<br>
@@ -187,13 +188,10 @@ public class SymmetricCrypto {
 	 * 加密
 	 * @param data 被加密的字符串
 	 * @return 加密后的bytes
+	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] encrypt(InputStream data){
-		try {
-			return encrypt(IoUtil.readBytes(data));
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}
+	public byte[] encrypt(InputStream data) throws IORuntimeException{
+		return encrypt(IoUtil.readBytes(data));
 	}
 	
 	/**
@@ -277,13 +275,10 @@ public class SymmetricCrypto {
 	 * 解密
 	 * @param data 被解密的bytes
 	 * @return 解密后的bytes
+	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] decrypt(InputStream data){
-		try {
-			return decrypt(IoUtil.readBytes(data));
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}
+	public byte[] decrypt(InputStream data) throws IORuntimeException{
+		return decrypt(IoUtil.readBytes(data));
 	}
 	
 	/**

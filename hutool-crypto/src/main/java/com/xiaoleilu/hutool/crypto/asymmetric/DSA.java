@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.crypto.asymmetric;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 /**
  * DSA加密算法
  * 
@@ -38,6 +41,19 @@ public class DSA extends AsymmetricCrypto {
 	 * @param publicKey 公钥
 	 */
 	public DSA(byte[] privateKey, byte[] publicKey) {
+		super(ALGORITHM_DSA, privateKey, publicKey);
+	}
+	
+	/**
+	 * 构造 <br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * 
+	 * @param privateKey 私钥
+	 * @param publicKey 公钥
+	 * @since 3.1.1
+	 */
+	public DSA(PrivateKey privateKey,PublicKey publicKey) {
 		super(ALGORITHM_DSA, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end

@@ -18,6 +18,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class RSATest {
+	
+	public void genRSAPublicKeySpecTest() {
+	}
 
 	@Test
 	public void generateKeyPairTest(){

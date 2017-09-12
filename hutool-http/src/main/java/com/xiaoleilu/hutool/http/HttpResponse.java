@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
@@ -12,6 +13,7 @@ import java.util.zip.GZIPInputStream;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -86,6 +88,28 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	public boolean isGzip(){
 		final String contentEncoding = contentEncoding();
 		return contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip");
+	}
+	
+	/**
+	 * 获取本次请求服务器返回的Cookie信息
+	 * @return Cookie字符串
+	 * @since 3.1.1
+	 */
+	public String getCookieStr() {
+		return header(Header.SET_COOKIE);
+	}
+	
+	/**
+	 * 获取Cookie
+	 * @return Cookie列表
+	 * @since 3.1.1
+	 */
+	public List<HttpCookie> getCookie(){
+		final String cookieStr = getCookieStr();
+		if(StrUtil.isNotBlank(cookieStr)) {
+			return HttpCookie.parse(cookieStr);
+		}
+		return null;
 	}
 	// ---------------------------------------------------------------- Http Response Header end
 	
@@ -179,22 +203,30 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	}
 	
 	/**
-	 * 读取主体
+	 * 读取主体，忽略EOFException异常
 	 * @param in 输入流
 	 * @return 自身
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
-	private void readBody(InputStream in) throws IOException{
+	private void readBody(InputStream in) throws IORuntimeException{
 		if(isGzip() && false == (in instanceof GZIPInputStream)){
-			in = new GZIPInputStream(in);
+			try {
+				in = new GZIPInputStream(in);
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
 		}
 		
 		int contentLength  = Convert.toInt(header(Header.CONTENT_LENGTH), 0);
 		this.out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
 		try {
 			IoUtil.copy(in, this.out);
-		} catch (EOFException e) {
-			//忽略读取HTTP流中的EOF错误
+		} catch (IORuntimeException e) {
+			if(e.getCause() instanceof EOFException) {
+				//忽略读取HTTP流中的EOF错误
+			}else {
+				throw e;
+			}
 		}
 	}
 	
@@ -214,8 +246,8 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		//非同步状态转为同步状态
 		try {
 			this.readBody(this.in);
-		} catch (IOException e) {
-			if(e instanceof FileNotFoundException){
+		} catch (IORuntimeException e) {
+			if(e.getCause() instanceof FileNotFoundException){
 				//服务器无返回内容，忽略之
 			}else{
 				throw new HttpException(e);

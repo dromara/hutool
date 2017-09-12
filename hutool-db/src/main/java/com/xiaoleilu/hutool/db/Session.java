@@ -108,7 +108,8 @@ public class Session extends AbstractSqlRunner implements Closeable{
 	public void beginTransaction() throws SQLException {
 		if(null == isSupportTransaction) {
 			isSupportTransaction = conn.getMetaData().supportsTransactions();
-		}else if(false == isSupportTransaction) {
+		}
+		if(false == isSupportTransaction) {
 			throw new SQLException("Transaction not supported for current database!");
 		}
 		conn.setAutoCommit(false);

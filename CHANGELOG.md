@@ -1,5 +1,40 @@
 # Changelog
 
+## 3.1.1
+
+### 新特性
+* ExcelReader中根据单元格格式判断Double还是Long类型（感谢@act家的excel-reader）
+* Map相关方法剥离为MapUtil
+* 新增CollUtil做为CollectionUtil别名
+* 非对称加密加入PublicKey对象和PrivateKey对象构造，RSA加入N,e,d参数支持（感谢@【帝都】小帅帅）
+* Props支持其它编码格式（PR#37@Github）
+* DateBetween增加可选是否取绝对值选项构造（issue#IETE0@gitee）
+* 加入Rythm模板引擎工具类
+* cron模块中增加方法支持获取Task和CronPattern（感谢@Γ平淡ㄎ）
+* HttpResponse中增加个体Cookie方法
+* Hive驱动识别支持。（@【北京】宁静）
+* IoUtil中IOException替换为IORuntimeException
+* IoUtil和FileUtil增加UTF-8编码重载
+* Http增加headerList方法
+* Http设置Cookie支持HttpCookie对象列表
+* 新增RuntimeUtil，用于执行系统命令的快捷工具类（感谢@【北京】宁静）
+* 新增DateUtil.isExpired方法（issue#41@Github）
+* 新增MapUtil.join和builder方法（pr#40@Github）
+
+### Bug修复
+* NumberUtil中针对Double重载方法，避免传入包装类型引起的歧义
+* 修复Bean转JSONObject时字段无getter方法导致的字段值丢失问题（感谢@猎隼丶止戈，issue#IEIJG@osc）
+* 修复StrUtil.addPrefixIfNot方法问题（感谢@【苏州】咖啡）
+* 修复db部分Session中beginTransaction()逻辑问题（感谢@taoguan）
+* 修复POI模块ExcelReader空单元格被忽略问题。
+* 修复cron模块中移除Task导致的index错误问题（感谢@Γ平淡ㄎ）
+* 修复POI模块中自定义单元格含有中文时无法识别为日期的问题（感谢@【昆明】Tang）
+* 修复RSA算法编码问题（感谢@【长沙】笑小生）
+* Http模块对参数key做编码（issue#IEYLP@gitee）
+* 修复ImageUtil写出文件没有关闭流导致的文件被占用问题（issue#44@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 3.1.0
 
 ### 新特性

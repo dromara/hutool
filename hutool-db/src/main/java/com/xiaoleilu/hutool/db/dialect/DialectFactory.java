@@ -27,6 +27,10 @@ public class DialectFactory {
 	public final static String DRIVER_POSTGRESQL = "org.postgresql.Driver";
 	/** JDBC 驱动 SQLLite3 */
 	public final static String DRIVER_SQLLITE3 = "org.sqlite.JDBC";
+	/** JDBC 驱动 Hive */
+	public final static String DRIVER_HIVE = "org.apache.hadoop.hive.jdbc.HiveDriver";
+	/** JDBC 驱动 Hive */
+	public final static String DRIVER_HIVE2 = "org.apache.hive.jdbc.HiveDriver";
 	
 	private DialectFactory() {
 	}
@@ -49,6 +53,7 @@ public class DialectFactory {
 			}
 		}
 		
+		//无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句
 		return new AnsiSqlDialect();
 	}
 	

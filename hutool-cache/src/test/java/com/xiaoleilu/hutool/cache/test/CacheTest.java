@@ -4,9 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.cache.impl.FIFOCache;
-import com.xiaoleilu.hutool.cache.impl.LFUCache;
-import com.xiaoleilu.hutool.cache.impl.LRUCache;
+import com.xiaoleilu.hutool.cache.CacheUtil;
 import com.xiaoleilu.hutool.cache.impl.TimedCache;
 import com.xiaoleilu.hutool.date.DateUnit;
 import com.xiaoleilu.hutool.util.ThreadUtil;
@@ -20,7 +18,7 @@ public class CacheTest {
 	
 	@Test
 	public void fifoCacheTest(){
-		Cache<String,String> fifoCache = new FIFOCache<String, String>(3, 0);
+		Cache<String,String> fifoCache = CacheUtil.newFIFOCache(3);
 		fifoCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
 		fifoCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
@@ -33,7 +31,7 @@ public class CacheTest {
 	
 	@Test
 	public void lfuCacheTest(){
-		LFUCache<String, String> lfuCache = new LFUCache<String, String>(3);
+		Cache<String, String> lfuCache = CacheUtil.newLFUCache(3);
 		lfuCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
 		lfuCache.get("key1");//使用次数+1
 		lfuCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
@@ -49,7 +47,9 @@ public class CacheTest {
 	
 	@Test
 	public void lruCacheTest(){
-		LRUCache<String, String> lruCache = new LRUCache<String, String>(3);
+		Cache<String, String> lruCache = CacheUtil.newLRUCache(3);
+		//通过实例化对象创建
+//		LRUCache<String, String> lruCache = new LRUCache<String, String>(3);
 		lruCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
 		lruCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
 		lruCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
@@ -63,7 +63,8 @@ public class CacheTest {
 	
 	@Test
 	public void timedCacheTest(){
-		TimedCache<String, String> timedCache = new TimedCache<String, String>(DateUnit.SECOND.getMillis() * 3);
+		TimedCache<String, String> timedCache = CacheUtil.newTimedCache(DateUnit.SECOND.getMillis() * 3);
+//		TimedCache<String, String> timedCache = new TimedCache<String, String>(DateUnit.SECOND.getMillis() * 3);
 		timedCache.put("key1", "value1", 1);
 		timedCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 5);
 		
@@ -72,7 +73,7 @@ public class CacheTest {
 		
 		ThreadUtil.sleep(5);
 		
-		//5毫秒后由于value2设置了5秒过期，因此只有value2被保留下来
+		//5毫秒后由于value2设置了5毫秒过期，因此只有value2被保留下来
 		String value1 = timedCache.get("key1");
 		String value2 = timedCache.get("key2");
 		Assert.assertTrue(null == value1);

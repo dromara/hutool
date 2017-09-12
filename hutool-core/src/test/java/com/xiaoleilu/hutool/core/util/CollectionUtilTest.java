@@ -79,12 +79,12 @@ public class CollectionUtilTest {
 		
 		//----------------------------------------------------------------------------------------
 		ArrayList<HashMap<String, String>> list = CollectionUtil.newArrayList(map1, map2);
-		Map<String, List<String>> map = CollectionUtil.toMapList(list);
+		Map<String, List<String>> map = CollectionUtil.toListMap(list);
 		Assert.assertEquals("值1", map.get("a").get(0));
 		Assert.assertEquals("值2", map.get("a").get(1));
 		
 		//----------------------------------------------------------------------------------------
-		List<Map<String,String>> listMap = CollectionUtil.toListMap(map);
+		List<Map<String,String>> listMap = CollectionUtil.toMapList(map);
 		Assert.assertEquals("值1", listMap.get(0).get("a"));
 		Assert.assertEquals("值2", listMap.get(1).get("a"));
 	}

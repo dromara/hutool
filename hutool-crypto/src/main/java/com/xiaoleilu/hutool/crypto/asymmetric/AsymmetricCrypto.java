@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.crypto.asymmetric;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyPair;
@@ -15,6 +14,7 @@ import javax.crypto.Cipher;
 import com.xiaoleilu.hutool.crypto.CryptoException;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -87,6 +87,19 @@ public class AsymmetricCrypto {
 	 * 构造
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * @param algorithm {@link SymmetricAlgorithm}
+	 * @param privateKey 私钥
+	 * @param publicKey 公钥
+	 * @since 3.1.1
+	 */
+	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, PrivateKey privateKey, PublicKey publicKey) {
+		this(algorithm.getValue(), privateKey, publicKey);
+	}
+	
+	/**
+	 * 构造
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 * @param algorithm 非对称加密算法
 	 * @param privateKeyBase64 私钥Base64
 	 * @param publicKeyBase64 公钥Base64
@@ -108,6 +121,21 @@ public class AsymmetricCrypto {
 	public AsymmetricCrypto(String algorithm, byte[] privateKey, byte[] publicKey) {
 		init(algorithm, privateKey, publicKey);
 	}
+	
+	/**
+	 * 构造
+	 * 
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
+	 * 
+	 * @param algorithm 算法
+	 * @param privateKey 私钥
+	 * @param publicKey 公钥
+	 * @since 3.1.1
+	 */
+	public AsymmetricCrypto(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+		init(algorithm, privateKey, publicKey);
+	}
 	// ------------------------------------------------------------------ Constructor end
 
 	/**
@@ -122,6 +150,24 @@ public class AsymmetricCrypto {
 	 * @return {@link AsymmetricCrypto}
 	 */
 	public AsymmetricCrypto init(String algorithm, byte[] privateKey, byte[] publicKey) {
+		final PrivateKey privateKeyObj = (null == privateKey) ? null : SecureUtil.generatePrivateKey(algorithm, privateKey);
+		final PublicKey publicKeyObj = (null == publicKey) ? null : SecureUtil.generatePublicKey(algorithm, publicKey);
+		
+		return init(algorithm, privateKeyObj, publicKeyObj);
+	}
+	
+	/**
+	 * 初始化<br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密<br>
+	 * 签名默认使用MD5摘要算法，如果需要自定义签名算法，调用 {@link AsymmetricCrypto#setSignature(Signature)}设置签名对象
+	 * 
+	 * @param algorithm 算法
+	 * @param privateKey 私钥
+	 * @param publicKey 公钥
+	 * @return {@link AsymmetricCrypto}
+	 */
+	public AsymmetricCrypto init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
 		this.algorithm = algorithm;
 		try {
 			this.clipher = Cipher.getInstance(algorithm);
@@ -134,15 +180,15 @@ public class AsymmetricCrypto {
 			initKeys();
 		}else{
 			if(null != privateKey){
-				this.privateKey = SecureUtil.generatePrivateKey(algorithm, privateKey);
+				this.privateKey = privateKey;
 			}
 			if(null != publicKey){
-				this.publicKey = SecureUtil.generatePublicKey(algorithm, publicKey);
+				this.publicKey = publicKey;
 			}
 		}
 		return this;
 	}
-
+	
 	/**
 	 * 生成公钥和私钥
 	 * @return {@link AsymmetricCrypto}
@@ -238,13 +284,10 @@ public class AsymmetricCrypto {
 	 * @param data 被加密的字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
+	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] encrypt(InputStream data, KeyType keyType) {
-		try {
-			return encrypt(IoUtil.readBytes(data), keyType);
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}
+	public byte[] encrypt(InputStream data, KeyType keyType) throws IORuntimeException{
+		return encrypt(IoUtil.readBytes(data), keyType);
 	}
 
 	// --------------------------------------------------------------------------------- Decrypt
@@ -273,13 +316,10 @@ public class AsymmetricCrypto {
 	 * @param data 被解密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 解密后的bytes
+	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] decrypt(InputStream data, KeyType keyType) {
-		try {
-			return decrypt(IoUtil.readBytes(data), keyType);
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}
+	public byte[] decrypt(InputStream data, KeyType keyType) throws IORuntimeException{
+		return decrypt(IoUtil.readBytes(data), keyType);
 	}
 
 	// --------------------------------------------------------------------------------- Getters and Setters

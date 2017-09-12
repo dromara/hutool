@@ -17,7 +17,7 @@ public class HttpPostDemo {
 		String url = "http://wthrcdn.etouch.cn/weather_mini";
 		
 		HashMap<String, Object> paramMap = new HashMap<>();
-		paramMap.put("city", "北京");
+		paramMap.put("city", "上海");
 		String result1 = HttpUtil.post(url, paramMap);
 		Console.log(result1);
 		
@@ -26,6 +26,6 @@ public class HttpPostDemo {
 			.header(Header.USER_AGENT, "Hutool http")
 			.form(paramMap)
 			.execute().body();
-		Console.log(result2);
+		Console.log("aaa: " + result2);
 	}
 }

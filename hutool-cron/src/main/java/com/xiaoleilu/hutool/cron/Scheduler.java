@@ -95,35 +95,40 @@ public class Scheduler {
 	 * 默认非守护线程
 	 * 
 	 * @param on <code>true</code>为守护线程，否则非守护线程
+	 * @return this
 	 * @throws CronException 定时任务已经启动抛出此异常
 	 */
-	public void setDaemon(boolean on) throws CronException {
+	public Scheduler setDaemon(boolean on) throws CronException {
 		synchronized (lock) {
 			if (started) {
 				throw new CronException("Scheduler already started!");
 			}
 			this.daemon = on;
 		}
+		return this;
 	}
-	
+
 	/**
 	 * 是否为守护线程
+	 * 
 	 * @return 是否为守护线程
 	 */
-	public boolean isDeamon(){
+	public boolean isDeamon() {
 		return this.daemon;
 	}
-	
+
 	/**
 	 * 是否支持秒匹配
+	 * 
 	 * @return <code>true</code>使用，<code>false</code>不使用
 	 */
-	public boolean isMatchSecond(){
+	public boolean isMatchSecond() {
 		return this.matchSecond;
 	}
-	
+
 	/**
 	 * 设置是否支持秒匹配，默认不使用
+	 * 
 	 * @param isMatchSecond <code>true</code>支持，<code>false</code>不支持
 	 * @return this
 	 */
@@ -131,17 +136,19 @@ public class Scheduler {
 		this.matchSecond = isMatchSecond;
 		return this;
 	}
-	
+
 	/**
 	 * 是否支持年匹配
+	 * 
 	 * @return <code>true</code>使用，<code>false</code>不使用
 	 */
-	public boolean isMatchYear(){
+	public boolean isMatchYear() {
 		return this.matchYear;
 	}
-	
+
 	/**
 	 * 设置是否支持年匹配，默认不使用
+	 * 
 	 * @param isMatchYear <code>true</code>支持，<code>false</code>不支持
 	 * @return this
 	 */
@@ -149,23 +156,25 @@ public class Scheduler {
 		this.matchYear = isMatchYear;
 		return this;
 	}
-	
+
 	/**
 	 * 增加监听器
+	 * 
 	 * @param listener {@link TaskListener}
 	 * @return this
 	 */
-	public Scheduler addListener(TaskListener listener){
+	public Scheduler addListener(TaskListener listener) {
 		this.listenerManager.addListener(listener);
 		return this;
 	}
-	
+
 	/**
 	 * 移除监听器
+	 * 
 	 * @param listener {@link TaskListener}
 	 * @return this
 	 */
-	public Scheduler removeListener(TaskListener listener){
+	public Scheduler removeListener(TaskListener listener) {
 		this.listenerManager.removeListener(listener);
 		return this;
 	}
@@ -174,13 +183,13 @@ public class Scheduler {
 	// -------------------------------------------------------------------- shcedule start
 	/**
 	 * 批量加入配置文件中的定时任务<br>
-	 * 配置文件格式为：
-	 * xxx.xxx.xxx.Class.method = * * * * *
+	 * 配置文件格式为： xxx.xxx.xxx.Class.method = * * * * *
+	 * 
 	 * @param cronSetting 定时任务设置文件
 	 * @return this
 	 */
 	public Scheduler schedule(Setting cronSetting) {
-		if(CollectionUtil.isNotEmpty(cronSetting)){
+		if (CollectionUtil.isNotEmpty(cronSetting)) {
 			for (Entry<Object, Object> entry : cronSetting.entrySet()) {
 				final String jobClass = Convert.toStr(entry.getKey());
 				final String pattern = Convert.toStr(entry.getValue());
@@ -193,7 +202,7 @@ public class Scheduler {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 新增Task，使用随机UUID
 	 * 
@@ -259,9 +268,33 @@ public class Scheduler {
 	 * 移除Task
 	 * 
 	 * @param id Task的ID
+	 * @return this
 	 */
-	public synchronized void deschedule(String id) throws IndexOutOfBoundsException {
+	public Scheduler deschedule(String id) {
 		this.taskTable.remove(id);
+		return this;
+	}
+
+	/**
+	 * 获得指定id的{@link CronPattern}
+	 * 
+	 * @param id ID
+	 * @return {@link CronPattern}
+	 * @since 3.1.1
+	 */
+	public CronPattern getPattern(String id) {
+		return this.taskTable.getPattern(id);
+	}
+
+	/**
+	 * 获得指定id的{@link Task}
+	 * 
+	 * @param id ID
+	 * @return {@link Task}
+	 * @since 3.1.1
+	 */
+	public Task getTask(String id) {
+		return this.taskTable.getTask(id);
 	}
 	// -------------------------------------------------------------------- shcedule end
 
@@ -285,7 +318,7 @@ public class Scheduler {
 
 			this.taskLauncherManager = new TaskLauncherManager(this);
 			this.taskExecutorManager = new TaskExecutorManager(this);
-			
+
 			// Start CronTimer
 			timer = new CronTimer(this);
 			timer.setDaemon(this.daemon);
@@ -308,18 +341,18 @@ public class Scheduler {
 
 			// 停止CronTimer
 			ThreadUtil.interupt(this.timer, true);
-			
+
 			// 停止所有TaskLauncher
 			taskLauncherManager.destroy();
 			// 停止所有TaskExecutor
 			this.taskExecutorManager.destroy();
 
-			//修改标志
+			// 修改标志
 			started = false;
 		}
 		return this;
 	}
-	
+
 	// -------------------------------------------------------------------- notify start
 	// -------------------------------------------------------------------- notify end
 }

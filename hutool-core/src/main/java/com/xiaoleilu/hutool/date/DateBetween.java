@@ -9,8 +9,22 @@ import java.util.Date;
  *
  */
 public class DateBetween {
+	
+	/** 开始日期 */
 	private Date begin;
+	/** 结束日期 */
 	private Date end;
+	
+	/**
+	 * 构造<br>
+	 * 在前的日期做为起始时间，在后的做为结束时间，间隔只保留绝对值正数
+	 * 
+	 * @param begin 起始时间
+	 * @param end 结束时间
+	 */
+	public DateBetween(Date begin, Date end) {
+		this(begin, end, true);
+	}
 	
 	/**
 	 * 构造<br>
@@ -18,14 +32,17 @@ public class DateBetween {
 	 * 
 	 * @param begin 起始时间
 	 * @param end 结束时间
+	 * @param isAbs 日期间隔是否只保留绝对值正数
+	 * @since 3.1.1
 	 */
-	public DateBetween(Date begin, Date end) {
-		if(begin.before(end)){
-			this.begin = begin;
-			this.end = end;
-		}else{
+	public DateBetween(Date begin, Date end, boolean isAbs) {
+		if(isAbs && begin.after(end)){
+			//间隔只为正数的情况下，如果开始日期晚于结束日期，置换之
 			this.begin = end;
 			this.end = begin;
+		}else{
+			this.begin = begin;
+			this.end = end;
 		}
 	}
 	
@@ -51,7 +68,7 @@ public class DateBetween {
 	 */
 	public long betweenMonth(boolean isReset) {
 		final Calendar beginCal = DateUtil.calendar(begin);
-		final Calendar endCal =  DateUtil.calendar(end);
+		final Calendar endCal = DateUtil.calendar(end);
 
 		final int betweenYear = endCal.get(Calendar.YEAR) - beginCal.get(Calendar.YEAR);
 		final int betweenMonthOfYear = endCal.get(Calendar.MONTH) - beginCal.get(Calendar.MONTH);

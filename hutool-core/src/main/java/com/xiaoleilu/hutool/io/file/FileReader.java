@@ -181,8 +181,6 @@ public class FileReader extends FileWrapper {
 		try {
 			reader = FileUtil.getReader(file, charset);
 			IoUtil.readLines(reader, lineHandler);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(reader);
 		}

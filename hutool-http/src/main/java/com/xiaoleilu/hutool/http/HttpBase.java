@@ -41,15 +41,25 @@ public abstract class HttpBase<T> {
 	 * @return Header值
 	 */
 	public String header(String name) {
-		if(StrUtil.isBlank(name)) {
-			return null;
-		}
-		
-		List<String> values = headers.get(name.trim());
+		final List<String> values = headerList(name);
 		if(CollectionUtil.isEmpty(values)) {
 			return null;
 		}
 		return values.get(0);
+	}
+	
+	/**
+	 * 根据name获取头信息列表
+	 * @param name Header名
+	 * @return Header值
+	 * @since 3.1.1
+	 */
+	public List<String> headerList(String name) {
+		if(StrUtil.isBlank(name)) {
+			return null;
+		}
+		
+		return headers.get(name.trim());
 	}
 	
 	/**
@@ -58,6 +68,9 @@ public abstract class HttpBase<T> {
 	 * @return Header值
 	 */
 	public String header(Header name) {
+		if(null == name) {
+			return null;
+		}
 		return header(name.toString());
 	}
 	

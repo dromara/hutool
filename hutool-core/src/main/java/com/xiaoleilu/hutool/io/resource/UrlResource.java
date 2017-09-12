@@ -87,8 +87,6 @@ public class UrlResource {
 		try {
 			reader = getReader(charset);
 			return IoUtil.read(reader);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(reader);
 		}
@@ -119,8 +117,6 @@ public class UrlResource {
 		try {
 			in = getStream();
 			return IoUtil.readBytes(in);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
 		}

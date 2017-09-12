@@ -1569,6 +1569,20 @@ public final class FileUtil {
 			IoUtil.close(in);
 		}
 	}
+	
+	/**
+	 * 从文件中读取每一行的UTF-8编码数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param path 文件路径
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static <T extends Collection<String>> T readUtf8Lines(String path, T collection) throws IORuntimeException {
+		return readLines(path, CharsetUtil.CHARSET_UTF_8, collection);
+	}
 
 	/**
 	 * 从文件中读取每一行数据
@@ -1596,6 +1610,20 @@ public final class FileUtil {
 	 */
 	public static <T extends Collection<String>> T readLines(String path, Charset charset, T collection) throws IORuntimeException {
 		return readLines(file(path), charset, collection);
+	}
+	
+	/**
+	 * 从文件中读取每一行数据，数据编码为UTF-8
+	 * 
+	 * @param <T> 集合类型
+	 * @param file 文件路径
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static <T extends Collection<String>> T readUtf8Lines(File file, T collection) throws IORuntimeException {
+		return readLines(file, CharsetUtil.CHARSET_UTF_8, collection);
 	}
 
 	/**
@@ -1625,6 +1653,33 @@ public final class FileUtil {
 	public static <T extends Collection<String>> T readLines(File file, Charset charset, T collection) throws IORuntimeException {
 		return FileReader.create(file, charset).readLines(collection);
 	}
+	
+	/**
+	 * 从文件中读取每一行数据，编码为UTF-8
+	 * 
+	 * @param <T> 集合类型
+	 * @param url 文件的URL
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T extends Collection<String>> T readUtf8Lines(URL url, T collection) throws IORuntimeException {
+		return readLines(url, CharsetUtil.CHARSET_UTF_8, collection);
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param url 文件的URL
+	 * @param charsetName 字符集
+	 * @param collection 集合
+	 * @return 文件中的每行内容的集合
+	 * @throws IORuntimeException IO异常
+	 */
+	public static <T extends Collection<String>> T readLines(URL url, String charsetName, T collection) throws IORuntimeException {
+		return readLines(url, CharsetUtil.charset(charsetName), collection);
+	}
 
 	/**
 	 * 从文件中读取每一行数据
@@ -1635,8 +1690,9 @@ public final class FileUtil {
 	 * @param collection 集合
 	 * @return 文件中的每行内容的集合
 	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
 	 */
-	public static <T extends Collection<String>> T readLines(URL url, String charset, T collection) throws IORuntimeException {
+	public static <T extends Collection<String>> T readLines(URL url, Charset charset, T collection) throws IORuntimeException {
 		InputStream in = null;
 		try {
 			in = url.openStream();
@@ -1646,6 +1702,17 @@ public final class FileUtil {
 		} finally {
 			IoUtil.close(in);
 		}
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param url 文件的URL
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 */
+	public static List<String> readUtf8Lines(URL url) throws IORuntimeException {
+		return readLines(url, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -1659,6 +1726,30 @@ public final class FileUtil {
 	public static List<String> readLines(URL url, String charset) throws IORuntimeException {
 		return readLines(url, charset, new ArrayList<String>());
 	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param url 文件的URL
+	 * @param charset 字符集
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 */
+	public static List<String> readLines(URL url, Charset charset) throws IORuntimeException {
+		return readLines(url, charset, new ArrayList<String>());
+	}
+	
+	/**
+	 * 从文件中读取每一行数据，编码为UTF-8
+	 * 
+	 * @param path 文件路径
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static List<String> readUtf8Lines(String path) throws IORuntimeException {
+		return readLines(path, CharsetUtil.CHARSET_UTF_8);
+	}
 
 	/**
 	 * 从文件中读取每一行数据
@@ -1670,6 +1761,31 @@ public final class FileUtil {
 	 */
 	public static List<String> readLines(String path, String charset) throws IORuntimeException {
 		return readLines(path, charset, new ArrayList<String>());
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static List<String> readLines(String path, Charset charset) throws IORuntimeException {
+		return readLines(path, charset, new ArrayList<String>());
+	}
+	
+	/**
+	 * 从文件中读取每一行数据
+	 * 
+	 * @param file 文件
+	 * @return 文件中的每行内容的集合List
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static List<String> readUtf8Lines(File file) throws IORuntimeException {
+		return readLines(file, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -1695,6 +1811,17 @@ public final class FileUtil {
 	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
+	
+	/**
+	 * 按行处理文件内容，编码为UTF-8
+	 * 
+	 * @param file 文件
+	 * @param lineHandler {@link LineHandler}行处理器
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void readUtf8Lines(File file, LineHandler lineHandler) throws IORuntimeException {
+		readLines(file, CharsetUtil.CHARSET_UTF_8, lineHandler);
+	}
 
 	/**
 	 * 按行处理文件内容
@@ -1717,9 +1844,84 @@ public final class FileUtil {
 	 * @param charset 字符集
 	 * @return 从文件中load出的数据
 	 * @throws IORuntimeException IO异常
+	 * @deprecated 使用FileUtil#load(String, String, ReaderHandler) 代替
 	 */
+	@Deprecated
 	public static <T> T load(ReaderHandler<T> readerHandler, String path, String charset) throws IORuntimeException {
 		return FileReader.create(file(path), CharsetUtil.charset(charset)).read(readerHandler);
+	}
+	
+	/**
+	 * 按照给定的readerHandler读取文件中的数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param readerHandler Reader处理类
+	 * @param path 文件的绝对路径
+	 * @return 从文件中load出的数据
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static <T> T loadUtf8(String path, ReaderHandler<T> readerHandler) throws IORuntimeException {
+		return load(path, CharsetUtil.CHARSET_UTF_8, readerHandler);
+	}
+	
+	/**
+	 * 按照给定的readerHandler读取文件中的数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param readerHandler Reader处理类
+	 * @param path 文件的绝对路径
+	 * @param charset 字符集
+	 * @return 从文件中load出的数据
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static <T> T load(String path, String charset, ReaderHandler<T> readerHandler) throws IORuntimeException {
+		return FileReader.create(file(path), CharsetUtil.charset(charset)).read(readerHandler);
+	}
+	
+	/**
+	 * 按照给定的readerHandler读取文件中的数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param readerHandler Reader处理类
+	 * @param path 文件的绝对路径
+	 * @param charset 字符集
+	 * @return 从文件中load出的数据
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static <T> T load(String path, Charset charset, ReaderHandler<T> readerHandler) throws IORuntimeException {
+		return FileReader.create(file(path), charset).read(readerHandler);
+	}
+	
+	/**
+	 * 按照给定的readerHandler读取文件中的数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param readerHandler Reader处理类
+	 * @param file 文件
+	 * @return 从文件中load出的数据
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static <T> T loadUtf8(File file, ReaderHandler<T> readerHandler) throws IORuntimeException {
+		return load(file, CharsetUtil.CHARSET_UTF_8, readerHandler);
+	}
+	
+	/**
+	 * 按照给定的readerHandler读取文件中的数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param readerHandler Reader处理类
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 从文件中load出的数据
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.1
+	 */
+	public static <T> T load(File file, Charset charset, ReaderHandler<T> readerHandler) throws IORuntimeException {
+		return FileReader.create(file, charset).read(readerHandler);
 	}
 
 	// -------------------------------------------------------------------------------------------- out start

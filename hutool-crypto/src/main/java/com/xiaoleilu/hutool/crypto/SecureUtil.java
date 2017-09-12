@@ -176,9 +176,20 @@ public final class SecureUtil {
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
-		PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(key);
+		return generatePrivateKey(algorithm, new PKCS8EncodedKeySpec(key));
+	}
+	
+	/**
+	 * 生成私钥，仅用于非对称加密
+	 * 
+	 * @param algorithm 算法
+	 * @param keySpec {@link KeySpec}
+	 * @return 私钥 {@link PrivateKey}
+	 * @since 3.1.1
+	 */
+	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
 		try {
-			return KeyFactory.getInstance(algorithm).generatePrivate(pkcs8KeySpec);
+			return KeyFactory.getInstance(algorithm).generatePrivate(keySpec);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
@@ -208,9 +219,20 @@ public final class SecureUtil {
 	 * @return 公钥 {@link PublicKey}
 	 */
 	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
-		X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(key);
+		return generatePublicKey(algorithm, new X509EncodedKeySpec(key));
+	}
+	
+	/**
+	 * 生成公钥，仅用于非对称加密
+	 * 
+	 * @param algorithm 算法
+	 * @param keySpec {@link KeySpec}
+	 * @return 公钥 {@link PublicKey}
+	 * @since 3.1.1
+	 */
+	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
 		try {
-			return KeyFactory.getInstance(algorithm).generatePublic(x509KeySpec);
+			return KeyFactory.getInstance(algorithm).generatePublic(keySpec);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
