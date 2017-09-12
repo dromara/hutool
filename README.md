@@ -86,7 +86,7 @@ compile 'com.xiaoleilu:hutool-all:3.1.1'
 注：工具包的**版本**可以通过 [http://search.maven.org/](http://search.maven.org/) 搜索`hutool-all`找到项目。
 
 ### 非Maven项目
-可以从[http://search.maven.org/](http://search.maven.org/) 搜索`hutool-all`找到项目，点击对应版本，下面是相应的Jar包，导入即可使用。
+可以从[http://search.maven.org/](http://search.maven.org/) 搜索`hutool all`找到项目，点击对应版本，下面是相应的Jar包，导入即可使用。
 
 [http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool-all%22](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool-all%22)
 
