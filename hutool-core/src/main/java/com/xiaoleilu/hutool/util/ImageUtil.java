@@ -33,6 +33,7 @@ import javax.imageio.stream.ImageOutputStream;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Base64;
 
 /**
@@ -64,16 +65,20 @@ public class ImageUtil {
 	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 */
 	public static void scale(File srcImageFile, File destImageFile, float scale) {
+		ImageOutputStream imageOutputStream = null;
 		try {
-			scale(ImageIO.read(srcImageFile), ImageIO.createImageOutputStream(destImageFile), scale);
+			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
+			scale(ImageIO.read(srcImageFile), imageOutputStream, scale);
 		} catch (IOException e) {
 			throw new UtilException(e);
+		} finally {
+			IoUtil.close(imageOutputStream);
 		}
 	}
 
 	/**
 	 * 缩放图像（按比例缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像来源流
 	 * @param destStream 缩放后的图像写出到的流
@@ -90,7 +95,7 @@ public class ImageUtil {
 
 	/**
 	 * 缩放图像（按比例缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像来源流
 	 * @param destStream 缩放后的图像写出到的流
@@ -107,7 +112,7 @@ public class ImageUtil {
 
 	/**
 	 * 缩放图像（按比例缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 * 
 	 * @param srcImg 源图像来源流
 	 * @param destImageStream 缩放后的图像写出到的流
@@ -173,16 +178,20 @@ public class ImageUtil {
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
 	 */
 	public final static void scale(File srcImageFile, File destImageFile, int width, int height, Color fixedColor) {
+		ImageOutputStream imageOutputStream = null;
 		try {
-			scale(ImageIO.read(srcImageFile), ImageIO.createImageOutputStream(destImageFile), width, height, fixedColor);
+			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
+			scale(ImageIO.read(srcImageFile), imageOutputStream, width, height, fixedColor);
 		} catch (IOException e) {
 			throw new UtilException(e);
+		} finally {
+			IoUtil.close(imageOutputStream);
 		}
 	}
 
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 缩放后的图像目标流
@@ -200,7 +209,7 @@ public class ImageUtil {
 
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 缩放后的图像目标流
@@ -218,7 +227,7 @@ public class ImageUtil {
 
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
 	 * 
 	 * @param srcImage 源图像
 	 * @param destImageStream 缩放后的图像目标流
@@ -289,15 +298,19 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public final static void cut(File srcImgFile, File destImgFile, Rectangle rectangle) {
+		ImageOutputStream imageOutputStream = null;
 		try {
-			cut(ImageIO.read(srcImgFile), ImageIO.createImageOutputStream(destImgFile), rectangle);
+			imageOutputStream = ImageIO.createImageOutputStream(destImgFile);
+			cut(ImageIO.read(srcImgFile), imageOutputStream, rectangle);
 		} catch (IOException e) {
 			throw new UtilException(e);
+		} finally {
+			IoUtil.close(imageOutputStream);
 		}
 	}
 
 	/**
-	 * 图像切割(按指定起点坐标和宽高切割)
+	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 切片后的图像输出流
@@ -313,7 +326,7 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 图像切割(按指定起点坐标和宽高切割)
+	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 切片后的图像输出流
@@ -329,7 +342,7 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 图像切割(按指定起点坐标和宽高切割)
+	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
 	 * 
 	 * @param srcImage 源图像
 	 * @param destImageStream 切片后的图像输出流
@@ -493,15 +506,20 @@ public class ImageUtil {
 	 * @param destImageFile 目标图像文件
 	 */
 	public final static void convert(File srcImageFile, String formatName, File destImageFile) {
+		ImageOutputStream imageOutputStream = null;
 		try {
-			convert(ImageIO.read(srcImageFile), formatName, ImageIO.createImageOutputStream(destImageFile));
+			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
+			convert(ImageIO.read(srcImageFile), formatName, imageOutputStream);
 		} catch (IOException e) {
 			throw new UtilException(e);
+		} finally {
+			IoUtil.close(imageOutputStream);
 		}
 	}
 
 	/**
-	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
+	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
@@ -517,7 +535,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
+	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
@@ -533,7 +552,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
+	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcImage 源图像流
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
@@ -556,15 +576,20 @@ public class ImageUtil {
 	 * @param destImageFile 目标图像地址
 	 */
 	public final static void gray(File srcImageFile, File destImageFile) {
+		ImageOutputStream imageOutputStream = null;
 		try {
+			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
 			gray(ImageIO.read(srcImageFile), ImageIO.createImageOutputStream(destImageFile));
 		} catch (IOException e) {
 			throw new UtilException(e);
+		} finally {
+			IoUtil.close(imageOutputStream);
 		}
 	}
 
 	/**
-	 * 彩色转为黑白
+	 * 彩色转为黑白<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 目标图像流
@@ -579,7 +604,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 彩色转为黑白
+	 * 彩色转为黑白<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 目标图像流
@@ -594,7 +620,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 彩色转为黑白
+	 * 彩色转为黑白<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcImage 源图像流
 	 * @param destImageStream 目标图像流
@@ -637,15 +664,20 @@ public class ImageUtil {
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
 	public final static void pressText(File srcFile, File destFile, String pressText, Color color, Font font, int x, int y, float alpha) {
+		ImageOutputStream imageOutputStream = null;
 		try {
-			pressText(ImageIO.read(srcFile), ImageIO.createImageOutputStream(destFile), pressText, color, font, x, y, alpha);
+			imageOutputStream = ImageIO.createImageOutputStream(destFile);
+			pressText(ImageIO.read(srcFile), imageOutputStream, pressText, color, font, x, y, alpha);
 		} catch (IOException e) {
 			throw new UtilException(e);
+		} finally {
+			IoUtil.close(imageOutputStream);
 		}
 	}
 
 	/**
-	 * 给图片添加文字水印
+	 * 给图片添加文字水印<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 目标图像流
@@ -665,7 +697,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 给图片添加文字水印
+	 * 给图片添加文字水印<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 目标图像流
@@ -685,7 +718,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 给图片添加文字水印
+	 * 给图片添加文字水印<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcImage 源图像
 	 * @param destImageStream 目标图像流
@@ -731,15 +765,20 @@ public class ImageUtil {
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
 	public final static void pressImage(File srcImageFile, File destImageFile, Image pressImg, int x, int y, float alpha) {
+		ImageOutputStream imageOutputStream = null;
 		try {
-			pressImage(ImageIO.read(srcImageFile), ImageIO.createImageOutputStream(destImageFile), pressImg, x, y, alpha);
+			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
+			pressImage(ImageIO.read(srcImageFile), imageOutputStream, pressImg, x, y, alpha);
 		} catch (IOException e) {
 			throw new UtilException(e);
+		} finally {
+			IoUtil.close(imageOutputStream);
 		}
 	}
 
 	/**
-	 * 给图片添加图片水印
+	 * 给图片添加图片水印<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 目标图像流
@@ -757,7 +796,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 给图片添加图片水印
+	 * 给图片添加图片水印<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcStream 源图像流
 	 * @param destStream 目标图像流
@@ -775,7 +815,8 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 给图片添加图片水印
+	 * 给图片添加图片水印<br>
+	 * 此方法并不关闭流
 	 * 
 	 * @param srcImage 源图像流
 	 * @param destImageStream 目标图像流
