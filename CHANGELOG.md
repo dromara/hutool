@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.2
+
+### 新特性
+* ArrayUtil增加containsIgnoreCase和indexOfIgnoreCase方法
+
 ## 3.1.1
 
 ### 新特性

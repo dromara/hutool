@@ -656,7 +656,24 @@ public class ArrayUtil {
 		}
 		return INDEX_NOT_FOUND;
 	}
-
+	
+	/**
+	 * 返回数组中指定元素所在位置，忽略大小写，未找到返回{@link #INDEX_NOT_FOUND}
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+	 * @since 3.1.2
+	 */
+	public static int indexOfIgnoreCase(CharSequence[] array, CharSequence value) {
+		for (int i = 0; i < array.length; i++) {
+			if (StrUtil.equalsIgnoreCase(array[i], value)) {
+				return i;
+			}
+		}
+		return INDEX_NOT_FOUND;
+	}
+	
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -686,6 +703,18 @@ public class ArrayUtil {
 	 */
 	public static <T> boolean contains(T[] array, T value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含元素，忽略大小写
+	 * 
+	 * @param array 数组
+	 * @param value 被检查的元素
+	 * @return 是否包含
+	 * @since 3.1.2
+	 */
+	public static boolean containsIgnoreCase(CharSequence[] array, CharSequence value) {
+		return indexOfIgnoreCase(array, value) > INDEX_NOT_FOUND;
 	}
 
 	/**
