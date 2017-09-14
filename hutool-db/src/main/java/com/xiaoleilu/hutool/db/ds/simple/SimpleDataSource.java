@@ -85,6 +85,18 @@ public class SimpleDataSource extends AbstractDataSource{
 	public SimpleDataSource(String url, String user, String pass) {
 		init(url, user, pass);
 	}
+	
+	/**
+	 * 构造
+	 * @param url jdbc url
+	 * @param user 用户名
+	 * @param pass 密码
+	 * @param driver JDBC驱动类
+	 * @since 3.1.2
+	 */
+	public SimpleDataSource(String url, String user, String pass, String driver) {
+		init(url, user, pass, driver);
+	}
 	//-------------------------------------------------------------------- Constructor end
 	
 	/**
@@ -94,15 +106,27 @@ public class SimpleDataSource extends AbstractDataSource{
 	 * @param pass 密码
 	 */
 	public void init(String url, String user, String pass) {
-		this.url = url;
-		this.user = user;
-		this.pass = pass;
-		this.driver = DbUtil.identifyDriver(url);
+		init(url, user, pass, DbUtil.identifyDriver(url));
+	}
+	
+	/**
+	 * 初始化
+	 * @param url jdbc url
+	 * @param user 用户名
+	 * @param pass 密码
+	 * @param driver JDBC驱动类
+	 * @since 3.1.2
+	 */
+	public void init(String url, String user, String pass, String driver) {
+		this.driver = driver;
 		try {
 			Class.forName(this.driver);
 		} catch (ClassNotFoundException e) {
-			throw new DbRuntimeException(e, "Get jdbc driver from [{}] error!", url);
+			throw new DbRuntimeException(e, "Get jdbc driver [{}] error!", driver);
 		}
+		this.url = url;
+		this.user = user;
+		this.pass = pass;
 	}
 
 	//-------------------------------------------------------------------- Getters and Setters start

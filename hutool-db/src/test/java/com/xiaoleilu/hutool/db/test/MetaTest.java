@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool.db.test;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.util.CollectionUtil;

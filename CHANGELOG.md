@@ -4,6 +4,10 @@
 
 ### 新特性
 * ArrayUtil增加containsIgnoreCase和indexOfIgnoreCase方法
+* DbUtil增加toSqlDate和toSqlTimestamp和setShowSqlGlobal方法
+
+### Bug修复
+* db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
 
 ## 3.1.1
 

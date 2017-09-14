@@ -501,9 +501,18 @@ public abstract class AbstractSqlRunner{
 	//---------------------------------------------------------------------------- CRUD end
 	
 	//---------------------------------------------------------------------------- Getters and Setters start
+	/**
+	 * 获取{@link SqlConnRunner}
+	 * @return {@link SqlConnRunner}
+	 */
 	public SqlConnRunner getRunner() {
 		return runner;
 	}
+	
+	/**
+	 * 设置 {@link SqlConnRunner}
+	 * @param runner {@link SqlConnRunner}
+	 */
 	public void setRunner(SqlConnRunner runner) {
 		this.runner = runner;
 	}

@@ -1,7 +1,8 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool.db.test;
 
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.lang.Console;
 
 public class EntityTest {

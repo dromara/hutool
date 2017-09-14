@@ -27,9 +27,11 @@ public class DialectFactory {
 	public final static String DRIVER_POSTGRESQL = "org.postgresql.Driver";
 	/** JDBC 驱动 SQLLite3 */
 	public final static String DRIVER_SQLLITE3 = "org.sqlite.JDBC";
+	/** JDBC 驱动 SQLServer */
+	public final static String DRIVER_SQLSERVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	/** JDBC 驱动 Hive */
 	public final static String DRIVER_HIVE = "org.apache.hadoop.hive.jdbc.HiveDriver";
-	/** JDBC 驱动 Hive */
+	/** JDBC 驱动 Hive2 */
 	public final static String DRIVER_HIVE2 = "org.apache.hive.jdbc.HiveDriver";
 	
 	private DialectFactory() {

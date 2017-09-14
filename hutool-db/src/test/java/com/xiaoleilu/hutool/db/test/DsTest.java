@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.db;
+package com.xiaoleilu.hutool.db.test;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.db.Entity;
+import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.ds.c3p0.C3p0DSFactory;
 import com.xiaoleilu.hutool.db.ds.dbcp.DbcpDSFactory;

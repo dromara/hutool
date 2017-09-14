@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.db;
 
+import java.io.Closeable;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -31,6 +32,7 @@ import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.meta.TableType;
 import com.xiaoleilu.hutool.db.sql.Condition;
+import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
 import com.xiaoleilu.hutool.io.IoUtil;
@@ -145,21 +147,27 @@ public final class DbUtil {
 	 */
 	public static void close(Object... objsToClose) {
 		for (Object obj : objsToClose) {
-			try {
-				if (obj != null) {
-					if (obj instanceof ResultSet) {
-						((ResultSet) obj).close();
-					} else if (obj instanceof Statement) {
-						((Statement) obj).close();
-					} else if (obj instanceof PreparedStatement) {
-						((PreparedStatement) obj).close();
-					} else if (obj instanceof Connection) {
-						((Connection) obj).close();
-					} else {
-						log.warn("Object " + obj.getClass().getName() + " not a ResultSet or Statement or PreparedStatement or Connection!");
+			if(obj instanceof AutoCloseable) {
+				IoUtil.close((AutoCloseable)obj);
+			}else if(obj instanceof Closeable) {
+				IoUtil.close((Closeable)obj);
+			}else {
+				try {
+					if (obj != null) {
+						if (obj instanceof ResultSet) {
+							((ResultSet) obj).close();
+						} else if (obj instanceof Statement) {
+							((Statement) obj).close();
+						} else if (obj instanceof PreparedStatement) {
+							((PreparedStatement) obj).close();
+						} else if (obj instanceof Connection) {
+							((Connection) obj).close();
+						} else {
+							log.warn("Object {} not a ResultSet or Statement or PreparedStatement or Connection!", obj.getClass().getName());
+						}
 					}
+				} catch (SQLException e) {
 				}
-			} catch (SQLException e) {
 			}
 		}
 	}
@@ -368,7 +376,8 @@ public final class DbUtil {
 	}
 	
 	/**
-	 * 填充SQL的参数。
+	 * 填充SQL的参数。<br>
+	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
 	 * 
 	 * @param ps PreparedStatement
 	 * @param params SQL参数
@@ -378,12 +387,23 @@ public final class DbUtil {
 		if (ArrayUtil.isEmpty(params)) {
 			return;//无参数
 		}
-		ParameterMetaData pmd = ps.getParameterMetaData();
+		Object param;
 		for (int i = 0; i < params.length; i++) {
 			int paramIndex = i + 1;
-			if (params[i] != null) {
-				ps.setObject(paramIndex, params[i]);
+			param = params[i];
+			if (null != param) {
+				//日期特殊处理
+				if(param instanceof java.util.Date) {
+					if(param instanceof java.sql.Date) {
+						ps.setDate(paramIndex, (java.sql.Date)param);
+					}else {
+						ps.setTimestamp(paramIndex, toSqlTimestamp((java.util.Date)param));
+					}
+				}else {
+					ps.setObject(paramIndex, param);
+				}
 			} else {
+				final ParameterMetaData pmd = ps.getParameterMetaData();
 				int sqlType = Types.VARCHAR;
 				try {
 					sqlType = pmd.getParameterType(paramIndex);
@@ -517,7 +537,7 @@ public final class DbUtil {
 	}
 	
 	/**
-	 * 识别JDBC驱动名
+	 * 通过JDBC URL等信息识别JDBC驱动名
 	 * @param nameContainsProductInfo 包含数据库标识的字符串
 	 * @return 驱动
 	 */
@@ -536,6 +556,8 @@ public final class DbUtil {
 			driver = DialectFactory.DRIVER_POSTGRESQL;
 		}else if(nameContainsProductInfo.contains("sqlite")) {
 			driver = DialectFactory.DRIVER_SQLLITE3;
+		}else if(nameContainsProductInfo.contains("sqlserver")) {
+			driver = DialectFactory.DRIVER_SQLSERVER;
 		}else if(nameContainsProductInfo.contains("hive")) {
 			driver = DialectFactory.DRIVER_HIVE;
 		}else if(nameContainsProductInfo.contains("hive2")) {
@@ -654,6 +676,36 @@ public final class DbUtil {
 		}finally{
 			IoUtil.close(in);
 		}
+	}
+	
+	/**
+	 * 转换为{@link java.sql.Date}
+	 * @param date {@link java.util.Date}
+	 * @return {@link java.sql.Date}
+	 * @since 3.1.2
+	 */
+	public static java.sql.Date toSqlDate(java.util.Date date){
+		return new java.sql.Date(date.getTime());
+	}
+	
+	/**
+	 * 转换为{@link java.sql.Timestamp}
+	 * @param date {@link java.util.Date}
+	 * @return {@link java.sql.Timestamp}
+	 * @since 3.1.2
+	 */
+	public static java.sql.Timestamp toSqlTimestamp(java.util.Date date){
+		return new java.sql.Timestamp(date.getTime());
+	}
+	
+	/**
+	 * 设置全局配置：是否通过debug日志显示SQL
+	 * @param isShowSql 是否显示SQL
+	 * @param isFormatSql 是否格式化显示的SQL
+	 * @since 3.1.2
+	 */
+	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql) {
+		SqlBuilder.setShowSql(true, isFormatSql);
 	}
 	//---------------------------------------------------------------------------- Private method start
 	//---------------------------------------------------------------------------- Private method end
