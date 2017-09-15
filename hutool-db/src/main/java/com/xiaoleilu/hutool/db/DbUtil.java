@@ -504,8 +504,14 @@ public final class DbUtil {
 		
 		final Condition[] conditions = new Condition[entity.size()];
 		int i = 0;
+		Object value;
 		for (Entry<String, Object> entry : entity.entrySet()) {
-			conditions[i++] = new Condition(entry.getKey(), entry.getValue());
+			value = entry.getValue();
+			if(value instanceof Condition) {
+				conditions[i++] = (Condition)value;
+			}else {
+				conditions[i++] = new Condition(entry.getKey(), value);
+			}
 		}
 		
 		return conditions;

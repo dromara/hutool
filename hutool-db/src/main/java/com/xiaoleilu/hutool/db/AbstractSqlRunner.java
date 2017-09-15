@@ -247,7 +247,8 @@ public abstract class AbstractSqlRunner{
 	}
 	
 	/**
-	 * 更新数据
+	 * 更新数据<br>
+	 * 更新条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param record 记录
 	 * @param where 条件
@@ -295,7 +296,8 @@ public abstract class AbstractSqlRunner{
 	//------------------------------------------------------------- Get end
 	
 	/**
-	 * 查询
+	 * 查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param <T> 需要处理成的结果对象类型
 	 * @param fields 返回的字段列表，null则返回所有字段
@@ -317,7 +319,8 @@ public abstract class AbstractSqlRunner{
 	}
 	
 	/**
-	 * 查询，返回所有字段
+	 * 查询，返回所有字段<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param <T> 需要处理成的结果对象类型
 	 * @param where 条件实体类（包含表名）
@@ -331,7 +334,8 @@ public abstract class AbstractSqlRunner{
 	}
 	
 	/**
-	 * 查询数据列表，返回所有字段
+	 * 查询数据列表，返回所有字段<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param where 条件实体类（包含表名）
 	 * @return 数据对象列表
@@ -399,6 +403,7 @@ public abstract class AbstractSqlRunner{
 	
 	/**
 	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param <T> 结果对象类型
 	 * @param fields 返回的字段列表，null则返回所有字段
@@ -423,6 +428,7 @@ public abstract class AbstractSqlRunner{
 	
 	/**
 	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param <T> 结果对象类型
 	 * @param fields 返回的字段列表，null则返回所有字段
@@ -446,6 +452,7 @@ public abstract class AbstractSqlRunner{
 	
 	/**
 	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
@@ -468,6 +475,7 @@ public abstract class AbstractSqlRunner{
 	
 	/**
 	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
@@ -489,6 +497,7 @@ public abstract class AbstractSqlRunner{
 	
 	/**
 	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " > 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param where 条件实体类（包含表名）
 	 * @param page 页码
