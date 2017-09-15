@@ -97,29 +97,39 @@ public class CharsetUtil {
 	}
 	
 	/**
-	 * 系统字符集编码，与 {@link CharsetUtil#defaultCharsetName()}功能相同，别名不同
+	 * 系统字符集编码，如果是Windows，则默认为GBK编码，否则取 {@link CharsetUtil#defaultCharsetName()}
 	 * 
 	 * @see CharsetUtil#defaultCharsetName()
 	 * @return 系统字符集编码
+	 * @since 3.1.2
 	 */
-	public static String systemCharset() {
-		return defaultCharsetName();
+	public static String systemCharsetName() {
+		return systemCharset().name();
+	}
+	
+	/**
+	 * 系统字符集编码，如果是Windows，则默认为GBK编码，否则取 {@link CharsetUtil#defaultCharsetName()}
+	 * 
+	 * @see CharsetUtil#defaultCharsetName()
+	 * @return 系统字符集编码
+	 * @since 3.1.2
+	 */
+	public static Charset systemCharset() {
+		return FileUtil.isWindows() ? CHARSET_GBK : defaultCharset();
 	}
 	
 	/**
 	 * 系统默认字符集编码
 	 * 
-	 * @see CharsetUtil#defaultCharsetName()
 	 * @return 系统字符集编码
 	 */
 	public static String defaultCharsetName() {
-		return Charset.defaultCharset().name();
+		return defaultCharset().name();
 	}
 	
 	/**
 	 * 系统默认字符集编码
 	 * 
-	 * @see CharsetUtil#defaultCharsetName()
 	 * @return 系统字符集编码
 	 */
 	public static Charset defaultCharset() {

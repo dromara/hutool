@@ -6,9 +6,11 @@
 * ArrayUtil增加containsIgnoreCase和indexOfIgnoreCase方法
 * DbUtil增加toSqlDate和toSqlTimestamp和setShowSqlGlobal方法
 * RuntimeUtil增加可选编码的方法
+* CharsetUtil.systemCharset修改逻辑，Windows使用GBK编码
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
+* 修复RuntimeUtil中乱码和单条带参数命令执行失败问题（@【北京】宁静）
 
 ## 3.1.1
 

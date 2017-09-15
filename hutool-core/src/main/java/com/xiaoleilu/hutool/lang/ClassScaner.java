@@ -97,7 +97,7 @@ public final class ClassScaner {
 		final Set<String> classPaths = ClassUtil.getClassPaths(packageName);
 		for (String classPath : classPaths) {
 			// bug修复，由于路径中空格和中文导致的Jar找不到
-			classPath = URLUtil.decode(classPath, CharsetUtil.systemCharset());
+			classPath = URLUtil.decode(classPath, CharsetUtil.systemCharsetName());
 
 //			log.debug("Scan classpath: [{}]", classPath);
 			// 填充 classes
@@ -109,7 +109,7 @@ public final class ClassScaner {
 			final String[] javaClassPaths = ClassUtil.getJavaClassPaths();
 			for (String classPath : javaClassPaths) {
 				// bug修复，由于路径中空格和中文导致的Jar找不到
-				classPath = URLUtil.decode(classPath, CharsetUtil.systemCharset());
+				classPath = URLUtil.decode(classPath, CharsetUtil.systemCharsetName());
 
 //				log.debug("Scan java classpath: [{}]", classPath);
 				// 填充 classes

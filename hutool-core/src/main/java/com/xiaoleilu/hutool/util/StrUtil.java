@@ -533,6 +533,17 @@ public class StrUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 指定字符是否在字符串中出现过
+	 * @param str 字符串
+	 * @param searchChar 被查找的字符
+	 * @return 是否包含
+	 * @since 3.1.2
+	 */
+	public static boolean contains(CharSequence str, char searchChar) {
+		return indexOf(str, searchChar) > -1;
+	}
 
 	/**
 	 * 是否包含特定字符，忽略大小写，如果给定两个参数都为<code>null</code>，返回true
@@ -880,11 +891,23 @@ public class StrUtil {
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
-	 * @param limit 限制分片数
+	 * @param limit 限制分片数，-1不限制
 	 * @return 切分后的集合
 	 */
 	public static List<String> split(CharSequence str, char separator, int limit) {
 		return split(str, separator, limit, false, false);
+	}
+	
+	/**
+	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @return 切分后的集合
+	 * @since 3.1.2
+	 */
+	public static List<String> splitTrim(CharSequence str, char separator) {
+		return splitTrim(str, separator, -1);
 	}
 
 	/**
@@ -892,7 +915,7 @@ public class StrUtil {
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
-	 * @param limit 限制分片数
+	 * @param limit 限制分片数，-1不限制
 	 * @return 切分后的集合
 	 * @since 3.1.0
 	 */
@@ -919,7 +942,7 @@ public class StrUtil {
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
-	 * @param limit 限制分片数
+	 * @param limit 限制分片数，-1不限制
 	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
 	 * @param ignoreEmpty 是否忽略空串
 	 * @return 切分后的集合
