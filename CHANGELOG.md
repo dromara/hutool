@@ -7,10 +7,15 @@
 * DbUtil增加toSqlDate和toSqlTimestamp和setShowSqlGlobal方法
 * RuntimeUtil增加可选编码的方法
 * CharsetUtil.systemCharset修改逻辑，Windows使用GBK编码
+* db模块加强异常提示信息
+* 升级可选依赖版本
+* Setting增加getandRemove和getAndRemoveStr方法，并去除db模块中配置键别名获取相关冗余方法
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
 * 修复RuntimeUtil中乱码和单条带参数命令执行失败问题（@【北京】宁静）
+* 修复ThreadUtil newExecutorByBlockingCoefficient中不能传入0的bug（issue#IF7UN@Gitee）
+* 修复CollUtil.split的bug（issue#IF7UT@Gitee）
 
 ## 3.1.1
 

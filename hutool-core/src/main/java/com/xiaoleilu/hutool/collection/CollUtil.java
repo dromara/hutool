@@ -701,7 +701,7 @@ public class CollUtil {
 
 		ArrayList<T> subList = new ArrayList<>(size);
 		for (T t : collection) {
-			if (subList.size() > size) {
+			if (subList.size() >= size) {
 				result.add(subList);
 				subList = new ArrayList<>(size);
 			}

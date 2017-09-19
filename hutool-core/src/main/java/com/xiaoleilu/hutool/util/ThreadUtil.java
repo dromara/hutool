@@ -76,7 +76,7 @@ public class ThreadUtil {
 	 * @since 3.0.6
 	 */
 	public static ThreadPoolExecutor newExecutorByBlockingCoefficient(float blockingCoefficient) {
-		if(blockingCoefficient > 1 || blockingCoefficient <=0){
+		if(blockingCoefficient >= 1 || blockingCoefficient < 0){
 			throw new IllegalArgumentException("[blockingCoefficient] must between 0 and 1, or equals 0.");
 		}
 		

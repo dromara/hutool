@@ -583,11 +583,15 @@ public final class DbUtil {
 		Connection conn = null;
 		String driver = null;
 		try {
-			conn = ds.getConnection();
+			try {
+				conn = ds.getConnection();
+			} catch (SQLException e) {
+				throw new DbRuntimeException("Get Connection error !", e);
+			} catch (NullPointerException e) {
+				throw new DbRuntimeException("Unexpected NullPointException, maybe [jdbcUrl] or [url] is empty!", e);
+			}
 			driver = identifyDriver(conn);
-		} catch (Exception e) {
-			throw new DbRuntimeException("Identify driver error!", e);
-		}finally {
+		} finally {
 			close(conn);
 		}
 		

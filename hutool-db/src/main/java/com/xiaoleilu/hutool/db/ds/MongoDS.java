@@ -424,16 +424,6 @@ public class MongoDS implements Closeable{
 			log.debug("MongoDB socketTimeout: {}", socketTimeout);
 		}
 		
-		//This controls whether or not to have socket keep alive turned on (SO_KEEPALIVE). defaults to false --boolean
-		Boolean socketKeepAlive = setting.getBool(group + "socketKeepAlive");
-		if(StrUtil.isBlank(group) == false && socketKeepAlive == null) {
-			socketKeepAlive = setting.getBool("socketKeepAlive");
-		}
-		if(socketKeepAlive != null) {
-			builder.socketKeepAlive(socketKeepAlive);
-			log.debug("MongoDB socketKeepAlive: {}", socketKeepAlive);
-		}
-		
 		return builder;
 	}
 	
