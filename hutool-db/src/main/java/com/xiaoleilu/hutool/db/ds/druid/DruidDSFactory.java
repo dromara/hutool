@@ -86,17 +86,23 @@ public class DruidDSFactory extends DSFactory {
 	 * @return Druid数据源 {@link DruidDataSource}
 	 */
 	private DruidDataSource createDataSource(String group){
-		final Properties config = setting.getProperties(group);
+		final Setting config = setting.getSetting(group);
 		if(CollectionUtil.isEmpty(config)){
 			throw new DbRuntimeException("No Druid config for group: [{}]", group);
 		}
 		
 		final DruidDataSource ds = new DruidDataSource();
+		
 		//基本信息
-		ds.setUrl(getAndRemoveProperty(config, "url", "jdbcUrl"));
-		ds.setUsername(getAndRemoveProperty(config, "username", "user"));
-		ds.setPassword(getAndRemoveProperty(config, "password", "pass"));
-		final String driver = getAndRemoveProperty(config, "driver", "driverClassName");
+		final String url = config.getAndRemoveStr(KEY_ALIAS_URL);
+		if(StrUtil.isBlank(url)) {
+			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
+		}
+		ds.setUrl(url);
+		ds.setUsername(config.getAndRemoveStr(KEY_ALIAS_USER));
+		ds.setPassword(config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
+		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
+		//在未提供JDBC驱动的情况下，Druid会自动识别驱动
 		if(StrUtil.isNotBlank(driver)){
 			ds.setDriverClassName(driver);
 		}
@@ -121,20 +127,5 @@ public class DruidDSFactory extends DSFactory {
 		}
 		
 		return ds;
-	}
-	
-	/**
-	 * 获得指定KEY对应的值，key1和key2为属性的两个名字，可以互作别名
-	 * @param properties 属性
-	 * @param key1 属性名
-	 * @param key2 备用属性名
-	 * @return 值
-	 */
-	private String getAndRemoveProperty(Properties properties, String key1, String key2){
-		String value = (String) properties.remove(key1);
-		if(StrUtil.isBlank(value)){
-			value = (String) properties.remove(key2);
-		}
-		return value;
 	}
 }

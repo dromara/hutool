@@ -200,6 +200,40 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	}
 	
 	/**
+	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
+	 * @param keys 键列表，常用于别名
+	 * @return 值
+	 * @since 3.1.2
+	 */
+	public Object getAndRemove(String... keys) {
+		Object value = null;
+		for (String key : keys) {
+			value = remove(key);
+			if(null != value) {
+				break;
+			}
+		}
+		return value;
+	}
+	
+	/**
+	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
+	 * @param keys 键列表，常用于别名
+	 * @return 字符串值
+	 * @since 3.1.2
+	 */
+	public String getAndRemoveStr(String... keys) {
+		Object value = null;
+		for (String key : keys) {
+			value = remove(key);
+			if(null != value) {
+				break;
+			}
+		}
+		return (String)value;
+	}
+	
+	/**
 	 * 获得指定分组的所有键值对
 	 * @param group 分组
 	 * @return map

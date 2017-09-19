@@ -7,25 +7,29 @@ import java.sql.SQLException;
 
 import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.DbUtil;
+import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.setting.Setting;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /***
  * 简易数据源，没有使用连接池，仅供测试或打开关闭连接非常少的场合使用！
+ * 
  * @author loolly
  *
  */
-public class SimpleDataSource extends AbstractDataSource{
-	
+public class SimpleDataSource extends AbstractDataSource {
+
 	/** 默认的数据库连接配置文件路径 */
 	public final static String DEFAULT_DB_CONFIG_PATH = "config/db.setting";
-	
-	//-------------------------------------------------------------------- Fields start
-	private String driver;		//数据库驱动
-	private String url;			//jdbc url
-	private String user;			//用户名
-	private String pass;			//密码
-	//-------------------------------------------------------------------- Fields end
-	
+
+	// -------------------------------------------------------------------- Fields start
+	private String driver; // 数据库驱动
+	private String url; // jdbc url
+	private String user; // 用户名
+	private String pass; // 密码
+	// -------------------------------------------------------------------- Fields end
+
 	/**
 	 * 获得一个数据源
 	 * 
@@ -35,49 +39,58 @@ public class SimpleDataSource extends AbstractDataSource{
 	synchronized public static SimpleDataSource getDataSource(String group) {
 		return new SimpleDataSource(group);
 	}
-	
+
 	/**
 	 * 获得一个数据源，无分组
+	 * 
 	 * @return {@link SimpleDataSource}
 	 */
 	synchronized public static SimpleDataSource getDataSource() {
 		return new SimpleDataSource();
 	}
-	
-	//-------------------------------------------------------------------- Constructor start
+
+	// -------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
 	 */
 	public SimpleDataSource() {
 		this(null);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param group 数据库配置文件中的分组
 	 */
 	public SimpleDataSource(String group) {
 		this(null, group);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param setting 数据库配置
 	 * @param group 数据库配置文件中的分组
 	 */
 	public SimpleDataSource(Setting setting, String group) {
-		if(null == setting) {
+		if (null == setting) {
 			setting = new Setting(DEFAULT_DB_CONFIG_PATH);
 		}
+		final Setting config = setting.getSetting(group);
+		if (CollectionUtil.isEmpty(config)) {
+			throw new DbRuntimeException("No C3P0 config for group: [{}]", group);
+		}
+
 		init(
-				setting.getByGroup("url", group), 
-				setting.getByGroup("user", group), 
-				setting.getByGroup("pass", group)
-		);
+				config.getAndRemoveStr(DSFactory.KEY_ALIAS_URL),
+				config.getAndRemoveStr(DSFactory.KEY_ALIAS_USER),
+				config.getAndRemoveStr(DSFactory.KEY_ALIAS_PASSWORD),
+				config.getAndRemoveStr(DSFactory.KEY_ALIAS_DRIVER));
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码
@@ -85,9 +98,10 @@ public class SimpleDataSource extends AbstractDataSource{
 	public SimpleDataSource(String url, String user, String pass) {
 		init(url, user, pass);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码
@@ -97,28 +111,30 @@ public class SimpleDataSource extends AbstractDataSource{
 	public SimpleDataSource(String url, String user, String pass, String driver) {
 		init(url, user, pass, driver);
 	}
-	//-------------------------------------------------------------------- Constructor end
-	
+	// -------------------------------------------------------------------- Constructor end
+
 	/**
 	 * 初始化
+	 * 
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码
 	 */
 	public void init(String url, String user, String pass) {
-		init(url, user, pass, DbUtil.identifyDriver(url));
+		init(url, user, pass, null);
 	}
-	
+
 	/**
 	 * 初始化
+	 * 
 	 * @param url jdbc url
 	 * @param user 用户名
 	 * @param pass 密码
-	 * @param driver JDBC驱动类
+	 * @param driver JDBC驱动类，传入空则自动识别驱动类
 	 * @since 3.1.2
 	 */
 	public void init(String url, String user, String pass, String driver) {
-		this.driver = driver;
+		this.driver = StrUtil.isBlank(driver) ? DbUtil.identifyDriver(url) : driver;
 		try {
 			Class.forName(this.driver);
 		} catch (ClassNotFoundException e) {
@@ -129,32 +145,39 @@ public class SimpleDataSource extends AbstractDataSource{
 		this.pass = pass;
 	}
 
-	//-------------------------------------------------------------------- Getters and Setters start
+	// -------------------------------------------------------------------- Getters and Setters start
 	public String getDriver() {
 		return driver;
 	}
+
 	public void setDriver(String driver) {
 		this.driver = driver;
 	}
+
 	public String getUrl() {
 		return url;
 	}
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
 	public String getUser() {
 		return user;
 	}
+
 	public void setUser(String user) {
 		this.user = user;
 	}
+
 	public String getPass() {
 		return pass;
 	}
+
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
-	//-------------------------------------------------------------------- Getters and Setters end
+	// -------------------------------------------------------------------- Getters and Setters end
 
 	@Override
 	public Connection getConnection() throws SQLException {
@@ -168,6 +191,6 @@ public class SimpleDataSource extends AbstractDataSource{
 
 	@Override
 	public void close() throws IOException {
-		//Not need to close;
+		// Not need to close;
 	}
 }

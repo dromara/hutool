@@ -25,6 +25,15 @@ public abstract class DSFactory {
 
 	protected static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
 	protected static final String DEFAULT_DB_SETTING_PATH2 = "db.setting";
+	
+	/** 别名字段名：URL */
+	public static final String[] KEY_ALIAS_URL = {"url", "jdbcUrl"};
+	/** 别名字段名：用户名 */
+	public static final String[] KEY_ALIAS_USER = {"user", "username"};
+	/** 别名字段名：密码 */
+	public static final String[] KEY_ALIAS_PASSWORD = {"password", "pass"};
+	/** 别名字段名：驱动名 */
+	public static final String[] KEY_ALIAS_DRIVER = {"driver", "driverClassName"};
 
 	/** 数据源名 */
 	private String dataSourceName;

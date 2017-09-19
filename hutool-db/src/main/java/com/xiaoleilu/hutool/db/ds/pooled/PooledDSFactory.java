@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
-import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.setting.Setting;
@@ -85,12 +84,8 @@ public class PooledDSFactory extends DSFactory {
 		if (group == null) {
 			group = StrUtil.EMPTY;
 		}
-		
-		Setting config = setting.getSetting(group);
-		if(null == config || config.isEmpty()){
-			throw new DbRuntimeException("No PooledDataSource config for group: [{}]", group);
-		}
-		final PooledDataSource ds = new PooledDataSource(new DbSetting(config).getDbConfig(null));
+
+		final PooledDataSource ds = new PooledDataSource(new DbSetting(this.setting), group);
 		return ds;
 	}
 }

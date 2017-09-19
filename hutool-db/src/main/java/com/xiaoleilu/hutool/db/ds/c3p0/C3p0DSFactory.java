@@ -91,15 +91,19 @@ public class C3p0DSFactory extends DSFactory {
 		final ComboPooledDataSource ds = new ComboPooledDataSource();
 		
 		//基本信息
-		ds.setJdbcUrl(getAndRemoveProperty(config, "url", "jdbcUrl"));
-		ds.setUser(getAndRemoveProperty(config, "username", "user"));
-		ds.setPassword(getAndRemoveProperty(config, "password", "pass"));
-		final String driver = getAndRemoveProperty(config, "driver", "driverClassName");
+		final String url = config.getAndRemoveStr(KEY_ALIAS_URL);
+		if(StrUtil.isBlank(url)) {
+			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
+		}
+		ds.setJdbcUrl(url);
+		ds.setUser(config.getAndRemoveStr(KEY_ALIAS_USER));
+		ds.setPassword(config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
+		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
 		try {
 			if(StrUtil.isNotBlank(driver)){
 				ds.setDriverClass(driver);
 			}else{
-				ds.setDriverClass(DbUtil.identifyDriver(ds.getJdbcUrl()));
+				ds.setDriverClass(DbUtil.identifyDriver(url));
 			}
 		} catch (Exception e) {
 			throw new DbRuntimeException(e);
@@ -108,20 +112,5 @@ public class C3p0DSFactory extends DSFactory {
 		config.toBean(ds);//注入属性
 		
 		return ds;
-	}
-	
-	/**
-	 * 获得指定KEY对应的值，key1和key2为属性的两个名字，可以互作别名
-	 * @param properties 属性
-	 * @param key1 属性名
-	 * @param key2 备用属性名
-	 * @return 值
-	 */
-	private String getAndRemoveProperty(Setting setting, String key1, String key2){
-		String value = (String) setting.remove(key1);
-		if(StrUtil.isBlank(value)){
-			value = (String) setting.remove(key2);
-		}
-		return value;
 	}
 }

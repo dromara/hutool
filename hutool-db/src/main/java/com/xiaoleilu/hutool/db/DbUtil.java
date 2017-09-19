@@ -551,6 +551,7 @@ public final class DbUtil {
 		if(StrUtil.isBlank(nameContainsProductInfo)) {
 			return null;
 		}
+		//全部转为小写，忽略大小写
 		nameContainsProductInfo = nameContainsProductInfo.toLowerCase();
 		
 		String driver = null;
@@ -597,8 +598,9 @@ public final class DbUtil {
 	 * 识别JDBC驱动名
 	 * @param conn 数据库连接对象
 	 * @return 驱动
+	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
 	 */
-	public static String identifyDriver(Connection conn) {
+	public static String identifyDriver(Connection conn) throws DbRuntimeException{
 		String driver = null;
 		try {
 			DatabaseMetaData meta = conn.getMetaData();
@@ -616,8 +618,9 @@ public final class DbUtil {
 	/**
 	 * 验证实体类对象的有效性
 	 * @param entity 实体类对象
+	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
 	 */
-	public static void validateEntity(Entity entity){
+	public static void validateEntity(Entity entity) throws DbRuntimeException{
 		if(null == entity) {
 			throw new DbRuntimeException("Entity is null !");
 		}

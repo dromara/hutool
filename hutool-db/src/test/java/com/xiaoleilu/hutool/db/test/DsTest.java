@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.db.Entity;
@@ -16,7 +17,7 @@ import com.xiaoleilu.hutool.db.ds.druid.DruidDSFactory;
 import com.xiaoleilu.hutool.db.ds.hikari.HikariDSFactory;
 import com.xiaoleilu.hutool.db.ds.pooled.PooledDSFactory;
 import com.xiaoleilu.hutool.db.ds.tomcat.TomcatDSFactory;
-import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.util.ArrayUtil;
 
 /**
  * 数据源单元测试
@@ -30,9 +31,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
-		for (Entity entity : all) {
-			Console.log(entity);
-		}
+		Assert.assertTrue(ArrayUtil.isNotEmpty(all));
 	}
 	
 	@Test
@@ -41,9 +40,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
-		for (Entity entity : all) {
-			Console.log(entity);
-		}
+		Assert.assertTrue(ArrayUtil.isNotEmpty(all));
 	}
 	
 	@Test
@@ -52,9 +49,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
-		for (Entity entity : all) {
-			Console.log(entity);
-		}
+		Assert.assertTrue(ArrayUtil.isNotEmpty(all));
 	}
 	
 	@Test
@@ -63,9 +58,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
-		for (Entity entity : all) {
-			Console.log(entity);
-		}
+		Assert.assertTrue(ArrayUtil.isNotEmpty(all));
 	}
 	
 	@Test
@@ -74,9 +67,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
-		for (Entity entity : all) {
-			Console.log(entity);
-		}
+		Assert.assertTrue(ArrayUtil.isNotEmpty(all));
 	}
 	
 	@Test
@@ -85,9 +76,7 @@ public class DsTest {
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
-		for (Entity entity : all) {
-			Console.log(entity);
-		}
+		Assert.assertTrue(ArrayUtil.isNotEmpty(all));
 	}
 	
 	@Test
@@ -96,8 +85,6 @@ public class DsTest {
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
-		for (Entity entity : all) {
-			Console.log(entity);
-		}
+		Assert.assertTrue(ArrayUtil.isNotEmpty(all));
 	}
 }
