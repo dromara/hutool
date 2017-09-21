@@ -1,6 +1,8 @@
 package com.xiaoleilu.hutool.io.resource;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
@@ -36,6 +38,26 @@ public class ResourceUtil {
 	 */
 	public static String readStr(String resource, Charset charset) {
 		return new ClassPathResource(resource).readStr(charset);
+	}
+	
+	/**
+	 * 从ClassPath资源中获取{@link InputStream}
+	 * @param resurce ClassPath资源
+	 * @return {@link InputStream}
+	 * @since 3.1.2
+	 */
+	public static InputStream getStream(String resurce) {
+		return new ClassPathResource(resurce).getStream();
+	}
+	
+	/**
+	 * 从ClassPath资源中获取{@link BufferedReader}
+	 * @param resurce ClassPath资源
+	 * @return {@link InputStream}
+	 * @since 3.1.2
+	 */
+	public static BufferedReader getReader(String resurce, Charset charset) {
+		return new ClassPathResource(resurce).getReader(charset);
 	}
 	
 	/**
