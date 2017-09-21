@@ -44,10 +44,9 @@ public class WatchMonitorTest {
 			}
 		};
 		
+		WatchMonitor monitor = WatchMonitor.createAll("d:/aaa/aaa.txt", new DelayWatcher(watcher, 500));
 		
-		WatchMonitor monitor = WatchMonitor.createAll("d:/", new DelayWatcher(watcher, 500));
-		
-		monitor.setMaxDepth(3);
+		monitor.setMaxDepth(0);
 		monitor.start();
 	}
 	

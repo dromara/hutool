@@ -1,6 +1,8 @@
 package com.xiaoleilu.hutool.core.io;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -93,5 +95,41 @@ public class FileUtilTest {
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
 		Assert.assertEquals("~/bar/", FileUtil.normalize("~/foo/../bar/"));
 		Assert.assertEquals("bar", FileUtil.normalize("~/../bar"));
+	}
+	
+	@Test
+	public void subPathTest() {
+		Path path = Paths.get("d:/aaa/bbb/ccc/ddd/eee/fff");
+		
+		Path subPath = FileUtil.subPath(path, 5, 4);
+		Assert.assertEquals("eee", subPath.toString());
+		subPath = FileUtil.subPath(path, 0, 1);
+		Assert.assertEquals("aaa", subPath.toString());
+		subPath = FileUtil.subPath(path, 1, 0);
+		Assert.assertEquals("aaa", subPath.toString());
+		
+		//负数
+		subPath = FileUtil.subPath(path, -1, 0);
+		Assert.assertEquals("aaa/bbb/ccc/ddd/eee", subPath.toString().replace('\\', '/'));
+		subPath = FileUtil.subPath(path, -1, Integer.MAX_VALUE);
+		Assert.assertEquals("fff", subPath.toString());
+		subPath = FileUtil.subPath(path, -1, path.getNameCount());
+		Assert.assertEquals("fff", subPath.toString());
+		subPath = FileUtil.subPath(path, -2, -3);
+		Assert.assertEquals("ddd", subPath.toString());
+	}
+	
+	@Test
+	public void getPathEle() {
+		Path path = Paths.get("d:/aaa/bbb/ccc/ddd/eee/fff");
+		
+		Path ele = FileUtil.getPathEle(path, -1);
+		Assert.assertEquals("fff", ele.toString());
+		ele = FileUtil.getPathEle(path, 0);
+		Assert.assertEquals("aaa", ele.toString());
+		ele = FileUtil.getPathEle(path, -5);
+		Assert.assertEquals("bbb", ele.toString());
+		ele = FileUtil.getPathEle(path, -6);
+		Assert.assertEquals("aaa", ele.toString());
 	}
 }

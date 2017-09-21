@@ -23,11 +23,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.watch.watchers.WatcherChain;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.ArrayUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
@@ -40,7 +41,6 @@ import com.xiaoleilu.hutool.util.URLUtil;
  *
  */
 public class WatchMonitor extends Thread implements Closeable{
-//	private static final Log log = LogFactory.get();
 	
 	/** 事件丢失 */
 	public static final WatchEvent.Kind<?> OVERFLOW = StandardWatchEventKinds.OVERFLOW;
@@ -304,6 +304,17 @@ public class WatchMonitor extends Thread implements Closeable{
 	public void init() throws WatchException{
 		//获取目录或文件路径
 		if(false ==Files.exists(this.path, LinkOption.NOFOLLOW_LINKS)) {
+			final Path lastPathEle = FileUtil.getLastPathEle(this.path);
+			if(null != lastPathEle) {
+				final String lastPathEleStr = lastPathEle.toString();
+				//带有点表示有扩展名，按照未创建的文件对待。Linux下.d的为目录，排除之
+				if(StrUtil.contains(lastPathEleStr, StrUtil.C_DOT) && false ==StrUtil.endWithIgnoreCase(lastPathEleStr, ".d")) {
+					this.filePath = this.path;
+					this.path = this.filePath.getParent();
+				}
+			}
+			
+			//创建不存在的目录或父目录
 			try {
 				Files.createDirectories(this.path);
 			} catch (IOException e) {
@@ -434,8 +445,6 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * @return {@link WatchKey}
 	 */
 	private void registerPath(Path path, int maxDepth) {
-		Console.log("Add watch path: {}", path);
-		
 		try {
 			final WatchKey key = path.register(watchService, ArrayUtil.isEmpty(this.events) ? EVENTS_ALL : this.events);
 			watchKeyPathMap.put(key, path);
