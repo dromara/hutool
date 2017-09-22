@@ -57,7 +57,7 @@ public class CacheTest {
 		lruCache.put("key4", "value4", DateUnit.SECOND.getMillis() * 3);
 		
 		//由于缓存容量只有3，当加入第四个元素的时候，根据LRU规则，最少使用的将被移除（2被移除）
-		String value2 = lruCache.get("key");
+		String value2 = lruCache.get("key2");
 		Assert.assertTrue(null == value2);
 	}
 	

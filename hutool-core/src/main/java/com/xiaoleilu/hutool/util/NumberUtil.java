@@ -1188,6 +1188,16 @@ public class NumberUtil {
 		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
 	
+	/**
+	 * 如果给定值为0，返回1，否则返回原值
+	 * @param value 值
+	 * @return 1或非0值
+	 * @since 3.1.2
+	 */
+	public static int zero2One(int value) {
+		return 0 == value ? 1 : value;
+	}
+	
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {

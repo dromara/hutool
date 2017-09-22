@@ -152,4 +152,28 @@ public class DateUtilTest {
 		int weekOfYear2 = DateUtil.weekOfYear(DateUtil.parse("2016-01-07"));
 		Assert.assertEquals(2, weekOfYear2);
 	}
+	
+	@Test
+	public void timeToSecondTest() {
+		int second = DateUtil.timeToSecond("00:01:40");
+		Assert.assertEquals(100, second);
+		second = DateUtil.timeToSecond("00:00:40");
+		Assert.assertEquals(40, second);
+		second = DateUtil.timeToSecond("01:00:00");
+		Assert.assertEquals(3600, second);
+		second = DateUtil.timeToSecond("00:00:00");
+		Assert.assertEquals(0, second);
+	}
+	
+	@Test
+	public void secondToTime() {
+		String time = DateUtil.secondToTime(3600);
+		Assert.assertEquals("01:00:00", time);
+		time = DateUtil.secondToTime(3800);
+		Assert.assertEquals("01:03:20", time);
+		time = DateUtil.secondToTime(0);
+		Assert.assertEquals("00:00:00", time);
+		time = DateUtil.secondToTime(30);
+		Assert.assertEquals("00:00:30", time);
+	}
 }

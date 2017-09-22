@@ -95,7 +95,7 @@ public class StrSpliter {
 			return addToList(new ArrayList<String>(1), str, isTrim, ignoreEmpty);
 		}
 		
-		final ArrayList<String> list = new ArrayList<>();
+		final ArrayList<String> list = new ArrayList<>(limit > 0 ? limit : 16);
 		int len = str.length();
 		int start = 0;//切分后每个部分的起始
 		for(int i = 0; i < len; i++){

@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import com.xiaoleilu.hutool.date.format.DateParser;
 import com.xiaoleilu.hutool.date.format.DatePrinter;
@@ -1235,6 +1236,7 @@ public class DateUtil {
 
 	/**
 	 * 判定给定开始时间经过某段时间后是否过期
+	 * 
 	 * @param startDate 开始时间
 	 * @param dateField 时间单位
 	 * @param timeLength 时长
@@ -1245,6 +1247,64 @@ public class DateUtil {
 	public static boolean isExpired(Date startDate, DateField dateField, int timeLength, Date checkedDate) {
 		final Date endDate = offset(startDate, dateField, timeLength);
 		return endDate.after(checkedDate);
+	}
+
+	/**
+	 * 时间格式字符串转为秒数<br>
+	 * 参考：https://github.com/iceroot
+	 * 
+	 * @param timeStr 字符串时分秒(HH:mm:ss)格式
+	 * @return 时分秒转换后的秒数
+	 * @since 3.1.2
+	 */
+	public static int timeToSecond(String timeStr) {
+		if(StrUtil.isEmpty(timeStr)) {
+			return 0;
+		}
+		
+		final List<String> hms = StrUtil.splitTrim(timeStr, StrUtil.C_COLON, 3);
+		int lastIndex = hms.size() - 1;
+
+		int result = 0;
+		for(int i = lastIndex; i >= 0; i--) {
+			result += Integer.parseInt(hms.get(i)) * Math.pow(60, (lastIndex - i));
+		}
+		return result;
+	}
+
+	/**
+	 * 秒数转为时间格式(HH:mm:ss)<br>
+	 * 参考：https://github.com/iceroot
+	 * 
+	 * @param seconds 需要转换的秒数
+	 * @return 转换后的字符串
+	 * @since 3.1.2
+	 */
+	public static String secondToTime(int seconds) {
+		if(seconds < 0) {
+			throw new IllegalArgumentException("Seconds must be a positive number!");
+		}
+		
+		int hour = seconds / 3600;
+		int other = seconds % 3600;
+		int minute = other / 60;
+		int second = other % 60;
+		final StringBuilder sb = new StringBuilder();
+		if (hour < 10) {
+			sb.append("0");
+		}
+		sb.append(hour);
+		sb.append(":");
+		if (minute < 10) {
+			sb.append("0");
+		}
+		sb.append(minute);
+		sb.append(":");
+		if (second < 10) {
+			sb.append("0");
+		}
+		sb.append(second);
+		return sb.toString();
 	}
 
 	// ------------------------------------------------------------------------ Private method start
