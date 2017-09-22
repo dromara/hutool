@@ -12,6 +12,7 @@
 * Setting增加getandRemove和getAndRemoveStr方法，并去除db模块中配置键别名获取相关冗余方法
 * FileUtil增加subPath、getPathEle方法（针对JDK7的Path对象封装）
 * 改进WatchMonitor，文件不存在时根据path判断是文件还是目录
+* 参阅iceroot库，增加DateUtil增加timeToSecond和secondToTime方法（感谢@【北京】宁静）
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
