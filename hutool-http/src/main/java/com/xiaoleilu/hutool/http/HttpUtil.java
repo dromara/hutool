@@ -595,6 +595,10 @@ public class HttpUtil {
 	 * @throws IOException IO异常
 	 */
 	public static String getString(byte[] contentBytes, Charset charset, boolean isGetCharsetFromContent) throws IOException {
+		if(null == contentBytes) {
+			return null;
+		}
+		
 		if(null == charset){
 			charset  = CharsetUtil.CHARSET_UTF_8;
 		}

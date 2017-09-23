@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.date.DateField;
 import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateTime;
+import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.date.Month;
 import com.xiaoleilu.hutool.date.Season;
 
@@ -58,5 +59,11 @@ public class DateTimeTest {
 		
 		String dateStr = dateTime.toString("yyyy/MM/dd");
 		Assert.assertEquals("2017/01/05", dateStr);
+	}
+	
+	@Test
+	public void monthTest() {
+		int month = DateUtil.parse("2017-07-01").month();
+		Assert.assertEquals(6, month);
 	}
 }

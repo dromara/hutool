@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.http.test;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -16,6 +19,15 @@ import com.xiaoleilu.hutool.lang.Console;
  */
 public class HttpRequestTest {
 	final String url = "http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2";
+	
+	@Test
+	@Ignore
+	public void asyncHeadTest() {
+		HttpResponse response = HttpRequest.head(url).execute();
+		Map<String, List<String>> headers = response.headers();
+		Console.log(headers);
+		Console.log(response.body());
+	}
 	
 	@Test
 	@Ignore

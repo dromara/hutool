@@ -117,7 +117,7 @@ public class Page {
 	 * @return 结束位置
 	 */
 	public int getEndPosition() {
-		return getStartEnd()[0];
+		return getStartEnd()[1];
 	}
 
 	/**

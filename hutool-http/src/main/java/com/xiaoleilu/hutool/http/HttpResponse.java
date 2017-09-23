@@ -36,6 +36,8 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	private FastByteArrayOutputStream out;
 	/** 响应状态码 */
 	private int status;
+	/** 是否忽略读取Http响应体 */
+	private boolean isIgnoreBody;
 
 	/**
 	 * 构造
@@ -43,12 +45,14 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @param httpConnection {@link HttpConnection}
 	 * @param charset 编码
 	 * @param isAsync 是否异步
-	 * @since 3.0.9
+	 * @param isIgnoreBody 是否忽略读取响应体
+	 * @since 3.1.2
 	 */
-	protected HttpResponse(HttpConnection httpConnection, Charset charset, boolean isAsync) {
+	protected HttpResponse(HttpConnection httpConnection, Charset charset, boolean isAsync, boolean isIgnoreBody) {
 		this.httpConnection = httpConnection;
 		this.charset = charset;
 		this.isAsync = isAsync;
+		this.isIgnoreBody = isIgnoreBody;
 		init();
 	}
 	
@@ -209,15 +213,20 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @throws IORuntimeException IO异常
 	 */
 	private void readBody(InputStream in) throws IORuntimeException{
+		if(isIgnoreBody) {
+			return;
+		}
+		
 		if(isGzip() && false == (in instanceof GZIPInputStream)){
 			try {
 				in = new GZIPInputStream(in);
 			} catch (IOException e) {
-				throw new IORuntimeException(e);
+				//在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
+				//ignore
 			}
 		}
 		
-		int contentLength  = Convert.toInt(header(Header.CONTENT_LENGTH), 0);
+		int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), 0);
 		this.out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
 		try {
 			IoUtil.copy(in, this.out);

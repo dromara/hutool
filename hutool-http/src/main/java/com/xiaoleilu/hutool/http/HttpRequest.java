@@ -564,7 +564,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 获取响应
 		if(null == httpResponse){
-			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync);
+			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isReadResponseBody());
 		}
 		return httpResponse;
 	}
@@ -782,6 +782,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private void setMultipart(){
 		this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_MULTIPART_PREFIX + BOUNDARY, true);
+	}
+	
+	/**
+	 * 是否需要读取响应body部分<br>
+	 * HEAD、CONNECT、OPTIONS、TRACE方法将不读取响应体
+	 * 
+	 * @return 是否需要读取响应body部分
+	 * @since 3.1.2
+	 */
+	private boolean isReadResponseBody() {
+		if(Method.HEAD == this.method 
+				|| Method.CONNECT == this.method 
+				|| Method.OPTIONS == this.method
+				|| Method.TRACE == this.method) {
+			return false;
+		}
+		return true;
 	}
 	// ---------------------------------------------------------------- Private method end
 

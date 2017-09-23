@@ -19,6 +19,8 @@
 * 修复RuntimeUtil中乱码和单条带参数命令执行失败问题（@【北京】宁静）
 * 修复ThreadUtil newExecutorByBlockingCoefficient中不能传入0的bug（issue#IF7UN@Gitee）
 * 修复CollUtil.split的bug（issue#IF7UT@Gitee）
+* 修复Page.getEndPosition()错误（感谢@【深圳】尘风了了）
+* 修复Http中head方法读取body失败问题，略过读取body（issue#IFA3C@Gitee）
 
 ## 3.1.1
 
