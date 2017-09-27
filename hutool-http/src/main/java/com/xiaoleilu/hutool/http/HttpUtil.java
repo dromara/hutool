@@ -11,7 +11,6 @@ import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -609,7 +608,12 @@ public class HttpUtil {
 				Charset charsetInContent = null;
 				try {
 					charsetInContent = Charset.forName(charsetInContentStr);
-				} catch (UnsupportedCharsetException e) {
+				} catch (Exception e) {
+					if(StrUtil.containsIgnoreCase(charsetInContentStr, "utf-8")) {
+						charsetInContent = CharsetUtil.CHARSET_UTF_8;
+					}else if(StrUtil.containsIgnoreCase(charsetInContentStr, "gbk")) {
+						charsetInContent = CharsetUtil.CHARSET_GBK;
+					}
 					//ignore
 				}
 				if(null != charsetInContent && false == charset.equals(charsetInContent)) {

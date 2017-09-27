@@ -21,6 +21,7 @@
 * 修复CollUtil.split的bug（issue#IF7UT@Gitee）
 * 修复Page.getEndPosition()错误（感谢@【深圳】尘风了了）
 * 修复Http中head方法读取body失败问题，略过读取body（issue#IFA3C@Gitee）
+* 修复从正文中获取编码类型的错误（issue#IFBYO@Gitee）
 
 ## 3.1.1
 
