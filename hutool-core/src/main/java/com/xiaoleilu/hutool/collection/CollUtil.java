@@ -1202,6 +1202,7 @@ public class CollUtil {
 	 * {@link Iterable}转为{@link Collection}<br>
 	 * 首先尝试强转，强转失败则构建一个新的{@link ArrayList}
 	 * 
+	 * @param <E> 集合元素类型
 	 * @param iterable {@link Iterable}
 	 * @return {@link Collection} 或者 {@link ArrayList}
 	 * @since 3.0.9

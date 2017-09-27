@@ -57,8 +57,8 @@ public class CharsetUtil {
 	 * 此方法用于纠正因读取使用编码错误导致的乱码问题。<br>
 	 * 例如，在Servlet请求中客户端用GBK编码了请求参数，我们使用UTF-8读取到的是乱码，此时，使用此方法即可还原原编码的内容
 	 * <pre>
-	 * 客户端-> GBK编码 -> Servlet容器 -> UTF-8解码 -> 乱码
-	 * 乱码 -> UTF-8编码 -> GBK解码 -> 正确内容
+	 * 客户端 -》 GBK编码 -》 Servlet容器 -》 UTF-8解码 -》 乱码
+	 * 乱码 -》 UTF-8编码 -》 GBK解码 -》 正确内容
 	 * </pre>
 	 * 
 	 * @param source 字符串

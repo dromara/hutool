@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.lang.Dict;
+import com.xiaoleilu.hutool.lang.Matcher;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 public class CollectionUtilTest {
@@ -43,7 +44,15 @@ public class CollectionUtilTest {
 		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
 		Collection<String> union = CollectionUtil.union(list1, list2);
-		Assert.assertEquals("[d, b, b, b, c, a, x]", union.toString());
+		
+		Assert.assertEquals(3, CollectionUtil.count(union, new Matcher<String>() {
+
+			@Override
+			public boolean match(String t) {
+				return t.equals("b");
+			}
+			
+		}));
 	}
 
 	@Test
@@ -52,7 +61,14 @@ public class CollectionUtilTest {
 		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
 		Collection<String> union = CollectionUtil.intersection(list1, list2);
-		Assert.assertEquals("[d, b, b, c, a]", union.toString());
+		Assert.assertEquals(2, CollectionUtil.count(union, new Matcher<String>() {
+
+			@Override
+			public boolean match(String t) {
+				return t.equals("b");
+			}
+			
+		}));
 	}
 
 	@Test
@@ -61,10 +77,14 @@ public class CollectionUtilTest {
 		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 
 		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
-		Assert.assertEquals("[b, x2, x]", disjunction.toString());
+		Assert.assertTrue(disjunction.contains("b"));
+		Assert.assertTrue(disjunction.contains("x2"));
+		Assert.assertTrue(disjunction.contains("x"));
 
 		Collection<String> disjunction2 = CollectionUtil.disjunction(list2, list1);
-		Assert.assertEquals("[b, x2, x]", disjunction2.toString());
+		Assert.assertTrue(disjunction2.contains("b"));
+		Assert.assertTrue(disjunction2.contains("x2"));
+		Assert.assertTrue(disjunction2.contains("x"));
 	}
 
 	@Test

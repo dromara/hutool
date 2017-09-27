@@ -129,6 +129,7 @@ public class ImageUtil {
 	 * 
 	 * @param srcImg 源图像来源流
 	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
+	 * @return {@link Image}
 	 * @since 3.1.0
 	 */
 	public static Image scale(Image srcImg, double scale) {
@@ -149,6 +150,7 @@ public class ImageUtil {
 	 * @param srcImg 源图像来源流
 	 * @param width 目标宽度
 	 * @param height 目标高度
+	 * @return {@link Image}
 	 * @since 3.1.0
 	 */
 	public static Image scale(Image srcImg, int width, int height) {
@@ -359,6 +361,7 @@ public class ImageUtil {
 	 * 
 	 * @param srcImage 源图像
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
+	 * @return {@link BufferedImage}
 	 * @since 3.1.0
 	 */
 	public static BufferedImage cut(Image srcImage, Rectangle rectangle) {

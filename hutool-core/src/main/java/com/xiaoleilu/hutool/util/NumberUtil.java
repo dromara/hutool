@@ -1026,7 +1026,7 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 比较大小，参数1>参数2 返回true
+	 * 比较大小，参数1 &gt; 参数2 返回true
 	 * 
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2
@@ -1040,7 +1040,7 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 比较大小，参数1>=参数2 返回true
+	 * 比较大小，参数1 &gt;= 参数2 返回true
 	 *
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2
@@ -1054,7 +1054,7 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 比较大小，参数1<参数2 返回true
+	 * 比较大小，参数1 &lt; 参数2 返回true
 	 *
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2
@@ -1068,7 +1068,7 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 比较大小，参数1<=参数2 返回true
+	 * 比较大小，参数1&lt;=参数2 返回true
 	 *
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2

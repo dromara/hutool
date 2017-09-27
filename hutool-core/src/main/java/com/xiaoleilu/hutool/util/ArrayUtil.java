@@ -1739,6 +1739,7 @@ public class ArrayUtil {
 	/**
 	 * 将集合转为数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param iterator {@link Iterator}
 	 * @param componentType 集合元素类型
 	 * @return 数组
@@ -1751,6 +1752,7 @@ public class ArrayUtil {
 	/**
 	 * 将集合转为数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param iterable {@link Iterable}
 	 * @param componentType 集合元素类型
 	 * @return 数组
@@ -1763,6 +1765,7 @@ public class ArrayUtil {
 	/**
 	 * 将集合转为数组
 	 * 
+	 * @param <T> 数组元素类型
 	 * @param collection 集合
 	 * @param componentType 集合元素类型
 	 * @return 数组

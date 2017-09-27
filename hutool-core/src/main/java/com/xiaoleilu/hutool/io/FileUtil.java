@@ -1015,6 +1015,7 @@ public final class FileUtil {
 	 * 判断是否为文件，如果file为null，则返回false
 	 * 
 	 * @param path 文件
+	 * @param isFollowLinks 是否跟踪软链（快捷方式）
 	 * @return 如果为文件true
 	 */
 	public static boolean isFile(Path path, boolean isFollowLinks) {

@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.cache.file;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.io.FileUtil;
@@ -88,7 +87,7 @@ public abstract class FileCache {
 	 * 获得缓存过的文件bytes
 	 * @param path 文件路径
 	 * @return 缓存过的文件bytes
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
 	public byte[] getFileBytes(String path) throws IORuntimeException {
 		return getFileBytes(new File(path));
@@ -98,7 +97,7 @@ public abstract class FileCache {
 	 * 获得缓存过的文件bytes
 	 * @param file 文件
 	 * @return 缓存过的文件bytes
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
 	public byte[] getFileBytes(File file) throws IORuntimeException {
 		byte[] bytes = cache.get(file);

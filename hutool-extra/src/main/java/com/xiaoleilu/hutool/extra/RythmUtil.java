@@ -42,6 +42,7 @@ public class RythmUtil {
 	 * 使用{@link RythmEngine}渲染模板
 	 * 
 	 * @param engine {@link RythmEngine}
+	 * @param writer 写出到的{@link Writer}
 	 * @param template 模板内容
 	 * @param args 变量值
 	 */
@@ -53,6 +54,7 @@ public class RythmUtil {
 	 * 使用{@link RythmEngine}渲染模板
 	 * 
 	 * @param engine {@link RythmEngine}
+	 * @param writer 写出到的{@link Writer}
 	 * @param template 模板内容
 	 * @param args 变量值
 	 */

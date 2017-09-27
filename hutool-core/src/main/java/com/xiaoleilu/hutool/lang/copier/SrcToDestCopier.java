@@ -31,7 +31,9 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	}
 	/**
 	 * 设置源
+	 * 
 	 * @param src 源
+	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
 	public C setSrc(T src) {
@@ -41,6 +43,7 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 
 	/**
 	 * 获得目标
+	 * 
 	 * @return 目标
 	 */
 	public T getDest() {
@@ -48,7 +51,9 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	}
 	/**
 	 * 设置目标
+	 * 
 	 * @param dest 目标
+	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
 	public C setDest(T dest) {
@@ -65,7 +70,9 @@ public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implem
 	}
 	/**
 	 * 设置过滤器
+	 * 
 	 * @param copyFilter 过滤器
+	 * @return this
 	 */
 	@SuppressWarnings("unchecked")
 	public C setCopyFilter(Filter<T> copyFilter) {

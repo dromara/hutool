@@ -274,7 +274,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * 构造<br>
 	 * 例如设置：
 	 * <pre>
-	 * maxDepth <= 1 表示只监听当前目录
+	 * maxDepth &lt;= 1 表示只监听当前目录
 	 * maxDepth = 2 表示监听当前目录以及下层目录
 	 * maxDepth = 3 表示监听当前目录以及下层
 	 * </pre>
@@ -408,7 +408,7 @@ public class WatchMonitor extends Thread implements Closeable{
 	 * 当设置值为1（或小于1）时，表示不递归监听子目录<br>
 	 * 例如设置：
 	 * <pre>
-	 * maxDepth <= 1 表示只监听当前目录
+	 * maxDepth &lt;= 1 表示只监听当前目录
 	 * maxDepth = 2 表示监听当前目录以及下层目录
 	 * maxDepth = 3 表示监听当前目录以及下层
 	 * </pre>

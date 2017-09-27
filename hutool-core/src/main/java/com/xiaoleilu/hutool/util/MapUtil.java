@@ -126,6 +126,8 @@ public class MapUtil {
 	/**
 	 * 将单一键值对转换为Map
 	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param key 键
 	 * @param value 值
 	 * @return {@link HashMap}
@@ -137,6 +139,8 @@ public class MapUtil {
 	/**
 	 * 将单一键值对转换为Map
 	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param key 键
 	 * @param value 值
 	 * @param isOrder 是否有序

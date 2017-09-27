@@ -69,7 +69,7 @@ public class SqlConnRunner{
 	 * @param dialect 方言
 	 */
 	public SqlConnRunner(Dialect dialect) {
-		StaticLog.info("Use Dialect: [{}].", dialect.getClass().getSimpleName());
+		StaticLog.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
 		
 		this.dialect = dialect;
 	}

@@ -481,6 +481,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 只针对HTTPS请求，如果不设置，不做验证，所有域名被信任
 	 * 
 	 * @param hostnameVerifier HostnameVerifier
+	 * @return this
 	 */
 	public HttpRequest setHostnameVerifier(HostnameVerifier hostnameVerifier) {
 		// 验证域
@@ -491,6 +492,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置代理
 	 * @param proxy 代理 {@link Proxy}
+	 * @return this
 	 */
 	public HttpRequest setProxy(Proxy proxy) {
 		this.proxy = proxy;

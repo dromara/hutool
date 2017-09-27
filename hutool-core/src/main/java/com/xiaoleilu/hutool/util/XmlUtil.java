@@ -72,7 +72,7 @@ public class XmlUtil {
 	
 	/**
 	 * 读取解析XML文件<br>
-	 * 如果给定内容以“<”开头，表示这是一个XML内容，直接读取，否则按照路径处理<br>
+	 * 如果给定内容以“&lt;”开头，表示这是一个XML内容，直接读取，否则按照路径处理<br>
 	 * 路径可以为相对路径，也可以是绝对路径，相对路径相对于ClassPath
 	 * 
 	 * @param pathOrContent 内容或路径
@@ -194,6 +194,7 @@ public class XmlUtil {
 	 * 
 	 * @param doc XML文档
 	 * @param charset  自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
+	 * @param isPretty 是否格式化输出
 	 * @return XML字符串
 	 * @since 3.0.9
 	 */

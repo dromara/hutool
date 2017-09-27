@@ -163,6 +163,7 @@ public class ExcelReader {
 	 * 设置标题行的别名Map
 	 * 
 	 * @param headerAlias 别名Map
+	 * @return this
 	 */
 	public ExcelReader setHeaderAlias(Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;

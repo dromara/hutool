@@ -205,6 +205,8 @@ public class IterUtil {
 	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
 	 * 如果值多于键，忽略多余的值。
 	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param keys 键列表
 	 * @param values 值列表
 	 * @return 标题内容Map
@@ -219,6 +221,8 @@ public class IterUtil {
 	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
 	 * 如果值多于键，忽略多余的值。
 	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param keys 键列表
 	 * @param values 值列表
 	 * @return 标题内容Map

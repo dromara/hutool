@@ -185,6 +185,7 @@ public class FileWriter extends FileWrapper{
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param list 列表
+	 * @param lineSeparator 换行符枚举（Windows、Mac或Linux换行符）
 	 * @param isAppend 是否追加
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常

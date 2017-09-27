@@ -7,6 +7,7 @@ import java.sql.SQLException;
 /**
  * Bean对象处理器，只处理第一条数据
  * 
+ * @param <E> 处理对象类型
  * @author loolly
  *@since 3.1.0
  */
@@ -17,6 +18,8 @@ public class BeanHandler<E> implements RsHandler<E>{
 	/**
 	 * 创建一个 BeanHandler对象
 	 * 
+	 * @param <E> 处理对象类型
+	 * @param beanType Bean类型
 	 * @return BeanHandler对象
 	 */
 	public static <E> BeanHandler<E> create(Class<E> beanType) {

@@ -53,6 +53,7 @@ public class ResourceUtil {
 	/**
 	 * 从ClassPath资源中获取{@link BufferedReader}
 	 * @param resurce ClassPath资源
+	 * @param charset 编码
 	 * @return {@link InputStream}
 	 * @since 3.1.2
 	 */

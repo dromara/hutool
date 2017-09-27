@@ -13,6 +13,7 @@ import com.xiaoleilu.hutool.db.Entity;
  *
  */
 public class HandleHelper {
+	
 	/**
 	 * 处理单条数据
 	 * @param columnCount 列数
@@ -65,6 +66,8 @@ public class HandleHelper {
 	
 	/**
 	 * 处理多条数据并返回一个Bean列表
+	 * 
+	 * @param <E> 集合元素类型
 	 * @param <T> 集合类型
 	 * @param rs 数据集
 	 * @param collection 数据集

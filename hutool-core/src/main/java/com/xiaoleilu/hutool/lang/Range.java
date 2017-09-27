@@ -172,6 +172,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>{
 		 * 增加步进后的返回值如果为{@code null}则表示步进结束
 		 * 
 		 * @param current 上一次增加步进后的基础对象
+		 * @param end 结束对象
 		 * @param index 当前索引（步进到第几个元素），从0开始计数
 		 * @return 增加步进后的对象
 		 */

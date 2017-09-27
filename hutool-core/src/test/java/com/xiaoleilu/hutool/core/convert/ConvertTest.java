@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
+import com.xiaoleilu.hutool.date.DateUtil;
 
 /**
  * 类型转换工具单元测试
@@ -60,7 +61,7 @@ public class ConvertTest {
 	public void toDateTest(){
 		String a = "2017-05-06";
 		Date value = Convert.convert(Date.class, a);
-		Assert.assertEquals("Sat May 06 00:00:00 CST 2017", value.toString());
+		Assert.assertEquals(a, DateUtil.formatDate(value));
 	}
 	
 	@Test
