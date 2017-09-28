@@ -84,9 +84,7 @@ public class DateUtil {
 	 * @return Calendar对象
 	 */
 	public static Calendar calendar(Date date) {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		return cal;
+		return calendar(date.getTime());
 	}
 
 	/**
@@ -689,7 +687,7 @@ public class DateUtil {
 	public static DateTime endOfWeek(Date date) {
 		return new DateTime(endOfWeek(calendar(date)));
 	}
-
+	
 	/**
 	 * 获取某周的开始时间
 	 * 
@@ -697,18 +695,42 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar beginOfWeek(Calendar calendar) {
-		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		return beginOfWeek(calendar, true);
+	}
+	
+	/**
+	 * 获取某周的开始时间，周一定为一周的开始时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @param isMondayAsFirstDay 是否周一做为一周的第一天（false表示周日做为第一天）
+	 * @return {@link Calendar}
+	 * @since 3.1.2
+	 */
+	public static Calendar beginOfWeek(Calendar calendar, boolean isMondayAsFirstDay) {
+		calendar.set(Calendar.DAY_OF_WEEK, isMondayAsFirstDay ? Calendar.MONDAY : Calendar.SUNDAY);
 		return beginOfDay(calendar);
+	}
+	
+	/**
+	 * 获取某周的结束时间，周日定为一周的结束
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar endOfWeek(Calendar calendar) {
+		return endOfWeek(calendar, true);
 	}
 
 	/**
 	 * 获取某周的结束时间
 	 * 
 	 * @param calendar 日期 {@link Calendar}
+	 * @param isSundayAsLastDay 是否周日做为一周的最后一天（false表示周六做为最后一天）
 	 * @return {@link Calendar}
+	 * @since 3.1.2
 	 */
-	public static Calendar endOfWeek(Calendar calendar) {
-		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+	public static Calendar endOfWeek(Calendar calendar, boolean isSundayAsLastDay) {
+		calendar.set(Calendar.DAY_OF_WEEK, isSundayAsLastDay ? Calendar.SUNDAY : Calendar.SATURDAY);
 		return endOfDay(calendar);
 	}
 
