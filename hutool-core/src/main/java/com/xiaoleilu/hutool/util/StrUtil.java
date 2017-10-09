@@ -263,7 +263,7 @@ public class StrUtil {
 	 * 
 	 * @param str 要处理的字符串
 	 * 
-	 * @return 除去空白的字符串，如果原字串为<code>null</code>，则返回<code>null</code>
+	 * @return 除去头尾空白的字符串，如果原字串为<code>null</code>，则返回<code>null</code>
 	 */
 	public static String trim(CharSequence str) {
 		return (null == str) ? null : trim(str, 0);
