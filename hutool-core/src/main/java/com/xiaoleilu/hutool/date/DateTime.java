@@ -100,7 +100,7 @@ public class DateTime extends Date {
 	 * @param timeMillis 日期毫秒数
 	 */
 	public DateTime(long timeMillis) {
-		super(timeMillis);
+		super(DateUtil.normalize(timeMillis));
 	}
 	
 	/**
@@ -225,7 +225,7 @@ public class DateTime extends Date {
 	@Override
 	public void setTime(long time) {
 		if(mutable){
-			super.setTime(time);
+			super.setTime(DateUtil.normalize(time));
 		}else{
 			throw new DateException("This is not a mutable object !");
 		}

@@ -58,13 +58,14 @@ public class DateUtil {
 	}
 
 	/**
-	 * Long类型时间转为{@link DateTime}
+	 * Long类型时间转为{@link DateTime}<br>
+	 * 同时支持10位秒级别时间戳和13位毫秒级别时间戳
 	 * 
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
 	 */
 	public static DateTime date(long date) {
-		return new DateTime(date);
+		return new DateTime(normalize(date));
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class DateUtil {
 	 */
 	public static Calendar calendar(long millis) {
 		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(millis);
+		cal.setTimeInMillis(normalize(millis));
 		return cal;
 	}
 
@@ -1327,6 +1328,15 @@ public class DateUtil {
 		}
 		sb.append(second);
 		return sb.toString();
+	}
+	
+	/**
+	 * 将10位秒级别的时间戳标准化为13位毫秒级别的时间戳
+	 * @param timeMillis 时间戳（秒级别或毫秒级别）
+	 * @since 3.1.2
+	 */
+	public static long normalize(long timeMillis) {
+		return timeMillis < 10000000000L ? timeMillis * 1000 : timeMillis;
 	}
 
 	// ------------------------------------------------------------------------ Private method start
