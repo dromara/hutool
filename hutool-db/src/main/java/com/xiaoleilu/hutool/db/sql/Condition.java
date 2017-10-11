@@ -249,6 +249,14 @@ public class Condition implements Cloneable{
 		if(valueStr.toUpperCase().startsWith(OPERATOR_LIKE)){
 			this.operator = OPERATOR_LIKE;
 			this.value = StrUtil.removePrefix(valueStr, OPERATOR_LIKE).trim();
+			return;
+		}
+		
+		//处理= null转换为is null
+		if(StrUtil.equalsIgnoreCase("= null", valueStr)) {
+			this.operator = OPERATOR_IS;
+			this.value = VALUE_NULL;
+			return;
 		}
 	}
 }

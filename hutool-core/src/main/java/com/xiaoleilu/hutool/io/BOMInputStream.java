@@ -20,7 +20,7 @@ import com.xiaoleilu.hutool.util.CharsetUtil;
  * <code>
  * String enc = "UTF-8"; // or NULL to use systemdefault<br>
  * FileInputStream fis = new FileInputStream(file); <br>
- * UnicodeInputStream uin = new UnicodeInputStream(fis, enc); <br>
+ * BOMInputStream uin = new BOMInputStream(fis, enc); <br>
  * enc = uin.getCharset(); // check and skip possible BOM bytes
  * </code>
  * <br><br>

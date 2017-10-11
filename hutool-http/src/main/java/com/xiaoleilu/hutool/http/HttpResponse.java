@@ -37,7 +37,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/** 响应状态码 */
 	private int status;
 	/** 是否忽略读取Http响应体 */
-	private boolean isIgnoreBody;
+	private boolean ignoreBody;
 
 	/**
 	 * 构造
@@ -52,7 +52,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		this.httpConnection = httpConnection;
 		this.charset = charset;
 		this.isAsync = isAsync;
-		this.isIgnoreBody = isIgnoreBody;
+		this.ignoreBody = isIgnoreBody;
 		init();
 	}
 	
@@ -213,7 +213,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * @throws IORuntimeException IO异常
 	 */
 	private void readBody(InputStream in) throws IORuntimeException{
-		if(isIgnoreBody) {
+		if(ignoreBody) {
 			return;
 		}
 		

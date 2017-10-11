@@ -566,7 +566,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// 获取响应
 		if(null == httpResponse){
-			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isReadResponseBody());
+			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
 		}
 		return httpResponse;
 	}
@@ -787,20 +787,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
-	 * 是否需要读取响应body部分<br>
+	 * 是否忽略读取响应body部分<br>
 	 * HEAD、CONNECT、OPTIONS、TRACE方法将不读取响应体
 	 * 
-	 * @return 是否需要读取响应body部分
+	 * @return 是否需要忽略响应body部分
 	 * @since 3.1.2
 	 */
-	private boolean isReadResponseBody() {
+	private boolean isIgnoreResponseBody() {
 		if(Method.HEAD == this.method 
 				|| Method.CONNECT == this.method 
 				|| Method.OPTIONS == this.method
 				|| Method.TRACE == this.method) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	// ---------------------------------------------------------------- Private method end
 
