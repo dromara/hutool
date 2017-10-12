@@ -39,9 +39,6 @@ public class NumberUtil {
 	/** 默认除法运算精度 */
 	private static final int DEFAUT_DIV_SCALE = 10;
 
-	private NumberUtil() {
-	}
-
 	/**
 	 * 提供精确的加法运算
 	 * 

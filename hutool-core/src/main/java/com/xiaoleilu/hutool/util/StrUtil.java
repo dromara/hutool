@@ -64,9 +64,6 @@ public class StrUtil {
 
 	public static final String EMPTY_JSON = "{}";
 
-	private StrUtil() {
-	}
-
 	// ------------------------------------------------------------------------ Blank
 	/**
 	 * 字符串是否为空白 空白的定义如下： <br>

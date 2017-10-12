@@ -49,9 +49,6 @@ public class URLUtil {
 	/** WAR路径及内部文件路径分界符 */
 	public static final String WAR_URL_SEPARATOR = "*/";
 
-	private URLUtil() {
-	}
-
 	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
 	 * 

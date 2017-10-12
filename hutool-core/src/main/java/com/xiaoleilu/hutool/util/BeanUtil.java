@@ -33,8 +33,6 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  */
 public class BeanUtil {
 	
-	private BeanUtil() {}
-	
 	/**
 	 * 判断是否为Bean对象<br>
 	 * 判定方法是是否存在只有一个参数的setXXX方法

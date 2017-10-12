@@ -29,8 +29,6 @@ public class ReUtil {
 	/** 正则中需要被转义的关键字 */
 	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[]{'$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'});
 	
-	private ReUtil() {}
-
 	/**
 	 * 获得匹配的字符串
 	 * 

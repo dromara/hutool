@@ -13,8 +13,6 @@ import javax.script.ScriptException;
  */
 public final class ScriptUtil {
 	
-	private ScriptUtil(){}
-	
 	/**
 	 * 获得 {@link ScriptEngine} 实例
 	 * @param name 脚本名称

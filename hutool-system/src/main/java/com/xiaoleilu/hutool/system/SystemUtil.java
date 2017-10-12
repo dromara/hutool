@@ -83,8 +83,6 @@ public final class SystemUtil {
 	// 用户的当前工作目录
 	public final static String USER_DIR = "user.dir";
 
-	private SystemUtil() {}
-
 	//----------------------------------------------------------------------- Basic start
 	
 	/**

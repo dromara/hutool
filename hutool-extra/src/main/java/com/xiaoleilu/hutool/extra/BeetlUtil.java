@@ -19,8 +19,6 @@ import org.beetl.core.resource.Matcher;
  */
 public final class BeetlUtil {
 	
-	private BeetlUtil() {}
-	
 	/**
 	 * 创建默认 {@link GroupTemplate}
 	 * @return {@link GroupTemplate}

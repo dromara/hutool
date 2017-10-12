@@ -26,8 +26,6 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public final class JSONUtil {
 	
-	private JSONUtil() {}
-	
 	//-------------------------------------------------------------------- Pause start
 	/**
 	 * 创建JSONObject

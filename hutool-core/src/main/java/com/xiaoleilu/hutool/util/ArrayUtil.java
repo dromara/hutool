@@ -22,9 +22,6 @@ public class ArrayUtil {
 	/** 数组中元素未找到的下标，值为-1 */
 	public static final int INDEX_NOT_FOUND = -1;
 
-	private ArrayUtil() {
-	}
-
 	// ---------------------------------------------------------------------- isEmpty
 	/**
 	 * 数组是否为空

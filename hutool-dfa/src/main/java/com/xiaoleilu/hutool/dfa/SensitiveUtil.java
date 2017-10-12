@@ -19,8 +19,6 @@ public final class SensitiveUtil {
 	public static final char DEFAULT_SEPARATOR = StrUtil.C_COMMA;
 	private static WordTree sensitiveTree = new WordTree();
 	
-	private SensitiveUtil() {}
-	
 	/**
 	 * @return 是否已经被初始化
 	 */

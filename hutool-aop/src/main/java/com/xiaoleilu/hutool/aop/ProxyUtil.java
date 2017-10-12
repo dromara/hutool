@@ -13,8 +13,6 @@ import com.xiaoleilu.hutool.util.ClassUtil;
  */
 public final class ProxyUtil {
 	
-	private ProxyUtil() {}
-	
 	/**
 	 * 使用切面代理对象
 	 * 

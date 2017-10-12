@@ -54,9 +54,6 @@ import com.xiaoleilu.hutool.util.URLUtil;
  */
 public final class FileUtil {
 
-	private FileUtil() {
-	}
-
 	/** The Unix separator character. */
 	private static final char UNIX_SEPARATOR = '/';
 	/** The Windows separator character. */

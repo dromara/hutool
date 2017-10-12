@@ -52,9 +52,6 @@ public class ImageUtil {
 	public static final String IMAGE_TYPE_PNG = "png";// 可移植网络图形
 	public static final String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
 
-	private ImageUtil() {
-	}
-
 	// ---------------------------------------------------------------------------------------------------------------------- scale
 	/**
 	 * 缩放图像（按比例缩放）<br>

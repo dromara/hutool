@@ -8,8 +8,6 @@ package com.xiaoleilu.hutool.util;
  */
 public class HashUtil {
 	
-	private HashUtil(){}
-
 	/**
 	 * 加法hash
 	 * 

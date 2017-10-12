@@ -106,8 +106,6 @@ public class IdcardUtil {
 		hkFirstCode.put("N", 14);
 	}
 	
-	private IdcardUtil() {}
-
 	/**
 	 * 将15位身份证号码转换为18位
 	 * 

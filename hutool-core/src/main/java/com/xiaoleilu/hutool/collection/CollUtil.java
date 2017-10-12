@@ -48,9 +48,6 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class CollUtil {
 
-	protected CollUtil() {
-	}
-
 	/**
 	 * 两个集合的并集<br>
 	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最多的个数<br>

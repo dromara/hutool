@@ -28,9 +28,6 @@ import com.xiaoleilu.hutool.io.IoUtil;
  */
 public class ZipUtil {
 
-	private ZipUtil() {
-	}
-
 	/**
 	 * 打包到当前目录
 	 * 

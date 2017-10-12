@@ -19,7 +19,6 @@ import com.xiaoleilu.hutool.thread.GlobalThreadPool;
  * @author luxiaolei
  */
 public class ThreadUtil {
-	private ThreadUtil() {}
 
 	/**
 	 * 新建一个线程池

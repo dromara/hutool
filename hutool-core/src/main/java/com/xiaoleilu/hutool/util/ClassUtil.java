@@ -36,9 +36,6 @@ import com.xiaoleilu.hutool.lang.Singleton;
  */
 public class ClassUtil {
 
-	private ClassUtil() {
-	}
-
 	/**
 	 * {@code null}安全的获取对象类型
 	 * 

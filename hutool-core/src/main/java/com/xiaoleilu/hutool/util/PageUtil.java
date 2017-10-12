@@ -8,8 +8,6 @@ package com.xiaoleilu.hutool.util;
  */
 public class PageUtil {
 	
-	private PageUtil() {}
-
 	/**
 	 * 将页数和每页条目数转换为开始位置和结束位置<br>
 	 * 此方法用于不包括结束位置的分页方法<br>

@@ -15,9 +15,6 @@ import java.nio.charset.Charset;
  */
 public class HexUtil {
 
-	private HexUtil() {
-	}
-
 	/**
 	 * 用于建立十六进制字符的输出的小写字符数组
 	 */

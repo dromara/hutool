@@ -54,8 +54,6 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public final class SecureUtil {
 	
-	private SecureUtil() {}
-
 	/**
 	 * 默认密钥字节数
 	 * 

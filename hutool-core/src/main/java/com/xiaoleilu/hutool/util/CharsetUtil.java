@@ -28,8 +28,6 @@ public class CharsetUtil {
 	/** GBK */
 	public static final Charset CHARSET_GBK = Charset.forName(GBK);
 	
-	private CharsetUtil() {}
-	
 	/**
 	 * 转换为Charset对象
 	 * @param charsetName 字符集，为空则返回默认字符集
