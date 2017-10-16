@@ -300,7 +300,9 @@ public class XmlUtil {
 	 * @return 当传入为null时返回null
 	 */
 	public static String cleanInvalid(String xmlContent) {
-		if (xmlContent == null) return null;
+		if (xmlContent == null) {
+			return null;
+		}
 		return xmlContent.replaceAll(INVALID_REGEX, "");
 	}
 

@@ -47,7 +47,9 @@ public class BitSetBloomFilter implements BloomFilter{
 			String line;
 			while(true) {
 				line = reader.readLine();
-				if(line == null) break;
+				if(line == null) {
+					break;
+				}
 				this.add(line);
 			}
 		}finally {
@@ -134,7 +136,8 @@ public class BitSetBloomFilter implements BloomFilter{
 				return HashUtil.sdbmHash(str);
 			case 7:
 				return HashUtil.pjwHash(str);
+			default:
+				return 0;
 		}
-		return 0;
 	}
 }

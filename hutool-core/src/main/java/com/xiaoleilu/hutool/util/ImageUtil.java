@@ -462,8 +462,12 @@ public class ImageUtil {
 	 */
 	public final static void sliceByRowsAndCols(Image srcImage, File descDir, int rows, int cols) {
 		try {
-			if (rows <= 0 || rows > 20) rows = 2; // 切片行数
-			if (cols <= 0 || cols > 20) cols = 2; // 切片列数
+			if (rows <= 0 || rows > 20) {
+				rows = 2; // 切片行数
+			}
+			if (cols <= 0 || cols > 20) {
+				cols = 2; // 切片列数
+			}
 			// 读取源图像
 			BufferedImage bi = toBufferedImage(srcImage);
 			int srcWidth = bi.getHeight(); // 源图宽度

@@ -78,7 +78,9 @@ public class BOMInputStream extends InputStream {
 	 * @throws IOException 读取引起的异常
 	 */
 	protected void init() throws IOException {
-		if (isInited) return;
+		if (isInited) {
+			return;
+		}
 
 		byte bom[] = new byte[BOM_SIZE];
 		int n, unread;
@@ -106,7 +108,9 @@ public class BOMInputStream extends InputStream {
 		}
 		// System.out.println("read=" + n + ", unread=" + unread);
 
-		if (unread > 0) in.unread(bom, (n - unread), unread);
+		if (unread > 0) {
+			in.unread(bom, (n - unread), unread);
+		}
 
 		isInited = true;
 	}

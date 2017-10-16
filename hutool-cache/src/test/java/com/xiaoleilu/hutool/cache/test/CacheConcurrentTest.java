@@ -6,6 +6,11 @@ import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.cache.impl.FIFOCache;
 import com.xiaoleilu.hutool.util.ThreadUtil;
 
+/**
+ * 缓存单元测试
+ * @author looly
+ *
+ */
 public class CacheConcurrentTest {
 	
 	public static void main(String[] args) {

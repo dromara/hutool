@@ -10,7 +10,7 @@ import com.xiaoleilu.hutool.cache.impl.LRUCache;
  * @author Looly
  *
  */
-public class LRUFileCache extends FileCache{
+public class LRUFileCache extends AbstractFileCache{
 	
 	/**
 	 * 构造<br>

@@ -19,6 +19,7 @@
 * 工具类继承支持（去除private构造）
 * 增加getGroup和findAllGroup两类方法
 * UrlUtil增加utf-8重载（感谢@【北京】宁静）
+* 按照Ali规范整理代码。Cache模块中定时清理改为定时任务池方式
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）

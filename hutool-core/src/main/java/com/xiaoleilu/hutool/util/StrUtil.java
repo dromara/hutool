@@ -1671,7 +1671,9 @@ public class StrUtil {
 			}
 			if (Character.isUpperCase(c)) {
 				if (!isPreUpperCase || !isNextUpperCase) {
-					if (i > 0) sb.append(UNDERLINE);
+					if (i > 0) {
+						sb.append(UNDERLINE);
+					}
 				}
 				isPreUpperCase = true;
 			} else {
@@ -1713,8 +1715,9 @@ public class StrUtil {
 				}
 			}
 			return sb.toString();
-		} else
+		} else {
 			return name2;
+		}
 	}
 
 	/**

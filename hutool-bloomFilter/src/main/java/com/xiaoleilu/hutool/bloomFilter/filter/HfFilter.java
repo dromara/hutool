@@ -16,11 +16,13 @@ public class HfFilter extends AbstractFilter {
 		int length = str.length() ;
 		long hash = 0;
 
-		for (int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++) {
 			hash += str.charAt(i) * 3 * i;
+		}
 
-		if (hash < 0)
+		if (hash < 0) {
 			hash = -hash;
+		}
 
 		return hash % size;
 	}

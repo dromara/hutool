@@ -10,7 +10,7 @@ import com.xiaoleilu.hutool.cache.impl.LFUCache;
  * @author Looly
  *
  */
-public class LFUFileCache extends FileCache{
+public class LFUFileCache extends AbstractFileCache{
 	
 	/**
 	 * 构造<br>

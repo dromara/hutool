@@ -11,7 +11,7 @@ import com.xiaoleilu.hutool.io.IORuntimeException;
  * @author Looly
  *
  */
-public abstract class FileCache {
+public abstract class AbstractFileCache {
 
 	/** 容量 */
 	protected final int capacity;
@@ -31,7 +31,7 @@ public abstract class FileCache {
 	 * @param maxFileSize 文件最大大小
 	 * @param timeout 默认超时时间，0表示无默认超时
 	 */
-	public FileCache(int capacity, int maxFileSize, long timeout) {
+	public AbstractFileCache(int capacity, int maxFileSize, long timeout) {
 		this.capacity = capacity;
 		this.maxFileSize = maxFileSize;
 		this.timeout = timeout;

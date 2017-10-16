@@ -41,8 +41,12 @@ public class ExamInfoDict implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		ExamInfoDict that = (ExamInfoDict) o;
 		return Objects.equals(id, that.id) && Objects.equals(examType, that.examType) && Objects.equals(answerIs, that.answerIs);
 	}

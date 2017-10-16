@@ -322,7 +322,9 @@ public class VelocityUtil {
 	 * 断言是否初始化默认引擎，若未初始化抛出 异常
 	 */
 	private static void assertInit() {
-		if (!isInited) throw new NotInitedException("Please use VelocityUtil.init() method to init Velocity default engine!");
+		if (false == isInited) {
+			throw new NotInitedException("Please use VelocityUtil.init() method to init Velocity default engine!");
+		}
 	}
 	// -------------------------------------------------------------------------- Private method end
 }

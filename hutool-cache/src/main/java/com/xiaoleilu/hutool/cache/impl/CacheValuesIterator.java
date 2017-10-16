@@ -4,7 +4,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * {@link com.xiaoleilu.hutool.cache.impl.AbstractCache} 的值迭代器.
+ *  {@link com.xiaoleilu.hutool.cache.impl.AbstractCache} 的值迭代器.
+ * @author looly
+ *
+ * @param <V> 迭代对象类型
  */
 public class CacheValuesIterator<V> implements Iterator<V> {
 

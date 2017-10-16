@@ -3,8 +3,9 @@ package com.xiaoleilu.hutool.cache.impl;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledFuture;
+
+import com.xiaoleilu.hutool.cache.GlobalPruneTimer;
 
 /**
  * 定时缓存<br>
@@ -16,14 +17,14 @@ import java.util.TimerTask;
  * @param <V> 值类型
  */
 public class TimedCache<K, V> extends AbstractCache<K, V> {
-	
-	/** 定时器 */
-	protected Timer pruneTimer;
-	
+
+	/** 正在执行的定时任务 */
+	private ScheduledFuture<?> pruneJobFuture;
+
 	/**
 	 * 构造
 	 * 
-	 * @param timeout 过期时长
+	 * @param timeout 超时（过期）时长，单位毫秒
 	 */
 	public TimedCache(long timeout) {
 		this(timeout, new HashMap<K, CacheObj<K, V>>());
@@ -44,7 +45,8 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	// ---------------------------------------------------------------- prune
 	/**
 	 * 清理过期对象
-	 * @return  清理数
+	 * 
+	 * @return 清理数
 	 */
 	@Override
 	protected int pruneCache() {
@@ -64,28 +66,24 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 	// ---------------------------------------------------------------- auto prune
 	/**
 	 * 定时清理
+	 * 
 	 * @param delay 间隔时长，单位毫秒
 	 */
 	public void schedulePrune(long delay) {
-		if (pruneTimer != null) {
-			pruneTimer.cancel();
-		}
-		pruneTimer = new Timer();
-		pruneTimer.schedule(new TimerTask(){
+		this.pruneJobFuture = GlobalPruneTimer.INSTANCE.schedule(new Runnable() {
 			@Override
 			public void run() {
 				prune();
 			}
-		}, delay, delay);
+		}, delay);
 	}
 
 	/**
 	 * 取消定时清理
 	 */
 	public void cancelPruneSchedule() {
-		if (pruneTimer != null) {
-			pruneTimer.cancel();
-			pruneTimer = null;
+		if (null != pruneJobFuture) {
+			pruneJobFuture.cancel(true);
 		}
 	}
 

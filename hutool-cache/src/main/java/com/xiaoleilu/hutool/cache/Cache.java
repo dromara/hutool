@@ -12,11 +12,13 @@ import java.util.Iterator;
 public interface Cache<K, V> extends Iterable<V>{
 
 	/**
+	 * 返回缓存容量，<code>0</code>表示无大小限制
 	 * @return 返回缓存容量，<code>0</code>表示无大小限制
 	 */
 	int capacity();
 
 	/**
+	 *  缓存失效时长， <code>0</code> 表示没有设置，单位毫秒
 	 * @return 缓存失效时长， <code>0</code> 表示没有设置，单位毫秒
 	 */
 	long timeout();
@@ -47,7 +49,8 @@ public interface Cache<K, V> extends Iterable<V>{
 	V get(K key);
 
 	/**
-	 * @return 返回缓存迭代器
+	 * 返回缓存迭代器
+	 * @return 缓存迭代器
 	 */
 	@Override
 	Iterator<V> iterator();
@@ -59,6 +62,7 @@ public interface Cache<K, V> extends Iterable<V>{
 	int prune();
 
 	/**
+	 * 缓存是否已满，仅用于有空间限制的缓存对象
 	 * @return 缓存是否已满，仅用于有空间限制的缓存对象
 	 */
 	boolean isFull();
@@ -75,11 +79,13 @@ public interface Cache<K, V> extends Iterable<V>{
 	void clear();
 
 	/**
+	 * 缓存的对象数量
 	 * @return 缓存的对象数量
 	 */
 	int size();
 
 	/**
+	 * 缓存是否为空
 	 * @return 缓存是否为空
 	 */
 	boolean isEmpty();

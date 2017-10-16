@@ -105,14 +105,15 @@ public final class BCD {
 	private static byte ascToBcd(byte asc) {
 		byte bcd;
 
-		if ((asc >= '0') && (asc <= '9'))
+		if ((asc >= '0') && (asc <= '9')) {
 			bcd = (byte) (asc - '0');
-		else if ((asc >= 'A') && (asc <= 'F'))
+		}else if ((asc >= 'A') && (asc <= 'F')) {
 			bcd = (byte) (asc - 'A' + 10);
-		else if ((asc >= 'a') && (asc <= 'f'))
+		}else if ((asc >= 'a') && (asc <= 'f')) {
 			bcd = (byte) (asc - 'a' + 10);
-		else
+		}else {
 			bcd = (byte) (asc - 48);
+		}
 		return bcd;
 	}
 	//----------------------------------------------------------------- Private method end

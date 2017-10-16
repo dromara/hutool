@@ -618,10 +618,11 @@ public class NumberUtil {
 	 * @return 是否为整数
 	 */
 	public static boolean isInteger(String s) {
-		if (StrUtil.isNotBlank(s))
+		if (StrUtil.isNotBlank(s)) {
 			return s.matches("^\\d+$");
-		else
+		} else {
 			return false;
+		}
 	}
 
 	/**
@@ -633,7 +634,9 @@ public class NumberUtil {
 	public static boolean isDouble(String s) {
 		try {
 			Double.parseDouble(s);
-			if (s.contains(".")) return true;
+			if (s.contains(".")) {
+				return true;
+			}
 			return false;
 		} catch (NumberFormatException e) {
 			return false;

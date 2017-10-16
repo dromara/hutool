@@ -33,7 +33,8 @@ public class CacheTest {
 	public void lfuCacheTest(){
 		Cache<String, String> lfuCache = CacheUtil.newLFUCache(3);
 		lfuCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
-		lfuCache.get("key1");//使用次数+1
+		//使用次数+1
+		lfuCache.get("key1"); 
 		lfuCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
 		lfuCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
 		lfuCache.put("key4", "value4", DateUnit.SECOND.getMillis() * 3);
@@ -53,7 +54,8 @@ public class CacheTest {
 		lruCache.put("key1", "value1", DateUnit.SECOND.getMillis() * 3);
 		lruCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 3);
 		lruCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
-		lruCache.get("key1");//使用时间推近
+		//使用时间推近
+		lruCache.get("key1");
 		lruCache.put("key4", "value4", DateUnit.SECOND.getMillis() * 3);
 		
 		//由于缓存容量只有3，当加入第四个元素的时候，根据LRU规则，最少使用的将被移除（2被移除）

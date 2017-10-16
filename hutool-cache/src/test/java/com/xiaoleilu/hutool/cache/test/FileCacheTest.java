@@ -5,6 +5,11 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.cache.file.LFUFileCache;
 
+/**
+ * 文件缓存单元测试
+ * @author looly
+ *
+ */
 public class FileCacheTest {
 	@Test
 	public void lfuFileCacheTest() {
