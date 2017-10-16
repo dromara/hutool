@@ -173,6 +173,19 @@ public class URLUtil {
 			throw new UtilException(e);
 		}
 	}
+	
+	/**
+	 * 编码URL，默认使用UTF-8编码<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
+	 * @param url URL
+	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 * @since 3.1.2
+	 */
+	public static String encode(String url) throws UtilException{
+		return encode(url, CharsetUtil.UTF_8);
+	}
 
 	/**
 	 * 编码URL<br>
@@ -183,12 +196,25 @@ public class URLUtil {
 	 * @return 编码后的URL
 	 * @exception UtilException UnsupportedEncodingException
 	 */
-	public static String encode(String url, String charset) {
+	public static String encode(String url, String charset) throws UtilException{
 		try {
 			return URLEncoder.encode(url, charset);
 		} catch (UnsupportedEncodingException e) {
 			throw new UtilException(e);
 		}
+	}
+	
+	/**
+	 * 解码URL<br>
+	 * 将%开头的16进制表示的内容解码。
+	 * 
+	 * @param url URL
+	 * @return 解码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 * @since 3.1.2
+	 */
+	public static String decode(String url) throws UtilException{
+		return decode(url, CharsetUtil.UTF_8);
 	}
 
 	/**
@@ -200,7 +226,7 @@ public class URLUtil {
 	 * @return 解码后的URL
 	 * @exception UtilException UnsupportedEncodingException
 	 */
-	public static String decode(String url, String charset) {
+	public static String decode(String url, String charset) throws UtilException{
 		try {
 			return URLDecoder.decode(url, charset);
 		} catch (UnsupportedEncodingException e) {

@@ -30,6 +30,30 @@ public class ReUtil {
 	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[]{'$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'});
 	
 	/**
+	 * 获得匹配的字符串，获得正则中分组0的内容
+	 * 
+	 * @param regex 匹配的正则
+	 * @param content 被匹配的内容
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 * @since 3.1.2
+	 */
+	public static String getGroup0(String regex, String content) {
+		return get(regex, content, 0);
+	}
+	
+	/**
+	 * 获得匹配的字符串，获得正则中分组1的内容
+	 * 
+	 * @param regex 匹配的正则
+	 * @param content 被匹配的内容
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 * @since 3.1.2
+	 */
+	public static String getGroup1(String regex, String content) {
+		return get(regex, content, 1);
+	}
+	
+	/**
 	 * 获得匹配的字符串
 	 * 
 	 * @param regex 匹配的正则
@@ -45,6 +69,30 @@ public class ReUtil {
 //		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		final Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
 		return get(pattern, content, groupIndex);
+	}
+	
+	/**
+	 * 获得匹配的字符串，，获得正则中分组0的内容
+	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被匹配的内容
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 * @since 3.1.2
+	 */
+	public static String getGroup0(Pattern pattern, String content) {
+		return get(pattern, content, 0);
+	}
+	
+	/**
+	 * 获得匹配的字符串，，获得正则中分组1的内容
+	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被匹配的内容
+	 * @return 匹配后得到的字符串，未匹配返回null
+	 * @since 3.1.2
+	 */
+	public static String getGroup1(Pattern pattern, String content) {
+		return get(pattern, content, 1);
 	}
 	
 	/**
@@ -289,6 +337,30 @@ public class ReUtil {
 	}
 	
 	/**
+	 * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组0的内容
+	 * 
+	 * @param regex 正则
+	 * @param content 被查找的内容
+	 * @return 结果列表
+	 * @since 3.1.2
+	 */
+	public static List<String> findAllGroup0(String regex, String content) {
+		return findAll(regex, content, 0);
+	}
+	
+	/**
+	 * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组1的内容
+	 * 
+	 * @param regex 正则
+	 * @param content 被查找的内容
+	 * @return 结果列表
+	 * @since 3.1.2
+	 */
+	public static List<String> findAllGroup1(String regex, String content) {
+		return findAll(regex, content, 1);
+	}
+	
+	/**
 	 * 取得内容中匹配的所有结果
 	 * 
 	 * @param regex 正则
@@ -318,6 +390,30 @@ public class ReUtil {
 		
 		Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
 		return findAll(pattern, content, group, collection);
+	}
+	
+	/**
+	 * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组0的内容
+	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被查找的内容
+	 * @return 结果列表
+	 * @since 3.1.2
+	 */
+	public static List<String> findAllGroup0(Pattern pattern, String content) {
+		return findAll(pattern, content, 0);
+	}
+	
+	/**
+	 * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组1的内容
+	 * 
+	 * @param pattern 编译后的正则模式
+	 * @param content 被查找的内容
+	 * @return 结果列表
+	 * @since 3.1.2
+	 */
+	public static List<String> findAllGroup1(Pattern pattern, String content) {
+		return findAll(pattern, content, 1);
 	}
 	
 	/**

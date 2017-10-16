@@ -17,6 +17,8 @@
 * 新增DateUtil.normalize方法转换10位时间戳为13位，DateUtil.date方法支持10位时间戳
 * Hutool-db支持value为"= null"转换为"is null"
 * 工具类继承支持（去除private构造）
+* 增加getGroup和findAllGroup两类方法
+* UrlUtil增加utf-8重载（感谢@【北京】宁静）
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
