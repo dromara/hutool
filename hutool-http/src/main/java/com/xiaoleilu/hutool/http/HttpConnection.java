@@ -25,7 +25,7 @@ import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
@@ -180,10 +180,7 @@ public class HttpConnection {
 		}
 
 		// default header
-		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
-		header(Header.ACCEPT_ENCODING, "gzip", true);
-		header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded", true);
-		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0 Hutool", true);
+		this.header(GlobalHeaders.INSTANCE.headers, true);
 		// Cookie
 		setCookie(CookiePool.get(this.url.getHost()));
 
@@ -279,14 +276,14 @@ public class HttpConnection {
 	 * 设置请求头<br>
 	 * 不覆盖原有请求头
 	 * 
-	 * @param headers 请求头
+	 * @param headerMap 请求头
 	 * @param isOverride 是否覆盖
 	 * @return this
 	 */
-	public HttpConnection header(Map<String, List<String>> headers, boolean isOverride) {
-		if (CollectionUtil.isNotEmpty(headers)) {
+	public HttpConnection header(Map<String, List<String>> headerMap, boolean isOverride) {
+		if (MapUtil.isNotEmpty(headerMap)) {
 			String name;
-			for (Entry<String, List<String>> entry : headers.entrySet()) {
+			for (Entry<String, List<String>> entry : headerMap.entrySet()) {
 				name = entry.getKey();
 				for (String value : entry.getValue()) {
 					this.header(name, StrUtil.nullToEmpty(value), isOverride);
