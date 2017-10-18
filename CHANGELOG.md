@@ -23,6 +23,7 @@
 * Http模块全局Header支持
 * JSON模块增加JSONStrFromater，用于格式化非标准的JSON字符串
 * 增加BeanDesc代替JDK的BeanInfo，提供更灵活的Getter和Setter
+* BeanUtil.fillBean方法使用BeanDesc替换
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）

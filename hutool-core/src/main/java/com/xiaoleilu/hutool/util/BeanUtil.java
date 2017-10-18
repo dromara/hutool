@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.bean.BeanDesc;
+import com.xiaoleilu.hutool.bean.BeanDesc.PropDesc;
+import com.xiaoleilu.hutool.bean.BeanDescCache;
 import com.xiaoleilu.hutool.bean.BeanInfoCache;
 import com.xiaoleilu.hutool.bean.BeanResolver;
 import com.xiaoleilu.hutool.bean.DynaBean;
@@ -88,6 +91,21 @@ public class BeanUtil {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * 获取{@link BeanDesc} Bean描述信息
+	 * @param clazz Bean类
+	 * @return {@link BeanDesc}
+	 * @since 3.1.2
+	 */
+	public static BeanDesc getBeanDesc(Class<?> clazz) {
+		BeanDesc beanDesc = BeanDescCache.INSTANCE.getBeanDesc(clazz);
+		if(null == beanDesc) {
+			beanDesc = new BeanDesc(clazz);
+			BeanDescCache.INSTANCE.putBeanDesc(clazz, beanDesc);
+		}
+		return beanDesc;
 	}
 
 	//--------------------------------------------------------------------------------------------------------- PropertyDescriptor
@@ -417,38 +435,34 @@ public class BeanUtil {
 		}
 		HashSet<String> ignoreSet = copyOptions.ignoreProperties != null ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
 		
-		final PropertyDescriptor[] propertyDescriptors;
-		try {
-			propertyDescriptors = getPropertyDescriptors(actualEditable);
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
-		String propertyName;
+		final Collection<PropDesc> props = BeanUtil.getBeanDesc(actualEditable).getProps();
+		String fieldName;
 		Object value;
 		Method setterMethod;
 		Type propType;
 		Class<?> propRowType;
-		for (PropertyDescriptor property : propertyDescriptors) {
-			propertyName = property.getName();
-			if((null != ignoreSet && ignoreSet.contains(propertyName)) || false == valueProvider.containsKey(propertyName)){
+		for (PropDesc prop : props) {
+			fieldName = prop.getFieldName();
+			if((null != ignoreSet && ignoreSet.contains(fieldName)) || false == valueProvider.containsKey(fieldName)){
 				continue;//属性值被忽略或值提供者无此key时跳过
 			}
-			setterMethod = ClassUtil.setAccessible(property.getWriteMethod());
-			propType = TypeUtil.getParamType(setterMethod, 0);
-			value = valueProvider.value(propertyName, propType);
+			setterMethod = prop.getSetter();
+			propType = TypeUtil.getFirstParamType(setterMethod);
+			value = valueProvider.value(fieldName, propType);
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;//当允许跳过空时，跳过
 			}
 			
 			try {
 				//当类型不匹配的时候，执行默认转换
-				propRowType = property.getPropertyType();
+				propRowType = prop.getField().getType();
 				if(false == propRowType.isInstance(value)){
 					value = Convert.convert(propRowType, value);
 					if (null == value && copyOptions.ignoreNullValue) {
 						continue;//当允许跳过空时，跳过
 					}
 				}
+				
 				//执行set方法注入值
 				if(null != setterMethod){
 					setterMethod.invoke(bean, value);
@@ -457,7 +471,7 @@ public class BeanUtil {
 				if(copyOptions.ignoreError){
 					continue;//忽略注入失败
 				}else{
-					throw new UtilException(e, "Inject [{}] error!", property.getName());
+					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
 				}
 			}
 		}
@@ -490,33 +504,26 @@ public class BeanUtil {
 		if (bean == null) {
 			return null;
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		final PropertyDescriptor[] propertyDescriptors;
-		try {
-			propertyDescriptors = getPropertyDescriptors(bean.getClass());
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
+		final Map<String, Object> map = new HashMap<String, Object>();
 		
+		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
 		String key;
 		Method getter;
 		Object value;
-		for (PropertyDescriptor property : propertyDescriptors) {
-			key = property.getName();
+		for (PropDesc prop : props) {
+			key = prop.getFieldName();
 			// 过滤class属性
-			if (false == key.equals("class") && false == key.equals("declaringClass")) {
-				// 得到property对应的getter方法
-				getter = ClassUtil.setAccessible(property.getReadMethod());
-				if(null != getter) {
-					//只读取有getter方法的属性
-					try {
-						value = getter.invoke(bean);
-					} catch (Exception ignore) {
-						continue;
-					}
-					if (false == ignoreNullValue || (null != value && false == value.equals(bean))) {
-						map.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
-					}
+			// 得到property对应的getter方法
+			getter = prop.getGetter();
+			if(null != getter) {
+				//只读取有getter方法的属性
+				try {
+					value = getter.invoke(bean);
+				} catch (Exception ignore) {
+					continue;
+				}
+				if (false == ignoreNullValue || (null != value && false == value.equals(bean))) {
+					map.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
 				}
 			}
 		}
@@ -569,22 +576,16 @@ public class BeanUtil {
 		}
 		final boolean ignoreError = copyOptions.ignoreError;
 		
-		final Map<String, PropertyDescriptor> sourcePdMap;
-		try {
-			sourcePdMap = getPropertyDescriptorMap(source.getClass(), ignoreCase);
-		} catch (IntrospectionException e) {
-			throw new UtilException(e);
-		}
-		
+		final Map<String, PropDesc> sourcePdMap = BeanUtil.getBeanDesc(source.getClass()).getPropMap(ignoreCase);
 		fillBean(target, new ValueProvider<String>(){
 			@Override
 			public Object value(String key, Type valueType) {
-				final PropertyDescriptor sourcePd = sourcePdMap.get(key);
+				final PropDesc sourcePd = sourcePdMap.get(key);
 				if(null != sourcePd){
-					final Method readMethod = sourcePd.getReadMethod();
-					if (null != readMethod) {
+					final Method getter = sourcePd.getGetter();
+					if (null != getter) {
 						try {
-							return ClassUtil.setAccessible(readMethod).invoke(source);
+							return getter.invoke(source);
 						} catch (Exception e) {
 							if(false == ignoreError){
 								throw new UtilException(e, "Inject [{}] error!", key);

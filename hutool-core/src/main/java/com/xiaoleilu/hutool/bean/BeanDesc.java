@@ -2,13 +2,17 @@ package com.xiaoleilu.hutool.bean;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * Bean信息描述做为BeanInfo替代方案，此对象持有JavaBean中的setters和getters等相关信息描述
@@ -34,19 +38,27 @@ public class BeanDesc {
 	}
 	
 	/**
-	 * 获取Bean的类名
+	 * 获取Bean的全类名
 	 * @return Bean的类名
 	 */
-	public String getBeanName() {
+	public String getName() {
 		return this.beanClass.getName();
+	}
+	
+	/**
+	 * 获取Bean的简单类名
+	 * @return Bean的类名
+	 */
+	public String getSimpleName() {
+		return this.beanClass.getSimpleName();
 	}
 	
 	/**
 	 * 获取字段名-字段属性Map
 	 * @return 字段名-字段属性Map
 	 */
-	public Map<String, PropDesc> getPropMap() {
-		return this.propMap;
+	public Map<String, PropDesc> getPropMap(boolean ignoreCase) {
+		return ignoreCase ? new CaseInsensitiveMap<>(1, this.propMap) : this.propMap;
 	}
 	
 	/**
@@ -58,7 +70,7 @@ public class BeanDesc {
 	}
 	
 	/**
-	 * 获取属性
+	 * 获取属性，如果不存在返回null
 	 * @param fieldName 字段名
 	 * @return {@link PropDesc}
 	 */
@@ -67,7 +79,17 @@ public class BeanDesc {
 	}
 	
 	/**
-	 * 获取Getter方法
+	 * 获得字段名对应的字段对象，如果不存在返回null
+	 * @param fieldName 字段名
+	 * @return 字段值
+	 */
+	public Field getField(String fieldName) {
+		final PropDesc desc = this.propMap.get(fieldName);
+		return null == desc ? null : desc.getField();
+	}
+	
+	/**
+	 * 获取Getter方法，如果不存在返回null
 	 * @param fieldName 字段名
 	 * @return Getter方法
 	 */
@@ -77,7 +99,7 @@ public class BeanDesc {
 	}
 	
 	/**
-	 * 获取Setter方法
+	 * 获取Setter方法，如果不存在返回null
 	 * @param fieldName 字段名
 	 * @return Setter方法
 	 */
@@ -90,7 +112,7 @@ public class BeanDesc {
 	 * 初始化
 	 * @return this
 	 */
-	public BeanDesc init() {
+	private BeanDesc init() {
 		final Field[] fields = ReflectUtil.getFields(this.beanClass);
 		
 		String fieldName;
@@ -120,15 +142,17 @@ public class BeanDesc {
 		private Method setter;
 		
 		/**
-		 * 构造
+		 * 构造<br>
+		 * Getter和Setter方法设置为默认可访问
+		 * 
 		 * @param field 字段
 		 * @param getter get方法
 		 * @param setter set方法
 		 */
 		public PropDesc(Field field, Method getter, Method setter) {
 			this.field = field;
-			this.getter = getter;
-			this.setter = setter;
+			this.getter = ClassUtil.setAccessible(getter);
+			this.setter = ClassUtil.setAccessible(setter);
 		}
 
 		/**
@@ -146,6 +170,19 @@ public class BeanDesc {
 		public Field getField() {
 			return this.field;
 		}
+		
+		/**
+		 * 获得字段类型<br>
+		 * 先获取字段的类型，如果字段不存在，则获取Getter方法的返回类型，否则获取Setter的第一个参数类型
+		 * 
+		 * @return 字段类型
+		 */
+		public Type getFieldType() {
+			if(null != this.field) {
+				return this.field.getType();
+			}
+			return findPropType(getter, setter);
+		}
 
 		/**
 		 * 获取Getter方法
@@ -160,6 +197,23 @@ public class BeanDesc {
 		 */
 		public Method getSetter() {
 			return this.setter;
+		}
+		
+		/**
+		 * 通过Getter和Setter方法中找到属性类型
+		 * @param getter Getter方法
+		 * @param setter Setter方法
+		 * @return {@link Type}
+		 */
+		private Type findPropType(Method getter, Method setter) {
+			Type type = null;
+			if(null != getter) {
+				type = TypeUtil.getReturnType(getter);
+			}
+			if(null == type && null != setter) {
+				type = TypeUtil.getParamType(setter, 0);
+			}
+			return type;
 		}
 	}
 }

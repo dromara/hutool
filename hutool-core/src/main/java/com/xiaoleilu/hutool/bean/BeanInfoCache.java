@@ -1,9 +1,9 @@
 package com.xiaoleilu.hutool.bean;
 
 import java.beans.PropertyDescriptor;
-import java.util.Collections;
 import java.util.Map;
-import java.util.WeakHashMap;
+
+import com.xiaoleilu.hutool.lang.SimpleCache;
 
 /**
  * Bean属性缓存<br>
@@ -14,8 +14,8 @@ import java.util.WeakHashMap;
 public enum BeanInfoCache {
 	INSTANCE;
 	
-	private Map<Class<?>, Map<String, PropertyDescriptor>> pdCache = Collections.synchronizedMap(new WeakHashMap<Class<?>, Map<String, PropertyDescriptor>>());
-	private Map<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = Collections.synchronizedMap(new WeakHashMap<Class<?>, Map<String, PropertyDescriptor>>());
+	private SimpleCache<Class<?>, Map<String, PropertyDescriptor>> pdCache = new SimpleCache<>();
+	private SimpleCache<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new SimpleCache<>();
 	
 	/**
 	 * 获得属性名和{@link PropertyDescriptor}Map映射

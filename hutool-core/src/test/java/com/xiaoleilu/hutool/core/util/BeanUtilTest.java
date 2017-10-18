@@ -88,6 +88,7 @@ public class BeanUtilTest {
 		Map<String, Object> map = BeanUtil.beanToMap(person);
 		Assert.assertEquals(map.get("name"), "测试A11");
 		Assert.assertEquals(map.get("age"), 14);
+		Assert.assertEquals("11213232", map.get("openid"));
 	}
 	
 	

@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.bean;
 
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -78,11 +77,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 			return (T) ((Map<?, ?>)bean).get(fieldName);
 		}else{
 			try {
-				final PropertyDescriptor descriptor = BeanUtil.getPropertyDescriptor(beanClass, fieldName);
-				if(null == descriptor){
-					throw new BeanException("No PropertyDescriptor for {}", fieldName);
-				}
-				final Method method = descriptor.getReadMethod();
+				final Method method = BeanUtil.getBeanDesc(beanClass).getGetter(fieldName);
 				if(null == method){
 					throw new BeanException("No get method for {}", fieldName);
 				}
@@ -122,15 +117,11 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 			return;
 		}else{
 			try {
-				final PropertyDescriptor descriptor = BeanUtil.getPropertyDescriptor(beanClass, fieldName);
-				if(null == descriptor){
-					throw new BeanException("No PropertyDescriptor for {}", fieldName);
-				}
-				final Method method = descriptor.getWriteMethod();
-				if(null == method){
+				final Method setter = BeanUtil.getBeanDesc(beanClass).getSetter(fieldName);
+				if(null == setter){
 					throw new BeanException("No set method for {}", fieldName);
 				}
-				method.invoke(this.bean, value);
+				setter.invoke(this.bean, value);
 			} catch (Exception e) {
 				throw new BeanException(e);
 			}

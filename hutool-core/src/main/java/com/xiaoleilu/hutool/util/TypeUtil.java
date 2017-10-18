@@ -49,7 +49,19 @@ public class TypeUtil {
 	}
 	
 	/**
-	 * 获取方法的参数类型列表<br>
+	 * 获取方法的第一个参数类型<br>
+	 * 优先获取方法的GenericParameterTypes，如果获取不到，则获取ParameterTypes
+	 * 
+	 * @param method 方法
+	 * @return {@link Type}，可能为{@code null}
+	 * @since 3.1.2
+	 */
+	public static Type getFirstParamType(Method method){
+		return getParamType(method, 0);
+	}
+	
+	/**
+	 * 获取方法的参数类型<br>
 	 * 优先获取方法的GenericParameterTypes，如果获取不到，则获取ParameterTypes
 	 * 
 	 * @param method 方法
