@@ -53,7 +53,7 @@ public class TypeUtil {
 	 * 优先获取方法的GenericParameterTypes，如果获取不到，则获取ParameterTypes
 	 * 
 	 * @param method 方法
-	 * @param index 第几个参数的索引
+	 * @param index 第几个参数的索引，从0开始计数
 	 * @return {@link Type}，可能为{@code null}
 	 */
 	public static Type getParamType(Method method, int index){

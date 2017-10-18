@@ -11,12 +11,11 @@ import java.util.WeakHashMap;
  * @author Looly
  *
  */
-public class BeanInfoCache {
+public enum BeanInfoCache {
+	INSTANCE;
+	
 	private Map<Class<?>, Map<String, PropertyDescriptor>> pdCache = Collections.synchronizedMap(new WeakHashMap<Class<?>, Map<String, PropertyDescriptor>>());
 	private Map<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = Collections.synchronizedMap(new WeakHashMap<Class<?>, Map<String, PropertyDescriptor>>());
-	
-	/** 单例 */
-	public static BeanInfoCache INSTANCE = new BeanInfoCache();
 	
 	/**
 	 * 获得属性名和{@link PropertyDescriptor}Map映射

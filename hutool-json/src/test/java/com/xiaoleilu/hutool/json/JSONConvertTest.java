@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.json.test.bean.ExamInfoDict;
+import com.xiaoleilu.hutool.json.test.bean.PerfectEvaluationProductResVo;
 import com.xiaoleilu.hutool.json.test.bean.UserInfoDict;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSON转换单元测试
@@ -86,5 +90,13 @@ public class JSONConvertTest {
 		UserInfoDict userInfoDict2 = jsonObject2.toBean(UserInfoDict.class);
 		Assert.assertNull(userInfoDict2.getId());
 	}
-
+	
+	@Test
+	@Ignore
+	public void testJson2Bean2() {
+		String jsonStr = ResourceUtil.readUtf8Str("test.json");
+		JSONObject obj = JSONUtil.parseObj(jsonStr);
+		PerfectEvaluationProductResVo vo = obj.toBean(PerfectEvaluationProductResVo.class);
+		Console.log(vo);
+	}
 }
