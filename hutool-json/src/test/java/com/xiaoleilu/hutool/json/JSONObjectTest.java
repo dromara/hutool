@@ -10,7 +10,6 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.json.test.bean.Seq;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
 import com.xiaoleilu.hutool.json.test.bean.UserB;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
@@ -62,7 +61,6 @@ public class JSONObjectTest {
 		
 		TestBean bean = json.toBean(TestBean.class);
 		Assert.assertEquals("a", bean.getList().get(0));
-		Console.log(bean);
 	}
 	
 	@Test
@@ -100,7 +98,6 @@ public class JSONObjectTest {
 		userA.setDate(new Date());
 		
 		JSONObject userAJson = JSONUtil.parseObj(userA);
-		Console.log(userAJson);
 		Assert.assertFalse(userAJson.containsKey("a"));
 		
 		JSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA, false);

@@ -11,7 +11,7 @@ import java.util.Map;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.getter.BasicTypeGetter;
-import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**

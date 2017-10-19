@@ -1,12 +1,11 @@
 package com.xiaoleilu.hutool.bean;
 
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * Bean对象解析器<br>
+ * Bean对象解析器，用于获取多层嵌套Bean中的字段值或Bean对象<br>
  * 根据给定的表达式，查找Bean中对应的属性值对象。 表达式分为两种：
  * <ol>
  * 	<li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>

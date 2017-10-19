@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.xiaoleilu.hutool.clone.CloneSupport;
 import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.util.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**

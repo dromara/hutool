@@ -11,8 +11,8 @@ import com.xiaoleilu.hutool.convert.ConvertException;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.BeanUtil;
-import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
+import com.xiaoleilu.hutool.bean.BeanUtil;
+import com.xiaoleilu.hutool.bean.BeanUtil.CopyOptions;
 import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -259,7 +259,7 @@ final class InternalJSONUtil {
 		if(value instanceof JSONNull){
 			return null;
 		}
-		final Class<?> rowType = TypeUtil.getRowType(type);
+		final Class<?> rowType = TypeUtil.getClass(type);
 		if(null == rowType) {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
 		}

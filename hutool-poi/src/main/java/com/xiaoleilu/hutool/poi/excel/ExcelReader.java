@@ -13,7 +13,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import com.xiaoleilu.hutool.collection.IterUtil;
 import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
-import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

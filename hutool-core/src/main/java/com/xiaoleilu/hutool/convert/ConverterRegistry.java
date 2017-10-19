@@ -39,7 +39,7 @@ import com.xiaoleilu.hutool.convert.impl.URIConverter;
 import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 
 /**

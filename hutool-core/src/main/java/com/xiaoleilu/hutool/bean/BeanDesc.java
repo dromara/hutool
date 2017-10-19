@@ -179,9 +179,22 @@ public class BeanDesc {
 		 */
 		public Type getFieldType() {
 			if(null != this.field) {
-				return this.field.getType();
+				return TypeUtil.getType(this.field);
 			}
 			return findPropType(getter, setter);
+		}
+		
+		/**
+		 * 获得字段类型<br>
+		 * 先获取字段的类型，如果字段不存在，则获取Getter方法的返回类型，否则获取Setter的第一个参数类型
+		 * 
+		 * @return 字段类型
+		 */
+		public Class<?> getFieldClass() {
+			if(null != this.field) {
+				return TypeUtil.getClass(this.field);
+			}
+			return findPropClass(getter, setter);
 		}
 
 		/**
@@ -212,6 +225,23 @@ public class BeanDesc {
 			}
 			if(null == type && null != setter) {
 				type = TypeUtil.getParamType(setter, 0);
+			}
+			return type;
+		}
+		
+		/**
+		 * 通过Getter和Setter方法中找到属性类型
+		 * @param getter Getter方法
+		 * @param setter Setter方法
+		 * @return {@link Type}
+		 */
+		private Class<?> findPropClass(Method getter, Method setter) {
+			Class<?> type = null;
+			if(null != getter) {
+				type = TypeUtil.getReturnClass(getter);
+			}
+			if(null == type && null != setter) {
+				type = TypeUtil.getFirstParamClass(setter);
 			}
 			return type;
 		}

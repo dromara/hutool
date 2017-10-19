@@ -54,7 +54,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	 * @param elementType 集合元素类型
 	 */
 	public CollectionConverter(Type collectionType, Type elementType) {
-		this(TypeUtil.getRowType(collectionType), TypeUtil.getRowType(elementType));
+		this(TypeUtil.getClass(collectionType), TypeUtil.getClass(elementType));
 	}
 
 	/**

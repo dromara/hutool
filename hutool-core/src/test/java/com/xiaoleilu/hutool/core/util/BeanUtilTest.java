@@ -7,9 +7,9 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.util.BeanUtil;
-import com.xiaoleilu.hutool.util.BeanUtil.CopyOptions;
-import com.xiaoleilu.hutool.util.BeanUtil.ValueProvider;
+import com.xiaoleilu.hutool.bean.BeanUtil;
+import com.xiaoleilu.hutool.bean.BeanUtil.CopyOptions;
+import com.xiaoleilu.hutool.bean.BeanUtil.ValueProvider;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**

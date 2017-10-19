@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.comparator;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 
 /**

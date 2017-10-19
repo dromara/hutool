@@ -270,8 +270,9 @@ public class VelocityUtil {
 	 * 取值包括Session和Request
 	 * @param context 内容
 	 * @param request 请求对象
+	 * @return VelocityContext
 	 */
-	public static void parseRequest(VelocityContext context, javax.servlet.http.HttpServletRequest request) {
+	public static VelocityContext parseRequest(VelocityContext context, javax.servlet.http.HttpServletRequest request) {
 		final Enumeration<String> attrs = request.getAttributeNames();
 		if (attrs != null) {
 			String attrName = null;
@@ -280,14 +281,16 @@ public class VelocityUtil {
 				context.put(attrName, request.getAttribute(attrName));
 			}
 		}
+		return context;
 	}
 
 	/**
 	 * 将Session中的值放入模板上下文
 	 * @param context 模板上下文
 	 * @param session Session
+	 * @return VelocityContext
 	 */
-	public static void parseSession(VelocityContext context, javax.servlet.http.HttpSession session) {
+	public static VelocityContext parseSession(VelocityContext context, javax.servlet.http.HttpSession session) {
 		if (null != session) {
 			final Enumeration<String> sessionAttrs = session.getAttributeNames();
 			if (sessionAttrs != null) {
@@ -298,6 +301,7 @@ public class VelocityUtil {
 				}
 			}
 		}
+		return context;
 	}
 
 	// -------------------------------------------------------------------------- Private method start

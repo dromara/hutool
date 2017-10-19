@@ -19,7 +19,7 @@ import java.util.Set;
 
 import com.xiaoleilu.hutool.bean.BeanResolver;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.BeanUtil;
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -251,7 +251,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T toBean(Type type, boolean ignoreError) {
-		final Class<?> clazz = TypeUtil.getRowType(type);
+		final Class<?> clazz = TypeUtil.getClass(type);
 		if(null == clazz) {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
 		}

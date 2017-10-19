@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.json.test.bean.ExamInfoDict;
 import com.xiaoleilu.hutool.json.test.bean.PerfectEvaluationProductResVo;
 import com.xiaoleilu.hutool.json.test.bean.UserInfoDict;
-import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSON转换单元测试
@@ -91,12 +89,16 @@ public class JSONConvertTest {
 		Assert.assertNull(userInfoDict2.getId());
 	}
 	
+	/**
+	 * 针对Bean中Setter返回this测试是否可以成功调用Setter方法并注入
+	 */
 	@Test
-	@Ignore
 	public void testJson2Bean2() {
-		String jsonStr = ResourceUtil.readUtf8Str("test.json");
+		String jsonStr = ResourceUtil.readUtf8Str("evaluation.json");
 		JSONObject obj = JSONUtil.parseObj(jsonStr);
 		PerfectEvaluationProductResVo vo = obj.toBean(PerfectEvaluationProductResVo.class);
-		Console.log(vo);
+		
+		Assert.assertEquals(obj.getStr("HA001"), vo.getHA001());
+		Assert.assertEquals(obj.getInt("costTotal"), vo.getCostTotal());
 	}
 }
