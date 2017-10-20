@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
  * 代理工具类
@@ -23,7 +24,7 @@ public final class ProxyUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T proxy(T target, Class<? extends Aspect> aspectClass){
-		final Aspect aspect = ClassUtil.newInstance(aspectClass, target);
+		final Aspect aspect = ReflectUtil.newInstance(aspectClass, target);
 		return (T) newProxyInstance(target.getClass().getClassLoader(), aspect, target.getClass().getInterfaces());
 	}
 	

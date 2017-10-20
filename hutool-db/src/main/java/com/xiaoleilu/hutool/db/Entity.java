@@ -14,8 +14,8 @@ import java.util.Set;
 import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -215,7 +215,7 @@ public class Entity extends Dict{
 				result = (Time)obj;
 			} catch (Exception e) {
 				//try oracle.sql.TIMESTAMP
-				result = ClassUtil.invoke(obj, "timeValue", new Object[]{});
+				result = ReflectUtil.invoke(obj, "timeValue", new Object[]{});
 			}
 		}
 		return result;
@@ -230,7 +230,7 @@ public class Entity extends Dict{
 				result = (Date)obj;
 			} catch (Exception e) {
 				//try oracle.sql.TIMESTAMP
-				result = ClassUtil.invoke(obj, "dateValue", new Object[]{});
+				result = ReflectUtil.invoke(obj, "dateValue", new Object[]{});
 			}
 		}
 		return result;
@@ -245,7 +245,7 @@ public class Entity extends Dict{
 				result = (Timestamp)obj;
 			} catch (Exception e) {
 				//try oracle.sql.TIMESTAMP
-				result = ClassUtil.invoke(obj, "timestampValue", new Object[]{});
+				result = ReflectUtil.invoke(obj, "timestampValue", new Object[]{});
 			}
 		}
 		return result;

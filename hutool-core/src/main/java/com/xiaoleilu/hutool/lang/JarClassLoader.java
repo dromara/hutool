@@ -13,6 +13,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
  * 外部Jar的类加载器
@@ -52,7 +53,7 @@ public class JarClassLoader extends URLClassLoader {
 				method.setAccessible(true);
 				final List<File> jars = loopJar(jarFile);
 				for (File jar : jars) {
-					ClassUtil.invoke(loader, method, new Object[] { jar.toURI().toURL() });
+					ReflectUtil.invoke(loader, method, new Object[] { jar.toURI().toURL() });
 				}
 			}
 		} catch (IOException e) {

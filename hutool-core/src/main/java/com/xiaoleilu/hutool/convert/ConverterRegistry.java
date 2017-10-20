@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
 import com.xiaoleilu.hutool.convert.impl.AtomicBooleanConverter;
 import com.xiaoleilu.hutool.convert.impl.AtomicReferenceConverter;
@@ -39,8 +40,7 @@ import com.xiaoleilu.hutool.convert.impl.URIConverter;
 import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
  * 转换器登记中心
@@ -88,7 +88,7 @@ public class ConverterRegistry {
 	 * @return {@link ConverterRegistry}
 	 */
 	public ConverterRegistry putCustom(Type type, Class<? extends Converter<?>> converterClass) {
-		return putCustom(type, ClassUtil.newInstance(converterClass));
+		return putCustom(type, ReflectUtil.newInstance(converterClass));
 	}
 
 	/**

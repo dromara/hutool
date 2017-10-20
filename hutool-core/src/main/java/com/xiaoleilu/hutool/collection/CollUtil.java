@@ -591,7 +591,7 @@ public class CollUtil {
 		// Others，直接实例化
 		else {
 			try {
-				list = (Collection<T>) ClassUtil.newInstance(collectionType);
+				list = (Collection<T>) ReflectUtil.newInstance(collectionType);
 			} catch (Exception e) {
 				throw new UtilException(e);
 			}

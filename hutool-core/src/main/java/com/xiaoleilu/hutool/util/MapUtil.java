@@ -115,7 +115,7 @@ public class MapUtil {
 			return new HashMap<>();
 		} else {
 			try {
-				return (Map<K, V>) ClassUtil.newInstance(mapType);
+				return (Map<K, V>) ReflectUtil.newInstance(mapType);
 			} catch (Exception e) {
 				throw new UtilException(e);
 			}

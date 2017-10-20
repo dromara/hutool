@@ -23,6 +23,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 
@@ -247,7 +248,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithMap(map, ClassUtil.newInstance(beanClass), isIgnoreError);
+		return fillBeanWithMap(map, ReflectUtil.newInstance(beanClass), isIgnoreError);
 	}
 
 	/**
@@ -261,7 +262,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T mapToBeanIgnoreCase(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithMapIgnoreCase(map, ClassUtil.newInstance(beanClass), isIgnoreError);
+		return fillBeanWithMapIgnoreCase(map, ReflectUtil.newInstance(beanClass), isIgnoreError);
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBeanWithMap
@@ -401,7 +402,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T requestParamToBean(javax.servlet.ServletRequest request, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithRequestParam(request, ClassUtil.newInstance(beanClass), isIgnoreError);
+		return fillBeanWithRequestParam(request, ReflectUtil.newInstance(beanClass), isIgnoreError);
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBean
@@ -415,7 +416,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T toBean(Class<T> beanClass, ValueProvider<String> valueProvider, CopyOptions copyOptions) {
-		return fillBean(ClassUtil.newInstance(beanClass), valueProvider, copyOptions);
+		return fillBean(ReflectUtil.newInstance(beanClass), valueProvider, copyOptions);
 	}
 
 	/**

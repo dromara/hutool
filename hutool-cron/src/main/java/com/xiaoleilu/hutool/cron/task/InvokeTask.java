@@ -45,7 +45,7 @@ public class InvokeTask implements Task{
 		if(null == this.clazz) {
 			throw new IllegalArgumentException("Load class with name of [" + className + "] fail !");
 		}
-		this.obj = ClassUtil.newInstance(this.clazz);
+		this.obj = ReflectUtil.newInstance(this.clazz);
 		
 		//方法
 		final String methodName = classNameWithMethodName.substring(splitIndex + 1);

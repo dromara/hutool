@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
  * 单例类<br>
@@ -33,7 +34,7 @@ public final class Singleton {
 			synchronized(Singleton.class) {
 				obj = (T) pool.get(clazz);
 				if(null == obj) {
-					obj = ClassUtil.newInstance(clazz, params);
+					obj = ReflectUtil.newInstance(clazz, params);
 					pool.put(clazz, obj);
 				}
 			}

@@ -18,10 +18,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.bean.BeanResolver;
-import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.bean.BeanUtil;
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 
@@ -225,7 +226,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @return 实体类对象
 	 */
 	public <T> T toBean(Class<T> clazz, boolean ignoreError) {
-		return toBean(ClassUtil.newInstance(clazz), ignoreError);
+		return toBean(ReflectUtil.newInstance(clazz), ignoreError);
 	}
 	
 	/**
@@ -255,7 +256,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		if(null == clazz) {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
 		}
-		return (T) toBean(ClassUtil.newInstance(clazz), ignoreError);
+		return (T) toBean(ReflectUtil.newInstance(clazz), ignoreError);
 	}
 
 	/**

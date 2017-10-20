@@ -224,7 +224,7 @@ public class ObjectUtil {
 		T result = ArrayUtil.clone(obj);
 		if (null == result) {
 			if (obj instanceof Cloneable) {
-				result = ClassUtil.invoke(obj, "clone", new Object[] {});
+				result = ReflectUtil.invoke(obj, "clone", new Object[] {});
 			} else {
 				result = cloneByStream(obj);
 			}

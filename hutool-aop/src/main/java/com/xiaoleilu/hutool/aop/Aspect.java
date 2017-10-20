@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
-import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
  * 切面抽象
@@ -57,7 +57,7 @@ public abstract class Aspect implements InvocationHandler{
 		Object result = null;
 		if(before(target, method, args)){
 			try {
-				result = ClassUtil.invoke(target, method, args);
+				result = ReflectUtil.invoke(target, method, args);
 			}catch (UtilException e) {
 				final Throwable cause = e.getCause();
 				if(e.getCause() instanceof InvocationTargetException) {

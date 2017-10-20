@@ -26,6 +26,8 @@
 * BeanUtil.fillBean方法使用BeanDesc替换
 * 增加FileAppender类用于积累追加文件内容
 * 增加ReferenceUtil用于工具化创建软引用和弱引用
+* ReflectUtil中将异常包装为UtilExcception，并增加invoke重载支持字符串
+* ClassUtil中部分方法被标记过时，大部分与ReflectUtil中方法重叠，通过注释指引到ReflectUtil
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）

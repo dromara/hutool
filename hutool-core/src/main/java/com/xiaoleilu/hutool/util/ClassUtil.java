@@ -361,7 +361,9 @@ public class ClassUtil {
 	 * @param fieldName 字段名
 	 * @return 字段
 	 * @throws SecurityException 安全异常
+	 * @deprecated 请使用 {@link ReflectUtil#getField(Class, String)}
 	 */
+	@Deprecated
 	public static Field getField(Class<?> clazz, String fieldName) throws SecurityException {
 		return ReflectUtil.getField(clazz, fieldName);
 	}
@@ -385,7 +387,9 @@ public class ClassUtil {
 	 * 
 	 * @param method 方法
 	 * @return 是否为equals方法
+	 * @deprecated 请使用 {@link ReflectUtil#isEqualsMethod(Method)}
 	 */
+	@Deprecated
 	public static boolean isEqualsMethod(Method method) {
 		return ReflectUtil.isEqualsMethod(method);
 	}
@@ -395,7 +399,9 @@ public class ClassUtil {
 	 * 
 	 * @param method 方法
 	 * @return 是否为hashCode方法
+	 * @deprecated 请使用 {@link ReflectUtil#isHashCodeMethod(Method)}
 	 */
+	@Deprecated
 	public static boolean isHashCodeMethod(Method method) {
 		return ReflectUtil.isHashCodeMethod(method);
 	}
@@ -405,7 +411,9 @@ public class ClassUtil {
 	 * 
 	 * @param method 方法
 	 * @return 是否为toString方法
+	 * @deprecated 请使用 {@link ReflectUtil#isToStringMethod(Method)}
 	 */
+	@Deprecated
 	public static boolean isToStringMethod(Method method) {
 		return ReflectUtil.isToStringMethod(method);
 	}
@@ -557,7 +565,9 @@ public class ClassUtil {
 	 * @param <T> 对象类型
 	 * @param clazz 类名
 	 * @return 对象
+	 * @deprecated 请使用 {@link ReflectUtil#newInstance(String)}
 	 */
+	@Deprecated
 	public static <T> T newInstance(String clazz) {
 		return ReflectUtil.newInstance(clazz);
 	}
@@ -568,7 +578,9 @@ public class ClassUtil {
 	 * @param <T> 对象类型
 	 * @param clazz 类
 	 * @return 对象
+	 * @deprecated 请使用 {@link ReflectUtil#newInstance(Class, Object...)}
 	 */
+	@Deprecated
 	public static <T> T newInstance(Class<T> clazz) {
 		return ReflectUtil.newInstance(clazz);
 	}
@@ -580,7 +592,9 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @param params 构造函数参数
 	 * @return 对象
+	 * @deprecated 请使用 {@link ReflectUtil#newInstance(Class, Object...)}
 	 */
+	@Deprecated
 	public static <T> T newInstance(Class<T> clazz, Object... params) {
 		return ReflectUtil.newInstance(clazz, params);
 	}
@@ -592,7 +606,9 @@ public class ClassUtil {
 	 * @param clazz 类
 	 * @param parameterTypes 参数类型，只要任何一个参数是指定参数的父类或接口或相等即可
 	 * @return 构造方法，如果未找到返回null
+	 * @deprecated 请使用 {@link ReflectUtil#getConstructor(Class, Class...)}
 	 */
+	@Deprecated
 	public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) {
 		return ReflectUtil.getConstructor(clazz, parameterTypes);
 	}
@@ -745,7 +761,9 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 * @throws UtilException 各种异常包装
+	 * @deprecated 请使用{@link ReflectUtil#invoke(Object, String, Object...)}
 	 */
+	@Deprecated
 	public static <T> T invoke(Object obj, String methodName, Object[] args) throws UtilException{
 		return ReflectUtil.invoke(obj, methodName, args);
 	}
@@ -758,7 +776,9 @@ public class ClassUtil {
 	 * @param args 参数对象
 	 * @return 结果
 	 * @throws UtilException IllegalAccessException and IllegalArgumentException
+	 * @deprecated 请使用 {@link ReflectUtil#invokeStatic(Method, Object...)}
 	 */
+	@Deprecated
 	public static <T> T invokeStatic(Method method, Object... args) throws UtilException {
 		return ReflectUtil.invokeStatic(method, args);
 	}
@@ -772,7 +792,9 @@ public class ClassUtil {
 	 * @param args 参数对象
 	 * @return 结果
 	 * @throws UtilException IllegalAccessException and IllegalArgumentException
+	 * @deprecated 请使用 {@link ReflectUtil#invoke(Object, Method, Object...)}
 	 */
+	@Deprecated
 	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException {
 		return ReflectUtil.invoke(obj, method, args);
 	}

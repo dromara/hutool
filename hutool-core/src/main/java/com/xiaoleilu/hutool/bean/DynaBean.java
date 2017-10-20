@@ -47,7 +47,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 	 * @param params 构造Bean所需要的参数
 	 */
 	public DynaBean(Class<?> beanClass, Object... params){
-		this(ClassUtil.newInstance(beanClass, params));
+		this(ReflectUtil.newInstance(beanClass, params));
 	}
 	
 	/**
