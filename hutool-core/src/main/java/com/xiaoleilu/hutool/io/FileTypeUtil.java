@@ -123,9 +123,9 @@ public final class FileTypeUtil {
 	 * 
 	 * @param in {@link InputStream}
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
-	 * @throws IOException 读取流引起的异常
+	 * @throws IORuntimeException 读取流引起的异常
 	 */
-	public static String getType(InputStream in) throws IOException {
+	public static String getType(InputStream in) throws IORuntimeException {
 		return getType(IoUtil.readHex28Upper(in));
 	}
 
@@ -135,7 +135,7 @@ public final class FileTypeUtil {
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
 	 * @throws IOException 读取文件引起的异常
 	 */
-	public static String getType(File file) throws IOException {
+	public static String getType(File file) throws IORuntimeException {
 		return getType(IoUtil.toStream(file));
 	}
 
@@ -146,7 +146,7 @@ public final class FileTypeUtil {
 	 * @return 类型
 	 * @throws IOException 读取文件引起的异常
 	 */
-	public static String getTypeByPath(String path) throws IOException {
+	public static String getTypeByPath(String path) throws IORuntimeException {
 		return getType(FileUtil.file(path));
 	}
 }

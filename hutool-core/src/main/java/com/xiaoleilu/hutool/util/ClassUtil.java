@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -745,17 +744,10 @@ public class ClassUtil {
 	 * @param methodName 方法名
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
+	 * @throws UtilException 各种异常包装
 	 */
-	public static <T> T invoke(Object obj, String methodName, Object[] args) {
-		try {
-			final Method method = getDeclaredMethodOfObj(obj, methodName, args);
-			if (null == method) {
-				throw new NoSuchMethodException(StrUtil.format("No such method: [{}]", methodName));
-			}
-			return invoke(obj, method, args);
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
+	public static <T> T invoke(Object obj, String methodName, Object[] args) throws UtilException{
+		return ReflectUtil.invoke(obj, methodName, args);
 	}
 
 	/**
@@ -766,11 +758,9 @@ public class ClassUtil {
 	 * @param args 参数对象
 	 * @return 结果
 	 * @throws UtilException IllegalAccessException and IllegalArgumentException
-	 * @throws InvocationTargetException 目标方法执行异常
-	 * @throws IllegalArgumentException 参数异常
 	 */
-	public static <T> T invokeStatic(Method method, Object... args) throws InvocationTargetException, IllegalArgumentException {
-		return invoke(null, method, args);
+	public static <T> T invokeStatic(Method method, Object... args) throws UtilException {
+		return ReflectUtil.invokeStatic(method, args);
 	}
 
 	/**
@@ -782,10 +772,8 @@ public class ClassUtil {
 	 * @param args 参数对象
 	 * @return 结果
 	 * @throws UtilException IllegalAccessException and IllegalArgumentException
-	 * @throws InvocationTargetException 目标方法执行异常
-	 * @throws IllegalArgumentException 参数异常
 	 */
-	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalArgumentException {
+	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException {
 		return ReflectUtil.invoke(obj, method, args);
 	}
 	// ---------------------------------------------------------------------------------------------------- Invoke end

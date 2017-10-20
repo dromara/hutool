@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.cron.task;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.xiaoleilu.hutool.cron.CronException;
@@ -63,8 +62,8 @@ public class InvokeTask implements Task{
 	public void execute() {
 		try {
 			ReflectUtil.invoke(this.obj, this.method, new Object[]{});
-		} catch (InvocationTargetException e) {
-			throw new CronException(e);
+		} catch (UtilException e) {
+			throw new CronException(e.getCause());
 		}
 	}
 }

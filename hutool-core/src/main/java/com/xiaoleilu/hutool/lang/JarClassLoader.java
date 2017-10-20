@@ -21,7 +21,7 @@ import com.xiaoleilu.hutool.util.ClassUtil;
  *
  */
 public class JarClassLoader extends URLClassLoader {
-	
+
 	/**
 	 * 加载Jar到ClassPath
 	 * 
@@ -37,33 +37,36 @@ public class JarClassLoader extends URLClassLoader {
 		}
 		return loader;
 	}
-	
+
 	/**
 	 * 加载Jar文件到指定loader中
+	 * 
 	 * @param loader {@link URLClassLoader}
 	 * @param jarFile 被加载的jar
+	 * @throws UtilException IO异常包装和执行异常
 	 */
-	public static void loadJar(URLClassLoader loader, File jarFile){
+	public static void loadJar(URLClassLoader loader, File jarFile) throws UtilException {
 		try {
 			final Method method = ClassUtil.getDeclaredMethod(URLClassLoader.class, "addURL", URL.class);
-			if(null != method){
+			if (null != method) {
 				method.setAccessible(true);
 				final List<File> jars = loopJar(jarFile);
 				for (File jar : jars) {
-					ClassUtil.invoke(loader, method, new Object[]{jar.toURI().toURL()});
+					ClassUtil.invoke(loader, method, new Object[] { jar.toURI().toURL() });
 				}
 			}
-		} catch (IOException | ReflectiveOperationException e) {
+		} catch (IOException e) {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 加载Jar文件到System ClassLoader中
+	 * 
 	 * @param jarFile 被加载的jar
 	 * @return System ClassLoader
 	 */
-	public static URLClassLoader loadJarToSystemClassLoader(File jarFile){
+	public static URLClassLoader loadJarToSystemClassLoader(File jarFile) {
 		URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 		loadJar(urlClassLoader, jarFile);
 		return urlClassLoader;
@@ -79,6 +82,7 @@ public class JarClassLoader extends URLClassLoader {
 
 	/**
 	 * 构造
+	 * 
 	 * @param urls 被加载的URL
 	 */
 	public JarClassLoader(URL[] urls) {
@@ -117,7 +121,7 @@ public class JarClassLoader extends URLClassLoader {
 	 * @return jar文件列表
 	 */
 	private static List<File> loopJar(File file) {
-		return FileUtil.loopFiles(file, new FileFilter(){
+		return FileUtil.loopFiles(file, new FileFilter() {
 
 			@Override
 			public boolean accept(File file) {

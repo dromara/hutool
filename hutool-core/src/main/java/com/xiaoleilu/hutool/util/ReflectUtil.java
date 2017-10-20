@@ -2,7 +2,6 @@ package com.xiaoleilu.hutool.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -158,8 +157,9 @@ public class ReflectUtil {
 	 * @param obj 对象
 	 * @param fieldName 字段名
 	 * @return 字段值
+	 * @throws UtilException 包装IllegalAccessException异常
 	 */
-	public static Object getFieldValue(Object obj, String fieldName) {
+	public static Object getFieldValue(Object obj, String fieldName) throws UtilException{
 		if (null == obj || StrUtil.isBlank(fieldName)) {
 			return null;
 		}
@@ -172,8 +172,9 @@ public class ReflectUtil {
 	 * @param obj 对象
 	 * @param field 字段
 	 * @return 字段值
+	 * @throws UtilException 包装IllegalAccessException异常
 	 */
-	public static Object getFieldValue(Object obj, Field field) {
+	public static Object getFieldValue(Object obj, Field field) throws UtilException{
 		if (null == obj || null == field) {
 			return null;
 		}
@@ -193,8 +194,9 @@ public class ReflectUtil {
 	 * @param obj 对象
 	 * @param fieldName 字段名
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 * @throws UtilException 包装IllegalAccessException异常
 	 */
-	public static void setFieldValue(Object obj, String fieldName, Object value) {
+	public static void setFieldValue(Object obj, String fieldName, Object value) throws UtilException{
 		Assert.notNull(obj);
 		Assert.notBlank(fieldName);
 		setFieldValue(obj, getField(obj.getClass(), fieldName), value);
@@ -206,8 +208,9 @@ public class ReflectUtil {
 	 * @param obj 对象
 	 * @param field 字段
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
+	 * @throws UtilException UtilException 包装IllegalAccessException异常
 	 */
-	public static void setFieldValue(Object obj, Field field, Object value) {
+	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException{
 		Assert.notNull(obj);
 		Assert.notNull(field);
 		field.setAccessible(true);
@@ -287,8 +290,9 @@ public class ReflectUtil {
 	 * 
 	 * @param clazz 类
 	 * @return 方法名Set
+	 * @throws SecurityException 安全异常
 	 */
-	public static Set<String> getMethodNames(Class<?> clazz) {
+	public static Set<String> getMethodNames(Class<?> clazz) throws SecurityException {
 		final HashSet<String> methodSet = new HashSet<String>();
 		final Method[] methods = getMethods(clazz);
 		for (Method method : methods) {
@@ -303,8 +307,9 @@ public class ReflectUtil {
 	 * @param clazz 查找方法的类
 	 * @param filter 过滤器
 	 * @return 过滤后的方法列表
+	 * @throws SecurityException 安全异常
 	 */
-	public static Method[] getMethods(Class<?> clazz, Filter<Method> filter) {
+	public static Method[] getMethods(Class<?> clazz, Filter<Method> filter) throws SecurityException {
 		if (null == clazz) {
 			return null;
 		}
@@ -374,11 +379,11 @@ public class ReflectUtil {
 	 * @return 是否为equals方法
 	 */
 	public static boolean isEqualsMethod(Method method) {
-		if (method == null || !method.getName().equals("equals")) {
+		if (method == null || false == method.getName().equals("equals")) {
 			return false;
 		}
-		Class<?>[] paramTypes = method.getParameterTypes();
-		return (paramTypes.length == 1 && paramTypes[0] == Object.class);
+		final Class<?>[] paramTypes = method.getParameterTypes();
+		return (1 == paramTypes.length && paramTypes[0] == Object.class);
 	}
 
 	/**
@@ -408,9 +413,10 @@ public class ReflectUtil {
 	 * @param <T> 对象类型
 	 * @param clazz 类名
 	 * @return 对象
+	 * @throws UtilException 包装各类异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstance(String clazz) {
+	public static <T> T newInstance(String clazz) throws UtilException{
 		try {
 			return (T) Class.forName(clazz).newInstance();
 		} catch (Exception e) {
@@ -425,8 +431,9 @@ public class ReflectUtil {
 	 * @param clazz 类
 	 * @param params 构造函数参数
 	 * @return 对象
+	 * @throws UtilException 包装各类异常
 	 */
-	public static <T> T newInstance(Class<T> clazz, Object... params) {
+	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException{
 		if (ArrayUtil.isEmpty(params)) {
 			try {
 				return (T) clazz.newInstance();
@@ -477,11 +484,9 @@ public class ReflectUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
 	 * @return 结果
-	 * @throws UtilException IllegalAccessException and IllegalArgumentException
-	 * @throws InvocationTargetException 目标方法执行异常
-	 * @throws IllegalArgumentException 参数异常
+	 * @throws UtilException 多种异常包装
 	 */
-	public static <T> T invokeStatic(Method method, Object... args) throws InvocationTargetException, IllegalArgumentException {
+	public static <T> T invokeStatic(Method method, Object... args) throws UtilException{
 		return invoke(null, method, args);
 	}
 
@@ -493,19 +498,34 @@ public class ReflectUtil {
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
 	 * @return 结果
-	 * @throws UtilException IllegalAccessException and IllegalArgumentException
-	 * @throws InvocationTargetException 目标方法执行异常
-	 * @throws IllegalArgumentException 参数异常
+	 * @throws UtilException 一些列异常的包装
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object... args) throws InvocationTargetException, IllegalArgumentException {
+	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException{
 		if (false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
 		try {
 			return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, args);
-		} catch (IllegalAccessException e) {
+		} catch (Exception e) {
 			throw new UtilException(e);
 		}
+	}
+	
+	/**
+	 * 执行对象中指定方法
+	 * @param obj 方法所在对象
+	 * @param methodName 方法名
+	 * @param args 参数列表
+	 * @return 执行结果
+	 * @throws UtilException IllegalAccessException包装
+	 * @since 3.1.2
+	 */
+	public static <T> T invoke(Object obj, String methodName, Object... args) throws UtilException{
+		final Method method = getMethodOfObj(obj, methodName, args);
+		if (null == method) {
+			throw new UtilException(StrUtil.format("No such method: [{}]", methodName));
+		}
+		return invoke(obj, method, args);
 	}
 }

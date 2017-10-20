@@ -24,6 +24,8 @@
 * JSON模块增加JSONStrFromater，用于格式化非标准的JSON字符串
 * 增加BeanDesc代替JDK的BeanInfo，提供更灵活的Getter和Setter
 * BeanUtil.fillBean方法使用BeanDesc替换
+* 增加FileAppender类用于积累追加文件内容
+* 增加ReferenceUtil用于工具化创建软引用和弱引用
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
@@ -33,6 +35,7 @@
 * 修复Page.getEndPosition()错误（感谢@【深圳】尘风了了）
 * 修复Http中head方法读取body失败问题，略过读取body（issue#IFA3C@Gitee）
 * 修复从正文中获取编码类型的错误（issue#IFBYO@Gitee）
+* 修复IOUtil.readBytes中读取为0导致的越界问题（issue#46@Github）
 
 ## 3.1.1
 

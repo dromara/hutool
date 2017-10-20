@@ -1392,12 +1392,8 @@ public final class FileUtil {
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String getType(File file) {
-		try {
-			return FileTypeUtil.getType(file);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+	public static String getType(File file) throws IORuntimeException{
+		return FileTypeUtil.getType(file);
 	}
 
 	/**
@@ -2180,6 +2176,19 @@ public final class FileUtil {
 	public static File writeString(String content, File file, Charset charset) throws IORuntimeException {
 		return FileWriter.create(file, charset).write(content);
 	}
+	
+	/**
+	 * 将String写入文件，UTF-8编码追加模式
+	 * 
+	 * @param content 写入的内容
+	 * @param path 文件路径
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static File appendUtf8String(String content, String path) throws IORuntimeException {
+		return appendString(content, path, CharsetUtil.CHARSET_UTF_8);
+	}
 
 	/**
 	 * 将String写入文件，追加模式
@@ -2205,6 +2214,19 @@ public final class FileUtil {
 	 */
 	public static File appendString(String content, String path, Charset charset) throws IORuntimeException {
 		return appendString(content, touch(path), charset);
+	}
+	
+	/**
+	 * 将String写入文件，UTF-8编码追加模式
+	 * 
+	 * @param content 写入的内容
+	 * @param file 文件
+	 * @return 写入的文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static File appendUtf8String(String content, File file) throws IORuntimeException {
+		return appendString(content, file, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -2240,10 +2262,11 @@ public final class FileUtil {
 	 * @param list 列表
 	 * @param path 绝对路径
 	 * @param charset 字符集
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static <T> void writeLines(Collection<T> list, String path, String charset) throws IORuntimeException {
-		writeLines(list, path, charset, false);
+	public static <T> File writeLines(Collection<T> list, String path, String charset) throws IORuntimeException {
+		return writeLines(list, path, charset, false);
 	}
 	
 	/**
@@ -2253,10 +2276,41 @@ public final class FileUtil {
 	 * @param list 列表
 	 * @param path 绝对路径
 	 * @param charset 字符集
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static <T> void writeLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
-		writeLines(list, path, charset, false);
+	public static <T> File writeLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
+		return writeLines(list, path, charset, false);
+	}
+	
+	/**
+	 * 将列表写入文件，追加模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static <T> File appendUtf8Lines(Collection<T> list, File file) throws IORuntimeException {
+		return appendLines(list, file, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 将列表写入文件，追加模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 文件路径
+	 * @param charset 字符集
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static <T> File appendUtf8Lines(Collection<T> list, String path) throws IORuntimeException {
+		return appendLines(list, path, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -2266,10 +2320,26 @@ public final class FileUtil {
 	 * @param list 列表
 	 * @param path 绝对路径
 	 * @param charset 字符集
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static <T> void appendLines(Collection<T> list, String path, String charset) throws IORuntimeException {
-		writeLines(list, path, charset, true);
+	public static <T> File appendLines(Collection<T> list, String path, String charset) throws IORuntimeException {
+		return writeLines(list, path, charset, true);
+	}
+	
+	/**
+	 * 将列表写入文件，追加模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static <T> File appendLines(Collection<T> list, File file, String charset) throws IORuntimeException {
+		return writeLines(list, file, charset, true);
 	}
 	
 	/**
@@ -2279,10 +2349,26 @@ public final class FileUtil {
 	 * @param list 列表
 	 * @param path 绝对路径
 	 * @param charset 字符集
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static <T> void appendLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
-		writeLines(list, path, charset, true);
+	public static <T> File appendLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
+		return writeLines(list, path, charset, true);
+	}
+	
+	/**
+	 * 将列表写入文件，追加模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static <T> File appendLines(Collection<T> list, File file, Charset charset) throws IORuntimeException {
+		return writeLines(list, file, charset, true);
 	}
 
 	/**
@@ -2293,7 +2379,7 @@ public final class FileUtil {
 	 * @param path 文件路径
 	 * @param charset 字符集
 	 * @param isAppend 是否追加
-	 * @return 文件
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(Collection<T> list, String path, String charset, boolean isAppend) throws IORuntimeException {
@@ -2308,7 +2394,7 @@ public final class FileUtil {
 	 * @param path 文件路径
 	 * @param charset 字符集
 	 * @param isAppend 是否追加
-	 * @return 文件
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(Collection<T> list, String path, Charset charset, boolean isAppend) throws IORuntimeException {
@@ -2323,7 +2409,7 @@ public final class FileUtil {
 	 * @param file 文件
 	 * @param charset 字符集
 	 * @param isAppend 是否追加
-	 * @return 文件
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(Collection<T> list, File file, String charset, boolean isAppend) throws IORuntimeException {
@@ -2338,7 +2424,7 @@ public final class FileUtil {
 	 * @param file 文件
 	 * @param charset 字符集
 	 * @param isAppend 是否追加
-	 * @return 文件
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T> File writeLines(Collection<T> list, File file, Charset charset, boolean isAppend) throws IORuntimeException {
@@ -2350,7 +2436,7 @@ public final class FileUtil {
 	 * 
 	 * @param data 数据
 	 * @param path 目标文件
-	 * @return 文件
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeBytes(byte[] data, String path) throws IORuntimeException {
@@ -2362,7 +2448,7 @@ public final class FileUtil {
 	 * 
 	 * @param dest 目标文件
 	 * @param data 数据
-	 * @return dest
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeBytes(byte[] data, File dest) throws IORuntimeException {
@@ -2377,7 +2463,7 @@ public final class FileUtil {
 	 * @param off 数据开始位置
 	 * @param len 数据长度
 	 * @param isAppend 是否追加模式
-	 * @return File
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeBytes(byte[] data, File dest, int off, int len, boolean isAppend) throws IORuntimeException {
@@ -2401,7 +2487,7 @@ public final class FileUtil {
 	 * 
 	 * @param in 输入流
 	 * @param fullFilePath 文件绝对路径
-	 * @return dest
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeFromStream(InputStream in, String fullFilePath) throws IORuntimeException {
@@ -2413,7 +2499,7 @@ public final class FileUtil {
 	 * 
 	 * @param file 文件
 	 * @param out 流
-	 * @return File
+	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 */
 	public static File writeToStream(File file, OutputStream out) throws IORuntimeException {

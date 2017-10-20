@@ -7,6 +7,7 @@ import java.util.Map;
 import com.xiaoleilu.hutool.clone.CloneSupport;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
  * 动态Bean，通过反射对Bean的相关方法做操作<br>
@@ -134,7 +135,7 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 	 * @return 执行结果，可能为null
 	 */
 	public Object invoke(String methodName, Object... params){
-		return ClassUtil.invoke(this.bean, methodName, params);
+		return ReflectUtil.invoke(this.bean, methodName, params);
 	}
 	
 	/**
