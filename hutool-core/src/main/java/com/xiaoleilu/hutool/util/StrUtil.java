@@ -2268,4 +2268,54 @@ public class StrUtil {
 	public static String reverse(String str) {
 		return new String(ArrayUtil.reverse(str.toCharArray()));
 	}
+	
+	/**
+	 * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串<br>
+	 * 字符填充于字符串前
+	 * 
+	 * @param str 被填充的字符串
+	 * @param filledChar 填充的字符
+	 * @param len 填充长度
+	 * @param isPre 是否填充在前
+	 * @return 填充后的字符串
+	 * @since 3.1.2
+	 */
+	public static String fillBefore(String str, char filledChar, int len) {
+		return fill(str, filledChar, len, true);
+	}
+	
+	/**
+	 * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串<br>
+	 * 字符填充于字符串后
+	 * 
+	 * @param str 被填充的字符串
+	 * @param filledChar 填充的字符
+	 * @param len 填充长度
+	 * @param isPre 是否填充在前
+	 * @return 填充后的字符串
+	 * @since 3.1.2
+	 */
+	public static String fillAfter(String str, char filledChar, int len) {
+		return fill(str, filledChar, len, false);
+	}
+	
+	/**
+	 * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串
+	 * 
+	 * @param str 被填充的字符串
+	 * @param filledChar 填充的字符
+	 * @param len 填充长度
+	 * @param isPre 是否填充在前
+	 * @return 填充后的字符串
+	 * @since 3.1.2
+	 */
+	public static String fill(String str, char filledChar, int len, boolean isPre) {
+		final int strLen = str.length();
+		if (strLen > len) {
+			return str;
+		}
+		
+		String filledStr = StrUtil.repeat(filledChar, len - strLen);
+		return isPre ? filledStr.concat(str) : str.concat(filledStr);
+	}
 }

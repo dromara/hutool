@@ -18,6 +18,15 @@ import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 public class ExcelReadTest {
 	
 	@Test
+	public void excelReadLinkTest() {
+		ExcelReader reader = ExcelUtil.getReader("d:/link_test.xlsx");
+		List<List<Object>> read = reader.read();
+		for (List<Object> list : read) {
+			Console.log(list);
+		}
+	}
+	
+	@Test
 	public void excelReadTest() {
 		ExcelReader reader = ExcelUtil.getReader(new ClassPathResource("aaa.xlsx").getStream());
 		List<List<Object>> readAll = reader.read();

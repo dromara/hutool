@@ -175,6 +175,35 @@ public class RandomUtil {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * 随机数字
+	 * @return 随机字符
+	 * @since 3.1.2
+	 */
+	public static int randomNumber() {
+		return randomChar(BASE_NUMBER);
+	}
+	
+	/**
+	 * 随机字母或数字，小写
+	 * @return 随机字符
+	 * @since 3.1.2
+	 */
+	public static char randomChar() {
+		return randomChar(BASE_CHAR_NUMBER);
+	}
+	
+	/**
+	 * 随机字符
+	 * @param baseString 随机字符选取的样本
+	 * @return 随机字符
+	 * @since 3.1.2
+	 */
+	public static char randomChar(String baseString) {
+		final Random random = new Random();
+		return baseString.charAt(random.nextInt(baseString.length()));
+	}
 
 	/**
 	 * @return 随机UUID

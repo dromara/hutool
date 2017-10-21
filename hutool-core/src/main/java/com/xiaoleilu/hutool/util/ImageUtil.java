@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -67,7 +68,7 @@ public class ImageUtil {
 			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
 			scale(ImageIO.read(srcImageFile), imageOutputStream, scale);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -86,7 +87,7 @@ public class ImageUtil {
 		try {
 			scale(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), scale);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -103,7 +104,7 @@ public class ImageUtil {
 		try {
 			scale(ImageIO.read(srcStream), destStream, scale);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -182,7 +183,7 @@ public class ImageUtil {
 			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
 			scale(ImageIO.read(srcImageFile), imageOutputStream, width, height, fixedColor);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -202,7 +203,7 @@ public class ImageUtil {
 		try {
 			scale(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), width, height, fixedColor);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -220,7 +221,7 @@ public class ImageUtil {
 		try {
 			scale(ImageIO.read(srcStream), destStream, width, height, fixedColor);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -302,7 +303,7 @@ public class ImageUtil {
 			imageOutputStream = ImageIO.createImageOutputStream(destImgFile);
 			cut(ImageIO.read(srcImgFile), imageOutputStream, rectangle);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -320,7 +321,7 @@ public class ImageUtil {
 		try {
 			cut(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), rectangle);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -336,7 +337,7 @@ public class ImageUtil {
 		try {
 			cut(ImageIO.read(srcStream), destStream, rectangle);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -382,7 +383,7 @@ public class ImageUtil {
 		try {
 			slice(ImageIO.read(srcImageFile), descDir, destWidth, destHeight);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -448,7 +449,7 @@ public class ImageUtil {
 		try {
 			sliceByRowsAndCols(ImageIO.read(srcImageFile), descDir, rows, cols);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -496,8 +497,8 @@ public class ImageUtil {
 					}
 				}
 			}
-		} catch (Exception e) {
-			throw new UtilException(e);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -515,7 +516,7 @@ public class ImageUtil {
 			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
 			convert(ImageIO.read(srcImageFile), formatName, imageOutputStream);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -534,7 +535,7 @@ public class ImageUtil {
 		try {
 			convert(ImageIO.read(srcStream), formatName, ImageIO.createImageOutputStream(destStream));
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -551,7 +552,7 @@ public class ImageUtil {
 		try {
 			convert(ImageIO.read(srcStream), formatName, destStream);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -585,7 +586,7 @@ public class ImageUtil {
 			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
 			gray(ImageIO.read(srcImageFile), ImageIO.createImageOutputStream(destImageFile));
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -603,7 +604,7 @@ public class ImageUtil {
 		try {
 			gray(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream));
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -619,7 +620,7 @@ public class ImageUtil {
 		try {
 			gray(ImageIO.read(srcStream), destStream);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -673,7 +674,7 @@ public class ImageUtil {
 			imageOutputStream = ImageIO.createImageOutputStream(destFile);
 			pressText(ImageIO.read(srcFile), imageOutputStream, pressText, color, font, x, y, alpha);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -696,7 +697,7 @@ public class ImageUtil {
 		try {
 			pressText(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), pressText, color, font, x, y, alpha);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -717,7 +718,7 @@ public class ImageUtil {
 		try {
 			pressText(ImageIO.read(srcStream), destStream, pressText, color, font, x, y, alpha);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -774,7 +775,7 @@ public class ImageUtil {
 			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
 			pressImage(ImageIO.read(srcImageFile), imageOutputStream, pressImg, x, y, alpha);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -795,7 +796,7 @@ public class ImageUtil {
 		try {
 			pressImage(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), pressImg, x, y, alpha);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -814,7 +815,7 @@ public class ImageUtil {
 		try {
 			pressImage(ImageIO.read(srcStream), destStream, pressImg, x, y, alpha);
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -921,9 +922,9 @@ public class ImageUtil {
 	 * @param backgroundColor 背景颜色
 	 * @param fontColor 字体颜色
 	 * @param out 图片输出地
-	 * @throws UtilException IO异常
+	 * @throws IORuntimeException IO异常
 	 */
-	public static void createImage(String str, Font font, Color backgroundColor, Color fontColor, ImageOutputStream out) throws UtilException {
+	public static void createImage(String str, Font font, Color backgroundColor, Color fontColor, ImageOutputStream out) throws IORuntimeException {
 		// 获取font的样式应用在str上的整个矩形
 		Rectangle2D r = font.getStringBounds(str, new FontRenderContext(AffineTransform.getScaleInstance(1, 1), false, false));
 		int unitHeight = (int) Math.floor(r.getHeight());// 获取单个字符的高度
@@ -961,7 +962,7 @@ public class ImageUtil {
 				throw new UtilException(e);
 			}
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -984,7 +985,7 @@ public class ImageUtil {
 				throw new UtilException(e);
 			}
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 	
@@ -995,11 +996,7 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void writeJpg(Image image, ImageOutputStream destImageStream) throws IORuntimeException{
-		try {
-			ImageIO.write(toBufferedImage(image), IMAGE_TYPE_JPEG, destImageStream);// 输出到文件流
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		write(image, IMAGE_TYPE_JPEG, destImageStream);
 	}
 	
 	/**
@@ -1009,8 +1006,32 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void writePng(Image image, ImageOutputStream destImageStream) throws IORuntimeException{
+		write(image, IMAGE_TYPE_PNG, destImageStream);
+	}
+	
+	/**
+	 * 写出图像为PNG格式
+	 * @param image {@link Image}
+	 * @param imageType 图片类型（图片扩展名）
+	 * @param out 写出到的目标流
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static void write(Image image, String imageType, OutputStream out) throws IORuntimeException{
+		write(image, imageType, getImageOutputStream(out));
+	}
+	
+	/**
+	 * 写出图像为PNG格式
+	 * @param image {@link Image}
+	 * @param imageType 图片类型（图片扩展名）
+	 * @param destImageStream 写出到的目标流
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static void write(Image image, String imageType, ImageOutputStream destImageStream) throws IORuntimeException{
 		try {
-			ImageIO.write(toBufferedImage(image), IMAGE_TYPE_PNG, destImageStream);// 输出到文件流
+			ImageIO.write(toBufferedImage(image), imageType, destImageStream);// 输出到文件流
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -1038,11 +1059,65 @@ public class ImageUtil {
 	 * @return {@link ImageReader}
 	 */
 	public static ImageReader getReader(String type) {
-		Iterator<ImageReader> iterator = ImageIO.getImageReadersByFormatName(type);
+		final Iterator<ImageReader> iterator = ImageIO.getImageReadersByFormatName(type);
 		if(iterator.hasNext()) {
 			return iterator.next();
 		}
 		return null;
+	}
+	
+	/**
+	 * 获取{@link ImageOutputStream}
+	 * 
+	 * @param out {@link OutputStream}
+	 * @return {@link ImageOutputStream}
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static ImageOutputStream getImageOutputStream(OutputStream out) throws IORuntimeException{
+		try {
+			return ImageIO.createImageOutputStream(out);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 获取{@link ImageInputStream}
+	 * 
+	 * @param in {@link InputStream}
+	 * @return {@link ImageInputStream}
+	 * @throws IORuntimeException IO异常
+	 * @since 3.1.2
+	 */
+	public static ImageInputStream getImageInputStream(InputStream in) throws IORuntimeException{
+		try {
+			return ImageIO.createImageInputStream(in);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 生成随机颜色
+	 * @return 随机颜色
+	 * @since 3.1.2
+	 */
+	public static Color randomColor() {
+		return randomColor(null);
+	}
+	
+	/**
+	 * 生成随机颜色
+	 * @param random 随机对象 {@link Random}
+	 * @return 随机颜色
+	 * @since 3.1.2
+	 */
+	public static Color randomColor(Random random) {
+		if(null == random) {
+			random = new Random();
+		}
+		return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------- Private method start
