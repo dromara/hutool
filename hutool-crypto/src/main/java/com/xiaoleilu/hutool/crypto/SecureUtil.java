@@ -23,6 +23,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -64,7 +65,7 @@ public final class SecureUtil {
 	 * </pre>
 	 */
 	public static final int DEFAULT_KEY_SIZE = 1024;
-
+	
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 * 
@@ -72,13 +73,29 @@ public final class SecureUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateKey(String algorithm) {
-		SecretKey secretKey;
+		return generateKey(algorithm, -1);
+	}
+
+	/**
+	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
+	 * 
+	 * @param algorithm 算法，支持PBE算法
+	 * @param keySize 密钥长度
+	 * @return {@link SecretKey}
+	 * @since 3.1.2
+	 */
+	public static SecretKey generateKey(String algorithm, int keySize) {
+		KeyGenerator keyGenerator;
 		try {
-			secretKey = KeyGenerator.getInstance(algorithm).generateKey();
+			keyGenerator = KeyGenerator.getInstance(algorithm);
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
-		return secretKey;
+		
+		if(keySize > 0) {
+			keyGenerator.init(keySize);
+		}
+		return keyGenerator.generateKey();
 	}
 
 	/**
@@ -115,14 +132,19 @@ public final class SecureUtil {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("DES")) {
 			throw new CryptoException("Algorithm [{}] is not a DES algorithm!");
 		}
-
+		
 		SecretKey secretKey = null;
 		if (null == key) {
 			secretKey = generateKey(algorithm);
 		} else {
-			DESKeySpec keySpec;
+			KeySpec keySpec;
 			try {
-				keySpec = new DESKeySpec(key);
+				if(algorithm.startsWith("DESede")) {
+					//DESede兼容
+					keySpec = new DESedeKeySpec(key);
+				}else {
+					keySpec = new DESKeySpec(key);
+				}
 			} catch (InvalidKeyException e) {
 				throw new CryptoException(e);
 			}

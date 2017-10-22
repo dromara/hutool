@@ -44,7 +44,7 @@ public class SymmetricCrypto {
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
 	public SymmetricCrypto(SymmetricAlgorithm algorithm) {
-		this(algorithm, null);
+		this(algorithm, (byte[])null);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class SymmetricCrypto {
 	 * @param algorithm 算法，可以是"algorithm/mode/padding"或者"algorithm"
 	 */
 	public SymmetricCrypto(String algorithm) {
-		this(algorithm, null);
+		this(algorithm, (byte[])null);
 	}
 	
 	/**
@@ -66,24 +66,33 @@ public class SymmetricCrypto {
 	
 	/**
 	 * 构造
+	 * @param algorithm 算法 {@link SymmetricAlgorithm}
+	 * @param key 自定义KEY
+	 * @since 3.1.2
+	 */
+	public SymmetricCrypto(SymmetricAlgorithm algorithm,SecretKey key) {
+		this(algorithm.getValue(), key);
+	}
+	
+	/**
+	 * 构造
 	 * @param algorithm 算法
 	 * @param key 密钥
 	 */
 	public SymmetricCrypto(String algorithm, byte[] key) {
+		this(algorithm, SecureUtil.generateKey(algorithm, key));
+	}
+	
+	/**
+	 * 构造
+	 * @param algorithm 算法
+	 * @param key 密钥
+	 * @since 3.1.2
+	 */
+	public SymmetricCrypto(String algorithm, SecretKey key) {
 		init(algorithm, key);
 	}
 	//------------------------------------------------------------------ Constructor end
-	
-	/**
-	 * 初始化
-	 * @param algorithm 算法
-	 * @param key 密钥，如果为<code>null</code>自动生成一个key
-	 * @return {@link SymmetricCrypto}
-	 */
-	public SymmetricCrypto init(String algorithm, byte[] key) {
-		return init(algorithm, SecureUtil.generateKey(algorithm, key));
-	}
-	
 	/**
 	 * 初始化
 	 * @param algorithm 算法

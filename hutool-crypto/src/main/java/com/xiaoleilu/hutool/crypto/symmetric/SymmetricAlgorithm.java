@@ -14,6 +14,7 @@ public enum SymmetricAlgorithm {
 	Blowfish("Blowfish"), 
 	/** 默认的DES加密方式：DES/ECB/PKCS5Padding */
 	DES("DES"), 
+	/** 3DES算法 */
 	DESede("DESede"), 
 	RC2("RC2"),
 

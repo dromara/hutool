@@ -1115,7 +1115,7 @@ public class ImageUtil {
 	 */
 	public static Color randomColor(Random random) {
 		if(null == random) {
-			random = new Random();
+			random = RandomUtil.getRandom();
 		}
 		return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 	}

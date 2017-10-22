@@ -29,6 +29,8 @@
 * ReflectUtil中将异常包装为UtilExcception，并增加invoke重载支持字符串
 * ClassUtil中部分方法被标记过时，大部分与ReflectUtil中方法重叠，通过注释指引到ReflectUtil
 * core包中加入验证码生成
+* 弃用Random类，改为ThreadLocalRandom
+* extra模块中增加MailUtil发送邮件工具（依赖javax.mail）
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
@@ -39,6 +41,7 @@
 * 修复Http中head方法读取body失败问题，略过读取body（issue#IFA3C@Gitee）
 * 修复从正文中获取编码类型的错误（issue#IFBYO@Gitee）
 * 修复IOUtil.readBytes中读取为0导致的越界问题（issue#46@Github）
+* 修复Crypto模块中DESede算法密钥生成bug
 
 ## 3.1.1
 

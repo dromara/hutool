@@ -383,6 +383,7 @@ public class HttpConnection {
 	 */
 	public HttpConnection setCookie(String cookie) {
 		if (cookie != null) {
+			log.debug("Cookie: {}", cookie);
 			header(Header.COOKIE, cookie, true);
 		}
 		return this;

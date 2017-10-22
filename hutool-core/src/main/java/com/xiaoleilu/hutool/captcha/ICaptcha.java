@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.captcha;
 
 import java.io.OutputStream;
+import java.io.Serializable;
 
 /**
  * 验证码接口，提供验证码对象接口定义
@@ -8,7 +9,7 @@ import java.io.OutputStream;
  * @author looly
  *
  */
-public interface ICaptcha {
+public interface ICaptcha extends Serializable{
 
 	/**
 	 * 创建验证码

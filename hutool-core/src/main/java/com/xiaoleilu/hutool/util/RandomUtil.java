@@ -1,12 +1,16 @@
 package com.xiaoleilu.hutool.util;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
+import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
  * 随机工具类
@@ -22,6 +26,31 @@ public class RandomUtil {
 	private static final String BASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
 	/** 用于随机选的字符和数字 */
 	private static final String BASE_CHAR_NUMBER = BASE_CHAR + BASE_NUMBER;
+	
+	/**
+	 * 获取随机数生成器对象<br>
+	 * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。
+	 * 
+	 * @return {@link ThreadLocalRandom}
+	 * @since 3.1.2
+	 */
+	public static ThreadLocalRandom getRandom() {
+		return ThreadLocalRandom.current();
+	}
+	
+	/**
+	 * 获取{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)
+	 * 
+	 * @return {@link SecureRandom}
+	 * @since 3.1.2
+	 */
+	public static SecureRandom getSecureRandom() {
+		try {
+			return SecureRandom.getInstance("SHA1PRNG");
+		} catch (NoSuchAlgorithmException e) {
+			throw new UtilException(e);
+		}
+	}
 
 	/**
 	 * 获得指定范围内的随机数
@@ -31,8 +60,7 @@ public class RandomUtil {
 	 * @return 随机数
 	 */
 	public static int randomInt(int min, int max) {
-		Random random = new Random();
-		return random.nextInt(max - min) + min;
+		return getRandom().nextInt(max - min) + min;
 	}
 
 	/**
@@ -41,8 +69,7 @@ public class RandomUtil {
 	 * @return 随机数
 	 */
 	public static int randomInt() {
-		Random random = new Random();
-		return random.nextInt();
+		return getRandom().nextInt();
 	}
 
 	/**
@@ -52,8 +79,7 @@ public class RandomUtil {
 	 * @return 随机数
 	 */
 	public static int randomInt(int limit) {
-		Random random = new Random();
-		return random.nextInt(limit);
+		return getRandom().nextInt(limit);
 	}
 
 	/**
@@ -63,9 +89,8 @@ public class RandomUtil {
 	 * @return bytes
 	 */
 	public static byte[] randomBytes(int length) {
-		Random random = new Random();
 		byte[] bytes = new byte[length];
-		random.nextBytes(bytes);
+		getRandom().nextBytes(bytes);
 		return bytes;
 	}
 
@@ -162,7 +187,6 @@ public class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomString(String baseString, int length) {
-		final Random random = new Random();
 		final StringBuilder sb = new StringBuilder();
 
 		if (length < 1) {
@@ -170,7 +194,7 @@ public class RandomUtil {
 		}
 		int baseLength = baseString.length();
 		for (int i = 0; i < length; i++) {
-			int number = random.nextInt(baseLength);
+			int number = getRandom().nextInt(baseLength);
 			sb.append(baseString.charAt(number));
 		}
 		return sb.toString();
@@ -201,8 +225,7 @@ public class RandomUtil {
 	 * @since 3.1.2
 	 */
 	public static char randomChar(String baseString) {
-		final Random random = new Random();
-		return baseString.charAt(random.nextInt(baseString.length()));
+		return baseString.charAt(getRandom().nextInt(baseString.length()));
 	}
 
 	/**

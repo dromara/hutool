@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.OutputStream;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
@@ -20,7 +20,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @since 3.1.2
  */
 public class LineCaptcha implements ICaptcha {
-
+	private static final long serialVersionUID = 8691294460763091089L;
+	
 	// 图片的宽度。
 	private int width = 100;
 	// 图片的高度。
@@ -80,7 +81,7 @@ public class LineCaptcha implements ICaptcha {
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
 		// 生成随机数
-		Random random = new Random();
+		final ThreadLocalRandom random = RandomUtil.getRandom();
 		// 将图像填充为白色
 		g.setColor(ImageUtil.randomColor(random));
 		g.fillRect(0, 0, width, height);
@@ -88,14 +89,7 @@ public class LineCaptcha implements ICaptcha {
 		g.setFont(this.font);
 
 		// 干扰线
-		for (int i = 0; i < lineCount; i++) {
-			int xs = random.nextInt(width);
-			int ys = random.nextInt(height);
-			int xe = xs + random.nextInt(width / 8);
-			int ye = ys + random.nextInt(height / 8);
-			g.drawLine(xs, ys, xe, ye);
-			g.setColor(ImageUtil.randomColor(random));
-		}
+		drawRandomLines(g, random);
 
 		// randomCode记录随机产生的验证码
 		final StringBuffer randomCode = new StringBuffer();
@@ -143,7 +137,7 @@ public class LineCaptcha implements ICaptcha {
 	 * @return 验证码图
 	 */
 	public BufferedImage getImage() {
-		if(null == this.image) {
+		if (null == this.image) {
 			createCode();
 		}
 		return image;
@@ -151,7 +145,7 @@ public class LineCaptcha implements ICaptcha {
 
 	@Override
 	public String getCode() {
-		if(null == this.code) {
+		if (null == this.code) {
 			createCode();
 		}
 		return code;
@@ -159,9 +153,36 @@ public class LineCaptcha implements ICaptcha {
 
 	@Override
 	public boolean verify(String userInputCode) {
-		if(StrUtil.isNotBlank(userInputCode)) {
+		if (StrUtil.isNotBlank(userInputCode)) {
 			return StrUtil.equalsIgnoreCase(getCode(), userInputCode);
 		}
 		return false;
+	}
+
+	/**
+	 * 自定义字体
+	 * 
+	 * @param font 字体
+	 */
+	public void setFont(Font font) {
+		this.font = font;
+	}
+
+	/**
+	 * 绘制干扰线
+	 * 
+	 * @param g {@link Graphics2D}画笔
+	 * @param random 随机对象
+	 */
+	private void drawRandomLines(Graphics2D g, ThreadLocalRandom random) {
+		// 干扰线
+		for (int i = 0; i < lineCount; i++) {
+			int xs = random.nextInt(width);
+			int ys = random.nextInt(height);
+			int xe = xs + random.nextInt(width / 8);
+			int ye = ys + random.nextInt(height / 8);
+			g.setColor(ImageUtil.randomColor(random));
+			g.drawLine(xs, ys, xe, ye);
+		}
 	}
 }
