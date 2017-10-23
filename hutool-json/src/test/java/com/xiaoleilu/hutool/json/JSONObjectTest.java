@@ -64,6 +64,21 @@ public class JSONObjectTest {
 	}
 	
 	@Test
+	public void toBeanNullStrTest(){
+		JSONObject json = JSONUtil.createObj()
+				.put("strValue", "null")
+				.put("intValue", 123)
+				.put("beanValue", "null")
+				.put("list", JSONUtil.createArray().put("a").put("b"));
+		
+		TestBean bean = json.toBean(TestBean.class, true);
+		//当JSON中为字符串"null"时应被当作字符串处理
+		Assert.assertEquals("null", bean.getStrValue());
+		//当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入
+		Assert.assertEquals(null, bean.getBeanValue());
+	}
+	
+	@Test
 	public void toBeanTest2(){
 		UserA userA = new UserA();
 		userA.setA("A user");

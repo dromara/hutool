@@ -280,10 +280,18 @@ final class InternalJSONUtil {
 		
 		//子对象递归转换
 		if(null == targetValue){
-			targetValue = ConverterRegistry.getInstance().convert(rowType, value);
+			try {
+				targetValue = ConverterRegistry.getInstance().convert(rowType, value);
+			} catch (ConvertException e) {
+				if(ignoreError) {
+					return null;
+				}else {
+					throw e;
+				}
+			}
 		}
 		
-		if(null == targetValue){
+		if(null == targetValue && false == ignoreError){
 			throw new ConvertException("Can not convert to type [{}]", rowType.getName());
 		}
 		
