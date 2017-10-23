@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.crypto.asymmetric;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.Key;
@@ -14,7 +15,6 @@ import javax.crypto.Cipher;
 import com.xiaoleilu.hutool.crypto.CryptoException;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.lang.BCD;
-import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -134,24 +134,36 @@ public class RSA extends AsymmetricCrypto {
 	 */
 	public String encryptStr(String data, KeyType keyType, Charset charset) {
 		Key key = getKeyByType(keyType);
-		// 模长
-		int keyLength = ((RSAKey) key).getModulus().bitLength() / 8;
-		StringBuilder sb = StrUtil.builder();
+		// 加密数据长度 <= 模长-11
+		int MAX_ENCRYPT_BLOCK = ((RSAKey) key).getModulus().bitLength() / 8 - 11;
+		byte[] dataBytes = StrUtil.bytes(data, charset);
 		lock.lock();
-		try {
+		try (
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+		) {
 			clipher.init(Cipher.ENCRYPT_MODE, key);
-			// 加密数据长度 <= 模长-11
-			String[] datas = StrUtil.split(data, keyLength - 11);
-			// 如果明文长度大于模长-11则要分组加密
-			for (String s : datas) {
-				sb.append(BCD.bcdToStr(clipher.doFinal(StrUtil.bytes(s, charset))));
+			int inputLen = dataBytes.length;
+			int offSet = 0;
+			byte[] cache;
+			int i = 0;
+			// 对数据分段加密
+			while (dataBytes.length - offSet > 0) {
+				if (inputLen - offSet > MAX_ENCRYPT_BLOCK) {
+					cache = clipher.doFinal(dataBytes, offSet, MAX_ENCRYPT_BLOCK);
+				} else {
+					cache = clipher.doFinal(dataBytes, offSet, inputLen - offSet);
+				}
+				out.write(cache, 0, cache.length);
+				i++;
+				offSet = i * MAX_ENCRYPT_BLOCK;
 			}
+			byte[] encryptedData = out.toByteArray();
+			return BCD.bcdToStr(encryptedData);
 		} catch (Exception e) {
 			throw new CryptoException(e);
-		}finally{
+		} finally {
 			lock.unlock();
 		}
-		return sb.toString();
 	}
 	
 	/**
@@ -177,23 +189,34 @@ public class RSA extends AsymmetricCrypto {
 	public String decryptStr(String data, KeyType keyType, Charset charset) {
 		Key key = getKeyByType(keyType);
 		// 模长
-		int keyLength = ((RSAKey) key).getModulus().bitLength() / 8;
-		StringBuilder sb = StrUtil.builder();
+		int MAX_DECRYPT_BLOCK = ((RSAKey) key).getModulus().bitLength() / 8;
+		byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
 		lock.lock();
-		try {
+		try (
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+		) {
 			clipher.init(Cipher.DECRYPT_MODE, key);
-			// 加密数据长度 <= 模长-11
-			byte[] bcd = BCD.ascToBcd(StrUtil.bytes(data, charset));
-			// 如果密文长度大于模长则要分组解密
-			byte[][] arrays = ArrayUtil.split(bcd, keyLength);
-			for (byte[] arr : arrays) {
-				sb.append(StrUtil.str(clipher.doFinal(arr), charset));
+			int inputLen = dataBytes.length;
+			int offSet = 0;
+			byte[] cache;
+			int i = 0;
+			// 对数据分段解密
+			while (inputLen - offSet > 0) {
+				if (inputLen - offSet > MAX_DECRYPT_BLOCK) {
+					cache = clipher.doFinal(dataBytes, offSet, MAX_DECRYPT_BLOCK);
+				} else {
+					cache = clipher.doFinal(dataBytes, offSet, inputLen - offSet);
+				}
+				out.write(cache, 0, cache.length);
+				i++;
+				offSet = i * MAX_DECRYPT_BLOCK;
 			}
+			byte[] decryptedData = out.toByteArray();
+			return StrUtil.str(decryptedData, charset);
 		} catch (Exception e) {
 			throw new CryptoException(e);
-		}finally{
+		} finally {
 			lock.unlock();
 		}
-		return sb.toString();
 	}
 }
