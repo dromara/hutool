@@ -836,8 +836,8 @@ public class CollUtil {
 			@Override
 			public boolean accept(T t) {
 				if (t instanceof Map) {
-					Map<?, ?> map = (Map<?, ?>) t;
-					final Object value = map.get(fieldValue);
+					final Map<?, ?> map = (Map<?, ?>) t;
+					final Object value = map.get(fieldName);
 					return ObjectUtil.equal(value, fieldValue);
 				}
 
