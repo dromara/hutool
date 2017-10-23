@@ -2276,7 +2276,6 @@ public class StrUtil {
 	 * @param str 被填充的字符串
 	 * @param filledChar 填充的字符
 	 * @param len 填充长度
-	 * @param isPre 是否填充在前
 	 * @return 填充后的字符串
 	 * @since 3.1.2
 	 */
@@ -2291,7 +2290,6 @@ public class StrUtil {
 	 * @param str 被填充的字符串
 	 * @param filledChar 填充的字符
 	 * @param len 填充长度
-	 * @param isPre 是否填充在前
 	 * @return 填充后的字符串
 	 * @since 3.1.2
 	 */

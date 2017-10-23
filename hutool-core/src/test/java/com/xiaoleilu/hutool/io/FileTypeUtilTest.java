@@ -3,10 +3,9 @@ package com.xiaoleilu.hutool.io;
 import java.io.File;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.io.FileTypeUtil;
-import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.lang.Console;
 
 /**
@@ -28,6 +27,7 @@ public class FileTypeUtilTest {
 	}
 	
 	@Test
+	@Ignore
 	public void emptyTest() {
 		File file = FileUtil.file("d:/empty.txt");
 		String type = FileTypeUtil.getType(file);

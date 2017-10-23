@@ -2289,7 +2289,6 @@ public final class FileUtil {
 	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @param file 文件
-	 * @param charset 字符集
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
@@ -2304,7 +2303,6 @@ public final class FileUtil {
 	 * @param <T> 集合元素类型
 	 * @param list 列表
 	 * @param path 文件路径
-	 * @param charset 字符集
 	 * @return 目标文件
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2

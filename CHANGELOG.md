@@ -14,7 +14,6 @@
 * 改进WatchMonitor，文件不存在时根据path判断是文件还是目录
 * 参阅iceroot库，增加DateUtil增加timeToSecond和secondToTime方法（感谢@【北京】宁静）
 * DateUtil.beginOfWeek加入方法可选一周的第一天，且默认周一为第一天（感谢@【北京】flyinke）
-* 新增DateUtil.normalize方法转换10位时间戳为13位，DateUtil.date方法支持10位时间戳
 * Hutool-db支持value为"= null"转换为"is null"
 * 工具类继承支持（去除private构造）
 * 增加getGroup和findAllGroup两类方法

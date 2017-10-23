@@ -62,7 +62,7 @@ public class DateUtil {
 	 * @return 时间对象
 	 */
 	public static DateTime date(long date) {
-		return new DateTime(normalize(date));
+		return new DateTime(date);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class DateUtil {
 	 */
 	public static Calendar calendar(long millis) {
 		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(normalize(millis));
+		cal.setTimeInMillis(millis);
 		return cal;
 	}
 
@@ -1327,15 +1327,6 @@ public class DateUtil {
 		return sb.toString();
 	}
 	
-	/**
-	 * 将10位秒级别的时间戳标准化为13位毫秒级别的时间戳
-	 * @param timeMillis 时间戳（秒级别或毫秒级别）
-	 * @since 3.1.2
-	 */
-	public static long normalize(long timeMillis) {
-		return timeMillis < 10000000000L ? timeMillis * 1000 : timeMillis;
-	}
-
 	// ------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>

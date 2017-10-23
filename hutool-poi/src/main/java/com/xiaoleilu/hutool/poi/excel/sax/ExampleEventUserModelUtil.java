@@ -214,7 +214,7 @@ public class ExampleEventUserModelUtil {
 			if (nextIsString) {
 				if ("s".equals(cs)) {
 					int idx = Integer.parseInt(lastContents);
-					lastContents = new XSSFRichTextString(sst.getEntryAt(idx)).toString();
+					lastContents = new XSSFRichTextString(this.sst.getEntryAt(idx)).toString();
 					nextIsString = false;
 				}
 				if ("c".equals(name) && "x".equals(cs)) {
