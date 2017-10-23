@@ -42,6 +42,7 @@
 * 修复IOUtil.readBytes中读取为0导致的越界问题（issue#46@Github）
 * 修复Crypto模块中DESede算法密钥生成bug
 * 修复JSON转Bean时在ignoreError模式下类型不匹配时无法忽略问题
+* 修复RSA分组加密中中文导致的问题（pr#47@Github）
 
 ## 3.1.1
 

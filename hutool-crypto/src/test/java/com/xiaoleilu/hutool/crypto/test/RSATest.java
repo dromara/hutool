@@ -31,7 +31,7 @@ public class RSATest {
 	
 	@Test
 	public void rsaTest(){
-		RSA rsa = new RSA();
+		final RSA rsa = new RSA();
 		
 		//获取私钥和公钥
 		Assert.assertNotNull(rsa.getPrivateKey());
@@ -48,6 +48,21 @@ public class RSATest {
 		byte[] encrypt2 = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PrivateKey);
 		byte[] decrypt2 = rsa.decrypt(encrypt2, KeyType.PublicKey);
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt2, CharsetUtil.CHARSET_UTF_8));
+	}
+	
+	@Test
+	public void rsaStrTest(){
+		final RSA rsa = new RSA();
+		
+		//公钥加密，私钥解密
+		String encryptStr = rsa.encryptStr("我是一段测试aaaa", KeyType.PublicKey);
+		String decryptStr = rsa.decryptStr(encryptStr, KeyType.PrivateKey);
+		Assert.assertEquals("我是一段测试aaaa", decryptStr);
+		
+		//私钥加密，公钥解密
+		String encrypt2 = rsa.encryptStr("我是一段测试aaaa", KeyType.PrivateKey);
+		String decrypt2 = rsa.decryptStr(encrypt2, KeyType.PublicKey);
+		Assert.assertEquals("我是一段测试aaaa", decrypt2);
 	}
 	
 	@Test

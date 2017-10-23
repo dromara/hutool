@@ -27,10 +27,11 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class RSA extends AsymmetricCrypto {
 
 	private static final AsymmetricAlgorithm ALGORITHM_RSA = AsymmetricAlgorithm.RSA;
-	
+
 	// ------------------------------------------------------------------ Static method start
 	/**
 	 * 生成RSA私钥
+	 * 
 	 * @param modulus N特征值
 	 * @param privateExponent d特征值
 	 * @return {@link PrivateKey}
@@ -38,9 +39,10 @@ public class RSA extends AsymmetricCrypto {
 	public static PrivateKey generatePrivateKey(BigInteger modulus, BigInteger privateExponent) {
 		return SecureUtil.generatePrivateKey(ALGORITHM_RSA.getValue(), new RSAPrivateKeySpec(modulus, privateExponent));
 	}
-	
+
 	/**
 	 * 生成RSA公钥
+	 * 
 	 * @param modulus N特征值
 	 * @param publicExponent e特征值
 	 * @return {@link PublicKey}
@@ -57,7 +59,7 @@ public class RSA extends AsymmetricCrypto {
 	public RSA() {
 		super(ALGORITHM_RSA);
 	}
-	
+
 	/**
 	 * 构造<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -81,7 +83,7 @@ public class RSA extends AsymmetricCrypto {
 	public RSA(byte[] privateKey, byte[] publicKey) {
 		super(ALGORITHM_RSA, privateKey, publicKey);
 	}
-	
+
 	/**
 	 * 构造 <br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -95,7 +97,7 @@ public class RSA extends AsymmetricCrypto {
 	public RSA(BigInteger modulus, BigInteger privateExponent, BigInteger publicExponent) {
 		this(generatePrivateKey(modulus, privateExponent), generatePublicKey(modulus, publicExponent));
 	}
-	
+
 	/**
 	 * 构造 <br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -105,11 +107,11 @@ public class RSA extends AsymmetricCrypto {
 	 * @param publicKey 公钥
 	 * @since 3.1.1
 	 */
-	public RSA(PrivateKey privateKey,PublicKey publicKey) {
+	public RSA(PrivateKey privateKey, PublicKey publicKey) {
 		super(ALGORITHM_RSA, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
-	
+
 	/**
 	 * 分组加密
 	 * 
@@ -135,37 +137,33 @@ public class RSA extends AsymmetricCrypto {
 	public String encryptStr(String data, KeyType keyType, Charset charset) {
 		Key key = getKeyByType(keyType);
 		// 加密数据长度 <= 模长-11
-		int MAX_ENCRYPT_BLOCK = ((RSAKey) key).getModulus().bitLength() / 8 - 11;
-		byte[] dataBytes = StrUtil.bytes(data, charset);
+		int maxBlockSize = ((RSAKey) key).getModulus().bitLength() / 8 - 11;
+		final byte[] dataBytes = StrUtil.bytes(data, charset);
+		final int inputLen = dataBytes.length;
+		
 		lock.lock();
-		try (
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-		) {
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
 			clipher.init(Cipher.ENCRYPT_MODE, key);
-			int inputLen = dataBytes.length;
 			int offSet = 0;
 			byte[] cache;
-			int i = 0;
+			// 剩余长度
+			int remainLength = inputLen;
 			// 对数据分段加密
-			while (dataBytes.length - offSet > 0) {
-				if (inputLen - offSet > MAX_ENCRYPT_BLOCK) {
-					cache = clipher.doFinal(dataBytes, offSet, MAX_ENCRYPT_BLOCK);
-				} else {
-					cache = clipher.doFinal(dataBytes, offSet, inputLen - offSet);
-				}
+			while (remainLength > 0) {
+				cache = clipher.doFinal(dataBytes, offSet, Math.min(remainLength, maxBlockSize));
 				out.write(cache, 0, cache.length);
-				i++;
-				offSet = i * MAX_ENCRYPT_BLOCK;
+				
+				offSet += maxBlockSize;
+				remainLength = inputLen - offSet;
 			}
-			byte[] encryptedData = out.toByteArray();
-			return BCD.bcdToStr(encryptedData);
+			return BCD.bcdToStr(out.toByteArray());
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 分组解密
 	 * 
@@ -176,7 +174,7 @@ public class RSA extends AsymmetricCrypto {
 	public String decryptStr(String data, KeyType keyType) {
 		return decryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 分组解密
 	 * 
@@ -187,32 +185,28 @@ public class RSA extends AsymmetricCrypto {
 	 * @since 3.1.1
 	 */
 	public String decryptStr(String data, KeyType keyType, Charset charset) {
-		Key key = getKeyByType(keyType);
+		final Key key = getKeyByType(keyType);
 		// 模长
-		int MAX_DECRYPT_BLOCK = ((RSAKey) key).getModulus().bitLength() / 8;
+		final int maxBlockSize = ((RSAKey) key).getModulus().bitLength() / 8;
 		byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
+		int inputLen = dataBytes.length;
+		
 		lock.lock();
-		try (
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-		) {
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
 			clipher.init(Cipher.DECRYPT_MODE, key);
-			int inputLen = dataBytes.length;
 			int offSet = 0;
 			byte[] cache;
-			int i = 0;
+			// 剩余长度
+			int remainLength = inputLen;
 			// 对数据分段解密
-			while (inputLen - offSet > 0) {
-				if (inputLen - offSet > MAX_DECRYPT_BLOCK) {
-					cache = clipher.doFinal(dataBytes, offSet, MAX_DECRYPT_BLOCK);
-				} else {
-					cache = clipher.doFinal(dataBytes, offSet, inputLen - offSet);
-				}
+			while (remainLength > 0) {
+				cache = clipher.doFinal(dataBytes, offSet, Math.min(remainLength, maxBlockSize));
 				out.write(cache, 0, cache.length);
-				i++;
-				offSet = i * MAX_DECRYPT_BLOCK;
+				
+				offSet += maxBlockSize;
+				remainLength = inputLen - offSet;
 			}
-			byte[] decryptedData = out.toByteArray();
-			return StrUtil.str(decryptedData, charset);
+			return StrUtil.str(out.toByteArray(), charset);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
