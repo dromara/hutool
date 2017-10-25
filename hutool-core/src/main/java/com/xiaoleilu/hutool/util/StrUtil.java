@@ -399,7 +399,8 @@ public class StrUtil {
 	}
 
 	/**
-	 * 是否以指定字符串开头
+	 * 是否以指定字符串开头<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
 	 * 
 	 * @param str 被监测字符串
 	 * @param prefix 开头字符串
@@ -407,6 +408,13 @@ public class StrUtil {
 	 * @return 是否以指定字符串开头
 	 */
 	public static boolean startWith(CharSequence str, CharSequence prefix, boolean isIgnoreCase) {
+		if(null == str || null == prefix) {
+			if(null == str && null == prefix) {
+				return true;
+			}
+			return false;
+		}
+		
 		if (isIgnoreCase) {
 			return str.toString().toLowerCase().startsWith(prefix.toString().toLowerCase());
 		} else {
@@ -432,12 +440,13 @@ public class StrUtil {
 	 * @param prefix 开头字符串
 	 * @return 是否以指定字符串开头
 	 */
-	public static boolean startWithIgnoreCase(String str, String prefix) {
+	public static boolean startWithIgnoreCase(CharSequence str, CharSequence prefix) {
 		return startWith(str, prefix, true);
 	}
 
 	/**
-	 * 给定字符串是否以任何一个字符串开始
+	 * 给定字符串是否以任何一个字符串开始<br>
+	 * 给定字符串和数组为空都返回false
 	 * 
 	 * @param str 给定字符串
 	 * @param prefixes 需要检测的开始字符串
@@ -469,7 +478,8 @@ public class StrUtil {
 	}
 
 	/**
-	 * 是否以指定字符串结尾
+	 * 是否以指定字符串结尾<br>
+	 * 如果给定的字符串和开头字符串都为null则返回true，否则任意一个值为null返回false
 	 * 
 	 * @param str 被监测字符串
 	 * @param suffix 结尾字符串
@@ -477,7 +487,10 @@ public class StrUtil {
 	 * @return 是否以指定字符串结尾
 	 */
 	public static boolean endWith(CharSequence str, CharSequence suffix, boolean isIgnoreCase) {
-		if (isBlank(str) || isBlank(suffix)) {
+		if(null == str || null == suffix) {
+			if(null == str && null == suffix) {
+				return true;
+			}
 			return false;
 		}
 
@@ -506,12 +519,13 @@ public class StrUtil {
 	 * @param suffix 结尾字符串
 	 * @return 是否以指定字符串结尾
 	 */
-	public static boolean endWithIgnoreCase(CharSequence str, String suffix) {
+	public static boolean endWithIgnoreCase(CharSequence str, CharSequence suffix) {
 		return endWith(str, suffix, true);
 	}
 
 	/**
-	 * 给定字符串是否以任何一个字符串结尾
+	 * 给定字符串是否以任何一个字符串结尾<br>
+	 * 给定字符串和数组为空都返回false
 	 * 
 	 * @param str 给定字符串
 	 * @param suffixes 需要检测的结尾字符串
@@ -703,7 +717,7 @@ public class StrUtil {
 	 */
 	public static String removePrefix(CharSequence str, CharSequence prefix) {
 		if (isEmpty(str) || isEmpty(prefix)) {
-			return str.toString();
+			return str(str);
 		}
 
 		final String str2 = str.toString();
@@ -720,13 +734,13 @@ public class StrUtil {
 	 * @param prefix 前缀
 	 * @return 切掉后的字符串，若前缀不是 prefix， 返回原字符串
 	 */
-	public static String removePrefixIgnoreCase(CharSequence str, String prefix) {
+	public static String removePrefixIgnoreCase(CharSequence str, CharSequence prefix) {
 		if (isEmpty(str) || isEmpty(prefix)) {
-			return str.toString();
+			return str(str);
 		}
 
 		final String str2 = str.toString();
-		if (str2.toLowerCase().startsWith(prefix.toLowerCase())) {
+		if (str2.toLowerCase().startsWith(prefix.toString().toLowerCase())) {
 			return subSuf(str2, prefix.length());// 截取后半段
 		}
 		return str2;
@@ -741,7 +755,7 @@ public class StrUtil {
 	 */
 	public static String removeSuffix(CharSequence str, CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
-			return str.toString();
+			return str(str);
 		}
 
 		final String str2 = str.toString();
@@ -771,7 +785,7 @@ public class StrUtil {
 	 */
 	public static String removeSuffixIgnoreCase(CharSequence str, CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
-			return str.toString();
+			return str(str);
 		}
 
 		final String str2 = str.toString();
@@ -779,6 +793,81 @@ public class StrUtil {
 			return subPre(str2, str2.length() - suffix.length());
 		}
 		return str2;
+	}
+	
+	/**
+	 * 去除两边的指定字符串
+	 * 
+	 * @param str 被处理的字符串
+	 * @param prefixOrSuffix 前缀或后缀
+	 * @return 处理后的字符串
+	 * @since 3.1.2
+	 */
+	public static String strip(CharSequence str, CharSequence prefixOrSuffix) {
+		return strip(str, prefixOrSuffix, prefixOrSuffix);
+	}
+	
+	/**
+	 * 去除两边的指定字符串
+	 * 
+	 * @param str 被处理的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 处理后的字符串
+	 * @since 3.1.2
+	 */
+	public static String strip(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		int from = 0;
+		int to = str.length();
+		
+		String str2 = str.toString();
+		if(startWith(str2, prefix)) {
+			from = prefix.length();
+		}
+		if(endWith(str2, suffix)) {
+			to -= suffix.length();
+		}
+		return str2.substring(from, to);
+	}
+	/**
+	 * 去除两边的指定字符串，忽略大小写
+	 * 
+	 * @param str 被处理的字符串
+	 * @param prefixOrSuffix 前缀或后缀
+	 * @return 处理后的字符串
+	 * @since 3.1.2
+	 */
+	public static String stripIgnoreCase(CharSequence str, CharSequence prefixOrSuffix) {
+		return stripIgnoreCase(str, prefixOrSuffix, prefixOrSuffix);
+	}
+	
+	/**
+	 * 去除两边的指定字符串，忽略大小写
+	 * 
+	 * @param str 被处理的字符串
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @return 处理后的字符串
+	 * @since 3.1.2
+	 */
+	public static String stripIgnoreCase(CharSequence str, CharSequence prefix, CharSequence suffix) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		int from = 0;
+		int to = str.length();
+		
+		String str2 = str.toString();
+		if(startWithIgnoreCase(str2, prefix)) {
+			from = prefix.length();
+		}
+		if(endWithIgnoreCase(str2, suffix)) {
+			to -= suffix.length();
+		}
+		return str2.substring(from, to);
 	}
 
 	/**
@@ -790,7 +879,7 @@ public class StrUtil {
 	 */
 	public static String addPrefixIfNot(CharSequence str, CharSequence prefix) {
 		if (isEmpty(str) || isEmpty(prefix)) {
-			return str.toString();
+			return str(str);
 		}
 
 		final String str2 = str.toString();
@@ -810,7 +899,7 @@ public class StrUtil {
 	 */
 	public static String addSuffixIfNot(CharSequence str, CharSequence suffix) {
 		if (isEmpty(str) || isEmpty(suffix)) {
-			return str.toString();
+			return str(str);
 		}
 
 		final String str2 = str.toString();
@@ -1041,6 +1130,10 @@ public class StrUtil {
 	 * @since 3.1.1
 	 */
 	public static String subPreGbk(CharSequence str, int len, CharSequence suffix) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		
 		byte b[];
 		int counterOfDoubleByte = 0;
 		b = str.toString().getBytes(CharsetUtil.CHARSET_GBK);
@@ -1622,6 +1715,15 @@ public class StrUtil {
 		}
 		return charset.decode(data).toString();
 	}
+	
+	/**
+	 * {@link CharSequence} 转为字符串，null安全
+	 * @param cs {@link CharSequence}
+	 * @return 字符串
+	 */
+	public static String str(CharSequence cs) {
+		return null == cs ? null : cs.toString();
+	}
 
 	/**
 	 * 字符串转换为byteBuffer
@@ -2190,7 +2292,7 @@ public class StrUtil {
 	 */
 	public static String appendIfMissing(final CharSequence str, final CharSequence suffix, final boolean ignoreCase, final CharSequence... suffixes) {
 		if (str == null || isEmpty(suffix) || endWith(str, suffix, ignoreCase)) {
-			return str.toString();
+			return str(str);
 		}
 		if (suffixes != null && suffixes.length > 0) {
 			for (final CharSequence s : suffixes) {
@@ -2245,7 +2347,7 @@ public class StrUtil {
 	 */
 	public static String prependIfMissing(final CharSequence str, final CharSequence prefix, final boolean ignoreCase, final CharSequence... prefixes) {
 		if (str == null || isEmpty(prefix) || startWith(str, prefix, ignoreCase)) {
-			return str.toString();
+			return str(str);
 		}
 		if (prefixes != null && prefixes.length > 0) {
 			for (final CharSequence s : prefixes) {

@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.util;
 
+import java.math.BigDecimal;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,5 +48,10 @@ public class NumberUtilTest {
 		
 		String format = NumberUtil.decimalFormat(",###", c);
 		Assert.assertEquals("299,792,458", format);
+	}
+	
+	@Test
+	public void equalsTest() {
+		Assert.assertTrue(NumberUtil.equals(new BigDecimal("0.00"), BigDecimal.ZERO));
 	}
 }

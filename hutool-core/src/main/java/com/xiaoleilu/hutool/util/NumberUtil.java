@@ -1082,7 +1082,9 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 比较大小，相等 返回true
+	 * 比较大小，值相等 返回true<br>
+	 * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等<br>
+	 * 此方法判断值相等时忽略精度的，既0.00 == 0
 	 * 
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2
@@ -1091,7 +1093,7 @@ public class NumberUtil {
 	public static boolean equals(BigDecimal bigNum1, BigDecimal bigNum2) {
 		Assert.notNull(bigNum1);
 		Assert.notNull(bigNum2);
-		return bigNum1.equals(bigNum2);
+		return 0 == bigNum1.compareTo(bigNum2);
 	}
 
 	/**

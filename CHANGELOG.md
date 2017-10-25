@@ -30,6 +30,8 @@
 * core包中加入验证码生成
 * 弃用Random类，改为ThreadLocalRandom
 * extra模块中增加MailUtil发送邮件工具（依赖javax.mail）
+* StrUtil增加strip和stripIgnoreCase方法
+* poi模块新增ExcelSaxReader，对大数据量的Excel读取增加支持
 
 ### Bug修复
 * db模块修复Oracle中传入java.util.Date对象无法识别类型问题（默认按照Timestamp处理）（感谢@【杭州】wiley）
@@ -43,6 +45,8 @@
 * 修复Crypto模块中DESede算法密钥生成bug
 * 修复JSON转Bean时在ignoreError模式下类型不匹配时无法忽略问题
 * 修复RSA分组加密中中文导致的问题（pr#47@Github）
+* 修复NumberUtil.equals方法的一个坑（精度不同导致不同）（感谢@【北京】Dull）
+* 修复StrUtil中部分方法判空后返回原值导致的空指针问题
 
 ## 3.1.1
 

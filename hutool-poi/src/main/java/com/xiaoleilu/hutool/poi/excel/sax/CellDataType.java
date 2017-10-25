@@ -51,6 +51,11 @@ public enum CellDataType {
 	 * @return 类型枚举
 	 */
 	public static CellDataType of(String name) {
+		if(null == name) {
+			//默认数字
+			return NUMBER;
+		}
+		
 		if(BOOL.name.equals(name)) {
 			return BOOL;
 		}else if(ERROR.name.equals(name)) {

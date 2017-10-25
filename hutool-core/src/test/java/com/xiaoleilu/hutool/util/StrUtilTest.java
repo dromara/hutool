@@ -59,4 +59,46 @@ public class StrUtilTest {
 		String result = StrUtil.format(template, Dict.create().set("name", "张三").set("phone", "13888881111"));
 		Assert.assertEquals("你好，我是张三，我的电话是：13888881111", result);
 	}
+	
+	@Test
+	public void stripTest() {
+		String str = "abcd123";
+		String strip = StrUtil.strip(str, "ab", "23");
+		Assert.assertEquals("cd1", strip);
+		
+		str = "abcd123";
+		strip = StrUtil.strip(str, "ab", "");
+		Assert.assertEquals("cd123", strip);
+		
+		str = "abcd123";
+		strip = StrUtil.strip(str, null, "");
+		Assert.assertEquals("abcd123", strip);
+		
+		str = "abcd123";
+		strip = StrUtil.strip(str, null, "567");
+		Assert.assertEquals("abcd123", strip);
+	}
+	
+	@Test
+	public void stripIgnoreCaseTest() {
+		String str = "abcd123";
+		String strip = StrUtil.stripIgnoreCase(str, "Ab", "23");
+		Assert.assertEquals("cd1", strip);
+		
+		str = "abcd123";
+		strip = StrUtil.stripIgnoreCase(str, "AB", "");
+		Assert.assertEquals("cd123", strip);
+		
+		str = "abcd123";
+		strip = StrUtil.stripIgnoreCase(str, "ab", "");
+		Assert.assertEquals("cd123", strip);
+		
+		str = "abcd123";
+		strip = StrUtil.stripIgnoreCase(str, null, "");
+		Assert.assertEquals("abcd123", strip);
+		
+		str = "abcd123";
+		strip = StrUtil.stripIgnoreCase(str, null, "567");
+		Assert.assertEquals("abcd123", strip);
+	}
 }
