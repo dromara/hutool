@@ -55,9 +55,9 @@ import com.xiaoleilu.hutool.util.URLUtil;
 public final class FileUtil {
 
 	/** The Unix separator character. */
-	private static final char UNIX_SEPARATOR = '/';
+	private static final char UNIX_SEPARATOR = StrUtil.C_SLASH;
 	/** The Windows separator character. */
-	private static final char WINDOWS_SEPARATOR = '\\';
+	private static final char WINDOWS_SEPARATOR = StrUtil.C_BACKSLASH;
 
 	/** Class文件扩展名 */
 	public static final String CLASS_EXT = ".class";
@@ -75,7 +75,7 @@ public final class FileUtil {
 	 * @since 3.0.9
 	 */
 	public static boolean isWindows() {
-		return '\\' == File.separatorChar;
+		return WINDOWS_SEPARATOR == File.separatorChar;
 	}
 
 	/**
@@ -89,6 +89,7 @@ public final class FileUtil {
 		if (path == null) {
 			return null;
 		}
+		
 		path = getAbsolutePath(path);
 
 		File file = file(path);
@@ -156,6 +157,19 @@ public final class FileUtil {
 	public static boolean isDirEmpty(File dir) {
 		return isDirEmpty(dir.toPath());
 	}
+	
+	/**
+	 * 递归遍历目录以及子目录中的所有文件<br>
+	 * 如果提供file为文件，直接返回过滤结果
+	 * 
+	 * @param path 当前遍历文件或目录的路径
+	 * @param fileFilter 文件过滤规则对象，选择要保留的文件，只对文件有效，不过滤目录
+	 * @return 文件列表
+	 * @since 3.2.0
+	 */
+	public static List<File> loopFiles(String path, FileFilter fileFilter) {
+		return loopFiles(file(path), fileFilter);
+	}
 
 	/**
 	 * 递归遍历目录以及子目录中的所有文件<br>
@@ -185,6 +199,17 @@ public final class FileUtil {
 
 		return fileList;
 	}
+	
+	/**
+	 * 递归遍历目录以及子目录中的所有文件
+	 * 
+	 * @param path 当前遍历文件或目录的路径
+	 * @return 文件列表
+	 * @since 3.2.0
+	 */
+	public static List<File> loopFiles(String path) {
+		return loopFiles(file(path));
+	}
 
 	/**
 	 * 递归遍历目录以及子目录中的所有文件
@@ -208,12 +233,8 @@ public final class FileUtil {
 		if (path == null) {
 			return null;
 		}
-		path = getAbsolutePath(path);
-		if (false == path.endsWith(String.valueOf(UNIX_SEPARATOR))) {
-			path = path + UNIX_SEPARATOR;
-		}
-
 		List<String> paths = new ArrayList<String>();
+		
 		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
 		if (index == -1) {
 			// 普通目录路径
@@ -224,6 +245,11 @@ public final class FileUtil {
 				}
 			}
 		} else {
+			//jar文件
+			path = getAbsolutePath(path);
+			if (false == path.endsWith(String.valueOf(UNIX_SEPARATOR))) {
+				path = path + UNIX_SEPARATOR;
+			}
 			// jar文件中的路径
 			index = index + FileUtil.JAR_FILE_EXT.length();
 			JarFile jarFile = null;
@@ -881,8 +907,7 @@ public final class FileUtil {
 			path = StrUtil.EMPTY;
 		} else {
 			path = normalize(path);
-
-			if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:/.*")) {
+			if (isAbsolutePath(path)) {
 				// 给定的路径已经是绝对路径了
 				return path;
 			}
@@ -896,15 +921,16 @@ public final class FileUtil {
 		final URL url = ClassUtil.getResourceUrl(path, baseClass);
 		if (null != url) {
 			// since 3.0.8 解决中文或空格路径被编码的问题
-			return URLUtil.getDecodedPath(url);
+			path = URLUtil.getDecodedPath(url);
 		} else {
 			// 如果资源不存在，则返回一个拼接的资源绝对路径
 			final String classPath = ClassUtil.getClassPath();
 			if (null == classPath) {
 				throw new NullPointerException("ClassPath is null !");
 			}
-			return classPath.concat(path);
+			path = classPath.concat(path);
 		}
+		return normalize(path);
 	}
 
 	/**
@@ -945,6 +971,10 @@ public final class FileUtil {
 	 * @return 是否已经是绝对路径
 	 */
 	public static boolean isAbsolutePath(String path) {
+		if(StrUtil.isEmpty(path)) {
+			return false;
+		}
+		
 		if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:/.*")) {
 			// 给定的路径已经是绝对路径了
 			return true;
@@ -1153,14 +1183,23 @@ public final class FileUtil {
 		if (path == null) {
 			return null;
 		}
+		//统一使用斜杠
 		String pathToUse = path.replaceAll("[/\\\\]{1,}", "/").trim();
 
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		String prefix = "";
 		if (prefixIndex > -1) {
+			//可能Windows风格路径
 			prefix = pathToUse.substring(0, prefixIndex + 1);
+			if(StrUtil.startWith(prefix, StrUtil.C_SLASH)) {
+				//去除类似于/C:这类路径开头的斜杠
+				prefix = prefix.substring(1);
+			}
 			if (false == prefix.contains("/")) {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
+			}else {
+				//如果前缀中包含/,说明非Windows风格path
+				prefix = StrUtil.EMPTY;
 			}
 		}
 		if (pathToUse.startsWith(StrUtil.SLASH)) {

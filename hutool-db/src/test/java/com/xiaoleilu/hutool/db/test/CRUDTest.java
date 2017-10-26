@@ -52,12 +52,9 @@ public class CRUDTest {
 	}
 	
 	@Test
-	@Ignore
 	public void findTest() throws SQLException {
 		List<Entity> find = runner.find(CollectionUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
-		for (Entity entity : find) {
-			Console.log(entity);
-		}
+		Assert.assertFalse(find.isEmpty());
 	}
 	
 	@Test

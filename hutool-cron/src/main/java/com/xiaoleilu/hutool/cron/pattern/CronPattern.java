@@ -19,7 +19,6 @@ import com.xiaoleilu.hutool.cron.pattern.parser.MonthValueParser;
 import com.xiaoleilu.hutool.cron.pattern.parser.SecondValueParser;
 import com.xiaoleilu.hutool.cron.pattern.parser.ValueParser;
 import com.xiaoleilu.hutool.cron.pattern.parser.YearValueParser;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -288,9 +287,4 @@ public class CronPattern {
 		matcherSize++;
 	}
 	// -------------------------------------------------------------------------------------- Private method end
-
-	public static void main(String[] args) {
-		CronPattern c = new CronPattern("1-8/2,2-10/3 * * * *");
-		Console.log(c.minuteMatchers);
-	}
 }

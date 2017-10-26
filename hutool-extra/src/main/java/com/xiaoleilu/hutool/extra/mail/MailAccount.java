@@ -55,48 +55,54 @@ public class MailAccount implements Serializable {
 		return host;
 	}
 
-	public void setHost(String host) {
+	public MailAccount setHost(String host) {
 		this.host = host;
+		return this;
 	}
 
 	public String getPort() {
 		return port;
 	}
 
-	public void setPort(String port) {
+	public MailAccount setPort(String port) {
 		this.port = port;
+		return this;
 	}
 
 	public boolean isAuth() {
 		return auth;
 	}
 
-	public void setAuth(boolean isAuth) {
+	public MailAccount setAuth(boolean isAuth) {
 		this.auth = isAuth;
+		return this;
 	}
 
 	public String getUser() {
 		return user;
 	}
 
-	public void setUser(String user) {
+	public MailAccount setUser(String user) {
 		this.user = user;
+		return this;
 	}
 
 	public String getPass() {
 		return pass;
 	}
 
-	public void setPass(String pass) {
+	public MailAccount setPass(String pass) {
 		this.pass = pass;
+		return this;
 	}
 
 	public String getFrom() {
 		return from;
 	}
 
-	public void setFrom(String from) {
+	public MailAccount setFrom(String from) {
 		this.from = from;
+		return this;
 	}
 
 	@Override

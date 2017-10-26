@@ -1,10 +1,10 @@
 package com.xiaoleilu.hutool.aop.test;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.aop.ProxyUtil;
 import com.xiaoleilu.hutool.aop.aspects.TimeIntervalAspect;
-import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * AOP模块单元测试
@@ -16,18 +16,19 @@ public class AopTest {
 	@Test
 	public void aopTest(){
 		Animal cat = ProxyUtil.proxy(new Cat(), TimeIntervalAspect.class);
-		cat.eat();
+		String result = cat.eat();
+		Assert.assertEquals("猫吃鱼", result);
 	}
 	
 	static interface Animal{
-		void eat();
+		String eat();
 	}
 	
 	static class Cat implements Animal{
 
 		@Override
-		public void eat() {
-			Console.log("猫吃鱼");
+		public String eat() {
+			return "猫吃鱼";
 		}
 		
 	}

@@ -3,12 +3,12 @@ package com.xiaoleilu.hutool.io;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.file.LineSeparator;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
@@ -21,8 +21,10 @@ public class FileUtilTest {
 	
 	@Test
 	public void getAbsolutePathTest(){
-		String absolutePath = FileUtil.getAbsolutePath("aaa");
+		String absolutePath = FileUtil.getAbsolutePath("classpath:aaa");
+		String absolutePath2 = FileUtil.getAbsolutePath(absolutePath);
 		Assert.assertNotNull(absolutePath);
+		Assert.assertEquals(absolutePath, absolutePath2);
 	}
 	
 	@Test
@@ -95,6 +97,16 @@ public class FileUtilTest {
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
 		Assert.assertEquals("~/bar/", FileUtil.normalize("~/foo/../bar/"));
 		Assert.assertEquals("bar", FileUtil.normalize("~/../bar"));
+		
+		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
+	}
+	
+	@Test
+	public void doubleNormalizeTest() {
+		String normalize = FileUtil.normalize("/aa/b:/c");
+		String normalize2 = FileUtil.normalize(normalize);
+		Assert.assertEquals("/aa/b:/c", normalize);
+		Assert.assertEquals(normalize, normalize2);
 	}
 	
 	@Test
@@ -131,5 +143,17 @@ public class FileUtilTest {
 		Assert.assertEquals("bbb", ele.toString());
 		ele = FileUtil.getPathEle(path, -6);
 		Assert.assertEquals("aaa", ele.toString());
+	}
+	
+	@Test
+	public void listFileNamesTest() {
+		List<String> names = FileUtil.listFileNames("classpath:");
+		Assert.assertTrue(names.contains("hutool.jpg"));
+		
+		names = FileUtil.listFileNames("");
+		Assert.assertTrue(names.contains("hutool.jpg"));
+		
+		names = FileUtil.listFileNames(".");
+		Assert.assertTrue(names.contains("hutool.jpg"));
 	}
 }

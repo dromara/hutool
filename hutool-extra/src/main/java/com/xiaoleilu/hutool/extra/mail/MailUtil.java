@@ -1,23 +1,9 @@
 package com.xiaoleilu.hutool.extra.mail;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.LogFactory;
+import com.xiaoleilu.hutool.collection.CollUtil;
 
 /**
  * 邮件工具类，基于javax.mail封装
@@ -26,7 +12,6 @@ import com.xiaoleilu.hutool.log.LogFactory;
  * @since 3.1.2
  */
 public class MailUtil {
-	private static Log log = LogFactory.get();
 
 	/**
 	 * 发送邮件给单收件人
@@ -35,11 +20,10 @@ public class MailUtil {
 	 * @param subject 标题
 	 * @param content 正文
 	 * @param isHtml 是否为HTML
+	 * @param files 附件列表
 	 */
-	public static void send(String to, String subject, String content, boolean isHtml) {
-		List<String> list = new ArrayList<String>();
-		list.add(to);
-		send(list, subject, content, isHtml);
+	public static void send(String to, String subject, String content, boolean isHtml, File... files) {
+		send(CollUtil.newArrayList(to), subject, content, isHtml, files);
 	}
 
 	/**
@@ -49,13 +33,10 @@ public class MailUtil {
 	 * @param subject 标题
 	 * @param content 正文
 	 * @param isHtml 是否为HTML
+	 * @param files 附件列表
 	 */
-	public static void send(Collection<String> tos, String subject, String content, boolean isHtml) {
-		try {
-			send(GlobalMailAccount.INSTANCE.getAccount(), tos, subject, content, isHtml);
-		} catch (MessagingException e) {
-			log.error("Send mail error!", e);
-		}
+	public static void send(Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
+		send(GlobalMailAccount.INSTANCE.getAccount(), tos, subject, content, isHtml, files);
 	}
 
 	/**
@@ -66,42 +47,15 @@ public class MailUtil {
 	 * @param subject 标题
 	 * @param content 正文
 	 * @param isHtml 是否为HTML格式
-	 * @throws MessagingException
+	 * @param files 附件列表
 	 */
-	public static void send(MailAccount mailAccount, Collection<String> tos, String subject, String content, boolean isHtml) throws MessagingException {
-		// 认证登录
-		final Session session = createSession(mailAccount);
-
-		final Message msg = new MimeMessage(session);
-		msg.setFrom(new InternetAddress(mailAccount.getFrom()));
-		msg.setSubject(subject);
-		msg.setSentDate(new Date());
-
-		if (isHtml) {
-			final BodyPart html = new MimeBodyPart();
-			html.setContent(content, "text/html; charset=utf-8");
-			
-			final Multipart mainPart = new MimeMultipart();
-			mainPart.addBodyPart(html);
-		} else {
-			msg.setText(content);
-		}
-
-		for (String to : tos) {
-			msg.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(to));
-			Transport.send(msg);
-			log.debug("Send mail to {} successed.", to);
-		}
-	}
-
-	/**
-	 * 创建邮件会话
-	 * 
-	 * @param mailAccount 邮件帐号信息
-	 * @return 邮件会话 {@link Session}
-	 */
-	public static Session createSession(final MailAccount mailAccount) {
-		return Session.getDefaultInstance(mailAccount.getSmtpProps(), //
-				mailAccount.isAuth() ? new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass()) : null);
+	public static void send(MailAccount mailAccount, Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
+		Mail.create(mailAccount)//
+				.to(tos.toArray(new String[tos.size()]))//
+				.setTitle(subject)//
+				.setContent(content)//
+				.setHtml(isHtml)//
+				.setFiles(files)//
+				.send();
 	}
 }
