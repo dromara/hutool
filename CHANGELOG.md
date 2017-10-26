@@ -3,6 +3,11 @@
 ## 3.1.2
 
 ### 新特性
+### Bug修复
+
+## 3.1.2
+
+### 新特性
 * ArrayUtil增加containsIgnoreCase和indexOfIgnoreCase方法
 * DbUtil增加toSqlDate和toSqlTimestamp和setShowSqlGlobal方法
 * RuntimeUtil增加可选编码的方法
