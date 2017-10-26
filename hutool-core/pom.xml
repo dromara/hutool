@@ -13,7 +13,7 @@
 	<artifactId>hutool-core</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool核心</description>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -22,4 +22,5 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
+
 </project>
