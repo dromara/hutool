@@ -38,6 +38,8 @@ import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
+import com.xiaoleilu.hutool.poi.excel.sax.Excel07SaxReader;
+import com.xiaoleilu.hutool.poi.excel.sax.RowHandler;
 import com.xiaoleilu.hutool.poi.exceptions.POIException;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -49,7 +51,48 @@ import com.xiaoleilu.hutool.util.StrUtil;
  *
  */
 public class ExcelUtil {
-	
+
+	// ------------------------------------------------------------------------------------ Read by Sax start
+	/**
+	 * Sax方式读取Excel07
+	 * 
+	 * @param in 输入流
+	 * @param sheetIndex Sheet索引，-1表示全部Sheet, 0表示第一个Sheet
+	 * @param rowHandler 行处理器
+	 * @return {@link Excel07SaxReader}
+	 * @since 3.2.0
+	 */
+	public static Excel07SaxReader read07BySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
+		return new Excel07SaxReader(rowHandler).read(in, sheetIndex);
+	}
+
+	/**
+	 * Sax方式读取Excel07
+	 * 
+	 * @param file 文件
+	 * @param sheetIndex Sheet索引，-1表示全部Sheet, 0表示第一个Sheet
+	 * @param rowHandler 行处理器
+	 * @return {@link Excel07SaxReader}
+	 * @since 3.2.0
+	 */
+	public static Excel07SaxReader read07BySax(File file, int sheetIndex, RowHandler rowHandler) {
+		return new Excel07SaxReader(rowHandler).read(file, sheetIndex);
+	}
+
+	/**
+	 * Sax方式读取Excel07
+	 * 
+	 * @param path 路径
+	 * @param sheetIndex Sheet索引，-1表示全部Sheet, 0表示第一个Sheet
+	 * @param rowHandler 行处理器
+	 * @return {@link Excel07SaxReader}
+	 * @since 3.2.0
+	 */
+	public static Excel07SaxReader read07BySax(String path, int sheetIndex, RowHandler rowHandler) {
+		return new Excel07SaxReader(rowHandler).read(path, sheetIndex);
+	}
+	// ------------------------------------------------------------------------------------ Read by Sax end
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet
@@ -72,7 +115,7 @@ public class ExcelUtil {
 	public static ExcelReader getReader(File bookFile) {
 		return getReader(bookFile, 0);
 	}
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容
 	 * 
@@ -139,7 +182,7 @@ public class ExcelUtil {
 	public static ExcelReader getReader(InputStream bookStream, String sheetName) {
 		return new ExcelReader(bookStream, sheetName);
 	}
-	
+
 	/**
 	 * 加载工作簿
 	 * 
@@ -278,21 +321,21 @@ public class ExcelUtil {
 
 		Object value;
 		switch (cellType) {
-			case NUMERIC:
-				value = getNumericValue(cell);
-				break;
-			case BOOLEAN:
-				value = cell.getBooleanCellValue();
-				break;
-			case FORMULA:
-				// 遇到公式时查找公式结果类型
-				value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), cellEditor);
-				break;
-			case BLANK:
-				value = StrUtil.EMPTY;
-				break;
-			default:
-				value = cell.getStringCellValue();
+		case NUMERIC:
+			value = getNumericValue(cell);
+			break;
+		case BOOLEAN:
+			value = cell.getBooleanCellValue();
+			break;
+		case FORMULA:
+			// 遇到公式时查找公式结果类型
+			value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), cellEditor);
+			break;
+		case BLANK:
+			value = StrUtil.EMPTY;
+			break;
+		default:
+			value = cell.getStringCellValue();
 		}
 
 		return null == cellEditor ? value : cellEditor.edit(cell, value);
@@ -410,7 +453,7 @@ public class ExcelUtil {
 
 		final short formatIndex = style.getDataFormat();
 		final String format = style.getDataFormatString();
-		
+
 		// 判断是否为日期
 		if (isDateType(formatIndex, format)) {
 			return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
@@ -428,6 +471,7 @@ public class ExcelUtil {
 	/**
 	 * 是否为日期格式<br>
 	 * 判断方式：
+	 * 
 	 * <pre>
 	 * 1、指定序号
 	 * 2、org.apache.poi.ss.usermodel.DateUtil.isADateFormat方法判定
@@ -451,7 +495,7 @@ public class ExcelUtil {
 		if (org.apache.poi.ss.usermodel.DateUtil.isADateFormat(formatIndex, format)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 	// -------------------------------------------------------------------------------------------------------------- Private method end
