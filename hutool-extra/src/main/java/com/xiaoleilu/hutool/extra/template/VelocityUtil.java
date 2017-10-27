@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.extra;
+package com.xiaoleilu.hutool.extra.template;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

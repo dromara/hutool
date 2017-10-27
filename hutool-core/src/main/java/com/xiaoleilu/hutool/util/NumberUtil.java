@@ -49,7 +49,7 @@ public class NumberUtil {
 	public static double add(double v1, double v2) {
 		return add(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的加法运算
 	 * 
@@ -59,9 +59,9 @@ public class NumberUtil {
 	 * @since 3.1.1
 	 */
 	public static double add(Double v1, Double v2) {
-		return add((Number)v1, (Number)v2).doubleValue();
+		return add((Number) v1, (Number) v2).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的加法运算
 	 * 
@@ -110,7 +110,7 @@ public class NumberUtil {
 	public static double sub(double v1, double v2) {
 		return sub(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的减法运算
 	 * 
@@ -119,9 +119,9 @@ public class NumberUtil {
 	 * @return 差
 	 */
 	public static double sub(Double v1, Double v2) {
-		return sub((Number)v1, (Number)v2).doubleValue();
+		return sub((Number) v1, (Number) v2).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的减法运算
 	 * 
@@ -170,7 +170,7 @@ public class NumberUtil {
 	public static double mul(double v1, double v2) {
 		return mul(Double.toString(v1), Double.toString(v2)).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的乘法运算
 	 * 
@@ -179,9 +179,9 @@ public class NumberUtil {
 	 * @return 积
 	 */
 	public static double mul(Double v1, Double v2) {
-		return mul((Number)v1, (Number)v2).doubleValue();
+		return mul((Number) v1, (Number) v2).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的乘法运算
 	 * 
@@ -229,7 +229,7 @@ public class NumberUtil {
 	public static double div(double v1, double v2) {
 		return div(v1, v2, DEFAUT_DIV_SCALE);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
 	 * 
@@ -240,7 +240,7 @@ public class NumberUtil {
 	public static double div(Double v1, Double v2) {
 		return div(v1, v2, DEFAUT_DIV_SCALE);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况的时候,精确到小数点后10位,后面的四舍五入
 	 * 
@@ -275,7 +275,7 @@ public class NumberUtil {
 	public static double div(double v1, double v2, int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度,后面的四舍五入
 	 * 
@@ -287,7 +287,7 @@ public class NumberUtil {
 	public static double div(Double v1, Double v2, int scale) {
 		return div(v1, v2, scale, RoundingMode.HALF_UP);
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度,后面的四舍五入
 	 * 
@@ -325,7 +325,7 @@ public class NumberUtil {
 	public static double div(double v1, double v2, int scale, RoundingMode roundingMode) {
 		return div(Double.toString(v1), Double.toString(v2), scale, roundingMode).doubleValue();
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
 	 * 
@@ -336,9 +336,9 @@ public class NumberUtil {
 	 * @return 两个参数的商
 	 */
 	public static double div(Double v1, Double v2, int scale, RoundingMode roundingMode) {
-		return div((Number)v1, (Number)v2, scale, roundingMode).doubleValue();
+		return div((Number) v1, (Number) v2, scale, roundingMode).doubleValue();
 	}
-	
+
 	/**
 	 * 提供(相对)精确的除法运算,当发生除不尽的情况时,由scale指定精确度
 	 * 
@@ -384,7 +384,7 @@ public class NumberUtil {
 		}
 		return v1.divide(v2, scale, roundingMode);
 	}
-	
+
 	// ------------------------------------------------------------------------------------------- round
 	/**
 	 * 保留固定位数小数<br>
@@ -1189,9 +1189,10 @@ public class NumberUtil {
 
 		return decimal == null ? BigDecimal.ZERO : decimal;
 	}
-	
+
 	/**
 	 * 如果给定值为0，返回1，否则返回原值
+	 * 
 	 * @param value 值
 	 * @return 1或非0值
 	 * @since 3.1.2
@@ -1199,7 +1200,7 @@ public class NumberUtil {
 	public static int zero2One(int value) {
 		return 0 == value ? 1 : value;
 	}
-	
+
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
