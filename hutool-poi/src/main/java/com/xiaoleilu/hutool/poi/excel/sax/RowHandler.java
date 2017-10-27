@@ -13,7 +13,7 @@ public interface RowHandler {
 	 * 处理一行数据
 	 * @param sheetIndex 当前Sheet序号
 	 * @param rowIndex 当前行号
-	 * @param rowlist 行数据列表
+	 * @param rowList 行数据列表
 	 */
-	void handle(int sheetIndex, int rowIndex, List<String> rowlist);
+	void handle(int sheetIndex, int rowIndex, List<String> rowList);
 }

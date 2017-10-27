@@ -8,6 +8,7 @@
 * BeetlUtil增加更多简化方法
 * extra模块中模板相关工具类移入template包中
 * ScriptUtil增加eval方法，执行脚本快捷方法
+* 增加Excel03SaxReader用于03格式的Excel通过Sax方式读取
 
 ### Bug修复
 * 修复FileUtil.normalize导致的路径修复问题
