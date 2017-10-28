@@ -29,8 +29,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import com.xiaoleilu.hutool.io.FileUtil;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.poi.exceptions.POIException;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * Excel2003格式的Sax方式读取器<br>
@@ -41,18 +41,16 @@ import com.xiaoleilu.hutool.poi.exceptions.POIException;
  */
 public class Excel03SaxReader implements HSSFListener {
 
-	private int minColumns = -1;
-
 	private POIFSFileSystem fs;
 
+	private int minColumns = -1;
 	private int lastRowNumber;
-
 	private int lastColumnNumber;
 
-	/** Should we output the formula, or the value it has? */
+	/** 如果为公式，true表示输出公式计算后的结果值，false表示输出公式本身 */
 	private boolean outputFormulaValues = true;
 
-	/** For parsing Formulas */
+	/** 用于解析公式 */
 	private SheetRecordCollectingListener workbookBuildingListener;
 
 	// excel2003工作薄
@@ -62,9 +60,6 @@ public class Excel03SaxReader implements HSSFListener {
 	private SSTRecord sstRecord;
 
 	private FormatTrackingHSSFListener formatListener;
-
-	// 表索引
-	private int sheetIndex = -1;
 
 	private BoundSheetRecord[] orderedBSRs;
 
@@ -81,9 +76,10 @@ public class Excel03SaxReader implements HSSFListener {
 	private int curRow = 0;
 
 	// 存储行记录的容器
-	private List<String> rowlist = new ArrayList<String>();
+	private List<String> rowCellList = new ArrayList<String>();
 
-	@SuppressWarnings("unused")
+	// 表索引
+	private int sheetIndex = -1;
 	private String sheetName;
 
 	private RowHandler rowHandler;
@@ -95,6 +91,14 @@ public class Excel03SaxReader implements HSSFListener {
 	 */
 	public Excel03SaxReader(RowHandler rowHandler) {
 		this.rowHandler = rowHandler;
+	}
+	
+	/**
+	 * 获取Sheet名
+	 * @return Sheet名
+	 */
+	public String getSheetName() {
+		return this.sheetName;
 	}
 
 	/**
@@ -168,14 +172,14 @@ public class Excel03SaxReader implements HSSFListener {
 			thisRow = brec.getRow();
 			thisColumn = brec.getColumn();
 			thisStr = "";
-			rowlist.add(thisColumn, thisStr);
+			rowCellList.add(thisColumn, thisStr);
 			break;
 		case BoolErrRecord.sid: // 单元格为布尔类型
 			BoolErrRecord berec = (BoolErrRecord) record;
 			thisRow = berec.getRow();
 			thisColumn = berec.getColumn();
 			thisStr = berec.getBooleanValue() + "";
-			rowlist.add(thisColumn, thisStr);
+			rowCellList.add(thisColumn, thisStr);
 			break;
 
 		case FormulaRecord.sid: // 单元格为公式类型
@@ -195,7 +199,7 @@ public class Excel03SaxReader implements HSSFListener {
 			} else {
 				thisStr = '"' + HSSFFormulaParser.toFormulaString(stubWorkbook, frec.getParsedExpression()) + '"';
 			}
-			rowlist.add(thisColumn, thisStr);
+			rowCellList.add(thisColumn, thisStr);
 			break;
 		case StringRecord.sid:// 单元格中公式的字符串
 			if (outputNextStringRecord) {
@@ -211,30 +215,30 @@ public class Excel03SaxReader implements HSSFListener {
 			LabelRecord lrec = (LabelRecord) record;
 			curRow = thisRow = lrec.getRow();
 			thisColumn = lrec.getColumn();
-			value = lrec.getValue().trim();
-			value = value.equals("") ? " " : value;
-			this.rowlist.add(thisColumn, value);
+			value = lrec.getValue();
+			value = StrUtil.isBlank(value) ? StrUtil.SPACE : value.trim();
+			this.rowCellList.add(thisColumn, value);
 			break;
 		case LabelSSTRecord.sid: // 单元格为字符串类型
 			LabelSSTRecord lsrec = (LabelSSTRecord) record;
 			curRow = thisRow = lsrec.getRow();
 			thisColumn = lsrec.getColumn();
 			if (sstRecord == null) {
-				rowlist.add(thisColumn, " ");
+				rowCellList.add(thisColumn, StrUtil.SPACE);
 			} else {
-				value = sstRecord.getString(lsrec.getSSTIndex()).toString().trim();
-				value = value.equals("") ? " " : value;
-				rowlist.add(thisColumn, value);
+				value = sstRecord.getString(lsrec.getSSTIndex()).toString();
+				value = StrUtil.isBlank(value) ? StrUtil.SPACE : value.trim();
+				rowCellList.add(thisColumn, value);
 			}
 			break;
 		case NumberRecord.sid: // 单元格为数字类型
 			NumberRecord numrec = (NumberRecord) record;
 			curRow = thisRow = numrec.getRow();
 			thisColumn = numrec.getColumn();
-			value = formatListener.formatNumberDateCell(numrec).trim();
-			value = value.equals("") ? " " : value;
+			value = formatListener.formatNumberDateCell(numrec);
+			value = StrUtil.isBlank(value) ? StrUtil.SPACE : value.trim();
 			// 向容器加入列值
-			rowlist.add(thisColumn, value);
+			rowCellList.add(thisColumn, value);
 			break;
 		default:
 			break;
@@ -250,14 +254,16 @@ public class Excel03SaxReader implements HSSFListener {
 			MissingCellDummyRecord mc = (MissingCellDummyRecord) record;
 			curRow = thisRow = mc.getRow();
 			thisColumn = mc.getColumn();
-			rowlist.add(thisColumn, " ");
+			rowCellList.add(thisColumn, StrUtil.SPACE);
 		}
 
 		// 更新行和列的值
-		if (thisRow > -1)
+		if (thisRow > -1) {
 			lastRowNumber = thisRow;
-		if (thisColumn > -1)
+		}
+		if (thisColumn > -1) {
 			lastColumnNumber = thisColumn;
+		}
 
 		// 行结束时的操作
 		if (record instanceof LastCellOfRowDummyRecord) {
@@ -270,23 +276,9 @@ public class Excel03SaxReader implements HSSFListener {
 			lastColumnNumber = -1;
 
 			// 每行结束时， 调用getRows() 方法
-			rowHandler.handle(sheetIndex, curRow, rowlist);
+			rowHandler.handle(sheetIndex, curRow, rowCellList);
 			// 清空容器
-			rowlist.clear();
+			rowCellList.clear();
 		}
 	}
-
-	public static void main(String[] args) {
-		RowHandler rowReader = new RowHandler() {
-
-			@Override
-			public void handle(int sheetIndex, int rowIndex, List<String> rowlist) {
-				Console.log(rowlist);
-			}
-		};
-
-		Excel03SaxReader reader = new Excel03SaxReader(rowReader);
-		reader.read("d:/text.xls");
-	}
-
 }
