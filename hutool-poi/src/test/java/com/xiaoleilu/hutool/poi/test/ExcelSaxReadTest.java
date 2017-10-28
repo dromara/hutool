@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.poi.excel.sax.Excel03SaxReader;
 import com.xiaoleilu.hutool.poi.excel.sax.Excel07SaxReader;
-import com.xiaoleilu.hutool.poi.excel.sax.RowHandler;
+import com.xiaoleilu.hutool.poi.excel.sax.handler.RowHandler;
 
 /**
  * Excel sax方式读取
@@ -19,16 +19,15 @@ public class ExcelSaxReadTest {
 	@Test
 	public void excel07Test() {
 		Excel07SaxReader reader = new Excel07SaxReader(createRowHandler());
-		reader.read("d:/text.xlsx", 0);
+		reader.read("aaa.xlsx", 0);
 	}
 	
 	@Test
 	public void excel03Test() {
 		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
-		reader.read("d:/text.xls", 1);
+		reader.read("aaa.xls", 1);
 		
-		Console.log(reader.getSheetIndex());
-		Console.log(reader.getSheetName());
+		Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
 	}
 	
 	private RowHandler createRowHandler() {

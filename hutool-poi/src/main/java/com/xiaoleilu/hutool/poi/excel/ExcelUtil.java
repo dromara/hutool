@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.hssf.usermodel.HSSFShape;
@@ -39,8 +38,9 @@ import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
+import com.xiaoleilu.hutool.poi.excel.sax.Excel03SaxReader;
 import com.xiaoleilu.hutool.poi.excel.sax.Excel07SaxReader;
-import com.xiaoleilu.hutool.poi.excel.sax.RowHandler;
+import com.xiaoleilu.hutool.poi.excel.sax.handler.RowHandler;
 import com.xiaoleilu.hutool.poi.exceptions.POIException;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -92,8 +92,47 @@ public class ExcelUtil {
 	public static Excel07SaxReader read07BySax(String path, int sheetIndex, RowHandler rowHandler) {
 		return new Excel07SaxReader(rowHandler).read(path, sheetIndex);
 	}
-	// ------------------------------------------------------------------------------------ Read by Sax end
+	
+	/**
+	 * Sax方式读取Excel03
+	 * 
+	 * @param in 输入流
+	 * @param sheetIndex Sheet索引，-1表示全部Sheet, 0表示第一个Sheet
+	 * @param rowHandler 行处理器
+	 * @return {@link Excel07SaxReader}
+	 * @since 3.2.0
+	 */
+	public static Excel03SaxReader read03BySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
+		return new Excel03SaxReader(rowHandler).read(in, sheetIndex);
+	}
 
+	/**
+	 * Sax方式读取Excel03
+	 * 
+	 * @param file 文件
+	 * @param sheetIndex Sheet索引，-1表示全部Sheet, 0表示第一个Sheet
+	 * @param rowHandler 行处理器
+	 * @return {@link Excel03SaxReader}
+	 * @since 3.2.0
+	 */
+	public static Excel03SaxReader read03BySax(File file, int sheetIndex, RowHandler rowHandler) {
+		return new Excel03SaxReader(rowHandler).read(file, sheetIndex);
+	}
+
+	/**
+	 * Sax方式读取Excel03
+	 * 
+	 * @param path 路径
+	 * @param sheetIndex Sheet索引，-1表示全部Sheet, 0表示第一个Sheet
+	 * @param rowHandler 行处理器
+	 * @return {@link Excel03SaxReader}
+	 * @since 3.2.0
+	 */
+	public static Excel03SaxReader read03BySax(String path, int sheetIndex, RowHandler rowHandler) {
+		return new Excel03SaxReader(rowHandler).read(path, sheetIndex);
+	}
+	// ------------------------------------------------------------------------------------ Read by Sax end
+	
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet
@@ -458,31 +497,6 @@ public class ExcelUtil {
 		// 判断是否为日期
 		if (isDateType(formatIndex, format)) {
 			return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
-		}
-
-		// 普通数字
-		if (null != format && format.indexOf('.') < 0) {
-			// 对于无小数部分的数字类型，转为Long
-			return (long) value;
-		} else {
-			return value;
-		}
-	}
-
-	/**
-	 * 获取日期或数字值
-	 * 
-	 * @param value 值
-	 * @param formatIndex 格式序号
-	 * @param format 格式字符串
-	 * @param isUse1904 如果为日期，是否使用1904基准格式
-	 * @return 数字或日期值
-	 * @since 3.2.0
-	 */
-	public static Object getHSSFNumericValue(double value, int formatIndex, String format, boolean isUse1904) {
-		// 判断是否为日期
-		if (isDateType(formatIndex, format)) {
-			return DateUtil.date(HSSFDateUtil.getJavaDate(value, isUse1904));// 使用Hutool的DateTime包装
 		}
 
 		// 普通数字
