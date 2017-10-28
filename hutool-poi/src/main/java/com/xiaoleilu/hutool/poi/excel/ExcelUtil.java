@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.hssf.usermodel.HSSFShape;
@@ -457,6 +458,31 @@ public class ExcelUtil {
 		// 判断是否为日期
 		if (isDateType(formatIndex, format)) {
 			return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
+		}
+
+		// 普通数字
+		if (null != format && format.indexOf('.') < 0) {
+			// 对于无小数部分的数字类型，转为Long
+			return (long) value;
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * 获取日期或数字值
+	 * 
+	 * @param value 值
+	 * @param formatIndex 格式序号
+	 * @param format 格式字符串
+	 * @param isUse1904 如果为日期，是否使用1904基准格式
+	 * @return 数字或日期值
+	 * @since 3.2.0
+	 */
+	public static Object getHSSFNumericValue(double value, int formatIndex, String format, boolean isUse1904) {
+		// 判断是否为日期
+		if (isDateType(formatIndex, format)) {
+			return DateUtil.date(HSSFDateUtil.getJavaDate(value, isUse1904));// 使用Hutool的DateTime包装
 		}
 
 		// 普通数字

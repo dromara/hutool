@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.poi.excel.sax;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,11 +30,12 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 import com.xiaoleilu.hutool.poi.exceptions.POIException;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * Excel2003格式的Sax方式读取器<br>
+ * Excel2003格式的事件-用户模型方式读取器，在Hutool中，统一将此归类为Sax读取<br>
  * 参考：http://www.cnblogs.com/wshsdlau/p/5643862.html
  * 
  * @author looly
@@ -43,44 +45,31 @@ public class Excel03SaxReader implements HSSFListener {
 
 	private POIFSFileSystem fs;
 
-	private int minColumns = -1;
-	private int lastRowNumber;
-	private int lastColumnNumber;
-
 	/** 如果为公式，true表示输出公式计算后的结果值，false表示输出公式本身 */
-	private boolean outputFormulaValues = true;
-
+	private boolean isOutputFormulaValues = true;
+	
 	/** 用于解析公式 */
 	private SheetRecordCollectingListener workbookBuildingListener;
-
-	// excel2003工作薄
+	/** 子工作簿，用于公式计算 */
 	private HSSFWorkbook stubWorkbook;
 
-	// Records we pick up as we process
+	/** 静态字符串表 */
 	private SSTRecord sstRecord;
 
 	private FormatTrackingHSSFListener formatListener;
 
-	private BoundSheetRecord[] orderedBSRs;
-
+	/** Sheet边界记录，此Record中可以获得Sheet名 */
 	private List<BoundSheetRecord> boundSheetRecords = new ArrayList<>();
 
-	// For handling formulas with string results
-	private int nextRow;
-
-	private int nextColumn;
-
-	private boolean outputNextStringRecord;
-
-	// 当前行
-	private int curRow = 0;
+	private boolean isOutputNextStringRecord;
 
 	// 存储行记录的容器
-	private List<String> rowCellList = new ArrayList<String>();
+	private List<Object> rowCellList = new ArrayList<>();
 
-	// 表索引
+	/** 自定义需要处理的sheet编号，如果-1表示处理所有sheet */
 	private int sheetIndex = -1;
-	private String sheetName;
+	// 当前表索引
+	private int curSheetIndex = -1;
 
 	private RowHandler rowHandler;
 
@@ -92,36 +81,44 @@ public class Excel03SaxReader implements HSSFListener {
 	public Excel03SaxReader(RowHandler rowHandler) {
 		this.rowHandler = rowHandler;
 	}
-	
+
+	// ------------------------------------------------------------------------------ Read start
 	/**
-	 * 获取Sheet名
-	 * @return Sheet名
+	 * 遍历excel下所有的sheet
+	 * 
+	 * @param path 文件路径，可以为相对ClassPath路径，也可以是绝对路径
+	 * @param sheetIndex sheet序列号，如果为-1表示处理所有sheet
+	 * @throws POIException IO异常包装
 	 */
-	public String getSheetName() {
-		return this.sheetName;
+	public void read(String path, int sheetIndex) throws POIException {
+		read(FileUtil.getInputStream(path), sheetIndex);
 	}
 
 	/**
 	 * 遍历excel下所有的sheet
 	 * 
-	 * @param path 文件
+	 * @param file 文件
+	 * @param sheetIndex sheet序列号，如果为-1表示处理所有sheet
+	 * @throws POIException IO异常包装
 	 */
-	public void read(String path) {
-		read(FileUtil.getInputStream(path));
+	public void read(File file, int sheetIndex) throws POIException {
+		read(FileUtil.getInputStream(file), sheetIndex);
 	}
 
 	/**
 	 * 遍历excel下所有的sheet
 	 * 
-	 * @throws IOException
+	 * @param excelStream Excel文件流
+	 * @param sheetIndex sheet序列号，如果为-1表示处理所有sheet
+	 * @throws POIException IO异常包装
 	 */
-	public void read(InputStream excelStream) {
+	public void read(InputStream excelStream, int sheetIndex) throws POIException {
+		this.sheetIndex = sheetIndex;
 		try {
 			this.fs = new POIFSFileSystem(excelStream);
-			MissingRecordAwareHSSFListener listener = new MissingRecordAwareHSSFListener(this);
-			formatListener = new FormatTrackingHSSFListener(listener);
-			HSSFRequest request = new HSSFRequest();
-			if (outputFormulaValues) {
+			formatListener = new FormatTrackingHSSFListener(new MissingRecordAwareHSSFListener(this));
+			final HSSFRequest request = new HSSFRequest();
+			if (isOutputFormulaValues) {
 				request.addListenerForAllRecords(formatListener);
 			} else {
 				workbookBuildingListener = new SheetRecordCollectingListener(formatListener);
@@ -133,152 +130,144 @@ public class Excel03SaxReader implements HSSFListener {
 			throw new POIException(e);
 		}
 	}
+	// ------------------------------------------------------------------------------ Read end
+
+	/**
+	 * 获得Sheet序号，如果处理所有sheet，获得最大的Sheet序号，从0开始
+	 * @return sheet序号
+	 */
+	public int getSheetIndex() {
+		return this.sheetIndex;
+	}
+
+	/**
+	 * 获得Sheet名，如果处理所有sheet，获得后一个Sheet名，从0开始
+	 * 
+	 * @return Sheet名
+	 */
+	public String getSheetName() {
+		if (this.boundSheetRecords.size() > this.sheetIndex) {
+			return this.boundSheetRecords.get(this.sheetIndex).getSheetname();
+		}
+		return null;
+	}
 
 	/**
 	 * HSSFListener 监听方法，处理 Record
+	 * 
+	 * @param record 记录
 	 */
 	@Override
 	public void processRecord(Record record) {
-		int thisRow = -1;
-		int thisColumn = -1;
-		String thisStr = null;
 		String value = null;
+
 		switch (record.getSid()) {
 		case BoundSheetRecord.sid:
+			// Sheet边界记录，此Record中可以获得Sheet名
 			boundSheetRecords.add((BoundSheetRecord) record);
 			break;
 		case BOFRecord.sid:
-			BOFRecord br = (BOFRecord) record;
-			if (br.getType() == BOFRecord.TYPE_WORKSHEET) {
+			BOFRecord bofRecord = (BOFRecord) record;
+			if (bofRecord.getType() == BOFRecord.TYPE_WORKSHEET) {
 				// 如果有需要，则建立子工作薄
 				if (workbookBuildingListener != null && stubWorkbook == null) {
 					stubWorkbook = workbookBuildingListener.getStubHSSFWorkbook();
 				}
-
-				sheetIndex++;
-				if (orderedBSRs == null) {
-					orderedBSRs = BoundSheetRecord.orderByBofPosition(boundSheetRecords);
-				}
-				sheetName = orderedBSRs[sheetIndex].getSheetname();
+				curSheetIndex++;
 			}
 			break;
-
 		case SSTRecord.sid:
+			// 静态字符串表
 			sstRecord = (SSTRecord) record;
 			break;
-
 		case BlankRecord.sid:
+			// 空白记录
 			BlankRecord brec = (BlankRecord) record;
-			thisRow = brec.getRow();
-			thisColumn = brec.getColumn();
-			thisStr = "";
-			rowCellList.add(thisColumn, thisStr);
+			rowCellList.add(brec.getColumn(), StrUtil.EMPTY);
 			break;
 		case BoolErrRecord.sid: // 单元格为布尔类型
 			BoolErrRecord berec = (BoolErrRecord) record;
-			thisRow = berec.getRow();
-			thisColumn = berec.getColumn();
-			thisStr = berec.getBooleanValue() + "";
-			rowCellList.add(thisColumn, thisStr);
+			rowCellList.add(berec.getColumn(), berec.getBooleanValue());
 			break;
-
 		case FormulaRecord.sid: // 单元格为公式类型
 			FormulaRecord frec = (FormulaRecord) record;
-			thisRow = frec.getRow();
-			thisColumn = frec.getColumn();
-			if (outputFormulaValues) {
+			if (isOutputFormulaValues) {
 				if (Double.isNaN(frec.getValue())) {
 					// Formula result is a string
 					// This is stored in the next record
-					outputNextStringRecord = true;
-					nextRow = frec.getRow();
-					nextColumn = frec.getColumn();
+					isOutputNextStringRecord = true;
 				} else {
-					thisStr = formatListener.formatNumberDateCell(frec);
+					value = formatListener.formatNumberDateCell(frec);
 				}
 			} else {
-				thisStr = '"' + HSSFFormulaParser.toFormulaString(stubWorkbook, frec.getParsedExpression()) + '"';
+				value = '"' + HSSFFormulaParser.toFormulaString(stubWorkbook, frec.getParsedExpression()) + '"';
 			}
-			rowCellList.add(thisColumn, thisStr);
+			rowCellList.add(frec.getColumn(), value);
 			break;
 		case StringRecord.sid:// 单元格中公式的字符串
-			if (outputNextStringRecord) {
+			if (isOutputNextStringRecord) {
 				// String for formula
 				StringRecord srec = (StringRecord) record;
-				thisStr = srec.getString();
-				thisRow = nextRow;
-				thisColumn = nextColumn;
-				outputNextStringRecord = false;
+				value = srec.getString();
+				isOutputNextStringRecord = false;
 			}
 			break;
 		case LabelRecord.sid:
 			LabelRecord lrec = (LabelRecord) record;
-			curRow = thisRow = lrec.getRow();
-			thisColumn = lrec.getColumn();
-			value = lrec.getValue();
-			value = StrUtil.isBlank(value) ? StrUtil.SPACE : value.trim();
-			this.rowCellList.add(thisColumn, value);
+			value = StrUtil.nullToEmpty(lrec.getValue()).trim();
+			this.rowCellList.add(lrec.getColumn(), value);
 			break;
 		case LabelSSTRecord.sid: // 单元格为字符串类型
 			LabelSSTRecord lsrec = (LabelSSTRecord) record;
-			curRow = thisRow = lsrec.getRow();
-			thisColumn = lsrec.getColumn();
 			if (sstRecord == null) {
-				rowCellList.add(thisColumn, StrUtil.SPACE);
+				rowCellList.add(lsrec.getColumn(), StrUtil.EMPTY);
 			} else {
 				value = sstRecord.getString(lsrec.getSSTIndex()).toString();
-				value = StrUtil.isBlank(value) ? StrUtil.SPACE : value.trim();
-				rowCellList.add(thisColumn, value);
+				value = StrUtil.nullToEmpty(value).trim();
+				rowCellList.add(lsrec.getColumn(), value);
 			}
 			break;
 		case NumberRecord.sid: // 单元格为数字类型
 			NumberRecord numrec = (NumberRecord) record;
-			curRow = thisRow = numrec.getRow();
-			thisColumn = numrec.getColumn();
-			value = formatListener.formatNumberDateCell(numrec);
-			value = StrUtil.isBlank(value) ? StrUtil.SPACE : value.trim();
+//			value = formatListener.formatNumberDateCell(numrec);
+//			value = StrUtil.nullToEmpty(value).trim();
+			
+			// Get the built in format, if there is one
+			final int formatIndex = formatListener.getFormatIndex(numrec);
+			final String formatString = formatListener.getFormatString(numrec);
+			//数字类型转为Date、Double或者Long，Date类型要考虑是否基于1904年，在此统一设定为否
+			final Object valueObj = ExcelUtil.getHSSFNumericValue(numrec.getValue(), formatIndex, formatString, false);
+			
 			// 向容器加入列值
-			rowCellList.add(thisColumn, value);
+			rowCellList.add(numrec.getColumn(), valueObj);
 			break;
 		default:
 			break;
 		}
 
-		// 遇到新行的操作
-		if (thisRow != -1 && thisRow != lastRowNumber) {
-			lastColumnNumber = -1;
-		}
-
 		// 空值的操作
 		if (record instanceof MissingCellDummyRecord) {
 			MissingCellDummyRecord mc = (MissingCellDummyRecord) record;
-			curRow = thisRow = mc.getRow();
-			thisColumn = mc.getColumn();
-			rowCellList.add(thisColumn, StrUtil.SPACE);
-		}
-
-		// 更新行和列的值
-		if (thisRow > -1) {
-			lastRowNumber = thisRow;
-		}
-		if (thisColumn > -1) {
-			lastColumnNumber = thisColumn;
+			rowCellList.add(mc.getColumn(), StrUtil.EMPTY);
 		}
 
 		// 行结束时的操作
 		if (record instanceof LastCellOfRowDummyRecord) {
-			if (minColumns > 0) {
-				// 列值重新置空
-				if (lastColumnNumber == -1) {
-					lastColumnNumber = 0;
-				}
-			}
-			lastColumnNumber = -1;
-
-			// 每行结束时， 调用getRows() 方法
-			rowHandler.handle(sheetIndex, curRow, rowCellList);
-			// 清空容器
-			rowCellList.clear();
+			processLastCell((LastCellOfRowDummyRecord) record);
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 处理行结束后的操作，{@link LastCellOfRowDummyRecord}是行结束的标识Record
+	 * 
+	 * @param lastCell 行结束的标识Record
+	 */
+	private void processLastCell(LastCellOfRowDummyRecord lastCell) {
+		// 每行结束时， 调用handle() 方法
+		this.rowHandler.handle(curSheetIndex, lastCell.getRow(), this.rowCellList);
+		// 清空行Cache
+		this.rowCellList.clear();
+	}
+	// ---------------------------------------------------------------------------------------------- Private method end
 }

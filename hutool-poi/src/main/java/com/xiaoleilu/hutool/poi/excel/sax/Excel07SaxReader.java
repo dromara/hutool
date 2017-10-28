@@ -23,7 +23,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.poi.exceptions.POIException;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -80,7 +79,7 @@ public class Excel07SaxReader extends DefaultHandler {
 	private int sheetIndex;
 
 	// 存储每行的列元素
-	List<String> rowCellList = new ArrayList<String>();
+	List<Object> rowCellList = new ArrayList<>();
 
 	/** 行处理器 */
 	private RowHandler rowHandler;
@@ -226,7 +225,7 @@ public class Excel07SaxReader extends DefaultHandler {
 		return this;
 	}
 	// ------------------------------------------------------------------------------ Read end
-
+	
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		// c 表示列
@@ -304,7 +303,6 @@ public class Excel07SaxReader extends DefaultHandler {
 
 				// 补全一行尾部可能缺失的单元格
 				if (maxCellCoordinate != null) {
-					Console.log("{} {}", curCoordinate, maxCellCoordinate);
 					fillBlankCell(curCoordinate, maxCellCoordinate, true);
 				}
 

@@ -15,5 +15,5 @@ public interface RowHandler {
 	 * @param rowIndex 当前行号
 	 * @param rowList 行数据列表
 	 */
-	void handle(int sheetIndex, int rowIndex, List<String> rowList);
+	void handle(int sheetIndex, int rowIndex, List<Object> rowList);
 }
