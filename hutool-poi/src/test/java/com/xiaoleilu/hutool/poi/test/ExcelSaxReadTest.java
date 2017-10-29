@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 import com.xiaoleilu.hutool.poi.excel.sax.Excel03SaxReader;
 import com.xiaoleilu.hutool.poi.excel.sax.Excel07SaxReader;
 import com.xiaoleilu.hutool.poi.excel.sax.handler.RowHandler;
@@ -20,6 +21,9 @@ public class ExcelSaxReadTest {
 	public void excel07Test() {
 		Excel07SaxReader reader = new Excel07SaxReader(createRowHandler());
 		reader.read("aaa.xlsx", 0);
+		
+		//工具化快速读取
+		ExcelUtil.read07BySax("aaa.xlsx", 0, createRowHandler());
 	}
 	
 	@Test
@@ -28,6 +32,8 @@ public class ExcelSaxReadTest {
 		reader.read("aaa.xls", 1);
 		
 		Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
+		
+		ExcelUtil.read03BySax("aaa.xls", 1, createRowHandler());
 	}
 	
 	private RowHandler createRowHandler() {

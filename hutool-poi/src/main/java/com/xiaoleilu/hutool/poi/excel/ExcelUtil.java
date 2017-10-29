@@ -55,6 +55,46 @@ public class ExcelUtil {
 
 	// ------------------------------------------------------------------------------------ Read by Sax start
 	/**
+	 * 通过Sax方式读取Excel，同时支持03和07格式
+	 * 
+	 * @param path Excel文件路径
+	 * @param sheetIndex sheet序号
+	 * @param rowHandler 行处理器
+	 * @since 3.2.0
+	 */
+	public static void readBySax(String path, int sheetIndex, RowHandler rowHandler) {
+		readBySax(FileUtil.getInputStream(path), sheetIndex, rowHandler);
+	}
+
+	/**
+	 * 通过Sax方式读取Excel，同时支持03和07格式
+	 * 
+	 * @param file Excel文件
+	 * @param sheetIndex sheet序号
+	 * @param rowHandler 行处理器
+	 * @since 3.2.0
+	 */
+	public static void readBySax(File file, int sheetIndex, RowHandler rowHandler) {
+		readBySax(FileUtil.getInputStream(file), sheetIndex, rowHandler);
+	}
+
+	/**
+	 * 通过Sax方式读取Excel，同时支持03和07格式
+	 * 
+	 * @param in Excel流
+	 * @param sheetIndex sheet序号
+	 * @param rowHandler 行处理器
+	 * @since 3.2.0
+	 */
+	public static void readBySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
+		if (isXlsx(in)) {
+			read07BySax(in, sheetIndex, rowHandler);
+		} else {
+			read03BySax(in, sheetIndex, rowHandler);
+		}
+	}
+
+	/**
 	 * Sax方式读取Excel07
 	 * 
 	 * @param in 输入流
@@ -92,7 +132,7 @@ public class ExcelUtil {
 	public static Excel07SaxReader read07BySax(String path, int sheetIndex, RowHandler rowHandler) {
 		return new Excel07SaxReader(rowHandler).read(path, sheetIndex);
 	}
-	
+
 	/**
 	 * Sax方式读取Excel03
 	 * 
@@ -132,7 +172,7 @@ public class ExcelUtil {
 		return new Excel03SaxReader(rowHandler).read(path, sheetIndex);
 	}
 	// ------------------------------------------------------------------------------------ Read by Sax end
-	
+
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet

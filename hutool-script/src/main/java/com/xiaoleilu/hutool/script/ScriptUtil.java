@@ -14,7 +14,7 @@ import javax.script.ScriptException;
  * @author Looly
  *
  */
-public final class ScriptUtil {
+public class ScriptUtil {
 
 	/**
 	 * 获得 {@link ScriptEngine} 实例
