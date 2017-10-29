@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.extra.mail;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.collection.CollUtil;
@@ -13,11 +14,13 @@ import com.xiaoleilu.hutool.io.FileUtil;
 public class MailTest {
 	
 	@Test
+	@Ignore
 	public void sendTest() {
 		MailUtil.send("914104645@qq.com", "测试", "<h1>邮件来自Hutool测试</h1>", true, FileUtil.file("d:/aaa.xml"));
 	}
 	
 	@Test
+	@Ignore
 	public void sendByAccountTest() {
 		MailAccount account = new MailAccount();
 		account.setHost("smtp.yeah.net");

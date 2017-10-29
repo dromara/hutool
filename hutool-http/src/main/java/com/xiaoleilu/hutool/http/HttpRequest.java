@@ -21,6 +21,7 @@ import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
@@ -37,6 +38,10 @@ import com.xiaoleilu.hutool.util.ThreadUtil;
  * @author Looly
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
+	
+	/** 默认超时时长，-1表示 */
+	public static final int TIMEOUT_DEFAULT = -1;
+	
 	private static final String BOUNDARY = "--------------------Hutool_" + RandomUtil.randomString(16);
 	private static final byte[] BOUNDARY_END = StrUtil.format("--{}--\r\n", BOUNDARY).getBytes();
 	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n\r\n";
@@ -46,10 +51,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
 
-	private String url = "";
+	private String url;
 	private Method method = Method.GET;
 	/** 默认超时 */
-	private int timeout = -1;
+	private int timeout = TIMEOUT_DEFAULT;
 	/** 存储表单数据 */
 	private Map<String, Object> form;
 	/** 文件表单对象，用于文件上传 */
@@ -79,6 +84,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url URL
 	 */
 	public HttpRequest(String url) {
+		Assert.notBlank(url, "Param [url] can not be blank !");
 		this.url = url;
 	}
 
@@ -446,7 +452,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Body end
 
 	/**
-	 * 设置超时
+	 * 设置超时，单位：毫秒
 	 * 
 	 * @param milliseconds 超时毫秒数
 	 * @return this

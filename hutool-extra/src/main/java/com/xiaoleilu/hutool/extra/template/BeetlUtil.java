@@ -184,9 +184,10 @@ public final class BeetlUtil {
 	}
 
 	/**
-	 * 渲染模板，如果为相对路劲，则渲染ClassPath模板，否则渲染本地文件模板
+	 * 渲染模板，如果为相对路径，则渲染ClassPath模板，否则渲染本地文件模板
 	 * 
-	 * @param template {@link Template}
+	 * @param path 路径
+	 * @param templateFileName 模板文件名
 	 * @param bindingMap 绑定参数
 	 * @return 渲染后的内容
 	 * @since 3.2.0
