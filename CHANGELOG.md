@@ -10,10 +10,13 @@
 * ScriptUtil增加eval方法，执行脚本快捷方法
 * 增加Excel03SaxReader用于03格式的Excel通过Sax方式读取
 * HttpUtil增加超时重载，post方法支持Rest模式
+* core包中去除servlet-api可选依赖，extra模块中增加ServletUtil（core包中的部分方法移入此工具类）
+* MailUtil支持SSL方式连接
 
 ### Bug修复
 * 修复FileUtil.normalize导致的路径修复问题
 * db模块中字段使用别名时去掉包装符
+* CollUtil.filter方法对于不可变集合参数报错问题改进（issue#IFW3Y@Gitee）
 
 ## 3.1.2
 

@@ -343,68 +343,6 @@ public class BeanUtil {
 		return fillBeanWithMap(new CaseInsensitiveMap<>(map), bean, isIgnoreError);
 	}
 
-	// --------------------------------------------------------------------------------------------- fillBeanWithRequestParam
-	/**
-	 * ServletRequest 参数转Bean
-	 * 
-	 * @param <T> Bean类型
-	 * @param request ServletRequest
-	 * @param bean Bean
-	 * @param copyOptions 注入时的设置
-	 * @return Bean
-	 * @since 3.0.4
-	 */
-	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean, CopyOptions copyOptions) {
-		final String beanName = StrUtil.lowerFirst(bean.getClass().getSimpleName());
-		return fillBean(bean, new ValueProvider<String>() {
-			@Override
-			public Object value(String key, Type valueType) {
-				String value = request.getParameter(key);
-				if (StrUtil.isEmpty(value)) {
-					// 使用类名前缀尝试查找值
-					value = request.getParameter(beanName + StrUtil.DOT + key);
-					if (StrUtil.isEmpty(value)) {
-						// 此处取得的值为空时跳过，包括null和""
-						value = null;
-					}
-				}
-				return value;
-			}
-
-			@Override
-			public boolean containsKey(String key) {
-				// 对于Servlet来说，返回值null意味着无此参数
-				return null != request.getParameter(key);
-			}
-		}, copyOptions);
-	}
-
-	/**
-	 * ServletRequest 参数转Bean
-	 * 
-	 * @param <T> Bean类型
-	 * @param request ServletRequest
-	 * @param bean Bean
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 */
-	public static <T> T fillBeanWithRequestParam(final javax.servlet.ServletRequest request, T bean, final boolean isIgnoreError) {
-		return fillBeanWithRequestParam(request, bean, CopyOptions.create().setIgnoreError(isIgnoreError));
-	}
-
-	/**
-	 * ServletRequest 参数转Bean
-	 * 
-	 * @param <T> Bean类型
-	 * @param request ServletRequest
-	 * @param beanClass Bean Class
-	 * @param isIgnoreError 是否忽略注入错误
-	 * @return Bean
-	 */
-	public static <T> T requestParamToBean(javax.servlet.ServletRequest request, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBeanWithRequestParam(request, ReflectUtil.newInstance(beanClass), isIgnoreError);
-	}
-
 	// --------------------------------------------------------------------------------------------- fillBean
 	/**
 	 * ServletRequest 参数转Bean

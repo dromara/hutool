@@ -16,7 +16,7 @@ public class MailTest {
 	@Test
 	@Ignore
 	public void sendTest() {
-		MailUtil.send("914104645@qq.com", "测试", "<h1>邮件来自Hutool测试</h1>", true, FileUtil.file("d:/aaa.xml"));
+		MailUtil.send("hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1>", true, FileUtil.file("d:/aaa.xml"));
 	}
 	
 	@Test
@@ -24,8 +24,7 @@ public class MailTest {
 	public void sendByAccountTest() {
 		MailAccount account = new MailAccount();
 		account.setHost("smtp.yeah.net");
-		account.setPort("25");
-		account.setAuth(true);
+		account.setPort(25);
 		account.setFrom("hutool@yeah.net");
 		account.setUser("hutool");
 		account.setPass("q1w2e3");

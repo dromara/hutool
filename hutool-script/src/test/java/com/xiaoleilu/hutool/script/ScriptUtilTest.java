@@ -1,5 +1,8 @@
 package com.xiaoleilu.hutool.script;
 
+import javax.script.CompiledScript;
+import javax.script.ScriptException;
+
 import org.junit.Test;
 
 /**
@@ -11,6 +14,16 @@ public class ScriptUtilTest {
 	
 	@Test
 	public void compileTest() {
+		CompiledScript script = ScriptUtil.compile("println('Script test!');");
+		try {
+			script.eval();
+		} catch (ScriptException e) {
+			throw new ScriptRuntimeException(e);
+		}
+	}
+	
+	@Test
+	public void evalTest() {
 		ScriptUtil.eval("println('Script test!');");
 	}
 	
