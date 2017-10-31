@@ -541,11 +541,13 @@ public class ExcelUtil {
 
 		// 普通数字
 		if (null != format && format.indexOf('.') < 0) {
-			// 对于无小数部分的数字类型，转为Long
-			return (long) value;
-		} else {
-			return value;
+			final long longPart = (long)value;
+			if(longPart == value) {
+				// 对于无小数部分的数字类型，转为Long
+				return longPart;
+			}
 		}
+		return value;
 	}
 
 	/**

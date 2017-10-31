@@ -20,6 +20,7 @@
 * db模块中字段使用别名时去掉包装符
 * CollUtil.filter方法对于不可变集合参数报错问题改进（issue#IFW3Y@Gitee）
 * 修复Convert.convert方法目标为数组对象时导致的问题
+* 修复poi模块中ExcelReader读取带小数的标准单元格时小数部分丢失问题修复
 
 ## 3.1.2
 
