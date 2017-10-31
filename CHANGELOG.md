@@ -12,6 +12,7 @@
 * HttpUtil增加超时重载，post方法支持Rest模式
 * core包中去除servlet-api可选依赖，extra模块中增加ServletUtil（core包中的部分方法移入此工具类）
 * MailUtil支持SSL方式连接
+* 增加MapProxy，用于代理Map对象，提供各种getXXX方法（感谢@【珠海】hzhhui）
 
 ### Bug修复
 * 修复FileUtil.normalize导致的路径修复问题

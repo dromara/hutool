@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.collection.MapBuilder;
+import com.xiaoleilu.hutool.collection.MapProxy;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.Editor;
@@ -334,7 +335,7 @@ public class MapUtil {
 
 		return resultList;
 	}
-	
+
 	// ----------------------------------------------------------------------------------------------- join
 	/**
 	 * 将map转成字符串
@@ -362,7 +363,7 @@ public class MapUtil {
 	 * @return 连接后的字符串
 	 * @since 3.1.1
 	 */
-	public static <K, V>String joinIgnoreNull(Map<K, V> map, String separator, String keyValueSeparator) {
+	public static <K, V> String joinIgnoreNull(Map<K, V> map, String separator, String keyValueSeparator) {
 		return join(map, separator, keyValueSeparator, true);
 	}
 
@@ -378,7 +379,7 @@ public class MapUtil {
 	 * @return 连接后的字符串
 	 * @since 3.1.1
 	 */
-	public static <K, V>String join(Map<K, V> map, String separator, String keyValueSeparator, boolean isIgnoreNull) {
+	public static <K, V> String join(Map<K, V> map, String separator, String keyValueSeparator, boolean isIgnoreNull) {
 		final StringBuilder strBuilder = StrUtil.builder();
 		boolean isFirst = true;
 		for (Entry<K, V> entry : map.entrySet()) {
@@ -456,6 +457,18 @@ public class MapUtil {
 			}
 		}
 		return map2;
+	}
+
+	/**
+	 * 创建代理Map<br>
+	 * {@link MapProxy}对Map做一次包装，提供各种getXXX方法
+	 * 
+	 * @param map 被代理的Map
+	 * @return {@link MapProxy}
+	 * @since 3.2.0
+	 */
+	public static MapProxy createProxy(Map<?, ?> map) {
+		return MapProxy.create(map);
 	}
 
 	// ----------------------------------------------------------------------------------------------- builder
