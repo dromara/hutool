@@ -45,6 +45,17 @@ public final class Convert {
 	public static String toStr(Object value) {
 		return toStr(value, null);
 	}
+	
+	/**
+	 * 转换为String数组
+	 * 
+	 * @param value 被转换的值
+	 * @return String数组
+	 * @since 3.2.0
+	 */
+	public static String[] toStrArray(Object value) {
+		return convert(String[].class, value);
+	}
 
 	/**
 	 * 转换为字符<br>
@@ -69,6 +80,17 @@ public final class Convert {
 	 */
 	public static Character toChar(Object value) {
 		return toChar(value, null);
+	}
+	
+	/**
+	 * 转换为Character数组
+	 * 
+	 * @param value 被转换的值
+	 * @return Character数组
+	 * @since 3.2.0
+	 */
+	public static Character[] toCharArray(Object value) {
+		return convert(Character[].class, value);
 	}
 
 	/**
@@ -95,6 +117,17 @@ public final class Convert {
 	public static Byte toByte(Object value) {
 		return toByte(value, null);
 	}
+	
+	/**
+	 * 转换为Byte数组
+	 * 
+	 * @param value 被转换的值
+	 * @return Byte数组
+	 * @since 3.2.0
+	 */
+	public static Byte[] toByteArray(Object value) {
+		return convert(Byte[].class, value);
+	}
 
 	/**
 	 * 转换为Short<br>
@@ -120,6 +153,17 @@ public final class Convert {
 	public static Short toShort(Object value) {
 		return toShort(value, null);
 	}
+	
+	/**
+	 * 转换为Short数组
+	 * 
+	 * @param value 被转换的值
+	 * @return Short数组
+	 * @since 3.2.0
+	 */
+	public static Short[] toShortArray(Object value) {
+		return convert(Short[].class, value);
+	}
 
 	/**
 	 * 转换为Number<br>
@@ -144,6 +188,17 @@ public final class Convert {
 	 */
 	public static Number toNumber(Object value) {
 		return toNumber(value, null);
+	}
+	
+	/**
+	 * 转换为Number数组
+	 * 
+	 * @param value 被转换的值
+	 * @return Number数组
+	 * @since 3.2.0
+	 */
+	public static Number[] toNumberArray(Object value) {
+		return convert(Number[].class, value);
 	}
 
 	/**

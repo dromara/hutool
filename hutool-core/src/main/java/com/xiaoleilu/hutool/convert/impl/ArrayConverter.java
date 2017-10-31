@@ -44,22 +44,22 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	/**
 	 * 数组对数组转换
 	 * 
-	 * @param value 被转换值
+	 * @param array 被转换的数组值
 	 * @return 转换后的数组
 	 */
-	private Object convertArrayToArray(Object value) {
-		final Class<?> valueComponentType = value.getClass().getComponentType();
+	private Object convertArrayToArray(Object array) {
+		final Class<?> valueComponentType = array.getClass().getComponentType();
 
 		if (valueComponentType == targetComponentType) {
-			return value;
+			return array;
 		}
 
-		final int len = ArrayUtil.length(value);
+		final int len = ArrayUtil.length(array);
 		final Object result = Array.newInstance(targetComponentType, len);
 
 		final ConverterRegistry converter = ConverterRegistry.getInstance();
 		for (int i = 0; i < len; i++) {
-			Array.set(result, i, converter.convert(targetComponentType, Array.get(value, i)));
+			Array.set(result, i, converter.convert(targetComponentType, Array.get(array, i)));
 		}
 		return result;
 	}
@@ -71,15 +71,27 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @return 转换后的数组
 	 */
 	private Object convertObjectToArray(Object value) {
+		if (value instanceof CharSequence) {
+			if(targetComponentType == char.class || targetComponentType == Character.class) {
+				return convertArrayToArray(value.toString().toCharArray());
+			}
+			
+			//单纯字符串情况下按照逗号分隔后劈开
+			final String[] strings = StrUtil.split(value.toString(), StrUtil.COMMA);
+			return convertArrayToArray(strings);
+		}
+		
 		final ConverterRegistry converter = ConverterRegistry.getInstance();
 		Object[] result = null;
 		if (value instanceof List) {
+			//List转数组
 			final List<?> list = (List<?>) value;
 			result = ArrayUtil.newArray(targetComponentType, list.size());
 			for (int i = 0; i < list.size(); i++) {
 				result[i] = converter.convert(targetComponentType, list.get(i));
 			}
 		} else if (value instanceof Collection) {
+			//集合转数组
 			final Collection<?> collection = (Collection<?>) value;
 			result = ArrayUtil.newArray(targetComponentType, collection.size());
 
@@ -89,6 +101,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 				i++;
 			}
 		} else if (value instanceof Iterable) {
+			//可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
 			final Iterable<?> iterable = (Iterable<?>) value;
 			final List<Object> list = new ArrayList<>();
 			for (Object element : iterable) {
@@ -97,15 +110,12 @@ public class ArrayConverter extends AbstractConverter<Object> {
 
 			result = ArrayUtil.newArray(targetComponentType, list.size());
 			result = list.toArray(result);
+		}else {
+			// everything else:
+			result = convertToSingleElementArray(value);
 		}
 
-		if (value instanceof CharSequence) {
-			String[] strings = StrUtil.split(value.toString(), StrUtil.COMMA);
-			return convertArrayToArray(strings);
-		}
-
-		// everything else:
-		return convertToSingleElementArray(value);
+		return result;
 	}
 
 	/**
@@ -114,7 +124,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @param value 被转换的值
 	 * @return 数组，只包含一个元素
 	 */
-	private Object convertToSingleElementArray(Object value) {
+	private Object[] convertToSingleElementArray(Object value) {
 		final Object[] singleElementArray = ArrayUtil.newArray(targetComponentType, 1);
 		singleElementArray[0] = ConverterRegistry.getInstance().convert(targetComponentType, value);
 		return singleElementArray;

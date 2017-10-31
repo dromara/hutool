@@ -13,11 +13,13 @@
 * core包中去除servlet-api可选依赖，extra模块中增加ServletUtil（core包中的部分方法移入此工具类）
 * MailUtil支持SSL方式连接
 * 增加MapProxy，用于代理Map对象，提供各种getXXX方法（感谢@【珠海】hzhhui）
+* Convert增加toXXXArray方法
 
 ### Bug修复
 * 修复FileUtil.normalize导致的路径修复问题
 * db模块中字段使用别名时去掉包装符
 * CollUtil.filter方法对于不可变集合参数报错问题改进（issue#IFW3Y@Gitee）
+* 修复Convert.convert方法目标为数组对象时导致的问题
 
 ## 3.1.2
 

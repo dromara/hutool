@@ -1,10 +1,10 @@
 package com.xiaoleilu.hutool.convert;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
 
 /**
@@ -66,5 +66,40 @@ public class ConvertToArrayTest {
 		ArrayConverter c3 = new ArrayConverter(int.class);
 		int[] result3 = (int[]) c3.convert(arrayStr, null);
 		Assert.assertArrayEquals(new int[]{1,2,3,4,5}, result3);
+	}
+	
+	@Test
+	public void collectionToArrayTest() {
+		ArrayList<Object> list = new ArrayList<>();
+		list.add("a");
+		list.add("b");
+		list.add("c");
+		
+		String[] result = Convert.toStrArray(list);
+		Assert.assertEquals(list.get(0), result[0]);
+		Assert.assertEquals(list.get(1), result[1]);
+		Assert.assertEquals(list.get(2), result[2]);
+	}
+	
+	@Test
+	public void strToCharArrayTest() {
+		String testStr = "abcde";
+		Character[] array = Convert.toCharArray(testStr);
+		
+		//包装类型数组
+		Assert.assertEquals(new Character('a'), array[0]);
+		Assert.assertEquals(new Character('b'), array[1]);
+		Assert.assertEquals(new Character('c'), array[2]);
+		Assert.assertEquals(new Character('d'), array[3]);
+		Assert.assertEquals(new Character('e'), array[4]);
+		
+		//原始类型数组
+		char[] array2 = Convert.convert(char[].class, testStr);
+		Assert.assertEquals('a', array2[0]);
+		Assert.assertEquals('b', array2[1]);
+		Assert.assertEquals('c', array2[2]);
+		Assert.assertEquals('d', array2[3]);
+		Assert.assertEquals('e', array2[4]);
+		
 	}
 }
