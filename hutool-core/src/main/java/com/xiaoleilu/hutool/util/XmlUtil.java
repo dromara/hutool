@@ -12,6 +12,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -19,6 +20,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -339,7 +343,7 @@ public class XmlUtil {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 根据节点名获得第一个子节点
 	 * 
@@ -411,6 +415,40 @@ public class XmlUtil {
 		} finally {
 			//关闭XMLEncoder会相应关闭OutputStream
 			IoUtil.close(xmlenc);
+		}
+	}
+	
+	/**
+	 * 创建XPath<br>
+	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * 
+	 * @return {@link XPath}
+	 * @since 3.2.0
+	 */
+	public static XPath createXPath() {
+		return XPathFactory.newInstance().newXPath();
+	}
+	
+	/**
+	 * 通过XPath方式读取XML节点等信息<br>
+	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * 
+	 * @param expression XPath表达式
+	 * @param source 资源，可以是Docunent、Node节点等
+	 * @param returnType 返回类型，{@link javax.xml.xpath.XPathConstants}
+	 * @return 匹配返回类型的值
+	 * @since 3.2.0
+	 */
+	public static Object getByXPath(String expression, Object source, QName returnType) {
+		final XPath xPath = createXPath();
+		try {
+			if(source instanceof InputSource) {
+				return xPath.evaluate(expression, (InputSource)source, returnType);
+			}else {
+				return xPath.evaluate(expression, source, returnType);
+			}
+		} catch (XPathExpressionException e) {
+			throw new UtilException(e);
 		}
 	}
 	// ---------------------------------------------------------------------------------------- Private method start
