@@ -428,24 +428,22 @@ public class BeanUtil {
 	/**
 	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
 	 * 
-	 * @param <T> Bean类型
 	 * @param bean bean对象
 	 * @return Map
 	 */
-	public static <T> Map<String, Object> beanToMap(T bean) {
+	public static Map<String, Object> beanToMap(Object bean) {
 		return beanToMap(bean, false, false);
 	}
 
 	/**
 	 * 对象转Map
 	 * 
-	 * @param <T> Bean类型
 	 * @param bean bean对象
 	 * @param isToUnderlineCase 是否转换为下划线模式
 	 * @param ignoreNullValue 是否忽略值为空的字段
 	 * @return Map
 	 */
-	public static <T> Map<String, Object> beanToMap(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+	public static Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
 
 		if (bean == null) {
 			return null;

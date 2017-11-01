@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.IoUtil;
@@ -38,7 +39,7 @@ public class ObjectUtil {
 	public static boolean equal(Object obj1, Object obj2) {
 		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
 	}
-	
+
 	/**
 	 * 比较两个对象是否不相等。<br>
 	 * 
@@ -358,7 +359,7 @@ public class ObjectUtil {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * {@code null}安全的对象比较，{@code null}对象排在末尾
 	 * 
@@ -394,9 +395,10 @@ public class ObjectUtil {
 		}
 		return c1.compareTo(c2);
 	}
-	
+
 	/**
 	 * 获得给定类的第一个泛型参数
+	 * 
 	 * @param obj 被检查的对象
 	 * @return {@link Class}
 	 * @since 3.0.8
@@ -404,9 +406,10 @@ public class ObjectUtil {
 	public static Class<?> getTypeArgument(Object obj) {
 		return getTypeArgument(obj, 0);
 	}
-	
+
 	/**
 	 * 获得给定类的第一个泛型参数
+	 * 
 	 * @param obj 被检查的对象
 	 * @param index 泛型类型的索引号，既第几个泛型类型
 	 * @return {@link Class}
@@ -414,5 +417,20 @@ public class ObjectUtil {
 	 */
 	public static Class<?> getTypeArgument(Object obj, int index) {
 		return ClassUtil.getTypeArgument(obj.getClass(), index);
+	}
+
+	/**
+	 * 将Object转为String
+	 * 
+	 * @param obj Bean对象
+	 * @return Bean所有字段转为Map后的字符串
+	 * @since 3.2.0
+	 */
+	public static String toString(Object obj) {
+		if(obj instanceof Map) {
+			return ((Map<?, ?>)obj).toString();
+		}
+		
+		return BeanUtil.beanToMap(obj).toString();
 	}
 }

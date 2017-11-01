@@ -14,7 +14,8 @@
 * MailUtil支持SSL方式连接
 * 增加MapProxy，用于代理Map对象，提供各种getXXX方法（感谢@【珠海】hzhhui）
 * Convert增加toXXXArray方法
-* 增加剪贴板工具类ClipboardUtil
+* 增加剪贴板工具类ClipboardUtil（感谢@【北京】宁静）
+* ObjectUtil增加toString方法（感谢@【南京】toling）
 
 ### Bug修复
 * 修复FileUtil.normalize导致的路径修复问题
