@@ -2,8 +2,11 @@ package com.xiaoleilu.hutool.extra.mail;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 import com.xiaoleilu.hutool.collection.CollUtil;
+import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 邮件工具类，基于javax.mail封装
@@ -12,9 +15,38 @@ import com.xiaoleilu.hutool.collection.CollUtil;
  * @since 3.1.2
  */
 public class MailUtil {
+	
+	/**
+	 * 使用配置文件中设置的账户发送文本邮件，发送给单个或多个收件人<br>
+	 * 多个收件人可以使用逗号“,”分隔，也可以通过分号“;”分隔
+	 * 
+	 * @param to 收件人
+	 * @param subject 标题
+	 * @param content 正文
+	 * @param files 附件列表
+	 * @since 3.2.0
+	 */
+	public static void sendText(String to, String subject, String content, File... files) {
+		send(to, subject, content, false, files);
+	}
+	
+	/**
+	 * 使用配置文件中设置的账户发送HTML邮件，发送给单个或多个收件人<br>
+	 * 多个收件人可以使用逗号“,”分隔，也可以通过分号“;”分隔
+	 * 
+	 * @param to 收件人
+	 * @param subject 标题
+	 * @param content 正文
+	 * @param files 附件列表
+	 * @since 3.2.0
+	 */
+	public static void sendHtml(String to, String subject, String content, File... files) {
+		send(to, subject, content, true, files);
+	}
 
 	/**
-	 * 发送邮件给单收件人
+	 * 使用配置文件中设置的账户发送邮件，发送单个或多个收件人<br>
+	 * 多个收件人可以使用逗号“,”分隔，也可以通过分号“;”分隔
 	 * 
 	 * @param to 收件人
 	 * @param subject 标题
@@ -23,11 +55,47 @@ public class MailUtil {
 	 * @param files 附件列表
 	 */
 	public static void send(String to, String subject, String content, boolean isHtml, File... files) {
-		send(CollUtil.newArrayList(to), subject, content, isHtml, files);
+		Assert.notBlank(to);
+		
+		List<String> tos;
+		if(StrUtil.contains(to, ',')) {
+			tos = StrUtil.split(to, ',');
+		}else if(StrUtil.contains(to, ';')) {
+			tos = StrUtil.split(to, ';');
+		}else {
+			tos = CollUtil.newArrayList(to);
+		}
+		
+		send(tos, subject, content, isHtml, files);
+	}
+	
+	/**
+	 * 使用配置文件中设置的账户发送文本邮件，发送给多人
+	 * 
+	 * @param tos 收件人列表
+	 * @param subject 标题
+	 * @param content 正文
+	 * @param files 附件列表
+	 */
+	public static void sendText(Collection<String> tos, String subject, String content, File... files) {
+		send(tos, subject, content, false, files);
+	}
+	
+	/**
+	 * 使用配置文件中设置的账户发送HTML邮件，发送给多人
+	 * 
+	 * @param tos 收件人列表
+	 * @param subject 标题
+	 * @param content 正文
+	 * @param files 附件列表
+	 * @since 3.2.0
+	 */
+	public static void sendHtml(Collection<String> tos, String subject, String content, File... files) {
+		send(tos, subject, content, true, files);
 	}
 
 	/**
-	 * 使用默认的设置账户发送邮件
+	 * 使用配置文件中设置的账户发送邮件，发送给多人
 	 * 
 	 * @param tos 收件人列表
 	 * @param subject 标题
