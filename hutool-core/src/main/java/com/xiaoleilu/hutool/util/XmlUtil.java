@@ -153,12 +153,40 @@ public class XmlUtil {
 	 * @return 对象
 	 * @throws IOException IO异常
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T readObjectFromXml(File source) throws IOException {
+		return readObjectFromXml(new InputSource(FileUtil.getInputStream(source)));
+	}
+	
+	/**
+	 * 从XML中读取对象
+	 * Reads serialized object from the XML file.
+	 * 
+	 * @param <T> 对象类型
+	 * @param xmlStr XML内容
+	 * @return 对象
+	 * @throws IOException IO异常
+	 * @since 3.2.0
+	 */
+	public static <T> T readObjectFromXml(String xmlStr) throws IOException {
+		return readObjectFromXml(new InputSource(StrUtil.getReader(xmlStr)));
+	}
+	
+	/**
+	 * 从XML中读取对象
+	 * Reads serialized object from the XML file.
+	 * 
+	 * @param <T> 对象类型
+	 * @param source {@link InputSource}
+	 * @return 对象
+	 * @throws IOException IO异常
+	 * @since 3.2.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T readObjectFromXml(InputSource source) throws IOException {
 		Object result = null;
 		XMLDecoder xmldec = null;
 		try {
-			xmldec = new XMLDecoder(FileUtil.getInputStream(source));
+			xmldec = new XMLDecoder(source);
 			result = xmldec.readObject();
 		} finally {
 			IoUtil.close(xmldec);

@@ -16,6 +16,7 @@
 * Convert增加toXXXArray方法
 * 增加剪贴板工具类ClipboardUtil（感谢@【北京】宁静）
 * ObjectUtil增加toString方法（感谢@【南京】toling）
+* XmlUtil增加readObjectFromXml重载（感谢@【北京】酱油君）
 
 ### Bug修复
 * 修复FileUtil.normalize导致的路径修复问题
