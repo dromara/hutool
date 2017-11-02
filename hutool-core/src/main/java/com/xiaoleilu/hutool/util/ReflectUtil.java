@@ -238,7 +238,21 @@ public class ReflectUtil {
 		}
 		return getMethod(obj.getClass(), methodName, ClassUtil.getClasses(args));
 	}
-
+	
+	/**
+	 * 忽略大小写查找指定方法，如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @param paramTypes 参数类型，指定参数类型如果是方法的子类也算
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 3.2.0
+	 */
+	public static Method getMethodIgnoreCase(Class<?> clazz, String methodName, Class<?>... paramTypes) throws SecurityException {
+		return getMethod(clazz, true, methodName, paramTypes);
+	}
+	
 	/**
 	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
 	 * 
@@ -249,6 +263,21 @@ public class ReflectUtil {
 	 * @throws SecurityException 无权访问抛出异常
 	 */
 	public static Method getMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) throws SecurityException {
+		return getMethod(clazz, false, methodName, paramTypes);
+	}
+
+	/**
+	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param ignoreCase 是否忽略大小写
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @param paramTypes 参数类型，指定参数类型如果是方法的子类也算
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 3.2.0
+	 */
+	public static Method getMethod(Class<?> clazz, boolean ignoreCase, String methodName, Class<?>... paramTypes) throws SecurityException {
 		if (null == clazz || StrUtil.isBlank(methodName)) {
 			return null;
 		}
@@ -256,7 +285,7 @@ public class ReflectUtil {
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
-				if (methodName.equals(method.getName())) {
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
 					if (ArrayUtil.isEmpty(paramTypes) || ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
 						return method;
 					}
@@ -265,25 +294,7 @@ public class ReflectUtil {
 		}
 		return null;
 	}
-
-	/**
-	 * 查找指定类中的所有方法（包括非public方法），也包括父类和Object类的方法， 方法不存在则返回<code>null</code>
-	 * 
-	 * @param beanClass 被查找字段的类,不能为null
-	 * @param name 方法名
-	 * @return 方法
-	 * @throws SecurityException 安全异常
-	 */
-	public static Method getMethod(Class<?> beanClass, String name) throws SecurityException {
-		final Method[] methods = getMethods(beanClass);
-		for (Method method : methods) {
-			if ((name.equals(method.getName()))) {
-				return method;
-			}
-		}
-		return null;
-	}
-
+	
 	/**
 	 * 获得指定类中的Public方法名<br>
 	 * 去重重载的方法

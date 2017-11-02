@@ -120,8 +120,8 @@ public class BeanDesc {
 		Method setter;
 		for (Field field : fields) {
 			fieldName = field.getName();
-			getter = ReflectUtil.getMethod(this.beanClass, StrUtil.genGetter(fieldName));
-			setter = ReflectUtil.getMethod(this.beanClass, StrUtil.genSetter(fieldName), field.getType());
+			getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
+			setter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genSetter(fieldName), field.getType());
 			this.propMap.put(fieldName, new PropDesc(field, getter, setter));
 		}
 		return this;

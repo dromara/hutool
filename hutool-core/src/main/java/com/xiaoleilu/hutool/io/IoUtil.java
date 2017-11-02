@@ -43,7 +43,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author xiaoleilu
  *
  */
-public final class IoUtil {
+public class IoUtil {
 
 	/** 默认缓存大小 */
 	public static final int DEFAULT_BUFFER_SIZE = 1024;

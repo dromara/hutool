@@ -390,9 +390,15 @@ public class BeanUtil {
 			// 获取值
 			fieldName = prop.getFieldName();
 			if ((null != ignoreSet && ignoreSet.contains(fieldName)) || false == valueProvider.containsKey(fieldName)) {
-				continue;// 属性值被忽略或值提供者无此key时跳过
+				// 属性值被忽略或值提供者无此key时跳过
+				continue;
 			}
 			setterMethod = prop.getSetter();
+			if(null == setterMethod) {
+				//Setter方法不存在跳过
+				continue;
+			}
+			
 			// 此处对valueProvider传递的为Type对象，而非Class，因为Type中包含泛型类型信息
 			value = valueProvider.value(fieldName, TypeUtil.getFirstParamType(setterMethod));
 			if (null == value && copyOptions.ignoreNullValue) {

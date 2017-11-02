@@ -52,7 +52,7 @@ import com.xiaoleilu.hutool.util.URLUtil;
  * @author xiaoleilu
  *
  */
-public final class FileUtil {
+public class FileUtil {
 
 	/** The Unix separator character. */
 	private static final char UNIX_SEPARATOR = StrUtil.C_SLASH;
