@@ -657,7 +657,7 @@ public final class SecureUtil {
 	 * @since 3.0.5
 	 */
 	public static RSA rsa(byte[] privateKey, byte[] publicKey){
-		return new RSA(privateKey, privateKey);
+		return new RSA(privateKey, publicKey);
 	}
 	
 	/**
@@ -695,7 +695,7 @@ public final class SecureUtil {
 	 * @since 3.0.5
 	 */
 	public static DSA dsa(byte[] privateKey, byte[] publicKey){
-		return new DSA(privateKey, privateKey);
+		return new DSA(privateKey, publicKey);
 	}
 
 	// ------------------------------------------------------------------- UUID
