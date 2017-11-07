@@ -19,6 +19,7 @@
 * XmlUtil增加readObjectFromXml重载（感谢@【北京】酱油君）
 * FileUtil和IoUtil去除final修饰（issue#49@Github）
 * 为了更好的兼容性，Getter和Setter方法获取忽略大小写
+* StrUtil增加split和splitTrim重载方法（感谢@【南京】toling @【北京】宁静）
 
 ### Bug修复
 * 修复FileUtil.normalize导致的路径修复问题

@@ -999,6 +999,7 @@ public class StrUtil {
 		return sb.toString();
 	}
 
+	//------------------------------------------------------------------------------ Split
 	/**
 	 * 切分字符串
 	 * 
@@ -1061,6 +1062,18 @@ public class StrUtil {
 	public static List<String> splitTrim(CharSequence str, char separator) {
 		return splitTrim(str, separator, -1);
 	}
+	
+	/**
+	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @return 切分后的集合
+	 * @since 3.2.0
+	 */
+	public static List<String> splitTrim(CharSequence str, CharSequence separator) {
+		return splitTrim(str, separator, -1);
+	}
 
 	/**
 	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项
@@ -1072,6 +1085,19 @@ public class StrUtil {
 	 * @since 3.1.0
 	 */
 	public static List<String> splitTrim(CharSequence str, char separator, int limit) {
+		return split(str, separator, limit, true, true);
+	}
+	
+	/**
+	 * 切分字符串，去除切分后每个元素两边的空白符，去除空白项
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数，-1不限制
+	 * @return 切分后的集合
+	 * @since 3.2.0
+	 */
+	public static List<String> splitTrim(CharSequence str, CharSequence separator, int limit) {
 		return split(str, separator, limit, true, true);
 	}
 
@@ -1105,6 +1131,25 @@ public class StrUtil {
 			return new ArrayList<>(0);
 		}
 		return StrSpliter.split(str.toString(), separator, limit, isTrim, ignoreEmpty);
+	}
+	
+	/**
+	 * 切分字符串
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数，-1不限制
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.2.0
+	 */
+	public static List<String> split(CharSequence str, CharSequence separator, int limit, boolean isTrim, boolean ignoreEmpty) {
+		if (null == str) {
+			return new ArrayList<>(0);
+		}
+		final String separatorStr = (null == separator) ? null : separator.toString();
+		return StrSpliter.split(str.toString(), separatorStr, limit, isTrim, ignoreEmpty);
 	}
 
 	/**
