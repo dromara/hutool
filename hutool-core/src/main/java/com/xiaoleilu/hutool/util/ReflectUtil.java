@@ -473,10 +473,21 @@ public class ReflectUtil {
 	 * @return 构造后的对象
 	 */
 	public static <T> T newInstanceIfPossible(Class<T> beanClass) {
+		Assert.notNull(beanClass);
+		try {
+			return (T) beanClass.newInstance();
+		} catch (Exception e) {
+			//ignore
+			//默认构造不存在的情况下查找其它构造
+		}
+		
 		final Constructor<T>[] constructors = getConstructors(beanClass);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {
 			parameterTypes = constructor.getParameterTypes();
+			if(0 == parameterTypes.length) {
+				continue;
+			}
 			try {
 				constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
 			} catch (Exception e) {

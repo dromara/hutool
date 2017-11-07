@@ -8,7 +8,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author xiaoleilu
  * 
  */
-public final class HtmlUtil {
+public class HtmlUtil {
 
 	public static final String RE_HTML_MARK = "(<[^<]*?>)|(<[\\s]*?/[^<]*?>)|(<[^<]*?/[\\s]*?>)";
 	public static final String RE_SCRIPT = "<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>";
@@ -28,8 +28,6 @@ public final class HtmlUtil {
 		TEXT['>'] = StrUtil.HTML_GT.toCharArray(); // 大于号
 	}
 	
-	private HtmlUtil(){}
-
 	/**
 	 * 还原被转义的HTML特殊字符
 	 * 
