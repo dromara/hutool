@@ -515,7 +515,7 @@ public class ReflectUtil {
 	/**
 	 * 执行方法
 	 * 
-	 * @param <T> 对象类型
+	 * @param <T> 返回对象类型
 	 * @param obj 对象，如果执行静态方法，此值为<code>null</code>
 	 * @param method 方法（对象方法或static方法都可）
 	 * @param args 参数对象
@@ -536,6 +536,8 @@ public class ReflectUtil {
 	
 	/**
 	 * 执行对象中指定方法
+	 * 
+	 * @param <T> 返回对象类型
 	 * @param obj 方法所在对象
 	 * @param methodName 方法名
 	 * @param args 参数列表

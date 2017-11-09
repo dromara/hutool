@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.io;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -133,7 +132,7 @@ public final class FileTypeUtil {
 	 * 根据文件流的头部信息获得文件类型
 	 * @param file 文件 {@link File}
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
-	 * @throws IOException 读取文件引起的异常
+	 * @throws IORuntimeException 读取文件引起的异常
 	 */
 	public static String getType(File file) throws IORuntimeException {
 		return getType(IoUtil.toStream(file));
@@ -144,7 +143,7 @@ public final class FileTypeUtil {
 	 * 
 	 * @param path 路径，绝对路径或相对ClassPath的路径
 	 * @return 类型
-	 * @throws IOException 读取文件引起的异常
+	 * @throws IORuntimeException 读取文件引起的异常
 	 */
 	public static String getTypeByPath(String path) throws IORuntimeException {
 		return getType(FileUtil.file(path));

@@ -22,6 +22,7 @@ import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.bean.BeanUtil.CopyOptions;
 import com.xiaoleilu.hutool.bean.BeanUtil.ValueProvider;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -301,7 +302,7 @@ public class ServletUtil {
 	 * 设定返回给客户端的Cookie
 	 * 
 	 * @param response 响应对象{@link HttpServletResponse}
-	 * @param cookie
+	 * @param cookie Servlet Cookie对象
 	 */
 	public final static void addCookie(HttpServletResponse response, Cookie cookie) {
 		response.addCookie(cookie);
@@ -324,7 +325,7 @@ public class ServletUtil {
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param name cookie名
 	 * @param value cookie值
-	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. n>0 : Cookie存在的秒数.
+	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. &gt;0 : Cookie存在的秒数.
 	 * @param path Cookie的有效路径
 	 * @param domain the domain name within which this cookie is visible; form is according to RFC 2109
 	 */
@@ -346,7 +347,7 @@ public class ServletUtil {
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param name cookie名
 	 * @param value cookie值
-	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. n>0 : Cookie存在的秒数.
+	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. &gt;0 : Cookie存在的秒数.
 	 */
 	public final static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds) {
 		addCookie(response, name, value, maxAgeInSeconds, "/", null);
@@ -359,10 +360,14 @@ public class ServletUtil {
 	 * 
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @return 获得PrintWriter
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
-	public static PrintWriter getWriter(HttpServletResponse response) throws IOException {
-		return response.getWriter();
+	public static PrintWriter getWriter(HttpServletResponse response) throws IORuntimeException {
+		try {
+			return response.getWriter();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -413,6 +418,7 @@ public class ServletUtil {
 	 * 
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param in 需要返回客户端的内容
+	 * @param bufferSize 缓存大小
 	 */
 	public static void write(HttpServletResponse response, InputStream in, int bufferSize) {
 		ServletOutputStream out = null;

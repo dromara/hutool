@@ -55,6 +55,8 @@ public class BeanDesc {
 	
 	/**
 	 * 获取字段名-字段属性Map
+	 * 
+	 * @param ignoreCase 是否忽略大小写，true为忽略，false不忽略
 	 * @return 字段名-字段属性Map
 	 */
 	public Map<String, PropDesc> getPropMap(boolean ignoreCase) {
@@ -207,6 +209,8 @@ public class BeanDesc {
 
 		/**
 		 * 获取Setter方法
+		 * 
+		 * @return {@link Method}Setter 方法对象
 		 */
 		public Method getSetter() {
 			return this.setter;
