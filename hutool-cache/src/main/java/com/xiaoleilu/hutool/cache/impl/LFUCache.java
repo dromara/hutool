@@ -33,6 +33,10 @@ public class LFUCache<K, V> extends AbstractCache<K, V> {
 	 * @param timeout 过期时长
 	 */
 	public LFUCache(int capacity, long timeout) {
+		if(Integer.MAX_VALUE == capacity) {
+			capacity -= 1;
+		}
+		
 		this.capacity = capacity;
 		this.timeout = timeout;
 		cacheMap = new HashMap<K, CacheObj<K, V>>(capacity + 1, 1.0f);
