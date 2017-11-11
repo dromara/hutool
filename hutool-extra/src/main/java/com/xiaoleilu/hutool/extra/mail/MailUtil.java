@@ -143,9 +143,9 @@ public class MailUtil {
 		
 		List<String> tos;
 		if(StrUtil.contains(to, ',')) {
-			tos = StrUtil.split(to, ',');
+			tos = StrUtil.splitTrim(to, ',');
 		}else if(StrUtil.contains(to, ';')) {
-			tos = StrUtil.split(to, ';');
+			tos = StrUtil.splitTrim(to, ';');
 		}else {
 			tos = CollUtil.newArrayList(to);
 		}

@@ -19,7 +19,7 @@ public class MailTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void sendByAccountTest() {
 		MailAccount account = new MailAccount();
 //		account.setHost("smtp.yeah.net");
