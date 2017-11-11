@@ -196,7 +196,7 @@ public class ConverterRegistry {
 				// 强转失败进行下一步
 			}
 		}
-
+		
 		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null != converter) {
 			return converter.convert(value, defaultValue);

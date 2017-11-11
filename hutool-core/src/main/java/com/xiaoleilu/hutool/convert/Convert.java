@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
+import com.xiaoleilu.hutool.convert.impl.EnumConverter;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.HexUtil;
@@ -437,23 +438,7 @@ public final class Convert {
 	 * @return Enum
 	 */
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
-		if (value == null) {
-			return defaultValue;
-		}
-		if (clazz.isAssignableFrom(value.getClass())) {
-			@SuppressWarnings("unchecked")
-			E myE = (E) value;
-			return myE;
-		}
-		final String valueStr = toStr(value, null);
-		if (StrUtil.isBlank(valueStr)) {
-			return defaultValue;
-		}
-		try {
-			return Enum.valueOf(clazz, valueStr);
-		} catch (Exception e) {
-			return defaultValue;
-		}
+		return (new EnumConverter<>(clazz)).convert(value, defaultValue);
 	}
 
 	/**

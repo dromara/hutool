@@ -2306,6 +2306,34 @@ public class FileUtil {
 	public static File appendString(String content, File file, Charset charset) throws IORuntimeException {
 		return FileWriter.create(file, charset).append(content);
 	}
+	
+	/**
+	 * 将列表写入文件，覆盖模式，编码为UTF-8
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param path 绝对路径
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.0
+	 */
+	public static <T> File writeUtf8Lines(Collection<T> list, String path) throws IORuntimeException {
+		return writeLines(list, path, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 将列表写入文件，覆盖模式，编码为UTF-8
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 绝对路径
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.0
+	 */
+	public static <T> File writeUtf8Lines(Collection<T> list, File file) throws IORuntimeException {
+		return writeLines(list, file, CharsetUtil.CHARSET_UTF_8);
+	}
 
 	/**
 	 * 将列表写入文件，覆盖模式
@@ -2333,6 +2361,36 @@ public class FileUtil {
 	 */
 	public static <T> File writeLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
 		return writeLines(list, path, charset, false);
+	}
+	
+	/**
+	 * 将列表写入文件，覆盖模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.2.0
+	 */
+	public static <T> File writeLines(Collection<T> list, File file, String charset) throws IORuntimeException {
+		return writeLines(list, file, charset, false);
+	}
+	
+	/**
+	 * 将列表写入文件，覆盖模式
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 列表
+	 * @param file 文件
+	 * @param charset 字符集
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.2.0
+	 */
+	public static <T> File writeLines(Collection<T> list, File file, Charset charset) throws IORuntimeException {
+		return writeLines(list, file, charset, false);
 	}
 	
 	/**

@@ -73,8 +73,6 @@ public class MailAccount implements Serializable {
 	 */
 	public MailAccount(Setting setting) {
 		setting.toBean(this);
-		
-		defaultIfEmpty();
 	}
 	// -------------------------------------------------------------- Constructor end
 	
@@ -186,16 +184,12 @@ public class MailAccount implements Serializable {
 		return p;
 	}
 	
-	@Override
-	public String toString() {
-		return "MailAccount [host=" + host + ", port=" + port + ", auth=" + auth + ", user=" + user + ", pass=" + (StrUtil.isEmpty(this.pass) ? "" : "******") + ", from=" + from + ", startttlsEnable=" + startttlsEnable
-				+ ", socketFactoryClass=" + socketFactoryClass + ", socketFactoryFallback=" + socketFactoryFallback + ", socketFactoryPort=" + socketFactoryPort + "]";
-	}
-	
 	/**
 	 * 如果某些值为null，使用默认值
+	 * 
+	 * @return this
 	 */
-	private void defaultIfEmpty() {
+	public MailAccount defaultIfEmpty() {
 		if(StrUtil.isBlank(this.host)) {
 			//如果SMTP地址为空，默认使用smtp.<发件人邮箱后缀>
 			this.host = StrUtil.format("smtp.{}", StrUtil.subSuf(this.from, this.from.indexOf('@')+1));
@@ -212,5 +206,13 @@ public class MailAccount implements Serializable {
 			//端口在SSL状态下默认与socketFactoryPort一致，非SSL状态下默认为25
 			this.port = this.startttlsEnable ? this.socketFactoryPort : 25;
 		}
+		
+		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return "MailAccount [host=" + host + ", port=" + port + ", auth=" + auth + ", user=" + user + ", pass=" + (StrUtil.isEmpty(this.pass) ? "" : "******") + ", from=" + from + ", startttlsEnable=" + startttlsEnable
+				+ ", socketFactoryClass=" + socketFactoryClass + ", socketFactoryFallback=" + socketFactoryFallback + ", socketFactoryPort=" + socketFactoryPort + "]";
 	}
 }

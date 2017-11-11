@@ -994,6 +994,16 @@ public class ClassUtil {
 				&& false == clazz.isSynthetic() //
 				&& false == clazz.isPrimitive();//
 	}
+	
+	/**
+	 * 判断类是否为枚举类型
+	 * @param clazz 类
+	 * @return 是否为枚举类型
+	 * @since 3.2.0
+	 */
+	public static boolean isEnum(Class<?> clazz) {
+		return null == clazz ? false : clazz.isEnum();
+	}
 
 	/**
 	 * 获得给定类的第一个泛型参数

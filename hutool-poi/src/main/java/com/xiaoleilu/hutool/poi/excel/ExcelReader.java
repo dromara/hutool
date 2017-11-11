@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.poi.excel;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,9 +12,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.xiaoleilu.hutool.collection.IterUtil;
-import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
 import com.xiaoleilu.hutool.bean.BeanUtil;
+import com.xiaoleilu.hutool.collection.IterUtil;
+import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -23,8 +25,10 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  * @since 3.1.0
  */
-public class ExcelReader {
+public class ExcelReader implements Closeable{
 
+	/** 工作簿 */
+	private Workbook workbook;
 	/** Excel中对应的Sheet */
 	private Sheet sheet;
 
@@ -104,6 +108,7 @@ public class ExcelReader {
 	 */
 	public ExcelReader(Workbook book, String sheetName) {
 		this(book.getSheet(sheetName));
+		this.workbook = book;
 	}
 
 	/**
@@ -307,6 +312,16 @@ public class ExcelReader {
 		}
 		return beanList;
 	}
+	
+	/**
+	 * 关闭工作簿
+	 * @return this
+	 * @since 3.2.0
+	 */
+	@Override
+	public void close() {
+		IoUtil.close(this.workbook);
+	}
 
 	// ------------------------------------------------------------------------------------------------------- Private methods start
 	/**
@@ -320,7 +335,7 @@ public class ExcelReader {
 		
 		short length = row.getLastCellNum();
 		for (short i = 0; i < length; i++) {
-			cellValues.add(ExcelUtil.getCellValue(row.getCell(i), cellEditor));
+			cellValues.add(InternalExcelUtil.getCellValue(row.getCell(i), cellEditor));
 		}
 		return cellValues;
 	}

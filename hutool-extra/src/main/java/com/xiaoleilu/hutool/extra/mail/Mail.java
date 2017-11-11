@@ -76,7 +76,7 @@ public class Mail {
 	 * @param mailAccount 邮件帐户
 	 */
 	public Mail(MailAccount mailAccount) {
-		this.mailAccount = mailAccount;
+		this.mailAccount = (null == mailAccount) ? null : mailAccount.defaultIfEmpty();
 	}
 	// --------------------------------------------------------------- Constructor end
 
@@ -204,8 +204,8 @@ public class Mail {
 		final InternetAddress[] toAdds = new InternetAddress[tos.length];
 		for (int i = 0; i < tos.length; i++) {
 			toAdds[i] = new InternetAddress(tos[i]);
-			msg.setRecipients(MimeMessage.RecipientType.TO, toAdds);
 		}
+		msg.setRecipients(MimeMessage.RecipientType.TO, toAdds);
 		return msg;
 	}
 

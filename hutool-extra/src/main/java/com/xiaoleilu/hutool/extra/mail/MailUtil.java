@@ -55,18 +55,7 @@ public class MailUtil {
 	 * @param files 附件列表
 	 */
 	public static void send(String to, String subject, String content, boolean isHtml, File... files) {
-		Assert.notBlank(to);
-		
-		List<String> tos;
-		if(StrUtil.contains(to, ',')) {
-			tos = StrUtil.split(to, ',');
-		}else if(StrUtil.contains(to, ';')) {
-			tos = StrUtil.split(to, ';');
-		}else {
-			tos = CollUtil.newArrayList(to);
-		}
-		
-		send(tos, subject, content, isHtml, files);
+		send(splitTos(to), subject, content, isHtml, files);
 	}
 	
 	/**
@@ -106,6 +95,21 @@ public class MailUtil {
 	public static void send(Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
 		send(GlobalMailAccount.INSTANCE.getAccount(), tos, subject, content, isHtml, files);
 	}
+	
+	/**
+	 * 发送邮件给多人
+	 * 
+	 * @param mailAccount 邮件认证对象
+	 * @param to 收件人，多个收件人逗号或者分号隔开
+	 * @param subject 标题
+	 * @param content 正文
+	 * @param isHtml 是否为HTML格式
+	 * @param files 附件列表
+	 * @since 3.2.0
+	 */
+	public static void send(MailAccount mailAccount, String to, String subject, String content, boolean isHtml, File... files) {
+		send(mailAccount, splitTos(to), subject, content, isHtml, files);
+	}
 
 	/**
 	 * 发送邮件给多人
@@ -126,4 +130,26 @@ public class MailUtil {
 				.setFiles(files)//
 				.send();
 	}
+	
+	//------------------------------------------------------------------------------------------------------------------------ Private method start
+	/**
+	 * 将多个联系人转为列表，分隔符为逗号或者分号
+	 * 
+	 * @param to 多个联系人
+	 * @return 联系人列表
+	 */
+	private static List<String> splitTos(String to){
+		Assert.notBlank(to);
+		
+		List<String> tos;
+		if(StrUtil.contains(to, ',')) {
+			tos = StrUtil.split(to, ',');
+		}else if(StrUtil.contains(to, ';')) {
+			tos = StrUtil.split(to, ';');
+		}else {
+			tos = CollUtil.newArrayList(to);
+		}
+		return tos;
+	}
+	//------------------------------------------------------------------------------------------------------------------------ Private method end
 }
