@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFPicture;
 import org.apache.poi.xssf.usermodel.XSSFShape;
@@ -194,13 +195,24 @@ public class InternalExcelUtil {
 	 * @param lastRow 结束行，0开始
 	 * @param firstColumn 起始列，0开始
 	 * @param lastColumn 结束列，0开始
+	 * @param cellStyle 单元格样式
+	 * @return 合并后的单元格号
 	 */
-	public static void mergingCells(Sheet sheet, int firstRow, int lastRow, int firstColumn, int lastColumn) {
-		sheet.addMergedRegion(new CellRangeAddress(firstRow, // first row (0-based)
+	public static int mergingCells(Sheet sheet, int firstRow, int lastRow, int firstColumn, int lastColumn, CellStyle cellStyle) {
+		final CellRangeAddress cellRangeAddress = new CellRangeAddress(//
+				firstRow, // first row (0-based)
 				lastRow, // last row (0-based)
 				firstColumn, // first column (0-based)
 				lastColumn // last column (0-based)
-		));
+		);
+		
+		if(null != cellStyle) {
+			RegionUtil.setBorderTop(cellStyle.getBorderTopEnum(), cellRangeAddress, sheet);
+			RegionUtil.setBorderRight(cellStyle.getBorderRightEnum(), cellRangeAddress, sheet);
+			RegionUtil.setBorderBottom(cellStyle.getBorderBottomEnum(), cellRangeAddress, sheet);
+			RegionUtil.setBorderLeft(cellStyle.getBorderLeftEnum(), cellRangeAddress, sheet);
+		}
+		return sheet.addMergedRegion(cellRangeAddress);
 	}
 
 	/**
@@ -267,7 +279,7 @@ public class InternalExcelUtil {
 	 * @return {@link CellStyle}
 	 */
 	public static CellStyle createDefaultCellStyle(Workbook workbook) {
-		CellStyle cellStyle = workbook.createCellStyle();
+		final CellStyle cellStyle = workbook.createCellStyle();
 		setAlign(cellStyle, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
 		setBorder(cellStyle, BorderStyle.THIN, IndexedColors.BLACK);
 		return cellStyle;
@@ -280,7 +292,7 @@ public class InternalExcelUtil {
 	 * @return {@link CellStyle}
 	 */
 	public static CellStyle createHeadCellStyle(Workbook workbook) {
-		CellStyle cellStyle = workbook.createCellStyle();
+		final CellStyle cellStyle = workbook.createCellStyle();
 		setAlign(cellStyle, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
 		setBorder(cellStyle, BorderStyle.MEDIUM, IndexedColors.BLACK);
 		setColor(cellStyle, IndexedColors.GREY_25_PERCENT, FillPatternType.SOLID_FOREGROUND);

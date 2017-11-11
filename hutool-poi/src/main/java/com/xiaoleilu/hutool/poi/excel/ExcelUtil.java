@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.poi.excel;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -314,6 +315,65 @@ public class ExcelUtil {
 			workbook = new HSSFWorkbook();
 		}
 		return workbook;
+	}
+	
+	/**
+	 * 将Excel Workbook刷出到输出流
+	 * 
+	 * @param book {@link Workbook}
+	 * @param out 输出流
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.0
+	 */
+	public static void writeBook(Workbook book, OutputStream out) throws IORuntimeException{
+		try {
+			book.write(out);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 获得{@link ExcelWriter}，默认写出到第一个sheet
+	 * 
+	 * @param destFilePath 目标文件路径
+	 * @return {@link ExcelWriter}
+	 */
+	public static ExcelWriter getWriter(String destFilePath) {
+		return new ExcelWriter(destFilePath);
+	}
+	
+	/**
+	 * 获得{@link ExcelWriter}，默认写出到第一个sheet
+	 * 
+	 * @param destFile 目标文件
+	 * @param sheetName sheet表名
+	 * @return {@link ExcelWriter}
+	 */
+	public static ExcelWriter getWriter(File destFile) {
+		return new ExcelWriter(destFile);
+	}
+	
+	/**
+	 * 获得{@link ExcelWriter}
+	 * 
+	 * @param destFilePath 目标文件路径
+	 * @param sheetName sheet表名
+	 * @return {@link ExcelWriter}
+	 */
+	public static ExcelWriter getWriter(String destFilePath, String sheetName) {
+		return new ExcelWriter(destFilePath, sheetName);
+	}
+	
+	/**
+	 * 获得{@link ExcelWriter}
+	 * 
+	 * @param destFile 目标文件
+	 * @param sheetName sheet表名
+	 * @return {@link ExcelWriter}
+	 */
+	public static ExcelWriter getWriter(File destFile, String sheetName) {
+		return new ExcelWriter(destFile, sheetName);
 	}
 
 	/**
