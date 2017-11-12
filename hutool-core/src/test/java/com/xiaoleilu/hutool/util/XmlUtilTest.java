@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.util;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -22,6 +23,7 @@ public class XmlUtilTest {
 	}
 	
 	@Test
+	@Ignore
 	public void writeTest() {
 		String result="<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
 				+ "<returnsms>"

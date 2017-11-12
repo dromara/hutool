@@ -2,9 +2,10 @@ package com.xiaoleilu.hutool.poi.test;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 import com.xiaoleilu.hutool.poi.excel.sax.Excel03SaxReader;
 import com.xiaoleilu.hutool.poi.excel.sax.Excel07SaxReader;
@@ -30,9 +31,7 @@ public class ExcelSaxReadTest {
 	public void excel03Test() {
 		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
 		reader.read("aaa.xls", 1);
-		
-		Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
-		
+//		Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
 		ExcelUtil.read03BySax("aaa.xls", 1, createRowHandler());
 	}
 	
@@ -41,7 +40,8 @@ public class ExcelSaxReadTest {
 
 			@Override
 			public void handle(int sheetIndex, int rowIndex, List<Object> rowlist) {
-				Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
+//				Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
+				Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
 			}
 		};
 	}

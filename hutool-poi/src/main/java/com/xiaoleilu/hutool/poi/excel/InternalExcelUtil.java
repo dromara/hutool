@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.poi.excel;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -44,7 +46,6 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * Excel内部工具类，主要针对行等操作支持
  * 
  * @author looly
- *
  */
 public class InternalExcelUtil {
 	/**
@@ -122,25 +123,93 @@ public class InternalExcelUtil {
 
 		return null == cellEditor ? value : cellEditor.edit(cell, value);
 	}
-	
+
 	/**
 	 * 设置单元格值
+	 * 
 	 * @param cell 单元格
 	 * @param value 值
+	 * @param cellStyle 单元格样式
 	 */
-	public static void setCellValue(Cell cell, Object value) {
-		if(value instanceof Date) {
-			cell.setCellValue((Date)value);
-		}else if(value instanceof Calendar) {
-			cell.setCellValue((Calendar)value);
-		}else if(value instanceof Boolean) {
-			cell.setCellValue((Boolean)value);
-		}else if(value instanceof RichTextString) {
-			cell.setCellValue((RichTextString)value);
-		}else if(value instanceof Number) {
-			cell.setCellValue(((Number)value).doubleValue());
-		}else {
+	public static void setCellValue(Cell cell, Object value, CellStyle cellStyle) {
+		if (value instanceof Date) {
+			short format = cellStyle.getDataFormat();
+			if(0 == format) {
+				final CellStyle styleForDate = cloneCellStyle(cell, cellStyle);
+				//22表示：m/d/yy h:mm
+				styleForDate.setDataFormat((short)22);
+				cell.setCellStyle(styleForDate);
+			}
+			cell.setCellValue((Date) value);
+		} else if (value instanceof Calendar) {
+			cell.setCellValue((Calendar) value);
+		} else if (value instanceof Boolean) {
+			cell.setCellValue((Boolean) value);
+		} else if (value instanceof RichTextString) {
+			cell.setCellValue((RichTextString) value);
+		} else if (value instanceof Number) {
+			if(value instanceof Double || value instanceof Float) {
+				//Double默认保留两位小数
+				final short format = cellStyle.getDataFormat();
+				if(0 == format) {
+					final CellStyle styleForDouble = cloneCellStyle(cell, cellStyle);
+					//2表示：0.00
+					styleForDouble.setDataFormat((short)2);
+					cell.setCellStyle(styleForDouble);
+				}
+			}
+			cell.setCellValue(((Number) value).doubleValue());
+		} else {
 			cell.setCellValue(value.toString());
+		}
+	}
+	
+	/**
+	 * 克隆新的{@link CellStyle}
+	 * @param cell 单元格
+	 * @param cellStyle 被复制的样式
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle cloneCellStyle(Cell cell, CellStyle cellStyle) {
+		final CellStyle newCellStyle = cell.getSheet().getWorkbook().createCellStyle();
+		newCellStyle.cloneStyleFrom(cellStyle);
+		return newCellStyle;
+	}
+	
+	/**
+	 * 读取一行
+	 * 
+	 * @param row 行
+	 * @param cellEditor 单元格编辑器
+	 * @return 单元格值列表
+	 */
+	public static List<Object> readRow(Row row, CellEditor cellEditor) {
+		final List<Object> cellValues = new ArrayList<>();
+		
+		short length = row.getLastCellNum();
+		for (short i = 0; i < length; i++) {
+			cellValues.add(InternalExcelUtil.getCellValue(row.getCell(i), cellEditor));
+		}
+		return cellValues;
+	}
+
+	/**
+	 * 写一行数据
+	 * 
+	 * @param row 行
+	 * @param rowData 一行的数据
+	 * @param cellStyle 单元格样式
+	 */
+	public static void writeRow(Row row, Iterable<?> rowData, CellStyle cellStyle) {
+		int i = 0;
+		Cell cell;
+		for (Object value : rowData) {
+			cell = row.createCell(i);
+			if (null != cellStyle) {
+				cell.setCellStyle(cellStyle);
+			}
+			setCellValue(cell, value, cellStyle);
+			i++;
 		}
 	}
 
@@ -173,7 +242,6 @@ public class InternalExcelUtil {
 	 * @param row 行号
 	 * @param column 列号
 	 * @return 是否是合并单元格
-	 * @since 3.1.1
 	 */
 	public static boolean isMergedRegion(Sheet sheet, int row, int column) {
 		final int sheetMergeCount = sheet.getNumMergedRegions();
@@ -205,8 +273,8 @@ public class InternalExcelUtil {
 				firstColumn, // first column (0-based)
 				lastColumn // last column (0-based)
 		);
-		
-		if(null != cellStyle) {
+
+		if (null != cellStyle) {
 			RegionUtil.setBorderTop(cellStyle.getBorderTopEnum(), cellRangeAddress, sheet);
 			RegionUtil.setBorderRight(cellStyle.getBorderRightEnum(), cellRangeAddress, sheet);
 			RegionUtil.setBorderBottom(cellStyle.getBorderBottomEnum(), cellRangeAddress, sheet);
@@ -294,7 +362,7 @@ public class InternalExcelUtil {
 	public static CellStyle createHeadCellStyle(Workbook workbook) {
 		final CellStyle cellStyle = workbook.createCellStyle();
 		setAlign(cellStyle, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
-		setBorder(cellStyle, BorderStyle.MEDIUM, IndexedColors.BLACK);
+		setBorder(cellStyle, BorderStyle.THIN, IndexedColors.BLACK);
 		setColor(cellStyle, IndexedColors.GREY_25_PERCENT, FillPatternType.SOLID_FOREGROUND);
 		return cellStyle;
 	}

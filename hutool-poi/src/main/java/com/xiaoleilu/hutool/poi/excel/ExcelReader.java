@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.collection.IterUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -27,6 +28,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class ExcelReader implements Closeable{
 
+	/** 是否被关闭 */
+	private boolean isClosed;
 	/** 工作簿 */
 	private Workbook workbook;
 	/** Excel中对应的Sheet */
@@ -216,6 +219,7 @@ public class ExcelReader implements Closeable{
 	 * @return 行的集合，一行使用List表示
 	 */
 	public List<List<Object>> read(int startRowIndex, int endRowIndex) {
+		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
 		List<List<Object>> resultList = new ArrayList<>();
 
 		startRowIndex = Math.max(startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
@@ -250,6 +254,7 @@ public class ExcelReader implements Closeable{
 	 * @return Map的列表
 	 */
 	public List<Map<String, Object>> read(int headerRowIndex, int startRowIndex, int endRowIndex) {
+		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
 		// 边界判断
 		final int firstRowNum = sheet.getFirstRowNum();
 		final int lastRowNum = sheet.getLastRowNum();
@@ -301,6 +306,7 @@ public class ExcelReader implements Closeable{
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> read(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> beanType) {
+		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
 		final List<Map<String, Object>> mapList = read(headerRowIndex, startRowIndex, endRowIndex);
 		if (Map.class.isAssignableFrom(beanType)) {
 			return (List<T>) mapList;
@@ -315,12 +321,14 @@ public class ExcelReader implements Closeable{
 	
 	/**
 	 * 关闭工作簿
-	 * @return this
 	 * @since 3.2.0
 	 */
 	@Override
 	public void close() {
 		IoUtil.close(this.workbook);
+		this.sheet = null;
+		this.workbook = null;
+		this.isClosed = true;
 	}
 
 	// ------------------------------------------------------------------------------------------------------- Private methods start
@@ -331,13 +339,7 @@ public class ExcelReader implements Closeable{
 	 * @return 单元格值列表
 	 */
 	private List<Object> readRow(Row row) {
-		final List<Object> cellValues = new ArrayList<>();
-		
-		short length = row.getLastCellNum();
-		for (short i = 0; i < length; i++) {
-			cellValues.add(InternalExcelUtil.getCellValue(row.getCell(i), cellEditor));
-		}
-		return cellValues;
+		return InternalExcelUtil.readRow(row, this.cellEditor);
 	}
 
 	/**

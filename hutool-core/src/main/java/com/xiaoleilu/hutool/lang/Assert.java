@@ -50,6 +50,38 @@ public final class Assert {
 	public static void isTrue(boolean expression) throws IllegalArgumentException {
 		isTrue(expression, "[Assertion failed] - this expression must be true");
 	}
+	
+	/**
+	 * 断言是否为假，如果为 {@code true} 抛出 {@code IllegalArgumentException} 异常<br>
+	 * 
+	 * <pre class="code">
+	 * Assert.isFalse(i &lt; 0, "The value must be greater than zero");
+	 * </pre>
+	 * 
+	 * @param expression 波尔值
+	 * @param errorMsgTemplate 错误抛出异常附带的消息模板，变量用{}代替
+	 * @param params 参数列表
+	 * @throws IllegalArgumentException if expression is {@code false}
+	 */
+	public static void isFalse(boolean expression, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+		if (expression) {
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
+		}
+	}
+	
+	/**
+	 * 断言是否为假，如果为 {@code true} 抛出 {@code IllegalArgumentException} 异常<br>
+	 * 
+	 * <pre class="code">
+	 * Assert.isFalse(i &lt; 0);
+	 * </pre>
+	 * 
+	 * @param expression 波尔值
+	 * @throws IllegalArgumentException if expression is {@code false}
+	 */
+	public static void isFalse(boolean expression) throws IllegalArgumentException {
+		isFalse(expression, "[Assertion failed] - this expression must be false");
+	}
 
 	/**
 	 * 断言对象是否为{@code null} ，如果不为{@code null} 抛出{@link IllegalArgumentException} 异常

@@ -344,10 +344,9 @@ public class ExcelUtil {
 	}
 	
 	/**
-	 * 获得{@link ExcelWriter}，默认写出到第一个sheet
+	 * 获得{@link ExcelWriter}，默认写出到第一个sheet，名字为sheet1
 	 * 
 	 * @param destFile 目标文件
-	 * @param sheetName sheet表名
 	 * @return {@link ExcelWriter}
 	 */
 	public static ExcelWriter getWriter(File destFile) {

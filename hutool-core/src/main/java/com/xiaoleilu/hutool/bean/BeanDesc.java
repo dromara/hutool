@@ -118,11 +118,24 @@ public class BeanDesc {
 		final Field[] fields = ReflectUtil.getFields(this.beanClass);
 		
 		String fieldName;
+		Class<?> fieldType;
 		Method getter;
 		Method setter;
 		for (Field field : fields) {
 			fieldName = field.getName();
-			getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
+			fieldType = field.getType();
+			if(fieldType == Boolean.class || fieldType == boolean.class) {
+				//Boolean和boolean类型特殊处理
+				fieldName = StrUtil.removePrefix(fieldName, "is");
+				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.upperFirstAndAddPre(fieldName, "is"));
+				if(null == getter) {
+					getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
+				}
+				
+			}else {
+				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
+			}
+			
 			setter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genSetter(fieldName), field.getType());
 			this.propMap.put(fieldName, new PropDesc(field, getter, setter));
 		}
