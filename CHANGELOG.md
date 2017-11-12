@@ -30,6 +30,7 @@
 * 修复poi模块中ExcelReader读取带小数的标准单元格时小数部分丢失问题修复
 * 修复SecureUtil.rsa和SecureUtil.dsa方法中publicKey传入问题（感谢@【上海】毛毛虎）
 * 修复Cache模块传入Integer.MAX_VALUE错误问题（感谢@【南京】雲栖鬆）
+* 修复BeanDesc无法识别isXXX方法的问题
 
 ## 3.1.2
 
