@@ -159,6 +159,8 @@ public class InternalExcelUtil {
 				}
 			}
 			cell.setCellValue(((Number) value).doubleValue());
+		} else if (null == value) {
+			cell.setCellValue("");
 		} else {
 			cell.setCellValue(value.toString());
 		}
