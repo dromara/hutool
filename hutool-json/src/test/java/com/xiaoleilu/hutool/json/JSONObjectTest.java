@@ -56,6 +56,8 @@ public class JSONObjectTest {
 		JSONObject json = JSONUtil.createObj()
 			.put("strValue", "strTest")
 			.put("intValue", 123)
+			//测试空字符串转对象
+			.put("doubleValue", "")
 			.put("beanValue", subJson)
 			.put("list", JSONUtil.createArray().put("a").put("b"));
 		
@@ -128,6 +130,7 @@ public class JSONObjectTest {
 	public static class TestBean{
 		private String strValue;
 		private int intValue;
+		private Double doubleValue;
 		private subBean beanValue;
 		private List<String> list;
 		
@@ -143,6 +146,12 @@ public class JSONObjectTest {
 		public void setIntValue(int intValue) {
 			this.intValue = intValue;
 		}
+		public Double getDoubleValue() {
+			return doubleValue;
+		}
+		public void setDoubleValue(Double doubleValue) {
+			this.doubleValue = doubleValue;
+		}
 		public subBean getBeanValue() {
 			return beanValue;
 		}
@@ -155,9 +164,10 @@ public class JSONObjectTest {
 		public void setList(List<String> list) {
 			this.list = list;
 		}
+		
 		@Override
 		public String toString() {
-			return "TestBean [strValue=" + strValue + ", intValue=" + intValue + ", beanValue=" + beanValue + ", list=" + list + "]";
+			return "TestBean [strValue=" + strValue + ", intValue=" + intValue + ", doubleValue=" + doubleValue + ", beanValue=" + beanValue + ", list=" + list + "]";
 		}
 	}
 	

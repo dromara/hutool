@@ -41,7 +41,7 @@ public enum GlobalHeaders{
 			this.headers.clear();
 		}
 		
-		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", true);
+		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml,application/json;q=0.9,*/*;q=0.8", true);
 		header(Header.ACCEPT_ENCODING, "gzip", true);
 		header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
 		header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded", true);

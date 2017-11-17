@@ -26,6 +26,7 @@ import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -351,8 +352,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 */
 	public HttpRequest form(Map<String, Object> formMap) {
-		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
-			form(entry.getKey(), entry.getValue());
+		if(MapUtil.isNotEmpty(formMap)) {
+			for (Map.Entry<String, Object> entry : formMap.entrySet()) {
+				form(entry.getKey(), entry.getValue());
+			}
 		}
 		return this;
 	}
@@ -366,19 +369,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest form(String name, File file) {
-		if (null == file) {
-			return this;
+		if (null != file) {
+			if (false == isKeepAlive()) {
+				keepAlive(true);
+			}
+			
+			if (null == this.fileForm) {
+				fileForm = new HashMap<String, File>();
+			}
+			// 文件对象
+			this.fileForm.put(name, file);
 		}
-
-		if (false == isKeepAlive()) {
-			keepAlive(true);
-		}
-
-		if (this.fileForm == null) {
-			fileForm = new HashMap<String, File>();
-		}
-		// 文件对象
-		this.fileForm.put(name, file);
 		return this;
 	}
 
@@ -402,7 +403,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest body(String body) {
 		this.body = body;
 		this.form = null; // 当使用body时，废弃form的使用
-		contentLength(body.length());
+		contentLength((null != body ? body.length() : 0));
 		return this;
 	}
 	

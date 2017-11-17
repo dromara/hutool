@@ -14,7 +14,7 @@ public class ScriptUtilTest {
 	
 	@Test
 	public void compileTest() {
-		CompiledScript script = ScriptUtil.compile("println('Script test!');");
+		CompiledScript script = ScriptUtil.compile("print('Script test!');");
 		try {
 			script.eval();
 		} catch (ScriptException e) {
@@ -24,7 +24,7 @@ public class ScriptUtilTest {
 	
 	@Test
 	public void evalTest() {
-		ScriptUtil.eval("println('Script test!');");
+		ScriptUtil.eval("print('Script test!');");
 	}
 	
 }

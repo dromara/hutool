@@ -2,8 +2,10 @@ package com.xiaoleilu.hutoo.setting.test;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 import com.xiaoleilu.hutool.setting.dialect.Props;
@@ -23,6 +25,17 @@ public class PropsTest {
 	@Test
 	public void settingTest(){
 		Props props = new Props("test.properties");
+		String user = props.getProperty("user");
+		Assert.assertEquals(user, "root");
+		
+		String driver = props.getStr("driver");
+		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
+	}
+	
+	@Test
+	@Ignore
+	public void settingTest2(){
+		Props props = new Props(FileUtil.file("d:/test.properties"));
 		String user = props.getProperty("user");
 		Assert.assertEquals(user, "root");
 		

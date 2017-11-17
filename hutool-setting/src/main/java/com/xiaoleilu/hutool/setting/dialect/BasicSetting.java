@@ -98,14 +98,14 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	/**
 	 * 构造，相对于classes读取文件
 	 * 
-	 * @param path 相对路径
+	 * @param pathBaseClassLoader 相对ClassPath路径
 	 * @param clazz 基准类
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 */
-	public BasicSetting(String path, Class<?> clazz, Charset charset, boolean isUseVariable) {
-		Assert.notBlank(path, "Blank setting path !");
-		this.init(new ClassPathResource(path, clazz), charset, isUseVariable);
+	public BasicSetting(String pathBaseClassLoader, Class<?> clazz, Charset charset, boolean isUseVariable) {
+		Assert.notBlank(pathBaseClassLoader, "Blank setting path !");
+		this.init(new ClassPathResource(pathBaseClassLoader, clazz), charset, isUseVariable);
 	}
 
 	/**

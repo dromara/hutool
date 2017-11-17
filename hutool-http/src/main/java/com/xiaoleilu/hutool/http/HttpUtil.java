@@ -732,6 +732,7 @@ public class HttpUtil {
 			char firstChar = body.charAt(0);
 			switch (firstChar) {
 			case '{':
+			case '[':
 				//JSON请求体
 				contentType = "application/json";
 				break;

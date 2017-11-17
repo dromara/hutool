@@ -278,7 +278,7 @@ final class InternalJSONUtil {
 			}
 		}
 		
-		//子对象递归转换
+		//标准格式转换
 		if(null == targetValue){
 			try {
 				targetValue = ConverterRegistry.getInstance().convert(rowType, value);
@@ -292,7 +292,12 @@ final class InternalJSONUtil {
 		}
 		
 		if(null == targetValue && false == ignoreError){
-			throw new ConvertException("Can not convert to type [{}]", rowType.getName());
+			if(value instanceof CharSequence && StrUtil.isBlank((CharSequence)value)) {	
+				//对于传入空字符串的情况，如果转换的目标对象是非字符串或非原书类型，转换器会返回false。
+				//此处特殊处理，认为返回null属于正常情况
+				return null;
+			}
+			throw new ConvertException("Can not convert [{}] to type [{}]", value, rowType.getName());
 		}
 		
 		return targetValue;

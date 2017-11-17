@@ -54,6 +54,13 @@ public class ConvertTest {
 		Number number = Convert.toNumber(a);
 		Assert.assertEquals(12.45D, number);
 	}
+	
+	@Test
+	public void emptyToNumberTest() {
+		Object a = "";
+		Number number = Convert.toNumber(a);
+		Assert.assertNull(number);
+	}
 
 	@Test
 	public void toDateTest() {

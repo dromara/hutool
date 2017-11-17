@@ -372,8 +372,17 @@ public class ZipUtil {
 			return;
 		}
 
-		if (file.isFile()) {// 如果是文件，则直接压缩该文件
-			final String subPath = FileUtil.subPath(srcRootDir, file); // 获取文件相对于压缩文件夹根目录的子路径
+		final String subPath = FileUtil.subPath(srcRootDir, file); // 获取文件相对于压缩文件夹根目录的子路径
+		if(file.isDirectory()){// 如果是目录，则压缩压缩目录中的文件或子目录
+			if(StrUtil.isNotEmpty(subPath)) {
+				//加入目录，此目录可能为空
+				zipDir(subPath, out);
+			}
+			//压缩目录下的子文件或目录
+			for (File childFile : file.listFiles()) {
+				zip(childFile, srcRootDir, out);
+			}
+		} else {// 如果是文件或其它符号，则直接压缩该文件
 			BufferedInputStream in = null;
 			try {
 				in = FileUtil.getInputStream(file);
@@ -381,18 +390,14 @@ public class ZipUtil {
 			} finally {
 				IoUtil.close(in);
 			}
-		} else {// 如果是目录，则压缩压缩目录中的文件或子目录
-			for (File childFile : file.listFiles()) {
-				zip(childFile, srcRootDir, out);
-			}
 		}
 	}
 
 	/**
 	 * 递归压缩流中的数据，不关闭输入流
 	 * 
-	 * @param path 压缩的路径
 	 * @param in 需要压缩的输入流
+	 * @param path 压缩的路径
 	 * @param out 压缩文件存储对象
 	 * @throws UtilException IO异常
 	 */
@@ -408,7 +413,24 @@ public class ZipUtil {
 		} finally {
 			closeEntry(out);
 		}
-
+	}
+	
+	/**
+	 * 压缩一个目录到Zip
+	 * 
+	 * @param path 压缩的路径
+	 * @param out 压缩文件存储对象
+	 * @throws UtilException IO异常
+	 */
+	private static void zipDir(String path, ZipOutputStream out) throws UtilException {
+		path = StrUtil.addSuffixIfNot(path, StrUtil.SLASH);
+		try {
+			out.putNextEntry(new ZipEntry(path));
+		} catch (IOException e) {
+			throw new UtilException(e);
+		} finally {
+			closeEntry(out);
+		}
 	}
 
 	/**
@@ -447,6 +469,7 @@ public class ZipUtil {
 		try {
 			out.closeEntry();
 		} catch (IOException e) {
+			//ignore
 		}
 	}
 

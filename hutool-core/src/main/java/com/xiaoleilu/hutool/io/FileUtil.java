@@ -913,10 +913,6 @@ public class FileUtil {
 			}
 		}
 
-		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
-		path = StrUtil.removePrefixIgnoreCase(path, "classpath:");
-		path = StrUtil.removePrefix(path, StrUtil.SLASH);
-
 		// 相对于ClassPath路径
 		final URL url = ClassUtil.getResourceUrl(path, baseClass);
 		if (null != url) {
@@ -1183,8 +1179,13 @@ public class FileUtil {
 		if (path == null) {
 			return null;
 		}
+		
+		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
+		String pathToUse = StrUtil.removePrefixIgnoreCase(path, "classpath:");
+		//去除file:前缀
+		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, "file:");
 		//统一使用斜杠
-		String pathToUse = path.replaceAll("[/\\\\]{1,}", "/").trim();
+		pathToUse = pathToUse.replaceAll("[/\\\\]{1,}", "/").trim();
 
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		String prefix = "";
@@ -1267,15 +1268,16 @@ public class FileUtil {
 	 * @return 相对子路径
 	 */
 	public static String subPath(String dirPath, String filePath) {
-		if (StrUtil.isEmpty(dirPath)) {
-		}
-
 		if (StrUtil.isNotEmpty(dirPath) && StrUtil.isNotEmpty(filePath)) {
 			dirPath = normalize(dirPath);
 			filePath = normalize(filePath);
-
+			
 			if (filePath != null && filePath.toLowerCase().startsWith(dirPath.toLowerCase())) {
-				filePath = filePath.substring(dirPath.length() + 1);
+				if(false == filePath.equals(dirPath)) {
+					filePath = filePath.substring(dirPath.length() + 1);
+				}else {
+					filePath = StrUtil.EMPTY;
+				}
 			}
 		}
 		return filePath;

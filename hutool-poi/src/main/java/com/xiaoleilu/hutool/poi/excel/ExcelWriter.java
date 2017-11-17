@@ -286,6 +286,7 @@ public class ExcelWriter implements Closeable {
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
 	 * 
 	 * @param rowData 一行的数据
+	 * @return this
 	 */
 	public ExcelWriter writeHeadRow(Iterable<?> rowData) {
 		InternalExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.headCellStyle);
@@ -299,6 +300,7 @@ public class ExcelWriter implements Closeable {
 	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
 	 * 
 	 * @param rowData 一行的数据
+	 * @return this
 	 */
 	public ExcelWriter writeRow(Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
@@ -311,6 +313,7 @@ public class ExcelWriter implements Closeable {
 	 * 
 	 * @param rowMap 写出的Map
 	 * @param isWriteKeys 为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
+	 * @return this
 	 */
 	public ExcelWriter writeRows(Map<?, ?> rowMap, boolean isWriteKeys) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");

@@ -17,6 +17,12 @@ public class ZipUtilTest {
 	
 	@Test
 	@Ignore
+	public void zipDirTest() {
+		ZipUtil.zip("d:/aaa/");
+	}
+	
+	@Test
+	@Ignore
 	public void unzipTest() {
 		File unzip = ZipUtil.unzip("E:\\aaa\\RongGenetor V1.0.0.zip", "e:\\aaa");
 		Console.log(unzip);
