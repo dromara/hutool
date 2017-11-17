@@ -6,6 +6,8 @@
 
 ### 新特性
 * HttpUtil中增加一些空判断
+* 增强Props和Setting，使传入路径支持绝对路径
+* 增加Resource接口和FileResource对象
 
 ### Bug修复
 * 在JSON中，空字符串转为bean中的非字符串对象时，传入null，而非报错

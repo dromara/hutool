@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.List;
 
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.util.ClassLoaderUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -105,5 +106,17 @@ public class ResourceUtil {
 	 */
 	public static URL getResource(String resource, Class<?> baseClass){
 		return (null != baseClass) ? baseClass.getResource(resource) : ClassLoaderUtil.getClassLoader().getResource(resource);
+	}
+	
+	/**
+	 * 获取{@link Resource} 资源对象<br>
+	 * 如果提供路径为绝对路径，返回{@link FileResource}，否则返回{@link ClassPathResource}
+	 * 
+	 * @param path 路径，可以是绝对路径，也可以是相对路径
+	 * @return {@link Resource} 资源对象
+	 * @since 3.2.1
+	 */
+	public static Resource getResourceObj(String path) {
+		return FileUtil.isAbsolutePath(path) ? new FileResource(path) : new ClassPathResource(path);
 	}
 }

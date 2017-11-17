@@ -6,6 +6,9 @@ import com.xiaoleilu.hutool.getter.OptBasicTypeGetter;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.resource.ClassPathResource;
+import com.xiaoleilu.hutool.io.resource.FileResource;
+import com.xiaoleilu.hutool.io.resource.Resource;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.io.resource.UrlResource;
 import com.xiaoleilu.hutool.io.watch.SimpleWatcher;
 import com.xiaoleilu.hutool.io.watch.WatchMonitor;
@@ -88,34 +91,34 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
-	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
+	 * @param path
 	 */
-	public Props(String pathBaseClassLoader) {
-		this(pathBaseClassLoader, CharsetUtil.CHARSET_ISO_8859_1);
+	public Props(String path) {
+		this(path, CharsetUtil.CHARSET_ISO_8859_1);
 	}
 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
-	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
+	 * @param path 相对或绝对路径
 	 * @param charsetName 字符集
 	 */
-	public Props(String pathBaseClassLoader, String charsetName) {
-		this(pathBaseClassLoader, CharsetUtil.charset(charsetName));
+	public Props(String path, String charsetName) {
+		this(path, CharsetUtil.charset(charsetName));
 	}
 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
-	 * @param pathBaseClassLoader 相对路径（相对于当前项目的classes路径）
+	 * @param path 相对或绝对路径
 	 * @param charset 字符集
 	 */
-	public Props(String pathBaseClassLoader, Charset charset) {
-		Assert.notBlank(pathBaseClassLoader, "Blank properties file path !");
+	public Props(String path, Charset charset) {
+		Assert.notBlank(path, "Blank properties file path !");
 		if(null != charset) {
 			this.charset = charset;
 		}
-		this.load(new ClassPathResource(pathBaseClassLoader));
+		this.load(ResourceUtil.getResourceObj(path));
 	}
 
 	/**
@@ -146,7 +149,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public Props(File propertiesFile, Charset charset) {
 		Assert.notNull(propertiesFile, "Null properties file!");
 		this.charset = charset;
-		this.load(new UrlResource(propertiesFile));
+		this.load(new FileResource(propertiesFile));
 	}
 
 	/**
@@ -236,7 +239,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 
 	 * @param urlResource {@link UrlResource}
 	 */
-	public void load(UrlResource urlResource) {
+	public void load(Resource urlResource) {
 		this.propertiesFileUrl = urlResource.getUrl();
 		if (null == this.propertiesFileUrl) {
 			throw new SettingRuntimeException("Can not find properties file: [{}]", urlResource);

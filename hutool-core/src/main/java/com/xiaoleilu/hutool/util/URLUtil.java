@@ -1,6 +1,9 @@
 package com.xiaoleilu.hutool.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -8,9 +11,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 
@@ -345,4 +351,30 @@ public class URLUtil {
 				url.getPath().toLowerCase().endsWith(FileUtil.JAR_FILE_EXT));
 	}
 
+	/**
+	 * 从URL中获取流
+	 * @param url {@link URL}
+	 * @return InputStream流
+	 * @since 3.2.1
+	 */
+	public static InputStream getStream(URL url) {
+		Assert.notNull(url);
+		try {
+			return url.openStream();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 获得Reader
+	 * 
+	 * @param url {@link URL}
+	 * @param charset 编码
+	 * @return {@link BufferedReader}
+	 * @since 3.2.1
+	 */
+	public static BufferedReader getReader(URL url, Charset charset){
+		return IoUtil.getReader(getStream(url), charset);
+	}
 }

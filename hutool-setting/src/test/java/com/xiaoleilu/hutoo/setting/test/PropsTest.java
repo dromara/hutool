@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 import com.xiaoleilu.hutool.setting.dialect.Props;
@@ -23,7 +22,7 @@ public class PropsTest {
 	}
 	
 	@Test
-	public void settingTest(){
+	public void propTest(){
 		Props props = new Props("test.properties");
 		String user = props.getProperty("user");
 		Assert.assertEquals(user, "root");
@@ -34,8 +33,8 @@ public class PropsTest {
 	
 	@Test
 	@Ignore
-	public void settingTest2(){
-		Props props = new Props(FileUtil.file("d:/test.properties"));
+	public void propTestForAbsPAth(){
+		Props props = new Props("d:/test.properties");
 		String user = props.getProperty("user");
 		Assert.assertEquals(user, "root");
 		

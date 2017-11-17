@@ -2,6 +2,7 @@ package com.xiaoleilu.hutoo.setting.test;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.log.LogFactory;
@@ -23,6 +24,18 @@ public class SettingTest {
 	@Test
 	public void settingTest(){
 		Setting setting = new Setting("test.setting", true);
+		
+		String driver = setting.getByGroup("driver", "demo");
+		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
+		
+		String user = setting.getByGroup("user", "demo");
+		Assert.assertEquals(user, "rootcom.mysql.jdbc.Driver");
+	}
+	
+	@Test
+	@Ignore
+	public void settingTestForAbsPath(){
+		Setting setting = new Setting("d:/test.setting", true);
 		
 		String driver = setting.getByGroup("driver", "demo");
 		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
