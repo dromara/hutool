@@ -19,6 +19,7 @@ import java.util.Set;
 
 import com.xiaoleilu.hutool.convert.BasicType;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.lang.ClassScaner;
@@ -27,10 +28,8 @@ import com.xiaoleilu.hutool.lang.Singleton;
 
 /**
  * 类工具类 <br>
- * 1、扫描指定包下的所有类<br>
- * 参考 http://www.oschina.net/code/snippet_234657_22722
  * 
- * @author seaside_hi, xiaoleilu
+ * @author  xiaoleilu
  *
  */
 public class ClassUtil {
@@ -448,14 +447,28 @@ public class ClassUtil {
 		}
 		return paths;
 	}
-
+	
 	/**
-	 * 获得ClassPath
+	 * 获得ClassPath，将编码后的中文路径解码为原字符<br>
+	 * 这个ClassPath路径会文件路径被标准化处理
 	 * 
 	 * @return ClassPath
 	 */
 	public static String getClassPath() {
-		return getClassPathURL().getPath();
+		return getClassPath(false);
+	}
+
+	/**
+	 * 获得ClassPath，这个ClassPath路径会文件路径被标准化处理
+	 * 
+	 * @param isEncoded 是否编码路径中的中文
+	 * @return ClassPath
+	 * @since 3.2.1
+	 */
+	public static String getClassPath(boolean isEncoded) {
+		final URL classPathURL = getClassPathURL();
+		String url = isEncoded ? classPathURL.getPath() : URLUtil.getDecodedPath(classPathURL);
+		return FileUtil.normalize(url);
 	}
 
 	/**

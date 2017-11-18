@@ -7,9 +7,12 @@ import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
- * ClassPath单一资源访问类
+ * ClassPath单一资源访问类<br>
+ * 传入路径path必须为相对路径，如果传入绝对路径，Linux路径会去掉开头的“/”，而Windows路径会直接报错。<br>
+ * 传入的path所指向的资源必须存在，否则报错
  * 
  * @author Looly
  *
@@ -53,14 +56,14 @@ public class ClassPathResource extends UrlResource {
 	/**
 	 * 构造
 	 * 
-	 * @param path 相对路劲
+	 * @param pathBaseClassLoader 相对路径
 	 * @param classLoader {@link ClassLoader}
 	 * @param clazz {@link Class} 用于定位路径
 	 */
-	public ClassPathResource(String path, ClassLoader classLoader, Class<?> clazz) {
+	public ClassPathResource(String pathBaseClassLoader, ClassLoader classLoader, Class<?> clazz) {
 		super((URL) null);
-		Assert.notNull(path, "Path must not be null");
-		this.path = normalizePath(path);
+		Assert.notNull(pathBaseClassLoader, "Path must not be null");
+		this.path = normalizePath(pathBaseClassLoader);
 		this.classLoader = (classLoader != null) ? classLoader : ClassUtil.getClassLoader();
 		this.clazz = clazz;
 		initUrl();
@@ -86,10 +89,8 @@ public class ClassPathResource extends UrlResource {
 		if(FileUtil.isAbsolutePath(this.path)){
 			return this.path;
 		}
-		
-		String reultPath = (url != null) ? url.getPath() : ClassUtil.getClassPath() + this.path;
-		// return StrUtil.removePrefix(reultPath, PATH_FILE_PRE);
-		return reultPath;
+		//url在初始化的时候已经断言，此处始终不为null
+		return FileUtil.normalize(URLUtil.getDecodedPath(this.url));
 	}
 
 	/**
@@ -130,9 +131,9 @@ public class ClassPathResource extends UrlResource {
 	private String normalizePath(String path) {
 		//标准化路径
 		path = FileUtil.normalize(path);
-		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
-		path = StrUtil.removePrefixIgnoreCase(path, "classpath:");
 		path = StrUtil.removePrefix(path, StrUtil.SLASH);
+		
+		Assert.isFalse(FileUtil.isAbsolutePath(path), "Path [{}] must be a relative path !", path);
 		return path;
 	}
 }

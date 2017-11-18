@@ -324,9 +324,4 @@ public class SqlFormatter {
 			this.beginLine = true;
 		}
 	}
-	
-	public static void main(String[] args) {
-		String format = SqlFormatter.format("select * from xx where a = b");
-		System.out.println(format);
-	}
 }

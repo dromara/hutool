@@ -10,7 +10,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.file.LineSeparator;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
@@ -100,8 +99,6 @@ public class FileUtilTest {
 		Assert.assertEquals("bar", FileUtil.normalize("~/../bar"));
 		
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
-		
-		Console.log(FileUtil.normalize("classpath:"));
 	}
 	
 	@Test

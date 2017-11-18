@@ -6,8 +6,6 @@ import java.lang.reflect.Method;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.util.ClassUtil;
-
 /**
  * {@link ClassUtil} 单元测试
  * 
@@ -95,5 +93,11 @@ public class ClassUtilTest {
 
 		Field subField = ClassUtil.getDeclaredField(TestSubClass.class, "subField");
 		Assert.assertNotNull(subField);
+	}
+	
+	@Test
+	public void getClassPathTest() {
+		String classPath = ClassUtil.getClassPath();
+		Assert.assertNotNull(classPath);
 	}
 }

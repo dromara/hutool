@@ -45,4 +45,11 @@ public class ClassPathResourceTest {
 		result = resource.readUtf8Str();
 		Assert.assertNotNull(result);
 	}
+	
+	@Test
+	public void getAbsTest() {
+		final ClassPathResource resource = new ClassPathResource("LICENSE-junit.txt");
+		String absPath = resource.getAbsolutePath();
+		Assert.assertTrue(absPath.contains("LICENSE-junit.txt"));
+	}
 }
