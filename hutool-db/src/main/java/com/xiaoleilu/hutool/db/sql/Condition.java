@@ -33,7 +33,9 @@ public class Condition implements Cloneable{
 	private static final String OPERATOR_LIKE = "LIKE";
 	private static final String OPERATOR_IN = "IN";
 	private static final String OPERATOR_IS = "IS";
-	private static final List<String> OPERATORS = Arrays.asList("<>", "<=", "<", ">=", ">", "=", "!=", OPERATOR_IN);
+	private static final String OPERATOR_BETWEEN = "BETWEEN";
+	private static final List<String> OPERATORS  = Arrays.asList("<>", "<=", "<", ">=", ">", "=", "!=", OPERATOR_IN, OPERATOR_BETWEEN);
+	
 	
 	private static final String VALUE_NULL = "NULL";
 	
@@ -45,7 +47,10 @@ public class Condition implements Cloneable{
 	private Object value;
 	/** 是否使用条件值占位符 */
 	private boolean isPlaceHolder = true;
-	
+	/** 是否为between */
+	private boolean isBetween = false;
+	/** between firstValue and secondValue */
+	private Object secondValue;
 	/**
 	 * 解析为Condition
 	 * @param field 字段名
@@ -178,6 +183,44 @@ public class Condition implements Cloneable{
 	public void setPlaceHolder(boolean isPlaceHolder) {
 		this.isPlaceHolder = isPlaceHolder;
 	}
+	
+	
+	/**
+	 * 是否 between x and y 类型
+	 *
+	 * @return 是否 between x and y 类型
+	 */
+	public boolean isBetween() {
+		return isBetween;
+	}
+	
+	/**
+	 * 设置为 between x and y 类型
+	 *
+	 * @param between 是否between x and y类型
+	 */
+	public void setBetween(boolean between) {
+		this.isBetween = between;
+	}
+	
+	/**
+	 * 获得between 类型中第二个值
+	 *
+	 * @return 值
+	 */
+	public Object getSecondValue() {
+		return secondValue;
+	}
+	
+	/**
+	 * 设置between 类型中第二个值
+	 *
+	 * @param secondValue 第二个值
+	 */
+	public void setSecondValue(Object secondValue) {
+		this.secondValue = secondValue;
+	}
+	
 	//--------------------------------------------------------------- Getters and Setters end
 	
 	@Override
@@ -232,6 +275,22 @@ public class Condition implements Cloneable{
 		}
 		
 		valueStr = valueStr.trim();
+		
+		//处理BETWEEN x AND y
+		if (StrUtil.startWithIgnoreCase(valueStr, OPERATOR_BETWEEN)) {
+			this.isBetween = true;
+			valueStr = StrUtil.removePrefixIgnoreCase(valueStr, OPERATOR_BETWEEN).trim();
+			
+			String[] strs = valueStr.toUpperCase().split(LogicalOperator.AND.toString(), 2);
+			if (strs.length < 2) {
+				return;
+			}
+ 			this.operator = OPERATOR_BETWEEN;
+			this.value = strs[0];
+			this.secondValue = StrUtil.removePrefixIgnoreCase(strs[1],LogicalOperator.AND.toString()).trim();
+			return;
+		}
+		
 		List<String> strs = StrUtil.split(valueStr, StrUtil.C_SPACE, 2);
 		if(strs.size() < 2){
 			return;
