@@ -132,7 +132,9 @@ public class InternalExcelUtil {
 	 * @param cellStyle 单元格样式
 	 */
 	public static void setCellValue(Cell cell, Object value, CellStyle cellStyle) {
-		if (value instanceof Date) {
+		if (null == value) {
+			cell.setCellValue(StrUtil.EMPTY);
+		} else if (value instanceof Date) {
 			short format = cellStyle.getDataFormat();
 			if(0 == format) {
 				final CellStyle styleForDate = cloneCellStyle(cell, cellStyle);
@@ -159,8 +161,6 @@ public class InternalExcelUtil {
 				}
 			}
 			cell.setCellValue(((Number) value).doubleValue());
-		} else if (null == value) {
-			cell.setCellValue("");
 		} else {
 			cell.setCellValue(value.toString());
 		}

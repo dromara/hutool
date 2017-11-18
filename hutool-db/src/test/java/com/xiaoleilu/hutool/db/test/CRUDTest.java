@@ -8,20 +8,43 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.SqlRunner;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.log.LogFactory;
+import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
+/**
+ * 增删改查测试
+ * 
+ * @author looly
+ *
+ */
 public class CRUDTest {
 	
 	SqlRunner runner;
 	
 	@Before
 	public void init() {
+		LogFactory.setCurrentLogFactory(new ConsoleLogFactory());
+		DbUtil.setShowSqlGlobal(true, false);
 		runner = SqlRunner.create(DSFactory.get());
+	}
+	
+	@Test
+	public void findBetweenTest() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("age", "between 18 and 40"));
+		Assert.assertEquals(1, results.size());
+	}
+	
+	@Test
+	public void findLikeTest() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("name", "like %三%"));
+		Assert.assertEquals(2, results.size());
 	}
 	
 	/**
