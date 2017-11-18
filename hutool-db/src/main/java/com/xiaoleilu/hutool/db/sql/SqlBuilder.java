@@ -583,16 +583,44 @@ public class SqlBuilder {
 				conditionStr.append(StrUtil.SPACE).append(logicalOperator).append(StrUtil.SPACE);
 			}
 			
-			//添加条件表达式
-			conditionStr.append(condition.getField()).append(StrUtil.SPACE).append(condition.getOperator());
-			
-			if(condition.isPlaceHolder()) {
-				//使用条件表达式占位符
-				conditionStr.append(" ?");
-				paramValues.add(condition.getValue());
-			}else {
-				//直接使用条件值
-				conditionStr.append(condition.getValue());
+			if (condition.isBetween()) {
+				//BETWEEN x AND y 的情况，两个参数
+				conditionStr.append(condition.getField()).append(StrUtil.SPACE);
+				
+				//处理 BETWEEN x
+				conditionStr.append(condition.getOperator());
+				if (condition.isPlaceHolder()) {
+					//使用条件表达式占位符
+					conditionStr.append(" ?");
+					paramValues.add(condition.getValue());
+				} else {
+					//直接使用条件值
+					conditionStr.append(condition.getValue());
+				}
+				
+				//处理 AND y
+				conditionStr.append(StrUtil.SPACE).append(LogicalOperator.AND.toString());
+				if (condition.isPlaceHolder()) {
+					//使用条件表达式占位符
+					conditionStr.append(" ?");
+					paramValues.add(condition.getSecondValue());
+				} else {
+					//直接使用条件值
+					conditionStr.append(condition.getSecondValue());
+				}
+			} else {
+				//其他情况，单一参数
+				//添加条件表达式
+				conditionStr.append(condition.getField()).append(StrUtil.SPACE).append(condition.getOperator());
+				
+				if (condition.isPlaceHolder()) {
+					//使用条件表达式占位符
+					conditionStr.append(" ?");
+					paramValues.add(condition.getValue());
+				} else {
+					//直接使用条件值
+					conditionStr.append(condition.getValue());
+				}
 			}
 		}
 		
