@@ -286,7 +286,7 @@ public class Condition implements Cloneable{
 				return;
 			}
  			this.operator = OPERATOR_BETWEEN;
-			this.value = strs[0];
+			this.value = strs[0].trim();
 			this.secondValue = StrUtil.removePrefixIgnoreCase(strs[1],LogicalOperator.AND.toString()).trim();
 			return;
 		}
@@ -300,7 +300,7 @@ public class Condition implements Cloneable{
 		final String firstPart = strs.get(0).trim().toUpperCase();
 		if(OPERATORS.contains(firstPart)){
 			this.operator = firstPart;
-			this.value = strs.get(1);
+			this.value = strs.get(1).trim();
 			return;
 		}
 		
