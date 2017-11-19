@@ -316,7 +316,7 @@ public class SqlConnRunner{
 	}
 	
 	/**
-	 * 查询，返回所有字段<br>
+	 * 查询，返回指定字段列表<br>
 	 * 此方法不会关闭Connection
 	 * 
 	 * @param <T> 结果对象类型
@@ -329,6 +329,19 @@ public class SqlConnRunner{
 	 */
 	public <T> T find(Connection conn, Entity where, RsHandler<T> rsh, String... fields) throws SQLException {
 		return find(conn, CollectionUtil.newArrayList(fields), where, rsh);
+	}
+	
+	/**
+	 * 查询数据列表，返回字段在where参数中定义
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param where 条件实体类（包含表名）
+	 * @return 数据对象列表
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.1
+	 */
+	public List<Entity> find(Connection conn, Entity where) throws SQLException{
+		return find(conn, where.getFieldNames(), where, EntityListHandler.create());
 	}
 	
 	/**

@@ -1095,6 +1095,21 @@ public class NumberUtil {
 		Assert.notNull(bigNum2);
 		return 0 == bigNum1.compareTo(bigNum2);
 	}
+	
+	/**
+	 * 比较两个字符是否相同
+	 * @param c1 字符1
+	 * @param c2 字符2
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 是否相同
+	 * @since 3.2.1
+	 */
+	public static boolean equals(char c1, char c2, boolean ignoreCase) {
+		if(ignoreCase) {
+			return Character.toLowerCase(c1) == Character.toLowerCase(c2);
+		}
+		return c1 == c2;
+	}
 
 	/**
 	 * 数字转字符串<br>
@@ -1200,7 +1215,7 @@ public class NumberUtil {
 	public static int zero2One(int value) {
 		return 0 == value ? 1 : value;
 	}
-
+	
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {

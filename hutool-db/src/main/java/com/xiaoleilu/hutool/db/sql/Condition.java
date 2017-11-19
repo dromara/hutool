@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.xiaoleilu.hutool.db.DbUtil;
+import com.xiaoleilu.hutool.lang.StrSpliter;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -318,15 +319,15 @@ public class Condition implements Cloneable {
 		// 处理BETWEEN x AND y
 		if (OPERATOR_BETWEEN.equals(firstPart)) {
 			this.isBetween = true;
-			final List<String> betweenValueStrs = StrUtil.splitTrim(strs.get(1).trim(), StrUtil.C_SPACE);
-			if (betweenValueStrs.size() < 3 || false == LogicalOperator.AND.isSame(betweenValueStrs.get(1))) {
+			final List<String> betweenValueStrs = StrSpliter.split(strs.get(1), LogicalOperator.AND.toString(), -1, true, true, true);
+			if (betweenValueStrs.size() < 2) {
 				// 必须满足a AND b格式，不满足被当作普通值
 				return;
 			}
 
 			this.operator = OPERATOR_BETWEEN;
 			this.value = betweenValueStrs.get(0);
-			this.secondValue = betweenValueStrs.get(2);
+			this.secondValue = betweenValueStrs.get(1);
 			return;
 		}
 

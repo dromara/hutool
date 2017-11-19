@@ -77,7 +77,7 @@ public class StrSpliter {
 	}
 	
 	/**
-	 * 切分字符串
+	 * 切分字符串，大小写敏感
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
@@ -88,6 +88,22 @@ public class StrSpliter {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty){
+		return split(str, separator, limit, isTrim, ignoreEmpty, false);
+	}
+	
+	/**
+	 * 切分字符串
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数，-1不限制
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> split(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase){
 		if(StrUtil.isEmpty(str)){
 			return new ArrayList<String>(0);
 		}
@@ -99,7 +115,7 @@ public class StrSpliter {
 		int len = str.length();
 		int start = 0;//切分后每个部分的起始
 		for(int i = 0; i < len; i++){
-			if(separator == str.charAt(i)){
+			if(NumberUtil.equals(separator, str.charAt(i), ignoreCase)){
 				addToList(list, str.substring(start, i), isTrim, ignoreEmpty);
 				start = i+1;//i+1同时将start与i保持一致
 				
@@ -130,7 +146,7 @@ public class StrSpliter {
 	//---------------------------------------------------------------------------------------------- Split by String
 	
 	/**
-	 * 切分字符串
+	 * 切分字符串，不忽略大小写
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符串
@@ -141,6 +157,22 @@ public class StrSpliter {
 	 * @since 3.0.8
 	 */
 	public static List<String> split(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty){
+		return split(str, separator, limit, isTrim, ignoreEmpty, false);
+	}
+	
+	/**
+	 * 切分字符串
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> split(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty, boolean ignoreCase){
 		if(StrUtil.isEmpty(str)){
 			return new ArrayList<String>(0);
 		}
@@ -151,7 +183,7 @@ public class StrSpliter {
 		if(StrUtil.isEmpty(separator)){//分隔符为空时按照空白符切分
 			return split(str, limit);
 		}else if(separator.length() == 1){//分隔符只有一个字符长度时按照单分隔符切分
-			return split(str, separator.charAt(0), limit, isTrim, ignoreEmpty);
+			return split(str, separator.charAt(0), limit, isTrim, ignoreEmpty, ignoreCase);
 		}
 		
 		final ArrayList<String> list = new ArrayList<>();
@@ -160,7 +192,7 @@ public class StrSpliter {
 		int start = 0;
 		int i = 0;
 		while(i < len){
-			i = str.indexOf(separator, start);
+			i = StrUtil.indexOf(str, separator, 0, ignoreCase);
 			if(i > -1){
 				addToList(list, str.substring(start, i), isTrim, ignoreEmpty);
 				start = i + separatorLen;

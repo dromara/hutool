@@ -10,6 +10,9 @@
 * 增加Resource接口和FileResource对象
 * DB模块新增between and支持（pr#53@Github）
 * poi模块中增加写出Excel针对null值得支持（默认输出空字符串）
+* DB模块find方法支持从where的Entity中获取返回字段列表（感谢@【北京】大大宝）
+* StrUtil增加indexOfIgnoreCase、isSubEquals、indexOf（String参数和IgnoreCase参数）方法
+* StrSpliter类中的方法支持大小写敏感可选参数
 
 ### Bug修复
 * 在JSON中，空字符串转为bean中的非字符串对象时，传入null，而非报错

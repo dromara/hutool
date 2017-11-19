@@ -334,6 +334,19 @@ public abstract class AbstractSqlRunner{
 	}
 	
 	/**
+	 * 查询数据列表，返回字段由where参数指定<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param where 条件实体类（包含表名）
+	 * @return 数据对象列表
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.1
+	 */
+	public List<Entity> find(Entity where) throws SQLException{
+		return find(where.getFieldNames(), where, EntityListHandler.create());
+	}
+	
+	/**
 	 * 查询数据列表，返回所有字段<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 * 
