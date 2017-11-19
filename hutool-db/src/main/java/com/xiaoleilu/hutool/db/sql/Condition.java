@@ -318,15 +318,33 @@ public class Condition implements Cloneable {
 		// 处理BETWEEN x AND y
 		if (OPERATOR_BETWEEN.equals(firstPart)) {
 			this.isBetween = true;
-			final List<String> betweenValueStrs = StrUtil.splitTrim(strs.get(1).trim(), StrUtil.C_SPACE);
-			if (betweenValueStrs.size() < 3 || false == LogicalOperator.AND.isSame(betweenValueStrs.get(1))) {
+			//BETWEEN 2017-08-25 14:57:52  and  2017-08-26 14:57:52 情况
+			if (!StrUtil.containsIgnoreCase(strs.get(1), " AND ")) {
+				// 必须包含 AND 格式，不满足被当作普通值
+				return;
+			}
+			Boolean isAndUpper = StrUtil.containsAny(strs.get(1), " AND ");
+			final List<String> betweenValueStrs = StrUtil.splitTrim(
+					strs.get(1).trim(),
+					isAndUpper ? LogicalOperator.AND.toString().toUpperCase() : LogicalOperator.AND.toString().toLowerCase()
+			);
+			
+			if (betweenValueStrs.size() < 2) {
 				// 必须满足a AND b格式，不满足被当作普通值
 				return;
 			}
-
+			//去除引号
+			String v1 = betweenValueStrs.get(0);
+			String v2 = betweenValueStrs.get(1);
+			v1=StrUtil.strip(v1,"\"");
+			v1=StrUtil.strip(v1,"\'");
+			v2=StrUtil.strip(v2,"\"");
+			v2=StrUtil.strip(v2,"\'");
+			
 			this.operator = OPERATOR_BETWEEN;
-			this.value = betweenValueStrs.get(0);
-			this.secondValue = betweenValueStrs.get(2);
+			this.value = v1;
+			this.secondValue = v2;
+			 
 			return;
 		}
 
