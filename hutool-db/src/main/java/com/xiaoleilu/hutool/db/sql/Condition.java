@@ -333,10 +333,18 @@ public class Condition implements Cloneable {
 				// 必须满足a AND b格式，不满足被当作普通值
 				return;
 			}
+			//去除引号
+			String v1 = betweenValueStrs.get(0);
+			String v2 = betweenValueStrs.get(1);
+			v1=StrUtil.strip(v1,"\"");
+			v1=StrUtil.strip(v1,"\'");
+			v2=StrUtil.strip(v2,"\"");
+			v2=StrUtil.strip(v2,"\'");
 			
 			this.operator = OPERATOR_BETWEEN;
-			this.value = betweenValueStrs.get(0);
-			this.secondValue = betweenValueStrs.get(1);
+			this.value = v1;
+			this.secondValue = v2;
+			 
 			return;
 		}
 
