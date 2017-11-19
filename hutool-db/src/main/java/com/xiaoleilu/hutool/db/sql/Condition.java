@@ -319,7 +319,7 @@ public class Condition implements Cloneable {
 		// 处理BETWEEN x AND y
 		if (OPERATOR_BETWEEN.equals(firstPart)) {
 			this.isBetween = true;
-			final List<String> betweenValueStrs = StrSpliter.split(strs.get(1), LogicalOperator.AND.toString(), -1, true, true, true);
+			final List<String> betweenValueStrs = StrSpliter.splitTrimIgnoreCase(strs.get(1), LogicalOperator.AND.toString(), 2, true);
 			if (betweenValueStrs.size() < 2) {
 				// 必须满足a AND b格式，不满足被当作普通值
 				return;

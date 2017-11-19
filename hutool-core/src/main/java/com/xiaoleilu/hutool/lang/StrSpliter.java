@@ -67,6 +67,19 @@ public class StrSpliter {
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> splitTrim(String str, char separator, boolean ignoreEmpty){
+		return split(str, separator, 0, true, ignoreEmpty);
+	}
+	
+	/**
+	 * 切分字符串
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
 	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
 	 * @param ignoreEmpty 是否忽略空串
 	 * @return 切分后的集合
@@ -74,6 +87,20 @@ public class StrSpliter {
 	 */
 	public static List<String> split(String str, char separator, boolean isTrim, boolean ignoreEmpty){
 		return split(str, separator, 0, isTrim, ignoreEmpty);
+	}
+	
+	/**
+	 * 切分字符串，大小写敏感，去除每个元素两边空白符
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数，-1不限制
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
+	public static List<String> splitTrim(String str, char separator, int limit, boolean ignoreEmpty){
+		return split(str, separator, limit, true, ignoreEmpty, false);
 	}
 	
 	/**
@@ -89,6 +116,21 @@ public class StrSpliter {
 	 */
 	public static List<String> split(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty){
 		return split(str, separator, limit, isTrim, ignoreEmpty, false);
+	}
+	
+	/**
+	 * 切分字符串，忽略大小写
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符
+	 * @param limit 限制分片数，-1不限制
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> splitIgnoreCase(String str, char separator, int limit, boolean isTrim, boolean ignoreEmpty){
+		return split(str, separator, limit, isTrim, ignoreEmpty, true);
 	}
 	
 	/**
@@ -156,8 +198,80 @@ public class StrSpliter {
 	 * @return 切分后的集合
 	 * @since 3.0.8
 	 */
+	public static List<String> split(String str, String separator, boolean isTrim, boolean ignoreEmpty){
+		return split(str, separator, -1, isTrim, ignoreEmpty, false);
+	}
+	
+	/**
+	 * 切分字符串，去除每个元素两边空格，忽略大小写
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @param limit 限制分片数
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> splitTrim(String str, String separator, boolean ignoreEmpty){
+		return split(str, separator, true, ignoreEmpty);
+	}
+	
+	/**
+	 * 切分字符串，不忽略大小写
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.0.8
+	 */
 	public static List<String> split(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty){
 		return split(str, separator, limit, isTrim, ignoreEmpty, false);
+	}
+	
+	/**
+	 * 切分字符串，去除每个元素两边空格，忽略大小写
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @param limit 限制分片数
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> splitTrim(String str, String separator, int limit, boolean ignoreEmpty){
+		return split(str, separator, limit, true, ignoreEmpty);
+	}
+	
+	/**
+	 * 切分字符串，忽略大小写
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @param limit 限制分片数
+	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> splitIgnoreCase(String str, String separator, int limit, boolean isTrim, boolean ignoreEmpty){
+		return split(str, separator, limit, isTrim, ignoreEmpty, true);
+	}
+	
+	/**
+	 * 切分字符串，去除每个元素两边空格，忽略大小写
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @param limit 限制分片数
+	 * @param ignoreEmpty 是否忽略空串
+	 * @return 切分后的集合
+	 * @since 3.2.1
+	 */
+	public static List<String> splitTrimIgnoreCase(String str, String separator, int limit, boolean ignoreEmpty){
+		return split(str, separator, limit, true, ignoreEmpty, true);
 	}
 	
 	/**
