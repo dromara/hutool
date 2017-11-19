@@ -312,7 +312,7 @@ public class Condition implements Cloneable {
 		// 处理LIKE
 		if (OPERATOR_LIKE.equals(firstPart)) {
 			this.operator = OPERATOR_LIKE;
-			this.value = strs.get(1).trim();
+			this.value = unwrapQuote(strs.get(1));
 			return;
 		}
 
@@ -326,8 +326,8 @@ public class Condition implements Cloneable {
 			}
 
 			this.operator = OPERATOR_BETWEEN;
-			this.value = betweenValueStrs.get(0);
-			this.secondValue = betweenValueStrs.get(1);
+			this.value = unwrapQuote(betweenValueStrs.get(0));
+			this.secondValue = unwrapQuote(betweenValueStrs.get(1));
 			return;
 		}
 
@@ -337,5 +337,34 @@ public class Condition implements Cloneable {
 			this.value = VALUE_NULL;
 			return;
 		}
+	}
+	
+	/**
+	 * 去掉包围在字符串两端的单引号或双引号
+	 * @param value 值
+	 * @return 去掉引号后的值
+	 */
+	private static String unwrapQuote(String value) {
+		if(null == value) {
+			return null;
+		}
+		value = value.trim();
+		
+		int from = 0;
+		int to = value.length();
+		char startChar = value.charAt(0);
+		char endChar = value.charAt(to -1);
+		if(startChar == endChar) {
+			if('\'' == startChar || '"' == startChar) {
+				from = 1;
+				to = to -1;
+			}
+		}
+		
+		if(from == 0 && to == value.length()) {
+			//并不包含，返回原值
+			return value;
+		}
+		return value.substring(from, to);
 	}
 }
