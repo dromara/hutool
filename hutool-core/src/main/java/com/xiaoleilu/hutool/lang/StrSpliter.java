@@ -192,7 +192,7 @@ public class StrSpliter {
 		int start = 0;
 		int i = 0;
 		while(i < len){
-			i = StrUtil.indexOf(str, separator, 0, ignoreCase);
+			i = StrUtil.indexOf(str, separator, start, ignoreCase);
 			if(i > -1){
 				addToList(list, str.substring(start, i), isTrim, ignoreEmpty);
 				start = i + separatorLen;

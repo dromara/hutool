@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Collection;
@@ -1095,9 +1096,10 @@ public class NumberUtil {
 		Assert.notNull(bigNum2);
 		return 0 == bigNum1.compareTo(bigNum2);
 	}
-	
+
 	/**
 	 * 比较两个字符是否相同
+	 * 
 	 * @param c1 字符1
 	 * @param c2 字符2
 	 * @param ignoreCase 是否忽略大小写
@@ -1105,7 +1107,7 @@ public class NumberUtil {
 	 * @since 3.2.1
 	 */
 	public static boolean equals(char c1, char c2, boolean ignoreCase) {
-		if(ignoreCase) {
+		if (ignoreCase) {
 			return Character.toLowerCase(c1) == Character.toLowerCase(c2);
 		}
 		return c1 == c2;
@@ -1215,7 +1217,49 @@ public class NumberUtil {
 	public static int zero2One(int value) {
 		return 0 == value ? 1 : value;
 	}
-	
+
+	/**
+	 * 创建{@link BigInteger}，支持16进制、10进制和8进制，如果传入空白串返回null<br>
+	 * from Apache Common Lang
+	 * 
+	 * @param str 数字字符串
+	 * @return {@link BigInteger}
+	 * @since 3.2.1
+	 */
+	public static BigInteger newBigInteger(String str) {
+		str = StrUtil.trimToNull(str);
+		if (null == str) {
+			return null;
+		}
+		
+		int pos = 0; //数字字符串位置
+		int radix = 10;
+		boolean negate = false; //负数与否
+		if (str.startsWith("-")) {
+			negate = true;
+			pos = 1;
+		}
+		if (str.startsWith("0x", pos) || str.startsWith("0X", pos)) {
+			// hex
+			radix = 16;
+			pos += 2;
+		} else if (str.startsWith("#", pos)) {
+			// alternative hex (allowed by Long/Integer)
+			radix = 16;
+			pos++;
+		} else if (str.startsWith("0", pos) && str.length() > pos + 1) {
+			// octal; so long as there are additional digits
+			radix = 8;
+			pos++;
+		} // default is to treat as decimal
+
+		if(pos > 0) {
+			str = str.substring(pos);
+		}
+		final BigInteger value = new BigInteger(str, radix);
+		return negate ? value.negate() : value;
+	}
+
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {

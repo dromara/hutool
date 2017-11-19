@@ -300,7 +300,27 @@ public class StrUtil {
 	 * @since 3.1.1
 	 */
 	public static String trimToEmpty(CharSequence str) {
-		return str == null ? EMPTY : trim(str, 0);
+		return str == null ? EMPTY : trim(str);
+	}
+	
+	/**
+	 * 除去字符串头尾部的空白，如果字符串是{@code null}，返回<code>""</code>。
+	 *
+	 * <pre>
+	 * StrUtil.trimToNull(null)          = null
+	 * StrUtil.trimToNull("")            = null
+	 * StrUtil.trimToNull("     ")       = null
+	 * StrUtil.trimToNull("abc")         = "abc"
+	 * StrUtil.trimToEmpty("    abc    ") = "abc"
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @return 去除两边空白符后的字符串, 如果为空返回null
+	 * @since 3.2.1
+	 */
+	public static String trimToNull(CharSequence str) {
+		final String trimStr = trim(str);
+		return EMPTY.equals(trimStr) ? null : trimStr;
 	}
 
 	/**
