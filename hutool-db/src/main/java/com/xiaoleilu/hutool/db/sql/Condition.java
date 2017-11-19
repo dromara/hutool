@@ -339,6 +339,7 @@ public class Condition implements Cloneable {
 		}
 	}
 	
+	//----------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 去掉包围在字符串两端的单引号或双引号
 	 * @param value 值
@@ -367,4 +368,5 @@ public class Condition implements Cloneable {
 		}
 		return value.substring(from, to);
 	}
+	//----------------------------------------------------------------------------------------------- Private method end
 }

@@ -37,13 +37,13 @@ public class CRUDTest {
 	
 	@Test
 	public void findBetweenTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("age", "between 18 and 40"));
+		List<Entity> results = runner.findAll(Entity.create("user").set("age", "between '18' and '40'"));
 		Assert.assertEquals(1, results.size());
 	}
 	
 	@Test
 	public void findLikeTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("name", "like %三%"));
+		List<Entity> results = runner.findAll(Entity.create("user").set("name", "like \"%三%\""));
 		Assert.assertEquals(2, results.size());
 	}
 	
