@@ -14,6 +14,7 @@
 * StrUtil增加indexOfIgnoreCase、isSubEquals、indexOf（String参数和IgnoreCase参数）方法
 * StrSpliter类中的方法支持大小写敏感可选参数
 * StrUtil增加replace方法，可以替换字符串某个部分为重复的字符（感谢@【北京】宁静）
+* 改进ExcelWriter增加标题别名（感谢@【帝都】汪汪）
 
 ### Bug修复
 * 在JSON中，空字符串转为bean中的非字符串对象时，传入null，而非报错
