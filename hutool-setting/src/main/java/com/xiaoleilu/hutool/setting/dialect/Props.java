@@ -1,26 +1,9 @@
 package com.xiaoleilu.hutool.setting.dialect;
 
-import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.getter.BasicTypeGetter;
-import com.xiaoleilu.hutool.getter.OptBasicTypeGetter;
-import com.xiaoleilu.hutool.io.FileUtil;
-import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.io.resource.ClassPathResource;
-import com.xiaoleilu.hutool.io.resource.FileResource;
-import com.xiaoleilu.hutool.io.resource.Resource;
-import com.xiaoleilu.hutool.io.resource.ResourceUtil;
-import com.xiaoleilu.hutool.io.resource.UrlResource;
-import com.xiaoleilu.hutool.io.watch.SimpleWatcher;
-import com.xiaoleilu.hutool.io.watch.WatchMonitor;
-import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.StaticLog;
-import com.xiaoleilu.hutool.setting.SettingRuntimeException;
-import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -31,6 +14,27 @@ import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.util.Properties;
 
+import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.getter.BasicTypeGetter;
+import com.xiaoleilu.hutool.getter.OptBasicTypeGetter;
+import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.resource.ClassPathResource;
+import com.xiaoleilu.hutool.io.resource.FileResource;
+import com.xiaoleilu.hutool.io.resource.Resource;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
+import com.xiaoleilu.hutool.io.resource.UrlResource;
+import com.xiaoleilu.hutool.io.watch.SimpleWatcher;
+import com.xiaoleilu.hutool.io.watch.WatchMonitor;
+import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.log.Log;
+import com.xiaoleilu.hutool.log.LogFactory;
+import com.xiaoleilu.hutool.setting.SettingRuntimeException;
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
+
 /**
  * Properties文件读取封装类
  * 
@@ -38,7 +42,7 @@ import java.util.Properties;
  */
 public final class Props extends Properties implements BasicTypeGetter<String>, OptBasicTypeGetter<String> {
 	private static final long serialVersionUID = 1935981579709590740L;
-	private final static Log log = StaticLog.get();
+	private final static Log log = LogFactory.get();
 
 	// ----------------------------------------------------------------------- 私有属性 start
 	/** 属性文件的URL */
@@ -456,13 +460,17 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 持久化当前设置，会覆盖掉之前的设置
 	 * 
 	 * @param absolutePath 设置文件的绝对路径
+	 * @throws IORuntimeException IO异常，可能为文件未找到
 	 */
-	public void store(String absolutePath) {
+	public void store(String absolutePath) throws IORuntimeException{
+		Writer writer = null;
 		try {
-			FileUtil.touch(absolutePath);
+			writer = FileUtil.getWriter(absolutePath, charset, false);
 			super.store(FileUtil.getWriter(absolutePath, charset, false), null);
 		} catch (IOException e) {
-			log.error(e, "Store properties to [{}] error!", absolutePath);
+			throw new IORuntimeException(e, "Store properties to [{}] error!", absolutePath);
+		} finally {
+			IoUtil.close(writer);
 		}
 	}
 

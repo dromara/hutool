@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.setting;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -11,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.resource.UrlResource;
 import com.xiaoleilu.hutool.log.Log;
@@ -157,10 +157,8 @@ public class SettingLoader {
 			for (Entry<Object, Object> entry : this.setting.entrySet()) {
 				writer.write(StrUtil.format("{} {} {}", entry.getKey(), ASSIGN_FLAG, entry.getValue()));
 			}
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(StrUtil.format("Can not find file [{}]!", absolutePath), e);
 		} catch (IOException e) {
-			throw new RuntimeException("Store Setting error!", e);
+			throw new IORuntimeException(e, "Store Setting to [{}] error!", absolutePath);
 		}finally{
 			IoUtil.close(writer);
 		}
