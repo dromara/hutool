@@ -2743,4 +2743,40 @@ public class StrUtil {
 
 		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
 	}
+	
+	/**
+	 * 替换指定字符串的指定区间内字符为固定字符
+	 * @param str 字符串
+	 * @param startInclude 开始位置（包含）
+	 * @param endExclude 结束位置（不包含）
+	 * @param replacedChar 被替换的字符
+	 * @return 替换后的字符串
+	 * @since 3.2.1
+	 */
+	public static String replace(CharSequence str, int startInclude, int endExclude, char replacedChar) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		final int strLength = str.length();
+		if(startInclude > strLength) {
+			return str(str);
+		}
+		if(endExclude > strLength) {
+			endExclude = strLength;
+		}
+		if(startInclude > endExclude) {
+			//如果起始位置大于结束位置，不替换
+			return str(str);
+		}
+		
+		final char[] chars = new char[strLength];
+		for(int i = 0; i < strLength; i++) {
+			if(i >= startInclude && i < endExclude) {
+				chars[i] = replacedChar;
+			}else {
+				chars[i] = str.charAt(i);
+			}
+		}
+		return new String(chars);
+	}
 }

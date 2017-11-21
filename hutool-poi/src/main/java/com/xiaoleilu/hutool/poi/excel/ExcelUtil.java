@@ -291,30 +291,31 @@ public class ExcelUtil {
 	}
 	
 	/**
-	 * 根据文件路径创建新的工作簿
-	 * @param destFilePath 目标文件路径，文件可以不存在
+	 * 根据文件路径创建新的工作簿，文件路径
+	 * 
+	 * @param destFilePath 目标文件路径，文件可以不存在，通过扩展名判断Workbook类型
 	 * @return {@link Workbook}
 	 * @since 3.2.0
 	 */
 	public static Workbook createBook(String destFilePath) {
-		return createBook(FileUtil.file(destFilePath));
-	}
-	
-	/**
-	 * 根据文件路径创建新的工作簿
-	 * @param destFile 目标文件，文件可以不存在
-	 * @return {@link Workbook}
-	 * @since 3.2.0
-	 */
-	public static Workbook createBook(File destFile) {
-		final String fileName = destFile.getName();
 		Workbook workbook;
-		if(StrUtil.endWithIgnoreCase(fileName, "xlsx")) {
+		if(StrUtil.endWithIgnoreCase(destFilePath, "xlsx")) {
 			workbook = new XSSFWorkbook();
 		}else {
 			workbook = new HSSFWorkbook();
 		}
 		return workbook;
+	}
+	
+	/**
+	 * 根据文件路径创建新的工作簿
+	 * 
+	 * @param destFile 目标文件，文件可以不存在
+	 * @return {@link Workbook}
+	 * @since 3.2.0
+	 */
+	public static Workbook createBook(File destFile) {
+		return createBook(destFile.getName());
 	}
 	
 	/**

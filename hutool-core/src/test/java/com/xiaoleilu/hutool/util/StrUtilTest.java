@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.lang.Dict;
-import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 字符串工具类单元测试
@@ -130,5 +129,13 @@ public class StrUtilTest {
 		Assert.assertEquals(-1 , StrUtil.lastIndexOfIgnoreCase("aabaabaa", "B", -1));
 		Assert.assertEquals(2 , StrUtil.lastIndexOfIgnoreCase("aabaabaa", "", 2));
 		Assert.assertEquals(3 , StrUtil.lastIndexOfIgnoreCase("abc", "", 9));
+	}
+	
+	@Test
+	public void replaceTest() {
+		String string = StrUtil.replace("aabbccdd", 2, 6, '*');
+		Assert.assertEquals("aa****dd", string);
+		string = StrUtil.replace("aabbccdd", 2, 12, '*');
+		Assert.assertEquals("aa******", string);
 	}
 }

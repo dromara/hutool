@@ -13,6 +13,7 @@
 * DB模块find方法支持从where的Entity中获取返回字段列表（感谢@【北京】大大宝）
 * StrUtil增加indexOfIgnoreCase、isSubEquals、indexOf（String参数和IgnoreCase参数）方法
 * StrSpliter类中的方法支持大小写敏感可选参数
+* StrUtil增加replace方法，可以替换字符串某个部分为重复的字符（感谢@【北京】宁静）
 
 ### Bug修复
 * 在JSON中，空字符串转为bean中的非字符串对象时，传入null，而非报错

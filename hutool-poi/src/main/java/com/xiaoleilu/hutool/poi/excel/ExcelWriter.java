@@ -4,6 +4,9 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,6 +20,7 @@ import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -42,6 +46,8 @@ public class ExcelWriter implements Closeable {
 	private CellStyle cellStyle;
 	/** 当前行 */
 	private AtomicInteger currentRow = new AtomicInteger(0);
+	/** 标题行别名 */
+	private Map<String, String> headerAlias;
 
 	// -------------------------------------------------------------------------- Constructor start
 	/**
@@ -82,7 +88,7 @@ public class ExcelWriter implements Closeable {
 		this(ExcelUtil.createBook(destFile), sheetName);
 		this.destFile = destFile;
 	}
-
+	
 	/**
 	 * 构造<br>
 	 * 自定义{@link Workbook}，若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件
@@ -194,6 +200,18 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter setDestFile(File destFile) {
 		this.destFile = destFile;
+		return this;
+	}
+	
+	/**
+	 * 设置标题别名，key为Map中的key，value为别名
+	 * 
+	 * @param headerAlias 标题别名
+	 * @return this
+	 * @since 3.2.1
+	 */
+	public ExcelWriter setHeaderAlias(Map<String, String> headerAlias) {
+		this.headerAlias = headerAlias;
 		return this;
 	}
 
@@ -318,11 +336,9 @@ public class ExcelWriter implements Closeable {
 	public ExcelWriter writeRows(Map<?, ?> rowMap, boolean isWriteKeys) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		if (isWriteKeys) {
-			writeHeadRow(rowMap.keySet());
-			writeRow(rowMap.values());
-		} else {
-			writeRow(rowMap.values());
+			writeHeadRow(aliasHeader(rowMap.keySet()));
 		}
+		writeRow(rowMap.values());
 		return this;
 	}
 
@@ -382,5 +398,23 @@ public class ExcelWriter implements Closeable {
 	}
 
 	// -------------------------------------------------------------------------- Private method start
+	/**
+	 * 为指定的key列表添加标题别名，如果没有定义key的别名，使用原key
+	 * 
+	 * @param keys 键列表
+	 * @return 别名列表
+	 */
+	private Collection<?> aliasHeader(Collection<?> keys){
+		if(MapUtil.isEmpty(this.headerAlias)) {
+			return keys;
+		}
+		final List<Object> alias = new ArrayList<>();
+		String aliasName;
+		for (Object key : keys) {
+			aliasName = this.headerAlias.get(key);
+			alias.add(null == aliasName ? key : aliasName);
+		}
+		return alias;
+	}
 	// -------------------------------------------------------------------------- Private method end
 }
