@@ -16,6 +16,7 @@ import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 import com.xiaoleilu.hutool.poi.excel.ExcelWriter;
+import com.xiaoleilu.hutool.util.MapUtil;
 
 /**
  * 写出Excel单元测试
@@ -99,6 +100,11 @@ public class ExcelWriteTest {
 		List<TestBean> rows = CollUtil.newArrayList(bean1, bean2);
 		// 通过工具类创建writer
 		ExcelWriter writer = ExcelUtil.getWriter("d:/writeBeanTest.xlsx");
+		//自定义标题
+		Map<String, String> alias = MapUtil.newHashMap();
+		alias.put("name", "姓名");
+		alias.put("age", "年龄");
+		writer.setHeaderAlias(alias);
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式

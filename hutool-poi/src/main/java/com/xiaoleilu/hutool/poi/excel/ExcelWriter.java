@@ -51,6 +51,29 @@ public class ExcelWriter implements Closeable {
 
 	// -------------------------------------------------------------------------- Constructor start
 	/**
+	 * 构造，默认生成xls格式的Excel文件<br>
+	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
+	 * 
+	 * @since 3.2.1
+	 */
+	public ExcelWriter() {
+		this(false);
+	}
+	
+	/**
+	 * 构造<br>
+	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
+	 * 
+	 * @param isXlsx 是否为xlsx格式
+	 * @since 3.2.1
+	 */
+	public ExcelWriter(boolean isXlsx) {
+		this(ExcelUtil.createBook(isXlsx ? ".xlsx" : ".xls"), null);
+	}
+	
+	/**
 	 * 构造，默认写出到第一个sheet，第一个sheet名为sheet1
 	 * 
 	 * @param destFilePath 目标文件路径，可以不存在
@@ -91,7 +114,8 @@ public class ExcelWriter implements Closeable {
 	
 	/**
 	 * 构造<br>
-	 * 自定义{@link Workbook}，若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件
+	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
 	 * 
 	 * @param workbook {@link Workbook}
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1

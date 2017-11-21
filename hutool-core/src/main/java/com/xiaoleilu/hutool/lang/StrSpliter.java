@@ -192,7 +192,6 @@ public class StrSpliter {
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符串
-	 * @param limit 限制分片数
 	 * @param isTrim 是否去除切分字符串后每个元素两边的空格
 	 * @param ignoreEmpty 是否忽略空串
 	 * @return 切分后的集合
@@ -207,7 +206,6 @@ public class StrSpliter {
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符串
-	 * @param limit 限制分片数
 	 * @param ignoreEmpty 是否忽略空串
 	 * @return 切分后的集合
 	 * @since 3.2.1

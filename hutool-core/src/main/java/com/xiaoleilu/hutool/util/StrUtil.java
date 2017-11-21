@@ -2415,9 +2415,7 @@ public class StrUtil {
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串
-	 * @param fromIndex 起始位置
-	 * @param ignoreCase 是否忽略大小写
-	 * @return
+	 * @return 位置
 	 * @since 3.2.1
 	 */
 	public static int indexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
@@ -2444,8 +2442,7 @@ public class StrUtil {
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串
 	 * @param fromIndex 起始位置
-	 * @param ignoreCase 是否忽略大小写
-	 * @return
+	 * @return 位置
 	 * @since 3.2.1
 	 */
 	public static int indexOfIgnoreCase(final CharSequence str, final CharSequence searchStr, int fromIndex) {
@@ -2459,7 +2456,7 @@ public class StrUtil {
 	 * @param searchStr 需要查找位置的字符串
 	 * @param fromIndex 起始位置
 	 * @param ignoreCase 是否忽略大小写
-	 * @return
+	 * @return 位置
 	 * @since 3.2.1
 	 */
 	public static int indexOf(final CharSequence str, final CharSequence searchStr, int fromIndex, boolean ignoreCase) {
