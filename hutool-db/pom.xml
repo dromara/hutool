@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.xiaoleilu</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>3.2.1</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
