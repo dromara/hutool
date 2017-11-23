@@ -16,6 +16,7 @@
 * StrUtil增加replace方法，可以替换字符串某个部分为重复的字符（感谢@【北京】宁静）
 * 改进ExcelWriter增加标题别名（感谢@【帝都】汪汪）
 * ExcelWriter增加构造方法，ExcelUtil.getWriter增加相应的重载方法（感谢@【帝都】汪汪）
+* ArrayUtil增加nullToEmpty方法（感谢@【北京】宁静）
 
 ### Bug修复
 * 在JSON中，空字符串转为bean中的非字符串对象时，传入null，而非报错
@@ -24,6 +25,7 @@
 * 修复ClassPathResource.getAbsolutePath方法获取路径非标准的问题（感谢@【北京】宁静）
 * 修复ClassUtil.getClassPath方法获取到的中文路径为编码后的，同时添加可选是否获取解码后的路径（感谢@【北京】宁静）
 * Props的store方法异常抛出，而非打印日志。修复Writer未关闭问题（感谢@【西安】小雷）
+* 修复ArrayUtil.filter方法过滤无效错误
 
 -------------------------------------------------------------------------------------------------------------
 

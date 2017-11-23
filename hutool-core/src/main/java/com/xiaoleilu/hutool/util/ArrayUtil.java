@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.Editor;
+import com.xiaoleilu.hutool.lang.Filter;
 
 /**
  * 数组工具类
@@ -566,7 +567,13 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 过滤
+	 * 过滤<br>
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param array 数组
@@ -574,15 +581,56 @@ public class ArrayUtil {
 	 * @return 过滤后的数组
 	 */
 	public static <T> T[] filter(T[] array, Editor<T> editor) {
-		ArrayList<T> list = new ArrayList<T>();
+		ArrayList<T> list = new ArrayList<T>(array.length);
 		T modified;
 		for (T t : array) {
 			modified = editor.edit(t);
 			if (null != modified) {
+				list.add(modified);
+			}
+		}
+		return list.toArray(Arrays.copyOf(array, list.size()));
+	}
+	
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
+	 * </pre>
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组
+	 * @param filter 过滤器接口，用于定义过滤规则
+	 * @return 过滤后的数组
+	 * @since 3.2.1
+	 */
+	public static <T> T[] filter(T[] array, Filter<T> filter) {
+		ArrayList<T> list = new ArrayList<T>(array.length);
+		boolean isAccept;
+		for (T t : array) {
+			isAccept = filter.accept(t);
+			if (isAccept) {
 				list.add(t);
 			}
 		}
 		return list.toArray(Arrays.copyOf(array, list.size()));
+	}
+	
+	/**
+	 * 数组元素中的null转换为""
+	 * 
+	 * @param array 数组
+	 * @return 新数组
+	 * @since 3.2.1
+	 */
+	public static String[] nullToEmpty(String[] array){
+		return filter(array, new Editor<String>() {
+			@Override
+			public String edit(String t) {
+				return null == t ? StrUtil.EMPTY : t;
+			}});
 	}
 
 	/**
@@ -2059,7 +2107,7 @@ public class ArrayUtil {
 	public static boolean[] removeEle(boolean[] array, boolean element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-
+	
 	//------------------------------------------------------------------------------------------------------------ Reverse array
 	
 	/**
