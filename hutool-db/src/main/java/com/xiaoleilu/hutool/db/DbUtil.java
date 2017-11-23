@@ -544,32 +544,10 @@ public final class DbUtil {
 	 * 通过JDBC URL等信息识别JDBC驱动名
 	 * @param nameContainsProductInfo 包含数据库标识的字符串
 	 * @return 驱动
+	 * @see DialectFactory#identifyDriver(String)
 	 */
 	public static String identifyDriver(String nameContainsProductInfo) {
-		if(StrUtil.isBlank(nameContainsProductInfo)) {
-			return null;
-		}
-		//全部转为小写，忽略大小写
-		nameContainsProductInfo = nameContainsProductInfo.toLowerCase();
-		
-		String driver = null;
-		if(nameContainsProductInfo.contains("mysql")) {
-			driver = DialectFactory.DRIVER_MYSQL;
-		}else if(nameContainsProductInfo.contains("oracle")) {
-			driver = DialectFactory.DRIVER_ORACLE;
-		}else if(nameContainsProductInfo.contains("postgresql")) {
-			driver = DialectFactory.DRIVER_POSTGRESQL;
-		}else if(nameContainsProductInfo.contains("sqlite")) {
-			driver = DialectFactory.DRIVER_SQLLITE3;
-		}else if(nameContainsProductInfo.contains("sqlserver")) {
-			driver = DialectFactory.DRIVER_SQLSERVER;
-		}else if(nameContainsProductInfo.contains("hive")) {
-			driver = DialectFactory.DRIVER_HIVE;
-		}else if(nameContainsProductInfo.contains("hive2")) {
-			driver = DialectFactory.DRIVER_HIVE2;
-		}
-		
-		return driver;
+		return DialectFactory.identifyDriver(nameContainsProductInfo);
 	}
 	
 	/**

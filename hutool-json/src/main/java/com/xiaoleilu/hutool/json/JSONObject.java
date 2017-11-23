@@ -1,7 +1,5 @@
 package com.xiaoleilu.hutool.json;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -17,10 +15,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.bean.BeanDesc.PropDesc;
 import com.xiaoleilu.hutool.bean.BeanResolver;
 import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -615,38 +613,34 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param ignoreNullValue 是否忽略空值
 	 */
 	private void populateMap(Object bean, boolean ignoreNullValue) {
-		PropertyDescriptor[] propertyDescriptors = null;
-		try {
-			propertyDescriptors = BeanUtil.getPropertyDescriptors(bean.getClass());
-		} catch (IntrospectionException e) {
-			throw new JSONException(e);
-		}
+		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
 		
-		String key;
-		Method readMethod;
+		Method getter;
 		Object value;
-		for (PropertyDescriptor property : propertyDescriptors) {
-			key = property.getName();
-			// 过滤class属性
-			if (false == key.equals("class") && false == key.equals("declaringClass")) {
-				// 得到property对应的getter方法
-				readMethod = ClassUtil.setAccessible(property.getReadMethod());
-				if(null != readMethod) {
-					//只读取有getter方法的属性
-					try {
-						value = readMethod.invoke(bean);
-					} catch (Exception ignore) {
-						//忽略读取失败的属性
-						continue;
-					}
-					if(null == value) {
-						if(false == ignoreNullValue) {
-							this.rawHashMap.put(key, JSONUtil.wrap(value));
-						}
-					}else if (false == value.equals(bean)) {
-						this.rawHashMap.put(key, JSONUtil.wrap(value));
-					}
-				}
+		for (PropDesc prop : props) {
+			// 得到property对应的getter方法
+			getter = prop.getGetter();
+			if(null == getter) {
+				//无Getter跳过
+				continue;
+			}
+			
+			//只读取有getter方法的属性
+			try {
+				value = getter.invoke(bean);
+			} catch (Exception ignore) {
+				//忽略读取失败的属性
+				continue;
+			}
+			
+			if(null == value && ignoreNullValue) {
+				//值为null且用户定义跳过则跳过
+				continue;
+			}
+			
+			if (value != bean) {
+				//防止循环引用
+				this.rawHashMap.put(prop.getFieldName(), JSONUtil.wrap(value));
 			}
 		}
 	}

@@ -33,6 +33,12 @@ public class DialectFactory {
 	public final static String DRIVER_HIVE = "org.apache.hadoop.hive.jdbc.HiveDriver";
 	/** JDBC 驱动 Hive2 */
 	public final static String DRIVER_HIVE2 = "org.apache.hive.jdbc.HiveDriver";
+	/** JDBC 驱动 H2 */
+	public final static String DRIVER_H2 = "org.h2.Driver";
+	/** JDBC 驱动 Derby */
+	public final static String DRIVER_DERBY = "org.apache.derby.jdbc.ClientDriver";
+	/** JDBC 驱动 Derby嵌入式 */
+	public final static String DRIVER_DERBY_EMBEDDED = "org.apache.derby.jdbc.EmbeddedDriver";
 	
 	private DialectFactory() {
 	}
@@ -57,6 +63,45 @@ public class DialectFactory {
 		
 		//无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句
 		return new AnsiSqlDialect();
+	}
+	
+	/**
+	 * 通过JDBC URL等信息识别JDBC驱动名
+	 * 
+	 * @param nameContainsProductInfo 包含数据库标识的字符串
+	 * @return 驱动
+	 */
+	public static String identifyDriver(String nameContainsProductInfo) {
+		if(StrUtil.isBlank(nameContainsProductInfo)) {
+			return null;
+		}
+		//全部转为小写，忽略大小写
+		nameContainsProductInfo = nameContainsProductInfo.toLowerCase();
+		
+		String driver = null;
+		if(nameContainsProductInfo.contains("mysql")) {
+			driver = DRIVER_MYSQL;
+		}else if(nameContainsProductInfo.contains("oracle")) {
+			driver = DRIVER_ORACLE;
+		}else if(nameContainsProductInfo.contains("postgresql")) {
+			driver = DRIVER_POSTGRESQL;
+		}else if(nameContainsProductInfo.contains("sqlite")) {
+			driver = DRIVER_SQLLITE3;
+		}else if(nameContainsProductInfo.contains("sqlserver")) {
+			driver = DRIVER_SQLSERVER;
+		}else if(nameContainsProductInfo.contains("hive")) {
+			driver = DRIVER_HIVE;
+		}else if(nameContainsProductInfo.contains("h2")) {
+			driver = DRIVER_H2;
+		}else if(nameContainsProductInfo.startsWith("jdbc:derby://")) {
+			//Derby数据库网络连接方式
+			driver = DRIVER_DERBY;
+		}else if(nameContainsProductInfo.contains("derby")) {
+			//嵌入式Derby数据库
+			driver = DRIVER_DERBY_EMBEDDED;
+		}
+		
+		return driver;
 	}
 	
 	/**

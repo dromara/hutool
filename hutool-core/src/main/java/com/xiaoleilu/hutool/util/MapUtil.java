@@ -422,7 +422,7 @@ public class MapUtil {
 		for (Entry<K, V> entry : map.entrySet()) {
 			modified = editor.edit(entry);
 			if (null != modified) {
-				map2.put(entry.getKey(), entry.getValue());
+				map2.put(modified.getKey(), modified.getValue());
 			}
 		}
 		return map2;
@@ -457,6 +457,35 @@ public class MapUtil {
 			}
 		}
 		return map2;
+	}
+	
+	/**
+	 * Map的键和值互换
+	 * @param map Map对象，键值类型必须一致
+	 * @return 互换后的Map
+	 * @since 3.2.2
+	 */
+	public static <T> Map<T, T> reverse(Map<T, T> map){
+		return filter(map, new Editor<Map.Entry<T, T>>() {
+			@Override
+			public Entry<T, T> edit(final Entry<T, T> t) {
+				return new Entry<T, T>() {
+
+					@Override
+					public T getKey() {
+						return t.getValue();
+					}
+
+					@Override
+					public T getValue() {
+						return t.getKey();
+					}
+
+					@Override
+					public T setValue(T value) {
+						throw new UnsupportedOperationException("Unsupported setValue method !");
+					}};
+			}});
 	}
 
 	/**

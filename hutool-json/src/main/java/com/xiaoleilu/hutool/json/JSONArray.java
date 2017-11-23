@@ -18,6 +18,7 @@ import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
  * JSON数组<br>
  * JSON数组是表示中括号括住的数据表现形式<br>
  * 对应的JSON字符串格格式例如:
+ * 
  * <pre>
  * ["a", "b", "c", 12]
  * </pre>
@@ -37,15 +38,42 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public JSONArray() {
 		this.rawList = new ArrayList<Object>();
 	}
+	
+	/**
+	 * 构造<br>
+	 * 默认使用{@link ArrayList} 实现
+	 * 
+	 * @param initialCapacity 初始大小
+	 * @since 3.2.2
+	 */
+	public JSONArray(int initialCapacity) {
+		this.rawList = new ArrayList<Object>(initialCapacity);
+	}
 
 	/**
 	 * 构造<br>
-	 * 此构造初始化JSONArray的List实现，既传入的List类型是什么，JSONArray的类型就是什么
+	 * 将参数数组中的元素转换为JSON对应的对象加入到JSONArray中
 	 * 
 	 * @param list 初始化的JSON数组
 	 */
-	public JSONArray(List<Object> list) {
-		this.rawList = list;
+	public JSONArray(Iterable<Object> list) {
+		this();
+		for (Object o : list) {
+			this.add(o);
+		}
+	}
+	
+	/**
+	 * 构造<br>
+	 * 将参数数组中的元素转换为JSON对应的对象加入到JSONArray中
+	 * 
+	 * @param list 初始化的JSON数组
+	 */
+	public JSONArray(Collection<Object> list) {
+		this(list.size());
+		for (Object o : list) {
+			this.add(o);
+		}
 	}
 
 	/**
@@ -56,33 +84,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 */
 	public JSONArray(JSONTokener x) throws JSONException {
 		this();
-		if (x.nextClean() != '[') {
-			throw x.syntaxError("A JSONArray text must start with '['");
-		}
-		if (x.nextClean() != ']') {
-			x.back();
-			for (;;) {
-				if (x.nextClean() == ',') {
-					x.back();
-					this.rawList.add(JSONNull.NULL);
-				} else {
-					x.back();
-					this.rawList.add(x.nextValue());
-				}
-				switch (x.nextClean()) {
-					case ',':
-						if (x.nextClean() == ']') {
-							return;
-						}
-						x.back();
-						break;
-					case ']':
-						return;
-					default:
-						throw x.syntaxError("Expected a ',' or ']'");
-				}
-			}
-		}
+		init(x);
 	}
 
 	/**
@@ -91,27 +93,37 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @param source JSON数组字符串
 	 * @throws JSONException If there is a syntax error.
 	 */
-	public JSONArray(String source) throws JSONException {
-		this(new JSONTokener(source));
+	public JSONArray(CharSequence source) throws JSONException {
+		this();
+		init(source);
 	}
 
 	/**
-	 * 从数组或{@link Collection}对象构造
+	 * 从对象构造<br>
+	 * 支持以下类型的参数：
+	 * 
+	 * <pre>
+	 * 1. 数组
+	 * 2. {@link Iterable}对象
+	 * 3. JSON数组字符串
+	 * </pre>
 	 *
-	 * @param arrayOrCollection 数组或集合
+	 * @param object 数组或集合或JSON数组字符串
 	 * @throws JSONException 非数组或集合
 	 */
-	public JSONArray(Object arrayOrCollection) throws JSONException {
+	public JSONArray(Object object) throws JSONException {
 		this();
-		if (arrayOrCollection.getClass().isArray()) {// 数组
-			int length = Array.getLength(arrayOrCollection);
+		if (object.getClass().isArray()) {// 数组
+			int length = Array.getLength(object);
 			for (int i = 0; i < length; i += 1) {
-				this.put(JSONUtil.wrap(Array.get(arrayOrCollection, i)));
+				this.put(JSONUtil.wrap(Array.get(object, i)));
 			}
-		} else if (arrayOrCollection instanceof Iterable<?>) {// Iterable
-			for (Object o : (Collection<?>) arrayOrCollection) {
+		} else if (object instanceof Iterable<?>) {// Iterable
+			for (Object o : (Iterable<?>) object) {
 				this.add(o);
 			}
+		} else if (object instanceof CharSequence) {
+			init((CharSequence) object);
 		} else {
 			throw new JSONException("JSONArray initial value should be a string or collection or array.");
 		}
@@ -162,7 +174,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public Object getByExp(String expression) {
 		return BeanResolver.resolveBean(this, expression);
 	}
-	
+
 	@Override
 	public <T> T getByExp(String expression, Class<T> resultType) {
 		return Convert.convert(resultType, getByExp(expression));
@@ -254,15 +266,16 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 格式化打印JSON，缩进为4个空格
+	 * 
 	 * @return 格式化后的JSON字符串
 	 * @throws JSONException 包含非法数抛出此异常
 	 * @since 3.0.9
 	 */
 	@Override
-	public String toStringPretty() throws JSONException{
+	public String toStringPretty() throws JSONException {
 		return this.toJSONString(4);
 	}
 
@@ -467,7 +480,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public Object[] toArray(Class<?> arrayClass, boolean ignoreError) {
 		return InternalJSONUtil.toArray(this, arrayClass, ignoreError);
 	}
-	
+
 	/**
 	 * 转为{@link ArrayList}
 	 * 
@@ -477,8 +490,56 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @since 3.0.8
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> ArrayList<T> toList(Class<T> elementType){
+	public <T> ArrayList<T> toList(Class<T> elementType) {
 		final CollectionConverter converter = new CollectionConverter(ArrayList.class, elementType);
 		return (ArrayList<T>) converter.convert(this, null);
 	}
+
+	// ------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 初始化
+	 * 
+	 * @param source JSON字符串
+	 */
+	private void init(CharSequence source) {
+		if (null != source) {
+			init(new JSONTokener(source.toString()));
+		}
+	}
+
+	/**
+	 * 初始化
+	 * 
+	 * @param x {@link JSONTokener}
+	 */
+	private void init(JSONTokener x) {
+		if (x.nextClean() != '[') {
+			throw x.syntaxError("A JSONArray text must start with '['");
+		}
+		if (x.nextClean() != ']') {
+			x.back();
+			for (;;) {
+				if (x.nextClean() == ',') {
+					x.back();
+					this.rawList.add(JSONNull.NULL);
+				} else {
+					x.back();
+					this.rawList.add(x.nextValue());
+				}
+				switch (x.nextClean()) {
+				case ',':
+					if (x.nextClean() == ']') {
+						return;
+					}
+					x.back();
+					break;
+				case ']':
+					return;
+				default:
+					throw x.syntaxError("Expected a ',' or ']'");
+				}
+			}
+		}
+	}
+	// ------------------------------------------------------------------------------------------------- Private method end
 }

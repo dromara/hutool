@@ -3,17 +3,16 @@ package com.xiaoleilu.hutool.json;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 public class JSONUtilTest {
+	
 	@Test
-	@Ignore
 	public void toJsonStrTest() {
 		UserA a1 = new UserA();
 		a1.setA("aaaa");
@@ -30,6 +29,6 @@ public class JSONUtilTest {
 		map.put("rows", list);
 		
 		String str = JSONUtil.toJsonStr(map);
-		Console.log(str);
+		Assert.assertNotNull(str);
 	}
 }
