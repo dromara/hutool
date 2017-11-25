@@ -53,7 +53,18 @@ public abstract class AbstractSqlRunner{
 	public <T> List<Entity> query(String sql, Object... params) throws SQLException {
 		return query(sql, new EntityListHandler(), params);
 	}
-
+	/**
+	 * 查询单条记录
+	 *
+	 * @param 结果集需要处理的对象类型，只取第一条记录
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public Entity queryOne(String sql, Object... params) throws SQLException {
+		return query(sql, new EntityHandler(), params);
+	}
 	/**
 	 * 查询
 	 * 
