@@ -10,7 +10,8 @@
 * 允许设置查询字段（pr#56@Github）
 * 增加SQL执行查询单条记录的方法（pr#57@Github）
 * 增加查询结果为单个字符串时的处理器（pr#58@Github）
-* 
+* DateTime提供toJdkDate方法以适应需要原生Date对象的环境
+* IdCardUtil提供hide方法，用于将固定位置的数字隐藏为星号
 
 ### Bug修复
 * 修复MapUtil.filter方法修改值无效问题

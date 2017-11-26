@@ -7,7 +7,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.json.test.bean.Price;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 public class JSONUtilTest {
@@ -28,7 +30,16 @@ public class JSONUtilTest {
 		map.put("total", 13);
 		map.put("rows", list);
 		
+		
 		String str = JSONUtil.toJsonStr(map);
 		Assert.assertNotNull(str);
+	}
+	
+	@Test
+	public void toBeanTest() {
+		String json = "{\"ADT\":[[{\"BookingCode\":[\"N\",\"N\"]}]]}";
+		
+		Price price = JSONUtil.toBean(json, Price.class);
+		Console.log("%%% " + price.getADT().get(0).get(0));
 	}
 }

@@ -1,6 +1,5 @@
 package com.xiaoleilu.hutool.collection;
 
-import java.lang.reflect.Array;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Matcher;
@@ -1306,7 +1306,7 @@ public class CollUtil {
 	 * 
 	 * @param <T> 元素类型
 	 * @param collection 被加入的集合
-	 * @param value 对象，可能为Iterator、Iterable、Enumeration、Array
+	 * @param value 对象，可能为Iterator、Iterable、Enumeration、Array，或者与集合元素类型一致
 	 * @param elementType 元素类型，为空时，使用Object类型来接纳所有类型
 	 * @return 被加入集合
 	 */
@@ -1315,37 +1315,36 @@ public class CollUtil {
 		if (null == collection || null == value) {
 			return collection;
 		}
-		if (null == elementType) {// 元素类型为空时，使用Object类型来接纳所有类型
+		if (null != elementType && elementType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementType)) {
+			Console.log("{} {}", value, elementType);
+			
+			//其它类型按照单一元素处理
+			collection.add((T) value);
+			return collection;
+		}
+		if (null == elementType) {
+			// 元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
 		}
-
-		final ConverterRegistry convert = ConverterRegistry.getInstance();
-		if (elementType.isInstance(value)) {
-			collection.add((T) value);
-		} else if (value instanceof Iterator) {
-			final Iterator iter = (Iterator) value;
-			while (iter.hasNext()) {
-				collection.add((T) convert.convert(elementType, iter.next()));
-			}
-			addAll(collection, (Iterator<T>) value);
+		
+		Iterator iter;
+		if (value instanceof Iterator) {
+			iter = (Iterator) value;
 		} else if (value instanceof Iterable) {
-			final Iterator iter = ((Iterable) value).iterator();
-			while (iter.hasNext()) {
-				collection.add((T) convert.convert(elementType, iter.next()));
-			}
+			iter = ((Iterable) value).iterator();
 		} else if (value instanceof Enumeration) {
-			final Enumeration enumeration = ((Enumeration) value);
-			while (enumeration.hasMoreElements()) {
-				collection.add((T) convert.convert(elementType, enumeration.nextElement()));
-			}
+			iter = new EnumerationIterator<>((Enumeration) value);
 		} else if (ArrayUtil.isArray(value)) {
-			final int length = Array.getLength(value);
-			Object item;
-			for (int i = 0; i < length; i++) {
-				item = Array.get(value, i);
-				collection.add((T) convert.convert(elementType, item));
-			}
+			iter = new ArrayIterator<>(value);
+		} else {
+			throw new UtilException("Unsupport value type [] !", value.getClass());
 		}
+		
+		final ConverterRegistry convert = ConverterRegistry.getInstance();
+		while (iter.hasNext()) {
+			collection.add((T) convert.convert(elementType, iter.next()));
+		}
+		
 		return collection;
 	}
 

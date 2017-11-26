@@ -19,14 +19,14 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
  *
  */
 public class RandomUtil {
-	
+
 	/** 用于随机选的数字 */
 	private static final String BASE_NUMBER = "0123456789";
 	/** 用于随机选的字符 */
 	private static final String BASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
 	/** 用于随机选的字符和数字 */
 	private static final String BASE_CHAR_NUMBER = BASE_CHAR + BASE_NUMBER;
-	
+
 	/**
 	 * 获取随机数生成器对象<br>
 	 * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。
@@ -37,7 +37,7 @@ public class RandomUtil {
 	public static ThreadLocalRandom getRandom() {
 		return ThreadLocalRandom.current();
 	}
-	
+
 	/**
 	 * 获取{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)
 	 * 
@@ -134,7 +134,7 @@ public class RandomUtil {
 
 		return result;
 	}
-	
+
 	/**
 	 * 随机获得列表中的一定量的不重复元素，返回Set
 	 * 
@@ -146,10 +146,10 @@ public class RandomUtil {
 	 */
 	public static <T> Set<T> randomEleSet(Collection<T> collection, int count) {
 		ArrayList<T> source = new ArrayList<>(new HashSet<>(collection));
-		if(count > source.size()){
+		if (count > source.size()) {
 			throw new IllegalArgumentException("Count is larger than collection distinct size !");
 		}
-		
+
 		final HashSet<T> result = new HashSet<T>(count);
 		int limit = collection.size();
 		while (result.size() < count) {
@@ -199,27 +199,30 @@ public class RandomUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 随机数字
+	 * 
 	 * @return 随机字符
 	 * @since 3.1.2
 	 */
 	public static int randomNumber() {
 		return randomChar(BASE_NUMBER);
 	}
-	
+
 	/**
 	 * 随机字母或数字，小写
+	 * 
 	 * @return 随机字符
 	 * @since 3.1.2
 	 */
 	public static char randomChar() {
 		return randomChar(BASE_CHAR_NUMBER);
 	}
-	
+
 	/**
 	 * 随机字符
+	 * 
 	 * @param baseString 随机字符选取的样本
 	 * @return 随机字符
 	 * @since 3.1.2
@@ -233,5 +236,16 @@ public class RandomUtil {
 	 */
 	public static String randomUUID() {
 		return UUID.randomUUID().toString();
+	}
+
+	// ------------------------------------------------------------------- UUID
+	/**
+	 * 简化的UUID，去掉了横线
+	 * 
+	 * @return 简化的UUID，去掉了横线
+	 * @since 3.2.2
+	 */
+	public static String simpleUUID() {
+		return randomUUID().replace("-", "");
 	}
 }

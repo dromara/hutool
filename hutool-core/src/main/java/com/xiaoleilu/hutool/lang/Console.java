@@ -11,9 +11,8 @@ import static java.lang.System.err;
  * @author Looly
  *
  */
-public final class Console {
 	
-	private Console() {}
+public class Console{
 	
 	//--------------------------------------------------------------------------------- Log
 	/**

@@ -17,7 +17,6 @@ import java.security.cert.CertificateFactory;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.UUID;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -705,6 +704,6 @@ public final class SecureUtil {
 	 * @return 简化的UUID，去掉了横线
 	 */
 	public static String simpleUUID() {
-		return UUID.randomUUID().toString().replace("-", "");
+		return RandomUtil.simpleUUID();
 	}
 }

@@ -458,6 +458,19 @@ public class IdcardUtil {
 		}
 		return null;
 	}
+	
+	/**
+	 * 隐藏指定位置的几个身份证号数字为“*”
+	 * 
+	 * @param idCard 身份证号
+	 * @param startInclude 开始位置（包含）
+	 * @param endExclude 结束位置（不包含）
+	 * @return 隐藏后的身份证号码
+	 * @since 3.2.2
+	 */
+	public static String hide(String idCard, int startInclude, int endExclude) {
+		return StrUtil.replace(idCard, startInclude, endExclude, '*');
+	}
 
 	// ----------------------------------------------------------------------------------- Private method start
 	/**

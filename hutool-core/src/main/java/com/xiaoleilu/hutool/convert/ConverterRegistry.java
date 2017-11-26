@@ -10,6 +10,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Currency;
 import java.util.Map;
 import java.util.TimeZone;
@@ -28,6 +29,7 @@ import com.xiaoleilu.hutool.convert.impl.CalendarConverter;
 import com.xiaoleilu.hutool.convert.impl.CharacterConverter;
 import com.xiaoleilu.hutool.convert.impl.CharsetConverter;
 import com.xiaoleilu.hutool.convert.impl.ClassConverter;
+import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.convert.impl.CurrencyConverter;
 import com.xiaoleilu.hutool.convert.impl.DateConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
@@ -41,6 +43,7 @@ import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
+import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * 转换器登记中心
@@ -182,6 +185,13 @@ public class ConverterRegistry {
 		if (null == type) {
 			type = (Class<T>) defaultValue.getClass();
 		}
+
+		// 集合转换
+		if (Collection.class.isAssignableFrom(type)) {
+			final CollectionConverter collectionConverter = new CollectionConverter(type, TypeUtil.getElementType(type));
+			return (T) collectionConverter.convert(value, (Collection<?>) defaultValue);
+		}
+
 		// 默认强转
 		if (type.isInstance(value)) {
 			return (T) value;
@@ -196,18 +206,18 @@ public class ConverterRegistry {
 				// 强转失败进行下一步
 			}
 		}
-		
+
 		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null != converter) {
 			return converter.convert(value, defaultValue);
 		}
-		
-		//尝试转Bean
-		if(BeanUtil.isBean(type) && value instanceof Map){
-			return BeanUtil.mapToBean((Map<?, ?>)value, type, true);
+
+		// 尝试转Bean
+		if (BeanUtil.isBean(type) && value instanceof Map) {
+			return BeanUtil.mapToBean((Map<?, ?>) value, type, true);
 		}
-		
-		//无法转换
+
+		// 无法转换
 		throw new ConvertException("No Converter for type [{}]", type.getName());
 	}
 
@@ -297,11 +307,11 @@ public class ConverterRegistry {
 		defaultConverterMap.put(String[].class, new ArrayConverter(String.class));
 
 		// 集合类型转换器
-//		defaultConverterMap.put(Collection.class, new CollectionConverter());
-//		defaultConverterMap.put(List.class, new CollectionConverter(List.class));
-//		defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
-//		defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
-//		defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
+		// defaultConverterMap.put(Collection.class, new CollectionConverter());
+		// defaultConverterMap.put(List.class, new CollectionConverter(List.class));
+		// defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
+		// defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
+		// defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
 
 		// URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());

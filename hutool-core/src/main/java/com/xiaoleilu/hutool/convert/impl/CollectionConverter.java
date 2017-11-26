@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.convert.impl;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.convert.Converter;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
@@ -87,6 +88,6 @@ public class CollectionConverter implements Converter<Collection<?>> {
 	 */
 	protected Collection<?> convertInternal(Object value) {
 		final Collection<Object> collection = CollectionUtil.create(this.collectionType);
-		return CollectionUtil.addAll(collection, value, elementType);
+		return CollUtil.addAll(collection, value, elementType);
 	}
 }
