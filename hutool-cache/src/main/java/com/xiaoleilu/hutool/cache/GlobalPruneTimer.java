@@ -52,7 +52,7 @@ public enum GlobalPruneTimer {
 		if (null != pruneTimer) {
 			shutdownNow();
 		}
-		this.pruneTimer = new ScheduledThreadPoolExecutor(Integer.MAX_VALUE, new ThreadFactory() {
+		this.pruneTimer = new ScheduledThreadPoolExecutor(16, new ThreadFactory() {
 			@Override
 			public Thread newThread(Runnable r) {
 				return ThreadUtil.newThread(r, StrUtil.format("Pure-Timer-{}", cacheTaskNumber.getAndIncrement()));
