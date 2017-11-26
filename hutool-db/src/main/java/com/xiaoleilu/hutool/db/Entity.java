@@ -56,6 +56,17 @@ public class Entity extends Dict{
 	public static <T> Entity parse(T bean) {
 		return create(null).parseBean(bean);
 	}
+	/**
+	 * 将PO对象转为Entity
+	 * @param <T> Bean对象类型
+	 * @param bean Bean对象
+	 * @param isToUnderlineCase 是否转换为下划线模式
+	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @return Entity
+	 */
+	public static <T> Entity parse(T bean,boolean isToUnderlineCase, boolean ignoreNullValue) {
+		return create(null).parseBean(bean,isToUnderlineCase,ignoreNullValue);
+	}
 	//--------------------------------------------------------------- Static method end
 	
 	/*表名*/
@@ -159,7 +170,23 @@ public class Entity extends Dict{
 		}
 		return (Entity) super.parseBean(bean);
 	}
-	
+	/**
+	 * 将值对象转换为Entity<br>
+	 * 类名会被当作表名，小写第一个字母
+	 *
+	 * @param <T> Bean对象类型
+	 * @param bean Bean对象
+	 * @param isToUnderlineCase 是否转换为下划线模式
+	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @return 自己
+	 */
+	@Override
+	public <T> Entity parseBean(T bean,boolean isToUnderlineCase, boolean ignoreNullValue) {
+		if(StrUtil.isBlank(this.tableName)) {
+			this.setTableName(StrUtil.lowerFirst(bean.getClass().getSimpleName()));
+		}
+		return (Entity) super.parseBean(bean,isToUnderlineCase,ignoreNullValue);
+	}
 	//-------------------------------------------------------------------- Put and Set start
 	/**
 	 * PUT方法做了过滤限制，如果此实体限制了属性名，则忽略限制名列表外的字段名
