@@ -291,7 +291,8 @@ public abstract class AbstractSqlRunner{
 	 * @throws SQLException SQL执行异常
 	 */
 	public Entity get(Entity where) throws SQLException {
-		return find(null, where, new EntityHandler());
+		return find(where.getFieldNames(), where, new EntityHandler());
+
 	}
 	//------------------------------------------------------------- Get end
 	
