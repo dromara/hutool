@@ -100,7 +100,19 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 		this.putAll(BeanUtil.beanToMap(bean));
 		return this;
 	}
-	
+	/**
+	 * 将值对象转换为Dict<br>
+	 * 类名会被当作表名，小写第一个字母
+	 * @param <T> Bean类型
+	 * @param bean 值对象
+	 * @param isToUnderlineCase 是否转换为下划线模式
+	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @return 自己
+	 */
+	public <T> Dict parseBean(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+		this.putAll(BeanUtil.beanToMap(bean,isToUnderlineCase,ignoreNullValue));
+		return this;
+	}
 	/**
 	 * 与给定实体对比并去除相同的部分<br>
 	 * 此方法用于在更新操作时避免所有字段被更新，跳过不需要更新的字段
