@@ -183,7 +183,10 @@ public class Entity extends Dict{
 	@Override
 	public <T> Entity parseBean(T bean,boolean isToUnderlineCase, boolean ignoreNullValue) {
 		if(StrUtil.isBlank(this.tableName)) {
-			this.setTableName(StrUtil.lowerFirst(bean.getClass().getSimpleName()));
+			String simpleName=bean.getClass().getSimpleName();
+			this.setTableName(
+					isToUnderlineCase ? StrUtil.toUnderlineCase(simpleName) : StrUtil.lowerFirst(simpleName)
+			);
 		}
 		return (Entity) super.parseBean(bean,isToUnderlineCase,ignoreNullValue);
 	}
