@@ -56,7 +56,6 @@ public abstract class AbstractSqlRunner{
 	/**
 	 * 查询单条记录
 	 *
-	 * @param 结果集需要处理的对象类型，只取第一条记录
 	 * @param sql 查询语句
 	 * @param params 参数
 	 * @return 结果对象
