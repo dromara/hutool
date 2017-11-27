@@ -1,14 +1,15 @@
 package com.xiaoleilu.hutool.convert.impl;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
-import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * {@link Map} 转换器
@@ -19,20 +20,19 @@ import com.xiaoleilu.hutool.util.StrUtil;
 public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	
 	/** Map类型 */
-	private final Class<?> mapType;
+	private final Type mapType;
 	/** 键类型 */
-	private final Class<?> keyType;
+	private final Type keyType;
 	/** 值类型 */
-	private final Class<?> valueType;
+	private final Type valueType;
 	
 	/**
-	 * 构造
+	 * 构造，Map的key和value泛型类型自动获取
+	 * 
 	 * @param mapType Map类型
 	 */
-	public MapConverter(Class<?> mapType) {
-		this.mapType = mapType;
-		this.keyType = ClassUtil.getTypeArgument(mapType, 0);
-		this.valueType = ClassUtil.getTypeArgument(mapType, 1);
+	public MapConverter(Type mapType) {
+		this(mapType, TypeUtil.getTypeArgument(mapType, 0), TypeUtil.getTypeArgument(mapType, 1));
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	 * @param keyType 键类型
 	 * @param valueType 值类型
 	 */
-	public MapConverter(Class<?> mapType, Class<?> keyType, Class<?> valueType) {
+	public MapConverter(Type mapType, Type keyType, Type valueType) {
 		this.mapType = mapType;
 		this.keyType = keyType;
 		this.valueType = valueType;
@@ -50,7 +50,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected Map<?, ?> convertInternal(Object value) {
-		Map map = CollectionUtil.createMap(mapType);
+		Map map = MapUtil.createMap(TypeUtil.getClass(this.mapType));
 		
 		Class<?> valueType = value.getClass();
 		if(value instanceof Map){
