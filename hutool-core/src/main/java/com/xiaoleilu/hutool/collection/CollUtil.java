@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.collection;
 
+import java.lang.reflect.Type;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.BoundedPriorityQueue;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Filter;
 import com.xiaoleilu.hutool.lang.Matcher;
@@ -39,6 +39,7 @@ import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.PageUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * 集合相关工具类，包括数组
@@ -1311,20 +1312,20 @@ public class CollUtil {
 	 * @return 被加入集合
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> Collection<T> addAll(Collection<T> collection, Object value, Class<?> elementType) {
+	public static <T> Collection<T> addAll(Collection<T> collection, Object value, Type elementType) {
 		if (null == collection || null == value) {
-			return collection;
-		}
-		if (null != elementType && elementType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementType)) {
-			Console.log("{} {}", value, elementType);
-			
-			//其它类型按照单一元素处理
-			collection.add((T) value);
 			return collection;
 		}
 		if (null == elementType) {
 			// 元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
+		}else {
+			final Class<?> elementRowType = TypeUtil.getClass(elementType);
+			if(elementRowType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementRowType)) {
+				//其它类型按照单一元素处理
+				collection.add((T) value);
+				return collection;
+			}
 		}
 		
 		Iterator iter;

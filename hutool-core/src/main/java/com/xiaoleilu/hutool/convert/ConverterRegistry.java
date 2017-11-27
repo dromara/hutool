@@ -175,7 +175,7 @@ public class ConverterRegistry {
 	 * @throws ConvertException 转换器不存在
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T convert(Class<T> type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException {
+	public <T> T convert(Type type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException {
 		if (null == type && null == defaultValue) {
 			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
 		}
@@ -183,25 +183,26 @@ public class ConverterRegistry {
 			return defaultValue;
 		}
 		if (null == type) {
-			type = (Class<T>) defaultValue.getClass();
+			type = defaultValue.getClass();
 		}
 
+		final Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
 		// 集合转换
-		if (Collection.class.isAssignableFrom(type)) {
-			final CollectionConverter collectionConverter = new CollectionConverter(type, TypeUtil.getElementType(type));
+		if (Collection.class.isAssignableFrom(rowType)) {
+			final CollectionConverter collectionConverter = new CollectionConverter(type);
 			return (T) collectionConverter.convert(value, (Collection<?>) defaultValue);
 		}
 
 		// 默认强转
-		if (type.isInstance(value)) {
+		if (rowType.isInstance(value)) {
 			return (T) value;
 		}
 
 		// 数组强转
 		final Class<?> valueClass = value.getClass();
-		if (type.isArray() && valueClass.isArray()) {
+		if (rowType.isArray() && valueClass.isArray()) {
 			try {
-				return (T) ArrayUtil.cast(type, value);
+				return (T) ArrayUtil.cast(rowType, value);
 			} catch (Exception e) {
 				// 强转失败进行下一步
 			}
@@ -213,12 +214,12 @@ public class ConverterRegistry {
 		}
 
 		// 尝试转Bean
-		if (BeanUtil.isBean(type) && value instanceof Map) {
-			return BeanUtil.mapToBean((Map<?, ?>) value, type, true);
+		if (BeanUtil.isBean(rowType) && value instanceof Map) {
+			return BeanUtil.mapToBean((Map<?, ?>) value, rowType, true);
 		}
 
 		// 无法转换
-		throw new ConvertException("No Converter for type [{}]", type.getName());
+		throw new ConvertException("No Converter for type [{}]", rowType.getName());
 	}
 
 	/**
@@ -232,7 +233,7 @@ public class ConverterRegistry {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
+	public <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
 		return convert(type, value, defaultValue, true);
 	}
 
@@ -245,7 +246,7 @@ public class ConverterRegistry {
 	 * @return 转换后的值，默认为<code>null</code>
 	 * @throws ConvertException 转换器不存在
 	 */
-	public <T> T convert(Class<T> type, Object value) throws ConvertException {
+	public <T> T convert(Type type, Object value) throws ConvertException {
 		return convert(type, value, null);
 	}
 

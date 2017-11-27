@@ -9,7 +9,6 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.json.test.bean.Price;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 public class JSONUtilTest {
@@ -40,6 +39,6 @@ public class JSONUtilTest {
 		String json = "{\"ADT\":[[{\"BookingCode\":[\"N\",\"N\"]}]]}";
 		
 		Price price = JSONUtil.toBean(json, Price.class);
-		Console.log("%%% " + price.getADT().get(0).get(0));
+		Assert.assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
 	}
 }

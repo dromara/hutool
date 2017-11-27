@@ -264,17 +264,21 @@ final class InternalJSONUtil {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
 		}
 		
+		if(JSON.class.isAssignableFrom(rowType)) {
+			//目标为JSON格式
+			return JSONUtil.parse(value);
+		}
+		
 		Object targetValue = null;
 		//非标准转换格式
 		if(value instanceof JSONObject){
 			targetValue = ((JSONObject)value).toBean(rowType, ignoreError);
 		}else if(value instanceof JSONArray){
-			final JSONArray jsonArrayValue = (JSONArray)value;
 			if(rowType.isArray()){
 				//目标为数组
-				targetValue = jsonArrayValue.toArray(rowType, ignoreError);
+				targetValue = ((JSONArray)value).toArray(rowType, ignoreError);
 			}else{
-				targetValue = (new CollectionConverter(type)).convert(value, null);
+				targetValue = (new CollectionConverter(rowType, TypeUtil.getTypeArgument(type))).convert(value, null);
 			}
 		}
 		
@@ -285,9 +289,8 @@ final class InternalJSONUtil {
 			} catch (ConvertException e) {
 				if(ignoreError) {
 					return null;
-				}else {
-					throw e;
 				}
+				throw e;
 			}
 		}
 		
