@@ -637,15 +637,25 @@ public class ClassUtil {
 		if (ArrayUtil.isEmpty(types1) && ArrayUtil.isEmpty(types2)) {
 			return true;
 		}
-		if (types1.length == types2.length) {
-			for (int i = 0; i < types1.length; i++) {
-				if (false == types1[i].isAssignableFrom(types2[i])) {
+		if (types1.length != types2.length) {
+			return false;
+		}
+		
+		Class<?> type1;
+		Class<?> type2;
+		for (int i = 0; i < types1.length; i++) {
+			type1 = types1[i];
+			type2 = types2[i];
+			if(isBasicType(type1) && isBasicType(type2)) {
+				//原始类型和包装类型存在不一致情况
+				if(BasicType.unWrap(type1) != BasicType.unWrap(type2)) {
 					return false;
 				}
+			}else if (false == type1.isAssignableFrom(type2)) {
+				return false;
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 
 	/**

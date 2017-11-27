@@ -6,9 +6,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.xiaoleilu.hutool.lang.StrFormatter;
 import com.xiaoleilu.hutool.lang.StrSpliter;
@@ -2775,5 +2777,46 @@ public class StrUtil {
 			}
 		}
 		return new String(chars);
+	}
+	
+	/**
+	 * 替换字符字符数组中所有的字符为replacedStr
+	 * 
+	 * @param str 被检查的字符串
+	 * @param chars 需要替换的字符列表，用一个字符串表示这个字符列表
+	 * @param replacedStr 替换成的字符串
+	 * @return 新字符串
+	 * @since 3.2.2
+	 */
+	public static String replaceChars(CharSequence str, String chars, CharSequence replacedStr) {
+		if(isEmpty(str) || isEmpty(chars)) {
+			return str(str);
+		}
+		return replaceChars(str, chars.toCharArray(), replacedStr);
+	}
+	
+	/**
+	 * 替换字符字符数组中所有的字符为replacedStr
+	 * 
+	 * @param str 被检查的字符串
+	 * @param chars 需要替换的字符列表
+	 * @param replacedStr 替换成的字符串
+	 * @return 新字符串
+	 * @since 3.2.2
+	 */
+	public static String replaceChars(CharSequence str, char[] chars, CharSequence replacedStr) {
+		if(isEmpty(str) || ArrayUtil.isEmpty(chars)) {
+			return str(str);
+		}
+		
+		final Set<Character> set = new HashSet<>(chars.length);
+		int strLen = str.length();
+		final StringBuilder builder = builder();
+		char c;
+		for(int i = 0; i < strLen; i++) {
+			c = str.charAt(i);
+			builder.append(set.contains(c) ? replacedStr : c);
+		}
+		return builder.toString();
 	}
 }

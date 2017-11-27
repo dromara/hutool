@@ -6,8 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.lang.test.bean.ExamInfoDict;
-import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.ReflectUtil;
 
 /**
  * 反射工具类单元测试
@@ -26,5 +24,24 @@ public class ReflectUtilTest {
 	public void getMethodTest(){
 		Method method = ReflectUtil.getMethod(ExamInfoDict.class, "getId");
 		Assert.assertEquals("getId", method.getName());
+	}
+	
+	@Test
+	public void invokeTest() {
+		TestClass testClass = new TestClass();
+		ReflectUtil.invoke(testClass, "setA", 10);
+		Assert.assertEquals(10, testClass.getA());
+	}
+	
+	static class TestClass{
+		private int a;
+
+		public int getA() {
+			return a;
+		}
+
+		public void setA(int a) {
+			this.a = a;
+		}
 	}
 }

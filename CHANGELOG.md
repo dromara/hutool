@@ -13,11 +13,13 @@
 * DateTime提供toJdkDate方法以适应需要原生Date对象的环境
 * IdCardUtil提供hide方法，用于将固定位置的数字隐藏为星号
 * 增加parseBean重载（针对Dict和Entity）（pr#63@Github）
+* StrUtil增加replaceChars用于替换某些字符（感谢@【北京】宁静）
 
 ### Bug修复
 * 修复MapUtil.filter方法修改值无效问题
 * fix 调用BeanUtil.fillBeanWithMap方法错误（pr#59@Github）
 * fix 线程不断创建OOM（pr#61@Github）
+* 修复ReflectUtil.invoke方法执行时参数为原始类型导致的类型不匹配问题（感谢@【上海】简简单单）
 
 -------------------------------------------------------------------------------------------------------------
 
