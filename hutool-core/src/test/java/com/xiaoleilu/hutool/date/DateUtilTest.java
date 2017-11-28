@@ -6,14 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.date.BetweenFormater.Level;
-import com.xiaoleilu.hutool.date.DateField;
-import com.xiaoleilu.hutool.date.DateTime;
-import com.xiaoleilu.hutool.date.DateUnit;
-import com.xiaoleilu.hutool.date.DateUtil;
-import com.xiaoleilu.hutool.date.TimeInterval;
 import com.xiaoleilu.hutool.lang.Console;
 
 /**
@@ -25,6 +21,7 @@ import com.xiaoleilu.hutool.lang.Console;
 public class DateUtilTest {
 	
 	@Test
+	@Ignore
 	public void dateTest(){
 		long current = DateUtil.current(false);
 		Console.log(current);
@@ -186,5 +183,73 @@ public class DateUtilTest {
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		DateTime parse = DateUtil.parse("12:11:39");
 		Assert.assertEquals(format.parse(time).getTime(), parse.getTime());
+	}
+	
+	@Test
+	public void parseToDateTimeTest1() {
+		String dateStr1 = "2017-02-01";
+		String dateStr2 = "2017/02/01";
+		String dateStr3 = "2017.02.01";
+		String dateStr4 = "2017年02月01日";
+		
+		DateTime dt1= DateUtil.parse(dateStr1);
+		DateTime dt2= DateUtil.parse(dateStr2);
+		DateTime dt3= DateUtil.parse(dateStr3);
+		DateTime dt4= DateUtil.parse(dateStr4);
+		Assert.assertEquals(dt1, dt2);
+		Assert.assertEquals(dt2, dt3);
+		Assert.assertEquals(dt3, dt4);
+	}
+	
+	@Test
+	public void parseToDateTimeTest2() {
+		String dateStr1 = "2017-02-01 12:23";
+		String dateStr2 = "2017/02/01 12:23";
+		String dateStr3 = "2017.02.01 12:23";
+		String dateStr4 = "2017年02月01日 12:23";
+		
+		DateTime dt1= DateUtil.parse(dateStr1);
+		DateTime dt2= DateUtil.parse(dateStr2);
+		DateTime dt3= DateUtil.parse(dateStr3);
+		DateTime dt4= DateUtil.parse(dateStr4);
+		Assert.assertEquals(dt1, dt2);
+		Assert.assertEquals(dt2, dt3);
+		Assert.assertEquals(dt3, dt4);
+	}
+	
+	@Test
+	public void parseToDateTimeTest3() {
+		String dateStr1 = "2017-02-01 12:23:45";
+		String dateStr2 = "2017/02/01 12:23:45";
+		String dateStr3 = "2017.02.01 12:23:45";
+		String dateStr4 = "2017年02月01日 12时23分45秒";
+		
+		DateTime dt1= DateUtil.parse(dateStr1);
+		DateTime dt2= DateUtil.parse(dateStr2);
+		DateTime dt3= DateUtil.parse(dateStr3);
+		DateTime dt4= DateUtil.parse(dateStr4);
+		Assert.assertEquals(dt1, dt2);
+		Assert.assertEquals(dt2, dt3);
+		Assert.assertEquals(dt3, dt4);
+	}
+	
+	@Test
+	public void parseToDateTimeTest4() {
+		String dateStr1 = "2017-02-01 12:23:45";
+		String dateStr2 = "20170201122345";
+		
+		DateTime dt1= DateUtil.parse(dateStr1);
+		DateTime dt2= DateUtil.parse(dateStr2);
+		Assert.assertEquals(dt1, dt2);
+	}
+	
+	@Test
+	public void parseToDateTimeTest5() {
+		String dateStr1 = "2017-02-01";
+		String dateStr2 = "20170201";
+		
+		DateTime dt1= DateUtil.parse(dateStr1);
+		DateTime dt2= DateUtil.parse(dateStr2);
+		Assert.assertEquals(dt1, dt2);
 	}
 }

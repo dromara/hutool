@@ -714,7 +714,7 @@ public class DateTime extends Date {
 		try {
 			return parser.parse(dateStr);
 		} catch (Exception e) {
-			throw new DateException(StrUtil.format("Parse [{}] with format [{}] error!", dateStr, parser.getPattern()), e);
+			throw new DateException("Parse [{}] with format [{}] error!", dateStr, parser.getPattern(), e);
 		}
 	}
 

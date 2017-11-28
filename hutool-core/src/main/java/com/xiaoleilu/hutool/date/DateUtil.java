@@ -11,6 +11,7 @@ import java.util.List;
 import com.xiaoleilu.hutool.date.format.DateParser;
 import com.xiaoleilu.hutool.date.format.DatePrinter;
 import com.xiaoleilu.hutool.date.format.FastDateFormat;
+import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -568,6 +569,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseDateTime(String dateString) {
+		dateString = normalize(dateString);
 		return parse(dateString, DatePattern.NORM_DATETIME_FORMAT);
 	}
 
@@ -578,6 +580,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseDate(String dateString) {
+		dateString = normalize(dateString);
 		return parse(dateString, DatePattern.NORM_DATE_FORMAT);
 	}
 
@@ -588,6 +591,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 */
 	public static DateTime parseTime(String timeString) {
+		timeString = normalize(timeString);
 		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
 	}
 
@@ -604,13 +608,22 @@ public class DateUtil {
 	}
 
 	/**
-	 * 格式：<br>
+	 * 将日期字符串转换为{@link DateTime}对象，格式：<br>
 	 * <ol>
 	 * <li>yyyy-MM-dd HH:mm:ss</li>
+	 * <li>yyyy/MM/dd HH:mm:ss</li>
+	 * <li>yyyy.MM.dd HH:mm:ss</li>
+	 * <li>yyyy年MM月dd日 HH时mm分ss秒</li>
 	 * <li>yyyy-MM-dd</li>
+	 * <li>yyyy/MM/dd</li>
+	 * <li>yyyy.MM.dd</li>
 	 * <li>HH:mm:ss</li>
+	 * <li>HH时mm分ss秒</li>
 	 * <li>yyyy-MM-dd HH:mm</li>
 	 * <li>yyyy-MM-dd HH:mm:ss.SSS</li>
+	 * <li>yyyyMMddHHmmss</li>
+	 * <li>yyyyMMddHHmmssSSS</li>
+	 * <li>yyyyMMdd</li>
 	 * </ol>
 	 * 
 	 * @param dateStr 日期字符串
@@ -620,27 +633,39 @@ public class DateUtil {
 		if (null == dateStr) {
 			return null;
 		}
-		dateStr = dateStr.trim();
+		//去掉两边空格并去掉中文日期中的“日”，以规范长度
+		dateStr = dateStr.trim().replace("日", "");
 		int length = dateStr.length();
-		try {
-			if (length == DatePattern.NORM_DATETIME_PATTERN.length()) {
-				return parseDateTime(dateStr);
-			} else if (length == DatePattern.NORM_DATE_PATTERN.length()) {
-				return parseDate(dateStr);
-			} else if (length == DatePattern.NORM_TIME_PATTERN.length()) {
-				return parseTime(dateStr);
-			} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length()) {
-				return parse(dateStr, DatePattern.NORM_DATETIME_MINUTE_PATTERN);
-			} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
-				return parse(dateStr, DatePattern.NORM_DATETIME_MS_PATTERN);
+		
+		if(Validator.isNumber(dateStr)) {
+			//纯数字形式
+			if(length == DatePattern.PURE_DATETIME_PATTERN.length()) {
+				return parse(dateStr, DatePattern.PURE_DATETIME_FORMAT);
+			} else if(length == DatePattern.PURE_DATETIME_MS_PATTERN.length()) {
+				return parse(dateStr, DatePattern.PURE_DATETIME_MS_FORMAT);
+			} else if(length == DatePattern.PURE_DATE_PATTERN.length()) {
+				return parse(dateStr, DatePattern.PURE_DATE_FORMAT);
+			} else if(length == DatePattern.PURE_TIME_PATTERN.length()) {
+				return parse(dateStr, DatePattern.PURE_TIME_FORMAT);
 			}
-		} catch (Exception e) {
-			throw new DateException(StrUtil.format("Parse [{}] with format normal error!", dateStr));
+		}
+		
+		if (length == DatePattern.NORM_DATETIME_PATTERN.length() || length == DatePattern.NORM_DATETIME_PATTERN.length()+1) {
+			return parseDateTime(dateStr);
+		} else if (length == DatePattern.NORM_DATE_PATTERN.length()) {
+			return parseDate(dateStr);
+		} else if (length == DatePattern.NORM_TIME_PATTERN.length() || length == DatePattern.NORM_TIME_PATTERN.length()+1) {
+			return parseTime(dateStr);
+		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() || length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length()+1) {
+			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_PATTERN);
+		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
+			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_PATTERN);
 		}
 
 		// 没有更多匹配的时间格式
-		throw new DateException(StrUtil.format(" [{}] format is not fit for date pattern!", dateStr));
+		throw new DateException("No format fit for date String [{}] !", dateStr);
 	}
+	
 	// ------------------------------------ Parse end ----------------------------------------------
 
 	// ------------------------------------ Offset start ----------------------------------------------
@@ -1362,6 +1387,42 @@ public class DateUtil {
 	 */
 	private static String yearAndSeason(Calendar cal) {
 		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
+	}
+	
+	/**
+	 * 标准化日期：<br>
+	 * 将以下字符替换为"-"
+	 * <pre>
+	 * "."
+	 * "/"
+	 * "年"
+	 * "月"
+	 * </pre>
+	 * 
+	 * 将以下字符去除
+	 * <pre>
+	 * "日"
+	 * </pre>
+	 * 
+	 * 将以下字符替换为":"
+	 * <pre>
+	 * "时"
+	 * "分"
+	 * "秒"
+	 * </pre>
+	 * 当末位是":"时去除之（不存在毫秒时）
+	 * 
+	 * @param dateStr 日期时间字符串
+	 * @return 格式化后的日期字符串
+	 */
+	private static String normalize(String dateStr) {
+		if(StrUtil.isBlank(dateStr)) {
+			return dateStr;
+		}
+		dateStr = dateStr.trim().replaceAll("[\\./年月]", "-").replace("日", "").replaceAll("[时分秒]", ":");
+		dateStr = StrUtil.removeSuffix(dateStr, ":");
+		
+		return dateStr;
 	}
 	// ------------------------------------------------------------------------ Private method end
 }
