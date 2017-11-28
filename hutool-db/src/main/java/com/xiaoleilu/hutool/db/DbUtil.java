@@ -406,7 +406,7 @@ public final class DbUtil {
 				try {
 					sqlType = pmd.getParameterType(paramIndex);
 				} catch (SQLException e) {
-					log.warn("Param get type fail, by: {}", e.getMessage());
+					log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
 				}
 				ps.setNull(paramIndex, sqlType);
 			}
