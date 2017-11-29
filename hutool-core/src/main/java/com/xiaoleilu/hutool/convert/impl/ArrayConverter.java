@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -17,16 +18,24 @@ import com.xiaoleilu.hutool.util.StrUtil;
  */
 public class ArrayConverter extends AbstractConverter<Object> {
 
+	private final Class<?> targetType;
 	/** 目标元素类型 */
 	private final Class<?> targetComponentType;
 
 	/**
 	 * 构造
 	 * 
-	 * @param targetComponentType 目标数组元素类型
+	 * @param targetType 目标数组类型
 	 */
-	public ArrayConverter(Class<?> targetComponentType) {
-		this.targetComponentType = targetComponentType;
+	public ArrayConverter(Class<?> targetType) {
+		if(null == targetType) {
+			//默认Object数组
+			targetType = Object[].class;
+		}else {
+			Assert.isTrue(targetType.isArray(), "Target type must be a array!");
+		}
+		this.targetType = targetType;
+		this.targetComponentType = targetType.getComponentType();
 	}
 
 	@Override
@@ -37,7 +46,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Class getTargetType() {
-		return this.targetComponentType;
+		return this.targetType;
 	}
 
 	// -------------------------------------------------------------------------------------- Private method start
@@ -48,7 +57,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @return 转换后的数组
 	 */
 	private Object convertArrayToArray(Object array) {
-		final Class<?> valueComponentType = array.getClass().getComponentType();
+		final Class<?> valueComponentType =ArrayUtil.getComponentType(array);
 
 		if (valueComponentType == targetComponentType) {
 			return array;

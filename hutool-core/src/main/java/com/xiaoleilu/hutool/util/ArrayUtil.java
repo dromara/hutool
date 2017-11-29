@@ -292,6 +292,40 @@ public class ArrayUtil {
 	public static <T> T[] newArray(Class<?> componentType, int newSize) {
 		return (T[]) Array.newInstance(componentType, newSize);
 	}
+	
+	/**
+	 * 获取数组对象的元素类型
+	 * 
+	 * @param array 数组对象
+	 * @return 元素类型
+	 * @since 3.2.2
+	 */
+	public static Class<?> getComponentType(Object array){
+		return null == array ? null : array.getClass().getComponentType();
+	}
+	
+	/**
+	 * 获取数组对象的元素类型
+	 * 
+	 * @param arrayClass 数组类
+	 * @return 元素类型
+	 * @since 3.2.2
+	 */
+	public static Class<?> getComponentType(Class<?> arrayClass){
+		return null == arrayClass ? null : arrayClass.getComponentType();
+	}
+	
+	/**
+	 * 根据数组元素类型，获取数组的类型<br>
+	 * 方法是通过创建一个空数组从而获取其类型
+	 * 
+	 * @param componentType 数组元素类型
+	 * @return 数组类型
+	 * @since 3.2.2
+	 */
+	public static Class<?> getArrayType(Class<?> componentType) {
+		return newArray(componentType, 0).getClass();
+	}
 
 	/**
 	 * 强转数组类型<br>

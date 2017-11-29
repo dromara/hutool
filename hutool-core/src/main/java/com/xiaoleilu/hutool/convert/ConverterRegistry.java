@@ -41,7 +41,6 @@ import com.xiaoleilu.hutool.convert.impl.TimeZoneConverter;
 import com.xiaoleilu.hutool.convert.impl.URIConverter;
 import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
-import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 
@@ -187,6 +186,7 @@ public class ConverterRegistry {
 		}
 
 		final Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
+		
 		// 集合转换
 		if (Collection.class.isAssignableFrom(rowType)) {
 			final CollectionConverter collectionConverter = new CollectionConverter(type);
@@ -198,11 +198,11 @@ public class ConverterRegistry {
 			return (T) value;
 		}
 
-		// 数组强转
-		final Class<?> valueClass = value.getClass();
-		if (rowType.isArray() && valueClass.isArray()) {
+		// 数组转换
+		if (rowType.isArray()) {
+			final ArrayConverter arrayConverter = new ArrayConverter(rowType);
 			try {
-				return (T) ArrayUtil.cast(rowType, value);
+				return (T) arrayConverter.convert(value, defaultValue);
 			} catch (Exception e) {
 				// 强转失败进行下一步
 			}
@@ -287,25 +287,25 @@ public class ConverterRegistry {
 		defaultConverterMap.put(String.class, new StringConverter());
 
 		// 原始类型数组转换器
-		defaultConverterMap.put(int[].class, new ArrayConverter(int.class));
-		defaultConverterMap.put(long[].class, new ArrayConverter(long.class));
-		defaultConverterMap.put(byte[].class, new ArrayConverter(byte.class));
-		defaultConverterMap.put(short[].class, new ArrayConverter(short.class));
-		defaultConverterMap.put(float[].class, new ArrayConverter(float.class));
-		defaultConverterMap.put(double[].class, new ArrayConverter(double.class));
-		defaultConverterMap.put(boolean[].class, new ArrayConverter(boolean.class));
-		defaultConverterMap.put(char[].class, new ArrayConverter(char.class));
+//		defaultConverterMap.put(int[].class, new ArrayConverter(int[].class));
+//		defaultConverterMap.put(long[].class, new ArrayConverter(long[].class));
+//		defaultConverterMap.put(byte[].class, new ArrayConverter(byte[].class));
+//		defaultConverterMap.put(short[].class, new ArrayConverter(short[].class));
+//		defaultConverterMap.put(float[].class, new ArrayConverter(float[].class));
+//		defaultConverterMap.put(double[].class, new ArrayConverter(double[].class));
+//		defaultConverterMap.put(boolean[].class, new ArrayConverter(boolean[].class));
+//		defaultConverterMap.put(char[].class, new ArrayConverter(char[].class));
 
 		// 包装数组类型转换器
-		defaultConverterMap.put(Integer[].class, new ArrayConverter(Integer.class));
-		defaultConverterMap.put(Long[].class, new ArrayConverter(Long.class));
-		defaultConverterMap.put(Byte[].class, new ArrayConverter(Byte.class));
-		defaultConverterMap.put(Short[].class, new ArrayConverter(Short.class));
-		defaultConverterMap.put(Float[].class, new ArrayConverter(Float.class));
-		defaultConverterMap.put(Double[].class, new ArrayConverter(Double.class));
-		defaultConverterMap.put(Boolean[].class, new ArrayConverter(Boolean.class));
-		defaultConverterMap.put(Character[].class, new ArrayConverter(Character.class));
-		defaultConverterMap.put(String[].class, new ArrayConverter(String.class));
+//		defaultConverterMap.put(Integer[].class, new ArrayConverter(Integer[].class));
+//		defaultConverterMap.put(Long[].class, new ArrayConverter(Long[].class));
+//		defaultConverterMap.put(Byte[].class, new ArrayConverter(Byte[].class));
+//		defaultConverterMap.put(Short[].class, new ArrayConverter(Short[].class));
+//		defaultConverterMap.put(Float[].class, new ArrayConverter(Float[].class));
+//		defaultConverterMap.put(Double[].class, new ArrayConverter(Double[].class));
+//		defaultConverterMap.put(Boolean[].class, new ArrayConverter(Boolean[].class));
+//		defaultConverterMap.put(Character[].class, new ArrayConverter(Character[].class));
+//		defaultConverterMap.put(String[].class, new ArrayConverter(String[].class));
 
 		// 集合类型转换器
 		// defaultConverterMap.put(Collection.class, new CollectionConverter());

@@ -15,6 +15,8 @@
 * 增加parseBean重载（针对Dict和Entity）（pr#63@Github）
 * StrUtil增加replaceChars用于替换某些字符（感谢@【北京】宁静）
 * DateUtil.parse增加日期支持的格式，DatePattern增加纯数字形式日期（感谢@【北京】宁静）
+* 改进Convert部分，使之支持数组类型转换
+* ArrayUtil增加getArrayType方法，可以从数组元素类型获取其数组类型
 
 ### Bug修复
 * 修复MapUtil.filter方法修改值无效问题

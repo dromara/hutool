@@ -1,11 +1,15 @@
 package com.xiaoleilu.hutool.convert;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
+import com.xiaoleilu.hutool.io.FileUtil;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * 类型转换工具单元测试<br>
@@ -20,8 +24,11 @@ public class ConvertToArrayTest {
 	public void toIntArrayTest() {
 		String[] b = { "1", "2", "3", "4" };
 		
-		Integer[] intArray = Convert.toIntArray(b);
-		Assert.assertArrayEquals(intArray, new Integer[]{1,2,3,4});
+		Integer[] integerArray = Convert.toIntArray(b);
+		Assert.assertArrayEquals(integerArray, new Integer[]{1,2,3,4});
+		
+		int[] intArray = Convert.convert(int[].class, b);
+		Assert.assertArrayEquals(intArray, new int[]{1,2,3,4});
 		
 		long[] c = {1L,2L,3L,4L,5L};
 		Integer[] intArray2 = Convert.toIntArray(c);
@@ -63,7 +70,7 @@ public class ConvertToArrayTest {
 		//字符串转数组
 		String arrayStr = "1,2,3,4,5";
 		//获取Converter类的方法2，自己实例化相应Converter对象
-		ArrayConverter c3 = new ArrayConverter(int.class);
+		ArrayConverter c3 = new ArrayConverter(int[].class);
 		int[] result3 = (int[]) c3.convert(arrayStr, null);
 		Assert.assertArrayEquals(new int[]{1,2,3,4,5}, result3);
 	}
@@ -101,5 +108,16 @@ public class ConvertToArrayTest {
 		Assert.assertEquals('d', array2[3]);
 		Assert.assertEquals('e', array2[4]);
 		
+	}
+	
+	@Test
+	public void toUrlArrayTest() {
+		File[] files = FileUtil.file("D:\\workspace").listFiles();
+		
+		URL[] urls = Convert.convert(URL[].class, files);
+		
+		for (URL url : urls) {
+			Console.log(url.getPath());
+		}
 	}
 }

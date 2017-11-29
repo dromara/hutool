@@ -3,32 +3,12 @@ package com.xiaoleilu.hutool.convert;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.convert.Converter;
-import com.xiaoleilu.hutool.convert.ConverterRegistry;
-import com.xiaoleilu.hutool.convert.impl.ArrayConverter;
-
 /**
  * ConverterRegistry 单元测试
  * @author Looly
  *
  */
 public class ConverterRegistryTest {
-	
-	@Test
-	public void arrayConverterTest(){
-		String arrayStr = "1,2,3,4,5";
-		
-		//获取Converter类的方法1，从ConverterRegistry单例对象中查找
-		Converter<Integer[]> c = ConverterRegistry.getInstance().getDefaultConverter(Integer[].class);
-		Integer[] result = c.convert(arrayStr, null);
-		Assert.assertArrayEquals(new Integer[]{1,2,3,4,5}, result);
-		
-		//获取Converter类的方法2，自己实例化相应Converter对象
-		ArrayConverter c2 = new ArrayConverter(Integer.class);
-		Integer[] result2 = (Integer[]) c2.convert(arrayStr, null);
-		Assert.assertArrayEquals(new Integer[]{1,2,3,4,5}, result2);
-		
-	}
 	
 	@Test
 	public void customTest(){
