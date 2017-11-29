@@ -17,6 +17,9 @@
 * DateUtil.parse增加日期支持的格式，DatePattern增加纯数字形式日期（感谢@【北京】宁静）
 * 改进Convert部分，使之支持数组类型转换
 * ArrayUtil增加getArrayType方法，可以从数组元素类型获取其数组类型
+* CollUtil和ArrayUtil增加removeNull、removeEmpty、removeBlank方法（感谢@【北京】宁静）
+* PageUtil增加rainbow方法（来自@【北京】宁静的iceroot项目）
+* CollUtil增加group和groupByField方法，用于集合分组（感谢@【北京】宁静）
 
 ### Bug修复
 * 修复MapUtil.filter方法修改值无效问题

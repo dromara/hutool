@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.lang.Console;
+import com.xiaoleilu.hutool.collection.CollUtil.Hash;
 import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Matcher;
@@ -166,6 +166,63 @@ public class CollUtilTest {
 				return t +1;
 			}});
 		
-		Console.log(filtered);
+		Assert.assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
+	}
+	
+	@Test
+	public void groupTest() {
+		List<String> list = CollUtil.newArrayList("1", "2", "3", "4", "5", "6");
+		List<List<String>> group = CollectionUtil.group(list, null);
+		Assert.assertTrue(group.size() > 0);
+		
+		List<List<String>> group2 = CollectionUtil.group(list, new Hash<String>() {
+			@Override
+			public int hash(String t) {
+				//按照奇数偶数分类
+				return Integer.parseInt(t) % 2;
+			}
+			
+		});
+		Assert.assertEquals(CollUtil.newArrayList("2", "4", "6"), group2.get(0));
+		Assert.assertEquals(CollUtil.newArrayList("1", "3", "5"), group2.get(1));
+	}
+	
+	@Test
+	public void groupByFieldTest() {
+		List<TestBeans> list = CollUtil.newArrayList(new TestBeans("张三", 12), new TestBeans("李四", 13), new TestBeans("王五", 12));
+		List<List<TestBeans>> groupByField = CollUtil.groupByField(list, "age");
+		Assert.assertEquals("张三", groupByField.get(0).get(0).getName());
+		Assert.assertEquals("王五", groupByField.get(0).get(1).getName());
+		
+		Assert.assertEquals("李四", groupByField.get(1).get(0).getName());
+	}
+	
+	public static class TestBeans {
+		private String name;
+		private int age;
+		
+		public TestBeans(String name, int age) {
+			this.name = name;
+			this.age = age;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public int getAge() {
+			return age;
+		}
+		public void setAge(int age) {
+			this.age = age;
+		}
+
+		@Override
+		public String toString() {
+			return "TestBeans [name=" + name + ", age=" + age + "]";
+		}
 	}
 }

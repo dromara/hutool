@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
 import com.xiaoleilu.hutool.exceptions.UtilException;
@@ -736,7 +737,7 @@ public class CollUtil {
 		for (T t : collection) {
 			modified = editor.edit(t);
 			if (null != modified) {
-				collection2.add(t);
+				collection2.add(modified);
 			}
 		}
 		return collection2;
@@ -771,6 +772,49 @@ public class CollUtil {
 			}
 		}
 		return collection2;
+	}
+	
+	/**
+	 * 去除{@code null} 元素
+	 * @param collection 集合
+	 * @return 处理后的集合
+	 * @since 3.2.2
+	 */
+	public static <T> Collection<T> removeNull(Collection<T> collection) {
+		return filter(collection, new Editor<T>() {
+			@Override
+			public T edit(T t) {
+				//返回null便不加入集合
+				return t;
+			}});
+	}
+	
+	/**
+	 * 去除{@code null}或者"" 元素
+	 * @param collection 集合
+	 * @return 处理后的集合
+	 * @since 3.2.2
+	 */
+	public static <T extends CharSequence> Collection<T> removeEmpty(Collection<T> collection) {
+		return filter(collection, new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return false == StrUtil.isEmpty(t);
+			}});
+	}
+	
+	/**
+	 * 去除{@code null}或者""或者空白字符串 元素
+	 * @param collection 集合
+	 * @return 处理后的集合
+	 * @since 3.2.2
+	 */
+	public static <T extends CharSequence> Collection<T> removeBlank(Collection<T> collection) {
+		return filter(collection, new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return false == StrUtil.isBlank(t);
+			}});
 	}
 
 	/**
@@ -1755,7 +1799,78 @@ public class CollUtil {
 			index++;
 		}
 	}
+	
+	/**
+	 * 分组，按照{@link Hash}接口定义的hash算法，集合中的元素放入hash值对应的子列表中
+	 * 
+	 * @param collection 被分组的集合
+	 * @param hash Hash值算法，决定元素放在第几个分组的规则
+	 * @return 分组后的集合
+	 */
+	public static <T> List<List<T>> group(Collection<T> collection, Hash<T> hash){
+		final List<List<T>> result = new ArrayList<>();
+		if(isEmpty(collection)) {
+			return result;
+		}
+		if(null == hash) {
+			//默认hash算法，按照元素的hashCode分组
+			hash = new Hash<T>() {
+				@Override
+				public int hash(T t) {
+					return null == t ? 0 : t.hashCode();
+				}
+			};
+		}
+		
+		int index;
+		List<T> subList;
+		for (T t : collection) {
+			index = hash.hash(t);
+			if(result.size()-1 < index) {
+				while(result.size()-1 < index) {
+					result.add(null);
+				}
+				result.set(index, newArrayList(t));
+			}else {
+				subList = result.get(index);
+				if(null == subList) {
+					result.set(index, newArrayList(t));
+				}else {
+					subList.add(t);
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 根据元素的指定字段名分组，非Bean都放在第一个分组中
+	 * 
+	 * @param collection 集合
+	 * @param fieldName 元素Bean中的字段名，非Bean都放在第一个分组中
+	 * @return 分组列表
+	 */
+	public static <T> List<List<T>> groupByField(Collection<T> collection, final String fieldName){
+		return group(collection, new Hash<T>() {
+			private List<Object> fieldNameList = new ArrayList<>();
+			@Override
+			public int hash(T t) {
+				if(null == t || false == BeanUtil.isBean(t.getClass())) {
+					//非Bean放在同一子分组中
+					return 0;
+				}
+				final Object value = ReflectUtil.getFieldValue(t, fieldName);
+				int hash = fieldNameList.indexOf(value);
+				if(hash < 0) {
+					fieldNameList.add(value);
+					return fieldNameList.size() -1;
+				}else {
+					return hash;
+				}
+			}});
+	}
 
+	//---------------------------------------------------------------------------------------------- Interface start
 	/**
 	 * 针对一个参数做相应的操作
 	 * 
@@ -1791,4 +1906,21 @@ public class CollUtil {
 		 */
 		void accept(K key, V value, int index);
 	}
+	
+	/**
+	 * Hash计算接口
+	 * @author looly
+	 *
+	 * @param <T> 被计算hash的对象类型
+	 * @since 3.2.2
+	 */
+	public static interface Hash<T> {
+		/**
+		 * 计算Hash值
+		 * @param t 对象
+		 * @return hash
+		 */
+		int hash(T t);
+	}
+	//---------------------------------------------------------------------------------------------- Interface end
 }

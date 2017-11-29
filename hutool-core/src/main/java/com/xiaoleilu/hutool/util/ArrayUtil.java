@@ -653,6 +653,49 @@ public class ArrayUtil {
 	}
 	
 	/**
+	 * 去除{@code null} 元素
+	 * @param array 数组
+	 * @return 处理后的数组
+	 * @since 3.2.2
+	 */
+	public static <T> T[] removeNull(T[] array) {
+		return filter(array, new Editor<T>() {
+			@Override
+			public T edit(T t) {
+				//返回null便不加入集合
+				return t;
+			}});
+	}
+	
+	/**
+	 * 去除{@code null}或者"" 元素
+	 * @param array 数组
+	 * @return 处理后的数组
+	 * @since 3.2.2
+	 */
+	public static <T extends CharSequence> T[] removeEmpty(T[] array) {
+		return filter(array, new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return false == StrUtil.isEmpty(t);
+			}});
+	}
+	
+	/**
+	 * 去除{@code null}或者""或者空白字符串 元素
+	 * @param array 数组
+	 * @return 处理后的数组
+	 * @since 3.2.2
+	 */
+	public static <T extends CharSequence> T[] removeBlank(T[] array) {
+		return filter(array, new Filter<T>() {
+			@Override
+			public boolean accept(T t) {
+				return false == StrUtil.isBlank(t);
+			}});
+	}
+	
+	/**
 	 * 数组元素中的null转换为""
 	 * 
 	 * @param array 数组
