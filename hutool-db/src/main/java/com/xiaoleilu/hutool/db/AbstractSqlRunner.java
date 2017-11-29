@@ -7,7 +7,9 @@ import java.util.List;
 
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
+import com.xiaoleilu.hutool.db.handler.NumberHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
+import com.xiaoleilu.hutool.db.handler.StringHandler;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
@@ -63,6 +65,29 @@ public abstract class AbstractSqlRunner{
 	 */
 	public Entity queryOne(String sql, Object... params) throws SQLException {
 		return query(sql, new EntityHandler(), params);
+	}
+	/**
+	 * 查询单条单个字段记录,并将其转换为Number
+	 *
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public Number queryNumber(String sql, Object... params) throws SQLException {
+		return query(sql, new NumberHandler(), params);
+	}
+
+	/**
+	 * 查询单条单个字段记录,并将其转换为String
+	 *
+	 * @param sql 查询语句
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 */
+	public String queryString(String sql, Object... params) throws SQLException {
+		return query(sql, new StringHandler(), params);
 	}
 	/**
 	 * 查询
