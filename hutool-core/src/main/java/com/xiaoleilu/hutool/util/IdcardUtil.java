@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateTime;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.lang.Validator;
@@ -337,6 +338,17 @@ public class IdcardUtil {
 		}
 		return (sum % 11 == 0) ? true : false;
 	}
+	
+	/**
+	 * 根据身份编号获取生日<br>
+	 * 
+	 * @param idCard 身份编号
+	 * @return 生日(yyyyMMdd)
+	 * @see #getBirth(String)
+	 */
+	public static String getBirthByIdCard(String idCard) {
+		return getBirth(idCard);
+	}
 
 	/**
 	 * 根据身份编号获取生日
@@ -344,14 +356,25 @@ public class IdcardUtil {
 	 * @param idCard 身份编号
 	 * @return 生日(yyyyMMdd)
 	 */
-	public static String getBirthByIdCard(String idCard) {
-		Integer len = idCard.length();
+	public static String getBirth(String idCard) {
+		final Integer len = idCard.length();
 		if (len < CHINA_ID_MIN_LENGTH) {
 			return null;
 		} else if (len == CHINA_ID_MIN_LENGTH) {
 			idCard = convert15To18(idCard);
 		}
 		return idCard.substring(6, 14);
+	}
+	
+	/**
+	 * 从身份证号码中获取生日日期
+	 * 
+	 * @param idCard 身份证号码
+	 * @return 日期
+	 */
+	public static DateTime getBirthDate(String idCard) {
+		final String birthByIdCard = getBirthByIdCard(idCard);
+		return null == birthByIdCard ? null : DateUtil.parse(birthByIdCard, DatePattern.PURE_DATE_FORMAT);
 	}
 
 	/**
