@@ -67,6 +67,15 @@ public class Entity extends Dict{
 	public static <T> Entity parse(T bean,boolean isToUnderlineCase, boolean ignoreNullValue) {
 		return create(null).parseBean(bean,isToUnderlineCase,ignoreNullValue);
 	}
+	/**
+	 * 将PO对象转为Entity,并采用下划线法转换字段
+	 * @param <T> Bean对象类型
+	 * @param bean Bean对象
+	 * @return Entity
+	 */
+	public static <T> Entity parseWithUnderlineCase(T bean) {
+		return create(null).parseBean(bean,true,true);
+	}
 	//--------------------------------------------------------------- Static method end
 	
 	/*表名*/
