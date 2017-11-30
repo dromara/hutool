@@ -1208,13 +1208,38 @@ public class StrUtil {
 	}
 
 	/**
+	 * 截取字符串,从指定位置开始,截取指定长度的字符串
+	 * @param input 原始字符串
+	 * @param fromIndex 开始的index,包括
+	 * @param length 要截取的长度
+	 * @return
+	 */
+	public static String subWithLength(String input, int fromIndex, int length) {
+		return input.substring(fromIndex, fromIndex + length);
+	}
+
+	/**
+	 * 截取字符串,从指定位置开始
+	 * 如果fromIndex为负,则从后向前,去掉绝对值个字符,返回其余字符串.
+	 * @param input 原始字符串
+	 * @param fromIndex 开始的index,包括
+ 	 * @return
+	 */
+	public static String sub(String input, int fromIndex) {
+		if (fromIndex > 0) {
+			return input.substring(fromIndex);
+		} else {
+			return input.substring(input.length() + fromIndex);
+		}
+	}
+	/**
 	 * 改进JDK subString<br>
 	 * index从0开始计算，最后一个字符为-1<br>
 	 * 如果from和to位置一样，返回 "" <br>
 	 * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
 	 * 如果经过修正的index中from大于to，则互换from和to example: <br>
-	 * abcdefgh 2 3 =》 c <br>
-	 * abcdefgh 2 -3 =》 cde <br>
+	 * abcdefgh 2 3 => c <br>
+	 * abcdefgh 2 -3 => cde <br>
 	 * 
 	 * @param string String
 	 * @param fromIndex 开始的index（包括）
