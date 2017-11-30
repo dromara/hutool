@@ -304,7 +304,7 @@ public class StrUtil {
 	public static String trimToEmpty(CharSequence str) {
 		return str == null ? EMPTY : trim(str);
 	}
-	
+
 	/**
 	 * 除去字符串头尾部的空白，如果字符串是{@code null}，返回<code>""</code>。
 	 *
@@ -1310,6 +1310,19 @@ public class StrUtil {
 			return null;
 		}
 		return sub(string, fromIndex, string.length());
+	}
+
+	/**
+	 * 截取字符串,从指定位置开始,截取指定长度的字符串
+	 * 
+	 * @param input 原始字符串
+	 * @param fromIndex 开始的index,包括
+	 * @param length 要截取的长度
+	 * @return 截取后的字符串
+	 * @author weibaohui
+	 */
+	public static String subWithLength(String input, int fromIndex, int length) {
+		return sub(input, fromIndex, fromIndex + length);
 	}
 
 	/**
@@ -2397,7 +2410,7 @@ public class StrUtil {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * 指定范围内查找字符串，忽略大小写<br>
 	 * 
@@ -2423,7 +2436,7 @@ public class StrUtil {
 	public static int indexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
 		return indexOfIgnoreCase(str, searchStr, 0);
 	}
-	
+
 	/**
 	 * 指定范围内查找字符串
 	 * 
@@ -2476,12 +2489,12 @@ public class StrUtil {
 		if (searchStr.length() == 0) {
 			return fromIndex;
 		}
-		
-		if(false == ignoreCase) {
-			//不忽略大小写调用JDK方法
+
+		if (false == ignoreCase) {
+			// 不忽略大小写调用JDK方法
 			return str.toString().indexOf(searchStr.toString(), fromIndex);
 		}
-		
+
 		for (int i = fromIndex; i < endLimit; i++) {
 			if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
 				return i;
@@ -2489,7 +2502,7 @@ public class StrUtil {
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 指定范围内查找字符串，忽略大小写<br>
 	 * 
@@ -2501,7 +2514,7 @@ public class StrUtil {
 	public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
 		return lastIndexOfIgnoreCase(str, searchStr, str.length());
 	}
-	
+
 	/**
 	 * 指定范围内查找字符串，忽略大小写<br>
 	 * 
@@ -2514,7 +2527,7 @@ public class StrUtil {
 	public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr, int fromIndex) {
 		return lastIndexOf(str, searchStr, fromIndex, true);
 	}
-	
+
 	/**
 	 * 指定范围内查找字符串<br>
 	 * 
@@ -2537,12 +2550,12 @@ public class StrUtil {
 		if (searchStr.length() == 0) {
 			return fromIndex;
 		}
-		
-		if(false == ignoreCase) {
-			//不忽略大小写调用JDK方法
+
+		if (false == ignoreCase) {
+			// 不忽略大小写调用JDK方法
 			return str.toString().lastIndexOf(searchStr.toString(), fromIndex);
 		}
-		
+
 		for (int i = fromIndex; i > 0; i--) {
 			if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
 				return i;
@@ -2742,9 +2755,10 @@ public class StrUtil {
 
 		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
 	}
-	
+
 	/**
 	 * 替换指定字符串的指定区间内字符为固定字符
+	 * 
 	 * @param str 字符串
 	 * @param startInclude 开始位置（包含）
 	 * @param endExclude 结束位置（不包含）
@@ -2753,32 +2767,32 @@ public class StrUtil {
 	 * @since 3.2.1
 	 */
 	public static String replace(CharSequence str, int startInclude, int endExclude, char replacedChar) {
-		if(isEmpty(str)) {
+		if (isEmpty(str)) {
 			return str(str);
 		}
 		final int strLength = str.length();
-		if(startInclude > strLength) {
+		if (startInclude > strLength) {
 			return str(str);
 		}
-		if(endExclude > strLength) {
+		if (endExclude > strLength) {
 			endExclude = strLength;
 		}
-		if(startInclude > endExclude) {
-			//如果起始位置大于结束位置，不替换
+		if (startInclude > endExclude) {
+			// 如果起始位置大于结束位置，不替换
 			return str(str);
 		}
-		
+
 		final char[] chars = new char[strLength];
-		for(int i = 0; i < strLength; i++) {
-			if(i >= startInclude && i < endExclude) {
+		for (int i = 0; i < strLength; i++) {
+			if (i >= startInclude && i < endExclude) {
 				chars[i] = replacedChar;
-			}else {
+			} else {
 				chars[i] = str.charAt(i);
 			}
 		}
 		return new String(chars);
 	}
-	
+
 	/**
 	 * 替换字符字符数组中所有的字符为replacedStr
 	 * 
@@ -2789,12 +2803,12 @@ public class StrUtil {
 	 * @since 3.2.2
 	 */
 	public static String replaceChars(CharSequence str, String chars, CharSequence replacedStr) {
-		if(isEmpty(str) || isEmpty(chars)) {
+		if (isEmpty(str) || isEmpty(chars)) {
 			return str(str);
 		}
 		return replaceChars(str, chars.toCharArray(), replacedStr);
 	}
-	
+
 	/**
 	 * 替换字符字符数组中所有的字符为replacedStr
 	 * 
@@ -2805,15 +2819,15 @@ public class StrUtil {
 	 * @since 3.2.2
 	 */
 	public static String replaceChars(CharSequence str, char[] chars, CharSequence replacedStr) {
-		if(isEmpty(str) || ArrayUtil.isEmpty(chars)) {
+		if (isEmpty(str) || ArrayUtil.isEmpty(chars)) {
 			return str(str);
 		}
-		
+
 		final Set<Character> set = new HashSet<>(chars.length);
 		int strLen = str.length();
 		final StringBuilder builder = builder();
 		char c;
-		for(int i = 0; i < strLen; i++) {
+		for (int i = 0; i < strLen; i++) {
 			c = str.charAt(i);
 			builder.append(set.contains(c) ? replacedStr : c);
 		}
