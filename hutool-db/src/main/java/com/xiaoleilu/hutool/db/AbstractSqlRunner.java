@@ -496,11 +496,9 @@ public abstract class AbstractSqlRunner{
 	 * 分页查询，结果为Entity列表，不计算总数<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 * 
-	 * @param <T> 结果对象类型
 	 * @param where 条件实体类（包含表名）
 	 * @param page 页码
 	 * @param numPerPage 每页条目数
-	 * @param rsh 结果集处理对象
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
@@ -513,10 +511,8 @@ public abstract class AbstractSqlRunner{
 	 * 分页查询，结果为Entity列表，不计算总数<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 * 
-	 * @param <T> 结果对象类型
 	 * @param where 条件实体类（包含表名）
 	 * @param page 分页对象
-	 * @param rsh 结果集处理对象
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2
