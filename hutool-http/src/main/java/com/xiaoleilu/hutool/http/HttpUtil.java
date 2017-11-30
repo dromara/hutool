@@ -243,7 +243,20 @@ public class HttpUtil {
 	public static String post(String urlString, Map<String, Object> paramMap) {
 		return post(urlString, paramMap, HttpRequest.TIMEOUT_DEFAULT);
 	}
-
+	
+	/**
+	 * 发送post请求
+	 *
+	 * @param urlString 网址
+	 * @param paramMap  post表单数据
+	 * @param userAgent 浏览器类型
+	 *
+	 * @return 返回数据
+	 */
+	public static String post(String urlString, Map<String, Object> paramMap, String userAgent) {
+		return HttpRequest.post(urlString).form(paramMap).header(Header.USER_AGENT, userAgent, true).execute().body();
+	}
+	
 	/**
 	 * 发送post请求
 	 * 
