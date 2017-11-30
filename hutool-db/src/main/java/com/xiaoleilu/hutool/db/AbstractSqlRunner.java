@@ -480,6 +480,72 @@ public abstract class AbstractSqlRunner{
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 * 
 	 * @param <T> 结果对象类型
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public <T> T page(Entity where, int page, int numPerPage, RsHandler<T> rsh) throws SQLException {
+		return page(where, new Page(page, numPerPage), rsh);
+	}
+	
+	/**
+	 * 分页查询，结果为Entity列表，不计算总数<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param <T> 结果对象类型
+	 * @param where 条件实体类（包含表名）
+	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public List<Entity> pageForEntityList(Entity where, int page, int numPerPage) throws SQLException {
+		return pageForEntityList(where, new Page(page, numPerPage));
+	}
+	
+	/**
+	 * 分页查询，结果为Entity列表，不计算总数<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param <T> 结果对象类型
+	 * @param where 条件实体类（包含表名）
+	 * @param page 分页对象
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public List<Entity> pageForEntityList(Entity where, Page page) throws SQLException {
+		return page(where, page, EntityListHandler.create());
+	}
+	
+	/**
+	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param <T> 结果对象类型
+	 * @param where 条件实体类（包含表名）
+	 * @param page 分页对象
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public <T> T page(Entity where, Page page, RsHandler<T> rsh) throws SQLException {
+		return page(where.getFieldNames(), where, page, rsh);
+	}
+	
+	/**
+	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param <T> 结果对象类型
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
 	 * @param page 分页对象
@@ -505,7 +571,7 @@ public abstract class AbstractSqlRunner{
 	 * 
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
-	 * @param page 页码
+	 * @param page 分页对象
 	 * @param numPerPage 每页条目数
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
@@ -528,7 +594,7 @@ public abstract class AbstractSqlRunner{
 	 * 
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
-	 * @param page 页码
+	 * @param page 分页对象
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 */
@@ -550,11 +616,26 @@ public abstract class AbstractSqlRunner{
 	 * 
 	 * @param where 条件实体类（包含表名）
 	 * @param page 页码
+	 * @param numPerPage 每页条目数
+	 * @return 分页结果集
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public PageResult<Entity> page(Entity where, int page, int numPerPage) throws SQLException {
+		return this.page(where, new Page(page, numPerPage));
+	}
+	
+	/**
+	 * 分页查询<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param where 条件实体类（包含表名）
+	 * @param page 分页对象
 	 * @return 分页结果集
 	 * @throws SQLException SQL执行异常
 	 */
 	public PageResult<Entity> page(Entity where, Page page) throws SQLException {
-		return this.page(null, where, page);
+		return this.page(where.getFieldNames(), where, page);
 	}
 	//---------------------------------------------------------------------------- CRUD end
 	

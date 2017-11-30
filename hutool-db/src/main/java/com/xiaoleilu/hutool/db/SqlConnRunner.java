@@ -513,7 +513,7 @@ public class SqlConnRunner{
 		//查询全部
 		if(null == page){
 			List<Entity> entityList = this.find(conn, fields, where, new EntityListHandler());
-			PageResult<Entity> pageResult = new PageResult<Entity>(0, entityList.size(), entityList.size());
+			final PageResult<Entity> pageResult = new PageResult<Entity>(0, entityList.size(), entityList.size());
 			pageResult.addAll(entityList);
 			return pageResult;
 		}

@@ -22,6 +22,7 @@
 * CollUtil增加group和groupByField方法，用于集合分组（感谢@【北京】宁静）
 * StrUtil增加subWithLength方法（感谢@weibaohui）
 * ZipUtil添加编码参数支持（感谢@【天津】〓下页 ）
+* SqlRunner增加分页重载方法
 
 ### Bug修复
 * 修复MapUtil.filter方法修改值无效问题
