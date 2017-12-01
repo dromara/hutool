@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import com.xiaoleilu.hutool.db.handler.BeanListHandler;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.db.handler.NumberHandler;
@@ -45,16 +46,32 @@ public abstract class AbstractSqlRunner{
 	/**
 	 * 查询
 	 * 
-	 * @param <T> 结果集需要处理的对象类型
 	 * @param sql 查询语句
 	 * @param params 参数
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 3.1.1
 	 */
-	public <T> List<Entity> query(String sql, Object... params) throws SQLException {
+	public List<Entity> query(String sql, Object... params) throws SQLException {
 		return query(sql, new EntityListHandler(), params);
 	}
+	
+	/**
+	 * 查询
+	 * 
+	 * @param <T> 结果集需要处理的对象类型
+	 * 
+	 * @param sql 查询语句
+	 * @param beanClass 元素Bean类型
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public <T> List<T> query(String sql, Class<T> beanClass, Object... params) throws SQLException {
+		return query(sql, new BeanListHandler<T>(beanClass), params);
+	}
+	
 	/**
 	 * 查询单条记录
 	 *
@@ -383,6 +400,20 @@ public abstract class AbstractSqlRunner{
 	}
 	
 	/**
+	 * 查询数据列表，返回字段由where参数指定<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param <T> Bean类型
+	 * @param where 条件实体类（包含表名）
+	 * @return 数据对象列表
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public <T> List<T> find(Entity where, Class<T> beanClass) throws SQLException{
+		return find(where.getFieldNames(), where,BeanListHandler.create(beanClass));
+	}
+	
+	/**
 	 * 查询数据列表，返回所有字段<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 * 
@@ -392,6 +423,20 @@ public abstract class AbstractSqlRunner{
 	 */
 	public List<Entity> findAll(Entity where) throws SQLException{
 		return find(where, EntityListHandler.create());
+	}
+	
+	/**
+	 * 查询数据列表，返回所有字段<br>
+	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
+	 * 
+	 * @param <T> Bean类型
+	 * @param where 条件实体类（包含表名）
+	 * @return 数据对象列表
+	 * @throws SQLException SQL执行异常
+	 * @since 3.2.2
+	 */
+	public <T> List<T> findAll(Entity where, Class<T> beanClass) throws SQLException{
+		return find(where, BeanListHandler.create(beanClass));
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
 import java.awt.font.FontRenderContext;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -39,7 +41,7 @@ import com.xiaoleilu.hutool.lang.Base64;
 
 /**
  * 图片处理工具类：<br>
- * 功能：缩放图像、切割图像、图像类型转换、彩色转黑白、文字水印、图片水印等 <br>
+ * 功能：缩放图像、切割图像、旋转、图像类型转换、彩色转黑白、文字水印、图片水印等 <br>
  * 参考：http://blog.csdn.net/zhangzhikaixinya/article/details/8459400
  * 
  * @author Looly
@@ -121,7 +123,7 @@ public class ImageUtil {
 		final Image image = scale(srcImg, scale);
 		writeJpg(image, destImageStream);
 	}
-	
+
 	/**
 	 * 缩放图像（按比例缩放）
 	 * 
@@ -131,16 +133,16 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static Image scale(Image srcImg, double scale) {
-		if(scale < 0) {
-			//自动修正负数
-			scale = - scale;
+		if (scale < 0) {
+			// 自动修正负数
+			scale = -scale;
 		}
-		
+
 		int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), Double.toString(scale)).intValue(); // 得到源图宽
 		int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), Double.toString(scale)).intValue(); // 得到源图长
 		return scale(srcImg, width, height);
 	}
-	
+
 	/**
 	 * 缩放图像（按长宽缩放）<br>
 	 * 注意：目标长宽与原图不成比例会变形
@@ -155,13 +157,13 @@ public class ImageUtil {
 		int srcHeight = srcImg.getHeight(null);
 		int srcWidth = srcImg.getWidth(null);
 		int scaleType;
-		if(srcHeight == height && srcWidth == width) {
-			//源与目标长宽一致返回原图
+		if (srcHeight == height && srcWidth == width) {
+			// 源与目标长宽一致返回原图
 			return srcImg;
-		}else if(srcHeight < height || srcWidth < width) {
-			//放大图片使用平滑模式
+		} else if (srcHeight < height || srcWidth < width) {
+			// 放大图片使用平滑模式
 			scaleType = Image.SCALE_SMOOTH;
-		}else {
+		} else {
 			scaleType = Image.SCALE_DEFAULT;
 		}
 		return srcImg.getScaledInstance(width, height, scaleType);
@@ -239,7 +241,7 @@ public class ImageUtil {
 		final Image image = scale(srcImage, width, height, fixedColor);
 		writeJpg(image, destImageStream);
 	}
-	
+
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式
@@ -255,34 +257,34 @@ public class ImageUtil {
 		int srcWidth = srcImage.getWidth(null);
 		double heightRatio = NumberUtil.div(height, srcHeight);
 		double widthRatio = NumberUtil.div(width, srcWidth);
-		if(heightRatio == widthRatio) {
-			//长宽都按照相同比例缩放时，返回缩放后的图片
+		if (heightRatio == widthRatio) {
+			// 长宽都按照相同比例缩放时，返回缩放后的图片
 			return scale(srcImage, width, height);
 		}
-		
+
 		Image itemp = null;
-		//宽缩放比例小就按照宽缩放，否则按照高缩放
-		if(widthRatio < height) {
-			itemp = scale(srcImage, width, (int)(srcHeight * widthRatio));
-		}else {
-			itemp = scale(srcImage, (int)(srcWidth * heightRatio), height);
+		// 宽缩放比例小就按照宽缩放，否则按照高缩放
+		if (widthRatio < height) {
+			itemp = scale(srcImage, width, (int) (srcHeight * widthRatio));
+		} else {
+			itemp = scale(srcImage, (int) (srcWidth * heightRatio), height);
 		}
-			
+
 		if (null == fixedColor) {// 补白
 			fixedColor = Color.WHITE;
 		}
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
-		
-		//设置背景
+
+		// 设置背景
 		g.setBackground(fixedColor);
 		g.clearRect(0, 0, width, height);
-		
+
 		final int itempHeight = itemp.getHeight(null);
 		final int itempWidth = itemp.getWidth(null);
-		//在中间贴图
+		// 在中间贴图
 		g.drawImage(itemp, (width - itempWidth) / 2, (height - itempHeight) / 2, itempWidth, itempHeight, fixedColor, null);
-		
+
 		g.dispose();
 		itemp = image;
 		return itemp;
@@ -365,12 +367,12 @@ public class ImageUtil {
 	public static BufferedImage cut(Image srcImage, Rectangle rectangle) {
 		ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		Image img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
-		
+
 		final BufferedImage result = new BufferedImage(rectangle.width, rectangle.height, BufferedImage.TYPE_INT_RGB);
 		draw(result, img, new Rectangle(0, 0, rectangle.width, rectangle.height));
 		return result;
 	}
-	
+
 	/**
 	 * 图像切片（指定切片的宽度和高度）
 	 * 
@@ -404,7 +406,7 @@ public class ImageUtil {
 		}
 		int srcWidth = srcImage.getHeight(null); // 源图宽度
 		int srcHeight = srcImage.getWidth(null); // 源图高度
-		
+
 		try {
 			if (srcWidth > destWidth && srcHeight > destHeight) {
 				int cols = 0; // 切片横向数量
@@ -426,7 +428,7 @@ public class ImageUtil {
 					for (int j = 0; j < cols; j++) {
 						// 四个参数分别为图像起点坐标和宽高
 						// 即: CropImageFilter(int x,int y,int width,int height)
-						tag = cut(srcImage,new Rectangle(j * destWidth, i * destHeight, destWidth, destHeight));
+						tag = cut(srcImage, new Rectangle(j * destWidth, i * destHeight, destWidth, destHeight));
 						// 输出为文件
 						ImageIO.write(tag, IMAGE_TYPE_JPEG, new File(descDir, "_r" + i + "_c" + j + ".jpg"));
 					}
@@ -584,7 +586,7 @@ public class ImageUtil {
 		ImageOutputStream imageOutputStream = null;
 		try {
 			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
-			gray(ImageIO.read(srcImageFile), ImageIO.createImageOutputStream(destImageFile));
+			gray(ImageIO.read(srcImageFile), imageOutputStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -601,11 +603,7 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public final static void gray(InputStream srcStream, OutputStream destStream) {
-		try {
-			gray(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream));
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		gray(read(srcStream), getImageOutputStream(destStream));
 	}
 
 	/**
@@ -617,11 +615,7 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public final static void gray(ImageInputStream srcStream, ImageOutputStream destStream) {
-		try {
-			gray(ImageIO.read(srcStream), destStream);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		gray(read(srcStream), destStream);
 	}
 
 	/**
@@ -633,14 +627,10 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public final static void gray(Image srcImage, ImageOutputStream destImageStream) {
-		final BufferedImage src = gray(srcImage);
-		try {
-			ImageIO.write(src, IMAGE_TYPE_JPEG, destImageStream);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		final BufferedImage destImg = gray(srcImage);
+		writeJpg(destImg, destImageStream);
 	}
-	
+
 	/**
 	 * 彩色转为黑白
 	 * 
@@ -740,10 +730,10 @@ public class ImageUtil {
 		int height = srcImage.getHeight(null);
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
-		
-		//绘制背景
+
+		// 绘制背景
 		g.drawImage(srcImage, 0, 0, width, height, null);
-		
+
 		g.setColor(color);
 		g.setFont(font);
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
@@ -751,7 +741,7 @@ public class ImageUtil {
 		final int fontSize = font.getSize();
 		g.drawString(pressText, (width - (getLength(pressText) * fontSize)) / 2 + x, (height - fontSize) / 2 + y);
 		g.dispose();
-		
+
 		try {
 			ImageIO.write((BufferedImage) image, IMAGE_TYPE_JPEG, destImageStream);// 输出到文件流
 		} catch (IOException e) {
@@ -835,10 +825,10 @@ public class ImageUtil {
 		final int height = srcImage.getHeight(null);
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
-		
-		//绘制背景
+
+		// 绘制背景
 		g.drawImage(srcImage, 0, 0, width, height, null);
-		
+
 		// 水印文件
 		int pressImgWidth = pressImg.getWidth(null);
 		int pressImgHeight = pressImg.getHeight(null);
@@ -846,9 +836,9 @@ public class ImageUtil {
 		y += (height - pressImgHeight) / 2;
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
 		g.drawImage(pressImg, x, y, pressImgWidth, pressImgHeight, null);
-		
+
 		g.dispose();
-		
+
 		try {
 			ImageIO.write(image, IMAGE_TYPE_JPEG, destImageStream);
 		} catch (IOException e) {
@@ -856,6 +846,112 @@ public class ImageUtil {
 		}
 	}
 
+	// ---------------------------------------------------------------------------------------------------------------------- rotate
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流
+	 * 
+	 * @param imageFile 被旋转图像文件
+	 * @param degree 旋转角度
+	 * @param out 输出流
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void rotate(File imageFile, int degree, File outFile) throws IORuntimeException {
+		rotate(read(imageFile), degree, outFile);
+	}
+
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流
+	 * 
+	 * @param image 目标图像
+	 * @param degree 旋转角度
+	 * @param out 输出流
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void rotate(Image image, int degree, File outFile) throws IORuntimeException {
+		ImageOutputStream out = null;
+		try {
+			out = getImageOutputStream(outFile);
+			writeJpg(rotate(image, degree), out);
+		} finally {
+			IoUtil.close(out);
+		}
+	}
+
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流
+	 * 
+	 * @param image 目标图像
+	 * @param degree 旋转角度
+	 * @param out 输出流
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void rotate(Image image, int degree, OutputStream out) throws IORuntimeException {
+		writeJpg(rotate(image, degree), getImageOutputStream(out));
+	}
+
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 此方法不会关闭输出流
+	 * 
+	 * @param image 目标图像
+	 * @param degree 旋转角度
+	 * @param out 输出图像流
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void rotate(Image image, int degree, ImageOutputStream out) throws IORuntimeException {
+		writeJpg(rotate(image, degree), out);
+	}
+
+	/**
+	 * 旋转图片为指定角度<br>
+	 * 来自：http://blog.51cto.com/cping1982/130066
+	 * 
+	 * @param image 目标图像
+	 * @param degree 旋转角度
+	 * @return 旋转后的图片
+	 * @since 3.2.2
+	 */
+	public static BufferedImage rotate(Image image, int degree) {
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		int type = toBufferedImage(image).getTransparency();
+
+		final BufferedImage destImg = new BufferedImage(width, height, type);
+		Graphics2D graphics2d = destImg.createGraphics();
+		// 抗锯齿
+		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		// 从中心旋转
+		graphics2d.rotate(Math.toRadians(degree), width / 2, height / 2);
+		graphics2d.drawImage(image, 0, 0, null);
+		graphics2d.dispose();
+		return destImg;
+	}
+
+	// ---------------------------------------------------------------------------------------------------------------------- flip
+	/**
+	 * 水平翻转图像
+	 * 
+	 * @param image 图像
+	 * @return 翻转后的图片
+	 * @since 3.2.2
+	 */
+	public static BufferedImage flip(Image image) {
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		
+		BufferedImage img = new BufferedImage(width, height, toBufferedImage(image).getTransparency());
+		Graphics2D graphics2d;
+		(graphics2d = img.createGraphics()).drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
+		graphics2d.dispose();
+		return img;
+	}
 	// ---------------------------------------------------------------------------------------------------------------------- other
 	/**
 	 * {@link Image} 转 {@link BufferedImage}<br>
@@ -871,9 +967,10 @@ public class ImageUtil {
 
 		return copyImage(img, BufferedImage.TYPE_INT_RGB);
 	}
-	
+
 	/**
 	 * 将已有Image复制新的一份出来
+	 * 
 	 * @param img {@link Image}
 	 * @param imageType {@link BufferedImage}中的常量
 	 * @return {@link BufferedImage}
@@ -907,11 +1004,7 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedImage toImage(byte[] imageBytes) throws IORuntimeException {
-		try {
-			return ImageIO.read(new ByteArrayInputStream(imageBytes));
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return read(new ByteArrayInputStream(imageBytes));
 	}
 
 	/**
@@ -988,55 +1081,59 @@ public class ImageUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 写出图像为JPG格式
+	 * 
 	 * @param image {@link Image}
 	 * @param destImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void writeJpg(Image image, ImageOutputStream destImageStream) throws IORuntimeException{
+	public static void writeJpg(Image image, ImageOutputStream destImageStream) throws IORuntimeException {
 		write(image, IMAGE_TYPE_JPEG, destImageStream);
 	}
-	
+
 	/**
 	 * 写出图像为PNG格式
+	 * 
 	 * @param image {@link Image}
 	 * @param destImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void writePng(Image image, ImageOutputStream destImageStream) throws IORuntimeException{
+	public static void writePng(Image image, ImageOutputStream destImageStream) throws IORuntimeException {
 		write(image, IMAGE_TYPE_PNG, destImageStream);
 	}
-	
+
 	/**
 	 * 写出图像为PNG格式
+	 * 
 	 * @param image {@link Image}
 	 * @param imageType 图片类型（图片扩展名）
 	 * @param out 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
 	 */
-	public static void write(Image image, String imageType, OutputStream out) throws IORuntimeException{
+	public static void write(Image image, String imageType, OutputStream out) throws IORuntimeException {
 		write(image, imageType, getImageOutputStream(out));
 	}
-	
+
 	/**
 	 * 写出图像为PNG格式
+	 * 
 	 * @param image {@link Image}
 	 * @param imageType 图片类型（图片扩展名）
 	 * @param destImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
 	 */
-	public static void write(Image image, String imageType, ImageOutputStream destImageStream) throws IORuntimeException{
+	public static void write(Image image, String imageType, ImageOutputStream destImageStream) throws IORuntimeException {
 		try {
 			ImageIO.write(toBufferedImage(image), imageType, destImageStream);// 输出到文件流
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 写出图像为目标文件扩展名对应的格式
 	 * 
@@ -1045,27 +1142,88 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.0
 	 */
-	public static void write(Image image, File targetFile) throws IORuntimeException{
+	public static void write(Image image, File targetFile) throws IORuntimeException {
 		try {
 			ImageIO.write(toBufferedImage(image), FileUtil.extName(targetFile), targetFile);// 输出到文件
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获得{@link ImageReader}
+	 * 
 	 * @param type 图片文件类型，例如 "jpeg" 或 "tiff"
 	 * @return {@link ImageReader}
 	 */
 	public static ImageReader getReader(String type) {
 		final Iterator<ImageReader> iterator = ImageIO.getImageReadersByFormatName(type);
-		if(iterator.hasNext()) {
+		if (iterator.hasNext()) {
 			return iterator.next();
 		}
 		return null;
 	}
-	
+
+	/**
+	 * 从文件中读取图片
+	 * 
+	 * @param imageFile 图片文件
+	 * @return 图片
+	 * @since 3.2.2
+	 */
+	public static BufferedImage read(File imageFile) {
+		try {
+			return ImageIO.read(imageFile);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从流中读取图片
+	 * 
+	 * @param imageStream 图片文件
+	 * @return 图片
+	 * @since 3.2.2
+	 */
+	public static BufferedImage read(InputStream imageStream) {
+		try {
+			return ImageIO.read(imageStream);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从图片流中读取图片
+	 * 
+	 * @param imageStream 图片文件
+	 * @return 图片
+	 * @since 3.2.2
+	 */
+	public static BufferedImage read(ImageInputStream imageStream) {
+		try {
+			return ImageIO.read(imageStream);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 从URL中读取图片
+	 * 
+	 * @param imageUrl 图片文件
+	 * @return 图片
+	 * @since 3.2.2
+	 */
+	public static BufferedImage read(URL imageUrl) {
+		try {
+			return ImageIO.read(imageUrl);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
 	/**
 	 * 获取{@link ImageOutputStream}
 	 * 
@@ -1074,14 +1232,30 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
 	 */
-	public static ImageOutputStream getImageOutputStream(OutputStream out) throws IORuntimeException{
+	public static ImageOutputStream getImageOutputStream(OutputStream out) throws IORuntimeException {
 		try {
 			return ImageIO.createImageOutputStream(out);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
+	/**
+	 * 获取{@link ImageOutputStream}
+	 * 
+	 * @param outFile {@link File}
+	 * @return {@link ImageOutputStream}
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public static ImageOutputStream getImageOutputStream(File outFile) throws IORuntimeException {
+		try {
+			return ImageIO.createImageOutputStream(outFile);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
 	/**
 	 * 获取{@link ImageInputStream}
 	 * 
@@ -1090,31 +1264,33 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
 	 */
-	public static ImageInputStream getImageInputStream(InputStream in) throws IORuntimeException{
+	public static ImageInputStream getImageInputStream(InputStream in) throws IORuntimeException {
 		try {
 			return ImageIO.createImageInputStream(in);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 生成随机颜色
+	 * 
 	 * @return 随机颜色
 	 * @since 3.1.2
 	 */
 	public static Color randomColor() {
 		return randomColor(null);
 	}
-	
+
 	/**
 	 * 生成随机颜色
+	 * 
 	 * @param random 随机对象 {@link Random}
 	 * @return 随机颜色
 	 * @since 3.1.2
 	 */
 	public static Color randomColor(Random random) {
-		if(null == random) {
+		if (null == random) {
 			random = RandomUtil.getRandom();
 		}
 		return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
@@ -1135,7 +1311,7 @@ public class ImageUtil {
 		g.dispose();
 		return backgroundImg;
 	}
-	
+
 	/**
 	 * 计算text的长度（一个中文算两个字符）
 	 * 

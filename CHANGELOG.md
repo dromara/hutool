@@ -23,6 +23,8 @@
 * StrUtil增加subWithLength方法（感谢@weibaohui）
 * ZipUtil添加编码参数支持（感谢@【天津】〓下页 ）
 * SqlRunner增加分页重载方法
+* imageUtil增加旋转和翻转
+* SqlRunner增加返回Bean列表的方法
 
 ### Bug修复
 * 修复MapUtil.filter方法修改值无效问题
