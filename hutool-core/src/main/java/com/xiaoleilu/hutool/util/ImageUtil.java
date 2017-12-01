@@ -905,11 +905,11 @@ public class ImageUtil {
 	 * 此方法并不关闭流
 	 * 
 	 * @param srcImage 源图像流
-	 * @param destImageStream 目标图像流
 	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @return 结果图片
 	 */
 	public final static BufferedImage pressImage(Image srcImage, Image pressImg, int x, int y, float alpha) {
 		final int width = srcImage.getWidth(null);
@@ -939,7 +939,7 @@ public class ImageUtil {
 	 * 
 	 * @param imageFile 被旋转图像文件
 	 * @param degree 旋转角度
-	 * @param out 输出流
+	 * @param outFile 输出文件
 	 * @since 3.2.2
 	 * @throws IORuntimeException IO异常
 	 */
@@ -953,7 +953,7 @@ public class ImageUtil {
 	 * 
 	 * @param image 目标图像
 	 * @param degree 旋转角度
-	 * @param out 输出流
+	 * @param outFile 输出文件
 	 * @since 3.2.2
 	 * @throws IORuntimeException IO异常
 	 */
@@ -1020,9 +1020,8 @@ public class ImageUtil {
 	 * 
 	 * @param imageFile 图像文件
 	 * @param outFile 输出文件
-	 * @return 翻转后的图片
-	 * @since 3.2.2
 	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
 	 */
 	public static void flip(File imageFile, File outFile) throws IORuntimeException{
 		flip(read(imageFile), outFile);
@@ -1033,9 +1032,8 @@ public class ImageUtil {
 	 * 
 	 * @param image 图像
 	 * @param outFile 输出文件
-	 * @return 翻转后的图片
-	 * @since 3.2.2
 	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
 	 */
 	public static void flip(Image image, File outFile) throws IORuntimeException{
 		write(flip(image), outFile);
@@ -1046,9 +1044,8 @@ public class ImageUtil {
 	 * 
 	 * @param image 图像
 	 * @param out 输出
-	 * @return 翻转后的图片
-	 * @since 3.2.2
 	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
 	 */
 	public static void flip(Image image, OutputStream out) throws IORuntimeException{
 		flip(image, getImageOutputStream(out));
@@ -1059,9 +1056,8 @@ public class ImageUtil {
 	 * 
 	 * @param image 图像
 	 * @param out 输出
-	 * @return 翻转后的图片
-	 * @since 3.2.2
 	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
 	 */
 	public static void flip(Image image, ImageOutputStream out) throws IORuntimeException{
 		writeJpg(flip(image), out);
