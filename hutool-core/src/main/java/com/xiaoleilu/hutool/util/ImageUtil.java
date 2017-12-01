@@ -65,15 +65,7 @@ public class ImageUtil {
 	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 */
 	public static void scale(File srcImageFile, File destImageFile, float scale) {
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
-			scale(ImageIO.read(srcImageFile), imageOutputStream, scale);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(imageOutputStream);
-		}
+		scale(read(srcImageFile), destImageFile, scale);
 	}
 
 	/**
@@ -86,11 +78,7 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public static void scale(InputStream srcStream, OutputStream destStream, float scale) {
-		try {
-			scale(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), scale);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		scale(read(srcStream), destStream, scale);
 	}
 
 	/**
@@ -103,11 +91,35 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static void scale(ImageInputStream srcStream, ImageOutputStream destStream, float scale) {
-		try {
-			scale(ImageIO.read(srcStream), destStream, scale);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		scale(read(srcStream), destStream, scale);
+	}
+	
+	/**
+	 * 缩放图像（按比例缩放）<br>
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
+	 * 
+	 * @param srcImg 源图像来源流
+	 * @param destFile 缩放后的图像写出到的流
+	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public static void scale(Image srcImg, File destFile, float scale) throws IORuntimeException{
+		write(scale(srcImg, scale), destFile);
+	}
+	
+	/**
+	 * 缩放图像（按比例缩放）<br>
+	 * 缩放后默认为jpeg格式，此方法并不关闭流
+	 * 
+	 * @param srcImg 源图像来源流
+	 * @param out 缩放后的图像写出到的流
+	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public static void scale(Image srcImg, OutputStream out, float scale) throws IORuntimeException{
+		scale(srcImg, getImageOutputStream(out), scale);
 	}
 
 	/**
@@ -117,11 +129,11 @@ public class ImageUtil {
 	 * @param srcImg 源图像来源流
 	 * @param destImageStream 缩放后的图像写出到的流
 	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
+	 * @throws IORuntimeException IO异常
 	 * @since 3.1.0
 	 */
-	public static void scale(Image srcImg, ImageOutputStream destImageStream, float scale) {
-		final Image image = scale(srcImg, scale);
-		writeJpg(image, destImageStream);
+	public static void scale(Image srcImg, ImageOutputStream destImageStream, float scale) throws IORuntimeException{
+		writeJpg(scale(srcImg, scale), destImageStream);
 	}
 
 	/**
@@ -132,14 +144,14 @@ public class ImageUtil {
 	 * @return {@link Image}
 	 * @since 3.1.0
 	 */
-	public static Image scale(Image srcImg, double scale) {
+	public static Image scale(Image srcImg, float scale) {
 		if (scale < 0) {
 			// 自动修正负数
 			scale = -scale;
 		}
 
-		int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), Double.toString(scale)).intValue(); // 得到源图宽
-		int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), Double.toString(scale)).intValue(); // 得到源图长
+		int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), Float.toString(scale)).intValue(); // 得到源图宽
+		int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), Float.toString(scale)).intValue(); // 得到源图长
 		return scale(srcImg, width, height);
 	}
 
@@ -178,17 +190,10 @@ public class ImageUtil {
 	 * @param width 缩放后的宽度
 	 * @param height 缩放后的高度
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void scale(File srcImageFile, File destImageFile, int width, int height, Color fixedColor) {
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
-			scale(ImageIO.read(srcImageFile), imageOutputStream, width, height, fixedColor);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(imageOutputStream);
-		}
+	public final static void scale(File srcImageFile, File destImageFile, int width, int height, Color fixedColor) throws IORuntimeException{
+		write(read(srcImageFile), destImageFile);
 	}
 
 	/**
@@ -200,13 +205,10 @@ public class ImageUtil {
 	 * @param width 缩放后的宽度
 	 * @param height 缩放后的高度
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void scale(InputStream srcStream, OutputStream destStream, int width, int height, Color fixedColor) {
-		try {
-			scale(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), width, height, fixedColor);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+	public final static void scale(InputStream srcStream, OutputStream destStream, int width, int height, Color fixedColor) throws IORuntimeException{
+		scale(read(srcStream), getImageOutputStream(destStream), width, height, fixedColor);
 	}
 
 	/**
@@ -218,13 +220,10 @@ public class ImageUtil {
 	 * @param width 缩放后的宽度
 	 * @param height 缩放后的高度
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void scale(ImageInputStream srcStream, ImageOutputStream destStream, int width, int height, Color fixedColor) {
-		try {
-			scale(ImageIO.read(srcStream), destStream, width, height, fixedColor);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+	public final static void scale(ImageInputStream srcStream, ImageOutputStream destStream, int width, int height, Color fixedColor) throws IORuntimeException{
+		scale(read(srcStream), destStream, width, height, fixedColor);
 	}
 
 	/**
@@ -236,10 +235,10 @@ public class ImageUtil {
 	 * @param width 缩放后的宽度
 	 * @param height 缩放后的高度
 	 * @param fixedColor 比例不对时补充的颜色，不补充为<code>null</code>
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void scale(Image srcImage, ImageOutputStream destImageStream, int width, int height, Color fixedColor) {
-		final Image image = scale(srcImage, width, height, fixedColor);
-		writeJpg(image, destImageStream);
+	public final static void scale(Image srcImage, ImageOutputStream destImageStream, int width, int height, Color fixedColor) throws IORuntimeException{
+		writeJpg(scale(srcImage, width, height, fixedColor), destImageStream);
 	}
 
 	/**
@@ -300,15 +299,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public final static void cut(File srcImgFile, File destImgFile, Rectangle rectangle) {
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = ImageIO.createImageOutputStream(destImgFile);
-			cut(ImageIO.read(srcImgFile), imageOutputStream, rectangle);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(imageOutputStream);
-		}
+		cut(read(srcImgFile), destImgFile, rectangle);
 	}
 
 	/**
@@ -320,11 +311,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public final static void cut(InputStream srcStream, OutputStream destStream, Rectangle rectangle) {
-		try {
-			cut(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), rectangle);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		cut(read(srcStream), destStream, rectangle);
 	}
 
 	/**
@@ -336,11 +323,33 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public final static void cut(ImageInputStream srcStream, ImageOutputStream destStream, Rectangle rectangle) {
-		try {
-			cut(ImageIO.read(srcStream), destStream, rectangle);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		cut(read(srcStream), destStream, rectangle);
+	}
+	
+	/**
+	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像
+	 * @param destFile 输出的文件
+	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public final static void cut(Image srcImage, File destFile, Rectangle rectangle) throws IORuntimeException{
+		write(cut(srcImage, rectangle), destFile);
+	}
+	
+	/**
+	 * 图像切割(按指定起点坐标和宽高切割)，此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像
+	 * @param out 切片后的图像输出流
+	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
+	 * @since 3.1.0
+	 * @throws IORuntimeException IO异常
+	 */
+	public final static void cut(Image srcImage, OutputStream out, Rectangle rectangle) throws IORuntimeException{
+		cut(srcImage, getImageOutputStream(out), rectangle);
 	}
 
 	/**
@@ -350,10 +359,10 @@ public class ImageUtil {
 	 * @param destImageStream 切片后的图像输出流
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
 	 * @since 3.1.0
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void cut(Image srcImage, ImageOutputStream destImageStream, Rectangle rectangle) {
-		final BufferedImage tag = cut(srcImage, rectangle);
-		writeJpg(tag, destImageStream);
+	public final static void cut(Image srcImage, ImageOutputStream destImageStream, Rectangle rectangle) throws IORuntimeException{
+		writeJpg(cut(srcImage, rectangle), destImageStream);
 	}
 
 	/**
@@ -382,11 +391,7 @@ public class ImageUtil {
 	 * @param destHeight 目标切片高度。默认150
 	 */
 	public static void slice(File srcImageFile, File descDir, int destWidth, int destHeight) {
-		try {
-			slice(ImageIO.read(srcImageFile), descDir, destWidth, destHeight);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		slice(read(srcImageFile), descDir, destWidth, destHeight);
 	}
 
 	/**
@@ -583,15 +588,7 @@ public class ImageUtil {
 	 * @param destImageFile 目标图像地址
 	 */
 	public final static void gray(File srcImageFile, File destImageFile) {
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
-			gray(ImageIO.read(srcImageFile), imageOutputStream);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(imageOutputStream);
-		}
+		gray(read(srcImageFile), destImageFile);
 	}
 
 	/**
@@ -617,6 +614,29 @@ public class ImageUtil {
 	public final static void gray(ImageInputStream srcStream, ImageOutputStream destStream) {
 		gray(read(srcStream), destStream);
 	}
+	
+	/**
+	 * 彩色转为黑白
+	 * 
+	 * @param srcImage 源图像流
+	 * @param outFile 目标文件
+	 * @since 3.2.2
+	 */
+	public final static void gray(Image srcImage, File outFile) {
+		write(gray(srcImage), outFile);
+	}
+	
+	/**
+	 * 彩色转为黑白<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像流
+	 * @param out 目标图像流
+	 * @since 3.2.2
+	 */
+	public final static void gray(Image srcImage, OutputStream out) {
+		gray(srcImage, getImageOutputStream(out));
+	}
 
 	/**
 	 * 彩色转为黑白<br>
@@ -625,10 +645,10 @@ public class ImageUtil {
 	 * @param srcImage 源图像流
 	 * @param destImageStream 目标图像流
 	 * @since 3.0.9
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void gray(Image srcImage, ImageOutputStream destImageStream) {
-		final BufferedImage destImg = gray(srcImage);
-		writeJpg(destImg, destImageStream);
+	public final static void gray(Image srcImage, ImageOutputStream destImageStream) throws IORuntimeException{
+		writeJpg(gray(srcImage), destImageStream);
 	}
 
 	/**
@@ -649,7 +669,7 @@ public class ImageUtil {
 	/**
 	 * 给图片添加文字水印
 	 * 
-	 * @param srcFile 源图像文件
+	 * @param imageFile 源图像文件
 	 * @param destFile 目标图像文件
 	 * @param pressText 水印文字
 	 * @param color 水印的字体颜色
@@ -658,16 +678,8 @@ public class ImageUtil {
 	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
-	public final static void pressText(File srcFile, File destFile, String pressText, Color color, Font font, int x, int y, float alpha) {
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = ImageIO.createImageOutputStream(destFile);
-			pressText(ImageIO.read(srcFile), imageOutputStream, pressText, color, font, x, y, alpha);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(imageOutputStream);
-		}
+	public final static void pressText(File imageFile, File destFile, String pressText, Color color, Font font, int x, int y, float alpha) {
+		pressText(read(imageFile), destFile, pressText, color, font, x, y, alpha);
 	}
 
 	/**
@@ -684,11 +696,7 @@ public class ImageUtil {
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
 	public final static void pressText(InputStream srcStream, OutputStream destStream, String pressText, Color color, Font font, int x, int y, float alpha) {
-		try {
-			pressText(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), pressText, color, font, x, y, alpha);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		pressText(read(srcStream), getImageOutputStream(destStream), pressText, color, font, x, y, alpha);
 	}
 
 	/**
@@ -705,11 +713,45 @@ public class ImageUtil {
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
 	public final static void pressText(ImageInputStream srcStream, ImageOutputStream destStream, String pressText, Color color, Font font, int x, int y, float alpha) {
-		try {
-			pressText(ImageIO.read(srcStream), destStream, pressText, color, font, x, y, alpha);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		pressText(read(srcStream), destStream, pressText, color, font, x, y, alpha);
+	}
+	
+	/**
+	 * 给图片添加文字水印<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像
+	 * @param destFile 目标流
+	 * @param pressText 水印文字
+	 * @param color 水印的字体颜色
+	 * @param font {@link Font} 字体相关信息，如果默认则为{@code null}
+	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public final static void pressText(Image srcImage, File destFile, String pressText, Color color, Font font, int x, int y, float alpha) throws IORuntimeException{
+		write(pressText(srcImage, pressText, color, font, x, y, alpha), destFile);
+	}
+	
+	/**
+	 * 给图片添加文字水印<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像
+	 * @param to 目标流
+	 * @param pressText 水印文字
+	 * @param color 水印的字体颜色
+	 * @param font {@link Font} 字体相关信息，如果默认则为{@code null}
+	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public final static void pressText(Image srcImage, OutputStream to, String pressText, Color color, Font font, int x, int y, float alpha) throws IORuntimeException{
+		pressText(srcImage, getImageOutputStream(to), pressText, color, font, x, y, alpha);
 	}
 
 	/**
@@ -724,16 +766,34 @@ public class ImageUtil {
 	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void pressText(Image srcImage, ImageOutputStream destImageStream, String pressText, Color color, Font font, int x, int y, float alpha) {
+	public final static void pressText(Image srcImage, ImageOutputStream destImageStream, String pressText, Color color, Font font, int x, int y, float alpha) throws IORuntimeException{
+		writeJpg(pressText(srcImage, pressText, color, font, x, y, alpha), destImageStream);
+	}
+	
+	/**
+	 * 给图片添加文字水印<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像
+	 * @param pressText 水印文字
+	 * @param color 水印的字体颜色
+	 * @param font {@link Font} 字体相关信息，如果默认则为{@code null}
+	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @return 处理后的图像
+	 * @since 3.2.2
+	 */
+	public final static BufferedImage pressText(Image srcImage, String pressText, Color color, Font font, int x, int y, float alpha) {
 		int width = srcImage.getWidth(null);
 		int height = srcImage.getHeight(null);
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = image.createGraphics();
+		BufferedImage destImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = destImage.createGraphics();
 
 		// 绘制背景
 		g.drawImage(srcImage, 0, 0, width, height, null);
-
 		g.setColor(color);
 		g.setFont(font);
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
@@ -742,11 +802,7 @@ public class ImageUtil {
 		g.drawString(pressText, (width - (getLength(pressText) * fontSize)) / 2 + x, (height - fontSize) / 2 + y);
 		g.dispose();
 
-		try {
-			ImageIO.write((BufferedImage) image, IMAGE_TYPE_JPEG, destImageStream);// 输出到文件流
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return destImage;
 	}
 
 	/**
@@ -760,15 +816,7 @@ public class ImageUtil {
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
 	public final static void pressImage(File srcImageFile, File destImageFile, Image pressImg, int x, int y, float alpha) {
-		ImageOutputStream imageOutputStream = null;
-		try {
-			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
-			pressImage(ImageIO.read(srcImageFile), imageOutputStream, pressImg, x, y, alpha);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(imageOutputStream);
-		}
+		pressImage(read(srcImageFile), destImageFile, pressImg, x, y, alpha);
 	}
 
 	/**
@@ -783,11 +831,7 @@ public class ImageUtil {
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
 	 */
 	public final static void pressImage(InputStream srcStream, OutputStream destStream, Image pressImg, int x, int y, float alpha) {
-		try {
-			pressImage(ImageIO.read(srcStream), ImageIO.createImageOutputStream(destStream), pressImg, x, y, alpha);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		pressImage(read(srcStream), getImageOutputStream(destStream), pressImg, x, y, alpha);
 	}
 
 	/**
@@ -800,13 +844,44 @@ public class ImageUtil {
 	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void pressImage(ImageInputStream srcStream, ImageOutputStream destStream, Image pressImg, int x, int y, float alpha) {
-		try {
-			pressImage(ImageIO.read(srcStream), destStream, pressImg, x, y, alpha);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+	public final static void pressImage(ImageInputStream srcStream, ImageOutputStream destStream, Image pressImg, int x, int y, float alpha) throws IORuntimeException{
+		pressImage(read(srcStream), destStream, pressImg, x, y, alpha);
+	}
+	
+	/**
+	 * 给图片添加图片水印<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像流
+	 * @param outFile 写出文件
+	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
+	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public final static void pressImage(Image srcImage, File outFile, Image pressImg, int x, int y, float alpha) throws IORuntimeException{
+		write(pressImage(srcImage, pressImg, x, y, alpha), outFile);
+	}
+	
+	/**
+	 * 给图片添加图片水印<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像流
+	 * @param out 目标图像流
+	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
+	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
+	 * @since 3.2.2
+	 */
+	public final static void pressImage(Image srcImage, OutputStream out, Image pressImg, int x, int y, float alpha) throws IORuntimeException{
+		pressImage(srcImage, getImageOutputStream(out), pressImg, x, y, alpha);
 	}
 
 	/**
@@ -819,12 +894,28 @@ public class ImageUtil {
 	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
 	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @throws IORuntimeException IO异常
 	 */
-	public final static void pressImage(Image srcImage, ImageOutputStream destImageStream, Image pressImg, int x, int y, float alpha) {
+	public final static void pressImage(Image srcImage, ImageOutputStream destImageStream, Image pressImg, int x, int y, float alpha) throws IORuntimeException{
+		writeJpg(pressImage(srcImage, pressImg, x, y, alpha), destImageStream);
+	}
+	
+	/**
+	 * 给图片添加图片水印<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像流
+	 * @param destImageStream 目标图像流
+	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
+	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param y 修正值。 默认在中间，偏移量相对于中间偏移
+	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 */
+	public final static BufferedImage pressImage(Image srcImage, Image pressImg, int x, int y, float alpha) {
 		final int width = srcImage.getWidth(null);
 		final int height = srcImage.getHeight(null);
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = image.createGraphics();
+		BufferedImage destImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = destImage.createGraphics();
 
 		// 绘制背景
 		g.drawImage(srcImage, 0, 0, width, height, null);
@@ -836,14 +927,9 @@ public class ImageUtil {
 		y += (height - pressImgHeight) / 2;
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
 		g.drawImage(pressImg, x, y, pressImgWidth, pressImgHeight, null);
-
 		g.dispose();
 
-		try {
-			ImageIO.write(image, IMAGE_TYPE_JPEG, destImageStream);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return destImage;
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- rotate
@@ -872,13 +958,7 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void rotate(Image image, int degree, File outFile) throws IORuntimeException {
-		ImageOutputStream out = null;
-		try {
-			out = getImageOutputStream(outFile);
-			writeJpg(rotate(image, degree), out);
-		} finally {
-			IoUtil.close(out);
-		}
+		write(rotate(image, degree), outFile);
 	}
 
 	/**
@@ -938,6 +1018,58 @@ public class ImageUtil {
 	/**
 	 * 水平翻转图像
 	 * 
+	 * @param imageFile 图像文件
+	 * @param outFile 输出文件
+	 * @return 翻转后的图片
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void flip(File imageFile, File outFile) throws IORuntimeException{
+		flip(read(imageFile), outFile);
+	}
+	
+	/**
+	 * 水平翻转图像
+	 * 
+	 * @param image 图像
+	 * @param outFile 输出文件
+	 * @return 翻转后的图片
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void flip(Image image, File outFile) throws IORuntimeException{
+		write(flip(image), outFile);
+	}
+	
+	/**
+	 * 水平翻转图像
+	 * 
+	 * @param image 图像
+	 * @param out 输出
+	 * @return 翻转后的图片
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void flip(Image image, OutputStream out) throws IORuntimeException{
+		flip(image, getImageOutputStream(out));
+	}
+	
+	/**
+	 * 水平翻转图像
+	 * 
+	 * @param image 图像
+	 * @param out 输出
+	 * @return 翻转后的图片
+	 * @since 3.2.2
+	 * @throws IORuntimeException IO异常
+	 */
+	public static void flip(Image image, ImageOutputStream out) throws IORuntimeException{
+		writeJpg(flip(image), out);
+	}
+	
+	/**
+	 * 水平翻转图像
+	 * 
 	 * @param image 图像
 	 * @return 翻转后的图片
 	 * @since 3.2.2
@@ -952,6 +1084,7 @@ public class ImageUtil {
 		graphics2d.dispose();
 		return img;
 	}
+	
 	// ---------------------------------------------------------------------------------------------------------------------- other
 	/**
 	 * {@link Image} 转 {@link BufferedImage}<br>
@@ -1143,8 +1276,12 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static void write(Image image, File targetFile) throws IORuntimeException {
+		String formatName = FileUtil.extName(targetFile);
+		if(StrUtil.isBlank(formatName)) {
+			formatName = IMAGE_TYPE_JPG;
+		}
 		try {
-			ImageIO.write(toBufferedImage(image), FileUtil.extName(targetFile), targetFile);// 输出到文件
+			ImageIO.write(toBufferedImage(image), formatName, targetFile);// 输出到文件
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

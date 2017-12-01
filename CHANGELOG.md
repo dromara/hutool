@@ -25,6 +25,7 @@
 * SqlRunner增加分页重载方法
 * imageUtil增加旋转和翻转
 * SqlRunner增加返回Bean列表的方法
+* ImageUtil增加方法，并支持根据文件扩展名输出其格式的图片
 
 ### Bug修复
 * 修复MapUtil.filter方法修改值无效问题

@@ -19,5 +19,6 @@ public interface Func<P, R> {
 	 * @param parameters 参数列表
 	 * @return 函数执行结果
 	 */
-	R call(@SuppressWarnings("unchecked") P... parameters);
+	@SuppressWarnings("unchecked")
+	R call(P... parameters);
 }

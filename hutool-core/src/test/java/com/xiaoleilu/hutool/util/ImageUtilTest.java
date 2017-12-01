@@ -38,4 +38,10 @@ public class ImageUtilTest {
 		BufferedImage image = ImageUtil.rotate(ImageIO.read(FileUtil.file("d:/logo.png")), 45);
 		ImageUtil.write(image, FileUtil.file("d:/result.png"));
 	}
+	
+	@Test
+	@Ignore
+	public void flipTest() throws IOException {
+		ImageUtil.flip(FileUtil.file("d:/logo.png"), FileUtil.file("d:/result.png"));
+	}
 }
