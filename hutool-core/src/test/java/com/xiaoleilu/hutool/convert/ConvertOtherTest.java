@@ -5,8 +5,6 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
@@ -61,13 +59,18 @@ public class ConvertOtherTest {
 	}
 
 	@Test
-	public void digitUppercaseTest() {
+	public void digitToChineseTest() {
 		double a = 67556.32;
-		String digitUppercase = Convert.digitUppercase(a);
+		String digitUppercase = Convert.digitToChinese(a);
 		Assert.assertEquals("陆万柒仟伍佰伍拾陆元叁角贰分", digitUppercase);
 		
-		double b = 1024;
-		Console.log(Convert.digitUppercase(b));
+		a = 1024.00;
+		digitUppercase = Convert.digitToChinese(a);
+		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
+		
+		a = 1024;
+		digitUppercase = Convert.digitToChinese(a);
+		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 	}
 
 	@Test
