@@ -9,11 +9,12 @@ import com.xiaoleilu.hutool.util.NumberUtil;
 
 /**
  * {@link NumberUtil} 单元测试类
+ * 
  * @author Looly
  *
  */
 public class NumberUtilTest {
-	
+
 	@Test
 	public void divTest() {
 		double result = NumberUtil.div(0, 1);
@@ -21,35 +22,47 @@ public class NumberUtilTest {
 	}
 
 	@Test
-	public void roundTest(){
-		
-		//四舍
-		double round3 = NumberUtil.round(2.674, 2);
-		double round4 = NumberUtil.round("2.674", 2);
-		Assert.assertEquals(round3, 2.67, 0);
-		Assert.assertEquals(round4, 2.67, 0);
+	public void roundTest() {
 
-		//五入
-		double round1 = NumberUtil.round(2.675, 2);
-		double round2 = NumberUtil.round("2.675", 2);
-		Assert.assertEquals(round1, 2.68, 0);
-		Assert.assertEquals(round2, 2.68, 0);
+		// 四舍
+		String round1 = NumberUtil.roundStr(2.674, 2);
+		String round2 = NumberUtil.roundStr("2.674", 2);
+		Assert.assertEquals("2.67", round1);
+		Assert.assertEquals("2.67", round2);
+
+		// 五入
+		String round3 = NumberUtil.roundStr(2.675, 2);
+		String round4 = NumberUtil.roundStr("2.675", 2);
+		Assert.assertEquals("2.68", round3);
+		Assert.assertEquals("2.68", round4);
+
+		// 补0
+		String round5 = NumberUtil.roundStr(2.6005, 2);
+		String round6 = NumberUtil.roundStr("2.6005", 2);
+		Assert.assertEquals("2.60", round5);
+		Assert.assertEquals("2.60", round6);
+		
+		// 补0
+		String round7 = NumberUtil.roundStr(2.600, 2);
+		String round8 = NumberUtil.roundStr("2.600", 2);
+		Assert.assertEquals("2.60", round7);
+		Assert.assertEquals("2.60", round8);
 	}
-	
+
 	@Test
-	public void roundStrTest(){
+	public void roundStrTest() {
 		String roundStr = NumberUtil.roundStr(2.647, 2);
 		Assert.assertEquals(roundStr, "2.65");
 	}
-	
+
 	@Test
-	public void decimalFormatTest(){
-		long c=299792458;//光速
-		
+	public void decimalFormatTest() {
+		long c = 299792458;// 光速
+
 		String format = NumberUtil.decimalFormat(",###", c);
 		Assert.assertEquals("299,792,458", format);
 	}
-	
+
 	@Test
 	public void equalsTest() {
 		Assert.assertTrue(NumberUtil.equals(new BigDecimal("0.00"), BigDecimal.ZERO));
