@@ -687,6 +687,53 @@ public final class Convert {
 		return destUnit.convert(sourceDuration, sourceUnit);
 	}
 
+	// --------------------------------------------------------------- 原始包装类型转换
+	/**
+	 * 原始类转为包装类，非原始类返回原类
+	 * 
+	 * @see BasicType#wrap(Class)
+	 * @param clazz 原始类
+	 * @return 包装类
+	 */
+	public static Class<?> wrap(Class<?> clazz) {
+		return BasicType.wrap(clazz);
+	}
+
+	/**
+	 * 包装类转为原始类，非包装类返回原类
+	 * 
+	 * @see BasicType#unWrap(Class)
+	 * @param clazz 包装类
+	 * @return 原始类
+	 */
+	public static Class<?> unWrap(Class<?> clazz) {
+		return BasicType.unWrap(clazz);
+	}
+
+	// -------------------------------------------------------------------------- 数字和英文转换
+	/**
+	 * 将阿拉伯数字转为英文表达方式
+	 * 
+	 * @param number {@link Number}对象
+	 * @return 英文表达式
+	 * @since 3.0.9
+	 */
+	public static String numberToWord(Number number) {
+		return NumberWordFormater.format(number);
+	}
+	
+	/**
+	 * 将阿拉伯数字转为中文表达方式
+	 * 
+	 * @param number 数字
+	 * @param isUseTraditonal 是否使用繁体字（金额形式）
+	 * @return 中文
+	 * @since 3.2.3
+	 */
+	public static String numberToChinese(double number, boolean isUseTraditonal) {
+		return NumberChineseFormater.format(number, isUseTraditonal);
+	}
+	
 	/**
 	 * 数字金额大写转换 先写个完整的然后将如零拾替换成零
 	 * 
@@ -719,41 +766,6 @@ public final class Convert {
 			s = p.replaceAll("(零.)*零$", "").replaceAll("^$", "零") + unit[0][i] + s;
 		}
 		return head + s.replaceAll("(零.)*零元", "元").replaceFirst("(零.)+", "").replaceAll("(零.)+", "零").replaceAll("^整$", "零元整");
-	}
-
-	// --------------------------------------------------------------- 原始包装类型转换
-	/**
-	 * 原始类转为包装类，非原始类返回原类
-	 * 
-	 * @see BasicType#wrap(Class)
-	 * @param clazz 原始类
-	 * @return 包装类
-	 */
-	public static Class<?> wrap(Class<?> clazz) {
-		return BasicType.wrap(clazz);
-	}
-
-	/**
-	 * 包装类转为原始类，非包装类返回原类
-	 * 
-	 * @see BasicType#unWrap(Class)
-	 * @param clazz 包装类
-	 * @return 原始类
-	 */
-	public static Class<?> unWrap(Class<?> clazz) {
-		return BasicType.unWrap(clazz);
-	}
-
-	// -------------------------------------------------------------------------- 数字和英文转换
-	/**
-	 * 将阿拉伯数字转为英文表达式
-	 * 
-	 * @param number {@link Number}对象
-	 * @return 英文表达式
-	 * @since 3.0.9
-	 */
-	public static String numberToWord(Number number) {
-		return NumberWordFormater.format(number);
 	}
 
 	// -------------------------------------------------------------------------- 数字转换

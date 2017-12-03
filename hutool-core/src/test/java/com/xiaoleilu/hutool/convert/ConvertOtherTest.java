@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
@@ -64,6 +65,9 @@ public class ConvertOtherTest {
 		double a = 67556.32;
 		String digitUppercase = Convert.digitUppercase(a);
 		Assert.assertEquals("陆万柒仟伍佰伍拾陆元叁角贰分", digitUppercase);
+		
+		double b = 1024;
+		Console.log(Convert.digitUppercase(b));
 	}
 
 	@Test
