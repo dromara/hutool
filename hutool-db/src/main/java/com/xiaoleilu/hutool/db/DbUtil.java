@@ -36,6 +36,7 @@ import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
@@ -367,10 +368,11 @@ public final class DbUtil {
 	 * 
 	 * @param ps PreparedStatement
 	 * @param params SQL参数
+	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
 	 */
-	public static void fillParams(PreparedStatement ps, Collection<Object> params) throws SQLException {
-		fillParams(ps, params.toArray(new Object[params.size()]));
+	public static PreparedStatement fillParams(PreparedStatement ps, Collection<Object> params) throws SQLException {
+		return fillParams(ps, params.toArray(new Object[params.size()]));
 	}
 	
 	/**
@@ -379,11 +381,12 @@ public final class DbUtil {
 	 * 
 	 * @param ps PreparedStatement
 	 * @param params SQL参数
+	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
 	 */
-	public static void fillParams(PreparedStatement ps, Object... params) throws SQLException {
+	public static PreparedStatement fillParams(PreparedStatement ps, Object... params) throws SQLException {
 		if (ArrayUtil.isEmpty(params)) {
-			return;//无参数
+			return ps;//无参数
 		}
 		Object param;
 		for (int i = 0; i < params.length; i++) {
@@ -411,6 +414,45 @@ public final class DbUtil {
 				ps.setNull(paramIndex, sqlType);
 			}
 		}
+		return ps;
+	}
+	
+	/**
+	 * 创建{@link PreparedStatement}
+	 * 
+	 * @param conn 数据库连接
+	 * @param sql SQL语句，使用"?"做为占位符
+	 * @param params "?"对应参数列表
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL异常
+	 * @since 3.2.3
+	 */
+	public static PreparedStatement prepareStatement(Connection conn, String sql, Collection<Object> params) throws SQLException {
+		return fillParams(conn.prepareStatement(sql), params);
+	}
+	
+	/**
+	 * 创建{@link PreparedStatement}
+	 * 
+	 * @param conn 数据库连接
+	 * @param sql SQL语句，使用"?"做为占位符
+	 * @param params "?"对应参数列表
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL异常
+	 * @since 3.2.3
+	 */
+	public static PreparedStatement prepareStatement(Connection conn, String sql, Object... params) throws SQLException {
+		Assert.notBlank(sql, "Sql String must be not blank!");
+		
+		sql = sql.trim();
+		PreparedStatement ps;
+		if(StrUtil.startWithIgnoreCase(sql, "insert")) {
+			//插入默认返回主键
+			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		}else {
+			ps = conn.prepareStatement(sql);
+		}
+		return fillParams(ps, params);
 	}
 	
 	/**
