@@ -7,6 +7,7 @@
 ### 新特性
 * 增加NumberChineseFormater数字转汉字（感谢@【杭州】fineliving）
 * StrUtil增加ordinalIndexOf方法（感谢@【四川】开心一笑）
+* 增加H2和SQLServer2012方言支持
 
 ### Bug修复
 * 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）
