@@ -8,10 +8,13 @@
 * 增加NumberChineseFormater数字转汉字（感谢@【杭州】fineliving）
 * StrUtil增加ordinalIndexOf方法（感谢@【四川】开心一笑）
 * 增加H2和SQLServer2012方言支持
+* 邮件支持发件人姓名（issue#IGMW2@Gitee）
 
 ### Bug修复
 * 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）
 * 修复Convert中金额转为大写格式问题（感谢@【杭州】fineliving）
+* 邮件修复附件名乱码问题（issue#IGMW2@Gitee）
+* 修复 DateBetween.betweenYear中月份一致导致判断有误问题（issue#IGN0N@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

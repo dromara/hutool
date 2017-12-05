@@ -193,9 +193,9 @@ public class Mail {
 	private MimeMessage buildMsg() throws MessagingException {
 		final MimeMessage msg = new MimeMessage(createSession());
 		// 发件人
-		msg.setFrom(new InternetAddress(mailAccount.getFrom()));
+		msg.setFrom(InternalMailUtil.parseFirstAddress(this.mailAccount.getFrom(), this.charset));
 		// 标题
-		msg.setSubject(this.title);
+		msg.setSubject(this.title, this.charset.name());
 		// 发送时间
 		msg.setSentDate(new Date());
 		// 内容和附件
@@ -216,7 +216,7 @@ public class Mail {
 	 * @param isHtml 是否为HTML
 	 * @param files 附件列表
 	 * @return 邮件信息主体
-	 * @throws MessagingException
+	 * @throws MessagingException 消息异常
 	 */
 	private Multipart buildContent() throws MessagingException {
 		final Multipart mainPart = new MimeMultipart();
@@ -232,14 +232,14 @@ public class Mail {
 			for (File file : files) {
 				bodyPart = new MimeBodyPart();
 				bodyPart.setDataHandler(new DataHandler(new FileDataSource(file)));
-				bodyPart.setFileName(file.getName());
+				bodyPart.setFileName(InternalMailUtil.encodeText(file.getName(), this.charset));
 				mainPart.addBodyPart(bodyPart);
 			}
 		}
 
 		return mainPart;
 	}
-
+	
 	/**
 	 * 创建邮件会话
 	 * 
