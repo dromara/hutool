@@ -633,7 +633,7 @@ public class CollUtil {
 	}
 
 	/**
-	 * 截取数组的部分
+	 * 截取集合的部分
 	 * 
 	 * @param <T> 集合元素类型
 	 * @param list 被截取的数组

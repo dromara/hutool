@@ -25,29 +25,58 @@ public class JSONStrFormater {
 	public static String format(String json) {
 		final StringBuffer result = new StringBuffer();
 
+		Character wrapChar = null;
+		boolean isEscapeMode = false;
 		int length = json.length();
 		int number = 0;
 		char key = 0;
-		// 遍历输入字符串。
 		for (int i = 0; i < length; i++) {
-			// 1、获取当前字符。
 			key = json.charAt(i);
-
-			// 2、如果当前字符是前方括号、前花括号做如下处理：
+			
+			if('"' == key || '\'' == key) {
+				if(null == wrapChar) {
+					//字符串模式开始
+					wrapChar = key;
+				}else if(isEscapeMode) {
+					//在字符串模式下的转义
+					isEscapeMode = false;
+				}else {
+					//字符串包装结束
+					wrapChar = null;
+				}
+				result.append(key);
+				continue;
+			}else if('\\' == key) {
+				if(null != wrapChar) {
+					//字符串模式下转义有效
+					isEscapeMode = !isEscapeMode;
+					result.append(key);
+					continue;
+				}else {
+					result.append(key);
+				}
+			}
+			
+			if(null != wrapChar) {
+				//字符串模式
+				result.append(key);
+				continue;
+			}
+			
+			//如果当前字符是前方括号、前花括号做如下处理：
 			if ((key == '[') || (key == '{')) {
-				// （1）如果前面还有字符，并且字符为“：”，打印：换行和缩进字符字符串。
+				//如果前面还有字符，并且字符为“：”，打印：换行和缩进字符字符串。
 				if ((i - 1 > 0) && (json.charAt(i - 1) == ':')) {
 					result.append(NEW_LINE);
 					result.append(indent(number));
 				}
-				// （2）打印：当前字符。
 				result.append(key);
-				// （3）前方括号、前花括号，的后面必须换行。打印：换行。
+				//前方括号、前花括号，的后面必须换行。打印：换行。
 				result.append(NEW_LINE);
-				// （4）每出现一次前方括号、前花括号；缩进次数增加一次。打印：新行缩进。
+				//每出现一次前方括号、前花括号；缩进次数增加一次。打印：新行缩进。
 				number++;
 				result.append(indent(number));
-				// （5）进行下一次循环。
+
 				continue;
 			}
 
