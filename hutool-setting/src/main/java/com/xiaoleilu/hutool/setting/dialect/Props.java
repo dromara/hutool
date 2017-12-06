@@ -466,7 +466,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		Writer writer = null;
 		try {
 			writer = FileUtil.getWriter(absolutePath, charset, false);
-			super.store(FileUtil.getWriter(absolutePath, charset, false), null);
+			super.store(writer, null);
 		} catch (IOException e) {
 			throw new IORuntimeException(e, "Store properties to [{}] error!", absolutePath);
 		} finally {
