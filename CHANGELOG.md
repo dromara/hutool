@@ -10,6 +10,7 @@
 * 增加H2和SQLServer2012方言支持
 * 邮件支持发件人姓名（issue#IGMW2@Gitee）
 * db部分中Session增加默认数据源的Session
+* 增加RedisDs，Jedis的薄封装
 
 ### Bug修复
 * 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）

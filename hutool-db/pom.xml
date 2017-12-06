@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
@@ -18,11 +19,12 @@
 		<!-- versions -->
 		<c3p0.version>0.9.5.2</c3p0.version>
 		<dbcp2.version>2.1.1</dbcp2.version>
-		<tomcat-jdbc.version>8.5.20</tomcat-jdbc.version>
-		<druid.version>1.1.5</druid.version>
+		<tomcat-jdbc.version>8.5.24</tomcat-jdbc.version>
+		<druid.version>1.1.6</druid.version>
 		<HikariCP.version>2.4.13</HikariCP.version>
-		<mongo.version>3.5.0</mongo.version>
-		<sqlite.version>3.20.0</sqlite.version>
+		<mongo.version>3.6.0</mongo.version>
+		<sqlite.version>3.21.0</sqlite.version>
+		<jedis.version>2.9.0</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -78,6 +80,13 @@
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>${mongo.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<!-- Redis Java客户端 -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.version}</version>
 			<optional>true</optional>
 		</dependency>
 

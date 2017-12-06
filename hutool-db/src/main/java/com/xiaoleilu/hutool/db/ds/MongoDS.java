@@ -3,9 +3,9 @@ package com.xiaoleilu.hutool.db.ds;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bson.Document;
 
@@ -39,7 +39,7 @@ public class MongoDS implements Closeable{
 	private final static String GROUP_SEPRATER = ",";
 	
 	/** 数据源池 */
-	private static Map<String, MongoDS> dsMap = new HashMap<String, MongoDS>();
+	private static Map<String, MongoDS> dsMap = new ConcurrentHashMap<>();
 	
 	//MongoDB配置文件
 	private Setting setting;
@@ -81,6 +81,8 @@ public class MongoDS implements Closeable{
 	
 	/**
 	 * 获取MongoDB数据源<br>
+	 * 多个分组名对应的连接组成集群
+	 * 
 	 * @param groups 分组列表
 	 * @return MongoDB连接
 	 */

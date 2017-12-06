@@ -299,8 +299,8 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	 */
 	private static String keyWithGroup(String key, String group) {
 		String keyWithGroup = key;
-		if (!StrUtil.isBlank(group)) {
-			keyWithGroup = group.concat(StrUtil.DOT).concat(key);
+		if (false == StrUtil.isBlank(group)) {
+			keyWithGroup = group.trim().concat(StrUtil.DOT).concat(key);
 		}
 		return keyWithGroup;
 	}
