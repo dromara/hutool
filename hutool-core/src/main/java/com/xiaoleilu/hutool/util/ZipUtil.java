@@ -28,8 +28,8 @@ import com.xiaoleilu.hutool.io.IoUtil;
  */
 public class ZipUtil {
 	
-	/** 默认编码 */
-	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	/** 默认编码，使用平台相关编码 */
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.defaultCharset();
 	
 	/**
 	 * 打包到当前目录，使用默认编码UTF-8
@@ -298,7 +298,7 @@ public class ZipUtil {
 	 * @since 3.2.2
 	 */
 	public static File unzip(String zipFilePath, Charset charset) throws UtilException {
-		return unzip(FileUtil.file(zipFilePath));
+		return unzip(FileUtil.file(zipFilePath), charset);
 	}
 	
 	/**
