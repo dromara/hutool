@@ -11,7 +11,7 @@ import org.junit.Test;
 public class CaptchaTest {
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void lineCaptchaTest() {
 		
 		//定义图形验证码的长和宽
