@@ -15,7 +15,7 @@ import com.xiaoleilu.hutool.util.RandomUtil;
  * @since 3.2.3
  *
  */
-public class ShareCaptcha extends AbstractCaptcha {
+public class ShearCaptcha extends AbstractCaptcha {
 	private static final long serialVersionUID = -7096627300356535494L;
 
 	/**
@@ -24,7 +24,7 @@ public class ShareCaptcha extends AbstractCaptcha {
 	 * @param width 图片宽
 	 * @param height 图片高
 	 */
-	public ShareCaptcha(int width, int height) {
+	public ShearCaptcha(int width, int height) {
 		this(width, height, 5);
 	}
 
@@ -35,7 +35,7 @@ public class ShareCaptcha extends AbstractCaptcha {
 	 * @param height 图片高
 	 * @param codeCount 字符个数
 	 */
-	public ShareCaptcha(int width, int height, int codeCount) {
+	public ShearCaptcha(int width, int height, int codeCount) {
 		this(width, height, codeCount, 15);
 	}
 
@@ -47,7 +47,7 @@ public class ShareCaptcha extends AbstractCaptcha {
 	 * @param codeCount 字符个数
 	 * @param interfereCount 验证码干扰元素个数
 	 */
-	public ShareCaptcha(int width, int height, int codeCount, int interfereCount) {
+	public ShearCaptcha(int width, int height, int codeCount, int interfereCount) {
 		super(width, height, codeCount, interfereCount);
 	}
 

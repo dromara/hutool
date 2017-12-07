@@ -24,7 +24,7 @@ public class LineCaptcha extends AbstractCaptcha {
 	 * @param height 图片高
 	 */
 	public LineCaptcha(int width, int height) {
-		this(width, height, 4, 150);
+		this(width, height, 5, 150);
 	}
 
 	/**
