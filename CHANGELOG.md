@@ -11,7 +11,9 @@
 * 邮件支持发件人姓名（issue#IGMW2@Gitee）
 * db部分中Session增加默认数据源的Session
 * 增加RedisDs，Jedis的薄封装
-* 增加字符串相似度计算工具TextSimilarity（感谢@【杭州】fineliving）
+* 增加字符串相似度计算工具TextSimilarity（感谢@【杭州】fineliving）\
+* 增加几个验证码类型
+* 增加HtmlUtil.escape方法（issue#IGOKB@Gitee）
 
 ### Bug修复
 * 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）

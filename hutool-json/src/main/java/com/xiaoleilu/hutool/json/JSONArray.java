@@ -104,7 +104,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 	
 	/**
-	 * 从对象构造，忽略{@link null}的值<br>
+	 * 从对象构造，忽略{@code null}的值<br>
 	 * 支持以下类型的参数：
 	 * 
 	 * <pre>

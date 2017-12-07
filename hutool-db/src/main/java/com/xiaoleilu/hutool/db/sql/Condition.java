@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.xiaoleilu.hutool.db.DbUtil;
-import com.xiaoleilu.hutool.lang.StrSpliter;
+import com.xiaoleilu.hutool.text.StrSpliter;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;

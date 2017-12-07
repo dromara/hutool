@@ -159,9 +159,9 @@ public class RedisDS {
 	}
 	
 	/**
-	 * 从Redis中获取值
+	 * 从Redis中删除多个值
 	 * 
-	 * @param key 键
+	 * @param keys 需要删除值对应的键列表
 	 * @return 删除个数，0表示无key可删除
 	 */
 	public Long del(String... keys) {

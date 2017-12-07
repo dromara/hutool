@@ -416,7 +416,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 追加值，如果key无对应值，就添加一个JSONArray，其元素只有value，如果值已经是一个JSONArray，则添加到值JSONArray中。
 	 *
 	 * @param key 键
-	 * @param 值
+	 * @param value 值
 	 * @return this.
 	 * @throws JSONException 如果给定键为<code>null</code>或者键对应的值存在且为非JSONArray
 	 */

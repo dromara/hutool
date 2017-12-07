@@ -34,7 +34,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 	 * 
 	 * @param width 图片宽
 	 * @param height 图片高
-	 * @param interfereCount 验证码干扰元素个数
+	 * @param codeCount 字符个数
 	 */
 	public CircleCaptcha(int width, int height, int codeCount) {
 		this(width, height, codeCount, 15);
