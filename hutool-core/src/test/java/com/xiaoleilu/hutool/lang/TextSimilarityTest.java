@@ -3,6 +3,8 @@ package com.xiaoleilu.hutool.lang;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.text.TextSimilarity;
+
 /**
  * 文本相似度计算工具类单元测试
  * @author looly

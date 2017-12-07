@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.text;
 
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -6,9 +6,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
 /**
  * 字符串格式化工具
  * @author Looly
- *@deprecated 请使用{@link com.xiaoleilu.hutool.text.StrFormatter}
+ *
  */
-@Deprecated
 public class StrFormatter {
 
 	/**

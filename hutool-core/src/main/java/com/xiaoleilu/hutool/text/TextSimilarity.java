@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.text;
 
 import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.StrUtil;

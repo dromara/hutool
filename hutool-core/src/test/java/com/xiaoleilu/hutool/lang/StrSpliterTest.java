@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.lang.StrSpliter;
+import com.xiaoleilu.hutool.text.StrSpliter;
 
 /**
  * {@link StrSpliter} 单元测试

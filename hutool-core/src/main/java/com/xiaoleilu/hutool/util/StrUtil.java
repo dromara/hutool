@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.xiaoleilu.hutool.lang.StrFormatter;
-import com.xiaoleilu.hutool.lang.StrSpliter;
-import com.xiaoleilu.hutool.lang.TextSimilarity;
+import com.xiaoleilu.hutool.text.StrFormatter;
+import com.xiaoleilu.hutool.text.StrSpliter;
+import com.xiaoleilu.hutool.text.TextSimilarity;
 
 /**
  * 字符串工具类

@@ -42,8 +42,8 @@ public class HtmlUtil {
 				.replace("&#39;", "'")
 				.replace(StrUtil.HTML_LT, "<")
 				.replace(StrUtil.HTML_GT, ">")
-				.replace(StrUtil.HTML_AMP, "&")
 				.replace(StrUtil.HTML_QUOTE, "\"")
+				.replace(StrUtil.HTML_AMP, "&")
 				.replace(StrUtil.HTML_NBSP, " ");
 	}
 
@@ -156,7 +156,7 @@ public class HtmlUtil {
 		String regex = null;
 		for (String tagName : tagNames) {
 			regex = StrUtil.format("(?i)<{}[^>]*?>", tagName);
-			content.replaceAll(regex, StrUtil.format("<{}>", tagName));
+			content = content.replaceAll(regex, StrUtil.format("<{}>", tagName));
 		}
 		return content;
 	}
@@ -173,8 +173,9 @@ public class HtmlUtil {
 			return StrUtil.EMPTY;
 		}
 		StringBuilder buffer = new StringBuilder(len + (len >> 2));
+		char c;
 		for (int i = 0; i < len; i++) {
-			char c = text.charAt(i);
+			c = text.charAt(i);
 			if (c < 64) {
 				buffer.append(array[c]);
 			} else {

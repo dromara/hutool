@@ -1,19 +1,19 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.text;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.xiaoleilu.hutool.lang.PatternPool;
 import com.xiaoleilu.hutool.util.NumberUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 字符串切分器
  * @author Looly
- *@deprecated 请使用{@link com.xiaoleilu.hutoo.text.StrSpliter}
+ *
  */
-@Deprecated
 public class StrSpliter {
 	
 	//---------------------------------------------------------------------------------------------- Split by char
