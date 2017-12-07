@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.xiaoleilu.hutool.lang.StrFormatter;
 import com.xiaoleilu.hutool.lang.StrSpliter;
+import com.xiaoleilu.hutool.lang.TextSimilarity;
 
 /**
  * 字符串工具类
@@ -2877,5 +2878,28 @@ public class StrUtil {
 			builder.append(set.contains(c) ? replacedStr : c);
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * 计算连个字符串的相似度
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @return 相似度
+	 * @since 3.2.3
+	 */
+	public static double similar(String str1, String str2) {
+		return TextSimilarity.similar(str1, str2);
+	}
+	
+	/**
+	 * 计算连个字符串的相似度百分比
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @param scale
+	 * @return 相似度百分比
+	 * @since 3.2.3
+	 */
+	public static String similar(String str1, String str2, int scale) {
+		return TextSimilarity.similar(str1, str2, scale);
 	}
 }

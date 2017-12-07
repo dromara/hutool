@@ -3,7 +3,6 @@ package com.xiaoleilu.hutool.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import com.xiaoleilu.hutool.bean.BeanResolver;
-import com.xiaoleilu.hutool.convert.Convert;
+import com.xiaoleilu.hutool.collection.ArrayIterator;
 import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 
 /**
@@ -27,8 +26,13 @@ import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
  */
 public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object> {
 
+	/** 默认初始大小 */
+	private static final int DEFAULT_CAPACITY = 10;
+
 	/** 持有原始数据的List */
 	private final List<Object> rawList;
+	/** 是否忽略空值 */
+	private boolean ignoreNullValue;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -36,9 +40,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * 默认使用{@link ArrayList} 实现
 	 */
 	public JSONArray() {
-		this.rawList = new ArrayList<Object>();
+		this(DEFAULT_CAPACITY);
 	}
-	
+
 	/**
 	 * 构造<br>
 	 * 默认使用{@link ArrayList} 实现
@@ -48,6 +52,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 */
 	public JSONArray(int initialCapacity) {
 		this.rawList = new ArrayList<Object>(initialCapacity);
+		this.ignoreNullValue = true;
 	}
 
 	/**
@@ -62,7 +67,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			this.add(o);
 		}
 	}
-	
+
 	/**
 	 * 构造<br>
 	 * 将参数数组中的元素转换为JSON对应的对象加入到JSONArray中
@@ -97,9 +102,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		this();
 		init(source);
 	}
-
+	
 	/**
-	 * 从对象构造<br>
+	 * 从对象构造，忽略{@link null}的值<br>
 	 * 支持以下类型的参数：
 	 * 
 	 * <pre>
@@ -112,20 +117,44 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object object) throws JSONException {
+		this(object, true);
+	}
+
+	/**
+	 * 从对象构造<br>
+	 * 支持以下类型的参数：
+	 * 
+	 * <pre>
+	 * 1. 数组
+	 * 2. {@link Iterable}对象
+	 * 3. JSON数组字符串
+	 * </pre>
+	 *
+	 * @param object 数组或集合或JSON数组字符串
+	 * @param ignoreNullValue 是否忽略空值
+	 * @throws JSONException 非数组或集合
+	 */
+	public JSONArray(Object object, boolean ignoreNullValue) throws JSONException {
 		this();
-		if (object.getClass().isArray()) {// 数组
-			int length = Array.getLength(object);
-			for (int i = 0; i < length; i += 1) {
-				this.put(JSONUtil.wrap(Array.get(object, i)));
-			}
-		} else if (object instanceof Iterable<?>) {// Iterable
-			for (Object o : (Iterable<?>) object) {
-				this.add(o);
-			}
-		} else if (object instanceof CharSequence) {
+		this.ignoreNullValue = ignoreNullValue;
+
+		if (object instanceof CharSequence) {
+			//JSON字符串
 			init((CharSequence) object);
-		} else {
-			throw new JSONException("JSONArray initial value should be a string or collection or array.");
+		}else {
+			Iterator<?> iter;
+			if (object.getClass().isArray()) {// 数组
+				iter = new ArrayIterator<>(object);
+			}else if (object instanceof Iterator<?>) {// Iterator
+				iter = ((Iterator<?>) object);
+			} else if (object instanceof Iterable<?>) {// Iterable
+				iter = ((Iterable<?>) object).iterator();
+			} else {
+				throw new JSONException("JSONArray initial value should be a string or collection or array.");
+			}
+			while(iter.hasNext()) {
+				this.add(iter.next());
+			}
 		}
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
@@ -176,8 +205,10 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getByExp(String expression, Class<T> resultType) {
-		return Convert.convert(resultType, getByExp(expression));
+		// return Convert.convert(resultType, getByExp(expression));
+		return (T) InternalJSONUtil.jsonConvert(resultType, getByExp(expression), true);
 	}
 
 	/**
@@ -366,7 +397,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public boolean add(Object e) {
-		return this.rawList.add(JSONUtil.wrap(e));
+		return this.rawList.add(JSONUtil.wrap(e, ignoreNullValue));
 	}
 
 	@Override
@@ -415,7 +446,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public Object set(int index, Object element) {
-		return this.rawList.set(index, JSONUtil.wrap(element));
+		return this.rawList.set(index, JSONUtil.wrap(element, this.ignoreNullValue));
 	}
 
 	@Override
@@ -425,7 +456,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		}
 		if (index < this.size()) {
 			InternalJSONUtil.testValidity(element);
-			this.rawList.set(index, JSONUtil.wrap(element));
+			this.rawList.set(index, JSONUtil.wrap(element, this.ignoreNullValue));
 		} else {
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);

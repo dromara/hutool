@@ -47,6 +47,8 @@ public class JSONObjectTest {
 		Assert.assertEquals(jsonObject.get("b"), "value2");
 		Assert.assertEquals(jsonObject.get("c"), "value3");
 		Assert.assertEquals(jsonObject.get("d"), true);
+		
+		Assert.assertTrue(jsonObject.containsKey("e"));
 		Assert.assertEquals(jsonObject.get("e"), JSONNull.NULL);
 	}
 	
@@ -91,6 +93,18 @@ public class JSONObjectTest {
 		JSONObject json = JSONUtil.parseObj(userA);
 		UserA userA2 = json.toBean(UserA.class);
 		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+	}
+	
+	@Test
+	public void parseBeanTest(){
+		UserA userA = new UserA();
+		userA.setName("nameTest");
+		userA.setDate(new Date());
+		userA.setSqs(CollectionUtil.newArrayList(new Seq(null), new Seq("seq2")));
+		
+		JSONObject json = JSONUtil.parseObj(userA, false);
+		Assert.assertTrue(json.containsKey("a"));
+		Assert.assertTrue(json.getJSONArray("sqs").getJSONObject(0).containsKey("seq"));
 	}
 	
 	@Test

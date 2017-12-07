@@ -15,6 +15,19 @@ public class MapBuilder<K, V> {
 	private Map<K, V> map;
 
 	/**
+	 * 创建Builde
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @param map Map实体类
+	 * @return MapBuilder
+	 * @since 3.2.3
+	 */
+	public static <K, V> MapBuilder<K, V> create(Map<K, V> map) {
+		return new MapBuilder<>(map);
+	}
+
+	/**
 	 * 链式Map创建类
 	 * 
 	 * @param map 要使用的Map实现类

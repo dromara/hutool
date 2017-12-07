@@ -11,6 +11,7 @@
 * 邮件支持发件人姓名（issue#IGMW2@Gitee）
 * db部分中Session增加默认数据源的Session
 * 增加RedisDs，Jedis的薄封装
+* 增加字符串相似度计算工具TextSimilarity（感谢@【杭州】fineliving）
 
 ### Bug修复
 * 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）
@@ -20,6 +21,7 @@
 * 修复JSONStrFormater在字符串中出现“[”、“{”等导致的换行错误问题（感谢@【北京】宁静）
 * 修复Props中两次创建Writer问题
 * 修复ZipUtil.unzip丢失编码参数问题（issue#71@Github）
+* 修复JSON中设置不忽略null值后子对象null值丢失问题（感谢@【北京】xkcoding）
 
 -------------------------------------------------------------------------------------------------------------
 

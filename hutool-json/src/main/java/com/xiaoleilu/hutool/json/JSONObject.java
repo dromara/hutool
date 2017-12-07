@@ -36,10 +36,12 @@ import com.xiaoleilu.hutool.util.TypeUtil;
 public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
 	
 	/** 默认初始大小 */
-	public static final int DEFAULT_CAPACITY = 16;
+	private static final int DEFAULT_CAPACITY = 16;
 
 	/** JSON的KV持有Map */
 	private final Map<String, Object> rawHashMap;
+	/** 是否忽略空值 */
+	private boolean ignoreNullValue = true;
 	
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -119,12 +121,13 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
 		this();
+		this.ignoreNullValue = ignoreNullValue;
 		if (null != source) {
 			if (source instanceof Map) {
 				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
 					final Object value = e.getValue();
 					if (false == ignoreNullValue || value != null) {
-						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value));
+						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value, ignoreNullValue));
 					}
 				}
 			}else if(source instanceof String){
@@ -133,7 +136,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				//ignore Number
 			} else{
 				//普通Bean
-				this.populateMap(source, ignoreNullValue);
+				this.populateMap(source);
 			}
 		}
 	}
@@ -317,14 +320,16 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T getByExp(String expression, Class<T> resultType) {
-		return Convert.convert(resultType, getByExp(expression));
+//		return Convert.convert(resultType, getByExp(expression));
+		return (T) InternalJSONUtil.jsonConvert(resultType, getByExp(expression), true);
 	}
 
 	/**
 	 * PUT 键值对到JSONObject中，如果值为<code>null</code>，将此键移除
 	 *
-	 * @param key A key string.
+	 * @param key 键
 	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
@@ -336,7 +341,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		}
 		if (value != null) {
 			InternalJSONUtil.testValidity(value);
-			this.rawHashMap.put(key, JSONUtil.wrap(value));
+			this.rawHashMap.put(key, JSONUtil.wrap(value, this.ignoreNullValue));
 		} else {
 			this.remove(key);
 		}
@@ -380,17 +385,19 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	@Override
 	public void putAll(Map<? extends String, ? extends Object> m) {
-		rawHashMap.putAll(m);
+		for(Entry<? extends String, ? extends Object> entry : m.entrySet()) {
+			put(entry.getKey(), entry.getValue());
+		}
 	}
 	
 	/**
 	 * 积累值。类似于put，当key对应value已经存在时，与value组成新的JSONArray. <br>
 	 * 如果只有一个值，此值就是value，如果多个值，则是添加到新的JSONArray中
 	 *
-	 * @param key A key string.
-	 * @param value An object to be accumulated under the key.
+	 * @param key 键
+	 * @param value 被积累的值
 	 * @return this.
-	 * @throws JSONException If the value is an invalid number or if the key is null.
+	 * @throws JSONException 如果给定键为<code>null</code>或者键对应的值存在且为非JSONArray
 	 */
 	public JSONObject accumulate(String key, Object value) throws JSONException {
 		InternalJSONUtil.testValidity(value);
@@ -408,8 +415,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	/**
 	 * 追加值，如果key无对应值，就添加一个JSONArray，其元素只有value，如果值已经是一个JSONArray，则添加到值JSONArray中。
 	 *
-	 * @param key A key string.
-	 * @param value An object to be accumulated under the key.
+	 * @param key 键
+	 * @param 值
 	 * @return this.
 	 * @throws JSONException 如果给定键为<code>null</code>或者键对应的值存在且为非JSONArray
 	 */
@@ -431,7 +438,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 *
 	 * @param key A key string.
 	 * @return this.
-	 * @throws JSONException If there is already a property with this name that is not an Integer, Long, Double, or Float.
+	 * @throws JSONException 如果存在值非Integer, Long, Double, 或 Float.
 	 */
 	public JSONObject increment(String key) throws JSONException {
 		Object value = this.getObj(key);
@@ -612,7 +619,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param bean Bean对象
 	 * @param ignoreNullValue 是否忽略空值
 	 */
-	private void populateMap(Object bean, boolean ignoreNullValue) {
+	private void populateMap(Object bean) {
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
 		
 		Method getter;
@@ -633,14 +640,14 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				continue;
 			}
 			
-			if(null == value && ignoreNullValue) {
+			if(null == value && this.ignoreNullValue) {
 				//值为null且用户定义跳过则跳过
 				continue;
 			}
 			
 			if (value != bean) {
 				//防止循环引用
-				this.rawHashMap.put(prop.getFieldName(), JSONUtil.wrap(value));
+				this.rawHashMap.put(prop.getFieldName(), JSONUtil.wrap(value, this.ignoreNullValue));
 			}
 		}
 	}
