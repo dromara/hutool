@@ -1390,7 +1390,7 @@ public class DateUtil {
 	}
 	
 	/**
-	 * 标准化日期：<br>
+	 * 标准化日期，默认处理以空格区分的日期时间格式，空格前为日期，空格后为时间：<br>
 	 * 将以下字符替换为"-"
 	 * <pre>
 	 * "."
@@ -1419,10 +1419,31 @@ public class DateUtil {
 		if(StrUtil.isBlank(dateStr)) {
 			return dateStr;
 		}
-		dateStr = dateStr.trim().replaceAll("[\\./年月]", "-").replace("日", "").replaceAll("[时分秒]", ":");
-		dateStr = StrUtil.removeSuffix(dateStr, ":");
 		
-		return dateStr;
+		//日期时间分开处理
+		final List<String> dateAndTime = StrUtil.splitTrim(dateStr, ' ');
+		final int size = dateAndTime.size();
+		if(size < 1 || size > 2) {
+			//非可被标准处理的格式
+			return dateStr;
+		}
+		
+		final StringBuilder builder = StrUtil.builder();
+		
+		//日期部分（"\"、"/"、"."、"年"、"月"都替换为"-"）
+		String datePart = dateAndTime.get(0).replaceAll("[\\/.年月]", "-");
+		datePart = StrUtil.removeSuffix(datePart, "日");
+		builder.append(datePart);
+		
+		//时间部分
+		if(size  == 2) {
+			builder.append(' ');
+			String timePart = dateAndTime.get(1).replaceAll("[时分秒]", ":");
+			timePart = StrUtil.removeSuffix(timePart, ":");
+			builder.append(timePart);
+		}
+		
+		return builder.toString();
 	}
 	// ------------------------------------------------------------------------ Private method end
 }
