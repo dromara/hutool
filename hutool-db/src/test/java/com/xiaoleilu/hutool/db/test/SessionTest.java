@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.Session;
+import com.xiaoleilu.hutool.lang.VoidFunc;
 
 /**
  * 事务性数据库操作单元测试
@@ -26,5 +27,17 @@ public class SessionTest {
 		} catch (SQLException e) {
 			session.quietRollback();
 		}
+	}
+	
+	@Test
+	@Ignore
+	public void transFuncTest() {
+		final Session session = Session.create();
+		session.trans(new VoidFunc() {
+			@Override
+			public void call() throws SQLException {
+				session.update(Entity.create().set("age", 78), Entity.create("user").set("name", "unitTestUser"));
+			}
+		});
 	}
 }

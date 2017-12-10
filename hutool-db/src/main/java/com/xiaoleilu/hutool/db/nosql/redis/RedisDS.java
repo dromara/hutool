@@ -1,5 +1,9 @@
 package com.xiaoleilu.hutool.db.nosql.redis;
 
+import java.io.Closeable;
+import java.io.IOException;
+
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -14,7 +18,7 @@ import redis.clients.jedis.Protocol;
  * @author looly
  * @since 3.2.3
  */
-public class RedisDS {
+public class RedisDS implements Closeable{
 	/** 默认配置文件 */
 	public final static String REDIS_CONFIG_PATH = "config/redis.setting";
 
@@ -168,5 +172,10 @@ public class RedisDS {
 		try (Jedis jedis = getJedis()) {
 			return jedis.del(keys);
 		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		IoUtil.close(pool);
 	}
 }

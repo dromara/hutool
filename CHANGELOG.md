@@ -14,6 +14,7 @@
 * 增加字符串相似度计算工具TextSimilarity（感谢@【杭州】fineliving）\
 * 增加几个验证码类型
 * 增加HtmlUtil.escape方法（issue#IGOKB@Gitee）
+* ExcelWriter排序支持
 
 ### Bug修复
 * 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）

@@ -440,7 +440,7 @@ public class BeanUtil {
 	public static Map<String, Object> beanToMap(Object bean) {
 		return beanToMap(bean, false, false);
 	}
-
+	
 	/**
 	 * 对象转Map
 	 * 
@@ -450,13 +450,26 @@ public class BeanUtil {
 	 * @return Map
 	 */
 	public static Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
+		return beanToMap(bean, new HashMap<String, Object>(), isToUnderlineCase, ignoreNullValue);
+	}
 
+	/**
+	 * 对象转Map
+	 * 
+	 * @param bean bean对象
+	 * @param targetMap 目标的Map
+	 * @param isToUnderlineCase 是否转换为下划线模式
+	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @return Map
+	 * @since 3.2.3
+	 */
+	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, boolean isToUnderlineCase, boolean ignoreNullValue) {
 		if (bean == null) {
 			return null;
 		}
-		final Map<String, Object> map = new HashMap<String, Object>();
 
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
+		
 		String key;
 		Method getter;
 		Object value;
@@ -473,11 +486,11 @@ public class BeanUtil {
 					continue;
 				}
 				if (false == ignoreNullValue || (null != value && false == value.equals(bean))) {
-					map.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
+					targetMap.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
 				}
 			}
 		}
-		return map;
+		return targetMap;
 	}
 
 	// --------------------------------------------------------------------------------------------- copyProperties

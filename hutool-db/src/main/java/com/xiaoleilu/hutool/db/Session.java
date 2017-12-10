@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
+import com.xiaoleilu.hutool.lang.VoidFunc;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -124,6 +125,24 @@ public class Session extends AbstractSqlRunner implements Closeable {
 	// ---------------------------------------------------------------------------- Getters and Setters end
 
 	// ---------------------------------------------------------------------------- Transaction method start
+	/**
+	 * 数据库是否支持事务
+	 * 
+	 * @return 是否支持事务
+	 * @throws DbRuntimeException SQLException包装
+	 * @since 3.2.3
+	 */
+	public boolean isSupportTransaction() throws DbRuntimeException{
+		if (null == isSupportTransaction) {
+			try {
+				isSupportTransaction = conn.getMetaData().supportsTransactions();
+			} catch (SQLException e) {
+				throw new DbRuntimeException(e, "Because of SQLException [{}], We can not know transation support or not.", e.getMessage());
+			}
+		}
+		return this.isSupportTransaction;
+	}
+	
 	/**
 	 * 开始事务
 	 * 
@@ -273,6 +292,23 @@ public class Session extends AbstractSqlRunner implements Closeable {
 			throw new SQLException(StrUtil.format("Transaction isolation [{}] not support!", level));
 		}
 		conn.setTransactionIsolation(level);
+	}
+	
+	/**
+	 * 在事务中执行操作，通过实现{@link VoidFunc}接口的call方法执行多条SQL语句从而完成事务
+	 * 
+	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
+	 * @since 3.2.3
+	 */
+	public void trans(VoidFunc func) {
+		try {
+			beginTransaction();
+			func.call();
+			commit();
+		} catch (Exception e) {
+			quietRollback();
+			throw new DbRuntimeException(e);
+		}
 	}
 	// ---------------------------------------------------------------------------- Transaction method end
 

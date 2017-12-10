@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -290,7 +292,7 @@ public class ExcelWriter implements Closeable {
 	 * 1. Iterable，既元素为一个集合，元素被当作一行，data表示多行<br>
 	 * 2. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
 	 * 3. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
-	 * 4. 无法识别，可能为基本类型，按照单行写出，data表示单行
+	 * 4. 无法识别，不输出
 	 * </p>
 	 * 
 	 * @param data 数据
@@ -317,6 +319,42 @@ public class ExcelWriter implements Closeable {
 		if (0 == index) {
 			// 在无法识别元素类型的情况下，做为一行对待
 			writeRow(data);
+		}
+		return this;
+	}
+	
+	/**
+	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式<br>
+	 * data中元素支持的类型有：
+	 * 
+	 * <p>
+	 * 1. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
+	 * 2. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
+	 * </p>
+	 * 
+	 * @param data 数据
+	 * @param comparator 比较器
+	 * @return this
+	 * @since 3.2.3
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public <T> ExcelWriter write(Iterable<T> data, Comparator<String> comparator) {
+		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+		boolean isFirstRow = true;
+		Map<?, ?> map;
+		for (T t : data) {
+			if(t instanceof Map) {
+				map = new TreeMap<>(comparator);
+				map.putAll((Map)t);
+			}else {
+				map = BeanUtil.beanToMap(t, new TreeMap<String, Object>(comparator), false, false);
+			}
+			writeRows(map, isFirstRow);
+			if(isFirstRow) {
+				isFirstRow = false;
+			}
 		}
 		return this;
 	}
