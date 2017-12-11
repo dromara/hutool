@@ -23,6 +23,7 @@ import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
@@ -379,7 +380,8 @@ public class BeanUtil {
 			}
 			actualEditable = copyOptions.editable;
 		}
-		HashSet<String> ignoreSet = copyOptions.ignoreProperties != null ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
+		final HashSet<String> ignoreSet = null != (copyOptions.ignoreProperties) ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
+		final Map<String, String> fieldReverseMapping = (null != copyOptions.fieldMapping) ? MapUtil.reverse(copyOptions.fieldMapping) : null;
 
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(actualEditable).getProps();
 		String fieldName;
@@ -400,7 +402,14 @@ public class BeanUtil {
 			}
 			
 			// 此处对valueProvider传递的为Type对象，而非Class，因为Type中包含泛型类型信息
-			value = valueProvider.value(fieldName, TypeUtil.getFirstParamType(setterMethod));
+			String providerKey = null;
+			if(null != fieldReverseMapping) {
+				providerKey = fieldReverseMapping.get(fieldName);
+			}
+			if(null == providerKey) {
+				providerKey = fieldName;
+			}
+			value = valueProvider.value(providerKey, TypeUtil.getFirstParamType(setterMethod));
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;// 当允许跳过空时，跳过
 			}
@@ -615,10 +624,12 @@ public class BeanUtil {
 		private Class<?> editable;
 		/** 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null */
 		private boolean ignoreNullValue;
-		/** 忽略的属性列表，设置一个属性列表，不拷贝这些属性值 */
+		/** 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值 */
 		private String[] ignoreProperties;
 		/** 是否忽略字段注入错误 */
 		private boolean ignoreError;
+		/** 拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用 */
+		private Map<String, String> fieldMapping;
 
 		/**
 		 * 创建拷贝选项
@@ -652,7 +663,7 @@ public class BeanUtil {
 		 * 
 		 * @param editable 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
 		 * @param ignoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
-		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
+		 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 		 */
 		public CopyOptions(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
 			this.editable = editable;
@@ -683,9 +694,9 @@ public class BeanUtil {
 		}
 
 		/**
-		 * 设置忽略的属性列表，设置一个属性列表，不拷贝这些属性值
+		 * 设置忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 		 * 
-		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
+		 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
 		 * @return CopyOptions
 		 */
 		public CopyOptions setIgnoreProperties(String... ignoreProperties) {
@@ -701,6 +712,17 @@ public class BeanUtil {
 		 */
 		public CopyOptions setIgnoreError(boolean ignoreError) {
 			this.ignoreError = ignoreError;
+			return this;
+		}
+		
+		/**
+		 * 设置拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用
+		 * 
+		 * @param fieldMapping 拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用
+		 * @return CopyOptions
+		 */
+		public CopyOptions setFieldMapping(Map<String, String> fieldMapping) {
+			this.fieldMapping = fieldMapping;
 			return this;
 		}
 	}

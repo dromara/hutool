@@ -521,6 +521,30 @@ public class MapUtil {
 	}
 
 	/**
+	 * 逆转Map的key和value
+	 * 
+	 * @param <K> 键类型，目标的值类型
+	 * @param <V> 值类型，目标的键类型
+	 * @param map 被转换的Map
+	 * @return 逆转后的Map
+	 */
+	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
+		Map<V, K> inverseMap;
+		if(map instanceof LinkedHashMap) {
+			inverseMap = new LinkedHashMap<>(map.size());
+		}else if(map instanceof TreeMap) {
+			inverseMap = new TreeMap<>();
+		}else {
+			inverseMap = new HashMap<>(map.size());
+		}
+		
+		for (Entry<K, V> entry : map.entrySet()) {
+			inverseMap.put(entry.getValue(), entry.getKey());
+		}
+		return inverseMap;
+	}
+
+	/**
 	 * 创建代理Map<br>
 	 * {@link MapProxy}对Map做一次包装，提供各种getXXX方法
 	 * 

@@ -15,6 +15,7 @@
 * 增加几个验证码类型
 * 增加HtmlUtil.escape方法（issue#IGOKB@Gitee）
 * ExcelWriter排序支持
+* BeanUtil中CopyOptions增加mapping选项，可以不同字段名之前值复制
 
 ### Bug修复
 * 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）
