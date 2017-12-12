@@ -18,14 +18,16 @@ import com.xiaoleilu.hutool.util.URLUtil;
 
 /**
  * 类扫描器
+ * 
  * @author Looly
  *
  */
 public final class ClassScaner {
-//	private static Log log = LogFactory.get();
-	
-	private ClassScaner() {}
-	
+	// private static Log log = LogFactory.get();
+
+	private ClassScaner() {
+	}
+
 	/**
 	 * 扫描指定包路径下所有包含指定注解的类
 	 * 
@@ -34,7 +36,7 @@ public final class ClassScaner {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
-		return scanPackage(packageName, new Filter<Class<?>>(){
+		return scanPackage(packageName, new Filter<Class<?>>() {
 			@Override
 			public boolean accept(Class<?> clazz) {
 				return clazz.isAnnotationPresent(annotationClass);
@@ -50,14 +52,14 @@ public final class ClassScaner {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
-		return scanPackage(packageName, new Filter<Class<?>>(){
+		return scanPackage(packageName, new Filter<Class<?>>() {
 			@Override
 			public boolean accept(Class<?> clazz) {
 				return superClass.isAssignableFrom(clazz) && !superClass.equals(clazz);
 			}
 		});
 	}
-	
+
 	/**
 	 * 扫面该包路径下所有class文件
 	 * 
@@ -86,11 +88,11 @@ public final class ClassScaner {
 	 * @param classFilter class过滤器，过滤掉不需要的class
 	 * @return 类集合
 	 */
-	public static Set<Class<?>> scanPackage(String packageName,  Filter<Class<?>> classFilter) {
+	public static Set<Class<?>> scanPackage(String packageName, Filter<Class<?>> classFilter) {
 		if (StrUtil.isBlank(packageName)) {
 			packageName = StrUtil.EMPTY;
 		}
-//		log.debug("Scan classes from package [{}]...", packageName);
+		// log.debug("Scan classes from package [{}]...", packageName);
 		packageName = getWellFormedPackageName(packageName);
 
 		final Set<Class<?>> classes = new HashSet<Class<?>>();
@@ -99,7 +101,7 @@ public final class ClassScaner {
 			// bug修复，由于路径中空格和中文导致的Jar找不到
 			classPath = URLUtil.decode(classPath, CharsetUtil.systemCharsetName());
 
-//			log.debug("Scan classpath: [{}]", classPath);
+			// log.debug("Scan classpath: [{}]", classPath);
 			// 填充 classes
 			fillClasses(classPath, packageName, classFilter, classes);
 		}
@@ -111,14 +113,14 @@ public final class ClassScaner {
 				// bug修复，由于路径中空格和中文导致的Jar找不到
 				classPath = URLUtil.decode(classPath, CharsetUtil.systemCharsetName());
 
-//				log.debug("Scan java classpath: [{}]", classPath);
+				// log.debug("Scan java classpath: [{}]", classPath);
 				// 填充 classes
 				fillClasses(classPath, new File(classPath), packageName, classFilter, classes);
 			}
 		}
 		return classes;
 	}
-	
+
 	// --------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 改变 com -> com. 避免在比较的时候把比如 completeTestSuite.class类扫描进去，如果没有"."<br>
@@ -234,7 +236,7 @@ public final class ClassScaner {
 			}
 		} catch (Exception ex) {
 			Console.error(ex, ex.getMessage());
-		}finally{
+		} finally {
 			IoUtil.close(jarFile);
 		}
 	}
@@ -259,12 +261,12 @@ public final class ClassScaner {
 			}
 		}
 	}
-	
+
 	/**
 	 * 文件过滤器，过滤掉不需要的文件<br>
 	 * 只保留Class文件、目录和Jar
 	 */
-	private static FileFilter fileFilter = new FileFilter(){
+	private static FileFilter fileFilter = new FileFilter() {
 		@Override
 		public boolean accept(File pathname) {
 			return isClass(pathname.getName()) || pathname.isDirectory() || isJarFile(pathname);
@@ -278,7 +280,7 @@ public final class ClassScaner {
 	private static boolean isClassFile(File file) {
 		return isClass(file.getName());
 	}
-	
+
 	/**
 	 * @param fileName 文件名
 	 * @return 是否为类文件
