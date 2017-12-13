@@ -3,13 +3,13 @@ package com.xiaoleilu.hutool.setting;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
+import com.xiaoleilu.hutool.bean.BeanUtil;
+import com.xiaoleilu.hutool.bean.copier.CopyOptions;
+import com.xiaoleilu.hutool.bean.copier.ValueProvider;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.StaticLog;
-import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.bean.BeanUtil.CopyOptions;
-import com.xiaoleilu.hutool.bean.BeanUtil.ValueProvider;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -299,8 +299,8 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	 */
 	private static String keyWithGroup(String key, String group) {
 		String keyWithGroup = key;
-		if (!StrUtil.isBlank(group)) {
-			keyWithGroup = group.concat(StrUtil.DOT).concat(key);
+		if (false == StrUtil.isBlank(group)) {
+			keyWithGroup = group.trim().concat(StrUtil.DOT).concat(key);
 		}
 		return keyWithGroup;
 	}

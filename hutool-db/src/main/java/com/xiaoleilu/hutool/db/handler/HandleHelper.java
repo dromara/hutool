@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.db.handler;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.db.Entity;
@@ -25,13 +26,14 @@ public class HandleHelper {
 	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
 		final Entity row = Entity.create(meta.getTableName(1));
 		String columnLabel;
+		int type;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);
-			row.put(columnLabel, rs.getObject(columnLabel));
+			type = meta.getColumnType(i);
+			row.put(columnLabel, getColumnValue(rs, columnLabel, type));
 		}
 		return row;
 	}
-	
 	
 	/**
 	 * 处理单条数据
@@ -86,4 +88,28 @@ public class HandleHelper {
 		
 		return collection;
 	}
+	
+	//-------------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 获取字段值<br>
+	 * 针对日期时间等做单独处理判断
+	 * 
+	 * @param rs {@link ResultSet}
+	 * @param label 字段名
+	 * @param type 字段类型，默认Object
+	 * @return 字段值
+	 * @throws SQLException SQL异常
+	 * @since 3.2.3
+	 */
+	private static Object getColumnValue(ResultSet rs, String label, int type) throws SQLException {
+		switch (type) {
+		case Types.TIMESTAMP:
+			return rs.getTimestamp(label);
+		case Types.TIME:
+			return rs.getTime(label);
+		default:
+			return rs.getObject(label);
+		}
+	}
+	//-------------------------------------------------------------------------------------------------------------- Private method end
 }

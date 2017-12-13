@@ -29,4 +29,10 @@ public class ZipUtilTest {
 		File unzip2 = ZipUtil.unzip("E:\\aaa\\RongGenetor V1.0.0.zip", "e:\\aaa");
 		Console.log(unzip2);
 	}
+	
+	@Test
+	@Ignore
+	public void unzipChineseTest() {
+		ZipUtil.unzip("d:/中文.zip", CharsetUtil.CHARSET_GBK);
+	}
 }

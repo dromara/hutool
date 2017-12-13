@@ -6,8 +6,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
 /**
  * 字符串格式化工具
  * @author Looly
- *
+ *@deprecated 请使用{@link com.xiaoleilu.hutool.text.StrFormatter}
  */
+@Deprecated
 public class StrFormatter {
 
 	/**

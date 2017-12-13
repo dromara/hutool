@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.http;
 
+import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -27,7 +28,42 @@ public class HtmlUtil {
 		TEXT['<'] = StrUtil.HTML_LT.toCharArray(); // 小于号
 		TEXT['>'] = StrUtil.HTML_GT.toCharArray(); // 大于号
 	}
-	
+
+	/**
+	 * 基本功能：替换标记以正常显示
+	 * 
+	 * @param input 输入的HTML字符串
+	 * @return String
+	 * @since 3.2.3
+	 */
+	public static String escape(String input) {
+		if(StrUtil.isBlank(input)) {
+			return input;
+		}
+		final StringBuilder filtered = StrUtil.builder(input.length());
+		char c;
+		for (int i = 0; i < input.length(); i++) {
+			c = input.charAt(i);
+			switch (c) {
+			case '<':
+				filtered.append("&lt;");
+				break;
+			case '>':
+				filtered.append("&gt;");
+				break;
+			case '"':
+				filtered.append("&quot;");
+				break;
+			case '&':
+				filtered.append("&amp;");
+				break;
+			default:
+				filtered.append(c);
+			}
+		}
+		return filtered.toString();
+	}
+
 	/**
 	 * 还原被转义的HTML特殊字符
 	 * 
@@ -38,13 +74,8 @@ public class HtmlUtil {
 		if (StrUtil.isBlank(htmlStr)) {
 			return htmlStr;
 		}
-		return htmlStr
-				.replace("&#39;", "'")
-				.replace(StrUtil.HTML_LT, "<")
-				.replace(StrUtil.HTML_GT, ">")
-				.replace(StrUtil.HTML_AMP, "&")
-				.replace(StrUtil.HTML_QUOTE, "\"")
-				.replace(StrUtil.HTML_NBSP, " ");
+		return htmlStr.replace("&#39;", "'").replace(StrUtil.HTML_LT, "<").replace(StrUtil.HTML_GT, ">").replace(StrUtil.HTML_QUOTE, "\"").replace(StrUtil.HTML_AMP, "&").replace(StrUtil.HTML_NBSP,
+				" ");
 	}
 
 	// ---------------------------------------------------------------- encode text
@@ -75,10 +106,11 @@ public class HtmlUtil {
 	public static String cleanHtmlTag(String content) {
 		return content.replaceAll(RE_HTML_MARK, "");
 	}
-	
+
 	/**
 	 * 清除指定HTML标签和被标签包围的内容<br>
 	 * 不区分大小写
+	 * 
 	 * @param content 文本
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
@@ -86,10 +118,11 @@ public class HtmlUtil {
 	public static String removeHtmlTag(String content, String... tagNames) {
 		return removeHtmlTag(content, true, tagNames);
 	}
-	
+
 	/**
 	 * 清除指定HTML标签，不包括内容<br>
 	 * 不区分大小写
+	 * 
 	 * @param content 文本
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
@@ -97,42 +130,40 @@ public class HtmlUtil {
 	public static String unwrapHtmlTag(String content, String... tagNames) {
 		return removeHtmlTag(content, false, tagNames);
 	}
-	
+
 	/**
 	 * 清除指定HTML标签<br>
 	 * 不区分大小写
+	 * 
 	 * @param content 文本
 	 * @param withTagContent 是否去掉被包含在标签中的内容
 	 * @param tagNames 要清除的标签
 	 * @return 去除标签后的文本
 	 */
 	public static String removeHtmlTag(String content, boolean withTagContent, String... tagNames) {
-		String regex1 = null;
-		String regex2 = null;
+		String regex = null;
 		for (String tagName : tagNames) {
-			if(StrUtil.isBlank(tagName)) {
+			if (StrUtil.isBlank(tagName)) {
 				continue;
 			}
 			tagName = tagName.trim();
-			//(?i)表示其后面的表达式忽略大小写
-			regex1 = StrUtil.format("(?i)<{}\\s?[^>]*?/>", tagName);	
-			if(withTagContent) {
-				//标签及其包含内容
-				regex2 = StrUtil.format("(?i)(?s)<{}\\s*?[^>]*?>.*?</{}>", tagName, tagName);
-			}else {
-				//标签不包含内容
-				regex2 = StrUtil.format("(?i)<{}\\s*?[^>]*?>|</{}>", tagName, tagName);
+			// (?i)表示其后面的表达式忽略大小写
+			if (withTagContent) {
+				// 标签及其包含内容
+				regex = StrUtil.format("(?i)<{}\\s*?[^>]*?/?>(.*?</{}>)?", tagName, tagName);
+			} else {
+				// 标签不包含内容
+				regex = StrUtil.format("(?i)<{}\\s*?[^>]*?>|</{}>", tagName, tagName);
 			}
-			
-			content = content
-					.replaceAll(regex1, StrUtil.EMPTY)									//自闭标签小写
-					.replaceAll(regex2, StrUtil.EMPTY);									//非自闭标签小写
+
+			content = ReUtil.delAll(regex, content); // 非自闭标签小写
 		}
 		return content;
 	}
-	
+
 	/**
 	 * 去除HTML标签中的属性
+	 * 
 	 * @param content 文本
 	 * @param attrs 属性名（不区分大小写）
 	 * @return 处理后的文本
@@ -145,9 +176,10 @@ public class HtmlUtil {
 		}
 		return content;
 	}
-	
+
 	/**
 	 * 去除指定标签的所有属性
+	 * 
 	 * @param content 内容
 	 * @param tagNames 指定标签
 	 * @return 处理后的文本
@@ -156,13 +188,14 @@ public class HtmlUtil {
 		String regex = null;
 		for (String tagName : tagNames) {
 			regex = StrUtil.format("(?i)<{}[^>]*?>", tagName);
-			content.replaceAll(regex, StrUtil.format("<{}>", tagName));
+			content = content.replaceAll(regex, StrUtil.format("<{}>", tagName));
 		}
 		return content;
 	}
-	
+
 	/**
 	 * Encoder
+	 * 
 	 * @param text 被编码的文本
 	 * @param array 特殊字符集合
 	 * @return 编码后的字符
@@ -173,8 +206,9 @@ public class HtmlUtil {
 			return StrUtil.EMPTY;
 		}
 		StringBuilder buffer = new StringBuilder(len + (len >> 2));
+		char c;
 		for (int i = 0; i < len; i++) {
-			char c = text.charAt(i);
+			c = text.charAt(i);
 			if (c < 64) {
 				buffer.append(array[c]);
 			} else {
@@ -183,13 +217,14 @@ public class HtmlUtil {
 		}
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * 过滤HTML文本，防止XSS攻击
+	 * 
 	 * @param htmlContent HTML内容
 	 * @return 过滤后的内容
 	 */
-	public static String filter(String htmlContent){
+	public static String filter(String htmlContent) {
 		return new HTMLFilter().filter(htmlContent);
 	}
 }

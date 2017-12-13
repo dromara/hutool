@@ -9,7 +9,7 @@ host = smtp.yeah.net
 # 邮件服务器的SMTP端口
 port = 465
 # 发件人（必须正确，否则发送失败）
-from = hutool@yeah.net
+from = 小磊<hutool@yeah.net>
 # 用户名
 user = hutool
 # 密码

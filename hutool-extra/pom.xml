@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.xiaoleilu</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>3.2.2</version>
+		<version>3.2.3</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -18,7 +18,7 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>1.7</velocity.version>
-		<beetl.version>2.7.23</beetl.version>
+		<beetl.version>2.7.24</beetl.version>
 		<rythm.version>1.2.0</rythm.version>
 		<mail.version>1.4.7</mail.version>
 	</properties>

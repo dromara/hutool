@@ -2,6 +2,7 @@ package com.xiaoleilu.hutool.util;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.xiaoleilu.hutool.collection.MapBuilder;
 import com.xiaoleilu.hutool.collection.MapProxy;
@@ -99,6 +101,33 @@ public class MapUtil {
 	 */
 	public static <K, V> HashMap<K, V> newHashMap(boolean isOrder) {
 		return newHashMap(DEFAULT_INITIAL_CAPACITY, false);
+	}
+
+	/**
+	 * 新建TreeMap，Key有序的Map
+	 * 
+	 * @param comparator Key比较器
+	 * @return TreeMap
+	 * @since 3.2.3
+	 */
+	public static <K, V> TreeMap<K, V> newTreeMap(Comparator<? super K> comparator) {
+		return new TreeMap<>(comparator);
+	}
+
+	/**
+	 * 新建TreeMap，Key有序的Map
+	 * 
+	 * @param map Map
+	 * @param comparator Key比较器
+	 * @return TreeMap
+	 * @since 3.2.3
+	 */
+	public static <K, V> TreeMap<K, V> newTreeMap(Map<K, V> map, Comparator<? super K> comparator) {
+		final TreeMap<K, V> treeMap = new TreeMap<>(comparator);
+		if (false == isEmpty(map)) {
+			treeMap.putAll(map);
+		}
+		return treeMap;
 	}
 
 	/**
@@ -458,14 +487,15 @@ public class MapUtil {
 		}
 		return map2;
 	}
-	
+
 	/**
 	 * Map的键和值互换
+	 * 
 	 * @param map Map对象，键值类型必须一致
 	 * @return 互换后的Map
 	 * @since 3.2.2
 	 */
-	public static <T> Map<T, T> reverse(Map<T, T> map){
+	public static <T> Map<T, T> reverse(Map<T, T> map) {
 		return filter(map, new Editor<Map.Entry<T, T>>() {
 			@Override
 			public Entry<T, T> edit(final Entry<T, T> t) {
@@ -484,8 +514,34 @@ public class MapUtil {
 					@Override
 					public T setValue(T value) {
 						throw new UnsupportedOperationException("Unsupported setValue method !");
-					}};
-			}});
+					}
+				};
+			}
+		});
+	}
+
+	/**
+	 * 逆转Map的key和value
+	 * 
+	 * @param <K> 键类型，目标的值类型
+	 * @param <V> 值类型，目标的键类型
+	 * @param map 被转换的Map
+	 * @return 逆转后的Map
+	 */
+	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
+		Map<V, K> inverseMap;
+		if(map instanceof LinkedHashMap) {
+			inverseMap = new LinkedHashMap<>(map.size());
+		}else if(map instanceof TreeMap) {
+			inverseMap = new TreeMap<>();
+		}else {
+			inverseMap = new HashMap<>(map.size());
+		}
+		
+		for (Entry<K, V> entry : map.entrySet()) {
+			inverseMap.put(entry.getValue(), entry.getKey());
+		}
+		return inverseMap;
 	}
 
 	/**

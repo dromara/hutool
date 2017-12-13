@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.util;
+package com.xiaoleilu.hutool.bean;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -7,9 +7,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.bean.BeanUtil.CopyOptions;
-import com.xiaoleilu.hutool.bean.BeanUtil.ValueProvider;
+import com.xiaoleilu.hutool.bean.copier.CopyOptions;
+import com.xiaoleilu.hutool.bean.copier.ValueProvider;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**

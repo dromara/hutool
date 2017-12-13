@@ -11,8 +11,9 @@ import com.xiaoleilu.hutool.util.StrUtil;
 /**
  * 字符串切分器
  * @author Looly
- *
+ *@deprecated 请使用{@link com.xiaoleilu.hutool.text.StrSpliter}
  */
+@Deprecated
 public class StrSpliter {
 	
 	//---------------------------------------------------------------------------------------------- Split by char

@@ -19,7 +19,7 @@ public class MailAccount implements Serializable {
 	private static final String SMTP_PORT = "mail.smtp.port";
 	private static final String SMTP_AUTH = "mail.smtp.auth";
 	
-	private static final String STARTTTL_ENABLE = "mail.smtp.starttls.enable";
+	private static final String STARTTTLS_ENABLE = "mail.smtp.starttls.enable";
 	private static final String SOCKEY_FACTORY = "mail.smtp.socketFactory.class";
 	private static final String SOCKEY_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 	private static final String SOCKEY_FACTORY_PORT = "smtp.socketFactory.port";
@@ -37,7 +37,7 @@ public class MailAccount implements Serializable {
 	private String user;
 	/** 密码 */
 	private String pass;
-	/** 发送方 */
+	/** 发送方，遵循RFC-822标准 */
 	private String from;
 	
 	//SSL
@@ -75,91 +75,181 @@ public class MailAccount implements Serializable {
 		setting.toBean(this);
 	}
 	// -------------------------------------------------------------- Constructor end
-	
+	/**
+	 * 获得SMTP服务器域名
+	 * @return SMTP服务器域名
+	 */
 	public String getHost() {
 		return host;
 	}
-
+	/**
+	 * 设置SMTP服务器域名
+	 * @param host SMTP服务器域名
+	 * @return this
+	 */
 	public MailAccount setHost(String host) {
 		this.host = host;
 		return this;
 	}
 
+	/**
+	 * 获得SMTP服务端口
+	 * @return SMTP服务端口
+	 */
 	public Integer getPort() {
 		return port;
 	}
-
+	/**
+	 * 设置SMTP服务端口
+	 * @param port SMTP服务端口
+	 * @return this
+	 */
 	public MailAccount setPort(Integer port) {
 		this.port = port;
 		return this;
 	}
 
+	/**
+	 * 是否需要用户名密码验证
+	 * @return 是否需要用户名密码验证
+	 */
 	public Boolean isAuth() {
 		return auth;
 	}
-
+	/**
+	 * 设置是否需要用户名密码验证
+	 * @param isAuth 是否需要用户名密码验证
+	 * @return this
+	 */
 	public MailAccount setAuth(boolean isAuth) {
 		this.auth = isAuth;
 		return this;
 	}
 
+	/**
+	 * 获取用户名
+	 * @return 用户名
+	 */
 	public String getUser() {
 		return user;
 	}
-
+	/**
+	 * 设置用户名
+	 * @param user 用户名
+	 * @return this
+	 */
 	public MailAccount setUser(String user) {
 		this.user = user;
 		return this;
 	}
 
+	/**
+	 * 获取密码
+	 * @return 密码
+	 */
 	public String getPass() {
 		return pass;
 	}
-
+	/**
+	 * 设置密码
+	 * @param pass 密码
+	 * @return this
+	 */
 	public MailAccount setPass(String pass) {
 		this.pass = pass;
 		return this;
 	}
 
+	/**
+	 * 获取发送方，遵循RFC-822标准
+	 * @return 发送方，遵循RFC-822标准
+	 */
 	public String getFrom() {
 		return from;
 	}
-
+	/**
+	 * 设置发送方，遵循RFC-822标准<br>
+	 * 发件人可以是以下形式：
+	 * <pre>
+	 * 1. user@xxx.xx
+	 * 2.  name <user@xxx.xx>
+	 * </pre>
+	 * 
+	 * @param from 发送方，遵循RFC-822标准
+	 * @return this
+	 */
 	public MailAccount setFrom(String from) {
 		this.from = from;
 		return this;
 	}
 	
+	/**
+	 * 是否使用 STARTTLS安全连接
+	 * @return 是否使用 STARTTLS安全连接
+	 */
 	public boolean isStartttlsEnable() {
 		return startttlsEnable;
 	}
-
-	public void setStartttlsEnable(boolean startttlsEnable) {
+	/**
+	 * 设置是否使用STARTTLS安全连接
+	 * @param startttlsEnable 是否使用STARTTLS安全连接
+	 * @return this
+	 */
+	public MailAccount setStartttlsEnable(boolean startttlsEnable) {
 		this.startttlsEnable = startttlsEnable;
+		return this;
 	}
 
+	/**
+	 * 获取指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
+	 * @return 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
+	 */
 	public String getSocketFactoryClass() {
 		return socketFactoryClass;
 	}
-
-	public void setSocketFactoryClass(String socketFactoryClass) {
+	/**
+	 * 设置指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
+	 * @param socketFactoryClass 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
+	 * @return this
+	 */
+	public MailAccount setSocketFactoryClass(String socketFactoryClass) {
 		this.socketFactoryClass = socketFactoryClass;
+		return this;
 	}
 
+	/**
+	 * 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
+	 * 
+	 * @return 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
+	 */
 	public boolean isSocketFactoryFallback() {
 		return socketFactoryFallback;
 	}
-
-	public void setSocketFactoryFallback(boolean socketFactoryFallback) {
+	/**
+	 * 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
+	 * @param socketFactoryFallback 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
+	 * @return this
+	 */
+	public MailAccount setSocketFactoryFallback(boolean socketFactoryFallback) {
 		this.socketFactoryFallback = socketFactoryFallback;
+		return this;
 	}
 
+	/**
+	 * 获取指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
+	 * @return 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
+	 */
 	public int getSocketFactoryPort() {
 		return socketFactoryPort;
 	}
-
-	public void setSocketFactoryPort(int socketFactoryPort) {
+	/**
+	 * 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
+	 * @param socketFactoryPort 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
+	 * @return this
+	 */
+	public MailAccount setSocketFactoryPort(int socketFactoryPort) {
 		this.socketFactoryPort = socketFactoryPort;
+		return this;
 	}
 
 	/**
@@ -175,7 +265,7 @@ public class MailAccount implements Serializable {
 
 		// SSL
 		if(startttlsEnable) {
-			p.put(STARTTTL_ENABLE, startttlsEnable);
+			p.put(STARTTTLS_ENABLE, startttlsEnable);
 			p.put(SOCKEY_FACTORY, socketFactoryClass);
 			p.put(SOCKEY_FACTORY_FALLBACK, socketFactoryFallback);
 			p.put(SOCKEY_FACTORY_PORT, socketFactoryPort);

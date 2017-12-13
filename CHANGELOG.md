@@ -1,5 +1,38 @@
 # Changelog
 
+-------------------------------------------------------------------------------------------------------------
+
+## 3.2.3
+
+### 新特性
+* 增加NumberChineseFormater数字转汉字（感谢@【杭州】fineliving）
+* StrUtil增加ordinalIndexOf方法（感谢@【四川】开心一笑）
+* 增加H2和SQLServer2012方言支持
+* 邮件支持发件人姓名（issue#IGMW2@Gitee）
+* db部分中Session增加默认数据源的Session
+* 增加RedisDs，Jedis的薄封装
+* 增加字符串相似度计算工具TextSimilarity（感谢@【杭州】fineliving）
+* 增加几个验证码类型
+* 增加HtmlUtil.escape方法（issue#IGOKB@Gitee）
+* ExcelWriter排序支持
+* BeanUtil中CopyOptions增加mapping选项，可以不同字段名之间值复制
+* 使用BeanCopier抽象Bean属性拷贝
+
+### Bug修复
+* 修复Oracle下Date类型字段带时分秒取出丢失问题（感谢@烟雨江南）
+* 修复Convert中金额转为大写格式问题（感谢@【杭州】fineliving）
+* 邮件修复附件名乱码问题（issue#IGMW2@Gitee）
+* 修复 DateBetween.betweenYear中月份一致导致判断有误问题（issue#IGN0N@Gitee）
+* 修复JSONStrFormater在字符串中出现“[”、“{”等导致的换行错误问题（感谢@【北京】宁静）
+* 修复Props中两次创建Writer问题
+* 修复ZipUtil.unzip丢失编码参数问题（issue#71@Github）
+* 修复JSON中设置不忽略null值后子对象null值丢失问题（感谢@【北京】xkcoding）
+* 修复HtmlUtil.removeAllHtmlAttr方法无效问题
+* 修复DateUtil.parse方法对时间中"."误替换
+* 修复Season.AUTUMN拼写错误（issue#73@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 3.2.2
 
 ### 新特性

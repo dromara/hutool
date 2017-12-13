@@ -16,4 +16,11 @@ public class JSONStrFormaterTest {
 		String result = JSONStrFormater.format(json);
 		Assert.assertNotNull(result);
 	}
+	
+	@Test
+	public void formatTest2() {
+		String json = "{\"abc\":{\"def\":\"\\\"[ghi]\"}}";
+		String result = JSONStrFormater.format(json);
+		Assert.assertNotNull(result);
+	}
 }

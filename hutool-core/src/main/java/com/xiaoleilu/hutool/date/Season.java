@@ -5,7 +5,7 @@ package com.xiaoleilu.hutool.date;
  * 
  * @see #SPRING
  * @see #SUMMER
- * @see #ANTUMN
+ * @see #AUTUMN
  * @see #WINTER
  * 
  * @author Looly
@@ -18,7 +18,7 @@ public enum Season {
 	/** 夏季（第二季度） */
 	SUMMER(2),
 	/** 秋季（第三季度） */
-	ANTUMN(3),
+	AUTUMN(3),
 	/** 冬季（第四季度） */
 	WINTER(4);
 	
@@ -38,7 +38,7 @@ public enum Season {
 	 * 
 	 * @see #SPRING
 	 * @see #SUMMER
-	 * @see #ANTUMN
+	 * @see #AUTUMN
 	 * @see #WINTER
 	 * 
 	 * @param intValue 季度int表示
@@ -51,7 +51,7 @@ public enum Season {
 			case 2:
 				return SUMMER;
 			case 3:
-				return ANTUMN;
+				return AUTUMN;
 			case 4:
 				return WINTER;
 			default:

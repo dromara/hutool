@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.lang;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.lang.StrFormatter;
+import com.xiaoleilu.hutool.text.StrFormatter;
 
 public class StrFormatterTest {
 	

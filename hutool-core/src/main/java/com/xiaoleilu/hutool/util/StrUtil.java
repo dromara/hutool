@@ -12,8 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.xiaoleilu.hutool.lang.StrFormatter;
-import com.xiaoleilu.hutool.lang.StrSpliter;
+import com.xiaoleilu.hutool.text.StrFormatter;
+import com.xiaoleilu.hutool.text.StrSpliter;
+import com.xiaoleilu.hutool.text.TextSimilarity;
 
 /**
  * 字符串工具类
@@ -2564,6 +2565,51 @@ public class StrUtil {
 		return INDEX_NOT_FOUND;
 	}
 
+	/**
+	 * 返回字符串 searchStr 在字符串 str 中第 ordinal 次出现的位置。<br>
+	 * 如果 str=null 或 searchStr=null 或 ordinal<=0 则返回-1<br>
+	 * 此方法来自：Apache-Commons-Lang
+	 * 
+	 *栗子（*代表任意字符）：
+	 * <pre>
+	 * StrUtil.ordinalIndexOf(null, *, *)          = -1
+	 * StrUtil.ordinalIndexOf(*, null, *)          = -1
+	 * StrUtil.ordinalIndexOf("", "", *)           = 0
+	 * StrUtil.ordinalIndexOf("aabaabaa", "a", 1)  = 0
+	 * StrUtil.ordinalIndexOf("aabaabaa", "a", 2)  = 1
+	 * StrUtil.ordinalIndexOf("aabaabaa", "b", 1)  = 2
+	 * StrUtil.ordinalIndexOf("aabaabaa", "b", 2)  = 5
+	 * StrUtil.ordinalIndexOf("aabaabaa", "ab", 1) = 1
+	 * StrUtil.ordinalIndexOf("aabaabaa", "ab", 2) = 4
+	 * StrUtil.ordinalIndexOf("aabaabaa", "", 1)   = 0
+	 * StrUtil.ordinalIndexOf("aabaabaa", "", 2)   = 0
+	 * </pre>
+	 *
+	 * @param str 被检查的字符串，可以为null
+	 * @param searchStr 被查找的字符串，可以为null
+	 * @param ordinal 第几次出现的位置
+	 * @return 查找到的位置
+	 * @since 3.2.3
+	 */
+	public static int ordinalIndexOf(String str, String searchStr, int ordinal) {
+		if (str == null || searchStr == null || ordinal <= 0) {
+			return INDEX_NOT_FOUND;
+		}
+		if (searchStr.length() == 0) {
+			return 0;
+		}
+		int found = 0;
+		int index = INDEX_NOT_FOUND;
+		do {
+			index = str.indexOf(searchStr, index + 1);
+			if (index < 0) {
+				return index;
+			}
+			found++;
+		} while (found < ordinal);
+		return index;
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------ Append and prepend
 	/**
 	 * 如果给定字符串不是以给定的一个或多个字符串为结尾，则在尾部添加结尾字符串<br>
@@ -2832,5 +2878,28 @@ public class StrUtil {
 			builder.append(set.contains(c) ? replacedStr : c);
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * 计算连个字符串的相似度
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @return 相似度
+	 * @since 3.2.3
+	 */
+	public static double similar(String str1, String str2) {
+		return TextSimilarity.similar(str1, str2);
+	}
+	
+	/**
+	 * 计算连个字符串的相似度百分比
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @param scale
+	 * @return 相似度百分比
+	 * @since 3.2.3
+	 */
+	public static String similar(String str1, String str2, int scale) {
+		return TextSimilarity.similar(str1, str2, scale);
 	}
 }

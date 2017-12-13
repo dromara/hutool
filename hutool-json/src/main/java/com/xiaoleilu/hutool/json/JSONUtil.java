@@ -98,6 +98,18 @@ public final class JSONUtil {
 	public static JSONArray parseArray(Object arrayOrCollection) {
 		return new JSONArray(arrayOrCollection);
 	}
+	
+	/**
+	 * JSON字符串转JSONArray
+	 * 
+	 * @param arrayOrCollection 数组或集合对象
+	 * @param ignoreNullValue 是否忽略空值
+	 * @return JSONArray
+	 * @since 3.2.3
+	 */
+	public static JSONArray parseArray(Object arrayOrCollection, boolean ignoreNullValue) {
+		return new JSONArray(arrayOrCollection, ignoreNullValue);
+	}
 
 	/**
 	 * 转换对象为JSON<br>
@@ -442,42 +454,43 @@ public final class JSONUtil {
 	 * <li>其它 =》 尝试包装为JSONObject，否则返回<code>null</code></li>
 	 * </ul>
 	 * 
-	 * @param object The object to wrap
-	 * @return The wrapped value
+	 * @param object 被包装的对象
+	 * @param ignoreNullValue 是否忽略{@code null} 值
+	 * @return 包装后的值
 	 */
-	public static Object wrap(Object object) {
+	public static Object wrap(Object object, boolean ignoreNullValue) {
+		if (object == null) {
+			return JSONNull.NULL;
+		}
+		if (object instanceof JSON || JSONNull.NULL.equals(object) || object instanceof JSONString || object instanceof CharSequence || object instanceof Number
+				|| ObjectUtil.isBasicType(object)) {
+			return object;
+		}
+		
 		try {
-			if (object == null) {
-				return JSONNull.NULL;
+			//JSONArray
+			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
+				return new JSONArray(object, ignoreNullValue);
 			}
-			if (object instanceof JSON || JSONNull.NULL.equals(object) || object instanceof JSONString || object instanceof CharSequence || object instanceof Number
-					|| ObjectUtil.isBasicType(object)) {
-				return object;
-			}
-
-			if (object instanceof Collection) {
-				Collection<?> coll = (Collection<?>) object;
-				return new JSONArray(coll);
-			}
-			if (ArrayUtil.isArray(object)) {
-				return new JSONArray(object);
-			}
-			if (object instanceof Map) {
-				Map<?, ?> map = (Map<?, ?>) object;
-				return new JSONObject(map);
-			}
+			
+			//日期类型特殊处理
 			if (object instanceof Date) {
 				return ((Date) object).getTime();
 			}
 			if (object instanceof Calendar) {
 				return ((Calendar) object).getTimeInMillis();
 			}
-			Package objectPackage = object.getClass().getPackage();
-			String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
-			if (objectPackageName.startsWith("java.") || objectPackageName.startsWith("javax.") || object.getClass().getClassLoader() == null) {
+			
+			//Java内部类不做转换
+			final Class<?> objectClass = object.getClass();
+			final Package objectPackage = objectClass.getPackage();
+			final String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
+			if (objectPackageName.startsWith("java.") || objectPackageName.startsWith("javax.") || objectClass.getClassLoader() == null) {
 				return object.toString();
 			}
-			return new JSONObject(object);
+			
+			//默认按照JSONObject对待
+			return new JSONObject(object, ignoreNullValue);
 		} catch (Exception exception) {
 			return null;
 		}
