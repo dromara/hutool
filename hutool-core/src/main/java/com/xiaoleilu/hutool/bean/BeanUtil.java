@@ -8,25 +8,23 @@ import java.beans.PropertyEditorManager;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.bean.BeanDesc.PropDesc;
+import com.xiaoleilu.hutool.bean.copier.BeanCopier;
+import com.xiaoleilu.hutool.bean.copier.CopyOptions;
+import com.xiaoleilu.hutool.bean.copier.ValueProvider;
 import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
-import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * Bean工具类
@@ -277,17 +275,11 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, CopyOptions copyOptions) {
-		return fillBean(bean, new ValueProvider<String>() {
-			@Override
-			public Object value(String key, Type valueType) {
-				return map.get(key);
-			}
-
-			@Override
-			public boolean containsKey(String key) {
-				return map.containsKey(key);
-			}
-		}, copyOptions);
+		if(MapUtil.isEmpty(map)) {
+			return bean;
+		}
+		
+		return BeanCopier.create(map, bean, copyOptions).copy();
 	}
 
 	/**
@@ -372,71 +364,7 @@ public class BeanUtil {
 			return bean;
 		}
 
-		Class<?> actualEditable = bean.getClass();
-		if (copyOptions.editable != null) {
-			// 检查限制类是否为target的父类或接口
-			if (false == copyOptions.editable.isInstance(bean)) {
-				throw new IllegalArgumentException(StrUtil.format("Target class [{}] not assignable to Editable class [{}]", bean.getClass().getName(), copyOptions.editable.getName()));
-			}
-			actualEditable = copyOptions.editable;
-		}
-		final HashSet<String> ignoreSet = null != (copyOptions.ignoreProperties) ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
-		final Map<String, String> fieldReverseMapping = (null != copyOptions.fieldMapping) ? MapUtil.reverse(copyOptions.fieldMapping) : null;
-
-		final Collection<PropDesc> props = BeanUtil.getBeanDesc(actualEditable).getProps();
-		String fieldName;
-		Object value;
-		Method setterMethod;
-		Class<?> propClass;
-		for (PropDesc prop : props) {
-			// 获取值
-			fieldName = prop.getFieldName();
-			if ((null != ignoreSet && ignoreSet.contains(fieldName)) || false == valueProvider.containsKey(fieldName)) {
-				// 属性值被忽略或值提供者无此key时跳过
-				continue;
-			}
-			setterMethod = prop.getSetter();
-			if(null == setterMethod) {
-				//Setter方法不存在跳过
-				continue;
-			}
-			
-			// 此处对valueProvider传递的为Type对象，而非Class，因为Type中包含泛型类型信息
-			String providerKey = null;
-			if(null != fieldReverseMapping) {
-				providerKey = fieldReverseMapping.get(fieldName);
-			}
-			if(null == providerKey) {
-				providerKey = fieldName;
-			}
-			value = valueProvider.value(providerKey, TypeUtil.getFirstParamType(setterMethod));
-			if (null == value && copyOptions.ignoreNullValue) {
-				continue;// 当允许跳过空时，跳过
-			}
-
-			try {
-				// valueProvider在没有对值做转换且当类型不匹配的时候，执行默认转换
-				propClass = prop.getFieldClass();
-				if (false == propClass.isInstance(value)) {
-					value = Convert.convert(propClass, value);
-					if (null == value && copyOptions.ignoreNullValue) {
-						continue;// 当允许跳过空时，跳过
-					}
-				}
-
-				// 执行set方法注入值
-				if (null != setterMethod) {
-					setterMethod.invoke(bean, value);
-				}
-			} catch (Exception e) {
-				if (copyOptions.ignoreError) {
-					continue;// 忽略注入失败
-				} else {
-					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
-				}
-			}
-		}
-		return bean;
+		return BeanCopier.create(valueProvider, bean, copyOptions).copy();
 	}
 
 	// --------------------------------------------------------------------------------------------- beanToMap
@@ -550,180 +478,6 @@ public class BeanUtil {
 		if (null == copyOptions) {
 			copyOptions = new CopyOptions();
 		}
-		final boolean ignoreError = copyOptions.ignoreError;
-
-		final Map<String, PropDesc> sourcePdMap = BeanUtil.getBeanDesc(source.getClass()).getPropMap(ignoreCase);
-		fillBean(target, new ValueProvider<String>() {
-			@Override
-			public Object value(String key, Type valueType) {
-				final PropDesc sourcePd = sourcePdMap.get(key);
-				if (null != sourcePd) {
-					final Method getter = sourcePd.getGetter();
-					if (null != getter) {
-						try {
-							return getter.invoke(source);
-						} catch (Exception e) {
-							if (false == ignoreError) {
-								throw new UtilException(e, "Inject [{}] error!", key);
-							}
-						}
-					}
-				}
-				return null;
-			}
-
-			@Override
-			public boolean containsKey(String key) {
-				return sourcePdMap.containsKey(key);
-			}
-
-		}, copyOptions);
-	}
-
-	/**
-	 * 值提供者，用于提供Bean注入时参数对应值得抽象接口<br>
-	 * 继承或匿名实例化此接口<br>
-	 * 在Bean注入过程中，Bean获得字段名，通过外部方式根据这个字段名查找相应的字段值，然后注入Bean<br>
-	 * 
-	 * @author Looly
-	 * @param <T> KEY类型，一般情况下为 {@link String}
-	 *
-	 */
-	public static interface ValueProvider<T> {
-		/**
-		 * 获取值<br>
-		 * 返回值一般需要匹配被注入类型，如果不匹配会调用默认转换 {@link Convert#convert(Class, Object)}实现转换
-		 * 
-		 * @param key Bean对象中参数名
-		 * @param valueType 被注入的值得类型
-		 * @return 对应参数名的值
-		 */
-		public Object value(T key, Type valueType);
-
-		/**
-		 * 是否包含指定KEY，如果不包含则忽略注入
-		 * 
-		 * @param key Bean对象中参数名
-		 * @return 是否包含指定KEY
-		 */
-		public boolean containsKey(T key);
-	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------------
-	/**
-	 * 属性拷贝选项<br>
-	 * 包括：<br>
-	 * 1、限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类<br>
-	 * 2、是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null<br>
-	 * 3、忽略的属性列表，设置一个属性列表，不拷贝这些属性值<br>
-	 * 
-	 * @author Looly
-	 */
-	public static class CopyOptions {
-		/** 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类 */
-		private Class<?> editable;
-		/** 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null */
-		private boolean ignoreNullValue;
-		/** 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值 */
-		private String[] ignoreProperties;
-		/** 是否忽略字段注入错误 */
-		private boolean ignoreError;
-		/** 拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用 */
-		private Map<String, String> fieldMapping;
-
-		/**
-		 * 创建拷贝选项
-		 * 
-		 * @return 拷贝选项
-		 */
-		public static CopyOptions create() {
-			return new CopyOptions();
-		}
-
-		/**
-		 * 创建拷贝选项
-		 * 
-		 * @param editable 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
-		 * @param ignoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
-		 * @param ignoreProperties 忽略的属性列表，设置一个属性列表，不拷贝这些属性值
-		 * @return 拷贝选项
-		 */
-		public static CopyOptions create(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
-			return new CopyOptions(editable, ignoreNullValue, ignoreProperties);
-		}
-
-		/**
-		 * 构造拷贝选项
-		 */
-		public CopyOptions() {
-		}
-
-		/**
-		 * 构造拷贝选项
-		 * 
-		 * @param editable 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
-		 * @param ignoreNullValue 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
-		 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
-		 */
-		public CopyOptions(Class<?> editable, boolean ignoreNullValue, String... ignoreProperties) {
-			this.editable = editable;
-			this.ignoreNullValue = ignoreNullValue;
-			this.ignoreProperties = ignoreProperties;
-		}
-
-		/**
-		 * 设置限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性
-		 * 
-		 * @param editable 限制的类或接口
-		 * @return CopyOptions
-		 */
-		public CopyOptions setEditable(Class<?> editable) {
-			this.editable = editable;
-			return this;
-		}
-
-		/**
-		 * 设置是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
-		 * 
-		 * @param ignoreNullVall 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null
-		 * @return CopyOptions
-		 */
-		public CopyOptions setIgnoreNullValue(boolean ignoreNullVall) {
-			this.ignoreNullValue = ignoreNullVall;
-			return this;
-		}
-
-		/**
-		 * 设置忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
-		 * 
-		 * @param ignoreProperties 忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
-		 * @return CopyOptions
-		 */
-		public CopyOptions setIgnoreProperties(String... ignoreProperties) {
-			this.ignoreProperties = ignoreProperties;
-			return this;
-		}
-
-		/**
-		 * 设置是否忽略字段的注入错误
-		 * 
-		 * @param ignoreError 是否忽略
-		 * @return CopyOptions
-		 */
-		public CopyOptions setIgnoreError(boolean ignoreError) {
-			this.ignoreError = ignoreError;
-			return this;
-		}
-		
-		/**
-		 * 设置拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用
-		 * 
-		 * @param fieldMapping 拷贝属性的字段映射，用于不同的属性之前拷贝做对应表用
-		 * @return CopyOptions
-		 */
-		public CopyOptions setFieldMapping(Map<String, String> fieldMapping) {
-			this.fieldMapping = fieldMapping;
-			return this;
-		}
+		BeanCopier.create(source, target, copyOptions).copy();
 	}
 }

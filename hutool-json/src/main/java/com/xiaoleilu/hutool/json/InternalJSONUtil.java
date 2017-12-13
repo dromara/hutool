@@ -7,7 +7,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.bean.BeanUtil.CopyOptions;
+import com.xiaoleilu.hutool.bean.copier.CopyOptions;
+import com.xiaoleilu.hutool.bean.copier.ValueProvider;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.convert.ConvertException;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
@@ -211,7 +212,7 @@ final class InternalJSONUtil {
 	 * @return 目标Bean
 	 */
 	protected static <T> T toBean(final JSONObject jsonObject, T bean, final boolean ignoreError){
-		return BeanUtil.fillBean(bean, new BeanUtil.ValueProvider<String>(){
+		return BeanUtil.fillBean(bean, new ValueProvider<String>(){
 
 			@Override
 			public Object value(String key, Type valueType) {

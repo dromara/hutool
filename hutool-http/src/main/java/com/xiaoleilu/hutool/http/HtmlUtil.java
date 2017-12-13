@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.http;
 
+import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -140,25 +141,22 @@ public class HtmlUtil {
 	 * @return 去除标签后的文本
 	 */
 	public static String removeHtmlTag(String content, boolean withTagContent, String... tagNames) {
-		String regex1 = null;
-		String regex2 = null;
+		String regex = null;
 		for (String tagName : tagNames) {
 			if (StrUtil.isBlank(tagName)) {
 				continue;
 			}
 			tagName = tagName.trim();
 			// (?i)表示其后面的表达式忽略大小写
-			regex1 = StrUtil.format("(?i)<{}\\s?[^>]*?/>", tagName);
 			if (withTagContent) {
 				// 标签及其包含内容
-				regex2 = StrUtil.format("(?i)(?s)<{}\\s*?[^>]*?>.*?</{}>", tagName, tagName);
+				regex = StrUtil.format("(?i)<{}\\s*?[^>]*?/?>(.*?</{}>)?", tagName, tagName);
 			} else {
 				// 标签不包含内容
-				regex2 = StrUtil.format("(?i)<{}\\s*?[^>]*?>|</{}>", tagName, tagName);
+				regex = StrUtil.format("(?i)<{}\\s*?[^>]*?>|</{}>", tagName, tagName);
 			}
 
-			content = content.replaceAll(regex1, StrUtil.EMPTY) // 自闭标签小写
-					.replaceAll(regex2, StrUtil.EMPTY); // 非自闭标签小写
+			content = ReUtil.delAll(regex, content); // 非自闭标签小写
 		}
 		return content;
 	}

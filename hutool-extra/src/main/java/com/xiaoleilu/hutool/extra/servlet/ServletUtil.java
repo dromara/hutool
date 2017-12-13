@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.bean.BeanUtil.CopyOptions;
-import com.xiaoleilu.hutool.bean.BeanUtil.ValueProvider;
+import com.xiaoleilu.hutool.bean.copier.CopyOptions;
+import com.xiaoleilu.hutool.bean.copier.ValueProvider;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
