@@ -45,8 +45,6 @@ public class WeightRandom<T> implements Serializable {
 	// ---------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
-	 * 
-	 * @param weightObj 带有权重的对象
 	 */
 	public WeightRandom() {
 		weightMap = new TreeMap<>();
