@@ -36,7 +36,7 @@ public class ExcelReader implements Closeable{
 	private Sheet sheet;
 
 	/** 是否忽略空行 */
-	private boolean ignoreEmptyRow;
+	private boolean ignoreEmptyRow = true;
 	/** 单元格值处理接口 */
 	private CellEditor cellEditor;
 	/** 标题别名 */

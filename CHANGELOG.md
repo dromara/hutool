@@ -6,6 +6,10 @@
 
 ### 新特性
 * 删除Deprecated方法和类
+* 增加StrUtil.isEmptyIfStr和isBlankIfStr方法
+* 改进ExcelReader，对于空行默认不读取（包括元素全部为null或“”的行）（感谢@【北京】新任女人国国）
+* Validator增加isLetter、isUpperCase、isLowerCase方法（感谢@【深圳】objectboy(刚转java) ）
+* 增加权重随机数算法WeightRandom，RandomUtil增加Long、Double随机数生成
 
 ### Bug修复
 

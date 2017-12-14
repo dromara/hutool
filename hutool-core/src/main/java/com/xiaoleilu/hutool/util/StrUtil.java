@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.lang.Matcher;
 import com.xiaoleilu.hutool.text.StrFormatter;
 import com.xiaoleilu.hutool.text.StrSpliter;
 import com.xiaoleilu.hutool.text.TextSimilarity;
@@ -93,6 +94,25 @@ public class StrUtil {
 
 		return true;
 	}
+	
+	/**
+	 * 如果对象是字符串是否为空白，空白的定义如下： <br>
+	 * 1、为null <br>
+	 * 2、为不可见字符（如空格）<br>
+	 * 3、""<br>
+	 * 
+	 * @param obj 对象
+	 * @return 如果为字符串是否为空串
+	 * @since 3.3.0
+	 */
+	public static boolean isBlankIfStr(Object obj) {
+		if(null == obj) {
+			return true;
+		} else if(obj instanceof CharSequence) {
+			return isBlank((CharSequence)obj);
+		}
+		return false;
+	}
 
 	/**
 	 * 字符串是否为非空白 空白的定义如下： <br>
@@ -147,7 +167,8 @@ public class StrUtil {
 
 	// ------------------------------------------------------------------------ Empty
 	/**
-	 * 字符串是否为空，空的定义如下 1、为null <br>
+	 * 字符串是否为空，空的定义如下:<br>
+	 * 1、为null <br>
 	 * 2、为""<br>
 	 * 
 	 * @param str 被检测的字符串
@@ -155,6 +176,24 @@ public class StrUtil {
 	 */
 	public static boolean isEmpty(CharSequence str) {
 		return str == null || str.length() == 0;
+	}
+	
+	/**
+	 * 如果对象是字符串是否为空串空的定义如下:<br>
+	 * 1、为null <br>
+	 * 2、为""<br>
+	 * 
+	 * @param obj 对象
+	 * @return 如果为字符串是否为空串
+	 * @since 3.3.0
+	 */
+	public static boolean isEmptyIfStr(Object obj) {
+		if(null == obj) {
+			return true;
+		} else if(obj instanceof CharSequence) {
+			return 0 == ((CharSequence)obj).length();
+		}
+		return false;
 	}
 
 	/**
@@ -2800,6 +2839,25 @@ public class StrUtil {
 		}
 
 		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
+	}
+	
+	/**
+	 * 字符串的每一个字符是否都与定义的匹配器匹配
+	 * @param value 字符串
+	 * @param matcher 匹配器
+	 * @return 是否全部匹配
+	 * @since 3.2.3
+	 */
+	public static boolean isAllCharMatch(CharSequence value, Matcher<Character> matcher) {
+		if (StrUtil.isBlank(value)) {
+			return false;
+		}
+		int len = value.length();
+		boolean isAllMatch = true;
+		for (int i = 0; i < len; i++) {
+			isAllMatch &= matcher.match(value.charAt(i));
+		}
+		return isAllMatch;
 	}
 
 	/**

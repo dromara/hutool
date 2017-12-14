@@ -186,11 +186,19 @@ public class InternalExcelUtil {
 	 * @return 单元格值列表
 	 */
 	public static List<Object> readRow(Row row, CellEditor cellEditor) {
-		final List<Object> cellValues = new ArrayList<>();
-		
-		short length = row.getLastCellNum();
+		final short length = row.getLastCellNum();
+		final List<Object> cellValues = new ArrayList<>((int)length);
+		Object cellValue;
+		boolean isAllNull = true;
 		for (short i = 0; i < length; i++) {
-			cellValues.add(InternalExcelUtil.getCellValue(row.getCell(i), cellEditor));
+			cellValue = InternalExcelUtil.getCellValue(row.getCell(i), cellEditor);
+			isAllNull &= StrUtil.isEmptyIfStr(cellValue);
+			cellValues.add(cellValue);
+		}
+		
+		if(isAllNull) {
+			//如果每个元素都为空，则定义为空行
+			return new ArrayList<>(0);
 		}
 		return cellValues;
 	}
