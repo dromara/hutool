@@ -26,6 +26,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -408,19 +409,25 @@ public class XmlUtil {
 	}
 
 	/**
-	 * 将NodeList转换为Element列表
+	 * 将NodeList转换为Element列表<br>
+	 * 非Element节点将被忽略
 	 * 
 	 * @param parentEle 父节点，如果指定将返回此节点的所有直接子节点，nul返回所有就节点
 	 * @param nodeList NodeList
 	 * @return Element列表
 	 */
 	public static List<Element> transElements(Element parentEle, NodeList nodeList) {
-		final ArrayList<Element> elements = new ArrayList<Element>();
 		int length = nodeList.getLength();
+		final ArrayList<Element> elements = new ArrayList<Element>(length);
+		Node node;
+		Element element;
 		for (int i = 0; i < length; i++) {
-			Element element = (Element) nodeList.item(i);
-			if (parentEle == null || element.getParentNode() == parentEle) {
-				elements.add(element);
+			node = nodeList.item(i);
+			if(Node.ELEMENT_NODE == node.getNodeType()) {
+				element = (Element) nodeList.item(i);
+				if (parentEle == null || element.getParentNode() == parentEle) {
+					elements.add(element);
+				}
 			}
 		}
 

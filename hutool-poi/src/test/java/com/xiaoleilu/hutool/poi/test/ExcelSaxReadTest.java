@@ -3,6 +3,7 @@ package com.xiaoleilu.hutool.poi.test;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.collection.CollUtil;
@@ -17,6 +18,12 @@ import com.xiaoleilu.hutool.poi.excel.sax.handler.RowHandler;
  *
  */
 public class ExcelSaxReadTest {
+	
+	@Test
+	@Ignore
+	public void readBySaxTest() {
+		ExcelUtil.readBySax("d:/aaa.xlsx", 0, createRowHandler());
+	}
 	
 	@Test
 	public void excel07Test() {

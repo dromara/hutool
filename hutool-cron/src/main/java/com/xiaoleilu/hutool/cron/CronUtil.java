@@ -91,14 +91,14 @@ public final class CronUtil {
 	 * 移除任务
 	 * @param schedulerId 任务ID
 	 */
-	public void remove(String schedulerId){
+	public static void remove(String schedulerId){
 		scheduler.deschedule(schedulerId);
 	}
 	
 	/**
 	 * @return 获得cron4j的Scheduler对象
 	 */
-	public Scheduler getScheduler(){
+	public static Scheduler getScheduler(){
 		return scheduler;
 	}
 	

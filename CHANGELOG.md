@@ -10,8 +10,12 @@
 * 改进ExcelReader，对于空行默认不读取（包括元素全部为null或“”的行）（感谢@【北京】新任女人国国）
 * Validator增加isLetter、isUpperCase、isLowerCase方法（感谢@【深圳】objectboy(刚转java) ）
 * 增加权重随机数算法WeightRandom，RandomUtil增加Long、Double随机数生成
+* XmlUtil.transElements增加节点类型判断（issue#IGTGO@Gitee）
+* JSONUtil增加isJson、isJsonObj、isJsonArray方法（issue#IGT7A@Gitee）
 
 ### Bug修复
+* 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
+* 修复CronUtil中一些方法非static问题（issue#74@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

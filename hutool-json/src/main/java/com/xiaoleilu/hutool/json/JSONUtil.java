@@ -505,4 +505,40 @@ public final class JSONUtil {
 	public static String formatJsonStr(String jsonStr) {
 		return JSONStrFormater.format(jsonStr);
 	}
+	
+	/**
+	 * 是否为JSON字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * @param str 字符串
+	 * @return 是否为JSON字符串
+	 * @since 3.3.0
+	 */
+	public static boolean isJson(String str) {
+		return isJsonObj(str) || isJsonArray(str);
+	}
+	
+	/**
+	 * 是否为JSONObject字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * @param str 字符串
+	 * @return 是否为JSON字符串
+	 * @since 3.3.0
+	 */
+	public static boolean isJsonObj(String str) {
+		if(StrUtil.isBlank(str)) {
+			return false;
+		}
+		return StrUtil.isWrap(str.trim(), '{', '}');
+	}
+	
+	/**
+	 * 是否为JSONObject字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * @param str 字符串
+	 * @return 是否为JSON字符串
+	 * @since 3.3.0
+	 */
+	public static boolean isJsonArray(String str) {
+		if(StrUtil.isBlank(str)) {
+			return false;
+		}
+		return StrUtil.isWrap(str.trim(), '[', ']');
+	}
 }
