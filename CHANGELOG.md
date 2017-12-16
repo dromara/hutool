@@ -12,6 +12,7 @@
 * 增加权重随机数算法WeightRandom，RandomUtil增加Long、Double随机数生成
 * XmlUtil.transElements增加节点类型判断（issue#IGTGO@Gitee）
 * JSONUtil增加isJson、isJsonObj、isJsonArray方法（issue#IGT7A@Gitee）
+* Week增加方法toChinese（感谢@【北京】宁静）
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
