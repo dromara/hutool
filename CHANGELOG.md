@@ -13,11 +13,13 @@
 * XmlUtil.transElements增加节点类型判断（issue#IGTGO@Gitee）
 * JSONUtil增加isJson、isJsonObj、isJsonArray方法（issue#IGT7A@Gitee）
 * Week增加方法toChinese（感谢@【北京】宁静）
+* AbstractCaptcha增加方法generateCode，用于抽象验证码字符串生成，提供可定制验证码字符串生成（感谢@【杭州】KIWI @【杭州】t-io ）
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
 * 修复CronUtil中一些方法非static问题（issue#74@Github）
 * 修复ShearCaptcha的thickness无效问题
+* 修复AbstractCaptcha写出文件未关闭流的问题
 
 -------------------------------------------------------------------------------------------------------------
 
