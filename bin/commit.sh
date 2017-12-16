@@ -3,4 +3,4 @@
 git add .
 git commit -am "$1"
 
-./push_dev.sh
+bin/push_dev.sh
