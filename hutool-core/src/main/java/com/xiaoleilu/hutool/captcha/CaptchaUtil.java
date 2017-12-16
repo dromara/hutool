@@ -33,7 +33,7 @@ public class CaptchaUtil {
 	}
 
 	/**
-	 * 创建圆圈干扰的验证码，默认5位验证码，150条干扰线
+	 * 创建圆圈干扰的验证码，默认5位验证码，15个干扰圈
 	 * 
 	 * @param width 图片宽
 	 * @param height 图片高
@@ -68,5 +68,19 @@ public class CaptchaUtil {
 	 */
 	public static ShearCaptcha createShearCaptcha(int width, int height) {
 		return new ShearCaptcha(width, height);
+	}
+	
+	/**
+	 * 创建扭曲干扰的验证码，默认5位验证码
+	 * 
+	 * @param width 图片宽
+	 * @param height 图片高
+	 * @param codeCount 字符个数
+	 * @param thickness 干扰线宽度
+	 * @return {@link ShearCaptcha}
+	 * @since 3.3.0
+	 */
+	public static ShearCaptcha createShearCaptcha(int width, int height, int codeCount, int thickness) {
+		return new ShearCaptcha(width, height, codeCount, thickness);
 	}
 }

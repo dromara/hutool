@@ -17,6 +17,7 @@
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
 * 修复CronUtil中一些方法非static问题（issue#74@Github）
+* 修复ShearCaptcha的thickness无效问题
 
 -------------------------------------------------------------------------------------------------------------
 

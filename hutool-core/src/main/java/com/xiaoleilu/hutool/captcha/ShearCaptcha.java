@@ -36,7 +36,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param codeCount 字符个数
 	 */
 	public ShearCaptcha(int width, int height, int codeCount) {
-		this(width, height, codeCount, 15);
+		this(width, height, codeCount, 4);
 	}
 
 	/**
@@ -45,10 +45,10 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param width 图片宽
 	 * @param height 图片高
 	 * @param codeCount 字符个数
-	 * @param interfereCount 验证码干扰元素个数
+	 * @param thickness 干扰线宽度
 	 */
-	public ShearCaptcha(int width, int height, int codeCount, int interfereCount) {
-		super(width, height, codeCount, interfereCount);
+	public ShearCaptcha(int width, int height, int codeCount, int thickness) {
+		super(width, height, codeCount, thickness);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 //		g.drawString(code, 1, height - 4);
 
 		shear(g, width, height, Color.white);
-		drawThickLine(g, 0, RandomUtil.randomInt(height) + 1, width, RandomUtil.randomInt(height) + 1, 4, ImageUtil.randomColor());
+		drawThickLine(g, 0, RandomUtil.randomInt(height) + 1, width, RandomUtil.randomInt(height) + 1, this.interfereCount, ImageUtil.randomColor());
 	}
 
 	// ----------------------------------------------------------------------------------------------------- Private method start
