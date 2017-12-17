@@ -13,12 +13,12 @@ import com.xiaoleilu.hutool.util.PageUtil;
 public class PageResult<T> extends ArrayList<T>{
 	private static final long serialVersionUID = 9056411043515781783L;
 	
-	public static final int DEFAULT_NUMBER_PER_PAGE = 20;
+	public static final int DEFAULT_PAGE_SIZE = Page.DEFAULT_PAGE_SIZE;
 	
 	/** 页码 */
 	private int page;
 	/** 每页结果数 */
-	private int numPerPage;
+	private int pageSize;
 	/** 总页数 */
 	private int totalPage;
 	/** 总数 */
@@ -28,26 +28,26 @@ public class PageResult<T> extends ArrayList<T>{
 	/**
 	 * 构造
 	 * @param page 页码
-	 * @param numPerPage 每页结果数
+	 * @param pageSize 每页结果数
 	 */
-	public PageResult(int page, int numPerPage) {
-		super(numPerPage <= 0 ? DEFAULT_NUMBER_PER_PAGE : numPerPage);
+	public PageResult(int page, int pageSize) {
+		super(pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize);
 		
 		this.page = page <= 0 ? 0 : page;
-		this.numPerPage = numPerPage <= 0 ? DEFAULT_NUMBER_PER_PAGE : numPerPage;
+		this.pageSize = pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
 	}
 	
 	/**
 	 * 构造
 	 * @param page 页码
-	 * @param numPerPage 每页结果数
+	 * @param pageSize 每页结果数
 	 * @param total 结果总数
 	 */
-	public PageResult(int page, int numPerPage, int total) {
-		this(page, numPerPage);
+	public PageResult(int page, int pageSize, int total) {
+		this(page, pageSize);
 		
 		this.total = total;
-		this.totalPage = PageUtil.totalPage(total,numPerPage);
+		this.totalPage = PageUtil.totalPage(total,pageSize);
 	}
 	//---------------------------------------------------------- Constructor end
 	
@@ -68,16 +68,34 @@ public class PageResult<T> extends ArrayList<T>{
 	
 	/**
 	 * @return 每页结果数
+	 * @deprecated 请使用{@link #getPageSize()}
 	 */
+	@Deprecated
 	public int getNumPerPage() {
-		return numPerPage;
+		return pageSize;
 	}
 	/**
 	 * 设置每页结果数
-	 * @param numPerPage 每页结果数
+	 * @param pageSize 每页结果数
+	 * @deprecated 请使用 {@link #setPageSize(int)}
 	 */
-	public void setNumPerPage(int numPerPage) {
-		this.numPerPage = numPerPage;
+	@Deprecated
+	public void setNumPerPage(int pageSize) {
+		this.pageSize = pageSize;
+	}
+	
+	/**
+	 * @return 每页结果数
+	 */
+	public int getPageSize() {
+		return pageSize;
+	}
+	/**
+	 * 设置每页结果数
+	 * @param pageSize 每页结果数
+	 */
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 	
 	/**

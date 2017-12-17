@@ -17,6 +17,7 @@
 * NetUtil增加netCat方法
 * 新增ExceptionUtil.wrap方法，包装异常
 * 改进AES个DES类，在构造中加入自定义偏移
+* 实现ActiveEntity
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）

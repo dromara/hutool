@@ -24,7 +24,23 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
-		final Entity row = Entity.create(meta.getTableName(1));
+		return handleRow(Entity.create(), columnCount, meta, rs);
+	}
+	
+	/**
+	 * 处理单条数据
+	 * 
+	 * @param <T> Entity及其子对象
+	 * @param row Entity对象
+	 * @param columnCount 列数
+	 * @param meta ResultSetMetaData
+	 * @param rs 数据集
+	 * @return 每一行的Entity
+	 * @throws SQLException SQL执行异常
+	 * @since 3.3.0
+	 */
+	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
+		row.setTableName(meta.getTableName(1));
 		String columnLabel;
 		int type;
 		for (int i = 1; i <= columnCount; i++) {

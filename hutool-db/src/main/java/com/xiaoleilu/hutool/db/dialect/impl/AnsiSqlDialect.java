@@ -134,7 +134,7 @@ public class AnsiSqlDialect implements Dialect {
 	 */
 	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
 		// limit A offset B 表示：A就是你需要多少行，B就是查询的起点位置。
-		return find.append(" limit ").append(page.getNumPerPage()).append(" offset ").append(page.getStartPosition());
+		return find.append(" limit ").append(page.getPageSize()).append(" offset ").append(page.getStartPosition());
 	}
 
 	@Override

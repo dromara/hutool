@@ -520,7 +520,7 @@ public class SqlConnRunner{
 		}
 		
 		final int count = count(conn, where);
-		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<Entity>(page.getPageNumber(), page.getNumPerPage(), count));
+		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<Entity>(page.getPageNumber(), page.getPageSize(), count));
 		return this.page(conn, fields, where, page, pageResultHandler);
 	}
 	

@@ -23,6 +23,6 @@ public class H2Dialect extends AnsiSqlDialect{
 	@Override
 	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
 		//limit  A , B 表示：A就是查询的起点位置，B就是你需要多少行。
-		return find.append(" limit ").append(page.getStartPosition()).append(" , ").append(page.getNumPerPage());
+		return find.append(" limit ").append(page.getStartPosition()).append(" , ").append(page.getPageSize());
 	}
 }
