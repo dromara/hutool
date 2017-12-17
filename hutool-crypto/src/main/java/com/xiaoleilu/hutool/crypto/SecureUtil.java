@@ -101,7 +101,7 @@ public final class SecureUtil {
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 * 
 	 * @param algorithm 算法
-	 * @param key 密钥
+	 * @param key 密钥，如果为{@code null} 自动生成随机密钥
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateKey(String algorithm, byte[] key) {

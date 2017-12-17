@@ -16,12 +16,14 @@
 * AbstractCaptcha增加方法generateCode，用于抽象验证码字符串生成，提供可定制验证码字符串生成（感谢@【杭州】KIWI @【杭州】t-io ）
 * NetUtil增加netCat方法
 * 新增ExceptionUtil.wrap方法，包装异常
+* 改进AES个DES类，在构造中加入自定义偏移
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
 * 修复CronUtil中一些方法非static问题（issue#74@Github）
 * 修复ShearCaptcha的thickness无效问题
 * 修复AbstractCaptcha写出文件未关闭流的问题
+* 修复AES中自定义Mode和Padding导致的自动生成密钥问题（issue#55@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
