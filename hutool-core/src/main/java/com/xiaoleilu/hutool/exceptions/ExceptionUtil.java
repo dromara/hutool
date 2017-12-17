@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -41,6 +42,21 @@ public final class ExceptionUtil {
 		}else{
 			return new RuntimeException(throwable);
 		}
+	}
+	
+	/**
+	 * 包装一个异常
+	 * @param throwable 异常
+	 * @param wrapThrowable 包装后的异常类
+	 * @return 包装后的异常
+	 * @since 3.3.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Throwable> T wrap(Throwable throwable, Class<T> wrapThrowable) {
+		if(wrapThrowable.isInstance(throwable)) {
+			return (T) throwable;
+		}
+		return ReflectUtil.newInstance(wrapThrowable, throwable);
 	}
 
 	/**
