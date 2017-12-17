@@ -74,7 +74,6 @@ public class AES extends SymmetricCrypto {
 	 * @param mode 模式{@link Mode}
 	 * @param padding {@link Padding}补码方式
 	 * @param key 密钥，支持三种密钥长度：128、192、256位
-	 * @param iv 偏移向量，加盐
 	 * @since 3.3.0
 	 */
 	public AES(Mode mode, Padding padding, SecretKey key) {

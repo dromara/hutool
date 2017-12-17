@@ -112,7 +112,7 @@ public class ActiveEntity extends Entity {
 	 * 构造
 	 * 
 	 * @param runner {@link SqlRunner}
-	 * @param tableName 表名
+	 * @param entity 非动态实体
 	 */
 	public ActiveEntity(SqlRunner runner, Entity entity) {
 		super(entity.getTableName());
