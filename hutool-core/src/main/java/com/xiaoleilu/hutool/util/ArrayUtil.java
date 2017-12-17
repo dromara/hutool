@@ -294,6 +294,19 @@ public class ArrayUtil {
 	}
 	
 	/**
+	 * 新建一个空数组
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param newSize 大小
+	 * @return 空数组
+	 * @since 3.3.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] newArray(int newSize) {
+		return (T[])new Object[newSize];
+	}
+	
+	/**
 	 * 获取数组对象的元素类型
 	 * 
 	 * @param array 数组对象

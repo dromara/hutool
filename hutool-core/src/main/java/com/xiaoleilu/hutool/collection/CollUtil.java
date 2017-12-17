@@ -23,7 +23,10 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.Convert;
@@ -554,6 +557,25 @@ public class CollUtil {
 	 */
 	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
 		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<T>(collection));
+	}
+	
+	/**
+	 * 新建{@link BlockingQueue}<br>
+	 * 在队列为空时，获取元素的线程会等待队列变为非空。当队列满时，存储元素的线程会等待队列可用。
+	 * 
+	 * @param capacity 容量
+	 * @param isLinked 是否为链表形式
+	 * @return {@link BlockingQueue}
+	 * @since 3.3.0
+	 */
+	public static <T> BlockingQueue<T> newBlockingQueue(int capacity, boolean isLinked){
+		BlockingQueue<T> queue;
+		if(isLinked) {
+			queue = new LinkedBlockingDeque<>(capacity);
+		}else {
+			queue = new ArrayBlockingQueue<>(capacity);
+		}
+		return queue;
 	}
 
 	/**

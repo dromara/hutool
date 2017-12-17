@@ -1,5 +1,7 @@
 package com.xiaoleilu.hutool.util;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -8,12 +10,16 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.io.IORuntimeException;
+import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Validator;
 
 /**
@@ -317,14 +323,16 @@ public class NetUtil {
 
 	/**
 	 * 获得本机MAC地址
+	 * 
 	 * @return 本机MAC地址
 	 */
 	public static String getLocalMacAddress() {
 		return getMacAddress(getLocalhost());
 	}
-	
+
 	/**
 	 * 获得指定地址信息中的MAC地址，使用分隔符“-”
+	 * 
 	 * @param inetAddress {@link InetAddress}
 	 * @return MAC地址，用-分隔
 	 */
@@ -334,6 +342,7 @@ public class NetUtil {
 
 	/**
 	 * 获得指定地址信息中的MAC地址
+	 * 
 	 * @param inetAddress {@link InetAddress}
 	 * @param separator 分隔符，推荐使用“-”或者“:”
 	 * @return MAC地址，用-分隔
@@ -349,7 +358,7 @@ public class NetUtil {
 		} catch (SocketException e) {
 			throw new UtilException(e);
 		}
-		if(null != mac){
+		if (null != mac) {
 			final StringBuilder sb = new StringBuilder();
 			String s;
 			for (int i = 0; i < mac.length; i++) {
@@ -363,6 +372,60 @@ public class NetUtil {
 			return sb.toString();
 		}
 		return null;
+	}
+	
+	/**
+	 * 创建 {@link InetSocketAddress}
+	 * @param host 域名或IP地址
+	 * @param port 端口
+	 * @return {@link InetSocketAddress}
+	 * @since 3.3.0
+	 */
+	public static InetSocketAddress createAddress(String host, int port) {
+		return new InetSocketAddress(host, port);
+	}
+
+	/**
+	 * 
+	 * 简易的使用Socket发送数据
+	 * 
+	 * @param host Server主机
+	 * @param port Server端口
+	 * @param isBlock 是否阻塞方式
+	 * @param data 需要发送的数据
+	 * @throws IORuntimeException IO异常
+	 * @since 3.3.0
+	 */
+	public static void netCat(String host, int port, boolean isBlock, ByteBuffer data) throws IORuntimeException {
+		try (SocketChannel channel = SocketChannel.open(createAddress(host, port))) {
+			channel.configureBlocking(isBlock);
+			channel.write(data);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 
+	 * 使用普通Socket发送数据
+	 * 
+	 * @param host Server主机
+	 * @param port Server端口
+	 * @param data 数据
+	 * @throws IOException IO异常
+	 * @since 3.3.0
+	 */
+	public static void netCat(String host, int port, byte[] data) throws IORuntimeException {
+		OutputStream out = null;
+		try (Socket socket = new Socket(host, port)) {
+			out = socket.getOutputStream();
+			out.write(data);
+			out.flush();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(out);
+		}
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start
