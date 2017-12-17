@@ -91,7 +91,7 @@ public final class CronUtil {
 	 * 移除任务
 	 * @param schedulerId 任务ID
 	 */
-	public void remove(String schedulerId){
+	public static void remove(String schedulerId){
 		scheduler.deschedule(schedulerId);
 	}
 	
