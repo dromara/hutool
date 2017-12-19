@@ -389,7 +389,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return 表单Map
 	 */
 	public Map<String, Object> form() {
-		return form;
+		return this.form;
+	}
+	
+	/**
+	 * 获取文件表单数据
+	 * 
+	 * @return 文件表单Map
+	 * @since 3.3.0
+	 */
+	public Map<String, Object> fileForm() {
+		return this.fileForm();
 	}
 	// ---------------------------------------------------------------- Form end
 
