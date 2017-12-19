@@ -15,7 +15,7 @@ import com.xiaoleilu.hutool.util.ArrayUtil;
  * @since 3.1.0
  */
 public class IterUtil {
-	
+
 	/**
 	 * Iterable是否为空
 	 * 
@@ -35,7 +35,7 @@ public class IterUtil {
 	public static boolean isEmpty(Iterator<?> Iterator) {
 		return null == Iterator || false == Iterator.hasNext();
 	}
-	
+
 	/**
 	 * Iterable是否为空
 	 * 
@@ -55,7 +55,7 @@ public class IterUtil {
 	public static boolean isNotEmpty(Iterator<?> Iterator) {
 		return null != Iterator && Iterator.hasNext();
 	}
-	
+
 	/**
 	 * 是否包含{@code null}元素
 	 * 
@@ -65,7 +65,7 @@ public class IterUtil {
 	public static boolean hasNull(Iterable<?> iter) {
 		return hasNull(null == iter ? null : iter.iterator());
 	}
-	
+
 	/**
 	 * 是否包含{@code null}元素
 	 * 
@@ -73,16 +73,49 @@ public class IterUtil {
 	 * @return 是否包含{@code null}元素
 	 */
 	public static boolean hasNull(Iterator<?> iter) {
-		if (isNotEmpty(iter)) {
-			while(iter.hasNext()) {
-				if(null == iter.next()) {
-					return true;
-				}
+		if (null == iter) {
+			return true;
+		}
+		while (iter.hasNext()) {
+			if (null == iter.next()) {
+				return true;
 			}
 		}
+
 		return false;
 	}
-	
+
+	/**
+	 * 是否全部元素为null
+	 * 
+	 * @param iter iter 被检查的{@link Iterable}对象，如果为{@code null} 返回true
+	 * @return 是否全部元素为null
+	 * @since 3.3.0
+	 */
+	public static boolean isAllNull(Iterable<?> iter) {
+		return isAllNull(null == iter ? null : iter.iterator());
+	}
+
+	/**
+	 * 是否全部元素为null
+	 * 
+	 * @param iter iter 被检查的{@link Iterator}对象，如果为{@code null} 返回true
+	 * @return 是否全部元素为null
+	 * @since 3.3.0
+	 */
+	public static boolean isAllNull(Iterator<?> iter) {
+		if (null == iter) {
+			return true;
+		}
+
+		while (iter.hasNext()) {
+			if (null != iter.next()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * 根据集合返回一个元素计数的 {@link Map}<br>
 	 * 所谓元素计数就是假如这个集合中某个元素出现了n次，那将这个元素做为key，n做为value<br>
@@ -98,7 +131,7 @@ public class IterUtil {
 	public static <T> Map<T, Integer> countMap(Iterable<T> iter) {
 		return countMap(null == iter ? null : iter.iterator());
 	}
-	
+
 	/**
 	 * 根据集合返回一个元素计数的 {@link Map}<br>
 	 * 所谓元素计数就是假如这个集合中某个元素出现了n次，那将这个元素做为key，n做为value<br>
@@ -113,10 +146,10 @@ public class IterUtil {
 	 */
 	public static <T> Map<T, Integer> countMap(Iterator<T> iter) {
 		final HashMap<T, Integer> countMap = new HashMap<>();
-		if(null != iter) {
+		if (null != iter) {
 			Integer count;
 			T t;
-			while(iter.hasNext()) {
+			while (iter.hasNext()) {
 				t = iter.next();
 				count = countMap.get(t);
 				if (null == count) {
@@ -128,7 +161,7 @@ public class IterUtil {
 		}
 		return countMap;
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
 	 * 
@@ -181,7 +214,7 @@ public class IterUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 将Entry集合转换为HashMap
 	 * 
@@ -199,7 +232,7 @@ public class IterUtil {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * 将键列表和值列表转换为Map<br>
 	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
@@ -212,10 +245,10 @@ public class IterUtil {
 	 * @return 标题内容Map
 	 * @since 3.1.0
 	 */
-	public static <K, V> Map<K, V> toMap(Iterable<K> keys, Iterable<V> values){
-		return toMap(null ==keys ? null : keys.iterator(), null == values ? null : values.iterator());
+	public static <K, V> Map<K, V> toMap(Iterable<K> keys, Iterable<V> values) {
+		return toMap(null == keys ? null : keys.iterator(), null == values ? null : values.iterator());
 	}
-	
+
 	/**
 	 * 将键列表和值列表转换为Map<br>
 	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
@@ -228,16 +261,16 @@ public class IterUtil {
 	 * @return 标题内容Map
 	 * @since 3.1.0
 	 */
-	public static <K, V> Map<K, V> toMap(Iterator<K> keys, Iterator<V> values){
+	public static <K, V> Map<K, V> toMap(Iterator<K> keys, Iterator<V> values) {
 		final Map<K, V> resultMap = new HashMap<>();
-		if(isNotEmpty(keys)) {
-			while(keys.hasNext()) {
+		if (isNotEmpty(keys)) {
+			while (keys.hasNext()) {
 				resultMap.put(keys.next(), (null != values && values.hasNext()) ? values.next() : null);
 			}
 		}
 		return resultMap;
 	}
-	
+
 	/**
 	 * Enumeration转换为Iterator
 	 * <p>
@@ -259,14 +292,14 @@ public class IterUtil {
 	 * @return {@link Iterable}
 	 */
 	public static <E> Iterable<E> asIterable(final Iterator<E> iter) {
-		return new Iterable<E>(){
+		return new Iterable<E>() {
 			@Override
 			public Iterator<E> iterator() {
 				return iter;
 			}
 		};
 	}
-	
+
 	/**
 	 * 获取集合的第一个元素
 	 * 
@@ -296,7 +329,8 @@ public class IterUtil {
 	}
 
 	/**
-	 * 获得{@link Iterable}对象的元素类型（通过第一个非空元素判断）
+	 * 获得{@link Iterable}对象的元素类型（通过第一个非空元素判断）<br>
+	 * 注意，此方法至少会调用多次next方法
 	 * 
 	 * @param iterable {@link Iterable}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
@@ -310,16 +344,18 @@ public class IterUtil {
 	}
 
 	/**
-	 * 获得{@link Iterator}对象的元素类型（通过第一个非空元素判断）
+	 * 获得{@link Iterator}对象的元素类型（通过第一个非空元素判断）<br>
+	 * 注意，此方法至少会调用多次next方法
 	 * 
 	 * @param iterator {@link Iterator}
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 */
 	public static Class<?> getElementType(Iterator<?> iterator) {
-		if (null != iterator) {
+		final Iterator<?> iter2 = new CopiedIterator<>(iterator);
+		if (null != iter2) {
 			Object t;
-			while (iterator.hasNext()) {
-				t = iterator.next();
+			while (iter2.hasNext()) {
+				t = iter2.next();
 				if (null != t) {
 					return t.getClass();
 				}
