@@ -16,10 +16,19 @@ public enum DigestAlgorithm {
 
 	private String value;
 
+	/**
+	 * 构造
+	 * 
+	 * @param value 算法字符串表示
+	 */
 	private DigestAlgorithm(String value) {
 		this.value = value;
 	}
 
+	/**
+	 * 获取算法字符串表示
+	 * @return 算法字符串表示
+	 */
 	public String getValue() {
 		return this.value;
 	}

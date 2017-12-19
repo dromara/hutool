@@ -8,6 +8,7 @@ import com.xiaoleilu.hutool.crypto.Padding;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.crypto.symmetric.AES;
 import com.xiaoleilu.hutool.crypto.symmetric.DES;
+import com.xiaoleilu.hutool.crypto.symmetric.DESede;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricCrypto;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -133,6 +134,7 @@ public class SymmetricTest {
 		String content = "test中文";
 		
 		DES des = new DES(Mode.CTS, Padding.PKCS5Padding, "0CoJUm6Qyw8W8jud".getBytes(), "01020304".getBytes());
+		
 		byte[] encrypt = des.encrypt(content);
 		byte[] decrypt = des.decrypt(encrypt);
 		
@@ -150,7 +152,8 @@ public class SymmetricTest {
 
 		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
 
-		SymmetricCrypto des = new SymmetricCrypto(SymmetricAlgorithm.DESede, key);
+		DESede des = SecureUtil.desede(key);
+		
 		byte[] encrypt = des.encrypt(content);
 		byte[] decrypt = des.decrypt(encrypt);
 

@@ -1328,22 +1328,22 @@ public class StrUtil {
 	}
 
 	/**
-	 * 切割前部分
+	 * 切割指定位置之前部分的字符串
 	 * 
 	 * @param string 字符串
 	 * @param toIndex 切割到的位置（不包括）
-	 * @return 切割后的字符串
+	 * @return 切割后的剩余的前半部分字符串
 	 */
 	public static String subPre(CharSequence string, int toIndex) {
 		return sub(string, 0, toIndex);
 	}
 
 	/**
-	 * 切割后部分
+	 * 切割指定位置之后部分的字符串
 	 * 
 	 * @param string 字符串
 	 * @param fromIndex 切割开始的位置（包括）
-	 * @return 切割后的字符串
+	 * @return 切割后后剩余的后半部分字符串
 	 */
 	public static String subSuf(CharSequence string, int fromIndex) {
 		if (isEmpty(string)) {
@@ -1384,7 +1384,7 @@ public class StrUtil {
 	 * </pre>
 	 * 
 	 * @param string 被查找的字符串
-	 * @param separator 分隔字符串
+	 * @param separator 分隔字符串（不包括）
 	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
 	 * @return 切割后的字符串
 	 * @since 3.1.1
@@ -1425,7 +1425,7 @@ public class StrUtil {
 	 * </pre>
 	 *
 	 * @param string 被查找的字符串
-	 * @param separator 分隔字符串
+	 * @param separator 分隔字符串（不包括）
 	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
 	 * @return 切割后的字符串
 	 * @since 3.1.1
