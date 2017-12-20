@@ -21,6 +21,8 @@
 * HttpRequest增加fileForm方法
 * 增加DESede快捷实现类
 * 签名算法从AsymmetricCrypto中剥离，形成Sign对象
+* 增加EnumUtil工具类
+* Convert.convert方法支持Map转换
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
@@ -28,6 +30,7 @@
 * 修复ShearCaptcha的thickness无效问题
 * 修复AbstractCaptcha写出文件未关闭流的问题
 * 修复AES中自定义Mode和Padding导致的自动生成密钥问题（issue#55@Github）
+* 修复MapConvert类中类型判断导致的null问题（issue#IGXNI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

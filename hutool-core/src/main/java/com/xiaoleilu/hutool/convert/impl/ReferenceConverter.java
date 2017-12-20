@@ -3,11 +3,12 @@ package com.xiaoleilu.hutool.convert.impl;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 
 import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
-import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**
  * {@link Reference}转换器
@@ -34,7 +35,7 @@ public class ReferenceConverter extends AbstractConverter<Reference> {
 		
 		//尝试将值转换为Reference泛型的类型
 		Object targetValue = null;
-		final Class<?> paramType = ClassUtil.getTypeArgument(targetType);
+		final Type paramType = TypeUtil.getTypeArgument(targetType);
 		if(null != paramType){
 			targetValue = ConverterRegistry.getInstance().convert(paramType, value);
 		}

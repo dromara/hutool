@@ -32,6 +32,7 @@ import com.xiaoleilu.hutool.convert.impl.ClassConverter;
 import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.convert.impl.CurrencyConverter;
 import com.xiaoleilu.hutool.convert.impl.DateConverter;
+import com.xiaoleilu.hutool.convert.impl.MapConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
 import com.xiaoleilu.hutool.convert.impl.PathConverter;
 import com.xiaoleilu.hutool.convert.impl.PrimitiveConverter;
@@ -192,6 +193,12 @@ public class ConverterRegistry {
 			final CollectionConverter collectionConverter = new CollectionConverter(type);
 			return (T) collectionConverter.convert(value, (Collection<?>) defaultValue);
 		}
+		
+		//Map类型
+		if(Map.class.isAssignableFrom(rowType)) {
+			final MapConverter mapConverter = new MapConverter(type);
+			return (T) mapConverter.convert(value, (Map<?, ?>)defaultValue);
+		}
 
 		// 默认强转
 		if (rowType.isInstance(value)) {
@@ -313,7 +320,7 @@ public class ConverterRegistry {
 		// defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
 		// defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
 		// defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
-
+		
 		// URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());
 		defaultConverterMap.put(URL.class, new URLConverter());

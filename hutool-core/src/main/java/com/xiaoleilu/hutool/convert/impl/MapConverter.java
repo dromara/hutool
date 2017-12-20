@@ -47,8 +47,8 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 		this.valueType = valueType;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Map<?, ?> convertInternal(Object value) {
 		Map map = MapUtil.createMap(TypeUtil.getClass(this.mapType));
 		
@@ -56,7 +56,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 		if(value instanceof Map){
 			convertMapToMap((Map)value, map);
 		}else if(BeanUtil.isBean(valueType)){
-			BeanUtil.beanToMap(map);
+			map = BeanUtil.beanToMap(value);
 		}else{
 			throw new UnsupportedOperationException(StrUtil.format("Unsupport toMap value type: {}", valueType.getName()));
 		}
@@ -73,5 +73,11 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 		for (Entry<?, ?> entry : srcMap.entrySet()) {
 			targetMap.put(convert.convert(this.keyType, entry.getKey()), convert.convert(this.valueType, entry.getValue()));
 		}
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public Class<Map<?, ?>> getTargetType() {
+		return (Class<Map<?, ?>>) TypeUtil.getClass(this.mapType);
 	}
 }

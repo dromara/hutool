@@ -11,11 +11,11 @@ import com.xiaoleilu.hutool.util.MapUtil;
  * @param <V> Value类型
  * @since 3.1.1
  */
-public class MapBuilder<K, V> {
+public class MapBuilder<K, V>{
 	private Map<K, V> map;
 
 	/**
-	 * 创建Builde
+	 * 创建Builder
 	 * 
 	 * @param <K> Key类型
 	 * @param <V> Value类型
@@ -66,6 +66,16 @@ public class MapBuilder<K, V> {
 	 */
 	public Map<K, V> map() {
 		return map;
+	}
+	
+	/**
+	 * 创建后的map
+	 * 
+	 * @return 创建后的map
+	 * @since 3.3.0
+	 */
+	public Map<K, V> build() {
+		return map();
 	}
 
 	/**

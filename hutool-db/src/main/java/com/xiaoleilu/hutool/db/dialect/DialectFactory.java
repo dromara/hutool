@@ -12,6 +12,7 @@ import com.xiaoleilu.hutool.db.dialect.impl.OracleDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.PostgresqlDialect;
 import com.xiaoleilu.hutool.db.dialect.impl.SqlServer2012Dialect;
 import com.xiaoleilu.hutool.db.dialect.impl.Sqlite3Dialect;
+import com.xiaoleilu.hutool.util.ClassLoaderUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -24,6 +25,8 @@ public class DialectFactory {
 
 	/** JDBC 驱动 MySQL */
 	public final static String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
+	/** JDBC 驱动 MySQL，在6.X版本中变动驱动类名，且使用SPI机制 */
+	public final static String DRIVER_MYSQL_V6 = "com.mysql.cj.jdbc.Driver";
 	/** JDBC 驱动 Oracle */
 	public final static String DRIVER_ORACLE = "oracle.jdbc.driver.OracleDriver";
 	/** JDBC 驱动 PostgreSQL */
@@ -54,7 +57,7 @@ public class DialectFactory {
 	 */
 	public static Dialect newDialect(String driverName) {
 		if (StrUtil.isNotBlank(driverName)) {
-			if (DRIVER_MYSQL.equalsIgnoreCase(driverName)) {
+			if (DRIVER_MYSQL.equalsIgnoreCase(driverName) || DRIVER_MYSQL_V6.equalsIgnoreCase(driverName)) {
 				return new MysqlDialect();
 			} else if (DRIVER_ORACLE.equalsIgnoreCase(driverName)) {
 				return new OracleDialect();
@@ -88,7 +91,7 @@ public class DialectFactory {
 
 		String driver = null;
 		if (nameContainsProductInfo.contains("mysql")) {
-			driver = DRIVER_MYSQL;
+			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
 		} else if (nameContainsProductInfo.contains("oracle")) {
 			driver = DRIVER_ORACLE;
 		} else if (nameContainsProductInfo.contains("postgresql")) {

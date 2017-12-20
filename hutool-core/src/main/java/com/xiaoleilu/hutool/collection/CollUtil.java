@@ -1364,7 +1364,7 @@ public class CollUtil {
 	 * @return 被加入集合
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, Object value) {
-		return addAll(collection, value, ClassUtil.getTypeArgument(collection.getClass()));
+		return addAll(collection, value, TypeUtil.getTypeArgument(collection.getClass()));
 	}
 
 	/**
