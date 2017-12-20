@@ -398,8 +398,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return 文件表单Map
 	 * @since 3.3.0
 	 */
-	public Map<String, Object> fileForm() {
-		return this.fileForm();
+	public Map<String, File> fileForm() {
+		return this.fileForm;
 	}
 	// ---------------------------------------------------------------- Form end
 
