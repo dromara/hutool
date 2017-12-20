@@ -30,9 +30,9 @@ public class MapConvertTest {
 
 	@Test
 	public void mapToMapTest() {
-		Map<String, Object> mapPre = MapBuilder.create(new HashMap<String, Object>()).put("name", "AAA").put("age", 45).map();
+		Map<String, Object> srcMap = MapBuilder.create(new HashMap<String, Object>()).put("name", "AAA").put("age", 45).map();
 
-		LinkedHashMap<?, ?> map = Convert.convert(LinkedHashMap.class, mapPre);
+		LinkedHashMap<?, ?> map = Convert.convert(LinkedHashMap.class, srcMap);
 		Assert.assertEquals("AAA", map.get("name"));
 		Assert.assertEquals(45, map.get("age"));
 	}

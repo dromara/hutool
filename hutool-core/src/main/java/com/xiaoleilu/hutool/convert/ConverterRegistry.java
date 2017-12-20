@@ -188,13 +188,13 @@ public class ConverterRegistry {
 
 		final Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
 		
-		// 集合转换
+		// 集合转换（不可以默认强转）
 		if (Collection.class.isAssignableFrom(rowType)) {
 			final CollectionConverter collectionConverter = new CollectionConverter(type);
 			return (T) collectionConverter.convert(value, (Collection<?>) defaultValue);
 		}
 		
-		//Map类型
+		//Map类型（不可以默认强转）
 		if(Map.class.isAssignableFrom(rowType)) {
 			final MapConverter mapConverter = new MapConverter(type);
 			return (T) mapConverter.convert(value, (Map<?, ?>)defaultValue);
