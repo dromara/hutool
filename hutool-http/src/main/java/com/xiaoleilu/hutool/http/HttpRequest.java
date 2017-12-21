@@ -67,10 +67,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HttpConnection httpConnection;
 	/** 是否禁用缓存 */
 	private boolean isDisableCache;
-	/** 是否允许重定向 */
-	private Boolean isFollowRedirects;
-	/** 重定向次数 */
+	/** 重定向次数计数器，内部使用 */
 	private int redirectCount;
+	/** 最大重定向次数 */
+	private int maxRedirectCount;
 	/** 代理 */
 	private Proxy proxy;
 	
@@ -498,12 +498,30 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
-	 * 设置是否打开重定向
+	 * 设置是否打开重定向，如果打开默认重定向次数为2<br>
+	 * 此方法效果与{@link #setMaxRedirectCount(int)} 一致
+	 * 
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
 	public HttpRequest setFollowRedirects(Boolean isFollowRedirects) {
-		this.isFollowRedirects = isFollowRedirects;
+		return setMaxRedirectCount(2);
+	}
+	
+	/**
+	 * 设置最大重定向次数<br>
+	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向
+	 * 
+	 * @param maxRedirectCount 最大重定向次数
+	 * @return this
+	 * @since 3.3.0
+	 */
+	public HttpRequest setMaxRedirectCount(int maxRedirectCount) {
+		if(maxRedirectCount > 0) {
+			this.maxRedirectCount = maxRedirectCount;
+		}else{
+			this.maxRedirectCount = 0;
+		}
 		return this;
 	}
 	
@@ -653,10 +671,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			this.httpConnection.disableCache();
 		}
 		
-		if(null != isFollowRedirects){
-			//如果自定义了转发，则设置，否则使用默认
-			this.httpConnection.setInstanceFollowRedirects(isFollowRedirects);
-		}
+		//定义转发
+		this.httpConnection.setInstanceFollowRedirects(maxRedirectCount > 0 ? true : false);
 	}
 	
 	/**
@@ -678,6 +694,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return {@link HttpResponse}，无转发返回 <code>null</code>
 	 */
 	private HttpResponse sendRedirectIfPosible(){
+		if(this.maxRedirectCount < 1) {
+			//不重定向
+			return null;
+		}
+		
 		//手动实现重定向
 		if(this.httpConnection.getHttpURLConnection().getInstanceFollowRedirects()){
 			int responseCode;
@@ -689,7 +710,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			if(responseCode != HttpURLConnection.HTTP_OK){
 				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER){
 					this.url = httpConnection.header(Header.LOCATION);
-					if(redirectCount < 2){
+					if(redirectCount < this.maxRedirectCount){
 						redirectCount++;
 						return execute();
 					}else{
