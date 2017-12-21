@@ -23,6 +23,7 @@
 * 签名算法从AsymmetricCrypto中剥离，形成Sign对象
 * 增加EnumUtil工具类
 * Convert.convert方法支持Map转换
+* HttpRequest.body方法增加自动判断Content-Type类型（感谢@【北京】酱油君）
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）

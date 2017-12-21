@@ -288,13 +288,7 @@ public class HttpUtil {
 	 * @since 3.2.0
 	 */
 	public static String post(String urlString, String body, int timeout) {
-		final HttpRequest request = HttpRequest.post(urlString).body(body);
-		
-		final String contentType = getContentTypeByRequestBody(body);
-		if(null != contentType) {
-			request.contentType(contentType);
-		}
-		return request.execute().body();
+		return HttpRequest.post(urlString).body(body).execute().body();
 	}
 	
 	// ---------------------------------------------------------------------------------------- download

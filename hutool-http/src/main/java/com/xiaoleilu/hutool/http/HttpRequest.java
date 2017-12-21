@@ -411,22 +411,36 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(String body) {
-		this.body = body;
-		this.form = null; // 当使用body时，废弃form的使用
-		contentLength((null != body ? body.length() : 0));
-		return this;
+		return this.body(body, null);
 	}
 	
 	/**
-	 * 设置内容主体
+	 * 设置内容主体<br>
+	 * 请求体body参数支持两种类型：
+	 * <pre>
+	 * 1. 标准参数，例如 a=1&amp;b=2 这种格式
+	 * 2. Rest模式，此时body需要传入一个JSON或者XML字符串，Hutool会自动绑定其对应的Content-Type
+	 * </pre>
 	 * 
 	 * @param body 请求体
 	 * @param contentType 请求体类型
 	 * @return this
 	 */
 	public HttpRequest body(String body, String contentType) {
-		this.body(body);
-		this.contentType(contentType);
+		this.body = body;
+		this.form = null; // 当使用body时，废弃form的使用
+		contentLength((null != body ? body.length() : 0));
+		
+		if(null != contentType) {
+			//Content-Type自定义设置
+			this.contentType(contentType);
+		} else if(null == this.header(Header.CONTENT_TYPE)) {
+			//在用户未自定义的情况下自动根据内容判断
+			contentType = HttpUtil.getContentTypeByRequestBody(body);
+			if(null != contentType) {
+				this.contentType(contentType);
+			}
+		}
 		return this;
 	}
 	
