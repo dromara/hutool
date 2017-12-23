@@ -18,4 +18,11 @@ public class FileCopierTest {
 		FileCopier copier = FileCopier.create("D:\\Java", "e:/eclipse/eclipse2.zip");
 		copier.copy();
 	}
+	
+	@Test
+	@Ignore
+	public void copyFileToDirTest() {
+		FileCopier copier = FileCopier.create("d:/GReen_Soft/XshellXftpPortable.zip", "c:/hp/");
+		copier.copy();
+	}
 }

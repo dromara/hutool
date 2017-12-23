@@ -221,7 +221,13 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 		
 		// 如果已经存在目标文件，切为不覆盖模式，跳过之
 		if (dest.exists()) {
-			if(false == isOverride) {
+			if(dest.isDirectory()) {
+				//目标为目录，目录下创建同名文件
+				dest = new File(dest, src.getName());
+			}
+			
+			if(dest.exists() && false == isOverride) {
+				//非覆盖模式跳过
 				return;
 			}
 		}else {
@@ -234,7 +240,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 			optionList.add(StandardCopyOption.REPLACE_EXISTING);
 		}
 		if(isCopyAttributes) {
-			optionList.add(StandardCopyOption.REPLACE_EXISTING);
+			optionList.add(StandardCopyOption.COPY_ATTRIBUTES);
 		}
 		
 		try {
