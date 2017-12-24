@@ -329,6 +329,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 *
 	 * @param preCoordinate 前一个单元格坐标
 	 * @param curCoordinate 当前单元格坐标
+	 * @param isEnd 是否为最后一个单元格
 	 */
 	private void fillBlankCell(String preCoordinate, String curCoordinate, boolean isEnd) {
 		if (false == curCoordinate.equals(preCoordinate)) {
@@ -336,7 +337,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			if (isEnd) {
 				len++;
 			}
-			while (--len > 0) {
+			while (len-- > 0) {
 				rowCellList.add(curCell++, "");
 			}
 		}

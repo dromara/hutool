@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -30,7 +28,6 @@ import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
  * http请求类<br>
@@ -620,21 +617,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return httpResponse;
 	}
 	
-	/**
-	 * 异步请求
-	 * @return 异步对象，使用get方法获取HttpResponse对象
-	 * @deprecated 请使用{@link #executeAsync()}
-	 */
-	@Deprecated
-	public Future<HttpResponse> asyncExecute(){
-		return ThreadUtil.execAsync(new Callable<HttpResponse>(){
-			@Override
-			public HttpResponse call() throws Exception {
-				return execute();
-			}
-		});
-	}
-
 	/**
 	 * 简单验证
 	 * 
