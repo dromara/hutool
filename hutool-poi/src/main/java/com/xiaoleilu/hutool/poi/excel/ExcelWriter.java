@@ -42,14 +42,12 @@ public class ExcelWriter implements Closeable {
 	private Sheet sheet;
 	/** 目标文件 */
 	private File destFile;
-	/** 标题样式 */
-	private CellStyle headCellStyle;
-	/** 默认样式 */
-	private CellStyle cellStyle;
 	/** 当前行 */
 	private AtomicInteger currentRow = new AtomicInteger(0);
 	/** 标题行别名 */
 	private Map<String, String> headerAlias;
+	/** 样式集，定义不同类型数据样式 */
+	private StyleSet styleSet;
 
 	// -------------------------------------------------------------------------- Constructor start
 	/**
@@ -62,7 +60,7 @@ public class ExcelWriter implements Closeable {
 	public ExcelWriter() {
 		this(false);
 	}
-	
+
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
@@ -74,7 +72,7 @@ public class ExcelWriter implements Closeable {
 	public ExcelWriter(boolean isXlsx) {
 		this(ExcelUtil.createBook(isXlsx ? ".xlsx" : ".xls"), null);
 	}
-	
+
 	/**
 	 * 构造，默认写出到第一个sheet，第一个sheet名为sheet1
 	 * 
@@ -113,7 +111,7 @@ public class ExcelWriter implements Closeable {
 		this(ExcelUtil.createBook(destFile), sheetName);
 		this.destFile = destFile;
 	}
-	
+
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
@@ -125,8 +123,7 @@ public class ExcelWriter implements Closeable {
 	public ExcelWriter(Workbook workbook, String sheetName) {
 		this.workbook = workbook;
 		this.sheet = workbook.createSheet(StrUtil.isBlank(sheetName) ? "sheet1" : sheetName);
-		this.headCellStyle = InternalExcelUtil.createHeadCellStyle(workbook);
-		this.cellStyle = InternalExcelUtil.createDefaultCellStyle(workbook);
+		this.styleSet = new StyleSet(workbook);
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
@@ -150,12 +147,25 @@ public class ExcelWriter implements Closeable {
 	}
 
 	/**
+	 * 设置某列为自动宽度
+	 * 
+	 * @param columnIndex 第几列，从0计数
+	 * @param useMergedCells 是否适用于合并单元格
+	 * @return this
+	 * @since 3.3.0
+	 */
+	public ExcelWriter autoSizeColumn(int columnIndex, boolean useMergedCells) {
+		this.sheet.autoSizeColumn(columnIndex, useMergedCells);
+		return this;
+	}
+
+	/**
 	 * 获取头部样式，获取样式后可自定义样式
 	 * 
 	 * @return 头部样式
 	 */
 	public CellStyle getHeadCellStyle() {
-		return this.headCellStyle;
+		return this.styleSet.headCellStyle;
 	}
 
 	/**
@@ -164,7 +174,7 @@ public class ExcelWriter implements Closeable {
 	 * @return 单元格样式
 	 */
 	public CellStyle getCellStyle() {
-		return this.cellStyle;
+		return this.styleSet.cellStyle;
 	}
 
 	/**
@@ -228,7 +238,7 @@ public class ExcelWriter implements Closeable {
 		this.destFile = destFile;
 		return this;
 	}
-	
+
 	/**
 	 * 设置标题别名，key为Map中的key，value为别名
 	 * 
@@ -263,19 +273,19 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter merge(int lastColumn, Object content) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		
+
 		final int rowIndex = this.currentRow.get();
 		final Cell cell = this.sheet.createRow(rowIndex).createCell(0);
 
 		// 设置合并后的单元格样式
-		if (null != this.headCellStyle) {
-			cell.setCellStyle(this.headCellStyle);
-			InternalExcelUtil.mergingCells(this.sheet, rowIndex, rowIndex, 0, lastColumn, this.headCellStyle);
+		if (null != this.styleSet.headCellStyle) {
+			cell.setCellStyle(this.styleSet.headCellStyle);
+			InternalExcelUtil.mergingCells(this.sheet, rowIndex, rowIndex, 0, lastColumn, this.styleSet.headCellStyle);
 		}
 
 		// 设置内容
 		if (null != content) {
-			InternalExcelUtil.setCellValue(cell, content, this.headCellStyle);
+			InternalExcelUtil.setCellValue(cell, content, this.styleSet);
 			// 设置内容后跳到下一行
 			this.currentRow.incrementAndGet();
 		}
@@ -322,7 +332,7 @@ public class ExcelWriter implements Closeable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
@@ -345,14 +355,14 @@ public class ExcelWriter implements Closeable {
 		boolean isFirstRow = true;
 		Map<?, ?> map;
 		for (T t : data) {
-			if(t instanceof Map) {
+			if (t instanceof Map) {
 				map = new TreeMap<>(comparator);
-				map.putAll((Map)t);
-			}else {
+				map.putAll((Map) t);
+			} else {
 				map = BeanUtil.beanToMap(t, new TreeMap<String, Object>(comparator), false, false);
 			}
 			writeRows(map, isFirstRow);
-			if(isFirstRow) {
+			if (isFirstRow) {
 				isFirstRow = false;
 			}
 		}
@@ -369,7 +379,7 @@ public class ExcelWriter implements Closeable {
 	 * @return this
 	 */
 	public ExcelWriter writeHeadRow(Iterable<?> rowData) {
-		InternalExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.headCellStyle);
+		InternalExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
 		return this;
 	}
 
@@ -384,7 +394,7 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter writeRow(Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		InternalExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.cellStyle);
+		InternalExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
 		return this;
 	}
 
@@ -449,11 +459,10 @@ public class ExcelWriter implements Closeable {
 			flush();
 		}
 		IoUtil.close(this.workbook);
-		
-		//清空对象
+
+		// 清空对象
 		this.currentRow = null;
-		this.headCellStyle = null;
-		this.cellStyle = null;
+		this.styleSet = null;
 		this.sheet = null;
 		this.workbook = null;
 		isClosed = true;
@@ -466,8 +475,8 @@ public class ExcelWriter implements Closeable {
 	 * @param keys 键列表
 	 * @return 别名列表
 	 */
-	private Collection<?> aliasHeader(Collection<?> keys){
-		if(MapUtil.isEmpty(this.headerAlias)) {
+	private Collection<?> aliasHeader(Collection<?> keys) {
+		if (MapUtil.isEmpty(this.headerAlias)) {
 			return keys;
 		}
 		final List<Object> alias = new ArrayList<>();
