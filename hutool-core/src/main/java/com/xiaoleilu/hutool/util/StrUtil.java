@@ -1656,8 +1656,13 @@ public class StrUtil {
 	 * @since 3.2.0
 	 */
 	public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
-		if (str1 == null) {
+		if (null == str1) {
+			//只有两个都为null才判断相等
 			return str2 == null;
+		}
+		if(null == str2) {
+			//字符串2空，字符串1非空，直接false
+			return false;
 		}
 
 		if (ignoreCase) {
