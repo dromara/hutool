@@ -596,6 +596,17 @@ public final class SecureUtil {
 	 * @param algorithm {@link HmacAlgorithm}
 	 * @param key 密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
+	 * @since 3.3.0
+	 */
+	public static HMac hmac(HmacAlgorithm algorithm, String key){
+		return new HMac(algorithm, StrUtil.utf8Bytes(key));
+	}
+	
+	/**
+	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * @param algorithm {@link HmacAlgorithm}
+	 * @param key 密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
 	public static HMac hmac(HmacAlgorithm algorithm, byte[] key){
@@ -618,7 +629,20 @@ public final class SecureUtil {
 	 * 例：<br>
 	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>
 	 * 		HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
-	 * @param key 加密密钥
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.3.0
+	 */
+	public static HMac hmacMd5(String key){
+		return hmacMd5(StrUtil.utf8Bytes(key));
+	}
+	
+	/**
+	 * HmacMD5加密器<br>
+	 * 例：<br>
+	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>
+	 * 		HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacMd5(byte[] key){
@@ -641,7 +665,20 @@ public final class SecureUtil {
 	 * 例：<br>
 	 * 		HmacSHA1加密：hmacSha1(key).digest(data)<br>
 	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
-	 * @param key 加密密钥
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.3.0
+	 */
+	public static HMac hmacSha1(String key){
+		return hmacSha1(StrUtil.utf8Bytes(key));
+	}
+	
+	/**
+	 * HmacSHA1加密器<br>
+	 * 例：<br>
+	 * 		HmacSHA1加密：hmacSha1(key).digest(data)<br>
+	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacSha1(byte[] key){
