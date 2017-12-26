@@ -2933,6 +2933,9 @@ public class StrUtil {
 		}
 
 		final Set<Character> set = new HashSet<>(chars.length);
+		for (char c : chars) {
+			set.add(c);
+		}
 		int strLen = str.length();
 		final StringBuilder builder = builder();
 		char c;
