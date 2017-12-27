@@ -27,6 +27,7 @@
 * 增加自定义重定向次数
 * SecureUtil针对hmac方法增加String参数（感谢@【北京】宁静）
 * db模块去除获取null值类型的错误日志
+* 手机号验证(Validator)支持199、198、166号段（issue#IH0TD@Gitee）
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
