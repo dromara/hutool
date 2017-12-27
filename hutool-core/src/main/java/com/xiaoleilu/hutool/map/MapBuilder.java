@@ -1,8 +1,6 @@
-package com.xiaoleilu.hutool.collection;
+package com.xiaoleilu.hutool.map;
 
 import java.util.Map;
-
-import com.xiaoleilu.hutool.util.MapUtil;
 
 /**
  * Map创建类

@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.collection;
+package com.xiaoleilu.hutool.map;
 
 import java.util.HashMap;
 import java.util.Map;

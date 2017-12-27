@@ -6,11 +6,11 @@ import java.security.PublicKey;
 
 import javax.crypto.Cipher;
 
+import com.xiaoleilu.hutool.codec.Base64;
 import com.xiaoleilu.hutool.crypto.CryptoException;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
-import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 

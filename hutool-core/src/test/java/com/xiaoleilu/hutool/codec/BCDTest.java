@@ -1,9 +1,9 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.codec;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.lang.BCD;
+import com.xiaoleilu.hutool.codec.BCD;
 
 public class BCDTest {
 	

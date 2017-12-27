@@ -8,9 +8,9 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.codec.Base64;
 import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.crypto.CryptoException;
-import com.xiaoleilu.hutool.lang.Base64;
 
 /**
  * 签名包装，{@link Signature} 包装类

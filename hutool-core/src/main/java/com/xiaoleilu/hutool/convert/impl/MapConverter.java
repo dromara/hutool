@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.convert.AbstractConverter;
 import com.xiaoleilu.hutool.convert.ConverterRegistry;
-import com.xiaoleilu.hutool.util.MapUtil;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 

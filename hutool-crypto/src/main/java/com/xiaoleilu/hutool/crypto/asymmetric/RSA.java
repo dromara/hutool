@@ -12,9 +12,9 @@ import java.security.spec.RSAPublicKeySpec;
 
 import javax.crypto.Cipher;
 
+import com.xiaoleilu.hutool.codec.BCD;
 import com.xiaoleilu.hutool.crypto.CryptoException;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
-import com.xiaoleilu.hutool.lang.BCD;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 

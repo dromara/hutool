@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.util;
+package com.xiaoleilu.hutool.map;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -12,12 +12,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.xiaoleilu.hutool.collection.MapBuilder;
-import com.xiaoleilu.hutool.collection.MapProxy;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Filter;
+import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.util.ObjectUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * Map相关工具类

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.collection.MapBuilder;
+import com.xiaoleilu.hutool.map.MapBuilder;
 
 /**
  * Map转换单元测试

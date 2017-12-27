@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.xiaoleilu.hutool.util.MapUtil;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 
 /**

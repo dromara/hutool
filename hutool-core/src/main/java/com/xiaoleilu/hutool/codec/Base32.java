@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.codec;
 
 import java.nio.charset.Charset;
 
@@ -7,7 +7,8 @@ import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * Base32 - encodes and decodes RFC3548 Base32 (see http://www.faqs.org/rfcs/rfc3548.html )<br>
- * base32就是用32（2的5次方）个特定ASCII码来表示256个ASCII码。所以，5个ASCII字符经过base32编码后会变为8个字符（公约数为40），长度增加3/5.不足8n用“=”补足。
+ * base32就是用32（2的5次方）个特定ASCII码来表示256个ASCII码。<br>
+ * 所以，5个ASCII字符经过base32编码后会变为8个字符（公约数为40），长度增加3/5.不足8n用“=”补足。
  * see http://blog.csdn.net/earbao/article/details/44453937
  * @author Looly
  *

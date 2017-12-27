@@ -7,9 +7,9 @@ import java.security.PublicKey;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.xiaoleilu.hutool.codec.Base64;
 import com.xiaoleilu.hutool.crypto.CryptoException;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
-import com.xiaoleilu.hutool.lang.Base64;
 
 /**
  * 非对称基础，提供锁、私钥和公钥的持有

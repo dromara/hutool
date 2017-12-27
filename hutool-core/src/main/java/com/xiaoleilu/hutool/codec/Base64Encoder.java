@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.codec;
 
 import java.nio.charset.Charset;
 
@@ -6,24 +6,19 @@ import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
- * Base64工具类，提供Base64的编码和解码方案<br>
- * base64编码是用64（2的6次方）个ASCII字符来表示256（2的8次方）个ASCII字符，也就是三位二进制数组经过编码后变为四位的ASCII字符显示，长度比原来增加1/3。
+ * Base64编码
  * 
- * @author Looly
- *
+ * @author looly
+ * @since 3.2.0
  */
-public final class Base64 {
+public class Base64Encoder {
 	
-	private Base64() {}
-
 	/** 标准编码表 */
-	private static final byte[] STANDARD_ENCODE_TABLE = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/' };
+	private static final byte[] STANDARD_ENCODE_TABLE = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
+			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/' };
 	/** URL安全的编码表，将 + 和 / 替换为 - 和 _ */
-	private static final byte[] URL_SAFE_ENCODE_TABLE = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_' };
-//	private static final byte STANDARD_DECODE_TABLE[] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 };
-//	private static final byte URL_SAFE_DECODE_TABLE[] =   { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, -1, 62, 9, 10, 11, -1, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 12, 13, 14, -1, 15, 63, 16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 17, -1, 18, 19, 21, 20, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 22, 23, 24, 25 };
-	/** Base64解码表 */
-	private static final byte[] DECODE_TABLE = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, 62, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 };
+	private static final byte[] URL_SAFE_ENCODE_TABLE = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
+			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_' };
 
 	// -------------------------------------------------------------------- encode
 	/**
@@ -36,7 +31,7 @@ public final class Base64 {
 	public static byte[] encode(byte[] arr, boolean lineSep) {
 		return encode(arr, lineSep, false);
 	}
-	
+
 	/**
 	 * 编码为Base64，URL安全的
 	 * 
@@ -58,7 +53,7 @@ public final class Base64 {
 	public static String encode(String source) {
 		return encode(source, CharsetUtil.UTF_8);
 	}
-	
+
 	/**
 	 * base64编码，URL安全
 	 * 
@@ -80,7 +75,7 @@ public final class Base64 {
 	public static String encode(String source, String charset) {
 		return encode(StrUtil.bytes(source, charset), charset);
 	}
-	
+
 	/**
 	 * base64编码,URL安全
 	 * 
@@ -103,7 +98,7 @@ public final class Base64 {
 	public static String encode(String source, Charset charset) {
 		return encode(StrUtil.bytes(source, charset), charset);
 	}
-	
+
 	/**
 	 * base64编码，URL安全的
 	 * 
@@ -125,7 +120,7 @@ public final class Base64 {
 	public static String encode(byte[] source) {
 		return encode(source, CharsetUtil.UTF_8);
 	}
-	
+
 	/**
 	 * base64编码,URL安全的
 	 * 
@@ -147,7 +142,7 @@ public final class Base64 {
 	public static String encode(byte[] source, String charset) {
 		return StrUtil.str(encode(source, false), charset);
 	}
-	
+
 	/**
 	 * base64编码，URL安全的
 	 * 
@@ -170,7 +165,7 @@ public final class Base64 {
 	public static String encode(byte[] source, Charset charset) {
 		return StrUtil.str(encode(source, false), charset);
 	}
-	
+
 	/**
 	 * base64编码，URL安全的
 	 * 
@@ -182,7 +177,7 @@ public final class Base64 {
 	public static String encodeUrlSafe(byte[] source, Charset charset) {
 		return StrUtil.str(encodeUrlSafe(source, false), charset);
 	}
-	
+
 	/**
 	 * 编码为Base64<br>
 	 * 如果isMultiLine为<code>true</code>，则每76个字符一个换行符，否则在一行显示
@@ -193,10 +188,10 @@ public final class Base64 {
 	 * @return 编码后的bytes
 	 */
 	public static byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
-		if(null == arr){
+		if (null == arr) {
 			return null;
 		}
-		
+
 		int len = arr.length;
 		if (len == 0) {
 			return new byte[0];
@@ -224,146 +219,28 @@ public final class Base64 {
 			}
 		}
 
-		int left = len - evenlen;//剩余位数
+		int left = len - evenlen;// 剩余位数
 		if (left > 0) {
 			int i = ((arr[evenlen] & 0xff) << 10) | (left == 2 ? ((arr[len - 1] & 0xff) << 2) : 0);
 
 			dest[destlen - 4] = encodeTable[i >> 12];
 			dest[destlen - 3] = encodeTable[(i >>> 6) & 0x3f];
-			
-			if(isUrlSafe){
-				//在URL Safe模式下，=为URL中的关键字符，不需要补充。空余的byte位要去掉。
+
+			if (isUrlSafe) {
+				// 在URL Safe模式下，=为URL中的关键字符，不需要补充。空余的byte位要去掉。
 				int urlSafeLen = destlen - 2;
-				if(2 == left){
+				if (2 == left) {
 					dest[destlen - 2] = encodeTable[i & 0x3f];
 					urlSafeLen += 1;
 				}
 				byte[] urlSafeDest = new byte[urlSafeLen];
 				System.arraycopy(dest, 0, urlSafeDest, 0, urlSafeLen);
 				return urlSafeDest;
-			}else{
+			} else {
 				dest[destlen - 2] = left == 2 ? encodeTable[i & 0x3f] : (byte) '=';
 				dest[destlen - 1] = '=';
 			}
 		}
-		return dest;
-	}
-
-	// -------------------------------------------------------------------- decode
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @return 被加密后的字符串
-	 */
-	public static String decodeStr(String source) {
-		return decodeStr(source, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String decodeStr(String source, String charset) {
-		return StrUtil.str(decode(source, charset), charset);
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String decodeStr(String source, Charset charset) {
-		return StrUtil.str(decode(source, charset), charset);
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @return 被加密后的字符串
-	 */
-	public static byte[] decode(String source) {
-		return decode(source, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static byte[] decode(String source, String charset) {
-		return decode(StrUtil.bytes(source, charset));
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static byte[] decode(String source, Charset charset) {
-		return decode(StrUtil.bytes(source, charset));
-	}
-
-	/**
-	 * 解码Base64，同时解码URL安全和非安全的base64编码
-	 * 
-	 * @param arr byte数组
-	 * @return 解码后的byte数组
-	 */
-	public static byte[] decode(byte[] arr) {
-		if(null == arr){
-			return null;
-		}
-		
-		int length = arr.length;
-		if (length == 0) {
-			return new byte[0];
-		}
-
-		int sndx = 0, endx = length - 1;
-		int pad = arr[endx] == '=' ? (arr[endx - 1] == '=' ? 2 : 1) : 0;
-		int cnt = endx - sndx + 1;
-		int sepCnt = length > 76 ? (arr[76] == '\r' ? cnt / 78 : 0) << 1 : 0;
-		int len = ((cnt - sepCnt) * 6 >> 3) - pad;
-		byte[] dest = new byte[len];
-
-//		byte[] decodeTable = isUrlSafe ? URL_SAFE_DECODE_TABLE : STANDARD_DECODE_TABLE;
-		byte[] decodeTable = DECODE_TABLE;
-
-		int d = 0;
-		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
-			int i = decodeTable[arr[sndx++]] << 18 | decodeTable[arr[sndx++]] << 12 | decodeTable[arr[sndx++]] << 6 | decodeTable[arr[sndx++]];
-
-			dest[d++] = (byte) (i >> 16);
-			dest[d++] = (byte) (i >> 8);
-			dest[d++] = (byte) i;
-
-			if (sepCnt > 0 && ++cc == 19) {
-				sndx += 2;
-				cc = 0;
-			}
-		}
-
-		if (d < len) {
-			int i = 0;
-			for (int j = 0; sndx <= endx - pad; j++) {
-				i |= decodeTable[arr[sndx++]] << (18 - j * 6);
-			}
-			for (int r = 16; d < len; r -= 8) {
-				dest[d++] = (byte) (i >> r);
-			}
-		}
-
 		return dest;
 	}
 }

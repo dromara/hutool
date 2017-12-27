@@ -14,9 +14,9 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 import com.xiaoleilu.hutool.poi.excel.ExcelWriter;
-import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 
 /**

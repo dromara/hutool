@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.xiaoleilu.hutool.codec.Base64;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
-import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.util.ImageUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;

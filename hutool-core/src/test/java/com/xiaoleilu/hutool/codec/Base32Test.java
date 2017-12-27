@@ -1,9 +1,9 @@
-package com.xiaoleilu.hutool.lang;
+package com.xiaoleilu.hutool.codec;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.lang.Base32;
+import com.xiaoleilu.hutool.codec.Base32;
 
 public class Base32Test {
 	

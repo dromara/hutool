@@ -18,11 +18,11 @@ import com.xiaoleilu.hutool.bean.BeanDesc.PropDesc;
 import com.xiaoleilu.hutool.bean.copier.BeanCopier;
 import com.xiaoleilu.hutool.bean.copier.CopyOptions;
 import com.xiaoleilu.hutool.bean.copier.ValueProvider;
-import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.exceptions.UtilException;
+import com.xiaoleilu.hutool.map.CaseInsensitiveMap;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 

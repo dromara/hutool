@@ -28,6 +28,8 @@
 * SecureUtil针对hmac方法增加String参数（感谢@【北京】宁静）
 * db模块去除获取null值类型的错误日志
 * 手机号验证(Validator)支持199、198、166号段（issue#IH0TD@Gitee）
+* Base64、Base32、BCD全部移入codec包
+* Map相关类移入map包中，与collection区分
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
@@ -43,6 +45,7 @@
 * 修复ExcelWriter在写出4000行以上时样式超出范围问题（issue#IH05B@Gitee）
 * 修复StrUtil.replaceChars方法无效问题
 * 修复在JSONArray中toList有null元素返回null的问题（感谢@@【银川】野马）
+* 修复Base64解码时在有换行符的情况下解码失败的问题（感谢@【霾都】QQ小冰）
 
 -------------------------------------------------------------------------------------------------------------
 

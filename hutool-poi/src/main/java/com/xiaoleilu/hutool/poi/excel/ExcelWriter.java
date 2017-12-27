@@ -22,7 +22,7 @@ import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.util.MapUtil;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
