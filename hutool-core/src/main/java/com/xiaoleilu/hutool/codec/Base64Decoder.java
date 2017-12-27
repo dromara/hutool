@@ -94,6 +94,9 @@ public class Base64Decoder {
 	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(byte[] in) {
+		if(ArrayUtil.isEmpty(in)) {
+			return in;
+		}
 		return decode(in, 0, in.length);
 	}
 
@@ -106,6 +109,10 @@ public class Base64Decoder {
 	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(byte[] in, int pos, int length) {
+		if(ArrayUtil.isEmpty(in)) {
+			return in;
+		}
+		
 		final IntWrapper offset = new IntWrapper(pos);
 
 		byte sestet0;
