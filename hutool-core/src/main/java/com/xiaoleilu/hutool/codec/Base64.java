@@ -252,8 +252,6 @@ public class Base64 {
 	 * 解码Base64
 	 * 
 	 * @param in 输入
-	 * @param pos 开始位置
-	 * @param length 长度
 	 * @return 解码后的bytes
 	 */
 	public static byte[] decode(byte[] in) {
