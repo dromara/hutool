@@ -23,8 +23,23 @@ public class Digester {
 	
 	private MessageDigest digest;
 	
+	/**
+	 * 构造
+	 * 
+	 * @param algorithm 算法枚举
+	 */
 	public Digester(DigestAlgorithm algorithm) {
-		init(algorithm.getValue());
+		this(algorithm.getValue());
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param algorithm 算法
+	 * @since 3.3.0
+	 */
+	public Digester(String algorithm) {
+		init(algorithm);
 	}
 	
 	/**

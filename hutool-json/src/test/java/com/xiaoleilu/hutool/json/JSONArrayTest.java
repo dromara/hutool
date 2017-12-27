@@ -53,4 +53,41 @@ public class JSONArrayTest {
 		ArrayList<Exam> list = array.toList(Exam.class);
 		Assert.assertFalse(list.isEmpty());
 	}
+	
+	/**
+	 * 单元测试用于测试在列表元素中有null时的情况下是否出错
+	 */
+	@Test
+	public void toListWithNullTest() {
+		String json = "[null,{'akey':'avalue','bkey':'bvalue'}]";
+		JSONArray ja = JSONUtil.parseArray(json);
+		
+		ArrayList<KeyBean> list = ja.toList(KeyBean.class);
+		Assert.assertTrue(null == list.get(0));
+		Assert.assertEquals("avalue", list.get(1).getAkey());
+		Assert.assertEquals("bvalue", list.get(1).getBkey());
+	}
+	
+	public static class KeyBean{
+		private String akey;
+		private String bkey;
+		
+		public String getAkey() {
+			return akey;
+		}
+		public void setAkey(String akey) {
+			this.akey = akey;
+		}
+		public String getBkey() {
+			return bkey;
+		}
+		public void setBkey(String bkey) {
+			this.bkey = bkey;
+		}
+		
+		@Override
+		public String toString() {
+			return "KeyBean [akey=" + akey + ", bkey=" + bkey + "]";
+		}
+	}
 }

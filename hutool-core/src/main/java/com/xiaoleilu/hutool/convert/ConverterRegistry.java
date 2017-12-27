@@ -42,6 +42,7 @@ import com.xiaoleilu.hutool.convert.impl.TimeZoneConverter;
 import com.xiaoleilu.hutool.convert.impl.URIConverter;
 import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
+import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 
@@ -179,7 +180,7 @@ public class ConverterRegistry {
 		if (null == type && null == defaultValue) {
 			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
 		}
-		if (null == value) {
+		if (ObjectUtil.isNull(value)) {
 			return defaultValue;
 		}
 		if (null == type) {

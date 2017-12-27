@@ -1409,7 +1409,11 @@ public class CollUtil {
 		
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
 		while (iter.hasNext()) {
-			collection.add((T) convert.convert(elementType, iter.next()));
+			try {
+				collection.add((T) convert.convert(elementType, iter.next()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return collection;
