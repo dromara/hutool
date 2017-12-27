@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.dialect.Dialect;
 import com.xiaoleilu.hutool.db.dialect.DialectFactory;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
@@ -20,7 +21,6 @@ import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

@@ -8,12 +8,12 @@ import java.util.Map;
 import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.bean.copier.provider.BeanValueProvider;
 import com.xiaoleilu.hutool.bean.copier.provider.MapValueProvider;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.bean.BeanDesc.PropDesc;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.copier.Copier;
 import com.xiaoleilu.hutool.map.MapUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 

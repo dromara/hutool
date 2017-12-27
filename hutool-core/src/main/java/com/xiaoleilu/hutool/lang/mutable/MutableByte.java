@@ -1,22 +1,22 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 import com.xiaoleilu.hutool.util.NumberUtil;
 
 /**
- * 可变 <code>float</code> 类型
+ * 可变 <code>byte</code> 类型
  * 
- * @see Float
+ * @see Byte
  * @since 3.0.1
  */
-public class MutableFloat extends Number implements Comparable<MutableFloat>, Mutable<Number> {
-	private static final long serialVersionUID = -7381592836008495052L;
+public class MutableByte extends Number implements Comparable<MutableByte>, Mutable<Number> {
+	private static final long serialVersionUID = -7982037656814990915L;
 	
-	private float value;
+	private byte value;
 
 	/**
 	 * 构造，默认值0
 	 */
-	public MutableFloat() {
+	public MutableByte() {
 		super();
 	}
 
@@ -24,7 +24,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableFloat(final float value) {
+	public MutableByte(final byte value) {
 		super();
 		this.value = value;
 	}
@@ -33,36 +33,36 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableFloat(final Number value) {
-		this(value.floatValue());
+	public MutableByte(final Number value) {
+		this(value.byteValue());
 	}
 
 	/**
 	 * 构造
 	 * @param value String值
-	 * @throws NumberFormatException 数字转换错误
+	 * @throws NumberFormatException 转为Byte错误
 	 */
-	public MutableFloat(final String value) throws NumberFormatException {
+	public MutableByte(final String value) throws NumberFormatException {
 		super();
-		this.value = Float.parseFloat(value);
+		this.value = Byte.parseByte(value);
 	}
 
 	@Override
-	public Float get() {
-		return Float.valueOf(this.value);
+	public Byte get() {
+		return Byte.valueOf(this.value);
 	}
 
 	/**
 	 * 设置值
 	 * @param value 值
 	 */
-	public void set(final float value) {
+	public void set(final byte value) {
 		this.value = value;
 	}
 
 	@Override
 	public void set(final Number value) {
-		this.value = value.floatValue();
+		this.value = value.byteValue();
 	}
 
 	// -----------------------------------------------------------------------
@@ -70,7 +70,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * 值+1
 	 * @return this
 	 */
-	public MutableFloat increment() {
+	public MutableByte increment() {
 		value++;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * 值减一
 	 * @return this
 	 */
-	public MutableFloat decrement() {
+	public MutableByte decrement() {
 		value--;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * @param operand 被增加的值
 	 * @return this
 	 */
-	public MutableFloat add(final float operand) {
+	public MutableByte add(final byte operand) {
 		this.value += operand;
 		return this;
 	}
@@ -101,8 +101,8 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * @return this
 	 * @throws NullPointerException if the object is null
 	 */
-	public MutableFloat add(final Number operand) {
-		this.value += operand.floatValue();
+	public MutableByte add(final Number operand) {
+		this.value += operand.byteValue();
 		return this;
 	}
 
@@ -112,7 +112,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * @param operand 被减的值
 	 * @return this
 	 */
-	public MutableFloat subtract(final float operand) {
+	public MutableByte subtract(final byte operand) {
 		this.value -= operand;
 		return this;
 	}
@@ -124,20 +124,25 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * @return this
 	 * @throws NullPointerException if the object is null
 	 */
-	public MutableFloat subtract(final Number operand) {
-		this.value -= operand.floatValue();
+	public MutableByte subtract(final Number operand) {
+		this.value -= operand.byteValue();
 		return this;
 	}
 
 	// -----------------------------------------------------------------------
 	@Override
+	public byte byteValue() {
+		return value;
+	}
+
+	@Override
 	public int intValue() {
-		return (int) value;
+		return value;
 	}
 
 	@Override
 	public long longValue() {
-		return (long) value;
+		return value;
 	}
 
 	@Override
@@ -155,7 +160,7 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 * 相等需同时满足如下条件：
 	 * <ol>
 	 * 	<li>非空</li>
-	 * 	<li>类型为 {@link MutableFloat}</li>
+	 * 	<li>类型为 {@link MutableByte}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
 	 * 
@@ -164,26 +169,26 @@ public class MutableFloat extends Number implements Comparable<MutableFloat>, Mu
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof MutableFloat) {
-			return (Float.floatToIntBits(((MutableFloat)obj).value) == Float.floatToIntBits(value));
+		if (obj instanceof MutableByte) {
+			return value == ((MutableByte) obj).byteValue();
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return Float.floatToIntBits(value);
+		return value;
 	}
 
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
 	 * 
-	 * @param other 其它 {@link MutableFloat} 对象
+	 * @param other 其它 {@link MutableByte} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override
-	public int compareTo(final MutableFloat other) {
+	public int compareTo(final MutableByte other) {
 		return NumberUtil.compare(this.value, other.value);
 	}
 

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.io.file.FileCopier;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
@@ -43,7 +44,6 @@ import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 

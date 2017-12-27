@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.setting.Setting;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * MongoDB工厂类，用于创建

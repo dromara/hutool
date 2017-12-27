@@ -7,10 +7,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.json.test.bean.Seq;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
 import com.xiaoleilu.hutool.json.test.bean.UserB;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * JSONObject单元测试

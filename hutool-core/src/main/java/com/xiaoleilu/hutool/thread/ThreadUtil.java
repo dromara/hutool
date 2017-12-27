@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.util;
+package com.xiaoleilu.hutool.thread;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -11,8 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import com.xiaoleilu.hutool.thread.GlobalThreadPool;
 
 /**
  * 线程池工具

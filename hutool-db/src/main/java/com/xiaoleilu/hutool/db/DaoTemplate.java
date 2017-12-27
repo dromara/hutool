@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

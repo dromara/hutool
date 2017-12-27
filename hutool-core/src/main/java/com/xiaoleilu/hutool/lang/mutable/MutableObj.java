@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 import java.io.Serializable;
 

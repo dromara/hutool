@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 /**
  * 提供可变值类型接口

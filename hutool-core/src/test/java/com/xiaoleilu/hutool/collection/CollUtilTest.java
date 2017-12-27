@@ -15,7 +15,6 @@ import com.xiaoleilu.hutool.lang.Dict;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Matcher;
 import com.xiaoleilu.hutool.map.MapUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * 集合工具类单元测试

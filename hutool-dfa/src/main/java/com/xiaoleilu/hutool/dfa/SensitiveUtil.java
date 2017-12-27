@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import com.xiaoleilu.hutool.json.JSONUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
  * 敏感词工具类

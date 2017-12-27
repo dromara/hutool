@@ -6,10 +6,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.ds.DSFactory;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.setting.Setting;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

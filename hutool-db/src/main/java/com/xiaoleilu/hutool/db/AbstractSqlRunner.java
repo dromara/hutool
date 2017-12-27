@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.handler.BeanListHandler;
 import com.xiaoleilu.hutool.db.handler.EntityHandler;
 import com.xiaoleilu.hutool.db.handler.EntityListHandler;
@@ -12,7 +13,6 @@ import com.xiaoleilu.hutool.db.handler.NumberHandler;
 import com.xiaoleilu.hutool.db.handler.RsHandler;
 import com.xiaoleilu.hutool.db.handler.StringHandler;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.db.sql.SqlExecutor;
 
 /**

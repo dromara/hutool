@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
@@ -18,7 +19,6 @@ import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

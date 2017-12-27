@@ -1,22 +1,22 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 import com.xiaoleilu.hutool.util.NumberUtil;
 
 /**
- * 可变 <code>byte</code> 类型
+ * 可变 <code>double</code> 类型
  * 
- * @see Byte
+ * @see Double
  * @since 3.0.1
  */
-public class MutableByte extends Number implements Comparable<MutableByte>, Mutable<Number> {
-	private static final long serialVersionUID = -7982037656814990915L;
+public class MutableDouble extends Number implements Comparable<MutableDouble>, Mutable<Number> {
+	private static final long serialVersionUID = -7381592836008495052L;
 	
-	private byte value;
+	private double value;
 
 	/**
 	 * 构造，默认值0
 	 */
-	public MutableByte() {
+	public MutableDouble() {
 		super();
 	}
 
@@ -24,7 +24,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableByte(final byte value) {
+	public MutableDouble(final double value) {
 		super();
 		this.value = value;
 	}
@@ -33,36 +33,36 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableByte(final Number value) {
-		this(value.byteValue());
+	public MutableDouble(final Number value) {
+		this(value.doubleValue());
 	}
 
 	/**
 	 * 构造
 	 * @param value String值
-	 * @throws NumberFormatException 转为Byte错误
+	 * @throws NumberFormatException 数字转换错误
 	 */
-	public MutableByte(final String value) throws NumberFormatException {
+	public MutableDouble(final String value) throws NumberFormatException {
 		super();
-		this.value = Byte.parseByte(value);
+		this.value = Double.parseDouble(value);
 	}
 
 	@Override
-	public Byte get() {
-		return Byte.valueOf(this.value);
+	public Double get() {
+		return Double.valueOf(this.value);
 	}
 
 	/**
 	 * 设置值
 	 * @param value 值
 	 */
-	public void set(final byte value) {
+	public void set(final double value) {
 		this.value = value;
 	}
 
 	@Override
 	public void set(final Number value) {
-		this.value = value.byteValue();
+		this.value = value.doubleValue();
 	}
 
 	// -----------------------------------------------------------------------
@@ -70,7 +70,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 值+1
 	 * @return this
 	 */
-	public MutableByte increment() {
+	public MutableDouble increment() {
 		value++;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 值减一
 	 * @return this
 	 */
-	public MutableByte decrement() {
+	public MutableDouble decrement() {
 		value--;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * @param operand 被增加的值
 	 * @return this
 	 */
-	public MutableByte add(final byte operand) {
+	public MutableDouble add(final double operand) {
 		this.value += operand;
 		return this;
 	}
@@ -99,10 +99,9 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 增加值
 	 * @param operand 被增加的值，非空
 	 * @return this
-	 * @throws NullPointerException if the object is null
 	 */
-	public MutableByte add(final Number operand) {
-		this.value += operand.byteValue();
+	public MutableDouble add(final Number operand) {
+		this.value += operand.doubleValue();
 		return this;
 	}
 
@@ -112,7 +111,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * @param operand 被减的值
 	 * @return this
 	 */
-	public MutableByte subtract(final byte operand) {
+	public MutableDouble subtract(final double operand) {
 		this.value -= operand;
 		return this;
 	}
@@ -122,32 +121,26 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 
 	 * @param operand 被减的值，非空
 	 * @return this
-	 * @throws NullPointerException if the object is null
 	 */
-	public MutableByte subtract(final Number operand) {
-		this.value -= operand.byteValue();
+	public MutableDouble subtract(final Number operand) {
+		this.value -= operand.doubleValue();
 		return this;
 	}
 
 	// -----------------------------------------------------------------------
 	@Override
-	public byte byteValue() {
-		return value;
-	}
-
-	@Override
 	public int intValue() {
-		return value;
+		return (int) value;
 	}
 
 	@Override
 	public long longValue() {
-		return value;
+		return (long) value;
 	}
 
 	@Override
 	public float floatValue() {
-		return value;
+		return (float) value;
 	}
 
 	@Override
@@ -160,7 +153,7 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 * 相等需同时满足如下条件：
 	 * <ol>
 	 * 	<li>非空</li>
-	 * 	<li>类型为 {@link MutableByte}</li>
+	 * 	<li>类型为 {@link MutableDouble}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
 	 * 
@@ -169,26 +162,27 @@ public class MutableByte extends Number implements Comparable<MutableByte>, Muta
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof MutableByte) {
-			return value == ((MutableByte) obj).byteValue();
+		if (obj instanceof MutableDouble) {
+			return (Double.doubleToLongBits(((MutableDouble)obj).value) == Double.doubleToLongBits(value));
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return value;
+		final long bits = Double.doubleToLongBits(value);
+		return (int) (bits ^ bits >>> 32);
 	}
 
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
 	 * 
-	 * @param other 其它 {@link MutableByte} 对象
+	 * @param other 其它 {@link MutableDouble} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override
-	public int compareTo(final MutableByte other) {
+	public int compareTo(final MutableDouble other) {
 		return NumberUtil.compare(this.value, other.value);
 	}
 

@@ -1,22 +1,22 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 import com.xiaoleilu.hutool.util.NumberUtil;
 
 /**
- * 可变 <code>long</code> 类型
+ * 可变 <code>int</code> 类型
  * 
- * @see Long
+ * @see Integer
  * @since 3.0.1
  */
-public class MutableLong extends Number implements Comparable<MutableLong>, Mutable<Number> {
-	private static final long serialVersionUID = -7982037656814990915L;
+public class MutableInt extends Number implements Comparable<MutableInt>, Mutable<Number> {
+	private static final long serialVersionUID = -7381592836008495052L;
 	
-	private long value;
+	private int value;
 
 	/**
 	 * 构造，默认值0
 	 */
-	public MutableLong() {
+	public MutableInt() {
 		super();
 	}
 
@@ -24,7 +24,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableLong(final long value) {
+	public MutableInt(final int value) {
 		super();
 		this.value = value;
 	}
@@ -33,8 +33,8 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableLong(final Number value) {
-		this(value.longValue());
+	public MutableInt(final Number value) {
+		this(value.intValue());
 	}
 
 	/**
@@ -42,27 +42,27 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * @param value String值
 	 * @throws NumberFormatException 数字转换错误
 	 */
-	public MutableLong(final String value) throws NumberFormatException {
+	public MutableInt(final String value) throws NumberFormatException {
 		super();
-		this.value = Long.parseLong(value);
+		this.value = Integer.parseInt(value);
 	}
 
 	@Override
-	public Long get() {
-		return Long.valueOf(this.value);
+	public Integer get() {
+		return Integer.valueOf(this.value);
 	}
 
 	/**
 	 * 设置值
 	 * @param value 值
 	 */
-	public void set(final long value) {
+	public void set(final int value) {
 		this.value = value;
 	}
 
 	@Override
 	public void set(final Number value) {
-		this.value = value.longValue();
+		this.value = value.intValue();
 	}
 
 	// -----------------------------------------------------------------------
@@ -70,7 +70,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * 值+1
 	 * @return this
 	 */
-	public MutableLong increment() {
+	public MutableInt increment() {
 		value++;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * 值减一
 	 * @return this
 	 */
-	public MutableLong decrement() {
+	public MutableInt decrement() {
 		value--;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * @param operand 被增加的值
 	 * @return this
 	 */
-	public MutableLong add(final long operand) {
+	public MutableInt add(final int operand) {
 		this.value += operand;
 		return this;
 	}
@@ -101,8 +101,8 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * @return this
 	 * @throws NullPointerException if the object is null
 	 */
-	public MutableLong add(final Number operand) {
-		this.value += operand.longValue();
+	public MutableInt add(final Number operand) {
+		this.value += operand.intValue();
 		return this;
 	}
 
@@ -112,7 +112,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * @param operand 被减的值
 	 * @return this
 	 */
-	public MutableLong subtract(final long operand) {
+	public MutableInt subtract(final int operand) {
 		this.value -= operand;
 		return this;
 	}
@@ -124,15 +124,15 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * @return this
 	 * @throws NullPointerException if the object is null
 	 */
-	public MutableLong subtract(final Number operand) {
-		this.value -= operand.longValue();
+	public MutableInt subtract(final Number operand) {
+		this.value -= operand.intValue();
 		return this;
 	}
 
 	// -----------------------------------------------------------------------
 	@Override
 	public int intValue() {
-		return (int) value;
+		return value;
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 * 相等需同时满足如下条件：
 	 * <ol>
 	 * 	<li>非空</li>
-	 * 	<li>类型为 {@link MutableLong}</li>
+	 * 	<li>类型为 {@link MutableInt}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
 	 * 
@@ -164,26 +164,26 @@ public class MutableLong extends Number implements Comparable<MutableLong>, Muta
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof MutableLong) {
-			return value == ((MutableLong) obj).longValue();
+		if (obj instanceof MutableInt) {
+			return value == ((MutableInt) obj).intValue();
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (value ^ (value >>> 32));
+		return this.value;
 	}
 
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
 	 * 
-	 * @param other 其它 {@link MutableLong} 对象
+	 * @param other 其它 {@link MutableInt} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override
-	public int compareTo(final MutableLong other) {
+	public int compareTo(final MutableInt other) {
 		return NumberUtil.compare(this.value, other.value);
 	}
 

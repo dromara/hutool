@@ -2,10 +2,10 @@ package com.xiaoleilu.hutool.db.sql;
 
 import java.util.Collection;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.Page;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * 查询对象，用于传递查询所需的字段值<br>

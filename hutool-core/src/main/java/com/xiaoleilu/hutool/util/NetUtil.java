@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;

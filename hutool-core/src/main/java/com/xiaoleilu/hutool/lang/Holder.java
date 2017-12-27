@@ -1,6 +1,6 @@
 package com.xiaoleilu.hutool.lang;
 
-import com.xiaoleilu.hutool.mutable.MutableObj;
+import com.xiaoleilu.hutool.lang.mutable.MutableObj;
 
 /**
  * 为不可变的对象引用提供一个可变的包装，在java中支持引用传递。

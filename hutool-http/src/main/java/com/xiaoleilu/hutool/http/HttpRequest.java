@@ -15,6 +15,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
 import com.xiaoleilu.hutool.codec.Base64;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.io.FileUtil;
@@ -24,7 +25,6 @@ import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;

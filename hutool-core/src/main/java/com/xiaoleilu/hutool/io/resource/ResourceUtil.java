@@ -8,10 +8,10 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.List;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.util.ClassLoaderUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * ClassPath资源工具类

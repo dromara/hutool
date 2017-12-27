@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
 import com.xiaoleilu.hutool.db.SqlRunner;
@@ -14,8 +15,7 @@ import com.xiaoleilu.hutool.db.handler.EntityListHandler;
 import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.log.dialect.console.ConsoleLogFactory;
-import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.ThreadUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 
 /**
  * SqlRunner线程安全测试

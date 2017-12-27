@@ -1,22 +1,22 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 import com.xiaoleilu.hutool.util.NumberUtil;
 
 /**
- * 可变 <code>double</code> 类型
+ * 可变 <code>float</code> 类型
  * 
- * @see Double
+ * @see Float
  * @since 3.0.1
  */
-public class MutableDouble extends Number implements Comparable<MutableDouble>, Mutable<Number> {
+public class MutableFloat extends Number implements Comparable<MutableFloat>, Mutable<Number> {
 	private static final long serialVersionUID = -7381592836008495052L;
 	
-	private double value;
+	private float value;
 
 	/**
 	 * 构造，默认值0
 	 */
-	public MutableDouble() {
+	public MutableFloat() {
 		super();
 	}
 
@@ -24,7 +24,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableDouble(final double value) {
+	public MutableFloat(final float value) {
 		super();
 		this.value = value;
 	}
@@ -33,8 +33,8 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableDouble(final Number value) {
-		this(value.doubleValue());
+	public MutableFloat(final Number value) {
+		this(value.floatValue());
 	}
 
 	/**
@@ -42,27 +42,27 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * @param value String值
 	 * @throws NumberFormatException 数字转换错误
 	 */
-	public MutableDouble(final String value) throws NumberFormatException {
+	public MutableFloat(final String value) throws NumberFormatException {
 		super();
-		this.value = Double.parseDouble(value);
+		this.value = Float.parseFloat(value);
 	}
 
 	@Override
-	public Double get() {
-		return Double.valueOf(this.value);
+	public Float get() {
+		return Float.valueOf(this.value);
 	}
 
 	/**
 	 * 设置值
 	 * @param value 值
 	 */
-	public void set(final double value) {
+	public void set(final float value) {
 		this.value = value;
 	}
 
 	@Override
 	public void set(final Number value) {
-		this.value = value.doubleValue();
+		this.value = value.floatValue();
 	}
 
 	// -----------------------------------------------------------------------
@@ -70,7 +70,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 值+1
 	 * @return this
 	 */
-	public MutableDouble increment() {
+	public MutableFloat increment() {
 		value++;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 值减一
 	 * @return this
 	 */
-	public MutableDouble decrement() {
+	public MutableFloat decrement() {
 		value--;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * @param operand 被增加的值
 	 * @return this
 	 */
-	public MutableDouble add(final double operand) {
+	public MutableFloat add(final float operand) {
 		this.value += operand;
 		return this;
 	}
@@ -99,9 +99,10 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 增加值
 	 * @param operand 被增加的值，非空
 	 * @return this
+	 * @throws NullPointerException if the object is null
 	 */
-	public MutableDouble add(final Number operand) {
-		this.value += operand.doubleValue();
+	public MutableFloat add(final Number operand) {
+		this.value += operand.floatValue();
 		return this;
 	}
 
@@ -111,7 +112,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * @param operand 被减的值
 	 * @return this
 	 */
-	public MutableDouble subtract(final double operand) {
+	public MutableFloat subtract(final float operand) {
 		this.value -= operand;
 		return this;
 	}
@@ -121,9 +122,10 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 
 	 * @param operand 被减的值，非空
 	 * @return this
+	 * @throws NullPointerException if the object is null
 	 */
-	public MutableDouble subtract(final Number operand) {
-		this.value -= operand.doubleValue();
+	public MutableFloat subtract(final Number operand) {
+		this.value -= operand.floatValue();
 		return this;
 	}
 
@@ -140,7 +142,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 
 	@Override
 	public float floatValue() {
-		return (float) value;
+		return value;
 	}
 
 	@Override
@@ -153,7 +155,7 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 * 相等需同时满足如下条件：
 	 * <ol>
 	 * 	<li>非空</li>
-	 * 	<li>类型为 {@link MutableDouble}</li>
+	 * 	<li>类型为 {@link MutableFloat}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
 	 * 
@@ -162,27 +164,26 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof MutableDouble) {
-			return (Double.doubleToLongBits(((MutableDouble)obj).value) == Double.doubleToLongBits(value));
+		if (obj instanceof MutableFloat) {
+			return (Float.floatToIntBits(((MutableFloat)obj).value) == Float.floatToIntBits(value));
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		final long bits = Double.doubleToLongBits(value);
-		return (int) (bits ^ bits >>> 32);
+		return Float.floatToIntBits(value);
 	}
 
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
 	 * 
-	 * @param other 其它 {@link MutableDouble} 对象
+	 * @param other 其它 {@link MutableFloat} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override
-	public int compareTo(final MutableDouble other) {
+	public int compareTo(final MutableFloat other) {
 		return NumberUtil.compare(this.value, other.value);
 	}
 

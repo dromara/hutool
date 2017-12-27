@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 /**
  * 可变 <code>boolean</code> 类型

@@ -1,22 +1,22 @@
-package com.xiaoleilu.hutool.mutable;
+package com.xiaoleilu.hutool.lang.mutable;
 
 import com.xiaoleilu.hutool.util.NumberUtil;
 
 /**
- * 可变 <code>short</code> 类型
+ * 可变 <code>long</code> 类型
  * 
- * @see Short
+ * @see Long
  * @since 3.0.1
  */
-public class MutableShort extends Number implements Comparable<MutableShort>, Mutable<Number> {
+public class MutableLong extends Number implements Comparable<MutableLong>, Mutable<Number> {
 	private static final long serialVersionUID = -7982037656814990915L;
 	
-	private short value;
+	private long value;
 
 	/**
 	 * 构造，默认值0
 	 */
-	public MutableShort() {
+	public MutableLong() {
 		super();
 	}
 
@@ -24,7 +24,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableShort(final short value) {
+	public MutableLong(final long value) {
 		super();
 		this.value = value;
 	}
@@ -33,36 +33,36 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * 构造
 	 * @param value 值
 	 */
-	public MutableShort(final Number value) {
-		this(value.shortValue());
+	public MutableLong(final Number value) {
+		this(value.longValue());
 	}
 
 	/**
 	 * 构造
 	 * @param value String值
-	 * @throws NumberFormatException 转为Short错误
+	 * @throws NumberFormatException 数字转换错误
 	 */
-	public MutableShort(final String value) throws NumberFormatException {
+	public MutableLong(final String value) throws NumberFormatException {
 		super();
-		this.value = Short.parseShort(value);
+		this.value = Long.parseLong(value);
 	}
 
 	@Override
-	public Short get() {
-		return Short.valueOf(this.value);
+	public Long get() {
+		return Long.valueOf(this.value);
 	}
 
 	/**
 	 * 设置值
 	 * @param value 值
 	 */
-	public void set(final short value) {
+	public void set(final long value) {
 		this.value = value;
 	}
 
 	@Override
 	public void set(final Number value) {
-		this.value = value.shortValue();
+		this.value = value.longValue();
 	}
 
 	// -----------------------------------------------------------------------
@@ -70,7 +70,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * 值+1
 	 * @return this
 	 */
-	public MutableShort increment() {
+	public MutableLong increment() {
 		value++;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * 值减一
 	 * @return this
 	 */
-	public MutableShort decrement() {
+	public MutableLong decrement() {
 		value--;
 		return this;
 	}
@@ -90,7 +90,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * @param operand 被增加的值
 	 * @return this
 	 */
-	public MutableShort add(final short operand) {
+	public MutableLong add(final long operand) {
 		this.value += operand;
 		return this;
 	}
@@ -101,8 +101,8 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * @return this
 	 * @throws NullPointerException if the object is null
 	 */
-	public MutableShort add(final Number operand) {
-		this.value += operand.shortValue();
+	public MutableLong add(final Number operand) {
+		this.value += operand.longValue();
 		return this;
 	}
 
@@ -112,7 +112,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * @param operand 被减的值
 	 * @return this
 	 */
-	public MutableShort subtract(final short operand) {
+	public MutableLong subtract(final long operand) {
 		this.value -= operand;
 		return this;
 	}
@@ -124,20 +124,15 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * @return this
 	 * @throws NullPointerException if the object is null
 	 */
-	public MutableShort subtract(final Number operand) {
-		this.value -= operand.shortValue();
+	public MutableLong subtract(final Number operand) {
+		this.value -= operand.longValue();
 		return this;
 	}
 
 	// -----------------------------------------------------------------------
 	@Override
-	public short shortValue() {
-		return value;
-	}
-
-	@Override
 	public int intValue() {
-		return value;
+		return (int) value;
 	}
 
 	@Override
@@ -160,7 +155,7 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 * 相等需同时满足如下条件：
 	 * <ol>
 	 * 	<li>非空</li>
-	 * 	<li>类型为 {@link MutableShort}</li>
+	 * 	<li>类型为 {@link MutableLong}</li>
 	 * 	<li>值相等</li>
 	 * </ol>
 	 * 
@@ -169,26 +164,26 @@ public class MutableShort extends Number implements Comparable<MutableShort>, Mu
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof MutableShort) {
-			return value == ((MutableShort) obj).shortValue();
+		if (obj instanceof MutableLong) {
+			return value == ((MutableLong) obj).longValue();
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return value;
+		return (int) (value ^ (value >>> 32));
 	}
 
 	// -----------------------------------------------------------------------
 	/**
 	 * 比较
 	 * 
-	 * @param other 其它 {@link MutableShort} 对象
+	 * @param other 其它 {@link MutableLong} 对象
 	 * @return x==y返回0，x&lt;y返回-1，x&gt;y返回1
 	 */
 	@Override
-	public int compareTo(final MutableShort other) {
+	public int compareTo(final MutableLong other) {
 		return NumberUtil.compare(this.value, other.value);
 	}
 

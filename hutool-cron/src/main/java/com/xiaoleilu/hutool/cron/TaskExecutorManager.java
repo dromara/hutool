@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xiaoleilu.hutool.cron.task.Task;
-import com.xiaoleilu.hutool.util.ThreadUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 
 /**
  * 任务执行管理器<br>

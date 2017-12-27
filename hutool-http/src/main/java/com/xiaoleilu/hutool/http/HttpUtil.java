@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
@@ -33,7 +34,6 @@ import com.xiaoleilu.hutool.io.StreamProgress;
 import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
