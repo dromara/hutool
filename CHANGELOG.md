@@ -30,6 +30,7 @@
 * 手机号验证(Validator)支持199、198、166号段（issue#IH0TD@Gitee）
 * Base64、Base32、BCD全部移入codec包
 * Map相关类移入map包中，与collection区分
+* HttpUtil.get增加超时重载（感谢@【山东】UP ）
 
 ### Bug修复
 * 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
