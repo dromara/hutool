@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.json.test.bean.Exam;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
@@ -37,12 +39,27 @@ public class JSONArrayTest {
 	}
 	
 	@Test
-	public void parseTest2(){
+	public void parseFileTest(){
 		JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.CHARSET_UTF_8);
 		
 		JSONObject obj0 = array.getJSONObject(0);
 		Exam exam = JSONUtil.toBean(obj0, Exam.class);
 		Assert.assertEquals("0", exam.getAnswerArray()[0].getSeq());
+	}
+	
+	@Test
+	public void parseBeanListTest() {
+		KeyBean b1 = new KeyBean();
+		b1.setAkey("aValue1");
+		b1.setBkey("bValue1");
+		KeyBean b2 = new KeyBean();
+		b2.setAkey("aValue2");
+		b2.setBkey("bValue2");
+		
+		ArrayList<KeyBean> list = CollUtil.newArrayList(b1, b2);
+		
+		JSONArray jsonArray = JSONUtil.parseArray(list);
+		Console.log(jsonArray);
 	}
 	
 	@Test
