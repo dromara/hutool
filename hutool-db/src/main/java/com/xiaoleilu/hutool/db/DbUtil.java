@@ -32,13 +32,13 @@ import com.xiaoleilu.hutool.db.meta.Column;
 import com.xiaoleilu.hutool.db.meta.Table;
 import com.xiaoleilu.hutool.db.meta.TableType;
 import com.xiaoleilu.hutool.db.sql.Condition;
-import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Condition.LikeType;
+import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.SqlFormatter;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -50,7 +50,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * 
  */
 public final class DbUtil {
-	private final static Log log = StaticLog.get();
+	private final static Log log = LogFactory.get();
 
 	/**
 	 * 实例化一个新的SQL运行对象
@@ -166,6 +166,7 @@ public final class DbUtil {
 						}
 					}
 				} catch (SQLException e) {
+					//ignore
 				}
 			}
 		}
@@ -409,7 +410,8 @@ public final class DbUtil {
 				try {
 					sqlType = pmd.getParameterType(paramIndex);
 				} catch (SQLException e) {
-					log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
+					//ignore
+//					log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
 				}
 				ps.setNull(paramIndex, sqlType);
 			}
@@ -428,7 +430,7 @@ public final class DbUtil {
 	 * @since 3.2.3
 	 */
 	public static PreparedStatement prepareStatement(Connection conn, String sql, Collection<Object> params) throws SQLException {
-		return fillParams(conn.prepareStatement(sql), params);
+		return prepareStatement(conn, sql, params.toArray(new Object[params.size()]));
 	}
 	
 	/**

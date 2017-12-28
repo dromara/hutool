@@ -12,6 +12,41 @@ import com.xiaoleilu.hutool.lang.Validator;
  *
  */
 public class ValidatorTest {
+	
+	@Test
+	public void isNumberTest() {
+		Assert.assertTrue(Validator.isNumber("45345365465"));
+		Assert.assertTrue(Validator.isNumber("0004545435"));
+		Assert.assertTrue(Validator.isNumber("5.222"));
+		Assert.assertTrue(Validator.isNumber("0.33323"));
+	}
+	
+	@Test
+	public void isLetterTest() {
+		Assert.assertTrue(Validator.isLetter("asfdsdsfds"));
+		Assert.assertTrue(Validator.isLetter("asfdsdfdsfVCDFDFGdsfds"));
+		Assert.assertTrue(Validator.isLetter("asfdsdf你好dsfVCDFDFGdsfds"));
+	}
+	
+	@Test
+	public void isUperCaseTest() {
+		Assert.assertTrue(Validator.isUpperCase("VCDFDFG"));
+		Assert.assertTrue(Validator.isUpperCase("ASSFD"));
+		
+		Assert.assertFalse(Validator.isUpperCase("asfdsdsfds"));
+		Assert.assertFalse(Validator.isUpperCase("ASSFD你好"));
+	}
+	
+	@Test
+	public void isLowerCaseTest() {
+		Assert.assertTrue(Validator.isLowerCase("asfdsdsfds"));
+		
+		Assert.assertFalse(Validator.isLowerCase("aaaa你好"));
+		Assert.assertFalse(Validator.isLowerCase("VCDFDFG"));
+		Assert.assertFalse(Validator.isLowerCase("ASSFD"));
+		Assert.assertFalse(Validator.isLowerCase("ASSFD你好"));
+	}
+	
 	@Test
 	public void isBirthdayTest(){
 		boolean b = Validator.isBirthday("20150101");

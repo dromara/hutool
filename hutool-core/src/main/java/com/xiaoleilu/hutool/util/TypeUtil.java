@@ -4,13 +4,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Iterator;
-
-import com.xiaoleilu.hutool.exceptions.UtilException;
 
 /**
  * 针对 {@link Type} 的工具类封装<br>
  * 最主要功能包括：
+ * 
  * <pre>
  * 1. 获取方法的参数和返回值类型（包括Type和Class）
  * 2. 获取泛型参数类型（包括对象的泛型参数或集合元素的泛型类型）
@@ -28,7 +26,7 @@ public class TypeUtil {
 	 * @return 原始类，如果无法获取原始类，返回{@code null}
 	 */
 	public static Class<?> getClass(Type type) {
-		if(null != type) {
+		if (null != type) {
 			if (type instanceof Class) {
 				return (Class<?>) type;
 			} else if (type instanceof ParameterizedType) {
@@ -55,7 +53,7 @@ public class TypeUtil {
 		}
 		return type;
 	}
-	
+
 	/**
 	 * 获得Field对应的原始类
 	 * 
@@ -67,7 +65,7 @@ public class TypeUtil {
 		return null == field ? null : field.getType();
 	}
 
-	//----------------------------------------------------------------------------------- Param Type
+	// ----------------------------------------------------------------------------------- Param Type
 	/**
 	 * 获取方法的第一个参数类型<br>
 	 * 优先获取方法的GenericParameterTypes，如果获取不到，则获取ParameterTypes
@@ -79,7 +77,7 @@ public class TypeUtil {
 	public static Type getFirstParamType(Method method) {
 		return getParamType(method, 0);
 	}
-	
+
 	/**
 	 * 获取方法的第一个参数类
 	 * 
@@ -106,7 +104,7 @@ public class TypeUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获取方法的参数类
 	 * 
@@ -151,7 +149,7 @@ public class TypeUtil {
 		return null == method ? null : method.getParameterTypes();
 	}
 
-	//----------------------------------------------------------------------------------- Return Type
+	// ----------------------------------------------------------------------------------- Return Type
 	/**
 	 * 获取方法的参数类型列表<br>
 	 * 获取方法的GenericReturnType
@@ -164,7 +162,7 @@ public class TypeUtil {
 	public static Type getReturnType(Method method) {
 		return null == method ? null : method.getGenericReturnType();
 	}
-	
+
 	/**
 	 * 解析方法的返回类型类列表
 	 *
@@ -177,7 +175,8 @@ public class TypeUtil {
 	public static Class<?> getReturnClass(Method method) {
 		return null == method ? null : method.getReturnType();
 	}
-	//----------------------------------------------------------------------------------- Type Argument
+
+	// ----------------------------------------------------------------------------------- Type Argument
 	/**
 	 * 获得给定类的第一个泛型参数
 	 * 
@@ -240,31 +239,5 @@ public class TypeUtil {
 			return genericSuperclass.getActualTypeArguments();
 		}
 		return null;
-	}
-
-	/**
-	 * 获取元素类型<br>
-	 * 通过{@link Iterator}的next方法返回值获取其泛型类型从而确定元素类型
-	 * 
-	 * @param clazz {@link Iterator}
-	 * @return 泛型元素类型
-	 */
-	public static Type getElementType(Class<?> clazz) {
-		if (null == clazz) {
-			return null;
-		}
-
-		Method nextMethod = null;
-		try {
-			if (Iterator.class.isAssignableFrom(clazz)) {
-				nextMethod = clazz.getMethod("next");
-			}
-		} catch (NoSuchMethodException e) {
-			return null;
-		} catch (SecurityException e) {
-			throw new UtilException(e);
-		}
-
-		return getReturnType(nextMethod);
 	}
 }

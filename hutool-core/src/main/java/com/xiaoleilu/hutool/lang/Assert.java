@@ -3,8 +3,8 @@ package com.xiaoleilu.hutool.lang;
 import java.util.Collection;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**

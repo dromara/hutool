@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.poi.excel;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -425,9 +426,11 @@ public class ExcelUtil {
 	 * @return 是否为XLSX格式的Excel文件（XSSF）
 	 */
 	public static boolean isXlsx(InputStream in) {
-		final PushbackInputStream pin = IoUtil.toPushbackStream(in, 8);
+		if(false == in.markSupported()) {
+			in = new BufferedInputStream(in);
+		}
 		try {
-			return DocumentFactoryHelper.hasOOXMLHeader(pin);
+			return DocumentFactoryHelper.hasOOXMLHeader(in);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

@@ -3,7 +3,7 @@ package com.xiaoleilu.hutool.cron;
 import com.xiaoleilu.hutool.date.DateUnit;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.ThreadUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 
 /**
  * 定时任务计时器<br>

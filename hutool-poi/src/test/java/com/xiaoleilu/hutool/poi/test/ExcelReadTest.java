@@ -17,6 +17,14 @@ import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 public class ExcelReadTest {
 	
 	@Test
+	public void excelReadTestOfEmptyLine() {
+		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("priceIndex.xls"));
+		List<Map<String, Object>> readAll = reader.readAll();
+		
+		Assert.assertEquals(4, readAll.size());
+	}
+	
+	@Test
 	public void excelReadTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
 		List<List<Object>> readAll = reader.read();

@@ -25,7 +25,7 @@ import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.MapUtil;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;

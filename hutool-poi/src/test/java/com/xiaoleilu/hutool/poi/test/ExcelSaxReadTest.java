@@ -19,6 +19,11 @@ import com.xiaoleilu.hutool.poi.excel.sax.handler.RowHandler;
 public class ExcelSaxReadTest {
 	
 	@Test
+	public void readBySaxTest() {
+		ExcelUtil.readBySax("blankAndDateTest.xlsx", 0, createRowHandler());
+	}
+	
+	@Test
 	public void excel07Test() {
 		Excel07SaxReader reader = new Excel07SaxReader(createRowHandler());
 		reader.read("aaa.xlsx", 0);

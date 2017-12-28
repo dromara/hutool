@@ -97,7 +97,7 @@ public class FileUtilTest {
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
 		Assert.assertEquals("~/bar/", FileUtil.normalize("~/foo/../bar/"));
 		Assert.assertEquals("bar", FileUtil.normalize("~/../bar"));
-		
+		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
 	}
 	

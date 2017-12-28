@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.db.DbRuntimeException;
 import com.xiaoleilu.hutool.db.DbUtil;
 import com.xiaoleilu.hutool.db.Entity;
@@ -18,7 +19,6 @@ import com.xiaoleilu.hutool.db.sql.SqlBuilder;
 import com.xiaoleilu.hutool.db.sql.Wrapper;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -134,7 +134,7 @@ public class AnsiSqlDialect implements Dialect {
 	 */
 	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
 		// limit A offset B 表示：A就是你需要多少行，B就是查询的起点位置。
-		return find.append(" limit ").append(page.getNumPerPage()).append(" offset ").append(page.getStartPosition());
+		return find.append(" limit ").append(page.getPageSize()).append(" offset ").append(page.getStartPosition());
 	}
 
 	@Override

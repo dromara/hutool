@@ -9,7 +9,7 @@ import java.util.Set;
 import com.xiaoleilu.hutool.collection.ConcurrentHashSet;
 import com.xiaoleilu.hutool.io.watch.Watcher;
 import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.util.ThreadUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 
 /**
  * 延迟观察者<br>

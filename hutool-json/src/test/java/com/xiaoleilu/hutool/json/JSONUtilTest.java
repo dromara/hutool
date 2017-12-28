@@ -6,10 +6,10 @@ import java.util.HashMap;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.json.test.bean.Price;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 public class JSONUtilTest {
 	

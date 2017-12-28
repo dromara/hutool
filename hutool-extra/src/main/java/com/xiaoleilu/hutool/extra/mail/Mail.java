@@ -76,7 +76,8 @@ public class Mail {
 	 * @param mailAccount 邮件帐户
 	 */
 	public Mail(MailAccount mailAccount) {
-		this.mailAccount = (null == mailAccount) ? null : mailAccount.defaultIfEmpty();
+		mailAccount = (null == mailAccount) ? null : GlobalMailAccount.INSTANCE.getAccount();
+		this.mailAccount = mailAccount.defaultIfEmpty();
 	}
 	// --------------------------------------------------------------- Constructor end
 

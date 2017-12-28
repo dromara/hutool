@@ -32,6 +32,7 @@ import com.xiaoleilu.hutool.convert.impl.ClassConverter;
 import com.xiaoleilu.hutool.convert.impl.CollectionConverter;
 import com.xiaoleilu.hutool.convert.impl.CurrencyConverter;
 import com.xiaoleilu.hutool.convert.impl.DateConverter;
+import com.xiaoleilu.hutool.convert.impl.MapConverter;
 import com.xiaoleilu.hutool.convert.impl.NumberConverter;
 import com.xiaoleilu.hutool.convert.impl.PathConverter;
 import com.xiaoleilu.hutool.convert.impl.PrimitiveConverter;
@@ -41,6 +42,7 @@ import com.xiaoleilu.hutool.convert.impl.TimeZoneConverter;
 import com.xiaoleilu.hutool.convert.impl.URIConverter;
 import com.xiaoleilu.hutool.convert.impl.URLConverter;
 import com.xiaoleilu.hutool.date.DateTime;
+import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 
@@ -178,7 +180,7 @@ public class ConverterRegistry {
 		if (null == type && null == defaultValue) {
 			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
 		}
-		if (null == value) {
+		if (ObjectUtil.isNull(value)) {
 			return defaultValue;
 		}
 		if (null == type) {
@@ -187,10 +189,16 @@ public class ConverterRegistry {
 
 		final Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
 		
-		// 集合转换
+		// 集合转换（不可以默认强转）
 		if (Collection.class.isAssignableFrom(rowType)) {
 			final CollectionConverter collectionConverter = new CollectionConverter(type);
 			return (T) collectionConverter.convert(value, (Collection<?>) defaultValue);
+		}
+		
+		//Map类型（不可以默认强转）
+		if(Map.class.isAssignableFrom(rowType)) {
+			final MapConverter mapConverter = new MapConverter(type);
+			return (T) mapConverter.convert(value, (Map<?, ?>)defaultValue);
 		}
 
 		// 默认强转
@@ -313,7 +321,7 @@ public class ConverterRegistry {
 		// defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
 		// defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
 		// defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
-
+		
 		// URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());
 		defaultConverterMap.put(URL.class, new URLConverter());

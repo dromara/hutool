@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.cron.listener.TaskListener;
 import com.xiaoleilu.hutool.cron.listener.TaskListenerManager;
@@ -12,8 +13,7 @@ import com.xiaoleilu.hutool.cron.task.InvokeTask;
 import com.xiaoleilu.hutool.cron.task.RunnableTask;
 import com.xiaoleilu.hutool.cron.task.Task;
 import com.xiaoleilu.hutool.setting.Setting;
-import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.ThreadUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 
 /**
  * 任务调度器<br>

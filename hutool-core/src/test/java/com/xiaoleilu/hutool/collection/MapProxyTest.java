@@ -8,6 +8,8 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.map.MapProxy;
+
 public class MapProxyTest {
 	
 	@Test

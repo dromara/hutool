@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import com.xiaoleilu.hutool.bean.copier.ValueProvider;
-import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
+import com.xiaoleilu.hutool.map.CaseInsensitiveMap;
 
 /**
  * Map值提供者

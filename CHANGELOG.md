@@ -2,6 +2,54 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 3.3.0
+
+### 新特性
+* 删除Deprecated方法和类
+* 增加StrUtil.isEmptyIfStr和isBlankIfStr方法
+* 改进ExcelReader，对于空行默认不读取（包括元素全部为null或“”的行）（感谢@【北京】新任女人国王）
+* Validator增加isLetter、isUpperCase、isLowerCase方法（感谢@【深圳】objectboy(刚转java) ）
+* 增加权重随机数算法WeightRandom，RandomUtil增加Long、Double随机数生成
+* XmlUtil.transElements增加节点类型判断（issue#IGTGO@Gitee）
+* JSONUtil增加isJson、isJsonObj、isJsonArray方法（issue#IGT7A@Gitee）
+* Week增加方法toChinese（感谢@【北京】宁静）
+* AbstractCaptcha增加方法generateCode，用于抽象验证码字符串生成，提供可定制验证码字符串生成（感谢@【杭州】KIWI @【杭州】t-io ）
+* NetUtil增加netCat方法
+* 新增ExceptionUtil.wrap方法，包装异常
+* 改进AES个DES类，在构造中加入自定义偏移
+* 实现ActiveEntity
+* HttpRequest增加fileForm方法
+* 增加DESede快捷实现类
+* 签名算法从AsymmetricCrypto中剥离，形成Sign对象
+* 增加EnumUtil工具类
+* Convert.convert方法支持Map转换
+* HttpRequest.body方法增加自动判断Content-Type类型（感谢@【北京】酱油君）
+* 增加自定义重定向次数
+* SecureUtil针对hmac方法增加String参数（感谢@【北京】宁静）
+* db模块去除获取null值类型的错误日志
+* 手机号验证(Validator)支持199、198、166号段（issue#IH0TD@Gitee）
+* Base64、Base32、BCD全部移入codec包
+* Map相关类移入map包中，与collection区分
+* HttpUtil.get增加超时重载（感谢@【山东】UP ）
+
+### Bug修复
+* 修复ExcelUtil.readBySax方法判断03或07格式导致的问题（issue#IGT7X@Gitee）
+* 修复CronUtil中一些方法非static问题（issue#74@Github）
+* 修复ShearCaptcha的thickness无效问题
+* 修复AbstractCaptcha写出文件未关闭流的问题
+* 修复AES中自定义Mode和Padding导致的自动生成密钥问题（issue#55@Github）
+* 修复MapConvert类中类型判断导致的null问题（issue#IGXNI@Gitee）
+* 修复FileUtil.copy方法复制文件到目录失败问题（感谢@【广州】Sinderlar）
+* 修复邮件默认配置问题
+* 按照RFC2616规范，读取响应头信息时忽略大小写（感谢@【武汉】赛车手）
+* 修复POI模块read07BySax导致的空白单元格丢失和日期粘连问题（issue#76@Github）
+* 修复ExcelWriter在写出4000行以上时样式超出范围问题（issue#IH05B@Gitee）
+* 修复StrUtil.replaceChars方法无效问题
+* 修复在JSONArray中toList有null元素返回null的问题（感谢@@【银川】野马）
+* 修复Base64解码时在有换行符的情况下解码失败的问题（感谢@【霾都】QQ小冰）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 3.2.3
 
 ### 新特性
@@ -30,6 +78,7 @@
 * 修复HtmlUtil.removeAllHtmlAttr方法无效问题
 * 修复DateUtil.parse方法对时间中"."误替换
 * 修复Season.AUTUMN拼写错误（issue#73@Github）
+* 修复插入返回主键错误问题（感谢@【北京】Pom）
 
 -------------------------------------------------------------------------------------------------------------
 

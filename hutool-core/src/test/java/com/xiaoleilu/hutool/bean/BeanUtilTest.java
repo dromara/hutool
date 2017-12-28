@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.xiaoleilu.hutool.bean.copier.CopyOptions;
 import com.xiaoleilu.hutool.bean.copier.ValueProvider;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 
 /**
  * Bean工具单元测试

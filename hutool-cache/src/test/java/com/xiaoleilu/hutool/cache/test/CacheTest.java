@@ -7,7 +7,7 @@ import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.cache.CacheUtil;
 import com.xiaoleilu.hutool.cache.impl.TimedCache;
 import com.xiaoleilu.hutool.date.DateUnit;
-import com.xiaoleilu.hutool.util.ThreadUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 
 /**
  * 缓存测试用例

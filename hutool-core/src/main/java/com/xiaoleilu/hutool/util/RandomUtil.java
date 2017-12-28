@@ -60,7 +60,7 @@ public class RandomUtil {
 	 * @return 随机数
 	 */
 	public static int randomInt(int min, int max) {
-		return getRandom().nextInt(max - min) + min;
+		return getRandom().nextInt(min, max);
 	}
 
 	/**
@@ -80,6 +80,71 @@ public class RandomUtil {
 	 */
 	public static int randomInt(int limit) {
 		return getRandom().nextInt(limit);
+	}
+	
+	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param min 最小数（包含）
+	 * @param max 最大数（不包含）
+	 * @return 随机数
+	 * @since 3.3.0
+	 */
+	public static long randomLong(long min, long max) {
+		return getRandom().nextLong(min, max);
+	}
+
+	/**
+	 * 获得随机数
+	 * 
+	 * @return 随机数
+	 * @since 3.3.0
+	 */
+	public static long randomLong() {
+		return getRandom().nextLong();
+	}
+
+	/**
+	 * 获得指定范围内的随机数 [0,limit)
+	 * 
+	 * @param limit 限制随机数的范围，不包括这个数
+	 * @return 随机数
+	 */
+	public static long randomLong(long limit) {
+		return getRandom().nextLong(limit);
+	}
+	
+	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param min 最小数（包含）
+	 * @param max 最大数（不包含）
+	 * @return 随机数
+	 * @since 3.3.0
+	 */
+	public static double randomDouble(double min, double max) {
+		return getRandom().nextDouble(min, max);
+	}
+	
+	/**
+	 * 获得随机数
+	 * 
+	 * @return 随机数
+	 * @since 3.3.0
+	 */
+	public static double randomDouble() {
+		return getRandom().nextDouble();
+	}
+	
+	/**
+	 * 获得指定范围内的随机数 [0,limit)
+	 * 
+	 * @param limit 限制随机数的范围，不包括这个数
+	 * @return 随机数
+	 * @since 3.3.0
+	 */
+	public static double randomDouble(Double limit) {
+		return getRandom().nextDouble(limit);
 	}
 
 	/**
@@ -115,6 +180,31 @@ public class RandomUtil {
 	 */
 	public static <T> T randomEle(List<T> list, int limit) {
 		return list.get(randomInt(limit));
+	}
+	
+	/**
+	 * 随机获得数组中的元素
+	 * 
+	 * @param <T> 元素类型
+	 * @param array 列表
+	 * @return 随机元素
+	 * @since 3.3.0
+	 */
+	public static <T> T randomEle(T[] array) {
+		return randomEle(array, array.length);
+	}
+	
+	/**
+	 * 随机获得数组中的元素
+	 * 
+	 * @param <T> 元素类型
+	 * @param array 列表
+	 * @param limit 限制列表的前N项
+	 * @return 随机元素
+	 * @since 3.3.0
+	 */
+	public static <T> T randomEle(T[] array, int limit) {
+		return array[randomInt(limit)];
 	}
 
 	/**

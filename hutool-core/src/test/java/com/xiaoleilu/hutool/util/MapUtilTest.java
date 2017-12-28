@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Filter;
+import com.xiaoleilu.hutool.map.MapUtil;
 
 public class MapUtilTest {
 	

@@ -1,7 +1,6 @@
 package com.xiaoleilu.hutool.util;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +8,15 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.lang.Console;
-import com.xiaoleilu.hutool.util.ReflectUtil;
-import com.xiaoleilu.hutool.util.TypeUtil;
-
 public class TypeUtilTest {
 	
 	@Test
-	public void getArgumentTypeTest(){
-		List<String> list = new ArrayList<String>();
-		list.add("aaaa");
-		ParameterizedType type = (ParameterizedType)list.getClass().getGenericSuperclass();
-		Type[] arguments = type.getActualTypeArguments();
-		Console.log(arguments[0]);
-		
-		Type typeArgument = TypeUtil.getTypeArgument(list.getClass());
-		Console.log(typeArgument);
+	public void getEleTypeTest() {
+		Method method = ReflectUtil.getMethod(TestClass.class, "getList");
+		Type type = TypeUtil.getReturnType(method);
+		Assert.assertEquals("java.util.List<java.lang.String>", type.toString());
+		Type type2 = TypeUtil.getTypeArgument(type);
+		Assert.assertEquals(String.class, type2);
 	}
 	
 	@Test
@@ -38,6 +30,10 @@ public class TypeUtilTest {
 	}
 	
 	public static class TestClass {
+		public List<String> getList(){
+			return new ArrayList<>();
+		}
+		
 		public Integer intTest(Integer integer) {
 			return 1;
 		}

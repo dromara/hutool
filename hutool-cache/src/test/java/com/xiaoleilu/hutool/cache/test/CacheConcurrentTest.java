@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.cache.impl.FIFOCache;
-import com.xiaoleilu.hutool.util.ThreadUtil;
+import com.xiaoleilu.hutool.thread.ThreadUtil;
 
 /**
  * 缓存单元测试

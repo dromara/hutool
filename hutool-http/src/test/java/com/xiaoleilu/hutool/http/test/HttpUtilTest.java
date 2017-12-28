@@ -21,6 +21,13 @@ public class HttpUtilTest {
 	}
 	
 	@Test
+	@Ignore
+	public void getTest2() {
+		String result1 = HttpUtil.get("http://122.152.198.206:5000/kf");
+		Console.log(result1);
+	}
+	
+	@Test
 	public void decodeParamsTest(){
 		String paramsStr = "uuuu=0&a=b&c=%3F%23%40!%24%25%5E%26%3Ddsssss555555";
 		Map<String, List<String>> map = HttpUtil.decodeParams(paramsStr, CharsetUtil.UTF_8);

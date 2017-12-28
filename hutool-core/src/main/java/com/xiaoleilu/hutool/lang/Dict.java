@@ -12,7 +12,7 @@ import java.util.Map;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.getter.BasicTypeGetter;
 import com.xiaoleilu.hutool.bean.BeanUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 
 /**
  * 1、字典对象，扩充了HashMap中的方法

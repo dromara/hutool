@@ -62,7 +62,7 @@ public class ExcelSaxUtil {
 			thisStr = thisStr.replace("_", "").trim();
 			break;
 		case DATE:
-			thisStr = StrUtil.cleanBlank(formatCellContent(value, numFmtIndex, numFmtString));
+			thisStr = formatCellContent(value, numFmtIndex, numFmtString);
 			break;
 		default:
 			thisStr = StrUtil.EMPTY;
@@ -82,7 +82,7 @@ public class ExcelSaxUtil {
 	public static String formatCellContent(String value, int numFmtIndex, String numFmtString) {
 		if (null != numFmtString) {
 			try {
-				return new DataFormatter().formatRawCellContents(Double.parseDouble(value), numFmtIndex, numFmtString);
+				value =  new DataFormatter().formatRawCellContents(Double.parseDouble(value), numFmtIndex, numFmtString);
 			} catch (NumberFormatException e) {
 				// ignore
 			}
