@@ -430,7 +430,7 @@ public final class DbUtil {
 	 * @since 3.2.3
 	 */
 	public static PreparedStatement prepareStatement(Connection conn, String sql, Collection<Object> params) throws SQLException {
-		return fillParams(conn.prepareStatement(sql), params);
+		return prepareStatement(conn, sql, params.toArray(new Object[params.size()]));
 	}
 	
 	/**
