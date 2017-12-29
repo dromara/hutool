@@ -2968,4 +2968,23 @@ public class StrUtil {
 	public static String similar(String str1, String str2, int scale) {
 		return TextSimilarity.similar(str1, str2, scale);
 	}
+	
+	/**
+	 * 字符串指定位置的字符是否与给定字符相同<br>
+	 * 如果字符串为null，返回false<br>
+	 * 如果给定的位置大于字符串长度，返回false<br>
+	 * 如果给定的位置小于0，返回false
+	 * 
+	 * @param str 字符串
+	 * @param position 位置
+	 * @param c 需要对比的字符
+	 * @return 字符串指定位置的字符是否与给定字符相同
+	 * @since 3.3.1
+	 */
+	public static boolean equalsCharAt(CharSequence str, int position, char c) {
+		if(null == str || position < 0) {
+			return false;
+		}
+		return str.length() > position && c == str.charAt(position);
+	}
 }

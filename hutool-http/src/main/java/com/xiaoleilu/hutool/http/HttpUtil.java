@@ -303,7 +303,7 @@ public class HttpUtil {
 	 * @since 3.2.0
 	 */
 	public static String post(String urlString, String body, int timeout) {
-		return HttpRequest.post(urlString).body(body).execute().body();
+		return HttpRequest.post(urlString).timeout(timeout).body(body).execute().body();
 	}
 
 	// ---------------------------------------------------------------------------------------- download

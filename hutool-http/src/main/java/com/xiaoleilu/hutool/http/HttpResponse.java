@@ -198,8 +198,12 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			if(e instanceof FileNotFoundException){
 				//服务器无返回内容，忽略之
 			}else{
-				throw new HttpException(e.getMessage(), e);
+				throw new HttpException(e);
 			}
+		}
+		if(null == this.in) {
+			//在一些情况下，返回的流为null，此时提供状态码说明
+			this.in = new ByteArrayInputStream(StrUtil.format("Error request, response status: {}", this.status).getBytes());
 		}
 		
 		//同步情况下强制同步

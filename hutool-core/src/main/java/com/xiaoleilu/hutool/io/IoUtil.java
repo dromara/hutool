@@ -179,7 +179,8 @@ public class IoUtil {
 	}
 
 	/**
-	 * 拷贝流 thanks to: https://github.com/venusdrogon/feilong-io/blob/master/src/main/java/com/feilong/io/IOWriteUtil.java
+	 * 拷贝流 thanks to: https://github.com/venusdrogon/feilong-io/blob/master/src/main/java/com/feilong/io/IOWriteUtil.java<br>
+	 * 本方法不会关闭流
 	 * 
 	 * @param in 输入流
 	 * @param out 输出流
