@@ -742,21 +742,12 @@ public final class Convert {
 	 * @since 3.2.3
 	 */
 	public static String digitToChinese(Number n) {
-		return DigitChineseFormater.format(n);
+		if(null == n) {
+			return "零";
+		}
+		return NumberChineseFormater.format(n.doubleValue(), true, true);
 	}
 	
-	/**
-	 * 金额转为中文形式
-	 * 
-	 * @param n 数字
-	 * @return 中文大写数字
-	 * @deprecated Please use {@link #digitToChinese(Number)}
-	 */
-	@Deprecated
-	public static String digitUppercase(Number n) {
-		return DigitChineseFormater.format(n);
-	}
-
 	// -------------------------------------------------------------------------- 数字转换
 	/**
 	 * int转byte
