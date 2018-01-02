@@ -33,13 +33,13 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.xiaoleilu.hutool.collection.CollectionUtil;
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.io.file.FileCopier;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
-import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.io.file.FileWriter;
 import com.xiaoleilu.hutool.io.file.LineSeparator;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
@@ -904,20 +904,21 @@ public class FileUtil {
 	 * @return 绝对路径
 	 */
 	public static String getAbsolutePath(String path, Class<?> baseClass) {
+		String normalPath;
 		if (path == null) {
-			path = StrUtil.EMPTY;
+			normalPath = StrUtil.EMPTY;
 		} else {
-			path = normalize(path);
-			if (isAbsolutePath(path)) {
+			normalPath = normalize(path);
+			if (isAbsolutePath(normalPath)) {
 				// 给定的路径已经是绝对路径了
-				return path;
+				return normalPath;
 			}
 		}
 
 		// 相对于ClassPath路径
-		final URL url = ResourceUtil.getResource(path, baseClass);
+		final URL url = ResourceUtil.getResource(normalPath, baseClass);
 		if (null != url) {
-			// since 3.0.8 解决中文或空格路径被编码的问题
+			//对于jar中文件包含file:前缀，需要去掉此类前缀，在此做标准化，since 3.0.8 解决中文或空格路径被编码的问题
 			return FileUtil.normalize(URLUtil.getDecodedPath(url));
 		}
 		
@@ -926,7 +927,9 @@ public class FileUtil {
 		if (null == classPath) {
 			throw new NullPointerException("ClassPath is null !");
 		}
-		return classPath.concat(path);
+		
+		//资源不存在的情况下使用标准化路径有问题，使用原始路径拼接后标准化路径
+		return normalize(classPath.concat(path));
 	}
 
 	/**
@@ -1221,7 +1224,7 @@ public class FileUtil {
 				tops++;
 			} else {
 				if (tops > 0) {
-					// Merging path element with element corresponding to top path.
+					// 有上级目录标记时按照个数依次跳过
 					tops--;
 				} else {
 					// Normal path element found.
@@ -1230,7 +1233,7 @@ public class FileUtil {
 			}
 		}
 
-		return prefix + CollectionUtil.join(pathElements, StrUtil.SLASH);
+		return prefix + CollUtil.join(pathElements, StrUtil.SLASH);
 	}
 
 	/**

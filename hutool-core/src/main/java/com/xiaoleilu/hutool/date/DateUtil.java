@@ -756,7 +756,13 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar beginOfWeek(Calendar calendar, boolean isMondayAsFirstDay) {
-		calendar.set(Calendar.DAY_OF_WEEK, isMondayAsFirstDay ? Calendar.MONDAY : Calendar.SUNDAY);
+		if(isMondayAsFirstDay) {
+			//设置周一为一周开始
+			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		}else {
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		}
 		return beginOfDay(calendar);
 	}
 	
@@ -779,7 +785,13 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar endOfWeek(Calendar calendar, boolean isSundayAsLastDay) {
-		calendar.set(Calendar.DAY_OF_WEEK, isSundayAsLastDay ? Calendar.SUNDAY : Calendar.SATURDAY);
+		if(isSundayAsLastDay) {
+			//设置周一为一周开始
+			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		}else {
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		}
 		return endOfDay(calendar);
 	}
 

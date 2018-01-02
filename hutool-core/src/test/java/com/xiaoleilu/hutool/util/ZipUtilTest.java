@@ -16,7 +16,7 @@ import com.xiaoleilu.hutool.util.ZipUtil;
 public class ZipUtilTest {
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void zipDirTest() {
 		ZipUtil.zip("d:/aaa/");
 	}

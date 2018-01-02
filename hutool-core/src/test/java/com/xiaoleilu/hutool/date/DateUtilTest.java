@@ -252,4 +252,10 @@ public class DateUtilTest {
 		DateTime dt2= DateUtil.parse(dateStr2);
 		Assert.assertEquals(dt1, dt2);
 	}
+	
+	@Test
+	public void endOfWeekTest() {
+		DateTime endOfWeek = DateUtil.endOfWeek(DateUtil.date());
+		Console.log(endOfWeek);
+	}
 }
