@@ -21,6 +21,8 @@ public class CronDemo {
 		
 		//支持秒级别定时任务
 		CronUtil.setMatchSecond(true);
+		//支持年匹配
+		CronUtil.setMatchYear(true);
 		
 		CronUtil.start();
 //		CronUtil.stop();
