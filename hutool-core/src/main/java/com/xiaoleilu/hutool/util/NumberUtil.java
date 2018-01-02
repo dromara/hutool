@@ -797,6 +797,17 @@ public class NumberUtil {
 
 	// ------------------------------------------------------------------------------------------- range
 	/**
+	 * 从0开始给定范围内的整数列表，步进为1
+	 * 
+	 * @param stop 结束（包含）
+	 * @return 整数列表
+	 * @since 3.3.1
+	 */
+	public static int[] range(int stop) {
+		return range(0, stop);
+	}
+	
+	/**
 	 * 给定范围内的整数列表，步进为1
 	 * 
 	 * @param start 开始（包含）
