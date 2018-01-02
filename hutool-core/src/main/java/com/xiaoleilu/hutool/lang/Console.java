@@ -3,6 +3,9 @@ package com.xiaoleilu.hutool.lang;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 import static java.lang.System.out;
+
+import java.util.Scanner;
+
 import static java.lang.System.err;
 
 /**
@@ -100,5 +103,15 @@ public class Console{
 			t.printStackTrace(err);
 			err.flush();
 		}
+	}
+	
+	//--------------------------------------------------------------------------------- in
+	/**
+	 * 创建从控制台读取内容的{@link Scanner}
+	 * @return {@link Scanner}
+	 * @since 3.3.1
+	 */
+	public static Scanner scanner() {
+		return new Scanner(System.in);
 	}
 }
