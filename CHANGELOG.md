@@ -6,6 +6,7 @@
 
 ### 新特性
 * StrUtil增加方法equalsCharAt
+* 增加方法FileUtil.cleanIInvalid
 
 ### Bug修复
 * 修复HttpUtil.post方法超时失效的问题（感谢@【常州】Gavin）

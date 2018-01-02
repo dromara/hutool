@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.io.file.FileCopier;
@@ -44,6 +45,7 @@ import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
@@ -55,10 +57,12 @@ import com.xiaoleilu.hutool.util.URLUtil;
  */
 public class FileUtil {
 
-	/** The Unix separator character. */
+	/** 类Unix路径分隔符 */
 	private static final char UNIX_SEPARATOR = StrUtil.C_SLASH;
-	/** The Windows separator character. */
+	/** Windows路径分隔符 */
 	private static final char WINDOWS_SEPARATOR = StrUtil.C_BACKSLASH;
+	/** 文件名中的无效字符 */
+	private static Pattern FILE_NAME_INVALID_PATTERN = Pattern.compile("[\\\\/:*?\"<>|]");
 
 	/** Class文件扩展名 */
 	public static final String CLASS_EXT = ".class";
@@ -2684,5 +2688,25 @@ public class FileUtil {
 	public static File convertLineSeparator(File file, Charset charset, LineSeparator lineSeparator) {
 	final List<String> lines = readLines(file, charset);
 		return FileWriter.create(file, charset).writeLines(lines, lineSeparator, false);
+	}
+	
+	/**
+	 * 清除文件名中的非法字符，包括： \ / : * ? " &lt; &gt; |
+	 * @param fileName 文件名（必须不包括路径，否则路径符将被替换）
+	 * @return 清理后的文件名
+	 * @since 3.3.1
+	 */
+	public static String cleanIInvalid(String fileName) {
+		return StrUtil.isBlank(fileName) ? fileName : ReUtil.delAll(FILE_NAME_INVALID_PATTERN, fileName);
+	}
+	
+	/**
+	 * 文件名中是否包含非法字符，包括： \ / : * ? " &lt; &gt; |
+	 * @param fileName 文件名（必须不包括路径，否则路径符将被替换）
+	 * @return 是否包含非法字符
+	 * @since 3.3.1
+	 */
+	public static boolean containsIInvalid(String fileName) {
+		return StrUtil.isBlank(fileName) ? false : ReUtil.contains(FILE_NAME_INVALID_PATTERN, fileName);
 	}
 }
