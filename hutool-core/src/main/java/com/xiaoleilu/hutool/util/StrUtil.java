@@ -61,8 +61,9 @@ public class StrUtil {
 	public static final String COLON = ":";
 
 	public static final String HTML_NBSP = "&nbsp;";
-	public static final String HTML_AMP = "&amp";
+	public static final String HTML_AMP = "&amp;";
 	public static final String HTML_QUOTE = "&quot;";
+	public static final String HTML_APOS = "&apos;";
 	public static final String HTML_LT = "&lt;";
 	public static final String HTML_GT = "&gt;";
 

@@ -16,14 +16,13 @@ public enum SignAlgorithm {
 	MD5withRSA("MD5withRSA"), //
 
 	// The signature algorithm with SHA-* and the RSA
-	SHA1withRSA("SHA1withRSA "), //
+	SHA1withRSA("SHA1withRSA"), //
 	SHA256withRSA("SHA256withRSA"), //
 	SHA384withRSA("SHA384withRSA"), //
 	SHA512withRSA("SHA512withRSA"), //
 
 	// The Digital Signature Algorithm
 	NONEwithDSA("NONEwithDSA"), //
-
 	// The DSA with SHA-1 signature algorithm
 	SHA1withDSA("SHA1withDSA"), //
 

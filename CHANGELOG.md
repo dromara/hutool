@@ -14,6 +14,8 @@
 * 修复Http的get方法传入String带有空格时，报空指针错误（感谢@【北京】宁静）
 * 修复DateUtil.endOfWeek问题（感谢@【北京】谢栋）
 * 修复Convert.numberToChinese大数字出现的问题（issue#IEYLP@Gitee）
+* 修复HtmlUtil.restoreEscaped缺失分号问题，以及单引号处理（issue#IH5ZH@Gitee）
+* 修复签名问题（issue#IH61M@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -191,7 +191,8 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成私钥，仅用于非对称加密
+	 * 生成私钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
@@ -202,7 +203,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成私钥，仅用于非对称加密
+	 * 生成私钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param keySpec {@link KeySpec}
@@ -210,6 +212,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
+		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return KeyFactory.getInstance(algorithm).generatePrivate(keySpec);
 		} catch (Exception e) {
@@ -234,7 +237,8 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成公钥，仅用于非对称加密
+	 * 生成公钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
@@ -245,7 +249,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成公钥，仅用于非对称加密
+	 * 生成公钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param keySpec {@link KeySpec}
@@ -253,6 +258,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
+		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return KeyFactory.getInstance(algorithm).generatePublic(keySpec);
 		} catch (Exception e) {
@@ -261,7 +267,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密
+	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
 	 * @return {@link KeyPair}
@@ -271,7 +278,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成用于非对称加密的公钥和私钥
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
 	 * @param keySize 密钥模（modulus ）长度
@@ -282,7 +290,8 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成用于非对称加密的公钥和私钥
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
 	 * @param keySize 密钥模（modulus ）长度
@@ -290,10 +299,10 @@ public final class SecureUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
-		Assert.notNull(algorithm, "algorithm must be not null !");
-		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
-		if(indexOfWith > 0) {
-			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
+		algorithm = getAlgorithmAfterWith(algorithm);
+		if("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
+			//对于EC算法，密钥长度有限制，在此使用默认256
+			keySize = 256;
 		}
 		
 		KeyPairGenerator keyPairGen;
@@ -307,12 +316,31 @@ public final class SecureUtil {
 			keySize = DEFAULT_KEY_SIZE;
 		}
 		if (null != seed) {
-			SecureRandom random = new SecureRandom(seed);
+			final SecureRandom random = new SecureRandom(seed);
 			keyPairGen.initialize(keySize, random);
 		} else {
 			keyPairGen.initialize(keySize);
 		}
 		return keyPairGen.generateKeyPair();
+	}
+	
+	/**
+	 * 获取用于密钥生成的算法<br>
+	 * 获取XXXwithXXX算法的后半部分算法，如果为ECDSA，返回算法为EC
+	 * 
+	 * @param algorithm XXXwithXXX算法
+	 * @return 算法
+	 */
+	public static String getAlgorithmAfterWith(String algorithm) {
+		Assert.notNull(algorithm, "algorithm must be not null !");
+		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
+		if(indexOfWith > 0) {
+			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
+		}
+		if("ECDSA".equalsIgnoreCase(algorithm)) {
+			algorithm = "EC";
+		}
+		return algorithm;
 	}
 
 	/**
