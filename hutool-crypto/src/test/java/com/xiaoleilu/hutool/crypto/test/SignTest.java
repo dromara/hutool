@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.crypto.SecureUtil;
 import com.xiaoleilu.hutool.crypto.asymmetric.Sign;
 import com.xiaoleilu.hutool.crypto.asymmetric.SignAlgorithm;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * 签名单元测试
@@ -59,7 +60,7 @@ public class SignTest {
 	 * @param signAlgorithm 算法
 	 */
 	private void signAndVerify(SignAlgorithm signAlgorithm) {
-		byte[] data = "我是一段测试ab".getBytes();
+		byte[] data = StrUtil.utf8Bytes("我是一段测试ab");
 		Sign sign = SecureUtil.sign(signAlgorithm);
 
 		// 签名
