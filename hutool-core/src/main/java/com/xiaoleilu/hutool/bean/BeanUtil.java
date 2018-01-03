@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.bean.BeanDesc.PropDesc;
 import com.xiaoleilu.hutool.bean.copier.BeanCopier;
@@ -307,16 +306,7 @@ public class BeanUtil {
 	 */
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, boolean isIgnoreError) {
 		if (isToCamelCase) {
-			final Map<Object, Object> map2 = new HashMap<Object, Object>();
-			for (Entry<?, ?> entry : map.entrySet()) {
-				final Object key = entry.getKey();
-				if (null != key && key instanceof String) {
-					final String keyStr = (String) key;
-					map2.put(StrUtil.toCamelCase(keyStr), entry.getValue());
-				} else {
-					map2.put(key, entry.getValue());
-				}
-			}
+			final Map<String, ?> map2 = MapUtil.toCamelCaseMap(map);
 			return fillBeanWithMap(map2, bean, isIgnoreError);
 		} else {
 			return fillBeanWithMap(map, bean, isIgnoreError);
