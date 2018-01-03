@@ -263,6 +263,18 @@ public class BeanUtil {
 		return fillBeanWithMapIgnoreCase(map, ReflectUtil.newInstance(beanClass), isIgnoreError);
 	}
 
+	/**
+	 * Map转换为Bean对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param map {@link Map}
+	 * @param beanClass Bean Class
+	 * @param copyOptions 转Bean选项
+	 * @return Bean
+	 */
+	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, CopyOptions copyOptions) {
+		return fillBeanWithMap(map, ReflectUtil.newInstance(beanClass), copyOptions);
+	}
 	// --------------------------------------------------------------------------------------------- fillBeanWithMap
 	/**
 	 * 使用Map填充Bean对象
@@ -322,7 +334,7 @@ public class BeanUtil {
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, final boolean isIgnoreError) {
+	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, boolean isIgnoreError) {
 		return fillBeanWithMap(new CaseInsensitiveMap<>(map), bean, isIgnoreError);
 	}
 

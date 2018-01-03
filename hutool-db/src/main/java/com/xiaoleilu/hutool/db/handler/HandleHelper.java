@@ -17,6 +17,36 @@ public class HandleHelper {
 	
 	/**
 	 * 处理单条数据
+	 * 
+	 * @param columnCount 列数
+	 * @param meta ResultSetMetaData
+	 * @param rs 数据集
+	 * @param bean 目标Bean
+	 * @return 每一行的Entity
+	 * @throws SQLException SQL执行异常
+	 * @since 3.3.1
+	 */
+	public static <T> T handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, T bean) throws SQLException {
+		return handleRow(columnCount, meta, rs).toBeanIgnoreCase(bean);
+	}
+	
+	/**
+	 * 处理单条数据
+	 * 
+	 * @param columnCount 列数
+	 * @param meta ResultSetMetaData
+	 * @param rs 数据集
+	 * @param beanClass 目标Bean类型
+	 * @return 每一行的Entity
+	 * @throws SQLException SQL执行异常
+	 * @since 3.3.1
+	 */
+	public static <T> T handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, Class<T> beanClass) throws SQLException {
+		return handleRow(columnCount, meta, rs).toBeanIgnoreCase(beanClass);
+	}
+	
+	/**
+	 * 处理单条数据
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
@@ -99,7 +129,7 @@ public class HandleHelper {
 		final int columnCount = meta.getColumnCount();
 		
 		while(rs.next()) {
-			collection.add(HandleHelper.handleRow(columnCount, meta, rs).toBean(elementBeanType));
+			collection.add(handleRow(columnCount, meta, rs, elementBeanType));
 		}
 		
 		return collection;
