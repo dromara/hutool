@@ -282,28 +282,11 @@ public class BeanUtil {
 	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
-	 * @param copyOptions 属性复制选项 {@link CopyOptions}
-	 * @return Bean
-	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, CopyOptions copyOptions) {
-		if(MapUtil.isEmpty(map)) {
-			return bean;
-		}
-		
-		return BeanCopier.create(map, bean, copyOptions).copy();
-	}
-
-	/**
-	 * 使用Map填充Bean对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param bean Bean
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, final boolean isIgnoreError) {
-		return fillBeanWithMap(map, bean, CopyOptions.create().setIgnoreError(isIgnoreError));
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isIgnoreError) {
+		return fillBeanWithMap(map, bean, false, isIgnoreError);
 	}
 
 	/**
@@ -317,12 +300,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, boolean isIgnoreError) {
-		if (isToCamelCase) {
-			final Map<String, ?> map2 = MapUtil.toCamelCaseMap(map);
-			return fillBeanWithMap(map2, bean, isIgnoreError);
-		} else {
-			return fillBeanWithMap(map, bean, isIgnoreError);
-		}
+		return fillBeanWithMap(map, bean, isToCamelCase, CopyOptions.create().setIgnoreError(isIgnoreError));
 	}
 
 	/**
@@ -335,9 +313,42 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, boolean isIgnoreError) {
-		return fillBeanWithMap(new CaseInsensitiveMap<>(map), bean, isIgnoreError);
+		return fillBeanWithMap(map, bean, CopyOptions.create().setIgnoreCase(true).setIgnoreError(isIgnoreError));
 	}
 
+	/**
+	 * 使用Map填充Bean对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param map Map
+	 * @param bean Bean
+	 * @param copyOptions 属性复制选项 {@link CopyOptions}
+	 * @return Bean
+	 */
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, CopyOptions copyOptions) {
+		return fillBeanWithMap(map, bean, false, copyOptions);
+	}
+	
+	/**
+	 * 使用Map填充Bean对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param map Map
+	 * @param bean Bean
+	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
+	 * @param copyOptions 属性复制选项 {@link CopyOptions}
+	 * @return Bean
+	 * @since 3.3.1
+	 */
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, CopyOptions copyOptions) {
+		if(MapUtil.isEmpty(map)) {
+			return bean;
+		}
+		if(isToCamelCase) {
+			map = MapUtil.toCamelCaseMap(map);
+		}
+		return BeanCopier.create(map, bean, copyOptions).copy();
+	}
 	// --------------------------------------------------------------------------------------------- fillBean
 	/**
 	 * ServletRequest 参数转Bean

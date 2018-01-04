@@ -15,7 +15,7 @@ import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.collection.CollectionUtil;
 
 /**
- * 1、字典对象，扩充了HashMap中的方法
+ * 字典对象，扩充了HashMap中的方法
  * 
  * @author loolly
  *
