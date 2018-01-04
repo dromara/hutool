@@ -18,6 +18,7 @@
 * 修复HtmlUtil.restoreEscaped缺失分号问题，以及单引号处理（issue#IH5ZH@Gitee）
 * 修复签名问题（issue#IH61M@Gitee）
 * 修复Excel空行下报错问题（issue#78@Github）
+* 修复NumberUtil.isInteger无法判断负数问题（感谢@【杭州】fineliving）
 
 -------------------------------------------------------------------------------------------------------------
 
