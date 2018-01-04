@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.resource.ResourceUtil;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.poi.excel.ExcelReader;
 import com.xiaoleilu.hutool.poi.excel.ExcelUtil;
 
@@ -40,6 +41,16 @@ public class ExcelReadTest {
 		Assert.assertEquals("男", readAll.get(1).get(1));
 		Assert.assertEquals(11L, readAll.get(1).get(2));
 		Assert.assertEquals(41.5D, readAll.get(1).get(3));
+	}
+	
+	@Test
+	public void excel03ReadTest() {
+		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));
+		List<List<Object>> readAll = reader.read();
+		
+		for (List<Object> list : readAll) {
+			Console.log(list);
+		}
 	}
 	
 	@Test
