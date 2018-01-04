@@ -9,6 +9,7 @@
 * 增加方法FileUtil.cleanIInvalid
 * db模块BeanHandler支持忽略大小写（针对Oracle返回大写字段无法注入Bean的问题）
 * Setting增加set方法，支持分组
+* JSONObject支持键忽略大小写模式
 
 ### Bug修复
 * 修复HttpUtil.post方法超时失效的问题（感谢@【常州】Gavin）
