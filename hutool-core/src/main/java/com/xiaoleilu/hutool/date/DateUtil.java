@@ -445,6 +445,9 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {
+		if(null == date || StrUtil.isBlank(format)) {
+			return null;
+		}
 		return format(date, FastDateFormat.getInstance(format));
 	}
 
@@ -456,6 +459,9 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DatePrinter format) {
+		if(null == format || null == date) {
+			return null;
+		}
 		return format.format(date);
 	}
 
@@ -467,6 +473,9 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DateFormat format) {
+		if(null == format || null == date) {
+			return null;
+		}
 		return format.format(date);
 	}
 

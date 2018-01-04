@@ -11,6 +11,7 @@ import java.util.TimeZone;
 import com.xiaoleilu.hutool.date.format.DateParser;
 import com.xiaoleilu.hutool.date.format.DatePrinter;
 import com.xiaoleilu.hutool.date.format.FastDateFormat;
+import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -711,6 +712,8 @@ public class DateTime extends Date {
 	 * @return {@link Date}
 	 */
 	private static Date parse(String dateStr, DateParser parser) {
+		Assert.notNull(parser, "Parser or DateFromat must be not null !");
+		Assert.notBlank(dateStr, "Date String must be not blank !");
 		try {
 			return parser.parse(dateStr);
 		} catch (Exception e) {

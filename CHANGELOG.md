@@ -8,6 +8,7 @@
 * StrUtil增加方法equalsCharAt
 * 增加方法FileUtil.cleanIInvalid
 * db模块BeanHandler支持忽略大小写（针对Oracle返回大写字段无法注入Bean的问题）
+* Setting增加set方法，支持分组
 
 ### Bug修复
 * 修复HttpUtil.post方法超时失效的问题（感谢@【常州】Gavin）
@@ -62,7 +63,7 @@
 * 修复POI模块read07BySax导致的空白单元格丢失和日期粘连问题（issue#76@Github）
 * 修复ExcelWriter在写出4000行以上时样式超出范围问题（issue#IH05B@Gitee）
 * 修复StrUtil.replaceChars方法无效问题
-* 修复在JSONArray中toList有null元素返回null的问题（感谢@@【银川】野马）
+* 修复在JSONArray中toList有null元素返回null的问题（感谢@【银川】野马）
 * 修复Base64解码时在有换行符的情况下解码失败的问题（感谢@【霾都】QQ小冰）
 
 -------------------------------------------------------------------------------------------------------------
