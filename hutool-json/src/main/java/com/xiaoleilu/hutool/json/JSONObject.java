@@ -573,10 +573,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	@Override
 	public String toJSONString(int indentFactor) throws JSONException {
-		StringWriter w = new StringWriter();
-		synchronized (w.getBuffer()) {
-			return this.write(w, indentFactor, 0).toString();
-		}
+		final StringWriter w = new StringWriter();
+		return this.write(w, indentFactor, 0).toString();
 	}
 
 	@Override
@@ -586,18 +584,18 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
+		boolean commanate = false;
+		final int length = this.size();
+		Iterator<String> keys = this.keySet().iterator();
 		try {
-			boolean commanate = false;
-			final int length = this.size();
-			Iterator<String> keys = this.keySet().iterator();
-			writer.write('{');
-
+			writer.write(StrUtil.C_DELIM_START);
 			if (length == 1) {
+				//只有一对键值对
 				Object key = keys.next();
 				writer.write(JSONUtil.quote(key.toString()));
-				writer.write(':');
+				writer.write(StrUtil.C_COLON);
 				if (indentFactor > 0) {
-					writer.write(' ');
+					writer.write(StrUtil.C_SPACE);
 				}
 				InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, indent);
 			} else if (length != 0) {
@@ -605,26 +603,26 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				while (keys.hasNext()) {
 					Object key = keys.next();
 					if (commanate) {
-						writer.write(',');
+						writer.write(StrUtil.C_COMMA);
 					}
 					if (indentFactor > 0) {
-						writer.write('\n');
+						writer.write(StrUtil.C_LF);
 					}
 					InternalJSONUtil.indent(writer, newindent);
 					writer.write(JSONUtil.quote(key.toString()));
-					writer.write(':');
+					writer.write(StrUtil.C_COLON);
 					if (indentFactor > 0) {
-						writer.write(' ');
+						writer.write(StrUtil.C_SPACE);
 					}
 					InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, newindent);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
-					writer.write('\n');
+					writer.write(StrUtil.C_LF);
 				}
 				InternalJSONUtil.indent(writer, indent);
 			}
-			writer.write('}');
+			writer.write(StrUtil.C_DELIM_END);
 			return writer;
 		} catch (IOException exception) {
 			throw new JSONException(exception);

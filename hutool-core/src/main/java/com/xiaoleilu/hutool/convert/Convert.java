@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.convert;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -475,7 +476,7 @@ public final class Convert {
 	 * @param value 值
 	 * @return 转换后的值
 	 */
-	public static <T> T convert(Class<T> type, Object value) {
+	public static <T> T convert(Type type, Object value) {
 		return convert(type, value, null);
 	}
 
@@ -489,7 +490,7 @@ public final class Convert {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
+	public static <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
 		return ConverterRegistry.getInstance().convert(type, value, defaultValue);
 	}
 

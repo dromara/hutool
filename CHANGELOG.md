@@ -10,6 +10,8 @@
 * db模块BeanHandler支持忽略大小写（针对Oracle返回大写字段无法注入Bean的问题）
 * Setting增加set方法，支持分组
 * JSONObject支持键忽略大小写模式
+* db模块针对java.sql.Time增加单独判断
+* DbUtil.getTables支持Oracle用户参数传入（感谢@【广西】Succy）
 
 ### Bug修复
 * 修复HttpUtil.post方法超时失效的问题（感谢@【常州】Gavin）
@@ -21,6 +23,7 @@
 * 修复Excel空行下报错问题（issue#78@Github）
 * 修复NumberUtil.isInteger无法判断负数问题（感谢@【杭州】fineliving）
 * 修复BeanUtil.fillBean等方法忽略大小写失败的问题
+* 修复JSON中getStr方法返回字符串中含有\b等特殊字符时显示错误问题（感谢@【广西】Succy）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -11,6 +11,7 @@ import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.json.test.bean.Seq;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
 import com.xiaoleilu.hutool.json.test.bean.UserB;
+import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSONObject单元测试
@@ -134,6 +135,14 @@ public class JSONObjectTest {
 		JSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA, false);
 		Assert.assertTrue(userAJsonWithNullValue.containsKey("a"));
 		Assert.assertTrue(userAJsonWithNullValue.containsKey("sqs"));
+	}
+	
+	@Test
+	public void specialCharTest() {
+		String json = "{\"pattern\": \"[abc]\b\n\"}";
+		JSONObject obj = JSONUtil.parseObj(json);
+		Console.log(obj);
+		Console.log(obj.getStr("pattern"));
 	}
 	
 	/**

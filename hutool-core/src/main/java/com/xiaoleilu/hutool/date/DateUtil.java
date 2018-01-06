@@ -1054,7 +1054,7 @@ public class DateUtil {
 	// ------------------------------------ Offset end ----------------------------------------------
 
 	/**
-	 * 判断两个日期相差的时长
+	 * 判断两个日期相差的时长，只保留绝对值
 	 * 
 	 * @param beginDate 起始日期
 	 * @param endDate 结束日期
@@ -1062,7 +1062,21 @@ public class DateUtil {
 	 * @return 日期差
 	 */
 	public static long between(Date beginDate, Date endDate, DateUnit unit) {
-		return new DateBetween(beginDate, endDate).between(unit);
+		return between(beginDate, endDate, unit, true);
+	}
+	
+	/**
+	 * 判断两个日期相差的时长
+	 * 
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
+	 * @param isAbs 日期间隔是否只保留绝对值正数
+	 * @return 日期差
+	 * @since 3.3.1
+	 */
+	public static long between(Date beginDate, Date endDate, DateUnit unit, boolean isAbs) {
+		return new DateBetween(beginDate, endDate, isAbs).between(unit);
 	}
 
 	/**

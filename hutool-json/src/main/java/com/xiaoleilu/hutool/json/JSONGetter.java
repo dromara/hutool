@@ -11,6 +11,12 @@ import com.xiaoleilu.hutool.getter.OptNullBasicTypeFromObjectGetter;
  */
 public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	
+	@Override
+	public String getStr(K key, String defaultValue) {
+		String str = super.getStr(key, defaultValue);
+		return JSONUtil.quote(str);
+	}
+	
 	/**
 	 * 获得JSONArray对象<br>
 	 * 如果值为其它类型对象，尝试转换为{@link JSONArray}返回，否则抛出异常

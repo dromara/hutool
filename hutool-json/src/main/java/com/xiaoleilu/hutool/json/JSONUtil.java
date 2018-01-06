@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.util.ArrayUtil;
+import com.xiaoleilu.hutool.util.HexUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -359,18 +360,16 @@ public final class JSONUtil {
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 *
-	 * @param string A String
-	 * @return A String correctly formatted for insertion in a JSON text.
+	 * @param string 字符串
+	 * @return 适合在JSON中显示的字符串
 	 */
 	public static String quote(String string) {
 		StringWriter sw = new StringWriter();
-		synchronized (sw.getBuffer()) {
-			try {
-				return quote(string, sw).toString();
-			} catch (IOException ignored) {
-				// will never happen - we are writing to a string writer
-				return "";
-			}
+		try {
+			return quote(string, sw).toString();
+		} catch (IOException ignored) {
+			// will never happen - we are writing to a string writer
+			return StrUtil.EMPTY;
 		}
 	}
 
@@ -379,31 +378,28 @@ public final class JSONUtil {
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
 	 * 
-	 * @param string A String
+	 * @param str 字符串
 	 * @param writer Writer
-	 * @return A String correctly formatted for insertion in a JSON text.
+	 * @return Writer
 	 * @throws IOException IO异常
 	 */
-	public static Writer quote(String string, Writer writer) throws IOException {
-		if (StrUtil.isEmpty(string)) {
+	public static Writer quote(String str, Writer writer) throws IOException {
+		if (StrUtil.isEmpty(str)) {
 			writer.write("\"\"");
 			return writer;
 		}
 
-		char b; // back char
-		char c = 0; // current char
-		String hhhh;
-		int i;
-		int len = string.length();
-
+		char b; // 前一个字符
+		char c = 0; // 当前字符
+		int len = str.length();
 		writer.write('"');
-		for (i = 0; i < len; i++) {
+		for (int i = 0; i < len; i++) {
 			b = c;
-			c = string.charAt(i);
+			c = str.charAt(i);
 			switch (c) {
 			case '\\':
 			case '"':
-				writer.write('\\');
+				writer.write("\\\"");
 				writer.write(c);
 				break;
 			case '/':
@@ -428,11 +424,8 @@ public final class JSONUtil {
 				writer.write("\\r");
 				break;
 			default:
-				if (c < ' ' || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
-					writer.write("\\u");
-					hhhh = Integer.toHexString(c);
-					writer.write("0000", 0, 4 - hhhh.length());
-					writer.write(hhhh);
+				if (c < StrUtil.C_SPACE || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
+					writer.write(HexUtil.toUnicodeHex(c));
 				} else {
 					writer.write(c);
 				}
