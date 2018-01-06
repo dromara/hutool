@@ -99,7 +99,7 @@ public final class JSONUtil {
 	public static JSONArray parseArray(Object arrayOrCollection) {
 		return new JSONArray(arrayOrCollection);
 	}
-	
+
 	/**
 	 * JSON字符串转JSONArray
 	 * 
@@ -290,7 +290,7 @@ public final class JSONUtil {
 	// -------------------------------------------------------------------- toString end
 
 	// -------------------------------------------------------------------- toBean start
-	
+
 	/**
 	 * JSON字符串转为实体类对象，转换异常将被抛出
 	 * 
@@ -303,7 +303,7 @@ public final class JSONUtil {
 	public static <T> T toBean(String jsonString, Class<T> beanClass) {
 		return toBean(parseObj(jsonString), beanClass, false);
 	}
-	
+
 	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 * 
@@ -364,9 +364,23 @@ public final class JSONUtil {
 	 * @return 适合在JSON中显示的字符串
 	 */
 	public static String quote(String string) {
+		return quote(string, true);
+	}
+
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 *
+	 * @param string 字符串
+	 * @param isWrap 是否使用双引号包装字符串
+	 * @return 适合在JSON中显示的字符串
+	 * @since 3.3.1
+	 */
+	public static String quote(String string, boolean isWrap) {
 		StringWriter sw = new StringWriter();
 		try {
-			return quote(string, sw).toString();
+			return quote(string, sw, isWrap).toString();
 		} catch (IOException ignored) {
 			// will never happen - we are writing to a string writer
 			return StrUtil.EMPTY;
@@ -384,15 +398,35 @@ public final class JSONUtil {
 	 * @throws IOException IO异常
 	 */
 	public static Writer quote(String str, Writer writer) throws IOException {
+		return quote(str, writer, true);
+	}
+
+	/**
+	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
+	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
+	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
+	 * 
+	 * @param str 字符串
+	 * @param writer Writer
+	 * @param isWrap 是否使用双引号包装字符串
+	 * @return Writer
+	 * @throws IOException IO异常
+	 * @since 3.3.1
+	 */
+	public static Writer quote(String str, Writer writer, boolean isWrap) throws IOException {
 		if (StrUtil.isEmpty(str)) {
-			writer.write("\"\"");
+			if (isWrap) {
+				writer.write("\"\"");
+			}
 			return writer;
 		}
 
 		char b; // 前一个字符
 		char c = 0; // 当前字符
 		int len = str.length();
-		writer.write('"');
+		if (isWrap) {
+			writer.write('"');
+		}
 		for (int i = 0; i < len; i++) {
 			b = c;
 			c = str.charAt(i);
@@ -431,8 +465,53 @@ public final class JSONUtil {
 				}
 			}
 		}
-		writer.write('"');
+		if (isWrap) {
+			writer.write('"');
+		}
 		return writer;
+	}
+
+	/**
+	 * 转义显示不可见字符
+	 * 
+	 * @param str 字符串
+	 * @return 转义后的字符串
+	 */
+	public static String escape(String str) {
+		if(StrUtil.isEmpty(str)) {
+			return str;
+		}
+		
+		final int len = str.length();
+		final StringBuilder builder = new StringBuilder(len);
+		char c;
+		for (int i = 0; i < len; i++) {
+			c = str.charAt(i);
+			switch (c) {
+			case '\b':
+				builder.append("\\b");
+				break;
+			case '\t':
+				builder.append("\\t");
+				break;
+			case '\n':
+				builder.append("\\n");
+				break;
+			case '\f':
+				builder.append("\\f");
+				break;
+			case '\r':
+				builder.append("\\r");
+				break;
+			default:
+				if (c < StrUtil.C_SPACE || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
+					builder.append(HexUtil.toUnicodeHex(c));
+				} else {
+					builder.append(c);
+				}
+			}
+		}
+		return builder.toString();
 	}
 
 	/**
@@ -455,42 +534,42 @@ public final class JSONUtil {
 		if (object == null) {
 			return JSONNull.NULL;
 		}
-		if (object instanceof JSON || JSONNull.NULL.equals(object) || object instanceof JSONString || object instanceof CharSequence || object instanceof Number
-				|| ObjectUtil.isBasicType(object)) {
+		if (object instanceof JSON || JSONNull.NULL.equals(object) || object instanceof JSONString || object instanceof CharSequence || object instanceof Number || ObjectUtil.isBasicType(object)) {
 			return object;
 		}
-		
+
 		try {
-			//JSONArray
+			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
 				return new JSONArray(object, ignoreNullValue);
 			}
-			
-			//日期类型特殊处理
+
+			// 日期类型特殊处理
 			if (object instanceof Date) {
 				return ((Date) object).getTime();
 			}
 			if (object instanceof Calendar) {
 				return ((Calendar) object).getTimeInMillis();
 			}
-			
-			//Java内部类不做转换
+
+			// Java内部类不做转换
 			final Class<?> objectClass = object.getClass();
 			final Package objectPackage = objectClass.getPackage();
 			final String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
 			if (objectPackageName.startsWith("java.") || objectPackageName.startsWith("javax.") || objectClass.getClassLoader() == null) {
 				return object.toString();
 			}
-			
-			//默认按照JSONObject对待
+
+			// 默认按照JSONObject对待
 			return new JSONObject(object, ignoreNullValue);
 		} catch (Exception exception) {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * 格式化JSON字符串，此方法并不严格检查JSON的格式正确与否
+	 * 
 	 * @param jsonStr JSON字符串
 	 * @return 格式化后的字符串
 	 * @since 3.1.2
@@ -498,9 +577,10 @@ public final class JSONUtil {
 	public static String formatJsonStr(String jsonStr) {
 		return JSONStrFormater.format(jsonStr);
 	}
-	
+
 	/**
 	 * 是否为JSON字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * 
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
@@ -508,28 +588,30 @@ public final class JSONUtil {
 	public static boolean isJson(String str) {
 		return isJsonObj(str) || isJsonArray(str);
 	}
-	
+
 	/**
 	 * 是否为JSONObject字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * 
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
 	 */
 	public static boolean isJsonObj(String str) {
-		if(StrUtil.isBlank(str)) {
+		if (StrUtil.isBlank(str)) {
 			return false;
 		}
 		return StrUtil.isWrap(str.trim(), '{', '}');
 	}
-	
+
 	/**
 	 * 是否为JSONObject字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * 
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
 	 */
 	public static boolean isJsonArray(String str) {
-		if(StrUtil.isBlank(str)) {
+		if (StrUtil.isBlank(str)) {
 			return false;
 		}
 		return StrUtil.isWrap(str.trim(), '[', ']');

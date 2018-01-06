@@ -12,6 +12,7 @@
 * JSONObject支持键忽略大小写模式
 * db模块针对java.sql.Time增加单独判断
 * DbUtil.getTables支持Oracle用户参数传入（感谢@【广西】Succy）
+* 优化BeanHandler，去除转为Entity环节
 
 ### Bug修复
 * 修复HttpUtil.post方法超时失效的问题（感谢@【常州】Gavin）

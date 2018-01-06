@@ -11,7 +11,6 @@ import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.json.test.bean.Seq;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
 import com.xiaoleilu.hutool.json.test.bean.UserB;
-import com.xiaoleilu.hutool.lang.Console;
 
 /**
  * JSONObject单元测试
@@ -139,10 +138,10 @@ public class JSONObjectTest {
 	
 	@Test
 	public void specialCharTest() {
-		String json = "{\"pattern\": \"[abc]\b\n\"}";
+		String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
 		JSONObject obj = JSONUtil.parseObj(json);
-		Console.log(obj);
-		Console.log(obj.getStr("pattern"));
+		Assert.assertEquals("[abc]\\b\\u2001", obj.getStr("pattern"));
+		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
 	}
 	
 	/**

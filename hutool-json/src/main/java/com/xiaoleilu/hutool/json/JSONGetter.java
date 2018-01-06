@@ -14,7 +14,10 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	@Override
 	public String getStr(K key, String defaultValue) {
 		String str = super.getStr(key, defaultValue);
-		return JSONUtil.quote(str);
+		if(null == str) {
+			return defaultValue;
+		}
+		return JSONUtil.escape(str);
 	}
 	
 	/**
