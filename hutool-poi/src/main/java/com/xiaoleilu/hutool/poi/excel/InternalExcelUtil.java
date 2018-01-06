@@ -190,6 +190,9 @@ public class InternalExcelUtil {
 	 * @return 单元格值列表
 	 */
 	public static List<Object> readRow(Row row, CellEditor cellEditor) {
+		if(null == row) {
+			return null;
+		}
 		final short length = row.getLastCellNum();
 		final List<Object> cellValues = new ArrayList<>((int) length);
 		Object cellValue;

@@ -23,7 +23,8 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void getTest2() {
-		String result1 = HttpUtil.get("http://122.152.198.206:5000/kf");
+		//测试url中带有空格的情况
+		String result1 = HttpUtil.get("http://122.152.198.206:5000/kf?abc= d");
 		Console.log(result1);
 	}
 	

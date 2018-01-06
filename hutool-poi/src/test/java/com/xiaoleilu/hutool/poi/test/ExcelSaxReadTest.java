@@ -46,7 +46,10 @@ public class ExcelSaxReadTest {
 			@Override
 			public void handle(int sheetIndex, int rowIndex, List<Object> rowlist) {
 //				Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
-				Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
+				if(5 != rowIndex && 6 != rowIndex) {
+					//测试样例中除第五行、第六行都为非空行
+					Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
+				}
 			}
 		};
 	}

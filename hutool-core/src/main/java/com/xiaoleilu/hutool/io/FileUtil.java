@@ -32,18 +32,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
-import com.xiaoleilu.hutool.collection.CollectionUtil;
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.io.file.FileCopier;
 import com.xiaoleilu.hutool.io.file.FileReader;
 import com.xiaoleilu.hutool.io.file.FileReader.ReaderHandler;
-import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.io.file.FileWriter;
 import com.xiaoleilu.hutool.io.file.LineSeparator;
+import com.xiaoleilu.hutool.io.resource.ResourceUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
 
@@ -55,10 +57,12 @@ import com.xiaoleilu.hutool.util.URLUtil;
  */
 public class FileUtil {
 
-	/** The Unix separator character. */
+	/** 类Unix路径分隔符 */
 	private static final char UNIX_SEPARATOR = StrUtil.C_SLASH;
-	/** The Windows separator character. */
+	/** Windows路径分隔符 */
 	private static final char WINDOWS_SEPARATOR = StrUtil.C_BACKSLASH;
+	/** Windows下文件名中的无效字符 */
+	private static Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
 
 	/** Class文件扩展名 */
 	public static final String CLASS_EXT = ".class";
@@ -90,7 +94,7 @@ public class FileUtil {
 		if (path == null) {
 			return null;
 		}
-		
+
 		path = getAbsolutePath(path);
 
 		File file = file(path);
@@ -158,7 +162,7 @@ public class FileUtil {
 	public static boolean isDirEmpty(File dir) {
 		return isDirEmpty(dir.toPath());
 	}
-	
+
 	/**
 	 * 递归遍历目录以及子目录中的所有文件<br>
 	 * 如果提供file为文件，直接返回过滤结果
@@ -200,7 +204,7 @@ public class FileUtil {
 
 		return fileList;
 	}
-	
+
 	/**
 	 * 递归遍历目录以及子目录中的所有文件
 	 * 
@@ -235,7 +239,7 @@ public class FileUtil {
 			return null;
 		}
 		List<String> paths = new ArrayList<String>();
-		
+
 		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
 		if (index == -1) {
 			// 普通目录路径
@@ -246,7 +250,7 @@ public class FileUtil {
 				}
 			}
 		} else {
-			//jar文件
+			// jar文件
 			path = getAbsolutePath(path);
 			if (false == path.endsWith(String.valueOf(UNIX_SEPARATOR))) {
 				path = path + UNIX_SEPARATOR;
@@ -904,29 +908,32 @@ public class FileUtil {
 	 * @return 绝对路径
 	 */
 	public static String getAbsolutePath(String path, Class<?> baseClass) {
+		String normalPath;
 		if (path == null) {
-			path = StrUtil.EMPTY;
+			normalPath = StrUtil.EMPTY;
 		} else {
-			path = normalize(path);
-			if (isAbsolutePath(path)) {
+			normalPath = normalize(path);
+			if (isAbsolutePath(normalPath)) {
 				// 给定的路径已经是绝对路径了
-				return path;
+				return normalPath;
 			}
 		}
 
 		// 相对于ClassPath路径
-		final URL url = ResourceUtil.getResource(path, baseClass);
+		final URL url = ResourceUtil.getResource(normalPath, baseClass);
 		if (null != url) {
-			// since 3.0.8 解决中文或空格路径被编码的问题
+			// 对于jar中文件包含file:前缀，需要去掉此类前缀，在此做标准化，since 3.0.8 解决中文或空格路径被编码的问题
 			return FileUtil.normalize(URLUtil.getDecodedPath(url));
 		}
-		
+
 		// 如果资源不存在，则返回一个拼接的资源绝对路径
 		final String classPath = ClassUtil.getClassPath();
 		if (null == classPath) {
 			throw new NullPointerException("ClassPath is null !");
 		}
-		return classPath.concat(path);
+
+		// 资源不存在的情况下使用标准化路径有问题，使用原始路径拼接后标准化路径
+		return normalize(classPath.concat(path));
 	}
 
 	/**
@@ -967,10 +974,10 @@ public class FileUtil {
 	 * @return 是否已经是绝对路径
 	 */
 	public static boolean isAbsolutePath(String path) {
-		if(StrUtil.isEmpty(path)) {
+		if (StrUtil.isEmpty(path)) {
 			return false;
 		}
-		
+
 		if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:/.*")) {
 			// 给定的路径已经是绝对路径了
 			return true;
@@ -1154,6 +1161,7 @@ public class FileUtil {
 	 * </ol>
 	 * 
 	 * 栗子：
+	 * 
 	 * <pre>
 	 * "/foo//" =》 "/foo/"
 	 * "/foo/./" =》 "/foo/"
@@ -1179,27 +1187,27 @@ public class FileUtil {
 		if (path == null) {
 			return null;
 		}
-		
+
 		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
 		String pathToUse = StrUtil.removePrefixIgnoreCase(path, "classpath:");
-		//去除file:前缀
+		// 去除file:前缀
 		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, "file:");
-		//统一使用斜杠
+		// 统一使用斜杠
 		pathToUse = pathToUse.replaceAll("[/\\\\]{1,}", "/").trim();
 
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		String prefix = "";
 		if (prefixIndex > -1) {
-			//可能Windows风格路径
+			// 可能Windows风格路径
 			prefix = pathToUse.substring(0, prefixIndex + 1);
-			if(StrUtil.startWith(prefix, StrUtil.C_SLASH)) {
-				//去除类似于/C:这类路径开头的斜杠
+			if (StrUtil.startWith(prefix, StrUtil.C_SLASH)) {
+				// 去除类似于/C:这类路径开头的斜杠
 				prefix = prefix.substring(1);
 			}
 			if (false == prefix.contains("/")) {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
-			}else {
-				//如果前缀中包含/,说明非Windows风格path
+			} else {
+				// 如果前缀中包含/,说明非Windows风格path
 				prefix = StrUtil.EMPTY;
 			}
 		}
@@ -1221,7 +1229,7 @@ public class FileUtil {
 				tops++;
 			} else {
 				if (tops > 0) {
-					// Merging path element with element corresponding to top path.
+					// 有上级目录标记时按照个数依次跳过
 					tops--;
 				} else {
 					// Normal path element found.
@@ -1230,13 +1238,14 @@ public class FileUtil {
 			}
 		}
 
-		return prefix + CollectionUtil.join(pathElements, StrUtil.SLASH);
+		return prefix + CollUtil.join(pathElements, StrUtil.SLASH);
 	}
 
 	/**
 	 * 获得相对子路径
 	 * 
 	 * 栗子：
+	 * 
 	 * <pre>
 	 * dirPath: d:/aaa/bbb    filePath: d:/aaa/bbb/ccc     =》    ccc
 	 * dirPath: d:/Aaa/bbb    filePath: d:/aaa/bbb/ccc.txt     =》    ccc.txt
@@ -1258,6 +1267,7 @@ public class FileUtil {
 	 * 获得相对子路径，忽略大小写
 	 * 
 	 * 栗子：
+	 * 
 	 * <pre>
 	 * dirPath: d:/aaa/bbb    filePath: d:/aaa/bbb/ccc     =》    ccc
 	 * dirPath: d:/Aaa/bbb    filePath: d:/aaa/bbb/ccc.txt     =》    ccc.txt
@@ -1271,41 +1281,44 @@ public class FileUtil {
 		if (StrUtil.isNotEmpty(dirPath) && StrUtil.isNotEmpty(filePath)) {
 			dirPath = normalize(dirPath);
 			filePath = normalize(filePath);
-			
+
 			if (filePath != null && filePath.toLowerCase().startsWith(dirPath.toLowerCase())) {
-				if(false == filePath.equals(dirPath)) {
+				if (false == filePath.equals(dirPath)) {
 					filePath = filePath.substring(dirPath.length() + 1);
-				}else {
+				} else {
 					filePath = StrUtil.EMPTY;
 				}
 			}
 		}
 		return filePath;
 	}
-	
+
 	/**
 	 * 获取指定位置的子路径部分，支持负数，例如index为-1表示从后数第一个节点位置
+	 * 
 	 * @param path 路径
 	 * @param index 路径节点位置，支持负数（负数从后向前计数）
 	 * @return 获取的子路径
 	 * @since 3.1.2
 	 */
 	public static Path getPathEle(Path path, int index) {
-		return subPath(path, index, index == -1 ? path.getNameCount() : index+1);
+		return subPath(path, index, index == -1 ? path.getNameCount() : index + 1);
 	}
-	
+
 	/**
 	 * 获取指定位置的最后一个子路径部分
+	 * 
 	 * @param path 路径
 	 * @return 获取的最后一个子路径
 	 * @since 3.1.2
 	 */
 	public static Path getLastPathEle(Path path) {
-		return getPathEle(path, path.getNameCount() -1);
+		return getPathEle(path, path.getNameCount() - 1);
 	}
-	
+
 	/**
 	 * 获取指定位置的子路径部分，支持负数，例如起始为-1表示从后数第一个节点位置
+	 * 
 	 * @param path 路径
 	 * @param fromIndex 起始路径节点（包括）
 	 * @param toIndex 结束路径节点（不包括）
@@ -1313,11 +1326,11 @@ public class FileUtil {
 	 * @since 3.1.2
 	 */
 	public static Path subPath(Path path, int fromIndex, int toIndex) {
-		if(null == path) {
+		if (null == path) {
 			return null;
 		}
 		final int len = path.getNameCount();
-		
+
 		if (fromIndex < 0) {
 			fromIndex = len + fromIndex;
 			if (fromIndex < 0) {
@@ -1347,7 +1360,7 @@ public class FileUtil {
 		}
 		return path.subpath(fromIndex, toIndex);
 	}
-	
+
 	// -------------------------------------------------------------------------------------------- name start
 	/**
 	 * 返回主文件名
@@ -1433,7 +1446,7 @@ public class FileUtil {
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
 	 * @throws IORuntimeException IO异常
 	 */
-	public static String getType(File file) throws IORuntimeException{
+	public static String getType(File file) throws IORuntimeException {
 		return FileTypeUtil.getType(file);
 	}
 
@@ -1584,7 +1597,7 @@ public class FileUtil {
 	public static byte[] readBytes(File file) throws IORuntimeException {
 		return FileReader.create(file).readBytes();
 	}
-	
+
 	/**
 	 * 读取文件所有数据<br>
 	 * 文件的长度不能超过Integer.MAX_VALUE
@@ -1691,7 +1704,7 @@ public class FileUtil {
 			IoUtil.close(in);
 		}
 	}
-	
+
 	/**
 	 * 从文件中读取每一行的UTF-8编码数据
 	 * 
@@ -1719,7 +1732,7 @@ public class FileUtil {
 	public static <T extends Collection<String>> T readLines(String path, String charset, T collection) throws IORuntimeException {
 		return readLines(file(path), charset, collection);
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1733,7 +1746,7 @@ public class FileUtil {
 	public static <T extends Collection<String>> T readLines(String path, Charset charset, T collection) throws IORuntimeException {
 		return readLines(file(path), charset, collection);
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据，数据编码为UTF-8
 	 * 
@@ -1761,7 +1774,7 @@ public class FileUtil {
 	public static <T extends Collection<String>> T readLines(File file, String charset, T collection) throws IORuntimeException {
 		return FileReader.create(file, CharsetUtil.charset(charset)).readLines(collection);
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1775,7 +1788,7 @@ public class FileUtil {
 	public static <T extends Collection<String>> T readLines(File file, Charset charset, T collection) throws IORuntimeException {
 		return FileReader.create(file, charset).readLines(collection);
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据，编码为UTF-8
 	 * 
@@ -1788,7 +1801,7 @@ public class FileUtil {
 	public static <T extends Collection<String>> T readUtf8Lines(URL url, T collection) throws IORuntimeException {
 		return readLines(url, CharsetUtil.CHARSET_UTF_8, collection);
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1825,7 +1838,7 @@ public class FileUtil {
 			IoUtil.close(in);
 		}
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1848,7 +1861,7 @@ public class FileUtil {
 	public static List<String> readLines(URL url, String charset) throws IORuntimeException {
 		return readLines(url, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1860,7 +1873,7 @@ public class FileUtil {
 	public static List<String> readLines(URL url, Charset charset) throws IORuntimeException {
 		return readLines(url, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据，编码为UTF-8
 	 * 
@@ -1884,7 +1897,7 @@ public class FileUtil {
 	public static List<String> readLines(String path, String charset) throws IORuntimeException {
 		return readLines(path, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1897,7 +1910,7 @@ public class FileUtil {
 	public static List<String> readLines(String path, Charset charset) throws IORuntimeException {
 		return readLines(path, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1921,7 +1934,7 @@ public class FileUtil {
 	public static List<String> readLines(File file, String charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 从文件中读取每一行数据
 	 * 
@@ -1933,7 +1946,7 @@ public class FileUtil {
 	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
 		return readLines(file, charset, new ArrayList<String>());
 	}
-	
+
 	/**
 	 * 按行处理文件内容，编码为UTF-8
 	 * 
@@ -1972,7 +1985,7 @@ public class FileUtil {
 	public static <T> T load(ReaderHandler<T> readerHandler, String path, String charset) throws IORuntimeException {
 		return FileReader.create(file(path), CharsetUtil.charset(charset)).read(readerHandler);
 	}
-	
+
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
 	 * 
@@ -1986,7 +1999,7 @@ public class FileUtil {
 	public static <T> T loadUtf8(String path, ReaderHandler<T> readerHandler) throws IORuntimeException {
 		return load(path, CharsetUtil.CHARSET_UTF_8, readerHandler);
 	}
-	
+
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
 	 * 
@@ -2001,7 +2014,7 @@ public class FileUtil {
 	public static <T> T load(String path, String charset, ReaderHandler<T> readerHandler) throws IORuntimeException {
 		return FileReader.create(file(path), CharsetUtil.charset(charset)).read(readerHandler);
 	}
-	
+
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
 	 * 
@@ -2016,7 +2029,7 @@ public class FileUtil {
 	public static <T> T load(String path, Charset charset, ReaderHandler<T> readerHandler) throws IORuntimeException {
 		return FileReader.create(file(path), charset).read(readerHandler);
 	}
-	
+
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
 	 * 
@@ -2030,7 +2043,7 @@ public class FileUtil {
 	public static <T> T loadUtf8(File file, ReaderHandler<T> readerHandler) throws IORuntimeException {
 		return load(file, CharsetUtil.CHARSET_UTF_8, readerHandler);
 	}
-	
+
 	/**
 	 * 按照给定的readerHandler读取文件中的数据
 	 * 
@@ -2189,7 +2202,7 @@ public class FileUtil {
 	public static File writeString(String content, String path, String charset) throws IORuntimeException {
 		return writeString(content, touch(path), charset);
 	}
-	
+
 	/**
 	 * 将String写入文件，覆盖模式
 	 * 
@@ -2216,7 +2229,7 @@ public class FileUtil {
 	public static File writeString(String content, File file, String charset) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).write(content);
 	}
-	
+
 	/**
 	 * 将String写入文件，覆盖模式
 	 * 
@@ -2230,7 +2243,7 @@ public class FileUtil {
 	public static File writeString(String content, File file, Charset charset) throws IORuntimeException {
 		return FileWriter.create(file, charset).write(content);
 	}
-	
+
 	/**
 	 * 将String写入文件，UTF-8编码追加模式
 	 * 
@@ -2256,7 +2269,7 @@ public class FileUtil {
 	public static File appendString(String content, String path, String charset) throws IORuntimeException {
 		return appendString(content, touch(path), charset);
 	}
-	
+
 	/**
 	 * 将String写入文件，追加模式
 	 * 
@@ -2269,7 +2282,7 @@ public class FileUtil {
 	public static File appendString(String content, String path, Charset charset) throws IORuntimeException {
 		return appendString(content, touch(path), charset);
 	}
-	
+
 	/**
 	 * 将String写入文件，UTF-8编码追加模式
 	 * 
@@ -2295,7 +2308,7 @@ public class FileUtil {
 	public static File appendString(String content, File file, String charset) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).append(content);
 	}
-	
+
 	/**
 	 * 将String写入文件，追加模式
 	 * 
@@ -2308,7 +2321,7 @@ public class FileUtil {
 	public static File appendString(String content, File file, Charset charset) throws IORuntimeException {
 		return FileWriter.create(file, charset).append(content);
 	}
-	
+
 	/**
 	 * 将列表写入文件，覆盖模式，编码为UTF-8
 	 * 
@@ -2322,7 +2335,7 @@ public class FileUtil {
 	public static <T> File writeUtf8Lines(Collection<T> list, String path) throws IORuntimeException {
 		return writeLines(list, path, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 将列表写入文件，覆盖模式，编码为UTF-8
 	 * 
@@ -2350,7 +2363,7 @@ public class FileUtil {
 	public static <T> File writeLines(Collection<T> list, String path, String charset) throws IORuntimeException {
 		return writeLines(list, path, charset, false);
 	}
-	
+
 	/**
 	 * 将列表写入文件，覆盖模式
 	 * 
@@ -2364,7 +2377,7 @@ public class FileUtil {
 	public static <T> File writeLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
 		return writeLines(list, path, charset, false);
 	}
-	
+
 	/**
 	 * 将列表写入文件，覆盖模式
 	 * 
@@ -2379,7 +2392,7 @@ public class FileUtil {
 	public static <T> File writeLines(Collection<T> list, File file, String charset) throws IORuntimeException {
 		return writeLines(list, file, charset, false);
 	}
-	
+
 	/**
 	 * 将列表写入文件，覆盖模式
 	 * 
@@ -2394,7 +2407,7 @@ public class FileUtil {
 	public static <T> File writeLines(Collection<T> list, File file, Charset charset) throws IORuntimeException {
 		return writeLines(list, file, charset, false);
 	}
-	
+
 	/**
 	 * 将列表写入文件，追加模式
 	 * 
@@ -2408,7 +2421,7 @@ public class FileUtil {
 	public static <T> File appendUtf8Lines(Collection<T> list, File file) throws IORuntimeException {
 		return appendLines(list, file, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 将列表写入文件，追加模式
 	 * 
@@ -2436,7 +2449,7 @@ public class FileUtil {
 	public static <T> File appendLines(Collection<T> list, String path, String charset) throws IORuntimeException {
 		return writeLines(list, path, charset, true);
 	}
-	
+
 	/**
 	 * 将列表写入文件，追加模式
 	 * 
@@ -2451,7 +2464,7 @@ public class FileUtil {
 	public static <T> File appendLines(Collection<T> list, File file, String charset) throws IORuntimeException {
 		return writeLines(list, file, charset, true);
 	}
-	
+
 	/**
 	 * 将列表写入文件，追加模式
 	 * 
@@ -2465,7 +2478,7 @@ public class FileUtil {
 	public static <T> File appendLines(Collection<T> list, String path, Charset charset) throws IORuntimeException {
 		return writeLines(list, path, charset, true);
 	}
-	
+
 	/**
 	 * 将列表写入文件，追加模式
 	 * 
@@ -2495,7 +2508,7 @@ public class FileUtil {
 	public static <T> File writeLines(Collection<T> list, String path, String charset, boolean isAppend) throws IORuntimeException {
 		return writeLines(list, file(path), charset, isAppend);
 	}
-	
+
 	/**
 	 * 将列表写入文件
 	 * 
@@ -2525,7 +2538,7 @@ public class FileUtil {
 	public static <T> File writeLines(Collection<T> list, File file, String charset, boolean isAppend) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.charset(charset)).writeLines(list, isAppend);
 	}
-	
+
 	/**
 	 * 将列表写入文件
 	 * 
@@ -2652,7 +2665,7 @@ public class FileUtil {
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
-	
+
 	/**
 	 * 转换文件编码<br>
 	 * 此方法用于转换文件编码，读取的文件实际编码必须与指定的srcCharset编码一致，否则导致乱码
@@ -2667,7 +2680,7 @@ public class FileUtil {
 	public static File convertCharset(File file, Charset srcCharset, Charset destCharset) {
 		return CharsetUtil.convert(file, srcCharset, destCharset);
 	}
-	
+
 	/**
 	 * 转换换行符<br>
 	 * 将给定文件的换行符转换为指定换行符
@@ -2679,7 +2692,29 @@ public class FileUtil {
 	 * @since 3.1.0
 	 */
 	public static File convertLineSeparator(File file, Charset charset, LineSeparator lineSeparator) {
-	final List<String> lines = readLines(file, charset);
+		final List<String> lines = readLines(file, charset);
 		return FileWriter.create(file, charset).writeLines(lines, lineSeparator, false);
+	}
+
+	/**
+	 * 清除文件名中的在Windows下不支持的非法字符，包括： \ / : * ? " &lt; &gt; |
+	 * 
+	 * @param fileName 文件名（必须不包括路径，否则路径符将被替换）
+	 * @return 清理后的文件名
+	 * @since 3.3.1
+	 */
+	public static String cleanInvalid(String fileName) {
+		return StrUtil.isBlank(fileName) ? fileName : ReUtil.delAll(FILE_NAME_INVALID_PATTERN_WIN, fileName);
+	}
+
+	/**
+	 * 文件名中是否包含在Windows下不支持的非法字符，包括： \ / : * ? " &lt; &gt; |
+	 * 
+	 * @param fileName 文件名（必须不包括路径，否则路径符将被替换）
+	 * @return 是否包含非法字符
+	 * @since 3.3.1
+	 */
+	public static boolean containsInvalid(String fileName) {
+		return StrUtil.isBlank(fileName) ? false : ReUtil.contains(FILE_NAME_INVALID_PATTERN_WIN, fileName);
 	}
 }

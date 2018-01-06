@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.xiaoleilu.hutool.bean.BeanUtil;
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.collection.IterUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.lang.Assert;
@@ -227,7 +228,10 @@ public class ExcelReader implements Closeable{
 		List<Object> rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			rowList = readRow(sheet.getRow(i));
-			if (false == rowList.isEmpty() || false == ignoreEmptyRow) {
+			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
+				if(null == rowList) {
+					rowList = new ArrayList<>();
+				}
 				resultList.add(rowList);
 			}
 		}

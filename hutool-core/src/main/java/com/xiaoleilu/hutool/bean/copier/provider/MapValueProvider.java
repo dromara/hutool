@@ -14,7 +14,7 @@ import com.xiaoleilu.hutool.map.CaseInsensitiveMap;
  */
 public class MapValueProvider implements ValueProvider<String> {
 
-	Map<?, ?> map;
+	private Map<?, ?> map;
 
 	/**
 	 * 构造
@@ -23,14 +23,13 @@ public class MapValueProvider implements ValueProvider<String> {
 	 * @param ignoreCase 是否忽略key的大小写
 	 */
 	public MapValueProvider(Map<?, ?> map, boolean ignoreCase) {
-		if(ignoreCase) {
-			if(map instanceof CaseInsensitiveMap) {
-				this.map = (CaseInsensitiveMap<?, ?>)map;
-			}else {
-				this.map = new CaseInsensitiveMap<>(map);
-			}
+		if(false == ignoreCase || map instanceof CaseInsensitiveMap) {
+			//不忽略大小写或者提供的Map本身为CaseInsensitiveMap则无需转换
+			this.map = map;
+		}else {
+			//转换为大小写不敏感的Map
+			this.map = new CaseInsensitiveMap<>(map);
 		}
-		this.map = map;
 	}
 
 	@Override

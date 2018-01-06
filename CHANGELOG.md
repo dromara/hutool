@@ -2,6 +2,32 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 3.3.1
+
+### 新特性
+* StrUtil增加方法equalsCharAt
+* 增加方法FileUtil.cleanIInvalid
+* db模块BeanHandler支持忽略大小写（针对Oracle返回大写字段无法注入Bean的问题）
+* Setting增加set方法，支持分组
+* JSONObject支持键忽略大小写模式
+* db模块针对java.sql.Time增加单独判断
+* DbUtil.getTables支持Oracle用户参数传入（感谢@【广西】Succy）
+* 优化BeanHandler，去除转为Entity环节
+
+### Bug修复
+* 修复HttpUtil.post方法超时失效的问题（感谢@【常州】Gavin）
+* 修复Http的get方法传入String带有空格时，报空指针错误（感谢@【北京】宁静）
+* 修复DateUtil.endOfWeek问题（感谢@【北京】谢栋）
+* 修复Convert.numberToChinese大数字出现的问题（issue#IEYLP@Gitee）
+* 修复HtmlUtil.restoreEscaped缺失分号问题，以及单引号处理（issue#IH5ZH@Gitee）
+* 修复签名问题（issue#IH61M@Gitee）
+* 修复Excel空行下报错问题（issue#78@Github）
+* 修复NumberUtil.isInteger无法判断负数问题（感谢@【杭州】fineliving）
+* 修复BeanUtil.fillBean等方法忽略大小写失败的问题
+* 修复JSON中getStr方法返回字符串中含有\b等特殊字符时显示错误问题（感谢@【广西】Succy）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 3.3.0
 
 ### 新特性
@@ -45,7 +71,7 @@
 * 修复POI模块read07BySax导致的空白单元格丢失和日期粘连问题（issue#76@Github）
 * 修复ExcelWriter在写出4000行以上时样式超出范围问题（issue#IH05B@Gitee）
 * 修复StrUtil.replaceChars方法无效问题
-* 修复在JSONArray中toList有null元素返回null的问题（感谢@@【银川】野马）
+* 修复在JSONArray中toList有null元素返回null的问题（感谢@【银川】野马）
 * 修复Base64解码时在有换行符的情况下解码失败的问题（感谢@【霾都】QQ小冰）
 
 -------------------------------------------------------------------------------------------------------------

@@ -28,20 +28,28 @@ public class NumberChineseFormaterTest {
 	@Test
 	public void formatTranditionalTest() {
 		String f1 = NumberChineseFormater.format(10889.72356, true);
-		Assert.assertEquals("壹万零捌百捌十玖点柒贰", f1);
+		Assert.assertEquals("壹万零捌佰捌拾玖点柒贰", f1);
 		f1 = NumberChineseFormater.format(12653, true);
-		Assert.assertEquals("壹万贰千陆百伍十叁", f1);
+		Assert.assertEquals("壹万贰仟陆佰伍拾叁", f1);
 		f1 = NumberChineseFormater.format(215.6387, true);
-		Assert.assertEquals("贰百壹十伍点陆肆", f1);
+		Assert.assertEquals("贰佰壹拾伍点陆肆", f1);
 		f1 = NumberChineseFormater.format(1024, true);
-		Assert.assertEquals("壹千零贰十肆", f1);
+		Assert.assertEquals("壹仟零贰拾肆", f1);
 		f1 = NumberChineseFormater.format(100350089, true);
-		Assert.assertEquals("壹亿叁十伍万零捌十玖", f1);
+		Assert.assertEquals("壹亿叁拾伍万零捌拾玖", f1);
 		f1 = NumberChineseFormater.format(1200, true);
-		Assert.assertEquals("壹千贰百", f1);
+		Assert.assertEquals("壹仟贰佰", f1);
 		f1 = NumberChineseFormater.format(12, true);
-		Assert.assertEquals("壹十贰", f1);
+		Assert.assertEquals("壹拾贰", f1);
 		f1 = NumberChineseFormater.format(0.05, true);
 		Assert.assertEquals("零点零伍", f1);
+	}
+	
+	@Test
+	public void digitToChineseTest() {
+		String digitToChinese = Convert.digitToChinese(12412412412421.12);
+		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元壹角贰分", digitToChinese);
+		String digitToChinese2 = Convert.digitToChinese(12412412412421D);
+		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹整", digitToChinese2);
 	}
 }

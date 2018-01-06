@@ -27,6 +27,6 @@ public class ActiveEntityHandler implements RsHandler<ActiveEntity>{
 		final ResultSetMetaData  meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 		
-		return rs.next() ? HandleHelper.handleRow(ActiveEntity.create(),columnCount, meta, rs) : null;
+		return rs.next() ? HandleHelper.handleRow(ActiveEntity.create(),columnCount, meta, rs, true) : null;
 	}
 }

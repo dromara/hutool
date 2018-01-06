@@ -366,6 +366,24 @@ public class MapUtil {
 
 		return resultList;
 	}
+	
+	/**
+	 * 将已知Map转换为key为驼峰风格的Map<br>
+	 * 对于key为非String类型，通过调用toString方法转换为字符串
+	 * 
+	 * @param map 原Map
+	 * @return 驼峰风格Map
+	 * @since 3.3.1
+	 */
+	public static <K, V> Map<String, V> toCamelCaseMap(Map<K, V> map){
+		final Map<String, V> map2 = newHashMap(map.size(), (map instanceof LinkedHashMap));
+		K key;
+		for (Entry<K, V> entry : map.entrySet()) {
+			key = entry.getKey();
+			map2.put(StrUtil.toCamelCase(null == key ? null : key.toString()), entry.getValue());
+		}
+		return map2;
+	}
 
 	// ----------------------------------------------------------------------------------------------- join
 	/**

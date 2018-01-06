@@ -361,6 +361,34 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	}
 	
 	/**
+	 * 设置值<br>
+	 * 此方法设置值后会将key和group拼接为：[group].[key]的形式
+	 * 
+	 * @param key 键
+	 * @param group 分组
+	 * @param value 值
+	 * @return this
+	 * @since 3.3.1
+	 */
+	public BasicSetting set(String key, String group, Object value) {
+		this.put(keyWithGroup(key, group), value);
+		return this;
+	}
+	
+	/**
+	 * 设置值
+	 * 
+	 * @param key 键
+	 * @param value 值
+	 * @return this
+	 * @since 3.3.1
+	 */
+	public BasicSetting set(String key, Object value) {
+		this.put(key, value);
+		return this;
+	}
+	
+	/**
 	 * 加入Map中的键值对
 	 * @param map {@link Map}
 	 */

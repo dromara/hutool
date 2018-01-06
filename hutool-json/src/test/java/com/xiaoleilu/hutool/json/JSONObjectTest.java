@@ -136,6 +136,14 @@ public class JSONObjectTest {
 		Assert.assertTrue(userAJsonWithNullValue.containsKey("sqs"));
 	}
 	
+	@Test
+	public void specialCharTest() {
+		String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
+		JSONObject obj = JSONUtil.parseObj(json);
+		Assert.assertEquals("[abc]\\b\\u2001", obj.getStr("pattern"));
+		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
+	}
+	
 	/**
 	 * 测试Bean
 	 * @author Looly

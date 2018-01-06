@@ -138,4 +138,18 @@ public class StrUtilTest {
 		string = StrUtil.replace("aabbccdd", 2, 12, '*');
 		Assert.assertEquals("aa******", string);
 	}
+	
+	@Test
+	public void upperFirstTest() {
+		StringBuilder sb = new StringBuilder("KEY");
+		String s = StrUtil.upperFirst(sb);
+		Assert.assertEquals(s, sb.toString());
+	}
+	
+	@Test
+	public void lowerFirstTest() {
+		StringBuilder sb = new StringBuilder("KEY");
+		String s = StrUtil.lowerFirst(sb);
+		Assert.assertEquals("kEY", s);
+	}
 }

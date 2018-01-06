@@ -445,6 +445,9 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {
+		if(null == date || StrUtil.isBlank(format)) {
+			return null;
+		}
 		return format(date, FastDateFormat.getInstance(format));
 	}
 
@@ -456,6 +459,9 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DatePrinter format) {
+		if(null == format || null == date) {
+			return null;
+		}
 		return format.format(date);
 	}
 
@@ -467,6 +473,9 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DateFormat format) {
+		if(null == format || null == date) {
+			return null;
+		}
 		return format.format(date);
 	}
 
@@ -756,7 +765,13 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar beginOfWeek(Calendar calendar, boolean isMondayAsFirstDay) {
-		calendar.set(Calendar.DAY_OF_WEEK, isMondayAsFirstDay ? Calendar.MONDAY : Calendar.SUNDAY);
+		if(isMondayAsFirstDay) {
+			//设置周一为一周开始
+			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		}else {
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		}
 		return beginOfDay(calendar);
 	}
 	
@@ -779,7 +794,13 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar endOfWeek(Calendar calendar, boolean isSundayAsLastDay) {
-		calendar.set(Calendar.DAY_OF_WEEK, isSundayAsLastDay ? Calendar.SUNDAY : Calendar.SATURDAY);
+		if(isSundayAsLastDay) {
+			//设置周一为一周开始
+			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		}else {
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		}
 		return endOfDay(calendar);
 	}
 
@@ -1033,7 +1054,7 @@ public class DateUtil {
 	// ------------------------------------ Offset end ----------------------------------------------
 
 	/**
-	 * 判断两个日期相差的时长
+	 * 判断两个日期相差的时长，只保留绝对值
 	 * 
 	 * @param beginDate 起始日期
 	 * @param endDate 结束日期
@@ -1041,7 +1062,21 @@ public class DateUtil {
 	 * @return 日期差
 	 */
 	public static long between(Date beginDate, Date endDate, DateUnit unit) {
-		return new DateBetween(beginDate, endDate).between(unit);
+		return between(beginDate, endDate, unit, true);
+	}
+	
+	/**
+	 * 判断两个日期相差的时长
+	 * 
+	 * @param beginDate 起始日期
+	 * @param endDate 结束日期
+	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
+	 * @param isAbs 日期间隔是否只保留绝对值正数
+	 * @return 日期差
+	 * @since 3.3.1
+	 */
+	public static long between(Date beginDate, Date endDate, DateUnit unit, boolean isAbs) {
+		return new DateBetween(beginDate, endDate, isAbs).between(unit);
 	}
 
 	/**

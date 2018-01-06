@@ -15,24 +15,27 @@ import com.xiaoleilu.hutool.bean.BeanUtil;
 import com.xiaoleilu.hutool.collection.CollectionUtil;
 
 /**
- * 1、字典对象，扩充了HashMap中的方法
+ * 字典对象，扩充了HashMap中的方法
+ * 
  * @author loolly
  *
  */
-public class Dict extends HashMap<String, Object> implements BasicTypeGetter<String>{
+public class Dict extends HashMap<String, Object> implements BasicTypeGetter<String> {
 	private static final long serialVersionUID = 6135423866861206530L;
 
-	//--------------------------------------------------------------- Static method start
+	// --------------------------------------------------------------- Static method start
 	/**
 	 * 创建Dict
+	 * 
 	 * @return Dict
 	 */
 	public static Dict create() {
 		return new Dict();
 	}
-	
+
 	/**
 	 * 将PO对象转为Dict
+	 * 
 	 * @param <T> Bean类型
 	 * @param bean Bean对象
 	 * @return Vo
@@ -40,15 +43,16 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public static <T> Dict parse(T bean) {
 		return create().parseBean(bean);
 	}
-	//--------------------------------------------------------------- Static method end
-	
-	//--------------------------------------------------------------- Constructor start
+	// --------------------------------------------------------------- Static method end
+
+	// --------------------------------------------------------------- Constructor start
 	public Dict() {
 	}
-	//--------------------------------------------------------------- Constructor end
-	
+	// --------------------------------------------------------------- Constructor end
+
 	/**
 	 * 转换为Bean对象
+	 * 
 	 * @param <T> Bean类型
 	 * @param bean Bean
 	 * @return Bean
@@ -56,30 +60,48 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public <T> T toBean(T bean) {
 		return toBean(bean, false);
 	}
-	
+
 	/**
 	 * 转换为Bean对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param bean Bean
+	 * @return Bean
+	 * @since 3.3.1
+	 */
+	public <T> T toBeanIgnoreCase(T bean) {
+		BeanUtil.fillBeanWithMapIgnoreCase(this, bean, false);
+		return bean;
+	}
+
+	/**
+	 * 转换为Bean对象
+	 * 
 	 * @param <T> Bean类型
 	 * @param bean Bean
 	 * @param isToCamelCase 是否转换为驼峰模式
 	 * @return Bean
 	 */
 	public <T> T toBean(T bean, boolean isToCamelCase) {
-		BeanUtil.fillBeanWithMap(this,bean,isToCamelCase,false);
+		BeanUtil.fillBeanWithMap(this, bean, isToCamelCase, false);
 		return bean;
 	}
+
 	/**
 	 * 转换为Bean对象,并使用驼峰法模式转换
+	 * 
 	 * @param <T> Bean类型
 	 * @param bean Bean
 	 * @return Bean
 	 */
 	public <T> T toBeanWithCamelCase(T bean) {
-		BeanUtil.fillBeanWithMap(this,bean,true,false);
+		BeanUtil.fillBeanWithMap(this, bean, true, false);
 		return bean;
 	}
+
 	/**
 	 * 填充Value Object对象
+	 * 
 	 * @param <T> Bean类型
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
@@ -87,9 +109,10 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public <T> T toBean(Class<T> clazz) {
 		return BeanUtil.mapToBean(this, clazz, false);
 	}
-	
+
 	/**
 	 * 填充Value Object对象，忽略大小写
+	 * 
 	 * @param <T> Bean类型
 	 * @param clazz Value Object（或者POJO）的类
 	 * @return vo
@@ -97,10 +120,11 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public <T> T toBeanIgnoreCase(Class<T> clazz) {
 		return BeanUtil.mapToBeanIgnoreCase(this, clazz, false);
 	}
-	
+
 	/**
 	 * 将值对象转换为Dict<br>
 	 * 类名会被当作表名，小写第一个字母
+	 * 
 	 * @param <T> Bean类型
 	 * @param bean 值对象
 	 * @return 自己
@@ -109,10 +133,11 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 		this.putAll(BeanUtil.beanToMap(bean));
 		return this;
 	}
-	
+
 	/**
 	 * 将值对象转换为Dict<br>
 	 * 类名会被当作表名，小写第一个字母
+	 * 
 	 * @param <T> Bean类型
 	 * @param bean 值对象
 	 * @param isToUnderlineCase 是否转换为下划线模式
@@ -120,14 +145,13 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 * @return 自己
 	 */
 	public <T> Dict parseBean(T bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
-		this.putAll(BeanUtil.beanToMap(bean,isToUnderlineCase,ignoreNullValue));
+		this.putAll(BeanUtil.beanToMap(bean, isToUnderlineCase, ignoreNullValue));
 		return this;
 	}
-	
+
 	/**
 	 * 与给定实体对比并去除相同的部分<br>
-	 * 此方法用于在更新操作时避免所有字段被更新，跳过不需要更新的字段
-	 * version from 2.0.0
+	 * 此方法用于在更新操作时避免所有字段被更新，跳过不需要更新的字段 version from 2.0.0
 	 * 
 	 * @param <T> 字典对象类型
 	 * @param dict 字典对象
@@ -135,21 +159,22 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 */
 	public <T extends Dict> void removeEqual(T dict, String... withoutNames) {
 		HashSet<String> withoutSet = CollectionUtil.newHashSet(withoutNames);
-		for(Map.Entry<String, Object> entry : dict.entrySet()) {
-			if(withoutSet.contains(entry.getKey())) {
+		for (Map.Entry<String, Object> entry : dict.entrySet()) {
+			if (withoutSet.contains(entry.getKey())) {
 				continue;
 			}
-			
+
 			final Object value = this.get(entry.getKey());
-			if(null != value && value.equals(entry.getValue())) {
+			if (null != value && value.equals(entry.getValue())) {
 				this.remove(entry.getKey());
 			}
 		}
 	}
-	
-	//-------------------------------------------------------------------- Set start
+
+	// -------------------------------------------------------------------- Set start
 	/**
 	 * 设置列
+	 * 
 	 * @param attr 属性
 	 * @param value 值
 	 * @return 本身
@@ -158,28 +183,29 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 		this.put(attr, value);
 		return this;
 	}
-	
+
 	/**
 	 * 设置列，当键或值为null时忽略
+	 * 
 	 * @param attr 属性
 	 * @param value 值
 	 * @return 本身
 	 */
 	public Dict setIgnoreNull(String attr, Object value) {
-		if(null != attr && null != value) {
+		if (null != attr && null != value) {
 			set(attr, value);
 		}
 		return this;
 	}
-	//-------------------------------------------------------------------- Set end
-	
-	//-------------------------------------------------------------------- Get start
-	
+	// -------------------------------------------------------------------- Set end
+
+	// -------------------------------------------------------------------- Get start
+
 	@Override
 	public Object getObj(String key) {
 		return super.get(key);
 	}
-	
+
 	/**
 	 * 获得特定类型值
 	 * 
@@ -191,9 +217,9 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	@SuppressWarnings("unchecked")
 	public <T> T get(String attr, T defaultValue) {
 		final Object result = get(attr);
-		return (T)(result != null ? result : defaultValue);
+		return (T) (result != null ? result : defaultValue);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -202,7 +228,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public String getStr(String attr) {
 		return Convert.toStr(get(attr), null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -211,7 +237,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Integer getInt(String attr) {
 		return Convert.toInt(get(attr), null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -220,7 +246,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Long getLong(String attr) {
 		return Convert.toLong(get(attr), null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -229,7 +255,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Float getFloat(String attr) {
 		return Convert.toFloat(get(attr), null);
 	}
-	
+
 	@Override
 	public Short getShort(String attr) {
 		return Convert.toShort(get(attr), null);
@@ -249,7 +275,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Byte getByte(String attr) {
 		return Convert.toByte(get(attr), null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -258,7 +284,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Boolean getBool(String attr) {
 		return Convert.toBool(get(attr), null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -267,7 +293,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public BigDecimal getBigDecimal(String attr) {
 		return Convert.toBigDecimal(get(attr));
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -276,12 +302,12 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public BigInteger getBigInteger(String attr) {
 		return Convert.toBigInteger(get(attr));
 	}
-	
+
 	@Override
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
 		return Convert.toEnum(clazz, get(key));
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -289,7 +315,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public byte[] getBytes(String attr) {
 		return get(attr, null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -297,7 +323,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Date getDate(String attr) {
 		return get(attr, null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -305,7 +331,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Time getTime(String attr) {
 		return get(attr, null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -313,7 +339,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Timestamp getTimestamp(String attr) {
 		return get(attr, null);
 	}
-	
+
 	/**
 	 * @param attr 字段名
 	 * @return 字段值
@@ -321,9 +347,8 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Number getNumber(String attr) {
 		return get(attr, null);
 	}
-	//-------------------------------------------------------------------- Get end
-	
-	
+	// -------------------------------------------------------------------- Get end
+
 	@Override
 	public Dict clone() {
 		return (Dict) super.clone();

@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.xiaoleilu.hutool.bean.BeanDesc.PropDesc;
 import com.xiaoleilu.hutool.bean.copier.BeanCopier;
@@ -264,24 +263,19 @@ public class BeanUtil {
 		return fillBeanWithMapIgnoreCase(map, ReflectUtil.newInstance(beanClass), isIgnoreError);
 	}
 
-	// --------------------------------------------------------------------------------------------- fillBeanWithMap
 	/**
-	 * 使用Map填充Bean对象
+	 * Map转换为Bean对象
 	 * 
 	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param bean Bean
-	 * @param copyOptions 属性复制选项 {@link CopyOptions}
+	 * @param map {@link Map}
+	 * @param beanClass Bean Class
+	 * @param copyOptions 转Bean选项
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, CopyOptions copyOptions) {
-		if(MapUtil.isEmpty(map)) {
-			return bean;
-		}
-		
-		return BeanCopier.create(map, bean, copyOptions).copy();
+	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, CopyOptions copyOptions) {
+		return fillBeanWithMap(map, ReflectUtil.newInstance(beanClass), copyOptions);
 	}
-
+	// --------------------------------------------------------------------------------------------- fillBeanWithMap
 	/**
 	 * 使用Map填充Bean对象
 	 * 
@@ -291,8 +285,8 @@ public class BeanUtil {
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMap(final Map<?, ?> map, T bean, final boolean isIgnoreError) {
-		return fillBeanWithMap(map, bean, CopyOptions.create().setIgnoreError(isIgnoreError));
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isIgnoreError) {
+		return fillBeanWithMap(map, bean, false, isIgnoreError);
 	}
 
 	/**
@@ -306,21 +300,7 @@ public class BeanUtil {
 	 * @return Bean
 	 */
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, boolean isIgnoreError) {
-		if (isToCamelCase) {
-			final Map<Object, Object> map2 = new HashMap<Object, Object>();
-			for (Entry<?, ?> entry : map.entrySet()) {
-				final Object key = entry.getKey();
-				if (null != key && key instanceof String) {
-					final String keyStr = (String) key;
-					map2.put(StrUtil.toCamelCase(keyStr), entry.getValue());
-				} else {
-					map2.put(key, entry.getValue());
-				}
-			}
-			return fillBeanWithMap(map2, bean, isIgnoreError);
-		} else {
-			return fillBeanWithMap(map, bean, isIgnoreError);
-		}
+		return fillBeanWithMap(map, bean, isToCamelCase, CopyOptions.create().setIgnoreError(isIgnoreError));
 	}
 
 	/**
@@ -332,10 +312,43 @@ public class BeanUtil {
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
-	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, final boolean isIgnoreError) {
-		return fillBeanWithMap(new CaseInsensitiveMap<>(map), bean, isIgnoreError);
+	public static <T> T fillBeanWithMapIgnoreCase(Map<?, ?> map, T bean, boolean isIgnoreError) {
+		return fillBeanWithMap(map, bean, CopyOptions.create().setIgnoreCase(true).setIgnoreError(isIgnoreError));
 	}
 
+	/**
+	 * 使用Map填充Bean对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param map Map
+	 * @param bean Bean
+	 * @param copyOptions 属性复制选项 {@link CopyOptions}
+	 * @return Bean
+	 */
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, CopyOptions copyOptions) {
+		return fillBeanWithMap(map, bean, false, copyOptions);
+	}
+	
+	/**
+	 * 使用Map填充Bean对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param map Map
+	 * @param bean Bean
+	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
+	 * @param copyOptions 属性复制选项 {@link CopyOptions}
+	 * @return Bean
+	 * @since 3.3.1
+	 */
+	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, CopyOptions copyOptions) {
+		if(MapUtil.isEmpty(map)) {
+			return bean;
+		}
+		if(isToCamelCase) {
+			map = MapUtil.toCamelCaseMap(map);
+		}
+		return BeanCopier.create(map, bean, copyOptions).copy();
+	}
 	// --------------------------------------------------------------------------------------------- fillBean
 	/**
 	 * ServletRequest 参数转Bean
