@@ -1,6 +1,7 @@
 package com.xiaoleilu.hutool.io;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,14 +14,15 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public final class FileTypeUtil {
-	
-	private FileTypeUtil(){};
+
+	private FileTypeUtil() {
+	};
 
 	private static final Map<String, String> fileTypeMap;
 
 	static {
 		fileTypeMap = new ConcurrentHashMap<>();
-		
+
 		fileTypeMap.put("ffd8ffe000104a464946", "jpg"); // JPEG (jpg)
 		fileTypeMap.put("89504e470d0a1a0a0000", "png"); // PNG (png)
 		fileTypeMap.put("47494638396126026f01", "gif"); // GIF (gif)
@@ -50,9 +52,9 @@ public final class FileTypeUtil {
 		fileTypeMap.put("52494646e27807005741", "wav"); // Wave (wav)
 		fileTypeMap.put("52494646d07d60074156", "avi");
 		fileTypeMap.put("4d546864000000060001", "mid"); // MIDI (mid)
-//		fileTypeMap.put("504b0304140000000800", "zip");
+		// fileTypeMap.put("504b0304140000000800", "zip");
 		fileTypeMap.put("504B0304", "zip");
-		fileTypeMap.put("526172211a0700cf9073", "rar");//WinRAR
+		fileTypeMap.put("526172211a0700cf9073", "rar");// WinRAR
 		fileTypeMap.put("235468697320636f6e66", "ini");
 		fileTypeMap.put("504b03040a0000000000", "jar");
 		fileTypeMap.put("504B0304140008000800", "jar");
@@ -130,12 +132,19 @@ public final class FileTypeUtil {
 
 	/**
 	 * 根据文件流的头部信息获得文件类型
+	 * 
 	 * @param file 文件 {@link File}
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
 	 * @throws IORuntimeException 读取文件引起的异常
 	 */
 	public static String getType(File file) throws IORuntimeException {
-		return getType(IoUtil.toStream(file));
+		FileInputStream in = null;
+		try {
+			in = IoUtil.toStream(file);
+			return getType(in);
+		} finally {
+			IoUtil.close(in);
+		}
 	}
 
 	/**
