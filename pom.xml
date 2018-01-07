@@ -4,12 +4,12 @@
 
 	<packaging>pom</packaging>
 
-	<groupId>com.xiaoleilu</groupId>
+	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>3.3.2-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
-	<url>https://github.com/looly/hutool</url>
+	<url>https://github.com/looly/hutool4</url>
 
 	<modules>
 		<module>hutool-all</module>
@@ -27,7 +27,6 @@
 		<module>hutool-script</module>
 		<module>hutool-setting</module>
 		<module>hutool-system</module>
-		<module>hutool-geo</module>
 		<module>hutool-json</module>
 		<module>hutool-poi</module>
 	</modules>

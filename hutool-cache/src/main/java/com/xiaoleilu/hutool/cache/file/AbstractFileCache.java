@@ -3,8 +3,9 @@ package com.xiaoleilu.hutool.cache.file;
 import java.io.File;
 
 import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.io.FileUtil;
-import com.xiaoleilu.hutool.io.IORuntimeException;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 
 /**
  * 文件缓存，以解决频繁读取文件引起的性能问题

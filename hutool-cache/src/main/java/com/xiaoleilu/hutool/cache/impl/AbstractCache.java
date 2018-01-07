@@ -7,7 +7,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.collection.CopiedIterator;
+
+import cn.hutool.core.collection.CopiedIterator;
 
 /**
  * 超时和限制大小的缓存的默认实现<br>

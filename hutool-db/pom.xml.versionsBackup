@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>cn.hutool</groupId>
+		<artifactId>hutool-parent</artifactId>
+		<version>3.3.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>hutool-db</artifactId>
+	<name>${project.artifactId}</name>
+	<description>Hutool 数据库JDBC的ORM封装</description>
+
+	<properties>
+		<!-- versions -->
+		<c3p0.version>0.9.5.2</c3p0.version>
+		<dbcp2.version>2.1.1</dbcp2.version>
+		<tomcat-jdbc.version>8.5.24</tomcat-jdbc.version>
+		<druid.version>1.1.6</druid.version>
+		<HikariCP.version>2.4.13</HikariCP.version>
+		<mongo.version>3.6.0</mongo.version>
+		<sqlite.version>3.21.0</sqlite.version>
+		<jedis.version>2.9.0</jedis.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-setting</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-log</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<!-- 数据库连接池 -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+			<version>${tomcat-jdbc.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP-java7</artifactId>
+			<version>${HikariCP.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>${c3p0.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>${dbcp2.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<!-- MongoDB Java客户端 -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongo.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<!-- Redis Java客户端 -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.version}</version>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- 测试用依赖 -->
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>${sqlite.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

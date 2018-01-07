@@ -6,8 +6,9 @@ import org.junit.Test;
 import com.xiaoleilu.hutool.cache.Cache;
 import com.xiaoleilu.hutool.cache.CacheUtil;
 import com.xiaoleilu.hutool.cache.impl.TimedCache;
-import com.xiaoleilu.hutool.date.DateUnit;
-import com.xiaoleilu.hutool.thread.ThreadUtil;
+
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.thread.ThreadUtil;
 
 /**
  * 缓存测试用例

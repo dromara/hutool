@@ -8,8 +8,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.xiaoleilu.hutool.thread.ThreadUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 全局缓存清理定时器池，用于在需要过期支持的缓存对象中超时任务池

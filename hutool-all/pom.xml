@@ -5,9 +5,9 @@
 	<packaging>jar</packaging>
 
 	<parent>
-		<groupId>com.xiaoleilu</groupId>
+		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>3.3.2-SNAPSHOT</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-all</artifactId>
@@ -17,87 +17,82 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-aop</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-bloomFilter</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-cache</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-crypto</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-db</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-dfa</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-extra</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-http</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-script</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-setting</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-system</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-cron</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
-			<artifactId>hutool-geo</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-json</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.xiaoleilu</groupId>
+			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-poi</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
