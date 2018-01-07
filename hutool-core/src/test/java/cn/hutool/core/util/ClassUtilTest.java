@@ -19,7 +19,7 @@ public class ClassUtilTest {
 	@Test
 	public void getClassNameTest() {
 		String className = ClassUtil.getClassName(ClassUtil.class, false);
-		Assert.assertEquals("com.xiaoleilu.hutool.util.ClassUtil", className);
+		Assert.assertEquals("cn.hutool.core.util.ClassUtil", className);
 
 		String simpleClassName = ClassUtil.getClassName(ClassUtil.class, true);
 		Assert.assertEquals("ClassUtil", simpleClassName);
