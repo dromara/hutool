@@ -1,8 +1,8 @@
-package com.xiaoleilu.hutool.cache.impl;
+package cn.hutool.cache.impl;
 
 import java.util.Iterator;
 
-import com.xiaoleilu.hutool.cache.Cache;
+import cn.hutool.cache.Cache;
 
 /**
  * 无缓存实现，用于快速关闭缓存

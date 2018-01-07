@@ -1,9 +1,9 @@
-package com.xiaoleilu.hutool.cache.test;
+package cn.hutool.cache.test;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.cache.file.LFUFileCache;
+import cn.hutool.cache.file.LFUFileCache;
 
 /**
  * 文件缓存单元测试

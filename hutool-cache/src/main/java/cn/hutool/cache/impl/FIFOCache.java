@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cache.impl;
+package cn.hutool.cache.impl;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

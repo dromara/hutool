@@ -1,9 +1,9 @@
-package com.xiaoleilu.hutool.cache.file;
+package cn.hutool.cache.file;
 
 import java.io.File;
 
-import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.cache.impl.LFUCache;
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.impl.LFUCache;
 
 /**
  *  使用LFU缓存文件，以解决频繁读取文件引起的性能问题

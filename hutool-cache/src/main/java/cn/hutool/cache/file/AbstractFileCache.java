@@ -1,9 +1,8 @@
-package com.xiaoleilu.hutool.cache.file;
+package cn.hutool.cache.file;
 
 import java.io.File;
 
-import com.xiaoleilu.hutool.cache.Cache;
-
+import cn.hutool.cache.Cache;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 

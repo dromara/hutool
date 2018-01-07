@@ -1,12 +1,11 @@
-package com.xiaoleilu.hutool.cache.test;
+package cn.hutool.cache.test;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.cache.CacheUtil;
-import com.xiaoleilu.hutool.cache.impl.TimedCache;
-
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.thread.ThreadUtil;
 

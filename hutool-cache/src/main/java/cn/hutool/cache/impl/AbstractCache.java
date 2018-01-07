@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cache.impl;
+package cn.hutool.cache.impl;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -6,8 +6,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
-import com.xiaoleilu.hutool.cache.Cache;
-
+import cn.hutool.cache.Cache;
 import cn.hutool.core.collection.CopiedIterator;
 
 /**

@@ -1,4 +1,4 @@
-package com.xiaoleilu.hutool.cache;
+package cn.hutool.cache;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;

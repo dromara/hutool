@@ -1,11 +1,11 @@
-package com.xiaoleilu.hutool.cache.impl;
+package cn.hutool.cache.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-import com.xiaoleilu.hutool.cache.GlobalPruneTimer;
+import cn.hutool.cache.GlobalPruneTimer;
 
 /**
  * 定时缓存<br>

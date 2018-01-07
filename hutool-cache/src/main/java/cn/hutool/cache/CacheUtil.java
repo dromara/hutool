@@ -1,11 +1,11 @@
-package com.xiaoleilu.hutool.cache;
+package cn.hutool.cache;
 
-import com.xiaoleilu.hutool.cache.impl.FIFOCache;
-import com.xiaoleilu.hutool.cache.impl.LFUCache;
-import com.xiaoleilu.hutool.cache.impl.LRUCache;
-import com.xiaoleilu.hutool.cache.impl.NoCache;
-import com.xiaoleilu.hutool.cache.impl.TimedCache;
-import com.xiaoleilu.hutool.cache.impl.WeakCache;
+import cn.hutool.cache.impl.FIFOCache;
+import cn.hutool.cache.impl.LFUCache;
+import cn.hutool.cache.impl.LRUCache;
+import cn.hutool.cache.impl.NoCache;
+import cn.hutool.cache.impl.TimedCache;
+import cn.hutool.cache.impl.WeakCache;
 
 /**
  * 缓存工具类

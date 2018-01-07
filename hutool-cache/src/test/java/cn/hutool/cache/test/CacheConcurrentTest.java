@@ -1,10 +1,9 @@
-package com.xiaoleilu.hutool.cache.test;
+package cn.hutool.cache.test;
 
 import java.util.Iterator;
 
-import com.xiaoleilu.hutool.cache.Cache;
-import com.xiaoleilu.hutool.cache.impl.FIFOCache;
-
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.thread.ThreadUtil;
 
 /**
