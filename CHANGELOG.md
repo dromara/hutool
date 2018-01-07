@@ -15,7 +15,7 @@
 
 ### 新特性
 * StrUtil增加方法equalsCharAt
-* 增加方法FileUtil.cleanIInvalid
+* 增加方法FileUtil.cleanInvalid
 * db模块BeanHandler支持忽略大小写（针对Oracle返回大写字段无法注入Bean的问题）
 * Setting增加set方法，支持分组
 * JSONObject支持键忽略大小写模式
