@@ -585,7 +585,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
-	 * 异步请求
+	 * 异步请求<br>
+	 * 异步请求后获取的{@link HttpResponse} 为异步模式，此时此对象持有Http链接（http链接并不会关闭），直调用获取内容方法为止
+	 * 
 	 * @return 异步对象，使用get方法获取HttpResponse对象
 	 */
 	public HttpResponse executeAsync(){

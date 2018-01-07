@@ -5,6 +5,7 @@
 ## 3.3.2
 
 ### 新特性
+* 改进HttpUtil.download使之支持更多方法和参数
 
 ### Bug修复
 * FileTypeUtil.getType未关闭流问题（issue#79@Github）

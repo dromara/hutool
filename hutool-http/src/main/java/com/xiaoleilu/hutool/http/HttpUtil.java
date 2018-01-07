@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -20,18 +19,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
-import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.StreamProgress;
-import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
@@ -386,7 +380,6 @@ public class HttpUtil {
 		}
 		if (destFile.isDirectory()) {
 			String fileName = StrUtil.subSuf(url, url.lastIndexOf('/') + 1);
-			StaticLog.debug("FileName: {}", fileName);
 			if (StrUtil.isBlank(fileName)) {
 				fileName = HttpUtil.encode(url, CharsetUtil.CHARSET_UTF_8);
 			}
@@ -431,26 +424,7 @@ public class HttpUtil {
 			throw new NullPointerException("[out] is null!");
 		}
 
-		InputStream in = null;
-		URLConnection conn;
-		try {
-			conn = new URL(url).openConnection();
-			if (isHttps(url)) {
-				HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
-				// 验证域
-				httpsConn.setHostnameVerifier(new TrustAnyHostnameVerifier());
-				httpsConn.setSSLSocketFactory(SSLSocketFactoryBuilder.create().build());
-			}
-			in = conn.getInputStream();
-			return IoUtil.copyByNIO(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
-		} catch (Exception e) {
-			throw new HttpException(e);
-		} finally {
-			IoUtil.close(in);
-			if (isCloseOut) {
-				IoUtil.close(out);
-			}
-		}
+		return HttpRequest.get(url).executeAsync().writeBody(out, isCloseOut, streamProgress);
 	}
 
 	/**
