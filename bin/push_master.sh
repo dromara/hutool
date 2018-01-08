@@ -1,12 +1,9 @@
 #!/bin/bash
 
-echo -e "\033[32m Checkout to master\033[0m"
-git checkout master
+echo 'checkout to v4-master'
+git checkout v4-master
 
-echo -e "\033[32m Merge dev branch\033[0m"
-git merge dev -m "Prepare release"
-
-echo -e "\033[32m Push to origin master\033[0m"
-git push origin master
-echo -e "\033[32m Push to osc master\033[0m"
-git push osc master
+echo 'Push to origin v4-master'
+git push origin v4-master
+echo 'Push to osc v4-master'
+git push osc v4-master
