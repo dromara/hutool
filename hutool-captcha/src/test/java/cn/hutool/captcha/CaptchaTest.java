@@ -1,12 +1,7 @@
-package cn.hutool.core.captcha;
+package cn.hutool.captcha;
 
 import org.junit.Ignore;
 import org.junit.Test;
-
-import cn.hutool.core.captcha.CaptchaUtil;
-import cn.hutool.core.captcha.CircleCaptcha;
-import cn.hutool.core.captcha.LineCaptcha;
-import cn.hutool.core.captcha.ShearCaptcha;
 
 /**
  * 直线干扰验证码单元测试

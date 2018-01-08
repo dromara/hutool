@@ -1,4 +1,4 @@
-package cn.hutool.core.captcha;
+package cn.hutool.captcha;
 
 /**
  * 图形验证码工具

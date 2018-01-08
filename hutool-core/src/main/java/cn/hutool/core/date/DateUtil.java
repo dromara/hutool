@@ -142,6 +142,16 @@ public class DateUtil {
 	public static long current(boolean isNano) {
 		return isNano ? System.nanoTime() : System.currentTimeMillis();
 	}
+	
+	/**
+	 * 当前时间秒数
+	 * 
+	 * @return 当前时间秒数
+	 * @since 4.0.0
+	 */
+	public static long currentSeconds() {
+		return System.currentTimeMillis() / 1000;
+	}
 
 	/**
 	 * 当前日期，格式 yyyy-MM-dd

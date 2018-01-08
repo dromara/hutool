@@ -29,6 +29,7 @@
 		<module>hutool-system</module>
 		<module>hutool-json</module>
 		<module>hutool-poi</module>
+		<module>hutool-captcha</module>
 	</modules>
 
 	<properties>

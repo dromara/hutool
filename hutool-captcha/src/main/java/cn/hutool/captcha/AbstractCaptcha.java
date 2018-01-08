@@ -1,4 +1,4 @@
-package cn.hutool.core.captcha;
+package cn.hutool.captcha;
 
 import java.awt.Font;
 import java.awt.image.BufferedImage;

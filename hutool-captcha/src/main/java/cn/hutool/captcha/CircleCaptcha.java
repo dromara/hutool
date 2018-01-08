@@ -1,4 +1,4 @@
-package cn.hutool.core.captcha;
+package cn.hutool.captcha;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

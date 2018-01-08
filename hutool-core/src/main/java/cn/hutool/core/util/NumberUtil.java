@@ -1336,7 +1336,7 @@ public class NumberUtil {
 		final BigInteger value = new BigInteger(str, radix);
 		return negate ? value.negate() : value;
 	}
-
+	
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
