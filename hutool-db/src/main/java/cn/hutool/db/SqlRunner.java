@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.sql.Wrapper;
 
 /**
  * SQL执行类<br>
@@ -92,11 +93,14 @@ public class SqlRunner extends AbstractSqlRunner{
 	//------------------------------------------------------- Constructor end
 
 	//---------------------------------------------------------------------------- Getters and Setters start
-	public SqlConnRunner getRunner() {
-		return this.runner;
+	@Override
+	public SqlRunner setWrapper(Character wrapperChar) {
+		return (SqlRunner) super.setWrapper(wrapperChar);
 	}
-	public void setRunner(SqlConnRunner runner) {
-		this.runner = runner;
+	
+	@Override
+	public SqlRunner setWrapper(Wrapper wrapper) {
+		return (SqlRunner) super.setWrapper(wrapper);
 	}
 	//---------------------------------------------------------------------------- Getters and Setters end
 	

@@ -14,5 +14,6 @@
 * JDBC参数针对BigInteger处理
 * db模块支持显示和格式化显示SQL
 * 调整日志优先级：ConsoleLog优先于JDKLog，Log4j2优先于Log4j
+* db模块的SqlRunner中可自定义Wrapper
 
 ### Bug修复

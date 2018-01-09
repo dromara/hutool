@@ -7,7 +7,8 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * {@link ByteBuffer} 工具类<br>
- * 此工具来自于 t-io 项目以及其它项目的相关部分收集
+ * 此工具来自于 t-io 项目以及其它项目的相关部分收集<br>
+ * ByteBuffer的相关介绍见：https://www.cnblogs.com/ruber/p/6857159.html
  * 
  * @author tanyaowu, looly
  * @since 4.0.0

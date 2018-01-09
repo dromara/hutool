@@ -13,6 +13,7 @@ import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.handler.StringHandler;
 import cn.hutool.db.sql.SqlExecutor;
+import cn.hutool.db.sql.Wrapper;
 import cn.hutool.db.sql.Condition.LikeType;
 
 /**
@@ -695,6 +696,27 @@ public abstract class AbstractSqlRunner{
 	 */
 	public void setRunner(SqlConnRunner runner) {
 		this.runner = runner;
+	}
+	
+	/**
+	 * 设置包装器，包装器用于对表名、字段名进行符号包装（例如双引号），防止关键字与这些表名或字段冲突
+	 * @param wrapperChar 包装字符，字符会在SQL生成时位于表名和字段名两边，null时表示取消包装
+	 * @return this
+	 * @since 4.0.0
+	 */
+	public AbstractSqlRunner setWrapper(Character wrapperChar) {
+		return setWrapper(new Wrapper(wrapperChar));
+	}
+	
+	/**
+	 * 设置包装器，包装器用于对表名、字段名进行符号包装（例如双引号），防止关键字与这些表名或字段冲突
+	 * @param wrapper 包装器，null表示取消包装
+	 * @return this
+	 * @since 4.0.0
+	 */
+	public AbstractSqlRunner setWrapper(Wrapper wrapper) {
+		this.runner.setWrapper(wrapper);
+		return this;
 	}
 	//---------------------------------------------------------------------------- Getters and Setters end
 	

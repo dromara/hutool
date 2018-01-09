@@ -11,6 +11,7 @@ import cn.hutool.core.lang.VoidFunc;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
+import cn.hutool.db.sql.Wrapper;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
@@ -132,7 +133,7 @@ public class Session extends AbstractSqlRunner implements Closeable {
 	 * @throws DbRuntimeException SQLException包装
 	 * @since 3.2.3
 	 */
-	public boolean isSupportTransaction() throws DbRuntimeException{
+	public boolean isSupportTransaction() throws DbRuntimeException {
 		if (null == isSupportTransaction) {
 			try {
 				isSupportTransaction = conn.getMetaData().supportsTransactions();
@@ -142,7 +143,7 @@ public class Session extends AbstractSqlRunner implements Closeable {
 		}
 		return this.isSupportTransaction;
 	}
-	
+
 	/**
 	 * 开始事务
 	 * 
@@ -293,7 +294,7 @@ public class Session extends AbstractSqlRunner implements Closeable {
 		}
 		conn.setTransactionIsolation(level);
 	}
-	
+
 	/**
 	 * 在事务中执行操作，通过实现{@link VoidFunc}接口的call方法执行多条SQL语句从而完成事务
 	 * 
@@ -311,6 +312,18 @@ public class Session extends AbstractSqlRunner implements Closeable {
 		}
 	}
 	// ---------------------------------------------------------------------------- Transaction method end
+
+	// ---------------------------------------------------------------------------- Getters and Setters start
+	@Override
+	public Session setWrapper(Character wrapperChar) {
+		return (Session) super.setWrapper(wrapperChar);
+	}
+
+	@Override
+	public Session setWrapper(Wrapper wrapper) {
+		return (Session) super.setWrapper(wrapper);
+	}
+	// ---------------------------------------------------------------------------- Getters and Setters end
 
 	/**
 	 * 获得连接，Session中使用同一个连接
