@@ -8,8 +8,7 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.DocumentFactoryHelper;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.poifs.filesystem.FileMagic;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -412,7 +411,7 @@ public class ExcelUtil {
 	public static boolean isXls(InputStream in) {
 		final PushbackInputStream pin = IoUtil.toPushbackStream(in, 8);
 		try {
-			return POIFSFileSystem.hasPOIFSHeader(pin);
+			return FileMagic.valueOf(pin) == FileMagic.OLE2;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -430,7 +429,7 @@ public class ExcelUtil {
 			in = new BufferedInputStream(in);
 		}
 		try {
-			return DocumentFactoryHelper.hasOOXMLHeader(in);
+			return FileMagic.valueOf(in) == FileMagic.OOXML;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

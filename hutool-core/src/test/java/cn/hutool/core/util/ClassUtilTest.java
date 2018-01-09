@@ -6,8 +6,6 @@ import java.lang.reflect.Method;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.ClassUtil;
-
 /**
  * {@link ClassUtil} 单元测试
  * 
@@ -15,7 +13,7 @@ import cn.hutool.core.util.ClassUtil;
  *
  */
 public class ClassUtilTest {
-
+	
 	@Test
 	public void getClassNameTest() {
 		String className = ClassUtil.getClassName(ClassUtil.class, false);

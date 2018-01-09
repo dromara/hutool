@@ -1,6 +1,12 @@
 package cn.hutool.poi.excel;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
@@ -11,6 +17,8 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public class StyleSet {
 
+	/** 工作簿引用 */
+	private Workbook workbook;
 	/** 标题样式 */
 	protected CellStyle headCellStyle;
 	/** 默认样式 */
@@ -26,16 +34,17 @@ public class StyleSet {
 	 * @param workbook 工作簿
 	 */
 	public StyleSet(Workbook workbook) {
-		this.headCellStyle = InternalExcelUtil.createHeadCellStyle(workbook);
-		this.cellStyle = InternalExcelUtil.createDefaultCellStyle(workbook);
+		this.workbook = workbook;
+		this.headCellStyle = StyleUtil.createHeadCellStyle(workbook);
+		this.cellStyle = StyleUtil.createDefaultCellStyle(workbook);
 
 		// 默认日期格式
-		this.cellStyleForDate = InternalExcelUtil.cloneCellStyle(workbook, this.cellStyle);
+		this.cellStyleForDate = StyleUtil.cloneCellStyle(workbook, this.cellStyle);
 		// 22表示：m/d/yy h:mm
 		this.cellStyleForDate.setDataFormat((short) 22);
 
 		// 默认数字格式
-		cellStyleForNumber = InternalExcelUtil.cloneCellStyle(workbook, this.cellStyle);
+		cellStyleForNumber = StyleUtil.cloneCellStyle(workbook, this.cellStyle);
 		// 2表示：0.00
 		cellStyleForNumber.setDataFormat((short) 2);
 	}
@@ -74,5 +83,72 @@ public class StyleSet {
 	 */
 	public CellStyle getCellStyleForDate() {
 		return cellStyleForDate;
+	}
+
+	/**
+	 * 定义所有单元格的边框类型
+	 * 
+	 * @param borderSize 边框粗细{@link BorderStyle}枚举
+	 * @param colorIndex 颜色的short值
+	 * @return this
+	 * @since 4.0.0
+	 */
+	public StyleSet setBorder(BorderStyle borderSize, IndexedColors colorIndex) {
+		StyleUtil.setBorder(this.headCellStyle, borderSize, colorIndex);
+		StyleUtil.setBorder(this.cellStyle, borderSize, colorIndex);
+		StyleUtil.setBorder(this.cellStyleForNumber, borderSize, colorIndex);
+		StyleUtil.setBorder(this.cellStyleForDate, borderSize, colorIndex);
+		return this;
+	}
+
+	/**
+	 * 设置cell文本对齐样式
+	 * 
+	 * @param halign 横向位置
+	 * @param valign 纵向位置
+	 * @return this
+	 * @since 4.0.0
+	 */
+	public StyleSet setAlign(HorizontalAlignment halign, VerticalAlignment valign) {
+		StyleUtil.setAlign(this.headCellStyle, halign, valign);
+		StyleUtil.setAlign(this.cellStyle, halign, valign);
+		StyleUtil.setAlign(this.cellStyleForNumber, halign, valign);
+		StyleUtil.setAlign(this.cellStyleForDate, halign, valign);
+		return this;
+	}
+
+	/**
+	 * 设置单元格背景样式
+	 * 
+	 * @param backgroundColor 背景色
+	 * @param withHeadCell 是否也定义头部样式
+	 * @return this
+	 * @since 4.0.0
+	 */
+	public StyleSet setBackgroundColor(IndexedColors backgroundColor, boolean withHeadCell) {
+		if (withHeadCell) {
+			StyleUtil.setColor(this.headCellStyle, backgroundColor, FillPatternType.SOLID_FOREGROUND);
+		}
+		StyleUtil.setColor(this.cellStyle, backgroundColor, FillPatternType.SOLID_FOREGROUND);
+		StyleUtil.setColor(this.cellStyleForNumber, backgroundColor, FillPatternType.SOLID_FOREGROUND);
+		StyleUtil.setColor(this.cellStyleForDate, backgroundColor, FillPatternType.SOLID_FOREGROUND);
+		return this;
+	}
+	
+	/**
+	 * 设置全局字体
+	 * 
+	 * @param color 字体颜色
+	 * @param fontSize 字体大小，-1表示默认大小
+	 * @param fontName 字体名，null表示默认字体
+	 * @return this
+	 */
+	public StyleSet setFont(short color, short fontSize, String fontName) {
+		final Font font = StyleUtil.createFont(this.workbook, color, fontSize, fontName);
+		this.headCellStyle.setFont(font);
+		this.cellStyle.setFont(font);
+		this.cellStyleForNumber.setFont(font);
+		this.cellStyleForDate.setFont(font);
+		return this;
 	}
 }

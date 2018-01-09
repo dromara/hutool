@@ -8,7 +8,6 @@ import cn.hutool.core.util.StrUtil;
 /**
  * {@link ByteBuffer} 工具类<br>
  * 此工具来自于 t-io 项目以及其它项目的相关部分收集
- * TODO 缺少单元测试
  * 
  * @author tanyaowu, looly
  * @since 4.0.0
@@ -36,7 +35,7 @@ public class BufferUtil {
 	 * @return 目标ByteBuffer
 	 */
 	public static ByteBuffer copy(ByteBuffer src, ByteBuffer dest) {
-		return copy(src, dest, Math.min(src.arrayOffset(), dest.remaining()));
+		return copy(src, dest, Math.min(src.limit(), dest.remaining()));
 	}
 
 	/**
@@ -64,6 +63,19 @@ public class BufferUtil {
 	public static ByteBuffer copy(ByteBuffer src, int srcStart, ByteBuffer dest, int destStart, int length) {
 		System.arraycopy(src.array(), srcStart, dest.array(), destStart, length);
 		return dest;
+	}
+	
+	/**
+	 * 读取剩余部分bytes<br>
+	 * 
+	 * @param buffer ByteBuffer
+	 * @return bytes
+	 */
+	public static byte[] readBytes(ByteBuffer buffer) {
+		final int remaining = buffer.remaining();
+		byte[] ab = new byte[remaining];
+		buffer.get(ab);
+		return ab;
 	}
 
 	/**
@@ -109,7 +121,12 @@ public class BufferUtil {
 	}
 
 	/**
-	 * 一行的末尾位置，查找位置时位移ByteBuffer到结束位置
+	 * 一行的末尾位置，查找位置时位移ByteBuffer到结束位置<br>
+	 * 支持的换行符如下：
+	 * <pre>
+	 * 1. \r\n
+	 * 2. \n
+	 * </pre>
 	 *
 	 * @param buffer {@link ByteBuffer}
 	 * @param maxLength 读取最大长度
@@ -118,33 +135,41 @@ public class BufferUtil {
 	public static int lineEnd(ByteBuffer buffer, int maxLength) {
 		int primitivePosition = buffer.position();
 		boolean canEnd = false;
-		int count = 0;
+		int charIndex = primitivePosition;
 		byte b;
 		while (buffer.hasRemaining()) {
 			b = buffer.get();
+			charIndex++;
 			if (b == StrUtil.C_CR) {
 				canEnd = true;
 			} else if (b == StrUtil.C_LF) {
-				return canEnd ? count - 1 : count;
+				return canEnd ? charIndex - 2 : charIndex - 1;
 			} else {
 				// 只有\r无法确认换行
 				canEnd = false;
 			}
-			// 继续查找
-			count++;
-			if (count > maxLength) {
+			
+			if (charIndex - primitivePosition > maxLength) {
 				//查找到尽头，未找到，还原位置
 				buffer.position(primitivePosition);
 				throw new IndexOutOfBoundsException(StrUtil.format("Position is out of maxLength: {}", maxLength));
 			}
 		}
 		
+		//查找到buffer尽头，未找到，还原位置
+		buffer.position(primitivePosition);
 		//读到结束位置
 		return -1;
 	}
 
 	/**
-	 * 读取一行
+	 * 读取一行，如果buffer中最后一部分并非完整一行，则返回null<br>
+	 * 支持的换行符如下：
+	 * <pre>
+	 * 1. \r\n
+	 * 2. \n
+	 * </pre>
+	 * 
 	 * @param buffer ByteBuffer
 	 * @param charset 编码
 	 * @return 一行

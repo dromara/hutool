@@ -48,16 +48,22 @@ public class ExcelReadTest {
 	public void excel03ReadTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));
 		List<List<Object>> readAll = reader.read();
+		
+//		for (List<Object> list : readAll) {
+//			Console.log(list);
+//		}
 
 		// 标题
 		Assert.assertEquals("姓名", readAll.get(0).get(0));
 		Assert.assertEquals("性别", readAll.get(0).get(1));
 		Assert.assertEquals("年龄", readAll.get(0).get(2));
+		Assert.assertEquals("分数", readAll.get(0).get(3));
 
 		// 第一行
 		Assert.assertEquals("张三", readAll.get(1).get(0));
 		Assert.assertEquals("男", readAll.get(1).get(1));
 		Assert.assertEquals(11L, readAll.get(1).get(2));
+		Assert.assertEquals(33.2D, readAll.get(1).get(3));
 	}
 
 	@Test

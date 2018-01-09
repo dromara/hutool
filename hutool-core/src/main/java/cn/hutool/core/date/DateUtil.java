@@ -21,45 +21,6 @@ import cn.hutool.core.util.StrUtil;
  */
 public class DateUtil {
 
-	/** 
-	 * 标准日期格式：yyyy-MM-dd
-	 * @deprecated 请使用{@link DatePattern#NORM_DATE_PATTERN}
-	 */
-	@Deprecated
-	public final static String NORM_DATE_PATTERN = DatePattern.NORM_DATE_PATTERN;
-	/** 
-	 * 标准时间格式：HH:mm:ss
-	 * @deprecated 请使用{@link DatePattern#NORM_TIME_PATTERN}
-	 */
-	@Deprecated
-	public final static String NORM_TIME_PATTERN = DatePattern.NORM_TIME_PATTERN;
-	/** 
-	 * 标准日期时间格式，精确到分：yyyy-MM-dd HH:mm
-	 * @deprecated 请使用{@link DatePattern#NORM_DATETIME_MINUTE_PATTERN}
-	 */
-	@Deprecated
-	public final static String NORM_DATETIME_MINUTE_PATTERN = DatePattern.NORM_DATETIME_MINUTE_PATTERN;
-	/** 
-	 * 标准日期时间格式，精确到秒：yyyy-MM-dd HH:mm:ss
-	 * @deprecated 请使用{@link DatePattern#NORM_DATETIME_PATTERN}
-	 */
-	@Deprecated
-	public final static String NORM_DATETIME_PATTERN = DatePattern.NORM_DATETIME_PATTERN;
-	/** 标准日期时间格式，精确到毫秒 */
-	/** 
-	 * 标准日期时间格式，精确到毫秒：yyyy-MM-dd HH:mm:ss.SSS
-	 * @deprecated 请使用{@link DatePattern#NORM_DATETIME_MS_PATTERN}
-	 */
-	@Deprecated
-	public final static String NORM_DATETIME_MS_PATTERN = DatePattern.NORM_DATETIME_MS_PATTERN;
-	/** HTTP头中日期时间格式 */
-	/** 
-	 * HTTP头中日期时间格式：EEE, dd MMM yyyy HH:mm:ss z
-	 * @deprecated 请使用{@link DatePattern#HTTP_DATETIME_PATTERN}
-	 */
-	@Deprecated
-	public final static String HTTP_DATETIME_PATTERN = DatePattern.HTTP_DATETIME_PATTERN;
-
 	/**
 	 * @return 当前时间
 	 */

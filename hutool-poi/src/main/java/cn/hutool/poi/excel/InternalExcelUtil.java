@@ -14,18 +14,13 @@ import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.hssf.usermodel.HSSFShape;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
@@ -48,6 +43,7 @@ import cn.hutool.poi.excel.editors.TrimEditor;
  * @author looly
  */
 public class InternalExcelUtil {
+	
 	/**
 	 * 获取单元格值
 	 * 
@@ -156,30 +152,6 @@ public class InternalExcelUtil {
 		} else {
 			cell.setCellValue(value.toString());
 		}
-	}
-
-	/**
-	 * 克隆新的{@link CellStyle}
-	 * 
-	 * @param cell 单元格
-	 * @param cellStyle 被复制的样式
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle cloneCellStyle(Cell cell, CellStyle cellStyle) {
-		return cloneCellStyle(cell.getSheet().getWorkbook(), cellStyle);
-	}
-
-	/**
-	 * 克隆新的{@link CellStyle}
-	 * 
-	 * @param workbook 工作簿
-	 * @param cellStyle 被复制的样式
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle cloneCellStyle(Workbook workbook, CellStyle cellStyle) {
-		final CellStyle newCellStyle = workbook.createCellStyle();
-		newCellStyle.cloneStyleFrom(cellStyle);
-		return newCellStyle;
 	}
 
 	/**
@@ -297,90 +269,6 @@ public class InternalExcelUtil {
 		return sheet.addMergedRegion(cellRangeAddress);
 	}
 
-	/**
-	 * cell文本位置样式
-	 * 
-	 * @param cellStyle {@link CellStyle}
-	 * @param halign 横向位置
-	 * @param valign 纵向位置
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle setAlign(CellStyle cellStyle, HorizontalAlignment halign, VerticalAlignment valign) {
-		cellStyle.setAlignment(halign);
-		cellStyle.setVerticalAlignment(valign);
-		return cellStyle;
-	}
-
-	/**
-	 * 设置cell的四个边框粗细和颜色
-	 * 
-	 * @param cellStyle {@link CellStyle}
-	 * @param borderSize 边框粗细{@link BorderStyle}枚举
-	 * @param colorIndex 颜色的short值
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle setBorder(CellStyle cellStyle, BorderStyle borderSize, IndexedColors colorIndex) {
-		cellStyle.setBorderBottom(borderSize);
-		cellStyle.setBottomBorderColor(colorIndex.index);
-
-		cellStyle.setBorderLeft(borderSize);
-		cellStyle.setLeftBorderColor(colorIndex.index);
-
-		cellStyle.setBorderRight(borderSize);
-		cellStyle.setRightBorderColor(colorIndex.index);
-
-		cellStyle.setBorderTop(borderSize);
-		cellStyle.setTopBorderColor(colorIndex.index);
-
-		return cellStyle;
-	}
-
-	/**
-	 * 给cell设置颜色
-	 * 
-	 * @param cellStyle {@link CellStyle}
-	 * @param backgroundColor 背景颜色
-	 * @param fillPattern 填充方式 {@link FillPatternType}枚举
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle setColor(CellStyle cellStyle, IndexedColors backgroundColor, FillPatternType fillPattern) {
-		cellStyle.setFillForegroundColor(backgroundColor.index);
-		cellStyle.setFillPattern(fillPattern);
-		return cellStyle;
-	}
-
-	/**
-	 * 创建默认普通单元格样式
-	 * 
-	 * <pre>
-	 * 1. 文字上下左右居中
-	 * 2. 细边框，黑色
-	 * </pre>
-	 * 
-	 * @param workbook {@link Workbook} 工作簿
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle createDefaultCellStyle(Workbook workbook) {
-		final CellStyle cellStyle = workbook.createCellStyle();
-		setAlign(cellStyle, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
-		setBorder(cellStyle, BorderStyle.THIN, IndexedColors.BLACK);
-		return cellStyle;
-	}
-
-	/**
-	 * 创建默认头部样式
-	 * 
-	 * @param workbook {@link Workbook} 工作簿
-	 * @return {@link CellStyle}
-	 */
-	public static CellStyle createHeadCellStyle(Workbook workbook) {
-		final CellStyle cellStyle = workbook.createCellStyle();
-		setAlign(cellStyle, HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
-		setBorder(cellStyle, BorderStyle.THIN, IndexedColors.BLACK);
-		setColor(cellStyle, IndexedColors.GREY_25_PERCENT, FillPatternType.SOLID_FOREGROUND);
-		return cellStyle;
-	}
-
 	// -------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获取XLS工作簿指定sheet中图片列表
@@ -457,7 +345,7 @@ public class InternalExcelUtil {
 		}
 
 		// 普通数字
-		if (null != format && format.indexOf('.') < 0) {
+		if (null != format && format.indexOf(StrUtil.C_DOT) < 0) {
 			final long longPart = (long) value;
 			if (longPart == value) {
 				// 对于无小数部分的数字类型，转为Long

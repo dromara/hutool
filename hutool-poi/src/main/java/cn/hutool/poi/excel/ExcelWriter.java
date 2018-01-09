@@ -158,6 +158,22 @@ public class ExcelWriter implements Closeable {
 		this.sheet.autoSizeColumn(columnIndex, useMergedCells);
 		return this;
 	}
+	
+	/**
+	 * 获取样式集，样式集可以自定义包括：<br>
+	 * <pre>
+	 * 1. 头部样式
+	 * 2. 一般单元格样式
+	 * 3. 默认数字样式
+	 * 4. 默认日期样式
+	 * </pre>
+	 * 
+	 * @return 样式集
+	 * @since 4.0.0
+	 */
+	public StyleSet getStyleSet() {
+		return this.styleSet;
+	}
 
 	/**
 	 * 获取头部样式，获取样式后可自定义样式
