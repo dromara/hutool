@@ -1,5 +1,6 @@
 package cn.hutool.core.thread;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.CountDownLatch;
@@ -9,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -365,5 +367,41 @@ public class ThreadUtil {
 	public static ThreadGroup currentThreadGroup() {
 		final SecurityManager s = System.getSecurityManager();
 		return (null != s) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+	}
+	
+	/**
+	 * 创建线程工厂
+	 * 
+	 * @param prefix 线程名前缀
+	 * @param isDeamon 是否守护线程
+	 * @since 4.0.0
+	 */
+	public static ThreadFactory newNamedThreadFactory(String prefix, boolean isDeamon) {
+		return new NamedThreadFactory(prefix, isDeamon);
+	}
+	
+	/**
+	 * 创建线程工厂
+	 * 
+	 * @param prefix 线程名前缀
+	 * @param threadGroup 线程组，可以为null
+	 * @param isDeamon 是否守护线程
+	 * @since 4.0.0
+	 */
+	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDeamon) {
+		return new NamedThreadFactory(prefix, threadGroup, isDeamon);
+	}
+	
+	/**
+	 * 创建线程工厂
+	 * 
+	 * @param prefix 线程名前缀
+	 * @param threadGroup 线程组，可以为null
+	 * @param isDeamon 是否守护线程
+	 * @param handler 未捕获异常处理
+	 * @since 4.0.0
+	 */
+	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDeamon, UncaughtExceptionHandler handler) {
+		return new NamedThreadFactory(prefix, threadGroup, isDeamon, handler);
 	}
 }

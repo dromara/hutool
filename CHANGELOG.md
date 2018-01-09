@@ -7,5 +7,6 @@
 ### 新特性
 * 新增Object类，用于实现MongoDB的ID生成策略
 * 验证码单独成为一个模块hutool-captcha
+* 新增NamedThreadFactory
 
 ### Bug修复

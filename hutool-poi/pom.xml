@@ -17,7 +17,7 @@
 
 	<properties>
 		<!-- versions -->
-		<poi.version>3.16</poi.version>
+		<poi.version>3.17</poi.version>
 		<xerces.version>2.11.0</xerces.version>
 	</properties>
 

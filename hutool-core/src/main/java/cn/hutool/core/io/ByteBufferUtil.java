@@ -17,33 +17,6 @@ import cn.hutool.core.util.StrUtil;
 public class ByteBufferUtil {
 
 	/**
-	 * ByteBuffer中数据的长度
-	 * 
-	 * @param byteBuffer {@link ByteBuffer}
-	 * @return 数据长度
-	 */
-	public static int size(ByteBuffer byteBuffer) {
-		return byteBuffer.limit() - byteBuffer.position();
-	}
-
-	/**
-	 * 混合两个{@link ByteBuffer} 为一个
-	 * 
-	 * @param byteBuffer1 ByteBuffer1
-	 * @param byteBuffer2 ByteBuffer2
-	 * @return 混合后的ByteBuffer
-	 */
-	public static ByteBuffer composite(ByteBuffer byteBuffer1, ByteBuffer byteBuffer2) {
-		int capacity = size(byteBuffer1) + size(byteBuffer2);
-		final ByteBuffer ret = ByteBuffer.allocate(capacity);
-
-		ret.put(byteBuffer1);
-		ret.put(byteBuffer2);
-
-		return ret;
-	}
-
-	/**
 	 * 拷贝到一个新的ByteBuffer
 	 * 
 	 * @param src 源ByteBuffer
@@ -63,7 +36,7 @@ public class ByteBufferUtil {
 	 * @return 目标ByteBuffer
 	 */
 	public static ByteBuffer copy(ByteBuffer src, ByteBuffer dest) {
-		return copy(src, dest, Math.min(size(src), size(dest)));
+		return copy(src, dest, Math.min(src.arrayOffset(), dest.remaining()));
 	}
 
 	/**
