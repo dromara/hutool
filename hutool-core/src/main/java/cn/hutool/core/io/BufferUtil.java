@@ -14,7 +14,7 @@ import cn.hutool.core.util.StrUtil;
  * @since 4.0.0
  *
  */
-public class ByteBufferUtil {
+public class BufferUtil {
 
 	/**
 	 * 拷贝到一个新的ByteBuffer
@@ -67,14 +67,19 @@ public class ByteBufferUtil {
 	}
 
 	/**
-	 * 读取指定长度的bytes
+	 * 读取指定长度的bytes<br>
+	 * 如果长度不足，则读取剩余部分，此时buffer必须为读模式
 	 * 
 	 * @param buffer ByteBuffer
-	 * @param length 长度
+	 * @param maxLength 最大长度
 	 * @return bytes
 	 */
-	public static byte[] readBytes(ByteBuffer buffer, int length) {
-		byte[] ab = new byte[length];
+	public static byte[] readBytes(ByteBuffer buffer, int maxLength) {
+		final int remaining = buffer.remaining();
+		if(maxLength > remaining) {
+			maxLength = remaining;
+		}
+		byte[] ab = new byte[maxLength];
 		buffer.get(ab);
 		return ab;
 	}
