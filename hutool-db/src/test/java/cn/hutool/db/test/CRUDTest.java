@@ -1,5 +1,7 @@
 package cn.hutool.db.test;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,14 +13,11 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.db.ActiveEntity;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.SqlRunner;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.handler.ActiveEntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.dialect.console.ConsoleLogFactory;
 
 /**
  * 增删改查测试
@@ -32,8 +31,6 @@ public class CRUDTest {
 
 	@Before
 	public void init() {
-		LogFactory.setCurrentLogFactory(new ConsoleLogFactory());
-		DbUtil.setShowSqlGlobal(true, false);
 		runner = SqlRunner.create(DSFactory.get());
 	}
 
@@ -41,6 +38,18 @@ public class CRUDTest {
 	public void findBetweenTest() throws SQLException {
 		List<Entity> results = runner.findAll(Entity.create("user").set("age", "between '18' and '40'"));
 		Assert.assertEquals(1, results.size());
+	}
+	
+	@Test
+	public void findByBigIntegerTest() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("age", new BigInteger("12")));
+		Assert.assertEquals(2, results.size());
+	}
+	
+	@Test
+	public void findByBigDecimalTest() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("age", new BigDecimal("12")));
+		Assert.assertEquals(2, results.size());
 	}
 
 	@Test

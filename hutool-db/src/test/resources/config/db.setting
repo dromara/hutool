@@ -6,3 +6,8 @@
 #===================================================================
 
 url = jdbc:sqlite:test.db
+
+# 是否在日志中显示执行的SQL
+showSql = true
+# 是否格式化显示的SQL
+formatSql = false

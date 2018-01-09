@@ -2,8 +2,10 @@ package cn.hutool.db.ds;
 
 import javax.sql.DataSource;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
 import cn.hutool.db.ds.druid.DruidDSFactory;
@@ -23,7 +25,9 @@ import cn.hutool.setting.Setting;
 public abstract class DSFactory {
 	private static final Log log = LogFactory.get();
 
+	/** 数据库配置文件可选路径1 */
 	protected static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
+	/** 数据库配置文件可选路径2 */
 	protected static final String DEFAULT_DB_SETTING_PATH2 = "db.setting";
 	
 	/** 别名字段名：URL */
@@ -59,6 +63,13 @@ public abstract class DSFactory {
 			}
 		}
 		this.setting = setting;
+		
+		//初始化SQL显示
+		if(null != this.setting) {
+			final boolean isShowSql = Convert.toBool(this.setting.remove("showSql"), false);
+			final boolean isFormatSql = Convert.toBool(this.setting.remove("formatSql"), false);
+			DbUtil.setShowSqlGlobal(isShowSql, isFormatSql);
+		}
 	}
 
 	/**

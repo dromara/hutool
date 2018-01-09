@@ -3,6 +3,8 @@ package cn.hutool.db;
 import java.io.Closeable;
 import java.io.InputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -38,9 +40,9 @@ import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.Table;
 import cn.hutool.db.meta.TableType;
 import cn.hutool.db.sql.Condition;
+import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlFormatter;
-import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
@@ -420,14 +422,23 @@ public final class DbUtil {
 			int paramIndex = i + 1;
 			param = params[i];
 			if (null != param) {
-				// 日期特殊处理
 				if (param instanceof java.util.Date) {
+					// 日期特殊处理
 					if (param instanceof java.sql.Date) {
 						ps.setDate(paramIndex, (java.sql.Date) param);
 					} else if (param instanceof java.sql.Time) {
 						ps.setTime(paramIndex, (java.sql.Time)param);
 					} else {
 						ps.setTimestamp(paramIndex, toSqlTimestamp((java.util.Date) param));
+					}
+				}else if(param instanceof Number) {
+					//针对大数字类型的特殊处理
+					if(param instanceof BigInteger) {
+						//BigInteger转为Long
+						ps.setLong(paramIndex, ((BigInteger)param).longValue());
+					}else if(param instanceof BigDecimal) {
+						//BigDecimal的转换交给JDBC驱动处理
+						ps.setBigDecimal(paramIndex, (BigDecimal)param);
 					}
 				} else {
 					ps.setObject(paramIndex, param);

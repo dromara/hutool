@@ -15,6 +15,10 @@ username = 用户名
 password = 密码
 # JDBC驱动名，可选（Hutool会自动识别）
 driver = com.mysql.jdbc.Driver
+# 是否在日志中显示执行的SQL
+showSql = true
+# 是否格式化显示的SQL
+formatSql = true
 
 
 #----------------------------------------------------------------------------------------------------------------

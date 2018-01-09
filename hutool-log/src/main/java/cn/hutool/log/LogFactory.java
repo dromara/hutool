@@ -16,12 +16,12 @@ import cn.hutool.log.dialect.tinylog.TinyLogFactory;
  * 日志工厂类
  * 
  * @see Slf4jLogFactory
- * @see Log4jLogFactory
  * @see Log4j2LogFactory
+ * @see Log4jLogFactory
  * @see ApacheCommonsLogFactory
  * @see TinyLogFactory
- * @see JdkLogFactory
  * @see ConsoleLogFactory
+ * @see JdkLogFactory
  * 
  * @author Looly
  *
@@ -182,11 +182,11 @@ public abstract class LogFactory {
 	 * 决定日志实现
 	 * 
 	 * @see Slf4jLogFactory
-	 * @see Log4jLogFactory
 	 * @see Log4j2LogFactory
+	 * @see Log4jLogFactory
 	 * @see ApacheCommonsLogFactory
-	 * @see JdkLogFactory
 	 * @see ConsoleLogFactory
+	 * @see JdkLogFactory
 	 * @return 日志实现类
 	 */
 	private static LogFactory detectLogFactory() {
@@ -196,11 +196,11 @@ public abstract class LogFactory {
 			logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 		} catch (NoClassDefFoundError e) {
 			try {
-				logFactory = new Log4jLogFactory();
+				logFactory = new Log4j2LogFactory();
 				logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 			} catch (NoClassDefFoundError e2) {
 				try {
-					logFactory = new Log4j2LogFactory();
+					logFactory = new Log4jLogFactory();
 					logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 				} catch (NoClassDefFoundError e3) {
 					try {
@@ -212,10 +212,10 @@ public abstract class LogFactory {
 							logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 						} catch (NoClassDefFoundError e5) {
 							try {
-								logFactory = new JdkLogFactory();
+								logFactory = new ConsoleLogFactory();
 								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 							} catch (NoClassDefFoundError e6) {
-								logFactory = new ConsoleLogFactory();
+								logFactory = new JdkLogFactory();
 								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 							}
 						}
