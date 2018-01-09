@@ -10,12 +10,13 @@ import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * Java的System类封装工具类。
+ * Java的System类封装工具类。<br>
+ * http://blog.csdn.net/zhongweijian/article/details/7619383
  * 
  * @author Looly
  *
  */
-public final class SystemUtil {
+public class SystemUtil {
 	
 	/***** Java运行时环境信息 *****/
 	// Java 运行时环境规范名称
@@ -196,7 +197,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>JvmSpecInfo</code>对象
 	 */
-	public static final JvmSpecInfo getJvmSpecInfo() {
+	public static JvmSpecInfo getJvmSpecInfo() {
 		return Singleton.get(JvmSpecInfo.class);
 	}
 
@@ -205,7 +206,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>JvmInfo</code>对象
 	 */
-	public static final JvmInfo getJvmInfo() {
+	public static JvmInfo getJvmInfo() {
 		return Singleton.get(JvmInfo.class);
 	}
 
@@ -214,7 +215,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>JavaSpecInfo</code>对象
 	 */
-	public static final JavaSpecInfo getJavaSpecInfo() {
+	public static JavaSpecInfo getJavaSpecInfo() {
 		return Singleton.get(JavaSpecInfo.class);
 	}
 
@@ -223,7 +224,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>JavaInfo</code>对象
 	 */
-	public static final JavaInfo getJavaInfo() {
+	public static JavaInfo getJavaInfo() {
 		return Singleton.get(JavaInfo.class);
 	}
 
@@ -232,7 +233,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>JreInfo</code>对象
 	 */
-	public static final JavaRuntimeInfo getJavaRuntimeInfo() {
+	public static JavaRuntimeInfo getJavaRuntimeInfo() {
 		return Singleton.get(JavaRuntimeInfo.class);
 	}
 
@@ -241,7 +242,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>OsInfo</code>对象
 	 */
-	public static final OsInfo getOsInfo() {
+	public static OsInfo getOsInfo() {
 		return Singleton.get(OsInfo.class);
 	}
 
@@ -250,7 +251,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>UserInfo</code>对象
 	 */
-	public static final UserInfo getUserInfo() {
+	public static UserInfo getUserInfo() {
 		return Singleton.get(UserInfo.class);
 	}
 
@@ -259,7 +260,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>HostInfo</code>对象
 	 */
-	public static final HostInfo getHostInfo() {
+	public static HostInfo getHostInfo() {
 		return Singleton.get(HostInfo.class);
 	}
 	
@@ -268,7 +269,7 @@ public final class SystemUtil {
 	 * 
 	 * @return <code>RuntimeInfo</code>对象
 	 */
-	public static final RuntimeInfo getRuntimeInfo() {
+	public static RuntimeInfo getRuntimeInfo() {
 		return Singleton.get(RuntimeInfo.class);
 	}
 	
@@ -276,7 +277,7 @@ public final class SystemUtil {
 	/**
 	 * 将系统信息输出到<code>System.out</code>中。
 	 */
-	public static final void dumpSystemInfo() {
+	public static void dumpSystemInfo() {
 		dumpSystemInfo(new PrintWriter(System.out));
 	}
 
@@ -285,7 +286,7 @@ public final class SystemUtil {
 	 * 
 	 * @param out <code>PrintWriter</code>输出流
 	 */
-	public static final void dumpSystemInfo(PrintWriter out) {
+	public static void dumpSystemInfo(PrintWriter out) {
 		out.println("--------------");
 		out.println(getJvmSpecInfo());
 		out.println("--------------");
