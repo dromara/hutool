@@ -163,9 +163,12 @@ public class InternalExcelUtil {
 	 */
 	public static List<Object> readRow(Row row, CellEditor cellEditor) {
 		if(null == row) {
-			return null;
+			return new ArrayList<>(0);
 		}
 		final short length = row.getLastCellNum();
+		if(length < 0) {
+			return new ArrayList<>(0);
+		}
 		final List<Object> cellValues = new ArrayList<>((int) length);
 		Object cellValue;
 		boolean isAllNull = true;

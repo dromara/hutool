@@ -209,7 +209,18 @@ public class ExcelReader implements Closeable{
 	 * @return 行的集合，一行使用List表示
 	 */
 	public List<List<Object>> read() {
-		return read(0, Integer.MAX_VALUE);
+		return read(0);
+	}
+	
+	/**
+	 * 读取工作簿中指定的Sheet
+	 * 
+	 * @param startRowIndex 起始行（包含，从0开始计数）
+	 * @return 行的集合，一行使用List表示
+	 * @since 4.0.0
+	 */
+	public List<List<Object>> read(int startRowIndex) {
+		return read(startRowIndex, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -230,7 +241,7 @@ public class ExcelReader implements Closeable{
 			rowList = readRow(sheet.getRow(i));
 			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
 				if(null == rowList) {
-					rowList = new ArrayList<>();
+					rowList = new ArrayList<>(0);
 				}
 				resultList.add(rowList);
 			}
@@ -279,7 +290,10 @@ public class ExcelReader implements Closeable{
 			if (i != headerRowIndex) {
 				// 跳过标题行
 				rowList = readRow(sheet.getRow(i));
-				if (false == rowList.isEmpty() || false == ignoreEmptyRow) {
+				if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
+					if(null == rowList) {
+						rowList = new ArrayList<>(0);
+					}
 					result.add(IterUtil.toMap(aliasHeader(headerList), rowList));
 				}
 			}
