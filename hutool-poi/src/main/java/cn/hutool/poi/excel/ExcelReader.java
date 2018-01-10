@@ -121,6 +121,7 @@ public class ExcelReader implements Closeable{
 	 * @param sheet Excel中的sheet
 	 */
 	public ExcelReader(Sheet sheet) {
+		Assert.notNull(sheet, "No Sheet provided.");
 		this.sheet = sheet;
 	}
 	// ------------------------------------------------------------------------------------------------------- Constructor end
