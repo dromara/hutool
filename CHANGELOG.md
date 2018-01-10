@@ -20,6 +20,7 @@
 * Http中使用byte[]存储body，减少转换
 * ExcelReader增加getWorkbook、getSheet方法
 * 新增StrBuilder
+* 新增JschUtil
 
 ### Bug修复
 * 修复ExcelReader空行导致空指针问题（pr#4@Gitee）
