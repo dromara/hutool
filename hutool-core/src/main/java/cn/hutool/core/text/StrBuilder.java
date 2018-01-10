@@ -52,7 +52,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 构造
 	 *
-	 * @param 初始容量
+	 * @param initialCapacity 初始容量
 	 */
 	public StrBuilder(final int initialCapacity) {
 		value = new char[initialCapacity];
