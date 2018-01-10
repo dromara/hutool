@@ -7,7 +7,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollectionUtil;
@@ -91,6 +90,19 @@ public class BeanUtilTest {
 		Assert.assertEquals("11213232", map.get("openid"));
 	}
 	
+	@Test
+	public void getPropertyTest() {
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+		
+		Object name = BeanUtil.getProperty(person, "name");
+		Assert.assertEquals("测试A11", name);
+		Object subName = BeanUtil.getProperty(person, "subName");
+		Assert.assertEquals("sub名字", subName);
+	}
 	
 	//-----------------------------------------------------------------------------------------------------------------
 	public static class SubPerson extends Person{

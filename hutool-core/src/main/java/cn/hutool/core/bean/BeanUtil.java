@@ -17,7 +17,6 @@ import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
-import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -208,18 +207,8 @@ public class BeanUtil {
 		} else if (ArrayUtil.isArray(bean)) {
 			return Array.get(bean, Integer.parseInt(fieldName));
 		} else {// 普通Bean对象
-			Field field;
-			try {
-				field = ClassUtil.getDeclaredField(bean.getClass(), fieldName);
-				if (null != field) {
-					field.setAccessible(true);
-					return field.get(bean);
-				}
-			} catch (Exception e) {
-				throw new UtilException(e);
-			}
+			return ReflectUtil.getFieldValue(bean, fieldName);
 		}
-		return null;
 	}
 
 	/**
