@@ -467,6 +467,20 @@ public final class Convert {
 	public static Collection<?> toCollection(Class<?> collectionType, Class<?> elementType, Object value) {
 		return new CollectionConverter(collectionType, elementType).convert(value, null);
 	}
+	
+	/**
+	 * 转换值为指定类型
+	 * 
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param value 值
+	 * @return 转换后的值
+	 * @since 4.0.0
+	 * @throws ConvertException 转换器不存在
+	 */
+	public static <T> T convert(Class<T> type, Object value) throws ConvertException{
+		return convert((Type)type, value);
+	}
 
 	/**
 	 * 转换值为指定类型
@@ -475,11 +489,27 @@ public final class Convert {
 	 * @param type 类型
 	 * @param value 值
 	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Type type, Object value) {
+	public static <T> T convert(Type type, Object value) throws ConvertException{
 		return convert(type, value, null);
 	}
-
+	
+	/**
+	 * 转换值为指定类型
+	 * 
+	 * @param <T> 目标类型
+	 * @param type 类型
+	 * @param value 值
+	 * @param defaultValue 默认值
+	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
+	 * @since 4.0.0
+	 */
+	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
+		return convert((Type)type, value, defaultValue);
+	}
+	
 	/**
 	 * 转换值为指定类型
 	 * 

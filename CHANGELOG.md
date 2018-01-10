@@ -16,6 +16,7 @@
 * 调整日志优先级：ConsoleLog优先于JDKLog，Log4j2优先于Log4j
 * db模块的SqlRunner中可自定义Wrapper
 * ExcelReader增加read重载方法（pr#4@Gitee）
+* Convert.convert增加Class的重载，解决返回值歧义（感谢@t-io）
 
 ### Bug修复
 * 修复ExcelReader空行导致空指针问题（pr#4@Gitee）

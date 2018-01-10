@@ -33,6 +33,12 @@ public class ConvertTest {
 		String bStr = Convert.toStr(b);
 		Assert.assertEquals("[1, 2, 3, 4, 5]", Convert.toStr(bStr));
 	}
+	
+	@Test
+	public void toStrTest2() {
+		String result = Convert.convert(String.class, "aaaa");
+		Assert.assertEquals("aaaa", result);
+	}
 
 	@Test
 	public void toIntTest() {
