@@ -18,6 +18,7 @@
 * ExcelReader增加read重载方法（pr#4@Gitee）
 * Convert.convert增加Class的重载，解决返回值歧义（感谢@t-io）
 * Http中使用byte[]存储body，减少转换
+* ExcelReader增加getWorkbook、getSheet方法
 
 ### Bug修复
 * 修复ExcelReader空行导致空指针问题（pr#4@Gitee）

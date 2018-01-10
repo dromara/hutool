@@ -717,7 +717,7 @@ public class IoUtil {
 	public static PushbackInputStream toPushbackStream(InputStream in, int pushBackSize) {
 		return (in instanceof PushbackInputStream) ? (PushbackInputStream)in : new PushbackInputStream(in, pushBackSize);
 	}
-
+	
 	/**
 	 * 将byte[]写到流中
 	 * 

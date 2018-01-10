@@ -128,6 +128,24 @@ public class ExcelReader implements Closeable{
 
 	// ------------------------------------------------------------------------------------------------------- Getters and Setters start
 	/**
+	 * 获取读取的Workbook
+	 * @return Workbook
+	 * @since 4.0.0
+	 */
+	public Workbook getWorkbook() {
+		return this.workbook;
+	}
+	
+	/**
+	 * 获取当前编辑的sheet
+	 * @return sheet
+	 * @since 4.0.0
+	 */
+	public Sheet getSheet() {
+		return this.sheet;
+	}
+	
+	/**
 	 * 是否忽略空行
 	 * 
 	 * @return 是否忽略空行

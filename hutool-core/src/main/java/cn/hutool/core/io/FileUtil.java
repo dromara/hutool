@@ -1476,6 +1476,22 @@ public class FileUtil {
 	/**
 	 * 获得输入流
 	 * 
+	 * @param path Path
+	 * @return 输入流
+	 * @throws IORuntimeException 文件未找到
+	 * @since 4.0.0
+	 */
+	public static BufferedInputStream getInputStream(Path path) throws IORuntimeException {
+		try {
+			return new BufferedInputStream(Files.newInputStream(path));
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 获得输入流
+	 * 
 	 * @param file 文件
 	 * @return 输入流
 	 * @throws IORuntimeException 文件未找到
@@ -1513,6 +1529,18 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 获得一个文件读取器
+	 * 
+	 * @param path 文件Path
+	 * @return BufferedReader对象
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.0
+	 */
+	public static BufferedReader getUtf8Reader(Path path) throws IORuntimeException {
+		return getReader(path, CharsetUtil.CHARSET_UTF_8);
+	}
 
 	/**
 	 * 获得一个文件读取器
@@ -1534,6 +1562,19 @@ public class FileUtil {
 	 */
 	public static BufferedReader getUtf8Reader(String path) throws IORuntimeException {
 		return getReader(path, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 获得一个文件读取器
+	 * 
+	 * @param path 文件Path
+	 * @param charset 字符集
+	 * @return BufferedReader对象
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.0
+	 */
+	public static BufferedReader getReader(Path path, Charset charset) throws IORuntimeException {
+		return IoUtil.getReader(getInputStream(path), charset);
 	}
 
 	/**
