@@ -38,8 +38,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	private InputStream in;
 	/** 是否异步，异步下只持有流，否则将在初始化时直接读取body内容 */
 	private volatile boolean isAsync;
-	/** 读取服务器返回的流保存至内存 */
-	private FastByteArrayOutputStream out;
 	/** 响应状态码 */
 	private int status;
 	/** 是否忽略读取Http响应体 */
@@ -136,7 +134,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 		if(isAsync) {
 			return this.in;
 		}
-		return new ByteArrayInputStream(this.out.toByteArray());
+		return new ByteArrayInputStream(this.bodyBytes);
 	}
 	
 	/**
@@ -147,7 +145,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	 */
 	public byte[] bodyBytes() {
 		sync();
-		return (null == this.out) ? null : this.out.toByteArray();
+		return this.bodyBytes;
 	}
 
 	/**
@@ -327,9 +325,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 		}
 		
 		int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), 0);
-		this.out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
+		final FastByteArrayOutputStream out = contentLength > 0 ? new FastByteArrayOutputStream(contentLength) : new FastByteArrayOutputStream();
 		try {
-			IoUtil.copy(in, this.out);
+			IoUtil.copy(in, out);
 		} catch (IORuntimeException e) {
 			if(e.getCause() instanceof EOFException) {
 				//忽略读取HTTP流中的EOF错误
@@ -337,6 +335,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 				throw e;
 			}
 		}
+		this.bodyBytes = out.toByteArray();
 	}
 	
 	/**

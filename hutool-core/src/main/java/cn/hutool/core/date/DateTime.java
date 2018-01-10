@@ -640,9 +640,24 @@ public class DateTime extends Date {
 	}
 
 	// -------------------------------------------------------------------- toString start
+	/**
+	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * 
+	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 */
 	@Override
 	public String toString() {
 		return toString(DatePattern.NORM_DATETIME_FORMAT);
+	}
+	
+	/**
+	 * 转为"yyyy-MM-dd " 格式字符串
+	 * 
+	 * @return "yyyy-MM-dd " 格式字符串
+	 * @since 4.0.0
+	 */
+	public String toDateStr() {
+		return toString(DatePattern.NORM_DATE_PATTERN);
 	}
 
 	/**

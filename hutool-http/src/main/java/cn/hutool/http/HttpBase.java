@@ -33,7 +33,7 @@ public abstract class HttpBase<T> {
 	/**http版本*/
 	protected String httpVersion = HTTP_1_1;
 	/**存储主体*/
-	protected String body;
+	protected byte[] bodyBytes;
 	
 	// ---------------------------------------------------------------- Headers start
 	/**
@@ -247,7 +247,7 @@ public abstract class HttpBase<T> {
 		}
 		
 		sb.append("Request Body: ").append(StrUtil.CRLF);
-		sb.append("    ").append(this.body).append(StrUtil.CRLF);
+		sb.append("    ").append(StrUtil.str(this.bodyBytes, this.charset)).append(StrUtil.CRLF);
 		
 		return sb.toString();
 	}

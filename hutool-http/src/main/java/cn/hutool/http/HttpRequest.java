@@ -298,7 +298,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 		
 		// 停用body
-		this.body = null;
+		this.bodyBytes = null;
 
 		if (value instanceof File) {
 			return this.form(name, (File) value);
@@ -424,8 +424,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(String body, String contentType) {
-		this.body = body;
-		this.form = null; // 当使用body时，废弃form的使用
+		body(StrUtil.bytes(body, this.charset));
+		this.form = null; // 当使用body时，停止form的使用
 		contentLength((null != body ? body.length() : 0));
 		
 		if(null != contentType) {
@@ -469,7 +469,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(byte[] bodyBytes) {
-		return body(StrUtil.str(bodyBytes, this.charset));
+		this.bodyBytes = bodyBytes;
+		return this;
 	}
 	// ---------------------------------------------------------------- Body end
 
@@ -665,8 +666,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private void urlWithParamIfGet(){
 		if (Method.GET.equals(method)) {
 			// 优先使用body形式的参数，不存在使用form
-			if (StrUtil.isNotBlank(this.body)) {
-				this.url = HttpUtil.urlWithForm(this.url, this.body);
+			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
+				this.url = HttpUtil.urlWithForm(this.url, StrUtil.str(this.bodyBytes, this.charset));
 			} else {
 				this.url = HttpUtil.urlWithForm(this.url, this.form);
 			}
@@ -738,13 +739,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 		
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
-		String content;
-		if (StrUtil.isNotBlank(this.body)) {
-			content = this.body;
+		if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
+			IoUtil.write(this.httpConnection.getOutputStream(), true, this.bodyBytes);
 		} else {
-			content = HttpUtil.toParams(this.form, this.charset);
+			final String content = HttpUtil.toParams(this.form, this.charset);
+			IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
 		}
-		IoUtil.write(this.httpConnection.getOutputStream(), this.charset, true, content);
 	}
 
 	/**
