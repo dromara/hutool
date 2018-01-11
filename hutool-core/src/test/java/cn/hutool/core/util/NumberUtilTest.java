@@ -30,6 +30,14 @@ public class NumberUtilTest {
 	}
 	
 	@Test
+	public void addTest3() {
+		float a = 3.15f;
+		double b = 4.22;
+		double result = NumberUtil.add(a, b, a, b).doubleValue();
+		Assert.assertEquals(14.74, result, 2);
+	}
+	
+	@Test
 	public void isIntegerTest() {
 		Assert.assertTrue(NumberUtil.isInteger("-12"));
 		Assert.assertTrue(NumberUtil.isInteger("256"));

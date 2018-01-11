@@ -23,6 +23,7 @@
 * 新增JschUtil
 * 新增UnicodeUtil
 * db模块的BeanListHandler和BeanHandler支持Map、Collection、Array等类型
+* NumberUtil加减乘支持多个值，解决float和double混合运算导致的坑
 
 ### Bug修复
 * 修复ExcelReader空行导致空指针问题（pr#4@Gitee）
