@@ -310,8 +310,6 @@ public class SqlConnRunner{
 	 * @throws SQLException SQL执行异常
 	 */
 	public <T> T find(Connection conn, Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
-		checkConn(conn);
-		
 		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
 		query.setFields(fields);
 		return find(conn, query, rsh);

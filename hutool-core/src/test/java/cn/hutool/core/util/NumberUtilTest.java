@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.NumberUtil;
-
 /**
  * {@link NumberUtil} 单元测试类
  * 
@@ -14,6 +12,22 @@ import cn.hutool.core.util.NumberUtil;
  *
  */
 public class NumberUtilTest {
+	
+	@Test
+	public void addTest() {
+		Float a = 3.15f;
+		Double b = 4.22;
+		double result = NumberUtil.add(a, b).doubleValue();
+		Assert.assertEquals(7.37, result, 2);
+	}
+	
+	@Test
+	public void addTest2() {
+		double a = 3.15f;
+		double b = 4.22;
+		double result = NumberUtil.add(a, b);
+		Assert.assertEquals(7.37, result, 2);
+	}
 	
 	@Test
 	public void isIntegerTest() {

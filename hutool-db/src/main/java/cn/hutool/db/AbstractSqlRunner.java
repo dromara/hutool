@@ -15,6 +15,8 @@ import cn.hutool.db.handler.StringHandler;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.Wrapper;
 import cn.hutool.db.sql.Condition.LikeType;
+import cn.hutool.db.sql.Condition;
+import cn.hutool.db.sql.Query;
 
 /**
  * 抽象SQL执行类<br>
@@ -373,6 +375,29 @@ public abstract class AbstractSqlRunner{
 	}
 	
 	/**
+	 * 查询<br>
+	 * Query为查询所需数据的一个实体类，此对象中可以定义返回字段、查询条件，查询的表、分页等信息
+	 * 
+	 * @param <T> 需要处理成的结果对象类型
+	 * @param query {@link Query}对象，此对象中可以定义返回字段、查询条件，查询的表、分页等信息
+	 * @param rsh 结果集处理对象
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 4.0.0
+	 */
+	public <T> T find(Query query, RsHandler<T> rsh) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.find(conn, query, rsh);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+	
+	/**
 	 * 查询，返回所有字段<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 * 
@@ -462,6 +487,19 @@ public abstract class AbstractSqlRunner{
 	 */
 	public List<Entity> findBy(String tableName, String field, Object value) throws SQLException{
 		return findAll(Entity.create(tableName).set(field, value));
+	}
+	/**
+	 * 根据某个字段名条件查询数据列表，返回所有字段
+	 * 
+	 * @param tableName 表名
+	 * @param wheres 字段名
+	 * @return 数据对象列表
+	 * @throws SQLException SQL执行异常
+	 * @since 4.0.0
+	 */
+	public List<Entity> findBy(String tableName, Condition... wheres) throws SQLException{
+		final Query query = new Query(wheres, tableName);
+		return find(query, EntityListHandler.create());
 	}
 	
 	/**

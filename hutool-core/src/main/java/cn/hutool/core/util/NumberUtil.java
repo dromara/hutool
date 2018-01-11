@@ -691,6 +691,22 @@ public class NumberUtil {
 			return false;
 		}
 	}
+	
+	/**
+	 * 判断字符串是否是Long类型
+	 * 
+	 * @param s String
+	 * @return 是否为{@link Long}类型
+	 * @since 4.0.0
+	 */
+	public static boolean isLong(String s) {
+		try {
+			Long.parseLong(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
 
 	/**
 	 * 判断字符串是否是浮点数

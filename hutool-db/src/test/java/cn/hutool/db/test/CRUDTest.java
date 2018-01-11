@@ -15,9 +15,9 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.db.ActiveEntity;
 import cn.hutool.db.Entity;
 import cn.hutool.db.SqlRunner;
-import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.handler.ActiveEntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
+import cn.hutool.db.test.pojo.User;
 
 /**
  * 增删改查测试
@@ -31,7 +31,7 @@ public class CRUDTest {
 
 	@Before
 	public void init() {
-		runner = SqlRunner.create(DSFactory.get());
+		runner = SqlRunner.create();
 	}
 
 	@Test
@@ -56,6 +56,12 @@ public class CRUDTest {
 	public void findLikeTest() throws SQLException {
 		List<Entity> results = runner.findAll(Entity.create("user").set("name", "like \"%三%\""));
 		Assert.assertEquals(2, results.size());
+	}
+	
+	@Test
+	public void findAllTest() throws SQLException {
+		List<Entity> results = runner.findAll("user");
+		Assert.assertEquals(3, results.size());
 	}
 
 	/**
@@ -138,53 +144,5 @@ public class CRUDTest {
 
 		int[] result = runner.insert(CollUtil.newArrayList(data1));
 		Console.log(result);
-	}
-
-	public static class User {
-		private Integer id;
-		private String name;
-		private int age;
-		private String birthday;
-		private boolean gender;
-
-		public Integer getId() {
-			return id;
-		}
-
-		public void setId(Integer id) {
-			this.id = id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public int getAge() {
-			return age;
-		}
-
-		public void setAge(int age) {
-			this.age = age;
-		}
-
-		public String getBirthday() {
-			return birthday;
-		}
-
-		public void setBirthday(String birthday) {
-			this.birthday = birthday;
-		}
-
-		public boolean isGender() {
-			return gender;
-		}
-
-		public void setGender(boolean gender) {
-			this.gender = gender;
-		}
 	}
 }

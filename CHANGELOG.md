@@ -21,6 +21,8 @@
 * ExcelReader增加getWorkbook、getSheet方法
 * 新增StrBuilder
 * 新增JschUtil
+* 新增UnicodeUtil
+* db模块的BeanListHandler和BeanHandler支持Map、Collection、Array等类型
 
 ### Bug修复
 * 修复ExcelReader空行导致空指针问题（pr#4@Gitee）

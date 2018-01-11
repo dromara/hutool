@@ -511,6 +511,38 @@ public class ReflectUtil {
 	public static <T> T invokeStatic(Method method, Object... args) throws UtilException{
 		return invoke(null, method, args);
 	}
+	
+	/**
+	 * 执行方法<br>
+	 * 执行前要检查给定参数：
+	 * <pre>
+	 * 1. 参数个数是否与方法参数个数一致
+	 * 2. 如果某个参数为null但是方法这个位置的参数为原始类型，则赋予原始类型默认值
+	 * </pre>
+	 * 
+	 * @param <T> 返回对象类型
+	 * @param obj 对象，如果执行静态方法，此值为<code>null</code>
+	 * @param method 方法（对象方法或static方法都可）
+	 * @param args 参数对象
+	 * @return 结果
+	 * @throws UtilException 一些列异常的包装
+	 */
+	public static <T> T invokeWithCheck(Object obj, Method method, Object... args) throws UtilException{
+		final Class<?>[] types = method.getParameterTypes();
+		if(null != types && null != args) {
+			Assert.isTrue(args.length == types.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, types.length);
+			Class<?> type;
+			for(int i = 0; i < args.length; i++) {
+				type = types[i];
+				if(type.isPrimitive() && null == args[i]) {
+					//参数是原始类型，而传入参数为null时赋予默认值
+					args[i] = ClassUtil.getDefaultValue(type);
+				}
+			}
+		}
+		
+		return invoke(obj, method, args);
+	}
 
 	/**
 	 * 执行方法
@@ -527,6 +559,7 @@ public class ReflectUtil {
 		if (false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
+		
 		try {
 			return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, args);
 		} catch (Exception e) {
