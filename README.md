@@ -10,22 +10,23 @@
 
 ## 功能
 一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
-* 布隆过滤
-* 缓存
-* 克隆接口
-* 类型转换
-* 日期处理
-* 数据库ORM（基于ActiveRecord思想）
-* 基于DFA有限自动机的多个关键字查找
-* HTTP客户端
-* IO和文件
-* 有用的一些数据结构
-* 日志
-* 反射代理类的简化（AOP切面实现）
-* Setting（一种扩展Properties的配置文件）
-* System（JVM和系统信息等）
-* WatchService的封装（文件变动监控）
-* XXXUtil各种有用的工具类
+
+- hutool-aop              JDK动态代理封装，提供非IOC下的切面支持
+- hutool-bloomFilter   布隆过滤，提供一些Hash算法的布隆过滤
+- hutool-cache           缓存
+- hutool-core             核心，包括Bean操作、日期、各种Util等
+- hutool-cron             定时任务模块，提供类Crontab表达式的定时任务
+- hutool-crypto          加密解密模块
+- hutool-db               JDBC封装后的数据操作，基于ActiveRecord思想
+- hutool-dfa              基于DFA模型的多关键字查找
+- hutool-extra            扩展模块，对第三方封装（模板引擎、邮件等）
+- hutool-http             基于HttpUrlConnection的Http客户端封装
+- hutool-log              自动识别日志实现的日志门面
+- hutool-script           脚本执行封装，例如Javascript
+- hutool-setting         功能更强大的Setting配置文件和Properties封装
+- hutool-system        系统参数调用封装（JVM信息等）
+- hutool-json            JSON实现
+- hutool-captcha      二维码实现
 
 ## 简介
 Hutool是Hu + tool的自造词，前者致敬我的“前任公司”，后者为工具之意，谐音“糊涂”，寓意追求“万事都作糊涂观，无所谓失，无所谓得”的境界。
@@ -74,7 +75,7 @@ Hutool始终是一个工具类而不是框架，这意味着它对项目的侵�
 
 ```xml
 <dependency>
-    <groupId>com.xiaoleilu</groupId>
+    <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
     <version>${hutool.version}</version>
 </dependency>
@@ -82,7 +83,7 @@ Hutool始终是一个工具类而不是框架，这意味着它对项目的侵�
 
 ### Gradle
 ```
-compile 'com.xiaoleilu:hutool-all:${hutool.version}'
+compile 'cn.hutool:hutool-all:${hutool.version}'
 ```
 
 注：工具包的**版本**可以通过 [http://search.maven.org/](http://search.maven.org/) 搜索`hutool-all`找到项目。
@@ -96,7 +97,7 @@ compile 'com.xiaoleilu:hutool-all:${hutool.version}'
 
 如果中央库访问不便，可以访问阿里云的资源：
 
-[http://maven.aliyun.com/nexus/content/groups/public/com/xiaoleilu/hutool-all/](http://maven.aliyun.com/nexus/content/groups/public/com/xiaoleilu/hutool-all/)
+[http://maven.aliyun.com/nexus/content/groups/public/cn/hutool/hutool-all/](http://maven.aliyun.com/nexus/content/groups/public/cn/hutool/hutool-all/)
 
 ## 文档 
 
