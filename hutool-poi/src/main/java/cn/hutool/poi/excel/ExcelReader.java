@@ -388,12 +388,14 @@ public class ExcelReader implements Closeable{
 	private List<String> aliasHeader(List<Object> headerList) {
 		final ArrayList<String> result = new ArrayList<>();
 		String header;
-		String alias;
+		String alias = null;
 		for (Object headerObj : headerList) {
-			header = headerObj.toString();
-			alias = this.headerAlias.get(header);
-			if (null == alias) {
-				alias = header;
+			if(null != headerObj) {
+				header = headerObj.toString();
+				alias = this.headerAlias.get(header);
+				if (null == alias) {
+					alias = header;
+				}
 			}
 			result.add(alias);
 		}
