@@ -19,7 +19,7 @@
 		<!-- versions -->
 		<velocity.version>1.7</velocity.version>
 		<beetl.version>2.7.26</beetl.version>
-		<rythm.version>1.2.0</rythm.version>
+		<rythm.version>1.2.1</rythm.version>
 		<mail.version>1.4.7</mail.version>
 	</properties>
 
