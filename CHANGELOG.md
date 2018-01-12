@@ -28,3 +28,4 @@
 ### Bug修复
 * 修复ExcelReader空行导致空指针问题（pr#4@Gitee）
 * 修复BeanUtil.getProperty不能获取父类属性的问题
+* 修复BeanDesc类中boolean类型字段名为isXXX的情况无法注入问题

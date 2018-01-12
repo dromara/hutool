@@ -136,18 +136,16 @@ public class BeanDesc {
 			fieldType = field.getType();
 			if (fieldType == Boolean.class || fieldType == boolean.class) {
 				// Boolean和boolean类型特殊处理
-				final String subFieldName = StrUtil.removePrefix(fieldName, "is");
-				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.upperFirstAndAddPre(subFieldName, "is"));
+				fieldName = StrUtil.removePrefix(fieldName, "is");
+				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.upperFirstAndAddPre(fieldName, "is"));
 				if (null == getter) {
-					getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(subFieldName));
+					getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
 				}
-
-			} else {
+			}else {
 				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
 			}
-
 			setter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genSetter(fieldName), field.getType());
-			this.propMap.put(fieldName, new PropDesc(field, getter, setter));
+			this.propMap.put(field.getName(), new PropDesc(field, getter, setter));
 		}
 		return this;
 	}

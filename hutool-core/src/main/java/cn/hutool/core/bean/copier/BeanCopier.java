@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.BeanDesc.PropDesc;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.provider.BeanValueProvider;
 import cn.hutool.core.bean.copier.provider.MapValueProvider;
 import cn.hutool.core.collection.CollectionUtil;

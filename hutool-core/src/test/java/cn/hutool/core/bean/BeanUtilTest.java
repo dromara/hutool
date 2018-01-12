@@ -104,15 +104,61 @@ public class BeanUtilTest {
 		Assert.assertEquals("sub名字", subName);
 	}
 	
+	@Test
+	public void copyPropertiesTest() {
+		SubPerson p1 = new SubPerson();
+		p1.setSlow(true);
+		
+		SubPerson p2 = new SubPerson();
+		BeanUtil.copyProperties(p1, p2);
+		Assert.assertTrue(p2.isSlow());
+	}
+	
+	@Test
+	public void copyPropertiesTest2() {
+		SubPerson p1 = new SubPerson();
+		p1.setSlow(true);
+		
+		SubPerson2 p2 = new SubPerson2();
+		BeanUtil.copyProperties(p1, p2);
+		Assert.assertTrue(p2.isSlow());
+	}
+	
 	//-----------------------------------------------------------------------------------------------------------------
 	public static class SubPerson extends Person{
 		private String subName;
+		private Boolean isSlow;
 
 		public String getSubName() {
 			return subName;
 		}
 		public void setSubName(String subName) {
 			this.subName = subName;
+		}
+		public Boolean isSlow() {
+			return isSlow;
+		}
+		public void setSlow(Boolean isSlow) {
+			this.isSlow = isSlow;
+		}
+	}
+	
+	public static class SubPerson2 extends Person{
+		private String subName;
+		//boolean参数值非isXXX形式
+		private Boolean slow;
+		
+		public String getSubName() {
+			return subName;
+		}
+		public void setSubName(String subName) {
+			this.subName = subName;
+		}
+		public Boolean isSlow() {
+			return slow;
+		}
+		public void setSlow(Boolean isSlow) {
+			this.slow = isSlow;
 		}
 	}
 	

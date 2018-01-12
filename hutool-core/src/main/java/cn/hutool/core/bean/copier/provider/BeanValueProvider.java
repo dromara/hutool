@@ -4,10 +4,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.BeanDesc.PropDesc;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * Bean的值提供者
@@ -36,7 +37,12 @@ public class BeanValueProvider implements ValueProvider<String> {
 
 	@Override
 	public Object value(String key, Type valueType) {
-		final PropDesc sourcePd = sourcePdMap.get(key);
+		PropDesc sourcePd = sourcePdMap.get(key);
+		if(null == sourcePd && (Boolean.class == valueType || boolean.class == valueType)) {
+			//boolean类型字段字段名支持两种方式
+			sourcePd = sourcePdMap.get(StrUtil.upperFirstAndAddPre(key, "is"));
+		}
+		
 		if (null != sourcePd) {
 			final Method getter = sourcePd.getGetter();
 			if (null != getter) {
@@ -54,7 +60,7 @@ public class BeanValueProvider implements ValueProvider<String> {
 
 	@Override
 	public boolean containsKey(String key) {
-		return sourcePdMap.containsKey(key);
+		return sourcePdMap.containsKey(key) || sourcePdMap.containsKey(StrUtil.upperFirstAndAddPre(key, "is"));
 	}
 
 }
