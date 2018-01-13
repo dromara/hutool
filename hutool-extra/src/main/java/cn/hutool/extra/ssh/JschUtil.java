@@ -3,6 +3,7 @@ package cn.hutool.extra.ssh;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -28,7 +29,9 @@ public class JschUtil {
 	/** SSH会话池，key：host，value：Session对象 */
 	private static Map<String, Session> sessionPool = new ConcurrentHashMap<String, Session>();
 	/** 备选的本地端口 */
-	private volatile static int alternativePort = 10000;
+	private volatile static AtomicInteger alternativePort = new AtomicInteger(10000);
+	/** 锁 */
+	private static final Object lock = new Object();
 	/*--------------------------私有属性 start-------------------------------*/
 
 	/**
@@ -37,11 +40,12 @@ public class JschUtil {
 	 * @return 未被使用的本地端口
 	 */
 	public static int generateLocalPort() {
+		int validPort = alternativePort.get();
 		// 获取可用端口
-		while (false == NetUtil.isUsableLocalPort(alternativePort)) {
-			alternativePort++;
+		while (false == NetUtil.isUsableLocalPort(validPort)) {
+			validPort = alternativePort.incrementAndGet();
 		}
-		return alternativePort;
+		return validPort;
 	}
 
 	/**
@@ -53,14 +57,18 @@ public class JschUtil {
 	 * @param sshPass 跳板机密码
 	 * @return SSH会话
 	 */
-	synchronized public static Session getSession(String sshHost, int sshPort, String sshUser, String sshPass) {
-		Session session = sessionPool.get(sshHost);
-		if (session != null && session.isConnected()) {
-			return session;
+	public static Session getSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+		final String key = StrUtil.format("{}@{}:{}", sshUser, sshHost, sshPort);
+		Session session = sessionPool.get(key);
+		if(null == session) {
+			synchronized (lock) {
+				session = sessionPool.get(key);
+				if(null == session || false == session.isConnected()) {
+					session = openSession(sshHost, sshPort, sshUser, sshPass);
+					sessionPool.put(key, session);
+				}
+			}
 		}
-
-		Session newSession = openSession(sshHost, sshPort, sshUser, sshPass);
-		sessionPool.put(sshHost, newSession);
 		return session;
 	}
 
@@ -78,16 +86,16 @@ public class JschUtil {
 			return null;
 		}
 
+		Session session;
 		try {
-			Session session = new JSch().getSession(sshUser, sshHost, sshPort);
+			session = new JSch().getSession(sshUser, sshHost, sshPort);
 			session.setPassword(sshPass);
 			session.setConfig("StrictHostKeyChecking", "no");
 			session.connect();
-
-			return session;
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}
+		return session;
 	}
 
 	/**
@@ -98,11 +106,15 @@ public class JschUtil {
 	 * @param remotePort 远程端口
 	 * @param localPort 本地端口
 	 * @return 成功与否
-	 * @throws JSchException 端口绑定失败异常
+	 * @throws JschRuntimeException 端口绑定失败异常
 	 */
-	public static boolean bindPort(Session session, String remoteHost, int remotePort, int localPort) throws JSchException {
+	public static boolean bindPort(Session session, String remoteHost, int remotePort, int localPort) throws JschRuntimeException{
 		if (session != null && session.isConnected()) {
-			session.setPortForwardingL(localPort, remoteHost, remotePort);
+			try {
+				session.setPortForwardingL(localPort, remoteHost, remotePort);
+			} catch (JSchException e) {
+				throw new JschRuntimeException("From [" + remoteHost + "] Mapping to [" + localPort + "] error！", e);
+			}
 			return true;
 		}
 		return false;
@@ -115,7 +127,7 @@ public class JschUtil {
 	 * @param localPort 需要解除的本地端口
 	 * @return 解除成功与否
 	 */
-	synchronized public static boolean unBindPort(Session session, int localPort) {
+	public static boolean unBindPort(Session session, int localPort) {
 		try {
 			session.delPortForwardingL(localPort);
 			return true;
@@ -134,16 +146,12 @@ public class JschUtil {
 	 * @throws JschRuntimeException 连接异常
 	 */
 	public static int openAndBindPortToLocal(Connector sshConn, String remoteHost, int remotePort) throws JschRuntimeException {
-		Session session = openSession(sshConn.getHost(), sshConn.getPort(), sshConn.getUser(), sshConn.getPassword());
+		final Session session = openSession(sshConn.getHost(), sshConn.getPort(), sshConn.getUser(), sshConn.getPassword());
 		if (session == null) {
 			throw new JschRuntimeException("Error to create SSH Session！");
 		}
-		int localPort = generateLocalPort();
-		try {
-			bindPort(session, remoteHost, remotePort, localPort);
-		} catch (JSchException e) {
-			throw new JschRuntimeException("From [" + remoteHost + "] Mapping to [" + localPort + "] error！", e);
-		}
+		final int localPort = generateLocalPort();
+		bindPort(session, remoteHost, remotePort, localPort);
 		return localPort;
 	}
 
@@ -152,7 +160,7 @@ public class JschUtil {
 	 * 
 	 * @param session SSH会话
 	 */
-	synchronized public static void close(Session session) {
+	public static void close(Session session) {
 		if (session != null && session.isConnected()) {
 			session.disconnect();
 		}
@@ -161,14 +169,14 @@ public class JschUtil {
 	/**
 	 * 关闭SSH连接会话
 	 * 
-	 * @param host 主机
+	 * @param key 主机，格式为user@host:port
 	 */
-	public static void close(String host) {
-		Session session = sessionPool.get(host);
+	public static void close(String key) {
+		Session session = sessionPool.get(key);
 		if (session != null && session.isConnected()) {
 			session.disconnect();
 		}
-		sessionPool.remove(host);
+		sessionPool.remove(key);
 	}
 
 	/**
