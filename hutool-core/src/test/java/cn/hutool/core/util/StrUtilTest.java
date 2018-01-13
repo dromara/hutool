@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 
@@ -152,5 +153,21 @@ public class StrUtilTest {
 		StringBuilder sb = new StringBuilder("KEY");
 		String s = StrUtil.lowerFirst(sb);
 		Assert.assertEquals("kEY", s);
+	}
+	
+	@Test
+	public void subTest() {
+		String a = "abcderghigh";
+		String pre = StrUtil.sub(a, -5, a.length());
+		Console.log(pre);
+	}
+	
+	@Test
+	public void subSufByLengthTest() {
+		Assert.assertEquals("cde", StrUtil.subSufByLength("abcde", 3));
+		Assert.assertEquals("", StrUtil.subSufByLength("abcde", -1));
+		Assert.assertEquals("", StrUtil.subSufByLength("abcde", 0));
+		Assert.assertEquals("abcde", StrUtil.subSufByLength("abcde", 5));
+		Assert.assertEquals("abcde", StrUtil.subSufByLength("abcde", 10));
 	}
 }

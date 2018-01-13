@@ -1,5 +1,6 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -65,7 +66,7 @@ public class UnicodeUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
-			if(isSkipAscii && (c > StrUtil.C_SPACE && c <= 127) ) {
+			if(isSkipAscii && CharUtil.isAsciiPrintable(c) ) {
 				unicode.append(c);
 			}else {
 				unicode.append(HexUtil.toUnicodeHex(c));

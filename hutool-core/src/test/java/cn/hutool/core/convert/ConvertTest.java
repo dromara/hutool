@@ -39,6 +39,13 @@ public class ConvertTest {
 		String result = Convert.convert(String.class, "aaaa");
 		Assert.assertEquals("aaaa", result);
 	}
+	
+	@Test
+	public void toStrTest3() {
+		char a = 'a';
+		String result = Convert.convert(String.class, a);
+		Assert.assertEquals("a", result);
+	}
 
 	@Test
 	public void toIntTest() {

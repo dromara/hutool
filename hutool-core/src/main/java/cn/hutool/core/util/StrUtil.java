@@ -10,13 +10,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.text.TextSimilarity;
-
-import java.util.Set;
 
 /**
  * 字符串工具类
@@ -28,20 +28,20 @@ public class StrUtil {
 
 	public static final int INDEX_NOT_FOUND = -1;
 
-	public static final char C_SPACE = ' ';
-	public static final char C_TAB = '	';
-	public static final char C_DOT = '.';
-	public static final char C_SLASH = '/';
-	public static final char C_BACKSLASH = '\\';
-	public static final char C_CR = '\r';
-	public static final char C_LF = '\n';
-	public static final char C_UNDERLINE = '_';
-	public static final char C_COMMA = ',';
-	public static final char C_DELIM_START = '{';
-	public static final char C_DELIM_END = '}';
-	public static final char C_BRACKET_START = '[';
-	public static final char C_BRACKET_END = ']';
-	public static final char C_COLON = ':';
+	public static final char C_SPACE = CharUtil.SPACE;
+	public static final char C_TAB = CharUtil.TAB;
+	public static final char C_DOT = CharUtil.DOT;
+	public static final char C_SLASH = CharUtil.SLASH;
+	public static final char C_BACKSLASH = CharUtil.BACKSLASH;
+	public static final char C_CR = CharUtil.CR;
+	public static final char C_LF = CharUtil.LF;
+	public static final char C_UNDERLINE = CharUtil.UNDERLINE;
+	public static final char C_COMMA = CharUtil.COMMA;
+	public static final char C_DELIM_START = CharUtil.DELIM_START;
+	public static final char C_DELIM_END = CharUtil.DELIM_END;
+	public static final char C_BRACKET_START = CharUtil.BRACKET_START;
+	public static final char C_BRACKET_END = CharUtil.BRACKET_END;
+	public static final char C_COLON = CharUtil.COLON;
 
 	public static final String SPACE = " ";
 	public static final String TAB = "	";
@@ -1353,6 +1353,33 @@ public class StrUtil {
 		}
 		return sub(string, fromIndex, string.length());
 	}
+	
+	/**
+	 * 切割指定长度的后部分的字符串
+	 * <pre>
+	 * StrUtil.subSufByLength("abcde", 3)      =    "cde"
+	 * StrUtil.subSufByLength("abcde", 0)      =    ""
+	 * StrUtil.subSufByLength("abcde", -5)     =    ""
+	 * StrUtil.subSufByLength("abcde", -1)     =    ""
+	 * StrUtil.subSufByLength("abcde", 5)       =    "abcde"
+	 * StrUtil.subSufByLength("abcde", 10)     =    "abcde"
+	 * StrUtil.subSufByLength(null, 3)               =    null
+	 * </pre>
+	 * 
+	 * @param string 字符串
+	 * @param length 切割长度
+	 * @return 切割后后剩余的后半部分字符串
+	 * @since 4.0.1
+	 */
+	public static String subSufByLength(CharSequence string, int length) {
+		if (isEmpty(string)) {
+			return null;
+		}
+		if(length <= 0) {
+			return EMPTY;
+		}
+		return sub(string, -length, string.length());
+	}
 
 	/**
 	 * 截取字符串,从指定位置开始,截取指定长度的字符串<br>
@@ -2187,6 +2214,16 @@ public class StrUtil {
 	public static StringBuilder builder() {
 		return new StringBuilder();
 	}
+	
+	/**
+	 * 创建StrBuilder对象
+	 * 
+	 * @return StrBuilder对象
+	 * @since 4.0.1
+	 */
+	public static StrBuilder strBuilder() {
+		return StrBuilder.create();
+	}
 
 	/**
 	 * 创建StringBuilder对象
@@ -2196,6 +2233,17 @@ public class StrUtil {
 	 */
 	public static StringBuilder builder(int capacity) {
 		return new StringBuilder(capacity);
+	}
+	
+	/**
+	 * 创建StrBuilder对象
+	 * 
+	 * @param capacity 初始大小
+	 * @return StrBuilder对象
+	 * @since 4.0.1
+	 */
+	public static StrBuilder strBuilder(int capacity) {
+		return StrBuilder.create(capacity);
 	}
 
 	/**
@@ -2210,6 +2258,16 @@ public class StrUtil {
 			sb.append(str);
 		}
 		return sb;
+	}
+	
+	/**
+	 * 创建StrBuilder对象
+	 * 
+	 * @param strs 初始字符串列表
+	 * @return StrBuilder对象
+	 */
+	public static StrBuilder strBuilder(CharSequence... strs) {
+		return StrBuilder.create(strs);
 	}
 
 	/**
@@ -2988,5 +3046,21 @@ public class StrUtil {
 			return false;
 		}
 		return str.length() > position && c == str.charAt(position);
+	}
+	
+	/**
+	 * 给定字符串数组的总长度<br>
+	 * null字符长度定义为0
+	 * 
+	 * @param strs 字符串数组
+	 * @return 总长度
+	 * @since 4.0.1
+	 */
+	public static int totalLength(CharSequence... strs) {
+		int totalLength = 0;
+		for(int i = 0 ; i < strs.length; i++) {
+			totalLength += (null == strs[i] ? 0 : strs[i].length());
+		}
+		return totalLength;
 	}
 }

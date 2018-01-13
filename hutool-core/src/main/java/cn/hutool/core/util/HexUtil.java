@@ -193,6 +193,7 @@ public class HexUtil {
 	// ---------------------------------------------------------------------------------------- Color
 	/**
 	 * 将{@link Color}编码为Hex形式
+	 * 
 	 * @param color {@link Color}
 	 * @return Hex字符串
 	 * @since 3.0.8
@@ -200,9 +201,10 @@ public class HexUtil {
 	public static String encodeColor(Color color) {
 		return encodeColor(color, "#");
 	}
-	
+
 	/**
 	 * 将{@link Color}编码为Hex形式
+	 * 
 	 * @param color {@link Color}
 	 * @param prefix 前缀字符串，可以是#、0x等
 	 * @return Hex字符串
@@ -212,17 +214,17 @@ public class HexUtil {
 		final StringBuffer builder = new StringBuffer(prefix);
 		String colorHex;
 		colorHex = Integer.toHexString(color.getRed());
-		if(1 == colorHex.length()){
+		if (1 == colorHex.length()) {
 			builder.append('0');
 		}
 		builder.append(colorHex);
 		colorHex = Integer.toHexString(color.getGreen());
-		if(1 == colorHex.length()){
+		if (1 == colorHex.length()) {
 			builder.append('0');
 		}
 		builder.append(colorHex);
 		colorHex = Integer.toHexString(color.getBlue());
-		if(1 == colorHex.length()){
+		if (1 == colorHex.length()) {
 			builder.append('0');
 		}
 		builder.append(colorHex);
@@ -231,6 +233,7 @@ public class HexUtil {
 
 	/**
 	 * 将Hex颜色值转为
+	 * 
 	 * @param hexColor 16进制颜色值，可以以#开头，也可以用0x开头
 	 * @return {@link Color}
 	 * @since 3.0.8
@@ -238,10 +241,11 @@ public class HexUtil {
 	public static Color decodeColor(String hexColor) {
 		return Color.decode(hexColor);
 	}
-	
+
 	/**
 	 * 将指定int值转换为Unicode字符串形式，常用于特殊字符（例如汉字）转Unicode形式<br>
 	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
+	 * 
 	 * <pre>
 	 * '我' =》\u4f60
 	 * </pre>
@@ -250,17 +254,39 @@ public class HexUtil {
 	 * @return Unicode表现形式
 	 */
 	public static String toUnicodeHex(int value) {
-		final StringBuilder builder = new StringBuilder(7);
-		
+		final StringBuilder builder = new StringBuilder(6);
+
 		builder.append("\\u");
 		String hex = Integer.toHexString(value);
 		int len = hex.length();
-		if(len < 4) {
-			builder.append("0000", 0, 4 - len);//不足4位补0
+		if (len < 4) {
+			builder.append("0000", 0, 4 - len);// 不足4位补0
 		}
 		builder.append(hex);
-		
+
 		return builder.toString();
+	}
+
+	/**
+	 * 将指定char值转换为Unicode字符串形式，常用于特殊字符（例如汉字）转Unicode形式<br>
+	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
+	 * 
+	 * <pre>
+	 * '我' =》\u4f60
+	 * </pre>
+	 * 
+	 * @param value int值，也可以是char
+	 * @return Unicode表现形式
+	 * @since 4.0.1
+	 */
+	public static String toUnicodeHex(char ch) {
+		StringBuilder sb = new StringBuilder(6);
+		sb.append("\\u");
+		sb.append(DIGITS_LOWER[(ch >> 12) & 15]);
+		sb.append(DIGITS_LOWER[(ch >> 8) & 15]);
+		sb.append(DIGITS_LOWER[(ch >> 4) & 15]);
+		sb.append(DIGITS_LOWER[(ch) & 15]);
+		return sb.toString();
 	}
 
 	// ---------------------------------------------------------------------------------------- Private method start

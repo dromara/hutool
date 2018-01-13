@@ -40,6 +40,16 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	public static StrBuilder create(int initialCapacity) {
 		return new StrBuilder(initialCapacity);
 	}
+	
+	/**
+	 * 创建字符串构建器
+	 * @param strs 初始字符串
+	 * @return {@link StrBuilder}
+	 * @since 4.0.1
+	 */
+	public static StrBuilder create(CharSequence... strs) {
+		return new StrBuilder(strs);
+	}
 
 	// ------------------------------------------------------------------------------------ Constructor start
 	/**
@@ -54,8 +64,21 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 *
 	 * @param initialCapacity 初始容量
 	 */
-	public StrBuilder(final int initialCapacity) {
+	public StrBuilder(int initialCapacity) {
 		value = new char[initialCapacity];
+	}
+	
+	/**
+	 * 构造
+	 *
+	 * @param strs 初始字符串
+	 * @since 4.0.1
+	 */
+	public StrBuilder(CharSequence... strs) {
+		this(ArrayUtil.isEmpty(strs) ? DEFAULT_CAPACITY : (totalLength(strs) + DEFAULT_CAPACITY));
+		for(int i = 0; i < strs.length; i++) {
+			append(strs[i]);
+		}
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
 
@@ -495,6 +518,22 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 			newCapacity = Integer.MAX_VALUE;
 		}
 		value = Arrays.copyOf(value, newCapacity);
+	}
+	
+	/**
+	 * 给定字符串数组的总长度<br>
+	 * null字符长度定义为0
+	 * 
+	 * @param strs 字符串数组
+	 * @return 总长度
+	 * @since 4.0.1
+	 */
+	private static int totalLength(CharSequence... strs) {
+		int totalLength = 0;
+		for(int i = 0 ; i < strs.length; i++) {
+			totalLength += (null == strs[i] ? 4 : strs[i].length());
+		}
+		return totalLength;
 	}
 	// ------------------------------------------------------------------------------------ Private method end
 }

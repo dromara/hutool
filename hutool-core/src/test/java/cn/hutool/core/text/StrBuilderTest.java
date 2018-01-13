@@ -1,7 +1,12 @@
 package cn.hutool.core.text;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.lang.Console;
 
 /**
  * StrBuilder单元测试
@@ -9,6 +14,29 @@ import org.junit.Test;
  *
  */
 public class StrBuilderTest {
+	
+	/**
+	 * StrBuilder的性能测试
+	 */
+	@Test
+	@Ignore
+	public void benchTest() {
+		TimeInterval timer = DateUtil.timer();
+		StrBuilder builder = StrBuilder.create();
+		for(int i =0; i< 1000000; i++) {
+			builder.append("test");
+			builder.reset();
+		}
+		Console.log(timer.interval());
+		
+		timer.restart();
+		StringBuilder b2 = new StringBuilder();
+		for(int i =0; i< 1000000; i++) {
+			b2.append("test");
+			b2 = new StringBuilder();
+		}
+		Console.log(timer.interval());
+	}
 	
 	@Test
 	public void appendTest() {

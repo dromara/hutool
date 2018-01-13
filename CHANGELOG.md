@@ -5,6 +5,8 @@
 ## 4.0.1
 
 ### 新特性
+* 新增CharUtil
+* 新增ASCIIStrCache，对ASCII字符做String对应表，提升字符转字符串性能
 
 ### Bug修复
 * 修复db模块中数据库为下划线而Bean为驼峰导致的注入失败问题（感谢@【广西】Succy）
