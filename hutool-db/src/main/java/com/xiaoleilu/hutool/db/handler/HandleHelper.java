@@ -61,20 +61,18 @@ public class HandleHelper {
 		//忽略字段大小写
 		final Map<String, PropDesc> propMap = BeanUtil.getBeanDesc(beanClass).getPropMap(true);
 		String columnLabel;
-		int type;
 		PropDesc pd;
 		Method setter = null;
 		Object value = null;
 		for (int i = 1; i <= columnCount; i++) {
+			columnLabel = meta.getColumnLabel(i);
 			//驼峰命名风格
-			columnLabel = StrUtil.toCamelCase(meta.getColumnLabel(i));
-			type = meta.getColumnType(i);
-			pd = propMap.get(columnLabel);
+			pd = propMap.get(StrUtil.toCamelCase(columnLabel));
 			if(null != pd) {
 				setter = pd.getSetter();
 			}
 			if(null != setter) {
-				value = getColumnValue(rs, columnLabel, type);
+				value = getColumnValue(rs, columnLabel, meta.getColumnType(i));
 				value = Convert.convert(TypeUtil.getFirstParamType(setter), value);
 				ReflectUtil.invoke(bean, setter, new Object[] {value});
 			}

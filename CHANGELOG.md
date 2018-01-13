@@ -9,6 +9,8 @@
 
 ### Bug修复
 * FileTypeUtil.getType未关闭流问题（issue#79@Github）
+* 修复EntityHandler和EntityListHandler转换问题
+* 修复BeanDesc类中boolean类型字段名为isXXX的情况无法注入问题
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -35,8 +37,6 @@
 * 修复NumberUtil.isInteger无法判断负数问题（感谢@【杭州】fineliving）
 * 修复BeanUtil.fillBean等方法忽略大小写失败的问题
 * 修复JSON中getStr方法返回字符串中含有\b等特殊字符时显示错误问题（感谢@【广西】Succy）
-* 修复EntityHandler和EntityListHandler转换问题
-* 修复BeanDesc类中boolean类型字段名为isXXX的情况无法注入问题
 
 -------------------------------------------------------------------------------------------------------------
 
