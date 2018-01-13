@@ -52,7 +52,8 @@ public class HandleHelper {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, Class<T> beanClass) throws SQLException {
-		if(Map.class.isAssignableFrom(Entity.class)) {
+		if(beanClass.isAssignableFrom(Entity.class)) {
+			//Entity的父类都可按照Entity返回
 			return (T) handleRow(columnCount, meta, rs);
 		}
 		

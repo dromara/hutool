@@ -1,10 +1,13 @@
 package com.xiaoleilu.hutool.http;
 
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -13,8 +16,11 @@ import java.util.zip.GZIPInputStream;
 
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
+import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
+import com.xiaoleilu.hutool.io.StreamProgress;
+import com.xiaoleilu.hutool.util.CharsetUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -24,7 +30,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
  * @author Looly
  *
  */
-public class HttpResponse extends HttpBase<HttpResponse> {
+public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	
 	/** 持有连接对象 */
 	private HttpConnection httpConnection;
@@ -121,7 +127,8 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	/**
 	 * 获得服务区响应流<br>
 	 * 异步模式下获取Http原生流，同步模式下获取获取到的在内存中的副本<br>
-	 * 如果想在同步模式下获取流，请先调用{@link #sync()}方法强制同步
+	 * 如果想在同步模式下获取流，请先调用{@link #sync()}方法强制同步<br>
+	 * 流获取后处理完毕需关闭此类
 	 * 
 	 * @return 响应流
 	 */
@@ -155,7 +162,98 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			throw new HttpException(e);
 		}
 	}
+	
+	/**
+	 * 将响应内容写出到{@link OutputStream}<br>
+	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
+	 * 写出后会关闭Http流（异步模式）
+	 * 
+	 * @param out 写出的流
+	 * @param isCloseOut 是否关闭输出流
+	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 * @return 写出bytes数
+	 * @since 3.3.2
+	 */
+	public long writeBody(OutputStream out, boolean isCloseOut, StreamProgress streamProgress) {
+		if (null == out) {
+			throw new NullPointerException("[out] is null!");
+		}
+		try {
+			return IoUtil.copyByNIO(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
+		} finally {
+			IoUtil.close(this);
+			if (isCloseOut) {
+				IoUtil.close(out);
+			}
+		}
+	}
+	
+	/**
+	 * 将响应内容写出到文件<br>
+	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
+	 * 写出后会关闭Http流（异步模式）
+	 * 
+	 * @param destFile 写出到的文件
+	 * @param streamProgress 进度显示接口，通过实现此接口显示下载进度
+	 * @return 写出bytes数
+	 * @since 3.3.2
+	 */
+	public long writeBody(File destFile, StreamProgress streamProgress) {
+		if (null == destFile) {
+			throw new NullPointerException("[destFile] is null!");
+		}
+		if (destFile.isDirectory()) {
+			String path = this.httpConnection.getUrl().getPath();
+			String fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
+			if (StrUtil.isBlank(fileName)) {
+				fileName = HttpUtil.encode(path, CharsetUtil.CHARSET_UTF_8);
+			}
+			destFile = FileUtil.file(destFile, fileName);
+		}
+		OutputStream out = null;
+		try {
+			out = FileUtil.getOutputStream(destFile);
+			return writeBody(out, false, streamProgress);
+		} catch (IORuntimeException e) {
+			throw new HttpException(e);
+		} finally {
+			IoUtil.close(out);
+		}
+	}
+	
+	/**
+	 * 将响应内容写出到文件<br>
+	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
+	 * 写出后会关闭Http流（异步模式）
+	 * 
+	 * @param destFile 写出到的文件
+	 * @return 写出bytes数
+	 * @since 3.3.2
+	 */
+	public long writeBody(File destFile) {
+		return writeBody(destFile, null);
+	}
+	
+	/**
+	 * 将响应内容写出到文件<br>
+	 * 异步模式下直接读取Http流写出，同步模式下将存储在内存中的响应内容写出<br>
+	 * 写出后会关闭Http流（异步模式）
+	 * 
+	 * @param destFilePath 写出到的文件的路径
+	 * @return 写出bytes数
+	 * @since 3.3.2
+	 */
+	public long writeBody(String destFilePath) {
+		return writeBody(FileUtil.file(destFilePath));
+	}
 	// ---------------------------------------------------------------- Body end
+	
+	@Override
+	public void close() {
+		IoUtil.close(this.in);
+		//关闭连接
+		this.httpConnection.disconnect();
+	}
 	
 	@Override
 	public String toString() {
@@ -204,6 +302,13 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		if(null == this.in) {
 			//在一些情况下，返回的流为null，此时提供状态码说明
 			this.in = new ByteArrayInputStream(StrUtil.format("Error request, response status: {}", this.status).getBytes());
+		} else if(isGzip() && false == (in instanceof GZIPInputStream)){
+			try {
+				in = new GZIPInputStream(in);
+			} catch (IOException e) {
+				//在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
+				//ignore
+			}
 		}
 		
 		//同步情况下强制同步
@@ -219,15 +324,6 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	private void readBody(InputStream in) throws IORuntimeException{
 		if(ignoreBody) {
 			return;
-		}
-		
-		if(isGzip() && false == (in instanceof GZIPInputStream)){
-			try {
-				in = new GZIPInputStream(in);
-			} catch (IOException e) {
-				//在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
-				//ignore
-			}
 		}
 		
 		int contentLength = Convert.toInt(header(Header.CONTENT_LENGTH), 0);
@@ -269,9 +365,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			if(this.isAsync) {
 				this.isAsync = false;
 			}
-			IoUtil.close(this.in);
-			//关闭连接
-			this.httpConnection.disconnect();
+			this.close();
 		}
 		return this;
 	}
