@@ -564,6 +564,42 @@ public class MapUtil {
 		}
 		return inverseMap;
 	}
+	
+	/**
+	 *排序已有Map，Key有序的Map，使用默认Key排序方式（字母顺序）
+	 * 
+	 * @param map Map
+	 * @return TreeMap
+	 * @since 4.0.1
+	 * @see #newTreeMap(Map, Comparator)
+	 */
+	public static <K, V> TreeMap<K, V> sort(Map<K, V> map){
+		return sort(map, null);
+	}
+	
+	/**
+	 *排序已有Map，Key有序的Map
+	 * 
+	 * @param map Map
+	 * @param comparator Key比较器
+	 * @return TreeMap
+	 * @since 4.0.1
+	 * @see #newTreeMap(Map, Comparator)
+	 */
+	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator){
+		TreeMap<K, V> result;
+		if(map instanceof TreeMap) {
+			//已经是可排序Map，此时只有比较器一致才返回原map
+			result = (TreeMap<K, V>)map;
+			if(null == comparator || comparator.equals(result.comparator())) {
+				return result;
+			}
+		}else {
+			result = newTreeMap(map, comparator);
+		}
+		
+		return result;
+	}
 
 	/**
 	 * 创建代理Map<br>

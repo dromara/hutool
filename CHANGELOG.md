@@ -8,6 +8,10 @@
 * 新增CharUtil
 * 新增ASCIIStrCache，对ASCII字符做String对应表，提升字符转字符串性能
 * 去除JschUtil中的同步修饰，改为锁
+* 新增MapUtil.sort
+* SymmetricCrypto支持加密后转为Base64和从Base64解密
+* AsymmetricCrypto支持Hex和Base64加密解密
+* 新增SecureUtil.signParams方法用于参数签名（感谢@【帝都】宁静）
 
 ### Bug修复
 * 修复db模块中数据库为下划线而Bean为驼峰导致的注入失败问题（感谢@【广西】Succy）

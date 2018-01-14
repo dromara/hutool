@@ -17,6 +17,7 @@ import java.security.cert.CertificateFactory;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Map;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -28,6 +29,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -841,6 +843,100 @@ public final class SecureUtil {
 	 */
 	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey){
 		return new Sign(algorithm, privateKey, publicKey);
+	}
+	
+	/**
+	 * 对参数做签名<br>
+	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
+	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
+	 * 
+	 * @param crypto 对称加密算法
+	 * @param params 参数
+	 * @return 签名
+	 * @since 4.0.1
+	 */
+	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params) {
+		return signParams(crypto, params, StrUtil.EMPTY, StrUtil.EMPTY, true);
+	}
+	
+	/**
+	 * 对参数做签名<br>
+	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串
+	 * 
+	 * @param crypto 对称加密算法
+	 * @param params 参数
+	 * @param separator entry之间的连接符
+	 * @param keyValueSeparator kv之间的连接符
+	 * @param isIgnoreNull 是否忽略null的键和值
+	 * @return 签名
+	 * @since 4.0.1
+	 */
+	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull) {
+		if(MapUtil.isEmpty(params)) {
+			return null;
+		}
+		String paramsStr = MapUtil.join(MapUtil.sort(params), separator, keyValueSeparator, isIgnoreNull);
+		return crypto.encryptHex(paramsStr);
+	}
+	
+	/**
+	 * 对参数做md5签名<br>
+	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
+	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
+	 * 
+	 * @param params 参数
+	 * @return 签名
+	 * @since 4.0.1
+	 */
+	public static String signParamsMd5(Map<?, ?> params) {
+		return signParams(DigestAlgorithm.MD5, params);
+	}
+	
+	/**
+	 * 对参数做Sha256签名<br>
+	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
+	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
+	 * 
+	 * @param params 参数
+	 * @return 签名
+	 * @since 4.0.1
+	 */
+	public static String signParamsSha256(Map<?, ?> params) {
+		return signParams(DigestAlgorithm.SHA256, params);
+	}
+	
+	/**
+	 * 对参数做签名<br>
+	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
+	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
+	 * 
+	 * @param digestAlgorithm 摘要算法
+	 * @param params 参数
+	 * @return 签名
+	 * @since 4.0.1
+	 */
+	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params) {
+		return signParams(digestAlgorithm, params, StrUtil.EMPTY, StrUtil.EMPTY, true);
+	}
+	
+	/**
+	 * 对参数做签名<br>
+	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串
+	 * 
+	 * @param digestAlgorithm 摘要算法
+	 * @param params 参数
+	 * @param separator entry之间的连接符
+	 * @param keyValueSeparator kv之间的连接符
+	 * @param isIgnoreNull 是否忽略null的键和值
+	 * @return 签名
+	 * @since 4.0.1
+	 */
+	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull) {
+		if(MapUtil.isEmpty(params)) {
+			return null;
+		}
+		final String paramsStr = MapUtil.join(MapUtil.sort(params), separator, keyValueSeparator, isIgnoreNull);
+		return new Digester(digestAlgorithm).digestHex(paramsStr);
 	}
 	
 	// ------------------------------------------------------------------- UUID

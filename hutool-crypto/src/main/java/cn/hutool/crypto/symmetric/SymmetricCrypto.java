@@ -10,6 +10,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.PBEParameterSpec;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -38,53 +39,59 @@ public class SymmetricCrypto {
 	private AlgorithmParameterSpec params;
 	private Lock lock = new ReentrantLock();
 
-	//------------------------------------------------------------------ Constructor start
+	// ------------------------------------------------------------------ Constructor start
 	/**
 	 * 构造，使用随机密钥
+	 * 
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
 	public SymmetricCrypto(SymmetricAlgorithm algorithm) {
-		this(algorithm, (byte[])null);
+		this(algorithm, (byte[]) null);
 	}
-	
+
 	/**
 	 * 构造，使用随机密钥
+	 * 
 	 * @param algorithm 算法，可以是"algorithm/mode/padding"或者"algorithm"
 	 */
 	public SymmetricCrypto(String algorithm) {
-		this(algorithm, (byte[])null);
+		this(algorithm, (byte[]) null);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param algorithm 算法 {@link SymmetricAlgorithm}
 	 * @param key 自定义KEY
 	 */
 	public SymmetricCrypto(SymmetricAlgorithm algorithm, byte[] key) {
 		this(algorithm.getValue(), key);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param algorithm 算法 {@link SymmetricAlgorithm}
 	 * @param key 自定义KEY
 	 * @since 3.1.2
 	 */
-	public SymmetricCrypto(SymmetricAlgorithm algorithm,SecretKey key) {
+	public SymmetricCrypto(SymmetricAlgorithm algorithm, SecretKey key) {
 		this(algorithm.getValue(), key);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
 	 */
 	public SymmetricCrypto(String algorithm, byte[] key) {
 		this(algorithm, SecureUtil.generateKey(algorithm, key));
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
 	 * @since 3.1.2
@@ -92,9 +99,10 @@ public class SymmetricCrypto {
 	public SymmetricCrypto(String algorithm, SecretKey key) {
 		this(algorithm, key, null);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
 	 * @param paramsSpec 算法参数，例如加盐等
@@ -102,21 +110,23 @@ public class SymmetricCrypto {
 	 */
 	public SymmetricCrypto(String algorithm, SecretKey key, AlgorithmParameterSpec paramsSpec) {
 		init(algorithm, key);
-		if(null != paramsSpec) {
+		if (null != paramsSpec) {
 			setParams(paramsSpec);
 		}
 	}
-	//------------------------------------------------------------------ Constructor end
+
+	// ------------------------------------------------------------------ Constructor end
 	/**
 	 * 初始化
+	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥，如果为<code>null</code>自动生成一个key
 	 * @return {@link SymmetricCrypto}
 	 */
 	public SymmetricCrypto init(String algorithm, SecretKey key) {
 		this.secretKey = key;
-		if(algorithm.startsWith("PBE")){
-			//对于PBE算法使用随机数加盐
+		if (algorithm.startsWith("PBE")) {
+			// 对于PBE算法使用随机数加盐
 			this.params = new PBEParameterSpec(RandomUtil.randomBytes(8), 100);
 		}
 		try {
@@ -126,206 +136,301 @@ public class SymmetricCrypto {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 设置 {@link AlgorithmParameterSpec}，通常用于加盐或偏移向量
+	 * 
 	 * @param params {@link AlgorithmParameterSpec}
 	 * @return 自身
 	 */
-	public SymmetricCrypto setParams(AlgorithmParameterSpec params){
+	public SymmetricCrypto setParams(AlgorithmParameterSpec params) {
 		this.params = params;
 		return this;
 	}
-	
-	//--------------------------------------------------------------------------------- Encrypt
+
+	// --------------------------------------------------------------------------------- Encrypt
 	/**
 	 * 加密
+	 * 
 	 * @param data 被加密的bytes
 	 * @return 加密后的bytes
 	 */
-	public byte[] encrypt(byte[] data){
+	public byte[] encrypt(byte[] data) {
 		lock.lock();
 		try {
-			if(null == this.params){
+			if (null == this.params) {
 				clipher.init(Cipher.ENCRYPT_MODE, secretKey);
-			}else{
+			} else {
 				clipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
 			}
 			return clipher.doFinal(data);
 		} catch (Exception e) {
 			throw new CryptoException(e);
-		}finally{
+		} finally {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 加密
 	 * 
 	 * @param data 数据
 	 * @return 加密后的Hex
 	 */
-	public String encryptHex(byte[] data){
+	public String encryptHex(byte[] data) {
 		return HexUtil.encodeHexStr(encrypt(data));
 	}
-	
+
 	/**
 	 * 加密
+	 * 
+	 * @param data 数据
+	 * @return 加密后的Base64
+	 * @since 4.0.1
+	 */
+	public String encryptBase64(byte[] data) {
+		return Base64.encode(encrypt(data));
+	}
+
+	/**
+	 * 加密
+	 * 
 	 * @param data 被加密的字符串
 	 * @param charset 编码
 	 * @return 加密后的bytes
 	 */
-	public byte[] encrypt(String data, String charset){
+	public byte[] encrypt(String data, String charset) {
 		return encrypt(StrUtil.bytes(data, charset));
 	}
-	
+
 	/**
 	 * 加密
+	 * 
 	 * @param data 被加密的字符串
 	 * @param charset 编码
 	 * @return 加密后的Hex
 	 */
-	public String encryptHex(String data, String charset){
+	public String encryptHex(String data, String charset) {
 		return HexUtil.encodeHexStr(encrypt(data, charset));
 	}
-	
+
+	/**
+	 * 加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @param charset 编码
+	 * @return 加密后的Base64
+	 */
+	public String encryptBase64(String data, String charset) {
+		return Base64.encode(encrypt(data, charset));
+	}
+
 	/**
 	 * 加密，使用UTF-8编码
+	 * 
 	 * @param data 被加密的字符串
 	 * @return 加密后的bytes
 	 */
-	public byte[] encrypt(String data){
+	public byte[] encrypt(String data) {
 		return encrypt(StrUtil.bytes(data, CharsetUtil.CHARSET_UTF_8));
 	}
-	
+
 	/**
 	 * 加密，使用UTF-8编码
+	 * 
 	 * @param data 被加密的字符串
 	 * @return 加密后的Hex
 	 */
-	public String encryptHex(String data){
+	public String encryptHex(String data) {
 		return HexUtil.encodeHexStr(encrypt(data));
 	}
-	
+
+	/**
+	 * 加密，使用UTF-8编码
+	 * 
+	 * @param data 被加密的字符串
+	 * @return 加密后的Base64
+	 */
+	public String encryptBase64(String data) {
+		return Base64.encode(encrypt(data));
+	}
+
 	/**
 	 * 加密
+	 * 
 	 * @param data 被加密的字符串
 	 * @return 加密后的bytes
 	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] encrypt(InputStream data) throws IORuntimeException{
+	public byte[] encrypt(InputStream data) throws IORuntimeException {
 		return encrypt(IoUtil.readBytes(data));
 	}
-	
+
 	/**
 	 * 加密
+	 * 
 	 * @param data 被加密的字符串
 	 * @return 加密后的Hex
 	 */
-	public String encryptHex(InputStream data){
+	public String encryptHex(InputStream data) {
 		return HexUtil.encodeHexStr(encrypt(data));
 	}
-	//--------------------------------------------------------------------------------- Decrypt
+
+	/**
+	 * 加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @return 加密后的Base64
+	 */
+	public String encryptBase64(InputStream data) {
+		return Base64.encode(encrypt(data));
+	}
+
+	// --------------------------------------------------------------------------------- Decrypt
 	/**
 	 * 解密
+	 * 
 	 * @param bytes 被解密的bytes
 	 * @return 解密后的bytes
 	 */
-	public byte[] decrypt(byte[] bytes){
+	public byte[] decrypt(byte[] bytes) {
 		lock.lock();
 		try {
-			if(null == this.params){
+			if (null == this.params) {
 				clipher.init(Cipher.DECRYPT_MODE, secretKey);
-			}else{
+			} else {
 				clipher.init(Cipher.DECRYPT_MODE, secretKey, params);
 			}
 			return clipher.doFinal(bytes);
 		} catch (Exception e) {
 			throw new CryptoException(e);
-		}finally{
+		} finally {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
-	 * 解密
+	 * 解密为字符串
+	 * 
 	 * @param bytes 被解密的bytes
 	 * @param charset 解密后的charset
 	 * @return 解密后的String
 	 */
-	public String decryptStr(byte[] bytes, Charset charset){
+	public String decryptStr(byte[] bytes, Charset charset) {
 		return StrUtil.str(decrypt(bytes), charset);
 	}
-	
+
 	/**
-	 * 解密
+	 * 解密为字符串，默认UTF-8编码
+	 * 
 	 * @param bytes 被解密的bytes
 	 * @return 解密后的String
 	 */
-	public String decryptStr(byte[] bytes){
+	public String decryptStr(byte[] bytes) {
 		return decryptStr(bytes, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
-	 * 解密
-	 * @param data 被解密的String
+	 * 解密Hex表示的字符串
+	 * 
+	 * @param data 被解密的String，必须为16进制字符串表示形式
 	 * @return 解密后的bytes
 	 */
 	public byte[] decrypt(String data) {
 		return decrypt(HexUtil.decodeHex(data));
 	}
-	
+
 	/**
-	 * 解密
+	 * 解密Base64表示的字符串
+	 * 
+	 * @param data 被解密的String，必须为Base64形式
+	 * @return 解密后的bytes
+	 * @since 4.0.1
+	 */
+	public byte[] decryptFromBase64(String data) {
+		return decrypt(Base64.decode(data));
+	}
+
+	/**
+	 * 解密Hex表示的字符串
+	 * 
 	 * @param data 被解密的String
 	 * @param charset 解密后的charset
 	 * @return 解密后的String
 	 */
-	public String decryptStr(String data, Charset charset){
+	public String decryptStr(String data, Charset charset) {
 		return StrUtil.str(decrypt(data), charset);
 	}
-	
+
 	/**
-	 * 解密
+	 * 解密Base64表示的字符串
+	 * 
+	 * @param data 被解密的String，必须为Base64形式
+	 * @param charset 解密后的charset
+	 * @return 解密后的String
+	 * @since 4.0.1
+	 */
+	public String decryptStrFromBase64(String data, Charset charset) {
+		return StrUtil.str(decrypt(Base64.decode(data, charset)), charset);
+	}
+
+	/**
+	 * 解密Hex表示的字符串，默认UTF-8编码
+	 * 
 	 * @param data 被解密的String
 	 * @return 解密后的String
 	 */
-	public String decryptStr(String data){
+	public String decryptStr(String data) {
 		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
-	 * 解密
+	 * 解密Base64表示的字符串，默认UTF-8编码
+	 * 
+	 * @param data 被解密的String
+	 * @return 解密后的String
+	 * @since 4.0.1
+	 */
+	public String decryptStrFromBase64(String data) {
+		return decryptStrFromBase64(data, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 解密，不会关闭流
+	 * 
 	 * @param data 被解密的bytes
 	 * @return 解密后的bytes
 	 * @throws IORuntimeException IO异常
 	 */
-	public byte[] decrypt(InputStream data) throws IORuntimeException{
+	public byte[] decrypt(InputStream data) throws IORuntimeException {
 		return decrypt(IoUtil.readBytes(data));
 	}
-	
+
 	/**
-	 * 解密
+	 * 解密，不会关闭流
+	 * 
 	 * @param data 被解密的InputStream
 	 * @param charset 解密后的charset
 	 * @return 解密后的String
 	 */
-	public String decryptStr(InputStream data, Charset charset){
+	public String decryptStr(InputStream data, Charset charset) {
 		return StrUtil.str(decrypt(data), charset);
 	}
-	
+
 	/**
 	 * 解密
+	 * 
 	 * @param data 被解密的InputStream
 	 * @return 解密后的String
 	 */
-	public String decryptStr(InputStream data){
+	public String decryptStr(InputStream data) {
 		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
 	}
-	
-	//--------------------------------------------------------------------------------- Getters
+
+	// --------------------------------------------------------------------------------- Getters
 	/**
 	 * 获得对称密钥
+	 * 
 	 * @return 获得对称密钥
 	 */
 	public SecretKey getSecretKey() {
@@ -334,6 +439,7 @@ public class SymmetricCrypto {
 
 	/**
 	 * 获得加密或解密器
+	 * 
 	 * @return 加密或解密
 	 */
 	public Cipher getClipher() {
