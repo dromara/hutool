@@ -87,8 +87,8 @@ public class HandleHelper {
 		Method setter = null;
 		Object value = null;
 		for (int i = 1; i <= columnCount; i++) {
-			//驼峰命名风格
 			columnLabel = meta.getColumnLabel(i);
+			//驼峰命名风格
 			pd = propMap.get(StrUtil.toCamelCase(columnLabel));
 			setter = (null == pd) ? null : pd.getSetter();
 			if(null != setter) {

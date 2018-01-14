@@ -13,6 +13,7 @@
 * AsymmetricCrypto支持Hex和Base64加密解密
 * 新增SecureUtil.signParams方法用于参数签名（感谢@【帝都】宁静）
 * 新增Loader和LazyLoader，抽象懒加载
+* 新增CsvReader,CSV读取
 
 ### Bug修复
 * 修复db模块中数据库为下划线而Bean为驼峰导致的注入失败问题（感谢@【广西】Succy）

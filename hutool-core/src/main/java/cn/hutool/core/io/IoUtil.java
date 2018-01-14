@@ -47,8 +47,11 @@ public class IoUtil {
 
 	/** 默认缓存大小 */
 	public static final int DEFAULT_BUFFER_SIZE = 1024;
-	/** 默认缓存大小 */
-	public static final int DEFAULT_LARGE_BUFFER_SIZE = 4096;
+	/** 默认中等缓存大小 */
+	public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 4096;
+	/** 默认大缓存大小 */
+	public static final int DEFAULT_LARGE_BUFFER_SIZE = 8192;
+	
 	/** 数据流末尾 */
 	public static final int EOF = -1;
 

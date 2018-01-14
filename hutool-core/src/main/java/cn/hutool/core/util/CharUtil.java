@@ -25,6 +25,8 @@ public class CharUtil {
 	public static final char BRACKET_START = '[';
 	public static final char BRACKET_END = ']';
 	public static final char COLON = ':';
+	public static final char DOUBLE_QUOTES = '"';
+	public static final char SINGLE_QUOTE = '\'';
 
 	/**
 	 * 是否为ASCII字符，ASCII字符位于0~127之间

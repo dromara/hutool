@@ -2115,6 +2115,47 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * 去掉字符包装，如果未被包装则返回原字符串
+	 * @param str 字符串
+	 * @param prefix 前置字符串
+	 * @param suffix 后置字符串
+	 * @return 去掉包装字符的字符串
+	 * @since 4.0.1
+	 */
+	public static String unWrap(CharSequence str, String prefix, String suffix) {
+		if(isWrap(str, prefix, suffix)) {
+			return sub(str, prefix.length(), str.length() - suffix.length());
+		}
+		return str.toString();
+	}
+	
+	/**
+	 * 去掉字符包装，如果未被包装则返回原字符串
+	 * @param str 字符串
+	 * @param prefix 前置字符
+	 * @param suffix 后置字符
+	 * @return 去掉包装字符的字符串
+	 * @since 4.0.1
+	 */
+	public static String unWrap(CharSequence str, char prefix, char suffix) {
+		if(str.charAt(0) == prefix && str.charAt(str.length() -1) == suffix) {
+			return sub(str, 1, str.length() -1);
+		}
+		return str.toString();
+	}
+	
+	/**
+	 * 去掉字符包装，如果未被包装则返回原字符串
+	 * @param str 字符串
+	 * @param prefixAndSuffix 前置和后置字符
+	 * @return 去掉包装字符的字符串
+	 * @since 4.0.1
+	 */
+	public static String unWrap(CharSequence str, char prefixAndSuffix) {
+		return unWrap(str, prefixAndSuffix, prefixAndSuffix);
+	}
 
 	/**
 	 * 指定字符串是否被包装
