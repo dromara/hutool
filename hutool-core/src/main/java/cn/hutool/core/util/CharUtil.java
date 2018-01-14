@@ -213,14 +213,14 @@ public class CharUtil {
 	}
 
 	/**
-	 * 给定类名是否为字符类，字符类包括：
+	 * 给定对象对应的类是否为字符类，字符类包括：
 	 * 
 	 * <pre>
 	 * Character.class
 	 * char.class
 	 * </pre>
 	 * 
-	 * @param clazz 被检查的类
+	 * @param value 被检查的对象
 	 * @return true表示为字符类
 	 */
 	public static boolean isChar(Object value) {

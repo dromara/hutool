@@ -366,7 +366,6 @@ public class DigestUtil {
 	 * 新建摘要器
 	 * 
 	 * @param algorithm 签名算法
-	 * @param data 数据
 	 * @return Digester
 	 * @since 4.0.1
 	 */

@@ -360,7 +360,7 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	/**
 	 * 从Base64字符串解密
 	 * 
-	 * @param hexStr Base64字符串
+	 * @param base64Str Base64字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 解密后的bytes
 	 * @since 4.0.1

@@ -275,7 +275,7 @@ public class HexUtil {
 	 * '我' =》\u4f60
 	 * </pre>
 	 * 
-	 * @param value int值，也可以是char
+	 * @param ch char值
 	 * @return Unicode表现形式
 	 * @since 4.0.1
 	 */
