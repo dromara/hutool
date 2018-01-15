@@ -9,6 +9,7 @@ import java.io.PushbackInputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.FileMagic;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -289,7 +290,7 @@ public class ExcelUtil {
 			throw new POIException(e);
 		}
 	}
-	
+
 	/**
 	 * 根据文件路径创建新的工作簿，文件路径
 	 * 
@@ -299,14 +300,14 @@ public class ExcelUtil {
 	 */
 	public static Workbook createBook(String destFilePath) {
 		Workbook workbook;
-		if(StrUtil.endWithIgnoreCase(destFilePath, "xlsx")) {
+		if (StrUtil.endWithIgnoreCase(destFilePath, "xlsx")) {
 			workbook = new XSSFWorkbook();
-		}else {
+		} else {
 			workbook = new HSSFWorkbook();
 		}
 		return workbook;
 	}
-	
+
 	/**
 	 * 根据文件路径创建新的工作簿
 	 * 
@@ -317,7 +318,7 @@ public class ExcelUtil {
 	public static Workbook createBook(File destFile) {
 		return createBook(destFile.getName());
 	}
-	
+
 	/**
 	 * 将Excel Workbook刷出到输出流
 	 * 
@@ -326,14 +327,14 @@ public class ExcelUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 3.2.0
 	 */
-	public static void writeBook(Workbook book, OutputStream out) throws IORuntimeException{
+	public static void writeBook(Workbook book, OutputStream out) throws IORuntimeException {
 		try {
 			book.write(out);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
 	 * 不传入写出的Excel文件路径，只能调用{@link ExcelWriter#flush(OutputStream)}方法写出到流<br>
@@ -345,7 +346,7 @@ public class ExcelUtil {
 	public static ExcelWriter getWriter() {
 		return new ExcelWriter();
 	}
-	
+
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
 	 * 不传入写出的Excel文件路径，只能调用{@link ExcelWriter#flush(OutputStream)}方法写出到流<br>
@@ -358,7 +359,7 @@ public class ExcelUtil {
 	public static ExcelWriter getWriter(boolean isXlsx) {
 		return new ExcelWriter(isXlsx);
 	}
-	
+
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet
 	 * 
@@ -368,7 +369,7 @@ public class ExcelUtil {
 	public static ExcelWriter getWriter(String destFilePath) {
 		return new ExcelWriter(destFilePath);
 	}
-	
+
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet，名字为sheet1
 	 * 
@@ -378,7 +379,7 @@ public class ExcelUtil {
 	public static ExcelWriter getWriter(File destFile) {
 		return new ExcelWriter(destFile);
 	}
-	
+
 	/**
 	 * 获得{@link ExcelWriter}
 	 * 
@@ -389,7 +390,7 @@ public class ExcelUtil {
 	public static ExcelWriter getWriter(String destFilePath, String sheetName) {
 		return new ExcelWriter(destFilePath, sheetName);
 	}
-	
+
 	/**
 	 * 获得{@link ExcelWriter}
 	 * 
@@ -425,7 +426,7 @@ public class ExcelUtil {
 	 * @return 是否为XLSX格式的Excel文件（XSSF）
 	 */
 	public static boolean isXlsx(InputStream in) {
-		if(false == in.markSupported()) {
+		if (false == in.markSupported()) {
 			in = new BufferedInputStream(in);
 		}
 		try {
@@ -433,5 +434,17 @@ public class ExcelUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 
+	 * sheet是否为空
+	 * 
+	 * @param sheet {@link Sheet}
+	 * @return sheet是否为空
+	 * @since 4.0.1
+	 */
+	public static boolean isEmpty(Sheet sheet) {
+		return null == sheet || (sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0);
 	}
 }

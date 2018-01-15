@@ -68,13 +68,13 @@ public class CRUDTest {
 	
 	@Test
 	public void findInTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("name", "in (1,2,3)"));
+		List<Entity> results = runner.findAll(Entity.create("user").set("id", "in 1,2,3"));
 		Assert.assertEquals(2, results.size());
 	}
 	
 	@Test
 	public void findInTest2() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("name", new Condition("name", new long[] {1,2,3})));
+		List<Entity> results = runner.findAll(Entity.create("user").set("id", new Condition("id", new long[] {1,2,3})));
 		Assert.assertEquals(2, results.size());
 	}
 	

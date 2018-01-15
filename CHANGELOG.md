@@ -15,6 +15,7 @@
 * 新增Loader和LazyLoader，抽象懒加载
 * 新增CsvReader,CSV读取
 * HttpRequest支持可选get请求下的url参数编码
+* ExcelReader增加read重载方法，ExcelUtil增加isEmpty(Sheet)方法（pr#5@Gitee）
 
 ### Bug修复
 * 修复db模块中数据库为下划线而Bean为驼峰导致的注入失败问题（感谢@【广西】Succy）
@@ -22,6 +23,7 @@
 * 修复ArrayUtil.join循环引用bug
 * FileTypeUtil针对pdf格式做修改（issue#IHDNH@Gitee）
 * 修复Http模块中get方法拼接参数问题
+* 修复db模块in方式查询错误问题
 
 -------------------------------------------------------------------------------------------------------------
 

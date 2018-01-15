@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
@@ -1602,9 +1603,9 @@ public class ArrayUtil {
 			if (ArrayUtil.isArray(item)) {
 				sb.append(join(ArrayUtil.wrap(item), conjunction));
 			} else if (item instanceof Iterable<?>) {
-				sb.append(CollectionUtil.join((Iterable<?>) item, conjunction));
+				sb.append(IterUtil.join((Iterable<?>) item, conjunction));
 			} else if (item instanceof Iterator<?>) {
-				sb.append(CollectionUtil.join((Iterator<?>) item, conjunction));
+				sb.append(IterUtil.join((Iterator<?>) item, conjunction));
 			} else {
 				sb.append(item);
 			}

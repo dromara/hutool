@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -49,8 +48,6 @@ public class Condition implements Cloneable {
 	private Object value;
 	/** 是否使用条件值占位符 */
 	private boolean isPlaceHolder = true;
-	/** 是否为between */
-	private boolean isBetween = false;
 	/** between firstValue and secondValue */
 	private Object secondValue;
 
@@ -211,16 +208,15 @@ public class Condition implements Cloneable {
 	 * @return 是否 between x and y 类型
 	 */
 	public boolean isBetween() {
-		return isBetween;
+		return OPERATOR_BETWEEN.equalsIgnoreCase(this.operator);
 	}
-
+	
 	/**
-	 * 设置为 between x and y 类型
-	 *
-	 * @param between 是否between x and y类型
+	 * 是否IN条件
+	 * @return 是否IN条件
 	 */
-	public void setBetween(boolean between) {
-		this.isBetween = between;
+	public boolean isIn() {
+		return OPERATOR_IN.equalsIgnoreCase(this.operator);
 	}
 
 	/**
@@ -273,13 +269,8 @@ public class Condition implements Cloneable {
 		}
 
 		// 对数组和集合值按照 IN 处理
-		if (this.value instanceof Collection) {
+		if (this.value instanceof Collection || ArrayUtil.isArray(this.value)) {
 			this.operator = OPERATOR_IN;
-			this.value = CollectionUtil.join((Collection<?>) this.value, StrUtil.COMMA);
-			return;
-		} else if (ArrayUtil.isArray(this.value)) {
-			this.operator = OPERATOR_IN;
-			this.value = ArrayUtil.join(this.value, StrUtil.COMMA);
 			return;
 		}
 
@@ -318,7 +309,6 @@ public class Condition implements Cloneable {
 
 		// 处理BETWEEN x AND y
 		if (OPERATOR_BETWEEN.equals(firstPart)) {
-			this.isBetween = true;
 			final List<String> betweenValueStrs = StrSpliter.splitTrimIgnoreCase(strs.get(1), LogicalOperator.AND.toString(), 2, true);
 			if (betweenValueStrs.size() < 2) {
 				// 必须满足a AND b格式，不满足被当作普通值
