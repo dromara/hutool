@@ -1619,7 +1619,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(long[] array, String conjunction) {
+	public static String join(long[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1644,7 +1644,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(int[] array, String conjunction) {
+	public static String join(int[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1669,7 +1669,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(short[] array, String conjunction) {
+	public static String join(short[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1694,7 +1694,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(char[] array, String conjunction) {
+	public static String join(char[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1719,7 +1719,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(byte[] array, String conjunction) {
+	public static String join(byte[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1744,7 +1744,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(boolean[] array, String conjunction) {
+	public static String join(boolean[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1769,7 +1769,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(float[] array, String conjunction) {
+	public static String join(float[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}
@@ -1794,7 +1794,7 @@ public class ArrayUtil {
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
 	 */
-	public static String join(double[] array, String conjunction) {
+	public static String join(double[] array, CharSequence conjunction) {
 		if (null == array) {
 			return null;
 		}

@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cn.hutool.core.util.StrUtil;
+
 /**
  * 文件类型判断工具类
  * 
@@ -42,7 +44,7 @@ public final class FileTypeUtil {
 		fileTypeMap.put("d0cf11e0a1b11ae10000", "vsd"); // Visio 绘图
 		fileTypeMap.put("5374616E64617264204A", "mdb"); // MS Access (mdb)
 		fileTypeMap.put("252150532D41646F6265", "ps");
-		fileTypeMap.put("255044462d312e350d0a", "pdf"); // Adobe Acrobat (pdf)
+		fileTypeMap.put("255044462d312e330d", "pdf"); // Adobe Acrobat (pdf)
 		fileTypeMap.put("2e524d46000000120001", "rmvb"); // rmvb/rm相同
 		fileTypeMap.put("464c5601050000000900", "flv"); // flv与f4v相同
 		fileTypeMap.put("00000020667479706d70", "mp4");
@@ -91,7 +93,7 @@ public final class FileTypeUtil {
 	 * @return 之前已经存在的文件扩展名
 	 */
 	public static String putFileType(String fileStreamHexHead, String extName) {
-		return fileTypeMap.put(fileStreamHexHead.toUpperCase(), extName);
+		return fileTypeMap.put(fileStreamHexHead.toLowerCase(), extName);
 	}
 
 	/**
@@ -101,7 +103,7 @@ public final class FileTypeUtil {
 	 * @return 移除的文件扩展名
 	 */
 	public static String removeFileType(String fileStreamHexHead) {
-		return fileTypeMap.remove(fileStreamHexHead);
+		return fileTypeMap.remove(fileStreamHexHead.toLowerCase());
 	}
 
 	/**
@@ -112,7 +114,7 @@ public final class FileTypeUtil {
 	 */
 	public static String getType(String fileStreamHexHead) {
 		for (Entry<String, String> fileTypeEntry : fileTypeMap.entrySet()) {
-			if (fileStreamHexHead.toLowerCase().startsWith(fileTypeEntry.getKey().toLowerCase())) {
+			if(StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())) {
 				return fileTypeEntry.getValue();
 			}
 		}

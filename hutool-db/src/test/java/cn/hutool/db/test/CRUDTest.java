@@ -61,9 +61,20 @@ public class CRUDTest {
 	}
 	
 	@Test
-//	@Ignore
 	public void findLikeTest2() throws SQLException {
 		List<Entity> results = runner.findAll(Entity.create("user").set("name", new Condition("name", "三", LikeType.Contains)));
+		Assert.assertEquals(2, results.size());
+	}
+	
+	@Test
+	public void findInTest() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("name", "in (1,2,3)"));
+		Assert.assertEquals(2, results.size());
+	}
+	
+	@Test
+	public void findInTest2() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("name", new Condition("name", new long[] {1,2,3})));
 		Assert.assertEquals(2, results.size());
 	}
 	

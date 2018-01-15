@@ -14,10 +14,14 @@
 * 新增SecureUtil.signParams方法用于参数签名（感谢@【帝都】宁静）
 * 新增Loader和LazyLoader，抽象懒加载
 * 新增CsvReader,CSV读取
+* HttpRequest支持可选get请求下的url参数编码
 
 ### Bug修复
 * 修复db模块中数据库为下划线而Bean为驼峰导致的注入失败问题（感谢@【广西】Succy）
 * 修复findLike的bug（感谢@cici）
+* 修复ArrayUtil.join循环引用bug
+* FileTypeUtil针对pdf格式做修改（issue#IHDNH@Gitee）
+* 修复Http模块中get方法拼接参数问题
 
 -------------------------------------------------------------------------------------------------------------
 

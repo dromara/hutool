@@ -26,6 +26,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
@@ -40,6 +41,16 @@ public class HttpUtil {
 
 	/** 正则：匹配meta标签的编码信息 */
 	public static final Pattern CHARSET_PATTERN = Pattern.compile("<meta.*?charset=(.*?)\"");
+
+	/**
+	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
+	 * 
+	 * @param content 被编码内容
+	 * @return 编码后的字符
+	 */
+	public static String encodeUtf8(String content) {
+		return encode(content, CharsetUtil.UTF_8);
+	}
 
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded
@@ -451,7 +462,8 @@ public class HttpUtil {
 
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
-	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）
+	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
+	 * 会自动url编码键和值
 	 * 
 	 * <pre>
 	 * key1=v1&amp;key2=&amp;key3=v3
@@ -499,6 +511,84 @@ public class HttpUtil {
 	}
 
 	/**
+	 * 对URL参数做编码，只编码键和值<br>
+	 * 提供的值可以是url附带编码，但是不能只是url
+	 * 
+	 * 
+	 * @param paramsStr url参数，可以包含url本身
+	 * @param charset 编码
+	 * @return 编码后的url和参数
+	 * @since 4.0.1
+	 */
+	public static String encodeParams(final String paramsStr, Charset charset) {
+		if (StrUtil.isBlank(paramsStr)) {
+			return StrUtil.EMPTY;
+		}
+
+		String urlPart = null; // url部分，不包括问号
+		String paramPart; // 参数部分
+		int pathEndPos = paramsStr.indexOf('?');
+		if (pathEndPos > -1) {
+			//url + 参数
+			urlPart = StrUtil.subPre(paramsStr, pathEndPos);
+			paramPart = StrUtil.subSuf(paramsStr, pathEndPos + 1);
+			if (StrUtil.isBlank(paramPart)) {
+				// 无参数，返回url
+				return urlPart;
+			}
+		} else {
+			// 无URL
+			paramPart = paramsStr;
+		}
+
+		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
+		final int len = paramPart.length();
+		String name = null;
+		int pos = 0; // 未处理字符开始位置
+		char c; // 当前字符
+		int i; // 当前字符位置
+		for (i = 0; i < len; i++) {
+			c = paramPart.charAt(i);
+			if (c == '=') { // 键值对的分界点
+				if (null == name) {
+					// 只有=前未定义name时被当作键值分界符，否则做为普通字符
+					name = (pos == i) ? StrUtil.EMPTY : paramPart.substring(pos, i);
+					pos = i + 1;
+				}
+			} else if (c == '&') { // 参数对的分界点
+				if (pos != i) {
+					if (null == name) {
+						// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
+						name = paramPart.substring(pos, i);
+						builder.append(encode(name, charset)).append('=');
+					} else {
+						builder.append(encode(name, charset)).append('=').append(encode(paramPart.substring(pos, i), charset)).append('&');
+					}
+					name = null;
+				}
+				pos = i + 1;
+			}
+		}
+
+		// 结尾处理
+		if (null != name) {
+			builder.append(encode(name, charset)).append('=');
+		}
+		if (pos != i) {
+			if (null == name) {
+				builder.append('=');
+			}
+			builder.append(encode(paramPart.substring(pos, i), charset));
+		}
+
+		int lastIndex = builder.length() - 1;
+		if ('&' == builder.charAt(lastIndex)) {
+			builder.delTo(lastIndex);
+		}
+		return StrUtil.isBlank(urlPart) ? builder.toString() : urlPart + "?" + builder.toString();
+	}
+
+	/**
 	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
 	 * 
 	 * @param paramsStr 参数字符串（或者带参数的Path）
@@ -512,7 +602,7 @@ public class HttpUtil {
 
 		// 去掉Path部分
 		int pathEndPos = paramsStr.indexOf('?');
-		if (pathEndPos > 0) {
+		if (pathEndPos > -1) {
 			paramsStr = StrUtil.subSuf(paramsStr, pathEndPos + 1);
 		}
 
@@ -524,13 +614,14 @@ public class HttpUtil {
 		char c; // 当前字符
 		for (i = 0; i < len; i++) {
 			c = paramsStr.charAt(i);
-			if (c == '=' && name == null) { // 键值对的分界点
-				if (pos != i) {
+			if (c == '=') { // 键值对的分界点
+				if (null == name) {
+					// name可以是""
 					name = paramsStr.substring(pos, i);
 				}
 				pos = i + 1;
-			} else if (c == '&' || c == ';') { // 参数对的分界点
-				if (name == null && pos != i) {
+			} else if (c == '&') { // 参数对的分界点
+				if (null == name && pos != i) {
 					// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
 					addParam(params, paramsStr.substring(pos, i), StrUtil.EMPTY, charset);
 				} else if (name != null) {
@@ -556,15 +647,23 @@ public class HttpUtil {
 	}
 
 	/**
-	 * 将表单数据加到URL中（用于GET表单提交）
+	 * 将表单数据加到URL中（用于GET表单提交）<br>
+	 * 表单的键值对会被url编码，但是url中原参数不会被编码
 	 * 
 	 * @param url URL
 	 * @param form 表单数据
+	 * @param charset 编码
+	 * @param isEncode 是否对键和值做转义处理
 	 * @return 合成后的URL
 	 */
-	public static String urlWithForm(String url, Map<String, Object> form) {
-		final String queryString = toParams(form, CharsetUtil.UTF_8);
-		return urlWithForm(url, queryString);
+	public static String urlWithForm(String url, Map<String, Object> form, Charset charset, boolean isEncode) {
+		if (isEncode && StrUtil.contains(url, '?')) {
+			// 在需要编码的情况下，如果url中已经有部分参数，则编码之
+			url = encodeParams(url, charset);
+		}
+
+		// url和参数是分别编码的
+		return urlWithForm(url, toParams(form, charset), charset, false);
 	}
 
 	/**
@@ -572,18 +671,40 @@ public class HttpUtil {
 	 * 
 	 * @param url URL
 	 * @param queryString 表单数据字符串
+	 * @param charset 编码
+	 * @param isEncode 是否对键和值做转义处理
 	 * @return 拼接后的字符串
 	 */
-	public static String urlWithForm(String url, String queryString) {
-		if (StrUtil.isNotBlank(queryString)) {
-			if (url.contains("?")) {
-				// 原URL已经带参数
-				url += "&" + queryString;
+	public static String urlWithForm(String url, String queryString, Charset charset, boolean isEncode) {
+		if (StrUtil.isBlank(queryString)) {
+			// 无额外参数
+			if (StrUtil.contains(url, '?')) {
+				// url中包含参数
+				return isEncode ? encodeParams(url, charset) : url;
 			}
-			url += url.endsWith("?") ? queryString : "?" + queryString;
+			return url;
 		}
 
-		return url;
+		// 始终有参数
+		final StrBuilder urlBuilder = StrBuilder.create(url.length() + queryString.length() + 16);
+		int qmIndex = url.indexOf('?');
+		if (qmIndex > 0) {
+			// 原URL带参数，则对这部分参数单独编码（如果选项为进行编码）
+			urlBuilder.append(isEncode ? encodeParams(url, charset) : url);
+			if (false == StrUtil.endWith(url, '&')) {
+				//已经带参数的情况下追加参数
+				urlBuilder.append('&');
+			}
+		} else {
+			//原url无参数，则不做编码
+			urlBuilder.append(url);
+			if(qmIndex < 0) {
+				//无 '?' 追加之
+				urlBuilder.append('?');
+			}
+		}
+		urlBuilder.append(isEncode ? encodeParams(queryString, charset) : queryString);
+		return urlBuilder.toString();
 	}
 
 	/**
@@ -742,12 +863,14 @@ public class HttpUtil {
 	 * @param charset 编码
 	 */
 	private static void addParam(Map<String, List<String>> params, String name, String value, String charset) {
+		name = decode(name, charset);
+		value = decode(value, charset);
 		List<String> values = params.get(name);
 		if (values == null) {
 			values = new ArrayList<String>(1); // 一般是一个参数
 			params.put(name, values);
 		}
-		values.add(decode(value, charset));
+		values.add(value);
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start end

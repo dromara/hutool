@@ -33,6 +33,19 @@ public class HttpRequestTest {
 		String body = HttpRequest.get("https://www.gjifa.com/pc/").execute().body();
 		Console.log(body);
 	}
+	
+	@Test
+	@Ignore
+	public void getWithParamsTest() {
+		String url = "http://gc.ditu.aliyun.com/geocoding?ccc=你好";
+		
+		HttpRequest request = HttpRequest.get(url).setEncodeUrl(true).body("a=乌海");
+		String body = request.execute().body();
+		Console.log(body);
+		
+//		String body2 = HttpUtil.get(url);
+//		Console.log(body2);
+	}
 
 	@Test
 	@Ignore

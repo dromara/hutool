@@ -75,4 +75,98 @@ public class HttpUtilTest {
 		String encodedParams = HttpUtil.toParams((Map<String, List<String>>) map);
 		Assert.assertEquals(paramsStr, encodedParams);
 	}
+
+	@Test
+	public void encodeParamTest() {
+		// ?单独存在去除之，&单位位于末尾去除之
+		String paramsStr = "?a=b&c=d&";
+		String encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a=b&c=d", encode);
+
+		// url不参与转码
+		paramsStr = "http://www.abc.dd?a=b&c=d&";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("http://www.abc.dd?a=b&c=d", encode);
+
+		// b=b中的=被当作值得一部分，做encode
+		paramsStr = "a=b=b&c=d&";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a=b%3Db&c=d", encode);
+
+		// =d的情况被处理为key为空
+		paramsStr = "a=bbb&c=d&=d";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a=bbb&c=d&=d", encode);
+
+		// d=的情况被处理为value为空
+		paramsStr = "a=bbb&c=d&d=";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a=bbb&c=d&d=", encode);
+
+		// 多个&&被处理为单个，相当于空条件
+		paramsStr = "a=bbb&c=d&&&d=";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a=bbb&c=d&d=", encode);
+
+		// &d&相当于只有键，无值得情况
+		paramsStr = "a=bbb&c=d&d&";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a=bbb&c=d&d=", encode);
+
+		// 中文的键和值被编码
+		paramsStr = "a=bbb&c=你好&哈喽&";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("a=bbb&c=%E4%BD%A0%E5%A5%BD&%E5%93%88%E5%96%BD=", encode);
+	}
+
+	@Test
+	public void decodeParamTest() {
+		// 开头的？被去除
+		String a = "?a=b&c=d&";
+		Map<String, List<String>> map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
+		Assert.assertEquals("b", map.get("a").get(0));
+		Assert.assertEquals("d", map.get("c").get(0));
+
+		// =e被当作空为key，e为value
+		a = "?a=b&c=d&=e";
+		map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
+		Assert.assertEquals("b", map.get("a").get(0));
+		Assert.assertEquals("d", map.get("c").get(0));
+		Assert.assertEquals("e", map.get("").get(0));
+
+		// 多余的&去除
+		a = "?a=b&c=d&=e&&&&";
+		map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
+		Assert.assertEquals("b", map.get("a").get(0));
+		Assert.assertEquals("d", map.get("c").get(0));
+		Assert.assertEquals("e", map.get("").get(0));
+
+		// 值为空
+		a = "?a=b&c=d&e=";
+		map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
+		Assert.assertEquals("b", map.get("a").get(0));
+		Assert.assertEquals("d", map.get("c").get(0));
+		Assert.assertEquals("", map.get("e").get(0));
+
+		// &=被作为键和值都为空
+		a = "a=b&c=d&=";
+		map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
+		Assert.assertEquals("b", map.get("a").get(0));
+		Assert.assertEquals("d", map.get("c").get(0));
+		Assert.assertEquals("", map.get("").get(0));
+
+		// &e&这类单独的字符串被当作key
+		a = "a=b&c=d&e&";
+		map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
+		Assert.assertEquals("b", map.get("a").get(0));
+		Assert.assertEquals("d", map.get("c").get(0));
+		Assert.assertEquals("", map.get("e").get(0));
+
+		// 被编码的键和值被还原
+		a = "a=bbb&c=%E4%BD%A0%E5%A5%BD&%E5%93%88%E5%96%BD=";
+		map = HttpUtil.decodeParams(a, CharsetUtil.UTF_8);
+		Assert.assertEquals("bbb", map.get("a").get(0));
+		Assert.assertEquals("你好", map.get("c").get(0));
+		Assert.assertEquals("", map.get("哈喽").get(0));
+	}
 }

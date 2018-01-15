@@ -21,7 +21,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 
 	/** 存放的字符数组 */
 	private char[] value;
-	/** 当前指针位置，或者叫做已经加入的字符数 */
+	/** 当前指针位置，或者叫做已经加入的字符数，此位置总在最后一个字符之后 */
 	private int position;
 	
 	/**
@@ -355,7 +355,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * 删除到指定位置<br>
 	 * 如果新位置小于等于0，则删除全部
 	 * 
-	 * @param newPosition 新的位置
+	 * @param newPosition 新的位置，不包括这个位置
 	 * @return this
 	 */
 	public StrBuilder delTo(int newPosition) {
