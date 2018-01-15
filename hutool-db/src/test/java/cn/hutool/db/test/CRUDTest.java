@@ -17,6 +17,8 @@ import cn.hutool.db.Entity;
 import cn.hutool.db.SqlRunner;
 import cn.hutool.db.handler.ActiveEntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
+import cn.hutool.db.sql.Condition;
+import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.db.test.pojo.User;
 
 /**
@@ -55,6 +57,13 @@ public class CRUDTest {
 	@Test
 	public void findLikeTest() throws SQLException {
 		List<Entity> results = runner.findAll(Entity.create("user").set("name", "like \"%三%\""));
+		Assert.assertEquals(2, results.size());
+	}
+	
+	@Test
+//	@Ignore
+	public void findLikeTest2() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("name", new Condition("name", "三", LikeType.Contains)));
 		Assert.assertEquals(2, results.size());
 	}
 	

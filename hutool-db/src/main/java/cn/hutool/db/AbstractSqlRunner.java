@@ -513,7 +513,7 @@ public abstract class AbstractSqlRunner{
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findLike(String tableName, String field, String value, LikeType likeType) throws SQLException{
-		return findAll(Entity.create(tableName).set(field, DbUtil.buildLikeValue(value, likeType)));
+		return findAll(Entity.create(tableName).set(field, DbUtil.buildLikeValue(value, likeType, true)));
 	}
 	
 	/**

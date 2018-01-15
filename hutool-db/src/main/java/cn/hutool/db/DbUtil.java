@@ -609,8 +609,8 @@ public final class DbUtil {
 	 * @param likeType LIKE值类型 {@link LikeType}
 	 * @return 拼接后的like值
 	 */
-	public static String buildLikeValue(String value, LikeType likeType) {
-		StringBuilder likeValue = StrUtil.builder("LIKE ");
+	public static String buildLikeValue(String value, LikeType likeType, boolean withLikeKeyword) {
+		StringBuilder likeValue = StrUtil.builder(withLikeKeyword ? "LIKE " : "");
 		switch (likeType) {
 		case StartWith:
 			likeValue.append('%').append(value);

@@ -394,7 +394,7 @@ public class SqlConnRunner{
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findLike(Connection conn, String tableName, String field, String value, LikeType likeType) throws SQLException{
-		return findAll(conn, Entity.create(tableName).set(field, DbUtil.buildLikeValue(value, likeType)));
+		return findAll(conn, Entity.create(tableName).set(field, DbUtil.buildLikeValue(value, likeType, true)));
 	}
 	
 	/**

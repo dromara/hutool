@@ -115,7 +115,7 @@ public class Condition implements Cloneable {
 	public Condition(String field, String value, LikeType likeType) {
 		this.field = field;
 		this.operator = OPERATOR_LIKE;
-		this.value = DbUtil.buildLikeValue(value, likeType);
+		this.value = DbUtil.buildLikeValue(value, likeType, false);
 	}
 	// --------------------------------------------------------------- Constructor start
 
