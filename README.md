@@ -91,7 +91,7 @@ compile 'cn.hutool:hutool-all:4.0.1'
 ### 非Maven项目
 可以从[http://search.maven.org/](http://search.maven.org/) 搜索`hutool all`找到项目，点击对应版本，下面是相应的Jar包，导入即可使用。
 
-[http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool-all%22](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.xiaoleilu%22%20AND%20a%3A%22hutool-all%22)
+[http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22cn.hutool%22%20AND%20a%3A%22hutool-all%22](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22cn.hutool%22%20AND%20a%3A%22hutool-all%22)
 
 点击链接后点选择对应版本，点击列表尾部的“Download”下载jar、API文档、源码
 
