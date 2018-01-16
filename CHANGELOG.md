@@ -57,3 +57,4 @@
 * 修复ExcelReader空行导致空指针问题（pr#4@Gitee）
 * 修复BeanUtil.getProperty不能获取父类属性的问题
 * 修复BeanDesc类中boolean类型字段名为isXXX的情况无法注入问题
+* 解决类扫描后加载类中引用依赖导致的报错（感谢@【帝都】宁静）

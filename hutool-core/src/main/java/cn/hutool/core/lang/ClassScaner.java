@@ -256,7 +256,7 @@ public final class ClassScaner {
 				if (classFilter == null || classFilter.accept(clazz)) {
 					classes.add(clazz);
 				}
-			} catch (Exception ex) {
+			} catch (Throwable ex) {
 				// Pass Load Error.
 			}
 		}
