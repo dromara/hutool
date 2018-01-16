@@ -16,6 +16,7 @@
 * 新增CsvReader,CSV读取
 * HttpRequest支持可选get请求下的url参数编码
 * ExcelReader增加read重载方法，ExcelUtil增加isEmpty(Sheet)方法（pr#5@Gitee）
+* db模块针对IS NULL优化
 
 ### Bug修复
 * 修复db模块中数据库为下划线而Bean为驼峰导致的注入失败问题（感谢@【广西】Succy）
