@@ -10,8 +10,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.CollUtil.Hash;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Editor;
@@ -95,6 +93,40 @@ public class CollUtilTest {
 		Assert.assertTrue(disjunction2.contains("b"));
 		Assert.assertTrue(disjunction2.contains("x2"));
 		Assert.assertTrue(disjunction2.contains("x"));
+	}
+	
+	@Test
+	public void disjunctionTest2() {
+		//任意一个集合为空，差集为另一个集合
+		ArrayList<String> list1 = CollectionUtil.newArrayList();
+		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
+		
+		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
+		Assert.assertEquals(list2, disjunction);
+		Collection<String> disjunction2 = CollectionUtil.disjunction(list2, list1);
+		Assert.assertEquals(list2, disjunction2);
+	}
+	
+	@Test
+	public void disjunctionTest3() {
+		//无交集下返回共同的元素
+		ArrayList<String> list1 = CollectionUtil.newArrayList("1", "2", "3");
+		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "c");
+		
+		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
+		Assert.assertTrue(disjunction.contains("1"));
+		Assert.assertTrue(disjunction.contains("2"));
+		Assert.assertTrue(disjunction.contains("3"));
+		Assert.assertTrue(disjunction.contains("a"));
+		Assert.assertTrue(disjunction.contains("b"));
+		Assert.assertTrue(disjunction.contains("c"));
+		Collection<String> disjunction2 = CollectionUtil.disjunction(list2, list1);
+		Assert.assertTrue(disjunction2.contains("1"));
+		Assert.assertTrue(disjunction2.contains("2"));
+		Assert.assertTrue(disjunction2.contains("3"));
+		Assert.assertTrue(disjunction2.contains("a"));
+		Assert.assertTrue(disjunction2.contains("b"));
+		Assert.assertTrue(disjunction2.contains("c"));
 	}
 
 	@Test

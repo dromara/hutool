@@ -1634,6 +1634,37 @@ public class StrUtil {
 		System.arraycopy(array, 0, array, n, size - n);
 		return new String(array);
 	}
+	
+	/**
+	 * 重复某个字符串并通过分界符连接
+	 * <pre>
+	 * StrUtil.repeatAndJoin("?", 5, ",")   = "?,?,?,?,?"
+	 * StrUtil.repeatAndJoin("?", 0, ",")   = ""
+	 * StrUtil.repeatAndJoin("?", 5, null) = "?????"
+	 * </pre>
+	 * 
+	 * @param str 被重复的字符串
+	 * @param count 数量
+	 * @param conjunction 分界符
+	 * @return 连接后的字符串
+	 * @since 4.0.1
+	 */
+	public static String repeatAndJoin(CharSequence str, int count, CharSequence conjunction) {
+		if(count <= 0) {
+			return EMPTY;
+		}
+		final StrBuilder builder = StrBuilder.create();
+		boolean isFirst = true;
+		while(count-- > 0) {
+			if(isFirst) {
+				isFirst = false;
+			}else if(isNotEmpty(conjunction)){
+				builder.append(conjunction);
+			}
+			builder.append(str);
+		}
+		return builder.toString();
+	}
 
 	/**
 	 * 比较两个字符串（大小写敏感）。

@@ -439,6 +439,9 @@ public final class DbUtil {
 					}else if(param instanceof BigDecimal) {
 						//BigDecimal的转换交给JDBC驱动处理
 						ps.setBigDecimal(paramIndex, (BigDecimal)param);
+					} else {
+						//普通数字类型按照默认传入
+						ps.setObject(paramIndex, param);
 					}
 				} else {
 					ps.setObject(paramIndex, param);
@@ -610,6 +613,10 @@ public final class DbUtil {
 	 * @return 拼接后的like值
 	 */
 	public static String buildLikeValue(String value, LikeType likeType, boolean withLikeKeyword) {
+		if(null == value) {
+			return value;
+		}
+		
 		StringBuilder likeValue = StrUtil.builder(withLikeKeyword ? "LIKE " : "");
 		switch (likeType) {
 		case StartWith:

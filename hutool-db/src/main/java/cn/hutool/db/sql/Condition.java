@@ -206,17 +206,43 @@ public class Condition implements Cloneable {
 	 * 是否 between x and y 类型
 	 *
 	 * @return 是否 between x and y 类型
+	 * @since 4.0.1
 	 */
-	public boolean isBetween() {
+	public boolean isOperatorBetween() {
 		return OPERATOR_BETWEEN.equalsIgnoreCase(this.operator);
 	}
-	
+
 	/**
 	 * 是否IN条件
+	 * 
 	 * @return 是否IN条件
+	 * @since 4.0.1
 	 */
-	public boolean isIn() {
+	public boolean isOperatorIn() {
 		return OPERATOR_IN.equalsIgnoreCase(this.operator);
+	}
+
+	/**
+	 * 是否IS条件
+	 * 
+	 * @return 是否IS条件
+	 * @since 4.0.1
+	 */
+	public boolean isOperatorIs() {
+		return OPERATOR_IS.equalsIgnoreCase(this.operator);
+	}
+
+	/**
+	 * 检查值是否为null，如果为null转换为 "IS NULL"形式
+	 * 
+	 * @return this
+	 */
+	public Condition checkValueNull() {
+		if (null == this.value) {
+			this.operator = OPERATOR_IS;
+			this.value = VALUE_NULL;
+		}
+		return this;
 	}
 
 	/**
@@ -287,6 +313,13 @@ public class Condition implements Cloneable {
 
 		valueStr = valueStr.trim();
 
+		// 处理"= null"和"is null"转换为"IS NULL"
+		if (StrUtil.equalsIgnoreCase("= null", valueStr) || StrUtil.equalsIgnoreCase("is null", valueStr)) {
+			this.operator = OPERATOR_IS;
+			this.value = VALUE_NULL;
+			return;
+		}
+
 		List<String> strs = StrUtil.split(valueStr, StrUtil.C_SPACE, 2);
 		if (strs.size() < 2) {
 			return;
@@ -320,43 +353,37 @@ public class Condition implements Cloneable {
 			this.secondValue = unwrapQuote(betweenValueStrs.get(1));
 			return;
 		}
-
-		// 处理= null转换为is null
-		if (StrUtil.equalsIgnoreCase("= null", valueStr)) {
-			this.operator = OPERATOR_IS;
-			this.value = VALUE_NULL;
-			return;
-		}
 	}
-	
-	//----------------------------------------------------------------------------------------------- Private method start
+
+	// ----------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 去掉包围在字符串两端的单引号或双引号
+	 * 
 	 * @param value 值
 	 * @return 去掉引号后的值
 	 */
 	private static String unwrapQuote(String value) {
-		if(null == value) {
+		if (null == value) {
 			return null;
 		}
 		value = value.trim();
-		
+
 		int from = 0;
 		int to = value.length();
 		char startChar = value.charAt(0);
-		char endChar = value.charAt(to -1);
-		if(startChar == endChar) {
-			if('\'' == startChar || '"' == startChar) {
+		char endChar = value.charAt(to - 1);
+		if (startChar == endChar) {
+			if ('\'' == startChar || '"' == startChar) {
 				from = 1;
-				to = to -1;
+				to = to - 1;
 			}
 		}
-		
-		if(from == 0 && to == value.length()) {
-			//并不包含，返回原值
+
+		if (from == 0 && to == value.length()) {
+			// 并不包含，返回原值
 			return value;
 		}
 		return value.substring(from, to);
 	}
-	//----------------------------------------------------------------------------------------------- Private method end
+	// ----------------------------------------------------------------------------------------------- Private method end
 }

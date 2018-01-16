@@ -170,4 +170,16 @@ public class StrUtilTest {
 		Assert.assertEquals("abcde", StrUtil.subSufByLength("abcde", 5));
 		Assert.assertEquals("abcde", StrUtil.subSufByLength("abcde", 10));
 	}
+	
+	@Test
+	public void repeatAndJoinTest() {
+		String repeatAndJoin = StrUtil.repeatAndJoin("?", 5, ",");
+		Assert.assertEquals("?,?,?,?,?", repeatAndJoin);
+		
+		repeatAndJoin = StrUtil.repeatAndJoin("?", 0, ",");
+		Assert.assertEquals("", repeatAndJoin);
+		
+		repeatAndJoin = StrUtil.repeatAndJoin("?", 5, null);
+		Assert.assertEquals("?????", repeatAndJoin);
+	}
 }

@@ -35,6 +35,24 @@ public class CRUDTest {
 	public void init() {
 		runner = SqlRunner.create();
 	}
+	
+	@Test
+	public void findIsNullTest() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("age", "is null"));
+		Assert.assertEquals(0, results.size());
+	}
+	
+	@Test
+	public void findIsNullTest2() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("age", "= null"));
+		Assert.assertEquals(0, results.size());
+	}
+	
+	@Test
+	public void findIsNullTest3() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("age", null));
+		Assert.assertEquals(0, results.size());
+	}
 
 	@Test
 	public void findBetweenTest() throws SQLException {
@@ -67,6 +85,12 @@ public class CRUDTest {
 	}
 	
 	@Test
+	public void findLikeTest3() throws SQLException {
+		List<Entity> results = runner.findAll(Entity.create("user").set("name", new Condition("name", null, LikeType.Contains)));
+		Assert.assertEquals(0, results.size());
+	}
+	
+	@Test
 	public void findInTest() throws SQLException {
 		List<Entity> results = runner.findAll(Entity.create("user").set("id", "in 1,2,3"));
 		Assert.assertEquals(2, results.size());
@@ -84,6 +108,18 @@ public class CRUDTest {
 		Assert.assertEquals(3, results.size());
 	}
 
+	@Test
+	public void findTest() throws SQLException {
+		List<Entity> find = runner.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		Assert.assertFalse(find.isEmpty());
+	}
+	
+	@Test
+	public void findActiveTest() throws SQLException {
+		ActiveEntity find = runner.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new ActiveEntityHandler());
+		Assert.assertEquals("user", find.getTableName());
+	}
+	
 	/**
 	 * 对增删改查做单元测试
 	 * 
@@ -110,18 +146,6 @@ public class CRUDTest {
 		Assert.assertTrue(del > 0);
 		Entity result3 = runner.get("user", "name", "unitTestUser");
 		Assert.assertNull(result3);
-	}
-
-	@Test
-	public void findTest() throws SQLException {
-		List<Entity> find = runner.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
-		Assert.assertFalse(find.isEmpty());
-	}
-	
-	@Test
-	public void findActiveTest() throws SQLException {
-		ActiveEntity find = runner.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new ActiveEntityHandler());
-		Assert.assertEquals("user", find.getTableName());
 	}
 
 	@Test
