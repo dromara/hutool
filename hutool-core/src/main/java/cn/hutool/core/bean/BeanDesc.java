@@ -137,11 +137,14 @@ public class BeanDesc {
 			if (fieldType == Boolean.class || fieldType == boolean.class) {
 				// Boolean和boolean类型特殊处理
 				fieldName = StrUtil.removePrefix(fieldName, "is");
+				//寻找isXXX方法
 				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.upperFirstAndAddPre(fieldName, "is"));
 				if (null == getter) {
+					//寻找getXXX方法
 					getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
 				}
 			}else {
+				//寻找 getXXX方法
 				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
 			}
 			setter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genSetter(fieldName), field.getType());
