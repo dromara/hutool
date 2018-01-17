@@ -62,7 +62,7 @@
 
 	<issueManagement>
 		<system>Github Issue</system>
-		<url>https://github.com/looly/hutool3/issues</url>
+		<url>https://github.com/looly/hutool/issues</url>
 	</issueManagement>
 
 	<licenses>
