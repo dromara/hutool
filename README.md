@@ -26,7 +26,7 @@
 - hutool-setting         功能更强大的Setting配置文件和Properties封装
 - hutool-system        系统参数调用封装（JVM信息等）
 - hutool-json            JSON实现
-- hutool-captcha      二维码实现
+- hutool-captcha      图片验证码实现
 
 ## 简介
 Hutool是Hu + tool的自造词，前者致敬我的“前任公司”，后者为工具之意，谐音“糊涂”，寓意追求“万事都作糊涂观，无所谓失，无所谓得”的境界。

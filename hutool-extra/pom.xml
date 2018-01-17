@@ -72,12 +72,21 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-		
+
 		<!-- SSH安全连接所使用的类库 -->
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.54</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- 二维码 -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.3.1</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

@@ -8,7 +8,6 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -327,7 +326,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 * @return 获得所有分组名
 	 */
 	public List<String> getGroups() {
-		return Collections.unmodifiableList(this.groups);
+		return this.groups;
 	}
 	
 	//------------------------------------------------- Override Map interface
