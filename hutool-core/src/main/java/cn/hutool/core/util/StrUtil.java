@@ -734,7 +734,7 @@ public class StrUtil {
 	 * @param fieldName 属性名
 	 * @return getXxx
 	 */
-	public static String genGetter(String fieldName) {
+	public static String genGetter(CharSequence fieldName) {
 		return upperFirstAndAddPre(fieldName, "get");
 	}
 
@@ -746,8 +746,11 @@ public class StrUtil {
 	 * @param strToRemove 被移除的字符串
 	 * @return 移除后的字符串
 	 */
-	public static String removeAll(String str, CharSequence strToRemove) {
-		return str.replace(strToRemove, EMPTY);
+	public static String removeAll(CharSequence str, CharSequence strToRemove) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		return str.toString().replace(strToRemove, EMPTY);
 	}
 
 	/**

@@ -20,14 +20,14 @@ public class AES extends SymmetricCrypto {
 
 	//------------------------------------------------------------------------- Constrctor start
 	/**
-	 * 构造，默认AES/CBC/PKCS5Padding，使用随机密钥
+	 * 构造，默认AES/ECB/PKCS5Padding，使用随机密钥
 	 */
 	public AES() {
 		super(SymmetricAlgorithm.AES);
 	}
 
 	/**
-	 * 构造，使用默认的AES/CBC/PKCS5Padding
+	 * 构造，使用默认的AES/ECB/PKCS5Padding
 	 * 
 	 * @param key 密钥
 	 */

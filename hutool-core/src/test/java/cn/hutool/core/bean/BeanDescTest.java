@@ -49,12 +49,20 @@ public class BeanDescTest {
 		Assert.assertEquals("isGender", desc.getGetter("gender").getName());
 		Assert.assertEquals("setGender", desc.getSetter("gender").getName());
 	}
-
+	
+	@Test
+	public void propDescOfBooleanTest2() {
+		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		
+		Assert.assertEquals("isIsSuper", desc.getGetter("isSuper").getName());
+		Assert.assertEquals("setIsSuper", desc.getSetter("isSuper").getName());
+	}
 
 	public static class User {
 		private String name;
 		private int age;
 		private boolean isAdmin;
+		private boolean isSuper;
 		private boolean gender;
 
 		public String getName() {
@@ -84,6 +92,14 @@ public class BeanDescTest {
 
 		public void setAdmin(boolean isAdmin) {
 			this.isAdmin = isAdmin;
+		}
+		
+		public boolean isIsSuper() {
+			return isSuper;
+		}
+
+		public void setIsSuper(boolean isSuper) {
+			this.isSuper = isSuper;
 		}
 
 		public boolean isGender() {

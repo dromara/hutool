@@ -23,7 +23,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * Excel 写入器<br>
@@ -122,7 +121,7 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter(Workbook workbook, String sheetName) {
 		this.workbook = workbook;
-		this.sheet = workbook.createSheet(StrUtil.isBlank(sheetName) ? "sheet1" : sheetName);
+		this.sheet = ExcelUtil.getOrCreateSheet(workbook, sheetName);
 		this.styleSet = new StyleSet(workbook);
 	}
 
