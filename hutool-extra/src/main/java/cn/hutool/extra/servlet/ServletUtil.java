@@ -28,6 +28,8 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.servlet.multipart.MultipartFormData;
+import cn.hutool.extra.servlet.multipart.UploadSetting;
 
 /**
  * Servlet相关工具类封装
@@ -69,6 +71,38 @@ public class ServletUtil {
 			params.put( entry.getKey(), ArrayUtil.join(entry.getValue(), StrUtil.COMMA) );
 		}
 		return params;
+	}
+	
+	/**
+	 * 获取请求体<br>
+	 * 调用该方法后，getParam方法将失效
+	 * 
+	 * @param request {@link ServletRequest}
+	 * @return 获得请求体
+	 * @since 4.0.2
+	 */
+	public static String getBody(ServletRequest request){
+		try {
+			return IoUtil.read(request.getReader());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 获取请求体byte[]<br>
+	 * 调用该方法后，getParam方法将失效
+	 * 
+	 * @param request {@link ServletRequest}
+	 * @return 获得请求体byte[]
+	 * @since 4.0.2
+	 */
+	public static byte[] getBodyBytes(ServletRequest request){
+		try {
+			return IoUtil.readBytes(request.getInputStream());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 	// --------------------------------------------------------- getParam end
 
@@ -164,6 +198,40 @@ public class ServletUtil {
 
 		ip = request.getRemoteAddr();
 		return getMultistageReverseProxyIp(ip);
+	}
+	
+	/**
+	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
+	 * 
+	 * @param request {@link ServletRequest}
+	 * @return MultipartFormData
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.2
+	 */
+	public static MultipartFormData getMultipart(ServletRequest request) throws IORuntimeException {
+		return getMultipart(request);
+	}
+
+	/**
+	 * 获得multipart/form-data 表单内容<br>
+	 * 包括文件和普通表单数据<br>
+	 * 在同一次请求中，此方法只能被执行一次！
+	 * 
+	 * @param request {@link ServletRequest}
+	 * @param uploadSetting 上传文件的设定，包括最大文件大小、保存在内存的边界大小、临时目录、扩展名限定等
+	 * @return MultiPart表单
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.2
+	 */
+	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException{
+		final MultipartFormData formData = new MultipartFormData(uploadSetting);
+		try {
+			formData.parseRequest(request);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return formData;
 	}
 
 	// --------------------------------------------------------- Header start

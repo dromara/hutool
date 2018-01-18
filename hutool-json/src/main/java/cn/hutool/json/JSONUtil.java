@@ -551,6 +551,10 @@ public final class JSONUtil {
 			if (object instanceof Calendar) {
 				return ((Calendar) object).getTimeInMillis();
 			}
+			//枚举类保存其字符串形式（4.0.2新增）
+			if(object instanceof Enum) {
+				return object.toString();
+			}
 
 			// Java内部类不做转换
 			final Class<?> objectClass = object.getClass();

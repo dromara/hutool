@@ -15,9 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanResolver;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;

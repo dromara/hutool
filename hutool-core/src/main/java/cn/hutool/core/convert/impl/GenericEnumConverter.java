@@ -3,32 +3,32 @@ package cn.hutool.core.convert.impl;
 import cn.hutool.core.convert.AbstractConverter;
 
 /**
- * 无泛型检查的枚举转换器
+ * 泛型枚举转换器
  * 
+ * @param <E> 枚举类类型
  * @author Looly
  * @since 4.0.2
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public class EnumConverter extends AbstractConverter<Object> {
+public class GenericEnumConverter<E extends Enum<E>> extends AbstractConverter<E> {
 
-	private Class enumClass;
+	private Class<E> enumClass;
 	
 	/**
 	 * 构造
 	 * 
 	 * @param enumClass 转换成的目标Enum类
 	 */
-	public EnumConverter(Class enumClass) {
+	public GenericEnumConverter(Class<E> enumClass) {
 		this.enumClass = enumClass;
 	}
 
 	@Override
-	protected Object convertInternal(Object value) {
+	protected E convertInternal(Object value) {
 		return Enum.valueOf(enumClass, convertToStr(value));
 	}
 
 	@Override
-	public Class getTargetType() {
+	public Class<E> getTargetType() {
 		return this.enumClass;
 	}
 }

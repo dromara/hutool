@@ -8,6 +8,8 @@
 * [core] 优化BeanDesc，适配更多Getter和Setter方法
 * [extra] 增加基于zxing的二维码生成和解码（zxing可选依赖）
 * [core] 增加VersionComparator用于版本比较，同时添加StrUtil.compareVersion
+* [core] Convert支持Map、Bean之间的转换，新增BeanConverter和CastBeanConverter
+* [extra] ServletUtil中增加获取body和上传文件支持
 
 ### Bug修复
 * [setting] 修复clear方法未清空group的问题，store方法未换行问题，set方法分组丢失问题（感谢@【广西】Succy）

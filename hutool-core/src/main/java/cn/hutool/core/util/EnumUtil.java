@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,21 @@ public class EnumUtil {
 			list.add(ReflectUtil.getFieldValue(e, fieldName));
 		}
 		return list;
+	}
+
+	/**
+	 * 获取枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序
+	 * 
+	 * @param enumClass 枚举类
+	 * @return 枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序
+	 * @since 4.0.2
+	 */
+	public static <E extends Enum<E>> LinkedHashMap<String, E> getEnumMap(final Class<E> enumClass) {
+		final LinkedHashMap<String, E> map = new LinkedHashMap<String, E>();
+		for (final E e : enumClass.getEnumConstants()) {
+			map.put(e.name(), e);
+		}
+		return map;
 	}
 
 	/**

@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.convert.impl.CollectionConverter;
-import cn.hutool.core.convert.impl.EnumConverter;
+import cn.hutool.core.convert.impl.GenericEnumConverter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
@@ -439,7 +439,7 @@ public final class Convert {
 	 * @return Enum
 	 */
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
-		return (new EnumConverter<>(clazz)).convert(value, defaultValue);
+		return (new GenericEnumConverter<>(clazz)).convert(value, defaultValue);
 	}
 
 	/**
