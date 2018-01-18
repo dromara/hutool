@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * Bean字段排序器<br>
@@ -20,10 +21,16 @@ public class FieldComparator<T> implements Comparator<T>, Serializable {
 
 	private final Field field;
 
+	/**
+	 * 构造
+	 * 
+	 * @param beanClass Bean类
+	 * @param fieldName 字段名
+	 */
 	public FieldComparator(Class<T> beanClass, String fieldName) {
 		this.field = ClassUtil.getDeclaredField(beanClass, fieldName);
 		if(this.field == null){
-			throw new IllegalArgumentException("字段"+ fieldName+ "在类"+beanClass+"中不存在");
+			throw new IllegalArgumentException(StrUtil.format("Field [{}] not found in Class [{}]", fieldName, beanClass.getName()));
 		}
 	}
 
