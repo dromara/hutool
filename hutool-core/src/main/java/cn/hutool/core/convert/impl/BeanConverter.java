@@ -1,7 +1,11 @@
 package cn.hutool.core.convert.impl;
 
+import java.util.Map;
+
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.util.ReflectUtil;
 
@@ -45,7 +49,11 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 
 	@Override
 	protected T convertInternal(Object value) {
-		return BeanCopier.create(value, ReflectUtil.newInstanceIfPossible(this.beanClass), copyOptions).copy();
+		if(value instanceof Map || value instanceof ValueProvider || BeanUtil.isBean(value.getClass())) {
+			//限定被转换对象类型
+			return BeanCopier.create(value, ReflectUtil.newInstanceIfPossible(this.beanClass), copyOptions).copy();
+		}
+		return null;
 	}
 
 	@Override
