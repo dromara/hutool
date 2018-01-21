@@ -117,6 +117,14 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
+	
+	@Test
+	public void writeCellValueTest() {
+		ExcelWriter writer = new ExcelWriter("d:/cellValueTest.xls");
+		writer.writeCellValue(3, 5, "aaa");
+		writer.writeCellValue(3, 5, "aaa");
+		writer.close();
+	}
 
 	static class TestBean {
 		private String name;

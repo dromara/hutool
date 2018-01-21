@@ -113,7 +113,7 @@ public class NumberChineseFormater {
 				chineseStr += (isMoneyMode ? "元" : "点") + numArray[numJiao] + (isMoneyMode ? "角" : "");
 			} else { // “分”数不为 0
 				if (numJiao == 0) {
-					chineseStr += (isMoneyMode ? "元零" : "点零") + numArray[numFen] + (isMoneyMode ? "角" : "");
+					chineseStr += (isMoneyMode ? "元零" : "点零") + numArray[numFen] + (isMoneyMode ? "分" : "");
 				} else {
 					chineseStr += (isMoneyMode ? "元" : "点") + numArray[numJiao] + (isMoneyMode ? "角" : "") + numArray[numFen] + (isMoneyMode ? "分" : "");
 				}

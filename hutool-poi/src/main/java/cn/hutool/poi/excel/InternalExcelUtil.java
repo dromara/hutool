@@ -153,6 +153,36 @@ public class InternalExcelUtil {
 			cell.setCellValue(value.toString());
 		}
 	}
+	
+	/**
+	 * 获取已有行或创建新行
+	 * @param sheet Excel表
+	 * @param rowIndex 行号
+	 * @return {@link Row}
+	 * @since 4.0.2
+	 */
+	public static Cell getOrCreateCell(Row row, int cellIndex) {
+		Cell cell = row.getCell(cellIndex);
+		if(null == cell) {
+			cell = row.createCell(cellIndex);
+		}
+		return cell;
+	}
+	
+	/**
+	 * 获取已有行或创建新行
+	 * @param sheet Excel表
+	 * @param rowIndex 行号
+	 * @return {@link Row}
+	 * @since 4.0.2
+	 */
+	public static Row getOrCreateRow(Sheet sheet, int rowIndex) {
+		Row row = sheet.getRow(rowIndex);
+		if(null == row) {
+			row = sheet.createRow(rowIndex);
+		}
+		return row;
+	}
 
 	/**
 	 * 读取一行
