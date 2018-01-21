@@ -1107,7 +1107,7 @@ public class DateUtil {
 	 * @param beginDate 起始日期
 	 * @param endDate 结束日期
 	 * @param isReset 是否重置时间为起始时间（重置月天时分秒）
-	 * @return 相差月数
+	 * @return 相差年数
 	 * @since 3.0.8
 	 */
 	public static long betweenYear(Date beginDate, Date endDate, boolean isReset) {

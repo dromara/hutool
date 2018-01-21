@@ -118,7 +118,7 @@ public class DateBetween {
 	 * 在非重置情况下，如果起始日期的月小于结束日期的月，年数要少算1（不足1年）
 	 * 
 	 * @param isReset 是否重置时间为起始时间（重置月天时分秒）
-	 * @return 相差月数
+	 * @return 相差年数
 	 * @since 3.0.8
 	 */
 	public long betweenYear(boolean isReset) {

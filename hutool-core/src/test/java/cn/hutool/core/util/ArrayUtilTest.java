@@ -5,6 +5,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
@@ -134,5 +135,12 @@ public class ArrayUtilTest {
 		Assert.assertEquals(values[0], cast[0]);
 		Assert.assertEquals(values[1], cast[1]);
 		Assert.assertEquals(values[2], cast[2]);
+	}
+	
+	@Test
+	public void rangeTest() {
+		for(int i: ArrayUtil.range(0, 10)) {
+			Console.log(i);
+		}
 	}
 }
