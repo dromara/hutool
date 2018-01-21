@@ -119,6 +119,7 @@ public class ExcelWriteTest {
 	}
 	
 	@Test
+	@Ignore
 	public void writeCellValueTest() {
 		ExcelWriter writer = new ExcelWriter("d:/cellValueTest.xls");
 		writer.writeCellValue(3, 5, "aaa");
