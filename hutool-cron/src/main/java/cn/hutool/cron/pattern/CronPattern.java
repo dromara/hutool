@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
 import cn.hutool.cron.pattern.matcher.AlwaysTrueValueMatcher;
@@ -41,6 +42,7 @@ import cn.hutool.cron.pattern.parser.YearValueParser;
  * 
  * 当定时任务运行到的时间匹配这些表达式后，任务被启动。<br>
  * 注意：
+ * 
  * <pre>
  * 当isMatchSecond为<code>true</code>时才会匹配秒部分
  * 当isMatchYear为<code>true</code>时才会匹配年部分
@@ -57,8 +59,13 @@ import cn.hutool.cron.pattern.parser.YearValueParser;
  * <li><strong>cronA | cronB</strong>：表示多个定时表达式</li>
  * </ul>
  * 注意：在每一个子表达式中优先级：
- * <pre>间隔（/） &gt; 区间（-） &gt; 列表（,） </pre>
- * 例如 2,3,6/3中，由于“/”优先级高，因此相当于2,3,(6/3)，结果与 2,3,6等价<br><br>
+ * 
+ * <pre>
+ * 间隔（/） &gt; 区间（-） &gt; 列表（,）
+ * </pre>
+ * 
+ * 例如 2,3,6/3中，由于“/”优先级高，因此相当于2,3,(6/3)，结果与 2,3,6等价<br>
+ * <br>
  * 
  * 一些例子：
  * <ul>
@@ -113,28 +120,16 @@ public class CronPattern {
 		this.pattern = pattern;
 		parseGroupPattern(pattern);
 	}
-	
-	//--------------------------------------------------------------------------------------- match start
+
+	// --------------------------------------------------------------------------------------- match start
 	/**
-	 * 给定时间是否匹配定时任务表达式，不匹配秒和年
+	 * 给定时间是否匹配定时任务表达式
 	 * 
 	 * @param millis 时间毫秒数
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
 	public boolean match(long millis) {
-		return match(millis, false, false);
-	}
-
-	/**
-	 * 给定时间是否匹配定时任务表达式
-	 * 
-	 * @param millis 时间毫秒数
-	 * @param isMatchSecond 是否匹配秒
-	 * @param isMatchYear 是否匹配年
-	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
-	 */
-	public boolean match(long millis, boolean isMatchSecond, boolean isMatchYear) {
-		return match(TimeZone.getDefault(), millis, isMatchSecond, isMatchYear);
+		return match(TimeZone.getDefault(), millis);
 	}
 
 	/**
@@ -143,49 +138,46 @@ public class CronPattern {
 	 * @param timezone 时区 {@link TimeZone}
 	 * @param millis 时间毫秒数
 	 * @param isMatchSecond 是否匹配秒
-	 * @param isMatchYear 是否匹配年
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
-	public boolean match(TimeZone timezone, long millis, boolean isMatchSecond, boolean isMatchYear) {
+	public boolean match(TimeZone timezone, long millis) {
 		GregorianCalendar calendar = new GregorianCalendar(timezone);
 		calendar.setTimeInMillis(millis);
-		return match(calendar, isMatchSecond, isMatchYear);
+		return match(calendar);
 	}
 
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 * 
 	 * @param calendar 时间
-	 * @param isMatchSecond 是否匹配秒
-	 * @param isMatchYear 是否匹配年
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
-	public boolean match(GregorianCalendar calendar, boolean isMatchSecond, boolean isMatchYear) {
-		int second = calendar.get(Calendar.SECOND);
-		int minute = calendar.get(Calendar.MINUTE);
-		int hour = calendar.get(Calendar.HOUR_OF_DAY);
-		int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-		int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
-		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
-		int year = calendar.get(Calendar.YEAR);
+	public boolean match(GregorianCalendar calendar) {
+		final int second = calendar.get(Calendar.SECOND);
+		final int minute = calendar.get(Calendar.MINUTE);
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		final int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+		final int month = calendar.get(Calendar.MONTH) + 1;// 月份从1开始
+		final int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1; // 星期从0开始，0和7都表示周日
+		final int year = calendar.get(Calendar.YEAR);
 
 		boolean eval;
 		for (int i = 0; i < matcherSize; i++) {
-			eval = (isMatchSecond ? secondMatchers.get(i).match(second) : true) // 匹配秒
+			eval = secondMatchers.get(i).match(second) // 匹配秒
 					&& minuteMatchers.get(i).match(minute)// 匹配分
 					&& hourMatchers.get(i).match(hour)// 匹配时
 					&& isMatchDayOfMonth(dayOfMonthMatchers.get(i), dayOfMonth, month, calendar.isLeapYear(year))// 匹配日
 					&& monthMatchers.get(i).match(month) // 匹配月
 					&& dayOfWeekMatchers.get(i).match(dayOfWeek)// 匹配周
-					&& (isMatchYear ? yearMatchers.get(i).match(year) : true);// 匹配年
+					&& isMatch(yearMatchers, i, year);// 匹配年
 			if (eval) {
 				return true;
 			}
 		}
 		return false;
 	}
-	//--------------------------------------------------------------------------------------- match end
-	
+	// --------------------------------------------------------------------------------------- match end
+
 	@Override
 	public String toString() {
 		return this.pattern;
@@ -205,6 +197,19 @@ public class CronPattern {
 		return ((matcher instanceof DayOfMonthValueMatcher) //
 				? ((DayOfMonthValueMatcher) matcher).match(dayOfMonth, month, isLeapYear) //
 				: matcher.match(dayOfMonth));
+	}
+
+	/**
+	 * 是否匹配指定的日期时间位置
+	 * 
+	 * @param matchers 匹配器列表
+	 * @param index 位置
+	 * @param value 被匹配的值
+	 * @return 是否匹配
+	 * @since 4.0.2
+	 */
+	private static boolean isMatch(List<ValueMatcher> matchers, int index, int value) {
+		return (matchers.size() > index) ? matchers.get(index).match(value) : true;
 	}
 
 	/**
@@ -241,8 +246,8 @@ public class CronPattern {
 			} catch (Exception e) {
 				throw new CronException(e, "Invalid pattern [{}], parsing 'second' field error!", pattern);
 			}
-		} else {// 不支持秒的表达式，全部匹配
-			this.secondMatchers.add(new AlwaysTrueValueMatcher());
+		} else {// 不支持秒的表达式，则第一位按照表达式生成时间的秒数赋值，表示整分匹配
+			this.secondMatchers.add(ValueMatcherBuilder.build(String.valueOf(DateUtil.date().second()), SECOND_VALUE_PARSER));
 		}
 		// 分
 		try {

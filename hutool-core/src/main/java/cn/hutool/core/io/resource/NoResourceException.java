@@ -1,33 +1,35 @@
-package cn.hutool.core.io;
+package cn.hutool.core.io.resource;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * IO运行时异常，常用于对IOException的包装
+ * 资源文件或资源不存在异常
  * 
  * @author xiaoleilu
+ * @since 4.0.2
  */
-public class IORuntimeException extends RuntimeException {
-	private static final long serialVersionUID = 8247610319171014183L;
+public class NoResourceException extends IORuntimeException {
+	private static final long serialVersionUID = -623254467603299129L;
 
-	public IORuntimeException(Throwable e) {
+	public NoResourceException(Throwable e) {
 		super(ExceptionUtil.getMessage(e), e);
 	}
 
-	public IORuntimeException(String message) {
+	public NoResourceException(String message) {
 		super(message);
 	}
 
-	public IORuntimeException(String messageTemplate, Object... params) {
+	public NoResourceException(String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params));
 	}
 
-	public IORuntimeException(String message, Throwable throwable) {
+	public NoResourceException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public IORuntimeException(Throwable throwable, String messageTemplate, Object... params) {
+	public NoResourceException(Throwable throwable, String messageTemplate, Object... params) {
 		super(StrUtil.format(messageTemplate, params), throwable);
 	}
 

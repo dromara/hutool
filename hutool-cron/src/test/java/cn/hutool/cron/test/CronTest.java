@@ -19,7 +19,7 @@ public class CronTest {
 		
 		//任何时间匹配
 		pattern = new CronPattern("* * * * *");
-		Assert.assertTrue(pattern.match(DateUtil.current(false), false, false));
+		Assert.assertTrue(pattern.match(DateUtil.current(false)));
 		
 		//12:11匹配
 		pattern = new CronPattern("11 12 * * *");
@@ -89,6 +89,6 @@ public class CronTest {
 	 * @param date 日期，标准日期时间字符串
 	 */
 	private void assertMatch(CronPattern pattern, String date){
-		Assert.assertTrue(pattern.match(DateUtil.parse(date).getTime(), false, false));
+		Assert.assertTrue(pattern.match(DateUtil.parse(date).getTime()));
 	}
 }

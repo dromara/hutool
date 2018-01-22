@@ -14,12 +14,14 @@
 * [core] 增加OptArrayTypeGetter接口
 * [http] HttpUtil增加decodeParamMap方法，返回单值map（感谢@【帝都】宁静）
 * [poi] ExcelWriter增加writeCellValue方法
+* [cron] 去除CronUtil以及Scheduler中的isMatchYear方法（年的匹配通过表达式自动判断）
 
 ### Bug修复
 * [setting] 修复clear方法未清空group的问题，store方法未换行问题，set方法分组丢失问题（感谢@【广西】Succy）
 * [json] 修复Map嵌套转JSONObject时判断失误导致的值错误（issue#@Gitee）
 * [core] 修复betweenYear注释错误（感谢@【常州】在校学生）
 * [core] 修复Convert.digitToChinese方法中角为0时显示问题（issue#IHHE1@Gitee）
+* [cron] 修复在秒匹配模式下5位表达式执行异常问题，修复cron.setting文件不存在报错问题
 
 -------------------------------------------------------------------------------------------------------------
 

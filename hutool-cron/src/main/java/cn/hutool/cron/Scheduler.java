@@ -53,8 +53,6 @@ public class Scheduler {
 	private boolean started = false;
 	/** 是否支持秒匹配 */
 	protected boolean matchSecond = false;
-	/** 是否支持年匹配 */
-	protected boolean matchYear = false;
 	/** 是否为守护线程 */
 	protected boolean daemon;
 
@@ -134,26 +132,6 @@ public class Scheduler {
 	 */
 	public Scheduler setMatchSecond(boolean isMatchSecond) {
 		this.matchSecond = isMatchSecond;
-		return this;
-	}
-
-	/**
-	 * 是否支持年匹配
-	 * 
-	 * @return <code>true</code>使用，<code>false</code>不使用
-	 */
-	public boolean isMatchYear() {
-		return this.matchYear;
-	}
-
-	/**
-	 * 设置是否支持年匹配，默认不使用
-	 * 
-	 * @param isMatchYear <code>true</code>支持，<code>false</code>不支持
-	 * @return this
-	 */
-	public Scheduler setMatchYear(boolean isMatchYear) {
-		this.matchYear = isMatchYear;
 		return this;
 	}
 
@@ -295,6 +273,26 @@ public class Scheduler {
 	 */
 	public Task getTask(String id) {
 		return this.taskTable.getTask(id);
+	}
+
+	/**
+	 * 是否无任务
+	 * 
+	 * @return true表示无任务
+	 * @since 4.0.2
+	 */
+	public boolean isEmpty() {
+		return this.taskTable.isEmpty();
+	}
+
+	/**
+	 * 当前任务数
+	 * 
+	 * @return 当前任务数
+	 * @since 4.0.2
+	 */
+	public int size() {
+		return this.taskTable.size();
 	}
 	// -------------------------------------------------------------------- shcedule end
 

@@ -48,7 +48,7 @@ public class UrlResource implements Resource{
 	@Override
 	public InputStream getStream(){
 		if(null == this.url){
-			throw new IORuntimeException("Resource [{}] not exist!", this.url);
+			throw new NoResourceException("Resource [{}] not exist!", this.url);
 		}
 		return URLUtil.getStream(url);
 	}
