@@ -15,9 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanResolver;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
@@ -151,8 +151,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value, ignoreNullValue));
 					}
 				}
-			} else if (source instanceof String) {
-				init((String) source);
+			} else if (source instanceof CharSequence) {
+				//可能为JSON字符串
+				init((CharSequence) source);
 			} else if (source instanceof Number) {
 				// ignore Number
 			} else {
@@ -191,8 +192,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
 	 * @exception JSONException JSON字符串语法错误
 	 */
-	public JSONObject(String source) throws JSONException {
-		this(new JSONTokener(source));
+	public JSONObject(CharSequence source) throws JSONException {
+		this(new JSONTokener(StrUtil.str(source)));
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
@@ -674,8 +675,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 
 	 * @param source JSON字符串
 	 */
-	private void init(String source) {
-		init(new JSONTokener(source));
+	private void init(CharSequence source) {
+		init(new JSONTokener(source.toString()));
 	}
 
 	/**

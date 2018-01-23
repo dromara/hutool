@@ -118,6 +118,7 @@ public class BeanDesc {
 		return null == desc ? null : desc.getSetter();
 	}
 
+	//------------------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 初始化<br>
 	 * 只有与属性关联的相关Getter和Setter方法才会被读取，无关的getXXX和setXXX都被忽略
@@ -125,30 +126,143 @@ public class BeanDesc {
 	 * @return this
 	 */
 	private BeanDesc init() {
-		final Field[] fields = ReflectUtil.getFields(this.beanClass);
-
-		String fieldName;
-		Class<?> fieldType;
-		Method getter;
-		Method setter;
-		for (Field field : fields) {
-			fieldName = field.getName();
-			fieldType = field.getType();
-			if (fieldType == Boolean.class || fieldType == boolean.class) {
-				// Boolean和boolean类型特殊处理
-				fieldName = StrUtil.removePrefix(fieldName, "is");
-				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.upperFirstAndAddPre(fieldName, "is"));
-				if (null == getter) {
-					getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
-				}
-			}else {
-				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
-			}
-			setter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genSetter(fieldName), field.getType());
-			this.propMap.put(field.getName(), new PropDesc(field, getter, setter));
+		for (Field field : ReflectUtil.getFields(this.beanClass)) {
+			this.propMap.put(field.getName(), createProp(field));
 		}
 		return this;
 	}
+
+	/**
+	 * 创建属性描述
+	 * 
+	 * @param field 字段
+	 * @return {@link PropDesc}
+	 * @since 4.0.2
+	 */
+	private PropDesc createProp(Field field) {
+		final String fieldName = field.getName();
+		final Class<?> fieldType = field.getType();
+		final boolean isBooeanField = (fieldType == Boolean.class || fieldType == boolean.class);
+
+		Method getter = null;
+		Method setter = null;
+
+		String methodName;
+		Class<?>[] parameterTypes;
+		for (Method method : ReflectUtil.getMethods(this.beanClass)) {
+			parameterTypes = method.getParameterTypes();
+			if (parameterTypes.length > 1) {
+				// 多于1个参数说明非Getter或Setter
+				continue;
+			}
+
+			methodName = method.getName();
+			if (parameterTypes.length == 0) {
+				// 无参数，可能为Getter方法
+				if (isMatchGetter(methodName, fieldName, isBooeanField)) {
+					// 方法名与字段名匹配，则为Getter方法
+					getter = method;
+				}
+			} else if (isMatchSetter(methodName, fieldName, isBooeanField)) {
+				// 只有一个参数的情况下方法名与字段名对应匹配，则为Setter方法
+				setter = method;
+			}
+			if (null != getter && null != setter) {
+				// 如果Getter和Setter方法都找到了，不再继续寻找
+				break;
+			}
+		}
+		return new PropDesc(field, getter, setter);
+	}
+
+	/**
+	 * 方法是否为Getter方法<br>
+	 * 匹配规则如下（忽略大小写）：
+	 * 
+	 * <pre>
+	 * 字段名    -》 方法名
+	 * isName  -》 isName
+	 * isName  -》 isIsName
+	 * isName  -》 getIsName
+	 * name     -》 isName
+	 * name     -》 getName
+	 * </pre>
+	 * 
+	 * @param methodName 方法名
+	 * @param fieldName 字段名
+	 * @param isBooeanField 是否为Boolean类型字段
+	 * @return 是否匹配
+	 */
+	private boolean isMatchGetter(String methodName, String fieldName, boolean isBooeanField) {
+		// 全部转为小写，忽略大小写比较
+		methodName = methodName.toLowerCase();
+		fieldName = fieldName.toLowerCase();
+
+		if (false == methodName.startsWith("get") && false == methodName.startsWith("is")) {
+			// 非标准Getter方法
+			return false;
+		}
+
+		//针对Boolean类型特殊检查
+		if (isBooeanField) {
+			if (fieldName.startsWith("is")) {
+				// 字段已经是is开头
+				if (methodName.equals(fieldName) // isName -》 isName
+						|| methodName.equals("get" + fieldName)// isName -》 getIsName
+						|| methodName.equals("is" + fieldName)// isName -》 isIsName
+				) {
+					return true;
+				}
+			} else if (methodName.equals("is" + fieldName)) {
+				//字段非is开头， name -》 isName
+				return true;
+			}
+		}
+
+		// 包括boolean的任何类型只有一种匹配情况：name -》 getName
+		return methodName.equals("get" + fieldName);
+	}
+
+	/**
+	 * 方法是否为Setter方法<br>
+	 * 匹配规则如下（忽略大小写）：
+	 * 
+	 * <pre>
+	 * 字段名    -》 方法名
+	 * isName  -》 setName
+	 * isName  -》 setIsName
+	 * name     -》 setName
+	 * </pre>
+	 * 
+	 * @param methodName 方法名
+	 * @param fieldName 字段名
+	 * @param isBooeanField 是否为Boolean类型字段
+	 * @return 是否匹配
+	 */
+	private boolean isMatchSetter(String methodName, String fieldName, boolean isBooeanField) {
+		// 全部转为小写，忽略大小写比较
+		methodName = methodName.toLowerCase();
+		fieldName = fieldName.toLowerCase();
+
+		// 非标准Setter方法跳过
+		if (false == methodName.startsWith("set")) {
+			return false;
+		}
+
+		//针对Boolean类型特殊检查
+		if (isBooeanField && fieldName.startsWith("is")) {
+			// 字段是is开头
+			if (methodName.equals("set" + StrUtil.removePrefix(fieldName, "is"))// isName -》 setName
+					|| methodName.equals("set" + fieldName)// isName -》 setIsName
+			) {
+				return true;
+			}
+		}
+
+		// 包括boolean的任何类型只有一种匹配情况：name -》 setName
+		return methodName.equals("set" + fieldName);
+	}
+	//------------------------------------------------------------------------------------------------------ Private method end
 
 	/**
 	 * 属性描述

@@ -6,9 +6,10 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -49,7 +50,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 
 	/** 分组 */
-	private final LinkedList<String> groups = new LinkedList<String>();
+	private final List<String> groups = new ArrayList<>();
 	/** 键值对存储 */
 	private final Map<Object, Object> map = new ConcurrentHashMap<>();
 	
@@ -286,7 +287,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	//--------------------------------------------------------------------------------- Functions
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置<br>
-	 * 持久化会不会保留之前的分组
+	 * 持久化不会保留之前的分组
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
@@ -320,9 +321,11 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	}
 	
 	/**
+	 * 获取所有分组
+	 * 
 	 * @return 获得所有分组名
 	 */
-	public LinkedList<String> getGroups() {
+	public List<String> getGroups() {
 		return this.groups;
 	}
 	
@@ -371,6 +374,12 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	 * @since 3.3.1
 	 */
 	public BasicSetting set(String key, String group, Object value) {
+		if(StrUtil.isNotBlank(group)) {
+			group = group.trim();
+			if(false == this.groups.contains(group)) {
+				this.groups.add(group);
+			}
+		}
 		this.put(keyWithGroup(key, group), value);
 		return this;
 	}
@@ -405,6 +414,7 @@ public class BasicSetting extends AbsSetting implements Map<Object, Object>{
 	@Override
 	public void clear() {
 		this.map.clear();
+		this.groups.clear();
 	}
 
 	@Override

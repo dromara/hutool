@@ -478,10 +478,10 @@ public final class JSONUtil {
 	 * @return 转义后的字符串
 	 */
 	public static String escape(String str) {
-		if(StrUtil.isEmpty(str)) {
+		if (StrUtil.isEmpty(str)) {
 			return str;
 		}
-		
+
 		final int len = str.length();
 		final StringBuilder builder = new StringBuilder(len);
 		char c;
@@ -534,7 +534,13 @@ public final class JSONUtil {
 		if (object == null) {
 			return JSONNull.NULL;
 		}
-		if (object instanceof JSON || JSONNull.NULL.equals(object) || object instanceof JSONString || object instanceof CharSequence || object instanceof Number || ObjectUtil.isBasicType(object)) {
+		if (object instanceof JSON //
+				|| JSONNull.NULL.equals(object) //
+				|| object instanceof JSONString //
+				|| object instanceof CharSequence //
+				|| object instanceof Number //
+				|| ObjectUtil.isBasicType(object) //
+		) {
 			return object;
 		}
 
@@ -543,6 +549,10 @@ public final class JSONUtil {
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
 				return new JSONArray(object, ignoreNullValue);
 			}
+			// JSONObject
+			if (object instanceof Map) {
+				return new JSONObject(object, ignoreNullValue);
+			}
 
 			// 日期类型特殊处理
 			if (object instanceof Date) {
@@ -550,6 +560,10 @@ public final class JSONUtil {
 			}
 			if (object instanceof Calendar) {
 				return ((Calendar) object).getTimeInMillis();
+			}
+			// 枚举类保存其字符串形式（4.0.2新增）
+			if (object instanceof Enum) {
+				return object.toString();
 			}
 
 			// Java内部类不做转换

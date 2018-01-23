@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -23,7 +24,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * Excel 写入器<br>
@@ -122,7 +122,7 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter(Workbook workbook, String sheetName) {
 		this.workbook = workbook;
-		this.sheet = workbook.createSheet(StrUtil.isBlank(sheetName) ? "sheet1" : sheetName);
+		this.sheet = ExcelUtil.getOrCreateSheet(workbook, sheetName);
 		this.styleSet = new StyleSet(workbook);
 	}
 
@@ -427,6 +427,21 @@ public class ExcelWriter implements Closeable {
 			writeHeadRow(aliasHeader(rowMap.keySet()));
 		}
 		writeRow(rowMap.values());
+		return this;
+	}
+	
+	/**
+	 * 给指定单元格赋值
+	 * @param x 列号，基于0
+	 * @param y 行号，基于0
+	 * @param value 值
+	 * @return this
+	 * @since 4.0.2
+	 */
+	public ExcelWriter writeCellValue(int x, int y, Object value) {
+		final Row row = InternalExcelUtil.getOrCreateRow(this.sheet, y);
+		final Cell cell = InternalExcelUtil.getOrCreateCell(row, x);
+		InternalExcelUtil.setCellValue(cell, value, styleSet);
 		return this;
 	}
 

@@ -3,7 +3,6 @@ package cn.hutool.core.io.resource;
 import java.net.URL;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
@@ -114,7 +113,7 @@ public class ClassPathResource extends UrlResource {
 			super.url = ClassLoader.getSystemResource(this.path);
 		}
 		if (null == super.url) {
-			throw new IORuntimeException("Resource of path [{}] not exist!", this.path);
+			throw new NoResourceException("Resource of path [{}] not exist!", this.path);
 		}
 	}
 

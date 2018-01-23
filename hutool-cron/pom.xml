@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-cron</artifactId>
@@ -18,11 +18,6 @@
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-core</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>cn.hutool</groupId>
-			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>

@@ -7,10 +7,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.json.JSONNull;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.json.test.bean.Seq;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
@@ -43,7 +41,7 @@ public class JSONObjectTest {
 	}
 	
 	@Test
-	public void parseTest(){
+	public void parseStringTest(){
 		String jsonStr = "{\"b\":\"value2\",\"c\":\"value3\",\"a\":\"value1\", \"d\": true, \"e\": null}";
 		JSONObject jsonObject = JSONUtil.parseObj(jsonStr);
 		Assert.assertEquals(jsonObject.get("a"), "value1");
@@ -64,10 +62,18 @@ public class JSONObjectTest {
 			//测试空字符串转对象
 			.put("doubleValue", "")
 			.put("beanValue", subJson)
-			.put("list", JSONUtil.createArray().put("a").put("b"));
+			.put("list", JSONUtil.createArray().put("a").put("b"))
+			.put("testEnum", "TYPE_A");
 		
 		TestBean bean = json.toBean(TestBean.class);
 		Assert.assertEquals("a", bean.getList().get(0));
+		Assert.assertEquals("b", bean.getList().get(1));
+		
+		Assert.assertEquals("strValue1", bean.getBeanValue().getValue1());
+		//BigDecimal转换检查
+		Assert.assertEquals(new BigDecimal("234"), bean.getBeanValue().getValue2());
+		//枚举转换检查
+		Assert.assertEquals(TestEnum.TYPE_A, bean.getTestEnum());
 	}
 	
 	@Test
@@ -111,6 +117,23 @@ public class JSONObjectTest {
 	}
 	
 	@Test
+	public void parseBeanTest2(){
+		TestBean bean = new TestBean();
+		bean.setDoubleValue(111.1);
+		bean.setIntValue(123);
+		bean.setList(CollUtil.newArrayList("a", "b", "c"));
+		bean.setStrValue("strTest");
+		bean.setTestEnum(TestEnum.TYPE_B);
+		
+		JSONObject json = JSONUtil.parseObj(bean, false);
+		//枚举转换检查
+		Assert.assertEquals("TYPE_B", json.get("testEnum"));
+		
+		TestBean bean2 = json.toBean(TestBean.class);
+		Assert.assertEquals(bean.toString(), bean2.toString());
+	}
+	
+	@Test
 	public void beanTransTest(){
 		UserA userA = new UserA();
 		userA.setA("A user");
@@ -147,6 +170,10 @@ public class JSONObjectTest {
 		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
 	}
 	
+	public static enum TestEnum{
+		TYPE_A, TYPE_B
+	}
+	
 	/**
 	 * 测试Bean
 	 * @author Looly
@@ -158,6 +185,7 @@ public class JSONObjectTest {
 		private Double doubleValue;
 		private subBean beanValue;
 		private List<String> list;
+		private TestEnum testEnum;
 		
 		public String getStrValue() {
 			return strValue;
@@ -189,10 +217,15 @@ public class JSONObjectTest {
 		public void setList(List<String> list) {
 			this.list = list;
 		}
-		
+		public TestEnum getTestEnum() {
+			return testEnum;
+		}
+		public void setTestEnum(TestEnum testEnum) {
+			this.testEnum = testEnum;
+		}
 		@Override
 		public String toString() {
-			return "TestBean [strValue=" + strValue + ", intValue=" + intValue + ", doubleValue=" + doubleValue + ", beanValue=" + beanValue + ", list=" + list + "]";
+			return "TestBean [strValue=" + strValue + ", intValue=" + intValue + ", doubleValue=" + doubleValue + ", beanValue=" + beanValue + ", list=" + list + ", testEnum=" + testEnum + "]";
 		}
 	}
 	

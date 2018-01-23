@@ -2,19 +2,20 @@
 package cn.hutool.cron;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.cron.task.Task;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.SettingRuntimeException;
 
 /**
  * 定时任务工具类<br>
- * 此工具持有一个全局{@link Scheduler}，所有定时任务在同一个调度器中执行
+ * 此工具持有一个全局{@link Scheduler}，所有定时任务在同一个调度器中执行<br>
+ * {@link #setMatchSecond(boolean)} 方法用于定义是否使用秒匹配模式，如果为true，则定时任务表达式中的第一位为秒，否则为分，默认是分
  * 
  * @author xiaoleilu
  *
  */
 public final class CronUtil {
-	// private final static Log log = StaticLog.get();
 
 	/** Crontab配置文件 */
 	public final static String CRONTAB_CONFIG_PATH = "config/cron.setting";
@@ -42,27 +43,19 @@ public final class CronUtil {
 	public static void setCronSetting(String cronSettingPath) {
 		try {
 			crontabSetting = new Setting(cronSettingPath, Setting.DEFAULT_CHARSET, false);
-		} catch (SettingRuntimeException e) {
-			// ignore setting file parse error
+		} catch (SettingRuntimeException | NoResourceException e) {
+			// ignore setting file parse error and no config error
 		}
 	}
 
 	/**
-	 * 设置是否支持秒匹配，默认不使用
+	 * 设置是否支持秒匹配<br>
+	 * 此方法用于定义是否使用秒匹配模式，如果为true，则定时任务表达式中的第一位为秒，否则为分，默认是分<br>
 	 * 
 	 * @param isMatchSecond <code>true</code>支持，<code>false</code>不支持
 	 */
 	public static void setMatchSecond(boolean isMatchSecond) {
 		scheduler.setMatchSecond(isMatchSecond);
-	}
-
-	/**
-	 * 设置是否支持年匹配，默认不使用
-	 * 
-	 * @param isMatchYear <code>true</code>支持，<code>false</code>不支持
-	 */
-	public static void setMatchYear(boolean isMatchYear) {
-		scheduler.setMatchYear(isMatchYear);
 	}
 
 	/**
@@ -120,7 +113,7 @@ public final class CronUtil {
 	}
 
 	/**
-	 * @return 获得cron4j的Scheduler对象
+	 * @return 获得Scheduler对象
 	 */
 	public static Scheduler getScheduler() {
 		return scheduler;

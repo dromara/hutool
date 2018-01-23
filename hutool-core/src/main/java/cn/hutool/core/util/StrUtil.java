@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
@@ -734,7 +735,7 @@ public class StrUtil {
 	 * @param fieldName 属性名
 	 * @return getXxx
 	 */
-	public static String genGetter(String fieldName) {
+	public static String genGetter(CharSequence fieldName) {
 		return upperFirstAndAddPre(fieldName, "get");
 	}
 
@@ -746,8 +747,11 @@ public class StrUtil {
 	 * @param strToRemove 被移除的字符串
 	 * @return 移除后的字符串
 	 */
-	public static String removeAll(String str, CharSequence strToRemove) {
-		return str.replace(strToRemove, EMPTY);
+	public static String removeAll(CharSequence str, CharSequence strToRemove) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		return str.toString().replace(strToRemove, EMPTY);
 	}
 
 	/**
@@ -2523,7 +2527,7 @@ public class StrUtil {
 	 * @param nullIsLess {@code null} 值是否排在前（null是否小于非空值）
 	 * @return 排序值。负数：str1 &lt; str2，正数：str1 &gt; str2, 0：str1 == str2
 	 */
-	public static int compareIgnoreCase(final CharSequence str1, final CharSequence str2, final boolean nullIsLess) {
+	public static int compareIgnoreCase(CharSequence str1, CharSequence str2, boolean nullIsLess) {
 		if (str1 == str2) {
 			return 0;
 		}
@@ -2534,6 +2538,29 @@ public class StrUtil {
 			return nullIsLess ? 1 : -1;
 		}
 		return str1.toString().compareToIgnoreCase(str2.toString());
+	}
+	
+	/**
+	 * 比较两个版本<br>
+	 * null版本排在最小：既：
+	 * <pre>
+	 * StrUtil.compareVersion(null, "v1") &lt; 0
+	 * StrUtil.compareVersion("v1", "v1")  = 0
+	 * StrUtil.compareVersion(null, null)   = 0
+	 * StrUtil.compareVersion("v1", null) &gt; 0
+	 * StrUtil.compareVersion("1.0.0", "1.0.2") &lt; 0
+	 * StrUtil.compareVersion("1.0.2", "1.0.2a") &lt; 0
+	 * StrUtil.compareVersion("1.13.0", "1.12.1c") &gt; 0
+	 * StrUtil.compareVersion("V0.0.20170102", "V0.0.20170101") &gt; 0
+	 * </pre>
+	 * 
+	 * @param version1 版本1
+	 * @param version2 版本2
+	 * @return 排序值。负数：version1 &lt; version2，正数：version1 &gt; version2, 0：version1 == version2
+	 * @since 4.0.2
+	 */
+	public static int compareVersion(CharSequence version1, CharSequence version2) {
+		return VersionComparator.INSTANCE.compare(str(version1), str(version2));
 	}
 
 	/**

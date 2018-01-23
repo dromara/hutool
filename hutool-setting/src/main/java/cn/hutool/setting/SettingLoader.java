@@ -1,9 +1,9 @@
 package cn.hutool.setting;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -151,10 +151,16 @@ public class SettingLoader {
  	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
-		Writer writer = null;
+		boolean isFirst = true;
+		BufferedWriter writer = null;
 		try {
 			writer = FileUtil.getWriter(absolutePath, charset, false);
 			for (Entry<Object, Object> entry : this.setting.entrySet()) {
+				if(isFirst) {
+					isFirst = false;
+				} else {
+					writer.newLine();
+				}
 				writer.write(StrUtil.format("{} {} {}", entry.getKey(), ASSIGN_FLAG, entry.getValue()));
 			}
 		} catch (IOException e) {

@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FastByteArrayOutputStream;
@@ -26,6 +28,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -586,6 +589,25 @@ public class HttpUtil {
 			builder.delTo(lastIndex);
 		}
 		return StrUtil.isBlank(urlPart) ? builder.toString() : urlPart + "?" + builder.toString();
+	}
+	
+	/**
+	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
+	 * 
+	 * @param paramsStr 参数字符串（或者带参数的Path）
+	 * @param charset 字符集
+	 * @return 参数Map
+	 * @since 4.0.2
+	 */
+	public static HashMap<String, String> decodeParamMap(String paramsStr, String charset) {
+		final Map<String, List<String>> paramsMap = decodeParams(paramsStr, charset);
+		final HashMap<String, String> result = MapUtil.newHashMap(paramsMap.size());
+		List<String> valueList;
+		for (Entry<String, List<String>> entry : paramsMap.entrySet()) {
+			valueList = entry.getValue();
+			result.put(entry.getKey(), CollUtil.isEmpty(valueList) ? null : valueList.get(0));
+		}
+		return result;
 	}
 
 	/**

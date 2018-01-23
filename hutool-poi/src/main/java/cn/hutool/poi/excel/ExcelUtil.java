@@ -334,6 +334,27 @@ public class ExcelUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 获取或者创建sheet表<br>
+	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
+	 * 
+	 * @param book 工作簿{@link Workbook}
+	 * @param sheetName 工作表名
+	 * @return 工作表{@link Sheet}
+	 * @since 4.0.2
+	 */
+	public static Sheet getOrCreateSheet(Workbook book, String sheetName) {
+		if(null == book) {
+			return null;
+		}
+		sheetName = StrUtil.isBlank(sheetName) ? "sheet1" : sheetName;
+		Sheet sheet = book.getSheet(sheetName);
+		if(null == sheet) {
+			sheet = book.createSheet(sheetName);
+		}
+		return sheet;
+	}
 
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
