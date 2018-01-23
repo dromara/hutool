@@ -5,6 +5,8 @@
 ## 4.0.2
 
 ### 新特性
+* 【core】新增LocalPortGenerater，本地端口生成器
+* 【extra】新增Sftp类，用于SFTP支持
 
 ### Bug修复
 

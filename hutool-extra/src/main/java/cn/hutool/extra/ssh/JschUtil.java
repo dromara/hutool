@@ -1,38 +1,38 @@
 package cn.hutool.extra.ssh;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.LocalPortGenerater;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * SSH安全连接相关工具类 此工具类用于维护一个到跳板机的通道，并将跳板机可访问的服务器端口映射到本地使用
+ * JSch是Java Secure Channel的缩写。JSch是一个SSH2的纯Java实现。它允许你连接到一个SSH服务器，并且可以使用端口转发，X11转发，文件传输等。<br>
  * 
  * @author Looly
  * @since 4.0.0
  */
 public class JschUtil {
 
-	/*--------------------------常量 start-------------------------------*/
 	/** 不使用SSH的值 */
 	public final static String SSH_NONE = "none";
-	/*--------------------------常量 start-------------------------------*/
 
-	/*--------------------------私有属性 start-------------------------------*/
-	/** SSH会话池，key：host，value：Session对象 */
-	private static Map<String, Session> sessionPool = new ConcurrentHashMap<String, Session>();
-	/** 备选的本地端口 */
-	private volatile static AtomicInteger alternativePort = new AtomicInteger(10000);
+	/** 本地端口生成器 */
+	private static final LocalPortGenerater portGenerater = new LocalPortGenerater(10000);
 	/** 锁 */
 	private static final Object lock = new Object();
-	/*--------------------------私有属性 start-------------------------------*/
 
 	/**
 	 * 生成一个本地端口，用于远程端口映射
@@ -40,12 +40,7 @@ public class JschUtil {
 	 * @return 未被使用的本地端口
 	 */
 	public static int generateLocalPort() {
-		int validPort = alternativePort.get();
-		// 获取可用端口
-		while (false == NetUtil.isUsableLocalPort(validPort)) {
-			validPort = alternativePort.incrementAndGet();
-		}
-		return validPort;
+		return portGenerater.generate();
 	}
 
 	/**
@@ -59,13 +54,13 @@ public class JschUtil {
 	 */
 	public static Session getSession(String sshHost, int sshPort, String sshUser, String sshPass) {
 		final String key = StrUtil.format("{}@{}:{}", sshUser, sshHost, sshPort);
-		Session session = sessionPool.get(key);
-		if(null == session) {
+		Session session = JschSessionPool.INSTANCE.get(key);
+		if (null == session) {
 			synchronized (lock) {
-				session = sessionPool.get(key);
-				if(null == session || false == session.isConnected()) {
+				session = JschSessionPool.INSTANCE.get(key);
+				if (null == session || false == session.isConnected()) {
 					session = openSession(sshHost, sshPort, sshUser, sshPass);
-					sessionPool.put(key, session);
+					JschSessionPool.INSTANCE.put(key, session);
 				}
 			}
 		}
@@ -108,7 +103,7 @@ public class JschUtil {
 	 * @return 成功与否
 	 * @throws JschRuntimeException 端口绑定失败异常
 	 */
-	public static boolean bindPort(Session session, String remoteHost, int remotePort, int localPort) throws JschRuntimeException{
+	public static boolean bindPort(Session session, String remoteHost, int remotePort, int localPort) throws JschRuntimeException {
 		if (session != null && session.isConnected()) {
 			try {
 				session.setPortForwardingL(localPort, remoteHost, remotePort);
@@ -156,6 +151,95 @@ public class JschUtil {
 	}
 
 	/**
+	 * 打开SFTP连接
+	 * 
+	 * @param session Session会话
+	 * @return {@link ChannelSftp}
+	 * @since 4.0.3
+	 */
+	public static ChannelSftp openSftp(Session session) {
+		Channel channel;
+		try {
+			channel = session.openChannel("sftp");
+			channel.connect();
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+		return (ChannelSftp) channel;
+	}
+	
+	/**
+	 * 创建Sftp
+	 * 
+	 * @param sshHost 远程主机
+	 * @param sshPort 远程主机端口
+	 * @param sshUser 远程主机用户名
+	 * @param sshPass 远程主机密码
+	 * @return {@link Sftp}
+	 * @since 4.0.3
+	 */
+	public static Sftp createSftp(String sshHost, int sshPort, String sshUser, String sshPass) {
+		return new Sftp(sshHost, sshPort, sshUser, sshPass);
+	}
+
+	/**
+	 * 打开Shell连接
+	 * 
+	 * @param session Session会话
+	 * @return {@link ChannelShell}
+	 * @since 4.0.3
+	 */
+	public static ChannelShell openShell(Session session) {
+		Channel channel;
+		try {
+			channel = session.openChannel("shell");
+			channel.connect();
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+		return (ChannelShell) channel;
+	}
+
+	/**
+	 * 打开Exec连接<br>
+	 * 获取ChannelExec后首先
+	 * 
+	 * @param session Session会话
+	 * @param cmd 命令
+	 * @param charset 发送和读取内容的编码
+	 * @return {@link ChannelExec}
+	 * @since 4.0.3
+	 */
+	public static String exec(Session session, String cmd, Charset charset) {
+		if (null == charset) {
+			charset = CharsetUtil.CHARSET_UTF_8;
+		}
+		ChannelExec channel;
+		try {
+			channel = (ChannelExec) session.openChannel("exec");
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+
+		channel.setCommand(StrUtil.bytes(cmd, charset));
+		channel.setInputStream(null);
+		channel.setErrStream(System.err);
+		InputStream in = null;
+		try {
+			channel.connect();// 执行命令 等待执行结束
+			in = channel.getInputStream();
+			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		} finally {
+			IoUtil.close(in);
+			close(channel);
+		}
+	}
+
+	/**
 	 * 关闭SSH连接会话
 	 * 
 	 * @param session SSH会话
@@ -167,29 +251,31 @@ public class JschUtil {
 	}
 
 	/**
+	 * 关闭会话通道
+	 * 
+	 * @param channel 会话通道
+	 * @since 4.0.3
+	 */
+	public static void close(Channel channel) {
+		if (channel != null && channel.isConnected()) {
+			channel.disconnect();
+		}
+	}
+
+	/**
 	 * 关闭SSH连接会话
 	 * 
 	 * @param key 主机，格式为user@host:port
 	 */
 	public static void close(String key) {
-		Session session = sessionPool.get(key);
-		if (session != null && session.isConnected()) {
-			session.disconnect();
-		}
-		sessionPool.remove(key);
+		JschSessionPool.INSTANCE.close(key);
 	}
 
 	/**
 	 * 关闭所有SSH连接会话
 	 */
 	public static void closeAll() {
-		Collection<Session> sessions = sessionPool.values();
-		for (Session session : sessions) {
-			if (session.isConnected()) {
-				session.disconnect();
-			}
-		}
-		sessionPool.clear();
+		JschSessionPool.INSTANCE.closeAll();
 	}
 
 }
