@@ -1,5 +1,6 @@
 package cn.hutool.extra.ssh;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jcraft.jsch.Session;
@@ -13,6 +14,7 @@ import com.jcraft.jsch.Session;
 public class JschUtilTest {
 	
 	@Test
+	@Ignore
 	public void bindPortTest() {
 		//新建会话，此会话用于ssh连接到跳板机（堡垒机），此处为10.1.1.1:22
 		Session session = JschUtil.getSession("10.1.1.1", 22, "test", "123456");

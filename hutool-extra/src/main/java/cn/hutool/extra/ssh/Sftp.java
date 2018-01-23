@@ -133,7 +133,6 @@ public class Sftp implements Closeable {
 	 * 删除文件
 	 * 
 	 * @param filePath 要删除的文件绝对路径
-	 * @param sftp
 	 */
 	public Sftp delFile(String filePath) {
 		try {
