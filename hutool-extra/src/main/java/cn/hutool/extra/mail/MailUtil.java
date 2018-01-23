@@ -6,7 +6,6 @@ import java.util.List;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -123,7 +122,6 @@ public class MailUtil {
 	 * @param files 附件列表
 	 */
 	public static void send(MailAccount mailAccount, Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
-		Console.log(mailAccount);
 		Mail.create(mailAccount)//
 				.to(tos.toArray(new String[tos.size()]))//
 				.setTitle(subject)//

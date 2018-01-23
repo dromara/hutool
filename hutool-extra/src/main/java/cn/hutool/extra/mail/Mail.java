@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -28,20 +29,22 @@ import cn.hutool.core.util.StrUtil;
  */
 public class Mail {
 
-	//邮件客户端
+	// 邮件客户端
 	private MailAccount mailAccount;
-	//收件人列表
+	// 收件人列表
 	private String[] tos;
-	//标题
+	// 标题
 	private String title;
-	//内容
+	// 内容
 	private String content;
-	//是否为HTML
+	// 是否为HTML
 	private boolean isHtml;
-	//附件列表
+	// 附件列表
 	private File[] files;
-	//正文编码
+	// 正文编码
 	private Charset charset = CharsetUtil.CHARSET_UTF_8;
+	/** 是否使用全局会话，默认为true */
+	private boolean useGlobalSession = true;
 
 	/**
 	 * 创建邮件客户端
@@ -91,7 +94,7 @@ public class Mail {
 	public Mail to(String... tos) {
 		return setTos(tos);
 	}
-	
+
 	/**
 	 * 设置收件人
 	 * 
@@ -157,6 +160,18 @@ public class Mail {
 		this.charset = charset;
 		return this;
 	}
+	
+	/**
+	 * 设置是否使用全局会话，默认为true
+	 * 
+	 * @param isUseGlobalSession 是否使用全局会话，默认为true
+	 * @return this
+	 * @since 4.0.2
+	 */
+	public Mail setUseGlobalSession(boolean isUseGlobalSession) {
+		this.useGlobalSession = isUseGlobalSession;
+		return this;
+	}
 	// --------------------------------------------------------------- Getters and Setters end
 
 	/**
@@ -192,7 +207,7 @@ public class Mail {
 	 * @throws MessagingException 消息异常
 	 */
 	private MimeMessage buildMsg() throws MessagingException {
-		final MimeMessage msg = new MimeMessage(createSession());
+		final MimeMessage msg = new MimeMessage(getSession(this.useGlobalSession));
 		// 发件人
 		msg.setFrom(InternalMailUtil.parseFirstAddress(this.mailAccount.getFrom(), this.charset));
 		// 标题
@@ -240,16 +255,23 @@ public class Mail {
 
 		return mainPart;
 	}
-	
+
 	/**
-	 * 创建邮件会话
+	 * 获取默认邮件会话<br>
+	 * 如果为全局单例的会话，则全局只允许一个邮件帐号，否则每次发送邮件会新建一个新的会话
 	 * 
-	 * @param mailAccount 邮件帐号信息
+	 * @param isSingleton 是否使用单例Session
 	 * @return 邮件会话 {@link Session}
+	 * @since 4.0.2
 	 */
-	private Session createSession() {
-		return Session.getDefaultInstance(mailAccount.getSmtpProps(), //
-				mailAccount.isAuth() ? new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass()) : null);
+	private Session getSession(boolean isSingleton) {
+		Authenticator authenticator = null;
+		if (mailAccount.isAuth()) {
+			authenticator = new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass());
+		}
+
+		return isSingleton ? Session.getDefaultInstance(mailAccount.getSmtpProps(), authenticator) //
+				: Session.getInstance(mailAccount.getSmtpProps(), authenticator);
 	}
 	// --------------------------------------------------------------- Private method end
 }

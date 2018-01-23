@@ -24,8 +24,10 @@ public class MailAccount implements Serializable {
 	private static final String SOCKEY_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 	private static final String SOCKEY_FACTORY_PORT = "smtp.socketFactory.port";
 	
+	private static final String MAIL_DEBUG = "mail.debug";
 
-	public static final String MAIL_SETTING_PATH = "config/mailAccount.setting";
+	public static final String MAIL_SETTING_PATH = "config/mail.setting";
+	public static final String MAIL_SETTING_PATH2 = "config/mailAccount.setting";
 
 	/** SMTP服务器域名 */
 	private String host;
@@ -39,6 +41,9 @@ public class MailAccount implements Serializable {
 	private String pass;
 	/** 发送方，遵循RFC-822标准 */
 	private String from;
+	
+	/** 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启 */
+	private boolean debug;
 	
 	//SSL
 	/** 使用 STARTTLS安全连接 */
@@ -184,6 +189,24 @@ public class MailAccount implements Serializable {
 	}
 	
 	/**
+	 * 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * @return 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * @since 4.0.2
+	 */
+	public boolean isDebug() {
+		return debug;
+	}
+
+	/**
+	 * 设置是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * @param debug 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * @since 4.0.2
+	 */
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+	
+	/**
 	 * 是否使用 STARTTLS安全连接
 	 * @return 是否使用 STARTTLS安全连接
 	 */
@@ -260,15 +283,17 @@ public class MailAccount implements Serializable {
 	public Properties getSmtpProps() {
 		final Properties p = new Properties();
 		p.put(SMTP_HOST, this.host);
-		p.put(SMTP_PORT, this.port);
-		p.put(SMTP_AUTH, this.auth);
-
+		p.put(SMTP_PORT, String.valueOf(this.port));
+		p.put(SMTP_AUTH, String.valueOf(this.auth));
+		
+		p.put(MAIL_DEBUG, String.valueOf(this.debug));
+		
 		// SSL
 		if(startttlsEnable) {
-			p.put(STARTTTLS_ENABLE, startttlsEnable);
+			p.put(STARTTTLS_ENABLE, String.valueOf(this.startttlsEnable));
 			p.put(SOCKEY_FACTORY, socketFactoryClass);
-			p.put(SOCKEY_FACTORY_FALLBACK, socketFactoryFallback);
-			p.put(SOCKEY_FACTORY_PORT, socketFactoryPort);
+			p.put(SOCKEY_FACTORY_FALLBACK, String.valueOf(this.socketFactoryFallback));
+			p.put(SOCKEY_FACTORY_PORT, String.valueOf(this.socketFactoryPort));
 		}
 		
 		return p;
