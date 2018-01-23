@@ -1126,7 +1126,7 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 将Base64编码的图像信息转为 {@link BufferedImage}
+	 * 将的图像bytes转为 {@link BufferedImage}
 	 * 
 	 * @param imageBytes 图像bytes
 	 * @return {@link BufferedImage}

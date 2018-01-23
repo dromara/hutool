@@ -1,11 +1,12 @@
 package cn.hutool.extra.mail;
 
+import java.util.Properties;
+
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.extra.mail.MailAccount;
-import cn.hutool.extra.mail.MailUtil;
 
 /**
  * 邮件发送测试
@@ -36,5 +37,15 @@ public class MailTest {
 //		account.setUser("hutool");
 		account.setPass("q1w2e3");
 //		MailUtil.send(account, "914104645@qq.com, loolly@aliyun.com", "测试", "邮件来自Hutool测试", true);
+	}
+	
+	@Test
+	public void mailAccountTest() {
+		MailAccount account = new MailAccount();
+		account.setFrom("hutool@yeah.net");
+		account.setDebug(true);
+		account.defaultIfEmpty();
+		Properties props = account.getSmtpProps();
+		Assert.assertEquals("true", props.getProperty("mail.debug"));
 	}
 }
