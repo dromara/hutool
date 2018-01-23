@@ -156,8 +156,8 @@ public class InternalExcelUtil {
 	
 	/**
 	 * 获取已有行或创建新行
-	 * @param sheet Excel表
-	 * @param rowIndex 行号
+	 * @param row Excel表的行
+	 * @param cellIndex 列号
 	 * @return {@link Row}
 	 * @since 4.0.2
 	 */

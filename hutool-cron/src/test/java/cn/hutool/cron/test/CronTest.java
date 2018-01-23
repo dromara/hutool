@@ -22,11 +22,11 @@ public class CronTest {
 		Assert.assertTrue(pattern.match(DateUtil.current(false)));
 		
 		//12:11匹配
-		pattern = new CronPattern("11 12 * * *");
+		pattern = new CronPattern("39 11 12 * * *");
 		assertMatch(pattern, "12:11:39");
 		
 		//每5分钟匹配，匹配分钟为：[0,5,10,15,20,25,30,35,40,45,50,55]
-		pattern = new CronPattern("*/5 * * * *");
+		pattern = new CronPattern("39 */5 * * * *");
 		assertMatch(pattern, "12:00:39");
 		assertMatch(pattern, "12:05:39");
 		assertMatch(pattern, "12:10:39");
@@ -41,31 +41,32 @@ public class CronTest {
 		assertMatch(pattern, "12:55:39");
 		
 		//2:01,3:01,4:01
-		pattern = new CronPattern("1 2-4 * * *");
+		pattern = new CronPattern("39 1 2-4 * * *");
 		assertMatch(pattern, "02:01:39");
 		assertMatch(pattern, "03:01:39");
 		assertMatch(pattern, "04:01:39");
 		
 		//2:01,3:01,4:01
-		pattern = new CronPattern("1 2,3,4 * * *");
+		pattern = new CronPattern("39 1 2,3,4 * * *");
 		assertMatch(pattern, "02:01:39");
 		assertMatch(pattern, "03:01:39");
 		assertMatch(pattern, "04:01:39");
 		
 		//08-07, 08-06
-		pattern = new CronPattern("0 0 6,7 8 *");
+		pattern = new CronPattern("39 0 0 6,7 8 *");
 		assertMatch(pattern, "2016-08-07 00:00:39");
 		assertMatch(pattern, "2016-08-06 00:00:39");
 		
 		//别名忽略大小写
-		pattern = new CronPattern("0 0 6,7 Aug *");
+		pattern = new CronPattern("39 0 0 6,7 Aug *");
 		assertMatch(pattern, "2016-08-06 00:00:39");
 		assertMatch(pattern, "2016-08-07 00:00:39");
-		pattern = new CronPattern("0 0 7 aug *");
+		
+		pattern = new CronPattern("39 0 0 7 aug *");
 		assertMatch(pattern, "2016-08-07 00:00:39");
 		
 		//星期四
-		pattern = new CronPattern("0 0 * * Thu");
+		pattern = new CronPattern("39 0 0 * * Thu");
 		assertMatch(pattern, "2017-02-09 00:00:39");
 		assertMatch(pattern, "2017-02-09 00:00:39");
 		
@@ -73,12 +74,12 @@ public class CronTest {
 	
 	@Test
 	public void quartzPatternTest() {
-		CronPattern pattern = new CronPattern("0 4 * * ?");
+		CronPattern pattern = new CronPattern("* 0 4 * * ?");
 		assertMatch(pattern, "2017-02-09 04:00:00");
 		assertMatch(pattern, "2017-02-19 04:00:33");
 		
-		//对于6位Quartz风格表达式，默认忽略第一位秒部分
-		pattern = new CronPattern("0 0 4 * * ?");
+		//6位Quartz风格表达式
+		pattern = new CronPattern("* 0 4 * * ?");
 		assertMatch(pattern, "2017-02-09 04:00:00");
 		assertMatch(pattern, "2017-02-19 04:00:33");
 	}

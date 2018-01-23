@@ -137,7 +137,6 @@ public class CronPattern {
 	 * 
 	 * @param timezone 时区 {@link TimeZone}
 	 * @param millis 时间毫秒数
-	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
 	public boolean match(TimeZone timezone, long millis) {
