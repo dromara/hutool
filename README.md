@@ -1,6 +1,6 @@
 ![封面](https://raw.githubusercontent.com/looly/hutool/master/docs/resources/hutool.jpg)
 
-[![Version](https://img.shields.io/badge/version-4.0.2-brightgreen.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22)
+[![Version](https://img.shields.io/badge/version-4.0.3-brightgreen.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![JDK 1.7](https://img.shields.io/badge/JDK-1.7-green.svg "JDK 1.7")]()
 
@@ -19,7 +19,7 @@
 - hutool-crypto          加密解密模块
 - hutool-db               JDBC封装后的数据操作，基于ActiveRecord思想
 - hutool-dfa              基于DFA模型的多关键字查找
-- hutool-extra            扩展模块，对第三方封装（模板引擎、邮件等）
+- hutool-extra            扩展模块，对第三方封装（模板引擎、邮件、Servlet、二维码等）
 - hutool-http             基于HttpUrlConnection的Http客户端封装
 - hutool-log              自动识别日志实现的日志门面
 - hutool-script           脚本执行封装，例如Javascript
@@ -77,13 +77,13 @@ Hutool始终是一个工具类而不是框架，这意味着它对项目的侵�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.0.2</version>
+    <version>4.0.3</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.0.2'
+compile 'cn.hutool:hutool-all:4.0.3'
 ```
 
 注：工具包的**版本**可以通过 [http://search.maven.org/](http://search.maven.org/) 搜索`hutool-all`找到项目。
