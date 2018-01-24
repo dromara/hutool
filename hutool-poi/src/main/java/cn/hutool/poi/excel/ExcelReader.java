@@ -17,6 +17,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.editors.TrimEditor;
 
@@ -249,18 +250,26 @@ public class ExcelReader implements Closeable{
 	 * @param endRowIndex 结束行（包含，从0开始计数）
 	 * @return 行的集合，一行使用List表示
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<List<Object>> read(int startRowIndex, int endRowIndex) {
-		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
+		checkNotClosed();
 		List<List<Object>> resultList = new ArrayList<>();
 
 		startRowIndex = Math.max(startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
 		endRowIndex = Math.min(endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
-		List<Object> rowList;
+		boolean isFirstLine = true;
+		List rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
 			rowList = readRow(sheet.getRow(i));
 			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
 				if(null == rowList) {
 					rowList = new ArrayList<>(0);
+				}
+				if(isFirstLine) {
+					isFirstLine = false;
+					if(MapUtil.isNotEmpty(headerAlias)) {
+						rowList = aliasHeader(rowList);
+					}
 				}
 				resultList.add(rowList);
 			}
@@ -288,7 +297,7 @@ public class ExcelReader implements Closeable{
 	 * @return Map的列表
 	 */
 	public List<Map<String, Object>> read(int headerRowIndex, int startRowIndex, int endRowIndex) {
-		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
+		checkNotClosed();
 		// 边界判断
 		final int firstRowNum = sheet.getFirstRowNum();
 		final int lastRowNum = sheet.getLastRowNum();
@@ -357,7 +366,7 @@ public class ExcelReader implements Closeable{
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> read(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> beanType) {
-		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
+		checkNotClosed();
 		final List<Map<String, Object>> mapList = read(headerRowIndex, startRowIndex, endRowIndex);
 		if (Map.class.isAssignableFrom(beanType)) {
 			return (List<T>) mapList;
@@ -401,6 +410,10 @@ public class ExcelReader implements Closeable{
 	 */
 	private List<String> aliasHeader(List<Object> headerList) {
 		final ArrayList<String> result = new ArrayList<>();
+		if(CollUtil.isEmpty(headerList)) {
+			return result;
+		}
+		
 		String header;
 		String alias = null;
 		for (Object headerObj : headerList) {
@@ -415,6 +428,13 @@ public class ExcelReader implements Closeable{
 			result.add(alias);
 		}
 		return result;
+	}
+	
+	/**
+	 * 检查是否未关闭状态
+	 */
+	private void checkNotClosed() {
+		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
 	}
 	// ------------------------------------------------------------------------------------------------------- Private methods end
 }

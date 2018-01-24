@@ -10,9 +10,10 @@
 * 【core】StrUtil增加replace（支持参数从某个位置开始）和replaceIgnoreCase方法（感谢@【贵阳】shadow ）
 * 【core】Number.equals方法迁移到CharUtil（NumberUtil中依旧保留）
 * 【extra】mail增加抄送和密送支持（感谢【成都】出错）
+* 【poi】ExcelReader别名在返回List时也被支持（第一行）
 
 ### Bug修复
-* 【core】修复获取子路劲bug（issue#IHI5K@Gitee）
+* 【core】修复获取子路径bug（issue#IHI5K@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

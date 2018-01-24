@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 
@@ -17,6 +18,32 @@ import cn.hutool.poi.excel.ExcelUtil;
  *
  */
 public class ExcelReadTest {
+	
+	@Test
+	public void aliasTest() {
+		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("alias.xlsx"));
+		Map<String,String> headerAlias = MapUtil.newHashMap();
+		headerAlias.put("用户姓名", "userName");
+		headerAlias.put("库房", "storageName");
+		headerAlias.put("盘点权限", "checkPerm");
+		headerAlias.put("领料审批权限", "allotAuditPerm");
+		reader.setHeaderAlias(headerAlias);
+		
+		//读取list时默认首个非空行为标题
+		List<List<Object>> read = reader.read();
+		Assert.assertEquals("userName", read.get(0).get(0));
+		Assert.assertEquals("storageName", read.get(0).get(1));
+		Assert.assertEquals("checkPerm", read.get(0).get(2));
+		Assert.assertEquals("allotAuditPerm", read.get(0).get(3));
+		
+		List<Map<String,Object>> readAll = reader.readAll();
+		for (Map<String, Object> map : readAll) {
+			Assert.assertTrue(map.containsKey("userName"));
+			Assert.assertTrue(map.containsKey("storageName"));
+			Assert.assertTrue(map.containsKey("checkPerm"));
+			Assert.assertTrue(map.containsKey("allotAuditPerm"));
+		}
+	}
 
 	@Test
 	public void excelReadTestOfEmptyLine() {
