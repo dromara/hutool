@@ -3,7 +3,10 @@ package cn.hutool.json;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -48,12 +51,14 @@ final class InternalJSONUtil {
 			((JSON) value).write(writer, indentFactor, indent);
 		} else if (value instanceof Map) {
 			new JSONObject((Map<?, ?>) value).write(writer, indentFactor, indent);
-		} else if (value instanceof Collection) {
-			new JSONArray((Collection<?>) value).write(writer, indentFactor, indent);
-		} else if (value.getClass().isArray()) {
+		} else if (value instanceof Iterable || value instanceof Iterator || value.getClass().isArray()) {
 			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
 			writer.write(NumberUtil.toStr((Number) value));
+		}else if (value instanceof Date) {
+			writer.write(String.valueOf(((Date) value).getTime()));
+		}else if (value instanceof Calendar) {
+			writer.write(String.valueOf(((Calendar) value).getTimeInMillis()));
 		} else if (value instanceof Boolean) {
 			writer.write(value.toString());
 		} else if (value instanceof JSONString) {
