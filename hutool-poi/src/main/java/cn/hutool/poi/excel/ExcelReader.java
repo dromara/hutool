@@ -408,6 +408,7 @@ public class ExcelReader implements Closeable{
 				header = headerObj.toString();
 				alias = this.headerAlias.get(header);
 				if (null == alias) {
+					//无别名则使用原标题
 					alias = header;
 				}
 			}
