@@ -7,6 +7,8 @@
 ### 新特性
 * 【core】新增LocalPortGenerater，本地端口生成器
 * 【extra】新增Sftp类，用于SFTP支持
+* 【core】StrUtil增加replace（支持参数从某个位置开始）和replaceIgnoreCase方法（感谢@【贵阳】shadow ）
+* 【core】Number.equals方法迁移到CharUtil（NumberUtil中依旧保留）
 
 ### Bug修复
 * 【core】修复获取子路劲bug（issue#IHI5K@Gitee）

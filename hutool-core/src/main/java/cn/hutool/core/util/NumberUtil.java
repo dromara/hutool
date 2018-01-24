@@ -1560,12 +1560,10 @@ public class NumberUtil {
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 是否相同
 	 * @since 3.2.1
+	 * @see CharUtil#equals(char, char, boolean)
 	 */
 	public static boolean equals(char c1, char c2, boolean ignoreCase) {
-		if (ignoreCase) {
-			return Character.toLowerCase(c1) == Character.toLowerCase(c2);
-		}
-		return c1 == c2;
+		return CharUtil.equals(c1, c2, ignoreCase);
 	}
 
 	/**

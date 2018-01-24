@@ -157,6 +157,25 @@ public abstract class HttpBase<T> {
 	}
 	
 	/**
+	 * 新增请求头<br>
+	 * 不覆盖原有请求头
+	 * 
+	 * @param headers 请求头
+	 * @return this
+	 * @since 4.0.3
+	 */
+	public T addHeaders(Map<String, String> headers) {
+		if(CollectionUtil.isEmpty(headers)) {
+			return (T)this;
+		}
+		
+		for (Entry<String,String> entry : headers.entrySet()) {
+			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), false);
+		}
+		return (T)this;
+	}
+	
+	/**
 	 * 移除一个头信息
 	 * @param name Header名
 	 * @return this
