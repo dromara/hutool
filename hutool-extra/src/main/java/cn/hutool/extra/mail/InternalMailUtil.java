@@ -2,6 +2,8 @@ package cn.hutool.extra.mail;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -15,6 +17,29 @@ import cn.hutool.core.util.ArrayUtil;
  * @since 3.2.3
  */
 public class InternalMailUtil {
+	
+	/**
+	 * 将多个字符串邮件地址转为{@link InternetAddress}列表<br>
+	 * 单个字符串地址可以是多个地址合并的字符串
+	 * 
+	 * @param addrStrs 地址数组
+	 * @param charset 编码（主要用于中文用户名的编码）
+	 * @return 地址数组
+	 * @since 4.0.3
+	 */
+	public static InternetAddress[] parseAddressFromStrs(String[] addrStrs, Charset charset) {
+		final List<InternetAddress> resultList = new ArrayList<>(addrStrs.length);
+		InternetAddress[] addrs;
+		for (int i = 0; i < addrStrs.length; i++) {
+			addrs = parseAddress(addrStrs[i], charset);
+			if(ArrayUtil.isNotEmpty(addrs)) {
+				for(int j = 0 ; j < addrs.length; j++) {
+					resultList.add(addrs[j]);
+				}
+			}
+		}
+		return resultList.toArray(new InternetAddress[resultList.size()]);
+	}
 	
 	/**
 	 * 解析第一个地址
@@ -50,6 +75,7 @@ public class InternalMailUtil {
 		} catch (AddressException e) {
 			throw new MailException(e);
 		}
+		//编码用户名
 		if (ArrayUtil.isNotEmpty(addresses)) {
 			for (InternetAddress internetAddress : addresses) {
 				try {
