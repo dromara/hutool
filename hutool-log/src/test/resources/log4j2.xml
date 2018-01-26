@@ -16,7 +16,7 @@
 			<!-- 控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch) -->
 			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
 			<!-- 输出日志的格式 -->
-			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36}:%L %M - %msg%xEx%n" />
+			<PatternLayout pattern="[%d{HH:mm:ss.SSS}][%-5level] %class{36}:%L %M - %msg%xEx%n" />
 		</Console>
 
 		<!-- 设置日志格式并配置日志压缩格式(service.log.年份.gz) -->

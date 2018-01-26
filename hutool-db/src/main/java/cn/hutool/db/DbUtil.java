@@ -797,10 +797,11 @@ public final class DbUtil {
 	 * 
 	 * @param isShowSql 是否显示SQL
 	 * @param isFormatSql 是否格式化显示的SQL
-	 * @since 3.1.2
+	 * @param isShowParams 是否打印参数
+	 * @since 4.0.3
 	 */
-	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql) {
-		SqlBuilder.setShowSql(true, isFormatSql);
+	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams) {
+		SqlBuilder.setShowSql(isShowSql, isFormatSql, isShowParams);
 	}
 	// ---------------------------------------------------------------------------- Private method start
 	// ---------------------------------------------------------------------------- Private method end

@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.WeightRandom;
+import cn.hutool.core.lang.WeightRandom.WeightObj;
 
 /**
  * 随机工具类
@@ -320,7 +322,28 @@ public class RandomUtil {
 	public static char randomChar(String baseString) {
 		return baseString.charAt(getRandom().nextInt(baseString.length()));
 	}
+	
+	/**
+	 * 带有权重的随机生成器
+	 * @param weightObjs 带有权重的对象列表
+	 * @return {@link WeightRandom}
+	 * @since 4.0.3
+	 */
+	public static <T> WeightRandom<T> weightRandom(WeightObj<T>[] weightObjs){
+		return new WeightRandom<>(weightObjs);
+	}
+	
+	/**
+	 * 带有权重的随机生成器
+	 * @param weightObjs 带有权重的对象列表
+	 * @return {@link WeightRandom}
+	 * @since 4.0.3
+	 */
+	public static <T> WeightRandom<T> weightRandom(Iterable<WeightObj<T>> weightObjs){
+		return new WeightRandom<>(weightObjs);
+	}
 
+	// ------------------------------------------------------------------- UUID
 	/**
 	 * @return 随机UUID
 	 */
@@ -328,7 +351,6 @@ public class RandomUtil {
 		return UUID.randomUUID().toString();
 	}
 
-	// ------------------------------------------------------------------- UUID
 	/**
 	 * 简化的UUID，去掉了横线
 	 * 

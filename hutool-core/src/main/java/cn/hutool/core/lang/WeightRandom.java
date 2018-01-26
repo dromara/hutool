@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 
@@ -58,7 +59,9 @@ public class WeightRandom<T> implements Serializable {
 	 */
 	public WeightRandom(WeightObj<T> weightObj) {
 		this();
-		add(weightObj);
+		if(null != weightObj) {
+			add(weightObj);
+		}
 	}
 
 	/**
@@ -68,8 +71,10 @@ public class WeightRandom<T> implements Serializable {
 	 */
 	public WeightRandom(Iterable<WeightObj<T>> weightObjs) {
 		this();
-		for (WeightObj<T> weightObj : weightObjs) {
-			add(weightObj);
+		if(CollUtil.isNotEmpty(weightObjs)) {
+			for (WeightObj<T> weightObj : weightObjs) {
+				add(weightObj);
+			}
 		}
 	}
 

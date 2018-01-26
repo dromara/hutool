@@ -80,9 +80,10 @@ public class ExcelReader implements Closeable {
 	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 * @param closeAfterRead 读取结束是否关闭流
 	 */
-	public ExcelReader(InputStream bookStream, int sheetIndex) {
-		this(ExcelUtil.loadBook(bookStream), sheetIndex);
+	public ExcelReader(InputStream bookStream, int sheetIndex, boolean closeAfterRead) {
+		this(ExcelUtil.loadBook(bookStream, closeAfterRead), sheetIndex);
 	}
 
 	/**
@@ -90,9 +91,10 @@ public class ExcelReader implements Closeable {
 	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetName sheet名，第一个默认是sheet1
+	 * @param closeAfterRead 读取结束是否关闭流
 	 */
-	public ExcelReader(InputStream bookStream, String sheetName) {
-		this(ExcelUtil.loadBook(bookStream), sheetName);
+	public ExcelReader(InputStream bookStream, String sheetName, boolean closeAfterRead) {
+		this(ExcelUtil.loadBook(bookStream, closeAfterRead), sheetName);
 	}
 
 	/**
@@ -292,7 +294,7 @@ public class ExcelReader implements Closeable {
 		boolean isFirstLine = true;
 		List rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
-			rowList = readRow(sheet.getRow(i));
+			rowList = readRow(i);
 			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
 				if (null == rowList) {
 					rowList = new ArrayList<>(0);
@@ -409,6 +411,33 @@ public class ExcelReader implements Closeable {
 			beanList.add(BeanUtil.mapToBean(map, beanType, false));
 		}
 		return beanList;
+	}
+
+	/**
+	 * 读取某一行数据
+	 * 
+	 * @param rowIndex 行号，从0开始
+	 * @return 一行数据
+	 * @since 4.0.3
+	 */
+	public List<Object> readRow(int rowIndex) {
+		return readRow(this.sheet.getRow(rowIndex));
+	}
+	
+	/**
+	 * 读取某个单元格的值
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return 值，如果单元格无值返回null
+	 * @since 4.0.3
+	 */
+	public Object readCellValue(int x, int y) {
+		final Row row = this.sheet.getRow(y);
+		if(null != row) {
+			return InternalExcelUtil.getCellValue(row.getCell(x), this.cellEditor);
+		}
+		return null;
 	}
 
 	/**
