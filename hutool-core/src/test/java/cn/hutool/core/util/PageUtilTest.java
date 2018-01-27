@@ -3,8 +3,6 @@ package cn.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.PageUtil;
-
 /**
  * 分页单元测试
  * @author Looly
@@ -27,5 +25,11 @@ public class PageUtilTest {
 	public void totalPage(){
 		int totalPage = PageUtil.totalPage(20, 3);
 		Assert.assertEquals(7, totalPage);
+	}
+	
+	@Test
+	public void rainbowTest() {
+		int[] rainbow = PageUtil.rainbow(5, 20, 6);
+		Assert.assertArrayEquals(new int[] {3, 4, 5, 6, 7, 8}, rainbow);
 	}
 }
