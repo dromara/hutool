@@ -18,7 +18,7 @@ import cn.hutool.poi.excel.ExcelUtil;
  *
  */
 public class ExcelReadTest {
-
+	
 	@Test
 	public void aliasTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("alias.xlsx"));
