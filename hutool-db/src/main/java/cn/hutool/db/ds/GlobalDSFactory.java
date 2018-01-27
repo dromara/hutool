@@ -25,8 +25,8 @@ public class GlobalDSFactory {
 			public void run() {
 				if (null != factory) {
 					factory.destroy();
-					factory = null;
 					StaticLog.debug("DataSource: [{}] destroyed.", factory.dataSourceName);
+					factory = null;
 				}
 			}
 		});
