@@ -17,7 +17,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -44,8 +43,6 @@ public class Mail {
 	private boolean isHtml;
 	/** 附件列表 */
 	private File[] files;
-	/** 编码用于编码邮件正文和发送人、收件人等中文 */
-	private Charset charset = CharsetUtil.CHARSET_UTF_8;
 	/** 是否使用全局会话，默认为true */
 	private boolean useGlobalSession = true;
 
@@ -79,10 +76,10 @@ public class Mail {
 	/**
 	 * 构造
 	 * 
-	 * @param mailAccount 邮件帐户
+	 * @param mailAccount 邮件帐户，如果为null使用默认配置文件的全局邮件配置
 	 */
 	public Mail(MailAccount mailAccount) {
-		mailAccount = (null == mailAccount) ? null : GlobalMailAccount.INSTANCE.getAccount();
+		mailAccount = (null != mailAccount) ? mailAccount : GlobalMailAccount.INSTANCE.getAccount();
 		this.mailAccount = mailAccount.defaultIfEmpty();
 	}
 	// --------------------------------------------------------------- Constructor end
@@ -93,6 +90,7 @@ public class Mail {
 	 * 
 	 * @param tos 收件人列表
 	 * @return this
+	 * @see #setTos(String...)
 	 */
 	public Mail to(String... tos) {
 		return setTos(tos);
@@ -182,9 +180,10 @@ public class Mail {
 	 * 
 	 * @param charset 字符集编码
 	 * @return this
+	 * @see MailAccount#setCharset(Charset)
 	 */
 	public Mail setCharset(Charset charset) {
-		this.charset = charset;
+		this.mailAccount.setCharset(charset);
 		return this;
 	}
 	
@@ -234,6 +233,7 @@ public class Mail {
 	 * @throws MessagingException 消息异常
 	 */
 	private MimeMessage buildMsg() throws MessagingException {
+		final Charset charset = this.mailAccount.getCharset();
 		final MimeMessage msg = new MimeMessage(getSession(this.useGlobalSession));
 		// 发件人
 		final String from = this.mailAccount.getFrom();
@@ -241,23 +241,23 @@ public class Mail {
 			//用户未提供发送方，则从Session中自动获取
 			msg.setFrom();
 		}else {
-			msg.setFrom(InternalMailUtil.parseFirstAddress(from, this.charset));
+			msg.setFrom(InternalMailUtil.parseFirstAddress(from, charset));
 		}
 		// 标题
-		msg.setSubject(this.title, this.charset.name());
+		msg.setSubject(this.title, charset.name());
 		// 发送时间
 		msg.setSentDate(new Date());
 		// 内容和附件
-		msg.setContent(buildContent());
+		msg.setContent(buildContent(charset));
 		// 收件人
-		msg.setRecipients(MimeMessage.RecipientType.TO, InternalMailUtil.parseAddressFromStrs(this.tos, this.charset));
+		msg.setRecipients(MimeMessage.RecipientType.TO, InternalMailUtil.parseAddressFromStrs(this.tos, charset));
 		// 抄送人
 		if(ArrayUtil.isNotEmpty(this.ccs)) {
-			msg.setRecipients(MimeMessage.RecipientType.CC, InternalMailUtil.parseAddressFromStrs(this.ccs, this.charset));
+			msg.setRecipients(MimeMessage.RecipientType.CC, InternalMailUtil.parseAddressFromStrs(this.ccs, charset));
 		}
 		// 密送人
 		if(ArrayUtil.isNotEmpty(this.bccs)) {
-			msg.setRecipients(MimeMessage.RecipientType.BCC, InternalMailUtil.parseAddressFromStrs(this.bccs, this.charset));
+			msg.setRecipients(MimeMessage.RecipientType.BCC, InternalMailUtil.parseAddressFromStrs(this.bccs, charset));
 		}
 		return msg;
 	}
@@ -265,13 +265,11 @@ public class Mail {
 	/**
 	 * 构建邮件信息主体
 	 * 
-	 * @param content 邮件信息正文
-	 * @param isHtml 是否为HTML
-	 * @param files 附件列表
+	 * @param charset 编码
 	 * @return 邮件信息主体
 	 * @throws MessagingException 消息异常
 	 */
-	private Multipart buildContent() throws MessagingException {
+	private Multipart buildContent(Charset charset) throws MessagingException {
 		final Multipart mainPart = new MimeMultipart();
 
 		// 正文
@@ -285,7 +283,7 @@ public class Mail {
 			for (File file : files) {
 				bodyPart = new MimeBodyPart();
 				bodyPart.setDataHandler(new DataHandler(new FileDataSource(file)));
-				bodyPart.setFileName(InternalMailUtil.encodeText(file.getName(), this.charset));
+				bodyPart.setFileName(InternalMailUtil.encodeText(file.getName(), charset));
 				mainPart.addBodyPart(bodyPart);
 			}
 		}

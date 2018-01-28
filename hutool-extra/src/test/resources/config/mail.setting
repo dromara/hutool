@@ -17,6 +17,8 @@ pass = q1w2e3
 
 # 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
 debug = true
+# 编码，决定了邮件正文编码和发件人、收件人、抄送人、密送人姓名中的中文编码，默认UTF-8
+charset = UTF-8
 
 #使用 STARTTLS安全连接
 startttlsEnable = true

@@ -2,6 +2,11 @@ package cn.hutool.system;
 
 import cn.hutool.core.io.FileUtil;
 
+/**
+ * 运行时信息，包括内存总大小、已用大小、可用大小等
+ * @author looly
+ *
+ */
 public class RuntimeInfo {
 	
 	private Runtime currentRuntime = Runtime.getRuntime();

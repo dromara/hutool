@@ -1,8 +1,10 @@
 package cn.hutool.extra.mail;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 
@@ -44,6 +46,8 @@ public class MailAccount implements Serializable {
 	
 	/** 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启 */
 	private boolean debug;
+	/** 编码用于编码邮件正文和发送人、收件人等中文 */
+	private Charset charset = CharsetUtil.CHARSET_UTF_8;
 	
 	//SSL
 	/** 使用 STARTTLS安全连接 */
@@ -202,8 +206,29 @@ public class MailAccount implements Serializable {
 	 * @param debug 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
 	 * @since 4.0.2
 	 */
-	public void setDebug(boolean debug) {
+	public MailAccount setDebug(boolean debug) {
 		this.debug = debug;
+		return this;
+	}
+	
+	/**
+	 * 获取字符集编码
+	 * 
+	 * @return 编码
+	 */
+	public Charset getCharset() {
+		return charset;
+	}
+	
+	/**
+	 * 设置字符集编码
+	 * 
+	 * @param charset 字符集编码
+	 * @return this
+	 */
+	public MailAccount setCharset(Charset charset) {
+		this.charset = charset;
+		return this;
 	}
 	
 	/**
@@ -305,13 +330,16 @@ public class MailAccount implements Serializable {
 	 * @return this
 	 */
 	public MailAccount defaultIfEmpty() {
+		//去掉发件人的姓名部分
+		final String fromAddress = InternalMailUtil.parseFirstAddress(this.from, this.charset).getAddress();
+		
 		if(StrUtil.isBlank(this.host)) {
 			//如果SMTP地址为空，默认使用smtp.<发件人邮箱后缀>
-			this.host = StrUtil.format("smtp.{}", StrUtil.subSuf(this.from, this.from.indexOf('@')+1));
+			this.host = StrUtil.format("smtp.{}", StrUtil.subSuf(fromAddress, fromAddress.indexOf('@')+1));
 		}
 		if(StrUtil.isBlank(user)) {
-			//如果发件人为空，默认为发件人邮箱前缀
-			this.user = StrUtil.subPre(this.from, this.from.indexOf('@'));
+			//如果用户名为空，默认为发件人邮箱前缀
+			this.user = StrUtil.subPre(fromAddress, fromAddress.indexOf('@'));
 		}
 		if(null == this.auth) {
 			//如果密码非空白，则使用认证模式
@@ -320,6 +348,10 @@ public class MailAccount implements Serializable {
 		if(null == this.port) {
 			//端口在SSL状态下默认与socketFactoryPort一致，非SSL状态下默认为25
 			this.port = this.startttlsEnable ? this.socketFactoryPort : 25;
+		}
+		if(null == this.charset) {
+			//默认UTF-8编码
+			this.charset = CharsetUtil.CHARSET_UTF_8;
 		}
 		
 		return this;
