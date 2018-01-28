@@ -33,4 +33,10 @@ public class ApacheCommonsLogFactory extends LogFactory{
 		}
 	}
 
+	@Override
+	protected void checkLogExist(Object logClassName) {
+		super.checkLogExist(logClassName);
+		//Commons Logging在调用getLog时才检查是否有日志实现，在此提前检查，如果没有实现则跳过之
+		getLog(ApacheCommonsLogFactory.class);
+	}
 }

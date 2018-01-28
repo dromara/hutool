@@ -17,6 +17,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.editors.TrimEditor;
 
@@ -27,7 +28,7 @@ import cn.hutool.poi.excel.editors.TrimEditor;
  * @author Looly
  * @since 3.1.0
  */
-public class ExcelReader implements Closeable{
+public class ExcelReader implements Closeable {
 
 	/** 是否被关闭 */
 	private boolean isClosed;
@@ -53,7 +54,7 @@ public class ExcelReader implements Closeable{
 	public ExcelReader(String excelFilePath, int sheetIndex) {
 		this(ExcelUtil.loadBook(excelFilePath), sheetIndex);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -79,9 +80,10 @@ public class ExcelReader implements Closeable{
 	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 * @param closeAfterRead 读取结束是否关闭流
 	 */
-	public ExcelReader(InputStream bookStream, int sheetIndex) {
-		this(ExcelUtil.loadBook(bookStream), sheetIndex);
+	public ExcelReader(InputStream bookStream, int sheetIndex, boolean closeAfterRead) {
+		this(ExcelUtil.loadBook(bookStream, closeAfterRead), sheetIndex);
 	}
 
 	/**
@@ -89,9 +91,10 @@ public class ExcelReader implements Closeable{
 	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetName sheet名，第一个默认是sheet1
+	 * @param closeAfterRead 读取结束是否关闭流
 	 */
-	public ExcelReader(InputStream bookStream, String sheetName) {
-		this(ExcelUtil.loadBook(bookStream), sheetName);
+	public ExcelReader(InputStream bookStream, String sheetName, boolean closeAfterRead) {
+		this(ExcelUtil.loadBook(bookStream, closeAfterRead), sheetName);
 	}
 
 	/**
@@ -129,22 +132,54 @@ public class ExcelReader implements Closeable{
 	// ------------------------------------------------------------------------------------------------------- Getters and Setters start
 	/**
 	 * 获取读取的Workbook
+	 * 
 	 * @return Workbook
 	 * @since 4.0.0
 	 */
 	public Workbook getWorkbook() {
 		return this.workbook;
 	}
-	
+
+	/**
+	 * 获取此工作簿所有Sheet表
+	 * 
+	 * @return sheet表列表
+	 * @since 4.0.3
+	 */
+	public List<Sheet> getSheets() {
+		final int totalSheet = workbook.getNumberOfSheets();
+		List<Sheet> result = new ArrayList<>(totalSheet);
+		for (int i = 0; i < totalSheet; i++) {
+			result.add(this.workbook.getSheetAt(i));
+		}
+		return result;
+	}
+
+	/**
+	 * 获取表名列表
+	 * 
+	 * @return 表名列表
+	 * @since 4.0.3
+	 */
+	public List<String> getSheetNames() {
+		final int totalSheet = workbook.getNumberOfSheets();
+		List<String> result = new ArrayList<>(totalSheet);
+		for (int i = 0; i < totalSheet; i++) {
+			result.add(this.workbook.getSheetAt(i).getSheetName());
+		}
+		return result;
+	}
+
 	/**
 	 * 获取当前编辑的sheet
+	 * 
 	 * @return sheet
 	 * @since 4.0.0
 	 */
 	public Sheet getSheet() {
 		return this.sheet;
 	}
-	
+
 	/**
 	 * 是否忽略空行
 	 * 
@@ -230,7 +265,7 @@ public class ExcelReader implements Closeable{
 	public List<List<Object>> read() {
 		return read(0);
 	}
-	
+
 	/**
 	 * 读取工作簿中指定的Sheet
 	 * 
@@ -249,18 +284,26 @@ public class ExcelReader implements Closeable{
 	 * @param endRowIndex 结束行（包含，从0开始计数）
 	 * @return 行的集合，一行使用List表示
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<List<Object>> read(int startRowIndex, int endRowIndex) {
-		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
+		checkNotClosed();
 		List<List<Object>> resultList = new ArrayList<>();
 
 		startRowIndex = Math.max(startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
 		endRowIndex = Math.min(endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
-		List<Object> rowList;
+		boolean isFirstLine = true;
+		List rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
-			rowList = readRow(sheet.getRow(i));
+			rowList = readRow(i);
 			if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
-				if(null == rowList) {
+				if (null == rowList) {
 					rowList = new ArrayList<>(0);
+				}
+				if (isFirstLine) {
+					isFirstLine = false;
+					if (MapUtil.isNotEmpty(headerAlias)) {
+						rowList = aliasHeader(rowList);
+					}
 				}
 				resultList.add(rowList);
 			}
@@ -288,7 +331,7 @@ public class ExcelReader implements Closeable{
 	 * @return Map的列表
 	 */
 	public List<Map<String, Object>> read(int headerRowIndex, int startRowIndex, int endRowIndex) {
-		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
+		checkNotClosed();
 		// 边界判断
 		final int firstRowNum = sheet.getFirstRowNum();
 		final int lastRowNum = sheet.getLastRowNum();
@@ -310,7 +353,7 @@ public class ExcelReader implements Closeable{
 				// 跳过标题行
 				rowList = readRow(sheet.getRow(i));
 				if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
-					if(null == rowList) {
+					if (null == rowList) {
 						rowList = new ArrayList<>(0);
 					}
 					result.add(IterUtil.toMap(aliasHeader(headerList), rowList));
@@ -330,7 +373,7 @@ public class ExcelReader implements Closeable{
 	public <T> List<T> readAll(Class<T> beanType) {
 		return read(0, 1, Integer.MAX_VALUE, beanType);
 	}
-	
+
 	/**
 	 * 读取Excel为Bean的列表
 	 * 
@@ -357,7 +400,7 @@ public class ExcelReader implements Closeable{
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> read(int headerRowIndex, int startRowIndex, int endRowIndex, Class<T> beanType) {
-		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
+		checkNotClosed();
 		final List<Map<String, Object>> mapList = read(headerRowIndex, startRowIndex, endRowIndex);
 		if (Map.class.isAssignableFrom(beanType)) {
 			return (List<T>) mapList;
@@ -369,9 +412,37 @@ public class ExcelReader implements Closeable{
 		}
 		return beanList;
 	}
+
+	/**
+	 * 读取某一行数据
+	 * 
+	 * @param rowIndex 行号，从0开始
+	 * @return 一行数据
+	 * @since 4.0.3
+	 */
+	public List<Object> readRow(int rowIndex) {
+		return readRow(this.sheet.getRow(rowIndex));
+	}
 	
 	/**
+	 * 读取某个单元格的值
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return 值，如果单元格无值返回null
+	 * @since 4.0.3
+	 */
+	public Object readCellValue(int x, int y) {
+		final Row row = this.sheet.getRow(y);
+		if(null != row) {
+			return InternalExcelUtil.getCellValue(row.getCell(x), this.cellEditor);
+		}
+		return null;
+	}
+
+	/**
 	 * 关闭工作簿
+	 * 
 	 * @since 3.2.0
 	 */
 	@Override
@@ -401,19 +472,31 @@ public class ExcelReader implements Closeable{
 	 */
 	private List<String> aliasHeader(List<Object> headerList) {
 		final ArrayList<String> result = new ArrayList<>();
+		if (CollUtil.isEmpty(headerList)) {
+			return result;
+		}
+
 		String header;
 		String alias = null;
 		for (Object headerObj : headerList) {
-			if(null != headerObj) {
+			if (null != headerObj) {
 				header = headerObj.toString();
 				alias = this.headerAlias.get(header);
 				if (null == alias) {
+					// 无别名则使用原标题
 					alias = header;
 				}
 			}
 			result.add(alias);
 		}
 		return result;
+	}
+
+	/**
+	 * 检查是否未关闭状态
+	 */
+	private void checkNotClosed() {
+		Assert.isFalse(this.isClosed, "ExcelReader has been closed!");
 	}
 	// ------------------------------------------------------------------------------------------------------- Private methods end
 }

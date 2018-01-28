@@ -207,16 +207,41 @@ public class ExcelUtil {
 	public static ExcelReader getReader(File bookFile, String sheetName) {
 		return new ExcelReader(bookFile, sheetName);
 	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
+	 * 默认调用第一个sheet，读取结束自动关闭流
+	 * 
+	 * @param bookStream Excel文件的流
+	 * @return {@link ExcelReader}
+	 */
+	public static ExcelReader getReader(InputStream bookStream) {
+		return getReader(bookStream, 0, true);
+	}
 
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet
 	 * 
 	 * @param bookStream Excel文件的流
+	 * @param closeAfterRead 读取结束是否关闭流
+	 * @return {@link ExcelReader}
+	 * @since 4.0.3
+	 */
+	public static ExcelReader getReader(InputStream bookStream, boolean closeAfterRead) {
+		return getReader(bookStream, 0, closeAfterRead);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
+	 * 读取结束自动关闭流
+	 * 
+	 * @param bookStream Excel文件的流
+	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 * @return {@link ExcelReader}
 	 */
-	public static ExcelReader getReader(InputStream bookStream) {
-		return getReader(bookStream, 0);
+	public static ExcelReader getReader(InputStream bookStream, int sheetIndex) {
+		return new ExcelReader(bookStream, sheetIndex, true);
 	}
 
 	/**
@@ -224,10 +249,24 @@ public class ExcelUtil {
 	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetIndex sheet序号，0表示第一个sheet
+	 * @param closeAfterRead 读取结束是否关闭流
+	 * @return {@link ExcelReader}
+	 * @since 4.0.3
+	 */
+	public static ExcelReader getReader(InputStream bookStream, int sheetIndex, boolean closeAfterRead) {
+		return new ExcelReader(bookStream, sheetIndex, closeAfterRead);
+	}
+	
+	/**
+	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
+	 * 读取结束自动关闭流
+	 * 
+	 * @param bookStream Excel文件的流
+	 * @param sheetName sheet名，第一个默认是sheet1
 	 * @return {@link ExcelReader}
 	 */
-	public static ExcelReader getReader(InputStream bookStream, int sheetIndex) {
-		return new ExcelReader(bookStream, sheetIndex);
+	public static ExcelReader getReader(InputStream bookStream, String sheetName) {
+		return new ExcelReader(bookStream, sheetName, true);
 	}
 
 	/**
@@ -235,10 +274,11 @@ public class ExcelUtil {
 	 * 
 	 * @param bookStream Excel文件的流
 	 * @param sheetName sheet名，第一个默认是sheet1
+	 * @param closeAfterRead 读取结束是否关闭流
 	 * @return {@link ExcelReader}
 	 */
-	public static ExcelReader getReader(InputStream bookStream, String sheetName) {
-		return new ExcelReader(bookStream, sheetName);
+	public static ExcelReader getReader(InputStream bookStream, String sheetName, boolean closeAfterRead) {
+		return new ExcelReader(bookStream, sheetName, closeAfterRead);
 	}
 
 	/**
@@ -261,33 +301,47 @@ public class ExcelUtil {
 	public static Workbook loadBook(File excelFile) {
 		return loadBook(excelFile, null);
 	}
-
+	
 	/**
-	 * 加载工作簿
+	 * 加载工作簿，只读模式
 	 * 
 	 * @param excelFile Excel文件
 	 * @param password Excel工作簿密码，如果无密码传{@code null}
 	 * @return {@link Workbook}
 	 */
 	public static Workbook loadBook(File excelFile, String password) {
-		try {
-			return WorkbookFactory.create(excelFile, password);
-		} catch (Exception e) {
-			throw new POIException(e);
-		}
+		return loadBook(FileUtil.getInputStream(excelFile), password, true);
+	}
+	
+	/**
+	 * 加载工作簿
+	 * 
+	 * @param in Excel输入流
+	 * @param closeAfterRead 读取结束是否关闭流
+	 * @return {@link Workbook}
+	 */
+	public static Workbook loadBook(InputStream in, boolean closeAfterRead) {
+		return loadBook(in, null, closeAfterRead);
 	}
 
 	/**
 	 * 加载工作簿
 	 * 
 	 * @param in Excel输入流
+	 * @param password 密码
+	 * @param closeAfterRead 读取结束是否关闭流
 	 * @return {@link Workbook}
+	 * @since 4.0.3
 	 */
-	public static Workbook loadBook(InputStream in) {
+	public static Workbook loadBook(InputStream in, String password, boolean closeAfterRead) {
 		try {
-			return WorkbookFactory.create(in);
+			return WorkbookFactory.create(in, password);
 		} catch (Exception e) {
 			throw new POIException(e);
+		} finally {
+			if(closeAfterRead) {
+				IoUtil.close(in);
+			}
 		}
 	}
 

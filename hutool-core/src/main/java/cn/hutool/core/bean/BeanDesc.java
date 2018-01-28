@@ -15,7 +15,15 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 /**
- * Bean信息描述做为BeanInfo替代方案，此对象持有JavaBean中的setters和getters等相关信息描述
+ * Bean信息描述做为BeanInfo替代方案，此对象持有JavaBean中的setters和getters等相关信息描述<br>
+ * 查找Getter和Setter方法时会：
+ * 
+ * <pre>
+ * 1. 忽略字段和方法名的大小写
+ * 2. Getter查找getXXX、isXXX、getIsXXX
+ * 3. Setter查找setXXX、setIsXXX
+ * 4. Setter忽略参数值与字段值不匹配的情况，因此有多个参数类型的重载时，会调用首次匹配的
+ * </pre>
  * 
  * @author looly
  * @since 3.1.2
@@ -118,7 +126,7 @@ public class BeanDesc {
 		return null == desc ? null : desc.getSetter();
 	}
 
-	//------------------------------------------------------------------------------------------------------ Private method start
+	// ------------------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 初始化<br>
 	 * 只有与属性关联的相关Getter和Setter方法才会被读取，无关的getXXX和setXXX都被忽略
@@ -133,7 +141,15 @@ public class BeanDesc {
 	}
 
 	/**
-	 * 创建属性描述
+	 * 根据字段创建属性描述<br>
+	 * 查找Getter和Setter方法时会：
+	 * 
+	 * <pre>
+	 * 1. 忽略字段和方法名的大小写
+	 * 2. Getter查找getXXX、isXXX、getIsXXX
+	 * 3. Setter查找setXXX、setIsXXX
+	 * 4. Setter忽略参数值与字段值不匹配的情况，因此有多个参数类型的重载时，会调用首次匹配的
+	 * </pre>
 	 * 
 	 * @param field 字段
 	 * @return {@link PropDesc}
@@ -202,8 +218,12 @@ public class BeanDesc {
 			// 非标准Getter方法
 			return false;
 		}
+		if("getclass".equals(methodName)) {
+			//跳过getClass方法
+			return false;
+		}
 
-		//针对Boolean类型特殊检查
+		// 针对Boolean类型特殊检查
 		if (isBooeanField) {
 			if (fieldName.startsWith("is")) {
 				// 字段已经是is开头
@@ -214,7 +234,7 @@ public class BeanDesc {
 					return true;
 				}
 			} else if (methodName.equals("is" + fieldName)) {
-				//字段非is开头， name -》 isName
+				// 字段非is开头， name -》 isName
 				return true;
 			}
 		}
@@ -249,7 +269,7 @@ public class BeanDesc {
 			return false;
 		}
 
-		//针对Boolean类型特殊检查
+		// 针对Boolean类型特殊检查
 		if (isBooeanField && fieldName.startsWith("is")) {
 			// 字段是is开头
 			if (methodName.equals("set" + StrUtil.removePrefix(fieldName, "is"))// isName -》 setName
@@ -262,7 +282,7 @@ public class BeanDesc {
 		// 包括boolean的任何类型只有一种匹配情况：name -》 setName
 		return methodName.equals("set" + fieldName);
 	}
-	//------------------------------------------------------------------------------------------------------ Private method end
+	// ------------------------------------------------------------------------------------------------------ Private method end
 
 	/**
 	 * 属性描述

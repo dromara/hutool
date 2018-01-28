@@ -2,6 +2,29 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.0.3
+
+### 新特性
+* 【core】新增LocalPortGenerater，本地端口生成器
+* 【extra】新增Sftp类，用于SFTP支持
+* 【core】StrUtil增加replace（支持参数从某个位置开始）和replaceIgnoreCase方法（感谢@【贵阳】shadow ）
+* 【core】Number.equals方法迁移到CharUtil（NumberUtil中依旧保留）
+* 【extra】mail增加抄送和密送支持（感谢【成都】出错）
+* 【poi】ExcelReader别名在返回List时也被支持（第一行）
+* 【poi】ExcelReader增加getSheets和getSheetNames方法（感谢@【帝都】宁静）
+* 【poi】ExcelReader增加readCellValue和readRow方法（感谢@【苏州】马克）
+* 【db】全局数据源工厂独立，使用懒加载方式，消除歧义
+* 【log】全局日志工厂独立，懒加载方式，消除歧义
+* 【extra】MailUtil增加快捷方法支持抄送和密送参数
+
+### Bug修复
+* 【core】修复获取子路径bug（issue#IHI5K@Gitee）
+* 【poi】修复ExcelReader在读取文件后未关闭导致文件被占用问题（感谢@【昆明】-@_@）
+* 【log】解决Tinylog实现显示类名和行行错误问题
+* 【extra】修复Mail构造在MailAccount传入null时读取错误的问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.0.2
 
 ### 新特性

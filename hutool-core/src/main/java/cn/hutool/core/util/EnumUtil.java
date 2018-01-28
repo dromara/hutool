@@ -53,7 +53,8 @@ public class EnumUtil {
 	}
 
 	/**
-	 * 获取枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序
+	 * 获取枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序<br>
+	 * 结果中键为枚举名，值为枚举对象
 	 * 
 	 * @param enumClass 枚举类
 	 * @return 枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序

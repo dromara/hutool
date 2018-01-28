@@ -71,6 +71,28 @@ public class ReUtilTest {
 	}
 	
 	@Test
+	public void replaceTest() {
+		String str = "AAABBCCCBBDDDBB";
+		String replace = StrUtil.replace(str, 0, "BB", "22", false);
+		Assert.assertEquals("AAA22CCC22DDD22", replace);
+		
+		replace = StrUtil.replace(str, 3, "BB", "22", false);
+		Assert.assertEquals("AAA22CCC22DDD22", replace);
+		
+		replace = StrUtil.replace(str, 4, "BB", "22", false);
+		Assert.assertEquals("AAABBCCC22DDD22", replace);
+		
+		replace = StrUtil.replace(str, 4, "bb", "22", true);
+		Assert.assertEquals("AAABBCCC22DDD22", replace);
+		
+		replace = StrUtil.replace(str, 4, "bb", "", true);
+		Assert.assertEquals("AAABBCCCDDD", replace);
+		
+		replace = StrUtil.replace(str, 4, "bb", null, true);
+		Assert.assertEquals("AAABBCCCDDD", replace);
+	}
+	
+	@Test
 	public void escapeTest() {
 		//转义给定字符串，为正则相关的特殊符号转义
 		String escape = ReUtil.escape("我有个$符号{}");

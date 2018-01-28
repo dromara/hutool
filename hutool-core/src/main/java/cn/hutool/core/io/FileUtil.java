@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.file.FileCopier;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.io.file.FileReader.ReaderHandler;
 import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.io.file.LineSeparator;
-import cn.hutool.core.io.file.FileReader.ReaderHandler;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
@@ -1279,16 +1279,10 @@ public class FileUtil {
 	 */
 	public static String subPath(String dirPath, String filePath) {
 		if (StrUtil.isNotEmpty(dirPath) && StrUtil.isNotEmpty(filePath)) {
-			dirPath = normalize(dirPath);
-			filePath = normalize(filePath);
-
-			if (filePath != null && filePath.toLowerCase().startsWith(dirPath.toLowerCase())) {
-				if (false == filePath.equals(dirPath)) {
-					filePath = filePath.substring(dirPath.length() + 1);
-				} else {
-					filePath = StrUtil.EMPTY;
-				}
-			}
+			dirPath = StrUtil.addSuffixIfNot(normalize(dirPath), "/");
+			filePath = StrUtil.removeSuffix(normalize(filePath), "/");
+			
+			return StrUtil.removePrefixIgnoreCase(filePath, dirPath);
 		}
 		return filePath;
 	}

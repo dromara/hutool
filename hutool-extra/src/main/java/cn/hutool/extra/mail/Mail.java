@@ -12,13 +12,11 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -29,20 +27,22 @@ import cn.hutool.core.util.StrUtil;
  */
 public class Mail {
 
-	// 邮件客户端
+	/** 邮箱帐户信息以及一些客户端配置信息 */
 	private MailAccount mailAccount;
-	// 收件人列表
+	/** 收件人列表 */
 	private String[] tos;
-	// 标题
+	/** 抄送人列表（carbon copy）*/
+	private String[] ccs;
+	/** 密送人列表（blind carbon copy）*/
+	private String[] bccs;
+	/** 标题 */
 	private String title;
-	// 内容
+	/** 内容 */
 	private String content;
-	// 是否为HTML
+	/** 是否为HTML */
 	private boolean isHtml;
-	// 附件列表
+	/** 附件列表 */
 	private File[] files;
-	// 正文编码
-	private Charset charset = CharsetUtil.CHARSET_UTF_8;
 	/** 是否使用全局会话，默认为true */
 	private boolean useGlobalSession = true;
 
@@ -76,10 +76,10 @@ public class Mail {
 	/**
 	 * 构造
 	 * 
-	 * @param mailAccount 邮件帐户
+	 * @param mailAccount 邮件帐户，如果为null使用默认配置文件的全局邮件配置
 	 */
 	public Mail(MailAccount mailAccount) {
-		mailAccount = (null == mailAccount) ? null : GlobalMailAccount.INSTANCE.getAccount();
+		mailAccount = (null != mailAccount) ? mailAccount : GlobalMailAccount.INSTANCE.getAccount();
 		this.mailAccount = mailAccount.defaultIfEmpty();
 	}
 	// --------------------------------------------------------------- Constructor end
@@ -90,19 +90,44 @@ public class Mail {
 	 * 
 	 * @param tos 收件人列表
 	 * @return this
+	 * @see #setTos(String...)
 	 */
 	public Mail to(String... tos) {
 		return setTos(tos);
 	}
 
 	/**
-	 * 设置收件人
+	 * 设置多个收件人
 	 * 
 	 * @param tos 收件人列表
 	 * @return this
 	 */
 	public Mail setTos(String... tos) {
 		this.tos = tos;
+		return this;
+	}
+	
+	/**
+	 * 设置多个抄送人（carbon copy）
+	 * 
+	 * @param ccs 抄送人列表
+	 * @return this
+	 * @since 4.0.3
+	 */
+	public Mail setCcs(String... ccs) {
+		this.ccs = ccs;
+		return this;
+	}
+	
+	/**
+	 * 设置多个密送人（blind carbon copy）
+	 * 
+	 * @param bccs 密送人列表
+	 * @return this
+	 * @since 4.0.3
+	 */
+	public Mail setBccs(String... bccs) {
+		this.bccs = bccs;
 		return this;
 	}
 
@@ -155,9 +180,10 @@ public class Mail {
 	 * 
 	 * @param charset 字符集编码
 	 * @return this
+	 * @see MailAccount#setCharset(Charset)
 	 */
 	public Mail setCharset(Charset charset) {
-		this.charset = charset;
+		this.mailAccount.setCharset(charset);
 		return this;
 	}
 	
@@ -207,34 +233,43 @@ public class Mail {
 	 * @throws MessagingException 消息异常
 	 */
 	private MimeMessage buildMsg() throws MessagingException {
+		final Charset charset = this.mailAccount.getCharset();
 		final MimeMessage msg = new MimeMessage(getSession(this.useGlobalSession));
 		// 发件人
-		msg.setFrom(InternalMailUtil.parseFirstAddress(this.mailAccount.getFrom(), this.charset));
+		final String from = this.mailAccount.getFrom();
+		if(StrUtil.isEmpty(from)) {
+			//用户未提供发送方，则从Session中自动获取
+			msg.setFrom();
+		}else {
+			msg.setFrom(InternalMailUtil.parseFirstAddress(from, charset));
+		}
 		// 标题
-		msg.setSubject(this.title, this.charset.name());
+		msg.setSubject(this.title, charset.name());
 		// 发送时间
 		msg.setSentDate(new Date());
 		// 内容和附件
-		msg.setContent(buildContent());
+		msg.setContent(buildContent(charset));
 		// 收件人
-		final InternetAddress[] toAdds = new InternetAddress[tos.length];
-		for (int i = 0; i < tos.length; i++) {
-			toAdds[i] = new InternetAddress(tos[i]);
+		msg.setRecipients(MimeMessage.RecipientType.TO, InternalMailUtil.parseAddressFromStrs(this.tos, charset));
+		// 抄送人
+		if(ArrayUtil.isNotEmpty(this.ccs)) {
+			msg.setRecipients(MimeMessage.RecipientType.CC, InternalMailUtil.parseAddressFromStrs(this.ccs, charset));
 		}
-		msg.setRecipients(MimeMessage.RecipientType.TO, toAdds);
+		// 密送人
+		if(ArrayUtil.isNotEmpty(this.bccs)) {
+			msg.setRecipients(MimeMessage.RecipientType.BCC, InternalMailUtil.parseAddressFromStrs(this.bccs, charset));
+		}
 		return msg;
 	}
 
 	/**
 	 * 构建邮件信息主体
 	 * 
-	 * @param content 邮件信息正文
-	 * @param isHtml 是否为HTML
-	 * @param files 附件列表
+	 * @param charset 编码
 	 * @return 邮件信息主体
 	 * @throws MessagingException 消息异常
 	 */
-	private Multipart buildContent() throws MessagingException {
+	private Multipart buildContent(Charset charset) throws MessagingException {
 		final Multipart mainPart = new MimeMultipart();
 
 		// 正文
@@ -248,7 +283,7 @@ public class Mail {
 			for (File file : files) {
 				bodyPart = new MimeBodyPart();
 				bodyPart.setDataHandler(new DataHandler(new FileDataSource(file)));
-				bodyPart.setFileName(InternalMailUtil.encodeText(file.getName(), this.charset));
+				bodyPart.setFileName(InternalMailUtil.encodeText(file.getName(), charset));
 				mainPart.addBodyPart(bodyPart);
 			}
 		}

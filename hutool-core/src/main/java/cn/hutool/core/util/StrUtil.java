@@ -97,7 +97,7 @@ public class StrUtil {
 
 		return true;
 	}
-	
+
 	/**
 	 * 如果对象是字符串是否为空白，空白的定义如下： <br>
 	 * 1、为null <br>
@@ -109,10 +109,10 @@ public class StrUtil {
 	 * @since 3.3.0
 	 */
 	public static boolean isBlankIfStr(Object obj) {
-		if(null == obj) {
+		if (null == obj) {
 			return true;
-		} else if(obj instanceof CharSequence) {
-			return isBlank((CharSequence)obj);
+		} else if (obj instanceof CharSequence) {
+			return isBlank((CharSequence) obj);
 		}
 		return false;
 	}
@@ -180,7 +180,7 @@ public class StrUtil {
 	public static boolean isEmpty(CharSequence str) {
 		return str == null || str.length() == 0;
 	}
-	
+
 	/**
 	 * 如果对象是字符串是否为空串空的定义如下:<br>
 	 * 1、为null <br>
@@ -191,10 +191,10 @@ public class StrUtil {
 	 * @since 3.3.0
 	 */
 	public static boolean isEmptyIfStr(Object obj) {
-		if(null == obj) {
+		if (null == obj) {
 			return true;
-		} else if(obj instanceof CharSequence) {
-			return 0 == ((CharSequence)obj).length();
+		} else if (obj instanceof CharSequence) {
+			return 0 == ((CharSequence) obj).length();
 		}
 		return false;
 	}
@@ -748,7 +748,7 @@ public class StrUtil {
 	 * @return 移除后的字符串
 	 */
 	public static String removeAll(CharSequence str, CharSequence strToRemove) {
-		if(isEmpty(str)) {
+		if (isEmpty(str)) {
 			return str(str);
 		}
 		return str.toString().replace(strToRemove, EMPTY);
@@ -1357,9 +1357,10 @@ public class StrUtil {
 		}
 		return sub(string, fromIndex, string.length());
 	}
-	
+
 	/**
 	 * 切割指定长度的后部分的字符串
+	 * 
 	 * <pre>
 	 * StrUtil.subSufByLength("abcde", 3)      =    "cde"
 	 * StrUtil.subSufByLength("abcde", 0)      =    ""
@@ -1379,7 +1380,7 @@ public class StrUtil {
 		if (isEmpty(string)) {
 			return null;
 		}
-		if(length <= 0) {
+		if (length <= 0) {
 			return EMPTY;
 		}
 		return sub(string, -length, string.length());
@@ -1638,9 +1639,10 @@ public class StrUtil {
 		System.arraycopy(array, 0, array, n, size - n);
 		return new String(array);
 	}
-	
+
 	/**
 	 * 重复某个字符串并通过分界符连接
+	 * 
 	 * <pre>
 	 * StrUtil.repeatAndJoin("?", 5, ",")   = "?,?,?,?,?"
 	 * StrUtil.repeatAndJoin("?", 0, ",")   = ""
@@ -1654,15 +1656,15 @@ public class StrUtil {
 	 * @since 4.0.1
 	 */
 	public static String repeatAndJoin(CharSequence str, int count, CharSequence conjunction) {
-		if(count <= 0) {
+		if (count <= 0) {
 			return EMPTY;
 		}
 		final StrBuilder builder = StrBuilder.create();
 		boolean isFirst = true;
-		while(count-- > 0) {
-			if(isFirst) {
+		while (count-- > 0) {
+			if (isFirst) {
 				isFirst = false;
-			}else if(isNotEmpty(conjunction)){
+			} else if (isNotEmpty(conjunction)) {
 				builder.append(conjunction);
 			}
 			builder.append(str);
@@ -1721,11 +1723,11 @@ public class StrUtil {
 	 */
 	public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
 		if (null == str1) {
-			//只有两个都为null才判断相等
+			// 只有两个都为null才判断相等
 			return str2 == null;
 		}
-		if(null == str2) {
-			//字符串2空，字符串1非空，直接false
+		if (null == str2) {
+			// 字符串2空，字符串1非空，直接false
 			return false;
 		}
 
@@ -2150,9 +2152,10 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 去掉字符包装，如果未被包装则返回原字符串
+	 * 
 	 * @param str 字符串
 	 * @param prefix 前置字符串
 	 * @param suffix 后置字符串
@@ -2160,14 +2163,15 @@ public class StrUtil {
 	 * @since 4.0.1
 	 */
 	public static String unWrap(CharSequence str, String prefix, String suffix) {
-		if(isWrap(str, prefix, suffix)) {
+		if (isWrap(str, prefix, suffix)) {
 			return sub(str, prefix.length(), str.length() - suffix.length());
 		}
 		return str.toString();
 	}
-	
+
 	/**
 	 * 去掉字符包装，如果未被包装则返回原字符串
+	 * 
 	 * @param str 字符串
 	 * @param prefix 前置字符
 	 * @param suffix 后置字符
@@ -2175,14 +2179,15 @@ public class StrUtil {
 	 * @since 4.0.1
 	 */
 	public static String unWrap(CharSequence str, char prefix, char suffix) {
-		if(str.charAt(0) == prefix && str.charAt(str.length() -1) == suffix) {
-			return sub(str, 1, str.length() -1);
+		if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
+			return sub(str, 1, str.length() - 1);
 		}
 		return str.toString();
 	}
-	
+
 	/**
 	 * 去掉字符包装，如果未被包装则返回原字符串
+	 * 
 	 * @param str 字符串
 	 * @param prefixAndSuffix 前置和后置字符
 	 * @return 去掉包装字符的字符串
@@ -2290,7 +2295,7 @@ public class StrUtil {
 	public static StringBuilder builder() {
 		return new StringBuilder();
 	}
-	
+
 	/**
 	 * 创建StrBuilder对象
 	 * 
@@ -2310,7 +2315,7 @@ public class StrUtil {
 	public static StringBuilder builder(int capacity) {
 		return new StringBuilder(capacity);
 	}
-	
+
 	/**
 	 * 创建StrBuilder对象
 	 * 
@@ -2335,7 +2340,7 @@ public class StrUtil {
 		}
 		return sb;
 	}
-	
+
 	/**
 	 * 创建StrBuilder对象
 	 * 
@@ -2539,10 +2544,11 @@ public class StrUtil {
 		}
 		return str1.toString().compareToIgnoreCase(str2.toString());
 	}
-	
+
 	/**
 	 * 比较两个版本<br>
 	 * null版本排在最小：既：
+	 * 
 	 * <pre>
 	 * StrUtil.compareVersion(null, "v1") &lt; 0
 	 * StrUtil.compareVersion("v1", "v1")  = 0
@@ -2678,7 +2684,7 @@ public class StrUtil {
 	 * @return 位置
 	 * @since 3.2.1
 	 */
-	public static int indexOf(final CharSequence str, final CharSequence searchStr, int fromIndex, boolean ignoreCase) {
+	public static int indexOf(final CharSequence str, CharSequence searchStr, int fromIndex, boolean ignoreCase) {
 		if (str == null || searchStr == null) {
 			return INDEX_NOT_FOUND;
 		}
@@ -2773,7 +2779,8 @@ public class StrUtil {
 	 * 如果 str=null 或 searchStr=null 或 ordinal<=0 则返回-1<br>
 	 * 此方法来自：Apache-Commons-Lang
 	 * 
-	 *栗子（*代表任意字符）：
+	 * 栗子（*代表任意字符）：
+	 * 
 	 * <pre>
 	 * StrUtil.ordinalIndexOf(null, *, *)          = -1
 	 * StrUtil.ordinalIndexOf(*, null, *)          = -1
@@ -3004,9 +3011,10 @@ public class StrUtil {
 
 		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
 	}
-	
+
 	/**
 	 * 字符串的每一个字符是否都与定义的匹配器匹配
+	 * 
 	 * @param value 字符串
 	 * @param matcher 匹配器
 	 * @return 是否全部匹配
@@ -3022,6 +3030,93 @@ public class StrUtil {
 			isAllMatch &= matcher.match(value.charAt(i));
 		}
 		return isAllMatch;
+	}
+	
+	/**
+	 * 替换字符串中的指定字符串，忽略大小写
+	 * 
+	 * @param str 字符串
+	 * @param searchStr 被查找的字符串
+	 * @param replacement 被替换的字符串
+	 * @return 替换后的字符串
+	 * @since 4.0.3
+	 */
+	public static String replaceIgnoreCase(CharSequence str, CharSequence searchStr, CharSequence replacement) {
+		return replace(searchStr, 0, searchStr, replacement, true);
+	}
+
+	/**
+	 * 替换字符串中的指定字符串
+	 * 
+	 * @param str 字符串
+	 * @param searchStr 被查找的字符串
+	 * @param replacement 被替换的字符串
+	 * @return 替换后的字符串
+	 * @since 4.0.3
+	 */
+	public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement) {
+		return replace(searchStr, 0, searchStr, replacement, false);
+	}
+
+	/**
+	 * 替换字符串中的指定字符串
+	 * 
+	 * @param str 字符串
+	 * @param searchStr 被查找的字符串
+	 * @param replacement 被替换的字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 替换后的字符串
+	 * @since 4.0.3
+	 */
+	public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
+		return replace(searchStr, 0, searchStr, replacement, ignoreCase);
+	}
+
+	/**
+	 * 替换字符串中的指定字符串
+	 * 
+	 * @param str 字符串
+	 * @param fromIndex 开始位置
+	 * @param searchStr 被查找的字符串
+	 * @param replacement 被替换的字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @return 替换后的字符串
+	 * @since 4.0.3
+	 */
+	public static String replace(CharSequence str, int fromIndex, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
+		if (isEmpty(str) || isEmpty(searchStr)) {
+			return str(str);
+		}
+		if (null == replacement) {
+			replacement = EMPTY;
+		}
+
+		final int strLength = str.length();
+		final int searchStrLength = searchStr.length();
+		if (fromIndex > strLength) {
+			return str(str);
+		} else if (fromIndex < 0) {
+			fromIndex = 0;
+		}
+
+		final StrBuilder result = StrBuilder.create(strLength + 16);
+		if (0 != fromIndex) {
+			result.append(str.subSequence(0, fromIndex));
+		}
+
+		int preIndex = fromIndex;
+		int index = fromIndex;
+		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > 0) {
+			result.append(str.subSequence(preIndex, index));
+			result.append(replacement);
+			preIndex = index + searchStrLength;
+		}
+
+		if (preIndex < strLength) {
+			// 结尾部分
+			result.append(str.subSequence(preIndex, strLength));
+		}
+		return result.toString();
 	}
 
 	/**
@@ -3104,9 +3199,10 @@ public class StrUtil {
 		}
 		return builder.toString();
 	}
-	
+
 	/**
 	 * 计算连个字符串的相似度
+	 * 
 	 * @param str1 字符串1
 	 * @param str2 字符串2
 	 * @return 相似度
@@ -3115,9 +3211,10 @@ public class StrUtil {
 	public static double similar(String str1, String str2) {
 		return TextSimilarity.similar(str1, str2);
 	}
-	
+
 	/**
 	 * 计算连个字符串的相似度百分比
+	 * 
 	 * @param str1 字符串1
 	 * @param str2 字符串2
 	 * @param scale
@@ -3127,7 +3224,7 @@ public class StrUtil {
 	public static String similar(String str1, String str2, int scale) {
 		return TextSimilarity.similar(str1, str2, scale);
 	}
-	
+
 	/**
 	 * 字符串指定位置的字符是否与给定字符相同<br>
 	 * 如果字符串为null，返回false<br>
@@ -3141,12 +3238,12 @@ public class StrUtil {
 	 * @since 3.3.1
 	 */
 	public static boolean equalsCharAt(CharSequence str, int position, char c) {
-		if(null == str || position < 0) {
+		if (null == str || position < 0) {
 			return false;
 		}
 		return str.length() > position && c == str.charAt(position);
 	}
-	
+
 	/**
 	 * 给定字符串数组的总长度<br>
 	 * null字符长度定义为0
@@ -3157,7 +3254,7 @@ public class StrUtil {
 	 */
 	public static int totalLength(CharSequence... strs) {
 		int totalLength = 0;
-		for(int i = 0 ; i < strs.length; i++) {
+		for (int i = 0; i < strs.length; i++) {
 			totalLength += (null == strs[i] ? 0 : strs[i].length());
 		}
 		return totalLength;

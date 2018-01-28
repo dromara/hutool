@@ -432,8 +432,8 @@ public class ExcelWriter implements Closeable {
 	
 	/**
 	 * 给指定单元格赋值
-	 * @param x 列号，基于0
-	 * @param y 行号，基于0
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
 	 * @param value 值
 	 * @return this
 	 * @since 4.0.2

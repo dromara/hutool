@@ -18,6 +18,7 @@ public class TypeUtilTest {
 		Method method = ReflectUtil.getMethod(TestClass.class, "getList");
 		Type type = TypeUtil.getReturnType(method);
 		Assert.assertEquals("java.util.List<java.lang.String>", type.toString());
+		
 		Type type2 = TypeUtil.getTypeArgument(type);
 		Assert.assertEquals(String.class, type2);
 	}

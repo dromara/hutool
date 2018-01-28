@@ -1,6 +1,8 @@
 package cn.hutool.json;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 
@@ -45,6 +48,18 @@ public class JSONUtilTest {
 		
 		JSONObject jsonObject = JSONUtil.parseObj(data);
 		Assert.assertEquals("{\"model\":{\"type\":1,\"mobile\":\"17610836523\"}}", jsonObject.toString());
+	}
+	
+	@Test
+	public void toJsonStrTest3() {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("mobile", "17610836523");
+		model.put("type", 1);
+		model.put("date", Calendar.getInstance());
+		model.put("date2", new Date());
+		
+		String str = JSONUtil.toJsonStr(model);
+		Console.log(str);
 	}
 
 	@Test

@@ -1,8 +1,10 @@
 package cn.hutool.log;
 
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Caller;
 import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
@@ -28,23 +30,23 @@ import cn.hutool.log.dialect.tinylog.TinyLogFactory;
  */
 public abstract class LogFactory {
 
-	private String logFramworkName;
+	protected String logFramworkName;
 	private Map<Object, Log> logCache;
 
 	public LogFactory(String logFramworkName) {
 		this.logFramworkName = logFramworkName;
 		logCache = new ConcurrentHashMap<>();
 	}
-	
+
 	/**
 	 * 获得日志对象
 	 * 
 	 * @param name 日志对象名
 	 * @return 日志对象
 	 */
-	public Log getLog(String name){
+	public Log getLog(String name) {
 		Log log = logCache.get(name);
-		if(null == log){
+		if (null == log) {
 			log = createLog(name);
 			logCache.put(name, log);
 		}
@@ -57,9 +59,9 @@ public abstract class LogFactory {
 	 * @param clazz 日志对应类
 	 * @return 日志对象
 	 */
-	public Log getLog(Class<?> clazz){
+	public Log getLog(Class<?> clazz) {
 		Log log = logCache.get(clazz);
-		if(null == log){
+		if (null == log) {
 			log = createLog(clazz);
 			logCache.put(clazz, log);
 		}
@@ -94,21 +96,11 @@ public abstract class LogFactory {
 	}
 
 	// ------------------------------------------------------------------------- Static start
-	private static volatile LogFactory currentLogFactory;
-	private static final Object lock = new Object();
-
 	/**
 	 * @return 当前使用的日志工厂
 	 */
 	public static LogFactory getCurrentLogFactory() {
-		if (null == currentLogFactory) {
-			synchronized (lock) {
-				if (null == currentLogFactory) {
-					currentLogFactory = detectLogFactory();
-				}
-			}
-		}
-		return currentLogFactory;
+		return GlobalLogFactory.get();
 	}
 
 	/**
@@ -125,11 +117,7 @@ public abstract class LogFactory {
 	 * @return 自定义的日志工厂类
 	 */
 	public static LogFactory setCurrentLogFactory(Class<? extends LogFactory> logFactoryClass) {
-		try {
-			return setCurrentLogFactory(logFactoryClass.newInstance());
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Can not instance LogFactory class!", e);
-		}
+		return GlobalLogFactory.set(logFactoryClass);
 	}
 
 	/**
@@ -146,9 +134,7 @@ public abstract class LogFactory {
 	 * @return 自定义的日志工厂类
 	 */
 	public static LogFactory setCurrentLogFactory(LogFactory logFactory) {
-		logFactory.getLog(LogFactory.class).debug("Custom Use [{}] Logger.", logFactory.logFramworkName);
-		currentLogFactory = logFactory;
-		return currentLogFactory;
+		return GlobalLogFactory.set(logFactory);
 	}
 
 	/**
@@ -189,35 +175,26 @@ public abstract class LogFactory {
 	 * @see JdkLogFactory
 	 * @return 日志实现类
 	 */
-	private static LogFactory detectLogFactory() {
+	public static LogFactory create() {
 		LogFactory logFactory;
 		try {
 			logFactory = new Slf4jLogFactory(true);
-			logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 		} catch (NoClassDefFoundError e) {
 			try {
 				logFactory = new Log4j2LogFactory();
-				logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 			} catch (NoClassDefFoundError e2) {
 				try {
 					logFactory = new Log4jLogFactory();
-					logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 				} catch (NoClassDefFoundError e3) {
 					try {
 						logFactory = new ApacheCommonsLogFactory();
-						logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 					} catch (NoClassDefFoundError e4) {
 						try {
 							logFactory = new TinyLogFactory();
-							logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
 						} catch (NoClassDefFoundError e5) {
-							try {
-								logFactory = new ConsoleLogFactory();
-								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-							} catch (NoClassDefFoundError e6) {
-								logFactory = new JdkLogFactory();
-								logFactory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", logFactory.logFramworkName);
-							}
+							// 未找到任何可支持的日志库时判断依据：当JDK Logging的配置文件位于classpath中，使用JDK Logging，否则使用Console
+							final URL url = ResourceUtil.getResource("logging.properties");
+							logFactory = (null != url) ? new JdkLogFactory() : new ConsoleLogFactory();
 						}
 					}
 				}
