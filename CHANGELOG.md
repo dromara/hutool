@@ -7,6 +7,7 @@
 ### 新特性
 * 【http】HttpUtil.downloadFile增加超时重载（感谢@【深圳】富）
 * 【setting】Setting增加构造重载（pr#8@Gitee）
+* 【core】IterUtil增加fieldValueMap方法（感谢@【苏州】陈华 万缕数据@【北京】宁静）
 
 ### Bug修复
 * 修复StaticLog.warn打印级别错误问题（issue#IHMF9@Gitee）

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
 
 /**
  * {@link Iterable} 和 {@link Iterator} 相关工具类
@@ -160,6 +161,45 @@ public class IterUtil {
 			}
 		}
 		return countMap;
+	}
+	
+	/**
+	 * 字段值与列表值对应的Map，常用于元素对象中有唯一ID时需要按照这个ID查找对象的情况<br>
+	 * 例如：车牌号 =》车
+	 * 
+	 * @param <K> 字段名对应值得类型，不确定请使用Object
+	 * @param <V> 对象类型
+	 * @param iter 对象列表
+	 * @param fieldName 字段名（会通过反射获取其值）
+	 * @return 某个字段值与对象对应Map
+	 * @since 4.0.4
+	 */
+	public static <K, V> Map<K, V> fieldValueMap(Iterable<V> iter, String fieldName){
+		return fieldValueMap(null == iter ? null : iter.iterator(), fieldName);
+	}
+	
+	/**
+	 * 字段值与列表值对应的Map，常用于元素对象中有唯一ID时需要按照这个ID查找对象的情况<br>
+	 * 例如：车牌号 =》车
+	 * 
+	 * @param <K> 字段名对应值得类型，不确定请使用Object
+	 * @param <V> 对象类型
+	 * @param iter 对象列表
+	 * @param fieldName 字段名（会通过反射获取其值）
+	 * @return 某个字段值与对象对应Map
+	 * @since 4.0.4
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> fieldValueMap(Iterator<V> iter, String fieldName){
+		final Map<K, V> result = new HashMap<>();
+		if(null != iter) {
+			V value;
+			while(iter.hasNext()) {
+				value = iter.next();
+				result.put((K) ReflectUtil.getFieldValue(value, fieldName), value);
+			}
+		}
+		return result;
 	}
 
 	/**
