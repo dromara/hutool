@@ -60,6 +60,16 @@ public class Setting extends BasicSetting {
 	}
 
 	/**
+	 * 构造
+	 *
+	 * @param configFile 配置文件对象
+	 * @param isUseVariable 是否使用变量
+	 */
+	public Setting(File configFile,  boolean isUseVariable) {
+		super(configFile, DEFAULT_CHARSET, isUseVariable);
+	}
+
+	/**
 	 * 构造，相对于classes读取文件
 	 * 
 	 * @param path 相对路径
