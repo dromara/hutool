@@ -6,14 +6,16 @@ import cn.hutool.log.level.Level;
 
 /**
  * 静态日志类，用于在不引入日志对象的情况下打印日志
+ * 
  * @author Looly
  *
  */
 public final class StaticLog {
 	private static final String FQCN = StaticLog.class.getName();
-	
-	private StaticLog() {}
-	
+
+	private StaticLog() {
+	}
+
 	// ----------------------------------------------------------- Log method start
 	// ------------------------ Trace
 	/**
@@ -35,7 +37,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void trace(Log log, String format, Object... arguments) {
-		if(false == log(log, Level.TRACE, null, format, arguments)){
+		if (false == log(log, Level.TRACE, null, format, arguments)) {
 			log.trace(format, arguments);
 		}
 	}
@@ -60,7 +62,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void debug(Log log, String format, Object... arguments) {
-		if(false == log(log, Level.DEBUG, null, format, arguments)){
+		if (false == log(log, Level.DEBUG, null, format, arguments)) {
 			log.debug(format, arguments);
 		}
 	}
@@ -85,7 +87,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void info(Log log, String format, Object... arguments) {
-		if(false == log(log, Level.INFO, null, format, arguments)){
+		if (false == log(log, Level.INFO, null, format, arguments)) {
 			log.info(format, arguments);
 		}
 	}
@@ -100,17 +102,6 @@ public final class StaticLog {
 	 */
 	public static void warn(String format, Object... arguments) {
 		warn(LogFactory.get(Caller.getCallerCaller()), format, arguments);
-	}
-
-	/**
-	 * Warn等级日志，小于Error
-	 * 
-	 * @param log 日志对象
-	 * @param format 格式文本，{} 代表变量
-	 * @param arguments 变量对应的参数
-	 */
-	public static void warn(Log log, String format, Object... arguments) {
-		warn(log, null, format, arguments);
 	}
 
 	/**
@@ -129,12 +120,23 @@ public final class StaticLog {
 	 * Warn等级日志，小于Error
 	 * 
 	 * @param log 日志对象
+	 * @param format 格式文本，{} 代表变量
+	 * @param arguments 变量对应的参数
+	 */
+	public static void warn(Log log, String format, Object... arguments) {
+		warn(log, null, format, arguments);
+	}
+
+	/**
+	 * Warn等级日志，小于Error
+	 * 
+	 * @param log 日志对象
 	 * @param e 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Log log, Throwable e, String format, Object... arguments) {
-		if(false == log(log, Level.TRACE, e, format, arguments)){
+		if (false == log(log, Level.WARN, e, format, arguments)) {
 			log.warn(e, format, arguments);
 		}
 	}
@@ -149,17 +151,7 @@ public final class StaticLog {
 	public static void error(Throwable e) {
 		error(LogFactory.get(Caller.getCallerCaller()), e);
 	}
-	
-	/**
-	 * Error等级日志<br>
-	 * 
-	 * @param log 日志对象
-	 * @param e 需在日志中堆栈打印的异常
-	 */
-	public static void error(Log log, Throwable e) {
-		error(log, e, e.getMessage());
-	}
-	
+
 	/**
 	 * Error等级日志<br>
 	 * 由于动态获取Log，效率较低，建议在非频繁调用的情况下使用！！
@@ -169,17 +161,6 @@ public final class StaticLog {
 	 */
 	public static void error(String format, Object... arguments) {
 		error(LogFactory.get(Caller.getCallerCaller()), format, arguments);
-	}
-
-	/**
-	 * Error等级日志<br>
-	 * 
-	 * @param log 日志对象
-	 * @param format 格式文本，{} 代表变量
-	 * @param arguments 变量对应的参数
-	 */
-	public static void error(Log log, String format, Object... arguments) {
-		error(log, null, format, arguments);
 	}
 
 	/**
@@ -199,15 +180,36 @@ public final class StaticLog {
 	 * 
 	 * @param log 日志对象
 	 * @param e 需在日志中堆栈打印的异常
+	 */
+	public static void error(Log log, Throwable e) {
+		error(log, e, e.getMessage());
+	}
+
+	/**
+	 * Error等级日志<br>
+	 * 
+	 * @param log 日志对象
+	 * @param format 格式文本，{} 代表变量
+	 * @param arguments 变量对应的参数
+	 */
+	public static void error(Log log, String format, Object... arguments) {
+		error(log, null, format, arguments);
+	}
+
+	/**
+	 * Error等级日志<br>
+	 * 
+	 * @param log 日志对象
+	 * @param e 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Log log, Throwable e, String format, Object... arguments) {
-		if(false == log(log, Level.ERROR, e, format, arguments)){
+		if (false == log(log, Level.ERROR, e, format, arguments)) {
 			log.error(e, format, arguments);
 		}
 	}
-	
+
 	// ------------------------ Log
 	/**
 	 * 打印日志<br>
@@ -221,7 +223,7 @@ public final class StaticLog {
 	public static boolean log(Level level, Throwable t, String format, Object... arguments) {
 		return log(LogFactory.get(Caller.getCallerCaller()), level, t, format, arguments);
 	}
-	
+
 	/**
 	 * 打印日志<br>
 	 * 
@@ -233,18 +235,19 @@ public final class StaticLog {
 	 * @return 是否为LocationAwareLog日志
 	 */
 	public static boolean log(Log log, Level level, Throwable t, String format, Object... arguments) {
-		if(log instanceof LocationAwareLog){
+		if (log instanceof LocationAwareLog) {
 			((LocationAwareLog) log).log(FQCN, level, t, format, arguments);
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
+
 	// ----------------------------------------------------------- Log method end
-	
+
 	/**
 	 * 获得Log
+	 * 
 	 * @param clazz 日志发出的类
 	 * @return Log
 	 */
@@ -254,13 +257,14 @@ public final class StaticLog {
 
 	/**
 	 * 获得Log
+	 * 
 	 * @param name 自定义的日志发出者名称
 	 * @return Log
 	 */
 	public static Log get(String name) {
 		return LogFactory.get(name);
 	}
-	
+
 	/**
 	 * @return 获得日志，自动判定日志发出者
 	 */
