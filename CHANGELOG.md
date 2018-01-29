@@ -5,6 +5,8 @@
 ## 4.0.4
 
 ### 新特性
+* 【http】HttpUtil.downloadFile增加超时重载（感谢@【深圳】富）
+* 【setting】Setting增加构造重载（pr#8@Gitee）
 
 ### Bug修复
 * 修复StaticLog.warn打印级别错误问题（issue#IHMF9@Gitee）
