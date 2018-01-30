@@ -5,13 +5,14 @@
 ## 4.0.4
 
 ### 新特性
-* 【http】HttpUtil.downloadFile增加超时重载（感谢@【深圳】富）
+* 【http】    HttpUtil.downloadFile增加超时重载（感谢@【深圳】富）
 * 【setting】Setting增加构造重载（pr#8@Gitee）
-* 【core】IterUtil增加fieldValueMap方法（感谢@【苏州】陈华 万缕数据@【北京】宁静）
+* 【core】   IterUtil增加fieldValueMap方法（感谢@【苏州】陈华 万缕数据@【北京】宁静）
 
 ### Bug修复
-* 修复StaticLog.warn打印级别错误问题（issue#IHMF9@Gitee）
-* 修复MapUtil.newHashMap中isOrder（感谢@【珠海】hzhhui）
+* 【log】  修复StaticLog.warn打印级别错误问题（issue#IHMF9@Gitee）
+* 【core】修复MapUtil.newHashMap中isOrder（感谢@【珠海】hzhhui）
+* 【core】修复DateTime.season获取的问题（感谢@西湖断桥）
 
 -------------------------------------------------------------------------------------------------------------
 

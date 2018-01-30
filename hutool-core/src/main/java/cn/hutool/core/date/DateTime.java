@@ -257,7 +257,7 @@ public class DateTime extends Date {
 	 * @return 第几个季度
 	 */
 	public int season() {
-		return monthStartFromOne() / 3 + 1;
+		return monthStartFromOne() / 4 + 1;
 	}
 
 	/**
