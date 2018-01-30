@@ -103,7 +103,7 @@ public class MapUtil {
 	 * @return HashMap对象
 	 */
 	public static <K, V> HashMap<K, V> newHashMap(boolean isOrder) {
-		return newHashMap(DEFAULT_INITIAL_CAPACITY, false);
+		return newHashMap(DEFAULT_INITIAL_CAPACITY, isOrder);
 	}
 
 	/**
