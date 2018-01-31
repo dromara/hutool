@@ -25,7 +25,7 @@ import cn.hutool.log.LogFactory;
 public class UploadFile {
 	private static Log log = LogFactory.get();
 
-	private static final String TMP_FILE_PREFIX = "hulu-";
+	private static final String TMP_FILE_PREFIX = "hutool-";
 	private static final String TMP_FILE_SUFFIX = ".upload.tmp";
 
 	private UploadFileHeader header;
@@ -33,11 +33,17 @@ public class UploadFile {
 	
 	private int size = -1;
 
-	// file data in memory
+	// 文件流（小文件位于内存中）
 	private byte[] data;
-	// file data in temporary directory
+	// 临时文件（大文件位于临时文件夹中）
 	private File tempFile;
 
+	/**
+	 * 构造
+	 * 
+	 * @param header 头部信息
+	 * @param setting 上传设置
+	 */
 	public UploadFile(UploadFileHeader header, UploadSetting setting) {
 		this.header = header;
 		this.setting = setting;

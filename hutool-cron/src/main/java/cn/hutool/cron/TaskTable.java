@@ -192,7 +192,7 @@ public class TaskTable {
 	 */
 	protected void executeTaskIfMatchInternal(long millis) {
 		for (int i = 0; i < size; i++) {
-			if (patterns.get(i).match(timezone, millis)) {
+			if (patterns.get(i).match(timezone, millis, this.scheduler.matchSecond)) {
 				this.scheduler.taskExecutorManager.spawnExecutor(tasks.get(i));
 			}
 		}

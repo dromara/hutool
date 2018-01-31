@@ -25,7 +25,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
@@ -376,7 +375,20 @@ public class HttpUtil {
 	public static long downloadFile(String url, File destFile) {
 		return downloadFile(url, destFile, null);
 	}
-
+	
+	/**
+	 * 下载远程文件
+	 * 
+	 * @param url 请求的url
+	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param timeout 超时，单位毫秒，-1表示默认超时
+	 * @return 文件大小
+	 * @since 4.0.4
+	 */
+	public static long downloadFile(String url, File destFile, int timeout) {
+		return downloadFile(url, destFile, timeout, null);
+	}
+	
 	/**
 	 * 下载远程文件
 	 * 
@@ -386,27 +398,27 @@ public class HttpUtil {
 	 * @return 文件大小
 	 */
 	public static long downloadFile(String url, File destFile, StreamProgress streamProgress) {
+		return downloadFile(url, destFile, -1, streamProgress);
+	}
+
+	/**
+	 * 下载远程文件
+	 * 
+	 * @param url 请求的url
+	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param timeout 超时，单位毫秒，-1表示默认超时
+	 * @param streamProgress 进度条
+	 * @return 文件大小
+	 * @since 4.0.4
+	 */
+	public static long downloadFile(String url, File destFile, int timeout, StreamProgress streamProgress) {
 		if (StrUtil.isBlank(url)) {
 			throw new NullPointerException("[url] is null!");
 		}
 		if (null == destFile) {
 			throw new NullPointerException("[destFile] is null!");
 		}
-		if (destFile.isDirectory()) {
-			String fileName = StrUtil.subSuf(url, url.lastIndexOf('/') + 1);
-			if (StrUtil.isBlank(fileName)) {
-				fileName = HttpUtil.encode(url, CharsetUtil.CHARSET_UTF_8);
-			}
-			destFile = FileUtil.file(destFile, fileName);
-		}
-
-		OutputStream out = null;
-		try {
-			out = FileUtil.getOutputStream(destFile);
-			return download(url, out, true, streamProgress);
-		} catch (IORuntimeException e) {
-			throw new HttpException(e);
-		}
+		return HttpRequest.get(url).timeout(timeout).executeAsync().writeBody(destFile, streamProgress);
 	}
 
 	/**

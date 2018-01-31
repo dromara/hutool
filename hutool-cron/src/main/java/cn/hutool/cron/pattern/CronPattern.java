@@ -126,10 +126,11 @@ public class CronPattern {
 	 * 给定时间是否匹配定时任务表达式
 	 * 
 	 * @param millis 时间毫秒数
+	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
-	public boolean match(long millis) {
-		return match(TimeZone.getDefault(), millis);
+	public boolean match(long millis, boolean isMatchSecond) {
+		return match(TimeZone.getDefault(), millis, isMatchSecond);
 	}
 
 	/**
@@ -137,21 +138,23 @@ public class CronPattern {
 	 * 
 	 * @param timezone 时区 {@link TimeZone}
 	 * @param millis 时间毫秒数
+	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
-	public boolean match(TimeZone timezone, long millis) {
+	public boolean match(TimeZone timezone, long millis, boolean isMatchSecond) {
 		GregorianCalendar calendar = new GregorianCalendar(timezone);
 		calendar.setTimeInMillis(millis);
-		return match(calendar);
+		return match(calendar, isMatchSecond);
 	}
 
 	/**
 	 * 给定时间是否匹配定时任务表达式
 	 * 
 	 * @param calendar 时间
+	 * @param isMatchSecond 是否匹配秒
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
-	public boolean match(GregorianCalendar calendar) {
+	public boolean match(GregorianCalendar calendar, boolean isMatchSecond) {
 		final int second = calendar.get(Calendar.SECOND);
 		final int minute = calendar.get(Calendar.MINUTE);
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -162,7 +165,7 @@ public class CronPattern {
 
 		boolean eval;
 		for (int i = 0; i < matcherSize; i++) {
-			eval = secondMatchers.get(i).match(second) // 匹配秒
+			eval = (isMatchSecond ? secondMatchers.get(i).match(second) : true) // 匹配秒（非秒匹配模式下始终返回true）
 					&& minuteMatchers.get(i).match(minute)// 匹配分
 					&& hourMatchers.get(i).match(hour)// 匹配时
 					&& isMatchDayOfMonth(dayOfMonthMatchers.get(i), dayOfMonth, month, calendar.isLeapYear(year))// 匹配日

@@ -39,6 +39,29 @@ public class DateTimeTest {
 	}
 	
 	@Test
+	public void seasonTest(){
+		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		//季度（非季节）
+		Season season = dateTime.seasonEnum();
+		Assert.assertEquals(Season.SPRING, season);
+		
+		dateTime = new DateTime("2017-04-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		//季度（非季节）
+		season = dateTime.seasonEnum();
+		Assert.assertEquals(Season.SUMMER, season);
+		
+		dateTime = new DateTime("2017-09-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		//季度（非季节）
+		season = dateTime.seasonEnum();
+		Assert.assertEquals(Season.AUTUMN, season);
+		
+		dateTime = new DateTime("2017-12-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		//季度（非季节）
+		season = dateTime.seasonEnum();
+		Assert.assertEquals(Season.WINTER, season);
+	}
+	
+	@Test
 	public void mutableTest(){
 		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
 		
