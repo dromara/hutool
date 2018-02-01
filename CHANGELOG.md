@@ -7,6 +7,7 @@
 ### 新特性
 * 【json】 toBean方法支持Map.class参数，消除歧义
 * 【core】FileWriter和FileUtil增加writeMap方法
+* 【core】新增CsvWriter和CsvUtil
 
 ### Bug修复
 
