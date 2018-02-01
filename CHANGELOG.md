@@ -5,6 +5,7 @@
 ## 4.0.5
 
 ### 新特性
+* 【json】toBean方法支持Map.class参数，消除歧义
 
 ### Bug修复
 

@@ -203,7 +203,7 @@ public class HttpUtil {
 	 * @param customCharset 自定义请求字符集，如果字符集获取不到，使用此字符集
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
-	public static String get(String urlString, String customCharset) {
+	public static String get(String urlString, Charset customCharset) {
 		return HttpRequest.get(urlString).charset(customCharset).execute().body();
 	}
 
