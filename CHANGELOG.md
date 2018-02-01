@@ -5,7 +5,8 @@
 ## 4.0.5
 
 ### 新特性
-* 【json】toBean方法支持Map.class参数，消除歧义
+* 【json】 toBean方法支持Map.class参数，消除歧义
+* 【core】FileWriter和FileUtil增加writeMap方法
 
 ### Bug修复
 

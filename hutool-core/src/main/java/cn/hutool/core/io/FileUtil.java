@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
@@ -2587,6 +2588,37 @@ public class FileUtil {
 	 */
 	public static <T> File writeLines(Collection<T> list, File file, Charset charset, boolean isAppend) throws IORuntimeException {
 		return FileWriter.create(file, charset).writeLines(list, isAppend);
+	}
+	
+	/**
+	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
+	 * 
+	 * @param map Map
+	 * @param file 文件
+	 * @param kvSeparator 键和值之间的分隔符，如果传入null使用默认分隔符" = "
+	 * @param isAppend 是否追加
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.5
+	 */
+	public static File writeUtf8Map(Map<?, ?> map, File file, String kvSeparator, boolean isAppend) throws IORuntimeException {
+		return FileWriter.create(file, CharsetUtil.CHARSET_UTF_8).writeMap(map, kvSeparator, isAppend);
+	}
+	
+	/**
+	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
+	 * 
+	 * @param map Map
+	 * @param file 文件
+	 * @param charset 字符集编码
+	 * @param kvSeparator 键和值之间的分隔符，如果传入null使用默认分隔符" = "
+	 * @param isAppend 是否追加
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.5
+	 */
+	public static File writeMap(Map<?, ?> map, File file, Charset charset, String kvSeparator, boolean isAppend) throws IORuntimeException {
+		return FileWriter.create(file, charset).writeMap(map, kvSeparator, isAppend);
 	}
 
 	/**

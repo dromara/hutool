@@ -10,12 +10,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 文件写入器
@@ -192,24 +195,55 @@ public class FileWriter extends FileWrapper{
 	 * @since 3.1.0
 	 */
 	public <T> File writeLines(Collection<T> list, LineSeparator lineSeparator, boolean isAppend) throws IORuntimeException {
-		PrintWriter writer = null;
-		try {
-			writer = getPrintWriter(isAppend);
+		try (PrintWriter writer = getPrintWriter(isAppend)){
 			for (T t : list) {
-				if (t != null) {
-					if(null == lineSeparator) {
-						//默认换行符
-						writer.println(t.toString());
-					}else {
-						//自定义换行符
-						writer.print(t.toString());
-						writer.print(lineSeparator.getValue());
-					}
+				if (null != t) {
+					writer.print(t.toString());
+					printNewLine(writer, lineSeparator);
 					writer.flush();
 				}
 			}
-		} finally {
-			IoUtil.close(writer);
+		}
+		return this.file;
+	}
+	
+	/**
+	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
+	 * 
+	 * @param map Map
+	 * @param kvSeparator 键和值之间的分隔符，如果传入null使用默认分隔符" = "
+	 * @param isAppend 是否追加
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.5
+	 */
+	public File writeMap(Map<?, ?> map, String kvSeparator, boolean isAppend) throws IORuntimeException {
+		return writeMap(map, null, kvSeparator, isAppend);
+	}
+	
+	/**
+	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
+	 * 
+	 * @param map Map
+	 * @param lineSeparator 换行符枚举（Windows、Mac或Linux换行符）
+	 * @param kvSeparator 键和值之间的分隔符，如果传入null使用默认分隔符" = "
+	 * @param isAppend 是否追加
+	 * @return 目标文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.5
+	 */
+	public File writeMap(Map<?, ?> map, LineSeparator lineSeparator, String kvSeparator, boolean isAppend) throws IORuntimeException {
+		if(null == kvSeparator) {
+			kvSeparator = " = ";
+		}
+		try(PrintWriter writer  = getPrintWriter(isAppend)) {
+			for (Entry<?, ?> entry : map.entrySet()) {
+				if (null != entry) {
+					writer.print(StrUtil.format("{}{}{}", entry.getKey(), kvSeparator, entry.getValue()));
+					printNewLine(writer, lineSeparator);
+					writer.flush();
+				}
+			}
 		}
 		return this.file;
 	}
@@ -334,6 +368,22 @@ public class FileWriter extends FileWrapper{
 		Assert.notNull(file, "File to write content is null !");
 		if(this.file.exists() && false == file.isFile()){
 			throw new IORuntimeException("File [{}] is not a file !", this.file.getAbsoluteFile());
+		}
+	}
+	
+	/**
+	 * 打印新行
+	 * @param writer Writer
+	 * @param lineSeparator 换行符枚举
+	 * @since 4.0.5
+	 */
+	private void printNewLine(PrintWriter writer, LineSeparator lineSeparator) {
+		if(null == lineSeparator) {
+			//默认换行符
+			writer.println();
+		}else {
+			//自定义换行符
+			writer.print(lineSeparator.getValue());
 		}
 	}
 }
