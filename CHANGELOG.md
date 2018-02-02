@@ -10,9 +10,11 @@
 * 【core】新增CsvWriter和CsvUtil
 * 【poi】  改进ExcelWriter.flush未指定文件时的报错信息
 * 【db】   在配置文件不存在时优化错误提示
+* 【core】BeanUtil.beanToMap方法支持key editor
 
 ### Bug修复
-* 【poi】修复ExcelReader获取Workbook为空的问题
+* 【poi】  修复ExcelReader获取Workbook为空的问题
+* 【core】修复ImageUtil.scale的问题（感谢@【北京】千古不见一人闲）
 
 -------------------------------------------------------------------------------------------------------------
 
