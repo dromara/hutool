@@ -55,7 +55,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * 获得一个类中所有字段列表
+	 * 获得一个类中所有构造列表
 	 * 
 	 * @param <T> 构造的对象类型
 	 * @param beanClass 类
