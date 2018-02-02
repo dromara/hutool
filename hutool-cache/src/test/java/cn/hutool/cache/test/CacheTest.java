@@ -73,7 +73,7 @@ public class CacheTest {
 		
 		//启动定时任务，每5毫秒秒检查一次过期
 		timedCache.schedulePrune(5);
-		
+		//等待5毫秒
 		ThreadUtil.sleep(5);
 		
 		//5毫秒后由于value2设置了5毫秒过期，因此只有value2被保留下来
