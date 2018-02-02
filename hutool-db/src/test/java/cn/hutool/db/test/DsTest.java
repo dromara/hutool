@@ -27,7 +27,7 @@ import cn.hutool.db.ds.tomcat.TomcatDSFactory;
 public class DsTest {
 	
 	@Test
-	public void DefaultDsTest() throws SQLException{
+	public void defaultDsTest() throws SQLException{
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
 		List<Entity> all = runner.findAll("user");
@@ -35,7 +35,7 @@ public class DsTest {
 	}
 	
 	@Test
-	public void HikariDsTest() throws SQLException{
+	public void hikariDsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new HikariDSFactory());
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
@@ -44,7 +44,7 @@ public class DsTest {
 	}
 	
 	@Test
-	public void DruidDsTest() throws SQLException{
+	public void druidDsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new DruidDSFactory());
 		DataSource ds = DSFactory.get();
 		
@@ -54,7 +54,7 @@ public class DsTest {
 	}
 	
 	@Test
-	public void TomcatDsTest() throws SQLException{
+	public void tomcatDsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new TomcatDSFactory());
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
@@ -63,7 +63,7 @@ public class DsTest {
 	}
 	
 	@Test
-	public void DbcpDsTest() throws SQLException{
+	public void dbcpDsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new DbcpDSFactory());
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
@@ -72,7 +72,7 @@ public class DsTest {
 	}
 	
 	@Test
-	public void C3p0DsTest() throws SQLException{
+	public void c3p0DsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);
@@ -81,7 +81,7 @@ public class DsTest {
 	}
 	
 	@Test
-	public void HutoolPoolTest() throws SQLException{
+	public void hutoolPoolTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new PooledDSFactory());
 		DataSource ds = DSFactory.get();
 		SqlRunner runner = SqlRunner.create(ds);

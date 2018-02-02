@@ -8,7 +8,8 @@
 * 【json】 toBean方法支持Map.class参数，消除歧义
 * 【core】FileWriter和FileUtil增加writeMap方法
 * 【core】新增CsvWriter和CsvUtil
-* 【poi】改进ExcelWriter.flush未指定文件时的报错信息
+* 【poi】  改进ExcelWriter.flush未指定文件时的报错信息
+* 【db】   在配置文件不存在时优化错误提示
 
 ### Bug修复
 * 【poi】修复ExcelReader获取Workbook为空的问题
