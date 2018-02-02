@@ -105,6 +105,7 @@ public class ExcelReader implements Closeable {
 	 */
 	public ExcelReader(Workbook book, int sheetIndex) {
 		this(book.getSheetAt(sheetIndex));
+		this.workbook = book;
 	}
 
 	/**
