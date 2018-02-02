@@ -86,7 +86,7 @@ public final class CsvWriter implements Closeable, Flushable {
 	/**
 	 * 构造
 	 * 
-	 * @param file File CSV文件
+	 * @param file CSV文件
 	 * @param charset 编码
 	 * @param isAppend 是否追加
 	 */
@@ -97,7 +97,7 @@ public final class CsvWriter implements Closeable, Flushable {
 	/**
 	 * 构造
 	 * 
-	 * @param file File CSV文件路径
+	 * @param filePath CSV文件路径
 	 * @param charset 编码
 	 * @param isAppend 是否追加
 	 * @param config 写出配置，null则使用默认配置
@@ -109,7 +109,7 @@ public final class CsvWriter implements Closeable, Flushable {
 	/**
 	 * 构造
 	 * 
-	 * @param file File CSV文件
+	 * @param file CSV文件
 	 * @param charset 编码
 	 * @param isAppend 是否追加
 	 * @param config 写出配置，null则使用默认配置
@@ -121,7 +121,7 @@ public final class CsvWriter implements Closeable, Flushable {
 	/**
 	 * 构造，使用默认配置
 	 * 
-	 * @param writer Writer
+	 * @param writer {@link Writer}
 	 */
 	public CsvWriter(Writer writer) {
 		this(writer, null);
