@@ -153,9 +153,7 @@ public class BeanCopier<T> implements Copier<T>{
 				}
 
 				// 执行set方法注入值
-				if (null != setterMethod) {
-					setterMethod.invoke(bean, value);
-				}
+				setterMethod.invoke(bean, value);
 			} catch (Exception e) {
 				if (copyOptions.ignoreError) {
 					continue;// 忽略注入失败

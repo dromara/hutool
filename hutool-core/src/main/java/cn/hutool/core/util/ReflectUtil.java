@@ -159,7 +159,7 @@ public class ReflectUtil {
 	 * @return 字段值
 	 * @throws UtilException 包装IllegalAccessException异常
 	 */
-	public static Object getFieldValue(Object obj, String fieldName) throws UtilException{
+	public static Object getFieldValue(Object obj, String fieldName) throws UtilException {
 		if (null == obj || StrUtil.isBlank(fieldName)) {
 			return null;
 		}
@@ -174,7 +174,7 @@ public class ReflectUtil {
 	 * @return 字段值
 	 * @throws UtilException 包装IllegalAccessException异常
 	 */
-	public static Object getFieldValue(Object obj, Field field) throws UtilException{
+	public static Object getFieldValue(Object obj, Field field) throws UtilException {
 		if (null == obj || null == field) {
 			return null;
 		}
@@ -196,7 +196,7 @@ public class ReflectUtil {
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
 	 * @throws UtilException 包装IllegalAccessException异常
 	 */
-	public static void setFieldValue(Object obj, String fieldName, Object value) throws UtilException{
+	public static void setFieldValue(Object obj, String fieldName, Object value) throws UtilException {
 		Assert.notNull(obj);
 		Assert.notBlank(fieldName);
 		setFieldValue(obj, getField(obj.getClass(), fieldName), value);
@@ -210,7 +210,7 @@ public class ReflectUtil {
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
 	 * @throws UtilException UtilException 包装IllegalAccessException异常
 	 */
-	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException{
+	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException {
 		Assert.notNull(obj);
 		Assert.notNull(field);
 		field.setAccessible(true);
@@ -238,7 +238,7 @@ public class ReflectUtil {
 		}
 		return getMethod(obj.getClass(), methodName, ClassUtil.getClasses(args));
 	}
-	
+
 	/**
 	 * 忽略大小写查找指定方法，如果找不到对应的方法则返回<code>null</code>
 	 * 
@@ -252,7 +252,7 @@ public class ReflectUtil {
 	public static Method getMethodIgnoreCase(Class<?> clazz, String methodName, Class<?>... paramTypes) throws SecurityException {
 		return getMethod(clazz, true, methodName, paramTypes);
 	}
-	
+
 	/**
 	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
 	 * 
@@ -294,7 +294,7 @@ public class ReflectUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获得指定类中的Public方法名<br>
 	 * 去重重载的方法
@@ -427,7 +427,7 @@ public class ReflectUtil {
 	 * @throws UtilException 包装各类异常
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T newInstance(String clazz) throws UtilException{
+	public static <T> T newInstance(String clazz) throws UtilException {
 		try {
 			return (T) Class.forName(clazz).newInstance();
 		} catch (Exception e) {
@@ -444,7 +444,7 @@ public class ReflectUtil {
 	 * @return 对象
 	 * @throws UtilException 包装各类异常
 	 */
-	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException{
+	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
 			try {
 				return (T) clazz.newInstance();
@@ -477,15 +477,15 @@ public class ReflectUtil {
 		try {
 			return (T) beanClass.newInstance();
 		} catch (Exception e) {
-			//ignore
-			//默认构造不存在的情况下查找其它构造
+			// ignore
+			// 默认构造不存在的情况下查找其它构造
 		}
-		
+
 		final Constructor<T>[] constructors = getConstructors(beanClass);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {
 			parameterTypes = constructor.getParameterTypes();
-			if(0 == parameterTypes.length) {
+			if (0 == parameterTypes.length) {
 				continue;
 			}
 			try {
@@ -508,13 +508,14 @@ public class ReflectUtil {
 	 * @return 结果
 	 * @throws UtilException 多种异常包装
 	 */
-	public static <T> T invokeStatic(Method method, Object... args) throws UtilException{
+	public static <T> T invokeStatic(Method method, Object... args) throws UtilException {
 		return invoke(null, method, args);
 	}
-	
+
 	/**
 	 * 执行方法<br>
 	 * 执行前要检查给定参数：
+	 * 
 	 * <pre>
 	 * 1. 参数个数是否与方法参数个数一致
 	 * 2. 如果某个参数为null但是方法这个位置的参数为原始类型，则赋予原始类型默认值
@@ -527,20 +528,20 @@ public class ReflectUtil {
 	 * @return 结果
 	 * @throws UtilException 一些列异常的包装
 	 */
-	public static <T> T invokeWithCheck(Object obj, Method method, Object... args) throws UtilException{
+	public static <T> T invokeWithCheck(Object obj, Method method, Object... args) throws UtilException {
 		final Class<?>[] types = method.getParameterTypes();
-		if(null != types && null != args) {
+		if (null != types && null != args) {
 			Assert.isTrue(args.length == types.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, types.length);
 			Class<?> type;
-			for(int i = 0; i < args.length; i++) {
+			for (int i = 0; i < args.length; i++) {
 				type = types[i];
-				if(type.isPrimitive() && null == args[i]) {
-					//参数是原始类型，而传入参数为null时赋予默认值
+				if (type.isPrimitive() && null == args[i]) {
+					// 参数是原始类型，而传入参数为null时赋予默认值
 					args[i] = ClassUtil.getDefaultValue(type);
 				}
 			}
 		}
-		
+
 		return invoke(obj, method, args);
 	}
 
@@ -555,18 +556,18 @@ public class ReflectUtil {
 	 * @throws UtilException 一些列异常的包装
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException{
+	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException {
 		if (false == method.isAccessible()) {
 			method.setAccessible(true);
 		}
-		
+
 		try {
 			return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, args);
 		} catch (Exception e) {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 执行对象中指定方法
 	 * 
@@ -578,7 +579,7 @@ public class ReflectUtil {
 	 * @throws UtilException IllegalAccessException包装
 	 * @since 3.1.2
 	 */
-	public static <T> T invoke(Object obj, String methodName, Object... args) throws UtilException{
+	public static <T> T invoke(Object obj, String methodName, Object... args) throws UtilException {
 		final Method method = getMethodOfObj(obj, methodName, args);
 		if (null == method) {
 			throw new UtilException(StrUtil.format("No such method: [{}]", methodName));

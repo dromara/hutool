@@ -433,7 +433,7 @@ public final class JSONUtil {
 			switch (c) {
 			case '\\':
 			case '"':
-				writer.write("\\\"");
+				writer.write("\\");
 				writer.write(c);
 				break;
 			case '/':
