@@ -12,6 +12,7 @@
 * 【db】   在配置文件不存在时优化错误提示
 * 【core】BeanUtil.beanToMap方法支持自定义key
 * 【core】增加ModifierUtil，修饰符工具类
+* 【http】下载文件时文件名首先从头信息中获取
 
 ### Bug修复
 * 【poi】  修复ExcelReader获取Workbook为空的问题
