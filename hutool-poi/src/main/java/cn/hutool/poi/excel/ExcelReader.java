@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -434,9 +435,20 @@ public class ExcelReader implements Closeable {
 	 * @since 4.0.3
 	 */
 	public Object readCellValue(int x, int y) {
+		return InternalExcelUtil.getCellValue(getCell(x, y), this.cellEditor);
+	}
+	
+	/**
+	 * 获取指定坐标单元格
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return {@link Cell}
+	 * @since 4.0.5
+	 */
+	public Cell getCell(int x, int y) {
 		final Row row = this.sheet.getRow(y);
 		if(null != row) {
-			return InternalExcelUtil.getCellValue(row.getCell(x), this.cellEditor);
+			return row.getCell(x);
 		}
 		return null;
 	}
