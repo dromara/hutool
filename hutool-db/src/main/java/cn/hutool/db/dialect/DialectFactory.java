@@ -28,7 +28,9 @@ public class DialectFactory {
 	/** JDBC 驱动 MySQL，在6.X版本中变动驱动类名，且使用SPI机制 */
 	public final static String DRIVER_MYSQL_V6 = "com.mysql.cj.jdbc.Driver";
 	/** JDBC 驱动 Oracle */
-	public final static String DRIVER_ORACLE = "oracle.jdbc.driver.OracleDriver";
+	public final static String DRIVER_ORACLE = "oracle.jdbc.OracleDriver";
+	/** JDBC 驱动 Oracle，旧版使用 */
+	public final static String DRIVER_ORACLE_OLD = "oracle.jdbc.driver.OracleDriver";
 	/** JDBC 驱动 PostgreSQL */
 	public final static String DRIVER_POSTGRESQL = "org.postgresql.Driver";
 	/** JDBC 驱动 SQLLite3 */
@@ -50,7 +52,8 @@ public class DialectFactory {
 	}
 
 	/**
-	 * 创建方言
+	 * 根据驱动名创建方言<br>
+	 * 驱动名是不分区大小写完全匹配的
 	 * 
 	 * @param driverName JDBC驱动类名
 	 * @return 方言
@@ -59,7 +62,7 @@ public class DialectFactory {
 		if (StrUtil.isNotBlank(driverName)) {
 			if (DRIVER_MYSQL.equalsIgnoreCase(driverName) || DRIVER_MYSQL_V6.equalsIgnoreCase(driverName)) {
 				return new MysqlDialect();
-			} else if (DRIVER_ORACLE.equalsIgnoreCase(driverName)) {
+			} else if (DRIVER_ORACLE.equalsIgnoreCase(driverName) || DRIVER_ORACLE_OLD.equalsIgnoreCase(driverName)) {
 				return new OracleDialect();
 			} else if (DRIVER_SQLLITE3.equalsIgnoreCase(driverName)) {
 				return new Sqlite3Dialect();
@@ -93,7 +96,7 @@ public class DialectFactory {
 		if (nameContainsProductInfo.contains("mysql")) {
 			driver = ClassLoaderUtil.isPresent(DRIVER_MYSQL_V6) ? DRIVER_MYSQL_V6 : DRIVER_MYSQL;
 		} else if (nameContainsProductInfo.contains("oracle")) {
-			driver = DRIVER_ORACLE;
+			driver = ClassLoaderUtil.isPresent(DRIVER_ORACLE) ? DRIVER_ORACLE : DRIVER_ORACLE_OLD;
 		} else if (nameContainsProductInfo.contains("postgresql")) {
 			driver = DRIVER_POSTGRESQL;
 		} else if (nameContainsProductInfo.contains("sqlite")) {
