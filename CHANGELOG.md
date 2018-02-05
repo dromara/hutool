@@ -5,6 +5,7 @@
 ## 4.0.6
 
 ### 新特性
+* 【poi】ExcelReader增加getWriter、getOrCreateCell方法
 
 ### Bug修复
 
