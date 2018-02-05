@@ -167,7 +167,7 @@ public class JschUtil {
 		}
 		return (ChannelSftp) channel;
 	}
-	
+
 	/**
 	 * 创建Sftp
 	 * 
@@ -180,6 +180,17 @@ public class JschUtil {
 	 */
 	public static Sftp createSftp(String sshHost, int sshPort, String sshUser, String sshPass) {
 		return new Sftp(sshHost, sshPort, sshUser, sshPass);
+	}
+
+	/**
+	 * 创建Sftp
+	 * 
+	 * @param session SSH会话
+	 * @return {@link Sftp}
+	 * @since 4.0.5
+	 */
+	public static Sftp createSftp(Session session) {
+		return new Sftp(session);
 	}
 
 	/**

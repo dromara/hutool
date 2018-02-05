@@ -15,6 +15,8 @@
 * 【http】下载文件时文件名首先从头信息中获取
 * 【poi】  ExcelReader增加getCell方法
 * 【db】   Oracle驱动变更
+* 【extra】扩充Sftp方法（感谢@【广西】Succy）
+* 【core】ImageUtil增加binary方法，生成二值化图片（感谢@【天津】〓下页）
 
 ### Bug修复
 * 【poi】  修复ExcelReader获取Workbook为空的问题

@@ -44,6 +44,7 @@ import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
@@ -59,9 +60,9 @@ import cn.hutool.core.util.URLUtil;
 public class FileUtil {
 
 	/** 类Unix路径分隔符 */
-	private static final char UNIX_SEPARATOR = StrUtil.C_SLASH;
+	private static final char UNIX_SEPARATOR = CharUtil.SLASH;
 	/** Windows路径分隔符 */
-	private static final char WINDOWS_SEPARATOR = StrUtil.C_BACKSLASH;
+	private static final char WINDOWS_SEPARATOR = CharUtil.BACKSLASH;
 	/** Windows下文件名中的无效字符 */
 	private static Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
 
@@ -1282,7 +1283,7 @@ public class FileUtil {
 		if (StrUtil.isNotEmpty(dirPath) && StrUtil.isNotEmpty(filePath)) {
 			dirPath = StrUtil.addSuffixIfNot(normalize(dirPath), "/");
 			filePath = StrUtil.removeSuffix(normalize(filePath), "/");
-			
+
 			return StrUtil.removePrefixIgnoreCase(filePath, dirPath);
 		}
 		return filePath;
@@ -1483,7 +1484,7 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获得输入流
 	 * 
@@ -1524,7 +1525,7 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -1558,7 +1559,7 @@ public class FileUtil {
 	public static BufferedReader getUtf8Reader(String path) throws IORuntimeException {
 		return getReader(path, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 获得一个文件读取器
 	 * 
@@ -2200,6 +2201,23 @@ public class FileUtil {
 		return new PrintWriter(getWriter(file, charset, isAppend));
 	}
 
+	/**
+	 * 获取当前系统的换行分隔符
+	 * 
+	 * <pre>
+	 * Windows: \r\n
+	 * Mac: \r
+	 * Linux: \n
+	 * </pre>
+	 * 
+	 * @return 换行符
+	 * @since 4.0.5
+	 */
+	public static String getLineSeparator() {
+		return System.lineSeparator();
+		// return System.getProperty("line.separator");
+	}
+
 	// -------------------------------------------------------------------------------------------- out end
 
 	/**
@@ -2589,7 +2607,7 @@ public class FileUtil {
 	public static <T> File writeLines(Collection<T> list, File file, Charset charset, boolean isAppend) throws IORuntimeException {
 		return FileWriter.create(file, charset).writeLines(list, isAppend);
 	}
-	
+
 	/**
 	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
 	 * 
@@ -2604,7 +2622,7 @@ public class FileUtil {
 	public static File writeUtf8Map(Map<?, ?> map, File file, String kvSeparator, boolean isAppend) throws IORuntimeException {
 		return FileWriter.create(file, CharsetUtil.CHARSET_UTF_8).writeMap(map, kvSeparator, isAppend);
 	}
-	
+
 	/**
 	 * 将Map写入文件，每个键值对为一行，一行中键与值之间使用kvSeparator分隔
 	 * 
