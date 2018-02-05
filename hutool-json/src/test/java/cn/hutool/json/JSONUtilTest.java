@@ -1,8 +1,6 @@
 package cn.hutool.json;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +9,7 @@ import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 
@@ -52,16 +50,23 @@ public class JSONUtilTest {
 	
 	@Test
 	public void toJsonStrTest3() {
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("mobile", "17610836523");
-		model.put("type", 1);
-		model.put("date", Calendar.getInstance());
-		model.put("date2", new Date());
+		//验证某个字段为JSON字符串时转义是否规范
+		JSONObject object = new JSONObject();
+		object.put("name", "123123");
+		object.put("value", "\\");
+		object.put("value2", "</");
 		
-		String str = JSONUtil.toJsonStr(model);
-		Console.log(str);
+		HashMap<String, String> map = MapUtil.newHashMap();
+		map.put("user", object.toString());
+		
+		JSONObject json = JSONUtil.parseObj(map);
+		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"<\\/\"}", json.get("user"));
+		Assert.assertEquals("{\"user\":\"{\\\"name\\\":\\\"123123\\\",\\\"value\\\":\\\"\\\\\\\\\\\",\\\"value2\\\":\\\"<\\\\/\\\"}\"}", json.toString());
+		
+		JSONObject json2 = JSONUtil.parseObj(json.toString());
+		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"<\\/\"}", json2.get("user"));
 	}
-
+	
 	@Test
 	public void toBeanTest() {
 		String json = "{\"ADT\":[[{\"BookingCode\":[\"N\",\"N\"]}]]}";
@@ -69,5 +74,4 @@ public class JSONUtilTest {
 		Price price = JSONUtil.toBean(json, Price.class);
 		Assert.assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
 	}
-
 }

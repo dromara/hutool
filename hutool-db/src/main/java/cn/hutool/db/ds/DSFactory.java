@@ -3,7 +3,7 @@ package cn.hutool.db.ds;
 import javax.sql.DataSource;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
@@ -59,9 +59,13 @@ public abstract class DSFactory {
 		if (null == setting) {
 			try {
 				setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
-			} catch (IORuntimeException e) {
+			} catch (NoResourceException e) {
 				//尝试ClassPath下直接读取配置文件
-				setting = new Setting(DEFAULT_DB_SETTING_PATH2, true);
+				try {
+					setting = new Setting(DEFAULT_DB_SETTING_PATH2, true);
+				} catch (NoResourceException e2) {
+					throw new NoResourceException("Default db setting [{}] or [{}] in classpath not found !", DEFAULT_DB_SETTING_PATH, DEFAULT_DB_SETTING_PATH2);
+				}
 			}
 		}
 		this.setting = setting;

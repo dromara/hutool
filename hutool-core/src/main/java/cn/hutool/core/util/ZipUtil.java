@@ -268,7 +268,7 @@ public class ZipUtil {
 		try {
 			out = getZipOutputStream(zipFile, charset);
 			for(int i = 0; i < paths.length; i++) {
-				zip(ins[i], paths[i], out);
+				addFile(ins[i], paths[i], out);
 			}
 		} finally {
 			IoUtil.close(out);
@@ -538,32 +538,45 @@ public class ZipUtil {
 		if(file.isDirectory()){// 如果是目录，则压缩压缩目录中的文件或子目录
 			if(StrUtil.isNotEmpty(subPath)) {
 				//加入目录，此目录可能为空
-				zipDir(subPath, out);
+				addDir(subPath, out);
 			}
 			//压缩目录下的子文件或目录
 			for (File childFile : file.listFiles()) {
 				zip(childFile, srcRootDir, out);
 			}
 		} else {// 如果是文件或其它符号，则直接压缩该文件
-			BufferedInputStream in = null;
-			try {
-				in = FileUtil.getInputStream(file);
-				zip(in, subPath, out);
-			} finally {
-				IoUtil.close(in);
-			}
+			addFile(file, subPath, out);
+		}
+	}
+	
+	/**
+	 * 添加文件到压缩包
+	 * 
+	 * @param file 需要压缩的文件
+	 * @param path 在压缩文件中的路径
+	 * @param out 压缩文件存储对象
+	 * @throws UtilException IO异常
+	 * @since 4.0.5
+	 */
+	private static void addFile(File file, String path, ZipOutputStream out) throws UtilException {
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			addFile(in, path, out);
+		} finally {
+			IoUtil.close(in);
 		}
 	}
 
 	/**
-	 * 递归压缩流中的数据，不关闭输入流
+	 * 添加文件流到压缩包，不关闭输入流
 	 * 
 	 * @param in 需要压缩的输入流
 	 * @param path 压缩的路径
 	 * @param out 压缩文件存储对象
 	 * @throws UtilException IO异常
 	 */
-	private static void zip(InputStream in, String path, ZipOutputStream out) throws UtilException {
+	private static void addFile(InputStream in, String path, ZipOutputStream out) throws UtilException {
 		if(null == in) {
 			return;
 		}
@@ -578,13 +591,13 @@ public class ZipUtil {
 	}
 	
 	/**
-	 * 压缩一个目录到Zip
+	 * 在压缩包中新建目录
 	 * 
 	 * @param path 压缩的路径
 	 * @param out 压缩文件存储对象
 	 * @throws UtilException IO异常
 	 */
-	private static void zipDir(String path, ZipOutputStream out) throws UtilException {
+	private static void addDir(String path, ZipOutputStream out) throws UtilException {
 		path = StrUtil.addSuffixIfNot(path, StrUtil.SLASH);
 		try {
 			out.putNextEntry(new ZipEntry(path));

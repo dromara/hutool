@@ -54,6 +54,8 @@ public enum Header {
 	SET_COOKIE("Set-Cookie"),
 	/**Content-Encoding*/
 	CONTENT_ENCODING("Content-Encoding"),
+	/**Content-Disposition*/
+	CONTENT_DISPOSITION("Content-Disposition"),
 	/**ETag*/
 	ETAG("ETag"),
 	/** 重定向指示到的URL */

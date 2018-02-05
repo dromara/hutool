@@ -3,8 +3,6 @@ package cn.hutool.core.bean;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.bean.BeanDesc;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.BeanDesc.PropDesc;
 
 /**
@@ -56,6 +54,18 @@ public class BeanDescTest {
 		
 		Assert.assertEquals("isIsSuper", desc.getGetter("isSuper").getName());
 		Assert.assertEquals("setIsSuper", desc.getSetter("isSuper").getName());
+	}
+	
+	@Test
+	public void getSetTest() {
+		BeanDesc desc = BeanUtil.getBeanDesc(User.class);
+		
+		User user = new User();
+		desc.getProp("name").setValue(user, "张三");
+		Assert.assertEquals("张三", user.getName());
+		
+		Object value = desc.getProp("name").getValue(user);
+		Assert.assertEquals("张三", value);
 	}
 
 	public static class User {

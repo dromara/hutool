@@ -6,8 +6,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ZipUtil;
 
 /**
  * {@link ZipUtil}单元测试
@@ -34,6 +32,6 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void unzipChineseTest() {
-		ZipUtil.unzip("d:/中文.zip", CharsetUtil.CHARSET_GBK);
+		ZipUtil.unzip("d:/测试.zip");
 	}
 }

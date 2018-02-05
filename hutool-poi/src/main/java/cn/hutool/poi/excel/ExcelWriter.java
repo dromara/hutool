@@ -453,6 +453,7 @@ public class ExcelWriter implements Closeable {
 	 * @throws IORuntimeException IO异常
 	 */
 	public ExcelWriter flush() throws IORuntimeException {
+		Assert.notNull(this.destFile, "[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
 		OutputStream out = null;
 		try {
 			out = FileUtil.getOutputStream(this.destFile);

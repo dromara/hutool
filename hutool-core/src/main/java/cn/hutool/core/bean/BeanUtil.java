@@ -17,6 +17,7 @@ import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -264,6 +265,7 @@ public class BeanUtil {
 	public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, CopyOptions copyOptions) {
 		return fillBeanWithMap(map, ReflectUtil.newInstance(beanClass), copyOptions);
 	}
+
 	// --------------------------------------------------------------------------------------------- fillBeanWithMap
 	/**
 	 * 使用Map填充Bean对象
@@ -317,7 +319,7 @@ public class BeanUtil {
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, CopyOptions copyOptions) {
 		return fillBeanWithMap(map, bean, false, copyOptions);
 	}
-	
+
 	/**
 	 * 使用Map填充Bean对象
 	 * 
@@ -330,14 +332,15 @@ public class BeanUtil {
 	 * @since 3.3.1
 	 */
 	public static <T> T fillBeanWithMap(Map<?, ?> map, T bean, boolean isToCamelCase, CopyOptions copyOptions) {
-		if(MapUtil.isEmpty(map)) {
+		if (MapUtil.isEmpty(map)) {
 			return bean;
 		}
-		if(isToCamelCase) {
+		if (isToCamelCase) {
 			map = MapUtil.toCamelCaseMap(map);
 		}
 		return BeanCopier.create(map, bean, copyOptions).copy();
 	}
+
 	// --------------------------------------------------------------------------------------------- fillBean
 	/**
 	 * ServletRequest 参数转Bean
@@ -379,7 +382,7 @@ public class BeanUtil {
 	public static Map<String, Object> beanToMap(Object bean) {
 		return beanToMap(bean, false, false);
 	}
-	
+
 	/**
 	 * 对象转Map
 	 * 
@@ -402,13 +405,44 @@ public class BeanUtil {
 	 * @return Map
 	 * @since 3.2.3
 	 */
-	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, boolean isToUnderlineCase, boolean ignoreNullValue) {
+	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, final boolean isToUnderlineCase, boolean ignoreNullValue) {
+		if (bean == null) {
+			return null;
+		}
+
+		return beanToMap(bean, targetMap, ignoreNullValue, new Editor<String>() {
+
+			@Override
+			public String edit(String key) {
+				return isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key;
+			}
+		});
+	}
+
+	/**
+	 * 对象转Map<br>
+	 * 通过实现{@link Editor} 可以自定义字段值，如果这个Editor返回null则忽略这个字段，以便实现：
+	 * 
+	 * <pre>
+	 * 1. 字段筛选，可以去除不需要的字段
+	 * 2. 字段变换，例如实现驼峰转下划线
+	 * 3. 自定义字段前缀或后缀等等
+	 * </pre>
+	 * 
+	 * @param bean bean对象
+	 * @param targetMap 目标的Map
+	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @param keyEditor 属性字段（Map的key）编辑器，用于筛选、编辑key
+	 * @return Map
+	 * @since 4.0.5
+	 */
+	public static Map<String, Object> beanToMap(Object bean, Map<String, Object> targetMap, boolean ignoreNullValue, Editor<String> keyEditor) {
 		if (bean == null) {
 			return null;
 		}
 
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
-		
+
 		String key;
 		Method getter;
 		Object value;
@@ -425,7 +459,10 @@ public class BeanUtil {
 					continue;
 				}
 				if (false == ignoreNullValue || (null != value && false == value.equals(bean))) {
-					targetMap.put(isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key, value);
+					key = keyEditor.edit(key);
+					if (null != key) {
+						targetMap.put(key, value);
+					}
 				}
 			}
 		}

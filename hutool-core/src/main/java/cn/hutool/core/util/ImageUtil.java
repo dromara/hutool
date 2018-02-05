@@ -193,7 +193,7 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public final static void scale(File srcImageFile, File destImageFile, int width, int height, Color fixedColor) throws IORuntimeException {
-		write(read(srcImageFile), destImageFile);
+		write(scale(read(srcImageFile), width, height, fixedColor), destImageFile);
 	}
 
 	/**
@@ -665,6 +665,91 @@ public class ImageUtil {
 		return grayImage;
 	}
 
+	// ---------------------------------------------------------------------------------------------------------------------- binary
+	/**
+	 * 彩色转为黑白二值化图片，根据目标文件扩展名确定转换后的格式
+	 * 
+	 * @param srcImageFile 源图像地址
+	 * @param destImageFile 目标图像地址
+	 */
+	public final static void binary(File srcImageFile, File destImageFile) {
+		binary(read(srcImageFile), destImageFile);
+	}
+
+	/**
+	 * 彩色转为黑白二值化图片<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcStream 源图像流
+	 * @param destStream 目标图像流
+	 * @param imageType 图片格式(扩展名)
+	 * @since 4.0.5
+	 */
+	public final static void binary(InputStream srcStream, OutputStream destStream, String imageType) {
+		binary(read(srcStream), getImageOutputStream(destStream), imageType);
+	}
+
+	/**
+	 * 彩色转为黑白黑白二值化图片<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcStream 源图像流
+	 * @param destStream 目标图像流
+	 * @param imageType 图片格式(扩展名)
+	 * @since 4.0.5
+	 */
+	public final static void binary(ImageInputStream srcStream, ImageOutputStream destStream, String imageType) {
+		binary(read(srcStream), destStream, imageType);
+	}
+
+	/**
+	 * 彩色转为黑白二值化图片，根据目标文件扩展名确定转换后的格式
+	 * 
+	 * @param srcImage 源图像流
+	 * @param outFile 目标文件
+	 * @since 4.0.5
+	 */
+	public final static void binary(Image srcImage, File outFile) {
+		write(binary(srcImage), outFile);
+	}
+
+	/**
+	 * 彩色转为黑白二值化图片<br>
+	 * 此方法并不关闭流，输出JPG格式
+	 * @param srcImage 源图像流
+	 * @param out 目标图像流
+	 * @param imageType 图片格式(扩展名)
+	 * @since 4.0.5
+	 */
+	public final static void binary(Image srcImage, OutputStream out, String imageType) {
+		binary(srcImage, getImageOutputStream(out), imageType);
+	}
+
+	/**
+	 * 彩色转为黑白二值化图片<br>
+	 * 此方法并不关闭流，输出JPG格式
+	 * 
+	 * @param srcImage 源图像流
+	 * @param destImageStream 目标图像流
+	 * @param imageType 图片格式(扩展名)
+	 * @since 4.0.5
+	 * @throws IORuntimeException IO异常
+	 */
+	public final static void binary(Image srcImage, ImageOutputStream destImageStream, String imageType) throws IORuntimeException {
+		write(binary(srcImage), imageType, destImageStream);
+	}
+	
+	/**
+	 * 彩色转为黑白二值化图片
+	 * 
+	 * @param srcImage 源图像流
+	 * @return {@link Image}二值化后的图片
+	 * @since 4.0.5
+	 */
+	public static BufferedImage binary(Image srcImage) {
+		return copyImage(srcImage, BufferedImage.TYPE_BYTE_BINARY);
+	}
+
 	// ---------------------------------------------------------------------------------------------------------------------- press
 	/**
 	 * 给图片添加文字水印
@@ -977,7 +1062,7 @@ public class ImageUtil {
 
 	/**
 	 * 旋转图片为指定角度<br>
-	 * 此方法不会关闭输出流
+	 * 此方法不会关闭输出流，输出格式为JPG
 	 * 
 	 * @param image 目标图像
 	 * @param degree 旋转角度
@@ -1052,7 +1137,7 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 水平翻转图像
+	 * 水平翻转图像，写出格式为JPG
 	 * 
 	 * @param image 图像
 	 * @param out 输出
@@ -1101,8 +1186,21 @@ public class ImageUtil {
 	 * 将已有Image复制新的一份出来
 	 * 
 	 * @param img {@link Image}
-	 * @param imageType {@link BufferedImage}中的常量
+	 * @param imageType {@link BufferedImage}中的常量，图像类型，例如黑白等
 	 * @return {@link BufferedImage}
+	 * @see BufferedImage#TYPE_INT_RGB
+	 * @see BufferedImage#TYPE_INT_ARGB
+	 * @see BufferedImage#TYPE_INT_ARGB_PRE
+	 * @see BufferedImage#TYPE_INT_BGR
+	 * @see BufferedImage#TYPE_3BYTE_BGR
+	 * @see BufferedImage#TYPE_4BYTE_ABGR
+	 * @see BufferedImage#TYPE_4BYTE_ABGR_PRE
+	 * @see BufferedImage#TYPE_BYTE_GRAY
+	 * @see BufferedImage#TYPE_USHORT_GRAY
+	 * @see BufferedImage#TYPE_BYTE_BINARY
+	 * @see BufferedImage#TYPE_BYTE_INDEXED
+	 * @see BufferedImage#TYPE_USHORT_565_RGB
+	 * @see BufferedImage#TYPE_USHORT_555_RGB
 	 */
 	public static BufferedImage copyImage(Image img, int imageType) {
 		final BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), imageType);
@@ -1221,7 +1319,7 @@ public class ImageUtil {
 	 */
 	public static Graphics2D createGraphics(BufferedImage image, Color color) {
 		final Graphics2D g = image.createGraphics();
-		//填充背景
+		// 填充背景
 		g.setColor(color);
 		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 
@@ -1236,7 +1334,7 @@ public class ImageUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void writeJpg(Image image, ImageOutputStream destImageStream) throws IORuntimeException {
-		write(image, IMAGE_TYPE_JPEG, destImageStream);
+		write(image, IMAGE_TYPE_JPG, destImageStream);
 	}
 
 	/**

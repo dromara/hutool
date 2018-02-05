@@ -3157,7 +3157,8 @@ public class StrUtil {
 	}
 
 	/**
-	 * 替换字符字符数组中所有的字符为replacedStr
+	 * 替换字符字符数组中所有的字符为replacedStr<br>
+	 * 提供的chars为所有需要被替换的字符，例如："\r\n"，则"\r"和"\n"都会被替换，哪怕他们单独存在
 	 * 
 	 * @param str 被检查的字符串
 	 * @param chars 需要替换的字符列表，用一个字符串表示这个字符列表
@@ -3201,7 +3202,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 计算连个字符串的相似度
+	 * 计算两个字符串的相似度
 	 * 
 	 * @param str1 字符串1
 	 * @param str2 字符串2

@@ -2,13 +2,18 @@ package cn.hutool.extra.ssh;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -83,6 +88,115 @@ public class Sftp implements Closeable {
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
+	}
+
+	/**
+	 * 获取HOME路径
+	 * 
+	 * @return HOME路径
+	 * @since 4.0.5
+	 */
+	public String home() {
+		try {
+			return channel.getHome();
+		} catch (SftpException e) {
+			throw new JschRuntimeException(e);
+		}
+	}
+
+	/**
+	 * 文件或目录在指定目录下是否存在
+	 * 
+	 * @param path 目录
+	 * @param fileOrDirName 文件或目录名
+	 * @return 是否存在
+	 * @since 4.0.5
+	 */
+	public boolean exist(String path, String fileOrDirName) {
+		List<String> ls = ls(path);
+		return containsIgnoreCase(ls, fileOrDirName);
+	}
+
+	/**
+	 * 遍历某个目录下所有文件或目录，不会递归遍历
+	 * 
+	 * @param path 遍历某个目录下所有文件或目录
+	 * @return 目录或文件名列表
+	 * @since 4.0.5
+	 */
+	public List<String> ls(String path) {
+		return ls(path, null);
+	}
+
+	/**
+	 * 遍历某个目录下所有目录，不会递归遍历
+	 * 
+	 * @param path 遍历某个目录下所有目录
+	 * @return 目录名列表
+	 * @since 4.0.5
+	 */
+	public List<String> lsDirs(String path) {
+		return ls(path, new Filter<LsEntry>() {
+			@Override
+			public boolean accept(LsEntry t) {
+				return t.getAttrs().isDir();
+			}
+		});
+	}
+
+	/**
+	 * 遍历某个目录下所有文件，不会递归遍历
+	 * 
+	 * @param path 遍历某个目录下所有文件
+	 * @return 文件名列表
+	 * @since 4.0.5
+	 */
+	public List<String> lsFiles(String path) {
+		return ls(path, new Filter<LsEntry>() {
+			@Override
+			public boolean accept(LsEntry t) {
+				return false == t.getAttrs().isDir();
+			}
+		});
+	}
+
+	/**
+	 * 遍历某个目录下所有文件或目录，不会递归遍历
+	 * 
+	 * @param path 遍历某个目录下所有文件或目录
+	 * @param filter 文件或目录过滤器，可以实现过滤器返回自己需要的文件或目录名列表
+	 * @return 目录或文件名列表
+	 * @since 4.0.5
+	 */
+	public List<String> ls(String path, final Filter<LsEntry> filter) {
+		final List<String> fileNames = new ArrayList<>();
+		try {
+			channel.ls(path, new LsEntrySelector() {
+				@Override
+				public int select(LsEntry entry) {
+					String fileName = entry.getFilename();
+					if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
+						if (null == filter || filter.accept(entry)) {
+							fileNames.add(entry.getFilename());
+						}
+					}
+					return CONTINUE;
+				}
+			});
+		} catch (SftpException e) {
+			throw new JschRuntimeException(e);
+		}
+		return fileNames;
+	}
+
+	/**
+	 * 打开上级目录
+	 * 
+	 * @return 是否打开目录
+	 * @since 4.0.5
+	 */
+	public boolean toParent() {
+		return cd("..");
 	}
 
 	/**
@@ -178,7 +292,7 @@ public class Sftp implements Closeable {
 			return false;
 		}
 
-		//删除空目录
+		// 删除空目录
 		try {
 			channel.rmdir(dirPath);
 			return true;
@@ -214,9 +328,10 @@ public class Sftp implements Closeable {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 获取远程文件
+	 * 
 	 * @param src 远程文件路径
 	 * @param dest 目标文件路径
 	 * @return this
@@ -250,4 +365,29 @@ public class Sftp implements Closeable {
 		/** 追加模式，如果目标文件已存在，传输的文件将在目标文件后追加。 */
 		APPEND;
 	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 是否包含指定字符串，忽略大小写
+	 * 
+	 * @param names 文件或目录名列表
+	 * @param nameToFind 要查找的文件或目录名
+	 * @return 是否包含
+	 * @since 4.0.5
+	 */
+	private static boolean containsIgnoreCase(List<String> names, String nameToFind) {
+		if (CollUtil.isEmpty(names)) {
+			return false;
+		}
+		if (StrUtil.isEmpty(nameToFind)) {
+			return false;
+		}
+		for (String name : names) {
+			if (nameToFind.equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// ---------------------------------------------------------------------------------------------------------------------------------------- Private method end
 }

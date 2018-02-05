@@ -13,16 +13,17 @@ import cn.hutool.http.HttpUtil;
  * 
  * @author looly
  */
-@Ignore
 public class DownloadTest {
-
+	
 	@Test
+	@Ignore
 	public void downloadSizeTest() {
 		long size = HttpUtil.downloadFile("https://www.baidu.com/", FileUtil.file("d:/"));
 		System.out.println("Download size: " + size);
 	}
 
 	@Test
+	@Ignore
 	public void downloadTest() {
 		// 带进度显示的文件下载
 		HttpUtil.downloadFile("http://mirrors.sohu.com/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1708.iso", FileUtil.file("d:/"), new StreamProgress() {

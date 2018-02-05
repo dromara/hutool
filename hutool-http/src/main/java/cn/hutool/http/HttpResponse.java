@@ -201,10 +201,16 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 			throw new NullPointerException("[destFile] is null!");
 		}
 		if (destFile.isDirectory()) {
-			String path = this.httpConnection.getUrl().getPath();
-			String fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
-			if (StrUtil.isBlank(fileName)) {
-				fileName = HttpUtil.encode(path, CharsetUtil.CHARSET_UTF_8);
+			//从头信息中获取文件名
+			String fileName = getFileNameFromDisposition();
+			if(StrUtil.isBlank(fileName)) {
+				final String path = this.httpConnection.getUrl().getPath();
+				//从路径中获取文件名
+				fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
+				if (StrUtil.isBlank(fileName)) {
+					//编码后的路径做为文件名
+					fileName = HttpUtil.encode(path, CharsetUtil.CHARSET_UTF_8);
+				}
 			}
 			destFile = FileUtil.file(destFile, fileName);
 		}
@@ -367,6 +373,18 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 			this.close();
 		}
 		return this;
+	}
+	
+	/**
+	 * 从Content-Disposition头中获取文件名
+	 * @return 文件名，empty表示无
+	 */
+	private String getFileNameFromDisposition() {
+		String fileName = header(Header.CONTENT_DISPOSITION);
+		if(StrUtil.isNotBlank(fileName)) {
+			fileName = StrUtil.subAfter(fileName, "filename=", true);
+		}
+		return fileName;
 	}
 	// ---------------------------------------------------------------- Private method end
 }

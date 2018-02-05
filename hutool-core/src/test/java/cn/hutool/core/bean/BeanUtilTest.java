@@ -72,8 +72,8 @@ public class BeanUtilTest {
 		map.put("aGe", 12);
 		
 		Person person = BeanUtil.mapToBeanIgnoreCase(map, Person.class, false);
-		Assert.assertEquals(person.getName(), "Joe");
-		Assert.assertEquals(person.getAge(), 12);
+		Assert.assertEquals("Joe", person.getName());
+		Assert.assertEquals(12, person.getAge());
 	}
 	
 	@Test
@@ -85,9 +85,21 @@ public class BeanUtilTest {
 		person.setSubName("sub名字");
 		
 		Map<String, Object> map = BeanUtil.beanToMap(person);
-		Assert.assertEquals(map.get("name"), "测试A11");
-		Assert.assertEquals(map.get("age"), 14);
+		Assert.assertEquals("测试A11", map.get("name"));
+		Assert.assertEquals(14, map.get("age"));
 		Assert.assertEquals("11213232", map.get("openid"));
+	}
+	
+	@Test
+	public void beanToMapTest2() {
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+		
+		Map<String, Object> map = BeanUtil.beanToMap(person, true, true);
+		Assert.assertEquals("sub名字", map.get("sub_name"));
 	}
 	
 	@Test

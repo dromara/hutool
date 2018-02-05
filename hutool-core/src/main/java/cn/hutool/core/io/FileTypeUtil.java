@@ -10,7 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * 文件类型判断工具类
+ * 文件类型判断工具类<br>
+ * 此工具根据文件的前几位bytes猜测文件类型，对于文本、zip判断不准确，对于视频、图片类型判断准确
  * 
  * @author Looly
  *
@@ -54,12 +55,14 @@ public final class FileTypeUtil {
 		fileTypeMap.put("52494646e27807005741", "wav"); // Wave (wav)
 		fileTypeMap.put("52494646d07d60074156", "avi");
 		fileTypeMap.put("4d546864000000060001", "mid"); // MIDI (mid)
-		// fileTypeMap.put("504b0304140000000800", "zip");
-		fileTypeMap.put("504B0304", "zip");
 		fileTypeMap.put("526172211a0700cf9073", "rar");// WinRAR
 		fileTypeMap.put("235468697320636f6e66", "ini");
-		fileTypeMap.put("504b03040a0000000000", "jar");
+		fileTypeMap.put("504B03040a0000000000", "jar");
 		fileTypeMap.put("504B0304140008000800", "jar");
+		fileTypeMap.put("504B0304140006000800", "docx");// docx文件
+		fileTypeMap.put("504B0304140006000800", "xlsx");// docx文件
+		fileTypeMap.put("D0CF11E0A1B11AE10", "xls");// xls文件
+		fileTypeMap.put("504B0304", "zip");
 		fileTypeMap.put("4d5a9000030000000400", "exe");// 可执行文件
 		fileTypeMap.put("3c25402070616765206c", "jsp");// jsp文件
 		fileTypeMap.put("4d616e69666573742d56", "mf");// MF文件
@@ -72,7 +75,6 @@ public final class FileTypeUtil {
 		fileTypeMap.put("cafebabe0000002e0041", "class");// bat文件
 		fileTypeMap.put("49545346030000006000", "chm");// bat文件
 		fileTypeMap.put("04000000010000001300", "mxp");// bat文件
-		fileTypeMap.put("504b0304140006000800", "docx");// docx文件
 		fileTypeMap.put("d0cf11e0a1b11ae10000", "wps");// WPS文字wps、表格et、演示dps都是一样的
 		fileTypeMap.put("6431303a637265617465", "torrent");
 		fileTypeMap.put("6D6F6F76", "mov"); // Quicktime (mov)

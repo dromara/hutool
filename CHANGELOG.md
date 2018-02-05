@@ -2,6 +2,29 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.0.5
+
+### 新特性
+* 【json】 toBean方法支持Map.class参数，消除歧义
+* 【core】FileWriter和FileUtil增加writeMap方法
+* 【core】新增CsvWriter和CsvUtil
+* 【poi】  改进ExcelWriter.flush未指定文件时的报错信息
+* 【db】   在配置文件不存在时优化错误提示
+* 【core】BeanUtil.beanToMap方法支持自定义key
+* 【core】增加ModifierUtil，修饰符工具类
+* 【http】下载文件时文件名首先从头信息中获取
+* 【poi】  ExcelReader增加getCell方法
+* 【db】   Oracle驱动变更
+* 【extra】扩充Sftp方法（感谢@【广西】Succy）
+* 【core】ImageUtil增加binary方法，生成二值化图片（感谢@【天津】〓下页）
+
+### Bug修复
+* 【poi】  修复ExcelReader获取Workbook为空的问题
+* 【core】修复ImageUtil.scale的问题（感谢@【北京】千古不见一人闲）
+* 【json】 修复JSON转字符串时值中双引号转义问题（感谢@【深圳】jae）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.0.4
 
 ### 新特性

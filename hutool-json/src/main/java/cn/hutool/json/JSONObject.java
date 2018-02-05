@@ -248,7 +248,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T toBean(Class<T> clazz, boolean ignoreError) {
+		if(Map.class.isAssignableFrom(clazz)) {
+			return (T) this;
+		}
 		return toBean(ReflectUtil.newInstance(clazz), ignoreError);
 	}
 

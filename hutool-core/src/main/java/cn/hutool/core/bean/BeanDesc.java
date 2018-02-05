@@ -10,6 +10,7 @@ import java.util.Map;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
@@ -125,7 +126,7 @@ public class BeanDesc {
 		final PropDesc desc = this.propMap.get(fieldName);
 		return null == desc ? null : desc.getSetter();
 	}
-
+	
 	// ------------------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 初始化<br>
@@ -374,7 +375,43 @@ public class BeanDesc {
 		public Method getSetter() {
 			return this.setter;
 		}
-
+		
+		/**
+		 * 获取字段值<br>
+		 * 首先调用字段对应的Getter方法获取值，如果Getter方法不存在，则判断字段如果为public，则直接获取字段值
+		 * 
+		 * @param bean Bean对象
+		 * @return 字段值
+		 * @since 4.0.5
+		 */
+		public Object getValue(Object bean) {
+			if(null != this.getter) {
+				return ReflectUtil.invoke(bean, this.getter);
+			} else if(ModifierUtil.isPublic(this.field)) {
+				return ReflectUtil.getFieldValue(bean, this.field);
+			}
+			return null;
+		}
+		
+		/**
+		 * 设置Bean的字段值<br>
+		 * 首先调用字段对应的Setter方法，如果Setter方法不存在，则判断字段如果为public，则直接赋值字段值
+		 * 
+		 * @param bean Bean对象
+		 * @param value 值
+		 * @return this
+		 * @since 4.0.5
+		 */
+		public PropDesc setValue(Object bean, Object value) {
+			if(null != this.setter) {
+				ReflectUtil.invoke(bean, this.setter, value);
+			} else if(ModifierUtil.isPublic(this.field)) {
+				ReflectUtil.setFieldValue(bean, this.field, value);
+			}
+			return this;
+		}
+		
+		//------------------------------------------------------------------------------------ Private method start
 		/**
 		 * 通过Getter和Setter方法中找到属性类型
 		 * 
@@ -410,5 +447,6 @@ public class BeanDesc {
 			}
 			return type;
 		}
+		//------------------------------------------------------------------------------------ Private method end
 	}
 }
