@@ -197,6 +197,16 @@ public class DateUtilTest {
 	}
 	
 	@Test
+	public void parseTest2() throws ParseException {
+		//转换时间与SimpleDateFormat结果保持一致即可
+		String birthday = "700403";
+		Date birthDate = DateUtil.parse(birthday, "yyMMdd");
+		// 获取出生年(完全表现形式,如：2010)
+		int sYear = DateUtil.year(birthDate);
+		Assert.assertEquals(1970, sYear);
+	}
+	
+	@Test
 	public void parseToDateTimeTest1() {
 		String dateStr1 = "2017-02-01";
 		String dateStr2 = "2017/02/01";
