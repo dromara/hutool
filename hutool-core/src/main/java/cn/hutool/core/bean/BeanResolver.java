@@ -1,7 +1,6 @@
 package cn.hutool.core.bean;
 
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -88,7 +87,7 @@ public class BeanResolver {
 					subBean = getSubBean(subBean, name);
 					if (null == subBean) {
 						//支持表达式的第一个对象为Bean本身
-						if(isFirst && ClassUtil.getClassName(this.bean, true).equals(StrUtil.upperFirst(name))){
+						if(isFirst && BeanUtil.isMatchName(subBean, name, true)){
 							subBean = bean;
 							isFirst = false;
 						}else{

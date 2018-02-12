@@ -5,7 +5,8 @@
 ## 4.0.6
 
 ### 新特性
-* 【poi】ExcelReader增加getWriter、getOrCreateCell方法
+* 【poi】  ExcelReader增加getWriter、getOrCreateCell方法
+* 【core】NetUtil增加isInRange方法（感谢@【成都】小邓）
 
 ### Bug修复
 * 【core】修复IdcardUtil中身份证15转18位年的问题（Issue#IHT1Q@Gitee）

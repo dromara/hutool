@@ -519,4 +519,17 @@ public class BeanUtil {
 		}
 		BeanCopier.create(source, target, copyOptions).copy();
 	}
+
+	/**
+	 * 给定的Bean的类名是否匹配指定类名字符串
+	 * 
+	 * @param bean Bean
+	 * @param beanClassName Bean的类名
+	 * @param isSimple 是否只匹配类名而忽略包名，true表示忽略包名
+	 * @return 是否匹配
+	 * @since 4.0.6
+	 */
+	public static boolean isMatchName(Object bean, String beanClassName, boolean isSimple) {
+		return ClassUtil.getClassName(bean, isSimple).equals(isSimple ? StrUtil.upperFirst(beanClassName) : beanClassName);
+	}
 }
