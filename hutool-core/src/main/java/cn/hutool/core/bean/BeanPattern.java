@@ -1,16 +1,12 @@
 package cn.hutool.core.bean;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -29,7 +25,6 @@ import cn.hutool.core.util.StrUtil;
  * persons[3]
  * person.friends[5].name
  * </pre>
- * 
  * 
  * @author Looly
  * @since 4.0.6
@@ -89,7 +84,7 @@ public class BeanPattern {
 		Object patternPart;
 		for (int i = 0; i < length; i++) {
 			patternPart = localPatternParts.get(i);
-			subBean = getValue(subBean, patternPart);
+			subBean = BeanUtil.getFieldValue(subBean, patternPart);
 			if (null == subBean) {
 				//支持表达式的第一个对象为Bean本身
 				if(isFirst && (patternPart instanceof String) && BeanUtil.isMatchName(subBean, (String)patternPart, true)){
@@ -123,7 +118,7 @@ public class BeanPattern {
 		Object patternPart;
 		for (int i = 0; i < lastIndex; i++) {
 			patternPart = localPatternParts.get(i);
-			subBean = getValue(subBean, patternPart);
+			subBean = BeanUtil.getFieldValue(subBean, patternPart);
 			if (null == subBean) {
 				//支持表达式的第一个对象为Bean本身
 				if(isFirst && (patternPart instanceof String) && BeanUtil.isMatchName(subBean, (String)patternPart, true)){
@@ -134,7 +129,7 @@ public class BeanPattern {
 				}
 			}
 		}
-		setValue(subBean, localPatternParts.get(lastIndex), value);
+		BeanUtil.setFieldValue(subBean, localPatternParts.get(lastIndex), value);
 	}
 	
 	/**
@@ -199,54 +194,5 @@ public class BeanPattern {
 
 		// 不可变List
 		this.patternParts = Collections.unmodifiableList(localPatternParts);
-	}
-
-	/**
-	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
-	 * 对象同样支持Map类型，patternPart即为key
-	 * 
-	 * @param bean Bean对象
-	 * @param patternPart 表达式某部分
-	 * @return 字段值
-	 */
-	private static Object getValue(Object bean, Object patternPart) {
-		if (null == bean) {
-			return null;
-		}
-
-		if (bean instanceof Map) {
-			return ((Map<?, ?>) bean).get(patternPart);
-		} else if (bean instanceof List) {
-			return ((List<?>) bean).get((int) patternPart);
-		} else if (bean instanceof Collection) {
-			return ((Collection<?>) bean).toArray()[(int) patternPart];
-		} else if (ArrayUtil.isArray(bean)) {
-			return Array.get(bean, (int) patternPart);
-		} else {
-			// 普通Bean对象
-			return ReflectUtil.getFieldValue(bean, (String) patternPart);
-		}
-	}
-	
-	/**
-	 * 设置字段值，，通过反射直接获得字段值，并不调用getXXX方法<br>
-	 * 对象同样支持Map类型，patternPart即为key
-	 * 
-	 * @param bean Bean
-	 * @param patternPart 表达式某部分
-	 * @param value 值
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void setValue(Object bean, Object patternPart, Object value) {
-		if (bean instanceof Map) {
-			((Map) bean).put(patternPart, value);
-		} else if (bean instanceof List) {
-			((List) bean).set((int) patternPart, value);
-		} else if (ArrayUtil.isArray(bean)) {
-			Array.set(bean, (int) patternPart, value);
-		} else {
-			// 普通Bean对象
-			ReflectUtil.setFieldValue(bean, (String)patternPart, value);
-		}
 	}
 }

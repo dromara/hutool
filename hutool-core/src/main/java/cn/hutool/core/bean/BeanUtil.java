@@ -17,6 +17,7 @@ import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
@@ -188,27 +189,49 @@ public class BeanUtil {
 
 	/**
 	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
-	 * 对象同样支持Map类型，fieldName即为key
+	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 * 
 	 * @param bean Bean对象
-	 * @param fieldName 字段名
+	 * @param fieldNameOrIndex 字段名或序号，必须为String或int类型
 	 * @return 字段值
 	 */
-	public static Object getFieldValue(Object bean, String fieldName) {
-		if (null == bean || StrUtil.isBlank(fieldName)) {
+	public static Object getFieldValue(Object bean, Object fieldNameOrIndex) {
+		if (null == bean || null == fieldNameOrIndex) {
 			return null;
 		}
 
 		if (bean instanceof Map) {
-			return ((Map<?, ?>) bean).get(fieldName);
+			return ((Map<?, ?>) bean).get(fieldNameOrIndex);
 		} else if (bean instanceof List) {
-			return ((List<?>) bean).get(Integer.parseInt(fieldName));
+			return ((List<?>) bean).get(Convert.toInt(fieldNameOrIndex));
 		} else if (bean instanceof Collection) {
-			return ((Collection<?>) bean).toArray()[Integer.parseInt(fieldName)];
+			return ((Collection<?>) bean).toArray()[Convert.toInt(fieldNameOrIndex)];
 		} else if (ArrayUtil.isArray(bean)) {
-			return Array.get(bean, Integer.parseInt(fieldName));
+			return Array.get(bean, Convert.toInt(fieldNameOrIndex));
 		} else {// 普通Bean对象
-			return ReflectUtil.getFieldValue(bean, fieldName);
+			return ReflectUtil.getFieldValue(bean, fieldNameOrIndex.toString());
+		}
+	}
+	
+	/**
+	 * 设置字段值，，通过反射设置字段值，并不调用setXXX方法<br>
+	 * 对象同样支持Map类型，fieldNameOrIndex即为key
+	 * 
+	 * @param bean Bean
+	 * @param fieldNameOrIndex 字段名或序号，必须为String或int类型
+	 * @param value 值
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static void setFieldValue(Object bean, Object fieldNameOrIndex, Object value) {
+		if (bean instanceof Map) {
+			((Map) bean).put(fieldNameOrIndex, value);
+		} else if (bean instanceof List) {
+			((List) bean).set(Convert.toInt(fieldNameOrIndex), value);
+		} else if (ArrayUtil.isArray(bean)) {
+			Array.set(bean, Convert.toInt(fieldNameOrIndex), value);
+		} else {
+			// 普通Bean对象
+			ReflectUtil.setFieldValue(bean, fieldNameOrIndex.toString(), value);
 		}
 	}
 
@@ -218,11 +241,23 @@ public class BeanUtil {
 	 * @param bean Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值
-	 * @see BeanResolver#resolveBean(Object, String)
+	 * @see BeanPattern#get(Object)
 	 * @since 3.0.7
 	 */
 	public static Object getProperty(Object bean, String expression) {
-		return BeanResolver.resolveBean(bean, expression);
+		return BeanPattern.create(expression).get(bean);
+	}
+	
+	/**
+	 * 解析Bean中的属性值
+	 * 
+	 * @param bean Bean对象，支持Map、List、Collection、Array
+	 * @param expression 表达式，例如：person.friend[5].name
+	 * @see BeanPattern#get(Object)
+	 * @since 4.0.6
+	 */
+	public static void setProperty(Object bean, String expression, Object value) {
+		BeanPattern.create(expression).set(bean, value);
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean
@@ -521,7 +556,9 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 给定的Bean的类名是否匹配指定类名字符串
+	 * 给定的Bean的类名是否匹配指定类名字符串<br>
+	 * 如果isSimple为{@code false}，则只匹配类名而忽略包名，例如：cn.hutool.TestEntity只匹配TestEntity<br>
+	 * 如果isSimple为{@code true}，则匹配包括包名的全类名，例如：cn.hutool.TestEntity匹配cn.hutool.TestEntity
 	 * 
 	 * @param bean Bean
 	 * @param beanClassName Bean的类名

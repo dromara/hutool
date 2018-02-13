@@ -2,7 +2,7 @@ package cn.hutool.json;
 
 import java.io.Writer;
 
-import cn.hutool.core.bean.BeanResolver;
+import cn.hutool.core.bean.BeanPattern;
 
 /**
  * JSON接口
@@ -30,7 +30,7 @@ public interface JSON {
 	 * 
 	 * @param expression 表达式
 	 * @return 对象
-	 * @see BeanResolver#resolveBean(Object, String)
+	 * @see BeanPattern#get(Object)
 	 */
 	public Object getByExp(String expression);
 	
@@ -56,7 +56,7 @@ public interface JSON {
 	 * @param expression 表达式
 	 * @param resultType 返回值类型
 	 * @return 对象
-	 * @see BeanResolver#resolveBean(Object, String)
+	 * @see BeanPattern#get(Object)
 	 * @since 3.1.0
 	 */
 	public <T> T getByExp(String expression, Class<T> resultType);

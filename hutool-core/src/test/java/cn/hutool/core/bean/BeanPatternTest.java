@@ -6,27 +6,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
 
+/**
+ * {@link BeanPattern} 单元测试
+ * 
+ * @author looly
+ *
+ */
 public class BeanPatternTest {
-	
-	@Test
-	public void beanPatternTest1() {
-		BeanPattern pattern = new BeanPattern("userInfo.examInfoDict[0].id");
-		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
-		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals(0, pattern.patternParts.get(2));
-		Assert.assertEquals("id", pattern.patternParts.get(3));
-		Console.log(pattern.patternParts);
-	}
-	
-	@Test
-	public void getValueTest(){
-		//------------------------------------------------- 考试信息列表
+
+	Map<String, Object> tempMap;
+
+	@Before
+	public void init() {
+		// ------------------------------------------------- 考试信息列表
 		ExamInfoDict examInfoDict = new ExamInfoDict();
 		examInfoDict.setId(1);
 		examInfoDict.setExamType(0);
@@ -47,19 +45,39 @@ public class BeanPatternTest {
 		examInfoDicts.add(examInfoDict1);
 		examInfoDicts.add(examInfoDict2);
 
-		//------------------------------------------------- 用户信息
+		// ------------------------------------------------- 用户信息
 		UserInfoDict userInfoDict = new UserInfoDict();
 		userInfoDict.setId(1);
 		userInfoDict.setPhotoPath("yx.mm.com");
 		userInfoDict.setRealName("张三");
 		userInfoDict.setExamInfoDict(examInfoDicts);
 
-		Map<String, Object> tempMap = new HashMap<String, Object>();
+		tempMap = new HashMap<String, Object>();
 		tempMap.put("userInfo", userInfoDict);
 		tempMap.put("flag", 1);
+	}
 
+	@Test
+	public void beanPatternTest1() {
+		BeanPattern pattern = new BeanPattern("userInfo.examInfoDict[0].id");
+		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assert.assertEquals(0, pattern.patternParts.get(2));
+		Assert.assertEquals("id", pattern.patternParts.get(3));
+	}
+
+	@Test
+	public void getTest() {
 		BeanPattern pattern = BeanPattern.create("userInfo.examInfoDict[0].id");
-		Object result = pattern.getValue(tempMap);
+		Object result = pattern.get(tempMap);
 		Assert.assertEquals(1, result);
+	}
+
+	@Test
+	public void setTest() {
+		BeanPattern pattern = BeanPattern.create("userInfo.examInfoDict[0].id");
+		pattern.set(tempMap, 2);
+		Object result = pattern.get(tempMap);
+		Assert.assertEquals(2, result);
 	}
 }
