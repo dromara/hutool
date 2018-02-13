@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import cn.hutool.core.bean.BeanPattern;
+import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIterator;
 import cn.hutool.core.convert.impl.CollectionConverter;
 
@@ -201,7 +201,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public Object getByExp(String expression) {
-		return BeanPattern.create(expression).get(this);
+		return BeanPath.create(expression).get(this);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.hutool.core.bean.BeanDesc.PropDesc;
-import cn.hutool.core.bean.BeanPattern;
+import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
@@ -342,7 +342,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	@Override
 	public Object getByExp(String expression) {
-		return BeanPattern.create(expression).get(this);
+		return BeanPath.create(expression).get(this);
 	}
 
 	@Override

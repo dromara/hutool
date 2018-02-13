@@ -10,7 +10,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * Bean表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
+ * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
  * 根据给定的表达式，查找Bean中对应的属性值对象。 表达式分为两种：
  * <ol>
  * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
@@ -29,7 +29,7 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  * @since 4.0.6
  */
-public class BeanPattern {
+public class BeanPath {
 
 	/** 表达式边界符号数组 */
 	private static final char[] expChars = { CharUtil.DOT, CharUtil.BRACKET_START, CharUtil.BRACKET_END };
@@ -37,7 +37,7 @@ public class BeanPattern {
 	protected List<Object> patternParts;
 
 	/**
-	 * 解析Bean表达式为Bean模式<br>
+	 * 解析Bean路径表达式为Bean模式<br>
 	 * Bean表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
 	 * 根据给定的表达式，查找Bean中对应的属性值对象。 表达式分为两种：
 	 * <ol>
@@ -55,10 +55,10 @@ public class BeanPattern {
 	 * </pre>
 	 * 
 	 * @param expression 表达式
-	 * @return {@link BeanPattern}
+	 * @return {@link BeanPath}
 	 */
-	public static BeanPattern create(String expression) {
-		return new BeanPattern(expression);
+	public static BeanPath create(String expression) {
+		return new BeanPath(expression);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class BeanPattern {
 	 * 
 	 * @param expression 表达式
 	 */
-	public BeanPattern(String expression) {
+	public BeanPath(String expression) {
 		init(expression);
 	}
 

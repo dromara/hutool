@@ -241,11 +241,11 @@ public class BeanUtil {
 	 * @param bean Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值
-	 * @see BeanPattern#get(Object)
+	 * @see BeanPath#get(Object)
 	 * @since 3.0.7
 	 */
 	public static Object getProperty(Object bean, String expression) {
-		return BeanPattern.create(expression).get(bean);
+		return BeanPath.create(expression).get(bean);
 	}
 	
 	/**
@@ -253,11 +253,11 @@ public class BeanUtil {
 	 * 
 	 * @param bean Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
-	 * @see BeanPattern#get(Object)
+	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
 	public static void setProperty(Object bean, String expression, Object value) {
-		BeanPattern.create(expression).set(bean, value);
+		BeanPath.create(expression).set(bean, value);
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean

@@ -19,13 +19,13 @@ package cn.hutool.core.bean;
  * 
  * @author Looly
  * @since 3.0.7
- * @deprecated 请使用{@link BeanPattern#get(Object)}
+ * @deprecated 请使用{@link BeanPath#get(Object)}
  */
 @Deprecated
 public class BeanResolver {
 	
 	private Object bean;
-	private BeanPattern pattern;
+	private BeanPath pattern;
 	
 	/**
 	 * 解析Bean中的属性值
@@ -44,7 +44,7 @@ public class BeanResolver {
 	 */
 	public BeanResolver(Object bean, String expression) {
 		this.bean = bean;
-		this.pattern = BeanPattern.create(expression);
+		this.pattern = BeanPath.create(expression);
 	}
 
 	/**

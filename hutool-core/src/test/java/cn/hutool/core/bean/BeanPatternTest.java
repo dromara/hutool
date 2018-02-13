@@ -13,7 +13,7 @@ import cn.hutool.core.lang.test.bean.ExamInfoDict;
 import cn.hutool.core.lang.test.bean.UserInfoDict;
 
 /**
- * {@link BeanPattern} 单元测试
+ * {@link BeanPath} 单元测试
  * 
  * @author looly
  *
@@ -59,7 +59,7 @@ public class BeanPatternTest {
 
 	@Test
 	public void beanPatternTest1() {
-		BeanPattern pattern = new BeanPattern("userInfo.examInfoDict[0].id");
+		BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
 		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
 		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
 		Assert.assertEquals(0, pattern.patternParts.get(2));
@@ -68,14 +68,14 @@ public class BeanPatternTest {
 
 	@Test
 	public void getTest() {
-		BeanPattern pattern = BeanPattern.create("userInfo.examInfoDict[0].id");
+		BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
 		Object result = pattern.get(tempMap);
 		Assert.assertEquals(1, result);
 	}
 
 	@Test
 	public void setTest() {
-		BeanPattern pattern = BeanPattern.create("userInfo.examInfoDict[0].id");
+		BeanPath pattern = BeanPath.create("userInfo.examInfoDict[0].id");
 		pattern.set(tempMap, 2);
 		Object result = pattern.get(tempMap);
 		Assert.assertEquals(2, result);
