@@ -1901,6 +1901,30 @@ public class CollUtil {
 				}
 			}});
 	}
+	
+	/**
+	 * 反序给定List，会在原List基础上直接修改
+	 * 
+	 * @param list 被反转的List
+	 * @return 反转后的List
+	 * @since 4.0.6
+	 */
+	public static <T> List<T> reverse(List<T> list){
+		Collections.reverse(list);
+		return list;
+	}
+	
+	/**
+	 * 反序给定List，会创建一个新的List，原List数据不变
+	 * 
+	 * @param list 被反转的List
+	 * @return 反转后的List
+	 * @since 4.0.6
+	 */
+	public static <T> List<T> reverseNew(List<T> list){
+		final List<T> list2 = ObjectUtil.clone(list);
+		return reverse(list2);
+	}
 
 	//---------------------------------------------------------------------------------------------- Interface start
 	/**

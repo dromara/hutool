@@ -212,7 +212,7 @@ public class BeanUtil {
 			return ReflectUtil.getFieldValue(bean, fieldNameOrIndex.toString());
 		}
 	}
-	
+
 	/**
 	 * 设置字段值，，通过反射设置字段值，并不调用setXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
@@ -247,7 +247,7 @@ public class BeanUtil {
 	public static Object getProperty(Object bean, String expression) {
 		return BeanPath.create(expression).get(bean);
 	}
-	
+
 	/**
 	 * 解析Bean中的属性值
 	 * 
@@ -569,4 +569,39 @@ public class BeanUtil {
 	public static boolean isMatchName(Object bean, String beanClassName, boolean isSimple) {
 		return ClassUtil.getClassName(bean, isSimple).equals(isSimple ? StrUtil.upperFirst(beanClassName) : beanClassName);
 	}
+
+	/**
+	 * 把Bean里面的String属性做trim操作。
+	 * 
+	 * 通常bean直接用来绑定页面的input，用户的输入可能首尾存在空格，通常保存数据库前需要把首尾空格去掉
+	 * 
+	 * @param <T> Bean类型
+	 * @param bean Bean对象
+	 * @param ignoreFields 不需要trim的Field名称列表（不区分大小写）
+	 */
+	public static <T> T trimBeanStrFields(T bean, String... ignoreFields) {
+		if (bean == null) {
+			return bean;
+		}
+		
+		final Field[] fields = ReflectUtil.getFields(bean.getClass());
+		for (Field f : fields) {
+			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, f.getName())) {
+				// 不处理忽略的Fields
+				continue;
+			}
+			if (String.class.equals(f.getType())) {
+				// 只有String的Field才处理
+				String val = (String) ReflectUtil.getFieldValue(bean, f);
+				String trimVal = StrUtil.trim(val);
+				if (val != null && !val.equals(trimVal)) {
+					// Field Value不为null，且首尾有空格才处理
+					ReflectUtil.setFieldValue(bean, f, trimVal);
+				}
+			}
+		}
+		
+		return bean;
+	}
+
 }
