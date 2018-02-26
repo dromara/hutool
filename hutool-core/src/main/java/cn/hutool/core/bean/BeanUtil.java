@@ -579,24 +579,26 @@ public class BeanUtil {
 	 * @param bean Bean对象
 	 * @param ignoreFields 不需要trim的Field名称列表（不区分大小写）
 	 */
-	public static <T> T trimBeanStrFields(T bean, String... ignoreFields) {
+	public static <T> T trimStrFields(T bean, String... ignoreFields) {
 		if (bean == null) {
 			return bean;
 		}
 		
 		final Field[] fields = ReflectUtil.getFields(bean.getClass());
-		for (Field f : fields) {
-			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, f.getName())) {
+		for (Field field : fields) {
+			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, field.getName())) {
 				// 不处理忽略的Fields
 				continue;
 			}
-			if (String.class.equals(f.getType())) {
+			if (String.class.equals(field.getType())) {
 				// 只有String的Field才处理
-				String val = (String) ReflectUtil.getFieldValue(bean, f);
-				String trimVal = StrUtil.trim(val);
-				if (val != null && !val.equals(trimVal)) {
-					// Field Value不为null，且首尾有空格才处理
-					ReflectUtil.setFieldValue(bean, f, trimVal);
+				final String val = (String) ReflectUtil.getFieldValue(bean, field);
+				if(null != val) {
+					final String trimVal = StrUtil.trim(val);
+					if (false == val.equals(trimVal)) {
+						// Field Value不为null，且首尾有空格才处理
+						ReflectUtil.setFieldValue(bean, field, trimVal);
+					}
 				}
 			}
 		}
