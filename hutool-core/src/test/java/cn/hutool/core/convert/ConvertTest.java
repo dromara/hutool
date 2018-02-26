@@ -88,6 +88,10 @@ public class ConvertTest {
 		String a = "2017-05-06";
 		Date value = Convert.convert(Date.class, a);
 		Assert.assertEquals(a, DateUtil.formatDate(value));
+		
+		long timeLong = DateUtil.date().getTime();
+		Date value2 = Convert.convert(Date.class, timeLong);
+		Assert.assertEquals(timeLong, value2.getTime());
 	}
 
 	@Test
@@ -95,6 +99,10 @@ public class ConvertTest {
 		String a = "2017-05-06";
 		java.sql.Date value = Convert.convert(java.sql.Date.class, a);
 		Assert.assertEquals("2017-05-06", value.toString());
+		
+		long timeLong = DateUtil.date().getTime();
+		java.sql.Date value2 = Convert.convert(java.sql.Date.class, timeLong);
+		Assert.assertEquals(timeLong, value2.getTime());
 	}
 
 	@Test
