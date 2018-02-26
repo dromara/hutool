@@ -1,9 +1,14 @@
 package cn.hutool.core.bean;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -24,6 +29,7 @@ import cn.hutool.core.util.StrUtil;
  * persion.name
  * persons[3]
  * person.friends[5].name
+ * ['person']['friends'][5]['name']
  * </pre>
  * 
  * @author Looly
@@ -34,7 +40,8 @@ public class BeanPath {
 	/** 表达式边界符号数组 */
 	private static final char[] expChars = { CharUtil.DOT, CharUtil.BRACKET_START, CharUtil.BRACKET_END };
 
-	protected List<Object> patternParts;
+	private boolean isStartWith$ = false;
+	protected List<String> patternParts;
 
 	/**
 	 * 解析Bean路径表达式为Bean模式<br>
@@ -52,6 +59,7 @@ public class BeanPath {
 	 * persion.name
 	 * persons[3]
 	 * person.friends[5].name
+	 * ['person']['friends'][5]['name']
 	 * </pre>
 	 * 
 	 * @param expression 表达式
@@ -77,31 +85,14 @@ public class BeanPath {
 	 * @return 值，如果对应值不存在，则返回null
 	 */
 	public Object get(Object bean) {
-		final List<Object> localPatternParts = this.patternParts;
-		int length = localPatternParts.size();
-		Object subBean = bean;
-		boolean isFirst = true;
-		Object patternPart;
-		for (int i = 0; i < length; i++) {
-			patternPart = localPatternParts.get(i);
-			subBean = BeanUtil.getFieldValue(subBean, patternPart);
-			if (null == subBean) {
-				//支持表达式的第一个对象为Bean本身
-				if(isFirst && (patternPart instanceof String) && BeanUtil.isMatchName(subBean, (String)patternPart, true)){
-					subBean = bean;
-					isFirst = false;
-				}else{
-					return null;
-				}
-			}
-		}
-		return subBean;
+		return get(this.patternParts, bean, false);
 	}
-	
+
 	/**
 	 * 设置表达式指定位置（或filed对应）的值<br>
 	 * 若表达式指向一个List则设置其坐标对应位置的值，若指向Map则put对应key的值，Bean则设置字段的值<br>
 	 * 注意：
+	 * 
 	 * <pre>
 	 * 1. 如果为List，则设置值得下标不能大于已有List的长度
 	 * 2. 如果为数组，不能超过其长度
@@ -111,41 +102,112 @@ public class BeanPath {
 	 * @param value 值
 	 */
 	public void set(Object bean, Object value) {
-		final List<Object> localPatternParts = this.patternParts;
-		int lastIndex = localPatternParts.size() - 1;
+		final List<String> localPatternParts = this.patternParts;
+		final Object subBean = get(localPatternParts, bean, true);
+		BeanUtil.setFieldValue(subBean, localPatternParts.get(localPatternParts.size() - 1), value);
+	}
+
+	// ------------------------------------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 获取Bean中对应表达式的值
+	 * 
+	 * @param patternParts 表达式分段列表
+	 * @param bean Bean对象或Map或List等
+	 * @param ignoreLast 是否忽略最后一个值，忽略最后一个值则用于set，否则用于read
+	 * @return 值，如果对应值不存在，则返回null
+	 */
+	private Object get(List<String> patternParts, Object bean, boolean ignoreLast) {
+		int length = patternParts.size();
+		if (ignoreLast) {
+			length--;
+		}
 		Object subBean = bean;
 		boolean isFirst = true;
-		Object patternPart;
-		for (int i = 0; i < lastIndex; i++) {
-			patternPart = localPatternParts.get(i);
-			subBean = BeanUtil.getFieldValue(subBean, patternPart);
+		String patternPart;
+		for (int i = 0; i < length; i++) {
+			patternPart = patternParts.get(i);
+			subBean = getFieldValue(subBean, patternPart);
 			if (null == subBean) {
-				//支持表达式的第一个对象为Bean本身
-				if(isFirst && (patternPart instanceof String) && BeanUtil.isMatchName(subBean, (String)patternPart, true)){
+				// 支持表达式的第一个对象为Bean本身（若用户定义表达式$开头，则不做此操作）
+				if (isFirst && false == this.isStartWith$ && BeanUtil.isMatchName(bean, patternPart, true)) {
 					subBean = bean;
 					isFirst = false;
-				}else{
-					throw new NullPointerException(StrUtil.format("No value for field or index: {}", patternPart));
+				} else {
+					return null;
 				}
 			}
 		}
-		BeanUtil.setFieldValue(subBean, localPatternParts.get(lastIndex), value);
+		return subBean;
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	private static Object getFieldValue(Object bean, String expression) {
+		if (StrUtil.isBlank(expression)) {
+			return null;
+		}
+
+		if (StrUtil.contains(expression, ':')) {
+			// [start:end:step] 模式
+			final List<String> parts = StrUtil.splitTrim(expression, ':');
+			int start = Integer.parseInt(parts.get(0));
+			int end = Integer.parseInt(parts.get(1));
+			int step = 1;
+			if (3 == parts.size()) {
+				step = Integer.parseInt(parts.get(2));
+			}
+			if (bean instanceof Collection) {
+				return CollUtil.sub((Collection<?>) bean, start, end, step);
+			} else if (ArrayUtil.isArray(bean)) {
+				return ArrayUtil.sub(bean, start, end, step);
+			}
+		} else if (StrUtil.contains(expression, ',')) {
+			// [num0,num1,num2...]模式或者['key0','key1']模式
+			final List<String> keys = StrUtil.splitTrim(expression, ',');
+			if (bean instanceof Collection) {
+				return CollUtil.getAny((Collection<?>) bean, Convert.convert(int[].class, keys));
+			} else if (ArrayUtil.isArray(bean)) {
+				return ArrayUtil.getAny(bean, Convert.convert(int[].class, keys));
+			} else {
+				final String[] unwrapedKeys = new String[keys.size()];
+				for (int i = 0; i < unwrapedKeys.length; i++) {
+					unwrapedKeys[i] = StrUtil.unWrap(keys.get(i), '\'');
+				}
+				if (bean instanceof Map) {
+					// 只支持String为key的Map
+					MapUtil.getAny((Map<String, ?>) bean, unwrapedKeys);
+				} else {
+					final Map<String, Object> map = BeanUtil.beanToMap(bean);
+					MapUtil.getAny(map, unwrapedKeys);
+				}
+			}
+		} else {
+			// 数字或普通字符串
+			return BeanUtil.getFieldValue(bean, expression);
+		}
+
+		return null;
+	}
+
 	/**
 	 * 初始化
 	 * 
 	 * @param expression 表达式
 	 */
 	private void init(String expression) {
-		List<Object> localPatternParts = new ArrayList<>();
+		List<String> localPatternParts = new ArrayList<>();
 		int length = expression.length();
 
-		StrBuilder builder = StrUtil.strBuilder();
+		final StrBuilder builder = StrUtil.strBuilder();
 		char c;
 		boolean isNumStart = false;// 下标标识符开始
 		for (int i = 0; i < length; i++) {
 			c = expression.charAt(i);
+			if (0 == i && '$' == c) {
+				// 忽略开头的$符，表示当前对象
+				isStartWith$ = true;
+				continue;
+			}
+
 			if (ArrayUtil.contains(expChars, c)) {
 				// 处理边界符号
 				if (CharUtil.BRACKET_END == c) {
@@ -156,7 +218,7 @@ public class BeanPath {
 					isNumStart = false;
 					// 中括号结束加入下标
 					if (builder.length() > 0) {
-						localPatternParts.add(Integer.parseInt(builder.toString()));
+						localPatternParts.add(unWrapIfPossible(builder));
 					}
 					builder.reset();
 				} else {
@@ -169,16 +231,12 @@ public class BeanPath {
 					}
 					// 每一个边界符之前的表达式是一个完整的KEY，开始处理KEY
 					if (builder.length() > 0) {
-						localPatternParts.add(builder.toString());
+						localPatternParts.add(unWrapIfPossible(builder));
 					}
 					builder.reset();
 				}
 			} else {
 				// 非边界符号，追加字符
-				if (isNumStart && (c < '0' || c > '9')) {
-					// 中括号之后只能跟数字
-					throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, it must number between '[' and ']', but contains '{}' !", expression, i, c));
-				}
 				builder.append(c);
 			}
 		}
@@ -188,11 +246,25 @@ public class BeanPath {
 			throw new IllegalArgumentException(StrUtil.format("Bad expression '{}':{}, we find '[' but no ']' !", expression, length - 1));
 		} else {
 			if (builder.length() > 0) {
-				localPatternParts.add(builder.toString());
+				localPatternParts.add(unWrapIfPossible(builder));
 			}
 		}
 
 		// 不可变List
 		this.patternParts = Collections.unmodifiableList(localPatternParts);
 	}
+
+	/**
+	 * 对于非表达式去除单引号
+	 * 
+	 * @param expression 表达式
+	 * @return 表达式
+	 */
+	private static String unWrapIfPossible(CharSequence expression) {
+		if (StrUtil.containsAny(expression, " = ", " > ", " < ", " like ", ",")) {
+			return expression.toString();
+		}
+		return StrUtil.unWrap(expression, '\'');
+	}
+	// ------------------------------------------------------------------------------------------------------------------------------------- Private method end
 }

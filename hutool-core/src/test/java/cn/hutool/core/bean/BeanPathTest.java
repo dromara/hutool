@@ -18,7 +18,7 @@ import cn.hutool.core.lang.test.bean.UserInfoDict;
  * @author looly
  *
  */
-public class BeanPatternTest {
+public class BeanPathTest {
 
 	Map<String, Object> tempMap;
 
@@ -58,11 +58,29 @@ public class BeanPatternTest {
 	}
 
 	@Test
-	public void beanPatternTest1() {
+	public void beanPathTest1() {
 		BeanPath pattern = new BeanPath("userInfo.examInfoDict[0].id");
 		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
 		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
-		Assert.assertEquals(0, pattern.patternParts.get(2));
+		Assert.assertEquals("0", pattern.patternParts.get(2));
+		Assert.assertEquals("id", pattern.patternParts.get(3));
+	}
+	
+	@Test
+	public void beanPathTest2() {
+		BeanPath pattern = new BeanPath("[userInfo][examInfoDict][0][id]");
+		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assert.assertEquals("0", pattern.patternParts.get(2));
+		Assert.assertEquals("id", pattern.patternParts.get(3));
+	}
+	
+	@Test
+	public void beanPathTest3() {
+		BeanPath pattern = new BeanPath("['userInfo']['examInfoDict'][0]['id']");
+		Assert.assertEquals("userInfo", pattern.patternParts.get(0));
+		Assert.assertEquals("examInfoDict", pattern.patternParts.get(1));
+		Assert.assertEquals("0", pattern.patternParts.get(2));
 		Assert.assertEquals("id", pattern.patternParts.get(3));
 	}
 

@@ -1267,7 +1267,7 @@ public class NumberUtil {
 	 * @param n 值
 	 * @return 阶乘
 	 */
-	public static int factorial(int n) {
+	public static long factorial(long n) {
 		if (n == 1) {
 			return 1;
 		}

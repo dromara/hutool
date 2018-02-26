@@ -1672,6 +1672,97 @@ public class ArrayUtil {
 		}
 		return obj.getClass().isArray();
 	}
+	
+	/**
+	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组对象
+	 * @param index 下标，支持负数
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T get(Object array, int index) {
+		if (index < 0) {
+			index += Array.getLength(array);
+		}
+		return (T)Array.get(array, index);
+	}
+	
+	/**
+	 * 获取数组中指定多个下标元素值，组成新数组
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组
+	 * @param indexes 下标列表
+	 * @return 结果
+	 */
+	public static <T> T[] getAny(Object array, int... indexes){
+		final T[] result = newArray(indexes.length);
+		for (int i : indexes) {
+			result[i] = get(array, i);
+		}
+		return result;
+	}
+	
+	/**
+	 * 获取子数组
+	 * @param array 数组
+	 * @param start 开始位置（包括）
+	 * @param end 结束位置（不包括）
+	 * @param step 步进
+	 * @return 新的数组
+	 * @since 4.0.6
+	 */
+	public static Object[] sub(Object array, int start, int end) {
+		return sub(array, start, end, 1);
+	}
+	
+	/**
+	 * 获取子数组
+	 * 
+	 * @param array 数组
+	 * @param start 开始位置（包括）
+	 * @param end 结束位置（不包括）
+	 * @param step 步进
+	 * @return 新的数组
+	 * @since 4.0.6
+	 */
+	public static Object[] sub(Object array, int start, int end, int step) {
+		int length = length(array);
+		if(start < 0) {
+			start  += length;
+		}
+		if(end < 0) {
+			end += length;
+		}
+		if(start == length) {
+			return new Object[0];
+		}
+		if(start > end) {
+			int tmp = start;
+			start= end;
+			end = tmp;
+		}
+		if (end > length) {
+			if (start >= length) {
+				return new Object[0];
+			}
+			end = length;
+		}
+		
+		if(step <= 1) {
+			step = 1;
+		}
+		
+		final ArrayList<Object> list = new ArrayList<>();
+		for(int i = start; i < end; i+= step) {
+			list.add(get(array, i));
+		}
+		
+		return list.toArray();
+	}
 
 	/**
 	 * 数组或集合转String

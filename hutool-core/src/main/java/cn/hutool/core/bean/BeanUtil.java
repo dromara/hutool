@@ -17,6 +17,7 @@ import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
@@ -192,24 +193,22 @@ public class BeanUtil {
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 * 
 	 * @param bean Bean对象
-	 * @param fieldNameOrIndex 字段名或序号，必须为String或int类型
+	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @return 字段值
 	 */
-	public static Object getFieldValue(Object bean, Object fieldNameOrIndex) {
+	public static Object getFieldValue(Object bean, String fieldNameOrIndex) {
 		if (null == bean || null == fieldNameOrIndex) {
 			return null;
 		}
 
 		if (bean instanceof Map) {
 			return ((Map<?, ?>) bean).get(fieldNameOrIndex);
-		} else if (bean instanceof List) {
-			return ((List<?>) bean).get(Convert.toInt(fieldNameOrIndex));
 		} else if (bean instanceof Collection) {
-			return ((Collection<?>) bean).toArray()[Convert.toInt(fieldNameOrIndex)];
+			return CollUtil.get((Collection<?>)bean, Integer.parseInt(fieldNameOrIndex));
 		} else if (ArrayUtil.isArray(bean)) {
-			return Array.get(bean, Convert.toInt(fieldNameOrIndex));
+			return ArrayUtil.get(bean, Integer.parseInt(fieldNameOrIndex));
 		} else {// 普通Bean对象
-			return ReflectUtil.getFieldValue(bean, fieldNameOrIndex.toString());
+			return ReflectUtil.getFieldValue(bean, fieldNameOrIndex);
 		}
 	}
 
@@ -218,11 +217,11 @@ public class BeanUtil {
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 * 
 	 * @param bean Bean
-	 * @param fieldNameOrIndex 字段名或序号，必须为String或int类型
+	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @param value 值
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void setFieldValue(Object bean, Object fieldNameOrIndex, Object value) {
+	public static void setFieldValue(Object bean, String fieldNameOrIndex, Object value) {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
@@ -231,7 +230,7 @@ public class BeanUtil {
 			Array.set(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {
 			// 普通Bean对象
-			ReflectUtil.setFieldValue(bean, fieldNameOrIndex.toString(), value);
+			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);
 		}
 	}
 
