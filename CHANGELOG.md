@@ -7,13 +7,15 @@
 ### 新特性
 * 【poi】  ExcelReader增加getWriter、getOrCreateCell方法
 * 【core】NetUtil增加isInRange方法（感谢@【成都】小邓）
-* 【core】新增BeanPath
+* 【core】新增BeanPath（仅支持部分JSONPath语法）
 * 【core】CollUtil新增reverse、reverseNew方法
-* 【core】集合中新增排列（Arrangement）和组合（Combination）类
+* 【core】集合中新增排列（Arrangement）和组合（Combination）类（感谢@【北京】宁静）
+* 【core】StrUtil新增splitToLong和splitToInt方法
 
 ### Bug修复
 * 【core】修复IdcardUtil中身份证15转18位年的问题（Issue#IHT1Q@Gitee）
 * 【http】忽略Premature EOF错误（感谢@【南京】peckey）
+* 【core】修复ArrayConvert中集合转原始类型数组导致的异常
 
 -------------------------------------------------------------------------------------------------------------
 

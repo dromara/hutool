@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import cn.hutool.core.comparator.VersionComparator;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
@@ -1075,10 +1076,58 @@ public class StrUtil {
 	 * 
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
-	 * @return 切分后的集合
+	 * @return 切分后的数组
 	 */
 	public static String[] splitToArray(CharSequence str, char separator) {
 		return splitToArray(str, separator, 0);
+	}
+	
+	/**
+	 * 切分字符串为long数组
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符
+	 * @return 切分后long数组
+	 * @since 4.0.6
+	 */
+	public static long[] splitToLong(CharSequence str, char separator) {
+		return Convert.convert(long[].class, splitTrim(str, separator));
+	}
+	
+	/**
+	 * 切分字符串为long数组
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @return 切分后long数组
+	 * @since 4.0.6
+	 */
+	public static long[] splitToLong(CharSequence str, CharSequence separator) {
+		return Convert.convert(long[].class, splitTrim(str, separator));
+	}
+	
+	/**
+	 * 切分字符串为int数组
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符
+	 * @return 切分后long数组
+	 * @since 4.0.6
+	 */
+	public static int[] splitToInt(CharSequence str, char separator) {
+		return Convert.convert(int[].class, splitTrim(str, separator));
+	}
+	
+	/**
+	 * 切分字符串为int数组
+	 * 
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符字符串
+	 * @return 切分后long数组
+	 * @since 4.0.6
+	 */
+	public static int[] splitToInt(CharSequence str, CharSequence separator) {
+		return Convert.convert(int[].class, splitTrim(str, separator));
 	}
 
 	/**
@@ -1100,7 +1149,7 @@ public class StrUtil {
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
 	 * @param limit 限制分片数
-	 * @return 切分后的集合
+	 * @return 切分后的数组
 	 */
 	public static String[] splitToArray(CharSequence str, char separator, int limit) {
 		if (null == str) {

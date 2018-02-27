@@ -1,10 +1,11 @@
 package cn.hutool.core.convert.impl;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.lang.Assert;
@@ -28,10 +29,10 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @param targetType 目标数组类型
 	 */
 	public ArrayConverter(Class<?> targetType) {
-		if(null == targetType) {
-			//默认Object数组
+		if (null == targetType) {
+			// 默认Object数组
 			targetType = Object[].class;
-		}else {
+		} else {
 			Assert.isTrue(targetType.isArray(), "Target type must be a array!");
 		}
 		this.targetType = targetType;
@@ -57,7 +58,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 * @return 转换后的数组
 	 */
 	private Object convertArrayToArray(Object array) {
-		final Class<?> valueComponentType =ArrayUtil.getComponentType(array);
+		final Class<?> valueComponentType = ArrayUtil.getComponentType(array);
 
 		if (valueComponentType == targetComponentType) {
 			return array;
@@ -81,45 +82,49 @@ public class ArrayConverter extends AbstractConverter<Object> {
 	 */
 	private Object convertObjectToArray(Object value) {
 		if (value instanceof CharSequence) {
-			if(targetComponentType == char.class || targetComponentType == Character.class) {
+			if (targetComponentType == char.class || targetComponentType == Character.class) {
 				return convertArrayToArray(value.toString().toCharArray());
 			}
-			
-			//单纯字符串情况下按照逗号分隔后劈开
+
+			// 单纯字符串情况下按照逗号分隔后劈开
 			final String[] strings = StrUtil.split(value.toString(), StrUtil.COMMA);
 			return convertArrayToArray(strings);
 		}
-		
+
 		final ConverterRegistry converter = ConverterRegistry.getInstance();
-		Object[] result = null;
+		Object result = null;
 		if (value instanceof List) {
-			//List转数组
+			// List转数组
 			final List<?> list = (List<?>) value;
-			result = ArrayUtil.newArray(targetComponentType, list.size());
+			result = Array.newInstance(targetComponentType, list.size());
 			for (int i = 0; i < list.size(); i++) {
-				result[i] = converter.convert(targetComponentType, list.get(i));
+				Array.set(result, i, converter.convert(targetComponentType, list.get(i)));
 			}
 		} else if (value instanceof Collection) {
-			//集合转数组
+			// 集合转数组
 			final Collection<?> collection = (Collection<?>) value;
-			result = ArrayUtil.newArray(targetComponentType, collection.size());
+			result = Array.newInstance(targetComponentType, collection.size());
 
 			int i = 0;
 			for (Object element : collection) {
-				result[i] = converter.convert(targetComponentType, element);
+				Array.set(result, i, converter.convert(targetComponentType, element));
 				i++;
 			}
 		} else if (value instanceof Iterable) {
-			//可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
-			final Iterable<?> iterable = (Iterable<?>) value;
-			final List<Object> list = new ArrayList<>();
-			for (Object element : iterable) {
-				list.add(converter.convert(targetComponentType, element));
+			// 可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
+			final List<?> list = IterUtil.toList((Iterable<?>) value);
+			result = Array.newInstance(targetComponentType, list.size());
+			for (int i = 0; i < list.size(); i++) {
+				Array.set(result, i, converter.convert(targetComponentType, list.get(i)));
 			}
-
-			result = ArrayUtil.newArray(targetComponentType, list.size());
-			result = list.toArray(result);
-		}else {
+		} else if (value instanceof Iterator) {
+			// 可循环对象转数组，可循环对象无法获取长度，因此先转为List后转为数组
+			final List<?> list = IterUtil.toList((Iterator<?>) value);
+			result = Array.newInstance(targetComponentType, list.size());
+			for (int i = 0; i < list.size(); i++) {
+				Array.set(result, i, converter.convert(targetComponentType, list.get(i)));
+			}
+		} else {
 			// everything else:
 			result = convertToSingleElementArray(value);
 		}

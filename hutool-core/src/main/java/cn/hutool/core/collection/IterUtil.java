@@ -1,8 +1,10 @@
 package cn.hutool.core.collection;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -162,7 +164,7 @@ public class IterUtil {
 		}
 		return countMap;
 	}
-	
+
 	/**
 	 * 字段值与列表值对应的Map，常用于元素对象中有唯一ID时需要按照这个ID查找对象的情况<br>
 	 * 例如：车牌号 =》车
@@ -174,10 +176,10 @@ public class IterUtil {
 	 * @return 某个字段值与对象对应Map
 	 * @since 4.0.4
 	 */
-	public static <K, V> Map<K, V> fieldValueMap(Iterable<V> iter, String fieldName){
+	public static <K, V> Map<K, V> fieldValueMap(Iterable<V> iter, String fieldName) {
 		return fieldValueMap(null == iter ? null : iter.iterator(), fieldName);
 	}
-	
+
 	/**
 	 * 字段值与列表值对应的Map，常用于元素对象中有唯一ID时需要按照这个ID查找对象的情况<br>
 	 * 例如：车牌号 =》车
@@ -190,11 +192,11 @@ public class IterUtil {
 	 * @since 4.0.4
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> fieldValueMap(Iterator<V> iter, String fieldName){
+	public static <K, V> Map<K, V> fieldValueMap(Iterator<V> iter, String fieldName) {
 		final Map<K, V> result = new HashMap<>();
-		if(null != iter) {
+		if (null != iter) {
 			V value;
-			while(iter.hasNext()) {
+			while (iter.hasNext()) {
 				value = iter.next();
 				result.put((K) ReflectUtil.getFieldValue(value, fieldName), value);
 			}
@@ -309,6 +311,36 @@ public class IterUtil {
 			}
 		}
 		return resultMap;
+	}
+	
+	/**
+	 * Iterator转List<br>
+	 * 不判断，直接生成新的List
+	 * 
+	 * @param <T> 元素类型
+	 * @param iter {@link Iterator}
+	 * @return List
+	 * @since 4.0.6
+	 */
+	public static <E> List<E> toList(Iterable<E> iter) {
+		return toList(iter.iterator());
+	}
+	
+	/**
+	 * Iterator转List<br>
+	 * 不判断，直接生成新的List
+	 * 
+	 * @param <T> 元素类型
+	 * @param iter {@link Iterator}
+	 * @return List
+	 * @since 4.0.6
+	 */
+	public static <E> List<E> toList(Iterator<E> iter) {
+		final List<E> list = new ArrayList<>();
+		while (iter.hasNext()) {
+			list.add(iter.next());
+		}
+		return list;
 	}
 
 	/**

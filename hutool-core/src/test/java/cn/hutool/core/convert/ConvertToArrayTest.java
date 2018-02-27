@@ -41,8 +41,11 @@ public class ConvertToArrayTest {
 	public void toLongArrayTest() {
 		String[] b = { "1", "2", "3", "4" };
 		
-		Long[] intArray = Convert.toLongArray(b);
-		Assert.assertArrayEquals(intArray, new Long[]{1L,2L,3L,4L});
+		Long[] longArray = Convert.toLongArray(b);
+		Assert.assertArrayEquals(longArray, new Long[]{1L,2L,3L,4L});
+		
+		long[] longArray2 = Convert.convert(long[].class, b);
+		Assert.assertArrayEquals(longArray2, new long[]{1L,2L,3L,4L});
 		
 		int[] c = {1,2,3,4,5};
 		Long[] intArray2 = Convert.toLongArray(c);
@@ -53,8 +56,11 @@ public class ConvertToArrayTest {
 	public void toDoubleArrayTest() {
 		String[] b = { "1", "2", "3", "4" };
 		
-		Double[] intArray = Convert.toDoubleArray(b);
-		Assert.assertArrayEquals(intArray, new Double[]{1D,2D,3D,4D});
+		Double[] doubleArray = Convert.toDoubleArray(b);
+		Assert.assertArrayEquals(doubleArray, new Double[]{1D,2D,3D,4D});
+		
+		double[] doubleArray2 = Convert.convert(double[].class, b);
+		Assert.assertArrayEquals(doubleArray2, new double[]{1D,2D,3D,4D}, 2);
 		
 		int[] c = {1,2,3,4,5};
 		Double[] intArray2 = Convert.toDoubleArray(c);

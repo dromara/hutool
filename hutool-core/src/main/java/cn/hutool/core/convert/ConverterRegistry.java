@@ -191,7 +191,7 @@ public class ConverterRegistry {
 		final Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		T result = convertSpecial(type, rowType, value, defaultValue);
+		final T result = convertSpecial(type, rowType, value, defaultValue);
 		if(null != result) {
 			return result;
 		}
