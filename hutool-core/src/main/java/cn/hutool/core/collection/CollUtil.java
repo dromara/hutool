@@ -29,6 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.exceptions.UtilException;
@@ -1803,6 +1804,30 @@ public class CollUtil {
 	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
 		Collections.sort(list, c);
 		return list;
+	}
+	
+	/**
+	 * 根据Bean的属性排序
+	 * 
+	 * @param collection Collection
+	 * @param property 属性名
+	 * @return 排序后的List
+	 * @since 4.0.6
+	 */
+	public static <T> List<T> sortByProperty(Collection<T> collection, String property){
+		return sort(collection, new PropertyComparator<>(property));
+	}
+	
+	/**
+	 * 根据Bean的属性排序
+	 * 
+	 * @param list List
+	 * @param property 属性名
+	 * @return 排序后的List
+	 * @since 4.0.6
+	 */
+	public static <T> List<T> sortByProperty(List<T> list, String property){
+		return sort(list, new PropertyComparator<>(property));
 	}
 
 	/**

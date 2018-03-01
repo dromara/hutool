@@ -13,6 +13,7 @@
 * 【core】StrUtil新增splitToLong和splitToInt方法
 * 【core】MapUtil增加getXXX方法
 * 【core】扩充Dict构造
+* 【core】CollUtil新增sortByProperty方法
 
 ### Bug修复
 * 【core】修复IdcardUtil中身份证15转18位年的问题（Issue#IHT1Q@Gitee）
