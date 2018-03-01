@@ -350,9 +350,62 @@ public final class JSONUtil {
 	 * @param expression 表达式
 	 * @return 对象
 	 * @see JSON#getByExp(String)
+	 * @deprecated 请使用{@link JSONUtil#getByPath(JSON, String)}
 	 */
+	@Deprecated
 	public static Object getByExp(JSON json, String expression) {
-		return (null == json || StrUtil.isBlank(expression)) ? null : json.getByExp(expression);
+		return (null == json || StrUtil.isBlank(expression)) ? null : json.getByPath(expression);
+	}
+
+	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * 
+	 * 表达式栗子：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * 
+	 * @param json {@link JSON}
+	 * @param expression 表达式
+	 * @return 对象
+	 * @see JSON#getByExp(String)
+	 */
+	public static Object getByPath(JSON json, String expression) {
+		return (null == json || StrUtil.isBlank(expression)) ? null : json.getByPath(expression);
+	}
+
+	/**
+	 * 设置表达式指定位置（或filed对应）的值<br>
+	 * 若表达式指向一个JSONArray则设置其坐标对应位置的值，若指向JSONObject则put对应key的值<br>
+	 * 注意：如果为JSONArray，则设置值得下标不能大于已有JSONArray的长度<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * 
+	 * 表达式栗子：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * 
+	 * @param json JSON，可以为JSONObject或JSONArray
+	 * @param expression 表达式
+	 * @param value 值
+	 */
+	public static void putByPath(JSON json, String expression, Object value) {
+		json.putByPath(expression, value);
 	}
 
 	/**

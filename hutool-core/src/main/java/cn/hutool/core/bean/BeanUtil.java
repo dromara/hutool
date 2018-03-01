@@ -17,6 +17,8 @@ import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
@@ -188,27 +190,47 @@ public class BeanUtil {
 
 	/**
 	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
-	 * 对象同样支持Map类型，fieldName即为key
+	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 * 
 	 * @param bean Bean对象
-	 * @param fieldName 字段名
+	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @return 字段值
 	 */
-	public static Object getFieldValue(Object bean, String fieldName) {
-		if (null == bean || StrUtil.isBlank(fieldName)) {
+	public static Object getFieldValue(Object bean, String fieldNameOrIndex) {
+		if (null == bean || null == fieldNameOrIndex) {
 			return null;
 		}
 
 		if (bean instanceof Map) {
-			return ((Map<?, ?>) bean).get(fieldName);
-		} else if (bean instanceof List) {
-			return ((List<?>) bean).get(Integer.parseInt(fieldName));
+			return ((Map<?, ?>) bean).get(fieldNameOrIndex);
 		} else if (bean instanceof Collection) {
-			return ((Collection<?>) bean).toArray()[Integer.parseInt(fieldName)];
+			return CollUtil.get((Collection<?>)bean, Integer.parseInt(fieldNameOrIndex));
 		} else if (ArrayUtil.isArray(bean)) {
-			return Array.get(bean, Integer.parseInt(fieldName));
+			return ArrayUtil.get(bean, Integer.parseInt(fieldNameOrIndex));
 		} else {// 普通Bean对象
-			return ReflectUtil.getFieldValue(bean, fieldName);
+			return ReflectUtil.getFieldValue(bean, fieldNameOrIndex);
+		}
+	}
+
+	/**
+	 * 设置字段值，，通过反射设置字段值，并不调用setXXX方法<br>
+	 * 对象同样支持Map类型，fieldNameOrIndex即为key
+	 * 
+	 * @param bean Bean
+	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
+	 * @param value 值
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static void setFieldValue(Object bean, String fieldNameOrIndex, Object value) {
+		if (bean instanceof Map) {
+			((Map) bean).put(fieldNameOrIndex, value);
+		} else if (bean instanceof List) {
+			((List) bean).set(Convert.toInt(fieldNameOrIndex), value);
+		} else if (ArrayUtil.isArray(bean)) {
+			Array.set(bean, Convert.toInt(fieldNameOrIndex), value);
+		} else {
+			// 普通Bean对象
+			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);
 		}
 	}
 
@@ -218,11 +240,23 @@ public class BeanUtil {
 	 * @param bean Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值
-	 * @see BeanResolver#resolveBean(Object, String)
+	 * @see BeanPath#get(Object)
 	 * @since 3.0.7
 	 */
 	public static Object getProperty(Object bean, String expression) {
-		return BeanResolver.resolveBean(bean, expression);
+		return BeanPath.create(expression).get(bean);
+	}
+
+	/**
+	 * 解析Bean中的属性值
+	 * 
+	 * @param bean Bean对象，支持Map、List、Collection、Array
+	 * @param expression 表达式，例如：person.friend[5].name
+	 * @see BeanPath#get(Object)
+	 * @since 4.0.6
+	 */
+	public static void setProperty(Object bean, String expression, Object value) {
+		BeanPath.create(expression).set(bean, value);
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean
@@ -519,4 +553,56 @@ public class BeanUtil {
 		}
 		BeanCopier.create(source, target, copyOptions).copy();
 	}
+
+	/**
+	 * 给定的Bean的类名是否匹配指定类名字符串<br>
+	 * 如果isSimple为{@code false}，则只匹配类名而忽略包名，例如：cn.hutool.TestEntity只匹配TestEntity<br>
+	 * 如果isSimple为{@code true}，则匹配包括包名的全类名，例如：cn.hutool.TestEntity匹配cn.hutool.TestEntity
+	 * 
+	 * @param bean Bean
+	 * @param beanClassName Bean的类名
+	 * @param isSimple 是否只匹配类名而忽略包名，true表示忽略包名
+	 * @return 是否匹配
+	 * @since 4.0.6
+	 */
+	public static boolean isMatchName(Object bean, String beanClassName, boolean isSimple) {
+		return ClassUtil.getClassName(bean, isSimple).equals(isSimple ? StrUtil.upperFirst(beanClassName) : beanClassName);
+	}
+
+	/**
+	 * 把Bean里面的String属性做trim操作。
+	 * 
+	 * 通常bean直接用来绑定页面的input，用户的输入可能首尾存在空格，通常保存数据库前需要把首尾空格去掉
+	 * 
+	 * @param <T> Bean类型
+	 * @param bean Bean对象
+	 * @param ignoreFields 不需要trim的Field名称列表（不区分大小写）
+	 */
+	public static <T> T trimStrFields(T bean, String... ignoreFields) {
+		if (bean == null) {
+			return bean;
+		}
+		
+		final Field[] fields = ReflectUtil.getFields(bean.getClass());
+		for (Field field : fields) {
+			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, field.getName())) {
+				// 不处理忽略的Fields
+				continue;
+			}
+			if (String.class.equals(field.getType())) {
+				// 只有String的Field才处理
+				final String val = (String) ReflectUtil.getFieldValue(bean, field);
+				if(null != val) {
+					final String trimVal = StrUtil.trim(val);
+					if (false == val.equals(trimVal)) {
+						// Field Value不为null，且首尾有空格才处理
+						ReflectUtil.setFieldValue(bean, field, trimVal);
+					}
+				}
+			}
+		}
+		
+		return bean;
+	}
+
 }

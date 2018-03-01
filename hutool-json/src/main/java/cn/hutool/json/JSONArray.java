@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import cn.hutool.core.bean.BeanResolver;
+import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIterator;
 import cn.hutool.core.convert.impl.CollectionConverter;
 
@@ -199,16 +199,78 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		return (index < 0 || index >= this.size()) ? defaultValue : this.rawList.get(index);
 	}
 
+	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * 
+	 * 表达式栗子：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * 
+	 * @param expression 表达式
+	 * @return 对象
+	 * @see BeanPath#get(Object)
+	 * @deprecated 请使用{@link #getByPath(String)}
+	 */
 	@Override
 	public Object getByExp(String expression) {
-		return BeanResolver.resolveBean(this, expression);
+		return getByPath(expression);
+	}
+
+	/**
+	 * 通过表达式获取JSON中嵌套的对象<br>
+	 * <ol>
+	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
+	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
+	 * </ol>
+	 * 
+	 * 表达式栗子：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * </pre>
+	 * 
+	 * 获取表达式对应值后转换为对应类型的值
+	 * 
+	 * @param <T> 返回值类型
+	 * @param expression 表达式
+	 * @param resultType 返回值类型
+	 * @return 对象
+	 * @see BeanPath#get(Object)
+	 * @since 3.1.0
+	 * @deprecated 请使用{@link #getByPath(String, Class)}
+	 */
+	@Deprecated
+	@Override
+	public <T> T getByExp(String expression, Class<T> resultType) {
+		return getByPath(expression, resultType);
+	}
+	
+	@Override
+	public Object getByPath(String expression) {
+		return BeanPath.create(expression).get(this);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T getByExp(String expression, Class<T> resultType) {
-		// return Convert.convert(resultType, getByExp(expression));
-		return (T) InternalJSONUtil.jsonConvert(resultType, getByExp(expression), true);
+	public <T> T getByPath(String expression, Class<T> resultType) {
+		return (T) InternalJSONUtil.jsonConvert(resultType, getByPath(expression), true);
+	}
+	
+	@Override
+	public void putByPath(String expression, Object value) {
+		BeanPath.create(expression).set(this, value);
 	}
 
 	/**

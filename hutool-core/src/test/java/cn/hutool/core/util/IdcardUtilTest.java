@@ -28,7 +28,10 @@ public class IdcardUtilTest {
 	@Test
 	public void convert15To18Test(){
 		String convert15To18 = IdcardUtil.convert15To18(ID_15);
-		Assert.assertEquals(convert15To18, "150102198807303035");
+		Assert.assertEquals("150102198807303035", convert15To18);
+		
+		String convert15To18Second = IdcardUtil.convert15To18("330102200403064");
+		Assert.assertEquals("33010219200403064x", convert15To18Second);
 	}
 	
 	@Test

@@ -136,6 +136,19 @@ public class BeanUtilTest {
 		Assert.assertTrue(p2.isSlow());
 	}
 	
+	@Test
+	public void trimBeanStrFieldsTest() {
+		Person person = new Person();
+		person.setAge(1);
+		person.setName("  张三 ");
+		person.setOpenid(null);
+		Person person2 = BeanUtil.trimStrFields(person);
+		
+		//是否改变原对象
+		Assert.assertEquals("张三", person.getName());
+		Assert.assertEquals("张三", person2.getName());
+	}
+	
 	//-----------------------------------------------------------------------------------------------------------------
 	public static class SubPerson extends Person{
 		private String subName;

@@ -124,6 +124,10 @@ public class IdcardUtil {
 			Date birthDate = DateUtil.parse(birthday, "yyMMdd");
 			// 获取出生年(完全表现形式,如：2010)
 			int sYear = DateUtil.year(birthDate);
+			if(sYear > 2000) {
+				//2000年之后不存在15位身份证号，此处用于修复此问题的判断
+				sYear -= 100;
+			}
 			idCard18 = StrUtil.builder().append(idCard.substring(0, 6)).append(sYear).append(idCard.substring(8));
 			// 获取校验位
 			char sVal = getCheckCode18(idCard18.toString());

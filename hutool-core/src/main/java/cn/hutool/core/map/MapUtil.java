@@ -15,6 +15,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -367,7 +368,7 @@ public class MapUtil {
 
 		return resultList;
 	}
-	
+
 	/**
 	 * 将已知Map转换为key为驼峰风格的Map<br>
 	 * 对于key为非String类型，通过调用toString方法转换为字符串
@@ -376,7 +377,7 @@ public class MapUtil {
 	 * @return 驼峰风格Map
 	 * @since 3.3.1
 	 */
-	public static <K, V> Map<String, V> toCamelCaseMap(Map<K, V> map){
+	public static <K, V> Map<String, V> toCamelCaseMap(Map<K, V> map) {
 		final Map<String, V> map2 = newHashMap(map.size(), (map instanceof LinkedHashMap));
 		K key;
 		for (Entry<K, V> entry : map.entrySet()) {
@@ -551,34 +552,34 @@ public class MapUtil {
 	 */
 	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
 		Map<V, K> inverseMap;
-		if(map instanceof LinkedHashMap) {
+		if (map instanceof LinkedHashMap) {
 			inverseMap = new LinkedHashMap<>(map.size());
-		}else if(map instanceof TreeMap) {
+		} else if (map instanceof TreeMap) {
 			inverseMap = new TreeMap<>();
-		}else {
+		} else {
 			inverseMap = new HashMap<>(map.size());
 		}
-		
+
 		for (Entry<K, V> entry : map.entrySet()) {
 			inverseMap.put(entry.getValue(), entry.getKey());
 		}
 		return inverseMap;
 	}
-	
+
 	/**
-	 *排序已有Map，Key有序的Map，使用默认Key排序方式（字母顺序）
+	 * 排序已有Map，Key有序的Map，使用默认Key排序方式（字母顺序）
 	 * 
 	 * @param map Map
 	 * @return TreeMap
 	 * @since 4.0.1
 	 * @see #newTreeMap(Map, Comparator)
 	 */
-	public static <K, V> TreeMap<K, V> sort(Map<K, V> map){
+	public static <K, V> TreeMap<K, V> sort(Map<K, V> map) {
 		return sort(map, null);
 	}
-	
+
 	/**
-	 *排序已有Map，Key有序的Map
+	 * 排序已有Map，Key有序的Map
 	 * 
 	 * @param map Map
 	 * @param comparator Key比较器
@@ -586,18 +587,18 @@ public class MapUtil {
 	 * @since 4.0.1
 	 * @see #newTreeMap(Map, Comparator)
 	 */
-	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator){
+	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
 		TreeMap<K, V> result;
-		if(map instanceof TreeMap) {
-			//已经是可排序Map，此时只有比较器一致才返回原map
-			result = (TreeMap<K, V>)map;
-			if(null == comparator || comparator.equals(result.comparator())) {
+		if (map instanceof TreeMap) {
+			// 已经是可排序Map，此时只有比较器一致才返回原map
+			result = (TreeMap<K, V>) map;
+			if (null == comparator || comparator.equals(result.comparator())) {
 				return result;
 			}
-		}else {
+		} else {
 			result = newTreeMap(map, comparator);
 		}
-		
+
 		return result;
 	}
 
@@ -641,12 +642,143 @@ public class MapUtil {
 	 * 创建链接调用map
 	 * 
 	 * @param <K> Key类型
-	 * @param <V> Key类型
+	 * @param <V> Value类型
 	 * @param k key
 	 * @param v value
 	 * @return map创建类
 	 */
 	public static <K, V> MapBuilder<K, V> builder(K k, V v) {
 		return (builder(new HashMap<K, V>())).put(k, v);
+	}
+
+	/**
+	 * 获取Map的部分key生成新的Map
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @param map Map
+	 * @param keys 键列表
+	 * @return 新Map，只包含指定的key
+	 * @since 4.0.6
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> getAny(Map<K, V> map, final K... keys) {
+		return filter(map, new Filter<Entry<K, V>>() {
+
+			@Override
+			public boolean accept(Entry<K, V> entry) {
+				return ArrayUtil.contains(keys, entry.getKey());
+			}
+		});
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为字符串
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static String getStr(Map<?, ?> map, Object key) {
+		return get(map, key, String.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为Integer
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static Integer getInt(Map<?, ?> map, Object key) {
+		return get(map, key, Integer.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为Double
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static Double getDouble(Map<?, ?> map, Object key) {
+		return get(map, key, Double.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为Float
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static Float getFloat(Map<?, ?> map, Object key) {
+		return get(map, key, Float.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为Short
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static Short getShort(Map<?, ?> map, Object key) {
+		return get(map, key, Short.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为Bool
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static Boolean getBool(Map<?, ?> map, Object key) {
+		return get(map, key, Boolean.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为Character
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static Character getChar(Map<?, ?> map, Object key) {
+		return get(map, key, Character.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为Long
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static Long getLong(Map<?, ?> map, Object key) {
+		return get(map, key, Long.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为指定类型
+	 * 
+	 * @param <T> 目标值类型
+	 * @param map Map
+	 * @param key 键
+	 * @param type 值类型
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	public static <T> T get(Map<?, ?> map, Object key, Class<T> type) {
+		return null == map ? null : Convert.convert(type, map.get(key));
 	}
 }

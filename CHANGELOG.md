@@ -2,6 +2,29 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.0.6
+
+### 新特性
+* 【poi】  ExcelReader增加getWriter、getOrCreateCell方法
+* 【core】NetUtil增加isInRange方法（感谢@【成都】小邓）
+* 【core】新增BeanPath（仅支持部分JSONPath语法）
+* 【core】CollUtil新增reverse、reverseNew方法
+* 【core】集合中新增排列（Arrangement）和组合（Combination）类（感谢@【北京】宁静）
+* 【core】StrUtil新增splitToLong和splitToInt方法
+* 【core】MapUtil增加getXXX方法
+* 【core】扩充Dict构造
+* 【core】CollUtil新增sortByProperty方法
+* 【json】toBean支持下划线转驼峰
+* 【core】FileUtil新增更多方法，包括路径拼接
+* 【core】新增LineIterator、NullOutputStream两个类
+
+### Bug修复
+* 【core】修复IdcardUtil中身份证15转18位年的问题（Issue#IHT1Q@Gitee）
+* 【http】忽略Premature EOF错误（感谢@【南京】peckey）
+* 【core】修复ArrayConvert中集合转原始类型数组导致的异常
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.0.5
 
 ### 新特性

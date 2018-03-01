@@ -121,8 +121,20 @@ public class ExcelWriter implements Closeable {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(Workbook workbook, String sheetName) {
-		this.workbook = workbook;
-		this.sheet = ExcelUtil.getOrCreateSheet(workbook, sheetName);
+		this(ExcelUtil.getOrCreateSheet(workbook, sheetName));
+	}
+	
+	/**
+	 * 构造<br>
+	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
+	 * 
+	 * @param sheet {@link Sheet}
+	 * @since 4.0.6
+	 */
+	public ExcelWriter(Sheet sheet) {
+		this.workbook = sheet.getWorkbook();
+		this.sheet = sheet;
 		this.styleSet = new StyleSet(workbook);
 	}
 
@@ -444,19 +456,33 @@ public class ExcelWriter implements Closeable {
 		InternalExcelUtil.setCellValue(cell, value, styleSet);
 		return this;
 	}
-
+	
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
-	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}
+	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>
+	 * 预定义文件可以通过{@link #setDestFile(File)} 方法预定义，或者通过构造定义
 	 * 
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
 	public ExcelWriter flush() throws IORuntimeException {
-		Assert.notNull(this.destFile, "[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
+		return flush(this.destFile);
+	}
+
+	/**
+	 * 将Excel Workbook刷出到文件<br>
+	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}
+	 * 
+	 * @param destFile 写出到的文件
+	 * @return this
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public ExcelWriter flush(File destFile) throws IORuntimeException {
+		Assert.notNull(destFile, "[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
 		OutputStream out = null;
 		try {
-			out = FileUtil.getOutputStream(this.destFile);
+			out = FileUtil.getOutputStream(destFile);
 			flush(out);
 		} finally {
 			IoUtil.close(out);

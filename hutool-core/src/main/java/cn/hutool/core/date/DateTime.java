@@ -36,6 +36,9 @@ public class DateTime extends Date {
 	 * @return DateTime
 	 */
 	public static DateTime of(Date date) {
+		if(date instanceof DateTime) {
+			return (DateTime)date;
+		}
 		return new DateTime(date);
 	}
 

@@ -374,9 +374,10 @@ public class NetUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 创建 {@link InetSocketAddress}
+	 * 
 	 * @param host 域名或IP地址
 	 * @param port 端口
 	 * @return {@link InetSocketAddress}
@@ -427,6 +428,26 @@ public class NetUtil {
 		} finally {
 			IoUtil.close(out);
 		}
+	}
+
+	/**
+	 * 是否在CIDR规则配置范围内<br>
+	 * 方法来自：【成都】小邓
+	 * 
+	 * @param ip 需要验证的IP
+	 * @param cidr CIDR规则
+	 * @return 是否在范围内
+	 * @since 4.0.6
+	 */
+	public static boolean isInRange(String ip, String cidr) {
+		String[] ips = StrUtil.splitToArray(ip, '.');
+		int ipAddr = (Integer.parseInt(ips[0]) << 24) | (Integer.parseInt(ips[1]) << 16) | (Integer.parseInt(ips[2]) << 8) | Integer.parseInt(ips[3]);
+		int type = Integer.parseInt(cidr.replaceAll(".*/", ""));
+		int mask = 0xFFFFFFFF << (32 - type);
+		String cidrIp = cidr.replaceAll("/.*", "");
+		String[] cidrIps = cidrIp.split("\\.");
+		int cidrIpAddr = (Integer.parseInt(cidrIps[0]) << 24) | (Integer.parseInt(cidrIps[1]) << 16) | (Integer.parseInt(cidrIps[2]) << 8) | Integer.parseInt(cidrIps[3]);
+		return (ipAddr & mask) == (cidrIpAddr & mask);
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start

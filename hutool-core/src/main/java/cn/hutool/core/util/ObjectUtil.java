@@ -432,6 +432,9 @@ public class ObjectUtil {
 	 * @since 3.2.0
 	 */
 	public static String toString(Object obj) {
+		if(null == obj) {
+			return "null";
+		}
 		if(obj instanceof Map) {
 			return ((Map<?, ?>)obj).toString();
 		}

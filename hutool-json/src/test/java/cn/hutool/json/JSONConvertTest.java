@@ -64,7 +64,7 @@ public class JSONConvertTest {
 		Assert.assertEquals(new Integer(1), examInfoDictsJson.getInt("id"));
 		Assert.assertEquals("质量过关", examInfoDictsJson.getStr("realName"));
 		
-		Object id = JSONUtil.getByExp(obj, "userInfoDict.examInfoDict[0].id");
+		Object id = JSONUtil.getByPath(obj, "userInfoDict.examInfoDict[0].id");
 		Assert.assertEquals(1, id);
 	}
 

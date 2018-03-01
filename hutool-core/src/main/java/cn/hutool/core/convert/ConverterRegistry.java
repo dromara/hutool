@@ -191,7 +191,7 @@ public class ConverterRegistry {
 		final Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
-		T result = convertSpecial(type, rowType, value, defaultValue);
+		final T result = convertSpecial(type, rowType, value, defaultValue);
 		if(null != result) {
 			return result;
 		}
@@ -332,34 +332,6 @@ public class ConverterRegistry {
 		defaultConverterMap.put(BigDecimal.class, new NumberConverter(BigDecimal.class));
 		defaultConverterMap.put(BigInteger.class, new NumberConverter(BigInteger.class));
 		defaultConverterMap.put(String.class, new StringConverter());
-
-		// 原始类型数组转换器
-		// defaultConverterMap.put(int[].class, new ArrayConverter(int[].class));
-		// defaultConverterMap.put(long[].class, new ArrayConverter(long[].class));
-		// defaultConverterMap.put(byte[].class, new ArrayConverter(byte[].class));
-		// defaultConverterMap.put(short[].class, new ArrayConverter(short[].class));
-		// defaultConverterMap.put(float[].class, new ArrayConverter(float[].class));
-		// defaultConverterMap.put(double[].class, new ArrayConverter(double[].class));
-		// defaultConverterMap.put(boolean[].class, new ArrayConverter(boolean[].class));
-		// defaultConverterMap.put(char[].class, new ArrayConverter(char[].class));
-
-		// 包装数组类型转换器
-		// defaultConverterMap.put(Integer[].class, new ArrayConverter(Integer[].class));
-		// defaultConverterMap.put(Long[].class, new ArrayConverter(Long[].class));
-		// defaultConverterMap.put(Byte[].class, new ArrayConverter(Byte[].class));
-		// defaultConverterMap.put(Short[].class, new ArrayConverter(Short[].class));
-		// defaultConverterMap.put(Float[].class, new ArrayConverter(Float[].class));
-		// defaultConverterMap.put(Double[].class, new ArrayConverter(Double[].class));
-		// defaultConverterMap.put(Boolean[].class, new ArrayConverter(Boolean[].class));
-		// defaultConverterMap.put(Character[].class, new ArrayConverter(Character[].class));
-		// defaultConverterMap.put(String[].class, new ArrayConverter(String[].class));
-
-		// 集合类型转换器
-		// defaultConverterMap.put(Collection.class, new CollectionConverter());
-		// defaultConverterMap.put(List.class, new CollectionConverter(List.class));
-		// defaultConverterMap.put(ArrayList.class, new CollectionConverter(ArrayList.class));
-		// defaultConverterMap.put(Set.class, new CollectionConverter(Set.class));
-		// defaultConverterMap.put(HashSet.class, new CollectionConverter(HashSet.class));
 
 		// URI and URL
 		defaultConverterMap.put(URI.class, new URIConverter());

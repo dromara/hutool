@@ -425,7 +425,7 @@ public class ExcelReader implements Closeable {
 	public List<Object> readRow(int rowIndex) {
 		return readRow(this.sheet.getRow(rowIndex));
 	}
-	
+
 	/**
 	 * 读取某个单元格的值
 	 * 
@@ -437,18 +437,44 @@ public class ExcelReader implements Closeable {
 	public Object readCellValue(int x, int y) {
 		return InternalExcelUtil.getCellValue(getCell(x, y), this.cellEditor);
 	}
-	
+
 	/**
 	 * 获取指定坐标单元格
+	 * 
 	 * @param x X坐标，从0计数，既列号
 	 * @param y Y坐标，从0计数，既行号
 	 * @return {@link Cell}
 	 * @since 4.0.5
 	 */
 	public Cell getCell(int x, int y) {
-		final Row row = this.sheet.getRow(y);
-		if(null != row) {
-			return row.getCell(x);
+		return getCell(x, y, false);
+	}
+
+	/**
+	 * 获取或创建指定坐标单元格
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return {@link Cell}
+	 * @since 4.0.6
+	 */
+	public Cell getOrCreateCell(int x, int y) {
+		return getCell(x, y, true);
+	}
+
+	/**
+	 * 获取指定坐标单元格
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @param isCreateIfNotExist 单元格不存在时是否创建
+	 * @return {@link Cell}
+	 * @since 4.0.6
+	 */
+	public Cell getCell(int x, int y, boolean isCreateIfNotExist) {
+		final Row row = isCreateIfNotExist ? InternalExcelUtil.getOrCreateRow(this.sheet, y) : this.sheet.getRow(y);
+		if (null != row) {
+			return isCreateIfNotExist ? InternalExcelUtil.getOrCreateCell(row, x) : row.getCell(x);
 		}
 		return null;
 	}
@@ -464,6 +490,17 @@ public class ExcelReader implements Closeable {
 		this.sheet = null;
 		this.workbook = null;
 		this.isClosed = true;
+	}
+
+	/**
+	 * 获取Excel写出器<br>
+	 * 在读取Excel并做一定编辑后，获取写出器写出
+	 * 
+	 * @return {@link ExcelWriter}
+	 * @since 4.0.6
+	 */
+	public ExcelWriter getWriter() {
+		return new ExcelWriter(this.sheet);
 	}
 
 	// ------------------------------------------------------------------------------------------------------- Private methods start

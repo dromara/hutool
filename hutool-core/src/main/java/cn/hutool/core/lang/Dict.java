@@ -46,7 +46,39 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	// --------------------------------------------------------------- Static method end
 
 	// --------------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 */
 	public Dict() {
+		super();
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param initialCapacity 初始容量
+	 */
+	public Dict(int initialCapacity) {
+		super(initialCapacity);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param initialCapacity 初始容量
+	 * @param loadFactor 容量增长因子，0~1，即达到容量的百分之多少时扩容
+	 */
+	public Dict(int initialCapacity, float loadFactor) {
+		super(initialCapacity, loadFactor);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param m Map
+	 */
+	public Dict(Map<String, Object> m) {
+		super(m);
 	}
 	// --------------------------------------------------------------- Constructor end
 

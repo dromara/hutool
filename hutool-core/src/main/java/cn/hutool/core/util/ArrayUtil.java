@@ -48,9 +48,9 @@ public class ArrayUtil {
 	 * @return 是否为空
 	 */
 	public static boolean isEmpty(final Object array) {
-		if(null == array) {
+		if (null == array) {
 			return true;
-		}else if(isArray(array)) {
+		} else if (isArray(array)) {
 			return 0 == Array.getLength(array);
 		}
 		throw new UtilException("Object to provide is not a Array !");
@@ -294,7 +294,7 @@ public class ArrayUtil {
 	public static <T> T[] newArray(Class<?> componentType, int newSize) {
 		return (T[]) Array.newInstance(componentType, newSize);
 	}
-	
+
 	/**
 	 * 新建一个空数组
 	 * 
@@ -305,9 +305,9 @@ public class ArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T[] newArray(int newSize) {
-		return (T[])new Object[newSize];
+		return (T[]) new Object[newSize];
 	}
-	
+
 	/**
 	 * 获取数组对象的元素类型
 	 * 
@@ -315,10 +315,10 @@ public class ArrayUtil {
 	 * @return 元素类型
 	 * @since 3.2.2
 	 */
-	public static Class<?> getComponentType(Object array){
+	public static Class<?> getComponentType(Object array) {
 		return null == array ? null : array.getClass().getComponentType();
 	}
-	
+
 	/**
 	 * 获取数组对象的元素类型
 	 * 
@@ -326,10 +326,10 @@ public class ArrayUtil {
 	 * @return 元素类型
 	 * @since 3.2.2
 	 */
-	public static Class<?> getComponentType(Class<?> arrayClass){
+	public static Class<?> getComponentType(Class<?> arrayClass) {
 		return null == arrayClass ? null : arrayClass.getComponentType();
 	}
-	
+
 	/**
 	 * 根据数组元素类型，获取数组的类型<br>
 	 * 方法是通过创建一个空数组从而获取其类型
@@ -640,7 +640,7 @@ public class ArrayUtil {
 		}
 		return list.toArray(Arrays.copyOf(array, list.size()));
 	}
-	
+
 	/**
 	 * 过滤<br>
 	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
@@ -666,9 +666,10 @@ public class ArrayUtil {
 		}
 		return list.toArray(Arrays.copyOf(array, list.size()));
 	}
-	
+
 	/**
 	 * 去除{@code null} 元素
+	 * 
 	 * @param array 数组
 	 * @return 处理后的数组
 	 * @since 3.2.2
@@ -677,13 +678,15 @@ public class ArrayUtil {
 		return filter(array, new Editor<T>() {
 			@Override
 			public T edit(T t) {
-				//返回null便不加入集合
+				// 返回null便不加入集合
 				return t;
-			}});
+			}
+		});
 	}
-	
+
 	/**
 	 * 去除{@code null}或者"" 元素
+	 * 
 	 * @param array 数组
 	 * @return 处理后的数组
 	 * @since 3.2.2
@@ -693,11 +696,13 @@ public class ArrayUtil {
 			@Override
 			public boolean accept(T t) {
 				return false == StrUtil.isEmpty(t);
-			}});
+			}
+		});
 	}
-	
+
 	/**
 	 * 去除{@code null}或者""或者空白字符串 元素
+	 * 
 	 * @param array 数组
 	 * @return 处理后的数组
 	 * @since 3.2.2
@@ -707,9 +712,10 @@ public class ArrayUtil {
 			@Override
 			public boolean accept(T t) {
 				return false == StrUtil.isBlank(t);
-			}});
+			}
+		});
 	}
-	
+
 	/**
 	 * 数组元素中的null转换为""
 	 * 
@@ -717,12 +723,13 @@ public class ArrayUtil {
 	 * @return 新数组
 	 * @since 3.2.1
 	 */
-	public static String[] nullToEmpty(String[] array){
+	public static String[] nullToEmpty(String[] array) {
 		return filter(array, new Editor<String>() {
 			@Override
 			public String edit(String t) {
 				return null == t ? StrUtil.EMPTY : t;
-			}});
+			}
+		});
 	}
 
 	/**
@@ -784,14 +791,16 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int indexOf(T[] array, Object value) {
-		for (int i = 0; i < array.length; i++) {
-			if (ObjectUtil.equal(value, array[i])) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (ObjectUtil.equal(value, array[i])) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在位置，忽略大小写，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -801,14 +810,16 @@ public class ArrayUtil {
 	 * @since 3.1.2
 	 */
 	public static int indexOfIgnoreCase(CharSequence[] array, CharSequence value) {
-		for (int i = 0; i < array.length; i++) {
-			if (StrUtil.equalsIgnoreCase(array[i], value)) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (StrUtil.equalsIgnoreCase(array[i], value)) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
 	 * 
@@ -819,9 +830,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static <T> int lastIndexOf(T[] array, Object value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (ObjectUtil.equal(value, array[i])) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (ObjectUtil.equal(value, array[i])) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -839,7 +852,7 @@ public class ArrayUtil {
 	public static <T> boolean contains(T[] array, T value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
-	
+
 	/**
 	 * 数组中是否包含元素，忽略大小写
 	 * 
@@ -861,9 +874,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(long[] array, long value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -878,9 +893,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(long[] array, long value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -907,9 +924,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(int[] array, int value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -924,9 +943,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(int[] array, int value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -953,9 +974,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(short[] array, short value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -970,9 +993,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(short[] array, short value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -999,9 +1024,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(char[] array, char value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1016,9 +1043,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(char[] array, char value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1045,9 +1074,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(byte[] array, byte value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1062,9 +1093,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(byte[] array, byte value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1091,9 +1124,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(double[] array, double value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1108,9 +1143,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(double[] array, double value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1137,9 +1174,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(float[] array, float value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1154,9 +1193,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(float[] array, float value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1183,9 +1224,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int indexOf(boolean[] array, boolean value) {
-		for (int i = 0; i < array.length; i++) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = 0; i < array.length; i++) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1200,9 +1243,11 @@ public class ArrayUtil {
 	 * @since 3.0.7
 	 */
 	public static int lastIndexOf(boolean[] array, boolean value) {
-		for (int i = array.length - 1; i >= 0; i--) {
-			if (value == array[i]) {
-				return i;
+		if (null != array) {
+			for (int i = array.length - 1; i >= 0; i--) {
+				if (value == array[i]) {
+					return i;
+				}
 			}
 		}
 		return INDEX_NOT_FOUND;
@@ -1228,8 +1273,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Integer[] wrap(int... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Integer[] array = new Integer[length];
+		if (0 == length) {
+			return new Integer[0];
+		}
+
+		final Integer[] array = new Integer[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Integer.valueOf(values[i]);
 		}
@@ -1243,8 +1295,15 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static int[] unWrap(Integer... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		int[] array = new int[length];
+		if (0 == length) {
+			return new int[0];
+		}
+
+		final int[] array = new int[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].intValue();
 		}
@@ -1258,8 +1317,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Long[] wrap(long... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Long[] array = new Long[length];
+		if (0 == length) {
+			return new Long[0];
+		}
+
+		final Long[] array = new Long[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Long.valueOf(values[i]);
 		}
@@ -1273,8 +1339,15 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static long[] unWrap(Long... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		long[] array = new long[length];
+		if (0 == length) {
+			return new long[0];
+		}
+
+		final long[] array = new long[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].longValue();
 		}
@@ -1288,8 +1361,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Character[] wrap(char... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Character[] array = new Character[length];
+		if (0 == length) {
+			return new Character[0];
+		}
+
+		final Character[] array = new Character[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Character.valueOf(values[i]);
 		}
@@ -1303,7 +1383,14 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static char[] unWrap(Character... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
+		if (0 == length) {
+			return new char[0];
+		}
+
 		char[] array = new char[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].charValue();
@@ -1318,8 +1405,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Byte[] wrap(byte... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Byte[] array = new Byte[length];
+		if (0 == length) {
+			return new Byte[0];
+		}
+
+		final Byte[] array = new Byte[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Byte.valueOf(values[i]);
 		}
@@ -1333,8 +1427,15 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static byte[] unWrap(Byte... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		byte[] array = new byte[length];
+		if (0 == length) {
+			return new byte[0];
+		}
+
+		final byte[] array = new byte[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].byteValue();
 		}
@@ -1348,8 +1449,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Short[] wrap(short... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Short[] array = new Short[length];
+		if (0 == length) {
+			return new Short[0];
+		}
+
+		final Short[] array = new Short[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Short.valueOf(values[i]);
 		}
@@ -1363,8 +1471,15 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static short[] unWrap(Short... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		short[] array = new short[length];
+		if (0 == length) {
+			return new short[0];
+		}
+
+		final short[] array = new short[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].shortValue();
 		}
@@ -1378,8 +1493,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Float[] wrap(float... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Float[] array = new Float[length];
+		if (0 == length) {
+			return new Float[0];
+		}
+
+		final Float[] array = new Float[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Float.valueOf(values[i]);
 		}
@@ -1393,8 +1515,15 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static float[] unWrap(Float... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		float[] array = new float[length];
+		if (0 == length) {
+			return new float[0];
+		}
+
+		final float[] array = new float[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].floatValue();
 		}
@@ -1408,8 +1537,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Double[] wrap(double... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Double[] array = new Double[length];
+		if (0 == length) {
+			return new Double[0];
+		}
+		
+		final Double[] array = new Double[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Double.valueOf(values[i]);
 		}
@@ -1423,8 +1559,15 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static double[] unWrap(Double... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		double[] array = new double[length];
+		if (0 == length) {
+			return new double[0];
+		}
+
+		final double[] array = new double[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].doubleValue();
 		}
@@ -1438,8 +1581,15 @@ public class ArrayUtil {
 	 * @return 包装类型数组
 	 */
 	public static Boolean[] wrap(boolean... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		Boolean[] array = new Boolean[length];
+		if (0 == length) {
+			return new Boolean[0];
+		}
+		
+		final Boolean[] array = new Boolean[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = Boolean.valueOf(values[i]);
 		}
@@ -1453,8 +1603,15 @@ public class ArrayUtil {
 	 * @return 原始类型数组
 	 */
 	public static boolean[] unWrap(Boolean... values) {
+		if (null == values) {
+			return null;
+		}
 		final int length = values.length;
-		boolean[] array = new boolean[length];
+		if (0 == length) {
+			return new boolean[0];
+		}
+		
+		final boolean[] array = new boolean[length];
 		for (int i = 0; i < length; i++) {
 			array[i] = values[i].booleanValue();
 		}
@@ -1469,30 +1626,33 @@ public class ArrayUtil {
 	 * @throws UtilException 对象为非数组
 	 */
 	public static Object[] wrap(Object obj) {
+		if(null == obj) {
+			return null;
+		}
 		if (isArray(obj)) {
 			try {
 				return (Object[]) obj;
 			} catch (Exception e) {
 				final String className = obj.getClass().getComponentType().getName();
 				switch (className) {
-					case "long":
-						return wrap((long[]) obj);
-					case "int":
-						return wrap((int[]) obj);
-					case "short":
-						return wrap((short[]) obj);
-					case "char":
-						return wrap((char[]) obj);
-					case "byte":
-						return wrap((byte[]) obj);
-					case "boolean":
-						return wrap((boolean[]) obj);
-					case "float":
-						return wrap((float[]) obj);
-					case "double":
-						return wrap((double[]) obj);
-					default:
-						throw new UtilException(e);
+				case "long":
+					return wrap((long[]) obj);
+				case "int":
+					return wrap((int[]) obj);
+				case "short":
+					return wrap((short[]) obj);
+				case "char":
+					return wrap((char[]) obj);
+				case "byte":
+					return wrap((byte[]) obj);
+				case "boolean":
+					return wrap((boolean[]) obj);
+				case "float":
+					return wrap((float[]) obj);
+				case "double":
+					return wrap((double[]) obj);
+				default:
+					throw new UtilException(e);
 				}
 			}
 		}
@@ -1507,10 +1667,101 @@ public class ArrayUtil {
 	 */
 	public static boolean isArray(Object obj) {
 		if (null == obj) {
-//			throw new NullPointerException("Object check for isArray is null");
+			// throw new NullPointerException("Object check for isArray is null");
 			return false;
 		}
 		return obj.getClass().isArray();
+	}
+	
+	/**
+	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组对象
+	 * @param index 下标，支持负数
+	 * @return 值
+	 * @since 4.0.6
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T get(Object array, int index) {
+		if (index < 0) {
+			index += Array.getLength(array);
+		}
+		return (T)Array.get(array, index);
+	}
+	
+	/**
+	 * 获取数组中指定多个下标元素值，组成新数组
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param array 数组
+	 * @param indexes 下标列表
+	 * @return 结果
+	 */
+	public static <T> T[] getAny(Object array, int... indexes){
+		final T[] result = newArray(indexes.length);
+		for (int i : indexes) {
+			result[i] = get(array, i);
+		}
+		return result;
+	}
+	
+	/**
+	 * 获取子数组
+	 * @param array 数组
+	 * @param start 开始位置（包括）
+	 * @param end 结束位置（不包括）
+	 * @param step 步进
+	 * @return 新的数组
+	 * @since 4.0.6
+	 */
+	public static Object[] sub(Object array, int start, int end) {
+		return sub(array, start, end, 1);
+	}
+	
+	/**
+	 * 获取子数组
+	 * 
+	 * @param array 数组
+	 * @param start 开始位置（包括）
+	 * @param end 结束位置（不包括）
+	 * @param step 步进
+	 * @return 新的数组
+	 * @since 4.0.6
+	 */
+	public static Object[] sub(Object array, int start, int end, int step) {
+		int length = length(array);
+		if(start < 0) {
+			start  += length;
+		}
+		if(end < 0) {
+			end += length;
+		}
+		if(start == length) {
+			return new Object[0];
+		}
+		if(start > end) {
+			int tmp = start;
+			start= end;
+			end = tmp;
+		}
+		if (end > length) {
+			if (start >= length) {
+				return new Object[0];
+			}
+			end = length;
+		}
+		
+		if(step <= 1) {
+			step = 1;
+		}
+		
+		final ArrayList<Object> list = new ArrayList<>();
+		for(int i = start; i < end; i+= step) {
+			list.add(get(array, i));
+		}
+		
+		return list.toArray();
 	}
 
 	/**
@@ -1529,24 +1780,24 @@ public class ArrayUtil {
 			} catch (Exception e) {
 				final String className = obj.getClass().getComponentType().getName();
 				switch (className) {
-					case "long":
-						return Arrays.toString((long[]) obj);
-					case "int":
-						return Arrays.toString((int[]) obj);
-					case "short":
-						return Arrays.toString((short[]) obj);
-					case "char":
-						return Arrays.toString((char[]) obj);
-					case "byte":
-						return Arrays.toString((byte[]) obj);
-					case "boolean":
-						return Arrays.toString((boolean[]) obj);
-					case "float":
-						return Arrays.toString((float[]) obj);
-					case "double":
-						return Arrays.toString((double[]) obj);
-					default:
-						throw new UtilException(e);
+				case "long":
+					return Arrays.toString((long[]) obj);
+				case "int":
+					return Arrays.toString((int[]) obj);
+				case "short":
+					return Arrays.toString((short[]) obj);
+				case "char":
+					return Arrays.toString((char[]) obj);
+				case "byte":
+					return Arrays.toString((byte[]) obj);
+				case "boolean":
+					return Arrays.toString((boolean[]) obj);
+				case "float":
+					return Arrays.toString((float[]) obj);
+				case "double":
+					return Arrays.toString((double[]) obj);
+				default:
+					throw new UtilException(e);
 				}
 			}
 		}
@@ -1826,24 +2077,24 @@ public class ArrayUtil {
 			if (componentType.isPrimitive()) {
 				final String componentTypeName = componentType.getName();
 				switch (componentTypeName) {
-					case "long":
-						return join((long[]) array, conjunction);
-					case "int":
-						return join((int[]) array, conjunction);
-					case "short":
-						return join((short[]) array, conjunction);
-					case "char":
-						return join((char[]) array, conjunction);
-					case "byte":
-						return join((byte[]) array, conjunction);
-					case "boolean":
-						return join((boolean[]) array, conjunction);
-					case "float":
-						return join((float[]) array, conjunction);
-					case "double":
-						return join((double[]) array, conjunction);
-					default:
-						throw new UtilException("Unknown primitive type: [{}]", componentTypeName);
+				case "long":
+					return join((long[]) array, conjunction);
+				case "int":
+					return join((int[]) array, conjunction);
+				case "short":
+					return join((short[]) array, conjunction);
+				case "char":
+					return join((char[]) array, conjunction);
+				case "byte":
+					return join((byte[]) array, conjunction);
+				case "boolean":
+					return join((boolean[]) array, conjunction);
+				case "float":
+					return join((float[]) array, conjunction);
+				case "double":
+					return join((double[]) array, conjunction);
+				default:
+					throw new UtilException("Unknown primitive type: [{}]", componentTypeName);
 				}
 			} else {
 				return join((Object[]) array, conjunction);
@@ -2199,9 +2450,9 @@ public class ArrayUtil {
 	public static boolean[] removeEle(boolean[] array, boolean element) throws IllegalArgumentException {
 		return remove(array, indexOf(array, element));
 	}
-	
-	//------------------------------------------------------------------------------------------------------------ Reverse array
-	
+
+	// ------------------------------------------------------------------------------------------------------------ Reverse array
+
 	/**
 	 * 反转数组，会变更原数组
 	 * 
@@ -2228,7 +2479,7 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
 	 * 
@@ -2240,7 +2491,7 @@ public class ArrayUtil {
 	public static <T> T[] reverse(final T[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
 	 * 
@@ -2266,9 +2517,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2276,9 +2528,10 @@ public class ArrayUtil {
 	public static long[] reverse(final long[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @param startIndexInclusive 其实位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
@@ -2301,9 +2554,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2311,9 +2565,10 @@ public class ArrayUtil {
 	public static int[] reverse(final int[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @param startIndexInclusive 其实位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
@@ -2336,9 +2591,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2346,9 +2602,10 @@ public class ArrayUtil {
 	public static short[] reverse(final short[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @param startIndexInclusive 其实位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
@@ -2371,9 +2628,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2381,9 +2639,10 @@ public class ArrayUtil {
 	public static char[] reverse(final char[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @param startIndexInclusive 其实位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
@@ -2406,9 +2665,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2416,9 +2676,10 @@ public class ArrayUtil {
 	public static byte[] reverse(final byte[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @param startIndexInclusive 其实位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
@@ -2441,9 +2702,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2451,9 +2713,10 @@ public class ArrayUtil {
 	public static double[] reverse(final double[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @param startIndexInclusive 其实位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
@@ -2476,9 +2739,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2486,9 +2750,10 @@ public class ArrayUtil {
 	public static float[] reverse(final float[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @param startIndexInclusive 其实位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
@@ -2511,9 +2776,10 @@ public class ArrayUtil {
 		}
 		return array;
 	}
-	
+
 	/**
 	 * 反转数组，会变更原数组
+	 * 
 	 * @param array 数组，会变更
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2521,8 +2787,8 @@ public class ArrayUtil {
 	public static boolean[] reverse(final boolean[] array) {
 		return reverse(array, 0, array.length);
 	}
-	
-	//------------------------------------------------------------------------------------------------------------ min and max
+
+	// ------------------------------------------------------------------------------------------------------------ min and max
 	/**
 	 * 取最小值
 	 * 
@@ -2533,126 +2799,133 @@ public class ArrayUtil {
 	 */
 	public static <T extends Comparable<? super T>> T min(T[] numberArray) {
 		T min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(ObjectUtil.compare(min, numberArray[i]) > 0) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (ObjectUtil.compare(min, numberArray[i]) > 0) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static long min(long[] numberArray) {
 		long min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(min > numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (min > numberArray[i]) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static int min(int[] numberArray) {
 		int min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(min > numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (min > numberArray[i]) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static short min(short[] numberArray) {
 		short min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(min > numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (min > numberArray[i]) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static char min(char[] numberArray) {
 		char min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(min > numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (min > numberArray[i]) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static byte min(byte[] numberArray) {
 		byte min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(min > numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (min > numberArray[i]) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static double min(double[] numberArray) {
 		double min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(min > numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (min > numberArray[i]) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
 	public static float min(float[] numberArray) {
 		float min = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(min > numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (min > numberArray[i]) {
 				min = numberArray[i];
 			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * 取最大值
 	 * 
@@ -2663,120 +2936,127 @@ public class ArrayUtil {
 	 */
 	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
 		T max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(ObjectUtil.compare(max, numberArray[i]) < 0) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (ObjectUtil.compare(max, numberArray[i]) < 0) {
 				max = numberArray[i];
 			}
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 取最大值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static long max(long[] numberArray) {
 		long max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(max < numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (max < numberArray[i]) {
 				max = numberArray[i];
 			}
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 取最大值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static int max(int[] numberArray) {
 		int max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(max < numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (max < numberArray[i]) {
 				max = numberArray[i];
 			}
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 取最大值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static short max(short[] numberArray) {
 		short max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(max < numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (max < numberArray[i]) {
 				max = numberArray[i];
 			}
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 取最大值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static char max(char[] numberArray) {
 		char max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(max < numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (max < numberArray[i]) {
 				max = numberArray[i];
 			}
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 取最大值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static byte max(byte[] numberArray) {
 		byte max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(max < numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (max < numberArray[i]) {
 				max = numberArray[i];
 			}
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 取最大值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static double max(double[] numberArray) {
 		double max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(max < numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (max < numberArray[i]) {
 				max = numberArray[i];
 			}
 		}
 		return max;
 	}
-	
+
 	/**
 	 * 取最大值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
 	public static float max(float[] numberArray) {
 		float max = numberArray[0];
-		for(int i = 0; i < numberArray.length; i++) {
-			if(max < numberArray[i]) {
+		for (int i = 0; i < numberArray.length; i++) {
+			if (max < numberArray[i]) {
 				max = numberArray[i];
 			}
 		}

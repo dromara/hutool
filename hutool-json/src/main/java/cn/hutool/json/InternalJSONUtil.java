@@ -214,7 +214,8 @@ final class InternalJSONUtil {
 	}
 
 	/**
-	 * JSON转Bean，忽略字段的大小写
+	 * JSON转Bean，忽略字段的大小写<br>
+	 * 首先在JSON中查找与Bean字段相同的名称的键的值，如果不存在，继续查找字段名转下划线后的值
 	 * 
 	 * @param jsonObject JSON对象
 	 * @param bean 目标Bean
@@ -226,12 +227,22 @@ final class InternalJSONUtil {
 
 			@Override
 			public Object value(String key, Type valueType) {
-				return jsonConvert(valueType, jsonObject.get(key), ignoreError);
+				Object value = jsonObject.get(key);
+				if(null == value) {
+					value = jsonObject.get(StrUtil.toUnderlineCase(key));
+				}
+				
+				return jsonConvert(valueType, value, ignoreError);
 			}
 
 			@Override
 			public boolean containsKey(String key) {
-				return jsonObject.containsKey(key);
+				if(jsonObject.containsKey(key)) {
+					return true;
+				}else if(jsonObject.containsKey(StrUtil.toUnderlineCase(key))) {
+					return true;
+				}
+				return false;
 			}
 
 		}, CopyOptions.create().setIgnoreCase(true).setIgnoreError(ignoreError));
