@@ -14,6 +14,7 @@
 * 【core】MapUtil增加getXXX方法
 * 【core】扩充Dict构造
 * 【core】CollUtil新增sortByProperty方法
+* 【json】toBean支持下划线转驼峰
 
 ### Bug修复
 * 【core】修复IdcardUtil中身份证15转18位年的问题（Issue#IHT1Q@Gitee）

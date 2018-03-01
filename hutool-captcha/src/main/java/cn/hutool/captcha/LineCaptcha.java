@@ -18,7 +18,7 @@ public class LineCaptcha extends AbstractCaptcha {
 
 	// -------------------------------------------------------------------- Constructor start
 	/**
-	 * 构造，默认4位验证码，150条干扰线
+	 * 构造，默认5位验证码，150条干扰线
 	 * 
 	 * @param width 图片宽
 	 * @param height 图片高
