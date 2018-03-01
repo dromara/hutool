@@ -11,6 +11,8 @@
 * 【core】CollUtil新增reverse、reverseNew方法
 * 【core】集合中新增排列（Arrangement）和组合（Combination）类（感谢@【北京】宁静）
 * 【core】StrUtil新增splitToLong和splitToInt方法
+* 【core】MapUtil增加getXXX方法
+* 【core】扩充Dict构造
 
 ### Bug修复
 * 【core】修复IdcardUtil中身份证15转18位年的问题（Issue#IHT1Q@Gitee）

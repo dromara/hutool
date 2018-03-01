@@ -93,6 +93,7 @@ public class Entity extends Dict {
 
 	// --------------------------------------------------------------- Constructor start
 	public Entity() {
+		super();
 	}
 
 	/**
@@ -102,6 +103,7 @@ public class Entity extends Dict {
 	 */
 
 	public Entity(String tableName) {
+		super();
 		this.tableName = tableName;
 	}
 	// --------------------------------------------------------------- Constructor end
