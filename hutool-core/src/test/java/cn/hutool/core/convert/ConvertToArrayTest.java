@@ -5,10 +5,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
@@ -119,6 +118,7 @@ public class ConvertToArrayTest {
 	}
 	
 	@Test
+	@Ignore
 	public void toUrlArrayTest() {
 		File[] files = FileUtil.file("D:\\workspace").listFiles();
 		
