@@ -1,5 +1,6 @@
 package cn.hutool.core.io;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
@@ -51,7 +52,7 @@ public class IoUtil {
 	public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 4096;
 	/** 默认大缓存大小 */
 	public static final int DEFAULT_LARGE_BUFFER_SIZE = 8192;
-	
+
 	/** 数据流末尾 */
 	public static final int EOF = -1;
 
@@ -300,19 +301,19 @@ public class IoUtil {
 	 * @since 3.0.9
 	 */
 	public static BufferedReader getReader(Reader reader) {
-		if(null == reader) {
+		if (null == reader) {
 			return null;
 		}
-		
+
 		return (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
 	}
-	
+
 	/**
 	 * 获得{@link PushbackReader}<br>
 	 * 如果是{@link PushbackReader}强转返回，否则新建
 	 * 
 	 * @param reader 普通Reader
-	 * @param pushBackSize 推后的byte数 
+	 * @param pushBackSize 推后的byte数
 	 * @return {@link PushbackReader}
 	 * @since 3.1.0
 	 */
@@ -410,7 +411,7 @@ public class IoUtil {
 		}
 		return builder.toString();
 	}
-	
+
 	/**
 	 * 从FileChannel中读取UTF-8编码内容
 	 * 
@@ -433,7 +434,7 @@ public class IoUtil {
 	public static String read(FileChannel fileChannel, String charsetName) throws IORuntimeException {
 		return read(fileChannel, CharsetUtil.charset(charsetName));
 	}
-	
+
 	/**
 	 * 从FileChannel中读取内容
 	 * 
@@ -474,13 +475,13 @@ public class IoUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static byte[] readBytes(InputStream in, int length) throws IORuntimeException {
-		if(null == in) {
+		if (null == in) {
 			return null;
 		}
-		if(length <= 0) {
+		if (length <= 0) {
 			return new byte[0];
 		}
-		
+
 		byte[] b = new byte[length];
 		int readLength;
 		try {
@@ -557,7 +558,7 @@ public class IoUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 从流中读取内容，使用UTF-8编码
 	 * 
@@ -598,7 +599,7 @@ public class IoUtil {
 	public static <T extends Collection<String>> T readLines(InputStream in, Charset charset, T collection) throws IORuntimeException {
 		return readLines(getReader(in, charset), collection);
 	}
-	
+
 	/**
 	 * 从Reader中读取内容
 	 * 
@@ -609,7 +610,7 @@ public class IoUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(Reader reader, final T collection) throws IORuntimeException {
-		readLines(reader, new LineHandler(){
+		readLines(reader, new LineHandler() {
 			@Override
 			public void handle(String line) {
 				collection.add(line);
@@ -617,7 +618,7 @@ public class IoUtil {
 		});
 		return collection;
 	}
-	
+
 	/**
 	 * 按行读取UTF-8编码数据，针对每行的数据做处理
 	 * 
@@ -629,7 +630,7 @@ public class IoUtil {
 	public static void readUtf8Lines(InputStream in, LineHandler lineHandler) throws IORuntimeException {
 		readLines(in, CharsetUtil.CHARSET_UTF_8, lineHandler);
 	}
-	
+
 	/**
 	 * 按行读取数据，针对每行的数据做处理
 	 * 
@@ -654,7 +655,7 @@ public class IoUtil {
 	public static void readLines(Reader reader, LineHandler lineHandler) throws IORuntimeException {
 		Assert.notNull(reader);
 		Assert.notNull(lineHandler);
-		
+
 		// 从返回的内容中读取所需内容
 		final BufferedReader bReader = getReader(reader);
 		String line = null;
@@ -707,7 +708,7 @@ public class IoUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 转换为{@link PushbackInputStream}<br>
 	 * 如果传入的输入流已经是{@link PushbackInputStream}，强转返回，否则新建一个
@@ -718,9 +719,9 @@ public class IoUtil {
 	 * @since 3.1.0
 	 */
 	public static PushbackInputStream toPushbackStream(InputStream in, int pushBackSize) {
-		return (in instanceof PushbackInputStream) ? (PushbackInputStream)in : new PushbackInputStream(in, pushBackSize);
+		return (in instanceof PushbackInputStream) ? (PushbackInputStream) in : new PushbackInputStream(in, pushBackSize);
 	}
-	
+
 	/**
 	 * 将byte[]写到流中
 	 * 
@@ -740,7 +741,7 @@ public class IoUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 将多部分内容写到流中，自动转换为UTF-8字符串
 	 * 
@@ -753,7 +754,7 @@ public class IoUtil {
 	public static void writeUtf8(OutputStream out, boolean isCloseOut, Object... contents) throws IORuntimeException {
 		write(out, CharsetUtil.CHARSET_UTF_8, isCloseOut, contents);
 	}
-	
+
 	/**
 	 * 将多部分内容写到流中，自动转换为字符串
 	 * 
@@ -795,7 +796,7 @@ public class IoUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 将多部分内容写到流中
 	 * 
@@ -852,6 +853,99 @@ public class IoUtil {
 			} catch (Exception e) {
 				// 静默关闭
 			}
+		}
+	}
+
+	/**
+	 * 对比两个流内容是否相同<br>
+	 * 内部会转换流为 {@link BufferedInputStream}
+	 *
+	 * @param input1 第一个流
+	 * @param input2 第二个流
+	 * @return 两个流的内容一致返回true，否则false
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static boolean contentEquals(InputStream input1, InputStream input2) throws IORuntimeException {
+		if (false == (input1 instanceof BufferedInputStream)) {
+			input1 = new BufferedInputStream(input1);
+		}
+		if (false == (input2 instanceof BufferedInputStream)) {
+			input2 = new BufferedInputStream(input2);
+		}
+
+		try {
+			int ch = input1.read();
+			while (EOF != ch) {
+				int ch2 = input2.read();
+				if (ch != ch2) {
+					return false;
+				}
+				ch = input1.read();
+			}
+
+			int ch2 = input2.read();
+			return ch2 == EOF;
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 对比两个Reader的内容是否一致<br>
+	 * 内部会转换流为 {@link BufferedInputStream}
+	 *
+	 * @param input1 第一个reader
+	 * @param input2 第二个reader
+	 * @return 两个流的内容一致返回true，否则false
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static boolean contentEquals(Reader input1, Reader input2) throws IORuntimeException {
+		input1 = getReader(input1);
+		input2 = getReader(input2);
+
+		try {
+			int ch = input1.read();
+			while (EOF != ch) {
+				int ch2 = input2.read();
+				if (ch != ch2) {
+					return false;
+				}
+				ch = input1.read();
+			}
+
+			int ch2 = input2.read();
+			return ch2 == EOF;
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 对比两个流内容是否相同，忽略EOL字符<br>
+	 * 内部会转换流为 {@link BufferedInputStream}
+	 *
+	 * @param input1 第一个流
+	 * @param input2 第二个流
+	 * @return 两个流的内容一致返回true，否则false
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static boolean contentEqualsIgnoreEOL(Reader input1, Reader input2) throws IORuntimeException {
+		final BufferedReader br1 = getReader(input1);
+		final BufferedReader br2 = getReader(input2);
+
+		try {
+			String line1 = br1.readLine();
+			String line2 = br2.readLine();
+			while (line1 != null && line2 != null && line1.equals(line2)) {
+				line1 = br1.readLine();
+				line2 = br2.readLine();
+			}
+			return line1 == null ? line2 == null ? true : false : line1.equals(line2);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
 		}
 	}
 }

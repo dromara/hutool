@@ -15,6 +15,8 @@
 * 【core】扩充Dict构造
 * 【core】CollUtil新增sortByProperty方法
 * 【json】toBean支持下划线转驼峰
+* 【core】FileUtil新增更多方法，包括路径拼接
+* 【core】新增LineIterator、NullOutputStream两个类
 
 ### Bug修复
 * 【core】修复IdcardUtil中身份证15转18位年的问题（Issue#IHT1Q@Gitee）

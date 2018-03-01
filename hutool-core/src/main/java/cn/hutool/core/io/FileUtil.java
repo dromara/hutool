@@ -7,11 +7,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -34,6 +36,9 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
+import java.util.zip.Checksum;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.file.FileCopier;
@@ -323,6 +328,53 @@ public class FileUtil {
 	}
 
 	/**
+	 * 通过多层目录参数创建文件
+	 * 
+	 * @param directory 父目录
+	 * @param 元素名（多层目录名）
+	 * @return the file 文件
+	 * @since 4.0.6
+	 */
+	public static File file(File directory, String... names) {
+		Assert.notNull(directory, "directorydirectory must not be null");
+		if (ArrayUtil.isEmpty(names)) {
+			return directory;
+		}
+
+		File file = directory;
+		for (String name : names) {
+			if (null != name) {
+				file = new File(file, name);
+			}
+		}
+		return file;
+	}
+
+	/**
+	 * 通过多层目录创建文件
+	 * 
+	 * 元素名（多层目录名）
+	 * 
+	 * @return the file 文件
+	 * @since 4.0.6
+	 */
+	public static File file(String... names) {
+		if (ArrayUtil.isEmpty(names)) {
+			return null;
+		}
+
+		File file = null;
+		for (String name : names) {
+			if (file == null) {
+				file = new File(name);
+			} else {
+				file = new File(file, name);
+			}
+		}
+		return file;
+	}
+
+	/**
 	 * 创建File对象
 	 * 
 	 * @param uri 文件URI
@@ -343,6 +395,46 @@ public class FileUtil {
 	 */
 	public static File file(URL url) {
 		return new File(URLUtil.toURI(url));
+	}
+
+	/**
+	 * 获取临时文件路径（绝对路径）
+	 * 
+	 * @return 临时文件路径
+	 * @since 4.0.6
+	 */
+	public static String getTmpDirPath() {
+		return System.getProperty("java.io.tmpdir");
+	}
+
+	/**
+	 * 获取临时文件目录
+	 * 
+	 * @return 临时文件目录
+	 * @since 4.0.6
+	 */
+	public static File getTmpDir() {
+		return file(getTmpDirPath());
+	}
+
+	/**
+	 * 获取用户路径（绝对路径）
+	 * 
+	 * @return 用户路径
+	 * @since 4.0.6
+	 */
+	public static String getUserHomePath() {
+		return System.getProperty("user.home");
+	}
+
+	/**
+	 * 获取用户目录
+	 * 
+	 * @return 用户目录
+	 * @since 4.0.6
+	 */
+	public static File getUserHomeDir() {
+		return file(getUserHomePath());
 	}
 
 	/**
@@ -373,12 +465,12 @@ public class FileUtil {
 	 * @return 如果存在匹配文件返回true
 	 */
 	public static boolean exist(String directory, String regexp) {
-		File file = new File(directory);
-		if (!file.exists()) {
+		final File file = new File(directory);
+		if (false == file.exists()) {
 			return false;
 		}
 
-		String[] fileList = file.list();
+		final String[] fileList = file.list();
 		if (fileList == null) {
 			return false;
 		}
@@ -1083,6 +1175,101 @@ public class FileUtil {
 			return Files.isSameFile(file1.toPath(), file2.toPath());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		}
+	}
+
+	/**
+	 * 比较两个文件内容是否相同<br>
+	 * 首先比较长度，长度一致再比较内容<br>
+	 * 此方法来自Apache Commons io
+	 *
+	 * @param file1 文件1
+	 * @param file2 文件2
+	 * @return 两个文件内容一致返回true，否则false
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static boolean contentEquals(File file1, File file2) throws IORuntimeException {
+		boolean file1Exists = file1.exists();
+		if (file1Exists != file2.exists()) {
+			return false;
+		}
+
+		if (false == file1Exists) {
+			// 两个文件都不存在，返回true
+			return true;
+		}
+
+		if (file1.isDirectory() || file2.isDirectory()) {
+			// 不比较目录
+			throw new IORuntimeException("Can't compare directories, only files");
+		}
+
+		if (file1.length() != file2.length()) {
+			// 文件长度不同
+			return false;
+		}
+
+		if (equals(file1, file2)) {
+			// 同一个文件
+			return true;
+		}
+
+		InputStream input1 = null;
+		InputStream input2 = null;
+		try {
+			input1 = getInputStream(file1);
+			input2 = getInputStream(file2);
+			return IoUtil.contentEquals(input1, input2);
+
+		} finally {
+			IoUtil.close(input1);
+			IoUtil.close(input2);
+		}
+	}
+
+	// -----------------------------------------------------------------------
+	/**
+	 * 比较两个文件内容是否相同<br>
+	 * 首先比较长度，长度一致再比较内容，比较内容采用按行读取，每行比较<br>
+	 * 此方法来自Apache Commons io
+	 *
+	 * @param file1 文件1
+	 * @param file2 文件2
+	 * @param charset 编码，null表示使用平台默认编码 两个文件内容一致返回true，否则false
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static boolean contentEqualsIgnoreEOL(File file1, File file2, Charset charset) throws IORuntimeException {
+		boolean file1Exists = file1.exists();
+		if (file1Exists != file2.exists()) {
+			return false;
+		}
+
+		if (!file1Exists) {
+			// 两个文件都不存在，返回true
+			return true;
+		}
+
+		if (file1.isDirectory() || file2.isDirectory()) {
+			// 不比较目录
+			throw new IORuntimeException("Can't compare directories, only files");
+		}
+
+		if (equals(file1, file2)) {
+			// 同一个文件
+			return true;
+		}
+
+		Reader input1 = null;
+		Reader input2 = null;
+		try {
+			input1 = getReader(file1, charset);
+			input2 = getReader(file2, charset);
+			return IoUtil.contentEqualsIgnoreEOL(input1, input2);
+		} finally {
+			IoUtil.close(input1);
+			IoUtil.close(input2);
 		}
 	}
 
@@ -2801,5 +2988,47 @@ public class FileUtil {
 	 */
 	public static boolean containsInvalid(String fileName) {
 		return StrUtil.isBlank(fileName) ? false : ReUtil.contains(FILE_NAME_INVALID_PATTERN_WIN, fileName);
+	}
+
+	/**
+	 * 计算文件CRC32校验码
+	 * 
+	 * @param file 文件，不能为目录
+	 * @param checksum {@link Checksum}
+	 * @return CRC32值
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static long checksumCRC32(File file) throws IORuntimeException {
+		return checksum(file, new CRC32()).getValue();
+	}
+
+	/**
+	 * 计算文件校验码
+	 * 
+	 * @param file 文件，不能为目录
+	 * @param checksum {@link Checksum}
+	 * @return Checksum
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static Checksum checksum(File file, Checksum checksum) throws IORuntimeException {
+		Assert.notNull(file, "File is null !");
+		if (null == checksum) {
+			checksum = new CRC32();
+		}
+		if (file.isDirectory()) {
+			throw new IllegalArgumentException("Checksums can't be computed on directories");
+		}
+		InputStream in = null;
+		try {
+			in = new CheckedInputStream(new FileInputStream(file), checksum);
+			IoUtil.copy(in, new NullOutputStream());
+		} catch (FileNotFoundException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(in);
+		}
+		return checksum;
 	}
 }
