@@ -1579,7 +1579,7 @@ public class CollUtil {
 	 * 
 	 * @param <T> 元素类型
 	 * @param collection 集合
-	 * @param index 下标，支持负数
+	 * @param indexes 下标，支持负数
 	 * @return 元素值列表
 	 * @since 4.0.6
 	 */

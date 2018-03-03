@@ -58,8 +58,7 @@ public class Combination {
 	/**
 	 * 组合选择（从列表中选择m个组合）
 	 * 
-	 * @param dataList 待选列表
-	 * @param n 选择个数
+	 * @param m 选择个数
 	 * @return 组合结果
 	 */
 	public List<String[]> select(int m) {

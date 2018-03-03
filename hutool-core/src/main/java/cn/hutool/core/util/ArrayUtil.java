@@ -1712,7 +1712,6 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @param start 开始位置（包括）
 	 * @param end 结束位置（不包括）
-	 * @param step 步进
 	 * @return 新的数组
 	 * @since 4.0.6
 	 */
@@ -3212,7 +3211,7 @@ public class ArrayUtil {
 	/**
 	 * 交换数组中连个位置的值
 	 * 
-	 * @param c 数组
+	 * @param array 数组对象
 	 * @param index1 位置1
 	 * @param index2 位置2
 	 * @return 交换后的数组，与传入数组为同一对象

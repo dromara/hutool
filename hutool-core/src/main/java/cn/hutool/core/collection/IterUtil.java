@@ -317,7 +317,7 @@ public class IterUtil {
 	 * Iterator转List<br>
 	 * 不判断，直接生成新的List
 	 * 
-	 * @param <T> 元素类型
+	 * @param <E> 元素类型
 	 * @param iter {@link Iterator}
 	 * @return List
 	 * @since 4.0.6
@@ -330,7 +330,7 @@ public class IterUtil {
 	 * Iterator转List<br>
 	 * 不判断，直接生成新的List
 	 * 
-	 * @param <T> 元素类型
+	 * @param <E> 元素类型
 	 * @param iter {@link Iterator}
 	 * @return List
 	 * @since 4.0.6
