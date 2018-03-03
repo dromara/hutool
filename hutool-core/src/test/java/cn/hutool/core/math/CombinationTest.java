@@ -19,7 +19,7 @@ public class CombinationTest {
 		Assert.assertEquals(10, result);
 		
 		long resultAll = Combination.countAll(5);
-		Assert.assertEquals(150, resultAll);
+		Assert.assertEquals(31, resultAll);
 	}
 
 	@Test
