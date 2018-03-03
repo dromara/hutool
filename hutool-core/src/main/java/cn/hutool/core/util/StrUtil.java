@@ -1311,13 +1311,16 @@ public class StrUtil {
 	 * abcdefgh 2 3 =》 c <br>
 	 * abcdefgh 2 -3 =》 cde <br>
 	 * 
-	 * @param string String
+	 * @param str String
 	 * @param fromIndex 开始的index（包括）
 	 * @param toIndex 结束的index（不包括）
 	 * @return 字串
 	 */
-	public static String sub(CharSequence string, int fromIndex, int toIndex) {
-		int len = string.length();
+	public static String sub(CharSequence str, int fromIndex, int toIndex) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		int len = str.length();
 
 		if (fromIndex < 0) {
 			fromIndex = len + fromIndex;
@@ -1347,7 +1350,7 @@ public class StrUtil {
 			return EMPTY;
 		}
 
-		return string.toString().substring(fromIndex, toIndex);
+		return str.toString().substring(fromIndex, toIndex);
 	}
 
 	/**
@@ -2228,6 +2231,9 @@ public class StrUtil {
 	 * @since 4.0.1
 	 */
 	public static String unWrap(CharSequence str, char prefix, char suffix) {
+		if(isEmpty(str)) {
+			return str(str);
+		}
 		if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
 			return sub(str, 1, str.length() - 1);
 		}

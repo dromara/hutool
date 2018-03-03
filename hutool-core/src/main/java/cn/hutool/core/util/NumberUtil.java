@@ -1268,6 +1268,9 @@ public class NumberUtil {
 	 * @return 阶乘
 	 */
 	public static long factorial(long n) {
+		if(n < 1) {
+			return 0;
+		}
 		if (n == 1) {
 			return 1;
 		}
