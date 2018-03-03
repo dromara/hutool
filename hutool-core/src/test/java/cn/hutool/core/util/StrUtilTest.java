@@ -5,7 +5,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 
 /**
@@ -179,7 +178,7 @@ public class StrUtilTest {
 	public void subTest() {
 		String a = "abcderghigh";
 		String pre = StrUtil.sub(a, -5, a.length());
-		Console.log(pre);
+		Assert.assertEquals("ghigh", pre);
 	}
 
 	@Test
@@ -201,5 +200,28 @@ public class StrUtilTest {
 
 		repeatAndJoin = StrUtil.repeatAndJoin("?", 5, null);
 		Assert.assertEquals("?????", repeatAndJoin);
+	}
+	
+	@Test
+	public void moveTest() {
+		String str = "aaaaaaa22222bbbbbbb";
+		String result = StrUtil.move(str, 7, 12, -3);
+		Assert.assertEquals("aaaa22222aaabbbbbbb", result);
+		result = StrUtil.move(str, 7, 12, -4);
+		Assert.assertEquals("aaa22222aaaabbbbbbb", result);
+		result = StrUtil.move(str, 7, 12, -7);
+		Assert.assertEquals("22222aaaaaaabbbbbbb", result);
+		result = StrUtil.move(str, 7, 12, -100);
+		Assert.assertEquals("22222aaaaaaabbbbbbb", result);
+		
+		result = StrUtil.move(str, 7, 12, 3);
+		Assert.assertEquals("aaaaaaabbb22222bbbb", result);
+		result = StrUtil.move(str, 7, 12, 7);
+		Assert.assertEquals("aaaaaaabbbbbbb22222", result);
+		result = StrUtil.move(str, 7, 12, 100);
+		Assert.assertEquals("aaaaaaabbbbbbb22222", result);
+		
+		result = StrUtil.move(str, 7, 12, 0);
+		Assert.assertEquals("aaaaaaa22222bbbbbbb", result);
 	}
 }

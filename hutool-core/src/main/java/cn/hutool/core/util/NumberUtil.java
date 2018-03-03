@@ -1715,6 +1715,32 @@ public class NumberUtil {
 		final BigInteger value = new BigInteger(str, radix);
 		return negate ? value.negate() : value;
 	}
+	
+	/**
+	 * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻<br>
+	 * 判断方法为做差取绝对值判断是否为1
+	 * 
+	 * @param number1 数字1
+	 * @param number2 数字2
+	 * @return 是否相邻
+	 * @since 4.0.7
+	 */
+	public static boolean isBeside(long number1, long number2) {
+		return Math.abs(number1 - number2) == 1;
+	}
+	
+	/**
+	 * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻<br>
+	 * 判断方法为做差取绝对值判断是否为1
+	 * 
+	 * @param number1 数字1
+	 * @param number2 数字2
+	 * @return 是否相邻
+	 * @since 4.0.7
+	 */
+	public static boolean isBeside(int number1, int number2) {
+		return Math.abs(number1 - number2) == 1;
+	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {

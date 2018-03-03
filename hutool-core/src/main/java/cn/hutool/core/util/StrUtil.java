@@ -1081,7 +1081,7 @@ public class StrUtil {
 	public static String[] splitToArray(CharSequence str, char separator) {
 		return splitToArray(str, separator, 0);
 	}
-	
+
 	/**
 	 * 切分字符串为long数组
 	 * 
@@ -1093,7 +1093,7 @@ public class StrUtil {
 	public static long[] splitToLong(CharSequence str, char separator) {
 		return Convert.convert(long[].class, splitTrim(str, separator));
 	}
-	
+
 	/**
 	 * 切分字符串为long数组
 	 * 
@@ -1105,7 +1105,7 @@ public class StrUtil {
 	public static long[] splitToLong(CharSequence str, CharSequence separator) {
 		return Convert.convert(long[].class, splitTrim(str, separator));
 	}
-	
+
 	/**
 	 * 切分字符串为int数组
 	 * 
@@ -1117,7 +1117,7 @@ public class StrUtil {
 	public static int[] splitToInt(CharSequence str, char separator) {
 		return Convert.convert(int[].class, splitTrim(str, separator));
 	}
-	
+
 	/**
 	 * 切分字符串为int数组
 	 * 
@@ -1317,7 +1317,7 @@ public class StrUtil {
 	 * @return 字串
 	 */
 	public static String sub(CharSequence str, int fromIndex, int toIndex) {
-		if(isEmpty(str)) {
+		if (isEmpty(str)) {
 			return str(str);
 		}
 		int len = str.length();
@@ -2231,7 +2231,7 @@ public class StrUtil {
 	 * @since 4.0.1
 	 */
 	public static String unWrap(CharSequence str, char prefix, char suffix) {
-		if(isEmpty(str)) {
+		if (isEmpty(str)) {
 			return str(str);
 		}
 		if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
@@ -3086,7 +3086,7 @@ public class StrUtil {
 		}
 		return isAllMatch;
 	}
-	
+
 	/**
 	 * 替换字符串中的指定字符串，忽略大小写
 	 * 
@@ -3314,5 +3314,31 @@ public class StrUtil {
 			totalLength += (null == strs[i] ? 0 : strs[i].length());
 		}
 		return totalLength;
+	}
+
+	/**
+	 * 位移指定位置的字符串为指定距离
+	 * 
+	 * @param str 字符串
+	 * @param startInclude 起始位置（包括）
+	 * @param endExclude 结束位置（不包括）
+	 * @param moveLength 移动距离，负数表示左移，正数为右移
+	 * @return 位移后的字符串
+	 * @since 4.0.7
+	 */
+	public static String move(CharSequence str, int startInclude, int endExclude, int moveLength) {
+		final StrBuilder strBuilder = StrBuilder.create(str.length());
+		if (moveLength > 0) {
+			int endAfterMove = Math.min(endExclude + moveLength, str.length());
+			strBuilder.append(str.subSequence(0, startInclude)).append(str.subSequence(endExclude, endAfterMove)).append(str.subSequence(startInclude, endExclude))
+					.append(str.subSequence(endAfterMove, str.length()));
+		} else if (moveLength < 0) {
+			int startAfterMove = Math.max(startInclude + moveLength, 0);
+			strBuilder.append(str.subSequence(0, startAfterMove)).append(str.subSequence(startInclude, endExclude)).append(str.subSequence(startAfterMove, startInclude))
+					.append(str.subSequence(endExclude, str.length()));
+		} else {
+			return str(str);
+		}
+		return strBuilder.toString();
 	}
 }
