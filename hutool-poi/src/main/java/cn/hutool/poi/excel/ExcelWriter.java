@@ -70,7 +70,7 @@ public class ExcelWriter implements Closeable {
 	 * @since 3.2.1
 	 */
 	public ExcelWriter(boolean isXlsx) {
-		this(ExcelUtil.createBook(isXlsx ? ".xlsx" : ".xls"), null);
+		this(WorkbookUtil.createBook(isXlsx ? ".xlsx" : ".xls"), null);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class ExcelWriter implements Closeable {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(File destFile, String sheetName) {
-		this(ExcelUtil.createBook(destFile), sheetName);
+		this(WorkbookUtil.createBook(destFile), sheetName);
 		this.destFile = destFile;
 	}
 
@@ -308,12 +308,12 @@ public class ExcelWriter implements Closeable {
 		// 设置合并后的单元格样式
 		if (null != this.styleSet.headCellStyle) {
 			cell.setCellStyle(this.styleSet.headCellStyle);
-			InternalExcelUtil.mergingCells(this.sheet, rowIndex, rowIndex, 0, lastColumn, this.styleSet.headCellStyle);
+			CellUtil.mergingCells(this.sheet, rowIndex, rowIndex, 0, lastColumn, this.styleSet.headCellStyle);
 		}
 
 		// 设置内容
 		if (null != content) {
-			InternalExcelUtil.setCellValue(cell, content, this.styleSet);
+			CellUtil.setCellValue(cell, content, this.styleSet);
 			// 设置内容后跳到下一行
 			this.currentRow.incrementAndGet();
 		}
@@ -407,7 +407,7 @@ public class ExcelWriter implements Closeable {
 	 * @return this
 	 */
 	public ExcelWriter writeHeadRow(Iterable<?> rowData) {
-		InternalExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
+		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
 		return this;
 	}
 
@@ -422,7 +422,7 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter writeRow(Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		InternalExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
+		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
 		return this;
 	}
 
@@ -451,9 +451,9 @@ public class ExcelWriter implements Closeable {
 	 * @since 4.0.2
 	 */
 	public ExcelWriter writeCellValue(int x, int y, Object value) {
-		final Row row = InternalExcelUtil.getOrCreateRow(this.sheet, y);
-		final Cell cell = InternalExcelUtil.getOrCreateCell(row, x);
-		InternalExcelUtil.setCellValue(cell, value, styleSet);
+		final Row row = RowUtil.getOrCreateRow(this.sheet, y);
+		final Cell cell = CellUtil.getOrCreateCell(row, x);
+		CellUtil.setCellValue(cell, value, styleSet);
 		return this;
 	}
 	

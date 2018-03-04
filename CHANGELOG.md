@@ -9,6 +9,8 @@
 * 【core】StrUtil增加move方法，字符串位移（感谢@【帝都】宁静）
 * 【core】ArrayUtil的max和min采用可变参数（T[]除外）（感谢@【帝都】宁静）
 * 【core】NumberUtil增加max和min方法，与ArrayUtil一致（感谢@【帝都】宁静）
+* 【poi】  去除InternalExcelUtil，根据功能新增WorkbookUtil、RowUtil、CellUtil、ExcelPicUtil
+* 【core】新增PinyinUtil（感谢@【帝都】宁静）
 
 ### Bug修复
 * 【core】修复排列组合结果错误问题（感谢@【帝都】宁静）

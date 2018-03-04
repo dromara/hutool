@@ -1,49 +1,27 @@
 package cn.hutool.poi.excel;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.poi.POIXMLDocumentPart;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPicture;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
-import org.apache.poi.hssf.usermodel.HSSFShape;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFShape;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.editors.TrimEditor;
 
 /**
- * Excel内部工具类，主要针对行等操作支持
- * 
+ * Excel表格中单元格工具类
  * @author looly
+ *@since 4.0.7
  */
-public class InternalExcelUtil {
-	
+public class CellUtil {
 	/**
 	 * 获取单元格值
 	 * 
@@ -153,9 +131,10 @@ public class InternalExcelUtil {
 			cell.setCellValue(value.toString());
 		}
 	}
-	
+
 	/**
 	 * 获取已有行或创建新行
+	 * 
 	 * @param row Excel表的行
 	 * @param cellIndex 列号
 	 * @return {@link Row}
@@ -163,97 +142,12 @@ public class InternalExcelUtil {
 	 */
 	public static Cell getOrCreateCell(Row row, int cellIndex) {
 		Cell cell = row.getCell(cellIndex);
-		if(null == cell) {
+		if (null == cell) {
 			cell = row.createCell(cellIndex);
 		}
 		return cell;
 	}
 	
-	/**
-	 * 获取已有行或创建新行
-	 * @param sheet Excel表
-	 * @param rowIndex 行号
-	 * @return {@link Row}
-	 * @since 4.0.2
-	 */
-	public static Row getOrCreateRow(Sheet sheet, int rowIndex) {
-		Row row = sheet.getRow(rowIndex);
-		if(null == row) {
-			row = sheet.createRow(rowIndex);
-		}
-		return row;
-	}
-
-	/**
-	 * 读取一行
-	 * 
-	 * @param row 行
-	 * @param cellEditor 单元格编辑器
-	 * @return 单元格值列表
-	 */
-	public static List<Object> readRow(Row row, CellEditor cellEditor) {
-		if(null == row) {
-			return new ArrayList<>(0);
-		}
-		final short length = row.getLastCellNum();
-		if(length < 0) {
-			return new ArrayList<>(0);
-		}
-		final List<Object> cellValues = new ArrayList<>((int) length);
-		Object cellValue;
-		boolean isAllNull = true;
-		for (short i = 0; i < length; i++) {
-			cellValue = InternalExcelUtil.getCellValue(row.getCell(i), cellEditor);
-			isAllNull &= StrUtil.isEmptyIfStr(cellValue);
-			cellValues.add(cellValue);
-		}
-
-		if (isAllNull) {
-			// 如果每个元素都为空，则定义为空行
-			return new ArrayList<>(0);
-		}
-		return cellValues;
-	}
-
-	/**
-	 * 写一行数据
-	 * 
-	 * @param row 行
-	 * @param rowData 一行的数据
-	 * @param styleSet 单元格样式集，包括日期等样式
-	 */
-	public static void writeRow(Row row, Iterable<?> rowData, StyleSet styleSet) {
-		int i = 0;
-		Cell cell;
-		for (Object value : rowData) {
-			cell = row.createCell(i);
-			setCellValue(cell, value, styleSet);
-			i++;
-		}
-	}
-
-	/**
-	 * 获取工作簿指定sheet中图片列表
-	 * 
-	 * @param workbook 工作簿{@link Workbook}
-	 * @param sheetIndex sheet的索引
-	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
-	 */
-	public static Map<String, PictureData> getPicMap(Workbook workbook, int sheetIndex) {
-		Assert.notNull(workbook, "Workbook must be not null !");
-		if (sheetIndex < 0) {
-			sheetIndex = 0;
-		}
-
-		if (workbook instanceof HSSFWorkbook) {
-			return getPicMapXls((HSSFWorkbook) workbook, sheetIndex);
-		} else if (workbook instanceof XSSFWorkbook) {
-			return getPicMapXlsx((XSSFWorkbook) workbook, sheetIndex);
-		} else {
-			throw new IllegalArgumentException(StrUtil.format("Workbook type [{}] is not supported!", workbook.getClass()));
-		}
-	}
-
 	/**
 	 * 判断指定的单元格是否是合并单元格
 	 * 
@@ -301,60 +195,8 @@ public class InternalExcelUtil {
 		}
 		return sheet.addMergedRegion(cellRangeAddress);
 	}
-
+	
 	// -------------------------------------------------------------------------------------------------------------- Private method start
-	/**
-	 * 获取XLS工作簿指定sheet中图片列表
-	 * 
-	 * @param workbook 工作簿{@link Workbook}
-	 * @param sheetIndex sheet的索引
-	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
-	 */
-	private static Map<String, PictureData> getPicMapXls(HSSFWorkbook workbook, int sheetIndex) {
-		final Map<String, PictureData> picMap = new HashMap<>();
-		final List<HSSFPictureData> pictures = workbook.getAllPictures();
-		if (CollectionUtil.isNotEmpty(pictures)) {
-			final HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
-			HSSFClientAnchor anchor;
-			int pictureIndex;
-			for (HSSFShape shape : sheet.getDrawingPatriarch().getChildren()) {
-				if (shape instanceof HSSFPicture) {
-					pictureIndex = ((HSSFPicture) shape).getPictureIndex() - 1;
-					anchor = (HSSFClientAnchor) shape.getAnchor();
-					picMap.put(StrUtil.format("{}_{}", anchor.getRow1(), anchor.getCol1()), pictures.get(pictureIndex));
-				}
-			}
-		}
-		return picMap;
-	}
-
-	/**
-	 * 获取XLSX工作簿指定sheet中图片列表
-	 * 
-	 * @param workbook 工作簿{@link Workbook}
-	 * @param sheetIndex sheet的索引
-	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
-	 */
-	private static Map<String, PictureData> getPicMapXlsx(XSSFWorkbook workbook, int sheetIndex) {
-		final Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
-		final XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
-		XSSFDrawing drawing;
-		for (POIXMLDocumentPart dr : sheet.getRelations()) {
-			if (dr instanceof XSSFDrawing) {
-				drawing = (XSSFDrawing) dr;
-				final List<XSSFShape> shapes = drawing.getShapes();
-				XSSFPicture pic;
-				CTMarker ctMarker;
-				for (XSSFShape shape : shapes) {
-					pic = (XSSFPicture) shape;
-					ctMarker = pic.getPreferredSize().getFrom();
-					sheetIndexPicMap.put(StrUtil.format("{}_{}", ctMarker.getRow(), ctMarker.getCol()), pic.getPictureData());
-				}
-			}
-		}
-		return sheetIndexPicMap;
-	}
-
 	/**
 	 * 获取数字类型的单元格值
 	 * 
