@@ -1572,6 +1572,20 @@ public class NumberUtil {
 	/**
 	 * 取最小值
 	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 4.0.7
+	 * @see ArrayUtil#min(Comparable[])
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Comparable<? super T>> T min(T... numberArray) {
+		return ArrayUtil.min(numberArray);
+	}
+	
+	/**
+	 * 取最小值
+	 * 
 	 * @param numberArray 数字数组
 	 * @return 最小值
 	 * @since 4.0.7
@@ -1627,6 +1641,20 @@ public class NumberUtil {
 	 */
 	public static float min(float... numberArray) {
 		return ArrayUtil.min(numberArray);
+	}
+	
+	/**
+	 * 取最大值
+	 * 
+	 * @param <T> 元素类型
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 4.0.7
+	 * @see ArrayUtil#max(Comparable[])
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Comparable<? super T>> T max(T... numberArray) {
+		return ArrayUtil.max(numberArray);
 	}
 	
 	/**
