@@ -17,6 +17,12 @@ public class ArrangementTest {
 		long result = Arrangement.count(4, 2);
 		Assert.assertEquals(12, result);
 		
+		result = Arrangement.count(4, 1);
+		Assert.assertEquals(4, result);
+		
+		result = Arrangement.count(4, 0);
+		Assert.assertEquals(1, result);
+		
 		long resultAll = Arrangement.countAll(4);
 		Assert.assertEquals(64, resultAll);
 	}
@@ -41,5 +47,8 @@ public class ArrangementTest {
 		
 		List<String[]> selectAll = arrangement.selectAll();
 		Assert.assertEquals(Arrangement.countAll(4), selectAll.size());
+		
+		List<String[]> list2 = arrangement.select(0);
+		Assert.assertTrue(1 == list2.size());
 	}
 }

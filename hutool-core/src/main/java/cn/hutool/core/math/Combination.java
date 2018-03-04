@@ -35,6 +35,9 @@ public class Combination {
 	 * @return 组合数
 	 */
 	public static long count(int n, int m) {
+		if(0 == m) {
+			return 1;
+		}
 		if(n == m) {
 			return NumberUtil.factorial(n) / NumberUtil.factorial(m);
 		}

@@ -21,6 +21,9 @@ public class CombinationTest {
 		result = Combination.count(5, 5);
 		Assert.assertEquals(1, result);
 		
+		result = Combination.count(5, 0);
+		Assert.assertEquals(1, result);
+		
 		long resultAll = Combination.countAll(5);
 		Assert.assertEquals(31, resultAll);
 	}
@@ -44,5 +47,8 @@ public class CombinationTest {
 		
 		List<String[]> selectAll = combination.selectAll();
 		Assert.assertEquals(Combination.countAll(5), selectAll.size());
+		
+		List<String[]> list2 = combination.select(0);
+		Assert.assertTrue(1 == list2.size());
 	}
 }
