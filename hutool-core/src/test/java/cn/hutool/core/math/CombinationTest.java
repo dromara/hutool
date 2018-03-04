@@ -14,9 +14,12 @@ import org.junit.Test;
 public class CombinationTest {
 
 	@Test
-	public void arrangementTest() {
+	public void countTest() {
 		long result = Combination.count(5, 2);
 		Assert.assertEquals(10, result);
+		
+		result = Combination.count(5, 5);
+		Assert.assertEquals(1, result);
 		
 		long resultAll = Combination.countAll(5);
 		Assert.assertEquals(31, resultAll);

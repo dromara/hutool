@@ -25,6 +25,16 @@ public class Arrangement {
 	public Arrangement(String[] datas) {
 		this.datas = datas;
 	}
+	
+	/**
+	 * 计算排列数，即A(n, n) = n!
+	 * 
+	 * @param n 总数
+	 * @return 排列数
+	 */
+	public static long count(int n) {
+		return count(n, n);
+	}
 
 	/**
 	 * 计算排列数，即A(n, m) = n!/(n-m)!
@@ -53,11 +63,20 @@ public class Arrangement {
 		}
 		return total;
 	}
+	
+	/**
+	 * 全排列选择（列表全部参与排列）
+	 * @return 所有排列列表
+	 */
+	public List<String[]> select() {
+		return select(this.datas.length);
+	}
 
 	/**
 	 * 排列选择（从列表中选择m个排列）
 	 * 
 	 * @param m 选择个数
+	 * @return 所有排列列表
 	 */
 	public List<String[]> select(int m) {
 		final List<String[]> result = new ArrayList<>((int) count(this.datas.length, m));
@@ -66,7 +85,7 @@ public class Arrangement {
 	}
 	
 	/**
-	 * 全排列
+	 * 排列所有组合，即A(n, 1) + A(n, 2) + A(n, 3)...
 	 * 
 	 * @return 全排列结果
 	 */

@@ -211,15 +211,15 @@ public class StrUtilTest {
 		Assert.assertEquals("aaa22222aaaabbbbbbb", result);
 		result = StrUtil.move(str, 7, 12, -7);
 		Assert.assertEquals("22222aaaaaaabbbbbbb", result);
-		result = StrUtil.move(str, 7, 12, -100);
-		Assert.assertEquals("22222aaaaaaabbbbbbb", result);
+		result = StrUtil.move(str, 7, 12, -20);
+		Assert.assertEquals("aaaaaa22222abbbbbbb", result);
 		
 		result = StrUtil.move(str, 7, 12, 3);
 		Assert.assertEquals("aaaaaaabbb22222bbbb", result);
 		result = StrUtil.move(str, 7, 12, 7);
 		Assert.assertEquals("aaaaaaabbbbbbb22222", result);
-		result = StrUtil.move(str, 7, 12, 100);
-		Assert.assertEquals("aaaaaaabbbbbbb22222", result);
+		result = StrUtil.move(str, 7, 12, 20);
+		Assert.assertEquals("aaaaaaab22222bbbbbb", result);
 		
 		result = StrUtil.move(str, 7, 12, 0);
 		Assert.assertEquals("aaaaaaa22222bbbbbbb", result);

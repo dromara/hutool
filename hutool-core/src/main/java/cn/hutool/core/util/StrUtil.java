@@ -3317,7 +3317,9 @@ public class StrUtil {
 	}
 
 	/**
-	 * 位移指定位置的字符串为指定距离
+	 * 循环位移指定位置的字符串为指定距离<br>
+	 * 当moveLength大于0向右位移，小于0向左位移，0不位移<br>
+	 * 当moveLength大于字符串长度时采取循环位移策略，既位移到头后从头（尾）位移，例如长度为10，位移13则表示位移3
 	 * 
 	 * @param str 字符串
 	 * @param startInclude 起始位置（包括）
@@ -3327,14 +3329,26 @@ public class StrUtil {
 	 * @since 4.0.7
 	 */
 	public static String move(CharSequence str, int startInclude, int endExclude, int moveLength) {
-		final StrBuilder strBuilder = StrBuilder.create(str.length());
+		if(isEmpty(str)) {
+			return str(str);
+		}
+		int len = str.length();
+		if(Math.abs(moveLength) > len) {
+			//循环位移，当越界时循环
+			moveLength = moveLength % len;
+		}
+		final StrBuilder strBuilder = StrBuilder.create(len);
 		if (moveLength > 0) {
 			int endAfterMove = Math.min(endExclude + moveLength, str.length());
-			strBuilder.append(str.subSequence(0, startInclude)).append(str.subSequence(endExclude, endAfterMove)).append(str.subSequence(startInclude, endExclude))
+			strBuilder.append(str.subSequence(0, startInclude))//
+					.append(str.subSequence(endExclude, endAfterMove))//
+					.append(str.subSequence(startInclude, endExclude))//
 					.append(str.subSequence(endAfterMove, str.length()));
 		} else if (moveLength < 0) {
 			int startAfterMove = Math.max(startInclude + moveLength, 0);
-			strBuilder.append(str.subSequence(0, startAfterMove)).append(str.subSequence(startInclude, endExclude)).append(str.subSequence(startAfterMove, startInclude))
+			strBuilder.append(str.subSequence(0, startAfterMove))//
+					.append(str.subSequence(startInclude, endExclude))//
+					.append(str.subSequence(startAfterMove, startInclude))//
 					.append(str.subSequence(endExclude, str.length()));
 		} else {
 			return str(str);

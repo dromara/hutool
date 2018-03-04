@@ -47,7 +47,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final Object array) {
+	public static boolean isEmpty(Object array) {
 		if (null == array) {
 			return true;
 		} else if (isArray(array)) {
@@ -2798,6 +2798,9 @@ public class ArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T extends Comparable<? super T>> T min(T[] numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		T min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (ObjectUtil.compare(min, numberArray[i]) > 0) {
@@ -2814,7 +2817,10 @@ public class ArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static long min(long[] numberArray) {
+	public static long min(long... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		long min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (min > numberArray[i]) {
@@ -2831,7 +2837,10 @@ public class ArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static int min(int[] numberArray) {
+	public static int min(int... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		int min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (min > numberArray[i]) {
@@ -2848,7 +2857,10 @@ public class ArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static short min(short[] numberArray) {
+	public static short min(short... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		short min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (min > numberArray[i]) {
@@ -2865,7 +2877,10 @@ public class ArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static char min(char[] numberArray) {
+	public static char min(char... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		char min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (min > numberArray[i]) {
@@ -2882,7 +2897,10 @@ public class ArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static byte min(byte[] numberArray) {
+	public static byte min(byte... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		byte min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (min > numberArray[i]) {
@@ -2899,7 +2917,10 @@ public class ArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static double min(double[] numberArray) {
+	public static double min(double... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		double min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (min > numberArray[i]) {
@@ -2916,7 +2937,10 @@ public class ArrayUtil {
 	 * @return 最小值
 	 * @since 3.0.9
 	 */
-	public static float min(float[] numberArray) {
+	public static float min(float... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		float min = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (min > numberArray[i]) {
@@ -2935,6 +2959,9 @@ public class ArrayUtil {
 	 * @since 3.0.9
 	 */
 	public static <T extends Comparable<? super T>> T max(T[] numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		T max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (ObjectUtil.compare(max, numberArray[i]) < 0) {
@@ -2951,7 +2978,10 @@ public class ArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static long max(long[] numberArray) {
+	public static long max(long... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		long max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (max < numberArray[i]) {
@@ -2968,7 +2998,10 @@ public class ArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static int max(int[] numberArray) {
+	public static int max(int... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		int max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (max < numberArray[i]) {
@@ -2985,7 +3018,10 @@ public class ArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static short max(short[] numberArray) {
+	public static short max(short... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		short max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (max < numberArray[i]) {
@@ -3002,7 +3038,10 @@ public class ArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static char max(char[] numberArray) {
+	public static char max(char... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		char max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (max < numberArray[i]) {
@@ -3019,7 +3058,10 @@ public class ArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static byte max(byte[] numberArray) {
+	public static byte max(byte... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		byte max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (max < numberArray[i]) {
@@ -3036,7 +3078,10 @@ public class ArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static double max(double[] numberArray) {
+	public static double max(double... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		double max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (max < numberArray[i]) {
@@ -3053,7 +3098,10 @@ public class ArrayUtil {
 	 * @return 最大值
 	 * @since 3.0.9
 	 */
-	public static float max(float[] numberArray) {
+	public static float max(float... numberArray) {
+		if(isEmpty(numberArray)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		float max = numberArray[0];
 		for (int i = 0; i < numberArray.length; i++) {
 			if (max < numberArray[i]) {
@@ -3073,6 +3121,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static int[] swap(int[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		int tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3089,6 +3140,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static long[] swap(long[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		long tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3105,6 +3159,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static double[] swap(double[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		double tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3121,6 +3178,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static float[] swap(float[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		float tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3137,6 +3197,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static boolean[] swap(boolean[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		boolean tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3153,6 +3216,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static byte[] swap(byte[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		byte tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3169,6 +3235,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static char[] swap(char[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		char tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3185,6 +3254,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static short[] swap(short[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Number array must not empty !");
+		}
 		short tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3202,6 +3274,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static <T> T[] swap(T[] array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Array must not empty !");
+		}
 		T tmp = array[index1];
 		array[index1] = array[index2];
 		array[index2] = tmp;
@@ -3218,6 +3293,9 @@ public class ArrayUtil {
 	 * @since 4.0.7
 	 */
 	public static Object swap(Object array, int index1, int index2) {
+		if(isEmpty(array)) {
+			throw new IllegalArgumentException("Array must not empty !");
+		}
 		Object tmp = get(array, index1);
 		Array.set(array, index1, Array.get(array, index2));
 		Array.set(array, index2, tmp);

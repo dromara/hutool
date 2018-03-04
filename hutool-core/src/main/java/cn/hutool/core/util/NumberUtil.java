@@ -1568,6 +1568,126 @@ public class NumberUtil {
 	public static boolean equals(char c1, char c2, boolean ignoreCase) {
 		return CharUtil.equals(c1, c2, ignoreCase);
 	}
+	
+	/**
+	 * 取最小值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 4.0.7
+	 * @see ArrayUtil#min(long...)
+	 */
+	public static long min(long... numberArray) {
+		return ArrayUtil.min(numberArray);
+	}
+
+	/**
+	 * 取最小值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 4.0.7
+	 * @see ArrayUtil#min(int...)
+	 */
+	public static int min(int... numberArray) {
+		return ArrayUtil.min(numberArray);
+	}
+
+	/**
+	 * 取最小值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 4.0.7
+	 * @see ArrayUtil#min(short...)
+	 */
+	public static short min(short... numberArray) {
+		return ArrayUtil.min(numberArray);
+	}
+
+	/**
+	 * 取最小值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 4.0.7
+	 * @see ArrayUtil#min(double...)
+	 */
+	public static double min(double... numberArray) {
+		return ArrayUtil.min(numberArray);
+	}
+
+	/**
+	 * 取最小值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @since 4.0.7
+	 * @see ArrayUtil#min(float...)
+	 */
+	public static float min(float... numberArray) {
+		return ArrayUtil.min(numberArray);
+	}
+	
+	/**
+	 * 取最大值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 4.0.7
+	 * @see ArrayUtil#max(long...)
+	 */
+	public static long max(long... numberArray) {
+		return ArrayUtil.max(numberArray);
+	}
+
+	/**
+	 * 取最大值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 4.0.7
+	 * @see ArrayUtil#max(int...)
+	 */
+	public static int max(int... numberArray) {
+		return max(numberArray);
+	}
+
+	/**
+	 * 取最大值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 4.0.7
+	 * @see ArrayUtil#max(short...)
+	 */
+	public static short max(short... numberArray) {
+		return ArrayUtil.max(numberArray);
+	}
+
+	/**
+	 * 取最大值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 4.0.7
+	 * @see ArrayUtil#max(double...)
+	 */
+	public static double max(double... numberArray) {
+		return ArrayUtil.max(numberArray);
+	}
+
+	/**
+	 * 取最大值
+	 * 
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @since 4.0.7
+	 * @see ArrayUtil#max(float...)
+	 */
+	public static float max(float... numberArray) {
+		return ArrayUtil.max(numberArray);
+	}
 
 	/**
 	 * 数字转字符串<br>
