@@ -143,4 +143,28 @@ public class ArrayUtilTest {
 			Console.log(i);
 		}
 	}
+	
+	@Test
+	public void maxTest() {
+		int max = ArrayUtil.max(1,2,13,4,5);
+		Assert.assertEquals(13, max);
+		
+		long maxLong = ArrayUtil.max(1L,2L,13L,4L,5L);
+		Assert.assertEquals(13, maxLong);
+		
+		double maxDouble = ArrayUtil.max(1D,2.4D,13.0D,4.55D,5D);
+		Assert.assertEquals(13.0, maxDouble, 2);
+	}
+	
+	@Test
+	public void minTest() {
+		int min = ArrayUtil.max(1,2,13,4,5);
+		Assert.assertEquals(1, min);
+		
+		long minLong = ArrayUtil.max(1L,2L,13L,4L,5L);
+		Assert.assertEquals(1, minLong);
+		
+		double minDouble = ArrayUtil.max(1D,2.4D,13.0D,4.55D,5D);
+		Assert.assertEquals(1.0, minDouble, 2);
+	}
 }
