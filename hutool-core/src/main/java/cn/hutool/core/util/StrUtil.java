@@ -2172,9 +2172,38 @@ public class StrUtil {
 	public static String wrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
 		return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
 	}
+	
+	/**
+	 * 包装多个字符串
+	 * 
+	 * @param prefixAndSuffix 前缀和后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAll(CharSequence prefixAndSuffix, CharSequence... strs) {
+		return wrapAll(prefixAndSuffix, prefixAndSuffix, strs);
+	}
 
 	/**
-	 * 包装指定字符串，如果前缀或后缀已经包含对应的字符串，则不再
+	 * 包装多个字符串
+	 * 
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAll(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
+		final String[] results = new String[strs.length];
+		for (int i = 0; i < strs.length; i++) {
+			results[i] = wrap(strs[i], prefix, suffix);
+		}
+		return results;
+	}
+
+	/**
+	 * 包装指定字符串，如果前缀或后缀已经包含对应的字符串，则不再包装
 	 * 
 	 * @param str 被包装的字符串
 	 * @param prefix 前缀
@@ -2203,6 +2232,35 @@ public class StrUtil {
 			sb.append(suffix);
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * 包装多个字符串，如果已经包装，则不再包装
+	 * 
+	 * @param prefixAndSuffix 前缀和后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAllIfMissing(CharSequence prefixAndSuffix, CharSequence... strs) {
+		return wrapAllIfMissing(prefixAndSuffix, prefixAndSuffix, strs);
+	}
+
+	/**
+	 * 包装多个字符串，如果已经包装，则不再包装
+	 * 
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAllIfMissing(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
+		final String[] results = new String[strs.length];
+		for (int i = 0; i < strs.length; i++) {
+			results[i] = wrapIfMissing(strs[i], prefix, suffix);
+		}
+		return results;
 	}
 
 	/**
@@ -3329,12 +3387,12 @@ public class StrUtil {
 	 * @since 4.0.7
 	 */
 	public static String move(CharSequence str, int startInclude, int endExclude, int moveLength) {
-		if(isEmpty(str)) {
+		if (isEmpty(str)) {
 			return str(str);
 		}
 		int len = str.length();
-		if(Math.abs(moveLength) > len) {
-			//循环位移，当越界时循环
+		if (Math.abs(moveLength) > len) {
+			// 循环位移，当越界时循环
 			moveLength = moveLength % len;
 		}
 		final StrBuilder strBuilder = StrBuilder.create(len);

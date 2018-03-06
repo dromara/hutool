@@ -11,10 +11,14 @@
 * 【core】NumberUtil增加max和min方法，与ArrayUtil一致（感谢@【帝都】宁静）
 * 【poi】  去除InternalExcelUtil，根据功能新增WorkbookUtil、RowUtil、CellUtil、ExcelPicUtil
 * 【core】新增PinyinUtil（感谢@【帝都】宁静）
+* 【core】StrUtil增加wrapAll、wrapAllIfMissing（感谢@【帝都】宁静）
+* 【core】Singleton增加put方法
+* 【core】Convert增加convertByClassName方法
 
 ### Bug修复
 * 【core】修复排列组合结果错误问题（感谢@【帝都】宁静）
 * 【poi】  修复StrUtil.unWrap传入null导致的越界问题（issue#II1VU@Gitee）
+* 【core】修复ImageUtil.sliceByRowsAndCols方法计算错误（感谢@【唐山】小虫）
 
 -------------------------------------------------------------------------------------------------------------
 

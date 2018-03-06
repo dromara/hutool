@@ -12,6 +12,7 @@ import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.GenericEnumConverter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -466,6 +467,21 @@ public final class Convert {
 	 */
 	public static Collection<?> toCollection(Class<?> collectionType, Class<?> elementType, Object value) {
 		return new CollectionConverter(collectionType, elementType).convert(value, null);
+	}
+	
+	/**
+	 * 转换值为指定类型，类型采用字符串表示
+	 * 
+	 * @param <T> 目标类型
+	 * @param className 类的字符串表示
+	 * @param value 值
+	 * @return 转换后的值
+	 * @since 4.0.7
+	 * @throws ConvertException 转换器不存在
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T convertByClassName(String className, Object value) throws ConvertException{
+		return (T) convert(ClassUtil.loadClass(className), value);
 	}
 	
 	/**

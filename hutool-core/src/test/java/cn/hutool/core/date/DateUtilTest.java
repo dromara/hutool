@@ -276,7 +276,13 @@ public class DateUtilTest {
 	
 	@Test
 	public void endOfWeekTest() {
-		DateTime endOfWeek = DateUtil.endOfWeek(DateUtil.date());
-		Console.log(endOfWeek);
+		DateTime now = DateUtil.date();
+		
+		DateTime startOfWeek = DateUtil.beginOfWeek(now);
+		DateTime endOfWeek = DateUtil.endOfWeek(now);
+		
+		long between = DateUtil.between(endOfWeek, startOfWeek, DateUnit.DAY);
+		//周一和周日相距6天
+		Assert.assertEquals(6, between);
 	}
 }
