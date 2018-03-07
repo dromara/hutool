@@ -285,4 +285,12 @@ public class DateUtilTest {
 		//周一和周日相距6天
 		Assert.assertEquals(6, between);
 	}
+	
+	@Test
+	public void dayOfWeekTest() {
+		int dayOfWeek = DateUtil.dayOfWeek(DateUtil.parse("2018-03-07"));
+		Assert.assertEquals(Calendar.WEDNESDAY, dayOfWeek);
+		Week week = DateUtil.dayOfWeekEnum(DateUtil.parse("2018-03-07"));
+		Assert.assertEquals(Week.WEDNESDAY, week);
+	}
 }
