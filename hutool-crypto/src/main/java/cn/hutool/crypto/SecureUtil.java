@@ -504,7 +504,7 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * DESede加密，生成随机KEY。注意解密时必须使用相同 {@link DESede}对象或者使用相同KEY<br>
+	 * DESede加密（又名3DES、TripleDES），生成随机KEY。注意解密时必须使用相同 {@link DESede}对象或者使用相同KEY<br>
 	 * 例：
 	 * <pre>
 	 * DESede加密：desede().encrypt(data)
@@ -519,7 +519,7 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * DESede加密<br>
+	 * DESede加密（又名3DES、TripleDES）<br>
 	 * 例：
 	 * <pre>
 	 * DESede加密：desede(key).encrypt(data)

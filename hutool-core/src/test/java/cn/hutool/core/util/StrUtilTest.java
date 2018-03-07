@@ -57,20 +57,20 @@ public class StrUtilTest {
 	public void splitToLongTest() {
 		String str = "1,2,3,4, 5";
 		long[] longArray = StrUtil.splitToLong(str, ',');
-		Assert.assertArrayEquals(new long[] {1,2,3,4,5}, longArray);
-		
+		Assert.assertArrayEquals(new long[] { 1, 2, 3, 4, 5 }, longArray);
+
 		longArray = StrUtil.splitToLong(str, ",");
-		Assert.assertArrayEquals(new long[] {1,2,3,4,5}, longArray);
+		Assert.assertArrayEquals(new long[] { 1, 2, 3, 4, 5 }, longArray);
 	}
-	
+
 	@Test
 	public void splitToIntTest() {
 		String str = "1,2,3,4, 5";
 		int[] intArray = StrUtil.splitToInt(str, ',');
-		Assert.assertArrayEquals(new int[] {1,2,3,4,5}, intArray);
-		
+		Assert.assertArrayEquals(new int[] { 1, 2, 3, 4, 5 }, intArray);
+
 		intArray = StrUtil.splitToInt(str, ",");
-		Assert.assertArrayEquals(new int[] {1,2,3,4,5}, intArray);
+		Assert.assertArrayEquals(new int[] { 1, 2, 3, 4, 5 }, intArray);
 	}
 
 	@Test
@@ -161,6 +161,12 @@ public class StrUtilTest {
 	}
 
 	@Test
+	public void replaceTest2() {
+		String result = StrUtil.replace("123", "2", "3");
+		Assert.assertEquals("133", result);
+	}
+
+	@Test
 	public void upperFirstTest() {
 		StringBuilder sb = new StringBuilder("KEY");
 		String s = StrUtil.upperFirst(sb);
@@ -201,7 +207,7 @@ public class StrUtilTest {
 		repeatAndJoin = StrUtil.repeatAndJoin("?", 5, null);
 		Assert.assertEquals("?????", repeatAndJoin);
 	}
-	
+
 	@Test
 	public void moveTest() {
 		String str = "aaaaaaa22222bbbbbbb";
@@ -213,14 +219,14 @@ public class StrUtilTest {
 		Assert.assertEquals("22222aaaaaaabbbbbbb", result);
 		result = StrUtil.move(str, 7, 12, -20);
 		Assert.assertEquals("aaaaaa22222abbbbbbb", result);
-		
+
 		result = StrUtil.move(str, 7, 12, 3);
 		Assert.assertEquals("aaaaaaabbb22222bbbb", result);
 		result = StrUtil.move(str, 7, 12, 7);
 		Assert.assertEquals("aaaaaaabbbbbbb22222", result);
 		result = StrUtil.move(str, 7, 12, 20);
 		Assert.assertEquals("aaaaaaab22222bbbbbb", result);
-		
+
 		result = StrUtil.move(str, 7, 12, 0);
 		Assert.assertEquals("aaaaaaa22222bbbbbbb", result);
 	}

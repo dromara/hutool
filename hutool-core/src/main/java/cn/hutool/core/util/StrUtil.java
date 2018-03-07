@@ -3168,7 +3168,7 @@ public class StrUtil {
 	 * @since 4.0.3
 	 */
 	public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement) {
-		return replace(searchStr, 0, searchStr, replacement, false);
+		return replace(str, 0, searchStr, replacement, false);
 	}
 
 	/**
