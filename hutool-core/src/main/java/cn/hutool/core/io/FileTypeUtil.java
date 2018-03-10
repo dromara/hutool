@@ -26,7 +26,8 @@ public final class FileTypeUtil {
 	static {
 		fileTypeMap = new ConcurrentHashMap<>();
 
-		fileTypeMap.put("ffd8ffe000104a464946", "jpg"); // JPEG (jpg)
+//		fileTypeMap.put("ffd8ffe000104a464946", "jpg"); // JPEG (jpg)
+		fileTypeMap.put("ffd8ffe", "jpg"); // JPEG (jpg)
 		fileTypeMap.put("89504e470d0a1a0a0000", "png"); // PNG (png)
 		fileTypeMap.put("47494638396126026f01", "gif"); // GIF (gif)
 		fileTypeMap.put("49492a00227105008037", "tif"); // TIFF (tif)
