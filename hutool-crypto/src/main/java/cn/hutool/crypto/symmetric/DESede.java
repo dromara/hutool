@@ -9,7 +9,7 @@ import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
 
 /**
- * DESede是由DES对称加密算法改进后的一种对称加密算法。<br>
+ * DESede是由DES对称加密算法改进后的一种对称加密算法，又名3DES、TripleDES。<br>
  * 使用 168 位的密钥对资料进行三次加密的一种机制；它通常（但非始终）提供极其强大的安全性。<br>
  * 如果三个 56 位的子元素都相同，则三重 DES 向后兼容 DES。<br>
  * Java中默认实现为：DESede/CBC/PKCS5Padding

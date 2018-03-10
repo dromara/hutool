@@ -58,6 +58,16 @@ public final class Singleton {
 	}
 	
 	/**
+	 * 将已有对象放入单例中，其Class做为键
+	 * 
+	 * @param obj 对象
+	 * @since 4.0.7
+	 */
+	public static void put(Object obj) {
+		pool.put(obj.getClass(), obj);
+	}
+	
+	/**
 	 * 移除指定Singleton对象
 	 * @param clazz 类
 	 */

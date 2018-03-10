@@ -5,7 +5,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
@@ -139,8 +138,40 @@ public class ArrayUtilTest {
 	
 	@Test
 	public void rangeTest() {
-		for(int i: ArrayUtil.range(0, 10)) {
-			Console.log(i);
-		}
+		int[] range = ArrayUtil.range(0, 10);
+		Assert.assertEquals(0, range[0]);
+		Assert.assertEquals(1, range[1]);
+		Assert.assertEquals(2, range[2]);
+		Assert.assertEquals(3, range[3]);
+		Assert.assertEquals(4, range[4]);
+		Assert.assertEquals(5, range[5]);
+		Assert.assertEquals(6, range[6]);
+		Assert.assertEquals(7, range[7]);
+		Assert.assertEquals(8, range[8]);
+		Assert.assertEquals(9, range[9]);
+	}
+	
+	@Test
+	public void maxTest() {
+		int max = ArrayUtil.max(1,2,13,4,5);
+		Assert.assertEquals(13, max);
+		
+		long maxLong = ArrayUtil.max(1L,2L,13L,4L,5L);
+		Assert.assertEquals(13, maxLong);
+		
+		double maxDouble = ArrayUtil.max(1D,2.4D,13.0D,4.55D,5D);
+		Assert.assertEquals(13.0, maxDouble, 2);
+	}
+	
+	@Test
+	public void minTest() {
+		int min = ArrayUtil.min(1,2,13,4,5);
+		Assert.assertEquals(1, min);
+		
+		long minLong = ArrayUtil.min(1L,2L,13L,4L,5L);
+		Assert.assertEquals(1, minLong);
+		
+		double minDouble = ArrayUtil.min(1D,2.4D,13.0D,4.55D,5D);
+		Assert.assertEquals(1.0, minDouble, 2);
 	}
 }

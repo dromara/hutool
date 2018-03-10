@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -329,6 +330,18 @@ public final class JSONUtil {
 		return null == json ? null : json.toBean(beanClass, ignoreError);
 	}
 	// -------------------------------------------------------------------- toBean end
+	
+	/**
+	 * 将JSONArray转换为Bean的List，默认为ArrayList
+	 * 
+	 * @param jsonArray JSONArray
+	 * @param elementType List中元素类型
+	 * @return List
+	 * @since 4.0.7
+	 */
+	public static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType){
+		return null == jsonArray ? null : jsonArray.toList(elementType);
+	}
 
 	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>

@@ -2,23 +2,25 @@ package cn.hutool.core.map;
 
 import java.util.Map;
 
+import cn.hutool.core.util.StrUtil;
+
 /**
- * 忽略大小写的Map<br>
- * 对KEY忽略大小写，get("Value")和get("value")获得的值相同，put进入的值也会被覆盖
+ * 驼峰Key风格的Map<br>
+ * 对KEY转换为驼峰，get("int_value")和get("intValue")获得的值相同，put进入的值也会被覆盖
  * 
  * @author Looly
  *
  * @param <K> 键类型
  * @param <V> 值类型
- * @since 3.0.2
+ * @since 4.0.7
  */
-public class CaseInsensitiveMap<K, V> extends CustomKeyMap<K, V> {
+public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	/**
 	 * 构造
 	 */
-	public CaseInsensitiveMap() {
+	public CamelCaseMap() {
 		super();
 	}
 
@@ -28,7 +30,7 @@ public class CaseInsensitiveMap<K, V> extends CustomKeyMap<K, V> {
 	 * @param initialCapacity 初始大小
 	 * @param loadFactor 加载因子
 	 */
-	public CaseInsensitiveMap(int initialCapacity, float loadFactor) {
+	public CamelCaseMap(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
@@ -37,7 +39,7 @@ public class CaseInsensitiveMap<K, V> extends CustomKeyMap<K, V> {
 	 * 
 	 * @param initialCapacity 初始大小
 	 */
-	public CaseInsensitiveMap(int initialCapacity) {
+	public CamelCaseMap(int initialCapacity) {
 		super(initialCapacity);
 	}
 
@@ -46,31 +48,20 @@ public class CaseInsensitiveMap<K, V> extends CustomKeyMap<K, V> {
 	 * 
 	 * @param m Map
 	 */
-	public CaseInsensitiveMap(Map<? extends K, ? extends V> m) {
+	public CamelCaseMap(Map<? extends K, ? extends V> m) {
 		super(m);
 	}
-
+	
 	/**
-	 * 构造
-	 * 
-	 * @param loadFactor 加载因子
-	 * @param m Map
-	 * @since 3.1.2
-	 */
-	public CaseInsensitiveMap(float loadFactor, Map<? extends K, ? extends V> m) {
-		super(loadFactor, m);
-	}
-
-	/**
-	 * 将Key转为小写
+	 * 将Key转为驼峰风格，如果key为字符串的话
 	 * 
 	 * @param key KEY
-	 * @return 小写KEY
+	 * @return 驼峰Key
 	 */
 	@Override
 	protected Object customKey(Object key) {
 		if (null != key && key instanceof CharSequence) {
-			key = key.toString().toLowerCase();
+			key = StrUtil.toCamelCase(key.toString());
 		}
 		return key;
 	}

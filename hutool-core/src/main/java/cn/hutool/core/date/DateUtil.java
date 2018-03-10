@@ -195,7 +195,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获得指定日期是星期几
+	 * 获得指定日期是星期几，1表示周日，2表示周一
 	 * 
 	 * @param date 日期
 	 * @return 天

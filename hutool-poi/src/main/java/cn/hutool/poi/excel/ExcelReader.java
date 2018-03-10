@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
@@ -44,7 +45,7 @@ public class ExcelReader implements Closeable {
 	private CellEditor cellEditor;
 	/** 标题别名 */
 	private Map<String, String> headerAlias = new HashMap<>();
-
+	
 	// ------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
@@ -53,7 +54,7 @@ public class ExcelReader implements Closeable {
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(String excelFilePath, int sheetIndex) {
-		this(ExcelUtil.loadBook(excelFilePath), sheetIndex);
+		this(FileUtil.file(excelFilePath), sheetIndex);
 	}
 
 	/**
@@ -63,7 +64,7 @@ public class ExcelReader implements Closeable {
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(File bookFile, int sheetIndex) {
-		this(ExcelUtil.loadBook(bookFile), sheetIndex);
+		this(WorkbookUtil.loadBook(bookFile), sheetIndex);
 	}
 
 	/**
@@ -73,7 +74,7 @@ public class ExcelReader implements Closeable {
 	 * @param sheetName sheet名，第一个默认是sheet1
 	 */
 	public ExcelReader(File bookFile, String sheetName) {
-		this(ExcelUtil.loadBook(bookFile), sheetName);
+		this(WorkbookUtil.loadBook(bookFile), sheetName);
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class ExcelReader implements Closeable {
 	 * @param closeAfterRead 读取结束是否关闭流
 	 */
 	public ExcelReader(InputStream bookStream, int sheetIndex, boolean closeAfterRead) {
-		this(ExcelUtil.loadBook(bookStream, closeAfterRead), sheetIndex);
+		this(WorkbookUtil.loadBook(bookStream, closeAfterRead), sheetIndex);
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class ExcelReader implements Closeable {
 	 * @param closeAfterRead 读取结束是否关闭流
 	 */
 	public ExcelReader(InputStream bookStream, String sheetName, boolean closeAfterRead) {
-		this(ExcelUtil.loadBook(bookStream, closeAfterRead), sheetName);
+		this(WorkbookUtil.loadBook(bookStream, closeAfterRead), sheetName);
 	}
 
 	/**
@@ -435,7 +436,7 @@ public class ExcelReader implements Closeable {
 	 * @since 4.0.3
 	 */
 	public Object readCellValue(int x, int y) {
-		return InternalExcelUtil.getCellValue(getCell(x, y), this.cellEditor);
+		return CellUtil.getCellValue(getCell(x, y), this.cellEditor);
 	}
 
 	/**
@@ -472,9 +473,9 @@ public class ExcelReader implements Closeable {
 	 * @since 4.0.6
 	 */
 	public Cell getCell(int x, int y, boolean isCreateIfNotExist) {
-		final Row row = isCreateIfNotExist ? InternalExcelUtil.getOrCreateRow(this.sheet, y) : this.sheet.getRow(y);
+		final Row row = isCreateIfNotExist ? RowUtil.getOrCreateRow(this.sheet, y) : this.sheet.getRow(y);
 		if (null != row) {
-			return isCreateIfNotExist ? InternalExcelUtil.getOrCreateCell(row, x) : row.getCell(x);
+			return isCreateIfNotExist ? CellUtil.getOrCreateCell(row, x) : row.getCell(x);
 		}
 		return null;
 	}
@@ -511,7 +512,7 @@ public class ExcelReader implements Closeable {
 	 * @return 单元格值列表
 	 */
 	private List<Object> readRow(Row row) {
-		return InternalExcelUtil.readRow(row, this.cellEditor);
+		return RowUtil.readRow(row, this.cellEditor);
 	}
 
 	/**

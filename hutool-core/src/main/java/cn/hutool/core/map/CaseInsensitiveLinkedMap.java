@@ -1,6 +1,5 @@
 package cn.hutool.core.map;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,7 +12,7 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 3.3.1
  */
-public class CaseInsensitiveLinkedMap<K, V> extends LinkedHashMap<K, V> {
+public class CaseInsensitiveLinkedMap<K, V> extends CustomKeyLinkedMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	/**
@@ -39,7 +38,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends LinkedHashMap<K, V> {
 	 * @param initialCapacity 初始大小
 	 */
 	public CaseInsensitiveLinkedMap(int initialCapacity) {
-		this(initialCapacity, 0.75f);
+		super(initialCapacity);
 	}
 
 	/**
@@ -48,8 +47,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends LinkedHashMap<K, V> {
 	 * @param m Map
 	 */
 	public CaseInsensitiveLinkedMap(Map<? extends K, ? extends V> m) {
-		super((int) (m.size() / 0.75));
-		putAll(m);
+		super(m);
 	}
 
 	/**
@@ -60,31 +58,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends LinkedHashMap<K, V> {
 	 * @since 3.1.2
 	 */
 	public CaseInsensitiveLinkedMap(float loadFactor, Map<? extends K, ? extends V> m) {
-		super(m.size(), loadFactor);
-		putAll(m);
-	}
-
-	@Override
-	public V get(Object key) {
-		return super.get(lowerCaseKey(key));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public V put(K key, V value) {
-		return super.put((K) lowerCaseKey(key), value);
-	}
-
-	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
-		for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
-			this.put(entry.getKey(), entry.getValue());
-		}
-	}
-
-	@Override
-	public boolean containsKey(Object key) {
-		return super.containsKey(lowerCaseKey(key));
+		super(loadFactor, m);
 	}
 
 	/**
@@ -93,7 +67,8 @@ public class CaseInsensitiveLinkedMap<K, V> extends LinkedHashMap<K, V> {
 	 * @param key KEY
 	 * @return 小写KEy
 	 */
-	private static Object lowerCaseKey(Object key) {
+	@Override
+	protected Object customKey(Object key) {
 		if (null != key && key instanceof CharSequence) {
 			key = key.toString().toLowerCase();
 		}

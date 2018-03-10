@@ -44,4 +44,16 @@ public class ImageUtilTest {
 	public void flipTest() throws IOException {
 		ImageUtil.flip(FileUtil.file("d:/logo.png"), FileUtil.file("d:/result.png"));
 	}
+	
+	@Test
+	@Ignore
+	public void pressImgTest() {
+		ImageUtil.pressImage(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest.jpg"), ImageUtil.read(FileUtil.file("d:/picTest/1432613.jpg")), -1000, -1000, 0.9f);
+	}
+	
+	@Test
+	@Ignore
+	public void sliceByRowsAndColsTest() {
+		ImageUtil.sliceByRowsAndCols(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest"), 5, 5);
+	}
 }

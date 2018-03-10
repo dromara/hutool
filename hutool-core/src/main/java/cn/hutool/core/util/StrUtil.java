@@ -1081,7 +1081,7 @@ public class StrUtil {
 	public static String[] splitToArray(CharSequence str, char separator) {
 		return splitToArray(str, separator, 0);
 	}
-	
+
 	/**
 	 * 切分字符串为long数组
 	 * 
@@ -1093,7 +1093,7 @@ public class StrUtil {
 	public static long[] splitToLong(CharSequence str, char separator) {
 		return Convert.convert(long[].class, splitTrim(str, separator));
 	}
-	
+
 	/**
 	 * 切分字符串为long数组
 	 * 
@@ -1105,7 +1105,7 @@ public class StrUtil {
 	public static long[] splitToLong(CharSequence str, CharSequence separator) {
 		return Convert.convert(long[].class, splitTrim(str, separator));
 	}
-	
+
 	/**
 	 * 切分字符串为int数组
 	 * 
@@ -1117,7 +1117,7 @@ public class StrUtil {
 	public static int[] splitToInt(CharSequence str, char separator) {
 		return Convert.convert(int[].class, splitTrim(str, separator));
 	}
-	
+
 	/**
 	 * 切分字符串为int数组
 	 * 
@@ -1311,13 +1311,16 @@ public class StrUtil {
 	 * abcdefgh 2 3 =》 c <br>
 	 * abcdefgh 2 -3 =》 cde <br>
 	 * 
-	 * @param string String
+	 * @param str String
 	 * @param fromIndex 开始的index（包括）
 	 * @param toIndex 结束的index（不包括）
 	 * @return 字串
 	 */
-	public static String sub(CharSequence string, int fromIndex, int toIndex) {
-		int len = string.length();
+	public static String sub(CharSequence str, int fromIndex, int toIndex) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+		int len = str.length();
 
 		if (fromIndex < 0) {
 			fromIndex = len + fromIndex;
@@ -1347,7 +1350,7 @@ public class StrUtil {
 			return EMPTY;
 		}
 
-		return string.toString().substring(fromIndex, toIndex);
+		return str.toString().substring(fromIndex, toIndex);
 	}
 
 	/**
@@ -2169,9 +2172,38 @@ public class StrUtil {
 	public static String wrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
 		return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
 	}
+	
+	/**
+	 * 包装多个字符串
+	 * 
+	 * @param prefixAndSuffix 前缀和后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAll(CharSequence prefixAndSuffix, CharSequence... strs) {
+		return wrapAll(prefixAndSuffix, prefixAndSuffix, strs);
+	}
 
 	/**
-	 * 包装指定字符串，如果前缀或后缀已经包含对应的字符串，则不再
+	 * 包装多个字符串
+	 * 
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAll(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
+		final String[] results = new String[strs.length];
+		for (int i = 0; i < strs.length; i++) {
+			results[i] = wrap(strs[i], prefix, suffix);
+		}
+		return results;
+	}
+
+	/**
+	 * 包装指定字符串，如果前缀或后缀已经包含对应的字符串，则不再包装
 	 * 
 	 * @param str 被包装的字符串
 	 * @param prefix 前缀
@@ -2201,6 +2233,35 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * 包装多个字符串，如果已经包装，则不再包装
+	 * 
+	 * @param prefixAndSuffix 前缀和后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAllIfMissing(CharSequence prefixAndSuffix, CharSequence... strs) {
+		return wrapAllIfMissing(prefixAndSuffix, prefixAndSuffix, strs);
+	}
+
+	/**
+	 * 包装多个字符串，如果已经包装，则不再包装
+	 * 
+	 * @param prefix 前缀
+	 * @param suffix 后缀
+	 * @param strs 多个字符串
+	 * @return 包装的字符串数组
+	 * @since 4.0.7
+	 */
+	public static String[] wrapAllIfMissing(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
+		final String[] results = new String[strs.length];
+		for (int i = 0; i < strs.length; i++) {
+			results[i] = wrapIfMissing(strs[i], prefix, suffix);
+		}
+		return results;
+	}
 
 	/**
 	 * 去掉字符包装，如果未被包装则返回原字符串
@@ -2228,6 +2289,9 @@ public class StrUtil {
 	 * @since 4.0.1
 	 */
 	public static String unWrap(CharSequence str, char prefix, char suffix) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
 		if (str.charAt(0) == prefix && str.charAt(str.length() - 1) == suffix) {
 			return sub(str, 1, str.length() - 1);
 		}
@@ -3080,7 +3144,7 @@ public class StrUtil {
 		}
 		return isAllMatch;
 	}
-	
+
 	/**
 	 * 替换字符串中的指定字符串，忽略大小写
 	 * 
@@ -3104,7 +3168,7 @@ public class StrUtil {
 	 * @since 4.0.3
 	 */
 	public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement) {
-		return replace(searchStr, 0, searchStr, replacement, false);
+		return replace(str, 0, searchStr, replacement, false);
 	}
 
 	/**
@@ -3308,5 +3372,45 @@ public class StrUtil {
 			totalLength += (null == strs[i] ? 0 : strs[i].length());
 		}
 		return totalLength;
+	}
+
+	/**
+	 * 循环位移指定位置的字符串为指定距离<br>
+	 * 当moveLength大于0向右位移，小于0向左位移，0不位移<br>
+	 * 当moveLength大于字符串长度时采取循环位移策略，既位移到头后从头（尾）位移，例如长度为10，位移13则表示位移3
+	 * 
+	 * @param str 字符串
+	 * @param startInclude 起始位置（包括）
+	 * @param endExclude 结束位置（不包括）
+	 * @param moveLength 移动距离，负数表示左移，正数为右移
+	 * @return 位移后的字符串
+	 * @since 4.0.7
+	 */
+	public static String move(CharSequence str, int startInclude, int endExclude, int moveLength) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+		int len = str.length();
+		if (Math.abs(moveLength) > len) {
+			// 循环位移，当越界时循环
+			moveLength = moveLength % len;
+		}
+		final StrBuilder strBuilder = StrBuilder.create(len);
+		if (moveLength > 0) {
+			int endAfterMove = Math.min(endExclude + moveLength, str.length());
+			strBuilder.append(str.subSequence(0, startInclude))//
+					.append(str.subSequence(endExclude, endAfterMove))//
+					.append(str.subSequence(startInclude, endExclude))//
+					.append(str.subSequence(endAfterMove, str.length()));
+		} else if (moveLength < 0) {
+			int startAfterMove = Math.max(startInclude + moveLength, 0);
+			strBuilder.append(str.subSequence(0, startAfterMove))//
+					.append(str.subSequence(startInclude, endExclude))//
+					.append(str.subSequence(startAfterMove, startInclude))//
+					.append(str.subSequence(endExclude, str.length()));
+		} else {
+			return str(str);
+		}
+		return strBuilder.toString();
 	}
 }

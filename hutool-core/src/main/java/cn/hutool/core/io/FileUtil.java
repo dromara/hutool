@@ -331,7 +331,7 @@ public class FileUtil {
 	 * 通过多层目录参数创建文件
 	 * 
 	 * @param directory 父目录
-	 * @param 元素名（多层目录名）
+	 * @param names 元素名（多层目录名）
 	 * @return the file 文件
 	 * @since 4.0.6
 	 */
@@ -2994,7 +2994,6 @@ public class FileUtil {
 	 * 计算文件CRC32校验码
 	 * 
 	 * @param file 文件，不能为目录
-	 * @param checksum {@link Checksum}
 	 * @return CRC32值
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.6

@@ -197,7 +197,7 @@ public class MapUtil {
 	 * </pre>
 	 * 
 	 * <pre>
-	 * Map&lt;Object, Object&gt; colorMap = CollectionUtil.toMap(new String[][] {{
+	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {{
 	 *     {"RED", "#FF0000"},
 	 *     {"GREEN", "#00FF00"},
 	 *     {"BLUE", "#0000FF"}});
@@ -371,20 +371,14 @@ public class MapUtil {
 
 	/**
 	 * 将已知Map转换为key为驼峰风格的Map<br>
-	 * 对于key为非String类型，通过调用toString方法转换为字符串
+	 * 如果KEY为非String类型，保留原值
 	 * 
 	 * @param map 原Map
 	 * @return 驼峰风格Map
 	 * @since 3.3.1
 	 */
-	public static <K, V> Map<String, V> toCamelCaseMap(Map<K, V> map) {
-		final Map<String, V> map2 = newHashMap(map.size(), (map instanceof LinkedHashMap));
-		K key;
-		for (Entry<K, V> entry : map.entrySet()) {
-			key = entry.getKey();
-			map2.put(StrUtil.toCamelCase(null == key ? null : key.toString()), entry.getValue());
-		}
-		return map2;
+	public static <K, V> Map<K, V> toCamelCaseMap(Map<K, V> map) {
+		return (map instanceof LinkedHashMap) ? new CamelCaseLinkedMap<>(map) : new CamelCaseMap<>(map);
 	}
 
 	// ----------------------------------------------------------------------------------------------- join
@@ -549,7 +543,9 @@ public class MapUtil {
 	 * @param <V> 值类型，目标的键类型
 	 * @param map 被转换的Map
 	 * @return 逆转后的Map
+	 * @deprecated 请使用{@link MapUtil#reverse(Map)} 代替
 	 */
+	@Deprecated
 	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
 		Map<V, K> inverseMap;
 		if (map instanceof LinkedHashMap) {
