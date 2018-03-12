@@ -142,7 +142,7 @@ public class NetUtil {
 			URL absoluteUrl = new URL(absoluteBasePath);
 			return new URL(absoluteUrl, relativePath).toString();
 		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("To absolute url [{}] base [{}] error!", relativePath, absoluteBasePath), e);
+			throw new UtilException(e, "To absolute url [{}] base [{}] error!", relativePath, absoluteBasePath);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class NetUtil {
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
 		} catch (SocketException e) {
-			throw new UtilException(e.getMessage(), e);
+			throw new UtilException(e);
 		}
 
 		if (networkInterfaces == null) {

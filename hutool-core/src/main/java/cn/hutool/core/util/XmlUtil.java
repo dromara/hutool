@@ -47,7 +47,7 @@ public class XmlUtil {
 
 	/** 在XML中无效的字符 正则 */
 	public final static String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
-	
+
 	// -------------------------------------------------------------------------------------- Read
 	/**
 	 * 读取解析XML文件
@@ -67,12 +67,12 @@ public class XmlUtil {
 		try {
 			file = file.getCanonicalFile();
 		} catch (IOException e) {
-			//ignore
+			// ignore
 		}
 
 		return readXML(new InputSource(file.toURI().toASCIIString()));
 	}
-	
+
 	/**
 	 * 读取解析XML文件<br>
 	 * 如果给定内容以“&lt;”开头，表示这是一个XML内容，直接读取，否则按照路径处理<br>
@@ -83,12 +83,12 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static Document readXML(String pathOrContent) {
-		if(StrUtil.startWith(pathOrContent, '<')) {
+		if (StrUtil.startWith(pathOrContent, '<')) {
 			return parseXml(pathOrContent);
 		}
 		return readXML(FileUtil.file(pathOrContent));
 	}
-	
+
 	/**
 	 * 读取解析XML文件<br>
 	 * 编码在XML中定义
@@ -98,10 +98,10 @@ public class XmlUtil {
 	 * @throws UtilException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(InputStream inputStream) throws UtilException{
+	public static Document readXML(InputStream inputStream) throws UtilException {
 		return readXML(new InputSource(inputStream));
 	}
-	
+
 	/**
 	 * 读取解析XML文件
 	 * 
@@ -110,7 +110,7 @@ public class XmlUtil {
 	 * @throws UtilException IO异常或转换异常
 	 * @since 3.0.9
 	 */
-	public static Document readXML(Reader reader) throws UtilException{
+	public static Document readXML(Reader reader) throws UtilException {
 		return readXML(new InputSource(reader));
 	}
 
@@ -131,7 +131,7 @@ public class XmlUtil {
 			throw new UtilException(e, "Parse XML from stream error!");
 		}
 	}
-	
+
 	/**
 	 * 将String类型的XML转换为XML文档
 	 * 
@@ -145,10 +145,10 @@ public class XmlUtil {
 		xmlStr = cleanInvalid(xmlStr);
 		return readXML(new InputSource(StrUtil.getReader(xmlStr)));
 	}
-	
+
 	/**
-	 * 从XML中读取对象
-	 * Reads serialized object from the XML file.
+	 * 从XML中读取对象 Reads serialized object from the XML file.
+	 * 
 	 * @param <T> 对象类型
 	 * @param source XML文件
 	 * @return 对象
@@ -157,10 +157,9 @@ public class XmlUtil {
 	public static <T> T readObjectFromXml(File source) throws IOException {
 		return readObjectFromXml(new InputSource(FileUtil.getInputStream(source)));
 	}
-	
+
 	/**
-	 * 从XML中读取对象
-	 * Reads serialized object from the XML file.
+	 * 从XML中读取对象 Reads serialized object from the XML file.
 	 * 
 	 * @param <T> 对象类型
 	 * @param xmlStr XML内容
@@ -171,10 +170,9 @@ public class XmlUtil {
 	public static <T> T readObjectFromXml(String xmlStr) throws IOException {
 		return readObjectFromXml(new InputSource(StrUtil.getReader(xmlStr)));
 	}
-	
+
 	/**
-	 * 从XML中读取对象
-	 * Reads serialized object from the XML file.
+	 * 从XML中读取对象 Reads serialized object from the XML file.
 	 * 
 	 * @param <T> 对象类型
 	 * @param source {@link InputSource}
@@ -194,7 +192,7 @@ public class XmlUtil {
 		}
 		return (T) result;
 	}
-	
+
 	// -------------------------------------------------------------------------------------- Write
 	/**
 	 * 将XML文档转换为String<br>
@@ -206,13 +204,13 @@ public class XmlUtil {
 	public static String toStr(Document doc) {
 		return toStr(doc, null);
 	}
-	
+
 	/**
 	 * 将XML文档转换为String<br>
 	 * 此方法会修改Document中的字符集
 	 * 
 	 * @param doc XML文档
-	 * @param charset  自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
+	 * @param charset 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 * @return XML字符串
 	 */
 	public static String toStr(Document doc, String charset) {
@@ -224,7 +222,7 @@ public class XmlUtil {
 	 * 此方法会修改Document中的字符集
 	 * 
 	 * @param doc XML文档
-	 * @param charset  自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
+	 * @param charset 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 * @param isPretty 是否格式化输出
 	 * @return XML字符串
 	 * @since 3.0.9
@@ -273,9 +271,10 @@ public class XmlUtil {
 			IoUtil.close(writer);
 		}
 	}
-	
+
 	/**
 	 * 将XML文档写出
+	 * 
 	 * @param doc {@link Document} XML文档
 	 * @param writer 写出的Writer，Writer决定了输出XML的编码
 	 * @param isPretty 是否格式化输出
@@ -288,7 +287,7 @@ public class XmlUtil {
 			xformer.setOutputProperty(OutputKeys.INDENT, isPretty ? "yes" : "no");
 			xformer.transform(new DOMSource(doc), new StreamResult(writer));
 		} catch (Exception e) {
-			throw new UtilException("Trans xml document to string error!", e);
+			throw new UtilException(e, "Trans xml document to string error!");
 		}
 	}
 
@@ -306,7 +305,7 @@ public class XmlUtil {
 		try {
 			builder = dbf.newDocumentBuilder();
 		} catch (Exception e) {
-			throw new UtilException("Create xml document error!", e);
+			throw new UtilException(e, "Create xml document error!");
 		}
 		final Document doc = builder.newDocument();
 		doc.appendChild(doc.createElement(rootElementName));
@@ -317,6 +316,7 @@ public class XmlUtil {
 	// -------------------------------------------------------------------------------------- Function
 	/**
 	 * 获得XML文档根节点
+	 * 
 	 * @param doc {@link Document}
 	 * @return 根节点
 	 * @see Document#getDocumentElement()
@@ -325,7 +325,7 @@ public class XmlUtil {
 	public static Element getRootElement(Document doc) {
 		return (null == doc) ? null : doc.getDocumentElement();
 	}
-	
+
 	/**
 	 * 去除XML文本中的无效字符
 	 * 
@@ -350,7 +350,7 @@ public class XmlUtil {
 		final NodeList nodeList = StrUtil.isBlank(tagName) ? element.getChildNodes() : element.getElementsByTagName(tagName);
 		return transElements(element, nodeList);
 	}
-	
+
 	/**
 	 * 根据节点名获得第一个子节点
 	 * 
@@ -372,7 +372,7 @@ public class XmlUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 根据节点名获得第一个子节点
 	 * 
@@ -423,7 +423,7 @@ public class XmlUtil {
 		Element element;
 		for (int i = 0; i < length; i++) {
 			node = nodeList.item(i);
-			if(Node.ELEMENT_NODE == node.getNodeType()) {
+			if (Node.ELEMENT_NODE == node.getNodeType()) {
 				element = (Element) nodeList.item(i);
 				if (parentEle == null || element.getParentNode() == parentEle) {
 					elements.add(element);
@@ -437,6 +437,7 @@ public class XmlUtil {
 	/**
 	 * 将可序列化的对象转换为XML写入文件，已经存在的文件将被覆盖<br>
 	 * Writes serializable object to a XML file. Existing file will be overwritten
+	 * 
 	 * @param <T> 对象类型
 	 * @param dest 目标文件
 	 * @param t 对象
@@ -448,11 +449,11 @@ public class XmlUtil {
 			xmlenc = new XMLEncoder(FileUtil.getOutputStream(dest));
 			xmlenc.writeObject(t);
 		} finally {
-			//关闭XMLEncoder会相应关闭OutputStream
+			// 关闭XMLEncoder会相应关闭OutputStream
 			IoUtil.close(xmlenc);
 		}
 	}
-	
+
 	/**
 	 * 创建XPath<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
@@ -463,7 +464,7 @@ public class XmlUtil {
 	public static XPath createXPath() {
 		return XPathFactory.newInstance().newXPath();
 	}
-	
+
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
@@ -477,14 +478,55 @@ public class XmlUtil {
 	public static Object getByXPath(String expression, Object source, QName returnType) {
 		final XPath xPath = createXPath();
 		try {
-			if(source instanceof InputSource) {
-				return xPath.evaluate(expression, (InputSource)source, returnType);
-			}else {
+			if (source instanceof InputSource) {
+				return xPath.evaluate(expression, (InputSource) source, returnType);
+			} else {
 				return xPath.evaluate(expression, source, returnType);
 			}
 		} catch (XPathExpressionException e) {
 			throw new UtilException(e);
 		}
+	}
+
+	/**
+	 * 转义XML特殊字符:
+	 * 
+	 * <pre>
+	 * &amp; (ampersand) 替换为 &amp;amp;
+	 * &lt; (小于) 替换为 &amp;lt;
+	 * &gt; (大于) 替换为 &amp;gt;
+	 * &quot; (双引号) 替换为 &amp;quot;
+	 * </pre>
+	 * 
+	 * @param string 被替换的字符串
+	 * @return 替换后的字符串
+	 * @since 4.0.8
+	 */
+	public static String escape(String string) {
+		final StringBuilder sb = new StringBuilder(string.length());
+		for (int i = 0, length = string.length(); i < length; i++) {
+			char c = string.charAt(i);
+			switch (c) {
+			case '&':
+				sb.append("&amp;");
+				break;
+			case '<':
+				sb.append("&lt;");
+				break;
+			case '>':
+				sb.append("&gt;");
+				break;
+			case '"':
+				sb.append("&quot;");
+				break;
+			case '\'':
+				sb.append("&apos;");
+				break;
+			default:
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 	// ---------------------------------------------------------------------------------------- Private method start
 	// ---------------------------------------------------------------------------------------- Private method end

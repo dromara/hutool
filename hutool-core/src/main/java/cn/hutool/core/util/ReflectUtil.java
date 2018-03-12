@@ -431,7 +431,7 @@ public class ReflectUtil {
 		try {
 			return (T) Class.forName(clazz).newInstance();
 		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
+			throw new UtilException(e, "Instance class [{}] error!", clazz);
 		}
 	}
 
@@ -449,7 +449,7 @@ public class ReflectUtil {
 			try {
 				return (T) clazz.newInstance();
 			} catch (Exception e) {
-				throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
+				throw new UtilException(e, "Instance class [{}] error!", clazz);
 			}
 		}
 
@@ -461,7 +461,7 @@ public class ReflectUtil {
 		try {
 			return getConstructor(clazz, paramTypes).newInstance(params);
 		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Instance class [{}] error!", clazz), e);
+			throw new UtilException(e, "Instance class [{}] error!", clazz);
 		}
 	}
 

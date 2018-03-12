@@ -69,7 +69,7 @@ public class GlobalThreadPool {
 		try {
 			executor.execute(runnable);
 		} catch (Exception e) {
-			throw new UtilException("Exception when running task!", e);
+			throw new UtilException(e, "Exception when running task!");
 		}
 	}
 

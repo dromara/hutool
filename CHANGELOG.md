@@ -5,6 +5,8 @@
 ## 4.0.8
 
 ### 新特性
+* 【core】新增PinyinComparator、CollUtil新增sortByPinyin（感谢@【帝都】宁静）
+* 【json】JSONUtil增加xmlToJson方法
 
 ### Bug修复
 

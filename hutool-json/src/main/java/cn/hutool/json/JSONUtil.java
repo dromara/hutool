@@ -286,7 +286,7 @@ public final class JSONUtil {
 	 * @return XML字符串
 	 */
 	public static String toXmlStr(JSON json) {
-		return XML.toString(json);
+		return XML.toXml(json);
 	}
 	// -------------------------------------------------------------------- toString end
 
@@ -695,5 +695,17 @@ public final class JSONUtil {
 			return false;
 		}
 		return StrUtil.isWrap(str.trim(), '[', ']');
+	}
+	
+	/**
+	 * XML转JSONObject<br>
+	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
+	 * 
+	 * @param xml XML字符串
+	 * @return JSONObject
+	 * @since 4.0.8
+	 */
+	public static JSONObject xmlToJson(String xml) {
+		return XML.toJSONObject(xml);
 	}
 }

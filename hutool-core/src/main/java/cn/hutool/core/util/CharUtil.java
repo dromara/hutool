@@ -27,6 +27,7 @@ public class CharUtil {
 	public static final char COLON = ':';
 	public static final char DOUBLE_QUOTES = '"';
 	public static final char SINGLE_QUOTE = '\'';
+	public static final char AMP = '&';
 
 	/**
 	 * 是否为ASCII字符，ASCII字符位于0~127之间
