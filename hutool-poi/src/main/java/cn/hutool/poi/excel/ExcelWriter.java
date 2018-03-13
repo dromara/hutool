@@ -278,6 +278,40 @@ public class ExcelWriter implements Closeable {
 		this.headerAlias = headerAlias;
 		return this;
 	}
+	
+	/**
+	 * 设置列宽（单位为一个字符的宽度，例如传入width为10，表示10个字符的宽度）
+	 * 
+	 * @param columnIndex 列号（从0开始计数，-1表示所有列的默认宽度）
+	 * @param width 宽度（单位1~256个字符宽度）
+	 * @return this
+	 * @since 4.0.8
+	 */
+	public ExcelWriter setColumnWidth(int columnIndex, int width) {
+		if(columnIndex < 0) {
+			this.sheet.setDefaultColumnWidth(width);
+		}else {
+			this.sheet.setColumnWidth(columnIndex, width * 256);
+		}
+		return this;
+	}
+	
+	/**
+	 * 设置行高，值为一个点的高度
+	 * 
+	 * @param rownum 行号（从0开始计数，-1表示所有行的默认高度）
+	 * @param height 高度
+	 * @return this
+	 * @since 4.0.8
+	 */
+	public ExcelWriter setRowHeight(int rownum, int height) {
+		if(rownum < 0) {
+			this.sheet.setDefaultRowHeightInPoints(height);
+		}else {
+			this.sheet.getRow(rownum).setHeightInPoints(height);
+		}
+		return this;
+	}
 
 	/**
 	 * 合并当前行的单元格<br>
