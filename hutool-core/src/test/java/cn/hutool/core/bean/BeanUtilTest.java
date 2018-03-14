@@ -151,6 +151,9 @@ public class BeanUtilTest {
 	
 	//-----------------------------------------------------------------------------------------------------------------
 	public static class SubPerson extends Person{
+		
+		public static final String STATIC_FIELD = "TEST";
+		
 		private String subName;
 		private Boolean isSlow;
 

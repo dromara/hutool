@@ -11,6 +11,7 @@ import java.util.ListIterator;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIterator;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.impl.CollectionConverter;
 
 /**
@@ -479,15 +480,25 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public boolean addAll(Collection<? extends Object> c) {
+		if(CollUtil.isEmpty(c)) {
+			return false;
+		}
 		for (Object obj : c) {
 			this.add(obj);
 		}
-		return rawList.addAll(c);
+		return true;
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends Object> c) {
-		return rawList.addAll(index, c);
+		if(CollUtil.isEmpty(c)) {
+			return false;
+		}
+		final ArrayList<Object> list = new ArrayList<>(c.size());
+		for (Object object : list) {
+			list.add(JSONUtil.wrap(object, ignoreNullValue));
+		}
+		return rawList.addAll(index, list);
 	}
 
 	@Override
