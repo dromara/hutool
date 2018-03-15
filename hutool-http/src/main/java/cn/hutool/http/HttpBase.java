@@ -142,6 +142,19 @@ public abstract class HttpBase<T> {
 	 * @return this
 	 */
 	public T header(Map<String, List<String>> headers) {
+		return header(headers, false);
+	}
+	
+	/**
+	 * 设置请求头<br>
+	 * 不覆盖原有请求头
+	 * 
+	 * @param headers 请求头
+	 * @param isOverride 是否覆盖已有头信息
+	 * @return this
+	 * @since 4.0.8
+	 */
+	public T header(Map<String, List<String>> headers, boolean isOverride) {
 		if(CollectionUtil.isEmpty(headers)) {
 			return (T)this;
 		}
@@ -150,7 +163,7 @@ public abstract class HttpBase<T> {
 		for (Entry<String, List<String>> entry : headers.entrySet()) {
 			name = entry.getKey();
 			for (String value : entry.getValue()) {
-				this.header(name, StrUtil.nullToEmpty(value), false);
+				this.header(name, StrUtil.nullToEmpty(value), isOverride);
 			}
 		}
 		return (T)this;

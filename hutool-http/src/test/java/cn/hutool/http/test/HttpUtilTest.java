@@ -10,6 +10,8 @@ import org.junit.Test;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 
 public class HttpUtilTest {
@@ -26,6 +28,15 @@ public class HttpUtilTest {
 	public void getTest() {
 		String result1 = HttpUtil.get("http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2", CharsetUtil.CHARSET_GBK);
 		Console.log(result1);
+	}
+	
+	@Test
+	@Ignore
+	public void getTest3() {
+		//自定义的默认header无效
+		String result = HttpRequest.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
+			.removeHeader(Header.USER_AGENT).execute().body();
+		Console.log(result);
 	}
 
 	@Test
