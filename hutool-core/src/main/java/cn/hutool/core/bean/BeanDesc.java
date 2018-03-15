@@ -136,7 +136,10 @@ public class BeanDesc {
 	 */
 	private BeanDesc init() {
 		for (Field field : ReflectUtil.getFields(this.beanClass)) {
-			this.propMap.put(field.getName(), createProp(field));
+			if(false == ModifierUtil.isStatic(field)) {
+				//只针对非static属性
+				this.propMap.put(field.getName(), createProp(field));
+			}
 		}
 		return this;
 	}
