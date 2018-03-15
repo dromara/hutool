@@ -693,6 +693,20 @@ public class FileUtil {
 		}
 		return true;
 	}
+	
+	/**
+	 * 清空文件夹<br>
+	 * 注意：清空文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
+	 * 某个文件删除失败会终止删除操作
+	 * 
+	 * @param dirPath 文件夹路径
+	 * @return 成功与否
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.8
+	 */
+	public static boolean clean(String dirPath) throws IORuntimeException {
+		return clean(file(dirPath));
+	}
 
 	/**
 	 * 清空文件夹<br>
