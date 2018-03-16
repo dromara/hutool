@@ -3,7 +3,6 @@ package cn.hutool.core.codec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -26,9 +25,9 @@ public class Base64Test {
 
 	@Test
 	public void urlSafeEncodeAndDecodeTest() {
-		String a = "伦家需要安全感55";
+		String a = "广州伦家需要安全感55";
 		String encode = StrUtil.utf8Str(Base64.encodeUrlSafe(StrUtil.utf8Bytes(a), false));
-		Assert.assertEquals("5Lym5a626ZyA6KaB5a6J5YWo5oSfNTU", encode);
+		Assert.assertEquals("5bm_5bee5Lym5a626ZyA6KaB5a6J5YWo5oSfNTU", encode);
 
 		String decodeStr = Base64.decodeStr(encode);
 		Assert.assertEquals(a, decodeStr);

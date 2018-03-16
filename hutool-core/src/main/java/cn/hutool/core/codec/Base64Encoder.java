@@ -237,7 +237,7 @@ public class Base64Encoder {
 				System.arraycopy(dest, 0, urlSafeDest, 0, urlSafeLen);
 				return urlSafeDest;
 			} else {
-				dest[destlen - 2] = left == 2 ? encodeTable[i & 0x3f] : (byte) '=';
+				dest[destlen - 2] = (left == 2) ? encodeTable[i & 0x3f] : (byte) '=';
 				dest[destlen - 1] = '=';
 			}
 		}
