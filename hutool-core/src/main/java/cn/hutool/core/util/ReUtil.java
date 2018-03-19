@@ -2,9 +2,11 @@ package cn.hutool.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -155,13 +157,22 @@ public class ReUtil {
 			return null;
 		}
 
-		HashSet<String> varNums = findAll(PatternPool.GROUP_VAR, template, 1, new HashSet<String>());
+		//提取模板中的编号
+		final TreeSet<Integer> varNums = new TreeSet<>(new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return ObjectUtil.compare(o2, o1);
+			}
+		});
+		final Matcher matcherForTemplate = PatternPool.GROUP_VAR.matcher(template);
+		while (matcherForTemplate.find()) {
+			varNums.add(Integer.parseInt(matcherForTemplate.group(1)));
+		}
 
-		Matcher matcher = pattern.matcher(content);
+		final Matcher matcher = pattern.matcher(content);
 		if (matcher.find()) {
-			for (String var : varNums) {
-				int group = Integer.parseInt(var);
-				template = template.replace("$" + var, matcher.group(group));
+			for (Integer group : varNums) {
+				template = template.replace("$" + group, matcher.group(group));
 			}
 			return template;
 		}
@@ -481,7 +492,7 @@ public class ReUtil {
 
 		return count;
 	}
-	
+
 	/**
 	 * 指定内容中是否有表达式匹配的内容
 	 * 

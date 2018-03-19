@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ReUtil;
 
 public class ReUtilTest {
 	final String content = "ZZZaaabbbccc中文1234";
@@ -23,6 +22,13 @@ public class ReUtilTest {
 		// 抽取多个分组然后把它们拼接起来
 		String resultExtractMulti = ReUtil.extractMulti("(\\w)aa(\\w)", content, "$1-$2");
 		Assert.assertEquals("Z-a", resultExtractMulti);
+	}
+	
+	@Test
+	public void extractMultiTest2() {
+		// 抽取多个分组然后把它们拼接起来
+		String resultExtractMulti = ReUtil.extractMulti("(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)(\\w)", content, "$1-$2-$3-$4-$5-$6-$7-$8-$9-$10");
+		Assert.assertEquals("Z-Z-Z-a-a-a-b-b-b-c", resultExtractMulti);
 	}
 
 	@Test
