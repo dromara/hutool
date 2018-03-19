@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.ArrayUtil;
 
 /**
  * {@link ArrayUtil} 数组工具单元测试
@@ -62,7 +61,7 @@ public class ArrayUtilTest {
 		});
 		Assert.assertArrayEquals(filter, new Integer[] { 2, 4, 6 });
 	}
-	
+
 	@Test
 	public void filterTestForFilter() {
 		Integer[] a = { 1, 2, 3, 4, 5, 6 };
@@ -70,7 +69,8 @@ public class ArrayUtilTest {
 			@Override
 			public boolean accept(Integer t) {
 				return t % 2 == 0;
-			}});
+			}
+		});
 		Assert.assertArrayEquals(filter, new Integer[] { 2, 4, 6 });
 	}
 
@@ -135,7 +135,7 @@ public class ArrayUtilTest {
 		Assert.assertEquals(values[1], cast[1]);
 		Assert.assertEquals(values[2], cast[2]);
 	}
-	
+
 	@Test
 	public void rangeTest() {
 		int[] range = ArrayUtil.range(0, 10);
@@ -150,28 +150,63 @@ public class ArrayUtilTest {
 		Assert.assertEquals(8, range[8]);
 		Assert.assertEquals(9, range[9]);
 	}
-	
+
 	@Test
 	public void maxTest() {
-		int max = ArrayUtil.max(1,2,13,4,5);
+		int max = ArrayUtil.max(1, 2, 13, 4, 5);
 		Assert.assertEquals(13, max);
-		
-		long maxLong = ArrayUtil.max(1L,2L,13L,4L,5L);
+
+		long maxLong = ArrayUtil.max(1L, 2L, 13L, 4L, 5L);
 		Assert.assertEquals(13, maxLong);
-		
-		double maxDouble = ArrayUtil.max(1D,2.4D,13.0D,4.55D,5D);
+
+		double maxDouble = ArrayUtil.max(1D, 2.4D, 13.0D, 4.55D, 5D);
 		Assert.assertEquals(13.0, maxDouble, 2);
 	}
-	
+
 	@Test
 	public void minTest() {
-		int min = ArrayUtil.min(1,2,13,4,5);
+		int min = ArrayUtil.min(1, 2, 13, 4, 5);
 		Assert.assertEquals(1, min);
-		
-		long minLong = ArrayUtil.min(1L,2L,13L,4L,5L);
+
+		long minLong = ArrayUtil.min(1L, 2L, 13L, 4L, 5L);
 		Assert.assertEquals(1, minLong);
-		
-		double minDouble = ArrayUtil.min(1D,2.4D,13.0D,4.55D,5D);
+
+		double minDouble = ArrayUtil.min(1D, 2.4D, 13.0D, 4.55D, 5D);
 		Assert.assertEquals(1.0, minDouble, 2);
+	}
+
+	@Test
+	public void appendTest() {
+		String[] a = { "1", "2", "3", "4" };
+		String[] b = { "a", "b", "c" };
+
+		String[] result = ArrayUtil.append(a, b);
+		Assert.assertArrayEquals(new String[] { "1", "2", "3", "4", "a", "b", "c" }, result);
+	}
+
+	@Test
+	public void insertTest() {
+		String[] a = { "1", "2", "3", "4" };
+		String[] b = { "a", "b", "c" };
+
+		// 在-1位置插入，相当于在3位置插入
+		String[] result = ArrayUtil.insert(a, -1, b);
+		Assert.assertArrayEquals(new String[] { "1", "2", "3", "a", "b", "c", "4" }, result);
+
+		// 在第0个位置插入，既在数组前追加
+		result = ArrayUtil.insert(a, 0, b);
+		Assert.assertArrayEquals(new String[] { "a", "b", "c", "1", "2", "3", "4" }, result);
+
+		// 在第2个位置插入，既"3"之前
+		result = ArrayUtil.insert(a, 2, b);
+		Assert.assertArrayEquals(new String[] { "1", "2", "a", "b", "c", "3", "4" }, result);
+
+		// 在第4个位置插入，既"4"之后，相当于追加
+		result = ArrayUtil.insert(a, 4, b);
+		Assert.assertArrayEquals(new String[] { "1", "2", "3", "4", "a", "b", "c" }, result);
+
+		// 在第5个位置插入，由于数组长度为4，因此补null
+		result = ArrayUtil.insert(a, 5, b);
+		Assert.assertArrayEquals(new String[] { "1", "2", "3", "4", null, "a", "b", "c" }, result);
 	}
 }

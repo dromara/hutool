@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -129,6 +130,20 @@ public class RandomUtil {
 	}
 	
 	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param min 最小数（包含）
+	 * @param max 最大数（不包含）
+	 * @param scale 保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 随机数
+	 * @since 4.0.8
+	 */
+	public static double randomDouble(double min, double max, int scale, RoundingMode roundingMode) {
+		return NumberUtil.round(randomDouble(min, max), scale, roundingMode).doubleValue();
+	}
+	
+	/**
 	 * 获得随机数
 	 * 
 	 * @return 随机数
@@ -139,14 +154,39 @@ public class RandomUtil {
 	}
 	
 	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param scale 保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 随机数
+	 * @since 4.0.8
+	 */
+	public static double randomDouble(int scale, RoundingMode roundingMode) {
+		return NumberUtil.round(randomDouble(), scale, roundingMode).doubleValue();
+	}
+	
+	/**
 	 * 获得指定范围内的随机数 [0,limit)
 	 * 
 	 * @param limit 限制随机数的范围，不包括这个数
 	 * @return 随机数
 	 * @since 3.3.0
 	 */
-	public static double randomDouble(Double limit) {
+	public static double randomDouble(double limit) {
 		return getRandom().nextDouble(limit);
+	}
+	
+	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param limit 限制随机数的范围，不包括这个数
+	 * @param scale 保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 随机数
+	 * @since 4.0.8
+	 */
+	public static double randomDouble(double limit, int scale, RoundingMode roundingMode) {
+		return NumberUtil.round(randomDouble(limit), scale, roundingMode).doubleValue();
 	}
 
 	/**

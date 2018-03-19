@@ -9,6 +9,8 @@
 * 【json】JSONUtil增加xmlToJson方法
 * 【poi】 ExcelWriter增加setColumnWidth和setRowHeight方法
 * 【core】FileUtil.clean增加字符串重载（感谢@【帝都】宁静）
+* 【core】ArrayUtil增加insert方法（感谢@【帝都】宁静）
+* 【core】RandomUtil.randomDouble增加可选保留小数重载（感谢@【帝都】宁静）
 
 ### Bug修复
 * 【json】修复JSONArray中addAll加入两次的bug（感谢@【天津】〓下页）
