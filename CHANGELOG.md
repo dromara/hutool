@@ -12,6 +12,7 @@
 * 【core】ArrayUtil增加insert方法（感谢@【帝都】宁静）
 * 【core】RandomUtil.randomDouble增加可选保留小数重载（感谢@【帝都】宁静）
 * 【core】增加RandomUtil.randomDay随机天（感谢@【帝都】宁静）
+* 【poi】  ExcelWriter增加setOrCreateSheet方法，从而支持多sheet生成
 
 ### Bug修复
 * 【json】修复JSONArray中addAll加入两次的bug（感谢@【天津】〓下页）

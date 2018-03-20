@@ -48,7 +48,7 @@ public class ExcelWriter implements Closeable {
 	private Map<String, String> headerAlias;
 	/** 样式集，定义不同类型数据样式 */
 	private StyleSet styleSet;
-
+	
 	// -------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造，默认生成xls格式的Excel文件<br>
@@ -253,6 +253,17 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter resetRow() {
 		this.currentRow.set(0);
+		return this;
+	}
+	
+	/**
+	 * 切换sheet，如果指定的sheet不存在，创建之
+	 * @param sheetName sheet名
+	 * @return this
+	 * @since 4.0.8
+	 */
+	public ExcelWriter setOrCreateSheet(String sheetName) {
+		this.sheet = ExcelUtil.getOrCreateSheet(this.workbook, sheetName);
 		return this;
 	}
 
