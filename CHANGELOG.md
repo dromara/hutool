@@ -11,6 +11,7 @@
 * 【core】FileUtil.clean增加字符串重载（感谢@【帝都】宁静）
 * 【core】ArrayUtil增加insert方法（感谢@【帝都】宁静）
 * 【core】RandomUtil.randomDouble增加可选保留小数重载（感谢@【帝都】宁静）
+* 【core】增加RandomUtil.randomDay随机天（感谢@【帝都】宁静）
 
 ### Bug修复
 * 【json】修复JSONArray中addAll加入两次的bug（感谢@【天津】〓下页）
@@ -18,6 +19,7 @@
 * 【http】解决无法移除默认头信息的问题
 * 【core】修复Base64在decode时针对urlSafe乱码问题（issue#89@Github）
 * 【core】修复ReUtil.extractMulti(感谢@【杭州】徐承恩)
+* 【core】修复DESede类中算法错误问题（issue#93@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

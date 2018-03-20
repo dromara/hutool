@@ -26,6 +26,7 @@ import cn.hutool.core.convert.impl.CollectionConverter;
  * @author looly
  */
 public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object> {
+	private static final long serialVersionUID = 2664900568717612292L;
 
 	/** 默认初始大小 */
 	private static final int DEFAULT_CAPACITY = 10;

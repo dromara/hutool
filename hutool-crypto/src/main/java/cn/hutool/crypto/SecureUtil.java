@@ -505,6 +505,7 @@ public final class SecureUtil {
 	
 	/**
 	 * DESede加密（又名3DES、TripleDES），生成随机KEY。注意解密时必须使用相同 {@link DESede}对象或者使用相同KEY<br>
+	 * Java中默认实现为：DESede/ECB/PKCS5Padding<br>
 	 * 例：
 	 * <pre>
 	 * DESede加密：desede().encrypt(data)
@@ -520,6 +521,7 @@ public final class SecureUtil {
 	
 	/**
 	 * DESede加密（又名3DES、TripleDES）<br>
+	 * Java中默认实现为：DESede/ECB/PKCS5Padding<br>
 	 * 例：
 	 * <pre>
 	 * DESede加密：desede(key).encrypt(data)
