@@ -2,6 +2,9 @@ package cn.hutool.json;
 
 import java.util.Iterator;
 
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.XmlUtil;
+
 /**
  * 提供静态方法在XML和JSONObject之间转换
  * 
@@ -10,10 +13,10 @@ import java.util.Iterator;
 public class XML {
 
 	/** The Character '&amp;'. */
-	public static final Character AMP = '&';
+	public static final Character AMP = CharUtil.AMP;
 
 	/** The Character '''. */
-	public static final Character APOS = '\'';
+	public static final Character APOS = CharUtil.SINGLE_QUOTE;
 
 	/** The Character '!'. */
 	public static final Character BANG = '!';
@@ -31,68 +34,10 @@ public class XML {
 	public static final Character QUEST = '?';
 
 	/** The Character '"'. */
-	public static final Character QUOT = '"';
+	public static final Character QUOT = CharUtil.DOUBLE_QUOTES;
 
 	/** The Character '/'. */
-	public static final Character SLASH = '/';
-
-	/**
-	 * Replace special characters with XML escapes:
-	 * 
-	 * <pre>
-	 * &amp; (ampersand) is replaced by &amp;amp;
-	 * &lt; (less than) is replaced by &amp;lt;
-	 * &gt; (greater than) is replaced by &amp;gt;
-	 * &quot; (double quote) is replaced by &amp;quot;
-	 * </pre>
-	 * 
-	 * @param string The string to be escaped.
-	 * @return The escaped string.
-	 */
-	public static String escape(String string) {
-		StringBuilder sb = new StringBuilder(string.length());
-		for (int i = 0, length = string.length(); i < length; i++) {
-			char c = string.charAt(i);
-			switch (c) {
-				case '&':
-					sb.append("&amp;");
-					break;
-				case '<':
-					sb.append("&lt;");
-					break;
-				case '>':
-					sb.append("&gt;");
-					break;
-				case '"':
-					sb.append("&quot;");
-					break;
-				case '\'':
-					sb.append("&apos;");
-					break;
-				default:
-					sb.append(c);
-			}
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * Throw an exception if the string contains whitespace. Whitespace is not allowed in tagNames and attributes.
-	 * 
-	 * @param string A string.
-	 * @throws JSONException Thrown if the string contains whitespace or is empty.
-	 */
-	public static void noSpace(String string) throws JSONException {
-		int i, length = string.length();
-		if (length == 0) {
-			throw new JSONException("Empty string.");
-		}
-		for (i = 0; i < length; i += 1) {
-			if (Character.isWhitespace(string.charAt(i))) {
-				throw new JSONException("'" + string + "' contains a space character.");
-			}
-		}
-	}
+	public static final Character SLASH = CharUtil.SLASH;
 
 	/**
 	 * Scan the content following the named tag, attaching it to the context.
@@ -290,19 +235,19 @@ public class XML {
 	}
 
 	/**
-	 * 转换XML为JSONObject
+	 * 转换JSONObject为XML
 	 * Convert a JSONObject into a well-formed, element-normal XML string.
 	 * 
 	 * @param object A JSONObject.
 	 * @return A string.
 	 * @throws JSONException Thrown if there is an error parsing the string
 	 */
-	public static String toString(Object object) throws JSONException {
-		return toString(object, null);
+	public static String toXml(Object object) throws JSONException {
+		return toXml(object, null);
 	}
 
 	/**
-	 * 转换XML为JSONObject
+	 * 转换JSONObject为XML
 	 * Convert a JSONObject into a well-formed, element-normal XML string.
 	 * 
 	 * @param object A JSONObject.
@@ -310,7 +255,7 @@ public class XML {
 	 * @return A string.
 	 * @throws JSONException Thrown if there is an error parsing the string
 	 */
-	public static String toString(Object object, String tagName) throws JSONException {
+	public static String toXml(Object object, String tagName) throws JSONException {
 		StringBuilder sb = new StringBuilder();
 		JSONArray ja;
 		JSONObject jo;
@@ -350,11 +295,11 @@ public class XML {
 							if (i > 0) {
 								sb.append('\n');
 							}
-							sb.append(escape(val.toString()));
+							sb.append(XmlUtil.escape(val.toString()));
 							i++;
 						}
 					} else {
-						sb.append(escape(value.toString()));
+						sb.append(XmlUtil.escape(value.toString()));
 					}
 
 					// Emit an array of similar keys
@@ -366,12 +311,12 @@ public class XML {
 							sb.append('<');
 							sb.append(key);
 							sb.append('>');
-							sb.append(toString(val));
+							sb.append(toXml(val));
 							sb.append("</");
 							sb.append(key);
 							sb.append('>');
 						} else {
-							sb.append(toString(val, key));
+							sb.append(toXml(val, key));
 						}
 					}
 				} else if ("".equals(value)) {
@@ -382,7 +327,7 @@ public class XML {
 					// Emit a new tag <k>
 
 				} else {
-					sb.append(toString(value, key));
+					sb.append(toXml(value, key));
 				}
 			}
 			if (tagName != null) {
@@ -407,13 +352,13 @@ public class XML {
 					// XML does not have good support for arrays. If an array
 					// appears in a place where XML is lacking, synthesize an
 					// <array> element.
-					sb.append(toString(val, tagName == null ? "array" : tagName));
+					sb.append(toXml(val, tagName == null ? "array" : tagName));
 				}
 				return sb.toString();
 			}
 		}
 
-		string = (object == null) ? "null" : escape(object.toString());
+		string = (object == null) ? "null" : XmlUtil.escape(object.toString());
 		return (tagName == null) ? "\"" + string + "\"" : (string.length() == 0) ? "<" + tagName + "/>" : "<" + tagName + ">" + string + "</" + tagName + ">";
 
 	}

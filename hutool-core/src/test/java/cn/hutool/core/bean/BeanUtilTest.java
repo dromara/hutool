@@ -85,9 +85,12 @@ public class BeanUtilTest {
 		person.setSubName("sub名字");
 		
 		Map<String, Object> map = BeanUtil.beanToMap(person);
+		
 		Assert.assertEquals("测试A11", map.get("name"));
 		Assert.assertEquals(14, map.get("age"));
 		Assert.assertEquals("11213232", map.get("openid"));
+		//static属性应被忽略
+		Assert.assertFalse(map.containsKey("SUBNAME"));
 	}
 	
 	@Test
@@ -151,6 +154,9 @@ public class BeanUtilTest {
 	
 	//-----------------------------------------------------------------------------------------------------------------
 	public static class SubPerson extends Person{
+		
+		public static final String SUBNAME = "TEST";
+		
 		private String subName;
 		private Boolean isSlow;
 

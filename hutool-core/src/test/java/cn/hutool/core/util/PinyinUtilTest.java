@@ -12,6 +12,10 @@ public class PinyinUtilTest {
 		
 		firstLetter = PinyinUtil.getFirstLetter('我');
 		Assert.assertEquals('w', firstLetter);
+		
+//		firstLetter = PinyinUtil.getFirstLetter('怡');
+//		Console.log(firstLetter);
+//		Assert.assertEquals('y', firstLetter);
 	}
 	
 	@Test

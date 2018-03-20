@@ -29,6 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConverterRegistry;
@@ -1809,7 +1810,8 @@ public class CollUtil {
 	/**
 	 * 根据Bean的属性排序
 	 * 
-	 * @param collection Collection
+	 * @param <T> 元素类型
+	 * @param collection 集合，会被转换为List
 	 * @param property 属性名
 	 * @return 排序后的List
 	 * @since 4.0.6
@@ -1821,6 +1823,7 @@ public class CollUtil {
 	/**
 	 * 根据Bean的属性排序
 	 * 
+	 * @param <T> 元素类型
 	 * @param list List
 	 * @param property 属性名
 	 * @return 排序后的List
@@ -1828,6 +1831,28 @@ public class CollUtil {
 	 */
 	public static <T> List<T> sortByProperty(List<T> list, String property){
 		return sort(list, new PropertyComparator<>(property));
+	}
+	
+	/**
+	 * 根据汉字的拼音顺序排序
+	 * 
+	 * @param collection 集合，会被转换为List
+	 * @return 排序后的List
+	 * @since 4.0.8
+	 */
+	public static <T> List<String> sortByPinyin(Collection<String> collection){
+		return sort(collection, new PinyinComparator());
+	}
+	
+	/**
+	 * 根据汉字的拼音顺序排序
+	 * 
+	 * @param list List
+	 * @return 排序后的List
+	 * @since 4.0.8
+	 */
+	public static <T> List<String> sortByPinyin(List<String> list){
+		return sort(list, new PinyinComparator());
 	}
 
 	/**

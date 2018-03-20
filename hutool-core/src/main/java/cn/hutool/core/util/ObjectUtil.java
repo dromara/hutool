@@ -37,7 +37,8 @@ public class ObjectUtil {
 	 * @return 是否相等
 	 */
 	public static boolean equal(Object obj1, Object obj2) {
-		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
+//		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
+		return (obj1 == obj2) || (obj1 != null && obj1.equals(obj2));
 	}
 
 	/**

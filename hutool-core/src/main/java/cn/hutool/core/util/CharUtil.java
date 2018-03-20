@@ -27,6 +27,7 @@ public class CharUtil {
 	public static final char COLON = ':';
 	public static final char DOUBLE_QUOTES = '"';
 	public static final char SINGLE_QUOTE = '\'';
+	public static final char AMP = '&';
 
 	/**
 	 * 是否为ASCII字符，ASCII字符位于0~127之间
@@ -228,7 +229,25 @@ public class CharUtil {
 	public static boolean isChar(Object value) {
 		return value instanceof Character || value.getClass() == char.class;
 	}
-	
+
+	/**
+	 * 判断是否为emoji表情符<br>
+	 * 参考：http://blog.csdn.net/a445020593/article/details/56667654
+	 * 
+	 * @param c 字符
+	 * @return 是否为emoji
+	 * @since 4.0.8
+	 */
+	public static boolean isEmoji(char c) {
+		return (c == 0x0) || //
+				(c == 0x9) || //
+				(c == 0xA) || //
+				(c == 0xD) || //
+				((c >= 0x20) && (c <= 0xD7FF)) || //
+				((c >= 0xE000) && (c <= 0xFFFD)) || //
+				((c >= 0x10000) && (c <= 0x10FFFF));
+	}
+
 	/**
 	 * 比较两个字符是否相同
 	 * 

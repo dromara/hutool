@@ -117,7 +117,7 @@ public class URLUtil {
 		try {
 			return file.toURI().toURL();
 		} catch (MalformedURLException e) {
-			throw new UtilException("Error occured when get URL!", e);
+			throw new UtilException(e, "Error occured when get URL!");
 		}
 	}
 
@@ -135,7 +135,7 @@ public class URLUtil {
 				urls[i] = files[i].toURI().toURL();
 			}
 		} catch (MalformedURLException e) {
-			throw new UtilException("Error occured when get URL!", e);
+			throw new UtilException(e, "Error occured when get URL!");
 		}
 
 		return urls;

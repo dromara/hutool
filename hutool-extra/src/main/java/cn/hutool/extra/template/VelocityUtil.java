@@ -20,7 +20,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * Velocity模板引擎工具类<br>
@@ -167,7 +166,7 @@ public class VelocityUtil {
 			writer = FileUtil.getPrintWriter(destPath, Velocity.getProperty(Velocity.OUTPUT_ENCODING).toString(), false);
 			merge(template, context, writer);
 		} catch (IORuntimeException e) {
-			throw new UtilException(StrUtil.format("Write Velocity content to [{}] error!", destPath), e);
+			throw new UtilException(e, "Write Velocity content to [{}] error!", destPath);
 		} finally {
 			IoUtil.close(writer);
 		}
@@ -220,7 +219,7 @@ public class VelocityUtil {
 			writer = response.getWriter();
 			toWriter(templateFileName, context, writer);
 		} catch (Exception e) {
-			throw new UtilException(StrUtil.format("Write Velocity content template by [{}] to response error!", templateFileName), e);
+			throw new UtilException(e, "Write Velocity content template by [{}] to response error!", templateFileName);
 		} finally {
 			IoUtil.close(writer);
 		}

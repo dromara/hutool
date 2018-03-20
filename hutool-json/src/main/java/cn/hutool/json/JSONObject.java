@@ -37,6 +37,7 @@ import cn.hutool.core.util.TypeUtil;
  * @author looly
  */
 public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
+	private static final long serialVersionUID = -330220388580734346L;
 
 	/** 默认初始大小 */
 	private static final int DEFAULT_CAPACITY = 16;

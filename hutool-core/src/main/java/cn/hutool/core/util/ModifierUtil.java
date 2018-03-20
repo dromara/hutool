@@ -160,6 +160,39 @@ public class ModifierUtil {
 		return hasModifier(constructor, ModifierType.PUBLIC);
 	}
 	
+	/**
+	 * 是否是static字段
+	 * 
+	 * @param field 字段
+	 * @return 是否是static
+	 * @since 4.0.8
+	 */
+	public static boolean isStatic(Field field) {
+		return hasModifier(field, ModifierType.STATIC);
+	}
+
+	/**
+	 * 是否是static方法
+	 * 
+	 * @param method 方法
+	 * @return 是否是static
+	 * @since 4.0.8
+	 */
+	public static boolean isStatic(Method method) {
+		return hasModifier(method, ModifierType.STATIC);
+	}
+
+	/**
+	 * 是否是static类
+	 * 
+	 * @param clazz 类
+	 * @return 是否是static
+	 * @since 4.0.8
+	 */
+	public static boolean isStatic(Class<?> clazz) {
+		return hasModifier(clazz, ModifierType.STATIC);
+	}
+	
 	//-------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 多个修饰符做“与”操作，表示同时存在多个修饰符

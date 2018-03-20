@@ -8,7 +8,7 @@ import cn.hutool.core.util.ObjectUtil;
 
 /**
  * Bean属性排序器<br>
- * 参阅feilong-core中的PropertyComparator
+ * 支持读取Bean多层次下的属性
  * 
  * @author Looly
  *

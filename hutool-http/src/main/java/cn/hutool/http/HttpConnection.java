@@ -136,7 +136,7 @@ public class HttpConnection {
 			throw new HttpException("{} is not a url !", urlStr);
 		}
 
-		//去掉url中的空白符，防止空白符导致的异常
+		// 去掉url中的空白符，防止空白符导致的异常
 		urlStr = StrUtil.cleanBlank(urlStr);
 		this.url = URLUtil.url(urlStr);
 		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
@@ -181,8 +181,9 @@ public class HttpConnection {
 			this.conn.setUseCaches(false);
 		}
 
-		// default header
-		this.header(GlobalHeaders.INSTANCE.headers, true);
+		// default header，默认头信息在构建HttpRequest时加入，便于操作，此处删除
+		// this.header(GlobalHeaders.INSTANCE.headers, true);
+
 		// Cookie
 		setCookie(CookiePool.get(this.url.getHost()));
 
@@ -448,7 +449,7 @@ public class HttpConnection {
 	 */
 	public InputStream getInputStream() throws IOException {
 		storeCookie();
-		
+
 		if (null != this.conn) {
 			return this.conn.getInputStream();
 		}
@@ -463,7 +464,7 @@ public class HttpConnection {
 	 */
 	public InputStream getErrorStream() throws IOException {
 		storeCookie();
-		
+
 		if (null != this.conn) {
 			return this.conn.getErrorStream();
 		}
@@ -506,7 +507,7 @@ public class HttpConnection {
 	public String getCharsetName() {
 		return HttpUtil.getCharset(conn);
 	}
-	
+
 	/**
 	 * 获取字符集编码<br>
 	 * 从Http连接的头信息中获得字符集<br>
@@ -518,11 +519,11 @@ public class HttpConnection {
 	public Charset getCharset() {
 		Charset charset = null;
 		final String charsetName = getCharsetName();
-		if(StrUtil.isNotBlank(charsetName)) {
+		if (StrUtil.isNotBlank(charsetName)) {
 			try {
 				charset = Charset.forName(charsetName);
 			} catch (UnsupportedCharsetException e) {
-				//ignore
+				// ignore
 			}
 		}
 		return charset;

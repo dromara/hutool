@@ -1,5 +1,6 @@
 package cn.hutool.json;
 
+import java.io.Serializable;
 import java.io.Writer;
 
 import cn.hutool.core.bean.BeanPath;
@@ -10,7 +11,7 @@ import cn.hutool.core.bean.BeanPath;
  * @author Looly
  *
  */
-public interface JSON {
+public interface JSON extends Serializable{
 
 	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>

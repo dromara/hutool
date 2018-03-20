@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.lang.WeightRandom.WeightObj;
@@ -83,7 +86,7 @@ public class RandomUtil {
 	public static int randomInt(int limit) {
 		return getRandom().nextInt(limit);
 	}
-	
+
 	/**
 	 * 获得指定范围内的随机数
 	 * 
@@ -115,7 +118,7 @@ public class RandomUtil {
 	public static long randomLong(long limit) {
 		return getRandom().nextLong(limit);
 	}
-	
+
 	/**
 	 * 获得指定范围内的随机数
 	 * 
@@ -127,7 +130,21 @@ public class RandomUtil {
 	public static double randomDouble(double min, double max) {
 		return getRandom().nextDouble(min, max);
 	}
-	
+
+	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param min 最小数（包含）
+	 * @param max 最大数（不包含）
+	 * @param scale 保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 随机数
+	 * @since 4.0.8
+	 */
+	public static double randomDouble(double min, double max, int scale, RoundingMode roundingMode) {
+		return NumberUtil.round(randomDouble(min, max), scale, roundingMode).doubleValue();
+	}
+
 	/**
 	 * 获得随机数
 	 * 
@@ -137,7 +154,19 @@ public class RandomUtil {
 	public static double randomDouble() {
 		return getRandom().nextDouble();
 	}
-	
+
+	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param scale 保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 随机数
+	 * @since 4.0.8
+	 */
+	public static double randomDouble(int scale, RoundingMode roundingMode) {
+		return NumberUtil.round(randomDouble(), scale, roundingMode).doubleValue();
+	}
+
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
 	 * 
@@ -145,8 +174,21 @@ public class RandomUtil {
 	 * @return 随机数
 	 * @since 3.3.0
 	 */
-	public static double randomDouble(Double limit) {
+	public static double randomDouble(double limit) {
 		return getRandom().nextDouble(limit);
+	}
+
+	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param limit 限制随机数的范围，不包括这个数
+	 * @param scale 保留小数位数
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
+	 * @return 随机数
+	 * @since 4.0.8
+	 */
+	public static double randomDouble(double limit, int scale, RoundingMode roundingMode) {
+		return NumberUtil.round(randomDouble(limit), scale, roundingMode).doubleValue();
 	}
 
 	/**
@@ -183,7 +225,7 @@ public class RandomUtil {
 	public static <T> T randomEle(List<T> list, int limit) {
 		return list.get(randomInt(limit));
 	}
-	
+
 	/**
 	 * 随机获得数组中的元素
 	 * 
@@ -195,7 +237,7 @@ public class RandomUtil {
 	public static <T> T randomEle(T[] array) {
 		return randomEle(array, array.length);
 	}
-	
+
 	/**
 	 * 随机获得数组中的元素
 	 * 
@@ -322,24 +364,26 @@ public class RandomUtil {
 	public static char randomChar(String baseString) {
 		return baseString.charAt(getRandom().nextInt(baseString.length()));
 	}
-	
+
 	/**
 	 * 带有权重的随机生成器
+	 * 
 	 * @param weightObjs 带有权重的对象列表
 	 * @return {@link WeightRandom}
 	 * @since 4.0.3
 	 */
-	public static <T> WeightRandom<T> weightRandom(WeightObj<T>[] weightObjs){
+	public static <T> WeightRandom<T> weightRandom(WeightObj<T>[] weightObjs) {
 		return new WeightRandom<>(weightObjs);
 	}
-	
+
 	/**
 	 * 带有权重的随机生成器
+	 * 
 	 * @param weightObjs 带有权重的对象列表
 	 * @return {@link WeightRandom}
 	 * @since 4.0.3
 	 */
-	public static <T> WeightRandom<T> weightRandom(Iterable<WeightObj<T>> weightObjs){
+	public static <T> WeightRandom<T> weightRandom(Iterable<WeightObj<T>> weightObjs) {
 		return new WeightRandom<>(weightObjs);
 	}
 
@@ -359,5 +403,17 @@ public class RandomUtil {
 	 */
 	public static String simpleUUID() {
 		return randomUUID().replace("-", "");
+	}
+
+	/**
+	 * 以当天为基准，随机产生一个日期
+	 * 
+	 * @param min 偏移最小天，可以为负数表示过去的时间
+	 * @param max 偏移最大天，可以为负数表示过去的时间
+	 * @return 随机日期（随机天，其它时间不变）
+	 * @since 4.0.8
+	 */
+	public static DateTime randomDay(int min, int max) {
+		return DateUtil.offsetDay(DateUtil.date(), randomInt(min, max));
 	}
 }

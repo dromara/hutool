@@ -389,7 +389,7 @@ public class ClassUtil {
 		try {
 			resources = getClassLoader().getResources(packagePath);
 		} catch (IOException e) {
-			throw new UtilException(StrUtil.format("Loading classPath [{}] error!", packagePath), e);
+			throw new UtilException(e, "Loading classPath [{}] error!", packagePath);
 		}
 		Set<String> paths = new HashSet<String>();
 		while (resources.hasMoreElements()) {

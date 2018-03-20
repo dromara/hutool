@@ -164,4 +164,23 @@ public class SymmetricTest {
 
 		Assert.assertEquals(content, decryptStr);
 	}
+	
+	@Test
+	public void desdeTest2() {
+		String content = "test中文";
+		
+		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
+		
+		DESede des = new DESede(Mode.CBC, Padding.PKCS5Padding, key, "12345678".getBytes());
+		
+		byte[] encrypt = des.encrypt(content);
+		byte[] decrypt = des.decrypt(encrypt);
+		
+		Assert.assertEquals(content, StrUtil.utf8Str(decrypt));
+		
+		String encryptHex = des.encryptHex(content);
+		String decryptStr = des.decryptStr(encryptHex);
+		
+		Assert.assertEquals(content, decryptStr);
+	}
 }

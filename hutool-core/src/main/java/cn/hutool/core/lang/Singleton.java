@@ -13,7 +13,7 @@ import cn.hutool.core.util.ReflectUtil;
  *
  */
 public final class Singleton {
-	private static Map<Class<?>, Object> pool = new ConcurrentHashMap<Class<?>, Object>();
+	private static Map<Class<?>, Object> pool = new ConcurrentHashMap<>();
 	
 	private Singleton() {}
 	
