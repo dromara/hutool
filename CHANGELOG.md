@@ -5,6 +5,7 @@
 ## 4.0.9
 
 ### 新特性
+【core】SecureUtil增加signParamsSha1方法（感谢@【帝都】宁静）
 
 ### Bug修复
 【core】修复StrUtil.replace问题（感谢@【上海】piaohao）

@@ -16,4 +16,13 @@ public class RestTest {
 				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2"));
 		Console.log(request.execute().body());
 	}
+	
+	@Test
+	@Ignore
+	public void postTest2() {
+		HttpRequest request = HttpRequest.post("http://211.162.39.204:8181/jeesite-simple/a/open/bizGwbnService/test")
+				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2"));
+		Console.log(request.execute().body());
+	}
+	
 }
