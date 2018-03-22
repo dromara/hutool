@@ -14,6 +14,12 @@ import com.xiaoleilu.hutool.date.DateUtil;
  *
  */
 public class ConvertTest {
+	
+	@Test
+	public void toObjectTest() {
+		Object result = Convert.convert(Object.class, "aaaa");
+		Assert.assertEquals("aaaa", result);
+	}
 
 	@Test
 	public void toStrTest() {

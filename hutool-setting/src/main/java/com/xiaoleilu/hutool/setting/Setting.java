@@ -102,5 +102,15 @@ public class Setting extends BasicSetting {
 		setting.putAll(this.getMap(group));
 		return setting;
 	}
+	
+	@Override
+	public Setting set(String key, String group, Object value) {
+		return (Setting) super.set(key, group, value);
+	}
+	
+	@Override
+	public Setting set(String key, Object value) {
+		return (Setting) super.set(key, value);
+	}
 	/*--------------------------公有方法 end-------------------------------*/
 }

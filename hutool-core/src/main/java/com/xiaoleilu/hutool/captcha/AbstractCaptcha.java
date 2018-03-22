@@ -2,9 +2,12 @@ package com.xiaoleilu.hutool.captcha;
 
 import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 
+import com.xiaoleilu.hutool.codec.Base64;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.util.ImageUtil;
@@ -56,11 +59,23 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	@Override
 	public void createCode() {
-		this.code = RandomUtil.randomString(this.codeCount);
+		generateCode();
 		createImage(this.code);
 	}
+	
+	/**
+	 * 生成验证码字符串
+	 * @since 3.3.0
+	 */
+	protected void generateCode() {
+		this.code = RandomUtil.randomString(this.codeCount);
+	}
 
-	public abstract void createImage(String code);
+	/**
+	 * 根据生成的code创建验证码图片
+	 * @param code 验证码
+	 */
+	protected abstract void createImage(String code);
 
 	@Override
 	public String getCode() {
@@ -82,7 +97,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @throws IORuntimeException IO异常
 	 */
 	public void write(String path) throws IORuntimeException {
-		this.write(FileUtil.getOutputStream(path));
+		this.write(FileUtil.touch(path));
 	}
 
 	/**
@@ -92,7 +107,11 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @throws IORuntimeException IO异常
 	 */
 	public void write(File file) throws IORuntimeException {
-		this.write(FileUtil.getOutputStream(file));
+		try (OutputStream out = FileUtil.getOutputStream(file)) {
+			this.write(out);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	@Override
@@ -110,6 +129,18 @@ public abstract class AbstractCaptcha implements ICaptcha {
 			createCode();
 		}
 		return image;
+	}
+
+	/**
+	 * 获得图片的Base64形式
+	 * 
+	 * @return 图片的Base64
+	 * @since 3.3.0
+	 */
+	public String getImageBase64() {
+		final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		write(byteArrayOutputStream);
+		return Base64.encode(byteArrayOutputStream.toByteArray());
 	}
 
 	/**

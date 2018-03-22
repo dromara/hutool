@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.lang;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.lang.Console;
@@ -10,6 +11,7 @@ import com.xiaoleilu.hutool.lang.Console;
  *
  */
 public class ConsoleTest {
+	
 	@Test
 	public void logTest(){
 		Console.log();
@@ -21,6 +23,14 @@ public class ConsoleTest {
 	}
 	
 	@Test
+	public void printTest(){
+		String[] a = {"abc", "bcd", "def"};
+		Console.print(a);
+		
+		Console.log("This is Console print for {}.", "test");
+	}
+	
+	@Test
 	public void errorTest(){
 		Console.error();
 		
@@ -28,5 +38,13 @@ public class ConsoleTest {
 		Console.error(a);
 		
 		Console.error("This is Console error for {}.", "test");
+	}
+	
+	@Test
+	@Ignore
+	public void inputTest() {
+		Console.log("Please input something: ");
+		String input = Console.input();
+		Console.log(input);
 	}
 }

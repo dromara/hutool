@@ -1,10 +1,16 @@
 package com.xiaoleilu.hutool.db.test;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.db.Entity;
-import com.xiaoleilu.hutool.lang.Console;
 
+/**
+ * Entity测试
+ * 
+ * @author looly
+ *
+ */
 public class EntityTest {
 	
 	@Test
@@ -14,7 +20,17 @@ public class EntityTest {
 		user.setName("test");
 		
 		Entity entity = Entity.create("testTable").parseBean(user);
-		Console.log(entity);
+		Assert.assertEquals(Integer.valueOf(1), entity.getInt("id"));
+		Assert.assertEquals("test", entity.getStr("name"));
+	}
+	
+	@Test
+	public void entityToBeanIgnoreCaseTest() {
+		Entity entity = Entity.create().set("ID", 2).set("NAME", "testName");
+		User user = entity.toBeanIgnoreCase(User.class);
+		
+		Assert.assertEquals(2, user.getId());
+		Assert.assertEquals("testName", user.getName());
 	}
 	
 	public static class User{

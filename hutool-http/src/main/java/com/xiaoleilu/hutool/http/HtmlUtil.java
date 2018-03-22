@@ -37,7 +37,7 @@ public class HtmlUtil {
 	 * @since 3.2.3
 	 */
 	public static String escape(String input) {
-		if(StrUtil.isBlank(input)) {
+		if (StrUtil.isBlank(input)) {
 			return input;
 		}
 		final StringBuilder filtered = StrUtil.builder(input.length());
@@ -74,8 +74,13 @@ public class HtmlUtil {
 		if (StrUtil.isBlank(htmlStr)) {
 			return htmlStr;
 		}
-		return htmlStr.replace("&#39;", "'").replace(StrUtil.HTML_LT, "<").replace(StrUtil.HTML_GT, ">").replace(StrUtil.HTML_QUOTE, "\"").replace(StrUtil.HTML_AMP, "&").replace(StrUtil.HTML_NBSP,
-				" ");
+		return htmlStr.replace(StrUtil.HTML_APOS, "'")//
+				.replace(StrUtil.HTML_LT, "<")//
+				.replace(StrUtil.HTML_GT, ">")//
+				.replace(StrUtil.HTML_QUOTE, "\"")//
+				.replace(StrUtil.HTML_AMP, "&")//
+				.replace(StrUtil.HTML_NBSP, " "//
+		);
 	}
 
 	// ---------------------------------------------------------------- encode text

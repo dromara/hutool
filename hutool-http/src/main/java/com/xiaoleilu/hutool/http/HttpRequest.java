@@ -10,27 +10,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
+import com.xiaoleilu.hutool.codec.Base64;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.json.JSON;
 import com.xiaoleilu.hutool.lang.Assert;
-import com.xiaoleilu.hutool.lang.Base64;
 import com.xiaoleilu.hutool.log.StaticLog;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.ArrayUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
-import com.xiaoleilu.hutool.util.MapUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.util.ThreadUtil;
 
 /**
  * http请求类<br>
@@ -67,10 +64,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HttpConnection httpConnection;
 	/** 是否禁用缓存 */
 	private boolean isDisableCache;
-	/** 是否允许重定向 */
-	private Boolean isFollowRedirects;
-	/** 重定向次数 */
+	/** 重定向次数计数器，内部使用 */
 	private int redirectCount;
+	/** 最大重定向次数 */
+	private int maxRedirectCount;
 	/** 代理 */
 	private Proxy proxy;
 	
@@ -389,7 +386,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return 表单Map
 	 */
 	public Map<String, Object> form() {
-		return form;
+		return this.form;
+	}
+	
+	/**
+	 * 获取文件表单数据
+	 * 
+	 * @return 文件表单Map
+	 * @since 3.3.0
+	 */
+	public Map<String, File> fileForm() {
+		return this.fileForm;
 	}
 	// ---------------------------------------------------------------- Form end
 
@@ -401,22 +408,36 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(String body) {
-		this.body = body;
-		this.form = null; // 当使用body时，废弃form的使用
-		contentLength((null != body ? body.length() : 0));
-		return this;
+		return this.body(body, null);
 	}
 	
 	/**
-	 * 设置内容主体
+	 * 设置内容主体<br>
+	 * 请求体body参数支持两种类型：
+	 * <pre>
+	 * 1. 标准参数，例如 a=1&amp;b=2 这种格式
+	 * 2. Rest模式，此时body需要传入一个JSON或者XML字符串，Hutool会自动绑定其对应的Content-Type
+	 * </pre>
 	 * 
 	 * @param body 请求体
 	 * @param contentType 请求体类型
 	 * @return this
 	 */
 	public HttpRequest body(String body, String contentType) {
-		this.body(body);
-		this.contentType(contentType);
+		this.body = body;
+		this.form = null; // 当使用body时，废弃form的使用
+		contentLength((null != body ? body.length() : 0));
+		
+		if(null != contentType) {
+			//Content-Type自定义设置
+			this.contentType(contentType);
+		} else if(null == this.header(Header.CONTENT_TYPE)) {
+			//在用户未自定义的情况下自动根据内容判断
+			contentType = HttpUtil.getContentTypeByRequestBody(body);
+			if(null != contentType) {
+				this.contentType(contentType);
+			}
+		}
 		return this;
 	}
 	
@@ -474,12 +495,30 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
-	 * 设置是否打开重定向
+	 * 设置是否打开重定向，如果打开默认重定向次数为2<br>
+	 * 此方法效果与{@link #setMaxRedirectCount(int)} 一致
+	 * 
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
 	public HttpRequest setFollowRedirects(Boolean isFollowRedirects) {
-		this.isFollowRedirects = isFollowRedirects;
+		return setMaxRedirectCount(2);
+	}
+	
+	/**
+	 * 设置最大重定向次数<br>
+	 * 如果次数小于1则表示不重定向，大于等于1表示打开重定向
+	 * 
+	 * @param maxRedirectCount 最大重定向次数
+	 * @return this
+	 * @since 3.3.0
+	 */
+	public HttpRequest setMaxRedirectCount(int maxRedirectCount) {
+		if(maxRedirectCount > 0) {
+			this.maxRedirectCount = maxRedirectCount;
+		}else{
+			this.maxRedirectCount = 0;
+		}
 		return this;
 	}
 	
@@ -546,7 +585,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 	
 	/**
-	 * 异步请求
+	 * 异步请求<br>
+	 * 异步请求后获取的{@link HttpResponse} 为异步模式，此时此对象持有Http链接（http链接并不会关闭），直调用获取内容方法为止
+	 * 
 	 * @return 异步对象，使用get方法获取HttpResponse对象
 	 */
 	public HttpResponse executeAsync(){
@@ -578,21 +619,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return httpResponse;
 	}
 	
-	/**
-	 * 异步请求
-	 * @return 异步对象，使用get方法获取HttpResponse对象
-	 * @deprecated 请使用{@link #executeAsync()}
-	 */
-	@Deprecated
-	public Future<HttpResponse> asyncExecute(){
-		return ThreadUtil.execAsync(new Callable<HttpResponse>(){
-			@Override
-			public HttpResponse call() throws Exception {
-				return execute();
-			}
-		});
-	}
-
 	/**
 	 * 简单验证
 	 * 
@@ -629,10 +655,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			this.httpConnection.disableCache();
 		}
 		
-		if(null != isFollowRedirects){
-			//如果自定义了转发，则设置，否则使用默认
-			this.httpConnection.setInstanceFollowRedirects(isFollowRedirects);
-		}
+		//定义转发
+		this.httpConnection.setInstanceFollowRedirects(maxRedirectCount > 0 ? true : false);
 	}
 	
 	/**
@@ -654,6 +678,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return {@link HttpResponse}，无转发返回 <code>null</code>
 	 */
 	private HttpResponse sendRedirectIfPosible(){
+		if(this.maxRedirectCount < 1) {
+			//不重定向
+			return null;
+		}
+		
 		//手动实现重定向
 		if(this.httpConnection.getHttpURLConnection().getInstanceFollowRedirects()){
 			int responseCode;
@@ -665,7 +694,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			if(responseCode != HttpURLConnection.HTTP_OK){
 				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER){
 					this.url = httpConnection.header(Header.LOCATION);
-					if(redirectCount < 2){
+					if(redirectCount < this.maxRedirectCount){
 						redirectCount++;
 						return execute();
 					}else{

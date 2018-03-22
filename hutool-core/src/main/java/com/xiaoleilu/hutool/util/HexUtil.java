@@ -238,6 +238,30 @@ public class HexUtil {
 	public static Color decodeColor(String hexColor) {
 		return Color.decode(hexColor);
 	}
+	
+	/**
+	 * 将指定int值转换为Unicode字符串形式，常用于特殊字符（例如汉字）转Unicode形式<br>
+	 * 转换的字符串如果u后不足4位，则前面用0填充，例如：
+	 * <pre>
+	 * '我' =》\u4f60
+	 * </pre>
+	 * 
+	 * @param value int值，也可以是char
+	 * @return Unicode表现形式
+	 */
+	public static String toUnicodeHex(int value) {
+		final StringBuilder builder = new StringBuilder(7);
+		
+		builder.append("\\u");
+		String hex = Integer.toHexString(value);
+		int len = hex.length();
+		if(len < 4) {
+			builder.append("0000", 0, 4 - len);//不足4位补0
+		}
+		builder.append(hex);
+		
+		return builder.toString();
+	}
 
 	// ---------------------------------------------------------------------------------------- Private method start
 	/**

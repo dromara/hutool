@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.xiaoleilu.hutool.lang.Matcher;
 import com.xiaoleilu.hutool.text.StrFormatter;
 import com.xiaoleilu.hutool.text.StrSpliter;
 import com.xiaoleilu.hutool.text.TextSimilarity;
@@ -60,8 +61,9 @@ public class StrUtil {
 	public static final String COLON = ":";
 
 	public static final String HTML_NBSP = "&nbsp;";
-	public static final String HTML_AMP = "&amp";
+	public static final String HTML_AMP = "&amp;";
 	public static final String HTML_QUOTE = "&quot;";
+	public static final String HTML_APOS = "&apos;";
 	public static final String HTML_LT = "&lt;";
 	public static final String HTML_GT = "&gt;";
 
@@ -92,6 +94,25 @@ public class StrUtil {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * 如果对象是字符串是否为空白，空白的定义如下： <br>
+	 * 1、为null <br>
+	 * 2、为不可见字符（如空格）<br>
+	 * 3、""<br>
+	 * 
+	 * @param obj 对象
+	 * @return 如果为字符串是否为空串
+	 * @since 3.3.0
+	 */
+	public static boolean isBlankIfStr(Object obj) {
+		if(null == obj) {
+			return true;
+		} else if(obj instanceof CharSequence) {
+			return isBlank((CharSequence)obj);
+		}
+		return false;
 	}
 
 	/**
@@ -147,7 +168,8 @@ public class StrUtil {
 
 	// ------------------------------------------------------------------------ Empty
 	/**
-	 * 字符串是否为空，空的定义如下 1、为null <br>
+	 * 字符串是否为空，空的定义如下:<br>
+	 * 1、为null <br>
 	 * 2、为""<br>
 	 * 
 	 * @param str 被检测的字符串
@@ -155,6 +177,24 @@ public class StrUtil {
 	 */
 	public static boolean isEmpty(CharSequence str) {
 		return str == null || str.length() == 0;
+	}
+	
+	/**
+	 * 如果对象是字符串是否为空串空的定义如下:<br>
+	 * 1、为null <br>
+	 * 2、为""<br>
+	 * 
+	 * @param obj 对象
+	 * @return 如果为字符串是否为空串
+	 * @since 3.3.0
+	 */
+	public static boolean isEmptyIfStr(Object obj) {
+		if(null == obj) {
+			return true;
+		} else if(obj instanceof CharSequence) {
+			return 0 == ((CharSequence)obj).length();
+		}
+		return false;
 	}
 
 	/**
@@ -1289,22 +1329,22 @@ public class StrUtil {
 	}
 
 	/**
-	 * 切割前部分
+	 * 切割指定位置之前部分的字符串
 	 * 
 	 * @param string 字符串
 	 * @param toIndex 切割到的位置（不包括）
-	 * @return 切割后的字符串
+	 * @return 切割后的剩余的前半部分字符串
 	 */
 	public static String subPre(CharSequence string, int toIndex) {
 		return sub(string, 0, toIndex);
 	}
 
 	/**
-	 * 切割后部分
+	 * 切割指定位置之后部分的字符串
 	 * 
 	 * @param string 字符串
 	 * @param fromIndex 切割开始的位置（包括）
-	 * @return 切割后的字符串
+	 * @return 切割后后剩余的后半部分字符串
 	 */
 	public static String subSuf(CharSequence string, int fromIndex) {
 		if (isEmpty(string)) {
@@ -1345,7 +1385,7 @@ public class StrUtil {
 	 * </pre>
 	 * 
 	 * @param string 被查找的字符串
-	 * @param separator 分隔字符串
+	 * @param separator 分隔字符串（不包括）
 	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
 	 * @return 切割后的字符串
 	 * @since 3.1.1
@@ -1386,7 +1426,7 @@ public class StrUtil {
 	 * </pre>
 	 *
 	 * @param string 被查找的字符串
-	 * @param separator 分隔字符串
+	 * @param separator 分隔字符串（不包括）
 	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
 	 * @return 切割后的字符串
 	 * @since 3.1.1
@@ -1617,8 +1657,13 @@ public class StrUtil {
 	 * @since 3.2.0
 	 */
 	public static boolean equals(CharSequence str1, CharSequence str2, boolean ignoreCase) {
-		if (str1 == null) {
+		if (null == str1) {
+			//只有两个都为null才判断相等
 			return str2 == null;
+		}
+		if(null == str2) {
+			//字符串2空，字符串1非空，直接false
+			return false;
 		}
 
 		if (ignoreCase) {
@@ -1952,7 +1997,7 @@ public class StrUtil {
 
 	/**
 	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。<br>
-	 * 例如：hello_world=》HelloWorld
+	 * 例如：hello_world=》helloWorld
 	 *
 	 * @param name 转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串
@@ -2801,6 +2846,25 @@ public class StrUtil {
 
 		return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
 	}
+	
+	/**
+	 * 字符串的每一个字符是否都与定义的匹配器匹配
+	 * @param value 字符串
+	 * @param matcher 匹配器
+	 * @return 是否全部匹配
+	 * @since 3.2.3
+	 */
+	public static boolean isAllCharMatch(CharSequence value, Matcher<Character> matcher) {
+		if (StrUtil.isBlank(value)) {
+			return false;
+		}
+		int len = value.length();
+		boolean isAllMatch = true;
+		for (int i = 0; i < len; i++) {
+			isAllMatch &= matcher.match(value.charAt(i));
+		}
+		return isAllMatch;
+	}
 
 	/**
 	 * 替换指定字符串的指定区间内字符为固定字符
@@ -2870,6 +2934,9 @@ public class StrUtil {
 		}
 
 		final Set<Character> set = new HashSet<>(chars.length);
+		for (char c : chars) {
+			set.add(c);
+		}
 		int strLen = str.length();
 		final StringBuilder builder = builder();
 		char c;
@@ -2901,5 +2968,24 @@ public class StrUtil {
 	 */
 	public static String similar(String str1, String str2, int scale) {
 		return TextSimilarity.similar(str1, str2, scale);
+	}
+	
+	/**
+	 * 字符串指定位置的字符是否与给定字符相同<br>
+	 * 如果字符串为null，返回false<br>
+	 * 如果给定的位置大于字符串长度，返回false<br>
+	 * 如果给定的位置小于0，返回false
+	 * 
+	 * @param str 字符串
+	 * @param position 位置
+	 * @param c 需要对比的字符
+	 * @return 字符串指定位置的字符是否与给定字符相同
+	 * @since 3.3.1
+	 */
+	public static boolean equalsCharAt(CharSequence str, int position, char c) {
+		if(null == str || position < 0) {
+			return false;
+		}
+		return str.length() > position && c == str.charAt(position);
 	}
 }

@@ -36,10 +36,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.lang.Assert;
 import com.xiaoleilu.hutool.poi.excel.editors.TrimEditor;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -129,18 +129,17 @@ public class InternalExcelUtil {
 	 * 
 	 * @param cell 单元格
 	 * @param value 值
-	 * @param cellStyle 单元格样式
+	 * @param styleSet 单元格样式集，包括日期等样式
 	 */
-	public static void setCellValue(Cell cell, Object value, CellStyle cellStyle) {
+	public static void setCellValue(Cell cell, Object value, StyleSet styleSet) {
+		if (null != styleSet.cellStyle) {
+			cell.setCellStyle(styleSet.cellStyle);
+		}
 		if (null == value) {
 			cell.setCellValue(StrUtil.EMPTY);
 		} else if (value instanceof Date) {
-			short format = cellStyle.getDataFormat();
-			if(0 == format) {
-				final CellStyle styleForDate = cloneCellStyle(cell, cellStyle);
-				//22表示：m/d/yy h:mm
-				styleForDate.setDataFormat((short)22);
-				cell.setCellStyle(styleForDate);
+			if (null != styleSet && null != styleSet.cellStyleForDate) {
+				cell.setCellStyle(styleSet.cellStyleForDate);
 			}
 			cell.setCellValue((Date) value);
 		} else if (value instanceof Calendar) {
@@ -150,34 +149,39 @@ public class InternalExcelUtil {
 		} else if (value instanceof RichTextString) {
 			cell.setCellValue((RichTextString) value);
 		} else if (value instanceof Number) {
-			if(value instanceof Double || value instanceof Float) {
-				//Double默认保留两位小数
-				final short format = cellStyle.getDataFormat();
-				if(0 == format) {
-					final CellStyle styleForDouble = cloneCellStyle(cell, cellStyle);
-					//2表示：0.00
-					styleForDouble.setDataFormat((short)2);
-					cell.setCellStyle(styleForDouble);
-				}
+			if ((value instanceof Double || value instanceof Float) && null != styleSet && null != styleSet.cellStyleForNumber) {
+				cell.setCellStyle(styleSet.cellStyleForNumber);
 			}
 			cell.setCellValue(((Number) value).doubleValue());
 		} else {
 			cell.setCellValue(value.toString());
 		}
 	}
-	
+
 	/**
 	 * 克隆新的{@link CellStyle}
+	 * 
 	 * @param cell 单元格
 	 * @param cellStyle 被复制的样式
 	 * @return {@link CellStyle}
 	 */
 	public static CellStyle cloneCellStyle(Cell cell, CellStyle cellStyle) {
-		final CellStyle newCellStyle = cell.getSheet().getWorkbook().createCellStyle();
+		return cloneCellStyle(cell.getSheet().getWorkbook(), cellStyle);
+	}
+
+	/**
+	 * 克隆新的{@link CellStyle}
+	 * 
+	 * @param workbook 工作簿
+	 * @param cellStyle 被复制的样式
+	 * @return {@link CellStyle}
+	 */
+	public static CellStyle cloneCellStyle(Workbook workbook, CellStyle cellStyle) {
+		final CellStyle newCellStyle = workbook.createCellStyle();
 		newCellStyle.cloneStyleFrom(cellStyle);
 		return newCellStyle;
 	}
-	
+
 	/**
 	 * 读取一行
 	 * 
@@ -186,11 +190,22 @@ public class InternalExcelUtil {
 	 * @return 单元格值列表
 	 */
 	public static List<Object> readRow(Row row, CellEditor cellEditor) {
-		final List<Object> cellValues = new ArrayList<>();
-		
-		short length = row.getLastCellNum();
+		if(null == row) {
+			return null;
+		}
+		final short length = row.getLastCellNum();
+		final List<Object> cellValues = new ArrayList<>((int) length);
+		Object cellValue;
+		boolean isAllNull = true;
 		for (short i = 0; i < length; i++) {
-			cellValues.add(InternalExcelUtil.getCellValue(row.getCell(i), cellEditor));
+			cellValue = InternalExcelUtil.getCellValue(row.getCell(i), cellEditor);
+			isAllNull &= StrUtil.isEmptyIfStr(cellValue);
+			cellValues.add(cellValue);
+		}
+
+		if (isAllNull) {
+			// 如果每个元素都为空，则定义为空行
+			return new ArrayList<>(0);
 		}
 		return cellValues;
 	}
@@ -200,17 +215,14 @@ public class InternalExcelUtil {
 	 * 
 	 * @param row 行
 	 * @param rowData 一行的数据
-	 * @param cellStyle 单元格样式
+	 * @param styleSet 单元格样式集，包括日期等样式
 	 */
-	public static void writeRow(Row row, Iterable<?> rowData, CellStyle cellStyle) {
+	public static void writeRow(Row row, Iterable<?> rowData, StyleSet styleSet) {
 		int i = 0;
 		Cell cell;
 		for (Object value : rowData) {
 			cell = row.createCell(i);
-			if (null != cellStyle) {
-				cell.setCellStyle(cellStyle);
-			}
-			setCellValue(cell, value, cellStyle);
+			setCellValue(cell, value, styleSet);
 			i++;
 		}
 	}

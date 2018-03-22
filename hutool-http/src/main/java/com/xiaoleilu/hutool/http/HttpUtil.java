@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -20,20 +19,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.http.ssl.SSLSocketFactoryBuilder;
-import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 import com.xiaoleilu.hutool.io.FastByteArrayOutputStream;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.io.IORuntimeException;
 import com.xiaoleilu.hutool.io.IoUtil;
 import com.xiaoleilu.hutool.io.StreamProgress;
-import com.xiaoleilu.hutool.log.StaticLog;
 import com.xiaoleilu.hutool.util.ArrayUtil;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
@@ -166,7 +160,7 @@ public class HttpUtil {
 	public static HttpRequest createRequest(Method method, String url) {
 		return new HttpRequest(url).method(method);
 	}
-	
+
 	/**
 	 * 创建Http GET请求对象
 	 * 
@@ -177,7 +171,7 @@ public class HttpUtil {
 	public static HttpRequest createGet(String url) {
 		return HttpRequest.get(url);
 	}
-	
+
 	/**
 	 * 创建Http POST请求对象
 	 * 
@@ -234,6 +228,19 @@ public class HttpUtil {
 	}
 
 	/**
+	 * 发送get请求
+	 * 
+	 * @param urlString 网址
+	 * @param paramMap post表单数据
+	 * @param timeout 超时时长，-1表示默认超时，单位毫秒
+	 * @return 返回数据
+	 * @since 3.3.0
+	 */
+	public static String get(String urlString, Map<String, Object> paramMap, int timeout) {
+		return HttpRequest.get(urlString).form(paramMap).timeout(timeout).execute().body();
+	}
+
+	/**
 	 * 发送post请求
 	 * 
 	 * @param urlString 网址
@@ -256,10 +263,11 @@ public class HttpUtil {
 	public static String post(String urlString, Map<String, Object> paramMap, int timeout) {
 		return HttpRequest.post(urlString).form(paramMap).timeout(timeout).execute().body();
 	}
-	
+
 	/**
 	 * 发送post请求<br>
 	 * 请求体body参数支持两种类型：
+	 * 
 	 * <pre>
 	 * 1. 标准参数，例如 a=1&amp;b=2 这种格式
 	 * 2. Rest模式，此时body需要传入一个JSON或者XML字符串，Hutool会自动绑定其对应的Content-Type
@@ -276,6 +284,7 @@ public class HttpUtil {
 	/**
 	 * 发送post请求<br>
 	 * 请求体body参数支持两种类型：
+	 * 
 	 * <pre>
 	 * 1. 标准参数，例如 a=1&amp;b=2 这种格式
 	 * 2. Rest模式，此时body需要传入一个JSON或者XML字符串，Hutool会自动绑定其对应的Content-Type
@@ -288,15 +297,9 @@ public class HttpUtil {
 	 * @since 3.2.0
 	 */
 	public static String post(String urlString, String body, int timeout) {
-		final HttpRequest request = HttpRequest.post(urlString).body(body);
-		
-		final String contentType = getContentTypeByRequestBody(body);
-		if(null != contentType) {
-			request.contentType(contentType);
-		}
-		return request.execute().body();
+		return HttpRequest.post(urlString).timeout(timeout).body(body).execute().body();
 	}
-	
+
 	// ---------------------------------------------------------------------------------------- download
 	/**
 	 * 下载远程文本
@@ -377,7 +380,6 @@ public class HttpUtil {
 		}
 		if (destFile.isDirectory()) {
 			String fileName = StrUtil.subSuf(url, url.lastIndexOf('/') + 1);
-			StaticLog.debug("FileName: {}", fileName);
 			if (StrUtil.isBlank(fileName)) {
 				fileName = HttpUtil.encode(url, CharsetUtil.CHARSET_UTF_8);
 			}
@@ -422,26 +424,7 @@ public class HttpUtil {
 			throw new NullPointerException("[out] is null!");
 		}
 
-		InputStream in = null;
-		URLConnection conn;
-		try {
-			conn = new URL(url).openConnection();
-			if (isHttps(url)) {
-				HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
-				// 验证域
-				httpsConn.setHostnameVerifier(new TrustAnyHostnameVerifier());
-				httpsConn.setSSLSocketFactory(SSLSocketFactoryBuilder.create().build());
-			}
-			in = conn.getInputStream();
-			return IoUtil.copyByNIO(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
-		} catch (Exception e) {
-			throw new HttpException(e);
-		} finally {
-			IoUtil.close(in);
-			if (isCloseOut) {
-				IoUtil.close(out);
-			}
-		}
+		return HttpRequest.get(url).executeAsync().writeBody(out, isCloseOut, streamProgress);
 	}
 
 	/**
@@ -714,9 +697,10 @@ public class HttpUtil {
 	public static String getMimeType(String filePath) {
 		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
 	}
-	
+
 	/**
 	 * 从请求参数的body中判断请求的Content-Type类型，支持的类型有：
+	 * 
 	 * <pre>
 	 * 1. application/json
 	 * 1. application/xml
@@ -728,16 +712,16 @@ public class HttpUtil {
 	 */
 	public static String getContentTypeByRequestBody(String body) {
 		String contentType = null;
-		if(StrUtil.isNotBlank(body)) {
+		if (StrUtil.isNotBlank(body)) {
 			char firstChar = body.charAt(0);
 			switch (firstChar) {
 			case '{':
 			case '[':
-				//JSON请求体
+				// JSON请求体
 				contentType = "application/json";
 				break;
 			case '<':
-				//XML请求体
+				// XML请求体
 				contentType = "application/xml";
 				break;
 

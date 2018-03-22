@@ -25,7 +25,7 @@ import com.xiaoleilu.hutool.http.ssl.TrustAnyHostnameVerifier;
 import com.xiaoleilu.hutool.lang.Validator;
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.MapUtil;
+import com.xiaoleilu.hutool.map.MapUtil;
 import com.xiaoleilu.hutool.util.ObjectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import com.xiaoleilu.hutool.util.URLUtil;
@@ -136,6 +136,8 @@ public class HttpConnection {
 			throw new HttpException("{} is not a url !", urlStr);
 		}
 
+		//去掉url中的空白符，防止空白符导致的异常
+		urlStr = StrUtil.cleanBlank(urlStr);
 		this.url = URLUtil.url(urlStr);
 		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
 		this.proxy = proxy;

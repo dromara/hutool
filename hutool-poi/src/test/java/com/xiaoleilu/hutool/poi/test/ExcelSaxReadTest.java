@@ -19,6 +19,11 @@ import com.xiaoleilu.hutool.poi.excel.sax.handler.RowHandler;
 public class ExcelSaxReadTest {
 	
 	@Test
+	public void readBySaxTest() {
+		ExcelUtil.readBySax("blankAndDateTest.xlsx", 0, createRowHandler());
+	}
+	
+	@Test
 	public void excel07Test() {
 		Excel07SaxReader reader = new Excel07SaxReader(createRowHandler());
 		reader.read("aaa.xlsx", 0);
@@ -41,7 +46,10 @@ public class ExcelSaxReadTest {
 			@Override
 			public void handle(int sheetIndex, int rowIndex, List<Object> rowlist) {
 //				Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
-				Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
+				if(5 != rowIndex && 6 != rowIndex) {
+					//测试样例中除第五行、第六行都为非空行
+					Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
+				}
 			}
 		};
 	}

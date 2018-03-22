@@ -106,9 +106,15 @@ public class DateUtilTest {
 		//相差月
 		long betweenMonth = DateUtil.betweenMonth(date1, date2, false);
 		Assert.assertEquals(1, betweenMonth);//相差一个月
+		//反向
+		betweenMonth = DateUtil.betweenMonth(date2, date1, false);
+		Assert.assertEquals(1, betweenMonth);//相差一个月
 		
 		//相差天
 		long betweenDay = DateUtil.between(date1, date2, DateUnit.DAY);
+		Assert.assertEquals(31, betweenDay);//相差一个月，31天
+		//反向
+		betweenDay = DateUtil.between(date2, date1, DateUnit.DAY);
 		Assert.assertEquals(31, betweenDay);//相差一个月，31天
 		
 		//相差毫秒
@@ -251,5 +257,11 @@ public class DateUtilTest {
 		DateTime dt1= DateUtil.parse(dateStr1);
 		DateTime dt2= DateUtil.parse(dateStr2);
 		Assert.assertEquals(dt1, dt2);
+	}
+	
+	@Test
+	public void endOfWeekTest() {
+		DateTime endOfWeek = DateUtil.endOfWeek(DateUtil.date());
+		Console.log(endOfWeek);
 	}
 }

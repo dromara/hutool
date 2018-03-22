@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.exceptions.UtilException;
 import com.xiaoleilu.hutool.lang.Editor;
 import com.xiaoleilu.hutool.lang.Filter;
@@ -291,6 +292,19 @@ public class ArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T[] newArray(Class<?> componentType, int newSize) {
 		return (T[]) Array.newInstance(componentType, newSize);
+	}
+	
+	/**
+	 * 新建一个空数组
+	 * 
+	 * @param <T> 数组元素类型
+	 * @param newSize 大小
+	 * @return 空数组
+	 * @since 3.3.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] newArray(int newSize) {
+		return (T[])new Object[newSize];
 	}
 	
 	/**

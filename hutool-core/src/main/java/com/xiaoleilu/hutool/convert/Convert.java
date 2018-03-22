@@ -1,5 +1,6 @@
 package com.xiaoleilu.hutool.convert;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -475,7 +476,7 @@ public final class Convert {
 	 * @param value 值
 	 * @return 转换后的值
 	 */
-	public static <T> T convert(Class<T> type, Object value) {
+	public static <T> T convert(Type type, Object value) {
 		return convert(type, value, null);
 	}
 
@@ -489,7 +490,7 @@ public final class Convert {
 	 * @return 转换后的值
 	 * @throws ConvertException 转换器不存在
 	 */
-	public static <T> T convert(Class<T> type, Object value, T defaultValue) throws ConvertException {
+	public static <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
 		return ConverterRegistry.getInstance().convert(type, value, defaultValue);
 	}
 
@@ -742,21 +743,12 @@ public final class Convert {
 	 * @since 3.2.3
 	 */
 	public static String digitToChinese(Number n) {
-		return DigitChineseFormater.format(n);
+		if(null == n) {
+			return "零";
+		}
+		return NumberChineseFormater.format(n.doubleValue(), true, true);
 	}
 	
-	/**
-	 * 金额转为中文形式
-	 * 
-	 * @param n 数字
-	 * @return 中文大写数字
-	 * @deprecated Please use {@link #digitToChinese(Number)}
-	 */
-	@Deprecated
-	public static String digitUppercase(Number n) {
-		return DigitChineseFormater.format(n);
-	}
-
 	// -------------------------------------------------------------------------- 数字转换
 	/**
 	 * int转byte

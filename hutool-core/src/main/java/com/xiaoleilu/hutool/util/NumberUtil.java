@@ -686,7 +686,7 @@ public class NumberUtil {
 	 */
 	public static boolean isInteger(String s) {
 		if (StrUtil.isNotBlank(s)) {
-			return s.matches("^\\d+$");
+			return s.matches("^-?\\d+$");
 		} else {
 			return false;
 		}
@@ -796,6 +796,17 @@ public class NumberUtil {
 	}
 
 	// ------------------------------------------------------------------------------------------- range
+	/**
+	 * 从0开始给定范围内的整数列表，步进为1
+	 * 
+	 * @param stop 结束（包含）
+	 * @return 整数列表
+	 * @since 3.3.1
+	 */
+	public static int[] range(int stop) {
+		return range(0, stop);
+	}
+	
 	/**
 	 * 给定范围内的整数列表，步进为1
 	 * 

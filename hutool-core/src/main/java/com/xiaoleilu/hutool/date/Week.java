@@ -35,14 +35,52 @@ public enum Week {
 	SATURDAY(Calendar.SATURDAY);
 
 	// ---------------------------------------------------------------
+	/** 星期对应{@link Calendar} 中的Week值 */
 	private int value;
 
+	/**
+	 * 构造
+	 * 
+	 * @param value 星期对应{@link Calendar} 中的Week值
+	 */
 	private Week(int value) {
 		this.value = value;
 	}
 
+	/**
+	 * 获得星期对应{@link Calendar} 中的Week值
+	 * 
+	 * @return 星期对应{@link Calendar} 中的Week值
+	 */
 	public int getValue() {
 		return this.value;
+	}
+
+	/**
+	 * 转换为中文名
+	 * 
+	 * @return 星期的中文名
+	 * @since 3.3.0
+	 */
+	public String toChinese() {
+		switch (this) {
+		case SUNDAY:
+			return "星期日";
+		case MONDAY:
+			return "星期一";
+		case TUESDAY:
+			return "星期二";
+		case WEDNESDAY:
+			return "星期三";
+		case THURSDAY:
+			return "星期四";
+		case FRIDAY:
+			return "星期五";
+		case SATURDAY:
+			return "星期六";
+		default:
+			return null;
+		}
 	}
 
 	/**
@@ -61,22 +99,22 @@ public enum Week {
 	 */
 	public static Week of(int calendarWeekIntValue) {
 		switch (calendarWeekIntValue) {
-			case Calendar.SUNDAY:
-				return SUNDAY;
-			case Calendar.MONDAY:
-				return MONDAY;
-			case Calendar.TUESDAY:
-				return TUESDAY;
-			case Calendar.WEDNESDAY:
-				return WEDNESDAY;
-			case Calendar.THURSDAY:
-				return THURSDAY;
-			case Calendar.FRIDAY:
-				return FRIDAY;
-			case Calendar.SATURDAY:
-				return SATURDAY;
-			default:
-				return null;
+		case Calendar.SUNDAY:
+			return SUNDAY;
+		case Calendar.MONDAY:
+			return MONDAY;
+		case Calendar.TUESDAY:
+			return TUESDAY;
+		case Calendar.WEDNESDAY:
+			return WEDNESDAY;
+		case Calendar.THURSDAY:
+			return THURSDAY;
+		case Calendar.FRIDAY:
+			return FRIDAY;
+		case Calendar.SATURDAY:
+			return SATURDAY;
+		default:
+			return null;
 		}
 	}
 }

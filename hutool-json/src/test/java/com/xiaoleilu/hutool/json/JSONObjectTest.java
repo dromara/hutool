@@ -7,10 +7,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.json.test.bean.Seq;
 import com.xiaoleilu.hutool.json.test.bean.UserA;
 import com.xiaoleilu.hutool.json.test.bean.UserB;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * JSONObject单元测试
@@ -134,6 +134,14 @@ public class JSONObjectTest {
 		JSONObject userAJsonWithNullValue = JSONUtil.parseObj(userA, false);
 		Assert.assertTrue(userAJsonWithNullValue.containsKey("a"));
 		Assert.assertTrue(userAJsonWithNullValue.containsKey("sqs"));
+	}
+	
+	@Test
+	public void specialCharTest() {
+		String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
+		JSONObject obj = JSONUtil.parseObj(json);
+		Assert.assertEquals("[abc]\\b\\u2001", obj.getStr("pattern"));
+		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
 	}
 	
 	/**

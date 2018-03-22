@@ -21,6 +21,13 @@ public class BeanValueProvider implements ValueProvider<String> {
 	private boolean ignoreError;
 	final Map<String, PropDesc> sourcePdMap;
 
+	/**
+	 * 构造
+	 * 
+	 * @param bean Bean
+	 * @param ignoreCase 是否忽略字段大小写
+	 * @param ignoreError 是否忽略字段值读取错误
+	 */
 	public BeanValueProvider(Object bean, boolean ignoreCase, boolean ignoreError) {
 		this.source = bean;
 		this.ignoreError = ignoreError;

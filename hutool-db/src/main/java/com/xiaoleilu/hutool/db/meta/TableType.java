@@ -29,4 +29,9 @@ public enum TableType {
 	public String value(){
 		return this.value;
 	}
+	
+	@Override
+	public String toString() {
+		return this.value();
+	}
 }

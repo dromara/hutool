@@ -12,7 +12,7 @@ import java.io.Serializable;
 public interface ICaptcha extends Serializable{
 
 	/**
-	 * 创建验证码
+	 * 创建验证码，实现类需同时生成随机验证码字符串和验证码图片
 	 */
 	void createCode();
 

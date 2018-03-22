@@ -17,7 +17,7 @@ public interface ValueProvider<T> {
 	
 	/**
 	 * 获取值<br>
-	 * 返回值一般需要匹配被注入类型，如果不匹配会调用默认转换 {@link Convert#convert(Class, Object)}实现转换
+	 * 返回值一般需要匹配被注入类型，如果不匹配会调用默认转换 {@link Convert#convert(Type, Object)}实现转换
 	 * 
 	 * @param key Bean对象中参数名
 	 * @param valueType 被注入的值得类型

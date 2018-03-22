@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.xiaoleilu.hutool.collection.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.lang.Assert;
+import com.xiaoleilu.hutool.map.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
@@ -136,18 +136,17 @@ public class BeanDesc {
 			fieldType = field.getType();
 			if (fieldType == Boolean.class || fieldType == boolean.class) {
 				// Boolean和boolean类型特殊处理
-				final String subFieldName = StrUtil.removePrefix(fieldName, "is");
-				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.upperFirstAndAddPre(subFieldName, "is"));
-				if (null == getter) {
-					getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(subFieldName));
-				}
 
-			} else {
+				fieldName = StrUtil.removePrefix(fieldName, "is");
+				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.upperFirstAndAddPre(fieldName, "is"));
+				if (null == getter) {
+					getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
+				}
+			}else {
 				getter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genGetter(fieldName));
 			}
-
 			setter = ReflectUtil.getMethodIgnoreCase(this.beanClass, StrUtil.genSetter(fieldName), field.getType());
-			this.propMap.put(fieldName, new PropDesc(field, getter, setter));
+			this.propMap.put(field.getName(), new PropDesc(field, getter, setter));
 		}
 		return this;
 	}

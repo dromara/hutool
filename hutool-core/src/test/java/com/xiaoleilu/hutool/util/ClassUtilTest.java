@@ -82,11 +82,6 @@ public class ClassUtilTest {
 		Field noField = ClassUtil.getDeclaredField(TestSubClass.class, "noField");
 		Assert.assertNull(noField);
 
-		// 能够获取到父类字段
-		@SuppressWarnings("deprecation")
-		Field privateField = ClassUtil.getField(TestSubClass.class, "privateField");
-		Assert.assertNotNull(privateField);
-
 		// 获取不到父类字段
 		Field field = ClassUtil.getDeclaredField(TestSubClass.class, "field");
 		Assert.assertNull(field);

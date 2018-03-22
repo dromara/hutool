@@ -29,12 +29,15 @@ import javax.crypto.spec.SecretKeySpec;
 import com.xiaoleilu.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import com.xiaoleilu.hutool.crypto.asymmetric.DSA;
 import com.xiaoleilu.hutool.crypto.asymmetric.RSA;
+import com.xiaoleilu.hutool.crypto.asymmetric.Sign;
+import com.xiaoleilu.hutool.crypto.asymmetric.SignAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.DigestAlgorithm;
 import com.xiaoleilu.hutool.crypto.digest.Digester;
 import com.xiaoleilu.hutool.crypto.digest.HMac;
 import com.xiaoleilu.hutool.crypto.digest.HmacAlgorithm;
 import com.xiaoleilu.hutool.crypto.symmetric.AES;
 import com.xiaoleilu.hutool.crypto.symmetric.DES;
+import com.xiaoleilu.hutool.crypto.symmetric.DESede;
 import com.xiaoleilu.hutool.crypto.symmetric.SymmetricCrypto;
 import com.xiaoleilu.hutool.io.FileUtil;
 import com.xiaoleilu.hutool.lang.Assert;
@@ -101,7 +104,7 @@ public final class SecureUtil {
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 * 
 	 * @param algorithm 算法
-	 * @param key 密钥
+	 * @param key 密钥，如果为{@code null} 自动生成随机密钥
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateKey(String algorithm, byte[] key) {
@@ -188,7 +191,8 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成私钥，仅用于非对称加密
+	 * 生成私钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
@@ -199,7 +203,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成私钥，仅用于非对称加密
+	 * 生成私钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param keySpec {@link KeySpec}
@@ -207,6 +212,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
+		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return KeyFactory.getInstance(algorithm).generatePrivate(keySpec);
 		} catch (Exception e) {
@@ -231,7 +237,8 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成公钥，仅用于非对称加密
+	 * 生成公钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param key 密钥
@@ -242,7 +249,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成公钥，仅用于非对称加密
+	 * 生成公钥，仅用于非对称加密<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
 	 * @param keySpec {@link KeySpec}
@@ -250,6 +258,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
+		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return KeyFactory.getInstance(algorithm).generatePublic(keySpec);
 		} catch (Exception e) {
@@ -258,7 +267,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密
+	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
 	 * @return {@link KeyPair}
@@ -268,7 +278,8 @@ public final class SecureUtil {
 	}
 	
 	/**
-	 * 生成用于非对称加密的公钥和私钥
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
 	 * @param keySize 密钥模（modulus ）长度
@@ -279,7 +290,8 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 生成用于非对称加密的公钥和私钥
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
 	 * @param keySize 密钥模（modulus ）长度
@@ -287,6 +299,12 @@ public final class SecureUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
+		algorithm = getAlgorithmAfterWith(algorithm);
+		if("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
+			//对于EC算法，密钥长度有限制，在此使用默认256
+			keySize = 256;
+		}
+		
 		KeyPairGenerator keyPairGen;
 		try {
 			keyPairGen = KeyPairGenerator.getInstance(algorithm);
@@ -298,12 +316,31 @@ public final class SecureUtil {
 			keySize = DEFAULT_KEY_SIZE;
 		}
 		if (null != seed) {
-			SecureRandom random = new SecureRandom(seed);
+			final SecureRandom random = new SecureRandom(seed);
 			keyPairGen.initialize(keySize, random);
 		} else {
 			keyPairGen.initialize(keySize);
 		}
 		return keyPairGen.generateKeyPair();
+	}
+	
+	/**
+	 * 获取用于密钥生成的算法<br>
+	 * 获取XXXwithXXX算法的后半部分算法，如果为ECDSA，返回算法为EC
+	 * 
+	 * @param algorithm XXXwithXXX算法
+	 * @return 算法
+	 */
+	public static String getAlgorithmAfterWith(String algorithm) {
+		Assert.notNull(algorithm, "algorithm must be not null !");
+		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
+		if(indexOfWith > 0) {
+			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
+		}
+		if("ECDSA".equalsIgnoreCase(algorithm)) {
+			algorithm = "EC";
+		}
+		return algorithm;
 	}
 
 	/**
@@ -463,6 +500,37 @@ public final class SecureUtil {
 	public static DES des(byte[] key) {
 		return new DES(key);
 	}
+	
+	/**
+	 * DESede加密，生成随机KEY。注意解密时必须使用相同 {@link DESede}对象或者使用相同KEY<br>
+	 * 例：
+	 * <pre>
+	 * DESede加密：desede().encrypt(data)
+	 * DESede解密：desede().decrypt(data)
+	 * </pre>
+	 * 
+	 * @return {@link DESede}
+	 * @since 3.3.0
+	 */
+	public static DESede desede() {
+		return new DESede();
+	}
+	
+	/**
+	 * DESede加密<br>
+	 * 例：
+	 * <pre>
+	 * DESede加密：desede(key).encrypt(data)
+	 * DESede解密：desede(key).decrypt(data)
+	 * </pre>
+	 * 
+	 * @param key 密钥
+	 * @return {@link DESede}
+	 * @since 3.3.0
+	 */
+	public static DESede desede(byte[] key) {
+		return new DESede(key);
+	}
 
 	// ------------------------------------------------------------------- 摘要算法
 	/**
@@ -556,6 +624,17 @@ public final class SecureUtil {
 	 * @param algorithm {@link HmacAlgorithm}
 	 * @param key 密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
+	 * @since 3.3.0
+	 */
+	public static HMac hmac(HmacAlgorithm algorithm, String key){
+		return new HMac(algorithm, StrUtil.utf8Bytes(key));
+	}
+	
+	/**
+	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * @param algorithm {@link HmacAlgorithm}
+	 * @param key 密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
 	public static HMac hmac(HmacAlgorithm algorithm, byte[] key){
@@ -578,7 +657,20 @@ public final class SecureUtil {
 	 * 例：<br>
 	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>
 	 * 		HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
-	 * @param key 加密密钥
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.3.0
+	 */
+	public static HMac hmacMd5(String key){
+		return hmacMd5(StrUtil.utf8Bytes(key));
+	}
+	
+	/**
+	 * HmacMD5加密器<br>
+	 * 例：<br>
+	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>
+	 * 		HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacMd5(byte[] key){
@@ -601,7 +693,20 @@ public final class SecureUtil {
 	 * 例：<br>
 	 * 		HmacSHA1加密：hmacSha1(key).digest(data)<br>
 	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
-	 * @param key 加密密钥
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
+	 * @return {@link HMac}
+	 * @since 3.3.0
+	 */
+	public static HMac hmacSha1(String key){
+		return hmacSha1(StrUtil.utf8Bytes(key));
+	}
+	
+	/**
+	 * HmacSHA1加密器<br>
+	 * 例：<br>
+	 * 		HmacSHA1加密：hmacSha1(key).digest(data)<br>
+	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
+	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 */
 	public static HMac hmacSha1(byte[] key){
@@ -696,7 +801,48 @@ public final class SecureUtil {
 	public static DSA dsa(byte[] privateKey, byte[] publicKey){
 		return new DSA(privateKey, publicKey);
 	}
-
+	
+	/**
+	 * 创建签名算法对象<br>
+	 * 生成新的私钥公钥对
+	 * 
+	 * @param algorithm 签名算法
+	 * @return {@link Sign}
+	 * @since 3.3.0
+	 */
+	public static Sign sign(SignAlgorithm algorithm){
+		return new Sign(algorithm);
+	}
+	
+	/**
+	 * 创建签名算法对象<br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
+	 * 
+	 * @param algorithm 签名算法
+	 * @param privateKeyBase64 私钥Base64
+	 * @param publicKeyBase64 公钥Base64
+	 * @return {@link Sign}
+	 * @since 3.3.0
+	 */
+	public static Sign sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64){
+		return new Sign(algorithm, privateKeyBase64, publicKeyBase64);
+	}
+	
+	/**
+	 * 创建Sign算法对象<br>
+	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
+	 * 
+	 * @param privateKey 私钥
+	 * @param publicKey 公钥
+	 * @return {@link Sign}
+	 * @since 3.3.0
+	 */
+	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey){
+		return new Sign(algorithm, privateKey, publicKey);
+	}
+	
 	// ------------------------------------------------------------------- UUID
 	/**
 	 * 简化的UUID，去掉了横线

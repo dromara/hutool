@@ -5,9 +5,9 @@ import java.nio.file.WatchEvent;
 import java.util.Iterator;
 import java.util.List;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.io.watch.Watcher;
 import com.xiaoleilu.hutool.lang.Chain;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 
 /**
  * 观察者链<br>

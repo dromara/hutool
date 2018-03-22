@@ -4,8 +4,8 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 import com.xiaoleilu.hutool.collection.CollUtil;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Converter;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.TypeUtil;
 
 /**

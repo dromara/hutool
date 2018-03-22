@@ -90,7 +90,21 @@ public class SymmetricCrypto {
 	 * @since 3.1.2
 	 */
 	public SymmetricCrypto(String algorithm, SecretKey key) {
+		this(algorithm, key, null);
+	}
+	
+	/**
+	 * 构造
+	 * @param algorithm 算法
+	 * @param key 密钥
+	 * @param paramsSpec 算法参数，例如加盐等
+	 * @since 3.3.0
+	 */
+	public SymmetricCrypto(String algorithm, SecretKey key, AlgorithmParameterSpec paramsSpec) {
 		init(algorithm, key);
+		if(null != paramsSpec) {
+			setParams(paramsSpec);
+		}
 	}
 	//------------------------------------------------------------------ Constructor end
 	/**

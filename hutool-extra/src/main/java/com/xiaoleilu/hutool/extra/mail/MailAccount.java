@@ -32,7 +32,7 @@ public class MailAccount implements Serializable {
 	/** SMTP服务端口 */
 	private Integer port;
 	/** 是否需要用户名密码验证 */
-	private Boolean auth = true;
+	private Boolean auth;
 	/** 用户名 */
 	private String user;
 	/** 密码 */

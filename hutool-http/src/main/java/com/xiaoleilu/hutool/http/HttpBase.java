@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
+import com.xiaoleilu.hutool.map.CaseInsensitiveMap;
 import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -36,7 +37,9 @@ public abstract class HttpBase<T> {
 	
 	// ---------------------------------------------------------------- Headers start
 	/**
-	 * 根据name获取头信息
+	 * 根据name获取头信息<br>
+	 * 根据RFC2616规范，header的name不区分大小写
+	 * 
 	 * @param name Header名
 	 * @return Header值
 	 */
@@ -59,7 +62,8 @@ public abstract class HttpBase<T> {
 			return null;
 		}
 		
-		return headers.get(name.trim());
+		final CaseInsensitiveMap<String,List<String>> headersIgnoreCase = new CaseInsensitiveMap<>(this.headers);
+		return headersIgnoreCase.get(name.trim());
 	}
 	
 	/**

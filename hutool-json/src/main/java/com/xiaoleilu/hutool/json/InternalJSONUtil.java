@@ -205,7 +205,8 @@ final class InternalJSONUtil {
 	}
 	
 	/**
-	 * JSON或者
+	 * JSON转Bean，忽略字段的大小写
+	 * 
 	 * @param jsonObject JSON对象
 	 * @param bean 目标Bean
 	 * @param ignoreError 是否忽略转换错误
@@ -224,7 +225,7 @@ final class InternalJSONUtil {
 				return jsonObject.containsKey(key);
 			}
 			
-		}, CopyOptions.create().setIgnoreError(ignoreError));
+		}, CopyOptions.create().setIgnoreCase(true).setIgnoreError(ignoreError));
 	}
 	
 	/**

@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.xiaoleilu.hutool.io.file.LineSeparator;
+import com.xiaoleilu.hutool.lang.Console;
 import com.xiaoleilu.hutool.util.CharsetUtil;
 
 /**
@@ -21,10 +22,22 @@ public class FileUtilTest {
 	
 	@Test
 	public void getAbsolutePathTest(){
-		String absolutePath = FileUtil.getAbsolutePath("aLICENSE-junit.txt");
+		String absolutePath = FileUtil.getAbsolutePath("LICENSE-junit.txt");
 		String absolutePath2 = FileUtil.getAbsolutePath(absolutePath);
 		Assert.assertNotNull(absolutePath2);
 		Assert.assertEquals(absolutePath, absolutePath2);
+	}
+	
+	@Test
+	public void getAbsolutePathTest2() {
+		String path = FileUtil.getAbsolutePath("中文.xml");
+		Assert.assertTrue(path.contains("中文.xml"));
+	}
+	
+	@Test
+	public void getAbsolutePathTest3() {
+		String path = FileUtil.getAbsolutePath("../../LICENSE-junit.txt");
+		Console.log(path);
 	}
 	
 	@Test
@@ -97,7 +110,7 @@ public class FileUtilTest {
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
 		Assert.assertEquals("~/bar/", FileUtil.normalize("~/foo/../bar/"));
 		Assert.assertEquals("bar", FileUtil.normalize("~/../bar"));
-		
+		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
 	}
 	
