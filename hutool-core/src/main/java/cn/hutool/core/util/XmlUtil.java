@@ -634,6 +634,27 @@ public class XmlUtil {
 	}
 
 	// ---------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data Map类型数据
+	 * @return XML格式的字符串
+	 * @since 4.0.8
+	 */
+	public static void mapToXml(Document doc, Element element, Map<String, Object> data) {
+		Element filedEle;
+		Object value;
+		for (Entry<String, Object> entry : data.entrySet()) {
+			filedEle = doc.createElement(entry.getKey());
+			value = entry.getValue();
+			if(value instanceof Map) {
+				mapToXml(doc, filedEle, data);
+				element.appendChild(filedEle);
+			}
+			filedEle.appendChild(doc.createTextNode(value.toString()));
+			element.appendChild(filedEle);
+		}
+	}
 	// ---------------------------------------------------------------------------------------- Private method end
 
 }
