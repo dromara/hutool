@@ -6,6 +6,8 @@
 
 ### 新特性
 【core】SecureUtil增加signParamsSha1方法（感谢@【帝都】宁静）
+【core】XmlUtil增加mapToXml和xmlToMap（感谢@【杭州】小宙子）
+【captcha】修改逻辑：在创建验证码对象时生成一个验证码（感谢@【重庆】liuuuu）
 
 ### Bug修复
 【core】修复StrUtil.replace问题（感谢@【上海】piaohao）

@@ -10,7 +10,10 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -296,10 +299,10 @@ public class XmlUtil {
 	 * 创建XML文档<br>
 	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，既XML在转为文本的时候才定义编码
 	 * 
-	 * @param rootElementName 根节点名称
 	 * @return XML文档
+	 * @since 4.0.8
 	 */
-	public static Document createXml(String rootElementName) {
+	public static Document createXml() {
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		try {
@@ -308,6 +311,19 @@ public class XmlUtil {
 			throw new UtilException(e, "Create xml document error!");
 		}
 		final Document doc = builder.newDocument();
+
+		return doc;
+	}
+	
+	/**
+	 * 创建XML文档<br>
+	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，既XML在转为文本的时候才定义编码
+	 * 
+	 * @param rootElementName 根节点名称
+	 * @return XML文档
+	 */
+	public static Document createXml(String rootElementName) {
+		final Document doc = createXml();
 		doc.appendChild(doc.createElement(rootElementName));
 
 		return doc;
@@ -528,6 +544,95 @@ public class XmlUtil {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * XML格式字符串转换为Map
+	 *
+	 * @param xmlStr XML字符串
+	 * @return XML数据转换后的Map
+	 * @since 4.0.8
+	 */
+	public static Map<String, Object> xmlToMap(String xmlStr) {
+		return xmlToMap(xmlStr, new HashMap<String, Object>());
+	}
+
+	/**
+	 * XML格式字符串转换为Map<br>
+	 * 只支持第一级别的XML，不支持多级XML
+	 *
+	 * @param xmlStr XML字符串
+	 * @param result 结果Map类型
+	 * @return XML数据转换后的Map
+	 * @since 4.0.8
+	 */
+	public static Map<String, Object> xmlToMap(String xmlStr, Map<String, Object> result) {
+		final Document doc = parseXml(xmlStr);
+		final Element root = getRootElement(doc);
+		root.normalize();
+		
+		return xmlToMap(root, result);
+	}
+	
+	/**
+	 * XML节点转换为Map
+	 *
+	 * @param element XML节点
+	 * @param result 结果Map类型
+	 * @return XML数据转换后的Map
+	 * @since 4.0.8
+	 */
+	public static Map<String, Object> xmlToMap(Element element, Map<String, Object> result) {
+		if(null == result) {
+			result = new HashMap<>();
+		}
+		
+		final NodeList nodeList = element.getChildNodes();
+		final int length = nodeList.getLength();
+		Node node;
+		Element subEle;
+		for (int i = 0; i < length; ++i) {
+			node = nodeList.item(i);
+			if (isElement(node)) {
+				subEle = (Element) node;
+				result.put(subEle.getNodeName(), subEle.getTextContent());
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data Map类型数据
+	 * @return XML格式的字符串
+	 * @since 4.0.8
+	 */
+	public static String mapToXml(Map<String, Object> data, String rootName) {
+		final Document doc = createXml();
+		final Element root = doc.createElement(rootName);
+		doc.appendChild(root);
+		
+		Element filedEle;
+		Object value;
+		for (Entry<String, Object> entry : data.entrySet()) {
+			filedEle = doc.createElement(entry.getKey());
+			value = entry.getValue();
+			filedEle.appendChild(doc.createTextNode(value.toString()));
+			root.appendChild(filedEle);
+		}
+		return toStr(doc);
+	}
+	
+	/**
+	 * 给定节点是否为{@link Element} 类型节点
+	 * @param node 节点
+	 * @return 是否为{@link Element} 类型节点
+	 * @since 4.0.8
+	 */
+	public static boolean isElement(Node node) {
+		return (null == node) ? false : Node.ELEMENT_NODE == node.getNodeType();
+	}
+
 	// ---------------------------------------------------------------------------------------- Private method start
 	// ---------------------------------------------------------------------------------------- Private method end
 
