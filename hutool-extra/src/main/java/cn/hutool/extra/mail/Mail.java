@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 import java.util.Date;
 
 import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
@@ -31,9 +32,9 @@ public class Mail {
 	private MailAccount mailAccount;
 	/** 收件人列表 */
 	private String[] tos;
-	/** 抄送人列表（carbon copy）*/
+	/** 抄送人列表（carbon copy） */
 	private String[] ccs;
-	/** 密送人列表（blind carbon copy）*/
+	/** 密送人列表（blind carbon copy） */
 	private String[] bccs;
 	/** 标题 */
 	private String title;
@@ -42,7 +43,7 @@ public class Mail {
 	/** 是否为HTML */
 	private boolean isHtml;
 	/** 附件列表 */
-	private File[] files;
+	private DataSource[] attachments;
 	/** 是否使用全局会话，默认为true */
 	private boolean useGlobalSession = true;
 
@@ -106,7 +107,7 @@ public class Mail {
 		this.tos = tos;
 		return this;
 	}
-	
+
 	/**
 	 * 设置多个抄送人（carbon copy）
 	 * 
@@ -118,7 +119,7 @@ public class Mail {
 		this.ccs = ccs;
 		return this;
 	}
-	
+
 	/**
 	 * 设置多个密送人（blind carbon copy）
 	 * 
@@ -165,13 +166,28 @@ public class Mail {
 	}
 
 	/**
-	 * 设置附件
+	 * 设置文件类型附件
 	 * 
 	 * @param files 附件文件列表
 	 * @return this
 	 */
 	public Mail setFiles(File... files) {
-		this.files = files;
+		DataSource[] attachments = new DataSource[files.length];
+		for (int i = 0; i < files.length; i++) {
+			attachments[i] = new FileDataSource(files[i]);
+		}
+		return setAttachments(attachments);
+	}
+
+	/**
+	 * 设置附件，附件使用{@link DataSource} 形式表示，可以使用{@link FileDataSource}包装文件表示文件附件
+	 * 
+	 * @param attachments 附件列表
+	 * @return this
+	 * @since 4.0.9
+	 */
+	public Mail setAttachments(DataSource... attachments) {
+		this.attachments = attachments;
 		return this;
 	}
 
@@ -186,7 +202,7 @@ public class Mail {
 		this.mailAccount.setCharset(charset);
 		return this;
 	}
-	
+
 	/**
 	 * 设置是否使用全局会话，默认为true
 	 * 
@@ -237,10 +253,10 @@ public class Mail {
 		final MimeMessage msg = new MimeMessage(getSession(this.useGlobalSession));
 		// 发件人
 		final String from = this.mailAccount.getFrom();
-		if(StrUtil.isEmpty(from)) {
-			//用户未提供发送方，则从Session中自动获取
+		if (StrUtil.isEmpty(from)) {
+			// 用户未提供发送方，则从Session中自动获取
 			msg.setFrom();
-		}else {
+		} else {
 			msg.setFrom(InternalMailUtil.parseFirstAddress(from, charset));
 		}
 		// 标题
@@ -252,11 +268,11 @@ public class Mail {
 		// 收件人
 		msg.setRecipients(MimeMessage.RecipientType.TO, InternalMailUtil.parseAddressFromStrs(this.tos, charset));
 		// 抄送人
-		if(ArrayUtil.isNotEmpty(this.ccs)) {
+		if (ArrayUtil.isNotEmpty(this.ccs)) {
 			msg.setRecipients(MimeMessage.RecipientType.CC, InternalMailUtil.parseAddressFromStrs(this.ccs, charset));
 		}
 		// 密送人
-		if(ArrayUtil.isNotEmpty(this.bccs)) {
+		if (ArrayUtil.isNotEmpty(this.bccs)) {
 			msg.setRecipients(MimeMessage.RecipientType.BCC, InternalMailUtil.parseAddressFromStrs(this.bccs, charset));
 		}
 		return msg;
@@ -278,12 +294,12 @@ public class Mail {
 		mainPart.addBodyPart(body);
 
 		// 附件
-		if (ArrayUtil.isNotEmpty(files)) {
+		if (ArrayUtil.isNotEmpty(this.attachments)) {
 			BodyPart bodyPart;
-			for (File file : files) {
+			for (DataSource attachment : attachments) {
 				bodyPart = new MimeBodyPart();
-				bodyPart.setDataHandler(new DataHandler(new FileDataSource(file)));
-				bodyPart.setFileName(InternalMailUtil.encodeText(file.getName(), charset));
+				bodyPart.setDataHandler(new DataHandler(attachment));
+				bodyPart.setFileName(InternalMailUtil.encodeText(attachment.getName(), charset));
 				mainPart.addBodyPart(bodyPart);
 			}
 		}

@@ -5,10 +5,14 @@
 ## 4.0.9
 
 ### 新特性
-【core】SecureUtil增加signParamsSha1方法（感谢@【帝都】宁静）
-【core】XmlUtil增加mapToXml和xmlToMap（感谢@【杭州】小宙子）
-【captcha】修改逻辑：在创建验证码对象时生成一个验证码（感谢@【重庆】liuuuu）
-【core】CopiedIterator使用LinkedList替代ArrayList（issue#III8K@Gitee）
+* 【core】     SecureUtil增加signParamsSha1方法（感谢@【帝都】宁静）
+* 【core】     XmlUtil增加mapToXml和xmlToMap（感谢@【杭州】小宙子）
+* 【captcha】修改逻辑：在创建验证码对象时生成一个验证码（感谢@【重庆】liuuuu）
+* 【core】     CopiedIterator使用LinkedList替代ArrayList（issue#III8K@Gitee）
+* 【poi】       ExcelWriter增加getOrCreateCell、createStyleForCell方法，便于自定义特殊单元格
+* 【core】     增加AnnotationUtil类
+* 【core】     IoUtil增加toMarkSupportStream方法
+* 【poi】       ExcelReader改进按照流读取工作簿的构造，使之对于mark不支持的流也可解析
 
 ### Bug修复
 【core】修复StrUtil.replace问题（感谢@【上海】piaohao）

@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
@@ -56,7 +57,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/** 存储表单数据 */
 	private Map<String, Object> form;
 	/** 文件表单对象，用于文件上传 */
-	private Map<String, File> fileForm;
+	private Map<String, DataSource> fileForm;
 	/** 文件表单对象，用于文件上传 */
 	private String cookie;
 
@@ -86,7 +87,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest(String url) {
 		Assert.notBlank(url, "Param [url] can not be blank !");
 		this.url = url;
-		//给定一个默认头信息
+		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}
 
@@ -306,7 +307,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.bodyBytes = null;
 
 		if (value instanceof File) {
+			//文件上传
 			return this.form(name, (File) value);
+		} else if (value instanceof DataSource) {
+			//自定义流上传
+			return this.form(name, (DataSource) value);
 		} else if (this.form == null) {
 			form = new HashMap<String, Object>();
 		}
@@ -367,20 +372,36 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 * 
 	 * @param name 名
-	 * @param file 文件
+	 * @param dataSource 数据源，文件可以使用{@link FileDataSource}包装使用
 	 * @return this
 	 */
 	public HttpRequest form(String name, File file) {
 		if (null != file) {
+			form(name, new FileDataSource(file));
+		}
+		return this;
+	}
+
+	/**
+	 * 文件表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * 
+	 * @param name 名
+	 * @param dataSource 数据源，文件可以使用{@link FileDataSource}包装使用
+	 * @return this
+	 * @since 4.0.9
+	 */
+	public HttpRequest form(String name, DataSource dataSource) {
+		if (null != dataSource) {
 			if (false == isKeepAlive()) {
 				keepAlive(true);
 			}
 
 			if (null == this.fileForm) {
-				fileForm = new HashMap<String, File>();
+				fileForm = new HashMap<String, DataSource>();
 			}
 			// 文件对象
-			this.fileForm.put(name, file);
+			this.fileForm.put(name, dataSource);
 		}
 		return this;
 	}
@@ -400,7 +421,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return 文件表单Map
 	 * @since 3.3.0
 	 */
-	public Map<String, File> fileForm() {
+	public Map<String, DataSource> fileForm() {
 		return this.fileForm;
 	}
 	// ---------------------------------------------------------------- Form end
@@ -812,14 +833,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException
 	 */
 	private void writeFileForm(OutputStream out) throws IOException {
-		File file;
-		for (Entry<String, File> entry : this.fileForm.entrySet()) {
-			file = entry.getValue();
+		DataSource dataSource;
+		for (Entry<String, DataSource> entry : this.fileForm.entrySet()) {
+			dataSource = entry.getValue();
 			StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
-			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), file.getName()));
-			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(file.getName())));
+			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), dataSource.getName()));
+			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(dataSource.getName())));
 			IoUtil.write(out, this.charset, false, builder);
-			FileUtil.writeToStream(file, out);
+			IoUtil.copy(dataSource.getInputStream(), out);
 			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
 		}
 	}
