@@ -15,6 +15,7 @@
 * 【poi】       ExcelReader改进按照流读取工作簿的构造，使之对于mark不支持的流也可解析
 * 【core】     新增BytesResource和InputStreamResource
 * 【core】     RandomUtil新增randomBigDecimal（感谢@【帝都】宁静）
+* 【db】        Column对象添加comment字段
 
 ### Bug修复
 * 【core】修复StrUtil.replace问题（感谢@【上海】piaohao）

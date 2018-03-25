@@ -14,12 +14,19 @@ import cn.hutool.db.DbRuntimeException;
 public class Column implements Cloneable{
 	
 	//----------------------------------------------------- Fields start
-	private String tableName;		//表名
+	/** 表名 */
+	private String tableName;
 	
-	private String name;				//列名
-	private int type;						//类型，对应java.sql.Types中的类型
-	private int size;						//大小
-	private boolean isNullable;		//是否为可空
+	/** 列名 */
+	private String name;
+	/** 类型，对应java.sql.Types中的类型 */
+	private int type;
+	/** 大小或数据长度 */
+	private int size;
+	/** 是否为可空 */
+	private boolean isNullable;
+	/** 注释 */
+	private String comment;
 	//----------------------------------------------------- Fields end
 	
 	/**
@@ -58,6 +65,7 @@ public class Column implements Cloneable{
 		this.type = columnMetaRs.getInt("DATA_TYPE");
 		this.size = columnMetaRs.getInt("COLUMN_SIZE");
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
+		this.comment = columnMetaRs.getString("REMARKS");
 	}
 	
 	//----------------------------------------------------- Getters and Setters start
@@ -90,6 +98,12 @@ public class Column implements Cloneable{
 	}
 	public void setNullable(boolean isNullable) {
 		this.isNullable = isNullable;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	//----------------------------------------------------- Getters and Setters end
 
