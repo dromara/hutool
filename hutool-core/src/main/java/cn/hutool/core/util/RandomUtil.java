@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -69,7 +70,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得随机数
+	 * 获得随机数[0, 1)
 	 * 
 	 * @return 随机数
 	 */
@@ -146,7 +147,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得随机数
+	 * 获得随机数[0, 1)
 	 * 
 	 * @return 随机数
 	 * @since 3.3.0
@@ -189,6 +190,39 @@ public class RandomUtil {
 	 */
 	public static double randomDouble(double limit, int scale, RoundingMode roundingMode) {
 		return NumberUtil.round(randomDouble(limit), scale, roundingMode).doubleValue();
+	}
+	
+	/**
+	 * 获得指定范围内的随机数[0, 1)
+	 * 
+	 * @return 随机数
+	 * @since 4.0.9
+	 */
+	public static BigDecimal randomBigDecimal() {
+		return NumberUtil.toBigDecimal(getRandom().nextDouble());
+	}
+	
+	/**
+	 * 获得指定范围内的随机数 [0,limit)
+	 * 
+	 * @param limit 最大数（不包含）
+	 * @return 随机数
+	 * @since 4.0.9
+	 */
+	public static BigDecimal randomBigDecimal(BigDecimal limit) {
+		return NumberUtil.toBigDecimal(getRandom().nextDouble(limit.doubleValue()));
+	}
+	
+	/**
+	 * 获得指定范围内的随机数
+	 * 
+	 * @param min 最小数（包含）
+	 * @param max 最大数（不包含）
+	 * @return 随机数
+	 * @since 4.0.9
+	 */
+	public static BigDecimal randomBigDecimal(BigDecimal min, BigDecimal max) {
+		return NumberUtil.toBigDecimal(getRandom().nextDouble(min.doubleValue(), max.doubleValue()));
 	}
 
 	/**
