@@ -28,3 +28,6 @@ socketFactoryClass = javax.net.ssl.SSLSocketFactory
 socketFactoryFallback = true
 # 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口456
 socketFactoryPort = 465
+
+# 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
+splitlongparameters = false

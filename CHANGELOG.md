@@ -16,7 +16,8 @@
 * 【core】     新增BytesResource和InputStreamResource
 
 ### Bug修复
-【core】修复StrUtil.replace问题（感谢@【上海】piaohao）
+* 【core】修复StrUtil.replace问题（感谢@【上海】piaohao）
+* 【mail】解决在javax.mail大于1.5版本时，附件名过长在国内邮箱导致的显示错误问题（添加splitlongparameters参数）
 
 -------------------------------------------------------------------------------------------------------------
 

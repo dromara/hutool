@@ -20,13 +20,14 @@ public class MailAccount implements Serializable {
 	private static final String SMTP_HOST = "mail.smtp.host";
 	private static final String SMTP_PORT = "mail.smtp.port";
 	private static final String SMTP_AUTH = "mail.smtp.auth";
-	
+
 	private static final String STARTTTLS_ENABLE = "mail.smtp.starttls.enable";
 	private static final String SOCKEY_FACTORY = "mail.smtp.socketFactory.class";
 	private static final String SOCKEY_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 	private static final String SOCKEY_FACTORY_PORT = "smtp.socketFactory.port";
-	
+
 	private static final String MAIL_DEBUG = "mail.debug";
+	private static final String SPLIT_LONG_PARAMS = "mail.mime.splitlongparameters";
 
 	public static final String MAIL_SETTING_PATH = "config/mail.setting";
 	public static final String MAIL_SETTING_PATH2 = "config/mailAccount.setting";
@@ -43,13 +44,15 @@ public class MailAccount implements Serializable {
 	private String pass;
 	/** 发送方，遵循RFC-822标准 */
 	private String from;
-	
+
 	/** 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启 */
 	private boolean debug;
 	/** 编码用于编码邮件正文和发送人、收件人等中文 */
 	private Charset charset = CharsetUtil.CHARSET_UTF_8;
-	
-	//SSL
+	/** 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名） */
+	private boolean splitlongparameters;
+
+	// SSL
 	/** 使用 STARTTLS安全连接 */
 	private boolean startttlsEnable = false;
 	/** 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字 */
@@ -83,16 +86,20 @@ public class MailAccount implements Serializable {
 	public MailAccount(Setting setting) {
 		setting.toBean(this);
 	}
+
 	// -------------------------------------------------------------- Constructor end
 	/**
 	 * 获得SMTP服务器域名
+	 * 
 	 * @return SMTP服务器域名
 	 */
 	public String getHost() {
 		return host;
 	}
+
 	/**
 	 * 设置SMTP服务器域名
+	 * 
 	 * @param host SMTP服务器域名
 	 * @return this
 	 */
@@ -103,13 +110,16 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 获得SMTP服务端口
+	 * 
 	 * @return SMTP服务端口
 	 */
 	public Integer getPort() {
 		return port;
 	}
+
 	/**
 	 * 设置SMTP服务端口
+	 * 
 	 * @param port SMTP服务端口
 	 * @return this
 	 */
@@ -120,13 +130,16 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 是否需要用户名密码验证
+	 * 
 	 * @return 是否需要用户名密码验证
 	 */
 	public Boolean isAuth() {
 		return auth;
 	}
+
 	/**
 	 * 设置是否需要用户名密码验证
+	 * 
 	 * @param isAuth 是否需要用户名密码验证
 	 * @return this
 	 */
@@ -137,13 +150,16 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 获取用户名
+	 * 
 	 * @return 用户名
 	 */
 	public String getUser() {
 		return user;
 	}
+
 	/**
 	 * 设置用户名
+	 * 
 	 * @param user 用户名
 	 * @return this
 	 */
@@ -154,13 +170,16 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 获取密码
+	 * 
 	 * @return 密码
 	 */
 	public String getPass() {
 		return pass;
 	}
+
 	/**
 	 * 设置密码
+	 * 
 	 * @param pass 密码
 	 * @return this
 	 */
@@ -171,14 +190,17 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 获取发送方，遵循RFC-822标准
+	 * 
 	 * @return 发送方，遵循RFC-822标准
 	 */
 	public String getFrom() {
 		return from;
 	}
+
 	/**
 	 * 设置发送方，遵循RFC-822标准<br>
 	 * 发件人可以是以下形式：
+	 * 
 	 * <pre>
 	 * 1. user@xxx.xx
 	 * 2.  name <user@xxx.xx>
@@ -191,9 +213,10 @@ public class MailAccount implements Serializable {
 		this.from = from;
 		return this;
 	}
-	
+
 	/**
 	 * 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * 
 	 * @return 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
 	 * @since 4.0.2
 	 */
@@ -203,6 +226,7 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 设置是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * 
 	 * @param debug 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
 	 * @since 4.0.2
 	 */
@@ -210,7 +234,7 @@ public class MailAccount implements Serializable {
 		this.debug = debug;
 		return this;
 	}
-	
+
 	/**
 	 * 获取字符集编码
 	 * 
@@ -219,7 +243,7 @@ public class MailAccount implements Serializable {
 	public Charset getCharset() {
 		return charset;
 	}
-	
+
 	/**
 	 * 设置字符集编码
 	 * 
@@ -230,16 +254,37 @@ public class MailAccount implements Serializable {
 		this.charset = charset;
 		return this;
 	}
-	
+
+	/**
+	 * 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
+	 * 
+	 * @return 对于超长参数是否切分为多份
+	 */
+	public boolean isSplitlongparameters() {
+		return splitlongparameters;
+	}
+
+	/**
+	 * 设置对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
+	 * 
+	 * @param splitlongparameters 对于超长参数是否切分为多份
+	 */
+	public void setSplitlongparameters(boolean splitlongparameters) {
+		this.splitlongparameters = splitlongparameters;
+	}
+
 	/**
 	 * 是否使用 STARTTLS安全连接
+	 * 
 	 * @return 是否使用 STARTTLS安全连接
 	 */
 	public boolean isStartttlsEnable() {
-		return startttlsEnable;
+		return this.startttlsEnable;
 	}
+
 	/**
 	 * 设置是否使用STARTTLS安全连接
+	 * 
 	 * @param startttlsEnable 是否使用STARTTLS安全连接
 	 * @return this
 	 */
@@ -250,13 +295,16 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 获取指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
+	 * 
 	 * @return 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
 	 */
 	public String getSocketFactoryClass() {
 		return socketFactoryClass;
 	}
+
 	/**
 	 * 设置指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
+	 * 
 	 * @param socketFactoryClass 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
 	 * @return this
 	 */
@@ -273,8 +321,10 @@ public class MailAccount implements Serializable {
 	public boolean isSocketFactoryFallback() {
 		return socketFactoryFallback;
 	}
+
 	/**
 	 * 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
+	 * 
 	 * @param socketFactoryFallback 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
 	 * @return this
 	 */
@@ -285,13 +335,16 @@ public class MailAccount implements Serializable {
 
 	/**
 	 * 获取指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
+	 * 
 	 * @return 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
 	 */
 	public int getSocketFactoryPort() {
 		return socketFactoryPort;
 	}
+
 	/**
 	 * 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
+	 * 
 	 * @param socketFactoryPort 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口
 	 * @return this
 	 */
@@ -306,60 +359,62 @@ public class MailAccount implements Serializable {
 	 * @return {@link Properties}
 	 */
 	public Properties getSmtpProps() {
+		//全局系统参数
+		System.setProperty(SPLIT_LONG_PARAMS, String.valueOf(this.splitlongparameters));
+		
 		final Properties p = new Properties();
 		p.put(SMTP_HOST, this.host);
 		p.put(SMTP_PORT, String.valueOf(this.port));
 		p.put(SMTP_AUTH, String.valueOf(this.auth));
-		
+
 		p.put(MAIL_DEBUG, String.valueOf(this.debug));
-		
+
 		// SSL
-		if(startttlsEnable) {
+		if (startttlsEnable) {
 			p.put(STARTTTLS_ENABLE, String.valueOf(this.startttlsEnable));
 			p.put(SOCKEY_FACTORY, socketFactoryClass);
 			p.put(SOCKEY_FACTORY_FALLBACK, String.valueOf(this.socketFactoryFallback));
 			p.put(SOCKEY_FACTORY_PORT, String.valueOf(this.socketFactoryPort));
 		}
-		
 		return p;
 	}
-	
+
 	/**
 	 * 如果某些值为null，使用默认值
 	 * 
 	 * @return this
 	 */
 	public MailAccount defaultIfEmpty() {
-		//去掉发件人的姓名部分
+		// 去掉发件人的姓名部分
 		final String fromAddress = InternalMailUtil.parseFirstAddress(this.from, this.charset).getAddress();
-		
-		if(StrUtil.isBlank(this.host)) {
-			//如果SMTP地址为空，默认使用smtp.<发件人邮箱后缀>
-			this.host = StrUtil.format("smtp.{}", StrUtil.subSuf(fromAddress, fromAddress.indexOf('@')+1));
+
+		if (StrUtil.isBlank(this.host)) {
+			// 如果SMTP地址为空，默认使用smtp.<发件人邮箱后缀>
+			this.host = StrUtil.format("smtp.{}", StrUtil.subSuf(fromAddress, fromAddress.indexOf('@') + 1));
 		}
-		if(StrUtil.isBlank(user)) {
-			//如果用户名为空，默认为发件人邮箱前缀
+		if (StrUtil.isBlank(user)) {
+			// 如果用户名为空，默认为发件人邮箱前缀
 			this.user = StrUtil.subPre(fromAddress, fromAddress.indexOf('@'));
 		}
-		if(null == this.auth) {
-			//如果密码非空白，则使用认证模式
+		if (null == this.auth) {
+			// 如果密码非空白，则使用认证模式
 			this.auth = (false == StrUtil.isBlank(this.pass));
 		}
-		if(null == this.port) {
-			//端口在SSL状态下默认与socketFactoryPort一致，非SSL状态下默认为25
+		if (null == this.port) {
+			// 端口在SSL状态下默认与socketFactoryPort一致，非SSL状态下默认为25
 			this.port = this.startttlsEnable ? this.socketFactoryPort : 25;
 		}
-		if(null == this.charset) {
-			//默认UTF-8编码
+		if (null == this.charset) {
+			// 默认UTF-8编码
 			this.charset = CharsetUtil.CHARSET_UTF_8;
 		}
-		
+
 		return this;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "MailAccount [host=" + host + ", port=" + port + ", auth=" + auth + ", user=" + user + ", pass=" + (StrUtil.isEmpty(this.pass) ? "" : "******") + ", from=" + from + ", startttlsEnable=" + startttlsEnable
-				+ ", socketFactoryClass=" + socketFactoryClass + ", socketFactoryFallback=" + socketFactoryFallback + ", socketFactoryPort=" + socketFactoryPort + "]";
+		return "MailAccount [host=" + host + ", port=" + port + ", auth=" + auth + ", user=" + user + ", pass=" + (StrUtil.isEmpty(this.pass) ? "" : "******") + ", from=" + from + ", startttlsEnable="
+				+ startttlsEnable + ", socketFactoryClass=" + socketFactoryClass + ", socketFactoryFallback=" + socketFactoryFallback + ", socketFactoryPort=" + socketFactoryPort + "]";
 	}
 }
