@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
@@ -15,6 +15,8 @@ import java.util.Map;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
 
 /**
  * 注解工具类<br>
@@ -24,6 +26,19 @@ import cn.hutool.core.lang.Filter;
  * @since 4.0.9
  */
 public class AnnotationUtil {
+	
+	/**
+	 * 将指定的被注解的元素转换为组合注解元素
+	 * 
+	 * @param annotationEle 注解元素
+	 * @return 组合注解元素
+	 */
+	public static CombinationAnnotationElement toCombination(AnnotatedElement annotationEle) {
+		if(annotationEle instanceof CombinationAnnotationElement) {
+			return (CombinationAnnotationElement)annotationEle;
+		}
+		return new CombinationAnnotationElement(annotationEle);
+	}
 
 	/**
 	 * 获取指定注解
@@ -31,8 +46,8 @@ public class AnnotationUtil {
 	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @return 注解对象
 	 */
-	public static Annotation[] getAnnotations(AnnotatedElement annotationEle) {
-		return (null == annotationEle) ? null : annotationEle.getAnnotations();
+	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isCombination) {
+		return (null == annotationEle) ? null : (isCombination ? toCombination(annotationEle) : annotationEle).getAnnotations();
 	}
 
 	/**
@@ -44,7 +59,7 @@ public class AnnotationUtil {
 	 * @return 注解对象
 	 */
 	public static <A extends Annotation> A getAnnotation(AnnotatedElement annotationEle, Class<A> annotationType) {
-		return (null == annotationEle) ? null : annotationEle.getAnnotation(annotationType);
+		return (null == annotationEle) ? null : toCombination(annotationEle).getAnnotation(annotationType);
 	}
 
 	/**
