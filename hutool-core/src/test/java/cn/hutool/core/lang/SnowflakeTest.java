@@ -15,6 +15,14 @@ import cn.hutool.core.lang.Snowflake;
 public class SnowflakeTest {
 	
 	@Test
+	public void snowflakeTest1(){
+		//构建Snowflake，提供终端ID和数据中心ID
+		Snowflake idWorker = new Snowflake(0, 0);
+		long nextId = idWorker.nextId();
+		Console.log(nextId);
+	}
+	
+	@Test
 	public void snowflakeTest(){
 		HashSet<Long> hashSet = new HashSet<>();
 		

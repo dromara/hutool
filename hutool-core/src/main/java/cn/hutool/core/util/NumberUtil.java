@@ -235,7 +235,7 @@ public class NumberUtil {
 	public static double sub(Double v1, Double v2) {
 		return sub((Number) v1, (Number) v2).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的减法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -375,7 +375,7 @@ public class NumberUtil {
 	public static double mul(Double v1, Double v2) {
 		return mul((Number) v1, (Number) v2).doubleValue();
 	}
-	
+
 	/**
 	 * 提供精确的乘法运算<br>
 	 * 如果传入多个值为null或者空，则返回0
@@ -739,7 +739,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal div(BigDecimal v1, BigDecimal v2, int scale, RoundingMode roundingMode) {
 		Assert.notNull(v2, "Divisor must be not null !");
-		if(null == v1) {
+		if (null == v1) {
 			return new BigDecimal("0");
 		}
 		if (scale < 0) {
@@ -1268,7 +1268,7 @@ public class NumberUtil {
 	 * @return 阶乘
 	 */
 	public static long factorial(long n) {
-		if(n < 1) {
+		if (n < 1) {
 			return 0;
 		}
 		if (n == 1) {
@@ -1568,7 +1568,7 @@ public class NumberUtil {
 	public static boolean equals(char c1, char c2, boolean ignoreCase) {
 		return CharUtil.equals(c1, c2, ignoreCase);
 	}
-	
+
 	/**
 	 * 取最小值
 	 * 
@@ -1582,7 +1582,7 @@ public class NumberUtil {
 	public static <T extends Comparable<? super T>> T min(T... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
-	
+
 	/**
 	 * 取最小值
 	 * 
@@ -1642,7 +1642,7 @@ public class NumberUtil {
 	public static float min(float... numberArray) {
 		return ArrayUtil.min(numberArray);
 	}
-	
+
 	/**
 	 * 取最大值
 	 * 
@@ -1656,7 +1656,7 @@ public class NumberUtil {
 	public static <T extends Comparable<? super T>> T max(T... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
-	
+
 	/**
 	 * 取最大值
 	 * 
@@ -1757,6 +1757,17 @@ public class NumberUtil {
 			}
 		}
 		return string;
+	}
+
+	/**
+	 * 数字转{@link BigDecimal}
+	 * 
+	 * @param number 数字
+	 * @return {@link BigDecimal}
+	 * @since 4.0.9
+	 */
+	public static BigDecimal toBigDecimal(Number number) {
+		return new BigDecimal(number.toString());
 	}
 
 	/**
@@ -1863,7 +1874,7 @@ public class NumberUtil {
 		final BigInteger value = new BigInteger(str, radix);
 		return negate ? value.negate() : value;
 	}
-	
+
 	/**
 	 * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻<br>
 	 * 判断方法为做差取绝对值判断是否为1
@@ -1876,7 +1887,7 @@ public class NumberUtil {
 	public static boolean isBeside(long number1, long number2) {
 		return Math.abs(number1 - number2) == 1;
 	}
-	
+
 	/**
 	 * 判断两个数字是否相邻，例如1和2相邻，1和3不相邻<br>
 	 * 判断方法为做差取绝对值判断是否为1
@@ -1889,7 +1900,7 @@ public class NumberUtil {
 	public static boolean isBeside(int number1, int number2) {
 		return Math.abs(number1 - number2) == 1;
 	}
-	
+
 	/**
 	 * 把给定的总是平均分成N份，返回每份的个数<br>
 	 * 当除以分数有余数时每份+1
@@ -1902,7 +1913,7 @@ public class NumberUtil {
 	public static int partValue(int total, int partCount) {
 		return partValue(total, partCount, true);
 	}
-	
+
 	/**
 	 * 把给定的总是平均分成N份，返回每份的个数<br>
 	 * 如果isPlusOneWhenHasRem为true，则当除以分数有余数时每份+1，否则丢弃余数部分
@@ -1919,7 +1930,7 @@ public class NumberUtil {
 			total = total / partCount;
 		} else {
 			partValue = (int) Math.floor(total / partCount);
-			if(isPlusOneWhenHasRem) {
+			if (isPlusOneWhenHasRem) {
 				partValue += 1;
 			}
 		}

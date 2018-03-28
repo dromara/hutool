@@ -17,7 +17,7 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void zipDirTest() {
-		ZipUtil.zip("d:/aaa/");
+		ZipUtil.zip("d:/aaa");
 	}
 	
 	@Test

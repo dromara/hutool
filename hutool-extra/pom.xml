@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -8,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.0.8</version>
+		<version>4.0.9</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -20,7 +21,7 @@
 		<velocity.version>1.7</velocity.version>
 		<beetl.version>2.7.26</beetl.version>
 		<rythm.version>1.2.2</rythm.version>
-		<mail.version>1.4.7</mail.version>
+		<mail.version>1.6.1</mail.version>
 		<jsch.version>0.1.54</jsch.version>
 		<zxing.version>3.3.2</zxing.version>
 	</properties>
@@ -68,8 +69,8 @@
 
 		<!-- 邮件 -->
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
 			<version>${mail.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>

@@ -82,25 +82,22 @@ public class ValueMatcherBuilder {
 	 * @return List
 	 */
 	private static List<Integer> parseStep(String value, ValueParser parser) {
-		List<String> parts = StrUtil.split(value, StrUtil.C_SLASH);
+		final List<String> parts = StrUtil.split(value, StrUtil.C_SLASH);
 		int size = parts.size();
+		
+		List<Integer> results;
 		if (size == 1) {// 普通形式
-			return parseRange(value, parser);
+			results = parseRange(value, -1, parser);
 		} else if (size == 2) {// 间隔形式
-			final List<Integer> rangeValues = parseRange(parts.get(0), parser);
-			int step = parser.parse(parts.get(1));
+			final int step = parser.parse(parts.get(1));
 			if (step < 1) {
 				throw new CronException("Non positive divisor for field: [{}]", value);
 			}
-			// 根据定义的间隔值，返回重新生成的时间值列表
-			List<Integer> values2 = new ArrayList<>();
-			for (int i = 0; i < rangeValues.size(); i += step) {
-				values2.add(rangeValues.get(i));
-			}
-			return values2;
+			results = parseRange(parts.get(0), step, parser);
 		} else {
 			throw new CronException("Invalid syntax of field: [{}]", value);
 		}
+		return results;
 	}
 
 	/**
@@ -114,39 +111,57 @@ public class ValueMatcherBuilder {
 	 * </ul>
 	 * 
 	 * @param value 范围表达式
+	 * @param step 步进
 	 * @param parser 针对这个时间字段的解析器
 	 * @return List
 	 */
-	private static List<Integer> parseRange(String value, ValueParser parser) {
+	private static List<Integer> parseRange(String value, int step, ValueParser parser) {
+		final List<Integer> results = new ArrayList<>();
+		
 		// 全部匹配形式
 		if (value.length() == 1 && value.equals("*")) {
-			List<Integer> values = new ArrayList<>();
-			for (int i = parser.getMin(); i <= parser.getMax(); i++) {
-				values.add(i);
+			if(step < 1) {
+				//在全匹配模式下，如果步进不存在，表示步进为1
+				step = 1;
 			}
-			return values;
+			for (int i = parser.getMin(); i <= parser.getMax(); i+=step) {
+				results.add(i);
+			}
+			return results;
 		}
 
+		//Range模式
 		List<String> parts = StrUtil.split(value, '-');
 		int size = parts.size();
-		List<Integer> values = new ArrayList<>();
 		if (size == 1) {// 普通值
-			values.add(parser.parse(value));
-			return values;
+			final int v1 = parser.parse(value);
+			if(step > 0) {//类似 20/2的形式
+				NumberUtil.appendRange(v1, parser.getMax(), step, results);
+			}else {
+				results.add(v1);
+			}
 		} else if (size == 2) {// range值
-			int v1 = parser.parse(parts.get(0));
-			int v2 = parser.parse(parts.get(1));
+			final int v1 = parser.parse(parts.get(0));
+			final int v2 = parser.parse(parts.get(1));
+			if(step < 1) {
+				//在range模式下，如果步进不存在，表示步进为1
+				step = 1;
+			}
 			if (v1 < v2) {// 正常范围，例如：2-5
-				NumberUtil.appendRange(v1, v2, values);
+				NumberUtil.appendRange(v1, v2, step, results);
 			} else if (v1 > v2) {// 逆向范围，反选模式，例如：5-2
-				NumberUtil.appendRange(v1, parser.getMax(), values);
-				NumberUtil.appendRange(parser.getMin(), v2, values);
-			} else {// v1 == v2
-				values.add(v1);
+				NumberUtil.appendRange(v1, parser.getMax(), step, results);
+				NumberUtil.appendRange(parser.getMin(), v2, step, results);
+			} else {// v1 == v2，此时与单值模式一致
+				if(step > 0) {//类似 20/2的形式
+					NumberUtil.appendRange(v1, parser.getMax(), step, results);
+				}else {
+					results.add(v1);
+				}
 			}
 		} else {
 			throw new CronException("Invalid syntax of field: [{}]", value);
 		}
-		return values;
+		return results;
 	}
 }

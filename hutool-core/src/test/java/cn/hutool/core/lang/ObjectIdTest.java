@@ -3,6 +3,7 @@ package cn.hutool.core.lang;
 import java.util.HashSet;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -22,5 +23,11 @@ public class ObjectIdTest {
 		}
 		
 		Assert.assertEquals(10000, set.size());
+	}
+	
+	@Test
+	@Ignore
+	public void nextTest() {
+		Console.log(ObjectId.next());
 	}
 }

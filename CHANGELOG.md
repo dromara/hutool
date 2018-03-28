@@ -2,6 +2,33 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.0.9
+
+### 新特性
+* 【core】     SecureUtil增加signParamsSha1方法（感谢@【帝都】宁静）
+* 【core】     XmlUtil增加mapToXml和xmlToMap（感谢@【杭州】小宙子）
+* 【captcha】修改逻辑：在创建验证码对象时生成一个验证码（感谢@【重庆】liuuuu）
+* 【core】     CopiedIterator使用LinkedList替代ArrayList（issue#III8K@Gitee）
+* 【poi】       ExcelWriter增加getOrCreateCell、createStyleForCell方法，便于自定义特殊单元格
+* 【core】     增加AnnotationUtil类
+* 【core】     IoUtil增加toMarkSupportStream方法
+* 【poi】       ExcelReader改进按照流读取工作簿的构造，使之对于mark不支持的流也可解析
+* 【core】     新增BytesResource和InputStreamResource
+* 【core】     RandomUtil新增randomBigDecimal（感谢@【帝都】宁静）
+* 【db】        Column对象添加comment字段
+* 【core】     Base64增加encode方法，参数为Inputstream和File，新增decodeToFile、decodeToStream（issue#IILZS@Gitee）
+* 【core】     扩充XmlUtil部分方法
+
+### Bug修复
+* 【core】修复StrUtil.replace问题（感谢@【上海】piaohao）
+* 【mail】解决在javax.mail大于1.5版本时，附件名过长在国内邮箱导致的显示错误问题（添加splitlongparameters参数）
+* 【core】修复ZipUtil.zip压缩目录时加入盘符问题（感谢@【深圳】Vmo ）
+* 【core】修复PropertyComparator失效问题（感谢@【长沙】哼哼 ）
+* 【cron】修复20/2此类表达式无效问题（感谢@【广州】杨小过 ）
+* 【core】修复XmlUtil.toStr编码设置无效问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.0.8
 
 ### 新特性

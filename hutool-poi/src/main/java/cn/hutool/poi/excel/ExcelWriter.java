@@ -496,10 +496,36 @@ public class ExcelWriter implements Closeable {
 	 * @since 4.0.2
 	 */
 	public ExcelWriter writeCellValue(int x, int y, Object value) {
-		final Row row = RowUtil.getOrCreateRow(this.sheet, y);
-		final Cell cell = CellUtil.getOrCreateCell(row, x);
+		final Cell cell = getOrCreateCell(x, y);
 		CellUtil.setCellValue(cell, value, styleSet);
 		return this;
+	}
+	
+	/**
+	 * 获取或者创建指定位置的单元格
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return {@link Cell}
+	 * @since 4.0.9
+	 */
+	public Cell getOrCreateCell(int x, int y) {
+		final Row row = RowUtil.getOrCreateRow(this.sheet, y);
+		return CellUtil.getOrCreateCell(row, x);
+	}
+	
+	/**
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return {@link CellStyle}
+	 * @since 4.0.9
+	 */
+	public CellStyle createStyleForCell(int x, int y) {
+		final CellStyle cellStyle = this.workbook.createCellStyle();
+		final Cell cell = getOrCreateCell(x, y);
+		cell.setCellStyle(this.workbook.createCellStyle());
+		return cellStyle;
 	}
 	
 	/**

@@ -153,16 +153,25 @@ public class FileUtilTest {
 	@Test
 	public void subPathTest2() {
 		String subPath = FileUtil.subPath("d:/aaa/bbb/", "d:/aaa/bbb/ccc/");
-		Assert.assertEquals("ccc", subPath);
+		Assert.assertEquals("ccc/", subPath);
 		
 		subPath = FileUtil.subPath("d:/aaa/bbb", "d:/aaa/bbb/ccc/");
-		Assert.assertEquals("ccc", subPath);
+		Assert.assertEquals("ccc/", subPath);
+		
+		subPath = FileUtil.subPath("d:/aaa/bbb", "d:/aaa/bbb/ccc/test.txt");
+		Assert.assertEquals("ccc/test.txt", subPath);
 		
 		subPath = FileUtil.subPath("d:/aaa/bbb/", "d:/aaa/bbb/ccc");
 		Assert.assertEquals("ccc", subPath);
 		
 		subPath = FileUtil.subPath("d:/aaa/bbb", "d:/aaa/bbb/ccc");
 		Assert.assertEquals("ccc", subPath);
+		
+		subPath = FileUtil.subPath("d:/aaa/bbb", "d:/aaa/bbb");
+		Assert.assertEquals("", subPath);
+		
+		subPath = FileUtil.subPath("d:/aaa/bbb/", "d:/aaa/bbb");
+		Assert.assertEquals("", subPath);
 	}
 	
 	@Test

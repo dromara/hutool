@@ -708,6 +708,24 @@ public class IoUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 将{@link InputStream}转换为支持mark标记的流<br>
+	 * 若原流支持mark标记，则返回原流，否则使用{@link BufferedInputStream} 包装之
+	 * 
+	 * @param in 流
+	 * @return {@link InputStream}
+	 * @since 4.0.9
+	 */
+	public static InputStream toMarkSupportStream(InputStream in) {
+		if(null == in) {
+			return null;
+		}
+		if(false == in.markSupported()) {
+			return new BufferedInputStream(in);
+		}
+		return in;
+	}
 
 	/**
 	 * 转换为{@link PushbackInputStream}<br>

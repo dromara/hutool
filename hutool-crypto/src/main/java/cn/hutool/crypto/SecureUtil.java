@@ -895,6 +895,19 @@ public final class SecureUtil {
 	}
 	
 	/**
+	 * 对参数做Sha1签名<br>
+	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
+	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
+	 * 
+	 * @param params 参数
+	 * @return 签名
+	 * @since 4.0.8
+	 */
+	public static String signParamsSha1(Map<?, ?> params) {
+		return signParams(DigestAlgorithm.SHA1, params);
+	}
+	
+	/**
 	 * 对参数做Sha256签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
 	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值

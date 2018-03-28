@@ -78,7 +78,7 @@ public class WorkbookUtil {
 	 */
 	public static Workbook loadBook(InputStream in, String password, boolean closeAfterRead) {
 		try {
-			return WorkbookFactory.create(in, password);
+			return WorkbookFactory.create(IoUtil.toMarkSupportStream(in), password);
 		} catch (Exception e) {
 			throw new POIException(e);
 		} finally {

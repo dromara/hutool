@@ -68,10 +68,10 @@ public class Caller {
 		ICaller caller;
 		try {
 			caller = new ReflectionCaller();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			try {
 				caller = new SecurityManagerCaller();
-			} catch (Exception e2) {
+			} catch (Throwable e2) {
 				caller = new StackTraceCaller();
 			}
 		}

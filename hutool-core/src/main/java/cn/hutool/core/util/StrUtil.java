@@ -3180,7 +3180,7 @@ public class StrUtil {
 	 * @since 4.0.3
 	 */
 	public static String replaceIgnoreCase(CharSequence str, CharSequence searchStr, CharSequence replacement) {
-		return replace(searchStr, 0, searchStr, replacement, true);
+		return replace(str, 0, searchStr, replacement, true);
 	}
 
 	/**
@@ -3207,7 +3207,7 @@ public class StrUtil {
 	 * @since 4.0.3
 	 */
 	public static String replace(CharSequence str, CharSequence searchStr, CharSequence replacement, boolean ignoreCase) {
-		return replace(searchStr, 0, searchStr, replacement, ignoreCase);
+		return replace(str, 0, searchStr, replacement, ignoreCase);
 	}
 
 	/**

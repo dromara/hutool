@@ -1474,6 +1474,7 @@ public class FileUtil {
 	 * <pre>
 	 * dirPath: d:/aaa/bbb    filePath: d:/aaa/bbb/ccc     =》    ccc
 	 * dirPath: d:/Aaa/bbb    filePath: d:/aaa/bbb/ccc.txt     =》    ccc.txt
+	 * dirPath: d:/Aaa/bbb    filePath: d:/aaa/bbb/     =》    ""
 	 * </pre>
 	 * 
 	 * @param dirPath 父路径
@@ -1482,10 +1483,12 @@ public class FileUtil {
 	 */
 	public static String subPath(String dirPath, String filePath) {
 		if (StrUtil.isNotEmpty(dirPath) && StrUtil.isNotEmpty(filePath)) {
-			dirPath = StrUtil.addSuffixIfNot(normalize(dirPath), "/");
-			filePath = StrUtil.removeSuffix(normalize(filePath), "/");
+			
+			dirPath = StrUtil.removeSuffix(normalize(dirPath), "/");
+			filePath = normalize(filePath);
 
-			return StrUtil.removePrefixIgnoreCase(filePath, dirPath);
+			final String result = StrUtil.removePrefixIgnoreCase(filePath, dirPath);
+			return StrUtil.removePrefix(result, "/");
 		}
 		return filePath;
 	}
