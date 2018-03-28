@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +74,13 @@ public class XmlUtil {
 			// ignore
 		}
 
-		return readXML(new InputSource(file.toURI().toASCIIString()));
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			return readXML(in);
+		} finally {
+			IoUtil.close(in);
+		}
 	}
 
 	/**
@@ -205,19 +212,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 */
 	public static String toStr(Document doc) {
-		return toStr(doc, null);
-	}
-
-	/**
-	 * 将XML文档转换为String<br>
-	 * 此方法会修改Document中的字符集
-	 * 
-	 * @param doc XML文档
-	 * @param charset 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
-	 * @return XML字符串
-	 */
-	public static String toStr(Document doc, String charset) {
-		return toStr(doc, charset, true);
+		return toStr(doc, true);
 	}
 
 	/**
@@ -230,7 +225,7 @@ public class XmlUtil {
 	 * @return XML字符串
 	 * @since 3.0.9
 	 */
-	public static String toStr(Document doc, String charset, boolean isPretty) {
+	public static String toStr(Document doc, boolean isPretty) {
 		final StringWriter writer = StrUtil.getWriter();
 		try {
 			write(doc, writer, isPretty);
@@ -555,6 +550,17 @@ public class XmlUtil {
 	public static Map<String, Object> xmlToMap(String xmlStr) {
 		return xmlToMap(xmlStr, new HashMap<String, Object>());
 	}
+	
+	/**
+	 * XML格式字符串转换为Map
+	 *
+	 * @param node XML节点
+	 * @return XML数据转换后的Map
+	 * @since 4.0.8
+	 */
+	public static Map<String, Object> xmlToMap(Node node) {
+		return xmlToMap(node, new HashMap<String, Object>());
+	}
 
 	/**
 	 * XML格式字符串转换为Map<br>
@@ -576,25 +582,25 @@ public class XmlUtil {
 	/**
 	 * XML节点转换为Map
 	 *
-	 * @param element XML节点
+	 * @param node XML节点
 	 * @param result 结果Map类型
 	 * @return XML数据转换后的Map
 	 * @since 4.0.8
 	 */
-	public static Map<String, Object> xmlToMap(Element element, Map<String, Object> result) {
+	public static Map<String, Object> xmlToMap(Node node, Map<String, Object> result) {
 		if(null == result) {
 			result = new HashMap<>();
 		}
 		
-		final NodeList nodeList = element.getChildNodes();
+		final NodeList nodeList = node.getChildNodes();
 		final int length = nodeList.getLength();
-		Node node;
-		Element subEle;
+		Node childNode;
+		Element childEle;
 		for (int i = 0; i < length; ++i) {
-			node = nodeList.item(i);
-			if (isElement(node)) {
-				subEle = (Element) node;
-				result.put(subEle.getNodeName(), subEle.getTextContent());
+			childNode = nodeList.item(i);
+			if (isElement(childNode)) {
+				childEle = (Element) childNode;
+				result.put(childEle.getNodeName(), childEle.getTextContent());
 			}
 		}
 		return result;
@@ -607,20 +613,23 @@ public class XmlUtil {
 	 * @return XML格式的字符串
 	 * @since 4.0.8
 	 */
-	public static String mapToXml(Map<String, Object> data, String rootName) {
+	public static String mapToXmlStr(Map<?, ?> data, String rootName) {
+		return toStr(mapToXml(data, rootName));
+	}
+	
+	/**
+	 * 将Map转换为XML
+	 *
+	 * @param data Map类型数据
+	 * @return XML
+	 * @since 4.0.9
+	 */
+	public static Document mapToXml(Map<?, ?> data, String rootName) {
 		final Document doc = createXml();
-		final Element root = doc.createElement(rootName);
-		doc.appendChild(root);
+		final Element root = appendChild(doc, rootName);
 		
-		Element filedEle;
-		Object value;
-		for (Entry<String, Object> entry : data.entrySet()) {
-			filedEle = doc.createElement(entry.getKey());
-			value = entry.getValue();
-			filedEle.appendChild(doc.createTextNode(value.toString()));
-			root.appendChild(filedEle);
-		}
-		return toStr(doc);
+		mapToXml(doc, root, data);
+		return doc;
 	}
 	
 	/**
@@ -632,27 +641,43 @@ public class XmlUtil {
 	public static boolean isElement(Node node) {
 		return (null == node) ? false : Node.ELEMENT_NODE == node.getNodeType();
 	}
+	
+	/**
+	 * 在已有节点上创建子节点
+	 * @param node 节点
+	 * @param tagName 标签名
+	 * @return 子节点
+	 * @since 4.0.9
+	 */
+	public static Element appendChild(Node node, String tagName) {
+		Document doc = (node instanceof Document) ? (Document)node : node.getOwnerDocument();
+		Element child = doc.createElement(tagName);
+		node.appendChild(child);
+		return child;
+	}
 
 	// ---------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
+	 *@param doc {@link Document}
+	 *@param element 节点
 	 * @param data Map类型数据
-	 * @return XML格式的字符串
 	 * @since 4.0.8
 	 */
-	public static void mapToXml(Document doc, Element element, Map<String, Object> data) {
+	private static void mapToXml(Document doc, Element element, Map<?, ?> data) {
 		Element filedEle;
 		Object value;
-		for (Entry<String, Object> entry : data.entrySet()) {
-			filedEle = doc.createElement(entry.getKey());
+		for (Entry<?, ?> entry : data.entrySet()) {
+			filedEle = doc.createElement(entry.getKey().toString());
+			element.appendChild(filedEle);
 			value = entry.getValue();
 			if(value instanceof Map) {
-				mapToXml(doc, filedEle, data);
+				mapToXml(doc, filedEle, (Map<?, ?>)value);
 				element.appendChild(filedEle);
+			} else {
+				filedEle.appendChild(doc.createTextNode(value.toString()));
 			}
-			filedEle.appendChild(doc.createTextNode(value.toString()));
-			element.appendChild(filedEle);
 		}
 	}
 	// ---------------------------------------------------------------------------------------- Private method end

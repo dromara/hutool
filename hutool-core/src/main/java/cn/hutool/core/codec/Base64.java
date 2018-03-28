@@ -281,7 +281,7 @@ public class Base64 {
 	/**
 	 * base64解码
 	 * 
-	 * @param source 被解码的base64字符串
+	 * @param base64 被解码的base64字符串
 	 * @param out 写出到的流
 	 * @param isCloseOut 是否关闭输出流
 	 * @since 4.0.9

@@ -104,7 +104,6 @@ public class AnnotationUtil {
 	 * 获取指定注解中所有属性值<br>
 	 * 如果无指定的属性方法返回null
 	 * 
-	 * @param <T> 注解值类型
 	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @return 注解对象
