@@ -149,12 +149,11 @@ public class ZipUtil {
 	public static File zip(File zipFile, Charset charset, boolean withSrcDir, File... srcFiles) throws UtilException {
 		validateFiles(zipFile, srcFiles);
 
-		ZipOutputStream out = null;
-		try {
-			out = getZipOutputStream(zipFile, charset);
+		try (ZipOutputStream out = getZipOutputStream(zipFile, charset)){
+			String srcRootDir;
 			for (File srcFile : srcFiles) {
 				// 如果只是压缩一个文件，则需要截取该文件的父目录
-				String srcRootDir = srcFile.getCanonicalPath();
+				srcRootDir = srcFile.getCanonicalPath();
 				if (srcFile.isFile() || withSrcDir) {
 					srcRootDir = srcFile.getParent();
 				}
@@ -164,8 +163,6 @@ public class ZipUtil {
 			}
 		} catch (IOException e) {
 			throw new UtilException(e);
-		} finally {
-			IoUtil.close(out);
 		}
 		return zipFile;
 	}
@@ -533,15 +530,16 @@ public class ZipUtil {
 		if (file == null) {
 			return;
 		}
-
+		
 		final String subPath = FileUtil.subPath(srcRootDir, file); // 获取文件相对于压缩文件夹根目录的子路径
 		if(file.isDirectory()){// 如果是目录，则压缩压缩目录中的文件或子目录
-			if(StrUtil.isNotEmpty(subPath)) {
-				//加入目录，此目录可能为空
+			final File[] files = file.listFiles();
+			if(ArrayUtil.isEmpty(files) && StrUtil.isNotEmpty(subPath)) {
+				//加入目录，只有空目录时才加入目录，非空时会在创建文件时自动添加父级目录
 				addDir(subPath, out);
 			}
 			//压缩目录下的子文件或目录
-			for (File childFile : file.listFiles()) {
+			for (File childFile : files) {
 				zip(childFile, srcRootDir, out);
 			}
 		} else {// 如果是文件或其它符号，则直接压缩该文件

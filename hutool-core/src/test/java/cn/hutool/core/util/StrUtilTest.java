@@ -230,4 +230,17 @@ public class StrUtilTest {
 		result = StrUtil.move(str, 7, 12, 0);
 		Assert.assertEquals("aaaaaaa22222bbbbbbb", result);
 	}
+	
+	@Test
+	public void removePrefixIgnorecaseTest() {
+		String a = "aaabbb";
+		String prefix = "aaa";
+		Assert.assertEquals("bbb", StrUtil.removePrefixIgnoreCase(a, prefix));
+		
+		prefix = "AAA";
+		Assert.assertEquals("bbb", StrUtil.removePrefixIgnoreCase(a, prefix));
+		
+		prefix = "AAABBB";
+		Assert.assertEquals("", StrUtil.removePrefixIgnoreCase(a, prefix));
+	}
 }

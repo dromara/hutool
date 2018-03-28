@@ -15,9 +15,9 @@ import cn.hutool.core.lang.Console;
 public class ZipUtilTest {
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void zipDirTest() {
-		ZipUtil.zip("d:/aaa/");
+		ZipUtil.zip("d:/aaa");
 	}
 	
 	@Test
