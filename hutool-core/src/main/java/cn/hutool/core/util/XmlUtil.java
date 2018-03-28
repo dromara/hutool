@@ -4,9 +4,11 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -20,11 +22,14 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
@@ -217,10 +222,9 @@ public class XmlUtil {
 
 	/**
 	 * 将XML文档转换为String<br>
-	 * 此方法会修改Document中的字符集
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
 	 * 
 	 * @param doc XML文档
-	 * @param charset 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 * @param isPretty 是否格式化输出
 	 * @return XML字符串
 	 * @since 3.0.9
@@ -233,6 +237,25 @@ public class XmlUtil {
 			throw new UtilException(e, "Trans xml document to string error!");
 		}
 		return writer.toString();
+	}
+	
+	/**
+	 * 将XML文档转换为String<br>
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
+	 * 
+	 * @param doc XML文档
+	 * @param isPretty 是否格式化输出
+	 * @return XML字符串
+	 * @since 3.0.9
+	 */
+	public static String toStr(Document doc, String charset, boolean isPretty) {
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			write(doc, out, charset, isPretty);
+		} catch (Exception e) {
+			throw new UtilException(e, "Trans xml document to string error!");
+		}
+		return out.toString();
 	}
 
 	/**
@@ -273,17 +296,45 @@ public class XmlUtil {
 	/**
 	 * 将XML文档写出
 	 * 
-	 * @param doc {@link Document} XML文档
+	 * @param node {@link Node} XML文档节点或文档本身
 	 * @param writer 写出的Writer，Writer决定了输出XML的编码
 	 * @param isPretty 是否格式化输出
 	 * @since 3.0.9
 	 */
-	public static void write(Document doc, Writer writer, boolean isPretty) {
+	public static void write(Node node, Writer writer, boolean isPretty) {
+		transform(new DOMSource(node), new StreamResult(writer), null, isPretty);
+	}
+	
+	/**
+	 * 将XML文档写出
+	 * 
+	 * @param node {@link Node} XML文档节点或文档本身
+	 * @param out 写出的Writer，Writer决定了输出XML的编码
+	 * @param charset 编码
+	 * @param isPretty 是否格式化输出
+	 * @since 4.0.8
+	 */
+	public static void write(Node node, OutputStream out, String charset, boolean isPretty) {
+		transform(new DOMSource(node), new StreamResult(out), charset, isPretty);
+	}
+	
+	/**
+	 * 将XML文档写出
+	 * 
+	 * @param node {@link Node} XML文档节点或文档本身
+	 * @param writer 写出的Writer，Writer决定了输出XML的编码
+	 * @param isPretty 是否格式化输出
+	 * @since 4.0.9
+	 */
+	public static void transform(Source source, Result result, String charset, boolean isPretty) {
 		final TransformerFactory factory = TransformerFactory.newInstance();
 		try {
 			final Transformer xformer = factory.newTransformer();
 			xformer.setOutputProperty(OutputKeys.INDENT, isPretty ? "yes" : "no");
-			xformer.transform(new DOMSource(doc), new StreamResult(writer));
+			if(StrUtil.isNotBlank(charset)) {
+				xformer.setOutputProperty(OutputKeys.ENCODING, charset);
+			}
+			xformer.transform(source, result);
 		} catch (Exception e) {
 			throw new UtilException(e, "Trans xml document to string error!");
 		}
@@ -474,6 +525,45 @@ public class XmlUtil {
 	 */
 	public static XPath createXPath() {
 		return XPathFactory.newInstance().newXPath();
+	}
+	
+	/**
+	 * 通过XPath方式读取XML节点等信息<br>
+	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * 
+	 * @param expression XPath表达式
+	 * @param source 资源，可以是Docunent、Node节点等
+	 * @return 匹配返回类型的值
+	 * @since 4.0.9
+	 */
+	public static Element getElementByXPath(String expression, Object source) {
+		return (Element) getNodeByXPath(expression, source);
+	}
+	
+	/**
+	 * 通过XPath方式读取XML的NodeList<br>
+	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * 
+	 * @param expression XPath表达式
+	 * @param source 资源，可以是Docunent、Node节点等
+	 * @return NodeList
+	 * @since 4.0.9
+	 */
+	public static NodeList getNodeListByXPath(String expression, Object source) {
+		return (NodeList) getByXPath(expression, source, XPathConstants.NODESET);
+	}
+	
+	/**
+	 * 通过XPath方式读取XML节点等信息<br>
+	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
+	 * 
+	 * @param expression XPath表达式
+	 * @param source 资源，可以是Docunent、Node节点等
+	 * @return 匹配返回类型的值
+	 * @since 4.0.9
+	 */
+	public static Node getNodeByXPath(String expression, Object source) {
+		return (Node) getByXPath(expression, source, XPathConstants.NODE);
 	}
 
 	/**

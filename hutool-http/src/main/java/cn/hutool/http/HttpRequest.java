@@ -372,7 +372,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 * 
 	 * @param name 名
-	 * @param dataSource 数据源，文件可以使用{@link FileDataSource}包装使用
+	 * @param file 需要上传的文件
 	 * @return this
 	 */
 	public HttpRequest form(String name, File file) {
