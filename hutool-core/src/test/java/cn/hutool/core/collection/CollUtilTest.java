@@ -2,6 +2,7 @@ package cn.hutool.core.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil.Hash;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Matcher;
@@ -222,21 +224,42 @@ public class CollUtilTest {
 	
 	@Test
 	public void groupByFieldTest() {
-		List<TestBeans> list = CollUtil.newArrayList(new TestBeans("张三", 12), new TestBeans("李四", 13), new TestBeans("王五", 12));
-		List<List<TestBeans>> groupByField = CollUtil.groupByField(list, "age");
+		List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12), new TestBean("李四", 13), new TestBean("王五", 12));
+		List<List<TestBean>> groupByField = CollUtil.groupByField(list, "age");
 		Assert.assertEquals("张三", groupByField.get(0).get(0).getName());
 		Assert.assertEquals("王五", groupByField.get(0).get(1).getName());
 		
 		Assert.assertEquals("李四", groupByField.get(1).get(0).getName());
 	}
 	
-	public static class TestBeans {
+	@Test
+	public void sortByPropertyTest() {
+		List<TestBean> list = CollUtil.newArrayList(
+				new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
+				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
+				new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
+		);
+		
+		CollUtil.sortByProperty(list, "createTime");
+		Assert.assertEquals("李四", list.get(0).getName());
+		Assert.assertEquals("王五", list.get(1).getName());
+		Assert.assertEquals("张三", list.get(2).getName());
+	}
+	
+	public static class TestBean {
 		private String name;
 		private int age;
+		private Date createTime;
 		
-		public TestBeans(String name, int age) {
+		public TestBean(String name, int age) {
 			this.name = name;
 			this.age = age;
+		}
+		
+		public TestBean(String name, int age, Date createTime) {
+			this.name = name;
+			this.age = age;
+			this.createTime = createTime;
 		}
 		
 		public String getName() {
@@ -251,6 +274,13 @@ public class CollUtilTest {
 		}
 		public void setAge(int age) {
 			this.age = age;
+		}
+		
+		public Date getCreateTime() {
+			return createTime;
+		}
+		public void setCreateTime(Date createTime) {
+			this.createTime = createTime;
 		}
 
 		@Override
