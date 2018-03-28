@@ -85,6 +85,27 @@ public class DateUtilTest {
 	}
 	
 	@Test
+	public void beginAndWeedTest() {
+		String dateStr = "2017-03-01 22:33:23";
+		Date date = DateUtil.parse(dateStr);
+		
+		// 一周的开始
+		Date beginOfWeek = DateUtil.beginOfWeek(date);
+		Assert.assertEquals("2017-02-27 00:00:00", beginOfWeek.toString());
+		// 一周的结束
+		Date endOfWeek = DateUtil.endOfWeek(date);
+		Assert.assertEquals("2017-03-05 23:59:59", endOfWeek.toString());
+		
+		Calendar calendar = DateUtil.calendar(date);
+		// 一周的开始
+		Calendar begin = DateUtil.beginOfWeek(calendar);
+		Assert.assertEquals("2017-02-27 00:00:00", DateUtil.date(begin).toString());
+		// 一周的结束
+		Calendar end = DateUtil.endOfWeek(calendar);
+		Assert.assertEquals("2017-03-05 23:59:59", DateUtil.date(end).toString());
+	}
+	
+	@Test
 	public void offsetDateTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		Date date = DateUtil.parse(dateStr);
