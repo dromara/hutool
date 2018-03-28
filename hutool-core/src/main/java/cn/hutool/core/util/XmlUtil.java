@@ -321,8 +321,9 @@ public class XmlUtil {
 	/**
 	 * 将XML文档写出
 	 * 
-	 * @param node {@link Node} XML文档节点或文档本身
-	 * @param writer 写出的Writer，Writer决定了输出XML的编码
+	 * @param source 源
+	 * @param result 目标
+	 * @param charset 编码
 	 * @param isPretty 是否格式化输出
 	 * @since 4.0.9
 	 */
