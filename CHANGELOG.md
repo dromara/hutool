@@ -16,12 +16,14 @@
 * 【core】     新增BytesResource和InputStreamResource
 * 【core】     RandomUtil新增randomBigDecimal（感谢@【帝都】宁静）
 * 【db】        Column对象添加comment字段
+* 【core】     Base64增加encode方法，参数为Inputstream和File，新增decodeToFile、decodeToStream（issue#IILZS@Gitee）
 
 ### Bug修复
 * 【core】修复StrUtil.replace问题（感谢@【上海】piaohao）
 * 【mail】解决在javax.mail大于1.5版本时，附件名过长在国内邮箱导致的显示错误问题（添加splitlongparameters参数）
 * 【core】修复ZipUtil.zip压缩目录时加入盘符问题（感谢@【深圳】Vmo ）
 * 【core】修复PropertyComparator失效问题（感谢@【长沙】哼哼 ）
+* 【cron】修复20/2此类表达式无效问题（感谢@【广州】杨小过 ）
 
 -------------------------------------------------------------------------------------------------------------
 

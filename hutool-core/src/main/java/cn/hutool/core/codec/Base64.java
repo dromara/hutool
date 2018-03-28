@@ -1,6 +1,12 @@
 package cn.hutool.core.codec;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 
 /**
  * Base64工具类，提供Base64的编码和解码方案<br>
@@ -123,6 +129,50 @@ public class Base64 {
 	public static String encodeUrlSafe(byte[] source) {
 		return Base64Encoder.encodeUrlSafe(source);
 	}
+	
+	/**
+	 * base64编码
+	 * 
+	 * @param in 被编码base64的流（一般为图片流或者文件流）
+	 * @return 被加密后的字符串
+	 * @since 4.0.9
+	 */
+	public static String encode(InputStream in) {
+		return Base64Encoder.encode(IoUtil.readBytes(in));
+	}
+
+	/**
+	 * base64编码,URL安全的
+	 * 
+	 * @param in 被编码base64的流（一般为图片流或者文件流）
+	 * @return 被加密后的字符串
+	 * @since 4.0.9
+	 */
+	public static String encodeUrlSafe(InputStream in) {
+		return Base64Encoder.encodeUrlSafe(IoUtil.readBytes(in));
+	}
+	
+	/**
+	 * base64编码
+	 * 
+	 * @param file 被编码base64的文件
+	 * @return 被加密后的字符串
+	 * @since 4.0.9
+	 */
+	public static String encode(File file) {
+		return Base64Encoder.encode(FileUtil.readBytes(file));
+	}
+
+	/**
+	 * base64编码,URL安全的
+	 * 
+	 * @param file 被编码base64的文件
+	 * @return 被加密后的字符串
+	 * @since 4.0.9
+	 */
+	public static String encodeUrlSafe(File file) {
+		return Base64Encoder.encodeUrlSafe(FileUtil.readBytes(file));
+	}
 
 	/**
 	 * base64编码
@@ -215,15 +265,39 @@ public class Base64 {
 	public static String decodeStr(String source, Charset charset) {
 		return Base64Decoder.decodeStr(source, charset);
 	}
-
+	
+	/**
+	 * base64解码
+	 * 
+	 * @param base64 被解码的base64字符串
+	 * @param destFile 目标文件
+	 * @return 目标文件
+	 * @since 4.0.9
+	 */
+	public static File decodeToFile(String base64, File destFile) {
+		return FileUtil.writeBytes(Base64Decoder.decode(base64), destFile);
+	}
+	
 	/**
 	 * base64解码
 	 * 
 	 * @param source 被解码的base64字符串
+	 * @param out 写出到的流
+	 * @param isCloseOut 是否关闭输出流
+	 * @since 4.0.9
+	 */
+	public static void decodeToStream(String base64, OutputStream out, boolean isCloseOut) {
+		IoUtil.write(out, isCloseOut, Base64Decoder.decode(base64));
+	}
+
+	/**
+	 * base64解码
+	 * 
+	 * @param base64 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 */
-	public static byte[] decode(String source) {
-		return Base64Decoder.decode(source);
+	public static byte[] decode(String base64) {
+		return Base64Decoder.decode(base64);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package cn.hutool.cron.demo;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.cron.CronUtil;
 
 /**
@@ -19,6 +20,18 @@ public class CronDemo {
 		CronUtil.setMatchSecond(true);
 		
 		CronUtil.start();
+		
+		String id = CronUtil.schedule("*/2 * * * * *", new Runnable() {
+			
+			@Override
+			public void run() {
+				Console.log("task running : 2s");
+			}
+		});
+		
+		Console.log(id);
+		CronUtil.remove(id);
+		
 //		CronUtil.stop();
 	}
 }

@@ -85,6 +85,19 @@ public class CronTest {
 		assertMatch(pattern, "2017-02-19 04:00:33");
 	}
 	
+	@Test
+	public void quartzRangePatternTest() {
+		CronPattern pattern = new CronPattern("* 20/2 * * * ?");
+		assertMatch(pattern, "2017-02-09 04:20:00");
+		assertMatch(pattern, "2017-02-09 05:20:00");
+		assertMatch(pattern, "2017-02-19 04:22:33");
+		
+		pattern = new CronPattern("* 2-20/2 * * * ?");
+		assertMatch(pattern, "2017-02-09 04:02:00");
+		assertMatch(pattern, "2017-02-09 05:04:00");
+		assertMatch(pattern, "2017-02-19 04:20:33");
+	}
+	
 	/**
 	 * 表达式是否匹配日期
 	 * @param pattern 表达式
