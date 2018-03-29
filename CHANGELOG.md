@@ -6,6 +6,7 @@
 
 ### 新特性
 * 【poi】       ExcelWriter.merge方法加入重载，可选是否加入默认标题样式
+* 【poi】       ExcelSaxReader改进按照流读取工作簿的构造，使之对于mark不支持的流也可解析
 
 ### Bug修复
 * 【poi】       修复ExcelWriter合并单元格后样式失效问题

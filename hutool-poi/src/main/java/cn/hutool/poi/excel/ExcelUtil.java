@@ -61,6 +61,7 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
+		in = IoUtil.toMarkSupportStream(in);
 		if (isXlsx(in)) {
 			read07BySax(in, sheetIndex, rowHandler);
 		} else {
