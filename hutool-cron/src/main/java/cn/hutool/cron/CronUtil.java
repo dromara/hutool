@@ -3,6 +3,7 @@ package cn.hutool.cron;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.resource.NoResourceException;
+import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.Task;
 import cn.hutool.setting.Setting;
 import cn.hutool.setting.SettingRuntimeException;
@@ -110,6 +111,17 @@ public final class CronUtil {
 	 */
 	public static void remove(String schedulerId) {
 		scheduler.deschedule(schedulerId);
+	}
+	
+	/**
+	 * 移除Task
+	 * 
+	 * @param id Task的ID
+	 * @param pattern {@link CronPattern}
+	 * @since 4.0.10
+	 */
+	public static void updatePattern(String id, CronPattern pattern) {
+		scheduler.updatePattern(id, pattern);
 	}
 
 	/**

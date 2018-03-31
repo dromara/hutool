@@ -84,6 +84,29 @@ public class TaskTable {
 			writeLock.unlock();
 		}
 	}
+	
+	/**
+	 * 更新某个Task的定时规则
+	 * 
+	 * @param id Task的ID
+	 * @param pattern 新的表达式
+	 * @return 是否更新成功，如果id对应的规则不存在则不更新
+	 * @since 4.0.10
+	 */
+	public boolean updatePattern(String id, CronPattern pattern) {
+		final Lock writeLock = lock.writeLock();
+		try {
+			writeLock.lock();
+			final int index = ids.indexOf(id);
+			if (index > -1) {
+				patterns.set(index, pattern);
+				return true;
+			}
+		} finally {
+			writeLock.unlock();
+		}
+		return false;
+	}
 
 	/**
 	 * 获得指定位置的{@link Task}
