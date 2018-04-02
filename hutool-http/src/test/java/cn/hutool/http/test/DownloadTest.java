@@ -21,6 +21,13 @@ public class DownloadTest {
 		long size = HttpUtil.downloadFile("https://www.baidu.com/", FileUtil.file("d:/"));
 		System.out.println("Download size: " + size);
 	}
+	
+	@Test
+	@Ignore
+	public void downloadTest1() {
+		long size = HttpUtil.downloadFile("http://explorer.bbfriend.com/crossdomain.xml", "d:/");
+		System.out.println("Download size: " + size);
+	}
 
 	@Test
 	@Ignore
