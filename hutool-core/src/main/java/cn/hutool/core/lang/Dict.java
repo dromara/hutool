@@ -206,7 +206,6 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	/**
 	 * 过滤Map保留指定键值对，如果键不存在跳过
 	 * 
-	 * @param map 原始Map
 	 * @param keys 键列表
 	 * @return Dict 结果
 	 * @since 4.0.10
