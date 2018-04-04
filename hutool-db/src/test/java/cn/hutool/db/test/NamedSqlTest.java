@@ -20,7 +20,7 @@ public class NamedSqlTest {
 
 		NamedSql namedSql = new NamedSql(sql, paramMap);
 		Assert.assertEquals("select * from table where id=@id and name = ? and nickName = ?", namedSql.getSql());
-		Assert.assertEquals("张三", namedSql.getParams().get(0));
-		Assert.assertEquals("小豆豆", namedSql.getParams().get(1));
+		Assert.assertEquals("张三", namedSql.getParams()[0]);
+		Assert.assertEquals("小豆豆", namedSql.getParams()[1]);
 	}
 }

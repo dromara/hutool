@@ -503,10 +503,37 @@ public class MapUtil {
 		}
 		return map2;
 	}
+	
+	/**
+	 * 过滤Map保留指定键值对，如果键不存在跳过
+	 * 
+	 * @param <K> Key类型
+	 * @param <V> Value类型
+	 * @param map 原始Map
+	 * @param keys 键列表
+	 * @return Map 结果，结果的Map类型与原Map保持一致
+	 * @since 4.0.10
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> filter(Map<K, V> map, K... keys) {
+		final Map<K, V> map2 = ObjectUtil.clone(map);
+		if (isEmpty(map2)) {
+			return map2;
+		}
+
+		map2.clear();
+		for (K key : keys) {
+			if(map.containsKey(key)) {
+				map2.put(key, map.get(key));
+			}
+		}
+		return map2;
+	}
 
 	/**
 	 * Map的键和值互换
 	 * 
+	 * @param <T> 键和值类型
 	 * @param map Map对象，键值类型必须一致
 	 * @return 互换后的Map
 	 * @since 3.2.2

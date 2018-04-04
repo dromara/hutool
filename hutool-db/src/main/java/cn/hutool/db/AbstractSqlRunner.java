@@ -12,11 +12,12 @@ import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.handler.RsHandler;
 import cn.hutool.db.handler.StringHandler;
-import cn.hutool.db.sql.SqlExecutor;
-import cn.hutool.db.sql.Wrapper;
-import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.db.sql.Condition;
+import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.db.sql.Query;
+import cn.hutool.db.sql.SqlExecutor;
+import cn.hutool.db.sql.SqlUtil;
+import cn.hutool.db.sql.Wrapper;
 
 /**
  * 抽象SQL执行类<br>
@@ -205,6 +206,28 @@ public abstract class AbstractSqlRunner{
 		try {
 			conn = this.getConnection();
 			return runner.insert(conn, record);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+	
+	/**
+	 * 插入或更新数据<br>
+	 * 根据给定的字段名查询数据，如果存在则更新这些数据，否则执行插入
+	 * 
+	 * @param record 记录
+	 * @param keys 需要检查唯一性的字段
+	 * @return 插入行数
+	 * @throws SQLException SQL执行异常
+	 * @since 4.0.10
+	 */
+	public int insertOrUpdate(Entity record, String... keys) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return runner.insertOrUpdate(conn, record, keys);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -513,7 +536,7 @@ public abstract class AbstractSqlRunner{
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findLike(String tableName, String field, String value, LikeType likeType) throws SQLException{
-		return findAll(Entity.create(tableName).set(field, DbUtil.buildLikeValue(value, likeType, true)));
+		return findAll(Entity.create(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
 	}
 	
 	/**

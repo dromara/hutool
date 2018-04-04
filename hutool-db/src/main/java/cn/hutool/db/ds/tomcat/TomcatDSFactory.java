@@ -10,7 +10,7 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
+import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.ds.simple.SimpleDataSource;
 import cn.hutool.setting.Setting;
@@ -105,7 +105,7 @@ public class TomcatDSFactory extends DSFactory {
 		if(StrUtil.isNotBlank(driver)){
 			poolProps.setDriverClassName(driver);
 		}else{
-			poolProps.setDriverClassName(DbUtil.identifyDriver(poolProps.getUrl()));
+			poolProps.setDriverClassName(DriverUtil.identifyDriver(poolProps.getUrl()));
 		}
 		
 		//扩展属性

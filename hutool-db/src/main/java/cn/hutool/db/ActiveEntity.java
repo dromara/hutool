@@ -1,7 +1,7 @@
 package cn.hutool.db;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 动态实体类<br>
@@ -127,7 +127,7 @@ public class ActiveEntity extends Entity {
 	}
 	
 	@Override
-	public ActiveEntity setFieldNames(List<String> fieldNames) {
+	public ActiveEntity setFieldNames(Collection<String> fieldNames) {
 		return (ActiveEntity) super.setFieldNames(fieldNames);
 	}
 	

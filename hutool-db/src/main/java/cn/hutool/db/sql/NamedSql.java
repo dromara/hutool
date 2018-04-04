@@ -43,13 +43,22 @@ public class NamedSql {
 	public String getSql() {
 		return this.sql;
 	}
+	
+	/**
+	 * 获取参数列表，按照占位符顺序
+	 * 
+	 * @return 参数数组
+	 */
+	public Object[] getParams() {
+		return this.params.toArray(new Object[this.params.size()]);
+	}
 
 	/**
 	 * 获取参数列表，按照占位符顺序
 	 * 
 	 * @return 参数列表
 	 */
-	public List<Object> getParams() {
+	public List<Object> getParamList() {
 		return this.params;
 	}
 

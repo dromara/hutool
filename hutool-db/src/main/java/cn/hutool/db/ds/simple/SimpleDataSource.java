@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
+import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
 
@@ -134,7 +134,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @since 3.1.2
 	 */
 	public void init(String url, String user, String pass, String driver) {
-		this.driver = StrUtil.isBlank(driver) ? DbUtil.identifyDriver(url) : driver;
+		this.driver = StrUtil.isBlank(driver) ? DriverUtil.identifyDriver(url) : driver;
 		try {
 			Class.forName(this.driver);
 		} catch (ClassNotFoundException e) {

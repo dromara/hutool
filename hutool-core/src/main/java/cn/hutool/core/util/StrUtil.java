@@ -426,7 +426,7 @@ public class StrUtil {
 	 * 除去字符串头部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
 	 * 
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>NumberUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>CharUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 * 
 	 * <pre>
 	 * trimStart(null)         = null
@@ -449,7 +449,7 @@ public class StrUtil {
 	 * 除去字符串尾部的空白，如果字符串是<code>null</code>，则返回<code>null</code>。
 	 * 
 	 * <p>
-	 * 注意，和<code>String.trim</code>不同，此方法使用<code>NumberUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
+	 * 注意，和<code>String.trim</code>不同，此方法使用<code>CharUtil.isBlankChar</code> 来判定空白， 因而可以除去英文字符集之外的其它空白，如中文空格。
 	 * 
 	 * <pre>
 	 * trimEnd(null)       = null

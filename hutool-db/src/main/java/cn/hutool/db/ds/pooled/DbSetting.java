@@ -3,7 +3,7 @@ package cn.hutool.db.ds.pooled;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
+import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
 
@@ -65,7 +65,7 @@ public class DbSetting {
 		if (StrUtil.isNotBlank(driver)) {
 			dbConfig.setDriver(driver);
 		} else {
-			dbConfig.setDriver(DbUtil.identifyDriver(url));
+			dbConfig.setDriver(DriverUtil.identifyDriver(url));
 		}
 
 		// 连接池相关信息

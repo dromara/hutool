@@ -13,7 +13,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.log.Log;
@@ -139,7 +138,7 @@ public class SqlBuilder {
 	 */
 	public SqlBuilder insert(Entity entity, DialectName dialectName) {
 		// 验证
-		DbUtil.validateEntity(entity);
+		validateEntity(entity);
 
 		if (null != wrapper) {
 			// 包装表名
@@ -213,7 +212,7 @@ public class SqlBuilder {
 	 */
 	public SqlBuilder update(Entity entity) {
 		// 验证
-		DbUtil.validateEntity(entity);
+		validateEntity(entity);
 
 		if (null != wrapper) {
 			// 包装表名
@@ -725,6 +724,24 @@ public class SqlBuilder {
 			conditionStrBuilder.append(StrUtil.join(",", value));
 		}
 		conditionStrBuilder.append(')');
+	}
+	
+	/**
+	 * 验证实体类对象的有效性
+	 * 
+	 * @param entity 实体类对象
+	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
+	 */
+	private static void validateEntity(Entity entity) throws DbRuntimeException {
+		if (null == entity) {
+			throw new DbRuntimeException("Entity is null !");
+		}
+		if (StrUtil.isBlank(entity.getTableName())) {
+			throw new DbRuntimeException("Entity`s table name is null !");
+		}
+		if (entity.isEmpty()) {
+			throw new DbRuntimeException("No filed and value in this entity !");
+		}
 	}
 	// --------------------------------------------------------------- private method end
 }

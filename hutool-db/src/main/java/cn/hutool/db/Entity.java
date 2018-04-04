@@ -6,9 +6,9 @@ import java.sql.Clob;
 import java.sql.RowId;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -17,6 +17,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.sql.SqlUtil;
 
 /**
  * 数据实体对象<br>
@@ -141,7 +142,7 @@ public class Entity extends Dict {
 	 * @param fieldNames 字段列表
 	 * @return 自身
 	 */
-	public Entity setFieldNames(List<String> fieldNames) {
+	public Entity setFieldNames(Collection<String> fieldNames) {
 		if (CollectionUtil.isNotEmpty(fieldNames)) {
 			this.fieldNames = new HashSet<String>(fieldNames);
 		}
@@ -214,6 +215,26 @@ public class Entity extends Dict {
 			this.setTableName(isToUnderlineCase ? StrUtil.toUnderlineCase(simpleName) : StrUtil.lowerFirst(simpleName));
 		}
 		return (Entity) super.parseBean(bean, isToUnderlineCase, ignoreNullValue);
+	}
+	
+	/**
+	 * 过滤Map保留指定键值对，如果键不存在跳过
+	 * 
+	 * @param map 原始Map
+	 * @param keys 键列表
+	 * @return Dict 结果
+	 * @since 4.0.10
+	 */
+	public Entity filter(String... keys) {
+		final Entity result = new Entity(this.tableName);
+		result.setFieldNames(this.fieldNames);
+
+		for (String key : keys) {
+			if(this.containsKey(key)) {
+				result.put(key, this.get(key));
+			}
+		}
+		return result;
 	}
 
 	// -------------------------------------------------------------------- Put and Set start
@@ -327,9 +348,9 @@ public class Entity extends Dict {
 	public String getStr(String field, Charset charset) {
 		final Object obj = get(field);
 		if (obj instanceof Clob) {
-			return DbUtil.clobToStr((Clob) obj);
+			return SqlUtil.clobToStr((Clob) obj);
 		} else if (obj instanceof Blob) {
-			return DbUtil.blobToStr((Blob) obj, charset);
+			return SqlUtil.blobToStr((Blob) obj, charset);
 		} else if (obj instanceof RowId) {
 			final RowId rowId = (RowId) obj;
 			return StrUtil.str(rowId.getBytes(), charset);

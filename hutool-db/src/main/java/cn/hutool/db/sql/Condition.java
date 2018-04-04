@@ -7,7 +7,6 @@ import java.util.List;
 import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.DbUtil;
 
 /**
  * 条件对象<br>
@@ -112,7 +111,7 @@ public class Condition implements Cloneable {
 	public Condition(String field, String value, LikeType likeType) {
 		this.field = field;
 		this.operator = OPERATOR_LIKE;
-		this.value = DbUtil.buildLikeValue(value, likeType, false);
+		this.value = SqlUtil.buildLikeValue(value, likeType, false);
 	}
 	// --------------------------------------------------------------- Constructor start
 
