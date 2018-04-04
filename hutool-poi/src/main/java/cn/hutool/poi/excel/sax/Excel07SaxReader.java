@@ -22,6 +22,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.exceptions.DependencyException;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
@@ -119,8 +121,10 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	public Excel07SaxReader read(InputStream in, int sheetIndex) throws POIException {
 		try {
 			return read(OPCPackage.open(in), sheetIndex);
-		} catch (Exception e) {
-			throw new POIException(e);
+		} catch (DependencyException e) {
+			throw e;
+		}catch (Exception e) {
+			throw ExceptionUtil.wrap(e, POIException.class);
 		}
 	}
 
@@ -159,8 +163,10 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 					parse(sheetInputStream);
 				}
 			}
-		} catch (Exception e) {
-			throw new POIException(e);
+		} catch (DependencyException e) {
+			throw e;
+		}catch (Exception e) {
+			throw ExceptionUtil.wrap(e, POIException.class);
 		} finally {
 			IoUtil.close(sheetInputStream);
 		}
@@ -351,7 +357,16 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 * @throws SAXException SAX异常
 	 */
 	private XMLReader fetchSheetReader() throws SAXException {
-		final XMLReader xmlReader = XMLReaderFactory.createXMLReader(CLASS_SAXPARSER);
+		XMLReader xmlReader = null;
+		try {
+			xmlReader = XMLReaderFactory.createXMLReader(CLASS_SAXPARSER);
+		} catch (SAXException e) {
+			if(e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
+				throw new DependencyException(e, "You need to add 'xerces:xercesImpl' to your project and version >= 2.11.0");
+			}else {
+				throw e;
+			}
+		}
 		xmlReader.setContentHandler(this);
 		return xmlReader;
 	}

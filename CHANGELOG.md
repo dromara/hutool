@@ -12,6 +12,7 @@
 * 【core】     StrUtil增加isNullOrUndefined、isEmptyOrUndefined、isBlankOrUndefined方法（issue#IIR44@Gitee）
 * 【core】     isBlankChar方法迁移到CharUtil中
 * 【db】        增加NamedSql
+* 【poi】       对于POI未引入或版本错误提供更加明确的提示
 
 ### Bug修复
 * 【poi】       修复ExcelWriter合并单元格后样式失效问题
