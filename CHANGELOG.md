@@ -11,6 +11,7 @@
 * 【cache】   添加get方法支持可选的是否更新lastAccess时间（issue#IISC4@Gitee）
 * 【core】     StrUtil增加isNullOrUndefined、isEmptyOrUndefined、isBlankOrUndefined方法（issue#IIR44@Gitee）
 * 【core】     isBlankChar方法迁移到CharUtil中
+* 【db】        增加NamedSql
 
 ### Bug修复
 * 【poi】       修复ExcelWriter合并单元格后样式失效问题

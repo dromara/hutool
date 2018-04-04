@@ -329,7 +329,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @return 是否为空
 	 */
 	public boolean isEmpty() {
-		return position > 0;
+		return position == 0;
 	}
 	
 	/**
