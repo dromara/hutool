@@ -91,7 +91,7 @@ public class StrUtil {
 
 		for (int i = 0; i < length; i++) {
 			// 只要有一个非空字符即为非空字符串
-			if (false == NumberUtil.isBlankChar(str.charAt(i))) {
+			if (false == CharUtil.isBlankChar(str.charAt(i))) {
 				return false;
 			}
 		}
@@ -289,6 +289,59 @@ public class StrUtil {
 		return true;
 	}
 
+	/**
+	 * 检查字符串是否为null、“null”、“undefined”
+	 * 
+	 * @param str 被检查的字符串
+	 * @return 是否为null、“null”、“undefined”
+	 * @since 4.0.10
+	 */
+	public static boolean isNullOrUndefined(CharSequence str) {
+		if (null == str) {
+			return true;
+		}
+		return isNullOrUndefinedStr(str);
+	}
+
+	/**
+	 * 检查字符串是否为null、“”、“null”、“undefined”
+	 * 
+	 * @param str 被检查的字符串
+	 * @return 是否为null、“”、“null”、“undefined”
+	 * @since 4.0.10
+	 */
+	public static boolean isEmptyOrUndefined(CharSequence str) {
+		if (isEmpty(str)) {
+			return true;
+		}
+		return isNullOrUndefinedStr(str);
+	}
+	
+	/**
+	 * 检查字符串是否为null、空白串、“null”、“undefined”
+	 * 
+	 * @param str 被检查的字符串
+	 * @return 是否为null、空白串、“null”、“undefined”
+	 * @since 4.0.10
+	 */
+	public static boolean isBlankOrUndefined(CharSequence str) {
+		if (isBlank(str)) {
+			return true;
+		}
+		return isNullOrUndefinedStr(str);
+	}
+	
+	/**
+	 * 是否为“null”、“undefined”，不做空指针检查
+	 * 
+	 * @param str 字符串
+	 * @return 是否为“null”、“undefined”
+	 */
+	private static boolean isNullOrUndefinedStr(CharSequence str) {
+		String strString = str.toString().trim();
+		return "null".equals(strString) || "undefined".equals(strString);
+	}
+
 	// ------------------------------------------------------------------------ Trim
 	/**
 	 * 除去字符串头尾部的空白，如果字符串是<code>null</code>，依然返回<code>null</code>。
@@ -434,14 +487,14 @@ public class StrUtil {
 
 		// 扫描字符串头部
 		if (mode <= 0) {
-			while ((start < end) && (NumberUtil.isBlankChar(str.charAt(start)))) {
+			while ((start < end) && (CharUtil.isBlankChar(str.charAt(start)))) {
 				start++;
 			}
 		}
 
 		// 扫描字符串尾部
 		if (mode >= 0) {
-			while ((start < end) && (NumberUtil.isBlankChar(str.charAt(end - 1)))) {
+			while ((start < end) && (CharUtil.isBlankChar(str.charAt(end - 1)))) {
 				end--;
 			}
 		}
@@ -634,7 +687,7 @@ public class StrUtil {
 	public static boolean containsAny(CharSequence str, CharSequence... testStrs) {
 		return null != getContainsStr(str, testStrs);
 	}
-	
+
 	/**
 	 * 给定字符串是否包含空白符（空白符包括空格、制表符、全角空格和不间断空格）<br>
 	 * 如果给定字符串为null或者""，则返回false
@@ -644,16 +697,16 @@ public class StrUtil {
 	 * @since 4.0.8
 	 */
 	public static boolean containsBlank(CharSequence str) {
-		if(null == str) {
+		if (null == str) {
 			return false;
 		}
 		final int length = str.length();
-		if(0 == length) {
+		if (0 == length) {
 			return false;
 		}
-		
+
 		for (int i = 0; i < length; i += 1) {
-			if (NumberUtil.isBlankChar(str.charAt(i))) {
+			if (CharUtil.isBlankChar(str.charAt(i))) {
 				return true;
 			}
 		}
@@ -1088,7 +1141,7 @@ public class StrUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
-			if (false == NumberUtil.isBlankChar(c)) {
+			if (false == CharUtil.isBlankChar(c)) {
 				sb.append(c);
 			}
 		}
@@ -2197,7 +2250,7 @@ public class StrUtil {
 	public static String wrap(CharSequence str, CharSequence prefix, CharSequence suffix) {
 		return nullToEmpty(prefix).concat(nullToEmpty(str)).concat(nullToEmpty(suffix));
 	}
-	
+
 	/**
 	 * 包装多个字符串
 	 * 
@@ -2258,7 +2311,7 @@ public class StrUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 包装多个字符串，如果已经包装，则不再包装
 	 * 

@@ -22,6 +22,8 @@ import cn.hutool.core.util.StrUtil;
 public class DateUtil {
 
 	/**
+	 * 转换为{@link DateTime}对象
+	 * 
 	 * @return 当前时间
 	 */
 	public static DateTime date() {

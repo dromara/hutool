@@ -20,6 +20,12 @@ public class StrUtilTest {
 		String blank = "	  　";
 		Assert.assertTrue(StrUtil.isBlank(blank));
 	}
+	
+	@Test
+	public void isBlankTest2() {
+		String blank = "\u202a";
+		Assert.assertTrue(StrUtil.isBlank(blank));
+	}
 
 	@Test
 	public void trimTest() {
@@ -27,7 +33,7 @@ public class StrUtilTest {
 		String trim = StrUtil.trim(blank);
 		Assert.assertEquals("哈哈", trim);
 	}
-
+	
 	@Test
 	public void cleanBlankTest() {
 		// 包含：制表符、英文空格、不间断空白符、全角空格

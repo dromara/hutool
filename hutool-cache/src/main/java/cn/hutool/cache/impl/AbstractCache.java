@@ -108,9 +108,14 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>{
 	public int getMissCount() {
 		return missCount;
 	}
-
+	
 	@Override
 	public V get(K key) {
+		return get(key, true);
+	}
+
+	@Override
+	public V get(K key, boolean isUpdateLastAccess) {
 		readLock.lock();
 
 		try {
@@ -131,7 +136,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>{
 
 			//命中
 			hitCount++;
-			return co.get();
+			return co.get(isUpdateLastAccess);
 		} finally {
 			readLock.unlock();
 		}
@@ -140,7 +145,14 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>{
 	// ---------------------------------------------------------------- get end
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Iterator<V> iterator() {
+		CacheObjIterator<K, V> copiedIterator = (CacheObjIterator<K, V>) this.cacheObjIterator();
+		return new CacheValuesIterator<V>(copiedIterator);
+	}
+	
+	@Override
+	public Iterator<CacheObj<K, V>> cacheObjIterator() {
 		CopiedIterator<CacheObj<K, V>> copiedIterator;
 		readLock.lock();
 		try {
@@ -148,7 +160,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>{
 		} finally {
 			readLock.unlock();
 		}
-		return new CacheValuesIterator<V>(copiedIterator);
+		return new CacheObjIterator<>(copiedIterator);
 	}
 
 	// ---------------------------------------------------------------- prune start
