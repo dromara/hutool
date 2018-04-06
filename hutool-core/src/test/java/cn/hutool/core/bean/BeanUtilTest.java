@@ -3,6 +3,7 @@ package cn.hutool.core.bean;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -157,9 +158,16 @@ public class BeanUtilTest {
 		
 		public static final String SUBNAME = "TEST";
 		
+		private UUID id;
 		private String subName;
 		private Boolean isSlow;
 
+		public UUID getId() {
+			return id;
+		}
+		public void setId(UUID id) {
+			this.id = id;
+		}
 		public String getSubName() {
 			return subName;
 		}
