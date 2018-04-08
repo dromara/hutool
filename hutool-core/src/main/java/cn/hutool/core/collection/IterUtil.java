@@ -211,7 +211,8 @@ public class IterUtil {
 	 * @param <K> 字段名对应值得类型，不确定请使用Object
 	 * @param <V> 值类型，不确定使用Object
 	 * @param iter 对象列表
-	 * @param fieldName 字段名（会通过反射获取其值）
+	 * @param fieldNameForKey 做为键的字段名（会通过反射获取其值）
+	 * @param fieldNameForValue 做为值的字段名（会通过反射获取其值）
 	 * @return 某个字段值与对象对应Map
 	 * @since 4.0.10
 	 */
