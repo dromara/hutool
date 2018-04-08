@@ -78,7 +78,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	 * @param m Map
 	 */
 	public Dict(Map<String, Object> m) {
-		super(m);
+		super((null == m) ? new HashMap<String, Object>() : m);
 	}
 	// --------------------------------------------------------------- Constructor end
 

@@ -14,6 +14,7 @@
 * 【db】        增加NamedSql
 * 【poi】       对于POI未引入或版本错误提供更加明确的提示
 * 【core】     增加UUIDConverter，支持UUID对象的自动转换
+* 【core】     IterUtil增加fieldValueList、fieldValueAsMap、join重载方法(issue#IIU4F@Gitee)
 
 ### Bug修复
 * 【poi】       修复ExcelWriter合并单元格后样式失效问题

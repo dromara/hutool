@@ -108,7 +108,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			}
 		}
 	}
-
+	
 	/**
 	 * 使用{@link JSONTokener}构建
 	 *
@@ -116,7 +116,19 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @throws JSONException 语法错误
 	 */
 	public JSONObject(JSONTokener x) throws JSONException {
-		this();
+		this(x, false);
+	}
+
+	/**
+	 * 使用{@link JSONTokener}构建
+	 *
+	 * @param x {@link JSONTokener}
+	 * @param isOrder 是否有序
+	 * @throws JSONException 语法错误
+	 * @since 4.0.10
+	 */
+	public JSONObject(JSONTokener x, boolean isOrder) throws JSONException {
+		this(isOrder);
 		init(x);
 	}
 

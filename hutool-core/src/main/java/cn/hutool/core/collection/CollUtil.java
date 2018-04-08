@@ -244,7 +244,7 @@ public class CollUtil {
 	public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
 		return IterUtil.countMap(collection);
 	}
-
+	
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串<br>
 	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串

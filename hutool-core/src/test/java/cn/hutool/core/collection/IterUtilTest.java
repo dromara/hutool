@@ -33,6 +33,21 @@ public class IterUtilTest {
 		Assert.assertEquals("奔驰", carNameMap.get("345").getCarName());
 		Assert.assertEquals("路虎", carNameMap.get("567").getCarName());
 	}
+	
+	@Test
+	public void joinTest() {
+		ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
+		String join = IterUtil.join(list, ":");
+		Assert.assertEquals("1:2:3:4", join);
+		
+		ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4);
+		String join1 = IterUtil.join(list1, ":");
+		Assert.assertEquals("1:2:3:4", join1);
+		
+		ArrayList<String> list2 = CollUtil.newArrayList("1", "2", "3", "4");
+		String join2 = IterUtil.join(list2, ":", "\"", "\"");
+		Assert.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
+	}
 
 	public static class Car {
 		private String carNumber;

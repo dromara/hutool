@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * {@link Iterable} 和 {@link Iterator} 相关工具类
@@ -205,6 +206,50 @@ public class IterUtil {
 	}
 
 	/**
+	 * 两个字段值组成新的Map
+	 * 
+	 * @param <K> 字段名对应值得类型，不确定请使用Object
+	 * @param <V> 值类型，不确定使用Object
+	 * @param iter 对象列表
+	 * @param fieldName 字段名（会通过反射获取其值）
+	 * @return 某个字段值与对象对应Map
+	 * @since 4.0.10
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> fieldValueAsMap(Iterator<?> iter, String fieldNameForKey, String fieldNameForValue) {
+		final Map<K, V> result = new HashMap<>();
+		if (null != iter) {
+			Object value;
+			while (iter.hasNext()) {
+				value = iter.next();
+				result.put((K) ReflectUtil.getFieldValue(value, fieldNameForKey), (V) ReflectUtil.getFieldValue(value, fieldNameForValue));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 获取指定Bean列表中某个字段，生成新的列表
+	 * 
+	 * @param <V> 对象类型
+	 * @param iter 对象列表
+	 * @param fieldName 字段名（会通过反射获取其值）
+	 * @return 某个字段值与对象对应Map
+	 * @since 4.0.10
+	 */
+	public static <V> List<Object> fieldValueList(Iterator<V> iter, String fieldName) {
+		final List<Object> result = new ArrayList<>();
+		if (null != iter) {
+			V value;
+			while (iter.hasNext()) {
+				value = iter.next();
+				result.add(ReflectUtil.getFieldValue(value, fieldName));
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
 	 * 
 	 * @param <T> 集合元素类型
@@ -218,7 +263,25 @@ public class IterUtil {
 		}
 		return join(iterable.iterator(), conjunction);
 	}
-
+	
+	/**
+	 * 以 conjunction 为分隔符将集合转换为字符串
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param iterable {@link Iterable}
+	 * @param conjunction 分隔符
+	 * @param prefix 每个元素添加的前缀，null表示不添加
+	 * @param suffix 每个元素添加的后缀，null表示不添加
+	 * @return 连接后的字符串
+	 * @since 4.0.10
+	 */
+	public static <T> String join(Iterable<T> iterable, CharSequence conjunction, String prefix, String suffix) {
+		if (null == iterable) {
+			return null;
+		}
+		return join(iterable.iterator(), conjunction, prefix, suffix);
+	}
+	
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串<br>
 	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
@@ -229,6 +292,22 @@ public class IterUtil {
 	 * @return 连接后的字符串
 	 */
 	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
+		return join(iterator, conjunction, null, null);
+	}
+
+	/**
+	 * 以 conjunction 为分隔符将集合转换为字符串<br>
+	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param iterator 集合
+	 * @param conjunction 分隔符
+	 * @param prefix 每个元素添加的前缀，null表示不添加
+	 * @param suffix 每个元素添加的后缀，null表示不添加
+	 * @return 连接后的字符串
+	 * @since 4.0.10
+	 */
+	public static <T> String join(Iterator<T> iterator, CharSequence conjunction, String prefix, String suffix) {
 		if (null == iterator) {
 			return null;
 		}
@@ -245,13 +324,13 @@ public class IterUtil {
 
 			item = iterator.next();
 			if (ArrayUtil.isArray(item)) {
-				sb.append(ArrayUtil.join(ArrayUtil.wrap(item), conjunction));
+				sb.append(ArrayUtil.join(ArrayUtil.wrap(item), conjunction, prefix, suffix));
 			} else if (item instanceof Iterable<?>) {
-				sb.append(join((Iterable<?>) item, conjunction));
+				sb.append(join((Iterable<?>) item, conjunction, prefix, suffix));
 			} else if (item instanceof Iterator<?>) {
-				sb.append(join((Iterator<?>) item, conjunction));
+				sb.append(join((Iterator<?>) item, conjunction, prefix, suffix));
 			} else {
-				sb.append(item);
+				sb.append(StrUtil.wrap(String.valueOf(item), prefix, suffix));
 			}
 		}
 		return sb.toString();
@@ -312,7 +391,7 @@ public class IterUtil {
 		}
 		return resultMap;
 	}
-	
+
 	/**
 	 * Iterator转List<br>
 	 * 不判断，直接生成新的List
@@ -325,7 +404,7 @@ public class IterUtil {
 	public static <E> List<E> toList(Iterable<E> iter) {
 		return toList(iter.iterator());
 	}
-	
+
 	/**
 	 * Iterator转List<br>
 	 * 不判断，直接生成新的List
