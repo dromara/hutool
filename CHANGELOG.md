@@ -15,10 +15,12 @@
 * 【poi】       对于POI未引入或版本错误提供更加明确的提示
 * 【core】     增加UUIDConverter，支持UUID对象的自动转换
 * 【core】     IterUtil增加fieldValueList、fieldValueAsMap、join重载方法(issue#IIU4F@Gitee)
+* 【core】     IoUtil增加checksum、toBuffered方法，StrUtil增加maxLength方法（参考osgl-tool）
 
 ### Bug修复
 * 【poi】       修复ExcelWriter合并单元格后样式失效问题
 * 【http】      修复HttpUtil.download方法遇到特殊Disposition时处理异常问题（感谢@【深圳】Bomb）
+* 【core】     修复StrUtil.toUnderlineCase方法中下划线转下划线导致的问题
 
 -------------------------------------------------------------------------------------------------------------
 

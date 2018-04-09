@@ -249,4 +249,49 @@ public class StrUtilTest {
 		prefix = "AAABBB";
 		Assert.assertEquals("", StrUtil.removePrefixIgnoreCase(a, prefix));
 	}
+	
+	@Test
+	public void maxLengthTest() {
+		String text = "我是一段正文，很长的正文，需要截取的正文";
+		String str = StrUtil.maxLength(text, 5);
+		Assert.assertEquals("我是一段正...", str);
+		str = StrUtil.maxLength(text, 21);
+		Assert.assertEquals(text, str);
+		str = StrUtil.maxLength(text, 50);
+		Assert.assertEquals(text, str);
+	}
+	
+	@Test
+	public void toCamelCaseTest() {
+		String str = "Table_Test_Of_day";
+		String result = StrUtil.toCamelCase(str);
+		Assert.assertEquals("tableTestOfDay", result);
+		
+		String str1 = "TableTestOfDay";
+		String result1 = StrUtil.toCamelCase(str1);
+		Assert.assertEquals("TableTestOfDay", result1);
+	}
+	
+	@Test
+	public void toUnderLineCaseTest() {
+		String str = "Table_Test_Of_day";
+		String result = StrUtil.toUnderlineCase(str);
+		Assert.assertEquals("table_test_of_day", result);
+		
+		String str1 = "_Table_Test_Of_day_";
+		String result1 = StrUtil.toUnderlineCase(str1);
+		Assert.assertEquals("_table_test_of_day_", result1);
+		
+		String str2 = "_Table_Test_Of_DAY_";
+		String result2 = StrUtil.toUnderlineCase(str2);
+		Assert.assertEquals("_table_test_of_DAY_", result2);
+		
+		String str3 = "_TableTestOfDAYtoday";
+		String result3 = StrUtil.toUnderlineCase(str3);
+		Assert.assertEquals("_table_test_of_DAY_today", result3);
+		
+		String str4 = "HelloWorld_test";
+		String result4 = StrUtil.toUnderlineCase(str4);
+		Assert.assertEquals("hello_world_test", result4);
+	}
 }

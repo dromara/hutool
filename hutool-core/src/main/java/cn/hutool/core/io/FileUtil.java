@@ -37,7 +37,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
 import java.util.zip.Checksum;
 
 import cn.hutool.core.collection.CollUtil;
@@ -1697,11 +1696,7 @@ public class FileUtil {
 	 * @throws IORuntimeException 文件未找到
 	 */
 	public static BufferedInputStream getInputStream(File file) throws IORuntimeException {
-		try {
-			return new BufferedInputStream(new FileInputStream(file));
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		return new BufferedInputStream(IoUtil.toStream(file));
 	}
 
 	/**
@@ -3030,21 +3025,13 @@ public class FileUtil {
 	 */
 	public static Checksum checksum(File file, Checksum checksum) throws IORuntimeException {
 		Assert.notNull(file, "File is null !");
-		if (null == checksum) {
-			checksum = new CRC32();
-		}
 		if (file.isDirectory()) {
 			throw new IllegalArgumentException("Checksums can't be computed on directories");
 		}
-		InputStream in = null;
 		try {
-			in = new CheckedInputStream(new FileInputStream(file), checksum);
-			IoUtil.copy(in, new NullOutputStream());
+			return IoUtil.checksum(new FileInputStream(file), checksum);
 		} catch (FileNotFoundException e) {
 			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(in);
 		}
-		return checksum;
 	}
 }

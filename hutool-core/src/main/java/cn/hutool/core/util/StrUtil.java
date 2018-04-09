@@ -14,6 +14,7 @@ import java.util.Set;
 
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
@@ -56,6 +57,7 @@ public class StrUtil {
 	public static final String LF = "\n";
 	public static final String CRLF = "\r\n";
 	public static final String UNDERLINE = "_";
+	public static final String DASHED = "-";
 	public static final String COMMA = ",";
 	public static final String DELIM_START = "{";
 	public static final String DELIM_END = "}";
@@ -316,7 +318,7 @@ public class StrUtil {
 		}
 		return isNullOrUndefinedStr(str);
 	}
-	
+
 	/**
 	 * 检查字符串是否为null、空白串、“null”、“undefined”
 	 * 
@@ -330,7 +332,7 @@ public class StrUtil {
 		}
 		return isNullOrUndefinedStr(str);
 	}
-	
+
 	/**
 	 * 是否为“null”、“undefined”，不做空指针检查
 	 * 
@@ -1464,6 +1466,25 @@ public class StrUtil {
 	}
 
 	/**
+	 * 限制字符串长度，如果超过指定长度，截取指定长度并在末尾加"..."
+	 * 
+	 * @param string 字符串
+	 * @param length 最大长度
+	 * @return 切割后的剩余的前半部分字符串+"..."
+	 * @since 4.0.10
+	 */
+	public static String maxLength(CharSequence string, int length) {
+		Assert.isTrue(length > 0);
+		if (null == string) {
+			return null;
+		}
+		if (string.length() <= length) {
+			return string.toString();
+		}
+		return sub(string, 0, length) + "...";
+	}
+
+	/**
 	 * 切割指定位置之前部分的字符串
 	 * 
 	 * @param string 字符串
@@ -2152,40 +2173,71 @@ public class StrUtil {
 	public static String join(CharSequence conjunction, Object... objs) {
 		return ArrayUtil.join(objs, conjunction);
 	}
-
+	
 	/**
 	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
-	 * 例如：HelloWorld=》hello_world
+	 * 例如：
+	 * <pre>
+	 * HelloWorld=》hello_world
+	 * Hello_World=》hello_world
+	 * HelloWorld_test=》hello_world_test
+	 * </pre>
 	 *
-	 * @param camelCaseStr 转换前的驼峰式命名的字符串
-	 * @return 转换后下划线大写方式命名的字符串
+	 * @param str 转换前的驼峰式命名的字符串，也可以为下划线形式
+	 * @return 转换后下划线方式命名的字符串
 	 */
-	public static String toUnderlineCase(CharSequence camelCaseStr) {
-		if (camelCaseStr == null) {
+	public static String toUnderlineCase(CharSequence str) {
+		return toSymbolCase(str, CharUtil.UNDERLINE);
+	}
+
+	/**
+	 * 将驼峰式命名的字符串转换为使用符号连接方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br>
+	 *
+	 * @param str 转换前的驼峰式命名的字符串，也可以为符号连接形式
+	 * @param symbol 连接符
+	 * @return 转换后符号连接方式命名的字符串
+	 * @since 4.0.10
+	 */
+	public static String toSymbolCase(CharSequence str, char symbol) {
+		if (str == null) {
 			return null;
 		}
 
-		final int length = camelCaseStr.length();
-		StringBuilder sb = new StringBuilder();
+		final int length = str.length();
+		final StringBuilder sb = new StringBuilder();
 		char c;
-		boolean isPreUpperCase = false;
 		for (int i = 0; i < length; i++) {
-			c = camelCaseStr.charAt(i);
-			boolean isNextUpperCase = true;
-			if (i < (length - 1)) {
-				isNextUpperCase = Character.isUpperCase(camelCaseStr.charAt(i + 1));
-			}
+			c = str.charAt(i);
+			final Character preChar = (i > 0) ? str.charAt(i - 1) : null;
 			if (Character.isUpperCase(c)) {
-				if (!isPreUpperCase || !isNextUpperCase) {
-					if (i > 0) {
-						sb.append(UNDERLINE);
+				//遇到大写字母处理
+				final Character nextChar = (i < str.length() - 1) ? str.charAt(i + 1) : null;
+				if (null != preChar && Character.isUpperCase(preChar)) {
+					//前一个字符为大写，则按照一个词对待
+					sb.append(c);
+				} else if (null != nextChar && Character.isUpperCase(nextChar)) {
+					//后一个为大写字母，按照一个词对待
+					if(null != preChar && symbol != preChar) {
+						//前一个是非大写时按照新词对待，加连接符
+						sb.append(symbol);
 					}
+					sb.append(c);
+				} else {
+					//前后都为非大写按照新词对待
+					if (null != preChar &&symbol != preChar) {
+						//前一个非连接符，补充连接符
+						sb.append(symbol);
+					}
+					sb.append(Character.toLowerCase(c));
 				}
-				isPreUpperCase = true;
 			} else {
-				isPreUpperCase = false;
+				if(sb.length() > 0 && Character.isUpperCase(sb.charAt(sb.length() -1)) && symbol != c) {
+					//当结果中前一个字母为大写，当前为小写，说明此字符为新词开始（连接符也表示新词）
+					sb.append(symbol);
+				}
+				//小写或符号
+				sb.append(c);
 			}
-			sb.append(Character.toLowerCase(c));
 		}
 		return sb.toString();
 	}
@@ -2204,20 +2256,18 @@ public class StrUtil {
 
 		String name2 = name.toString();
 		if (name2.contains(UNDERLINE)) {
-			name2 = name2.toLowerCase();
-
-			StringBuilder sb = new StringBuilder(name2.length());
+			final StringBuilder sb = new StringBuilder(name2.length());
 			boolean upperCase = false;
 			for (int i = 0; i < name2.length(); i++) {
 				char c = name2.charAt(i);
 
-				if (c == '_') {
+				if (c == CharUtil.UNDERLINE) {
 					upperCase = true;
 				} else if (upperCase) {
 					sb.append(Character.toUpperCase(c));
 					upperCase = false;
 				} else {
-					sb.append(c);
+					sb.append(Character.toLowerCase(c));
 				}
 			}
 			return sb.toString();
@@ -3490,5 +3540,16 @@ public class StrUtil {
 			return str(str);
 		}
 		return strBuilder.toString();
+	}
+
+	/**
+	 * 生成随机UUID
+	 * 
+	 * @return UUID字符串
+	 * @since 4.0.10
+	 * @see RandomUtil#randomUUID()
+	 */
+	public static String uuid() {
+		return RandomUtil.randomUUID();
 	}
 }

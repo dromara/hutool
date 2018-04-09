@@ -19,6 +19,7 @@ public class CharUtil {
 	public static final char CR = '\r';
 	public static final char LF = '\n';
 	public static final char UNDERLINE = '_';
+	public static final char DASHED = '-';
 	public static final char COMMA = ',';
 	public static final char DELIM_START = '{';
 	public static final char DELIM_END = '}';
