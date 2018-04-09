@@ -43,13 +43,18 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isInteger("256"));
 		Assert.assertTrue(NumberUtil.isInteger("0256"));
 	}
+	
+	@Test
+	public void isNumberTest() {
+		Assert.assertTrue(NumberUtil.isNumber("28.55"));
+	}
 
 	@Test
 	public void divTest() {
 		double result = NumberUtil.div(0, 1);
 		Assert.assertEquals(0.0, result, 0);
 	}
-
+	
 	@Test
 	public void roundTest() {
 
