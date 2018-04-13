@@ -2,6 +2,7 @@ package cn.hutool.extra.qrcode;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,6 +36,20 @@ public class QrCodeUtil {
 
 	private static final int BLACK = 0xFF000000;
 	private static final int WHITE = 0xFFFFFFFF;
+	
+	/**
+	 * 生成PNG格式的二维码图片，以byte[]形式表示
+	 * @param content 内容
+	 * @param width 宽度
+	 * @param height 高度
+	 * @return 图片的byte[]
+	 * @since 4.0.10
+	 */
+	public static byte[] generatePng(String content, int width, int height) {
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		generate(content, width, height, ImageUtil.IMAGE_TYPE_PNG, out);
+		return out.toByteArray();
+	}
 
 	/**
 	 * 生成二维码到文件，二维码图片格式取决于文件的扩展名
@@ -77,7 +92,7 @@ public class QrCodeUtil {
 		final BitMatrix bitMatrix = encode(content, width, height);
 		return toImage(bitMatrix);
 	}
-
+	
 	/**
 	 * 将文本内容编码为二维码
 	 * 

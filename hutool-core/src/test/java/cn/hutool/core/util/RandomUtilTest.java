@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -14,6 +15,12 @@ public class RandomUtilTest {
 	public void randomEleSetTest(){
 		Set<Integer> set = RandomUtil.randomEleSet(CollectionUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
 		Assert.assertEquals(set.size(), 2);
+	}
+	
+	@Test
+	public void randomElesTest(){
+		List<Integer> result = RandomUtil.randomEles(CollectionUtil.newArrayList(1, 2, 3, 4, 5, 6), 2);
+		Assert.assertEquals(result.size(), 2);
 	}
 	
 	@Test

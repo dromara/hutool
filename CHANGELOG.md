@@ -21,6 +21,7 @@
 * 【poi】       修复ExcelWriter合并单元格后样式失效问题
 * 【http】      修复HttpUtil.download方法遇到特殊Disposition时处理异常问题（感谢@【深圳】Bomb）
 * 【core】     修复StrUtil.toUnderlineCase方法中下划线转下划线导致的问题
+* 【core】     修复RandomUtil.randomEles方法计数错误问题（issue#98@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

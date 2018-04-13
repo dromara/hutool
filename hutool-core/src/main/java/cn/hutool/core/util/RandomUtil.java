@@ -296,7 +296,7 @@ public class RandomUtil {
 	public static <T> List<T> randomEles(List<T> list, int count) {
 		final List<T> result = new ArrayList<T>(count);
 		int limit = list.size();
-		while (--count > 0) {
+		while (result.size() < count) {
 			result.add(randomEle(list, limit));
 		}
 
