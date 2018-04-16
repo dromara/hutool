@@ -115,4 +115,16 @@ public class NumberUtilTest {
 		BigDecimal bigDecimal = NumberUtil.toBigDecimal(a);
 		Assert.assertEquals("3.14", bigDecimal.toString());
 	}
+	
+	@Test
+	public void maxTest() {
+		int max = NumberUtil.max(new int[]{5,4,3,6,1});
+		Assert.assertEquals(6, max);
+	}
+	
+	@Test
+	public void minTest() {
+		int min = NumberUtil.min(new int[]{5,4,3,6,1});
+		Assert.assertEquals(1, min);
+	}
 }

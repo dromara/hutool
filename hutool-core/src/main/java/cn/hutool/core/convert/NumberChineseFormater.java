@@ -75,7 +75,7 @@ public class NumberChineseFormater {
 
 		boolean beforeWanIsZero = true; // 标志“万”下面一级是不是 0
 
-		String chineseStr = "";
+		String chineseStr = StrUtil.EMPTY;
 		for (int i = 0; i < numParts; i++) {
 			String partChinese = toChinese(parts[i], isUseTraditional);
 			if (i % 2 == 0) {
@@ -101,9 +101,12 @@ public class NumberChineseFormater {
 			chineseStr = partChinese + chineseStr;
 		}
 
-		if ("".equals(chineseStr)) // 整数部分为 0, 则表达为"零"
+		// 整数部分为 0, 则表达为"零"
+		if (StrUtil.EMPTY.equals(chineseStr)) {
 			chineseStr = numArray[0];
-		else if (negative) { // 整数部分不为 0
+		}
+		//负数
+		if (negative) { // 整数部分不为 0
 			chineseStr = "负" + chineseStr;
 		}
 

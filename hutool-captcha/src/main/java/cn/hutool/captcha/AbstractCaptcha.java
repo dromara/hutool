@@ -1,7 +1,9 @@
 package cn.hutool.captcha;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.io.OutputStream;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ImageUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -37,8 +40,8 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	protected Font font;
 	// 验证码
 	protected String code;
-	// 验证码图片Buffer
-	protected BufferedImage image;
+	// 验证码图片
+	protected byte[] imageBytes;
 
 	/**
 	 * 构造
@@ -61,7 +64,10 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	@Override
 	public void createCode() {
 		generateCode();
-		createImage(this.code);
+		
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ImageUtil.writePng(createImage(this.code), out);
+		this.imageBytes = out.toByteArray();
 	}
 	
 	/**
@@ -76,7 +82,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * 根据生成的code创建验证码图片
 	 * @param code 验证码
 	 */
-	protected abstract void createImage(String code);
+	protected abstract Image createImage(String code);
 
 	@Override
 	public String getCode() {
@@ -117,7 +123,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	@Override
 	public void write(OutputStream out) {
-		ImageUtil.write(this.getImage(), ImageUtil.IMAGE_TYPE_PNG, out);
+		IoUtil.write(out, false, this.imageBytes);
 	}
 
 	/**
@@ -126,10 +132,10 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @return 验证码图
 	 */
 	public BufferedImage getImage() {
-		if (null == this.image) {
+		if (null == this.imageBytes) {
 			createCode();
 		}
-		return image;
+		return ImageUtil.read(new ByteArrayInputStream(this.imageBytes));
 	}
 
 	/**
@@ -139,9 +145,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @since 3.3.0
 	 */
 	public String getImageBase64() {
-		final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		write(byteArrayOutputStream);
-		return Base64.encode(byteArrayOutputStream.toByteArray());
+		return Base64.encode(this.imageBytes);
 	}
 
 	/**

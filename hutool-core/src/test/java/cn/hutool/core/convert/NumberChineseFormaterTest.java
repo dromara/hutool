@@ -29,6 +29,12 @@ public class NumberChineseFormaterTest {
 	}
 	
 	@Test
+	public void formatTest2() {
+		String f1 = NumberChineseFormater.format(-0.3, false, false);
+		Assert.assertEquals("负零点三", f1);
+	}
+	
+	@Test
 	public void formatTranditionalTest() {
 		String f1 = NumberChineseFormater.format(10889.72356, true);
 		Assert.assertEquals("壹万零捌佰捌拾玖点柒贰", f1);

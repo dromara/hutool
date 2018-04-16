@@ -1678,7 +1678,7 @@ public class NumberUtil {
 	 * @see ArrayUtil#max(int...)
 	 */
 	public static int max(int... numberArray) {
-		return max(numberArray);
+		return ArrayUtil.max(numberArray);
 	}
 
 	/**

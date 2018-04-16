@@ -3,6 +3,7 @@ package cn.hutool.captcha;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import cn.hutool.core.util.ImageUtil;
@@ -52,9 +53,9 @@ public class ShearCaptcha extends AbstractCaptcha {
 	}
 
 	@Override
-	public void createImage(String code) {
-		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = ImageUtil.createGraphics(this.image, Color.WHITE);
+	public Image createImage(String code) {
+		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		final Graphics2D g = ImageUtil.createGraphics(image, Color.WHITE);
 
 		// 画字符串
 		g.setColor(Color.black);
@@ -69,6 +70,8 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 		shear(g, width, height, Color.white);
 		drawThickLine(g, 0, RandomUtil.randomInt(height) + 1, width, RandomUtil.randomInt(height) + 1, this.interfereCount, ImageUtil.randomColor());
+		
+		return image;
 	}
 
 	// ----------------------------------------------------------------------------------------------------- Private method start

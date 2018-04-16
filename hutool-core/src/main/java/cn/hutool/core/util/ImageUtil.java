@@ -1332,6 +1332,30 @@ public class ImageUtil {
 	public static void writePng(Image image, ImageOutputStream destImageStream) throws IORuntimeException {
 		write(image, IMAGE_TYPE_PNG, destImageStream);
 	}
+	
+	/**
+	 * 写出图像为JPG格式
+	 * 
+	 * @param image {@link Image}
+	 * @param out 写出到的目标流
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.10
+	 */
+	public static void writeJpg(Image image, OutputStream out) throws IORuntimeException {
+		write(image, IMAGE_TYPE_JPG, out);
+	}
+	
+	/**
+	 * 写出图像为PNG格式
+	 * 
+	 * @param image {@link Image}
+	 * @param out 写出到的目标流
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.10
+	 */
+	public static void writePng(Image image, OutputStream out) throws IORuntimeException {
+		write(image, IMAGE_TYPE_PNG, out);
+	}
 
 	/**
 	 * 写出图像为PNG格式

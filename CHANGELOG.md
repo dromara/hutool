@@ -16,12 +16,15 @@
 * 【core】     增加UUIDConverter，支持UUID对象的自动转换
 * 【core】     IterUtil增加fieldValueList、fieldValueAsMap、join重载方法(issue#IIU4F@Gitee)
 * 【core】     IoUtil增加checksum、toBuffered方法，StrUtil增加maxLength方法（参考osgl-tool）
+* 【poi】       ExcelReader支持自定义sheet
 
 ### Bug修复
 * 【poi】       修复ExcelWriter合并单元格后样式失效问题
 * 【http】      修复HttpUtil.download方法遇到特殊Disposition时处理异常问题（感谢@【深圳】Bomb）
 * 【core】     修复StrUtil.toUnderlineCase方法中下划线转下划线导致的问题
 * 【core】     修复RandomUtil.randomEles方法计数错误问题（issue#98@Github）
+* 【core】     修复NumberChineseFormater负数小数结果错误问题（pr#10@Gitee）
+* 【captcha】修复验证码无法序列化的问题（issue#IJ2MI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
