@@ -15,6 +15,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.PoiChecker;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.Excel07SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
@@ -26,7 +27,7 @@ import cn.hutool.poi.excel.sax.handler.RowHandler;
  *
  */
 public class ExcelUtil {
-
+	
 	// ------------------------------------------------------------------------------------ Read by Sax start
 	/**
 	 * 通过Sax方式读取Excel，同时支持03和07格式
@@ -61,6 +62,7 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
+		in = IoUtil.toMarkSupportStream(in);
 		if (isXlsx(in)) {
 			read07BySax(in, sheetIndex, rowHandler);
 		} else {
@@ -78,7 +80,11 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static Excel07SaxReader read07BySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
-		return new Excel07SaxReader(rowHandler).read(in, sheetIndex);
+		try {
+			return new Excel07SaxReader(rowHandler).read(in, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -91,7 +97,11 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static Excel07SaxReader read07BySax(File file, int sheetIndex, RowHandler rowHandler) {
-		return new Excel07SaxReader(rowHandler).read(file, sheetIndex);
+		try {
+			return new Excel07SaxReader(rowHandler).read(file, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -104,7 +114,11 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static Excel07SaxReader read07BySax(String path, int sheetIndex, RowHandler rowHandler) {
-		return new Excel07SaxReader(rowHandler).read(path, sheetIndex);
+		try {
+			return new Excel07SaxReader(rowHandler).read(path, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -117,7 +131,11 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static Excel03SaxReader read03BySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
-		return new Excel03SaxReader(rowHandler).read(in, sheetIndex);
+		try {
+			return new Excel03SaxReader(rowHandler).read(in, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -130,7 +148,11 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static Excel03SaxReader read03BySax(File file, int sheetIndex, RowHandler rowHandler) {
-		return new Excel03SaxReader(rowHandler).read(file, sheetIndex);
+		try {
+			return new Excel03SaxReader(rowHandler).read(file, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -143,7 +165,11 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static Excel03SaxReader read03BySax(String path, int sheetIndex, RowHandler rowHandler) {
-		return new Excel03SaxReader(rowHandler).read(path, sheetIndex);
+		try {
+			return new Excel03SaxReader(rowHandler).read(path, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 	// ------------------------------------------------------------------------------------ Read by Sax end
 
@@ -179,7 +205,11 @@ public class ExcelUtil {
 	 * @since 3.1.1
 	 */
 	public static ExcelReader getReader(String bookFilePath, int sheetIndex) {
-		return new ExcelReader(bookFilePath, sheetIndex);
+		try {
+			return new ExcelReader(bookFilePath, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -190,7 +220,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelReader}
 	 */
 	public static ExcelReader getReader(File bookFile, int sheetIndex) {
-		return new ExcelReader(bookFile, sheetIndex);
+		try {
+			return new ExcelReader(bookFile, sheetIndex);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -201,7 +235,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelReader}
 	 */
 	public static ExcelReader getReader(File bookFile, String sheetName) {
-		return new ExcelReader(bookFile, sheetName);
+		try {
+			return new ExcelReader(bookFile, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -225,7 +263,11 @@ public class ExcelUtil {
 	 * @since 4.0.3
 	 */
 	public static ExcelReader getReader(InputStream bookStream, boolean closeAfterRead) {
-		return getReader(bookStream, 0, closeAfterRead);
+		try {
+			return getReader(bookStream, 0, closeAfterRead);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -237,7 +279,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelReader}
 	 */
 	public static ExcelReader getReader(InputStream bookStream, int sheetIndex) {
-		return new ExcelReader(bookStream, sheetIndex, true);
+		try {
+			return new ExcelReader(bookStream, sheetIndex, true);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -250,7 +296,11 @@ public class ExcelUtil {
 	 * @since 4.0.3
 	 */
 	public static ExcelReader getReader(InputStream bookStream, int sheetIndex, boolean closeAfterRead) {
-		return new ExcelReader(bookStream, sheetIndex, closeAfterRead);
+		try {
+			return new ExcelReader(bookStream, sheetIndex, closeAfterRead);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -262,7 +312,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelReader}
 	 */
 	public static ExcelReader getReader(InputStream bookStream, String sheetName) {
-		return new ExcelReader(bookStream, sheetName, true);
+		try {
+			return new ExcelReader(bookStream, sheetName, true);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -274,28 +328,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelReader}
 	 */
 	public static ExcelReader getReader(InputStream bookStream, String sheetName, boolean closeAfterRead) {
-		return new ExcelReader(bookStream, sheetName, closeAfterRead);
-	}
-
-	/**
-	 * 获取或者创建sheet表<br>
-	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
-	 * 
-	 * @param book 工作簿{@link Workbook}
-	 * @param sheetName 工作表名
-	 * @return 工作表{@link Sheet}
-	 * @since 4.0.2
-	 */
-	public static Sheet getOrCreateSheet(Workbook book, String sheetName) {
-		if (null == book) {
-			return null;
+		try {
+			return new ExcelReader(bookStream, sheetName, closeAfterRead);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
 		}
-		sheetName = StrUtil.isBlank(sheetName) ? "sheet1" : sheetName;
-		Sheet sheet = book.getSheet(sheetName);
-		if (null == sheet) {
-			sheet = book.createSheet(sheetName);
-		}
-		return sheet;
 	}
 
 	/**
@@ -307,7 +344,11 @@ public class ExcelUtil {
 	 * @since 3.2.1
 	 */
 	public static ExcelWriter getWriter() {
-		return new ExcelWriter();
+		try {
+			return new ExcelWriter();
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -320,7 +361,11 @@ public class ExcelUtil {
 	 * @since 3.2.1
 	 */
 	public static ExcelWriter getWriter(boolean isXlsx) {
-		return new ExcelWriter(isXlsx);
+		try {
+			return new ExcelWriter(isXlsx);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -330,7 +375,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelWriter}
 	 */
 	public static ExcelWriter getWriter(String destFilePath) {
-		return new ExcelWriter(destFilePath);
+		try {
+			return new ExcelWriter(destFilePath);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -340,7 +389,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelWriter}
 	 */
 	public static ExcelWriter getWriter(File destFile) {
-		return new ExcelWriter(destFile);
+		try {
+			return new ExcelWriter(destFile);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -351,7 +404,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelWriter}
 	 */
 	public static ExcelWriter getWriter(String destFilePath, String sheetName) {
-		return new ExcelWriter(destFilePath, sheetName);
+		try {
+			return new ExcelWriter(destFilePath, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -362,7 +419,11 @@ public class ExcelUtil {
 	 * @return {@link ExcelWriter}
 	 */
 	public static ExcelWriter getWriter(File destFile, String sheetName) {
-		return new ExcelWriter(destFile, sheetName);
+		try {
+			return new ExcelWriter(destFile, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
 	}
 
 	/**
@@ -396,7 +457,30 @@ public class ExcelUtil {
 			return FileMagic.valueOf(in) == FileMagic.OOXML;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		} catch(NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
 		}
+	}
+	
+	/**
+	 * 获取或者创建sheet表<br>
+	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
+	 * 
+	 * @param book 工作簿{@link Workbook}
+	 * @param sheetName 工作表名
+	 * @return 工作表{@link Sheet}
+	 * @since 4.0.2
+	 */
+	public static Sheet getOrCreateSheet(Workbook book, String sheetName) {
+		if (null == book) {
+			return null;
+		}
+		sheetName = StrUtil.isBlank(sheetName) ? "sheet1" : sheetName;
+		Sheet sheet = book.getSheet(sheetName);
+		if (null == sheet) {
+			sheet = book.createSheet(sheetName);
+		}
+		return sheet;
 	}
 
 	/**

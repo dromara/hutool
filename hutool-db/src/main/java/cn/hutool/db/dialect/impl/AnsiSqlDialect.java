@@ -10,9 +10,9 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Page;
+import cn.hutool.db.StatementUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectName;
 import cn.hutool.db.sql.Condition;
@@ -45,7 +45,7 @@ public class AnsiSqlDialect implements Dialect {
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entity, this.dialectName());
 
-		return DbUtil.prepareStatement(conn, insert.build(), insert.getParamValues());
+		return StatementUtil.prepareStatement(conn, insert.build(), insert.getParamValues());
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final PreparedStatement ps = conn.prepareStatement(insert.build(), Statement.RETURN_GENERATED_KEYS);
 		for (Entity entity : entities) {
-			DbUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, insert.getFields()));
+			StatementUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, insert.getFields()));
 			ps.addBatch();
 		}
 		return ps;
@@ -75,7 +75,7 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		final SqlBuilder delete = SqlBuilder.create(wrapper).delete(query.getFirstTableName()).where(LogicalOperator.AND, where);
 
-		return DbUtil.prepareStatement(conn, delete.build(), delete.getParamValues());
+		return StatementUtil.prepareStatement(conn, delete.build(), delete.getParamValues());
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final SqlBuilder update = SqlBuilder.create(wrapper).update(entity).where(LogicalOperator.AND, where);
 
-		return DbUtil.prepareStatement(conn, update.build(), update.getParamValues());
+		return StatementUtil.prepareStatement(conn, update.build(), update.getParamValues());
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final SqlBuilder find = SqlBuilder.create(wrapper).query(query);
 
-		return DbUtil.prepareStatement(conn, find.build(), find.getParamValues());
+		return StatementUtil.prepareStatement(conn, find.build(), find.getParamValues());
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class AnsiSqlDialect implements Dialect {
 		// 根据不同数据库在查询SQL语句基础上包装其分页的语句
 		find = wrapPageSql(find, page);
 
-		return DbUtil.prepareStatement(conn, find.build(), find.getParamValues());
+		return StatementUtil.prepareStatement(conn, find.build(), find.getParamValues());
 	}
 
 	/**

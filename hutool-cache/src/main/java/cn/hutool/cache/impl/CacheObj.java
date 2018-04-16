@@ -27,21 +27,47 @@ public class CacheObj<K, V> {
 	}
 	
 	/**
+	 * 判断是否过期
+	 * 
 	 * @return 是否过期
 	 */
 	boolean isExpired() {
-		return (ttl > 0) && (lastAccess + ttl < System.currentTimeMillis());
+		return (this.ttl > 0) && (this.lastAccess + this.ttl < System.currentTimeMillis());
 	}
 	
 	/**
+	 * 获取值
+	 * 
+	 * @param isUpdateLastAccess 是否更新最后访问时间
 	 * @return 获得对象
+	 * @since 4.0.10
 	 */
-	V get() {
-		lastAccess = System.currentTimeMillis();
+	V get(boolean isUpdateLastAccess) {
+		if(isUpdateLastAccess) {
+			lastAccess = System.currentTimeMillis();
+		}
 		accessCount++;
 		return obj;
 	}
-
+	
+	/**
+	 * 获取键
+	 * @return 键
+	 * @since 4.0.10
+	 */
+	public K getKey() {
+		return this.key;
+	}
+	
+	/**
+	 * 获取值
+	 * @return 值
+	 * @since 4.0.10
+	 */
+	public V getValue() {
+		return this.obj;
+	}
+	
 	@Override
 	public String toString() {
 		return "CacheObj [key=" + key + ", obj=" + obj + ", lastAccess=" + lastAccess + ", accessCount=" + accessCount + ", ttl=" + ttl + "]";

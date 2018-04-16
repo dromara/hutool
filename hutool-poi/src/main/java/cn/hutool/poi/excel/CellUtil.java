@@ -99,7 +99,8 @@ public class CellUtil {
 	}
 
 	/**
-	 * 设置单元格值
+	 * 设置单元格值<br>
+	 * 根据传入的styleSet自动匹配样式
 	 * 
 	 * @param cell 单元格
 	 * @param value 值
@@ -176,7 +177,7 @@ public class CellUtil {
 	 * @param lastRow 结束行，0开始
 	 * @param firstColumn 起始列，0开始
 	 * @param lastColumn 结束列，0开始
-	 * @param cellStyle 单元格样式
+	 * @param cellStyle 单元格样式，只提取边框样式
 	 * @return 合并后的单元格号
 	 */
 	public static int mergingCells(Sheet sheet, int firstRow, int lastRow, int firstColumn, int lastColumn, CellStyle cellStyle) {

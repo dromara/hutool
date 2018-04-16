@@ -45,7 +45,7 @@ public class ExcelReader implements Closeable {
 	private CellEditor cellEditor;
 	/** 标题别名 */
 	private Map<String, String> headerAlias = new HashMap<>();
-	
+
 	// ------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
@@ -107,7 +107,6 @@ public class ExcelReader implements Closeable {
 	 */
 	public ExcelReader(Workbook book, int sheetIndex) {
 		this(book.getSheetAt(sheetIndex));
-		this.workbook = book;
 	}
 
 	/**
@@ -118,7 +117,6 @@ public class ExcelReader implements Closeable {
 	 */
 	public ExcelReader(Workbook book, String sheetName) {
 		this(book.getSheet(sheetName));
-		this.workbook = book;
 	}
 
 	/**
@@ -129,6 +127,7 @@ public class ExcelReader implements Closeable {
 	public ExcelReader(Sheet sheet) {
 		Assert.notNull(sheet, "No Sheet provided.");
 		this.sheet = sheet;
+		this.workbook = sheet.getWorkbook();
 	}
 	// ------------------------------------------------------------------------------------------------------- Constructor end
 
@@ -144,14 +143,24 @@ public class ExcelReader implements Closeable {
 	}
 
 	/**
+	 * 返回工作簿表格数
+	 * 
+	 * @return 工作簿表格数
+	 * @since 4.0.10
+	 */
+	public int getSheetCount() {
+		return this.workbook.getNumberOfSheets();
+	}
+
+	/**
 	 * 获取此工作簿所有Sheet表
 	 * 
 	 * @return sheet表列表
 	 * @since 4.0.3
 	 */
 	public List<Sheet> getSheets() {
-		final int totalSheet = workbook.getNumberOfSheets();
-		List<Sheet> result = new ArrayList<>(totalSheet);
+		final int totalSheet = getSheetCount();
+		final List<Sheet> result = new ArrayList<>(totalSheet);
 		for (int i = 0; i < totalSheet; i++) {
 			result.add(this.workbook.getSheetAt(i));
 		}
@@ -181,6 +190,30 @@ public class ExcelReader implements Closeable {
 	 */
 	public Sheet getSheet() {
 		return this.sheet;
+	}
+
+	/**
+	 * 自定义需要读取的Sheet
+	 * 
+	 * @param sheetName sheet名
+	 * @return this
+	 * @since 4.0.10
+	 */
+	public ExcelReader setSheet(String sheetName) {
+		this.sheet = this.workbook.getSheet(sheetName);
+		return this;
+	}
+
+	/**
+	 * 自定义需要读取的Sheet
+	 * 
+	 * @param sheetIndex sheet序号，从0开始计数
+	 * @return this
+	 * @since 4.0.10
+	 */
+	public ExcelReader setSheet(int sheetIndex) {
+		this.sheet = this.workbook.getSheetAt(sheetIndex);
+		return this;
 	}
 
 	/**

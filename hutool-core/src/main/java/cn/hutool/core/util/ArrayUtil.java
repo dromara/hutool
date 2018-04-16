@@ -1859,7 +1859,7 @@ public class ArrayUtil {
 		}
 		return Array.getLength(array);
 	}
-
+	
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
 	 * 
@@ -1869,6 +1869,21 @@ public class ArrayUtil {
 	 * @return 连接后的字符串
 	 */
 	public static <T> String join(T[] array, CharSequence conjunction) {
+		return join(array, conjunction, null, null);
+	}
+
+	/**
+	 * 以 conjunction 为分隔符将数组转换为字符串
+	 * 
+	 * @param <T> 被处理的集合
+	 * @param array 数组
+	 * @param conjunction 分隔符
+	 * @param prefix 每个元素添加的前缀，null表示不添加
+	 * @param suffix 每个元素添加的后缀，null表示不添加
+	 * @return 连接后的字符串
+	 * @since 4.0.10
+	 */
+	public static <T> String join(T[] array, CharSequence conjunction, String prefix, String suffix) {
 		if (null == array) {
 			return null;
 		}
@@ -1882,11 +1897,11 @@ public class ArrayUtil {
 				sb.append(conjunction);
 			}
 			if (ArrayUtil.isArray(item)) {
-				sb.append(join(ArrayUtil.wrap(item), conjunction));
+				sb.append(join(ArrayUtil.wrap(item), conjunction, prefix, suffix));
 			} else if (item instanceof Iterable<?>) {
-				sb.append(IterUtil.join((Iterable<?>) item, conjunction));
+				sb.append(IterUtil.join((Iterable<?>) item, conjunction, prefix, suffix));
 			} else if (item instanceof Iterator<?>) {
-				sb.append(IterUtil.join((Iterator<?>) item, conjunction));
+				sb.append(IterUtil.join((Iterator<?>) item, conjunction, prefix, suffix));
 			} else {
 				sb.append(item);
 			}

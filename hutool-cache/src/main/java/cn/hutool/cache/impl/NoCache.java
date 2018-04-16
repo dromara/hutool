@@ -6,10 +6,10 @@ import cn.hutool.cache.Cache;
 
 /**
  * 无缓存实现，用于快速关闭缓存
- * @author Looly,jodd
- *
+ * 
  * @param <K> 键类型
  * @param <V> 值类型
+ * @author Looly,jodd
  */
 public class NoCache<K, V> implements Cache<K, V> {
 
@@ -32,7 +32,7 @@ public class NoCache<K, V> implements Cache<K, V> {
 	public void put(K key, V object, long timeout) {
 		// 跳过
 	}
-	
+
 	@Override
 	public boolean containsKey(K key) {
 		return false;
@@ -44,7 +44,17 @@ public class NoCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
+	public V get(K key, boolean isUpdateLastAccess) {
+		return null;
+	}
+
+	@Override
 	public Iterator<V> iterator() {
+		return null;
+	}
+	
+	@Override
+	public Iterator<CacheObj<K, V>> cacheObjIterator() {
 		return null;
 	}
 

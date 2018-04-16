@@ -21,6 +21,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -380,9 +381,13 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	 * @return 文件名，empty表示无
 	 */
 	private String getFileNameFromDisposition() {
-		String fileName = header(Header.CONTENT_DISPOSITION);
-		if(StrUtil.isNotBlank(fileName)) {
-			fileName = StrUtil.subAfter(fileName, "filename=", true);
+		String fileName = null;
+		final String desposition = header(Header.CONTENT_DISPOSITION);
+		if(StrUtil.isNotBlank(desposition)) {
+			fileName = ReUtil.get("filename=\"(.*?)\"", desposition, 1);
+			if(StrUtil.isBlank(fileName)) {
+				fileName = StrUtil.subAfter(desposition, "filename=", true);
+			}
 		}
 		return fileName;
 	}

@@ -334,9 +334,9 @@ public class ExcelWriter implements Closeable {
 	public ExcelWriter merge(int lastColumn) {
 		return merge(lastColumn, null);
 	}
-
+	
 	/**
-	 * 合并某行的单元格，并写入对象到单元格<br>
+	 * 合并当前行的单元格，并写入对象到单元格<br>
 	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
 	 * 
@@ -345,22 +345,58 @@ public class ExcelWriter implements Closeable {
 	 * @return this
 	 */
 	public ExcelWriter merge(int lastColumn, Object content) {
+		return merge(lastColumn, content, true);
+	}
+
+	/**
+	 * 合并某行的单元格，并写入对象到单元格<br>
+	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
+	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 
+	 * @param lastColumn 合并到的最后一个列号
+	 * @param content 合并单元格后的内容
+	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式
+	 * @return this
+	 * @since 4.0.10
+	 */
+	public ExcelWriter merge(int lastColumn, Object content, boolean isSetHeaderStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
 		final int rowIndex = this.currentRow.get();
-		final Cell cell = this.sheet.createRow(rowIndex).createCell(0);
-
-		// 设置合并后的单元格样式
-		if (null != this.styleSet.headCellStyle) {
-			cell.setCellStyle(this.styleSet.headCellStyle);
-			CellUtil.mergingCells(this.sheet, rowIndex, rowIndex, 0, lastColumn, this.styleSet.headCellStyle);
+		merge(rowIndex, rowIndex, 0, lastColumn, content, isSetHeaderStyle);
+		
+		// 设置内容后跳到下一行
+		if(null != content) {
+			this.currentRow.incrementAndGet();
 		}
+		return this;
+	}
+	
+	/**
+	 * 合并某行的单元格，并写入对象到单元格<br>
+	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
+	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
+	 * 
+	 * @param lastColumn 合并到的最后一个列号
+	 * @param content 合并单元格后的内容
+	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式
+	 * @return this
+	 * @since 4.0.10
+	 */
+	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn , Object content, boolean isSetHeaderStyle) {
+		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+
+		final CellStyle style = (isSetHeaderStyle && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
+		CellUtil.mergingCells(this.sheet, firstRow, lastRow, firstColumn, lastColumn, style);
 
 		// 设置内容
 		if (null != content) {
+			final Cell cell = getOrCreateCell(firstColumn, firstRow);
 			CellUtil.setCellValue(cell, content, this.styleSet);
-			// 设置内容后跳到下一行
-			this.currentRow.incrementAndGet();
+			if(isSetHeaderStyle) {
+				//当作为标题合并单元格时，使用标题样式
+				cell.setCellStyle(this.styleSet.headCellStyle);
+			}
 		}
 		return this;
 	}

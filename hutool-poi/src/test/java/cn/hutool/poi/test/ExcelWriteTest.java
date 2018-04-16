@@ -9,6 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -18,6 +21,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import cn.hutool.poi.excel.StyleUtil;
 
 /**
  * 写出Excel单元测试
@@ -52,6 +56,36 @@ public class ExcelWriteTest {
 		writer.merge(row1.size() - 1, "测试标题");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
+		// 关闭writer，释放内存
+		writer.close();
+	}
+	
+	@Test
+	@Ignore
+	public void mergeTest() {
+		List<?> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd", DateUtil.date(), 3.22676575765);
+		List<?> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1", DateUtil.date(), 250.7676);
+		List<?> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2", DateUtil.date(), 0.111);
+		List<?> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3", DateUtil.date(), 35);
+		List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
+
+		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
+
+		// 通过工具类创建writer
+		ExcelWriter writer = ExcelUtil.getWriter("d:/mergeTest.xlsx");
+		CellStyle style = writer.getStyleSet().getHeadCellStyle();
+		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
+
+		// 跳过当前行，既第一行，非必须，在此演示用
+		writer.passCurrentRow();
+		// 合并单元格后的标题行，使用默认标题样式
+		writer.merge(row1.size() - 1, "测试标题");
+		// 一次性写出内容，使用默认样式
+		writer.write(rows);
+		
+		// 合并单元格后的标题行，使用默认标题样式
+		writer.merge(7, 10, 4, 10, "测试Merge", false);
+		
 		// 关闭writer，释放内存
 		writer.close();
 	}

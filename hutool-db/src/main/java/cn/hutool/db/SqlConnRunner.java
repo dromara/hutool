@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
@@ -18,10 +19,11 @@ import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.handler.NumberHandler;
 import cn.hutool.db.handler.PageResultHandler;
 import cn.hutool.db.handler.RsHandler;
+import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlExecutor;
+import cn.hutool.db.sql.SqlUtil;
 import cn.hutool.db.sql.Wrapper;
-import cn.hutool.db.sql.Condition.LikeType;
 import cn.hutool.log.StaticLog;
 
 /**
@@ -110,6 +112,25 @@ public class SqlConnRunner{
 	}
 	
 	/**
+	 * 插入数据<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接
+	 * @param record 记录
+	 * @param keys 需要检查唯一性的字段
+	 * @return 插入行数
+	 * @throws SQLException SQL执行异常
+	 */
+	public int insertOrUpdate(Connection conn, Entity record, String... keys) throws SQLException {
+		final Entity where = record.filter(keys);
+		if(MapUtil.isNotEmpty(where) && count(conn, where) > 0) {
+			return update(conn, record, where);
+		}else {
+			return insert(conn, record);
+		}
+	}
+	
+	/**
 	 * 批量插入数据<br>
 	 * 需要注意的是，批量插入每一条数据结构必须一致。批量插入数据时会获取第一条数据的字段结构，之后的数据会按照这个格式插入。<br>
 	 * 也就是说假如第一条数据只有2个字段，后边数据多于这两个字段的部分将被抛弃。
@@ -172,7 +193,7 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForInsert(conn, record);
 			ps.executeUpdate();
-			return DbUtil.getGeneratedKeys(ps);
+			return StatementUtil.getGeneratedKeys(ps);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -198,7 +219,7 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForInsert(conn, record);
 			ps.executeUpdate();
-			return DbUtil.getGeneratedKeyOfLong(ps);
+			return StatementUtil.getGeneratedKeyOfLong(ps);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -221,7 +242,7 @@ public class SqlConnRunner{
 			throw new SQLException("Empty entity provided!");
 		}
 		
-		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
+		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
 		PreparedStatement ps = null;
 		try {
 			ps = dialect.psForDelete(conn, query);
@@ -259,7 +280,7 @@ public class SqlConnRunner{
 			record.setTableName(tableName);
 		}
 		
-		final Query query = new Query(DbUtil.buildConditions(where), tableName);
+		final Query query = new Query(SqlUtil.buildConditions(where), tableName);
 		PreparedStatement ps = null;
 		try {
 			ps = dialect.psForUpdate(conn, record, query);
@@ -310,7 +331,7 @@ public class SqlConnRunner{
 	 * @throws SQLException SQL执行异常
 	 */
 	public <T> T find(Connection conn, Collection<String> fields, Entity where, RsHandler<T> rsh) throws SQLException {
-		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
+		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
 		query.setFields(fields);
 		return find(conn, query, rsh);
 	}
@@ -394,7 +415,7 @@ public class SqlConnRunner{
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findLike(Connection conn, String tableName, String field, String value, LikeType likeType) throws SQLException{
-		return findAll(conn, Entity.create(tableName).set(field, DbUtil.buildLikeValue(value, likeType, true)));
+		return findAll(conn, Entity.create(tableName).set(field, SqlUtil.buildLikeValue(value, likeType, true)));
 	}
 	
 	/**
@@ -421,7 +442,7 @@ public class SqlConnRunner{
 	public int count(Connection conn, Entity where) throws SQLException {
 		checkConn(conn);
 		
-		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
+		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
 		PreparedStatement ps = null;
 		try {
 			ps = dialect.psForCount(conn, query);
@@ -470,7 +491,7 @@ public class SqlConnRunner{
 			return this.find(conn, fields, where, rsh);
 		}
 		
-		final Query query = new Query(DbUtil.buildConditions(where), where.getTableName());
+		final Query query = new Query(SqlUtil.buildConditions(where), where.getTableName());
 		query.setFields(fields);
 		query.setPage(page);
 		return SqlExecutor.queryAndClosePs(dialect.psForPage(conn, query), rsh);

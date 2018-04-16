@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.0.9</version>
+		<version>4.0.10</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -19,7 +19,7 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>1.7</velocity.version>
-		<beetl.version>2.7.26</beetl.version>
+		<beetl.version>2.7.28</beetl.version>
 		<rythm.version>1.2.2</rythm.version>
 		<mail.version>1.6.1</mail.version>
 		<jsch.version>0.1.54</jsch.version>

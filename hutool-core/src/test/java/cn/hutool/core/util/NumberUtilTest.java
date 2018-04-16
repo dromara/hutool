@@ -43,13 +43,18 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isInteger("256"));
 		Assert.assertTrue(NumberUtil.isInteger("0256"));
 	}
+	
+	@Test
+	public void isNumberTest() {
+		Assert.assertTrue(NumberUtil.isNumber("28.55"));
+	}
 
 	@Test
 	public void divTest() {
 		double result = NumberUtil.div(0, 1);
 		Assert.assertEquals(0.0, result, 0);
 	}
-
+	
 	@Test
 	public void roundTest() {
 
@@ -109,5 +114,17 @@ public class NumberUtilTest {
 				
 		BigDecimal bigDecimal = NumberUtil.toBigDecimal(a);
 		Assert.assertEquals("3.14", bigDecimal.toString());
+	}
+	
+	@Test
+	public void maxTest() {
+		int max = NumberUtil.max(new int[]{5,4,3,6,1});
+		Assert.assertEquals(6, max);
+	}
+	
+	@Test
+	public void minTest() {
+		int min = NumberUtil.min(new int[]{5,4,3,6,1});
+		Assert.assertEquals(1, min);
 	}
 }

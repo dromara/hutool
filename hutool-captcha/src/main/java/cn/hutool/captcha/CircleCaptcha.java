@@ -3,6 +3,7 @@ package cn.hutool.captcha;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -53,9 +54,9 @@ public class CircleCaptcha extends AbstractCaptcha {
 	}
 
 	@Override
-	public void createImage(String code) {
-		this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = ImageUtil.createGraphics(this.image, Color.WHITE);
+	public Image createImage(String code) {
+		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		final Graphics2D g = ImageUtil.createGraphics(image, Color.WHITE);
 
 		// 画字符串
 		g.setFont(font);
@@ -71,6 +72,8 @@ public class CircleCaptcha extends AbstractCaptcha {
 		
 		// 随机画干扰圈圈
 		drawInterfere(g);
+		
+		return image;
 	}
 
 	// ----------------------------------------------------------------------------------------------------- Private method start

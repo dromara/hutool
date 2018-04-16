@@ -6,7 +6,6 @@ import javax.sql.DataSource;
 
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.dialect.impl.AnsiSqlDialect;
 import cn.hutool.db.dialect.impl.H2Dialect;
 import cn.hutool.db.dialect.impl.MysqlDialect;
@@ -125,7 +124,7 @@ public class DialectFactory {
 	 * @return 方言
 	 */
 	public static Dialect newDialect(DataSource ds) {
-		return newDialect(DbUtil.identifyDriver(ds));
+		return newDialect(DriverUtil.identifyDriver(ds));
 	}
 
 	/**
@@ -135,7 +134,7 @@ public class DialectFactory {
 	 * @return 方言
 	 */
 	public static Dialect newDialect(Connection conn) {
-		return newDialect(DbUtil.identifyDriver(conn));
+		return newDialect(DriverUtil.identifyDriver(conn));
 	}
 
 }

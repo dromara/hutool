@@ -7,7 +7,7 @@ import java.net.URL;
 import cn.hutool.core.convert.AbstractConverter;
 
 /**
- * 字符串转换器
+ * URI对象转换器
  * @author Looly
  *
  */

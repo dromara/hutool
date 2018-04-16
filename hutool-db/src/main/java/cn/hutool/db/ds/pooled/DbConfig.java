@@ -1,7 +1,7 @@
 package cn.hutool.db.ds.pooled;
 
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
+import cn.hutool.db.dialect.DriverUtil;
 
 /**
  * 数据库配置
@@ -47,7 +47,7 @@ public class DbConfig {
 		this.url = url;
 		this.user = user;
 		this.pass = pass;
-		this.driver = DbUtil.identifyDriver(url);
+		this.driver = DriverUtil.identifyDriver(url);
 		try {
 			Class.forName(this.driver);
 		} catch (ClassNotFoundException e) {

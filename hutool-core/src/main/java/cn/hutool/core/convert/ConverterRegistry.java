@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Currency;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -43,6 +44,7 @@ import cn.hutool.core.convert.impl.StringConverter;
 import cn.hutool.core.convert.impl.TimeZoneConverter;
 import cn.hutool.core.convert.impl.URIConverter;
 import cn.hutool.core.convert.impl.URLConverter;
+import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -356,6 +358,7 @@ public class ConverterRegistry {
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
 		defaultConverterMap.put(Path.class, new PathConverter());
 		defaultConverterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
+		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
 
 		return this;
 	}

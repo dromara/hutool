@@ -12,7 +12,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
+import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
 
@@ -104,7 +104,7 @@ public class DbcpDSFactory extends DSFactory {
 		if(StrUtil.isNotBlank(driver)){
 			ds.setDriverClassName(driver);
 		}else{
-			ds.setDriverClassName(DbUtil.identifyDriver(ds.getUrl()));
+			ds.setDriverClassName(DriverUtil.identifyDriver(ds.getUrl()));
 		}
 		
 		config.toBean(ds);//注入属性

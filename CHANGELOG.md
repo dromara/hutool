@@ -2,6 +2,32 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.0.10
+
+### 新特性
+* 【poi】       ExcelWriter.merge方法加入重载，可选是否加入默认标题样式
+* 【poi】       ExcelSaxReader改进按照流读取工作簿的构造，使之对于mark不支持的流也可解析
+* 【cron】     添加updatePattern方法，可更新Task执行时间规则(感谢@【上海】嘿)
+* 【cache】   添加get方法支持可选的是否更新lastAccess时间（issue#IISC4@Gitee）
+* 【core】     StrUtil增加isNullOrUndefined、isEmptyOrUndefined、isBlankOrUndefined方法（issue#IIR44@Gitee）
+* 【core】     isBlankChar方法迁移到CharUtil中
+* 【db】        增加NamedSql
+* 【poi】       对于POI未引入或版本错误提供更加明确的提示
+* 【core】     增加UUIDConverter，支持UUID对象的自动转换
+* 【core】     IterUtil增加fieldValueList、fieldValueAsMap、join重载方法(issue#IIU4F@Gitee)
+* 【core】     IoUtil增加checksum、toBuffered方法，StrUtil增加maxLength方法（参考osgl-tool）
+* 【poi】       ExcelReader支持自定义sheet
+
+### Bug修复
+* 【poi】       修复ExcelWriter合并单元格后样式失效问题
+* 【http】      修复HttpUtil.download方法遇到特殊Disposition时处理异常问题（感谢@【深圳】Bomb）
+* 【core】     修复StrUtil.toUnderlineCase方法中下划线转下划线导致的问题
+* 【core】     修复RandomUtil.randomEles方法计数错误问题（issue#98@Github）
+* 【core】     修复NumberChineseFormater负数小数结果错误问题（pr#10@Gitee）
+* 【captcha】修复验证码无法序列化的问题（issue#IJ2MI@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.0.9
 
 ### 新特性

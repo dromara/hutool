@@ -34,12 +34,14 @@ public class ConvertToBeanTest {
 	@Test
 	public void mapToBeanTest() {
 		HashMap<String, Object> map = new HashMap<>();
+		map.put("id", "88dc4b28-91b1-4a1a-bab5-444b795c7ecd");
 		map.put("age", 14);
 		map.put("openid", "11213232");
 		map.put("name", "测试A11");
 		map.put("subName", "sub名字");
 		
 		SubPerson subPerson = Convert.convert(SubPerson.class, map);
+		Assert.assertEquals("88dc4b28-91b1-4a1a-bab5-444b795c7ecd", subPerson.getId().toString());
 		Assert.assertEquals(14, subPerson.getAge());
 		Assert.assertEquals("11213232", subPerson.getOpenid());
 		Assert.assertEquals("测试A11", subPerson.getName());

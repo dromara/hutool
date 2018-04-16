@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
+
 /**
  * {@link ClassUtil} 单元测试
  * 
@@ -13,6 +15,12 @@ import org.junit.Test;
  *
  */
 public class ClassUtilTest {
+	
+	@Test
+	public void a() {
+		String path = "C:/Users/maple/Desktop/tone.txt";
+		Console.log(path.matches("^[a-zA-z]:/.*"));
+	}
 	
 	@Test
 	public void getClassNameTest() {

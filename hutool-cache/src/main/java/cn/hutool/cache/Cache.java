@@ -2,6 +2,8 @@ package cn.hutool.cache;
 
 import java.util.Iterator;
 
+import cn.hutool.cache.impl.CacheObj;
+
 /**
  * 缓存接口
  * @author Looly,jodd
@@ -47,6 +49,14 @@ public interface Cache<K, V> extends Iterable<V>{
 	 * @return 键对应的对象
 	 */
 	V get(K key);
+	
+	/**
+	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回<code>null</code>
+	 * @param key 键
+	 * @param isUpdateLastAccess 是否更新最后访问时间
+	 * @return 键对应的对象
+	 */
+	V get(K key, boolean isUpdateLastAccess);
 
 	/**
 	 * 返回缓存迭代器
@@ -54,6 +64,14 @@ public interface Cache<K, V> extends Iterable<V>{
 	 */
 	@Override
 	Iterator<V> iterator();
+	
+	/**
+	 * 返回包含键和值得迭代器
+	 * 
+	 * @return 缓存对象迭代器
+	 * @since 4.0.10
+	 */
+	Iterator<CacheObj<K, V>> cacheObjIterator();
 
 	/**
 	 * 从缓存中清理过期对象，清理策略取决于具体实现

@@ -1,6 +1,7 @@
 package cn.hutool.core.io;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
@@ -29,6 +30,9 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
+import java.util.zip.Checksum;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
@@ -708,7 +712,29 @@ public class IoUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+
+	/**
+	 * 转换为{@link BufferedInputStream}
+	 * 
+	 * @param in {@link InputStream}
+	 * @return {@link BufferedInputStream}
+	 * @since 4.0.10
+	 */
+	public static BufferedInputStream toBuffered(InputStream in) {
+		return (in instanceof BufferedInputStream) ? (BufferedInputStream) in : new BufferedInputStream(in);
+	}
 	
+	/**
+	 * 转换为{@link BufferedOutputStream}
+	 * 
+	 * @param out {@link OutputStream}
+	 * @return {@link BufferedOutputStream}
+	 * @since 4.0.10
+	 */
+	public static BufferedOutputStream toBuffered(OutputStream out) {
+		return (out instanceof BufferedOutputStream) ? (BufferedOutputStream) out : new BufferedOutputStream(out);
+	}
+
 	/**
 	 * 将{@link InputStream}转换为支持mark标记的流<br>
 	 * 若原流支持mark标记，则返回原流，否则使用{@link BufferedInputStream} 包装之
@@ -718,10 +744,10 @@ public class IoUtil {
 	 * @since 4.0.9
 	 */
 	public static InputStream toMarkSupportStream(InputStream in) {
-		if(null == in) {
+		if (null == in) {
 			return null;
 		}
-		if(false == in.markSupported()) {
+		if (false == in.markSupported()) {
 			return new BufferedInputStream(in);
 		}
 		return in;
@@ -965,5 +991,40 @@ public class IoUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 计算流CRC32校验码，计算后关闭流
+	 * 
+	 * @param in 文件，不能为目录
+	 * @return CRC32值
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.6
+	 */
+	public static long checksumCRC32(InputStream in) throws IORuntimeException {
+		return checksum(in, new CRC32()).getValue();
+	}
+
+	/**
+	 * 计算流的校验码，计算后关闭流
+	 * 
+	 * @param in 流
+	 * @param checksum {@link Checksum}
+	 * @return Checksum
+	 * @throws IORuntimeException IO异常
+	 * @since 4.0.10
+	 */
+	public static Checksum checksum(InputStream in, Checksum checksum) throws IORuntimeException {
+		Assert.notNull(in, "InputStream is null !");
+		if (null == checksum) {
+			checksum = new CRC32();
+		}
+		try {
+			in = new CheckedInputStream(in, checksum);
+			IoUtil.copy(in, new NullOutputStream());
+		} finally {
+			IoUtil.close(in);
+		}
+		return checksum;
 	}
 }

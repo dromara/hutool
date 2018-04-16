@@ -11,7 +11,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
+import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
 
@@ -104,7 +104,7 @@ public class C3p0DSFactory extends DSFactory {
 			if(StrUtil.isNotBlank(driver)){
 				ds.setDriverClass(driver);
 			}else{
-				ds.setDriverClass(DbUtil.identifyDriver(url));
+				ds.setDriverClass(DriverUtil.identifyDriver(url));
 			}
 		} catch (Exception e) {
 			throw new DbRuntimeException(e);

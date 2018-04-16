@@ -52,7 +52,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Dict() {
 		super();
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -61,7 +61,7 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Dict(int initialCapacity) {
 		super(initialCapacity);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -71,14 +71,14 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 	public Dict(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
 	 * @param m Map
 	 */
 	public Dict(Map<String, Object> m) {
-		super(m);
+		super((null == m) ? new HashMap<String, Object>() : m);
 	}
 	// --------------------------------------------------------------- Constructor end
 
@@ -201,6 +201,24 @@ public class Dict extends HashMap<String, Object> implements BasicTypeGetter<Str
 				this.remove(entry.getKey());
 			}
 		}
+	}
+
+	/**
+	 * 过滤Map保留指定键值对，如果键不存在跳过
+	 * 
+	 * @param keys 键列表
+	 * @return Dict 结果
+	 * @since 4.0.10
+	 */
+	public Dict filter(String... keys) {
+		final Dict result = new Dict(keys.length, 1);
+
+		for (String key : keys) {
+			if (this.containsKey(key)) {
+				result.put(key, this.get(key));
+			}
+		}
+		return result;
 	}
 
 	// -------------------------------------------------------------------- Set start

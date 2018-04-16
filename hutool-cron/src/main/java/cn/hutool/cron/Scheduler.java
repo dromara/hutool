@@ -252,6 +252,19 @@ public class Scheduler {
 		this.taskTable.remove(id);
 		return this;
 	}
+	
+	/**
+	 * 更新Task执行的时间规则
+	 * 
+	 * @param id Task的ID
+	 * @param pattern {@link CronPattern}
+	 * @return this
+	 * @since 4.0.10
+	 */
+	public Scheduler updatePattern(String id, CronPattern pattern) {
+		this.taskTable.updatePattern(id, pattern);
+		return this;
+	}
 
 	/**
 	 * 获得指定id的{@link CronPattern}

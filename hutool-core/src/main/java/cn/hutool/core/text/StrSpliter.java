@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -359,7 +360,7 @@ public class StrSpliter {
 		int len = str.length();
 		int start = 0;//切分后每个部分的起始
 		for(int i = 0; i < len; i++){
-			if(NumberUtil.isBlankChar(str.charAt(i))){
+			if(CharUtil.isBlankChar(str.charAt(i))){
 				addToList(list, str.substring(start, i), true, true);
 				start = i+1;//i+1同时将start与i保持一致
 				
