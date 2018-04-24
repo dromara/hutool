@@ -60,7 +60,7 @@ public class NumberChineseFormaterTest {
 		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元壹角贰分", digitToChinese);
 		
 		String digitToChinese2 = Convert.digitToChinese(12412412412421D);
-		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹整", digitToChinese2);
+		Assert.assertEquals("壹拾贰万肆仟壹佰贰拾肆亿壹仟贰佰肆拾壹万贰仟肆佰贰拾壹元整", digitToChinese2);
 		
 		String digitToChinese3 = Convert.digitToChinese(2421.02);
 		Assert.assertEquals("贰仟肆佰贰拾壹元零贰分", digitToChinese3);

@@ -123,7 +123,7 @@ public class NumberChineseFormater {
 			}
 		}else if(isMoneyMode) {
 			//无小数部分的金额结尾
-			chineseStr += "整";
+			chineseStr += "元整";
 		}
 
 		return chineseStr;

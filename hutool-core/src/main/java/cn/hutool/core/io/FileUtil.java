@@ -199,8 +199,11 @@ public class FileUtil {
 		}
 
 		if (file.isDirectory()) {
-			for (File tmp : file.listFiles()) {
-				fileList.addAll(loopFiles(tmp, fileFilter));
+			final File[] subFiles = file.listFiles();
+			if(ArrayUtil.isNotEmpty(subFiles)) {
+				for (File tmp : subFiles) {
+					fileList.addAll(loopFiles(tmp, fileFilter));
+				}
 			}
 		} else {
 			if (null == fileFilter || fileFilter.accept(file)) {

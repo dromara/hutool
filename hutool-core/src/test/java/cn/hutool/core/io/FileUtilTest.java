@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.io.file.LineSeparator;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 
 /**
@@ -190,5 +191,14 @@ public class FileUtilTest {
 
 		names = FileUtil.listFileNames(".");
 		Assert.assertTrue(names.contains("hutool.jpg"));
+	}
+	
+	@Test
+	@Ignore
+	public void loopFilesTest() {
+		List<File> files = FileUtil.loopFiles("d:/");
+		for (File file : files) {
+			Console.log(file.getPath());
+		}
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -90,6 +91,10 @@ public class CellUtil {
 			break;
 		case BLANK:
 			value = StrUtil.EMPTY;
+			break;
+		case ERROR:
+			final FormulaError error = FormulaError.forInt(cell.getErrorCellValue());
+			value = (null == error) ? StrUtil.EMPTY : error.getString();
 			break;
 		default:
 			value = cell.getStringCellValue();

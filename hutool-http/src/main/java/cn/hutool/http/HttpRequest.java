@@ -458,10 +458,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (null != contentType) {
 			// Content-Type自定义设置
 			this.contentType(contentType);
-		} else if (null == this.header(Header.CONTENT_TYPE)) {
+		} else {
 			// 在用户未自定义的情况下自动根据内容判断
 			contentType = HttpUtil.getContentTypeByRequestBody(body);
-			if (null != contentType) {
+			if (null != contentType && ContentType.isFormUrlEncoed(this.header(Header.CONTENT_TYPE))) {
 				this.contentType(contentType);
 			}
 		}

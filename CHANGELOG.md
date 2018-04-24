@@ -8,6 +8,10 @@
 * 【core】     Week.toChinese()添加可选参数，选择星期的前缀（比如是“星期”还是“周”）
 
 ### Bug修复
+* 【core】     修复NumberChineseFormater.format()方法无“元”字的问题（issue#IJ6MR@Gitee）
+* 【core】     修复FileUtil.loopFile遍历根目录时空指针错误问题
+* 【poi】       修复ExcelReader遇到ERROR单元格时报错问题（感谢@夏夜神话）
+* 【http】      修复HttpUtil.post传入json字符串导致的问题（issue#99@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

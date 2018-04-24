@@ -48,7 +48,7 @@ public class ImageUtilTest {
 	@Test
 	@Ignore
 	public void pressImgTest() {
-		ImageUtil.pressImage(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest.jpg"), ImageUtil.read(FileUtil.file("d:/picTest/1432613.jpg")), -1000, -1000, 0.9f);
+		ImageUtil.pressImage(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest.jpg"), ImageUtil.read(FileUtil.file("d:/picTest/1432613.jpg")), 0, 0, 0.1f);
 	}
 	
 	@Test
