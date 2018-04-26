@@ -26,4 +26,16 @@ public class PinyinUtilTest {
 		allFirstLetter = PinyinUtil.getAllFirstLetter("一览众山小");
 		Assert.assertEquals("ylzsx", allFirstLetter);
 	}
+	
+	@Test
+	public void getPinyinTest() {
+		String pinYin = PinyinUtil.getPinYin("会当凌绝顶");
+		Assert.assertEquals("huidanglingjueding", pinYin);
+		
+		pinYin = PinyinUtil.getPinYin("一览众山小");
+		Assert.assertEquals("yilanzhongshanxiao", pinYin);
+		
+//		pinYin = PinyinUtil.getPinYin("怡");
+//		Assert.assertEquals("yi", pinYin);
+	}
 }

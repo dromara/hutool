@@ -6,6 +6,7 @@
 
 ### 新特性
 * 【core】     Week.toChinese()添加可选参数，选择星期的前缀（比如是“星期”还是“周”）
+* 【core】     PinyinUtil增加方法，汉字转拼音（pr#11@Gitee）
 
 ### Bug修复
 * 【core】     修复NumberChineseFormater.format()方法无“元”字的问题（issue#IJ6MR@Gitee）
