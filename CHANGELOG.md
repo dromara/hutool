@@ -13,6 +13,7 @@
 * 【core】     修复FileUtil.loopFile遍历根目录时空指针错误问题
 * 【poi】       修复ExcelReader遇到ERROR单元格时报错问题（感谢@夏夜神话）
 * 【http】      修复HttpUtil.post传入json字符串导致的问题（issue#99@Github）
+* 【json】      修复Unicode不可见字符转义导致的中文双引号等符号显示问题（issue#IJFBD@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

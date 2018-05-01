@@ -570,7 +570,8 @@ public final class JSONUtil {
 				builder.append("\\r");
 				break;
 			default:
-				if (c < StrUtil.C_SPACE || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
+//				if (c < StrUtil.C_SPACE || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
+				if (c < StrUtil.C_SPACE) {
 					builder.append(HexUtil.toUnicodeHex(c));
 				} else {
 					builder.append(c);
