@@ -15,6 +15,8 @@
 * 【poi】       修复ExcelReader遇到ERROR单元格时报错问题（感谢@夏夜神话）
 * 【http】      修复HttpUtil.post传入json字符串导致的问题（issue#99@Github）
 * 【json】      修复Unicode不可见字符转义导致的中文双引号等符号显示问题（issue#IJFBD@Gitee）
+* 【core】      修复ReferenceUtil中SoftReference错误问题（pr#105@Github）
+* 【db】         删除ActiveRsHandler（歧义），修复showSql属性报错问题（issue#IJII8@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

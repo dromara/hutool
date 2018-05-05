@@ -5,9 +5,16 @@
 # 基本连接信息所有连接池都支持，连接池配置信息根据不同的连接池，连接池配置是根据连接池相应的配置项移植而来
 #===================================================================
 
+# 默认数据源
+url = jdbc:sqlite:test.db
+
+# 测试数据源
+[test]
 url = jdbc:sqlite:test.db
 
 # 是否在日志中显示执行的SQL
 showSql = true
 # 是否格式化显示的SQL
 formatSql = false
+# 是否显示SQL参数
+showParams = false

@@ -34,6 +34,18 @@ public class SqlRunner extends AbstractSqlRunner{
 	
 	/**
 	 * 创建SqlRunner<br>
+	 * 使用默认数据源，自动探测数据库连接池
+	 * 
+	 * @param group 数据源分组
+	 * @return SqlRunner
+	 * @since 4.0.11
+	 */
+	public static SqlRunner create(String group) {
+		return create(DSFactory.get(group));
+	}
+	
+	/**
+	 * 创建SqlRunner<br>
 	 * 会根据数据源连接的元信息识别目标数据库类型，进而使用合适的数据源
 	 * @param ds 数据源
 	 * @return SqlRunner
