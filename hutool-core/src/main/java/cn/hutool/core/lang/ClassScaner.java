@@ -3,7 +3,7 @@ package cn.hutool.core.lang;
 import java.io.File;
 import java.io.FileFilter;
 import java.lang.annotation.Annotation;
-import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -82,7 +82,7 @@ public final class ClassScaner {
 	/**
 	 * 扫面包路径下满足class过滤器条件的所有class文件，<br>
 	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException<br>
-	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理,有可能是一个不完善的地方，以后需要进行修改<br>
+	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理<br>
 	 * 
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @param classFilter class过滤器，过滤掉不需要的class
@@ -96,12 +96,8 @@ public final class ClassScaner {
 		packageName = getWellFormedPackageName(packageName);
 
 		final Set<Class<?>> classes = new HashSet<Class<?>>();
-		final Set<String> classPaths = ClassUtil.getClassPaths(packageName);
+		final Set<String> classPaths = ClassUtil.getClassPaths(packageName, true);
 		for (String classPath : classPaths) {
-			// bug修复，由于路径中空格和中文导致的Jar找不到
-			classPath = URLUtil.decode(classPath, CharsetUtil.systemCharsetName());
-
-			// log.debug("Scan classpath: [{}]", classPath);
 			// 填充 classes
 			fillClasses(classPath, packageName, classFilter, classes);
 		}
@@ -192,16 +188,16 @@ public final class ClassScaner {
 	 * 处理为class文件的情况,填充满足条件的class 到 classes
 	 * 
 	 * @param classPath 类文件所在目录，当包名为空时使用此参数，用于截掉类名前面的文件路径
-	 * @param file class文件
+	 * @param classFile class文件
 	 * @param packageName 包名
 	 * @param classFilter 类过滤器
 	 * @param classes 类集合
 	 */
-	private static void processClassFile(String classPath, File file, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
+	private static void processClassFile(String classPath, File classFile, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		if (false == classPath.endsWith(File.separator)) {
 			classPath += File.separator;
 		}
-		String path = file.getAbsolutePath();
+		String path = classFile.getAbsolutePath();
 		if (StrUtil.isEmpty(packageName)) {
 			path = StrUtil.removePrefix(path, classPath);
 		}
@@ -226,9 +222,13 @@ public final class ClassScaner {
 	 */
 	private static void processJarFile(File file, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		JarFile jarFile = null;
+		Enumeration<JarEntry> entries;
 		try {
 			jarFile = new JarFile(file);
-			for (JarEntry entry : Collections.list(jarFile.entries())) {
+			entries = jarFile.entries();
+			JarEntry entry;
+			while(entries.hasMoreElements()) {
+				entry = entries.nextElement();
 				if (isClass(entry.getName())) {
 					final String className = entry.getName().replace(StrUtil.SLASH, StrUtil.DOT).replace(FileUtil.CLASS_EXT, StrUtil.EMPTY);
 					fillClass(className, packageName, classes, classFilter);

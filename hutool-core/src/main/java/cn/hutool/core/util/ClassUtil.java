@@ -369,21 +369,44 @@ public class ClassUtil {
 
 	// ----------------------------------------------------------------------------------------- Classpath
 	/**
-	 * 获得ClassPath
+	 * 获得ClassPath，不解码路径中的特殊字符（例如空格和中文）
 	 * 
 	 * @return ClassPath集合
 	 */
 	public static Set<String> getClassPathResources() {
-		return getClassPaths(StrUtil.EMPTY);
+		return getClassPathResources(false);
+	}
+	
+	/**
+	 * 获得ClassPath
+	 * 
+	 * @param isDecode 是否解码路径中的特殊字符（例如空格和中文）
+	 * @return ClassPath集合
+	 * @since 4.0.11
+	 */
+	public static Set<String> getClassPathResources(boolean isDecode) {
+		return getClassPaths(StrUtil.EMPTY, isDecode);
+	}
+	
+	/**
+	 * 获得ClassPath，不解码路径中的特殊字符（例如空格和中文）
+	 * 
+	 * @param packageName 包名称
+	 * @return ClassPath路径字符串集合
+	 */
+	public static Set<String> getClassPaths(String packageName) {
+		return getClassPaths(packageName, false);
 	}
 
 	/**
 	 * 获得ClassPath
 	 * 
 	 * @param packageName 包名称
+	 * @param isDecode 是否解码路径中的特殊字符（例如空格和中文）
 	 * @return ClassPath路径字符串集合
+	 * @since 4.0.11
 	 */
-	public static Set<String> getClassPaths(String packageName) {
+	public static Set<String> getClassPaths(String packageName, boolean isDecode) {
 		String packagePath = packageName.replace(StrUtil.DOT, StrUtil.SLASH);
 		Enumeration<URL> resources;
 		try {
@@ -391,9 +414,11 @@ public class ClassUtil {
 		} catch (IOException e) {
 			throw new UtilException(e, "Loading classPath [{}] error!", packagePath);
 		}
-		Set<String> paths = new HashSet<String>();
+		final Set<String> paths = new HashSet<String>();
+		String path;
 		while (resources.hasMoreElements()) {
-			paths.add(resources.nextElement().getPath());
+			path = resources.nextElement().getPath();
+			paths.add(isDecode ? URLUtil.decode(path, CharsetUtil.systemCharsetName()) : path);
 		}
 		return paths;
 	}
@@ -480,8 +505,7 @@ public class ClassUtil {
 	 * @return 获得Java ClassPath路径，不包括 jre
 	 */
 	public static String[] getJavaClassPaths() {
-		String[] classPaths = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
-		return classPaths;
+		return System.getProperty("java.class.path").split(System.getProperty("path.separator"));
 	}
 
 	/**
