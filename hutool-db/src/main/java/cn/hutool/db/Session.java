@@ -39,6 +39,17 @@ public class Session extends AbstractSqlRunner implements Closeable {
 	public static Session create() {
 		return new Session(DSFactory.get());
 	}
+	
+	/**
+	 * 创建会话
+	 * 
+	 * @param group 分组
+	 * @return {@link Session}
+	 * @since 4.0.11
+	 */
+	public static Session create(String group) {
+		return new Session(DSFactory.get(group));
+	}
 
 	/**
 	 * 创建会话

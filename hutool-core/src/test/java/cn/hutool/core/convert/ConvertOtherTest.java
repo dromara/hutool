@@ -67,11 +67,11 @@ public class ConvertOtherTest {
 		
 		a = 1024.00;
 		digitUppercase = Convert.digitToChinese(a);
-		Assert.assertEquals("壹仟零贰拾肆整", digitUppercase);
+		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 		
 		a = 1024;
 		digitUppercase = Convert.digitToChinese(a);
-		Assert.assertEquals("壹仟零贰拾肆整", digitUppercase);
+		Assert.assertEquals("壹仟零贰拾肆元整", digitUppercase);
 	}
 
 	@Test

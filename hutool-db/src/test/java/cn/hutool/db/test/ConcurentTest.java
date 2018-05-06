@@ -32,7 +32,7 @@ public class ConcurentTest {
 	public void init() {
 		LogFactory.setCurrentLogFactory(new ConsoleLogFactory());
 		DbUtil.setShowSqlGlobal(true, false, false);
-		runner = SqlRunner.create();
+		runner = SqlRunner.create("test");
 	}
 	
 	@Test

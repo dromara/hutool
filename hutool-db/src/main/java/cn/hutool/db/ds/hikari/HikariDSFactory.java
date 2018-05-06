@@ -98,7 +98,7 @@ public class HikariDSFactory extends DSFactory {
 		if (CollectionUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No HikariCP config for group: [{}]", group);
 		}
-
+		
 		// 初始化SQL显示
 		final boolean isShowSql = Convert.toBool(config.remove("showSql"), false);
 		final boolean isFormatSql = Convert.toBool(config.remove("formatSql"), false);

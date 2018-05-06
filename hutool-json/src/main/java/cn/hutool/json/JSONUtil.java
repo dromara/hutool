@@ -570,8 +570,13 @@ public final class JSONUtil {
 				builder.append("\\r");
 				break;
 			default:
-//				if (c < StrUtil.C_SPACE || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
-				if (c < StrUtil.C_SPACE) {
+				//无法显示字符转为Unicode符：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
+				if (c < StrUtil.C_SPACE || //
+						(c >= '\u0080' && c <= '\u00a0') || //
+						(c >= '\u2000' && c <= '\u2010') ||//
+						(c >= '\u2028' && c <= '\u202F') ||//
+						(c >= '\u2066' && c <= '\u206F')//
+				) {
 					builder.append(HexUtil.toUnicodeHex(c));
 				} else {
 					builder.append(c);
