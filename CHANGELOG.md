@@ -19,6 +19,7 @@
 * 【json】      修复Unicode不可见字符转义导致的中文双引号等符号显示问题（issue#IJFBD@Gitee）
 * 【core】      修复ReferenceUtil中SoftReference错误问题（pr#105@Github）
 * 【db】         删除ActiveRsHandler（歧义），修复showSql属性报错问题（issue#IJII8@Gitee）
+* 【setting】   大改Setting逻辑，使用GroupedMap代替分组拼接方式，解决了无分组情况下会包含分组的问题
 
 -------------------------------------------------------------------------------------------------------------
 
