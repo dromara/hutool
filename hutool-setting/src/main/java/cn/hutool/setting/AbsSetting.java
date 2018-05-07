@@ -7,7 +7,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
+import cn.hutool.core.getter.OptNullBasicTypeFromStringGetter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.StaticLog;
@@ -18,15 +18,19 @@ import cn.hutool.log.StaticLog;
  * @author Looly
  *
  */
-public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String> implements Serializable{
+public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String> implements Serializable{
 	private static final long serialVersionUID = 6200156302595905863L;
 	private final static Log log = StaticLog.get();
 
 	/** 数组类型值默认分隔符 */
 	public final static String DEFAULT_DELIMITER = ",";
-
+	/** 默认分组 */
+	public final static String DEFAULT_GROUP = StrUtil.EMPTY;
+	
 	@Override
-	public abstract Object getObj(String key, Object defaultValue);
+	public String getStr(String key, String defaultValue) {
+		return getByGroup(key, DEFAULT_GROUP);
+	}
 
 	/**
 	 * 获得字符串类型值
@@ -51,9 +55,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	 * @param group 分组
 	 * @return 值
 	 */
-	public String getByGroup(String key, String group) {
-		return getStr(keyWithGroup(key, group));
-	}
+	public abstract String getByGroup(String key, String group);
 
 	// --------------------------------------------------------------- Get
 	/**
@@ -288,22 +290,4 @@ public abstract class AbsSetting extends OptNullBasicTypeFromObjectGetter<String
 	public Object toBean(Object bean) {
 		return toBean(null, bean);
 	}
-
-	/*--------------------------Private Method start-------------------------------*/
-	/**
-	 * 组合Key和Group，组合后为group.key
-	 * 
-	 * @param key
-	 * @param group
-	 * @return 组合后的KEY
-	 */
-	protected static String keyWithGroup(String key, String group) {
-		String keyWithGroup = key;
-		if (false == StrUtil.isBlank(group)) {
-			keyWithGroup = group.trim().concat(StrUtil.DOT).concat(key);
-		}
-		return keyWithGroup;
-	}
-
-	/*--------------------------Private Method end-------------------------------*/
 }

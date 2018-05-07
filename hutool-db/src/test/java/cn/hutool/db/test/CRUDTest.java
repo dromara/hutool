@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -28,13 +27,8 @@ import cn.hutool.db.test.pojo.User;
  */
 public class CRUDTest {
 
-	SqlRunner runner;
+	private static SqlRunner runner = SqlRunner.create("test");
 
-	@Before
-	public void init() {
-		runner = SqlRunner.create("test");
-	}
-	
 	@Test
 	public void findIsNullTest() throws SQLException {
 		List<Entity> results = runner.findAll(Entity.create("user").set("age", "is null"));
@@ -115,7 +109,7 @@ public class CRUDTest {
 	
 	@Test
 	public void findActiveTest() throws SQLException {
-		ActiveEntity entity = new ActiveEntity(this.runner, "user");
+		ActiveEntity entity = new ActiveEntity(runner, "user");
 		entity.setFieldNames("name AS name2").load();
 		Assert.assertEquals("user", entity.getTableName());
 		Assert.assertFalse(entity.isEmpty());

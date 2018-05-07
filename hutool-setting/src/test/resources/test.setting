@@ -10,6 +10,7 @@ driver = com.mysql.jdbc.Driver
 #JDBC url，必须
 url = jdbc:mysql://fedora.vmware:3306/extractor
 #用户名，必须
-user = root${demo.driver}
+user = root${driver}
+user2 = root${demo.driver}
 #密码，必须，如果密码为空，请填写 pass = 
 pass = 123456

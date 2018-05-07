@@ -120,8 +120,8 @@ public class DruidDSFactory extends DSFactory {
 		// 规范化属性名
 		Properties config2 = new Properties();
 		String keyStr;
-		for (Entry<Object, Object> entry : config.entrySet()) {
-			keyStr = StrUtil.addPrefixIfNot(Convert.toStr(entry.getKey()), "druid.");
+		for (Entry<String, String> entry : config.entrySet()) {
+			keyStr = StrUtil.addPrefixIfNot(entry.getKey(), "druid.");
 			config2.put(keyStr, entry.getValue());
 		}
 

@@ -9,6 +9,7 @@
 * 【core】     PinyinUtil增加方法，汉字转拼音（pr#11@Gitee）
 * 【core】     Convert增加toList方法
 * 【core】     CollUtil增加toList方法（感谢@【帝都】宁静）
+* 【poi】       新增FormulaCellValue对象用于写出公式支持（感谢@【宁波】mojie126）
 
 ### Bug修复
 * 【core】     修复NumberChineseFormater.format()方法无“元”字的问题（issue#IJ6MR@Gitee）

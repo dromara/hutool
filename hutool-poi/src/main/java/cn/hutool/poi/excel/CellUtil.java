@@ -15,6 +15,7 @@ import org.apache.poi.ss.util.RegionUtil;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.editors.TrimEditor;
 
 /**
@@ -117,6 +118,9 @@ public class CellUtil {
 		}
 		if (null == value) {
 			cell.setCellValue(StrUtil.EMPTY);
+		}else if (value instanceof FormulaCellValue) {
+			//公式
+			cell.setCellFormula(((FormulaCellValue)value).getValue());
 		} else if (value instanceof Date) {
 			if (null != styleSet && null != styleSet.cellStyleForDate) {
 				cell.setCellStyle(styleSet.cellStyleForDate);
