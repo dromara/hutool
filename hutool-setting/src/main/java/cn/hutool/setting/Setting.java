@@ -415,8 +415,9 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @param m 键值对
 	 * @return this
 	 */
-	public void putAll(String group, Map<? extends String, ? extends String> m) {
+	public Setting putAll(String group, Map<? extends String, ? extends String> m) {
 		this.groupedMap.putAll(group, m);
+		return this;
 	}
 
 	/**
@@ -425,8 +426,9 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @param group 分组
 	 * @return this
 	 */
-	public void clear(String group) {
+	public Setting clear(String group) {
 		this.groupedMap.clear(group);
+		return this;
 	}
 
 	/**
