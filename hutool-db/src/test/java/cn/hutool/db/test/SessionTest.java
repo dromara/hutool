@@ -19,7 +19,7 @@ public class SessionTest {
 	@Test
 	@Ignore
 	public void transTest() {
-		Session session = Session.create();
+		Session session = Session.create("test");
 		try {
 			session.beginTransaction();
 			session.update(Entity.create().set("age", 76), Entity.create("user").set("name", "unitTestUser"));
@@ -32,7 +32,7 @@ public class SessionTest {
 	@Test
 	@Ignore
 	public void transFuncTest() {
-		final Session session = Session.create();
+		final Session session = Session.create("test");
 		session.trans(new VoidFunc() {
 			@Override
 			public void call() throws SQLException {

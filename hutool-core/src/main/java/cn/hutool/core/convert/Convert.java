@@ -4,7 +4,9 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -467,6 +469,18 @@ public final class Convert {
 	 */
 	public static Collection<?> toCollection(Class<?> collectionType, Class<?> elementType, Object value) {
 		return new CollectionConverter(collectionType, elementType).convert(value, null);
+	}
+	
+	/**
+	 * 转换为ArrayList
+	 * 
+	 * @param elementType 集合中元素类型
+	 * @param value 被转换的值
+	 * @return {@link Collection}
+	 * @since 4.0.11
+	 */
+	public static List<?> toList(Class<?> elementType, Object value) {
+		return (List<?>) toCollection(ArrayList.class, elementType, value);
 	}
 	
 	/**

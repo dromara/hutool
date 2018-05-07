@@ -233,6 +233,14 @@ public class DateUtilTest {
 	}
 	
 	@Test
+	public void parseTest3() throws ParseException {
+		String dateStr = "2018-10-10 12:11:11";
+		Date date = DateUtil.parse(dateStr);
+		String format = DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN);
+		Assert.assertEquals("2018-10-10 12:11:11", format);
+	}
+	
+	@Test
 	public void parseToDateTimeTest1() {
 		String dateStr1 = "2017-02-01";
 		String dateStr2 = "2017/02/01";

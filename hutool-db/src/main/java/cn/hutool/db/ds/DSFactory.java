@@ -2,10 +2,8 @@ package cn.hutool.db.ds;
 
 import javax.sql.DataSource;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
 import cn.hutool.db.ds.druid.DruidDSFactory;
@@ -69,14 +67,6 @@ public abstract class DSFactory {
 			}
 		}
 		this.setting = setting;
-		
-		//初始化SQL显示
-		if(null != this.setting) {
-			final boolean isShowSql = Convert.toBool(this.setting.remove("showSql"), false);
-			final boolean isFormatSql = Convert.toBool(this.setting.remove("formatSql"), false);
-			final boolean isShowParams = Convert.toBool(this.setting.remove("showParams"), false);
-			DbUtil.setShowSqlGlobal(isShowSql, isFormatSql, isShowParams);
-		}
 	}
 	
 	/**

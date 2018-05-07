@@ -488,7 +488,20 @@ public class CollUtil {
 		}
 		return arrayList;
 	}
-
+	
+	/**
+	 * 数组转为ArrayList
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param values 数组
+	 * @return ArrayList对象
+	 * @since 4.0.11
+	 */
+	@SafeVarargs
+	public static <T> ArrayList<T> toList(T... values) {
+		return newArrayList(values);
+	}
+	
 	/**
 	 * 新建一个ArrayList
 	 * 

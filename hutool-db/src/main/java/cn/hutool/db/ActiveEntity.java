@@ -3,6 +3,8 @@ package cn.hutool.db;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import cn.hutool.core.map.MapUtil;
+
 /**
  * 动态实体类<br>
  * 提供了针对自身实体的增删改方法
@@ -188,7 +190,10 @@ public class ActiveEntity extends Entity {
 	 */
 	public ActiveEntity load() {
 		try {
-			runner.get(this);
+			final Entity result = runner.get(this);
+			if(MapUtil.isNotEmpty(result)) {
+				this.putAll(result);
+			}
 		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}

@@ -2,6 +2,27 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.0.11
+
+### 新特性
+* 【core】     Week.toChinese()添加可选参数，选择星期的前缀（比如是“星期”还是“周”）
+* 【core】     PinyinUtil增加方法，汉字转拼音（pr#11@Gitee）
+* 【core】     Convert增加toList方法
+* 【core】     CollUtil增加toList方法（感谢@【帝都】宁静）
+* 【poi】       新增FormulaCellValue对象用于写出公式支持（感谢@【宁波】mojie126）
+
+### Bug修复
+* 【core】     修复NumberChineseFormater.format()方法无“元”字的问题（issue#IJ6MR@Gitee）
+* 【core】     修复FileUtil.loopFile遍历根目录时空指针错误问题
+* 【poi】       修复ExcelReader遇到ERROR单元格时报错问题（感谢@夏夜神话）
+* 【http】      修复HttpUtil.post传入json字符串导致的问题（issue#99@Github）
+* 【json】      修复Unicode不可见字符转义导致的中文双引号等符号显示问题（issue#IJFBD@Gitee）
+* 【core】      修复ReferenceUtil中SoftReference错误问题（pr#105@Github）
+* 【db】         删除ActiveRsHandler（歧义），修复showSql属性报错问题（issue#IJII8@Gitee）
+* 【setting】   大改Setting逻辑，使用GroupedMap代替分组拼接方式，解决了无分组情况下会包含分组的问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.0.10
 
 ### 新特性

@@ -237,20 +237,6 @@ public class Entity extends Dict {
 	}
 
 	// -------------------------------------------------------------------- Put and Set start
-	/**
-	 * PUT方法做了过滤限制，如果此实体限制了属性名，则忽略限制名列表外的字段名
-	 * 
-	 * @param key 名
-	 * @param value 值
-	 */
-	@Override
-	public Object put(String key, Object value) {
-		if (CollectionUtil.isEmpty(fieldNames) || fieldNames.contains(key)) {
-			super.put(key, value);
-		}
-		return null;
-	}
-
 	@Override
 	public Entity set(String field, Object value) {
 		return (Entity) super.set(field, value);

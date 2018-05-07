@@ -5,7 +5,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.cron.listener.TaskListener;
 import cn.hutool.cron.listener.TaskListenerManager;
@@ -168,9 +167,9 @@ public class Scheduler {
 	 */
 	public Scheduler schedule(Setting cronSetting) {
 		if (CollectionUtil.isNotEmpty(cronSetting)) {
-			for (Entry<Object, Object> entry : cronSetting.entrySet()) {
-				final String jobClass = Convert.toStr(entry.getKey());
-				final String pattern = Convert.toStr(entry.getValue());
+			for (Entry<String, String> entry : cronSetting.entrySet()) {
+				final String jobClass = entry.getKey();
+				final String pattern = entry.getValue();
 				try {
 					schedule(pattern, new InvokeTask(jobClass));
 				} catch (Exception e) {

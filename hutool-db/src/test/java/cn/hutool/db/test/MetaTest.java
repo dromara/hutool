@@ -19,7 +19,7 @@ import cn.hutool.db.meta.Table;
  *
  */
 public class MetaTest {
-	DataSource ds = DSFactory.get();
+	DataSource ds = DSFactory.get("test");
 
 	@Test
 	public void getTablesTest() {

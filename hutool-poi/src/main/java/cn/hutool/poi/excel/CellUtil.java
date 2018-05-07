@@ -6,6 +6,7 @@ import java.util.Date;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FormulaError;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,6 +15,7 @@ import org.apache.poi.ss.util.RegionUtil;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.cell.FormulaCellValue;
 import cn.hutool.poi.excel.editors.TrimEditor;
 
 /**
@@ -91,6 +93,10 @@ public class CellUtil {
 		case BLANK:
 			value = StrUtil.EMPTY;
 			break;
+		case ERROR:
+			final FormulaError error = FormulaError.forInt(cell.getErrorCellValue());
+			value = (null == error) ? StrUtil.EMPTY : error.getString();
+			break;
 		default:
 			value = cell.getStringCellValue();
 		}
@@ -112,6 +118,9 @@ public class CellUtil {
 		}
 		if (null == value) {
 			cell.setCellValue(StrUtil.EMPTY);
+		}else if (value instanceof FormulaCellValue) {
+			//公式
+			cell.setCellFormula(((FormulaCellValue)value).getValue());
 		} else if (value instanceof Date) {
 			if (null != styleSet && null != styleSet.cellStyleForDate) {
 				cell.setCellStyle(styleSet.cellStyleForDate);

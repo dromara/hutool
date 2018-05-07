@@ -55,7 +55,7 @@ public enum Week {
 	public int getValue() {
 		return this.value;
 	}
-
+	
 	/**
 	 * 转换为中文名
 	 * 
@@ -63,21 +63,32 @@ public enum Week {
 	 * @since 3.3.0
 	 */
 	public String toChinese() {
+		return toChinese("星期");
+	}
+
+	/**
+	 * 转换为中文名
+	 * 
+	 * @param weekNamePre 表示星期的前缀，例如前缀为“星期”，则返回结果为“星期一”；前缀为”周“，结果为“周一”
+	 * @return 星期的中文名
+	 * @since 4.0.11
+	 */
+	public String toChinese(String weekNamePre) {
 		switch (this) {
 		case SUNDAY:
-			return "星期日";
+			return weekNamePre + "日";
 		case MONDAY:
-			return "星期一";
+			return weekNamePre + "一";
 		case TUESDAY:
-			return "星期二";
+			return weekNamePre + "二";
 		case WEDNESDAY:
-			return "星期三";
+			return weekNamePre + "三";
 		case THURSDAY:
-			return "星期四";
+			return weekNamePre + "四";
 		case FRIDAY:
-			return "星期五";
+			return weekNamePre + "五";
 		case SATURDAY:
-			return "星期六";
+			return weekNamePre + "六";
 		default:
 			return null;
 		}

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -15,7 +14,6 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.db.ActiveEntity;
 import cn.hutool.db.Entity;
 import cn.hutool.db.SqlRunner;
-import cn.hutool.db.handler.ActiveEntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.Condition.LikeType;
@@ -29,13 +27,8 @@ import cn.hutool.db.test.pojo.User;
  */
 public class CRUDTest {
 
-	SqlRunner runner;
+	private static SqlRunner runner = SqlRunner.create("test");
 
-	@Before
-	public void init() {
-		runner = SqlRunner.create();
-	}
-	
 	@Test
 	public void findIsNullTest() throws SQLException {
 		List<Entity> results = runner.findAll(Entity.create("user").set("age", "is null"));
@@ -116,8 +109,10 @@ public class CRUDTest {
 	
 	@Test
 	public void findActiveTest() throws SQLException {
-		ActiveEntity find = runner.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new ActiveEntityHandler());
-		Assert.assertEquals("user", find.getTableName());
+		ActiveEntity entity = new ActiveEntity(runner, "user");
+		entity.setFieldNames("name AS name2").load();
+		Assert.assertEquals("user", entity.getTableName());
+		Assert.assertFalse(entity.isEmpty());
 	}
 	
 	/**

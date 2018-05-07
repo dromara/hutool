@@ -989,7 +989,7 @@ public class ImageUtil {
 	 * @return 结果图片
 	 */
 	public static BufferedImage pressImage(Image srcImage, Image pressImg, int x, int y, float alpha) {
-		BufferedImage destImg = toBufferedImage(srcImage);
+		final BufferedImage destImg = toBufferedImage(srcImage);
 		final int width = destImg.getWidth();
 		final int height = destImg.getHeight();
 

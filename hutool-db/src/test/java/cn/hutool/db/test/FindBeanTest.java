@@ -23,7 +23,7 @@ public class FindBeanTest {
 
 	@Before
 	public void init() {
-		runner = SqlRunner.create();
+		runner = SqlRunner.create("test");
 	}
 
 	@Test

@@ -864,27 +864,11 @@ public class HttpUtil {
 	 * @param body 请求参数体
 	 * @return Content-Type类型，如果无法判断返回null
 	 * @since 3.2.0
+	 * @see ContentType#get(String)
 	 */
 	public static String getContentTypeByRequestBody(String body) {
-		String contentType = null;
-		if (StrUtil.isNotBlank(body)) {
-			char firstChar = body.charAt(0);
-			switch (firstChar) {
-			case '{':
-			case '[':
-				// JSON请求体
-				contentType = "application/json";
-				break;
-			case '<':
-				// XML请求体
-				contentType = "application/xml";
-				break;
-
-			default:
-				break;
-			}
-		}
-		return contentType;
+		final ContentType contentType = ContentType.get(body);
+		return (null == contentType) ? null : contentType.toString();
 	}
 	// ----------------------------------------------------------------------------------------- Private method start
 
