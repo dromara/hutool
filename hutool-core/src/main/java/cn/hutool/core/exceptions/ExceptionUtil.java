@@ -19,6 +19,8 @@ import cn.hutool.core.util.StrUtil;
  */
 public final class ExceptionUtil {
 	
+	private static final String NULL = "null";
+	
 	private ExceptionUtil(){};
 
 	/**
@@ -28,7 +30,21 @@ public final class ExceptionUtil {
 	 * @return 完整消息
 	 */
 	public static String getMessage(Throwable e) {
+		if(null == e) {
+			return NULL;
+		}
 		return StrUtil.format("{}: {}", e.getClass().getSimpleName(), e.getMessage());
+	}
+	
+	
+	/**
+	 * 获得完整消息，包括异常名
+	 * 
+	 * @param e 异常
+	 * @return 完整消息
+	 */
+	public static String getSimpleMessage(Throwable e) {
+		return (null == e) ? NULL : e.getMessage();
 	}
 	
 	/**

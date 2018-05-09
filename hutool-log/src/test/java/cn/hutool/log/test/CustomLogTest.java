@@ -60,4 +60,39 @@ public class CustomLogTest {
 		// 自动选择日志实现
 		log.info("This is {} log\n{}", "custom Console", LINE);
 	}
+	
+	@Test
+	public void customNullLogTest(){
+		Log log;
+		
+		//自定义日志实现为Apache Commons Logging
+		LogFactory.setCurrentLogFactory(new ApacheCommonsLogFactory());
+		log = LogFactory.get();
+		log.info(null);
+		
+		//自定义日志实现为TinyLog
+		LogFactory.setCurrentLogFactory(new TinyLogFactory());
+		log = LogFactory.get();
+		log.info(null);
+		
+		//自定义日志实现为Log4j2
+		LogFactory.setCurrentLogFactory(new Log4j2LogFactory());
+		log = LogFactory.get();
+		log.info(null);
+		
+		//自定义日志实现为Log4j
+		LogFactory.setCurrentLogFactory(new Log4jLogFactory());
+		log = LogFactory.get();
+		log.info(null);
+		
+		//自定义日志实现为JDK Logging
+		LogFactory.setCurrentLogFactory(new JdkLogFactory());
+		log = LogFactory.get();
+		log.info(null);
+		
+		//自定义日志实现为Console Logging
+		LogFactory.setCurrentLogFactory(new ConsoleLogFactory());
+		log = LogFactory.get();
+		log.info(null);
+	}
 }

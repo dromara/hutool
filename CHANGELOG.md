@@ -10,6 +10,8 @@
 * 【setting】      修复Setting中size的bug
 * 【cron】         修复Setting修改导致的定时任务读取错误问题（issue#IJMVN@Gitee）
 * 【setting】      修复Props中autoLoad无效问题（issue#IJMOE@Gitee）
+* 【cron】         修复表达式中年匹配位置的问题（issue#106@Gtihub）
+* 【log】           修复log.info(null)空指针问题（issue#IJNRW@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
