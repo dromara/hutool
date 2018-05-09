@@ -318,6 +318,15 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		}
 		return properties;
 	}
+	
+	/**
+	 * 获取GroupedMap
+	 * @return GroupedMap
+	 * @since 4.0.12
+	 */
+	public GroupedMap getGroupedMap() {
+		return this.groupedMap;
+	}
 
 	/**
 	 * 获取所有分组

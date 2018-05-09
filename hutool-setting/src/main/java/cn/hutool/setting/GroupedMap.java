@@ -43,6 +43,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public int size() {
 		if (this.size < 0) {
+			this.size = 0;
 			for (LinkedHashMap<String, String> value : this.values()) {
 				this.size += value.size();
 			}

@@ -1,17 +1,21 @@
 package cn.hutool.cron;
 
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.UUID;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.listener.TaskListener;
 import cn.hutool.cron.listener.TaskListenerManager;
 import cn.hutool.cron.pattern.CronPattern;
 import cn.hutool.cron.task.InvokeTask;
 import cn.hutool.cron.task.RunnableTask;
 import cn.hutool.cron.task.Task;
+import cn.hutool.log.StaticLog;
 import cn.hutool.setting.Setting;
 
 /**
@@ -167,13 +171,21 @@ public class Scheduler {
 	 */
 	public Scheduler schedule(Setting cronSetting) {
 		if (CollectionUtil.isNotEmpty(cronSetting)) {
-			for (Entry<String, String> entry : cronSetting.entrySet()) {
-				final String jobClass = entry.getKey();
-				final String pattern = entry.getValue();
-				try {
-					schedule(pattern, new InvokeTask(jobClass));
-				} catch (Exception e) {
-					throw new CronException(e, "Schedule [{}] [{}] error!", pattern, jobClass);
+			String group;
+			for (Entry<String, LinkedHashMap<String, String>> groupedEntry : cronSetting.getGroupedMap().entrySet()) {
+				group = groupedEntry.getKey();
+				for (Entry<String, String> entry : groupedEntry.getValue().entrySet()) {
+					String jobClass = entry.getKey();
+					if(StrUtil.isNotBlank(group)) {
+						jobClass = group + CharUtil.DOT + jobClass;
+					}
+					final String pattern = entry.getValue();
+					StaticLog.debug("Load job: {} {}", pattern, jobClass);
+					try {
+						schedule(pattern, new InvokeTask(jobClass));
+					} catch (Exception e) {
+						throw new CronException(e, "Schedule [{}] [{}] error!", pattern, jobClass);
+					}
 				}
 			}
 		}

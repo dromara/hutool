@@ -284,7 +284,7 @@ public class CronPattern {
 		// 年
 		if (parts.length == 7) {// 支持年的表达式
 			try {
-				this.yearMatchers.add(ValueMatcherBuilder.build(parts[0], YEAR_VALUE_PARSER));
+				this.yearMatchers.add(ValueMatcherBuilder.build(parts[6], YEAR_VALUE_PARSER));
 			} catch (Exception e) {
 				throw new CronException(e, "Invalid pattern [{}], parsing 'year' field error!", pattern);
 			}
