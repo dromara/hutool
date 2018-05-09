@@ -2,12 +2,14 @@ package cn.hutool.core.lang;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -227,17 +229,51 @@ public final class ClassScaner {
 			jarFile = new JarFile(file);
 			entries = jarFile.entries();
 			JarEntry entry;
-			while(entries.hasMoreElements()) {
+			String entryName;
+			while (entries.hasMoreElements()) {
 				entry = entries.nextElement();
-				if (isClass(entry.getName())) {
-					final String className = entry.getName().replace(StrUtil.SLASH, StrUtil.DOT).replace(FileUtil.CLASS_EXT, StrUtil.EMPTY);
+				entryName = entry.getName();
+				if (isClass(entryName)) {
+					final String className = StrUtil.removeSuffix(entryName.replace(StrUtil.SLASH, StrUtil.DOT), FileUtil.CLASS_EXT);
 					fillClass(className, packageName, classes, classFilter);
+				} else if(isJar(entryName)) {
+					processJarStream(jarFile.getInputStream(entry), packageName, classFilter, classes);
 				}
 			}
 		} catch (Exception ex) {
 			Console.error(ex, ex.getMessage());
 		} finally {
 			IoUtil.close(jarFile);
+		}
+	}
+	
+	/**
+	 * 处理为jar文件的情况，填充满足条件的class 到 classes
+	 * 
+	 * @param in jar文件流
+	 * @param packageName 包名
+	 * @param classFilter 类过滤器
+	 * @param classes 类集合
+	 * @since 4.0.12
+	 */
+	private static void processJarStream(InputStream in, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
+		JarInputStream jarIn = null;
+		try {
+			jarIn = (in instanceof JarInputStream) ? (JarInputStream)in : new JarInputStream(in);
+			JarEntry entry;
+			String entryName;
+			while (null != (entry = jarIn.getNextJarEntry())) {
+				entryName = entry.getName();
+				if (isClass(entryName)) {
+					final String className = StrUtil.removeSuffix(entryName.replace(StrUtil.SLASH, StrUtil.DOT), FileUtil.CLASS_EXT);
+					fillClass(className, packageName, classes, classFilter);
+				}
+			}
+		} catch (Exception ex) {
+			Console.error(ex, ex.getMessage());
+		} finally {
+			IoUtil.close(jarIn);
+			IoUtil.close(in);
 		}
 	}
 
@@ -291,10 +327,19 @@ public final class ClassScaner {
 
 	/**
 	 * @param file 文件
-	 * @return是否为Jar文件
+	 * @return 是否为Jar文件
 	 */
 	private static boolean isJarFile(File file) {
-		return file.getName().endsWith(FileUtil.JAR_FILE_EXT);
+		return isJar(file.getName());
+	}
+
+	/**
+	 * @param fileName 文件名
+	 * @return 是否为Jar文件
+	 * @since 4.0.12
+	 */
+	private static boolean isJar(String fileName) {
+		return fileName.endsWith(FileUtil.JAR_FILE_EXT);
 	}
 	// --------------------------------------------------------------------------------------------------- Private method end
 }

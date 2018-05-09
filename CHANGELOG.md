@@ -5,6 +5,7 @@
 ## 4.0.12
 
 ### 新特性
+* 【core】         ClassScaner支持jar的嵌套
 
 ### Bug修复
 * 【setting】      修复Setting中size的bug
