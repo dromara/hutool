@@ -7,8 +7,9 @@
 ### 新特性
 
 ### Bug修复
-* 【setting】   修复Setting中size的bug
-* 【cron】      修复Setting修改导致的定时任务读取错误问题
+* 【setting】      修复Setting中size的bug
+* 【cron】         修复Setting修改导致的定时任务读取错误问题（issue#IJMVN@Gitee）
+* 【setting】      修复Props中autoLoad无效问题（issue#IJMOE@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

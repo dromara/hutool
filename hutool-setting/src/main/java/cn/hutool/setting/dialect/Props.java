@@ -272,17 +272,17 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 		if (autoReload) {
 			if (null != this.watchMonitor) {
 				this.watchMonitor.close();
-				try {
-					watchMonitor = WatchMonitor.create(Paths.get(this.propertiesFileUrl.toURI()));
-					watchMonitor.setWatcher(new SimpleWatcher(){
-						@Override
-						public void onModify(WatchEvent<?> event, Path currentPath) {
-							load();
-						}
-					}).start();
-				} catch (Exception e) {
-					throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.propertiesFileUrl);
-				}
+			}
+			try {
+				watchMonitor = WatchMonitor.create(Paths.get(this.propertiesFileUrl.toURI()));
+				watchMonitor.setWatcher(new SimpleWatcher(){
+					@Override
+					public void onModify(WatchEvent<?> event, Path currentPath) {
+						load();
+					}
+				}).start();
+			} catch (Exception e) {
+				throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.propertiesFileUrl);
 			}
 		} else {
 			IoUtil.close(this.watchMonitor);
