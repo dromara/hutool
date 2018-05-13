@@ -48,7 +48,7 @@ public class ExcelWriter implements Closeable {
 	private Map<String, String> headerAlias;
 	/** 样式集，定义不同类型数据样式 */
 	private StyleSet styleSet;
-	
+
 	// -------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造，默认生成xls格式的Excel文件<br>
@@ -123,7 +123,7 @@ public class ExcelWriter implements Closeable {
 	public ExcelWriter(Workbook workbook, String sheetName) {
 		this(ExcelUtil.getOrCreateSheet(workbook, sheetName));
 	}
-	
+
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
@@ -159,7 +159,21 @@ public class ExcelWriter implements Closeable {
 	}
 
 	/**
-	 * 设置某列为自动宽度
+	 * 设置某列为自动宽度，不考虑合并单元格<br>
+	 * 此方法必须在指定列数据完全写出后调用才有效。
+	 * 
+	 * @param columnIndex 第几列，从0计数
+	 * @return this
+	 * @since 4.0.12
+	 */
+	public ExcelWriter autoSizeColumn(int columnIndex) {
+		this.sheet.autoSizeColumn(columnIndex);
+		return this;
+	}
+
+	/**
+	 * 设置某列为自动宽度<br>
+	 * 此方法必须在指定列数据完全写出后调用才有效。
 	 * 
 	 * @param columnIndex 第几列，从0计数
 	 * @param useMergedCells 是否适用于合并单元格
@@ -170,9 +184,10 @@ public class ExcelWriter implements Closeable {
 		this.sheet.autoSizeColumn(columnIndex, useMergedCells);
 		return this;
 	}
-	
+
 	/**
 	 * 获取样式集，样式集可以自定义包括：<br>
+	 * 
 	 * <pre>
 	 * 1. 头部样式
 	 * 2. 一般单元格样式
@@ -255,9 +270,10 @@ public class ExcelWriter implements Closeable {
 		this.currentRow.set(0);
 		return this;
 	}
-	
+
 	/**
 	 * 切换sheet，如果指定的sheet不存在，创建之
+	 * 
 	 * @param sheetName sheet名
 	 * @return this
 	 * @since 4.0.8
@@ -289,7 +305,7 @@ public class ExcelWriter implements Closeable {
 		this.headerAlias = headerAlias;
 		return this;
 	}
-	
+
 	/**
 	 * 设置列宽（单位为一个字符的宽度，例如传入width为10，表示10个字符的宽度）
 	 * 
@@ -299,14 +315,14 @@ public class ExcelWriter implements Closeable {
 	 * @since 4.0.8
 	 */
 	public ExcelWriter setColumnWidth(int columnIndex, int width) {
-		if(columnIndex < 0) {
+		if (columnIndex < 0) {
 			this.sheet.setDefaultColumnWidth(width);
-		}else {
+		} else {
 			this.sheet.setColumnWidth(columnIndex, width * 256);
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 设置行高，值为一个点的高度
 	 * 
@@ -316,9 +332,9 @@ public class ExcelWriter implements Closeable {
 	 * @since 4.0.8
 	 */
 	public ExcelWriter setRowHeight(int rownum, int height) {
-		if(rownum < 0) {
+		if (rownum < 0) {
 			this.sheet.setDefaultRowHeightInPoints(height);
-		}else {
+		} else {
 			this.sheet.getRow(rownum).setHeightInPoints(height);
 		}
 		return this;
@@ -334,7 +350,7 @@ public class ExcelWriter implements Closeable {
 	public ExcelWriter merge(int lastColumn) {
 		return merge(lastColumn, null);
 	}
-	
+
 	/**
 	 * 合并当前行的单元格，并写入对象到单元格<br>
 	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
@@ -364,14 +380,14 @@ public class ExcelWriter implements Closeable {
 
 		final int rowIndex = this.currentRow.get();
 		merge(rowIndex, rowIndex, 0, lastColumn, content, isSetHeaderStyle);
-		
+
 		// 设置内容后跳到下一行
-		if(null != content) {
+		if (null != content) {
 			this.currentRow.incrementAndGet();
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 合并某行的单元格，并写入对象到单元格<br>
 	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
@@ -383,7 +399,7 @@ public class ExcelWriter implements Closeable {
 	 * @return this
 	 * @since 4.0.10
 	 */
-	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn , Object content, boolean isSetHeaderStyle) {
+	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn, Object content, boolean isSetHeaderStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
 		final CellStyle style = (isSetHeaderStyle && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
@@ -393,8 +409,8 @@ public class ExcelWriter implements Closeable {
 		if (null != content) {
 			final Cell cell = getOrCreateCell(firstColumn, firstRow);
 			CellUtil.setCellValue(cell, content, this.styleSet);
-			if(isSetHeaderStyle) {
-				//当作为标题合并单元格时，使用标题样式
+			if (isSetHeaderStyle) {
+				// 当作为标题合并单元格时，使用标题样式
 				cell.setCellStyle(this.styleSet.headCellStyle);
 			}
 		}
@@ -522,9 +538,10 @@ public class ExcelWriter implements Closeable {
 		writeRow(rowMap.values());
 		return this;
 	}
-	
+
 	/**
 	 * 给指定单元格赋值
+	 * 
 	 * @param x X坐标，从0计数，既列号
 	 * @param y Y坐标，从0计数，既行号
 	 * @param value 值
@@ -536,7 +553,7 @@ public class ExcelWriter implements Closeable {
 		CellUtil.setCellValue(cell, value, styleSet);
 		return this;
 	}
-	
+
 	/**
 	 * 获取或者创建指定位置的单元格
 	 * 
@@ -549,8 +566,9 @@ public class ExcelWriter implements Closeable {
 		final Row row = RowUtil.getOrCreateRow(this.sheet, y);
 		return CellUtil.getOrCreateCell(row, x);
 	}
-	
+
 	/**
+	 * 为指定单元格创建样式
 	 * 
 	 * @param x X坐标，从0计数，既列号
 	 * @param y Y坐标，从0计数，既行号
@@ -563,7 +581,7 @@ public class ExcelWriter implements Closeable {
 		cell.setCellStyle(this.workbook.createCellStyle());
 		return cellStyle;
 	}
-	
+
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>

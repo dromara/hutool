@@ -1942,8 +1942,12 @@ public class StrUtil {
 		}
 
 		String template2 = template.toString();
+		String value;
 		for (Entry<?, ?> entry : map.entrySet()) {
-			template2 = template2.replace("{" + entry.getKey() + "}", utf8Str(entry.getValue()));
+			value = utf8Str(entry.getValue());
+			if(null != value) {
+				template2 = replace(template2, "{" + entry.getKey() + "}", value);
+			}
 		}
 		return template2;
 	}

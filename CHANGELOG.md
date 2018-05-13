@@ -5,7 +5,13 @@
 ## 4.0.13
 
 ### 新特性
+* 【json】          JSONArray添加jsonIter方法可以实现foreach语法遍历JSONObject（issue#IJPIJ@Gitee）
+* 【core】         强化FileTypeUtil中对PDF文件格式的识别兼容性（issue#IJO1K@Gitee）
+
 ### Bug修复
+* 【core】         修复XmlUtil.toStr方法注释丢失问题（issue#IJPUA@Gitee）
+* 【core】         修复ImageUtil.scale和createFont方法的bug（issue#IJOKE@Gitee）
+* 【core】         修复StrUtil.format方法Map参数中值为null导致的空指针问题（issue#IJO31@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
