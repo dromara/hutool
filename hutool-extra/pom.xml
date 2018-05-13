@@ -21,6 +21,7 @@
 		<velocity.version>1.7</velocity.version>
 		<beetl.version>2.8.1</beetl.version>
 		<rythm.version>1.3.0</rythm.version>
+		<freemarker.version>2.3.28</freemarker.version>
 		<mail.version>1.6.1</mail.version>
 		<jsch.version>0.1.54</jsch.version>
 		<zxing.version>3.3.2</zxing.version>
@@ -63,6 +64,13 @@
 			<groupId>org.rythmengine</groupId>
 			<artifactId>rythm-engine</artifactId>
 			<version>${rythm.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>${freemarker.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
