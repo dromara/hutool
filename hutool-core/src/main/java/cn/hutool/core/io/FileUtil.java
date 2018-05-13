@@ -3037,4 +3037,17 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 获取Web项目下的web root路径
+	 * @return web root路径
+	 * @since 4.0.13
+	 */
+	public static File getWebRoot() {
+		String classPath = ClassUtil.getClassPath();
+		if(StrUtil.isNotBlank(classPath)) {
+			return file(classPath).getParentFile().getParentFile();
+		}
+		return null;
+	}
 }
