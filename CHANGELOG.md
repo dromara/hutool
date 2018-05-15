@@ -12,6 +12,7 @@
 * 【core】         修复XmlUtil.toStr方法注释丢失问题（issue#IJPUA@Gitee）
 * 【core】         修复ImageUtil.scale和createFont方法的bug（issue#IJOKE@Gitee）
 * 【core】         修复StrUtil.format方法Map参数中值为null导致的空指针问题（issue#IJO31@Gitee）
+* 【core】         修复ReUtil.getAllGroups丢失最后一个分组问题（issue#IJRJM@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
