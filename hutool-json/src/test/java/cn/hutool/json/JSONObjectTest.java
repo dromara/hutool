@@ -10,6 +10,7 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.test.bean.Seq;
+import cn.hutool.json.test.bean.UserWithMap;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
 
@@ -102,6 +103,14 @@ public class JSONObjectTest {
 		JSONObject json = JSONUtil.parseObj(userA);
 		UserA userA2 = json.toBean(UserA.class);
 		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+	}
+
+	@Test
+	public void toBeanTest3() {
+		String jsonStr = "{'data':{'userName':'ak','password': null}}";
+		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class, true);
+		String password = user.getData().get("password");
+		Assert.assertNull(password);
 	}
 
 	@Test

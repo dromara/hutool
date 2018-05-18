@@ -17,6 +17,7 @@
 * 【core】         修复ImageUtil.scale和createFont方法的bug（issue#IJOKE@Gitee）
 * 【core】         修复StrUtil.format方法Map参数中值为null导致的空指针问题（issue#IJO31@Gitee）
 * 【core】         修复ReUtil.getAllGroups丢失最后一个分组问题（issue#IJRJM@Gitee）
+* 【json】         修复Bean中为Map导致的泛型类型不匹配问题（issue#IJRJM@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
