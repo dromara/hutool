@@ -62,12 +62,12 @@ public class BetweenFormater {
 				sb.append(hour).append(Level.HOUR.name);
 				levelCount++;
 			}
-			if(isLevelCountValid(levelCount) && 0 != minute && level >= Level.SECOND.ordinal()){
-				sb.append(minute).append(Level.SECOND.name);
+			if(isLevelCountValid(levelCount) && 0 != minute && level >= Level.MINUTE.ordinal()){
+				sb.append(minute).append(Level.MINUTE.name);
 				levelCount++;
 			}
-			if(isLevelCountValid(levelCount) && 0 != second && level >= Level.MINUTE.ordinal()){
-				sb.append(second).append(Level.MINUTE.name);
+			if(isLevelCountValid(levelCount) && 0 != second && level >= Level.SECOND.ordinal()){
+				sb.append(second).append(Level.SECOND.name);
 				levelCount++;
 			}
 			if(isLevelCountValid(levelCount) && 0 != millisecond && level >= Level.MILLSECOND.ordinal()){
@@ -127,7 +127,7 @@ public class BetweenFormater {
 		/** 小时 */
 		HOUR("小时"),
 		/** 分钟 */
-		MINUTE("分钟"),
+		MINUTE("分"),
 		/** 秒 */
 		SECOND("秒"),
 		/** 毫秒 */

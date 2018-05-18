@@ -148,11 +148,49 @@ public class DateUtilTest {
 		betweenDay = DateUtil.between(date2, date1, DateUnit.DAY);
 		Assert.assertEquals(31, betweenDay);//相差一个月，31天
 		
-		//相差毫秒
+		//相差小时
+		long betweenHour = DateUtil.between(date1, date2, DateUnit.HOUR);
+		Assert.assertEquals(745, betweenHour);
+		//反向
+		betweenHour = DateUtil.between(date2, date1, DateUnit.HOUR);
+		Assert.assertEquals(745, betweenHour);
+		
+		//相差分
+		long betweenMinute = DateUtil.between(date1, date2, DateUnit.MINUTE);
+		Assert.assertEquals(44721, betweenMinute);
+		//反向
+		betweenMinute = DateUtil.between(date2, date1, DateUnit.MINUTE);
+		Assert.assertEquals(44721, betweenMinute);
+		
+		//相差秒
+		long betweenSecond = DateUtil.between(date1, date2, DateUnit.SECOND);
+		Assert.assertEquals(2683311, betweenSecond);
+		//反向
+		betweenSecond = DateUtil.between(date2, date1, DateUnit.SECOND);
+		Assert.assertEquals(2683311, betweenSecond);
+		
+		//相差秒
+		long betweenMS = DateUtil.between(date1, date2, DateUnit.MS);
+		Assert.assertEquals(2683311000L, betweenMS);
+		//反向
+		betweenMS = DateUtil.between(date2, date1, DateUnit.MS);
+		Assert.assertEquals(2683311000L, betweenMS);
+	}
+	
+	@Test
+	public void formatBetweenTest() {
+		String dateStr1 = "2017-03-01 22:34:23";
+		Date date1 = DateUtil.parse(dateStr1);
+		
+		String dateStr2 = "2017-04-01 23:56:14";
+		Date date2 = DateUtil.parse(dateStr2);
+		
 		long between = DateUtil.between(date1, date2, DateUnit.MS);
 		String formatBetween = DateUtil.formatBetween(between, Level.MINUTE);
 		Assert.assertEquals("31天1小时21分", formatBetween);
 	}
+	
+	
 	
 	@Test
 	public void timerTest(){
