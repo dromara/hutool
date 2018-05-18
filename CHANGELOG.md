@@ -8,6 +8,9 @@
 * 【json】          JSONArray添加jsonIter方法可以实现foreach语法遍历JSONObject（issue#IJPIJ@Gitee）
 * 【core】         强化FileTypeUtil中对PDF文件格式的识别兼容性（issue#IJO1K@Gitee）
 * 【core】         修改BetweenFormater枚举规则，修复不足1天显示空问题
+* 【http】          由于JDK9移除了javax.activation导致的问题，修复移除相关包依赖（issue#109@Github）
+* 【core】         改进Resource，增加getName方法，增加构造支持name
+* 【core】         RandomUtil增加randomStringUpper方法（issue#IJVLS@Gitee）
 
 ### Bug修复
 * 【core】         修复XmlUtil.toStr方法注释丢失问题（issue#IJPUA@Gitee）

@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -20,6 +18,8 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.FileResource;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -38,7 +38,7 @@ import cn.hutool.log.StaticLog;
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
 
-	/** 默认超时时长，-1表示 */
+	/** 默认超时时长，-1表示默认超时时长 */
 	public static final int TIMEOUT_DEFAULT = -1;
 
 	private static final String BOUNDARY = "--------------------Hutool_" + RandomUtil.randomString(16);
@@ -57,7 +57,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/** 存储表单数据 */
 	private Map<String, Object> form;
 	/** 文件表单对象，用于文件上传 */
-	private Map<String, DataSource> fileForm;
+	private Map<String, Resource> fileForm;
 	/** 文件表单对象，用于文件上传 */
 	private String cookie;
 
@@ -309,9 +309,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (value instanceof File) {
 			//文件上传
 			return this.form(name, (File) value);
-		} else if (value instanceof DataSource) {
+		} else if (value instanceof Resource) {
 			//自定义流上传
-			return this.form(name, (DataSource) value);
+			return this.form(name, (Resource) value);
 		} else if (this.form == null) {
 			form = new HashMap<String, Object>();
 		}
@@ -377,7 +377,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest form(String name, File file) {
 		if (null != file) {
-			form(name, new FileDataSource(file));
+			form(name, new FileResource(file));
 		}
 		return this;
 	}
@@ -387,21 +387,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 * 
 	 * @param name 名
-	 * @param dataSource 数据源，文件可以使用{@link FileDataSource}包装使用
+	 * @param resource 数据源，文件可以使用{@link FileResource}包装使用
 	 * @return this
 	 * @since 4.0.9
 	 */
-	public HttpRequest form(String name, DataSource dataSource) {
-		if (null != dataSource) {
+	public HttpRequest form(String name, Resource resource) {
+		if (null != resource) {
 			if (false == isKeepAlive()) {
 				keepAlive(true);
 			}
 
 			if (null == this.fileForm) {
-				fileForm = new HashMap<String, DataSource>();
+				fileForm = new HashMap<>();
 			}
 			// 文件对象
-			this.fileForm.put(name, dataSource);
+			this.fileForm.put(name, resource);
 		}
 		return this;
 	}
@@ -421,7 +421,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return 文件表单Map
 	 * @since 3.3.0
 	 */
-	public Map<String, DataSource> fileForm() {
+	public Map<String, Resource> fileForm() {
 		return this.fileForm;
 	}
 	// ---------------------------------------------------------------- Form end
@@ -833,14 +833,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException
 	 */
 	private void writeFileForm(OutputStream out) throws IOException {
-		DataSource dataSource;
-		for (Entry<String, DataSource> entry : this.fileForm.entrySet()) {
-			dataSource = entry.getValue();
+		Resource resource;
+		for (Entry<String, Resource> entry : this.fileForm.entrySet()) {
+			resource = entry.getValue();
 			StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
-			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), dataSource.getName()));
-			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(dataSource.getName())));
+			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), resource.getName()));
+			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(resource.getName())));
 			IoUtil.write(out, this.charset, false, builder);
-			IoUtil.copy(dataSource.getInputStream(), out);
+			IoUtil.copy(resource.getStream(), out);
 			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
 		}
 	}

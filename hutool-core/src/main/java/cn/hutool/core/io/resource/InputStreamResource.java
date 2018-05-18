@@ -19,6 +19,7 @@ import cn.hutool.core.util.CharsetUtil;
 public class InputStreamResource implements Resource {
 
 	private InputStream in;
+	private String name;
 
 	/**
 	 * 构造
@@ -26,7 +27,23 @@ public class InputStreamResource implements Resource {
 	 * @param in {@link InputStream}
 	 */
 	public InputStreamResource(InputStream in) {
+		this(in, null);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param in {@link InputStream}
+	 * @param name 资源名称
+	 */
+	public InputStreamResource(InputStream in, String name) {
 		this.in = in;
+		this.name = name;
+	}
+	
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 	@Override

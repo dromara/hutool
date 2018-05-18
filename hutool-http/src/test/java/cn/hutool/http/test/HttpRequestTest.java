@@ -101,7 +101,7 @@ public class HttpRequestTest {
 
 		// 方法一：自定义构建表单
 		HttpRequest request = HttpRequest//
-				.post("http://localhost:8080/file/upload")//
+				.post("http://localhost:8090/file/upload")//
 				.form("file", file)//
 				.form("fileType", "图片");
 		HttpResponse response = request.execute();

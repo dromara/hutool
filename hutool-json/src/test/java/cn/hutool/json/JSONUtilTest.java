@@ -59,7 +59,7 @@ public class JSONUtilTest {
 	@Test
 	public void toJsonStrTest3() {
 		//验证某个字段为JSON字符串时转义是否规范
-		JSONObject object = new JSONObject();
+		JSONObject object = new JSONObject(true);
 		object.put("name", "123123");
 		object.put("value", "\\");
 		object.put("value2", "</");

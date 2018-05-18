@@ -1589,7 +1589,7 @@ public class FileUtil {
 		}
 		return StrUtil.subPre(fileName, fileName.lastIndexOf(StrUtil.DOT));
 	}
-
+	
 	/**
 	 * 获取文件扩展名，扩展名不带“.”
 	 * 

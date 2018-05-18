@@ -20,7 +20,7 @@ public class FileResource extends UrlResource{
 	 * @param file 文件
 	 */
 	public FileResource(File file) {
-		super(URLUtil.getURL(file));
+		super(URLUtil.getURL(file), file.getName());
 	}
 	
 	/**
