@@ -1,19 +1,21 @@
 package cn.hutool.extra.template.engine.beetl;
 
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
 
-import cn.hutool.extra.template.Template;
+import cn.hutool.extra.template.AbstractTemplate;
 
 /**
  * Beetl模板实现
  * 
  * @author looly
  */
-public class BeetlTemplate implements Template{
-	
-	org.beetl.core.Template beetlTemplate;
+public class BeetlTemplate extends AbstractTemplate implements Serializable{
+	private static final long serialVersionUID = -8157926902932567280L;
+
+	org.beetl.core.Template rawTemplate;
 	
 	/**
 	 * 包装Beetl模板
@@ -31,19 +33,19 @@ public class BeetlTemplate implements Template{
 	 * @param beetlTemplate Beetl的模板对象 {@link org.beetl.core.Template}
 	 */
 	public BeetlTemplate(org.beetl.core.Template beetlTemplate) {
-		this.beetlTemplate = beetlTemplate;
+		this.rawTemplate = beetlTemplate;
 	}
 
 	@Override
 	public void render(Map<String, Object> bindingMap, Writer writer) {
-		beetlTemplate.binding(bindingMap);
-		beetlTemplate.renderTo(writer);
+		rawTemplate.binding(bindingMap);
+		rawTemplate.renderTo(writer);
 	}
 
 	@Override
 	public void render(Map<String, Object> bindingMap, OutputStream out) {
-		beetlTemplate.binding(bindingMap);
-		beetlTemplate.renderTo(out);
+		rawTemplate.binding(bindingMap);
+		rawTemplate.renderTo(out);
 	}
 
 }

@@ -1,6 +1,4 @@
-package cn.hutool.extra.template.engine;
-
-import cn.hutool.extra.template.Template;
+package cn.hutool.extra.template;
 
 /**
  * 引擎接口，通过实现此接口从而使用对应的模板引擎

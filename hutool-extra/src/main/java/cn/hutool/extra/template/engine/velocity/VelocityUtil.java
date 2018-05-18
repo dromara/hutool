@@ -1,4 +1,4 @@
-package cn.hutool.extra.template;
+package cn.hutool.extra.template.engine.velocity;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -78,8 +78,8 @@ public class VelocityUtil {
 	 */
 	public static VelocityEngine newEngine(String templateDir, String charset) {
 		final VelocityEngine ve = new VelocityEngine();
+		
 		ve.setProperty(Velocity.FILE_RESOURCE_LOADER_CACHE, true); // 使用缓存
-
 		ve.init(_newInitedProp(templateDir, charset));
 
 		return ve;

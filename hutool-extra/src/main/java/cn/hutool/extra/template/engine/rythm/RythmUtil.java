@@ -1,4 +1,4 @@
-package cn.hutool.extra.template;
+package cn.hutool.extra.template.engine.rythm;
 
 import java.io.Writer;
 import java.util.Map;

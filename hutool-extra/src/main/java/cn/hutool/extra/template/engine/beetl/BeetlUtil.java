@@ -1,4 +1,4 @@
-package cn.hutool.extra.template;
+package cn.hutool.extra.template.engine.beetl;
 
 import java.io.IOException;
 import java.io.Writer;
