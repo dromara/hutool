@@ -61,7 +61,6 @@ public class VelocityEngine implements Engine {
 
 		final org.apache.velocity.app.VelocityEngine ve = new org.apache.velocity.app.VelocityEngine();
 		ve.setProperty(Velocity.FILE_RESOURCE_LOADER_CACHE, true); // 使用缓存
-
 		ve.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, config.getPath());
 
 		final String charsetStr = config.getCharset().toString();
