@@ -5,6 +5,15 @@
 ## 4.0.13
 
 ### 新特性
+* 【extra】          模板工具改为模板门面，抽象各模板引擎
+
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.0.13
+
+### 新特性
 * 【json】          JSONArray添加jsonIter方法可以实现foreach语法遍历JSONObject（issue#IJPIJ@Gitee）
 * 【core】         强化FileTypeUtil中对PDF文件格式的识别兼容性（issue#IJO1K@Gitee）
 * 【core】         修改BetweenFormater枚举规则，修复不足1天显示空问题
