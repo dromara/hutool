@@ -38,7 +38,11 @@ public class DateTimeTest {
 		Assert.assertEquals(5, day);
 	}
 	
-	@Test
+	/**
+	 * @deprecated season季节根据经纬变化，不适合做公共方法
+	 */
+	// @Test
+	@Deprecated
 	public void seasonTest(){
 		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
 		//季度（非季节）
@@ -50,17 +54,46 @@ public class DateTimeTest {
 		season = dateTime.seasonEnum();
 		Assert.assertEquals(Season.SUMMER, season);
 		
-		dateTime = new DateTime("2017-09-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		dateTime = new DateTime("2017-07-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
 		//季度（非季节）
 		season = dateTime.seasonEnum();
 		Assert.assertEquals(Season.AUTUMN, season);
 		
-		dateTime = new DateTime("2017-12-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+		dateTime = new DateTime("2017-10-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
 		//季度（非季节）
 		season = dateTime.seasonEnum();
 		Assert.assertEquals(Season.WINTER, season);
 	}
 	
+		@Test
+		public void quarterTest() {
+			DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+			Quarter quarter = dateTime.quarterEnum();
+			Assert.assertEquals(Quarter.Q1, quarter);
+			
+			dateTime = new DateTime("2017-04-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+			quarter = dateTime.quarterEnum();
+			Assert.assertEquals(Quarter.Q2, quarter);
+			
+			dateTime = new DateTime("2017-07-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+			quarter = dateTime.quarterEnum();
+			Assert.assertEquals(Quarter.Q3, quarter);
+			
+			dateTime = new DateTime("2017-10-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);
+			quarter = dateTime.quarterEnum();
+			Assert.assertEquals(Quarter.Q4, quarter);
+
+			// 精确到毫秒
+			DateTime beginTime = new DateTime("2017-10-01 00:00:00.000", DatePattern.NORM_DATETIME_MS_FORMAT);
+			dateTime = DateUtil.beginOfQuarter(dateTime);
+			Assert.assertEquals(beginTime, dateTime);
+
+			// 精确到毫秒
+			DateTime endTime = new DateTime("2017-12-31 23:59:59.999", DatePattern.NORM_DATETIME_MS_FORMAT);
+			dateTime = DateUtil.endOfQuarter(dateTime);
+			Assert.assertEquals(endTime, dateTime);
+		}
+
 	@Test
 	public void mutableTest(){
 		DateTime dateTime = new DateTime("2017-01-05 12:34:23", DatePattern.NORM_DATETIME_FORMAT);

@@ -370,9 +370,23 @@ public class DateUtil {
 	 * 
 	 * @param date 日期
 	 * @return Season ，类似于 20132
+	 * @deprecated 请使用{@link yearAndQuarter} 代替
 	 */
+	@Deprecated
 	public static String yearAndSeason(Date date) {
 		return yearAndSeason(calendar(date));
+	}
+
+	/**
+	 * 获得指定日期年份和季节<br>
+	 * 格式：[20131]表示2013年第一季度
+	 * 
+	 * @param date 日期
+	 * @return Quarter ，类似于 20132
+	 * @deprecated 
+	 */
+	public static String yearAndQuarter(Date date) {
+		return yearAndQuarter(calendar(date));
 	}
 
 	/**
@@ -381,7 +395,9 @@ public class DateUtil {
 	 * @param startDate 起始日期（包含）
 	 * @param endDate 结束日期（包含）
 	 * @return Season列表 ，元素类似于 20132
+	 * @deprecated 请使用{@link yearAndQuarter} 代替
 	 */
+	@Deprecated
 	public static LinkedHashSet<String> yearAndSeasons(Date startDate, Date endDate) {
 		final LinkedHashSet<String> seasons = new LinkedHashSet<String>();
 		if (startDate == null || endDate == null) {
@@ -407,6 +423,40 @@ public class DateUtil {
 		}
 
 		return seasons;
+	}
+	
+	/**
+	 * 获得指定日期区间内的年份和季节<br>
+	 * 
+	 * @param startDate 起始日期（包含）
+	 * @param endDate 结束日期（包含）
+	 * @return Season列表 ，元素类似于 20132
+	 */
+	public static LinkedHashSet<String> yearAndQuarter(Date startDate, Date endDate) {
+		final LinkedHashSet<String> quarter = new LinkedHashSet<String>();
+		if (startDate == null || endDate == null) {
+			return quarter;
+		}
+
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		while (true) {
+			// 如果开始时间超出结束时间，让结束时间为开始时间，处理完后结束循环
+			if (startDate.after(endDate)) {
+				startDate = endDate;
+			}
+
+			quarter.add(yearAndSeason(cal));
+
+			if (startDate.equals(endDate)) {
+				break;
+			}
+
+			cal.add(Calendar.MONTH, 3);
+			startDate = cal.getTime();
+		}
+
+		return quarter;
 	}
 
 	// ------------------------------------ Format start ----------------------------------------------
@@ -815,6 +865,50 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar endOfMonth(Calendar calendar) {
+		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return endOfDay(calendar);
+	}
+
+	/**
+	 * 获取某季度的开始时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime beginOfQuarter(Date date) {
+		return new DateTime(beginOfQuarter(calendar(date)));
+	}
+
+	/**
+	 * 获取某季度的结束时间
+	 * 
+	 * @param date 日期
+	 * @return {@link DateTime}
+	 */
+	public static DateTime endOfQuarter(Date date) {
+		return new DateTime(endOfQuarter(calendar(date)));
+	}
+
+	/**
+	 * 获取某季度的开始时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar beginOfQuarter(Calendar calendar) {
+		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) /3 *3);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		return beginOfDay(calendar);
+	}
+
+	/**
+	 * 获取某季度的结束时间
+	 * 
+	 * @param calendar 日期 {@link Calendar}
+	 * @return {@link Calendar}
+	 */
+	public static Calendar endOfQuarter(Calendar calendar) {
+		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) /3 *3 +2);
 		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		return endOfDay(calendar);
 	}
@@ -1392,8 +1486,19 @@ public class DateUtil {
 	 * 格式：[20131]表示2013年第一季度
 	 * 
 	 * @param cal 日期
+	 * @deprecated 请使用{@link yearAndQuarter}
 	 */
+	@Deprecated
 	private static String yearAndSeason(Calendar cal) {
+		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
+	}
+	/**
+	 * 获得指定日期年份和季节<br>
+	 * 格式：[20131]表示2013年第一季度
+	 * 
+	 * @param cal 日期
+	 */
+	private static String yearAndQuarter(Calendar cal) {
 		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
 	}
 	
