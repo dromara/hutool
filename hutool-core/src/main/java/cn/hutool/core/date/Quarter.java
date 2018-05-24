@@ -1,14 +1,14 @@
 package cn.hutool.core.date;
 
 /**
- * 季度枚举<br>
+ * 季度枚举
  * 
  * @see #Q1
  * @see #Q2
  * @see #Q3
  * @see #Q4
  * 
- * @author zhfish
+ * @author zhfish(https://github.com/zhfish)
  *
  */
 public enum Quarter {

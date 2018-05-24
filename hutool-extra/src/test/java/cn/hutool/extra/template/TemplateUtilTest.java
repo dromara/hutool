@@ -1,6 +1,7 @@
 package cn.hutool.extra.template;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
@@ -18,6 +19,7 @@ public class TemplateUtilTest {
 	}
 	
 	@Test
+	@Ignore
 	public void createVelocityEngineTest() {
 		Engine engine = new VelocityEngine();
 		Template template = engine.getTemplate("hello,$name");

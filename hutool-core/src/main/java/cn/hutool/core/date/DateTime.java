@@ -277,7 +277,7 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 获得当前日期所属季度<br>
+	 * 获得当前日期所属季度，从1开始计数<br>
 	 * 
 	 * @return 第几个季度 {@link Quarter}
 	 */

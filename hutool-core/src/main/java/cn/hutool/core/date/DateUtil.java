@@ -105,7 +105,7 @@ public class DateUtil {
 	public static long current(boolean isNano) {
 		return isNano ? System.nanoTime() : System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * 当前时间秒数
 	 * 
@@ -137,13 +137,37 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获得指定日期所属季节
+	 * 获得指定日期所属季度
 	 * 
 	 * @param date 日期
-	 * @return 第几个季节
+	 * @return 第几个季度
+	 * @deprecated 请使用{@link #quarter(Date)}
 	 */
+	@Deprecated
 	public static int season(Date date) {
-		return DateTime.of(date).season();
+		return quarter(date);
+	}
+
+	/**
+	 * 获得指定日期所属季度，从1开始计数
+	 * 
+	 * @param date 日期
+	 * @return 第几个季度
+	 * @since 4.1.0
+	 */
+	public static int quarter(Date date) {
+		return DateTime.of(date).quarter();
+	}
+
+	/**
+	 * 获得指定日期所属季度
+	 * 
+	 * @param date 日期
+	 * @return 第几个季度枚举
+	 * @since 4.1.0
+	 */
+	public static Quarter quarterEnum(Date date) {
+		return DateTime.of(date).quarterEnum();
 	}
 
 	/**
@@ -383,7 +407,6 @@ public class DateUtil {
 	 * 
 	 * @param date 日期
 	 * @return Quarter ，类似于 20132
-	 * @deprecated 
 	 */
 	public static String yearAndQuarter(Date date) {
 		return yearAndQuarter(calendar(date));
@@ -424,7 +447,7 @@ public class DateUtil {
 
 		return seasons;
 	}
-	
+
 	/**
 	 * 获得指定日期区间内的年份和季节<br>
 	 * 
@@ -468,7 +491,7 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format) {
-		if(null == date || StrUtil.isBlank(format)) {
+		if (null == date || StrUtil.isBlank(format)) {
 			return null;
 		}
 		return format(date, FastDateFormat.getInstance(format));
@@ -482,7 +505,7 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DatePrinter format) {
-		if(null == format || null == date) {
+		if (null == format || null == date) {
 			return null;
 		}
 		return format.format(date);
@@ -496,7 +519,7 @@ public class DateUtil {
 	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, DateFormat format) {
-		if(null == format || null == date) {
+		if (null == format || null == date) {
 			return null;
 		}
 		return format.format(date);
@@ -665,30 +688,30 @@ public class DateUtil {
 		if (null == dateStr) {
 			return null;
 		}
-		//去掉两边空格并去掉中文日期中的“日”，以规范长度
+		// 去掉两边空格并去掉中文日期中的“日”，以规范长度
 		dateStr = dateStr.trim().replace("日", "");
 		int length = dateStr.length();
-		
-		if(Validator.isNumber(dateStr)) {
-			//纯数字形式
-			if(length == DatePattern.PURE_DATETIME_PATTERN.length()) {
+
+		if (Validator.isNumber(dateStr)) {
+			// 纯数字形式
+			if (length == DatePattern.PURE_DATETIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATETIME_FORMAT);
-			} else if(length == DatePattern.PURE_DATETIME_MS_PATTERN.length()) {
+			} else if (length == DatePattern.PURE_DATETIME_MS_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATETIME_MS_FORMAT);
-			} else if(length == DatePattern.PURE_DATE_PATTERN.length()) {
+			} else if (length == DatePattern.PURE_DATE_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATE_FORMAT);
-			} else if(length == DatePattern.PURE_TIME_PATTERN.length()) {
+			} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_TIME_FORMAT);
 			}
 		}
-		
-		if (length == DatePattern.NORM_DATETIME_PATTERN.length() || length == DatePattern.NORM_DATETIME_PATTERN.length()+1) {
+
+		if (length == DatePattern.NORM_DATETIME_PATTERN.length() || length == DatePattern.NORM_DATETIME_PATTERN.length() + 1) {
 			return parseDateTime(dateStr);
 		} else if (length == DatePattern.NORM_DATE_PATTERN.length()) {
 			return parseDate(dateStr);
-		} else if (length == DatePattern.NORM_TIME_PATTERN.length() || length == DatePattern.NORM_TIME_PATTERN.length()+1) {
+		} else if (length == DatePattern.NORM_TIME_PATTERN.length() || length == DatePattern.NORM_TIME_PATTERN.length() + 1) {
 			return parseTime(dateStr);
-		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() || length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length()+1) {
+		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() || length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() + 1) {
 			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_PATTERN);
 		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
 			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_PATTERN);
@@ -697,7 +720,7 @@ public class DateUtil {
 		// 没有更多匹配的时间格式
 		throw new DateException("No format fit for date String [{}] !", dateStr);
 	}
-	
+
 	// ------------------------------------ Parse end ----------------------------------------------
 
 	// ------------------------------------ Offset start ----------------------------------------------
@@ -768,7 +791,7 @@ public class DateUtil {
 	public static DateTime endOfWeek(Date date) {
 		return new DateTime(endOfWeek(calendar(date)));
 	}
-	
+
 	/**
 	 * 获取某周的开始时间
 	 * 
@@ -778,7 +801,7 @@ public class DateUtil {
 	public static Calendar beginOfWeek(Calendar calendar) {
 		return beginOfWeek(calendar, true);
 	}
-	
+
 	/**
 	 * 获取某周的开始时间，周一定为一周的开始时间
 	 * 
@@ -788,16 +811,16 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar beginOfWeek(Calendar calendar, boolean isMondayAsFirstDay) {
-		if(isMondayAsFirstDay) {
-			//设置周一为一周开始
+		if (isMondayAsFirstDay) {
+			// 设置周一为一周开始
 			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
 			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		}else {
+		} else {
 			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 		}
 		return beginOfDay(calendar);
 	}
-	
+
 	/**
 	 * 获取某周的结束时间，周日定为一周的结束
 	 * 
@@ -817,11 +840,11 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar endOfWeek(Calendar calendar, boolean isSundayAsLastDay) {
-		if(isSundayAsLastDay) {
-			//设置周一为一周开始
+		if (isSundayAsLastDay) {
+			// 设置周一为一周开始
 			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
 			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		}else {
+		} else {
 			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
 		}
 		return endOfDay(calendar);
@@ -894,9 +917,10 @@ public class DateUtil {
 	 * 
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
+	 * @since 4.1.0
 	 */
 	public static Calendar beginOfQuarter(Calendar calendar) {
-		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) /3 *3);
+		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) / 3 * 3);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		return beginOfDay(calendar);
 	}
@@ -906,9 +930,10 @@ public class DateUtil {
 	 * 
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
+	 * @since 4.1.0
 	 */
 	public static Calendar endOfQuarter(Calendar calendar) {
-		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) /3 *3 +2);
+		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) / 3 * 3 + 2);
 		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		return endOfDay(calendar);
 	}
@@ -1131,7 +1156,7 @@ public class DateUtil {
 	public static long between(Date beginDate, Date endDate, DateUnit unit) {
 		return between(beginDate, endDate, unit, true);
 	}
-	
+
 	/**
 	 * 判断两个日期相差的时长
 	 * 
@@ -1431,15 +1456,15 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static int timeToSecond(String timeStr) {
-		if(StrUtil.isEmpty(timeStr)) {
+		if (StrUtil.isEmpty(timeStr)) {
 			return 0;
 		}
-		
+
 		final List<String> hms = StrUtil.splitTrim(timeStr, StrUtil.C_COLON, 3);
 		int lastIndex = hms.size() - 1;
 
 		int result = 0;
-		for(int i = lastIndex; i >= 0; i--) {
+		for (int i = lastIndex; i >= 0; i--) {
 			result += Integer.parseInt(hms.get(i)) * Math.pow(60, (lastIndex - i));
 		}
 		return result;
@@ -1454,10 +1479,10 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static String secondToTime(int seconds) {
-		if(seconds < 0) {
+		if (seconds < 0) {
 			throw new IllegalArgumentException("Seconds must be a positive number!");
 		}
-		
+
 		int hour = seconds / 3600;
 		int other = seconds % 3600;
 		int minute = other / 60;
@@ -1479,7 +1504,7 @@ public class DateUtil {
 		sb.append(second);
 		return sb.toString();
 	}
-	
+
 	// ------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>
@@ -1492,6 +1517,7 @@ public class DateUtil {
 	private static String yearAndSeason(Calendar cal) {
 		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
 	}
+
 	/**
 	 * 获得指定日期年份和季节<br>
 	 * 格式：[20131]表示2013年第一季度
@@ -1501,10 +1527,11 @@ public class DateUtil {
 	private static String yearAndQuarter(Calendar cal) {
 		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
 	}
-	
+
 	/**
 	 * 标准化日期，默认处理以空格区分的日期时间格式，空格前为日期，空格后为时间：<br>
 	 * 将以下字符替换为"-"
+	 * 
 	 * <pre>
 	 * "."
 	 * "/"
@@ -1513,49 +1540,52 @@ public class DateUtil {
 	 * </pre>
 	 * 
 	 * 将以下字符去除
+	 * 
 	 * <pre>
 	 * "日"
 	 * </pre>
 	 * 
 	 * 将以下字符替换为":"
+	 * 
 	 * <pre>
 	 * "时"
 	 * "分"
 	 * "秒"
 	 * </pre>
+	 * 
 	 * 当末位是":"时去除之（不存在毫秒时）
 	 * 
 	 * @param dateStr 日期时间字符串
 	 * @return 格式化后的日期字符串
 	 */
 	private static String normalize(String dateStr) {
-		if(StrUtil.isBlank(dateStr)) {
+		if (StrUtil.isBlank(dateStr)) {
 			return dateStr;
 		}
-		
-		//日期时间分开处理
+
+		// 日期时间分开处理
 		final List<String> dateAndTime = StrUtil.splitTrim(dateStr, ' ');
 		final int size = dateAndTime.size();
-		if(size < 1 || size > 2) {
-			//非可被标准处理的格式
+		if (size < 1 || size > 2) {
+			// 非可被标准处理的格式
 			return dateStr;
 		}
-		
+
 		final StringBuilder builder = StrUtil.builder();
-		
-		//日期部分（"\"、"/"、"."、"年"、"月"都替换为"-"）
+
+		// 日期部分（"\"、"/"、"."、"年"、"月"都替换为"-"）
 		String datePart = dateAndTime.get(0).replaceAll("[\\/.年月]", "-");
 		datePart = StrUtil.removeSuffix(datePart, "日");
 		builder.append(datePart);
-		
-		//时间部分
-		if(size  == 2) {
+
+		// 时间部分
+		if (size == 2) {
 			builder.append(' ');
 			String timePart = dateAndTime.get(1).replaceAll("[时分秒]", ":");
 			timePart = StrUtil.removeSuffix(timePart, ":");
 			builder.append(timePart);
 		}
-		
+
 		return builder.toString();
 	}
 	// ------------------------------------------------------------------------ Private method end
