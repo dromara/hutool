@@ -1,5 +1,6 @@
 package cn.hutool.extra.template;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 
 import cn.hutool.core.util.CharsetUtil;
@@ -8,24 +9,25 @@ import cn.hutool.core.util.CharsetUtil;
  * 模板配置
  * 
  * @author looly
- *
+ * @since 4.1.0
  */
-public class TemplateConfig {
-	
+public class TemplateConfig implements Serializable {
+	private static final long serialVersionUID = 2933113779920339523L;
+
 	/** 编码 */
 	private Charset charset;
 	/** 模板路径，如果ClassPath或者WebRoot模式，则表示相对路径 */
 	private String path;
 	/** 模板资源加载方式 */
 	private ResourceMode resourceMode;
-	
+
 	/**
 	 * 默认构造，使用UTF8编码，默认从ClassPath获取模板
 	 */
 	public TemplateConfig() {
-		this(CharsetUtil.CHARSET_UTF_8, null, ResourceMode.CLASSPATH);
+		this(CharsetUtil.CHARSET_UTF_8, null, ResourceMode.STRING);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -107,5 +109,47 @@ public class TemplateConfig {
 		WEB_ROOT,
 		/** 从模板文本加载模板 */
 		STRING;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((charset == null) ? 0 : charset.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		result = prime * result + ((resourceMode == null) ? 0 : resourceMode.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		TemplateConfig other = (TemplateConfig) obj;
+		if (charset == null) {
+			if (other.charset != null) {
+				return false;
+			}
+		} else if (!charset.equals(other.charset)) {
+			return false;
+		}
+		if (path == null) {
+			if (other.path != null) {
+				return false;
+			}
+		} else if (!path.equals(other.path)) {
+			return false;
+		}
+		if (resourceMode != other.resourceMode) {
+			return false;
+		}
+		return true;
 	};
 }

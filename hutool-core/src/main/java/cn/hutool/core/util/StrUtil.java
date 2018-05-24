@@ -3321,7 +3321,7 @@ public class StrUtil {
 	 * 替换字符串中的指定字符串
 	 * 
 	 * @param str 字符串
-	 * @param fromIndex 开始位置
+	 * @param fromIndex 开始位置（包括）
 	 * @param searchStr 被查找的字符串
 	 * @param replacement 被替换的字符串
 	 * @param ignoreCase 是否忽略大小写
@@ -3351,7 +3351,7 @@ public class StrUtil {
 
 		int preIndex = fromIndex;
 		int index = fromIndex;
-		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > 0) {
+		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
 			result.append(str.subSequence(preIndex, index));
 			result.append(replacement);
 			preIndex = index + searchStrLength;

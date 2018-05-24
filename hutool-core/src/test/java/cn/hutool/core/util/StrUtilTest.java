@@ -174,6 +174,12 @@ public class StrUtilTest {
 		String result = StrUtil.replace("123", "2", "3");
 		Assert.assertEquals("133", result);
 	}
+	
+	@Test
+	public void replaceTest3() {
+		String result = StrUtil.replace(",abcdef,", ",", "|");
+		Assert.assertEquals("|abcdef|", result);
+	}
 
 	@Test
 	public void upperFirstTest() {
