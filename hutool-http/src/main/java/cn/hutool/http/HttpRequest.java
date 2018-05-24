@@ -18,6 +18,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.BytesResource;
 import cn.hutool.core.io.resource.FileResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
@@ -376,8 +377,38 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest form(String name, File file) {
+		return form(name, file, file.getName());
+	}
+	
+	/**
+	 * 文件表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * 
+	 * @param name 名
+	 * @param file 需要上传的文件
+	 * @param fileName 文件名，为空使用文件默认的文件名
+	 * @return this
+	 */
+	public HttpRequest form(String name, File file, String fileName) {
 		if (null != file) {
-			form(name, new FileResource(file));
+			form(name, new FileResource(file, fileName));
+		}
+		return this;
+	}
+	
+	/**
+	 * 文件byte[]表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * 
+	 * @param name 名
+	 * @param fileBytes 需要上传的文件
+	 * @param fileName 文件名
+	 * @return this
+	 * @since 4.1.0
+	 */
+	public HttpRequest form(String name, byte[] fileBytes, String fileName) {
+		if (null != fileBytes) {
+			form(name, new BytesResource(fileBytes, fileName));
 		}
 		return this;
 	}
@@ -757,7 +788,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				if (CollectionUtil.isEmpty(fileForm)) {
 					sendFormUrlEncoded();// 普通表单
 				} else {
-					sendMltipart(); // 文件上传表单
+					sendMultipart(); // 文件上传表单
 				}
 			} else {
 				this.httpConnection.connect();
@@ -792,7 +823,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @throws IOException
 	 */
-	private void sendMltipart() throws IOException {
+	private void sendMultipart() throws IOException {
 		setMultipart();// 设置表单类型为Multipart
 
 		final OutputStream out = this.httpConnection.getOutputStream();
