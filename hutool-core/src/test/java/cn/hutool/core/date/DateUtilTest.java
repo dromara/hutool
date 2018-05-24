@@ -275,7 +275,15 @@ public class DateUtilTest {
 		String dateStr = "2018-10-10 12:11:11";
 		Date date = DateUtil.parse(dateStr);
 		String format = DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN);
-		Assert.assertEquals("2018-10-10 12:11:11", format);
+		Assert.assertEquals(dateStr, format);
+	}
+	
+	@Test
+	public void parseDateTest() throws ParseException {
+		String dateStr = "2018-4-10";
+		Date date = DateUtil.parseDate(dateStr);
+		String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
+		Assert.assertEquals("2018-04-10", format);
 	}
 	
 	@Test

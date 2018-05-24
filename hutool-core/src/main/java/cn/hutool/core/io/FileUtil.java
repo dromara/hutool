@@ -1087,8 +1087,8 @@ public class FileUtil {
 		if (StrUtil.isEmpty(path)) {
 			return false;
 		}
-
-		if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:/.*")) {
+		
+		if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:[/\\\\].*")) {
 			// 给定的路径已经是绝对路径了
 			return true;
 		}

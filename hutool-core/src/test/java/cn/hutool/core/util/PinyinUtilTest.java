@@ -37,5 +37,9 @@ public class PinyinUtilTest {
 		
 //		pinYin = PinyinUtil.getPinYin("怡");
 //		Assert.assertEquals("yi", pinYin);
+		
+		String cnStr = "中文(进一步说明)-（OK）@gitee.com";
+		pinYin = PinyinUtil.getPinYin(cnStr);
+		Assert.assertEquals("zhongwen(jinyibushuoming)-OK@gitee.com", pinYin);
 	}
 }

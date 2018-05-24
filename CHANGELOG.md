@@ -7,10 +7,13 @@
 ### 新特性
 * 【extra】          模板工具改为模板门面，抽象各模板引擎
 * 【core】           修改Season为quarter（pr#114@Github）
+* 【core】           CollUtil增加removeAny方法
 
 ### Bug修复
 * 【core】          修复StrUtil.replace方法第一个字符无法替换问题（issue#IJZR0@Gitee）
 * 【core】          修复Season计算问题（pr#114@Github）
+* 【core】          修复PinyinUtil获取拼音特殊字符转数字问题（issue#IJNWH@Gitee）
+* 【core】          修复FileUtil.isAbsolutePath方法正则问题（issue#IJZUB@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -244,7 +244,7 @@ public class CollUtil {
 	public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
 		return IterUtil.countMap(collection);
 	}
-	
+
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串<br>
 	 * 如果集合元素为数组、{@link Iterable}或{@link Iterator}，则递归组合其为字符串
@@ -488,7 +488,7 @@ public class CollUtil {
 		}
 		return arrayList;
 	}
-	
+
 	/**
 	 * 数组转为ArrayList
 	 * 
@@ -501,7 +501,7 @@ public class CollUtil {
 	public static <T> ArrayList<T> toList(T... values) {
 		return newArrayList(values);
 	}
-	
+
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -871,6 +871,20 @@ public class CollUtil {
 				return t;
 			}
 		});
+	}
+
+	/**
+	 * 去掉集合中的多个元素
+	 * 
+	 * @param collection 集合
+	 * @param elesRemoved 被去掉的元素数组
+	 * @return 原集合
+	 * @since 4.1.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Collection<T> removeAny(Collection<T> collection, T... elesRemoved) {
+		collection.removeAll(newHashSet(elesRemoved));
+		return collection;
 	}
 
 	/**
@@ -1587,7 +1601,7 @@ public class CollUtil {
 			return (T) ((Collection<T>) collection).toArray()[index];
 		}
 	}
-	
+
 	/**
 	 * 获取集合中指定多个下标的元素值，下标可以为负数，例如-1表示最后一个元素
 	 * 
@@ -1604,7 +1618,7 @@ public class CollUtil {
 		if (collection instanceof List) {
 			final List<T> list = ((List<T>) collection);
 			for (int index : indexes) {
-				if(index < 0) {
+				if (index < 0) {
 					index += size;
 				}
 				result.add(list.get(index));
@@ -1612,10 +1626,10 @@ public class CollUtil {
 		} else {
 			Object[] array = ((Collection<T>) collection).toArray();
 			for (int index : indexes) {
-				if(index < 0) {
+				if (index < 0) {
 					index += size;
 				}
-				result.add((T)array[index]);
+				result.add((T) array[index]);
 			}
 		}
 		return result;
@@ -1819,7 +1833,7 @@ public class CollUtil {
 		Collections.sort(list, c);
 		return list;
 	}
-	
+
 	/**
 	 * 根据Bean的属性排序
 	 * 
@@ -1829,10 +1843,10 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sortByProperty(Collection<T> collection, String property){
+	public static <T> List<T> sortByProperty(Collection<T> collection, String property) {
 		return sort(collection, new PropertyComparator<>(property));
 	}
-	
+
 	/**
 	 * 根据Bean的属性排序
 	 * 
@@ -1842,10 +1856,10 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.6
 	 */
-	public static <T> List<T> sortByProperty(List<T> list, String property){
+	public static <T> List<T> sortByProperty(List<T> list, String property) {
 		return sort(list, new PropertyComparator<>(property));
 	}
-	
+
 	/**
 	 * 根据汉字的拼音顺序排序
 	 * 
@@ -1853,10 +1867,10 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.8
 	 */
-	public static <T> List<String> sortByPinyin(Collection<String> collection){
+	public static <T> List<String> sortByPinyin(Collection<String> collection) {
 		return sort(collection, new PinyinComparator());
 	}
-	
+
 	/**
 	 * 根据汉字的拼音顺序排序
 	 * 
@@ -1864,7 +1878,7 @@ public class CollUtil {
 	 * @return 排序后的List
 	 * @since 4.0.8
 	 */
-	public static <T> List<String> sortByPinyin(List<String> list){
+	public static <T> List<String> sortByPinyin(List<String> list) {
 		return sort(list, new PinyinComparator());
 	}
 
