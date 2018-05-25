@@ -41,7 +41,7 @@ public class Combination {
 		if(n == m) {
 			return NumberUtil.factorial(n) / NumberUtil.factorial(m);
 		}
-		return (n > m) ? NumberUtil.factorial(n) / NumberUtil.factorial(n - m) / NumberUtil.factorial(m) : 0;
+		return (n > m) ? NumberUtil.factorial(n, n - m) / NumberUtil.factorial(m) : 0;
 	}
 	
 	/**

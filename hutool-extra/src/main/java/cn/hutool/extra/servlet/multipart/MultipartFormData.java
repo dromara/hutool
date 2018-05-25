@@ -62,16 +62,16 @@ public class MultipartFormData {
 	 * 提取上传的文件和表单数据
 	 * 
 	 * @param inputStream HttpRequest流
-	 * @param encoding 编码
+	 * @param charset 编码
 	 * @throws IOException IO异常
 	 */
-	public void parseRequestStream(InputStream inputStream, String encoding) throws IOException {
+	public void parseRequestStream(InputStream inputStream, String charset) throws IOException {
 		setLoaded();
 
 		MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);
 		input.readBoundary();
 		while (true) {
-			UploadFileHeader header = input.readDataHeader(encoding);
+			UploadFileHeader header = input.readDataHeader(charset);
 			if (header == null) {
 				break;
 			}
@@ -90,7 +90,7 @@ public class MultipartFormData {
 				// 标准表单项
 				ByteArrayOutputStream fbos = new ByteArrayOutputStream(1024);
 				input.copy(fbos);
-				String value = (encoding != null) ? new String(fbos.toByteArray(), encoding) : new String(fbos.toByteArray());
+				String value = (charset != null) ? new String(fbos.toByteArray(), charset) : new String(fbos.toByteArray());
 				putParameter(header.formFieldName, value);
 			}
 

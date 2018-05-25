@@ -119,7 +119,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal add(Number... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		Number value = values[0];
@@ -143,7 +143,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal add(String... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		String value = values[0];
@@ -167,11 +167,11 @@ public class NumberUtil {
 	 */
 	public static BigDecimal add(BigDecimal... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		BigDecimal value = values[0];
-		BigDecimal result = null == value ? new BigDecimal("0") : value;
+		BigDecimal result = null == value ? BigDecimal.ZERO : value;
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -258,7 +258,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal sub(Number... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		Number value = values[0];
@@ -282,7 +282,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal sub(String... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		String value = values[0];
@@ -306,11 +306,11 @@ public class NumberUtil {
 	 */
 	public static BigDecimal sub(BigDecimal... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		BigDecimal value = values[0];
-		BigDecimal result = null == value ? new BigDecimal("0") : value;
+		BigDecimal result = null == value ? BigDecimal.ZERO : value;
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -398,7 +398,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal mul(Number... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		Number value = values[0];
@@ -434,7 +434,7 @@ public class NumberUtil {
 	 */
 	public static BigDecimal mul(String... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		String value = values[0];
@@ -458,11 +458,11 @@ public class NumberUtil {
 	 */
 	public static BigDecimal mul(BigDecimal... values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 
 		BigDecimal value = values[0];
-		BigDecimal result = null == value ? new BigDecimal("0") : value;
+		BigDecimal result = null == value ? BigDecimal.ZERO : value;
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
 			if (null != value) {
@@ -740,7 +740,7 @@ public class NumberUtil {
 	public static BigDecimal div(BigDecimal v1, BigDecimal v2, int scale, RoundingMode roundingMode) {
 		Assert.notNull(v2, "Divisor must be not null !");
 		if (null == v1) {
-			return new BigDecimal("0");
+			return BigDecimal.ZERO;
 		}
 		if (scale < 0) {
 			scale = -scale;
@@ -843,12 +843,30 @@ public class NumberUtil {
 		if (scale < 0) {
 			scale = 0;
 		}
+		return round(toBigDecimal(numberStr), scale, roundingMode);
+	}
+
+	/**
+	 * 保留固定位数小数<br>
+	 * 例如保留四位小数：123.456789 =》 123.4567
+	 * 
+	 * @param numberStr 数字值
+	 * @param scale 保留小数位数，如果传入小于0，则默认0
+	 * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
+	 * @return 新值
+	 */
+	public static BigDecimal round(BigDecimal number, int scale, RoundingMode roundingMode) {
+		if (null == number) {
+			number = BigDecimal.ZERO;
+		}
+		if (scale < 0) {
+			scale = 0;
+		}
 		if (null == roundingMode) {
 			roundingMode = RoundingMode.HALF_UP;
 		}
 
-		final BigDecimal b = new BigDecimal(numberStr);
-		return b.setScale(scale, roundingMode);
+		return number.setScale(scale, roundingMode);
 	}
 
 	/**
@@ -863,6 +881,71 @@ public class NumberUtil {
 	 */
 	public static String roundStr(String numberStr, int scale, RoundingMode roundingMode) {
 		return round(numberStr, scale, roundingMode).toString();
+	}
+
+	/**
+	 * 四舍六入五成双计算法
+	 * <p>
+	 * 四舍六入五成双是一种比较精确比较科学的计数保留法，是一种数字修约规则。
+	 * </p>
+	 * 
+	 * <pre>
+	 * 算法规则:
+	 * 四舍六入五考虑，
+	 * 五后非零就进一，
+	 * 五后皆零看奇偶，
+	 * 五前为偶应舍去，
+	 * 五前为奇要进一。
+	 * </pre>
+	 * 
+	 * @param number 需要科学计算的数据
+	 * @param digit 保留的小数位
+	 * @return 结果
+	 * @since 4.1.0
+	 */
+	public static BigDecimal roundHalfEven(Number number, int digit) {
+		return roundHalfEven(toBigDecimal(number), digit);
+	}
+
+	/**
+	 * 四舍六入五成双计算法
+	 * <p>
+	 * 四舍六入五成双是一种比较精确比较科学的计数保留法，是一种数字修约规则。
+	 * </p>
+	 * 
+	 * <pre>
+	 * 算法规则:
+	 * 四舍六入五考虑，
+	 * 五后非零就进一，
+	 * 五后皆零看奇偶，
+	 * 五前为偶应舍去，
+	 * 五前为奇要进一。
+	 * </pre>
+	 * 
+	 * @param value 需要科学计算的数据
+	 * @param scale 保留的小数位
+	 * @return 结果
+	 * @since 4.1.0
+	 */
+	public static BigDecimal roundHalfEven(BigDecimal value, int scale) {
+		// // 小数进位，然后取整计算，再退位得到结果
+		// BigDecimal ratio = pow(10, digit);
+		// // 进位后的数字
+		// BigDecimal number = mul(value, ratio);
+		// // 获取BigDecimal整数部分，直接舍弃小数部分
+		// long integer = number.setScale(0, RoundingMode.DOWN).longValue();
+		// // 获取小数部分
+		// double decimal = sub(number, integer).doubleValue();
+		// if (decimal > 0.5) {
+		// // 四舍六入
+		// integer = integer + 1;
+		// }
+		// if (decimal == 0.5 && integer % 2 != 0) {
+		// // 五前为奇要进一
+		// integer = integer + 1;
+		// }
+		// return div(integer, ratio).setScale(digit, RoundingMode.HALF_UP);
+		return round(value, scale, RoundingMode.HALF_EVEN);
 	}
 
 	// ------------------------------------------------------------------------------------------- decimalFormat
@@ -1262,19 +1345,37 @@ public class NumberUtil {
 
 	// ------------------------------------------------------------------------------------------- others
 	/**
-	 * 阶乘：n!
+	 * 计算阶乘
+	 * <p>
+	 * n! = n * (n-1) * ... * end
+	 * </p>
 	 * 
-	 * @param n 值
-	 * @return 阶乘
+	 * @param start 阶乘起始
+	 * @param end 阶乘结束
+	 * @return 结果
+	 * @since 4.1.0
+	 */
+	public static long factorial(long start, long end) {
+		if (start < end) {
+			return 0L;
+		}
+		if (start == end) {
+			return 1L;
+		}
+		return start * factorial(start - 1, end);
+	}
+
+	/**
+	 * 计算阶乘
+	 * <p>
+	 * n! = n * (n-1) * ... * 2 * 1
+	 * </p>
+	 * 
+	 * @param n 阶乘起始
+	 * @return 结果
 	 */
 	public static long factorial(long n) {
-		if (n < 1) {
-			return 0;
-		}
-		if (n == 1) {
-			return 1;
-		}
-		return n * factorial(n - 1);
+		return factorial(n, 1);
 	}
 
 	/**
@@ -1767,7 +1868,21 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(Number number) {
-		return new BigDecimal(number.toString());
+		if(null == number) {
+			return BigDecimal.ZERO;
+		}
+		return toBigDecimal(number.toString());
+	}
+
+	/**
+	 * 数字转{@link BigDecimal}
+	 * 
+	 * @param number 数字
+	 * @return {@link BigDecimal}
+	 * @since 4.0.9
+	 */
+	public static BigDecimal toBigDecimal(String number) {
+		return (null == number) ? BigDecimal.ZERO : new BigDecimal(number);
 	}
 
 	/**
@@ -1939,6 +2054,30 @@ public class NumberUtil {
 			}
 		}
 		return partValue;
+	}
+
+	/**
+	 * 提供精确的幂运算
+	 * 
+	 * @param number 底数
+	 * @param n 指数
+	 * @return 幂的积
+	 * @since 4.1.0
+	 */
+	public static BigDecimal pow(Number number, int n) {
+		return pow(toBigDecimal(number), n);
+	}
+
+	/**
+	 * 提供精确的幂运算
+	 * 
+	 * @param number 底数
+	 * @param n 指数
+	 * @return 幂的积
+	 * @since 4.1.0
+	 */
+	public static BigDecimal pow(BigDecimal number, int n) {
+		return number.pow(n);
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start

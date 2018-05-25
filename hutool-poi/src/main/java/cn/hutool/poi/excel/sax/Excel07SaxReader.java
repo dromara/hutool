@@ -231,7 +231,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		String value = StrUtil.trim(lastContent);
-
+		
 		if (T_ELEMENT.equals(qName)) {
 			// type标签
 			rowCellList.add(curCell++, value);

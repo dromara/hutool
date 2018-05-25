@@ -3,6 +3,7 @@ package cn.hutool.poi.test;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
@@ -21,6 +22,12 @@ public class ExcelSaxReadTest {
 	@Test
 	public void readBySaxTest() {
 		ExcelUtil.readBySax("blankAndDateTest.xlsx", 0, createRowHandler());
+	}
+	
+	@Test
+	@Ignore
+	public void readBySaxTest2() {
+		ExcelUtil.readBySax("d:/B23_20180404164901240.xlsx", 0, createRowHandler());
 	}
 	
 	@Test

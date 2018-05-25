@@ -20,6 +20,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.BytesResource;
 import cn.hutool.core.io.resource.FileResource;
+import cn.hutool.core.io.resource.MultiResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
@@ -314,7 +315,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			//自定义流上传
 			return this.form(name, (Resource) value);
 		} else if (this.form == null) {
-			form = new HashMap<String, Object>();
+			this.form = new HashMap<>();
 		}
 
 		String strValue;
@@ -373,11 +374,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 * 
 	 * @param name 名
-	 * @param file 需要上传的文件
+	 * @param files 需要上传的文件
 	 * @return this
 	 */
-	public HttpRequest form(String name, File file) {
-		return form(name, file, file.getName());
+	public HttpRequest form(String name, File... files) {
+		if(1 == files.length) {
+			final File file = files[0];
+			return form(name, file, file.getName());
+		}
+		final MultiResource multiResource = new MultiResource();
+		for (File file : files) {
+			multiResource.add(new FileResource(file));
+		}
+		return form(name, multiResource);
 	}
 	
 	/**
@@ -864,16 +873,34 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException
 	 */
 	private void writeFileForm(OutputStream out) throws IOException {
-		Resource resource;
 		for (Entry<String, Resource> entry : this.fileForm.entrySet()) {
-			resource = entry.getValue();
-			StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
-			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), resource.getName()));
+			appendPart(entry.getKey(), entry.getValue(), out);
+		}
+	}
+	
+	/**
+	 * 添加Multipart表单的数据项
+	 * @param formFieldName 表单名
+	 * @param resource 资源，可以是文件等
+	 * @param out Http流
+	 * @since 4.1.0
+	 */
+	private void appendPart(String formFieldName, Resource resource, OutputStream out) {
+		if(resource instanceof MultiResource) {
+			//多资源
+			for (Resource subResource : (MultiResource)resource) {
+				appendPart(formFieldName, subResource, out);
+			}
+		}else {
+			//普通资源
+			final StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
+			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, formFieldName, resource.getName()));
 			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(resource.getName())));
 			IoUtil.write(out, this.charset, false, builder);
 			IoUtil.copy(resource.getStream(), out);
 			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
 		}
+		
 	}
 
 	// 添加结尾数据

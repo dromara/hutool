@@ -8,12 +8,16 @@
 * 【extra】          模板工具改为模板门面，抽象各模板引擎
 * 【core】           修改Season为quarter（pr#114@Github）
 * 【core】           CollUtil增加removeAny方法
+* 【core】           StrUtil增加emptyToDefault和blankToDefault（issue#115@Github）
+* 【core】           优化排列组合算法（感谢@【青岛】LQ）
+* 【core】           NumberUtil增加roundHalfEven（感谢@【青岛】LQ）
 
 ### Bug修复
 * 【core】          修复StrUtil.replace方法第一个字符无法替换问题（issue#IJZR0@Gitee）
 * 【core】          修复Season计算问题（pr#114@Github）
 * 【core】          修复PinyinUtil获取拼音特殊字符转数字问题（issue#IJNWH@Gitee）
 * 【core】          修复FileUtil.isAbsolutePath方法正则问题（issue#IJZUB@Gitee）
+* 【extra】         修复ServletUtil.getMultipart方法的问题
 
 -------------------------------------------------------------------------------------------------------------
 
