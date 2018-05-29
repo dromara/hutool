@@ -88,6 +88,8 @@ public class VelocityEngine implements Engine {
 			ve.setProperty("resource.loader", "string");
 			ve.setProperty("string.resource.loader.class ", StringResourceLoader.class.getName());
 			break;
+		default:
+			break;
 		}
 
 		return ve;

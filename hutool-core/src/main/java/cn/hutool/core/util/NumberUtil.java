@@ -787,6 +787,20 @@ public class NumberUtil {
 	public static BigDecimal round(String numberStr, int scale) {
 		return round(numberStr, scale, RoundingMode.HALF_UP);
 	}
+	
+	/**
+	 * 保留固定位数小数<br>
+	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
+	 * 例如保留2位小数：123.456789 =》 123.46
+	 * 
+	 * @param number 数字值
+	 * @param scale 保留小数位数
+	 * @return 新值
+	 * @since 4.1.0
+	 */
+	public static BigDecimal round(BigDecimal number, int scale) {
+		return round(number, scale, RoundingMode.HALF_UP);
+	}
 
 	/**
 	 * 保留固定位数小数<br>

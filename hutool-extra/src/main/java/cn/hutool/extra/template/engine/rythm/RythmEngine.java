@@ -1,5 +1,7 @@
 package cn.hutool.extra.template.engine.rythm;
 
+import java.util.Properties;
+
 import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
@@ -45,7 +47,7 @@ public class RythmEngine implements Engine {
 	public Template getTemplate(String resource) {
 		return RythmTemplate.wrap(engine.getTemplate(resource));
 	}
-	
+
 	/**
 	 * 创建引擎
 	 * 
@@ -57,9 +59,13 @@ public class RythmEngine implements Engine {
 			config = new TemplateConfig();
 		}
 		
-		final org.rythmengine.RythmEngine engine =  new org.rythmengine.RythmEngine();
-		engine.setProperty("home.template", config.getPath());
-		
+		final Properties props = new Properties();
+		final String path = config.getPath();
+		if (null != path) {
+			props.put("home.template", path);
+		}
+
+		final org.rythmengine.RythmEngine engine = new org.rythmengine.RythmEngine(props);
 		return engine;
 	}
 }

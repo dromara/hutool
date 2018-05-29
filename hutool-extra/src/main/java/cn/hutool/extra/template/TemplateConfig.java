@@ -25,7 +25,26 @@ public class TemplateConfig implements Serializable {
 	 * 默认构造，使用UTF8编码，默认从ClassPath获取模板
 	 */
 	public TemplateConfig() {
-		this(CharsetUtil.CHARSET_UTF_8, null, ResourceMode.STRING);
+		this((String)null);
+	}
+	
+	/**
+	 * 构造，默认UTF-8编码
+	 * 
+	 * @param path 模板路径，如果ClassPath或者WebRoot模式，则表示相对路径
+	 */
+	public TemplateConfig(String path) {
+		this(path, ResourceMode.STRING);
+	}
+	
+	/**
+	 * 构造，默认UTF-8编码
+	 * 
+	 * @param path 模板路径，如果ClassPath或者WebRoot模式，则表示相对路径
+	 * @param resourceMode 模板资源加载方式
+	 */
+	public TemplateConfig(String path, ResourceMode resourceMode) {
+		this(CharsetUtil.CHARSET_UTF_8, path, resourceMode);
 	}
 
 	/**
@@ -108,7 +127,9 @@ public class TemplateConfig implements Serializable {
 		/** 从WebRoot目录加载模板 */
 		WEB_ROOT,
 		/** 从模板文本加载模板 */
-		STRING;
+		STRING,
+		/** 复合加载模板（分别从File、ClassPath、Web-root、String方式尝试查找模板） */
+		COMPOSITE;
 	}
 
 	@Override

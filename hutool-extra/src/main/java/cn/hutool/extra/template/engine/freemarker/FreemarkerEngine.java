@@ -92,6 +92,8 @@ public class FreemarkerEngine implements Engine {
 		case STRING:
 			cfg.setTemplateLoader(new StringTemplateLoader());
 			break;
+		default:
+			break;
 		}
 		
 		return cfg;

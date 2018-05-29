@@ -6,6 +6,7 @@ import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
 import org.beetl.core.resource.ClasspathResourceLoader;
+import org.beetl.core.resource.CompositeResourceLoader;
 import org.beetl.core.resource.FileResourceLoader;
 import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.core.resource.WebAppResourceLoader;
@@ -76,6 +77,9 @@ public class BeetlEngine implements Engine {
 			return createGroupTemplate(new WebAppResourceLoader(config.getPath(), config.getCharset().toString()));
 		case STRING:
 			return createGroupTemplate(new StringTemplateResourceLoader());
+		case COMPOSITE:
+			//TODO 需要定义复合资源加载器
+			return createGroupTemplate(new CompositeResourceLoader());
 		default:
 			return new GroupTemplate();
 		}
