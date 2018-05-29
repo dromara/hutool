@@ -187,4 +187,11 @@ public class HttpUtilTest {
 		Assert.assertEquals("你好", map.get("c").get(0));
 		Assert.assertEquals("", map.get("哈喽").get(0));
 	}
+	
+	@Test
+	@Ignore
+	public void patchTest() {
+		String body = HttpRequest.post("https://www.baidu.com").execute().body();
+		Console.log(body);
+	}
 }

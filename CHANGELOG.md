@@ -2,7 +2,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 4.0.13
+## 4.1.0
 
 ### 新特性
 * 【extra】          模板工具改为模板门面，抽象各模板引擎
@@ -18,6 +18,8 @@
 * 【core】          修复PinyinUtil获取拼音特殊字符转数字问题（issue#IJNWH@Gitee）
 * 【core】          修复FileUtil.isAbsolutePath方法正则问题（issue#IJZUB@Gitee）
 * 【extra】         修复ServletUtil.getMultipart方法的问题
+* 【http】          修复patch方法无效问题（issue#IK2Z8@Gitee）
+* 【core】          修复DateUtil.parseTimeToday格式问题（issue#IK25B@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
