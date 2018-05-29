@@ -20,6 +20,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.BytesResource;
 import cn.hutool.core.io.resource.FileResource;
+import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.MultiResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
@@ -328,6 +329,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			// 列表对象
 			strValue = CollectionUtil.join((List<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
+			if(File.class == ArrayUtil.getComponentType(value)) {
+				//多文件
+				return this.form(name, (File[]) value);
+			}
 			// 数组对象
 			strValue = ArrayUtil.join((Object[]) value, ",");
 		} else {
@@ -387,11 +392,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			final File file = files[0];
 			return form(name, file, file.getName());
 		}
-		final MultiResource multiResource = new MultiResource();
-		for (File file : files) {
-			multiResource.add(new FileResource(file));
-		}
-		return form(name, multiResource);
+		return form(name, new MultiFileResource(files));
+	}
+	
+	/**
+	 * 文件表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * 
+	 * @param name 名
+	 * @param file 需要上传的文件
+	 * @return this
+	 */
+	public HttpRequest form(String name, File file) {
+		return form(name, file, file.getName());
 	}
 	
 	/**

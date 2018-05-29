@@ -11,6 +11,7 @@
 * 【core】           StrUtil增加emptyToDefault和blankToDefault（issue#115@Github）
 * 【core】           优化排列组合算法（感谢@【青岛】LQ）
 * 【core】           NumberUtil增加roundHalfEven（感谢@【青岛】LQ）
+* 【http】            HttpRequest.form支持多文件上传（相同key）（issue#IJYWM@Gitee）
 
 ### Bug修复
 * 【core】          修复StrUtil.replace方法第一个字符无法替换问题（issue#IJZR0@Gitee）
@@ -20,6 +21,7 @@
 * 【extra】         修复ServletUtil.getMultipart方法的问题
 * 【http】          修复patch方法无效问题（issue#IK2Z8@Gitee）
 * 【core】          修复DateUtil.parseTimeToday格式问题（issue#IK25B@Gitee）
+* 【poi】            修复设置字体日期和小数无效问题（issue#IK488@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

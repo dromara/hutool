@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -92,7 +93,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void writeMapTest() {
 		Map<String, Object> row1 = new LinkedHashMap<>();
 		row1.put("姓名", "张三");
@@ -111,7 +112,15 @@ public class ExcelWriteTest {
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("d:/writeMapTest.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest.xlsx");
+		
+		//设置内容字体
+		Font font = writer.createFont();
+		font.setBold(true);
+		font.setColor(Font.COLOR_RED); 
+		font.setItalic(true); 
+		writer.getStyleSet().setFont(font, true);
+		
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");
 		// 一次性写出内容，使用默认样式

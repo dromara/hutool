@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
@@ -37,8 +38,12 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 * 
 	 * @param resources 资源列表
 	 */
-	public MultiResource(List<Resource> resources) {
-		this.resources = resources;
+	public MultiResource(Collection<Resource> c) {
+		if(c instanceof List) {
+			this.resources = (List<Resource>)c;
+		}else {
+			this.resources = CollUtil.newArrayList(c);
+		}
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -408,11 +409,7 @@ public class ExcelWriter implements Closeable {
 		// 设置内容
 		if (null != content) {
 			final Cell cell = getOrCreateCell(firstColumn, firstRow);
-			CellUtil.setCellValue(cell, content, this.styleSet);
-			if (isSetHeaderStyle) {
-				// 当作为标题合并单元格时，使用标题样式
-				cell.setCellStyle(this.styleSet.headCellStyle);
-			}
+			CellUtil.setCellValue(cell, content, this.styleSet, isSetHeaderStyle);
 		}
 		return this;
 	}
@@ -504,7 +501,8 @@ public class ExcelWriter implements Closeable {
 	 * @return this
 	 */
 	public ExcelWriter writeHeadRow(Iterable<?> rowData) {
-		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
+		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, true);
 		return this;
 	}
 
@@ -519,7 +517,7 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter writeRow(Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet);
+		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false);
 		return this;
 	}
 
@@ -540,7 +538,7 @@ public class ExcelWriter implements Closeable {
 	}
 
 	/**
-	 * 给指定单元格赋值
+	 * 给指定单元格赋值，使用默认单元格样式
 	 * 
 	 * @param x X坐标，从0计数，既列号
 	 * @param y Y坐标，从0计数，既行号
@@ -550,7 +548,7 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter writeCellValue(int x, int y, Object value) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellUtil.setCellValue(cell, value, styleSet);
+		CellUtil.setCellValue(cell, value, styleSet, false);
 		return this;
 	}
 
@@ -580,6 +578,15 @@ public class ExcelWriter implements Closeable {
 		final Cell cell = getOrCreateCell(x, y);
 		cell.setCellStyle(this.workbook.createCellStyle());
 		return cellStyle;
+	}
+	
+	/**
+	 * 创建字体
+	 * @return 字体
+	 * @since 4.1.0
+	 */
+	public Font createFont() {
+		return getWorkbook().createFont();
 	}
 
 	/**

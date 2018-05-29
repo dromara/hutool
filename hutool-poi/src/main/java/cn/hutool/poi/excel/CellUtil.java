@@ -106,16 +106,21 @@ public class CellUtil {
 
 	/**
 	 * 设置单元格值<br>
-	 * 根据传入的styleSet自动匹配样式
+	 * 根据传入的styleSet自动匹配样式<br>
+	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
 	 * 
 	 * @param cell 单元格
 	 * @param value 值
 	 * @param styleSet 单元格样式集，包括日期等样式
+	 * @param isHeader 是否为标题单元格
 	 */
-	public static void setCellValue(Cell cell, Object value, StyleSet styleSet) {
-		if (null != styleSet.cellStyle) {
+	public static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
+		if(isHeader && null != styleSet.headCellStyle) {
+			cell.setCellStyle(styleSet.headCellStyle);
+		} else if (null != styleSet.cellStyle) {
 			cell.setCellStyle(styleSet.cellStyle);
 		}
+		
 		if (null == value) {
 			cell.setCellValue(StrUtil.EMPTY);
 		}else if (value instanceof FormulaCellValue) {
