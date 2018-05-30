@@ -138,6 +138,9 @@ public class ExcelSaxUtil {
 	 * @since 4.1.0
 	 */
 	private static Number getNumberValue(String value, String numFmtString) {
+		if(StrUtil.isBlank(value)) {
+			return null;
+		}
 		double numValue = Double.parseDouble(value);
 		// 普通数字
 		if (null != numFmtString && numFmtString.indexOf(StrUtil.C_DOT) < 0) {
