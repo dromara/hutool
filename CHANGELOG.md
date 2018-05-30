@@ -23,6 +23,7 @@
 * 【core】          修复DateUtil.parseTimeToday格式问题（issue#IK25B@Gitee）
 * 【poi】            修复设置字体日期和小数无效问题（issue#IK488@Gitee）
 * 【core】          修复NumberUtil.partValue的bug（pr#15@Gitee）
+* 【poi】            调整了readBySax方式读取导致的部分问题
 
 -------------------------------------------------------------------------------------------------------------
 

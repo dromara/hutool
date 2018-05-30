@@ -75,7 +75,7 @@ public class ExcelReadTest {
 		Assert.assertEquals(11L, readAll.get(1).get(2));
 		Assert.assertEquals(41.5D, readAll.get(1).get(3));
 	}
-
+	
 	@Test
 	public void excel03ReadTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));

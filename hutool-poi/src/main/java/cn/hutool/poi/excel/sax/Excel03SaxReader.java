@@ -206,11 +206,11 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 			BlankRecord brec = (BlankRecord) record;
 			rowCellList.add(brec.getColumn(), StrUtil.EMPTY);
 			break;
-		case BoolErrRecord.sid: // 单元格为布尔类型
+		case BoolErrRecord.sid: // 布尔类型
 			BoolErrRecord berec = (BoolErrRecord) record;
 			rowCellList.add(berec.getColumn(), berec.getBooleanValue());
 			break;
-		case FormulaRecord.sid: // 单元格为公式类型
+		case FormulaRecord.sid: // 公式类型
 			FormulaRecord frec = (FormulaRecord) record;
 			if (isOutputFormulaValues) {
 				if (Double.isNaN(frec.getValue())) {
@@ -237,7 +237,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 			LabelRecord lrec = (LabelRecord) record;
 			this.rowCellList.add(lrec.getColumn(), value);
 			break;
-		case LabelSSTRecord.sid: // 单元格为字符串类型
+		case LabelSSTRecord.sid: // 字符串类型
 			LabelSSTRecord lsrec = (LabelSSTRecord) record;
 			if (sstRecord == null) {
 				rowCellList.add(lsrec.getColumn(), StrUtil.EMPTY);
@@ -246,7 +246,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 				rowCellList.add(lsrec.getColumn(), value);
 			}
 			break;
-		case NumberRecord.sid: // 单元格为数字类型
+		case NumberRecord.sid: // 数字类型
 			NumberRecord numrec = (NumberRecord) record;
 			
 			final String formatString = formatListener.getFormatString(numrec);
