@@ -22,6 +22,7 @@
 * 【http】          修复patch方法无效问题（issue#IK2Z8@Gitee）
 * 【core】          修复DateUtil.parseTimeToday格式问题（issue#IK25B@Gitee）
 * 【poi】            修复设置字体日期和小数无效问题（issue#IK488@Gitee）
+* 【core】          修复NumberUtil.partValue的bug（pr#15@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
