@@ -9,6 +9,8 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import cn.hutool.poi.excel.style.StyleUtil;
+
 /**
  * 样式集合，此样式集合汇集了整个工作簿的样式，用于减少样式的创建和冗余
  * 

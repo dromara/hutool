@@ -8,10 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -21,6 +25,8 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.cell.CellEditor;
+import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.editors.TrimEditor;
 
 /**
@@ -64,7 +70,7 @@ public class ExcelReader implements Closeable {
 	 * @param sheetIndex sheet序号，0表示第一个sheet
 	 */
 	public ExcelReader(File bookFile, int sheetIndex) {
-		this(WorkbookUtil.loadBook(bookFile), sheetIndex);
+		this(WorkbookUtil.createBook(bookFile), sheetIndex);
 	}
 
 	/**
@@ -74,7 +80,7 @@ public class ExcelReader implements Closeable {
 	 * @param sheetName sheet名，第一个默认是sheet1
 	 */
 	public ExcelReader(File bookFile, String sheetName) {
-		this(WorkbookUtil.loadBook(bookFile), sheetName);
+		this(WorkbookUtil.createBook(bookFile), sheetName);
 	}
 
 	/**
@@ -85,7 +91,7 @@ public class ExcelReader implements Closeable {
 	 * @param closeAfterRead 读取结束是否关闭流
 	 */
 	public ExcelReader(InputStream bookStream, int sheetIndex, boolean closeAfterRead) {
-		this(WorkbookUtil.loadBook(bookStream, closeAfterRead), sheetIndex);
+		this(WorkbookUtil.createBook(bookStream, closeAfterRead), sheetIndex);
 	}
 
 	/**
@@ -96,7 +102,7 @@ public class ExcelReader implements Closeable {
 	 * @param closeAfterRead 读取结束是否关闭流
 	 */
 	public ExcelReader(InputStream bookStream, String sheetName, boolean closeAfterRead) {
-		this(WorkbookUtil.loadBook(bookStream, closeAfterRead), sheetName);
+		this(WorkbookUtil.createBook(bookStream, closeAfterRead), sheetName);
 	}
 
 	/**
@@ -447,6 +453,37 @@ public class ExcelReader implements Closeable {
 			beanList.add(BeanUtil.mapToBean(map, beanType, false));
 		}
 		return beanList;
+	}
+
+	/**
+	 * 读取为文本格式<br>
+	 * 使用{@link ExcelExtractor} 提取Excel内容
+	 * 
+	 * @param withSheetName 是否附带sheet名
+	 * @return Excel文本
+	 * @since 4.1.0
+	 */
+	public String readAsText(boolean withSheetName) {
+		final ExcelExtractor extractor = getExtractor();
+		extractor.setIncludeSheetNames(withSheetName);
+		return extractor.getText();
+	}
+
+	/**
+	 * 获取 {@link ExcelExtractor} 对象
+	 * 
+	 * @return {@link ExcelExtractor}
+	 * @since 4.1.0
+	 */
+	public ExcelExtractor getExtractor() {
+		ExcelExtractor extractor;
+		Workbook wb = this.workbook;
+		if (wb instanceof HSSFWorkbook) {
+			extractor = new org.apache.poi.hssf.extractor.ExcelExtractor((HSSFWorkbook) wb);
+		} else {
+			extractor = new XSSFExcelExtractor((XSSFWorkbook) wb);
+		}
+		return extractor;
 	}
 
 	/**

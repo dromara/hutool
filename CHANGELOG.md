@@ -1,3 +1,4 @@
+
 # Changelog
 
 -------------------------------------------------------------------------------------------------------------
@@ -12,6 +13,8 @@
 * 【core】           优化排列组合算法（感谢@【青岛】LQ）
 * 【core】           NumberUtil增加roundHalfEven（感谢@【青岛】LQ）
 * 【http】            HttpRequest.form支持多文件上传（相同key）（issue#IJYWM@Gitee）
+* 【db】              新增SqlLog，独立SQL日志打印配置
+* 【poi】             ExcelReader新增readAsText方法，ExcelWriter新增setHeaderOrFooter方法（设置页眉页脚）
 
 ### Bug修复
 * 【core】          修复StrUtil.replace方法第一个字符无法替换问题（issue#IJZR0@Gitee）
@@ -24,6 +27,7 @@
 * 【poi】            修复设置字体日期和小数无效问题（issue#IK488@Gitee）
 * 【core】          修复NumberUtil.partValue的bug（pr#15@Gitee）
 * 【poi】            调整了readBySax方式读取导致的部分问题
+* 【core】          修复CsvRow的get方法越界问题（issue#IK9CX@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

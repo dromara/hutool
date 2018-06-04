@@ -77,6 +77,12 @@ public class ExcelReadTest {
 	}
 	
 	@Test
+	public void excelReadAsTextTest() {
+		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
+		Assert.assertNotNull(reader.readAsText(false));
+	}
+	
+	@Test
 	public void excel03ReadTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));
 		List<List<Object>> readAll = reader.read();

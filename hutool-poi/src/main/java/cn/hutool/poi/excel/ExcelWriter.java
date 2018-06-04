@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HeaderFooter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -25,10 +26,18 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.cell.CellUtil;
+import cn.hutool.poi.excel.style.Align;
 
 /**
  * Excel 写入器<br>
- * 此工具用于通过POI将数据写出到Excel
+ * 此工具用于通过POI将数据写出到Excel，此对象可完成以下两个功能
+ * 
+ * <pre>
+ * 1. 编辑已存在的Excel，可写出原Excel文件，也可写出到其它地方（到文件或到流）
+ * 2. 新建一个空的Excel工作簿，完成数据填充后写出（到文件或到流）
+ * </pre>
  * 
  * @author Looly
  * @since 3.2.0
@@ -71,7 +80,7 @@ public class ExcelWriter implements Closeable {
 	 * @since 3.2.1
 	 */
 	public ExcelWriter(boolean isXlsx) {
-		this(WorkbookUtil.createBook(isXlsx ? ".xlsx" : ".xls"), null);
+		this(WorkbookUtil.createBook(isXlsx), null);
 	}
 
 	/**
@@ -109,7 +118,7 @@ public class ExcelWriter implements Closeable {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(File destFile, String sheetName) {
-		this(WorkbookUtil.createBook(destFile), sheetName);
+		this(destFile.exists() ? WorkbookUtil.createBook(destFile) : WorkbookUtil.createBook(StrUtil.endWithIgnoreCase(destFile.getName(), ".xlsx")), sheetName);
 		this.destFile = destFile;
 	}
 
@@ -337,6 +346,33 @@ public class ExcelWriter implements Closeable {
 			this.sheet.setDefaultRowHeightInPoints(height);
 		} else {
 			this.sheet.getRow(rownum).setHeightInPoints(height);
+		}
+		return this;
+	}
+
+	/**
+	 * 设置Excel页眉或页脚
+	 * 
+	 * @param text 页脚的文本
+	 * @param align 对齐方式枚举 {@link Align}
+	 * @param isFooter 是否为页脚，false表示页眉，true表示页脚
+	 * @return this
+	 * @since 4.1.0
+	 */
+	public ExcelWriter setHeaderOrFooter(String text, Align align, boolean isFooter) {
+		final HeaderFooter headerFooter = isFooter ? this.sheet.getFooter() : this.sheet.getHeader();
+		switch (align) {
+		case LEFT:
+			headerFooter.setLeft(text);
+			break;
+		case RIGHT:
+			headerFooter.setRight(text);
+			break;
+		case CENTER:
+			headerFooter.setCenter(text);
+			break;
+		default:
+			break;
 		}
 		return this;
 	}
@@ -579,9 +615,10 @@ public class ExcelWriter implements Closeable {
 		cell.setCellStyle(this.workbook.createCellStyle());
 		return cellStyle;
 	}
-	
+
 	/**
 	 * 创建字体
+	 * 
 	 * @return 字体
 	 * @since 4.1.0
 	 */

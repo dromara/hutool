@@ -22,7 +22,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
-import cn.hutool.poi.excel.StyleUtil;
+import cn.hutool.poi.excel.style.StyleUtil;
 
 /**
  * 写出Excel单元测试
@@ -47,7 +47,7 @@ public class ExcelWriteTest {
 		}
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("d:/writeTest.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("e:/writeTest.xlsx");
 		// 通过构造方法创建writer
 		// ExcelWriter writer = new ExcelWriter("d:/writeTest.xls");
 
@@ -74,7 +74,7 @@ public class ExcelWriteTest {
 		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("d:/mergeTest.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("e:/mergeTest.xlsx");
 		CellStyle style = writer.getStyleSet().getHeadCellStyle();
 		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
 

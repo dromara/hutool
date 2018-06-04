@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.cell.CellEditor;
+import cn.hutool.poi.excel.cell.CellUtil;
 
 /**
  * Excel中的行{@link Row}封装工具类

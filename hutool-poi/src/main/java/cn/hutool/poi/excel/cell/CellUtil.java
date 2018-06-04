@@ -1,4 +1,4 @@
-package cn.hutool.poi.excel;
+package cn.hutool.poi.excel.cell;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +15,7 @@ import org.apache.poi.ss.util.RegionUtil;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.poi.excel.cell.FormulaCellValue;
+import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.editors.TrimEditor;
 
 /**
@@ -115,10 +115,12 @@ public class CellUtil {
 	 * @param isHeader 是否为标题单元格
 	 */
 	public static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
-		if(isHeader && null != styleSet.headCellStyle) {
-			cell.setCellStyle(styleSet.headCellStyle);
-		} else if (null != styleSet.cellStyle) {
-			cell.setCellStyle(styleSet.cellStyle);
+		final CellStyle headCellStyle = styleSet.getHeadCellStyle();
+		final CellStyle cellStyle = styleSet.getCellStyle();
+		if(isHeader && null != headCellStyle) {
+			cell.setCellStyle(headCellStyle);
+		} else if (null != cellStyle) {
+			cell.setCellStyle(cellStyle);
 		}
 		
 		if (null == value) {
@@ -127,8 +129,8 @@ public class CellUtil {
 			//公式
 			cell.setCellFormula(((FormulaCellValue)value).getValue());
 		} else if (value instanceof Date) {
-			if (null != styleSet && null != styleSet.cellStyleForDate) {
-				cell.setCellStyle(styleSet.cellStyleForDate);
+			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
+				cell.setCellStyle(styleSet.getCellStyleForDate());
 			}
 			cell.setCellValue((Date) value);
 		} else if (value instanceof Calendar) {
@@ -138,8 +140,8 @@ public class CellUtil {
 		} else if (value instanceof RichTextString) {
 			cell.setCellValue((RichTextString) value);
 		} else if (value instanceof Number) {
-			if ((value instanceof Double || value instanceof Float) && null != styleSet && null != styleSet.cellStyleForNumber) {
-				cell.setCellStyle(styleSet.cellStyleForNumber);
+			if ((value instanceof Double || value instanceof Float) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
+				cell.setCellStyle(styleSet.getCellStyleForNumber());
 			}
 			cell.setCellValue(((Number) value).doubleValue());
 		} else {
@@ -227,13 +229,12 @@ public class CellUtil {
 		}
 
 		final short formatIndex = style.getDataFormat();
-		final String format = style.getDataFormatString();
-
 		// 判断是否为日期
-		if (isDateType(formatIndex, format)) {
+		if (isDateType(cell, formatIndex)) {
 			return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
 		}
 
+		final String format = style.getDataFormatString();
 		// 普通数字
 		if (null != format && format.indexOf(StrUtil.C_DOT) < 0) {
 			final long longPart = (long) value;
@@ -258,7 +259,7 @@ public class CellUtil {
 	 * @param format 格式字符串
 	 * @return 是否为日期格式
 	 */
-	private static boolean isDateType(int formatIndex, String format) {
+	private static boolean isDateType(Cell cell, int formatIndex) {
 		// yyyy-MM-dd----- 14
 		// yyyy年m月d日---- 31
 		// yyyy年m月------- 57
@@ -269,7 +270,7 @@ public class CellUtil {
 			return true;
 		}
 
-		if (org.apache.poi.ss.usermodel.DateUtil.isADateFormat(formatIndex, format)) {
+		if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
 			return true;
 		}
 

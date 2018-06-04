@@ -103,6 +103,7 @@ public class Session extends AbstractSqlRunner implements Closeable {
 	 * 获得{@link Connection}
 	 * 
 	 * @return {@link Connection}
+	 * @see #getConnection()
 	 */
 	public Connection getConn() {
 		return conn;
