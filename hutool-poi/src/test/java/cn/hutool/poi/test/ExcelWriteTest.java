@@ -93,7 +93,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void writeMapTest() {
 		Map<String, Object> row1 = new LinkedHashMap<>();
 		row1.put("姓名", "张三");
