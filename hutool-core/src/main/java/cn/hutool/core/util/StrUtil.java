@@ -3596,4 +3596,19 @@ public class StrUtil {
 	public static String uuid() {
 		return RandomUtil.randomUUID();
 	}
+	
+	/**
+	 * 连接多个字符串为一个
+	 * @param isNullToEmpty 是否null转为""
+	 * @param strs 字符串数组
+	 * @return 连接后的字符串
+	 * @since 4.1.0
+	 */
+	public static String concat(boolean isNullToEmpty, CharSequence... strs) {
+		final StrBuilder sb = new StrBuilder();
+		for (CharSequence str : strs) {
+			sb.append(isNullToEmpty ? nullToEmpty(str) : str);
+		}
+		return sb.toString();
+	}
 }

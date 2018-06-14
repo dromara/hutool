@@ -17,6 +17,7 @@
 * 【poi】             ExcelReader新增readAsText方法，ExcelWriter新增setHeaderOrFooter方法（设置页眉页脚）
 * 【crypto】        删除DSA类（DSA算法用在Sign中），修改规则，RSA分段方式变为全局（issue#IKGKG@Gitee）
 * 【core】           DateUtil添加range和rangeToList方法，增加DateRange类（issue#119@Github）
+* 【core】           StrUtil增加concat方法，可选是否null转""（感谢@【帝都】宁静）
 
 ### Bug修复
 * 【core】          修复StrUtil.replace方法第一个字符无法替换问题（issue#IJZR0@Gitee）
