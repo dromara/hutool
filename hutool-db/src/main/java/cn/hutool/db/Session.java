@@ -24,7 +24,7 @@ import cn.hutool.log.LogFactory;
  * @author loolly
  *
  */
-public class Session extends AbstractSqlRunner implements Closeable {
+public class Session extends AbstractDb implements Closeable {
 	private final static Log log = LogFactory.get();
 
 	private Connection conn = null;

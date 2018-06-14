@@ -30,11 +30,15 @@ public class UnicodeUtil {
 		int i = -1;
 		int pos = 0;
 		while ((i = unicode.indexOf("\\u", pos)) != -1) {
-			sb.append(unicode.substring(pos, i));
+			sb.append(unicode, pos, i);
 			if (i + 5 < len) {
 				pos = i + 6;
 				sb.append((char) Integer.parseInt(unicode.substring(i + 2, i + 6), 16));
 			}
+		}
+		
+		if(pos < len) {
+			sb.append(unicode,pos, len);
 		}
 		return sb.toString();
 	}

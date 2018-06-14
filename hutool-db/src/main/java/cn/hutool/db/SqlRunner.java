@@ -19,7 +19,7 @@ import cn.hutool.db.sql.Wrapper;
  * @author Luxiaolei
  * 
  */
-public class SqlRunner extends AbstractSqlRunner{
+public class SqlRunner extends AbstractDb{
 	private DataSource ds;
 	
 	/**

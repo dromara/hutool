@@ -184,4 +184,23 @@ public class CRUDTest {
 		int[] result = runner.insert(CollUtil.newArrayList(data1));
 		Console.log(result);
 	}
+	
+	@Test
+	public void insertOneTest() throws SQLException {
+		Entity data1 = Entity.create("user")
+				.set("f_max", 1)
+				.set("pfsid", 1861)
+				.set("bdid", 120)
+				.set("f_min", 0)
+				.set("f_datatype", "/")
+				.set("f_note", "资格性评审")
+				.set("fpfsid", 0)
+				.set("f_type", 2)
+				.set("f_table", "J");
+		
+		Console.log(data1);
+		
+		int result = runner.insert(data1);
+		Console.log(result);
+	}
 }

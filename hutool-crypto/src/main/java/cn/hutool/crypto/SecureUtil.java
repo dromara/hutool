@@ -34,7 +34,6 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
-import cn.hutool.crypto.asymmetric.DSA;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
@@ -766,44 +765,6 @@ public final class SecureUtil {
 	 */
 	public static RSA rsa(byte[] privateKey, byte[] publicKey){
 		return new RSA(privateKey, publicKey);
-	}
-	
-	/**
-	 * 创建RSA算法对象<br>
-	 * 生成新的私钥公钥对
-	 * @return {@link DSA}
-	 * @since 3.0.5
-	 */
-	public static DSA dsa(){
-		return new DSA();
-	}
-	
-	/**
-	 * 创建DSA算法对象<br>
-	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
-	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
-	 * 
-	 * @param privateKeyBase64 私钥Base64
-	 * @param publicKeyBase64 公钥Base64
-	 * @return {@link DSA}
-	 * @since 3.0.5
-	 */
-	public static DSA dsa(String privateKeyBase64, String publicKeyBase64){
-		return new DSA(privateKeyBase64, publicKeyBase64);
-	}
-	
-	/**
-	 * 创建DSA算法对象<br>
-	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
-	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
-	 * 
-	 * @param privateKey 私钥
-	 * @param publicKey 公钥
-	 * @return {@link DSA}
-	 * @since 3.0.5
-	 */
-	public static DSA dsa(byte[] privateKey, byte[] publicKey){
-		return new DSA(privateKey, publicKey);
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
@@ -1503,6 +1504,30 @@ public class DateUtil {
 		}
 		sb.append(second);
 		return sb.toString();
+	}
+
+	/**
+	 * 创建日期范围生成器
+	 * 
+	 * @param start 起始日期时间
+	 * @param end 结束日期时间
+	 * @param unit 步进单位
+	 * @return {@link DateRange}
+	 */
+	public static DateRange range(Date start, Date end, final DateField unit) {
+		return new DateRange(start, end, unit);
+	}
+
+	/**
+	 * 创建日期范围生成器
+	 * 
+	 * @param start 起始日期时间
+	 * @param end 结束日期时间
+	 * @param unit 步进单位
+	 * @return {@link DateRange}
+	 */
+	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
+		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
 
 	// ------------------------------------------------------------------------ Private method start

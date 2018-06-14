@@ -455,20 +455,20 @@ public class IdcardUtil {
 	 * 根据身份编号获取性别
 	 * 
 	 * @param idCard 身份编号
-	 * @return 性别(1-男，0-女，-1-未知)
+	 * @return 性别(1: 男，0: 女)
 	 */
 	public static int getGenderByIdCard(String idCard) {
-		int sGender = -1;
 		if (idCard.length() == CHINA_ID_MIN_LENGTH) {
 			idCard = convert15To18(idCard);
 		}
 		char sCardChar = idCard.charAt(16);
+		int gender = -1;
 		if (Integer.parseInt(String.valueOf(sCardChar)) % 2 != 0) {
-			sGender = 1;
+			gender = 1;
 		} else {
-			sGender = 0;
+			gender = 0;
 		}
-		return sGender;
+		return gender;
 	}
 
 	/**

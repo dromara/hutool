@@ -913,12 +913,12 @@ public class NumberUtil {
 	 * </pre>
 	 * 
 	 * @param number 需要科学计算的数据
-	 * @param digit 保留的小数位
+	 * @param scale 保留的小数位
 	 * @return 结果
 	 * @since 4.1.0
 	 */
-	public static BigDecimal roundHalfEven(Number number, int digit) {
-		return roundHalfEven(toBigDecimal(number), digit);
+	public static BigDecimal roundHalfEven(Number number, int scale) {
+		return roundHalfEven(toBigDecimal(number), scale);
 	}
 
 	/**
@@ -942,24 +942,31 @@ public class NumberUtil {
 	 * @since 4.1.0
 	 */
 	public static BigDecimal roundHalfEven(BigDecimal value, int scale) {
-		// // 小数进位，然后取整计算，再退位得到结果
-		// BigDecimal ratio = pow(10, digit);
-		// // 进位后的数字
-		// BigDecimal number = mul(value, ratio);
-		// // 获取BigDecimal整数部分，直接舍弃小数部分
-		// long integer = number.setScale(0, RoundingMode.DOWN).longValue();
-		// // 获取小数部分
-		// double decimal = sub(number, integer).doubleValue();
-		// if (decimal > 0.5) {
-		// // 四舍六入
-		// integer = integer + 1;
-		// }
-		// if (decimal == 0.5 && integer % 2 != 0) {
-		// // 五前为奇要进一
-		// integer = integer + 1;
-		// }
-		// return div(integer, ratio).setScale(digit, RoundingMode.HALF_UP);
 		return round(value, scale, RoundingMode.HALF_EVEN);
+	}
+	
+	/**
+	 * 保留固定小数位数，舍去多余位数
+	 * 
+	 * @param number 需要科学计算的数据
+	 * @param scale 保留的小数位
+	 * @return 结果
+	 * @since 4.1.0
+	 */
+	public static BigDecimal roundDown(Number number, int scale) {
+		return roundDown(toBigDecimal(number), scale);
+	}
+	
+	/**
+	 * 保留固定小数位数，舍去多余位数
+	 * 
+	 * @param value 需要科学计算的数据
+	 * @param scale 保留的小数位
+	 * @return 结果
+	 * @since 4.1.0
+	 */
+	public static BigDecimal roundDown(BigDecimal value, int scale) {
+		return round(value, scale, RoundingMode.DOWN);
 	}
 
 	// ------------------------------------------------------------------------------------------- decimalFormat

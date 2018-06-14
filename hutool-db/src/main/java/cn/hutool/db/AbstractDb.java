@@ -1,3 +1,4 @@
+
 package cn.hutool.db;
 
 import java.sql.Connection;
@@ -20,14 +21,14 @@ import cn.hutool.db.sql.SqlUtil;
 import cn.hutool.db.sql.Wrapper;
 
 /**
- * 抽象SQL执行类<br>
+ * 抽象数据库操作类<br>
  * 通过给定的数据源执行给定SQL或者给定数据源和方言，执行相应的CRUD操作<br>
  * 提供抽象方法getConnection和closeConnection，用于自定义数据库连接的打开和关闭
  * 
  * @author Luxiaolei
  * 
  */
-public abstract class AbstractSqlRunner{
+public abstract class AbstractDb{
 	protected SqlConnRunner runner;
 	
 	//------------------------------------------------------- Constructor start
@@ -765,7 +766,7 @@ public abstract class AbstractSqlRunner{
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public AbstractSqlRunner setWrapper(Character wrapperChar) {
+	public AbstractDb setWrapper(Character wrapperChar) {
 		return setWrapper(new Wrapper(wrapperChar));
 	}
 	
@@ -775,7 +776,7 @@ public abstract class AbstractSqlRunner{
 	 * @return this
 	 * @since 4.0.0
 	 */
-	public AbstractSqlRunner setWrapper(Wrapper wrapper) {
+	public AbstractDb setWrapper(Wrapper wrapper) {
 		this.runner.setWrapper(wrapper);
 		return this;
 	}

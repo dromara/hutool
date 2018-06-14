@@ -15,6 +15,8 @@
 * 【http】            HttpRequest.form支持多文件上传（相同key）（issue#IJYWM@Gitee）
 * 【db】              新增SqlLog，独立SQL日志打印配置
 * 【poi】             ExcelReader新增readAsText方法，ExcelWriter新增setHeaderOrFooter方法（设置页眉页脚）
+* 【crypto】        删除DSA类（DSA算法用在Sign中），修改规则，RSA分段方式变为全局（issue#IKGKG@Gitee）
+* 【core】           DateUtil添加range和rangeToList方法，增加DateRange类（issue#119@Github）
 
 ### Bug修复
 * 【core】          修复StrUtil.replace方法第一个字符无法替换问题（issue#IJZR0@Gitee）
@@ -28,6 +30,7 @@
 * 【core】          修复NumberUtil.partValue的bug（pr#15@Gitee）
 * 【poi】            调整了readBySax方式读取导致的部分问题
 * 【core】          修复CsvRow的get方法越界问题（issue#IK9CX@Gitee）
+* 【core】          修复UnicodeUtil丢失末尾字符串的问题（issue#IKI6T@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

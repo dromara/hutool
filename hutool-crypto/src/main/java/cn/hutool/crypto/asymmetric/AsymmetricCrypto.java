@@ -1,12 +1,15 @@
 package cn.hutool.crypto.asymmetric;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import javax.crypto.Cipher;
 
+import cn.hutool.core.codec.BCD;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -28,6 +31,11 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 
 	/** Cipher负责完成加密或解密工作 */
 	protected Cipher clipher;
+
+	/** 加密的块大小 */
+	protected int encryptBlockSize = -1;
+	/** 解密的块大小 */
+	protected int decryptBlockSize = -1;
 
 	// ------------------------------------------------------------------ Constructor start
 	/**
@@ -128,6 +136,42 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	// ------------------------------------------------------------------ Constructor end
 
 	/**
+	 * 获取加密块大小
+	 * 
+	 * @return 加密块大小
+	 */
+	public int getEncryptBlockSize() {
+		return encryptBlockSize;
+	}
+
+	/**
+	 * 设置加密块大小
+	 * 
+	 * @param encryptBlockSize 加密块大小
+	 */
+	public void setEncryptBlockSize(int encryptBlockSize) {
+		this.encryptBlockSize = encryptBlockSize;
+	}
+
+	/**
+	 * 获取解密块大小
+	 * 
+	 * @return 解密块大小
+	 */
+	public int getDecryptBlockSize() {
+		return decryptBlockSize;
+	}
+
+	/**
+	 * 设置解密块大小
+	 * 
+	 * @param decryptBlockSize 解密块大小
+	 */
+	public void setDecryptBlockSize(int decryptBlockSize) {
+		this.decryptBlockSize = decryptBlockSize;
+	}
+
+	/**
 	 * 初始化<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
@@ -158,11 +202,26 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	 * @return 加密后的bytes
 	 */
 	public byte[] encrypt(byte[] data, KeyType keyType) {
-		lock.lock();
-		try {
-			clipher.init(Cipher.ENCRYPT_MODE, getKeyByType(keyType));
-			return clipher.doFinal(data);
+		final Key key = getKeyByType(keyType);
+		final int inputLen = data.length;
+		final int maxBlockSize = this.decryptBlockSize < 0 ? inputLen : this.decryptBlockSize;
 
+		lock.lock();
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+			clipher.init(Cipher.ENCRYPT_MODE, key);
+			int offSet = 0;
+			byte[] cache;
+			// 剩余长度
+			int remainLength = inputLen;
+			// 对数据分段加密
+			while (remainLength > 0) {
+				cache = clipher.doFinal(data, offSet, Math.min(remainLength, maxBlockSize));
+				out.write(cache, 0, cache.length);
+
+				offSet += maxBlockSize;
+				remainLength = inputLen - offSet;
+			}
+			return out.toByteArray();
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -313,6 +372,33 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 		return Base64.encode(encrypt(data, keyType));
 	}
 
+	/**
+	 * 分组加密
+	 * 
+	 * @param data 数据
+	 * @param keyType 密钥类型
+	 * @return 加密后的密文
+	 * @throws CryptoException 加密异常
+	 * @since 4.1.0
+	 */
+	public String encryptBcd(String data, KeyType keyType) {
+		return encryptBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 分组加密
+	 * 
+	 * @param data 数据
+	 * @param keyType 密钥类型
+	 * @param charset 加密前编码
+	 * @return 加密后的密文
+	 * @throws CryptoException 加密异常
+	 * @since 4.1.0
+	 */
+	public String encryptBcd(String data, KeyType keyType, Charset charset) {
+		return BCD.bcdToStr(encrypt(data, charset, keyType));
+	}
+
 	// --------------------------------------------------------------------------------- Decrypt
 	/**
 	 * 解密
@@ -322,10 +408,27 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	 * @return 解密后的bytes
 	 */
 	public byte[] decrypt(byte[] bytes, KeyType keyType) {
+		final Key key = getKeyByType(keyType);
+		// 模长
+		final int inputLen = bytes.length;
+		final int maxBlockSize = this.decryptBlockSize < 0 ? inputLen : this.decryptBlockSize;
+
 		lock.lock();
-		try {
-			clipher.init(Cipher.DECRYPT_MODE, getKeyByType(keyType));
-			return clipher.doFinal(bytes);
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			clipher.init(Cipher.DECRYPT_MODE, key);
+			int offSet = 0;
+			byte[] cache;
+			// 剩余长度
+			int remainLength = inputLen;
+			// 对数据分段解密
+			while (remainLength > 0) {
+				cache = clipher.doFinal(bytes, offSet, Math.min(remainLength, maxBlockSize));
+				out.write(cache, 0, cache.length);
+
+				offSet += maxBlockSize;
+				remainLength = inputLen - offSet;
+			}
+			return out.toByteArray();
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -367,6 +470,32 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	 */
 	public byte[] decryptFromBase64(String base64Str, KeyType keyType) {
 		return decrypt(Base64.decode(base64Str, CharsetUtil.CHARSET_UTF_8), keyType);
+	}
+
+	/**
+	 * 解密BCD
+	 * 
+	 * @param data 数据
+	 * @param keyType 密钥类型
+	 * @return 解密后的密文
+	 * @since 4.1.0
+	 */
+	public String decryptFromBcd(String data, KeyType keyType) {
+		return decryptFromBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 分组解密
+	 * 
+	 * @param data 数据
+	 * @param keyType 密钥类型
+	 * @param charset 加密前编码
+	 * @return 解密后的密文
+	 * @since 4.1.0
+	 */
+	public String decryptFromBcd(String data, KeyType keyType, Charset charset) {
+		final byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
+		return StrUtil.str(decrypt(dataBytes, keyType), charset);
 	}
 
 	// --------------------------------------------------------------------------------- Getters and Setters
