@@ -94,7 +94,7 @@ public class WorkbookUtil {
 	/**
 	 * 根据文件路径创建新的工作簿，文件路径
 	 * 
-	 * @param destFilePath 目标文件路径，文件可以不存在，通过扩展名判断Workbook类型
+	 * @param isXlsx 是否为xlsx格式的Excel
 	 * @return {@link Workbook}
 	 * @since 4.1.0
 	 */

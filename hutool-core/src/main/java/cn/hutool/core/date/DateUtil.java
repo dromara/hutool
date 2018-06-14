@@ -395,7 +395,7 @@ public class DateUtil {
 	 * 
 	 * @param date 日期
 	 * @return Season ，类似于 20132
-	 * @deprecated 请使用{@link yearAndQuarter} 代替
+	 * @deprecated 请使用{@link #yearAndQuarter} 代替
 	 */
 	@Deprecated
 	public static String yearAndSeason(Date date) {
@@ -419,7 +419,7 @@ public class DateUtil {
 	 * @param startDate 起始日期（包含）
 	 * @param endDate 结束日期（包含）
 	 * @return Season列表 ，元素类似于 20132
-	 * @deprecated 请使用{@link yearAndQuarter} 代替
+	 * @deprecated 请使用{@link #yearAndQuarter} 代替
 	 */
 	@Deprecated
 	public static LinkedHashSet<String> yearAndSeasons(Date startDate, Date endDate) {

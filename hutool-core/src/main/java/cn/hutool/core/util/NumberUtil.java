@@ -864,7 +864,7 @@ public class NumberUtil {
 	 * 保留固定位数小数<br>
 	 * 例如保留四位小数：123.456789 =》 123.4567
 	 * 
-	 * @param numberStr 数字值
+	 * @param number 数字值
 	 * @param scale 保留小数位数，如果传入小于0，则默认0
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
 	 * @return 新值

@@ -1,9 +1,9 @@
 package cn.hutool.setting;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -159,9 +159,9 @@ public class SettingLoader {
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
-		BufferedWriter writer = null;
+		PrintWriter writer = null;
 		try {
-			writer = FileUtil.getWriter(absolutePath, charset, false);
+			writer = FileUtil.getPrintWriter(absolutePath, charset, false);
 			store(writer);
 		} catch (IOException e) {
 			throw new IORuntimeException(e, "Store Setting to [{}] error!", absolutePath);
@@ -176,11 +176,11 @@ public class SettingLoader {
 	 * @param writer Writer
 	 * @throws IOException IO异常
 	 */
-	private void store(BufferedWriter writer) throws IOException {
+	private void store(PrintWriter writer) throws IOException {
 		for (Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
-			writer.write(StrUtil.format("{}{}{}", CharUtil.BRACKET_START, groupEntry.getKey(), CharUtil.BRACKET_END));
+			writer.println(StrUtil.format("{}{}{}", CharUtil.BRACKET_START, groupEntry.getKey(), CharUtil.BRACKET_END));
 			for (Entry<String, String> entry : groupEntry.getValue().entrySet()) {
-				writer.write(StrUtil.format("{} {} {}", entry.getKey(), ASSIGN_FLAG, entry.getValue()));
+				writer.println(StrUtil.format("{} {} {}", entry.getKey(), ASSIGN_FLAG, entry.getValue()));
 			}
 		}
 	}

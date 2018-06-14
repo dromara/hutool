@@ -540,7 +540,6 @@ public class SqlBuilder {
 	/**
 	 * 构建
 	 * 
-	 * @param isShowDebugSql 显示SQL的debug日志
 	 * @return 构建好的SQL语句
 	 */
 	public String build() {

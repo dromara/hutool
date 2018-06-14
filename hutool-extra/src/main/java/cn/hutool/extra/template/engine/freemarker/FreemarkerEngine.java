@@ -43,7 +43,7 @@ public class FreemarkerEngine implements Engine {
 	/**
 	 * 构造
 	 * 
-	 * @param engine {@link Configuration}
+	 * @param freemarkerCfg {@link Configuration}
 	 */
 	public FreemarkerEngine(Configuration freemarkerCfg) {
 		this.cfg = freemarkerCfg;
