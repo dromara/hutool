@@ -84,6 +84,9 @@ public class StrUtilTest {
 		String template = "你好，我是{name}，我的电话是：{phone}";
 		String result = StrUtil.format(template, Dict.create().set("name", "张三").set("phone", "13888881111"));
 		Assert.assertEquals("你好，我是张三，我的电话是：13888881111", result);
+		
+		String result2 = StrUtil.format(template, Dict.create().set("name", "张三").set("phone", null));
+		Assert.assertEquals("你好，我是张三，我的电话是：{phone}", result2);
 	}
 
 	@Test
@@ -170,6 +173,12 @@ public class StrUtilTest {
 	public void replaceTest2() {
 		String result = StrUtil.replace("123", "2", "3");
 		Assert.assertEquals("133", result);
+	}
+	
+	@Test
+	public void replaceTest3() {
+		String result = StrUtil.replace(",abcdef,", ",", "|");
+		Assert.assertEquals("|abcdef|", result);
 	}
 
 	@Test

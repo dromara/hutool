@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -103,5 +104,21 @@ public class ReUtilTest {
 		//转义给定字符串，为正则相关的特殊符号转义
 		String escape = ReUtil.escape("我有个$符号{}");
 		Assert.assertEquals("我有个\\$符号\\{\\}", escape);
+	}
+	
+	@Test
+	public void getAllGroupsTest() {
+		//转义给定字符串，为正则相关的特殊符号转义
+		Pattern pattern = Pattern.compile("(\\d+)-(\\d+)-(\\d+)");
+		List<String> allGroups = ReUtil.getAllGroups(pattern, "192-168-1-1");
+		Assert.assertEquals("192-168-1", allGroups.get(0));
+		Assert.assertEquals("192", allGroups.get(1));
+		Assert.assertEquals("168", allGroups.get(2));
+		Assert.assertEquals("1", allGroups.get(3));
+		
+		allGroups = ReUtil.getAllGroups(pattern, "192-168-1-1", false);
+		Assert.assertEquals("192", allGroups.get(0));
+		Assert.assertEquals("168", allGroups.get(1));
+		Assert.assertEquals("1", allGroups.get(2));
 	}
 }

@@ -18,7 +18,9 @@ import cn.hutool.core.util.URLUtil;
  *
  */
 public class UrlResource implements Resource{
+	
 	protected URL url;
+	protected String name;
 	
 	//-------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -26,7 +28,17 @@ public class UrlResource implements Resource{
 	 * @param url URL
 	 */
 	public UrlResource(URL url) {
+		this(url, null);
+	}
+	
+	/**
+	 * 构造
+	 * @param url URL
+	 * @param name 资源名称
+	 */
+	public UrlResource(URL url, String name) {
 		this.url = url;
+		this.name = name;
 	}
 	
 	/**
@@ -39,6 +51,11 @@ public class UrlResource implements Resource{
 		this.url = URLUtil.getURL(file);
 	}
 	//-------------------------------------------------------------------------------------- Constructor end
+	
+	@Override
+	public String getName() {
+		return this.name;
+	}
 	
 	@Override
 	public URL getUrl(){

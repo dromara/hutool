@@ -4,6 +4,8 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -25,50 +27,51 @@ public class ExcelSaxUtil {
 	 * @param cellDataType 数据类型枚举
 	 * @param value 数据值
 	 * @param sharedStringsTable {@link SharedStringsTable}
-	 * @param numFmtIndex 数字格式索引
 	 * @param numFmtString 数字格式名
 	 * @return 数据值
 	 */
-	public static String getDataValue(CellDataType cellDataType, String value, SharedStringsTable sharedStringsTable, int numFmtIndex, String numFmtString) {
-		if(null == value) {
+	public static Object getDataValue(CellDataType cellDataType, String value, SharedStringsTable sharedStringsTable, String numFmtString) {
+		if (null == value) {
 			return null;
 		}
-		
-		String thisStr;
+
+		Object result;
 		switch (cellDataType) {
 		case BOOL:
-			char first = value.charAt(0);
-			thisStr = (first == '0') ? "FALSE" : "TRUE";
+			result = (value.charAt(0) != '0');
 			break;
 		case ERROR:
-			thisStr = StrUtil.format("\\\"ERROR: {} ", value);
+			result = StrUtil.format("\\\"ERROR: {} ", value);
 			break;
 		case FORMULA:
-			thisStr = StrUtil.format("\"{}\"", value);
+			result = StrUtil.format("\"{}\"", value);
 			break;
 		case INLINESTR:
-			thisStr = new XSSFRichTextString(value.toString()).toString();
+			result = new XSSFRichTextString(value.toString()).toString();
 			break;
 		case SSTINDEX:
 			try {
 				final int index = Integer.parseInt(value);
-				thisStr = new XSSFRichTextString(sharedStringsTable.getEntryAt(index)).getString();
+				result = new XSSFRichTextString(sharedStringsTable.getEntryAt(index)).getString();
 			} catch (NumberFormatException e) {
-				thisStr = value;
+				result = value;
 			}
 			break;
 		case NUMBER:
-			thisStr = formatCellContent(value, numFmtIndex, numFmtString);
-			thisStr = thisStr.replace("_", "").trim();
+			result = getNumberValue(value, numFmtString);
 			break;
 		case DATE:
-			thisStr = formatCellContent(value, numFmtIndex, numFmtString);
+			try {
+				result = getDateValue(value);
+			} catch (Exception e) {
+				result = value;
+			}
 			break;
 		default:
-			thisStr = StrUtil.EMPTY;
+			result = value;
 			break;
 		}
-		return thisStr;
+		return result;
 	}
 
 	/**
@@ -82,7 +85,7 @@ public class ExcelSaxUtil {
 	public static String formatCellContent(String value, int numFmtIndex, String numFmtString) {
 		if (null != numFmtString) {
 			try {
-				value =  new DataFormatter().formatRawCellContents(Double.parseDouble(value), numFmtIndex, numFmtString);
+				value = new DataFormatter().formatRawCellContents(Double.parseDouble(value), numFmtIndex, numFmtString);
 			} catch (NumberFormatException e) {
 				// ignore
 			}
@@ -113,5 +116,40 @@ public class ExcelSaxUtil {
 		// 用字母表示则最多三位，每26个字母进一位
 		int res = (letter[0] - preLetter[0]) * 26 * 26 + (letter[1] - preLetter[1]) * 26 + (letter[2] - preLetter[2]);
 		return res - 1;
+	}
+
+	/**
+	 * 获取日期
+	 * 
+	 * @param value 单元格值
+	 * @return 日期
+	 * @since 4.1.0
+	 */
+	private static DateTime getDateValue(String value) {
+		return DateUtil.date(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(Double.parseDouble(value), false));
+	}
+
+	/**
+	 * 获取数字类型值
+	 * 
+	 * @param value 值
+	 * @param numFmtString 格式
+	 * @return 数字，可以是Double、Long
+	 * @since 4.1.0
+	 */
+	private static Number getNumberValue(String value, String numFmtString) {
+		if(StrUtil.isBlank(value)) {
+			return null;
+		}
+		double numValue = Double.parseDouble(value);
+		// 普通数字
+		if (null != numFmtString && numFmtString.indexOf(StrUtil.C_DOT) < 0) {
+			final long longPart = (long) numValue;
+			if (longPart == numValue) {
+				// 对于无小数部分的数字类型，转为Long
+				return longPart;
+			}
+		}
+		return numValue;
 	}
 }

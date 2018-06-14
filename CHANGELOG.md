@@ -1,4 +1,56 @@
+
 # Changelog
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.1.0
+
+### 新特性
+* 【extra】          模板工具改为模板门面，抽象各模板引擎
+* 【core】           修改Season为quarter（pr#114@Github）
+* 【core】           CollUtil增加removeAny方法
+* 【core】           StrUtil增加emptyToDefault和blankToDefault（issue#115@Github）
+* 【core】           优化排列组合算法（感谢@【青岛】LQ）
+* 【core】           NumberUtil增加roundHalfEven（感谢@【青岛】LQ）
+* 【http】            HttpRequest.form支持多文件上传（相同key）（issue#IJYWM@Gitee）
+* 【db】              新增SqlLog，独立SQL日志打印配置
+* 【poi】             ExcelReader新增readAsText方法，ExcelWriter新增setHeaderOrFooter方法（设置页眉页脚）
+* 【crypto】        删除DSA类（DSA算法用在Sign中），修改规则，RSA分段方式变为全局（issue#IKGKG@Gitee）
+* 【core】           DateUtil添加range和rangeToList方法，增加DateRange类（issue#119@Github）
+* 【core】           StrUtil增加concat方法，可选是否null转""（感谢@【帝都】宁静）
+
+### Bug修复
+* 【core】          修复StrUtil.replace方法第一个字符无法替换问题（issue#IJZR0@Gitee）
+* 【core】          修复Season计算问题（pr#114@Github）
+* 【core】          修复PinyinUtil获取拼音特殊字符转数字问题（issue#IJNWH@Gitee）
+* 【core】          修复FileUtil.isAbsolutePath方法正则问题（issue#IJZUB@Gitee）
+* 【extra】         修复ServletUtil.getMultipart方法的问题
+* 【http】          修复patch方法无效问题（issue#IK2Z8@Gitee）
+* 【core】          修复DateUtil.parseTimeToday格式问题（issue#IK25B@Gitee）
+* 【poi】            修复设置字体日期和小数无效问题（issue#IK488@Gitee）
+* 【core】          修复NumberUtil.partValue的bug（pr#15@Gitee）
+* 【poi】            调整了readBySax方式读取导致的部分问题
+* 【core】          修复CsvRow的get方法越界问题（issue#IK9CX@Gitee）
+* 【core】          修复UnicodeUtil丢失末尾字符串的问题（issue#IKI6T@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.0.13
+
+### 新特性
+* 【json】          JSONArray添加jsonIter方法可以实现foreach语法遍历JSONObject（issue#IJPIJ@Gitee）
+* 【core】         强化FileTypeUtil中对PDF文件格式的识别兼容性（issue#IJO1K@Gitee）
+* 【core】         修改BetweenFormater枚举规则，修复不足1天显示空问题
+* 【http】          由于JDK9移除了javax.activation导致的问题，修复移除相关包依赖（issue#109@Github）
+* 【core】         改进Resource，增加getName方法，增加构造支持name
+* 【core】         RandomUtil增加randomStringUpper方法（issue#IJVLS@Gitee）
+
+### Bug修复
+* 【core】         修复XmlUtil.toStr方法注释丢失问题（issue#IJPUA@Gitee）
+* 【core】         修复ImageUtil.scale和createFont方法的bug（issue#IJOKE@Gitee）
+* 【core】         修复StrUtil.format方法Map参数中值为null导致的空指针问题（issue#IJO31@Gitee）
+* 【core】         修复ReUtil.getAllGroups丢失最后一个分组问题（issue#IJRJM@Gitee）
+* 【json】         修复Bean中为Map导致的泛型类型不匹配问题（issue#IJRJM@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

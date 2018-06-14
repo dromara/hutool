@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -24,10 +25,10 @@ import cn.hutool.core.lang.Console;
  *
  */
 public class DateUtilTest {
-	
+
 	@Test
 	@Ignore
-	public void dateTest(){
+	public void dateTest() {
 		long current = DateUtil.current(false);
 		Console.log(current);
 		DateTime date = DateUtil.date(current);
@@ -83,19 +84,19 @@ public class DateUtilTest {
 		Date endOfDay = DateUtil.endOfDay(date);
 		Assert.assertEquals("2017-03-01 23:59:59", endOfDay.toString());
 	}
-	
+
 	@Test
 	public void beginAndWeedTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		Date date = DateUtil.parse(dateStr);
-		
+
 		// 一周的开始
 		Date beginOfWeek = DateUtil.beginOfWeek(date);
 		Assert.assertEquals("2017-02-27 00:00:00", beginOfWeek.toString());
 		// 一周的结束
 		Date endOfWeek = DateUtil.endOfWeek(date);
 		Assert.assertEquals("2017-03-05 23:59:59", endOfWeek.toString());
-		
+
 		Calendar calendar = DateUtil.calendar(date);
 		// 一周的开始
 		Calendar begin = DateUtil.beginOfWeek(calendar);
@@ -104,91 +105,127 @@ public class DateUtilTest {
 		Calendar end = DateUtil.endOfWeek(calendar);
 		Assert.assertEquals("2017-03-05 23:59:59", DateUtil.date(end).toString());
 	}
-	
+
 	@Test
 	public void offsetDateTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		Date date = DateUtil.parse(dateStr);
-		
+
 		Date newDate = DateUtil.offset(date, DateField.DAY_OF_MONTH, 2);
 		Assert.assertEquals("2017-03-03 22:33:23", newDate.toString());
-		
-		//偏移天
+
+		// 偏移天
 		DateTime newDate2 = DateUtil.offsetDay(date, 3);
 		Assert.assertEquals("2017-03-04 22:33:23", newDate2.toString());
-		
-		//偏移小时
+
+		// 偏移小时
 		DateTime newDate3 = DateUtil.offsetHour(date, -3);
 		Assert.assertEquals("2017-03-01 19:33:23", newDate3.toString());
-		
-		//偏移月
+
+		// 偏移月
 		DateTime offsetMonth = DateUtil.offsetMonth(date, -1);
 		Assert.assertEquals("2017-02-01 22:33:23", offsetMonth.toString());
 	}
-	
+
 	@Test
 	public void betweenTest() {
 		String dateStr1 = "2017-03-01 22:34:23";
 		Date date1 = DateUtil.parse(dateStr1);
-		
+
 		String dateStr2 = "2017-04-01 23:56:14";
 		Date date2 = DateUtil.parse(dateStr2);
-		
-		//相差月
+
+		// 相差月
 		long betweenMonth = DateUtil.betweenMonth(date1, date2, false);
-		Assert.assertEquals(1, betweenMonth);//相差一个月
-		//反向
+		Assert.assertEquals(1, betweenMonth);// 相差一个月
+		// 反向
 		betweenMonth = DateUtil.betweenMonth(date2, date1, false);
-		Assert.assertEquals(1, betweenMonth);//相差一个月
-		
-		//相差天
+		Assert.assertEquals(1, betweenMonth);// 相差一个月
+
+		// 相差天
 		long betweenDay = DateUtil.between(date1, date2, DateUnit.DAY);
-		Assert.assertEquals(31, betweenDay);//相差一个月，31天
-		//反向
+		Assert.assertEquals(31, betweenDay);// 相差一个月，31天
+		// 反向
 		betweenDay = DateUtil.between(date2, date1, DateUnit.DAY);
-		Assert.assertEquals(31, betweenDay);//相差一个月，31天
-		
-		//相差毫秒
+		Assert.assertEquals(31, betweenDay);// 相差一个月，31天
+
+		// 相差小时
+		long betweenHour = DateUtil.between(date1, date2, DateUnit.HOUR);
+		Assert.assertEquals(745, betweenHour);
+		// 反向
+		betweenHour = DateUtil.between(date2, date1, DateUnit.HOUR);
+		Assert.assertEquals(745, betweenHour);
+
+		// 相差分
+		long betweenMinute = DateUtil.between(date1, date2, DateUnit.MINUTE);
+		Assert.assertEquals(44721, betweenMinute);
+		// 反向
+		betweenMinute = DateUtil.between(date2, date1, DateUnit.MINUTE);
+		Assert.assertEquals(44721, betweenMinute);
+
+		// 相差秒
+		long betweenSecond = DateUtil.between(date1, date2, DateUnit.SECOND);
+		Assert.assertEquals(2683311, betweenSecond);
+		// 反向
+		betweenSecond = DateUtil.between(date2, date1, DateUnit.SECOND);
+		Assert.assertEquals(2683311, betweenSecond);
+
+		// 相差秒
+		long betweenMS = DateUtil.between(date1, date2, DateUnit.MS);
+		Assert.assertEquals(2683311000L, betweenMS);
+		// 反向
+		betweenMS = DateUtil.between(date2, date1, DateUnit.MS);
+		Assert.assertEquals(2683311000L, betweenMS);
+	}
+
+	@Test
+	public void formatBetweenTest() {
+		String dateStr1 = "2017-03-01 22:34:23";
+		Date date1 = DateUtil.parse(dateStr1);
+
+		String dateStr2 = "2017-04-01 23:56:14";
+		Date date2 = DateUtil.parse(dateStr2);
+
 		long between = DateUtil.between(date1, date2, DateUnit.MS);
 		String formatBetween = DateUtil.formatBetween(between, Level.MINUTE);
 		Assert.assertEquals("31天1小时21分", formatBetween);
 	}
-	
+
 	@Test
-	public void timerTest(){
+	public void timerTest() {
 		TimeInterval timer = DateUtil.timer();
-		
-		//---------------------------------
-		//-------这是执行过程
-		//---------------------------------
-		
-		timer.interval();//花费毫秒数
-		timer.intervalRestart();//返回花费时间，并重置开始时间
-		timer.intervalMinute();//花费分钟数
+
+		// ---------------------------------
+		// -------这是执行过程
+		// ---------------------------------
+
+		timer.interval();// 花费毫秒数
+		timer.intervalRestart();// 返回花费时间，并重置开始时间
+		timer.intervalMinute();// 花费分钟数
 	}
-	
+
 	@Test
-	public void currentTest(){
+	public void currentTest() {
 		long current = DateUtil.current(false);
 		String currentStr = String.valueOf(current);
 		Assert.assertEquals(13, currentStr.length());
-		
+
 		long currentNano = DateUtil.current(true);
 		String currentNanoStr = String.valueOf(currentNano);
 		Assert.assertNotNull(currentNanoStr);
 	}
-	
+
 	@Test
 	public void weekOfYearTest() {
-		//第一周周日
+		// 第一周周日
 		int weekOfYear1 = DateUtil.weekOfYear(DateUtil.parse("2016-01-03"));
 		Assert.assertEquals(1, weekOfYear1);
-		
-		//第二周周四
+
+		// 第二周周四
 		int weekOfYear2 = DateUtil.weekOfYear(DateUtil.parse("2016-01-07"));
 		Assert.assertEquals(2, weekOfYear2);
 	}
-	
+
 	@Test
 	public void timeToSecondTest() {
 		int second = DateUtil.timeToSecond("00:01:40");
@@ -200,7 +237,7 @@ public class DateUtilTest {
 		second = DateUtil.timeToSecond("00:00:00");
 		Assert.assertEquals(0, second);
 	}
-	
+
 	@Test
 	public void secondToTime() {
 		String time = DateUtil.secondToTime(3600);
@@ -212,119 +249,147 @@ public class DateUtilTest {
 		time = DateUtil.secondToTime(30);
 		Assert.assertEquals("00:00:30", time);
 	}
-	
+
 	@Test
 	public void parseTest() throws ParseException {
-		//转换时间与SimpleDateFormat结果保持一致即可
+		// 转换时间与SimpleDateFormat结果保持一致即可
 		String time = "12:11:39";
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		DateTime parse = DateUtil.parse("12:11:39");
 		Assert.assertEquals(format.parse(time).getTime(), parse.getTime());
 	}
-	
+
 	@Test
 	public void parseTest2() throws ParseException {
-		//转换时间与SimpleDateFormat结果保持一致即可
+		// 转换时间与SimpleDateFormat结果保持一致即可
 		String birthday = "700403";
 		Date birthDate = DateUtil.parse(birthday, "yyMMdd");
 		// 获取出生年(完全表现形式,如：2010)
 		int sYear = DateUtil.year(birthDate);
 		Assert.assertEquals(1970, sYear);
 	}
-	
+
 	@Test
 	public void parseTest3() throws ParseException {
 		String dateStr = "2018-10-10 12:11:11";
 		Date date = DateUtil.parse(dateStr);
 		String format = DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN);
-		Assert.assertEquals("2018-10-10 12:11:11", format);
+		Assert.assertEquals(dateStr, format);
 	}
-	
+
+	@Test
+	public void parseDateTest() throws ParseException {
+		String dateStr = "2018-4-10";
+		Date date = DateUtil.parseDate(dateStr);
+		String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
+		Assert.assertEquals("2018-04-10", format);
+	}
+
 	@Test
 	public void parseToDateTimeTest1() {
 		String dateStr1 = "2017-02-01";
 		String dateStr2 = "2017/02/01";
 		String dateStr3 = "2017.02.01";
 		String dateStr4 = "2017年02月01日";
-		
-		DateTime dt1= DateUtil.parse(dateStr1);
-		DateTime dt2= DateUtil.parse(dateStr2);
-		DateTime dt3= DateUtil.parse(dateStr3);
-		DateTime dt4= DateUtil.parse(dateStr4);
+
+		DateTime dt1 = DateUtil.parse(dateStr1);
+		DateTime dt2 = DateUtil.parse(dateStr2);
+		DateTime dt3 = DateUtil.parse(dateStr3);
+		DateTime dt4 = DateUtil.parse(dateStr4);
 		Assert.assertEquals(dt1, dt2);
 		Assert.assertEquals(dt2, dt3);
 		Assert.assertEquals(dt3, dt4);
 	}
-	
+
 	@Test
 	public void parseToDateTimeTest2() {
 		String dateStr1 = "2017-02-01 12:23";
 		String dateStr2 = "2017/02/01 12:23";
 		String dateStr3 = "2017.02.01 12:23";
 		String dateStr4 = "2017年02月01日 12:23";
-		
-		DateTime dt1= DateUtil.parse(dateStr1);
-		DateTime dt2= DateUtil.parse(dateStr2);
-		DateTime dt3= DateUtil.parse(dateStr3);
-		DateTime dt4= DateUtil.parse(dateStr4);
+
+		DateTime dt1 = DateUtil.parse(dateStr1);
+		DateTime dt2 = DateUtil.parse(dateStr2);
+		DateTime dt3 = DateUtil.parse(dateStr3);
+		DateTime dt4 = DateUtil.parse(dateStr4);
 		Assert.assertEquals(dt1, dt2);
 		Assert.assertEquals(dt2, dt3);
 		Assert.assertEquals(dt3, dt4);
 	}
-	
+
 	@Test
 	public void parseToDateTimeTest3() {
 		String dateStr1 = "2017-02-01 12:23:45";
 		String dateStr2 = "2017/02/01 12:23:45";
 		String dateStr3 = "2017.02.01 12:23:45";
 		String dateStr4 = "2017年02月01日 12时23分45秒";
-		
-		DateTime dt1= DateUtil.parse(dateStr1);
-		DateTime dt2= DateUtil.parse(dateStr2);
-		DateTime dt3= DateUtil.parse(dateStr3);
-		DateTime dt4= DateUtil.parse(dateStr4);
+
+		DateTime dt1 = DateUtil.parse(dateStr1);
+		DateTime dt2 = DateUtil.parse(dateStr2);
+		DateTime dt3 = DateUtil.parse(dateStr3);
+		DateTime dt4 = DateUtil.parse(dateStr4);
 		Assert.assertEquals(dt1, dt2);
 		Assert.assertEquals(dt2, dt3);
 		Assert.assertEquals(dt3, dt4);
 	}
-	
+
 	@Test
 	public void parseToDateTimeTest4() {
 		String dateStr1 = "2017-02-01 12:23:45";
 		String dateStr2 = "20170201122345";
-		
-		DateTime dt1= DateUtil.parse(dateStr1);
-		DateTime dt2= DateUtil.parse(dateStr2);
+
+		DateTime dt1 = DateUtil.parse(dateStr1);
+		DateTime dt2 = DateUtil.parse(dateStr2);
 		Assert.assertEquals(dt1, dt2);
 	}
-	
+
 	@Test
 	public void parseToDateTimeTest5() {
 		String dateStr1 = "2017-02-01";
 		String dateStr2 = "20170201";
-		
-		DateTime dt1= DateUtil.parse(dateStr1);
-		DateTime dt2= DateUtil.parse(dateStr2);
+
+		DateTime dt1 = DateUtil.parse(dateStr1);
+		DateTime dt2 = DateUtil.parse(dateStr2);
 		Assert.assertEquals(dt1, dt2);
 	}
-	
+
 	@Test
 	public void endOfWeekTest() {
 		DateTime now = DateUtil.date();
-		
+
 		DateTime startOfWeek = DateUtil.beginOfWeek(now);
 		DateTime endOfWeek = DateUtil.endOfWeek(now);
-		
+
 		long between = DateUtil.between(endOfWeek, startOfWeek, DateUnit.DAY);
-		//周一和周日相距6天
+		// 周一和周日相距6天
 		Assert.assertEquals(6, between);
 	}
-	
+
 	@Test
 	public void dayOfWeekTest() {
 		int dayOfWeek = DateUtil.dayOfWeek(DateUtil.parse("2018-03-07"));
 		Assert.assertEquals(Calendar.WEDNESDAY, dayOfWeek);
 		Week week = DateUtil.dayOfWeekEnum(DateUtil.parse("2018-03-07"));
 		Assert.assertEquals(Week.WEDNESDAY, week);
+	}
+
+	@Test
+	public void rangeTest() {
+		DateTime start = DateUtil.parse("2017-01-01");
+		DateTime end = DateUtil.parse("2017-01-31");
+
+		DateRange range = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
+		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
+		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
+	}
+	
+	@Test
+	public void rangeToListTest() {
+		DateTime start = DateUtil.parse("2017-01-01");
+		DateTime end = DateUtil.parse("2017-01-31");
+		
+		List<DateTime> rangeToList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR);
+		Assert.assertEquals(rangeToList.get(0), DateUtil.parse("2017-01-01"));
+		Assert.assertEquals(rangeToList.get(1), DateUtil.parse("2017-01-02"));
 	}
 }

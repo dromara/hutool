@@ -16,6 +16,14 @@ import cn.hutool.core.io.IORuntimeException;
  * @since 3.2.1
  */
 public interface Resource {
+	
+	/**
+	 * 获取资源名，例如文件资源的资源名为文件名
+	 * @return 资源名
+	 * @since 4.0.13
+	 */
+	String getName();
+	
 	/**
 	 * 获得解析后的{@link URL}
 	 * @return 解析后的{@link URL}

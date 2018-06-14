@@ -48,6 +48,10 @@ public class JSONArrayTest {
 		JSONObject obj0 = array.getJSONObject(0);
 		Exam exam = JSONUtil.toBean(obj0, Exam.class);
 		Assert.assertEquals("0", exam.getAnswerArray()[0].getSeq());
+		
+		for (JSONObject jsonObj : array.jsonIter()) {
+			Console.log(jsonObj.getInt("id"));
+		}
 	}
 	
 	@Test

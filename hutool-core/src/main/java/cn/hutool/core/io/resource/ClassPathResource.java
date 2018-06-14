@@ -65,6 +65,7 @@ public class ClassPathResource extends UrlResource {
 		this.path = normalizePath(pathBaseClassLoader);
 		this.classLoader = (classLoader != null) ? classLoader : ClassUtil.getClassLoader();
 		this.clazz = clazz;
+		this.name = FileUtil.file(this.path).getName();
 		initUrl();
 	}
 	// -------------------------------------------------------------------------------------- Constructor end

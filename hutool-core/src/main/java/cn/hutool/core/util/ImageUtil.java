@@ -263,7 +263,7 @@ public class ImageUtil {
 
 		Image itemp = null;
 		// 宽缩放比例小就按照宽缩放，否则按照高缩放
-		if (widthRatio < height) {
+		if (widthRatio < heightRatio) {
 			itemp = scale(srcImage, width, (int) (srcHeight * widthRatio));
 		} else {
 			itemp = scale(srcImage, (int) (srcWidth * heightRatio), height);
@@ -1287,7 +1287,7 @@ public class ImageUtil {
 			try {
 				return Font.createFont(Font.TYPE1_FONT, fontStream);
 			} catch (Exception e1) {
-				throw new UtilException(e);
+				throw new UtilException(e1);
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);

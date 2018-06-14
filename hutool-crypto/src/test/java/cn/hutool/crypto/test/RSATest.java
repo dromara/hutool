@@ -20,9 +20,6 @@ import cn.hutool.crypto.asymmetric.RSA;
  */
 public class RSATest {
 
-	public void genRSAPublicKeySpecTest() {
-	}
-
 	@Test
 	public void generateKeyPairTest() {
 		KeyPair pair = SecureUtil.generateKeyPair("RSA");
@@ -71,17 +68,17 @@ public class RSATest {
 	}
 
 	@Test
-	public void rsaStrTest() {
+	public void rsaBcdTest() {
 		final RSA rsa = new RSA();
 
 		// 公钥加密，私钥解密
-		String encryptStr = rsa.encryptStr("我是一段测试aaaa", KeyType.PublicKey);
-		String decryptStr = rsa.decryptStr(encryptStr, KeyType.PrivateKey);
+		String encryptStr = rsa.encryptBcd("我是一段测试aaaa", KeyType.PublicKey);
+		String decryptStr = rsa.decryptFromBcd(encryptStr, KeyType.PrivateKey);
 		Assert.assertEquals("我是一段测试aaaa", decryptStr);
 
 		// 私钥加密，公钥解密
-		String encrypt2 = rsa.encryptStr("我是一段测试aaaa", KeyType.PrivateKey);
-		String decrypt2 = rsa.decryptStr(encrypt2, KeyType.PublicKey);
+		String encrypt2 = rsa.encryptBcd("我是一段测试aaaa", KeyType.PrivateKey);
+		String decrypt2 = rsa.decryptFromBcd(encrypt2, KeyType.PublicKey);
 		Assert.assertEquals("我是一段测试aaaa", decrypt2);
 	}
 

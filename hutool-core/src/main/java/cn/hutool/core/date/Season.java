@@ -9,8 +9,9 @@ package cn.hutool.core.date;
  * @see #WINTER
  * 
  * @author Looly
- *
+ *@deprecated 请使用{@link Quarter}代替
  */
+@Deprecated
 public enum Season {
 
 	/** 春季（第一季度） */
@@ -43,7 +44,9 @@ public enum Season {
 	 * 
 	 * @param intValue 季度int表示
 	 * @return {@link Season}
+	 * @deprecated 使用@{@link Quarter} 替代
 	 */
+	@Deprecated
 	public static Season of(int intValue) {
 		switch (intValue) {
 			case 1:

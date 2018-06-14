@@ -242,6 +242,46 @@ public class StrUtil {
 	public static String nullToDefault(CharSequence str, String defaultStr) {
 		return (str == null) ? defaultStr : str.toString();
 	}
+	
+	/**
+	 * 如果字符串是<code>null</code>或者&quot;&quot;，则返回指定默认字符串，否则返回字符串本身。
+	 * 
+	 * <pre>
+	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+	 * emptyToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
+	 * emptyToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;  &quot;
+	 * emptyToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+	 * </pre>
+	 * 
+	 * @param str 要转换的字符串
+	 * @param defaultStr 默认字符串
+	 * 
+	 * @return 字符串本身或指定的默认字符串
+	 * @since 4.1.0
+	 */
+	public static String emptyToDefault(CharSequence str, String defaultStr) {
+		return isEmpty(str) ? defaultStr : str.toString();
+	}
+	
+	/**
+	 * 如果字符串是<code>null</code>或者&quot;&quot;或者空白，则返回指定默认字符串，否则返回字符串本身。
+	 * 
+	 * <pre>
+	 * emptyToDefault(null, &quot;default&quot;)  = &quot;default&quot;
+	 * emptyToDefault(&quot;&quot;, &quot;default&quot;)    = &quot;default&quot;
+	 * emptyToDefault(&quot;  &quot;, &quot;default&quot;)  = &quot;default&quot;
+	 * emptyToDefault(&quot;bat&quot;, &quot;default&quot;) = &quot;bat&quot;
+	 * </pre>
+	 * 
+	 * @param str 要转换的字符串
+	 * @param defaultStr 默认字符串
+	 * 
+	 * @return 字符串本身或指定的默认字符串
+	 * @since 4.1.0
+	 */
+	public static String blankToDefault(CharSequence str, String defaultStr) {
+		return isBlank(str) ? defaultStr : str.toString();
+	}
 
 	/**
 	 * 当给定字符串为空字符串时，转换为<code>null</code>
@@ -1942,8 +1982,12 @@ public class StrUtil {
 		}
 
 		String template2 = template.toString();
+		String value;
 		for (Entry<?, ?> entry : map.entrySet()) {
-			template2 = template2.replace("{" + entry.getKey() + "}", utf8Str(entry.getValue()));
+			value = utf8Str(entry.getValue());
+			if(null != value) {
+				template2 = replace(template2, "{" + entry.getKey() + "}", value);
+			}
 		}
 		return template2;
 	}
@@ -3317,7 +3361,7 @@ public class StrUtil {
 	 * 替换字符串中的指定字符串
 	 * 
 	 * @param str 字符串
-	 * @param fromIndex 开始位置
+	 * @param fromIndex 开始位置（包括）
 	 * @param searchStr 被查找的字符串
 	 * @param replacement 被替换的字符串
 	 * @param ignoreCase 是否忽略大小写
@@ -3347,7 +3391,7 @@ public class StrUtil {
 
 		int preIndex = fromIndex;
 		int index = fromIndex;
-		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > 0) {
+		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
 			result.append(str.subSequence(preIndex, index));
 			result.append(replacement);
 			preIndex = index + searchStrLength;
@@ -3551,5 +3595,20 @@ public class StrUtil {
 	 */
 	public static String uuid() {
 		return RandomUtil.randomUUID();
+	}
+	
+	/**
+	 * 连接多个字符串为一个
+	 * @param isNullToEmpty 是否null转为""
+	 * @param strs 字符串数组
+	 * @return 连接后的字符串
+	 * @since 4.1.0
+	 */
+	public static String concat(boolean isNullToEmpty, CharSequence... strs) {
+		final StrBuilder sb = new StrBuilder();
+		for (CharSequence str : strs) {
+			sb.append(isNullToEmpty ? nullToEmpty(str) : str);
+		}
+		return sb.toString();
 	}
 }

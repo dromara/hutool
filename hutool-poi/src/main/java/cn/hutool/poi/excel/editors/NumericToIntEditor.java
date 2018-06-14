@@ -2,7 +2,7 @@ package cn.hutool.poi.excel.editors;
 
 import org.apache.poi.ss.usermodel.Cell;
 
-import cn.hutool.poi.excel.CellEditor;
+import cn.hutool.poi.excel.cell.CellEditor;
 
 /**
  * POI中NUMRIC类型的值默认返回的是Double类型，此编辑器用于转换其为int型

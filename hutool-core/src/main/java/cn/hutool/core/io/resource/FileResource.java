@@ -3,6 +3,7 @@ package cn.hutool.core.io.resource;
 import java.io.File;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
 /**
@@ -20,7 +21,17 @@ public class FileResource extends UrlResource{
 	 * @param file 文件
 	 */
 	public FileResource(File file) {
-		super(URLUtil.getURL(file));
+		this(file, file.getName());
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param file 文件
+	 * @param fileName 文件名，如果为null获取文件本身的文件名
+	 */
+	public FileResource(File file, String fileName) {
+		super(URLUtil.getURL(file), StrUtil.isBlank(fileName) ? file.getName() : fileName);
 	}
 	
 	/**

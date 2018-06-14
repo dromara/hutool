@@ -15,9 +15,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.sql.SqlBuilder;
+import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import cn.hutool.log.level.Level;
 
 /**
  * 数据库操作工具类
@@ -208,6 +209,6 @@ public final class DbUtil {
 	 * @since 4.0.3
 	 */
 	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams) {
-		SqlBuilder.setShowSql(isShowSql, isFormatSql, isShowParams);
+		SqlLog.INSTASNCE.init(isShowSql, isFormatSql, isShowParams, Level.DEBUG);
 	}
 }

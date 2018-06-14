@@ -244,6 +244,7 @@ public class XmlUtil {
 	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
 	 * 
 	 * @param doc XML文档
+	 * @param charset 编码
 	 * @param isPretty 是否格式化输出
 	 * @return XML字符串
 	 * @since 3.0.9

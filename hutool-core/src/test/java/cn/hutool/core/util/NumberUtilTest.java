@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -69,6 +70,12 @@ public class NumberUtilTest {
 		String round4 = NumberUtil.roundStr("2.675", 2);
 		Assert.assertEquals("2.68", round3);
 		Assert.assertEquals("2.68", round4);
+		
+		// 四舍六入五成双
+		String round31 = NumberUtil.roundStr(4.245, 2, RoundingMode.HALF_EVEN);
+		String round41 = NumberUtil.roundStr("4.2451", 2, RoundingMode.HALF_EVEN);
+		Assert.assertEquals("4.24", round31);
+		Assert.assertEquals("4.25", round41);
 
 		// 补0
 		String round5 = NumberUtil.roundStr(2.6005, 2);
@@ -87,6 +94,39 @@ public class NumberUtilTest {
 	public void roundStrTest() {
 		String roundStr = NumberUtil.roundStr(2.647, 2);
 		Assert.assertEquals(roundStr, "2.65");
+	}
+	
+	@Test
+	public void roundHalfEvenTest() {
+		String roundStr = NumberUtil.roundHalfEven(4.245, 2).toString();
+		Assert.assertEquals(roundStr, "4.24");
+		roundStr = NumberUtil.roundHalfEven(4.2450, 2).toString();
+		Assert.assertEquals(roundStr, "4.24");
+		roundStr = NumberUtil.roundHalfEven(4.2451, 2).toString();
+		Assert.assertEquals(roundStr, "4.25");
+		roundStr = NumberUtil.roundHalfEven(4.2250, 2).toString();
+		Assert.assertEquals(roundStr, "4.22");
+		
+		roundStr = NumberUtil.roundHalfEven(1.2050, 2).toString();
+		Assert.assertEquals(roundStr, "1.20");
+		roundStr = NumberUtil.roundHalfEven(1.2150, 2).toString();
+		Assert.assertEquals(roundStr, "1.22");
+		roundStr = NumberUtil.roundHalfEven(1.2250, 2).toString();
+		Assert.assertEquals(roundStr, "1.22");
+		roundStr = NumberUtil.roundHalfEven(1.2350, 2).toString();
+		Assert.assertEquals(roundStr, "1.24");
+		roundStr = NumberUtil.roundHalfEven(1.2450, 2).toString();
+		Assert.assertEquals(roundStr, "1.24");
+		roundStr = NumberUtil.roundHalfEven(1.2550, 2).toString();
+		Assert.assertEquals(roundStr, "1.26");
+		roundStr = NumberUtil.roundHalfEven(1.2650, 2).toString();
+		Assert.assertEquals(roundStr, "1.26");
+		roundStr = NumberUtil.roundHalfEven(1.2750, 2).toString();
+		Assert.assertEquals(roundStr, "1.28");
+		roundStr = NumberUtil.roundHalfEven(1.2850, 2).toString();
+		Assert.assertEquals(roundStr, "1.28");
+		roundStr = NumberUtil.roundHalfEven(1.2950, 2).toString();
+		Assert.assertEquals(roundStr, "1.30");
 	}
 
 	@Test

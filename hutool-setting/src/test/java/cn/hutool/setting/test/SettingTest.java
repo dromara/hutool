@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.setting.Setting;
@@ -40,13 +41,8 @@ public class SettingTest {
 	@Test
 	@Ignore
 	public void settingTestForAbsPath(){
-		Setting setting = new Setting("d:/test.setting", true);
-		
-		String driver = setting.getByGroup("driver", "demo");
-		Assert.assertEquals(driver, "com.mysql.jdbc.Driver");
-		
-		String user = setting.getByGroup("user", "demo");
-		Assert.assertEquals(user, "rootcom.mysql.jdbc.Driver");
+		Setting setting = new Setting("d:\\excel-plugin\\other.setting", true);
+		Console.log(setting.getStr("a"));
 	}
 	
 	@Test

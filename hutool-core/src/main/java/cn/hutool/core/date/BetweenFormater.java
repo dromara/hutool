@@ -1,5 +1,7 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.util.StrUtil;
+
 /**
  * 时长格式化器
  * @author Looly
@@ -41,39 +43,41 @@ public class BetweenFormater {
 	 * @return 格式化后的字符串
 	 */
 	public String format(){
-		if(betweenMs == 0){
-			return "0";
+		final StringBuilder sb = new StringBuilder();
+		if(betweenMs > 0){
+			long day = betweenMs / DateUnit.DAY.getMillis();
+			long hour = betweenMs / DateUnit.HOUR.getMillis() - day * 24;
+			long minute = betweenMs / DateUnit.MINUTE.getMillis() - day * 24 * 60 - hour * 60;
+			long second = betweenMs / DateUnit.SECOND.getMillis() - ((day * 24 + hour) * 60 + minute) * 60;
+			long millisecond = betweenMs - (((day * 24 + hour) * 60 + minute) * 60 + second) * 1000;
+			
+			final int level = this.level.ordinal();
+			int levelCount = 0;
+			
+			if(isLevelCountValid(levelCount) && 0 != day && level >= Level.DAY.ordinal()){
+				sb.append(day).append(Level.DAY.name);
+				levelCount++;
+			}
+			if(isLevelCountValid(levelCount) && 0 != hour && level >= Level.HOUR.ordinal()){
+				sb.append(hour).append(Level.HOUR.name);
+				levelCount++;
+			}
+			if(isLevelCountValid(levelCount) && 0 != minute && level >= Level.MINUTE.ordinal()){
+				sb.append(minute).append(Level.MINUTE.name);
+				levelCount++;
+			}
+			if(isLevelCountValid(levelCount) && 0 != second && level >= Level.SECOND.ordinal()){
+				sb.append(second).append(Level.SECOND.name);
+				levelCount++;
+			}
+			if(isLevelCountValid(levelCount) && 0 != millisecond && level >= Level.MILLSECOND.ordinal()){
+				sb.append(millisecond).append(Level.MILLSECOND.name);
+				levelCount++;
+			}
 		}
 		
-		long day = betweenMs / DateUnit.DAY.getMillis();
-		long hour = betweenMs / DateUnit.HOUR.getMillis() - day * 24;
-		long minute = betweenMs / DateUnit.MINUTE.getMillis() - day * 24 * 60 - hour * 60;
-		long second = betweenMs / DateUnit.SECOND.getMillis() - ((day * 24 + hour) * 60 + minute) * 60;
-		long millisecond = betweenMs - (((day * 24 + hour) * 60 + minute) * 60 + second) * 1000;
-		
-		StringBuilder sb = new StringBuilder();
-		final int level = this.level.value;
-		int levelCount = 0;
-		
-		if(isLevelCountValid(levelCount) && 0 != day && level > 0){
-			sb.append(day).append("天");
-			levelCount++;
-		}
-		if(isLevelCountValid(levelCount) && 0 != hour && level > 1){
-			sb.append(hour).append("小时");
-			levelCount++;
-		}
-		if(isLevelCountValid(levelCount) && 0 != minute && level > 2){
-			sb.append(minute).append("分");
-			levelCount++;
-		}
-		if(isLevelCountValid(levelCount) && 0 != second && level > 3){
-			sb.append(second).append("秒");
-			levelCount++;
-		}
-		if(isLevelCountValid(levelCount) && 0 != millisecond && level > 4){
-			sb.append(millisecond).append("毫秒");
-			levelCount++;
+		if(StrUtil.isEmpty(sb)) {
+			sb.append(0).append(this.level.name);
 		}
 		
 		return sb.toString();
@@ -112,30 +116,40 @@ public class BetweenFormater {
 	}
 	
 	/**
-	 * 格式化等级枚举<br>
+	 * 格式化等级枚举
+	 * 
 	 * @author Looly
 	 */
 	public static enum Level {
 
 		/** 天 */
-		DAY(1),
+		DAY("天"),
 		/** 小时 */
-		HOUR(2),
+		HOUR("小时"),
 		/** 分钟 */
-		MINUTE(3),
+		MINUTE("分"),
 		/** 秒 */
-		SECOND(4),
+		SECOND("秒"),
 		/** 毫秒 */
-		MILLSECOND(5);
+		MILLSECOND("毫秒");
 
-		private int value;
+		/** 级别名称 */
+		private String name;
 
-		private Level(int value) {
-			this.value = value;
+		/**
+		 * 构造
+		 * @param name 级别名称
+		 */
+		private Level(String name) {
+			this.name = name;
 		}
 
-		public int getValue() {
-			return this.value;
+		/**
+		 * 获取级别名称
+		 * @return 级别名称
+		 */
+		public String getName() {
+			return this.name;
 		}
 	}
 	

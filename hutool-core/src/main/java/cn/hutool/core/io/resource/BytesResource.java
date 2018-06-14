@@ -21,6 +21,7 @@ import cn.hutool.core.util.StrUtil;
 public class BytesResource implements Resource {
 
 	private byte[] bytes;
+	private String name;
 
 	/**
 	 * 构造
@@ -28,7 +29,23 @@ public class BytesResource implements Resource {
 	 * @param bytes 字节数组
 	 */
 	public BytesResource(byte[] bytes) {
+		this(bytes, null);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param bytes 字节数组
+	 * @param name 资源名称
+	 */
+	public BytesResource(byte[] bytes, String name) {
 		this.bytes = bytes;
+		this.name = name;
+	}
+	
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 	@Override

@@ -15,8 +15,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
 import cn.hutool.db.dialect.DialectName;
-import cn.hutool.log.Log;
-import cn.hutool.log.StaticLog;
 
 /**
  * SQL构建器<br>
@@ -27,14 +25,6 @@ import cn.hutool.log.StaticLog;
  *
  */
 public class SqlBuilder {
-	private final static Log log = StaticLog.get();
-
-	/** 是否debugSQL */
-	private static boolean showSql;
-	/** 是否格式化SQL */
-	private static boolean formatSql;
-	/** 是否显示参数 */
-	private static boolean showParams;
 
 	// --------------------------------------------------------------- Static methods start
 	/**
@@ -56,28 +46,6 @@ public class SqlBuilder {
 		return new SqlBuilder(wrapper);
 	}
 
-	/**
-	 * 设置全局配置：是否通过debug日志显示SQL
-	 * 
-	 * @param isShowSql 是否显示SQL
-	 * @param isFormatSql 是否格式化显示的SQL
-	 */
-	public static void setShowSql(boolean isShowSql, boolean isFormatSql) {
-		setShowSql(isShowSql, isFormatSql, false);
-	}
-
-	/**
-	 * 设置全局配置：是否通过debug日志显示SQL
-	 * 
-	 * @param isShowSql 是否显示SQL
-	 * @param isFormatSql 是否格式化显示的SQL
-	 * @param isShowParams 是否打印参数
-	 */
-	public static void setShowSql(boolean isShowSql, boolean isFormatSql, boolean isShowParams) {
-		showSql = isShowSql;
-		formatSql = isFormatSql;
-		showParams = isShowParams;
-	}
 	// --------------------------------------------------------------- Static methods end
 
 	// --------------------------------------------------------------- Enums start
@@ -572,27 +540,12 @@ public class SqlBuilder {
 	/**
 	 * 构建
 	 * 
-	 * @return 构建好的SQL语句
-	 */
-	public String build() {
-		return this.build(showSql);
-	}
-
-	/**
-	 * 构建
-	 * 
 	 * @param isShowDebugSql 显示SQL的debug日志
 	 * @return 构建好的SQL语句
 	 */
-	public String build(boolean isShowDebugSql) {
+	public String build() {
 		final String sqlStr = this.sql.toString().trim();
-		if (isShowDebugSql) {
-			if (showParams) {
-				log.debug("\nSQL -> {}\nParams -> {}", formatSql ? SqlFormatter.format(sqlStr) : sqlStr, this.paramValues);
-			} else {
-				log.debug("\nSQL -> {}", formatSql ? SqlFormatter.format(sqlStr) : sqlStr);
-			}
-		}
+		SqlLog.INSTASNCE.log(sqlStr, this.paramValues);
 		return sqlStr;
 	}
 

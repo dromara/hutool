@@ -336,6 +336,17 @@ public class RandomUtil {
 	public static String randomString(int length) {
 		return randomString(BASE_CHAR_NUMBER, length);
 	}
+	
+	/**
+	 * 获得一个随机的字符串（只包含数字和大写字符）
+	 * 
+	 * @param length 字符串的长度
+	 * @return 随机字符串
+	 * @since 4.0.13
+	 */
+	public static String randomStringUpper(int length) {
+		return randomString(BASE_CHAR_NUMBER, length).toUpperCase();
+	}
 
 	/**
 	 * 获得一个只包含数字的字符串

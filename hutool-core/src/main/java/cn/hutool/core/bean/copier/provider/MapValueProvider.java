@@ -5,6 +5,7 @@ import java.util.Map;
 
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * Map值提供者
@@ -34,12 +35,23 @@ public class MapValueProvider implements ValueProvider<String> {
 
 	@Override
 	public Object value(String key, Type valueType) {
-		return map.get(key);
+		Object value = map.get(key);
+		if(null == value) {
+			//检查下划线模式
+			value = map.get(StrUtil.toUnderlineCase(key));
+		}
+		return value;
 	}
 
 	@Override
 	public boolean containsKey(String key) {
-		return map.containsKey(key);
+		if(map.containsKey(key)) {
+			return true;
+		}else if(map.containsKey(StrUtil.toUnderlineCase(key))) {
+			//检查下划线模式
+			return true;
+		}
+		return false;
 	}
 
 }

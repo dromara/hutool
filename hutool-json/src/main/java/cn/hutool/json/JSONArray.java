@@ -433,6 +433,16 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public Iterator<Object> iterator() {
 		return rawList.iterator();
 	}
+	
+	/**
+	 * 当此JSON列表的每个元素都是一个JSONObject时，可以调用此方法返回一个Iterable，便于使用foreach语法遍历
+	 * 
+	 * @return Iterable
+	 * @since 4.0.12
+	 */
+	public Iterable<JSONObject> jsonIter(){
+		return new JSONObjectIter(iterator());
+	}
 
 	@Override
 	public int size() {

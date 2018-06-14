@@ -47,7 +47,7 @@ public class Arrangement {
 		if(n == m) {
 			return NumberUtil.factorial(n);
 		}
-		return (n > m) ? NumberUtil.factorial(n) / NumberUtil.factorial(n - m) : 0;
+		return (n > m) ? NumberUtil.factorial(n, n - m) : 0;
 	}
 	
 	/**

@@ -46,7 +46,7 @@ public final class FileTypeUtil {
 		fileTypeMap.put("d0cf11e0a1b11ae10000", "vsd"); // Visio 绘图
 		fileTypeMap.put("5374616E64617264204A", "mdb"); // MS Access (mdb)
 		fileTypeMap.put("252150532D41646F6265", "ps");
-		fileTypeMap.put("255044462d312e330d", "pdf"); // Adobe Acrobat (pdf)
+		fileTypeMap.put("255044462d312e", "pdf"); // Adobe Acrobat (pdf)
 		fileTypeMap.put("2e524d46000000120001", "rmvb"); // rmvb/rm相同
 		fileTypeMap.put("464c5601050000000900", "flv"); // flv与f4v相同
 		fileTypeMap.put("00000020667479706d70", "mp4");

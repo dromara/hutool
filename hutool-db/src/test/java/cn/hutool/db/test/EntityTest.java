@@ -26,6 +26,18 @@ public class EntityTest {
 	}
 	
 	@Test
+	public void parseTest2() {
+		User user = new User();
+		user.setId(1);
+		user.setName("test");
+		
+		Entity entity = Entity.create().parseBean(user);
+		Assert.assertEquals(Integer.valueOf(1), entity.getInt("id"));
+		Assert.assertEquals("test", entity.getStr("name"));
+		Assert.assertEquals("user", entity.getTableName());
+	}
+	
+	@Test
 	public void entityToBeanIgnoreCaseTest() {
 		Entity entity = Entity.create().set("ID", 2).set("NAME", "testName");
 		User user = entity.toBeanIgnoreCase(User.class);

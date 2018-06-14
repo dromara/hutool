@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Dict;
-import cn.hutool.extra.template.BeetlUtil;
+import cn.hutool.extra.template.engine.beetl.BeetlUtil;
 
 /**
  * BeetlUtil单元测试

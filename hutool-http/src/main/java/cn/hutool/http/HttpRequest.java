@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -20,6 +18,11 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.BytesResource;
+import cn.hutool.core.io.resource.FileResource;
+import cn.hutool.core.io.resource.MultiFileResource;
+import cn.hutool.core.io.resource.MultiResource;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -38,7 +41,7 @@ import cn.hutool.log.StaticLog;
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
 
-	/** 默认超时时长，-1表示 */
+	/** 默认超时时长，-1表示默认超时时长 */
 	public static final int TIMEOUT_DEFAULT = -1;
 
 	private static final String BOUNDARY = "--------------------Hutool_" + RandomUtil.randomString(16);
@@ -57,7 +60,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/** 存储表单数据 */
 	private Map<String, Object> form;
 	/** 文件表单对象，用于文件上传 */
-	private Map<String, DataSource> fileForm;
+	private Map<String, Resource> fileForm;
 	/** 文件表单对象，用于文件上传 */
 	private String cookie;
 
@@ -99,7 +102,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return HttpRequest
 	 */
 	public HttpRequest method(Method method) {
-		this.method = method;
+		if(Method.PATCH == method) {
+			this.method = Method.POST;
+			this.header("X-HTTP-Method-Override", "PATCH");
+		}else {
+			this.method = method;
+		}
 		return this;
 	}
 
@@ -309,11 +317,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (value instanceof File) {
 			//文件上传
 			return this.form(name, (File) value);
-		} else if (value instanceof DataSource) {
+		} else if (value instanceof Resource) {
 			//自定义流上传
-			return this.form(name, (DataSource) value);
+			return this.form(name, (Resource) value);
 		} else if (this.form == null) {
-			form = new HashMap<String, Object>();
+			this.form = new HashMap<>();
 		}
 
 		String strValue;
@@ -321,6 +329,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			// 列表对象
 			strValue = CollectionUtil.join((List<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
+			if(File.class == ArrayUtil.getComponentType(value)) {
+				//多文件
+				return this.form(name, (File[]) value);
+			}
 			// 数组对象
 			strValue = ArrayUtil.join((Object[]) value, ",");
 		} else {
@@ -372,12 +384,58 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 * 
 	 * @param name 名
+	 * @param files 需要上传的文件
+	 * @return this
+	 */
+	public HttpRequest form(String name, File... files) {
+		if(1 == files.length) {
+			final File file = files[0];
+			return form(name, file, file.getName());
+		}
+		return form(name, new MultiFileResource(files));
+	}
+	
+	/**
+	 * 文件表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * 
+	 * @param name 名
 	 * @param file 需要上传的文件
 	 * @return this
 	 */
 	public HttpRequest form(String name, File file) {
+		return form(name, file, file.getName());
+	}
+	
+	/**
+	 * 文件表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * 
+	 * @param name 名
+	 * @param file 需要上传的文件
+	 * @param fileName 文件名，为空使用文件默认的文件名
+	 * @return this
+	 */
+	public HttpRequest form(String name, File file, String fileName) {
 		if (null != file) {
-			form(name, new FileDataSource(file));
+			form(name, new FileResource(file, fileName));
+		}
+		return this;
+	}
+	
+	/**
+	 * 文件byte[]表单项<br>
+	 * 一旦有文件加入，表单变为multipart/form-data
+	 * 
+	 * @param name 名
+	 * @param fileBytes 需要上传的文件
+	 * @param fileName 文件名
+	 * @return this
+	 * @since 4.1.0
+	 */
+	public HttpRequest form(String name, byte[] fileBytes, String fileName) {
+		if (null != fileBytes) {
+			form(name, new BytesResource(fileBytes, fileName));
 		}
 		return this;
 	}
@@ -387,21 +445,21 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 一旦有文件加入，表单变为multipart/form-data
 	 * 
 	 * @param name 名
-	 * @param dataSource 数据源，文件可以使用{@link FileDataSource}包装使用
+	 * @param resource 数据源，文件可以使用{@link FileResource}包装使用
 	 * @return this
 	 * @since 4.0.9
 	 */
-	public HttpRequest form(String name, DataSource dataSource) {
-		if (null != dataSource) {
+	public HttpRequest form(String name, Resource resource) {
+		if (null != resource) {
 			if (false == isKeepAlive()) {
 				keepAlive(true);
 			}
 
 			if (null == this.fileForm) {
-				fileForm = new HashMap<String, DataSource>();
+				fileForm = new HashMap<>();
 			}
 			// 文件对象
-			this.fileForm.put(name, dataSource);
+			this.fileForm.put(name, resource);
 		}
 		return this;
 	}
@@ -421,7 +479,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return 文件表单Map
 	 * @since 3.3.0
 	 */
-	public Map<String, DataSource> fileForm() {
+	public Map<String, Resource> fileForm() {
 		return this.fileForm;
 	}
 	// ---------------------------------------------------------------- Form end
@@ -757,7 +815,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				if (CollectionUtil.isEmpty(fileForm)) {
 					sendFormUrlEncoded();// 普通表单
 				} else {
-					sendMltipart(); // 文件上传表单
+					sendMultipart(); // 文件上传表单
 				}
 			} else {
 				this.httpConnection.connect();
@@ -792,7 +850,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @throws IOException
 	 */
-	private void sendMltipart() throws IOException {
+	private void sendMultipart() throws IOException {
 		setMultipart();// 设置表单类型为Multipart
 
 		final OutputStream out = this.httpConnection.getOutputStream();
@@ -833,16 +891,34 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @throws IOException
 	 */
 	private void writeFileForm(OutputStream out) throws IOException {
-		DataSource dataSource;
-		for (Entry<String, DataSource> entry : this.fileForm.entrySet()) {
-			dataSource = entry.getValue();
-			StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
-			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, entry.getKey(), dataSource.getName()));
-			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(dataSource.getName())));
+		for (Entry<String, Resource> entry : this.fileForm.entrySet()) {
+			appendPart(entry.getKey(), entry.getValue(), out);
+		}
+	}
+	
+	/**
+	 * 添加Multipart表单的数据项
+	 * @param formFieldName 表单名
+	 * @param resource 资源，可以是文件等
+	 * @param out Http流
+	 * @since 4.1.0
+	 */
+	private void appendPart(String formFieldName, Resource resource, OutputStream out) {
+		if(resource instanceof MultiResource) {
+			//多资源
+			for (Resource subResource : (MultiResource)resource) {
+				appendPart(formFieldName, subResource, out);
+			}
+		}else {
+			//普通资源
+			final StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
+			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, formFieldName, resource.getName()));
+			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(resource.getName())));
 			IoUtil.write(out, this.charset, false, builder);
-			IoUtil.copy(dataSource.getInputStream(), out);
+			IoUtil.copy(resource.getStream(), out);
 			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
 		}
+		
 	}
 
 	// 添加结尾数据

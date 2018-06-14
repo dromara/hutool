@@ -1,25 +1,28 @@
 package cn.hutool.crypto.asymmetric;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAKey;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
-import javax.crypto.Cipher;
-
-import cn.hutool.core.codec.BCD;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
 /**
- * RSA加密算法
+ * <p>
+ * RSA公钥/私钥/签名加密解密
+ * </p>
+ * <p>
+ * 罗纳德·李维斯特（Ron [R]ivest）、阿迪·萨莫尔（Adi [S]hamir）和伦纳德·阿德曼（Leonard [A]dleman）
+ * </p>
+ * <p>
+ * 由于非对称加密速度极其缓慢，一般文件不使用它来加密而是使用对称加密，<br/>
+ * 非对称加密算法可以用来对对称加密的密钥加密，这样保证密钥的安全也就保证了数据的安全
+ * </p>
  * 
  * @author Looly
  *
@@ -119,7 +122,9 @@ public class RSA extends AsymmetricCrypto {
 	 * @param keyType 密钥类型
 	 * @return 加密后的密文
 	 * @throws CryptoException 加密异常
+	 * @deprecated 请使用 {@link #encryptBcd(String, KeyType)}
 	 */
+	@Deprecated
 	public String encryptStr(String data, KeyType keyType) {
 		return encryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
@@ -133,35 +138,20 @@ public class RSA extends AsymmetricCrypto {
 	 * @return 加密后的密文
 	 * @throws CryptoException 加密异常
 	 * @since 3.1.1
+	 * @deprecated 请使用 {@link #encryptBcd(String, KeyType, Charset)}
 	 */
+	@Deprecated
 	public String encryptStr(String data, KeyType keyType, Charset charset) {
-		Key key = getKeyByType(keyType);
-		// 加密数据长度 <= 模长-11
-		int maxBlockSize = ((RSAKey) key).getModulus().bitLength() / 8 - 11;
-		final byte[] dataBytes = StrUtil.bytes(data, charset);
-		final int inputLen = dataBytes.length;
-		
-		lock.lock();
-		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-			clipher.init(Cipher.ENCRYPT_MODE, key);
-			int offSet = 0;
-			byte[] cache;
-			// 剩余长度
-			int remainLength = inputLen;
-			// 对数据分段加密
-			while (remainLength > 0) {
-				cache = clipher.doFinal(dataBytes, offSet, Math.min(remainLength, maxBlockSize));
-				out.write(cache, 0, cache.length);
-				
-				offSet += maxBlockSize;
-				remainLength = inputLen - offSet;
-			}
-			return BCD.bcdToStr(out.toByteArray());
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		} finally {
-			lock.unlock();
+		return encryptBcd(data, keyType, charset);
+	}
+
+	@Override
+	public byte[] encrypt(byte[] data, KeyType keyType) {
+		if(this.encryptBlockSize < 0) {
+			// 加密数据长度 <= 模长-11
+			this.encryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8 - 11;
 		}
+		return super.encrypt(data, keyType);
 	}
 
 	/**
@@ -170,7 +160,9 @@ public class RSA extends AsymmetricCrypto {
 	 * @param data 数据
 	 * @param keyType 密钥类型
 	 * @return 解密后的密文
+	 * @deprecated 请使用 {@link #decryptFromBcd(String, KeyType)}
 	 */
+	@Deprecated
 	public String decryptStr(String data, KeyType keyType) {
 		return decryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
@@ -183,34 +175,19 @@ public class RSA extends AsymmetricCrypto {
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
 	 * @since 3.1.1
+	 * @deprecated 请使用 {@link #decryptFromBcd(String, KeyType, Charset)}
 	 */
+	@Deprecated
 	public String decryptStr(String data, KeyType keyType, Charset charset) {
-		final Key key = getKeyByType(keyType);
-		// 模长
-		final int maxBlockSize = ((RSAKey) key).getModulus().bitLength() / 8;
-		byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
-		int inputLen = dataBytes.length;
-		
-		lock.lock();
-		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-			clipher.init(Cipher.DECRYPT_MODE, key);
-			int offSet = 0;
-			byte[] cache;
-			// 剩余长度
-			int remainLength = inputLen;
-			// 对数据分段解密
-			while (remainLength > 0) {
-				cache = clipher.doFinal(dataBytes, offSet, Math.min(remainLength, maxBlockSize));
-				out.write(cache, 0, cache.length);
-				
-				offSet += maxBlockSize;
-				remainLength = inputLen - offSet;
-			}
-			return StrUtil.str(out.toByteArray(), charset);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		} finally {
-			lock.unlock();
+		return decryptFromBcd(data, keyType, charset);
+	}
+
+	@Override
+	public byte[] decrypt(byte[] bytes, KeyType keyType) {
+		if(this.encryptBlockSize < 0) {
+			// 加密数据长度 <= 模长-11
+			this.encryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8;
 		}
+		return super.decrypt(bytes, keyType);
 	}
 }

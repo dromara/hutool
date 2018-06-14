@@ -8,7 +8,7 @@ package cn.hutool.crypto.asymmetric;
  *
  */
 public enum AsymmetricAlgorithm {
-	RSA("RSA"), DSA("DSA"), EC("EC");
+	RSA("RSA"), EC("EC");
 
 	private String value;
 

@@ -21,7 +21,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.IoUtil;
@@ -41,20 +40,20 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 
 	// saxParser
 	private static final String CLASS_SAXPARSER = "org.apache.xerces.parsers.SAXParser";
-	// 列元素
+	/** Cell单元格元素 */
 	private static final String C_ELEMENT = "c";
-	// 列中属性r
+	/** 行元素 */
+	private static final String ROW_ELEMENT = "row";
+	/** Cell中的行列号 */
 	private static final String R_ATTR = "r";
-	// 列中的t元素
+	/** Cell类型 */
 	private static final String T_ELEMENT = "t";
-	// 列中属性值
+	/** SST（SharedStringsTable） 的索引 */
 	private static final String S_ATTR_VALUE = "s";
 	// 列中属性值
 	private static final String T_ATTR_VALUE = "t";
 	// sheet r:Id前缀
 	private static final String RID_PREFIX = "rId";
-	// 行元素
-	private static final String ROW_ELEMENT = "row";
 
 	// excel 2007 的共享字符串表,对应sharedString.xml
 	private SharedStringsTable sharedStringsTable;
@@ -123,7 +122,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			return read(OPCPackage.open(in), sheetIndex);
 		} catch (DependencyException e) {
 			throw e;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw ExceptionUtil.wrap(e, POIException.class);
 		}
 	}
@@ -165,7 +164,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			}
 		} catch (DependencyException e) {
 			throw e;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw ExceptionUtil.wrap(e, POIException.class);
 		} finally {
 			IoUtil.close(sheetInputStream);
@@ -174,9 +173,12 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	}
 	// ------------------------------------------------------------------------------ Read end
 
+	/**
+	 * 读到一个xml开始标签时的回调处理方法
+	 */
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		// c 表示列
+		// 单元格元素
 		if (C_ELEMENT.equals(qName)) {
 
 			// 获取当前列坐标
@@ -219,57 +221,59 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			if (numFmtString == null) {
 				cellDataType = CellDataType.NULL;
 				numFmtString = BuiltinFormats.getBuiltinFormat(numFmtIndex);
-			} else if (CellDataType.DATE.getName().equals(numFmtString)) {
+			} else if (org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
 				cellDataType = CellDataType.DATE;
-				numFmtString = DatePattern.NORM_DATETIME_PATTERN;
 			}
-
 		}
 
 	}
 
+	/**
+	 * 标签结束的回调处理方法
+	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		String value = StrUtil.trim(lastContent);
+		final String contentStr = StrUtil.trim(lastContent);
 
 		if (T_ELEMENT.equals(qName)) {
 			// type标签
-			rowCellList.add(curCell++, value);
+			rowCellList.add(curCell++, contentStr);
 		} else if (C_ELEMENT.equals(qName)) {
 			// cell标签
-			value = ExcelSaxUtil.getDataValue(this.cellDataType, value, this.sharedStringsTable, this.numFmtIndex, this.numFmtString);
+			Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStringsTable, this.numFmtString);
 			// 补全单元格之间的空格
 			fillBlankCell(preCoordinate, curCoordinate, false);
 			rowCellList.add(curCell++, value);
-		} else {
+		} else if (ROW_ELEMENT.equals(qName)) {
 			// 如果是row标签，说明已经到了一行的结尾
-			if (ROW_ELEMENT.equals(qName)) {
-				// 最大列坐标以第一行的为准
-				if (curRow == 0) {
-					maxCellCoordinate = curCoordinate;
-				}
-
-				// 补全一行尾部可能缺失的单元格
-				if (maxCellCoordinate != null) {
-					fillBlankCell(curCoordinate, maxCellCoordinate, true);
-				}
-
-				rowHandler.handle(sheetIndex, curRow, rowCellList);
-
-				// 一行结束
-				// 清空rowCellList,
-				rowCellList.clear();
-				// 行数增加
-				curRow++;
-				// 当前列置0
-				curCell = 0;
-				// 置空当前列坐标和前一列坐标
-				curCoordinate = null;
-				preCoordinate = null;
+			// 最大列坐标以第一行的为准
+			if (curRow == 0) {
+				maxCellCoordinate = curCoordinate;
 			}
+
+			// 补全一行尾部可能缺失的单元格
+			if (maxCellCoordinate != null) {
+				fillBlankCell(curCoordinate, maxCellCoordinate, true);
+			}
+
+			rowHandler.handle(sheetIndex, curRow, rowCellList);
+
+			// 一行结束
+			// 清空rowCellList,
+			rowCellList.clear();
+			// 行数增加
+			curRow++;
+			// 当前列置0
+			curCell = 0;
+			// 置空当前列坐标和前一列坐标
+			curCoordinate = null;
+			preCoordinate = null;
 		}
 	}
 
+	/**
+	 * s标签结束的回调处理方法
+	 */
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		// 得到单元格内容的值
@@ -282,6 +286,9 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 		// pass
 	}
 
+	/**
+	 * ?xml标签的回调处理方法
+	 */
 	@Override
 	public void startDocument() throws SAXException {
 		// pass
@@ -361,9 +368,9 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 		try {
 			xmlReader = XMLReaderFactory.createXMLReader(CLASS_SAXPARSER);
 		} catch (SAXException e) {
-			if(e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
+			if (e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
 				throw new DependencyException(e, "You need to add 'xerces:xercesImpl' to your project and version >= 2.11.0");
-			}else {
+			} else {
 				throw e;
 			}
 		}

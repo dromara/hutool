@@ -9,6 +9,8 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import cn.hutool.poi.excel.style.StyleUtil;
+
 /**
  * 样式集合，此样式集合汇集了整个工作簿的样式，用于减少样式的创建和冗余
  * 
@@ -134,18 +136,33 @@ public class StyleSet {
 		StyleUtil.setColor(this.cellStyleForDate, backgroundColor, FillPatternType.SOLID_FOREGROUND);
 		return this;
 	}
-	
+
 	/**
 	 * 设置全局字体
 	 * 
 	 * @param color 字体颜色
 	 * @param fontSize 字体大小，-1表示默认大小
 	 * @param fontName 字体名，null表示默认字体
+	 * @param ignoreHead 是否跳过头部样式
 	 * @return this
 	 */
-	public StyleSet setFont(short color, short fontSize, String fontName) {
+	public StyleSet setFont(short color, short fontSize, String fontName, boolean ignoreHead) {
 		final Font font = StyleUtil.createFont(this.workbook, color, fontSize, fontName);
-		this.headCellStyle.setFont(font);
+		return setFont(font, ignoreHead);
+	}
+
+	/**
+	 * 设置全局字体
+	 * 
+	 * @param font 字体，可以通过{@link StyleUtil#createFont(Workbook, short, short, String)}创建
+	 * @param ignoreHead 是否跳过头部样式
+	 * @return this
+	 * @since 4.1.0
+	 */
+	public StyleSet setFont(Font font, boolean ignoreHead) {
+		if(false == ignoreHead) {
+			this.headCellStyle.setFont(font);
+		}
 		this.cellStyle.setFont(font);
 		this.cellStyleForNumber.setFont(font);
 		this.cellStyleForDate.setFont(font);

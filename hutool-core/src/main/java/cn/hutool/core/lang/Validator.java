@@ -18,7 +18,7 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public final class Validator {
+public class Validator {
 
 	private Validator() {
 	}
