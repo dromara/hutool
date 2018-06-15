@@ -25,4 +25,11 @@ public class UnicodeUtilTest {
 		String unicode = UnicodeUtil.toString(str);
 		Assert.assertEquals("aaaa&bbbb&cccc", unicode);
 	}
+	
+	@Test
+	public void convertTest3() {
+		String str = "aaa\\u111";
+		String res = UnicodeUtil.toString(str);
+		Assert.assertEquals("aaa\\u111", res);
+	}
 }

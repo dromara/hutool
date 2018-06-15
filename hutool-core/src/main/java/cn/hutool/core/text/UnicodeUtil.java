@@ -30,10 +30,13 @@ public class UnicodeUtil {
 		int i = -1;
 		int pos = 0;
 		while ((i = unicode.indexOf("\\u", pos)) != -1) {
-			sb.append(unicode, pos, i);
+			sb.append(unicode, pos, i);//写入Unicode符之前的部分
 			if (i + 5 < len) {
 				pos = i + 6;
 				sb.append((char) Integer.parseInt(unicode.substring(i + 2, i + 6), 16));
+			}else {
+				pos = i;//非Unicode符，结束
+				break;
 			}
 		}
 		
