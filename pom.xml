@@ -10,7 +10,7 @@
 	<version>4.1.1-SNAPSHOT</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
-	<url>https://github.com/looly/hutool4</url>
+	<url>https://github.com/looly/hutool</url>
 
 	<modules>
 		<module>hutool-all</module>

@@ -361,7 +361,7 @@ public class DigestUtil {
 	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key) {
 		return new HMac(algorithm, key);
 	}
-	
+
 	/**
 	 * 新建摘要器
 	 * 
@@ -371,5 +371,27 @@ public class DigestUtil {
 	 */
 	public static Digester digester(DigestAlgorithm algorithm) {
 		return new Digester(algorithm);
+	}
+
+	/**
+	 * 生成Bcrypt加密后的密文
+	 * 
+	 * @param password 明文密码
+	 * @return 加密后的密文
+	 * @since 4.1.1
+	 */
+	public static String bcrypt(String password) {
+		return BCrypt.hashpw(password);
+	}
+	
+	/**
+	 * 验证密码是否与Bcrypt加密后的密文匹配
+	 * 
+	 * @param password 明文密码
+	 * @return 是否匹配
+	 * @since 4.1.1
+	 */
+	public static boolean bcryptCheck(String password, String hashed) {
+		return BCrypt.checkpw(password, hashed);
 	}
 }
