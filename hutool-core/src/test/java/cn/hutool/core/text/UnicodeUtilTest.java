@@ -32,4 +32,11 @@ public class UnicodeUtilTest {
 		String res = UnicodeUtil.toString(str);
 		Assert.assertEquals("aaa\\u111", res);
 	}
+	
+	@Test
+	public void convertTest4() {
+		String str = "aaa\\U4e2d\\u6587\\u111\\urtyu\\u0026";
+		String res = UnicodeUtil.toString(str);
+		Assert.assertEquals("aaa中文\\u111\\urtyu&", res);
+	}
 }

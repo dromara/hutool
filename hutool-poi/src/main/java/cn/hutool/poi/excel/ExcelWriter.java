@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -478,7 +479,7 @@ public class ExcelWriter implements Closeable {
 				writeRows((Map<?, ?>) object, 0 == index);
 			} else if (BeanUtil.isBean(object.getClass())) {
 				// 一个Bean对象表示一行
-				writeRows(BeanUtil.beanToMap(object), 0 == index);
+				writeRows(BeanUtil.beanToMap(object, new LinkedHashMap<String, Object>(), false, false), 0 == index);
 			} else {
 				break;
 			}
