@@ -13,6 +13,7 @@
 ### Bug修复
 * 【setting】       修复store方法无换行问题
 * 【core】          修复UnicodeUtil.toString方法不正确Unicode死循环问题（issue#IKJGU@Gitee）
+* 【http】           修复HttpsURLConnectionOLDImpl导致的转换异常（issue#IKKGF@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
