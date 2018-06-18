@@ -33,9 +33,9 @@ import cn.hutool.core.lang.Assert;
  * 此类来自于Apache Commons io
  *
  * @author looly
- * @since 4.0.6
+ * @since 4.1.1
  */
-public class LineIterator implements Iterator<String>, Closeable {
+public class LineIter implements Iterator<String>, Iterable<String>, Closeable {
 
 	/** The reader that is being read. */
 	private final BufferedReader bufferedReader;
@@ -51,7 +51,7 @@ public class LineIterator implements Iterator<String>, Closeable {
 	 * @param charset 编码
 	 * @throws IllegalArgumentException reader为null抛出此异常
 	 */
-	public LineIterator(InputStream in, Charset charset) throws IllegalArgumentException {
+	public LineIter(InputStream in, Charset charset) throws IllegalArgumentException {
 		this(IoUtil.getReader(in, charset));
 	}
 
@@ -61,7 +61,7 @@ public class LineIterator implements Iterator<String>, Closeable {
 	 * @param reader {@link Reader}对象，不能为null
 	 * @throws IllegalArgumentException reader为null抛出此异常
 	 */
-	public LineIterator(Reader reader) throws IllegalArgumentException {
+	public LineIter(Reader reader) throws IllegalArgumentException {
 		Assert.notNull(reader, "Reader must not be null");
 		this.bufferedReader = IoUtil.getReader(reader);
 	}
@@ -135,9 +135,9 @@ public class LineIterator implements Iterator<String>, Closeable {
 	}
 
 	/**
-	 * Unsupported.
+	 * 不支持移除
 	 *
-	 * @throws UnsupportedOperationException always
+	 * @throws UnsupportedOperationException 始终抛出此异常
 	 */
 	@Override
 	public void remove() {
@@ -145,12 +145,17 @@ public class LineIterator implements Iterator<String>, Closeable {
 	}
 
 	/**
-	 * Overridable method to validate each line that is returned. This implementation always returns true.
+	 * 重写此方法来判断是否每一行都被返回，默认全部为true
 	 * 
-	 * @param line the line that is to be validated
-	 * @return true if valid, false to remove from the iterator
+	 * @param line 需要验证的行
+	 * @return 是否通过验证
 	 */
 	protected boolean isValidLine(String line) {
 		return true;
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		return this;
 	}
 }

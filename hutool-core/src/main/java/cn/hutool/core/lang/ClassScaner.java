@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
+import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -145,8 +145,10 @@ public final class ClassScaner {
 		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
 		if (index != -1) {
 			// Jar文件
-			path = path.substring(0, index + FileUtil.JAR_FILE_EXT.length()); // 截取jar路径
-			path = StrUtil.removePrefix(path, FileUtil.PATH_FILE_PRE); // 去掉文件前缀
+			path = path.substring(
+					path.startsWith(FileUtil.PATH_FILE_PRE) ? FileUtil.PATH_FILE_PRE.length() : 0, //去除file:前缀
+					index + FileUtil.JAR_FILE_EXT.length()// 截取到.jar之后
+			); 
 			processJarFile(new File(path), packageName, classFilter, classes);
 		} else {
 			fillClasses(path, new File(path), packageName, classFilter, classes);
@@ -224,20 +226,18 @@ public final class ClassScaner {
 	 */
 	private static void processJarFile(File file, String packageName, Filter<Class<?>> classFilter, Set<Class<?>> classes) {
 		JarFile jarFile = null;
-		Enumeration<JarEntry> entries;
+		EnumerationIter<JarEntry> entries;
 		try {
 			jarFile = new JarFile(file);
-			entries = jarFile.entries();
-			JarEntry entry;
+			entries = new EnumerationIter<>(jarFile.entries());
 			String entryName;
-			while (entries.hasMoreElements()) {
-				entry = entries.nextElement();
-				entryName = entry.getName();
+			for (JarEntry jarEntry : entries) {
+				entryName = jarEntry.getName();
 				if (isClass(entryName)) {
 					final String className = StrUtil.removeSuffix(entryName.replace(StrUtil.SLASH, StrUtil.DOT), FileUtil.CLASS_EXT);
 					fillClass(className, packageName, classes, classFilter);
 				} else if(isJar(entryName)) {
-					processJarStream(jarFile.getInputStream(entry), packageName, classFilter, classes);
+					processJarStream(jarFile.getInputStream(jarEntry), packageName, classFilter, classes);
 				}
 			}
 		} catch (Exception ex) {

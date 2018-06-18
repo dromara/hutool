@@ -9,9 +9,9 @@ import java.util.NoSuchElementException;
  * @author Looly
  *
  * @param <E> 元素类型
- * @since 3.0.8
+ * @since 4.1.1
  */
-public class ArrayIterator<E> implements Iterator<E> {
+public class ArrayIter<E> implements Iterator<E>, Iterable<E>{
 
 	/** 数组 */
 	private Object array;
@@ -28,7 +28,7 @@ public class ArrayIterator<E> implements Iterator<E> {
 	 * @throws IllegalArgumentException array对象不为数组抛出此异常
 	 * @throws NullPointerException array对象为null
 	 */
-	public ArrayIterator(final Object array) {
+	public ArrayIter(final Object array) {
 		this(array, 0);
 	}
 
@@ -39,7 +39,7 @@ public class ArrayIterator<E> implements Iterator<E> {
 	 * @throws IllegalArgumentException array对象不为数组抛出此异常
 	 * @throws NullPointerException array对象为null
 	 */
-	public ArrayIterator(final Object array, final int startIndex) {
+	public ArrayIter(final Object array, final int startIndex) {
 		this(array, startIndex, -1);
 	}
 
@@ -51,7 +51,7 @@ public class ArrayIterator<E> implements Iterator<E> {
 	 * @throws IllegalArgumentException array对象不为数组抛出此异常
 	 * @throws NullPointerException array对象为null
 	 */
-	public ArrayIterator(final Object array, final int startIndex, final int endIndex) {
+	public ArrayIter(final Object array, final int startIndex, final int endIndex) {
 		this.endIndex = Array.getLength(array);
 		if(endIndex > 0 && endIndex < this.endIndex){
 			this.endIndex = endIndex;
@@ -103,6 +103,11 @@ public class ArrayIterator<E> implements Iterator<E> {
 	 */
 	public void reset() {
 		this.index = this.startIndex;
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return this;
 	}
 
 }

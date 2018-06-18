@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import cn.hutool.cache.Cache;
-import cn.hutool.core.collection.CopiedIterator;
+import cn.hutool.core.collection.CopiedIter;
 
 /**
  * 超时和限制大小的缓存的默认实现<br>
@@ -153,10 +153,10 @@ public abstract class AbstractCache<K, V> implements Cache<K, V>{
 	
 	@Override
 	public Iterator<CacheObj<K, V>> cacheObjIterator() {
-		CopiedIterator<CacheObj<K, V>> copiedIterator;
+		CopiedIter<CacheObj<K, V>> copiedIterator;
 		readLock.lock();
 		try {
-			copiedIterator = CopiedIterator.copyOf(this.cacheMap.values().iterator());
+			copiedIterator = CopiedIter.copyOf(this.cacheMap.values().iterator());
 		} finally {
 			readLock.unlock();
 		}

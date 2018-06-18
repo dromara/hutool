@@ -9,6 +9,7 @@
 * 【poi】            ExcelWriter写出bean使用LinkedHashMap
 * 【core】          UnicodeUtil新增：1、\u大小写不区分，2、\u后跟非16进制按照非Unicode符对待，直接输出（issue#IKJGU@Gitee）
 * 【crypto】       增加Bcrypt实现（参照：jBCrypt）
+* 【core】          XXXIterator修改为XXXIter，同时实现Iterator和Iterable接口
 
 ### Bug修复
 * 【setting】       修复store方法无换行问题
