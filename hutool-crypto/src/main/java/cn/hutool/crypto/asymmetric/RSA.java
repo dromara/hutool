@@ -9,6 +9,7 @@ import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -179,14 +180,14 @@ public class RSA extends AsymmetricCrypto {
 	 */
 	@Deprecated
 	public String decryptStr(String data, KeyType keyType, Charset charset) {
-		return decryptFromBcd(data, keyType, charset);
+		return StrUtil.str(decryptFromBcd(data, keyType, charset), charset);
 	}
 
 	@Override
 	public byte[] decrypt(byte[] bytes, KeyType keyType) {
-		if(this.encryptBlockSize < 0) {
+		if(this.decryptBlockSize < 0) {
 			// 加密数据长度 <= 模长-11
-			this.encryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8;
+			this.decryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8;
 		}
 		return super.decrypt(bytes, keyType);
 	}

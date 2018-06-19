@@ -128,6 +128,25 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
+	
+	@Test
+	@Ignore
+	public void writeMapTest2() {
+		Map<String, Object> row1 = MapUtil.newHashMap(true);
+		row1.put("姓名", "张三");
+		row1.put("年龄", 23);
+		row1.put("成绩", 88.32);
+		row1.put("是否合格", true);
+		row1.put("考试日期", DateUtil.date());
+		
+		// 通过工具类创建writer
+		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest2.xlsx");
+		
+		// 一次性写出内容，使用默认样式
+		writer.writeRows(row1, true);
+		// 关闭writer，释放内存
+		writer.close();
+	}
 
 	@Test
 	@Ignore

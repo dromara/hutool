@@ -119,7 +119,7 @@ public class ExcelWriter implements Closeable {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(File destFile, String sheetName) {
-		this(destFile.exists() ? WorkbookUtil.createBook(destFile) : WorkbookUtil.createBook(StrUtil.endWithIgnoreCase(destFile.getName(), ".xlsx")), sheetName);
+		this(destFile.exists() ? WorkbookUtil.createBook(FileUtil.getInputStream(destFile), true) : WorkbookUtil.createBook(StrUtil.endWithIgnoreCase(destFile.getName(), ".xlsx")), sheetName);
 		this.destFile = destFile;
 	}
 

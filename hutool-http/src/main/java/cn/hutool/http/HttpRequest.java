@@ -70,6 +70,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private boolean isDisableCache;
 	/** 是否对url进行编码 */
 	private boolean isEncodeUrl;
+	/** 是否是REST请求模式 */
+	private boolean isRest;
 	/** 重定向次数计数器，内部使用 */
 	private int redirectCount;
 	/** 最大重定向次数 */
@@ -520,8 +522,17 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			// 在用户未自定义的情况下自动根据内容判断
 			contentType = HttpUtil.getContentTypeByRequestBody(body);
 			if (null != contentType && ContentType.isFormUrlEncoed(this.header(Header.CONTENT_TYPE))) {
+				if (null != this.charset) {
+					//附加编码信息
+					contentType = StrUtil.format("{};charset={}", contentType, this.charset.name());
+				}
 				this.contentType(contentType);
 			}
+		}
+		
+		//判断是否为rest请求
+		if(StrUtil.containsAnyIgnoreCase(contentType, "json", "xml")) {
+			this.isRest = true;
 		}
 		return this;
 	}
@@ -534,15 +545,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(JSON json) {
-		this.body(json.toString());
-
-		String contentTypeJson = "application/json";
-		if (null != this.charset) {
-			contentTypeJson = StrUtil.format("{};charset={}", contentTypeJson, this.charset.name());
-		}
-		this.contentType(contentTypeJson);
-
-		return this;
+		return this.body(json.toString());
 	}
 
 	/**
@@ -760,7 +763,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 对于GET请求将参数加到URL中
 	 */
 	private void urlWithParamIfGet() {
-		if (Method.GET.equals(method)) {
+		if (Method.GET.equals(method) && false == this.isRest) {
 			// 优先使用body形式的参数，不存在使用form
 			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
 				this.url = HttpUtil.urlWithForm(this.url, StrUtil.str(this.bodyBytes, this.charset), this.charset, this.isEncodeUrl);
@@ -811,8 +814,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private void send() throws HttpException {
 		try {
-			if (Method.POST.equals(method) || Method.PUT.equals(method)) {
-				if (CollectionUtil.isEmpty(fileForm)) {
+			if (Method.POST.equals(this.method) || Method.PUT.equals(this.method) || this.isRest) {
+				if (CollectionUtil.isEmpty(this.fileForm)) {
 					sendFormUrlEncoded();// 普通表单
 				} else {
 					sendMultipart(); // 文件上传表单

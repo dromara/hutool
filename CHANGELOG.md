@@ -10,11 +10,15 @@
 * 【core】          UnicodeUtil新增：1、\u大小写不区分，2、\u后跟非16进制按照非Unicode符对待，直接输出（issue#IKJGU@Gitee）
 * 【crypto】       增加Bcrypt实现（参照：jBCrypt）
 * 【core】          XXXIterator修改为XXXIter，同时实现Iterator和Iterable接口
+* 【core】          Dict使用LinkedHashMap，Entity也是
 
 ### Bug修复
 * 【setting】       修复store方法无换行问题
 * 【core】          修复UnicodeUtil.toString方法不正确Unicode死循环问题（issue#IKJGU@Gitee）
 * 【http】           修复HttpsURLConnectionOLDImpl导致的转换异常（issue#IKKGF@Gitee）
+* 【crypto】        修复RSA分段加密解密的bug（感谢@【深圳】Demo）
+* 【poi】            修复ExcelWriter写出文件无法覆盖问题（感谢@【宁波】mojie126）
+* 【poi】            修复sax方式读取空行空指针问题（issue#124@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

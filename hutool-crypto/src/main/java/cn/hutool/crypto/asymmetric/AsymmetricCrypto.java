@@ -204,7 +204,7 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	public byte[] encrypt(byte[] data, KeyType keyType) {
 		final Key key = getKeyByType(keyType);
 		final int inputLen = data.length;
-		final int maxBlockSize = this.decryptBlockSize < 0 ? inputLen : this.decryptBlockSize;
+		final int maxBlockSize = this.encryptBlockSize < 0 ? inputLen : this.encryptBlockSize;
 
 		lock.lock();
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
@@ -480,7 +480,7 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	 * @return 解密后的密文
 	 * @since 4.1.0
 	 */
-	public String decryptFromBcd(String data, KeyType keyType) {
+	public byte[] decryptFromBcd(String data, KeyType keyType) {
 		return decryptFromBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
 
@@ -493,9 +493,9 @@ public class AsymmetricCrypto extends BaseAsymmetric<AsymmetricCrypto> {
 	 * @return 解密后的密文
 	 * @since 4.1.0
 	 */
-	public String decryptFromBcd(String data, KeyType keyType, Charset charset) {
+	public byte[] decryptFromBcd(String data, KeyType keyType, Charset charset) {
 		final byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
-		return StrUtil.str(decrypt(dataBytes, keyType), charset);
+		return decrypt(dataBytes, keyType);
 	}
 
 	// --------------------------------------------------------------------------------- Getters and Setters

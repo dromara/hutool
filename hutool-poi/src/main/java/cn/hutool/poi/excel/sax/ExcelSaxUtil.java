@@ -103,8 +103,8 @@ public class ExcelSaxUtil {
 	public static int countNullCell(String preRef, String ref) {
 		// excel2007最大行数是1048576，最大列数是16384，最后一列列名是XFD
 		// 数字代表列，去掉列信息
-		String preXfd = preRef.replaceAll("\\d+", "");
-		String xfd = ref.replaceAll("\\d+", "");
+		String preXfd = StrUtil.nullToDefault(preRef, "@").replaceAll("\\d+", "");
+		String xfd = StrUtil.nullToDefault(ref, "@").replaceAll("\\d+", "");
 
 		// A表示65，@表示64，如果A算作1，那@代表0
 		// 填充最大位数3
