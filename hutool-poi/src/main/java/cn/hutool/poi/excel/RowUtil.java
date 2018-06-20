@@ -71,7 +71,7 @@ public class RowUtil {
 	 * @param row 行
 	 * @param rowData 一行的数据
 	 * @param styleSet 单元格样式集，包括日期等样式
-	 * @param 是否为标题行
+	 * @param isHeader 是否为标题行
 	 */
 	public static void writeRow(Row row, Iterable<?> rowData, StyleSet styleSet, boolean isHeader) {
 		int i = 0;

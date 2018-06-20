@@ -19,7 +19,7 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void postTest() {
-		String result = HttpUtil.createPost("http://api.uhaozu.com/goods/description/1120448506").charset(CharsetUtil.GBK).execute().body();
+		String result = HttpUtil.createPost("http://api.uhaozu.com/goods/description/1120448506").charset(CharsetUtil.UTF_8).execute().body();
 		Console.log(result);
 	}
 

@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 
 import cn.hutool.core.exceptions.UtilException;
@@ -54,7 +55,7 @@ public class URLUtil {
 	public static final String JAR_URL_SEPARATOR = "!/";
 	/** WAR路径及内部文件路径分界符 */
 	public static final String WAR_URL_SEPARATOR = "*/";
-
+	
 	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
 	 * 
@@ -62,6 +63,18 @@ public class URLUtil {
 	 * @return URL对象
 	 */
 	public static URL url(String url) {
+		return url(url, null);
+	}
+
+	/**
+	 * 通过一个字符串形式的URL地址创建URL对象
+	 * 
+	 * @param url URL
+	 * @param handler {@link URLStreamHandler}
+	 * @return URL对象
+	 * @since 4.1.1
+	 */
+	public static URL url(String url, URLStreamHandler handler) {
 		Assert.notNull(url, "URL must not be null");
 
 		// 兼容Spring的ClassPath路径
@@ -71,7 +84,7 @@ public class URLUtil {
 		}
 
 		try {
-			return new URL(url);
+			return new URL(null, url, handler);
 		} catch (MalformedURLException e) {
 			// 尝试文件路径
 			try {

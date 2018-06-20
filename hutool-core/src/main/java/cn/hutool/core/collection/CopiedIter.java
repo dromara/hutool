@@ -21,20 +21,20 @@ import java.util.List;
  * @author Looly
  * @since 3.0.7
  */
-public class CopiedIterator<E> implements Iterator<E> {
+public class CopiedIter<E> implements Iterator<E>, Iterable<E> {
 
 	private List<E> eleList = new LinkedList<>();
 	private Iterator<E> listIterator;
 	
-	public static <V> CopiedIterator<V> copyOf(Iterator<V> iterator){
-		return new CopiedIterator<>(iterator);
+	public static <V> CopiedIter<V> copyOf(Iterator<V> iterator){
+		return new CopiedIter<>(iterator);
 	}
 
 	/**
 	 * 构造
 	 * @param iterator 被复制的Iterator
 	 */
-	public CopiedIterator(Iterator<E> iterator) {
+	public CopiedIter(Iterator<E> iterator) {
 		while (iterator.hasNext()) {
 			eleList.add(iterator.next());
 		}
@@ -58,6 +58,11 @@ public class CopiedIterator<E> implements Iterator<E> {
 	@Override
 	public void remove() throws UnsupportedOperationException{
 		throw new UnsupportedOperationException("This is a read-only iterator.");
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return this;
 	}
 
 }

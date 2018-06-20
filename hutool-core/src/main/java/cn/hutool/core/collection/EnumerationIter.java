@@ -8,9 +8,9 @@ import java.util.Iterator;
  * @author Looly
  *
  * @param <E> 元素类型
- * @since 3.0.8
+ * @since 4.1.1
  */
-public class EnumerationIterator<E> implements Iterator<E>{
+public class EnumerationIter<E> implements Iterator<E>, Iterable<E>{
 	
 	private final Enumeration<E> e;
 	
@@ -18,7 +18,7 @@ public class EnumerationIterator<E> implements Iterator<E>{
 	 * 构造
 	 * @param enumeration {@link Enumeration}对象
 	 */
-	public EnumerationIterator(Enumeration<E> enumeration) {
+	public EnumerationIter(Enumeration<E> enumeration) {
 		this.e = enumeration;
 	}
 
@@ -35,6 +35,11 @@ public class EnumerationIterator<E> implements Iterator<E>{
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return this;
 	}
 
 }

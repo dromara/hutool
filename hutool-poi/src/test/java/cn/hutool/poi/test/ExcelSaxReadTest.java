@@ -7,7 +7,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.Excel07SaxReader;
@@ -19,6 +21,21 @@ import cn.hutool.poi.excel.sax.handler.RowHandler;
  *
  */
 public class ExcelSaxReadTest {
+	
+	@Test
+	@Ignore
+	public void readBlankLineTest() {
+		ExcelUtil.readBySax("e:/ExcelBlankLine.xlsx", 0, new RowHandler() {
+			
+			@Override
+			public void handle(int sheetIndex, int rowIndex, List<Object> rowList) {
+				if(StrUtil.isAllEmpty(Convert.toStrArray(rowList))) {
+					return;
+				}
+				Console.log(rowList);
+			}
+		});
+	}
 	
 	@Test
 	public void readBySaxTest() {

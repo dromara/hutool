@@ -1480,9 +1480,9 @@ public class CollUtil {
 		} else if (value instanceof Iterable) {
 			iter = ((Iterable) value).iterator();
 		} else if (value instanceof Enumeration) {
-			iter = new EnumerationIterator<>((Enumeration) value);
+			iter = new EnumerationIter<>((Enumeration) value);
 		} else if (ArrayUtil.isArray(value)) {
-			iter = new ArrayIterator<>(value);
+			iter = new ArrayIter<>(value);
 		} else {
 			throw new UtilException("Unsupport value type [] !", value.getClass());
 		}

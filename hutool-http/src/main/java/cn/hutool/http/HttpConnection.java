@@ -143,7 +143,7 @@ public class HttpConnection {
 		this.proxy = proxy;
 
 		try {
-			this.conn = HttpUtil.isHttps(urlStr) ? openHttps(hostnameVerifier, ssf) : openHttp();
+			this.conn = openHttp(hostnameVerifier, ssf);
 		} catch (Exception e) {
 			throw new HttpException(e.getMessage(), e);
 		}
@@ -544,26 +544,25 @@ public class HttpConnection {
 
 	// --------------------------------------------------------------- Private Method start
 	/**
-	 * 初始化http请求参数
-	 */
-	private HttpURLConnection openHttp() throws IOException {
-		return (HttpURLConnection) openConnection();
-	}
-
-	/**
-	 * 初始化https请求参数
+	 * 初始化http或https请求参数<br>
+	 * 有些时候htts请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
 	 * 
-	 * @param hostnameVerifier 域名验证器
-	 * @param ssf SSLSocketFactory
+	 * @param hostnameVerifier 域名验证器，非https传入null
+	 * @param ssf SSLSocketFactory，非https传入null
+	 * @return {@link HttpURLConnection}，https返回{@link HttpsURLConnection}
 	 */
-	private HttpsURLConnection openHttps(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-		final HttpsURLConnection httpsURLConnection = (HttpsURLConnection) openConnection();
+	private HttpURLConnection openHttp(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+		final HttpURLConnection conn = (HttpURLConnection) openConnection();
 
-		// 验证域
-		httpsURLConnection.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
-		httpsURLConnection.setSSLSocketFactory(null != ssf ? ssf : SSLSocketFactoryBuilder.create().build());
+		if(conn instanceof HttpsURLConnection) {
+			//Https请求
+			final HttpsURLConnection httpsConn = (HttpsURLConnection)conn;
+			// 验证域
+			httpsConn.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
+			httpsConn.setSSLSocketFactory(null != ssf ? ssf : SSLSocketFactoryBuilder.create().build());
+		}
 
-		return httpsURLConnection;
+		return conn;
 	}
 
 	/**

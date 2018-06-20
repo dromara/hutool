@@ -38,11 +38,11 @@ public class MultiResource implements Resource, Iterable<Resource>, Iterator<Res
 	 * 
 	 * @param resources 资源列表
 	 */
-	public MultiResource(Collection<Resource> c) {
-		if(c instanceof List) {
-			this.resources = (List<Resource>)c;
+	public MultiResource(Collection<Resource> resources) {
+		if(resources instanceof List) {
+			this.resources = (List<Resource>)resources;
 		}else {
-			this.resources = CollUtil.newArrayList(c);
+			this.resources = CollUtil.newArrayList(resources);
 		}
 	}
 

@@ -2389,6 +2389,20 @@ public class FileUtil {
 	public static PrintWriter getPrintWriter(String path, String charset, boolean isAppend) throws IORuntimeException {
 		return new PrintWriter(getWriter(path, charset, isAppend));
 	}
+	
+	/**
+	 * 获得一个打印写入对象，可以有print
+	 * 
+	 * @param path 输出路径，绝对路径
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @return 打印对象
+	 * @throws IORuntimeException IO异常
+	 * @since 4.1.1
+	 */
+	public static PrintWriter getPrintWriter(String path, Charset charset, boolean isAppend) throws IORuntimeException {
+		return new PrintWriter(getWriter(path, charset, isAppend));
+	}
 
 	/**
 	 * 获得一个打印写入对象，可以有print

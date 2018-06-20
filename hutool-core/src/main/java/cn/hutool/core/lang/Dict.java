@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -20,7 +21,7 @@ import cn.hutool.core.getter.BasicTypeGetter;
  * @author loolly
  *
  */
-public class Dict extends HashMap<String, Object> implements BasicTypeGetter<String> {
+public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGetter<String> {
 	private static final long serialVersionUID = 6135423866861206530L;
 
 	// --------------------------------------------------------------- Static method start

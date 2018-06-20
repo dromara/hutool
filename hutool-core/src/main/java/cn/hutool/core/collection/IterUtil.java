@@ -433,7 +433,7 @@ public class IterUtil {
 	 * @return {@link Iterator}
 	 */
 	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
-		return new EnumerationIterator<E>(e);
+		return new EnumerationIter<E>(e);
 	}
 
 	/**
@@ -503,7 +503,7 @@ public class IterUtil {
 	 * @return 元素类型，当列表为空或元素全部为null时，返回null
 	 */
 	public static Class<?> getElementType(Iterator<?> iterator) {
-		final Iterator<?> iter2 = new CopiedIterator<>(iterator);
+		final Iterator<?> iter2 = new CopiedIter<>(iterator);
 		if (null != iter2) {
 			Object t;
 			while (iter2.hasNext()) {

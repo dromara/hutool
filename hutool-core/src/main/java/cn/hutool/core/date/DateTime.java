@@ -258,7 +258,7 @@ public class DateTime extends Date {
 	 * 4：第四季度<br>
 	 * 
 	 * @return 第几个季度
-	 * @deprecated 请使用{@link quarter}代替
+	 * @deprecated 请使用{@link Quarter}代替
 	 */
 	@Deprecated
 	public int season() {
@@ -269,7 +269,7 @@ public class DateTime extends Date {
 	 * 获得当前日期所属季度<br>
 	 * 
 	 * @return 第几个季度 {@link Season}
-	 * @deprecated 请使用{@link quarterEnum}代替
+	 * @deprecated 请使用{@link #quarterEnum}代替
 	 */
 	@Deprecated
 	public Season seasonEnum() {

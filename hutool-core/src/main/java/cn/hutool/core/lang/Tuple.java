@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import cn.hutool.core.clone.CloneSupport;
-import cn.hutool.core.collection.ArrayIterator;
+import cn.hutool.core.collection.ArrayIter;
 
 /**
  * 不可变数组类型，用于多值返回<br>
@@ -53,6 +53,6 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 
 	@Override
 	public Iterator<Object> iterator() {
-		return new ArrayIterator<Object>(members);
+		return new ArrayIter<Object>(members);
 	}
 }
