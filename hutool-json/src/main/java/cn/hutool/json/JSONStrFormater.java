@@ -40,7 +40,7 @@ public class JSONStrFormater {
 				}else if(isEscapeMode) {
 					//在字符串模式下的转义
 					isEscapeMode = false;
-				}else {
+				}else if(wrapChar.equals(key)){
 					//字符串包装结束
 					wrapChar = null;
 				}

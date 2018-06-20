@@ -280,14 +280,18 @@ public class URLUtil {
 	 * @since 3.0.8
 	 */
 	public static String getDecodedPath(URL url) {
-		String path = null;
+		if(null == url) {
+			return null;
+		}
+		
+		URI uri = null;
 		try {
 			// URL对象的getPath方法对于包含中文或空格的问题
-			path = URLUtil.toURI(url).getPath();
+			uri = toURI(url);
 		} catch (UtilException e) {
 			// ignore
 		}
-		return (null != path) ? path : url.getPath();
+		return (null != uri) ? uri.getPath() : url.getPath();
 	}
 
 	/**

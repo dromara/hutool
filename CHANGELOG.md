@@ -8,6 +8,9 @@
 ### 新特性
 
 ### Bug修复
+* 【core】          修复JSONUtil.formatJsonStr引号换行问题（issue#IKMMK@Gitee）
+* 【core】          修复URLUtil.getDecodedPath可能导致的空指针问题（issue#IKLRD@gitee）
+* 【core】          修复PinyinUtil.getAllFirstLetter非汉字显示问题（issue#IKM0P@gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
