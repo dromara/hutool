@@ -284,14 +284,14 @@ public class URLUtil {
 			return null;
 		}
 		
-		URI uri = null;
+		String path = null;
 		try {
 			// URL对象的getPath方法对于包含中文或空格的问题
-			uri = toURI(url);
+			path = URLUtil.toURI(url).getPath();
 		} catch (UtilException e) {
 			// ignore
 		}
-		return (null != uri) ? uri.getPath() : url.getPath();
+		return (null != path) ? path : url.getPath();
 	}
 
 	/**
