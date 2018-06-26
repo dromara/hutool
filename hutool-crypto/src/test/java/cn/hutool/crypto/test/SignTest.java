@@ -70,4 +70,21 @@ public class SignTest {
 		boolean verify = sign.verify(data, signed);
 		Assert.assertTrue(verify);
 	}
+	
+	/**
+	 * 测试MD5withRSA算法的签名和验证签名
+	 */
+	@Test
+	public void signAndVerify2() {
+		String str = "wx2421b1c4370ec43b 支付测试 JSAPI支付测试 10000100 1add1a30ac87aa2db72f57a2375d8fec http://wxpay.wxutil.com/pub_v2/pay/notify.v2.php oUpF8uMuAJO_M2pxb1Q9zNjWeS6o 1415659990 14.23.150.211 1 JSAPI 0CB01533B8C1EF103065174F50BCA001";
+		byte[] data = StrUtil.utf8Bytes(str);
+		Sign sign = SecureUtil.sign(SignAlgorithm.MD5withRSA);
+		
+		// 签名
+		byte[] signed = sign.sign(data);
+		
+		// 验证签名
+		boolean verify = sign.verify(data, signed);
+		Assert.assertTrue(verify);
+	}
 }

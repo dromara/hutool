@@ -5,7 +5,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -225,9 +224,9 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
-			((List) bean).set(Convert.toInt(fieldNameOrIndex), value);
+			CollUtil.setOrAppend((List) bean, Convert.toInt(fieldNameOrIndex), value);
 		} else if (ArrayUtil.isArray(bean)) {
-			Array.set(bean, Convert.toInt(fieldNameOrIndex), value);
+			ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {
 			// 普通Bean对象
 			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);

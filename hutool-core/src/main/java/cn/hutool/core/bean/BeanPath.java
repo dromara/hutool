@@ -94,8 +94,8 @@ public class BeanPath {
 	 * 注意：
 	 * 
 	 * <pre>
-	 * 1. 如果为List，则设置值得下标不能大于已有List的长度
-	 * 2. 如果为数组，不能超过其长度
+	 * 1. 如果为List，如果下标不大于List长度，则替换原有值，否则追加值
+	 * 2. 如果为数组，如果下标不大于数组长度，则替换原有值，否则追加值
 	 * </pre>
 	 * 
 	 * @param bean Bean、Map或List

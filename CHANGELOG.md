@@ -6,6 +6,8 @@
 ## 4.1.2
 
 ### 新特性
+* 【core】          MapUtil增加getDate方法（感谢@【帝都】宁静）
+* 【json】           putByPath方法增加容错性，支持下标越界识别为追加（issue#IKNM6@Gitee）
 
 ### Bug修复
 * 【core】          修复JSONUtil.formatJsonStr引号换行问题（issue#IKMMK@Gitee）

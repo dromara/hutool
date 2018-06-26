@@ -2012,6 +2012,7 @@ public class CollUtil {
 	/**
 	 * 分组，按照{@link Hash}接口定义的hash算法，集合中的元素放入hash值对应的子列表中
 	 * 
+	 * @param <T> 元素类型
 	 * @param collection 被分组的集合
 	 * @param hash Hash值算法，决定元素放在第几个分组的规则
 	 * @return 分组后的集合
@@ -2055,6 +2056,7 @@ public class CollUtil {
 	/**
 	 * 根据元素的指定字段名分组，非Bean都放在第一个分组中
 	 * 
+	 * @param <T> 元素类型
 	 * @param collection 集合
 	 * @param fieldName 元素Bean中的字段名，非Bean都放在第一个分组中
 	 * @return 分组列表
@@ -2084,6 +2086,7 @@ public class CollUtil {
 	/**
 	 * 反序给定List，会在原List基础上直接修改
 	 * 
+	 * @param <T> 元素类型
 	 * @param list 被反转的List
 	 * @return 反转后的List
 	 * @since 4.0.6
@@ -2096,6 +2099,7 @@ public class CollUtil {
 	/**
 	 * 反序给定List，会创建一个新的List，原List数据不变
 	 * 
+	 * @param <T> 元素类型
 	 * @param list 被反转的List
 	 * @return 反转后的List
 	 * @since 4.0.6
@@ -2103,6 +2107,23 @@ public class CollUtil {
 	public static <T> List<T> reverseNew(List<T> list) {
 		final List<T> list2 = ObjectUtil.clone(list);
 		return reverse(list2);
+	}
+	
+	/**
+	 * 设置或增加元素。当index小于List的长度时，替换指定位置的值，否则在尾部追加
+	 * @param list List列表
+	 * @param index 位置
+	 * @param element 新元素
+	 * @return 原List
+	 * @since 4.1.2
+	 */
+	public static <T> List<T> setOrAppend(List<T> list, int index, T element){
+		if(index < list.size()) {
+			list.set(index, element);
+		}else {
+			list.add(element);
+		}
+		return list;
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start
