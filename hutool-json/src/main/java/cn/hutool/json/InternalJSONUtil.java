@@ -292,7 +292,7 @@ final class InternalJSONUtil {
 			// 目标为JSON格式
 			return JSONUtil.parse(value);
 		}
-
+		
 		Object targetValue = null;
 		// 非标准转换格式
 		if (value instanceof JSONObject) {
@@ -302,7 +302,7 @@ final class InternalJSONUtil {
 				// 目标为数组
 				targetValue = ((JSONArray) value).toArray(rowType, ignoreError);
 			} else {
-				targetValue = (new CollectionConverter(rowType, TypeUtil.getTypeArgument(type))).convert(value, null);
+				targetValue = (new CollectionConverter(type, TypeUtil.getTypeArgument(type))).convert(value, null);
 			}
 		}
 

@@ -36,11 +36,11 @@ public class ReflectUtil {
 
 	// --------------------------------------------------------------------------------------------------------- Constructor
 	/**
-	 * 查找类中的指定参数的构造方法
+	 * 查找类中的指定参数的构造方法，如果找到构造方法，会自动设置可访问为true
 	 * 
 	 * @param <T> 对象类型
 	 * @param clazz 类
-	 * @param parameterTypes 参数类型，只要任何一个参数是指定参数的父类或接口或相等即可
+	 * @param parameterTypes 参数类型，只要任何一个参数是指定参数的父类或接口或相等即可，此参数可以不传
 	 * @return 构造方法，如果未找到返回null
 	 */
 	@SuppressWarnings("unchecked")
@@ -49,11 +49,13 @@ public class ReflectUtil {
 			return null;
 		}
 
-		final Constructor<?>[] constructors = clazz.getConstructors();
+		final Constructor<?>[] constructors = getConstructors(clazz);
 		Class<?>[] pts;
 		for (Constructor<?> constructor : constructors) {
 			pts = constructor.getParameterTypes();
 			if (ClassUtil.isAllAssignableFrom(pts, parameterTypes)) {
+				//构造可访问
+				constructor.setAccessible(true);
 				return (Constructor<T>) constructor;
 			}
 		}
@@ -473,8 +475,9 @@ public class ReflectUtil {
 				}
 			}
 			
+			final Constructor<T> constructor = getConstructor(clazz);
 			try {
-				return (T) clazz.newInstance();
+				return constructor.newInstance();
 			} catch (Exception e) {
 				throw new UtilException(e, "Instance class [{}] error!", clazz);
 			}
@@ -502,12 +505,12 @@ public class ReflectUtil {
 	public static <T> T newInstanceIfPossible(Class<T> beanClass) {
 		Assert.notNull(beanClass);
 		try {
-			return (T) beanClass.newInstance();
+			return newInstance(beanClass);
 		} catch (Exception e) {
 			// ignore
 			// 默认构造不存在的情况下查找其它构造
 		}
-
+		
 		final Constructor<T>[] constructors = getConstructors(beanClass);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {
@@ -515,6 +518,7 @@ public class ReflectUtil {
 			if (0 == parameterTypes.length) {
 				continue;
 			}
+			constructor.setAccessible(true);
 			try {
 				constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
 			} catch (Exception e) {
