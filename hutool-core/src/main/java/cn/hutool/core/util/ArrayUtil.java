@@ -411,7 +411,8 @@ public class ArrayUtil {
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param buffer 已有数组
-	 * @param newElements 新元素
+	 * @param index 位置，大于长度追加，否则替换
+	 * @param value 新值
 	 * @return 新数组或原有数组
 	 * @since 4.1.2
 	 */
@@ -428,7 +429,8 @@ public class ArrayUtil {
 	 * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
 	 * 
 	 * @param array 已有数组
-	 * @param newElements 新元素
+	 * @param index 位置，大于长度追加，否则替换
+	 * @param value 新值
 	 * @return 新数组或原有数组
 	 * @since 4.1.2
 	 */
