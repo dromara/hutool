@@ -868,7 +868,9 @@ public class ImageUtil {
 		int height = srcImage.getHeight(null);
 		BufferedImage destImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = destImage.createGraphics();
-
+		
+		//抗锯齿
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		// 绘制背景
 		g.drawImage(srcImage, 0, 0, width, height, null);
 		g.setColor(color);

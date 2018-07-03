@@ -9,12 +9,16 @@
 * 【core】          MapUtil增加getDate方法（感谢@【帝都】宁静）
 * 【json】           putByPath方法增加容错性，支持下标越界识别为追加（issue#IKNM6@Gitee）
 * 【core】          增加FileUtil.getParent方法（pr#18@Gitee）
+* 【core】          ImageUtil.pressText增加抗锯齿（pr#19@Gitee）
+* 【core】          BeanUtil.getPropertyDescriptors去除class属性（issue#IKVKR@Gitee）
+* 【json】           putByPath方法针对空的规则变更（issue#IKX2H@Gitee）
 
 ### Bug修复
 * 【core】          修复JSONUtil.formatJsonStr引号换行问题（issue#IKMMK@Gitee）
 * 【core】          修复URLUtil.getDecodedPath可能导致的空指针问题（issue#IKLRD@gitee）
 * 【core】          修复PinyinUtil.getAllFirstLetter非汉字显示问题（issue#IKM0P@gitee）
 * 【json】          修复当Bean为私有类时无法实例化导致的JSON转换问题（感谢@【上海】风景）
+* 【json】          修复Bean中有Object字段时toBean产生的问题（感谢@【上海】风景）
 
 -------------------------------------------------------------------------------------------------------------
 

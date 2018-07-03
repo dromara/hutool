@@ -82,4 +82,11 @@ public class JSONUtilTest {
 		Price price = JSONUtil.toBean(json, Price.class);
 		Assert.assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
 	}
+	
+	@Test
+	public void putByPathTest() {
+		JSONObject json = new JSONObject();
+		json.putByPath("aa.bb", "BB");
+		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
+	}
 }

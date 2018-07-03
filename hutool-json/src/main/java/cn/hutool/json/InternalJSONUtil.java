@@ -305,7 +305,7 @@ final class InternalJSONUtil {
 				targetValue = (new CollectionConverter(type, TypeUtil.getTypeArgument(type))).convert(value, null);
 			}
 		}
-
+		
 		// 标准格式转换
 		if (null == targetValue) {
 			try {
@@ -317,7 +317,7 @@ final class InternalJSONUtil {
 				throw e;
 			}
 		}
-
+		
 		if (null == targetValue && false == ignoreError) {
 			if (value instanceof CharSequence && StrUtil.isBlank((CharSequence) value)) {
 				// 对于传入空字符串的情况，如果转换的目标对象是非字符串或非原书类型，转换器会返回false。
