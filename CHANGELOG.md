@@ -19,6 +19,7 @@
 * 【core】          修复PinyinUtil.getAllFirstLetter非汉字显示问题（issue#IKM0P@gitee）
 * 【json】          修复当Bean为私有类时无法实例化导致的JSON转换问题（感谢@【上海】风景）
 * 【json】          修复Bean中有Object字段时toBean产生的问题（感谢@【上海】风景）
+* 【core】          修复XmlUtil关闭XXE避免XXE攻击
 
 -------------------------------------------------------------------------------------------------------------
 
