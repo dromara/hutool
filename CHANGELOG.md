@@ -13,15 +13,18 @@
 * 【core】          BeanUtil.getPropertyDescriptors去除class属性（issue#IKVKR@Gitee）
 * 【json】           putByPath方法针对空的规则变更（issue#IKX2H@Gitee）
 * 【captcha】     增加CodeGenerator，可自定义验证码文字生成策略（issue#IL3YH@Gitee）
+* 【core】          增加CollUtil.list方法，更灵活的创建ArrayList和LinkedList
+* 【core】          DateTime增加时区支持（issue#131@Github）
 
 ### Bug修复
 * 【core】          修复JSONUtil.formatJsonStr引号换行问题（issue#IKMMK@Gitee）
-* 【core】          修复URLUtil.getDecodedPath可能导致的空指针问题（issue#IKLRD@gitee）
-* 【core】          修复PinyinUtil.getAllFirstLetter非汉字显示问题（issue#IKM0P@gitee）
+* 【core】          修复URLUtil.getDecodedPath可能导致的空指针问题（issue#IKLRD@Gitee）
+* 【core】          修复PinyinUtil.getAllFirstLetter非汉字显示问题（issue#IKM0P@Gitee）
 * 【json】          修复当Bean为私有类时无法实例化导致的JSON转换问题（感谢@【上海】风景）
 * 【json】          修复Bean中有Object字段时toBean产生的问题（感谢@【上海】风景）
 * 【core】          修复XmlUtil关闭XXE避免XXE攻击
 * 【poi】            修复Excel03SaxReader读取小数的问题（感谢@【深圳】rm -rf /）
+* 【core】          修复CollUtil.findOne空参数导致的空指针问题（issue#133@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

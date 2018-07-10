@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -287,5 +289,35 @@ public class CollUtilTest {
 		public String toString() {
 			return "TestBeans [name=" + name + ", age=" + age + "]";
 		}
+	}
+	
+	@Test
+	public void listTest() {
+		List<Object> list1 = CollUtil.list(false);
+		List<Object> list2 = CollUtil.list(true);
+		
+		Assert.assertTrue(list1 instanceof ArrayList);
+		Assert.assertTrue(list2 instanceof LinkedList);
+	}
+	
+	@Test
+	public void listTest2() {
+		List<String> list1 = CollUtil.list(false, "a", "b", "c");
+		List<String> list2 = CollUtil.list(true, "a", "b", "c");
+		Assert.assertEquals("[a, b, c]", list1.toString());
+		Assert.assertEquals("[a, b, c]", list2.toString());
+	}
+	
+	@Test
+	public void listTest3() {
+		HashSet<String> set = new HashSet<>();
+		set.add("a");
+		set.add("b");
+		set.add("c");
+		
+		List<String> list1 = CollUtil.list(false, set);
+		List<String> list2 = CollUtil.list(true, set);
+		Assert.assertEquals("[b, c, a]", list1.toString());
+		Assert.assertEquals("[b, c, a]", list2.toString());
 	}
 }

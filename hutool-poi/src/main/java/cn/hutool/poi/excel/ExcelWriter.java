@@ -506,7 +506,7 @@ public class ExcelWriter implements Closeable {
 	 * </p>
 	 * 
 	 * @param data 数据
-	 * @param comparator 比较器
+	 * @param comparator 比较器，用于字段名的排序
 	 * @return this
 	 * @since 3.2.3
 	 */
