@@ -9,12 +9,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ImageUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -32,8 +33,6 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	protected int width = 100;
 	// 图片的高度。
 	protected int height = 37;
-	// 验证码字符个数
-	protected int codeCount = 4;
 	// 验证码干扰元素个数
 	protected int interfereCount = 15;
 	// 字体
@@ -42,9 +41,11 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	protected String code;
 	// 验证码图片
 	protected byte[] imageBytes;
+	/** 验证码生成器 */
+	protected CodeGenerator generator;
 
 	/**
-	 * 构造
+	 * 构造，使用随机验证码生成器生成验证码
 	 * 
 	 * @param width 图片宽
 	 * @param height 图片高
@@ -52,9 +53,21 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public AbstractCaptcha(int width, int height, int codeCount, int interfereCount) {
+		this(width, height, new RandomGenerator(codeCount), interfereCount);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param width 图片宽
+	 * @param height 图片高
+	 * @param generator 验证码生成器
+	 * @param interfereCount 验证码干扰元素个数
+	 */
+	public AbstractCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
 		this.width = width;
 		this.height = height;
-		this.codeCount = codeCount;
+		this.generator = generator;
 		this.interfereCount = interfereCount;
 		// 字体高度设为验证码高度-2，留边距
 		this.font = new Font("Courier", Font.PLAIN, this.height - 2);
@@ -64,22 +77,24 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	@Override
 	public void createCode() {
 		generateCode();
-		
+
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		ImageUtil.writePng(createImage(this.code), out);
 		this.imageBytes = out.toByteArray();
 	}
-	
+
 	/**
 	 * 生成验证码字符串
+	 * 
 	 * @since 3.3.0
 	 */
 	protected void generateCode() {
-		this.code = RandomUtil.randomString(this.codeCount);
+		this.code = generator.generate();
 	}
 
 	/**
 	 * 根据生成的code创建验证码图片
+	 * 
 	 * @param code 验证码
 	 */
 	protected abstract Image createImage(String code);
@@ -155,5 +170,23 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 */
 	public void setFont(Font font) {
 		this.font = font;
+	}
+
+	/**
+	 * 获取验证码生成器
+	 * 
+	 * @return 验证码生成器
+	 */
+	public CodeGenerator getGenerator() {
+		return generator;
+	}
+
+	/**
+	 * 设置验证码生成器
+	 * 
+	 * @param generator 验证码生成器
+	 */
+	public void setGenerator(CodeGenerator generator) {
+		this.generator = generator;
 	}
 }

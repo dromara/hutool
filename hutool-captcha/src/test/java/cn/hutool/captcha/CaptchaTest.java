@@ -30,13 +30,13 @@ public class CaptchaTest {
 		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
 		// LineCaptcha lineCaptcha = new LineCaptcha(200, 100, 4, 150);
 		// 图形验证码写出，可以写出到文件，也可以写出到流
-		lineCaptcha.write("d:/line.png");
+		lineCaptcha.write("e:/line.png");
 		Console.log(lineCaptcha.getCode());
 		// 验证图形验证码的有效性，返回boolean值
 		lineCaptcha.verify("1234");
 
 		lineCaptcha.createCode();
-		lineCaptcha.write("d:/line.png");
+		lineCaptcha.write("e:/line.png");
 		Console.log(lineCaptcha.getCode());
 		// 验证图形验证码的有效性，返回boolean值
 		lineCaptcha.verify("1234");
