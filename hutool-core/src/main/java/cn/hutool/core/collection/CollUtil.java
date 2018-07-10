@@ -569,6 +569,27 @@ public class CollUtil {
 		return list;
 	}
 
+	//----------------------------------------------------------------------new LinkedList
+	/**
+	 * 新建LinkedList
+	 * @param values 数组
+	 * @param <T> 类型
+	 * @return LinkedList
+	 */
+	@SafeVarargs
+	public static <T> LinkedList<T> newLinkedList(T... values) {
+		if (values == null) {
+			return new LinkedList<>();
+		}
+
+		LinkedList<T> linkedList = new LinkedList<T>();
+
+		for (T value : values) {
+			linkedList.add(value);
+		}
+		return linkedList;
+	}
+
 	/**
 	 * 新建一个CopyOnWriteArrayList
 	 * 
