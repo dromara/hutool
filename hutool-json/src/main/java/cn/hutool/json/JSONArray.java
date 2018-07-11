@@ -506,7 +506,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			return false;
 		}
 		final ArrayList<Object> list = new ArrayList<>(c.size());
-		for (Object object : list) {
+		for (Object object : c) {
 			list.add(JSONUtil.wrap(object, ignoreNullValue));
 		}
 		return rawList.addAll(index, list);
