@@ -474,7 +474,7 @@ public class CollUtil {
 	 * 新建一个空List
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param isLineked 是否新建LinkedList
+	 * @param isLinked 是否新建LinkedList
 	 * @return List对象
 	 * @since 4.1.2
 	 */
@@ -486,7 +486,7 @@ public class CollUtil {
 	 * 新建一个List
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param isLineked 是否新建LinkedList
+	 * @param isLinked 是否新建LinkedList
 	 * @param values 数组
 	 * @return List对象
 	 * @since 4.1.2
@@ -507,16 +507,16 @@ public class CollUtil {
 	 * 新建一个List
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param isLineked 是否新建LinkedList
+	 * @param isLinked 是否新建LinkedList
 	 * @param collection 集合
 	 * @return List对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(boolean isLineked, Collection<T> collection) {
+	public static <T> List<T> list(boolean isLinked, Collection<T> collection) {
 		if (null == collection) {
-			return list(isLineked);
+			return list(isLinked);
 		}
-		return isLineked ? new LinkedList<T>(collection) : new ArrayList<T>(collection);
+		return isLinked ? new LinkedList<T>(collection) : new ArrayList<T>(collection);
 	}
 
 	/**
@@ -524,16 +524,16 @@ public class CollUtil {
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param isLineked 是否新建LinkedList
+	 * @param isLinked 是否新建LinkedList
 	 * @param iterable {@link Iterable}
 	 * @return List对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(boolean isLineked, Iterable<T> iterable) {
+	public static <T> List<T> list(boolean isLinked, Iterable<T> iterable) {
 		if(null == iterable) {
-			return list(isLineked);
+			return list(isLinked);
 		}
-		return list(isLineked, iterable.iterator());
+		return list(isLinked, iterable.iterator());
 	}
 
 	/**
@@ -541,13 +541,13 @@ public class CollUtil {
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param isLineked 是否新建LinkedList
+	 * @param isLinked 是否新建LinkedList
 	 * @param iter {@link Iterator}
 	 * @return ArrayList对象
 	 * @since 4.1.2
 	 */
-	public static <T> List<T> list(boolean isLineked, Iterator<T> iter) {
-		final List<T> list = list(isLineked);
+	public static <T> List<T> list(boolean isLinked, Iterator<T> iter) {
+		final List<T> list = list(isLinked);
 		if (null != iter) {
 			while (iter.hasNext()) {
 				list.add(iter.next());
@@ -561,13 +561,13 @@ public class CollUtil {
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param isLineked 是否新建LinkedList
+	 * @param isLinked 是否新建LinkedList
 	 * @param enumration {@link Enumeration}
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> List<T> list(boolean isLineked, Enumeration<T> enumration) {
-		final List<T> list = list(isLineked);
+	public static <T> List<T> list(boolean isLinked, Enumeration<T> enumration) {
+		final List<T> list = list(isLinked);
 		if (null != enumration) {
 			while (enumration.hasMoreElements()) {
 				list.add(enumration.nextElement());

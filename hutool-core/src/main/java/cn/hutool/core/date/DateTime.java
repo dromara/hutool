@@ -127,7 +127,6 @@ public class DateTime extends Date {
 	 * 给定日期毫秒数的构造
 	 * 
 	 * @param timeMillis 日期毫秒数
-	 * @param timeZone 时区
 	 * @since 4.1.2
 	 */
 	public DateTime(long timeMillis) {
