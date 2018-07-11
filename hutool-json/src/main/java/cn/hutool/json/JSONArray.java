@@ -1,18 +1,14 @@
 package cn.hutool.json;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.impl.CollectionConverter;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.*;
 
 /**
  * JSON数组<br>
@@ -506,7 +502,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			return false;
 		}
 		final ArrayList<Object> list = new ArrayList<>(c.size());
-		for (Object object : list) {
+		for (Object object : c) {
 			list.add(JSONUtil.wrap(object, ignoreNullValue));
 		}
 		return rawList.addAll(index, list);
