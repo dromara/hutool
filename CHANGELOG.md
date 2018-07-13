@@ -26,6 +26,7 @@
 * 【poi】            修复Excel03SaxReader读取小数的问题（感谢@【深圳】rm -rf /）
 * 【core】          修复CollUtil.findOne空参数导致的空指针问题（issue#133@Github）
 * 【core】          修复JSONArray.addAll问题（pr#137@Github）
+* 【core】          修复UnicodeUtil单独空格无法转换问题
 
 -------------------------------------------------------------------------------------------------------------
 
