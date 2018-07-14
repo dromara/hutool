@@ -22,7 +22,7 @@ public class JSONUtilTest {
 		Date date = JSONUtil.toBean(JSONUtil.parseObj(x), Date.class);
 		Assert.assertNotNull(date);
 	}
-
+	
 	@Test
 	public void toJsonStrTest() {
 		UserA a1 = new UserA();
