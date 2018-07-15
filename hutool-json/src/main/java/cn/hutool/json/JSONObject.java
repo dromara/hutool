@@ -263,7 +263,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T toBean(Class<T> clazz, boolean ignoreError) {
-		if (Map.class.isAssignableFrom(clazz)) {
+		if (Map.class.isAssignableFrom(clazz) || Object.class.equals(clazz)) {
 			return (T) this;
 		}
 		return toBean(ReflectUtil.newInstance(clazz), ignoreError);
@@ -292,6 +292,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T toBean(Type type, boolean ignoreError) {
+		if(Object.class.equals(type)) {
+			return (T) this;
+		}
 		final Class<?> clazz = TypeUtil.getClass(type);
 		if (null == clazz) {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));

@@ -87,11 +87,11 @@ public class PinyinUtil {
 		}
 		final byte[] bys = String.valueOf(ch).getBytes(CharsetUtil.CHARSET_GBK);
 		if (bys.length == 1) {
-			return '*';
+			return ch;
 		}
 		int count = (bys[0] + 256) * 256 + bys[1] + 256;
 		if (count < 45217) {
-			return '*';
+			return ch;
 		} else if (count < 45253) {
 			return 'a';
 		} else if (count < 45761) {
@@ -139,7 +139,7 @@ public class PinyinUtil {
 		} else if (count < 55290) {
 			return 'z';
 		}
-		return ' ';
+		return ch;
 	}
 	
 	/**

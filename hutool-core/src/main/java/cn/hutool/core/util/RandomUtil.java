@@ -27,11 +27,11 @@ import cn.hutool.core.lang.WeightRandom.WeightObj;
 public class RandomUtil {
 
 	/** 用于随机选的数字 */
-	private static final String BASE_NUMBER = "0123456789";
+	public static final String BASE_NUMBER = "0123456789";
 	/** 用于随机选的字符 */
-	private static final String BASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
+	public static final String BASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
 	/** 用于随机选的字符和数字 */
-	private static final String BASE_CHAR_NUMBER = BASE_CHAR + BASE_NUMBER;
+	public static final String BASE_CHAR_NUMBER = BASE_CHAR + BASE_NUMBER;
 
 	/**
 	 * 获取随机数生成器对象<br>

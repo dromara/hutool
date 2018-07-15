@@ -28,6 +28,8 @@ public class DateTime extends Date {
 	private boolean mutable = true;
 	/** 一周的第一天，默认是周一， 在设置或获得 WEEK_OF_MONTH 或 WEEK_OF_YEAR 字段时，Calendar 必须确定一个月或一年的第一个星期，以此作为参考点。 */
 	private Week firstDayOfWeek = Week.MONDAY;
+	/** 时区 */
+	private TimeZone timeZone;
 
 	/**
 	 * 转换JDK date为 DateTime
@@ -36,8 +38,8 @@ public class DateTime extends Date {
 	 * @return DateTime
 	 */
 	public static DateTime of(Date date) {
-		if(date instanceof DateTime) {
-			return (DateTime)date;
+		if (date instanceof DateTime) {
+			return (DateTime) date;
 		}
 		return new DateTime(date);
 	}
@@ -76,9 +78,20 @@ public class DateTime extends Date {
 	// -------------------------------------------------------------------- Constructor start
 	/**
 	 * 当前时间
+	 * 
 	 */
 	public DateTime() {
-		super();
+		this(TimeZone.getDefault());
+	}
+
+	/**
+	 * 当前时间
+	 * 
+	 * @param timeZone 时区
+	 * @since 4.1.2
+	 */
+	public DateTime(TimeZone timeZone) {
+		this(System.currentTimeMillis(), timeZone);
 	}
 
 	/**
@@ -87,7 +100,18 @@ public class DateTime extends Date {
 	 * @param date 日期
 	 */
 	public DateTime(Date date) {
-		this(date.getTime());
+		this(date.getTime(), TimeZone.getDefault());
+	}
+
+	/**
+	 * 给定日期的构造
+	 * 
+	 * @param date 日期
+	 * @param timeZone 时区
+	 * @since 4.1.2
+	 */
+	public DateTime(Date date, TimeZone timeZone) {
+		this(date.getTime(), timeZone);
 	}
 
 	/**
@@ -96,16 +120,31 @@ public class DateTime extends Date {
 	 * @param calendar {@link Calendar}
 	 */
 	public DateTime(Calendar calendar) {
-		this(calendar.getTime());
+		this(calendar.getTime(), (TimeZone)null);
+	}
+	
+	/**
+	 * 给定日期毫秒数的构造
+	 * 
+	 * @param timeMillis 日期毫秒数
+	 * @since 4.1.2
+	 */
+	public DateTime(long timeMillis) {
+		this(timeMillis, (TimeZone)null);
 	}
 
 	/**
 	 * 给定日期毫秒数的构造
 	 * 
 	 * @param timeMillis 日期毫秒数
+	 * @param timeZone 时区
+	 * @since 4.1.2
 	 */
-	public DateTime(long timeMillis) {
+	public DateTime(long timeMillis, TimeZone timeZone) {
 		super(timeMillis);
+		if(null != timeZone) {
+			this.timeZone = timeZone;
+		}
 	}
 
 	/**
@@ -127,7 +166,7 @@ public class DateTime extends Date {
 	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
 	 */
 	public DateTime(String dateStr, DateFormat dateFormat) {
-		this(parse(dateStr, dateFormat));
+		this(parse(dateStr, dateFormat), dateFormat.getTimeZone());
 	}
 
 	/**
@@ -138,7 +177,7 @@ public class DateTime extends Date {
 	 * @param dateParser 格式化器 {@link DateParser}，可以使用 {@link FastDateFormat}
 	 */
 	public DateTime(String dateStr, DateParser dateParser) {
-		this(parse(dateStr, dateParser));
+		this(parse(dateStr, dateParser), dateParser.getTimeZone());
 	}
 
 	// -------------------------------------------------------------------- Constructor end
@@ -222,7 +261,7 @@ public class DateTime extends Date {
 	 * @return {@link DateTime}
 	 */
 	public DateTime setField(int field, int value) {
-		Calendar calendar = toCalendar();
+		final Calendar calendar = toCalendar();
 		calendar.set(field, value);
 
 		DateTime dt = this;
@@ -452,15 +491,12 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 转换为Calendar，默认{@link TimeZone}，默认 {@link Locale}
+	 * 转换为Calendar, 默认 {@link Locale}
 	 * 
 	 * @return {@link Calendar}
 	 */
 	public Calendar toCalendar() {
-		final Calendar cal = Calendar.getInstance();
-		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
-		cal.setTime(this);
-		return cal;
+		return toCalendar(Locale.getDefault(Locale.Category.FORMAT));
 	}
 
 	/**
@@ -470,10 +506,7 @@ public class DateTime extends Date {
 	 * @return {@link Calendar}
 	 */
 	public Calendar toCalendar(Locale locale) {
-		final Calendar cal = Calendar.getInstance(locale);
-		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
-		cal.setTime(this);
-		return cal;
+		return toCalendar(this.timeZone, locale);
 	}
 
 	/**
@@ -494,7 +527,10 @@ public class DateTime extends Date {
 	 * @return {@link Calendar}
 	 */
 	public Calendar toCalendar(TimeZone zone, Locale locale) {
-		final Calendar cal = Calendar.getInstance(zone, locale);
+		if(null == locale) {
+			locale = Locale.getDefault(Locale.Category.FORMAT);
+		}
+		final Calendar cal = (null != zone) ? Calendar.getInstance(zone, locale) : Calendar.getInstance(locale);
 		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
 		cal.setTime(this);
 		return cal;
@@ -663,6 +699,18 @@ public class DateTime extends Date {
 		this.firstDayOfWeek = firstDayOfWeek;
 		return this;
 	}
+	
+	/**
+	 * 设置时区
+	 * 
+	 * @param timeZone 时区
+	 * @return this
+	 * @since 4.1.2
+	 */
+	public DateTime setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
+		return this;
+	}
 
 	// -------------------------------------------------------------------- toString start
 	/**
@@ -672,9 +720,14 @@ public class DateTime extends Date {
 	 */
 	@Override
 	public String toString() {
+		if(null != this.timeZone) {
+			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
+			simpleDateFormat.setTimeZone(this.timeZone);
+			return toString(simpleDateFormat);
+		}
 		return toString(DatePattern.NORM_DATETIME_FORMAT);
 	}
-	
+
 	/**
 	 * 转为"yyyy-MM-dd " 格式字符串
 	 * 
@@ -682,7 +735,12 @@ public class DateTime extends Date {
 	 * @since 4.0.0
 	 */
 	public String toDateStr() {
-		return toString(DatePattern.NORM_DATE_PATTERN);
+		if(null != this.timeZone) {
+			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATE_PATTERN);
+			simpleDateFormat.setTimeZone(this.timeZone);
+			return toString(simpleDateFormat);
+		}
+		return toString(DatePattern.NORM_DATE_FORMAT);
 	}
 
 	/**
@@ -692,6 +750,11 @@ public class DateTime extends Date {
 	 * @return String
 	 */
 	public String toString(String format) {
+		if(null != this.timeZone) {
+			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+			simpleDateFormat.setTimeZone(this.timeZone);
+			return toString(simpleDateFormat);
+		}
 		return toString(FastDateFormat.getInstance(format));
 	}
 

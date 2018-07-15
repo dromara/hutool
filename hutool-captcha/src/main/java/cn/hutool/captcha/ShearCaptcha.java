@@ -60,8 +60,9 @@ public class ShearCaptcha extends AbstractCaptcha {
 		// 画字符串
 		g.setColor(Color.black);
 		g.setFont(font);
-		int charWidth = width / (codeCount + 2);
-		for (int i = 0; i < codeCount; i++) {
+		final int len = this.generator.getLength();
+		int charWidth = width / (len + 2);
+		for (int i = 0; i < len; i++) {
 			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
 			g.setColor(ImageUtil.randomColor());
 			g.drawString(String.valueOf(code.charAt(i)), (i + 1) * charWidth, height - 4);

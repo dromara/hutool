@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -138,9 +139,8 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static Document readXML(InputSource source) {
-		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		final DocumentBuilder builder = createDocumentBuilder();
 		try {
-			final DocumentBuilder builder = dbf.newDocumentBuilder();
 			return builder.parse(source);
 		} catch (Exception e) {
 			throw new UtilException(e, "Parse XML from stream error!");
@@ -238,7 +238,7 @@ public class XmlUtil {
 		}
 		return writer.toString();
 	}
-	
+
 	/**
 	 * 将XML文档转换为String<br>
 	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
@@ -305,7 +305,7 @@ public class XmlUtil {
 	public static void write(Node node, Writer writer, boolean isPretty) {
 		transform(new DOMSource(node), new StreamResult(writer), null, isPretty);
 	}
-	
+
 	/**
 	 * 将XML文档写出
 	 * 
@@ -318,7 +318,7 @@ public class XmlUtil {
 	public static void write(Node node, OutputStream out, String charset, boolean isPretty) {
 		transform(new DOMSource(node), new StreamResult(out), charset, isPretty);
 	}
-	
+
 	/**
 	 * 将XML文档写出
 	 * 
@@ -333,7 +333,7 @@ public class XmlUtil {
 		try {
 			final Transformer xformer = factory.newTransformer();
 			xformer.setOutputProperty(OutputKeys.INDENT, isPretty ? "yes" : "no");
-			if(StrUtil.isNotBlank(charset)) {
+			if (StrUtil.isNotBlank(charset)) {
 				xformer.setOutputProperty(OutputKeys.ENCODING, charset);
 			}
 			xformer.transform(source, result);
@@ -351,18 +351,26 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static Document createXml() {
+		return createDocumentBuilder().newDocument();
+	}
+	
+	/**
+	 * 创建 DocumentBuilder
+	 * @return DocumentBuilder
+	 * @since 4.1.2
+	 */
+	public static DocumentBuilder createDocumentBuilder() {
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		disableXXE(dbf);
 		DocumentBuilder builder = null;
 		try {
 			builder = dbf.newDocumentBuilder();
 		} catch (Exception e) {
 			throw new UtilException(e, "Create xml document error!");
 		}
-		final Document doc = builder.newDocument();
-
-		return doc;
+		return builder;
 	}
-	
+
 	/**
 	 * 创建XML文档<br>
 	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，既XML在转为文本的时候才定义编码
@@ -527,7 +535,7 @@ public class XmlUtil {
 	public static XPath createXPath() {
 		return XPathFactory.newInstance().newXPath();
 	}
-	
+
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
@@ -540,7 +548,7 @@ public class XmlUtil {
 	public static Element getElementByXPath(String expression, Object source) {
 		return (Element) getNodeByXPath(expression, source);
 	}
-	
+
 	/**
 	 * 通过XPath方式读取XML的NodeList<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
@@ -553,7 +561,7 @@ public class XmlUtil {
 	public static NodeList getNodeListByXPath(String expression, Object source) {
 		return (NodeList) getByXPath(expression, source, XPathConstants.NODESET);
 	}
-	
+
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
@@ -630,7 +638,7 @@ public class XmlUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * XML格式字符串转换为Map
 	 *
@@ -641,7 +649,7 @@ public class XmlUtil {
 	public static Map<String, Object> xmlToMap(String xmlStr) {
 		return xmlToMap(xmlStr, new HashMap<String, Object>());
 	}
-	
+
 	/**
 	 * XML格式字符串转换为Map
 	 *
@@ -666,10 +674,10 @@ public class XmlUtil {
 		final Document doc = parseXml(xmlStr);
 		final Element root = getRootElement(doc);
 		root.normalize();
-		
+
 		return xmlToMap(root, result);
 	}
-	
+
 	/**
 	 * XML节点转换为Map
 	 *
@@ -679,10 +687,10 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static Map<String, Object> xmlToMap(Node node, Map<String, Object> result) {
-		if(null == result) {
+		if (null == result) {
 			result = new HashMap<>();
 		}
-		
+
 		final NodeList nodeList = node.getChildNodes();
 		final int length = nodeList.getLength();
 		Node childNode;
@@ -707,7 +715,7 @@ public class XmlUtil {
 	public static String mapToXmlStr(Map<?, ?> data, String rootName) {
 		return toStr(mapToXml(data, rootName));
 	}
-	
+
 	/**
 	 * 将Map转换为XML
 	 *
@@ -718,13 +726,14 @@ public class XmlUtil {
 	public static Document mapToXml(Map<?, ?> data, String rootName) {
 		final Document doc = createXml();
 		final Element root = appendChild(doc, rootName);
-		
+
 		mapToXml(doc, root, data);
 		return doc;
 	}
-	
+
 	/**
 	 * 给定节点是否为{@link Element} 类型节点
+	 * 
 	 * @param node 节点
 	 * @return 是否为{@link Element} 类型节点
 	 * @since 4.0.8
@@ -732,16 +741,17 @@ public class XmlUtil {
 	public static boolean isElement(Node node) {
 		return (null == node) ? false : Node.ELEMENT_NODE == node.getNodeType();
 	}
-	
+
 	/**
 	 * 在已有节点上创建子节点
+	 * 
 	 * @param node 节点
 	 * @param tagName 标签名
 	 * @return 子节点
 	 * @since 4.0.9
 	 */
 	public static Element appendChild(Node node, String tagName) {
-		Document doc = (node instanceof Document) ? (Document)node : node.getOwnerDocument();
+		Document doc = (node instanceof Document) ? (Document) node : node.getOwnerDocument();
 		Element child = doc.createElement(tagName);
 		node.appendChild(child);
 		return child;
@@ -751,8 +761,8 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
-	 *@param doc {@link Document}
-	 *@param element 节点
+	 * @param doc {@link Document}
+	 * @param element 节点
 	 * @param data Map类型数据
 	 * @since 4.0.8
 	 */
@@ -763,13 +773,49 @@ public class XmlUtil {
 			filedEle = doc.createElement(entry.getKey().toString());
 			element.appendChild(filedEle);
 			value = entry.getValue();
-			if(value instanceof Map) {
-				mapToXml(doc, filedEle, (Map<?, ?>)value);
+			if (value instanceof Map) {
+				mapToXml(doc, filedEle, (Map<?, ?>) value);
 				element.appendChild(filedEle);
 			} else {
 				filedEle.appendChild(doc.createTextNode(value.toString()));
 			}
 		}
+	}
+	
+	/**
+	 * 关闭XXE，避免漏洞攻击<br>
+	 * see: https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#JAXP_DocumentBuilderFactory.2C_SAXParserFactory_and_DOM4J
+	 * @param dbf DocumentBuilderFactory
+	 * @return DocumentBuilderFactory
+	 */
+	private static DocumentBuilderFactory disableXXE(DocumentBuilderFactory dbf) {
+		String feature;
+		try {
+			// This is the PRIMARY defense. If DTDs (doctypes) are disallowed, almost all XML entity attacks are prevented
+			// Xerces 2 only - http://xerces.apache.org/xerces2-j/features.html#disallow-doctype-decl
+			feature = "http://apache.org/xml/features/disallow-doctype-decl";
+			dbf.setFeature(feature, true);
+			// If you can't completely disable DTDs, then at least do the following:
+			// Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-general-entities
+			// Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-general-entities
+			// JDK7+ - http://xml.org/sax/features/external-general-entities
+			feature = "http://xml.org/sax/features/external-general-entities";
+			dbf.setFeature(feature, false);
+			// Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-parameter-entities
+			// Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-parameter-entities
+			// JDK7+ - http://xml.org/sax/features/external-parameter-entities
+			feature = "http://xml.org/sax/features/external-parameter-entities";
+			dbf.setFeature(feature, false);
+			// Disable external DTDs as well
+			feature = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+			dbf.setFeature(feature, false);
+			// and these as well, per Timothy Morgan's 2014 paper: "XML Schema, DTD, and Entity Attacks"
+			dbf.setXIncludeAware(false);
+			dbf.setExpandEntityReferences(false);
+		} catch (ParserConfigurationException e) {
+			// ignore
+		}
+		return dbf;
 	}
 	// ---------------------------------------------------------------------------------------- Private method end
 

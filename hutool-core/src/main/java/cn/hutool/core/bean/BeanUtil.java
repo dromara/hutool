@@ -1,11 +1,11 @@
 package cn.hutool.core.bean;
 
+import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -20,6 +20,7 @@ import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -120,10 +121,22 @@ public class BeanUtil {
 	 * 
 	 * @param clazz Bean类
 	 * @return 字段描述数组
-	 * @throws IntrospectionException 获取属性异常
+	 * @throws BeanException 获取属性异常
 	 */
-	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) throws IntrospectionException {
-		return Introspector.getBeanInfo(clazz).getPropertyDescriptors();
+	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) throws BeanException{
+		BeanInfo beanInfo;
+		try {
+			beanInfo = Introspector.getBeanInfo(clazz);
+		} catch (IntrospectionException e) {
+			throw new BeanException(e);
+		}
+		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), new Filter<PropertyDescriptor>() {
+			@Override
+			public boolean accept(PropertyDescriptor t) {
+				//过滤掉getClass方法
+				return false == "class".equals(t.getName());
+			}
+		});
 	}
 
 	/**
@@ -132,9 +145,9 @@ public class BeanUtil {
 	 * @param clazz Bean类
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
-	 * @throws IntrospectionException 获取属性异常
+	 * @throws BeanException 获取属性异常
 	 */
-	public static Map<String, PropertyDescriptor> getPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws IntrospectionException {
+	public static Map<String, PropertyDescriptor> getPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws BeanException {
 		Map<String, PropertyDescriptor> map = BeanInfoCache.INSTANCE.getPropertyDescriptorMap(clazz, ignoreCase);
 		if (null == map) {
 			map = internalGetPropertyDescriptorMap(clazz, ignoreCase);
@@ -149,9 +162,9 @@ public class BeanUtil {
 	 * @param clazz Bean类
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
-	 * @throws IntrospectionException 获取属性异常
+	 * @throws BeanException 获取属性异常
 	 */
-	private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws IntrospectionException {
+	private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws BeanException {
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
 		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<String, PropertyDescriptor>(propertyDescriptors.length, 1)
 				: new HashMap<String, PropertyDescriptor>((int) (propertyDescriptors.length), 1);
@@ -168,9 +181,9 @@ public class BeanUtil {
 	 * @param clazz Bean类
 	 * @param fieldName 字段名
 	 * @return PropertyDescriptor
-	 * @throws IntrospectionException 获取属性异常
+	 * @throws BeanException 获取属性异常
 	 */
-	public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz, final String fieldName) throws IntrospectionException {
+	public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz, final String fieldName) throws BeanException {
 		return getPropertyDescriptor(clazz, fieldName, false);
 	}
 
@@ -181,9 +194,9 @@ public class BeanUtil {
 	 * @param fieldName 字段名
 	 * @param ignoreCase 是否忽略大小写
 	 * @return PropertyDescriptor
-	 * @throws IntrospectionException 获取属性异常
+	 * @throws BeanException 获取属性异常
 	 */
-	public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz, final String fieldName, boolean ignoreCase) throws IntrospectionException {
+	public static PropertyDescriptor getPropertyDescriptor(Class<?> clazz, final String fieldName, boolean ignoreCase) throws BeanException {
 		final Map<String, PropertyDescriptor> map = getPropertyDescriptorMap(clazz, ignoreCase);
 		return (null == map) ? null : map.get(fieldName);
 	}
@@ -204,7 +217,7 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			return ((Map<?, ?>) bean).get(fieldNameOrIndex);
 		} else if (bean instanceof Collection) {
-			return CollUtil.get((Collection<?>)bean, Integer.parseInt(fieldNameOrIndex));
+			return CollUtil.get((Collection<?>) bean, Integer.parseInt(fieldNameOrIndex));
 		} else if (ArrayUtil.isArray(bean)) {
 			return ArrayUtil.get(bean, Integer.parseInt(fieldNameOrIndex));
 		} else {// 普通Bean对象
@@ -225,9 +238,9 @@ public class BeanUtil {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
 		} else if (bean instanceof List) {
-			((List) bean).set(Convert.toInt(fieldNameOrIndex), value);
+			CollUtil.setOrAppend((List) bean, Convert.toInt(fieldNameOrIndex), value);
 		} else if (ArrayUtil.isArray(bean)) {
-			Array.set(bean, Convert.toInt(fieldNameOrIndex), value);
+			ArrayUtil.setOrAppend(bean, Convert.toInt(fieldNameOrIndex), value);
 		} else {
 			// 普通Bean对象
 			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);
@@ -582,7 +595,7 @@ public class BeanUtil {
 		if (bean == null) {
 			return bean;
 		}
-		
+
 		final Field[] fields = ReflectUtil.getFields(bean.getClass());
 		for (Field field : fields) {
 			if (ignoreFields != null && ArrayUtil.containsIgnoreCase(ignoreFields, field.getName())) {
@@ -592,7 +605,7 @@ public class BeanUtil {
 			if (String.class.equals(field.getType())) {
 				// 只有String的Field才处理
 				final String val = (String) ReflectUtil.getFieldValue(bean, field);
-				if(null != val) {
+				if (null != val) {
 					final String trimVal = StrUtil.trim(val);
 					if (false == val.equals(trimVal)) {
 						// Field Value不为null，且首尾有空格才处理
@@ -601,7 +614,7 @@ public class BeanUtil {
 				}
 			}
 		}
-		
+
 		return bean;
 	}
 

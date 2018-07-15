@@ -1,5 +1,6 @@
 package cn.hutool.core.bean;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Console;
 
 /**
  * Bean工具单元测试
@@ -118,6 +120,14 @@ public class BeanUtilTest {
 		Assert.assertEquals("测试A11", name);
 		Object subName = BeanUtil.getProperty(person, "subName");
 		Assert.assertEquals("sub名字", subName);
+	}
+	
+	@Test
+	public void getPropertyDescriptorsTest() {
+		PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
+		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+			Console.log(propertyDescriptor.getName());
+		}
 	}
 	
 	@Test

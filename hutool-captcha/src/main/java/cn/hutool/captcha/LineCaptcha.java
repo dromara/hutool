@@ -54,8 +54,9 @@ public class LineCaptcha extends AbstractCaptcha {
 		drawInterfere(g, random);
 
 		// 文字
-		int charWidth = width / (codeCount + 2);
-		for (int i = 0; i < codeCount; i++) {
+		final int len = this.generator.getLength();
+		int charWidth = width / (len + 2);
+		for (int i = 0; i < len; i++) {
 			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
 			g.setColor(ImageUtil.randomColor(random));
 			g.drawString(String.valueOf(code.charAt(i)), i * charWidth + (charWidth >> 1), RandomUtil.randomInt(height >> 1) + (height >> 1));

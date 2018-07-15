@@ -469,7 +469,113 @@ public class CollUtil {
 		return set;
 	}
 
-	// ----------------------------------------------------------------------------------------------- new ArrayList
+	// ----------------------------------------------------------------------------------------------- List
+	/**
+	 * 新建一个空List
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isLinked 是否新建LinkedList
+	 * @return List对象
+	 * @since 4.1.2
+	 */
+	public static <T> List<T> list(boolean isLinked) {
+		return isLinked ? new LinkedList<T>() : new ArrayList<T>();
+	}
+	
+	/**
+	 * 新建一个List
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isLinked 是否新建LinkedList
+	 * @param values 数组
+	 * @return List对象
+	 * @since 4.1.2
+	 */
+	@SafeVarargs
+	public static <T> List<T> list(boolean isLinked, T... values) {
+		if (ArrayUtil.isEmpty(values)) {
+			return list(isLinked);
+		}
+		List<T> arrayList = isLinked ? new LinkedList<T>() : new ArrayList<T>(values.length);
+		for (T t : values) {
+			arrayList.add(t);
+		}
+		return arrayList;
+	}
+
+	/**
+	 * 新建一个List
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isLinked 是否新建LinkedList
+	 * @param collection 集合
+	 * @return List对象
+	 * @since 4.1.2
+	 */
+	public static <T> List<T> list(boolean isLinked, Collection<T> collection) {
+		if (null == collection) {
+			return list(isLinked);
+		}
+		return isLinked ? new LinkedList<T>(collection) : new ArrayList<T>(collection);
+	}
+
+	/**
+	 * 新建一个List<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isLinked 是否新建LinkedList
+	 * @param iterable {@link Iterable}
+	 * @return List对象
+	 * @since 4.1.2
+	 */
+	public static <T> List<T> list(boolean isLinked, Iterable<T> iterable) {
+		if(null == iterable) {
+			return list(isLinked);
+		}
+		return list(isLinked, iterable.iterator());
+	}
+
+	/**
+	 * 新建一个ArrayList<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isLinked 是否新建LinkedList
+	 * @param iter {@link Iterator}
+	 * @return ArrayList对象
+	 * @since 4.1.2
+	 */
+	public static <T> List<T> list(boolean isLinked, Iterator<T> iter) {
+		final List<T> list = list(isLinked);
+		if (null != iter) {
+			while (iter.hasNext()) {
+				list.add(iter.next());
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 新建一个List<br>
+	 * 提供的参数为null时返回空{@link ArrayList}
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param isLinked 是否新建LinkedList
+	 * @param enumration {@link Enumeration}
+	 * @return ArrayList对象
+	 * @since 3.0.8
+	 */
+	public static <T> List<T> list(boolean isLinked, Enumeration<T> enumration) {
+		final List<T> list = list(isLinked);
+		if (null != enumration) {
+			while (enumration.hasMoreElements()) {
+				list.add(enumration.nextElement());
+			}
+		}
+		return list;
+	}
+	
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -479,14 +585,7 @@ public class CollUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		if (null == values) {
-			return new ArrayList<>();
-		}
-		ArrayList<T> arrayList = new ArrayList<T>(values.length);
-		for (T t : values) {
-			arrayList.add(t);
-		}
-		return arrayList;
+		return (ArrayList<T>) list(false, values);
 	}
 
 	/**
@@ -510,10 +609,7 @@ public class CollUtil {
 	 * @return ArrayList对象
 	 */
 	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
-		if (null == collection) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<T>(collection);
+		return (ArrayList<T>) list(false, collection);
 	}
 
 	/**
@@ -526,7 +622,7 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> ArrayList<T> newArrayList(Iterable<T> iterable) {
-		return (null == iterable) ? new ArrayList<T>() : newArrayList(iterable.iterator());
+		return (ArrayList<T>) list(false, iterable);
 	}
 
 	/**
@@ -539,14 +635,7 @@ public class CollUtil {
 	 * @since 3.0.8
 	 */
 	public static <T> ArrayList<T> newArrayList(Iterator<T> iter) {
-		final ArrayList<T> list = new ArrayList<>();
-		if (null == iter) {
-			return list;
-		}
-		while (iter.hasNext()) {
-			list.add(iter.next());
-		}
-		return list;
+		return (ArrayList<T>) list(false, iter);
 	}
 
 	/**
@@ -559,14 +648,21 @@ public class CollUtil {
 	 * @since 3.0.8
 	 */
 	public static <T> ArrayList<T> newArrayList(Enumeration<T> enumration) {
-		final ArrayList<T> list = new ArrayList<>();
-		if (null == enumration) {
-			return list;
-		}
-		while (enumration.hasMoreElements()) {
-			list.add(enumration.nextElement());
-		}
-		return list;
+		return (ArrayList<T>) list(false, enumration);
+	}
+
+	// ----------------------------------------------------------------------new LinkedList
+	/**
+	 * 新建LinkedList
+	 * 
+	 * @param values 数组
+	 * @param <T> 类型
+	 * @return LinkedList
+	 * @since 4.1.2
+	 */
+	@SafeVarargs
+	public static <T> LinkedList<T> newLinkedList(T... values) {
+		return (LinkedList<T>) list(true, values);
 	}
 
 	/**
@@ -967,9 +1063,11 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> T findOne(Iterable<T> collection, Filter<T> filter) {
-		for (T t : collection) {
-			if (filter.accept(t)) {
-				return t;
+		if(null != collection) {
+			for (T t : collection) {
+				if (filter.accept(t)) {
+					return t;
+				}
 			}
 		}
 		return null;
@@ -2012,6 +2110,7 @@ public class CollUtil {
 	/**
 	 * 分组，按照{@link Hash}接口定义的hash算法，集合中的元素放入hash值对应的子列表中
 	 * 
+	 * @param <T> 元素类型
 	 * @param collection 被分组的集合
 	 * @param hash Hash值算法，决定元素放在第几个分组的规则
 	 * @return 分组后的集合
@@ -2055,6 +2154,7 @@ public class CollUtil {
 	/**
 	 * 根据元素的指定字段名分组，非Bean都放在第一个分组中
 	 * 
+	 * @param <T> 元素类型
 	 * @param collection 集合
 	 * @param fieldName 元素Bean中的字段名，非Bean都放在第一个分组中
 	 * @return 分组列表
@@ -2084,6 +2184,7 @@ public class CollUtil {
 	/**
 	 * 反序给定List，会在原List基础上直接修改
 	 * 
+	 * @param <T> 元素类型
 	 * @param list 被反转的List
 	 * @return 反转后的List
 	 * @since 4.0.6
@@ -2096,6 +2197,7 @@ public class CollUtil {
 	/**
 	 * 反序给定List，会创建一个新的List，原List数据不变
 	 * 
+	 * @param <T> 元素类型
 	 * @param list 被反转的List
 	 * @return 反转后的List
 	 * @since 4.0.6
@@ -2103,6 +2205,24 @@ public class CollUtil {
 	public static <T> List<T> reverseNew(List<T> list) {
 		final List<T> list2 = ObjectUtil.clone(list);
 		return reverse(list2);
+	}
+
+	/**
+	 * 设置或增加元素。当index小于List的长度时，替换指定位置的值，否则在尾部追加
+	 * 
+	 * @param list List列表
+	 * @param index 位置
+	 * @param element 新元素
+	 * @return 原List
+	 * @since 4.1.2
+	 */
+	public static <T> List<T> setOrAppend(List<T> list, int index, T element) {
+		if (index < list.size()) {
+			list.set(index, element);
+		} else {
+			list.add(element);
+		}
+		return list;
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start

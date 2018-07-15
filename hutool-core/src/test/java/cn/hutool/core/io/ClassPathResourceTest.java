@@ -24,6 +24,13 @@ public class ClassPathResourceTest {
 	}
 	
 	@Test
+	public void readStringTest2() throws IOException{
+		ClassPathResource resource = new ClassPathResource("/");
+		String content = resource.readUtf8Str();
+		Assert.assertTrue(StrUtil.isNotEmpty(content));
+	}
+	
+	@Test
 	public void readTest() throws IOException{
 		ClassPathResource resource = new ClassPathResource("test.properties");
 		Properties properties = new Properties();

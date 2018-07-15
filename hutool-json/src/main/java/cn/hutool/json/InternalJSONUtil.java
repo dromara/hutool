@@ -292,7 +292,7 @@ final class InternalJSONUtil {
 			// 目标为JSON格式
 			return JSONUtil.parse(value);
 		}
-
+		
 		Object targetValue = null;
 		// 非标准转换格式
 		if (value instanceof JSONObject) {
@@ -302,10 +302,10 @@ final class InternalJSONUtil {
 				// 目标为数组
 				targetValue = ((JSONArray) value).toArray(rowType, ignoreError);
 			} else {
-				targetValue = (new CollectionConverter(rowType, TypeUtil.getTypeArgument(type))).convert(value, null);
+				targetValue = (new CollectionConverter(type, TypeUtil.getTypeArgument(type))).convert(value, null);
 			}
 		}
-
+		
 		// 标准格式转换
 		if (null == targetValue) {
 			try {
@@ -317,7 +317,7 @@ final class InternalJSONUtil {
 				throw e;
 			}
 		}
-
+		
 		if (null == targetValue && false == ignoreError) {
 			if (value instanceof CharSequence && StrUtil.isBlank((CharSequence) value)) {
 				// 对于传入空字符串的情况，如果转换的目标对象是非字符串或非原书类型，转换器会返回false。

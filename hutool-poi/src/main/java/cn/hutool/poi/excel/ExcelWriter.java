@@ -283,7 +283,8 @@ public class ExcelWriter implements Closeable {
 	}
 
 	/**
-	 * 切换sheet，如果指定的sheet不存在，创建之
+	 * 切换sheet，如果指定的sheet不存在，创建之<br>
+	 * 当切换到新的sheet时，游标将归零到第一行
 	 * 
 	 * @param sheetName sheet名
 	 * @return this
@@ -291,6 +292,7 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter setOrCreateSheet(String sheetName) {
 		this.sheet = ExcelUtil.getOrCreateSheet(this.workbook, sheetName);
+		this.resetRow();
 		return this;
 	}
 
@@ -504,7 +506,7 @@ public class ExcelWriter implements Closeable {
 	 * </p>
 	 * 
 	 * @param data 数据
-	 * @param comparator 比较器
+	 * @param comparator 比较器，用于字段名的排序
 	 * @return this
 	 * @since 3.2.3
 	 */

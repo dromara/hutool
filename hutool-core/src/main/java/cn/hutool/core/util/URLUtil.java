@@ -280,6 +280,10 @@ public class URLUtil {
 	 * @since 3.0.8
 	 */
 	public static String getDecodedPath(URL url) {
+		if(null == url) {
+			return null;
+		}
+		
 		String path = null;
 		try {
 			// URL对象的getPath方法对于包含中文或空格的问题

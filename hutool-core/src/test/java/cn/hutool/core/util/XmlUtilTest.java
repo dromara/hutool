@@ -48,7 +48,7 @@ public class XmlUtilTest {
 				+ "<successCounts>1</successCounts>"//
 				+ "</returnsms>";
 		Document docResult = XmlUtil.parseXml(result);
-		XmlUtil.toFile(docResult, "d:/aaa.xml", "utf-8");
+		XmlUtil.toFile(docResult, "e:/aaa.xml", "utf-8");
 	}
 
 	@Test
@@ -104,5 +104,11 @@ public class XmlUtilTest {
 				+ "</game>"//
 				+ "</user>", //
 				XmlUtil.toStr(doc, false));
+	}
+	
+	@Test
+	public void readTest() {
+		Document doc = XmlUtil.readXML("test.xml");
+		Assert.assertNotNull(doc);
 	}
 }

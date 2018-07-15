@@ -15,14 +15,14 @@ import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 
 public class JSONUtilTest {
-	
+
 	@Test
 	public void toDateTest() {
 		String x = JSONUtil.parse(new Date()).toString();
 		Date date = JSONUtil.toBean(JSONUtil.parseObj(x), Date.class);
 		Assert.assertNotNull(date);
 	}
-
+	
 	@Test
 	public void toJsonStrTest() {
 		UserA a1 = new UserA();
@@ -51,35 +51,56 @@ public class JSONUtilTest {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("model", model);
-		
+
 		JSONObject jsonObject = JSONUtil.parseObj(data);
 		Assert.assertEquals("{\"model\":{\"type\":1,\"mobile\":\"17610836523\"}}", jsonObject.toString());
 	}
-	
+
 	@Test
 	public void toJsonStrTest3() {
-		//验证某个字段为JSON字符串时转义是否规范
+		// 验证某个字段为JSON字符串时转义是否规范
 		JSONObject object = new JSONObject(true);
 		object.put("name", "123123");
 		object.put("value", "\\");
 		object.put("value2", "</");
-		
+
 		HashMap<String, String> map = MapUtil.newHashMap();
 		map.put("user", object.toString());
-		
+
 		JSONObject json = JSONUtil.parseObj(map);
 		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"<\\/\"}", json.get("user"));
 		Assert.assertEquals("{\"user\":\"{\\\"name\\\":\\\"123123\\\",\\\"value\\\":\\\"\\\\\\\\\\\",\\\"value2\\\":\\\"<\\\\/\\\"}\"}", json.toString());
-		
+
 		JSONObject json2 = JSONUtil.parseObj(json.toString());
 		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"<\\/\"}", json2.get("user"));
 	}
-	
+
 	@Test
 	public void toBeanTest() {
 		String json = "{\"ADT\":[[{\"BookingCode\":[\"N\",\"N\"]}]]}";
 
 		Price price = JSONUtil.toBean(json, Price.class);
 		Assert.assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
+	}
+
+	@Test
+	public void putByPathTest() {
+		JSONObject json = new JSONObject();
+		json.putByPath("aa.bb", "BB");
+		Assert.assertEquals("{\"aa\":{\"bb\":\"BB\"}}", json.toString());
+	}
+
+	@Test
+	public void getStrTest() {
+		String html = "{\"name\":\"Something must have been changed since you leave\"}";
+		JSONObject jsonObject = JSONUtil.parseObj(html);
+		Assert.assertEquals("Something must have been changed since you leave", jsonObject.getStr("name"));
+	}
+
+	@Test
+	public void getStrTest2() {
+		String html = "{\"name\":\"Something\\u00a0must have been changed since you leave\"}";
+		JSONObject jsonObject = JSONUtil.parseObj(html);
+		Assert.assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStr("name"));
 	}
 }

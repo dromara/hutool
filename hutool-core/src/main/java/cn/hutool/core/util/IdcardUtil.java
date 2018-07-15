@@ -7,6 +7,7 @@ import java.util.Map;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 
 /**
@@ -95,18 +96,19 @@ public class IdcardUtil {
 		twFirstCode.put("I", 34);
 		twFirstCode.put("O", 35);
 
-		hkFirstCode.put("A", 1);
-		hkFirstCode.put("B", 2);
-		hkFirstCode.put("C", 3);
-		hkFirstCode.put("R", 18);
-		hkFirstCode.put("U", 21);
-		hkFirstCode.put("Z", 26);
-		hkFirstCode.put("X", 24);
-		hkFirstCode.put("W", 23);
-		hkFirstCode.put("O", 15);
-		hkFirstCode.put("N", 14);
+		//来自http://shenfenzheng.bajiu.cn/?rid=40
+		hkFirstCode.put("A", 1);// 持证人拥有香港居留权
+		hkFirstCode.put("B", 2);// 持证人所报称的出生日期或地点自首次登记以后，曾作出更改
+		hkFirstCode.put("C", 3);// 持证人登记领证时在香港的居留受到入境事务处处长的限制
+		hkFirstCode.put("N", 14);// 持证人所报的姓名自首次登记以后，曾作出更改
+		hkFirstCode.put("O", 15);// 持证人报称在香港、澳门及中国以外其他地区或国家出生
+		hkFirstCode.put("R", 18);// 持证人拥有香港入境权
+		hkFirstCode.put("U", 21);// 持证人登记领证时在香港的居留不受入境事务处处长的限制
+		hkFirstCode.put("W", 23);// 持证人报称在澳门地区出生
+		hkFirstCode.put("X", 24);// 持证人报称在中国大陆出生
+		hkFirstCode.put("Z", 26);// 持证人报称在香港出生
 	}
-	
+
 	/**
 	 * 将15位身份证号码转换为18位
 	 * 
@@ -124,8 +126,8 @@ public class IdcardUtil {
 			Date birthDate = DateUtil.parse(birthday, "yyMMdd");
 			// 获取出生年(完全表现形式,如：2010)
 			int sYear = DateUtil.year(birthDate);
-			if(sYear > 2000) {
-				//2000年之后不存在15位身份证号，此处用于修复此问题的判断
+			if (sYear > 2000) {
+				// 2000年之后不存在15位身份证号，此处用于修复此问题的判断
 				sYear -= 100;
 			}
 			idCard18 = StrUtil.builder().append(idCard.substring(0, 6)).append(sYear).append(idCard.substring(8));
@@ -148,20 +150,20 @@ public class IdcardUtil {
 		idCard = idCard.trim();
 		int length = idCard.length();
 		switch (length) {
-			case 18:// 18位身份证
-				return isvalidCard18(idCard);
-			case 15:// 15位身份证
-				return isvalidCard15(idCard);
-			case 10: {// 10位身份证，港澳台地区
-				String[] cardval = isValidCard10(idCard);
-				if (cardval != null && cardval[2].equals("true")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-			default:
+		case 18:// 18位身份证
+			return isvalidCard18(idCard);
+		case 15:// 15位身份证
+			return isvalidCard15(idCard);
+		case 10: {// 10位身份证，港澳台地区
+			String[] cardval = isValidCard10(idCard);
+			if (cardval != null && cardval[2].equals("true")) {
+				return true;
+			} else {
 				return false;
+			}
+		}
+		default:
+			return false;
 		}
 	}
 
@@ -342,9 +344,9 @@ public class IdcardUtil {
 		}
 		return (sum % 11 == 0) ? true : false;
 	}
-	
+
 	/**
-	 * 根据身份编号获取生日<br>
+	 * 根据身份编号获取生日，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(yyyyMMdd)
@@ -355,7 +357,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日
+	 * 根据身份编号获取生日，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(yyyyMMdd)
@@ -369,9 +371,9 @@ public class IdcardUtil {
 		}
 		return idCard.substring(6, 14);
 	}
-	
+
 	/**
-	 * 从身份证号码中获取生日日期
+	 * 从身份证号码中获取生日日期，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份证号码
 	 * @return 日期
@@ -382,7 +384,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取年龄
+	 * 根据身份编号获取年龄，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 年龄
@@ -392,7 +394,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取指定日期当时的年龄年龄
+	 * 根据身份编号获取指定日期当时的年龄年龄，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @param dateToCompare 以此日期为界，计算年龄。
@@ -404,7 +406,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日年
+	 * 根据身份编号获取生日年，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(yyyy)
@@ -420,7 +422,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日月
+	 * 根据身份编号获取生日月，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(MM)
@@ -436,7 +438,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日天
+	 * 根据身份编号获取生日天，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(dd)
@@ -452,13 +454,19 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取性别
+	 * 根据身份编号获取性别，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 性别(1: 男，0: 女)
 	 */
 	public static int getGenderByIdCard(String idCard) {
-		if (idCard.length() == CHINA_ID_MIN_LENGTH) {
+		Assert.notBlank(idCard);
+		final int len = idCard.length();
+		if(len < CHINA_ID_MIN_LENGTH) {
+			throw new IllegalArgumentException("ID Card length must be 15 or 18");
+		}
+		
+		if (len == CHINA_ID_MIN_LENGTH) {
 			idCard = convert15To18(idCard);
 		}
 		char sCardChar = idCard.charAt(16);
@@ -472,7 +480,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取户籍省份
+	 * 根据身份编号获取户籍省份，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编码
 	 * @return 省级编码。
@@ -485,7 +493,7 @@ public class IdcardUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 隐藏指定位置的几个身份证号数字为“*”
 	 * 
@@ -519,30 +527,30 @@ public class IdcardUtil {
 	 */
 	private static char getCheckCode18(int iSum) {
 		switch (iSum % 11) {
-			case 10:
-				return  '2';
-			case 9:
-				return  '3';
-			case 8:
-				return  '4';
-			case 7:
-				return  '5';
-			case 6:
-				return  '6';
-			case 5:
-				return  '7';
-			case 4:
-				return  '8';
-			case 3:
-				return  '9';
-			case 2:
-				return  'x';
-			case 1:
-				return  '0';
-			case 0:
-				return  '1';
-			default:
-				return StrUtil.C_SPACE;
+		case 10:
+			return '2';
+		case 9:
+			return '3';
+		case 8:
+			return '4';
+		case 7:
+			return '5';
+		case 6:
+			return '6';
+		case 5:
+			return '7';
+		case 4:
+			return '8';
+		case 3:
+			return '9';
+		case 2:
+			return 'x';
+		case 1:
+			return '0';
+		case 0:
+			return '1';
+		default:
+			return StrUtil.C_SPACE;
 		}
 	}
 

@@ -28,6 +28,12 @@ public class PinyinUtilTest {
 	}
 	
 	@Test
+	public void getAllFirstLetterTest2() {
+		String allFirstLetter = PinyinUtil.getAllFirstLetter("张三123");
+		Assert.assertEquals("zs123", allFirstLetter);
+	}
+	
+	@Test
 	public void getPinyinTest() {
 		String pinYin = PinyinUtil.getPinYin("会当凌绝顶");
 		Assert.assertEquals("huidanglingjueding", pinYin);

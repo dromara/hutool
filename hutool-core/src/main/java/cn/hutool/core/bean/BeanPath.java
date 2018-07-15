@@ -3,6 +3,7 @@ package cn.hutool.core.bean;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,17 +95,39 @@ public class BeanPath {
 	 * 注意：
 	 * 
 	 * <pre>
-	 * 1. 如果为List，则设置值得下标不能大于已有List的长度
-	 * 2. 如果为数组，不能超过其长度
+	 * 1. 如果为List，如果下标不大于List长度，则替换原有值，否则追加值
+	 * 2. 如果为数组，如果下标不大于数组长度，则替换原有值，否则追加值
 	 * </pre>
 	 * 
 	 * @param bean Bean、Map或List
 	 * @param value 值
 	 */
 	public void set(Object bean, Object value) {
-		final List<String> localPatternParts = this.patternParts;
-		final Object subBean = get(localPatternParts, bean, true);
-		BeanUtil.setFieldValue(subBean, localPatternParts.get(localPatternParts.size() - 1), value);
+		set(bean, this.patternParts, value);
+	}
+	
+	/**
+	 * 设置表达式指定位置（或filed对应）的值<br>
+	 * 若表达式指向一个List则设置其坐标对应位置的值，若指向Map则put对应key的值，Bean则设置字段的值<br>
+	 * 注意：
+	 * 
+	 * <pre>
+	 * 1. 如果为List，如果下标不大于List长度，则替换原有值，否则追加值
+	 * 2. 如果为数组，如果下标不大于数组长度，则替换原有值，否则追加值
+	 * </pre>
+	 * 
+	 * @param bean Bean、Map或List
+	 * @param patternParts 表达式块列表
+	 * @param value 值
+	 */
+	private void set(Object bean, List<String> patternParts, Object value) {
+		Object subBean = get(patternParts, bean, true);
+		if(null == subBean) {
+			set(bean, patternParts.subList(0, patternParts.size() - 1), new HashMap<>());
+			//set中有可能做过转换，因此此处重新获取bean
+			subBean = get(patternParts, bean, true);
+		}
+		BeanUtil.setFieldValue(subBean, patternParts.get(patternParts.size() - 1), value);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------------- Private method start

@@ -3,12 +3,15 @@ package cn.hutool.core.map;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
@@ -19,9 +22,6 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-
-import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * Map相关工具类
@@ -789,6 +789,18 @@ public class MapUtil {
 	 */
 	public static Long getLong(Map<?, ?> map, Object key) {
 		return get(map, key, Long.class);
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为{@link Date}
+	 * 
+	 * @param map Map
+	 * @param key 键
+	 * @return 值
+	 * @since 4.1.2
+	 */
+	public static Date getDate(Map<?, ?> map, Object key) {
+		return get(map, key, Date.class);
 	}
 	
 	/**

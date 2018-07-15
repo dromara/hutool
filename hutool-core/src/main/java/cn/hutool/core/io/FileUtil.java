@@ -200,7 +200,7 @@ public class FileUtil {
 
 		if (file.isDirectory()) {
 			final File[] subFiles = file.listFiles();
-			if(ArrayUtil.isNotEmpty(subFiles)) {
+			if (ArrayUtil.isNotEmpty(subFiles)) {
 				for (File tmp : subFiles) {
 					fileList.addAll(loopFiles(tmp, fileFilter));
 				}
@@ -695,7 +695,7 @@ public class FileUtil {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 清空文件夹<br>
 	 * 注意：清空文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
@@ -1087,7 +1087,7 @@ public class FileUtil {
 		if (StrUtil.isEmpty(path)) {
 			return false;
 		}
-		
+
 		if (StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:[/\\\\].*")) {
 			// 给定的路径已经是绝对路径了
 			return true;
@@ -1485,7 +1485,7 @@ public class FileUtil {
 	 */
 	public static String subPath(String dirPath, String filePath) {
 		if (StrUtil.isNotEmpty(dirPath) && StrUtil.isNotEmpty(filePath)) {
-			
+
 			dirPath = StrUtil.removeSuffix(normalize(dirPath), "/");
 			filePath = normalize(filePath);
 
@@ -1589,7 +1589,7 @@ public class FileUtil {
 		}
 		return StrUtil.subPre(fileName, fileName.lastIndexOf(StrUtil.DOT));
 	}
-	
+
 	/**
 	 * 获取文件扩展名，扩展名不带“.”
 	 * 
@@ -2389,7 +2389,7 @@ public class FileUtil {
 	public static PrintWriter getPrintWriter(String path, String charset, boolean isAppend) throws IORuntimeException {
 		return new PrintWriter(getWriter(path, charset, isAppend));
 	}
-	
+
 	/**
 	 * 获得一个打印写入对象，可以有print
 	 * 
@@ -3051,17 +3051,65 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取Web项目下的web root路径
+	 * 
 	 * @return web root路径
 	 * @since 4.0.13
 	 */
 	public static File getWebRoot() {
 		String classPath = ClassUtil.getClassPath();
-		if(StrUtil.isNotBlank(classPath)) {
+		if (StrUtil.isNotBlank(classPath)) {
 			return file(classPath).getParentFile().getParentFile();
 		}
 		return null;
+	}
+	
+	/**
+	 * 获取指定层级的父路径
+	 * 
+	 * <pre>
+	 * getParent("d:/aaa/bbb/cc/ddd", 0) -> "d:/aaa/bbb/cc/ddd"
+	 * getParent("d:/aaa/bbb/cc/ddd", 2) -> "d:/aaa/bbb"
+	 * getParent("d:/aaa/bbb/cc/ddd", 4) -> "d:/"
+	 * getParent("d:/aaa/bbb/cc/ddd", 5) -> null
+	 * </pre>
+	 * 
+	 * @param filePath 目录或文件路径
+	 * @param level 层级
+	 * @return 路径File，如果不存在返回null
+	 * @since 4.1.2
+	 */
+	public static String getParent(String filePath, int level) {
+		final File parent = getParent(file(filePath), level);
+		return null == parent ? null : parent.getAbsolutePath();
+	}
+
+	/**
+	 * 获取指定层级的父路径
+	 * 
+	 * <pre>
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 0)) -> "d:/aaa/bbb/cc/ddd"
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 2)) -> "d:/aaa/bbb"
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 4)) -> "d:/"
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 5)) -> null
+	 * </pre>
+	 * 
+	 * @param file 目录或文件
+	 * @param level 层级
+	 * @return 路径File，如果不存在返回null
+	 * @since 4.1.2
+	 */
+	public static File getParent(File file, int level) {
+		if (level < 1 || null == file) {
+			return file;
+		}
+
+		final File parentFile = file.getParentFile();
+		if (1 == level) {
+			return parentFile;
+		}
+		return getParent(parentFile, level - 1);
 	}
 }
