@@ -15,6 +15,7 @@
 * 【captcha】     增加CodeGenerator，可自定义验证码文字生成策略（issue#IL3YH@Gitee）
 * 【core】          增加CollUtil.list方法，更灵活的创建ArrayList和LinkedList
 * 【core】          DateTime增加时区支持（issue#131@Github）
+* 【extra】         QrCodeUtil二维码生成支持设置边距、颜色等自定义项（issue#135@Github）
 
 ### Bug修复
 * 【core】          修复JSONUtil.formatJsonStr引号换行问题（issue#IKMMK@Gitee）

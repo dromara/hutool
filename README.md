@@ -1,4 +1,4 @@
-![封面](https://raw.githubusercontent.com/looly/hutool/master/docs/resources/hutool.jpg)
+![封面](http://www.hutool.cn/images/logo.jpg)
 
 [![Version](https://img.shields.io/badge/version-4.1.2-brightgreen.svg)](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)

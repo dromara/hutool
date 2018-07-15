@@ -7,6 +7,7 @@ import java.util.Map;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 
 /**
@@ -345,7 +346,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日<br>
+	 * 根据身份编号获取生日，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(yyyyMMdd)
@@ -356,7 +357,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日
+	 * 根据身份编号获取生日，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(yyyyMMdd)
@@ -372,7 +373,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 从身份证号码中获取生日日期
+	 * 从身份证号码中获取生日日期，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份证号码
 	 * @return 日期
@@ -383,7 +384,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取年龄
+	 * 根据身份编号获取年龄，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 年龄
@@ -393,7 +394,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取指定日期当时的年龄年龄
+	 * 根据身份编号获取指定日期当时的年龄年龄，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @param dateToCompare 以此日期为界，计算年龄。
@@ -405,7 +406,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日年
+	 * 根据身份编号获取生日年，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(yyyy)
@@ -421,7 +422,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日月
+	 * 根据身份编号获取生日月，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(MM)
@@ -437,7 +438,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取生日天
+	 * 根据身份编号获取生日天，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 生日(dd)
@@ -453,13 +454,19 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取性别
+	 * 根据身份编号获取性别，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编号
 	 * @return 性别(1: 男，0: 女)
 	 */
 	public static int getGenderByIdCard(String idCard) {
-		if (idCard.length() == CHINA_ID_MIN_LENGTH) {
+		Assert.notBlank(idCard);
+		final int len = idCard.length();
+		if(len < CHINA_ID_MIN_LENGTH) {
+			throw new IllegalArgumentException("ID Card length must be 15 or 18");
+		}
+		
+		if (len == CHINA_ID_MIN_LENGTH) {
 			idCard = convert15To18(idCard);
 		}
 		char sCardChar = idCard.charAt(16);
@@ -473,7 +480,7 @@ public class IdcardUtil {
 	}
 
 	/**
-	 * 根据身份编号获取户籍省份
+	 * 根据身份编号获取户籍省份，只支持15或18位身份证号码
 	 * 
 	 * @param idCard 身份编码
 	 * @return 省级编码。
