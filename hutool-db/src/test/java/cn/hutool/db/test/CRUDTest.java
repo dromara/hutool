@@ -98,7 +98,7 @@ public class CRUDTest {
 	@Test
 	public void findAllTest() throws SQLException {
 		List<Entity> results = runner.findAll("user");
-		Assert.assertEquals(3, results.size());
+		Assert.assertEquals(4, results.size());
 	}
 
 	@Test
