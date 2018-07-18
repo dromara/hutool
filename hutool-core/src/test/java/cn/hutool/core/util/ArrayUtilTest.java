@@ -209,4 +209,11 @@ public class ArrayUtilTest {
 		result = ArrayUtil.insert(a, 5, b);
 		Assert.assertArrayEquals(new String[] { "1", "2", "3", "4", null, "a", "b", "c" }, result);
 	}
+	
+	@Test
+	public void joinTest() {
+		String[] array = {"aa", "bb", "cc", "dd"};
+		String join = ArrayUtil.join(array, ",", "[", "]");
+		Assert.assertEquals("[aa],[bb],[cc],[dd]", join);
+	}
 }
