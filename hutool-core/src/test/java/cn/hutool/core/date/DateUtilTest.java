@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -376,11 +377,32 @@ public class DateUtilTest {
 	@Test
 	public void rangeTest() {
 		DateTime start = DateUtil.parse("2017-01-01");
-		DateTime end = DateUtil.parse("2017-01-31");
+		DateTime end = DateUtil.parse("2017-01-03");
 
+		//测试包含开始和结束情况下步进为1的情况
 		DateRange range = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
+		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-03"));
+		try {
+			range.next();
+			Assert.fail("已超过边界，下一个元素不应该存在！");
+		} catch (NoSuchElementException e) {
+		}
+		
+		//测试多步进的情况
+		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 2);
+		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
+		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-03"));
+		
+		//测试不包含开始结束时间的情况
+		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 1, false, false);
+		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
+		try {
+			range.next();
+			Assert.fail("不包含结束时间情况下，下一个元素不应该存在！");
+		} catch (NoSuchElementException e) {
+		}
 	}
 	
 	@Test
