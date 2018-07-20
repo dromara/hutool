@@ -64,7 +64,7 @@ public class HttpUtilTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void oschinaTest() {
 		// 请求列表页
 		String listContent = HttpUtil.get("https://www.oschina.net/action/ajax/get_more_news_list?newsType=&p=2");

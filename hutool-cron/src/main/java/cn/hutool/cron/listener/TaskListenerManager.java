@@ -3,8 +3,8 @@ package cn.hutool.cron.listener;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.cron.TaskExecutor;
+import cn.hutool.log.StaticLog;
 
 /**
  * 监听调度器，统一管理监听
@@ -81,7 +81,7 @@ public class TaskListenerManager {
 					listenerl.onFailed(executor, exception);
 				}
 			}else{
-				Console.log(exception, exception.getMessage());
+				StaticLog.error(exception, exception.getMessage());
 			}
 		}
 	}

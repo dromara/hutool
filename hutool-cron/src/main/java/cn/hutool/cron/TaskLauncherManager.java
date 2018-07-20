@@ -3,8 +3,6 @@ package cn.hutool.cron;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.hutool.core.thread.ThreadUtil;
-
 public class TaskLauncherManager {
 	
 	protected Scheduler scheduler;
@@ -25,7 +23,8 @@ public class TaskLauncherManager {
 		synchronized (this.launchers) {
 			this.launchers.add(launcher);
 		}
-		launcher.setDaemon(this.scheduler.daemon);
+		//子线程是否为deamon线程取决于父线程，因此此处无需显示调用
+		//launcher.setDaemon(this.scheduler.daemon);
 		launcher.start();
 		return launcher;
 	}
@@ -41,15 +40,17 @@ public class TaskLauncherManager {
 	}
 
 	/**
-	 * 停止所有TaskExecutor
+	 * 停止所有TaskLauncher
 	 * @return this
+	 * @deprecated 作业启动器只是调用定时任务检查，无法强制关闭，可通过deamon线程方式关闭之
 	 */
+	@Deprecated
 	public TaskLauncherManager destroy() {
-		synchronized (this.launchers) {
-			for (TaskLauncher taskLauncher : launchers) {
-				ThreadUtil.interupt(taskLauncher, true);
-			}
-		}
+		// synchronized (this.launchers) {
+		// for (TaskLauncher taskLauncher : launchers) {
+		// ThreadUtil.interupt(taskLauncher, false);
+		// }
+		// }
 		this.launchers.clear();
 		return this;
 	}

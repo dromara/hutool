@@ -6,7 +6,6 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.listener.TaskListener;
@@ -93,7 +92,7 @@ public class Scheduler {
 
 	/**
 	 * 设置是否为守护线程<br>
-	 * 默认非守护线程
+	 * 如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。默认非守护线程
 	 * 
 	 * @param on <code>true</code>为守护线程，否则非守护线程
 	 * @return this
@@ -176,7 +175,7 @@ public class Scheduler {
 				group = groupedEntry.getKey();
 				for (Entry<String, String> entry : groupedEntry.getValue().entrySet()) {
 					String jobClass = entry.getKey();
-					if(StrUtil.isNotBlank(group)) {
+					if (StrUtil.isNotBlank(group)) {
 						jobClass = group + CharUtil.DOT + jobClass;
 					}
 					final String pattern = entry.getValue();
@@ -263,7 +262,7 @@ public class Scheduler {
 		this.taskTable.remove(id);
 		return this;
 	}
-	
+
 	/**
 	 * 更新Task执行的时间规则
 	 * 
@@ -326,6 +325,17 @@ public class Scheduler {
 	public boolean isStarted() {
 		return this.started;
 	}
+	
+	/**
+	 * 启动
+	 * 
+	 * @param isDeamon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
+	 * @return this
+	 */
+	public Scheduler start(boolean isDeamon) {
+		this.daemon = isDeamon;
+		return start();
+	}
 
 	/**
 	 * 启动
@@ -351,23 +361,20 @@ public class Scheduler {
 	}
 
 	/**
-	 * 停止定时任务
+	 * 停止定时任务<br>
+	 * 此方法调用后会将定时器进程立即结束，如果为守护线程模式，则正在执行的作业也会自动结束，否则作业线程将在执行完成后结束。
 	 * 
 	 * @return this
 	 */
 	public Scheduler stop() {
 		synchronized (lock) {
-			if (!started) {
-				throw new IllegalStateException("Scheduler not started");
+			if (false == started) {
+				throw new IllegalStateException("Scheduler not started !");
 			}
 
 			// 停止CronTimer
-			ThreadUtil.interupt(this.timer, true);
-
-			// 停止所有TaskLauncher
-			taskLauncherManager.destroy();
-			// 停止所有TaskExecutor
-			this.taskExecutorManager.destroy();
+			this.timer.stopTimer();
+			this.timer = null;
 
 			// 修改标志
 			started = false;
