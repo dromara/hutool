@@ -19,7 +19,7 @@ import cn.hutool.core.util.CharsetUtil;
  * @author Looly
  */
 public class FileUtilTest {
-
+	
 	@Test
 	public void getAbsolutePathTest() {
 		String absolutePath = FileUtil.getAbsolutePath("LICENSE-junit.txt");
