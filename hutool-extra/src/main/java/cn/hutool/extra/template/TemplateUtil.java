@@ -1,10 +1,6 @@
 package cn.hutool.extra.template;
 
-import cn.hutool.extra.template.engine.beetl.BeetlEngine;
-import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
-import cn.hutool.extra.template.engine.rythm.RythmEngine;
-import cn.hutool.extra.template.engine.velocity.VelocityEngine;
-import cn.hutool.log.StaticLog;
+import cn.hutool.extra.template.engine.EngineFactory;
 
 /**
  * 模板工具类
@@ -21,29 +17,6 @@ public class TemplateUtil {
 	 * @return {@link Engine}
 	 */
 	public static Engine createEngine(TemplateConfig config) {
-		Engine engine = null;
-		try {
-			engine = new BeetlEngine(config);
-			StaticLog.debug("{} Engine Created.", "Beetl");
-		} catch (NoClassDefFoundError e) {
-			try {
-				engine = new FreemarkerEngine(config);
-				StaticLog.debug("{} Engine Created.", "Freemarker");
-			} catch (NoClassDefFoundError e2) {
-				try {
-					engine = new VelocityEngine(config);
-					StaticLog.debug("{} Engine Created.", "Velocity");
-				} catch (NoClassDefFoundError e3) {
-					try {
-						engine = new RythmEngine(config);
-						StaticLog.debug("{} Engine Created.", "Rythm");
-					} catch (NoClassDefFoundError e4) {
-						throw new TemplateException("No template found ! Please add one of [Beetl,Freemarker,Velocity,Rythm] jar to your project !");
-					}
-				}
-			}
-		}
-
-		return engine;
+		return EngineFactory.create(config);
 	}
 }

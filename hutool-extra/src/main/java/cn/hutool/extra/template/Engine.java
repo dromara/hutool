@@ -6,6 +6,13 @@ package cn.hutool.extra.template;
  * @author looly
  */
 public interface Engine {
+	
+	/**
+	 * 获取模板引擎名
+	 * @return 模板引擎名
+	 * @since 4.1.3
+	 */
+	String getName();
 
 	/**
 	 * 获取模板

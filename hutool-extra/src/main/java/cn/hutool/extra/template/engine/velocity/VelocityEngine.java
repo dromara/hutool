@@ -43,6 +43,11 @@ public class VelocityEngine implements Engine {
 		this.engine = engine;
 	}
 	// --------------------------------------------------------------------------------- Constructor end
+	
+	@Override
+	public String getName() {
+		return "Velocity";
+	}
 
 	@Override
 	public Template getTemplate(String resource) {

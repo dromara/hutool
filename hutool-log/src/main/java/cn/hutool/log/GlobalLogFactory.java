@@ -28,7 +28,6 @@ public class GlobalLogFactory {
 			synchronized (lock) {
 				if (null == currentLogFactory) {
 					currentLogFactory = LogFactory.create();
-					currentLogFactory.getLog(GlobalLogFactory.class).debug("Use [{}] Logger As Default.", currentLogFactory.logFramworkName);
 				}
 			}
 		}

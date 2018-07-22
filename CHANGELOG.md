@@ -6,6 +6,7 @@
 ## 4.1.3
 
 ### 新特性
+* 【all】             优化db的DsFactory、log的LogFactory、extra的TemplateUtil逻辑，减少异常栈嵌套
 
 ### Bug修复
 * 【core】          修复ArrayUtil.join前后fix失效问题（@【河北】理想主义）

@@ -163,9 +163,11 @@ public abstract class LogFactory {
 	public static Log get() {
 		return get(Caller.getCallerCaller());
 	}
-
+	
 	/**
 	 * 决定日志实现
+	 * <p>
+	 * 依次按照顺序检查日志库的jar是否被引入，如果未引入任何日志库，则检查ClassPath下的logging.properties，存在则使用JdkLogFactory，否则使用ConsoleLogFactory
 	 * 
 	 * @see Slf4jLogFactory
 	 * @see Log4j2LogFactory
@@ -176,32 +178,54 @@ public abstract class LogFactory {
 	 * @return 日志实现类
 	 */
 	public static LogFactory create() {
-		LogFactory logFactory;
+		final LogFactory factory = doCreate();
+		factory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", factory.logFramworkName);
+		return factory;
+	}
+
+	/**
+	 * 决定日志实现
+	 * <p>
+	 * 依次按照顺序检查日志库的jar是否被引入，如果未引入任何日志库，则检查ClassPath下的logging.properties，存在则使用JdkLogFactory，否则使用ConsoleLogFactory
+	 * 
+	 * @see Slf4jLogFactory
+	 * @see Log4j2LogFactory
+	 * @see Log4jLogFactory
+	 * @see ApacheCommonsLogFactory
+	 * @see ConsoleLogFactory
+	 * @see JdkLogFactory
+	 * @return 日志实现类
+	 */
+	private static LogFactory doCreate() {
 		try {
-			logFactory = new Slf4jLogFactory(true);
+			return new Slf4jLogFactory(true);
 		} catch (NoClassDefFoundError e) {
-			try {
-				logFactory = new Log4j2LogFactory();
-			} catch (NoClassDefFoundError e2) {
-				try {
-					logFactory = new Log4jLogFactory();
-				} catch (NoClassDefFoundError e3) {
-					try {
-						logFactory = new ApacheCommonsLogFactory();
-					} catch (NoClassDefFoundError e4) {
-						try {
-							logFactory = new TinyLogFactory();
-						} catch (NoClassDefFoundError e5) {
-							// 未找到任何可支持的日志库时判断依据：当JDK Logging的配置文件位于classpath中，使用JDK Logging，否则使用Console
-							final URL url = ResourceUtil.getResource("logging.properties");
-							logFactory = (null != url) ? new JdkLogFactory() : new ConsoleLogFactory();
-						}
-					}
-				}
-			}
+			// ignore
+		}
+		try {
+			return new Log4j2LogFactory();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		try {
+			return new Log4jLogFactory();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		try {
+			return new ApacheCommonsLogFactory();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		try {
+			return new TinyLogFactory();
+		} catch (NoClassDefFoundError e) {
+			// ignore
 		}
 
-		return logFactory;
+		// 未找到任何可支持的日志库时判断依据：当JDK Logging的配置文件位于classpath中，使用JDK Logging，否则使用Console
+		final URL url = ResourceUtil.getResource("logging.properties");
+		return (null != url) ? new JdkLogFactory() : new ConsoleLogFactory();
 	}
 	// ------------------------------------------------------------------------- Static end
 }

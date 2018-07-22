@@ -42,6 +42,11 @@ public class RythmEngine implements Engine {
 		this.engine = engine;
 	}
 	// --------------------------------------------------------------------------------- Constructor end
+	
+	@Override
+	public String getName() {
+		return "Rythm";
+	}
 
 	@Override
 	public Template getTemplate(String resource) {
