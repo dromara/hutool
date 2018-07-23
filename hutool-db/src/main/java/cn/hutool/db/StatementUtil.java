@@ -99,7 +99,7 @@ public class StatementUtil {
 	 * 创建{@link PreparedStatement}
 	 * 
 	 * @param conn 数据库连接
-	 * @param sqlBuilder{@link {@link SqlBuilder}} 包括SQL语句和参数
+	 * @param sqlBuilder {@link SqlBuilder}包括SQL语句和参数
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL异常
 	 * @since 4.1.3
