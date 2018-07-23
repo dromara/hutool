@@ -13,6 +13,7 @@
 * 【core】          修复ArrayUtil.join前后fix失效问题（@【河北】理想主义）
 * 【core】          修复DateRange最后一个元素逻辑问题（issue#ILE38@Gitee）
 * 【cron】          修复调用CronUtil.stop()方法无法正常结束作业进程的问题（issue#ILFCZ@Gitee）
+* 【db】             修复page方法在Oracle中丢失参数问题（issue#ILGXP@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

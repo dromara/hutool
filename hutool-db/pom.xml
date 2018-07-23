@@ -98,5 +98,11 @@
 			<version>${sqlite.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.zenframework.z8.dependencies.commons</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>2.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

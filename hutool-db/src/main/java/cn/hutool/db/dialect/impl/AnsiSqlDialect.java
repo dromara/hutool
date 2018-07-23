@@ -45,7 +45,7 @@ public class AnsiSqlDialect implements Dialect {
 	public PreparedStatement psForInsert(Connection conn, Entity entity) throws SQLException {
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entity, this.dialectName());
 
-		return StatementUtil.prepareStatement(conn, insert.build(), insert.getParamValues());
+		return StatementUtil.prepareStatement(conn, insert);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class AnsiSqlDialect implements Dialect {
 		}
 		final SqlBuilder delete = SqlBuilder.create(wrapper).delete(query.getFirstTableName()).where(LogicalOperator.AND, where);
 
-		return StatementUtil.prepareStatement(conn, delete.build(), delete.getParamValues());
+		return StatementUtil.prepareStatement(conn, delete);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final SqlBuilder update = SqlBuilder.create(wrapper).update(entity).where(LogicalOperator.AND, where);
 
-		return StatementUtil.prepareStatement(conn, update.build(), update.getParamValues());
+		return StatementUtil.prepareStatement(conn, update);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class AnsiSqlDialect implements Dialect {
 
 		final SqlBuilder find = SqlBuilder.create(wrapper).query(query);
 
-		return StatementUtil.prepareStatement(conn, find.build(), find.getParamValues());
+		return StatementUtil.prepareStatement(conn, find);
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class AnsiSqlDialect implements Dialect {
 		// 根据不同数据库在查询SQL语句基础上包装其分页的语句
 		find = wrapPageSql(find, page);
 
-		return StatementUtil.prepareStatement(conn, find.build(), find.getParamValues());
+		return StatementUtil.prepareStatement(conn, find);
 	}
 
 	/**
