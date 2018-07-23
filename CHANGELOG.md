@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【all】             优化db的DsFactory、log的LogFactory、extra的TemplateUtil逻辑，减少异常栈嵌套
+* 【core】          Validator增加isMac、validateMac方法（感谢@【上海】阳仔）
 
 ### Bug修复
 * 【core】          修复ArrayUtil.join前后fix失效问题（@【河北】理想主义）
