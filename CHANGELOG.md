@@ -14,6 +14,7 @@
 * 【core】          修复DateRange最后一个元素逻辑问题（issue#ILE38@Gitee）
 * 【cron】          修复调用CronUtil.stop()方法无法正常结束作业进程的问题（issue#ILFCZ@Gitee）
 * 【db】             修复page方法在Oracle中丢失参数问题（issue#ILGXP@Gitee）
+* 【extra】          修复QrCodeUtil.decode对复杂二维码解码失败问题（感谢@【成都】小朋友）
 
 -------------------------------------------------------------------------------------------------------------
 
