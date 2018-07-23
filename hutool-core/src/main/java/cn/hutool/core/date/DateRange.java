@@ -50,7 +50,8 @@ public class DateRange extends Range<DateTime> {
 
 			@Override
 			public DateTime step(DateTime current, DateTime end, int index) {
-				if (current.isAfterOrEquals(end)) {
+				DateTime dt = current.offsetNew(unit, step);
+				if (dt.isAfter(end)) {
 					return null;
 				}
 				return current.offsetNew(unit, step);

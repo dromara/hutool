@@ -614,6 +614,20 @@ public class DateTime extends Date {
 
 		return thisMills >= Math.min(beginMills, endMills) && thisMills <= Math.max(beginMills, endMills);
 	}
+	
+	/**
+	 * 是否在给定日期之前
+	 * 
+	 * @param date 日期
+	 * @return 是否在给定日期之前或与给定日期相等
+	 * @since 4.1.3
+	 */
+	public boolean isBefore(Date date) {
+		if (null == date) {
+			throw new NullPointerException("Date to compare is null !");
+		}
+		return compareTo(date) < 0;
+	}
 
 	/**
 	 * 是否在给定日期之前或与给定日期相等
@@ -628,7 +642,21 @@ public class DateTime extends Date {
 		}
 		return compareTo(date) <= 0;
 	}
-
+	
+	/**
+	 * 是否在给定日期之后或与给定日期相等
+	 * 
+	 * @param date 日期
+	 * @return 是否在给定日期之后或与给定日期相等
+	 * @since 4.1.3
+	 */
+	public boolean isAfter(Date date) {
+		if (null == date) {
+			throw new NullPointerException("Date to compare is null !");
+		}
+		return compareTo(date) > 0;
+	}
+	
 	/**
 	 * 是否在给定日期之后或与给定日期相等
 	 * 

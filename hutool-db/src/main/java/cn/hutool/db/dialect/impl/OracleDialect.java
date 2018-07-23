@@ -18,9 +18,8 @@ public class OracleDialect extends AnsiSqlDialect{
 	@Override
 	protected SqlBuilder wrapPageSql(SqlBuilder find, Page page) {
 		final int[] startEnd = page.getStartEnd();
-		return SqlBuilder.create(wrapper)
-			.append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")//
-			.append(find)//
+		return find
+			.insertPreFragment("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ")
 			.append(" ) row_ where rownum <= ").append(startEnd[1])//
 			.append(") table_alias")//
 			.append(" where table_alias.rownum_ >= ").append(startEnd[0]);//

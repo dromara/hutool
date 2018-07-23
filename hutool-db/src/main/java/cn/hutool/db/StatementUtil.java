@@ -16,6 +16,7 @@ import java.util.List;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlUtil;
 
 /**
@@ -92,6 +93,19 @@ public class StatementUtil {
 			}
 		}
 		return ps;
+	}
+
+	/**
+	 * 创建{@link PreparedStatement}
+	 * 
+	 * @param conn 数据库连接
+	 * @param sqlBuilder {@link SqlBuilder}包括SQL语句和参数
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL异常
+	 * @since 4.1.3
+	 */
+	public static PreparedStatement prepareStatement(Connection conn, SqlBuilder sqlBuilder) throws SQLException {
+		return prepareStatement(conn, sqlBuilder.build(), sqlBuilder.getParamValueArray());
 	}
 
 	/**

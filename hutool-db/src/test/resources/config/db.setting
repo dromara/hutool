@@ -11,9 +11,15 @@ url = jdbc:sqlite:test.db
 [test]
 url = jdbc:sqlite:test.db
 
+# 测试用Oracle数据库
+[orcl]
+url = jdbc:oracle:thin:@//looly.centos:1521/XE
+user = looly
+pass = 123456
+
 # 是否在日志中显示执行的SQL
 showSql = true
 # 是否格式化显示的SQL
 formatSql = false
 # 是否显示SQL参数
-showParams = false
+showParams = true

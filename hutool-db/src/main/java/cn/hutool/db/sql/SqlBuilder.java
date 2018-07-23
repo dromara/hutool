@@ -475,18 +475,30 @@ public class SqlBuilder {
 		}
 		return this;
 	}
+	
+	/**
+	 * 在SQL的开头补充SQL片段
+	 * @param sqlFragment SQL片段
+	 * @return this
+	 * @since 4.1.3
+	 */
+	public SqlBuilder insertPreFragment(Object sqlFragment) {
+		if(null != sqlFragment) {
+			this.sql.insert(0, sqlFragment);
+		}
+		return this;
+	}
 
 	/**
-	 * 追加SQL其它部分
+	 * 追加SQL其它部分片段
 	 * 
-	 * @param sqlPart SQL其它部分
-	 * @return 自己
+	 * @param sqlFragment SQL其它部分片段
+	 * @return this
 	 */
-	public SqlBuilder append(Object sqlPart) {
-		if (null != sqlPart) {
-			this.sql.append(sqlPart);
+	public SqlBuilder append(Object sqlFragment) {
+		if (null != sqlFragment) {
+			this.sql.append(sqlFragment);
 		}
-
 		return this;
 	}
 
@@ -536,21 +548,34 @@ public class SqlBuilder {
 	public Object[] getParamValueArray() {
 		return this.paramValues.toArray(new Object[this.paramValues.size()]);
 	}
-
+	
 	/**
-	 * 构建
+	 * 构建，默认打印SQL日志
 	 * 
 	 * @return 构建好的SQL语句
 	 */
 	public String build() {
+		return build(true);
+	}
+
+	/**
+	 * 构建
+	 * 
+	 * @param printLog 是否打印日志
+	 * @return 构建好的SQL语句
+	 * @since 4.1.3
+	 */
+	public String build(boolean printLog) {
 		final String sqlStr = this.sql.toString().trim();
-		SqlLog.INSTASNCE.log(sqlStr, this.paramValues);
+		if(printLog) {
+			SqlLog.INSTASNCE.log(sqlStr, this.paramValues);
+		}
 		return sqlStr;
 	}
 
 	@Override
 	public String toString() {
-		return this.build();
+		return this.build(false);
 	}
 
 	// --------------------------------------------------------------- private method start
