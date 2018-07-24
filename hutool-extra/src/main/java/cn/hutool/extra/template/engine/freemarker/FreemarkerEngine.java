@@ -49,6 +49,11 @@ public class FreemarkerEngine implements Engine {
 		this.cfg = freemarkerCfg;
 	}
 	// --------------------------------------------------------------------------------- Constructor end
+	
+	@Override
+	public String getName() {
+		return "Freemarker";
+	}
 
 	@Override
 	public Template getTemplate(String resource) {

@@ -19,6 +19,8 @@ public class CronTimer extends Thread{
 	/** 定时单元：分 */
 	private long TIMER_UNIT_MINUTE = DateUnit.MINUTE.getMillis();
 	
+	/** 定时任务是否已经被强制关闭 */
+	private boolean isStoped;
 	private Scheduler scheduler;
 	
 	/**
@@ -36,7 +38,7 @@ public class CronTimer extends Thread{
 		long thisTime = System.currentTimeMillis();
 		long nextTime;
 		long sleep;
-		while(true){
+		while(false == isStoped){
 			//下一时间计算是按照上一个执行点开始时间计算的
 			nextTime = ((thisTime / timerUnit) + 1) * timerUnit;
 			sleep = nextTime - System.currentTimeMillis();
@@ -50,6 +52,14 @@ public class CronTimer extends Thread{
 			spawnLauncher(thisTime);
 		}
 		log.debug("Hutool Cron Timer stoped.");
+	}
+	
+	/**
+	 * 关闭定时器
+	 */
+	synchronized public void stopTimer() {
+		this.isStoped = true;
+		ThreadUtil.interupt(this, true);
 	}
 	
 	/**

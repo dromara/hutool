@@ -24,7 +24,7 @@ import cn.hutool.core.util.StrUtil;
  * @author xiaoleilu
  * 
  */
-public final class Convert {
+public class Convert {
 
 	/**
 	 * 转换为字符串<br>

@@ -184,13 +184,25 @@ public class ThreadUtil {
 	 * @since 3.1.2
 	 */
 	public static Thread newThread(Runnable runnable, String name) {
-		final Thread t = new Thread(currentThreadGroup(), runnable, name);
-		if (t.isDaemon()) {
-			t.setDaemon(false);
-		}
+		final Thread t = newThread(runnable, name, false);
 		if (t.getPriority() != Thread.NORM_PRIORITY) {
 			t.setPriority(Thread.NORM_PRIORITY);
 		}
+		return t;
+	}
+	
+	/**
+	 * 创建新线程
+	 * 
+	 * @param runnable {@link Runnable}
+	 * @param name 线程名
+	 * @param isDeamon 是否守护线程
+	 * @return {@link Thread}
+	 * @since 4.1.2
+	 */
+	public static Thread newThread(Runnable runnable, String name, boolean isDeamon) {
+		final Thread t = new Thread(null, runnable, name);
+		t.setDaemon(isDeamon);
 		return t;
 	}
 

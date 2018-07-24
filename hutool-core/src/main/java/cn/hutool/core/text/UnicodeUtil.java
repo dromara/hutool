@@ -73,7 +73,7 @@ public class UnicodeUtil {
 	 * @return Unicode字符串
 	 */
 	public static String toUnicode(String str, boolean isSkipAscii) {
-		if (StrUtil.isBlank(str)) {
+		if (StrUtil.isEmpty(str)) {
 			return str;
 		}
 

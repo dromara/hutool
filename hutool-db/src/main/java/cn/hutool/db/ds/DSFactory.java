@@ -209,31 +209,46 @@ public abstract class DSFactory {
 	 * @return 日志实现类
 	 */
 	public static DSFactory create(Setting setting) {
-		DSFactory dsFactory;
-		try {
-			dsFactory = new HikariDSFactory(setting);
-		} catch (NoClassDefFoundError e1) {
-			try {
-				dsFactory = new DruidDSFactory(setting);
-			} catch (NoClassDefFoundError e2) {
-				try {
-					dsFactory = new TomcatDSFactory(setting);
-				} catch (NoClassDefFoundError e3) {
-					try {
-						dsFactory = new DbcpDSFactory(setting);
-					} catch (NoClassDefFoundError e4) {
-						try {
-							dsFactory = new C3p0DSFactory(setting);
-						} catch (NoClassDefFoundError e5) {
-							// 默认使用Hutool实现的简易连接池
-							dsFactory = new PooledDSFactory(setting);
-						}
-					}
-				}
-			}
-		}
+		final DSFactory dsFactory = doCreate(setting);
 		log.debug("Use [{}] DataSource As Default", dsFactory.dataSourceName);
 		return dsFactory;
+	}
+	
+	/**
+	 * 创建数据源实现工厂<br>
+	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
+	 * 连接池优先级：Hikari > Druid > Tomcat > Dbcp > C3p0 > Hutool Pooled
+	 * 
+	 * @return 日志实现类
+	 * @since 4.1.3
+	 */
+	private static DSFactory doCreate(Setting setting) {
+		try {
+			return new HikariDSFactory(setting);
+		} catch (NoClassDefFoundError e) {
+			//ignore
+		}
+		try {
+			return new DruidDSFactory(setting);
+		} catch (NoClassDefFoundError e) {
+			//ignore
+		}
+		try {
+			return new TomcatDSFactory(setting);
+		} catch (NoClassDefFoundError e) {
+			//ignore
+		}
+		try {
+			return new DbcpDSFactory(setting);
+		} catch (NoClassDefFoundError e) {
+			//ignore
+		}
+		try {
+			return new C3p0DSFactory(setting);
+		} catch (NoClassDefFoundError e) {
+			//ignore
+		}
+		return new PooledDSFactory(setting);
 	}
 	// ------------------------------------------------------------------------- Static end
 }

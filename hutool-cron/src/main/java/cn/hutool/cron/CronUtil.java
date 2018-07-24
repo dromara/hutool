@@ -112,7 +112,7 @@ public final class CronUtil {
 	public static void remove(String schedulerId) {
 		scheduler.deschedule(schedulerId);
 	}
-	
+
 	/**
 	 * 移除Task
 	 * 
@@ -132,9 +132,20 @@ public final class CronUtil {
 	}
 
 	/**
-	 * 开始
+	 * 开始，非守护线程模式
+	 * 
+	 * @see #start(boolean)
 	 */
-	synchronized public static void start() {
+	public static void start() {
+		start(false);
+	}
+
+	/**
+	 * 开始
+	 * 
+	 * @param isDeamon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
+	 */
+	synchronized public static void start(boolean isDeamon) {
 		if (null == crontabSetting) {
 			setCronSetting(CRONTAB_CONFIG_PATH);
 		}
@@ -143,12 +154,12 @@ public final class CronUtil {
 		}
 
 		schedule(crontabSetting);
-		scheduler.start();
+		scheduler.start(isDeamon);
 	}
 
 	/**
 	 * 重新启动定时任务<br>
-	 * 重新启动定时任务会清除动态加载的任务
+	 * 重新启动定时任务会清除动态加载的任务，重新启动后，守护线程与否与之前保持一致
 	 */
 	synchronized public static void restart() {
 		if (null != crontabSetting) {

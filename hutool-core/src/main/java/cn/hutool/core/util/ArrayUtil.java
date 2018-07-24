@@ -1976,7 +1976,7 @@ public class ArrayUtil {
 			} else if (item instanceof Iterator<?>) {
 				sb.append(IterUtil.join((Iterator<?>) item, conjunction, prefix, suffix));
 			} else {
-				sb.append(item);
+				sb.append(StrUtil.wrap(StrUtil.toString(item), prefix, suffix));
 			}
 		}
 		return sb.toString();

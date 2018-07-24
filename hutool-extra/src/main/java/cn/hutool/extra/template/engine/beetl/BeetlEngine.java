@@ -51,6 +51,11 @@ public class BeetlEngine implements Engine {
 		this.engine = engine;
 	}
 	// --------------------------------------------------------------------------------- Constructor end
+	
+	@Override
+	public String getName() {
+		return "Beetl";
+	}
 
 	@Override
 	public Template getTemplate(String resource) {

@@ -16,6 +16,12 @@ import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.Entity;
 
+/**
+ * 数据库元数据信息工具类
+ * 
+ * @author looly
+ *
+ */
 public class MetaUtil {
 	/**
 	 * 获得所有表名

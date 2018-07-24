@@ -3,6 +3,30 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.4
+
+### 新特性
+* 【all】             补充package-info
+
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.1.3
+
+### 新特性
+* 【all】             优化db的DsFactory、log的LogFactory、extra的TemplateUtil逻辑，减少异常栈嵌套
+* 【core】          Validator增加isMac、validateMac方法（感谢@【上海】阳仔）
+
+### Bug修复
+* 【core】          修复ArrayUtil.join前后fix失效问题（@【河北】理想主义）
+* 【core】          修复DateRange最后一个元素逻辑问题（issue#ILE38@Gitee）
+* 【cron】          修复调用CronUtil.stop()方法无法正常结束作业进程的问题（issue#ILFCZ@Gitee）
+* 【db】             修复page方法在Oracle中丢失参数问题（issue#ILGXP@Gitee）
+* 【extra】          修复QrCodeUtil.decode对复杂二维码解码失败问题（感谢@【成都】小朋友）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.2
 
 ### 新特性
@@ -15,6 +39,7 @@
 * 【captcha】     增加CodeGenerator，可自定义验证码文字生成策略（issue#IL3YH@Gitee）
 * 【core】          增加CollUtil.list方法，更灵活的创建ArrayList和LinkedList
 * 【core】          DateTime增加时区支持（issue#131@Github）
+* 【extra】         QrCodeUtil二维码生成支持设置边距、颜色等自定义项（issue#135@Github）
 
 ### Bug修复
 * 【core】          修复JSONUtil.formatJsonStr引号换行问题（issue#IKMMK@Gitee）
@@ -25,6 +50,8 @@
 * 【core】          修复XmlUtil关闭XXE避免XXE攻击
 * 【poi】            修复Excel03SaxReader读取小数的问题（感谢@【深圳】rm -rf /）
 * 【core】          修复CollUtil.findOne空参数导致的空指针问题（issue#133@Github）
+* 【core】          修复JSONArray.addAll问题（pr#137@Github）
+* 【core】          修复UnicodeUtil单独空格无法转换问题
 
 -------------------------------------------------------------------------------------------------------------
 
