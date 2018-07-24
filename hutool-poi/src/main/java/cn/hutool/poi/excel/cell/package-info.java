@@ -1,8 +1,5 @@
 /**
- * Excel中单元格相关类，包括：
- * <pre>
- * 1. 单元格值类型
- * </pre>
+ * Excel中单元格相关类，入口为CellUtil
  * @author looly
  *
  */

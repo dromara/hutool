@@ -6,6 +6,7 @@
 ## 4.1.4
 
 ### 新特性
+* 【all】             补充package-info
 
 ### Bug修复
 

@@ -15,6 +15,7 @@ public enum TableType {
 	SYNONYM("SYNONYM");
 	
 	private String value;
+	
 	/**
 	 * 构造
 	 * @param value 值
