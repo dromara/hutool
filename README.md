@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="http://hutool.cn/"><img src="http://www.hutool.cn/images/logo.jpg" width="400"></a>
+	<img src="http://www.hutool.cn/images/logo.jpg" width="400">
 	<p align="center">
 		<strong>A set of tools that keep Java sweet.</strong><br/>
 	</p>
