@@ -79,24 +79,37 @@ compile 'cn.hutool:hutool-all:4.1.4'
 
 ### 非Maven项目
 
-[Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/)
-[Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/)
-[阿里镜像](http://maven.aliyun.com/nexus/content/groups/public/cn/hutool/hutool-all/)
+点击已下任一链接，下载`hutool-all-X.X.X.jar`即可：
+
+- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.4/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.4/)
+- [阿里镜像](http://maven.aliyun.com/nexus/content/groups/public/cn/hutool/hutool-all/4.1.4/)
+
+-------------------------------------------------------------------------------
+
+## 版本变更
+
+[CHANGELOG.md](https://gitee.com/loolly/hutool/blob/v4-master/CHANGELOG.md)
 
 -------------------------------------------------------------------------------
 
 ## 添砖加瓦
 
+### 提供bug反馈或建议
+
+- [码云](https://gitee.com/loolly/hutool/issues)
+- [Gtihub](https://github.com/looly/hutool/issues)
+
 ### 遵照的原则
 
-我欢迎任何人为Hutool添砖加瓦，贡献代码，不过作者是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合一些规范，规范如下：
+Hutool欢迎任何人为Hutool添砖加瓦，贡献代码，不过作者是一个强迫症患者，为了照顾病人，需要提交的pr（pull request）符合一些规范，规范如下：
 
 1. 注释完备，尤其每个新增的方法应按照Java文档规范标明方法说明、参数说明、返回值说明等信息，如果愿意，也可以加上你的大名。
 2. Hutool的缩进按照Eclipse（不要跟我说IDEA多好用，作者非常懒，学不会）默认（tab）缩进，所以请遵守（不要和我争执空格与tab的问题，这是一个病人的习惯）。
 3. 新加的方法不要使用第三方库的方法，Hutool遵循无依赖原则（除非在extra模块中加方法工具）。
-4. Hutool在4.x版本后使用了新的分支：`v4-master`是主分支，表示已经发布中央库的版本，这个分支不允许pr，也不允许修改。`v4-dev`分支是开发分支，Hutool的下个版本或者SNAPSHOT版本在这个分支上开发，你可以pr到这个分支。
+4. 请pull request到`v4-dev`分支。Hutool在4.x版本后使用了新的分支：`v4-master`是主分支，表示已经发布中央库的版本，这个分支不允许pr，也不允许修改。`v4-dev`分支是开发分支，Hutool的下个版本或者SNAPSHOT版本在这个分支上开发，你可以pr到这个分支。
 
-### 贡献代码的方法
+### 贡献代码的步骤
 
 1. 在Gitee或者Github上fork项目到自己的repo
 2. 把fork过去的项目也就是你的项目clone到你的本地
@@ -107,6 +120,10 @@ compile 'cn.hutool:hutool-all:4.1.4'
 
 -------------------------------------------------------------------------------
 
-## 版本变更
+## 捐赠
 
-[CHANGELOG.md](https://gitee.com/loolly/hutool/blob/v4-master/CHANGELOG.md)
+如果你觉得Hutool不错，可以捐赠请作者吃包辣条~，在此表示感谢^_^。
+
+点击以下链接，将页面拉到最下方点击“捐赠”即可。
+
+[前往捐赠](https://gitee.com/loolly/hutool)
