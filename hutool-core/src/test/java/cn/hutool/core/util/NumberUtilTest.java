@@ -167,4 +167,28 @@ public class NumberUtilTest {
 		int min = NumberUtil.min(new int[]{5,4,3,6,1});
 		Assert.assertEquals(1, min);
 	}
+	
+	@Test
+	public void parseIntTest() {
+		int v1 = NumberUtil.parseInt("0xFF");
+		Assert.assertEquals(255, v1);
+		int v2 = NumberUtil.parseInt("010");
+		Assert.assertEquals(8, v2);
+		int v3 = NumberUtil.parseInt("10");
+		Assert.assertEquals(10, v3);
+		int v4 = NumberUtil.parseInt("   ");
+		Assert.assertEquals(0, v4);
+	}
+	
+	@Test
+	public void parseLongTest() {
+		long v1 = NumberUtil.parseLong("0xFF");
+		Assert.assertEquals(255L, v1);
+		long v2 = NumberUtil.parseLong("010");
+		Assert.assertEquals(8L, v2);
+		long v3 = NumberUtil.parseLong("10");
+		Assert.assertEquals(10L, v3);
+		long v4 = NumberUtil.parseLong("   ");
+		Assert.assertEquals(0L, v4);
+	}
 }

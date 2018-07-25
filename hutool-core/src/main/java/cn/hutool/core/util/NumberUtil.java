@@ -2100,6 +2100,60 @@ public class NumberUtil {
 	public static BigDecimal pow(BigDecimal number, int n) {
 		return number.pow(n);
 	}
+	
+	/**
+	 * 解析转换数字字符串为int型数字，规则如下：
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的视为8进制数字
+	 * 3、空串返回0
+	 * 4、其它情况按照10进制转换
+	 * </pre>
+	 * 
+	 * @param number 数字，支持0x开头、0开头和普通十进制
+	 * @return int
+	 * @since 4.1.4
+	 */
+	public static int parseInt(String number) {
+		if(StrUtil.isBlank(number)) {
+			return 0;
+		}
+		if(number.startsWith("0x")) {
+			//0x04表示16进制数
+			return Integer.parseInt(number.substring(2), 16);
+		} else if(number.startsWith("0")) {
+			//04表示8进制数
+			return Integer.parseInt(number.substring(1), 8);
+		}
+		return Integer.parseInt(number);
+	}
+	
+	/**
+	 * 解析转换数字字符串为long型数字，规则如下：
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的视为8进制数字
+	 * 3、空串返回0
+	 * 4、其它情况按照10进制转换
+	 * </pre>
+	 * 
+	 * @param number 数字，支持0x开头、0开头和普通十进制
+	 * @return long
+	 * @since 4.1.4
+	 */
+	public static long parseLong(String number) {
+		if(StrUtil.isBlank(number)) {
+			return 0L;
+		}
+		if(number.startsWith("0x")) {
+			//0x04表示16进制数
+			return Long.parseLong(number.substring(2), 16);
+		} else if(number.startsWith("0")) {
+			//04表示8进制数
+			return Long.parseLong(number.substring(1), 8);
+		}
+		return Long.parseLong(number);
+	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {

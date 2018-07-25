@@ -12,6 +12,7 @@
 * 【system】      SystemUtil增加部分方法
 * 【core】          新增NamedThreadLocal（issue#ILJ0Z@Gitee）
 * 【core】          ZipUtil新增Zlib压缩解压
+* 【core】          NumberUtil增加parseInt和parseLong，支持10进制、8进制和16进制自动识别
 
 ### Bug修复
 * 【http】          修复HttpRequest.setFollowRedirects无效问题（issue#ILIKG@Gitee）
