@@ -11,6 +11,7 @@
 * 【core】          ExceptionUtil增加部分方法
 * 【system】      SystemUtil增加部分方法
 * 【core】          新增NamedThreadLocal（issue#ILJ0Z@Gitee）
+* 【core】          ZipUtil新增Zlib压缩解压
 
 ### Bug修复
 * 【http】          修复HttpRequest.setFollowRedirects无效问题（issue#ILIKG@Gitee）
