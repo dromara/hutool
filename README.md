@@ -1,13 +1,14 @@
 <p align="center">
-	<img src="http://www.hutool.cn/images/logo.jpg" width="400">
+	<a href="http://hutool.cn/"><img src="http://www.hutool.cn/images/logo.jpg" width="400"></a>
 	<p align="center">
-		A set of tools that keep Java sweet.<br/>
+		<strong>A set of tools that keep Java sweet.</strong><br/>
 		主页：<a href="http://hutool.cn">http://hutool.cn/</a><br/>
 		QQ群：<a href="http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810">537116831<br/>
 	</p>
+	<br/>
 	<p align="center">
-		<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22">
-			<img src="https://img.shields.io/badge/version-4.1.4-brightgreen.svg" >
+		<a href="http://search.maven.org/#artifactdetails%7Ccn.hutool%7Chutool-all%7C4.1.4%7Cjar">
+			<img src="https://img.shields.io/badge/version-4.1.4-blue.svg" >
 		</a>
 		<a href="http://www.apache.org/licenses/LICENSE-2.0.html">
 			<img src="http://img.shields.io/:license-apache-blue.svg" >
