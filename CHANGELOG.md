@@ -7,6 +7,10 @@
 
 ### 新特性
 * 【all】             补充package-info
+* 【db】            增加方法SqlExecutor.callQuery(issue#ILJ0N@Gitee)
+* 【core】          ExceptionUtil增加部分方法
+* 【system】      SystemUtil增加部分方法
+* 【core】          新增NamedThreadLocal（issue#ILJ0Z@Gitee）
 
 ### Bug修复
 * 【http】          修复HttpRequest.setFollowRedirects无效问题（issue#ILIKG@Gitee）

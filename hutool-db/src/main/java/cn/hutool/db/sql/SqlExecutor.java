@@ -15,11 +15,12 @@ import cn.hutool.db.handler.RsHandler;
 /**
  * SQL执行器，全部为静态方法，执行查询或非查询的SQL语句<br>
  * 此方法为JDBC的简单封装，与数据库类型无关
+ * 
  * @author loolly
  *
  */
 public class SqlExecutor {
-	
+
 	/**
 	 * 执行非查询语句<br>
 	 * 语句包括 插入、更新、删除<br>
@@ -36,7 +37,7 @@ public class SqlExecutor {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return execute(conn, namedSql.getSql(), namedSql.getParams());
 	}
-	
+
 	/**
 	 * 执行非查询语句<br>
 	 * 语句包括 插入、更新、删除<br>
@@ -57,7 +58,7 @@ public class SqlExecutor {
 			DbUtil.close(ps);
 		}
 	}
-	
+
 	/**
 	 * 执行调用存储过程<br>
 	 * 此方法不会关闭Connection
@@ -69,15 +70,36 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static boolean call(Connection conn, String sql, Object... params) throws SQLException {
-		CallableStatement ps = null;
+		CallableStatement proc = null;
 		try {
-			ps = conn.prepareCall(sql);
-			return execute(ps, params);
+			proc = conn.prepareCall(sql);
+			return execute(proc, params);
 		} finally {
-			DbUtil.close(ps);
+			DbUtil.close(proc);
 		}
 	}
-	
+
+	/**
+	 * 执行调用存储过程<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sql SQL
+	 * @param params 参数
+	 * @return ResultSet
+	 * @throws SQLException SQL执行异常
+	 * @since 4.1.4
+	 */
+	public static ResultSet callQuery(Connection conn, String sql, Object... params) throws SQLException {
+		CallableStatement proc = null;
+		try {
+			proc = conn.prepareCall(sql);
+			return proc.executeQuery();
+		} finally {
+			DbUtil.close(proc);
+		}
+	}
+
 	/**
 	 * 执行非查询语句，返回主键<br>
 	 * 发查询语句包括 插入、更新、删除<br>
@@ -94,7 +116,7 @@ public class SqlExecutor {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return executeForGeneratedKey(conn, namedSql.getSql(), namedSql.getParams());
 	}
-	
+
 	/**
 	 * 执行非查询语句，返回主键<br>
 	 * 发查询语句包括 插入、更新、删除<br>
@@ -111,12 +133,12 @@ public class SqlExecutor {
 		try {
 			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			executeUpdate(ps, params);
-			ResultSet rs = ps.getGeneratedKeys(); 
-			if(rs != null && rs.next()) {
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs != null && rs.next()) {
 				try {
 					return rs.getLong(1);
 				} catch (SQLException e) {
-					//可能会出现没有主键返回的情况
+					// 可能会出现没有主键返回的情况
 				}
 			}
 			return null;
@@ -124,7 +146,7 @@ public class SqlExecutor {
 			DbUtil.close(ps);
 		}
 	}
-	
+
 	/**
 	 * 批量执行非查询语句<br>
 	 * 语句包括 插入、更新、删除<br>
@@ -149,7 +171,7 @@ public class SqlExecutor {
 			DbUtil.close(ps);
 		}
 	}
-	
+
 	/**
 	 * 执行查询语句<br>
 	 * 此方法不会关闭Connection
@@ -167,7 +189,7 @@ public class SqlExecutor {
 		final NamedSql namedSql = new NamedSql(sql, paramMap);
 		return query(conn, namedSql.getSql(), rsh, namedSql.getParams());
 	}
-	
+
 	/**
 	 * 执行查询语句<br>
 	 * 此方法不会关闭Connection
@@ -189,8 +211,8 @@ public class SqlExecutor {
 			DbUtil.close(ps);
 		}
 	}
-	
-	//-------------------------------------------------------------------------------------- Execute With PreparedStatement
+
+	// -------------------------------------------------------------------------------------- Execute With PreparedStatement
 	/**
 	 * 执行非查询语句<br>
 	 * 语句包括 插入、更新、删除<br>
@@ -205,7 +227,7 @@ public class SqlExecutor {
 		StatementUtil.fillParams(ps, params);
 		return ps.executeUpdate();
 	}
-	
+
 	/**
 	 * 执行非查询语句<br>
 	 * 语句包括 插入、更新、删除<br>
@@ -220,7 +242,7 @@ public class SqlExecutor {
 		StatementUtil.fillParams(ps, params);
 		return ps.execute();
 	}
-	
+
 	/**
 	 * 执行查询语句<br>
 	 * 此方法不会关闭PreparedStatement
@@ -242,7 +264,7 @@ public class SqlExecutor {
 			DbUtil.close(rs);
 		}
 	}
-	
+
 	/**
 	 * 执行查询语句并关闭PreparedStatement
 	 * 
@@ -256,7 +278,7 @@ public class SqlExecutor {
 	public static <T> T queryAndClosePs(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
 		try {
 			return query(ps, rsh, params);
-		} finally{
+		} finally {
 			DbUtil.close(ps);
 		}
 	}

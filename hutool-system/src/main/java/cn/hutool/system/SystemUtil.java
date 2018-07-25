@@ -1,7 +1,17 @@
 package cn.hutool.system;
 
 import java.io.PrintWriter;
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.CompilationMXBean;
+import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryManagerMXBean;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadMXBean;
+import java.util.List;
 import java.util.Properties;
 
 import cn.hutool.core.convert.Convert;
@@ -17,7 +27,7 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class SystemUtil {
-	
+
 	/***** Java运行时环境信息 *****/
 	// Java 运行时环境规范名称
 	public final static String SPECIFICATION_NAME = "java.specification.name";
@@ -84,18 +94,19 @@ public class SystemUtil {
 	// 用户的当前工作目录
 	public final static String USER_DIR = "user.dir";
 
-	//----------------------------------------------------------------------- Basic start
-	
+	// ----------------------------------------------------------------------- Basic start
+
 	/**
 	 * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 <code>null</code>。
+	 * 
 	 * @param name 属性名
 	 * @param defaultValue 默认值
 	 * @return 属性值或<code>null</code>
 	 */
-	public static String get(String name, String defaultValue){
+	public static String get(String name, String defaultValue) {
 		return StrUtil.nullToDefault(get(name, false), defaultValue);
 	}
-	
+
 	/**
 	 * 取得系统属性，如果因为Java安全的限制而失败，则将错误打在Log中，然后返回 <code>null</code>。
 	 * 
@@ -182,15 +193,109 @@ public class SystemUtil {
 	public static Properties props() {
 		return System.getProperties();
 	}
-	
+
 	/**
 	 * 获取当前进程 PID
+	 * 
 	 * @return 当前进程 ID
 	 */
-	public static long getCurrentPID(){
-		return Long.parseLong(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
+	public static long getCurrentPID() {
+		return Long.parseLong(getRuntimeMXBean().getName().split("@")[0]);
 	}
-	//----------------------------------------------------------------------- Basic end
+	// ----------------------------------------------------------------------- Basic end
+
+	/**
+	 * 返回Java虚拟机类加载系统相关属性
+	 *
+	 * @return {@link ClassLoadingMXBean}
+	 * @since 4.1.4
+	 */
+	public static ClassLoadingMXBean getClassLoadingMXBean() {
+		return ManagementFactory.getClassLoadingMXBean();
+	}
+
+	/**
+	 * 返回Java虚拟机内存系统相关属性
+	 *
+	 * @return {@link MemoryMXBean}
+	 * @since 4.1.4
+	 */
+	public static MemoryMXBean getMemoryMXBean() {
+		return ManagementFactory.getMemoryMXBean();
+	}
+
+	/**
+	 * 返回Java虚拟机线程系统相关属性
+	 *
+	 * @return {@link ThreadMXBean}
+	 * @since 4.1.4
+	 */
+	public static ThreadMXBean getThreadMXBean() {
+		return ManagementFactory.getThreadMXBean();
+	}
+
+	/**
+	 * 返回Java虚拟机运行时系统相关属性
+	 *
+	 * @return {@link RuntimeMXBean}
+	 * @since 4.1.4
+	 */
+	public static RuntimeMXBean getRuntimeMXBean() {
+		return ManagementFactory.getRuntimeMXBean();
+	}
+
+	/**
+	 * 返回Java虚拟机编译系统相关属性<br>
+	 * 如果没有编译系统，则返回<code>null</code>
+	 *
+	 * @return a {@link CompilationMXBean} ，如果没有编译系统，则返回<code>null</code>
+	 * @since 4.1.4
+	 */
+	public static CompilationMXBean getCompilationMXBean() {
+		return ManagementFactory.getCompilationMXBean();
+	}
+
+	/**
+	 * 返回Java虚拟机运行下的操作系统相关信息属性
+	 *
+	 * @return {@link OperatingSystemMXBean}
+	 * @since 4.1.4
+	 */
+	public static OperatingSystemMXBean getOperatingSystemMXBean() {
+		return ManagementFactory.getOperatingSystemMXBean();
+	}
+
+	/**
+	 * Returns a list of {@link MemoryPoolMXBean} objects in the Java virtual machine. The Java virtual machine can have one or more memory pools. It may add or remove memory pools during execution.
+	 *
+	 * @return a list of <tt>MemoryPoolMXBean</tt> objects.
+	 *
+	 */
+	public static List<MemoryPoolMXBean> getMemoryPoolMXBeans() {
+		return ManagementFactory.getMemoryPoolMXBeans();
+	}
+
+	/**
+	 * Returns a list of {@link MemoryManagerMXBean} objects in the Java virtual machine. The Java virtual machine can have one or more memory managers. It may add or remove memory managers during
+	 * execution.
+	 *
+	 * @return a list of <tt>MemoryManagerMXBean</tt> objects.
+	 *
+	 */
+	public static List<MemoryManagerMXBean> getMemoryManagerMXBeans() {
+		return ManagementFactory.getMemoryManagerMXBeans();
+	}
+
+	/**
+	 * Returns a list of {@link GarbageCollectorMXBean} objects in the Java virtual machine. The Java virtual machine may have one or more <tt>GarbageCollectorMXBean</tt> objects. It may add or remove
+	 * <tt>GarbageCollectorMXBean</tt> during execution.
+	 *
+	 * @return a list of <tt>GarbageCollectorMXBean</tt> objects.
+	 *
+	 */
+	public static List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
+		return ManagementFactory.getGarbageCollectorMXBeans();
+	}
 
 	/**
 	 * 取得Java Virtual Machine Specification的信息。
@@ -263,7 +368,7 @@ public class SystemUtil {
 	public static HostInfo getHostInfo() {
 		return Singleton.get(HostInfo.class);
 	}
-	
+
 	/**
 	 * 取得Runtime的信息。
 	 * 
@@ -272,8 +377,8 @@ public class SystemUtil {
 	public static RuntimeInfo getRuntimeInfo() {
 		return Singleton.get(RuntimeInfo.class);
 	}
-	
-	//------------------------------------------------------------------ Dump
+
+	// ------------------------------------------------------------------ Dump
 	/**
 	 * 将系统信息输出到<code>System.out</code>中。
 	 */
@@ -308,7 +413,7 @@ public class SystemUtil {
 		out.println("--------------");
 		out.flush();
 	}
-	
+
 	/**
 	 * 输出到<code>StringBuilder</code>。
 	 * 
