@@ -90,7 +90,9 @@ compile 'cn.hutool:hutool-all:4.1.4'
 
 ## 版本变更
 
-[CHANGELOG.md](https://gitee.com/loolly/hutool/blob/v4-master/CHANGELOG.md)
+- [Release版本变更说明](https://gitee.com/loolly/hutool/blob/v4-master/CHANGELOG.md)
+
+- [SNAPSHOT版本变更说明](https://gitee.com/loolly/hutool/blob/v4-dev/CHANGELOG.md)
 
 -------------------------------------------------------------------------------
 
