@@ -1,25 +1,23 @@
 <p align="center">
 	<a href="http://hutool.cn/"><img src="http://www.hutool.cn/images/logo.jpg" width="400"></a>
-	<p align="center">
-		<strong>A set of tools that keep Java sweet.</strong>
-	</p>
-	<br/>
-	<br/>
-	<p align="center">
-		<a href="http://search.maven.org/#artifactdetails%7Ccn.hutool%7Chutool-all%7C4.1.4%7Cjar">
-			<img src="https://img.shields.io/badge/version-4.1.4-blue.svg" >
-		</a>
-		<a href="http://www.apache.org/licenses/LICENSE-2.0.html">
-			<img src="http://img.shields.io/:license-apache-blue.svg" >
-		</a>
-		<a>
-			<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" >
-		</a>
-	</p>
-	<p align="center">
-		主页：<a href="http://hutool.cn">http://hutool.cn/</a><br/>
-		QQ群：<a href="http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810">537116831</a>
-	</p>
+</p>
+<p align="center">
+	<strong>A set of tools that keep Java sweet.</strong>
+</p>
+<p align="center">
+	<a href="http://search.maven.org/#artifactdetails%7Ccn.hutool%7Chutool-all%7C4.1.4%7Cjar">
+		<img src="https://img.shields.io/badge/version-4.1.4-blue.svg" >
+	</a>
+	<a href="http://www.apache.org/licenses/LICENSE-2.0.html">
+		<img src="http://img.shields.io/:license-apache-blue.svg" >
+	</a>
+	<a>
+		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" >
+	</a>
+</p>
+<p align="center">
+	主页：<a href="http://hutool.cn">http://hutool.cn/</a><br/>
+	QQ群：<a href="http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810">537116831</a>
 </p>
 
 -------------------------------------------------------------------------------
