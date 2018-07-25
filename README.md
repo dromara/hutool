@@ -79,7 +79,9 @@ compile 'cn.hutool:hutool-all:4.1.4'
 
 ### 非Maven项目
 
-[下载（阿里Maven镜像）](http://maven.aliyun.com/nexus/content/groups/public/cn/hutool/hutool-all/)
+[Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/)
+[Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/)
+[阿里镜像](http://maven.aliyun.com/nexus/content/groups/public/cn/hutool/hutool-all/)
 
 -------------------------------------------------------------------------------
 
