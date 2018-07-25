@@ -9,6 +9,8 @@
 * 【all】             补充package-info
 
 ### Bug修复
+* 【http】          修复HttpRequest.setFollowRedirects无效问题（issue#ILIKG@Gitee）
+* 【core】         修复CharUtil.isEmoji问题
 
 -------------------------------------------------------------------------------------------------------------
 

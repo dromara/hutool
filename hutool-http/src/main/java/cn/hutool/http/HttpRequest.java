@@ -601,8 +601,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
-	public HttpRequest setFollowRedirects(Boolean isFollowRedirects) {
-		return setMaxRedirectCount(2);
+	public HttpRequest setFollowRedirects(boolean isFollowRedirects) {
+		return setMaxRedirectCount(isFollowRedirects ? 2 : 0);
 	}
 
 	/**
