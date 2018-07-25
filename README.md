@@ -1,6 +1,11 @@
 <p align="center">
 	<img src="http://www.hutool.cn/images/logo.jpg" width="400">
 	<p align="center">
+		A set of tools that keep Java sweet.<br/>
+		主页：<a href="http://hutool.cn">http://hutool.cn/</a><br/>
+		QQ群：<a href="http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810">537116831<br/>
+	</p>
+	<p align="center">
 		<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22">
 			<img src="https://img.shields.io/badge/version-4.1.4-brightgreen.svg" >
 		</a>
@@ -12,10 +17,6 @@
 		</a>
 	</p>
 </p>
-
-## 全新项目主页：[http://www.hutool.cn/](http://www.hutool.cn/)
-
-## Hutool交流QQ群：== [537116831](http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810) ==
 
 ## 功能
 一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
