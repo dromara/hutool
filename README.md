@@ -1,8 +1,6 @@
 <p align="center">
 	<img src="http://www.hutool.cn/images/logo.jpg" width="400">
-	<p align="center">
-		<strong>A set of tools that keep Java sweet.</strong><br/>
-	</p>
+	<strong>A set of tools that keep Java sweet.</strong><br/>
 	<br/>
 	<p align="center">
 		<a href="http://search.maven.org/#artifactdetails%7Ccn.hutool%7Chutool-all%7C4.1.4%7Cjar">
