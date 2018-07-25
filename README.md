@@ -1,6 +1,10 @@
 <p align="center">
-	<img src="http://www.hutool.cn/images/logo.jpg" width="400">
-	<div><strong>A set of tools that keep Java sweet.</strong><div>
+	<a href="http://hutool.cn/"><img src="http://www.hutool.cn/images/logo.jpg" width="400"></a>
+	<p align="center">
+		<strong>A set of tools that keep Java sweet.</strong>
+	</p>
+	<br/>
+	<br/>
 	<p align="center">
 		<a href="http://search.maven.org/#artifactdetails%7Ccn.hutool%7Chutool-all%7C4.1.4%7Cjar">
 			<img src="https://img.shields.io/badge/version-4.1.4-blue.svg" >
