@@ -14,6 +14,8 @@
 * 【core】          ZipUtil新增Zlib压缩解压
 * 【core】          NumberUtil增加parseInt和parseLong，支持10进制、8进制和16进制自动识别
 * 【db】            Table继承自LinkedHashMap保证字段读出有序（感谢@【帝都】宁静）
+* 【json】          JSONObject子类自动判断是否有序（感谢@【帝都】宁静）
+* 【poi】           抽象ExcelBase，提取共用方法
 
 ### Bug修复
 * 【http】          修复HttpRequest.setFollowRedirects无效问题（issue#ILIKG@Gitee）
