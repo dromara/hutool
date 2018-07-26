@@ -120,6 +120,37 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 		}
 		return null;
 	}
+	
+	/**
+	 * 获取Cookie
+	 * 
+	 * @param name Cookie名
+	 * @return {@link HttpCookie}
+	 * @since 4.1.4
+	 */
+	public HttpCookie getCookie(String name) {
+		List<HttpCookie> cookie = getCookie();
+		if(null != cookie) {
+			for (HttpCookie httpCookie : cookie) {
+				if(httpCookie.getName().equals(name)) {
+					return httpCookie;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 获取Cookie值
+	 * 
+	 * @param name Cookie名
+	 * @return Cookie值
+	 * @since 4.1.4
+	 */
+	public String getCookieValue(String name) {
+		HttpCookie cookie = getCookie(name);
+		return (null == cookie) ? null : cookie.getValue();
+	}
 	// ---------------------------------------------------------------- Http Response Header end
 	
 	// ---------------------------------------------------------------- Body start
@@ -178,7 +209,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 			throw new NullPointerException("[out] is null!");
 		}
 		try {
-			return IoUtil.copyByNIO(in, out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
+			return IoUtil.copyByNIO(bodyStream(), out, IoUtil.DEFAULT_BUFFER_SIZE, streamProgress);
 		} finally {
 			IoUtil.close(this);
 			if (isCloseOut) {
@@ -256,6 +287,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	@Override
 	public void close() {
 		IoUtil.close(this.in);
+		this.in = null;
 		//关闭连接
 		this.httpConnection.disconnect();
 	}

@@ -287,6 +287,17 @@ public class FileUtil {
 		}
 		return paths;
 	}
+	
+	/**
+	 * 创建File对象，相当于调用new File()，不做任何处理
+	 * 
+	 * @param path 文件路径
+	 * @return File
+	 * @since 4.1.4
+	 */
+	public static File newFile(String path) {
+		return new File(path);
+	}
 
 	/**
 	 * 创建File对象，自动识别相对或绝对路径，相对路径将自动从ClassPath下寻找
@@ -1004,6 +1015,24 @@ public class FileUtil {
 		final CopyOption[] options = isOverride ? new CopyOption[] { StandardCopyOption.REPLACE_EXISTING } : new CopyOption[] {};
 		try {
 			return Files.move(path, path.resolveSibling(newName), options).toFile();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 获取规范的绝对路径
+	 * 
+	 * @param file 文件
+	 * @return 规范绝对路径，如果传入file为null，返回null
+	 * @since 4.1.4
+	 */
+	public static String getCanonicalPath(File file) {
+		if(null == file) {
+			return null;
+		}
+		try {
+			return file.getCanonicalPath();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
