@@ -38,7 +38,7 @@ import cn.hutool.log.StaticLog;
 
 /**
  * http请求类<br>
- * Http请求类用于构建Http请求并同步获取结果，此类通过 {@link CookiePool}持有域名对应的Cookie值，再次请求时会自动附带Cookie信息
+ * Http请求类用于构建Http请求并同步获取结果，此类通过CookieManager持有域名对应的Cookie值，再次请求时会自动附带Cookie信息
  * 
  * @author Looly
  */
