@@ -113,12 +113,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	 * @return Cookie列表
 	 * @since 3.1.1
 	 */
-	public List<HttpCookie> getCookie(){
-		final String cookieStr = getCookieStr();
-		if(StrUtil.isNotBlank(cookieStr)) {
-			return HttpCookie.parse(cookieStr);
-		}
-		return null;
+	public List<HttpCookie> getCookies(){
+		return HttpRequest.cookieManager.getCookieStore().getCookies();
 	}
 	
 	/**
@@ -129,7 +125,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	 * @since 4.1.4
 	 */
 	public HttpCookie getCookie(String name) {
-		List<HttpCookie> cookie = getCookie();
+		List<HttpCookie> cookie = getCookies();
 		if(null != cookie) {
 			for (HttpCookie httpCookie : cookie) {
 				if(httpCookie.getName().equals(name)) {

@@ -3,6 +3,9 @@ package cn.hutool.http;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
@@ -52,6 +55,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final String CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX = "application/x-www-form-urlencoded;charset=";
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
+	
+	/** Cookie管理 */
+	protected static CookieManager cookieManager = new CookieManager();
+	static {
+		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+		CookieHandler.setDefault(cookieManager);
+	}
 
 	private String url;
 	private Method method = Method.GET;

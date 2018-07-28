@@ -21,6 +21,7 @@
 * 【http】          修复HttpRequest.setFollowRedirects无效问题（issue#ILIKG@Gitee）
 * 【core】         修复CharUtil.isEmoji问题
 * 【http】          修复HttpResponse.writeBody同步模式下写出失败问题
+* 【http】          修复Cookie机制导致的部分Cookie信息不能在请求时附带的问题
 
 -------------------------------------------------------------------------------------------------------------
 

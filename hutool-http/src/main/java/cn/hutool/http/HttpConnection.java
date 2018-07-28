@@ -185,7 +185,7 @@ public class HttpConnection {
 		// this.header(GlobalHeaders.INSTANCE.headers, true);
 
 		// Cookie
-		setCookie(CookiePool.get(this.url.getHost()));
+//		setCookie(CookiePool.get(this.url.getHost()));
 
 		return this;
 	}
@@ -386,7 +386,7 @@ public class HttpConnection {
 	 */
 	public HttpConnection setCookie(String cookie) {
 		if (cookie != null) {
-			log.debug("Cookie: {}", cookie);
+			log.debug("With Cookie: {}", cookie);
 			header(Header.COOKIE, cookie, true);
 		}
 		return this;
@@ -448,8 +448,6 @@ public class HttpConnection {
 	 * @throws IOException IO异常
 	 */
 	public InputStream getInputStream() throws IOException {
-		storeCookie();
-
 		if (null != this.conn) {
 			return this.conn.getInputStream();
 		}
@@ -463,8 +461,6 @@ public class HttpConnection {
 	 * @throws IOException IO异常
 	 */
 	public InputStream getErrorStream() throws IOException {
-		storeCookie();
-
 		if (null != this.conn) {
 			return this.conn.getErrorStream();
 		}
@@ -528,7 +524,7 @@ public class HttpConnection {
 		}
 		return charset;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
@@ -573,17 +569,6 @@ public class HttpConnection {
 	 */
 	private URLConnection openConnection() throws IOException {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
-	}
-
-	/**
-	 * 存储服务器返回的Cookie到本地
-	 */
-	private void storeCookie() {
-		final String setCookie = header(Header.SET_COOKIE);
-		if (StrUtil.isBlank(setCookie) == false) {
-			log.debug("Set cookie: [{}]", setCookie);
-			CookiePool.put(url.getHost(), setCookie);
-		}
 	}
 	// --------------------------------------------------------------- Private Method end
 }
