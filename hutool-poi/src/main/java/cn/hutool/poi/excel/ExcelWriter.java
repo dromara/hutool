@@ -1,6 +1,5 @@
 package cn.hutool.poi.excel;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,7 +16,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HeaderFooter;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -43,14 +41,8 @@ import cn.hutool.poi.excel.style.Align;
  * @author Looly
  * @since 3.2.0
  */
-public class ExcelWriter implements Closeable {
+public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
-	/** 是否被关闭 */
-	private boolean isClosed;
-	/** 工作簿 */
-	private Workbook workbook;
-	/** Excel中对应的Sheet */
-	private Sheet sheet;
 	/** 目标文件 */
 	private File destFile;
 	/** 当前行 */
@@ -144,30 +136,11 @@ public class ExcelWriter implements Closeable {
 	 * @since 4.0.6
 	 */
 	public ExcelWriter(Sheet sheet) {
-		this.workbook = sheet.getWorkbook();
-		this.sheet = sheet;
+		super(sheet);
 		this.styleSet = new StyleSet(workbook);
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
-
-	/**
-	 * 获取Workbook
-	 * 
-	 * @return Workbook
-	 */
-	public Workbook getWorkbook() {
-		return this.workbook;
-	}
-
-	/**
-	 * 获取当前Sheet
-	 * 
-	 * @return {@link Sheet}
-	 */
-	public Sheet getSheet() {
-		return this.sheet;
-	}
 
 	/**
 	 * 设置某列为自动宽度，不考虑合并单元格<br>
@@ -279,20 +252,6 @@ public class ExcelWriter implements Closeable {
 	 */
 	public ExcelWriter resetRow() {
 		this.currentRow.set(0);
-		return this;
-	}
-
-	/**
-	 * 切换sheet，如果指定的sheet不存在，创建之<br>
-	 * 当切换到新的sheet时，游标将归零到第一行
-	 * 
-	 * @param sheetName sheet名
-	 * @return this
-	 * @since 4.0.8
-	 */
-	public ExcelWriter setOrCreateSheet(String sheetName) {
-		this.sheet = ExcelUtil.getOrCreateSheet(this.workbook, sheetName);
-		this.resetRow();
 		return this;
 	}
 
@@ -592,30 +551,19 @@ public class ExcelWriter implements Closeable {
 	}
 
 	/**
-	 * 获取或者创建指定位置的单元格
-	 * 
-	 * @param x X坐标，从0计数，既列号
-	 * @param y Y坐标，从0计数，既行号
-	 * @return {@link Cell}
-	 * @since 4.0.9
-	 */
-	public Cell getOrCreateCell(int x, int y) {
-		final Row row = RowUtil.getOrCreateRow(this.sheet, y);
-		return CellUtil.getOrCreateCell(row, x);
-	}
-
-	/**
 	 * 为指定单元格创建样式
 	 * 
 	 * @param x X坐标，从0计数，既列号
 	 * @param y Y坐标，从0计数，既行号
 	 * @return {@link CellStyle}
 	 * @since 4.0.9
+	 * @deprecated 请使用{@link #getOrCreateCellStyle(int, int)}
 	 */
+	@Deprecated
 	public CellStyle createStyleForCell(int x, int y) {
-		final CellStyle cellStyle = this.workbook.createCellStyle();
 		final Cell cell = getOrCreateCell(x, y);
-		cell.setCellStyle(this.workbook.createCellStyle());
+		final CellStyle cellStyle = this.workbook.createCellStyle();
+		cell.setCellStyle(cellStyle);
 		return cellStyle;
 	}
 
@@ -688,14 +636,11 @@ public class ExcelWriter implements Closeable {
 		if (null != this.destFile) {
 			flush();
 		}
-		IoUtil.close(this.workbook);
+		super.close();
 
 		// 清空对象
 		this.currentRow = null;
 		this.styleSet = null;
-		this.sheet = null;
-		this.workbook = null;
-		isClosed = true;
 	}
 
 	// -------------------------------------------------------------------------- Private method start

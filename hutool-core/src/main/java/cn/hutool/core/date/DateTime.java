@@ -770,6 +770,21 @@ public class DateTime extends Date {
 		}
 		return toString(DatePattern.NORM_DATE_FORMAT);
 	}
+	
+	/**
+	 * 转为"HH:mm:ss" 格式字符串
+	 * 
+	 * @return "HH:mm:ss" 格式字符串
+	 * @since 4.1.4
+	 */
+	public String toTimeStr() {
+		if(null != this.timeZone) {
+			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_TIME_PATTERN);
+			simpleDateFormat.setTimeZone(this.timeZone);
+			return toString(simpleDateFormat);
+		}
+		return toString(DatePattern.NORM_TIME_FORMAT);
+	}
 
 	/**
 	 * 转为字符串

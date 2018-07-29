@@ -3,6 +3,29 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.4
+
+### 新特性
+* 【all】             补充package-info
+* 【db】            增加方法SqlExecutor.callQuery(issue#ILJ0N@Gitee)
+* 【core】          ExceptionUtil增加部分方法
+* 【system】      SystemUtil增加部分方法
+* 【core】          新增NamedThreadLocal（issue#ILJ0Z@Gitee）
+* 【core】          ZipUtil新增Zlib压缩解压
+* 【core】          NumberUtil增加parseInt和parseLong，支持10进制、8进制和16进制自动识别
+* 【db】            Table继承自LinkedHashMap保证字段读出有序（感谢@【帝都】宁静）
+* 【json】          JSONObject子类自动判断是否有序（感谢@【帝都】宁静）
+* 【poi】           抽象ExcelBase，提取共用方法
+
+### Bug修复
+* 【http】          修复HttpRequest.setFollowRedirects无效问题（issue#ILIKG@Gitee）
+* 【core】         修复CharUtil.isEmoji问题
+* 【http】          修复HttpResponse.writeBody同步模式下写出失败问题
+* 【http】          修复Cookie机制导致的部分Cookie信息不能在请求时附带的问题
+* 【json】          修复JSONArray.toArray转换为原始类型导致的异常问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.3
 
 ### 新特性

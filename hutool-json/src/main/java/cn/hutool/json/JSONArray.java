@@ -592,7 +592,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 */
-	public Object[] toArray(Class<?> arrayClass, boolean ignoreError) {
+	public Object toArray(Class<?> arrayClass, boolean ignoreError) {
 		return InternalJSONUtil.toArray(this, arrayClass, ignoreError);
 	}
 

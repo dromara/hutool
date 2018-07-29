@@ -1,5 +1,6 @@
 package cn.hutool.http.test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 
 public class HttpUtilTest {
-	
+
 	@Test
 	@Ignore
 	public void postTest() {
@@ -29,13 +30,14 @@ public class HttpUtilTest {
 		String result1 = HttpUtil.get("http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2", CharsetUtil.CHARSET_GBK);
 		Console.log(result1);
 	}
-	
+
 	@Test
 	@Ignore
 	public void getTest3() {
-		//自定义的默认header无效
-		String result = HttpRequest.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
-			.removeHeader(Header.USER_AGENT).execute().body();
+		// 自定义的默认header无效
+		String result = HttpRequest
+				.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
+				.removeHeader(Header.USER_AGENT).execute().body();
 		Console.log(result);
 	}
 
@@ -187,11 +189,35 @@ public class HttpUtilTest {
 		Assert.assertEquals("你好", map.get("c").get(0));
 		Assert.assertEquals("", map.get("哈喽").get(0));
 	}
-	
+
 	@Test
 	@Ignore
 	public void patchTest() {
 		String body = HttpRequest.post("https://www.baidu.com").execute().body();
 		Console.log(body);
+	}
+
+	@Test
+	public void urlWithFormTest() {
+		Map<String, Object> param = new HashMap<>();
+		param.put("AccessKeyId", "123");
+		param.put("Action", "DescribeDomainRecords");
+		param.put("Format", "date");
+		param.put("DomainName", "lesper.cn"); // 域名地址
+		param.put("SignatureMethod", "POST");
+		param.put("SignatureNonce", "123");
+		param.put("SignatureVersion", "4.3.1");
+		param.put("Timestamp", 123432453);
+		param.put("Version", "1.0");
+
+		String urlWithForm = HttpUtil.urlWithForm("http://api.hutool.cn/login?type=aaa", param, CharsetUtil.CHARSET_UTF_8, false);
+		Assert.assertEquals(
+				"http://api.hutool.cn/login?type=aaa&Format=date&Action=DescribeDomainRecords&AccessKeyId=123&SignatureMethod=POST&DomainName=lesper.cn&SignatureNonce=123&Version=1.0&SignatureVersion=4.3.1&Timestamp=123432453",
+				urlWithForm);
+
+		urlWithForm = HttpUtil.urlWithForm("http://api.hutool.cn/login?type=aaa", param, CharsetUtil.CHARSET_UTF_8, false);
+		Assert.assertEquals(
+				"http://api.hutool.cn/login?type=aaa&Format=date&Action=DescribeDomainRecords&AccessKeyId=123&SignatureMethod=POST&DomainName=lesper.cn&SignatureNonce=123&Version=1.0&SignatureVersion=4.3.1&Timestamp=123432453",
+				urlWithForm);
 	}
 }

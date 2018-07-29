@@ -103,7 +103,26 @@ public final class ExceptionUtil {
 		return Thread.currentThread().getStackTrace();
 	}
 	
+	/**
+	 * 获取指定层的堆栈信息
+	 * 
+	 * @return 指定层的堆栈信息
+	 * @since 4.1.4
+	 */
+	public static StackTraceElement getStackElement(int i) {
+		return getStackElements()[i];
+	}
 	
+	/**
+	 * 获取入口堆栈信息
+	 * 
+	 * @return 入口堆栈信息
+	 * @since 4.1.4
+	 */
+	public static StackTraceElement getRootStackElement() {
+		final StackTraceElement[] stackElements = getStackElements();
+		return stackElements[stackElements.length - 1];
+	}
 	
 	/**
 	 * 堆栈转为单行完整字符串

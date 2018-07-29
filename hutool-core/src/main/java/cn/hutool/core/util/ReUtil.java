@@ -99,11 +99,11 @@ public class ReUtil {
 	}
 
 	/**
-	 * 获得匹配的字符串
+	 * 获得匹配的字符串，对应分组0表示整个匹配内容，1表示第一个括号分组内容，依次类推
 	 * 
 	 * @param pattern 编译后的正则模式
 	 * @param content 被匹配的内容
-	 * @param groupIndex 匹配正则的分组序号
+	 * @param groupIndex 匹配正则的分组序号，0表示整个匹配内容，1表示第一个括号分组内容，依次类推
 	 * @return 匹配后得到的字符串，未匹配返回null
 	 */
 	public static String get(Pattern pattern, String content, int groupIndex) {

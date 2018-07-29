@@ -164,10 +164,10 @@ public class IoUtil {
 		}
 
 		byte[] buffer = new byte[bufferSize];
-		long size = 0;
 		if (null != streamProgress) {
 			streamProgress.start();
 		}
+		long size = 0;
 		try {
 			for (int readSize = -1; (readSize = in.read(buffer)) != EOF;) {
 				out.write(buffer, 0, readSize);
@@ -236,7 +236,7 @@ public class IoUtil {
 	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
 		Assert.notNull(in, "InputStream is null !");
 		Assert.notNull(out, "OutputStream is null !");
-
+		
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize <= 0 ? DEFAULT_BUFFER_SIZE : bufferSize);
 		long size = 0;
 		if (null != streamProgress) {

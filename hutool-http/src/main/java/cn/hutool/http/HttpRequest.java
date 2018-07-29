@@ -3,6 +3,9 @@ package cn.hutool.http;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
@@ -35,7 +38,7 @@ import cn.hutool.log.StaticLog;
 
 /**
  * http请求类<br>
- * Http请求类用于构建Http请求并同步获取结果，此类通过 {@link CookiePool}持有域名对应的Cookie值，再次请求时会自动附带Cookie信息
+ * Http请求类用于构建Http请求并同步获取结果，此类通过CookieManager持有域名对应的Cookie值，再次请求时会自动附带Cookie信息
  * 
  * @author Looly
  */
@@ -52,6 +55,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final String CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX = "application/x-www-form-urlencoded;charset=";
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
+	
+	/** Cookie管理 */
+	protected static CookieManager cookieManager = new CookieManager();
+	static {
+		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+		CookieHandler.setDefault(cookieManager);
+	}
 
 	private String url;
 	private Method method = Method.GET;
@@ -601,8 +611,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param isFollowRedirects 是否打开重定向
 	 * @return this
 	 */
-	public HttpRequest setFollowRedirects(Boolean isFollowRedirects) {
-		return setMaxRedirectCount(2);
+	public HttpRequest setFollowRedirects(boolean isFollowRedirects) {
+		return setMaxRedirectCount(isFollowRedirects ? 2 : 0);
 	}
 
 	/**

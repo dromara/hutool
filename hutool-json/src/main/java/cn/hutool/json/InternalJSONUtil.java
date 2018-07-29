@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Collection;
@@ -16,7 +17,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.convert.impl.CollectionConverter;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -231,7 +231,6 @@ final class InternalJSONUtil {
 				if(null == value) {
 					value = jsonObject.get(StrUtil.toUnderlineCase(key));
 				}
-				
 				return jsonConvert(valueType, value, ignoreError);
 			}
 
@@ -256,11 +255,12 @@ final class InternalJSONUtil {
 	 * @param ignoreError 是否忽略转换异常
 	 * @return 数组对象
 	 */
-	protected static Object[] toArray(final JSONArray jsonArray, Class<?> arrayClass, boolean ignoreError) {
+	protected static Object toArray(final JSONArray jsonArray, Class<?> arrayClass, boolean ignoreError) {
 		final Class<?> componentType = arrayClass.isArray() ? arrayClass.getComponentType() : arrayClass;
-		final Object[] objArray = ArrayUtil.newArray(componentType, jsonArray.size());
-		for (int i = 0; i < objArray.length; i++) {
-			objArray[i] = jsonConvert(componentType, jsonArray.get(i), ignoreError);
+		final int size = jsonArray.size();
+		final Object objArray = Array.newInstance(componentType, size);
+		for (int i = 0; i < size; i++) {
+			Array.set(objArray, i, jsonConvert(componentType, jsonArray.get(i), ignoreError));
 		}
 
 		return objArray;

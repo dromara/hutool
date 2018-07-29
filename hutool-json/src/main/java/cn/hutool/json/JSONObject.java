@@ -154,7 +154,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
-		this();
+		this(DEFAULT_CAPACITY, (source instanceof LinkedHashMap));
 		this.ignoreNullValue = ignoreNullValue;
 		if (null != source) {
 			if (source instanceof Map) {
