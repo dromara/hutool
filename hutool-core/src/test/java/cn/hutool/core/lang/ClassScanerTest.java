@@ -2,17 +2,18 @@ package cn.hutool.core.lang;
 
 import java.util.Set;
 
-import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ClassScanerTest {
 	
 	@Test
+	@Ignore
 	public void scanTest() {
-		Set<Class<?>> result = ClassScaner.scanPackage("cn.hutool.core");
-//		for (Class<?> clazz : result) {
-//			Console.log(clazz.getName());
-//		}
-		Assert.assertFalse(result.isEmpty());
+		ClassScaner scaner = new ClassScaner("cn.hutool.core", null);
+		Set<Class<?>> set = scaner.scan();
+		for (Class<?> clazz : set) {
+			Console.log(clazz.getName());
+		}
 	}
 }

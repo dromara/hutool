@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,6 +21,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.comparator.IndexedComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -49,6 +51,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private AtomicInteger currentRow = new AtomicInteger(0);
 	/** 标题行别名 */
 	private Map<String, String> headerAlias;
+	private Comparator<String> aliasComparator;
 	/** 样式集，定义不同类型数据样式 */
 	private StyleSet styleSet;
 
@@ -279,6 +282,24 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 增加标题别名
+	 * 
+	 * @param name 原标题
+	 * @param alias 别名
+	 * @return this
+	 * @since 4.1.5
+	 */
+	public ExcelWriter addHeaderAlias(String name, String alias) {
+		Map<String, String> headerAlias = this.headerAlias;
+		if (null == headerAlias) {
+			headerAlias = new LinkedHashMap<>();
+		}
+		this.headerAlias = headerAlias;
+		headerAlias.put(name, alias);
+		return this;
+	}
+
+	/**
 	 * 设置列宽（单位为一个字符的宽度，例如传入width为10，表示10个字符的宽度）
 	 * 
 	 * @param columnIndex 列号（从0开始计数，-1表示所有列的默认宽度）
@@ -432,23 +453,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		int index = 0;
 		for (Object object : data) {
-			if (object instanceof Iterable) {
-				// 普通多行数据
-				writeRow((Iterable<?>) object);
-			} else if (object instanceof Map) {
-				// Map表示一行，第一条数据的key做为标题行
-				writeRows((Map<?, ?>) object, 0 == index);
-			} else if (BeanUtil.isBean(object.getClass())) {
-				// 一个Bean对象表示一行
-				writeRows(BeanUtil.beanToMap(object, new LinkedHashMap<String, Object>(), false, false), 0 == index);
-			} else {
-				break;
-			}
+			writeRow(object, 0 == index);
 			index++;
-		}
-		if (0 == index) {
-			// 在无法识别元素类型的情况下，做为一行对待
-			writeRow(data);
 		}
 		return this;
 	}
@@ -470,18 +476,18 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 3.2.3
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public <T> ExcelWriter write(Iterable<T> data, Comparator<String> comparator) {
+	public ExcelWriter write(Iterable<?> data, Comparator<String> comparator) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		boolean isFirstRow = true;
 		Map<?, ?> map;
-		for (T t : data) {
-			if (t instanceof Map) {
+		for (Object obj : data) {
+			if (obj instanceof Map) {
 				map = new TreeMap<>(comparator);
-				map.putAll((Map) t);
+				map.putAll((Map) obj);
 			} else {
-				map = BeanUtil.beanToMap(t, new TreeMap<String, Object>(comparator), false, false);
+				map = BeanUtil.beanToMap(obj, new TreeMap<String, Object>(comparator), false, false);
 			}
-			writeRows(map, isFirstRow);
+			writeRow(map, isFirstRow);
 			if (isFirstRow) {
 				isFirstRow = false;
 			}
@@ -505,6 +511,62 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 写出一行，根据rowBean数据类型不同，写出情况如下：
+	 * 
+	 * <pre>
+	 * 1、如果为Iterable，直接写出一行
+	 * 2、如果为Map，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
+	 * 3、如果为Bean，转为Map写出，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
+	 * </pre>
+	 * 
+	 * @param rowBean 写出的Bean
+	 * @param isWriteKeyAsHead 为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
+	 * @return this
+	 * @see #writeRow(Iterable)
+	 * @see #writeRow(Map, boolean)
+	 * @since 4.1.5
+	 */
+	public ExcelWriter writeRow(Object rowBean, boolean isWriteKeyAsHead) {
+		Map<?, ?> rowMap = null;
+		if (rowBean instanceof Iterable) {
+			writeRow((Iterable<?>) rowBean);
+		}
+		if (rowBean instanceof Map) {
+			rowMap = (Map<?, ?>) rowBean;
+		} else {
+			if (MapUtil.isEmpty(this.headerAlias)) {
+				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);
+			} else {
+				// 别名存在情况下按照别名的添加顺序排序Bean数据
+				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<String, Object>(getInitedAliasComparator()), false, false);
+			}
+		}
+		return writeRow(rowMap, isWriteKeyAsHead);
+	}
+
+	/**
+	 * 将一个Map写入到Excel，isWriteKeyAsHead为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values<br>
+	 * 如果rowMap为空（包括null），则写出空行
+	 * 
+	 * @param rowMap 写出的Map，为空（包括null），则写出空行
+	 * @param isWriteKeyAsHead 为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
+	 * @return this
+	 */
+	public ExcelWriter writeRow(Map<?, ?> rowMap, boolean isWriteKeyAsHead) {
+		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
+		if (MapUtil.isEmpty(rowMap)) {
+			// 如果写出数据为null或空，跳过当前行
+			return passCurrentRow();
+		}
+
+		if (isWriteKeyAsHead) {
+			writeHeadRow(aliasHeader(rowMap.keySet()));
+		}
+		writeRow(rowMap.values());
+		return this;
+	}
+
+	/**
 	 * 写出一行数据<br>
 	 * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动+1<br>
@@ -516,22 +578,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter writeRow(Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, false);
-		return this;
-	}
-
-	/**
-	 * 将一个Map写入到Excel，isWriteKeys为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
-	 * 
-	 * @param rowMap 写出的Map
-	 * @param isWriteKeys 为true写出两行，Map的keys做为一行，values做为第二行，否则只写出一行values
-	 * @return this
-	 */
-	public ExcelWriter writeRows(Map<?, ?> rowMap, boolean isWriteKeys) {
-		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		if (isWriteKeys) {
-			writeHeadRow(aliasHeader(rowMap.keySet()));
-		}
-		writeRow(rowMap.values());
 		return this;
 	}
 
@@ -661,6 +707,25 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			alias.add(null == aliasName ? key : aliasName);
 		}
 		return alias;
+	}
+
+	/**
+	 * 获取单例的别名比较器，比较器的顺序为别名加入的顺序
+	 * 
+	 * @return Comparator
+	 * @since 4.1.5
+	 */
+	private Comparator<String> getInitedAliasComparator() {
+		if (MapUtil.isEmpty(this.headerAlias)) {
+			return null;
+		}
+		Comparator<String> aliasComparator = this.aliasComparator;
+		if (null == aliasComparator) {
+			Set<String> keySet = this.headerAlias.keySet();
+			aliasComparator = new IndexedComparator<>(keySet.toArray(new String[keySet.size()]));
+			this.aliasComparator = aliasComparator;
+		}
+		return aliasComparator;
 	}
 	// -------------------------------------------------------------------------- Private method end
 }

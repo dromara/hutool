@@ -531,7 +531,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		} else {
 			// 在用户未自定义的情况下自动根据内容判断
 			contentType = HttpUtil.getContentTypeByRequestBody(body);
-			if (null != contentType && ContentType.isFormUrlEncoed(this.header(Header.CONTENT_TYPE))) {
+			if (null != contentType && ContentType.isDefault(this.header(Header.CONTENT_TYPE))) {
 				if (null != this.charset) {
 					//附加编码信息
 					contentType = StrUtil.format("{};charset={}", contentType, this.charset.name());

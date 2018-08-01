@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -143,7 +144,7 @@ public class ExcelWriteTest {
 		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest2.xlsx");
 		
 		// 一次性写出内容，使用默认样式
-		writer.writeRows(row1, true);
+		writer.writeRow(row1, true);
 		// 关闭writer，释放内存
 		writer.close();
 	}
@@ -167,12 +168,15 @@ public class ExcelWriteTest {
 
 		List<TestBean> rows = CollUtil.newArrayList(bean1, bean2);
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("d:/writeBeanTest.xlsx");
+		String file = "e:/writeBeanTest.xlsx";
+		FileUtil.del(file);
+		ExcelWriter writer = ExcelUtil.getWriter(file);
 		//自定义标题
-		Map<String, String> alias = MapUtil.newHashMap();
-		alias.put("name", "姓名");
-		alias.put("age", "年龄");
-		writer.setHeaderAlias(alias);
+		writer.addHeaderAlias("name", "姓名");
+		writer.addHeaderAlias("age", "年龄");
+		writer.addHeaderAlias("score", "分数");
+		writer.addHeaderAlias("isPass", "是否通过");
+		writer.addHeaderAlias("examDate", "考试时间");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式

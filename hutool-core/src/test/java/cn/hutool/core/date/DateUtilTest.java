@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -126,6 +127,18 @@ public class DateUtilTest {
 		// 偏移月
 		DateTime offsetMonth = DateUtil.offsetMonth(date, -1);
 		Assert.assertEquals("2017-02-01 22:33:23", offsetMonth.toString());
+	}
+
+	@Test
+	public void test1() {
+		DateTime st = DateUtil.parseDate("2018-05-31");
+		List<DateTime> list = new ArrayList<>();
+		for (int i = 0; i < 4; i++) {
+			list.add(DateUtil.offsetMonth(st, i));
+		}
+		for (DateTime dateTime : list) {
+			System.out.println(dateTime);
+		}
 	}
 
 	@Test
@@ -379,7 +392,7 @@ public class DateUtilTest {
 		DateTime start = DateUtil.parse("2017-01-01");
 		DateTime end = DateUtil.parse("2017-01-03");
 
-		//测试包含开始和结束情况下步进为1的情况
+		// 测试包含开始和结束情况下步进为1的情况
 		DateRange range = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
@@ -389,13 +402,13 @@ public class DateUtilTest {
 			Assert.fail("已超过边界，下一个元素不应该存在！");
 		} catch (NoSuchElementException e) {
 		}
-		
-		//测试多步进的情况
+
+		// 测试多步进的情况
 		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 2);
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-03"));
-		
-		//测试不包含开始结束时间的情况
+
+		// 测试不包含开始结束时间的情况
 		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 1, false, false);
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
 		try {
@@ -404,12 +417,12 @@ public class DateUtilTest {
 		} catch (NoSuchElementException e) {
 		}
 	}
-	
+
 	@Test
 	public void rangeToListTest() {
 		DateTime start = DateUtil.parse("2017-01-01");
 		DateTime end = DateUtil.parse("2017-01-31");
-		
+
 		List<DateTime> rangeToList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR);
 		Assert.assertEquals(rangeToList.get(0), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(rangeToList.get(1), DateUtil.parse("2017-01-02"));

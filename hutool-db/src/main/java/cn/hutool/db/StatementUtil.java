@@ -17,6 +17,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.sql.SqlBuilder;
+import cn.hutool.db.sql.SqlLog;
 import cn.hutool.db.sql.SqlUtil;
 
 /**
@@ -136,6 +137,7 @@ public class StatementUtil {
 		Assert.notBlank(sql, "Sql String must be not blank!");
 
 		sql = sql.trim();
+		SqlLog.INSTASNCE.log(sql, params);
 		PreparedStatement ps;
 		if (StrUtil.startWithIgnoreCase(sql, "insert")) {
 			// 插入默认返回主键
