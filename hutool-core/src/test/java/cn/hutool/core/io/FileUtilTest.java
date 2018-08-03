@@ -64,6 +64,15 @@ public class FileUtilTest {
 		Assert.assertTrue(destFile.exists());
 		Assert.assertEquals(srcFile.length(), destFile.length());
 	}
+	
+	@Test
+	@Ignore
+	public void copyFilesFromDir() throws Exception {
+		File srcFile = FileUtil.file("D:\\驱动");
+		File destFile = FileUtil.file("d:\\驱动备份");
+		
+		FileUtil.copyFilesFromDir(srcFile, destFile, true);
+	}
 
 	@Test
 	public void equlasTest() {

@@ -8,9 +8,12 @@
 ### 新特性
 * 【poi】           ExcelWriter支持通过别名方式设置Bean写出的顺序（感谢@【武汉】zzz）
 * 【db】            SQL日志打印扩展到所有SQL（感谢@【河北】理想主义）
+* 【core】         增加FileUtil.copyFilesFromDir方法（issue#ILRLG@Gitee）
+* 【core】         EscapeUtil.unescapeHtml4和EscapeUtil.escapeHtml4（issue#112@Github）
 
 ### Bug修复
 * 【http】          修复body方法判断Content-Type失效问题（感谢@【上海】皮皮今）
+* 【core】         修复FileUtil.copy方法在目标不存在的情况下报错问题
 
 
 -------------------------------------------------------------------------------------------------------------
