@@ -112,8 +112,6 @@ public class ClassScaner {
 
 	/**
 	 * 构造，默认UTF-8编码
-	 * 
-	 * @param packageName 包名，所有包传入""或者null
 	 */
 	public ClassScaner() {
 		this(null);
@@ -154,13 +152,8 @@ public class ClassScaner {
 	}
 
 	/**
-	 * 扫面包路径下满足class过滤器条件的所有class文件，<br>
-	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException<br>
-	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理<br>
+	 * 扫面包路径下满足class过滤器条件的所有class文件
 	 * 
-	 * @param packageName 包路径 com | com. | com.abs | com.abs.
-	 * @param classFilter class过滤器，过滤掉不需要的class
-	 * @return
 	 * @return 类集合
 	 */
 	public Set<Class<?>> scan() {
