@@ -12,6 +12,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.ssl.AndroidSupportSSLFactory;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * http基类
@@ -34,6 +37,21 @@ public abstract class HttpBase<T> {
 	protected String httpVersion = HTTP_1_1;
 	/**存储主体*/
 	protected byte[] bodyBytes;
+
+	static {
+
+		boolean isAndroid = false;
+
+		try {
+			isAndroid = "Dalvik".equals(System.getProperty("java.vm.name"));
+		} catch(Exception ignored) {}
+
+		if (isAndroid) {
+			HttpsURLConnection.setDefaultSSLSocketFactory(new AndroidSupportSSLFactory());
+		}
+
+	}
+
 	
 	// ---------------------------------------------------------------- Headers start
 	/**
