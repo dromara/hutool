@@ -1,6 +1,7 @@
 package cn.hutool.core.util;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -49,6 +50,21 @@ public class ImageUtilTest {
 	@Ignore
 	public void pressImgTest() {
 		ImageUtil.pressImage(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest.jpg"), ImageUtil.read(FileUtil.file("d:/picTest/1432613.jpg")), 0, 0, 0.1f);
+	}
+	
+	@Test
+	@Ignore
+	public void pressTextTest() {
+		ImageUtil.pressText(//
+				FileUtil.file("e:/face.jpg"), //
+				FileUtil.file("e:/face_text.jpg"),// 
+				"测试",
+				Color.WHITE,//
+				new Font("宋体", Font.PLAIN, 50),//
+				0,//
+				0,//
+				0.1f
+		);
 	}
 	
 	@Test
