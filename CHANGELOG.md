@@ -15,6 +15,7 @@
 * 【http】          修复body方法判断Content-Type失效问题（感谢@【上海】皮皮今）
 * 【core】         修复FileUtil.copy方法在目标不存在的情况下报错问题
 * 【core】         修复ClassScaner在Spring boot fat jar下扫描失败的问题（issue#IKDJW@Gitee）
+* 【json】          修复JSONObject构造names列表为空导致的构造空对象（感谢@【浙江】MikaGuraNTK ）
 
 
 -------------------------------------------------------------------------------------------------------------

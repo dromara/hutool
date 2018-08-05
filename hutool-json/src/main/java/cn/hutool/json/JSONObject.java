@@ -22,6 +22,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
@@ -94,18 +95,22 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。<br>
-	 * 此构造方法并不忽略空值
+	 * 如果传入的name列表为空则加入所有键值对
 	 *
 	 * @param jsonObject A JSONObject.
-	 * @param names 需要的name列表
+	 * @param names 需要的name列表，如果为空加入所有键值对
 	 */
 	public JSONObject(JSONObject jsonObject, String... names) {
 		this();
-		for (String name : names) {
-			try {
-				this.putOnce(name, jsonObject.getObj(name));
-			} catch (Exception ignore) {
+		if(ArrayUtil.isNotEmpty(names)) {
+			for (String name : names) {
+				try {
+					this.putOnce(name, jsonObject.getObj(name));
+				} catch (Exception ignore) {
+				}
 			}
+		} else {
+			this.putAll(jsonObject);
 		}
 	}
 	
