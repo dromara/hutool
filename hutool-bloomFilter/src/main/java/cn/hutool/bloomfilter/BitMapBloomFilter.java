@@ -20,7 +20,7 @@ public class BitMapBloomFilter implements BloomFilter{
 	private BloomFilter[] filters;
 
 	/**
-	 * 使用默认的5个过滤器
+	 * 构造，使用默认的5个过滤器
 	 * @param m M值决定BitMap的大小
 	 */
 	public BitMapBloomFilter(int m) {

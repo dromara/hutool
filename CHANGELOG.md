@@ -11,6 +11,8 @@
 * 【core】         增加FileUtil.copyFilesFromDir方法（issue#ILRLG@Gitee）
 * 【core】         EscapeUtil.unescapeHtml4和EscapeUtil.escapeHtml4（issue#112@Github）
 * 【http】          增加CustomProtocolsSSLFactory和AndroidSupportSSLFactory（pr#142@Github）
+* 【setting】      添加SettingUtil（感谢@【杭州】t-io）
+* 【bloomFilter】添加BloomFilterUtil
 
 ### Bug修复
 * 【http】          修复body方法判断Content-Type失效问题（感谢@【上海】皮皮今）

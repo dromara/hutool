@@ -49,7 +49,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	/** 默认字符集 */
 	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	/** 默认配置文件扩展名 */
-	public final static String EXT_NAME = ".setting";
+	public final static String EXT_NAME = "setting";
 
 	/** 附带分组的键值对存储 */
 	private final GroupedMap groupedMap = new GroupedMap();
