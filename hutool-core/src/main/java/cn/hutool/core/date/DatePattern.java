@@ -63,8 +63,8 @@ public class DatePattern {
 	/** HTTP头中日期时间格式 {@link FastDateFormat}：EEE, dd MMM yyyy HH:mm:ss z */
 	public final static FastDateFormat HTTP_DATETIME_FORMAT = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN);
 
-	/** HTTP头中日期时间格式：EEE MMM dd HH:mm:ss zzz yyyy */
+	/** JDK中日期时间格式：EEE MMM dd HH:mm:ss zzz yyyy */
 	public final static String JDK_DATETIME_PATTERN = "EEE MMM dd HH:mm:ss zzz yyyy";
-	/** HTTP头中日期时间格式 {@link FastDateFormat}：EEE MMM dd HH:mm:ss zzz yyyy */
+	/** JDK中日期时间格式 {@link FastDateFormat}：EEE MMM dd HH:mm:ss zzz yyyy */
 	public final static FastDateFormat JDK_DATETIME_FORMAT = FastDateFormat.getInstance(JDK_DATETIME_PATTERN);
 }
