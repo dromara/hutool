@@ -295,7 +295,6 @@ public class Img {
 	 * 旋转图片为指定角度<br>
 	 * 来自：http://blog.51cto.com/cping1982/130066
 	 * 
-	 * @param image 目标图像
 	 * @param degree 旋转角度
 	 * @return 旋转后的图片
 	 * @since 3.2.2
@@ -356,7 +355,6 @@ public class Img {
 	/**
 	 * 写出图像为PNG格式
 	 * 
-	 * @param imageType 图片类型（图片扩展名）
 	 * @param destImageStream 写出到的目标流
 	 * @throws IORuntimeException IO异常
 	 */

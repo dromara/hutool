@@ -415,7 +415,6 @@ public class RandomUtil {
 	/**
 	 * 生成随机颜色
 	 * 
-	 * @param random 随机对象 {@link Random}
 	 * @return 随机颜色
 	 * @since 4.1.5
 	 */
