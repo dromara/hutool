@@ -53,7 +53,7 @@ public class Img {
 	
 	/**
 	 * 从流读取图片并开始处理
-	 * @param imageFile 图片文件
+	 * @param in 图片流
 	 * @return {@link Img}
 	 */
 	public static Img from(InputStream in) {
@@ -62,7 +62,7 @@ public class Img {
 	
 	/**
 	 * 从ImageInputStream取图片并开始处理
-	 * @param imageFile 图片文件
+	 * @param imageStream 图片流
 	 * @return {@link Img}
 	 */
 	public static Img from(ImageInputStream imageStream) {
@@ -71,7 +71,7 @@ public class Img {
 	
 	/**
 	 * 从URL取图片并开始处理
-	 * @param imageFile 图片文件
+	 * @param imageUrl 图片URL
 	 * @return {@link Img}
 	 */
 	public static Img from(URL imageUrl) {
@@ -80,7 +80,7 @@ public class Img {
 	
 	/**
 	 * 从Image取图片并开始处理
-	 * @param imageFile 图片文件
+	 * @param image 图片
 	 * @return {@link Img}
 	 */
 	public static Img from(Image image) {
@@ -93,6 +93,18 @@ public class Img {
 	 */
 	public Img(BufferedImage srcImage) {
 		this.srcImage = srcImage;
+	}
+	
+	/**
+	 * 设置目标图片文件格式，用于写出
+	 * @param imgType 图片格式
+	 * @return this
+	 * @see ImageUtil#IMAGE_TYPE_JPG
+	 * @see ImageUtil#IMAGE_TYPE_PNG
+	 */
+	public Img setDestImageType(String imgType) {
+		this.destImageType = imgType;
+		return this;
 	}
 
 	/**
@@ -292,9 +304,7 @@ public class Img {
 		final BufferedImage image = this.srcImage;
 		int width = image.getWidth(null);
 		int height = image.getHeight(null);
-		int type = ImageUtil.toBufferedImage(image).getTransparency();
-
-		final BufferedImage destImg = new BufferedImage(width, height, type);
+		final BufferedImage destImg = new BufferedImage(width, height, getTypeInt());
 		Graphics2D graphics2d = destImg.createGraphics();
 		// 抗锯齿
 		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -315,9 +325,7 @@ public class Img {
 		final BufferedImage image = this.srcImage;
 		int width = image.getWidth();
 		int height = image.getHeight();
-		int type = ImageUtil.toBufferedImage(image).getTransparency();
-
-		final BufferedImage destImg = new BufferedImage(width, height, type);
+		final BufferedImage destImg = new BufferedImage(width, height, getTypeInt());
 		Graphics2D graphics2d = destImg.createGraphics();
 		graphics2d.drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
 		graphics2d.dispose();
@@ -412,6 +420,22 @@ public class Img {
 			}
 		}
 		return length / 2;
+	}
+	
+	/**
+	 * 获取int类型的图片类型
+	 * 
+	 * @return 图片类型
+	 * @see BufferedImage#TYPE_INT_ARGB
+	 * @see BufferedImage#TYPE_INT_RGB
+	 */
+	private int getTypeInt() {
+		switch (this.destImageType) {
+		case ImageUtil.IMAGE_TYPE_PNG:
+			return BufferedImage.TYPE_INT_ARGB;
+		default:
+			return BufferedImage.TYPE_INT_RGB;
+		}
 	}
 	// ---------------------------------------------------------------------------------------------------------------- Private method end
 }
