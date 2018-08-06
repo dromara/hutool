@@ -555,27 +555,12 @@ public class SqlBuilder {
 	 * @return 构建好的SQL语句
 	 */
 	public String build() {
-		return build(true);
-	}
-
-	/**
-	 * 构建
-	 * 
-	 * @param printLog 是否打印日志
-	 * @return 构建好的SQL语句
-	 * @since 4.1.3
-	 */
-	public String build(boolean printLog) {
-		final String sqlStr = this.sql.toString().trim();
-		if(printLog) {
-			SqlLog.INSTASNCE.log(sqlStr, this.paramValues);
-		}
-		return sqlStr;
+		return this.sql.toString();
 	}
 
 	@Override
 	public String toString() {
-		return this.build(false);
+		return this.build();
 	}
 
 	// --------------------------------------------------------------- private method start

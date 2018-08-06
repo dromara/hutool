@@ -10,6 +10,13 @@ import cn.hutool.core.util.StrUtil;
  * 
  */
 public class HtmlUtil {
+	
+	public static final String NBSP = StrUtil.HTML_NBSP;
+	public static final String AMP = StrUtil.HTML_AMP;
+	public static final String QUOTE = StrUtil.HTML_QUOTE;
+	public static final String APOS = StrUtil.HTML_APOS;
+	public static final String LT = StrUtil.HTML_LT;
+	public static final String GT = StrUtil.HTML_GT;
 
 	public static final String RE_HTML_MARK = "(<[^<]*?>)|(<[\\s]*?/[^<]*?>)|(<[^<]*?/[\\s]*?>)";
 	public static final String RE_SCRIPT = "<[\\s]*?script[^>]*?>.*?<[\\s]*?\\/[\\s]*?script[\\s]*?>";
@@ -23,45 +30,27 @@ public class HtmlUtil {
 
 		// special HTML characters
 		TEXT['\''] = "&#039;".toCharArray(); // 单引号 ('&apos;' doesn't work - it is not by the w3 specs)
-		TEXT['"'] = StrUtil.HTML_QUOTE.toCharArray(); // 双引号
+		TEXT['"'] = QUOTE.toCharArray(); // 双引号
 		TEXT['&'] = StrUtil.HTML_AMP.toCharArray(); // &符
 		TEXT['<'] = StrUtil.HTML_LT.toCharArray(); // 小于号
 		TEXT['>'] = StrUtil.HTML_GT.toCharArray(); // 大于号
 	}
-
+	
 	/**
-	 * 基本功能：替换标记以正常显示
+	 * 转义文本中的HTML字符为安全的字符，以下字符被转义：
+	 * <ul>
+	 * <li>'  替换为 &amp;#039; (&amp;apos; doesn't work in HTML4)</li>
+	 * <li>"  替换为 &amp;quot;</li>
+	 * <li>&amp; 替换为 &amp;amp;</li>
+	 * <li>&lt; 替换为 &amp;lt;</li>
+	 * <li>&gt; 替换为 &amp;gt;</li>
+	 * </ul>
 	 * 
-	 * @param input 输入的HTML字符串
-	 * @return String
-	 * @since 3.2.3
+	 * @param text 被转义的文本
+	 * @return 转义后的文本
 	 */
-	public static String escape(String input) {
-		if (StrUtil.isBlank(input)) {
-			return input;
-		}
-		final StringBuilder filtered = StrUtil.builder(input.length());
-		char c;
-		for (int i = 0; i < input.length(); i++) {
-			c = input.charAt(i);
-			switch (c) {
-			case '<':
-				filtered.append("&lt;");
-				break;
-			case '>':
-				filtered.append("&gt;");
-				break;
-			case '"':
-				filtered.append("&quot;");
-				break;
-			case '&':
-				filtered.append("&amp;");
-				break;
-			default:
-				filtered.append(c);
-			}
-		}
-		return filtered.toString();
+	public static String escape(String text) {
+		return encode(text, TEXT);
 	}
 
 	/**
@@ -70,11 +59,12 @@ public class HtmlUtil {
 	 * @param htmlStr 包含转义符的HTML内容
 	 * @return 转换后的字符串
 	 */
-	public static String restoreEscaped(String htmlStr) {
+	public static String unescape(String htmlStr) {
 		if (StrUtil.isBlank(htmlStr)) {
 			return htmlStr;
 		}
 		return htmlStr.replace(StrUtil.HTML_APOS, "'")//
+				.replace("&#039;", "'")//
 				.replace(StrUtil.HTML_LT, "<")//
 				.replace(StrUtil.HTML_GT, ">")//
 				.replace(StrUtil.HTML_QUOTE, "\"")//
@@ -84,23 +74,6 @@ public class HtmlUtil {
 	}
 
 	// ---------------------------------------------------------------- encode text
-
-	/**
-	 * 转义文本中的HTML字符为安全的字符，以下字符被转义：
-	 * <ul>
-	 * <li>' with &amp;#039; (&amp;apos; doesn't work in HTML4)</li>
-	 * <li>" with &amp;quot;</li>
-	 * <li>&amp; with &amp;amp;</li>
-	 * <li>&lt; with &amp;lt;</li>
-	 * <li>&gt; with &amp;gt;</li>
-	 * </ul>
-	 * 
-	 * @param text 被转义的文本
-	 * @return 转义后的文本
-	 */
-	public static String encode(String text) {
-		return encode(text, TEXT);
-	}
 
 	/**
 	 * 清除所有HTML标签

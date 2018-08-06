@@ -3,6 +3,28 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.5
+
+### 新特性
+* 【poi】           ExcelWriter支持通过别名方式设置Bean写出的顺序（感谢@【武汉】zzz）
+* 【db】            SQL日志打印扩展到所有SQL（感谢@【河北】理想主义）
+* 【core】         增加FileUtil.copyFilesFromDir方法（issue#ILRLG@Gitee）
+* 【core】         EscapeUtil.unescapeHtml4和EscapeUtil.escapeHtml4（issue#112@Github）
+* 【http】          增加CustomProtocolsSSLFactory和AndroidSupportSSLFactory（pr#142@Github）
+* 【setting】      添加SettingUtil（感谢@【杭州】t-io）
+* 【bloomFilter】添加BloomFilterUtil
+* 【core】          添加Img类
+
+### Bug修复
+* 【http】          修复body方法判断Content-Type失效问题（感谢@【上海】皮皮今）
+* 【core】         修复FileUtil.copy方法在目标不存在的情况下报错问题
+* 【core】         修复ClassScaner在Spring boot fat jar下扫描失败的问题（issue#IKDJW@Gitee）
+* 【json】          修复JSONObject构造names列表为空导致的构造空对象（issue#143@Github ）
+* 【core】         修复ImageUtil.pressText图片有黑边的问题（issue#141@Github）
+
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.4
 
 ### 新特性

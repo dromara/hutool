@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -408,6 +410,17 @@ public class RandomUtil {
 	 */
 	public static char randomChar(String baseString) {
 		return baseString.charAt(getRandom().nextInt(baseString.length()));
+	}
+	
+	/**
+	 * 生成随机颜色
+	 * 
+	 * @return 随机颜色
+	 * @since 4.1.5
+	 */
+	public static Color randomColor() {
+		final Random random = getRandom();
+		return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 	}
 
 	/**

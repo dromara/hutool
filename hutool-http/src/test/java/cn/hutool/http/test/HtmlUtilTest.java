@@ -78,4 +78,12 @@ public class HtmlUtilTest {
 		result = HtmlUtil.unwrapHtmlTag(str, "div");
 		Assert.assertEquals("pre\r\n\t\tabc\r\n", result);
 	}
+	
+	@Test
+	public void escapeTest() {
+		String html = "<html><body>123'123'</body></html>";
+		String escape = HtmlUtil.escape(html);
+		String restoreEscaped = HtmlUtil.unescape(escape);
+		Assert.assertEquals(html, restoreEscaped);
+	}
 }

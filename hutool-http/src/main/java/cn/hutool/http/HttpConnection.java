@@ -25,6 +25,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.ssl.AndroidSupportSSLFactory;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.http.ssl.TrustAnyHostnameVerifier;
 import cn.hutool.log.Log;
@@ -185,7 +186,7 @@ public class HttpConnection {
 		// this.header(GlobalHeaders.INSTANCE.headers, true);
 
 		// Cookie
-//		setCookie(CookiePool.get(this.url.getHost()));
+		// setCookie(CookiePool.get(this.url.getHost()));
 
 		return this;
 	}
@@ -524,7 +525,7 @@ public class HttpConnection {
 		}
 		return charset;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
@@ -550,12 +551,20 @@ public class HttpConnection {
 	private HttpURLConnection openHttp(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
 		final HttpURLConnection conn = (HttpURLConnection) openConnection();
 
-		if(conn instanceof HttpsURLConnection) {
-			//Https请求
-			final HttpsURLConnection httpsConn = (HttpsURLConnection)conn;
+		if (conn instanceof HttpsURLConnection) {
+			// Https请求
+			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
 			// 验证域
 			httpsConn.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
-			httpsConn.setSSLSocketFactory(null != ssf ? ssf : SSLSocketFactoryBuilder.create().build());
+			if (null == ssf) {
+				if (StrUtil.equalsIgnoreCase("dalvik", System.getProperty("java.vm.name"))) {
+					// 兼容android低版本SSL连接
+					ssf = new AndroidSupportSSLFactory();
+				} else {
+					ssf = SSLSocketFactoryBuilder.create().build();
+				}
+			}
+			httpsConn.setSSLSocketFactory(ssf);
 		}
 
 		return conn;

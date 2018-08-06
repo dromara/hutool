@@ -1,6 +1,5 @@
 package cn.hutool.core.util;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -8,17 +7,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.color.ColorSpace;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
-import java.awt.image.CropImageFilter;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +27,7 @@ import javax.imageio.stream.ImageOutputStream;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.img.Img;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -145,14 +138,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static Image scale(Image srcImg, float scale) {
-		if (scale < 0) {
-			// 自动修正负数
-			scale = -scale;
-		}
-
-		int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), Float.toString(scale)).intValue(); // 得到源图宽
-		int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), Float.toString(scale)).intValue(); // 得到源图长
-		return scale(srcImg, width, height);
+		return Img.from(srcImg).scale(scale).getImg();
 	}
 
 	/**
@@ -166,19 +152,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static Image scale(Image srcImg, int width, int height) {
-		int srcHeight = srcImg.getHeight(null);
-		int srcWidth = srcImg.getWidth(null);
-		int scaleType;
-		if (srcHeight == height && srcWidth == width) {
-			// 源与目标长宽一致返回原图
-			return srcImg;
-		} else if (srcHeight < height || srcWidth < width) {
-			// 放大图片使用平滑模式
-			scaleType = Image.SCALE_SMOOTH;
-		} else {
-			scaleType = Image.SCALE_DEFAULT;
-		}
-		return srcImg.getScaledInstance(width, height, scaleType);
+		return Img.from(srcImg).scale(width, height).getImg();
 	}
 
 	/**
@@ -252,41 +226,7 @@ public class ImageUtil {
 	 * @return {@link Image}
 	 */
 	public static Image scale(Image srcImage, int width, int height, Color fixedColor) {
-		int srcHeight = srcImage.getHeight(null);
-		int srcWidth = srcImage.getWidth(null);
-		double heightRatio = NumberUtil.div(height, srcHeight);
-		double widthRatio = NumberUtil.div(width, srcWidth);
-		if (heightRatio == widthRatio) {
-			// 长宽都按照相同比例缩放时，返回缩放后的图片
-			return scale(srcImage, width, height);
-		}
-
-		Image itemp = null;
-		// 宽缩放比例小就按照宽缩放，否则按照高缩放
-		if (widthRatio < heightRatio) {
-			itemp = scale(srcImage, width, (int) (srcHeight * widthRatio));
-		} else {
-			itemp = scale(srcImage, (int) (srcWidth * heightRatio), height);
-		}
-
-		if (null == fixedColor) {// 补白
-			fixedColor = Color.WHITE;
-		}
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = image.createGraphics();
-
-		// 设置背景
-		g.setBackground(fixedColor);
-		g.clearRect(0, 0, width, height);
-
-		final int itempHeight = itemp.getHeight(null);
-		final int itempWidth = itemp.getWidth(null);
-		// 在中间贴图
-		g.drawImage(itemp, (width - itempWidth) / 2, (height - itempHeight) / 2, itempWidth, itempHeight, fixedColor, null);
-
-		g.dispose();
-		itemp = image;
-		return itemp;
+		return Img.from(srcImage).scale(width, height, fixedColor).getImg();
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- cut
@@ -374,9 +314,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static BufferedImage cut(Image srcImage, Rectangle rectangle) {
-		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-		Image img = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
-		return toBufferedImage(img);
+		return Img.from(srcImage).cut(rectangle).getImg();
 	}
 
 	/**
@@ -466,12 +404,12 @@ public class ImageUtil {
 	 * @param cols 目标切片列数。默认2，必须是范围 [1, 20] 之内
 	 */
 	public static void sliceByRowsAndCols(Image srcImage, File destDir, int rows, int cols) {
-		if(false == destDir.exists()) {
+		if (false == destDir.exists()) {
 			FileUtil.mkdir(destDir);
-		}else if(false == destDir.isDirectory()) {
+		} else if (false == destDir.isDirectory()) {
 			throw new IllegalArgumentException("Destination Dir must be a Directory !");
 		}
-		
+
 		try {
 			if (rows <= 0 || rows > 20) {
 				rows = 2; // 切片行数
@@ -483,7 +421,7 @@ public class ImageUtil {
 			final BufferedImage bi = toBufferedImage(srcImage);
 			int srcWidth = bi.getWidth(); // 源图宽度
 			int srcHeight = bi.getHeight(); // 源图高度
-			
+
 			int destWidth = NumberUtil.partValue(srcWidth, cols); // 每张切片的宽度
 			int destHeight = NumberUtil.partValue(srcHeight, rows); // 每张切片的高度
 
@@ -651,10 +589,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static BufferedImage gray(Image srcImage) {
-		BufferedImage grayImage = toBufferedImage(srcImage);
-		final ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-		grayImage = op.filter(grayImage, null);
-		return grayImage;
+		return Img.from(srcImage).gray().getImg();
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- binary
@@ -708,6 +643,7 @@ public class ImageUtil {
 	/**
 	 * 彩色转为黑白二值化图片<br>
 	 * 此方法并不关闭流，输出JPG格式
+	 * 
 	 * @param srcImage 源图像流
 	 * @param out 目标图像流
 	 * @param imageType 图片格式(扩展名)
@@ -730,7 +666,7 @@ public class ImageUtil {
 	public static void binary(Image srcImage, ImageOutputStream destImageStream, String imageType) throws IORuntimeException {
 		write(binary(srcImage), imageType, destImageStream);
 	}
-	
+
 	/**
 	 * 彩色转为黑白二值化图片
 	 * 
@@ -739,7 +675,7 @@ public class ImageUtil {
 	 * @since 4.0.5
 	 */
 	public static BufferedImage binary(Image srcImage) {
-		return copyImage(srcImage, BufferedImage.TYPE_BYTE_BINARY);
+		return Img.from(srcImage).binary().getImg();
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- press
@@ -864,24 +800,7 @@ public class ImageUtil {
 	 * @since 3.2.2
 	 */
 	public static BufferedImage pressText(Image srcImage, String pressText, Color color, Font font, int x, int y, float alpha) {
-		int width = srcImage.getWidth(null);
-		int height = srcImage.getHeight(null);
-		BufferedImage destImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = destImage.createGraphics();
-		
-		//抗锯齿
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-		// 绘制背景
-		g.drawImage(srcImage, 0, 0, width, height, null);
-		g.setColor(color);
-		g.setFont(font);
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-		// 在指定坐标绘制水印文字
-		final int fontSize = font.getSize();
-		g.drawString(pressText, (width - (getLength(pressText) * fontSize)) / 2 + x, (height - fontSize) / 2 + y);
-		g.dispose();
-
-		return destImage;
+		return Img.from(srcImage).pressText(pressText, color, font, x, y, alpha).getImg();
 	}
 
 	/**
@@ -991,17 +910,7 @@ public class ImageUtil {
 	 * @return 结果图片
 	 */
 	public static BufferedImage pressImage(Image srcImage, Image pressImg, int x, int y, float alpha) {
-		final BufferedImage destImg = toBufferedImage(srcImage);
-		final int width = destImg.getWidth();
-		final int height = destImg.getHeight();
-
-		int pressImgWidth = pressImg.getWidth(null);
-		int pressImgHeight = pressImg.getHeight(null);
-		x += (width - pressImgWidth) / 2;
-		y += (height - pressImgHeight) / 2;
-		
-		draw(destImg, pressImg, new Rectangle(x, y, pressImgWidth, pressImgHeight), alpha);
-		return destImg;
+		return Img.from(srcImage).pressImage(pressImg, x, y, alpha).getImg();
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- rotate
@@ -1071,19 +980,7 @@ public class ImageUtil {
 	 * @since 3.2.2
 	 */
 	public static BufferedImage rotate(Image image, int degree) {
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
-		int type = toBufferedImage(image).getTransparency();
-
-		final BufferedImage destImg = new BufferedImage(width, height, type);
-		Graphics2D graphics2d = destImg.createGraphics();
-		// 抗锯齿
-		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// 从中心旋转
-		graphics2d.rotate(Math.toRadians(degree), width / 2, height / 2);
-		graphics2d.drawImage(image, 0, 0, null);
-		graphics2d.dispose();
-		return destImg;
+		return Img.from(image).rotate(degree).getImg();
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- flip
@@ -1143,14 +1040,7 @@ public class ImageUtil {
 	 * @since 3.2.2
 	 */
 	public static BufferedImage flip(Image image) {
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
-
-		BufferedImage img = new BufferedImage(width, height, toBufferedImage(image).getTransparency());
-		Graphics2D graphics2d;
-		(graphics2d = img.createGraphics()).drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
-		graphics2d.dispose();
-		return img;
+		return Img.from(image).flip().getImg();
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- other
@@ -1334,7 +1224,7 @@ public class ImageUtil {
 	public static void writePng(Image image, ImageOutputStream destImageStream) throws IORuntimeException {
 		write(image, IMAGE_TYPE_PNG, destImageStream);
 	}
-	
+
 	/**
 	 * 写出图像为JPG格式
 	 * 
@@ -1346,7 +1236,7 @@ public class ImageUtil {
 	public static void writeJpg(Image image, OutputStream out) throws IORuntimeException {
 		write(image, IMAGE_TYPE_JPG, out);
 	}
-	
+
 	/**
 	 * 写出图像为PNG格式
 	 * 
@@ -1360,7 +1250,7 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 写出图像为PNG格式
+	 * 写出图像
 	 * 
 	 * @param image {@link Image}
 	 * @param imageType 图片类型（图片扩展名）
@@ -1554,41 +1444,4 @@ public class ImageUtil {
 		}
 		return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
 	}
-
-	// ---------------------------------------------------------------------------------------------------------------- Private method start
-	/**
-	 * 将图片绘制在背景上
-	 * 
-	 * @param backgroundImg 背景图片
-	 * @param img 要绘制的图片
-	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
-	 * @return 绘制后的背景
-	 */
-	private static BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle, float alpha) {
-		final Graphics2D g = backgroundImg.createGraphics();
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-		g.drawImage(img, rectangle.x, rectangle.y, rectangle.width, rectangle.height, null); // 绘制切割后的图
-		g.dispose();
-		return backgroundImg;
-	}
-
-	/**
-	 * 计算text的长度（一个中文算两个字符）<br>
-	 * 如：text="中国",返回 2；text="test",返回 2；text="中国ABC",返回 4.
-	 * 
-	 * @param text 文本
-	 * @return 字符长度
-	 */
-	private static int getLength(String text) {
-		int length = 0;
-		for (int i = 0; i < text.length(); i++) {
-			if (String.valueOf(text.charAt(i)).getBytes().length > 1) {
-				length += 2;
-			} else {
-				length += 1;
-			}
-		}
-		return length / 2;
-	}
-	// ---------------------------------------------------------------------------------------------------------------- Private method end
 }

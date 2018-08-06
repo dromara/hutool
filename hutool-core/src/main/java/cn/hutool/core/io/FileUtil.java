@@ -469,7 +469,7 @@ public class FileUtil {
 	public static boolean exist(File file) {
 		return (file == null) ? false : file.exists();
 	}
-
+	
 	/**
 	 * 是否存在匹配文件
 	 * 
@@ -941,8 +941,29 @@ public class FileUtil {
 	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File copyContent(File src, File dest, boolean isOverride) {
+	public static File copyContent(File src, File dest, boolean isOverride) throws IORuntimeException{
 		return FileCopier.create(src, dest).setCopyContentIfDir(true).setOverride(isOverride).copy();
+	}
+	
+	/**
+	 * 复制文件或目录<br>
+	 * 情况如下：
+	 * 
+	 * <pre>
+	 * 1、src和dest都为目录，则讲src下所有文件（包括子目录）拷贝到dest下
+	 * 2、src和dest都为文件，直接复制，名字为dest
+	 * 3、src为文件，dest为目录，将src拷贝到dest目录下
+	 * </pre>
+	 * 
+	 * @param src 源文件
+	 * @param dest 目标文件或目录，目标不存在会自动创建（目录、文件都创建）
+	 * @param isOverride 是否覆盖目标文件
+	 * @return 目标目录或文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.1.5
+	 */
+	public static File copyFilesFromDir(File src, File dest, boolean isOverride) throws IORuntimeException{
+		return FileCopier.create(src, dest).setCopyContentIfDir(true).setOnlyCopyFile(true).setOverride(isOverride).copy();
 	}
 
 	/**

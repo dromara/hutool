@@ -2118,7 +2118,7 @@ public class NumberUtil {
 		if(StrUtil.isBlank(number)) {
 			return 0;
 		}
-		if(number.startsWith("0x")) {
+		if(StrUtil.startWithIgnoreCase(number, "0x")) {
 			//0x04表示16进制数
 			return Integer.parseInt(number.substring(2), 16);
 		} else if(number.startsWith("0")) {
