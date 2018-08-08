@@ -680,6 +680,8 @@ public class DateUtil {
 	 * <li>yyyyMMddHHmmss</li>
 	 * <li>yyyyMMddHHmmssSSS</li>
 	 * <li>yyyyMMdd</li>
+	 * <li>EEE, dd MMM yyyy HH:mm:ss z</li>
+	 * <li>EEE MMM dd HH:mm:ss zzz yyyy</li>
 	 * </ol>
 	 * 
 	 * @param dateStr 日期字符串
@@ -713,9 +715,9 @@ public class DateUtil {
 		} else if (length == DatePattern.NORM_TIME_PATTERN.length() || length == DatePattern.NORM_TIME_PATTERN.length() + 1) {
 			return parseTime(dateStr);
 		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() || length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() + 1) {
-			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_PATTERN);
+			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
-			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_PATTERN);
+			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_FORMAT);
 		}
 
 		// 没有更多匹配的时间格式

@@ -9,6 +9,7 @@
 * 【core】         OptNullBasicTypeGetter增加getDate方法（issue#ILUQM@Gitee）
 
 ### Bug修复
+* 【db】            修复Oracle分页多一条问题（issue#ILUQM@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
