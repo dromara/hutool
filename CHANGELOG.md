@@ -7,9 +7,11 @@
 
 ### 新特性
 * 【core】         OptNullBasicTypeGetter增加getDate方法（issue#ILUQM@Gitee）
+* 【core】         RuntimeUtil增加可选环境变量参数（issue#ILV2I@Gitee）
 
 ### Bug修复
 * 【db】            修复Oracle分页多一条问题（issue#ILUQM@Gitee）
+* 【poi】           修复ExcelWriter换行问题（issue#ILXLI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

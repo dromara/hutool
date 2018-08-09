@@ -19,7 +19,7 @@ import cn.hutool.core.util.CharsetUtil;
  * @author Looly
  */
 public class FileUtilTest {
-	
+
 	@Test
 	public void getAbsolutePathTest() {
 		String absolutePath = FileUtil.getAbsolutePath("LICENSE-junit.txt");
@@ -64,13 +64,13 @@ public class FileUtilTest {
 		Assert.assertTrue(destFile.exists());
 		Assert.assertEquals(srcFile.length(), destFile.length());
 	}
-	
+
 	@Test
 	@Ignore
 	public void copyFilesFromDir() throws Exception {
 		File srcFile = FileUtil.file("D:\\驱动");
 		File destFile = FileUtil.file("d:\\驱动备份");
-		
+
 		FileUtil.copyFilesFromDir(srcFile, destFile, true);
 	}
 
@@ -202,7 +202,7 @@ public class FileUtilTest {
 		names = FileUtil.listFileNames(".");
 		Assert.assertTrue(names.contains("hutool.jpg"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void loopFilesTest() {
@@ -211,24 +211,24 @@ public class FileUtilTest {
 			Console.log(file.getPath());
 		}
 	}
-	
+
 	@Test
 	public void getParentTest() {
 		File parent = FileUtil.getParent(FileUtil.file("d:/aaa/bbb/cc/ddd"), 0);
 		Assert.assertEquals(FileUtil.file("d:\\aaa\\bbb\\cc\\ddd"), parent);
-		
+
 		parent = FileUtil.getParent(FileUtil.file("d:/aaa/bbb/cc/ddd"), 1);
 		Assert.assertEquals(FileUtil.file("d:\\aaa\\bbb\\cc"), parent);
-		
+
 		parent = FileUtil.getParent(FileUtil.file("d:/aaa/bbb/cc/ddd"), 2);
 		Assert.assertEquals(FileUtil.file("d:\\aaa\\bbb"), parent);
-		
+
 		parent = FileUtil.getParent(FileUtil.file("d:/aaa/bbb/cc/ddd"), 4);
 		Assert.assertEquals(FileUtil.file("d:\\"), parent);
-		
+
 		parent = FileUtil.getParent(FileUtil.file("d:/aaa/bbb/cc/ddd"), 5);
 		Assert.assertNull(parent);
-		
+
 		parent = FileUtil.getParent(FileUtil.file("d:/aaa/bbb/cc/ddd"), 10);
 		Assert.assertNull(parent);
 	}

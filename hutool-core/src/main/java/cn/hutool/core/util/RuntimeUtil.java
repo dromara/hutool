@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -93,6 +94,49 @@ public class RuntimeUtil {
 			throw new IORuntimeException(e);
 		}
 		return process;
+	}
+	
+	/**
+	 * 执行命令<br>
+	 * 命令带参数时参数可作为其中一个参数，也可以将命令和参数组合为一个字符串传入
+	 * 
+	 * @param envp 环境变量参数，传入形式为key=value，null表示继承系统环境变量
+	 * @param cmds 命令
+	 * @return {@link Process}
+	 * @since 4.1.6
+	 */
+	public static Process exec(String[] envp, String... cmds) {
+		return exec(envp, cmds);
+	}
+	
+	/**
+	 * 执行命令<br>
+	 * 命令带参数时参数可作为其中一个参数，也可以将命令和参数组合为一个字符串传入
+	 * 
+	 * @param envp 环境变量参数，传入形式为key=value，null表示继承系统环境变量
+	 * @param dir 执行命令所在目录（用于相对路径命令执行），null表示使用当前进程执行的目录
+	 * @param cmds 命令
+	 * @return {@link Process}
+	 * @since 4.1.6
+	 */
+	public static Process exec(String[] envp, File dir, String... cmds) {
+		if (ArrayUtil.isEmpty(cmds)) {
+			throw new NullPointerException("Command is empty !");
+		}
+
+		// 单条命令的情况
+		if (1 == cmds.length) {
+			final String cmd = cmds[0];
+			if (StrUtil.isBlank(cmd)) {
+				throw new NullPointerException("Command is empty !");
+			}
+			cmds = StrUtil.splitToArray(cmd, StrUtil.C_SPACE);
+		}
+		try {
+			return Runtime.getRuntime().exec(cmds, envp, dir);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	// -------------------------------------------------------------------------------------------------- result

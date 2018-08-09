@@ -46,7 +46,9 @@ public class ExcelWriteTest {
 			//超大列表写出测试
 			rows.add(ObjectUtil.clone(row1));
 		}
-
+		
+		String filePath = "e:/writeTest.xlsx";
+		FileUtil.del(filePath);
 		// 通过工具类创建writer
 		ExcelWriter writer = ExcelUtil.getWriter("e:/writeTest.xlsx");
 		// 通过构造方法创建writer
