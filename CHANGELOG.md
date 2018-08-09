@@ -8,6 +8,7 @@
 ### 新特性
 * 【core】         OptNullBasicTypeGetter增加getDate方法（issue#ILUQM@Gitee）
 * 【core】         RuntimeUtil增加可选环境变量参数（issue#ILV2I@Gitee）
+* 【core】         修改Caller结构
 
 ### Bug修复
 * 【db】            修复Oracle分页多一条问题（issue#ILUQM@Gitee）

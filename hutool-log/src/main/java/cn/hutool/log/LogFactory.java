@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Caller;
+import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.log.dialect.jdk.JdkLogFactory;
@@ -161,7 +161,7 @@ public abstract class LogFactory {
 	 * @return 获得调用者的日志
 	 */
 	public static Log get() {
-		return get(Caller.getCallerCaller());
+		return get(CallerUtil.getCallerCaller());
 	}
 	
 	/**
