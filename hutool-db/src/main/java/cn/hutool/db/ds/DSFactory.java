@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
 import cn.hutool.db.ds.druid.DruidDSFactory;
@@ -29,15 +30,15 @@ public abstract class DSFactory {
 	protected static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
 	/** 数据库配置文件可选路径2 */
 	protected static final String DEFAULT_DB_SETTING_PATH2 = "db.setting";
-	
+
 	/** 别名字段名：URL */
-	public static final String[] KEY_ALIAS_URL = {"url", "jdbcUrl"};
+	public static final String[] KEY_ALIAS_URL = { "url", "jdbcUrl" };
 	/** 别名字段名：用户名 */
-	public static final String[] KEY_ALIAS_USER = {"user", "username"};
+	public static final String[] KEY_ALIAS_USER = { "user", "username" };
 	/** 别名字段名：密码 */
-	public static final String[] KEY_ALIAS_PASSWORD = {"password", "pass"};
+	public static final String[] KEY_ALIAS_PASSWORD = { "password", "pass" };
 	/** 别名字段名：驱动名 */
-	public static final String[] KEY_ALIAS_DRIVER = {"driver", "driverClassName"};
+	public static final String[] KEY_ALIAS_DRIVER = { "driver", "driverClassName" };
 
 	/** 数据源名 */
 	protected String dataSourceName;
@@ -58,7 +59,7 @@ public abstract class DSFactory {
 			try {
 				setting = new Setting(DEFAULT_DB_SETTING_PATH, true);
 			} catch (NoResourceException e) {
-				//尝试ClassPath下直接读取配置文件
+				// 尝试ClassPath下直接读取配置文件
 				try {
 					setting = new Setting(DEFAULT_DB_SETTING_PATH2, true);
 				} catch (NoResourceException e2) {
@@ -66,11 +67,16 @@ public abstract class DSFactory {
 				}
 			}
 		}
+
+		//读取配置，用于SQL打印
+		DbUtil.setShowSqlGlobal(setting);
+
 		this.setting = setting;
 	}
-	
+
 	/**
 	 * 获取配置，用于自定义添加配置项
+	 * 
 	 * @return Setting
 	 * @since 4.0.3
 	 */
@@ -189,6 +195,7 @@ public abstract class DSFactory {
 	 * 设置全局的数据源工厂<br>
 	 * 在项目中存在多个连接池库的情况下，我们希望使用低优先级的库时使用此方法自定义之<br>
 	 * 重新定义全局的数据源工厂此方法可在以下两种情况下调用：
+	 * 
 	 * <pre>
 	 * 1. 在get方法调用前调用此方法来自定义全局的数据源工厂
 	 * 2. 替换已存在的全局数据源工厂，当已存在时会自动关闭
@@ -213,7 +220,7 @@ public abstract class DSFactory {
 		log.debug("Use [{}] DataSource As Default", dsFactory.dataSourceName);
 		return dsFactory;
 	}
-	
+
 	/**
 	 * 创建数据源实现工厂<br>
 	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
@@ -226,27 +233,27 @@ public abstract class DSFactory {
 		try {
 			return new HikariDSFactory(setting);
 		} catch (NoClassDefFoundError e) {
-			//ignore
+			// ignore
 		}
 		try {
 			return new DruidDSFactory(setting);
 		} catch (NoClassDefFoundError e) {
-			//ignore
+			// ignore
 		}
 		try {
 			return new TomcatDSFactory(setting);
 		} catch (NoClassDefFoundError e) {
-			//ignore
+			// ignore
 		}
 		try {
 			return new DbcpDSFactory(setting);
 		} catch (NoClassDefFoundError e) {
-			//ignore
+			// ignore
 		}
 		try {
 			return new C3p0DSFactory(setting);
 		} catch (NoClassDefFoundError e) {
-			//ignore
+			// ignore
 		}
 		return new PooledDSFactory(setting);
 	}

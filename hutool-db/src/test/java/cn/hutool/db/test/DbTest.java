@@ -20,6 +20,8 @@ public class DbTest {
 	
 	@Test
 	public void findTest() throws SQLException {
+		Db.use();
+		
 		List<Entity> find = Db.use().find(Entity.create("user").set("age", 18));
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}

@@ -68,7 +68,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @param ds 数据源
 	 */
 	public Session(DataSource ds) {
-		this(ds, DialectFactory.newDialect(ds));
+		this(ds, DialectFactory.getDialect(ds));
 	}
 	
 	/**

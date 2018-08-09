@@ -80,7 +80,7 @@ public class SqlRunner extends AbstractDb{
 	 * @param ds 数据源
 	 */
 	public SqlRunner(DataSource ds) {
-		this(ds, DialectFactory.newDialect(ds));
+		this(ds, DialectFactory.getDialect(ds));
 	}
 	
 	/**

@@ -83,7 +83,7 @@ public class Db extends AbstractDb {
 	 * @param ds 数据源
 	 */
 	public Db(DataSource ds) {
-		this(ds, DialectFactory.newDialect(ds));
+		this(ds, DialectFactory.getDialect(ds));
 	}
 	
 	/**

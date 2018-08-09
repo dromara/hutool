@@ -24,7 +24,6 @@ import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.SqlUtil;
 import cn.hutool.db.sql.Wrapper;
-import cn.hutool.log.StaticLog;
 
 /**
  * SQL执行类<br>
@@ -53,7 +52,7 @@ public class SqlConnRunner{
 	 * @return SQL执行类
 	 */
 	public static SqlConnRunner create(DataSource ds) {
-		return new SqlConnRunner(DialectFactory.newDialect(ds));
+		return new SqlConnRunner(DialectFactory.getDialect(ds));
 	}
 	
 	/**
@@ -72,8 +71,6 @@ public class SqlConnRunner{
 	 * @param dialect 方言
 	 */
 	public SqlConnRunner(Dialect dialect) {
-		StaticLog.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
-		
 		this.dialect = dialect;
 	}
 	
