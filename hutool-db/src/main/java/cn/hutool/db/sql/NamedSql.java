@@ -86,9 +86,10 @@ public class NamedSql {
 					name.append(c);
 				} else {
 					// 变量结束
-					final Object paramValue = paramMap.get(name.toString());
-					if (null != paramValue) {
-						// 有变量对应值，替换占位符
+					String nameStr = name.toString();
+					if(paramMap.containsKey(nameStr)) {
+						// 有变量对应值（值可以为null），替换占位符
+						final Object paramValue = paramMap.get(nameStr);
 						sqlBuilder.append('?');
 						this.params.add(paramValue);
 					} else {

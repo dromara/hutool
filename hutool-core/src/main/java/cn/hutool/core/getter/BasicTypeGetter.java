@@ -2,6 +2,7 @@ package cn.hutool.core.getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * 基本类型的getter接口<br>
@@ -114,6 +115,13 @@ public interface BasicTypeGetter<K> {
 	 * @param key KEY
 	 * @return Enum类型的值，无则返回Null
 	 */
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, K key);
+	<E extends Enum<E>> E getEnum(Class<E> clazz, K key);
+	
+	/**
+	 * 获取Date类型值
+	 * @param key 属性名
+	 * @return Date类型属性值
+	 */
+	Date getDate(K key);
 	/*-------------------------- 基本类型 end -------------------------------*/
 }

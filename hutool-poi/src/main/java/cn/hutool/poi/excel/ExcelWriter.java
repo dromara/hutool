@@ -529,7 +529,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter writeRow(Object rowBean, boolean isWriteKeyAsHead) {
 		Map<?, ?> rowMap = null;
 		if (rowBean instanceof Iterable) {
-			writeRow((Iterable<?>) rowBean);
+			return writeRow((Iterable<?>) rowBean);
 		}
 		if (rowBean instanceof Map) {
 			rowMap = (Map<?, ?>) rowBean;

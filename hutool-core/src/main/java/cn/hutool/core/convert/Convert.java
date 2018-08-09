@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -421,7 +422,7 @@ public class Convert {
 
 	/**
 	 * 转换为BigDecimal<br>
-	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 如果给定的值为空，或者转换失败，返回null<br>
 	 * 转换失败不会报错
 	 * 
 	 * @param value 被转换的值
@@ -429,6 +430,33 @@ public class Convert {
 	 */
 	public static BigDecimal toBigDecimal(Object value) {
 		return toBigDecimal(value, null);
+	}
+	
+	/**
+	 * 转换为Date<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 * @since 4.1.6
+	 */
+	public static Date toDate(Object value, Date defaultValue) {
+		return convert(Date.class, value, defaultValue);
+	}
+	
+	/**
+	 * 转换为Date<br>
+	 * 如果给定的值为空，或者转换失败，返回<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 * @since 4.1.6
+	 */
+	public static Date toDate(Object value) {
+		return toDate(value, null);
 	}
 
 	/**

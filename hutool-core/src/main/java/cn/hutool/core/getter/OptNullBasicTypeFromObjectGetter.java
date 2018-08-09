@@ -2,6 +2,7 @@ package cn.hutool.core.getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 import cn.hutool.core.convert.Convert;
 
@@ -74,5 +75,10 @@ public abstract class OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTy
 	@Override
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, K key, E defaultValue) {
 		return Convert.toEnum(clazz, getObj(key), defaultValue);
+	}
+	
+	@Override
+	public Date getDate(K key, Date defaultValue) {
+		return Convert.toDate(getObj(key), defaultValue);
 	}
 }
