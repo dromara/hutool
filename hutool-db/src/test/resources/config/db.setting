@@ -7,6 +7,14 @@
 
 url = jdbc:sqlite:test.db
 
+## 可选配置
+# 是否在日志中显示执行的SQL
+showSql = true
+# 是否格式化显示的SQL
+formatSql = false
+# 是否显示SQL参数
+showParams = false
+
 # 测试数据源
 [test]
 url = jdbc:sqlite:test.db
@@ -16,10 +24,3 @@ url = jdbc:sqlite:test.db
 url = jdbc:oracle:thin:@//looly.centos:1521/XE
 user = looly
 pass = 123456
-
-# 是否在日志中显示执行的SQL
-showSql = true
-# 是否格式化显示的SQL
-formatSql = false
-# 是否显示SQL参数
-showParams = true

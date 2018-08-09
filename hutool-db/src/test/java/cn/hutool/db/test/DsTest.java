@@ -9,8 +9,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
-import cn.hutool.db.SqlRunner;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.ds.c3p0.C3p0DSFactory;
 import cn.hutool.db.ds.dbcp.DbcpDSFactory;
@@ -29,8 +29,8 @@ public class DsTest {
 	@Test
 	public void defaultDsTest() throws SQLException{
 		DataSource ds = DSFactory.get("test");
-		SqlRunner runner = SqlRunner.create(ds);
-		List<Entity> all = runner.findAll("user");
+		Db db = Db.use(ds);
+		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 	
@@ -38,8 +38,8 @@ public class DsTest {
 	public void hikariDsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new HikariDSFactory());
 		DataSource ds = DSFactory.get("test");
-		SqlRunner runner = SqlRunner.create(ds);
-		List<Entity> all = runner.findAll("user");
+		Db db = Db.use(ds);
+		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 	
@@ -48,8 +48,8 @@ public class DsTest {
 		DSFactory.setCurrentDSFactory(new DruidDSFactory());
 		DataSource ds = DSFactory.get("test");
 		
-		SqlRunner runner = SqlRunner.create(ds);
-		List<Entity> all = runner.findAll("user");
+		Db db = Db.use(ds);
+		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 	
@@ -57,8 +57,8 @@ public class DsTest {
 	public void tomcatDsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new TomcatDSFactory());
 		DataSource ds = DSFactory.get("test");
-		SqlRunner runner = SqlRunner.create(ds);
-		List<Entity> all = runner.findAll("user");
+		Db db = Db.use(ds);
+		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 	
@@ -66,8 +66,8 @@ public class DsTest {
 	public void dbcpDsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new DbcpDSFactory());
 		DataSource ds = DSFactory.get("test");
-		SqlRunner runner = SqlRunner.create(ds);
-		List<Entity> all = runner.findAll("user");
+		Db db = Db.use(ds);
+		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 	
@@ -75,8 +75,8 @@ public class DsTest {
 	public void c3p0DsTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new C3p0DSFactory());
 		DataSource ds = DSFactory.get("test");
-		SqlRunner runner = SqlRunner.create(ds);
-		List<Entity> all = runner.findAll("user");
+		Db db = Db.use(ds);
+		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 	
@@ -84,8 +84,8 @@ public class DsTest {
 	public void hutoolPoolTest() throws SQLException{
 		DSFactory.setCurrentDSFactory(new PooledDSFactory());
 		DataSource ds = DSFactory.get("test");
-		SqlRunner runner = SqlRunner.create(ds);
-		List<Entity> all = runner.findAll("user");
+		Db db = Db.use(ds);
+		List<Entity> all = db.findAll("user");
 		Assert.assertTrue(CollUtil.isNotEmpty(all));
 	}
 }

@@ -63,7 +63,9 @@ public final class DbUtil {
 	 * 实例化一个新的SQL运行对象，使用默认数据源
 	 * 
 	 * @return SQL执行类
+	 * @deprecated 请使用 {@link #use()}
 	 */
+	@Deprecated
 	public static SqlRunner newSqlRunner() {
 		return SqlRunner.create(getDs());
 	}
@@ -73,7 +75,9 @@ public final class DbUtil {
 	 * 
 	 * @param ds 数据源
 	 * @return SQL执行类
+	 * @deprecated 请使用 {@link #use(DataSource)}
 	 */
+	@Deprecated
 	public static SqlRunner newSqlRunner(DataSource ds) {
 		return SqlRunner.create(ds);
 	}
@@ -84,9 +88,41 @@ public final class DbUtil {
 	 * @param ds 数据源
 	 * @param dialect SQL方言
 	 * @return SQL执行类
+	 * @deprecated 请使用 {@link #use(DataSource, Dialect)}
 	 */
+	@Deprecated
 	public static SqlRunner newSqlRunner(DataSource ds, Dialect dialect) {
 		return SqlRunner.create(ds, dialect);
+	}
+	
+	/**
+	 * 实例化一个新的Db，使用默认数据源
+	 * 
+	 * @return SQL执行类
+	 */
+	public static Db use() {
+		return Db.use();
+	}
+
+	/**
+	 * 实例化一个新的Db对象
+	 * 
+	 * @param ds 数据源
+	 * @return SQL执行类
+	 */
+	public static Db use(DataSource ds) {
+		return Db.use(ds);
+	}
+
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param ds 数据源
+	 * @param dialect SQL方言
+	 * @return SQL执行类
+	 */
+	public static Db use(DataSource ds, Dialect dialect) {
+		return Db.use(ds, dialect);
 	}
 
 	/**
@@ -106,16 +142,6 @@ public final class DbUtil {
 	 */
 	public static Session newSession(DataSource ds) {
 		return Session.create(ds);
-	}
-
-	/**
-	 * 新建数据库会话
-	 * 
-	 * @param conn 数据库连接对象
-	 * @return 数据库会话
-	 */
-	public static Session newSession(Connection conn) {
-		return Session.create(conn);
 	}
 
 	/**

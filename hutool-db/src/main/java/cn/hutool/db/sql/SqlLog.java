@@ -11,7 +11,7 @@ import cn.hutool.log.level.Level;
  * @since 4.1.0
  */
 public enum SqlLog {
-	INSTASNCE(false, false, false);
+	INSTASNCE;
 	
 	private final static Log log = LogFactory.get();
 
@@ -22,18 +22,7 @@ public enum SqlLog {
 	/** 是否显示参数 */
 	private boolean showParams;
 	/** 默认日志级别 */
-	private Level level;
-	
-	/**
-	 * 构造，设置全局配置：是否通过debug日志显示SQL
-	 * 
-	 * @param isShowSql 是否显示SQL
-	 * @param isFormatSql 是否格式化显示的SQL
-	 * @param isShowParams 是否打印参数
-	 */
-	private SqlLog(boolean isShowSql, boolean isFormatSql, boolean isShowParams) {
-		init(isShowSql, isFormatSql, isShowParams, Level.DEBUG);
-	}
+	private Level level = Level.DEBUG;
 	
 	/**
 	 * 设置全局配置：是否通过debug日志显示SQL

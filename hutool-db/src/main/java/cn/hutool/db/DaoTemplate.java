@@ -27,7 +27,7 @@ public class DaoTemplate {
 	/** 本表的主键字段，请在子类中覆盖或构造方法中指定，默认为id */
 	protected String primaryKeyField = "id";
 	/** SQL运行器 */
-	protected SqlRunner runner;
+	protected Db db;
 	
 	//--------------------------------------------------------------- Constructor start
 	/**
@@ -58,21 +58,21 @@ public class DaoTemplate {
 	 * @param ds 数据源
 	 */
 	public DaoTemplate(String tableName, String primaryKeyField, DataSource ds) {
-		this(tableName, primaryKeyField, DbUtil.newSqlRunner(ds));
+		this(tableName, primaryKeyField, Db.use(ds));
 	}
 	
 	/**
 	 * 构造
 	 * @param tableName 表名
 	 * @param primaryKeyField 主键字段名
-	 * @param runner SqlRunner对象
+	 * @param db Db对象
 	 */
-	public DaoTemplate(String tableName, String primaryKeyField, SqlRunner runner) {
+	public DaoTemplate(String tableName, String primaryKeyField, Db db) {
 		this.tableName = tableName;
 		if(StrUtil.isNotBlank(primaryKeyField)){
 			this.primaryKeyField = primaryKeyField;
 		}
-		this.runner = runner;
+		this.db = db;
 	}
 	//--------------------------------------------------------------- Constructor end
 	
@@ -84,7 +84,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public int add(Entity entity) throws SQLException {
-		return runner.insert(fixEntity(entity));
+		return db.insert(fixEntity(entity));
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Object> addForGeneratedKeys(Entity entity) throws SQLException {
-		return runner.insertForGeneratedKeys(fixEntity(entity));
+		return db.insertForGeneratedKeys(fixEntity(entity));
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Long addForGeneratedKey(Entity entity) throws SQLException {
-		return runner.insertForGeneratedKey(fixEntity(entity));
+		return db.insertForGeneratedKey(fixEntity(entity));
 	}
 	//------------------------------------------------------------- Add end
 	
@@ -153,7 +153,7 @@ public class DaoTemplate {
 		if (CollectionUtil.isEmpty(where)) {
 			return 0;
 		}
-		return runner.del(fixEntity(where));
+		return db.del(fixEntity(where));
 	}
 	//------------------------------------------------------------- Delete end
 	
@@ -169,7 +169,7 @@ public class DaoTemplate {
 		if (CollectionUtil.isEmpty(record)) {
 			return 0;
 		}
-		return runner.update(fixEntity(record), where);
+		return db.update(fixEntity(record), where);
 	}
 	
 	/**
@@ -192,7 +192,7 @@ public class DaoTemplate {
 		final Entity record = (Entity) entity.clone();
 		record.remove(primaryKeyField);
 
-		return runner.update(record, where);
+		return db.update(record, where);
 	}
 	
 	/**
@@ -241,7 +241,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Entity get(Entity where) throws SQLException {
-		return runner.find(null, fixEntity(where), new EntityHandler());
+		return db.find(null, fixEntity(where), new EntityHandler());
 	}
 	//------------------------------------------------------------- Get end
 	
@@ -276,7 +276,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> find(Entity where) throws SQLException {
-		return runner.find(null, fixEntity(where), new EntityListHandler());
+		return db.find(null, fixEntity(where), new EntityListHandler());
 	}
 	
 	/**
@@ -294,7 +294,7 @@ public class DaoTemplate {
 		if(false == "select".equals(selectKeyword)){
 			sql = "SELECT * FROM " + this.tableName + " " + sql;
 		}
-		return runner.query(sql, new EntityListHandler(), params);
+		return db.query(sql, new EntityListHandler(), params);
 	}
 	
 	/**
@@ -307,7 +307,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public PageResult<Entity> page(Entity where, Page page, String... selectFields) throws SQLException{
-		return runner.page(Arrays.asList(selectFields), fixEntity(where), page);
+		return db.page(Arrays.asList(selectFields), fixEntity(where), page);
 	}
 	
 	/**
@@ -319,7 +319,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public PageResult<Entity> page(Entity where, Page page) throws SQLException{
-		return runner.page(fixEntity(where), page);
+		return db.page(fixEntity(where), page);
 	}
 	
 	/**
@@ -330,7 +330,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public int count(Entity where) throws SQLException{
-		return runner.count(fixEntity(where));
+		return db.count(fixEntity(where));
 	}
 	
 	/**
