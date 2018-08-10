@@ -6,7 +6,10 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.handler.EntityHandler;
 import cn.hutool.db.handler.EntityListHandler;
@@ -29,9 +32,23 @@ import cn.hutool.db.sql.Wrapper;
  * 
  */
 public abstract class AbstractDb{
+	
+	protected DataSource ds;
+	/** 是否支持事务 */
+	protected Boolean isSupportTransaction = null;
 	protected SqlConnRunner runner;
 	
 	//------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 * 
+	 * @param ds 数据源
+	 * @param dialect 数据库方言
+	 */
+	public AbstractDb(DataSource ds, Dialect dialect) {
+		this.ds = ds;
+		this.runner = new SqlConnRunner(dialect);
+	}
 	//------------------------------------------------------- Constructor end
 	
 	/**
@@ -782,6 +799,21 @@ public abstract class AbstractDb{
 	}
 	//---------------------------------------------------------------------------- Getters and Setters end
 	
-	//---------------------------------------------------------------------------- Private method start
-	//---------------------------------------------------------------------------- Private method end
+	//---------------------------------------------------------------------------- protected method start
+	/**
+	 * 检查数据库是否支持事务，此项检查同一个数据源只检查一次，如果不支持抛出DbRuntimeException异常
+	 * 
+	 * @param conn Connection
+	 * @throws SQLException 获取元数据信息失败
+	 * @throws DbRuntimeException 不支持事务
+	 */
+	protected void checkTransactionSupported(Connection conn) throws SQLException, DbRuntimeException {
+		if (null == isSupportTransaction) {
+			isSupportTransaction = conn.getMetaData().supportsTransactions();
+		}
+		if (false == isSupportTransaction) {
+			throw new DbRuntimeException("Transaction not supported for current database!");
+		}
+	}
+	//---------------------------------------------------------------------------- protected method end
 }

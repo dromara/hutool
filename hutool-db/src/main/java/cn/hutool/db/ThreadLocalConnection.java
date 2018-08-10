@@ -35,17 +35,17 @@ public enum ThreadLocalConnection {
 		}
 		return groupedConnection.get(ds);
 	}
-
+	
 	/**
 	 * 关闭数据库，并从线程池中移除
 	 * 
 	 * @param ds 数据源
-	 * @param connToClose 需要关闭的连接
+	 * @since 4.1.7
 	 */
-	public void close(DataSource ds, Connection connToClose) {
+	public void close(DataSource ds) {
 		GroupedConnection groupedConnection = threadLocal.get();
 		if (null != groupedConnection) {
-			groupedConnection.close(ds, connToClose);
+			groupedConnection.close(ds);
 		}
 	}
 
@@ -72,32 +72,28 @@ public enum ThreadLocalConnection {
 			}
 			return conn;
 		}
-
+		
 		/**
-		 * 关闭并移除Connection
+		 * 关闭并移除Connection<br>
+		 * 如果处于事务中，则不进行任何操作
 		 * 
 		 * @param ds 数据源
 		 * @return this
 		 */
-		public GroupedConnection close(DataSource ds, Connection connToClose) {
-			if(null != connToClose) {
+		public GroupedConnection close(DataSource ds) {
+			final Connection conn = connMap.get(ds);
+			if(null != conn) {
 				try {
-					if(false == connToClose.getAutoCommit()) {
+					if(false == conn.getAutoCommit()) {
 						//非自动提交事务的连接，不做关闭（可能处于事务中）
 						return this;
 					}
 				} catch (SQLException e) {
 					//ignore
 				}
-				
-				Connection conn = connMap.get(ds);
-				if (null != conn && conn.equals(connToClose)) {
-					//连接为同一对象时移除
-					connMap.remove(ds);
-				}
+				connMap.remove(ds);
+				DbUtil.close(conn);
 			}
-			
-			DbUtil.close(connToClose);
 			return this;
 		}
 	}

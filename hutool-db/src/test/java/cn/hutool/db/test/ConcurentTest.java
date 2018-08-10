@@ -10,12 +10,10 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.db.DbUtil;
+import cn.hutool.db.Db;
+import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.Entity;
-import cn.hutool.db.SqlRunner;
 import cn.hutool.db.handler.EntityListHandler;
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.dialect.console.ConsoleLogFactory;
 
 /**
  * SqlRunner线程安全测试
@@ -26,13 +24,11 @@ import cn.hutool.log.dialect.console.ConsoleLogFactory;
 @Ignore
 public class ConcurentTest {
 	
-	private SqlRunner runner;
+	private Db db;
 	
 	@Before
 	public void init() {
-		LogFactory.setCurrentLogFactory(new ConsoleLogFactory());
-		DbUtil.setShowSqlGlobal(true, false, false);
-		runner = SqlRunner.create("test");
+		db = Db.use("test");
 	}
 	
 	@Test
@@ -43,13 +39,16 @@ public class ConcurentTest {
 				public void run() {
 					List<Entity> find = null;
 					try {
-						find = runner.find(CollectionUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+						find = db.find(CollectionUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
 					} catch (SQLException e) {
-						e.printStackTrace();
+						throw new DbRuntimeException(e);
 					}
 					Console.log(find);
 				}
 			});
 		}
+		
+		//主线程关闭会导致连接池销毁，sleep避免此情况引起的问题
+		ThreadUtil.sleep(5000);
 	}
 }

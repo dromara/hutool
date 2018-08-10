@@ -11,11 +11,9 @@ import javax.sql.DataSource;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
 
@@ -94,12 +92,6 @@ public class DruidDSFactory extends DSFactory {
 		if (CollectionUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No Druid config for group: [{}]", group);
 		}
-
-		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBool(config.remove("showSql"), false);
-		final boolean isFormatSql = Convert.toBool(config.remove("formatSql"), false);
-		final boolean isShowParams = Convert.toBool(config.remove("showParams"), false);
-		DbUtil.setShowSqlGlobal(isShowSql, isFormatSql, isShowParams);
 
 		final DruidDataSource ds = new DruidDataSource();
 

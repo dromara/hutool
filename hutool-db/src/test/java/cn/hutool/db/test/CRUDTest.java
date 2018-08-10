@@ -12,8 +12,8 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.db.ActiveEntity;
+import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
-import cn.hutool.db.SqlRunner;
 import cn.hutool.db.handler.EntityListHandler;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.Condition.LikeType;
@@ -27,89 +27,89 @@ import cn.hutool.db.test.pojo.User;
  */
 public class CRUDTest {
 
-	private static SqlRunner runner = SqlRunner.create("test");
+	private static Db db = Db.use("test");
 
 	@Test
 	public void findIsNullTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("age", "is null"));
+		List<Entity> results = db.findAll(Entity.create("user").set("age", "is null"));
 		Assert.assertEquals(0, results.size());
 	}
 	
 	@Test
 	public void findIsNullTest2() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("age", "= null"));
+		List<Entity> results = db.findAll(Entity.create("user").set("age", "= null"));
 		Assert.assertEquals(0, results.size());
 	}
 	
 	@Test
 	public void findIsNullTest3() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("age", null));
+		List<Entity> results = db.findAll(Entity.create("user").set("age", null));
 		Assert.assertEquals(0, results.size());
 	}
 
 	@Test
 	public void findBetweenTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("age", "between '18' and '40'"));
+		List<Entity> results = db.findAll(Entity.create("user").set("age", "between '18' and '40'"));
 		Assert.assertEquals(1, results.size());
 	}
 	
 	@Test
 	public void findByBigIntegerTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("age", new BigInteger("12")));
+		List<Entity> results = db.findAll(Entity.create("user").set("age", new BigInteger("12")));
 		Assert.assertEquals(2, results.size());
 	}
 	
 	@Test
 	public void findByBigDecimalTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("age", new BigDecimal("12")));
+		List<Entity> results = db.findAll(Entity.create("user").set("age", new BigDecimal("12")));
 		Assert.assertEquals(2, results.size());
 	}
 
 	@Test
 	public void findLikeTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("name", "like \"%三%\""));
+		List<Entity> results = db.findAll(Entity.create("user").set("name", "like \"%三%\""));
 		Assert.assertEquals(2, results.size());
 	}
 	
 	@Test
 	public void findLikeTest2() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("name", new Condition("name", "三", LikeType.Contains)));
+		List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", "三", LikeType.Contains)));
 		Assert.assertEquals(2, results.size());
 	}
 	
 	@Test
 	public void findLikeTest3() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("name", new Condition("name", null, LikeType.Contains)));
+		List<Entity> results = db.findAll(Entity.create("user").set("name", new Condition("name", null, LikeType.Contains)));
 		Assert.assertEquals(0, results.size());
 	}
 	
 	@Test
 	public void findInTest() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("id", "in 1,2,3"));
+		List<Entity> results = db.findAll(Entity.create("user").set("id", "in 1,2,3"));
 		Assert.assertEquals(2, results.size());
 	}
 	
 	@Test
 	public void findInTest2() throws SQLException {
-		List<Entity> results = runner.findAll(Entity.create("user").set("id", new Condition("id", new long[] {1,2,3})));
+		List<Entity> results = db.findAll(Entity.create("user").set("id", new Condition("id", new long[] {1,2,3})));
 		Assert.assertEquals(2, results.size());
 	}
 	
 	@Test
 	public void findAllTest() throws SQLException {
-		List<Entity> results = runner.findAll("user");
+		List<Entity> results = db.findAll("user");
 		Assert.assertEquals(4, results.size());
 	}
 
 	@Test
 	public void findTest() throws SQLException {
-		List<Entity> find = runner.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
+		List<Entity> find = db.find(CollUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
 		Assert.assertFalse(find.isEmpty());
 	}
 	
 	@Test
 	public void findActiveTest() throws SQLException {
-		ActiveEntity entity = new ActiveEntity(runner, "user");
+		ActiveEntity entity = new ActiveEntity(db, "user");
 		entity.setFieldNames("name AS name2").load();
 		Assert.assertEquals("user", entity.getTableName());
 		Assert.assertFalse(entity.isEmpty());
@@ -125,21 +125,21 @@ public class CRUDTest {
 	public void crudTest() throws SQLException {
 
 		// 增
-		Long id = runner.insertForGeneratedKey(Entity.create("user").set("name", "unitTestUser").set("age", 66));
+		Long id = db.insertForGeneratedKey(Entity.create("user").set("name", "unitTestUser").set("age", 66));
 		Assert.assertTrue(id > 0);
-		Entity result = runner.get("user", "name", "unitTestUser");
+		Entity result = db.get("user", "name", "unitTestUser");
 		Assert.assertSame(66, (int) result.getInt("age"));
 
 		// 改
-		int update = runner.update(Entity.create().set("age", 88), Entity.create("user").set("name", "unitTestUser"));
+		int update = db.update(Entity.create().set("age", 88), Entity.create("user").set("name", "unitTestUser"));
 		Assert.assertTrue(update > 0);
-		Entity result2 = runner.get("user", "name", "unitTestUser");
+		Entity result2 = db.get("user", "name", "unitTestUser");
 		Assert.assertSame(88, (int) result2.getInt("age"));
 
 		// 删
-		int del = runner.del("user", "name", "unitTestUser");
+		int del = db.del("user", "name", "unitTestUser");
 		Assert.assertTrue(del > 0);
-		Entity result3 = runner.get("user", "name", "unitTestUser");
+		Entity result3 = db.get("user", "name", "unitTestUser");
 		Assert.assertNull(result3);
 	}
 
@@ -164,7 +164,7 @@ public class CRUDTest {
 		Console.log(data1);
 		Console.log(data2);
 
-		int[] result = runner.insert(CollUtil.newArrayList(data1, data2));
+		int[] result = db.insert(CollUtil.newArrayList(data1, data2));
 		Console.log(result);
 	}
 
@@ -181,7 +181,7 @@ public class CRUDTest {
 
 		Console.log(data1);
 
-		int[] result = runner.insert(CollUtil.newArrayList(data1));
+		int[] result = db.insert(CollUtil.newArrayList(data1));
 		Console.log(result);
 	}
 }

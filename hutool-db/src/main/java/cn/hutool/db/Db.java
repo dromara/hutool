@@ -22,10 +22,6 @@ import cn.hutool.log.StaticLog;
  */
 public class Db extends AbstractDb {
 
-	private DataSource ds;
-	/** 是否支持事务 */
-	private Boolean isSupportTransaction = null;
-
 	/**
 	 * 创建Db<br>
 	 * 使用默认数据源，自动探测数据库连接池
@@ -87,7 +83,17 @@ public class Db extends AbstractDb {
 	 * @param ds 数据源
 	 */
 	public Db(DataSource ds) {
-		this(ds, DialectFactory.newDialect(ds));
+		this(ds, DialectFactory.getDialect(ds));
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param ds 数据源
+	 * @param driverClassName 数据库连接驱动类名，用于识别方言
+	 */
+	public Db(DataSource ds, String driverClassName) {
+		this(ds, DialectFactory.newDialect(driverClassName));
 	}
 
 	/**
@@ -97,19 +103,7 @@ public class Db extends AbstractDb {
 	 * @param dialect 方言
 	 */
 	public Db(DataSource ds, Dialect dialect) {
-		this.runner = new SqlConnRunner(dialect);
-		this.ds = ds;
-	}
-
-	/**
-	 * 构造
-	 * 
-	 * @param ds 数据源
-	 * @param driverClassName 数据库连接驱动类名，用于识别方言
-	 */
-	public Db(DataSource ds, String driverClassName) {
-		this.runner = new SqlConnRunner(driverClassName);
-		this.ds = ds;
+		super(ds, dialect);
 	}
 	// ---------------------------------------------------------------------------- Constructor end
 
@@ -132,7 +126,7 @@ public class Db extends AbstractDb {
 
 	@Override
 	public void closeConnection(Connection conn) {
-		ThreadLocalConnection.INSTANCE.close(this.ds, conn);
+		ThreadLocalConnection.INSTANCE.close(this.ds);
 	}
 	
 	/**
@@ -197,22 +191,6 @@ public class Db extends AbstractDb {
 	}
 
 	// ---------------------------------------------------------------------------- Private method start
-	/**
-	 * 检查数据库是否支持事务，此项检查同一个数据源只检查一次，如果不支持抛出DbRuntimeException异常
-	 * 
-	 * @param conn Connection
-	 * @throws SQLException 获取元数据信息失败
-	 * @throws DbRuntimeException 不支持事务
-	 */
-	private void checkTransactionSupported(Connection conn) throws SQLException, DbRuntimeException {
-		if (null == isSupportTransaction) {
-			isSupportTransaction = conn.getMetaData().supportsTransactions();
-		}
-		if (false == isSupportTransaction) {
-			throw new DbRuntimeException("Transaction not supported for current database!");
-		}
-	}
-
 	/**
 	 * 静默回滚事务
 	 * 

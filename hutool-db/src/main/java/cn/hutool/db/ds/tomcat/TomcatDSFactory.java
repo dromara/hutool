@@ -9,10 +9,8 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.ds.simple.SimpleDataSource;
@@ -99,12 +97,6 @@ public class TomcatDSFactory extends DSFactory {
 		if (CollUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No Tomcat jdbc pool config for group: [{}]", group);
 		}
-
-		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBool(config.remove("showSql"), false);
-		final boolean isFormatSql = Convert.toBool(config.remove("formatSql"), false);
-		final boolean isShowParams = Convert.toBool(config.remove("showParams"), false);
-		DbUtil.setShowSqlGlobal(isShowSql, isFormatSql, isShowParams);
 
 		final PoolProperties poolProps = new PoolProperties();
 

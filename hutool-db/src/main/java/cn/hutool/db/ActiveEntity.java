@@ -15,7 +15,7 @@ import cn.hutool.core.map.MapUtil;
 public class ActiveEntity extends Entity {
 	private static final long serialVersionUID = 6112321379601134750L;
 
-	private SqlRunner runner;
+	private Db db;
 
 	// --------------------------------------------------------------- Static method start
 	/**
@@ -78,7 +78,7 @@ public class ActiveEntity extends Entity {
 	 * 构造
 	 */
 	public ActiveEntity() {
-		this(SqlRunner.create(), (String) null);
+		this(Db.use(), (String) null);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class ActiveEntity extends Entity {
 	 * @param tableName 表名
 	 */
 	public ActiveEntity(String tableName) {
-		this(SqlRunner.create(), tableName);
+		this(Db.use(), tableName);
 	}
 
 	/**
@@ -96,30 +96,30 @@ public class ActiveEntity extends Entity {
 	 * @param entity 非动态实体
 	 */
 	public ActiveEntity(Entity entity) {
-		this(SqlRunner.create(), entity);
+		this(Db.use(), entity);
 	}
 
 	/**
 	 * 构造
 	 * 
-	 * @param runner {@link SqlRunner}
+	 * @param db {@link SqlRunner}
 	 * @param tableName 表名
 	 */
-	public ActiveEntity(SqlRunner runner, String tableName) {
+	public ActiveEntity(Db db, String tableName) {
 		super(tableName);
-		this.runner = runner;
+		this.db = db;
 	}
 
 	/**
 	 * 构造
 	 * 
-	 * @param runner {@link SqlRunner}
+	 * @param db {@link SqlRunner}
 	 * @param entity 非动态实体
 	 */
-	public ActiveEntity(SqlRunner runner, Entity entity) {
+	public ActiveEntity(Db db, Entity entity) {
 		super(entity.getTableName());
 		this.putAll(entity);
-		this.runner = runner;
+		this.db = db;
 	}
 	// -------------------------------------------------------------------------- Constructor end
 	
@@ -176,7 +176,7 @@ public class ActiveEntity extends Entity {
 	 */
 	public ActiveEntity add() {
 		try {
-			runner.insert(this);
+			db.insert(this);
 		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}
@@ -190,7 +190,7 @@ public class ActiveEntity extends Entity {
 	 */
 	public ActiveEntity load() {
 		try {
-			final Entity result = runner.get(this);
+			final Entity result = db.get(this);
 			if(MapUtil.isNotEmpty(result)) {
 				this.putAll(result);
 			}
@@ -207,7 +207,7 @@ public class ActiveEntity extends Entity {
 	 */
 	public ActiveEntity del() {
 		try {
-			runner.del(this);
+			db.del(this);
 		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}
@@ -222,7 +222,7 @@ public class ActiveEntity extends Entity {
 	 */
 	public ActiveEntity update(String primaryKey) {
 		try {
-			runner.update(this, Entity.create().set(primaryKey, this.get(primaryKey)));
+			db.update(this, Entity.create().set(primaryKey, this.get(primaryKey)));
 		} catch (SQLException e) {
 			throw new DbRuntimeException(e);
 		}
