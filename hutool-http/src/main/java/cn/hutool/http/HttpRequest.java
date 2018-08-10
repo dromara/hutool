@@ -55,7 +55,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final String CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX = "application/x-www-form-urlencoded;charset=";
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
-	
+
 	/** Cookie管理 */
 	protected static CookieManager cookieManager = new CookieManager();
 	static {
@@ -106,23 +106,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}
 
-	// ---------------------------------------------------------------- Http Method start
-	/**
-	 * 设置请求方法
-	 * 
-	 * @param method HTTP方法
-	 * @return HttpRequest
-	 */
-	public HttpRequest method(Method method) {
-		if(Method.PATCH == method) {
-			this.method = Method.POST;
-			this.header("X-HTTP-Method-Override", "PATCH");
-		}else {
-			this.method = method;
-		}
-		return this;
-	}
-
+	// ---------------------------------------------------------------- static Http Method start
 	/**
 	 * POST请求
 	 * 
@@ -203,7 +187,63 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public static HttpRequest trace(String url) {
 		return new HttpRequest(url).method(Method.TRACE);
 	}
-	// ---------------------------------------------------------------- Http Method end
+	// ---------------------------------------------------------------- static Http Method end
+	
+	/**
+	 * 获取请求URL
+	 * @return URL字符串
+	 * @since 4.1.8
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * 设置URL
+	 * @param url url字符串
+	 * @since 4.1.8
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	/**
+	 * 获取Http请求方法
+	 * 
+	 * @return {@link Method}
+	 * @since 4.1.8
+	 */
+	public Method getMethod() {
+		return this.method;
+	}
+
+	/**
+	 * 设置请求方法
+	 * 
+	 * @param method HTTP方法
+	 * @return HttpRequest
+	 * @see #method(Method)
+	 * @since 4.1.8
+	 */
+	public HttpRequest setMethod(Method method) {
+		return method(method);
+	}
+
+	/**
+	 * 设置请求方法
+	 * 
+	 * @param method HTTP方法
+	 * @return HttpRequest
+	 */
+	public HttpRequest method(Method method) {
+		if (Method.PATCH == method) {
+			this.method = Method.POST;
+			this.header("X-HTTP-Method-Override", "PATCH");
+		} else {
+			this.method = method;
+		}
+		return this;
+	}
 
 	// ---------------------------------------------------------------- Http Request Header start
 	/**
@@ -327,10 +367,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.bodyBytes = null;
 
 		if (value instanceof File) {
-			//文件上传
+			// 文件上传
 			return this.form(name, (File) value);
 		} else if (value instanceof Resource) {
-			//自定义流上传
+			// 自定义流上传
 			return this.form(name, (Resource) value);
 		} else if (this.form == null) {
 			this.form = new HashMap<>();
@@ -341,8 +381,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			// 列表对象
 			strValue = CollectionUtil.join((List<?>) value, ",");
 		} else if (ArrayUtil.isArray(value)) {
-			if(File.class == ArrayUtil.getComponentType(value)) {
-				//多文件
+			if (File.class == ArrayUtil.getComponentType(value)) {
+				// 多文件
 				return this.form(name, (File[]) value);
 			}
 			// 数组对象
@@ -400,13 +440,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest form(String name, File... files) {
-		if(1 == files.length) {
+		if (1 == files.length) {
 			final File file = files[0];
 			return form(name, file, file.getName());
 		}
 		return form(name, new MultiFileResource(files));
 	}
-	
+
 	/**
 	 * 文件表单项<br>
 	 * 一旦有文件加入，表单变为multipart/form-data
@@ -418,7 +458,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest form(String name, File file) {
 		return form(name, file, file.getName());
 	}
-	
+
 	/**
 	 * 文件表单项<br>
 	 * 一旦有文件加入，表单变为multipart/form-data
@@ -434,7 +474,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 文件byte[]表单项<br>
 	 * 一旦有文件加入，表单变为multipart/form-data
@@ -533,15 +573,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			contentType = HttpUtil.getContentTypeByRequestBody(body);
 			if (null != contentType && ContentType.isDefault(this.header(Header.CONTENT_TYPE))) {
 				if (null != this.charset) {
-					//附加编码信息
+					// 附加编码信息
 					contentType = StrUtil.format("{};charset={}", contentType, this.charset.name());
 				}
 				this.contentType(contentType);
 			}
 		}
-		
-		//判断是否为rest请求
-		if(StrUtil.containsAnyIgnoreCase(contentType, "json", "xml")) {
+
+		// 判断是否为rest请求
+		if (StrUtil.containsAnyIgnoreCase(contentType, "json", "xml")) {
 			this.isRest = true;
 		}
 		return this;
@@ -908,22 +948,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			appendPart(entry.getKey(), entry.getValue(), out);
 		}
 	}
-	
+
 	/**
 	 * 添加Multipart表单的数据项
+	 * 
 	 * @param formFieldName 表单名
 	 * @param resource 资源，可以是文件等
 	 * @param out Http流
 	 * @since 4.1.0
 	 */
 	private void appendPart(String formFieldName, Resource resource, OutputStream out) {
-		if(resource instanceof MultiResource) {
-			//多资源
-			for (Resource subResource : (MultiResource)resource) {
+		if (resource instanceof MultiResource) {
+			// 多资源
+			for (Resource subResource : (MultiResource) resource) {
 				appendPart(formFieldName, subResource, out);
 			}
-		}else {
-			//普通资源
+		} else {
+			// 普通资源
 			final StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
 			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, formFieldName, resource.getName()));
 			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(resource.getName())));
@@ -931,7 +972,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			IoUtil.copy(resource.getStream(), out);
 			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
 		}
-		
+
 	}
 
 	// 添加结尾数据

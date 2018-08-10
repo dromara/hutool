@@ -6,6 +6,7 @@
 ## 4.1.8
 
 ### 新特性
+* 【http】          HttpRequest增加getUrl、getMethod等方法
 
 ### Bug修复
 
