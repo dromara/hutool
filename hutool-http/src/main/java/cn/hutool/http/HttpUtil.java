@@ -153,6 +153,35 @@ public class HttpUtil {
 	}
 
 	/**
+	 * 从ip.cn检测当前公网ip 需要联网
+	 * @return ip地址
+	 */
+	public static String getPublicIp() {
+
+		String ipcn  = get("https://ip.cn");
+
+		if (ipcn == null) return null;
+
+		return StrUtil.subBetween(ipcn, "您现在的 IP：<code>", "</code>");
+
+	}
+
+	/**
+	 * 从ip.cn检测当前ip位置 需要联网
+	 * 格式 : xx省xx市 移动/电信/联通
+	 * @return 公共位置
+	 */
+	public static String getPublicAddress() {
+
+		String ipcn  = get("https://ip.cn");
+
+		if (ipcn == null) return null;
+
+		return StrUtil.subBetween(ipcn, "所在地理位置：<code>", "</code>");
+
+	}
+
+	/**
 	 * 检测是否https
 	 * 
 	 * @param url URL
