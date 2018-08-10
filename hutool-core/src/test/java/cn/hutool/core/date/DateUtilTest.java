@@ -36,7 +36,7 @@ public class DateUtilTest {
 		DateTime date = DateUtil.date(current);
 		Console.log(date);
 	}
-
+	
 	@Test
 	public void nowTest() {
 		// 当前时间
