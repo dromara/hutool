@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【http】          HttpRequest增加getUrl、getMethod等方法
+* 【core】         Validator增加isWord和ValidateWord（感谢@【帝都】宁静）
 
 ### Bug修复
 
