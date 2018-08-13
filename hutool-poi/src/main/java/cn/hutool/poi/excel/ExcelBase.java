@@ -99,7 +99,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	}
 	
 	/**
-	 * 自定义需要读取的Sheet，如果给定的sheet不存在，创建之。<br>
+	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之。<br>
 	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet。
 	 * 
 	 * @param sheetName sheet名
@@ -116,7 +116,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	}
 
 	/**
-	 * 自定义需要读取的Sheet，如果给定的sheet不存在，创建之（命名为默认）<br>
+	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之（命名为默认）<br>
 	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet
 	 * 
 	 * @param sheetIndex sheet序号，从0开始计数

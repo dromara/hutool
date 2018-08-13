@@ -70,7 +70,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 构造<br>
 	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
-	 * 若写出到文件，还需调用{@link #setDestFile(File)}方法自定义写出的文件，然后调用{@link #flush()}方法写出到文件
+	 * 若写出到文件，需要调用{@link #flush(File)} 写出到文件
 	 * 
 	 * @param isXlsx 是否为xlsx格式
 	 * @since 3.2.1
@@ -86,6 +86,19 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter(String destFilePath) {
 		this(destFilePath, null);
+	}
+
+	/**
+	 * 构造<br>
+	 * 此构造不传入写出的Excel文件路径，只能调用{@link #flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，需要调用{@link #flush(File)} 写出到文件
+	 * 
+	 * @param isXlsx 是否为xlsx格式
+	 * @param sheetName sheet名，第一个sheet名并写出到此sheet，例如sheet1
+	 * @since 4.1.8
+	 */
+	public ExcelWriter(boolean isXlsx, String sheetName) {
+		this(WorkbookUtil.createBook(isXlsx), sheetName);
 	}
 
 	/**
@@ -144,6 +157,20 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	// -------------------------------------------------------------------------- Constructor end
+
+	@Override
+	public ExcelWriter setSheet(int sheetIndex) {
+		// 切换到新sheet需要重置开始行
+		resetRow();
+		return super.setSheet(sheetIndex);
+	}
+
+	@Override
+	public ExcelWriter setSheet(String sheetName) {
+		// 切换到新sheet需要重置开始行
+		resetRow();
+		return super.setSheet(sheetName);
+	}
 
 	/**
 	 * 设置某列为自动宽度，不考虑合并单元格<br>
