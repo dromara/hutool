@@ -10,6 +10,7 @@
 * 【core】         Validator增加isWord和ValidateWord（感谢@【帝都】宁静）
 * 【core】         增加CollUtil.filter针对List的重载（issue#IM1NI@Gitee）
 * 【core】         增加ImageUtil.toBase64
+* 【http】          增加SoapRequest
 
 ### Bug修复
 * 【http】          修复编码自动识别的bug（issue#IM33O@Gitee）
