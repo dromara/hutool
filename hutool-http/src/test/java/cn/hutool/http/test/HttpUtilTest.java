@@ -30,10 +30,10 @@ public class HttpUtilTest {
 		String result1 = HttpUtil.get("http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2", CharsetUtil.CHARSET_GBK);
 		Console.log(result1);
 	}
-
+	
 	@Test
 	@Ignore
-	public void getTest3() {
+	public void getTest2() {
 		// 自定义的默认header无效
 		String result = HttpRequest
 				.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
@@ -43,12 +43,12 @@ public class HttpUtilTest {
 
 	@Test
 	@Ignore
-	public void getTest2() {
+	public void getTest3() {
 		// 测试url中带有空格的情况
 		String result1 = HttpUtil.get("http://122.152.198.206:5000/kf?abc= d");
 		Console.log(result1);
 	}
-
+	
 	@Test
 	@Ignore
 	public void get12306Test() {
