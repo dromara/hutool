@@ -173,6 +173,30 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 重命名当前sheet
+	 * 
+	 * @param sheetName 新的sheet名
+	 * @return this
+	 * @since 4.1.8
+	 */
+	public ExcelWriter renameSheet(String sheetName) {
+		return renameSheet(this.workbook.getSheetIndex(this.sheet), sheetName);
+	}
+
+	/**
+	 * 重命名sheet
+	 * 
+	 * @param sheet sheet需要，0表示第一个sheet
+	 * @param sheetName 新的sheet名
+	 * @return this
+	 * @since 4.1.8
+	 */
+	public ExcelWriter renameSheet(int sheet, String sheetName) {
+		this.workbook.setSheetName(sheet, sheetName);
+		return this;
+	}
+
+	/**
 	 * 设置某列为自动宽度，不考虑合并单元格<br>
 	 * 此方法必须在指定列数据完全写出后调用才有效。
 	 * 

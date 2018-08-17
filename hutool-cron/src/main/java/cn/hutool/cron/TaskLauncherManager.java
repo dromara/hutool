@@ -3,6 +3,12 @@ package cn.hutool.cron;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 作业启动管理器
+ * 
+ * @author looly
+ *
+ */
 public class TaskLauncherManager {
 	
 	protected Scheduler scheduler;

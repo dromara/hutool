@@ -413,4 +413,31 @@ public class URLUtil {
 			throw new IORuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 标准化URL字符串，包括：
+	 * <pre>
+	 * 1. 多个/替换为一个
+	 * </pre>
+	 * 
+	 * @param url URL字符串
+	 * @return
+	 */
+	public static String normalize (String url) {
+		if(StrUtil.isBlank(url)) {
+			return url;
+		}
+		int sepIndex = url.indexOf("://");
+		String pre;
+		String body;
+		if(sepIndex > 0) {
+			pre = StrUtil.subPre(url, sepIndex + 3);
+			body = StrUtil.subSuf(url, sepIndex + 3);
+		}else {
+			pre = "http://";
+			body = url;
+		}
+		body = body.replaceAll("//+", "/");
+		return pre + body;
+	}
 }

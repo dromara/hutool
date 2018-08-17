@@ -6,8 +6,8 @@ import java.util.List;
 import cn.hutool.cron.task.Task;
 
 /**
- * 任务执行管理器<br>
- * 负责管理任务的启动、停止等
+ * 作业执行管理器<br>
+ * 负责管理作业的启动、停止等
  * 
  * @author Looly
  * @since 3.0.1
