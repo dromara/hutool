@@ -421,7 +421,7 @@ public class URLUtil {
 	 * </pre>
 	 * 
 	 * @param url URL字符串
-	 * @return
+	 * @return 标准化后的URL字符串
 	 */
 	public static String normalize (String url) {
 		if(StrUtil.isBlank(url)) {
