@@ -14,6 +14,7 @@
 * 【poi】           ExcelWriter增加renameSheet方法（issue#150@Github）
 * 【core】         ZipUtil增加unzipFileBytes方法（issue#IM5KO@Gitee）
 * 【aop】          加入Cglib实现的切面支持（issue#IM4Y2@Gitee）
+* 【extra】         加入FTP客户端支持，基于commons-net封装
 
 ### Bug修复
 * 【http】          修复编码自动识别的bug（issue#IM33O@Gitee）
