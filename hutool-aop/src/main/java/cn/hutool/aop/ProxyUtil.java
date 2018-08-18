@@ -7,7 +7,6 @@ import java.lang.reflect.Proxy;
 import cn.hutool.aop.aspects.Aspect;
 import cn.hutool.aop.proxy.ProxyFactory;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
 
 /**
  * 代理工具类
@@ -25,7 +24,7 @@ public final class ProxyUtil {
 	 * @return 代理对象
 	 */
 	public static <T> T proxy(T target, Class<? extends Aspect> aspectClass){
-		return proxy(target, ReflectUtil.newInstance(aspectClass));
+		return ProxyFactory.createProxy(target, aspectClass);
 	}
 	
 	/**
