@@ -36,7 +36,6 @@ public class Ftp implements Closeable {
 	 * 构造，匿名登录
 	 * 
 	 * @param host 域名或IP
-	 * @param port 端口
 	 */
 	public Ftp(String host) {
 		this(host, DEFAULT_PORT);
@@ -200,9 +199,8 @@ public class Ftp implements Closeable {
 	/**
 	 * 上传文件
 	 * 
+	 * @param path 服务端路径（目录）
 	 * @param file 文件
-	 * @param path 服务端路径
-	 * @param fileName 文件名
 	 * @return 是否上传成功
 	 */
 	public boolean upload(String path, File file) {
