@@ -14,10 +14,6 @@ import cn.hutool.log.LogFactory;
 public class TimeIntervalAspect extends SimpleAspect{
 	private static final Log log = LogFactory.get();
 
-	public TimeIntervalAspect(Object target) {
-		super(target);
-	}
-	
 	private TimeInterval interval = new TimeInterval();
 
 	@Override

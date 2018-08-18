@@ -25,6 +25,7 @@
 		<mail.version>1.6.1</mail.version>
 		<jsch.version>0.1.54</jsch.version>
 		<zxing.version>3.3.3</zxing.version>
+		<net.version>3.6</net.version>
 	</properties>
 
 	<dependencies>
@@ -98,6 +99,14 @@
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
 			<version>${zxing.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>${net.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

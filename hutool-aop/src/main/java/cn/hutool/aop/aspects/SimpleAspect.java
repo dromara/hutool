@@ -2,8 +2,6 @@ package cn.hutool.aop.aspects;
 
 import java.lang.reflect.Method;
 
-import cn.hutool.aop.Aspect;
-
 /**
  * 简单切面类，不做任何操作<br>
  * 可以继承此类实现自己需要的方法即可
@@ -11,12 +9,8 @@ import cn.hutool.aop.Aspect;
  * @author Looly
  *
  */
-public class SimpleAspect extends Aspect{
+public class SimpleAspect implements Aspect{
 	
-	public SimpleAspect(Object target) {
-		super(target);
-	}
-
 	@Override
 	public boolean before(Object target, Method method, Object[] args) {
 		//继承此类后实现此方法

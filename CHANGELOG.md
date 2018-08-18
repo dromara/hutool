@@ -12,7 +12,8 @@
 * 【core】         增加ImageUtil.toBase64
 * 【http】          增加SoapRequest
 * 【poi】           ExcelWriter增加renameSheet方法（issue#150@Github）
-* 【core】         ZipUtil增加unzipFileBytes方法（issue#IM5KO@Github）
+* 【core】         ZipUtil增加unzipFileBytes方法（issue#IM5KO@Gitee）
+* 【aop】          加入Cglib实现的切面支持（issue#IM4Y2@Gitee）
 
 ### Bug修复
 * 【http】          修复编码自动识别的bug（issue#IM33O@Gitee）
