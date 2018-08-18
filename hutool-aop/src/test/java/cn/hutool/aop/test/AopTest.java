@@ -16,7 +16,7 @@ public class AopTest {
 
 	@Test
 	public void aopTest() {
-		Cat cat = ProxyUtil.proxy(new Cat(), TimeIntervalAspect.class);
+		Animal cat = ProxyUtil.proxy(new Cat(), TimeIntervalAspect.class);
 		String result = cat.eat();
 		Assert.assertEquals("猫吃鱼", result);
 	}
