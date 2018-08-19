@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.GenericEnumConverter;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
@@ -731,17 +732,10 @@ public class Convert {
 	 * 
 	 * @param unicode Unicode符
 	 * @return String 字符串
+	 * @see UnicodeUtil#toString(String)
 	 */
 	public static String unicodeToStr(String unicode) {
-		StringBuffer string = new StringBuffer();
-		String[] hex = StrUtil.split(unicode, "\\u");
-		for (int i = 1; i < hex.length; i++) {
-			// 转换出每一个代码点
-			int data = Integer.parseInt(hex[i], 16);
-			// 追加成string
-			string.append((char) data);
-		}
-		return string.toString();
+		return UnicodeUtil.toString(unicode);
 	}
 
 	/**

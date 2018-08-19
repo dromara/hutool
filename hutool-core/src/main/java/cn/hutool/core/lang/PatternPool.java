@@ -16,6 +16,8 @@ public class PatternPool {
 	public final static Pattern GENERAL = Pattern.compile("^\\w+$");
 	/** 数字 */
 	public final static Pattern NUMBERS = Pattern.compile("\\d+");
+	/** 字母 */
+	public final static Pattern WORD = Pattern.compile("[a-zA-Z]+");
 	/** 单个中文汉字 */
 	public final static Pattern CHINESE = Pattern.compile(ReUtil.RE_CHINESE);
 	/** 中文汉字 */

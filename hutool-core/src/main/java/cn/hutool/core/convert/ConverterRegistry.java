@@ -291,7 +291,7 @@ public class ConverterRegistry {
 			}
 		}
 		
-		//泛型转换
+		//枚举转换
 		if(rowType.isEnum()) {
 			return (T) new EnumConverter(rowType).convert(value, defaultValue);
 		}

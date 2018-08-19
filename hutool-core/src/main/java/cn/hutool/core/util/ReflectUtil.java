@@ -484,12 +484,12 @@ public class ReflectUtil {
 		}
 
 		final Class<?>[] paramTypes = ClassUtil.getClasses(params);
-		final Constructor<?> constructor = getConstructor(clazz, paramTypes);
+		final Constructor<T> constructor = getConstructor(clazz, paramTypes);
 		if (null == constructor) {
 			throw new UtilException("No Constructor matched for parameter types: [{}]", new Object[] { paramTypes });
 		}
 		try {
-			return getConstructor(clazz, paramTypes).newInstance(params);
+			return constructor.newInstance(params);
 		} catch (Exception e) {
 			throw new UtilException(e, "Instance class [{}] error!", clazz);
 		}

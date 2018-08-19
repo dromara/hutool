@@ -398,9 +398,77 @@ public class ZipUtil {
 			throw new UtilException(e);
 		} finally {
 			IoUtil.close(zipFileObj);
-
 		}
 		return outFile;
+	}
+	
+	/**
+	 * 从Zip文件中提取指定的文件为bytes
+	 * 
+	 * @param zipFilePath Zip文件
+	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @return 文件内容bytes
+	 * @since 4.1.8
+	 */
+	public static byte[] unzipFileBytes(String zipFilePath, String name) {
+		return unzipFileBytes(zipFilePath, DEFAULT_CHARSET, name);
+	}
+	
+	/**
+	 * 从Zip文件中提取指定的文件为bytes
+	 * 
+	 * @param zipFilePath Zip文件
+	 * @param charset 编码
+	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @return 文件内容bytes
+	 * @since 4.1.8
+	 */
+	public static byte[] unzipFileBytes(String zipFilePath, Charset charset, String name) {
+		return unzipFileBytes(FileUtil.file(zipFilePath), charset, name);
+	}
+	
+	/**
+	 * 从Zip文件中提取指定的文件为bytes
+	 * 
+	 * @param zipFile Zip文件
+	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @return 文件内容bytes
+	 * @since 4.1.8
+	 */
+	public static byte[] unzipFileBytes(File zipFile, String name) {
+		return unzipFileBytes(zipFile, DEFAULT_CHARSET, name);
+	}
+	
+	/**
+	 * 从Zip文件中提取指定的文件为bytes
+	 * 
+	 * @param zipFile Zip文件
+	 * @param charset 编码
+	 * @param name 文件名，如果存在于子文件夹中，此文件名必须包含目录名，例如images/aaa.txt
+	 * @return 文件内容bytes
+	 * @since 4.1.8
+	 */
+	@SuppressWarnings("unchecked")
+	public static byte[] unzipFileBytes(File zipFile, Charset charset, String name) {
+		ZipFile zipFileObj = null;
+		try {
+			zipFileObj = new ZipFile(zipFile, charset);
+			final Enumeration<ZipEntry> em = (Enumeration<ZipEntry>) zipFileObj.entries();
+			ZipEntry zipEntry = null;
+			while (em.hasMoreElements()) {
+				zipEntry = em.nextElement();
+				if (zipEntry.isDirectory()) {
+					continue;
+				} else if(name.equals(zipEntry.getName())){
+					return IoUtil.readBytes(zipFileObj.getInputStream(zipEntry));
+				}
+			}
+		} catch (IOException e) {
+			throw new UtilException(e);
+		} finally {
+			IoUtil.close(zipFileObj);
+		}
+		return null;
 	}
 
 	// ----------------------------------------------------------------------------- Gzip

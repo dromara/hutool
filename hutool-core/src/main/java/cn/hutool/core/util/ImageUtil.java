@@ -12,6 +12,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1109,6 +1110,19 @@ public class ImageUtil {
 	 */
 	public static BufferedImage toImage(byte[] imageBytes) throws IORuntimeException {
 		return read(new ByteArrayInputStream(imageBytes));
+	}
+	
+	/**
+	 * 将图片对象转换为Base64形式
+	 * @param image 图片对象
+	 * @param imageType 图片类型
+	 * @return Base64的字符串表现形式
+	 * @since 4.1.8
+	 */
+	public static String toBase64(Image image, String imageType) {
+		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		write(image, imageType, out);
+		return Base64.encode(out.toByteArray());
 	}
 
 	/**

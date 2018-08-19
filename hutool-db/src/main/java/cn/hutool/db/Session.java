@@ -28,8 +28,6 @@ import cn.hutool.log.LogFactory;
 public class Session extends AbstractDb implements Closeable {
 	private final static Log log = LogFactory.get();
 
-	private DataSource ds;
-
 	/**
 	 * 创建默认数据源会话
 	 * 

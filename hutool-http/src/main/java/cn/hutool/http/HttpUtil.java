@@ -41,8 +41,10 @@ import cn.hutool.core.util.StrUtil;
  */
 public class HttpUtil {
 
+	/** 正则：Content-Type中的编码信息 */
+	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*)");
 	/** 正则：匹配meta标签的编码信息 */
-	public static final Pattern CHARSET_PATTERN = Pattern.compile("<meta.*?charset=(.*?)\"");
+	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta.*?charset=(.*?)\"");
 
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
@@ -752,9 +754,7 @@ public class HttpUtil {
 		if (conn == null) {
 			return null;
 		}
-
-		String charset = ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
-		return charset;
+		return ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
 	}
 
 	/**
@@ -822,13 +822,13 @@ public class HttpUtil {
 		}
 		String content = new String(contentBytes, charset);
 		if (isGetCharsetFromContent) {
-			final String charsetInContentStr = ReUtil.get(CHARSET_PATTERN, content, 1);
+			final String charsetInContentStr = ReUtil.get(META_CHARSET_PATTERN, content, 1);
 			if (StrUtil.isNotBlank(charsetInContentStr)) {
 				Charset charsetInContent = null;
 				try {
 					charsetInContent = Charset.forName(charsetInContentStr);
 				} catch (Exception e) {
-					if (StrUtil.containsIgnoreCase(charsetInContentStr, "utf-8")) {
+					if (StrUtil.containsIgnoreCase(charsetInContentStr, "utf-8") || StrUtil.containsIgnoreCase(charsetInContentStr, "utf8")) {
 						charsetInContent = CharsetUtil.CHARSET_UTF_8;
 					} else if (StrUtil.containsIgnoreCase(charsetInContentStr, "gbk")) {
 						charsetInContent = CharsetUtil.CHARSET_GBK;

@@ -481,7 +481,7 @@ public class CollUtil {
 	public static <T> List<T> list(boolean isLinked) {
 		return isLinked ? new LinkedList<T>() : new ArrayList<T>();
 	}
-	
+
 	/**
 	 * 新建一个List
 	 * 
@@ -530,7 +530,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked, Iterable<T> iterable) {
-		if(null == iterable) {
+		if (null == iterable) {
 			return list(isLinked);
 		}
 		return list(isLinked, iterable.iterator());
@@ -575,7 +575,7 @@ public class CollUtil {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -923,7 +923,34 @@ public class CollUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 集合
+	 * @param editor 编辑器接口
+	 * @return 过滤后的数组
+	 * @since 4.1.8
+	 */
+	public static <T> List<T> filter(List<T> list, Editor<T> editor) {
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
+		T modified;
+		for (T t : list) {
+			modified = editor.edit(t);
+			if (null != modified) {
+				list2.add(modified);
+			}
+		}
+		return list2;
+	}
+
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
 	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
@@ -950,6 +977,30 @@ public class CollUtil {
 			}
 		}
 		return collection2;
+	}
+
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
+	 * </pre>
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 集合
+	 * @param filter 过滤器
+	 * @return 过滤后的数组
+	 * @since 4.1.8
+	 */
+	public static <T> List<T> filter(List<T> list, Filter<T> filter) {
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
+		for (T t : list) {
+			if (filter.accept(t)) {
+				list2.add(t);
+			}
+		}
+		return list2;
 	}
 
 	/**
@@ -1063,7 +1114,7 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> T findOne(Iterable<T> collection, Filter<T> filter) {
-		if(null != collection) {
+		if (null != collection) {
 			for (T t : collection) {
 				if (filter.accept(t)) {
 					return t;

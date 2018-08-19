@@ -43,12 +43,14 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	private int status;
 	/** 是否忽略读取Http响应体 */
 	private boolean ignoreBody;
+	/** 从响应中获取的编码 */
+	private Charset charsetFromResponse;
 
 	/**
 	 * 构造
 	 * 
 	 * @param httpConnection {@link HttpConnection}
-	 * @param charset 编码
+	 * @param charset 编码，从请求编码中获取默认编码
 	 * @param isAsync 是否异步
 	 * @param isIgnoreBody 是否忽略读取响应体
 	 * @since 3.1.2
@@ -183,7 +185,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	 */
 	public String body() throws HttpException{
 		try {
-			return HttpUtil.getString(bodyBytes(), this.charset, null == this.charset);
+			return HttpUtil.getString(bodyBytes(), this.charset, null == this.charsetFromResponse);
 		} catch (IOException e) {
 			throw new HttpException(e);
 		}
@@ -320,6 +322,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 			this.status = httpConnection.responseCode();
 			this.headers = httpConnection.headers();
 			final Charset charset = httpConnection.getCharset();
+			this.charsetFromResponse = charset;
 			if(null != charset) {
 				this.charset = charset;
 			}

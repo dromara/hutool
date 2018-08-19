@@ -3,6 +3,27 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.8
+
+### 新特性
+* 【http】          HttpRequest增加getUrl、getMethod等方法
+* 【core】         Validator增加isWord和ValidateWord（感谢@【帝都】宁静）
+* 【core】         增加CollUtil.filter针对List的重载（issue#IM1NI@Gitee）
+* 【core】         增加ImageUtil.toBase64
+* 【http】          增加SoapRequest
+* 【poi】           ExcelWriter增加renameSheet方法（issue#150@Github）
+* 【core】         ZipUtil增加unzipFileBytes方法（issue#IM5KO@Gitee）
+* 【aop】          加入Cglib实现的切面支持（issue#IM4Y2@Gitee）
+* 【extra】         加入FTP客户端支持，基于commons-net封装
+
+### Bug修复
+* 【http】          修复编码自动识别的bug（issue#IM33O@Gitee）
+* 【db】            修复Session中ds引起的空指针问题（感谢@【武汉】jellard）
+* 【core】         修复ReflectUtil.newInstance二次调用资源问题（issue#IM51X@Gitee）
+* 【core】         修复ClassScaner包名前缀引起的问题（issue#IM5OJ@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.7
 
 ### 新特性

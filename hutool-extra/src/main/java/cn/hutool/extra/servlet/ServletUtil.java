@@ -137,7 +137,7 @@ public class ServletUtil {
 			@Override
 			public boolean containsKey(String key) {
 				// 对于Servlet来说，返回值null意味着无此参数
-				return null != request.getParameter(key);
+				return (null != request.getParameter(key)) || (null != request.getParameter(beanName + StrUtil.DOT + key));
 			}
 		}, copyOptions);
 	}

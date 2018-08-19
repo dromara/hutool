@@ -33,6 +33,8 @@ public class ClassScaner {
 
 	/** 包名 */
 	private String packageName;
+	/** 包名，最后跟一个点，表示包名，避免在检查前缀时的歧义 */
+	private String packageNameWithDot;
 	/** 包路径，用于文件中对路径操作 */
 	private String packageDirName;
 	/** 包路径，用于jar中对路径操作，在Linux下与packageDirName一致 */
@@ -144,9 +146,11 @@ public class ClassScaner {
 	 * @param charset 编码
 	 */
 	public ClassScaner(String packageName, Filter<Class<?>> classFilter, Charset charset) {
-		this.packageName = StrUtil.nullToEmpty(packageName);
-		this.packageDirName = this.packageName.replace(CharUtil.DOT, File.separatorChar);
-		this.packagePath = this.packageName.replace(CharUtil.DOT, CharUtil.SLASH);
+		packageName = StrUtil.nullToEmpty(packageName);
+		this.packageName = packageName;
+		this.packageNameWithDot = StrUtil.addSuffixIfNot(packageName, StrUtil.DOT);
+		this.packageDirName = packageName.replace(CharUtil.DOT, File.separatorChar);
+		this.packagePath = packageName.replace(CharUtil.DOT, CharUtil.SLASH);
 		this.classFilter = classFilter;
 		this.charset = charset;
 	}
@@ -214,7 +218,8 @@ public class ClassScaner {
 						// 8为classes长度，fileName.length() - 6为".class"的长度
 						.substring(rootDir.length(), fileName.length() - 6)//
 						.replace(File.separatorChar, CharUtil.DOT);//
-				addIfAccept(loadClass(className));
+				//加入满足条件的类
+				addIfAccept(className);
 			} else if (fileName.endsWith(FileUtil.JAR_FILE_EXT)) {
 				try {
 					scanJar(new JarFile(file));
@@ -240,7 +245,6 @@ public class ClassScaner {
 			name = StrUtil.removePrefix(entry.getName(), StrUtil.SLASH);
 			if (name.startsWith(this.packagePath)) {
 				if (name.endsWith(FileUtil.CLASS_EXT) && false == entry.isDirectory()) {
-					Console.log(name);
 					final String className = name//
 							.substring(0, name.length() - 6)//
 							.replace(CharUtil.SLASH, CharUtil.DOT);//
@@ -270,6 +274,31 @@ public class ClassScaner {
 		}
 		return clazz;
 	}
+	
+	/**
+	 * 通过过滤器，是否满足接受此类的条件
+	 * 
+	 * @param clazz 类
+	 * @return 是否接受
+	 */
+	private void addIfAccept(String className) {
+		if(StrUtil.isBlank(className)) {
+			return;
+		}
+		int classLen = className.length();
+		int packageLen = this.packageName.length();
+		if(classLen == packageLen) {
+			//类名和包名长度一致，用户可能传入的包名是类名
+			if(className.equals(this.packageName)) {
+				addIfAccept(loadClass(className));
+			}
+		} else if(classLen > packageLen){
+			//检查类名是否以指定包名为前缀，包名后加.（避免类似于cn.hutool.A和cn.hutool.ATest这类类名引起的歧义）
+			if(className.startsWith(this.packageNameWithDot)) {
+				addIfAccept(loadClass(className));
+			}
+		}
+	}
 
 	/**
 	 * 通过过滤器，是否满足接受此类的条件
@@ -293,11 +322,11 @@ public class ClassScaner {
 	 * @return 包名之前的部分
 	 */
 	private String subPathBeforePackage(File file) {
-		final String filePath = file.getAbsolutePath();
-		if (StrUtil.isEmpty(this.packageDirName)) {
-			return StrUtil.addSuffixIfNot(filePath, StrUtil.SLASH);
+		String filePath = file.getAbsolutePath();
+		if (StrUtil.isNotEmpty(this.packageDirName)) {
+			filePath = StrUtil.subBefore(filePath, this.packageDirName, true);
 		}
-		return StrUtil.subBefore(filePath, this.packageDirName, true);
+		return StrUtil.addSuffixIfNot(filePath, File.separator);
 	}
 	// --------------------------------------------------------------------------------------------------- Private method end
 }

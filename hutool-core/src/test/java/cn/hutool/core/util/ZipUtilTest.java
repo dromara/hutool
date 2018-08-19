@@ -5,6 +5,8 @@ import java.io.File;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 
 /**
@@ -33,5 +35,12 @@ public class ZipUtilTest {
 	@Ignore
 	public void unzipChineseTest() {
 		ZipUtil.unzip("d:/测试.zip");
+	}
+	
+	@Test
+	@Ignore
+	public void unzipFileBytesTest() {
+		byte[] fileBytes = ZipUtil.unzipFileBytes(FileUtil.file("e:/02 电力相关设备及服务2-241-.zip"), CharsetUtil.CHARSET_GBK, "images/CE-EP-HY-MH01-ES-0001.jpg");
+		Assert.notNull(fileBytes);
 	}
 }
