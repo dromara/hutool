@@ -6,6 +6,7 @@
 ## 4.1.9
 
 ### 新特性
+* 【core】         MapUtil增加toObjectArray方法
 
 ### Bug修复
 
