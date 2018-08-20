@@ -427,7 +427,7 @@ public class URLUtil {
 		if(StrUtil.isBlank(url)) {
 			return url;
 		}
-		int sepIndex = url.indexOf("://");
+		final int sepIndex = url.indexOf("://");
 		String pre;
 		String body;
 		if(sepIndex > 0) {
@@ -437,7 +437,15 @@ public class URLUtil {
 			pre = "http://";
 			body = url;
 		}
-		body = body.replaceAll("//+", "/");
-		return pre + body;
+		
+		int paramsSepIndex = url.indexOf("?");
+		String params = null;
+		if(paramsSepIndex > 0) {
+			params = StrUtil.subSuf(body, paramsSepIndex);
+			body = StrUtil.subPre(body, paramsSepIndex);
+		}
+		
+		body = body.replace("\\", "/").replaceAll("//+", "/");
+		return pre + body + StrUtil.nullToEmpty(params);
 	}
 }

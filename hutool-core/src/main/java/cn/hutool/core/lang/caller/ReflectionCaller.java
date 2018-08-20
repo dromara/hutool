@@ -6,7 +6,7 @@ package cn.hutool.core.lang.caller;
  * @author Looly
  *
  */
-@SuppressWarnings({ "deprecation", "restriction" })
+@SuppressWarnings({ "deprecation"})
 public class ReflectionCaller extends SecurityManagerCaller {
 	private static final int OFFSET = 2;
 

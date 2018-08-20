@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core】         MapUtil增加toObjectArray方法
+* 【core】         URLUtil.normalize增加反斜杠处理（issue#IM8BI@Gitee）
 
 ### Bug修复
 
