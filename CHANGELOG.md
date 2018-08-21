@@ -9,6 +9,7 @@
 * 【core】         MapUtil增加toObjectArray方法
 * 【core】         URLUtil.normalize增加反斜杠处理（issue#IM8BI@Gitee）
 * 【core】         增加ClassUtil.getShortClassName（issue#IM8XM@Gitee）
+* 【core】         增加ThreadFactoryBuilder和ExecutorBuilder
 
 ### Bug修复
 
