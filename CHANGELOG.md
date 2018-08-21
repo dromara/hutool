@@ -10,6 +10,7 @@
 * 【core】         URLUtil.normalize增加反斜杠处理（issue#IM8BI@Gitee）
 * 【core】         增加ClassUtil.getShortClassName（issue#IM8XM@Gitee）
 * 【core】         增加ThreadFactoryBuilder和ExecutorBuilder
+* 【cron】         定时任务改为线程池实现
 
 ### Bug修复
 

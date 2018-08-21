@@ -4,8 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.thread.ExecutorBuilder;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.listener.TaskListener;
@@ -68,6 +71,8 @@ public class Scheduler {
 	protected TaskExecutorManager taskExecutorManager;
 	/** 监听管理器列表 */
 	protected TaskListenerManager listenerManager = new TaskListenerManager();
+	/** 线程池 */
+	protected ExecutorService threadExecutor;
 
 	// --------------------------------------------------------- Getters and Setters start
 	/**
@@ -325,7 +330,7 @@ public class Scheduler {
 	public boolean isStarted() {
 		return this.started;
 	}
-	
+
 	/**
 	 * 启动
 	 * 
@@ -348,6 +353,9 @@ public class Scheduler {
 				throw new CronException("Schedule is started!");
 			}
 
+			this.threadExecutor = ExecutorBuilder.create().setThreadFactory(//
+					ThreadFactoryBuilder.create().setNamePrefix("hutool-cron-").setDaemon(this.daemon).build()//
+			).build();
 			this.taskLauncherManager = new TaskLauncherManager(this);
 			this.taskExecutorManager = new TaskExecutorManager(this);
 
@@ -375,6 +383,10 @@ public class Scheduler {
 			// 停止CronTimer
 			this.timer.stopTimer();
 			this.timer = null;
+			
+			//停止线程池
+			this.threadExecutor.shutdown();
+			this.threadExecutor = null;
 
 			// 修改标志
 			started = false;
@@ -382,6 +394,4 @@ public class Scheduler {
 		return this;
 	}
 
-	// -------------------------------------------------------------------- notify start
-	// -------------------------------------------------------------------- notify end
 }

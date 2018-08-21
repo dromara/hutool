@@ -8,7 +8,7 @@ import cn.hutool.cron.task.Task;
  * @author Looly
  *
  */
-public class TaskExecutor extends Thread{
+public class TaskExecutor implements Runnable{
 	
 	private Scheduler scheduler;
 	private Task task;
