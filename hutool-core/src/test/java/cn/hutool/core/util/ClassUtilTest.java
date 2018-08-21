@@ -103,4 +103,11 @@ public class ClassUtilTest {
 		String classPath = ClassUtil.getClassPath();
 		Assert.assertNotNull(classPath);
 	}
+	
+	@Test
+	public void getShortClassNameTest() {
+		String className = "cn.hutool.core.util.StrUtil";
+		String result = ClassUtil.getShortClassName(className);
+		Assert.assertEquals("c.h.c.u.StrUtil", result);
+	}
 }

@@ -83,6 +83,30 @@ public class ClassUtil {
 		}
 		return isSimple ? clazz.getSimpleName() : clazz.getName();
 	}
+	
+	/**
+	 * 获取完整类名的短格式如：<br>
+	 * cn.hutool.core.util.StrUtil -》c.h.c.u.StrUtil
+	 * 
+	 * @param className 类名
+	 * @return 短格式类名
+	 * @since 4.1.9
+	 */
+	public static String getShortClassName(String className) {
+		final List<String> packages = StrUtil.split(className, CharUtil.DOT);
+		if(null == packages || packages.size() < 2) {
+			return className;
+		}
+		
+		final int size = packages.size();
+		final StringBuilder result = StrUtil.builder();
+		result.append(packages.get(0).charAt(0));
+		for(int i = 1; i < size - 1; i++) {
+			result.append(CharUtil.DOT).append(packages.get(i).charAt(0));
+		}
+		result.append(CharUtil.DOT).append(packages.get(size - 1));
+		return result.toString();
+	}
 
 	/**
 	 * 获得对象数组的类数组
