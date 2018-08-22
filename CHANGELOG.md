@@ -12,6 +12,7 @@
 * 【core】         增加ThreadFactoryBuilder和ExecutorBuilder
 * 【cron】         定时任务改为线程池实现
 * 【core】         Assert增加checkIndex方法
+* 【core】         parseBoolean增加on、off关键字支持可选字符串
 
 ### Bug修复
 

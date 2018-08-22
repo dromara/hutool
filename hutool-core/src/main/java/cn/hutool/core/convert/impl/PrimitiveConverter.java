@@ -138,17 +138,33 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 					return false;
 				case "yes":
 					return true;
-				case "y":
-					return true;
-				case "ok":
-					return true;
 				case "no":
 					return false;
+				case "y":
+					return true;
 				case "n":
 					return false;
+				case "ok":
+					return true;
 				case "1":
 					return true;
 				case "0":
+					return false;
+				case "on":
+					return true;
+				case "off":
+					return false;
+				case "是":
+					return true;
+				case "否":
+					return false;
+				case "对":
+					return true;
+				case "错":
+					return false;
+				case "真":
+					return true;
+				case "假":
 					return false;
 			}
 		}
