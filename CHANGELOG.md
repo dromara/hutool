@@ -11,6 +11,7 @@
 * 【core】         增加ClassUtil.getShortClassName（issue#IM8XM@Gitee）
 * 【core】         增加ThreadFactoryBuilder和ExecutorBuilder
 * 【cron】         定时任务改为线程池实现
+* 【core】         Assert增加checkIndex方法
 
 ### Bug修复
 
