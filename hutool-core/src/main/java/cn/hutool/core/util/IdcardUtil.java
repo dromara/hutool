@@ -156,7 +156,7 @@ public class IdcardUtil {
 			return isvalidCard15(idCard);
 		case 10: {// 10位身份证，港澳台地区
 			String[] cardval = isValidCard10(idCard);
-			if (cardval != null && cardval[2].equals("true")) {
+			if (null != cardval && cardval[2].equals("true")) {
 				return true;
 			} else {
 				return false;
@@ -256,6 +256,9 @@ public class IdcardUtil {
 	 *         </p>
 	 */
 	public static String[] isValidCard10(String idCard) {
+		if(StrUtil.isBlank(idCard)) {
+			return null;
+		}
 		String[] info = new String[3];
 		String card = idCard.replaceAll("[\\(|\\)]", "");
 		if (card.length() != 8 && card.length() != 9 && idCard.length() != 10) {
@@ -294,12 +297,18 @@ public class IdcardUtil {
 	 * @return 验证码是否符合
 	 */
 	public static boolean isValidTWCard(String idCard) {
+		if(StrUtil.isEmpty(idCard)) {
+			return false;
+		}
 		String start = idCard.substring(0, 1);
 		String mid = idCard.substring(1, 9);
 		String end = idCard.substring(9, 10);
 		Integer iStart = twFirstCode.get(start);
-		Integer sum = iStart / 10 + (iStart % 10) * 9;
-		char[] chars = mid.toCharArray();
+		if(null == iStart) {
+			return false;
+		}
+		int sum = iStart / 10 + (iStart % 10) * 9;
+		final char[] chars = mid.toCharArray();
 		Integer iflag = 8;
 		for (char c : chars) {
 			sum += Integer.valueOf(String.valueOf(c)) * iflag;

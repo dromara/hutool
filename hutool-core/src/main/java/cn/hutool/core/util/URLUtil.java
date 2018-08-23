@@ -161,15 +161,10 @@ public class URLUtil {
 	 * 
 	 * @param url 需要格式化的URL
 	 * @return 格式化后的URL，如果提供了null或者空串，返回null
+	 * @see #normalize(String)
 	 */
 	public static String formatUrl(String url) {
-		if (StrUtil.isBlank(url)) {
-			return null;
-		}
-		if (url.startsWith("http://") || url.startsWith("https://")) {
-			return url;
-		}
-		return "http://" + url;
+		return normalize(url);
 	}
 
 	/**
@@ -445,6 +440,9 @@ public class URLUtil {
 			body = StrUtil.subPre(body, paramsSepIndex);
 		}
 		
+		//去除开头的\或者/
+		body = body.replaceAll("^[\\/]+", StrUtil.EMPTY);
+		//替换多个\或/为单个/
 		body = body.replace("\\", "/").replaceAll("//+", "/");
 		return pre + body + StrUtil.nullToEmpty(params);
 	}

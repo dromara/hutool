@@ -32,4 +32,11 @@ public class URLUtilTest {
 		normalize = URLUtil.normalize(url);
 		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
 	}
+	
+	@Test
+	public void formatTest() {
+		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
+		String normalize = URLUtil.formatUrl(url);
+		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+	}
 }

@@ -13,8 +13,10 @@
 * 【cron】         定时任务改为线程池实现
 * 【core】         Assert增加checkIndex方法
 * 【core】         parseBoolean增加on、off关键字支持可选字符串
+* 【core】         URLUtil.formatUrl方法兼容更多情况（issue#IMAEA@Gitee）
 
 ### Bug修复
+* 【core】         修复IdcardUtil中isValidCard10空指针问题（issue#IMB7R@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
