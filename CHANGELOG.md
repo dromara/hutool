@@ -17,6 +17,7 @@
 
 ### Bug修复
 * 【core】         修复IdcardUtil中isValidCard10空指针问题（issue#IMB7R@Gitee）
+* 【core】         修复SoapRequest空指针问题（issue#IMBUN@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

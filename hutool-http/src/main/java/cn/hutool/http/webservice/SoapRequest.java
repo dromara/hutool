@@ -4,6 +4,7 @@ import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -124,10 +125,13 @@ public class SoapRequest {
 		sb.append("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n");
 		sb.append("  <soap:Body>\n");
 		// 传入method和namespace
+		Assert.notBlank(this.method, "Method must be not blank !");
 		sb.append("    <").append(this.method).append(" xmlns=\"").append(this.namespace).append("\">\n");
 		// 动态构造参数和值
-		for (Map.Entry<String, String> entry : this.params.entrySet()) {
-			sb.append("      <").append(entry.getKey()).append(">").append(entry.getValue()).append("</").append(entry.getKey()).append(">\n");
+		if(null != this.params) {
+			for (Map.Entry<String, String> entry : this.params.entrySet()) {
+				sb.append("      <").append(entry.getKey()).append(">").append(entry.getValue()).append("</").append(entry.getKey()).append(">\n");
+			}
 		}
 		sb.append("    </").append(this.method).append(">\n");
 		sb.append("  </soap:Body>\n");
