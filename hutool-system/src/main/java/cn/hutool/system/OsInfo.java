@@ -25,6 +25,11 @@ public class OsInfo{
 	private final boolean IS_OS_WINDOWS_NT = getOSMatches("Windows NT");
 	private final boolean IS_OS_WINDOWS_XP = getOSMatches("Windows", "5.1");
 
+	private final boolean IS_OS_WINDOWS_7 = getOSMatches("Windows", "6.1");
+	private final boolean IS_OS_WINDOWS_8 = getOSMatches("Windows", "6.2");
+	private final boolean IS_OS_WINDOWS_8_1 = getOSMatches("Windows", "6.3");
+	private final boolean IS_OS_WINDOWS_10 = getOSMatches("Windows", "10.0");
+
 	// 由于改变file.encoding属性并不会改变系统字符编码，为了保持一致，通过LocaleUtil取系统默认编码。
 	private final String FILE_SEPARATOR = SystemUtil.get("file.separator", false);
 	private final String LINE_SEPARATOR = SystemUtil.get("line.separator", false);
@@ -281,6 +286,58 @@ public class OsInfo{
 	 */
 	public final boolean isWindowsXP() {
 		return IS_OS_WINDOWS_XP;
+	}
+
+	/**
+	 * 判断当前OS的类型。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * </p>
+	 *
+	 * @return 如果当前OS类型为Windows 7，则返回<code>true</code>
+	 */
+	public final boolean isWindows7() {
+		return IS_OS_WINDOWS_7;
+	}
+
+	/**
+	 * 判断当前OS的类型。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * </p>
+	 *
+	 * @return 如果当前OS类型为Windows 8，则返回<code>true</code>
+	 */
+	public final boolean isWindoows8() {
+		return IS_OS_WINDOWS_8;
+	}
+
+	/**
+	 * 判断当前OS的类型。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * </p>
+	 *
+	 * @return 如果当前OS类型为Windows 8.1，则返回<code>true</code>
+	 */
+	public final boolean isWindows8_1() {
+		return IS_OS_WINDOWS_8_1;
+	}
+
+	/**
+	 * 判断当前OS的类型。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>os.name</code>（因为Java安全限制），则总是返回<code>false</code>
+	 * </p>
+	 *
+	 * @return 如果当前OS类型为Windows 10，则返回<code>true</code>
+	 */
+	public final boolean isWindows10() {
+		return IS_OS_WINDOWS_10;
 	}
 
 	/**
