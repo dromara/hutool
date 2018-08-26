@@ -46,7 +46,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 		this.keyType = keyType;
 		this.valueType = valueType;
 	}
-
+	
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Map<?, ?> convertInternal(Object value) {

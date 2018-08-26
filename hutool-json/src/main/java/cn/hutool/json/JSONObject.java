@@ -297,15 +297,13 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T toBean(Type type, boolean ignoreError) {
-		if(null == type) {
-			return null;
-		}
 		final Class<?> clazz = TypeUtil.getClass(type);
 		if (null == clazz) {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
-		}
-		if(Map.class.equals(clazz) || Object.class.equals(clazz)) {
+		}else if(Object.class.equals(clazz)) {
 			return (T) this;
+		}else if(Map.class.equals(clazz)) {
+			return Convert.convert(type, this);
 		}
 		return (T) toBean(ReflectUtil.newInstance(clazz), ignoreError);
 	}
