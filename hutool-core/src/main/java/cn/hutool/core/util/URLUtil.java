@@ -96,6 +96,32 @@ public class URLUtil {
 			}
 		}
 	}
+	
+	/**
+	 * 将URL字符串转换为URL对象，并做必要验证
+	 * 
+	 * @param urlStr URL字符串
+	 * @return URL
+	 * @since 4.1.9
+	 */
+	public static URL toUrlForHttp(String urlStr) {
+		return toUrlForHttp(urlStr, null);
+	}
+	
+	/**
+	 * 将URL字符串转换为URL对象，并做必要验证
+	 * 
+	 * @param urlStr URL字符串
+	 * @param handler {@link URLStreamHandler}
+	 * @return URL
+	 * @since 4.1.9
+	 */
+	public static URL toUrlForHttp(String urlStr, URLStreamHandler handler) {
+		Assert.notBlank(urlStr, "Url is blank !");
+		// 去掉url中的空白符，防止空白符导致的异常
+		urlStr = StrUtil.cleanBlank(urlStr);
+		return URLUtil.url(urlStr, handler);
+	}
 
 	/**
 	 * 获得URL

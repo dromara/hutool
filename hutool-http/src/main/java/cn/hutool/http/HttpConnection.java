@@ -20,7 +20,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
-import cn.hutool.core.lang.Validator;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -146,7 +145,7 @@ public class HttpConnection {
 	 * @param proxy 代理
 	 */
 	public HttpConnection(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
-		this(toUrl(urlStr), method, hostnameVerifier, ssf, timeout, proxy);
+		this(URLUtil.toUrlForHttp(urlStr), method, hostnameVerifier, ssf, timeout, proxy);
 	}
 
 	/**
@@ -601,23 +600,5 @@ public class HttpConnection {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
 	}
 
-	/**
-	 * 将URL字符串转换为URL对象，并做必要验证
-	 * 
-	 * @param urlStr URL字符串
-	 * @return URL
-	 */
-	private static URL toUrl(String urlStr) {
-		if (StrUtil.isBlank(urlStr)) {
-			throw new HttpException("Url is blank !");
-		}
-		if (false == Validator.isUrl(urlStr)) {
-			throw new HttpException("{} is not a url !", urlStr);
-		}
-
-		// 去掉url中的空白符，防止空白符导致的异常
-		urlStr = StrUtil.cleanBlank(urlStr);
-		return URLUtil.url(urlStr);
-	}
 	// --------------------------------------------------------------- Private Method end
 }

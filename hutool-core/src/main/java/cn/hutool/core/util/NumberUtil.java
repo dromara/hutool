@@ -1145,21 +1145,24 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 判断String是否是整数
+	 * 判断String是否是整数<br>
+	 * 支持8、10、16进制
 	 * 
 	 * @param s String
 	 * @return 是否为整数
 	 */
 	public static boolean isInteger(String s) {
-		if (StrUtil.isNotBlank(s)) {
-			return s.matches("^-?\\d+$");
-		} else {
+		try {
+			parseInt(s);
+		} catch (NumberFormatException e) {
 			return false;
 		}
+		return true;
 	}
 
 	/**
-	 * 判断字符串是否是Long类型
+	 * 判断字符串是否是Long类型<br>
+	 * 支持8、10、16进制
 	 * 
 	 * @param s String
 	 * @return 是否为{@link Long}类型
@@ -1167,11 +1170,11 @@ public class NumberUtil {
 	 */
 	public static boolean isLong(String s) {
 		try {
-			Long.parseLong(s);
-			return true;
+			parseLong(s);
 		} catch (NumberFormatException e) {
 			return false;
 		}
+		return true;
 	}
 
 	/**

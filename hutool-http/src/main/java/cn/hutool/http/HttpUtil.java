@@ -420,7 +420,11 @@ public class HttpUtil {
 		if (null == destFile) {
 			throw new NullPointerException("[destFile] is null!");
 		}
-		return HttpRequest.get(url).timeout(timeout).executeAsync().writeBody(destFile, streamProgress);
+		final HttpResponse response = HttpRequest.get(url).timeout(timeout).executeAsync();
+		if(false == response.isOk()) {
+			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
+		}
+		return response.writeBody(destFile, streamProgress);
 	}
 
 	/**
@@ -452,7 +456,11 @@ public class HttpUtil {
 			throw new NullPointerException("[out] is null!");
 		}
 
-		return HttpRequest.get(url).executeAsync().writeBody(out, isCloseOut, streamProgress);
+		final HttpResponse response = HttpRequest.get(url).executeAsync();
+		if(false == response.isOk()) {
+			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
+		}
+		return response.writeBody(out, isCloseOut, streamProgress);
 	}
 
 	/**

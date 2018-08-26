@@ -11,6 +11,7 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.json.test.bean.MapBean;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
 
@@ -81,6 +82,14 @@ public class JSONUtilTest {
 
 		Price price = JSONUtil.toBean(json, Price.class);
 		Assert.assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
+	}
+	
+	@Test
+	public void toBeanTest2() {
+		String json = "{\"a\":{\"b\": \"c\"}}";
+		
+		MapBean map = JSONUtil.toBean(json, MapBean.class);
+		Assert.assertEquals("c", map.getA().get("b"));
 	}
 
 	@Test

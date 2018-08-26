@@ -69,7 +69,16 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	 * @return 状态码
 	 */
 	public int getStatus() {
-		return status;
+		return this.status;
+	}
+	
+	/**
+	 * 请求是否成功，判断依据为：状态码范围在200~299内。
+	 * @return 是否成功请求
+	 * @since 4.1.9
+	 */
+	public boolean isOk() {
+		return this.status >= 200 && this.status < 300;
 	}
 	
 	/**
