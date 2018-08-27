@@ -110,7 +110,16 @@ public class JSONObjectTest {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
 		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class, true);
 		String password = user.getData().get("password");
+		Assert.assertTrue(user.getData().containsKey("password"));
 		Assert.assertNull(password);
+	}
+	
+	@Test
+	public void toBeanTest4() {
+		String json = "{\"data\":{\"b\": \"c\"}}";
+		
+		UserWithMap map = JSONUtil.toBean(json, UserWithMap.class);
+		Assert.assertEquals("c", map.getData().get("b"));
 	}
 
 	@Test

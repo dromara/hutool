@@ -3,6 +3,33 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.9
+
+### 新特性
+* 【core】         MapUtil增加toObjectArray方法
+* 【core】         URLUtil.normalize增加反斜杠处理（issue#IM8BI@Gitee）
+* 【core】         增加ClassUtil.getShortClassName（issue#IM8XM@Gitee）
+* 【core】         增加ThreadFactoryBuilder和ExecutorBuilder
+* 【cron】         定时任务改为线程池实现
+* 【core】         Assert增加checkIndex方法
+* 【core】         parseBoolean增加on、off关键字支持可选字符串
+* 【core】         URLUtil.formatUrl方法兼容更多情况（issue#IMAEA@Gitee）
+* 【core】         改进NumberUtil.isInteger和isLong判断（issue#IMDGB@Gitee）
+* 【http】          HttpResponse增加isOk方法（issue#155@Github）
+* 【http】          改进HttpUtil.downloadXXX方法，返回非2XX抛出异常（issue#IMCTT@Gitee）
+* 【http】          HttpRequest增加setUrlHandler方法（issue#IMD1X@Gitee）
+* 【http】          HttpRequest增加getCookieManager和closeCookie方法（issue#IMDND@Gitee）
+
+### Bug修复
+* 【core】         修复IdcardUtil中isValidCard10空指针问题（issue#IMB7R@Gitee）
+* 【core】         修复SoapRequest空指针问题（issue#IMBUN@Gitee）
+* 【http】          修复文件上传没有关闭File的问题（issue#IMDUY@Gitee）
+* 【json】          修复toBean中国有Map参数导致的值丢失问题（issue#IMDEM@Gitee）
+* 【bloomFilter】修复hash值负数问题（issue#154@Github）
+* 【core】          修复Convert中Map强转导致的问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.8
 
 ### 新特性

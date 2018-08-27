@@ -41,7 +41,7 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	@Override
 	public boolean contains(String str) {
-		return bm.contains(hash(str));
+		return bm.contains(Math.abs(hash(str)));
 	}
 
 	@Override

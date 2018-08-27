@@ -134,22 +134,22 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			switch (valueStr) {
 				case "true":
 					return true;
-				case "false":
-					return false;
 				case "yes":
 					return true;
 				case "y":
 					return true;
 				case "ok":
 					return true;
-				case "no":
-					return false;
-				case "n":
-					return false;
 				case "1":
 					return true;
-				case "0":
-					return false;
+				case "on":
+					return true;
+				case "是":
+					return true;
+				case "对":
+					return true;
+				case "真":
+					return true;
 			}
 		}
 		return false;

@@ -30,10 +30,10 @@ public class HtmlUtil {
 
 		// special HTML characters
 		TEXT['\''] = "&#039;".toCharArray(); // 单引号 ('&apos;' doesn't work - it is not by the w3 specs)
-		TEXT['"'] = QUOTE.toCharArray(); // 双引号
-		TEXT['&'] = StrUtil.HTML_AMP.toCharArray(); // &符
-		TEXT['<'] = StrUtil.HTML_LT.toCharArray(); // 小于号
-		TEXT['>'] = StrUtil.HTML_GT.toCharArray(); // 大于号
+		TEXT['"'] = QUOTE.toCharArray(); // 单引号
+		TEXT['&'] = AMP.toCharArray(); // &符
+		TEXT['<'] = LT.toCharArray(); // 小于号
+		TEXT['>'] = GT.toCharArray(); // 大于号
 	}
 	
 	/**
@@ -65,6 +65,7 @@ public class HtmlUtil {
 		}
 		return htmlStr.replace(StrUtil.HTML_APOS, "'")//
 				.replace("&#039;", "'")//
+				.replace("&#39;", "'")//
 				.replace(StrUtil.HTML_LT, "<")//
 				.replace(StrUtil.HTML_GT, ">")//
 				.replace(StrUtil.HTML_QUOTE, "\"")//

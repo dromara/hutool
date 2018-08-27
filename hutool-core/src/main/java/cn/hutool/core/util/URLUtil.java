@@ -96,6 +96,32 @@ public class URLUtil {
 			}
 		}
 	}
+	
+	/**
+	 * 将URL字符串转换为URL对象，并做必要验证
+	 * 
+	 * @param urlStr URL字符串
+	 * @return URL
+	 * @since 4.1.9
+	 */
+	public static URL toUrlForHttp(String urlStr) {
+		return toUrlForHttp(urlStr, null);
+	}
+	
+	/**
+	 * 将URL字符串转换为URL对象，并做必要验证
+	 * 
+	 * @param urlStr URL字符串
+	 * @param handler {@link URLStreamHandler}
+	 * @return URL
+	 * @since 4.1.9
+	 */
+	public static URL toUrlForHttp(String urlStr, URLStreamHandler handler) {
+		Assert.notBlank(urlStr, "Url is blank !");
+		// 去掉url中的空白符，防止空白符导致的异常
+		urlStr = StrUtil.cleanBlank(urlStr);
+		return URLUtil.url(urlStr, handler);
+	}
 
 	/**
 	 * 获得URL
@@ -161,15 +187,10 @@ public class URLUtil {
 	 * 
 	 * @param url 需要格式化的URL
 	 * @return 格式化后的URL，如果提供了null或者空串，返回null
+	 * @see #normalize(String)
 	 */
 	public static String formatUrl(String url) {
-		if (StrUtil.isBlank(url)) {
-			return null;
-		}
-		if (url.startsWith("http://") || url.startsWith("https://")) {
-			return url;
-		}
-		return "http://" + url;
+		return normalize(url);
 	}
 
 	/**
@@ -427,7 +448,7 @@ public class URLUtil {
 		if(StrUtil.isBlank(url)) {
 			return url;
 		}
-		int sepIndex = url.indexOf("://");
+		final int sepIndex = url.indexOf("://");
 		String pre;
 		String body;
 		if(sepIndex > 0) {
@@ -437,7 +458,18 @@ public class URLUtil {
 			pre = "http://";
 			body = url;
 		}
-		body = body.replaceAll("//+", "/");
-		return pre + body;
+		
+		int paramsSepIndex = url.indexOf("?");
+		String params = null;
+		if(paramsSepIndex > 0) {
+			params = StrUtil.subSuf(body, paramsSepIndex);
+			body = StrUtil.subPre(body, paramsSepIndex);
+		}
+		
+		//去除开头的\或者/
+		body = body.replaceAll("^[\\/]+", StrUtil.EMPTY);
+		//替换多个\或/为单个/
+		body = body.replace("\\", "/").replaceAll("//+", "/");
+		return pre + body + StrUtil.nullToEmpty(params);
 	}
 }

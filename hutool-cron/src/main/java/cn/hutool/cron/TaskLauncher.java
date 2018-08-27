@@ -8,7 +8,7 @@ package cn.hutool.cron;
  * @author Looly
  *
  */
-public class TaskLauncher extends Thread{
+public class TaskLauncher implements Runnable{
 	
 	private Scheduler scheduler;
 	private long millis;

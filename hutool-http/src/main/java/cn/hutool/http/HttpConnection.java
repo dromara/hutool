@@ -20,7 +20,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
-import cn.hutool.core.lang.Validator;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -97,6 +96,22 @@ public class HttpConnection {
 		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, timeout, proxy);
 	}
 
+	/**
+	 * 创建HttpConnection
+	 * 
+	 * @param url URL
+	 * @param method HTTP方法
+	 * @param hostnameVerifier {@link HostnameVerifier}
+	 * @param ssf {@link SSLSocketFactory}
+	 * @param timeout 超时时间
+	 * @param proxy 代理
+	 * @return HttpConnection
+	 * @since 4.1.9
+	 */
+	public static HttpConnection create(URL url, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
+		return new HttpConnection(url, method, hostnameVerifier, ssf, timeout, proxy);
+	}
+
 	// --------------------------------------------------------------- Constructor start
 	/**
 	 * 构造HttpConnection
@@ -130,16 +145,21 @@ public class HttpConnection {
 	 * @param proxy 代理
 	 */
 	public HttpConnection(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
-		if (StrUtil.isBlank(urlStr)) {
-			throw new HttpException("Url is blank !");
-		}
-		if (Validator.isUrl(urlStr) == false) {
-			throw new HttpException("{} is not a url !", urlStr);
-		}
+		this(URLUtil.toUrlForHttp(urlStr), method, hostnameVerifier, ssf, timeout, proxy);
+	}
 
-		// 去掉url中的空白符，防止空白符导致的异常
-		urlStr = StrUtil.cleanBlank(urlStr);
-		this.url = URLUtil.url(urlStr);
+	/**
+	 * 构造HttpConnection
+	 * 
+	 * @param url URL
+	 * @param method HTTP方法
+	 * @param hostnameVerifier 域名验证器
+	 * @param ssf SSLSocketFactory
+	 * @param timeout 超时时长
+	 * @param proxy 代理
+	 */
+	public HttpConnection(URL url, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
+		this.url = url;
 		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
 		this.proxy = proxy;
 
@@ -579,5 +599,6 @@ public class HttpConnection {
 	private URLConnection openConnection() throws IOException {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
 	}
+
 	// --------------------------------------------------------------- Private Method end
 }

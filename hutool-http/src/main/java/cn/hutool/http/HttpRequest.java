@@ -2,6 +2,7 @@ package cn.hutool.http;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -9,6 +10,7 @@ import java.net.CookiePolicy;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
+import java.net.URLStreamHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.json.JSON;
 import cn.hutool.log.StaticLog;
@@ -57,13 +60,33 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
 
 	/** Cookie管理 */
-	protected static CookieManager cookieManager = new CookieManager();
+	protected static CookieManager cookieManager;
 	static {
+		cookieManager = new CookieManager();
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
 	}
+	
+	/**
+	 * 获取Cookie管理器，用于自定义Cookie管理
+	 * @return {@link CookieManager}
+	 * @since 4.1.0
+	 */
+	public static CookieManager getCookieManager() {
+		return cookieManager;
+	}
+	
+	/**
+	 * 关闭Cookie
+	 * @since 4.1.9
+	 */
+	public static void closeCookie() {
+		cookieManager = null;
+		CookieHandler.setDefault(null);
+	}
 
 	private String url;
+	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
 	/** 默认超时 */
 	private int timeout = TIMEOUT_DEFAULT;
@@ -203,8 +226,26 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param url url字符串
 	 * @since 4.1.8
 	 */
-	public void setUrl(String url) {
+	public HttpRequest setUrl(String url) {
 		this.url = url;
+		return this;
+	}
+	
+	/**
+	 * 设置{@link URLStreamHandler}
+	 * <p>
+	 * 部分环境下需要单独设置此项，例如当 WebLogic Server 实例充当 SSL 客户端角色（它会尝试通过 SSL 连接到其他服务器或应用程序）时，它会验证 SSL 服务器在数字证书中返回的主机名是否与用于连接 SSL 服务器的 URL 主机名相匹配。<br>
+	 * 如果主机名不匹配，则删除此连接。<br>
+	 * 因此weblogic不支持https的sni协议的主机名验证，此时需要将此值设置为sun.net.www.protocol.https.Handler对象。
+	 * <p>
+	 * 相关issue见：https://gitee.com/loolly/hutool/issues/IMD1X
+	 * 
+	 * @param urlHandler url字符串
+	 * @since 4.1.9
+	 */
+	public HttpRequest setUrlHandler(URLStreamHandler urlHandler) {
+		this.urlHandler = urlHandler;
+		return this;
 	}
 	
 	/**
@@ -793,7 +834,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private void initConnecton() {
 		// 初始化 connection
-		this.httpConnection = HttpConnection.create(this.url, this.method, this.hostnameVerifier, this.ssf, this.timeout, this.proxy).header(this.headers, true); // 覆盖默认Header
+		this.httpConnection = HttpConnection.create(URLUtil.toUrlForHttp(this.url, this.urlHandler), this.method, this.hostnameVerifier, this.ssf, this.timeout, this.proxy)//
+				.header(this.headers, true); // 覆盖默认Header
 
 		// 自定义Cookie
 		if (null != this.cookie) {
@@ -969,7 +1011,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, formFieldName, resource.getName()));
 			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(resource.getName())));
 			IoUtil.write(out, this.charset, false, builder);
-			IoUtil.copy(resource.getStream(), out);
+			InputStream in = null;
+			try {
+				in = resource.getStream();
+				IoUtil.copy(in, out);
+			} finally {
+				IoUtil.close(in);
+			}
 			IoUtil.write(out, this.charset, false, StrUtil.CRLF);
 		}
 

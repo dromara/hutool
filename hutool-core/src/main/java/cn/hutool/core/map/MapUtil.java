@@ -380,6 +380,30 @@ public class MapUtil {
 	public static <K, V> Map<K, V> toCamelCaseMap(Map<K, V> map) {
 		return (map instanceof LinkedHashMap) ? new CamelCaseLinkedMap<>(map) : new CamelCaseMap<>(map);
 	}
+	
+	/**
+	 * 将键值对转换为二维数组，第一维是key，第二纬是value
+	 * 
+	 * @param map Map<?, ?> map
+	 * @return 数组
+	 * @since 4.1.9
+	 */
+	public static Object[][] toObjectArray(Map<?, ?> map) {
+		if(map == null) {
+			return null;
+		}
+		final Object[][] result = new Object[map.size()][2];
+		if(map.isEmpty()) {
+			return result;
+		}
+		int index = 0;
+		for(Entry<?, ?> entry : map.entrySet()) {
+			result[index][0] = entry.getKey();
+			result[index][1] = entry.getValue();
+			index++;
+		}
+		return result;
+	}
 
 	// ----------------------------------------------------------------------------------------------- join
 	/**

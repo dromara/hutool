@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,8 +27,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor(int threadSize) {
-		return new ThreadPoolExecutor(threadSize, threadSize, 0L, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>());
+		return ExecutorBuilder.create().setCorePoolSize(threadSize).build();
 	}
 
 	/**
@@ -38,7 +36,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor() {
-		return new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+		return ExecutorBuilder.create().setWorkQueue(new SynchronousQueue<Runnable>()).build();
 	}
 
 	/**
@@ -59,9 +57,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadPoolExecutor}
 	 */
 	public static ThreadPoolExecutor newExecutor(int corePoolSize, int maximumPoolSize) {
-		return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, //
-				60L, TimeUnit.SECONDS, //
-				new LinkedBlockingQueue<Runnable>());
+		return ExecutorBuilder.create().setCorePoolSize(corePoolSize).setMaxPoolSize(maximumPoolSize).build();
 	}
 
 	/**
@@ -83,10 +79,7 @@ public class ThreadUtil {
 
 		// 最佳的线程数 = CPU可用核心数 / (1 - 阻塞系数)
 		int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
-
-		return new ThreadPoolExecutor(poolSize, poolSize, //
-				0L, TimeUnit.MILLISECONDS, //
-				new LinkedBlockingQueue<Runnable>());
+		return ExecutorBuilder.create().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
 	}
 
 	/**
