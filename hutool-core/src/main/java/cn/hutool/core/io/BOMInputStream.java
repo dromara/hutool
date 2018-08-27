@@ -40,7 +40,7 @@ public class BOMInputStream extends InputStream {
 	}
 
 	public BOMInputStream(InputStream in, String defaultCharset) {
-		in = new PushbackInputStream(in, BOM_SIZE);
+		this.in = new PushbackInputStream(in, BOM_SIZE);
 		this.defaultCharset = defaultCharset;
 	}
 	// ----------------------------------------------------------------- Constructor end
