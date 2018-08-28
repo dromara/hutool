@@ -4,6 +4,7 @@ import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateException;
 import cn.hutool.extra.template.engine.beetl.BeetlEngine;
+import cn.hutool.extra.template.engine.enjoy.EnjoyEngine;
 import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
 import cn.hutool.extra.template.engine.rythm.RythmEngine;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
@@ -52,6 +53,11 @@ public class EngineFactory {
 		}
 		try {
 			return new RythmEngine(config);
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		try {
+			return new EnjoyEngine(config);
 		} catch (NoClassDefFoundError e) {
 			// ignore
 		}

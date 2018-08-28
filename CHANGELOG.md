@@ -6,8 +6,10 @@
 ## 4.1.10
 
 ### 新特性
+* 【extra】         Template增加Jfinal的Enjoy模板支持
 
 ### Bug修复
+* 【core】         修复BOMInputStream构造的问题（pr#22@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -32,7 +34,7 @@
 * 【core】         修复IdcardUtil中isValidCard10空指针问题（issue#IMB7R@Gitee）
 * 【core】         修复SoapRequest空指针问题（issue#IMBUN@Gitee）
 * 【http】          修复文件上传没有关闭File的问题（issue#IMDUY@Gitee）
-* 【json】          修复toBean中国有Map参数导致的值丢失问题（issue#IMDEM@Gitee）
+* 【json】          修复toBean中有Map参数导致的值丢失问题（issue#IMDEM@Gitee）
 * 【bloomFilter】修复hash值负数问题（issue#154@Github）
 * 【core】          修复Convert中Map强转导致的问题
 
