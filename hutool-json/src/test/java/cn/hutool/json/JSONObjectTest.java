@@ -10,9 +10,9 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.test.bean.Seq;
-import cn.hutool.json.test.bean.UserWithMap;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
+import cn.hutool.json.test.bean.UserWithMap;
 
 /**
  * JSONObject单元测试
@@ -113,11 +113,11 @@ public class JSONObjectTest {
 		Assert.assertTrue(user.getData().containsKey("password"));
 		Assert.assertNull(password);
 	}
-	
+
 	@Test
 	public void toBeanTest4() {
 		String json = "{\"data\":{\"b\": \"c\"}}";
-		
+
 		UserWithMap map = JSONUtil.toBean(json, UserWithMap.class);
 		Assert.assertEquals("c", map.getData().get("b"));
 	}

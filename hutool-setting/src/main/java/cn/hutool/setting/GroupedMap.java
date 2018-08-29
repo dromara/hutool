@@ -181,7 +181,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 		group = StrUtil.nullToEmpty(group).trim();
 		final LinkedHashMap<String, String> valueMap = this.get(group);
 		if (MapUtil.isNotEmpty(valueMap)) {
-			valueMap.keySet();
+			return valueMap.keySet();
 		}
 		return Collections.emptySet();
 	}

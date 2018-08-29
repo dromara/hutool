@@ -12,6 +12,7 @@
 ### Bug修复
 * 【core】         修复BOMInputStream构造的问题（pr#22@Gitee）
 * 【json】          修复toBean中如果字段中为字符串而JSON中为JSONObject对象注入失败问题（issue#IMGBJ@Gitee）
+* 【setting】      修复keySet总返回空问题（issue#IMHD7@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
