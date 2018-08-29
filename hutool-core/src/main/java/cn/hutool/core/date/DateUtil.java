@@ -47,7 +47,7 @@ public class DateUtil {
 
 	/**
 	 * Long类型时间转为{@link DateTime}<br>
-	 * 同时支持10位秒级别时间戳和13位毫秒级别时间戳
+	 * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
 	 * 
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象

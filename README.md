@@ -16,8 +16,10 @@
 	</a>
 </p>
 <p align="center">
-	主页：<a href="http://hutool.cn">http://hutool.cn/</a><br/>
-	QQ群：<a href="http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810">537116831</a>
+	-- 主页：<a href="http://hutool.cn">http://hutool.cn/</a> --
+</p>
+<p align="center">
+	-- QQ群②：<a href="http://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
 </p>
 
 -------------------------------------------------------------------------------
