@@ -320,4 +320,14 @@ public class CollUtilTest {
 		Assert.assertEquals("[b, c, a]", list1.toString());
 		Assert.assertEquals("[b, c, a]", list2.toString());
 	}
+	
+	@Test
+	public void getTest() {
+		HashSet<String> set = CollUtil.newHashSet(true, new String[]{"A", "B", "C", "D"});
+		String str = CollUtil.get(set, 2);
+		Assert.assertEquals("C", str);
+		
+		str = CollUtil.get(set, -1);
+		Assert.assertEquals("D", str);
+	}
 }
