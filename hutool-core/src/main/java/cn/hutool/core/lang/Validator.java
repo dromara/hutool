@@ -817,4 +817,42 @@ public class Validator {
 			throw new ValidateException(errorMsg);
 		}
 	}
+	
+	/**
+	 * 验证是否为UUID<br>
+	 * 包括带横线标准格式和不带横线的简单模式
+	 * 
+	 * @param value 值
+	 * @return 是否为UUID
+	 */
+	/**
+	 * 检查给定的数字是否在指定范围内
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 是否满足
+	 * @since 4.1.10
+	 */
+	public static boolean isBetween(Number value, Number min, Number max) {
+		Assert.notNull(value);
+		Assert.notNull(min);
+		Assert.notNull(max);
+		final double doubleValue = value.doubleValue();
+		return (doubleValue >= min.doubleValue()) && (doubleValue <= max.doubleValue()); 
+	}
+	
+	/**
+	 * 检查给定的数字是否在指定范围内
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException 验证异常
+	 * @since 4.1.10
+	 */
+	public static void validateBetween(Number value, Number min, Number max, String errorMsg) throws ValidateException {
+		if (false == isBetween(value, min, max)) {
+			throw new ValidateException(errorMsg);
+		}
+	}
 }

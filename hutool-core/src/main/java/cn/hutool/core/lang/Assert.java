@@ -563,6 +563,77 @@ public class Assert {
 	}
 
 	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static int checkBetween(int value, int min, int max) {
+		if (value < min || value > max) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+	
+	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static long checkBetween(long value, long min, long max) {
+		if (value < min || value > max) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+	
+	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static double checkBetween(double value, double min, double max) {
+		if (value < min || value > max) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+	
+	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static Number checkBetween(Number value, Number min, Number max) {
+		notNull(value);
+		notNull(min);
+		notNull(max);
+		double valueDouble = value.doubleValue();
+		double minDouble = min.doubleValue();
+		double maxDouble = max.doubleValue();
+		if (valueDouble < minDouble || valueDouble > maxDouble) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+
+	// -------------------------------------------------------------------------------------------------------------------------------------------- Private method start
+	/**
 	 * 错误的下标时显示的消息
 	 * 
 	 * @param index 下标
@@ -580,4 +651,5 @@ public class Assert {
 			return StrUtil.format("{} ({}) must be less than size ({})", StrUtil.format(desc, params), index, size);
 		}
 	}
+	// -------------------------------------------------------------------------------------------------------------------------------------------- Private method end
 }
