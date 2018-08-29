@@ -13,6 +13,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
+import cn.hutool.json.test.bean.UserC;
 
 public class JSONUtilTest {
 
@@ -22,7 +23,7 @@ public class JSONUtilTest {
 		Date date = JSONUtil.toBean(JSONUtil.parseObj(x), Date.class);
 		Assert.assertNotNull(date);
 	}
-	
+
 	@Test
 	public void toJsonStrTest() {
 		UserA a1 = new UserA();
@@ -82,7 +83,15 @@ public class JSONUtilTest {
 		Price price = JSONUtil.toBean(json, Price.class);
 		Assert.assertEquals("N", price.getADT().get(0).get(0).getBookingCode().get(0));
 	}
-	
+
+	@Test
+	public void toBeanTest2() {
+		//测试JSONObject转为Bean中字符串字段的情况
+		String json = "{\"id\":123,\"name\":\"张三\",\"prop\":{\"gender\":\"男\", \"age\":18}}";
+		UserC user = JSONUtil.toBean(json, UserC.class);
+		Assert.assertEquals("{\"age\":18,\"gender\":\"男\"}", user.getProp());
+	}
+
 	@Test
 	public void putByPathTest() {
 		JSONObject json = new JSONObject();

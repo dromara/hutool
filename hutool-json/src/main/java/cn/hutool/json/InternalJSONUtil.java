@@ -296,7 +296,9 @@ final class InternalJSONUtil {
 		Object targetValue = null;
 		// 非标准转换格式
 		if (value instanceof JSONObject) {
-			targetValue = ((JSONObject) value).toBean(type, ignoreError);
+			if(BeanUtil.isBean(rowType)) {
+				targetValue = ((JSONObject) value).toBean(type, ignoreError);
+			}
 		} else if (value instanceof JSONArray) {
 			if (rowType.isArray()) {
 				// 目标为数组
@@ -326,7 +328,7 @@ final class InternalJSONUtil {
 			}
 			throw new ConvertException("Can not convert [{}] to type [{}]", value, rowType.getName());
 		}
-
+		
 		return targetValue;
 	}
 }

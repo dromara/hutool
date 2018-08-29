@@ -102,7 +102,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	public JSONObject(JSONObject jsonObject, String... names) {
 		this();
-		if(ArrayUtil.isNotEmpty(names)) {
+		if (ArrayUtil.isNotEmpty(names)) {
 			for (String name : names) {
 				try {
 					this.putOnce(name, jsonObject.getObj(name));
@@ -113,7 +113,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			this.putAll(jsonObject);
 		}
 	}
-	
+
 	/**
 	 * 使用{@link JSONTokener}构建
 	 *
@@ -300,9 +300,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		final Class<?> clazz = TypeUtil.getClass(type);
 		if (null == clazz) {
 			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
-		}else if(Object.class.equals(clazz)) {
+		} else if (Object.class.equals(clazz)) {
 			return (T) this;
-		}else if(Map.class.equals(clazz)) {
+		} else if (Map.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz)) {
 			return Convert.convert(type, this);
 		}
 		return (T) toBean(ReflectUtil.newInstance(clazz), ignoreError);
@@ -431,7 +431,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	public <T> T getByPath(String expression, Class<T> resultType) {
 		return (T) InternalJSONUtil.jsonConvert(resultType, getByPath(expression), true);
 	}
-	
+
 	@Override
 	public void putByPath(String expression, Object value) {
 		BeanPath.create(expression).set(this, value);
