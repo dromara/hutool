@@ -1,25 +1,25 @@
 package cn.hutool.core.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * 一些通用的函数
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class ObjectUtil {
 
@@ -31,7 +31,7 @@ public class ObjectUtil {
 	 * <li>obj1.equals(obj2)</li>
 	 * </ol>
 	 * 1. obj1 == null &amp;&amp; obj2 == null 2. obj1.equals(obj2)
-	 * 
+	 *
 	 * @param obj1 对象1
 	 * @param obj2 对象2
 	 * @return 是否相等
@@ -43,7 +43,7 @@ public class ObjectUtil {
 
 	/**
 	 * 比较两个对象是否不相等。<br>
-	 * 
+	 *
 	 * @param obj1 对象1
 	 * @param obj2 对象2
 	 * @return 是否不等
@@ -63,7 +63,7 @@ public class ObjectUtil {
 	 * <li>Enumeration</li>
 	 * <li>Array</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param obj 被计算长度的对象
 	 * @return 长度
 	 */
@@ -117,8 +117,8 @@ public class ObjectUtil {
 	 * <li>Enumeration</li>
 	 * <li>Array</li>
 	 * </ul>
-	 * 
-	 * @param obj 对象
+	 *
+	 * @param obj     对象
 	 * @param element 元素
 	 * @return 是否包含
 	 */
@@ -172,13 +172,34 @@ public class ObjectUtil {
 	}
 
 	/**
+	 * 判断对象是否为空对象，属性都为<code>null</code>
+	 *
+	 * @param object 对象
+	 * @param clazz  对象类型
+	 * @return 是否为空，<code>true</code> - 空 / <code>false</code> - 非空
+	 */
+	public static Boolean isEmpty(Object object, Class clazz) {
+		if (ObjectUtil.isNull(object)) {
+			return true;
+		}
+		Field[] fields = ReflectUtil.getFields(clazz);
+		for (Field field : fields) {
+			Object fieldValue = ReflectUtil.getFieldValue(object, field);
+			if (ObjectUtil.isNotNull(fieldValue)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * 检查对象是否为null<br>
 	 * 判断标准为：
 	 * <pre>
 	 * 1. == null
 	 * 2. equals(null)
 	 * </pre>
-	 * 
+	 *
 	 * @param obj 对象
 	 * @return 是否为null
 	 */
@@ -188,7 +209,7 @@ public class ObjectUtil {
 
 	/**
 	 * 检查对象是否不为null
-	 * 
+	 *
 	 * @param obj 对象
 	 * @return 是否为null
 	 */
@@ -207,8 +228,8 @@ public class ObjectUtil {
 	 * ObjectUtil.defaultIfNull(Boolean.TRUE, *) = Boolean.TRUE
 	 * </pre>
 	 *
-	 * @param <T> 对象类型
-	 * @param object 被检查对象，可能为{@code null}
+	 * @param <T>          对象类型
+	 * @param object       被检查对象，可能为{@code null}
 	 * @param defaultValue 被检查对象为{@code null}返回的默认值，可以为{@code null}
 	 * @return 被检查对象为{@code null}返回默认值，否则返回原值
 	 * @since 3.0.7
@@ -222,7 +243,7 @@ public class ObjectUtil {
 	 * 如果对象实现Cloneable接口，调用其clone方法<br>
 	 * 如果实现Serializable接口，执行深度克隆<br>
 	 * 否则返回<code>null</code>
-	 * 
+	 *
 	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
@@ -231,7 +252,7 @@ public class ObjectUtil {
 		T result = ArrayUtil.clone(obj);
 		if (null == result) {
 			if (obj instanceof Cloneable) {
-				result = ReflectUtil.invoke(obj, "clone", new Object[] {});
+				result = ReflectUtil.invoke(obj, "clone", new Object[]{});
 			} else {
 				result = cloneByStream(obj);
 			}
@@ -241,7 +262,7 @@ public class ObjectUtil {
 
 	/**
 	 * 返回克隆后的对象，如果克隆失败，返回原对象
-	 * 
+	 *
 	 * @param <T> 对象类型
 	 * @param obj 对象
 	 * @return 克隆后或原对象
@@ -259,7 +280,7 @@ public class ObjectUtil {
 	/**
 	 * 序列化后拷贝流的方式克隆<br>
 	 * 对象必须实现Serializable接口
-	 * 
+	 *
 	 * @param <T> 对象类型
 	 * @param obj 被克隆对象
 	 * @return 克隆后的对象
@@ -288,7 +309,7 @@ public class ObjectUtil {
 	/**
 	 * 序列化<br>
 	 * 对象必须实现Serializable接口
-	 * 
+	 *
 	 * @param <T> 对象类型
 	 * @param obj 要被序列化的对象
 	 * @return 序列化后的字节码
@@ -315,8 +336,8 @@ public class ObjectUtil {
 	/**
 	 * 反序列化<br>
 	 * 对象必须实现Serializable接口
-	 * 
-	 * @param <T> 对象类型
+	 *
+	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
 	 */
@@ -334,10 +355,10 @@ public class ObjectUtil {
 
 	/**
 	 * 是否为基本类型，包括包装类型和非包装类型
-	 * 
-	 * @see ClassUtil#isBasicType(Class)
+	 *
 	 * @param object 被检查对象
 	 * @return 是否为基本类型
+	 * @see ClassUtil#isBasicType(Class)
 	 */
 	public static boolean isBasicType(Object object) {
 		return ClassUtil.isBasicType(object.getClass());
@@ -347,7 +368,7 @@ public class ObjectUtil {
 	 * 检查是否为有效的数字<br>
 	 * 检查Double和Float是否为无限大，或者Not a Number<br>
 	 * 非数字类型和Null将返回true
-	 * 
+	 *
 	 * @param obj 被检查类型
 	 * @return 检查结果，非数字类型和Null将返回true
 	 */
@@ -368,13 +389,13 @@ public class ObjectUtil {
 
 	/**
 	 * {@code null}安全的对象比较，{@code null}对象排在末尾
-	 * 
+	 *
 	 * @param <T> 被比较对象类型
-	 * @param c1 对象1，可以为{@code null}
-	 * @param c2 对象2，可以为{@code null}
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
 	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
-	 * @since 3.0.7
 	 * @see java.util.Comparator#compare(Object, Object)
+	 * @since 3.0.7
 	 */
 	public static <T extends Comparable<? super T>> int compare(T c1, T c2) {
 		return compare(c1, c2, false);
@@ -382,14 +403,14 @@ public class ObjectUtil {
 
 	/**
 	 * {@code null}安全的对象比较
-	 * 
-	 * @param <T> 被比较对象类型
-	 * @param c1 对象1，可以为{@code null}
-	 * @param c2 对象2，可以为{@code null}
+	 *
+	 * @param <T>         被比较对象类型
+	 * @param c1          对象1，可以为{@code null}
+	 * @param c2          对象2，可以为{@code null}
 	 * @param nullGreater 当被比较对象为null时是否排在前面
 	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
-	 * @since 3.0.7
 	 * @see java.util.Comparator#compare(Object, Object)
+	 * @since 3.0.7
 	 */
 	public static <T extends Comparable<? super T>> int compare(T c1, T c2, boolean nullGreater) {
 		if (c1 == c2) {
@@ -404,7 +425,7 @@ public class ObjectUtil {
 
 	/**
 	 * 获得给定类的第一个泛型参数
-	 * 
+	 *
 	 * @param obj 被检查的对象
 	 * @return {@link Class}
 	 * @since 3.0.8
@@ -415,8 +436,8 @@ public class ObjectUtil {
 
 	/**
 	 * 获得给定类的第一个泛型参数
-	 * 
-	 * @param obj 被检查的对象
+	 *
+	 * @param obj   被检查的对象
 	 * @param index 泛型类型的索引号，既第几个泛型类型
 	 * @return {@link Class}
 	 * @since 3.0.8
@@ -427,19 +448,19 @@ public class ObjectUtil {
 
 	/**
 	 * 将Object转为String
-	 * 
+	 *
 	 * @param obj Bean对象
 	 * @return Bean所有字段转为Map后的字符串
 	 * @since 3.2.0
 	 */
 	public static String toString(Object obj) {
-		if(null == obj) {
+		if (null == obj) {
 			return "null";
 		}
-		if(obj instanceof Map) {
-			return ((Map<?, ?>)obj).toString();
+		if (obj instanceof Map) {
+			return ((Map<?, ?>) obj).toString();
 		}
-		
+
 		return BeanUtil.beanToMap(obj).toString();
 	}
 }
