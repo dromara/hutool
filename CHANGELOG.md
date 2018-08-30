@@ -9,6 +9,8 @@
 * 【extra】         Template增加Jfinal的Enjoy模板支持
 * 【core】          Assert增加checkBetween方法，Validator增加isBetween和validatorBetween
 * 【core】          增加CollUtil.getLast方法（感谢@【帝都】宁静）
+* 【core】          修改Assert.notNull注释（issue#IMI3Z@Gitee）
+* 【core】          BeanUtil增加isEmpty和hasNullField方法（pr#157@Github）
 
 ### Bug修复
 * 【core】         修复BOMInputStream构造的问题（pr#22@Gitee）
