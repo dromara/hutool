@@ -27,3 +27,8 @@ url = jdbc:sqlite:test.db
 url = jdbc:oracle:thin:@//looly.centos:1521/XE
 user = looly
 pass = 123456
+
+[mysql]
+url = jdbc:mysql://looly.centos:3306/test_hutool
+user = root
+pass = 123456
