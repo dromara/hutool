@@ -11,11 +11,14 @@
 * 【core】          增加CollUtil.getLast方法（感谢@【帝都】宁静）
 * 【core】          修改Assert.notNull注释（issue#IMI3Z@Gitee）
 * 【core】          BeanUtil增加isEmpty和hasNullField方法（pr#157@Github）
+* 【log】            ConsoleLog增加setLevel方法（issue#IMLZ3@Gitee）
 
 ### Bug修复
 * 【core】         修复BOMInputStream构造的问题（pr#22@Gitee）
 * 【json】          修复toBean中如果字段中为字符串而JSON中为JSONObject对象注入失败问题（issue#IMGBJ@Gitee）
 * 【setting】      修复keySet总返回空问题（issue#IMHD7@Gitee）
+* 【extra】        修复starttls和SSL连接混淆问题（issue#IMLMD@Gitee）
+* 【setting】      修复getStr无法获取默认值问题（issue#IMLMI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
