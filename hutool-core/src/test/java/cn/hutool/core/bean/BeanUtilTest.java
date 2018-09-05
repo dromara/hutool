@@ -3,6 +3,7 @@ package cn.hutool.core.bean;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -11,8 +12,8 @@ import org.junit.Test;
 
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Console;
 
 /**
  * Bean工具单元测试
@@ -80,6 +81,22 @@ public class BeanUtilTest {
 	}
 	
 	@Test
+	public void mapToBeanTest(){
+		HashMap<String,Object> map = CollectionUtil.newHashMap();
+		map.put("a_name", "Joe");
+		map.put("b_age", 12);
+		
+		//别名
+		HashMap<String, String> mapping = CollUtil.newHashMap();
+		mapping.put("a_name", "name");
+		mapping.put("b_age", "age");
+		
+		Person person = BeanUtil.mapToBean(map, Person.class, CopyOptions.create().setFieldMapping(mapping));
+		Assert.assertEquals("Joe", person.getName());
+		Assert.assertEquals(12, person.getAge());
+	}
+	
+	@Test
 	public void beanToMapTest() {
 		SubPerson person = new SubPerson();
 		person.setAge(14);
@@ -124,10 +141,17 @@ public class BeanUtilTest {
 	
 	@Test
 	public void getPropertyDescriptorsTest() {
+		HashSet<Object> set = CollUtil.newHashSet();
 		PropertyDescriptor[] propertyDescriptors = BeanUtil.getPropertyDescriptors(SubPerson.class);
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-			Console.log(propertyDescriptor.getName());
+			set.add(propertyDescriptor.getName());
 		}
+		Assert.assertTrue(set.contains("age"));
+		Assert.assertTrue(set.contains("id"));
+		Assert.assertTrue(set.contains("name"));
+		Assert.assertTrue(set.contains("openid"));
+		Assert.assertTrue(set.contains("slow"));
+		Assert.assertTrue(set.contains("subName"));
 	}
 	
 	@Test

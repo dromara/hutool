@@ -201,6 +201,18 @@ public class CollUtil {
 		}
 		return result;
 	}
+	
+	/**
+	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * 
+	 * @param collection 集合
+	 * @param value 需要查找的值
+	 * @return 如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @since 4.1.10
+	 */
+	public static boolean contains(final Collection<?> collection, Object value) {
+		return isNotEmpty(collection) && collection.contains(value);
+	}
 
 	/**
 	 * 其中一个集合在另一个集合中是否至少包含一个元素，既是两个集合是否至少有一个共同的元素

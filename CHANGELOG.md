@@ -19,6 +19,7 @@
 * 【setting】      修复keySet总返回空问题（issue#IMHD7@Gitee）
 * 【extra】        修复starttls和SSL连接混淆问题（issue#IMLMD@Gitee）
 * 【setting】      修复getStr无法获取默认值问题（issue#IMLMI@Gitee）
+* 【core】         修复BeanUtil.mapToBean设置别名失效问题
 
 -------------------------------------------------------------------------------------------------------------
 
