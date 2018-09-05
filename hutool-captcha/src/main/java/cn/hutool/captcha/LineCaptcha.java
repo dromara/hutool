@@ -1,5 +1,6 @@
 package cn.hutool.captcha;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -47,19 +48,21 @@ public class LineCaptcha extends AbstractCaptcha {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final ThreadLocalRandom random = RandomUtil.getRandom();
 		final Graphics2D g = ImageUtil.createGraphics(image, ImageUtil.randomColor(random));
-		// 创建字体
-		g.setFont(this.font);
 
 		// 干扰线
 		drawInterfere(g, random);
 
+		// 创建字体
+		g.setFont(this.font);
+		final FontMetrics metrics = g.getFontMetrics();
+		int minY = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
 		// 文字
 		final int len = this.generator.getLength();
-		int charWidth = width / (len + 2);
+		int charWidth = width / len;
 		for (int i = 0; i < len; i++) {
 			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
 			g.setColor(ImageUtil.randomColor(random));
-			g.drawString(String.valueOf(code.charAt(i)), i * charWidth + (charWidth >> 1), RandomUtil.randomInt(height >> 1) + (height >> 1));
+			g.drawString(String.valueOf(code.charAt(i)), i * charWidth, RandomUtil.randomInt(minY, this.height));
 		}
 		
 		return image;

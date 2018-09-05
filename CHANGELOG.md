@@ -12,6 +12,7 @@
 * 【core】          修改Assert.notNull注释（issue#IMI3Z@Gitee）
 * 【core】          BeanUtil增加isEmpty和hasNullField方法（pr#157@Github）
 * 【log】            ConsoleLog增加setLevel方法（issue#IMLZ3@Gitee）
+* 【captcha】     解决验证码超出背景的问题（issue#IHWHE@Gitee）
 
 ### Bug修复
 * 【core】         修复BOMInputStream构造的问题（pr#22@Gitee）
