@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.1.9</version>
+		<version>4.1.10</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -22,6 +22,7 @@
 		<beetl.version>2.8.6</beetl.version>
 		<rythm.version>1.3.0</rythm.version>
 		<freemarker.version>2.3.28</freemarker.version>
+		<enjoy.version>3.4</enjoy.version>
 		<mail.version>1.6.1</mail.version>
 		<jsch.version>0.1.54</jsch.version>
 		<zxing.version>3.3.3</zxing.version>
@@ -72,6 +73,13 @@
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>${freemarker.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.jfinal</groupId>
+			<artifactId>enjoy</artifactId>
+			<version>${enjoy.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

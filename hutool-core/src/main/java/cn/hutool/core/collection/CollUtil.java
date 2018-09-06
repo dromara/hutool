@@ -47,10 +47,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 /**
- * 集合相关工具类，包括数组
+ * 集合相关工具类<p>
+ * 此工具方法针对{@link Collection}及其实现类封装的工具。<p>
+ * 由于{@link Collection} 实现了{@link Iterable}接口，因此部分工具此类不提供，而是在{@link IterUtil} 中提供
  * 
  * @author xiaoleilu
  * @since 3.1.1
+ * @see IterUtil
  */
 public class CollUtil {
 
@@ -197,6 +200,18 @@ public class CollUtil {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * 
+	 * @param collection 集合
+	 * @param value 需要查找的值
+	 * @return 如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @since 4.1.10
+	 */
+	public static boolean contains(final Collection<?> collection, Object value) {
+		return isNotEmpty(collection) && collection.contains(value);
 	}
 
 	/**
@@ -383,6 +398,19 @@ public class CollUtil {
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(T... ts) {
 		return newHashSet(false, ts);
+	}
+	
+	/**
+	 * 新建一个LinkedHashSet
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param ts 元素数组
+	 * @return HashSet对象
+	 * @since 4.1.10
+	 */
+	@SafeVarargs
+	public static <T> LinkedHashSet<T> newLinkedHashSet(T... ts) {
+		return (LinkedHashSet<T>)newHashSet(true, ts);
 	}
 
 	/**
@@ -1738,7 +1766,6 @@ public class CollUtil {
 	 * @return 元素值
 	 * @since 4.0.6
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T get(Collection<T> collection, int index) {
 		if (index < 0) {
 			index += collection.size();
@@ -1747,8 +1774,21 @@ public class CollUtil {
 			final List<T> list = ((List<T>) collection);
 			return list.get(index);
 		} else {
-			return (T) ((Collection<T>) collection).toArray()[index];
+			int i = 0;
+			for(T t : collection) {
+				if(i > index) {
+					break;
+				}else if(i == index) {
+					return t;
+				}
+				i++;
+			}
+			//检查越界
+			if(index >= i) {
+				throw new IndexOutOfBoundsException(StrUtil.format("Length is {} but index is {}", i, index));
+			}
 		}
+		return null;
 	}
 
 	/**
@@ -1808,6 +1848,18 @@ public class CollUtil {
 	 */
 	public static <T> T getFirst(Iterator<T> iterator) {
 		return IterUtil.getFirst(iterator);
+	}
+	
+	/**
+	 * 获取集合的最后一个元素
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection {@link Collection}
+	 * @return 最后一个元素
+	 * @since 4.1.10
+	 */
+	public static <T> T getLast(Collection<T> collection) {
+		return get(collection, -1);
 	}
 
 	/**

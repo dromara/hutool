@@ -9,11 +9,12 @@ import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.provider.BeanValueProvider;
 import cn.hutool.core.bean.copier.provider.MapValueProvider;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.copier.Copier;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
@@ -108,8 +109,8 @@ public class BeanCopier<T> implements Copier<T>{
 			}
 			actualEditable = copyOptions.editable;
 		}
-		final HashSet<String> ignoreSet = null != (copyOptions.ignoreProperties) ? CollectionUtil.newHashSet(copyOptions.ignoreProperties) : null;
-		final Map<String, String> fieldReverseMapping = (null != copyOptions.fieldMapping) ? MapUtil.reverse(copyOptions.fieldMapping) : null;
+		final HashSet<String> ignoreSet = (null != copyOptions.ignoreProperties) ? CollUtil.newHashSet(copyOptions.ignoreProperties) : null;
+		final Map<String, String> fieldReverseMapping = copyOptions.getReversedMapping();
 
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(actualEditable).getProps();
 		String fieldName;
@@ -119,23 +120,19 @@ public class BeanCopier<T> implements Copier<T>{
 		for (PropDesc prop : props) {
 			// 获取值
 			fieldName = prop.getFieldName();
-			if ((null != ignoreSet && ignoreSet.contains(fieldName)) || false == valueProvider.containsKey(fieldName)) {
-				// 属性值被忽略或值提供者无此key时跳过
+			if (CollUtil.contains(ignoreSet, fieldName)) {
+				// 目标属性值被忽略或值提供者无此key时跳过
+				continue;
+			}
+			final String providerKey = mappingKey(fieldReverseMapping, fieldName);
+			if(false == valueProvider.containsKey(providerKey)) {
+				//无对应值可提供
 				continue;
 			}
 			setterMethod = prop.getSetter();
 			if(null == setterMethod) {
 				//Setter方法不存在跳过
 				continue;
-			}
-			
-			// 此处对valueProvider传递的为Type对象，而非Class，因为Type中包含泛型类型信息
-			String providerKey = null;
-			if(null != fieldReverseMapping) {
-				providerKey = fieldReverseMapping.get(fieldName);
-			}
-			if(null == providerKey) {
-				providerKey = fieldName;
 			}
 			value = valueProvider.value(providerKey, TypeUtil.getFirstParamType(setterMethod));
 			if (null == value && copyOptions.ignoreNullValue) {
@@ -164,4 +161,17 @@ public class BeanCopier<T> implements Copier<T>{
 		}
 	}
 	
+	/**
+	 * 获取指定字段名对应的映射值
+	 * @param fieldReverseMapping 反向映射Map
+	 * @param fieldName 字段名
+	 * @return 映射值，无对应值返回字段名
+	 * @since 4.1.10
+	 */
+	private static String mappingKey(Map<String, String> fieldReverseMapping, String fieldName) {
+		if(MapUtil.isEmpty(fieldReverseMapping)) {
+			return fieldName;
+		}
+		return ObjectUtil.defaultIfNull(fieldReverseMapping.get(fieldName), fieldName);
+	}
 }

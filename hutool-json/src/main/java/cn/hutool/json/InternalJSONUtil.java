@@ -296,7 +296,10 @@ final class InternalJSONUtil {
 		Object targetValue = null;
 		// 非标准转换格式
 		if (value instanceof JSONObject) {
-			targetValue = ((JSONObject) value).toBean(type, ignoreError);
+			if(BeanUtil.isBean(rowType)) {
+				//目标为Bean
+				targetValue = ((JSONObject) value).toBean(type, ignoreError);
+			}
 		} else if (value instanceof JSONArray) {
 			if (rowType.isArray()) {
 				// 目标为数组
@@ -309,7 +312,7 @@ final class InternalJSONUtil {
 		// 标准格式转换
 		if (null == targetValue) {
 			try {
-				targetValue = ConverterRegistry.getInstance().convert(rowType, value);
+				targetValue = ConverterRegistry.getInstance().convert(type, value);
 			} catch (ConvertException e) {
 				if (ignoreError) {
 					return null;
@@ -326,7 +329,7 @@ final class InternalJSONUtil {
 			}
 			throw new ConvertException("Can not convert [{}] to type [{}]", value, rowType.getName());
 		}
-
+		
 		return targetValue;
 	}
 }

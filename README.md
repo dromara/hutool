@@ -5,8 +5,8 @@
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
 <p align="center">
-	<a href="http://search.maven.org/#artifactdetails%7Ccn.hutool%7Chutool-all%7C4.1.9%7Cjar">
-		<img src="https://img.shields.io/badge/version-4.1.9-blue.svg" >
+	<a href="http://search.maven.org/#artifactdetails%7Ccn.hutool%7Chutool-all%7C4.1.10%7Cjar">
+		<img src="https://img.shields.io/badge/version-4.1.10-blue.svg" >
 	</a>
 	<a href="http://www.apache.org/licenses/LICENSE-2.0.html">
 		<img src="http://img.shields.io/:license-apache-blue.svg" >
@@ -16,8 +16,10 @@
 	</a>
 </p>
 <p align="center">
-	主页：<a href="http://hutool.cn">http://hutool.cn/</a><br/>
-	QQ群：<a href="http://shang.qq.com/wpa/qunwpa?idkey=382bb37ce779c11da77577f69d92d5171b340e3e7343d5ae0521f237c82c7810">537116831</a>
+	-- 主页：<a href="http://hutool.cn">http://hutool.cn/</a> --
+</p>
+<p align="center">
+	-- QQ群②：<a href="http://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
 </p>
 
 -------------------------------------------------------------------------------
@@ -69,22 +71,21 @@ Hutool是Hu + tool的自造词，前者致敬我的“前任公司”，后者�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.1.9</version>
+    <version>4.1.10</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.1.9'
+compile 'cn.hutool:hutool-all:4.1.10'
 ```
 
 ### 非Maven项目
 
 点击已下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.9/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.9/)
-- [阿里镜像](http://maven.aliyun.com/nexus/content/groups/public/cn/hutool/hutool-all/4.1.9/)
+- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.10/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.10/)
 
 -------------------------------------------------------------------------------
 

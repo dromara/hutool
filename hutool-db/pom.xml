@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.1.9</version>
+		<version>4.1.10</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -23,7 +23,7 @@
 		<tomcat-jdbc.version>8.5.27</tomcat-jdbc.version>
 		<druid.version>1.1.7</druid.version>
 		<HikariCP.version>2.4.13</HikariCP.version>
-		<mongo.version>3.6.2</mongo.version>
+		<mongo.version>3.8.1</mongo.version>
 		<sqlite.version>3.21.0.1</sqlite.version>
 		<jedis.version>2.9.0</jedis.version>
 	</properties>
@@ -102,6 +102,12 @@
 			<groupId>org.zenframework.z8.dependencies.commons</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>2.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.41</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

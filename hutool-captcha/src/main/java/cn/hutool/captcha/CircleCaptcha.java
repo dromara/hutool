@@ -2,8 +2,10 @@ package cn.hutool.captcha;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -57,21 +59,24 @@ public class CircleCaptcha extends AbstractCaptcha {
 	public Image createImage(String code) {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = ImageUtil.createGraphics(image, Color.WHITE);
-
-		// 画字符串
-		g.setFont(font);
-		int len = code.length();
-		int w = width / len;
-		AlphaComposite ac3;
-		for (int i = 0; i < len; i++) {
-			ac3 = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f);// 指定透明度
-			g.setComposite(ac3);
-			g.setColor(ImageUtil.randomColor());
-			g.drawString(String.valueOf(code.charAt(i)), i * w, RandomUtil.randomInt(height >> 1) + (height >> 1));
-		}
 		
 		// 随机画干扰圈圈
 		drawInterfere(g);
+		
+		// 画字符串
+		// 抗锯齿
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setFont(font);
+		final FontMetrics metrics = g.getFontMetrics();
+		final int minY = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
+		int len = code.length();
+		int charWidth = width / len;
+		for (int i = 0; i < len; i++) {
+			// 指定透明度
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+			g.setColor(ImageUtil.randomColor());
+			g.drawString(String.valueOf(code.charAt(i)), i * charWidth, RandomUtil.randomInt(minY, this.height));
+		}
 		
 		return image;
 	}

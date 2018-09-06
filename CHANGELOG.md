@@ -3,6 +3,27 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.10
+
+### 新特性
+* 【extra】         Template增加Jfinal的Enjoy模板支持
+* 【core】          Assert增加checkBetween方法，Validator增加isBetween和validatorBetween
+* 【core】          增加CollUtil.getLast方法（感谢@【帝都】宁静）
+* 【core】          修改Assert.notNull注释（issue#IMI3Z@Gitee）
+* 【core】          BeanUtil增加isEmpty和hasNullField方法（pr#157@Github）
+* 【log】            ConsoleLog增加setLevel方法（issue#IMLZ3@Gitee）
+* 【captcha】     解决验证码超出背景的问题（issue#IHWHE@Gitee）
+
+### Bug修复
+* 【core】         修复BOMInputStream构造的问题（pr#22@Gitee）
+* 【json】          修复toBean中如果字段中为字符串而JSON中为JSONObject对象注入失败问题（issue#IMGBJ@Gitee）
+* 【setting】      修复keySet总返回空问题（issue#IMHD7@Gitee）
+* 【extra】        修复starttls和SSL连接混淆问题（issue#IMLMD@Gitee）
+* 【setting】      修复getStr无法获取默认值问题（issue#IMLMI@Gitee）
+* 【core】         修复BeanUtil.mapToBean设置别名失效问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.9
 
 ### 新特性
@@ -24,7 +45,7 @@
 * 【core】         修复IdcardUtil中isValidCard10空指针问题（issue#IMB7R@Gitee）
 * 【core】         修复SoapRequest空指针问题（issue#IMBUN@Gitee）
 * 【http】          修复文件上传没有关闭File的问题（issue#IMDUY@Gitee）
-* 【json】          修复toBean中国有Map参数导致的值丢失问题（issue#IMDEM@Gitee）
+* 【json】          修复toBean中有Map参数导致的值丢失问题（issue#IMDEM@Gitee）
 * 【bloomFilter】修复hash值负数问题（issue#154@Github）
 * 【core】          修复Convert中Map强转导致的问题
 

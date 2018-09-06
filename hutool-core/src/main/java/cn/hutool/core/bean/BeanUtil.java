@@ -618,4 +618,41 @@ public class BeanUtil {
 		return bean;
 	}
 
+	/**
+	 * 判断Bean是否为空对象，空对象表示本身为<code>null</code>或者所有属性都为<code>null</code>
+	 *
+	 * @param bean Bean对象
+	 * @return 是否为空，<code>true</code> - 空 / <code>false</code> - 非空
+	 * @since 4.1.10
+	 */
+	public static boolean isEmpty(Object bean) {
+		if (null != bean) {
+			for (Field field : ReflectUtil.getFields(bean.getClass())) {
+				if (null != ReflectUtil.getFieldValue(bean, field)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * 判断Bean是否包含值为<code>null</code>的属性<br>
+	 * 对象本身为<code>null</code>也返回true
+	 *
+	 * @param bean Bean对象
+	 * @return 是否包含值为<code>null</code>的属性，<code>true</code> - 包含 / <code>false</code> - 不包含
+	 * @since 4.1.10
+	 */
+	public static boolean hasNullField(Object bean) {
+		if (null == bean) {
+			return true;
+		}
+		for (Field field : ReflectUtil.getFields(bean.getClass())) {
+			if (null == ReflectUtil.getFieldValue(bean, field)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

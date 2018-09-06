@@ -29,7 +29,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	
 	@Override
 	public String getStr(String key, String defaultValue) {
-		return getByGroup(key, DEFAULT_GROUP);
+		return getStr(key, DEFAULT_GROUP, defaultValue);
 	}
 
 	/**

@@ -2,6 +2,8 @@ package cn.hutool.core.bean.copier;
 
 import java.util.Map;
 
+import cn.hutool.core.map.MapUtil;
+
 /**
  * 属性拷贝选项<br>
  * 包括：<br>
@@ -129,5 +131,14 @@ public class CopyOptions {
 	public CopyOptions setFieldMapping(Map<String, String> fieldMapping) {
 		this.fieldMapping = fieldMapping;
 		return this;
+	}
+	
+	/**
+	 * 获取反转之后的映射
+	 * @return 反转映射
+	 * @since 4.1.10
+	 */
+	protected Map<String, String> getReversedMapping() {
+		 return (null != this.fieldMapping) ? MapUtil.reverse(this.fieldMapping) : null;
 	}
 }
