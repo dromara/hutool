@@ -529,6 +529,7 @@ public abstract class AbstractDb{
 	public List<Entity> findBy(String tableName, String field, Object value) throws SQLException{
 		return findAll(Entity.create(tableName).set(field, value));
 	}
+	
 	/**
 	 * 根据某个字段名条件查询数据列表，返回所有字段
 	 * 

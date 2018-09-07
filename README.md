@@ -14,6 +14,9 @@
 	<a>
 		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" >
 	</a>
+	<a>
+		<a href='https://gitee.com/loolly/hutool/stargazers'><img src='https://gitee.com/loolly/hutool/badge/star.svg?theme=dark' alt='star'></img></a>
+	</a>
 </p>
 <p align="center">
 	-- 主页：<a href="http://hutool.cn">http://hutool.cn/</a> --
@@ -101,8 +104,8 @@ compile 'cn.hutool:hutool-all:4.1.11'
 
 ### 提供bug反馈或建议
 
-- [码云](https://gitee.com/loolly/hutool/issues)
-- [Gtihub](https://github.com/looly/hutool/issues)
+- [码云Gitee](https://gitee.com/loolly/hutool/issues)
+- [Github](https://github.com/looly/hutool/issues)
 
 ### 遵照的原则
 

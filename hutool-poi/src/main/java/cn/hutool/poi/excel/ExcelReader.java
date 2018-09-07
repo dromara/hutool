@@ -21,6 +21,7 @@ import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.CellEditor;
 import cn.hutool.poi.excel.cell.CellUtil;
@@ -235,8 +236,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 		checkNotClosed();
 		List<List<Object>> resultList = new ArrayList<>();
 
-		startRowIndex = Math.max(startRowIndex, sheet.getFirstRowNum());// 读取起始行（包含）
-		endRowIndex = Math.min(endRowIndex, sheet.getLastRowNum());// 读取结束行（包含）
+		startRowIndex = Math.max(startRowIndex, this.sheet.getFirstRowNum());// 读取起始行（包含）
+		endRowIndex = Math.min(endRowIndex, this.sheet.getLastRowNum());// 读取结束行（包含）
 		boolean isFirstLine = true;
 		List rowList;
 		for (int i = startRowIndex; i <= endRowIndex; i++) {
@@ -247,7 +248,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 				}
 				if (isFirstLine) {
 					isFirstLine = false;
-					if (MapUtil.isNotEmpty(headerAlias)) {
+					if (MapUtil.isNotEmpty(this.headerAlias)) {
 						rowList = aliasHeader(rowList);
 					}
 				}
@@ -452,11 +453,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 		for (Object headerObj : headerList) {
 			if (null != headerObj) {
 				header = headerObj.toString();
-				alias = this.headerAlias.get(header);
-				if (null == alias) {
-					// 无别名则使用原标题
-					alias = header;
-				}
+				alias = ObjectUtil.defaultIfNull(this.headerAlias.get(header), header);
 			}
 			result.add(alias);
 		}
