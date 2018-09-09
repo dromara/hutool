@@ -20,7 +20,7 @@ public class ConvertOtherTest {
 		String hex = Convert.toHex(a, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("e68891e698afe4b880e4b8aae5b08fe5b08fe79a84e58fafe788b1e79a84e5ad97e7aca6e4b8b2", hex);
 
-		String raw = Convert.hexStrToStr(hex, CharsetUtil.CHARSET_UTF_8);
+		String raw = Convert.hexToStr(hex, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals(a, raw);
 	}
 
