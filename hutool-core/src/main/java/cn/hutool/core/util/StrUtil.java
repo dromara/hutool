@@ -734,7 +734,7 @@ public class StrUtil {
 	 * 查找指定字符串是否包含指定字符列表中的任意一个字符
 	 * 
 	 * @param str 指定字符串
-	 * @param testStrs 需要检查的字符数组
+	 * @param testChars 需要检查的字符数组
 	 * @return 是否包含任意一个字符
 	 * @since 4.1.11
 	 */
