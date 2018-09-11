@@ -31,6 +31,15 @@ import cn.hutool.poi.excel.style.StyleUtil;
  * @author looly
  */
 public class ExcelWriteTest {
+	
+	@Test
+	@Ignore
+	public void writeTest2() {
+		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/single_line.xlsx");
+		overtimeWriter.write(row);
+		overtimeWriter.close();
+	}
 
 	@Test
 	@Ignore
