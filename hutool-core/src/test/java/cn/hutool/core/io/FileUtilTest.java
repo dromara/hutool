@@ -232,4 +232,41 @@ public class FileUtilTest {
 		parent = FileUtil.getParent(FileUtil.file("d:/aaa/bbb/cc/ddd"), 10);
 		Assert.assertNull(parent);
 	}
+	
+	@Test
+	public void lastIndexOfSeparatorTest() {
+		String dir = "d:\\aaa\\bbb\\cc\\ddd";
+		int index = FileUtil.lastIndexOfSeparator(dir);
+		Assert.assertEquals(13, index);
+	}
+	
+	@Test
+	public void mainNameTest() {
+		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
+		String mainName = FileUtil.mainName(path);
+		Assert.assertEquals("ddd", mainName);
+		
+		path = "d:\\aaa\\bbb\\cc\\ddd";
+		mainName = FileUtil.mainName(path);
+		Assert.assertEquals("ddd", mainName);
+		
+		path = "d:\\aaa\\bbb\\cc\\ddd.jpg";
+		mainName = FileUtil.mainName(path);
+		Assert.assertEquals("ddd", mainName);
+	}
+	
+	@Test
+	public void extNameTest() {
+		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
+		String mainName = FileUtil.extName(path);
+		Assert.assertEquals("", mainName);
+		
+		path = "d:\\aaa\\bbb\\cc\\ddd";
+		mainName = FileUtil.extName(path);
+		Assert.assertEquals("", mainName);
+		
+		path = "d:\\aaa\\bbb\\cc\\ddd.jpg";
+		mainName = FileUtil.extName(path);
+		Assert.assertEquals("jpg", mainName);
+	}
 }

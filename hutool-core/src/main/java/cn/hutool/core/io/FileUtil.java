@@ -261,7 +261,7 @@ public class FileUtil {
 		} else {
 			// jar文件
 			path = getAbsolutePath(path);
-			if (false == path.endsWith(String.valueOf(UNIX_SEPARATOR))) {
+			if (false == StrUtil.endWith(path, UNIX_SEPARATOR)) {
 				path = path + UNIX_SEPARATOR;
 			}
 			// jar文件中的路径
@@ -274,7 +274,7 @@ public class FileUtil {
 					final String name = entry.getName();
 					if (name.startsWith(subPath)) {
 						final String nameSuffix = StrUtil.removePrefix(name, subPath);
-						if (nameSuffix.contains(String.valueOf(UNIX_SEPARATOR)) == false) {
+						if (false == StrUtil.contains(nameSuffix, UNIX_SEPARATOR)) {
 							paths.add(nameSuffix);
 						}
 					}
@@ -1382,12 +1382,17 @@ public class FileUtil {
 	 * @return 最后一个文件路径分隔符的位置
 	 */
 	public static int lastIndexOfSeparator(String filePath) {
-		if (filePath == null) {
-			return -1;
+		if (StrUtil.isNotEmpty(filePath)) {
+			int i = filePath.length();
+			char c;
+			while(i-- >= 0) {
+				c = filePath.charAt(i);
+				if(CharUtil.isFileSeparator(c)) {
+					return i;
+				}
+			}
 		}
-		int lastUnixPos = filePath.lastIndexOf(UNIX_SEPARATOR);
-		int lastWindowsPos = filePath.lastIndexOf(WINDOWS_SEPARATOR);
-		return (lastUnixPos >= lastWindowsPos) ? lastUnixPos : lastWindowsPos;
+		return -1;
 	}
 
 	/**
@@ -1634,10 +1639,36 @@ public class FileUtil {
 	 * @return 主文件名
 	 */
 	public static String mainName(String fileName) {
-		if (StrUtil.isBlank(fileName) || false == fileName.contains(StrUtil.DOT)) {
+		if (null == fileName) {
 			return fileName;
 		}
-		return StrUtil.subPre(fileName, fileName.lastIndexOf(StrUtil.DOT));
+		int len = fileName.length();
+		if(0 == len) {
+			return fileName;
+		}
+		if(CharUtil.isFileSeparator(fileName.charAt(len -1))) {
+			len --;
+		}
+		
+		int begin = 0;
+		int end = len;
+		char c;
+		for(int i =len-1; i > -1; i --) {
+			c = fileName.charAt(i);
+			if(len == end && CharUtil.DOT == c) {
+				//查找最后一个文件名和扩展名的分隔符：.
+				end = i;
+			}
+			if(0 == begin || begin > end) {
+				if(CharUtil.SLASH == c || CharUtil.BACKSLASH == c) {
+					//查找最后一个路径分隔符（/或者\），如果这个分隔符在.之后，则继续查找，否则结束
+					begin = i +1;
+					break;
+				}
+			}
+		}
+		
+		return fileName.substring(begin, end);
 	}
 
 	/**
@@ -1672,7 +1703,7 @@ public class FileUtil {
 		} else {
 			String ext = fileName.substring(index + 1);
 			// 扩展名中不能包含路径相关的符号
-			return (ext.contains(String.valueOf(UNIX_SEPARATOR)) || ext.contains(String.valueOf(WINDOWS_SEPARATOR))) ? StrUtil.EMPTY : ext;
+			return StrUtil.containsAny(ext, UNIX_SEPARATOR, WINDOWS_SEPARATOR) ? StrUtil.EMPTY : ext;
 		}
 	}
 	// -------------------------------------------------------------------------------------------- name end

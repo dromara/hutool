@@ -7,6 +7,9 @@
 
 ### 新特性
 * 【core】         Convert增加toList方法
+* 【core】         StrUtil增加containsAny针对char的重载
+* 【core】         FileUtil.mainName修正处理逻辑
+* 【core】         CharUtil增加isFileSeparator方法
 
 ### Bug修复
 
