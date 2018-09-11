@@ -10,6 +10,7 @@
 * 【core】         StrUtil增加containsAny针对char的重载
 * 【core】         FileUtil.mainName修正处理逻辑
 * 【core】         CharUtil增加isFileSeparator方法
+* 【core】         增加UUID类，提升Simple模式下性能
 
 ### Bug修复
 
