@@ -269,4 +269,11 @@ public class FileUtilTest {
 		mainName = FileUtil.extName(path);
 		Assert.assertEquals("jpg", mainName);
 	}
+	
+	@Test
+	public void getWebRootTest() {
+		File webRoot = FileUtil.getWebRoot();
+		Assert.assertNotNull(webRoot);
+		Assert.assertEquals("hutool-core", webRoot.getName());
+	}
 }

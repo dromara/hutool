@@ -9,6 +9,7 @@ import cn.hutool.extra.template.engine.beetl.BeetlEngine;
 import cn.hutool.extra.template.engine.enjoy.EnjoyEngine;
 import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
 import cn.hutool.extra.template.engine.rythm.RythmEngine;
+import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 
 /**
@@ -80,5 +81,14 @@ public class TemplateUtilTest {
 		Template template = engine.getTemplate("#(x + 123)");
 		String result = template.render(Dict.create().set("x", 1));
 		Assert.assertEquals("124", result);
+	}
+	
+	@Test
+	public void thymeleafEngineTest() {
+		// 字符串模板
+		Engine engine = new ThymeleafEngine(new TemplateConfig("templates"));
+		Template template = engine.getTemplate("<h3 th:text=\"${message}\"></h3>");
+		String result = template.render(Dict.create().set("message", "Hutool"));
+		Assert.assertEquals("<h3>Hutool</h3>", result);
 	}
 }

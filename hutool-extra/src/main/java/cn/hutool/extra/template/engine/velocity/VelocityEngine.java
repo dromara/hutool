@@ -45,11 +45,6 @@ public class VelocityEngine implements Engine {
 	// --------------------------------------------------------------------------------- Constructor end
 	
 	@Override
-	public String getName() {
-		return "Velocity";
-	}
-
-	@Override
 	public Template getTemplate(String resource) {
 		return VelocityTemplate.wrap(engine.getTemplate(resource));
 	}

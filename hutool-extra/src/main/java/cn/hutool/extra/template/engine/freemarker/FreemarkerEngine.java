@@ -51,11 +51,6 @@ public class FreemarkerEngine implements Engine {
 	// --------------------------------------------------------------------------------- Constructor end
 	
 	@Override
-	public String getName() {
-		return "Freemarker";
-	}
-
-	@Override
 	public Template getTemplate(String resource) {
 		try {
 			return FreemarkerTemplate.wrap(this.cfg.getTemplate(resource));

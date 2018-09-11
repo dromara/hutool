@@ -3134,15 +3134,16 @@ public class FileUtil {
 	}
 
 	/**
-	 * 获取Web项目下的web root路径
+	 * 获取Web项目下的web root路径<br>
+	 * 原理是首先获取ClassPath路径，由于在web项目中ClassPath位于 WEB-INF/classes/下，故向上获取两级目录即可。
 	 * 
 	 * @return web root路径
 	 * @since 4.0.13
 	 */
 	public static File getWebRoot() {
-		String classPath = ClassUtil.getClassPath();
+		final String classPath = ClassUtil.getClassPath();
 		if (StrUtil.isNotBlank(classPath)) {
-			return file(classPath).getParentFile().getParentFile();
+			return getParent(file(classPath), 2);
 		}
 		return null;
 	}
