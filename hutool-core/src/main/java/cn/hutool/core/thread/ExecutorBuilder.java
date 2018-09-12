@@ -4,6 +4,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -70,7 +71,13 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	}
 
 	/**
-	 * 设置队列，用于存在未执行的线程
+	 * 设置队列，用于存在未执行的线程<br>
+	 * 可选队列有：
+	 * <pre>
+	 * 1. SynchronousQueue    它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程
+	 * 2. LinkedBlockingQueue 无界队列，当运行线程大于corePoolSize时始终放入此队列，此时maximumPoolSize无效
+	 * 3. ArrayBlockingQueue  有界队列，相对无界队列有利于控制队列大小，队列满时，运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
+	 * </pre>
 	 * 
 	 * @param workQueue 队列
 	 * @return this
@@ -78,6 +85,16 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	public ExecutorBuilder setWorkQueue(BlockingQueue<Runnable> workQueue) {
 		this.workQueue = workQueue;
 		return this;
+	}
+	
+	/**
+	 * 使用{@link SynchronousQueue} 做为等待队列
+	 * 
+	 * @return this
+	 * @since 4.1.11
+	 */
+	public ExecutorBuilder useSynchronousQueue() {
+		return setWorkQueue(new SynchronousQueue<Runnable>());
 	}
 
 	/**

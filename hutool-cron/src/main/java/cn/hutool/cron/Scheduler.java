@@ -353,7 +353,7 @@ public class Scheduler {
 				throw new CronException("Schedule is started!");
 			}
 
-			this.threadExecutor = ExecutorBuilder.create().setThreadFactory(//
+			this.threadExecutor = ExecutorBuilder.create().useSynchronousQueue().setThreadFactory(//
 					ThreadFactoryBuilder.create().setNamePrefix("hutool-cron-").setDaemon(this.daemon).build()//
 			).build();
 			this.taskLauncherManager = new TaskLauncherManager(this);
