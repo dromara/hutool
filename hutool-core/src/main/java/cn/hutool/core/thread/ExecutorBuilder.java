@@ -147,7 +147,13 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 		final int corePoolSize = builder.corePoolSize;
 		final int maxPoolSize = builder.maxPoolSize;
 		final long keepAliveTime = builder.keepAliveTime;
-		final BlockingQueue<Runnable> workQueue = (null != builder.workQueue) ? builder.workQueue : new LinkedBlockingQueue<Runnable>();
+		final BlockingQueue<Runnable> workQueue;
+		if(null != builder.workQueue) {
+			workQueue = builder.workQueue;
+		} else {
+			//corePoolSize为0则要使用SynchronousQueue避免无限阻塞
+			workQueue = (corePoolSize <= 0) ? new SynchronousQueue<Runnable>() : new LinkedBlockingQueue<Runnable>();
+		}
 		final ThreadFactory threadFactory = (null != builder.threadFactory) ? builder.threadFactory : Executors.defaultThreadFactory();
 		final RejectedExecutionHandler handler = builder.handler;
 
