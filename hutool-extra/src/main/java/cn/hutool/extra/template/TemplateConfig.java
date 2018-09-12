@@ -68,6 +68,16 @@ public class TemplateConfig implements Serializable {
 	public Charset getCharset() {
 		return charset;
 	}
+	
+	/**
+	 * 获取编码
+	 * 
+	 * @return 编码
+	 * @since 4.1.11
+	 */
+	public String getCharsetStr() {
+		return charset.toString();
+	}
 
 	/**
 	 * 设置编码

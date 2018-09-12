@@ -53,11 +53,6 @@ public class BeetlEngine implements Engine {
 	// --------------------------------------------------------------------------------- Constructor end
 	
 	@Override
-	public String getName() {
-		return "Beetl";
-	}
-
-	@Override
 	public Template getTemplate(String resource) {
 		return BeetlTemplate.wrap(engine.getTemplate(resource));
 	}
@@ -75,11 +70,11 @@ public class BeetlEngine implements Engine {
 
 		switch (config.getResourceMode()) {
 		case CLASSPATH:
-			return createGroupTemplate(new ClasspathResourceLoader(config.getPath(), config.getCharset().toString()));
+			return createGroupTemplate(new ClasspathResourceLoader(config.getPath(), config.getCharsetStr()));
 		case FILE:
-			return createGroupTemplate(new FileResourceLoader(config.getPath(), config.getCharset().toString()));
+			return createGroupTemplate(new FileResourceLoader(config.getPath(), config.getCharsetStr()));
 		case WEB_ROOT:
-			return createGroupTemplate(new WebAppResourceLoader(config.getPath(), config.getCharset().toString()));
+			return createGroupTemplate(new WebAppResourceLoader(config.getPath(), config.getCharsetStr()));
 		case STRING:
 			return createGroupTemplate(new StringTemplateResourceLoader());
 		case COMPOSITE:

@@ -138,7 +138,7 @@ public class Ftp implements Closeable {
 		// 如果远程目录不存在，则递归创建远程服务器目录
 		if (false == directory.equalsIgnoreCase(StrUtil.SLASH) && false == cd(directory)) {
 			int start = directory.startsWith(directory) ? 1 : 0;
-			int end = directory.indexOf(directory.startsWith(directory) ? 1 : 0, start);
+			int end = directory.indexOf(start, start);
 			String path = "";
 			String paths = "";
 			String subDirectory;

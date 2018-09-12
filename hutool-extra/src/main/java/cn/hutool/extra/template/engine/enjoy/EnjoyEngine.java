@@ -51,11 +51,6 @@ public class EnjoyEngine implements Engine {
 	// --------------------------------------------------------------------------------- Constructor end
 
 	@Override
-	public String getName() {
-		return "Enjoy";
-	}
-
-	@Override
 	public Template getTemplate(String resource) {
 		if(ObjectUtil.equal(ResourceMode.STRING, this.resourceMode)) {
 			return EnjoyTemplate.wrap(this.engine.getTemplateByString(resource));

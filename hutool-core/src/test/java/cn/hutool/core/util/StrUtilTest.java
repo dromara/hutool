@@ -303,4 +303,23 @@ public class StrUtilTest {
 		String result4 = StrUtil.toUnderlineCase(str4);
 		Assert.assertEquals("hello_world_test", result4);
 	}
+	
+	@Test
+	public void containsAnyTest() {
+		//字符
+		boolean containsAny = StrUtil.containsAny("aaabbbccc", 'a', 'd');
+		Assert.assertTrue(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", 'e', 'd');
+		Assert.assertFalse(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", 'd', 'c');
+		Assert.assertTrue(containsAny);
+		
+		//字符串
+		containsAny = StrUtil.containsAny("aaabbbccc", "a", "d");
+		Assert.assertTrue(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", "e", "d");
+		Assert.assertFalse(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", "d", "c");
+		Assert.assertTrue(containsAny);
+	}
 }

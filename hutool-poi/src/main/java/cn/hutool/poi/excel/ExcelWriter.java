@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.IndexedComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -220,6 +221,18 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter autoSizeColumn(int columnIndex, boolean useMergedCells) {
 		this.sheet.autoSizeColumn(columnIndex, useMergedCells);
+		return this;
+	}
+
+	/**
+	 * 设置样式集，如果不使用样式，传入{@code null}
+	 * 
+	 * @param styleSet 样式集，{@code null}表示无样式
+	 * @return this
+	 * @since 4.1.11
+	 */
+	public ExcelWriter setStyleSet(StyleSet styleSet) {
+		this.styleSet = styleSet;
 		return this;
 	}
 
@@ -473,7 +486,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn, Object content, boolean isSetHeaderStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
-		final CellStyle style = (isSetHeaderStyle && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
+		final CellStyle style = (isSetHeaderStyle && null != this.styleSet && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
 		CellUtil.mergingCells(this.sheet, firstRow, lastRow, firstColumn, lastColumn, style);
 
 		// 设置内容
@@ -487,15 +500,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式<br>
-	 * data中元素支持的类型有：
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
 	 * 
 	 * <p>
+	 * data中元素支持的类型有：
+	 *  <pre>
 	 * 1. Iterable，既元素为一个集合，元素被当作一行，data表示多行<br>
 	 * 2. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
 	 * 3. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
-	 * 4. 无法识别，不输出
-	 * </p>
+	 * 4. 其它类型，按照基本类型输出（例如字符串）
+	 * </pre>
 	 * 
 	 * @param data 数据
 	 * @return this
@@ -578,19 +592,22 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @since 4.1.5
 	 */
 	public ExcelWriter writeRow(Object rowBean, boolean isWriteKeyAsHead) {
-		Map<?, ?> rowMap = null;
 		if (rowBean instanceof Iterable) {
 			return writeRow((Iterable<?>) rowBean);
 		}
+		Map<?, ?> rowMap = null;
 		if (rowBean instanceof Map) {
 			rowMap = (Map<?, ?>) rowBean;
-		} else {
+		} else if(BeanUtil.isBean(rowBean.getClass())){
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
 				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<String, Object>(getInitedAliasComparator()), false, false);
 			}
+		}else {
+			//其它转为字符串默认输出
+			return writeRow(CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
 		}
 		return writeRow(rowMap, isWriteKeyAsHead);
 	}
@@ -643,7 +660,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeCellValue(int x, int y, Object value) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellUtil.setCellValue(cell, value, styleSet, false);
+		CellUtil.setCellValue(cell, value, this.styleSet, false);
 		return this;
 	}
 
@@ -673,7 +690,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public Font createFont() {
 		return getWorkbook().createFont();
 	}
-
+	
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>

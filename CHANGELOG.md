@@ -3,6 +3,24 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.11
+
+### 新特性
+* 【core】         Convert增加toList方法
+* 【core】         StrUtil增加containsAny针对char的重载
+* 【core】         FileUtil.mainName修正处理逻辑
+* 【core】         CharUtil增加isFileSeparator方法
+* 【core】         增加UUID类，提升Simple模式下性能
+* 【poi】           ExcelUtil增加setStyleSet方法，修改write逻辑，对于单列数据输出，而非忽略（感谢@【宁波】mojie126）
+* 【core】         新增WebAppResource类
+* 【extra】        新增Thymeleaf模板支持
+
+### Bug修复
+* 【script】        修复FullSupportScriptEngine构造中ext和mimeType方式获取引擎丢失问题
+* 【cron】         修复定时任务执行阻塞问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.10
 
 ### 新特性

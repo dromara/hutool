@@ -501,11 +501,22 @@ public class Convert {
 	}
 	
 	/**
+	 * 转换为ArrayList，元素类型默认Object
+	 * 
+	 * @param value 被转换的值
+	 * @return {@link List}
+	 * @since 4.1.11
+	 */
+	public static List<?> toList(Object value) {
+		return convert(List.class, value);
+	}
+	
+	/**
 	 * 转换为ArrayList
 	 * 
 	 * @param elementType 集合中元素类型
 	 * @param value 被转换的值
-	 * @return {@link Collection}
+	 * @return {@link List}
 	 * @since 4.0.11
 	 */
 	public static List<?> toList(Class<?> elementType, Object value) {
@@ -698,8 +709,23 @@ public class Convert {
 	 * @param charset 编码 {@link Charset}
 	 * @return 对应的字符串
 	 * @see HexUtil#decodeHexStr(String, Charset)
+	 * @deprecated 请使用 {@link #hexToStr(String, Charset)}
 	 */
+	@Deprecated
 	public static String hexStrToStr(String hexStr, Charset charset) {
+		return hexToStr(hexStr, charset);
+	}
+	
+	/**
+	 * 十六进制转换字符串
+	 * 
+	 * @param hexStr Byte字符串(Byte之间无分隔符 如:[616C6B])
+	 * @param charset 编码 {@link Charset}
+	 * @return 对应的字符串
+	 * @see HexUtil#decodeHexStr(String, Charset)
+	 * @since 4.1.11
+	 */
+	public static String hexToStr(String hexStr, Charset charset) {
 		return HexUtil.decodeHexStr(hexStr, charset);
 	}
 
@@ -708,23 +734,10 @@ public class Convert {
 	 * 
 	 * @param strText 全角字符串
 	 * @return String 每个unicode之间无分隔符
+	 * @see UnicodeUtil#toUnicode(String)
 	 */
 	public static String strToUnicode(String strText) {
-		int strLength = strText.length();
-		final StringBuilder str = new StringBuilder(strLength * 6);
-		String strHex;
-		int strHexLen;
-		for (int i = 0; i < strLength; i++) {
-			strHex = Integer.toHexString(strText.charAt(i));
-			strHexLen = strHex.length();
-			str.append("\\u");
-			// 对不够4位的在前补零
-			if (strHexLen > 0 && strHexLen < 4) {
-				str.append(StrUtil.repeat('0', 4 - strHexLen));
-			}
-			str.append(strHex);
-		}
-		return str.toString();
+		return UnicodeUtil.toUnicode(strText);
 	}
 
 	/**
@@ -777,6 +790,7 @@ public class Convert {
 	 * @see BasicType#wrap(Class)
 	 * @param clazz 原始类
 	 * @return 包装类
+	 * @see BasicType#wrap(Class)
 	 */
 	public static Class<?> wrap(Class<?> clazz) {
 		return BasicType.wrap(clazz);
@@ -788,6 +802,7 @@ public class Convert {
 	 * @see BasicType#unWrap(Class)
 	 * @param clazz 包装类
 	 * @return 原始类
+	 * @see BasicType#unWrap(Class)
 	 */
 	public static Class<?> unWrap(Class<?> clazz) {
 		return BasicType.unWrap(clazz);

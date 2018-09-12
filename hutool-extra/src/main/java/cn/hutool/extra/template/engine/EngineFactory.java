@@ -1,5 +1,6 @@
 package cn.hutool.extra.template.engine;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateException;
@@ -7,6 +8,7 @@ import cn.hutool.extra.template.engine.beetl.BeetlEngine;
 import cn.hutool.extra.template.engine.enjoy.EnjoyEngine;
 import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
 import cn.hutool.extra.template.engine.rythm.RythmEngine;
+import cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 import cn.hutool.log.StaticLog;
 
@@ -25,7 +27,7 @@ public class EngineFactory {
 	 */
 	public static Engine create(TemplateConfig config) {
 		final Engine engine = doCreate(config);
-		StaticLog.debug("Use [{}] Engine As Default.", engine.getName());
+		StaticLog.debug("Use [{}] Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
 
@@ -58,6 +60,11 @@ public class EngineFactory {
 		}
 		try {
 			return new EnjoyEngine(config);
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		try {
+			return new ThymeleafEngine(config);
 		} catch (NoClassDefFoundError e) {
 			// ignore
 		}

@@ -23,7 +23,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void lineCaptchaTest2() {
 
 		// 定义图形验证码的长和宽

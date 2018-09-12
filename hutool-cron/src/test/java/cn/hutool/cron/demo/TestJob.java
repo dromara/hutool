@@ -16,7 +16,7 @@ public class TestJob {
 	 */
 	public void doTest() {
 		String name = Thread.currentThread().getName();
-		Console.log("Job {} running...", name);
+		Console.log("Test Job {} running...", name);
 	}
 
 	/**

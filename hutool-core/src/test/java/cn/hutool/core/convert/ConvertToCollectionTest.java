@@ -32,7 +32,7 @@ public class ConvertToCollectionTest {
 	@Test
 	public void toListTest() {
 		Object[] a = {"a", "你", "好", "", 1};
-		List<?> list = Convert.convert(List.class, a);
+		List<?> list = Convert.toList(a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));

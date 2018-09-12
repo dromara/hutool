@@ -7,8 +7,10 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
+import cn.hutool.db.sql.Condition;
 import cn.hutool.db.transaction.TxFunc;
 
 /**
@@ -24,6 +26,20 @@ public class DbTest {
 		
 		List<Entity> find = Db.use().find(Entity.create("user").set("age", 18));
 		Assert.assertEquals("王五", find.get(0).get("name"));
+	}
+	
+	@Test
+	public void findByTest() throws SQLException {
+		Db.use();
+		
+		List<Entity> find = Db.use().findBy("user", 
+				Condition.parse("age", "> 18"), 
+				Condition.parse("age", "< 100")
+		);
+		for (Entity entity : find) {
+			Console.log(entity);
+		}
+		Assert.assertEquals("unitTestUser", find.get(0).get("name"));
 	}
 	
 	@Test

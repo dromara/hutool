@@ -86,11 +86,11 @@ public class ConvertTest {
 	@Test
 	public void toDateTest() {
 		String a = "2017-05-06";
-		Date value = Convert.convert(Date.class, a);
+		Date value = Convert.toDate(a);
 		Assert.assertEquals(a, DateUtil.formatDate(value));
 		
 		long timeLong = DateUtil.date().getTime();
-		Date value2 = Convert.convert(Date.class, timeLong);
+		Date value2 = Convert.toDate(timeLong);
 		Assert.assertEquals(timeLong, value2.getTime());
 	}
 

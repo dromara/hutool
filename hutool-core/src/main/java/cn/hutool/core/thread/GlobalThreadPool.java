@@ -3,7 +3,6 @@ package cn.hutool.core.thread;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
 
 import cn.hutool.core.exceptions.UtilException;
 
@@ -30,7 +29,7 @@ public class GlobalThreadPool {
 		if (null != executor) {
 			executor.shutdownNow();
 		}
-		executor = ExecutorBuilder.create().setWorkQueue(new SynchronousQueue<Runnable>()).build();
+		executor = ExecutorBuilder.create().useSynchronousQueue().build();
 	}
 
 	/**

@@ -31,7 +31,7 @@ public class ConvertToArrayTest {
 		int[] intArray = Convert.convert(int[].class, b);
 		Assert.assertArrayEquals(intArray, new int[]{1,2,3,4});
 		
-		long[] c = {1L,2L,3L,4L,5L};
+		long[] c = {1,2,3,4,5};
 		Integer[] intArray2 = Convert.toIntArray(c);
 		Assert.assertArrayEquals(intArray2, new Integer[]{1,2,3,4,5});
 	}
