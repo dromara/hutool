@@ -27,6 +27,9 @@
 
 -------------------------------------------------------------------------------
 
+[![Join the chat at https://gitter.im/hutool/Lobby](https://badges.gitter.im/hutool/Lobby.svg)](https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+
 ## 简介
 
 Hutool是一个Java工具包，也只是一个工具包，它帮助我们简化每一行代码，减少每一个方法，让Java语言也可以“甜甜的”。Hutool最初是我项目中“util”包的一个整理，后来慢慢积累并加入更多非业务相关功能，并广泛学习其它开源项目精髓，经过自己整理修改，最终形成丰富的开源工具集。
