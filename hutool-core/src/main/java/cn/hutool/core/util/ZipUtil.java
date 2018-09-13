@@ -386,7 +386,8 @@ public class ZipUtil {
 			File outItemFile = null;
 			while (em.hasMoreElements()) {
 				zipEntry = em.nextElement();
-				outItemFile = new File(outFile, zipEntry.getName());
+				//FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
+				outItemFile = FileUtil.file(outFile, zipEntry.getName());
 				if (zipEntry.isDirectory()) {
 					outItemFile.mkdirs();
 				} else {
@@ -401,7 +402,7 @@ public class ZipUtil {
 		}
 		return outFile;
 	}
-	
+
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
 	 * 
@@ -413,7 +414,7 @@ public class ZipUtil {
 	public static byte[] unzipFileBytes(String zipFilePath, String name) {
 		return unzipFileBytes(zipFilePath, DEFAULT_CHARSET, name);
 	}
-	
+
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
 	 * 
@@ -426,7 +427,7 @@ public class ZipUtil {
 	public static byte[] unzipFileBytes(String zipFilePath, Charset charset, String name) {
 		return unzipFileBytes(FileUtil.file(zipFilePath), charset, name);
 	}
-	
+
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
 	 * 
@@ -438,7 +439,7 @@ public class ZipUtil {
 	public static byte[] unzipFileBytes(File zipFile, String name) {
 		return unzipFileBytes(zipFile, DEFAULT_CHARSET, name);
 	}
-	
+
 	/**
 	 * 从Zip文件中提取指定的文件为bytes
 	 * 
@@ -459,7 +460,7 @@ public class ZipUtil {
 				zipEntry = em.nextElement();
 				if (zipEntry.isDirectory()) {
 					continue;
-				} else if(name.equals(zipEntry.getName())){
+				} else if (name.equals(zipEntry.getName())) {
 					return IoUtil.readBytes(zipFileObj.getInputStream(zipEntry));
 				}
 			}
@@ -567,7 +568,7 @@ public class ZipUtil {
 	}
 
 	// ----------------------------------------------------------------------------- Zlib
-	
+
 	/**
 	 * Zlib压缩处理
 	 * 
@@ -580,7 +581,7 @@ public class ZipUtil {
 	public static byte[] zlib(String content, String charset, int level) {
 		return zlib(StrUtil.bytes(content, charset), level);
 	}
-	
+
 	/**
 	 * Zlib压缩文件
 	 * 
@@ -592,7 +593,7 @@ public class ZipUtil {
 	public static byte[] zlib(File file, int level) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BufferedInputStream in = null;
-		try{
+		try {
 			in = FileUtil.getInputStream(file);
 			deflater(in, out, level);
 		} finally {
@@ -615,7 +616,7 @@ public class ZipUtil {
 		deflater(in, out, level);
 		return out.toByteArray();
 	}
-	
+
 	/**
 	 * Zlib解压缩处理
 	 * 
