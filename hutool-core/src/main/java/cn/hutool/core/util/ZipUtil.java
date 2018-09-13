@@ -131,8 +131,8 @@ public class ZipUtil {
 	 * 使用默认UTF-8编码
 	 * 
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
-	 * @param withSrcDir 是否包含被打包目录
-	 * @param srcFiles 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
+	 * @param srcFiles 要压缩的源文件或目录。
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
 	 */
@@ -145,7 +145,7 @@ public class ZipUtil {
 	 * 
 	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
 	 * @param charset 编码
-	 * @param withSrcDir 是否包含被打包目录
+	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
 	 * @param srcFiles 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @return 压缩文件
 	 * @throws UtilException IO异常
@@ -159,7 +159,8 @@ public class ZipUtil {
 				// 如果只是压缩一个文件，则需要截取该文件的父目录
 				srcRootDir = srcFile.getCanonicalPath();
 				if (srcFile.isFile() || withSrcDir) {
-					srcRootDir = srcFile.getParent();
+					//若是文件，则将父目录完整路径都截取掉；若设置包含目录，则将上级目录全部截取掉，保留本目录名
+					srcRootDir = srcFile.getParentFile().getCanonicalPath();
 				}
 				// 调用递归压缩方法进行目录或文件压缩
 				zip(srcFile, srcRootDir, out);
@@ -668,10 +669,12 @@ public class ZipUtil {
 	}
 
 	/**
-	 * 递归压缩文件夹
+	 * 递归压缩文件夹<br>
+	 * srcRootDir决定了路径截取的位置，例如：<br>
+	 * file的路径为d:/a/b/c/d.txt，srcRootDir为d:/a/b，则压缩后的文件与目录为结构为c/d.txt
 	 * 
 	 * @param out 压缩文件存储对象
-	 * @param srcRootDir 压缩文件夹根目录的子路径
+	 * @param srcRootDir 被压缩的文件夹根目录
 	 * @param file 当前递归压缩的文件或目录对象
 	 * @throws UtilException IO异常
 	 */

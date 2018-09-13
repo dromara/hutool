@@ -336,9 +336,7 @@ public class FileUtil {
 		if (StrUtil.isBlank(path)) {
 			throw new NullPointerException("File path is blank!");
 		}
-		final File file = new File(parent, path);
-		checkSlip(parent, file);
-		return file;
+		return checkSlip(parent, new File(parent, path));
 	}
 
 	/**
@@ -3167,7 +3165,11 @@ public class FileUtil {
 	 */
 	public static String getParent(String filePath, int level) {
 		final File parent = getParent(file(filePath), level);
-		return null == parent ? null : parent.getAbsolutePath();
+		try {
+			return null == parent ? null : parent.getCanonicalPath();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -3204,9 +3206,10 @@ public class FileUtil {
 	 * 
 	 * @param parentFile 父文件或目录
 	 * @param file 子文件或目录
+	 * @return 子文件或目录
 	 * @throws IllegalArgumentException 检查创建的子文件不在父目录中抛出此异常
 	 */
-	public static void checkSlip(File parentFile, File file) throws IllegalArgumentException {
+	public static File checkSlip(File parentFile, File file) throws IllegalArgumentException {
 		String parentCanonicalPath;
 		String canonicalPath;
 		try {
@@ -3218,5 +3221,6 @@ public class FileUtil {
 		if (false == canonicalPath.startsWith(parentCanonicalPath)) {
 			throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
 		}
+		return file;
 	}
 }
