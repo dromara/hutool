@@ -3192,7 +3192,12 @@ public class FileUtil {
 			return file;
 		}
 
-		final File parentFile = file.getParentFile();
+		File parentFile;
+		try {
+			parentFile = file.getCanonicalFile().getParentFile();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 		if (1 == level) {
 			return parentFile;
 		}
@@ -3210,16 +3215,18 @@ public class FileUtil {
 	 * @throws IllegalArgumentException 检查创建的子文件不在父目录中抛出此异常
 	 */
 	public static File checkSlip(File parentFile, File file) throws IllegalArgumentException {
-		String parentCanonicalPath;
-		String canonicalPath;
-		try {
-			parentCanonicalPath = parentFile.getCanonicalPath();
-			canonicalPath = file.getCanonicalPath();
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
-		if (false == canonicalPath.startsWith(parentCanonicalPath)) {
-			throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
+		if(null != parentFile && null != file) {
+			String parentCanonicalPath;
+			String canonicalPath;
+			try {
+				parentCanonicalPath = parentFile.getCanonicalPath();
+				canonicalPath = file.getCanonicalPath();
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+			if (false == canonicalPath.startsWith(parentCanonicalPath)) {
+				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
+			}
 		}
 		return file;
 	}

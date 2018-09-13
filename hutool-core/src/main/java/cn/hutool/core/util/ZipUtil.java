@@ -156,11 +156,14 @@ public class ZipUtil {
 		try (ZipOutputStream out = getZipOutputStream(zipFile, charset)) {
 			String srcRootDir;
 			for (File srcFile : srcFiles) {
+				if(null == srcFile) {
+					continue;
+				}
 				// 如果只是压缩一个文件，则需要截取该文件的父目录
 				srcRootDir = srcFile.getCanonicalPath();
 				if (srcFile.isFile() || withSrcDir) {
 					//若是文件，则将父目录完整路径都截取掉；若设置包含目录，则将上级目录全部截取掉，保留本目录名
-					srcRootDir = srcFile.getParentFile().getCanonicalPath();
+					srcRootDir = srcFile.getCanonicalFile().getParentFile().getCanonicalPath();
 				}
 				// 调用递归压缩方法进行目录或文件压缩
 				zip(srcFile, srcRootDir, out);
@@ -766,13 +769,16 @@ public class ZipUtil {
 	 */
 	private static void validateFiles(File zipFile, File... srcFiles) throws UtilException {
 		for (File srcFile : srcFiles) {
+			if(null == srcFile) {
+				continue;
+			}
 			if (false == srcFile.exists()) {
 				throw new UtilException(StrUtil.format("File [{}] not exist!", srcFile.getAbsolutePath()));
 			}
 
 			try {
 				// 压缩文件不能位于被压缩的目录内
-				if (srcFile.isDirectory() && zipFile.getParent().contains(srcFile.getCanonicalPath())) {
+				if (srcFile.isDirectory() && zipFile.getCanonicalPath().contains(srcFile.getCanonicalPath())) {
 					throw new UtilException("[zipPath] must not be the child directory of [srcPath]!");
 				}
 

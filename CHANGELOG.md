@@ -6,9 +6,12 @@
 ## 4.1.12
 
 ### 新特性
+* 【core】         ExcelReader.read方法返回的Map默认有序
+
 ### Bug修复
 * 【core】         修复ZipUtil以及FileUtil中slip漏洞（issue#162@Github）
 * 【core】         修复ZipUtil路径问题（issue#IMUEK@Gitee）
+* 【core】         修复FileUtil.getParent方法获取父路径不严格导致空指针问题
 
 -------------------------------------------------------------------------------------------------------------
 
