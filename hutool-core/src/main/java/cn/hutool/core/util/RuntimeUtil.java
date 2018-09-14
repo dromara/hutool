@@ -165,6 +165,7 @@ public class RuntimeUtil {
 			return IoUtil.readLines(in, charset, new ArrayList<String>());
 		} finally {
 			IoUtil.close(in);
+			destroy(process);
 		}
 	}
 
