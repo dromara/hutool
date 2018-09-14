@@ -1089,7 +1089,9 @@ public class FileUtil {
 		// 如果资源不存在，则返回一个拼接的资源绝对路径
 		final String classPath = ClassUtil.getClassPath();
 		if (null == classPath) {
-			throw new NullPointerException("ClassPath is null !");
+//			throw new NullPointerException("ClassPath is null !");
+			//在jar运行模式中，ClassPath有可能获取不到，此时返回原始相对路径（此时获取的文件为相对工作目录）
+			return path;
 		}
 
 		// 资源不存在的情况下使用标准化路径有问题，使用原始路径拼接后标准化路径
@@ -1620,6 +1622,51 @@ public class FileUtil {
 
 	// -------------------------------------------------------------------------------------------- name start
 	/**
+	 * 返回文件名
+	 * 
+	 * @param file 文件
+	 * @return 文件名
+	 * @since 4.1.13
+	 */
+	public static String getName(File file) {
+		return (null != file) ? file.getName() : null;
+	}
+	
+	/**
+	 * 返回文件名
+	 * 
+	 * @param filePath 文件
+	 * @return 文件名
+	 * @since 4.1.13
+	 */
+	public static String getName(String filePath) {
+		if (null == filePath) {
+			return filePath;
+		}
+		int len = filePath.length();
+		if(0 == len) {
+			return filePath;
+		}
+		if(CharUtil.isFileSeparator(filePath.charAt(len -1))) {
+			//以分隔符结尾的去掉结尾分隔符
+			len --;
+		}
+		
+		int begin = 0;
+		char c;
+		for(int i =len-1; i > -1; i --) {
+			c = filePath.charAt(i);
+			if(CharUtil.isFileSeparator(c)) {
+				//查找最后一个路径分隔符（/或者\）
+				begin = i +1;
+				break;
+			}
+		}
+		
+		return filePath.substring(begin, len);
+	}
+	
+	/**
 	 * 返回主文件名
 	 * 
 	 * @param file 文件
@@ -1660,7 +1707,7 @@ public class FileUtil {
 				end = i;
 			}
 			if(0 == begin || begin > end) {
-				if(CharUtil.SLASH == c || CharUtil.BACKSLASH == c) {
+				if(CharUtil.isFileSeparator(c)) {
 					//查找最后一个路径分隔符（/或者\），如果这个分隔符在.之后，则继续查找，否则结束
 					begin = i +1;
 					break;

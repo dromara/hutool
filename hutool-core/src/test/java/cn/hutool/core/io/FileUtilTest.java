@@ -250,6 +250,17 @@ public class FileUtilTest {
 	}
 	
 	@Test
+	public void getNameTest() {
+		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
+		String name = FileUtil.getName(path);
+		Assert.assertEquals("ddd", name);
+		
+		path = "d:\\aaa\\bbb\\cc\\ddd.jpg";
+		name = FileUtil.getName(path);
+		Assert.assertEquals("ddd.jpg", name);
+	}
+	
+	@Test
 	public void mainNameTest() {
 		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
 		String mainName = FileUtil.mainName(path);

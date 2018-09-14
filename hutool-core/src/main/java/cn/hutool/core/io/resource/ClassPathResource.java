@@ -5,6 +5,7 @@ import java.net.URL;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
@@ -62,10 +63,13 @@ public class ClassPathResource extends UrlResource {
 	public ClassPathResource(String pathBaseClassLoader, ClassLoader classLoader, Class<?> clazz) {
 		super((URL) null);
 		Assert.notNull(pathBaseClassLoader, "Path must not be null");
-		this.path = normalizePath(pathBaseClassLoader);
-		this.classLoader = (classLoader != null) ? classLoader : ClassUtil.getClassLoader();
+		
+		final String path = normalizePath(pathBaseClassLoader);
+		this.path = path;
+		this.name = StrUtil.isBlank(path) ? null : FileUtil.getName(path);
+		
+		this.classLoader = ObjectUtil.defaultIfNull(classLoader, ClassUtil.getClassLoader());
 		this.clazz = clazz;
-		this.name = StrUtil.isBlank(this.path) ? null : FileUtil.file(this.path).getName();
 		initUrl();
 	}
 	// -------------------------------------------------------------------------------------- Constructor end
