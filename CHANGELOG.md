@@ -6,6 +6,8 @@
 ## 4.1.13
 
 ### 新特性
+* 【core】         增加RejectPolicy线程池线程拒绝策略枚举
+* 【core】         DateUtil增加isSame方法
 
 ### Bug修复
 * 【core】         修复RuntimeUtil.getResultLines未关闭Process问题（pr#164@Github）

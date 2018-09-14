@@ -3205,7 +3205,7 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 检查
+	 * 检查父完整路径是否为自路径的前半部分，如果不是说明不是子路径，可能存在slip注入。
 	 * <p>
 	 * 见http://blog.nsfocus.net/zip-slip-2/
 	 * 
