@@ -2,6 +2,7 @@ package cn.hutool.db;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
@@ -146,6 +147,49 @@ public class StatementUtil {
 			ps = conn.prepareStatement(sql);
 		}
 		return fillParams(ps, params);
+	}
+	
+	/**
+	 * 创建批量操作的{@link PreparedStatement}
+	 * 
+	 * @param conn 数据库连接
+	 * @param sql SQL语句，使用"?"做为占位符
+	 * @param paramsBatch "?"对应参数批次列表
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL异常
+	 * @since 4.1.13
+	 */
+	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
+		Assert.notBlank(sql, "Sql String must be not blank!");
+		
+		sql = sql.trim();
+//		SqlLog.INSTASNCE.log(sql, paramsBatch);
+		PreparedStatement ps = conn.prepareStatement(sql);
+		for (Object[] params : paramsBatch) {
+			StatementUtil.fillParams(ps, params);
+			ps.addBatch();
+		}
+		return ps;
+	}
+
+	/**
+	 * 创建{@link CallableStatement}
+	 * 
+	 * @param conn 数据库连接
+	 * @param sql SQL语句，使用"?"做为占位符
+	 * @param params "?"对应参数列表
+	 * @return {@link CallableStatement}
+	 * @throws SQLException SQL异常
+	 * @since 4.1.13
+	 */
+	public static CallableStatement prepareCall(Connection conn, String sql, Object... params) throws SQLException {
+		Assert.notBlank(sql, "Sql String must be not blank!");
+
+		sql = sql.trim();
+		SqlLog.INSTASNCE.log(sql, params);
+		CallableStatement call = conn.prepareCall(sql);
+		fillParams(call, params);
+		return call;
 	}
 
 	/**

@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Map;
 
 import cn.hutool.db.DbUtil;
@@ -52,8 +51,8 @@ public class SqlExecutor {
 	public static int execute(Connection conn, String sql, Object... params) throws SQLException {
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement(sql);
-			return executeUpdate(ps, params);
+			ps = StatementUtil.prepareStatement(conn, sql, params);
+			return ps.executeUpdate();
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -70,12 +69,12 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static boolean call(Connection conn, String sql, Object... params) throws SQLException {
-		CallableStatement proc = null;
+		CallableStatement call = null;
 		try {
-			proc = conn.prepareCall(sql);
-			return execute(proc, params);
+			call = StatementUtil.prepareCall(conn, sql, params);
+			return call.execute();
 		} finally {
-			DbUtil.close(proc);
+			DbUtil.close(call);
 		}
 	}
 
@@ -93,7 +92,7 @@ public class SqlExecutor {
 	public static ResultSet callQuery(Connection conn, String sql, Object... params) throws SQLException {
 		CallableStatement proc = null;
 		try {
-			proc = conn.prepareCall(sql);
+			proc = StatementUtil.prepareCall(conn, sql, params);
 			return proc.executeQuery();
 		} finally {
 			DbUtil.close(proc);
@@ -130,10 +129,11 @@ public class SqlExecutor {
 	 */
 	public static Long executeForGeneratedKey(Connection conn, String sql, Object... params) throws SQLException {
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		try {
-			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			executeUpdate(ps, params);
-			ResultSet rs = ps.getGeneratedKeys();
+			ps = StatementUtil.prepareStatement(conn, sql, params);
+			ps.executeUpdate();
+			rs = ps.getGeneratedKeys();
 			if (rs != null && rs.next()) {
 				try {
 					return rs.getLong(1);
@@ -144,6 +144,7 @@ public class SqlExecutor {
 			return null;
 		} finally {
 			DbUtil.close(ps);
+			DbUtil.close(rs);
 		}
 	}
 
@@ -161,11 +162,7 @@ public class SqlExecutor {
 	public static int[] executeBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement(sql);
-			for (Object[] params : paramsBatch) {
-				StatementUtil.fillParams(ps, params);
-				ps.addBatch();
-			}
+			ps = StatementUtil.prepareStatementForBatch(conn, sql, paramsBatch);
 			return ps.executeBatch();
 		} finally {
 			DbUtil.close(ps);
@@ -205,8 +202,8 @@ public class SqlExecutor {
 	public static <T> T query(Connection conn, String sql, RsHandler<T> rsh, Object... params) throws SQLException {
 		PreparedStatement ps = null;
 		try {
-			ps = conn.prepareStatement(sql);
-			return query(ps, rsh, params);
+			ps = StatementUtil.prepareStatement(conn, sql, params);
+			return executeQuery(ps, rsh);
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -255,16 +252,10 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static <T> T query(PreparedStatement ps, RsHandler<T> rsh, Object... params) throws SQLException {
-		ResultSet rs = null;
-		try {
-			StatementUtil.fillParams(ps, params);
-			rs = ps.executeQuery();
-			return rsh.handle(rs);
-		} finally {
-			DbUtil.close(rs);
-		}
+		StatementUtil.fillParams(ps, params);
+		return executeQuery(ps, rsh);
 	}
-
+	
 	/**
 	 * 执行查询语句并关闭PreparedStatement
 	 * 
@@ -282,4 +273,25 @@ public class SqlExecutor {
 			DbUtil.close(ps);
 		}
 	}
+	
+	//-------------------------------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 执行查询
+	 * @param ps {@link PreparedStatement}
+	 * @param rsh  结果集处理对象
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 4.1.13
+	 */
+	private static <T> T executeQuery(PreparedStatement ps, RsHandler<T> rsh) throws SQLException{
+		ResultSet rs = null;
+		try {
+			rs = ps.executeQuery();
+			return rsh.handle(rs);
+		} finally {
+			DbUtil.close(rs);
+		}
+	}
+	//-------------------------------------------------------------------------------------------------------------------------------- Private method end
 }

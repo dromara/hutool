@@ -9,6 +9,7 @@
 * 【core】         增加RejectPolicy线程池线程拒绝策略枚举
 * 【core】         DateUtil增加isSame方法
 * 【core】         FileUtil.getAbsolutePath方法在获取不到ClassPath情况下返回原路径
+* 【core】         打印SQL日志覆盖每一个方法
 
 ### Bug修复
 * 【core】         修复RuntimeUtil.getResultLines未关闭Process问题（pr#164@Github）
