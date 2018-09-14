@@ -303,7 +303,7 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 					if (null == rowList) {
 						rowList = new ArrayList<>(0);
 					}
-					result.add(IterUtil.toMap(aliasHeader(headerList), rowList));
+					result.add(IterUtil.toMap(aliasHeader(headerList), rowList, true));
 				}
 			}
 		}

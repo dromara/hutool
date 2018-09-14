@@ -313,21 +313,20 @@ public class FileUtil {
 	}
 
 	/**
-	 * 创建File对象
+	 * 创建File对象<br>
+	 * 此方法会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
 	 * 
 	 * @param parent 父目录
 	 * @param path 文件路径
 	 * @return File
 	 */
 	public static File file(String parent, String path) {
-		if (StrUtil.isBlank(path)) {
-			throw new NullPointerException("File path is blank!");
-		}
-		return new File(parent, path);
+		return file(new File(parent), path);
 	}
 
 	/**
-	 * 创建File对象
+	 * 创建File对象<br>
+	 * 此方法会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
 	 * 
 	 * @param parent 父文件对象
 	 * @param path 文件路径
@@ -337,11 +336,12 @@ public class FileUtil {
 		if (StrUtil.isBlank(path)) {
 			throw new NullPointerException("File path is blank!");
 		}
-		return new File(parent, path);
+		return checkSlip(parent, new File(parent, path));
 	}
 
 	/**
-	 * 通过多层目录参数创建文件
+	 * 通过多层目录参数创建文件<br>
+	 * 此方法会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
 	 * 
 	 * @param directory 父目录
 	 * @param names 元素名（多层目录名）
@@ -357,7 +357,7 @@ public class FileUtil {
 		File file = directory;
 		for (String name : names) {
 			if (null != name) {
-				file = new File(file, name);
+				file = file(file, name);
 			}
 		}
 		return file;
@@ -379,9 +379,9 @@ public class FileUtil {
 		File file = null;
 		for (String name : names) {
 			if (file == null) {
-				file = new File(name);
+				file = file(name);
 			} else {
-				file = new File(file, name);
+				file = file(file, name);
 			}
 		}
 		return file;
@@ -3165,7 +3165,11 @@ public class FileUtil {
 	 */
 	public static String getParent(String filePath, int level) {
 		final File parent = getParent(file(filePath), level);
-		return null == parent ? null : parent.getAbsolutePath();
+		try {
+			return null == parent ? null : parent.getCanonicalPath();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -3188,10 +3192,42 @@ public class FileUtil {
 			return file;
 		}
 
-		final File parentFile = file.getParentFile();
+		File parentFile;
+		try {
+			parentFile = file.getCanonicalFile().getParentFile();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 		if (1 == level) {
 			return parentFile;
 		}
 		return getParent(parentFile, level - 1);
+	}
+	
+	/**
+	 * 检查
+	 * <p>
+	 * 见http://blog.nsfocus.net/zip-slip-2/
+	 * 
+	 * @param parentFile 父文件或目录
+	 * @param file 子文件或目录
+	 * @return 子文件或目录
+	 * @throws IllegalArgumentException 检查创建的子文件不在父目录中抛出此异常
+	 */
+	public static File checkSlip(File parentFile, File file) throws IllegalArgumentException {
+		if(null != parentFile && null != file) {
+			String parentCanonicalPath;
+			String canonicalPath;
+			try {
+				parentCanonicalPath = parentFile.getCanonicalPath();
+				canonicalPath = file.getCanonicalPath();
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			}
+			if (false == canonicalPath.startsWith(parentCanonicalPath)) {
+				throw new IllegalArgumentException("New file is outside of the parent dir: " + file.getName());
+			}
+		}
+		return file;
 	}
 }

@@ -19,6 +19,15 @@ import cn.hutool.core.util.CharsetUtil;
  * @author Looly
  */
 public class FileUtilTest {
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void fileTest() {
+		File file = FileUtil.file("d:/aaa", "bbb");
+		Assert.assertNotNull(file);
+		
+		//构建目录中出现非子目录抛出异常
+		FileUtil.file(file, "../ccc");
+	}
 
 	@Test
 	public void getAbsolutePathTest() {
