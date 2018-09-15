@@ -47,7 +47,7 @@ import cn.hutool.poi.excel.style.Align;
 public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/** 目标文件 */
-	private File destFile;
+	protected File destFile;
 	/** 当前行 */
 	private AtomicInteger currentRow = new AtomicInteger(0);
 	/** 标题行别名 */
@@ -750,6 +750,13 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (null != this.destFile) {
 			flush();
 		}
+		closeWithoutFlush();
+	}
+	
+	/**
+	 * 关闭工作簿但是不写出
+	 */
+	protected void closeWithoutFlush() {
 		super.close();
 
 		// 清空对象

@@ -3623,10 +3623,10 @@ public class StrUtil {
 	 * 
 	 * @return UUID字符串
 	 * @since 4.0.10
-	 * @see RandomUtil#randomUUID()
+	 * @see IdUtil#randomUUID()
 	 */
 	public static String uuid() {
-		return RandomUtil.randomUUID();
+		return IdUtil.randomUUID();
 	}
 
 	/**

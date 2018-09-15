@@ -20,8 +20,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import cn.hutool.poi.excel.style.StyleUtil;
 
 /**
@@ -29,13 +29,13 @@ import cn.hutool.poi.excel.style.StyleUtil;
  * 
  * @author looly
  */
-public class ExcelWriteTest {
-
+public class BigExcelWriteTest {
+	
 	@Test
 	@Ignore
 	public void writeTest2() {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
-		ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/single_line.xlsx");
+		BigExcelWriter overtimeWriter = ExcelUtil.getBigWriter("e:/single_line.xlsx");
 		overtimeWriter.write(row);
 		overtimeWriter.close();
 	}
@@ -50,29 +50,27 @@ public class ExcelWriteTest {
 		List<?> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4", DateUtil.date(), 28.00);
 
 		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
-		for (int i = 0; i < 400; i++) {
-			// 超大列表写出测试
+		for(int i=0; i < 400000; i++) {
+			//超大列表写出测试
 			rows.add(ObjectUtil.clone(row1));
 		}
-
-		String filePath = "e:/writeTest.xlsx";
+		
+		String filePath = "e:/bigWriteTest.xlsx";
 		FileUtil.del(filePath);
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter(filePath);
-		// 通过构造方法创建writer
-		// ExcelWriter writer = new ExcelWriter("d:/writeTest.xls");
+		BigExcelWriter writer = ExcelUtil.getBigWriter(filePath);
 
-		// 跳过当前行，既第一行，非必须，在此演示用
-		writer.passCurrentRow();
-		// 合并单元格后的标题行，使用默认标题样式
-		writer.merge(row1.size() - 1, "测试标题");
+//		// 跳过当前行，既第一行，非必须，在此演示用
+//		writer.passCurrentRow();
+//		// 合并单元格后的标题行，使用默认标题样式
+//		writer.merge(row1.size() - 1, "大数据测试标题");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
-		writer.autoSizeColumn(0, true);
+//		writer.autoSizeColumn(0, true);
 		// 关闭writer，释放内存
 		writer.close();
 	}
-
+	
 	@Test
 	@Ignore
 	public void mergeTest() {
@@ -85,7 +83,7 @@ public class ExcelWriteTest {
 		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("e:/mergeTest.xlsx");
+		BigExcelWriter writer = ExcelUtil.getBigWriter("e:/mergeTest.xlsx");
 		CellStyle style = writer.getStyleSet().getHeadCellStyle();
 		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
 
@@ -95,10 +93,10 @@ public class ExcelWriteTest {
 		writer.merge(row1.size() - 1, "测试标题");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
-
+		
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(7, 10, 4, 10, "测试Merge", false);
-
+		
 		// 关闭writer，释放内存
 		writer.close();
 	}
@@ -123,15 +121,17 @@ public class ExcelWriteTest {
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest.xlsx");
-
-		// 设置内容字体
+		String path = "e:/bigWriteMapTest.xlsx";
+		FileUtil.del(path);
+		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
+		
+		//设置内容字体
 		Font font = writer.createFont();
 		font.setBold(true);
-		font.setColor(Font.COLOR_RED);
-		font.setItalic(true);
+		font.setColor(Font.COLOR_RED); 
+		font.setItalic(true); 
 		writer.getStyleSet().setFont(font, true);
-
+		
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");
 		// 一次性写出内容，使用默认样式
@@ -139,7 +139,7 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-
+	
 	@Test
 	@Ignore
 	public void writeMapTest2() {
@@ -149,10 +149,12 @@ public class ExcelWriteTest {
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
 		row1.put("考试日期", DateUtil.date());
-
+		
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest2.xlsx");
-
+		String path = "e:/bigWriteMapTest2.xlsx";
+		FileUtil.del(path);
+		BigExcelWriter writer = ExcelUtil.getBigWriter(path);
+		
 		// 一次性写出内容，使用默认样式
 		writer.writeRow(row1, true);
 		// 关闭writer，释放内存
@@ -178,10 +180,10 @@ public class ExcelWriteTest {
 
 		List<TestBean> rows = CollUtil.newArrayList(bean1, bean2);
 		// 通过工具类创建writer
-		String file = "e:/writeBeanTest.xlsx";
+		String file = "e:/bigWriteBeanTest.xlsx";
 		FileUtil.del(file);
-		ExcelWriter writer = ExcelUtil.getWriter(file);
-		// 自定义标题
+		BigExcelWriter writer = ExcelUtil.getBigWriter(file);
+		//自定义标题
 		writer.addHeaderAlias("name", "姓名");
 		writer.addHeaderAlias("age", "年龄");
 		writer.addHeaderAlias("score", "分数");
@@ -194,12 +196,13 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-
+	
 	@Test
 	@Ignore
 	public void writeCellValueTest() {
-		ExcelWriter writer = new ExcelWriter("d:/cellValueTest.xls");
-		writer.writeCellValue(3, 5, "aaa");
+		String path = "e:/cellValueTest.xlsx";
+		FileUtil.del(path);
+		BigExcelWriter writer = new BigExcelWriter(path);
 		writer.writeCellValue(3, 5, "aaa");
 		writer.close();
 	}

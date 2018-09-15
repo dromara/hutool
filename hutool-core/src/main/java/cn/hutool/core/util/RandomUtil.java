@@ -448,7 +448,9 @@ public class RandomUtil {
 	// ------------------------------------------------------------------- UUID
 	/**
 	 * @return 随机UUID
+	 * @deprecated 请使用{@link IdUtil#randomUUID()}
 	 */
+	@Deprecated
 	public static String randomUUID() {
 		return UUID.randomUUID().toString();
 	}
@@ -458,7 +460,9 @@ public class RandomUtil {
 	 * 
 	 * @return 简化的UUID，去掉了横线
 	 * @since 3.2.2
+	 * @deprecated 请使用{@link IdUtil#simpleUUID()}
 	 */
+	@Deprecated
 	public static String simpleUUID() {
 		return UUID.randomUUID().toString(true);
 	}

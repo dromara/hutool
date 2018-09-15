@@ -17,6 +17,7 @@ import cn.hutool.setting.Setting;
 public class MailAccount implements Serializable {
 	private static final long serialVersionUID = -6937313421815719204L;
 
+	private static final String MAIL_PROTOCOL = "mail.transport.protocol";
 	private static final String SMTP_HOST = "mail.smtp.host";
 	private static final String SMTP_PORT = "mail.smtp.port";
 	private static final String SMTP_AUTH = "mail.smtp.auth";
@@ -384,6 +385,7 @@ public class MailAccount implements Serializable {
 		System.setProperty(SPLIT_LONG_PARAMS, String.valueOf(this.splitlongparameters));
 		
 		final Properties p = new Properties();
+		p.put(MAIL_PROTOCOL, "smtp");
 		p.put(SMTP_HOST, this.host);
 		p.put(SMTP_PORT, String.valueOf(this.port));
 		p.put(SMTP_AUTH, String.valueOf(this.auth));

@@ -3,6 +3,25 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.13
+
+### 新特性
+* 【core】         增加RejectPolicy线程池线程拒绝策略枚举
+* 【core】         DateUtil增加isSame方法
+* 【core】         FileUtil.getAbsolutePath方法在获取不到ClassPath情况下返回原路径
+* 【core】         打印SQL日志覆盖每一个方法
+* 【core】         Convert.toXXX转数字的时候默认去除两边空白符
+* 【poi】           增加BigExcelWriter，支持Excel大数据导出（issue#IK47S@Gitee）
+* 【core】         ExceptionUtil增加isCausedBy和getCausedBy方法
+* 【poi】           EnumUtil增加toString和fromString
+* 【poi】           新增IdUtil工具类
+
+### Bug修复
+* 【core】         修复RuntimeUtil.getResultLines未关闭Process问题（pr#164@Github）
+* 【core】         修复ClassPathResource在jar运行模式下的空指针问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.12
 
 ### 新特性

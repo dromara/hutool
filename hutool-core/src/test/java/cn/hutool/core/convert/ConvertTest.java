@@ -5,8 +5,6 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.date.DateUtil;
 
 /**
@@ -49,12 +47,22 @@ public class ConvertTest {
 
 	@Test
 	public void toIntTest() {
-		String a = "34232";
+		String a = " 34232";
 		Integer value = Convert.toInt(a);
 		Assert.assertEquals(Integer.valueOf(34232), value);
 
 		int value2 = ConverterRegistry.getInstance().convert(int.class, a);
 		Assert.assertTrue(34232 == value2);
+	}
+	
+	@Test
+	public void toLongTest() {
+		String a = " 342324545435435";
+		Long value = Convert.toLong(a);
+		Assert.assertEquals(Long.valueOf(342324545435435L), value);
+		
+		long value2 = ConverterRegistry.getInstance().convert(long.class, a);
+		Assert.assertTrue(342324545435435L == value2);
 	}
 
 	@Test

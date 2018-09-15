@@ -1301,6 +1301,49 @@ public class DateUtil {
 			return new DateTime(date).isIn(beginDate, endDate);
 		}
 	}
+	
+	/**
+	 * 是否为相同时间
+	 * 
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为相同时间
+	 * @since 4.1.13
+	 */
+	public static boolean isSameTime(Date date1, Date date2) {
+		return date1.compareTo(date2) == 0;
+	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一天
+	 * @since 4.1.13
+	 */
+	public static boolean isSameDay(final Date date1, final Date date2) {
+		if (date1 == null || date2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return isSameDay(calendar(date1), calendar(date2));
+	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 * 
+	 * @param cal1 日期1
+	 * @param cal2 日期2
+	 * @return 是否为同一天
+	 * @since 4.1.13
+	 */
+	public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+		if (cal1 == null || cal2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
+				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
+				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+	}
 
 	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：纳秒

@@ -316,6 +316,7 @@ public class Mail {
 	 * @since 4.0.2
 	 */
 	private Session getSession(boolean isSingleton) {
+		final MailAccount mailAccount = this.mailAccount;
 		Authenticator authenticator = null;
 		if (mailAccount.isAuth()) {
 			authenticator = new UserPassAuthenticator(mailAccount.getUser(), mailAccount.getPass());

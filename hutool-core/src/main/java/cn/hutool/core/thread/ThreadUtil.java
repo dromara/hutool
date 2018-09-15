@@ -183,7 +183,7 @@ public class ThreadUtil {
 		}
 		return t;
 	}
-	
+
 	/**
 	 * 创建新线程
 	 * 
@@ -292,6 +292,17 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 创建ThreadFactoryBuilder
+	 * 
+	 * @return ThreadFactoryBuilder
+	 * @see ThreadFactoryBuilder#build()
+	 * @since 4.1.13
+	 */
+	public static ThreadFactoryBuilder createThreadFactoryBuilder() {
+		return ThreadFactoryBuilder.create();
+	}
+
+	/**
 	 * 结束线程，调用此方法后，线程将抛出 {@link InterruptedException}异常
 	 * 
 	 * @param thread 线程
@@ -373,7 +384,7 @@ public class ThreadUtil {
 		final SecurityManager s = System.getSecurityManager();
 		return (null != s) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
 	}
-	
+
 	/**
 	 * 创建线程工厂
 	 * 
@@ -384,7 +395,7 @@ public class ThreadUtil {
 	public static ThreadFactory newNamedThreadFactory(String prefix, boolean isDeamon) {
 		return new NamedThreadFactory(prefix, isDeamon);
 	}
-	
+
 	/**
 	 * 创建线程工厂
 	 * 
@@ -396,7 +407,7 @@ public class ThreadUtil {
 	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDeamon) {
 		return new NamedThreadFactory(prefix, threadGroup, isDeamon);
 	}
-	
+
 	/**
 	 * 创建线程工厂
 	 * 

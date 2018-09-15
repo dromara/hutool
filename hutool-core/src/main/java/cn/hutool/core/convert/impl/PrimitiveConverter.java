@@ -156,6 +156,11 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 	}
 	
 	@Override
+	protected String convertToStr(Object value) {
+		return StrUtil.trim(super.convertToStr(value));
+	}
+	
+	@Override
 	@SuppressWarnings("unchecked")
 	public Class<Object> getTargetType() {
 		return (Class<Object>) this.targetType;

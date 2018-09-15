@@ -198,8 +198,7 @@ public class NumberConverter extends AbstractConverter<Number> {
 
 	@Override
 	protected String convertToStr(Object value) {
-		final String valueStr = super.convertToStr(value);
-		return (null == valueStr) ? null : valueStr.trim();
+		return StrUtil.trim(super.convertToStr(value));
 	}
 
 	@Override
