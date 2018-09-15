@@ -16,6 +16,30 @@ import cn.hutool.core.map.MapUtil;
 public class EnumUtil {
 
 	/**
+	 * Enum对象转String，调用{@link Enum#name()} 方法
+	 * 
+	 * @param e Enum
+	 * @return name值
+	 * @since 4.1.13
+	 */
+	public static String toString(Enum<?> e) {
+		return null != e ? e.name() : null;
+	}
+
+	/**
+	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}
+	 * 
+	 * @param <T> 枚举类型泛型
+	 * @param enumClass 枚举类
+	 * @param value 值
+	 * @return 枚举值
+	 * @since 4.1.13
+	 */
+	public static <T extends Enum<T>> T fromString(Class<T> enumClass, String value) {
+		return Enum.valueOf(enumClass, value);
+	}
+
+	/**
 	 * 枚举类中所有枚举对象的name列表
 	 * 
 	 * @param clazz 枚举类

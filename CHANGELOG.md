@@ -12,6 +12,8 @@
 * 【core】         打印SQL日志覆盖每一个方法
 * 【core】         Convert.toXXX转数字的时候默认去除两边空白符
 * 【poi】           增加BigExcelWriter，支持Excel大数据导出（issue#IK47S@Gitee）
+* 【core】         ExceptionUtil增加isCausedBy和getCausedBy方法
+* 【poi】           EnumUtil增加toString和fromString
 
 ### Bug修复
 * 【core】         修复RuntimeUtil.getResultLines未关闭Process问题（pr#164@Github）
