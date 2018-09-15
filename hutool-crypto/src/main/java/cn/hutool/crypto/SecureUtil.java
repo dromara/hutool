@@ -31,6 +31,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
@@ -920,8 +921,10 @@ public final class SecureUtil {
 	 * 简化的UUID，去掉了横线
 	 * 
 	 * @return 简化的UUID，去掉了横线
+	 * @deprecated 请使用 {@link IdUtil#simpleUUID()}
 	 */
+	@Deprecated
 	public static String simpleUUID() {
-		return RandomUtil.simpleUUID();
+		return IdUtil.simpleUUID();
 	}
 }

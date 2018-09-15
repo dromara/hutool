@@ -14,6 +14,7 @@
 * 【poi】           增加BigExcelWriter，支持Excel大数据导出（issue#IK47S@Gitee）
 * 【core】         ExceptionUtil增加isCausedBy和getCausedBy方法
 * 【poi】           EnumUtil增加toString和fromString
+* 【poi】           新增IdUtil工具类
 
 ### Bug修复
 * 【core】         修复RuntimeUtil.getResultLines未关闭Process问题（pr#164@Github）
