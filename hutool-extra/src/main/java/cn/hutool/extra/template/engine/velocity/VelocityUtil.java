@@ -19,7 +19,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.IdUtil;
 
 /**
  * Velocity模板引擎工具类<br>
@@ -235,7 +235,7 @@ public class VelocityUtil {
 	public static String merge(String templateContent, VelocityContext context) {
 		final StringWriter writer = new StringWriter();
 		try {
-			Velocity.evaluate(context, writer, RandomUtil.randomUUID(), templateContent);
+			Velocity.evaluate(context, writer, IdUtil.randomUUID(), templateContent);
 		} catch (Exception e) {
 			throw new UtilException(e);
 		}
