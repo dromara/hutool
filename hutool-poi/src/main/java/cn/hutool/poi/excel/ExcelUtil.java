@@ -27,7 +27,7 @@ import cn.hutool.poi.excel.sax.handler.RowHandler;
  *
  */
 public class ExcelUtil {
-	
+
 	// ------------------------------------------------------------------------------------ Read by Sax start
 	/**
 	 * 通过Sax方式读取Excel，同时支持03和07格式
@@ -173,6 +173,7 @@ public class ExcelUtil {
 	}
 	// ------------------------------------------------------------------------------------ Read by Sax end
 
+	// ------------------------------------------------------------------------------------------------ getReader
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet
@@ -335,6 +336,7 @@ public class ExcelUtil {
 		}
 	}
 
+	// ------------------------------------------------------------------------------------------------ getWriter
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
 	 * 不传入写出的Excel文件路径，只能调用{@link ExcelWriter#flush(OutputStream)}方法写出到流<br>
@@ -426,6 +428,99 @@ public class ExcelUtil {
 		}
 	}
 
+	// ------------------------------------------------------------------------------------------------ getBigWriter
+	/**
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet<br>
+	 * 不传入写出的Excel文件路径，只能调用{@link BigExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link BigExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link BigExcelWriter#flush()}方法写出到文件
+	 * 
+	 * @return {@link BigExcelWriter}
+	 * @since 4.1.13
+	 */
+	public static ExcelWriter getBigWriter() {
+		try {
+			return new BigExcelWriter();
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
+	}
+
+	/**
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet<br>
+	 * 不传入写出的Excel文件路径，只能调用{@link BigExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link BigExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link BigExcelWriter#flush()}方法写出到文件
+	 * 
+	 * @param rowAccessWindowSize 在内存中的行数
+	 * @return {@link BigExcelWriter}
+	 * @since 4.1.13
+	 */
+	public static ExcelWriter getBigWriter(int rowAccessWindowSize) {
+		try {
+			return new BigExcelWriter(rowAccessWindowSize);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
+	}
+
+	/**
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet
+	 * 
+	 * @param destFilePath 目标文件路径
+	 * @return {@link BigExcelWriter}
+	 */
+	public static BigExcelWriter getBigWriter(String destFilePath) {
+		try {
+			return new BigExcelWriter(destFilePath);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
+	}
+
+	/**
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet，名字为sheet1
+	 * 
+	 * @param destFile 目标文件
+	 * @return {@link BigExcelWriter}
+	 */
+	public static BigExcelWriter getBigWriter(File destFile) {
+		try {
+			return new BigExcelWriter(destFile);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
+	}
+
+	/**
+	 * 获得{@link BigExcelWriter}
+	 * 
+	 * @param destFilePath 目标文件路径
+	 * @param sheetName sheet表名
+	 * @return {@link BigExcelWriter}
+	 */
+	public static BigExcelWriter getBigWriter(String destFilePath, String sheetName) {
+		try {
+			return new BigExcelWriter(destFilePath, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
+	}
+
+	/**
+	 * 获得{@link BigExcelWriter}
+	 * 
+	 * @param destFile 目标文件
+	 * @param sheetName sheet表名
+	 * @return {@link BigExcelWriter}
+	 */
+	public static BigExcelWriter getBigWriter(File destFile, String sheetName) {
+		try {
+			return new BigExcelWriter(destFile, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw PoiChecker.transError(e);
+		}
+	}
+
+	// ------------------------------------------------------------------------------------------------ isXls
 	/**
 	 * 是否为XLS格式的Excel文件（HSSF）<br>
 	 * XLS文件主要用于Excel 97~2003创建
@@ -457,11 +552,11 @@ public class ExcelUtil {
 			return FileMagic.valueOf(in) == FileMagic.OOXML;
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
-		} catch(NoClassDefFoundError e) {
+		} catch (NoClassDefFoundError e) {
 			throw PoiChecker.transError(e);
 		}
 	}
-	
+
 	/**
 	 * 获取或者创建sheet表<br>
 	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之

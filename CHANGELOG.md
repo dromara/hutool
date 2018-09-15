@@ -10,6 +10,8 @@
 * 【core】         DateUtil增加isSame方法
 * 【core】         FileUtil.getAbsolutePath方法在获取不到ClassPath情况下返回原路径
 * 【core】         打印SQL日志覆盖每一个方法
+* 【core】         Convert.toXXX转数字的时候默认去除两边空白符
+* 【poi】           增加BigExcelWriter，支持Excel大数据导出（issue#IK47S@Gitee）
 
 ### Bug修复
 * 【core】         修复RuntimeUtil.getResultLines未关闭Process问题（pr#164@Github）
