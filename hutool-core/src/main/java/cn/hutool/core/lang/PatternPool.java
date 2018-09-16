@@ -36,11 +36,13 @@ public class PatternPool {
 	/** 18位身份证号码 */
 	public final static Pattern CITIZEN_ID = Pattern.compile("[1-9]\\d{5}[1-2]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}(\\d|X|x)");
 	/** 邮编 */
-	public final static Pattern ZIP_CODE = Pattern.compile("\\d{6}");
+	public final static Pattern ZIP_CODE = Pattern.compile("[1-9]\\d{5}(?!\\d)");
 	/** 生日 */
 	public final static Pattern BIRTHDAY = Pattern.compile("^(\\d{2,4})([/\\-\\.年]?)(\\d{1,2})([/\\-\\.月]?)(\\d{1,2})日?$");
 	/** URL */
-	public final static Pattern URL = Pattern.compile("(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?");
+	public final static Pattern URL = Pattern.compile("[a-zA-z]+://[^\\s]*");
+	/** Http URL */
+	public final static Pattern URL_HTTP = Pattern.compile("(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?");
 	/** 中文字、英文字母、数字和下划线 */
 	public final static Pattern GENERAL_WITH_CHINESE = Pattern.compile("^[\u4E00-\u9FFF\\w]+$");
 	/** UUID */
