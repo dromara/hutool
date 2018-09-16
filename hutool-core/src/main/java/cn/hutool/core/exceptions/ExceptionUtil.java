@@ -17,12 +17,9 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public final class ExceptionUtil {
+public class ExceptionUtil {
 
 	private static final String NULL = "null";
-
-	private ExceptionUtil() {
-	};
 
 	/**
 	 * 获得完整消息，包括异常名
@@ -38,10 +35,10 @@ public final class ExceptionUtil {
 	}
 
 	/**
-	 * 获得完整消息，包括异常名
+	 * 获得消息，调用异常类的getMessage方法
 	 * 
 	 * @param e 异常
-	 * @return 完整消息
+	 * @return 消息
 	 */
 	public static String getSimpleMessage(Throwable e) {
 		return (null == e) ? NULL : e.getMessage();
@@ -224,7 +221,7 @@ public final class ExceptionUtil {
 	public static boolean isCausedBy(Throwable throwable, Class<? extends Exception>... causeClasses) {
 		return null != getCausedBy(throwable, causeClasses);
 	}
-	
+
 	/**
 	 * 获取由指定异常类引起的异常
 	 * 

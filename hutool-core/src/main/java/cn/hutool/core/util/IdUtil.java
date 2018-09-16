@@ -51,10 +51,10 @@ public class IdUtil {
 	 * 
 	 * 参考：http://blog.csdn.net/qxc1281/article/details/54021882
 	 * 
-	 * @return {@link ObjectId}
+	 * @return ObjectId
 	 */
-	public static ObjectId createObjectId() {
-		return new ObjectId();
+	public static String objectId() {
+		return ObjectId.next();
 	}
 
 	/**
