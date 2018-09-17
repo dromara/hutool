@@ -42,6 +42,15 @@ public class QrConfig {
 	protected Image img;
 	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
 	protected int ratio;
+	
+	/**
+	 * 创建QrConfig
+	 * @return QrConfig
+	 * @since 4.1.14
+	 */
+	public static QrConfig create() {
+		return new QrConfig();
+	}
 
 	/**
 	 * 构造，默认长宽为300
