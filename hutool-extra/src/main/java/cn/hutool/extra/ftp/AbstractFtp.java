@@ -59,7 +59,6 @@ public abstract class AbstractFtp implements Closeable {
 	 * 文件或目录是否存在
 	 * 
 	 * @param path 目录
-	 * @param fileOrDirName 文件或目录名
 	 * @return 是否存在
 	 */
 	public boolean exist(String path) {
@@ -81,7 +80,6 @@ public abstract class AbstractFtp implements Closeable {
 	 * 删除指定目录下的指定文件
 	 * 
 	 * @param path 目录路径
-	 * @param fileName 文件名
 	 * @return 是否存在
 	 */
 	public abstract boolean delFile(String path);

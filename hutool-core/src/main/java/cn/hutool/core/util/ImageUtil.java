@@ -446,7 +446,6 @@ public class ImageUtil {
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG
 	 * 
 	 * @param srcImageFile 源图像文件
-	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
 	 * @param destImageFile 目标图像文件
 	 */
 	public static void convert(File srcImageFile, File destImageFile) {
