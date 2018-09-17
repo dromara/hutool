@@ -1,6 +1,7 @@
 package cn.hutool.extra.qrcode;
 
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -142,7 +143,24 @@ public class QrCodeUtil {
 	 */
 	public static BufferedImage generate(String content, QrConfig config) {
 		final BitMatrix bitMatrix = encode(content, config);
-		return toImage(bitMatrix, config.getForeColor(), config.getBackColor());
+		final BufferedImage image = toImage(bitMatrix, config.foreColor, config.backColor);
+		final Image logoImg = config.img;
+		if(null != logoImg) {
+			final int qrWidth = image.getWidth();
+			final int qrHeight = image.getHeight();
+			int width;
+			int height;
+			//按照最短的边做比例缩放
+			if(qrWidth < qrHeight) {
+				width = qrWidth / 6;
+				height =  logoImg.getHeight(null) * width / logoImg.getWidth(null);
+			}else {
+				height = qrHeight / 6;
+				width =  logoImg.getWidth(null) * height / logoImg.getHeight(null);
+			}
+			ImageUtil.pressImage(image, logoImg, new Rectangle(width, height), 1);
+		}
+		return image;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------- encode
@@ -200,7 +218,7 @@ public class QrCodeUtil {
 		}
 		BitMatrix bitMatrix;
 		try {
-			bitMatrix = multiFormatWriter.encode(content, format, config.getWidth(), config.getHeight(), config.toHints());
+			bitMatrix = multiFormatWriter.encode(content, format, config.width, config.height, config.toHints());
 		} catch (WriterException e) {
 			throw new QrCodeException(e);
 		}

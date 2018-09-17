@@ -938,6 +938,21 @@ public class ImageUtil {
 	public static BufferedImage pressImage(Image srcImage, Image pressImg, int x, int y, float alpha) {
 		return Img.from(srcImage).pressImage(pressImg, x, y, alpha).getImg();
 	}
+	
+	/**
+	 * 给图片添加图片水印<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像流
+	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
+	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
+	 * @param alpha 透明度：alpha 必须是范围 [0.0, 1.0] 之内（包含边界值）的一个浮点数字
+	 * @return 结果图片
+	 * @since 4.1.14
+	 */
+	public static BufferedImage pressImage(Image srcImage, Image pressImg, Rectangle rectangle, float alpha) {
+		return Img.from(srcImage).pressImage(pressImg, rectangle, alpha).getImg();
+	}
 
 	// ---------------------------------------------------------------------------------------------------------------------- rotate
 	/**

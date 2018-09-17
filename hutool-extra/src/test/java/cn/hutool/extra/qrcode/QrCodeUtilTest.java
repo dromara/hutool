@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ImageUtil;
 
 /**
  * 二维码工具类单元测试
@@ -29,6 +30,15 @@ public class QrCodeUtilTest {
 		config.setMargin(3);
 		config.setForeColor(Color.CYAN.getRGB());
 		config.setBackColor(Color.GRAY.getRGB());
+		QrCodeUtil.generate("http://hutool.cn/", config, FileUtil.file("e:/qrcode.jpg"));
+	}
+	
+	@Test
+//	@Ignore
+	public void generateTest3() {
+		QrConfig config = new QrConfig();
+		config.setMargin(3);
+		config.setImg(ImageUtil.read(FileUtil.file("e:/logo_small.jpg")));
 		QrCodeUtil.generate("http://hutool.cn/", config, FileUtil.file("e:/qrcode.jpg"));
 	}
 
