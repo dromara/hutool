@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.ImageUtil;
 
 /**
  * 二维码工具类单元测试
