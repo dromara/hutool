@@ -1,13 +1,17 @@
 package cn.hutool.extra.qrcode;
 
 import java.awt.Image;
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+
+import org.apache.velocity.texen.util.FileUtil;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ImageUtil;
 
 /**
  * 二维码设置
@@ -205,15 +209,35 @@ public class QrConfig {
 	public Image getImg() {
 		return img;
 	}
+	
+	/**
+	 * 设置二维码中的Logo文件
+	 * 
+	 * @param imgFile 二维码中的Logo
+	 * @return this;
+	 */
+	public QrConfig setImg(String imgPath) {
+		return setImg(FileUtil.file(imgPath));
+	}
+	
+	/**
+	 * 设置二维码中的Logo文件
+	 * 
+	 * @param imgFile 二维码中的Logo
+	 * @return this;
+	 */
+	public QrConfig setImg(File imgFile) {
+		return setImg(ImageUtil.read(imgFile));
+	}
 
 	/**
 	 * 设置二维码中的Logo
 	 * 
-	 * @param logoImg 二维码中的Logo
+	 * @param img 二维码中的Logo
 	 * @return this;
 	 */
-	public QrConfig setImg(Image logoImg) {
-		this.img = logoImg;
+	public QrConfig setImg(Image img) {
+		this.img = img;
 		return this;
 	}
 

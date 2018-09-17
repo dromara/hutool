@@ -38,7 +38,7 @@ public class QrCodeUtilTest {
 	public void generateTest3() {
 		QrConfig config = new QrConfig();
 		config.setMargin(3);
-		config.setImg(ImageUtil.read(FileUtil.file("e:/logo_small.jpg")));
+		config.setImg("e:/logo_small.jpg");
 		QrCodeUtil.generate("http://hutool.cn/", config, FileUtil.file("e:/qrcode.jpg"));
 	}
 
