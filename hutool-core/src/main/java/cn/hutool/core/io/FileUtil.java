@@ -558,7 +558,7 @@ public class FileUtil {
 	 * @return 是否晚于给定时间
 	 */
 	public static boolean newerThan(File file, File reference) {
-		if (null == file || false == reference.exists()) {
+		if (null == reference || false == reference.exists()) {
 			return true;// 文件一定比一个不存在的文件新
 		}
 		return newerThan(file, reference.lastModified());

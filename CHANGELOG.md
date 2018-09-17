@@ -11,6 +11,7 @@
 
 ### Bug修复
 * 【core】         修复ImageUtil.convert转换png变色问题（issue#IMWUO@Gitee）
+* 【core】         修复FileUtil.newerThan中null判断的问题（issue#165@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
