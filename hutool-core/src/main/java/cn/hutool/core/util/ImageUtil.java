@@ -32,6 +32,7 @@ import cn.hutool.core.img.Img;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
 
 /**
  * 图片处理工具类：<br>
@@ -448,11 +449,22 @@ public class ImageUtil {
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
 	 * @param destImageFile 目标图像文件
 	 */
-	public static void convert(File srcImageFile, String formatName, File destImageFile) {
+	public static void convert(File srcImageFile, File destImageFile) {
+		Assert.notNull(srcImageFile);
+		Assert.notNull(destImageFile);
+		Assert.isFalse(srcImageFile.equals(destImageFile), "Src file is equals to dest file!");
+		
+		final String srcExtName = FileUtil.extName(srcImageFile);
+		final String destExtName = FileUtil.extName(destImageFile);
+		if(StrUtil.equalsIgnoreCase(srcExtName, destExtName)) {
+			//扩展名相同直接复制文件
+			FileUtil.copy(srcImageFile, destImageFile, true);
+		}
+		
 		ImageOutputStream imageOutputStream = null;
 		try {
 			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
-			convert(ImageIO.read(srcImageFile), formatName, imageOutputStream);
+			convert(ImageIO.read(srcImageFile), destExtName, imageOutputStream, StrUtil.equalsIgnoreCase(IMAGE_TYPE_PNG, srcExtName));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -493,7 +505,7 @@ public class ImageUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-
+	
 	/**
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
 	 * 此方法并不关闭流
@@ -504,8 +516,22 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream) {
+		convert(srcImage, formatName, destImageStream, false);
+	}
+
+	/**
+	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
+	 * 
+	 * @param srcImage 源图像流
+	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
+	 * @param destImageStream 目标图像输出流
+	 * @param isSrcPng 源图片是否为PNG格式
+	 * @since 4.1.14
+	 */
+	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream, boolean isSrcPng) {
 		try {
-			ImageIO.write(toBufferedImage(srcImage), formatName, destImageStream);
+			ImageIO.write(isSrcPng ? copyImage(srcImage, BufferedImage.TYPE_INT_BGR) : toBufferedImage(srcImage), formatName, destImageStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

@@ -88,7 +88,7 @@ compile 'cn.hutool:hutool-all:4.1.14'
 
 ### 非Maven项目
 
-点击已下任一链接，下载`hutool-all-X.X.X.jar`即可：
+点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
 - [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.14/)
 - [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.14/)

@@ -71,4 +71,10 @@ public class ImageUtilTest {
 	public void sliceByRowsAndColsTest() {
 		ImageUtil.sliceByRowsAndCols(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest"), 5, 5);
 	}
+	
+	@Test
+	@Ignore
+	public void convertTest() {
+		ImageUtil.convert(FileUtil.file("e:/test2.png"), FileUtil.file("e:/test2Convert.jpg"));
+	}
 }
