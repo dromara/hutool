@@ -8,10 +8,12 @@
 ### 新特性
 * 【core】         StrUtil增加hide方法
 * 【core】         PatternPool增加URL_HTTP，原URL规则变更
+* 【extra】        统一FTP和SFTP接口规范
 
 ### Bug修复
 * 【core】         修复ImageUtil.convert转换png变色问题（issue#IMWUO@Gitee）
 * 【core】         修复FileUtil.newerThan中null判断的问题（issue#165@Github）
+* 【extra】        修复Ftp中mkdir方法引起的数组越界问题
 
 -------------------------------------------------------------------------------------------------------------
 

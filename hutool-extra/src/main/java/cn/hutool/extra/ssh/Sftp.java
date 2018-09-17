@@ -1,7 +1,8 @@
 package cn.hutool.extra.ssh;
 
-import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -12,9 +13,10 @@ import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.ftp.AbstractFtp;
 
 /**
  * SFTP是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。<br>
@@ -29,7 +31,7 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 4.0.2
  */
-public class Sftp implements Closeable {
+public class Sftp extends AbstractFtp {
 
 	private Session session;
 	private ChannelSftp channel;
@@ -44,8 +46,21 @@ public class Sftp implements Closeable {
 	 * @param sshPass 远程主机密码
 	 */
 	public Sftp(String sshHost, int sshPort, String sshUser, String sshPass) {
-		this.session = JschUtil.getSession(sshHost, sshPort, sshUser, sshPass);
-		this.channel = JschUtil.openSftp(session);
+		this(sshHost, sshPort, sshUser, sshPass, DEFAULT_CHARSET);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param sshHost 远程主机
+	 * @param sshPort 远程主机端口
+	 * @param sshUser 远程主机用户名
+	 * @param sshPass 远程主机密码
+	 * @param charset 编码
+	 * @since 4.1.14
+	 */
+	public Sftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
+		this(JschUtil.getSession(sshHost, sshPort, sshUser, sshPass), charset);
 	}
 
 	/**
@@ -54,27 +69,57 @@ public class Sftp implements Closeable {
 	 * @param session {@link Session}
 	 */
 	public Sftp(Session session) {
+		this(session, DEFAULT_CHARSET);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param session {@link Session}
+	 * @param charset 编码
+	 * @since 4.1.14
+	 */
+	public Sftp(Session session, Charset charset) {
+		this(JschUtil.openSftp(session), charset);
 		this.session = session;
-		this.channel = JschUtil.openSftp(session);
 	}
 
 	/**
 	 * 构造
 	 * 
 	 * @param channel {@link ChannelSftp}
+	 * @param charset 编码
 	 */
-	public Sftp(ChannelSftp channel) {
+	public Sftp(ChannelSftp channel, Charset charset) {
+		this.charset = charset;
 		this.channel = channel;
+		try {
+			this.channel.setFilenameEncoding(charset.toString());
+		} catch (SftpException e) {
+			throw new JschRuntimeException(e);
+		}
 	}
 	// ---------------------------------------------------------------------------------------- Constructor end
+
+	/**
+	 * 获取SFTP通道客户端
+	 * 
+	 * @return 通道客户端
+	 * @since 4.1.14
+	 */
+	public ChannelSftp getClient() {
+		return this.channel;
+	}
 
 	/**
 	 * 获取SFTP通道
 	 * 
 	 * @return 通道
+	 * @deprecated 请使用{@link #getClient()}
 	 */
+	@Deprecated
 	public ChannelSftp getChannel() {
-		return this.channel;
+		return getClient();
 	}
 
 	/**
@@ -82,6 +127,7 @@ public class Sftp implements Closeable {
 	 * 
 	 * @return 远程当前目录
 	 */
+	@Override
 	public String pwd() {
 		try {
 			return channel.pwd();
@@ -105,25 +151,13 @@ public class Sftp implements Closeable {
 	}
 
 	/**
-	 * 文件或目录在指定目录下是否存在
-	 * 
-	 * @param path 目录
-	 * @param fileOrDirName 文件或目录名
-	 * @return 是否存在
-	 * @since 4.0.5
-	 */
-	public boolean exist(String path, String fileOrDirName) {
-		List<String> ls = ls(path);
-		return containsIgnoreCase(ls, fileOrDirName);
-	}
-
-	/**
 	 * 遍历某个目录下所有文件或目录，不会递归遍历
 	 * 
 	 * @param path 遍历某个目录下所有文件或目录
 	 * @return 目录或文件名列表
 	 * @since 4.0.5
 	 */
+	@Override
 	public List<String> ls(String path) {
 		return ls(path, null);
 	}
@@ -189,14 +223,14 @@ public class Sftp implements Closeable {
 		return fileNames;
 	}
 
-	/**
-	 * 打开上级目录
-	 * 
-	 * @return 是否打开目录
-	 * @since 4.0.5
-	 */
-	public boolean toParent() {
-		return cd("..");
+	@Override
+	public boolean mkdir(String dir) {
+		try {
+			this.channel.mkdir(dir);
+			return true;
+		} catch (SftpException e) {
+			throw new JschRuntimeException(e);
+		}
 	}
 
 	/**
@@ -213,32 +247,6 @@ public class Sftp implements Closeable {
 			channel.cd(directory.replaceAll("\\\\", "/"));
 			return true;
 		} catch (SftpException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * 创建指定文件夹及其父目录
-	 * 
-	 * @param dir 文件夹路径，绝对路径
-	 */
-	public void mkDirs(String dir) {
-		final String[] dirs = dir.split("[\\\\/]");
-
-		try {
-			final String now = channel.pwd();
-			channel.cd("/");
-			for (int i = 0; i < dirs.length; i++) {
-				if (StrUtil.isNotEmpty(dirs[i])) {
-					boolean dirExists = cd(dirs[i]);
-					if (false == dirExists) {
-						channel.mkdir(dirs[i]);
-						channel.cd(dirs[i]);
-					}
-				}
-			}
-			channel.cd(now);
-		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
 	}
@@ -248,13 +256,14 @@ public class Sftp implements Closeable {
 	 * 
 	 * @param filePath 要删除的文件绝对路径
 	 */
-	public Sftp delFile(String filePath) {
+	@Override
+	public boolean delFile(String filePath) {
 		try {
 			channel.rm(filePath);
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
-		return this;
+		return true;
 	}
 
 	/**
@@ -263,6 +272,7 @@ public class Sftp implements Closeable {
 	 * @param dirPath 文件夹路径
 	 * @return boolean 是否删除成功
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean delDir(String dirPath) {
 		if (false == cd(dirPath)) {
@@ -301,6 +311,12 @@ public class Sftp implements Closeable {
 		}
 	}
 
+	@Override
+	public boolean upload(String srcFilePath, File destFile) {
+		put(srcFilePath, FileUtil.getAbsolutePath(destFile));
+		return true;
+	}
+
 	/**
 	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。覆盖模式
 	 * 
@@ -327,6 +343,11 @@ public class Sftp implements Closeable {
 			throw new JschRuntimeException(e);
 		}
 		return this;
+	}
+
+	@Override
+	public void download(String src, File destFile) {
+		get(src, FileUtil.getAbsolutePath(destFile));
 	}
 
 	/**
@@ -365,29 +386,4 @@ public class Sftp implements Closeable {
 		/** 追加模式，如果目标文件已存在，传输的文件将在目标文件后追加。 */
 		APPEND;
 	}
-
-	// ---------------------------------------------------------------------------------------------------------------------------------------- Private method start
-	/**
-	 * 是否包含指定字符串，忽略大小写
-	 * 
-	 * @param names 文件或目录名列表
-	 * @param nameToFind 要查找的文件或目录名
-	 * @return 是否包含
-	 * @since 4.0.5
-	 */
-	private static boolean containsIgnoreCase(List<String> names, String nameToFind) {
-		if (CollUtil.isEmpty(names)) {
-			return false;
-		}
-		if (StrUtil.isEmpty(nameToFind)) {
-			return false;
-		}
-		for (String name : names) {
-			if (nameToFind.equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	// ---------------------------------------------------------------------------------------------------------------------------------------- Private method end
 }
