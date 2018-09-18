@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.swing;
 
 import java.awt.Image;
 import java.awt.Toolkit;

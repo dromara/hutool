@@ -3,6 +3,7 @@ package cn.hutool.core.img;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -258,8 +259,10 @@ public class Img {
 		// 透明度
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
 		// 在指定坐标绘制水印文字
-		final int fontSize = font.getSize();
-		g.drawString(pressText, (destImage.getWidth() - (getLength(pressText) * fontSize)) / 2 + x, (destImage.getHeight() - fontSize) / 2 + y);
+		final FontMetrics metrics = g.getFontMetrics(font);
+		final int textLength = metrics.stringWidth(pressText);
+		final int textHeight = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
+		g.drawString(pressText, Math.abs(destImage.getWidth() - textLength) / 2 + x, Math.abs(destImage.getHeight() + textHeight) / 2 + y);
 		g.dispose();
 		this.destImage = destImage;
 
@@ -420,25 +423,6 @@ public class Img {
 		return backgroundImg;
 	}
 
-	/**
-	 * 计算text的长度（一个中文算两个字符）<br>
-	 * 如：text="中国",返回 2；text="test",返回 2；text="中国ABC",返回 4.
-	 * 
-	 * @param text 文本
-	 * @return 字符长度
-	 */
-	private static int getLength(String text) {
-		int length = 0;
-		for (int i = 0; i < text.length(); i++) {
-			if (String.valueOf(text.charAt(i)).getBytes().length > 1) {
-				length += 2;
-			} else {
-				length += 1;
-			}
-		}
-		return length / 2;
-	}
-	
 	/**
 	 * 获取int类型的图片类型
 	 * 

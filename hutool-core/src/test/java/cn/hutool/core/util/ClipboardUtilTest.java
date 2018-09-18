@@ -3,7 +3,7 @@ package cn.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.ClipboardUtil;
+import cn.hutool.core.swing.ClipboardUtil;
 
 /**
  * 剪贴板工具类单元测试

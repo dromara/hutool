@@ -10,6 +10,9 @@
 * 【core】         PatternPool增加URL_HTTP，原URL规则变更
 * 【extra】        统一FTP和SFTP接口规范
 * 【extra】        QrCodeUtil支持二维码中贴Logo图片
+* 【core】         校准ImageUtil.pressText文字位置
+* 【core】         ImageUtil增加getColor等方法
+* 【core】         增加RobotUtil提供截屏等封装，增加ScreenUtil用于获取屏幕属性
 
 ### Bug修复
 * 【core】         修复ImageUtil.convert转换png变色问题（issue#IMWUO@Gitee）
