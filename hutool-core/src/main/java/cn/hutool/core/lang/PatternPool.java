@@ -11,7 +11,10 @@ import cn.hutool.core.util.ReUtil;
  *
  */
 public class PatternPool {
-
+	/** 驼峰格式 */
+	public final static Pattern CAMELCASE_PATTERN = Pattern.compile("[A-Z]");
+	/** 下划线格式 */
+	public final static Pattern UNDERLINE_PATTERN = Pattern.compile("_[a-z]");
 	/** 英文字母 、数字和下划线 */
 	public final static Pattern GENERAL = Pattern.compile("^\\w+$");
 	/** 数字 */

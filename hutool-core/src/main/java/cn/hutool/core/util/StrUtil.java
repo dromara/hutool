@@ -16,6 +16,7 @@ import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.text.StrSpliter;
@@ -2279,43 +2280,15 @@ public class StrUtil {
 			return null;
 		}
 
-		final int length = str.length();
-		final StringBuilder sb = new StringBuilder();
-		char c;
-		for (int i = 0; i < length; i++) {
-			c = str.charAt(i);
-			final Character preChar = (i > 0) ? str.charAt(i - 1) : null;
-			if (Character.isUpperCase(c)) {
-				// 遇到大写字母处理
-				final Character nextChar = (i < str.length() - 1) ? str.charAt(i + 1) : null;
-				if (null != preChar && Character.isUpperCase(preChar)) {
-					// 前一个字符为大写，则按照一个词对待
-					sb.append(c);
-				} else if (null != nextChar && Character.isUpperCase(nextChar)) {
-					// 后一个为大写字母，按照一个词对待
-					if (null != preChar && symbol != preChar) {
-						// 前一个是非大写时按照新词对待，加连接符
-						sb.append(symbol);
-					}
-					sb.append(c);
-				} else {
-					// 前后都为非大写按照新词对待
-					if (null != preChar && symbol != preChar) {
-						// 前一个非连接符，补充连接符
-						sb.append(symbol);
-					}
-					sb.append(Character.toLowerCase(c));
-				}
-			} else {
-				if (sb.length() > 0 && Character.isUpperCase(sb.charAt(sb.length() - 1)) && symbol != c) {
-					// 当结果中前一个字母为大写，当前为小写，说明此字符为新词开始（连接符也表示新词）
-					sb.append(symbol);
-				}
-				// 小写或符号
-				sb.append(c);
-			}
+		java.util.regex.Matcher matcher = PatternPool.CAMELCASE_PATTERN.matcher(str);
+		StringBuilder builder = new StringBuilder(str);
+		for (int i = 0; matcher.find(); i++) {
+			builder.replace(matcher.start() + i, matcher.end() + i, symbol + matcher.group().toLowerCase());
 		}
-		return sb.toString();
+		if (builder.charAt(0) == symbol) {
+			builder.deleteCharAt(0);
+		}
+		return builder.toString();
 	}
 
 	/**
