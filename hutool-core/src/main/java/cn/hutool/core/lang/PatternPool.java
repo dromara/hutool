@@ -6,12 +6,15 @@ import cn.hutool.core.util.ReUtil;
 
 /**
  * 常用正则表达式集合
- * 
+ *
  * @author Looly
  *
  */
 public class PatternPool {
-
+	/** 驼峰格式 */
+	public final static Pattern CAMELCASE_PATTERN = Pattern.compile("[A-Z]");
+	/** 下划线格式 */
+	public final static Pattern UNDERLINE_PATTERN = Pattern.compile("_[a-z]");
 	/** 英文字母 、数字和下划线 */
 	public final static Pattern GENERAL = Pattern.compile("^\\w+$");
 	/** 数字 */
@@ -60,7 +63,7 @@ public class PatternPool {
 
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
-	 * 
+	 *
 	 * @param regex 正则表达式
 	 * @return {@link Pattern}
 	 */
@@ -70,7 +73,7 @@ public class PatternPool {
 
 	/**
 	 * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
-	 * 
+	 *
 	 * @param regex 正则表达式
 	 * @param flags 正则标识位集合 {@link Pattern}
 	 * @return {@link Pattern}
@@ -88,7 +91,7 @@ public class PatternPool {
 
 	/**
 	 * 移除缓存
-	 * 
+	 *
 	 * @param regex 正则
 	 * @param flags 标识
 	 * @return 移除的{@link Pattern}，可能为{@code null}
@@ -107,7 +110,7 @@ public class PatternPool {
 	// ---------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 正则表达式和正则标识位的包装
-	 * 
+	 *
 	 * @author Looly
 	 *
 	 */
@@ -117,7 +120,7 @@ public class PatternPool {
 
 		/**
 		 * 构造
-		 * 
+		 *
 		 * @param regex 正则
 		 * @param flag 标识
 		 */
