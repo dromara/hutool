@@ -222,7 +222,7 @@ public class QrConfig {
 	/**
 	 * 设置二维码中的Logo文件
 	 * 
-	 * @param imgFile 二维码中的Logo
+	 * @param imgPath 二维码中的Logo路径
 	 * @return this;
 	 */
 	public QrConfig setImg(String imgPath) {

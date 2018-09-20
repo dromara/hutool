@@ -45,7 +45,6 @@ public class ScreenUtil {
 	/**
 	 * 截取全屏
 	 * 
-	 * @param screenRect 截屏的矩形区域
 	 * @return 截屏的图片
 	 * @see RobotUtil#captureScreen()
 	 */
@@ -56,7 +55,6 @@ public class ScreenUtil {
 	/**
 	 * 截取全屏到文件
 	 * 
-	 * @param screenRect 截屏的矩形区域
 	 * @param outFile 写出到的文件
 	 * @return 写出到的文件
 	 * @see RobotUtil#captureScreen(File)

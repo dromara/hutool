@@ -13,12 +13,16 @@ import cn.hutool.core.swing.ClipboardUtil;
  */
 public class ClipboardUtilTest {
 
-	//忽略 No X11 DISPLAY variable was set, but this program performed an operation which requires it.
-	@Test(expected = java.awt.HeadlessException.class)
+	@Test
 	public void setAndGetStrTest() {
-		ClipboardUtil.setStr("test");
+		try {
+			ClipboardUtil.setStr("test");
 
-		String test = ClipboardUtil.getStr();
-		Assert.assertEquals("test", test);
+			String test = ClipboardUtil.getStr();
+			Assert.assertEquals("test", test);
+		} catch (java.awt.HeadlessException e) {
+			// 忽略 No X11 DISPLAY variable was set, but this program performed an operation which requires it.
+			// ignore
+		}
 	}
 }

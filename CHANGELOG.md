@@ -16,6 +16,7 @@
 * 【extra】        QrCodeUtil增加条形码等其它类型支持（issue#IN1CR@Gitee）
 * 【core】         增加DateUtil.parseUTC方法（issue#IN1IO@Gitee）
 * 【core】         增加DateUtil.isWeekend方法
+* 【all】            加入Travis-CI验证项目构建
 
 ### Bug修复
 * 【core】         修复ImageUtil.convert转换png变色问题（issue#IMWUO@Gitee）

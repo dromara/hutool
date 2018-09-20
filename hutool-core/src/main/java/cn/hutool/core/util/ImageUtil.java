@@ -1531,7 +1531,7 @@ public class ImageUtil {
 	 * 
 	 * @param colorName 颜色的英文名，16进制表示或RGB表示
 	 * @return {@link Color}
-	 * @sin 4.1.14
+	 * @since 4.1.14
 	 */
 	public static Color getColor(String colorName) {
 		if (StrUtil.isBlank(colorName)) {
