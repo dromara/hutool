@@ -330,4 +330,20 @@ public class CollUtilTest {
 		str = CollUtil.get(set, -1);
 		Assert.assertEquals("D", str);
 	}
+	
+	@Test
+	public void addAllIfNotContainsTest() {
+		ArrayList<String> list1 = new ArrayList<>();
+		list1.add("1");
+		list1.add("2");
+		ArrayList<String> list2 = new ArrayList<>();
+		list2.add("2");
+		list2.add("3");
+		CollUtil.addAllIfNotContains(list1, list2);
+		
+		Assert.assertEquals(3, list1.size());
+		Assert.assertEquals("1", list1.get(0));
+		Assert.assertEquals("2", list1.get(1));
+		Assert.assertEquals("3", list1.get(2));
+	}
 }

@@ -660,7 +660,18 @@ public class DateUtil {
 	 */
 	public static DateTime parseTimeToday(String timeString) {
 		timeString = StrUtil.format("{} {}", today(), timeString);
-		return parse(timeString, DatePattern.NORM_DATETIME_PATTERN);
+		return parse(timeString, DatePattern.NORM_DATETIME_FORMAT);
+	}
+
+	/**
+	 * 解析UTC时间，格式为：yyyy-MM-dd'T'HH:mm:ss'Z
+	 * 
+	 * @param utcString UTC时间
+	 * @return 日期对象
+	 * @since 4.1.14
+	 */
+	public static DateTime parseUTC(String utcString) {
+		return parse(utcString, DatePattern.UTC_FORMAT);
 	}
 
 	/**
@@ -1301,7 +1312,7 @@ public class DateUtil {
 			return new DateTime(date).isIn(beginDate, endDate);
 		}
 	}
-	
+
 	/**
 	 * 是否为相同时间
 	 * 
@@ -1316,6 +1327,7 @@ public class DateUtil {
 
 	/**
 	 * 比较两个日期是否为同一天
+	 * 
 	 * @param date1 日期1
 	 * @param date2 日期2
 	 * @return 是否为同一天

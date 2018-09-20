@@ -320,9 +320,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		}
 		return properties;
 	}
-	
+
 	/**
 	 * 获取GroupedMap
+	 * 
 	 * @return GroupedMap
 	 * @since 4.0.12
 	 */
@@ -352,7 +353,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		this.settingLoader.setVarRegex(regex);
 	}
 
-	// ------------------------------------------------- Override Map interface
+	// ------------------------------------------------- Map interface with group
 	/**
 	 * 某个分组对应的键值对是否为空
 	 * 
@@ -485,56 +486,111 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		return this;
 	}
 
+	// ------------------------------------------------- Override Map interface
 	@Override
 	public boolean isEmpty() {
 		return this.groupedMap.isEmpty();
 	}
 
+	/**
+	 * 默认分组（空分组）中是否包含指定key对应的值
+	 * 
+	 * @param key 键
+	 * @return 默认分组中是否包含指定key对应的值
+	 */
 	@Override
 	public boolean containsKey(Object key) {
 		return this.groupedMap.containsKey(DEFAULT_GROUP, Convert.toStr(key));
 	}
 
+	/**
+	 * 默认分组（空分组）中是否包含指定值
+	 * 
+	 * @param value 值
+	 * @return 默认分组中是否包含指定值
+	 */
 	@Override
 	public boolean containsValue(Object value) {
 		return this.groupedMap.containsValue(DEFAULT_GROUP, Convert.toStr(value));
 	}
 
+	/**
+	 * 获取默认分组（空分组）中指定key对应的值
+	 * 
+	 * @param key 键
+	 * @return 默认分组（空分组）中指定key对应的值
+	 */
 	@Override
 	public String get(Object key) {
 		return this.groupedMap.get(DEFAULT_GROUP, Convert.toStr(key));
 	}
 
+	/**
+	 * 将指定键值对加入到默认分组（空分组）中
+	 * 
+	 * @param key 键
+	 * @param value 值
+	 * @return 加入的值
+	 */
 	@Override
 	public String put(String key, String value) {
 		return this.groupedMap.put(DEFAULT_GROUP, key, value);
 	}
 
+	/**
+	 * 移除默认分组（空分组）中指定值
+	 * 
+	 * @param key 键
+	 * @return 移除的值
+	 */
 	@Override
 	public String remove(Object key) {
 		return this.groupedMap.remove(DEFAULT_GROUP, Convert.toStr(key));
 	}
 
+	/**
+	 * 将键值对Map加入默认分组（空分组）中
+	 * 
+	 * @param m Map
+	 */
 	@Override
 	public void putAll(Map<? extends String, ? extends String> m) {
 		this.groupedMap.putAll(DEFAULT_GROUP, m);
 	}
 
+	/**
+	 * 清空默认分组（空分组）中的所有键值对
+	 */
 	@Override
 	public void clear() {
 		this.groupedMap.clear(DEFAULT_GROUP);
 	}
 
+	/**
+	 * 获取默认分组（空分组）中的所有键列表
+	 * 
+	 * @return 默认分组（空分组）中的所有键列表
+	 */
 	@Override
 	public Set<String> keySet() {
 		return this.groupedMap.keySet(DEFAULT_GROUP);
 	}
 
+	/**
+	 * 获取默认分组（空分组）中的所有值列表
+	 * 
+	 * @return 默认分组（空分组）中的所有值列表
+	 */
 	@Override
 	public Collection<String> values() {
 		return this.groupedMap.values(DEFAULT_GROUP);
 	}
 
+	/**
+	 * 获取默认分组（空分组）中的所有键值对列表
+	 * 
+	 * @return 默认分组（空分组）中的所有键值对列表
+	 */
 	@Override
 	public Set<Entry<String, String>> entrySet() {
 		return this.groupedMap.entrySet(DEFAULT_GROUP);

@@ -13,6 +13,8 @@
 * 【core】         校准ImageUtil.pressText文字位置
 * 【core】         ImageUtil增加getColor等方法
 * 【core】         增加RobotUtil提供截屏等封装，增加ScreenUtil用于获取屏幕属性
+* 【extra】        QrCodeUtil增加条形码等其它类型支持（issue#IN1CR@Gitee）
+* 【core】         增加DateUtil.parseUTC方法（issue#IN1IO@Gitee）
 
 ### Bug修复
 * 【core】         修复ImageUtil.convert转换png变色问题（issue#IMWUO@Gitee）

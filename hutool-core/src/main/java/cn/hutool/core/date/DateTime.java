@@ -742,15 +742,39 @@ public class DateTime extends Date {
 
 	// -------------------------------------------------------------------- toString start
 	/**
-	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 如果时区被设置，会转换为其时区对应的时间，否则转换为当前地点对应的时区
 	 * 
 	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
 	 */
 	@Override
 	public String toString() {
-		if(null != this.timeZone) {
+		return toString(this.timeZone);
+	}
+	
+	/**
+	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 时区使用当前地区的默认时区
+	 * 
+	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @since 4.1.14
+	 */
+	public String toStringDefaultTimeZone() {
+		return toString(TimeZone.getDefault());
+	}
+	
+	/**
+	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
+	 * 如果时区不为{@code null}，会转换为其时区对应的时间，否则转换为当前时间对应的时区
+	 * 
+	 * @param timeZone 时区
+	 * @return "yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串
+	 * @since 4.1.14
+	 */
+	public String toString(TimeZone timeZone) {
+		if(null != timeZone) {
 			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
-			simpleDateFormat.setTimeZone(this.timeZone);
+			simpleDateFormat.setTimeZone(timeZone);
 			return toString(simpleDateFormat);
 		}
 		return toString(DatePattern.NORM_DATETIME_FORMAT);
