@@ -511,9 +511,10 @@ public class IdcardUtil {
 	 * @param endExclude 结束位置（不包含）
 	 * @return 隐藏后的身份证号码
 	 * @since 3.2.2
+	 * @see StrUtil#hide(CharSequence, int, int)
 	 */
 	public static String hide(String idCard, int startInclude, int endExclude) {
-		return StrUtil.replace(idCard, startInclude, endExclude, '*');
+		return StrUtil.hide(idCard, startInclude, endExclude);
 	}
 
 	// ----------------------------------------------------------------------------------- Private method start

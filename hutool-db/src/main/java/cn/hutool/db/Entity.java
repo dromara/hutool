@@ -280,7 +280,7 @@ public class Entity extends Dict {
 				result = (Time) obj;
 			} catch (Exception e) {
 				// try oracle.sql.TIMESTAMP
-				result = ReflectUtil.invoke(obj, "timeValue", new Object[] {});
+				result = ReflectUtil.invoke(obj, "timeValue");
 			}
 		}
 		return result;
@@ -295,7 +295,7 @@ public class Entity extends Dict {
 				result = (Date) obj;
 			} catch (Exception e) {
 				// try oracle.sql.TIMESTAMP
-				result = ReflectUtil.invoke(obj, "dateValue", new Object[] {});
+				result = ReflectUtil.invoke(obj, "dateValue");
 			}
 		}
 		return result;
@@ -310,7 +310,7 @@ public class Entity extends Dict {
 				result = (Timestamp) obj;
 			} catch (Exception e) {
 				// try oracle.sql.TIMESTAMP
-				result = ReflectUtil.invoke(obj, "timestampValue", new Object[] {});
+				result = ReflectUtil.invoke(obj, "timestampValue");
 			}
 		}
 		return result;

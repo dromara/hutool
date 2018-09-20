@@ -7,16 +7,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.date.BetweenFormater.Level;
 import cn.hutool.core.lang.Console;
 
@@ -36,7 +32,7 @@ public class DateUtilTest {
 		DateTime date = DateUtil.date(current);
 		Console.log(date);
 	}
-	
+
 	@Test
 	public void nowTest() {
 		// 当前时间
@@ -290,7 +286,7 @@ public class DateUtilTest {
 		String format = DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals(dateStr, format);
 	}
-	
+
 	@Test
 	public void parseDateTest() throws ParseException {
 		String dateStr = "2018-4-10";
@@ -365,6 +361,20 @@ public class DateUtilTest {
 		DateTime dt1 = DateUtil.parse(dateStr1);
 		DateTime dt2 = DateUtil.parse(dateStr2);
 		Assert.assertEquals(dt1, dt2);
+	}
+
+	@Test
+	public void parseUTCTest() throws ParseException {
+		String dateStr1 = "2018-09-13T05:34:31Z";
+		DateTime dt = DateUtil.parseUTC(dateStr1);
+		
+		//默认使用Pattern对应的时区，既UTC时区
+		String dateStr = dt.toString();
+		Assert.assertEquals("2018-09-13 05:34:31", dateStr);
+		
+		//使用当前（上海）时区
+		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
 	}
 
 	@Test

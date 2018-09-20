@@ -1,5 +1,7 @@
 package cn.hutool.core.date;
 
+import java.util.TimeZone;
+
 import cn.hutool.core.date.format.FastDateFormat;
 
 /**
@@ -35,7 +37,7 @@ public class DatePattern {
 	public final static String NORM_DATETIME_MS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
 	/** 标准日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss.SSS */
 	public final static FastDateFormat NORM_DATETIME_MS_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_MS_PATTERN);
-
+	
 	//-------------------------------------------------------------------------------------------------------------------------------- Pure
 	/** 标准日期格式：yyyyMMdd */
 	public final static String PURE_DATE_PATTERN = "yyyyMMdd";
@@ -67,4 +69,9 @@ public class DatePattern {
 	public final static String JDK_DATETIME_PATTERN = "EEE MMM dd HH:mm:ss zzz yyyy";
 	/** JDK中日期时间格式 {@link FastDateFormat}：EEE MMM dd HH:mm:ss zzz yyyy */
 	public final static FastDateFormat JDK_DATETIME_FORMAT = FastDateFormat.getInstance(JDK_DATETIME_PATTERN);
+	
+	/** UTC时间：yyyy-MM-dd'T'HH:mm:ss'Z' */
+	public final static String UTC_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+	/** UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss'Z' */
+	public final static FastDateFormat UTC_FORMAT = FastDateFormat.getInstance(UTC_PATTERN, TimeZone.getTimeZone("UTC"));
 }

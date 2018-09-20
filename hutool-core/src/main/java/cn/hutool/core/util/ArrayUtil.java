@@ -3230,7 +3230,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3249,7 +3249,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3268,7 +3268,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3287,7 +3287,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3306,7 +3306,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3325,7 +3325,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3344,7 +3344,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3363,7 +3363,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3382,7 +3382,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param <T> 元素类型
 	 * @param array 数组
@@ -3402,7 +3402,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组对象
 	 * @param index1 位置1

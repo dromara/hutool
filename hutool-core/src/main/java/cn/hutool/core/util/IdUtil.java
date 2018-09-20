@@ -51,12 +51,12 @@ public class IdUtil {
 	 * 
 	 * 参考：http://blog.csdn.net/qxc1281/article/details/54021882
 	 * 
-	 * @return {@link ObjectId}
+	 * @return ObjectId
 	 */
-	public static ObjectId createObjectId() {
-		return new ObjectId();
+	public static String objectId() {
+		return ObjectId.next();
 	}
-
+	
 	/**
 	 * 创建Twitter的Snowflake 算法<br>
 	 * 分布式系统中，有一些需要使用全局唯一ID的场景，有些时候我们希望能使用一种简单一些的ID，并且希望ID能够按照时间有序生成。

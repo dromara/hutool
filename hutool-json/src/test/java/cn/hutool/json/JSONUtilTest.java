@@ -54,7 +54,10 @@ public class JSONUtilTest {
 		data.put("model", model);
 
 		JSONObject jsonObject = JSONUtil.parseObj(data);
-		Assert.assertEquals("{\"model\":{\"type\":1,\"mobile\":\"17610836523\"}}", jsonObject.toString());
+		Assert.assertTrue(jsonObject.containsKey("model"));
+		Assert.assertEquals(1, jsonObject.getJSONObject("model").getInt("type").intValue());
+		Assert.assertEquals("17610836523", jsonObject.getJSONObject("model").getStr("mobile"));
+		// Assert.assertEquals("{\"model\":{\"type\":1,\"mobile\":\"17610836523\"}}", jsonObject.toString());
 	}
 
 	@Test
@@ -86,10 +89,15 @@ public class JSONUtilTest {
 
 	@Test
 	public void toBeanTest2() {
-		//测试JSONObject转为Bean中字符串字段的情况
+		// 测试JSONObject转为Bean中字符串字段的情况
 		String json = "{\"id\":123,\"name\":\"张三\",\"prop\":{\"gender\":\"男\", \"age\":18}}";
 		UserC user = JSONUtil.toBean(json, UserC.class);
-		Assert.assertEquals("{\"age\":18,\"gender\":\"男\"}", user.getProp());
+		Assert.assertNotNull(user.getProp());
+		String prop = user.getProp();
+		JSONObject propJson = JSONUtil.parseObj(prop);
+		Assert.assertEquals("男", propJson.getStr("gender"));
+		Assert.assertEquals(18, propJson.getInt("age").intValue());
+//		Assert.assertEquals("{\"age\":18,\"gender\":\"男\"}", user.getProp());
 	}
 
 	@Test
@@ -112,7 +120,7 @@ public class JSONUtilTest {
 		JSONObject jsonObject = JSONUtil.parseObj(html);
 		Assert.assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStr("name"));
 	}
-	
+
 	@Test
 	public void parseFromXmlTest() {
 		String s = "<sfzh>640102197312070614</sfzh><sfz>640102197312070614X</sfz><name>aa</name><gender>1</gender>";

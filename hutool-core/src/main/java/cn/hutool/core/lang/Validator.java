@@ -45,6 +45,8 @@ public class Validator {
 	public final static Pattern BIRTHDAY = PatternPool.BIRTHDAY;
 	/** URL */
 	public final static Pattern URL = PatternPool.URL;
+	/** Http URL */
+	public final static Pattern URL_HTTP = PatternPool.URL_HTTP;
 	/** 中文字、英文字母、数字和下划线 */
 	public final static Pattern GENERAL_WITH_CHINESE = PatternPool.GENERAL_WITH_CHINESE;
 	/** UUID */

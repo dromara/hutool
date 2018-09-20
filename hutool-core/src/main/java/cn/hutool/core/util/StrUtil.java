@@ -3472,6 +3472,19 @@ public class StrUtil {
 		}
 		return new String(chars);
 	}
+	
+	/**
+	 * 替换指定字符串的指定区间内字符为"*"
+	 * 
+	 * @param str 字符串
+	 * @param startInclude 开始位置（包含）
+	 * @param endExclude 结束位置（不包含）
+	 * @return 替换后的字符串
+	 * @since 4.1.14
+	 */
+	public static String hide(CharSequence str, int startInclude, int endExclude) {
+		return replace(str, startInclude, endExclude, '*');
+	}
 
 	/**
 	 * 替换字符字符数组中所有的字符为replacedStr<br>

@@ -1,16 +1,17 @@
 package cn.hutool.extra.ftp;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
@@ -24,7 +25,7 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 4.1.8
  */
-public class Ftp implements Closeable {
+public class Ftp extends AbstractFtp {
 	
 	/** 默认端口 */
 	public static final int DEFAULT_PORT = 21;
@@ -116,6 +117,7 @@ public class Ftp implements Closeable {
 	 * @param directory 目录
 	 * @return 是否成功
 	 */
+	@Override
 	public boolean cd(String directory) {
 		boolean flag = true;
 		try {
@@ -125,42 +127,42 @@ public class Ftp implements Closeable {
 		}
 		return flag;
 	}
-
+	
 	/**
-	 * 创建多层目录文件，如果有ftp服务器已存在该文件，则不创建，如果无，则创建
+	 * 远程当前目录
 	 * 
-	 * @param remote 目录
-	 * @return 是否创建成功
+	 * @return 远程当前目录
+	 * @since 4.1.14
 	 */
-	public boolean mkdir(String remote) {
-		boolean success = true;
-		String directory = StrUtil.addSuffixIfNot(remote, StrUtil.SLASH);
-		// 如果远程目录不存在，则递归创建远程服务器目录
-		if (false == directory.equalsIgnoreCase(StrUtil.SLASH) && false == cd(directory)) {
-			int start = directory.startsWith(directory) ? 1 : 0;
-			int end = directory.indexOf(start, start);
-			String path = "";
-			String paths = "";
-			String subDirectory;
-			while (true) {
-				subDirectory = remote.substring(start, end);
-				path = StrUtil.format("{}/{}", path, subDirectory);
-				if (false == existFile(path)) {
-					makeDirectory(subDirectory);
-				}
-				cd(subDirectory);
-				paths = StrUtil.format("{}/{}", paths, subDirectory);
-				start = end + 1;
-				end = directory.indexOf(StrUtil.SLASH, start);
-				// 检查所有目录是否创建完毕
-				if (end <= start) {
-					break;
-				}
-			}
+	@Override
+	public String pwd() {
+		try {
+			return client.printWorkingDirectory();
+		} catch (IOException e) {
+			throw new FtpException(e);
 		}
-		return success;
 	}
-
+	
+	@Override
+	public List<String> ls(String path) {
+		try {
+			return CollUtil.toList(this.client.listNames(path));
+		} catch (IOException e) {
+			throw new FtpException(e);
+		}
+	}
+	
+	@Override
+	public boolean mkdir(String dir) {
+		boolean flag = true;
+		try {
+			flag = this.client.makeDirectory(dir);
+		} catch (IOException e) {
+			throw new FtpException(e);
+		}
+		return flag;
+	}
+	
 	/**
 	 * 判断ftp服务器文件是否存在
 	 * 
@@ -180,17 +182,48 @@ public class Ftp implements Closeable {
 		return false;
 	}
 
-	/**
-	 * 删除指定目录下的指定文件
-	 * 
-	 * @param path 目录路径
-	 * @param fileName 文件名
-	 * @return 是否存在
-	 */
-	public boolean del(String path, String fileName) {
-		cd(path);
+	@Override
+	public boolean delFile(String path) {
+		final String pwd = pwd();
+		final String fileName = FileUtil.getName(path);
+		final String dir = StrUtil.removeSuffix(path, fileName);
+		cd(dir);
+		boolean isSuccess;
 		try {
-			return client.deleteFile(fileName);
+			isSuccess = client.deleteFile(fileName);
+		} catch (IOException e) {
+			throw new FtpException(e);
+		}
+		cd(pwd);
+		return isSuccess;
+	}
+
+	@Override
+	public boolean delDir(String dirPath) {
+		FTPFile[] dirs;
+		try {
+			dirs = client.listDirectories(dirPath);
+		} catch (IOException e) {
+			throw new FtpException(e);
+		}
+		String name;
+		String childPath;
+		for (FTPFile ftpFile : dirs) {
+			name = ftpFile.getName();
+			childPath = StrUtil.format("{}/{}", dirPath, name);
+			if(ftpFile.isDirectory()) {
+				//上级和本级目录除外
+				if (false == name.equals(".") && false == name.equals("..")) {
+					delDir(childPath);
+				}
+			}else {
+				delFile(childPath);
+			}
+		}
+		
+		//删除空目录
+		try {
+			return this.client.removeDirectory(dirPath);
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
@@ -203,6 +236,7 @@ public class Ftp implements Closeable {
 	 * @param file 文件
 	 * @return 是否上传成功
 	 */
+	@Override
 	public boolean upload(String path, File file) {
 		Assert.notNull(file, "file to upload is null !");
 		return upload(path, file.getName(), file);
@@ -238,13 +272,26 @@ public class Ftp implements Closeable {
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
-		mkdir(path);
+		mkDirs(path);
 		cd(path);
 		try {
 			return client.storeFile(fileName, fileStream);
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
+	}
+	
+	/**
+	 * 下载文件
+	 * 
+	 * @param path 文件路径
+	 * @param outFile 输出文件或目录
+	 */
+	@Override
+	public void download(String path, File outFile) {
+		final String fileName = FileUtil.getName(path);
+		final String dir = StrUtil.removeSuffix(path, fileName);
+		download(dir, fileName, outFile);
 	}
 
 	/**
@@ -301,20 +348,4 @@ public class Ftp implements Closeable {
 			this.client.disconnect();
 		}
 	}
-
-	// ------------------------------------------------------------------------------------------------------- Private method start
-	/**
-	 * @param dir 目录名
-	 * @return 是否创建成功
-	 */
-	private boolean makeDirectory(String dir) {
-		boolean flag = true;
-		try {
-			flag = this.client.makeDirectory(dir);
-		} catch (IOException e) {
-			throw new FtpException(e);
-		}
-		return flag;
-	}
-	// ------------------------------------------------------------------------------------------------------- Private method end
 }

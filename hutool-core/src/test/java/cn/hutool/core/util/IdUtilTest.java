@@ -9,6 +9,7 @@ import org.junit.Test;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Snowflake;
 
 /**
  * {@link IdUtil} 单元测试
@@ -44,5 +45,18 @@ public class IdUtilTest {
 			UUID.randomUUID().toString().replace("-", "");
 		}
 		Console.log(timer.interval());
+	}
+	
+	@Test
+	public void objectIdTest() {
+		String id = IdUtil.objectId();
+		Assert.assertEquals(24, id.length());
+	}
+	
+	@Test
+	public void createSnowflakeTest() {
+		Snowflake snowflake = IdUtil.createSnowflake(1, 1);
+		long id = snowflake.nextId();
+		Assert.assertTrue(id > 0);
 	}
 }

@@ -1,6 +1,7 @@
 package cn.hutool.extra.qrcode;
 
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -119,7 +120,7 @@ public class QrCodeUtil {
 		final BufferedImage image = generate(content, config);
 		ImageUtil.write(image, imageType, out);
 	}
-
+	
 	/**
 	 * 生成二维码图片
 	 * 
@@ -131,6 +132,19 @@ public class QrCodeUtil {
 	public static BufferedImage generate(String content, int width, int height) {
 		return generate(content, new QrConfig(width, height));
 	}
+	
+	/**
+	 * 生成二维码或条形码图片
+	 * 
+	 * @param content 文本内容
+	 * @param format 格式，可选二维码或者条形码
+	 * @param width 宽度
+	 * @param height 高度
+	 * @return 二维码图片（黑白）
+	 */
+	public static BufferedImage generate(String content, BarcodeFormat format, int width, int height) {
+		return generate(content, format, new QrConfig(width, height));
+	}
 
 	/**
 	 * 生成二维码图片
@@ -141,8 +155,40 @@ public class QrCodeUtil {
 	 * @since 4.1.2
 	 */
 	public static BufferedImage generate(String content, QrConfig config) {
-		final BitMatrix bitMatrix = encode(content, config);
-		return toImage(bitMatrix, config.getForeColor(), config.getBackColor());
+		return generate(content, BarcodeFormat.QR_CODE, config);
+	}
+
+	/**
+	 * 生成二维码或条形码图片<br>
+	 * 只有二维码时QrConfig中的图片才有效
+	 * 
+	 * @param content 文本内容
+	 * @param format 格式，可选二维码、条形码等
+	 * @param config 二维码配置，包括长、宽、边距、颜色等
+	 * @return 二维码图片（黑白）
+	 * @since 4.1.14
+	 */
+	public static BufferedImage generate(String content, BarcodeFormat format, QrConfig config) {
+		final BitMatrix bitMatrix = encode(content, format, config);
+		final BufferedImage image = toImage(bitMatrix, config.foreColor, config.backColor);
+		final Image logoImg = config.img;
+		if (null != logoImg && BarcodeFormat.QR_CODE == format) {
+			// 只有二维码可以贴图
+			final int qrWidth = image.getWidth();
+			final int qrHeight = image.getHeight();
+			int width;
+			int height;
+			// 按照最短的边做比例缩放
+			if (qrWidth < qrHeight) {
+				width = qrWidth / 6;
+				height = logoImg.getHeight(null) * width / logoImg.getWidth(null);
+			} else {
+				height = qrHeight / 6;
+				width = logoImg.getWidth(null) * height / logoImg.getHeight(null);
+			}
+			ImageUtil.pressImage(image, logoImg, new Rectangle(width, height), 1);
+		}
+		return image;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------- encode
@@ -200,7 +246,7 @@ public class QrCodeUtil {
 		}
 		BitMatrix bitMatrix;
 		try {
-			bitMatrix = multiFormatWriter.encode(content, format, config.getWidth(), config.getHeight(), config.toHints());
+			bitMatrix = multiFormatWriter.encode(content, format, config.width, config.height, config.toHints());
 		} catch (WriterException e) {
 			throw new QrCodeException(e);
 		}
@@ -244,9 +290,9 @@ public class QrCodeUtil {
 
 		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
 		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.UTF_8);
-		//优化精度
+		// 优化精度
 		hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-		//复杂模式，开启PURE_BARCODE模式
+		// 复杂模式，开启PURE_BARCODE模式
 		hints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
 		Result result;
 		try {

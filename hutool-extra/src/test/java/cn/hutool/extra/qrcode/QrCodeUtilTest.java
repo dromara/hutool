@@ -21,7 +21,7 @@ public class QrCodeUtilTest {
 	public void generateTest() {
 		QrCodeUtil.generate("http://hutool.cn/", 300, 300, FileUtil.file("e:/qrcode.jpg"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void generateTest2() {
@@ -30,6 +30,15 @@ public class QrCodeUtilTest {
 		config.setForeColor(Color.CYAN.getRGB());
 		config.setBackColor(Color.GRAY.getRGB());
 		QrCodeUtil.generate("http://hutool.cn/", config, FileUtil.file("e:/qrcode.jpg"));
+	}
+
+	@Test
+	// @Ignore
+	public void generateTest3() {
+		QrCodeUtil.generate(//
+				"http://hutool.cn/", //
+				QrConfig.create().setImg("e:/logo_small.jpg"), //
+				FileUtil.file("e:/qrcode.jpg"));
 	}
 
 	@Test

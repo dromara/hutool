@@ -5,14 +5,17 @@
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
 <p align="center">
-	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all/4.1.13/jar">
-		<img src="https://img.shields.io/badge/version-4.1.13-blue.svg" ></img>
+	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all/4.1.14/jar">
+		<img src="https://img.shields.io/badge/version-4.1.14-blue.svg" ></img>
 	</a>
 	<a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0.html">
 		<img src="http://img.shields.io/:license-apache-blue.svg" ></img>
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
 		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" ></img>
+	</a>
+	<a target="_blank" href="https://travis-ci.org/looly/hutool">
+		<img src="https://travis-ci.org/looly/hutool.svg?branch=v4-master" ></img>
 	</a>
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" ></img>
@@ -77,21 +80,21 @@ Hutool是Hu + tool的自造词，前者致敬我的“前任公司”，后者�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.1.13</version>
+    <version>4.1.14</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.1.13'
+compile 'cn.hutool:hutool-all:4.1.14'
 ```
 
 ### 非Maven项目
 
-点击已下任一链接，下载`hutool-all-X.X.X.jar`即可：
+点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.13/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.13/)
+- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.14/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.14/)
 
 -------------------------------------------------------------------------------
 

@@ -57,18 +57,24 @@ public class ImageUtilTest {
 	@Ignore
 	public void pressTextTest() {
 		ImageUtil.pressText(//
-				FileUtil.file("e:/test2.png"), //
+				FileUtil.file("e:/face.jpg"), //
 				FileUtil.file("e:/test2_result.png"), //
-				"123456", Color.RED, //
-				new Font("黑体", Font.BOLD, 40), //
-				-45, //
-				180, //
-				1.0f);
+				"版权所有", Color.WHITE, //
+				new Font("黑体", Font.BOLD, 100), //
+				0, //
+				0, //
+				0.8f);
 	}
 
 	@Test
 	@Ignore
 	public void sliceByRowsAndColsTest() {
 		ImageUtil.sliceByRowsAndCols(FileUtil.file("d:/picTest/1.jpg"), FileUtil.file("d:/picTest/dest"), 5, 5);
+	}
+	
+	@Test
+	@Ignore
+	public void convertTest() {
+		ImageUtil.convert(FileUtil.file("e:/test2.png"), FileUtil.file("e:/test2Convert.jpg"));
 	}
 }

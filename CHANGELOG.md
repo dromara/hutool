@@ -3,6 +3,28 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.14
+
+### 新特性
+* 【core】         StrUtil增加hide方法
+* 【core】         PatternPool增加URL_HTTP，原URL规则变更
+* 【extra】        统一FTP和SFTP接口规范
+* 【extra】        QrCodeUtil支持二维码中贴Logo图片
+* 【core】         校准ImageUtil.pressText文字位置
+* 【core】         ImageUtil增加getColor等方法
+* 【core】         增加RobotUtil提供截屏等封装，增加ScreenUtil用于获取屏幕属性
+* 【extra】        QrCodeUtil增加条形码等其它类型支持（issue#IN1CR@Gitee）
+* 【core】         增加DateUtil.parseUTC方法（issue#IN1IO@Gitee）
+* 【core】         增加DateUtil.isWeekend方法
+* 【all】            加入Travis-CI验证项目构建
+
+### Bug修复
+* 【core】         修复ImageUtil.convert转换png变色问题（issue#IMWUO@Gitee）
+* 【core】         修复FileUtil.newerThan中null判断的问题（issue#165@Github）
+* 【extra】        修复Ftp中mkdir方法引起的数组越界问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.13
 
 ### 新特性
