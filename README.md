@@ -14,6 +14,9 @@
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
 		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" ></img>
 	</a>
+	<a target="_blank" href="https://travis-ci.org/looly/hutool">
+		<img src="https://travis-ci.org/looly/hutool.svg?branch=v4-master" ></img>
+	</a>
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" ></img>
 	</a>
