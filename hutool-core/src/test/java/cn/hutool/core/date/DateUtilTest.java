@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -371,8 +372,8 @@ public class DateUtilTest {
 		String dateStr = dt.toString();
 		Assert.assertEquals("2018-09-13 05:34:31", dateStr);
 		
-		//使用当前时区
-		dateStr = dt.toStringDefaultTimeZone();
+		//使用当前（上海）时区
+		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
 	}
 

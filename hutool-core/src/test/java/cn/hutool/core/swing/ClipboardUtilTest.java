@@ -7,15 +7,17 @@ import cn.hutool.core.swing.ClipboardUtil;
 
 /**
  * 剪贴板工具类单元测试
+ * 
  * @author looly
  *
  */
 public class ClipboardUtilTest {
-	
-	@Test
+
+	//忽略 No X11 DISPLAY variable was set, but this program performed an operation which requires it.
+	@Test(expected = java.awt.HeadlessException.class)
 	public void setAndGetStrTest() {
 		ClipboardUtil.setStr("test");
-		
+
 		String test = ClipboardUtil.getStr();
 		Assert.assertEquals("test", test);
 	}

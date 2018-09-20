@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -310,15 +311,15 @@ public class CollUtilTest {
 	
 	@Test
 	public void listTest3() {
-		HashSet<String> set = new HashSet<>();
+		HashSet<String> set = new LinkedHashSet<>();
 		set.add("a");
 		set.add("b");
 		set.add("c");
 		
 		List<String> list1 = CollUtil.list(false, set);
 		List<String> list2 = CollUtil.list(true, set);
-		Assert.assertEquals("[b, c, a]", list1.toString());
-		Assert.assertEquals("[b, c, a]", list2.toString());
+		Assert.assertEquals("[a, b, c]", list1.toString());
+		Assert.assertEquals("[a, b, c]", list2.toString());
 	}
 	
 	@Test
