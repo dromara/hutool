@@ -120,9 +120,9 @@ public class DateTime extends Date {
 	 * @param calendar {@link Calendar}
 	 */
 	public DateTime(Calendar calendar) {
-		this(calendar.getTime(), (TimeZone)null);
+		this(calendar.getTime(), (TimeZone) null);
 	}
-	
+
 	/**
 	 * 给定日期毫秒数的构造
 	 * 
@@ -130,7 +130,7 @@ public class DateTime extends Date {
 	 * @since 4.1.2
 	 */
 	public DateTime(long timeMillis) {
-		this(timeMillis, (TimeZone)null);
+		this(timeMillis, (TimeZone) null);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(long timeMillis, TimeZone timeZone) {
 		super(timeMillis);
-		if(null != timeZone) {
+		if (null != timeZone) {
 			this.timeZone = timeZone;
 		}
 	}
@@ -478,6 +478,17 @@ public class DateTime extends Date {
 	public boolean isPM() {
 		return Calendar.PM == getField(DateField.AM_PM);
 	}
+
+	/**
+	 * 是否为周末，周末指周六或者周日
+	 * 
+	 * @return 是否为周末，周末指周六或者周日
+	 * @since 4.1.14
+	 */
+	public boolean isWeekend() {
+		final int dayOfWeek = dayOfWeek();
+		return Calendar.SATURDAY == dayOfWeek || Calendar.SUNDAY == dayOfWeek;
+	}
 	// -------------------------------------------------------------------- Part of Date end
 
 	/**
@@ -527,7 +538,7 @@ public class DateTime extends Date {
 	 * @return {@link Calendar}
 	 */
 	public Calendar toCalendar(TimeZone zone, Locale locale) {
-		if(null == locale) {
+		if (null == locale) {
 			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
 		final Calendar cal = (null != zone) ? Calendar.getInstance(zone, locale) : Calendar.getInstance(locale);
@@ -614,7 +625,7 @@ public class DateTime extends Date {
 
 		return thisMills >= Math.min(beginMills, endMills) && thisMills <= Math.max(beginMills, endMills);
 	}
-	
+
 	/**
 	 * 是否在给定日期之前
 	 * 
@@ -642,7 +653,7 @@ public class DateTime extends Date {
 		}
 		return compareTo(date) <= 0;
 	}
-	
+
 	/**
 	 * 是否在给定日期之后或与给定日期相等
 	 * 
@@ -656,7 +667,7 @@ public class DateTime extends Date {
 		}
 		return compareTo(date) > 0;
 	}
-	
+
 	/**
 	 * 是否在给定日期之后或与给定日期相等
 	 * 
@@ -727,7 +738,7 @@ public class DateTime extends Date {
 		this.firstDayOfWeek = firstDayOfWeek;
 		return this;
 	}
-	
+
 	/**
 	 * 设置时区
 	 * 
@@ -751,7 +762,7 @@ public class DateTime extends Date {
 	public String toString() {
 		return toString(this.timeZone);
 	}
-	
+
 	/**
 	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
 	 * 时区使用当前地区的默认时区
@@ -762,7 +773,7 @@ public class DateTime extends Date {
 	public String toStringDefaultTimeZone() {
 		return toString(TimeZone.getDefault());
 	}
-	
+
 	/**
 	 * 转为"yyyy-MM-dd yyyy-MM-dd HH:mm:ss " 格式字符串<br>
 	 * 如果时区不为{@code null}，会转换为其时区对应的时间，否则转换为当前时间对应的时区
@@ -772,7 +783,7 @@ public class DateTime extends Date {
 	 * @since 4.1.14
 	 */
 	public String toString(TimeZone timeZone) {
-		if(null != timeZone) {
+		if (null != timeZone) {
 			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
 			simpleDateFormat.setTimeZone(timeZone);
 			return toString(simpleDateFormat);
@@ -787,14 +798,14 @@ public class DateTime extends Date {
 	 * @since 4.0.0
 	 */
 	public String toDateStr() {
-		if(null != this.timeZone) {
+		if (null != this.timeZone) {
 			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATE_PATTERN);
 			simpleDateFormat.setTimeZone(this.timeZone);
 			return toString(simpleDateFormat);
 		}
 		return toString(DatePattern.NORM_DATE_FORMAT);
 	}
-	
+
 	/**
 	 * 转为"HH:mm:ss" 格式字符串
 	 * 
@@ -802,7 +813,7 @@ public class DateTime extends Date {
 	 * @since 4.1.4
 	 */
 	public String toTimeStr() {
-		if(null != this.timeZone) {
+		if (null != this.timeZone) {
 			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_TIME_PATTERN);
 			simpleDateFormat.setTimeZone(this.timeZone);
 			return toString(simpleDateFormat);
@@ -817,7 +828,7 @@ public class DateTime extends Date {
 	 * @return String
 	 */
 	public String toString(String format) {
-		if(null != this.timeZone) {
+		if (null != this.timeZone) {
 			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
 			simpleDateFormat.setTimeZone(this.timeZone);
 			return toString(simpleDateFormat);
