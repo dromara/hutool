@@ -2,13 +2,11 @@ package cn.hutool.core.convert.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import cn.hutool.core.convert.AbstractConverter;
-import cn.hutool.core.convert.ConvertException;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -52,31 +50,22 @@ public class NumberConverter extends AbstractConverter<Number> {
 				return Byte.valueOf(((Number) value).byteValue());
 			}
 			final String valueStr = convertToStr(value);
-			if (StrUtil.isBlank(valueStr)) {
-				return null;
-			}
-			return Byte.valueOf(valueStr);
-
+			return StrUtil.isBlank(valueStr) ? null : Byte.valueOf(valueStr);
+			
 		} else if (Short.class == this.targetType) {
 			if (value instanceof Number) {
 				return Short.valueOf(((Number) value).shortValue());
 			}
 			final String valueStr = convertToStr(value);
-			if (StrUtil.isBlank(valueStr)) {
-				return null;
-			}
-			return Short.valueOf(valueStr);
+			return StrUtil.isBlank(valueStr) ? null : Short.valueOf(valueStr);
 
 		} else if (Integer.class == this.targetType) {
 			if (value instanceof Number) {
 				return Integer.valueOf(((Number) value).intValue());
 			}
 			final String valueStr = convertToStr(value);
-			if (StrUtil.isBlank(valueStr)) {
-				return null;
-			}
-			return Integer.valueOf(valueStr);
-
+			return StrUtil.isBlank(valueStr) ? null : Integer.valueOf(NumberUtil.parseInt(valueStr));
+			
 		} else if (AtomicInteger.class == this.targetType) {
 			int intValue;
 			if (value instanceof Number) {
@@ -86,17 +75,14 @@ public class NumberConverter extends AbstractConverter<Number> {
 			if (StrUtil.isBlank(valueStr)) {
 				return null;
 			}
-			intValue = Integer.parseInt(valueStr);
+			intValue = NumberUtil.parseInt(valueStr);
 			return new AtomicInteger(intValue);
 		} else if (Long.class == this.targetType) {
 			if (value instanceof Number) {
 				return Long.valueOf(((Number) value).longValue());
 			}
 			final String valueStr = convertToStr(value);
-			if (StrUtil.isBlank(valueStr)) {
-				return null;
-			}
-			return Long.valueOf(valueStr);
+			return StrUtil.isBlank(valueStr) ? null : Long.valueOf(NumberUtil.parseLong(valueStr));
 
 		} else if (AtomicLong.class == this.targetType) {
 			long longValue;
@@ -107,46 +93,35 @@ public class NumberConverter extends AbstractConverter<Number> {
 			if (StrUtil.isBlank(valueStr)) {
 				return null;
 			}
-			longValue = Long.parseLong(valueStr);
+			longValue = NumberUtil.parseLong(valueStr);
 			return new AtomicLong(longValue);
+			
 		} else if (Float.class == this.targetType) {
 			if (value instanceof Number) {
 				return Float.valueOf(((Number) value).floatValue());
 			}
 			final String valueStr = convertToStr(value);
-			if (StrUtil.isBlank(valueStr)) {
-				return null;
-			}
-			return Float.valueOf(valueStr);
+			return StrUtil.isBlank(valueStr) ? null : Float.valueOf(valueStr);
 
 		} else if (Double.class == this.targetType) {
 			if (value instanceof Number) {
 				return Double.valueOf(((Number) value).doubleValue());
 			}
 			final String valueStr = convertToStr(value);
-			if (StrUtil.isBlank(valueStr)) {
-				return null;
-			}
-			return Double.valueOf(valueStr);
+			return StrUtil.isBlank(valueStr) ? null : Double.valueOf(valueStr);
 
 		} else if (BigDecimal.class == this.targetType) {
 			return toBigDecimal(value);
 
 		} else if (BigInteger.class == this.targetType) {
-			toBigInteger(value);
+			return toBigInteger(value);
+			
 		}else if(Number.class == this.targetType){
 			if (value instanceof Number) {
 				return (Number)value;
 			}
 			final String valueStr = convertToStr(value);
-			if (StrUtil.isBlank(valueStr)) {
-				return null;
-			}
-			try {
-				return NumberFormat.getInstance().parse(valueStr);
-			} catch (ParseException e) {
-				throw new ConvertException(e);
-			}
+			return StrUtil.isBlank(valueStr) ? null : NumberUtil.parseNumber(valueStr);
 		}
 
 		throw new UnsupportedOperationException(StrUtil.format("Unsupport Number type: {}", this.targetType.getName()));

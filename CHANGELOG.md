@@ -6,6 +6,7 @@
 ## 4.1.15
 
 ### 新特性
+* 【core】         Convert.toInt增加容错，NumberUtil增加toNumber方法（issue#IN2LP@Gitee）
 
 ### Bug修复
 
