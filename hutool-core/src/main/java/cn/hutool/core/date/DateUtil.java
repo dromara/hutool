@@ -423,30 +423,21 @@ public class DateUtil {
 	 */
 	@Deprecated
 	public static LinkedHashSet<String> yearAndSeasons(Date startDate, Date endDate) {
-		final LinkedHashSet<String> seasons = new LinkedHashSet<String>();
+		return yearAndQuarter(startDate, endDate);
+	}
+	
+	/**
+	 * 获得指定日期区间内的年份和季节<br>
+	 * 
+	 * @param startDate 起始日期（包含）
+	 * @param endDate 结束日期（包含）
+	 * @return 季度列表 ，元素类似于 20132
+	 */
+	public static LinkedHashSet<String> yearAndQuarter(Date startDate, Date endDate) {
 		if (startDate == null || endDate == null) {
-			return seasons;
+			return new LinkedHashSet<String>(0);
 		}
-
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		while (true) {
-			// 如果开始时间超出结束时间，让结束时间为开始时间，处理完后结束循环
-			if (startDate.after(endDate)) {
-				startDate = endDate;
-			}
-
-			seasons.add(yearAndSeason(cal));
-
-			if (startDate.equals(endDate)) {
-				break;
-			}
-
-			cal.add(Calendar.MONTH, 3);
-			startDate = cal.getTime();
-		}
-
-		return seasons;
+		return yearAndQuarter(startDate.getTime(), endDate.getTime());
 	}
 
 	/**
@@ -454,33 +445,21 @@ public class DateUtil {
 	 * 
 	 * @param startDate 起始日期（包含）
 	 * @param endDate 结束日期（包含）
-	 * @return Season列表 ，元素类似于 20132
+	 * @return 季度列表 ，元素类似于 20132
+	 * @since 4.1.15
 	 */
-	public static LinkedHashSet<String> yearAndQuarter(Date startDate, Date endDate) {
-		final LinkedHashSet<String> quarter = new LinkedHashSet<String>();
-		if (startDate == null || endDate == null) {
-			return quarter;
-		}
-
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		while (true) {
+	public static LinkedHashSet<String> yearAndQuarter(long startDate, long endDate) {
+		LinkedHashSet<String> quarters = new LinkedHashSet<>();
+		final Calendar cal = calendar(startDate);
+		while (startDate <= endDate) {
 			// 如果开始时间超出结束时间，让结束时间为开始时间，处理完后结束循环
-			if (startDate.after(endDate)) {
-				startDate = endDate;
-			}
-
-			quarter.add(yearAndSeason(cal));
-
-			if (startDate.equals(endDate)) {
-				break;
-			}
+			quarters.add(yearAndQuarter(cal));
 
 			cal.add(Calendar.MONTH, 3);
-			startDate = cal.getTime();
+			startDate = cal.getTimeInMillis();
 		}
 
-		return quarter;
+		return quarters;
 	}
 
 	// ------------------------------------ Format start ----------------------------------------------

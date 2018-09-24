@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.TimeZone;
@@ -13,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
 import cn.hutool.core.lang.Console;
 
@@ -436,5 +438,22 @@ public class DateUtilTest {
 		List<DateTime> rangeToList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR);
 		Assert.assertEquals(rangeToList.get(0), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(rangeToList.get(1), DateUtil.parse("2017-01-02"));
+	}
+	
+	@Test
+	public void yearAndQTest() {
+		String yearAndQuarter = DateUtil.yearAndQuarter(DateUtil.parse("2018-12-01"));
+		Assert.assertEquals("20184", yearAndQuarter);
+		
+		LinkedHashSet<String> yearAndQuarters = DateUtil.yearAndQuarter(DateUtil.parse("2018-09-10"), DateUtil.parse("2018-12-20"));
+		List<String> list = CollUtil.list(false, yearAndQuarters);
+		Assert.assertEquals(2, list.size());
+		Assert.assertEquals("20183", list.get(0));
+		Assert.assertEquals("20184", list.get(1));
+		
+		LinkedHashSet<String> yearAndQuarters2 = DateUtil.yearAndQuarter(DateUtil.parse("2018-10-10"), DateUtil.parse("2018-12-10"));
+		List<String> list2 = CollUtil.list(false, yearAndQuarters2);
+		Assert.assertEquals(1, list2.size());
+		Assert.assertEquals("20184", list2.get(0));
 	}
 }
