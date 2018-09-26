@@ -318,7 +318,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static BufferedImage cut(Image srcImage, Rectangle rectangle) {
-		return Img.from(srcImage).cut(rectangle).getImg();
+		return Img.from(srcImage).setPositionBaseCentre(false).cut(rectangle).getImg();
 	}
 	
 	/**
@@ -559,7 +559,7 @@ public class ImageUtil {
 	 */
 	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream, boolean isSrcPng) {
 		try {
-			ImageIO.write(isSrcPng ? copyImage(srcImage, BufferedImage.TYPE_INT_BGR) : toBufferedImage(srcImage), formatName, destImageStream);
+			ImageIO.write(isSrcPng ? copyImage(srcImage, BufferedImage.TYPE_INT_RGB) : toBufferedImage(srcImage), formatName, destImageStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -1347,7 +1347,7 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 写出图像为PNG格式
+	 * 写出图像为指定格式
 	 * 
 	 * @param image {@link Image}
 	 * @param imageType 图片类型（图片扩展名）
@@ -1395,6 +1395,17 @@ public class ImageUtil {
 			return iterator.next();
 		}
 		return null;
+	}
+	
+	/**
+	 * 从文件中读取图片，请使用绝对路径，使用相对路径会相对于ClassPath
+	 * 
+	 * @param imageFilePath 图片文件路径
+	 * @return 图片
+	 * @since 4.1.15
+	 */
+	public static BufferedImage read(String imageFilePath) {
+		return read(FileUtil.file(imageFilePath));
 	}
 
 	/**

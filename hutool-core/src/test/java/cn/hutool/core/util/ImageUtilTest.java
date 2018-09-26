@@ -77,4 +77,10 @@ public class ImageUtilTest {
 	public void convertTest() {
 		ImageUtil.convert(FileUtil.file("e:/test2.png"), FileUtil.file("e:/test2Convert.jpg"));
 	}
+	
+	@Test
+	@Ignore
+	public void writeTest() {
+		ImageUtil.write(ImageUtil.read("e:/test2.png"), FileUtil.file("e:/test2Write.jpg"));
+	}
 }

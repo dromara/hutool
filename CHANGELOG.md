@@ -8,6 +8,7 @@
 ### 新特性
 * 【core】         Convert.toInt增加容错，NumberUtil增加toNumber方法（issue#IN2LP@Gitee）
 * 【core】         ImageUtil增加cut切圆形方法（issue#IN3JJ@Gitee）
+* 【core】         Img增加setPositionBaseCentre可选坐标计算基于中心（issue#IN3JM@Gitee）
 
 ### Bug修复
 * 【core】         修复DateUtil.yearAndQuarter计算错误的问题（issue#IN38V@Gitee）

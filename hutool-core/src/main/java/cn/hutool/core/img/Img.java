@@ -43,46 +43,54 @@ public class Img {
 
 	private BufferedImage srcImage;
 	private BufferedImage destImage;
+	/** 目标图片文件格式，用于写出 */
 	private String destImageType = ImageUtil.IMAGE_TYPE_JPG;
-	
+	/** 计算x,y坐标的时候是否从中心做为原始坐标开始计算 */
+	private boolean positionBaseCentre = true;
+
 	/**
 	 * 从文件读取图片并开始处理
+	 * 
 	 * @param imageFile 图片文件
 	 * @return {@link Img}
 	 */
 	public static Img from(File imageFile) {
 		return new Img(ImageUtil.read(imageFile));
 	}
-	
+
 	/**
 	 * 从流读取图片并开始处理
+	 * 
 	 * @param in 图片流
 	 * @return {@link Img}
 	 */
 	public static Img from(InputStream in) {
 		return new Img(ImageUtil.read(in));
 	}
-	
+
 	/**
 	 * 从ImageInputStream取图片并开始处理
+	 * 
 	 * @param imageStream 图片流
 	 * @return {@link Img}
 	 */
 	public static Img from(ImageInputStream imageStream) {
 		return new Img(ImageUtil.read(imageStream));
 	}
-	
+
 	/**
 	 * 从URL取图片并开始处理
+	 * 
 	 * @param imageUrl 图片URL
 	 * @return {@link Img}
 	 */
 	public static Img from(URL imageUrl) {
 		return new Img(ImageUtil.read(imageUrl));
 	}
-	
+
 	/**
 	 * 从Image取图片并开始处理
+	 * 
 	 * @param image 图片
 	 * @return {@link Img}
 	 */
@@ -92,14 +100,16 @@ public class Img {
 
 	/**
 	 * 构造
+	 * 
 	 * @param srcImage 来源图片
 	 */
 	public Img(BufferedImage srcImage) {
 		this.srcImage = srcImage;
 	}
-	
+
 	/**
 	 * 设置目标图片文件格式，用于写出
+	 * 
 	 * @param imgType 图片格式
 	 * @return this
 	 * @see ImageUtil#IMAGE_TYPE_JPG
@@ -107,6 +117,17 @@ public class Img {
 	 */
 	public Img setDestImageType(String imgType) {
 		this.destImageType = imgType;
+		return this;
+	}
+
+	/**
+	 * 计算x,y坐标的时候是否从中心做为原始坐标开始计算
+	 * 
+	 * @param positionBaseCentre 是否从中心做为原始坐标开始计算
+	 * @since 4.1.15
+	 */
+	public Img setPositionBaseCentre(boolean positionBaseCentre) {
+		this.positionBaseCentre = positionBaseCentre;
 		return this;
 	}
 
@@ -155,7 +176,7 @@ public class Img {
 		this.destImage = ImageUtil.toBufferedImage(image);
 		return this;
 	}
-	
+
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
 	 * 缩放后默认为jpeg格式
@@ -211,12 +232,15 @@ public class Img {
 	 * @return this
 	 */
 	public Img cut(Rectangle rectangle) {
+		final BufferedImage srcImage = getValidSrcImg();
+		rectangle = fixRectangle(rectangle, srcImage.getWidth(), srcImage.getHeight());
+		
 		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		final Image image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
 		this.destImage = ImageUtil.toBufferedImage(image);
 		return this;
 	}
-	
+
 	/**
 	 * 图像切割为圆形(按指定起点坐标和半径切割)，填充满整个图片（直径取长宽最小值）
 	 * 
@@ -228,7 +252,7 @@ public class Img {
 	public Img cut(int x, int y) {
 		return cut(x, y, -1);
 	}
-	
+
 	/**
 	 * 图像切割为圆形(按指定起点坐标和半径切割)
 	 * 
@@ -242,12 +266,16 @@ public class Img {
 		final BufferedImage srcImage = getValidSrcImg();
 		final int width = srcImage.getWidth();
 		final int height = srcImage.getHeight();
-		
-		
+
 		final int diameter = radius > 0 ? radius * 2 : Math.min(width, height);
 		final BufferedImage destImage = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g = destImage.createGraphics();
 		g.setClip(new Ellipse2D.Double(0, 0, diameter, diameter));
+		
+		if(this.positionBaseCentre) {
+			x = x - width/2 + diameter/2;
+			y = y - height/2 + diameter/2;
+		}
 		g.drawImage(srcImage, x, y, null);
 		g.dispose();
 		this.destImage = destImage;
@@ -307,7 +335,7 @@ public class Img {
 
 		return this;
 	}
-	
+
 	/**
 	 * 给图片添加图片水印<br>
 	 * 此方法并不关闭流
@@ -321,10 +349,10 @@ public class Img {
 	public Img pressImage(Image pressImg, int x, int y, float alpha) {
 		final int pressImgWidth = pressImg.getWidth(null);
 		final int pressImgHeight = pressImg.getHeight(null);
-		
+
 		return pressImage(pressImg, new Rectangle(x, y, pressImgWidth, pressImgHeight), alpha);
 	}
-	
+
 	/**
 	 * 给图片添加图片水印<br>
 	 * 此方法并不关闭流
@@ -335,14 +363,15 @@ public class Img {
 	 * @return this
 	 * @since 4.1.14
 	 */
-	public Img pressImage(Image pressImg,Rectangle rectangle, float alpha) {
+	public Img pressImage(Image pressImg, Rectangle rectangle, float alpha) {
 		final BufferedImage destImg = getValidSrcImg();
-		
+
+		rectangle = fixRectangle(rectangle, destImg.getWidth(), destImg.getHeight());
 		draw(destImg, pressImg, rectangle, alpha);
 		this.destImage = destImg;
 		return this;
 	}
-	
+
 	/**
 	 * 旋转图片为指定角度<br>
 	 * 来自：http://blog.51cto.com/cping1982/130066
@@ -366,7 +395,7 @@ public class Img {
 		this.destImage = destImg;
 		return this;
 	}
-	
+
 	/**
 	 * 水平翻转图像
 	 * 
@@ -393,7 +422,7 @@ public class Img {
 	public BufferedImage getImg() {
 		return this.destImage;
 	}
-	
+
 	/**
 	 * 写出图像
 	 * 
@@ -448,15 +477,6 @@ public class Img {
 	private static BufferedImage draw(BufferedImage backgroundImg, Image img, Rectangle rectangle, float alpha) {
 		final Graphics2D g = backgroundImg.createGraphics();
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-		
-		//修正图片位置从背景的中心计算
-		final int width = backgroundImg.getWidth();
-		final int height = backgroundImg.getHeight();
-		rectangle.setLocation(//
-				rectangle.x + (int)(Math.abs(width - rectangle.width) / 2), //
-				rectangle.y + (int)(Math.abs(height - rectangle.height) / 2)//
-		);
-		
 		g.drawImage(img, rectangle.x, rectangle.y, rectangle.width, rectangle.height, null); // 绘制切割后的图
 		g.dispose();
 		return backgroundImg;
@@ -477,7 +497,7 @@ public class Img {
 			return BufferedImage.TYPE_INT_RGB;
 		}
 	}
-	
+
 	/**
 	 * 获取有效的源图片，首先检查上一次处理的结果图片，如无则使用用户传入的源图片
 	 * 
@@ -485,6 +505,26 @@ public class Img {
 	 */
 	private BufferedImage getValidSrcImg() {
 		return ObjectUtil.defaultIfNull(this.destImage, this.srcImage);
+	}
+
+	/**
+	 * 修正矩形框位置，如果{@link Img#setPositionFromCentre(boolean)} 设为{@code true}，则坐标修正为基于图形中心，否则基于左上角
+	 * 
+	 * @param rectangle 矩形
+	 * @param baseWidth 参考宽
+	 * @param baseHeight 参考高
+	 * @return 修正后的{@link Rectangle}
+	 * @since 4.1.15
+	 */
+	private Rectangle fixRectangle(Rectangle rectangle, int baseWidth, int baseHeight) {
+		if (this.positionBaseCentre) {
+			// 修正图片位置从背景的中心计算
+			rectangle.setLocation(//
+					rectangle.x + (int) (Math.abs(baseWidth - rectangle.width) / 2), //
+					rectangle.y + (int) (Math.abs(baseHeight - rectangle.height) / 2)//
+			);
+		}
+		return rectangle;
 	}
 	// ---------------------------------------------------------------------------------------------------------------- Private method end
 }
