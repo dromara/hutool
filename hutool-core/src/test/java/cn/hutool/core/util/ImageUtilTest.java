@@ -33,7 +33,7 @@ public class ImageUtilTest {
 	public void cutTest() {
 		ImageUtil.cut(FileUtil.file("d:/face.jpg"), FileUtil.file("d:/face_result.jpg"), new Rectangle(200, 200, 100, 100));
 	}
-
+	
 	@Test
 	@Ignore
 	public void rotateTest() throws IOException {

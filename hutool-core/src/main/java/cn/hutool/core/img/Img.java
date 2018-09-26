@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.CropImageFilter;
@@ -29,6 +30,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ImageUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -120,7 +122,7 @@ public class Img {
 			scale = -scale;
 		}
 
-		final BufferedImage srcImg = this.srcImage;
+		final BufferedImage srcImg = getValidSrcImg();
 		int width = NumberUtil.mul(Integer.toString(srcImg.getWidth()), Float.toString(scale)).intValue(); // 得到源图宽
 		int height = NumberUtil.mul(Integer.toString(srcImg.getHeight()), Float.toString(scale)).intValue(); // 得到源图长
 		return scale(width, height);
@@ -135,7 +137,7 @@ public class Img {
 	 * @return this
 	 */
 	public Img scale(int width, int height) {
-		final BufferedImage srcImg = this.srcImage;
+		final BufferedImage srcImg = getValidSrcImg();
 		int srcHeight = srcImg.getHeight();
 		int srcWidth = srcImg.getWidth();
 		int scaleType;
@@ -164,7 +166,7 @@ public class Img {
 	 * @return this
 	 */
 	public Img scale(int width, int height, Color fixedColor) {
-		final BufferedImage srcImage = this.srcImage;
+		final BufferedImage srcImage = getValidSrcImg();
 		int srcHeight = srcImage.getHeight(null);
 		int srcWidth = srcImage.getWidth(null);
 		double heightRatio = NumberUtil.div(height, srcHeight);
@@ -184,7 +186,7 @@ public class Img {
 		if (null == fixedColor) {// 补白
 			fixedColor = Color.WHITE;
 		}
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		final BufferedImage image = new BufferedImage(width, height, getTypeInt());
 		Graphics2D g = image.createGraphics();
 
 		// 设置背景
@@ -206,12 +208,49 @@ public class Img {
 	 * 图像切割(按指定起点坐标和宽高切割)
 	 * 
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height
-	 * @return {@link BufferedImage}
+	 * @return this
 	 */
 	public Img cut(Rectangle rectangle) {
 		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		final Image image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
 		this.destImage = ImageUtil.toBufferedImage(image);
+		return this;
+	}
+	
+	/**
+	 * 图像切割为圆形(按指定起点坐标和半径切割)，填充满整个图片（直径取长宽最小值）
+	 * 
+	 * @param x 原图的x坐标起始位置
+	 * @param y 原图的y坐标起始位置
+	 * @return this
+	 * @since 4.1.15
+	 */
+	public Img cut(int x, int y) {
+		return cut(x, y, -1);
+	}
+	
+	/**
+	 * 图像切割为圆形(按指定起点坐标和半径切割)
+	 * 
+	 * @param x 原图的x坐标起始位置
+	 * @param y 原图的y坐标起始位置
+	 * @param radius 半径，小于0表示填充满整个图片（直径取长宽最小值）
+	 * @return this
+	 * @since 4.1.15
+	 */
+	public Img cut(int x, int y, int radius) {
+		final BufferedImage srcImage = getValidSrcImg();
+		final int width = srcImage.getWidth();
+		final int height = srcImage.getHeight();
+		
+		
+		final int diameter = radius > 0 ? radius * 2 : Math.min(width, height);
+		final BufferedImage destImage = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
+		final Graphics2D g = destImage.createGraphics();
+		g.setClip(new Ellipse2D.Double(0, 0, diameter, diameter));
+		g.drawImage(srcImage, x, y, null);
+		g.dispose();
+		this.destImage = destImage;
 		return this;
 	}
 
@@ -222,7 +261,7 @@ public class Img {
 	 */
 	public Img gray() {
 		final ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-		this.destImage = op.filter(this.srcImage, null);
+		this.destImage = op.filter(getValidSrcImg(), null);
 		return this;
 	}
 
@@ -232,7 +271,7 @@ public class Img {
 	 * @return this
 	 */
 	public Img binary() {
-		this.destImage = ImageUtil.copyImage(this.srcImage, BufferedImage.TYPE_BYTE_BINARY);
+		this.destImage = ImageUtil.copyImage(getValidSrcImg(), BufferedImage.TYPE_BYTE_BINARY);
 		return this;
 	}
 
@@ -249,7 +288,7 @@ public class Img {
 	 * @return 处理后的图像
 	 */
 	public Img pressText(String pressText, Color color, Font font, int x, int y, float alpha) {
-		final BufferedImage destImage = this.srcImage;
+		final BufferedImage destImage = getValidSrcImg();
 		final Graphics2D g = destImage.createGraphics();
 
 		// 抗锯齿
@@ -297,7 +336,7 @@ public class Img {
 	 * @since 4.1.14
 	 */
 	public Img pressImage(Image pressImg,Rectangle rectangle, float alpha) {
-		final BufferedImage destImg = this.srcImage;
+		final BufferedImage destImg = getValidSrcImg();
 		
 		draw(destImg, pressImg, rectangle, alpha);
 		this.destImage = destImg;
@@ -313,7 +352,7 @@ public class Img {
 	 * @since 3.2.2
 	 */
 	public Img rotate(int degree) {
-		final BufferedImage image = this.srcImage;
+		final BufferedImage image = getValidSrcImg();
 		int width = image.getWidth(null);
 		int height = image.getHeight(null);
 		final BufferedImage destImg = new BufferedImage(width, height, getTypeInt());
@@ -334,7 +373,7 @@ public class Img {
 	 * @return this
 	 */
 	public Img flip() {
-		final BufferedImage image = this.srcImage;
+		final BufferedImage image = getValidSrcImg();
 		int width = image.getWidth();
 		int height = image.getHeight();
 		final BufferedImage destImg = new BufferedImage(width, height, getTypeInt());
@@ -388,7 +427,7 @@ public class Img {
 	public void write(File targetFile) throws IORuntimeException {
 		String formatName = FileUtil.extName(targetFile);
 		if (StrUtil.isBlank(formatName)) {
-			formatName = ImageUtil.IMAGE_TYPE_JPG;
+			formatName = this.destImageType;
 		}
 		try {
 			ImageIO.write(this.destImage, formatName, targetFile);// 输出到文件
@@ -437,6 +476,15 @@ public class Img {
 		default:
 			return BufferedImage.TYPE_INT_RGB;
 		}
+	}
+	
+	/**
+	 * 获取有效的源图片，首先检查上一次处理的结果图片，如无则使用用户传入的源图片
+	 * 
+	 * @return 有效的源图片
+	 */
+	private BufferedImage getValidSrcImg() {
+		return ObjectUtil.defaultIfNull(this.destImage, this.srcImage);
 	}
 	// ---------------------------------------------------------------------------------------------------------------- Private method end
 }

@@ -320,6 +320,33 @@ public class ImageUtil {
 	public static BufferedImage cut(Image srcImage, Rectangle rectangle) {
 		return Img.from(srcImage).cut(rectangle).getImg();
 	}
+	
+	/**
+	 * 图像切割(按指定起点坐标和宽高切割)，填充满整个图片（直径取长宽最小值）
+	 * 
+	 * @param srcImage 源图像
+	 * @param x 原图的x坐标起始位置
+	 * @param y 原图的y坐标起始位置
+	 * @return {@link BufferedImage}
+	 * @since 4.1.15
+	 */
+	public static BufferedImage cut(Image srcImage, int x, int y) {
+		return cut(srcImage, x, y, -1);
+	}
+	
+	/**
+	 * 图像切割(按指定起点坐标和宽高切割)
+	 * 
+	 * @param srcImage 源图像
+	 * @param x 原图的x坐标起始位置
+	 * @param y 原图的y坐标起始位置
+	 * @param radius 半径，小于0表示填充满整个图片（直径取长宽最小值）
+	 * @return {@link BufferedImage}
+	 * @since 4.1.15
+	 */
+	public static BufferedImage cut(Image srcImage, int x, int y, int radius) {
+		return Img.from(srcImage).cut(x, y, radius).getImg();
+	}
 
 	/**
 	 * 图像切片（指定切片的宽度和高度）
