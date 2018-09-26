@@ -31,7 +31,7 @@ import cn.hutool.core.util.StrUtil;
 public class ObjectId {
 
 	/** 线程安全的下一个随机数,每次生成自增+1 */
-	private static AtomicInteger nextInc = new AtomicInteger(RandomUtil.randomInt());
+	private static final AtomicInteger nextInc = new AtomicInteger(RandomUtil.randomInt());
 	/** 机器信息 */
 	private static final int machine = getMachinePiece() | getProcessPiece();
 
@@ -47,8 +47,9 @@ public class ObjectId {
 		}
 		s = StrUtil.removeAll(s, "-");
 		final int len = s.length();
-		if (len != 24)
+		if (len != 24) {
 			return false;
+		}
 
 		char c;
 		for (int i = 0; i < len; i++) {
@@ -68,6 +69,21 @@ public class ObjectId {
 	}
 
 	/**
+	 * 获取一个objectId的bytes表现形式
+	 * 
+	 * @return objectId
+	 * @since 4.1.15
+	 */
+	public static byte[] nextBytes() {
+		final ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
+		bb.putInt((int) DateUtil.currentSeconds());// 4位
+		bb.putInt(machine);// 4位
+		bb.putInt(nextInc.getAndIncrement());// 4位
+
+		return bb.array();
+	}
+
+	/**
 	 * 获取一个objectId用下划线分割
 	 * 
 	 * @return objectId
@@ -77,18 +93,13 @@ public class ObjectId {
 	}
 
 	/**
-	 * 获取一个objectId用下划线分割
+	 * 获取一个objectId
 	 * 
+	 * @param withHyphen 是否包含分隔符
 	 * @return objectId
 	 */
 	public static String next(boolean withHyphen) {
-		ByteBuffer bb = ByteBuffer.wrap(new byte[12]);
-		bb.putInt((int) DateUtil.currentSeconds());// 4位
-		bb.putInt(machine);// 4位
-		bb.putInt(nextInc.getAndIncrement());// 4位
-
-		// 原来objectId格式化太慢
-		byte[] array = bb.array();
+		byte[] array = nextBytes();
 		final StringBuilder buf = new StringBuilder(withHyphen ? 26 : 24);
 		int t;
 		for (int i = 0; i < array.length; i++) {
@@ -97,7 +108,7 @@ public class ObjectId {
 			}
 			t = array[i] & 0xff;
 			if (t < 16) {
-				buf.append("0");
+				buf.append('0');
 			}
 			buf.append(Integer.toHexString(t));
 
@@ -146,7 +157,13 @@ public class ObjectId {
 		int processId;
 		try {
 			// 获取进程ID
-			processId = ManagementFactory.getRuntimeMXBean().getName().hashCode();
+			final String processName =ManagementFactory.getRuntimeMXBean().getName();
+			final int atIndex = processName.indexOf('@');
+			if (atIndex > 0) {
+				processId = Integer.parseInt(processName.substring(0, atIndex));
+			} else {
+				processId = processName.hashCode();
+			}
 		} catch (Throwable t) {
 			processId = RandomUtil.randomInt();
 		}

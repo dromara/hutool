@@ -10,9 +10,11 @@
 * 【core】         ImageUtil增加cut切圆形方法（issue#IN3JJ@Gitee）
 * 【core】         Img增加setPositionBaseCentre可选坐标计算基于中心（issue#IN3JM@Gitee）
 * 【core】         ImageUtil增加逻辑判断颜色模式，避免失色问题（issue#IN3JK@Gitee）
+* 【cron】         改进规则支持20/2这类形式
 
 ### Bug修复
 * 【core】         修复DateUtil.yearAndQuarter计算错误的问题（issue#IN38V@Gitee）
+* 【core】         修复ClassUtil.isPublic判断问题（issue#IN38V@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

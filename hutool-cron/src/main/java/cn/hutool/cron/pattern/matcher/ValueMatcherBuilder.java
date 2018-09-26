@@ -119,12 +119,26 @@ public class ValueMatcherBuilder {
 		final List<Integer> results = new ArrayList<>();
 		
 		// 全部匹配形式
-		if (value.length() == 1 && value.equals("*")) {
+		if (value.length() <= 2) {
 			if(step < 1) {
 				//在全匹配模式下，如果步进不存在，表示步进为1
 				step = 1;
 			}
-			for (int i = parser.getMin(); i <= parser.getMax(); i+=step) {
+			
+			//根据步进的第一个数字确定起始时间，类似于 12/3则从12（秒、分等）开始
+			int minValue = parser.getMin();
+			if(false == "*".equals(value) && false == "?".equals(value)) {
+				try {
+					minValue = Math.max(minValue, Integer.parseInt(value));
+				} catch (NumberFormatException e) {
+					throw new CronException("Invalid field value: [{}]", value);
+				}
+			}
+			final int maxValue = parser.getMax();
+			if(minValue > maxValue) {
+				throw new CronException("Invalid value {} > {}", minValue, maxValue);
+			}
+			for (int i = minValue; i <= maxValue; i+=step) {
 				results.add(i);
 			}
 			return results;

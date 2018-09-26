@@ -1485,7 +1485,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 时间格式字符串转为秒数<br>
+	 * HH:mm:ss 时间格式字符串转为秒数<br>
 	 * 参考：https://github.com/iceroot
 	 * 
 	 * @param timeStr 字符串时分秒(HH:mm:ss)格式

@@ -59,6 +59,19 @@ public class RandomUtil {
 			throw new UtilException(e);
 		}
 	}
+	
+	/**
+	 * 获取随机数产生器
+	 * 
+	 * @param isSecure 是否为强随机数生成器 (RNG)
+	 * @return {@link Random}
+	 * @since 4.1.15
+	 * @see #getSecureRandom()
+	 * @see #getRandom()
+	 */
+	public static Random getRandom(boolean isSecure) {
+		return isSecure ? getSecureRandom() : getRandom();
+	}
 
 	/**
 	 * 获得指定范围内的随机数
