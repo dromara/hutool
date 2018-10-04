@@ -92,7 +92,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>3.8.0</version>
 				<configuration>
 					<source>7</source>
 					<target>7</target>
@@ -108,6 +108,7 @@
 						<phase>package</phase>
 						<goals>
 							<goal>jar</goal>
+							<goal>aggregate</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -137,6 +138,7 @@
 						<version>3.0.1</version>
 						<executions>
 							<execution>
+								<id>oss</id>
 								<phase>package</phase>
 								<goals>
 									<goal>jar-no-fork</goal>
