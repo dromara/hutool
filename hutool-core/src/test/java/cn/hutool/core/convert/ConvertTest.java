@@ -48,23 +48,35 @@ public class ConvertTest {
 	@Test
 	public void toIntTest() {
 		String a = " 34232";
-		Integer value = Convert.toInt(a);
-		Assert.assertEquals(Integer.valueOf(34232), value);
-
-		int value2 = ConverterRegistry.getInstance().convert(int.class, a);
-		Assert.assertTrue(34232 == value2);
+		Integer aInteger = Convert.toInt(a);
+		Assert.assertEquals(Integer.valueOf(34232), aInteger);
+		int aInt = ConverterRegistry.getInstance().convert(int.class, a);
+		Assert.assertTrue(34232 == aInt);
+		
+		//带小数测试
+		String b = " 34232.00";
+		Integer bInteger = Convert.toInt(b);
+		Assert.assertEquals(Integer.valueOf(34232), bInteger);
+		int bInt = ConverterRegistry.getInstance().convert(int.class, b);
+		Assert.assertTrue(34232 == bInt);
 	}
 	
 	@Test
 	public void toLongTest() {
 		String a = " 342324545435435";
-		Long value = Convert.toLong(a);
-		Assert.assertEquals(Long.valueOf(342324545435435L), value);
+		Long aLong = Convert.toLong(a);
+		Assert.assertEquals(Long.valueOf(342324545435435L), aLong);
+		long aLong2 = ConverterRegistry.getInstance().convert(long.class, a);
+		Assert.assertTrue(342324545435435L == aLong2);
 		
-		long value2 = ConverterRegistry.getInstance().convert(long.class, a);
-		Assert.assertTrue(342324545435435L == value2);
+		//带小数测试
+		String b = " 342324545435435.245435435";
+		Long bLong = Convert.toLong(b);
+		Assert.assertEquals(Long.valueOf(342324545435435L), bLong);
+		long bLong2 = ConverterRegistry.getInstance().convert(long.class, b);
+		Assert.assertTrue(342324545435435L == bLong2);
 	}
-
+	
 	@Test
 	public void toCharTest() {
 		String str = "aadfdsfs";

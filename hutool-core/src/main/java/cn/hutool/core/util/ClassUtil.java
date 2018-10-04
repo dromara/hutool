@@ -22,6 +22,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ClassScaner;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Singleton;
@@ -818,10 +819,8 @@ public class ClassUtil {
 	 * @return 是否为public
 	 */
 	public static boolean isPublic(Method method) {
-		if (null == method) {
-			throw new NullPointerException("Method to provided is null.");
-		}
-		return isPublic(method.getDeclaringClass());
+		Assert.notNull(method, "Method to provided is null.");
+		return Modifier.isPublic(method.getModifiers());
 	}
 
 	/**
@@ -851,6 +850,7 @@ public class ClassUtil {
 	 * @return 是否为静态方法
 	 */
 	public static boolean isStatic(Method method) {
+		Assert.notNull(method, "Method to provided is null.");
 		return Modifier.isStatic(method.getModifiers());
 	}
 

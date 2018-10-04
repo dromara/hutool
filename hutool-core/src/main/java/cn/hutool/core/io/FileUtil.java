@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
@@ -3276,5 +3277,16 @@ public class FileUtil {
 			}
 		}
 		return file;
+	}
+	
+	/**
+	 * 根据文件扩展名获得MimeType
+	 * 
+	 * @param filePath 文件路径或文件名
+	 * @return MimeType
+	 * @since 4.1.15
+	 */
+	public static String getMimeType(String filePath) {
+		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
 	}
 }

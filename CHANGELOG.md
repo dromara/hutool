@@ -3,6 +3,24 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.15
+
+### 新特性
+* 【core】         Convert.toInt增加容错，NumberUtil增加toNumber方法（issue#IN2LP@Gitee）
+* 【core】         ImageUtil增加cut切圆形方法（issue#IN3JJ@Gitee）
+* 【core】         Img增加setPositionBaseCentre可选坐标计算基于中心（issue#IN3JM@Gitee）
+* 【core】         ImageUtil增加逻辑判断颜色模式，避免失色问题（issue#IN3JK@Gitee）
+* 【cron】         改进规则支持20/2这类形式
+* 【extra】         ServletUtil.write增加重载方法支持文件（issue#IN9O0@Gitee）
+
+### Bug修复
+* 【core】         修复DateUtil.yearAndQuarter计算错误的问题（issue#IN38V@Gitee）
+* 【core】         修复ClassUtil.isPublic判断问题（issue#IN38V@Gitee）
+* 【extra】        修复JschUtil中Session关闭未移除出池导致的问题（issue#171@Github）
+* 【core】        修复NumberUtil.isInteger中0判断问题（issue#IN9BS@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.14
 
 ### 新特性

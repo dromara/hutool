@@ -318,7 +318,34 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static BufferedImage cut(Image srcImage, Rectangle rectangle) {
-		return Img.from(srcImage).cut(rectangle).getImg();
+		return Img.from(srcImage).setPositionBaseCentre(false).cut(rectangle).getImg();
+	}
+	
+	/**
+	 * 图像切割(按指定起点坐标和宽高切割)，填充满整个图片（直径取长宽最小值）
+	 * 
+	 * @param srcImage 源图像
+	 * @param x 原图的x坐标起始位置
+	 * @param y 原图的y坐标起始位置
+	 * @return {@link BufferedImage}
+	 * @since 4.1.15
+	 */
+	public static BufferedImage cut(Image srcImage, int x, int y) {
+		return cut(srcImage, x, y, -1);
+	}
+	
+	/**
+	 * 图像切割(按指定起点坐标和宽高切割)
+	 * 
+	 * @param srcImage 源图像
+	 * @param x 原图的x坐标起始位置
+	 * @param y 原图的y坐标起始位置
+	 * @param radius 半径，小于0表示填充满整个图片（直径取长宽最小值）
+	 * @return {@link BufferedImage}
+	 * @since 4.1.15
+	 */
+	public static BufferedImage cut(Image srcImage, int x, int y, int radius) {
+		return Img.from(srcImage).cut(x, y, radius).getImg();
 	}
 
 	/**
@@ -464,10 +491,8 @@ public class ImageUtil {
 
 		ImageOutputStream imageOutputStream = null;
 		try {
-			imageOutputStream = ImageIO.createImageOutputStream(destImageFile);
-			convert(ImageIO.read(srcImageFile), destExtName, imageOutputStream, StrUtil.equalsIgnoreCase(IMAGE_TYPE_PNG, srcExtName));
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			imageOutputStream = getImageOutputStream(destImageFile);
+			convert(read(srcImageFile), destExtName, imageOutputStream, StrUtil.equalsIgnoreCase(IMAGE_TYPE_PNG, srcExtName));
 		} finally {
 			IoUtil.close(imageOutputStream);
 		}
@@ -483,11 +508,7 @@ public class ImageUtil {
 	 * @since 3.0.9
 	 */
 	public static void convert(InputStream srcStream, String formatName, OutputStream destStream) {
-		try {
-			convert(ImageIO.read(srcStream), formatName, ImageIO.createImageOutputStream(destStream));
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		write(read(srcStream), formatName, getImageOutputStream(destStream));
 	}
 
 	/**
@@ -498,13 +519,11 @@ public class ImageUtil {
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
 	 * @param destStream 目标图像输出流
 	 * @since 3.0.9
+	 * @deprecated 请使用{@link #write(Image, String, ImageOutputStream)}
 	 */
+	@Deprecated
 	public static void convert(ImageInputStream srcStream, String formatName, ImageOutputStream destStream) {
-		try {
-			convert(ImageIO.read(srcStream), formatName, destStream);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		write(read(srcStream), formatName, destStream);
 	}
 
 	/**
@@ -515,7 +534,9 @@ public class ImageUtil {
 	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
 	 * @param destImageStream 目标图像输出流
 	 * @since 3.0.9
+	 * @deprecated 请使用{@link #write(Image, String, ImageOutputStream)}
 	 */
+	@Deprecated
 	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream) {
 		convert(srcImage, formatName, destImageStream, false);
 	}
@@ -532,7 +553,7 @@ public class ImageUtil {
 	 */
 	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream, boolean isSrcPng) {
 		try {
-			ImageIO.write(isSrcPng ? copyImage(srcImage, BufferedImage.TYPE_INT_BGR) : toBufferedImage(srcImage), formatName, destImageStream);
+			ImageIO.write(isSrcPng ? copyImage(srcImage, BufferedImage.TYPE_INT_RGB) : toBufferedImage(srcImage), formatName, destImageStream);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -1320,7 +1341,7 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 写出图像为PNG格式
+	 * 写出图像为指定格式
 	 * 
 	 * @param image {@link Image}
 	 * @param imageType 图片类型（图片扩展名）
@@ -1329,8 +1350,26 @@ public class ImageUtil {
 	 * @since 3.1.2
 	 */
 	public static void write(Image image, String imageType, ImageOutputStream destImageStream) throws IORuntimeException {
+		if (StrUtil.isBlank(imageType)) {
+			imageType = IMAGE_TYPE_JPG;
+		}
+		
+		BufferedImage bufferedImage;
+		if(false == imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)) {
+			//当目标为非PNG类图片时，源图片统一转换为RGB格式
+			if(image instanceof BufferedImage) {
+				bufferedImage = (BufferedImage)image;
+				if(BufferedImage.TYPE_INT_RGB != bufferedImage.getType()) {
+					bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
+				}
+			}else {
+				bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
+			}
+		}else {
+			bufferedImage = toBufferedImage(image);
+		}
 		try {
-			ImageIO.write(toBufferedImage(image), imageType, destImageStream);// 输出到文件流
+			ImageIO.write(bufferedImage, imageType, destImageStream);// 输出到文件流
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -1345,15 +1384,7 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static void write(Image image, File targetFile) throws IORuntimeException {
-		String formatName = FileUtil.extName(targetFile);
-		if (StrUtil.isBlank(formatName)) {
-			formatName = IMAGE_TYPE_JPG;
-		}
-		try {
-			ImageIO.write(toBufferedImage(image), formatName, targetFile);// 输出到文件
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		write(image, FileUtil.extName(targetFile), getImageOutputStream(targetFile));
 	}
 
 	/**
@@ -1368,6 +1399,17 @@ public class ImageUtil {
 			return iterator.next();
 		}
 		return null;
+	}
+	
+	/**
+	 * 从文件中读取图片，请使用绝对路径，使用相对路径会相对于ClassPath
+	 * 
+	 * @param imageFilePath 图片文件路径
+	 * @return 图片
+	 * @since 4.1.15
+	 */
+	public static BufferedImage read(String imageFilePath) {
+		return read(FileUtil.file(imageFilePath));
 	}
 
 	/**

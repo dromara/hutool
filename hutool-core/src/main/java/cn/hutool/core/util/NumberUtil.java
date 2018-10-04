@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
@@ -787,7 +788,7 @@ public class NumberUtil {
 	public static BigDecimal round(String numberStr, int scale) {
 		return round(numberStr, scale, RoundingMode.HALF_UP);
 	}
-	
+
 	/**
 	 * 保留固定位数小数<br>
 	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
@@ -944,7 +945,7 @@ public class NumberUtil {
 	public static BigDecimal roundHalfEven(BigDecimal value, int scale) {
 		return round(value, scale, RoundingMode.HALF_EVEN);
 	}
-	
+
 	/**
 	 * 保留固定小数位数，舍去多余位数
 	 * 
@@ -956,7 +957,7 @@ public class NumberUtil {
 	public static BigDecimal roundDown(Number number, int scale) {
 		return roundDown(toBigDecimal(number), scale);
 	}
-	
+
 	/**
 	 * 保留固定小数位数，舍去多余位数
 	 * 
@@ -1892,7 +1893,7 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(Number number) {
-		if(null == number) {
+		if (null == number) {
 			return BigDecimal.ZERO;
 		}
 		return toBigDecimal(number.toString());
@@ -2103,36 +2104,48 @@ public class NumberUtil {
 	public static BigDecimal pow(BigDecimal number, int n) {
 		return number.pow(n);
 	}
-	
+
 	/**
 	 * 解析转换数字字符串为int型数字，规则如下：
+	 * 
 	 * <pre>
 	 * 1、0x开头的视为16进制数字
 	 * 2、0开头的视为8进制数字
-	 * 3、空串返回0
-	 * 4、其它情况按照10进制转换
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
 	 * </pre>
 	 * 
 	 * @param number 数字，支持0x开头、0开头和普通十进制
 	 * @return int
+	 * @throws NumberFormatException 数字格式异常
 	 * @since 4.1.4
 	 */
-	public static int parseInt(String number) {
-		if(StrUtil.isBlank(number)) {
+	public static int parseInt(String number) throws NumberFormatException {
+		if (StrUtil.isBlank(number)) {
 			return 0;
 		}
-		if(StrUtil.startWithIgnoreCase(number, "0x")) {
-			//0x04表示16进制数
+
+		// 对于带小数转换为整数采取去掉小数的策略
+		number = StrUtil.subBefore(number, CharUtil.DOT, false);
+		if (StrUtil.isEmpty(number)) {
+			return 0;
+		}
+
+		if (StrUtil.startWithIgnoreCase(number, "0x")) {
+			// 0x04表示16进制数
 			return Integer.parseInt(number.substring(2), 16);
-		} else if(number.startsWith("0")) {
-			//04表示8进制数
+		} else if (number.startsWith("0") && number.length() > 1) {
+			// 04表示8进制数
 			return Integer.parseInt(number.substring(1), 8);
 		}
 		return Integer.parseInt(number);
 	}
-	
+
 	/**
 	 * 解析转换数字字符串为long型数字，规则如下：
+	 * 
 	 * <pre>
 	 * 1、0x开头的视为16进制数字
 	 * 2、0开头的视为8进制数字
@@ -2145,17 +2158,39 @@ public class NumberUtil {
 	 * @since 4.1.4
 	 */
 	public static long parseLong(String number) {
-		if(StrUtil.isBlank(number)) {
-			return 0L;
+		if (StrUtil.isBlank(number)) {
+			return 0;
 		}
-		if(number.startsWith("0x")) {
-			//0x04表示16进制数
+
+		// 对于带小数转换为整数采取去掉小数的策略
+		number = StrUtil.subBefore(number, CharUtil.DOT, false);
+		if (StrUtil.isEmpty(number)) {
+			return 0;
+		}
+
+		if (number.startsWith("0x")) {
+			// 0x04表示16进制数
 			return Long.parseLong(number.substring(2), 16);
-		} else if(number.startsWith("0")) {
-			//04表示8进制数
+		} else if (number.startsWith("0")) {
+			// 04表示8进制数
 			return Long.parseLong(number.substring(1), 8);
 		}
 		return Long.parseLong(number);
+	}
+
+	/**
+	 * 将指定字符串转换为{@link Number} 对象
+	 * 
+	 * @param numberStr Number字符串
+	 * @return Number对象
+	 * @since 4.1.15
+	 */
+	public static Number parseNumber(String numberStr) {
+		try {
+			return NumberFormat.getInstance().parse(numberStr);
+		} catch (ParseException e) {
+			throw new UtilException(e);
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start

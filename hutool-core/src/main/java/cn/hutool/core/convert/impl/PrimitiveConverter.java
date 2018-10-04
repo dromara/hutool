@@ -1,6 +1,7 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -69,7 +70,7 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 				if (StrUtil.isBlank(valueStr)) {
 					return 0;
 				}
-				return Integer.parseInt(valueStr);
+				return NumberUtil.parseInt(valueStr);
 				
 			} else if (long.class == this.targetType) {
 				if (value instanceof Number) {
@@ -79,7 +80,7 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 				if (StrUtil.isBlank(valueStr)) {
 					return 0;
 				}
-				return Long.parseLong(valueStr);
+				return NumberUtil.parseLong(valueStr);
 				
 			} else if (float.class == this.targetType) {
 				if (value instanceof Number) {

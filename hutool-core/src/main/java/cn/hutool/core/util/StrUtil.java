@@ -1070,7 +1070,7 @@ public class StrUtil {
 		}
 		return str2;
 	}
-
+	
 	/**
 	 * 去除两边的指定字符串
 	 * 
@@ -1613,9 +1613,7 @@ public class StrUtil {
 	/**
 	 * 截取分隔字符串之前的字符串，不包括分隔字符串<br>
 	 * 如果给定的字符串为空串（null或""）或者分隔字符串为null，返回原字符串<br>
-	 * 如果分隔字符串为空串""，则返回空串，如果分隔字符串未找到，返回原字符串
-	 * 
-	 * 栗子：
+	 * 如果分隔字符串为空串""，则返回空串，如果分隔字符串未找到，返回原字符串，举例如下：
 	 * 
 	 * <pre>
 	 * StrUtil.subBefore(null, *)      = null
@@ -1645,8 +1643,47 @@ public class StrUtil {
 			return EMPTY;
 		}
 		final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
-		if (pos == INDEX_NOT_FOUND) {
+		if (INDEX_NOT_FOUND == pos) {
 			return str;
+		}
+		if(0 == pos) {
+			return EMPTY;
+		}
+		return str.substring(0, pos);
+	}
+	
+	/**
+	 * 截取分隔字符串之前的字符串，不包括分隔字符串<br>
+	 * 如果给定的字符串为空串（null或""）或者分隔字符串为null，返回原字符串<br>
+	 * 如果分隔字符串未找到，返回原字符串，举例如下：
+	 * 
+	 * <pre>
+	 * StrUtil.subBefore(null, *)      = null
+	 * StrUtil.subBefore("", *)        = ""
+	 * StrUtil.subBefore("abc", 'a')   = ""
+	 * StrUtil.subBefore("abcba", 'b') = "a"
+	 * StrUtil.subBefore("abc", 'c')   = "ab"
+	 * StrUtil.subBefore("abc", 'd')   = "abc"
+	 * </pre>
+	 * 
+	 * @param string 被查找的字符串
+	 * @param separator 分隔字符串（不包括）
+	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+	 * @return 切割后的字符串
+	 * @since 4.1.15
+	 */
+	public static String subBefore(CharSequence string, char separator, boolean isLastSeparator) {
+		if (isEmpty(string)) {
+			return null == string ? null : string.toString();
+		}
+		
+		final String str = string.toString();
+		final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
+		if (INDEX_NOT_FOUND == pos) {
+			return str;
+		}
+		if(0 == pos) {
+			return EMPTY;
 		}
 		return str.substring(0, pos);
 	}
@@ -1654,10 +1691,8 @@ public class StrUtil {
 	/**
 	 * 截取分隔字符串之后的字符串，不包括分隔字符串<br>
 	 * 如果给定的字符串为空串（null或""），返回原字符串<br>
-	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串
+	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
 	 *
-	 * 栗子：
-	 * 
 	 * <pre>
 	 * StrUtil.subAfter(null, *)      = null
 	 * StrUtil.subAfter("", *)        = ""
@@ -1685,10 +1720,42 @@ public class StrUtil {
 		final String str = string.toString();
 		final String sep = separator.toString();
 		final int pos = isLastSeparator ? str.lastIndexOf(sep) : str.indexOf(sep);
-		if (pos == INDEX_NOT_FOUND) {
+		if (INDEX_NOT_FOUND == pos || (string.length() - 1) == pos) {
 			return EMPTY;
 		}
 		return str.substring(pos + separator.length());
+	}
+	
+	/**
+	 * 截取分隔字符串之后的字符串，不包括分隔字符串<br>
+	 * 如果给定的字符串为空串（null或""），返回原字符串<br>
+	 * 如果分隔字符串为空串（null或""），则返回空串，如果分隔字符串未找到，返回空串，举例如下：
+	 *
+	 * <pre>
+	 * StrUtil.subAfter(null, *)      = null
+	 * StrUtil.subAfter("", *)        = ""
+	 * StrUtil.subAfter("abc", 'a')   = "bc"
+	 * StrUtil.subAfter("abcba", 'b') = "cba"
+	 * StrUtil.subAfter("abc", 'c')   = ""
+	 * StrUtil.subAfter("abc", 'd')   = ""
+	 * </pre>
+	 *
+	 * @param string 被查找的字符串
+	 * @param separator 分隔字符串（不包括）
+	 * @param isLastSeparator 是否查找最后一个分隔字符串（多次出现分隔字符串时选取最后一个），true为选取最后一个
+	 * @return 切割后的字符串
+	 * @since 4.1.15
+	 */
+	public static String subAfter(CharSequence string, char separator, boolean isLastSeparator) {
+		if (isEmpty(string)) {
+			return null == string ? null : string.toString();
+		}
+		final String str = string.toString();
+		final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
+		if (INDEX_NOT_FOUND == pos) {
+			return EMPTY;
+		}
+		return str.substring(pos + 1);
 	}
 
 	/**

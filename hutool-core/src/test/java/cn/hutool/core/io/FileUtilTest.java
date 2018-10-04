@@ -299,4 +299,10 @@ public class FileUtilTest {
 		Assert.assertNotNull(webRoot);
 		Assert.assertEquals("hutool-core", webRoot.getName());
 	}
+	
+	@Test
+	public void getMimeTypeTest() {
+		String mimeType = FileUtil.getMimeType("test2Write.jpg");
+		Assert.assertEquals("image/jpeg", mimeType);
+	}
 }

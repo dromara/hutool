@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -856,9 +855,10 @@ public class HttpUtil {
 	 * 
 	 * @param filePath 文件路径或文件名
 	 * @return MimeType
+	 * @see FileUtil#getMimeType(String)
 	 */
 	public static String getMimeType(String filePath) {
-		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
+		return FileUtil.getMimeType(filePath);
 	}
 
 	/**

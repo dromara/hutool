@@ -43,11 +43,13 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isInteger("-12"));
 		Assert.assertTrue(NumberUtil.isInteger("256"));
 		Assert.assertTrue(NumberUtil.isInteger("0256"));
+		Assert.assertTrue(NumberUtil.isInteger("0"));
 	}
 	
 	@Test
 	public void isNumberTest() {
 		Assert.assertTrue(NumberUtil.isNumber("28.55"));
+		Assert.assertTrue(NumberUtil.isNumber("0"));
 	}
 
 	@Test
