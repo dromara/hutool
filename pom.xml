@@ -153,7 +153,7 @@
 						<version>1.6</version>
 						<executions>
 							<execution>
-								<id>sign-artifacts</id>
+								<id>oss</id>
 								<phase>verify</phase>
 								<goals>
 									<goal>sign</goal>
@@ -167,7 +167,7 @@
 						<version>1.6.8</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId>
+							<serverId>oss</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
