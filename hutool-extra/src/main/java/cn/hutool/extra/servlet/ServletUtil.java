@@ -468,8 +468,7 @@ public class ServletUtil {
 	 * 返回文件给客户端
 	 * 
 	 * @param response 响应对象{@link HttpServletResponse}
-	 * @param in 需要返回客户端的内容
-	 * @param contentType 返回的类型
+	 * @param file 写出的文件对象
 	 * @since 4.1.15
 	 */
 	public static void write(HttpServletResponse response, File file) {

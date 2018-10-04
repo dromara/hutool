@@ -2112,7 +2112,7 @@ public class NumberUtil {
 	 * 1、0x开头的视为16进制数字
 	 * 2、0开头的视为8进制数字
 	 * 3、其它情况按照10进制转换
-	 * 4、空串抛出NumberFormatException异常
+	 * 4、空串返回0
 	 * 5、.123形式返回0（按照小于0的小数对待）
 	 * 6、123.56截取小数点之前的数字，忽略小数部分
 	 * </pre>
@@ -2124,7 +2124,7 @@ public class NumberUtil {
 	 */
 	public static int parseInt(String number) throws NumberFormatException {
 		if (StrUtil.isBlank(number)) {
-			throw new NumberFormatException("Input number is blank !");
+			return 0;
 		}
 
 		// 对于带小数转换为整数采取去掉小数的策略
@@ -2159,7 +2159,7 @@ public class NumberUtil {
 	 */
 	public static long parseLong(String number) {
 		if (StrUtil.isBlank(number)) {
-			throw new NumberFormatException("Input number is blank !");
+			return 0;
 		}
 
 		// 对于带小数转换为整数采取去掉小数的策略
