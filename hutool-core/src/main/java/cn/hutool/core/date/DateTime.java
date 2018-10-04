@@ -630,7 +630,7 @@ public class DateTime extends Date {
 	 * 是否在给定日期之前
 	 * 
 	 * @param date 日期
-	 * @return 是否在给定日期之前或与给定日期相等
+	 * @return 是否在给定日期之前
 	 * @since 4.1.3
 	 */
 	public boolean isBefore(Date date) {
@@ -655,10 +655,10 @@ public class DateTime extends Date {
 	}
 
 	/**
-	 * 是否在给定日期之后或与给定日期相等
+	 * 是否在给定日期之后
 	 * 
 	 * @param date 日期
-	 * @return 是否在给定日期之后或与给定日期相等
+	 * @return 是否在给定日期之后
 	 * @since 4.1.3
 	 */
 	public boolean isAfter(Date date) {
