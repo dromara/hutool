@@ -8,7 +8,7 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>4.1.15-SNAPSHOT</version>
+	<version>4.1.15</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
@@ -44,6 +44,7 @@
 	</properties>
 
 	<dependencies>
+		<!-- 全局单元测试 -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -108,7 +109,6 @@
 						<phase>package</phase>
 						<goals>
 							<goal>jar</goal>
-							<goal>aggregate</goal>
 						</goals>
 					</execution>
 				</executions>
