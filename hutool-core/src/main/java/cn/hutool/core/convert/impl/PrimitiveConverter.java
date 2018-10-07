@@ -1,6 +1,7 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -45,6 +46,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			if (byte.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).byteValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toByte((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -55,6 +58,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (short.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).shortValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toShort((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -65,6 +70,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (int.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).intValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toInt((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -75,6 +82,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (long.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).longValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toLong((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -85,6 +94,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (float.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).floatValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toFloat((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -95,6 +106,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (double.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).doubleValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toDouble((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -105,6 +118,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (char.class == this.targetType) {
 				if(value instanceof Character){
 					return ((Character)value).charValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toChar((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -116,44 +131,12 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 					return ((Boolean)value).booleanValue();
 				}
 				String valueStr = convertToStr(value);
-				return parseBoolean(valueStr);
+				return BooleanUtil.toBoolean(valueStr);
 			}
 		} catch (Exception e) {
 			// Ignore Exception
 		}
 		return 0;
-	}
-	
-	/**
-	 * 转换字符串为boolean值
-	 * @param valueStr 字符串
-	 * @return boolean值
-	 */
-	static boolean parseBoolean(String valueStr){
-		if (StrUtil.isNotBlank(valueStr)) {
-			valueStr = valueStr.trim().toLowerCase();
-			switch (valueStr) {
-				case "true":
-					return true;
-				case "yes":
-					return true;
-				case "y":
-					return true;
-				case "ok":
-					return true;
-				case "1":
-					return true;
-				case "on":
-					return true;
-				case "是":
-					return true;
-				case "对":
-					return true;
-				case "真":
-					return true;
-			}
-		}
-		return false;
 	}
 	
 	@Override

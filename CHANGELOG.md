@@ -6,6 +6,8 @@
 ## 4.1.16
 
 ### 新特性
+* 【core】         Convert.增加boolean类型转数字（issue#INCKM@Gitee）
+* 【core】         新增BooleanUtil
 
 ### Bug修复
 
