@@ -71,8 +71,8 @@ public class CallerUtil {
 		try {
 			return new SecurityManagerCaller();
 		} catch (Throwable e) {
-			return new StackTraceCaller();
 		}
+		return new StackTraceCaller();
 	}
 	// ---------------------------------------------------------------------------------------------- static interface and class
 }

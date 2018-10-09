@@ -89,4 +89,12 @@ public class DateTimeTest {
 		int month = DateUtil.parse("2017-07-01").month();
 		Assert.assertEquals(6, month);
 	}
+	
+	@Test
+	public void weekOfYearTest() {
+		DateTime date = DateUtil.parse("2016-12-27");
+		Assert.assertEquals(2016, date.year());
+		//跨年的周返回的总是1
+		Assert.assertEquals(1, date.weekOfYear());
+	}
 }
