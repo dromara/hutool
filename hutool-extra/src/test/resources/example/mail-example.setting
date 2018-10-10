@@ -33,3 +33,8 @@ socketFactoryPort = 465
 
 # 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
 splitlongparameters = false
+
+# SMTP超时时长，单位毫秒，缺省值不超时
+timeout = 0
+# Socket连接超时值，单位毫秒，缺省值不超时
+connectionTimeout = 0

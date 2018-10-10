@@ -21,6 +21,8 @@ public class MailAccount implements Serializable {
 	private static final String SMTP_HOST = "mail.smtp.host";
 	private static final String SMTP_PORT = "mail.smtp.port";
 	private static final String SMTP_AUTH = "mail.smtp.auth";
+	private static final String SMTP_CONNECTION_TIMEOUT = "mail.smtp.connectiontimeout";
+	private static final String SMTP_TIMEOUT = "mail.smtp.timeout";
 
 	private static final String STARTTTLS_ENABLE = "mail.smtp.starttls.enable";
 	private static final String SOCKEY_FACTORY = "mail.smtp.socketFactory.class";
@@ -63,6 +65,11 @@ public class MailAccount implements Serializable {
 	private boolean socketFactoryFallback;
 	/** 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口 */
 	private int socketFactoryPort = 465;
+	
+	/** SMTP超时时长，单位毫秒，缺省值不超时 */
+	private long timeout;
+	/** Socket连接超时值，单位毫秒，缺省值不超时 */
+	private long connectionTimeout;
 
 	// -------------------------------------------------------------- Constructor start
 	/**
@@ -374,6 +381,28 @@ public class MailAccount implements Serializable {
 		this.socketFactoryPort = socketFactoryPort;
 		return this;
 	}
+	
+	/**
+	 * 设置SMTP超时时长，单位毫秒，缺省值不超时
+	 * @param timeout SMTP超时时长，单位毫秒，缺省值不超时
+	 * @return this
+	 * @since 4.1.17
+	 */
+	public MailAccount setTimeout(long timeout) {
+		this.timeout = timeout;
+		return this;
+	}
+
+	/**
+	 * 设置Socket连接超时值，单位毫秒，缺省值不超时
+	 * @param connectionTimeout Socket连接超时值，单位毫秒，缺省值不超时
+	 * @return this
+	 * @since 4.1.17
+	 */
+	public MailAccount setConnectionTimeout(long connectionTimeout) {
+		this.connectionTimeout = connectionTimeout;
+		return this;
+	}
 
 	/**
 	 * 获得SMTP相关信息
@@ -389,6 +418,12 @@ public class MailAccount implements Serializable {
 		p.put(SMTP_HOST, this.host);
 		p.put(SMTP_PORT, String.valueOf(this.port));
 		p.put(SMTP_AUTH, String.valueOf(this.auth));
+		if(this.timeout > 0) {
+			p.put(SMTP_TIMEOUT, String.valueOf(this.timeout));
+		}
+		if(this.connectionTimeout > 0) {
+			p.put(SMTP_CONNECTION_TIMEOUT, String.valueOf(this.connectionTimeout));
+		}
 
 		p.put(MAIL_DEBUG, String.valueOf(this.debug));
 
