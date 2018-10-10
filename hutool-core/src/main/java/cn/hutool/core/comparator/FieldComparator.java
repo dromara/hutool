@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -47,8 +48,8 @@ public class FieldComparator<T> implements Comparator<T>, Serializable {
 		Comparable<?> v1;
 		Comparable<?> v2;
 		try {
-			v1 = (Comparable<?>) field.get(o1);
-			v2 = (Comparable<?>) field.get(o2);
+			v1 = (Comparable<?>) ReflectUtil.getFieldValue(o1, this.field);
+			v2 = (Comparable<?>) ReflectUtil.getFieldValue(o2, this.field);
 		} catch (Exception e) {
 			throw new ComparatorException(e);
 		}
@@ -59,9 +60,9 @@ public class FieldComparator<T> implements Comparator<T>, Serializable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private int compare(T o1, T o2, Comparable fieldValue1, Comparable fieldValue2) {
 		int result = ObjectUtil.compare(fieldValue1, fieldValue2);
-		if(0 == result && ObjectUtil.notEqual(o1, o2)){
+		if(0 == result) {
 			//避免TreeSet / TreeMap 过滤掉排序字段相同但是对象不相同的情况
-			return 1;
+			result = CompareUtil.compare(o1, o2, true);
 		}
 		return result;
 	}

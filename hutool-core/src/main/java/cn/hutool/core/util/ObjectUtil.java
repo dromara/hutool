@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
@@ -377,7 +378,7 @@ public class ObjectUtil {
 	 * @see java.util.Comparator#compare(Object, Object)
 	 */
 	public static <T extends Comparable<? super T>> int compare(T c1, T c2) {
-		return compare(c1, c2, false);
+		return CompareUtil.compare(c1, c2);
 	}
 
 	/**
@@ -392,14 +393,7 @@ public class ObjectUtil {
 	 * @see java.util.Comparator#compare(Object, Object)
 	 */
 	public static <T extends Comparable<? super T>> int compare(T c1, T c2, boolean nullGreater) {
-		if (c1 == c2) {
-			return 0;
-		} else if (c1 == null) {
-			return nullGreater ? 1 : -1;
-		} else if (c2 == null) {
-			return nullGreater ? -1 : 1;
-		}
-		return c1.compareTo(c2);
+		return CompareUtil.compare(c1, c2, nullGreater);
 	}
 
 	/**

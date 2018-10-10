@@ -54,7 +54,7 @@ public class ReflectUtil {
 		for (Constructor<?> constructor : constructors) {
 			pts = constructor.getParameterTypes();
 			if (ClassUtil.isAllAssignableFrom(pts, parameterTypes)) {
-				//构造可访问
+				// 构造可访问
 				constructor.setAccessible(true);
 				return (Constructor<T>) constructor;
 			}
@@ -194,6 +194,26 @@ public class ReflectUtil {
 			throw new UtilException(e, "IllegalAccess for {}.{}", obj.getClass(), field.getName());
 		}
 		return result;
+	}
+
+	/**
+	 * 获取所有字段的值
+	 * @param obj bean对象
+	 * @return 字段值数组
+	 * @since 4.1.17
+	 */
+	public static Object[] getFieldsValue(Object obj) {
+		if (null != obj) {
+			final Field[] fields = getFields(obj.getClass());
+			if (null != fields) {
+				final Object[] values = new Object[fields.length];
+				for (int i = 0; i < fields.length; i++) {
+					values[i] = getFieldValue(obj, fields[i]);
+				}
+				return values;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -455,26 +475,26 @@ public class ReflectUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
-			if(Map.class.isAssignableFrom(clazz)) {
-				//Map
-				if(LinkedHashMap.class.isAssignableFrom(clazz)) {
+			if (Map.class.isAssignableFrom(clazz)) {
+				// Map
+				if (LinkedHashMap.class.isAssignableFrom(clazz)) {
 					return (T) MapUtil.newHashMap(true);
-				}else {
+				} else {
 					return (T) MapUtil.newHashMap();
 				}
-			} else if(Iterable.class.isAssignableFrom(clazz)) {
-				//Iterable
-				if(LinkedHashSet.class.isAssignableFrom(clazz)) {
+			} else if (Iterable.class.isAssignableFrom(clazz)) {
+				// Iterable
+				if (LinkedHashSet.class.isAssignableFrom(clazz)) {
 					return (T) new LinkedHashSet<>();
-				}else if(Set.class.isAssignableFrom(clazz)) {
+				} else if (Set.class.isAssignableFrom(clazz)) {
 					return (T) new HashSet<>();
-				} else if(LinkedList.class.isAssignableFrom(clazz)) {
+				} else if (LinkedList.class.isAssignableFrom(clazz)) {
 					return (T) new LinkedList<>();
 				} else {
 					return (T) CollUtil.newArrayList();
 				}
 			}
-			
+
 			final Constructor<T> constructor = getConstructor(clazz);
 			try {
 				return constructor.newInstance();
@@ -510,7 +530,7 @@ public class ReflectUtil {
 			// ignore
 			// 默认构造不存在的情况下查找其它构造
 		}
-		
+
 		final Constructor<T>[] constructors = getConstructors(beanClass);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {

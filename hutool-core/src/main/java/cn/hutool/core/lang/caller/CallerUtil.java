@@ -65,10 +65,6 @@ public class CallerUtil {
 	 */
 	private static Caller tryCreateCaller() {
 		try {
-			return new ReflectionCaller();
-		} catch (Throwable e) {
-		}
-		try {
 			return new SecurityManagerCaller();
 		} catch (Throwable e) {
 		}

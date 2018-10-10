@@ -11,12 +11,20 @@ public class SecurityManagerCaller extends SecurityManager implements Caller {
 
 	@Override
 	public Class<?> getCaller() {
-		return getClassContext()[OFFSET + 1];
+		final Class<?>[] context = getClassContext();
+		if ((OFFSET + 1) < context.length) {
+			return context[OFFSET + 1];
+		}
+		return null;
 	}
 
 	@Override
 	public Class<?> getCallerCaller() {
-		return getClassContext()[OFFSET + 2];
+		final Class<?>[] context = getClassContext();
+		if ((OFFSET + 2) < context.length) {
+			return context[OFFSET + 2];
+		}
+		return null;
 	}
 
 	@Override
@@ -31,9 +39,11 @@ public class SecurityManagerCaller extends SecurityManager implements Caller {
 	@Override
 	public boolean isCalledBy(Class<?> clazz) {
 		final Class<?>[] classes = getClassContext();
-		for (Class<?> contextClass : classes) {
-			if (contextClass.equals(clazz)) {
-				return true;
+		if(null != classes) {
+			for (Class<?> contextClass : classes) {
+				if (contextClass.equals(clazz)) {
+					return true;
+				}
 			}
 		}
 		return false;
