@@ -12,7 +12,11 @@ public class StackTraceCaller implements Caller {
 
 	@Override
 	public Class<?> getCaller() {
-		final String className = Thread.currentThread().getStackTrace()[OFFSET + 1].getClassName();
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		if (null == stackTrace || (OFFSET + 1) >= stackTrace.length) {
+			return null;
+		}
+		final String className = stackTrace[OFFSET + 1].getClassName();
 		try {
 			return Class.forName(className);
 		} catch (ClassNotFoundException e) {
@@ -22,7 +26,11 @@ public class StackTraceCaller implements Caller {
 
 	@Override
 	public Class<?> getCallerCaller() {
-		final String className = Thread.currentThread().getStackTrace()[OFFSET + 2].getClassName();
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		if (null == stackTrace || (OFFSET + 2) >= stackTrace.length) {
+			return null;
+		}
+		final String className = stackTrace[OFFSET + 2].getClassName();
 		try {
 			return Class.forName(className);
 		} catch (ClassNotFoundException e) {
@@ -32,7 +40,11 @@ public class StackTraceCaller implements Caller {
 
 	@Override
 	public Class<?> getCaller(int depth) {
-		final String className = Thread.currentThread().getStackTrace()[OFFSET + depth].getClassName();
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		if (null == stackTrace || (OFFSET + depth) >= stackTrace.length) {
+			return null;
+		}
+		final String className = stackTrace[OFFSET + depth].getClassName();
 		try {
 			return Class.forName(className);
 		} catch (ClassNotFoundException e) {
@@ -42,9 +54,12 @@ public class StackTraceCaller implements Caller {
 
 	@Override
 	public boolean isCalledBy(Class<?> clazz) {
-		for (final StackTraceElement element : Thread.currentThread().getStackTrace()) {
-			if (element.getClassName().equals(clazz.getName())) {
-				return true;
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		if(null != stackTrace) {
+			for (final StackTraceElement element : stackTrace) {
+				if (element.getClassName().equals(clazz.getName())) {
+					return true;
+				}
 			}
 		}
 		return false;
