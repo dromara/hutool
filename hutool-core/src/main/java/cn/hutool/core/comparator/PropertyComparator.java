@@ -65,9 +65,9 @@ public class PropertyComparator<T> implements Comparator<T>, Serializable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private int compare(T o1, T o2, Comparable fieldValue1, Comparable fieldValue2) {
 		int result = ObjectUtil.compare(fieldValue1, fieldValue2, isNullGreater);
-		if(0 == result && ObjectUtil.notEqual(o1, o2)){
+		if(0 == result) {
 			//避免TreeSet / TreeMap 过滤掉排序字段相同但是对象不相同的情况
-			return 1;
+			result = CompareUtil.compare(o1, o2, this.isNullGreater);
 		}
 		return result;
 	}

@@ -41,6 +41,16 @@ public class CronTest {
 		ThreadUtil.sleep(3000);
 		CronUtil.stop();
 	}
+	
+	@Test
+	@Ignore
+	public void cronTest2() {
+		// 支持秒级别定时任务
+		CronUtil.setMatchSecond(true);
+		CronUtil.start();
+		
+		ThreadUtil.sleep(30000);
+	}
 
 	@Test
 	@Ignore

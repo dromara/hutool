@@ -159,17 +159,21 @@ public final class CronUtil {
 
 	/**
 	 * 重新启动定时任务<br>
-	 * 重新启动定时任务会清除动态加载的任务，重新启动后，守护线程与否与之前保持一致
+	 * 此方法会清除动态加载的任务，重新启动后，守护线程与否与之前保持一致
 	 */
 	synchronized public static void restart() {
 		if (null != crontabSetting) {
+			//重新读取配置文件
 			crontabSetting.load();
 		}
 		if (scheduler.isStarted()) {
-			scheduler.stop();
+			//关闭并清除已有任务
+			scheduler.stop(true);
 		}
-
+		
+		//重新加载任务
 		schedule(crontabSetting);
+		//重新启动
 		scheduler.start();
 	}
 

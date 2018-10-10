@@ -2,6 +2,7 @@ package cn.hutool.cron.demo;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.IdUtil;
 
 /**
  * 测试定时任务，当触发到定时的时间点时，执行doTest方法
@@ -10,13 +11,15 @@ import cn.hutool.core.thread.ThreadUtil;
  *
  */
 public class TestJob {
+	
+	private String jobId = IdUtil.simpleUUID();
 
 	/**
 	 * 执行定时任务内容
 	 */
 	public void doTest() {
-		String name = Thread.currentThread().getName();
-		Console.log("Test Job {} running...", name);
+//		String name = Thread.currentThread().getName();
+		Console.log("Test Job {} running...", jobId);
 	}
 
 	/**

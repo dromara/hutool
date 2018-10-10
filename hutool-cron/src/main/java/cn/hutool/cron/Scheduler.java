@@ -322,6 +322,16 @@ public class Scheduler {
 	public int size() {
 		return this.taskTable.size();
 	}
+	
+	/**
+	 * 清空任务表
+	 * @return this
+	 * @since 4.1.17
+	 */
+	public Scheduler clear() {
+		this.taskTable = new TaskTable(this);
+		return this;
+	}
 	// -------------------------------------------------------------------- shcedule end
 
 	/**
@@ -367,14 +377,26 @@ public class Scheduler {
 		}
 		return this;
 	}
+	
+	/**
+	 * 停止定时任务<br>
+	 * 此方法调用后会将定时器进程立即结束，如果为守护线程模式，则正在执行的作业也会自动结束，否则作业线程将在执行完成后结束。<br>
+	 * 此方法并不会清除任务表中的任务，请调用{@link #clear()} 方法清空任务或者使用{@link #stop(boolean)}方法可选是否清空
+	 * 
+	 * @return this
+	 */
+	public Scheduler stop() {
+		return stop(false);
+	}
 
 	/**
 	 * 停止定时任务<br>
 	 * 此方法调用后会将定时器进程立即结束，如果为守护线程模式，则正在执行的作业也会自动结束，否则作业线程将在执行完成后结束。
 	 * 
 	 * @return this
+	 * @since 4.1.17
 	 */
-	public Scheduler stop() {
+	public Scheduler stop(boolean clearTasks) {
 		synchronized (lock) {
 			if (false == started) {
 				throw new IllegalStateException("Scheduler not started !");
@@ -387,6 +409,11 @@ public class Scheduler {
 			//停止线程池
 			this.threadExecutor.shutdown();
 			this.threadExecutor = null;
+			
+			//可选是否清空任务表
+			if(clearTasks) {
+				clear();
+			}
 
 			// 修改标志
 			started = false;
