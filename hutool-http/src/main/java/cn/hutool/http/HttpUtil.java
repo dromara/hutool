@@ -41,9 +41,9 @@ import cn.hutool.core.util.StrUtil;
 public class HttpUtil {
 
 	/** 正则：Content-Type中的编码信息 */
-	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset=(.*)");
+	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset\\s*=\\s*([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
 	/** 正则：匹配meta标签的编码信息 */
-	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta.*?charset=(.*?)\"");
+	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta[^>]*?charset\\s*=\\s*['\"]?([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
@@ -376,7 +376,7 @@ public class HttpUtil {
 	public static long downloadFile(String url, File destFile) {
 		return downloadFile(url, destFile, null);
 	}
-	
+
 	/**
 	 * 下载远程文件
 	 * 
@@ -389,7 +389,7 @@ public class HttpUtil {
 	public static long downloadFile(String url, File destFile, int timeout) {
 		return downloadFile(url, destFile, timeout, null);
 	}
-	
+
 	/**
 	 * 下载远程文件
 	 * 
@@ -420,7 +420,7 @@ public class HttpUtil {
 			throw new NullPointerException("[destFile] is null!");
 		}
 		final HttpResponse response = HttpRequest.get(url).timeout(timeout).executeAsync();
-		if(false == response.isOk()) {
+		if (false == response.isOk()) {
 			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
 		}
 		return response.writeBody(destFile, streamProgress);
@@ -456,7 +456,7 @@ public class HttpUtil {
 		}
 
 		final HttpResponse response = HttpRequest.get(url).executeAsync();
-		if(false == response.isOk()) {
+		if (false == response.isOk()) {
 			throw new HttpException("Server response error with status code: [{}]", response.getStatus());
 		}
 		return response.writeBody(out, isCloseOut, streamProgress);
@@ -553,7 +553,7 @@ public class HttpUtil {
 		String paramPart; // 参数部分
 		int pathEndPos = paramsStr.indexOf('?');
 		if (pathEndPos > -1) {
-			//url + 参数
+			// url + 参数
 			urlPart = StrUtil.subPre(paramsStr, pathEndPos);
 			paramPart = StrUtil.subSuf(paramsStr, pathEndPos + 1);
 			if (StrUtil.isBlank(paramPart)) {
@@ -611,7 +611,7 @@ public class HttpUtil {
 		}
 		return StrUtil.isBlank(urlPart) ? builder.toString() : urlPart + "?" + builder.toString();
 	}
-	
+
 	/**
 	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
 	 * 
@@ -735,14 +735,14 @@ public class HttpUtil {
 			// 原URL带参数，则对这部分参数单独编码（如果选项为进行编码）
 			urlBuilder.append(isEncode ? encodeParams(url, charset) : url);
 			if (false == StrUtil.endWith(url, '&')) {
-				//已经带参数的情况下追加参数
+				// 已经带参数的情况下追加参数
 				urlBuilder.append('&');
 			}
 		} else {
-			//原url无参数，则不做编码
+			// 原url无参数，则不做编码
 			urlBuilder.append(url);
-			if(qmIndex < 0) {
-				//无 '?' 追加之
+			if (qmIndex < 0) {
+				// 无 '?' 追加之
 				urlBuilder.append('?');
 			}
 		}

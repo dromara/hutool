@@ -6,6 +6,7 @@
 ## 4.1.18
 
 ### 新特性
+* 【http】         改进字符串匹配正则（issue#INHPD@Gitee）
 
 ### Bug修复
 

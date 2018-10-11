@@ -60,6 +60,7 @@ Hutool是Hu + tool的自造词，前者致敬我的“前任公司”，后者�
 - hutool-system        系统参数调用封装（JVM信息等）
 - hutool-json            JSON实现
 - hutool-captcha      图片验证码实现
+- hutool-poi             针对POI中Excel的封装
 
 -------------------------------------------------------------------------------
 
