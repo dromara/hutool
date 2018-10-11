@@ -538,6 +538,17 @@ public class BeanUtil {
 	public static void copyProperties(Object source, Object target, String... ignoreProperties) {
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 	}
+	
+	/**
+	 * 复制Bean对象属性<br>
+	 * 
+	 * @param source 源Bean对象
+	 * @param target 目标Bean对象
+	 * @param ignoreCase 是否忽略大小写
+	 */
+	public static void copyProperties(Object source, Object target, boolean ignoreCase) {
+		BeanCopier.create(source, target, CopyOptions.create().setIgnoreCase(ignoreCase)).copy();
+	}
 
 	/**
 	 * 复制Bean对象属性<br>
@@ -547,24 +558,8 @@ public class BeanUtil {
 	 * @param target 目标Bean对象
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
-	public static void copyProperties(final Object source, Object target, CopyOptions copyOptions) {
-		copyProperties(source, target, false, copyOptions);
-	}
-
-	/**
-	 * 复制Bean对象属性<br>
-	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将CopyOptions.editable设置为父类
-	 * 
-	 * @param source 源Bean对象
-	 * @param target 目标Bean对象
-	 * @param ignoreCase 是否忽略大小写
-	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
-	 */
-	public static void copyProperties(final Object source, Object target, boolean ignoreCase, CopyOptions copyOptions) {
-		if (null == copyOptions) {
-			copyOptions = new CopyOptions();
-		}
-		BeanCopier.create(source, target, copyOptions).copy();
+	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
+		copyProperties(source, target, copyOptions);
 	}
 
 	/**
