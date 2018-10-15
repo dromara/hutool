@@ -492,25 +492,12 @@ public class ZipUtil {
 	/**
 	 * Gzip压缩处理
 	 * 
-	 * @param val 被压缩的字节流
+	 * @param buf 被压缩的字节流
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
 	 */
-	public static byte[] gzip(byte[] val) throws UtilException {
-		FastByteArrayOutputStream bos = new FastByteArrayOutputStream(val.length);
-		GZIPOutputStream gos = null;
-		try {
-			gos = new GZIPOutputStream(bos);
-			gos.write(val, 0, val.length);
-			gos.finish();
-			gos.flush();
-			val = bos.toByteArray();
-		} catch (IOException e) {
-			throw new UtilException(e);
-		} finally {
-			IoUtil.close(gos);
-		}
-		return val;
+	public static byte[] gzip(byte[] buf) throws UtilException {
+		return gzip(new ByteArrayInputStream(buf), buf.length);
 	}
 
 	/**
@@ -521,18 +508,48 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	public static byte[] gzip(File file) throws UtilException {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream((int) file.length());
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			return gzip(in, (int)file.length());
+		} finally {
+			IoUtil.close(in);
+		}
+	}
+	
+	/**
+	 * Gzip压缩文件
+	 * 
+	 * @param in 被压缩的流
+	 * @return 压缩后的字节流
+	 * @throws UtilException IO异常
+	 * @sin 4.1.18
+	 */
+	public static byte[] gzip(InputStream in) throws UtilException {
+		return gzip(in, 32);
+	}
+	
+	/**
+	 * Gzip压缩文件
+	 * 
+	 * @param in 被压缩的流
+	 * @param length 预估长度
+	 * @return 压缩后的字节流
+	 * @throws UtilException IO异常
+	 * @sin 4.1.18
+	 */
+	public static byte[] gzip(InputStream in, int length) throws UtilException {
+		final FastByteArrayOutputStream bos = new FastByteArrayOutputStream(length);
 		GZIPOutputStream gos = null;
-		BufferedInputStream in;
 		try {
 			gos = new GZIPOutputStream(bos);
-			in = FileUtil.getInputStream(file);
 			IoUtil.copy(in, gos);
 			return bos.toByteArray();
 		} catch (IOException e) {
 			throw new UtilException(e);
 		} finally {
 			IoUtil.close(gos);
+			IoUtil.close(bos);
 		}
 	}
 
@@ -556,19 +573,42 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	public static byte[] unGzip(byte[] buf) throws UtilException {
+		return unGzip(new ByteArrayInputStream(buf), buf.length);
+	}
+	
+	/**
+	 * Gzip解压处理
+	 * 
+	 * @param in Gzip数据
+	 * @return 解压后的数据
+	 * @throws UtilException IO异常
+	 */
+	public static byte[] unGzip(InputStream in) throws UtilException {
+		return unGzip(in, 32);
+	}
+	
+	/**
+	 * Gzip解压处理
+	 * 
+	 * @param in Gzip数据
+	 * @param length 估算长度，如果无法确定请传入32
+	 * @return 解压后的数据
+	 * @throws UtilException IO异常
+	 * @since 4.1.18
+	 */
+	public static byte[] unGzip(InputStream in, int length) throws UtilException {
 		GZIPInputStream gzi = null;
-		ByteArrayOutputStream bos = null;
+		FastByteArrayOutputStream bos = null;
 		try {
-			gzi = new GZIPInputStream(new ByteArrayInputStream(buf));
-			bos = new ByteArrayOutputStream(buf.length);
+			gzi = (in instanceof GZIPInputStream) ? (GZIPInputStream)in : new GZIPInputStream(in);
+			bos = new FastByteArrayOutputStream(length);
 			IoUtil.copy(gzi, bos);
-			buf = bos.toByteArray();
 		} catch (IOException e) {
 			throw new UtilException(e);
 		} finally {
 			IoUtil.close(gzi);
 		}
-		return buf;
+		return bos.toByteArray();
 	}
 
 	// ----------------------------------------------------------------------------- Zlib
