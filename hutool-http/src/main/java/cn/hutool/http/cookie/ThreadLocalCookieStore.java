@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ThreadLocalCookieStore implements CookieStore {
 
-	private final static ThreadLocal<CookieStore> COOKIE_JARS = new ThreadLocal<CookieStore>() {
+	private final static ThreadLocal<CookieStore> STORES = new ThreadLocal<CookieStore>() {
 		@Override
 		protected synchronized CookieStore initialValue() {
 			/* InMemoryCookieStore */
@@ -30,7 +30,17 @@ public class ThreadLocalCookieStore implements CookieStore {
 	 * @return CookieStore
 	 */
 	public CookieStore getCookieStore() {
-		return COOKIE_JARS.get();
+		return STORES.get();
+	}
+
+	/**
+	 * 移除当前线程的Cookie
+	 * 
+	 * @return this
+	 */
+	public ThreadLocalCookieStore removeCurrent() {
+		STORES.remove();
+		return this;
 	}
 
 	@Override
