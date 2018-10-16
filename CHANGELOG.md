@@ -7,7 +7,8 @@
 
 ### 新特性
 * 【http】         改进字符串匹配正则（issue#INHPD@Gitee）
-* 【core】         增加gzip和UnGzip针对流的方法（issue#INKMP@Gitee）
+* 【core】        增加gzip和UnGzip针对流的方法（issue#INKMP@Gitee）
+* 【http】         增加ThreadLocalCookieStore
 
 ### Bug修复
 * 【core】        修复BeanUtil.copyProperties参数多余问题

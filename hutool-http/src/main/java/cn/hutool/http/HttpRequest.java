@@ -35,6 +35,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.cookie.ThreadLocalCookieStore;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.json.JSON;
 import cn.hutool.log.StaticLog;
@@ -62,8 +63,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/** Cookie管理 */
 	protected static CookieManager cookieManager;
 	static {
-		cookieManager = new CookieManager();
-		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+		cookieManager = new CookieManager(new ThreadLocalCookieStore(), CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
 	}
 	
@@ -94,7 +94,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private Map<String, Object> form;
 	/** 文件表单对象，用于文件上传 */
 	private Map<String, Resource> fileForm;
-	/** 文件表单对象，用于文件上传 */
+	/** Cookie */
 	private String cookie;
 
 	/** 连接对象 */
