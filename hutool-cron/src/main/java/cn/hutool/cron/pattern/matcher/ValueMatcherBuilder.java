@@ -12,11 +12,12 @@ import cn.hutool.cron.pattern.parser.ValueParser;
 import cn.hutool.cron.pattern.parser.YearValueParser;
 
 /**
- * {@link ValueMatcher} 构建器
+ * {@link ValueMatcher} 构建器，用于构建表达式中每一项的匹配器
  * @author Looly
  *
  */
 public class ValueMatcherBuilder {
+	
 	/**
 	 * 处理定时任务表达式每个时间字段<br>
 	 * 多个时间使用逗号分隔
@@ -26,7 +27,7 @@ public class ValueMatcherBuilder {
 	 * @return List
 	 */
 	public static ValueMatcher build(String value, ValueParser parser) {
-		if (1 == value.length() && ("*".equals(value) || "?".equals(value))) {
+		if (isMatchAllStr(value)) {
 			//兼容Quartz的"?"表达式，不会出现互斥情况，与"*"作用相同
 			return new AlwaysTrueValueMatcher();
 		}
@@ -37,7 +38,7 @@ public class ValueMatcherBuilder {
 		}
 
 		if (parser instanceof DayOfMonthValueParser) {
-			//考虑每月的天数不同，切存在闰年情况，日匹配单独使用
+			//考虑每月的天数不同，且存在闰年情况，日匹配单独使用
 			return new DayOfMonthValueMatcher(values);
 		}else if(parser instanceof YearValueParser){
 			//考虑年数字太大，不适合boolean数组，单独使用列表遍历匹配
@@ -122,7 +123,7 @@ public class ValueMatcherBuilder {
 		if (value.length() <= 2) {
 			//根据步进的第一个数字确定起始时间，类似于 12/3则从12（秒、分等）开始
 			int minValue = parser.getMin();
-			if(false == "*".equals(value) && false == "?".equals(value)) {
+			if(false == isMatchAllStr(value)) {
 				try {
 					minValue = Math.max(minValue, Integer.parseInt(value));
 				} catch (NumberFormatException e) {
@@ -134,11 +135,11 @@ public class ValueMatcherBuilder {
 					step = 1;
 				}
 			}
-			final int maxValue = parser.getMax();
-			if(minValue > maxValue) {
-				throw new CronException("Invalid value {} > {}", minValue, maxValue);
-			}
 			if(step > 0) {
+				final int maxValue = parser.getMax();
+				if(minValue > maxValue) {
+					throw new CronException("Invalid value {} > {}", minValue, maxValue);
+				}
 				//有步进
 				for (int i = minValue; i <= maxValue; i+=step) {
 					results.add(i);
@@ -183,5 +184,17 @@ public class ValueMatcherBuilder {
 			throw new CronException("Invalid syntax of field: [{}]", value);
 		}
 		return results;
+	}
+	
+	/**
+	 * 是否为全匹配符<br>
+	 * 全匹配符指 * 或者 ?
+	 * 
+	 * @param value 被检查的值
+	 * @return 是否为全匹配符
+	 * @since 4.1.18
+	 */
+	private static boolean isMatchAllStr(String value) {
+		return (1 == value.length()) && ("*".equals(value) || "?".equals(value));
 	}
 }

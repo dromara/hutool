@@ -1,4 +1,4 @@
-package cn.hutool.cron.test;
+package cn.hutool.cron.pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import cn.hutool.cron.pattern.CronPattern;
  * @author Looly
  *
  */
-public class CronTest {
+public class CronPatternTest {
 
 	@Test
 	public void matchAllTest() {
@@ -24,7 +24,7 @@ public class CronTest {
 	}
 
 	@Test
-	public void CronPatternTest() {
+	public void cronPatternTest() {
 		CronPattern pattern;
 
 		// 12:11匹配

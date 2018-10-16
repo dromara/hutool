@@ -17,6 +17,7 @@ public class TestJob2 {
 	 * 执行定时任务内容
 	 */
 	public void doTest() {
+		Console.log("TestJob2.doTest开始执行……");
 		ThreadUtil.sleep(20, TimeUnit.SECONDS);
 		Console.log("延迟20s打印testJob2");
 	}
