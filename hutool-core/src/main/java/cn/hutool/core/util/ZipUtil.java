@@ -523,7 +523,7 @@ public class ZipUtil {
 	 * @param in 被压缩的流
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
-	 * @sin 4.1.18
+	 * @since 4.1.18
 	 */
 	public static byte[] gzip(InputStream in) throws UtilException {
 		return gzip(in, 32);
@@ -536,7 +536,7 @@ public class ZipUtil {
 	 * @param length 预估长度
 	 * @return 压缩后的字节流
 	 * @throws UtilException IO异常
-	 * @sin 4.1.18
+	 * @since 4.1.18
 	 */
 	public static byte[] gzip(InputStream in, int length) throws UtilException {
 		final FastByteArrayOutputStream bos = new FastByteArrayOutputStream(length);

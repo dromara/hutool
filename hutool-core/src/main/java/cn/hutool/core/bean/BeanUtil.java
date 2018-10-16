@@ -559,7 +559,10 @@ public class BeanUtil {
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
-		copyProperties(source, target, copyOptions);
+		if (null == copyOptions) {
+			copyOptions = new CopyOptions();
+		}
+		BeanCopier.create(source, target, copyOptions).copy();
 	}
 
 	/**
