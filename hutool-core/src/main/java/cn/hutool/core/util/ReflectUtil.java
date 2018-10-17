@@ -314,7 +314,7 @@ public class ReflectUtil {
 		if (ArrayUtil.isNotEmpty(methods)) {
 			for (Method method : methods) {
 				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
-					if (ArrayUtil.isEmpty(paramTypes) || ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
+					if (ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
 						return method;
 					}
 				}

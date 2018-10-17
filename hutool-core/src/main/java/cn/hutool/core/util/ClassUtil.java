@@ -570,6 +570,10 @@ public class ClassUtil {
 		if (ArrayUtil.isEmpty(types1) && ArrayUtil.isEmpty(types2)) {
 			return true;
 		}
+		if(null == types1 || null == types2) {
+			//任何一个为null不相等（之前已判断两个都为null的情况）
+			return false;
+		}
 		if (types1.length != types2.length) {
 			return false;
 		}
