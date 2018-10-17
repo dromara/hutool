@@ -14,6 +14,8 @@
 * 【core】        修复BeanUtil.copyProperties参数多余问题
 * 【cron】        修复表达式匹配错误问题（issue#INLEE@Gitee）
 * 【core】        修复ReflectUtil获取空参数方法导致的问题（issue#INN5W@Gitee）
+* 【json】         修复JSONArray.toList方法导致的问题（issue#INO3F@Gitee）
+* 【core】        修复NumberUtil.parseLong中0转换问题方法导致的问题（issue#INO3F@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

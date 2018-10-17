@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -255,7 +257,7 @@ final class InternalJSONUtil {
 	 * @param ignoreError 是否忽略转换异常
 	 * @return 数组对象
 	 */
-	protected static Object toArray(final JSONArray jsonArray, Class<?> arrayClass, boolean ignoreError) {
+	protected static Object toArray(JSONArray jsonArray, Class<?> arrayClass, boolean ignoreError) {
 		final Class<?> componentType = arrayClass.isArray() ? arrayClass.getComponentType() : arrayClass;
 		final int size = jsonArray.size();
 		final Object objArray = Array.newInstance(componentType, size);
@@ -264,6 +266,25 @@ final class InternalJSONUtil {
 		}
 
 		return objArray;
+	}
+	
+	/**
+	 * 将JSONArray转换为指定类型的对量列表
+	 * 
+	 * @param <T> 元素类型
+	 * @param jsonArray JSONArray
+	 * @param elementType 对象元素类型
+	 * @param ignoreError 是否忽略错误
+	 * @return 对象列表
+	 */
+	@SuppressWarnings("unchecked")
+	protected static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType, boolean ignoreError) {
+		final int size = jsonArray.size();
+		final List<T> result = new ArrayList<>(size);
+		for (Object obj : jsonArray) {
+			result.add((T) jsonConvert(elementType, obj, ignoreError));
+		}
+		return result;
 	}
 
 	/**
@@ -327,7 +348,7 @@ final class InternalJSONUtil {
 				// 此处特殊处理，认为返回null属于正常情况
 				return null;
 			}
-			throw new ConvertException("Can not convert [{}] to type [{}]", value, rowType.getName());
+			throw new ConvertException("Can not convert {} to type {}", value, rowType.getName());
 		}
 		
 		return targetValue;
