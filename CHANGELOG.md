@@ -16,6 +16,7 @@
 * 【core】        修复ReflectUtil获取空参数方法导致的问题（issue#INN5W@Gitee）
 * 【json】         修复JSONArray.toList方法导致的问题（issue#INO3F@Gitee）
 * 【core】        修复NumberUtil.parseLong中0转换问题方法导致的问题（issue#INO3F@Gitee）
+* 【core】        修复CompareUtil循环引用问题（issue#180@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
