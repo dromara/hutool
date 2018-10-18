@@ -1384,7 +1384,13 @@ public class ImageUtil {
 	 * @since 3.1.0
 	 */
 	public static void write(Image image, File targetFile) throws IORuntimeException {
-		write(image, FileUtil.extName(targetFile), getImageOutputStream(targetFile));
+		ImageOutputStream out = null;
+		try {
+			out = getImageOutputStream(targetFile);
+			write(image, FileUtil.extName(targetFile), out);
+		}finally {
+			IoUtil.close(out);
+		}
 	}
 
 	/**
