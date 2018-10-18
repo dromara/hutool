@@ -5,8 +5,8 @@
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
 <p align="center">
-	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all/4.1.17/jar">
-		<img src="https://img.shields.io/badge/version-4.1.17-blue.svg" ></img>
+	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all/4.1.18/jar">
+		<img src="https://img.shields.io/badge/version-4.1.18-blue.svg" ></img>
 	</a>
 	<a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0.html">
 		<img src="http://img.shields.io/:license-apache-blue.svg" ></img>
@@ -60,6 +60,7 @@ Hutool是Hu + tool的自造词，前者致敬我的“前任公司”，后者�
 - hutool-system        系统参数调用封装（JVM信息等）
 - hutool-json            JSON实现
 - hutool-captcha      图片验证码实现
+- hutool-poi             针对POI中Excel的封装
 
 -------------------------------------------------------------------------------
 
@@ -80,21 +81,21 @@ Hutool是Hu + tool的自造词，前者致敬我的“前任公司”，后者�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.1.17</version>
+    <version>4.1.18</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.1.17'
+compile 'cn.hutool:hutool-all:4.1.18'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.17/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.17/)
+- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.18/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.18/)
 
 -------------------------------------------------------------------------------
 

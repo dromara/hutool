@@ -220,4 +220,19 @@ public class HttpUtilTest {
 				"http://api.hutool.cn/login?type=aaa&Format=date&Action=DescribeDomainRecords&AccessKeyId=123&SignatureMethod=POST&DomainName=lesper.cn&SignatureNonce=123&Version=1.0&SignatureVersion=4.3.1&Timestamp=123432453",
 				urlWithForm);
 	}
+	
+	@Test
+	public void getCharsetTest() {
+		String charsetName = ReUtil.get(HttpUtil.CHARSET_PATTERN, "Charset=UTF-8;fq=0.9", 1);
+		Assert.assertEquals("UTF-8", charsetName);
+		
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset=utf-8", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset='utf-8'", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset=\"utf-8\"", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset = \"utf-8\"", 1);
+		Assert.assertEquals("utf-8", charsetName);
+	}
 }

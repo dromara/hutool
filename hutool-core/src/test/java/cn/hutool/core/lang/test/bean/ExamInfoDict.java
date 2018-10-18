@@ -21,6 +21,9 @@ public class ExamInfoDict implements Serializable {
 	public Integer getId() {
 		return id;
 	}
+	public Integer getId(Integer defaultValue) {
+		return this.id == null ? defaultValue : this.id;
+	}
 	public void setId(Integer id) {
 		this.id = id;
 	}

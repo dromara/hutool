@@ -12,7 +12,6 @@ import java.util.ListIterator;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.impl.CollectionConverter;
 
 /**
  * JSON数组<br>
@@ -604,10 +603,8 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @return {@link ArrayList}
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings("unchecked")
-	public <T> ArrayList<T> toList(Class<T> elementType) {
-		final CollectionConverter converter = new CollectionConverter(ArrayList.class, elementType);
-		return (ArrayList<T>) converter.convert(this, null);
+	public <T> List<T> toList(Class<T> elementType) {
+		return InternalJSONUtil.toList(this, elementType, false);
 	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start

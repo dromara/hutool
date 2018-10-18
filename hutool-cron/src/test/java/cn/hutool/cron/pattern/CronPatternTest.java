@@ -1,4 +1,4 @@
-package cn.hutool.cron.test;
+package cn.hutool.cron.pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import cn.hutool.cron.pattern.CronPattern;
  * @author Looly
  *
  */
-public class CronTest {
+public class CronPatternTest {
 
 	@Test
 	public void matchAllTest() {
@@ -24,7 +24,7 @@ public class CronTest {
 	}
 
 	@Test
-	public void CronPatternTest() {
+	public void cronPatternTest() {
 		CronPattern pattern;
 
 		// 12:11匹配
@@ -76,6 +76,16 @@ public class CronTest {
 		assertMatch(pattern, "2017-02-09 00:00:39");
 		assertMatch(pattern, "2017-02-09 00:00:39");
 
+	}
+	
+	@Test
+	public void CronPatternTest2() {
+		CronPattern pattern = new CronPattern("0/30 * * * *");
+		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:00:00").getTime(), false));
+		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:30:00").getTime(), false));
+		
+		pattern = new CronPattern("32 * * * *");
+		Assert.assertTrue(pattern.match(DateUtil.parse("2018-10-09 12:32:00").getTime(), false));
 	}
 
 	@Test

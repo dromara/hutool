@@ -3,6 +3,23 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.18
+
+### 新特性
+* 【http】         改进字符串匹配正则（issue#INHPD@Gitee）
+* 【core】        增加gzip和UnGzip针对流的方法（issue#INKMP@Gitee）
+* 【http】         增加ThreadLocalCookieStore
+
+### Bug修复
+* 【core】        修复BeanUtil.copyProperties参数多余问题
+* 【cron】        修复表达式匹配错误问题（issue#INLEE@Gitee）
+* 【core】        修复ReflectUtil获取空参数方法导致的问题（issue#INN5W@Gitee）
+* 【json】         修复JSONArray.toList方法导致的问题（issue#INO3F@Gitee）
+* 【core】        修复NumberUtil.parseLong中0转换问题方法导致的问题（issue#INO3F@Gitee）
+* 【core】        修复CompareUtil循环引用问题（issue#180@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.17
 
 ### 新特性

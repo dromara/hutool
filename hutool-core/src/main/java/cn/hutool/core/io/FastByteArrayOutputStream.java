@@ -25,6 +25,11 @@ public class FastByteArrayOutputStream extends OutputStream {
 		this(1024);
 	}
 
+	/**
+	 * 构造
+	 * 
+	 * @param size 预估大小
+	 */
 	public FastByteArrayOutputStream(int size) {
 		buffer = new FastByteBuffer(size);
 	}

@@ -51,7 +51,7 @@ public class CronTimer extends Thread{
 			thisTime = System.currentTimeMillis();
 			spawnLauncher(thisTime);
 		}
-		log.debug("Hutool Cron Timer stoped.");
+		log.debug("Hutool-cron timer stoped.");
 	}
 	
 	/**

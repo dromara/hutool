@@ -29,6 +29,11 @@ public class ReflectUtilTest {
 	public void getMethodTest() {
 		Method method = ReflectUtil.getMethod(ExamInfoDict.class, "getId");
 		Assert.assertEquals("getId", method.getName());
+		Assert.assertEquals(0, method.getParameterTypes().length);
+		
+		method = ReflectUtil.getMethod(ExamInfoDict.class, "getId", Integer.class);
+		Assert.assertEquals("getId", method.getName());
+		Assert.assertEquals(1, method.getParameterTypes().length);
 	}
 
 	@Test
