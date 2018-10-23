@@ -22,6 +22,7 @@ import java.util.zip.ZipOutputStream;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 
 /**
@@ -31,6 +32,8 @@ import cn.hutool.core.io.IoUtil;
  *
  */
 public class ZipUtil {
+	
+	private static final int DEFAULT_BYTE_ARRAY_LENGTH = 32;
 
 	/** 默认编码，使用平台相关编码 */
 	private static final Charset DEFAULT_CHARSET = CharsetUtil.defaultCharset();
@@ -120,8 +123,8 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	public static File zip(String srcPath, String zipPath, Charset charset, boolean withSrcDir) throws UtilException {
-		File srcFile = FileUtil.file(srcPath);
-		File zipFile = FileUtil.file(zipPath);
+		final File srcFile = FileUtil.file(srcPath);
+		final File zipFile = FileUtil.file(zipPath);
 		zip(zipFile, charset, withSrcDir, srcFile);
 		return zipFile;
 	}
@@ -526,7 +529,7 @@ public class ZipUtil {
 	 * @since 4.1.18
 	 */
 	public static byte[] gzip(InputStream in) throws UtilException {
-		return gzip(in, 32);
+		return gzip(in, DEFAULT_BYTE_ARRAY_LENGTH);
 	}
 	
 	/**
@@ -539,18 +542,18 @@ public class ZipUtil {
 	 * @since 4.1.18
 	 */
 	public static byte[] gzip(InputStream in, int length) throws UtilException {
-		final FastByteArrayOutputStream bos = new FastByteArrayOutputStream(length);
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
 		GZIPOutputStream gos = null;
 		try {
 			gos = new GZIPOutputStream(bos);
 			IoUtil.copy(in, gos);
-			return bos.toByteArray();
 		} catch (IOException e) {
 			throw new UtilException(e);
 		} finally {
 			IoUtil.close(gos);
-			IoUtil.close(bos);
 		}
+		//返回必须在关闭gos后进行，因为关闭时会自动执行finish()方法，保证数据全部写出
+		return bos.toByteArray();
 	}
 
 	/**
@@ -584,14 +587,14 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	public static byte[] unGzip(InputStream in) throws UtilException {
-		return unGzip(in, 32);
+		return unGzip(in, DEFAULT_BYTE_ARRAY_LENGTH);
 	}
 	
 	/**
 	 * Gzip解压处理
 	 * 
 	 * @param in Gzip数据
-	 * @param length 估算长度，如果无法确定请传入32
+	 * @param length 估算长度，如果无法确定请传入{@link #DEFAULT_BYTE_ARRAY_LENGTH}
 	 * @return 解压后的数据
 	 * @throws UtilException IO异常
 	 * @since 4.1.18
@@ -608,6 +611,7 @@ public class ZipUtil {
 		} finally {
 			IoUtil.close(gzi);
 		}
+		//返回必须在关闭gos后进行，因为关闭时会自动执行finish()方法，保证数据全部写出
 		return bos.toByteArray();
 	}
 
@@ -635,15 +639,13 @@ public class ZipUtil {
 	 * @since 4.1.4
 	 */
 	public static byte[] zlib(File file, int level) {
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BufferedInputStream in = null;
 		try {
 			in = FileUtil.getInputStream(file);
-			deflater(in, out, level);
+			return zlib(in, level, (int)file.length());
 		} finally {
 			IoUtil.close(in);
 		}
-		return out.toByteArray();
 	}
 
 	/**
@@ -655,8 +657,32 @@ public class ZipUtil {
 	 * @since 4.1.4
 	 */
 	public static byte[] zlib(byte[] buf, int level) {
-		final ByteArrayInputStream in = new ByteArrayInputStream(buf);
-		final ByteArrayOutputStream out = new ByteArrayOutputStream(buf.length);
+		return zlib(new ByteArrayInputStream(buf), level, buf.length);
+	}
+	
+	/**
+	 * 打成Zlib压缩包
+	 * 
+	 * @param in 数据流
+	 * @param level 压缩级别，0~9
+	 * @return 压缩后的bytes
+	 * @since 4.1.19
+	 */
+	public static byte[] zlib(InputStream in, int level) {
+		return zlib(in, level, DEFAULT_BYTE_ARRAY_LENGTH);
+	}
+	
+	/**
+	 * 打成Zlib压缩包
+	 * 
+	 * @param in 数据流
+	 * @param level 压缩级别，0~9
+	 * @param length 预估大小
+	 * @return 压缩后的bytes
+	 * @since 4.1.19
+	 */
+	public static byte[] zlib(InputStream in, int level, int length) {
+		final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
 		deflater(in, out, level);
 		return out.toByteArray();
 	}
@@ -681,8 +707,30 @@ public class ZipUtil {
 	 * @since 4.1.4
 	 */
 	public static byte[] unZlib(byte[] buf) {
-		final ByteArrayInputStream in = new ByteArrayInputStream(buf);
-		final ByteArrayOutputStream out = new ByteArrayOutputStream(buf.length);
+		return unZlib(new ByteArrayInputStream(buf), buf.length);
+	}
+	
+	/**
+	 * 解压缩zlib
+	 * 
+	 * @param in 数据流
+	 * @return 解压后的bytes
+	 * @since 4.1.19
+	 */
+	public static byte[] unZlib(InputStream in) {
+		return unZlib(in, DEFAULT_BYTE_ARRAY_LENGTH);
+	}
+	
+	/**
+	 * 解压缩zlib
+	 * 
+	 * @param in 数据流
+	 * @param length 预估长度
+	 * @return 解压后的bytes
+	 * @since 4.1.19
+	 */
+	public static byte[] unZlib(InputStream in, int length) {
+		final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
 		inflater(in, out);
 		return out.toByteArray();
 	}
@@ -808,6 +856,10 @@ public class ZipUtil {
 	 * @param srcFile 被压缩的文件或目录
 	 */
 	private static void validateFiles(File zipFile, File... srcFiles) throws UtilException {
+		if(zipFile.isDirectory()) {
+			throw new UtilException("Zip file [{}] must not be a directory !", zipFile.getAbsoluteFile());
+		}
+		
 		for (File srcFile : srcFiles) {
 			if(null == srcFile) {
 				continue;
@@ -817,14 +869,12 @@ public class ZipUtil {
 			}
 
 			try {
+				final File parentFile = zipFile.getCanonicalFile().getParentFile();
 				// 压缩文件不能位于被压缩的目录内
-				if (srcFile.isDirectory() && zipFile.getCanonicalPath().contains(srcFile.getCanonicalPath())) {
+				if (srcFile.isDirectory() && parentFile.getCanonicalPath().contains(srcFile.getCanonicalPath())) {
 					throw new UtilException("[zipPath] must not be the child directory of [srcPath]!");
 				}
 
-				if (false == zipFile.exists()) {
-					FileUtil.touch(zipFile);
-				}
 			} catch (IOException e) {
 				throw new UtilException(e);
 			}
@@ -874,6 +924,11 @@ public class ZipUtil {
 	private static void inflater(InputStream in, OutputStream out) {
 		final InflaterOutputStream ios = (out instanceof InflaterOutputStream) ? (InflaterOutputStream) out : new InflaterOutputStream(out, new Inflater(true));
 		IoUtil.copy(in, ios);
+		try {
+			ios.finish();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -886,6 +941,11 @@ public class ZipUtil {
 	private static void deflater(InputStream in, OutputStream out, int level) {
 		final DeflaterOutputStream ios = (out instanceof DeflaterOutputStream) ? (DeflaterOutputStream) out : new DeflaterOutputStream(out, new Deflater(level, true));
 		IoUtil.copy(in, ios);
+		try {
+			ios.finish();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 	// ---------------------------------------------------------------------------------------------- Private method end
 
