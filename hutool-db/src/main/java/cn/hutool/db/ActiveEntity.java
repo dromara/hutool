@@ -102,7 +102,7 @@ public class ActiveEntity extends Entity {
 	/**
 	 * 构造
 	 * 
-	 * @param db {@link SqlRunner}
+	 * @param db {@link Db}
 	 * @param tableName 表名
 	 */
 	public ActiveEntity(Db db, String tableName) {
@@ -113,7 +113,7 @@ public class ActiveEntity extends Entity {
 	/**
 	 * 构造
 	 * 
-	 * @param db {@link SqlRunner}
+	 * @param db {@link Db}
 	 * @param entity 非动态实体
 	 */
 	public ActiveEntity(Db db, Entity entity) {
