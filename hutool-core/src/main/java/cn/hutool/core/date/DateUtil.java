@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
@@ -559,6 +560,33 @@ public class DateUtil {
 			return null;
 		}
 		return DatePattern.HTTP_DATETIME_FORMAT.format(date);
+	}
+	
+	/**
+	 * 格式化为Http的标准日期格式
+	 * 
+	 * @param date 被格式化的日期
+	 * @return HTTP标准形式日期字符串
+	 */
+	public static String formatChineseDate(Date date, boolean isUppercase) {
+		if (null == date) {
+			return null;
+		}
+		String format = DatePattern.CHINESE_DATE_FORMAT.format(date);
+		if(isUppercase) {
+			final StringBuilder builder = StrUtil.builder(format.length());
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(0, 1)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(1, 2)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(2, 3)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(3, 4)), false));
+			builder.append(format.substring(4, 5));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(5, 7)), false));
+			builder.append(format.substring(7, 8));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(8, 10)), false));
+			builder.append(format.substring(10));
+			format = builder.toString().replace('零', '〇');
+		}
+		return format;
 	}
 	// ------------------------------------ Format end ----------------------------------------------
 

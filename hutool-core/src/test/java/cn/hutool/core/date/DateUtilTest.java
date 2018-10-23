@@ -189,6 +189,12 @@ public class DateUtilTest {
 		betweenMS = DateUtil.between(date2, date1, DateUnit.MS);
 		Assert.assertEquals(2683311000L, betweenMS);
 	}
+	
+	@Test
+	public void formatChineseDateTest() {
+		String formatChineseDate = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24"), true);
+		Assert.assertEquals("二〇一八年二月二十四日", formatChineseDate);
+	}
 
 	@Test
 	public void formatBetweenTest() {
