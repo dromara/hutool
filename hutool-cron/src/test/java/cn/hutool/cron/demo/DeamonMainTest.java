@@ -5,6 +5,7 @@ import cn.hutool.cron.CronUtil;
 import cn.hutool.cron.task.InvokeTask;
 
 public class DeamonMainTest {
+	//测试
 	public static void main(String[] args) {
 		// 测试守护线程是否对作业线程有效
 		CronUtil.schedule("*/2 * * * * *", new InvokeTask("cn.hutool.cron.demo.TestJob.doWhileTest"));
