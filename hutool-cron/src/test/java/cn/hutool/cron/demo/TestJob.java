@@ -1,5 +1,6 @@
 package cn.hutool.cron.demo;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
@@ -19,7 +20,7 @@ public class TestJob {
 	 */
 	public void doTest() {
 //		String name = Thread.currentThread().getName();
-		Console.log("Test Job {} running...", jobId);
+		Console.log("Test Job {} running... at {}", jobId, DateUtil.now());
 	}
 
 	/**

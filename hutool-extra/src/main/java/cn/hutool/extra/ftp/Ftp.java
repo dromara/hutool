@@ -26,13 +26,13 @@ import cn.hutool.core.util.StrUtil;
  * @since 4.1.8
  */
 public class Ftp extends AbstractFtp {
-	
+
 	/** 默认端口 */
 	public static final int DEFAULT_PORT = 21;
 
 	private FTPClient client;
 	private Charset charset;
-	
+
 	/**
 	 * 构造，匿名登录
 	 * 
@@ -41,7 +41,7 @@ public class Ftp extends AbstractFtp {
 	public Ftp(String host) {
 		this(host, DEFAULT_PORT);
 	}
-	
+
 	/**
 	 * 构造，匿名登录
 	 * 
@@ -51,7 +51,7 @@ public class Ftp extends AbstractFtp {
 	public Ftp(String host, int port) {
 		this(host, port, "anonymous", "");
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -112,6 +112,25 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
+	 * 设置FTP连接模式，可选主动和被动模式
+	 * 
+	 * @param mode 模式枚举
+	 * @return this
+	 * @since 4.1.19
+	 */
+	public Ftp setMode(FtpMode mode) {
+		switch (mode) {
+		case Active:
+			this.client.enterLocalActiveMode();
+			break;
+		case Passive:
+			this.client.enterLocalPassiveMode();
+			break;
+		}
+		return this;
+	}
+
+	/**
 	 * 改变目录
 	 * 
 	 * @param directory 目录
@@ -127,7 +146,7 @@ public class Ftp extends AbstractFtp {
 		}
 		return flag;
 	}
-	
+
 	/**
 	 * 远程当前目录
 	 * 
@@ -142,7 +161,7 @@ public class Ftp extends AbstractFtp {
 			throw new FtpException(e);
 		}
 	}
-	
+
 	@Override
 	public List<String> ls(String path) {
 		try {
@@ -151,7 +170,7 @@ public class Ftp extends AbstractFtp {
 			throw new FtpException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean mkdir(String dir) {
 		boolean flag = true;
@@ -162,7 +181,7 @@ public class Ftp extends AbstractFtp {
 		}
 		return flag;
 	}
-	
+
 	/**
 	 * 判断ftp服务器文件是否存在
 	 * 
@@ -211,17 +230,17 @@ public class Ftp extends AbstractFtp {
 		for (FTPFile ftpFile : dirs) {
 			name = ftpFile.getName();
 			childPath = StrUtil.format("{}/{}", dirPath, name);
-			if(ftpFile.isDirectory()) {
-				//上级和本级目录除外
+			if (ftpFile.isDirectory()) {
+				// 上级和本级目录除外
 				if (false == name.equals(".") && false == name.equals("..")) {
 					delDir(childPath);
 				}
-			}else {
+			} else {
 				delFile(childPath);
 			}
 		}
-		
-		//删除空目录
+
+		// 删除空目录
 		try {
 			return this.client.removeDirectory(dirPath);
 		} catch (IOException e) {
@@ -280,7 +299,7 @@ public class Ftp extends AbstractFtp {
 			throw new FtpException(e);
 		}
 	}
-	
+
 	/**
 	 * 下载文件
 	 * 

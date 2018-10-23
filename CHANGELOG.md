@@ -6,6 +6,8 @@
 ## 4.1.19
 
 ### 新特性
+* 【extra】        Ftp增加setMode方法（issue#INPMZ@Gitee）
+
 ### Bug修复
 * 【core】        修复ImageUtil文件流未关闭问题（感谢@【西安】追寻）
 * 【core】        修复ZipUtil中gzip和zlib方法未调用finish导致的问题（issue#INSXF@Gitee）
