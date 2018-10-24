@@ -426,7 +426,7 @@ public class DateUtil {
 	public static LinkedHashSet<String> yearAndSeasons(Date startDate, Date endDate) {
 		return yearAndQuarter(startDate, endDate);
 	}
-	
+
 	/**
 	 * 获得指定日期区间内的年份和季节<br>
 	 * 
@@ -561,19 +561,22 @@ public class DateUtil {
 		}
 		return DatePattern.HTTP_DATETIME_FORMAT.format(date);
 	}
-	
+
 	/**
-	 * 格式化为Http的标准日期格式
+	 * 格式化为中文日期格式，如果isUppercase为false，则返回类似：2018年10月24日，否则返回二〇一八年十月二十四日
 	 * 
 	 * @param date 被格式化的日期
-	 * @return HTTP标准形式日期字符串
+	 * @param 是否采用大写形式
+	 * @return 中文日期字符串
+	 * @since 4.1.19
 	 */
 	public static String formatChineseDate(Date date, boolean isUppercase) {
 		if (null == date) {
 			return null;
 		}
+		
 		String format = DatePattern.CHINESE_DATE_FORMAT.format(date);
-		if(isUppercase) {
+		if (isUppercase) {
 			final StringBuilder builder = StrUtil.builder(format.length());
 			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(0, 1)), false));
 			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(1, 2)), false));

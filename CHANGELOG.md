@@ -7,6 +7,8 @@
 
 ### 新特性
 * 【extra】        Ftp增加setMode方法（issue#INPMZ@Gitee）
+* 【core】         IdUtil增加fastUUID和fastSimpleUUID方法（issue#INU37@Gitee）
+* 【core】         DateUtil增加formatChineseDate方法（issue#INT6I@Gitee）
 
 ### Bug修复
 * 【core】        修复ImageUtil文件流未关闭问题（感谢@【西安】追寻）
