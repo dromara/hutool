@@ -600,11 +600,11 @@ public final class JSONUtil {
 	 * 
 	 * @param object 被包装的对象
 	 * @param ignoreNullValue 是否忽略{@code null} 值
-	 * @return 包装后的值
+	 * @return 包装后的值，null表示此值需被忽略
 	 */
 	public static Object wrap(Object object, boolean ignoreNullValue) {
 		if (object == null) {
-			return JSONNull.NULL;
+			return ignoreNullValue ? null : JSONNull.NULL;
 		}
 		if (object instanceof JSON //
 				|| JSONNull.NULL.equals(object) //
@@ -626,9 +626,9 @@ public final class JSONUtil {
 				return new JSONObject(object, ignoreNullValue);
 			}
 
-			// 日期类型特殊处理
-			if (object instanceof Date) {
-				return ((Date) object).getTime();
+			// 日期类型原样保存，便于格式化
+			if (object instanceof Date || object instanceof Calendar) {
+				return object;
 			}
 			if (object instanceof Calendar) {
 				return ((Calendar) object).getTimeInMillis();

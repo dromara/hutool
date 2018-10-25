@@ -45,8 +45,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/** JSON的KV持有Map */
 	private final Map<String, Object> rawHashMap;
-	/** 是否忽略空值 */
-	private boolean ignoreNullValue = true;
+	/** 配置项 */
+	private JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -86,11 +86,23 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @since 3.3.1
 	 */
 	public JSONObject(int capacity, boolean isIgnoreCase, boolean isOrder) {
-		if (isIgnoreCase) {
-			this.rawHashMap = isOrder ? new CaseInsensitiveLinkedMap<String, Object>(capacity) : new CaseInsensitiveMap<String, Object>(capacity);
+		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase).setOrder(isOrder));
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param capacity 初始大小
+	 * @param config JSON配置项
+	 * @since 4.1.19
+	 */
+	public JSONObject(int capacity, JSONConfig config) {
+		if (config.isIgnoreCase()) {
+			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<String, Object>(capacity) : new CaseInsensitiveMap<String, Object>(capacity);
 		} else {
-			this.rawHashMap = isOrder ? new LinkedHashMap<String, Object>(capacity) : new HashMap<String, Object>(capacity);
+			this.rawHashMap = config.isOrder() ? new LinkedHashMap<String, Object>(capacity) : new HashMap<String, Object>(capacity);
 		}
+		this.config = config;
 	}
 
 	/**
@@ -159,26 +171,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
-		this(DEFAULT_CAPACITY, (source instanceof LinkedHashMap));
-		this.ignoreNullValue = ignoreNullValue;
-		if (null != source) {
-			if (source instanceof Map) {
-				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-					final Object value = e.getValue();
-					if (false == ignoreNullValue || value != null) {
-						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value, ignoreNullValue));
-					}
-				}
-			} else if (source instanceof CharSequence) {
-				// 可能为JSON字符串
-				init((CharSequence) source);
-			} else if (source instanceof Number) {
-				// ignore Number
-			} else {
-				// 普通Bean
-				this.populateMap(source);
-			}
-		}
+		this(DEFAULT_CAPACITY, JSONConfig.create().setOrder((source instanceof LinkedHashMap)).setIgnoreCase((source instanceof CaseInsensitiveMap) || (source instanceof CaseInsensitiveLinkedMap))
+				.setIgnoreNullValue(ignoreNullValue));
+		init(source);
 	}
 
 	/**
@@ -216,15 +211,17 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
 	/**
-	 * key对应值是否为<code>null</code>或无此key
-	 *
-	 * @param key 键
-	 * @return true 无此key或值为<code>null</code>或{@link JSONNull#NULL}返回<code>false</code>，其它返回<code>true</code>
+	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
+	 * 
+	 * @param format 格式，null表示使用时间戳
+	 * @return this
+	 * @since 4.1.19
 	 */
-	public boolean isNull(String key) {
-		return JSONNull.NULL.equals(this.getObj(key));
+	public JSONObject setDateFormat(String format) {
+		this.config.setDateFormat(format);
+		return this;
 	}
-
+	
 	/**
 	 * 将指定KEY列表的值组成新的JSONArray
 	 *
@@ -447,21 +444,23 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	@Override
 	public JSONObject put(String key, Object value) throws JSONException {
-		if (key == null) {
-			throw new NullPointerException("Null key.");
+		if (null == key) {
+			return this;
 		}
-		if (value != null) {
-			InternalJSONUtil.testValidity(value);
-			this.rawHashMap.put(key, JSONUtil.wrap(value, this.ignoreNullValue));
-		} else {
+
+		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
+		if (null == value && ignoreNullValue) {
+			// 忽略值模式下如果值为空清除key
 			this.remove(key);
+		} else {
+			InternalJSONUtil.testValidity(value);
+			this.rawHashMap.put(key, JSONUtil.wrap(value, ignoreNullValue));
 		}
 		return this;
 	}
 
 	/**
-	 * Put a key/value pair in the JSONObject, but only if the key and the value are both non-null, <br>
-	 * and only if there is not already a member with that name. 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
+	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
 	 *
 	 * @param key 键
 	 * @param value 值对象，可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
@@ -471,7 +470,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	public JSONObject putOnce(String key, Object value) throws JSONException {
 		if (key != null && value != null) {
 			if (rawHashMap.containsKey(key)) {
-				throw new JSONException(StrUtil.format("Duplicate key \"{}\"", key));
+				throw new JSONException("Duplicate key \"{}\"", key);
 			}
 			this.put(key, value);
 		}
@@ -687,11 +686,12 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				if (indentFactor > 0) {
 					writer.write(StrUtil.C_SPACE);
 				}
-				InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, indent);
+				InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, indent, this.config);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
+				Object key;
 				while (keys.hasNext()) {
-					Object key = keys.next();
+					key = keys.next();
 					if (commanate) {
 						writer.write(StrUtil.C_COMMA);
 					}
@@ -704,7 +704,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 					if (indentFactor > 0) {
 						writer.write(StrUtil.C_SPACE);
 					}
-					InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, newindent);
+					InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, newindent, this.config);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
@@ -747,14 +747,41 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				continue;
 			}
 
-			if (null == value && this.ignoreNullValue) {
+			if (null == value && this.config.isIgnoreNullValue()) {
 				// 值为null且用户定义跳过则跳过
 				continue;
 			}
 
 			if (value != bean) {
 				// 防止循环引用
-				this.rawHashMap.put(prop.getFieldName(), JSONUtil.wrap(value, this.ignoreNullValue));
+				this.rawHashMap.put(prop.getFieldName(), JSONUtil.wrap(value, this.config.isIgnoreNullValue()));
+			}
+		}
+	}
+
+	/**
+	 * 初始化
+	 * 
+	 * @param source JavaBean或者Map对象或者String
+	 */
+	private void init(Object source) {
+		if (null != source) {
+			if (source instanceof Map) {
+				boolean ignoreNullValue = this.config.isIgnoreNullValue();
+				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
+					final Object value = e.getValue();
+					if (false == ignoreNullValue || null != value) {
+						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value, ignoreNullValue));
+					}
+				}
+			} else if (source instanceof CharSequence) {
+				// 可能为JSON字符串
+				init((CharSequence) source);
+			} else if (source instanceof Number) {
+				// ignore Number
+			} else {
+				// 普通Bean
+				this.populateMap(source);
 			}
 		}
 	}

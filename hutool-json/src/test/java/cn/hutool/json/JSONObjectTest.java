@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.test.bean.Seq;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
@@ -163,6 +164,21 @@ public class JSONObjectTest {
 
 		Assert.assertEquals(userA.getName(), userB.getName());
 		Assert.assertEquals(userA.getDate(), userB.getDate());
+	}
+	
+	@Test
+	public void beanTransTest2() {
+		UserA userA = new UserA();
+		userA.setA("A user");
+		userA.setName("nameTest");
+		userA.setDate(DateUtil.parse("2018-10-25"));
+		
+		JSONObject userAJson = JSONUtil.parseObj(userA);
+		//自定义日期格式
+		userAJson.setDateFormat("yyyy-MM-dd");
+		
+		UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
+		Assert.assertEquals(DateUtil.parse("2018-10-25"), bean.getDate());
 	}
 
 	@Test
