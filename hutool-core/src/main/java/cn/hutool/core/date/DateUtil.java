@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
@@ -425,7 +426,7 @@ public class DateUtil {
 	public static LinkedHashSet<String> yearAndSeasons(Date startDate, Date endDate) {
 		return yearAndQuarter(startDate, endDate);
 	}
-	
+
 	/**
 	 * 获得指定日期区间内的年份和季节<br>
 	 * 
@@ -559,6 +560,36 @@ public class DateUtil {
 			return null;
 		}
 		return DatePattern.HTTP_DATETIME_FORMAT.format(date);
+	}
+
+	/**
+	 * 格式化为中文日期格式，如果isUppercase为false，则返回类似：2018年10月24日，否则返回二〇一八年十月二十四日
+	 * 
+	 * @param date 被格式化的日期
+	 * @param isUppercase 是否采用大写形式
+	 * @return 中文日期字符串
+	 * @since 4.1.19
+	 */
+	public static String formatChineseDate(Date date, boolean isUppercase) {
+		if (null == date) {
+			return null;
+		}
+		
+		String format = DatePattern.CHINESE_DATE_FORMAT.format(date);
+		if (isUppercase) {
+			final StringBuilder builder = StrUtil.builder(format.length());
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(0, 1)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(1, 2)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(2, 3)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(3, 4)), false));
+			builder.append(format.substring(4, 5));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(5, 7)), false));
+			builder.append(format.substring(7, 8));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(8, 10)), false));
+			builder.append(format.substring(10));
+			format = builder.toString().replace('零', '〇');
+		}
+		return format;
 	}
 	// ------------------------------------ Format end ----------------------------------------------
 

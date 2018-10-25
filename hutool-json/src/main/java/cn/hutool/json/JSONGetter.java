@@ -11,6 +11,16 @@ import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
  */
 public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	
+	/**
+	 * key对应值是否为<code>null</code>或无此key
+	 *
+	 * @param key 键
+	 * @return true 无此key或值为<code>null</code>或{@link JSONNull#NULL}返回<code>false</code>，其它返回<code>true</code>
+	 */
+	public boolean isNull(K key) {
+		return JSONNull.NULL.equals(this.getObj(key));
+	}
+	
 	@Override
 	public String getStr(K key, String defaultValue) {
 		String str = super.getStr(key, defaultValue);

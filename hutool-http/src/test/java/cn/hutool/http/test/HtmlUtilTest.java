@@ -86,4 +86,11 @@ public class HtmlUtilTest {
 		String restoreEscaped = HtmlUtil.unescape(escape);
 		Assert.assertEquals(html, restoreEscaped);
 	}
+	
+	@Test
+	public void filterTest() {
+		String html = "<alert></alert>";
+		String filter = HtmlUtil.filter(html);
+		Assert.assertEquals("", filter);
+	}
 }

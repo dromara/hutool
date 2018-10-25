@@ -40,7 +40,7 @@ public class JschUtil {
 	public static int generateLocalPort() {
 		return portGenerater.generate();
 	}
-
+	
 	/**
 	 * 获得一个SSH跳板机会话，重用已经使用的会话
 	 * 
@@ -72,6 +72,7 @@ public class JschUtil {
 		try {
 			session = new JSch().getSession(sshUser, sshHost, sshPort);
 			session.setPassword(sshPass);
+			//设置第一次登陆的时候提示，可选值：(ask | yes | no) 
 			session.setConfig("StrictHostKeyChecking", "no");
 			session.connect();
 		} catch (JSchException e) {

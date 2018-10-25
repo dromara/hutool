@@ -1,6 +1,5 @@
 package cn.hutool.cron.demo;
 
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.cron.CronUtil;
 
 /**
@@ -10,8 +9,6 @@ public class JobMainTest {
 
 	public static void main(String[] args) {
 		CronUtil.setMatchSecond(true);
-		CronUtil.start(true);
-
-		ThreadUtil.sleep(Integer.MAX_VALUE);
+		CronUtil.start(false);
 	}
 }

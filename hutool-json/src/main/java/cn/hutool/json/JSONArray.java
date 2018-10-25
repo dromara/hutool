@@ -32,8 +32,8 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	/** 持有原始数据的List */
 	private final List<Object> rawList;
-	/** 是否忽略空值 */
-	private boolean ignoreNullValue;
+	/** 配置项 */
+	private JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -52,8 +52,20 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @since 3.2.2
 	 */
 	public JSONArray(int initialCapacity) {
+		this(initialCapacity, JSONConfig.create());
+	}
+
+	/**
+	 * 构造<br>
+	 * 默认使用{@link ArrayList} 实现
+	 * 
+	 * @param initialCapacity 初始大小
+	 * @param config JSON配置项
+	 * @since 4.1.19
+	 */
+	public JSONArray(int initialCapacity, JSONConfig config) {
 		this.rawList = new ArrayList<Object>(initialCapacity);
-		this.ignoreNullValue = true;
+		this.config = config;
 	}
 
 	/**
@@ -103,7 +115,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		this();
 		init(source);
 	}
-	
+
 	/**
 	 * 从对象构造，忽略{@code null}的值<br>
 	 * 支持以下类型的参数：
@@ -136,38 +148,21 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object object, boolean ignoreNullValue) throws JSONException {
-		this();
-		this.ignoreNullValue = ignoreNullValue;
-
-		if (object instanceof CharSequence) {
-			//JSON字符串
-			init((CharSequence) object);
-		}else {
-			Iterator<?> iter;
-			if (object.getClass().isArray()) {// 数组
-				iter = new ArrayIter<>(object);
-			}else if (object instanceof Iterator<?>) {// Iterator
-				iter = ((Iterator<?>) object);
-			} else if (object instanceof Iterable<?>) {// Iterable
-				iter = ((Iterable<?>) object).iterator();
-			} else {
-				throw new JSONException("JSONArray initial value should be a string or collection or array.");
-			}
-			while(iter.hasNext()) {
-				this.add(iter.next());
-			}
-		}
+		this(DEFAULT_CAPACITY, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
+		init(object);
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
-
+	
 	/**
-	 * 值是否为<code>null</code>
-	 *
-	 * @param index 值所在序列
-	 * @return true if the value at the index is null, or if there is no value.
+	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
+	 * 
+	 * @param format 格式，null表示使用时间戳
+	 * @return this
+	 * @since 4.1.19
 	 */
-	public boolean isNull(int index) {
-		return JSONNull.NULL.equals(this.getObj(index));
+	public JSONArray setDateFormat(String format) {
+		this.config.setDateFormat(format);
+		return this;
 	}
 
 	/**
@@ -257,7 +252,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public <T> T getByExp(String expression, Class<T> resultType) {
 		return getByPath(expression, resultType);
 	}
-	
+
 	@Override
 	public Object getByPath(String expression) {
 		return BeanPath.create(expression).get(this);
@@ -268,7 +263,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public <T> T getByPath(String expression, Class<T> resultType) {
 		return (T) InternalJSONUtil.jsonConvert(resultType, getByPath(expression), true);
 	}
-	
+
 	@Override
 	public void putByPath(String expression, Object value) {
 		BeanPath.create(expression).set(this, value);
@@ -401,7 +396,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			writer.write('[');
 
 			if (length == 1) {
-				InternalJSONUtil.writeValue(writer, this.rawList.get(0), indentFactor, indent);
+				InternalJSONUtil.writeValue(writer, this.rawList.get(0), indentFactor, indent, this.config);
 			} else if (length != 0) {
 				final int newindent = indent + indentFactor;
 
@@ -413,7 +408,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 						writer.write('\n');
 					}
 					InternalJSONUtil.indent(writer, newindent);
-					InternalJSONUtil.writeValue(writer, this.rawList.get(i), indentFactor, newindent);
+					InternalJSONUtil.writeValue(writer, this.rawList.get(i), indentFactor, newindent, this.config);
 					commanate = true;
 				}
 				if (indentFactor > 0) {
@@ -432,14 +427,14 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public Iterator<Object> iterator() {
 		return rawList.iterator();
 	}
-	
+
 	/**
 	 * 当此JSON列表的每个元素都是一个JSONObject时，可以调用此方法返回一个Iterable，便于使用foreach语法遍历
 	 * 
 	 * @return Iterable
 	 * @since 4.0.12
 	 */
-	public Iterable<JSONObject> jsonIter(){
+	public Iterable<JSONObject> jsonIter() {
 		return new JSONObjectIter(iterator());
 	}
 
@@ -470,7 +465,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public boolean add(Object e) {
-		return this.rawList.add(JSONUtil.wrap(e, ignoreNullValue));
+		return this.rawList.add(JSONUtil.wrap(e, this.config.isIgnoreNullValue()));
 	}
 
 	@Override
@@ -490,7 +485,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public boolean addAll(Collection<? extends Object> c) {
-		if(CollUtil.isEmpty(c)) {
+		if (CollUtil.isEmpty(c)) {
 			return false;
 		}
 		for (Object obj : c) {
@@ -501,12 +496,12 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public boolean addAll(int index, Collection<? extends Object> c) {
-		if(CollUtil.isEmpty(c)) {
+		if (CollUtil.isEmpty(c)) {
 			return false;
 		}
 		final ArrayList<Object> list = new ArrayList<>(c.size());
 		for (Object object : c) {
-			list.add(JSONUtil.wrap(object, ignoreNullValue));
+			list.add(JSONUtil.wrap(object, this.config.isIgnoreNullValue()));
 		}
 		return rawList.addAll(index, list);
 	}
@@ -529,7 +524,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	@Override
 	public Object set(int index, Object element) {
-		return this.rawList.set(index, JSONUtil.wrap(element, this.ignoreNullValue));
+		return this.rawList.set(index, JSONUtil.wrap(element, this.config.isIgnoreNullValue()));
 	}
 
 	@Override
@@ -539,7 +534,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		}
 		if (index < this.size()) {
 			InternalJSONUtil.testValidity(element);
-			this.rawList.set(index, JSONUtil.wrap(element, this.ignoreNullValue));
+			this.rawList.set(index, JSONUtil.wrap(element, this.config.isIgnoreNullValue()));
 		} else {
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);
@@ -608,6 +603,33 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 初始化
+	 * 
+	 * @param object 数组或集合或JSON数组字符串
+	 * @throws JSONException 非数组或集合
+	 */
+	private void init(Object object) throws JSONException{
+		if (object instanceof CharSequence) {
+			// JSON字符串
+			init((CharSequence) object);
+		} else {
+			Iterator<?> iter;
+			if (object.getClass().isArray()) {// 数组
+				iter = new ArrayIter<>(object);
+			} else if (object instanceof Iterator<?>) {// Iterator
+				iter = ((Iterator<?>) object);
+			} else if (object instanceof Iterable<?>) {// Iterable
+				iter = ((Iterable<?>) object).iterator();
+			} else {
+				throw new JSONException("JSONArray initial value should be a string or collection or array.");
+			}
+			while (iter.hasNext()) {
+				this.add(iter.next());
+			}
+		}
+	}
+	
 	/**
 	 * 初始化
 	 * 

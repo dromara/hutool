@@ -32,6 +32,15 @@ public class IdUtilTest {
 		String randomUUID = IdUtil.randomUUID();
 		Assert.assertEquals(36, randomUUID.length());
 	}
+	
+	@Test
+	public void fastUUIDTest() {
+		String simpleUUID = IdUtil.fastSimpleUUID();
+		Assert.assertEquals(32, simpleUUID.length());
+		
+		String randomUUID = IdUtil.fastUUID();
+		Assert.assertEquals(36, randomUUID.length());
+	}
 
 	/**
 	 * UUID的性能测试

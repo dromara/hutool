@@ -3,6 +3,22 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.1.19
+
+### 新特性
+* 【extra】        Ftp增加setMode方法（issue#INPMZ@Gitee）
+* 【core】         IdUtil增加fastUUID和fastSimpleUUID方法（issue#INU37@Gitee）
+* 【core】         DateUtil增加formatChineseDate方法（issue#INT6I@Gitee）
+* 【core】         ClassUtil中部分方法迁移至ReflectUtil
+* 【json】          新增JSONConfig，统一JSON配置，并添加可选的自定义输出日期格式支持
+
+### Bug修复
+* 【core】        修复ImageUtil文件流未关闭问题（感谢@【西安】追寻）
+* 【core】        修复ZipUtil中gzip和zlib方法未调用finish导致的问题（issue#INSXF@Gitee）
+* 【core】        修复ZipUtil中文件目录同名无法压缩的问题（issue#INQ1K@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.18
 
 ### 新特性

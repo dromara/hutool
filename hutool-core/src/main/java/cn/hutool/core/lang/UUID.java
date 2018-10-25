@@ -1,7 +1,11 @@
 package cn.hutool.core.lang;
 
-import java.security.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Random;
 
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -47,7 +51,7 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 	 *
 	 */
 	private static class Holder {
-		static final SecureRandom numberGenerator = new SecureRandom();
+		static final SecureRandom numberGenerator = RandomUtil.getSecureRandom();
 	}
 
 	/** 此UUID的最高64有效位 */
@@ -85,14 +89,33 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 		this.mostSigBits = mostSigBits;
 		this.leastSigBits = leastSigBits;
 	}
-
+	
+	/**
+	 * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的本地线程伪随机数生成器生成该 UUID。
+	 * 
+	 * @return 随机生成的 {@code UUID}
+	 */
+	public static UUID fastUUID() {
+		return randomUUID(false);
+	}
+	
 	/**
 	 * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
 	 * 
 	 * @return 随机生成的 {@code UUID}
 	 */
 	public static UUID randomUUID() {
-		final SecureRandom ng = Holder.numberGenerator;
+		return randomUUID(true);
+	}
+
+	/**
+	 * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
+	 * 
+	 * @param isSecure 是否使用{@link SecureRandom}如果是可以获得更安全的随机码，否则可以得到更好的性能
+	 * @return 随机生成的 {@code UUID}
+	 */
+	public static UUID randomUUID(boolean isSecure) {
+		final Random ng = isSecure ? Holder.numberGenerator : RandomUtil.getRandom();
 
 		byte[] randomBytes = new byte[16];
 		ng.nextBytes(randomBytes);

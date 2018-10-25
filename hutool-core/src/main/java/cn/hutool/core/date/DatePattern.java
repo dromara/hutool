@@ -17,7 +17,7 @@ public class DatePattern {
 	public final static String NORM_DATE_PATTERN = "yyyy-MM-dd";
 	/** 标准日期格式 {@link FastDateFormat}：yyyy-MM-dd */
 	public final static FastDateFormat NORM_DATE_FORMAT = FastDateFormat.getInstance(NORM_DATE_PATTERN);
-
+	
 	/** 标准时间格式：HH:mm:ss */
 	public final static String NORM_TIME_PATTERN = "HH:mm:ss";
 	/** 标准时间格式 {@link FastDateFormat}：HH:mm:ss */
@@ -37,6 +37,11 @@ public class DatePattern {
 	public final static String NORM_DATETIME_MS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
 	/** 标准日期时间格式，精确到毫秒 {@link FastDateFormat}：yyyy-MM-dd HH:mm:ss.SSS */
 	public final static FastDateFormat NORM_DATETIME_MS_FORMAT = FastDateFormat.getInstance(NORM_DATETIME_MS_PATTERN);
+	
+	/** 标准日期格式：yyyy年MM月dd日 */
+	public final static String CHINESE_DATE_PATTERN = "yyyy年MM月dd日";
+	/** 标准日期格式 {@link FastDateFormat}：yyyy年MM月dd日 */
+	public final static FastDateFormat CHINESE_DATE_FORMAT = FastDateFormat.getInstance(CHINESE_DATE_PATTERN);
 	
 	//-------------------------------------------------------------------------------------------------------------------------------- Pure
 	/** 标准日期格式：yyyyMMdd */
