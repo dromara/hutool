@@ -33,7 +33,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	// @Ignore
+	@Ignore
 	public void generateTest3() {
 		QrCodeUtil.generate(//
 				"http://hutool.cn/", //
