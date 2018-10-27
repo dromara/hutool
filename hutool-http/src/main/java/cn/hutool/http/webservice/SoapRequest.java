@@ -23,8 +23,10 @@ public class SoapRequest {
 	private Charset charset = CharsetUtil.CHARSET_UTF_8;
 	/** Webservice请求地址 */
 	private String url;
-	/** 命名空间 */
-	private String namespace;
+	/** 方法的命名空间 */
+	private String methodNamespace;
+	/** 命名空间envelope(ns) */
+	private String xmlns = "soapenv";
 	/** 请求方法 */
 	private String method;
 	/** 请求参数 */
@@ -34,11 +36,11 @@ public class SoapRequest {
 	 * 构造
 	 * 
 	 * @param url Webservice请求地址
-	 * @param namespace 命名空间
+	 * @param methodNamespace 命名空间
 	 */
-	public SoapRequest(String url, String namespace) {
+	public SoapRequest(String url, String methodNamespace) {
 		this.url = url;
-		this.namespace = namespace;
+		this.methodNamespace = methodNamespace;
 	}
 	
 	/**
@@ -62,12 +64,22 @@ public class SoapRequest {
 	}
 
 	/**
-	 * 设置命名空间
+	 * 设置方法的命名空间
 	 * @param namespace 命名空间
 	 * @return this
 	 */
-	public SoapRequest setNamespace(String namespace) {
-		this.namespace = namespace;
+	public SoapRequest setMethodNamespace(String namespace) {
+		this.methodNamespace = namespace;
+		return this;
+	}
+	
+	/**
+	 * 设置命名空间envelope(ns)
+	 * @param namespace 命名空间
+	 * @return this
+	 */
+	public SoapRequest setXmlns(String xmlns) {
+		this.xmlns = xmlns;
 		return this;
 	}
 
@@ -122,11 +134,11 @@ public class SoapRequest {
 	 */
 	private String toSoapXml() {
 		StringBuilder sb = StrUtil.builder();
-		sb.append("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n");
-		sb.append("  <soap:Body>\n");
+		sb.append(StrUtil.format("<{}:Envelope xmlns:{}=\"http://schemas.xmlsoap.org/soap/envelope/\">\n", this.xmlns, this.xmlns));
+		sb.append(StrUtil.format("  <{}:Body>\n", this.xmlns));
 		// 传入method和namespace
 		Assert.notBlank(this.method, "Method must be not blank !");
-		sb.append("    <").append(this.method).append(" xmlns=\"").append(this.namespace).append("\">\n");
+		sb.append("    <").append(this.method).append(" xmlns=\"").append(this.methodNamespace).append("\">\n");
 		// 动态构造参数和值
 		if(null != this.params) {
 			for (Map.Entry<String, String> entry : this.params.entrySet()) {
@@ -134,8 +146,9 @@ public class SoapRequest {
 			}
 		}
 		sb.append("    </").append(this.method).append(">\n");
-		sb.append("  </soap:Body>\n");
-		sb.append("</soap:Envelope>");
+		sb.append(StrUtil.format("  </{}:Body>\n", this.xmlns));
+		sb.append(StrUtil.format("</{}:Envelope>", this.xmlns));
+		
 		return sb.toString();
 	}
 	

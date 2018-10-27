@@ -872,7 +872,7 @@ public class ZipUtil {
 				final File parentFile = zipFile.getCanonicalFile().getParentFile();
 				// 压缩文件不能位于被压缩的目录内
 				if (srcFile.isDirectory() && parentFile.getCanonicalPath().contains(srcFile.getCanonicalPath())) {
-					throw new UtilException("[zipPath] must not be the child directory of [srcPath]!");
+					throw new UtilException("Zip file path [{}] must not be the child directory of [{}] !", zipFile.getCanonicalPath(), srcFile.getCanonicalPath());
 				}
 
 			} catch (IOException e) {

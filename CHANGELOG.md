@@ -6,6 +6,8 @@
 ## 4.1.20
 
 ### 新特性
+* 【http】        增强SoapRequest的兼容性（感谢@【南京】陽光）
+* 【core】        改进ZipUtil错误提示
 
 ### Bug修复
 
