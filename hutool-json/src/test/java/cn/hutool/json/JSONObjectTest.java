@@ -180,6 +180,13 @@ public class JSONObjectTest {
 		UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
 		Assert.assertEquals(DateUtil.parse("2018-10-25"), bean.getDate());
 	}
+	
+	@Test
+	public void beanTransTest3() {
+		JSONObject userAJson = JSONUtil.createObj().put("a", "AValue").put("name", "nameValue").put("date", "08:00:00");
+		UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
+		Assert.assertEquals(DateUtil.today() + " 08:00:00", DateUtil.date(bean.getDate()).toString());
+	}
 
 	@Test
 	public void parseFromBeanTest() {

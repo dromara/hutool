@@ -1,7 +1,6 @@
 package cn.hutool.core.date;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,12 +10,10 @@ import java.util.NoSuchElementException;
 import java.util.TimeZone;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
-import cn.hutool.core.lang.Console;
 
 /**
  * 时间工具单元测试
@@ -25,15 +22,6 @@ import cn.hutool.core.lang.Console;
  *
  */
 public class DateUtilTest {
-
-	@Test
-	@Ignore
-	public void dateTest() {
-		long current = DateUtil.current(false);
-		Console.log(current);
-		DateTime date = DateUtil.date(current);
-		Console.log(date);
-	}
 
 	@Test
 	public void nowTest() {
@@ -128,15 +116,16 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void test1() {
+	public void offsetMonthTest() {
 		DateTime st = DateUtil.parseDate("2018-05-31");
 		List<DateTime> list = new ArrayList<>();
 		for (int i = 0; i < 4; i++) {
 			list.add(DateUtil.offsetMonth(st, i));
 		}
-		for (DateTime dateTime : list) {
-			System.out.println(dateTime);
-		}
+		Assert.assertEquals("2018-05-31 00:00:00", list.get(0).toString());
+		Assert.assertEquals("2018-06-30 00:00:00", list.get(1).toString());
+		Assert.assertEquals("2018-07-31 00:00:00", list.get(2).toString());
+		Assert.assertEquals("2018-08-31 00:00:00", list.get(3).toString());
 	}
 
 	@Test
@@ -270,11 +259,9 @@ public class DateUtilTest {
 
 	@Test
 	public void parseTest() throws ParseException {
-		// 转换时间与SimpleDateFormat结果保持一致即可
 		String time = "12:11:39";
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		DateTime parse = DateUtil.parse("12:11:39");
-		Assert.assertEquals(format.parse(time).getTime(), parse.getTime());
+		Assert.assertEquals(DateUtil.parseTimeToday(time).getTime(), parse.getTime());
 	}
 
 	@Test
@@ -376,6 +363,10 @@ public class DateUtilTest {
 		String dateStr1 = "2018-09-13T05:34:31Z";
 		DateTime dt = DateUtil.parseUTC(dateStr1);
 		
+		//parse方法支持UTC格式测试
+		DateTime dt2 = DateUtil.parse(dateStr1);
+		Assert.assertEquals(dt, dt2);
+		
 		//默认使用Pattern对应的时区，既UTC时区
 		String dateStr = dt.toString();
 		Assert.assertEquals("2018-09-13 05:34:31", dateStr);
@@ -384,7 +375,7 @@ public class DateUtilTest {
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
 	}
-
+	
 	@Test
 	public void endOfWeekTest() {
 		DateTime now = DateUtil.date();

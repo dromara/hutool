@@ -120,7 +120,7 @@ public class JSONUtilTest {
 		JSONObject jsonObject = JSONUtil.parseObj(html);
 		Assert.assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStr("name"));
 	}
-
+	
 	@Test
 	public void parseFromXmlTest() {
 		String s = "<sfzh>640102197312070614</sfzh><sfz>640102197312070614X</sfz><name>aa</name><gender>1</gender>";

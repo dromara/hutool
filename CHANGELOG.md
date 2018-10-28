@@ -8,6 +8,8 @@
 ### 新特性
 * 【http】        增强SoapRequest的兼容性（感谢@【南京】陽光）
 * 【core】        改进ZipUtil错误提示
+* 【core】        DateUtil.parse方法读取时间时，年月日按照当天计算。（issue#INYCF@Gitee）
+* 【core】        DateUtil.parse改进支持UTC时间格式。
 
 ### Bug修复
 
