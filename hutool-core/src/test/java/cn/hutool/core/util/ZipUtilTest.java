@@ -20,7 +20,7 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void zipDirTest() {
-		ZipUtil.zip("e:/picTest");
+		ZipUtil.zip(new File("e:/picTest/picSubTest"));
 	}
 	
 	@Test
