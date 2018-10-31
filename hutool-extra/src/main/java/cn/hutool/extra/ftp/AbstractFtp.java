@@ -105,6 +105,7 @@ public abstract class AbstractFtp implements Closeable {
 		for (int i = 0; i < dirs.length; i++) {
 			if (StrUtil.isNotEmpty(dirs[i])) {
 				if (false == cd(dirs[i])) {
+					//目录不存在时创建
 					mkdir(dirs[i]);
 					cd(dirs[i]);
 				}

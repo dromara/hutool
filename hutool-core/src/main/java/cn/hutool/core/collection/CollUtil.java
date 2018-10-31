@@ -1964,7 +1964,12 @@ public class CollUtil {
 		int resultSize = result.size();
 		// 每页条目数大于总数直接返回所有
 		if (resultSize <= numPerPage) {
-			return result;
+			if(pageNo <=1) {
+				return result;
+			} else {
+				// 越界直接返回空
+				return new ArrayList<>();
+			}
 		}
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
 		if (startEnd[1] > resultSize) {
@@ -1980,7 +1985,7 @@ public class CollUtil {
 	 * 采用{@link BoundedPriorityQueue}实现分页取局部
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param pageNo 页码
+	 * @param pageNo 页码，从1开始计数
 	 * @param numPerPage 每页的条目数
 	 * @param comparator 比较器
 	 * @param colls 集合数组
@@ -1996,7 +2001,12 @@ public class CollUtil {
 		int resultSize = queue.size();
 		// 每页条目数大于总数直接返回所有
 		if (resultSize <= numPerPage) {
-			return queue.toList();
+			if(pageNo <=1) {
+				return queue.toList();
+			} else {
+				// 越界直接返回空
+				return new ArrayList<>();
+			}
 		}
 		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
 		if (startEnd[1] > resultSize) {
