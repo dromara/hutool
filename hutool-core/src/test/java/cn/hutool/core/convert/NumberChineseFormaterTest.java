@@ -2,11 +2,15 @@ package cn.hutool.core.convert;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.NumberChineseFormater;
 
 public class NumberChineseFormaterTest {
+
+	@Rule public ExpectedException thrown = ExpectedException.none();
 	
 	@Test
 	public void formatTest() {
@@ -64,5 +68,64 @@ public class NumberChineseFormaterTest {
 		
 		String digitToChinese3 = Convert.digitToChinese(2421.02);
 		Assert.assertEquals("贰仟肆佰贰拾壹元零贰分", digitToChinese3);
+	}
+
+	@Test
+	public void formatInputPositiveTrueOutputIllegalArgumentException() {
+
+		// Arrange
+		final double amount = 0x1.7p+46 /* 1.01155e+14 */;
+		final boolean isUseTraditional = true;
+
+		// Act
+		thrown.expect(IllegalArgumentException.class);
+		NumberChineseFormater.format(amount, isUseTraditional);
+
+		// Method is not expected to return due to exception thrown
+	}
+
+	@Test
+	public void formatInputNegativeInfinityTrueFalseOutputIllegalArgumentException() {
+
+		// Arrange
+		final double amount = Double.NEGATIVE_INFINITY;
+		final boolean isUseTraditional = true;
+		final boolean isMoneyMode = false;
+
+		// Act
+		thrown.expect(IllegalArgumentException.class);
+		NumberChineseFormater.format(amount, isUseTraditional, isMoneyMode);
+
+		// Method is not expected to return due to exception thrown
+	}
+
+	@Test
+	public void formatInputNegativeInfinityFalseFalseOutputIllegalArgumentException() {
+
+		// Arrange
+		final double amount = Double.NEGATIVE_INFINITY;
+		final boolean isUseTraditional = false;
+		final boolean isMoneyMode = false;
+
+		// Act
+		thrown.expect(IllegalArgumentException.class);
+		NumberChineseFormater.format(amount, isUseTraditional, isMoneyMode);
+
+		// Method is not expected to return due to exception thrown
+	}
+
+	@Test
+	public void formatInputPositiveFalseFalseOutputIllegalArgumentException() {
+
+		// Arrange
+		final double amount = 0x1.47afp+1021 /* 2.87634e+307 */;
+		final boolean isUseTraditional = false;
+		final boolean isMoneyMode = false;
+
+		// Act
+		thrown.expect(IllegalArgumentException.class);
+		NumberChineseFormater.format(amount, isUseTraditional, isMoneyMode);
+
+		// Method is not expected to return due to exception thrown
 	}
 }
