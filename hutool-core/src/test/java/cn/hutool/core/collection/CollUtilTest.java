@@ -13,6 +13,8 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 import cn.hutool.core.collection.CollUtil.Hash;
 import cn.hutool.core.date.DateUtil;
@@ -27,6 +29,8 @@ import cn.hutool.core.map.MapUtil;
  *
  */
 public class CollUtilTest {
+
+	@Rule public ExpectedException thrown = ExpectedException.none();
 	
 	@Test
 	public void newHashSetTest() {
@@ -346,5 +350,214 @@ public class CollUtilTest {
 		Assert.assertEquals("1", list1.get(0));
 		Assert.assertEquals("2", list1.get(1));
 		Assert.assertEquals("3", list1.get(2));
+	}
+
+	@Test
+	public void subInput1PositiveNegativePositiveOutput1() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(null);
+		final int start = 3;
+		final int end = -1;
+		final int step = 2;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		arrayList.add(null);
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput1ZeroPositivePositiveOutput1() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(null);
+		final int start = 0;
+		final int end = 1;
+		final int step = 2;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		arrayList.add(null);
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput1PositiveZeroOutput0() {
+
+		// Arrange
+		final ArrayList collection = new ArrayList();
+		collection.add(null);
+		final int start = 1;
+		final int end = 0;
+
+		// Act
+		final List retval = CollUtil.sub(collection, start, end);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput0ZeroZeroZeroOutputNull() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		final int start = 0;
+		final int end = 0;
+		final int step = 0;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		Assert.assertNull(retval);
+	}
+
+	@Test
+	public void subInput1PositiveNegativeZeroOutput0() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(null);
+		final int start = 1;
+		final int end = -2_147_483_648;
+		final int step = 0;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput1PositivePositivePositiveOutput0() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(null);
+		final int start = 2_147_483_647;
+		final int end = 2_147_483_647;
+		final int step = 1_073_741_824;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput1PositiveNegativePositiveOutputArrayIndexOutOfBoundsException() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(null);
+		final int start = 2_147_483_643;
+		final int end = -2_147_483_648;
+		final int step = 2;
+
+		// Act
+		thrown.expect(ArrayIndexOutOfBoundsException.class);
+		CollUtil.sub(list, start, end, step);
+
+		// Method is not expected to return due to exception thrown
+	}
+
+	@Test
+	public void subInput0ZeroPositiveNegativeOutputNull() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		final int start = 0;
+		final int end = 1;
+		final int step = -2_147_483_646;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		Assert.assertNull(retval);
+	}
+
+	@Test
+	public void subInput1PositivePositivePositiveOutput02() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(null);
+		final int start = 2_147_483_643;
+		final int end = 2_147_483_642;
+		final int step = 1_073_741_824;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput1ZeroZeroPositiveOutput0() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(0);
+		final int start = 0;
+		final int end = 0;
+		final int step = 2;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput1NegativeZeroPositiveOutput0() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		list.add(0);
+		final int start = -1;
+		final int end = 0;
+		final int step = 2;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end, step);
+
+		// Assert result
+		final ArrayList arrayList = new ArrayList();
+		Assert.assertEquals(arrayList, retval);
+	}
+
+	@Test
+	public void subInput0ZeroZeroOutputNull() {
+
+		// Arrange
+		final ArrayList list = new ArrayList();
+		final int start = 0;
+		final int end = 0;
+
+		// Act
+		final List retval = CollUtil.sub(list, start, end);
+
+		// Assert result
+		Assert.assertNull(retval);
 	}
 }
