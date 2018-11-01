@@ -253,6 +253,19 @@ public class FileUtilTest {
 	}
 
 	@Test
+	public void lastIndexOfSeparatorInputNotNullOutputNegative() {
+
+		// Arrange
+		final String filePath = "";
+
+		// Act
+		final int retval = FileUtil.lastIndexOfSeparator(filePath);
+
+		// Assert result
+		Assert.assertEquals(-1, retval);
+	}
+
+	@Test
 	public void getNameTest() {
 		String path = "d:\\aaa\\bbb\\cc\\ddd\\";
 		String name = FileUtil.getName(path);
