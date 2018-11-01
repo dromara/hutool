@@ -1,14 +1,6 @@
 package cn.hutool.core.img;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -381,21 +373,42 @@ public class Img {
 	 * @since 3.2.2
 	 */
 	public Img rotate(int degree) {
-		final BufferedImage image = getValidSrcImg();
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
-		final BufferedImage destImg = new BufferedImage(width, height, getTypeInt());
-		Graphics2D graphics2d = destImg.createGraphics();
-		// 抗锯齿
-		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// 从中心旋转
-		graphics2d.rotate(Math.toRadians(degree), width / 2, height / 2);
-		graphics2d.drawImage(image, 0, 0, null);
-		graphics2d.dispose();
-		this.destImage = destImg;
+		int width = this.srcImage.getWidth();
+		int height = this.srcImage.getHeight();
+		Rectangle rectangle = CalcRotatedSize(new Rectangle(new Dimension(width,height)),degree);
+		BufferedImage bufferedImage = new BufferedImage(rectangle.width,rectangle.height,BufferedImage.TYPE_INT_RGB);
+		Graphics2D graphics2D = bufferedImage.createGraphics();
+		graphics2D.translate((rectangle.width-width)/2,(rectangle.height-height)/2);
+		graphics2D.rotate(Math.toRadians(degree),width/2,height/2);
+		graphics2D.drawImage(this.srcImage,null,null);
+		this.destImage = bufferedImage;
+		graphics2D.dispose();
 		return this;
 	}
 
+
+	public static Rectangle CalcRotatedSize(Rectangle src, int angel) {
+		if (angel >= 90) {
+			if (angel / 90 % 2 == 1) {
+				int temp = src.height;
+				src.height = src.width;
+				src.width = temp;
+			}
+			angel = angel % 90;
+		}
+
+		double r = Math.sqrt(src.height * src.height + src.width * src.width) / 2;
+		double len = 2 * Math.sin(Math.toRadians(angel) / 2) * r;
+		double angel_alpha = (Math.PI - Math.toRadians(angel)) / 2;
+		double angel_dalta_width = Math.atan((double) src.height / src.width);
+		double angel_dalta_height = Math.atan((double) src.width / src.height);
+
+		int len_dalta_width = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_width));
+		int len_dalta_height = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_height));
+		int des_width = src.width + len_dalta_width * 2;
+		int des_height = src.height + len_dalta_height * 2;
+		return new java.awt.Rectangle(new Dimension(des_width, des_height));
+	}
 	/**
 	 * 水平翻转图像
 	 * 
