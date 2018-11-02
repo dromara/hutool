@@ -10,9 +10,11 @@
 * 【core】        改进ZipUtil错误提示
 * 【core】        DateUtil.parse方法读取时间时，年月日按照当天计算。（issue#INYCF@Gitee）
 * 【core】        DateUtil.parse改进支持UTC时间格式。
+* 【db】          MongoDS支持客户端验证（issue#IO2DS@Gitee）
 
 ### Bug修复
 * 【core】        修正CollUtil.sortPageAll逻辑（pr#186@Github）
+* 【core】        修复ClassLoaderUtil.loadClass不能加载内部类问题（issue#IO4GF@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

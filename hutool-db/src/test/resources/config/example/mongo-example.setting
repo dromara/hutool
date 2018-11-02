@@ -16,6 +16,10 @@ socketTimeout=0
 #是否打开长连接. defaults to false --boolean
 socketKeepAlive=false
 
+user = test1
+pass = 123456
+database = test
+
 #---------------------------------- MongoDB实例连接
 [master]
 host = 127.0.0.1:27017
