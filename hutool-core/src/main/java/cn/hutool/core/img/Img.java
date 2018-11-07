@@ -234,7 +234,7 @@ public class Img {
 	public Img cut(Rectangle rectangle) {
 		final BufferedImage srcImage = getValidSrcImg();
 		rectangle = fixRectangle(rectangle, srcImage.getWidth(), srcImage.getHeight());
-		
+
 		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		final Image image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
 		this.destImage = ImageUtil.toBufferedImage(image);
@@ -271,10 +271,10 @@ public class Img {
 		final BufferedImage destImage = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g = destImage.createGraphics();
 		g.setClip(new Ellipse2D.Double(0, 0, diameter, diameter));
-		
-		if(this.positionBaseCentre) {
-			x = x - width/2 + diameter/2;
-			y = y - height/2 + diameter/2;
+
+		if (this.positionBaseCentre) {
+			x = x - width / 2 + diameter / 2;
+			y = y - height / 2 + diameter / 2;
 		}
 		g.drawImage(srcImage, x, y, null);
 		g.dispose();
