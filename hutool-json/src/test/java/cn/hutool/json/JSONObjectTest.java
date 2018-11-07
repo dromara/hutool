@@ -10,6 +10,7 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.test.bean.Seq;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
@@ -97,15 +98,18 @@ public class JSONObjectTest {
 	public void toBeanTest2() {
 		UserA userA = new UserA();
 		userA.setA("A user");
-		userA.setName("nameTest");
+		userA.setName("{\n\t\"body\":{\n\t\t\"loginId\":\"id\",\n\t\t\"password\":\"pwd\"\n\t}\n}");
 		userA.setDate(new Date());
 		userA.setSqs(CollectionUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
 
 		JSONObject json = JSONUtil.parseObj(userA);
 		UserA userA2 = json.toBean(UserA.class);
+		//测试数组
 		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+		//测试带换行符等特殊字符转换是否成功
+		Assert.assertTrue(StrUtil.isNotBlank(userA2.getName()));
 	}
-
+	
 	@Test
 	public void toBeanTest3() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";

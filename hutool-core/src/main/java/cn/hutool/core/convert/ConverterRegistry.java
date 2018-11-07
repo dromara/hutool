@@ -263,7 +263,7 @@ public class ConverterRegistry {
 		if(null == rowType) {
 			return null;
 		}
-		
+
 		// 集合转换（不可以默认强转）
 		if (Collection.class.isAssignableFrom(rowType)) {
 			final CollectionConverter collectionConverter = new CollectionConverter(type);

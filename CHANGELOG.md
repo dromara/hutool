@@ -11,10 +11,17 @@
 * 【core】        DateUtil.parse方法读取时间时，年月日按照当天计算。（issue#INYCF@Gitee）
 * 【core】        DateUtil.parse改进支持UTC时间格式。
 * 【db】          MongoDS支持客户端验证（issue#IO2DS@Gitee）
+* 【core】        改进字符串转集合和数组（支持逗号分隔形式）（pr#26@Gitee）
+* 【core】        改进DateConverter（issue#IOCWR@Gitee）
+* 【core】        改进NumberUtil中转数字，支持字母结尾（issue#IOCWR@Gitee）
+* 【poi】          ExcelUtil增加indexToColName和colNameToIndex方法（issue#IO8ZH@Gitee）
 
 ### Bug修复
 * 【core】        修正CollUtil.sortPageAll逻辑（pr#186@Github）
 * 【core】        修复ClassLoaderUtil.loadClass不能加载内部类问题（issue#IO4GF@Gitee）
+* 【core】        修复CustomKeyLinkedMap继承问题（issue#IO5Y2@Gitee）
+* 【core】        修复NumberUtil.isPrimes没有参数校验导致的问题（issue#IO57Q@Gitee）
+* 【extra】       修复QrConfig 引入包错误问题（pr#194@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

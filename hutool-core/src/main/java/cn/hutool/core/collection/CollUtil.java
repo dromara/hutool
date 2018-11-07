@@ -39,6 +39,7 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PageUtil;
@@ -1660,8 +1661,12 @@ public class CollUtil {
 			iter = new EnumerationIter<>((Enumeration) value);
 		} else if (ArrayUtil.isArray(value)) {
 			iter = new ArrayIter<>(value);
-		} else {
-			throw new UtilException("Unsupport value type [] !", value.getClass());
+		} else if(value instanceof CharSequence){
+			//String按照逗号分隔的列表对待
+			iter = StrUtil.splitTrim((CharSequence)value, CharUtil.COMMA).iterator();
+		}else {
+			//其它类型按照单一元素处理
+			iter = CollUtil.newArrayList(value).iterator();
 		}
 
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
@@ -1669,7 +1674,7 @@ public class CollUtil {
 			try {
 				collection.add((T) convert.convert(elementType, iter.next()));
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new UtilException(e);
 			}
 		}
 

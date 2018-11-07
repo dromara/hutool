@@ -103,7 +103,7 @@ public class CacheUtil {
 	}
 	
 	/**
-	 * 创建若引用缓存.
+	 * 创建弱引用缓存.
 	 * 
 	 * @param <K> Key类型
 	 * @param <V> Value类型

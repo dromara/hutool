@@ -1,6 +1,6 @@
 package cn.hutool.core.map;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 4.0.7
  */
-public abstract class CustomKeyLinkedMap<K, V> extends HashMap<K, V> {
+public abstract class CustomKeyLinkedMap<K, V> extends LinkedHashMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	/**
