@@ -29,6 +29,18 @@ public class EnumUtilTest {
 	}
 	
 	@Test
+	public void getFieldNamesTest() {
+		List<String> names = EnumUtil.getFieldNames(TestEnum.class);
+		Assert.assertEquals(CollUtil.newArrayList("type", "name"), names);
+	}
+	
+	@Test
+	public void likeValueOfTest() {
+		TestEnum value = EnumUtil.likeValueOf(TestEnum.class, "type2");
+		Assert.assertEquals(TestEnum.TEST2, value);
+	}
+	
+	@Test
 	public void getEnumMapTest() {
 		Map<String,TestEnum> enumMap = EnumUtil.getEnumMap(TestEnum.class);
 		Assert.assertEquals(TestEnum.TEST1, enumMap.get("TEST1"));

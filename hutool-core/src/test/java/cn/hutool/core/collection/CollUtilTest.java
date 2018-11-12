@@ -2,6 +2,7 @@ package cn.hutool.core.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -531,5 +532,18 @@ public class CollUtilTest {
 		final List<Integer> retval = CollUtil.sub(list, start, end);
 		// Assert result
 		Assert.assertNull(retval);
+	}
+	
+	@Test
+	public void sortPageAllTest() {
+		ArrayList<Integer> list = CollUtil.newArrayList(1,2,3,4,5,6,7,8,9);
+		List<Integer> sortPageAll = CollUtil.sortPageAll(2, 5, new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				//反序
+				return o2.compareTo(o1);
+			}}, list);
+		
+		Assert.assertEquals(CollUtil.newArrayList(4,3,2,1), sortPageAll);
 	}
 }

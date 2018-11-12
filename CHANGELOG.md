@@ -17,6 +17,9 @@
 * 【poi】          ExcelUtil增加indexToColName和colNameToIndex方法（issue#IO8ZH@Gitee）
 * 【core】        Convert.toList修改为泛型（issue#IOJZV@Gitee）
 * 【core】        BeanDesc中属性修改为使用LinkedHashMap存储
+* 【core】        ArrayUtil.get和CollUtil.get对于越界返回null而非抛出异常（issue#IOFKL@Gitee）
+* 【core】        EnumUtil增加likeValueOf方法（issue#IOFKL@Gitee）
+* 【core】        删除CollUtil.sortPageAll2方法，增加ColllUtil.page方法
 
 ### Bug修复
 * 【core】        修正CollUtil.sortPageAll逻辑（pr#186@Github）
@@ -24,6 +27,8 @@
 * 【core】        修复CustomKeyLinkedMap继承问题（issue#IO5Y2@Gitee）
 * 【core】        修复NumberUtil.isPrimes没有参数校验导致的问题（issue#IO57Q@Gitee）
 * 【extra】       修复QrConfig 引入包错误问题（pr#194@Github）
+* 【extra】       修复Sftp创建目录问题（issue#INZUP@Gitee）
+* 【core】        修复CollUtil.sortPageAll方法
 
 -------------------------------------------------------------------------------------------------------------
 

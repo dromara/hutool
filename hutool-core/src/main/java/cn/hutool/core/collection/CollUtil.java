@@ -1763,7 +1763,8 @@ public class CollUtil {
 	}
 
 	/**
-	 * 获取集合中指定下标的元素值，下标可以为负数，例如-1表示最后一个元素
+	 * 获取集合中指定下标的元素值，下标可以为负数，例如-1表示最后一个元素<br>
+	 * 如果元素越界，返回null
 	 * 
 	 * @param <T> 元素类型
 	 * @param collection 集合
@@ -1772,9 +1773,16 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> T get(Collection<T> collection, int index) {
+		final int size = collection.size();
 		if (index < 0) {
-			index += collection.size();
+			index += size;
 		}
+		
+		//检查越界
+		if(index >= size) {
+			return null;
+		}
+		
 		if (collection instanceof List) {
 			final List<T> list = ((List<T>) collection);
 			return list.get(index);
@@ -1787,10 +1795,6 @@ public class CollUtil {
 					return t;
 				}
 				i++;
-			}
-			//检查越界
-			if(index >= i) {
-				throw new IndexOutOfBoundsException(StrUtil.format("Length is {} but index is {}", i, index));
 			}
 		}
 		return null;
@@ -1948,78 +1952,58 @@ public class CollUtil {
 	// ------------------------------------------------------------------------------------------------- sort
 	/**
 	 * 将多个集合排序并显示不同的段落（分页）<br>
-	 * 采用先排序，后截断的方式取分页的部分
+	 * 采用{@link BoundedPriorityQueue}实现分页取局部
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param pageNo 页码，从1开始
-	 * @param numPerPage 每页的条目数
+	 * @param pageNo 页码，从1开始计数，0和1效果相同
+	 * @param pageSize 每页的条目数
 	 * @param comparator 比较器
 	 * @param colls 集合数组
 	 * @return 分页后的段落内容
 	 */
 	@SafeVarargs
-	public static <T> List<T> sortPageAll(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		final List<T> result = new ArrayList<>();
+	public static <T> List<T> sortPageAll(int pageNo, int pageSize, Comparator<T> comparator, Collection<T>... colls) {
+		final List<T> list = new ArrayList<>(pageNo * pageSize);
 		for (Collection<T> coll : colls) {
-			result.addAll(coll);
+			list.addAll(coll);
 		}
-
-		Collections.sort(result, comparator);
-
-		int resultSize = result.size();
-		// 每页条目数大于总数直接返回所有
-		if (resultSize <= numPerPage) {
-			if(pageNo <=1) {
-				return result;
-			} else {
-				// 越界直接返回空
-				return new ArrayList<>();
-			}
+		if(null != comparator) {
+			Collections.sort(list, comparator);
 		}
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
-		if (startEnd[1] > resultSize) {
-			// 越界直接返回空
-			return new ArrayList<>();
-		}
-
-		return result.subList(startEnd[0], startEnd[1]);
+		
+		return page(pageNo, pageSize, list);
 	}
-
+	
 	/**
-	 * 将多个集合排序并显示不同的段落（分页）<br>
-	 * 采用{@link BoundedPriorityQueue}实现分页取局部
+	 * 对指定List分页取值
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param pageNo 页码，从1开始计数
-	 * @param numPerPage 每页的条目数
-	 * @param comparator 比较器
-	 * @param colls 集合数组
-	 * @return 分业后的段落内容
+	 * @param pageNo 页码，从1开始计数，0和1效果相同
+	 * @param pageSize 每页的条目数
+	 * @param list 列表
+	 * @return 分页后的段落内容
+	 * @since 4.1.20
 	 */
-	@SafeVarargs
-	public static <T> List<T> sortPageAll2(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<>(pageNo * numPerPage, comparator);
-		for (Collection<T> coll : colls) {
-			queue.addAll(coll);
+	public static <T> List<T> page(int pageNo, int pageSize, List<T> list) {
+		if(isEmpty(list)) {
+			return new ArrayList<>(0); 
 		}
-
-		int resultSize = queue.size();
+		
+		int resultSize = list.size();
 		// 每页条目数大于总数直接返回所有
-		if (resultSize <= numPerPage) {
+		if (resultSize <= pageSize) {
 			if(pageNo <=1) {
-				return queue.toList();
+				return Collections.unmodifiableList(list);
 			} else {
 				// 越界直接返回空
-				return new ArrayList<>();
+				return new ArrayList<>(0);
 			}
 		}
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
+		final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
 		if (startEnd[1] > resultSize) {
-			// 越界直接返回空
-			return new ArrayList<>();
+			startEnd[1] = resultSize;
 		}
-
-		return queue.toList().subList(startEnd[0], startEnd[1]);
+		return list.subList(startEnd[0], startEnd[1]);
 	}
 
 	/**
