@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.hutool.core.lang.Assert;
@@ -34,7 +34,7 @@ public class BeanDesc {
 	/** Bean类 */
 	private Class<?> beanClass;
 	/** 属性Map */
-	private Map<String, PropDesc> propMap = new HashMap<>();
+	private Map<String, PropDesc> propMap = new LinkedHashMap<>();
 
 	/**
 	 * 构造

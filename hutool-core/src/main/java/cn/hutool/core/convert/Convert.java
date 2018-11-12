@@ -514,13 +514,15 @@ public class Convert {
 	/**
 	 * 转换为ArrayList
 	 * 
+	 * @param <T> 元素类型
 	 * @param elementType 集合中元素类型
 	 * @param value 被转换的值
 	 * @return {@link List}
-	 * @since 4.0.11
+	 * @since 4.1.20
 	 */
-	public static List<?> toList(Class<?> elementType, Object value) {
-		return (List<?>) toCollection(ArrayList.class, elementType, value);
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> toList(Class<T> elementType, Object value) {
+		return (List<T>) toCollection(ArrayList.class, elementType, value);
 	}
 	
 	/**

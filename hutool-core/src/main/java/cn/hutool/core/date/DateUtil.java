@@ -99,7 +99,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 当前时间long
+	 * 当前时间的时间戳
 	 * 
 	 * @param isNano 是否为高精度时间
 	 * @return 时间
@@ -109,7 +109,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 当前时间秒数
+	 * 当前时间的时间戳（秒）
 	 * 
 	 * @return 当前时间秒数
 	 * @since 4.0.0
@@ -730,11 +730,15 @@ public class DateUtil {
 		}
 
 		if (length == DatePattern.NORM_DATETIME_PATTERN.length() || length == DatePattern.NORM_DATETIME_PATTERN.length() + 1) {
+			if(dateStr.contains("T")) {
+				//UTC时间格式：类似2018-09-13T05:34:31
+				return parseUTC(dateStr);
+			}
 			return parseDateTime(dateStr);
 		} else if (length == DatePattern.NORM_DATE_PATTERN.length()) {
 			return parseDate(dateStr);
 		} else if (length == DatePattern.NORM_TIME_PATTERN.length() || length == DatePattern.NORM_TIME_PATTERN.length() + 1) {
-			return parseTime(dateStr);
+			return parseTimeToday(dateStr);
 		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() || length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() + 1) {
 			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {

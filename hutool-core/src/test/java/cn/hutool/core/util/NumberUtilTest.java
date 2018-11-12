@@ -180,6 +180,10 @@ public class NumberUtilTest {
 		Assert.assertEquals(10, v3);
 		int v4 = NumberUtil.parseInt("   ");
 		Assert.assertEquals(0, v4);
+		int v5 = NumberUtil.parseInt("10F");
+		Assert.assertEquals(10, v5);
+		int v6 = NumberUtil.parseInt("22.4D");
+		Assert.assertEquals(22, v6);
 	}
 	
 	@Test
@@ -192,5 +196,9 @@ public class NumberUtilTest {
 		Assert.assertEquals(10L, v3);
 		long v4 = NumberUtil.parseLong("   ");
 		Assert.assertEquals(0L, v4);
+		long v5 = NumberUtil.parseLong("10F");
+		Assert.assertEquals(10L, v5);
+		long v6 = NumberUtil.parseLong("22.4D");
+		Assert.assertEquals(22L, v6);
 	}
 }
