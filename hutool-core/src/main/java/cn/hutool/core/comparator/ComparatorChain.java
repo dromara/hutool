@@ -47,7 +47,7 @@ public class ComparatorChain<E> implements Chain<Comparator<E>, ComparatorChain<
 	 * 构造，初始化单一比较器。自定义正序还是反序
 	 *
 	 * @param comparator 在比较器链中的第一个比较器
-	 * @param reverse 是否反序，true表示正序，false反序
+	 * @param reverse 是否反序，true表示反序，false正序
 	 */
 	public ComparatorChain(final Comparator<E> comparator, final boolean reverse) {
 		chain = new ArrayList<Comparator<E>>(1);
