@@ -75,7 +75,7 @@ public class SoapRequest {
 	
 	/**
 	 * 设置命名空间envelope(ns)
-	 * @param namespace 命名空间
+	 * 
 	 * @return this
 	 */
 	public SoapRequest setXmlns(String xmlns) {
