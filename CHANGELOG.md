@@ -29,6 +29,7 @@
 * 【extra】       修复QrConfig 引入包错误问题（pr#194@Github）
 * 【extra】       修复Sftp创建目录问题（issue#INZUP@Gitee）
 * 【core】        修复CollUtil.sortPageAll方法
+* 【core】        修复ImageUtil图片旋转出现黑边问题（pr#189@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

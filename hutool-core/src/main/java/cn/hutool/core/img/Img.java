@@ -384,11 +384,13 @@ public class Img {
 		final BufferedImage image = getValidSrcImg();
 		int width = image.getWidth(null);
 		int height = image.getHeight(null);
-		final BufferedImage destImg = new BufferedImage(width, height, getTypeInt());
+		final Rectangle rectangle = calcRotatedSize(width, height, degree);
+		final BufferedImage destImg = new BufferedImage(rectangle.width, rectangle.height, getTypeInt());
 		Graphics2D graphics2d = destImg.createGraphics();
 		// 抗锯齿
 		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		// 从中心旋转
+		graphics2d.translate((rectangle.width - width) / 2, (rectangle.height - height) / 2);
 		graphics2d.rotate(Math.toRadians(degree), width / 2, height / 2);
 		graphics2d.drawImage(image, 0, 0, null);
 		graphics2d.dispose();
@@ -525,6 +527,37 @@ public class Img {
 			);
 		}
 		return rectangle;
+	}
+
+	/**
+	 * 计算旋转后的图片尺寸
+	 * 
+	 * @param width 宽度
+	 * @param height 高度
+	 * @param degree 旋转角度
+	 * @return 计算后目标尺寸
+	 * @since 4.1.20
+	 */
+	private static Rectangle calcRotatedSize(int width, int height, int degree) {
+		if (degree >= 90) {
+			if (degree / 90 % 2 == 1) {
+				int temp = height;
+				height = width;
+				width = temp;
+			}
+			degree = degree % 90;
+		}
+		double r = Math.sqrt(height * height + width * width) / 2;
+		double len = 2 * Math.sin(Math.toRadians(degree) / 2) * r;
+		double angel_alpha = (Math.PI - Math.toRadians(degree)) / 2;
+		double angel_dalta_width = Math.atan((double) height / width);
+		double angel_dalta_height = Math.atan((double) width / height);
+		int len_dalta_width = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_width));
+		int len_dalta_height = (int) (len * Math.cos(Math.PI - angel_alpha - angel_dalta_height));
+		int des_width = width + len_dalta_width * 2;
+		int des_height = height + len_dalta_height * 2;
+
+		return new Rectangle(des_width, des_height);
 	}
 	// ---------------------------------------------------------------------------------------------------------------- Private method end
 }
