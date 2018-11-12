@@ -145,7 +145,7 @@ public class EnumUtil {
 		String name;
 		for (Field field : fields) {
 			name = field.getName();
-			if (field.getType().isEnum() || "ENUM$VALUES".equals(name) || "ordinal".equals(name)) {
+			if (field.getType().isEnum() || name.contains("$VALUES") || "ordinal".equals(name)) {
 				continue;
 			}
 			names.add(name);
