@@ -16,6 +16,7 @@
 * 【core】        改进NumberUtil中转数字，支持字母结尾（issue#IOCWR@Gitee）
 * 【poi】          ExcelUtil增加indexToColName和colNameToIndex方法（issue#IO8ZH@Gitee）
 * 【core】        Convert.toList修改为泛型（issue#IOJZV@Gitee）
+* 【core】        BeanDesc中属性修改为使用LinkedHashMap存储
 
 ### Bug修复
 * 【core】        修正CollUtil.sortPageAll逻辑（pr#186@Github）
