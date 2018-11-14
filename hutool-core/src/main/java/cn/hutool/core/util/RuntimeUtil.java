@@ -17,7 +17,7 @@ import cn.hutool.core.io.IoUtil;
  * @since 3.1.1
  */
 public class RuntimeUtil {
-	
+
 	/**
 	 * 执行系统命令，使用系统默认编码
 	 * 
@@ -95,7 +95,7 @@ public class RuntimeUtil {
 		}
 		return process;
 	}
-	
+
 	/**
 	 * 执行命令<br>
 	 * 命令带参数时参数可作为其中一个参数，也可以将命令和参数组合为一个字符串传入
@@ -108,7 +108,7 @@ public class RuntimeUtil {
 	public static Process exec(String[] envp, String... cmds) {
 		return exec(envp, cmds);
 	}
-	
+
 	/**
 	 * 执行命令<br>
 	 * 命令带参数时参数可作为其中一个参数，也可以将命令和参数组合为一个字符串传入
@@ -198,18 +198,49 @@ public class RuntimeUtil {
 			destroy(process);
 		}
 	}
-	
+
+	/**
+	 * 获取命令执行异常结果，使用系统默认编码，，获取后销毁进程
+	 * 
+	 * @param process {@link Process} 进程
+	 * @return 命令执行结果列表
+	 * @since 4.1.21
+	 */
+	public static String getErrorResult(Process process) {
+		return getErrorResult(process, CharsetUtil.systemCharset());
+	}
+
+	/**
+	 * 获取命令执行异常结果，获取后销毁进程
+	 * 
+	 * @param process {@link Process} 进程
+	 * @param charset 编码
+	 * @return 命令执行结果列表
+	 * @since 4.1.21
+	 */
+	public static String getErrorResult(Process process, Charset charset) {
+		InputStream in = null;
+		try {
+			in = process.getErrorStream();
+			return IoUtil.read(in, charset);
+		} finally {
+			IoUtil.close(in);
+			destroy(process);
+		}
+	}
+
 	/**
 	 * 销毁进程
+	 * 
 	 * @param process 进程
 	 * @since 3.1.2
 	 */
 	public static void destroy(Process process) {
-		if(null != process) {
+		if (null != process) {
 			process.destroy();
 		}
 	}
-	
+
 	/**
 	 * 增加一个JVM关闭后的钩子，用于在JVM关闭时执行某些操作
 	 * 
@@ -217,6 +248,6 @@ public class RuntimeUtil {
 	 * @since 4.0.5
 	 */
 	public static void addShutdownHook(Runnable hook) {
-		Runtime.getRuntime().addShutdownHook((hook instanceof Thread) ? (Thread)hook : new Thread(hook));
+		Runtime.getRuntime().addShutdownHook((hook instanceof Thread) ? (Thread) hook : new Thread(hook));
 	}
 }
