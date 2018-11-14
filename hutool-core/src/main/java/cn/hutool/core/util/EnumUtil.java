@@ -72,6 +72,10 @@ public class EnumUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Enum<T>> T likeValueOf(Class<T> enumClass, Object value) {
+		if(value instanceof CharSequence) {
+			value = value.toString().trim();
+		}
+		
 		final Field[] fields = ReflectUtil.getFields(enumClass);
 		final Enum<?>[] enums = enumClass.getEnumConstants();
 		String fieldName;
@@ -148,7 +152,9 @@ public class EnumUtil {
 			if (field.getType().isEnum() || name.contains("$VALUES") || "ordinal".equals(name)) {
 				continue;
 			}
-			names.add(name);
+			if(false == names.contains(name)) {
+				names.add(name);
+			}
 		}
 		return names;
 	}

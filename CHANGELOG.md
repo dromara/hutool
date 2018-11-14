@@ -9,6 +9,7 @@
 * 【core】        RuntimeUtil增加getErrorResult方法（issue#199@Github）
 
 ### Bug修复
+* 【core】        修复EnumUtil.getFieldNames定义name属性重复问题（感谢@【杭州】J辉）
 
 -------------------------------------------------------------------------------------------------------------
 

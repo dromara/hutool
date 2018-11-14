@@ -60,9 +60,14 @@ public class EnumUtilTest {
 		}
 		
 		private String type;
+		private String name;
 		
 		public String getType() {
 			return this.type;
+		}
+		
+		public String getName() {
+			return this.name;
 		}
 	}
 }
