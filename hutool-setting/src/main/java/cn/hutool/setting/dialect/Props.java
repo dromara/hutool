@@ -453,6 +453,24 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public Date getDate(String key) {
 		return getDate(key, null);
 	}
+	
+	/**
+	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
+	 * 
+	 * @param keys 键列表，常用于别名
+	 * @return 字符串值
+	 * @since 4.1.21
+	 */
+	public String getAndRemoveStr(String... keys) {
+		Object value = null;
+		for (String key : keys) {
+			value = remove(key);
+			if (null != value) {
+				break;
+			}
+		}
+		return (String) value;
+	}
 
 	// ----------------------------------------------------------------------- Get end
 

@@ -18,9 +18,16 @@ sqlLevel = debug
 # 默认数据源
 url = jdbc:sqlite:test.db
 
+
 # 测试数据源
 [test]
 url = jdbc:sqlite:test.db
+
+# 测试用HSQLDB数据库
+[hsqldb]
+url = jdbc:hsqldb:mem:mem_hutool
+user = SA
+pass = 
 
 # 测试用Oracle数据库
 [orcl]

@@ -28,6 +28,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
+import cn.hutool.setting.dialect.Props;
 
 /**
  * 设置工具类。 用于支持设置（配置）文件<br>
@@ -279,7 +280,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 转换为Properties对象，原分组变为前缀
+	 * 获得group对应的子Properties
 	 * 
 	 * @param group 分组
 	 * @return Properties对象
@@ -288,6 +289,19 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		final Properties properties = new Properties();
 		properties.putAll(getMap(group));
 		return properties;
+	}
+
+	/**
+	 * 获得group对应的子Props
+	 * 
+	 * @param group 分组
+	 * @return Props对象
+	 * @since 4.1.21
+	 */
+	public Props getProps(String group) {
+		final Props props = new Props();
+		props.putAll(getMap(group));
+		return props;
 	}
 
 	// --------------------------------------------------------------------------------- Functions
