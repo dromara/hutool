@@ -291,25 +291,25 @@ final class InternalJSONUtil {
 	 * JSON递归转换<br>
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
 	 * 
-	 * @param type 目标类型
+	 * @param targetType 目标类型
 	 * @param value 值
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
-	protected static Object jsonConvert(Type type, Object value, boolean ignoreError) throws ConvertException {
+	protected static Object jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
 		if (null == value) {
 			return null;
 		}
 		if (value instanceof JSONNull) {
 			return null;
 		}
-		final Class<?> rowType = TypeUtil.getClass(type);
-		if (null == rowType) {
-			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
+		final Class<?> targetRowType = TypeUtil.getClass(targetType);
+		if (null == targetRowType) {
+			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", targetType));
 		}
 
-		if (JSON.class.isAssignableFrom(rowType)) {
+		if (JSON.class.isAssignableFrom(targetRowType)) {
 			// 目标为JSON格式
 			return JSONUtil.parse(value);
 		}
@@ -317,23 +317,23 @@ final class InternalJSONUtil {
 		Object targetValue = null;
 		// 非标准转换格式
 		if (value instanceof JSONObject) {
-			if (BeanUtil.isBean(rowType)) {
+			if (BeanUtil.isBean(targetRowType)) {
 				// 目标为Bean
-				targetValue = ((JSONObject) value).toBean(type, ignoreError);
+				targetValue = ((JSONObject) value).toBean(targetType, ignoreError);
 			}
 		} else if (value instanceof JSONArray) {
-			if (rowType.isArray()) {
+			if (targetRowType.isArray()) {
 				// 目标为数组
-				targetValue = ((JSONArray) value).toArray(rowType, ignoreError);
+				targetValue = ((JSONArray) value).toArray(targetRowType, ignoreError);
 			} else {
-				targetValue = (new CollectionConverter(type, TypeUtil.getTypeArgument(type))).convert(value, null);
+				targetValue = (new CollectionConverter(targetType, TypeUtil.getTypeArgument(targetType))).convert(value, null);
 			}
 		}
 
 		// 标准格式转换
 		if (null == targetValue) {
 			try {
-				targetValue = ConverterRegistry.getInstance().convert(type, value);
+				targetValue = ConverterRegistry.getInstance().convert(targetType, value);
 			} catch (ConvertException e) {
 				if (ignoreError) {
 					return null;
@@ -348,7 +348,7 @@ final class InternalJSONUtil {
 				// 此处特殊处理，认为返回null属于正常情况
 				return null;
 			}
-			throw new ConvertException("Can not convert {} to type {}", value, rowType.getName());
+			throw new ConvertException("Can not convert {} to type {}", value, targetRowType.getName());
 		}
 
 		return targetValue;

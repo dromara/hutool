@@ -52,6 +52,17 @@ public class ConvertToCollectionTest {
 		Assert.assertEquals("", list.get(3));
 		Assert.assertEquals("1", list.get(4));
 	}
+	
+	@Test
+	public void toListTest3() {
+		Object[] a = { "a", "你", "好", "", 1 };
+		List<String> list = Convert.toList(String.class, a);
+		Assert.assertEquals("a", list.get(0));
+		Assert.assertEquals("你", list.get(1));
+		Assert.assertEquals("好", list.get(2));
+		Assert.assertEquals("", list.get(3));
+		Assert.assertEquals("1", list.get(4));
+	}
 
 	@Test
 	public void strToListTest() {

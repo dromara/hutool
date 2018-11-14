@@ -7,6 +7,8 @@
 
 ### 新特性
 * 【core】        RuntimeUtil增加getErrorResult方法（issue#199@Github）
+* 【core】        ReflectUtil增加hasField方法（感谢@【杭州】J辉）
+* 【core】        BeanUtil增加toBean方法（感谢@【杭州】J辉）
 
 ### Bug修复
 * 【core】        修复EnumUtil.getFieldNames定义name属性重复问题（感谢@【杭州】J辉）

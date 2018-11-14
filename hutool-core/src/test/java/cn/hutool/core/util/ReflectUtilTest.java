@@ -7,8 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.lang.test.bean.ExamInfoDict;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.ClassUtilTest.TestSubClass;
 
 /**
@@ -41,6 +39,13 @@ public class ReflectUtilTest {
 		// 能够获取到父类字段
 		Field privateField = ReflectUtil.getField(TestSubClass.class, "privateField");
 		Assert.assertNotNull(privateField);
+	}
+	
+	@Test
+	public void setFieldTest() {
+		TestClass testClass = new TestClass();
+		ReflectUtil.setFieldValue(testClass, "a", "111");
+		Assert.assertEquals(111, testClass.getA());
 	}
 
 	@Test

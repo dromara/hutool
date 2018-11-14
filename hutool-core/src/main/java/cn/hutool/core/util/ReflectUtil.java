@@ -14,6 +14,7 @@ import java.util.Set;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
@@ -96,6 +97,19 @@ public class ReflectUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------------------- Field
+	/**
+	 * 查找指定类中是否包含指定名称对应的字段，包括所有字段（包括非public字段），也包括父类和Object类的字段
+	 * 
+	 * @param beanClass 被查找字段的类,不能为null
+	 * @param name 字段名
+	 * @return 是否包含字段
+	 * @throws SecurityException 安全异常
+	 * @since 4.1.21
+	 */
+	public static boolean hasField(Class<?> beanClass, String name) throws SecurityException {
+		return null != getField(beanClass, name);
+	}
+	
 	/**
 	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回<code>null</code>
 	 * 
@@ -243,7 +257,18 @@ public class ReflectUtil {
 		Assert.notNull(obj);
 		Assert.notNull(field);
 		field.setAccessible(true);
-
+		
+		if(null != value) {
+			Class<?> fieldType = field.getType();
+			if(false == fieldType.isAssignableFrom(value.getClass())) {
+				//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
+				final Object targetValue = Convert.convert(fieldType, value);
+				if(null != targetValue) {
+					value = targetValue;
+				}
+			}
+		}
+		
 		try {
 			field.set(obj, value);
 		} catch (IllegalAccessException e) {
