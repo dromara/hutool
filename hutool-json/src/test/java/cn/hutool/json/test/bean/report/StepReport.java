@@ -1,4 +1,4 @@
-package cn.hutool.json.test2;
+package cn.hutool.json.test.bean.report;
 
 import cn.hutool.core.util.StrUtil;
 

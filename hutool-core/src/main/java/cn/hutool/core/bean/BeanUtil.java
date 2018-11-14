@@ -8,9 +8,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -398,23 +396,6 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBean
-	/**
-	 * 
-	 * @param sourceList
-	 * @param clz
-	 * @return
-	 */
-	public static <T> List<T> toBeanList(Collection<?> sourceList, Class<T> clz) {
-		if (CollUtil.isEmpty(sourceList)) {
-			return Collections.emptyList();
-		}
-		final List<T> list = new ArrayList<>();
-		for (Object source : sourceList) {
-			list.add(toBean(source, clz));
-		}
-		return list;
-	}
-
 	/**
 	 * 对象或Map转Bean
 	 * 
