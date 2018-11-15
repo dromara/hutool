@@ -59,6 +59,8 @@ public class ValidatorTest {
 		Assert.assertTrue(b4);
 		boolean b5 = Validator.isBirthday("2015.01.01");
 		Assert.assertTrue(b5);
+		boolean b6 = Validator.isBirthday("2018-08-15");
+		Assert.assertTrue(b6);
 		
 		//验证年非法
 		Assert.assertFalse(Validator.isBirthday("2095.05.01"));
