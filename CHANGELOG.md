@@ -14,6 +14,7 @@
 ### Bug修复
 * 【core】        修复EnumUtil.getFieldNames定义name属性重复问题（感谢@【杭州】J辉）
 * 【json】         修复List多层嵌套toBean转换失败问题
+* 【core】        修复ObjectUtil.toString问题（issue#IONLA@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
