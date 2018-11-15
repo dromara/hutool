@@ -135,7 +135,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @since 3.1.2
 	 */
 	public void init(String url, String user, String pass, String driver) {
-		this.driver = StrUtil.isBlank(driver) ? DriverUtil.identifyDriver(url) : driver;
+		this.driver = StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url);
 		try {
 			Class.forName(this.driver);
 		} catch (ClassNotFoundException e) {

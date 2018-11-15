@@ -1,5 +1,6 @@
 package cn.hutool.http.webservice;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
@@ -13,7 +14,7 @@ import cn.hutool.core.lang.Console;
 public class SoapRequestTest {
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void requestTest() {
 		SoapRequest request = new SoapRequest(//
 				"http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx", //

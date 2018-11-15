@@ -82,7 +82,13 @@ public class BeanUtil {
 		return PropertyEditorManager.findEditor(type);
 	}
 
-	public static boolean hasNull(Object bean, boolean ignoreError) {
+	/**
+	 * 判断Bean中是否有值为null的字段
+	 * 
+	 * @param bean Bean
+	 * @return 是否有值为null的字段
+	 */
+	public static boolean hasNull(Object bean) {
 		final Field[] fields = ClassUtil.getDeclaredFields(bean.getClass());
 
 		Object fieldValue = null;
@@ -124,7 +130,7 @@ public class BeanUtil {
 	 * @return 字段描述数组
 	 * @throws BeanException 获取属性异常
 	 */
-	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) throws BeanException{
+	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) throws BeanException {
 		BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz);
@@ -134,7 +140,7 @@ public class BeanUtil {
 		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), new Filter<PropertyDescriptor>() {
 			@Override
 			public boolean accept(PropertyDescriptor t) {
-				//过滤掉getClass方法
+				// 过滤掉getClass方法
 				return false == "class".equals(t.getName());
 			}
 		});
@@ -247,7 +253,7 @@ public class BeanUtil {
 			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);
 		}
 	}
-
+	
 	/**
 	 * 解析Bean中的属性值
 	 * 
@@ -390,6 +396,20 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBean
+	/**
+	 * 对象或Map转Bean
+	 * 
+	 * @param source Bean对象或Map
+	 * @param clazz 目标的Bean类型
+	 * @return Bean对象
+	 * @since 4.1.20
+	 */
+	public static <T> T toBean(Object source, Class<T> clazz) {
+		final T target = ReflectUtil.newInstance(clazz);
+		copyProperties(source, target);
+		return target;
+	}
+
 	/**
 	 * ServletRequest 参数转Bean
 	 * 
@@ -539,7 +559,7 @@ public class BeanUtil {
 	public static void copyProperties(Object source, Object target, String... ignoreProperties) {
 		copyProperties(source, target, CopyOptions.create().setIgnoreProperties(ignoreProperties));
 	}
-	
+
 	/**
 	 * 复制Bean对象属性<br>
 	 * 
@@ -634,7 +654,7 @@ public class BeanUtil {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 判断Bean是否包含值为<code>null</code>的属性<br>
 	 * 对象本身为<code>null</code>也返回true

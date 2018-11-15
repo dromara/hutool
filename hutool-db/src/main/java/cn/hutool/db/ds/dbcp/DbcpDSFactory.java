@@ -95,19 +95,16 @@ public class DbcpDSFactory extends DSFactory {
 		final BasicDataSource ds = new BasicDataSource();
 
 		// 基本信息
-		String url = config.getAndRemoveStr(KEY_ALIAS_URL);
+		final String url = config.getAndRemoveStr(KEY_ALIAS_URL);
 		if (StrUtil.isBlank(url)) {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
 		ds.setUrl(url);
+		//自动识别Driver
+		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
+		ds.setDriverClassName(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
 		ds.setUsername(config.getAndRemoveStr(KEY_ALIAS_USER));
 		ds.setPassword(config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
-		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
-		if (StrUtil.isNotBlank(driver)) {
-			ds.setDriverClassName(driver);
-		} else {
-			ds.setDriverClassName(DriverUtil.identifyDriver(ds.getUrl()));
-		}
 
 		config.toBean(ds);// 注入属性
 		return ds;

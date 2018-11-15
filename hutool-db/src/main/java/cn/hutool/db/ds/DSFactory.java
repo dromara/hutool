@@ -36,7 +36,7 @@ public abstract class DSFactory {
 	/** 别名字段名：用户名 */
 	public static final String[] KEY_ALIAS_USER = { "user", "username" };
 	/** 别名字段名：密码 */
-	public static final String[] KEY_ALIAS_PASSWORD = { "password", "pass" };
+	public static final String[] KEY_ALIAS_PASSWORD = { "pass", "password" };
 	/** 别名字段名：驱动名 */
 	public static final String[] KEY_ALIAS_DRIVER = { "driver", "driverClassName" };
 
@@ -68,7 +68,7 @@ public abstract class DSFactory {
 			}
 		}
 
-		//读取配置，用于SQL打印
+		// 读取配置，用于SQL打印
 		DbUtil.setShowSqlGlobal(setting);
 
 		this.setting = setting;

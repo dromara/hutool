@@ -166,7 +166,8 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 * @return 获得公钥
 	 */
 	public String getPublicKeyBase64() {
-		return Base64.encode(getPublicKey().getEncoded());
+		final PublicKey publicKey = getPublicKey();
+		return (null == publicKey) ? null : Base64.encode(publicKey.getEncoded());
 	}
 
 	/**
