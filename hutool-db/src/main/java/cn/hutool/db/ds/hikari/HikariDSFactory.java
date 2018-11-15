@@ -105,10 +105,21 @@ public class HikariDSFactory extends DSFactory {
 		}
 		config.put("jdbcUrl", url);
 		//自动识别Driver
-		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
-		config.put("driverClassName", StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
-		config.put("username", config.getAndRemoveStr(KEY_ALIAS_USER));
-		config.put("password", config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
+		String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
+		if(StrUtil.isBlank(driver)) {
+			driver = DriverUtil.identifyDriver(url);
+		}
+		if(null != driver) {
+			config.put("driverClassName", driver);
+		}
+		final String user = config.getAndRemoveStr(KEY_ALIAS_USER);
+		if(null != user) {
+			config.put("username", user);
+		}
+		final String pass = config.getAndRemoveStr(KEY_ALIAS_PASSWORD);
+		if(null != pass) {
+			config.put("password", pass);
+		}
 		
 		final HikariDataSource ds = new HikariDataSource(new HikariConfig(config));
 		return ds;
