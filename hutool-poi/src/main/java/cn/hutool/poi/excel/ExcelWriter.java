@@ -52,6 +52,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private AtomicInteger currentRow = new AtomicInteger(0);
 	/** 标题行别名 */
 	private Map<String, String> headerAlias;
+	/** 是否只保留别名对应的字段 */
+	private boolean onlyAlias;
+	/** 标题顺序比较器 */
 	private Comparator<String> aliasComparator;
 	/** 样式集，定义不同类型数据样式 */
 	private StyleSet styleSet;
@@ -344,7 +347,19 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		this.headerAlias = headerAlias;
 		return this;
 	}
-
+	
+	/**
+	 * 设置是否只保留别名中的字段值，如果为true，则不设置alias的字段将不被输出，false表示原样输出
+	 * 
+	 * @param isOnlyAlias 是否只保留别名中的字段值
+	 * @return this
+	 * @since 4.1.22
+	 */
+	public ExcelWriter setOnlyAlias(boolean isOnlyAlias) {
+		this.onlyAlias = isOnlyAlias;
+		return this;
+	}
+	
 	/**
 	 * 增加标题别名
 	 * 
@@ -779,7 +794,11 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		String aliasName;
 		for (Object key : keys) {
 			aliasName = this.headerAlias.get(key);
-			alias.add(null == aliasName ? key : aliasName);
+			if(null != aliasName) {
+				alias.add(aliasName);
+			} else if(false == this.onlyAlias) {
+				alias.add(key);
+			}
 		}
 		return alias;
 	}
