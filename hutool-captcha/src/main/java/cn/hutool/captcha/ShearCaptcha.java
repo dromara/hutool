@@ -58,7 +58,6 @@ public class ShearCaptcha extends AbstractCaptcha {
 		final Graphics2D g = ImageUtil.createGraphics(image, Color.WHITE);
 
 		// 画字符串
-		g.setColor(Color.black);
 		g.setFont(font);
 		final int len = this.generator.getLength();
 		int charWidth = width / (len + 2);

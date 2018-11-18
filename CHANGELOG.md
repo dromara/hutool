@@ -6,6 +6,7 @@
 ## 4.1.22
 
 ### 新特性
+* 【core】        BeanUtil.copyProperties方法支持目标为Map（issue#IOQHZ@Gitee）
 
 ### Bug修复
 * 【core】        修复Validator.isBirthday
