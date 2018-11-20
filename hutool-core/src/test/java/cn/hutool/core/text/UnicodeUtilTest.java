@@ -3,8 +3,6 @@ package cn.hutool.core.text;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
-
 /**
  * UnicodeUtil 单元测试
  * 

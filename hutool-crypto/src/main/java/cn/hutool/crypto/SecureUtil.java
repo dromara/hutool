@@ -9,8 +9,10 @@ import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.Signature;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
@@ -58,7 +60,7 @@ import cn.hutool.crypto.symmetric.SymmetricCrypto;
  *
  */
 public final class SecureUtil {
-	
+
 	/**
 	 * 默认密钥字节数
 	 * 
@@ -69,7 +71,7 @@ public final class SecureUtil {
 	 * </pre>
 	 */
 	public static final int DEFAULT_KEY_SIZE = 1024;
-	
+
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
 	 * 
@@ -95,8 +97,8 @@ public final class SecureUtil {
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
-		
-		if(keySize > 0) {
+
+		if (keySize > 0) {
 			keyGenerator.init(keySize);
 		}
 		return keyGenerator.generateKey();
@@ -136,17 +138,17 @@ public final class SecureUtil {
 		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("DES")) {
 			throw new CryptoException("Algorithm [{}] is not a DES algorithm!");
 		}
-		
+
 		SecretKey secretKey = null;
 		if (null == key) {
 			secretKey = generateKey(algorithm);
 		} else {
 			KeySpec keySpec;
 			try {
-				if(algorithm.startsWith("DESede")) {
-					//DESede兼容
+				if (algorithm.startsWith("DESede")) {
+					// DESede兼容
 					keySpec = new DESedeKeySpec(key);
-				}else {
+				} else {
 					keySpec = new DESKeySpec(key);
 				}
 			} catch (InvalidKeyException e) {
@@ -203,7 +205,7 @@ public final class SecureUtil {
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
 		return generatePrivateKey(algorithm, new PKCS8EncodedKeySpec(key));
 	}
-	
+
 	/**
 	 * 生成私钥，仅用于非对称加密<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
@@ -221,7 +223,7 @@ public final class SecureUtil {
 			throw new CryptoException(e);
 		}
 	}
-	
+
 	/**
 	 * 生成私钥，仅用于非对称加密
 	 * 
@@ -249,7 +251,7 @@ public final class SecureUtil {
 	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
 		return generatePublicKey(algorithm, new X509EncodedKeySpec(key));
 	}
-	
+
 	/**
 	 * 生成公钥，仅用于非对称加密<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
@@ -267,7 +269,7 @@ public final class SecureUtil {
 			throw new CryptoException(e);
 		}
 	}
-	
+
 	/**
 	 * 生成用于非对称加密的公钥和私钥，仅用于非对称加密<br>
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
@@ -278,7 +280,7 @@ public final class SecureUtil {
 	public static KeyPair generateKeyPair(String algorithm) {
 		return generateKeyPair(algorithm, DEFAULT_KEY_SIZE, null);
 	}
-	
+
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
@@ -302,11 +304,11 @@ public final class SecureUtil {
 	 */
 	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
 		algorithm = getAlgorithmAfterWith(algorithm);
-		if("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
-			//对于EC算法，密钥长度有限制，在此使用默认256
+		if ("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
+			// 对于EC算法，密钥长度有限制，在此使用默认256
 			keySize = 256;
 		}
-		
+
 		KeyPairGenerator keyPairGen;
 		try {
 			keyPairGen = KeyPairGenerator.getInstance(algorithm);
@@ -314,7 +316,7 @@ public final class SecureUtil {
 			throw new CryptoException(e);
 		}
 
-		if(keySize <= 0){
+		if (keySize <= 0) {
 			keySize = DEFAULT_KEY_SIZE;
 		}
 		if (null != seed) {
@@ -325,7 +327,7 @@ public final class SecureUtil {
 		}
 		return keyPairGen.generateKeyPair();
 	}
-	
+
 	/**
 	 * 获取用于密钥生成的算法<br>
 	 * 获取XXXwithXXX算法的后半部分算法，如果为ECDSA，返回算法为EC
@@ -336,10 +338,10 @@ public final class SecureUtil {
 	public static String getAlgorithmAfterWith(String algorithm) {
 		Assert.notNull(algorithm, "algorithm must be not null !");
 		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
-		if(indexOfWith > 0) {
+		if (indexOfWith > 0) {
 			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
 		}
-		if("ECDSA".equalsIgnoreCase(algorithm)) {
+		if ("ECDSA".equalsIgnoreCase(algorithm)) {
 			algorithm = "EC";
 		}
 		return algorithm;
@@ -361,7 +363,7 @@ public final class SecureUtil {
 			throw new CryptoException(e);
 		}
 	}
-	
+
 	/**
 	 * 读取密钥库(Java Key Store，JKS) KeyStore文件<br>
 	 * KeyStore文件用于数字证书的密钥对保存<br>
@@ -371,10 +373,10 @@ public final class SecureUtil {
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
-	public static KeyStore readJKSKeyStore(InputStream in, char[] password){
+	public static KeyStore readJKSKeyStore(InputStream in, char[] password) {
 		return readKeyStore("JKS", in, password);
 	}
-	
+
 	/**
 	 * 读取KeyStore文件<br>
 	 * KeyStore文件用于数字证书的密钥对保存<br>
@@ -385,7 +387,7 @@ public final class SecureUtil {
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
-	public static KeyStore readKeyStore(String type, InputStream in, char[] password){
+	public static KeyStore readKeyStore(String type, InputStream in, char[] password) {
 		KeyStore keyStore = null;
 		try {
 			keyStore = KeyStore.getInstance(type);
@@ -395,7 +397,7 @@ public final class SecureUtil {
 		}
 		return keyStore;
 	}
-	
+
 	/**
 	 * 读取X.509 Certification文件<br>
 	 * Certification为证书文件<br>
@@ -405,10 +407,10 @@ public final class SecureUtil {
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
-	public static Certificate readX509Certificate(InputStream in, char[] password){
+	public static Certificate readX509Certificate(InputStream in, char[] password) {
 		return readCertificate("X.509", in, password);
 	}
-	
+
 	/**
 	 * 读取Certification文件<br>
 	 * Certification为证书文件<br>
@@ -419,7 +421,7 @@ public final class SecureUtil {
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
-	public static Certificate readCertificate(String type, InputStream in, char[] password){
+	public static Certificate readCertificate(String type, InputStream in, char[] password) {
 		Certificate certificate;
 		try {
 			certificate = CertificateFactory.getInstance(type).generateCertificate(in);
@@ -428,14 +430,15 @@ public final class SecureUtil {
 		}
 		return certificate;
 	}
-	
+
 	/**
 	 * 获得 Certification
+	 * 
 	 * @param keyStore {@link KeyStore}
 	 * @param alias 别名
 	 * @return {@link Certificate}
 	 */
-	public static Certificate getCertificate(KeyStore keyStore, String alias){
+	public static Certificate getCertificate(KeyStore keyStore, String alias) {
 		try {
 			return keyStore.getCertificate(alias);
 		} catch (Exception e) {
@@ -448,6 +451,7 @@ public final class SecureUtil {
 	/**
 	 * AES加密，生成随机KEY。注意解密时必须使用相同 {@link AES}对象或者使用相同KEY<br>
 	 * 例：
+	 * 
 	 * <pre>
 	 * AES加密：aes().encrypt(data)
 	 * AES解密：aes().decrypt(data)
@@ -462,6 +466,7 @@ public final class SecureUtil {
 	/**
 	 * AES加密<br>
 	 * 例：
+	 * 
 	 * <pre>
 	 * AES加密：aes(key).encrypt(data)
 	 * AES解密：aes(key).decrypt(data)
@@ -473,10 +478,11 @@ public final class SecureUtil {
 	public static AES aes(byte[] key) {
 		return new AES(key);
 	}
-	
+
 	/**
 	 * DES加密，生成随机KEY。注意解密时必须使用相同 {@link DES}对象或者使用相同KEY<br>
 	 * 例：
+	 * 
 	 * <pre>
 	 * DES加密：des().encrypt(data)
 	 * DES解密：des().decrypt(data)
@@ -491,6 +497,7 @@ public final class SecureUtil {
 	/**
 	 * DES加密<br>
 	 * 例：
+	 * 
 	 * <pre>
 	 * DES加密：des(key).encrypt(data)
 	 * DES解密：des(key).decrypt(data)
@@ -502,11 +509,12 @@ public final class SecureUtil {
 	public static DES des(byte[] key) {
 		return new DES(key);
 	}
-	
+
 	/**
 	 * DESede加密（又名3DES、TripleDES），生成随机KEY。注意解密时必须使用相同 {@link DESede}对象或者使用相同KEY<br>
 	 * Java中默认实现为：DESede/ECB/PKCS5Padding<br>
 	 * 例：
+	 * 
 	 * <pre>
 	 * DESede加密：desede().encrypt(data)
 	 * DESede解密：desede().decrypt(data)
@@ -518,11 +526,12 @@ public final class SecureUtil {
 	public static DESede desede() {
 		return new DESede();
 	}
-	
+
 	/**
 	 * DESede加密（又名3DES、TripleDES）<br>
 	 * Java中默认实现为：DESede/ECB/PKCS5Padding<br>
 	 * 例：
+	 * 
 	 * <pre>
 	 * DESede加密：desede(key).encrypt(data)
 	 * DESede解密：desede(key).decrypt(data)
@@ -540,6 +549,7 @@ public final class SecureUtil {
 	/**
 	 * MD5加密<br>
 	 * 例：
+	 * 
 	 * <pre>
 	 * MD5加密：md5().digest(data)
 	 * MD5加密并转为16进制字符串：md5().digestHex(data)
@@ -550,7 +560,7 @@ public final class SecureUtil {
 	public static Digester md5() {
 		return new Digester(DigestAlgorithm.MD5);
 	}
-	
+
 	/**
 	 * MD5加密，生成16进制MD5字符串<br>
 	 * 
@@ -560,7 +570,7 @@ public final class SecureUtil {
 	public static String md5(String data) {
 		return new Digester(DigestAlgorithm.MD5).digestHex(data);
 	}
-	
+
 	/**
 	 * MD5加密，生成16进制MD5字符串<br>
 	 * 
@@ -570,7 +580,7 @@ public final class SecureUtil {
 	public static String md5(InputStream data) {
 		return new Digester(DigestAlgorithm.MD5).digestHex(data);
 	}
-	
+
 	/**
 	 * MD5加密文件，生成16进制MD5字符串<br>
 	 * 
@@ -584,15 +594,15 @@ public final class SecureUtil {
 	/**
 	 * SHA1加密<br>
 	 * 例：<br>
-	 * 		SHA1加密：sha1().digest(data)<br>
-	 * 		SHA1加密并转为16进制字符串：sha1().digestHex(data)<br>
+	 * SHA1加密：sha1().digest(data)<br>
+	 * SHA1加密并转为16进制字符串：sha1().digestHex(data)<br>
 	 * 
 	 * @return {@link Digester}
 	 */
 	public static Digester sha1() {
 		return new Digester(DigestAlgorithm.SHA1);
 	}
-	
+
 	/**
 	 * SHA1加密，生成16进制SHA1字符串<br>
 	 * 
@@ -602,7 +612,7 @@ public final class SecureUtil {
 	public static String sha1(String data) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
-	
+
 	/**
 	 * SHA1加密，生成16进制SHA1字符串<br>
 	 * 
@@ -612,7 +622,7 @@ public final class SecureUtil {
 	public static String sha1(InputStream data) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(data);
 	}
-	
+
 	/**
 	 * SHA1加密文件，生成16进制SHA1字符串<br>
 	 * 
@@ -622,124 +632,134 @@ public final class SecureUtil {
 	public static String sha1(File dataFile) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(dataFile);
 	}
-	
+
 	/**
 	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * 
 	 * @param algorithm {@link HmacAlgorithm}
 	 * @param key 密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, String key){
+	public static HMac hmac(HmacAlgorithm algorithm, String key) {
 		return new HMac(algorithm, StrUtil.utf8Bytes(key));
 	}
-	
+
 	/**
 	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * 
 	 * @param algorithm {@link HmacAlgorithm}
 	 * @param key 密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, byte[] key){
+	public static HMac hmac(HmacAlgorithm algorithm, byte[] key) {
 		return new HMac(algorithm, key);
 	}
-	
+
 	/**
 	 * 创建HMac对象，调用digest方法可获得hmac值
+	 * 
 	 * @param algorithm {@link HmacAlgorithm}
 	 * @param key 密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
-	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key){
+	public static HMac hmac(HmacAlgorithm algorithm, SecretKey key) {
 		return new HMac(algorithm, key);
 	}
-	
+
 	/**
 	 * HmacMD5加密器<br>
 	 * 例：<br>
-	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>
-	 * 		HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
+	 * HmacMD5加密：hmacMd5(key).digest(data)<br>
+	 * HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
+	 * 
 	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
-	public static HMac hmacMd5(String key){
+	public static HMac hmacMd5(String key) {
 		return hmacMd5(StrUtil.utf8Bytes(key));
 	}
-	
+
 	/**
 	 * HmacMD5加密器<br>
 	 * 例：<br>
-	 * 		HmacMD5加密：hmacMd5(key).digest(data)<br>
-	 * 		HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
+	 * HmacMD5加密：hmacMd5(key).digest(data)<br>
+	 * HmacMD5加密并转为16进制字符串：hmacMd5(key).digestHex(data)<br>
+	 * 
 	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 */
-	public static HMac hmacMd5(byte[] key){
+	public static HMac hmacMd5(byte[] key) {
 		return new HMac(HmacAlgorithm.HmacMD5, key);
 	}
-	
+
 	/**
 	 * HmacMD5加密器，生成随机KEY<br>
 	 * 例：<br>
-	 * 		HmacMD5加密：hmacMd5().digest(data)<br>
-	 * 		HmacMD5加密并转为16进制字符串：hmacMd5().digestHex(data)<br>
+	 * HmacMD5加密：hmacMd5().digest(data)<br>
+	 * HmacMD5加密并转为16进制字符串：hmacMd5().digestHex(data)<br>
+	 * 
 	 * @return {@link HMac}
 	 */
-	public static HMac hmacMd5(){
+	public static HMac hmacMd5() {
 		return new HMac(HmacAlgorithm.HmacMD5);
 	}
-	
+
 	/**
 	 * HmacSHA1加密器<br>
 	 * 例：<br>
-	 * 		HmacSHA1加密：hmacSha1(key).digest(data)<br>
-	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
+	 * HmacSHA1加密：hmacSha1(key).digest(data)<br>
+	 * HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
+	 * 
 	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.3.0
 	 */
-	public static HMac hmacSha1(String key){
+	public static HMac hmacSha1(String key) {
 		return hmacSha1(StrUtil.utf8Bytes(key));
 	}
-	
+
 	/**
 	 * HmacSHA1加密器<br>
 	 * 例：<br>
-	 * 		HmacSHA1加密：hmacSha1(key).digest(data)<br>
-	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
+	 * HmacSHA1加密：hmacSha1(key).digest(data)<br>
+	 * HmacSHA1加密并转为16进制字符串：hmacSha1(key).digestHex(data)<br>
+	 * 
 	 * @param key 加密密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 */
-	public static HMac hmacSha1(byte[] key){
+	public static HMac hmacSha1(byte[] key) {
 		return new HMac(HmacAlgorithm.HmacSHA1, key);
 	}
-	
+
 	/**
 	 * HmacSHA1加密器，生成随机KEY<br>
 	 * 例：<br>
-	 * 		HmacSHA1加密：hmacSha1().digest(data)<br>
-	 * 		HmacSHA1加密并转为16进制字符串：hmacSha1().digestHex(data)<br>
+	 * HmacSHA1加密：hmacSha1().digest(data)<br>
+	 * HmacSHA1加密并转为16进制字符串：hmacSha1().digestHex(data)<br>
+	 * 
 	 * @return {@link HMac}
 	 */
-	public static HMac hmacSha1(){
+	public static HMac hmacSha1() {
 		return new HMac(HmacAlgorithm.HmacSHA1);
 	}
-	
+
 	// ------------------------------------------------------------------- 非称加密算法
-	
+
 	/**
 	 * 创建RSA算法对象<br>
 	 * 生成新的私钥公钥对
+	 * 
 	 * @return {@link RSA}
 	 * @since 3.0.5
 	 */
-	public static RSA rsa(){
+	public static RSA rsa() {
 		return new RSA();
 	}
-	
+
 	/**
 	 * 创建RSA算法对象<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -750,10 +770,10 @@ public final class SecureUtil {
 	 * @return {@link RSA}
 	 * @since 3.0.5
 	 */
-	public static RSA rsa(String privateKeyBase64, String publicKeyBase64){
+	public static RSA rsa(String privateKeyBase64, String publicKeyBase64) {
 		return new RSA(privateKeyBase64, publicKeyBase64);
 	}
-	
+
 	/**
 	 * 创建RSA算法对象<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -764,10 +784,10 @@ public final class SecureUtil {
 	 * @return {@link RSA}
 	 * @since 3.0.5
 	 */
-	public static RSA rsa(byte[] privateKey, byte[] publicKey){
+	public static RSA rsa(byte[] privateKey, byte[] publicKey) {
 		return new RSA(privateKey, publicKey);
 	}
-	
+
 	/**
 	 * 创建签名算法对象<br>
 	 * 生成新的私钥公钥对
@@ -776,10 +796,10 @@ public final class SecureUtil {
 	 * @return {@link Sign}
 	 * @since 3.3.0
 	 */
-	public static Sign sign(SignAlgorithm algorithm){
+	public static Sign sign(SignAlgorithm algorithm) {
 		return new Sign(algorithm);
 	}
-	
+
 	/**
 	 * 创建签名算法对象<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -791,10 +811,10 @@ public final class SecureUtil {
 	 * @return {@link Sign}
 	 * @since 3.3.0
 	 */
-	public static Sign sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64){
+	public static Sign sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
 		return new Sign(algorithm, privateKeyBase64, publicKeyBase64);
 	}
-	
+
 	/**
 	 * 创建Sign算法对象<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
@@ -805,10 +825,10 @@ public final class SecureUtil {
 	 * @return {@link Sign}
 	 * @since 3.3.0
 	 */
-	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey){
+	public static Sign sign(SignAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
 		return new Sign(algorithm, privateKey, publicKey);
 	}
-	
+
 	/**
 	 * 对参数做签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
@@ -822,7 +842,7 @@ public final class SecureUtil {
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params) {
 		return signParams(crypto, params, StrUtil.EMPTY, StrUtil.EMPTY, true);
 	}
-	
+
 	/**
 	 * 对参数做签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串
@@ -836,13 +856,13 @@ public final class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull) {
-		if(MapUtil.isEmpty(params)) {
+		if (MapUtil.isEmpty(params)) {
 			return null;
 		}
 		String paramsStr = MapUtil.join(MapUtil.sort(params), separator, keyValueSeparator, isIgnoreNull);
 		return crypto.encryptHex(paramsStr);
 	}
-	
+
 	/**
 	 * 对参数做md5签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
@@ -855,7 +875,7 @@ public final class SecureUtil {
 	public static String signParamsMd5(Map<?, ?> params) {
 		return signParams(DigestAlgorithm.MD5, params);
 	}
-	
+
 	/**
 	 * 对参数做Sha1签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
@@ -868,7 +888,7 @@ public final class SecureUtil {
 	public static String signParamsSha1(Map<?, ?> params) {
 		return signParams(DigestAlgorithm.SHA1, params);
 	}
-	
+
 	/**
 	 * 对参数做Sha256签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
@@ -881,7 +901,7 @@ public final class SecureUtil {
 	public static String signParamsSha256(Map<?, ?> params) {
 		return signParams(DigestAlgorithm.SHA256, params);
 	}
-	
+
 	/**
 	 * 对参数做签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
@@ -895,7 +915,7 @@ public final class SecureUtil {
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params) {
 		return signParams(digestAlgorithm, params, StrUtil.EMPTY, StrUtil.EMPTY, true);
 	}
-	
+
 	/**
 	 * 对参数做签名<br>
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串
@@ -909,13 +929,13 @@ public final class SecureUtil {
 	 * @since 4.0.1
 	 */
 	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull) {
-		if(MapUtil.isEmpty(params)) {
+		if (MapUtil.isEmpty(params)) {
 			return null;
 		}
 		final String paramsStr = MapUtil.join(MapUtil.sort(params), separator, keyValueSeparator, isIgnoreNull);
 		return new Digester(digestAlgorithm).digestHex(paramsStr);
 	}
-	
+
 	// ------------------------------------------------------------------- UUID
 	/**
 	 * 简化的UUID，去掉了横线
@@ -926,5 +946,19 @@ public final class SecureUtil {
 	@Deprecated
 	public static String simpleUUID() {
 		return IdUtil.simpleUUID();
+	}
+
+	/**
+	 * 增加加密解密的算法提供者，例如：
+	 * 
+	 * <pre>
+	 * addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+	 * </pre>
+	 * 
+	 * @param provider 算法提供者
+	 * @since 4.1.22
+	 */
+	public static void addProvider(Provider provider) {
+		Security.addProvider(provider);
 	}
 }
