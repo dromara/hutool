@@ -140,6 +140,7 @@ public class MongoDS implements Closeable {
 
 		String group = StrUtil.EMPTY;
 		if (null == this.serverAddress) {
+			//存在唯一分组
 			if (groups != null && groups.length == 1) {
 				group = groups[0];
 			}
