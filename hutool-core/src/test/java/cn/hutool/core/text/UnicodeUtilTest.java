@@ -3,6 +3,8 @@ package cn.hutool.core.text;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
+
 /**
  * UnicodeUtil 单元测试
  * 
@@ -38,5 +40,12 @@ public class UnicodeUtilTest {
 		String str = "aaa\\U4e2d\\u6587\\u111\\urtyu\\u0026";
 		String res = UnicodeUtil.toString(str);
 		Assert.assertEquals("aaa中文\\u111\\urtyu&", res);
+	}
+	
+	@Test
+	public void convertTest5() {
+		String str = "{\"code\":403,\"enmsg\":\"Product not found\",\"cnmsg\":\"\\u4ea7\\u54c1\\u4e0d\\u5b58\\u5728\\uff0c\\u6216\\u5df2\\u5220\\u9664\",\"data\":null}";
+		String res = UnicodeUtil.toString(str);
+		Assert.assertEquals("{\"code\":403,\"enmsg\":\"Product not found\",\"cnmsg\":\"产品不存在，或已删除\",\"data\":null}", res);
 	}
 }
