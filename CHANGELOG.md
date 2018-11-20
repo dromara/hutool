@@ -9,6 +9,7 @@
 * 【core】        BeanUtil.copyProperties方法支持目标为Map（issue#IOQHZ@Gitee）
 * 【poi】          ExcelWriter增加方法setOnlyAlias，用于特定字段剔除（issue#IOOVK@Gitee）
 * 【captcha】   增加setBackground方法（issue#200@Github）
+* 【core】        NetUtil增加idnToASCII方法（issue#201@Github）
 
 ### Bug修复
 * 【core】        修复Validator.isBirthday
