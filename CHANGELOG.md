@@ -10,6 +10,7 @@
 * 【poi】          ExcelWriter增加方法setOnlyAlias，用于特定字段剔除（issue#IOOVK@Gitee）
 * 【captcha】   增加setBackground方法（issue#200@Github）
 * 【core】        NetUtil增加idnToASCII方法（issue#201@Github）
+* 【log】          增加JBoss-Logging支持（issue#IOVS1@Gitee）
 
 ### Bug修复
 * 【core】        修复Validator.isBirthday

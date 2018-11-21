@@ -1,33 +1,33 @@
-package cn.hutool.log.dialect.log4j;
+package cn.hutool.log.dialect.jboss;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.AbstractLocationAwareLog;
+import cn.hutool.log.level.Level;
 
 /**
- * <a href="http://logging.apache.org/log4j/1.2/index.html">Apache Log4J</a> log.<br>
+ * <a href="https://github.com/jboss-logging">Jboss-Logging</a> log.
  * 
  * @author Looly
  *
  */
-public class Log4jLog extends AbstractLocationAwareLog {
+public class JbossLog extends AbstractLocationAwareLog {
 	private static final long serialVersionUID = -6843151523380063975L;
-	private static final String FQCN = Log4jLog.class.getName();
+	private static final String FQCN = JbossLog.class.getName();
 
-	private final Logger logger;
+	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
-	public Log4jLog(Logger logger) {
+	public JbossLog(Logger logger) {
 		this.logger = logger;
 	}
 
-	public Log4jLog(Class<?> clazz) {
+	public JbossLog(Class<?> clazz) {
 		this(Logger.getLogger(clazz));
 	}
 
-	public Log4jLog(String name) {
+	public JbossLog(String name) {
 		this(Logger.getLogger(name));
 	}
 
@@ -49,7 +49,7 @@ public class Log4jLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void trace(Throwable t, String format, Object... arguments) {
-		logger.log(FQCN, Level.TRACE, StrUtil.format(format, arguments), t);
+		logger.trace(FQCN, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Debug
@@ -65,7 +65,7 @@ public class Log4jLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void debug(Throwable t, String format, Object... arguments) {
-		logger.log(FQCN, Level.DEBUG, StrUtil.format(format, arguments), t);
+		logger.debug(FQCN, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Info
@@ -81,13 +81,13 @@ public class Log4jLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void info(Throwable t, String format, Object... arguments) {
-		logger.log(FQCN, Level.INFO, StrUtil.format(format, arguments), t);
+		logger.info(FQCN, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Warn
 	@Override
 	public boolean isWarnEnabled() {
-		return logger.isEnabledFor(Level.WARN);
+		return logger.isEnabled(Logger.Level.WARN);
 	}
 
 	@Override
@@ -97,13 +97,13 @@ public class Log4jLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
-		logger.log(FQCN, Level.WARN, StrUtil.format(format, arguments), t);
+		logger.warn(FQCN, StrUtil.format(format, arguments), t);
 	}
 
 	// ------------------------------------------------------------------------- Error
 	@Override
 	public boolean isErrorEnabled() {
-		return logger.isEnabledFor(Level.ERROR);
+		return logger.isEnabled(Logger.Level.ERROR);
 	}
 
 	@Override
@@ -113,44 +113,40 @@ public class Log4jLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void error(Throwable t, String format, Object... arguments) {
-		logger.log(FQCN, Level.ERROR, StrUtil.format(format, arguments), t);
+		logger.error(FQCN, StrUtil.format(format, arguments), t);
 	}
-
+	
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(cn.hutool.log.level.Level level, String format, Object... arguments) {
-		log(level, null, format, arguments);
+	public void log(Level level, String format, Object... arguments) {
+		this.log(level, null, format, arguments);
 	}
 	
 	@Override
-	public void log(cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
+	public void log(Level level, Throwable t, String format, Object... arguments) {
 		this.log(FQCN, level, t, format, arguments);
 	}
 	
 	@Override
-	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
-		Level log4jLevel;
+	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
 		switch (level) {
 			case TRACE:
-				log4jLevel = Level.TRACE;
+				logger.trace(fqcn, StrUtil.format(format, arguments), t);
 				break;
 			case DEBUG:
-				log4jLevel = Level.DEBUG;
+				logger.debug(fqcn, StrUtil.format(format, arguments), t);
 				break;
 			case INFO:
-				log4jLevel = Level.INFO;
+				logger.info(fqcn, StrUtil.format(format, arguments), t);
 				break;
 			case WARN:
-				log4jLevel = Level.WARN;
+				logger.warn(fqcn, StrUtil.format(format, arguments), t);
 				break;
 			case ERROR:
-				log4jLevel = Level.ERROR;
+				logger.error(fqcn, StrUtil.format(format, arguments), t);
 				break;
 			default:
 				throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
-		logger.log(fqcn, log4jLevel, StrUtil.format(format, arguments), t);
 	}
-	
-	// ------------------------------------------------------------------------- Private method
 }
