@@ -124,7 +124,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest(String url) {
 		Assert.notBlank(url, "Param [url] can not be blank !");
-		this.url = url;
+		this.url = URLUtil.normalize(url);
 		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}

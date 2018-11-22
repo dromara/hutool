@@ -11,6 +11,7 @@
 * 【captcha】   增加setBackground方法（issue#200@Github）
 * 【core】        NetUtil增加idnToASCII方法（issue#201@Github）
 * 【log】          增加JBoss-Logging支持（issue#IOVS1@Gitee）
+* 【http】        增加URL标准化，从而支持非http开头的URL字符串
 
 ### Bug修复
 * 【core】        修复Validator.isBirthday
