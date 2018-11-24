@@ -15,7 +15,7 @@ import cn.hutool.crypto.symmetric.SymmetricCrypto;
  *
  */
 public class SmTest {
-
+	
 	@Test
 	public void sm3Test() {
 		Digester digester = DigestUtil.digester("sm3");
