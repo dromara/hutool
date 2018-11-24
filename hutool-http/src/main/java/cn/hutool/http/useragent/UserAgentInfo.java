@@ -23,7 +23,7 @@ public class UserAgentInfo {
 	 * 构造
 	 * 
 	 * @param name 名字
-	 * @param pattern 表达式
+	 * @param regex 表达式
 	 */
 	public UserAgentInfo(String name, String regex) {
 		this(name, (null == regex) ? null : Pattern.compile(regex, Pattern.CASE_INSENSITIVE));

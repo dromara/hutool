@@ -13,8 +13,6 @@ public class JbossLogFactory extends LogFactory {
 
 	/**
 	 * 构造
-	 * 
-	 * @param failIfNOP 如果未找到桥接包是否报错
 	 */
 	public JbossLogFactory() {
 		super("JBoss Logging");

@@ -87,7 +87,6 @@ public class EmojiUtil {
 	 * 例如：<code>👦🏿</code> 转换为 <code>:boy:🏿</code>
 	 * 
 	 * @param str 包含Emoji Unicode字符的字符串
-	 * @param fitzpatrickAction {@link FitzpatrickAction} Fitzpatrick类型
 	 * @return 替换后的字符串
 	 */
 	public static String toAlias(String str) {
