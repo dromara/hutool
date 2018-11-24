@@ -8,6 +8,8 @@
 ### 新特性
 * 【extra】       增加基于emoji-java的EmojiUtil
 * 【http】        增加User-agent解析
+* 【crypto】     引入bouncycastle从而对国密SM2、SM3、SM4支持
+* 【poi】          新增ExcelFileUtil，改进错误提示
 
 ### Bug修复
 

@@ -144,7 +144,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(Workbook workbook, String sheetName) {
-		this(ExcelUtil.getOrCreateSheet(workbook, sheetName));
+		this(WorkbookUtil.getOrCreateSheet(workbook, sheetName));
 	}
 
 	/**
