@@ -32,6 +32,7 @@ import javax.crypto.spec.SecretKeySpec;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -91,6 +92,10 @@ public final class SecureUtil {
 	 * @since 3.1.2
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
+		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
+		if(slashIndex > 0) {
+			algorithm = algorithm.substring(0, slashIndex);
+		}
 		KeyGenerator keyGenerator;
 		try {
 			keyGenerator = KeyGenerator.getInstance(algorithm);
