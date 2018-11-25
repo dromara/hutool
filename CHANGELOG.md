@@ -3,6 +3,33 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.2.1
+
+### 新特性
+* 【extra】       增加基于emoji-java的EmojiUtil
+* 【http】        增加User-agent解析
+* 【crypto】     引入bouncycastle从而对国密SM2、SM3、SM4支持
+* 【poi】          新增ExcelFileUtil，改进错误提示
+
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.1.22
+
+### 新特性
+* 【core】        BeanUtil.copyProperties方法支持目标为Map（issue#IOQHZ@Gitee）
+* 【poi】          ExcelWriter增加方法setOnlyAlias，用于特定字段剔除（issue#IOOVK@Gitee）
+* 【captcha】   增加setBackground方法（issue#200@Github）
+* 【core】        NetUtil增加idnToASCII方法（issue#201@Github）
+* 【log】          增加JBoss-Logging支持（issue#IOVS1@Gitee）
+* 【http】        增加URL标准化，从而支持非http开头的URL字符串
+
+### Bug修复
+* 【core】        修复Validator.isBirthday
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.21
 
 ### 新特性

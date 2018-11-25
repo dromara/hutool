@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.1.21</version>
+		<version>4.2.1</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -20,9 +20,9 @@
 		<!-- versions -->
 		<c3p0.version>0.9.5.2</c3p0.version>
 		<dbcp2.version>2.2.0</dbcp2.version>
-		<tomcat-jdbc.version>8.5.27</tomcat-jdbc.version>
-		<druid.version>1.1.7</druid.version>
-		<HikariCP.version>2.4.13</HikariCP.version>
+		<tomcat-jdbc.version>8.5.35</tomcat-jdbc.version>
+		<druid.version>1.1.12</druid.version>
+		<hikariCP.version>2.4.13</hikariCP.version>
 		<mongo.version>3.8.2</mongo.version>
 		<sqlite.version>3.21.0.1</sqlite.version>
 		<hsqldb.version>2.3.6</hsqldb.version>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP-java7</artifactId>
-			<version>${HikariCP.version}</version>
+			<version>${hikariCP.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

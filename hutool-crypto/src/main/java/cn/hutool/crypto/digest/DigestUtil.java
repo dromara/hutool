@@ -372,6 +372,17 @@ public class DigestUtil {
 	public static Digester digester(DigestAlgorithm algorithm) {
 		return new Digester(algorithm);
 	}
+	
+	/**
+	 * 新建摘要器
+	 * 
+	 * @param algorithm 签名算法
+	 * @return Digester
+	 * @since 4.2.1
+	 */
+	public static Digester digester(String algorithm) {
+		return new Digester(algorithm);
+	}
 
 	/**
 	 * 生成Bcrypt加密后的密文

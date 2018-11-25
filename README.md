@@ -5,8 +5,8 @@
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
 <p align="center">
-	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all/4.1.21/jar">
-		<img src="https://img.shields.io/badge/version-4.1.21-blue.svg" ></img>
+	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all/4.1.22/jar">
+		<img src="https://img.shields.io/badge/version-4.1.22-blue.svg" ></img>
 	</a>
 	<a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0.html">
 		<img src="http://img.shields.io/:license-apache-blue.svg" ></img>
@@ -62,6 +62,8 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 - hutool-captcha      图片验证码实现
 - hutool-poi             针对POI中Excel的封装
 
+可以根据需求对每个模块单独引入，也可以通过引入`hutool-all`方式引入所有模块。
+
 -------------------------------------------------------------------------------
 
 ## 文档 
@@ -81,21 +83,21 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.1.21</version>
+    <version>4.1.22</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.1.21'
+compile 'cn.hutool:hutool-all:4.1.22'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.21/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.21/)
+- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.1.22/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.1.22/)
 
 > 注意
 > Hutool只支持JDK7+，对应Android平台没有测试，部分方法并不支持。
