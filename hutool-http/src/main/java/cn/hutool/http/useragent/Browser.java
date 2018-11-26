@@ -39,7 +39,7 @@ public class Browser extends UserAgentInfo {
 			new Browser("Outlook", "microsoft.outlook", Other_Version), //
 			new Browser("Evolution", "evolution", Other_Version), //
 			new Browser("MSIE", "msie", "msie ([\\d\\w\\.\\-]+)"), //
-			new Browser("MSIE11", "trident", "rv:([\\d\\w\\.\\-]+)"), //
+			new Browser("MSIE11", "rv:11", "rv:([\\d\\w\\.\\-]+)"), //
 			new Browser("Gabble", "Gabble", "Gabble\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Yammer Desktop", "AdobeAir", "([\\d\\w\\.\\-]+)\\/Yammer"), //
 			new Browser("Yammer Mobile", "Yammer[\\s]+([\\d\\w\\.\\-]+)", "Yammer[\\s]+([\\d\\w\\.\\-]+)"), //
