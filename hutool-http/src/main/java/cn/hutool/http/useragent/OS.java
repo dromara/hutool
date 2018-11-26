@@ -19,6 +19,7 @@ public class OS extends UserAgentInfo {
 	 * 支持的引擎类型
 	 */
 	public static final List<OS> oses = CollUtil.newArrayList(//
+			new OS("Windows 10","windows nt 10\\.0"),//
 			new OS("Windows Vista", "windows nt 6\\.0"), //
 			new OS("Windows 7", "windows nt 6\\.\\d+"), //
 			new OS("Windows 2003", "windows nt 5\\.2"), //
@@ -27,6 +28,7 @@ public class OS extends UserAgentInfo {
 			new OS("Windows Phone", "windows (ce|phone|mobile)( os)?"), //
 			new OS("Windows", "windows"), //
 			new OS("OSX", "os x (\\d+)[._](\\d+)"), //
+			new OS("Android","Android"),//
 			new OS("Linux", "linux"), //
 			new OS("Wii", "wii"), //
 			new OS("PS3", "playstation 3"), //
