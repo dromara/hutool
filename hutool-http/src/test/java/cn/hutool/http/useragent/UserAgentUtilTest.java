@@ -54,7 +54,7 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("70.0.3538.102", ua.getVersion());
 		Assert.assertEquals("Webkit", ua.getEngine().toString());
 		Assert.assertEquals("537.36", ua.getEngineVersion());
-		Assert.assertEquals("Windows 10", ua.getOs().toString());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
@@ -67,7 +67,7 @@ public class UserAgentUtilTest {
         Assert.assertEquals("11.0", ua.getVersion());
         Assert.assertEquals("Trident", ua.getEngine().toString());
         Assert.assertEquals("7.0", ua.getEngineVersion());
-        Assert.assertEquals("Windows 10", ua.getOs().toString());
+        Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
         Assert.assertEquals("Windows", ua.getPlatform().toString());
         Assert.assertFalse(ua.isMobile());
     }
@@ -106,7 +106,7 @@ public class UserAgentUtilTest {
         Assert.assertEquals("18.17763", ua.getVersion());
         Assert.assertEquals("Webkit", ua.getEngine().toString());
         Assert.assertEquals("537.36", ua.getEngineVersion());
-        Assert.assertEquals("Windows 10", ua.getOs().toString());
+        Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
         Assert.assertEquals("Windows", ua.getPlatform().toString());
         Assert.assertFalse(ua.isMobile());
     }
@@ -121,5 +121,31 @@ public class UserAgentUtilTest {
         Assert.assertEquals("Windows Phone", ua.getOs().toString());
         Assert.assertEquals("Windows Phone", ua.getPlatform().toString());
         Assert.assertTrue(ua.isMobile());
+    }
+    
+    @Test
+    public void parseChromeOnWindowsServer2012R2(){
+	    String uaStr="Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36";
+        UserAgent ua=UserAgentUtil.parse(uaStr);
+        Assert.assertEquals("Chrome", ua.getBrowser().toString());
+        Assert.assertEquals("63.0.3239.132", ua.getVersion());
+        Assert.assertEquals("Webkit", ua.getEngine().toString());
+        Assert.assertEquals("537.36", ua.getEngineVersion());
+        Assert.assertEquals("Windows 8.1 or Winsows Server 2012R2", ua.getOs().toString());
+        Assert.assertEquals("Windows", ua.getPlatform().toString());
+        Assert.assertFalse(ua.isMobile());
+    }
+
+    @Test
+    public void parseIE11OnWindowsServer2008R2(){
+	    String uaStr="Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko";
+        UserAgent ua=UserAgentUtil.parse(uaStr);
+        Assert.assertEquals("MSIE11", ua.getBrowser().toString());
+        Assert.assertEquals("11.0", ua.getVersion());
+        Assert.assertEquals("Trident", ua.getEngine().toString());
+        Assert.assertEquals("7.0", ua.getEngineVersion());
+        Assert.assertEquals("Windows 7 or Windows Server 2008R2", ua.getOs().toString());
+        Assert.assertEquals("Windows", ua.getPlatform().toString());
+        Assert.assertFalse(ua.isMobile());
     }
 }
