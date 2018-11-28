@@ -19,9 +19,9 @@ public class Engine extends UserAgentInfo {
 	 * 支持的引擎类型
 	 */
 	public static final List<Engine> engines = CollUtil.newArrayList(//
+			new Engine("Trident", "trident"), //
 			new Engine("Webkit", "webkit"), //
 			new Engine("Chrome", "chrome"), //
-			new Engine("MSIE", "msie"), //
 			new Engine("Opera", "opera"), //
 			new Engine("Presto", "presto"), //
 			new Engine("Gecko", "gecko"), //
