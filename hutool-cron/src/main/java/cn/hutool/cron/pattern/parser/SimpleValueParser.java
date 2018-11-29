@@ -30,10 +30,10 @@ public class SimpleValueParser implements ValueParser {
 		try {
 			i = Integer.parseInt(value);
 		} catch (NumberFormatException e) {
-			throw new CronException(e, "Invalid integer value: [{}]", value);
+			throw new CronException(e, "Invalid integer value: '{}'", value);
 		}
 		if (i < min || i > max) {
-			throw new CronException("Value [{}] out of range: [{} , {}]", i, min, max);
+			throw new CronException("Value {} out of range: [{} , {}]", i, min, max);
 		}
 		return i;
 	}
