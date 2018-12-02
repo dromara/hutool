@@ -573,11 +573,11 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为生日<br>
+	 * 验证是否为生日
 	 * 
-	 * @param year 年
-	 * @param month 月
-	 * @param day 日
+	 * @param year 年，从1900年开始计算
+	 * @param month 月，从1开始计数
+	 * @param day 日，从1开始计数
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(int year, int month, int day) {
