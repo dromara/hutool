@@ -9,6 +9,7 @@
 * 【json】        JSONObject调整构造方法，支持对象转为JSON可选是否有序（issue#IP1Q2@Gitee）
 * 【core】        BeanUtil增加hasGetter和hasSetter方法
 * 【core】        StrUtil增加isUperCase和isLowerCase方法，增加removeAll和removeAllLineBreaks（issue#IP7PT@Gitee）
+* 【db】          增加PostgreSQL的单元测试
 
 ### Bug修复
 * 【cron】        修复L代表的最后一天无效问题（issue#IP5PB@Gitee）

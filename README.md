@@ -5,8 +5,8 @@
 	<strong>A set of tools that keep Java sweet.</strong>
 </p>
 <p align="center">
-	<a target="_blank" href="https://search.maven.org/artifact/cn.hutool/hutool-all/4.2.2/jar">
-		<img src="https://img.shields.io/badge/version-4.2.2-blue.svg" ></img>
+	<a target="_blank" href="https://search.maven.org/search?q=g:%22cn.hutool%22%20AND%20a:%22hutool-all%22">
+		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" ></img>
 	</a>
 	<a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0.html">
 		<img src="http://img.shields.io/:license-apache-blue.svg" ></img>
