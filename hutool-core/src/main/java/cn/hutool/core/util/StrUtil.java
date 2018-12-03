@@ -3141,7 +3141,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 指定范围内查找字符串，忽略大小写<br>
+	 * 指定范围内查找字符串，忽略大小写
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串
@@ -3154,6 +3154,7 @@ public class StrUtil {
 
 	/**
 	 * 指定范围内查找字符串，忽略大小写<br>
+	 * fromIndex 为搜索起始位置，从后往前计数
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串
@@ -3167,6 +3168,7 @@ public class StrUtil {
 
 	/**
 	 * 指定范围内查找字符串<br>
+	 * fromIndex 为搜索起始位置，从后往前计数
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串

@@ -145,6 +145,13 @@ public class StrUtilTest {
 		Assert.assertEquals(2, StrUtil.indexOfIgnoreCase("aabaabaa", "", 2));
 		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("abc", "", 9));
 	}
+	
+	@Test
+	public void lastIndexOfTest() {
+		String a = "aabbccddcc";
+		int lastIndexOf = StrUtil.lastIndexOf(a, "c", 0, false);
+		Assert.assertEquals(-1, lastIndexOf);
+	}
 
 	@Test
 	public void lastIndexOfIgnoreCaseTest() {

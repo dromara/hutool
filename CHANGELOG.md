@@ -10,6 +10,8 @@
 * 【core】        BeanUtil增加hasGetter和hasSetter方法
 * 【core】        StrUtil增加isUperCase和isLowerCase方法，增加removeAll和removeAllLineBreaks（issue#IP7PT@Gitee）
 * 【db】          增加PostgreSQL的单元测试
+* 【core】       ArrayUtil增加sub方法泛型支持
+* 【core】       从Apache-commons-lang3移植Builder（issue#IPALY@Gitee）
 
 ### Bug修复
 * 【cron】        修复L代表的最后一天无效问题（issue#IP5PB@Gitee）
