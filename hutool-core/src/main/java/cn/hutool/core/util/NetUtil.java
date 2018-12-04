@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.IDN;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -448,6 +449,17 @@ public class NetUtil {
 		String[] cidrIps = cidrIp.split("\\.");
 		int cidrIpAddr = (Integer.parseInt(cidrIps[0]) << 24) | (Integer.parseInt(cidrIps[1]) << 16) | (Integer.parseInt(cidrIps[2]) << 8) | Integer.parseInt(cidrIps[3]);
 		return (ipAddr & mask) == (cidrIpAddr & mask);
+	}
+
+	/**
+	 * Unicode域名转puny code
+	 * 
+	 * @param unicode Unicode域名
+	 * @return puny code
+	 * @since 4.1.22
+	 */
+	public static String idnToASCII(String unicode) {
+		return IDN.toASCII(unicode);
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start

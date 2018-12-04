@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.util.NumberUtil;
@@ -574,17 +573,17 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为生日<br>
+	 * 验证是否为生日
 	 * 
-	 * @param year 年
-	 * @param month 月
-	 * @param day 日
+	 * @param year 年，从1900年开始计算
+	 * @param month 月，从1开始计数
+	 * @param day 日，从1开始计数
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(int year, int month, int day) {
 		// 验证年
 		int thisYear = DateUtil.thisYear();
-		if (year < 1930 || year > thisYear) {
+		if (year < 1900 || year > thisYear) {
 			return false;
 		}
 
@@ -626,9 +625,9 @@ public class Validator {
 		if (isMactchRegex(BIRTHDAY, value)) {
 			Matcher matcher = BIRTHDAY.matcher(value);
 			if (matcher.find()) {
-				int year = Convert.toInt(matcher.group(1));
-				int month = Convert.toInt(matcher.group(3));
-				int day = Convert.toInt(matcher.group(5));
+				int year = Integer.parseInt(matcher.group(1));
+				int month = Integer.parseInt(matcher.group(3));
+				int day = Integer.parseInt(matcher.group(5));
 				return isBirthday(year, month, day);
 			}
 		}

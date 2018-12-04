@@ -1,5 +1,6 @@
 package cn.hutool.db.ds.c3p0;
 
+import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,18 +100,15 @@ public class C3p0DSFactory extends DSFactory {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
 		ds.setJdbcUrl(url);
-		ds.setUser(config.getAndRemoveStr(KEY_ALIAS_USER));
-		ds.setPassword(config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
+		// 自动识别Driver
 		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
 		try {
-			if (StrUtil.isNotBlank(driver)) {
-				ds.setDriverClass(driver);
-			} else {
-				ds.setDriverClass(DriverUtil.identifyDriver(url));
-			}
-		} catch (Exception e) {
+			ds.setDriverClass(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
+		} catch (PropertyVetoException e) {
 			throw new DbRuntimeException(e);
 		}
+		ds.setUser(config.getAndRemoveStr(KEY_ALIAS_USER));
+		ds.setPassword(config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
 
 		config.toBean(ds);// 注入属性
 

@@ -1,10 +1,12 @@
 package cn.hutool.core.util;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 
 /**
@@ -14,6 +16,28 @@ import cn.hutool.core.map.MapUtil;
  * @since 3.3.0
  */
 public class EnumUtil {
+
+	/**
+	 * 指定类是否为Enum类
+	 * 
+	 * @param clazz 类
+	 * @return 是否为Enum类
+	 */
+	public static boolean isEnum(Class<?> clazz) {
+		Assert.notNull(clazz);
+		return clazz.isEnum();
+	}
+	
+	/**
+	 * 指定类是否为Enum类
+	 * 
+	 * @param obj 类
+	 * @return 是否为Enum类
+	 */
+	public static boolean isEnum(Object obj) {
+		Assert.notNull(obj);
+		return obj.getClass().isEnum();
+	}
 
 	/**
 	 * Enum对象转String，调用{@link Enum#name()} 方法
@@ -37,6 +61,37 @@ public class EnumUtil {
 	 */
 	public static <T extends Enum<T>> T fromString(Class<T> enumClass, String value) {
 		return Enum.valueOf(enumClass, value);
+	}
+	
+	/**
+	 * 模糊匹配转换为枚举，给定一个值，匹配枚举中定义的所有字段名（包括name属性），一旦匹配到返回这个枚举对象，否则返回null
+	 * 
+	 * @param enumClass 枚举类
+	 * @param value 值
+	 * @return 匹配到的枚举对象，未匹配到返回null
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Enum<T>> T likeValueOf(Class<T> enumClass, Object value) {
+		if(value instanceof CharSequence) {
+			value = value.toString().trim();
+		}
+		
+		final Field[] fields = ReflectUtil.getFields(enumClass);
+		final Enum<?>[] enums = enumClass.getEnumConstants();
+		String fieldName;
+		for (Field field : fields) {
+			fieldName = field.getName();
+			if (field.getType().isEnum() || "ENUM$VALUES".equals(fieldName) || "ordinal".equals(fieldName)) {
+				//跳过一些特殊字段
+				continue;
+			}
+			for (Enum<?> enumObj : enums) {
+				if(ObjectUtil.equal(value, ReflectUtil.getFieldValue(enumObj, field))) {
+					return (T) enumObj;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -74,6 +129,34 @@ public class EnumUtil {
 			list.add(ReflectUtil.getFieldValue(e, fieldName));
 		}
 		return list;
+	}
+
+	/**
+	 * 获得枚举类中所有的字段名<br>
+	 * 除用户自定义的字段名，也包括“name”字段，例如：
+	 * 
+	 * <pre>
+	*   EnumUtil.getFieldNames(Color.class) == ["name", "index"]
+	 * </pre>
+	 * 
+	 * @param clazz 枚举类
+	 * @return 字段名列表
+	 * @since 4.1.20
+	 */
+	public static List<String> getFieldNames(Class<? extends Enum<?>> clazz) {
+		final List<String> names = new ArrayList<>();
+		final Field[] fields = ReflectUtil.getFields(clazz);
+		String name;
+		for (Field field : fields) {
+			name = field.getName();
+			if (field.getType().isEnum() || name.contains("$VALUES") || "ordinal".equals(name)) {
+				continue;
+			}
+			if(false == names.contains(name)) {
+				names.add(name);
+			}
+		}
+		return names;
 	}
 
 	/**

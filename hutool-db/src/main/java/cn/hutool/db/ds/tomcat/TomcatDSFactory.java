@@ -101,15 +101,15 @@ public class TomcatDSFactory extends DSFactory {
 		final PoolProperties poolProps = new PoolProperties();
 
 		// 基本信息
-		poolProps.setUrl(getAndRemoveProperty(config, "url", "jdbcUrl"));
-		poolProps.setUsername(getAndRemoveProperty(config, "username", "user"));
-		poolProps.setPassword(getAndRemoveProperty(config, "password", "pass"));
-		final String driver = getAndRemoveProperty(config, "driver", "driverClassName");
-		if (StrUtil.isNotBlank(driver)) {
-			poolProps.setDriverClassName(driver);
-		} else {
-			poolProps.setDriverClassName(DriverUtil.identifyDriver(poolProps.getUrl()));
+		final String url = config.getAndRemoveStr(KEY_ALIAS_URL);
+		if (StrUtil.isBlank(url)) {
+			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
+		poolProps.setUrl(url);
+		final String driver = getAndRemoveProperty(config, "driver", "driverClassName");
+		poolProps.setDriverClassName(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
+		poolProps.setUsername(config.getAndRemoveStr(KEY_ALIAS_USER));
+		poolProps.setPassword(config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
 
 		// 扩展属性
 		config.toBean(poolProps);

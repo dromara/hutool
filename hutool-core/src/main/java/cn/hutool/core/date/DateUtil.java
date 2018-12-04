@@ -99,7 +99,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 当前时间long
+	 * 当前时间的时间戳
 	 * 
 	 * @param isNano 是否为高精度时间
 	 * @return 时间
@@ -109,7 +109,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 当前时间秒数
+	 * 当前时间的时间戳（秒）
 	 * 
 	 * @return 当前时间秒数
 	 * @since 4.0.0

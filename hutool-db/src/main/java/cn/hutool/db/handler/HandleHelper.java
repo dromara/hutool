@@ -109,7 +109,7 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
-		return handleRow(Entity.create(), columnCount, meta, rs, false);
+		return handleRow(Entity.create(), columnCount, meta, rs, true);
 	}
 
 	/**
@@ -120,21 +120,22 @@ public class HandleHelper {
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
-	 * @param withTableName 是否包含表名
+	 * @param withMetaInfo 是否包含表名、字段名等元信息
 	 * @return 每一行的Entity
 	 * @throws SQLException SQL执行异常
 	 * @since 3.3.1
 	 */
-	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withTableName) throws SQLException {
-		if (withTableName) {
-			row.setTableName(meta.getTableName(1));
-		}
+	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withMetaInfo) throws SQLException {
 		String columnLabel;
 		int type;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);
 			type = meta.getColumnType(i);
 			row.put(columnLabel, getColumnValue(rs, columnLabel, type, null));
+		}
+		if (withMetaInfo) {
+			row.setTableName(meta.getTableName(1));
+			row.setFieldNames(row.keySet());
 		}
 		return row;
 	}

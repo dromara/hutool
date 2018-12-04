@@ -1,11 +1,11 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.builder;
 
 /**
  * 建造者模式接口定义
  * 
  * @param <T> 建造对象类型
  * @author Looly
- * @since 4.1.9
+ * @since 4.2.2
  */
 public interface Builder<T> {
 	/**

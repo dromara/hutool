@@ -11,6 +11,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.BouncyCastleSupport;
 import cn.hutool.crypto.CryptoException;
 
 /**
@@ -19,7 +20,7 @@ import cn.hutool.crypto.CryptoException;
  * @author Looly
  *
  */
-public class Digester {
+public class Digester extends BouncyCastleSupport{
 	
 	private MessageDigest digest;
 	

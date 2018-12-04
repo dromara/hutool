@@ -8,6 +8,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.crypto.BouncyCastleSupport;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -17,7 +18,7 @@ import cn.hutool.crypto.SecureUtil;
  * @author Looly
  * @since 3.3.0
  */
-public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
+public class BaseAsymmetric<T extends BaseAsymmetric<T>> extends BouncyCastleSupport{
 
 	/** 算法 */
 	protected String algorithm;
@@ -166,7 +167,8 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>> {
 	 * @return 获得公钥
 	 */
 	public String getPublicKeyBase64() {
-		return Base64.encode(getPublicKey().getEncoded());
+		final PublicKey publicKey = getPublicKey();
+		return (null == publicKey) ? null : Base64.encode(publicKey.getEncoded());
 	}
 
 	/**

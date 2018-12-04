@@ -234,7 +234,7 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
-	 * 打开指定目录
+	 * 打开指定目录，如果指定路径非目录或不存在返回false
 	 * 
 	 * @param directory directory
 	 * @return 是否打开目录
@@ -247,10 +247,10 @@ public class Sftp extends AbstractFtp {
 			channel.cd(directory.replaceAll("\\\\", "/"));
 			return true;
 		} catch (SftpException e) {
-			throw new JschRuntimeException(e);
+			return false;
 		}
 	}
-
+	
 	/**
 	 * 删除文件
 	 * 

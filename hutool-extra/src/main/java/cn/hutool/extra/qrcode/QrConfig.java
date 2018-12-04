@@ -5,11 +5,10 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
-import org.apache.velocity.texen.util.FileUtil;
-
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ImageUtil;
 

@@ -178,23 +178,17 @@ public class ClassLoaderUtil {
 				clazz = Class.forName(name, isInitialized, classLoader);
 			} catch (ClassNotFoundException ex) {
 				// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
-				int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
-				if (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
-					final String innerClassName = name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
-					try {
-						clazz = Class.forName(innerClassName, isInitialized, classLoader);
-					} catch (ClassNotFoundException ex2) {
-						// 尝试获取内部类失败时，忽略之。
-					}
+				clazz = tryLoadInnerClass(name, classLoader, isInitialized);
+				if(null == clazz) {
+					throw new UtilException(ex);
 				}
-				throw new UtilException(ex);
 			}
 		}
 
 		// 加入缓存并返回
 		return classCache.put(name, clazz);
 	}
-
+	
 	/**
 	 * 加载原始类型的类。包括原始类型、原始类型数组和void
 	 * 
@@ -242,4 +236,29 @@ public class ClassLoaderUtil {
 			return false;
 		}
 	}
+	
+	// ----------------------------------------------------------------------------------- Private method start
+	/**
+	 * 尝试转换并加载内部类，例如java.lang.Thread.State =》java.lang.Thread$State
+	 * 
+	 * @param name 类名
+	 * @param classLoader {@link ClassLoader}，{@code null} 则使用系统默认ClassLoader
+	 * @param isInitialized 是否初始化类（调用static模块内容和初始化static属性）
+	 * @return 类名对应的类
+	 * @since 4.1.20
+	 */
+	private static Class<?> tryLoadInnerClass(String name, ClassLoader classLoader, boolean isInitialized){
+		// 尝试获取内部类，例如java.lang.Thread.State =》java.lang.Thread$State
+		final int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
+		if (lastDotIndex > 0) {// 类与内部类的分隔符不能在第一位，因此>0
+			final String innerClassName = name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
+			try {
+				return Class.forName(innerClassName, isInitialized, classLoader);
+			} catch (ClassNotFoundException ex2) {
+				// 尝试获取内部类失败时，忽略之。
+			}
+		}
+		return null;
+	}
+	// ----------------------------------------------------------------------------------- Private method end
 }

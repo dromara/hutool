@@ -112,7 +112,7 @@ public class AES extends SymmetricCrypto {
 	 * @param key 密钥，支持三种密钥长度：128、192、256位
 	 */
 	public AES(String mode, String padding, byte[] key) {
-		this(mode, padding, SecureUtil.generateKey("AES", key), null);
+		this(mode, padding, key, null);
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class AES extends SymmetricCrypto {
 	 * @param iv 加盐
 	 */
 	public AES(String mode, String padding, byte[] key, byte[] iv) {
-		this(mode, padding, SecureUtil.generateKey("AES", key), null == iv ? null : new IvParameterSpec(iv));
+		this(mode, padding, SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue(), key), null == iv ? null : new IvParameterSpec(iv));
 	}
 	
 	/**

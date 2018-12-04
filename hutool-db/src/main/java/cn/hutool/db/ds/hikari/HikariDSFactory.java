@@ -2,7 +2,6 @@ package cn.hutool.db.ds.hikari;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
@@ -14,8 +13,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
+import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
+import cn.hutool.setting.dialect.Props;
 
 /**
  * HikariCP数据源工厂类
@@ -92,25 +93,34 @@ public class HikariDSFactory extends DSFactory {
 			group = StrUtil.EMPTY;
 		}
 
-		final Properties config = setting.getProperties(group);
+		final Props config = setting.getProps(group);
 		if (CollectionUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No HikariCP config for group: [{}]", group);
 		}
 		
 		// 规范化属性名
-		if (false == config.containsKey("jdbcUrl") && config.containsKey("url")) {
-			config.put("jdbcUrl", config.remove("url"));
+		final String url = config.getAndRemoveStr(KEY_ALIAS_URL);
+		if (StrUtil.isBlank(url)) {
+			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
-		if (false == config.containsKey("username") && config.containsKey("user")) {
-			config.put("username", config.remove("user"));
+		config.put("jdbcUrl", url);
+		//自动识别Driver
+		String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
+		if(StrUtil.isBlank(driver)) {
+			driver = DriverUtil.identifyDriver(url);
 		}
-		if (false == config.containsKey("password") && config.containsKey("pass")) {
-			config.put("password", config.remove("pass"));
+		if(null != driver) {
+			config.put("driverClassName", driver);
 		}
-		if (false == config.containsKey("driverClassName") && config.containsKey("driver")) {
-			config.put("driverClassName", config.remove("driver"));
+		final String user = config.getAndRemoveStr(KEY_ALIAS_USER);
+		if(null != user) {
+			config.put("username", user);
 		}
-
+		final String pass = config.getAndRemoveStr(KEY_ALIAS_PASSWORD);
+		if(null != pass) {
+			config.put("password", pass);
+		}
+		
 		final HikariDataSource ds = new HikariDataSource(new HikariConfig(config));
 		return ds;
 	}

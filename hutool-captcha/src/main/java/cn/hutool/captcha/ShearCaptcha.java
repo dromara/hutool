@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import cn.hutool.core.util.ImageUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 
 /**
@@ -54,11 +55,10 @@ public class ShearCaptcha extends AbstractCaptcha {
 
 	@Override
 	public Image createImage(String code) {
-		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = ImageUtil.createGraphics(image, Color.WHITE);
+		final BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
+		final Graphics2D g = ImageUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
 
 		// 画字符串
-		g.setColor(Color.black);
 		g.setFont(font);
 		final int len = this.generator.getLength();
 		int charWidth = width / (len + 2);

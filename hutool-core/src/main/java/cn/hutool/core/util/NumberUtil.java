@@ -1197,13 +1197,14 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 是否是质数<br>
+	 * 是否是质数（素数）<br>
 	 * 质数表的质数又称素数。指整数在一个大于1的自然数中,除了1和此整数自身外,没法被其他自然数整除的数。
 	 * 
 	 * @param n 数字
 	 * @return 是否是质数
 	 */
 	public static boolean isPrimes(int n) {
+		Assert.isTrue(n > 1, "The number must be > 1");
 		for (int i = 2; i <= Math.sqrt(n); i++) {
 			if (n % i == 0) {
 				return false;
@@ -2140,7 +2141,8 @@ public class NumberUtil {
 			// 04表示8进制数
 			return Integer.parseInt(number.substring(1), 8);
 		}
-		return Integer.parseInt(number);
+
+		return Integer.parseInt(removeNumberFlag(number));
 	}
 
 	/**
@@ -2175,7 +2177,7 @@ public class NumberUtil {
 			// 04表示8进制数
 			return Long.parseLong(number.substring(1), 8);
 		}
-		return Long.parseLong(number);
+		return Long.parseLong(removeNumberFlag(number));
 	}
 
 	/**
@@ -2186,6 +2188,7 @@ public class NumberUtil {
 	 * @since 4.1.15
 	 */
 	public static Number parseNumber(String numberStr) {
+		numberStr = removeNumberFlag(numberStr);
 		try {
 			return NumberFormat.getInstance().parse(numberStr);
 		} catch (ParseException e) {
@@ -2208,6 +2211,21 @@ public class NumberUtil {
 		} else {
 			return selectNum * mathNode(selectNum - 1);
 		}
+	}
+
+	/**
+	 * 去掉数字尾部的数字标识，例如12D，44.0F，22L中的最后一个字母
+	 * @param number 数字字符串
+	 * @return 去掉标识的字符串
+	 */
+	private static String removeNumberFlag(String number) {
+		// 去掉类型标识的结尾
+		final int lastPos = number.length() - 1;
+		final char lastCharUpper = Character.toUpperCase(number.charAt(lastPos));
+		if ('D' == lastCharUpper || 'L' == lastCharUpper || 'F' == lastCharUpper) {
+			number = StrUtil.subPre(number, lastPos);
+		}
+		return number;
 	}
 	// ------------------------------------------------------------------------------------------- Private method end
 }

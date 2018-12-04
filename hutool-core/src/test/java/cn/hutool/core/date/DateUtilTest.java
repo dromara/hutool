@@ -127,7 +127,7 @@ public class DateUtilTest {
 		Assert.assertEquals("2018-07-31 00:00:00", list.get(2).toString());
 		Assert.assertEquals("2018-08-31 00:00:00", list.get(3).toString());
 	}
-
+	
 	@Test
 	public void betweenTest() {
 		String dateStr1 = "2017-03-01 22:34:23";

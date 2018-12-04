@@ -14,6 +14,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
+import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
 
@@ -101,24 +102,22 @@ public class DruidDSFactory extends DSFactory {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
 		ds.setUrl(url);
+		// 自动识别Driver
+		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
+		ds.setDriverClassName(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
 		ds.setUsername(config.getAndRemoveStr(KEY_ALIAS_USER));
 		ds.setPassword(config.getAndRemoveStr(KEY_ALIAS_PASSWORD));
-		final String driver = config.getAndRemoveStr(KEY_ALIAS_DRIVER);
-		// 在未提供JDBC驱动的情况下，Druid会自动识别驱动
-		if (StrUtil.isNotBlank(driver)) {
-			ds.setDriverClassName(driver);
-		}
 
 		// 规范化属性名
-		Properties config2 = new Properties();
+		Properties druidProps = new Properties();
 		String keyStr;
 		for (Entry<String, String> entry : config.entrySet()) {
 			keyStr = StrUtil.addPrefixIfNot(entry.getKey(), "druid.");
-			config2.put(keyStr, entry.getValue());
+			druidProps.put(keyStr, entry.getValue());
 		}
 
 		// 连接池信息
-		ds.configFromPropety(config2);
+		ds.configFromPropety(druidProps);
 
 		// 检查关联配置，在用户未设置某项配置时，
 		if (null == ds.getValidationQuery()) {

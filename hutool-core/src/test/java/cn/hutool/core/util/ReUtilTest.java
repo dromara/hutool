@@ -2,12 +2,14 @@ package cn.hutool.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Func1;
 
 public class ReUtilTest {
 	final String content = "ZZZaaabbbccc中文1234";
@@ -74,6 +76,19 @@ public class ReUtilTest {
 		//通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
 		//此处把1234替换为 ->1234<-
 		String replaceAll = ReUtil.replaceAll(content, "(\\d+)", "->$1<-");
+		Assert.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
+	}
+	
+	@Test
+	public void replaceAllTest2() {
+		//此处把1234替换为 ->1234<-
+		String replaceAll = ReUtil.replaceAll(this.content, "(\\d+)", new Func1<Matcher, String>() {
+			
+			@Override
+			public String call(Matcher parameters) {
+				return "->" + parameters.group(1) + "<-";
+			}
+		});
 		Assert.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 	}
 	

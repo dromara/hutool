@@ -426,4 +426,14 @@ public class HashUtil {
 		hash |= fnvHash(str);
 		return hash;
 	}
+	
+	/**
+	 * 根据对象的内存地址生成相应的Hash值
+	 * @param obj 对象
+	 * @return hash值
+	 * @since 4.2.2
+	 */
+	public static int identityHashCode(Object obj) {
+		return System.identityHashCode(obj);
+	}
 }

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.1.20-SNAPSHOT</version>
+		<version>4.2.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -28,6 +28,7 @@
 		<jsch.version>0.1.54</jsch.version>
 		<zxing.version>3.3.3</zxing.version>
 		<net.version>3.6</net.version>
+		<emoji-java.version>4.0.0</emoji-java.version>
 	</properties>
 
 	<dependencies>
@@ -109,7 +110,6 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-
 		<!-- 二维码 -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>
@@ -118,11 +118,19 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-
+		<!-- FTP工具 -->
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
 			<version>${net.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<!-- Emoji工具依赖 -->
+		<dependency>
+			<groupId>com.vdurmont</groupId>
+			<artifactId>emoji-java</artifactId>
+			<version>${emoji-java.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

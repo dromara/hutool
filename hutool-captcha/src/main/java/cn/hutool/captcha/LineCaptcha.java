@@ -1,5 +1,6 @@
 package cn.hutool.captcha;
 
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -7,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
 import cn.hutool.core.util.ImageUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 
 /**
@@ -47,7 +49,7 @@ public class LineCaptcha extends AbstractCaptcha {
 		// 图像buffer
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final ThreadLocalRandom random = RandomUtil.getRandom();
-		final Graphics2D g = ImageUtil.createGraphics(image, ImageUtil.randomColor(random));
+		final Graphics2D g = ImageUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
 
 		// 干扰线
 		drawInterfere(g, random);

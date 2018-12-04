@@ -955,6 +955,26 @@ public class ArrayUtil {
 	public static <T> boolean contains(T[] array, T value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
 	}
+	
+	/**
+	 * 数组中是否包含指定元素中的任意一个
+	 * 
+	 * @param <T> 数组元素类型
+	 * 
+	 * @param array 数组
+	 * @param values 被检查的多个元素
+	 * @return 是否包含指定元素中的任意一个
+	 * @since 4.1.20
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> boolean containsAny(T[] array, T... values) {
+		for (T value : values) {
+			if(contains(array, value)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 数组中是否包含元素，忽略大小写
@@ -1777,7 +1797,8 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值
+	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值<br>
+	 * 如果数组下标越界，返回null
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param array 数组对象
@@ -1790,7 +1811,11 @@ public class ArrayUtil {
 		if (index < 0) {
 			index += Array.getLength(array);
 		}
-		return (T) Array.get(array, index);
+		try {
+			return (T) Array.get(array, index);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -1807,6 +1832,41 @@ public class ArrayUtil {
 			result[i] = get(array, i);
 		}
 		return result;
+	}
+	
+	/**
+	 * 获取子数组
+	 * 
+	 * @param array 数组
+	 * @param start 开始位置（包括）
+	 * @param end 结束位置（不包括）
+	 * @return 新的数组
+	 * @since 4.2.2
+	 * @see Arrays#copyOfRange(Object[], int, int)
+	 */
+	public static <T> T[] sub(T[] array, int start, int end) {
+		int length = length(array);
+		if (start < 0) {
+			start += length;
+		}
+		if (end < 0) {
+			end += length;
+		}
+		if (start == length) {
+			return newArray(0);
+		}
+		if (start > end) {
+			int tmp = start;
+			start = end;
+			end = tmp;
+		}
+		if (end > length) {
+			if (start >= length) {
+				return newArray(0);
+			}
+			end = length;
+		}
+		return Arrays.copyOfRange(array, start, end);
 	}
 
 	/**

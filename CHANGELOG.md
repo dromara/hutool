@@ -3,6 +3,65 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.2.2
+
+### 新特性
+* 【json】        JSONObject调整构造方法，支持对象转为JSON可选是否有序（issue#IP1Q2@Gitee）
+* 【core】        BeanUtil增加hasGetter和hasSetter方法
+* 【core】        StrUtil增加isUperCase和isLowerCase方法，增加removeAll和removeAllLineBreaks（issue#IP7PT@Gitee）
+* 【db】          增加PostgreSQL的单元测试
+* 【core】       ArrayUtil增加sub方法泛型支持
+* 【core】       从Apache-commons-lang3移植Builder（issue#IPALY@Gitee）
+* 【core】       增加Func1接口，ReUtil和StrUtil增加Func1参数的replace方法（pr#27@Gitee）
+
+### Bug修复
+* 【cron】        修复L代表的最后一天无效问题（issue#IP5PB@Gitee）
+* 【core】        修复修复验证15位身份证月的判断问题（issue#IP70D@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.2.1
+
+### 新特性
+* 【extra】       增加基于emoji-java的EmojiUtil
+* 【http】        增加User-agent解析
+* 【crypto】     引入bouncycastle从而对国密SM2、SM3、SM4支持
+* 【poi】          新增ExcelFileUtil，改进错误提示
+
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.1.22
+
+### 新特性
+* 【core】        BeanUtil.copyProperties方法支持目标为Map（issue#IOQHZ@Gitee）
+* 【poi】          ExcelWriter增加方法setOnlyAlias，用于特定字段剔除（issue#IOOVK@Gitee）
+* 【captcha】   增加setBackground方法（issue#200@Github）
+* 【core】        NetUtil增加idnToASCII方法（issue#201@Github）
+* 【log】          增加JBoss-Logging支持（issue#IOVS1@Gitee）
+* 【http】        增加URL标准化，从而支持非http开头的URL字符串
+
+### Bug修复
+* 【core】        修复Validator.isBirthday
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.1.21
+
+### 新特性
+* 【core】        RuntimeUtil增加getErrorResult方法（issue#199@Github）
+* 【core】        ReflectUtil增加hasField方法（感谢@【杭州】J辉）
+* 【core】        BeanUtil增加toBean方法（感谢@【杭州】J辉）
+* 【db】           增加对HSQLDB支持，改进Driver自定识别
+
+### Bug修复
+* 【core】        修复EnumUtil.getFieldNames定义name属性重复问题（感谢@【杭州】J辉）
+* 【json】         修复List多层嵌套toBean转换失败问题
+* 【core】        修复ObjectUtil.toString问题（issue#IONLA@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.1.20
 
 ### 新特性
@@ -10,8 +69,26 @@
 * 【core】        改进ZipUtil错误提示
 * 【core】        DateUtil.parse方法读取时间时，年月日按照当天计算。（issue#INYCF@Gitee）
 * 【core】        DateUtil.parse改进支持UTC时间格式。
+* 【db】          MongoDS支持客户端验证（issue#IO2DS@Gitee）
+* 【core】        改进字符串转集合和数组（支持逗号分隔形式）（pr#26@Gitee）
+* 【core】        改进DateConverter（issue#IOCWR@Gitee）
+* 【core】        改进NumberUtil中转数字，支持字母结尾（issue#IOCWR@Gitee）
+* 【poi】          ExcelUtil增加indexToColName和colNameToIndex方法（issue#IO8ZH@Gitee）
+* 【core】        Convert.toList修改为泛型（issue#IOJZV@Gitee）
+* 【core】        BeanDesc中属性修改为使用LinkedHashMap存储
+* 【core】        ArrayUtil.get和CollUtil.get对于越界返回null而非抛出异常（issue#IOFKL@Gitee）
+* 【core】        EnumUtil增加likeValueOf方法（issue#IOFKL@Gitee）
+* 【core】        删除CollUtil.sortPageAll2方法，增加ColllUtil.page方法
 
 ### Bug修复
+* 【core】        修正CollUtil.sortPageAll逻辑（pr#186@Github）
+* 【core】        修复ClassLoaderUtil.loadClass不能加载内部类问题（issue#IO4GF@Gitee）
+* 【core】        修复CustomKeyLinkedMap继承问题（issue#IO5Y2@Gitee）
+* 【core】        修复NumberUtil.isPrimes没有参数校验导致的问题（issue#IO57Q@Gitee）
+* 【extra】       修复QrConfig 引入包错误问题（pr#194@Github）
+* 【extra】       修复Sftp创建目录问题（issue#INZUP@Gitee）
+* 【core】        修复CollUtil.sortPageAll方法
+* 【core】        修复ImageUtil图片旋转出现黑边问题（pr#189@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

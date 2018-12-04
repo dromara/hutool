@@ -10,10 +10,15 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.test.bean.Seq;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
 import cn.hutool.json.test.bean.UserWithMap;
+import cn.hutool.json.test.bean.report.CaseReport;
+import cn.hutool.json.test.bean.report.StepReport;
+import cn.hutool.json.test.bean.report.SuiteReport;
 
 /**
  * JSONObject单元测试
@@ -97,15 +102,18 @@ public class JSONObjectTest {
 	public void toBeanTest2() {
 		UserA userA = new UserA();
 		userA.setA("A user");
-		userA.setName("nameTest");
+		userA.setName("{\n\t\"body\":{\n\t\t\"loginId\":\"id\",\n\t\t\"password\":\"pwd\"\n\t}\n}");
 		userA.setDate(new Date());
 		userA.setSqs(CollectionUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
 
 		JSONObject json = JSONUtil.parseObj(userA);
 		UserA userA2 = json.toBean(UserA.class);
+		//测试数组
 		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+		//测试带换行符等特殊字符转换是否成功
+		Assert.assertTrue(StrUtil.isNotBlank(userA2.getName()));
 	}
-
+	
 	@Test
 	public void toBeanTest3() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
@@ -121,6 +129,23 @@ public class JSONObjectTest {
 
 		UserWithMap map = JSONUtil.toBean(json, UserWithMap.class);
 		Assert.assertEquals("c", map.getData().get("b"));
+	}
+	
+	@Test
+	public void toBeanTest5() {
+		String readUtf8Str = ResourceUtil.readUtf8Str("suiteReport.json");
+		JSONObject json = JSONUtil.parseObj(readUtf8Str);
+		SuiteReport bean = json.toBean(SuiteReport.class);
+		
+		//第一层
+		List<CaseReport> caseReports = bean.getCaseReports();
+		CaseReport caseReport = caseReports.get(0);
+		Assert.assertNotNull(caseReport);
+		
+		//第二层
+		List<StepReport> stepReports = caseReports.get(0).getStepReports();
+		StepReport stepReport = stepReports.get(0);
+		Assert.assertNotNull(stepReport);
 	}
 
 	@Test

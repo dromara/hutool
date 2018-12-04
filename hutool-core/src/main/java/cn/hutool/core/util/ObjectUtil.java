@@ -10,8 +10,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.comparator.CompareUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
@@ -434,6 +434,6 @@ public class ObjectUtil {
 			return ((Map<?, ?>)obj).toString();
 		}
 		
-		return BeanUtil.beanToMap(obj).toString();
+		return Convert.toStr(obj);
 	}
 }
