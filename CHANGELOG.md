@@ -12,6 +12,7 @@
 * 【db】          增加PostgreSQL的单元测试
 * 【core】       ArrayUtil增加sub方法泛型支持
 * 【core】       从Apache-commons-lang3移植Builder（issue#IPALY@Gitee）
+* 【core】       增加Func1接口，ReUtil和StrUtil增加Func1参数的replace方法（pr#27@Gitee）
 
 ### Bug修复
 * 【cron】        修复L代表的最后一天无效问题（issue#IP5PB@Gitee）

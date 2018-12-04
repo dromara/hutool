@@ -9,21 +9,10 @@ import java.util.Comparator;
 import cn.hutool.core.util.ArrayUtil;
 
 /** 
- * Assists in implementing {@link java.lang.Comparable#compareTo(Object)} methods.
+ * 用于构建 {@link java.lang.Comparable#compareTo(Object)} 方法的辅助工具
  *
- * <p>It is consistent with <code>equals(Object)</code> and
- * <code>hashcode()</code> built with {@link EqualsBuilder} and
- * {@link HashCodeBuilder}.</p>
- *
- * <p>Two Objects that compare equal using <code>equals(Object)</code> should normally
- * also compare equal using <code>compareTo(Object)</code>.</p>
- *
- * <p>All relevant fields should be included in the calculation of the
- * comparison. Derived fields may be ignored. The same fields, in the same
- * order, should be used in both <code>compareTo(Object)</code> and
- * <code>equals(Object)</code>.</p>
- *
- * <p>To use this class write code as follows:</p>
+ * <p>
+ * 在Bean对象中，所有相关字段都参与比对，继承的字段不参与。使用方法如下：
  *
  * <pre>
  * public class MyClass {
@@ -45,29 +34,16 @@ import cn.hutool.core.util.ArrayUtil;
  * }
  * </pre>
  * 
- * <p>Values are compared in the order they are appended to the builder. If any comparison returns
- * a non-zero result, then that value will be the result returned by {@code toComparison()} and all
- * subsequent comparisons are skipped.</p>
+ * 字段值按照顺序比较，如果某个字段返回非0结果，比较终止，使用{@code toComparison()}返回结果，后续比较忽略。
  *
- * <p>Alternatively, there are {@link #reflectionCompare(Object, Object) reflectionCompare} methods that use
- * reflection to determine the fields to append. Because fields can be private,
- * <code>reflectionCompare</code> uses {@link java.lang.reflect.AccessibleObject#setAccessible(boolean)} to
- * bypass normal access control checks. This will fail under a security manager,
- * unless the appropriate permissions are set up correctly. It is also
- * slower than appending explicitly.</p>
+ * <p>
+ * 也可以使用{@link #reflectionCompare(Object, Object) reflectionCompare} 方法通过反射比较字段，使用方法如下：
  *
- * <p>A typical implementation of <code>compareTo(Object)</code> using
- * <code>reflectionCompare</code> looks like:</p>
-
  * <pre>
  * public int compareTo(Object o) {
  *   return CompareToBuilder.reflectionCompare(this, o);
  * }
  * </pre>
- * 
- * <p>The reflective methods compare object fields in the order returned by 
- * {@link Class#getDeclaredFields()}. The fields of the class are compared first, followed by those
- * of its parent classes (in order from the bottom to the top of the class hierarchy).</p>
  *
  *TODO 待整理
  * 来自于Apache-Commons-Lang3
@@ -76,17 +52,11 @@ import cn.hutool.core.util.ArrayUtil;
  */
 public class CompareToBuilder implements Builder<Integer> {
     
-    /**
-     * Current state of the comparison as appended fields are checked.
-     */
+	/** 当前比较状态 */
     private int comparison;
 
     /**
-     * <p>Constructor for CompareToBuilder.</p>
-     *
-     * <p>Starts off assuming that the objects are equal. Multiple calls are 
-     * then made to the various append methods, followed by a call to 
-     * {@link #toComparison} to get the result.</p>
+     * 构造，构造后调用append方法增加比较项，然后调用{@link #toComparison()}获取结果
      */
     public CompareToBuilder() {
         super();
@@ -95,24 +65,19 @@ public class CompareToBuilder implements Builder<Integer> {
 
     //-----------------------------------------------------------------------
     /** 
-     * <p>Compares two <code>Object</code>s via reflection.</p>
-     *
-     * <p>Fields can be private, thus <code>AccessibleObject.setAccessible</code>
-     * is used to bypass normal access control checks. This will fail under a 
-     * security manager unless the appropriate permissions are set.</p>
+     * 通过反射比较两个Bean对象，对象字段可以为private。比较规则如下：
      *
      * <ul>
-     * <li>Static fields will not be compared</li>
-     * <li>Transient members will be not be compared, as they are likely derived
-     *     fields</li>
-     * <li>Superclass fields will be compared</li>
+     * <li>static字段不比较</li>
+     * <li>Transient字段不参与比较</li>
+     * <li>父类字段参与比较</li>
      * </ul>
      *
-     * <p>If both <code>lhs</code> and <code>rhs</code> are <code>null</code>,
-     * they are considered equal.</p>
+     *<p>
+     *如果被比较的两个对象都为<code>null</code>，被认为相同。
      *
-     * @param lhs  left-hand object
-     * @param rhs  right-hand object
+     * @param lhs  第一个对象
+     * @param rhs  第二个对象
      * @return a negative integer, zero, or a positive integer as <code>lhs</code>
      *  is less than, equal to, or greater than <code>rhs</code>
      * @throws NullPointerException  if either (but not both) parameters are
@@ -1004,7 +969,7 @@ public class CompareToBuilder implements Builder<Integer> {
      */
     @Override
     public Integer build() {
-        return Integer.valueOf(toComparison());
+        return toComparison();
     }
 }
 
