@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Func;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
@@ -3586,14 +3588,47 @@ public class StrUtil {
 	}
 
 	/**
-	 * 替换指定字符串的指定区间内字符为"*"
-	 * 
-	 * @param str 字符串
-	 * @param startInclude 开始位置（包含）
-	 * @param endExclude 结束位置（不包含）
-	 * @return 替换后的字符串
-	 * @since 4.1.14
+	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+	 * @param str 要替换的字符串
+	 * @param pattern 用于匹配的正则式
+	 * @param replaceFun 决定如何替换的函数
+	 * @return
 	 */
+	public static String replace(CharSequence str, Pattern pattern, Func<java.util.regex.Matcher,String> replaceFun){
+		if (isEmpty(str)) {
+			return str(str);
+		}
+
+		java.util.regex.Matcher matcher = pattern.matcher(str);
+		StringBuffer buffer = new StringBuffer();
+		while (matcher.find()) {
+			matcher.appendReplacement(buffer, replaceFun.call(matcher));
+		}
+		matcher.appendTail(buffer);
+		return buffer.toString();
+	}
+
+	/**
+	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+	 * @param str 要替换的字符串
+	 * @param pattern 用于匹配的正则式
+	 * @param replaceFun 决定如何替换的函数
+	 * @return
+	 */
+	public static String replace(CharSequence str, String pattern, Func<java.util.regex.Matcher,String> replaceFun) {
+		Pattern compiledPattern = Pattern.compile(pattern);
+		return replace(str,compiledPattern,replaceFun);
+	}
+
+		/**
+         * 替换指定字符串的指定区间内字符为"*"
+         *
+         * @param str 字符串
+         * @param startInclude 开始位置（包含）
+         * @param endExclude 结束位置（不包含）
+         * @return 替换后的字符串
+         * @since 4.1.14
+         */
 	public static String hide(CharSequence str, int startInclude, int endExclude) {
 		return replace(str, startInclude, endExclude, '*');
 	}
