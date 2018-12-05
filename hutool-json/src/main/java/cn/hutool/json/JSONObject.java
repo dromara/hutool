@@ -19,12 +19,12 @@ import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
 
 /**
  * JSON对象<br>
@@ -271,80 +271,32 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @return 实体类对象
 	 */
 	public <T> T toBean(Class<T> clazz) {
-		return toBean(clazz, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param clazz 实体类
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T toBean(Class<T> clazz, boolean ignoreError) {
-		if (Map.class.isAssignableFrom(clazz) || Object.class.equals(clazz)) {
-			return (T) this;
-		}
-		return toBean(ReflectUtil.newInstance(clazz), ignoreError);
+		return toBean((Type)clazz);
 	}
 
 	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 * 
 	 * @param <T> Bean类型
+	 * @param reference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
+	 * @return 实体类对象
+	 * @since 4.2.2
+	 */
+	public <T> T toBean(TypeReference<T> reference) {
+		return toBean(reference.getType());
+	}
+
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param <T> Bean类型
 	 * @param type {@link Type}
+	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 3.0.8
 	 */
 	public <T> T toBean(Type type) {
-		return toBean(type, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param type {@link Type}
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 * @since 3.0.8
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T toBean(Type type, boolean ignoreError) {
-		final Class<?> clazz = TypeUtil.getClass(type);
-		if (null == clazz) {
-			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
-		} else if (Object.class.equals(clazz)) {
-			return (T) this;
-		} else if (Map.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz)) {
-			return Convert.convert(type, this);
-		}
-		return (T) toBean(ReflectUtil.newInstance(clazz), ignoreError);
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param bean 实体类
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(T bean) {
-		return toBean(bean, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param bean 实体类
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(T bean, boolean ignoreError) {
-		return InternalJSONUtil.toBean(this, bean, ignoreError);
+		return Convert.convert(type, this);
 	}
 
 	@Override
@@ -445,7 +397,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) InternalJSONUtil.jsonConvert(resultType, getByPath(expression), true);
+		return (T) JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override

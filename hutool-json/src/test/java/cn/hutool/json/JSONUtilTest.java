@@ -1,7 +1,6 @@
 package cn.hutool.json;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,13 +15,6 @@ import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
 
 public class JSONUtilTest {
-
-	@Test
-	public void toDateTest() {
-		String x = JSONUtil.parse(new Date()).toString();
-		Date date = JSONUtil.toBean(JSONUtil.parseObj(x), Date.class);
-		Assert.assertNotNull(date);
-	}
 
 	@Test
 	public void toJsonStrTest() {

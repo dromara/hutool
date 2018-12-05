@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.TypeReference;
 
 /**
  * 转换为集合测试
@@ -57,6 +58,17 @@ public class ConvertToCollectionTest {
 	public void toListTest3() {
 		Object[] a = { "a", "你", "好", "", 1 };
 		List<String> list = Convert.toList(String.class, a);
+		Assert.assertEquals("a", list.get(0));
+		Assert.assertEquals("你", list.get(1));
+		Assert.assertEquals("好", list.get(2));
+		Assert.assertEquals("", list.get(3));
+		Assert.assertEquals("1", list.get(4));
+	}
+	
+	@Test
+	public void toListTest4() {
+		Object[] a = { "a", "你", "好", "", 1 };
+		List<String> list = Convert.convert(new TypeReference<List<String>>() {}, a);
 		Assert.assertEquals("a", list.get(0));
 		Assert.assertEquals("你", list.get(1));
 		Assert.assertEquals("好", list.get(2));

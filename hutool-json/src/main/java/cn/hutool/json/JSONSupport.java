@@ -14,8 +14,8 @@ public class JSONSupport implements JSONString{
 	 * @param jsonString JSON String
 	 * @param ignoreError 是否忽略转换错误
 	 */
-	public void parse(String jsonString, boolean ignoreError){
-		new JSONObject(jsonString).toBean(this, ignoreError);
+	public void parse(String jsonString){
+		new JSONObject(jsonString).toBean(this.getClass());
 	}
 
 	/**

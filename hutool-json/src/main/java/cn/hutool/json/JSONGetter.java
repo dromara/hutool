@@ -115,6 +115,6 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 		if(null == value){
 			return null;
 		}
-		return (T) InternalJSONUtil.jsonConvert(type, value, ignoreError);
+		return (T) JSONConverter.jsonConvert(type, value, ignoreError);
 	}
 }

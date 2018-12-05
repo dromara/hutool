@@ -8,9 +8,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.TypeUtil;
-
 public class TypeUtilTest {
 	
 	@Test

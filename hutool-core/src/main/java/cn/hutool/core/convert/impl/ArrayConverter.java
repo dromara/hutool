@@ -8,7 +8,6 @@ import java.util.List;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConverterRegistry;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -32,11 +31,16 @@ public class ArrayConverter extends AbstractConverter<Object> {
 		if (null == targetType) {
 			// 默认Object数组
 			targetType = Object[].class;
-		} else {
-			Assert.isTrue(targetType.isArray(), "Target type must be a array!");
 		}
-		this.targetType = targetType;
-		this.targetComponentType = targetType.getComponentType();
+		
+		if(targetType.isArray()) {
+			this.targetType = targetType;
+			this.targetComponentType = targetType.getComponentType();
+		}else {
+			//用户传入类为非数组时，按照数组元素类型对待
+			this.targetComponentType = targetType;
+			this.targetType = ArrayUtil.getArrayType(targetType);
+		}
 	}
 
 	@Override

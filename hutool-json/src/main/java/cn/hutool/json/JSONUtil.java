@@ -315,19 +315,7 @@ public final class JSONUtil {
 	 * @since 3.1.2
 	 */
 	public static <T> T toBean(String jsonString, Class<T> beanClass) {
-		return toBean(parseObj(jsonString), beanClass, false);
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param json JSONObject
-	 * @param beanClass 实体类对象
-	 * @return 实体类对象
-	 */
-	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
-		return toBean(json, beanClass, false);
+		return toBean(parseObj(jsonString), beanClass);
 	}
 
 	/**
@@ -336,11 +324,10 @@ public final class JSONUtil {
 	 * @param <T> Bean类型
 	 * @param json JSONObject
 	 * @param beanClass 实体类对象
-	 * @param ignoreError 是否忽略转换过程中某个字段的转换异常
 	 * @return 实体类对象
 	 */
-	public static <T> T toBean(JSONObject json, Class<T> beanClass, boolean ignoreError) {
-		return null == json ? null : json.toBean(beanClass, ignoreError);
+	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
+		return null == json ? null : json.toBean(beanClass);
 	}
 	// -------------------------------------------------------------------- toBean end
 

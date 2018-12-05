@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.GenericEnumConverter;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -552,6 +553,19 @@ public class Convert {
 	 */
 	public static <T> T convert(Class<T> type, Object value) throws ConvertException{
 		return convert((Type)type, value);
+	}
+	
+	/**
+	 * 转换值为指定类型
+	 * 
+	 * @param <T> 目标类型
+	 * @param reference 类型参考，用于持有转换后的泛型类型
+	 * @param value 值
+	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
+	 */
+	public static <T> T convert(TypeReference<T> reference, Object value) throws ConvertException{
+		return convert(reference.getType(), value, null);
 	}
 
 	/**

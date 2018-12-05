@@ -339,7 +339,7 @@ public class ArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static Class<?> getArrayType(Class<?> componentType) {
-		return newArray(componentType, 0).getClass();
+		return Array.newInstance(componentType, 0).getClass();
 	}
 
 	/**

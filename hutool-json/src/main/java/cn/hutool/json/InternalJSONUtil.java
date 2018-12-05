@@ -2,28 +2,17 @@ package cn.hutool.json;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.convert.ConverterRegistry;
-import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -215,145 +204,6 @@ final class InternalJSONUtil {
 		return jsonObject;
 	}
 
-	/**
-	 * JSON转Bean，忽略字段的大小写<br>
-	 * 首先在JSON中查找与Bean字段相同的名称的键的值，如果不存在，继续查找字段名转下划线后的值
-	 * 
-	 * @param jsonObject JSON对象
-	 * @param bean 目标Bean
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 目标Bean
-	 */
-	protected static <T> T toBean(final JSONObject jsonObject, T bean, final boolean ignoreError) {
-		return BeanUtil.fillBean(bean, new ValueProvider<String>() {
-
-			@Override
-			public Object value(String key, Type valueType) {
-				Object value = jsonObject.get(key);
-				if (null == value) {
-					value = jsonObject.get(StrUtil.toUnderlineCase(key));
-				}
-				return jsonConvert(valueType, value, ignoreError);
-			}
-
-			@Override
-			public boolean containsKey(String key) {
-				if (jsonObject.containsKey(key)) {
-					return true;
-				} else if (jsonObject.containsKey(StrUtil.toUnderlineCase(key))) {
-					return true;
-				}
-				return false;
-			}
-
-		}, CopyOptions.create().setIgnoreCase(true).setIgnoreError(ignoreError));
-	}
-
-	/**
-	 * JSONArray转数组
-	 * 
-	 * @param jsonArray JSONArray
-	 * @param arrayClass 数组元素类型
-	 * @param ignoreError 是否忽略转换异常
-	 * @return 数组对象
-	 */
-	protected static Object toArray(JSONArray jsonArray, Class<?> arrayClass, boolean ignoreError) {
-		final Class<?> componentType = arrayClass.isArray() ? arrayClass.getComponentType() : arrayClass;
-		final int size = jsonArray.size();
-		final Object objArray = Array.newInstance(componentType, size);
-		for (int i = 0; i < size; i++) {
-			Array.set(objArray, i, jsonConvert(componentType, jsonArray.get(i), ignoreError));
-		}
-
-		return objArray;
-	}
-
-	/**
-	 * 将JSONArray转换为指定类型的对量列表
-	 * 
-	 * @param <T> 元素类型
-	 * @param jsonArray JSONArray
-	 * @param elementType 对象元素类型
-	 * @param ignoreError 是否忽略错误
-	 * @return 对象列表
-	 */
-	@SuppressWarnings("unchecked")
-	protected static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType, boolean ignoreError) {
-		final int size = jsonArray.size();
-		final List<T> result = new ArrayList<>(size);
-		for (Object obj : jsonArray) {
-			result.add((T) jsonConvert(elementType, obj, ignoreError));
-		}
-		return result;
-	}
-
-	/**
-	 * JSON递归转换<br>
-	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
-	 * 
-	 * @param targetType 目标类型
-	 * @param value 值
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 目标类型的值
-	 * @throws ConvertException 转换失败
-	 */
-	protected static Object jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
-		if (null == value) {
-			return null;
-		}
-		if (value instanceof JSONNull) {
-			return null;
-		}
-		final Class<?> targetRowType = TypeUtil.getClass(targetType);
-		if (null == targetRowType) {
-			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", targetType));
-		}
-
-		if (JSON.class.isAssignableFrom(targetRowType)) {
-			// 目标为JSON格式
-			return JSONUtil.parse(value);
-		}
-
-		Object targetValue = null;
-		// 非标准转换格式
-		if (value instanceof JSONObject) {
-			if (BeanUtil.isBean(targetRowType)) {
-				// 目标为Bean
-				targetValue = ((JSONObject) value).toBean(targetType, ignoreError);
-			}
-		} else if (value instanceof JSONArray) {
-			if (targetRowType.isArray()) {
-				// 目标为数组
-				targetValue = ((JSONArray) value).toArray(targetRowType, ignoreError);
-			} else {
-				targetValue = (new CollectionConverter(targetType, TypeUtil.getTypeArgument(targetType))).convert(value, null);
-			}
-		}
-
-		// 标准格式转换
-		if (null == targetValue) {
-			try {
-				targetValue = ConverterRegistry.getInstance().convert(targetType, value);
-			} catch (ConvertException e) {
-				if (ignoreError) {
-					return null;
-				}
-				throw e;
-			}
-		}
-
-		if (null == targetValue && false == ignoreError) {
-			if (value instanceof CharSequence && StrUtil.isBlank((CharSequence) value)) {
-				// 对于传入空字符串的情况，如果转换的目标对象是非字符串或非原书类型，转换器会返回false。
-				// 此处特殊处理，认为返回null属于正常情况
-				return null;
-			}
-			throw new ConvertException("Can not convert {} to type {}", value, targetRowType.getName());
-		}
-
-		return targetValue;
-	}
-	
 	/**
 	 * 按照给定格式格式化日期，格式为空时返回时间戳字符串
 	 * 
