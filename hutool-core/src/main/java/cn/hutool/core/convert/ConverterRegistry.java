@@ -333,6 +333,7 @@ public class ConverterRegistry {
 		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());// since 3.0.8
 		defaultConverterMap.put(BigDecimal.class, new NumberConverter(BigDecimal.class));
 		defaultConverterMap.put(BigInteger.class, new NumberConverter(BigInteger.class));
+		defaultConverterMap.put(CharSequence.class, new StringConverter());
 		defaultConverterMap.put(String.class, new StringConverter());
 
 		// URI and URL

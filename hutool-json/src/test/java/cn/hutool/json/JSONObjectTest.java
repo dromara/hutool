@@ -11,7 +11,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.Seq;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
@@ -175,6 +177,15 @@ public class JSONObjectTest {
 
 		TestBean bean2 = json.toBean(TestBean.class);
 		Assert.assertEquals(bean.toString(), bean2.toString());
+	}
+	
+	@Test
+	public void parseBeanTest3() {
+		JSONObject json = JSONUtil.createObj().put("code", 22).put("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
+		
+		JSONBean bean = json.toBean(JSONBean.class);
+		Console.log(bean.getCode());
+		Console.log(bean.getData());
 	}
 
 	@Test

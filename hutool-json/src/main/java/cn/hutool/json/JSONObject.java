@@ -295,8 +295,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @return 实体类对象
 	 * @since 3.0.8
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T toBean(Type type) {
-		return Convert.convert(type, this);
+		return (T) JSONConverter.jsonConvert(type, this, false);
 	}
 
 	@Override

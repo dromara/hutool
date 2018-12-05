@@ -459,8 +459,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
-		return rawList.toArray(a);
+		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
 	}
 
 	@Override
