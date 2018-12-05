@@ -531,7 +531,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter write(Iterable<?> data) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		int index = 0;
+		int index = getCurrentRow();
 		for (Object object : data) {
 			writeRow(object, 0 == index);
 			index++;

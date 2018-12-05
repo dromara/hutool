@@ -78,6 +78,16 @@ public class Table extends LinkedHashMap<String, Column> {
 		put(column.getName(), column);
 		return this;
 	}
+	
+	/**
+	 * 获取某列信息
+	 * @param name 列名
+	 * @return 列对象
+	 * @since 4.2.2
+	 */
+	public Column getColumn(String name) {
+		return get(name);
+	}
 
 	/**
 	 * 添加主键

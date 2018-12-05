@@ -47,6 +47,7 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	@Override
 	public void render(Map<String, Object> bindingMap, Writer writer) {
 		rawTemplate.merge(toContext(bindingMap), writer);
+		IoUtil.flush(writer);
 	}
 
 	@Override

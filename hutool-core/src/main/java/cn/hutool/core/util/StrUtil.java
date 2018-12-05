@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Func;
 import cn.hutool.core.lang.Func1;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.text.StrBuilder;
@@ -3595,7 +3594,7 @@ public class StrUtil {
 	 * @param pattern 用于匹配的正则式
 	 * @param replaceFun 决定如何替换的函数
 	 * @return 替换后的字符串
-	 * @see ReUtil#replaceAll(CharSequence, Pattern, Func)
+	 * @see ReUtil#replaceAll(CharSequence, Pattern, Func1)
 	 * @since 4.2.2
 	 */
 	public static String replace(CharSequence str, Pattern pattern, Func1<java.util.regex.Matcher, String> replaceFun) {
@@ -3609,7 +3608,7 @@ public class StrUtil {
 	 * @param regex 用于匹配的正则式
 	 * @param replaceFun 决定如何替换的函数
 	 * @return 替换后的字符串
-	 * @see ReUtil#replaceAll(CharSequence, String, Func)
+	 * @see ReUtil#replaceAll(CharSequence, String, Func1)
 	 * @since 4.2.2
 	 */
 	public static String replace(CharSequence str, String regex, Func1<java.util.regex.Matcher, String> replaceFun) {

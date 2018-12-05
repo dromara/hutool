@@ -13,10 +13,13 @@
 * 【core】       ArrayUtil增加sub方法泛型支持
 * 【core】       从Apache-commons-lang3移植Builder（issue#IPALY@Gitee）
 * 【core】       增加Func1接口，ReUtil和StrUtil增加Func1参数的replace方法（pr#27@Gitee）
+* 【db】         Table增加getColumn方法，Column补充注释（issue#209@Github）
 
 ### Bug修复
 * 【cron】        修复L代表的最后一天无效问题（issue#IP5PB@Gitee）
-* 【core】        修复修复验证15位身份证月的判断问题（issue#IP70D@Gitee）
+* 【core】        修复验证15位身份证月的判断问题（issue#IP70D@Gitee）
+* 【poi】          修复多次调用write方法写出多个标题问题（issue#212@Github）
+* 【extra】       修复模板写出文件空白问题（issue#208@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

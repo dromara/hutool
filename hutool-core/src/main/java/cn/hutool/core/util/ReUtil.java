@@ -642,7 +642,8 @@ public class ReUtil {
 	 * @param str 要替换的字符串
 	 * @param regex 用于匹配的正则式
 	 * @param replaceFun 决定如何替换的函数
-	 * @return
+	 * @return 替换后的文本
+	 * @since 4.2.2
 	 */
 	public static String replaceAll(CharSequence str, String regex, Func1<Matcher, String> replaceFun) {
 		return replaceAll(str, Pattern.compile(regex), replaceFun);
