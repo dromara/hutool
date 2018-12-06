@@ -8,6 +8,7 @@
 ### 新特性
 * 【core】        增加TypeReference类（issue#IPAML@Gitee）
 * 【json】         支持TypeReference类转换，并对toBean逻辑做了大量变动（issue#IPAML@Gitee）
+* 【core】        ArrayUtil.get和CollUtil.get返回null而非空指针（issue#IPKZO@Gitee）
 
 ### Bug修复
 

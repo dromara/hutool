@@ -1773,6 +1773,10 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> T get(Collection<T> collection, int index) {
+		if(null == collection) {
+			return null;
+		}
+		
 		final int size = collection.size();
 		if (index < 0) {
 			index += size;

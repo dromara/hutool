@@ -1808,6 +1808,10 @@ public class ArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Object array, int index) {
+		if(null == array) {
+			return null;
+		}
+		
 		if (index < 0) {
 			index += Array.getLength(array);
 		}
