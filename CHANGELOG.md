@@ -11,6 +11,7 @@
 * 【core】        ArrayUtil.get和CollUtil.get返回null而非空指针（issue#IPKZO@Gitee）
 
 ### Bug修复
+* 【extra】        修复VelocityEngine中模板中文乱码问题（issue#216@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
