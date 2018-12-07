@@ -820,13 +820,6 @@ public class Validator {
 	}
 	
 	/**
-	 * 验证是否为UUID<br>
-	 * 包括带横线标准格式和不带横线的简单模式
-	 * 
-	 * @param value 值
-	 * @return 是否为UUID
-	 */
-	/**
 	 * 检查给定的数字是否在指定范围内
 	 * @param value 值
 	 * @param min 最小值（包含）

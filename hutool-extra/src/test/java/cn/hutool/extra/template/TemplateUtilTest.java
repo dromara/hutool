@@ -76,7 +76,12 @@ public class TemplateUtilTest {
 		Engine engine = new VelocityEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
 		Template template = engine.getTemplate("templates/velocity_test.vtl");
 		String result = template.render(Dict.create().set("name", "hutool"));
-		Assert.assertEquals("hello,hutool", result);
+		Assert.assertEquals("你好,hutool", result);
+		
+		engine = new VelocityEngine(new TemplateConfig("templates", ResourceMode.STRING));
+		template = engine.getTemplate("你好,$name");
+		result = template.render(Dict.create().set("name", "hutool"));
+		Assert.assertEquals("你好,hutool", result);
 	}
 
 	@Test

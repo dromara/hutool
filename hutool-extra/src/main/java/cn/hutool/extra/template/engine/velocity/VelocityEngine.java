@@ -15,7 +15,7 @@ import cn.hutool.extra.template.TemplateConfig;
  */
 public class VelocityEngine implements Engine {
 
-	org.apache.velocity.app.VelocityEngine engine;
+	private org.apache.velocity.app.VelocityEngine engine;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**
@@ -43,7 +43,17 @@ public class VelocityEngine implements Engine {
 		this.engine = engine;
 	}
 	// --------------------------------------------------------------------------------- Constructor end
-	
+
+	/**
+	 * 获取原始的引擎对象
+	 * 
+	 * @return 原始引擎对象
+	 * @since 4.3.0
+	 */
+	public org.apache.velocity.app.VelocityEngine getRowEngine() {
+		return this.engine;
+	}
+
 	@Override
 	public Template getTemplate(String resource) {
 		return VelocityTemplate.wrap(engine.getTemplate(resource));
@@ -80,18 +90,19 @@ public class VelocityEngine implements Engine {
 			}
 			break;
 		case WEB_ROOT:
-			ve.setProperty("resource.loader", "webapp");
+			ve.setProperty(Velocity.RESOURCE_LOADER, "webapp");
 			ve.setProperty("webapp.resource.loader.class", "org.apache.velocity.tools.view.servlet.WebappLoader");
 			ve.setProperty("webapp.resource.loader.path", StrUtil.nullToDefault(config.getPath(), StrUtil.SLASH));
 			break;
 		case STRING:
-			ve.setProperty("resource.loader", "string");
-			ve.setProperty("string.resource.loader.class ", StringResourceLoader.class.getName());
+			ve.setProperty(Velocity.RESOURCE_LOADER, "str");
+			 ve.setProperty("str.resource.loader.class", StringResourceLoader.class.getName());
 			break;
 		default:
 			break;
 		}
 
+		ve.init();
 		return ve;
 	}
 }
