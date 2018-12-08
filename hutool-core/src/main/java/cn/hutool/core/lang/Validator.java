@@ -573,11 +573,11 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为生日<br>
+	 * 验证是否为生日
 	 * 
-	 * @param year 年
-	 * @param month 月
-	 * @param day 日
+	 * @param year 年，从1900年开始计算
+	 * @param month 月，从1开始计数
+	 * @param day 日，从1开始计数
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(int year, int month, int day) {
@@ -819,13 +819,6 @@ public class Validator {
 		}
 	}
 	
-	/**
-	 * 验证是否为UUID<br>
-	 * 包括带横线标准格式和不带横线的简单模式
-	 * 
-	 * @param value 值
-	 * @return 是否为UUID
-	 */
 	/**
 	 * 检查给定的数字是否在指定范围内
 	 * @param value 值

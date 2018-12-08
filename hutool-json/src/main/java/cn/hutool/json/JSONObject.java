@@ -3,7 +3,6 @@ package cn.hutool.json;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -20,12 +19,12 @@ import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
 
 /**
  * JSON对象<br>
@@ -106,26 +105,106 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * 使用其他<code>JSONObject</code>构造新的<code>JSONObject</code>，并只加入指定name对应的键值对。<br>
-	 * 如果传入的name列表为空则加入所有键值对
-	 *
-	 * @param jsonObject A JSONObject.
-	 * @param names 需要的name列表，如果为空加入所有键值对
+	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"<br>
+	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 * 
+	 * @param source JavaBean或者Map对象或者String
 	 */
-	public JSONObject(JSONObject jsonObject, String... names) {
+	public JSONObject(Object source) {
+		this(source, true);
+	}
+
+	/**
+	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
+	 * 
+	 * @param source JavaBean或者Map对象或者String
+	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @since 3.0.9
+	 */
+	public JSONObject(Object source, boolean ignoreNullValue) {
+		this(source, ignoreNullValue, (source instanceof LinkedHashMap));
+	}
+
+	/**
+	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
+	 * 
+	 * @param source JavaBean或者Map对象或者String
+	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @param isOrder 是否有序
+	 * @since 4.2.2
+	 */
+	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
+		this(DEFAULT_CAPACITY, JSONConfig.create().setOrder(isOrder)//
+				.setIgnoreCase((source instanceof CaseInsensitiveMap) || (source instanceof CaseInsensitiveLinkedMap))//
+				.setIgnoreNullValue(ignoreNullValue));
+		init(source);
+	}
+
+	/**
+	 * 构建指定name列表对应的键值对为新的JSONObject，情况如下：
+	 * 
+	 * <pre>
+	 * 1. 若obj为Map，则获取name列表对应键值对
+	 * 2. 若obj为普通Bean，使用反射方式获取字段名和字段值
+	 * </pre>
+	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入<br>
+	 * 若names列表为空，则字段全部加入
+	 *
+	 * @param obj 包含需要字段的Bean对象或者Map对象
+	 * @param names 需要构建JSONObject的字段名列表
+	 */
+	public JSONObject(Object obj, String... names) {
 		this();
-		if (ArrayUtil.isNotEmpty(names)) {
+		if(ArrayUtil.isEmpty(names)) {
+			init(obj);
+			return;
+		}
+		
+		if (obj instanceof Map) {
+			Object value;
+			for (String name : names) {
+				value = ((Map<?, ?>)obj).get(name);
+				this.putOnce(name, value);
+			}
+		}else {
 			for (String name : names) {
 				try {
-					this.putOnce(name, jsonObject.getObj(name));
+					this.putOpt(name, ReflectUtil.getFieldValue(obj, name));
 				} catch (Exception ignore) {
+					// ignore
 				}
 			}
-		} else {
-			this.putAll(jsonObject);
 		}
 	}
 
+	/**
+	 * 从JSON字符串解析为JSON对象，JSON中的键值对无序
+	 *
+	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
+	 * @exception JSONException JSON字符串语法错误
+	 */
+	public JSONObject(CharSequence source) throws JSONException {
+		this(source, false);
+	}
+
+	/**
+	 * 从JSON字符串解析为JSON对象
+	 *
+	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
+	 * @param isOrder 是否有序
+	 * @exception JSONException JSON字符串语法错误
+	 * @since 4.2.2
+	 */
+	public JSONObject(CharSequence source, boolean isOrder) throws JSONException {
+		this(new JSONTokener(StrUtil.str(source)), isOrder);
+	}
+	
 	/**
 	 * 使用{@link JSONTokener}构建
 	 *
@@ -148,66 +227,6 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		this(isOrder);
 		init(x);
 	}
-
-	/**
-	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
-	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
-	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"<br>
-	 * 此方法会忽略空值，但是对JSON字符串不影响
-	 * 
-	 * @param source JavaBean或者Map对象或者String
-	 */
-	public JSONObject(Object source) {
-		this(source, true);
-	}
-
-	/**
-	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
-	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
-	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
-	 * 
-	 * @param source JavaBean或者Map对象或者String
-	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
-	 * @since 3.0.9
-	 */
-	public JSONObject(Object source, boolean ignoreNullValue) {
-		this(DEFAULT_CAPACITY, JSONConfig.create().setOrder((source instanceof LinkedHashMap)).setIgnoreCase((source instanceof CaseInsensitiveMap) || (source instanceof CaseInsensitiveLinkedMap))
-				.setIgnoreNullValue(ignoreNullValue));
-		init(source);
-	}
-
-	/**
-	 * 使用反射方式获取public字段名和字段值，构建JSONObject对象<br>
-	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入
-	 *
-	 * @param pojo 包含需要字段的Bean对象
-	 * @param names 需要构建JSONObject的字段名列表
-	 */
-	public JSONObject(Object pojo, String[] names) {
-		this();
-		Class<?> c = pojo.getClass();
-		Field field;
-		for (String name : names) {
-			try {
-				field = c.getField(name);
-				if (null != field) {
-					this.putOpt(name, field.get(pojo));
-				}
-			} catch (Exception ignore) {
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * 从JSON字符串解析为JSON对象
-	 *
-	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
-	 * @exception JSONException JSON字符串语法错误
-	 */
-	public JSONObject(CharSequence source) throws JSONException {
-		this(new JSONTokener(StrUtil.str(source)));
-	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
 	/**
@@ -221,7 +240,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		this.config.setDateFormat(format);
 		return this;
 	}
-	
+
 	/**
 	 * 将指定KEY列表的值组成新的JSONArray
 	 *
@@ -252,80 +271,33 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @return 实体类对象
 	 */
 	public <T> T toBean(Class<T> clazz) {
-		return toBean(clazz, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param clazz 实体类
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T toBean(Class<T> clazz, boolean ignoreError) {
-		if (Map.class.isAssignableFrom(clazz) || Object.class.equals(clazz)) {
-			return (T) this;
-		}
-		return toBean(ReflectUtil.newInstance(clazz), ignoreError);
+		return toBean((Type)clazz);
 	}
 
 	/**
 	 * 转为实体类对象，转换异常将被抛出
 	 * 
 	 * @param <T> Bean类型
+	 * @param reference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
+	 * @return 实体类对象
+	 * @since 4.2.2
+	 */
+	public <T> T toBean(TypeReference<T> reference) {
+		return toBean(reference.getType());
+	}
+
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param <T> Bean类型
 	 * @param type {@link Type}
+	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 3.0.8
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T toBean(Type type) {
-		return toBean(type, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param type {@link Type}
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 * @since 3.0.8
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T toBean(Type type, boolean ignoreError) {
-		final Class<?> clazz = TypeUtil.getClass(type);
-		if (null == clazz) {
-			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
-		} else if (Object.class.equals(clazz)) {
-			return (T) this;
-		} else if (Map.class.isAssignableFrom(clazz) || CharSequence.class.isAssignableFrom(clazz)) {
-			return Convert.convert(type, this);
-		}
-		return (T) toBean(ReflectUtil.newInstance(clazz), ignoreError);
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param bean 实体类
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(T bean) {
-		return toBean(bean, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param bean 实体类
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(T bean, boolean ignoreError) {
-		return InternalJSONUtil.toBean(this, bean, ignoreError);
+		return (T) JSONConverter.jsonConvert(type, this, false);
 	}
 
 	@Override
@@ -426,7 +398,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) InternalJSONUtil.jsonConvert(resultType, getByPath(expression), true);
+		return (T) JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override

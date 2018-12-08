@@ -74,6 +74,10 @@ public class ConvertToArrayTest {
 		long[] result = ConverterRegistry.getInstance().convert(long[].class, a);
 		Assert.assertArrayEquals(new long[]{1L, 2L, 3L, 4L}, result);
 		
+		//数组转数组测试
+		byte[] resultBytes = ConverterRegistry.getInstance().convert(byte[].class, a);
+		Assert.assertArrayEquals(new byte[]{1, 2, 3, 4}, resultBytes);
+		
 		//字符串转数组
 		String arrayStr = "1,2,3,4,5";
 		//获取Converter类的方法2，自己实例化相应Converter对象

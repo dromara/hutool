@@ -23,8 +23,10 @@ public class Browser extends UserAgentInfo {
 	 * 支持的浏览器类型
 	 */
 	public static final List<Browser> browers = CollUtil.newArrayList(//
+			new Browser("MSEdge", "Edge", "edge\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Chrome", "chrome", "chrome\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Firefox", "firefox", Other_Version), //
+			new Browser("IEMobile", "iemobile", Other_Version), //
 			new Browser("Safari", "safari", "version\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Opera", "opera", Other_Version), //
 			new Browser("Konqueror", "konqueror", Other_Version), //
@@ -36,8 +38,8 @@ public class Browser extends UserAgentInfo {
 			new Browser("Seamonkey", "seamonkey", Other_Version), //
 			new Browser("Outlook", "microsoft.outlook", Other_Version), //
 			new Browser("Evolution", "evolution", Other_Version), //
-			new Browser("MSIE", "msie", Other_Version), //
-			new Browser("IEMobile", "emobile|windows phone", Other_Version), //
+			new Browser("MSIE", "msie", "msie ([\\d\\w\\.\\-]+)"), //
+			new Browser("MSIE11", "rv:11", "rv:([\\d\\w\\.\\-]+)"), //
 			new Browser("Gabble", "Gabble", "Gabble\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Yammer Desktop", "AdobeAir", "([\\d\\w\\.\\-]+)\\/Yammer"), //
 			new Browser("Yammer Mobile", "Yammer[\\s]+([\\d\\w\\.\\-]+)", "Yammer[\\s]+([\\d\\w\\.\\-]+)"), //
@@ -46,6 +48,7 @@ public class Browser extends UserAgentInfo {
 	);
 
 	private Pattern versionPattern;
+
 
 	/**
 	 * 构造

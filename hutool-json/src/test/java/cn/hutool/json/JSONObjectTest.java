@@ -11,7 +11,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.Seq;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
@@ -91,7 +93,7 @@ public class JSONObjectTest {
 	public void toBeanNullStrTest() {
 		JSONObject json = JSONUtil.createObj().put("strValue", "null").put("intValue", 123).put("beanValue", "null").put("list", JSONUtil.createArray().put("a").put("b"));
 
-		TestBean bean = json.toBean(TestBean.class, true);
+		TestBean bean = json.toBean(TestBean.class);
 		// 当JSON中为字符串"null"时应被当作字符串处理
 		Assert.assertEquals("null", bean.getStrValue());
 		// 当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入
@@ -117,7 +119,7 @@ public class JSONObjectTest {
 	@Test
 	public void toBeanTest3() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
-		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class, true);
+		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
 		String password = user.getData().get("password");
 		Assert.assertTrue(user.getData().containsKey("password"));
 		Assert.assertNull(password);
@@ -175,6 +177,15 @@ public class JSONObjectTest {
 
 		TestBean bean2 = json.toBean(TestBean.class);
 		Assert.assertEquals(bean.toString(), bean2.toString());
+	}
+	
+	@Test
+	public void parseBeanTest3() {
+		JSONObject json = JSONUtil.createObj().put("code", 22).put("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
+		
+		JSONBean bean = json.toBean(JSONBean.class);
+		Console.log(bean.getCode());
+		Console.log(bean.getData());
 	}
 
 	@Test

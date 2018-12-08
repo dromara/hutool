@@ -81,6 +81,19 @@ public final class JSONUtil {
 	}
 
 	/**
+	 * JSON字符串转JSONObject对象
+	 * 
+	 * @param obj Bean对象或者Map
+	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @param isOrder 是否有序
+	 * @return JSONObject
+	 * @since 4.2.2
+	 */
+	public static JSONObject parseObj(Object obj, boolean ignoreNullValue, boolean isOrder) {
+		return new JSONObject(obj, ignoreNullValue, isOrder);
+	}
+
+	/**
 	 * JSON字符串转JSONArray
 	 * 
 	 * @param jsonStr JSON字符串
@@ -302,19 +315,7 @@ public final class JSONUtil {
 	 * @since 3.1.2
 	 */
 	public static <T> T toBean(String jsonString, Class<T> beanClass) {
-		return toBean(parseObj(jsonString), beanClass, false);
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param json JSONObject
-	 * @param beanClass 实体类对象
-	 * @return 实体类对象
-	 */
-	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
-		return toBean(json, beanClass, false);
+		return toBean(parseObj(jsonString), beanClass);
 	}
 
 	/**
@@ -323,14 +324,13 @@ public final class JSONUtil {
 	 * @param <T> Bean类型
 	 * @param json JSONObject
 	 * @param beanClass 实体类对象
-	 * @param ignoreError 是否忽略转换过程中某个字段的转换异常
 	 * @return 实体类对象
 	 */
-	public static <T> T toBean(JSONObject json, Class<T> beanClass, boolean ignoreError) {
-		return null == json ? null : json.toBean(beanClass, ignoreError);
+	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
+		return null == json ? null : json.toBean(beanClass);
 	}
 	// -------------------------------------------------------------------- toBean end
-	
+
 	/**
 	 * 将JSONArray转换为Bean的List，默认为ArrayList
 	 * 
@@ -339,7 +339,7 @@ public final class JSONUtil {
 	 * @return List
 	 * @since 4.0.7
 	 */
-	public static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType){
+	public static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType) {
 		return null == jsonArray ? null : jsonArray.toList(elementType);
 	}
 
@@ -570,11 +570,11 @@ public final class JSONUtil {
 				builder.append("\\r");
 				break;
 			default:
-				//无法显示字符转为Unicode符：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
+				// 无法显示字符转为Unicode符：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
 				if (c < StrUtil.C_SPACE || //
 						(c >= '\u0080' && c <= '\u00a0') || //
-						(c >= '\u2000' && c <= '\u2010') ||//
-						(c >= '\u2028' && c <= '\u202F') ||//
+						(c >= '\u2000' && c <= '\u2010') || //
+						(c >= '\u2028' && c <= '\u202F') || //
 						(c >= '\u2066' && c <= '\u206F')//
 				) {
 					builder.append(HexUtil.toUnicodeHex(c));
@@ -702,7 +702,7 @@ public final class JSONUtil {
 		}
 		return StrUtil.isWrap(str.trim(), '[', ']');
 	}
-	
+
 	/**
 	 * XML转JSONObject<br>
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。

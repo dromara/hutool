@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
-import cn.hutool.core.lang.Builder;
+import cn.hutool.core.builder.Builder;
 import cn.hutool.core.util.StrUtil;
 
 /**

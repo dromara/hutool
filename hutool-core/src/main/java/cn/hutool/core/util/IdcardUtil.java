@@ -237,7 +237,7 @@ public class IdcardUtil {
 
 			// 生日
 			DateTime birthDate = DateUtil.parse(idCard.substring(6, 12), "yyMMdd");
-			if (false == Validator.isBirthday(birthDate.year(), birthDate.month(), birthDate.dayOfMonth())) {
+			if (false == Validator.isBirthday(birthDate.year(), birthDate.month() + 1, birthDate.dayOfMonth())) {
 				return false;
 			}
 		} else {

@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Func1;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
@@ -729,7 +731,7 @@ public class StrUtil {
 	public static boolean containsAny(CharSequence str, CharSequence... testStrs) {
 		return null != getContainsStr(str, testStrs);
 	}
-	
+
 	/**
 	 * 查找指定字符串是否包含指定字符列表中的任意一个字符
 	 * 
@@ -739,10 +741,10 @@ public class StrUtil {
 	 * @since 4.1.11
 	 */
 	public static boolean containsAny(CharSequence str, char... testChars) {
-		if(false == isEmpty(str)) {
+		if (false == isEmpty(str)) {
 			int len = str.length();
-			for(int i = 0; i < len; i++) {
-				if(ArrayUtil.contains(testChars, str.charAt(i))) {
+			for (int i = 0; i < len; i++) {
+				if (ArrayUtil.contains(testChars, str.charAt(i))) {
 					return true;
 				}
 			}
@@ -893,6 +895,49 @@ public class StrUtil {
 			return str(str);
 		}
 		return str.toString().replace(strToRemove, EMPTY);
+	}
+
+	/**
+	 * 去除字符串中指定的多个字符，如有多个则全部去除
+	 * 
+	 * @param str 字符串
+	 * @param chars 字符列表
+	 * @return 去除后的字符
+	 * @since 4.2.2
+	 */
+	public static String removeAll(CharSequence str, char... chars) {
+		if (null == str || ArrayUtil.isEmpty(chars)) {
+			return str(str);
+		}
+		final int len = str.length();
+		if (0 == len) {
+			return str(str);
+		}
+		final StringBuilder builder = builder(len);
+		char c;
+		for (int i = 0; i < len; i++) {
+			c = str.charAt(i);
+			if (false == ArrayUtil.contains(chars, c)) {
+				builder.append(c);
+			}
+		}
+		return builder.toString();
+	}
+
+	/**
+	 * 去除所有换行符，包括：
+	 * 
+	 * <pre>
+	 * 1. \r
+	 * 1. \n
+	 * </pre>
+	 * 
+	 * @param str 字符串
+	 * @return 处理后的字符串
+	 * @since 4.2.2
+	 */
+	public static String removeAllLineBreaks(CharSequence str) {
+		return removeAll(str, C_CR, C_LF);
 	}
 
 	/**
@@ -1070,7 +1115,7 @@ public class StrUtil {
 		}
 		return str2;
 	}
-	
+
 	/**
 	 * 去除两边的指定字符串
 	 * 
@@ -1646,12 +1691,12 @@ public class StrUtil {
 		if (INDEX_NOT_FOUND == pos) {
 			return str;
 		}
-		if(0 == pos) {
+		if (0 == pos) {
 			return EMPTY;
 		}
 		return str.substring(0, pos);
 	}
-	
+
 	/**
 	 * 截取分隔字符串之前的字符串，不包括分隔字符串<br>
 	 * 如果给定的字符串为空串（null或""）或者分隔字符串为null，返回原字符串<br>
@@ -1676,13 +1721,13 @@ public class StrUtil {
 		if (isEmpty(string)) {
 			return null == string ? null : string.toString();
 		}
-		
+
 		final String str = string.toString();
 		final int pos = isLastSeparator ? str.lastIndexOf(separator) : str.indexOf(separator);
 		if (INDEX_NOT_FOUND == pos) {
 			return str;
 		}
-		if(0 == pos) {
+		if (0 == pos) {
 			return EMPTY;
 		}
 		return str.substring(0, pos);
@@ -1725,7 +1770,7 @@ public class StrUtil {
 		}
 		return str.substring(pos + separator.length());
 	}
-	
+
 	/**
 	 * 截取分隔字符串之后的字符串，不包括分隔字符串<br>
 	 * 如果给定的字符串为空串（null或""），返回原字符串<br>
@@ -3098,7 +3143,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 指定范围内查找字符串，忽略大小写<br>
+	 * 指定范围内查找字符串，忽略大小写
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串
@@ -3111,6 +3156,7 @@ public class StrUtil {
 
 	/**
 	 * 指定范围内查找字符串，忽略大小写<br>
+	 * fromIndex 为搜索起始位置，从后往前计数
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串
@@ -3124,6 +3170,7 @@ public class StrUtil {
 
 	/**
 	 * 指定范围内查找字符串<br>
+	 * fromIndex 为搜索起始位置，从后往前计数
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串
@@ -3539,10 +3586,38 @@ public class StrUtil {
 		}
 		return new String(chars);
 	}
-	
+
+	/**
+	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+	 * 
+	 * @param str 要替换的字符串
+	 * @param pattern 用于匹配的正则式
+	 * @param replaceFun 决定如何替换的函数
+	 * @return 替换后的字符串
+	 * @see ReUtil#replaceAll(CharSequence, Pattern, Func1)
+	 * @since 4.2.2
+	 */
+	public static String replace(CharSequence str, Pattern pattern, Func1<java.util.regex.Matcher, String> replaceFun) {
+		return ReUtil.replaceAll(str, pattern, replaceFun);
+	}
+
+	/**
+	 * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+	 * 
+	 * @param str 要替换的字符串
+	 * @param regex 用于匹配的正则式
+	 * @param replaceFun 决定如何替换的函数
+	 * @return 替换后的字符串
+	 * @see ReUtil#replaceAll(CharSequence, String, Func1)
+	 * @since 4.2.2
+	 */
+	public static String replace(CharSequence str, String regex, Func1<java.util.regex.Matcher, String> replaceFun) {
+		return ReUtil.replaceAll(str, regex, replaceFun);
+	}
+
 	/**
 	 * 替换指定字符串的指定区间内字符为"*"
-	 * 
+	 *
 	 * @param str 字符串
 	 * @param startInclude 开始位置（包含）
 	 * @param endExclude 结束位置（不包含）
@@ -3723,5 +3798,55 @@ public class StrUtil {
 			sb.append(isNullToEmpty ? nullToEmpty(str) : str);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 给定字符串中的字母是否全部为大写，判断依据如下：
+	 * 
+	 * <pre>
+	 * 1. 大写字母包括A-Z
+	 * 2. 其它非字母的Unicode符都算作大写
+	 * </pre>
+	 * 
+	 * @param str 被检查的字符串
+	 * @return 是否全部为大写
+	 * @since 4.2.2
+	 */
+	public static boolean isUpperCase(CharSequence str) {
+		if (null == str) {
+			return false;
+		}
+		final int len = str.length();
+		for (int i = 0; i < len; i++) {
+			if (Character.isLowerCase(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 给定字符串中的字母是否全部为小写，判断依据如下：
+	 * 
+	 * <pre>
+	 * 1. 小写字母包括a-z
+	 * 2. 其它非字母的Unicode符都算作小写
+	 * </pre>
+	 * 
+	 * @param str 被检查的字符串
+	 * @return 是否全部为小写
+	 * @since 4.2.2
+	 */
+	public static boolean isLowerCase(CharSequence str) {
+		if (null == str) {
+			return false;
+		}
+		final int len = str.length();
+		for (int i = 0; i < len; i++) {
+			if (Character.isUpperCase(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

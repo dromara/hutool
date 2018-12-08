@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import cn.hutool.core.lang.Builder;
+import cn.hutool.core.builder.Builder;
 
 /**
  * {@link ThreadPoolExecutor} 建造者

@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -878,6 +879,22 @@ public class IoUtil {
 		} finally {
 			if (isCloseOut) {
 				close(osw);
+			}
+		}
+	}
+	
+	/**
+	 * 从缓存中刷出数据
+	 * 
+	 * @param flushable {@link Flushable}
+	 * @since 4.2.2
+	 */
+	public static void flush(Flushable flushable) {
+		if (null != flushable) {
+			try {
+				flushable.flush();
+			} catch (Exception e) {
+				// 静默刷出
 			}
 		}
 	}

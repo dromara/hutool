@@ -40,21 +40,56 @@ import cn.hutool.core.util.StrUtil;
  * @since 3.1.2
  */
 public class BeanUtil {
-
+	
 	/**
 	 * 判断是否为Bean对象<br>
 	 * 判定方法是是否存在只有一个参数的setXXX方法
 	 * 
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
+	 * @see #hasSetter(Class)
 	 */
 	public static boolean isBean(Class<?> clazz) {
+		return hasSetter(clazz);
+	}
+
+	/**
+	 * 判断是否有Setter方法<br>
+	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 * @since 4.2.2
+	 */
+	public static boolean hasSetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
 			final Method[] methods = clazz.getMethods();
 			for (Method method : methods) {
 				if (method.getParameterTypes().length == 1 && method.getName().startsWith("set")) {
 					// 检测包含标准的setXXX方法即视为标准的JavaBean
 					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 判断是否为Bean对象<br>
+	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 * @since 4.2.2
+	 */
+	public static boolean hasGetter(Class<?> clazz) {
+		if (ClassUtil.isNormalClass(clazz)) {
+			final Method[] methods = clazz.getMethods();
+			for (Method method : methods) {
+				if (method.getParameterTypes().length == 0) {
+					if(method.getName().startsWith("get") || method.getName().startsWith("is")) {
+						return true;
+					}
 				}
 			}
 		}

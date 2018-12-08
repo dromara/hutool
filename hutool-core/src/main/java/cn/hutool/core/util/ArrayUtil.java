@@ -339,7 +339,7 @@ public class ArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static Class<?> getArrayType(Class<?> componentType) {
-		return newArray(componentType, 0).getClass();
+		return Array.newInstance(componentType, 0).getClass();
 	}
 
 	/**
@@ -1808,6 +1808,10 @@ public class ArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Object array, int index) {
+		if(null == array) {
+			return null;
+		}
+		
 		if (index < 0) {
 			index += Array.getLength(array);
 		}
@@ -1832,6 +1836,41 @@ public class ArrayUtil {
 			result[i] = get(array, i);
 		}
 		return result;
+	}
+	
+	/**
+	 * 获取子数组
+	 * 
+	 * @param array 数组
+	 * @param start 开始位置（包括）
+	 * @param end 结束位置（不包括）
+	 * @return 新的数组
+	 * @since 4.2.2
+	 * @see Arrays#copyOfRange(Object[], int, int)
+	 */
+	public static <T> T[] sub(T[] array, int start, int end) {
+		int length = length(array);
+		if (start < 0) {
+			start += length;
+		}
+		if (end < 0) {
+			end += length;
+		}
+		if (start == length) {
+			return newArray(0);
+		}
+		if (start > end) {
+			int tmp = start;
+			start = end;
+			end = tmp;
+		}
+		if (end > length) {
+			if (start >= length) {
+				return newArray(0);
+			}
+			end = length;
+		}
+		return Arrays.copyOfRange(array, start, end);
 	}
 
 	/**

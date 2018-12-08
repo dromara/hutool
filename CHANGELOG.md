@@ -3,6 +3,38 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.3.0
+
+### 新特性
+* 【core】        增加TypeReference类（issue#IPAML@Gitee）
+* 【json】         支持TypeReference类转换，并对toBean逻辑做了大量变动（issue#IPAML@Gitee）
+* 【core】        ArrayUtil.get和CollUtil.get返回null而非空指针（issue#IPKZO@Gitee）
+
+### Bug修复
+* 【extra】        修复VelocityEngine中模板中文乱码问题（issue#216@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.2.2
+
+### 新特性
+* 【json】        JSONObject调整构造方法，支持对象转为JSON可选是否有序（issue#IP1Q2@Gitee）
+* 【core】        BeanUtil增加hasGetter和hasSetter方法
+* 【core】        StrUtil增加isUperCase和isLowerCase方法，增加removeAll和removeAllLineBreaks（issue#IP7PT@Gitee）
+* 【db】          增加PostgreSQL的单元测试
+* 【core】       ArrayUtil增加sub方法泛型支持
+* 【core】       从Apache-commons-lang3移植Builder（issue#IPALY@Gitee）
+* 【core】       增加Func1接口，ReUtil和StrUtil增加Func1参数的replace方法（pr#27@Gitee）
+* 【db】         Table增加getColumn方法，Column补充注释（issue#209@Github）
+
+### Bug修复
+* 【cron】        修复L代表的最后一天无效问题（issue#IP5PB@Gitee）
+* 【core】        修复验证15位身份证月的判断问题（issue#IP70D@Gitee）
+* 【poi】          修复多次调用write方法写出多个标题问题（issue#212@Github）
+* 【extra】       修复模板写出文件空白问题（issue#208@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.2.1
 
 ### 新特性

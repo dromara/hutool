@@ -77,6 +77,17 @@ public class JSONArrayTest {
 
 		List<Exam> list = array.toList(Exam.class);
 		Assert.assertFalse(list.isEmpty());
+		Assert.assertEquals(Exam.class, list.get(0).getClass());;
+	}
+	
+	@Test
+	public void toArrayTest() {
+		String jsonStr = FileUtil.readString("exam_test.json", CharsetUtil.CHARSET_UTF_8);
+		JSONArray array = JSONUtil.parseArray(jsonStr);
+		
+		Exam[] list = array.toArray(new Exam[0]);
+		Assert.assertFalse(0 == list.length);
+		Assert.assertEquals(Exam.class, list[0].getClass());
 	}
 
 	/**

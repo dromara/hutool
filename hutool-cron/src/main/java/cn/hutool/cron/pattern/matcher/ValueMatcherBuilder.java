@@ -124,11 +124,7 @@ public class ValueMatcherBuilder {
 			//根据步进的第一个数字确定起始时间，类似于 12/3则从12（秒、分等）开始
 			int minValue = parser.getMin();
 			if(false == isMatchAllStr(value)) {
-				try {
-					minValue = Math.max(minValue, Integer.parseInt(value));
-				} catch (NumberFormatException e) {
-					throw new CronException("Invalid field value: [{}]", value);
-				}
+				minValue = Math.max(minValue, parser.parse(value));
 			}else {
 				//在全匹配模式下，如果步进不存在，表示步进为1
 				if(step < 1) {

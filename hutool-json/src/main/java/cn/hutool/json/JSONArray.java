@@ -261,7 +261,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) InternalJSONUtil.jsonConvert(resultType, getByPath(expression), true);
+		return (T) JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override
@@ -459,8 +459,9 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
-		return rawList.toArray(a);
+		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
 	}
 
 	@Override
@@ -570,24 +571,13 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	/**
-	 * 转为Bean数组，转换异常将被抛出
-	 * 
-	 * @param clazz 数组元素类型
-	 * @return 实体类对象
-	 */
-	public Object toArray(Class<?> clazz) {
-		return toArray(clazz, false);
-	}
-
-	/**
 	 * 转为Bean数组
 	 * 
 	 * @param arrayClass 数组元素类型
-	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 */
-	public Object toArray(Class<?> arrayClass, boolean ignoreError) {
-		return InternalJSONUtil.toArray(this, arrayClass, ignoreError);
+	public Object toArray(Class<?> arrayClass) {
+		return JSONConverter.toArray(this, arrayClass);
 	}
 
 	/**
@@ -599,7 +589,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @since 3.0.8
 	 */
 	public <T> List<T> toList(Class<T> elementType) {
-		return InternalJSONUtil.toList(this, elementType, false);
+		return JSONConverter.toList(this, elementType);
 	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start
