@@ -259,9 +259,8 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) JSONConverter.jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override

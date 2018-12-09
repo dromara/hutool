@@ -109,12 +109,11 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T get(K key, Class<T> type, boolean ignoreError) throws ConvertException{
 		final Object value = this.getObj(key);
 		if(null == value){
 			return null;
 		}
-		return (T) JSONConverter.jsonConvert(type, value, ignoreError);
+		return JSONConverter.jsonConvert(type, value, ignoreError);
 	}
 }

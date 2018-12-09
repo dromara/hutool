@@ -33,7 +33,6 @@ public class JSONConverter implements Converter<JSON> {
 	 * 
 	 * @param jsonArray JSONArray
 	 * @param arrayClass 数组元素类型
-	 * @param ignoreError 是否忽略转换异常
 	 * @return 数组对象
 	 */
 	protected static Object toArray(JSONArray jsonArray, Class<?> arrayClass) {
@@ -55,6 +54,7 @@ public class JSONConverter implements Converter<JSON> {
 	/**
 	 * JSON递归转换<br>
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
+	 * @param <T>
 	 * 
 	 * @param targetType 目标类型
 	 * @param value 值
@@ -62,7 +62,8 @@ public class JSONConverter implements Converter<JSON> {
 	 * @return 目标类型的值
 	 * @throws ConvertException 转换失败
 	 */
-	protected static Object jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
+	@SuppressWarnings("unchecked")
+	protected static <T> T jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
 		if (null == value) {
 			return null;
 		}
@@ -88,7 +89,7 @@ public class JSONConverter implements Converter<JSON> {
 			throw new ConvertException("Can not convert {} to type {}", value, ObjectUtil.defaultIfNull(TypeUtil.getClass(targetType), targetType));
 		}
 
-		return targetValue;
+		return (T) targetValue;
 	}
 
 	@Override

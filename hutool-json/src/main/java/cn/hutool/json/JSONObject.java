@@ -291,13 +291,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 
 	 * @param <T> Bean类型
 	 * @param type {@link Type}
-	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T toBean(Type type) {
-		return (T) JSONConverter.jsonConvert(type, this, false);
+		return JSONConverter.jsonConvert(type, this, false);
 	}
 
 	@Override
@@ -396,9 +394,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) JSONConverter.jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override
