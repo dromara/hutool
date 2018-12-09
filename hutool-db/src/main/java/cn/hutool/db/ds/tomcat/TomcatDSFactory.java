@@ -13,7 +13,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.ds.simple.SimpleDataSource;
 import cn.hutool.setting.Setting;
 
 /**
@@ -29,12 +28,22 @@ public class TomcatDSFactory extends DSFactory {
 	/** 数据源池 */
 	private Map<String, DataSource> dsMap;
 
+	/**
+	 * 构造
+	 * 
+	 * @param setting Setting数据库配置
+	 */
 	public TomcatDSFactory() {
 		this(null);
 	}
 
+	/**
+	 * 构造
+	 * 
+	 * @param setting Setting数据库配置
+	 */
 	public TomcatDSFactory(Setting setting) {
-		super(DS_NAME, SimpleDataSource.class, setting);
+		super(DS_NAME, DataSource.class, setting);
 		this.dsMap = new ConcurrentHashMap<>();
 	}
 
