@@ -8,6 +8,7 @@
 ### 新特性
 * 【core】        新增DateUtil.dateNew方法（issue#217@Github）
 * 【extra】       JschUtil.exec增加重载，可选错误输出（issue#IPNAB@Gitee）
+* 【core】       增加NoLock（issue#218@Github）
 
 ### Bug修复
 * 【db】          解决数据源识别错误问题（issue#IPNI7@Gitee）
