@@ -10,10 +10,12 @@
 * 【extra】       JschUtil.exec增加重载，可选错误输出（issue#IPNAB@Gitee）
 * 【core】       增加NoLock（issue#218@Github）
 * 【core】       QrCode.decode改进
+* 【core】       合并无必要的构造方法
 
 ### Bug修复
 * 【db】          解决数据源识别错误问题（issue#IPNI7@Gitee）
 * 【core】       修复DateField.of缺失字段问题（issue#IPP51@Gitee）
+* 【core】       JSONObject中忽略空值失效问题（issue#221@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

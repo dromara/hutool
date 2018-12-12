@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
@@ -29,6 +30,16 @@ import cn.hutool.json.test.bean.report.SuiteReport;
  *
  */
 public class JSONObjectTest {
+	
+	@Test
+	@Ignore
+	public void toStringTest() {
+		String str = "{\"code\": 500, \"data\":null}";
+		JSONObject jsonObject = new JSONObject(str);
+		Console.log(jsonObject);
+		jsonObject.getConfig().setIgnoreNullValue(true);
+		Console.log(jsonObject.toStringPretty());
+	}
 
 	@Test
 	public void putAllTest() {
@@ -184,8 +195,9 @@ public class JSONObjectTest {
 		JSONObject json = JSONUtil.createObj().put("code", 22).put("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
 		
 		JSONBean bean = json.toBean(JSONBean.class);
-		Console.log(bean.getCode());
-		Console.log(bean.getData());
+		Assert.assertEquals(22, bean.getCode());
+		Assert.assertEquals("abc", bean.getData().getObj("jobId"));
+		Assert.assertEquals("http://a.com/a.mp4", bean.getData().getObj("videoUrl"));
 	}
 
 	@Test

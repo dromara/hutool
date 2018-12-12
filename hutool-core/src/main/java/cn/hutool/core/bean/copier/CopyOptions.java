@@ -112,7 +112,7 @@ public class CopyOptions {
 	}
 	
 	/**
-	 * 设置是否忽略字段的注入错误
+	 * 设置是否忽略字段的大小写
 	 * 
 	 * @param ignoreCase 是否忽略大小写
 	 * @return CopyOptions
