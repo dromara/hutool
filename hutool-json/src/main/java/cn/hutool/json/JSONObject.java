@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,8 +22,9 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * JSON对象<br>
@@ -105,24 +105,31 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
-	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
-	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"<br>
-	 * 此方法会忽略空值，但是对JSON字符串不影响
+	 * 构建JSONObject，JavaBean默认忽略null值，其它对象不忽略，规则如下：
+	 * <ol>
+	 * <li>value为Map，将键值对加入JSON对象</li>
+	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
+	 * <li>value为JSONTokener，直接解析</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * </ol>
 	 * 
 	 * @param source JavaBean或者Map对象或者String
 	 */
 	public JSONObject(Object source) {
-		this(source, true);
+		this(source, InternalJSONUtil.defaultIgnoreNullValue(source));
 	}
 
 	/**
-	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
-	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
-	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
+	 * 构建JSONObject，规则如下：
+	 * <ol>
+	 * <li>value为Map，将键值对加入JSON对象</li>
+	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
+	 * <li>value为JSONTokener，直接解析</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * </ol>
 	 * 
 	 * @param source JavaBean或者Map对象或者String
-	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @param ignoreNullValue 是否忽略空值
 	 * @since 3.0.9
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue) {
@@ -130,9 +137,13 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * 构建JSONObject，如果给定值为Map，将键值对加入JSON对象;<br>
-	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
-	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
+	 * 构建JSONObject，规则如下：
+	 * <ol>
+	 * <li>value为Map，将键值对加入JSON对象</li>
+	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
+	 * <li>value为JSONTokener，直接解析</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * </ol>
 	 * 
 	 * @param source JavaBean或者Map对象或者String
 	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
@@ -140,9 +151,30 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @since 4.2.2
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
-		this(DEFAULT_CAPACITY, JSONConfig.create().setOrder(isOrder)//
+		this(source, JSONConfig.create().setOrder(isOrder)//
 				.setIgnoreCase((source instanceof CaseInsensitiveMap) || (source instanceof CaseInsensitiveLinkedMap))//
 				.setIgnoreNullValue(ignoreNullValue));
+	}
+
+	/**
+	 * 构建JSONObject，规则如下：
+	 * <ol>
+	 * <li>value为Map，将键值对加入JSON对象</li>
+	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
+	 * <li>value为JSONTokener，直接解析</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * </ol>
+	 * 
+	 * 如果给定值为Map，将键值对加入JSON对象;<br>
+	 * 如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象<br>
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"
+	 * 
+	 * @param source JavaBean或者Map对象或者String
+	 * @param config JSON配置文件
+	 * @since 4.2.2
+	 */
+	public JSONObject(Object source, JSONConfig config) {
+		this(DEFAULT_CAPACITY, config);
 		init(source);
 	}
 
@@ -153,6 +185,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 1. 若obj为Map，则获取name列表对应键值对
 	 * 2. 若obj为普通Bean，使用反射方式获取字段名和字段值
 	 * </pre>
+	 * 
 	 * KEY或VALUE任意一个为null则不加入，字段不存在也不加入<br>
 	 * 若names列表为空，则字段全部加入
 	 *
@@ -161,18 +194,18 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	public JSONObject(Object obj, String... names) {
 		this();
-		if(ArrayUtil.isEmpty(names)) {
+		if (ArrayUtil.isEmpty(names)) {
 			init(obj);
 			return;
 		}
-		
+
 		if (obj instanceof Map) {
 			Object value;
 			for (String name : names) {
-				value = ((Map<?, ?>)obj).get(name);
+				value = ((Map<?, ?>) obj).get(name);
 				this.putOnce(name, value);
 			}
-		}else {
+		} else {
 			for (String name : names) {
 				try {
 					this.putOpt(name, ReflectUtil.getFieldValue(obj, name));
@@ -184,17 +217,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	/**
-	 * 从JSON字符串解析为JSON对象，JSON中的键值对无序
-	 *
-	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
-	 * @exception JSONException JSON字符串语法错误
-	 */
-	public JSONObject(CharSequence source) throws JSONException {
-		this(source, false);
-	}
-
-	/**
-	 * 从JSON字符串解析为JSON对象
+	 * 从JSON字符串解析为JSON对象，对于排序单独配置参数
 	 *
 	 * @param source 以大括号 {} 包围的字符串，其中KEY和VALUE使用 : 分隔，每个键值对使用逗号分隔
 	 * @param isOrder 是否有序
@@ -202,32 +225,20 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @since 4.2.2
 	 */
 	public JSONObject(CharSequence source, boolean isOrder) throws JSONException {
-		this(new JSONTokener(StrUtil.str(source)), isOrder);
-	}
-	
-	/**
-	 * 使用{@link JSONTokener}构建
-	 *
-	 * @param x {@link JSONTokener}
-	 * @throws JSONException 语法错误
-	 */
-	public JSONObject(JSONTokener x) throws JSONException {
-		this(x, false);
+		this(source, JSONConfig.create().setOrder(isOrder));
 	}
 
-	/**
-	 * 使用{@link JSONTokener}构建
-	 *
-	 * @param x {@link JSONTokener}
-	 * @param isOrder 是否有序
-	 * @throws JSONException 语法错误
-	 * @since 4.0.10
-	 */
-	public JSONObject(JSONTokener x, boolean isOrder) throws JSONException {
-		this(isOrder);
-		init(x);
-	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
+
+	/**
+	 * 获取JSON配置
+	 * 
+	 * @return {@link JSONConfig}
+	 * @since 4.3.1
+	 */
+	public JSONConfig getConfig() {
+		return this.config;
+	}
 
 	/**
 	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
@@ -271,7 +282,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @return 实体类对象
 	 */
 	public <T> T toBean(Class<T> clazz) {
-		return toBean((Type)clazz);
+		return toBean((Type) clazz);
 	}
 
 	/**
@@ -291,13 +302,11 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 
 	 * @param <T> Bean类型
 	 * @param type {@link Type}
-	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T toBean(Type type) {
-		return (T) JSONConverter.jsonConvert(type, this, false);
+		return JSONConverter.jsonConvert(type, this, false);
 	}
 
 	@Override
@@ -331,74 +340,14 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		return null == obj ? defaultValue : obj;
 	}
 
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * @param expression 表达式
-	 * @return 对象
-	 * @see BeanPath#get(Object)
-	 * @deprecated 请使用{@link #getByPath(String)}
-	 */
-	@Override
-	@Deprecated
-	public Object getByExp(String expression) {
-		return getByPath(expression);
-	}
-
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * 获取表达式对应值后转换为对应类型的值
-	 * 
-	 * @param <T> 返回值类型
-	 * @param expression 表达式
-	 * @param resultType 返回值类型
-	 * @return 对象
-	 * @see BeanPath#get(Object)
-	 * @since 3.1.0
-	 * @deprecated 请使用{@link #getByPath(String, Class)}
-	 */
-	@Deprecated
-	@Override
-	public <T> T getByExp(String expression, Class<T> resultType) {
-		return getByPath(expression, resultType);
-	}
-
 	@Override
 	public Object getByPath(String expression) {
 		return BeanPath.create(expression).get(this);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) JSONConverter.jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override
@@ -421,7 +370,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		}
 
 		final boolean ignoreNullValue = this.config.isIgnoreNullValue();
-		if (null == value && ignoreNullValue) {
+		if (ObjectUtil.isNull(value) && ignoreNullValue) {
 			// 忽略值模式下如果值为空清除key
 			this.remove(key);
 		} else {
@@ -467,7 +416,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	@Override
 	public void putAll(Map<? extends String, ? extends Object> m) {
 		for (Entry<? extends String, ? extends Object> entry : m.entrySet()) {
-			put(entry.getKey(), entry.getValue());
+			this.put(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -645,53 +594,63 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
-		boolean commanate = false;
-		final int length = this.size();
-		Iterator<String> keys = this.keySet().iterator();
 		try {
-			writer.write(StrUtil.C_DELIM_START);
-			if (length == 1) {
-				// 只有一对键值对
-				Object key = keys.next();
-				writer.write(JSONUtil.quote(key.toString()));
-				writer.write(StrUtil.C_COLON);
-				if (indentFactor > 0) {
-					writer.write(StrUtil.C_SPACE);
-				}
-				InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, indent, this.config);
-			} else if (length != 0) {
-				final int newindent = indent + indentFactor;
-				Object key;
-				while (keys.hasNext()) {
-					key = keys.next();
-					if (commanate) {
-						writer.write(StrUtil.C_COMMA);
-					}
-					if (indentFactor > 0) {
-						writer.write(StrUtil.C_LF);
-					}
-					InternalJSONUtil.indent(writer, newindent);
-					writer.write(JSONUtil.quote(key.toString()));
-					writer.write(StrUtil.C_COLON);
-					if (indentFactor > 0) {
-						writer.write(StrUtil.C_SPACE);
-					}
-					InternalJSONUtil.writeValue(writer, this.rawHashMap.get(key), indentFactor, newindent, this.config);
-					commanate = true;
-				}
-				if (indentFactor > 0) {
-					writer.write(StrUtil.C_LF);
-				}
-				InternalJSONUtil.indent(writer, indent);
-			}
-			writer.write(StrUtil.C_DELIM_END);
-			return writer;
+			return doWrite(writer, indentFactor, indent);
 		} catch (IOException exception) {
 			throw new JSONException(exception);
 		}
 	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 将JSON内容写入Writer
+	 * 
+	 * @param writer writer
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent 本级别缩进量
+	 * @return Writer
+	 * @throws JSONException JSON相关异常
+	 */
+	private Writer doWrite(Writer writer, int indentFactor, int indent) throws IOException {
+		writer.write(CharUtil.DELIM_START);
+		boolean isFirst = true;
+		final boolean isIgnoreNullValue = this.config.isIgnoreNullValue();
+		final int newIndent = indent + indentFactor;
+		for (Entry<String, Object> entry : this.entrySet()) {
+			if (ObjectUtil.isNull(entry.getKey()) || (ObjectUtil.isNull(entry.getValue()) && isIgnoreNullValue)) {
+				continue;
+			}
+
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				// 键值对分隔
+				writer.write(CharUtil.COMMA);
+			}
+			// 换行缩进
+			if (indentFactor > 0) {
+				writer.write(CharUtil.LF);
+			}
+
+			InternalJSONUtil.indent(writer, newIndent);
+			writer.write(JSONUtil.quote(entry.getKey().toString()));
+			writer.write(CharUtil.COLON);
+			if (indentFactor > 0) {
+				// 冒号后的空格
+				writer.write(CharUtil.SPACE);
+			}
+			InternalJSONUtil.writeValue(writer, entry.getValue(), indentFactor, newIndent, this.config);
+		}
+
+		// 结尾符
+		if (indentFactor > 0) {
+			writer.write(CharUtil.LF);
+		}
+		InternalJSONUtil.indent(writer, indent);
+		writer.write(CharUtil.DELIM_END);
+		return writer;
+	}
+
 	/**
 	 * Bean对象转Map
 	 * 
@@ -719,7 +678,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 				continue;
 			}
 
-			if (null == value && this.config.isIgnoreNullValue()) {
+			if (ObjectUtil.isNull(value) && this.config.isIgnoreNullValue()) {
 				// 值为null且用户定义跳过则跳过
 				continue;
 			}
@@ -733,28 +692,38 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 	/**
 	 * 初始化
+	 * <ol>
+	 * <li>value为Map，将键值对加入JSON对象</li>
+	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
+	 * <li>value为JSONTokener，直接解析</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * </ol>
 	 * 
 	 * @param source JavaBean或者Map对象或者String
 	 */
 	private void init(Object source) {
-		if (null != source) {
-			if (source instanceof Map) {
-				boolean ignoreNullValue = this.config.isIgnoreNullValue();
-				for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-					final Object value = e.getValue();
-					if (false == ignoreNullValue || null != value) {
-						this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value, ignoreNullValue));
-					}
+		if (null == source) {
+			return;
+		}
+
+		if (source instanceof Map) {
+			boolean ignoreNullValue = this.config.isIgnoreNullValue();
+			for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
+				final Object value = e.getValue();
+				if (false == ignoreNullValue || null != value) {
+					this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value, ignoreNullValue));
 				}
-			} else if (source instanceof CharSequence) {
-				// 可能为JSON字符串
-				init((CharSequence) source);
-			} else if (source instanceof Number) {
-				// ignore Number
-			} else {
-				// 普通Bean
-				this.populateMap(source);
 			}
+		} else if (source instanceof CharSequence) {
+			// 可能为JSON字符串
+			init((CharSequence) source);
+		} else if (source instanceof JSONTokener) {
+			init((JSONTokener) source);
+		} else if (source instanceof Number) {
+			// ignore Number
+		} else {
+			// 普通Bean
+			this.populateMap(source);
 		}
 	}
 

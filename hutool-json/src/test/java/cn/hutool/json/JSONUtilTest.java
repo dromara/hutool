@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
@@ -32,7 +33,7 @@ public class JSONUtilTest {
 		map.put("total", 13);
 		map.put("rows", list);
 
-		String str = JSONUtil.toJsonStr(map);
+		String str = JSONUtil.toJsonPrettyStr(map);
 		Assert.assertNotNull(str);
 	}
 
@@ -44,8 +45,12 @@ public class JSONUtilTest {
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("model", model);
+		data.put("model2", model);
 
 		JSONObject jsonObject = JSONUtil.parseObj(data);
+		
+		Console.log(jsonObject.toStringPretty());
+		
 		Assert.assertTrue(jsonObject.containsKey("model"));
 		Assert.assertEquals(1, jsonObject.getJSONObject("model").getInt("type").intValue());
 		Assert.assertEquals("17610836523", jsonObject.getJSONObject("model").getStr("mobile"));

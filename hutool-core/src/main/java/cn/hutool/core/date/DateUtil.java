@@ -33,7 +33,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * {@link Date}类型时间转为{@link DateTime}
+	 * {@link Date}类型时间转为{@link DateTime}<br>
+	 * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
 	 * 
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
@@ -43,6 +44,16 @@ public class DateUtil {
 		if (date instanceof DateTime) {
 			return (DateTime) date;
 		}
+		return dateNew(date);
+	}
+	
+	/**
+	 * 根据已有{@link Date} 产生新的{@link DateTime}对象
+	 * @param date Date对象
+	 * @return {@link DateTime}对象
+	 * @since 4.3.1
+	 */
+	public static DateTime dateNew(Date date) {
 		return new DateTime(date);
 	}
 
@@ -58,7 +69,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * {@link Calendar}类型时间转为{@link DateTime}
+	 * {@link Calendar}类型时间转为{@link DateTime}<br>
+	 * 始终根据已有{@link Calendar} 产生新的{@link DateTime}对象
 	 * 
 	 * @param calendar {@link Calendar}
 	 * @return 时间对象

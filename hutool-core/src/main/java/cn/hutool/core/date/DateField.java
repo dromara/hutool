@@ -117,6 +117,12 @@ public enum DateField {
 				return DAY_OF_WEEK;
 			case Calendar.DAY_OF_WEEK_IN_MONTH:
 				return DAY_OF_WEEK_IN_MONTH;
+			case Calendar.AM_PM:
+				return AM_PM;
+			case Calendar.HOUR:
+				return HOUR;
+			case Calendar.HOUR_OF_DAY:
+				return HOUR_OF_DAY;
 			case Calendar.MINUTE:
 				return MINUTE;
 			case Calendar.SECOND:

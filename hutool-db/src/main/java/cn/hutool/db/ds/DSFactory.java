@@ -243,6 +243,8 @@ public abstract class DSFactory {
 		try {
 			return new TomcatDSFactory(setting);
 		} catch (NoClassDefFoundError e) {
+			//如果未引入包，此处会报org.apache.tomcat.jdbc.pool.PoolConfiguration未找到错误
+			//因为org.apache.tomcat.jdbc.pool.DataSource实现了此接口，会首先检查接口的存在与否
 			// ignore
 		}
 		try {

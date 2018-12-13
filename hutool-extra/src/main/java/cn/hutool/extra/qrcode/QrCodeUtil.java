@@ -274,7 +274,7 @@ public class QrCodeUtil {
 	public static String decode(File qrCodeFile) {
 		return decode(ImageUtil.read(qrCodeFile));
 	}
-
+	
 	/**
 	 * 将二维码图片解码为文本
 	 * 
@@ -282,6 +282,19 @@ public class QrCodeUtil {
 	 * @return 解码后的文本
 	 */
 	public static String decode(Image image) {
+		return decode(image, true, false);
+	}
+
+	/**
+	 * 将二维码图片解码为文本
+	 * 
+	 * @param image {@link Image} 二维码图片
+	 * @param isTryHarder 是否优化精度
+	 * @param isPureBarcode 是否使用复杂模式，扫描带logo的二维码设为true
+	 * @return 解码后的文本
+	 * @since 4.3.1
+	 */
+	public static String decode(Image image, boolean isTryHarder, boolean isPureBarcode) {
 		final MultiFormatReader formatReader = new MultiFormatReader();
 
 		final LuminanceSource source = new BufferedImageLuminanceSource(ImageUtil.toBufferedImage(image));
@@ -291,14 +304,20 @@ public class QrCodeUtil {
 		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
 		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.UTF_8);
 		// 优化精度
-		hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+		hints.put(DecodeHintType.TRY_HARDER, Boolean.valueOf(isTryHarder));
 		// 复杂模式，开启PURE_BARCODE模式
-		hints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE);
+		hints.put(DecodeHintType.PURE_BARCODE, Boolean.valueOf(isPureBarcode));
 		Result result;
 		try {
 			result = formatReader.decode(binaryBitmap, hints);
 		} catch (NotFoundException e) {
-			throw new QrCodeException(e);
+			// 报错尝试关闭复杂模式
+			hints.remove(DecodeHintType.PURE_BARCODE);
+			try {
+				result = formatReader.decode(binaryBitmap, hints);
+			} catch (NotFoundException e1) {
+				throw new QrCodeException(e1);
+			}
 		}
 
 		return result.getText();

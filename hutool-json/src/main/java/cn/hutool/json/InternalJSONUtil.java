@@ -10,6 +10,7 @@ import java.util.Map;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -39,6 +40,7 @@ final class InternalJSONUtil {
 	 */
 	protected static final Writer writeValue(Writer writer, Object value, int indentFactor, int indent, JSONConfig config) throws JSONException, IOException {
 		if (value == null || value instanceof JSONNull) {
+			writer.write(JSONNull.NULL.toString());
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent);
 		} else if (value instanceof Map) {
@@ -75,7 +77,7 @@ final class InternalJSONUtil {
 	 */
 	protected static final void indent(Writer writer, int indent) throws IOException {
 		for (int i = 0; i < indent; i += 1) {
-			writer.write(' ');
+			writer.write(CharUtil.SPACE);
 		}
 	}
 
@@ -202,6 +204,21 @@ final class InternalJSONUtil {
 		}
 		target.put(path[last], value);
 		return jsonObject;
+	}
+	
+	/**
+	 * 默认情况下是否忽略null值的策略选择<br>
+	 * JavaBean默认忽略null值，其它对象不忽略
+	 * 
+	 * @param obj 需要检查的对象
+	 * @return 是否忽略null值
+	 * @since 4.3.1
+	 */
+	protected static boolean defaultIgnoreNullValue(Object obj) {
+		if(obj instanceof CharSequence || obj instanceof JSONTokener || obj instanceof Map) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

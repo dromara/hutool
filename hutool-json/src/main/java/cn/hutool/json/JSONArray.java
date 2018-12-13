@@ -12,6 +12,8 @@ import java.util.ListIterator;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * JSON数组<br>
@@ -195,73 +197,14 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		return (index < 0 || index >= this.size()) ? defaultValue : this.rawList.get(index);
 	}
 
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * @param expression 表达式
-	 * @return 对象
-	 * @see BeanPath#get(Object)
-	 * @deprecated 请使用{@link #getByPath(String)}
-	 */
-	@Override
-	public Object getByExp(String expression) {
-		return getByPath(expression);
-	}
-
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * 获取表达式对应值后转换为对应类型的值
-	 * 
-	 * @param <T> 返回值类型
-	 * @param expression 表达式
-	 * @param resultType 返回值类型
-	 * @return 对象
-	 * @see BeanPath#get(Object)
-	 * @since 3.1.0
-	 * @deprecated 请使用{@link #getByPath(String, Class)}
-	 */
-	@Deprecated
-	@Override
-	public <T> T getByExp(String expression, Class<T> resultType) {
-		return getByPath(expression, resultType);
-	}
-
 	@Override
 	public Object getByPath(String expression) {
 		return BeanPath.create(expression).get(this);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) JSONConverter.jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
 
 	@Override
@@ -340,87 +283,6 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * 转为JSON字符串，无缩进
-	 *
-	 * @return JSONArray字符串
-	 */
-	@Override
-	public String toString() {
-		try {
-			return this.toJSONString(0);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	/**
-	 * 格式化打印JSON，缩进为4个空格
-	 * 
-	 * @return 格式化后的JSON字符串
-	 * @throws JSONException 包含非法数抛出此异常
-	 * @since 3.0.9
-	 */
-	@Override
-	public String toStringPretty() throws JSONException {
-		return this.toJSONString(4);
-	}
-
-	/**
-	 * 转为JSON字符串，指定缩进值
-	 *
-	 * @param indentFactor 缩进值，既缩进空格数
-	 * @return JSON字符串
-	 * @throws JSONException JSON写入异常
-	 */
-	@Override
-	public String toJSONString(int indentFactor) throws JSONException {
-		StringWriter sw = new StringWriter();
-		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0).toString();
-		}
-	}
-
-	@Override
-	public Writer write(Writer writer) throws JSONException {
-		return this.write(writer, 0, 0);
-	}
-
-	@Override
-	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
-		try {
-			boolean commanate = false;
-			int length = this.size();
-			writer.write('[');
-
-			if (length == 1) {
-				InternalJSONUtil.writeValue(writer, this.rawList.get(0), indentFactor, indent, this.config);
-			} else if (length != 0) {
-				final int newindent = indent + indentFactor;
-
-				for (int i = 0; i < length; i += 1) {
-					if (commanate) {
-						writer.write(',');
-					}
-					if (indentFactor > 0) {
-						writer.write('\n');
-					}
-					InternalJSONUtil.indent(writer, newindent);
-					InternalJSONUtil.writeValue(writer, this.rawList.get(i), indentFactor, newindent, this.config);
-					commanate = true;
-				}
-				if (indentFactor > 0) {
-					writer.write('\n');
-				}
-				InternalJSONUtil.indent(writer, indent);
-			}
-			writer.write(']');
-			return writer;
-		} catch (IOException e) {
-			throw new JSONException(e);
-		}
 	}
 
 	@Override
@@ -591,8 +453,103 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	public <T> List<T> toList(Class<T> elementType) {
 		return JSONConverter.toList(this, elementType);
 	}
+	
+	/**
+	 * 转为JSON字符串，无缩进
+	 *
+	 * @return JSONArray字符串
+	 */
+	@Override
+	public String toString() {
+		try {
+			return this.toJSONString(0);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * 格式化打印JSON，缩进为4个空格
+	 * 
+	 * @return 格式化后的JSON字符串
+	 * @throws JSONException 包含非法数抛出此异常
+	 * @since 3.0.9
+	 */
+	@Override
+	public String toStringPretty() throws JSONException {
+		return this.toJSONString(4);
+	}
+
+	/**
+	 * 转为JSON字符串，指定缩进值
+	 *
+	 * @param indentFactor 缩进值，既缩进空格数
+	 * @return JSON字符串
+	 * @throws JSONException JSON写入异常
+	 */
+	@Override
+	public String toJSONString(int indentFactor) throws JSONException {
+		StringWriter sw = new StringWriter();
+		synchronized (sw.getBuffer()) {
+			return this.write(sw, indentFactor, 0).toString();
+		}
+	}
+
+	@Override
+	public Writer write(Writer writer) throws JSONException {
+		return this.write(writer, 0, 0);
+	}
+
+	@Override
+	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
+		try {
+			return doWrite(writer, indentFactor, indent);
+		} catch (IOException e) {
+			throw new JSONException(e);
+		}
+	}
 
 	// ------------------------------------------------------------------------------------------------- Private method start
+	
+	/**
+	 * 将JSON内容写入Writer
+	 * 
+	 * @param writer writer
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent 本级别缩进量
+	 * @return Writer
+	 * @throws IOException IO相关异常
+	 */
+	private Writer doWrite(Writer writer, int indentFactor, int indent) throws IOException {
+		writer.write(CharUtil.BRACKET_START);
+		final int newindent = indent + indentFactor;
+		final boolean isIgnoreNullValue = this.config.isIgnoreNullValue();
+		boolean isFirst = true;
+		for (Object obj : this.rawList) {
+			if(ObjectUtil.isNull(obj) && isIgnoreNullValue) {
+				continue;
+			}
+			if (isFirst) {
+				isFirst = false;
+			}else {
+				writer.write(CharUtil.COMMA);
+			}
+			
+			if (indentFactor > 0) {
+				writer.write(CharUtil.LF);
+			}
+			InternalJSONUtil.indent(writer, newindent);
+			InternalJSONUtil.writeValue(writer, obj, indentFactor, newindent, this.config);
+		}
+		
+		if (indentFactor > 0) {
+			writer.write(CharUtil.LF);
+		}
+		InternalJSONUtil.indent(writer, indent);
+		writer.write(CharUtil.BRACKET_END);
+		return writer;
+	}
+	
 	/**
 	 * 初始化
 	 * 

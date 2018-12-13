@@ -2,8 +2,11 @@ package cn.hutool.core.lang;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import cn.hutool.core.thread.lock.NoLock;
 
 /**
  * 范围生成器。根据给定的初始值、结束值和步进生成一个步进列表生成器<br>
@@ -16,7 +19,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class Range<T> implements Iterable<T>, Iterator<T>{
 	
 	/** 锁保证线程安全 */
-	private final ReentrantLock lock = new ReentrantLock();
+	private Lock lock = new ReentrantLock();
 	/** 起始对象 */
 	private T start;
 	/** 结束对象 */
@@ -69,6 +72,17 @@ public class Range<T> implements Iterable<T>, Iterator<T>{
 		this.next = safeStep(this.current);
 		this.includeStart = isIncludeStart;
 		this.includeEnd = isIncludeEnd;
+	}
+	
+	/**
+	 * 禁用锁，调用此方法后不在 使用锁保护
+	 * 
+	 * @return this
+	 * @since 4.3.1
+	 */
+	public Range<T> disableLock() {
+		this.lock = new NoLock();
+		return this;
 	}
 	
 	@Override

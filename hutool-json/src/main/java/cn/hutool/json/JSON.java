@@ -32,59 +32,6 @@ public interface JSON extends Serializable{
 	 * @param expression 表达式
 	 * @return 对象
 	 * @see BeanPath#get(Object)
-	 * @deprecated 请使用{@link #getByPath(String)}
-	 */
-	@Deprecated
-	public Object getByExp(String expression);
-
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * 获取表达式对应值后转换为对应类型的值
-	 * 
-	 * @param <T> 返回值类型
-	 * @param expression 表达式
-	 * @param resultType 返回值类型
-	 * @return 对象
-	 * @see BeanPath#get(Object)
-	 * @since 3.1.0
-	 * @deprecated 请使用{@link #getByPath(String, Class)}
-	 */
-	@Deprecated
-	public <T> T getByExp(String expression, Class<T> resultType);
-
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * @param expression 表达式
-	 * @return 对象
-	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
 	public Object getByPath(String expression);
@@ -154,8 +101,8 @@ public interface JSON extends Serializable{
 	 * Warning: This method assumes that the data structure is acyclical.
 	 * 
 	 * @param writer writer
-	 * @param indentFactor 每一级别的缩进量
-	 * @param indent 顶级别缩进量
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent 本级别缩进量
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 */
@@ -164,7 +111,7 @@ public interface JSON extends Serializable{
 	/**
 	 * 转换为JSON字符串
 	 * 
-	 * @param indentFactor 每一级别的缩进
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
 	 * @return JSON字符串
 	 * @throws JSONException JSON相关异常
 	 */
