@@ -11,6 +11,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.dialect.DriverUtil;
@@ -94,7 +95,7 @@ public class HikariDSFactory extends DSFactory {
 		}
 
 		final Props config = setting.getProps(group);
-		if (CollectionUtil.isEmpty(config)) {
+		if (MapUtil.isEmpty(config)) {
 			throw new DbRuntimeException("No HikariCP config for group: [{}]", group);
 		}
 		

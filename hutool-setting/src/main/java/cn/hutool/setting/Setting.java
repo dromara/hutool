@@ -264,7 +264,8 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return map
 	 */
 	public Map<String, String> getMap(String group) {
-		return this.groupedMap.get(group);
+		final LinkedHashMap<String, String> map = this.groupedMap.get(group);
+		return (null != map) ? map : new LinkedHashMap<String, String>(0);
 	}
 
 	/**

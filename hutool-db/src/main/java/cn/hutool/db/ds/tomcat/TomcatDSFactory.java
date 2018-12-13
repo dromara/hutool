@@ -30,8 +30,6 @@ public class TomcatDSFactory extends DSFactory {
 
 	/**
 	 * 构造
-	 * 
-	 * @param setting Setting数据库配置
 	 */
 	public TomcatDSFactory() {
 		this(null);

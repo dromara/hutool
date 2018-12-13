@@ -11,6 +11,7 @@
 * 【core】       增加NoLock（issue#218@Github）
 * 【core】       QrCode.decode改进
 * 【core】       合并无必要的构造方法
+* 【setting】    Setting.getMap方法在分组不存在时返回空Map而非null（issue#IPU2X@Gitee）
 
 ### Bug修复
 * 【db】          解决数据源识别错误问题（issue#IPNI7@Gitee）
