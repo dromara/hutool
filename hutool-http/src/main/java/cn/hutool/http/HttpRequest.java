@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URLStreamHandler;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -414,7 +415,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			// 自定义流上传
 			return this.form(name, (Resource) value);
 		} else if (this.form == null) {
-			this.form = new HashMap<>();
+			this.form = new LinkedHashMap<>();
 		}
 
 		String strValue;

@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core】        StrUtil增加equalsAny和equalsAnyIgnoreCase方法（issue#IPUQK@Gitee）
+* 【http】         StrUtil增加equalsAny和equalsAnyIgnoreCase方法（issue#223@Github）
 
 ### Bug修复
 
