@@ -6,6 +6,7 @@
 ## 4.3.2
 
 ### 新特性
+* 【core】        StrUtil增加equalsAny和equalsAnyIgnoreCase方法（issue#IPUQK@Gitee）
 
 ### Bug修复
 

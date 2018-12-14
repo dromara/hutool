@@ -2060,6 +2060,55 @@ public class StrUtil {
 			return str1.equals(str2);
 		}
 	}
+	
+	/**
+	 * 给定字符串是否与提供的中任一字符串相同（忽略大小写），相同则返回{@code true}，没有相同的返回{@code false}<br>
+	 * 如果参与比对的字符串列表为空，返回{@code false}
+	 * 
+	 * @param str1 给定需要检查的字符串
+	 * @param strs 需要参与比对的字符串列表
+	 * @return 是否相同
+	 * @since 4.3.2
+	 */
+	public static boolean equalsAnyIgnoreCase(CharSequence str1, CharSequence... strs) {
+		return equalsAny(str1, true, strs);
+	}
+	
+	/**
+	 * 给定字符串是否与提供的中任一字符串相同，相同则返回{@code true}，没有相同的返回{@code false}<br>
+	 * 如果参与比对的字符串列表为空，返回{@code false}
+	 * 
+	 * @param str1 给定需要检查的字符串
+	 * @param strs 需要参与比对的字符串列表
+	 * @return 是否相同
+	 * @since 4.3.2
+	 */
+	public static boolean equalsAny(CharSequence str1, CharSequence... strs) {
+		return equalsAny(str1, false, strs);
+	}
+
+	/**
+	 * 给定字符串是否与提供的中任一字符串相同，相同则返回{@code true}，没有相同的返回{@code false}<br>
+	 * 如果参与比对的字符串列表为空，返回{@code false}
+	 * 
+	 * @param str1 给定需要检查的字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @param strs 需要参与比对的字符串列表
+	 * @return 是否相同
+	 * @since 4.3.2
+	 */
+	public static boolean equalsAny(CharSequence str1, boolean ignoreCase, CharSequence... strs) {
+		if (ArrayUtil.isEmpty(strs)) {
+			return false;
+		}
+
+		for (CharSequence str : strs) {
+			if (equals(str1, str, ignoreCase)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 格式化文本, {} 表示占位符<br>
