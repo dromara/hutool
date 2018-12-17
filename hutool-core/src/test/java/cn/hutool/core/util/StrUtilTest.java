@@ -363,4 +363,28 @@ public class StrUtilTest {
 		containsAny = StrUtil.containsAny("aaabbbccc", "d", "c");
 		Assert.assertTrue(containsAny);
 	}
+	
+	@Test
+	public void centerTest() {
+		Assert.assertNull(StrUtil.center(null, 10));
+		Assert.assertEquals("    ", StrUtil.center("", 4));
+		Assert.assertEquals("ab", StrUtil.center("ab", -1));
+		Assert.assertEquals(" ab ", StrUtil.center("ab", 4));
+		Assert.assertEquals("abcd", StrUtil.center("abcd", 2));
+		Assert.assertEquals(" a  ", StrUtil.center("a", 4));
+	}
+	
+	@Test
+	public void padPreTest() {
+		Assert.assertNull(StrUtil.padPre(null, 10, ' '));
+		Assert.assertEquals("001", StrUtil.padPre("1", 3, '0'));
+		Assert.assertEquals("12", StrUtil.padPre("123", 2, '0'));
+	}
+	
+	@Test
+	public void padAfterTest() {
+		Assert.assertNull(StrUtil.padAfter(null, 10, ' '));
+		Assert.assertEquals("100", StrUtil.padAfter("1", 3, '0'));
+		Assert.assertEquals("23", StrUtil.padAfter("123", 2, '0'));
+	}
 }
