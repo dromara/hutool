@@ -11,6 +11,8 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,8 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
@@ -320,7 +326,7 @@ public class ImageUtil {
 	public static BufferedImage cut(Image srcImage, Rectangle rectangle) {
 		return Img.from(srcImage).setPositionBaseCentre(false).cut(rectangle).getImg();
 	}
-	
+
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)，填充满整个图片（直径取长宽最小值）
 	 * 
@@ -333,7 +339,7 @@ public class ImageUtil {
 	public static BufferedImage cut(Image srcImage, int x, int y) {
 		return cut(srcImage, x, y, -1);
 	}
-	
+
 	/**
 	 * 图像切割(按指定起点坐标和宽高切割)
 	 * 
@@ -1107,7 +1113,36 @@ public class ImageUtil {
 		return Img.from(image).flip().getImg();
 	}
 
+	// ---------------------------------------------------------------------------------------------------------------------- compress
+	/**
+	 * 压缩图像，输出图像只支持jpg文件
+	 * 
+	 * @param imageFile 图像文件
+	 * @param outFile 输出文件，只支持jpg文件
+	 * @throws IORuntimeException IO异常
+	 * @since 4.3.2
+	 */
+	public static void compress(File imageFile, File outFile, float quality) throws IORuntimeException {
+		Img.from(imageFile).setQuality(quality).write(outFile);
+	}
+
 	// ---------------------------------------------------------------------------------------------------------------------- other
+	/**
+	 * {@link Image} 转 {@link RenderedImage}<br>
+	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制
+	 * 
+	 * @param img {@link Image}
+	 * @return {@link BufferedImage}
+	 * @since 4.3.2
+	 */
+	public static RenderedImage toRenderedImage(Image img) {
+		if (img instanceof RenderedImage) {
+			return (RenderedImage) img;
+		}
+
+		return copyImage(img, BufferedImage.TYPE_INT_RGB);
+	}
+
 	/**
 	 * {@link Image} 转 {@link BufferedImage}<br>
 	 * 首先尝试强转，否则新建一个{@link BufferedImage}后重新绘制
@@ -1121,6 +1156,33 @@ public class ImageUtil {
 		}
 
 		return copyImage(img, BufferedImage.TYPE_INT_RGB);
+	}
+
+	/**
+	 * {@link Image} 转 {@link BufferedImage}<br>
+	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制
+	 * 
+	 * @param img {@link Image}
+	 * @param imageType 目标图片类型
+	 * @return {@link BufferedImage}
+	 * @since 4.3.2
+	 */
+	public static BufferedImage toBufferedImage(Image image, String imageType) {
+		BufferedImage bufferedImage;
+		if (false == imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)) {
+			// 当目标为非PNG类图片时，源图片统一转换为RGB格式
+			if (image instanceof BufferedImage) {
+				bufferedImage = (BufferedImage) image;
+				if (BufferedImage.TYPE_INT_RGB != bufferedImage.getType()) {
+					bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
+				}
+			} else {
+				bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
+			}
+		} else {
+			bufferedImage = toBufferedImage(image);
+		}
+		return bufferedImage;
 	}
 
 	/**
@@ -1346,33 +1408,32 @@ public class ImageUtil {
 	 * @param image {@link Image}
 	 * @param imageType 图片类型（图片扩展名）
 	 * @param destImageStream 写出到的目标流
+	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
 	 * @throws IORuntimeException IO异常
 	 * @since 3.1.2
 	 */
-	public static void write(Image image, String imageType, ImageOutputStream destImageStream) throws IORuntimeException {
+	public static boolean write(Image image, String imageType, ImageOutputStream destImageStream) throws IORuntimeException {
+		return write(image, imageType, destImageStream, 1);
+	}
+
+	/**
+	 * 写出图像为指定格式
+	 * 
+	 * @param image {@link Image}
+	 * @param imageType 图片类型（图片扩展名）
+	 * @param destImageStream 写出到的目标流
+	 * @param quality 质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
+	 * @return 是否成功写出，如果返回false表示未找到合适的Writer
+	 * @throws IORuntimeException IO异常
+	 * @since 4.3.2
+	 */
+	public static boolean write(Image image, String imageType, ImageOutputStream destImageStream, float quality) throws IORuntimeException {
 		if (StrUtil.isBlank(imageType)) {
 			imageType = IMAGE_TYPE_JPG;
 		}
-		
-		BufferedImage bufferedImage;
-		if(false == imageType.equalsIgnoreCase(IMAGE_TYPE_PNG)) {
-			//当目标为非PNG类图片时，源图片统一转换为RGB格式
-			if(image instanceof BufferedImage) {
-				bufferedImage = (BufferedImage)image;
-				if(BufferedImage.TYPE_INT_RGB != bufferedImage.getType()) {
-					bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
-				}
-			}else {
-				bufferedImage = copyImage(image, BufferedImage.TYPE_INT_RGB);
-			}
-		}else {
-			bufferedImage = toBufferedImage(image);
-		}
-		try {
-			ImageIO.write(bufferedImage, imageType, destImageStream);// 输出到文件流
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+
+		final ImageWriter writer = getWriter(image, imageType);
+		return write(toBufferedImage(image, imageType), writer, destImageStream, quality);
 	}
 
 	/**
@@ -1388,9 +1449,53 @@ public class ImageUtil {
 		try {
 			out = getImageOutputStream(targetFile);
 			write(image, FileUtil.extName(targetFile), out);
-		}finally {
+		} finally {
 			IoUtil.close(out);
 		}
+	}
+
+	/**
+	 * 通过{@link ImageWriter}写出图片到输出流
+	 * 
+	 * @param image 图片
+	 * @param writer {@link ImageWriter}
+	 * @param output 输出的Image流{@link ImageOutputStream}
+	 * @param quality 质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
+	 * @return 是否成功写出
+	 * @since 4.3.2
+	 */
+	public static boolean write(Image image, ImageWriter writer, ImageOutputStream output, float quality) {
+		if (writer == null) {
+			return false;
+		}
+
+		writer.setOutput(output);
+		final RenderedImage renderedImage = toRenderedImage(image);
+		// 设置质量
+		ImageWriteParam imgWriteParams = null;
+		if (quality > 0 && quality < 1) {
+			imgWriteParams = writer.getDefaultWriteParam();
+			if (imgWriteParams.canWriteCompressed()) {
+				imgWriteParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+				imgWriteParams.setCompressionQuality(quality);
+				final ColorModel colorModel = renderedImage.getColorModel();// ColorModel.getRGBdefault();
+				imgWriteParams.setDestinationType(new ImageTypeSpecifier(colorModel, colorModel.createCompatibleSampleModel(16, 16)));
+			}
+		}
+
+		try {
+			if (null != imgWriteParams) {
+				writer.write(null, new IIOImage(renderedImage, null, null), imgWriteParams);
+			} else {
+				writer.write(renderedImage);
+			}
+			output.flush();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			writer.dispose();
+		}
+		return true;
 	}
 
 	/**
@@ -1406,7 +1511,7 @@ public class ImageUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 从文件中读取图片，请使用绝对路径，使用相对路径会相对于ClassPath
 	 * 
@@ -1524,6 +1629,43 @@ public class ImageUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 根据给定的Image对象和格式获取对应的{@link ImageWriter}，如果未找到合适的Writer，返回null
+	 * 
+	 * @param img {@link Image}
+	 * @param formatName 图片格式，例如"jpg"、"png"
+	 * @return {@link ImageWriter}
+	 * @since 4.3.2
+	 */
+	public static ImageWriter getWriter(Image img, String formatName) {
+		final ImageTypeSpecifier type = ImageTypeSpecifier.createFromRenderedImage(toRenderedImage(img));
+		final Iterator<ImageWriter> iter = ImageIO.getImageWriters(type, formatName);
+		return iter.hasNext() ? iter.next() : null;
+	}
+
+	/**
+	 * 根据给定的图片格式或者扩展名获取{@link ImageWriter}，如果未找到合适的Writer，返回null
+	 * 
+	 * @param formatName 图片格式或扩展名，例如"jpg"、"png"
+	 * @return {@link ImageWriter}
+	 * @since 4.3.2
+	 */
+	public static ImageWriter getWriter(String formatName) {
+		ImageWriter writer = null;
+		Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName(formatName);
+		if (iter.hasNext()) {
+			writer = iter.next();
+		}
+		if (null == writer) {
+			// 尝试扩展名获取
+			iter = ImageIO.getImageWritersBySuffix(formatName);
+			if (iter.hasNext()) {
+				writer = iter.next();
+			}
+		}
+		return writer;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------- Color

@@ -9,6 +9,7 @@
 * 【core】        StrUtil增加equalsAny和equalsAnyIgnoreCase方法（issue#IPUQK@Gitee）
 * 【http】         StrUtil增加equalsAny和equalsAnyIgnoreCase方法（issue#223@Github）
 * 【http】         StrUtil增加padPre、padAfter、center方法（issue#IPWR0@Gitee）
+* 【core】         ImageUtil增加compress方法（issue#IPYIF@Gitee）
 
 ### Bug修复
 * 【core】         修复FileUtil.lastIndexOfSeparator空指针问题（issue#IPXPK@Gitee）

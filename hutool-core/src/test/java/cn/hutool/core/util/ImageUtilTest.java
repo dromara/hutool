@@ -12,7 +12,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ImageUtil;
 
 public class ImageUtilTest {
 
@@ -82,5 +81,11 @@ public class ImageUtilTest {
 	@Ignore
 	public void writeTest() {
 		ImageUtil.write(ImageUtil.read("e:/test2.png"), FileUtil.file("e:/test2Write.jpg"));
+	}
+	
+	@Test
+	@Ignore
+	public void compressTest() {
+		ImageUtil.compress(FileUtil.file("e:/pic/1111.png"), FileUtil.file("e:/pic/1111_target.jpg"), 0.8f);
 	}
 }

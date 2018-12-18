@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 /**
  * Base64工具类，提供Base64的编码和解码方案<br>
@@ -234,6 +235,17 @@ public class Base64 {
 	}
 
 	// -------------------------------------------------------------------- decode
+	/**
+	 * base64解码
+	 * 
+	 * @param source 被解码的base64字符串
+	 * @return 被加密后的字符串
+	 * @since 4.3.2
+	 */
+	public static String decodeStrGbk(String source) {
+		return Base64Decoder.decodeStr(source, CharsetUtil.CHARSET_GBK);
+	}
+	
 	/**
 	 * base64解码
 	 * 
