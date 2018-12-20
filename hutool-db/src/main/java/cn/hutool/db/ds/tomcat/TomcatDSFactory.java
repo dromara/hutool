@@ -128,7 +128,7 @@ public class TomcatDSFactory extends DSFactory {
 	/**
 	 * 获得指定KEY对应的值，key1和key2为属性的两个名字，可以互作别名
 	 * 
-	 * @param properties 属性
+	 * @param setting 属性
 	 * @param key1 属性名
 	 * @param key2 备用属性名
 	 * @return 值

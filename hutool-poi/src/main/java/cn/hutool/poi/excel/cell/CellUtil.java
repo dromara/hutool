@@ -255,8 +255,8 @@ public class CellUtil {
 	 * 2、org.apache.poi.ss.usermodel.DateUtil.isADateFormat方法判定
 	 * </pre>
 	 * 
+	 * @param cell 单元格
 	 * @param formatIndex 格式序号
-	 * @param format 格式字符串
 	 * @return 是否为日期格式
 	 */
 	private static boolean isDateType(Cell cell, int formatIndex) {

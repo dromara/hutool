@@ -2886,7 +2886,6 @@ public class StrUtil {
 	 *
 	 * @param str 字符串
 	 * @param size 指定长度
-	 * @param padChar 两边补充的字符
 	 * @return 补充后的字符串
 	 * @since 4.3.2
 	 */

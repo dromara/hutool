@@ -279,7 +279,6 @@ public class SqlExecutor {
 	 * 执行查询
 	 * @param ps {@link PreparedStatement}
 	 * @param rsh  结果集处理对象
-	 * @param params 参数
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 4.1.13

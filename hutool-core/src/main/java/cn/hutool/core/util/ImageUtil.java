@@ -1162,7 +1162,7 @@ public class ImageUtil {
 	 * {@link Image} 转 {@link BufferedImage}<br>
 	 * 如果源图片的RGB模式与目标模式一致，则直接转换，否则重新绘制
 	 * 
-	 * @param img {@link Image}
+	 * @param image {@link Image}
 	 * @param imageType 目标图片类型
 	 * @return {@link BufferedImage}
 	 * @since 4.3.2
