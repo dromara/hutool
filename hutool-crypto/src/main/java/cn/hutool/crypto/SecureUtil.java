@@ -208,6 +208,9 @@ public final class SecureUtil {
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
+		if(null == key) {
+			return null;
+		}
 		return generatePrivateKey(algorithm, new PKCS8EncodedKeySpec(key));
 	}
 
@@ -221,6 +224,9 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
+		if(null == keySpec) {
+			return null;
+		}
 		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return KeyFactory.getInstance(algorithm).generatePrivate(keySpec);
@@ -254,6 +260,9 @@ public final class SecureUtil {
 	 * @return 公钥 {@link PublicKey}
 	 */
 	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
+		if(null == key) {
+			return null;
+		}
 		return generatePublicKey(algorithm, new X509EncodedKeySpec(key));
 	}
 
@@ -267,6 +276,9 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
+		if(null == keySpec) {
+			return null;
+		}
 		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
 			return KeyFactory.getInstance(algorithm).generatePublic(keySpec);
@@ -335,7 +347,7 @@ public final class SecureUtil {
 
 	/**
 	 * 获取用于密钥生成的算法<br>
-	 * 获取XXXwithXXX算法的后半部分算法，如果为ECDSA，返回算法为EC
+	 * 获取XXXwithXXX算法的后半部分算法，如果为ECDSA或SM2，返回算法为EC
 	 * 
 	 * @param algorithm XXXwithXXX算法
 	 * @return 算法
@@ -346,7 +358,7 @@ public final class SecureUtil {
 		if (indexOfWith > 0) {
 			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
 		}
-		if ("ECDSA".equalsIgnoreCase(algorithm)) {
+		if ("ECDSA".equalsIgnoreCase(algorithm) || "SM2".equalsIgnoreCase(algorithm)) {
 			algorithm = "EC";
 		}
 		return algorithm;
@@ -636,6 +648,52 @@ public final class SecureUtil {
 	 */
 	public static String sha1(File dataFile) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(dataFile);
+	}
+	
+	/**
+	 * SHA256加密<br>
+	 * 例：<br>
+	 * SHA256加密：sha256().digest(data)<br>
+	 * SHA256加密并转为16进制字符串：sha256().digestHex(data)<br>
+	 * 
+	 * @return {@link Digester}
+	 * @since 4.3.2
+	 */
+	public static Digester sha256() {
+		return new Digester(DigestAlgorithm.SHA256);
+	}
+	
+	/**
+	 * SHA256加密，生成16进制SHA256字符串<br>
+	 * 
+	 * @param data 数据
+	 * @return SHA256字符串
+	 * @since 4.3.2
+	 */
+	public static String sha256(String data) {
+		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
+	}
+	
+	/**
+	 * SHA256加密，生成16进制SHA256字符串<br>
+	 * 
+	 * @param data 数据
+	 * @return SHA1字符串
+	 * @since 4.3.2
+	 */
+	public static String sha256(InputStream data) {
+		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
+	}
+	
+	/**
+	 * SHA256加密文件，生成16进制SHA256字符串<br>
+	 * 
+	 * @param dataFile 被加密文件
+	 * @return SHA256字符串
+	 * @since 4.3.2
+	 */
+	public static String sha256(File dataFile) {
+		return new Digester(DigestAlgorithm.SHA256).digestHex(dataFile);
 	}
 
 	/**

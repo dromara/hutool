@@ -38,7 +38,7 @@ public class ArrayUtilTest {
 		String[] newArray = ArrayUtil.newArray(String.class, 3);
 		Assert.assertEquals(3, newArray.length);
 	}
-
+	
 	@Test
 	public void cloneTest() {
 		Integer[] b = { 1, 2, 3 };

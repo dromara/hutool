@@ -298,14 +298,12 @@ public class ArrayUtil {
 	/**
 	 * 新建一个空数组
 	 * 
-	 * @param <T> 数组元素类型
 	 * @param newSize 大小
 	 * @return 空数组
 	 * @since 3.3.0
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T[] newArray(int newSize) {
-		return (T[]) new Object[newSize];
+	public static Object[] newArray(int newSize) {
+		return new Object[newSize];
 	}
 
 	/**
@@ -1834,7 +1832,11 @@ public class ArrayUtil {
 	 * @return 结果
 	 */
 	public static <T> T[] getAny(Object array, int... indexes) {
-		final T[] result = newArray(indexes.length);
+		if(null == array) {
+			return null;
+		}
+		
+		final T[] result = newArray(array.getClass().getComponentType(), indexes.length);
 		for (int i : indexes) {
 			result[i] = get(array, i);
 		}
@@ -1860,7 +1862,7 @@ public class ArrayUtil {
 			end += length;
 		}
 		if (start == length) {
-			return newArray(0);
+			return newArray(array.getClass().getComponentType(), 0);
 		}
 		if (start > end) {
 			int tmp = start;
@@ -1869,7 +1871,7 @@ public class ArrayUtil {
 		}
 		if (end > length) {
 			if (start >= length) {
-				return newArray(0);
+				return newArray(array.getClass().getComponentType(), 0);
 			}
 			end = length;
 		}

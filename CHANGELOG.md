@@ -11,9 +11,12 @@
 * 【http】         StrUtil增加padPre、padAfter、center方法（issue#IPWR0@Gitee）
 * 【core】         ImageUtil增加compress方法（issue#IPYIF@Gitee）
 * 【core】         ReflectUtil增加getMethodByName、getMethodByNameIgnoreCase（issue#IQ2BO@Gitee）
+* 【crypto】      增加SmUtil国密算法工具类（issue#225@Github）
+* 【crypto】      增加SM2非对称加密（issue#225@Github）
 
 ### Bug修复
 * 【core】         修复FileUtil.lastIndexOfSeparator空指针问题（issue#IPXPK@Gitee）
+* 【core】         修复ArrayUtil.newArray泛型问题
 
 -------------------------------------------------------------------------------------------------------------
 
