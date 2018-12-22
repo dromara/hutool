@@ -10,6 +10,7 @@
 * 【http】         StrUtil增加equalsAny和equalsAnyIgnoreCase方法（issue#223@Github）
 * 【http】         StrUtil增加padPre、padAfter、center方法（issue#IPWR0@Gitee）
 * 【core】         ImageUtil增加compress方法（issue#IPYIF@Gitee）
+* 【core】         ReflectUtil增加getMethodByName、getMethodByNameIgnoreCase（issue#IQ2BO@Gitee）
 
 ### Bug修复
 * 【core】         修复FileUtil.lastIndexOfSeparator空指针问题（issue#IPXPK@Gitee）
