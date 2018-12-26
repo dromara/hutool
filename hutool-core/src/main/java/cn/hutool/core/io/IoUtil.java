@@ -237,7 +237,7 @@ public class IoUtil {
 	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize, StreamProgress streamProgress) throws IORuntimeException {
 		Assert.notNull(in, "InputStream is null !");
 		Assert.notNull(out, "OutputStream is null !");
-		
+
 		ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize <= 0 ? DEFAULT_BUFFER_SIZE : bufferSize);
 		long size = 0;
 		if (null != streamProgress) {
@@ -699,7 +699,7 @@ public class IoUtil {
 		}
 		return toStream(StrUtil.bytes(content, charset));
 	}
-	
+
 	/**
 	 * String 转为流
 	 * 
@@ -738,7 +738,7 @@ public class IoUtil {
 	public static BufferedInputStream toBuffered(InputStream in) {
 		return (in instanceof BufferedInputStream) ? (BufferedInputStream) in : new BufferedInputStream(in);
 	}
-	
+
 	/**
 	 * 转换为{@link BufferedOutputStream}
 	 * 
@@ -882,7 +882,7 @@ public class IoUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 从缓存中刷出数据
 	 * 
@@ -928,6 +928,19 @@ public class IoUtil {
 			} catch (Exception e) {
 				// 静默关闭
 			}
+		}
+	}
+
+	/**
+	 * 尝试关闭指定对象<br>
+	 * 判断对象如果实现了{@link AutoCloseable}，则调用之
+	 * 
+	 * @param obj 可关闭对象
+	 * @since 4.3.2
+	 */
+	public static void closeIfPosible(Object obj) {
+		if (obj instanceof AutoCloseable) {
+			close((AutoCloseable) obj);
 		}
 	}
 

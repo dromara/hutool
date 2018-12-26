@@ -109,7 +109,7 @@ public class DialectFactory {
 			return null;
 		}
 		// 全部转为小写，忽略大小写
-		nameContainsProductInfo = nameContainsProductInfo.toLowerCase();
+		nameContainsProductInfo = StrUtil.cleanBlank(nameContainsProductInfo.toLowerCase());
 
 		String driver = null;
 		if (nameContainsProductInfo.contains("mysql")) {

@@ -13,12 +13,16 @@
 * 【core】         ReflectUtil增加getMethodByName、getMethodByNameIgnoreCase（issue#IQ2BO@Gitee）
 * 【crypto】      增加SmUtil国密算法工具类（issue#225@Github）
 * 【crypto】      增加SM2非对称加密（issue#225@Github）
+* 【db】           增加AbstractDSFactory，减少冗余代码
+* 【json】         JSONUtil.toBean增加可选是否忽略错误（issue@227@Gtihub）
 
 ### Bug修复
 * 【core】         修复FileUtil.lastIndexOfSeparator空指针问题（issue#IPXPK@Gitee）
 * 【core】         修复ArrayUtil.newArray泛型问题
 * 【core】         修复CsvWriter循环调用问题（issue#IQ8T6@Gitee）
 * 【poi】           修复ExcelReader读取Map空头导致的问题（issue#IQ6F2@Gitee）
+* 【db】            修复Driver识别导致的SQL Server方言异常（issue#IQ687@Gitee）
+* 【core】         修复Number.isInteger和isLong判断问题（issue#229@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

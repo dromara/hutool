@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Collection;
@@ -319,7 +320,7 @@ public final class JSONUtil {
 	}
 
 	/**
-	 * 转为实体类对象
+	 * 转为实体类对象，转换异常将被抛出
 	 * 
 	 * @param <T> Bean类型
 	 * @param json JSONObject
@@ -328,6 +329,36 @@ public final class JSONUtil {
 	 */
 	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
 		return null == json ? null : json.toBean(beanClass);
+	}
+	
+	/**
+	 * JSON字符串转为实体类对象，转换异常将被抛出
+	 * 
+	 * @param <T> Bean类型
+	 * @param jsonString JSON字符串
+	 * @param beanType 实体类对象类型
+	 * @return 实体类对象
+	 * @since 4.3.2
+	 */
+	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
+		return toBean(parseObj(jsonString), beanType, ignoreError);
+	}
+	
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param json JSONObject
+	 * @param beanType 实体类对象类型
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 实体类对象
+	 * @since 4.3.2
+	 */
+	public static <T> T toBean(JSONObject json, Type beanType, boolean ignoreError) {
+		if(null == json) {
+			return null;
+		}
+		return json.toBean(beanType, ignoreError);
 	}
 	// -------------------------------------------------------------------- toBean end
 

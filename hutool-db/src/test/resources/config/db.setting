@@ -44,3 +44,8 @@ pass = 123456
 url = jdbc:postgresql://looly.centos:5432/test_hutool
 user = postgres
 pass = 123456
+
+[sqlserver]
+url = jdbc:sqlserver://looly.database.chinacloudapi.cn:1433;database=test;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.chinacloudapi.cn;loginTimeout=30;
+user = looly@looly
+pass = 123

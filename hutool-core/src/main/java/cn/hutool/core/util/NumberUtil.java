@@ -1154,7 +1154,7 @@ public class NumberUtil {
 	 */
 	public static boolean isInteger(String s) {
 		try {
-			parseInt(s);
+			Integer.parseInt(s);
 		} catch (NumberFormatException e) {
 			return false;
 		}
@@ -1171,7 +1171,7 @@ public class NumberUtil {
 	 */
 	public static boolean isLong(String s) {
 		try {
-			parseLong(s);
+			Long.parseLong(s);
 		} catch (NumberFormatException e) {
 			return false;
 		}
