@@ -143,18 +143,22 @@ public final class CsvWriter implements Closeable, Flushable {
 	 * 设置是否始终使用文本分隔符，文本包装符，默认false，按需添加
 	 * 
 	 * @param alwaysDelimitText 是否始终使用文本分隔符，文本包装符，默认false，按需添加
+	 * @return this
 	 */
-	public void setAlwaysDelimitText(boolean alwaysDelimitText) {
-		this.setAlwaysDelimitText(alwaysDelimitText);
+	public CsvWriter setAlwaysDelimitText(boolean alwaysDelimitText) {
+		this.config.setAlwaysDelimitText(alwaysDelimitText);
+		return this;
 	}
 
 	/**
 	 * 设置换行符
 	 * 
 	 * @param lineDelimiter 换行符
+	 * @return this
 	 */
-	public void setLineDelimiter(char[] lineDelimiter) {
-		this.setLineDelimiter(lineDelimiter);
+	public CsvWriter setLineDelimiter(char[] lineDelimiter) {
+		this.config.setLineDelimiter(lineDelimiter);
+		return this;
 	}
 
 	/**

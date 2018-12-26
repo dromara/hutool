@@ -437,27 +437,39 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	}
 
 	/**
-	 * 转换标题别名，如果没有别名则使用原标题
+	 * 转换标题别名，如果没有别名则使用原标题，当标题为空时，列号对应的字母便是header
 	 * 
 	 * @param headerList 原标题列表
 	 * @return 转换别名列表
 	 */
 	private List<String> aliasHeader(List<Object> headerList) {
-		final ArrayList<String> result = new ArrayList<>();
+		final int size = headerList.size();
+		final ArrayList<String> result = new ArrayList<>(size);
 		if (CollUtil.isEmpty(headerList)) {
 			return result;
 		}
 
-		String header;
-		String alias = null;
-		for (Object headerObj : headerList) {
-			if (null != headerObj) {
-				header = headerObj.toString();
-				alias = ObjectUtil.defaultIfNull(this.headerAlias.get(header), header);
-			}
-			result.add(alias);
+		for(int i = 0; i < size; i++) {
+			result.add(aliasHeader(headerList.get(i), i));
 		}
 		return result;
+	}
+	
+	/**
+	 * 转换标题别名，如果没有别名则使用原标题，当标题为空时，列号对应的字母便是header
+	 * 
+	 * @param headerObj 原标题
+	 * @param index 标题所在列号，当标题为空时，列号对应的字母便是header
+	 * @return 转换别名列表
+	 * @since 4.3.2
+	 */
+	private String aliasHeader(Object headerObj, int index) {
+		if(null == headerObj) {
+			return ExcelUtil.indexToColName(index);
+		}
+		
+		final String header = headerObj.toString();
+		return ObjectUtil.defaultIfNull(this.headerAlias.get(header), header);
 	}
 
 	/**

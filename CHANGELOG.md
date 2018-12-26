@@ -17,6 +17,8 @@
 ### Bug修复
 * 【core】         修复FileUtil.lastIndexOfSeparator空指针问题（issue#IPXPK@Gitee）
 * 【core】         修复ArrayUtil.newArray泛型问题
+* 【core】         修复CsvWriter循环调用问题（issue#IQ8T6@Gitee）
+* 【poi】           修复ExcelReader读取Map空头导致的问题（issue#IQ6F2@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
