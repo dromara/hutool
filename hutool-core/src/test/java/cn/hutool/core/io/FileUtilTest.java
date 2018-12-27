@@ -250,6 +250,10 @@ public class FileUtilTest {
 		String dir = "d:\\aaa\\bbb\\cc\\ddd";
 		int index = FileUtil.lastIndexOfSeparator(dir);
 		Assert.assertEquals(13, index);
+		
+		String file = "ddd.jpg";
+		int index2 = FileUtil.lastIndexOfSeparator(file);
+		Assert.assertEquals(-1, index2);
 	}
 
 	@Test

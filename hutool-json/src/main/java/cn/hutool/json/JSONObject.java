@@ -306,7 +306,20 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @since 3.0.8
 	 */
 	public <T> T toBean(Type type) {
-		return JSONConverter.jsonConvert(type, this, false);
+		return toBean(type, false);
+	}
+
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param type {@link Type}
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 实体类对象
+	 * @since 4.3.2
+	 */
+	public <T> T toBean(Type type, boolean ignoreError) {
+		return JSONConverter.jsonConvert(type, this, ignoreError);
 	}
 
 	@Override

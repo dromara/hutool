@@ -298,14 +298,12 @@ public class ArrayUtil {
 	/**
 	 * 新建一个空数组
 	 * 
-	 * @param <T> 数组元素类型
 	 * @param newSize 大小
 	 * @return 空数组
 	 * @since 3.3.0
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T[] newArray(int newSize) {
-		return (T[]) new Object[newSize];
+	public static Object[] newArray(int newSize) {
+		return new Object[newSize];
 	}
 
 	/**
@@ -746,7 +744,7 @@ public class ArrayUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
 	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
@@ -754,20 +752,23 @@ public class ArrayUtil {
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param array 数组
-	 * @param filter 过滤器接口，用于定义过滤规则
+	 * @param filter 过滤器接口，用于定义过滤规则，null表示不过滤，返回原数组
 	 * @return 过滤后的数组
 	 * @since 3.2.1
 	 */
 	public static <T> T[] filter(T[] array, Filter<T> filter) {
-		ArrayList<T> list = new ArrayList<T>(array.length);
-		boolean isAccept;
+		if(null == filter) {
+			return array;
+		}
+		
+		final ArrayList<T> list = new ArrayList<T>(array.length);
 		for (T t : array) {
-			isAccept = filter.accept(t);
-			if (isAccept) {
+			if (filter.accept(t)) {
 				list.add(t);
 			}
 		}
-		return list.toArray(Arrays.copyOf(array, list.size()));
+		final T[] result = newArray(array.getClass().getComponentType(), list.size());
+		return list.toArray(result);
 	}
 
 	/**
@@ -1831,7 +1832,11 @@ public class ArrayUtil {
 	 * @return 结果
 	 */
 	public static <T> T[] getAny(Object array, int... indexes) {
-		final T[] result = newArray(indexes.length);
+		if(null == array) {
+			return null;
+		}
+		
+		final T[] result = newArray(array.getClass().getComponentType(), indexes.length);
 		for (int i : indexes) {
 			result[i] = get(array, i);
 		}
@@ -1857,7 +1862,7 @@ public class ArrayUtil {
 			end += length;
 		}
 		if (start == length) {
-			return newArray(0);
+			return newArray(array.getClass().getComponentType(), 0);
 		}
 		if (start > end) {
 			int tmp = start;
@@ -1866,7 +1871,7 @@ public class ArrayUtil {
 		}
 		if (end > length) {
 			if (start >= length) {
-				return newArray(0);
+				return newArray(array.getClass().getComponentType(), 0);
 			}
 			end = length;
 		}

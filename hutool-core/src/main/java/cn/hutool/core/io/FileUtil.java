@@ -1388,7 +1388,7 @@ public class FileUtil {
 		if (StrUtil.isNotEmpty(filePath)) {
 			int i = filePath.length();
 			char c;
-			while(i-- >= 0) {
+			while(--i >= 0) {
 				c = filePath.charAt(i);
 				if(CharUtil.isFileSeparator(c)) {
 					return i;

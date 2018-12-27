@@ -1964,6 +1964,36 @@ public class StrUtil {
 	}
 
 	/**
+	 * 重复某个字符串到指定长度
+	 * 
+	 * @param str 被重复的字符
+	 * @param padLen 指定长度
+	 * @return 重复字符字符串
+	 * @since 4.3.2
+	 */
+	public static String repeatByLength(CharSequence str, int padLen) {
+		if (null == str) {
+			return null;
+		}
+		if (padLen <= 0) {
+			return StrUtil.EMPTY;
+		}
+		final int strLen = str.length();
+		if (strLen == padLen) {
+			return str.toString();
+		} else if (strLen > padLen) {
+			return subPre(str, padLen);
+		}
+
+		// 重复，直到达到指定长度
+		final char[] padding = new char[padLen];
+		for (int i = 0; i < padLen; i++) {
+			padding[i] = str.charAt(i % padLen);
+		}
+		return new String(padding);
+	}
+
+	/**
 	 * 重复某个字符串并通过分界符连接
 	 * 
 	 * <pre>
@@ -2059,6 +2089,55 @@ public class StrUtil {
 		} else {
 			return str1.equals(str2);
 		}
+	}
+
+	/**
+	 * 给定字符串是否与提供的中任一字符串相同（忽略大小写），相同则返回{@code true}，没有相同的返回{@code false}<br>
+	 * 如果参与比对的字符串列表为空，返回{@code false}
+	 * 
+	 * @param str1 给定需要检查的字符串
+	 * @param strs 需要参与比对的字符串列表
+	 * @return 是否相同
+	 * @since 4.3.2
+	 */
+	public static boolean equalsAnyIgnoreCase(CharSequence str1, CharSequence... strs) {
+		return equalsAny(str1, true, strs);
+	}
+
+	/**
+	 * 给定字符串是否与提供的中任一字符串相同，相同则返回{@code true}，没有相同的返回{@code false}<br>
+	 * 如果参与比对的字符串列表为空，返回{@code false}
+	 * 
+	 * @param str1 给定需要检查的字符串
+	 * @param strs 需要参与比对的字符串列表
+	 * @return 是否相同
+	 * @since 4.3.2
+	 */
+	public static boolean equalsAny(CharSequence str1, CharSequence... strs) {
+		return equalsAny(str1, false, strs);
+	}
+
+	/**
+	 * 给定字符串是否与提供的中任一字符串相同，相同则返回{@code true}，没有相同的返回{@code false}<br>
+	 * 如果参与比对的字符串列表为空，返回{@code false}
+	 * 
+	 * @param str1 给定需要检查的字符串
+	 * @param ignoreCase 是否忽略大小写
+	 * @param strs 需要参与比对的字符串列表
+	 * @return 是否相同
+	 * @since 4.3.2
+	 */
+	public static boolean equalsAny(CharSequence str1, boolean ignoreCase, CharSequence... strs) {
+		if (ArrayUtil.isEmpty(strs)) {
+			return false;
+		}
+
+		for (CharSequence str : strs) {
+			if (equals(str1, str, ignoreCase)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -2681,7 +2760,41 @@ public class StrUtil {
 	}
 
 	/**
-	 * 补充字符串以满足最小长度 StrUtil.padPre("1", 3, '0');//"001"
+	 * 补充字符串以满足最小长度
+	 * 
+	 * <pre>
+	 * StrUtil.padAfter(null, *, *);//null
+	 * StrUtil.padAfter("1", 3, "ABC");//"AB1"
+	 * StrUtil.padAfter("123", 2, "ABC");//"12"
+	 * </pre>
+	 * 
+	 * @param str 字符串
+	 * @param minLength 最小长度
+	 * @param padStr 补充的字符
+	 * @return 补充后的字符串
+	 */
+	public static String padPre(CharSequence str, int minLength, CharSequence padStr) {
+		if (null == str) {
+			return null;
+		}
+		final int strLen = str.length();
+		if (strLen == minLength) {
+			return str.toString();
+		} else if (strLen > minLength) {
+			return subPre(str, minLength);
+		}
+
+		return repeat(padStr, minLength - strLen).concat(str.toString());
+	}
+
+	/**
+	 * 补充字符串以满足最小长度
+	 * 
+	 * <pre>
+	 * StrUtil.padPre(null, *, *);//null
+	 * StrUtil.padPre("1", 3, '0');//"001"
+	 * StrUtil.padPre("123", 2, '0');//"12"
+	 * </pre>
 	 * 
 	 * @param str 字符串
 	 * @param minLength 最小长度
@@ -2690,30 +2803,165 @@ public class StrUtil {
 	 */
 	public static String padPre(CharSequence str, int minLength, char padChar) {
 		if (null == str) {
-			str = EMPTY;
-		} else if (str.length() >= minLength) {
+			return null;
+		}
+		final int strLen = str.length();
+		if (strLen == minLength) {
 			return str.toString();
+		} else if (strLen > minLength) {
+			return subPre(str, minLength);
 		}
 
-		return repeat(padChar, minLength - str.length()).concat(str.toString());
+		return repeat(padChar, minLength - strLen).concat(str.toString());
 	}
 
 	/**
-	 * 补充字符串以满足最小长度 StrUtil.padEnd("1", 3, '0');//"100"
+	 * 补充字符串以满足最小长度
+	 * 
+	 * <pre>
+	 * StrUtil.padAfter(null, *, *);//null
+	 * StrUtil.padAfter("1", 3, '0');//"100"
+	 * StrUtil.padAfter("123", 2, '0');//"23"
+	 * </pre>
 	 * 
 	 * @param str 字符串，如果为<code>null</code>，按照空串处理
 	 * @param minLength 最小长度
 	 * @param padChar 补充的字符
 	 * @return 补充后的字符串
 	 */
-	public static String padEnd(CharSequence str, int minLength, char padChar) {
+	public static String padAfter(CharSequence str, int minLength, char padChar) {
 		if (null == str) {
-			str = EMPTY;
-		} else if (str.length() >= minLength) {
+			return null;
+		}
+		final int strLen = str.length();
+		if (strLen == minLength) {
 			return str.toString();
+		} else if (strLen > minLength) {
+			return sub(str, strLen - minLength, strLen);
 		}
 
-		return str.toString().concat(repeat(padChar, minLength - str.length()));
+		return str.toString().concat(repeat(padChar, minLength - strLen));
+	}
+
+	/**
+	 * 补充字符串以满足最小长度
+	 * 
+	 * <pre>
+	 * StrUtil.padAfter(null, *, *);//null
+	 * StrUtil.padAfter("1", 3, "ABC");//"1AB"
+	 * StrUtil.padAfter("123", 2, "ABC");//"23"
+	 * </pre>
+	 * 
+	 * @param str 字符串，如果为<code>null</code>，按照空串处理
+	 * @param minLength 最小长度
+	 * @param padStr 补充的字符
+	 * @return 补充后的字符串
+	 * @since 4.3.2
+	 */
+	public static String padAfter(CharSequence str, int minLength, CharSequence padStr) {
+		if (null == str) {
+			return null;
+		}
+		final int strLen = str.length();
+		if (strLen == minLength) {
+			return str.toString();
+		} else if (strLen > minLength) {
+			return subSuf(str, minLength);
+		}
+
+		return str.toString().concat(repeat(padStr, minLength - strLen));
+	}
+
+	/**
+	 * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串
+	 * 
+	 * <pre>
+	 * StrUtil.center(null, *)   = null
+	 * StrUtil.center("", 4)     = "    "
+	 * StrUtil.center("ab", -1)  = "ab"
+	 * StrUtil.center("ab", 4)   = " ab "
+	 * StrUtil.center("abcd", 2) = "abcd"
+	 * StrUtil.center("a", 4)    = " a  "
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @param size 指定长度
+	 * @return 补充后的字符串
+	 * @since 4.3.2
+	 */
+	public static String center(CharSequence str, final int size) {
+		return center(str, size, CharUtil.SPACE);
+	}
+
+	/**
+	 * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串
+	 * 
+	 * <pre>
+	 * StrUtil.center(null, *, *)     = null
+	 * StrUtil.center("", 4, ' ')     = "    "
+	 * StrUtil.center("ab", -1, ' ')  = "ab"
+	 * StrUtil.center("ab", 4, ' ')   = " ab "
+	 * StrUtil.center("abcd", 2, ' ') = "abcd"
+	 * StrUtil.center("a", 4, ' ')    = " a  "
+	 * StrUtil.center("a", 4, 'y')   = "yayy"
+	 * StrUtil.center("abc", 7, ' ')   = "  abc  "
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @param size 指定长度
+	 * @param padChar 两边补充的字符
+	 * @return 补充后的字符串
+	 * @since 4.3.2
+	 */
+	public static String center(CharSequence str, final int size, char padChar) {
+		if (str == null || size <= 0) {
+			return str(str);
+		}
+		final int strLen = str.length();
+		final int pads = size - strLen;
+		if (pads <= 0) {
+			return str.toString();
+		}
+		str = padPre(str, strLen + pads / 2, padChar);
+		str = padAfter(str, size, padChar);
+		return str.toString();
+	}
+
+	/**
+	 * 居中字符串，两边补充指定字符串，如果指定长度小于字符串，则返回原字符串
+	 * 
+	 * <pre>
+	 * StrUtil.center(null, *, *)     = null
+	 * StrUtil.center("", 4, " ")     = "    "
+	 * StrUtil.center("ab", -1, " ")  = "ab"
+	 * StrUtil.center("ab", 4, " ")   = " ab "
+	 * StrUtil.center("abcd", 2, " ") = "abcd"
+	 * StrUtil.center("a", 4, " ")    = " a  "
+	 * StrUtil.center("a", 4, "yz")   = "yayz"
+	 * StrUtil.center("abc", 7, null) = "  abc  "
+	 * StrUtil.center("abc", 7, "")   = "  abc  "
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @param size 指定长度
+	 * @param padStr 两边补充的字符串
+	 * @return 补充后的字符串
+	 */
+	public static String center(CharSequence str, final int size, CharSequence padStr) {
+		if (str == null || size <= 0) {
+			return str(str);
+		}
+		if (isEmpty(padStr)) {
+			padStr = SPACE;
+		}
+		final int strLen = str.length();
+		final int pads = size - strLen;
+		if (pads <= 0) {
+			return str.toString();
+		}
+		str = padPre(str, strLen + pads / 2, padStr);
+		str = padAfter(str, size, padStr);
+		return str.toString();
 	}
 
 	/**
@@ -3848,5 +4096,49 @@ public class StrUtil {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 获取字符串的长度，如果为null返回0
+	 *
+	 * @param cs a 字符串
+	 * @return 字符串的长度，如果为null返回0
+	 * @since 4.3.2
+	 */
+	public static int length(final CharSequence cs) {
+		return cs == null ? 0 : cs.length();
+	}
+
+	/**
+	 * 切换给定字符串中的大小写。大写转小写，小写转大写。
+	 *
+	 * <pre>
+	 * StrUtil.swapCase(null)                 = null
+	 * StrUtil.swapCase("")                   = ""
+	 * StrUtil.swapCase("The dog has a BONE") = "tHE DOG HAS A bone"
+	 * </pre>
+	 *
+	 * @param str 字符串
+	 * @return 交换后的字符串
+	 * @since 4.3.2
+	 */
+	public static String swapCase(final String str) {
+		if (isEmpty(str)) {
+			return str;
+		}
+
+		final char[] buffer = str.toCharArray();
+
+		for (int i = 0; i < buffer.length; i++) {
+			final char ch = buffer[i];
+			if (Character.isUpperCase(ch)) {
+				buffer[i] = Character.toLowerCase(ch);
+			} else if (Character.isTitleCase(ch)) {
+				buffer[i] = Character.toLowerCase(ch);
+			} else if (Character.isLowerCase(ch)) {
+				buffer[i] = Character.toUpperCase(ch);
+			}
+		}
+		return new String(buffer);
 	}
 }

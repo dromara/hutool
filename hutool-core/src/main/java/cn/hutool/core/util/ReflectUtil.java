@@ -386,6 +386,10 @@ public class ReflectUtil {
 	/**
 	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
 	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
+	 * 
 	 * @param obj 被查找的对象，如果为{@code null}返回{@code null}
 	 * @param methodName 方法名，如果为空字符串返回{@code null}
 	 * @param args 参数
@@ -402,6 +406,10 @@ public class ReflectUtil {
 	/**
 	 * 忽略大小写查找指定方法，如果找不到对应的方法则返回<code>null</code>
 	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
+	 * 
 	 * @param clazz 类，如果为{@code null}返回{@code null}
 	 * @param methodName 方法名，如果为空字符串返回{@code null}
 	 * @param paramTypes 参数类型，指定参数类型如果是方法的子类也算
@@ -416,6 +424,10 @@ public class ReflectUtil {
 	/**
 	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
 	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
+	 * 
 	 * @param clazz 类，如果为{@code null}返回{@code null}
 	 * @param methodName 方法名，如果为空字符串返回{@code null}
 	 * @param paramTypes 参数类型，指定参数类型如果是方法的子类也算
@@ -428,6 +440,10 @@ public class ReflectUtil {
 
 	/**
 	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
 	 * 
 	 * @param clazz 类，如果为{@code null}返回{@code null}
 	 * @param ignoreCase 是否忽略大小写
@@ -449,6 +465,70 @@ public class ReflectUtil {
 					if (ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
 						return method;
 					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法只检查方法名是否一致，并不检查参数的一致性。
+	 * </p>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 4.3.2
+	 */
+	public static Method getMethodByName(Class<?> clazz, String methodName) throws SecurityException {
+		return getMethodByName(clazz, false, methodName);
+	}
+	
+	/**
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法只检查方法名是否一致（忽略大小写），并不检查参数的一致性。
+	 * </p>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 4.3.2
+	 */
+	public static Method getMethodByNameIgnoreCase(Class<?> clazz, String methodName) throws SecurityException {
+		return getMethodByName(clazz, true, methodName);
+	}
+	
+	/**
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法只检查方法名是否一致，并不检查参数的一致性。
+	 * </p>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param ignoreCase 是否忽略大小写
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 4.3.2
+	 */
+	public static Method getMethodByName(Class<?> clazz, boolean ignoreCase, String methodName) throws SecurityException {
+		if (null == clazz || StrUtil.isBlank(methodName)) {
+			return null;
+		}
+
+		final Method[] methods = getMethods(clazz);
+		if (ArrayUtil.isNotEmpty(methods)) {
+			for (Method method : methods) {
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
+					return method;
 				}
 			}
 		}
@@ -484,19 +564,7 @@ public class ReflectUtil {
 		if (null == clazz) {
 			return null;
 		}
-
-		final Method[] methods = getMethods(clazz);
-		if (null == filter) {
-			return methods;
-		}
-
-		final List<Method> methodList = new ArrayList<>();
-		for (Method method : methods) {
-			if (filter.accept(method)) {
-				methodList.add(method);
-			}
-		}
-		return methodList.toArray(new Method[methodList.size()]);
+		return ArrayUtil.filter(getMethods(clazz), filter);
 	}
 
 	/**

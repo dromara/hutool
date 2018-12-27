@@ -3,6 +3,8 @@ package cn.hutool.core.codec;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -12,6 +14,17 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class Base64Test {
+	
+	@Test
+	public void decodeTest() {
+		String a = "wO7LxKO6DQogICAgxPq6w6Os1q7HsLXE0vjQ0L+o1N3No8q508PBy6Osx+vNqLn91qe4trGm16rV\r\n" + 
+				"y6Osx7DBvczsuPjE47XEMTI208rP5KOs0LvQu6GjDQoNCg0KICAgICAgICAgICAgICAgICAgICAg\r\n" + 
+				"ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg\r\n" + 
+				"ICAgICAgICDVxcj9DQo=\r\n" + 
+				"";
+		byte[] decode = Base64.decode(a);
+		Console.log(StrUtil.str(decode, CharsetUtil.GBK));
+	}
 
 	@Test
 	public void encodeAndDecodeTest() {

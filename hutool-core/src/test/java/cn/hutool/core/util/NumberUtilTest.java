@@ -44,6 +44,16 @@ public class NumberUtilTest {
 		Assert.assertTrue(NumberUtil.isInteger("256"));
 		Assert.assertTrue(NumberUtil.isInteger("0256"));
 		Assert.assertTrue(NumberUtil.isInteger("0"));
+		Assert.assertFalse(NumberUtil.isInteger("23.4"));
+	}
+	
+	@Test
+	public void isLongTest() {
+		Assert.assertTrue(NumberUtil.isLong("-12"));
+		Assert.assertTrue(NumberUtil.isLong("256"));
+		Assert.assertTrue(NumberUtil.isLong("0256"));
+		Assert.assertTrue(NumberUtil.isLong("0"));
+		Assert.assertFalse(NumberUtil.isLong("23.4"));
 	}
 	
 	@Test

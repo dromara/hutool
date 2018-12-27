@@ -239,6 +239,7 @@ public class Sftp extends AbstractFtp {
 	 * @param directory directory
 	 * @return 是否打开目录
 	 */
+	@Override
 	public boolean cd(String directory) {
 		if (StrUtil.isBlank(directory)) {
 			return false;

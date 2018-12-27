@@ -929,9 +929,13 @@ public class CollUtil {
 	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @param editor 编辑器接口
-	 * @return 过滤后的数组
+	 * @return 过滤后的集合
 	 */
 	public static <T> Collection<T> filter(Collection<T> collection, Editor<T> editor) {
+		if(null == collection || null == editor) {
+			return collection;
+		}
+		
 		Collection<T> collection2 = ObjectUtil.clone(collection);
 		try {
 			collection2.clear();
@@ -966,6 +970,10 @@ public class CollUtil {
 	 * @since 4.1.8
 	 */
 	public static <T> List<T> filter(List<T> list, Editor<T> editor) {
+		if(null == list || null == editor) {
+			return list;
+		}
+		
 		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
 		T modified;
 		for (T t : list) {
@@ -992,6 +1000,10 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
+		if(null == collection || null == filter) {
+			return collection;
+		}
+		
 		Collection<T> collection2 = ObjectUtil.clone(collection);
 		try {
 			collection2.clear();
@@ -1023,6 +1035,9 @@ public class CollUtil {
 	 * @since 4.1.8
 	 */
 	public static <T> List<T> filter(List<T> list, Filter<T> filter) {
+		if(null == list || null == filter) {
+			return list;
+		}
 		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
 		for (T t : list) {
 			if (filter.accept(t)) {
