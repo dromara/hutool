@@ -515,7 +515,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式<br>
+	 * 默认的，当当前行号为0时，写出标题（如果为Map或Bean），否则不写标题
 	 * 
 	 * <p>
 	 * data中元素支持的类型有：
@@ -530,11 +531,35 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @return this
 	 */
 	public ExcelWriter write(Iterable<?> data) {
+		return write(data, 0 == getCurrentRow());
+	}
+	
+	/**
+	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 
+	 * <p>
+	 * data中元素支持的类型有：
+	 *  <pre>
+	 * 1. Iterable，既元素为一个集合，元素被当作一行，data表示多行<br>
+	 * 2. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
+	 * 3. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
+	 * 4. 其它类型，按照基本类型输出（例如字符串）
+	 * </pre>
+	 * 
+	 * @param data 数据
+	 * @param isWriteKeyAsHead 是否强制写出标题行（Map或Bean）
+	 * @return this
+	 */
+	public ExcelWriter write(Iterable<?> data, boolean isWriteKeyAsHead) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		int index = getCurrentRow();
+		boolean isFirst = true;
 		for (Object object : data) {
-			writeRow(object, 0 == index);
-			index++;
+			writeRow(object, isFirst && isWriteKeyAsHead);
+			if(isFirst) {
+				isFirst = false;
+			}
 		}
 		return this;
 	}

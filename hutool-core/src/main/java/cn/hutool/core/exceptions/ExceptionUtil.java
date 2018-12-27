@@ -8,6 +8,7 @@ import java.util.Map;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -244,14 +245,14 @@ public class ExceptionUtil {
 		return null;
 	}
 
-    /**
-     * 判断指定异常是否来自或者包含指定异常
-     *
-     * @param throwable 异常
-     * @param exceptionClass 定义的引起异常的类
-     * @return true 来自或者包含
-     */
-	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Exception> exceptionClass) {
+	/**
+	 * 判断指定异常是否来自或者包含指定异常
+	 *
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @return true 来自或者包含
+	 */
+	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass) {
 		if (throwable == null || exceptionClass == null) {
 			return false;
 		}
@@ -259,7 +260,7 @@ public class ExceptionUtil {
 			return true;
 		}
 		Throwable[] throwables = throwable.getSuppressed();
-		if (throwables != null && throwables.length >= 1) {
+		if (ArrayUtil.isNotEmpty(throwables)) {
 			for (Throwable throwable1 : throwables) {
 				if (exceptionClass.isAssignableFrom(throwable1.getClass())) {
 					return true;

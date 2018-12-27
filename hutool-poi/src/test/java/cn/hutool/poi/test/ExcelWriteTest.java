@@ -135,7 +135,7 @@ public class ExcelWriteTest {
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");
 		// 一次性写出内容，使用默认样式
-		writer.write(rows);
+		writer.write(rows, true);
 		// 关闭writer，释放内存
 		writer.close();
 	}
@@ -190,7 +190,7 @@ public class ExcelWriteTest {
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
 		// 一次性写出内容，使用默认样式
-		writer.write(rows);
+		writer.write(rows, true);
 		// 关闭writer，释放内存
 		writer.close();
 	}
