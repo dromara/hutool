@@ -8,6 +8,7 @@
 ### 新特性
 * 【poi】          ExcelWriter增加write重载，可选强制加标题（感谢@【北京】大熊）
 * 【core】        ExceptionUtil增加isFromOrSuppressedThrowable（pr#29@Gitee）
+* 【core】        ExceptionUtil增加convertFromOrSuppressedThrowable（pr#30@Gitee）
 
 ### Bug修复
 
