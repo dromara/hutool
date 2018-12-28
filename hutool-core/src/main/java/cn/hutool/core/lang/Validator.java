@@ -429,7 +429,7 @@ public class Validator {
 			throw new ValidateException(errorMsg);
 		}
 	}
-	
+
 	/**
 	 * 验证该字符串是否是字母（包括大写和小写字母）
 	 * 
@@ -440,7 +440,7 @@ public class Validator {
 	public static boolean isWord(String value) {
 		return isMactchRegex(PatternPool.WORD, value);
 	}
-	
+
 	/**
 	 * 验证是否为字母（包括大写和小写字母）
 	 * 
@@ -818,9 +818,35 @@ public class Validator {
 			throw new ValidateException(errorMsg);
 		}
 	}
-	
+
+	/**
+	 * 验证是否为Hex（16进制）字符串
+	 * 
+	 * @param value 值
+	 * @return 是否为Hex（16进制）字符串
+	 * @since 4.3.3
+	 */
+	public static boolean isHex(String value) {
+		return isMactchRegex(PatternPool.HEX, value);
+	}
+
+	/**
+	 * 验证是否为Hex（16进制）字符串
+	 * 
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @throws ValidateException 验证异常
+	 * @since 4.3.3
+	 */
+	public static void validateHex(String value, String errorMsg) throws ValidateException {
+		if (false == isHex(value)) {
+			throw new ValidateException(errorMsg);
+		}
+	}
+
 	/**
 	 * 检查给定的数字是否在指定范围内
+	 * 
 	 * @param value 值
 	 * @param min 最小值（包含）
 	 * @param max 最大值（包含）
@@ -832,11 +858,12 @@ public class Validator {
 		Assert.notNull(min);
 		Assert.notNull(max);
 		final double doubleValue = value.doubleValue();
-		return (doubleValue >= min.doubleValue()) && (doubleValue <= max.doubleValue()); 
+		return (doubleValue >= min.doubleValue()) && (doubleValue <= max.doubleValue());
 	}
-	
+
 	/**
 	 * 检查给定的数字是否在指定范围内
+	 * 
 	 * @param value 值
 	 * @param min 最小值（包含）
 	 * @param max 最大值（包含）

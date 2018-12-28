@@ -379,6 +379,10 @@ public class StrUtilTest {
 		Assert.assertNull(StrUtil.padPre(null, 10, ' '));
 		Assert.assertEquals("001", StrUtil.padPre("1", 3, '0'));
 		Assert.assertEquals("12", StrUtil.padPre("123", 2, '0'));
+		
+		Assert.assertNull(StrUtil.padPre(null, 10, "AA"));
+		Assert.assertEquals("AB1", StrUtil.padPre("1", 3, "ABC"));
+		Assert.assertEquals("12", StrUtil.padPre("123", 2, "ABC"));
 	}
 	
 	@Test
@@ -386,5 +390,9 @@ public class StrUtilTest {
 		Assert.assertNull(StrUtil.padAfter(null, 10, ' '));
 		Assert.assertEquals("100", StrUtil.padAfter("1", 3, '0'));
 		Assert.assertEquals("23", StrUtil.padAfter("123", 2, '0'));
+		
+		Assert.assertNull(StrUtil.padAfter(null, 10, "ABC"));
+		Assert.assertEquals("1AB", StrUtil.padAfter("1", 3, "ABC"));
+		Assert.assertEquals("23", StrUtil.padAfter("123", 2, "ABC"));
 	}
 }

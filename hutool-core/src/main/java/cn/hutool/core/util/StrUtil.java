@@ -2763,9 +2763,9 @@ public class StrUtil {
 	 * 补充字符串以满足最小长度
 	 * 
 	 * <pre>
-	 * StrUtil.padAfter(null, *, *);//null
-	 * StrUtil.padAfter("1", 3, "ABC");//"AB1"
-	 * StrUtil.padAfter("123", 2, "ABC");//"12"
+	 * StrUtil.padPre(null, *, *);//null
+	 * StrUtil.padPre("1", 3, "ABC");//"AB1"
+	 * StrUtil.padPre("123", 2, "ABC");//"12"
 	 * </pre>
 	 * 
 	 * @param str 字符串
@@ -2784,7 +2784,7 @@ public class StrUtil {
 			return subPre(str, minLength);
 		}
 
-		return repeat(padStr, minLength - strLen).concat(str.toString());
+		return repeatByLength(padStr, minLength - strLen).concat(str.toString());
 	}
 
 	/**
@@ -2866,10 +2866,10 @@ public class StrUtil {
 		if (strLen == minLength) {
 			return str.toString();
 		} else if (strLen > minLength) {
-			return subSuf(str, minLength);
+			return subSufByLength(str, minLength);
 		}
 
-		return str.toString().concat(repeat(padStr, minLength - strLen));
+		return str.toString().concat(repeatByLength(padStr, minLength - strLen));
 	}
 
 	/**

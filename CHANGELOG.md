@@ -9,8 +9,12 @@
 * 【poi】          ExcelWriter增加write重载，可选强制加标题（感谢@【北京】大熊）
 * 【core】        ExceptionUtil增加isFromOrSuppressedThrowable（pr#29@Gitee）
 * 【core】        ExceptionUtil增加convertFromOrSuppressedThrowable（pr#30@Gitee）
+* 【crypto】     非对称和SM2构造传入的私钥和公钥支持Hex和Base64自动识别
 
 ### Bug修复
+* 【core】        修复padAfter和padPre结果错误问题（issue#IQANO@Gitee）
+* 【crypto】     修复SM2签名验证异常（issue#IQAY0@Gitee）
+* 【extra】       修复Freemarker字符串模板无效问题（issue#231@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

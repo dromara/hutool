@@ -54,11 +54,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 * 
 	 * @param algorithm {@link SymmetricAlgorithm}
-	 * @param privateKeyBase64 私钥Base64
-	 * @param publicKeyBase64 公钥Base64
+	 * @param privateKeyStr 私钥Hex或Base64表示
+	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
-		this(algorithm.getValue(), Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
+	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, String privateKeyStr, String publicKeyStr) {
+		this(algorithm.getValue(), SecureUtil.decodeKey(privateKeyStr), SecureUtil.decodeKey(publicKeyStr));
 	}
 
 	/**

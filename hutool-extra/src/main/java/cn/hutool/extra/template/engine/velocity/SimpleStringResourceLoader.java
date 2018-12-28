@@ -10,7 +10,14 @@ import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 
-public class StringResourceLoader extends ResourceLoader{
+/**
+ * {@link ResourceLoader} 的字符串实现形式<br>
+ * 用于直接获取字符串模板
+ * 
+ * @author looly
+ *
+ */
+public class SimpleStringResourceLoader extends ResourceLoader{
 
 	@Override
 	public void init(ExtendedProperties configuration) {

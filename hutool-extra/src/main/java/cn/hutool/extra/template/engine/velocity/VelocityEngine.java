@@ -96,7 +96,7 @@ public class VelocityEngine implements Engine {
 			break;
 		case STRING:
 			ve.setProperty(Velocity.RESOURCE_LOADER, "str");
-			 ve.setProperty("str.resource.loader.class", StringResourceLoader.class.getName());
+			 ve.setProperty("str.resource.loader.class", SimpleStringResourceLoader.class.getName());
 			break;
 		default:
 			break;

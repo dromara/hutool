@@ -6,11 +6,11 @@ import java.security.PublicKey;
 
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.engines.SM2Engine;
+import org.bouncycastle.crypto.params.ParametersWithID;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -42,11 +42,11 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 * 
-	 * @param privateKeyBase64 私钥Base64
-	 * @param publicKeyBase64 公钥Base64
+	 * @param privateKeyStr 私钥Hex或Base64表示
+	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public SM2(String privateKeyBase64, String publicKeyBase64) {
-		this(Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
+	public SM2(String privateKeyStr, String publicKeyStr) {
+		this(SecureUtil.decodeKey(privateKeyStr), SecureUtil.decodeKey(publicKeyStr));
 	}
 
 	/**
@@ -147,17 +147,31 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 用私钥对信息生成数字签名
 	 * 
 	 * @param data 加密数据
-	 * @param withId 可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
 	 * @return 签名
 	 */
-	public byte[] sign(byte[] data, byte[] withId) {
+	public byte[] sign(byte[] data) {
+		return sign(data, null);
+	}
+	
+	/**
+	 * 用私钥对信息生成数字签名
+	 * 
+	 * @param data 加密数据
+	 * @param id 可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
+	 * @return 签名
+	 */
+	public byte[] sign(byte[] data, byte[] id) {
 		lock.lock();
 		if (null == this.signer) {
 			this.signer = new SM2Signer();
 		}
 		final SM2Signer signer = this.signer;
 		try {
-			signer.init(true, new ParametersWithRandom(generateCipherParameters(KeyType.PrivateKey)));
+			CipherParameters param = new ParametersWithRandom(generateCipherParameters(KeyType.PrivateKey));
+			if (id != null) {
+				param = new ParametersWithID(param, id);
+			}
+			signer.init(true, param);
 			signer.update(data, 0, data.length);
 			return signer.generateSignature();
 		} catch (Exception e) {
@@ -166,7 +180,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 			lock.unlock();
 		}
 	}
-
+	
 	/**
 	 * 用公钥检验数字签名的合法性
 	 * 
@@ -175,13 +189,29 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @return 是否验证通过
 	 */
 	public boolean verify(byte[] data, byte[] sign) {
+		return verify(data, sign, null);
+	}
+
+	/**
+	 * 用公钥检验数字签名的合法性
+	 * 
+	 * @param data 数据
+	 * @param sign 签名
+	 * @param id 可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
+	 * @return 是否验证通过
+	 */
+	public boolean verify(byte[] data, byte[] sign, byte[] id) {
 		lock.lock();
 		if (null == this.signer) {
 			this.signer = new SM2Signer();
 		}
 		final SM2Signer signer = this.signer;
 		try {
-			signer.init(false, new ParametersWithRandom(generateCipherParameters(KeyType.PrivateKey)));
+			CipherParameters param = generateCipherParameters(KeyType.PublicKey);
+			if (id != null) {
+				param = new ParametersWithID(param, id);
+			}
+			signer.init(false, param);
 			signer.update(data, 0, data.length);
 			return signer.verifySignature(sign);
 		} catch (Exception e) {

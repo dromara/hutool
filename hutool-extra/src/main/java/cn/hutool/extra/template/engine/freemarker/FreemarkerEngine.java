@@ -11,7 +11,6 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateException;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 
 /**
@@ -21,7 +20,7 @@ import freemarker.template.Configuration;
  */
 public class FreemarkerEngine implements Engine {
 
-	Configuration cfg;
+	private Configuration cfg;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**
@@ -73,6 +72,7 @@ public class FreemarkerEngine implements Engine {
 		}
 
 		final Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+		cfg.setLocalizedLookup(false);
 		cfg.setDefaultEncoding(config.getCharset().toString());
 
 		switch (config.getResourceMode()) {
@@ -90,7 +90,7 @@ public class FreemarkerEngine implements Engine {
 			// cfg.setTemplateLoader(new WebappTemplateLoader(null, config.getPath()));
 			break;
 		case STRING:
-			cfg.setTemplateLoader(new StringTemplateLoader());
+			cfg.setTemplateLoader(new SimpleStringTemplateLoader());
 			break;
 		default:
 			break;

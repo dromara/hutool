@@ -69,8 +69,13 @@ public class TemplateUtilTest {
 		Template template = engine.getTemplate("freemarker_test.ftl");
 		String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
+		
+		engine = new FreemarkerEngine(new TemplateConfig("templates", ResourceMode.STRING));
+		template = engine.getTemplate("hello,${name}");
+		result = template.render(Dict.create().set("name", "hutool"));
+		Assert.assertEquals("hello,hutool", result);
 	}
-
+	
 	@Test
 	public void velocityEngineTest() {
 		Engine engine = new VelocityEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
