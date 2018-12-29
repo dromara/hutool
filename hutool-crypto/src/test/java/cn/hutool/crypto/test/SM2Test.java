@@ -44,7 +44,7 @@ public class SM2Test {
 
 	@Test
 	public void sm2Test() {
-		final SM2 sm2 = new SM2();
+		final SM2 sm2 = SmUtil.sm2();
 
 		// 获取私钥和公钥
 		Assert.assertNotNull(sm2.getPrivateKey());
@@ -62,7 +62,7 @@ public class SM2Test {
 	public void sm2BcdTest() {
 		String text = "我是一段测试aaaa";
 
-		final SM2 sm2 = new SM2();
+		final SM2 sm2 = SmUtil.sm2();
 
 		// 公钥加密，私钥解密
 		String encryptStr = sm2.encryptBcd(text, KeyType.PublicKey);
@@ -90,7 +90,7 @@ public class SM2Test {
 	public void sm2SignAndVerifyTest() {
 		String content = "我是Hanley.";
 
-		final SM2 sm2 = new SM2();
+		final SM2 sm2 = SmUtil.sm2();
 
 		byte[] sign = sm2.sign(content.getBytes());
 		boolean verify = sm2.verify(content.getBytes(), sign);

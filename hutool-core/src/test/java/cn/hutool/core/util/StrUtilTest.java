@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 
 /**
@@ -106,6 +107,14 @@ public class StrUtilTest {
 		str = "abcd123";
 		strip = StrUtil.strip(str, null, "567");
 		Assert.assertEquals("abcd123", strip);
+		
+		Assert.assertEquals("a", StrUtil.strip("a","a"));
+	}
+	
+	@Test
+	public void stripTest2() {
+		Console.log("a".substring(0, 1));
+		Assert.assertEquals("", StrUtil.strip("a","a"));
 	}
 
 	@Test
@@ -395,4 +404,5 @@ public class StrUtilTest {
 		Assert.assertEquals("1AB", StrUtil.padAfter("1", 3, "ABC"));
 		Assert.assertEquals("23", StrUtil.padAfter("123", 2, "ABC"));
 	}
+	
 }

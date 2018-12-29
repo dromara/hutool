@@ -1151,7 +1151,8 @@ public class StrUtil {
 		if (endWith(str2, suffix)) {
 			to -= suffix.length();
 		}
-		return str2.substring(from, to);
+		
+		return str2.substring(Math.min(from, to), Math.max(from, to));
 	}
 
 	/**

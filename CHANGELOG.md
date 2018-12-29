@@ -15,6 +15,7 @@
 * 【core】        修复padAfter和padPre结果错误问题（issue#IQANO@Gitee）
 * 【crypto】     修复SM2签名验证异常（issue#IQAY0@Gitee）
 * 【extra】       修复Freemarker字符串模板无效问题（issue#231@Github）
+* 【core】        修复StrUtil.strip问题（issue#232@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
