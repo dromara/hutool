@@ -68,7 +68,7 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 
 ## 文档 
 
-[中文文档](http://hutool.mydoc.io/)
+[中文文档](https://www.hutool.cn/docs/#/)
 
 [参考API](https://apidoc.gitee.com/loolly/hutool/)
 
