@@ -15,9 +15,6 @@ import cn.hutool.core.util.CharsetUtil;
  */
 public class DigestUtil {
 
-	private DigestUtil() {
-	}
-
 	// ------------------------------------------------------------------------------------------- MD5
 	/**
 	 * 计算16位MD5摘要值
