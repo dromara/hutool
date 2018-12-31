@@ -3,6 +3,15 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.4.0
+
+### 新特性
+* 【core】        增加MurmurHash（Murmur3算法实现），HashUtil增加murmur32、murmur64、murmur128方法
+* 【core】        增加Simhash（用于海量文本去重）
+* 【extra】        增加分词封装，封装了ansj、HanLP、IKAnalyzer、Jcseg、Jieba、MMSeg的实现，统一了接口
+
+### Bug修复
+
 ## 4.3.3
 
 ### 新特性
@@ -10,8 +19,6 @@
 * 【core】        ExceptionUtil增加isFromOrSuppressedThrowable（pr#29@Gitee）
 * 【core】        ExceptionUtil增加convertFromOrSuppressedThrowable（pr#30@Gitee）
 * 【crypto】     非对称和SM2构造传入的私钥和公钥支持Hex和Base64自动识别
-* 【core】        增加MurmurHash（Murmur3算法实现），HashUtil增加murmur32、murmur64、murmur128方法
-* 【core】        增加Simhash（用于海量文本去重）
 
 ### Bug修复
 * 【core】        修复padAfter和padPre结果错误问题（issue#IQANO@Gitee）
