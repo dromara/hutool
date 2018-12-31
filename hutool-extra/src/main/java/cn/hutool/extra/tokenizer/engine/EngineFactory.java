@@ -21,7 +21,6 @@ public class EngineFactory {
 	/**
 	 * 根据用户引入的分词引擎jar，自动创建对应的分词引擎对象
 	 * 
-	 * @param config 分词配置，包括编码、分词文件path等信息
 	 * @return {@link Engine}
 	 */
 	public static Engine create() {

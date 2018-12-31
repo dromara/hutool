@@ -24,8 +24,6 @@ public class MmsegEngine implements Engine {
 	
 	/**
 	 * 构造
-	 * 
-	 * @param mode 模式{@link SegMode}
 	 */
 	public MmsegEngine() {
 		this(SegMode.INDEX);
