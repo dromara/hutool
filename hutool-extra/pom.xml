@@ -134,11 +134,5 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.2</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>
