@@ -1125,6 +1125,10 @@ public class StrUtil {
 	 * @since 3.1.2
 	 */
 	public static String strip(CharSequence str, CharSequence prefixOrSuffix) {
+		if(equals(str, prefixOrSuffix)) {
+			//对于去除相同字符的情况单独处理
+			return EMPTY;
+		}
 		return strip(str, prefixOrSuffix, prefixOrSuffix);
 	}
 
@@ -1141,6 +1145,7 @@ public class StrUtil {
 		if (isEmpty(str)) {
 			return str(str);
 		}
+		
 		int from = 0;
 		int to = str.length();
 

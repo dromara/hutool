@@ -5,7 +5,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 
 /**
@@ -108,15 +107,10 @@ public class StrUtilTest {
 		strip = StrUtil.strip(str, null, "567");
 		Assert.assertEquals("abcd123", strip);
 		
-		Assert.assertEquals("a", StrUtil.strip("a","a"));
+		Assert.assertEquals("", StrUtil.strip("a","a"));
+		Assert.assertEquals("", StrUtil.strip("a","a", "b"));
 	}
 	
-	@Test
-	public void stripTest2() {
-		Console.log("a".substring(0, 1));
-		Assert.assertEquals("", StrUtil.strip("a","a"));
-	}
-
 	@Test
 	public void stripIgnoreCaseTest() {
 		String str = "abcd123";
