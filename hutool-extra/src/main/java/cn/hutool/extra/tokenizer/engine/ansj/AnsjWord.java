@@ -26,6 +26,16 @@ public class AnsjWord implements Word {
 	public String getText() {
 		return term.getName();
 	}
+	
+	@Override
+	public int getStartOffset() {
+		return this.term.getOffe();
+	}
+
+	@Override
+	public int getEndOffset() {
+		return getStartOffset() + getText().length();
+	}
 
 	@Override
 	public String toString() {

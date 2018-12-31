@@ -27,6 +27,16 @@ public class IKAnalyzerWord implements Word {
 	public String getText() {
 		return word.getLexemeText();
 	}
+	
+	@Override
+	public int getStartOffset() {
+		return word.getBeginPosition();
+	}
+	
+	@Override
+	public int getEndOffset() {
+		return word.getEndPosition();
+	}
 
 	@Override
 	public String toString() {

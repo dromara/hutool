@@ -27,6 +27,16 @@ public class HanLPWord implements Word {
 	public String getText() {
 		return term.word;
 	}
+	
+	@Override
+	public int getStartOffset() {
+		return this.term.offset;
+	}
+	
+	@Override
+	public int getEndOffset() {
+		return getStartOffset() + this.term.length();
+	}
 
 	@Override
 	public String toString() {

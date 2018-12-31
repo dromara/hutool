@@ -25,6 +25,16 @@ public class MmsegWord implements Word {
 	public String getText() {
 		return word.getString();
 	}
+	
+	@Override
+	public int getStartOffset() {
+		return this.word.getStartOffset();
+	}
+	
+	@Override
+	public int getEndOffset() {
+		return this.word.getEndOffset();
+	}
 
 	@Override
 	public String toString() {

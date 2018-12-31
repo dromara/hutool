@@ -26,6 +26,16 @@ public class JiebaWord implements Word {
 	public String getText() {
 		return segToken.word;
 	}
+	
+	@Override
+	public int getStartOffset() {
+		return segToken.startOffset;
+	}
+	
+	@Override
+	public int getEndOffset() {
+		return segToken.endOffset;
+	}
 
 	@Override
 	public String toString() {

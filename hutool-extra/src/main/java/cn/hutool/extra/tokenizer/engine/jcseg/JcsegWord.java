@@ -26,6 +26,16 @@ public class JcsegWord implements Word {
 	public String getText() {
 		return word.getValue();
 	}
+	
+	@Override
+	public int getStartOffset() {
+		return word.getPosition();
+	}
+	
+	@Override
+	public int getEndOffset() {
+		return getStartOffset() + word.getLength();
+	}
 
 	@Override
 	public String toString() {

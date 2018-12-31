@@ -14,4 +14,18 @@ public interface Word {
 	 * @return 单词文本
 	 */
 	String getText();
+
+	/**
+	 * 获取本词的起始位置
+	 * 
+	 * @return 起始位置
+	 */
+	int getStartOffset();
+
+	/**
+	 * 获取本词的结束位置
+	 * 
+	 * @return 结束位置
+	 */
+	int getEndOffset();
 }
