@@ -8,7 +8,7 @@ import com.chenlb.mmseg4j.MMSeg;
 import com.huaban.analysis.jieba.JiebaSegmenter.SegMode;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.Engine;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
 
 /**
@@ -18,7 +18,7 @@ import cn.hutool.extra.tokenizer.Result;
  * @author looly
  *
  */
-public class MmsegEngine implements Engine {
+public class MmsegEngine implements TokenizerEngine {
 
 	private MMSeg mmSeg;
 	
@@ -38,6 +38,15 @@ public class MmsegEngine implements Engine {
 		final Dictionary dict = Dictionary.getInstance();
 		final ComplexSeg seg = new ComplexSeg(dict);
 		this.mmSeg = new MMSeg(new StringReader(""), seg);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param mmSeg 模式{@link MMSeg}
+	 */
+	public MmsegEngine(MMSeg mmSeg) {
+		this.mmSeg = mmSeg;
 	}
 
 	@Override

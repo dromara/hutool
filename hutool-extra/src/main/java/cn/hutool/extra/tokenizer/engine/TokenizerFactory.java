@@ -1,7 +1,7 @@
 package cn.hutool.extra.tokenizer.engine;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.Engine;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.TokenizerException;
 import cn.hutool.extra.tokenizer.engine.ansj.AnsjEngine;
 import cn.hutool.extra.tokenizer.engine.hanlp.HanLPEngine;
@@ -17,14 +17,14 @@ import cn.hutool.log.StaticLog;
  * @author looly
  *
  */
-public class EngineFactory {
+public class TokenizerFactory {
 	/**
 	 * 根据用户引入的分词引擎jar，自动创建对应的分词引擎对象
 	 * 
-	 * @return {@link Engine}
+	 * @return {@link TokenizerEngine}
 	 */
-	public static Engine create() {
-		final Engine engine = doCreate();
+	public static TokenizerEngine create() {
+		final TokenizerEngine engine = doCreate();
 		StaticLog.debug("Use [{}] Tokenizer Engine As Default.", StrUtil.removeSuffix(engine.getClass().getSimpleName(), "Engine"));
 		return engine;
 	}
@@ -32,9 +32,9 @@ public class EngineFactory {
 	/**
 	 * 根据用户引入的分词引擎jar，自动创建对应的分词引擎对象
 	 * 
-	 * @return {@link Engine}
+	 * @return {@link TokenizerEngine}
 	 */
-	private static Engine doCreate() {
+	private static TokenizerEngine doCreate() {
 		try {
 			return new AnsjEngine();
 		} catch (NoClassDefFoundError e) {
@@ -65,6 +65,6 @@ public class EngineFactory {
 		} catch (NoClassDefFoundError e) {
 			// ignore
 		}
-		throw new TokenizerException("No template found ! Please add one of [Beetl,Freemarker,Velocity,Rythm] jar to your project !");
+		throw new TokenizerException("No tokenizer found ! Please add some tokenizer jar to your project !");
 	}
 }

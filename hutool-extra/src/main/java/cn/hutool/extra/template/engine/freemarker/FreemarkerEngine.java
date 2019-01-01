@@ -5,9 +5,9 @@ import java.io.IOException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateException;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
@@ -18,7 +18,7 @@ import freemarker.template.Configuration;
  * 
  * @author looly
  */
-public class FreemarkerEngine implements Engine {
+public class FreemarkerEngine implements TemplateEngine {
 
 	private Configuration cfg;
 

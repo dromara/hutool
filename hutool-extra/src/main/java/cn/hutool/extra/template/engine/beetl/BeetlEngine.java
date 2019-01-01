@@ -12,16 +12,16 @@ import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.core.resource.WebAppResourceLoader;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Beetl模板引擎封装
  * 
  * @author looly
  */
-public class BeetlEngine implements Engine {
+public class BeetlEngine implements TemplateEngine {
 
 	private GroupTemplate engine;
 

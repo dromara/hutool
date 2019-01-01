@@ -11,7 +11,7 @@ import org.lionsoul.jcseg.tokenizer.core.JcsegTaskConfig;
 import org.lionsoul.jcseg.tokenizer.core.SegmentFactory;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.Engine;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerException;
 
@@ -22,7 +22,7 @@ import cn.hutool.extra.tokenizer.TokenizerException;
  * @author looly
  *
  */
-public class JcsegEngine implements Engine {
+public class JcsegEngine implements TokenizerEngine {
 
 	private ISegment segment;
 

@@ -4,7 +4,7 @@ import com.huaban.analysis.jieba.JiebaSegmenter;
 import com.huaban.analysis.jieba.JiebaSegmenter.SegMode;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.Engine;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
 
 /**
@@ -14,7 +14,7 @@ import cn.hutool.extra.tokenizer.Result;
  * @author looly
  *
  */
-public class JiebaEngine implements Engine {
+public class JiebaEngine implements TokenizerEngine {
 
 	private JiebaSegmenter jiebaSegmenter;
 	private SegMode mode;

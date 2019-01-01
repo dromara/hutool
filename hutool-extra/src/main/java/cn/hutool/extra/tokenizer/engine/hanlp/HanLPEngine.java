@@ -4,7 +4,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.Engine;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
 
 /**
@@ -14,7 +14,7 @@ import cn.hutool.extra.tokenizer.Result;
  * @author looly
  *
  */
-public class HanLPEngine implements Engine {
+public class HanLPEngine implements TokenizerEngine {
 
 	private Segment seg;
 	
@@ -23,7 +23,16 @@ public class HanLPEngine implements Engine {
 	 * 
 	 */
 	public HanLPEngine() {
-		this.seg = HanLP.newSegment();
+		this(HanLP.newSegment());
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param seg {@link Segment}
+	 */
+	public HanLPEngine(Segment seg) {
+		this.seg = seg;
 	}
 
 	@Override

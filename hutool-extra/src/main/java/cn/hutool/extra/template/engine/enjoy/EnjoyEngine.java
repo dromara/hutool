@@ -6,10 +6,10 @@ import com.jfinal.template.source.FileSourceFactory;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateConfig.ResourceMode;
+import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Enjoy库的引擎包装
@@ -17,7 +17,7 @@ import cn.hutool.extra.template.TemplateConfig.ResourceMode;
  * @author looly
  * @since 4.1.10
  */
-public class EnjoyEngine implements Engine {
+public class EnjoyEngine implements TemplateEngine {
 
 	private com.jfinal.template.Engine engine;
 	private ResourceMode resourceMode;

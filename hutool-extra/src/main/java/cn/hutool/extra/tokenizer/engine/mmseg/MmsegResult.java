@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.chenlb.mmseg4j.MMSeg;
 
-import cn.hutool.extra.tokenizer.CachedResult;
+import cn.hutool.extra.tokenizer.AbstractResult;
 import cn.hutool.extra.tokenizer.TokenizerException;
 import cn.hutool.extra.tokenizer.Word;
 
@@ -15,7 +15,7 @@ import cn.hutool.extra.tokenizer.Word;
  * @author looly
  *
  */
-public class MmsegResult extends CachedResult {
+public class MmsegResult extends AbstractResult {
 
 	private MMSeg mmSeg;
 

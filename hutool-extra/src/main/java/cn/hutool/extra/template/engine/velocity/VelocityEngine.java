@@ -3,9 +3,9 @@ package cn.hutool.extra.template.engine.velocity;
 import org.apache.velocity.app.Velocity;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Velocity模板引擎
@@ -13,7 +13,7 @@ import cn.hutool.extra.template.TemplateConfig;
  * @author looly
  *
  */
-public class VelocityEngine implements Engine {
+public class VelocityEngine implements TemplateEngine {
 
 	private org.apache.velocity.app.VelocityEngine engine;
 

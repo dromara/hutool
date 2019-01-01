@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
 
-import cn.hutool.extra.tokenizer.CachedResult;
+import cn.hutool.extra.tokenizer.AbstractResult;
 import cn.hutool.extra.tokenizer.TokenizerException;
 import cn.hutool.extra.tokenizer.Word;
 
@@ -16,7 +16,7 @@ import cn.hutool.extra.tokenizer.Word;
  * @author looly
  *
  */
-public class IKAnalyzerResult extends CachedResult {
+public class IKAnalyzerResult extends AbstractResult {
 
 	private IKSegmenter seg;
 

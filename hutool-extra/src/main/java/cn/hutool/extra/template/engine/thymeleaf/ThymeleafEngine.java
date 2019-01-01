@@ -1,6 +1,5 @@
 package cn.hutool.extra.template.engine.thymeleaf;
 
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.DefaultTemplateResolver;
@@ -9,9 +8,9 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Thymeleaf模板引擎实现
@@ -19,9 +18,9 @@ import cn.hutool.extra.template.TemplateConfig;
  * @author looly
  * @since 4.1.11
  */
-public class ThymeleafEngine implements Engine {
+public class ThymeleafEngine implements TemplateEngine {
 
-	TemplateEngine engine;
+	org.thymeleaf.TemplateEngine engine;
 	TemplateConfig config;
 
 	// --------------------------------------------------------------------------------- Constructor start
@@ -45,9 +44,9 @@ public class ThymeleafEngine implements Engine {
 	/**
 	 * 构造
 	 * 
-	 * @param engine {@link TemplateEngine}
+	 * @param engine {@link org.thymeleaf.TemplateEngine}
 	 */
-	public ThymeleafEngine(TemplateEngine engine) {
+	public ThymeleafEngine(org.thymeleaf.TemplateEngine engine) {
 		this.engine = engine;
 	}
 	// --------------------------------------------------------------------------------- Constructor end
@@ -63,7 +62,7 @@ public class ThymeleafEngine implements Engine {
 	 * @param config 模板配置
 	 * @return {@link TemplateEngine}
 	 */
-	private static TemplateEngine createEngine(TemplateConfig config) {
+	private static org.thymeleaf.TemplateEngine createEngine(TemplateConfig config) {
 		if (null == config) {
 			config = new TemplateConfig();
 		}
@@ -100,7 +99,7 @@ public class ThymeleafEngine implements Engine {
 			break;
 		}
 		
-		final TemplateEngine engine = new TemplateEngine();
+		final org.thymeleaf.TemplateEngine engine = new org.thymeleaf.TemplateEngine();
 		engine.setTemplateResolver(resolver);
 		return engine;
 	}

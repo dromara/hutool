@@ -25,14 +25,14 @@ public class TokenizerUtilTest {
 	@Test
 	public void createEngineTest() {
 		// 默认分词引擎，此处为Ansj
-		Engine engine = TokenizerUtil.createEngine();
+		TokenizerEngine engine = TokenizerUtil.createEngine();
 		Result result = engine.parse(text);
 		checkResult(result);
 	}
 	
 	@Test
 	public void hanlpTest() {
-		Engine engine = new HanLPEngine();
+		TokenizerEngine engine = new HanLPEngine();
 		Result result = engine.parse(text);
 		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这 两 个 方法 的 区别 在于 返回 值", resultStr);
@@ -40,7 +40,7 @@ public class TokenizerUtilTest {
 	
 	@Test
 	public void ikAnalyzerTest() {
-		Engine engine = new IKAnalyzerEngine();
+		TokenizerEngine engine = new IKAnalyzerEngine();
 		Result result = engine.parse(text);
 		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这两个 方法 的 区别 在于 返回值", resultStr);
@@ -48,14 +48,14 @@ public class TokenizerUtilTest {
 	
 	@Test
 	public void jcsegTest() {
-		Engine engine = new JcsegEngine();
+		TokenizerEngine engine = new JcsegEngine();
 		Result result = engine.parse(text);
 		checkResult(result);
 	}
 	
 	@Test
 	public void jiebaTest() {
-		Engine engine = new JiebaEngine();
+		TokenizerEngine engine = new JiebaEngine();
 		Result result = engine.parse(text);
 		String resultStr = CollUtil.join((Iterator<Word>)result, " ");
 		Assert.assertEquals("这 两个 方法 的 区别 在于 返回值", resultStr);
@@ -63,7 +63,7 @@ public class TokenizerUtilTest {
 	
 	@Test
 	public void mmsegTest() {
-		Engine engine = new MmsegEngine();
+		TokenizerEngine engine = new MmsegEngine();
 		Result result = engine.parse(text);
 		checkResult(result);
 	}

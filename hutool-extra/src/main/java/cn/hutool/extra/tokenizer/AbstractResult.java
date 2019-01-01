@@ -10,8 +10,9 @@ import java.util.NoSuchElementException;
  * @author looly
  *
  */
-public abstract class CachedResult implements Result{
-	protected Word cachedWord;
+public abstract class AbstractResult implements Result{
+	
+	private Word cachedWord;
 	
 	@Override
 	public boolean hasNext() {

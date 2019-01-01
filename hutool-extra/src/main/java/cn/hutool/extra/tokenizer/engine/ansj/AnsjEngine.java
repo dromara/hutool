@@ -4,7 +4,7 @@ import org.ansj.splitWord.Analysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.Engine;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
 
 /**
@@ -14,7 +14,7 @@ import cn.hutool.extra.tokenizer.Result;
  * @author looly
  *
  */
-public class AnsjEngine implements Engine {
+public class AnsjEngine implements TokenizerEngine {
 
 	private Analysis analysis;
 	

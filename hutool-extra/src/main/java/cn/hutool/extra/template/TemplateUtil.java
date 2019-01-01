@@ -1,6 +1,6 @@
 package cn.hutool.extra.template;
 
-import cn.hutool.extra.template.engine.EngineFactory;
+import cn.hutool.extra.template.engine.TemplateFactory;
 
 /**
  * 模板工具类
@@ -16,7 +16,7 @@ public class TemplateUtil {
 	 * @return {@link Engine}
 	 * @since 4.1.11
 	 */
-	public static Engine createEngine() {
+	public static TemplateEngine createEngine() {
 		return createEngine(new TemplateConfig());
 	}
 
@@ -26,7 +26,7 @@ public class TemplateUtil {
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link Engine}
 	 */
-	public static Engine createEngine(TemplateConfig config) {
-		return EngineFactory.create(config);
+	public static TemplateEngine createEngine(TemplateConfig config) {
+		return TemplateFactory.create(config);
 	}
 }

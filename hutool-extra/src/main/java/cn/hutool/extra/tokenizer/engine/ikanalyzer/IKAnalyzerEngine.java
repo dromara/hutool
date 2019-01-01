@@ -3,7 +3,7 @@ package cn.hutool.extra.tokenizer.engine.ikanalyzer;
 import org.wltea.analyzer.core.IKSegmenter;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.Engine;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
 
 /**
@@ -13,16 +13,25 @@ import cn.hutool.extra.tokenizer.Result;
  * @author looly
  *
  */
-public class IKAnalyzerEngine implements Engine {
+public class IKAnalyzerEngine implements TokenizerEngine {
 
 	private IKSegmenter seg;
-	
+
 	/**
 	 * 构造
 	 * 
 	 */
 	public IKAnalyzerEngine() {
-		this.seg = new IKSegmenter(null, true);
+		this(new IKSegmenter(null, true));
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param seg {@link IKSegmenter}
+	 */
+	public IKAnalyzerEngine(IKSegmenter seg) {
+		this.seg = seg;
 	}
 
 	@Override
