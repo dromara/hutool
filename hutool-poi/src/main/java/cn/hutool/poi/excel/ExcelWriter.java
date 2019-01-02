@@ -631,13 +631,18 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @see #writeRow(Map, boolean)
 	 * @since 4.1.5
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ExcelWriter writeRow(Object rowBean, boolean isWriteKeyAsHead) {
 		if (rowBean instanceof Iterable) {
 			return writeRow((Iterable<?>) rowBean);
 		}
-		Map<?, ?> rowMap = null;
+		Map rowMap = null;
 		if (rowBean instanceof Map) {
-			rowMap = (Map<?, ?>) rowBean;
+			if(MapUtil.isNotEmpty(this.headerAlias)) {
+				rowMap = MapUtil.newTreeMap((Map) rowBean, getInitedAliasComparator());
+			} else {
+				rowMap = (Map) rowBean;
+			}
 		} else if(BeanUtil.isBean(rowBean.getClass())){
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);

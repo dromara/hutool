@@ -11,6 +11,7 @@
 * 【extra】        增加分词封装，封装了ansj、HanLP、IKAnalyzer、Jcseg、Jieba、MMSeg的实现，统一了接口
 * 【core】        去除NumberUtil.parseInt和parseLong的8进制支持（issue#234@Github）
 * 【extra】        Template部分修改命名减少歧义（Engine->TemplateEngine，EngineFactory->TemplateFactory）
+* 【poi】          ExcelWriter中Map支持alias（issue#IQISU@Gitee）
 
 ### Bug修复
 
