@@ -1125,6 +1125,10 @@ public class StrUtil {
 	 * @since 3.1.2
 	 */
 	public static String strip(CharSequence str, CharSequence prefixOrSuffix) {
+		if(equals(str, prefixOrSuffix)) {
+			//对于去除相同字符的情况单独处理
+			return EMPTY;
+		}
 		return strip(str, prefixOrSuffix, prefixOrSuffix);
 	}
 
@@ -1141,6 +1145,7 @@ public class StrUtil {
 		if (isEmpty(str)) {
 			return str(str);
 		}
+		
 		int from = 0;
 		int to = str.length();
 
@@ -1151,7 +1156,8 @@ public class StrUtil {
 		if (endWith(str2, suffix)) {
 			to -= suffix.length();
 		}
-		return str2.substring(from, to);
+		
+		return str2.substring(Math.min(from, to), Math.max(from, to));
 	}
 
 	/**
@@ -2763,9 +2769,9 @@ public class StrUtil {
 	 * 补充字符串以满足最小长度
 	 * 
 	 * <pre>
-	 * StrUtil.padAfter(null, *, *);//null
-	 * StrUtil.padAfter("1", 3, "ABC");//"AB1"
-	 * StrUtil.padAfter("123", 2, "ABC");//"12"
+	 * StrUtil.padPre(null, *, *);//null
+	 * StrUtil.padPre("1", 3, "ABC");//"AB1"
+	 * StrUtil.padPre("123", 2, "ABC");//"12"
 	 * </pre>
 	 * 
 	 * @param str 字符串
@@ -2784,7 +2790,7 @@ public class StrUtil {
 			return subPre(str, minLength);
 		}
 
-		return repeat(padStr, minLength - strLen).concat(str.toString());
+		return repeatByLength(padStr, minLength - strLen).concat(str.toString());
 	}
 
 	/**
@@ -2866,10 +2872,10 @@ public class StrUtil {
 		if (strLen == minLength) {
 			return str.toString();
 		} else if (strLen > minLength) {
-			return subSuf(str, minLength);
+			return subSufByLength(str, minLength);
 		}
 
-		return str.toString().concat(repeat(padStr, minLength - strLen));
+		return str.toString().concat(repeatByLength(padStr, minLength - strLen));
 	}
 
 	/**

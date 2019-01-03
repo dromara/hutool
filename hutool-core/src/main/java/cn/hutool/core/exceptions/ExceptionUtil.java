@@ -8,6 +8,7 @@ import java.util.Map;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -240,6 +241,46 @@ public class ExceptionUtil {
 				}
 			}
 			cause = cause.getCause();
+		}
+		return null;
+	}
+
+	/**
+	 * 判断指定异常是否来自或者包含指定异常
+	 *
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @return true 来自或者包含
+	 * @since 4.3.2
+	 */
+	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass) {
+		return convertFromOrSuppressedThrowable(throwable, exceptionClass) != null;
+	}
+
+	/**
+	 * 转化指定异常为来自或者包含指定异常
+	 *
+	 *@param <T> 异常类型
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @return 结果为null 不是来自或者包含
+	 * @since 4.3.2
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass) {
+		if (throwable == null || exceptionClass == null) {
+			return null;
+		}
+		if (exceptionClass.isAssignableFrom(throwable.getClass())) {
+			return (T) throwable;
+		}
+		Throwable[] throwables = throwable.getSuppressed();
+		if (ArrayUtil.isNotEmpty(throwables)) {
+			for (Throwable throwable1 : throwables) {
+				if (exceptionClass.isAssignableFrom(throwable1.getClass())) {
+					return (T) throwable1;
+				}
+			}
 		}
 		return null;
 	}

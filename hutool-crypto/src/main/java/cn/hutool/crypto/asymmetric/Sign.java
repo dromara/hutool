@@ -48,11 +48,11 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
 	 * 
 	 * @param algorithm {@link SignAlgorithm}
-	 * @param privateKeyBase64 私钥Base64
-	 * @param publicKeyBase64 公钥Base64
+	 * @param privateKeyStr 私钥Hex或Base64表示
+	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public Sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
-		this(algorithm.getValue(), Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
+	public Sign(SignAlgorithm algorithm, String privateKeyStr, String publicKeyStr) {
+		this(algorithm.getValue(), SecureUtil.decodeKey(privateKeyStr), SecureUtil.decodeKey(publicKeyStr));
 	}
 
 	/**

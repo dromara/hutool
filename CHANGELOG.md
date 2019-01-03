@@ -3,6 +3,34 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.4.0
+
+### 新特性
+* 【core】        增加MurmurHash（Murmur3算法实现），HashUtil增加murmur32、murmur64、murmur128方法
+* 【core】        增加Simhash（用于海量文本去重）
+* 【extra】        增加分词封装，封装了ansj、HanLP、IKAnalyzer、Jcseg、Jieba、MMSeg的实现，统一了接口
+* 【core】        去除NumberUtil.parseInt和parseLong的8进制支持（issue#234@Github）
+* 【extra】        Template部分修改命名减少歧义（Engine->TemplateEngine，EngineFactory->TemplateFactory）
+* 【poi】          ExcelWriter中Map支持alias（issue#IQISU@Gitee）
+
+### Bug修复
+
+## 4.3.3
+
+### 新特性
+* 【poi】          ExcelWriter增加write重载，可选强制加标题（感谢@【北京】大熊）
+* 【core】        ExceptionUtil增加isFromOrSuppressedThrowable（pr#29@Gitee）
+* 【core】        ExceptionUtil增加convertFromOrSuppressedThrowable（pr#30@Gitee）
+* 【crypto】     非对称和SM2构造传入的私钥和公钥支持Hex和Base64自动识别
+
+### Bug修复
+* 【core】        修复padAfter和padPre结果错误问题（issue#IQANO@Gitee）
+* 【crypto】     修复SM2签名验证异常（issue#IQAY0@Gitee）
+* 【extra】       修复Freemarker字符串模板无效问题（issue#231@Github）
+* 【core】        修复StrUtil.strip问题（issue#232@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.3.2
 
 ### 新特性

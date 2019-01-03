@@ -2,6 +2,7 @@ package cn.hutool.crypto;
 
 import java.io.File;
 import java.io.InputStream;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -16,6 +17,7 @@ import java.security.Security;
 import java.security.Signature;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
+import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -29,11 +31,14 @@ import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -93,7 +98,7 @@ public final class SecureUtil {
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
 		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
-		if(slashIndex > 0) {
+		if (slashIndex > 0) {
 			algorithm = algorithm.substring(0, slashIndex);
 		}
 		KeyGenerator keyGenerator;
@@ -208,7 +213,7 @@ public final class SecureUtil {
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
-		if(null == key) {
+		if (null == key) {
 			return null;
 		}
 		return generatePrivateKey(algorithm, new PKCS8EncodedKeySpec(key));
@@ -224,7 +229,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
-		if(null == keySpec) {
+		if (null == keySpec) {
 			return null;
 		}
 		algorithm = getAlgorithmAfterWith(algorithm);
@@ -260,7 +265,7 @@ public final class SecureUtil {
 	 * @return 公钥 {@link PublicKey}
 	 */
 	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
-		if(null == key) {
+		if (null == key) {
 			return null;
 		}
 		return generatePublicKey(algorithm, new X509EncodedKeySpec(key));
@@ -276,7 +281,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
-		if(null == keySpec) {
+		if (null == keySpec) {
 			return null;
 		}
 		algorithm = getAlgorithmAfterWith(algorithm);
@@ -341,6 +346,52 @@ public final class SecureUtil {
 			keyPairGen.initialize(keySize, random);
 		} else {
 			keyPairGen.initialize(keySize);
+		}
+		return keyPairGen.generateKeyPair();
+	}
+	
+	/**
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 
+	 * @param algorithm 非对称加密算法
+	 * @param params {@link AlgorithmParameterSpec}
+	 * @return {@link KeyPair}
+	 * @since 4.3.3
+	 */
+	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params) {
+		return generateKeyPair(algorithm, params, null);
+	}
+
+	/**
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 
+	 * @param algorithm 非对称加密算法
+	 * @param params {@link AlgorithmParameterSpec}
+	 * @param seed 种子
+	 * @return {@link KeyPair}
+	 * @since 4.3.3
+	 */
+	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params, byte[] seed) {
+		algorithm = getAlgorithmAfterWith(algorithm);
+
+		KeyPairGenerator keyPairGen;
+		try {
+			keyPairGen = KeyPairGenerator.getInstance(algorithm);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+
+		try {
+			if (null != seed) {
+				final SecureRandom random = new SecureRandom(seed);
+				keyPairGen.initialize(params, random);
+			} else {
+				keyPairGen.initialize(params);
+			}
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new CryptoException(e);
 		}
 		return keyPairGen.generateKeyPair();
 	}
@@ -649,7 +700,7 @@ public final class SecureUtil {
 	public static String sha1(File dataFile) {
 		return new Digester(DigestAlgorithm.SHA1).digestHex(dataFile);
 	}
-	
+
 	/**
 	 * SHA256加密<br>
 	 * 例：<br>
@@ -662,7 +713,7 @@ public final class SecureUtil {
 	public static Digester sha256() {
 		return new Digester(DigestAlgorithm.SHA256);
 	}
-	
+
 	/**
 	 * SHA256加密，生成16进制SHA256字符串<br>
 	 * 
@@ -673,7 +724,7 @@ public final class SecureUtil {
 	public static String sha256(String data) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
-	
+
 	/**
 	 * SHA256加密，生成16进制SHA256字符串<br>
 	 * 
@@ -684,7 +735,7 @@ public final class SecureUtil {
 	public static String sha256(InputStream data) {
 		return new Digester(DigestAlgorithm.SHA256).digestHex(data);
 	}
-	
+
 	/**
 	 * SHA256加密文件，生成16进制SHA256字符串<br>
 	 * 
@@ -1023,5 +1074,21 @@ public final class SecureUtil {
 	 */
 	public static void addProvider(Provider provider) {
 		Security.addProvider(provider);
+	}
+
+	/**
+	 * 解码字符串密钥，可支持的编码如下：
+	 * 
+	 * <pre>
+	 * 1. Hex（16进制）编码
+	 * 1. Base64编码
+	 * </pre>
+	 * 
+	 * @param key 被解码的密钥字符串
+	 * @return 密钥
+	 * @since 4.3.3
+	 */
+	public static byte[] decodeKey(String key) {
+		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
 	}
 }

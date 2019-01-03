@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="http://hutool.cn/"><img src="http://www.hutool.cn/images/logo.jpg" width="400"></a>
+	<a href="https://hutool.cn/"><img src="https://hutool.cn/images/logo.jpg" width="400"></a>
 </p>
 <p align="center">
 	<strong>A set of tools that keep Java sweet.</strong>
@@ -8,8 +8,8 @@
 	<a target="_blank" href="https://search.maven.org/search?q=g:%22cn.hutool%22%20AND%20a:%22hutool-all%22">
 		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" ></img>
 	</a>
-	<a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0.html">
-		<img src="http://img.shields.io/:license-apache-blue.svg" ></img>
+	<a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0.html">
+		<img src="https://img.shields.io/:license-apache-blue.svg" ></img>
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
 		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" ></img>
@@ -20,15 +20,18 @@
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" ></img>
 	</a>
-	<a target="_blank" href='https://gitee.com/loolly/hutool/stargazers'>
-		<img src='https://gitee.com/loolly/hutool/badge/star.svg?theme=dark' alt='star'></img>
+	<a target="_blank" href="https://gitee.com/loolly/hutool/stargazers">
+		<img src='https://gitee.com/loolly/hutool/badge/star.svg?theme=dark' alt='gitee star'></img>
+	</a>
+	<a target="_blank" href='https://github.com/looly/hutool'>
+		<img src="https://img.shields.io/github/stars/looly/hutool.svg?style=social" alt="github star"></img>
 	</a>
 </p>
 <p align="center">
-	-- 主页：<a href="http://hutool.cn">http://hutool.cn/</a> --
+	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> --
 </p>
 <p align="center">
-	-- QQ群②：<a href="http://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
+	-- QQ群②：<a href="https://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
 </p>
 
 -------------------------------------------------------------------------------
@@ -68,7 +71,7 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 
 ## 文档 
 
-[中文文档](http://hutool.mydoc.io/)
+[中文文档](https://www.hutool.cn/docs/#/)
 
 [参考API](https://apidoc.gitee.com/loolly/hutool/)
 
@@ -83,21 +86,21 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.3.2</version>
+    <version>4.3.3</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.3.2'
+compile 'cn.hutool:hutool-all:4.3.3'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](http://repo1.maven.org/maven2/cn/hutool/hutool-all/4.3.2/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.3.2/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.3.3/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.3.3/)
 
 > 注意
 > Hutool只支持JDK7+，对应Android平台没有测试，部分方法并不支持。

@@ -116,11 +116,11 @@ public class LineIter implements Iterator<String>, Iterable<String>, Closeable {
 	 * @throws NoSuchElementException 没有更多行
 	 */
 	public String nextLine() throws NoSuchElementException {
-		if (!hasNext()) {
+		if (false == hasNext()) {
 			throw new NoSuchElementException("No more lines");
 		}
-		String currentLine = cachedLine;
-		cachedLine = null;
+		String currentLine = this.cachedLine;
+		this.cachedLine = null;
 		return currentLine;
 	}
 

@@ -66,6 +66,13 @@ public class ConvertTest {
 		Assert.assertEquals(Integer.valueOf(1), cInteger);
 		int cInt = ConverterRegistry.getInstance().convert(int.class, c);
 		Assert.assertTrue(1 == cInt);
+
+		// boolean测试
+		String d = "08";
+		Integer dInteger = Convert.toInt(d);
+		Assert.assertEquals(Integer.valueOf(8), dInteger);
+		int dInt = ConverterRegistry.getInstance().convert(int.class, d);
+		Assert.assertTrue(8 == dInt);
 	}
 
 	@Test
@@ -89,6 +96,13 @@ public class ConvertTest {
 		Assert.assertEquals(Long.valueOf(1), cLong);
 		long cLong2 = ConverterRegistry.getInstance().convert(long.class, c);
 		Assert.assertTrue(1 == cLong2);
+
+		// boolean测试
+		String d = "08";
+		Long dLong = Convert.toLong(d);
+		Assert.assertEquals(Long.valueOf(8), dLong);
+		long dLong2 = ConverterRegistry.getInstance().convert(long.class, d);
+		Assert.assertTrue(8 == dLong2);
 	}
 
 	@Test

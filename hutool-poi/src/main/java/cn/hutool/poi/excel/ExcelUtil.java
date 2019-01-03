@@ -1,5 +1,6 @@
 package cn.hutool.poi.excel;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,7 +33,13 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(String path, int sheetIndex, RowHandler rowHandler) {
-		readBySax(FileUtil.getInputStream(path), sheetIndex, rowHandler);
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(path);
+			readBySax(in, sheetIndex, rowHandler);
+		} finally {
+			IoUtil.close(in);
+		}
 	}
 
 	/**
@@ -44,7 +51,13 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(File file, int sheetIndex, RowHandler rowHandler) {
-		readBySax(FileUtil.getInputStream(file), sheetIndex, rowHandler);
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			readBySax(in, sheetIndex, rowHandler);
+		} finally {
+			IoUtil.close(in);
+		}
 	}
 
 	/**

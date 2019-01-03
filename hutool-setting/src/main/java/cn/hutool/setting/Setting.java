@@ -269,7 +269,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 获得group对应的子Setting
+	 * 获取group分组下所有配置键值对，组成新的{@link Setting}
 	 * 
 	 * @param group 分组
 	 * @return {@link Setting}
@@ -281,7 +281,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 获得group对应的子Properties
+	 * 获取group分组下所有配置键值对，组成新的{@link Properties}
 	 * 
 	 * @param group 分组
 	 * @return Properties对象
@@ -293,7 +293,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 获得group对应的子Props
+	 * 获取group分组下所有配置键值对，组成新的{@link Props}
 	 * 
 	 * @param group 分组
 	 * @return Props对象
