@@ -7,13 +7,14 @@
 
 ### 新特性
 ### Bug修复
+* 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
 
 ## 4.4.0
 
 ### 新特性
 * 【core】        增加MurmurHash（Murmur3算法实现），HashUtil增加murmur32、murmur64、murmur128方法
 * 【core】        增加Simhash（用于海量文本去重）
-* 【extra】        增加分词封装，封装了ansj、HanLP、IKAnalyzer、Jcseg、Jieba、MMSeg的实现，统一了接口
+* 【extra】        增加分词封装，封装了ansj、HanLP、IKAnalyzer、Jcseg、Jieba、MMSeg、Lucene-analysis、Word的实现，统一了接口
 * 【core】        去除NumberUtil.parseInt和parseLong的8进制支持（issue#234@Github）
 * 【extra】        Template部分修改命名减少歧义（Engine->TemplateEngine，EngineFactory->TemplateFactory）
 * 【poi】          ExcelWriter中Map支持alias（issue#IQISU@Gitee）
