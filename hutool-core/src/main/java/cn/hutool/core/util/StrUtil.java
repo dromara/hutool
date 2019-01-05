@@ -751,6 +751,26 @@ public class StrUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 检查指定字符串中是否只包含给定的字符
+	 * 
+	 * @param str 字符串
+	 * @param testChars 检查的字符
+	 * @return 字符串含有非检查的字符，返回false
+	 * @since 4.4.1
+	 */
+	public static boolean containsOnly(CharSequence str, char... testChars) {
+		if (false == isEmpty(str)) {
+			int len = str.length();
+			for (int i = 0; i < len; i++) {
+				if (false == ArrayUtil.contains(testChars, str.charAt(i))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * 给定字符串是否包含空白符（空白符包括空格、制表符、全角空格和不间断空格）<br>
