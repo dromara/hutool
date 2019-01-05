@@ -6,6 +6,9 @@
 ## 4.4.1
 
 ### 新特性
+* 【core】        增加Rot（回转N位简易替换密码）和凯撒密码
+* 【crypto】     增加Vigenere密码
+
 ### Bug修复
 * 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
 
