@@ -19,13 +19,13 @@
 	<properties>
 		<!-- versions -->
 		<velocity.version>1.7</velocity.version>
-		<beetl.version>2.9.3</beetl.version>
+		<beetl.version>2.9.7</beetl.version>
 		<rythm.version>1.3.0</rythm.version>
 		<freemarker.version>2.3.28</freemarker.version>
 		<enjoy.version>3.4</enjoy.version>
-		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
-		<mail.version>1.6.1</mail.version>
-		<jsch.version>0.1.54</jsch.version>
+		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+		<mail.version>1.6.2</mail.version>
+		<jsch.version>0.1.55</jsch.version>
 		<zxing.version>3.3.3</zxing.version>
 		<net.version>3.6</net.version>
 		<emoji-java.version>4.0.0</emoji-java.version>
