@@ -257,7 +257,7 @@ public class HexUtil {
 		final StringBuilder builder = new StringBuilder(6);
 
 		builder.append("\\u");
-		String hex = Integer.toHexString(value);
+		String hex = toHex(value);
 		int len = hex.length();
 		if (len < 4) {
 			builder.append("0000", 0, 4 - len);// 不足4位补0
@@ -287,6 +287,28 @@ public class HexUtil {
 		sb.append(DIGITS_LOWER[(ch >> 4) & 15]);
 		sb.append(DIGITS_LOWER[(ch) & 15]);
 		return sb.toString();
+	}
+
+	/**
+	 * 转为16进制字符串
+	 * 
+	 * @param value int值
+	 * @return 16进制字符串
+	 * @since 4.4.1
+	 */
+	public static String toHex(int value) {
+		return Integer.toHexString(value);
+	}
+
+	/**
+	 * 转为16进制字符串
+	 * 
+	 * @param value int值
+	 * @return 16进制字符串
+	 * @since 4.4.1
+	 */
+	public static String toHex(long value) {
+		return Long.toHexString(value);
 	}
 
 	// ---------------------------------------------------------------------------------------- Private method start

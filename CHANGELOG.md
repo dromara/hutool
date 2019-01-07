@@ -10,6 +10,7 @@
 * 【crypto】     增加Vigenere密码
 * 【db】          增加达梦7的驱动识别
 * 【extra】       TemplateEngine适配更广泛的参数类型
+* 【core】       HexUtil增加toHex方法，增加CRC8和CRC16（issue#IQWNB@Gitee）
 
 ### Bug修复
 * 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
