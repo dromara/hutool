@@ -21,9 +21,9 @@
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.version>1.2.3</logback.version>
 		<log4j.version>1.2.17</log4j.version>
-		<log4j2.version>2.10.0</log4j2.version>
+		<log4j2.version>2.11.1</log4j2.version>
 		<commons-logging.version>1.2</commons-logging.version>
-		<tinylog.version>1.3.2</tinylog.version>
+		<tinylog.version>1.3.5</tinylog.version>
 		<jboss-logging.version>3.3.2.Final</jboss-logging.version>
 	</properties>
 
@@ -45,7 +45,6 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
-			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

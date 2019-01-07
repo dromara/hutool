@@ -5,6 +5,8 @@ import java.awt.Color;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 
@@ -19,26 +21,27 @@ public class QrCodeUtilTest {
 	@Test
 	@Ignore
 	public void generateTest() {
-		QrCodeUtil.generate("http://hutool.cn/", 300, 300, FileUtil.file("e:/qrcode.jpg"));
+		QrCodeUtil.generate("https://hutool.cn/", 300, 300, FileUtil.file("e:/qrcode.jpg"));
 	}
 
 	@Test
 	@Ignore
-	public void generateTest2() {
+	public void generateCustomTest() {
 		QrConfig config = new QrConfig();
 		config.setMargin(3);
 		config.setForeColor(Color.CYAN.getRGB());
 		config.setBackColor(Color.GRAY.getRGB());
-		QrCodeUtil.generate("http://hutool.cn/", config, FileUtil.file("e:/qrcode.jpg"));
+		config.setErrorCorrection(ErrorCorrectionLevel.H);
+		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.file("e:/qrcodeCustom.jpg"));
 	}
 
 	@Test
 	@Ignore
-	public void generateTest3() {
+	public void generateWithLogoTest() {
 		QrCodeUtil.generate(//
 				"http://hutool.cn/", //
 				QrConfig.create().setImg("e:/logo_small.jpg"), //
-				FileUtil.file("e:/qrcode.jpg"));
+				FileUtil.file("e:/qrcodeWithLogo.jpg"));
 	}
 
 	@Test
