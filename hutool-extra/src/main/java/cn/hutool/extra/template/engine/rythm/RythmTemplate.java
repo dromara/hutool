@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.extra.template.AbstractTemplate;
 import cn.hutool.extra.template.engine.beetl.BeetlTemplate;
 
@@ -40,7 +42,8 @@ public class RythmTemplate extends AbstractTemplate implements Serializable {
 
 	@Override
 	public void render(Map<?, ?> bindingMap, Writer writer) {
-		rawTemplate.__setRenderArgs(bindingMap);
+		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		rawTemplate.__setRenderArgs(map);
 		rawTemplate.render(writer);
 	}
 
