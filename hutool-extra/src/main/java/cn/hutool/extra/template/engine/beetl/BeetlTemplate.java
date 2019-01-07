@@ -37,13 +37,13 @@ public class BeetlTemplate extends AbstractTemplate implements Serializable{
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, Writer writer) {
+	public void render(Map<?, ?> bindingMap, Writer writer) {
 		rawTemplate.binding(bindingMap);
 		rawTemplate.renderTo(writer);
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, OutputStream out) {
+	public void render(Map<?, ?> bindingMap, OutputStream out) {
 		rawTemplate.binding(bindingMap);
 		rawTemplate.renderTo(out);
 	}

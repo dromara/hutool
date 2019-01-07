@@ -45,13 +45,13 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, Writer writer) {
+	public void render(Map<?, ?> bindingMap, Writer writer) {
 		rawTemplate.merge(toContext(bindingMap), writer);
 		IoUtil.flush(writer);
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, OutputStream out) {
+	public void render(Map<?, ?> bindingMap, OutputStream out) {
 		if(null == charset) {
 			loadEncoding();
 		}
@@ -64,7 +64,7 @@ public class VelocityTemplate extends AbstractTemplate implements Serializable {
 	 * @param bindingMap 参数绑定的Map
 	 * @return {@link VelocityContext}
 	 */
-	private VelocityContext toContext(Map<String, Object> bindingMap) {
+	private VelocityContext toContext(Map<?, ?> bindingMap) {
 		return new VelocityContext(bindingMap);
 	}
 	

@@ -17,7 +17,7 @@ import cn.hutool.core.io.IoUtil;
 public abstract class AbstractTemplate implements Template{
 	
 	@Override
-	public void render(Map<String, Object> bindingMap, File file) {
+	public void render(Map<?, ?> bindingMap, File file) {
 		BufferedOutputStream out = null;
 		try {
 			out = FileUtil.getOutputStream(file);
@@ -28,7 +28,7 @@ public abstract class AbstractTemplate implements Template{
 	}
 	
 	@Override
-	public String render(Map<String, Object> bindingMap) {
+	public String render(Map<?, ?> bindingMap) {
 		final StringWriter writer = new StringWriter();
 		render(bindingMap, writer);
 		return writer.toString();

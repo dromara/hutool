@@ -39,13 +39,13 @@ public class RythmTemplate extends AbstractTemplate implements Serializable {
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, Writer writer) {
+	public void render(Map<?, ?> bindingMap, Writer writer) {
 		rawTemplate.__setRenderArgs(bindingMap);
 		rawTemplate.render(writer);
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, OutputStream out) {
+	public void render(Map<?, ?> bindingMap, OutputStream out) {
 		rawTemplate.__setRenderArgs(bindingMap);
 		rawTemplate.render(out);
 	}
