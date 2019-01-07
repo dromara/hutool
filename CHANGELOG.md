@@ -8,6 +8,7 @@
 ### 新特性
 * 【core】        增加Rot（回转N位简易替换密码）、凯撒密码和莫尔斯电码
 * 【crypto】     增加Vigenere密码
+* 【db】          增加达梦7的驱动识别
 
 ### Bug修复
 * 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
