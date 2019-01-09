@@ -12,6 +12,8 @@
 * 【extra】       TemplateEngine适配更广泛的参数类型
 * 【core】       HexUtil增加toHex方法，增加CRC8和CRC16（issue#IQWNB@Gitee）
 * 【http】        添加text/xml ContentType（pr#31@Gitee）
+* 【core】        Img、ImageUtil增加Resource和Path参数支持
+* 【extra】       ServletUtil.getClientIP增加注释，提示IP伪造风险
 
 ### Bug修复
 * 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）

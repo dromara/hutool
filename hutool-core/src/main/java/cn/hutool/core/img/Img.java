@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Path;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -28,6 +29,7 @@ import javax.imageio.stream.ImageOutputStream;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ImageUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -50,6 +52,16 @@ public class Img {
 	private boolean positionBaseCentre = true;
 	/** 图片输出质量，用于压缩 */
 	private float quality = -1;
+	
+	/**
+	 * 从Path读取图片并开始处理
+	 * 
+	 * @param imagePath 图片文件路径
+	 * @return {@link Img}
+	 */
+	public static Img from(Path imagePath) {
+		return from(imagePath.toFile());
+	}
 
 	/**
 	 * 从文件读取图片并开始处理
@@ -59,6 +71,17 @@ public class Img {
 	 */
 	public static Img from(File imageFile) {
 		return new Img(ImageUtil.read(imageFile));
+	}
+	
+	/**
+	 * 从资源对象中读取图片并开始处理
+	 * 
+	 * @param resource 图片资源对象
+	 * @return {@link Img}
+	 * @since 4.4.1
+	 */
+	public static Img from(Resource resource) {
+		return from(resource.getStream());
 	}
 
 	/**

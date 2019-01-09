@@ -40,6 +40,7 @@ import cn.hutool.core.img.Img;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 
 /**
@@ -1536,6 +1537,17 @@ public class ImageUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 从{@link Resource}中读取图片
+	 * 
+	 * @param resource 图片资源
+	 * @return 图片
+	 * @since 4.4.1
+	 */
+	public static BufferedImage read(Resource resource) {
+		return read(resource.getStream());
 	}
 
 	/**
