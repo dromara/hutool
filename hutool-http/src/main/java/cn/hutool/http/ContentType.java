@@ -17,7 +17,9 @@ public enum ContentType {
 	/** Rest请求JSON编码 */
 	JSON("application/json"),
 	/** Rest请求XML编码 */
-	XML("application/xml");
+	XML("application/xml"),
+	/** Rest请求text/xml编码 */
+	TEXT_XML("text/xml");
 
 	private String value;
 	private ContentType(String value) {
