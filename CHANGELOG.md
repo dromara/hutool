@@ -11,6 +11,7 @@
 * 【db】          增加达梦7的驱动识别
 * 【extra】       TemplateEngine适配更广泛的参数类型
 * 【core】       HexUtil增加toHex方法，增加CRC8和CRC16（issue#IQWNB@Gitee）
+* 【http】        添加text/xml ContentType（pr#31@Gitee）
 
 ### Bug修复
 * 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
