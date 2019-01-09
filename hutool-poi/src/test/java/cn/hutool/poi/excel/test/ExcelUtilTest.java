@@ -1,4 +1,4 @@
-package cn.hutool.poi.test;
+package cn.hutool.poi.excel.test;
 
 import org.junit.Assert;
 import org.junit.Test;
