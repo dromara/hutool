@@ -304,7 +304,7 @@ public class ExceptionUtil {
 		if(checkCause) {
 			Throwable cause = throwable.getCause();
 			if(cause != throwable && exceptionClass.isAssignableFrom(cause.getClass())){
-				return (T) throwable;
+				return (T) cause;
 			}
 		}
 		Throwable[] throwables = throwable.getSuppressed();
