@@ -2,45 +2,27 @@ package cn.hutool.crypto;
 
 import java.io.File;
 import java.io.InputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.Security;
 import java.security.Signature;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
-import javax.crypto.spec.DESedeKeySpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -76,7 +58,7 @@ public final class SecureUtil {
 	 * Keysize must be a multiple of 64, ranging from 512 to 1024 (inclusive).
 	 * </pre>
 	 */
-	public static final int DEFAULT_KEY_SIZE = 1024;
+	public static final int DEFAULT_KEY_SIZE = KeyUtil.DEFAULT_KEY_SIZE;
 
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
@@ -85,7 +67,7 @@ public final class SecureUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateKey(String algorithm) {
-		return generateKey(algorithm, -1);
+		return KeyUtil.generateKey(algorithm);
 	}
 
 	/**
@@ -97,21 +79,7 @@ public final class SecureUtil {
 	 * @since 3.1.2
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
-		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
-		if (slashIndex > 0) {
-			algorithm = algorithm.substring(0, slashIndex);
-		}
-		KeyGenerator keyGenerator;
-		try {
-			keyGenerator = KeyGenerator.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
-		}
-
-		if (keySize > 0) {
-			keyGenerator.init(keySize);
-		}
-		return keyGenerator.generateKey();
+		return KeyUtil.generateKey(algorithm, keySize);
 	}
 
 	/**
@@ -122,19 +90,7 @@ public final class SecureUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateKey(String algorithm, byte[] key) {
-		Assert.notBlank(algorithm, "Algorithm is blank!");
-		SecretKey secretKey = null;
-		if (algorithm.startsWith("PBE")) {
-			// PBE密钥
-			secretKey = generatePBEKey(algorithm, (null == key) ? null : StrUtil.str(key, CharsetUtil.CHARSET_UTF_8).toCharArray());
-		} else if (algorithm.startsWith("DES")) {
-			// DES密钥
-			secretKey = generateDESKey(algorithm, key);
-		} else {
-			// 其它算法密钥
-			secretKey = (null == key) ? generateKey(algorithm) : new SecretKeySpec(key, algorithm);
-		}
-		return secretKey;
+		return KeyUtil.generateKey(algorithm, key);
 	}
 
 	/**
@@ -145,28 +101,7 @@ public final class SecureUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateDESKey(String algorithm, byte[] key) {
-		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("DES")) {
-			throw new CryptoException("Algorithm [{}] is not a DES algorithm!");
-		}
-
-		SecretKey secretKey = null;
-		if (null == key) {
-			secretKey = generateKey(algorithm);
-		} else {
-			KeySpec keySpec;
-			try {
-				if (algorithm.startsWith("DESede")) {
-					// DESede兼容
-					keySpec = new DESedeKeySpec(key);
-				} else {
-					keySpec = new DESKeySpec(key);
-				}
-			} catch (InvalidKeyException e) {
-				throw new CryptoException(e);
-			}
-			secretKey = generateKey(algorithm, keySpec);
-		}
-		return secretKey;
+		return KeyUtil.generateDESKey(algorithm, key);
 	}
 
 	/**
@@ -177,15 +112,7 @@ public final class SecureUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generatePBEKey(String algorithm, char[] key) {
-		if (StrUtil.isBlank(algorithm) || false == algorithm.startsWith("PBE")) {
-			throw new CryptoException("Algorithm [{}] is not a PBE algorithm!");
-		}
-
-		if (null == key) {
-			key = RandomUtil.randomString(32).toCharArray();
-		}
-		PBEKeySpec keySpec = new PBEKeySpec(key);
-		return generateKey(algorithm, keySpec);
+		return KeyUtil.generatePBEKey(algorithm, key);
 	}
 
 	/**
@@ -196,12 +123,7 @@ public final class SecureUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateKey(String algorithm, KeySpec keySpec) {
-		try {
-			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(algorithm);
-			return keyFactory.generateSecret(keySpec);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
+		return KeyUtil.generateKey(algorithm, keySpec);
 	}
 
 	/**
@@ -213,10 +135,7 @@ public final class SecureUtil {
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
-		if (null == key) {
-			return null;
-		}
-		return generatePrivateKey(algorithm, new PKCS8EncodedKeySpec(key));
+		return KeyUtil.generatePrivateKey(algorithm, key);
 	}
 
 	/**
@@ -229,15 +148,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, KeySpec keySpec) {
-		if (null == keySpec) {
-			return null;
-		}
-		algorithm = getAlgorithmAfterWith(algorithm);
-		try {
-			return KeyFactory.getInstance(algorithm).generatePrivate(keySpec);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
+		return KeyUtil.generatePrivateKey(algorithm, keySpec);
 	}
 
 	/**
@@ -249,11 +160,7 @@ public final class SecureUtil {
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(KeyStore keyStore, String alias, char[] password) {
-		try {
-			return (PrivateKey) keyStore.getKey(alias, password);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
+		return KeyUtil.generatePrivateKey(keyStore, alias, password);
 	}
 
 	/**
@@ -265,10 +172,7 @@ public final class SecureUtil {
 	 * @return 公钥 {@link PublicKey}
 	 */
 	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
-		if (null == key) {
-			return null;
-		}
-		return generatePublicKey(algorithm, new X509EncodedKeySpec(key));
+		return KeyUtil.generatePublicKey(algorithm, key);
 	}
 
 	/**
@@ -281,15 +185,7 @@ public final class SecureUtil {
 	 * @since 3.1.1
 	 */
 	public static PublicKey generatePublicKey(String algorithm, KeySpec keySpec) {
-		if (null == keySpec) {
-			return null;
-		}
-		algorithm = getAlgorithmAfterWith(algorithm);
-		try {
-			return KeyFactory.getInstance(algorithm).generatePublic(keySpec);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
+		return KeyUtil.generatePublicKey(algorithm, keySpec);
 	}
 
 	/**
@@ -300,7 +196,7 @@ public final class SecureUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String algorithm) {
-		return generateKeyPair(algorithm, DEFAULT_KEY_SIZE, null);
+		return KeyUtil.generateKeyPair(algorithm);
 	}
 
 	/**
@@ -312,7 +208,7 @@ public final class SecureUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String algorithm, int keySize) {
-		return generateKeyPair(algorithm, keySize, null);
+		return KeyUtil.generateKeyPair(algorithm, keySize);
 	}
 
 	/**
@@ -325,31 +221,9 @@ public final class SecureUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
-		algorithm = getAlgorithmAfterWith(algorithm);
-		if ("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
-			// 对于EC算法，密钥长度有限制，在此使用默认256
-			keySize = 256;
-		}
-
-		KeyPairGenerator keyPairGen;
-		try {
-			keyPairGen = KeyPairGenerator.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
-		}
-
-		if (keySize <= 0) {
-			keySize = DEFAULT_KEY_SIZE;
-		}
-		if (null != seed) {
-			final SecureRandom random = new SecureRandom(seed);
-			keyPairGen.initialize(keySize, random);
-		} else {
-			keyPairGen.initialize(keySize);
-		}
-		return keyPairGen.generateKeyPair();
+		return KeyUtil.generateKeyPair(algorithm, keySize, seed);
 	}
-	
+
 	/**
 	 * 生成用于非对称加密的公钥和私钥<br>
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
@@ -360,7 +234,7 @@ public final class SecureUtil {
 	 * @since 4.3.3
 	 */
 	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params) {
-		return generateKeyPair(algorithm, params, null);
+		return KeyUtil.generateKeyPair(algorithm, params);
 	}
 
 	/**
@@ -374,26 +248,7 @@ public final class SecureUtil {
 	 * @since 4.3.3
 	 */
 	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params, byte[] seed) {
-		algorithm = getAlgorithmAfterWith(algorithm);
-
-		KeyPairGenerator keyPairGen;
-		try {
-			keyPairGen = KeyPairGenerator.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
-		}
-
-		try {
-			if (null != seed) {
-				final SecureRandom random = new SecureRandom(seed);
-				keyPairGen.initialize(params, random);
-			} else {
-				keyPairGen.initialize(params);
-			}
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new CryptoException(e);
-		}
-		return keyPairGen.generateKeyPair();
+		return KeyUtil.generateKeyPair(algorithm, params, seed);
 	}
 
 	/**
@@ -404,15 +259,20 @@ public final class SecureUtil {
 	 * @return 算法
 	 */
 	public static String getAlgorithmAfterWith(String algorithm) {
-		Assert.notNull(algorithm, "algorithm must be not null !");
-		int indexOfWith = StrUtil.lastIndexOfIgnoreCase(algorithm, "with");
-		if (indexOfWith > 0) {
-			algorithm = StrUtil.subSuf(algorithm, indexOfWith + "with".length());
-		}
-		if ("ECDSA".equalsIgnoreCase(algorithm) || "SM2".equalsIgnoreCase(algorithm)) {
-			algorithm = "EC";
-		}
-		return algorithm;
+		return KeyUtil.getAlgorithmAfterWith(algorithm);
+	}
+
+	/**
+	 * 生成算法，格式为XXXwithXXX
+	 * 
+	 * @param asymmetricAlgorithm 非对称算法
+	 * @param digestAlgorithm 摘要算法
+	 * @return 算法
+	 * @since 4.4.1
+	 */
+	public static String generateAlgorithm(AsymmetricAlgorithm asymmetricAlgorithm, DigestAlgorithm digestAlgorithm) {
+		final String digestPart = (null == digestAlgorithm) ? "NONE" : digestAlgorithm.name();
+		return StrUtil.format("{}with{}", digestPart, asymmetricAlgorithm.getValue());
 	}
 
 	/**
@@ -423,10 +283,8 @@ public final class SecureUtil {
 	 * @return {@link Signature}
 	 */
 	public static Signature generateSignature(AsymmetricAlgorithm asymmetricAlgorithm, DigestAlgorithm digestAlgorithm) {
-		String digestPart = (null == digestAlgorithm) ? "NONE" : digestAlgorithm.name();
-		String algorithm = StrUtil.format("{}with{}", digestPart, asymmetricAlgorithm.getValue());
 		try {
-			return Signature.getInstance(algorithm);
+			return Signature.getInstance(generateAlgorithm(asymmetricAlgorithm, digestAlgorithm));
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
@@ -442,7 +300,7 @@ public final class SecureUtil {
 	 * @return {@link KeyStore}
 	 */
 	public static KeyStore readJKSKeyStore(InputStream in, char[] password) {
-		return readKeyStore("JKS", in, password);
+		return KeyUtil.readJKSKeyStore(in, password);
 	}
 
 	/**
@@ -456,14 +314,7 @@ public final class SecureUtil {
 	 * @return {@link KeyStore}
 	 */
 	public static KeyStore readKeyStore(String type, InputStream in, char[] password) {
-		KeyStore keyStore = null;
-		try {
-			keyStore = KeyStore.getInstance(type);
-			keyStore.load(in, password);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
-		return keyStore;
+		return KeyUtil.readKeyStore(type, in, password);
 	}
 
 	/**
@@ -473,10 +324,25 @@ public final class SecureUtil {
 	 * 
 	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
 	 * @param password 密码
+	 * @param alias 别名
 	 * @return {@link KeyStore}
+	 * @since 4.4.1
 	 */
-	public static Certificate readX509Certificate(InputStream in, char[] password) {
-		return readCertificate("X.509", in, password);
+	public static Certificate readX509Certificate(InputStream in, char[] password, String alias) {
+		return KeyUtil.readX509Certificate(in, password, alias);
+	}
+
+	/**
+	 * 读取X.509 Certification文件<br>
+	 * Certification为证书文件<br>
+	 * see: http://snowolf.iteye.com/blog/391931
+	 * 
+	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @return {@link KeyStore}
+	 * @since 4.4.1
+	 */
+	public static Certificate readX509Certificate(InputStream in) {
+		return KeyUtil.readX509Certificate(in);
 	}
 
 	/**
@@ -484,19 +350,28 @@ public final class SecureUtil {
 	 * Certification为证书文件<br>
 	 * see: http://snowolf.iteye.com/blog/391931
 	 * 
-	 * @param type 类型
+	 * @param type 类型，例如X.509
 	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
 	 * @param password 密码
+	 * @param alias 别名
 	 * @return {@link KeyStore}
+	 * @since 4.4.1
 	 */
-	public static Certificate readCertificate(String type, InputStream in, char[] password) {
-		Certificate certificate;
-		try {
-			certificate = CertificateFactory.getInstance(type).generateCertificate(in);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
-		return certificate;
+	public static Certificate readCertificate(String type, InputStream in, char[] password, String alias) {
+		return KeyUtil.readCertificate(type, in, password, alias);
+	}
+
+	/**
+	 * 读取Certification文件<br>
+	 * Certification为证书文件<br>
+	 * see: http://snowolf.iteye.com/blog/391931
+	 * 
+	 * @param type 类型，例如X.509
+	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @return {@link Certificate}
+	 */
+	public static Certificate readCertificate(String type, InputStream in) {
+		return KeyUtil.readCertificate(type, in);
 	}
 
 	/**
@@ -507,11 +382,7 @@ public final class SecureUtil {
 	 * @return {@link Certificate}
 	 */
 	public static Certificate getCertificate(KeyStore keyStore, String alias) {
-		try {
-			return keyStore.getCertificate(alias);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
+		return KeyUtil.getCertificate(keyStore, alias);
 	}
 
 	// ------------------------------------------------------------------- 对称加密算法

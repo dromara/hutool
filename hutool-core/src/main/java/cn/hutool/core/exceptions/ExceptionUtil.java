@@ -280,7 +280,7 @@ public class ExceptionUtil {
 	 * @since 4.3.2
 	 */
 	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass) {
-		return convertFromOrSuppressedThrowable(throwable,exceptionClass,true);
+		return convertFromOrSuppressedThrowable(throwable, exceptionClass, true);
 	}
 
 	/**
@@ -289,8 +289,8 @@ public class ExceptionUtil {
 	 * @param <T> 异常类型
 	 * @param throwable 异常
 	 * @param exceptionClass 定义的引起异常的类
-	 * @return 结果为null 不是来自或者包含
 	 * @param checkCause 判断cause
+	 * @return 结果为null 不是来自或者包含
 	 * @since 4.4.1
 	 */
 	@SuppressWarnings("unchecked")
@@ -301,9 +301,9 @@ public class ExceptionUtil {
 		if (exceptionClass.isAssignableFrom(throwable.getClass())) {
 			return (T) throwable;
 		}
-		if(checkCause) {
+		if (checkCause) {
 			Throwable cause = throwable.getCause();
-			if(cause != throwable && exceptionClass.isAssignableFrom(cause.getClass())){
+			if (cause != throwable && exceptionClass.isAssignableFrom(cause.getClass())) {
 				return (T) cause;
 			}
 		}

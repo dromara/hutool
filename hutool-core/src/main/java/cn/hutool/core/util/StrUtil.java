@@ -3378,7 +3378,7 @@ public class StrUtil {
 	}
 
 	/**
-	 * 指定范围内反向查找字符串
+	 * 指定范围内查找字符串
 	 * 
 	 * @param str 字符串
 	 * @param searchStr 需要查找位置的字符串

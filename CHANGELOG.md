@@ -15,9 +15,11 @@
 * 【core】        Img、ImageUtil增加Resource和Path参数支持
 * 【extra】       ServletUtil.getClientIP增加注释，提示IP伪造风险
 * 【poi】          增加Word07Writer
+* 【crypto】     增加KeyUtil
 
 ### Bug修复
 * 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
+* 【crypto】     解决SecureUtil.readCertificate密码无效问题（issue#240@Github）
 
 ## 4.4.0
 
