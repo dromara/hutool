@@ -6,6 +6,7 @@ import org.junit.Test;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.lang.Console;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 
 /**
@@ -18,8 +19,13 @@ public class DownloadTest {
 	@Test
 	@Ignore
 	public void downloadSizeTest() {
-		long size = HttpUtil.downloadFile("https://www.baidu.com/", FileUtil.file("d:/"));
-		System.out.println("Download size: " + size);
+		String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
+//		long size = HttpUtil.downloadFile(url, FileUtil.file("d:/"));
+//		System.out.println("Download size: " + size);
+		HttpRequest req = HttpRequest.get(url);
+		req.setSSLProtocol("TLSv1.2");
+		String body = req.execute().body();
+		Console.log(body);
 	}
 	
 	@Test

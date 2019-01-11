@@ -30,11 +30,5 @@
 			<artifactId>hutool-json</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
 	</dependencies>
 </project>

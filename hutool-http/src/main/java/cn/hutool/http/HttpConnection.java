@@ -160,9 +160,25 @@ public class HttpConnection {
 	 */
 	public HttpConnection(URL url, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
 		this.url = url;
-		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
+		this.method = ObjectUtil.defaultIfNull(method, Method.GET);
 		this.proxy = proxy;
 
+		//初始化Http连接
+		initConn(hostnameVerifier, ssf, timeout);
+	}
+
+	// --------------------------------------------------------------- Constructor end
+
+	/**
+	 * 初始化连接相关信息
+	 * 
+	 * @param hostnameVerifier 域名验证器
+	 * @param ssf SSLSocketFactory
+	 * @param timeout 超时时长
+	 * @return HttpConnection
+	 * @since 4.4.1
+	 */
+	public HttpConnection initConn(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout) {
 		try {
 			this.conn = openHttp(hostnameVerifier, ssf);
 		} catch (Exception e) {
@@ -171,18 +187,7 @@ public class HttpConnection {
 		if (timeout > 0) {
 			this.setConnectionAndReadTimeout(timeout);
 		}
-
-		initConn();
-	}
-
-	// --------------------------------------------------------------- Constructor end
-
-	/**
-	 * 初始化连接相关信息
-	 * 
-	 * @return HttpConnection
-	 */
-	public HttpConnection initConn() {
+		
 		// method
 		try {
 			this.conn.setRequestMethod(this.method.toString());
@@ -569,7 +574,11 @@ public class HttpConnection {
 	 * @return {@link HttpURLConnection}，https返回{@link HttpsURLConnection}
 	 */
 	private HttpURLConnection openHttp(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-		final HttpURLConnection conn = (HttpURLConnection) openConnection();
+		final URLConnection conn = openConnection();
+		if(false == conn instanceof HttpURLConnection) {
+			//防止其它协议造成的转换异常
+			throw new HttpException("'{}' is not a http connection, make sure URL is format for http.", conn.getClass().getName());
+		}
 
 		if (conn instanceof HttpsURLConnection) {
 			// Https请求
@@ -586,8 +595,8 @@ public class HttpConnection {
 			}
 			httpsConn.setSSLSocketFactory(ssf);
 		}
-
-		return conn;
+		
+		return (HttpURLConnection)conn;
 	}
 
 	/**

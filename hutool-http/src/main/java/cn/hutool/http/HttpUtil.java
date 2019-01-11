@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +25,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 
 /**
  * Http请求工具类
@@ -61,12 +58,10 @@ public class HttpUtil {
 	 * @param content 被编码内容
 	 * @param charset 编码
 	 * @return 编码后的字符
+	 * @see URLUtil#encode(String, Charset)
 	 */
 	public static String encode(String content, Charset charset) {
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return encode(content, charset.name());
+		return URLUtil.encode(content, charset);
 	}
 
 	/**
@@ -75,20 +70,13 @@ public class HttpUtil {
 	 * @param content 被编码内容
 	 * @param charsetStr 编码
 	 * @return 编码后的字符
-	 * @throws HttpException 编码不支持
+	 * @see URLUtil#encode(String, String)
 	 */
-	public static String encode(String content, String charsetStr) throws HttpException {
-		if (StrUtil.isBlank(content)) {
+	public static String encode(String content, String charsetStr) {
+		if (StrUtil.isEmpty(content)) {
 			return content;
 		}
-
-		String encodeContent = null;
-		try {
-			encodeContent = URLEncoder.encode(content, charsetStr);
-		} catch (UnsupportedEncodingException e) {
-			throw new HttpException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
-		}
-		return encodeContent;
+		return URLUtil.encode(content, charsetStr);
 	}
 
 	/**
@@ -97,9 +85,10 @@ public class HttpUtil {
 	 * @param content 被解码内容
 	 * @param charset 编码
 	 * @return 编码后的字符
+	 * @see URLUtil#decode(String, Charset)
 	 */
 	public static String decode(String content, Charset charset) {
-		return decode(content, charset.name());
+		return URLUtil.decode(content, charset);
 	}
 
 	/**
@@ -108,49 +97,10 @@ public class HttpUtil {
 	 * @param content 被解码内容
 	 * @param charsetStr 编码
 	 * @return 编码后的字符
+	 * @see URLUtil#decode(String, String)
 	 */
 	public static String decode(String content, String charsetStr) {
-		if (StrUtil.isBlank(content)) {
-			return content;
-		}
-		String encodeContnt = null;
-		try {
-			encodeContnt = URLDecoder.decode(content, charsetStr);
-		} catch (UnsupportedEncodingException e) {
-			throw new HttpException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
-		}
-		return encodeContnt;
-	}
-
-	/**
-	 * 获取客户端IP<br>
-	 * 默认检测的Header：<br>
-	 * 1、X-Forwarded-For<br>
-	 * 2、X-Real-IP<br>
-	 * 3、Proxy-Client-IP<br>
-	 * 4、WL-Proxy-Client-IP<br>
-	 * otherHeaderNames参数用于自定义检测的Header
-	 * 
-	 * @param request 请求对象
-	 * @param otherHeaderNames 其他自定义头文件
-	 * @return IP地址
-	 */
-	public static String getClientIP(javax.servlet.http.HttpServletRequest request, String... otherHeaderNames) {
-		String[] headers = { "X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR" };
-		if (ArrayUtil.isNotEmpty(otherHeaderNames)) {
-			headers = ArrayUtil.addAll(headers, otherHeaderNames);
-		}
-
-		String ip;
-		for (String header : headers) {
-			ip = request.getHeader(header);
-			if (false == isUnknow(ip)) {
-				return getMultistageReverseProxyIp(ip);
-			}
-		}
-
-		ip = request.getRemoteAddr();
-		return getMultistageReverseProxyIp(ip);
+		return URLUtil.decode(content, charsetStr);
 	}
 
 	/**
@@ -696,11 +646,11 @@ public class HttpUtil {
 	 * @param url URL
 	 * @param form 表单数据
 	 * @param charset 编码
-	 * @param isEncode 是否对键和值做转义处理
+	 * @param isEncodeParams 是否对键和值做转义处理
 	 * @return 合成后的URL
 	 */
-	public static String urlWithForm(String url, Map<String, Object> form, Charset charset, boolean isEncode) {
-		if (isEncode && StrUtil.contains(url, '?')) {
+	public static String urlWithForm(String url, Map<String, Object> form, Charset charset, boolean isEncodeParams) {
+		if (isEncodeParams && StrUtil.contains(url, '?')) {
 			// 在需要编码的情况下，如果url中已经有部分参数，则编码之
 			url = encodeParams(url, charset);
 		}
@@ -762,36 +712,6 @@ public class HttpUtil {
 			return null;
 		}
 		return ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
-	}
-
-	/**
-	 * 从多级反向代理中获得第一个非unknown IP地址
-	 * 
-	 * @param ip 获得的IP地址
-	 * @return 第一个非unknown IP地址
-	 */
-	public static String getMultistageReverseProxyIp(String ip) {
-		// 多级反向代理检测
-		if (ip != null && ip.indexOf(",") > 0) {
-			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
-				if (false == isUnknow(subIp)) {
-					ip = subIp;
-					break;
-				}
-			}
-		}
-		return ip;
-	}
-
-	/**
-	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
-	 * 
-	 * @param checkString 被检测的字符串
-	 * @return 是否未知
-	 */
-	public static boolean isUnknow(String checkString) {
-		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 
 	/**
