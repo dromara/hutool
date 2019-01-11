@@ -254,25 +254,58 @@ public class ExceptionUtil {
 	 * @since 4.3.2
 	 */
 	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass) {
-		return convertFromOrSuppressedThrowable(throwable, exceptionClass) != null;
+		return convertFromOrSuppressedThrowable(throwable, exceptionClass, true) != null;
+	}
+
+	/**
+	 * 判断指定异常是否来自或者包含指定异常
+	 *
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @param checkCause 判断cause
+	 * @return true 来自或者包含
+	 * @since 4.4.1
+	 */
+	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass, boolean checkCause) {
+		return convertFromOrSuppressedThrowable(throwable, exceptionClass, checkCause) != null;
 	}
 
 	/**
 	 * 转化指定异常为来自或者包含指定异常
 	 *
-	 *@param <T> 异常类型
+	 * @param <T> 异常类型
 	 * @param throwable 异常
 	 * @param exceptionClass 定义的引起异常的类
 	 * @return 结果为null 不是来自或者包含
 	 * @since 4.3.2
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass) {
+		return convertFromOrSuppressedThrowable(throwable,exceptionClass,true);
+	}
+
+	/**
+	 * 转化指定异常为来自或者包含指定异常
+	 *
+	 * @param <T> 异常类型
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @return 结果为null 不是来自或者包含
+	 * @param checkCause 判断cause
+	 * @since 4.4.1
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass, boolean checkCause) {
 		if (throwable == null || exceptionClass == null) {
 			return null;
 		}
 		if (exceptionClass.isAssignableFrom(throwable.getClass())) {
 			return (T) throwable;
+		}
+		if(checkCause) {
+			Throwable cause = throwable.getCause();
+			if(cause != throwable && exceptionClass.isAssignableFrom(cause.getClass())){
+				return (T) cause;
+			}
 		}
 		Throwable[] throwables = throwable.getSuppressed();
 		if (ArrayUtil.isNotEmpty(throwables)) {
