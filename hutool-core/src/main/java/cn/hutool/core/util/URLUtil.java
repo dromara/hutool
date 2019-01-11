@@ -15,14 +15,12 @@ import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.jar.JarFile;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Editor;
 import cn.hutool.core.net.URLEncoder;
 
 /**
@@ -270,7 +268,7 @@ public class URLUtil {
 	}
 
 	/**
-	 * 编码URL<br>
+	 * 编码URL字符为 application/x-www-form-urlencoded<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
 	 * 
 	 * @param url URL
@@ -279,6 +277,9 @@ public class URLUtil {
 	 * @exception UtilException UnsupportedEncodingException
 	 */
 	public static String encode(String url, String charset) throws UtilException {
+		if (StrUtil.isEmpty(url)) {
+			return url;
+		}
 		return encode(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
 	}
 	
@@ -553,12 +554,7 @@ public class URLUtil {
 		//替换多个\或/为单个/
 		body = body.replace("\\", "/").replaceAll("//+", "/");
 		if(isEncodeBody) {
-			body = CollUtil.join(CollUtil.filter(StrUtil.split(body, '/'), new Editor<String>() {
-				@Override
-				public String edit(String t) {
-					return encode(t);
-				}
-			}), "/");
+			body = encode(body);
 		}
 		return pre + body + StrUtil.nullToEmpty(params);
 	}

@@ -23,6 +23,7 @@ import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 
 /**
  * Http响应类<br>
@@ -248,7 +249,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 				fileName = StrUtil.subSuf(path, path.lastIndexOf('/') + 1);
 				if (StrUtil.isBlank(fileName)) {
 					//编码后的路径做为文件名
-					fileName = HttpUtil.encode(path, CharsetUtil.CHARSET_UTF_8);
+					fileName = URLUtil.encodeQuery(path, CharsetUtil.CHARSET_UTF_8);
 				}
 			}
 			destFile = FileUtil.file(destFile, fileName);

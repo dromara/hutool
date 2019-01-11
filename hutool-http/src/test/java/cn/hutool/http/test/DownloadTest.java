@@ -20,12 +20,10 @@ public class DownloadTest {
 //	@Ignore
 	public void downloadSizeTest() {
 		String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
-//		long size = HttpUtil.downloadFile(url, FileUtil.file("d:/"));
-//		System.out.println("Download size: " + size);
-		HttpRequest req = HttpRequest.get(url);
-		req.setSSLProtocol("TLSv1.2");
-		String body = req.execute().body();
-		Console.log(body);
+		HttpRequest
+				.get(url)
+				.setSSLProtocol("TLSv1.2")
+				.executeAsync().writeBody("e:/pic/366466.jpg");
 	}
 	
 	@Test

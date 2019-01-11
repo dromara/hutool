@@ -30,7 +30,6 @@ import cn.hutool.core.io.resource.MultiFileResource;
 import cn.hutool.core.io.resource.MultiResource;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -129,7 +128,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest(String url) {
 		Assert.notBlank(url, "Param [url] can not be blank !");
 		this.url = URLUtil.normalize(url, true);
-		Console.log(this.url);
 		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}

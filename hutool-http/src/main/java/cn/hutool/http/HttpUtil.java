@@ -43,67 +43,6 @@ public class HttpUtil {
 	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta[^>]*?charset\\s*=\\s*['\"]?([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
 
 	/**
-	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
-	 * 
-	 * @param content 被编码内容
-	 * @return 编码后的字符
-	 */
-	public static String encodeUtf8(String content) {
-		return encode(content, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @see URLUtil#encode(String, Charset)
-	 */
-	public static String encode(String content, Charset charset) {
-		return URLUtil.encode(content, charset);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 * @see URLUtil#encode(String, String)
-	 */
-	public static String encode(String content, String charsetStr) {
-		if (StrUtil.isEmpty(content)) {
-			return content;
-		}
-		return URLUtil.encode(content, charsetStr);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @see URLUtil#decode(String, Charset)
-	 */
-	public static String decode(String content, Charset charset) {
-		return URLUtil.decode(content, charset);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 * @see URLUtil#decode(String, String)
-	 */
-	public static String decode(String content, String charsetStr) {
-		return URLUtil.decode(content, charsetStr);
-	}
-
-	/**
 	 * 检测是否https
 	 * 
 	 * @param url URL
@@ -475,13 +414,76 @@ public class HttpUtil {
 			}
 			valueStr = Convert.toStr(value);
 			if (StrUtil.isNotEmpty(key)) {
-				sb.append(encode(key, charset)).append("=");
+				sb.append(URLUtil.encodeQuery(key, charset)).append("=");
 				if (StrUtil.isNotEmpty(valueStr)) {
-					sb.append(encode(valueStr, charset));
+					sb.append(URLUtil.encodeQuery(valueStr, charset));
 				}
 			}
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
+	 * 
+	 * @param content 被编码内容
+	 * @return 编码后的字符
+	 * @deprecated 请使用{@link URLUtil#encode(String)}
+	 */
+	@Deprecated
+	public static String encodeUtf8(String content) {
+		return encode(content, CharsetUtil.UTF_8);
+	}
+
+	/**
+	 * 编码字符为 application/x-www-form-urlencoded
+	 * 
+	 * @param content 被编码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 * @deprecated 请使用{@link URLUtil#encode(String, Charset)}
+	 */
+	@Deprecated
+	public static String encode(String content, Charset charset) {
+		return URLUtil.encode(content, charset);
+	}
+
+	/**
+	 * 编码字符为 application/x-www-form-urlencoded
+	 * 
+	 * @param content 被编码内容
+	 * @param charsetStr 编码
+	 * @return 编码后的字符
+	 * @see URLUtil#encode(String, String)
+	 */
+	public static String encode(String content, String charsetStr) {
+		return URLUtil.encode(content, charsetStr);
+	}
+
+	/**
+	 * 解码application/x-www-form-urlencoded字符
+	 * 
+	 * @param content 被解码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 * @deprecated 请使用{@link URLUtil#decode(String, Charset)}
+	 */
+	@Deprecated
+	public static String decode(String content, Charset charset) {
+		return URLUtil.decode(content, charset);
+	}
+
+	/**
+	 * 解码application/x-www-form-urlencoded字符
+	 * 
+	 * @param content 被解码内容
+	 * @param charsetStr 编码
+	 * @return 编码后的字符
+	 * @deprecated 请使用{@link URLUtil#decode(String, String)}
+	 */
+	@Deprecated
+	public static String decode(String content, String charsetStr) {
+		return URLUtil.decode(content, charsetStr);
 	}
 
 	/**
@@ -534,9 +536,9 @@ public class HttpUtil {
 					if (null == name) {
 						// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
 						name = paramPart.substring(pos, i);
-						builder.append(encode(name, charset)).append('=');
+						builder.append(URLUtil.encodeQuery(name, charset)).append('=');
 					} else {
-						builder.append(encode(name, charset)).append('=').append(encode(paramPart.substring(pos, i), charset)).append('&');
+						builder.append(URLUtil.encodeQuery(name, charset)).append('=').append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset)).append('&');
 					}
 					name = null;
 				}
@@ -546,13 +548,13 @@ public class HttpUtil {
 
 		// 结尾处理
 		if (null != name) {
-			builder.append(encode(name, charset)).append('=');
+			builder.append(URLUtil.encodeQuery(name, charset)).append('=');
 		}
 		if (pos != i) {
 			if (null == name) {
 				builder.append('=');
 			}
-			builder.append(encode(paramPart.substring(pos, i), charset));
+			builder.append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset));
 		}
 
 		int lastIndex = builder.length() - 1;
@@ -809,8 +811,8 @@ public class HttpUtil {
 	 * @param charset 编码
 	 */
 	private static void addParam(Map<String, List<String>> params, String name, String value, String charset) {
-		name = decode(name, charset);
-		value = decode(value, charset);
+		name = URLUtil.decode(name, charset);
+		value = URLUtil.decode(value, charset);
 		List<String> values = params.get(name);
 		if (values == null) {
 			values = new ArrayList<String>(1); // 一般是一个参数
