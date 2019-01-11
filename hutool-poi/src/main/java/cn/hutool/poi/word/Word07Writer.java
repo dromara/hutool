@@ -75,6 +75,17 @@ public class Word07Writer implements Closeable {
 	public XWPFDocument getDoc() {
 		return this.doc;
 	}
+	
+	/**
+	 * 设置写出的目标文件
+	 * 
+	 * @param destFile 目标文件
+	 * @return this
+	 */
+	public Word07Writer setDestFile(File destFile) {
+		this.destFile = destFile;
+		return this;
+	}
 
 	/**
 	 * 增加一个段落
