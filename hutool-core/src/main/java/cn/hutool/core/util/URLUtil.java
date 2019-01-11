@@ -22,7 +22,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.net.URLEncoder;
 
@@ -218,7 +217,20 @@ public class URLUtil {
 	 * @since 3.1.2
 	 */
 	public static String encode(String url) throws UtilException {
-		return encode(url, CharsetUtil.UTF_8);
+		return encode(url, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 编码URL，默认使用UTF-8编码<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
+	 * @param url URL
+	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 * @since 3.1.2
+	 */
+	public static String encodeQuery(String url) throws UtilException {
+		return encodeQuery(url, CharsetUtil.CHARSET_UTF_8);
 	}
 	
 	/**
@@ -236,7 +248,25 @@ public class URLUtil {
 		if (null == charset) {
 			charset = CharsetUtil.defaultCharset();
 		}
-		return URLEncoder.encode(url, charset);
+		return URLEncoder.DEFAULT.encode(url, charset);
+	}
+	
+	/**
+	 * 编码字符为URL中查询语句
+	 * 
+	 * @param url 被编码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 * @since 4.4.1
+	 */
+	public static String encodeQuery(String url, Charset charset) {
+		if (StrUtil.isEmpty(url)) {
+			return url;
+		}
+		if (null == charset) {
+			charset = CharsetUtil.defaultCharset();
+		}
+		return URLEncoder.QUERY.encode(url, charset);
 	}
 
 	/**
@@ -250,6 +280,19 @@ public class URLUtil {
 	 */
 	public static String encode(String url, String charset) throws UtilException {
 		return encode(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
+	}
+	
+	/**
+	 * 编码URL<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
+	 * @param url URL
+	 * @param charset 编码
+	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 */
+	public static String encodeQuery(String url, String charset) throws UtilException {
+		return encodeQuery(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -511,10 +554,8 @@ public class URLUtil {
 		body = body.replace("\\", "/").replaceAll("//+", "/");
 		if(isEncodeBody) {
 			body = CollUtil.join(CollUtil.filter(StrUtil.split(body, '/'), new Editor<String>() {
-				
 				@Override
 				public String edit(String t) {
-					Console.log(encode(t));
 					return encode(t);
 				}
 			}), "/");

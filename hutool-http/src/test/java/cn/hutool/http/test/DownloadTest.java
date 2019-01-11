@@ -17,7 +17,7 @@ import cn.hutool.http.HttpUtil;
 public class DownloadTest {
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void downloadSizeTest() {
 		String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
 //		long size = HttpUtil.downloadFile(url, FileUtil.file("d:/"));

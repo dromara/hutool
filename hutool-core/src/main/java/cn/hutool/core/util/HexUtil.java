@@ -310,6 +310,22 @@ public class HexUtil {
 	public static String toHex(long value) {
 		return Long.toHexString(value);
 	}
+	
+	/**
+	 * 将byte值转为16进制并添加到{@link StringBuilder}中
+	 * @param builder {@link StringBuilder}
+	 * @param b byte
+	 * @param toLowerCase 是否使用小写
+	 * @since 4.4.1
+	 */
+	public static void appendHex(StringBuilder builder, byte b, boolean toLowerCase) {
+		final char[] toDigits = toLowerCase ? DIGITS_LOWER : DIGITS_UPPER;
+		
+		int high = (b & 0xf0) >>> 4;//高位
+		int low = b & 0x0f;//低位
+		builder.append(toDigits[high]);
+		builder.append(toDigits[low]);
+	}
 
 	// ---------------------------------------------------------------------------------------- Private method start
 	/**
@@ -331,12 +347,12 @@ public class HexUtil {
 	 * @return 十六进制char[]
 	 */
 	private static char[] encodeHex(byte[] data, char[] toDigits) {
-		int l = data.length;
-		char[] out = new char[l << 1];
+		final int len = data.length;
+		final char[] out = new char[len << 1];//len*2
 		// two characters from the hex value.
-		for (int i = 0, j = 0; i < l; i++) {
-			out[j++] = toDigits[(0xF0 & data[i]) >>> 4];
-			out[j++] = toDigits[0x0F & data[i]];
+		for (int i = 0, j = 0; i < len; i++) {
+			out[j++] = toDigits[(0xF0 & data[i]) >>> 4];// 高位
+			out[j++] = toDigits[0x0F & data[i]];// 低位
 		}
 		return out;
 	}

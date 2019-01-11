@@ -3,8 +3,6 @@ package cn.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.net.URLEncoder;
-
 /**
  * URLUtil单元测试
  * 
@@ -49,8 +47,7 @@ public class URLUtilTest {
 		Assert.assertEquals("366466%20-%20%E5%89%AF%E6%9C%AC.jpg", encode);
 		Assert.assertEquals(body, URLUtil.decode(encode));
 		
-		URLEncoder.setPercentSpace(false);
-		String encode2 = URLUtil.encode(body);
+		String encode2 = URLUtil.encodeQuery(body);
 		Assert.assertEquals("366466+-+%E5%89%AF%E6%9C%AC.jpg", encode2);
 	}
 }
