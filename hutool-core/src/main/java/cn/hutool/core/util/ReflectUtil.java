@@ -730,7 +730,7 @@ public class ReflectUtil {
 			// ignore
 			// 默认构造不存在的情况下查找其它构造
 		}
-
+		
 		final Constructor<T>[] constructors = getConstructors(beanClass);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {
@@ -740,7 +740,7 @@ public class ReflectUtil {
 			}
 			constructor.setAccessible(true);
 			try {
-				constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
+				return constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
 			} catch (Exception e) {
 				// 构造出错时继续尝试下一种构造方式
 				continue;
