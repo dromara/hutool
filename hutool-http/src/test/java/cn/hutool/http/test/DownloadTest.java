@@ -17,7 +17,15 @@ import cn.hutool.http.HttpUtil;
 public class DownloadTest {
 	
 	@Test
-//	@Ignore
+	@Ignore
+	public void downloadPicTest() {
+		String url = "http://wx.qlogo.cn/mmopen/vKhlFcibVUtNBVDjcIowlg0X8aJfHXrTNCEFBukWVH9ta99pfEN88lU39MKspCUCOP3yrFBH3y2NbV7sYtIIlon8XxLwAEqv2/0";
+		HttpUtil.downloadFile(url, "e:/pic/t3.jpg");
+		Console.log("ok");
+	}
+	
+	@Test
+	@Ignore
 	public void downloadSizeTest() {
 		String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
 		HttpRequest
