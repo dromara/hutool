@@ -22,6 +22,7 @@
 * 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
 * 【crypto】     解决SecureUtil.readCertificate密码无效问题（issue#240@Github）
 * 【json】        修复JSONUtil.toList针对对象中的类无法实例化导致的null问题（issue#239@Github）
+* 【db】          修复MongoDS在Single模式下检查配置文件导致的问题（issue#IR2BF@Github）
 
 ## 4.4.0
 
