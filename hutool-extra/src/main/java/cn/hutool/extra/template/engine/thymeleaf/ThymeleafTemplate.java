@@ -10,7 +10,9 @@ import java.util.Map;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.template.AbstractTemplate;
@@ -54,13 +56,14 @@ public class ThymeleafTemplate extends AbstractTemplate implements Serializable 
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, Writer writer) {
-		final Context context = new Context(Locale.getDefault(), bindingMap);
+	public void render(Map<?, ?> bindingMap, Writer writer) {
+		final Map<String, Object> map = Convert.convert(new TypeReference<Map<String, Object>>() {}, bindingMap);
+		final Context context = new Context(Locale.getDefault(), map);
 		this.engine.process(this.template, context, writer);
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, OutputStream out) {
+	public void render(Map<?, ?> bindingMap, OutputStream out) {
 		render(bindingMap, IoUtil.getWriter(out, this.charset));
 	}
 

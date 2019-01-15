@@ -41,7 +41,7 @@ public class FreemarkerTemplate extends AbstractTemplate implements Serializable
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, Writer writer) {
+	public void render(Map<?, ?> bindingMap, Writer writer) {
 		try {
 			rawTemplate.process(bindingMap, writer);
 		} catch (freemarker.template.TemplateException e) {
@@ -52,7 +52,7 @@ public class FreemarkerTemplate extends AbstractTemplate implements Serializable
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, OutputStream out) {
+	public void render(Map<?, ?> bindingMap, OutputStream out) {
 		render(bindingMap, IoUtil.getWriter(out, this.rawTemplate.getEncoding()));
 	}
 

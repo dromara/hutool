@@ -35,7 +35,7 @@ public class HttpRequestTest {
 	public void getWithParamsTest() {
 		String url = "http://gc.ditu.aliyun.com/geocoding?ccc=你好";
 		
-		HttpRequest request = HttpRequest.get(url).setEncodeUrl(true).body("a=乌海");
+		HttpRequest request = HttpRequest.get(url).setEncodeUrlParams(true).body("a=乌海");
 		String body = request.execute().body();
 		Console.log(body);
 		

@@ -54,6 +54,7 @@ public class TemplateUtilTest {
 		// 字符串模板
 		TemplateEngine engine = new RythmEngine(new TemplateConfig("templates"));
 		Template template = engine.getTemplate("hello,@name");
+		
 		String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
 

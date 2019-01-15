@@ -108,10 +108,10 @@ public class HttpUtilTest {
 		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("http://www.abc.dd?a=b&c=d", encode);
 
-		// b=b中的=被当作值得一部分，做encode
+		// b=b中的=被当作值的一部分，不做encode
 		paramsStr = "a=b=b&c=d&";
 		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("a=b%3Db&c=d", encode);
+		Assert.assertEquals("a=b=b&c=d", encode);
 
 		// =d的情况被处理为key为空
 		paramsStr = "a=bbb&c=d&=d";

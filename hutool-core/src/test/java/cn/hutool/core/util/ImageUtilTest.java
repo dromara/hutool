@@ -56,8 +56,8 @@ public class ImageUtilTest {
 	@Ignore
 	public void pressTextTest() {
 		ImageUtil.pressText(//
-				FileUtil.file("e:/face.jpg"), //
-				FileUtil.file("e:/test2_result.png"), //
+				FileUtil.file("e:/pic/face.jpg"), //
+				FileUtil.file("e:/pic/test2_result.png"), //
 				"版权所有", Color.WHITE, //
 				new Font("黑体", Font.BOLD, 100), //
 				0, //

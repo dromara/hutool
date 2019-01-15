@@ -759,16 +759,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter flush(File destFile) throws IORuntimeException {
 		Assert.notNull(destFile, "[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
-		OutputStream out = null;
-		try {
-			out = FileUtil.getOutputStream(destFile);
-			flush(out);
-		} finally {
-			IoUtil.close(out);
-		}
-		return this;
+		return flush(FileUtil.getOutputStream(destFile), true);
 	}
-
+	
 	/**
 	 * 将Excel Workbook刷出到输出流
 	 * 
@@ -777,11 +770,29 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @throws IORuntimeException IO异常
 	 */
 	public ExcelWriter flush(OutputStream out) throws IORuntimeException {
+		return flush(out, false);
+	}
+
+	/**
+	 * 将Excel Workbook刷出到输出流
+	 * 
+	 * @param out 输出流
+	 * @param isCloseOut 是否关闭输出流
+	 * @return this
+	 * @throws IORuntimeException IO异常
+	 * @since 4.4.1
+	 */
+	public ExcelWriter flush(OutputStream out, boolean isCloseOut) throws IORuntimeException {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		try {
 			this.workbook.write(out);
+			out.flush();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		} finally {
+			if(isCloseOut) {
+				IoUtil.close(out);
+			}
 		}
 		return this;
 	}

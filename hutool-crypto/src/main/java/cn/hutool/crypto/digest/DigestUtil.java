@@ -118,6 +118,17 @@ public class DigestUtil {
 		return new Digester(DigestAlgorithm.MD5).digestHex(file);
 	}
 
+	/**
+	 * 32位MD5转16位MD5
+	 * 
+	 * @param md5Hex 32位MD5
+	 * @return 16位MD5
+	 * @since 4.4.1
+	 */
+	public static String md5HexTo16(String md5Hex) {
+		return md5Hex.substring(8, 24);
+	}
+
 	// ------------------------------------------------------------------------------------------- SHA-1
 	/**
 	 * 计算SHA-1摘要值
@@ -369,7 +380,7 @@ public class DigestUtil {
 	public static Digester digester(DigestAlgorithm algorithm) {
 		return new Digester(algorithm);
 	}
-	
+
 	/**
 	 * 新建摘要器
 	 * 
@@ -391,7 +402,7 @@ public class DigestUtil {
 	public static String bcrypt(String password) {
 		return BCrypt.hashpw(password);
 	}
-	
+
 	/**
 	 * 验证密码是否与Bcrypt加密后的密文匹配
 	 * 

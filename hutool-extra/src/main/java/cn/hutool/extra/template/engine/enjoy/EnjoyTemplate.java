@@ -38,12 +38,12 @@ public class EnjoyTemplate extends AbstractTemplate implements Serializable{
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, Writer writer) {
+	public void render(Map<?, ?> bindingMap, Writer writer) {
 		rawTemplate.render(bindingMap, writer);
 	}
 
 	@Override
-	public void render(Map<String, Object> bindingMap, OutputStream out) {
+	public void render(Map<?, ?> bindingMap, OutputStream out) {
 		rawTemplate.render(bindingMap, out);
 	}
 

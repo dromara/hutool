@@ -67,18 +67,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		cookieManager = new CookieManager(new ThreadLocalCookieStore(), CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
 	}
-	
+
 	/**
 	 * 获取Cookie管理器，用于自定义Cookie管理
+	 * 
 	 * @return {@link CookieManager}
 	 * @since 4.1.0
 	 */
 	public static CookieManager getCookieManager() {
 		return cookieManager;
 	}
-	
+
 	/**
 	 * 关闭Cookie
+	 * 
 	 * @since 4.1.9
 	 */
 	public static void closeCookie() {
@@ -102,8 +104,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private HttpConnection httpConnection;
 	/** 是否禁用缓存 */
 	private boolean isDisableCache;
-	/** 是否对url进行编码 */
-	private boolean isEncodeUrl;
+	/** 是否对url中的参数进行编码 */
+	private boolean encodeUrlParams;
 	/** 是否是REST请求模式 */
 	private boolean isRest;
 	/** 重定向次数计数器，内部使用 */
@@ -125,7 +127,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest(String url) {
 		Assert.notBlank(url, "Param [url] can not be blank !");
-		this.url = URLUtil.normalize(url);
+		this.url = URLUtil.normalize(url, true);
 		// 给定一个默认头信息
 		this.header(GlobalHeaders.INSTANCE.headers);
 	}
@@ -212,9 +214,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return new HttpRequest(url).method(Method.TRACE);
 	}
 	// ---------------------------------------------------------------- static Http Method end
-	
+
 	/**
 	 * 获取请求URL
+	 * 
 	 * @return URL字符串
 	 * @since 4.1.8
 	 */
@@ -224,6 +227,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * 设置URL
+	 * 
 	 * @param url url字符串
 	 * @since 4.1.8
 	 */
@@ -231,7 +235,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.url = url;
 		return this;
 	}
-	
+
 	/**
 	 * 设置{@link URLStreamHandler}
 	 * <p>
@@ -248,7 +252,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.urlHandler = urlHandler;
 		return this;
 	}
-	
+
 	/**
 	 * 获取Http请求方法
 	 * 
@@ -677,12 +681,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 是否对URL中的参数进行编码
 	 * 
-	 * @param isEncodeUrl 是否对URL中的参数进行编码
+	 * @param isEncodeUrlParams 是否对URL中的参数进行编码
 	 * @return this
-	 * @since 4.0.1
+	 * @since 4.4.1
 	 */
-	public HttpRequest setEncodeUrl(boolean isEncodeUrl) {
-		this.isEncodeUrl = isEncodeUrl;
+	public HttpRequest setEncodeUrlParams(boolean isEncodeUrlParams) {
+		this.encodeUrlParams = isEncodeUrlParams;
 		return this;
 	}
 
@@ -752,7 +756,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置HTTPS安全连接协议，只针对HTTPS请求<br>
+	 * 设置HTTPS安全连接协议，只针对HTTPS请求，可以使用的协议包括：<br>
+	 * 
+	 * <pre>
+	 * 1. TLSv1.2
+	 * 2. TLSv1.1
+	 * 3. SSLv3
+	 * ...
+	 * </pre>
 	 * 
 	 * @see SSLSocketFactoryBuilder
 	 * @param protocol 协议
@@ -859,9 +870,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (Method.GET.equals(method) && false == this.isRest) {
 			// 优先使用body形式的参数，不存在使用form
 			if (ArrayUtil.isNotEmpty(this.bodyBytes)) {
-				this.url = HttpUtil.urlWithForm(this.url, StrUtil.str(this.bodyBytes, this.charset), this.charset, this.isEncodeUrl);
+				this.url = HttpUtil.urlWithForm(this.url, StrUtil.str(this.bodyBytes, this.charset), this.charset, this.encodeUrlParams);
 			} else {
-				this.url = HttpUtil.urlWithForm(this.url, this.form, this.charset, this.isEncodeUrl);
+				this.url = HttpUtil.urlWithForm(this.url, this.form, this.charset, this.encodeUrlParams);
 			}
 		}
 	}

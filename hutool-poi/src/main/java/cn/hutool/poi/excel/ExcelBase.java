@@ -125,7 +125,11 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	@SuppressWarnings("unchecked")
 	public T setSheet(int sheetIndex) {
-		this.sheet = this.workbook.getSheetAt(sheetIndex);
+		try {
+			this.sheet = this.workbook.getSheetAt(sheetIndex);
+		} catch (IllegalArgumentException e) {
+			this.sheet = this.workbook.createSheet();
+		}
 		if(null == this.sheet) {
 			this.sheet = this.workbook.createSheet();
 		}

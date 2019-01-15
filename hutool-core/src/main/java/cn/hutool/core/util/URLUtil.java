@@ -11,7 +11,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.jar.JarFile;
@@ -22,6 +21,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.URLEncoder;
 
 /**
  * 统一资源定位符相关工具类
@@ -183,17 +183,6 @@ public class URLUtil {
 	}
 
 	/**
-	 * 格式化URL链接
-	 * 
-	 * @param url 需要格式化的URL
-	 * @return 格式化后的URL，如果提供了null或者空串，返回null
-	 * @see #normalize(String)
-	 */
-	public static String formatUrl(String url) {
-		return normalize(url);
-	}
-
-	/**
 	 * 补全相对路径
 	 * 
 	 * @param baseUrl 基准URL
@@ -202,7 +191,7 @@ public class URLUtil {
 	 * @exception UtilException MalformedURLException
 	 */
 	public static String complateUrl(String baseUrl, String relativePath) {
-		baseUrl = formatUrl(baseUrl);
+		baseUrl = normalize(baseUrl, false);
 		if (StrUtil.isBlank(baseUrl)) {
 			return null;
 		}
@@ -226,9 +215,74 @@ public class URLUtil {
 	 * @since 3.1.2
 	 */
 	public static String encode(String url) throws UtilException {
-		return encode(url, CharsetUtil.UTF_8);
+		return encode(url, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 编码URL，默认使用UTF-8编码<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
+	 * @param url URL
+	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 * @since 3.1.2
+	 */
+	public static String encodeQuery(String url) throws UtilException {
+		return encodeQuery(url, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 编码字符为 application/x-www-form-urlencoded
+	 * 
+	 * @param url 被编码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 * @since 4.4.1
+	 */
+	public static String encode(String url, Charset charset) {
+		if (StrUtil.isEmpty(url)) {
+			return url;
+		}
+		if (null == charset) {
+			charset = CharsetUtil.defaultCharset();
+		}
+		return URLEncoder.DEFAULT.encode(url, charset);
+	}
+	
+	/**
+	 * 编码字符为URL中查询语句
+	 * 
+	 * @param url 被编码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 * @since 4.4.1
+	 */
+	public static String encodeQuery(String url, Charset charset) {
+		if (StrUtil.isEmpty(url)) {
+			return url;
+		}
+		if (null == charset) {
+			charset = CharsetUtil.defaultCharset();
+		}
+		return URLEncoder.QUERY.encode(url, charset);
 	}
 
+	/**
+	 * 编码URL字符为 application/x-www-form-urlencoded<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
+	 * @param url URL
+	 * @param charset 编码
+	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 */
+	public static String encode(String url, String charset) throws UtilException {
+		if (StrUtil.isEmpty(url)) {
+			return url;
+		}
+		return encode(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
+	}
+	
 	/**
 	 * 编码URL<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
@@ -238,12 +292,8 @@ public class URLUtil {
 	 * @return 编码后的URL
 	 * @exception UtilException UnsupportedEncodingException
 	 */
-	public static String encode(String url, String charset) throws UtilException {
-		try {
-			return URLEncoder.encode(url, charset);
-		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(e);
-		}
+	public static String encodeQuery(String url, String charset) throws UtilException {
+		return encodeQuery(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -258,6 +308,21 @@ public class URLUtil {
 	public static String decode(String url) throws UtilException {
 		return decode(url, CharsetUtil.UTF_8);
 	}
+	
+	/**
+	 * 解码application/x-www-form-urlencoded字符
+	 * 
+	 * @param content 被解码内容
+	 * @param charset 编码
+	 * @return 编码后的字符
+	 * @since 4.4.1
+	 */
+	public static String decode(String content, Charset charset) {
+		if (null == charset) {
+			charset = CharsetUtil.defaultCharset();
+		}
+		return decode(content, charset.name());
+	}
 
 	/**
 	 * 解码URL<br>
@@ -269,10 +334,13 @@ public class URLUtil {
 	 * @exception UtilException UnsupportedEncodingException
 	 */
 	public static String decode(String url, String charset) throws UtilException {
+		if (StrUtil.isEmpty(url)) {
+			return url;
+		}
 		try {
 			return URLDecoder.decode(url, charset);
 		} catch (UnsupportedEncodingException e) {
-			throw new UtilException(e);
+			throw new UtilException(e, "Unsupported encoding: [{}]", charset);
 		}
 	}
 
@@ -444,7 +512,22 @@ public class URLUtil {
 	 * @param url URL字符串
 	 * @return 标准化后的URL字符串
 	 */
-	public static String normalize (String url) {
+	public static String normalize(String url) {
+		return normalize(url, false);
+	}
+	
+	/**
+	 * 标准化URL字符串，包括：
+	 * <pre>
+	 * 1. 多个/替换为一个
+	 * </pre>
+	 * 
+	 * @param url URL字符串
+	 * @param isEncodeBody 是否对URL中body部分的中文和特殊字符做转义（不包括http:和/）
+	 * @return 标准化后的URL字符串
+	 * @since 4.4.1
+	 */
+	public static String normalize(String url, boolean isEncodeBody) {
 		if(StrUtil.isBlank(url)) {
 			return url;
 		}
@@ -470,6 +553,9 @@ public class URLUtil {
 		body = body.replaceAll("^[\\/]+", StrUtil.EMPTY);
 		//替换多个\或/为单个/
 		body = body.replace("\\", "/").replaceAll("//+", "/");
+		if(isEncodeBody) {
+			body = encode(body);
+		}
 		return pre + body + StrUtil.nullToEmpty(params);
 	}
 }

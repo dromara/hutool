@@ -3,12 +3,33 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.4.1
+
+### 新特性
+* 【core】        增加Rot（回转N位简易替换密码）、凯撒密码和莫尔斯电码
+* 【crypto】     增加Vigenere密码
+* 【db】          增加达梦7的驱动识别
+* 【extra】       TemplateEngine适配更广泛的参数类型
+* 【core】       HexUtil增加toHex方法，增加CRC8和CRC16（issue#IQWNB@Gitee）
+* 【http】        添加text/xml ContentType（pr#31@Gitee）
+* 【core】        Img、ImageUtil增加Resource和Path参数支持
+* 【extra】       ServletUtil.getClientIP增加注释，提示IP伪造风险
+* 【poi】          增加Word07Writer
+* 【crypto】     增加KeyUtil，SecureUtil中的密钥生成迁移至此工具类中
+* 【core】        增加URLEncoder（自行实现解决空格转义问题），HttpUtil废弃encode和decode方法
+
+### Bug修复
+* 【poi】          解决ExcelWriter中setSheet报错问题（issue#235@Github）
+* 【crypto】     解决SecureUtil.readCertificate密码无效问题（issue#240@Github）
+* 【json】        修复JSONUtil.toList针对对象中的类无法实例化导致的null问题（issue#239@Github）
+* 【db】          修复MongoDS在Single模式下检查配置文件导致的问题（issue#IR2BF@Github）
+
 ## 4.4.0
 
 ### 新特性
 * 【core】        增加MurmurHash（Murmur3算法实现），HashUtil增加murmur32、murmur64、murmur128方法
 * 【core】        增加Simhash（用于海量文本去重）
-* 【extra】        增加分词封装，封装了ansj、HanLP、IKAnalyzer、Jcseg、Jieba、MMSeg的实现，统一了接口
+* 【extra】        增加分词封装，封装了ansj、HanLP、IKAnalyzer、Jcseg、Jieba、MMSeg、Lucene-analysis、Word的实现，统一了接口
 * 【core】        去除NumberUtil.parseInt和parseLong的8进制支持（issue#234@Github）
 * 【extra】        Template部分修改命名减少歧义（Engine->TemplateEngine，EngineFactory->TemplateFactory）
 * 【poi】          ExcelWriter中Map支持alias（issue#IQISU@Gitee）

@@ -461,6 +461,38 @@ public class NetUtil {
 	public static String idnToASCII(String unicode) {
 		return IDN.toASCII(unicode);
 	}
+	
+	/**
+	 * 从多级反向代理中获得第一个非unknown IP地址
+	 * 
+	 * @param ip 获得的IP地址
+	 * @return 第一个非unknown IP地址
+	 * @since 4.4.1
+	 */
+	public static String getMultistageReverseProxyIp(String ip) {
+		// 多级反向代理检测
+		if (ip != null && ip.indexOf(",") > 0) {
+			final String[] ips = ip.trim().split(",");
+			for (String subIp : ips) {
+				if (false == isUnknow(subIp)) {
+					ip = subIp;
+					break;
+				}
+			}
+		}
+		return ip;
+	}
+
+	/**
+	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
+	 * 
+	 * @param checkString 被检测的字符串
+	 * @return 是否未知
+	 * @since 4.4.1
+	 */
+	public static boolean isUnknow(String checkString) {
+		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
+	}
 
 	// ----------------------------------------------------------------------------------------- Private method start
 	/**
