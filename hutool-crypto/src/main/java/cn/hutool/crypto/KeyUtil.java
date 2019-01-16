@@ -38,7 +38,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 密钥工具类
  * 
- * @author looly
+ * @author looly, Gsealy
  * @since 4.4.1
  */
 public class KeyUtil {

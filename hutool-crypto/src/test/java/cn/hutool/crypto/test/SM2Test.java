@@ -16,7 +16,7 @@ import cn.hutool.crypto.asymmetric.SM2;
 /**
  * SM2算法单元测试
  * 
- * @author Looly
+ * @author Looly, Gsealy
  *
  */
 public class SM2Test {
