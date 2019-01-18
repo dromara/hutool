@@ -255,8 +255,8 @@ public class JSONObjectTest {
 	public void specialCharTest() {
 		String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
 		JSONObject obj = JSONUtil.parseObj(json);
-		Assert.assertEquals("[abc]\\b\\u2001", obj.getStr("pattern"));
-		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
+		Assert.assertEquals("[abc]\\b\\u2001", obj.getStrEscaped("pattern"));
+		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStrEscaped("pattern2Json"));
 	}
 	
 	@Test
