@@ -944,7 +944,7 @@ public final class SecureUtil {
 	 * @since 4.1.22
 	 */
 	public static void addProvider(Provider provider) {
-		Security.insertProviderAt(provider, 1);
+		Security.insertProviderAt(provider, 0);
 	}
 
 	/**

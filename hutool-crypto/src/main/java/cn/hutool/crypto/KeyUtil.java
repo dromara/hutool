@@ -10,6 +10,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.Certificate;
@@ -319,11 +320,18 @@ public class KeyUtil {
 			// 对于EC算法，密钥长度有限制，在此使用默认256
 			keySize = 256;
 		}
-
+		
+		Provider provider = null;
+		try {
+			provider = ProviderFactory.createBouncyCastleProvider();
+		} catch (NoClassDefFoundError e) {
+		}
+		
 		KeyPairGenerator keyPairGen;
 		try {
-			keyPairGen = KeyPairGenerator.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
+			keyPairGen = (null == provider) ? KeyPairGenerator.getInstance(algorithm) : KeyPairGenerator.getInstance(algorithm, provider);
+		} 
+		catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 
