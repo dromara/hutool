@@ -20,10 +20,12 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
@@ -288,7 +290,7 @@ public class FileUtil {
 		}
 		return paths;
 	}
-	
+
 	/**
 	 * 创建File对象，相当于调用new File()，不做任何处理
 	 * 
@@ -470,7 +472,7 @@ public class FileUtil {
 	public static boolean exist(File file) {
 		return (file == null) ? false : file.exists();
 	}
-	
+
 	/**
 	 * 是否存在匹配文件
 	 * 
@@ -694,14 +696,60 @@ public class FileUtil {
 	 */
 	public static boolean del(File file) throws IORuntimeException {
 		if (file == null || false == file.exists()) {
-			return false;
+			//如果文件不存在或已被删除，此处返回true表示删除成功
+			return true;
 		}
 
 		if (file.isDirectory()) {
-			clean(file);
+			// 清空目录下所有文件和目录
+			boolean isOk = clean(file);
+			if (false == isOk) {
+				return false;
+			}
 		}
+
+		// 删除文件或清空后的目录
+		return file.delete();
+	}
+
+	/**
+	 * 删除文件或者文件夹<br>
+	 * 注意：删除文件夹时不会判断文件夹是否为空，如果不空则递归删除子文件或文件夹<br>
+	 * 某个文件删除失败会终止删除操作
+	 * 
+	 * @param path 文件对象
+	 * @return 成功与否
+	 * @throws IORuntimeException IO异常
+	 * @since 4.4.2
+	 */
+	public static boolean del(Path path) throws IORuntimeException {
+		if (Files.notExists(path)) {
+			return true;
+		}
+
 		try {
-			Files.delete(file.toPath());
+			if (Files.isDirectory(path)) {
+				Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						Files.delete(file);
+						return FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+						if (e == null) {
+							Files.delete(dir);
+							return FileVisitResult.CONTINUE;
+						} else {
+							throw e;
+						}
+					}
+				});
+			} else {
+				Files.delete(path);
+			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -738,8 +786,9 @@ public class FileUtil {
 		}
 
 		final File[] files = directory.listFiles();
+		boolean isOk;
 		for (File childFile : files) {
-			boolean isOk = del(childFile);
+			isOk = del(childFile);
 			if (isOk == false) {
 				// 删除一个出错则本次删除任务失败
 				return false;
@@ -942,10 +991,10 @@ public class FileUtil {
 	 * @return 目标目录或文件
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File copyContent(File src, File dest, boolean isOverride) throws IORuntimeException{
+	public static File copyContent(File src, File dest, boolean isOverride) throws IORuntimeException {
 		return FileCopier.create(src, dest).setCopyContentIfDir(true).setOverride(isOverride).copy();
 	}
-	
+
 	/**
 	 * 复制文件或目录<br>
 	 * 情况如下：
@@ -963,7 +1012,7 @@ public class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.1.5
 	 */
-	public static File copyFilesFromDir(File src, File dest, boolean isOverride) throws IORuntimeException{
+	public static File copyFilesFromDir(File src, File dest, boolean isOverride) throws IORuntimeException {
 		return FileCopier.create(src, dest).setCopyContentIfDir(true).setOnlyCopyFile(true).setOverride(isOverride).copy();
 	}
 
@@ -1041,7 +1090,7 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取规范的绝对路径
 	 * 
@@ -1050,7 +1099,7 @@ public class FileUtil {
 	 * @since 4.1.4
 	 */
 	public static String getCanonicalPath(File file) {
-		if(null == file) {
+		if (null == file) {
 			return null;
 		}
 		try {
@@ -1090,8 +1139,8 @@ public class FileUtil {
 		// 如果资源不存在，则返回一个拼接的资源绝对路径
 		final String classPath = ClassUtil.getClassPath();
 		if (null == classPath) {
-//			throw new NullPointerException("ClassPath is null !");
-			//在jar运行模式中，ClassPath有可能获取不到，此时返回原始相对路径（此时获取的文件为相对工作目录）
+			// throw new NullPointerException("ClassPath is null !");
+			// 在jar运行模式中，ClassPath有可能获取不到，此时返回原始相对路径（此时获取的文件为相对工作目录）
 			return path;
 		}
 
@@ -1388,9 +1437,9 @@ public class FileUtil {
 		if (StrUtil.isNotEmpty(filePath)) {
 			int i = filePath.length();
 			char c;
-			while(--i >= 0) {
+			while (--i >= 0) {
 				c = filePath.charAt(i);
-				if(CharUtil.isFileSeparator(c)) {
+				if (CharUtil.isFileSeparator(c)) {
 					return i;
 				}
 			}
@@ -1632,7 +1681,7 @@ public class FileUtil {
 	public static String getName(File file) {
 		return (null != file) ? file.getName() : null;
 	}
-	
+
 	/**
 	 * 返回文件名
 	 * 
@@ -1645,28 +1694,28 @@ public class FileUtil {
 			return filePath;
 		}
 		int len = filePath.length();
-		if(0 == len) {
+		if (0 == len) {
 			return filePath;
 		}
-		if(CharUtil.isFileSeparator(filePath.charAt(len -1))) {
-			//以分隔符结尾的去掉结尾分隔符
-			len --;
+		if (CharUtil.isFileSeparator(filePath.charAt(len - 1))) {
+			// 以分隔符结尾的去掉结尾分隔符
+			len--;
 		}
-		
+
 		int begin = 0;
 		char c;
-		for(int i =len-1; i > -1; i --) {
+		for (int i = len - 1; i > -1; i--) {
 			c = filePath.charAt(i);
-			if(CharUtil.isFileSeparator(c)) {
-				//查找最后一个路径分隔符（/或者\）
-				begin = i +1;
+			if (CharUtil.isFileSeparator(c)) {
+				// 查找最后一个路径分隔符（/或者\）
+				begin = i + 1;
 				break;
 			}
 		}
-		
+
 		return filePath.substring(begin, len);
 	}
-	
+
 	/**
 	 * 返回主文件名
 	 * 
@@ -1691,31 +1740,31 @@ public class FileUtil {
 			return fileName;
 		}
 		int len = fileName.length();
-		if(0 == len) {
+		if (0 == len) {
 			return fileName;
 		}
-		if(CharUtil.isFileSeparator(fileName.charAt(len -1))) {
-			len --;
+		if (CharUtil.isFileSeparator(fileName.charAt(len - 1))) {
+			len--;
 		}
-		
+
 		int begin = 0;
 		int end = len;
 		char c;
-		for(int i =len-1; i > -1; i --) {
+		for (int i = len - 1; i > -1; i--) {
 			c = fileName.charAt(i);
-			if(len == end && CharUtil.DOT == c) {
-				//查找最后一个文件名和扩展名的分隔符：.
+			if (len == end && CharUtil.DOT == c) {
+				// 查找最后一个文件名和扩展名的分隔符：.
 				end = i;
 			}
-			if(0 == begin || begin > end) {
-				if(CharUtil.isFileSeparator(c)) {
-					//查找最后一个路径分隔符（/或者\），如果这个分隔符在.之后，则继续查找，否则结束
-					begin = i +1;
+			if (0 == begin || begin > end) {
+				if (CharUtil.isFileSeparator(c)) {
+					// 查找最后一个路径分隔符（/或者\），如果这个分隔符在.之后，则继续查找，否则结束
+					begin = i + 1;
 					break;
 				}
 			}
 		}
-		
+
 		return fileName.substring(begin, end);
 	}
 
@@ -3195,7 +3244,7 @@ public class FileUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获取指定层级的父路径
 	 * 
@@ -3251,7 +3300,7 @@ public class FileUtil {
 		}
 		return getParent(parentFile, level - 1);
 	}
-	
+
 	/**
 	 * 检查父完整路径是否为自路径的前半部分，如果不是说明不是子路径，可能存在slip注入。
 	 * <p>
@@ -3263,7 +3312,7 @@ public class FileUtil {
 	 * @throws IllegalArgumentException 检查创建的子文件不在父目录中抛出此异常
 	 */
 	public static File checkSlip(File parentFile, File file) throws IllegalArgumentException {
-		if(null != parentFile && null != file) {
+		if (null != parentFile && null != file) {
 			String parentCanonicalPath;
 			String canonicalPath;
 			try {
@@ -3278,7 +3327,7 @@ public class FileUtil {
 		}
 		return file;
 	}
-	
+
 	/**
 	 * 根据文件扩展名获得MimeType
 	 * 
@@ -3288,5 +3337,16 @@ public class FileUtil {
 	 */
 	public static String getMimeType(String filePath) {
 		return URLConnection.getFileNameMap().getContentTypeFor(filePath);
+	}
+
+	/**
+	 * 判断是否为符号链接文件
+	 * 
+	 * @param file 被检查的文件
+	 * @return 是否为符号链接文件
+	 * @since 4.4.2
+	 */
+	public static boolean isSymlink(File file) throws IORuntimeException {
+		return Files.isSymbolicLink(file.toPath());
 	}
 }

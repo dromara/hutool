@@ -34,6 +34,17 @@ public class URLUtilTest {
 	}
 	
 	@Test
+	public void normalizeTest3() {
+		String url = "http://www.hutool.cn//aaa/\\bbb?a=1&b=2";
+		String normalize = URLUtil.normalize(url, true);
+		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+		
+		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
+		normalize = URLUtil.normalize(url, true);
+		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+	}
+	
+	@Test
 	public void formatTest() {
 		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);

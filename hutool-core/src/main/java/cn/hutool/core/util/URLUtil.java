@@ -542,7 +542,7 @@ public class URLUtil {
 			body = url;
 		}
 		
-		int paramsSepIndex = url.indexOf("?");
+		final int paramsSepIndex = StrUtil.indexOf(body, '?');
 		String params = null;
 		if(paramsSepIndex > 0) {
 			params = StrUtil.subSuf(body, paramsSepIndex);

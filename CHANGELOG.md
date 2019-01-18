@@ -6,7 +6,11 @@
 ## 4.4.2
 
 ### 新特性
+* 【core】        JSON中添加getStrEscaped方法，并修改原getStr逻辑，不再自动转义（issue#IR7SW@Gitee）
+* 【core】        CLassLoaderUtil增加getJarClassLoader和loadClass重载方法（issue#IR94T@Gitee）
+
 ### Bug修复
+* 【core】        修复URL转义问题（issue#IR6QP@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

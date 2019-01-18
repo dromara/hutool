@@ -258,6 +258,17 @@ public class JSONObjectTest {
 		Assert.assertEquals("[abc]\\b\\u2001", obj.getStr("pattern"));
 		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
 	}
+	
+	@Test
+	public void getStrTest() {
+		String json = "{\"name\": \"yyb\\nbbb\"}";
+		JSONObject jsonObject = JSONUtil.parseObj(json);
+		
+		//没有转义按照默认规则显示
+		Assert.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
+		//转义按照字符串显示
+		Assert.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
+	}
 
 	public static enum TestEnum {
 		TYPE_A, TYPE_B
