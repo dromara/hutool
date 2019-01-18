@@ -10,11 +10,13 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.ECGenParameterSpec;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -37,7 +39,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 密钥工具类
  * 
- * @author looly
+ * @author looly, Gsealy
  * @since 4.4.1
  */
 public class KeyUtil {
@@ -56,6 +58,15 @@ public class KeyUtil {
 	 * </pre>
 	 */
 	public static final int DEFAULT_KEY_SIZE = 1024;
+	
+	/**
+	 * SM2默认曲线
+	 * 
+	 * <pre>
+	 * Default SM2 curve
+	 * </pre>
+	 */
+	public static final String SM2_DEFAULT_CURVE = "sm2p256v1";
 
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成
@@ -298,22 +309,29 @@ public class KeyUtil {
 	 * 生成用于非对称加密的公钥和私钥<br>
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
-	 * @param algorithm 非对称加密算法
+	 * @param realAlgorithm 非对称加密算法
 	 * @param keySize 密钥模（modulus ）长度
 	 * @param seed 种子
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
-		algorithm = getAlgorithmAfterWith(algorithm);
+	public static KeyPair generateKeyPair(String realAlgorithm, int keySize, byte[] seed) {
+		final String algorithm = getAlgorithmAfterWith(realAlgorithm);
 		if ("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
 			// 对于EC算法，密钥长度有限制，在此使用默认256
 			keySize = 256;
 		}
-
+		
+		Provider provider = null;
+		try {
+			provider = ProviderFactory.createBouncyCastleProvider();
+		} catch (NoClassDefFoundError e) {
+		}
+		
 		KeyPairGenerator keyPairGen;
 		try {
-			keyPairGen = KeyPairGenerator.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
+			keyPairGen = (null == provider) ? KeyPairGenerator.getInstance(algorithm) : KeyPairGenerator.getInstance(algorithm, provider);
+		} 
+		catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 
@@ -325,6 +343,16 @@ public class KeyUtil {
 			keyPairGen.initialize(keySize, random);
 		} else {
 			keyPairGen.initialize(keySize);
+		}
+		
+		//SM2算法需要单独定义其曲线生成
+		if ("SM2".equalsIgnoreCase(realAlgorithm)) {
+			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2_DEFAULT_CURVE);
+			try {
+				keyPairGen.initialize(sm2p256v1);
+			} catch (InvalidAlgorithmParameterException e) {
+				throw new CryptoException(e);
+			}
 		}
 		return keyPairGen.generateKeyPair();
 	}

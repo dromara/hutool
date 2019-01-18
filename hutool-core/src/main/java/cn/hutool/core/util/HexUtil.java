@@ -33,8 +33,17 @@ public class HexUtil {
 	 * @return 是否为16进制
 	 */
 	public static boolean isHexNumber(String value) {
-		int index = (value.startsWith("-") ? 1 : 0);
-		return (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index));
+		final int index = (value.startsWith("-") ? 1 : 0);
+		if (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index)) {
+			try {
+				Long.decode(value);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------------------- encode

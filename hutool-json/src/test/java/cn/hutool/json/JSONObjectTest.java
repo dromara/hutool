@@ -255,8 +255,19 @@ public class JSONObjectTest {
 	public void specialCharTest() {
 		String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
 		JSONObject obj = JSONUtil.parseObj(json);
-		Assert.assertEquals("[abc]\\b\\u2001", obj.getStr("pattern"));
-		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
+		Assert.assertEquals("[abc]\\b\\u2001", obj.getStrEscaped("pattern"));
+		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStrEscaped("pattern2Json"));
+	}
+	
+	@Test
+	public void getStrTest() {
+		String json = "{\"name\": \"yyb\\nbbb\"}";
+		JSONObject jsonObject = JSONUtil.parseObj(json);
+		
+		//没有转义按照默认规则显示
+		Assert.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
+		//转义按照字符串显示
+		Assert.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
 	}
 
 	public static enum TestEnum {

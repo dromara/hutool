@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.json.test.bean.Price;
 import cn.hutool.json.test.bean.UserA;
@@ -48,8 +47,6 @@ public class JSONUtilTest {
 		data.put("model2", model);
 
 		JSONObject jsonObject = JSONUtil.parseObj(data);
-		
-		Console.log(jsonObject.toStringPretty());
 		
 		Assert.assertTrue(jsonObject.containsKey("model"));
 		Assert.assertEquals(1, jsonObject.getJSONObject("model").getInt("type").intValue());
@@ -115,7 +112,7 @@ public class JSONUtilTest {
 	public void getStrTest2() {
 		String html = "{\"name\":\"Something\\u00a0must have been changed since you leave\"}";
 		JSONObject jsonObject = JSONUtil.parseObj(html);
-		Assert.assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStr("name"));
+		Assert.assertEquals("Something\\u00a0must\\u00a0have\\u00a0been\\u00a0changed\\u00a0since\\u00a0you\\u00a0leave", jsonObject.getStrEscaped("name"));
 	}
 	
 	@Test

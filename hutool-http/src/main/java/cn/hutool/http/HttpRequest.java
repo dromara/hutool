@@ -276,6 +276,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 获取{@link HttpConnection}
+	 * 
+	 * @return {@link HttpConnection}
+	 * @since 4.2.2
+	 */
+	public HttpConnection getConnection() {
+		return this.httpConnection;
+	}
+
+	/**
 	 * 设置请求方法
 	 * 
 	 * @param method HTTP方法

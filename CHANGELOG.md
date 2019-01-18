@@ -3,6 +3,22 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.4.2
+
+### 新特性
+* 【core】        JSON中添加getStrEscaped方法，并修改原getStr逻辑，不再自动转义（issue#IR7SW@Gitee）
+* 【core】        CLassLoaderUtil增加getJarClassLoader和loadClass重载方法（issue#IR94T@Gitee）
+* 【crypto】     SM2密钥生成曲线修改为使用sm2p256v1（pr#249@Github）
+* 【json】         JSONUtil增加空判断（issue#253@Github）
+* 【core】        改进HexUtil.isHexNumber（issue#254@Github）
+* 【http】        HttpRequest增加getConnection方法（issue#251@Github）
+
+### Bug修复
+* 【core】        修复URL转义问题（issue#IR6QP@Gitee）
+* 【core】        修复WeightRandom权重为0的对象问题（issue#252@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.4.1
 
 ### 新特性

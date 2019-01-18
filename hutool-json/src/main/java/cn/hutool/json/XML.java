@@ -256,6 +256,10 @@ public class XML {
 	 * @throws JSONException Thrown if there is an error parsing the string
 	 */
 	public static String toXml(Object object, String tagName) throws JSONException {
+		if(null == object) {
+			return null;
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		JSONArray ja;
 		JSONObject jo;

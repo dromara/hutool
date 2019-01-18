@@ -44,7 +44,7 @@ import cn.hutool.crypto.symmetric.SymmetricCrypto;
  * 2、非对称加密（asymmetric），例如：RSA、DSA等<br>
  * 3、摘要加密（digest），例如：MD5、SHA-1、SHA-256、HMAC等<br>
  * 
- * @author xiaoleilu
+ * @author xiaoleilu, Gsealy
  *
  */
 public final class SecureUtil {
@@ -934,7 +934,7 @@ public final class SecureUtil {
 	}
 
 	/**
-	 * 增加加密解密的算法提供者，例如：
+	 * 增加加密解密的算法提供者，默认优先使用，例如：
 	 * 
 	 * <pre>
 	 * addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -944,7 +944,7 @@ public final class SecureUtil {
 	 * @since 4.1.22
 	 */
 	public static void addProvider(Provider provider) {
-		Security.addProvider(provider);
+		Security.insertProviderAt(provider, 0);
 	}
 
 	/**
