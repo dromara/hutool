@@ -16,7 +16,7 @@ import cn.hutool.crypto.asymmetric.SM2;
 /**
  * SM2算法单元测试
  * 
- * @author Looly
+ * @author Looly, Gsealy
  *
  */
 public class SM2Test {
@@ -26,6 +26,15 @@ public class SM2Test {
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
 		Assert.assertNotNull(pair.getPrivate());
 		Assert.assertNotNull(pair.getPublic());
+	}
+	
+	@Test
+	public void KeyPairOIDTest() {
+		// OBJECT IDENTIFIER 1.2.156.10197.1.301
+		String OID = "06082A811CCF5501822D";
+		KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		Assert.assertTrue(HexUtil.encodeHexStr(pair.getPrivate().getEncoded()).toUpperCase().contains(OID));
+		Assert.assertTrue(HexUtil.encodeHexStr(pair.getPublic().getEncoded()).toUpperCase().contains(OID));
 	}
 
 	@Test
