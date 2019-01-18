@@ -30,6 +30,8 @@ public class SM2Test {
 	
 	@Test
 	public void KeyPairOIDTest() {
+		new SM2();//保证BC被加载
+		
 		// OBJECT IDENTIFIER 1.2.156.10197.1.301
 		String OID = "06082A811CCF5501822D";
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");

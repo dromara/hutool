@@ -314,7 +314,7 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String realAlgorithm, int keySize, byte[] seed) {
-		String algorithm = getAlgorithmAfterWith(realAlgorithm);
+		final String algorithm = getAlgorithmAfterWith(realAlgorithm);
 		if ("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
 			// 对于EC算法，密钥长度有限制，在此使用默认256
 			keySize = 256;
@@ -337,8 +337,9 @@ public class KeyUtil {
 			keyPairGen.initialize(keySize);
 		}
 		
+		//SM2算法需要单独定义其曲线生成
 		if ("SM2".equalsIgnoreCase(realAlgorithm)) {
-			ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2_DEFAULT_CURVE);
+			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2_DEFAULT_CURVE);
 			try {
 				keyPairGen.initialize(sm2p256v1);
 			} catch (InvalidAlgorithmParameterException e) {

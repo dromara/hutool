@@ -247,6 +247,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(JSON json, int indentFactor) {
+		if(null == json) {
+			return null;
+		}
 		return json.toJSONString(indentFactor);
 	}
 
@@ -257,6 +260,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(JSON json) {
+		if(null == json) {
+			return null;
+		}
 		return json.toJSONString(0);
 	}
 
@@ -267,6 +273,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonPrettyStr(JSON json) {
+		if(null == json) {
+			return null;
+		}
 		return json.toJSONString(4);
 	}
 
@@ -277,6 +286,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(Object obj) {
+		if(null == obj) {
+			return null;
+		}
 		if (obj instanceof String) {
 			return (String) obj;
 		}

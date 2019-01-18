@@ -937,7 +937,7 @@ public final class SecureUtil {
 	 * 增加加密解密的算法提供者，默认优先使用，例如：
 	 * 
 	 * <pre>
-	 * insertProviderAt(new org.bouncycastle.jce.provider.BouncyCastleProvider(), 1);
+	 * addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 	 * </pre>
 	 * 
 	 * @param provider 算法提供者
