@@ -6,7 +6,10 @@
 ## 4.4.3
 
 ### 新特性
+
 ### Bug修复
+* 【core】        修复ExceptionUtil.stacktraceToString中limit参数无效问题（issue#IR7UE@Gitee）
+* 【core】        修复StrUtil.repeatByLength中数组越界问题（issue#IRB2C@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

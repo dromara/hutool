@@ -751,7 +751,7 @@ public class StrUtil {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 检查指定字符串中是否只包含给定的字符
 	 * 
@@ -1145,8 +1145,8 @@ public class StrUtil {
 	 * @since 3.1.2
 	 */
 	public static String strip(CharSequence str, CharSequence prefixOrSuffix) {
-		if(equals(str, prefixOrSuffix)) {
-			//对于去除相同字符的情况单独处理
+		if (equals(str, prefixOrSuffix)) {
+			// 对于去除相同字符的情况单独处理
 			return EMPTY;
 		}
 		return strip(str, prefixOrSuffix, prefixOrSuffix);
@@ -1165,7 +1165,7 @@ public class StrUtil {
 		if (isEmpty(str)) {
 			return str(str);
 		}
-		
+
 		int from = 0;
 		int to = str.length();
 
@@ -1176,7 +1176,7 @@ public class StrUtil {
 		if (endWith(str2, suffix)) {
 			to -= suffix.length();
 		}
-		
+
 		return str2.substring(Math.min(from, to), Math.max(from, to));
 	}
 
@@ -2014,7 +2014,7 @@ public class StrUtil {
 		// 重复，直到达到指定长度
 		final char[] padding = new char[padLen];
 		for (int i = 0; i < padLen; i++) {
-			padding[i] = str.charAt(i % padLen);
+			padding[i] = str.charAt(i % strLen);
 		}
 		return new String(padding);
 	}

@@ -206,7 +206,7 @@ public class ExceptionUtil {
 			}
 			return sb.toString();
 		} else {
-			return exceptionStr;
+			return StrUtil.subPre(exceptionStr, limit);
 		}
 	}
 

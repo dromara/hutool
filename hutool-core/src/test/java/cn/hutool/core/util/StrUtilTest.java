@@ -190,6 +190,13 @@ public class StrUtilTest {
 		String result = StrUtil.replace(",abcdef,", ",", "|");
 		Assert.assertEquals("|abcdef|", result);
 	}
+	
+	@Test
+	public void replaceTest4() {
+		String a = "1039";
+		String result = StrUtil.padPre(a,8,"0"); //在字符串1039前补4个0
+		Assert.assertEquals("00001039", result);
+	}
 
 	@Test
 	public void upperFirstTest() {
