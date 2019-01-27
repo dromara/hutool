@@ -221,7 +221,7 @@ public class Ftp extends AbstractFtp {
 	public boolean delDir(String dirPath) {
 		FTPFile[] dirs;
 		try {
-			dirs = client.listDirectories(dirPath);
+			dirs = client.listFiles(dirPath);
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}

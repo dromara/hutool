@@ -6,10 +6,16 @@
 ## 4.4.3
 
 ### 新特性
+* 【crypto】     MD5以及Digester增加加盐支持（issue#256@Github）
+* 【crypto】     整理KeyUtil，减少冗余代码
+* 【core】        增加Zodiac类，DateUtil增加getZodiac、getChineseZodiac用于获取星座和生肖（issue#260@Github）
 
 ### Bug修复
 * 【core】        修复ExceptionUtil.stacktraceToString中limit参数无效问题（issue#IR7UE@Gitee）
 * 【core】        修复StrUtil.repeatByLength中数组越界问题（issue#IRB2C@Gitee）
+* 【core】        修复FileUtil.remove移动后删除失败问题（issue#IRF8R@Gitee）
+* 【extra】       修复Ftp中delDir逻辑导致的问题（issue#IRCQ8@Gitee）
+* 【core】        修复XmlUtil.mapToXml中map值为空导致的空指针问题。（issue#IRD7X@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -353,9 +353,10 @@ public class XmlUtil {
 	public static Document createXml() {
 		return createDocumentBuilder().newDocument();
 	}
-	
+
 	/**
 	 * 创建 DocumentBuilder
+	 * 
 	 * @return DocumentBuilder
 	 * @since 4.1.2
 	 */
@@ -768,23 +769,32 @@ public class XmlUtil {
 	 */
 	private static void mapToXml(Document doc, Element element, Map<?, ?> data) {
 		Element filedEle;
-		Object value;
+		Object key;
 		for (Entry<?, ?> entry : data.entrySet()) {
-			filedEle = doc.createElement(entry.getKey().toString());
-			element.appendChild(filedEle);
-			value = entry.getValue();
-			if (value instanceof Map) {
-				mapToXml(doc, filedEle, (Map<?, ?>) value);
+			key = entry.getKey();
+			if (null != key) {
+				// key作为标签名
+				filedEle = doc.createElement(key.toString());
 				element.appendChild(filedEle);
-			} else {
-				filedEle.appendChild(doc.createTextNode(value.toString()));
+				final Object value = entry.getValue();
+				// value作为标签内的值。
+				if (null != value) {
+					if (value instanceof Map) {
+						//如果值依旧为map，递归继续
+						mapToXml(doc, filedEle, (Map<?, ?>) value);
+						element.appendChild(filedEle);
+					} else {
+						filedEle.appendChild(doc.createTextNode(value.toString()));
+					}
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 关闭XXE，避免漏洞攻击<br>
 	 * see: https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#JAXP_DocumentBuilderFactory.2C_SAXParserFactory_and_DOM4J
+	 * 
 	 * @param dbf DocumentBuilderFactory
 	 * @return DocumentBuilderFactory
 	 */
