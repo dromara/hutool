@@ -16,6 +16,7 @@
 * 【core】        修复FileUtil.remove移动后删除失败问题（issue#IRF8R@Gitee）
 * 【extra】       修复Ftp中delDir逻辑导致的问题（issue#IRCQ8@Gitee）
 * 【core】        修复XmlUtil.mapToXml中map值为空导致的空指针问题。（issue#IRD7X@Gitee）
+* 【poi】          修复ExcelWriter中setOnlyAlias没有排除值的问题。（issue#IRF9L@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

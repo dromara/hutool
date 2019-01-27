@@ -3,12 +3,10 @@ package cn.hutool.poi.excel;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -672,10 +670,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			return passCurrentRow();
 		}
 
+		final Map<?, ?> aliasMap = aliasMap(rowMap);
+		
 		if (isWriteKeyAsHead) {
-			writeHeadRow(aliasHeader(rowMap.keySet()));
+			writeHeadRow(aliasMap.keySet());
 		}
-		writeRow(rowMap.values());
+		writeRow(aliasMap.values());
 		return this;
 	}
 
@@ -822,26 +822,29 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	// -------------------------------------------------------------------------- Private method start
 	/**
-	 * 为指定的key列表添加标题别名，如果没有定义key的别名，使用原key
+	 * 为指定的key列表添加标题别名，如果没有定义key的别名，在onlyAlias为false时使用原key
 	 * 
 	 * @param keys 键列表
 	 * @return 别名列表
 	 */
-	private Collection<?> aliasHeader(Collection<?> keys) {
+	private Map<?, ?> aliasMap(Map<?, ?> rowMap) {
 		if (MapUtil.isEmpty(this.headerAlias)) {
-			return keys;
+			return rowMap;
 		}
-		final List<Object> alias = new ArrayList<>();
+		
+		final Map<Object, Object> filteredMap = new LinkedHashMap<>();
 		String aliasName;
-		for (Object key : keys) {
-			aliasName = this.headerAlias.get(key);
+		for (Entry<?, ?> entry : rowMap.entrySet()) {
+			aliasName = this.headerAlias.get(entry.getKey());
 			if(null != aliasName) {
-				alias.add(aliasName);
+				//别名键值对加入
+				filteredMap.put(aliasName, entry.getValue());
 			} else if(false == this.onlyAlias) {
-				alias.add(key);
+				//保留无别名设置的键值对
+				filteredMap.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return alias;
+		return filteredMap;
 	}
 
 	/**
