@@ -242,13 +242,13 @@ public final class SecureUtil {
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
-	 * @param params {@link AlgorithmParameterSpec}
 	 * @param seed 种子
+	 * @param params {@link AlgorithmParameterSpec}
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
-	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params, byte[] seed) {
-		return KeyUtil.generateKeyPair(algorithm, params, seed);
+	public static KeyPair generateKeyPair(String algorithm, byte[] seed, AlgorithmParameterSpec params) {
+		return KeyUtil.generateKeyPair(algorithm, seed, params);
 	}
 
 	/**

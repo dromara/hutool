@@ -23,7 +23,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(byte[] data) {
-		return new Digester(DigestAlgorithm.MD5).digest(data);
+		return new MD5().digest(data);
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(String data, String charset) {
-		return new Digester(DigestAlgorithm.MD5).digest(data, charset);
+		return new MD5().digest(data, charset);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(InputStream data) {
-		return new Digester(DigestAlgorithm.MD5).digest(data);
+		return new MD5().digest(data);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(File file) {
-		return new Digester(DigestAlgorithm.MD5).digest(file);
+		return new MD5().digest(file);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(byte[] data) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+		return new MD5().digestHex(data);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(String data, String charset) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data, charset);
+		return new MD5().digestHex(data, charset);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(InputStream data) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+		return new MD5().digestHex(data);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(File file) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(file);
+		return new MD5().digestHex(file);
 	}
 
 	/**

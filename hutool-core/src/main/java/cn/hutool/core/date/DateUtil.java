@@ -1612,6 +1612,29 @@ public class DateUtil {
 	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
+	
+	/**
+	 * 通过生日计算星座
+	 * 
+	 * @param month 月，从0开始计数
+	 * @param day 天
+	 * @return 星座名
+	 * @since 4.4.3
+	 */
+	public static String getZodiac(int month, int day) {
+		return Zodiac.getZodiac(month, day);
+	}
+	
+	/**
+	 * 计算生肖，只计算1900年后出生的人
+	 * 
+	 * @param year 农历年
+	 * @return 生肖名
+	 * @since 4.4.3
+	 */
+	public static String getChineseZodiac(int year) {
+		return Zodiac.getChineseZodiac(year);
+	}
 
 	// ------------------------------------------------------------------------ Private method start
 	/**

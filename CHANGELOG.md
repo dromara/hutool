@@ -3,6 +3,23 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.4.3
+
+### 新特性
+* 【crypto】     MD5以及Digester增加加盐支持（issue#256@Github）
+* 【crypto】     整理KeyUtil，减少冗余代码
+* 【core】        增加Zodiac类，DateUtil增加getZodiac、getChineseZodiac用于获取星座和生肖（issue#260@Github）
+
+### Bug修复
+* 【core】        修复ExceptionUtil.stacktraceToString中limit参数无效问题（issue#IR7UE@Gitee）
+* 【core】        修复StrUtil.repeatByLength中数组越界问题（issue#IRB2C@Gitee）
+* 【core】        修复FileUtil.remove移动后删除失败问题（issue#IRF8R@Gitee）
+* 【extra】       修复Ftp中delDir逻辑导致的问题（issue#IRCQ8@Gitee）
+* 【core】        修复XmlUtil.mapToXml中map值为空导致的空指针问题。（issue#IRD7X@Gitee）
+* 【poi】          修复ExcelWriter中setOnlyAlias没有排除值的问题。（issue#IRF9L@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.4.2
 
 ### 新特性
@@ -39,6 +56,8 @@
 * 【crypto】     解决SecureUtil.readCertificate密码无效问题（issue#240@Github）
 * 【json】        修复JSONUtil.toList针对对象中的类无法实例化导致的null问题（issue#239@Github）
 * 【db】          修复MongoDS在Single模式下检查配置文件导致的问题（issue#IR2BF@Github）
+
+-------------------------------------------------------------------------------------------------------------
 
 ## 4.4.0
 

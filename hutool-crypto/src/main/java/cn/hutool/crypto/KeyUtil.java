@@ -31,6 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -58,7 +59,7 @@ public class KeyUtil {
 	 * </pre>
 	 */
 	public static final int DEFAULT_KEY_SIZE = 1024;
-	
+
 	/**
 	 * SM2默认曲线
 	 * 
@@ -290,7 +291,7 @@ public class KeyUtil {
 	 * @return {@link KeyPair}
 	 */
 	public static KeyPair generateKeyPair(String algorithm) {
-		return generateKeyPair(algorithm, DEFAULT_KEY_SIZE, null);
+		return generateKeyPair(algorithm, DEFAULT_KEY_SIZE);
 	}
 
 	/**
@@ -309,52 +310,19 @@ public class KeyUtil {
 	 * 生成用于非对称加密的公钥和私钥<br>
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
-	 * @param realAlgorithm 非对称加密算法
+	 * @param algorithm 非对称加密算法
 	 * @param keySize 密钥模（modulus ）长度
 	 * @param seed 种子
 	 * @return {@link KeyPair}
 	 */
-	public static KeyPair generateKeyPair(String realAlgorithm, int keySize, byte[] seed) {
-		final String algorithm = getAlgorithmAfterWith(realAlgorithm);
-		if ("EC".equalsIgnoreCase(algorithm) && (keySize <= 0 || keySize > 256)) {
-			// 对于EC算法，密钥长度有限制，在此使用默认256
-			keySize = 256;
-		}
-		
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-		}
-		
-		KeyPairGenerator keyPairGen;
-		try {
-			keyPairGen = (null == provider) ? KeyPairGenerator.getInstance(algorithm) : KeyPairGenerator.getInstance(algorithm, provider);
-		} 
-		catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
+	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed) {
+		// SM2算法需要单独定义其曲线生成
+		if ("SM2".equalsIgnoreCase(algorithm)) {
+			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2_DEFAULT_CURVE);
+			return generateKeyPair(algorithm, keySize, seed, sm2p256v1);
 		}
 
-		if (keySize <= 0) {
-			keySize = DEFAULT_KEY_SIZE;
-		}
-		if (null != seed) {
-			final SecureRandom random = new SecureRandom(seed);
-			keyPairGen.initialize(keySize, random);
-		} else {
-			keyPairGen.initialize(keySize);
-		}
-		
-		//SM2算法需要单独定义其曲线生成
-		if ("SM2".equalsIgnoreCase(realAlgorithm)) {
-			final ECGenParameterSpec sm2p256v1 = new ECGenParameterSpec(SM2_DEFAULT_CURVE);
-			try {
-				keyPairGen.initialize(sm2p256v1);
-			} catch (InvalidAlgorithmParameterException e) {
-				throw new CryptoException(e);
-			}
-		}
-		return keyPairGen.generateKeyPair();
+		return generateKeyPair(algorithm, keySize, seed, (AlgorithmParameterSpec[]) null);
 	}
 
 	/**
@@ -367,7 +335,7 @@ public class KeyUtil {
 	 * @since 4.3.3
 	 */
 	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params) {
-		return generateKeyPair(algorithm, params, null);
+		return generateKeyPair(algorithm, null, params);
 	}
 
 	/**
@@ -375,32 +343,86 @@ public class KeyUtil {
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
 	 * @param algorithm 非对称加密算法
-	 * @param params {@link AlgorithmParameterSpec}
+	 * @param param {@link AlgorithmParameterSpec}
 	 * @param seed 种子
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
-	public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec params, byte[] seed) {
+	public static KeyPair generateKeyPair(String algorithm, byte[] seed, AlgorithmParameterSpec param) {
+		return generateKeyPair(algorithm, DEFAULT_KEY_SIZE, seed, param);
+	}
+
+	/**
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 
+	 * @param algorithm 非对称加密算法
+	 * @param keySize 密钥模（modulus ）长度
+	 * @param seed 种子
+	 * @param params {@link AlgorithmParameterSpec}
+	 * @return {@link KeyPair}
+	 * @since 4.3.3
+	 */
+	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed, AlgorithmParameterSpec... params) {
 		algorithm = getAlgorithmAfterWith(algorithm);
+		final KeyPairGenerator keyPairGen = getKeyPairGenerator(algorithm);
+
+		// 密钥模（modulus ）长度初始化定义
+		if (keySize > 0) {
+			// key长度适配修正
+			if ("EC".equalsIgnoreCase(algorithm) && keySize > 256) {
+				// 对于EC算法，密钥长度有限制，在此使用默认256
+				keySize = 256;
+			}
+			if (null != seed) {
+				keyPairGen.initialize(keySize, new SecureRandom(seed));
+			} else {
+				keyPairGen.initialize(keySize);
+			}
+		}
+
+		// 自定义初始化参数
+		if (ArrayUtil.isNotEmpty(params)) {
+			for (AlgorithmParameterSpec param : params) {
+				if (null == param) {
+					continue;
+				}
+				try {
+					if (null != seed) {
+						keyPairGen.initialize(param, new SecureRandom(seed));
+					} else {
+						keyPairGen.initialize(param);
+					}
+				} catch (InvalidAlgorithmParameterException e) {
+					throw new CryptoException(e);
+				}
+			}
+		}
+		return keyPairGen.generateKeyPair();
+	}
+
+	/**
+	 * 获取{@link KeyPairGenerator}
+	 * 
+	 * @param algorithm 非对称加密算法
+	 * @return {@link KeyPairGenerator}
+	 * @since 4.3.3
+	 */
+	public static KeyPairGenerator getKeyPairGenerator(String algorithm) {
+		Provider provider = null;
+		try {
+			provider = ProviderFactory.createBouncyCastleProvider();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
 
 		KeyPairGenerator keyPairGen;
 		try {
-			keyPairGen = KeyPairGenerator.getInstance(algorithm);
+			keyPairGen = (null == provider) ? KeyPairGenerator.getInstance(algorithm) : KeyPairGenerator.getInstance(algorithm, provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
-
-		try {
-			if (null != seed) {
-				final SecureRandom random = new SecureRandom(seed);
-				keyPairGen.initialize(params, random);
-			} else {
-				keyPairGen.initialize(params);
-			}
-		} catch (InvalidAlgorithmParameterException e) {
-			throw new CryptoException(e);
-		}
-		return keyPairGen.generateKeyPair();
+		return keyPairGen;
 	}
 
 	/**
@@ -455,7 +477,7 @@ public class KeyUtil {
 		}
 		return keyStore;
 	}
-	
+
 	/**
 	 * 从KeyStore中获取私钥公钥
 	 * 

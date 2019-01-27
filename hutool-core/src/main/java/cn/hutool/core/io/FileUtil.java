@@ -1048,11 +1048,11 @@ public class FileUtil {
 			// 在文件系统不同的情况下，renameTo会失败，此时使用copy，然后删除原文件
 			try {
 				copy(src, dest, isOverride);
-				src.delete();
 			} catch (Exception e) {
 				throw new IORuntimeException(StrUtil.format("Move [{}] to [{}] failed!", src, dest), e);
 			}
-
+			//复制后删除源
+			del(src);
 		}
 	}
 
