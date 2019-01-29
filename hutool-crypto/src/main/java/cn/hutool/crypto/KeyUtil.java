@@ -1,6 +1,7 @@
 package cn.hutool.crypto;
 
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -16,7 +17,11 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.ECFieldFp;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.ECPoint;
+import java.security.spec.ECPublicKeySpec;
+import java.security.spec.EllipticCurve;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -593,6 +598,49 @@ public class KeyUtil {
 		try {
 			return keyStore.getCertificate(alias);
 		} catch (Exception e) {
+			throw new CryptoException(e);
+		}
+	}
+	
+	/**
+	 * 编码压缩EC公钥（基于BouncyCastle）
+	 * 
+	 * @param publicKey {@link PublicKey}
+	 * @return 压缩得到的X
+	 */
+	public static byte[] encodeECPublicKey(PublicKey publicKey) {
+		org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey bcPubKey = (org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey) publicKey;
+		return bcPubKey.getQ().getEncoded(true);
+	}
+	
+	/**
+	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）
+	 * 
+	 * @param encode 压缩公钥
+	 * @param curveName EC曲线名
+	 */
+	public static PublicKey decodeECPoint(String encode, String curveName) {
+		Provider provider = null;
+		try {
+			provider = ProviderFactory.createBouncyCastleProvider();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		
+		final byte[] encodeByte = SecureUtil.decodeKey(encode);
+		org.bouncycastle.jce.spec.ECNamedCurveParameterSpec namedSpec = org.bouncycastle.jce.ECNamedCurveTable.getParameterSpec(curveName);
+		EllipticCurve ecCurve = new EllipticCurve(new ECFieldFp(namedSpec.getCurve().getField().getCharacteristic()),namedSpec.getCurve().getA().toBigInteger(), namedSpec.getCurve().getB().toBigInteger());
+		// 根据X恢复点Y
+		ECPoint point = org.bouncycastle.jce.ECPointUtil.decodePoint(ecCurve, encodeByte);
+		
+		// 根据曲线恢复公钥格式
+		java.security.spec.ECParameterSpec ecSpec = new org.bouncycastle.jce.spec.ECNamedCurveSpec(curveName,
+				namedSpec.getCurve(), namedSpec.getG(), namedSpec.getN());
+		ECPublicKeySpec pubKeySpec = new ECPublicKeySpec(point, ecSpec);
+		try {
+			KeyFactory PubKeyGen = KeyFactory.getInstance("EC", provider);
+			return PubKeyGen.generatePublic(pubKeySpec);
+		} catch (GeneralSecurityException e) {
 			throw new CryptoException(e);
 		}
 	}
