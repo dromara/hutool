@@ -17,8 +17,11 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.ECFieldFp;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.ECPoint;
 import java.security.spec.ECPublicKeySpec;
+import java.security.spec.EllipticCurve;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -625,14 +628,15 @@ public class KeyUtil {
 		}
 		
 		final byte[] encodeByte = SecureUtil.decodeKey(encode);
-		org.bouncycastle.asn1.x9.X9ECParameters spec = org.bouncycastle.asn1.x9.ECNamedCurveTable.getByName(curveName);
+		org.bouncycastle.jce.spec.ECNamedCurveParameterSpec namedSpec = org.bouncycastle.jce.ECNamedCurveTable.getParameterSpec(curveName);
+		EllipticCurve ecCurve = new EllipticCurve(new ECFieldFp(namedSpec.getCurve().getField().getCharacteristic()),namedSpec.getCurve().getA().toBigInteger(), namedSpec.getCurve().getB().toBigInteger());
 		// 根据X恢复点Y
-		org.bouncycastle.math.ec.ECPoint W = spec.getCurve().decodePoint(encodeByte);
+		ECPoint point = org.bouncycastle.jce.ECPointUtil.decodePoint(ecCurve, encodeByte);
 		
 		// 根据曲线恢复公钥格式
-		java.security.spec.ECParameterSpec params = new org.bouncycastle.jce.spec.ECNamedCurveSpec(curveName, spec.getCurve(), spec.getG(),
-				spec.getN());
-		ECPublicKeySpec pubKeySpec = new ECPublicKeySpec(org.bouncycastle.jcajce.provider.asymmetric.util.EC5Util.convertPoint(W), params);
+		java.security.spec.ECParameterSpec ecSpec = new org.bouncycastle.jce.spec.ECNamedCurveSpec(curveName,
+				namedSpec.getCurve(), namedSpec.getG(), namedSpec.getN());
+		ECPublicKeySpec pubKeySpec = new ECPublicKeySpec(point, ecSpec);
 		try {
 			KeyFactory PubKeyGen = KeyFactory.getInstance("EC", provider);
 			return PubKeyGen.generatePublic(pubKeySpec);
