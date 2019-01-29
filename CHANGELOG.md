@@ -6,6 +6,8 @@
 ## 4.4.4
 
 ### 新特性
+* 【crypto】     增加EC公钥压缩/解压缩（pr#264@Github）
+
 ### Bug修复
 * 【core】        修复Profile中路径参数失效问题（issue#265@Github）
 * 【core】        修复Profile中路径参数失效问题
