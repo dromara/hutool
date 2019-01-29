@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
 
@@ -14,17 +15,17 @@ import cn.hutool.setting.Setting;
  * 默认的，我们读取${classpath}/default下的配置文件(*.setting文件)，当调用setProfile方法时，指定一个profile，即可读取其目录下的配置文件。<br>
  * 比如我们定义几个profile：test，develop，production，分别代表测试环境、开发环境和线上环境，我希望读取数据库配置文件db.setting，那么：
  * <ol>
- * 	<li>test =》 ${classpath}/test/db.setting</li>
- * 	<li>develop =》 ${classpath}/develop/db.setting</li>
- * 	<li>production =》 ${classpath}/production/db.setting</li>
+ * <li>test =》 ${classpath}/test/db.setting</li>
+ * <li>develop =》 ${classpath}/develop/db.setting</li>
+ * <li>production =》 ${classpath}/production/db.setting</li>
  * </ol>
  * 
  * @author Looly
  *
  */
-public class Profile implements Serializable{
+public class Profile implements Serializable {
 	private static final long serialVersionUID = -4189955219454008744L;
-	
+
 	/** 默认环境 */
 	public static final String DEFAULT_PROFILE = "default";
 
@@ -36,25 +37,27 @@ public class Profile implements Serializable{
 	private boolean useVar;
 	/** 配置文件缓存 */
 	private Map<String, Setting> settingMap = new ConcurrentHashMap<>();
-	
-	//-------------------------------------------------------------------------------- Constructor start
+
+	// -------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 默认构造，环境使用默认的：default，编码UTF-8，不使用变量
 	 */
 	public Profile() {
 		this(DEFAULT_PROFILE);
 	}
-	
+
 	/**
 	 * 构造，编码UTF-8，不使用变量
+	 * 
 	 * @param profile 环境
 	 */
 	public Profile(String profile) {
 		this(profile, Setting.DEFAULT_CHARSET, false);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param profile 环境
 	 * @param charset 编码
 	 * @param useVar 是否使用变量
@@ -65,74 +68,81 @@ public class Profile implements Serializable{
 		this.charset = charset;
 		this.useVar = useVar;
 	}
-	//-------------------------------------------------------------------------------- Constructor end
+	// -------------------------------------------------------------------------------- Constructor end
 
 	/**
 	 * 获取当前环境下的配置文件
+	 * 
 	 * @param name 文件名，如果没有扩展名，默认为.setting
 	 * @return 当前环境下配置文件
 	 */
-	public Setting getSetting(String name){
+	public Setting getSetting(String name) {
 		String nameForProfile = fixNameForProfile(name);
 		Setting setting = settingMap.get(nameForProfile);
-		if(null == setting){
-			setting = new Setting(nameForProfile, charset, useVar);
+		if (null == setting) {
+			setting = new Setting(nameForProfile, this.charset, this.useVar);
 			settingMap.put(nameForProfile, setting);
 		}
 		return setting;
 	}
-	
+
 	/**
 	 * 设置环境
+	 * 
 	 * @param profile 环境
 	 * @return 自身
 	 */
-	public Profile setProfile(String profile){
+	public Profile setProfile(String profile) {
 		this.profile = profile;
 		return this;
 	}
-	
+
 	/**
 	 * 设置编码
+	 * 
 	 * @param charset 编码
 	 * @return 自身
 	 */
-	public Profile setCharset(Charset charset){
+	public Profile setCharset(Charset charset) {
 		this.charset = charset;
 		return this;
 	}
-	
+
 	/**
 	 * 设置是否使用变量
+	 * 
 	 * @param useVar 变量
 	 * @return 自身
 	 */
-	public Profile setUseVar(boolean useVar){
+	public Profile setUseVar(boolean useVar) {
 		this.useVar = useVar;
 		return this;
 	}
-	
+
 	/**
 	 * 清空所有环境的配置文件
+	 * 
 	 * @return 自身
 	 */
-	public Profile clear(){
+	public Profile clear() {
 		this.settingMap.clear();
 		return this;
 	}
-	
-	//-------------------------------------------------------------------------------- Private method start
+
+	// -------------------------------------------------------------------------------- Private method start
 	/**
 	 * 修正文件名
+	 * 
 	 * @param name 文件名
 	 * @return 修正后的文件名
 	 */
-	private String fixNameForProfile(String name){
-		final String actralProfile = null == this.profile ? StrUtil.EMPTY : this.profile;
-		if(StrUtil.isNotBlank(name) && false == name.contains(StrUtil.DOT)){
+	private String fixNameForProfile(String name) {
+		Assert.notBlank(name, "Setting name must be not blank !");
+		final String actralProfile = StrUtil.nullToEmpty(this.profile);
+		if (false == name.contains(StrUtil.DOT)) {
 			return StrUtil.format("{}/{}.setting", actralProfile, name);
 		}
-		return StrUtil.format("{}/{}", actralProfile);
+		return StrUtil.format("{}/{}", actralProfile, name);
 	}
-	//-------------------------------------------------------------------------------- Private method end
+	// -------------------------------------------------------------------------------- Private method end
 }
