@@ -630,10 +630,10 @@ public class KeyUtil {
 
 	/**
 	 * 编码压缩EC公钥（基于BouncyCastle）<br>
-	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 * 见：ANSI X9.62 4.2.1和4.2.2节
 	 * 
-	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
-	 * @return 压缩得到的X
+	 * @param publicKey {@link PublicKey}，必须为java.security.interfaces.ECPublicKey
+	 * @return 压缩的ECPoint
 	 * @since 4.4.4
 	 */
 	public static byte[] encodeECPublicKey(PublicKey publicKey) {
@@ -642,7 +642,7 @@ public class KeyUtil {
 	
 	/**
 	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
-	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 * 见：ANSI X9.62 4.2.1和4.2.2节
 	 * 
 	 * @param encode 压缩公钥
 	 * @param curveName EC曲线名
@@ -654,7 +654,7 @@ public class KeyUtil {
 
 	/**
 	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
-	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
+	 * 见：ANSI X9.62 4.2.1和4.2.2节
 	 * 
 	 * @param encodeByte 压缩公钥
 	 * @param curveName EC曲线名
