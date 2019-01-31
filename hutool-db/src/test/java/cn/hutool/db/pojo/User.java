@@ -1,4 +1,4 @@
-package cn.hutool.db.test.pojo;
+package cn.hutool.db.pojo;
 
 /**
  * 测试用POJO，与测试数据库中的user表对应

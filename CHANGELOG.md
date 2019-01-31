@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【crypto】     增加EC公钥压缩/解压缩（pr#264@Github）
+* 【db】          Entity支持IS NOT NULL形式，调整逻辑，强化Condition的toString（issue#267@Github）
 
 ### Bug修复
 * 【core】        修复Profile中路径参数失效问题（issue#265@Github）

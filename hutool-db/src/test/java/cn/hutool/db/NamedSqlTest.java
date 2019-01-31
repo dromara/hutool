@@ -1,4 +1,4 @@
-package cn.hutool.db.test;
+package cn.hutool.db;
 
 import java.util.Map;
 
