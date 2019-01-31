@@ -1660,7 +1660,7 @@ public class CollUtil {
 			elementType = Object.class;
 		} else {
 			final Class<?> elementRowType = TypeUtil.getClass(elementType);
-			if (elementRowType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementRowType)) {
+			if (null != elementRowType && (elementRowType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementRowType))) {
 				// 其它类型按照单一元素处理
 				collection.add((T) value);
 				return collection;
