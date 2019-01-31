@@ -180,31 +180,6 @@ public class TypeUtil {
 	/**
 	 * 获得给定类的第一个泛型参数
 	 * 
-	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
-	 * @return {@link Type}，可能为{@code null}
-	 */
-	public static Type getTypeArgument(Class<?> clazz) {
-		return getTypeArgument(clazz, 0);
-	}
-
-	/**
-	 * 获得给定类的泛型参数
-	 * 
-	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
-	 * @param index 泛型类型的索引号，既第几个泛型类型
-	 * @return {@link Type}
-	 */
-	public static Type getTypeArgument(Class<?> clazz, int index) {
-		Type type = clazz;
-		if (false == (type instanceof ParameterizedType)) {
-			type = clazz.getGenericSuperclass();
-		}
-		return getTypeArgument(type, index);
-	}
-
-	/**
-	 * 获得给定类的第一个泛型参数
-	 * 
 	 * @param type 被检查的类型，必须是已经确定泛型类型的类型
 	 * @return {@link Type}，可能为{@code null}
 	 */
@@ -234,10 +209,16 @@ public class TypeUtil {
 	 * @return 所有泛型参数类型
 	 */
 	public static Type[] getTypeArguments(Type type) {
+		if (null == type) {
+			return null;
+		}
+		Type[] types = null;
 		if (type instanceof ParameterizedType) {
 			final ParameterizedType genericSuperclass = (ParameterizedType) type;
-			return genericSuperclass.getActualTypeArguments();
+			types = genericSuperclass.getActualTypeArguments();
+		} else if(type instanceof Class) {
+			types = getTypeArguments(((Class<?>)type).getGenericSuperclass());
 		}
-		return null;
+		return types;
 	}
 }
