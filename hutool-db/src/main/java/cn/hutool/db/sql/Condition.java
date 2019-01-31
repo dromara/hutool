@@ -4,8 +4,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import cn.hutool.core.clone.CloneSupport;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -14,10 +18,10 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public class Condition implements Cloneable {
+public class Condition extends CloneSupport<Condition> {
 
 	/**
-	 * SQL中 WHERE 语句查询方式<br>
+	 * SQL中 LIKE 语句查询方式<br>
 	 * 
 	 * @author Looly
 	 *
@@ -34,6 +38,7 @@ public class Condition implements Cloneable {
 	private static final String OPERATOR_LIKE = "LIKE";
 	private static final String OPERATOR_IN = "IN";
 	private static final String OPERATOR_IS = "IS";
+	private static final String OPERATOR_IS_NOT = "IS NOT";
 	private static final String OPERATOR_BETWEEN = "BETWEEN";
 	private static final List<String> OPERATORS = Arrays.asList("<>", "<=", "<", ">=", ">", "=", "!=", OPERATOR_IN);
 
@@ -265,23 +270,114 @@ public class Condition implements Cloneable {
 	// --------------------------------------------------------------- Getters and Setters end
 
 	@Override
-	public Condition clone() {
-		try {
-			return (Condition) super.clone();
-		} catch (CloneNotSupportedException e) {
-			// 不会发生
-			return null;
+	public String toString() {
+		return toString(null);
+	}
+
+	/**
+	 * 转换为条件字符串，并回填占位符对应的参数值
+	 * 
+	 * @param paramValues 参数列表，用于回填占位符对应参数值
+	 * @return 条件字符串
+	 */
+	public String toString(List<Object> paramValues) {
+		final StringBuilder conditionStrBuilder = StrUtil.builder();
+		// 判空值
+		checkValueNull();
+
+		// 固定前置，例如："name ="、"name IN"、"name BETWEEN"、"name LIKE"
+		conditionStrBuilder.append(this.field).append(StrUtil.SPACE).append(this.operator);
+
+		if (isOperatorBetween()) {
+			buildValuePartForBETWEEN(conditionStrBuilder, paramValues);
+		} else if (isOperatorIn()) {
+			// 类似：" (?,?,?)" 或者 " (1,2,3,4)"
+			buildValuePartForIN(conditionStrBuilder, paramValues);
+		} else {
+			if (isPlaceHolder() && false == isOperatorIs()) {
+				// 使用条件表达式占位符，条件表达式并不适用于 IS NULL
+				conditionStrBuilder.append(" ?");
+				if(null != paramValues) {
+					paramValues.add(this.value);
+				}
+			} else {
+				// 直接使用条件值
+				conditionStrBuilder.append(" ").append(this.value);
+			}
+		}
+
+		return conditionStrBuilder.toString();
+	}
+
+	// ----------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 构建BETWEEN语句中的值部分<br>
+	 * 开头必须加空格，类似：" ? AND ?" 或者 " 1 AND 2"
+	 * 
+	 * @param conditionStrBuilder 条件语句构建器
+	 * @param paramValues 参数集合，用于参数占位符对应参数回填
+	 */
+	private void buildValuePartForBETWEEN(StringBuilder conditionStrBuilder, List<Object> paramValues) {
+		// BETWEEN x AND y 的情况，两个参数
+		if (isPlaceHolder()) {
+			// 使用条件表达式占位符
+			conditionStrBuilder.append(" ?");
+			if(null != paramValues) {
+				paramValues.add(this.value);
+			}
+		} else {
+			// 直接使用条件值
+			conditionStrBuilder.append(CharUtil.SPACE).append(this.value);
+		}
+
+		// 处理 AND y
+		conditionStrBuilder.append(StrUtil.SPACE).append(LogicalOperator.AND.toString());
+		if (isPlaceHolder()) {
+			// 使用条件表达式占位符
+			conditionStrBuilder.append(" ?");
+			if(null != paramValues) {
+				paramValues.add(this.secondValue);
+			}
+		} else {
+			// 直接使用条件值
+			conditionStrBuilder.append(CharUtil.SPACE).append(this.secondValue);
 		}
 	}
 
-	@Override
-	public String toString() {
-		return StrUtil.format("`{}` {} {}", this.field, this.operator, this.value);
+	/**
+	 * 构建IN语句中的值部分<br>
+	 * 开头必须加空格，类似：" (?,?,?)" 或者 " (1,2,3,4)"
+	 * 
+	 * @param conditionStrBuilder 条件语句构建器
+	 * @param paramValues 参数集合，用于参数占位符对应参数回填
+	 */
+	private void buildValuePartForIN(StringBuilder conditionStrBuilder, List<Object> paramValues) {
+		conditionStrBuilder.append(" (");
+		final Object value = this.value;
+		if (isPlaceHolder()) {
+			List<?> valuesForIn;
+			// 占位符对应值列表
+			if (value instanceof CharSequence) {
+				valuesForIn = StrUtil.split((CharSequence) value, ',');
+			} else {
+				valuesForIn = Arrays.asList(Convert.convert(String[].class, value));
+				if (null == valuesForIn) {
+					valuesForIn = CollUtil.newArrayList(Convert.toStr(value));
+				}
+			}
+			conditionStrBuilder.append(StrUtil.repeatAndJoin("?", valuesForIn.size(), ","));
+			if(null != paramValues) {
+				paramValues.addAll(valuesForIn);
+			}
+		} else {
+			conditionStrBuilder.append(StrUtil.join(",", value));
+		}
+		conditionStrBuilder.append(')');
 	}
 
 	/**
 	 * 解析值表达式<br>
-	 * 支持"<>", "<=", "< ", ">=", "> ", "= ", "!=", "IN","LIKE"表达式<br>
+	 * 支持"<>", "<=", "< ", ">=", "> ", "= ", "!=", "IN", "LIKE", "IS", "IS NOT"表达式<br>
 	 * 如果无法识别表达式，则表达式为"="，表达式与值用空格隔开<br>
 	 * 例如字段为name，那value可以为："> 1"或者 "LIKE %Tom"此类
 	 */
@@ -312,11 +408,21 @@ public class Condition implements Cloneable {
 
 		valueStr = valueStr.trim();
 
-		// 处理"= null"和"is null"转换为"IS NULL"
-		if (StrUtil.equalsIgnoreCase("= null", valueStr) || StrUtil.equalsIgnoreCase("is null", valueStr)) {
-			this.operator = OPERATOR_IS;
-			this.value = VALUE_NULL;
-			return;
+		// 处理null
+		if (StrUtil.endWithIgnoreCase(valueStr, "null")) {
+			if (StrUtil.equalsIgnoreCase("= null", valueStr) || StrUtil.equalsIgnoreCase("is null", valueStr)) {
+				// 处理"= null"和"is null"转换为"IS NULL"
+				this.operator = OPERATOR_IS;
+				this.value = VALUE_NULL;
+				this.isPlaceHolder = false;
+				return;
+			} else if (StrUtil.equalsIgnoreCase("!= null", valueStr) || StrUtil.equalsIgnoreCase("is not null", valueStr)) {
+				// 处理"!= null"和"is not null"转换为"IS NOT NULL"
+				this.operator = OPERATOR_IS_NOT;
+				this.value = VALUE_NULL;
+				this.isPlaceHolder = false;
+				return;
+			}
 		}
 
 		List<String> strs = StrUtil.split(valueStr, StrUtil.C_SPACE, 2);
@@ -354,7 +460,6 @@ public class Condition implements Cloneable {
 		}
 	}
 
-	// ----------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 去掉包围在字符串两端的单引号或双引号
 	 * 

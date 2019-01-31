@@ -1,10 +1,10 @@
-package cn.hutool.db.test;
+package cn.hutool.db;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.db.Entity;
-import cn.hutool.db.test.pojo.User;
+import cn.hutool.db.pojo.User;
 
 /**
  * Entity测试

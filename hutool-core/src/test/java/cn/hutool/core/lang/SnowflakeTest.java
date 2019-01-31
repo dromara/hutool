@@ -5,8 +5,6 @@ import java.util.HashSet;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Snowflake;
-
 /**
  * Snowflake单元测试
  * @author Looly
@@ -19,7 +17,7 @@ public class SnowflakeTest {
 		//构建Snowflake，提供终端ID和数据中心ID
 		Snowflake idWorker = new Snowflake(0, 0);
 		long nextId = idWorker.nextId();
-		Console.log(nextId);
+		Assert.assertTrue(nextId > 0);
 	}
 	
 	@Test

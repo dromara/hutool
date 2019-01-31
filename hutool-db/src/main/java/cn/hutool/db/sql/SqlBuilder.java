@@ -6,9 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.builder.Builder;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -24,7 +23,7 @@ import cn.hutool.db.dialect.DialectName;
  * @author Looly
  *
  */
-public class SqlBuilder {
+public class SqlBuilder implements Builder<String>{
 
 	// --------------------------------------------------------------- Static methods start
 	/**
@@ -282,6 +281,17 @@ public class SqlBuilder {
 
 		return this;
 	}
+	
+	/**
+	 * 添加Where语句，所有逻辑之间为AND的关系
+	 * 
+	 * @param conditions 条件，当条件为空时，只添加WHERE关键字
+	 * @return 自己
+	 * @since 4.4.4
+	 */
+	public SqlBuilder where(Condition... conditions) {
+		return where(LogicalOperator.AND, conditions);
+	}
 
 	/**
 	 * 添加Where语句<br>
@@ -475,15 +485,16 @@ public class SqlBuilder {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 在SQL的开头补充SQL片段
+	 * 
 	 * @param sqlFragment SQL片段
 	 * @return this
 	 * @since 4.1.3
 	 */
 	public SqlBuilder insertPreFragment(Object sqlFragment) {
-		if(null != sqlFragment) {
+		if (null != sqlFragment) {
 			this.sql.insert(0, sqlFragment);
 		}
 		return this;
@@ -548,12 +559,13 @@ public class SqlBuilder {
 	public Object[] getParamValueArray() {
 		return this.paramValues.toArray(new Object[this.paramValues.size()]);
 	}
-	
+
 	/**
 	 * 构建，默认打印SQL日志
 	 * 
 	 * @return 构建好的SQL语句
 	 */
+	@Override
 	public String build() {
 		return this.sql.toString();
 	}
@@ -591,103 +603,13 @@ public class SqlBuilder {
 				conditionStrBuilder.append(StrUtil.SPACE).append(logicalOperator).append(StrUtil.SPACE);
 			}
 
-			//构建条件部分："name = ?"、"name IN (?,?,?)"、"name BETWEEN ？AND ？"、"name LIKE ?"
-			buildConditionPart(conditionStrBuilder, condition);
+			// 构建条件部分："name = ?"、"name IN (?,?,?)"、"name BETWEEN ？AND ？"、"name LIKE ?"
+			conditionStrBuilder.append(condition.toString(this.paramValues));
 		}
 
 		return conditionStrBuilder.toString();
 	}
 
-	/**
-	 * 构建条件部分："name = ?"、"name IN (?,?,?)"、"name BETWEEN ？AND ？"、"name LIKE ?"
-	 * 
-	 * @param conditionStrBuilder 条件语句构建器
-	 * @param condition 条件
-	 */
-	private void buildConditionPart(StringBuilder conditionStrBuilder, Condition condition) {
-		//判空值
-		condition.checkValueNull();
-		
-		// 固定前置，例如："name ="、"name IN"、"name BETWEEN"、"name LIKE"
-		conditionStrBuilder.append(condition.getField()).append(StrUtil.SPACE).append(condition.getOperator());
-
-		if (condition.isOperatorBetween()) {
-			// 类似：" ? AND ?" 或者 " 1 AND 2"
-			buildValuePartForBETWEEN(conditionStrBuilder, condition);
-		} else if (condition.isOperatorIn()) {
-			// 类似：" (?,?,?)" 或者 " (1,2,3,4)"
-			buildValuePartForIN(conditionStrBuilder, condition);
-		} else {
-			if (condition.isPlaceHolder() && false == condition.isOperatorIs()) {
-				// 使用条件表达式占位符，条件表达式并不适用于 IS NULL
-				conditionStrBuilder.append(" ?");
-				paramValues.add(condition.getValue());
-			} else {
-				// 直接使用条件值
-				conditionStrBuilder.append(" ").append(condition.getValue());
-			}
-		}
-	}
-
-	/**
-	 * 构建BETWEEN语句中的值部分<br>
-	 * 开头必须加空格，类似：" ? AND ?" 或者 " 1 AND 2"
-	 * 
-	 * @param conditionStrBuilder 条件语句构建器
-	 * @param condition 条件
-	 */
-	private void buildValuePartForBETWEEN(StringBuilder conditionStrBuilder, Condition condition) {
-		// BETWEEN x AND y 的情况，两个参数
-		if (condition.isPlaceHolder()) {
-			// 使用条件表达式占位符
-			conditionStrBuilder.append(" ?");
-			paramValues.add(condition.getValue());
-		} else {
-			// 直接使用条件值
-			conditionStrBuilder.append(condition.getValue());
-		}
-
-		// 处理 AND y
-		conditionStrBuilder.append(StrUtil.SPACE).append(LogicalOperator.AND.toString());
-		if (condition.isPlaceHolder()) {
-			// 使用条件表达式占位符
-			conditionStrBuilder.append(" ?");
-			paramValues.add(condition.getSecondValue());
-		} else {
-			// 直接使用条件值
-			conditionStrBuilder.append(condition.getSecondValue());
-		}
-	}
-
-	/**
-	 * 构建IN语句中的值部分<br>
-	 * 开头必须加空格，类似：" (?,?,?)" 或者 " (1,2,3,4)"
-	 * 
-	 * @param conditionStrBuilder 条件语句构建器
-	 * @param condition 条件
-	 */
-	private void buildValuePartForIN(StringBuilder conditionStrBuilder, Condition condition) {
-		conditionStrBuilder.append(" (");
-		final Object value = condition.getValue();
-		if (condition.isPlaceHolder()) {
-			List<?> valuesForIn;
-			// 占位符对应值列表
-			if (value instanceof CharSequence) {
-				valuesForIn = StrUtil.split((CharSequence) value, ',');
-			} else {
-				valuesForIn = Arrays.asList(Convert.convert(String[].class, value));
-				if (null == valuesForIn) {
-					valuesForIn = CollUtil.newArrayList(Convert.toStr(value));
-				}
-			}
-			conditionStrBuilder.append(StrUtil.repeatAndJoin("?", valuesForIn.size(), ","));
-			paramValues.addAll(valuesForIn);
-		} else {
-			conditionStrBuilder.append(StrUtil.join(",", value));
-		}
-		conditionStrBuilder.append(')');
-	}
-	
 	/**
 	 * 验证实体类对象的有效性
 	 * 

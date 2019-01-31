@@ -1,4 +1,4 @@
-package cn.hutool.db.test;
+package cn.hutool.db;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -15,9 +15,9 @@ import cn.hutool.db.ActiveEntity;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.EntityListHandler;
+import cn.hutool.db.pojo.User;
 import cn.hutool.db.sql.Condition;
 import cn.hutool.db.sql.Condition.LikeType;
-import cn.hutool.db.test.pojo.User;
 
 /**
  * 增删改查测试

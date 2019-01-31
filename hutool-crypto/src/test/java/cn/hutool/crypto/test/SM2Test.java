@@ -1,13 +1,16 @@
 package cn.hutool.crypto.test;
 
 import java.security.KeyPair;
+import java.security.PublicKey;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -123,4 +126,18 @@ public class SM2Test {
 		boolean verify = sm2.verify(content.getBytes(), sign);
 		Assert.assertTrue(verify);
 	}
+	
+	@Test
+	public void sm2PublicKeyEncodeDecodeTest() {
+		KeyPair pair = SecureUtil.generateKeyPair("SM2");
+		PublicKey publicKey = pair.getPublic();
+		byte[] data = KeyUtil.encodeECPublicKey(publicKey);
+		String encodeHex = HexUtil.encodeHexStr(data);
+		String encodeB64 = Base64.encode(data);
+		PublicKey Hexdecode = KeyUtil.decodeECPoint(encodeHex, KeyUtil.SM2_DEFAULT_CURVE);
+		PublicKey B64decode = KeyUtil.decodeECPoint(encodeB64, KeyUtil.SM2_DEFAULT_CURVE);
+		Assert.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(Hexdecode.getEncoded()));
+		Assert.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(B64decode.getEncoded()));
+	}
+	
 }

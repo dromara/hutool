@@ -1,4 +1,4 @@
-package cn.hutool.db.test;
+package cn.hutool.db;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
-import cn.hutool.db.test.pojo.User;
+import cn.hutool.db.pojo.User;
 
 /**
  * Entity测试
