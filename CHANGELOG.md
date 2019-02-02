@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core】        增加StrFormater代码逻辑可读性（pr#269@Github）
+* 【core】        Validator中使用泛型
 
 ### Bug修复
 
