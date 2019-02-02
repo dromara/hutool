@@ -86,4 +86,11 @@ public class StrBuilderTest {
 		builder.append(123).append(456.123D).append(true).append('\n');
 		Assert.assertEquals("123456.123true\n", builder.toString());
 	}
+
+	@Test
+	public void Test01() {
+
+		Assert.assertEquals(StrFormatter.format("test\\{}666\\\\{}{}\\{}", "456", 456, 6L, 9d, 8f),
+				"test{}666\\456456{}");
+	}
 }
