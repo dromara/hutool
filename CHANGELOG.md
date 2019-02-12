@@ -11,6 +11,7 @@
 * 【core】        NumberUtil增加toBytes和toInt方法
 * 【core】        XmlUtil增加format方法，支持缩进
 * 【http】         SoapRequest增加executeBody方法（issue#IRN6I@Gitee）
+* 【core】        调整XmlUtil.toStr方法对编码的逻辑
 
 ### Bug修复
 * 【core】        修复AnnotationUtil.getAnnotationValue获取对象错误问题（issue#271@Github）

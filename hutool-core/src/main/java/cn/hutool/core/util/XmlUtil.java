@@ -4,12 +4,12 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,7 +232,7 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, boolean isPretty) {
-		return toStr(doc, null, isPretty);
+		return toStr(doc, CharsetUtil.UTF_8, isPretty);
 	}
 
 	/**
@@ -246,13 +246,13 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, String charset, boolean isPretty) {
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		final StringWriter writer = StrUtil.getWriter();
 		try {
-			write(doc, out, charset, isPretty ? INDENT_DEFAULT : 0);
+			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0);
 		} catch (Exception e) {
 			throw new UtilException(e, "Trans xml document to string error!");
 		}
-		return out.toString();
+		return writer.toString();
 	}
 
 	/**
@@ -306,7 +306,7 @@ public class XmlUtil {
 		BufferedWriter writer = null;
 		try {
 			writer = FileUtil.getWriter(path, charset, false);
-			write(doc, writer, INDENT_DEFAULT);
+			write(doc, writer, charset, INDENT_DEFAULT);
 		} finally {
 			IoUtil.close(writer);
 		}
@@ -317,11 +317,12 @@ public class XmlUtil {
 	 * 
 	 * @param node {@link Node} XML文档节点或文档本身
 	 * @param writer 写出的Writer，Writer决定了输出XML的编码
+	 * @param charset 编码
 	 * @param indent 格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 3.0.9
 	 */
-	public static void write(Node node, Writer writer, int indent) {
-		transform(new DOMSource(node), new StreamResult(writer), null, indent);
+	public static void write(Node node, Writer writer, String charset, int indent) {
+		transform(new DOMSource(node), new StreamResult(writer), charset, indent);
 	}
 
 	/**
