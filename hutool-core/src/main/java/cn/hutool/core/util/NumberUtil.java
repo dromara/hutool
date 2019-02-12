@@ -2171,7 +2171,7 @@ public class NumberUtil {
 			// 0x04表示16进制数
 			return Long.parseLong(number.substring(2), 16);
 		}
-		
+
 		return Long.parseLong(removeNumberFlag(number));
 	}
 
@@ -2189,6 +2189,40 @@ public class NumberUtil {
 		} catch (ParseException e) {
 			throw new UtilException(e);
 		}
+	}
+
+	/**
+	 * int值转byte数组，使用大端字节序（高位字节在前，低位字节在后）<br>
+	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 
+	 * @param value 值
+	 * @return byte数组
+	 * @since 4.4.5
+	 */
+	public static byte[] toBytes(int value) {
+		final byte[] result = new byte[4];
+
+		result[0] = (byte) (value >> 24);
+		result[1] = (byte) (value >> 16);
+		result[2] = (byte) (value >> 8);
+		result[3] = (byte) (value /* >> 0 */);
+
+		return result;
+	}
+
+	/**
+	 * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）<br>
+	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 
+	 * @param bytes
+	 * @return int
+	 * @since 4.4.5
+	 */
+	public static int toInt(byte[] bytes) {
+		return (bytes[0] & 0xff) << 24//
+				| (bytes[1] & 0xff) << 16//
+				| (bytes[2] & 0xff) << 8//
+				| (bytes[3] & 0xff);
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start
@@ -2210,6 +2244,7 @@ public class NumberUtil {
 
 	/**
 	 * 去掉数字尾部的数字标识，例如12D，44.0F，22L中的最后一个字母
+	 * 
 	 * @param number 数字字符串
 	 * @return 去掉标识的字符串
 	 */

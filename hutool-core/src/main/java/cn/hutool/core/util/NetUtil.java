@@ -375,16 +375,19 @@ public class NetUtil {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 创建 {@link InetSocketAddress}
 	 * 
-	 * @param host 域名或IP地址
-	 * @param port 端口
+	 * @param host 域名或IP地址，空表示任意地址
+	 * @param port 端口，0表示系统分配临时端口
 	 * @return {@link InetSocketAddress}
 	 * @since 3.3.0
 	 */
 	public static InetSocketAddress createAddress(String host, int port) {
+		if(StrUtil.isBlank(host)) {
+			return new InetSocketAddress(port);
+		}
 		return new InetSocketAddress(host, port);
 	}
 

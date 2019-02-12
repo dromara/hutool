@@ -8,6 +8,9 @@
 ### 新特性
 * 【core】        增加StrFormater代码逻辑可读性（pr#269@Github）
 * 【core】        Validator中使用泛型
+* 【core】        NumberUtil增加toBytes和toInt方法
+* 【core】        XmlUtil增加format方法，支持缩进
+* 【http】         SoapRequest增加executeBody方法（issue#IRN6I@Gitee）
 
 ### Bug修复
 * 【core】        修复AnnotationUtil.getAnnotationValue获取对象错误问题（issue#271@Github）

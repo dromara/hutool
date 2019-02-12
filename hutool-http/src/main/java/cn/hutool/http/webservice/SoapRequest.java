@@ -3,9 +3,11 @@ package cn.hutool.http.webservice;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 
@@ -17,7 +19,12 @@ import cn.hutool.http.HttpRequest;
  */
 public class SoapRequest {
 	
+	/** 默认的xmlns */
+	public static final String XMLNS_SOAPENV = "soapenv";
+	
 	private static final String TEXT_XML_CONTENT_TYPE = "text/xml;charset=";
+	/** 返回值中soap:Body标签内的内容正则 */
+	private static final Pattern SOAP_BODY_PATTERN = Pattern.compile("<soap:Body>(.*?)</soap:Body>", Pattern.DOTALL);
 	
 	/** 编码 */
 	private Charset charset = CharsetUtil.CHARSET_UTF_8;
@@ -26,7 +33,7 @@ public class SoapRequest {
 	/** 方法的命名空间 */
 	private String methodNamespace;
 	/** 命名空间envelope(ns) */
-	private String xmlns = "soapenv";
+	private String xmlns = XMLNS_SOAPENV;
 	/** 请求方法 */
 	private String method;
 	/** 请求参数 */
@@ -74,7 +81,7 @@ public class SoapRequest {
 	}
 	
 	/**
-	 * 设置命名空间envelope(ns)
+	 * 设置命名空间envelope(ns)，默认是
 	 * 
 	 * @return this
 	 */
@@ -125,6 +132,14 @@ public class SoapRequest {
 	 */
 	public String execute() {
 		return HttpRequest.post(this.url).body(toSoapXml()).contentType(getXmlContentType()).execute().body();
+	}
+	
+	/**
+	 * 执行Webservice请求，既发送SOAP内容
+	 * @return 返回结果
+	 */
+	public String executeBody() {
+		return ReUtil.getGroup1(SOAP_BODY_PATTERN, execute());
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------- Private method start
