@@ -1,4 +1,4 @@
-package cn.hutool.core.net;
+package cn.hutool.socket;
 
 import java.nio.channels.SelectionKey;
 

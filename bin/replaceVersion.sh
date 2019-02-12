@@ -11,18 +11,18 @@ pwd=`pwd`
 echo "当前路径：${pwd}"
 
 if [ -n "$1" ];then
-	new_version="$1"
+    new_version="$1"
     old_version=`cat ${pwd}/bin/version.txt`
-	echo "$old_version 替换为新版本 $new_version"
+    echo "$old_version 替换为新版本 $new_version"
 else
     # 参数错误，退出
-	echo "ERROR: 请指定新版本！"
-	exit
+    echo "ERROR: 请指定新版本！"
+    exit
 fi
 
 if [ ! -n "$old_version" ]; then
-	echo "ERROR: 旧版本不存在，请确认bin/version.txt中信息正确"
-	exit
+    echo "ERROR: 旧版本不存在，请确认bin/version.txt中信息正确"
+    exit
 fi
 
 # 替换README.md中的版本
