@@ -232,7 +232,7 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, boolean isPretty) {
-		return toStr(doc, null, isPretty);
+		return toStr(doc, CharsetUtil.UTF_8, isPretty);
 	}
 
 	/**

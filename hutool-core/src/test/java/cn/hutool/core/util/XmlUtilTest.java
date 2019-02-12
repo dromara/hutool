@@ -65,7 +65,7 @@ public class XmlUtilTest {
 		Object value = XmlUtil.getByXPath("//returnsms/message", docResult, XPathConstants.STRING);
 		Assert.assertEquals("ok", value);
 	}
-	
+
 	@Test
 	public void xmlToMapTest() {
 		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
@@ -77,7 +77,7 @@ public class XmlUtilTest {
 				+ "<successCounts>1</successCounts>"//
 				+ "</returnsms>";
 		Map<String, Object> map = XmlUtil.xmlToMap(xml);
-		
+
 		Assert.assertEquals(5, map.size());
 		Assert.assertEquals("Success", map.get("returnstatus"));
 		Assert.assertEquals("ok", map.get("message"));
@@ -88,7 +88,8 @@ public class XmlUtilTest {
 
 	@Test
 	public void mapToXmlTest() {
-		Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>()).put("name", "张三")//
+		Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())//
+				.put("name", "张三")//
 				.put("age", 12)//
 				.put("game", MapUtil.builder(new LinkedHashMap<String, Object>()).put("昵称", "Looly").put("level", 14).build())//
 				.build();
@@ -105,7 +106,7 @@ public class XmlUtilTest {
 				+ "</user>", //
 				XmlUtil.toStr(doc, false));
 	}
-	
+
 	@Test
 	public void readTest() {
 		Document doc = XmlUtil.readXML("test.xml");
