@@ -74,7 +74,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * 设置队列，用于存在未执行的线程<br>
 	 * 可选队列有：
 	 * <pre>
-	 * 1. SynchronousQueue    它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程
+	 * 1. SynchronousQueue    它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * 2. LinkedBlockingQueue 无界队列，当运行线程大于corePoolSize时始终放入此队列，此时maximumPoolSize无效
 	 * 3. ArrayBlockingQueue  有界队列，相对无界队列有利于控制队列大小，队列满时，运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * </pre>
@@ -88,13 +88,26 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	}
 	
 	/**
-	 * 使用{@link SynchronousQueue} 做为等待队列
+	 * 使用{@link SynchronousQueue} 做为等待队列（非公平策略）<br>
+	 * 它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * 
 	 * @return this
 	 * @since 4.1.11
 	 */
 	public ExecutorBuilder useSynchronousQueue() {
-		return setWorkQueue(new SynchronousQueue<Runnable>());
+		return useSynchronousQueue(false);
+	}
+	
+	/**
+	 * 使用{@link SynchronousQueue} 做为等待队列<br>
+	 * 它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
+	 * 
+	 * @param fair 是否使用公平访问策略
+	 * @return this
+	 * @since 4.5.0
+	 */
+	public ExecutorBuilder useSynchronousQueue(boolean fair) {
+		return setWorkQueue(new SynchronousQueue<Runnable>(fair));
 	}
 
 	/**

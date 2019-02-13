@@ -52,7 +52,7 @@ import cn.hutool.core.util.StrUtil;
 public class IoUtil {
 
 	/** 默认缓存大小 */
-	public static final int DEFAULT_BUFFER_SIZE = 1024;
+	public static final int DEFAULT_BUFFER_SIZE = 2048;
 	/** 默认中等缓存大小 */
 	public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 4096;
 	/** 默认大缓存大小 */
@@ -229,6 +229,33 @@ public class IoUtil {
 	 * 
 	 * @param in {@link ReadableByteChannel}
 	 * @param out {@link WritableByteChannel}
+	 * @return 拷贝的字节数
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.0
+	 */
+	public static long copy(ReadableByteChannel in, WritableByteChannel out) throws IORuntimeException {
+		return copy(in, out, DEFAULT_BUFFER_SIZE);
+	}
+
+	/**
+	 * 拷贝流，使用NIO，不会关闭流
+	 * 
+	 * @param in {@link ReadableByteChannel}
+	 * @param out {@link WritableByteChannel}
+	 * @param bufferSize 缓冲大小，如果小于等于0，使用默认
+	 * @return 拷贝的字节数
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.0
+	 */
+	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize) throws IORuntimeException {
+		return copy(in, out, bufferSize, null);
+	}
+
+	/**
+	 * 拷贝流，使用NIO，不会关闭流
+	 * 
+	 * @param in {@link ReadableByteChannel}
+	 * @param out {@link WritableByteChannel}
 	 * @param bufferSize 缓冲大小，如果小于等于0，使用默认
 	 * @param streamProgress {@link StreamProgress}进度处理器
 	 * @return 拷贝的字节数
@@ -385,6 +412,20 @@ public class IoUtil {
 	}
 
 	/**
+	 * 从流中读取内容，读取完毕后并不关闭流
+	 * 
+	 * @param channel 可读通道，读取完毕后并不关闭通道
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.0
+	 */
+	public static String read(ReadableByteChannel channel, Charset charset) throws IORuntimeException {
+		FastByteArrayOutputStream out = read(channel);
+		return null == charset ? out.toString() : out.toString(charset);
+	}
+
+	/**
 	 * 从流中读取内容，读到输出流中
 	 * 
 	 * @param in 输入流
@@ -394,6 +435,19 @@ public class IoUtil {
 	public static FastByteArrayOutputStream read(InputStream in) throws IORuntimeException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(in, out);
+		return out;
+	}
+
+	/**
+	 * 从流中读取内容，读到输出流中
+	 * 
+	 * @param channel 可读通道，读取完毕后并不关闭通道
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 */
+	public static FastByteArrayOutputStream read(ReadableByteChannel channel) throws IORuntimeException {
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		copy(channel, Channels.newChannel(out));
 		return out;
 	}
 

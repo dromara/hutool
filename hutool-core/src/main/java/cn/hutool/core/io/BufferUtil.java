@@ -3,6 +3,7 @@ package cn.hutool.core.io;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -67,6 +68,29 @@ public class BufferUtil {
 	}
 	
 	/**
+	 * 读取剩余部分并转为UTF-8编码字符串
+	 * 
+	 * @param buffer ByteBuffer
+	 * @return 字符串
+	 * @since 4.5.0
+	 */
+	public static String readUtf8Str(ByteBuffer buffer) {
+		return readStr(buffer, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 读取剩余部分并转为字符串
+	 * 
+	 * @param buffer ByteBuffer
+	 * @param charset 编码
+	 * @return 字符串
+	 * @since 4.5.0
+	 */
+	public static String readStr(ByteBuffer buffer, Charset charset) {
+		return StrUtil.str(readBytes(buffer), charset);
+	}
+
+	/**
 	 * 读取剩余部分bytes<br>
 	 * 
 	 * @param buffer ByteBuffer
@@ -89,14 +113,14 @@ public class BufferUtil {
 	 */
 	public static byte[] readBytes(ByteBuffer buffer, int maxLength) {
 		final int remaining = buffer.remaining();
-		if(maxLength > remaining) {
+		if (maxLength > remaining) {
 			maxLength = remaining;
 		}
 		byte[] ab = new byte[maxLength];
 		buffer.get(ab);
 		return ab;
 	}
-	
+
 	/**
 	 * 读取指定区间的数据
 	 * 
@@ -110,7 +134,7 @@ public class BufferUtil {
 		System.arraycopy(buffer.array(), start, bs, 0, bs.length);
 		return bs;
 	}
-	
+
 	/**
 	 * 一行的末尾位置，查找位置时位移ByteBuffer到结束位置
 	 *
@@ -124,6 +148,7 @@ public class BufferUtil {
 	/**
 	 * 一行的末尾位置，查找位置时位移ByteBuffer到结束位置<br>
 	 * 支持的换行符如下：
+	 * 
 	 * <pre>
 	 * 1. \r\n
 	 * 2. \n
@@ -149,23 +174,24 @@ public class BufferUtil {
 				// 只有\r无法确认换行
 				canEnd = false;
 			}
-			
+
 			if (charIndex - primitivePosition > maxLength) {
-				//查找到尽头，未找到，还原位置
+				// 查找到尽头，未找到，还原位置
 				buffer.position(primitivePosition);
 				throw new IndexOutOfBoundsException(StrUtil.format("Position is out of maxLength: {}", maxLength));
 			}
 		}
-		
-		//查找到buffer尽头，未找到，还原位置
+
+		// 查找到buffer尽头，未找到，还原位置
 		buffer.position(primitivePosition);
-		//读到结束位置
+		// 读到结束位置
 		return -1;
 	}
 
 	/**
 	 * 读取一行，如果buffer中最后一部分并非完整一行，则返回null<br>
 	 * 支持的换行符如下：
+	 * 
 	 * <pre>
 	 * 1. \r\n
 	 * 2. \n
@@ -185,7 +211,7 @@ public class BufferUtil {
 		} else if (endPosition == startPosition) {
 			return StrUtil.EMPTY;
 		}
-		
+
 		return null;
 	}
 }

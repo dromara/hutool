@@ -1,23 +1,15 @@
 package cn.hutool.socket.aio;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
+import java.net.SocketOption;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 基于AIO的Socket服务端实现
@@ -25,9 +17,11 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  *
  */
-public class AioServer implements Closeable {
+public class AioServer {
 
-	AsynchronousServerSocketChannel channel;
+	private AsynchronousChannelGroup group;
+	private AsynchronousServerSocketChannel channel;
+	private AcceptHandler acceptHandler;
 
 	/**
 	 * 构造
@@ -45,86 +39,125 @@ public class AioServer implements Closeable {
 	 * @return this
 	 */
 	public AioServer init(InetSocketAddress address) {
-		ExecutorService threadPool = Executors.newFixedThreadPool(20);
-		AsynchronousChannelGroup group;
+
+		// TODO 需要自定义线程池大小
+		ExecutorService threadPool = Executors.newFixedThreadPool(2);
 		try {
-			group = AsynchronousChannelGroup.withThreadPool(threadPool);
-			this.channel = AsynchronousServerSocketChannel.open(group);
-			this.channel.bind(address);
+			this.group = AsynchronousChannelGroup.withThreadPool(threadPool);
+			this.channel = AsynchronousServerSocketChannel.open(group).bind(address);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+		this.acceptHandler = new AcceptHandler();
+
 		return this;
 	}
 
 	/**
 	 * 开始监听
+	 * 
+	 * @param sync 是否阻塞
 	 */
-	public void listen() {
+	public void start() {
+		start(false);
+	}
+
+	/**
+	 * 开始监听
+	 * 
+	 * @param sync 是否阻塞
+	 */
+	public void start(boolean sync) {
 		try {
-			doListen();
+			doStart(sync);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
 	/**
-	 * 开始监听
-	 * 
+	 * 设置 Socket 的 Option 选项<br>
+	 * 选项见：{@link java.net.StandardSocketOptions}
+	 *
+	 * @param <T> 选项泛型
+	 * @param name {@link SocketOption} 枚举
+	 * @param value SocketOption参数
 	 * @throws IOException IO异常
 	 */
-	private void doListen() throws IOException {
-		this.channel.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
-
-			@Override
-			public void completed(AsynchronousSocketChannel result, Void attachment) {
-				channel.accept(attachment, this);
-				try {
-					Console.log(result.getRemoteAddress().toString());
-				} catch (IOException e) {
-					throw new IORuntimeException(e);
-				}
-
-				final ByteBuffer buffer = ByteBuffer.allocate(2);
-				while(true) {
-					result.read(buffer, null, new CompletionHandler<Integer, Void>() {
-						
-						@Override
-						public void completed(Integer result, Void attachment) {
-							buffer.flip();
-							byte[] readBytes = BufferUtil.readBytes(buffer);
-							Console.log(StrUtil.str(readBytes, CharsetUtil.CHARSET_UTF_8));
-						}
-						
-						@Override
-						public void failed(Throwable exc, Void attachment) {
-							exc.printStackTrace();
-						}
-					});
-				}
-			}
-
-			@Override
-			public void failed(Throwable exc, Void attachment) {
-				exc.printStackTrace();
-			}
-		});
+	public <T> void setOption(SocketOption<T> name, T value) throws IOException {
+		this.channel.setOption(name, value);
 	}
 
-	@Override
-	public void close() throws IOException {
+	/**
+	 * 获取{@link AsynchronousServerSocketChannel}
+	 * 
+	 * @return {@link AsynchronousServerSocketChannel}
+	 */
+	public AsynchronousServerSocketChannel getChannel() {
+		return this.channel;
+	}
+
+	/**
+	 * 处理接入的客户端
+	 * 
+	 * @return this
+	 */
+	public AioServer accept() {
+		this.channel.accept(this, this.acceptHandler);
+		return this;
+	}
+
+	/**
+	 * 服务是否开启状态
+	 * 
+	 * @return 服务是否开启状态
+	 */
+	public boolean isOpen() {
+		return (null == this.channel) ? false : this.channel.isOpen();
+	}
+
+	/**
+	 * 关闭服务
+	 */
+	public void close() {
 		IoUtil.close(this.channel);
-	}
-
-	public static void main(String[] args) {
-		final AioServer aioServer = new AioServer(8899);
-		ThreadUtil.execute(new Runnable() {
-
-			@Override
-			public void run() {
-				aioServer.listen();
+		
+		if(null != this.group && false == this.group.isShutdown()) {
+			try {
+				this.group.shutdownNow();
+			} catch (IOException e) {
+				//ignore
 			}
-		});
-		Console.log("####");
+		}
+
+		// 结束阻塞
+		synchronized (this) {
+			this.notify();
+		}
 	}
+
+	// ------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 开始监听
+	 * 
+	 * @param sync 是否阻塞
+	 * @throws IOException IO异常
+	 */
+	private void doStart(boolean sync) throws IOException {
+
+		// 接收客户端连接
+		accept();
+
+		if (sync) {
+			// 阻塞当前线程，保证在main方法中执行不被退出
+			synchronized (this) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+		}
+	}
+	// ------------------------------------------------------------------------------------- Private method end
 }
