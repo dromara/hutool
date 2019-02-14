@@ -34,8 +34,6 @@ import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.bouncycastle.math.ec.ECCurve;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
@@ -662,7 +660,7 @@ public class KeyUtil {
 	 */
 	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {
 		final org.bouncycastle.jce.spec.ECNamedCurveParameterSpec namedSpec = org.bouncycastle.jce.ECNamedCurveTable.getParameterSpec(curveName);
-		final ECCurve curve = namedSpec.getCurve();
+		final org.bouncycastle.math.ec.ECCurve curve = namedSpec.getCurve();
 		final EllipticCurve ecCurve = new EllipticCurve(//
 				new ECFieldFp(curve.getField().getCharacteristic()), //
 				curve.getA().toBigInteger(), //

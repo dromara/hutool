@@ -1,4 +1,4 @@
-package cn.hutool.socket;
+package cn.hutool.socket.nio;
 
 import java.io.Closeable;
 import java.io.IOException;
