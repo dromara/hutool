@@ -1,7 +1,6 @@
 package cn.hutool.crypto;
 
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -17,11 +16,7 @@ import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.ECFieldFp;
 import java.security.spec.ECGenParameterSpec;
-import java.security.spec.ECPoint;
-import java.security.spec.ECPublicKeySpec;
-import java.security.spec.EllipticCurve;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -635,7 +630,7 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static byte[] encodeECPublicKey(PublicKey publicKey) {
-		return ((org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey) publicKey).getQ().getEncoded(true);
+		return BCUtil.encodeECPublicKey(publicKey);
 	}
 	
 	/**
@@ -647,7 +642,7 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(String encode, String curveName) {
-		return decodeECPoint(SecureUtil.decodeKey(encode), curveName);
+		return BCUtil.decodeECPoint(encode, curveName);
 	}
 
 	/**
@@ -659,23 +654,6 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {
-		final org.bouncycastle.jce.spec.ECNamedCurveParameterSpec namedSpec = org.bouncycastle.jce.ECNamedCurveTable.getParameterSpec(curveName);
-		final org.bouncycastle.math.ec.ECCurve curve = namedSpec.getCurve();
-		final EllipticCurve ecCurve = new EllipticCurve(//
-				new ECFieldFp(curve.getField().getCharacteristic()), //
-				curve.getA().toBigInteger(), //
-				curve.getB().toBigInteger());
-		// 根据X恢复点Y
-		final ECPoint point = org.bouncycastle.jce.ECPointUtil.decodePoint(ecCurve, encodeByte);
-
-		// 根据曲线恢复公钥格式
-		java.security.spec.ECParameterSpec ecSpec = new org.bouncycastle.jce.spec.ECNamedCurveSpec(curveName, curve, namedSpec.getG(), namedSpec.getN());
-		
-		final KeyFactory PubKeyGen = getKeyFactory("EC");
-		try {
-			return PubKeyGen.generatePublic(new ECPublicKeySpec(point, ecSpec));
-		} catch (GeneralSecurityException e) {
-			throw new CryptoException(e);
-		}
+		return BCUtil.decodeECPoint(encodeByte, curveName);
 	}
 }
