@@ -453,4 +453,10 @@ public class DateUtilTest {
 		Assert.assertEquals(1, list2.size());
 		Assert.assertEquals("20184", list2.get(0));
 	}
+	
+	@Test
+	public void formatHttpDateTest() {
+		String formatHttpDate = DateUtil.formatHttpDate(DateUtil.parse("2019-01-02 22:32:01"));
+		Assert.assertEquals("Wed, 02 Jan 2019 14:32:01 GMT", formatHttpDate);
+	}
 }

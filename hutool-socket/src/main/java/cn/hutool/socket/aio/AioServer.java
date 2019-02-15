@@ -3,6 +3,7 @@ package cn.hutool.socket.aio;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketOption;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.util.concurrent.ExecutorService;
@@ -10,6 +11,8 @@ import java.util.concurrent.Executors;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 /**
  * 基于AIO的Socket服务端实现
@@ -18,10 +21,12 @@ import cn.hutool.core.io.IoUtil;
  *
  */
 public class AioServer {
+	private static final Log log = LogFactory.get();
 
 	private AsynchronousChannelGroup group;
 	private AsynchronousServerSocketChannel channel;
 	private AcceptHandler acceptHandler;
+	private IoAction<ByteBuffer> ioAction;
 
 	/**
 	 * 构造
@@ -84,8 +89,28 @@ public class AioServer {
 	 * @param value SocketOption参数
 	 * @throws IOException IO异常
 	 */
-	public <T> void setOption(SocketOption<T> name, T value) throws IOException {
+	public <T> AioServer setOption(SocketOption<T> name, T value) throws IOException {
 		this.channel.setOption(name, value);
+		return this;
+	}
+	
+	/**
+	 * 获取IO处理器
+	 * @return {@link IoAction}
+	 */
+	public IoAction<ByteBuffer> getIoAction() {
+		return this.ioAction;
+	}
+
+	/**
+	 * 设置IO处理器，单例存在
+	 * 
+	 * @param ioAction {@link IoAction}
+	 * @return this;
+	 */
+	public AioServer setIoAction(IoAction<ByteBuffer> ioAction) {
+		this.ioAction = ioAction;
+		return this;
 	}
 
 	/**
@@ -121,12 +146,12 @@ public class AioServer {
 	 */
 	public void close() {
 		IoUtil.close(this.channel);
-		
-		if(null != this.group && false == this.group.isShutdown()) {
+
+		if (null != this.group && false == this.group.isShutdown()) {
 			try {
 				this.group.shutdownNow();
 			} catch (IOException e) {
-				//ignore
+				// ignore
 			}
 		}
 
@@ -144,6 +169,7 @@ public class AioServer {
 	 * @throws IOException IO异常
 	 */
 	private void doStart(boolean sync) throws IOException {
+		log.debug("Aio Server started, waiting for accept.");
 
 		// 接收客户端连接
 		accept();

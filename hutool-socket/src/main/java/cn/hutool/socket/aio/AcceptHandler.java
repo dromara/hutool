@@ -1,6 +1,5 @@
 package cn.hutool.socket.aio;
 
-import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
@@ -22,10 +21,12 @@ public class AcceptHandler implements CompletionHandler<AsynchronousSocketChanne
 
 		// 处理接入后的相关动作
 		StaticLog.debug("客户端 {} 接入。", SocketUtil.getRemoteAddress(socketChannel));
+		
+		//创建Session会话
+		final AioSession session = new AioSession(socketChannel, aioServer.getIoAction());
 
 		// 处理读
-		final ByteBuffer readBuffer = ByteBuffer.allocate(5);
-		socketChannel.read(readBuffer, readBuffer, new ReadHandler(socketChannel));
+		session.read();
 	}
 
 	@Override

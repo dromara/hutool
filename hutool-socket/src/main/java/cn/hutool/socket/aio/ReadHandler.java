@@ -1,11 +1,8 @@
 package cn.hutool.socket.aio;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 
-import cn.hutool.core.io.BufferUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.log.StaticLog;
 
 /**
@@ -14,36 +11,25 @@ import cn.hutool.log.StaticLog;
  * @author looly
  *
  */
-public class ReadHandler implements CompletionHandler<Integer, ByteBuffer> {
-
-	AsynchronousSocketChannel socketChannel;
-	
-	public ReadHandler(AsynchronousSocketChannel socketChannel) {
-		this.socketChannel = socketChannel;
-	}
+public class ReadHandler implements CompletionHandler<Integer, AioSession> {
 
 	@Override
-	public void completed(Integer result, ByteBuffer buffer) {
-		if(result < 0) {
+	public void completed(Integer result, AioSession session) {
+		if (result < 0) {
 			// 客户端关闭
 			return;
 		}
-		
-		buffer.flip();//读模式
-		
-		
-//		StaticLog.debug("客户端消息：[{}] {}", result, BufferUtil.readUtf8Str(buffer));
-		Console.print(BufferUtil.readUtf8Str(buffer));
-		
+
+		final ByteBuffer readBuffer = session.getReadBuffer();
+		readBuffer.flip();// 读模式
+		session.getIoAction().doAction(session, readBuffer);
+
 		// 继续读取
-		if(this.socketChannel.isOpen()) {
-			buffer.clear();
-			socketChannel.read(buffer, buffer, this);
-		}
+		session.read();
 	}
 
 	@Override
-	public void failed(Throwable exc, ByteBuffer attachment) {
+	public void failed(Throwable exc, AioSession attachment) {
 		StaticLog.error(exc);
 	}
 
