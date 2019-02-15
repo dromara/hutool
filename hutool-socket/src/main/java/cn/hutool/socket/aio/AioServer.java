@@ -63,15 +63,6 @@ public class AioServer {
 	 * 
 	 * @param sync 是否阻塞
 	 */
-	public void start() {
-		start(false);
-	}
-
-	/**
-	 * 开始监听
-	 * 
-	 * @param sync 是否阻塞
-	 */
 	public void start(boolean sync) {
 		try {
 			doStart(sync);
@@ -93,9 +84,10 @@ public class AioServer {
 		this.channel.setOption(name, value);
 		return this;
 	}
-	
+
 	/**
 	 * 获取IO处理器
+	 * 
 	 * @return {@link IoAction}
 	 */
 	public IoAction<ByteBuffer> getIoAction() {
