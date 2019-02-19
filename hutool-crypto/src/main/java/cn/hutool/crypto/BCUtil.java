@@ -52,7 +52,7 @@ public class BCUtil {
 	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
 	 * 
 	 * @param encodeByte 压缩公钥
-	 * @param curveName EC曲线名
+	 * @param curveName EC曲线名，例如{@link KeyUtil#SM2_DEFAULT_CURVE}
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {

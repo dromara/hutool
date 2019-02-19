@@ -29,6 +29,9 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	protected SM2Engine engine;
 	protected SM2Signer signer;
 
+	private CipherParameters cipherParamsForPublicKey;
+	private CipherParameters cipherParamsForPrivateKey;
+
 	// ------------------------------------------------------------------ Constructor start
 	/**
 	 * 构造，生成新的私钥公钥对
@@ -90,9 +93,21 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		return this.init(ALGORITHM_SM2, privateKey, publicKey);
 	}
 
+	@Override
+	protected SM2 init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
+		super.init(algorithm, privateKey, publicKey);
+		return initCipherParams();
+	}
+
 	// --------------------------------------------------------------------------------- Encrypt
 	/**
-	 * 加密
+	 * 加密，SM2非对称加密的结果由C1,C2,C3三部分组成，其中：
+	 * 
+	 * <pre>
+	 * C1 生成随机数的计算出的椭圆曲线点
+	 * C2 密文数据
+	 * C3 SM3的摘要值
+	 * </pre>
 	 * 
 	 * @param data 被加密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
@@ -107,7 +122,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 		final SM2Engine engine = this.engine;
 		try {
-			engine.init(true, new ParametersWithRandom(generateCipherParameters(keyType)));
+			engine.init(true, new ParametersWithRandom(getCipherParameters(keyType)));
 			return engine.processBlock(data, 0, data.length);
 		} catch (Exception e) {
 			throw new CryptoException(e);
@@ -133,7 +148,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 		final SM2Engine engine = this.engine;
 		try {
-			engine.init(false, generateCipherParameters(keyType));
+			engine.init(false, getCipherParameters(keyType));
 			return engine.processBlock(data, 0, data.length);
 		} catch (Exception e) {
 			throw new CryptoException(e);
@@ -152,7 +167,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	public byte[] sign(byte[] data) {
 		return sign(data, null);
 	}
-	
+
 	/**
 	 * 用私钥对信息生成数字签名
 	 * 
@@ -167,7 +182,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 		final SM2Signer signer = this.signer;
 		try {
-			CipherParameters param = new ParametersWithRandom(generateCipherParameters(KeyType.PrivateKey));
+			CipherParameters param = new ParametersWithRandom(getCipherParameters(KeyType.PrivateKey));
 			if (id != null) {
 				param = new ParametersWithID(param, id);
 			}
@@ -180,7 +195,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 			lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 用公钥检验数字签名的合法性
 	 * 
@@ -207,7 +222,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 		final SM2Signer signer = this.signer;
 		try {
-			CipherParameters param = generateCipherParameters(KeyType.PublicKey);
+			CipherParameters param = getCipherParameters(KeyType.PublicKey);
 			if (id != null) {
 				param = new ParametersWithID(param, id);
 			}
@@ -223,23 +238,41 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 
 	// ------------------------------------------------------------------------------------------------------------------------- Private method start
 	/**
-	 * 生成{@link CipherParameters}
+	 * 初始化加密解密参数
 	 * 
-	 * @param keyType Key类型枚举，包括私钥或公钥
-	 * @return {@link CipherParameters}
+	 * @return this
 	 */
-	private CipherParameters generateCipherParameters(KeyType keyType) {
+	private SM2 initCipherParams() {
 		try {
-			switch (keyType) {
-			case PublicKey:
-				return ECUtil.generatePublicKeyParameter(this.publicKey);
-			case PrivateKey:
-				return ECUtil.generatePrivateKeyParameter(this.privateKey);
+			if (null != this.publicKey) {
+				this.cipherParamsForPublicKey = ECUtil.generatePublicKeyParameter(this.publicKey);
+			}
+			if (null != privateKey) {
+				this.cipherParamsForPrivateKey = ECUtil.generatePrivateKeyParameter(this.privateKey);
 			}
 		} catch (InvalidKeyException e) {
 			throw new CryptoException(e);
 		}
+
+		return this;
+	}
+
+	/**
+	 * 获取密钥类型对应的加密参数对象{@link CipherParameters}
+	 * 
+	 * @param keyType Key类型枚举，包括私钥或公钥
+	 * @return {@link CipherParameters}
+	 */
+	private CipherParameters getCipherParameters(KeyType keyType) {
+		switch (keyType) {
+		case PublicKey:
+			return this.cipherParamsForPublicKey;
+		case PrivateKey:
+			return this.cipherParamsForPrivateKey;
+		}
+
 		return null;
 	}
+
 	// ------------------------------------------------------------------------------------------------------------------------- Private method end
 }

@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
@@ -164,11 +164,18 @@ public class Ftp extends AbstractFtp {
 
 	@Override
 	public List<String> ls(String path) {
+		FTPFile[] ftpFiles;
 		try {
-			return CollUtil.toList(this.client.listNames(path));
+			ftpFiles = this.client.listFiles();
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
+		
+		final List<String> fileNames = new ArrayList<>();
+		for (FTPFile ftpFile : ftpFiles) {
+			fileNames.add(ftpFile.getName());
+		}
+		return fileNames;
 	}
 
 	@Override

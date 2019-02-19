@@ -7,10 +7,12 @@
 
 ### 新特性
 * 【socket】     增加Socket模块
+* 【core】        Validator增加isIpV4方法（issue#IRQ6W@Gitee）
 
 ### Bug修复
 * 【crypto】     修复KeyUtil中使用BC库导致的其它密钥生成异常
 * 【core】        修正DateUtil.formatHttpDate方法
+* 【extra】        修复FTP.ls无法遍历文件问题（issue#IRTA3@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
