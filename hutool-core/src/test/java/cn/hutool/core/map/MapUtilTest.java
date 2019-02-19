@@ -1,5 +1,6 @@
 package cn.hutool.core.map;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -96,5 +97,41 @@ public class MapUtilTest {
 		Assert.assertEquals("3", objectArray[2][1]);
 		Assert.assertEquals("d", objectArray[3][0]);
 		Assert.assertEquals("4", objectArray[3][1]);
+	}
+
+	@Test
+	public void toMap() {
+		ArrayList<User> objects = new ArrayList<>();
+		objects.add(new User(1L, 1));
+		objects.add(new User(2L, 0));
+		objects.add(new User(4L, 2));
+		objects.add(new User(4L, 1));
+		objects.add(new User(5L, 3));
+
+		Map<Long, Integer> map = MapUtil.toMap(objects, User::getId, User::getScore,
+			(a, b) -> {
+				return a.getScore() < b.getScore() ? a : b;
+			});
+
+		Assert.assertEquals(4, map.size());
+		Assert.assertEquals(1, (int) map.get(4L));
+	}
+
+	static class User {
+		private long id;
+		private int score;
+
+		public User(long id, int score) {
+			this.id = id;
+			this.score = score;
+		}
+
+		public long getId() {
+			return id;
+		}
+
+		public int getScore() {
+			return score;
+		}
 	}
 }

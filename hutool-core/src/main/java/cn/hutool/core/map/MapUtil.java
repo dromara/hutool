@@ -22,6 +22,8 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 /**
  * Map相关工具类
@@ -846,5 +848,41 @@ public class MapUtil {
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, Class<T> type) {
 		return null == map ? null : Convert.convert(type, map.get(key));
+	}
+
+	/**
+	 * List转成Map，并按指定的策略去重.
+	 *
+	 * @param elements 源
+	 * @param keyMapper key生成策略
+	 * @param valueMapper value生成策略
+	 * @param mergeFunction 当key重复时，解决策略
+	 * @param <T> 源数据类型
+	 * @param <K> key数据类型
+	 * @param <U> value数据类型
+	 * @return 转换后的Map
+	 */
+	public static <T, K, U> Map<K, U> toMap(List<T> elements,
+		Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper,
+		BinaryOperator<T> mergeFunction) {
+
+		Map<K, U> result = new HashMap<>();
+		if (null == elements || elements.size() == 0) {
+			return result;
+		}
+
+		Map<K, T> temp = new HashMap<>();
+		elements.forEach(e -> {
+			K key = keyMapper.apply(e);
+			T finalReult = e;
+			if (result.containsKey(key) && null != mergeFunction) {
+				finalReult = mergeFunction.apply(temp.get(key), e);
+			}
+			result.put(key, valueMapper.apply(finalReult));
+			temp.put(key, finalReult);
+		});
+
+		temp.clear();
+		return result;
 	}
 }
