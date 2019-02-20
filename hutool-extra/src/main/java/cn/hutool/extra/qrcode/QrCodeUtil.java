@@ -180,10 +180,10 @@ public class QrCodeUtil {
 			int height;
 			// 按照最短的边做比例缩放
 			if (qrWidth < qrHeight) {
-				width = qrWidth / 6;
+				width = qrWidth / config.ratio;
 				height = logoImg.getHeight(null) * width / logoImg.getWidth(null);
 			} else {
-				height = qrHeight / 6;
+				height = qrHeight / config.ratio;
 				width = logoImg.getWidth(null) * height / logoImg.getHeight(null);
 			}
 			ImageUtil.pressImage(image, logoImg, new Rectangle(width, height), 1);

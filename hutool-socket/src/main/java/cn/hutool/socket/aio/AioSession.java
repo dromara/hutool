@@ -3,9 +3,11 @@ package cn.hutool.socket.aio;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.log.StaticLog;
 
 /**
  * AIO会话<br>
@@ -59,7 +61,7 @@ public class AioSession {
 	public ByteBuffer getWriteBuffer() {
 		return this.writeBuffer;
 	}
-	
+
 	/**
 	 * 获取消息处理器
 	 * 
@@ -77,7 +79,22 @@ public class AioSession {
 	public AioSession read() {
 		if (isOpen()) {
 			this.readBuffer.clear();
-			this.channel.read(this.readBuffer, this, new ReadHandler());
+			this.channel.read(this.readBuffer, this, new CompletionHandler<Integer, AioSession>() {
+
+				@Override
+				public void completed(Integer result, AioSession session) {
+					readBuffer.flip();// 读模式
+					ioAction.doAction(session, readBuffer);
+					
+					// 继续读取
+					session.read();
+				}
+
+				@Override
+				public void failed(Throwable exc, AioSession attachment) {
+					StaticLog.error(exc);
+				}
+			});
 		}
 		return this;
 	}
@@ -101,13 +118,14 @@ public class AioSession {
 	public boolean isOpen() {
 		return (null == this.channel) ? false : this.channel.isOpen();
 	}
-	
+
 	/**
 	 * 关闭输出
+	 * 
 	 * @return this
 	 */
 	public AioSession closeIn() {
-		if(null != this.channel) {
+		if (null != this.channel) {
 			try {
 				this.channel.shutdownInput();
 			} catch (IOException e) {
@@ -116,13 +134,14 @@ public class AioSession {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 关闭输出
+	 * 
 	 * @return this
 	 */
 	public AioSession closeOut() {
-		if(null != this.channel) {
+		if (null != this.channel) {
 			try {
 				this.channel.shutdownOutput();
 			} catch (IOException e) {
@@ -131,9 +150,10 @@ public class AioSession {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 关闭会话
+	 * 
 	 * @return this
 	 */
 	public AioSession close() {

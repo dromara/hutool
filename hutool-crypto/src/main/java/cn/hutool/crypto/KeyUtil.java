@@ -14,6 +14,7 @@ import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
@@ -597,13 +598,11 @@ public class KeyUtil {
 	 * @return {@link Certificate}
 	 */
 	public static Certificate readCertificate(String type, InputStream in) {
-		Certificate certificate;
 		try {
-			certificate = CertificateFactory.getInstance(type).generateCertificate(in);
-		} catch (Exception e) {
+			return getCertificateFactory(type).generateCertificate(in);
+		} catch (CertificateException e) {
 			throw new CryptoException(e);
 		}
-		return certificate;
 	}
 
 	/**
@@ -619,6 +618,30 @@ public class KeyUtil {
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
+	}
+	
+	/**
+	 * 获取{@link CertificateFactory}
+	 * 
+	 * @param type 类型，例如X.509
+	 * @return {@link KeyPairGenerator}
+	 * @since 4.5.0
+	 */
+	public static CertificateFactory getCertificateFactory(String type) {
+		Provider provider = null;
+		try {
+			provider = ProviderFactory.createBouncyCastleProvider();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+
+		CertificateFactory factory;
+		try {
+			factory = (null == provider) ? CertificateFactory.getInstance(type) : CertificateFactory.getInstance(type, provider);
+		} catch (CertificateException e) {
+			throw new CryptoException(e);
+		}
+		return factory;
 	}
 
 	/**

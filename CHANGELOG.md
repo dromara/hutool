@@ -8,11 +8,14 @@
 ### 新特性
 * 【socket】     增加Socket模块
 * 【core】        Validator增加isIpV4方法（issue#IRQ6W@Gitee）
+* 【crypto】     增加SM2Engine，支持C1C2C3和C1C3C2两种模式
 
 ### Bug修复
 * 【crypto】     修复KeyUtil中使用BC库导致的其它密钥生成异常
 * 【core】        修正DateUtil.formatHttpDate方法
 * 【extra】        修复FTP.ls无法遍历文件问题（issue#IRTA3@Gitee）
+* 【extra】        修复QrCodeUtil中ratio参数失效问题，调整默认纠错为M（感谢@【上海】皮皮今）
+* 【core】        修复FileTypeUtil对jpg文件识别问题（issue#275@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

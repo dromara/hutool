@@ -34,13 +34,13 @@ public class QrConfig {
 	/** 边距1~4 */
 	protected Integer margin = 2;
 	/** 纠错级别 */
-	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.L;
+	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
 	/** 编码 */
 	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
 	/** 二维码中的Logo */
 	protected Image img;
 	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
-	protected int ratio;
+	protected int ratio = 6;
 	
 	/**
 	 * 创建QrConfig

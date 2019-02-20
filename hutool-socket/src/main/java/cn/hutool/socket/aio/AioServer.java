@@ -6,11 +6,10 @@ import java.net.SocketOption;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
@@ -46,9 +45,11 @@ public class AioServer {
 	public AioServer init(InetSocketAddress address) {
 
 		// TODO 需要自定义线程池大小
-		ExecutorService threadPool = Executors.newFixedThreadPool(2);
 		try {
-			this.group = AsynchronousChannelGroup.withThreadPool(threadPool);
+			this.group = AsynchronousChannelGroup.withFixedThreadPool(//
+					2, //默认线程池大小
+					ThreadFactoryBuilder.create().setNamePrefix("Huool-socket-").build()//
+			);
 			this.channel = AsynchronousServerSocketChannel.open(group).bind(address);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);

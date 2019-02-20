@@ -5,7 +5,8 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import org.bouncycastle.crypto.CipherParameters;
-import org.bouncycastle.crypto.engines.SM2Engine;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.ParametersWithID;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
@@ -13,10 +14,12 @@ import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.asymmetric.SM2Engine.SM2Mode;
 
 /**
  * 国密SM2算法实现，基于BC库<br>
- * SM2算法只支持公钥加密，私钥解密
+ * SM2算法只支持公钥加密，私钥解密<br>
+ * 参考：https://blog.csdn.net/pridas/article/details/86118774
  * 
  * @author looly
  * @since 4.3.2
@@ -29,8 +32,9 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	protected SM2Engine engine;
 	protected SM2Signer signer;
 
-	private CipherParameters cipherParamsForPublicKey;
-	private CipherParameters cipherParamsForPrivateKey;
+	private SM2Mode mode;
+	private ECPublicKeyParameters publicKeyParams;
+	private ECPrivateKeyParameters privateKeyParams;
 
 	// ------------------------------------------------------------------ Constructor start
 	/**
@@ -116,16 +120,16 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	@Override
 	public byte[] encrypt(byte[] data, KeyType keyType) throws CryptoException {
-		lock.lock();
-		if (null == this.engine) {
-			this.engine = new SM2Engine();
+		if (KeyType.PublicKey != keyType) {
+			throw new IllegalArgumentException("Encrypt is only support by public key");
 		}
-		final SM2Engine engine = this.engine;
+		ckeckKey(keyType);
+
+		lock.lock();
+		final SM2Engine engine = getEngine();
 		try {
 			engine.init(true, new ParametersWithRandom(getCipherParameters(keyType)));
 			return engine.processBlock(data, 0, data.length);
-		} catch (Exception e) {
-			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
 		}
@@ -142,16 +146,16 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	@Override
 	public byte[] decrypt(byte[] data, KeyType keyType) throws CryptoException {
-		lock.lock();
-		if (null == this.engine) {
-			this.engine = new SM2Engine();
+		if (KeyType.PrivateKey != keyType) {
+			throw new IllegalArgumentException("Decrypt is only support by private key");
 		}
-		final SM2Engine engine = this.engine;
+		ckeckKey(keyType);
+
+		lock.lock();
+		final SM2Engine engine = getEngine();
 		try {
 			engine.init(false, getCipherParameters(keyType));
 			return engine.processBlock(data, 0, data.length);
-		} catch (Exception e) {
-			throw new CryptoException(e);
 		} finally {
 			lock.unlock();
 		}
@@ -177,10 +181,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public byte[] sign(byte[] data, byte[] id) {
 		lock.lock();
-		if (null == this.signer) {
-			this.signer = new SM2Signer();
-		}
-		final SM2Signer signer = this.signer;
+		final SM2Signer signer = getSigner();
 		try {
 			CipherParameters param = new ParametersWithRandom(getCipherParameters(KeyType.PrivateKey));
 			if (id != null) {
@@ -217,10 +218,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 */
 	public boolean verify(byte[] data, byte[] sign, byte[] id) {
 		lock.lock();
-		if (null == this.signer) {
-			this.signer = new SM2Signer();
-		}
-		final SM2Signer signer = this.signer;
+		final SM2Signer signer = getSigner();
 		try {
 			CipherParameters param = getCipherParameters(KeyType.PublicKey);
 			if (id != null) {
@@ -236,6 +234,20 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 	}
 
+	/**
+	 * 设置加密类型
+	 * 
+	 * @param mode {@link SM2Mode}
+	 * @return this
+	 */
+	public SM2 setMode(SM2Mode mode) {
+		this.mode = mode;
+		if (null != this.engine) {
+			this.engine.setMode(mode);
+		}
+		return this;
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 初始化加密解密参数
@@ -245,10 +257,10 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	private SM2 initCipherParams() {
 		try {
 			if (null != this.publicKey) {
-				this.cipherParamsForPublicKey = ECUtil.generatePublicKeyParameter(this.publicKey);
+				this.publicKeyParams = (ECPublicKeyParameters) ECUtil.generatePublicKeyParameter(this.publicKey);
 			}
 			if (null != privateKey) {
-				this.cipherParamsForPrivateKey = ECUtil.generatePrivateKeyParameter(this.privateKey);
+				this.privateKeyParams = (ECPrivateKeyParameters) ECUtil.generatePrivateKeyParameter(this.privateKey);
 			}
 		} catch (InvalidKeyException e) {
 			throw new CryptoException(e);
@@ -266,12 +278,56 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	private CipherParameters getCipherParameters(KeyType keyType) {
 		switch (keyType) {
 		case PublicKey:
-			return this.cipherParamsForPublicKey;
+			return this.publicKeyParams;
 		case PrivateKey:
-			return this.cipherParamsForPrivateKey;
+			return this.privateKeyParams;
 		}
 
 		return null;
+	}
+
+	/**
+	 * 检查对应类型的Key是否存在
+	 * 
+	 * @param keyType key类型
+	 */
+	private void ckeckKey(KeyType keyType) {
+		switch (keyType) {
+		case PublicKey:
+			if (null == this.publicKey) {
+				throw new NullPointerException("No public key provided");
+			}
+			break;
+		case PrivateKey:
+			if (null == this.privateKey) {
+				throw new NullPointerException("No private key provided");
+			}
+			break;
+		}
+	}
+
+	/**
+	 * 获取{@link SM2Engine}
+	 * 
+	 * @return {@link SM2Engine}
+	 */
+	private SM2Engine getEngine() {
+		if (null == this.engine) {
+			this.engine = new SM2Engine(this.mode);
+		}
+		return this.engine;
+	}
+	
+	/**
+	 * 获取{@link SM2Signer}
+	 * 
+	 * @return {@link SM2Signer}
+	 */
+	private SM2Signer getSigner() {
+		if (null == this.signer) {
+			this.signer = new SM2Signer();
+		}
+		return this.signer;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------- Private method end
