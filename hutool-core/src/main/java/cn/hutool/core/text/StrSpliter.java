@@ -494,7 +494,7 @@ public class StrSpliter {
 	private static List<String> addToList(List<String> list, String part, boolean isTrim, boolean ignoreEmpty){
 		part = part.toString();
 		if(isTrim){
-			part = part.trim();
+			part = StrUtil.trim(part);
 		}
 		if(false == ignoreEmpty || false == part.isEmpty()){
 			list.add(part);
