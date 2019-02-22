@@ -10,6 +10,8 @@
 * 【core】        Validator增加isIpV4方法（issue#IRQ6W@Gitee）
 * 【crypto】     增加SM2Engine，支持C1C2C3和C1C3C2两种模式
 * 【core】       StrUtil.splitTrim支持其它空白符（issue#IRVPC@Gitee）
+* 【http】        请求支持DELETE附带参数模式（issue#IRW9E@Gitee）
+* 【bloomFilter】调整BitMap注释
 
 ### Bug修复
 * 【crypto】     修复KeyUtil中使用BC库导致的其它密钥生成异常

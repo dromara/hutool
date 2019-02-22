@@ -39,11 +39,23 @@ public class Zodiac {
 		}
 		return getZodiac(calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 	}
-
+	
 	/**
 	 * 通过生日计算星座
 	 * 
 	 * @param month 月，从0开始计数
+	 * @param day 天
+	 * @return 星座名
+	 * @since 4.5.0
+	 */
+	public static String getZodiac(Month month, int day) {
+		return getZodiac(month.getValue(), day);
+	}
+
+	/**
+	 * 通过生日计算星座
+	 * 
+	 * @param month 月，从0开始计数，见{@link Month#getValue()}
 	 * @param day 天
 	 * @return 星座名
 	 */

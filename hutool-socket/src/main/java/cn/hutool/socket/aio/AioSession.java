@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.util.concurrent.Future;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.log.StaticLog;
 
 /**
  * AIO会话<br>
@@ -77,35 +77,62 @@ public class AioSession {
 	 * @return this
 	 */
 	public AioSession read() {
+		return read(new CompletionHandler<Integer, AioSession>() {
+
+			@Override
+			public void completed(Integer result, AioSession session) {
+				readBuffer.flip();// 读模式
+				ioAction.doAction(session, readBuffer);
+			}
+
+			@Override
+			public void failed(Throwable exc, AioSession session) {
+				ioAction.failed(exc, session);
+			}
+		});
+	}
+
+	/**
+	 * 读取数据到Buffer
+	 * 
+	 * @param handler {@link CompletionHandler}
+	 * @return this
+	 */
+	public AioSession read(CompletionHandler<Integer, AioSession> handler) {
 		if (isOpen()) {
 			this.readBuffer.clear();
-			this.channel.read(this.readBuffer, this, new CompletionHandler<Integer, AioSession>() {
-
-				@Override
-				public void completed(Integer result, AioSession session) {
-					readBuffer.flip();// 读模式
-					ioAction.doAction(session, readBuffer);
-					
-					// 继续读取
-					session.read();
-				}
-
-				@Override
-				public void failed(Throwable exc, AioSession attachment) {
-					StaticLog.error(exc);
-				}
-			});
+			this.channel.read(this.readBuffer, this, handler);
 		}
 		return this;
 	}
 
 	/**
-	 * 写数据到目标端
+	 * 写数据到目标端，并关闭输出
 	 * 
 	 * @return this
 	 */
-	public AioSession write(ByteBuffer data) {
-		this.channel.write(data);
+	public AioSession writeAndClose(ByteBuffer data) {
+		write(data);
+		return closeOut();
+	}
+
+	/**
+	 * 写数据到目标端
+	 * 
+	 * @return {@link Future}
+	 */
+	public Future<Integer> write(ByteBuffer data) {
+		return this.channel.write(data);
+	}
+	
+	/**
+	 * 写数据到目标端
+	 * 
+	 * @param handler {@link CompletionHandler}
+	 * @return this
+	 */
+	public AioSession write(ByteBuffer data, CompletionHandler<Integer, AioSession> handler) {
+		this.channel.write(data, this, handler);
 		return this;
 	}
 
@@ -156,8 +183,7 @@ public class AioSession {
 	 * 
 	 * @return this
 	 */
-	public AioSession close() {
+	public void close() {
 		IoUtil.close(this.channel);
-		return this;
 	}
 }
