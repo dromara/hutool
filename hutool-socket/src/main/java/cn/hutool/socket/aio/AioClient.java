@@ -22,6 +22,12 @@ public class AioClient {
 
 	private AioSession session;
 
+	/**
+	 * 构造
+	 * 
+	 * @param address 地址
+	 * @param ioAction IO处理类
+	 */
 	public AioClient(InetSocketAddress address, IoAction<ByteBuffer> ioAction) {
 		this(createChannel(address), ioAction);
 	}
