@@ -183,20 +183,20 @@ public class SM2Engine {
 		BigInteger k;
 		do {
 			k = nextK();
-			//产生随机数计算出曲线点C1
+			// 产生随机数计算出曲线点C1
 			c1 = multiplier.multiply(ecParams.getG(), k).normalize().getEncoded(false);
 			kPB = ((ECPublicKeyParameters) ecKey).getQ().multiply(k).normalize();
-			kdf(digest, kPB, c2);
+			kdf(kPB, c2);
 		} while (notEncrypted(c2, in, inOff));
 
 		// 杂凑值，效验数据
 		byte[] c3 = new byte[digest.getDigestSize()];
 
-		addFieldElement(digest, kPB.getAffineXCoord());
-		digest.update(in, inOff, inLen);
-		addFieldElement(digest, kPB.getAffineYCoord());
+		addFieldElement(kPB.getAffineXCoord());
+		this.digest.update(in, inOff, inLen);
+		addFieldElement(kPB.getAffineYCoord());
 
-		digest.doFinal(c3, 0);
+		this.digest.doFinal(c3, 0);
 
 		// 按照莫属输出结果
 		switch (mode) {
@@ -238,15 +238,15 @@ public class SM2Engine {
 			// C2位于第二部分
 			System.arraycopy(in, inOff + c1.length, c2, 0, c2.length);
 		}
-		kdf(digest, c1P, c2);
+		kdf(c1P, c2);
 
 		// 使用摘要验证C2数据
 		final byte[] c3 = new byte[digestSize];
 
-		addFieldElement(digest, c1P.getAffineXCoord());
-		digest.update(c2, 0, c2.length);
-		addFieldElement(digest, c1P.getAffineYCoord());
-		digest.doFinal(c3, 0);
+		addFieldElement(c1P.getAffineXCoord());
+		this.digest.update(c2, 0, c2.length);
+		addFieldElement(c1P.getAffineYCoord());
+		this.digest.doFinal(c3, 0);
 
 		int check = 0;
 		for (int i = 0; i != c3.length; i++) {
@@ -276,11 +276,11 @@ public class SM2Engine {
 	/**
 	 * 解密数据
 	 * 
-	 * @param digest {@link Digest}
 	 * @param c1 c1点
 	 * @param encData 密文
 	 */
-	private void kdf(Digest digest, ECPoint c1, byte[] encData) {
+	private void kdf(ECPoint c1, byte[] encData) {
+		final Digest digest = this.digest;
 		int digestSize = digest.getDigestSize();
 		byte[] buf = new byte[Math.max(4, digestSize)];
 		int off = 0;
@@ -289,8 +289,8 @@ public class SM2Engine {
 		Memoable copy = null;
 
 		if (digest instanceof Memoable) {
-			addFieldElement(digest, c1.getAffineXCoord());
-			addFieldElement(digest, c1.getAffineYCoord());
+			addFieldElement(c1.getAffineXCoord());
+			addFieldElement(c1.getAffineYCoord());
 			memo = (Memoable) digest;
 			copy = memo.copy();
 		}
@@ -301,8 +301,8 @@ public class SM2Engine {
 			if (memo != null) {
 				memo.reset(copy);
 			} else {
-				addFieldElement(digest, c1.getAffineXCoord());
-				addFieldElement(digest, c1.getAffineYCoord());
+				addFieldElement(c1.getAffineXCoord());
+				addFieldElement(c1.getAffineYCoord());
 			}
 
 			Pack.intToBigEndian(++ct, buf, 0);
@@ -315,27 +315,45 @@ public class SM2Engine {
 		}
 	}
 
+	/**
+	 * 异或
+	 * 
+	 * @param data 数据
+	 * @param kdfOut kdf输出值
+	 * @param dOff d偏移
+	 * @param dRemaining d剩余
+	 */
 	private void xor(byte[] data, byte[] kdfOut, int dOff, int dRemaining) {
 		for (int i = 0; i != dRemaining; i++) {
 			data[dOff + i] ^= kdfOut[i];
 		}
 	}
 
+	/**
+	 * 下一个K值
+	 * 
+	 * @return K值
+	 */
 	private BigInteger nextK() {
-		int qBitLength = ecParams.getN().bitLength();
+		final int qBitLength = this.ecParams.getN().bitLength();
 
 		BigInteger k;
 		do {
-			k = new BigInteger(qBitLength, random);
-		} while (k.equals(ECConstants.ZERO) || k.compareTo(ecParams.getN()) >= 0);
+			k = new BigInteger(qBitLength, this.random);
+		} while (k.equals(ECConstants.ZERO) || k.compareTo(this.ecParams.getN()) >= 0);
 
 		return k;
 	}
 
-	private void addFieldElement(Digest digest, ECFieldElement v) {
-		byte[] p = BigIntegers.asUnsignedByteArray(curveLength, v.toBigInteger());
-
-		digest.update(p, 0, p.length);
+	/**
+	 * 增加字段节点
+	 * 
+	 * @param digest
+	 * @param v
+	 */
+	private void addFieldElement(ECFieldElement v) {
+		final byte[] p = BigIntegers.asUnsignedByteArray(this.curveLength, v.toBigInteger());
+		this.digest.update(p, 0, p.length);
 	}
 	// --------------------------------------------------------------------------------------------------- Private method start
 }

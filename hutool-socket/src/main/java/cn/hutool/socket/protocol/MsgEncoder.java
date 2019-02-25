@@ -18,7 +18,6 @@ public interface MsgEncoder<T> {
 	 * @param session 本次需要解码的session
 	 * @param writeBuffer 待处理的读buffer
 	 * @param data 写出的数据
-	 * @return 本次解码成功后封装的业务消息对象, 返回null则表示解码未完成
 	 */
 	void encode(AioSession session, ByteBuffer writeBuffer, T data);
 }

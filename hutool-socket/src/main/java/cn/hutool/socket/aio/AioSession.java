@@ -189,8 +189,6 @@ public class AioSession {
 
 	/**
 	 * 关闭会话
-	 * 
-	 * @return this
 	 */
 	public void close() {
 		IoUtil.close(this.channel);

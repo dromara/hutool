@@ -28,7 +28,6 @@ public class AioClient {
 	 * 
 	 * @param address 地址
 	 * @param ioAction IO处理类
-	 * @param config 配置项
 	 */
 	public AioClient(InetSocketAddress address, IoAction<ByteBuffer> ioAction) {
 		this(address, ioAction, new SocketConfig());
@@ -83,7 +82,7 @@ public class AioClient {
 	/**
 	 * 从服务端读取数据
 	 * 
-	 * @return
+	 * @return this
 	 */
 	public AioClient read() {
 		this.session.read();
