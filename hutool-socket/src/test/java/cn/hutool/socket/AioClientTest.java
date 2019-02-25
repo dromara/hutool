@@ -15,11 +15,17 @@ public class AioClientTest {
 			
 			@Override
 			public void doAction(AioSession session, ByteBuffer data) {
-				Console.log(StrUtil.utf8Str(data));
+				if(data.hasRemaining()) {
+					Console.log(StrUtil.utf8Str(data));
+					session.read();
+				}
+				Console.log("OK");
 			}
 		});
 		
 		client.write(ByteBuffer.wrap("Hello".getBytes()));
 		client.read();
+		
+		client.close();
 	}
 }

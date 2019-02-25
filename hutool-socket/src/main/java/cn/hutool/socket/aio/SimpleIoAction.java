@@ -1,7 +1,6 @@
 package cn.hutool.socket.aio;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.hutool.log.StaticLog;
 
@@ -15,7 +14,7 @@ import cn.hutool.log.StaticLog;
 public abstract class SimpleIoAction implements IoAction<ByteBuffer> {
 	
 	@Override
-	public void accept(AsynchronousSocketChannel socketChannel) {
+	public void accept(AioSession session) {
 	}
 
 	@Override

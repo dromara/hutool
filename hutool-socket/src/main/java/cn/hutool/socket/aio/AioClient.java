@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.socket.SocketConfig;
 import cn.hutool.socket.SocketRuntimeException;
 
 /**
@@ -27,9 +28,21 @@ public class AioClient {
 	 * 
 	 * @param address 地址
 	 * @param ioAction IO处理类
+	 * @param config 配置项
 	 */
 	public AioClient(InetSocketAddress address, IoAction<ByteBuffer> ioAction) {
-		this(createChannel(address), ioAction);
+		this(address, ioAction, new SocketConfig());
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param address 地址
+	 * @param ioAction IO处理类
+	 * @param config 配置项
+	 */
+	public AioClient(InetSocketAddress address, IoAction<ByteBuffer> ioAction, SocketConfig config) {
+		this(createChannel(address, config.getThreadPoolSize()), ioAction, config);
 	}
 
 	/**
@@ -37,10 +50,11 @@ public class AioClient {
 	 * 
 	 * @param channel {@link AsynchronousSocketChannel}
 	 * @param ioAction IO处理类
+	 * @param config 配置项
 	 */
-	public AioClient(AsynchronousSocketChannel channel, IoAction<ByteBuffer> ioAction) {
-		ioAction.accept(channel);
-		this.session = new AioSession(channel, ioAction);
+	public AioClient(AsynchronousSocketChannel channel, IoAction<ByteBuffer> ioAction, SocketConfig config) {
+		this.session = new AioSession(channel, ioAction, config);
+		ioAction.accept(this.session);
 	}
 
 	/**
@@ -68,6 +82,7 @@ public class AioClient {
 
 	/**
 	 * 从服务端读取数据
+	 * 
 	 * @return
 	 */
 	public AioClient read() {
@@ -85,27 +100,34 @@ public class AioClient {
 		return this;
 	}
 
+	/**
+	 * 关闭客户端
+	 */
+	public void close() {
+		this.session.close();
+	}
+
 	// ------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 初始化
 	 * 
 	 * @param address 地址和端口
+	 * @param poolSize 线程池大小
 	 * @return this
 	 */
-	private static AsynchronousSocketChannel createChannel(InetSocketAddress address) {
+	private static AsynchronousSocketChannel createChannel(InetSocketAddress address, int poolSize) {
 
 		AsynchronousSocketChannel channel;
-		// TODO 需要自定义线程池大小
 		try {
 			AsynchronousChannelGroup group = AsynchronousChannelGroup.withFixedThreadPool(//
-					2, // 默认线程池大小
+					poolSize, // 默认线程池大小
 					ThreadFactoryBuilder.create().setNamePrefix("Huool-socket-").build()//
 			);
 			channel = AsynchronousSocketChannel.open(group);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
-		} 
-		
+		}
+
 		try {
 			channel.connect(address).get();
 		} catch (InterruptedException | ExecutionException e) {

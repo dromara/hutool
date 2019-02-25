@@ -1,13 +1,17 @@
 package cn.hutool.socket.aio;
 
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.socket.SocketConfig;
+import cn.hutool.socket.SocketUtil;
 
 /**
  * AIO会话<br>
@@ -18,20 +22,28 @@ import cn.hutool.core.io.IoUtil;
  */
 public class AioSession {
 
+	private static final ReadHandler READ_HANDLER = new ReadHandler();
+
 	private AsynchronousSocketChannel channel;
+	private IoAction<ByteBuffer> ioAction;
 	private ByteBuffer readBuffer;
 	private ByteBuffer writeBuffer;
-	private IoAction<ByteBuffer> ioAction;
+	/** 读取超时时长，小于等于0表示默认 */
+	private long readTimeout;
+	/** 写出超时时长，小于等于0表示默认 */
+	private long writeTimeout;
 
 	/**
 	 * 构造
 	 * 
 	 * @param channel {@link AsynchronousSocketChannel}
+	 * @param ioAction IO消息处理类
+	 * @param config 配置项
 	 */
-	public AioSession(AsynchronousSocketChannel channel, IoAction<ByteBuffer> ioAction) {
+	public AioSession(AsynchronousSocketChannel channel, IoAction<ByteBuffer> ioAction, SocketConfig config) {
 		this.channel = channel;
-		this.readBuffer = ByteBuffer.allocate(IoUtil.DEFAULT_BUFFER_SIZE);
-		this.writeBuffer = ByteBuffer.allocate(IoUtil.DEFAULT_BUFFER_SIZE);
+		this.readBuffer = ByteBuffer.allocate(config.getReadBufferSize());
+		this.writeBuffer = ByteBuffer.allocate(config.getWriteBufferSize());
 		this.ioAction = ioAction;
 	}
 
@@ -72,24 +84,21 @@ public class AioSession {
 	}
 
 	/**
+	 * 获取远程主机（客户端）地址和端口
+	 * 
+	 * @return 远程主机（客户端）地址和端口
+	 */
+	public SocketAddress getRemoteAddress() {
+		return SocketUtil.getRemoteAddress(this.channel);
+	}
+
+	/**
 	 * 读取数据到Buffer
 	 * 
 	 * @return this
 	 */
 	public AioSession read() {
-		return read(new CompletionHandler<Integer, AioSession>() {
-
-			@Override
-			public void completed(Integer result, AioSession session) {
-				readBuffer.flip();// 读模式
-				ioAction.doAction(session, readBuffer);
-			}
-
-			@Override
-			public void failed(Throwable exc, AioSession session) {
-				ioAction.failed(exc, session);
-			}
-		});
+		return read(READ_HANDLER);
 	}
 
 	/**
@@ -101,7 +110,7 @@ public class AioSession {
 	public AioSession read(CompletionHandler<Integer, AioSession> handler) {
 		if (isOpen()) {
 			this.readBuffer.clear();
-			this.channel.read(this.readBuffer, this, handler);
+			this.channel.read(this.readBuffer, Math.max(this.readTimeout, 0L), TimeUnit.MILLISECONDS, this, handler);
 		}
 		return this;
 	}
@@ -124,7 +133,7 @@ public class AioSession {
 	public Future<Integer> write(ByteBuffer data) {
 		return this.channel.write(data);
 	}
-	
+
 	/**
 	 * 写数据到目标端
 	 * 
@@ -132,7 +141,7 @@ public class AioSession {
 	 * @return this
 	 */
 	public AioSession write(ByteBuffer data, CompletionHandler<Integer, AioSession> handler) {
-		this.channel.write(data, this, handler);
+		this.channel.write(data, Math.max(this.writeTimeout, 0L), TimeUnit.MILLISECONDS, this, handler);
 		return this;
 	}
 
@@ -185,5 +194,15 @@ public class AioSession {
 	 */
 	public void close() {
 		IoUtil.close(this.channel);
+		this.readBuffer = null;
+		this.writeBuffer = null;
+	}
+
+	/**
+	 * 执行读，用于读取事件结束的回调
+	 */
+	protected void callbackRead() {
+		readBuffer.flip();// 读模式
+		ioAction.doAction(this, readBuffer);
 	}
 }

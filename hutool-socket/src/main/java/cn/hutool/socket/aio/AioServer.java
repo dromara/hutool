@@ -12,6 +12,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import cn.hutool.socket.SocketConfig;
 
 /**
  * 基于AIO的Socket服务端实现
@@ -21,19 +22,32 @@ import cn.hutool.log.LogFactory;
  */
 public class AioServer {
 	private static final Log log = LogFactory.get();
+	private static AcceptHandler ACCEPT_HANDLER = new AcceptHandler();
 
 	private AsynchronousChannelGroup group;
 	private AsynchronousServerSocketChannel channel;
-	private AcceptHandler acceptHandler;
-	private IoAction<ByteBuffer> ioAction;
-
+	protected IoAction<ByteBuffer> ioAction;
+	protected SocketConfig config;
+	
+	
 	/**
 	 * 构造
 	 * 
 	 * @param port 端口
 	 */
 	public AioServer(int port) {
-		init(new InetSocketAddress(port));
+		this(new InetSocketAddress(port), new SocketConfig());
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param address 地址
+	 * @param config {@link SocketConfig} 配置项
+	 */
+	public AioServer(InetSocketAddress address, SocketConfig config) {
+		this.config = config;
+		init(address);
 	}
 
 	/**
@@ -43,19 +57,15 @@ public class AioServer {
 	 * @return this
 	 */
 	public AioServer init(InetSocketAddress address) {
-
-		// TODO 需要自定义线程池大小
 		try {
 			this.group = AsynchronousChannelGroup.withFixedThreadPool(//
-					2, //默认线程池大小
+					config.getThreadPoolSize(), // 默认线程池大小
 					ThreadFactoryBuilder.create().setNamePrefix("Huool-socket-").build()//
 			);
 			this.channel = AsynchronousServerSocketChannel.open(group).bind(address);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		this.acceptHandler = new AcceptHandler();
-
 		return this;
 	}
 
@@ -121,7 +131,7 @@ public class AioServer {
 	 * @return this
 	 */
 	public AioServer accept() {
-		this.channel.accept(this, this.acceptHandler);
+		this.channel.accept(this, ACCEPT_HANDLER);
 		return this;
 	}
 

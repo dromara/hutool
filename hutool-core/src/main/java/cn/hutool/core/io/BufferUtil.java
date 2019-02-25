@@ -66,7 +66,7 @@ public class BufferUtil {
 		System.arraycopy(src.array(), srcStart, dest.array(), destStart, length);
 		return dest;
 	}
-	
+
 	/**
 	 * 读取剩余部分并转为UTF-8编码字符串
 	 * 
@@ -213,5 +213,39 @@ public class BufferUtil {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 创建新Buffer
+	 * 
+	 * @param data 数据
+	 * @return {@link ByteBuffer}
+	 * @since 4.5.0
+	 */
+	public static ByteBuffer create(byte[] data) {
+		return ByteBuffer.wrap(data);
+	}
+
+	/**
+	 * 从字符串创建新Buffer
+	 * 
+	 * @param data 数据
+	 * @param charset 编码
+	 * @return {@link ByteBuffer}
+	 * @since 4.5.0
+	 */
+	public static ByteBuffer create(CharSequence data, Charset charset) {
+		return create(StrUtil.bytes(data, charset));
+	}
+	
+	/**
+	 * 从字符串创建新Buffer，使用UTF-8编码
+	 * 
+	 * @param data 数据
+	 * @return {@link ByteBuffer}
+	 * @since 4.5.0
+	 */
+	public static ByteBuffer createUtf8(CharSequence data) {
+		return create(StrUtil.utf8Bytes(data));
 	}
 }

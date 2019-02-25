@@ -1,11 +1,10 @@
 package cn.hutool.socket;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousSocketChannel;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
 import cn.hutool.socket.aio.AioServer;
@@ -20,8 +19,9 @@ public class AioServerTest {
 		aioServer.setIoAction(new SimpleIoAction() {
 			
 			@Override
-			public void accept(AsynchronousSocketChannel socketChannel) {
-				StaticLog.debug("客户端接入：{}", SocketUtil.getRemoteAddress(socketChannel));
+			public void accept(AioSession session) {
+				StaticLog.debug("【客户端】：{} 连接。", session.getRemoteAddress());
+				session.write(BufferUtil.createUtf8("=== Welcome to Hutool socket server. ==="));
 			}
 			
 			@Override
@@ -35,7 +35,7 @@ public class AioServerTest {
 							.append("Content-Type: text/html; charset=UTF-8\r\n")//
 							.append("\r\n")
 							.append("Hello Hutool socket");//
-					session.writeAndClose(ByteBuffer.wrap(response.toString().getBytes(CharsetUtil.CHARSET_UTF_8)));
+					session.writeAndClose(BufferUtil.createUtf8(response));
 				}else {
 					session.read();
 				}
