@@ -19,6 +19,7 @@
 * 【extra】        修复FTP.ls无法遍历文件问题（issue#IRTA3@Gitee）
 * 【extra】        修复QrCodeUtil中ratio参数失效问题，调整默认纠错为M（感谢@【上海】皮皮今）
 * 【core】        修复FileTypeUtil对jpg文件识别问题（issue#275@Github）
+* 【cache】      修复cache使用读锁导致的删除节点并发问题（issue#IRZTL@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
