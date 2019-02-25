@@ -791,6 +791,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * 设置是否rest模式
+	 * 
+	 * @param isRest 是否rest模式
+	 * @return this
+	 * @since 4.5.0
+	 */
+	public HttpRequest setRest(boolean isRest) {
+		this.isRest = isRest;
+		return this;
+	}
+
+	/**
 	 * 执行Reuqest请求
 	 * 
 	 * @return this
@@ -928,7 +940,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private void send() throws HttpException {
 		try {
-			if (Method.POST.equals(this.method) || Method.PUT.equals(this.method) || this.isRest) {
+			if (Method.POST.equals(this.method) || Method.PUT.equals(this.method) || Method.DELETE.equals(this.method) || this.isRest) {
 				if (CollectionUtil.isEmpty(this.fileForm)) {
 					sendFormUrlEncoded();// 普通表单
 				} else {

@@ -71,7 +71,7 @@ public class Scheduler {
 	protected TaskExecutorManager taskExecutorManager;
 	/** 监听管理器列表 */
 	protected TaskListenerManager listenerManager = new TaskListenerManager();
-	/** 线程池 */
+	/** 线程池，用于执行TaskLauncher和TaskExecutor */
 	protected ExecutorService threadExecutor;
 
 	// --------------------------------------------------------- Getters and Setters start
@@ -363,6 +363,7 @@ public class Scheduler {
 				throw new CronException("Schedule is started!");
 			}
 
+			// 无界线程池，确保每一个需要执行的线程都可以及时运行，同时复用已有现成避免线程重复创建
 			this.threadExecutor = ExecutorBuilder.create().useSynchronousQueue().setThreadFactory(//
 					ThreadFactoryBuilder.create().setNamePrefix("hutool-cron-").setDaemon(this.daemon).build()//
 			).build();

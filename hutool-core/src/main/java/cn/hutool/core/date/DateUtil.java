@@ -562,7 +562,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 格式化为Http的标准日期格式
+	 * 格式化为Http的标准日期格式<br>
+	 * 标准日期格式遵循RFC 1123规范，格式类似于：Fri, 31 Dec 1999 23:59:59 GMT
 	 * 
 	 * @param date 被格式化的日期
 	 * @return HTTP标准形式日期字符串

@@ -168,17 +168,17 @@ public class Digester extends BouncyCastleSupport {
 	 * @return 摘要bytes
 	 */
 	public byte[] digest(byte[] data) {
-		if(null != this.salt) {
+		if (null != this.salt) {
 			digest.update(this.salt);
 		}
 		int digestCount = Math.max(1, this.digestCount);
 		byte[] result = data;
-		for(int i = 0; i < digestCount; i++) {
+		for (int i = 0; i < digestCount; i++) {
 			result = doDigest(result);
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 生成摘要
 	 * 
@@ -277,5 +277,15 @@ public class Digester extends BouncyCastleSupport {
 	 */
 	public MessageDigest getDigest() {
 		return digest;
+	}
+
+	/**
+	 * 获取散列长度，0表示不支持此方法
+	 * 
+	 * @return 散列长度，0表示不支持此方法
+	 * @since 4.5.0
+	 */
+	public int getDigestLength() {
+		return this.digest.getDigestLength();
 	}
 }

@@ -64,6 +64,7 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 - hutool-json            JSON实现
 - hutool-captcha      图片验证码实现
 - hutool-poi             针对POI中Excel的封装
+- hutool-socket         基于Java的NIO和AIO的Socket封装
 
 可以根据需求对每个模块单独引入，也可以通过引入`hutool-all`方式引入所有模块。
 
@@ -86,21 +87,21 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.4.5</version>
+    <version>4.5.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.4.5'
+compile 'cn.hutool:hutool-all:4.5.0'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.4.5/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.4.5/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.5.0/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.5.0/)
 
 > 注意
 > Hutool只支持JDK7+，对应Android平台没有测试，部分方法并不支持。

@@ -15,6 +15,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.SM2;
+import cn.hutool.crypto.asymmetric.SM2Engine.SM2Mode;
 
 /**
  * SM2算法单元测试
@@ -30,11 +31,9 @@ public class SM2Test {
 		Assert.assertNotNull(pair.getPrivate());
 		Assert.assertNotNull(pair.getPublic());
 	}
-	
+
 	@Test
 	public void KeyPairOIDTest() {
-		new SM2();//保证BC被加载
-		
 		// OBJECT IDENTIFIER 1.2.156.10197.1.301
 		String OID = "06082A811CCF5501822D";
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
@@ -49,6 +48,7 @@ public class SM2Test {
 		byte[] publicKey = pair.getPublic().getEncoded();
 
 		SM2 sm2 = SmUtil.sm2(privateKey, publicKey);
+		sm2.setMode(SM2Mode.C1C3C2);
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = sm2.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
@@ -126,7 +126,7 @@ public class SM2Test {
 		boolean verify = sm2.verify(content.getBytes(), sign);
 		Assert.assertTrue(verify);
 	}
-	
+
 	@Test
 	public void sm2PublicKeyEncodeDecodeTest() {
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
@@ -139,5 +139,4 @@ public class SM2Test {
 		Assert.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(Hexdecode.getEncoded()));
 		Assert.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(B64decode.getEncoded()));
 	}
-	
 }

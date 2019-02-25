@@ -45,9 +45,9 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void decodeTest() {
-		String decode = QrCodeUtil.decode(FileUtil.file("e:/1.png"));
+		String decode = QrCodeUtil.decode(FileUtil.file("e:/pic/qr.png"));
 		Console.log(decode);
 	}
 }

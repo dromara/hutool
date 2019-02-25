@@ -30,6 +30,8 @@ public class Validator {
 	public final static Pattern GROUP_VAR = PatternPool.GROUP_VAR;
 	/** IP v4 */
 	public final static Pattern IPV4 = PatternPool.IPV4;
+	/** IP v6 */
+	public final static Pattern IPV6 = PatternPool.IPV6;
 	/** 货币 */
 	public final static Pattern MONEY = PatternPool.MONEY;
 	/** 邮件 */
@@ -806,6 +808,32 @@ public class Validator {
 	 */
 	public static <T extends CharSequence> T validateIpv4(T value, String errorMsg) throws ValidateException {
 		if (false == isIpv4(value)) {
+			throw new ValidateException(errorMsg);
+		}
+		return value;
+	}
+	
+	/**
+	 * 验证是否为IPV6地址
+	 * 
+	 * @param value 值
+	 * @return 是否为IPV6地址
+	 */
+	public static boolean isIpv6(CharSequence value) {
+		return isMactchRegex(IPV6, value);
+	}
+	
+	/**
+	 * 验证是否为IPV6地址
+	 * 
+	 * @param <T> 字符串类型
+	 * @param value 值
+	 * @param errorMsg 验证错误的信息
+	 * @return 验证后的值
+	 * @throws ValidateException 验证异常
+	 */
+	public static <T extends CharSequence> T validateIpv6(T value, String errorMsg) throws ValidateException {
+		if (false == isIpv6(value)) {
 			throw new ValidateException(errorMsg);
 		}
 		return value;

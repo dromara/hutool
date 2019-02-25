@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.builder.Builder;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * {@link ThreadPoolExecutor} 建造者
@@ -19,12 +20,20 @@ import cn.hutool.core.builder.Builder;
  */
 public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 
+	/** 初始池大小 */
 	private int corePoolSize;
+	/** 最大池大小（允许同时执行的最大线程数） */
 	private int maxPoolSize = Integer.MAX_VALUE;
+	/** 线程存活时间，既当池中线程多于初始大小时，多出的线程保留的时长 */
 	private long keepAliveTime = TimeUnit.SECONDS.toNanos(60);
+	/** 队列，用于存在未执行的线程 */
 	private BlockingQueue<Runnable> workQueue;
+	/** 线程工厂，用于自定义线程创建 */
 	private ThreadFactory threadFactory;
+	/** 当线程阻塞（block）时的异常处理器，所谓线程阻塞既线程池和等待队列已满，无法处理线程时采取的策略 */
 	private RejectedExecutionHandler handler;
+	/** 线程执行超时后是否回收线程 */
+	private Boolean allowCoreThreadTimeOut;
 
 	/**
 	 * 设置初始池大小，默认0
@@ -73,8 +82,9 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	/**
 	 * 设置队列，用于存在未执行的线程<br>
 	 * 可选队列有：
+	 * 
 	 * <pre>
-	 * 1. SynchronousQueue    它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程
+	 * 1. SynchronousQueue    它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * 2. LinkedBlockingQueue 无界队列，当运行线程大于corePoolSize时始终放入此队列，此时maximumPoolSize无效
 	 * 3. ArrayBlockingQueue  有界队列，相对无界队列有利于控制队列大小，队列满时，运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * </pre>
@@ -86,15 +96,28 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 		this.workQueue = workQueue;
 		return this;
 	}
-	
+
 	/**
-	 * 使用{@link SynchronousQueue} 做为等待队列
+	 * 使用{@link SynchronousQueue} 做为等待队列（非公平策略）<br>
+	 * 它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
 	 * 
 	 * @return this
 	 * @since 4.1.11
 	 */
 	public ExecutorBuilder useSynchronousQueue() {
-		return setWorkQueue(new SynchronousQueue<Runnable>());
+		return useSynchronousQueue(false);
+	}
+
+	/**
+	 * 使用{@link SynchronousQueue} 做为等待队列<br>
+	 * 它将任务直接提交给线程而不保持它们。当运行线程小于maxPoolSize时会创建新线程，否则触发异常策略
+	 * 
+	 * @param fair 是否使用公平访问策略
+	 * @return this
+	 * @since 4.5.0
+	 */
+	public ExecutorBuilder useSynchronousQueue(boolean fair) {
+		return setWorkQueue(new SynchronousQueue<Runnable>(fair));
 	}
 
 	/**
@@ -120,6 +143,17 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 */
 	public ExecutorBuilder setHandler(RejectedExecutionHandler handler) {
 		this.handler = handler;
+		return this;
+	}
+
+	/**
+	 * 设置线程执行超时后是否回收线程
+	 * 
+	 * @param allowCoreThreadTimeOut 线程执行超时后是否回收线程
+	 * @return this
+	 */
+	public ExecutorBuilder setAllowCoreThreadTimeOut(boolean allowCoreThreadTimeOut) {
+		this.allowCoreThreadTimeOut = allowCoreThreadTimeOut;
 		return this;
 	}
 
@@ -151,19 +185,26 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 		final int maxPoolSize = builder.maxPoolSize;
 		final long keepAliveTime = builder.keepAliveTime;
 		final BlockingQueue<Runnable> workQueue;
-		if(null != builder.workQueue) {
+		if (null != builder.workQueue) {
 			workQueue = builder.workQueue;
 		} else {
-			//corePoolSize为0则要使用SynchronousQueue避免无限阻塞
+			// corePoolSize为0则要使用SynchronousQueue避免无限阻塞
 			workQueue = (corePoolSize <= 0) ? new SynchronousQueue<Runnable>() : new LinkedBlockingQueue<Runnable>();
 		}
 		final ThreadFactory threadFactory = (null != builder.threadFactory) ? builder.threadFactory : Executors.defaultThreadFactory();
-		final RejectedExecutionHandler handler = builder.handler;
+		RejectedExecutionHandler handler = ObjectUtil.defaultIfNull(builder.handler, new ThreadPoolExecutor.AbortPolicy());
 
-		if (null == handler) {
-			return new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.NANOSECONDS, workQueue, threadFactory);
-		} else {
-			return new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.NANOSECONDS, workQueue, threadFactory, handler);
+		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(//
+				corePoolSize, //
+				maxPoolSize, //
+				keepAliveTime, TimeUnit.NANOSECONDS, //
+				workQueue, //
+				threadFactory, //
+				handler//
+		);
+		if (null != builder.allowCoreThreadTimeOut) {
+			threadPoolExecutor.allowCoreThreadTimeOut(builder.allowCoreThreadTimeOut);
 		}
+		return threadPoolExecutor;
 	}
 }

@@ -208,6 +208,11 @@ public class IdcardUtil {
 		if (CHINA_ID_MAX_LENGTH != idCard.length()) {
 			return false;
 		}
+		
+		//校验生日
+		if(false == Validator.isBirthday(idCard.substring(6, 14))) {
+			return false;
+		}
 
 		// 前17位
 		String code17 = idCard.substring(0, 17);

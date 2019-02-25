@@ -1,5 +1,6 @@
 package cn.hutool.core.date;
 
+import java.util.Locale;
 import java.util.TimeZone;
 
 import cn.hutool.core.date.format.FastDateFormat;
@@ -68,7 +69,7 @@ public class DatePattern {
 	/** HTTP头中日期时间格式：EEE, dd MMM yyyy HH:mm:ss z */
 	public final static String HTTP_DATETIME_PATTERN = "EEE, dd MMM yyyy HH:mm:ss z";
 	/** HTTP头中日期时间格式 {@link FastDateFormat}：EEE, dd MMM yyyy HH:mm:ss z */
-	public final static FastDateFormat HTTP_DATETIME_FORMAT = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN);
+	public final static FastDateFormat HTTP_DATETIME_FORMAT = FastDateFormat.getInstance(HTTP_DATETIME_PATTERN, TimeZone.getTimeZone("GMT"), Locale.US);
 
 	/** JDK中日期时间格式：EEE MMM dd HH:mm:ss zzz yyyy */
 	public final static String JDK_DATETIME_PATTERN = "EEE MMM dd HH:mm:ss zzz yyyy";

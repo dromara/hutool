@@ -34,10 +34,10 @@ public class ImageUtilTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void rotateTest() throws IOException {
-		BufferedImage image = ImageUtil.rotate(ImageIO.read(FileUtil.file("e:/line.png")), 45);
-		ImageUtil.write(image, FileUtil.file("e:/result.png"));
+		BufferedImage image = ImageUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
+		ImageUtil.write(image, FileUtil.file("e:/pic/result.png"));
 	}
 
 	@Test

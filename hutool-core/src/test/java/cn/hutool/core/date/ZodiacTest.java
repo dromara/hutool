@@ -7,7 +7,9 @@ public class ZodiacTest {
 	
 	@Test
 	public void getZodiacTest() {
-		Assert.assertEquals("处女座", Zodiac.getZodiac(7, 28));
+		Assert.assertEquals("摩羯座", Zodiac.getZodiac(Month.JANUARY, 19));
+		Assert.assertEquals("水瓶座", Zodiac.getZodiac(Month.JANUARY, 20));
+		Assert.assertEquals("巨蟹座", Zodiac.getZodiac(6, 17));
 	}
 	
 	@Test

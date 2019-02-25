@@ -17,25 +17,42 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	protected long size = 0;
 
+	/**
+	 * 构造
+	 * 
+	 * @param maxValue 最大值
+	 * @param machineNum 机器位数
+	 */
 	public AbstractFilter(long maxValue, int machineNum) {
 		init(maxValue, machineNum);
 	}
 
+	/**
+	 * 构造32位
+	 * 
+	 * @param maxValue 最大值
+	 */
 	public AbstractFilter(long maxValue) {
 		this(maxValue, BitMap.MACHINE32);
 	}
 
+	/**
+	 * 初始化
+	 * 
+	 * @param maxValue 最大值
+	 * @param machineNum 机器位数
+	 */
 	public void init(long maxValue, int machineNum) {
 		this.size = maxValue;
 		switch (machineNum) {
-			case BitMap.MACHINE32:
-				bm = new IntMap((int) (size / machineNum));
-				break;
-			case BitMap.MACHINE64:
-				bm = new LongMap((int) (size / machineNum));
-				break;
-			default:
-				throw new RuntimeException("Error Machine number!");
+		case BitMap.MACHINE32:
+			bm = new IntMap((int) (size / machineNum));
+			break;
+		case BitMap.MACHINE64:
+			bm = new LongMap((int) (size / machineNum));
+			break;
+		default:
+			throw new RuntimeException("Error Machine number!");
 		}
 	}
 
@@ -57,8 +74,9 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	/**
 	 * 自定义Hash方法
+	 * 
 	 * @param str 字符串
 	 * @return HashCode
 	 */
-	public abstract long hash(String str) ;
+	public abstract long hash(String str);
 }
