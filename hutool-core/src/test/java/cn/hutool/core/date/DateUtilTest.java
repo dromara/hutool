@@ -1,23 +1,19 @@
 package cn.hutool.core.date;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
-import cn.hutool.core.lang.Console;
 
 /**
  * 时间工具单元测试
@@ -26,15 +22,6 @@ import cn.hutool.core.lang.Console;
  *
  */
 public class DateUtilTest {
-
-	@Test
-	@Ignore
-	public void dateTest() {
-		long current = DateUtil.current(false);
-		Console.log(current);
-		DateTime date = DateUtil.date(current);
-		Console.log(date);
-	}
 
 	@Test
 	public void nowTest() {
@@ -129,6 +116,19 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void offsetMonthTest() {
+		DateTime st = DateUtil.parseDate("2018-05-31");
+		List<DateTime> list = new ArrayList<>();
+		for (int i = 0; i < 4; i++) {
+			list.add(DateUtil.offsetMonth(st, i));
+		}
+		Assert.assertEquals("2018-05-31 00:00:00", list.get(0).toString());
+		Assert.assertEquals("2018-06-30 00:00:00", list.get(1).toString());
+		Assert.assertEquals("2018-07-31 00:00:00", list.get(2).toString());
+		Assert.assertEquals("2018-08-31 00:00:00", list.get(3).toString());
+	}
+	
+	@Test
 	public void betweenTest() {
 		String dateStr1 = "2017-03-01 22:34:23";
 		Date date1 = DateUtil.parse(dateStr1);
@@ -177,6 +177,12 @@ public class DateUtilTest {
 		// 反向
 		betweenMS = DateUtil.between(date2, date1, DateUnit.MS);
 		Assert.assertEquals(2683311000L, betweenMS);
+	}
+	
+	@Test
+	public void formatChineseDateTest() {
+		String formatChineseDate = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24"), true);
+		Assert.assertEquals("二〇一八年二月二十四日", formatChineseDate);
 	}
 
 	@Test
@@ -253,11 +259,9 @@ public class DateUtilTest {
 
 	@Test
 	public void parseTest() throws ParseException {
-		// 转换时间与SimpleDateFormat结果保持一致即可
 		String time = "12:11:39";
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		DateTime parse = DateUtil.parse("12:11:39");
-		Assert.assertEquals(format.parse(time).getTime(), parse.getTime());
+		Assert.assertEquals(DateUtil.parseTimeToday(time).getTime(), parse.getTime());
 	}
 
 	@Test
@@ -355,6 +359,24 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void parseUTCTest() throws ParseException {
+		String dateStr1 = "2018-09-13T05:34:31Z";
+		DateTime dt = DateUtil.parseUTC(dateStr1);
+		
+		//parse方法支持UTC格式测试
+		DateTime dt2 = DateUtil.parse(dateStr1);
+		Assert.assertEquals(dt, dt2);
+		
+		//默认使用Pattern对应的时区，既UTC时区
+		String dateStr = dt.toString();
+		Assert.assertEquals("2018-09-13 05:34:31", dateStr);
+		
+		//使用当前（上海）时区
+		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
+	}
+	
+	@Test
 	public void endOfWeekTest() {
 		DateTime now = DateUtil.date();
 
@@ -379,7 +401,7 @@ public class DateUtilTest {
 		DateTime start = DateUtil.parse("2017-01-01");
 		DateTime end = DateUtil.parse("2017-01-03");
 
-		//测试包含开始和结束情况下步进为1的情况
+		// 测试包含开始和结束情况下步进为1的情况
 		DateRange range = DateUtil.range(start, end, DateField.DAY_OF_YEAR);
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
@@ -389,13 +411,13 @@ public class DateUtilTest {
 			Assert.fail("已超过边界，下一个元素不应该存在！");
 		} catch (NoSuchElementException e) {
 		}
-		
-		//测试多步进的情况
+
+		// 测试多步进的情况
 		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 2);
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-03"));
-		
-		//测试不包含开始结束时间的情况
+
+		// 测试不包含开始结束时间的情况
 		range = new DateRange(start, end, DateField.DAY_OF_YEAR, 1, false, false);
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
 		try {
@@ -404,14 +426,37 @@ public class DateUtilTest {
 		} catch (NoSuchElementException e) {
 		}
 	}
-	
+
 	@Test
 	public void rangeToListTest() {
 		DateTime start = DateUtil.parse("2017-01-01");
 		DateTime end = DateUtil.parse("2017-01-31");
-		
+
 		List<DateTime> rangeToList = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR);
 		Assert.assertEquals(rangeToList.get(0), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(rangeToList.get(1), DateUtil.parse("2017-01-02"));
+	}
+	
+	@Test
+	public void yearAndQTest() {
+		String yearAndQuarter = DateUtil.yearAndQuarter(DateUtil.parse("2018-12-01"));
+		Assert.assertEquals("20184", yearAndQuarter);
+		
+		LinkedHashSet<String> yearAndQuarters = DateUtil.yearAndQuarter(DateUtil.parse("2018-09-10"), DateUtil.parse("2018-12-20"));
+		List<String> list = CollUtil.list(false, yearAndQuarters);
+		Assert.assertEquals(2, list.size());
+		Assert.assertEquals("20183", list.get(0));
+		Assert.assertEquals("20184", list.get(1));
+		
+		LinkedHashSet<String> yearAndQuarters2 = DateUtil.yearAndQuarter(DateUtil.parse("2018-10-10"), DateUtil.parse("2018-12-10"));
+		List<String> list2 = CollUtil.list(false, yearAndQuarters2);
+		Assert.assertEquals(1, list2.size());
+		Assert.assertEquals("20184", list2.get(0));
+	}
+	
+	@Test
+	public void formatHttpDateTest() {
+		String formatHttpDate = DateUtil.formatHttpDate(DateUtil.parse("2019-01-02 22:32:01"));
+		Assert.assertEquals("Wed, 02 Jan 2019 14:32:01 GMT", formatHttpDate);
 	}
 }

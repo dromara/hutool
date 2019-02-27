@@ -69,7 +69,7 @@ public class GlobalLogFactory {
 	 * @return 自定义的日志工厂类
 	 */
 	public static LogFactory set(LogFactory logFactory) {
-		logFactory.getLog(GlobalLogFactory.class).debug("Custom Use [{}] Logger.", logFactory.logFramworkName);
+		logFactory.getLog(GlobalLogFactory.class).debug("Custom Use [{}] Logger.", logFactory.name);
 		currentLogFactory = logFactory;
 		return currentLogFactory;
 	}

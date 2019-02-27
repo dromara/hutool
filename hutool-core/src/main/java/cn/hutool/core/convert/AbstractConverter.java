@@ -1,5 +1,7 @@
 package cn.hutool.core.convert;
 
+import java.util.Map;
+
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -29,8 +31,8 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 		}
 
 		if (null == defaultValue || targetType.isInstance(defaultValue)) {
-			if (targetType.isInstance(value)) {
-				// 已经是目标类型，不需要转换
+			if (targetType.isInstance(value) && false == Map.class.isAssignableFrom(targetType)) {
+				// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
 				return (T) targetType.cast(value);
 			}
 			T result = null;

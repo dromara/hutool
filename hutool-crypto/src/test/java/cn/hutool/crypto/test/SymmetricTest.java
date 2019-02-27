@@ -13,6 +13,7 @@ import cn.hutool.crypto.symmetric.DES;
 import cn.hutool.crypto.symmetric.DESede;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.Vigenere;
 
 /**
  * 对称加密算法单元测试
@@ -182,5 +183,16 @@ public class SymmetricTest {
 		String decryptStr = des.decryptStr(encryptHex);
 		
 		Assert.assertEquals(content, decryptStr);
+	}
+	
+	@Test
+	public void vigenereTest() {
+		String content = "Wherethereisawillthereisaway";
+		String key = "CompleteVictory";
+		
+		String encrypt = Vigenere.encrypt(content, key);
+		Assert.assertEquals("zXScRZ]KIOMhQjc0\\bYRXZOJK[Vi", encrypt);
+		String decrypt = Vigenere.decrypt(encrypt, key);
+		Assert.assertEquals(content, decrypt);
 	}
 }

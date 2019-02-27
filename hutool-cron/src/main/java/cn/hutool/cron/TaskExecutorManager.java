@@ -6,8 +6,8 @@ import java.util.List;
 import cn.hutool.cron.task.Task;
 
 /**
- * 任务执行管理器<br>
- * 负责管理任务的启动、停止等
+ * 作业执行管理器<br>
+ * 负责管理作业的启动、停止等
  * 
  * @author Looly
  * @since 3.0.1
@@ -35,7 +35,8 @@ public class TaskExecutorManager {
 		}
 		// 子线程是否为deamon线程取决于父线程，因此此处无需显示调用
 		// executor.setDaemon(this.scheduler.daemon);
-		executor.start();
+//		executor.start();
+		this.scheduler.threadExecutor.execute(executor);
 		return executor;
 	}
 

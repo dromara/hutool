@@ -3,7 +3,6 @@ package cn.hutool.db.dialect.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
@@ -56,7 +55,7 @@ public class AnsiSqlDialect implements Dialect {
 		// 批量
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entities[0], this.dialectName());
 
-		final PreparedStatement ps = conn.prepareStatement(insert.build(), Statement.RETURN_GENERATED_KEYS);
+		final PreparedStatement ps = StatementUtil.prepareStatement(conn, insert.build());
 		for (Entity entity : entities) {
 			StatementUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, insert.getFields()));
 			ps.addBatch();

@@ -11,6 +11,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
@@ -19,6 +20,7 @@ import cn.hutool.db.sql.SqlLog;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.level.Level;
+import cn.hutool.setting.Setting;
 
 /**
  * 数据库操作工具类
@@ -63,7 +65,9 @@ public final class DbUtil {
 	 * 实例化一个新的SQL运行对象，使用默认数据源
 	 * 
 	 * @return SQL执行类
+	 * @deprecated 请使用 {@link #use()}
 	 */
+	@Deprecated
 	public static SqlRunner newSqlRunner() {
 		return SqlRunner.create(getDs());
 	}
@@ -73,7 +77,9 @@ public final class DbUtil {
 	 * 
 	 * @param ds 数据源
 	 * @return SQL执行类
+	 * @deprecated 请使用 {@link #use(DataSource)}
 	 */
+	@Deprecated
 	public static SqlRunner newSqlRunner(DataSource ds) {
 		return SqlRunner.create(ds);
 	}
@@ -84,9 +90,41 @@ public final class DbUtil {
 	 * @param ds 数据源
 	 * @param dialect SQL方言
 	 * @return SQL执行类
+	 * @deprecated 请使用 {@link #use(DataSource, Dialect)}
 	 */
+	@Deprecated
 	public static SqlRunner newSqlRunner(DataSource ds, Dialect dialect) {
 		return SqlRunner.create(ds, dialect);
+	}
+
+	/**
+	 * 实例化一个新的Db，使用默认数据源
+	 * 
+	 * @return SQL执行类
+	 */
+	public static Db use() {
+		return Db.use();
+	}
+
+	/**
+	 * 实例化一个新的Db对象
+	 * 
+	 * @param ds 数据源
+	 * @return SQL执行类
+	 */
+	public static Db use(DataSource ds) {
+		return Db.use(ds);
+	}
+
+	/**
+	 * 实例化一个新的SQL运行对象
+	 * 
+	 * @param ds 数据源
+	 * @param dialect SQL方言
+	 * @return SQL执行类
+	 */
+	public static Db use(DataSource ds, Dialect dialect) {
+		return Db.use(ds, dialect);
 	}
 
 	/**
@@ -106,16 +144,6 @@ public final class DbUtil {
 	 */
 	public static Session newSession(DataSource ds) {
 		return Session.create(ds);
-	}
-
-	/**
-	 * 新建数据库会话
-	 * 
-	 * @param conn 数据库连接对象
-	 * @return 数据库会话
-	 */
-	public static Session newSession(Connection conn) {
-		return Session.create(conn);
 	}
 
 	/**
@@ -201,14 +229,34 @@ public final class DbUtil {
 	}
 
 	/**
+	 * 从配置文件中读取SQL打印选项
+	 * @param setting 配置文件
+	 * @since 4.1.7
+	 */
+	public static void setShowSqlGlobal(Setting setting) {
+		// 初始化SQL显示
+		final boolean isShowSql = Convert.toBool(setting.remove("showSql"), false);
+		final boolean isFormatSql = Convert.toBool(setting.remove("formatSql"), false);
+		final boolean isShowParams = Convert.toBool(setting.remove("showParams"), false);
+		String sqlLevelStr = setting.remove("sqlLevel");
+		if (null != sqlLevelStr) {
+			sqlLevelStr = sqlLevelStr.toUpperCase();
+		}
+		final Level level = Convert.toEnum(Level.class, sqlLevelStr, Level.DEBUG);
+		log.debug("Show sql: [{}], format sql: [{}], show params: [{}], level: [{}]", isShowSql, isFormatSql, isShowParams, level);
+		setShowSqlGlobal(isShowSql, isFormatSql, isShowParams, level);
+	}
+
+	/**
 	 * 设置全局配置：是否通过debug日志显示SQL
 	 * 
 	 * @param isShowSql 是否显示SQL
 	 * @param isFormatSql 是否格式化显示的SQL
 	 * @param isShowParams 是否打印参数
-	 * @since 4.0.3
+	 * @param level SQL打印到的日志等级
+	 * @since 4.1.7
 	 */
-	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams) {
-		SqlLog.INSTASNCE.init(isShowSql, isFormatSql, isShowParams, Level.DEBUG);
+	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
+		SqlLog.INSTASNCE.init(isShowSql, isFormatSql, isShowParams, level);
 	}
 }

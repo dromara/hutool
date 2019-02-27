@@ -1,5 +1,6 @@
 package cn.hutool.captcha;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -29,20 +30,22 @@ import cn.hutool.core.util.StrUtil;
 public abstract class AbstractCaptcha implements ICaptcha {
 	private static final long serialVersionUID = 3180820918087507254L;
 
-	// 图片的宽度。
+	/** 图片的宽度 */
 	protected int width = 100;
-	// 图片的高度。
+	/** 图片的高度 */
 	protected int height = 37;
-	// 验证码干扰元素个数
+	/** 验证码干扰元素个数 */
 	protected int interfereCount = 15;
-	// 字体
+	/** 字体 */
 	protected Font font;
-	// 验证码
+	/** 验证码 */
 	protected String code;
-	// 验证码图片
+	/** 验证码图片 */
 	protected byte[] imageBytes;
 	/** 验证码生成器 */
 	protected CodeGenerator generator;
+	/** 背景色 */
+	protected Color background;
 
 	/**
 	 * 构造，使用随机验证码生成器生成验证码
@@ -70,7 +73,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		this.generator = generator;
 		this.interfereCount = interfereCount;
 		// 字体高度设为验证码高度-2，留边距
-		this.font = new Font("Courier", Font.PLAIN, this.height - 2);
+		this.font = new Font("Courier", Font.PLAIN, (int)(this.height * 0.75));
 		createCode();
 	}
 
@@ -188,5 +191,15 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 */
 	public void setGenerator(CodeGenerator generator) {
 		this.generator = generator;
+	}
+	
+	/**
+	 * 设置背景色
+	 * 
+	 * @param background 背景色
+	 * @since 4.1.22
+	 */
+	public void setBackground(Color background) {
+		this.background = background;
 	}
 }

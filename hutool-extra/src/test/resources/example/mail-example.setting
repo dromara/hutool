@@ -1,0 +1,40 @@
+# **************************************************************
+# ----- Setting File with UTF8-----
+# ----- 邮件发送功能的账户信息配置文件 -----
+# ----- 此邮箱专门注册用于Hutool发送邮件测试，为公开邮箱 -----
+# **************************************************************
+
+# 邮件服务器的SMTP地址
+host = smtp.yeah.net
+# 邮件服务器的SMTP端口
+port = 465
+# 发件人（必须正确，否则发送失败）
+from = 小磊<hutool@yeah.net>
+# 用户名
+user = hutool
+# 密码
+pass = q1w2e3
+
+# 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+debug = true
+# 编码，决定了邮件正文编码和发件人、收件人、抄送人、密送人姓名中的中文编码，默认UTF-8
+charset = UTF-8
+
+#使用 STARTTLS安全连接
+startttlsEnable = true
+#使用 SSL安全连接
+sslEnable = true
+# 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
+socketFactoryClass = javax.net.ssl.SSLSocketFactory
+# 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
+socketFactoryFallback = true
+# 指定的端口连接到在使用指定的套接字工厂。如果没有设置,将使用默认端口456
+socketFactoryPort = 465
+
+# 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
+splitlongparameters = false
+
+# SMTP超时时长，单位毫秒，缺省值不超时
+timeout = 0
+# Socket连接超时值，单位毫秒，缺省值不超时
+connectionTimeout = 0

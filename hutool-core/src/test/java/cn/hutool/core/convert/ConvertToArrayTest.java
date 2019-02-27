@@ -31,7 +31,7 @@ public class ConvertToArrayTest {
 		int[] intArray = Convert.convert(int[].class, b);
 		Assert.assertArrayEquals(intArray, new int[]{1,2,3,4});
 		
-		long[] c = {1L,2L,3L,4L,5L};
+		long[] c = {1,2,3,4,5};
 		Integer[] intArray2 = Convert.toIntArray(c);
 		Assert.assertArrayEquals(intArray2, new Integer[]{1,2,3,4,5});
 	}
@@ -73,6 +73,10 @@ public class ConvertToArrayTest {
 		int[] a = new int[]{1,2,3,4};
 		long[] result = ConverterRegistry.getInstance().convert(long[].class, a);
 		Assert.assertArrayEquals(new long[]{1L, 2L, 3L, 4L}, result);
+		
+		//数组转数组测试
+		byte[] resultBytes = ConverterRegistry.getInstance().convert(byte[].class, a);
+		Assert.assertArrayEquals(new byte[]{1, 2, 3, 4}, resultBytes);
 		
 		//字符串转数组
 		String arrayStr = "1,2,3,4,5";

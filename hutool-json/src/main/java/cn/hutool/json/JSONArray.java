@@ -3,7 +3,8 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.impl.CollectionConverter;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ObjectUtil;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,8 +30,8 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 
 	/** 持有原始数据的List */
 	private final List<Object> rawList;
-	/** 是否忽略空值 */
-	private boolean ignoreNullValue;
+	/** 配置项 */
+	private JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -49,8 +50,20 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @since 3.2.2
 	 */
 	public JSONArray(int initialCapacity) {
+		this(initialCapacity, JSONConfig.create());
+	}
+
+	/**
+	 * 构造<br>
+	 * 默认使用{@link ArrayList} 实现
+	 * 
+	 * @param initialCapacity 初始大小
+	 * @param config JSON配置项
+	 * @since 4.1.19
+	 */
+	public JSONArray(int initialCapacity, JSONConfig config) {
 		this.rawList = new ArrayList<Object>(initialCapacity);
-		this.ignoreNullValue = true;
+		this.config = config;
 	}
 
 	/**
@@ -100,7 +113,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		this();
 		init(source);
 	}
-	
+
 	/**
 	 * 从对象构造，忽略{@code null}的值<br>
 	 * 支持以下类型的参数：
@@ -133,38 +146,21 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @throws JSONException 非数组或集合
 	 */
 	public JSONArray(Object object, boolean ignoreNullValue) throws JSONException {
-		this();
-		this.ignoreNullValue = ignoreNullValue;
-
-		if (object instanceof CharSequence) {
-			//JSON字符串
-			init((CharSequence) object);
-		}else {
-			Iterator<?> iter;
-			if (object.getClass().isArray()) {// 数组
-				iter = new ArrayIter<>(object);
-			}else if (object instanceof Iterator<?>) {// Iterator
-				iter = ((Iterator<?>) object);
-			} else if (object instanceof Iterable<?>) {// Iterable
-				iter = ((Iterable<?>) object).iterator();
-			} else {
-				throw new JSONException("JSONArray initial value should be a string or collection or array.");
-			}
-			while(iter.hasNext()) {
-				this.add(iter.next());
-			}
-		}
+		this(DEFAULT_CAPACITY, JSONConfig.create().setIgnoreNullValue(ignoreNullValue));
+		init(object);
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
-
+	
 	/**
-	 * 值是否为<code>null</code>
-	 *
-	 * @param index 值所在序列
-	 * @return true if the value at the index is null, or if there is no value.
+	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
+	 * 
+	 * @param format 格式，null表示使用时间戳
+	 * @return this
+	 * @since 4.1.19
 	 */
-	public boolean isNull(int index) {
-		return JSONNull.NULL.equals(this.getObj(index));
+	public JSONArray setDateFormat(String format) {
+		this.config.setDateFormat(format);
+		return this;
 	}
 
 	/**
@@ -197,75 +193,16 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		return (index < 0 || index >= this.size()) ? defaultValue : this.rawList.get(index);
 	}
 
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * @param expression 表达式
-	 * @return 对象
-	 * @see BeanPath#get(Object)
-	 * @deprecated 请使用{@link #getByPath(String)}
-	 */
-	@Override
-	public Object getByExp(String expression) {
-		return getByPath(expression);
-	}
-
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * 获取表达式对应值后转换为对应类型的值
-	 * 
-	 * @param <T> 返回值类型
-	 * @param expression 表达式
-	 * @param resultType 返回值类型
-	 * @return 对象
-	 * @see BeanPath#get(Object)
-	 * @since 3.1.0
-	 * @deprecated 请使用{@link #getByPath(String, Class)}
-	 */
-	@Deprecated
-	@Override
-	public <T> T getByExp(String expression, Class<T> resultType) {
-		return getByPath(expression, resultType);
-	}
-	
 	@Override
 	public Object getByPath(String expression) {
 		return BeanPath.create(expression).get(this);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T getByPath(String expression, Class<T> resultType) {
-		return (T) InternalJSONUtil.jsonConvert(resultType, getByPath(expression), true);
+		return JSONConverter.jsonConvert(resultType, getByPath(expression), true);
 	}
-	
+
 	@Override
 	public void putByPath(String expression, Object value) {
 		BeanPath.create(expression).set(this, value);
@@ -344,6 +281,175 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		return true;
 	}
 
+	@Override
+	public Iterator<Object> iterator() {
+		return rawList.iterator();
+	}
+
+	/**
+	 * 当此JSON列表的每个元素都是一个JSONObject时，可以调用此方法返回一个Iterable，便于使用foreach语法遍历
+	 * 
+	 * @return Iterable
+	 * @since 4.0.12
+	 */
+	public Iterable<JSONObject> jsonIter() {
+		return new JSONObjectIter(iterator());
+	}
+
+	@Override
+	public int size() {
+		return rawList.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return rawList.isEmpty();
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return rawList.contains(o);
+	}
+
+	@Override
+	public Object[] toArray() {
+		return rawList.toArray();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T[] toArray(T[] a) {
+		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
+	}
+
+	@Override
+	public boolean add(Object e) {
+		return this.rawList.add(JSONUtil.wrap(e, this.config.isIgnoreNullValue()));
+	}
+
+	@Override
+	public Object remove(int index) {
+		return index >= 0 && index < this.size() ? this.rawList.remove(index) : null;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		return rawList.remove(o);
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		return rawList.containsAll(c);
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends Object> c) {
+		if (CollUtil.isEmpty(c)) {
+			return false;
+		}
+		for (Object obj : c) {
+			this.add(obj);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends Object> c) {
+		if (CollUtil.isEmpty(c)) {
+			return false;
+		}
+		final ArrayList<Object> list = new ArrayList<>(c.size());
+		for (Object object : c) {
+			list.add(JSONUtil.wrap(object, this.config.isIgnoreNullValue()));
+		}
+		return rawList.addAll(index, list);
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		return this.rawList.removeAll(c);
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		return this.rawList.retainAll(c);
+	}
+
+	@Override
+	public void clear() {
+		this.rawList.clear();
+
+	}
+
+	@Override
+	public Object set(int index, Object element) {
+		return this.rawList.set(index, JSONUtil.wrap(element, this.config.isIgnoreNullValue()));
+	}
+
+	@Override
+	public void add(int index, Object element) {
+		if (index < 0) {
+			throw new JSONException("JSONArray[" + index + "] not found.");
+		}
+		if (index < this.size()) {
+			InternalJSONUtil.testValidity(element);
+			this.rawList.set(index, JSONUtil.wrap(element, this.config.isIgnoreNullValue()));
+		} else {
+			while (index != this.size()) {
+				this.add(JSONNull.NULL);
+			}
+			this.put(element);
+		}
+
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		return this.rawList.indexOf(o);
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		return this.rawList.lastIndexOf(o);
+	}
+
+	@Override
+	public ListIterator<Object> listIterator() {
+		return this.rawList.listIterator();
+	}
+
+	@Override
+	public ListIterator<Object> listIterator(int index) {
+		return this.rawList.listIterator(index);
+	}
+
+	@Override
+	public List<Object> subList(int fromIndex, int toIndex) {
+		return this.rawList.subList(fromIndex, toIndex);
+	}
+
+	/**
+	 * 转为Bean数组
+	 * 
+	 * @param arrayClass 数组元素类型
+	 * @return 实体类对象
+	 */
+	public Object toArray(Class<?> arrayClass) {
+		return JSONConverter.toArray(this, arrayClass);
+	}
+
+	/**
+	 * 转为{@link ArrayList}
+	 * 
+	 * @param <T> 元素类型
+	 * @param elementType 元素类型
+	 * @return {@link ArrayList}
+	 * @since 3.0.8
+	 */
+	public <T> List<T> toList(Class<T> elementType) {
+		return JSONConverter.toList(this, elementType);
+	}
+	
 	/**
 	 * 转为JSON字符串，无缩进
 	 *
@@ -393,220 +499,80 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	@Override
 	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException {
 		try {
-			boolean commanate = false;
-			int length = this.size();
-			writer.write('[');
-
-			if (length == 1) {
-				InternalJSONUtil.writeValue(writer, this.rawList.get(0), indentFactor, indent);
-			} else if (length != 0) {
-				final int newindent = indent + indentFactor;
-
-				for (int i = 0; i < length; i += 1) {
-					if (commanate) {
-						writer.write(',');
-					}
-					if (indentFactor > 0) {
-						writer.write('\n');
-					}
-					InternalJSONUtil.indent(writer, newindent);
-					InternalJSONUtil.writeValue(writer, this.rawList.get(i), indentFactor, newindent);
-					commanate = true;
-				}
-				if (indentFactor > 0) {
-					writer.write('\n');
-				}
-				InternalJSONUtil.indent(writer, indent);
-			}
-			writer.write(']');
-			return writer;
+			return doWrite(writer, indentFactor, indent);
 		} catch (IOException e) {
 			throw new JSONException(e);
 		}
 	}
 
-	@Override
-	public Iterator<Object> iterator() {
-		return rawList.iterator();
+	// ------------------------------------------------------------------------------------------------- Private method start
+	
+	/**
+	 * 将JSON内容写入Writer
+	 * 
+	 * @param writer writer
+	 * @param indentFactor 缩进因子，定义每一级别增加的缩进量
+	 * @param indent 本级别缩进量
+	 * @return Writer
+	 * @throws IOException IO相关异常
+	 */
+	private Writer doWrite(Writer writer, int indentFactor, int indent) throws IOException {
+		writer.write(CharUtil.BRACKET_START);
+		final int newindent = indent + indentFactor;
+		final boolean isIgnoreNullValue = this.config.isIgnoreNullValue();
+		boolean isFirst = true;
+		for (Object obj : this.rawList) {
+			if(ObjectUtil.isNull(obj) && isIgnoreNullValue) {
+				continue;
+			}
+			if (isFirst) {
+				isFirst = false;
+			}else {
+				writer.write(CharUtil.COMMA);
+			}
+			
+			if (indentFactor > 0) {
+				writer.write(CharUtil.LF);
+			}
+			InternalJSONUtil.indent(writer, newindent);
+			InternalJSONUtil.writeValue(writer, obj, indentFactor, newindent, this.config);
+		}
+		
+		if (indentFactor > 0) {
+			writer.write(CharUtil.LF);
+		}
+		InternalJSONUtil.indent(writer, indent);
+		writer.write(CharUtil.BRACKET_END);
+		return writer;
 	}
 	
 	/**
-	 * 当此JSON列表的每个元素都是一个JSONObject时，可以调用此方法返回一个Iterable，便于使用foreach语法遍历
+	 * 初始化
 	 * 
-	 * @return Iterable
-	 * @since 4.0.12
+	 * @param object 数组或集合或JSON数组字符串
+	 * @throws JSONException 非数组或集合
 	 */
-	public Iterable<JSONObject> jsonIter(){
-		return new JSONObjectIter(iterator());
-	}
-
-	@Override
-	public int size() {
-		return rawList.size();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return rawList.isEmpty();
-	}
-
-	@Override
-	public boolean contains(Object o) {
-		return rawList.contains(o);
-	}
-
-	@Override
-	public Object[] toArray() {
-		return rawList.toArray();
-	}
-
-	@Override
-	public <T> T[] toArray(T[] a) {
-		return rawList.toArray(a);
-	}
-
-	@Override
-	public boolean add(Object e) {
-		return this.rawList.add(JSONUtil.wrap(e, ignoreNullValue));
-	}
-
-	@Override
-	public Object remove(int index) {
-		return index >= 0 && index < this.size() ? this.rawList.remove(index) : null;
-	}
-
-	@Override
-	public boolean remove(Object o) {
-		return rawList.remove(o);
-	}
-
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		return rawList.containsAll(c);
-	}
-
-	@Override
-	public boolean addAll(Collection<? extends Object> c) {
-		if(CollUtil.isEmpty(c)) {
-			return false;
-		}
-		for (Object obj : c) {
-			this.add(obj);
-		}
-		return true;
-	}
-
-	@Override
-	public boolean addAll(int index, Collection<? extends Object> c) {
-		if(CollUtil.isEmpty(c)) {
-			return false;
-		}
-		final ArrayList<Object> list = new ArrayList<>(c.size());
-		for (Object object : c) {
-			list.add(JSONUtil.wrap(object, ignoreNullValue));
-		}
-		return rawList.addAll(index, list);
-	}
-
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		return this.rawList.removeAll(c);
-	}
-
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		return this.rawList.retainAll(c);
-	}
-
-	@Override
-	public void clear() {
-		this.rawList.clear();
-
-	}
-
-	@Override
-	public Object set(int index, Object element) {
-		return this.rawList.set(index, JSONUtil.wrap(element, this.ignoreNullValue));
-	}
-
-	@Override
-	public void add(int index, Object element) {
-		if (index < 0) {
-			throw new JSONException("JSONArray[" + index + "] not found.");
-		}
-		if (index < this.size()) {
-			InternalJSONUtil.testValidity(element);
-			this.rawList.set(index, JSONUtil.wrap(element, this.ignoreNullValue));
+	private void init(Object object) throws JSONException{
+		if (object instanceof CharSequence) {
+			// JSON字符串
+			init((CharSequence) object);
 		} else {
-			while (index != this.size()) {
-				this.add(JSONNull.NULL);
+			Iterator<?> iter;
+			if (object.getClass().isArray()) {// 数组
+				iter = new ArrayIter<>(object);
+			} else if (object instanceof Iterator<?>) {// Iterator
+				iter = ((Iterator<?>) object);
+			} else if (object instanceof Iterable<?>) {// Iterable
+				iter = ((Iterable<?>) object).iterator();
+			} else {
+				throw new JSONException("JSONArray initial value should be a string or collection or array.");
 			}
-			this.put(element);
+			while (iter.hasNext()) {
+				this.add(iter.next());
+			}
 		}
-
 	}
-
-	@Override
-	public int indexOf(Object o) {
-		return this.rawList.indexOf(o);
-	}
-
-	@Override
-	public int lastIndexOf(Object o) {
-		return this.rawList.lastIndexOf(o);
-	}
-
-	@Override
-	public ListIterator<Object> listIterator() {
-		return this.rawList.listIterator();
-	}
-
-	@Override
-	public ListIterator<Object> listIterator(int index) {
-		return this.rawList.listIterator(index);
-	}
-
-	@Override
-	public List<Object> subList(int fromIndex, int toIndex) {
-		return this.rawList.subList(fromIndex, toIndex);
-	}
-
-	/**
-	 * 转为Bean数组，转换异常将被抛出
-	 * 
-	 * @param clazz 数组元素类型
-	 * @return 实体类对象
-	 */
-	public Object toArray(Class<?> clazz) {
-		return toArray(clazz, false);
-	}
-
-	/**
-	 * 转为Bean数组
-	 * 
-	 * @param arrayClass 数组元素类型
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 */
-	public Object[] toArray(Class<?> arrayClass, boolean ignoreError) {
-		return InternalJSONUtil.toArray(this, arrayClass, ignoreError);
-	}
-
-	/**
-	 * 转为{@link ArrayList}
-	 * 
-	 * @param <T> 元素类型
-	 * @param elementType 元素类型
-	 * @return {@link ArrayList}
-	 * @since 3.0.8
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> ArrayList<T> toList(Class<T> elementType) {
-		final CollectionConverter converter = new CollectionConverter(ArrayList.class, elementType);
-		return (ArrayList<T>) converter.convert(this, null);
-	}
-
-	// ------------------------------------------------------------------------------------------------- Private method start
+	
 	/**
 	 * 初始化
 	 * 

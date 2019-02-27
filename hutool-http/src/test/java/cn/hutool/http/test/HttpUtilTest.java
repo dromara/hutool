@@ -1,5 +1,6 @@
 package cn.hutool.http.test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +16,11 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 
 public class HttpUtilTest {
-	
+
 	@Test
 	@Ignore
 	public void postTest() {
-		String result = HttpUtil.createPost("http://api.uhaozu.com/goods/description/1120448506").charset(CharsetUtil.UTF_8).execute().body();
+		String result = HttpUtil.createPost("api.uhaozu.com/goods/description/1120448506").charset(CharsetUtil.UTF_8).execute().body();
 		Console.log(result);
 	}
 
@@ -32,21 +33,22 @@ public class HttpUtilTest {
 	
 	@Test
 	@Ignore
-	public void getTest3() {
-		//自定义的默认header无效
-		String result = HttpRequest.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
-			.removeHeader(Header.USER_AGENT).execute().body();
+	public void getTest2() {
+		// 自定义的默认header无效
+		String result = HttpRequest
+				.get("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101457313&redirect_uri=http%3A%2F%2Fwww.benmovip.com%2Fpay-cloud%2Fqqlogin%2FgetCode&state=ok")
+				.removeHeader(Header.USER_AGENT).execute().body();
 		Console.log(result);
 	}
 
 	@Test
 	@Ignore
-	public void getTest2() {
+	public void getTest3() {
 		// 测试url中带有空格的情况
 		String result1 = HttpUtil.get("http://122.152.198.206:5000/kf?abc= d");
 		Console.log(result1);
 	}
-
+	
 	@Test
 	@Ignore
 	public void get12306Test() {
@@ -106,10 +108,10 @@ public class HttpUtilTest {
 		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("http://www.abc.dd?a=b&c=d", encode);
 
-		// b=b中的=被当作值得一部分，做encode
+		// b=b中的=被当作值的一部分，不做encode
 		paramsStr = "a=b=b&c=d&";
 		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
-		Assert.assertEquals("a=b%3Db&c=d", encode);
+		Assert.assertEquals("a=b=b&c=d", encode);
 
 		// =d的情况被处理为key为空
 		paramsStr = "a=bbb&c=d&=d";
@@ -187,11 +189,50 @@ public class HttpUtilTest {
 		Assert.assertEquals("你好", map.get("c").get(0));
 		Assert.assertEquals("", map.get("哈喽").get(0));
 	}
-	
+
 	@Test
 	@Ignore
 	public void patchTest() {
 		String body = HttpRequest.post("https://www.baidu.com").execute().body();
 		Console.log(body);
+	}
+
+	@Test
+	public void urlWithFormTest() {
+		Map<String, Object> param = new HashMap<>();
+		param.put("AccessKeyId", "123");
+		param.put("Action", "DescribeDomainRecords");
+		param.put("Format", "date");
+		param.put("DomainName", "lesper.cn"); // 域名地址
+		param.put("SignatureMethod", "POST");
+		param.put("SignatureNonce", "123");
+		param.put("SignatureVersion", "4.3.1");
+		param.put("Timestamp", 123432453);
+		param.put("Version", "1.0");
+
+		String urlWithForm = HttpUtil.urlWithForm("http://api.hutool.cn/login?type=aaa", param, CharsetUtil.CHARSET_UTF_8, false);
+		Assert.assertEquals(
+				"http://api.hutool.cn/login?type=aaa&Format=date&Action=DescribeDomainRecords&AccessKeyId=123&SignatureMethod=POST&DomainName=lesper.cn&SignatureNonce=123&Version=1.0&SignatureVersion=4.3.1&Timestamp=123432453",
+				urlWithForm);
+
+		urlWithForm = HttpUtil.urlWithForm("http://api.hutool.cn/login?type=aaa", param, CharsetUtil.CHARSET_UTF_8, false);
+		Assert.assertEquals(
+				"http://api.hutool.cn/login?type=aaa&Format=date&Action=DescribeDomainRecords&AccessKeyId=123&SignatureMethod=POST&DomainName=lesper.cn&SignatureNonce=123&Version=1.0&SignatureVersion=4.3.1&Timestamp=123432453",
+				urlWithForm);
+	}
+	
+	@Test
+	public void getCharsetTest() {
+		String charsetName = ReUtil.get(HttpUtil.CHARSET_PATTERN, "Charset=UTF-8;fq=0.9", 1);
+		Assert.assertEquals("UTF-8", charsetName);
+		
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset=utf-8", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset='utf-8'", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset=\"utf-8\"", 1);
+		Assert.assertEquals("utf-8", charsetName);
+		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset = \"utf-8\"", 1);
+		Assert.assertEquals("utf-8", charsetName);
 	}
 }

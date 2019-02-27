@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import cn.hutool.core.lang.VoidFunc;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.Wrapper;
@@ -26,9 +27,6 @@ import cn.hutool.log.LogFactory;
  */
 public class Session extends AbstractDb implements Closeable {
 	private final static Log log = LogFactory.get();
-
-	private Connection conn = null;
-	private Boolean isSupportTransaction = null;
 
 	/**
 	 * 创建默认数据源会话
@@ -61,63 +59,38 @@ public class Session extends AbstractDb implements Closeable {
 		return new Session(ds);
 	}
 
-	/**
-	 * 创建会话
-	 * 
-	 * @param conn 数据库连接对象
-	 * @return {@link Session}
-	 */
-	public static Session create(Connection conn) {
-		return new Session(conn);
-	}
-
 	// ---------------------------------------------------------------------------- Constructor start
 	/**
-	 * 构造
+	 * 构造，从DataSource中识别方言
 	 * 
 	 * @param ds 数据源
 	 */
 	public Session(DataSource ds) {
-		try {
-			this.conn = ds.getConnection();
-		} catch (SQLException e) {
-			throw new DbRuntimeException("Get connection error!", e);
-		}
-		this.runner = new SqlConnRunner(DialectFactory.newDialect(conn));
+		this(ds, DialectFactory.getDialect(ds));
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param ds 数据源
+	 * @param driverClassName 数据库连接驱动类名，用于识别方言
+	 */
+	public Session(DataSource ds, String driverClassName) {
+		this(ds, DialectFactory.newDialect(driverClassName));
 	}
 
 	/**
 	 * 构造
 	 * 
-	 * @param conn 数据库连接对象
+	 * @param ds 数据源
+	 * @param dialect 方言
 	 */
-	public Session(Connection conn) {
-		this.conn = conn;
-		this.runner = new SqlConnRunner(DialectFactory.newDialect(conn));
+	public Session(DataSource ds, Dialect dialect) {
+		super(ds, dialect);
 	}
-
 	// ---------------------------------------------------------------------------- Constructor end
 
 	// ---------------------------------------------------------------------------- Getters and Setters end
-	/**
-	 * 获得{@link Connection}
-	 * 
-	 * @return {@link Connection}
-	 * @see #getConnection()
-	 */
-	public Connection getConn() {
-		return conn;
-	}
-
-	/**
-	 * 设置{@link Connection}
-	 * 
-	 * @param conn {@link Connection}
-	 */
-	public void setConn(Connection conn) {
-		this.conn = conn;
-	}
-
 	/**
 	 * 获得{@link SqlConnRunner}
 	 * 
@@ -126,48 +99,17 @@ public class Session extends AbstractDb implements Closeable {
 	public SqlConnRunner getRunner() {
 		return runner;
 	}
-
-	/**
-	 * 设置{@link SqlConnRunner}
-	 * 
-	 * @param runner {@link SqlConnRunner}
-	 */
-	public void setRunner(SqlConnRunner runner) {
-		this.runner = runner;
-	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
 
 	// ---------------------------------------------------------------------------- Transaction method start
-	/**
-	 * 数据库是否支持事务
-	 * 
-	 * @return 是否支持事务
-	 * @throws DbRuntimeException SQLException包装
-	 * @since 3.2.3
-	 */
-	public boolean isSupportTransaction() throws DbRuntimeException {
-		if (null == isSupportTransaction) {
-			try {
-				isSupportTransaction = conn.getMetaData().supportsTransactions();
-			} catch (SQLException e) {
-				throw new DbRuntimeException(e, "Because of SQLException [{}], We can not know transation support or not.", e.getMessage());
-			}
-		}
-		return this.isSupportTransaction;
-	}
-
 	/**
 	 * 开始事务
 	 * 
 	 * @throws SQLException SQL执行异常
 	 */
 	public void beginTransaction() throws SQLException {
-		if (null == isSupportTransaction) {
-			isSupportTransaction = conn.getMetaData().supportsTransactions();
-		}
-		if (false == isSupportTransaction) {
-			throw new SQLException("Transaction not supported for current database!");
-		}
+		final Connection conn = getConnection();
+		checkTransactionSupported(conn);
 		conn.setAutoCommit(false);
 	}
 
@@ -178,12 +120,12 @@ public class Session extends AbstractDb implements Closeable {
 	 */
 	public void commit() throws SQLException {
 		try {
-			conn.commit();
+			getConnection().commit();
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			try {
-				conn.setAutoCommit(true); // 事务结束，恢复自动提交
+				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
 			} catch (SQLException e) {
 				log.error(e);
 			}
@@ -197,12 +139,12 @@ public class Session extends AbstractDb implements Closeable {
 	 */
 	public void rollback() throws SQLException {
 		try {
-			conn.rollback();
+			getConnection().rollback();
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			try {
-				conn.setAutoCommit(true); // 事务结束，恢复自动提交
+				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
 			} catch (SQLException e) {
 				log.error(e);
 			}
@@ -215,12 +157,12 @@ public class Session extends AbstractDb implements Closeable {
 	 */
 	public void quietRollback() {
 		try {
-			conn.rollback();
+			getConnection().rollback();
 		} catch (Exception e) {
 			log.error(e);
 		} finally {
 			try {
-				conn.setAutoCommit(true); // 事务结束，恢复自动提交
+				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
 			} catch (SQLException e) {
 				log.error(e);
 			}
@@ -235,12 +177,12 @@ public class Session extends AbstractDb implements Closeable {
 	 */
 	public void rollback(Savepoint savepoint) throws SQLException {
 		try {
-			conn.rollback(savepoint);
+			getConnection().rollback(savepoint);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			try {
-				conn.setAutoCommit(true); // 事务结束，恢复自动提交
+				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
 			} catch (SQLException e) {
 				log.error(e);
 			}
@@ -255,12 +197,12 @@ public class Session extends AbstractDb implements Closeable {
 	 */
 	public void quietRollback(Savepoint savepoint) throws SQLException {
 		try {
-			conn.rollback(savepoint);
+			getConnection().rollback(savepoint);
 		} catch (Exception e) {
 			log.error(e);
 		} finally {
 			try {
-				conn.setAutoCommit(true); // 事务结束，恢复自动提交
+				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
 			} catch (SQLException e) {
 				log.error(e);
 			}
@@ -274,7 +216,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Savepoint setSavepoint() throws SQLException {
-		return conn.setSavepoint();
+		return getConnection().setSavepoint();
 	}
 
 	/**
@@ -285,7 +227,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Savepoint setSavepoint(String name) throws SQLException {
-		return conn.setSavepoint(name);
+		return getConnection().setSavepoint(name);
 	}
 
 	/**
@@ -301,10 +243,10 @@ public class Session extends AbstractDb implements Closeable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public void setTransactionIsolation(int level) throws SQLException {
-		if (conn.getMetaData().supportsTransactionIsolationLevel(level) == false) {
+		if (getConnection().getMetaData().supportsTransactionIsolationLevel(level) == false) {
 			throw new SQLException(StrUtil.format("Transaction isolation [{}] not support!", level));
 		}
-		conn.setTransactionIsolation(level);
+		getConnection().setTransactionIsolation(level);
 	}
 
 	/**
@@ -337,30 +279,18 @@ public class Session extends AbstractDb implements Closeable {
 	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
 
-	/**
-	 * 获得连接，Session中使用同一个连接
-	 * 
-	 * @return {@link Connection}
-	 * @throws SQLException SQL执行异常
-	 */
 	@Override
 	public Connection getConnection() throws SQLException {
-		// Session中使用同一个连接操作
-		return this.conn;
+		return ThreadLocalConnection.INSTANCE.get(this.ds);
 	}
 
-	/**
-	 * Session中不关闭连接
-	 * 
-	 * @param conn {@link Connection}
-	 */
 	@Override
 	public void closeConnection(Connection conn) {
-		// Session中不关闭连接
+		ThreadLocalConnection.INSTANCE.close(this.ds);
 	}
 
 	@Override
 	public void close() {
-		DbUtil.close(conn);
+		closeConnection(null);
 	}
 }

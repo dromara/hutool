@@ -10,7 +10,7 @@ host = smtp.yeah.net
 port = 465
 # 发件人（必须正确，否则发送失败）
 from = 小磊<hutool@yeah.net>
-# 用户名
+# 用户名（注意：如果使用foxmail邮箱，此处user为qq号）
 user = hutool
 # 密码
 pass = q1w2e3
@@ -22,6 +22,8 @@ charset = UTF-8
 
 #使用 STARTTLS安全连接
 startttlsEnable = true
+#使用 SSL安全连接
+sslEnable = true
 # 指定实现javax.net.SocketFactory接口的类的名称,这个类将被用于创建SMTP的套接字
 socketFactoryClass = javax.net.ssl.SSLSocketFactory
 # 如果设置为true,未能创建一个套接字使用指定的套接字工厂类将导致使用java.net.Socket创建的套接字类, 默认值为true
@@ -31,3 +33,8 @@ socketFactoryPort = 465
 
 # 对于超长参数是否切分为多份，默认为false（国内邮箱附件不支持切分的附件名）
 splitlongparameters = false
+
+# SMTP超时时长，单位毫秒，缺省值不超时
+timeout = 0
+# Socket连接超时值，单位毫秒，缺省值不超时
+connectionTimeout = 0

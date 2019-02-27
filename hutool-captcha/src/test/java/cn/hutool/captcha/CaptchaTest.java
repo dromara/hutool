@@ -50,7 +50,7 @@ public class CaptchaTest {
 		CircleCaptcha captcha = CaptchaUtil.createCircleCaptcha(200, 100, 4, 20);
 		// CircleCaptcha captcha = new CircleCaptcha(200, 100, 4, 20);
 		// 图形验证码写出，可以写出到文件，也可以写出到流
-		captcha.write("d:/circle.png");
+		captcha.write("e:/circle.png");
 		// 验证图形验证码的有效性，返回boolean值
 		captcha.verify("1234");
 	}
@@ -63,7 +63,7 @@ public class CaptchaTest {
 		ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
 		// ShearCaptcha captcha = new ShearCaptcha(200, 100, 4, 4);
 		// 图形验证码写出，可以写出到文件，也可以写出到流
-		captcha.write("d:/shear.png");
+		captcha.write("e:/shear.png");
 		// 验证图形验证码的有效性，返回boolean值
 		captcha.verify("1234");
 	}

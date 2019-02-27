@@ -28,6 +28,7 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
+import cn.hutool.setting.dialect.Props;
 
 /**
  * 设置工具类。 用于支持设置（配置）文件<br>
@@ -48,6 +49,8 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/** 默认字符集 */
 	public final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
+	/** 默认配置文件扩展名 */
+	public final static String EXT_NAME = "setting";
 
 	/** 附带分组的键值对存储 */
 	private final GroupedMap groupedMap = new GroupedMap();
@@ -261,11 +264,12 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return map
 	 */
 	public Map<String, String> getMap(String group) {
-		return this.groupedMap.get(group);
+		final LinkedHashMap<String, String> map = this.groupedMap.get(group);
+		return (null != map) ? map : new LinkedHashMap<String, String>(0);
 	}
 
 	/**
-	 * 获得group对应的子Setting
+	 * 获取group分组下所有配置键值对，组成新的{@link Setting}
 	 * 
 	 * @param group 分组
 	 * @return {@link Setting}
@@ -277,7 +281,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 转换为Properties对象，原分组变为前缀
+	 * 获取group分组下所有配置键值对，组成新的{@link Properties}
 	 * 
 	 * @param group 分组
 	 * @return Properties对象
@@ -286,6 +290,19 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		final Properties properties = new Properties();
 		properties.putAll(getMap(group));
 		return properties;
+	}
+
+	/**
+	 * 获取group分组下所有配置键值对，组成新的{@link Props}
+	 * 
+	 * @param group 分组
+	 * @return Props对象
+	 * @since 4.1.21
+	 */
+	public Props getProps(String group) {
+		final Props props = new Props();
+		props.putAll(getMap(group));
+		return props;
 	}
 
 	// --------------------------------------------------------------------------------- Functions
@@ -318,9 +335,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		}
 		return properties;
 	}
-	
+
 	/**
 	 * 获取GroupedMap
+	 * 
 	 * @return GroupedMap
 	 * @since 4.0.12
 	 */
@@ -350,7 +368,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		this.settingLoader.setVarRegex(regex);
 	}
 
-	// ------------------------------------------------- Override Map interface
+	// ------------------------------------------------- Map interface with group
 	/**
 	 * 某个分组对应的键值对是否为空
 	 * 
@@ -483,56 +501,111 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		return this;
 	}
 
+	// ------------------------------------------------- Override Map interface
 	@Override
 	public boolean isEmpty() {
 		return this.groupedMap.isEmpty();
 	}
 
+	/**
+	 * 默认分组（空分组）中是否包含指定key对应的值
+	 * 
+	 * @param key 键
+	 * @return 默认分组中是否包含指定key对应的值
+	 */
 	@Override
 	public boolean containsKey(Object key) {
 		return this.groupedMap.containsKey(DEFAULT_GROUP, Convert.toStr(key));
 	}
 
+	/**
+	 * 默认分组（空分组）中是否包含指定值
+	 * 
+	 * @param value 值
+	 * @return 默认分组中是否包含指定值
+	 */
 	@Override
 	public boolean containsValue(Object value) {
 		return this.groupedMap.containsValue(DEFAULT_GROUP, Convert.toStr(value));
 	}
 
+	/**
+	 * 获取默认分组（空分组）中指定key对应的值
+	 * 
+	 * @param key 键
+	 * @return 默认分组（空分组）中指定key对应的值
+	 */
 	@Override
 	public String get(Object key) {
 		return this.groupedMap.get(DEFAULT_GROUP, Convert.toStr(key));
 	}
 
+	/**
+	 * 将指定键值对加入到默认分组（空分组）中
+	 * 
+	 * @param key 键
+	 * @param value 值
+	 * @return 加入的值
+	 */
 	@Override
 	public String put(String key, String value) {
 		return this.groupedMap.put(DEFAULT_GROUP, key, value);
 	}
 
+	/**
+	 * 移除默认分组（空分组）中指定值
+	 * 
+	 * @param key 键
+	 * @return 移除的值
+	 */
 	@Override
 	public String remove(Object key) {
 		return this.groupedMap.remove(DEFAULT_GROUP, Convert.toStr(key));
 	}
 
+	/**
+	 * 将键值对Map加入默认分组（空分组）中
+	 * 
+	 * @param m Map
+	 */
 	@Override
 	public void putAll(Map<? extends String, ? extends String> m) {
 		this.groupedMap.putAll(DEFAULT_GROUP, m);
 	}
 
+	/**
+	 * 清空默认分组（空分组）中的所有键值对
+	 */
 	@Override
 	public void clear() {
 		this.groupedMap.clear(DEFAULT_GROUP);
 	}
 
+	/**
+	 * 获取默认分组（空分组）中的所有键列表
+	 * 
+	 * @return 默认分组（空分组）中的所有键列表
+	 */
 	@Override
 	public Set<String> keySet() {
 		return this.groupedMap.keySet(DEFAULT_GROUP);
 	}
 
+	/**
+	 * 获取默认分组（空分组）中的所有值列表
+	 * 
+	 * @return 默认分组（空分组）中的所有值列表
+	 */
 	@Override
 	public Collection<String> values() {
 		return this.groupedMap.values(DEFAULT_GROUP);
 	}
 
+	/**
+	 * 获取默认分组（空分组）中的所有键值对列表
+	 * 
+	 * @return 默认分组（空分组）中的所有键值对列表
+	 */
 	@Override
 	public Set<Entry<String, String>> entrySet() {
 		return this.groupedMap.entrySet(DEFAULT_GROUP);

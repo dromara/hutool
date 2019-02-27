@@ -190,14 +190,22 @@ public class ConverterRegistry {
 		if (null == type) {
 			type = defaultValue.getClass();
 		}
-		final Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
+		Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
+		if(null == rowType) {
+			if(null != defaultValue) {
+				rowType = (Class<T>) defaultValue.getClass();
+			}else {
+				//无法识别的泛型类型，按照Object处理
+				return (T) value;
+			}
+		}
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
 		final T result = convertSpecial(type, rowType, value, defaultValue);
 		if(null != result) {
 			return result;
 		}
-
+		
 		// 标准转换器
 		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null != converter) {
@@ -208,7 +216,8 @@ public class ConverterRegistry {
 		if (BeanUtil.isBean(rowType)) {
 			return new BeanConverter<T>(rowType).convert(value, defaultValue);
 		}
-
+		
+		
 		// 无法转换
 		throw new ConvertException("No Converter for type [{}]", rowType.getName());
 	}
@@ -264,6 +273,7 @@ public class ConverterRegistry {
 			return null;
 		}
 		
+
 		// 集合转换（不可以默认强转）
 		if (Collection.class.isAssignableFrom(rowType)) {
 			final CollectionConverter collectionConverter = new CollectionConverter(type);
@@ -291,7 +301,7 @@ public class ConverterRegistry {
 			}
 		}
 		
-		//泛型转换
+		//枚举转换
 		if(rowType.isEnum()) {
 			return (T) new EnumConverter(rowType).convert(value, defaultValue);
 		}
@@ -333,6 +343,7 @@ public class ConverterRegistry {
 		defaultConverterMap.put(AtomicBoolean.class, new AtomicBooleanConverter());// since 3.0.8
 		defaultConverterMap.put(BigDecimal.class, new NumberConverter(BigDecimal.class));
 		defaultConverterMap.put(BigInteger.class, new NumberConverter(BigInteger.class));
+		defaultConverterMap.put(CharSequence.class, new StringConverter());
 		defaultConverterMap.put(String.class, new StringConverter());
 
 		// URI and URL

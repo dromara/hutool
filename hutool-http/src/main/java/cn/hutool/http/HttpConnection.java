@@ -20,11 +20,11 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
-import cn.hutool.core.lang.Validator;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.ssl.AndroidSupportSSLFactory;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.http.ssl.TrustAnyHostnameVerifier;
 import cn.hutool.log.Log;
@@ -96,6 +96,22 @@ public class HttpConnection {
 		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, timeout, proxy);
 	}
 
+	/**
+	 * 创建HttpConnection
+	 * 
+	 * @param url URL
+	 * @param method HTTP方法
+	 * @param hostnameVerifier {@link HostnameVerifier}
+	 * @param ssf {@link SSLSocketFactory}
+	 * @param timeout 超时时间
+	 * @param proxy 代理
+	 * @return HttpConnection
+	 * @since 4.1.9
+	 */
+	public static HttpConnection create(URL url, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
+		return new HttpConnection(url, method, hostnameVerifier, ssf, timeout, proxy);
+	}
+
 	// --------------------------------------------------------------- Constructor start
 	/**
 	 * 构造HttpConnection
@@ -129,19 +145,40 @@ public class HttpConnection {
 	 * @param proxy 代理
 	 */
 	public HttpConnection(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
-		if (StrUtil.isBlank(urlStr)) {
-			throw new HttpException("Url is blank !");
-		}
-		if (Validator.isUrl(urlStr) == false) {
-			throw new HttpException("{} is not a url !", urlStr);
-		}
+		this(URLUtil.toUrlForHttp(urlStr), method, hostnameVerifier, ssf, timeout, proxy);
+	}
 
-		// 去掉url中的空白符，防止空白符导致的异常
-		urlStr = StrUtil.cleanBlank(urlStr);
-		this.url = URLUtil.url(urlStr);
-		this.method = ObjectUtil.isNull(method) ? Method.GET : method;
+	/**
+	 * 构造HttpConnection
+	 * 
+	 * @param url URL
+	 * @param method HTTP方法
+	 * @param hostnameVerifier 域名验证器
+	 * @param ssf SSLSocketFactory
+	 * @param timeout 超时时长
+	 * @param proxy 代理
+	 */
+	public HttpConnection(URL url, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
+		this.url = url;
+		this.method = ObjectUtil.defaultIfNull(method, Method.GET);
 		this.proxy = proxy;
 
+		//初始化Http连接
+		initConn(hostnameVerifier, ssf, timeout);
+	}
+
+	// --------------------------------------------------------------- Constructor end
+
+	/**
+	 * 初始化连接相关信息
+	 * 
+	 * @param hostnameVerifier 域名验证器
+	 * @param ssf SSLSocketFactory
+	 * @param timeout 超时时长
+	 * @return HttpConnection
+	 * @since 4.4.1
+	 */
+	public HttpConnection initConn(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout) {
 		try {
 			this.conn = openHttp(hostnameVerifier, ssf);
 		} catch (Exception e) {
@@ -150,18 +187,7 @@ public class HttpConnection {
 		if (timeout > 0) {
 			this.setConnectionAndReadTimeout(timeout);
 		}
-
-		initConn();
-	}
-
-	// --------------------------------------------------------------- Constructor end
-
-	/**
-	 * 初始化连接相关信息
-	 * 
-	 * @return HttpConnection
-	 */
-	public HttpConnection initConn() {
+		
 		// method
 		try {
 			this.conn.setRequestMethod(this.method.toString());
@@ -185,7 +211,7 @@ public class HttpConnection {
 		// this.header(GlobalHeaders.INSTANCE.headers, true);
 
 		// Cookie
-		setCookie(CookiePool.get(this.url.getHost()));
+		// setCookie(CookiePool.get(this.url.getHost()));
 
 		return this;
 	}
@@ -386,7 +412,7 @@ public class HttpConnection {
 	 */
 	public HttpConnection setCookie(String cookie) {
 		if (cookie != null) {
-			log.debug("Cookie: {}", cookie);
+			log.debug("With Cookie: {}", cookie);
 			header(Header.COOKIE, cookie, true);
 		}
 		return this;
@@ -448,8 +474,6 @@ public class HttpConnection {
 	 * @throws IOException IO异常
 	 */
 	public InputStream getInputStream() throws IOException {
-		storeCookie();
-
 		if (null != this.conn) {
 			return this.conn.getInputStream();
 		}
@@ -463,8 +487,6 @@ public class HttpConnection {
 	 * @throws IOException IO异常
 	 */
 	public InputStream getErrorStream() throws IOException {
-		storeCookie();
-
 		if (null != this.conn) {
 			return this.conn.getErrorStream();
 		}
@@ -552,17 +574,29 @@ public class HttpConnection {
 	 * @return {@link HttpURLConnection}，https返回{@link HttpsURLConnection}
 	 */
 	private HttpURLConnection openHttp(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-		final HttpURLConnection conn = (HttpURLConnection) openConnection();
-
-		if(conn instanceof HttpsURLConnection) {
-			//Https请求
-			final HttpsURLConnection httpsConn = (HttpsURLConnection)conn;
-			// 验证域
-			httpsConn.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
-			httpsConn.setSSLSocketFactory(null != ssf ? ssf : SSLSocketFactoryBuilder.create().build());
+		final URLConnection conn = openConnection();
+		if(false == conn instanceof HttpURLConnection) {
+			//防止其它协议造成的转换异常
+			throw new HttpException("'{}' is not a http connection, make sure URL is format for http.", conn.getClass().getName());
 		}
 
-		return conn;
+		if (conn instanceof HttpsURLConnection) {
+			// Https请求
+			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
+			// 验证域
+			httpsConn.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
+			if (null == ssf) {
+				if (StrUtil.equalsIgnoreCase("dalvik", System.getProperty("java.vm.name"))) {
+					// 兼容android低版本SSL连接
+					ssf = new AndroidSupportSSLFactory();
+				} else {
+					ssf = SSLSocketFactoryBuilder.create().build();
+				}
+			}
+			httpsConn.setSSLSocketFactory(ssf);
+		}
+		
+		return (HttpURLConnection)conn;
 	}
 
 	/**
@@ -575,15 +609,5 @@ public class HttpConnection {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
 	}
 
-	/**
-	 * 存储服务器返回的Cookie到本地
-	 */
-	private void storeCookie() {
-		final String setCookie = header(Header.SET_COOKIE);
-		if (StrUtil.isBlank(setCookie) == false) {
-			log.debug("Set cookie: [{}]", setCookie);
-			CookiePool.put(url.getHost(), setCookie);
-		}
-	}
 	// --------------------------------------------------------------- Private Method end
 }

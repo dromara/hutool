@@ -3,6 +3,12 @@ package cn.hutool.cron;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 作业启动管理器
+ * 
+ * @author looly
+ *
+ */
 public class TaskLauncherManager {
 	
 	protected Scheduler scheduler;
@@ -25,7 +31,8 @@ public class TaskLauncherManager {
 		}
 		//子线程是否为deamon线程取决于父线程，因此此处无需显示调用
 		//launcher.setDaemon(this.scheduler.daemon);
-		launcher.start();
+//		launcher.start();
+		this.scheduler.threadExecutor.execute(launcher);
 		return launcher;
 	}
 	

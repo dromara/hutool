@@ -2,6 +2,7 @@ package cn.hutool.extra.ssh;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import com.jcraft.jsch.Channel;
@@ -31,8 +32,6 @@ public class JschUtil {
 
 	/** 本地端口生成器 */
 	private static final LocalPortGenerater portGenerater = new LocalPortGenerater(10000);
-	/** 锁 */
-	private static final Object lock = new Object();
 
 	/**
 	 * 生成一个本地端口，用于远程端口映射
@@ -42,7 +41,7 @@ public class JschUtil {
 	public static int generateLocalPort() {
 		return portGenerater.generate();
 	}
-
+	
 	/**
 	 * 获得一个SSH跳板机会话，重用已经使用的会话
 	 * 
@@ -53,18 +52,7 @@ public class JschUtil {
 	 * @return SSH会话
 	 */
 	public static Session getSession(String sshHost, int sshPort, String sshUser, String sshPass) {
-		final String key = StrUtil.format("{}@{}:{}", sshUser, sshHost, sshPort);
-		Session session = JschSessionPool.INSTANCE.get(key);
-		if (null == session) {
-			synchronized (lock) {
-				session = JschSessionPool.INSTANCE.get(key);
-				if (null == session || false == session.isConnected()) {
-					session = openSession(sshHost, sshPort, sshUser, sshPass);
-					JschSessionPool.INSTANCE.put(key, session);
-				}
-			}
-		}
-		return session;
+		return JschSessionPool.INSTANCE.getSession(sshHost, sshPort, sshUser, sshPass);
 	}
 
 	/**
@@ -85,6 +73,7 @@ public class JschUtil {
 		try {
 			session = new JSch().getSession(sshUser, sshHost, sshPort);
 			session.setPassword(sshPass);
+			//设置第一次登陆的时候提示，可选值：(ask | yes | no) 
 			session.setConfig("StrictHostKeyChecking", "no");
 			session.connect();
 		} catch (JSchException e) {
@@ -108,7 +97,7 @@ public class JschUtil {
 			try {
 				session.setPortForwardingL(localPort, remoteHost, remotePort);
 			} catch (JSchException e) {
-				throw new JschRuntimeException("From [" + remoteHost + "] Mapping to [" + localPort + "] error！", e);
+				throw new JschRuntimeException(e, "From [{}] mapping to [{}] error！", remoteHost, localPort);
 			}
 			return true;
 		}
@@ -210,10 +199,9 @@ public class JschUtil {
 		}
 		return (ChannelShell) channel;
 	}
-
+	
 	/**
-	 * 打开Exec连接<br>
-	 * 获取ChannelExec后首先
+	 * 执行Shell命令
 	 * 
 	 * @param session Session会话
 	 * @param cmd 命令
@@ -222,6 +210,20 @@ public class JschUtil {
 	 * @since 4.0.3
 	 */
 	public static String exec(Session session, String cmd, Charset charset) {
+		return exec(session, cmd, charset, System.err);
+	}
+
+	/**
+	 * 执行Shell命令
+	 * 
+	 * @param session Session会话
+	 * @param cmd 命令
+	 * @param charset 发送和读取内容的编码
+	 * @param errStream 错误信息输出到的位置
+	 * @return {@link ChannelExec}
+	 * @since 4.3.1
+	 */
+	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
 		if (null == charset) {
 			charset = CharsetUtil.CHARSET_UTF_8;
 		}
@@ -234,7 +236,7 @@ public class JschUtil {
 
 		channel.setCommand(StrUtil.bytes(cmd, charset));
 		channel.setInputStream(null);
-		channel.setErrStream(System.err);
+		channel.setErrStream(errStream);
 		InputStream in = null;
 		try {
 			channel.connect();// 执行命令 等待执行结束
@@ -259,6 +261,7 @@ public class JschUtil {
 		if (session != null && session.isConnected()) {
 			session.disconnect();
 		}
+		JschSessionPool.INSTANCE.remove(session);
 	}
 
 	/**

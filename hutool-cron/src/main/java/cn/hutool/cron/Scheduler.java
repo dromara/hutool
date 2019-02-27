@@ -4,8 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.thread.ExecutorBuilder;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.listener.TaskListener;
@@ -68,6 +71,8 @@ public class Scheduler {
 	protected TaskExecutorManager taskExecutorManager;
 	/** 监听管理器列表 */
 	protected TaskListenerManager listenerManager = new TaskListenerManager();
+	/** 线程池，用于执行TaskLauncher和TaskExecutor */
+	protected ExecutorService threadExecutor;
 
 	// --------------------------------------------------------- Getters and Setters start
 	/**
@@ -317,6 +322,16 @@ public class Scheduler {
 	public int size() {
 		return this.taskTable.size();
 	}
+	
+	/**
+	 * 清空任务表
+	 * @return this
+	 * @since 4.1.17
+	 */
+	public Scheduler clear() {
+		this.taskTable = new TaskTable(this);
+		return this;
+	}
 	// -------------------------------------------------------------------- shcedule end
 
 	/**
@@ -325,7 +340,7 @@ public class Scheduler {
 	public boolean isStarted() {
 		return this.started;
 	}
-	
+
 	/**
 	 * 启动
 	 * 
@@ -348,6 +363,10 @@ public class Scheduler {
 				throw new CronException("Schedule is started!");
 			}
 
+			// 无界线程池，确保每一个需要执行的线程都可以及时运行，同时复用已有现成避免线程重复创建
+			this.threadExecutor = ExecutorBuilder.create().useSynchronousQueue().setThreadFactory(//
+					ThreadFactoryBuilder.create().setNamePrefix("hutool-cron-").setDaemon(this.daemon).build()//
+			).build();
 			this.taskLauncherManager = new TaskLauncherManager(this);
 			this.taskExecutorManager = new TaskExecutorManager(this);
 
@@ -359,14 +378,26 @@ public class Scheduler {
 		}
 		return this;
 	}
+	
+	/**
+	 * 停止定时任务<br>
+	 * 此方法调用后会将定时器进程立即结束，如果为守护线程模式，则正在执行的作业也会自动结束，否则作业线程将在执行完成后结束。<br>
+	 * 此方法并不会清除任务表中的任务，请调用{@link #clear()} 方法清空任务或者使用{@link #stop(boolean)}方法可选是否清空
+	 * 
+	 * @return this
+	 */
+	public Scheduler stop() {
+		return stop(false);
+	}
 
 	/**
 	 * 停止定时任务<br>
 	 * 此方法调用后会将定时器进程立即结束，如果为守护线程模式，则正在执行的作业也会自动结束，否则作业线程将在执行完成后结束。
 	 * 
 	 * @return this
+	 * @since 4.1.17
 	 */
-	public Scheduler stop() {
+	public Scheduler stop(boolean clearTasks) {
 		synchronized (lock) {
 			if (false == started) {
 				throw new IllegalStateException("Scheduler not started !");
@@ -375,6 +406,15 @@ public class Scheduler {
 			// 停止CronTimer
 			this.timer.stopTimer();
 			this.timer = null;
+			
+			//停止线程池
+			this.threadExecutor.shutdown();
+			this.threadExecutor = null;
+			
+			//可选是否清空任务表
+			if(clearTasks) {
+				clear();
+			}
 
 			// 修改标志
 			started = false;
@@ -382,6 +422,4 @@ public class Scheduler {
 		return this;
 	}
 
-	// -------------------------------------------------------------------- notify start
-	// -------------------------------------------------------------------- notify end
 }

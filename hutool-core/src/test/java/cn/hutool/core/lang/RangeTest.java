@@ -18,7 +18,7 @@ public class RangeTest {
 	@Test
 	public void dateRangeTest() {
 		DateTime start = DateUtil.parse("2017-01-01");
-		DateTime end = DateUtil.parse("2017-01-31");
+		DateTime end = DateUtil.parse("2017-01-02");
 		
 		final Range<DateTime> range = new Range<DateTime>(start, end, new Range.Steper<DateTime>(){
 
@@ -32,7 +32,26 @@ public class RangeTest {
 			
 		});
 		
+		Assert.assertTrue(range.hasNext());
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-01"));
+		Assert.assertTrue(range.hasNext());
 		Assert.assertEquals(range.next(), DateUtil.parse("2017-01-02"));
+		Assert.assertFalse(range.hasNext());
+	}
+	
+	@Test
+	public void intRangeTest() {
+		final Range<Integer> range = new Range<Integer>(1, 1, new Range.Steper<Integer>(){
+			
+			@Override
+			public Integer step(Integer current, Integer end, int index) {
+				return current >= end ? null : current +10;
+			}
+			
+		});
+		
+		Assert.assertTrue(range.hasNext());
+		Assert.assertEquals(Integer.valueOf(1), range.next());
+		Assert.assertFalse(range.hasNext());
 	}
 }

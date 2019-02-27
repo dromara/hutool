@@ -47,7 +47,7 @@ public class Assert {
 	public static void isTrue(boolean expression) throws IllegalArgumentException {
 		isTrue(expression, "[Assertion failed] - this expression must be true");
 	}
-	
+
 	/**
 	 * 断言是否为假，如果为 {@code true} 抛出 {@code IllegalArgumentException} 异常<br>
 	 * 
@@ -65,7 +65,7 @@ public class Assert {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
-	
+
 	/**
 	 * 断言是否为假，如果为 {@code true} 抛出 {@code IllegalArgumentException} 异常<br>
 	 * 
@@ -112,9 +112,9 @@ public class Assert {
 		isNull(object, "[Assertion failed] - the object argument must be null");
 	}
 
-	//----------------------------------------------------------------------------------------------------------- Check not null
+	// ----------------------------------------------------------------------------------------------------------- Check not null
 	/**
-	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link NullPointerException} 异常 Assert that an object is not {@code null} .
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz, "The class must not be null");
@@ -135,7 +135,7 @@ public class Assert {
 	}
 
 	/**
-	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link NullPointerException} 异常
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz);
@@ -150,7 +150,7 @@ public class Assert {
 		return notNull(object, "[Assertion failed] - this argument is required; it must not be null");
 	}
 
-	//----------------------------------------------------------------------------------------------------------- Check empty
+	// ----------------------------------------------------------------------------------------------------------- Check empty
 	/**
 	 * 检查给定字符串是否为空，为空抛出 {@link IllegalArgumentException}
 	 * 
@@ -455,34 +455,34 @@ public class Assert {
 	}
 
 	/**
-	 * Assert that {@code superType.isAssignableFrom(subType)} is {@code true}.
+	 * 断言 {@code superType.isAssignableFrom(subType)} 是否为 {@code true}.
 	 * 
 	 * <pre class="code">
 	 * Assert.isAssignable(Number.class, myClass);
 	 * </pre>
 	 * 
-	 * @param superType the super type to check
-	 * @param subType the sub type to check
-	 * @throws IllegalArgumentException if the classes are not assignable
+	 * @param superType 需要检查的父类或接口
+	 * @param subType 需要检查的子类
+	 * @throws IllegalArgumentException 如果子类非继承父类，抛出此异常
 	 */
-	public static void isAssignable(Class<?> superType, Class<?> subType) throws IllegalArgumentException{
+	public static void isAssignable(Class<?> superType, Class<?> subType) throws IllegalArgumentException {
 		isAssignable(superType, subType, "{} is not assignable to {})", subType, superType);
 	}
 
 	/**
-	 * Assert that {@code superType.isAssignableFrom(subType)} is {@code true}.
+	 * 断言 {@code superType.isAssignableFrom(subType)} 是否为 {@code true}.
 	 * 
 	 * <pre class="code">
 	 * Assert.isAssignable(Number.class, myClass);
 	 * </pre>
 	 * 
-	 * @param superType the super type to check against
-	 * @param subType the sub type to check
+	 * @param superType 需要检查的父类或接口
+	 * @param subType 需要检查的子类
 	 * @param errorMsgTemplate 异常时的消息模板
 	 * @param params 参数列表
-	 * @throws IllegalArgumentException if the classes are not assignable
+	 * @throws IllegalArgumentException 如果子类非继承父类，抛出此异常
 	 */
-	public static void isAssignable(Class<?> superType, Class<?> subType, String errorMsgTemplate, Object... params) throws IllegalArgumentException{
+	public static void isAssignable(Class<?> superType, Class<?> subType, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		notNull(superType, "Type to check against must not be null");
 		if (subType == null || !superType.isAssignableFrom(subType)) {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
@@ -490,36 +490,166 @@ public class Assert {
 	}
 
 	/**
-	 * Assert a boolean expression, throwing {@code IllegalStateException} if the test result is {@code false}. Call isTrue if you wish to throw IllegalArgumentException on an assertion failure.
+	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
 	 * 
 	 * <pre class="code">
 	 * Assert.state(id == null, "The id property must not already be initialized");
 	 * </pre>
 	 * 
-	 * @param expression a boolean expression
+	 * @param expression boolean 表达式
 	 * @param errorMsgTemplate 异常时的消息模板
 	 * @param params 参数列表
-	 * @throws IllegalStateException if expression is {@code false}
+	 * @throws IllegalStateException 表达式为 {@code false} 抛出此异常
 	 */
-	public static void state(boolean expression, String errorMsgTemplate, Object... params) throws IllegalStateException{
+	public static void state(boolean expression, String errorMsgTemplate, Object... params) throws IllegalStateException {
 		if (false == expression) {
 			throw new IllegalStateException(StrUtil.format(errorMsgTemplate, params));
 		}
 	}
 
 	/**
-	 * Assert a boolean expression, throwing {@link IllegalStateException} if the test result is {@code false}.
-	 * <p>
-	 * Call {@link #isTrue(boolean)} if you wish to throw {@link IllegalArgumentException} on an assertion failure.
+	 * 检查boolean表达式，当检查结果为false时抛出 {@code IllegalStateException}。
 	 * 
 	 * <pre class="code">
 	 * Assert.state(id == null);
 	 * </pre>
 	 * 
-	 * @param expression a boolean expression
-	 * @throws IllegalStateException if the supplied expression is {@code false}
+	 * @param expression boolean 表达式
+	 * @throws IllegalStateException 表达式为 {@code false} 抛出此异常
 	 */
-	public static void state(boolean expression) throws IllegalStateException{
+	public static void state(boolean expression) throws IllegalStateException {
 		state(expression, "[Assertion failed] - this state invariant must be true");
 	}
+
+	/**
+	 * 检查下标（数组、集合、字符串）是否符合要求，下标必须满足：
+	 * 
+	 * <pre>
+	 * 0 <= index < size
+	 * </pre>
+	 * 
+	 * @param index 下标
+	 * @param size 长度
+	 * @return 检查后的下标
+	 * @throws IllegalArgumentException 如果size < 0 抛出此异常
+	 * @throws IndexOutOfBoundsException 如果index < 0或者 index >= size 抛出此异常
+	 * @since 4.1.9
+	 */
+	public static int checkIndex(int index, int size) throws IllegalArgumentException, IndexOutOfBoundsException {
+		return checkIndex(index, size, "[Assertion failed]");
+	}
+
+	/**
+	 * 检查下标（数组、集合、字符串）是否符合要求，下标必须满足：
+	 * 
+	 * <pre>
+	 * 0 <= index < size
+	 * </pre>
+	 * 
+	 * @param index 下标
+	 * @param size 长度
+	 * @param errorMsgTemplate 异常时的消息模板
+	 * @param params 参数列表
+	 * @return 检查后的下标
+	 * @throws IllegalArgumentException 如果size < 0 抛出此异常
+	 * @throws IndexOutOfBoundsException 如果index < 0或者 index >= size 抛出此异常
+	 * @since 4.1.9
+	 */
+	public static int checkIndex(int index, int size, String errorMsgTemplate, Object... params) throws IllegalArgumentException, IndexOutOfBoundsException {
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException(badIndexMsg(index, size, errorMsgTemplate, params));
+		}
+		return index;
+	}
+
+	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static int checkBetween(int value, int min, int max) {
+		if (value < min || value > max) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+	
+	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static long checkBetween(long value, long min, long max) {
+		if (value < min || value > max) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+	
+	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static double checkBetween(double value, double min, double max) {
+		if (value < min || value > max) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+	
+	/**
+	 * 检查值是否在指定范围内
+	 * 
+	 * @param value 值
+	 * @param min 最小值（包含）
+	 * @param max 最大值（包含）
+	 * @return 检查后的长度值
+	 * @since 4.1.10
+	 */
+	public static Number checkBetween(Number value, Number min, Number max) {
+		notNull(value);
+		notNull(min);
+		notNull(max);
+		double valueDouble = value.doubleValue();
+		double minDouble = min.doubleValue();
+		double maxDouble = max.doubleValue();
+		if (valueDouble < minDouble || valueDouble > maxDouble) {
+			throw new IllegalArgumentException(StrUtil.format("Length must be between {} and {}.", min, max));
+		}
+		return value;
+	}
+
+	// -------------------------------------------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 错误的下标时显示的消息
+	 * 
+	 * @param index 下标
+	 * @param size 长度
+	 * @param desc 异常时的消息模板
+	 * @param params 参数列表
+	 * @return 消息
+	 */
+	private static String badIndexMsg(int index, int size, String desc, Object... params) {
+		if (index < 0) {
+			return StrUtil.format("{} ({}) must not be negative", StrUtil.format(desc, params), index);
+		} else if (size < 0) {
+			throw new IllegalArgumentException("negative size: " + size);
+		} else { // index >= size
+			return StrUtil.format("{} ({}) must be less than size ({})", StrUtil.format(desc, params), index, size);
+		}
+	}
+	// -------------------------------------------------------------------------------------------------------------------------------------------- Private method end
 }

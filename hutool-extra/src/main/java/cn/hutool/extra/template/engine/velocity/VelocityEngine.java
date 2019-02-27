@@ -3,9 +3,9 @@ package cn.hutool.extra.template.engine.velocity;
 import org.apache.velocity.app.Velocity;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Velocity模板引擎
@@ -13,9 +13,9 @@ import cn.hutool.extra.template.TemplateConfig;
  * @author looly
  *
  */
-public class VelocityEngine implements Engine {
+public class VelocityEngine implements TemplateEngine {
 
-	org.apache.velocity.app.VelocityEngine engine;
+	private org.apache.velocity.app.VelocityEngine engine;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**
@@ -43,10 +43,15 @@ public class VelocityEngine implements Engine {
 		this.engine = engine;
 	}
 	// --------------------------------------------------------------------------------- Constructor end
-	
-	@Override
-	public String getName() {
-		return "Velocity";
+
+	/**
+	 * 获取原始的引擎对象
+	 * 
+	 * @return 原始引擎对象
+	 * @since 4.3.0
+	 */
+	public org.apache.velocity.app.VelocityEngine getRowEngine() {
+		return this.engine;
 	}
 
 	@Override
@@ -85,18 +90,19 @@ public class VelocityEngine implements Engine {
 			}
 			break;
 		case WEB_ROOT:
-			ve.setProperty("resource.loader", "webapp");
+			ve.setProperty(Velocity.RESOURCE_LOADER, "webapp");
 			ve.setProperty("webapp.resource.loader.class", "org.apache.velocity.tools.view.servlet.WebappLoader");
 			ve.setProperty("webapp.resource.loader.path", StrUtil.nullToDefault(config.getPath(), StrUtil.SLASH));
 			break;
 		case STRING:
-			ve.setProperty("resource.loader", "string");
-			ve.setProperty("string.resource.loader.class ", StringResourceLoader.class.getName());
+			ve.setProperty(Velocity.RESOURCE_LOADER, "str");
+			 ve.setProperty("str.resource.loader.class", SimpleStringResourceLoader.class.getName());
 			break;
 		default:
 			break;
 		}
 
+		ve.init();
 		return ve;
 	}
 }

@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
@@ -787,7 +788,7 @@ public class NumberUtil {
 	public static BigDecimal round(String numberStr, int scale) {
 		return round(numberStr, scale, RoundingMode.HALF_UP);
 	}
-	
+
 	/**
 	 * 保留固定位数小数<br>
 	 * 采用四舍五入策略 {@link RoundingMode#HALF_UP}<br>
@@ -944,7 +945,7 @@ public class NumberUtil {
 	public static BigDecimal roundHalfEven(BigDecimal value, int scale) {
 		return round(value, scale, RoundingMode.HALF_EVEN);
 	}
-	
+
 	/**
 	 * 保留固定小数位数，舍去多余位数
 	 * 
@@ -956,7 +957,7 @@ public class NumberUtil {
 	public static BigDecimal roundDown(Number number, int scale) {
 		return roundDown(toBigDecimal(number), scale);
 	}
-	
+
 	/**
 	 * 保留固定小数位数，舍去多余位数
 	 * 
@@ -1145,21 +1146,24 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 判断String是否是整数
+	 * 判断String是否是整数<br>
+	 * 支持8、10、16进制
 	 * 
 	 * @param s String
 	 * @return 是否为整数
 	 */
 	public static boolean isInteger(String s) {
-		if (StrUtil.isNotBlank(s)) {
-			return s.matches("^-?\\d+$");
-		} else {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
 			return false;
 		}
+		return true;
 	}
 
 	/**
-	 * 判断字符串是否是Long类型
+	 * 判断字符串是否是Long类型<br>
+	 * 支持8、10、16进制
 	 * 
 	 * @param s String
 	 * @return 是否为{@link Long}类型
@@ -1168,10 +1172,10 @@ public class NumberUtil {
 	public static boolean isLong(String s) {
 		try {
 			Long.parseLong(s);
-			return true;
 		} catch (NumberFormatException e) {
 			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -1193,13 +1197,14 @@ public class NumberUtil {
 	}
 
 	/**
-	 * 是否是质数<br>
+	 * 是否是质数（素数）<br>
 	 * 质数表的质数又称素数。指整数在一个大于1的自然数中,除了1和此整数自身外,没法被其他自然数整除的数。
 	 * 
 	 * @param n 数字
 	 * @return 是否是质数
 	 */
 	public static boolean isPrimes(int n) {
+		Assert.isTrue(n > 1, "The number must be > 1");
 		for (int i = 2; i <= Math.sqrt(n); i++) {
 			if (n % i == 0) {
 				return false;
@@ -1889,7 +1894,7 @@ public class NumberUtil {
 	 * @since 4.0.9
 	 */
 	public static BigDecimal toBigDecimal(Number number) {
-		if(null == number) {
+		if (null == number) {
 			return BigDecimal.ZERO;
 		}
 		return toBigDecimal(number.toString());
@@ -2101,6 +2106,199 @@ public class NumberUtil {
 		return number.pow(n);
 	}
 
+	/**
+	 * 解析转换数字字符串为int型数字，规则如下：
+	 * 
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的视为8进制数字
+	 * 3、其它情况按照10进制转换
+	 * 4、空串返回0
+	 * 5、.123形式返回0（按照小于0的小数对待）
+	 * 6、123.56截取小数点之前的数字，忽略小数部分
+	 * </pre>
+	 * 
+	 * @param number 数字，支持0x开头、0开头和普通十进制
+	 * @return int
+	 * @throws NumberFormatException 数字格式异常
+	 * @since 4.1.4
+	 */
+	public static int parseInt(String number) throws NumberFormatException {
+		if (StrUtil.isBlank(number)) {
+			return 0;
+		}
+
+		// 对于带小数转换为整数采取去掉小数的策略
+		number = StrUtil.subBefore(number, CharUtil.DOT, false);
+		if (StrUtil.isEmpty(number)) {
+			return 0;
+		}
+
+		if (StrUtil.startWithIgnoreCase(number, "0x")) {
+			// 0x04表示16进制数
+			return Integer.parseInt(number.substring(2), 16);
+		}
+
+		return Integer.parseInt(removeNumberFlag(number));
+	}
+
+	/**
+	 * 解析转换数字字符串为long型数字，规则如下：
+	 * 
+	 * <pre>
+	 * 1、0x开头的视为16进制数字
+	 * 2、0开头的视为8进制数字
+	 * 3、空串返回0
+	 * 4、其它情况按照10进制转换
+	 * </pre>
+	 * 
+	 * @param number 数字，支持0x开头、0开头和普通十进制
+	 * @return long
+	 * @since 4.1.4
+	 */
+	public static long parseLong(String number) {
+		if (StrUtil.isBlank(number)) {
+			return 0;
+		}
+
+		// 对于带小数转换为整数采取去掉小数的策略
+		number = StrUtil.subBefore(number, CharUtil.DOT, false);
+		if (StrUtil.isEmpty(number)) {
+			return 0;
+		}
+
+		if (number.startsWith("0x")) {
+			// 0x04表示16进制数
+			return Long.parseLong(number.substring(2), 16);
+		}
+
+		return Long.parseLong(removeNumberFlag(number));
+	}
+
+	/**
+	 * 将指定字符串转换为{@link Number} 对象
+	 * 
+	 * @param numberStr Number字符串
+	 * @return Number对象
+	 * @since 4.1.15
+	 */
+	public static Number parseNumber(String numberStr) {
+		numberStr = removeNumberFlag(numberStr);
+		try {
+			return NumberFormat.getInstance().parse(numberStr);
+		} catch (ParseException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
+	 * int值转byte数组，使用大端字节序（高位字节在前，低位字节在后）<br>
+	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 
+	 * @param value 值
+	 * @return byte数组
+	 * @since 4.4.5
+	 */
+	public static byte[] toBytes(int value) {
+		final byte[] result = new byte[4];
+
+		result[0] = (byte) (value >> 24);
+		result[1] = (byte) (value >> 16);
+		result[2] = (byte) (value >> 8);
+		result[3] = (byte) (value /* >> 0 */);
+
+		return result;
+	}
+
+	/**
+	 * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）<br>
+	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
+	 * 
+	 * @param bytes
+	 * @return int
+	 * @since 4.4.5
+	 */
+	public static int toInt(byte[] bytes) {
+		return (bytes[0] & 0xff) << 24//
+				| (bytes[1] & 0xff) << 16//
+				| (bytes[2] & 0xff) << 8//
+				| (bytes[3] & 0xff);
+	}
+
+	/**
+	 * 以无符号字节数组的形式返回传入值。
+	 * 
+	 * @param value 需要转换的值
+	 * @return 无符号bytes
+	 * @since 4.5.0
+	 */
+	public static byte[] toUnsignedByteArray(BigInteger value) {
+		byte[] bytes = value.toByteArray();
+
+		if (bytes[0] == 0) {
+			byte[] tmp = new byte[bytes.length - 1];
+			System.arraycopy(bytes, 1, tmp, 0, tmp.length);
+
+			return tmp;
+		}
+
+		return bytes;
+	}
+
+	/**
+	 * 以无符号字节数组的形式返回传入值。
+	 * 
+	 * @param length bytes长度
+	 * @param value 需要转换的值
+	 * @return 无符号bytes
+	 * @since 4.5.0
+	 */
+	public static byte[] toUnsignedByteArray(int length, BigInteger value) {
+		byte[] bytes = value.toByteArray();
+		if (bytes.length == length) {
+			return bytes;
+		}
+
+		int start = bytes[0] == 0 ? 1 : 0;
+		int count = bytes.length - start;
+
+		if (count > length) {
+			throw new IllegalArgumentException("standard length exceeded for value");
+		}
+
+		byte[] tmp = new byte[length];
+		System.arraycopy(bytes, start, tmp, tmp.length - count, count);
+		return tmp;
+	}
+
+	/**
+	 * 无符号bytes转{@link BigInteger}
+	 * 
+	 * @param buf buf 无符号bytes
+	 * @return {@link BigInteger}
+	 * @since 4.5.0
+	 */
+	public static BigInteger fromUnsignedByteArray(byte[] buf) {
+		return new BigInteger(1, buf);
+	}
+
+	/**
+	 * 无符号bytes转{@link BigInteger}
+	 * 
+	 * @param buf 无符号bytes
+	 * @param off 起始位置
+	 * @param length 长度
+	 * @return {@link BigInteger}
+	 */
+	public static BigInteger fromUnsignedByteArray(byte[] buf, int off, int length) {
+		byte[] mag = buf;
+		if (off != 0 || length != buf.length) {
+			mag = new byte[length];
+			System.arraycopy(buf, off, mag, 0, length);
+		}
+		return new BigInteger(1, mag);
+	}
+
 	// ------------------------------------------------------------------------------------------- Private method start
 	private static int mathSubnode(int selectNum, int minNum) {
 		if (selectNum == minNum) {
@@ -2116,6 +2314,22 @@ public class NumberUtil {
 		} else {
 			return selectNum * mathNode(selectNum - 1);
 		}
+	}
+
+	/**
+	 * 去掉数字尾部的数字标识，例如12D，44.0F，22L中的最后一个字母
+	 * 
+	 * @param number 数字字符串
+	 * @return 去掉标识的字符串
+	 */
+	private static String removeNumberFlag(String number) {
+		// 去掉类型标识的结尾
+		final int lastPos = number.length() - 1;
+		final char lastCharUpper = Character.toUpperCase(number.charAt(lastPos));
+		if ('D' == lastCharUpper || 'L' == lastCharUpper || 'F' == lastCharUpper) {
+			number = StrUtil.subPre(number, lastPos);
+		}
+		return number;
 	}
 	// ------------------------------------------------------------------------------------------- Private method end
 }

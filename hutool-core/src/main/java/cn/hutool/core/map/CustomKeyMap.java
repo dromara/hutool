@@ -1,6 +1,5 @@
 package cn.hutool.core.map;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,55 +11,18 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 4.0.7
  */
-public abstract class CustomKeyMap<K, V> extends HashMap<K, V> {
+public abstract class CustomKeyMap<K, V> extends MapWrapper<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
 	/**
-	 * 构造
-	 */
-	public CustomKeyMap() {
-		super();
-	}
-
-	/**
-	 * 构造
+	 * 构造<br>
+	 * 通过传入一个Map从而确定Map的类型，子类需创建一个空的Map，而非传入一个已有Map，否则值可能会被修改
 	 * 
-	 * @param initialCapacity 初始大小
-	 * @param loadFactor 加载因子
-	 */
-	public CustomKeyMap(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
-	}
-
-	/**
-	 * 构造
-	 * 
-	 * @param initialCapacity 初始大小
-	 */
-	public CustomKeyMap(int initialCapacity) {
-		this(initialCapacity, 0.75f);
-	}
-
-	/**
-	 * 构造
-	 * 
-	 * @param m Map
-	 */
-	public CustomKeyMap(Map<? extends K, ? extends V> m) {
-		super((int) (m.size() / 0.75));
-		putAll(m);
-	}
-
-	/**
-	 * 构造
-	 * 
-	 * @param loadFactor 加载因子
-	 * @param m Map
+	 * @param m Map 被包装的Map
 	 * @since 3.1.2
 	 */
-	public CustomKeyMap(float loadFactor, Map<? extends K, ? extends V> m) {
-		super(m.size(), loadFactor);
-		putAll(m);
+	public CustomKeyMap(Map<K, V> m) {
+		super(m);
 	}
 
 	@Override

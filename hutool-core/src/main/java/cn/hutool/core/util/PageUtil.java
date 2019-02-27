@@ -17,20 +17,20 @@ public class PageUtil {
 	 * 。。。<br>
 	 * 
 	 * @param pageNo 页码（从1计数）
-	 * @param countPerPage 每页条目数
+	 * @param pageSize 每页条目数
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */
-	public static int[] transToStartEnd(int pageNo, int countPerPage) {
+	public static int[] transToStartEnd(int pageNo, int pageSize) {
 		if (pageNo < 1) {
 			pageNo = 1;
 		}
 
-		if (countPerPage < 1) {
-			countPerPage = 0;
+		if (pageSize < 1) {
+			pageSize = 0;
 		}
 
-		int start = (pageNo - 1) * countPerPage;
-		int end = start + countPerPage;
+		int start = (pageNo - 1) * pageSize;
+		int end = start + pageSize;
 
 		return new int[] { start, end };
 	}

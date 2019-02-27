@@ -10,7 +10,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.getter.OptNullBasicTypeFromStringGetter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
-import cn.hutool.log.StaticLog;
+import cn.hutool.log.LogFactory;
 
 /**
  * Setting抽象类
@@ -20,7 +20,7 @@ import cn.hutool.log.StaticLog;
  */
 public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String> implements Serializable{
 	private static final long serialVersionUID = 6200156302595905863L;
-	private final static Log log = StaticLog.get();
+	private final static Log log = LogFactory.get();
 
 	/** 数组类型值默认分隔符 */
 	public final static String DEFAULT_DELIMITER = ",";
@@ -29,7 +29,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	
 	@Override
 	public String getStr(String key, String defaultValue) {
-		return getByGroup(key, DEFAULT_GROUP);
+		return getStr(key, DEFAULT_GROUP, defaultValue);
 	}
 
 	/**
@@ -267,9 +267,9 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 			@Override
 			public Object value(String key, Type valueType) {
 				final String value = getByGroup(key, group);
-				if (null != value) {
-					log.debug("Parse setting to object field [{}={}]", key, value);
-				}
+//				if (null != value) {
+//					log.debug("Parse setting to object field [{}={}]", key, value);
+//				}
 				return value;
 			}
 

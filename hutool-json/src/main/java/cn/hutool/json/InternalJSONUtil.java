@@ -2,25 +2,18 @@ package cn.hutool.json;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.convert.ConvertException;
-import cn.hutool.core.convert.ConverterRegistry;
-import cn.hutool.core.convert.impl.CollectionConverter;
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -38,15 +31,16 @@ final class InternalJSONUtil {
 	 * 
 	 * @param writer Writer
 	 * @param value 值
-	 * @param indentFactor
+	 * @param indentFactor 每一级别的缩进量
 	 * @param indent 缩进空格数
+	 * @param config 配置项
 	 * @return Writer
 	 * @throws JSONException
 	 * @throws IOException
 	 */
-	protected static final Writer writeValue(Writer writer, Object value, int indentFactor, int indent) throws JSONException, IOException {
+	protected static final Writer writeValue(Writer writer, Object value, int indentFactor, int indent, JSONConfig config) throws JSONException, IOException {
 		if (value == null || value instanceof JSONNull) {
-			writer.write("null");
+			writer.write(JSONNull.NULL.toString());
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent);
 		} else if (value instanceof Map) {
@@ -55,10 +49,9 @@ final class InternalJSONUtil {
 			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
 			writer.write(NumberUtil.toStr((Number) value));
-		}else if (value instanceof Date) {
-			writer.write(String.valueOf(((Date) value).getTime()));
-		}else if (value instanceof Calendar) {
-			writer.write(String.valueOf(((Calendar) value).getTimeInMillis()));
+		} else if (value instanceof Date || value instanceof Calendar) {
+			final String format = (null == config) ? null : config.getDateFormat();
+			writer.write(formatDate(value, format));
 		} else if (value instanceof Boolean) {
 			writer.write(value.toString());
 		} else if (value instanceof JSONString) {
@@ -74,7 +67,7 @@ final class InternalJSONUtil {
 		}
 		return writer;
 	}
-
+	
 	/**
 	 * 缩进，使用空格符
 	 * 
@@ -84,7 +77,7 @@ final class InternalJSONUtil {
 	 */
 	protected static final void indent(Writer writer, int indent) throws IOException {
 		for (int i = 0; i < indent; i += 1) {
-			writer.write(' ');
+			writer.write(CharUtil.SPACE);
 		}
 	}
 
@@ -212,121 +205,37 @@ final class InternalJSONUtil {
 		target.put(path[last], value);
 		return jsonObject;
 	}
-
+	
 	/**
-	 * JSON转Bean，忽略字段的大小写<br>
-	 * 首先在JSON中查找与Bean字段相同的名称的键的值，如果不存在，继续查找字段名转下划线后的值
+	 * 默认情况下是否忽略null值的策略选择<br>
+	 * JavaBean默认忽略null值，其它对象不忽略
 	 * 
-	 * @param jsonObject JSON对象
-	 * @param bean 目标Bean
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 目标Bean
+	 * @param obj 需要检查的对象
+	 * @return 是否忽略null值
+	 * @since 4.3.1
 	 */
-	protected static <T> T toBean(final JSONObject jsonObject, T bean, final boolean ignoreError) {
-		return BeanUtil.fillBean(bean, new ValueProvider<String>() {
-
-			@Override
-			public Object value(String key, Type valueType) {
-				Object value = jsonObject.get(key);
-				if(null == value) {
-					value = jsonObject.get(StrUtil.toUnderlineCase(key));
-				}
-				
-				return jsonConvert(valueType, value, ignoreError);
-			}
-
-			@Override
-			public boolean containsKey(String key) {
-				if(jsonObject.containsKey(key)) {
-					return true;
-				}else if(jsonObject.containsKey(StrUtil.toUnderlineCase(key))) {
-					return true;
-				}
-				return false;
-			}
-
-		}, CopyOptions.create().setIgnoreCase(true).setIgnoreError(ignoreError));
+	protected static boolean defaultIgnoreNullValue(Object obj) {
+		if(obj instanceof CharSequence || obj instanceof JSONTokener || obj instanceof Map) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
-	 * JSONArray转数组
+	 * 按照给定格式格式化日期，格式为空时返回时间戳字符串
 	 * 
-	 * @param jsonArray JSONArray
-	 * @param arrayClass 数组元素类型
-	 * @param ignoreError 是否忽略转换异常
-	 * @return 数组对象
+	 * @param dateObj Date或者Calendar对象
+	 * @param format 格式
+	 * @return 日期字符串
 	 */
-	protected static Object[] toArray(final JSONArray jsonArray, Class<?> arrayClass, boolean ignoreError) {
-		final Class<?> componentType = arrayClass.isArray() ? arrayClass.getComponentType() : arrayClass;
-		final Object[] objArray = ArrayUtil.newArray(componentType, jsonArray.size());
-		for (int i = 0; i < objArray.length; i++) {
-			objArray[i] = jsonConvert(componentType, jsonArray.get(i), ignoreError);
-		}
-
-		return objArray;
-	}
-
-	/**
-	 * JSON递归转换<br>
-	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
-	 * 
-	 * @param type 目标类型
-	 * @param value 值
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 目标类型的值
-	 * @throws ConvertException 转换失败
-	 */
-	protected static Object jsonConvert(Type type, Object value, boolean ignoreError) throws ConvertException {
-		if (null == value) {
-			return null;
-		}
-		if (value instanceof JSONNull) {
-			return null;
-		}
-		final Class<?> rowType = TypeUtil.getClass(type);
-		if (null == rowType) {
-			throw new IllegalArgumentException(StrUtil.format("Can not know Class of Type {} !", type));
-		}
-
-		if (JSON.class.isAssignableFrom(rowType)) {
-			// 目标为JSON格式
-			return JSONUtil.parse(value);
+	private static String formatDate(Object dateObj, String format) {
+		if (StrUtil.isNotBlank(format)) {
+			final Date date = (dateObj instanceof Date) ? (Date)dateObj : ((Calendar)dateObj).getTime();
+			//用户定义了日期格式
+			return DateUtil.format(date, format);
 		}
 		
-		Object targetValue = null;
-		// 非标准转换格式
-		if (value instanceof JSONObject) {
-			targetValue = ((JSONObject) value).toBean(type, ignoreError);
-		} else if (value instanceof JSONArray) {
-			if (rowType.isArray()) {
-				// 目标为数组
-				targetValue = ((JSONArray) value).toArray(rowType, ignoreError);
-			} else {
-				targetValue = (new CollectionConverter(type, TypeUtil.getTypeArgument(type))).convert(value, null);
-			}
-		}
-		
-		// 标准格式转换
-		if (null == targetValue) {
-			try {
-				targetValue = ConverterRegistry.getInstance().convert(rowType, value);
-			} catch (ConvertException e) {
-				if (ignoreError) {
-					return null;
-				}
-				throw e;
-			}
-		}
-		
-		if (null == targetValue && false == ignoreError) {
-			if (value instanceof CharSequence && StrUtil.isBlank((CharSequence) value)) {
-				// 对于传入空字符串的情况，如果转换的目标对象是非字符串或非原书类型，转换器会返回false。
-				// 此处特殊处理，认为返回null属于正常情况
-				return null;
-			}
-			throw new ConvertException("Can not convert [{}] to type [{}]", value, rowType.getName());
-		}
-
-		return targetValue;
+		//默认使用时间戳
+		return String.valueOf((dateObj instanceof Date) ? ((Date)dateObj).getTime() : ((Calendar)dateObj).getTimeInMillis());
 	}
 }

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.1.4-SNAPSHOT</version>
+		<version>4.5.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-db</artifactId>
@@ -19,13 +19,14 @@
 	<properties>
 		<!-- versions -->
 		<c3p0.version>0.9.5.2</c3p0.version>
-		<dbcp2.version>2.2.0</dbcp2.version>
-		<tomcat-jdbc.version>8.5.27</tomcat-jdbc.version>
-		<druid.version>1.1.7</druid.version>
-		<HikariCP.version>2.4.13</HikariCP.version>
-		<mongo.version>3.6.2</mongo.version>
+		<dbcp2.version>2.4.0</dbcp2.version>
+		<tomcat-jdbc.version>8.5.35</tomcat-jdbc.version>
+		<druid.version>1.1.12</druid.version>
+		<hikariCP.version>2.4.13</hikariCP.version>
+		<mongo.version>3.8.2</mongo.version>
 		<sqlite.version>3.21.0.1</sqlite.version>
-		<jedis.version>2.9.0</jedis.version>
+		<hsqldb.version>2.3.6</hsqldb.version>
+		<jedis.version>3.0.1</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -61,7 +62,7 @@
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP-java7</artifactId>
-			<version>${HikariCP.version}</version>
+			<version>${hikariCP.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -99,9 +100,33 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>${hsqldb.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.zenframework.z8.dependencies.commons</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>2.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.41</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.5.jre7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>6.4.0.jre7</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

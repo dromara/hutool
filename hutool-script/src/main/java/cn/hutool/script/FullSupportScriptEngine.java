@@ -16,64 +16,76 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 全功能引擎类，支持Compilable和Invocable
+ * 
  * @author Looly
  *
  */
-public class FullSupportScriptEngine implements ScriptEngine, Compilable, Invocable{
-	
+public class FullSupportScriptEngine implements ScriptEngine, Compilable, Invocable {
+
 	ScriptEngine engine;
-	
+
+	/**
+	 * 构造
+	 * 
+	 * @param engine 脚本引擎
+	 */
 	public FullSupportScriptEngine(ScriptEngine engine) {
 		this.engine = engine;
 	}
-	
+
+	/**
+	 * 构造
+	 * 
+	 * @param nameOrExtOrMime 脚本名或者脚本语言扩展名或者MineType
+	 */
 	public FullSupportScriptEngine(String nameOrExtOrMime) {
-		ScriptEngineManager manager = new ScriptEngineManager();
-		this.engine = manager.getEngineByName(nameOrExtOrMime);
-		if(null == this.engine){
-			manager.getEngineByExtension(nameOrExtOrMime);
+		final ScriptEngineManager manager = new ScriptEngineManager();
+		ScriptEngine engine = manager.getEngineByName(nameOrExtOrMime);
+		if (null == engine) {
+			engine = manager.getEngineByExtension(nameOrExtOrMime);
 		}
-		if(null == this.engine){
-			manager.getEngineByMimeType(nameOrExtOrMime);
+		if (null == engine) {
+			engine = manager.getEngineByMimeType(nameOrExtOrMime);
 		}
-		if(null == this.engine){
+		if (null == engine) {
 			throw new NullPointerException(StrUtil.format("Script for [{}] not support !", nameOrExtOrMime));
 		}
+		this.engine = engine;
 	}
-	
-	//----------------------------------------------------------------------------------------------- Invocable
+
+	// ----------------------------------------------------------------------------------------------- Invocable
 	@Override
 	public Object invokeMethod(Object thiz, String name, Object... args) throws ScriptException, NoSuchMethodException {
-		return ((Invocable)engine).invokeMethod(thiz, name, args);
+		return ((Invocable) engine).invokeMethod(thiz, name, args);
 	}
 
 	@Override
 	public Object invokeFunction(String name, Object... args) throws ScriptException, NoSuchMethodException {
-		return ((Invocable)engine).invokeFunction(name, args);
+		return ((Invocable) engine).invokeFunction(name, args);
 	}
 
 	@Override
 	public <T> T getInterface(Class<T> clasz) {
-		return ((Invocable)engine).getInterface(clasz);
+		return ((Invocable) engine).getInterface(clasz);
 	}
 
 	@Override
 	public <T> T getInterface(Object thiz, Class<T> clasz) {
-		return ((Invocable)engine).getInterface(thiz, clasz);
+		return ((Invocable) engine).getInterface(thiz, clasz);
 	}
 
-	//----------------------------------------------------------------------------------------------- Compilable
+	// ----------------------------------------------------------------------------------------------- Compilable
 	@Override
 	public CompiledScript compile(String script) throws ScriptException {
-		return ((Compilable)engine).compile(script);
+		return ((Compilable) engine).compile(script);
 	}
 
 	@Override
 	public CompiledScript compile(Reader script) throws ScriptException {
-		return ((Compilable)engine).compile(script);
+		return ((Compilable) engine).compile(script);
 	}
 
-	//----------------------------------------------------------------------------------------------- ScriptEngine
+	// ----------------------------------------------------------------------------------------------- ScriptEngine
 	@Override
 	public Object eval(String script, ScriptContext context) throws ScriptException {
 		return engine.eval(script, context);

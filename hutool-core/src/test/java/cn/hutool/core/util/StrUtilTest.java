@@ -106,8 +106,11 @@ public class StrUtilTest {
 		str = "abcd123";
 		strip = StrUtil.strip(str, null, "567");
 		Assert.assertEquals("abcd123", strip);
+		
+		Assert.assertEquals("", StrUtil.strip("a","a"));
+		Assert.assertEquals("", StrUtil.strip("a","a", "b"));
 	}
-
+	
 	@Test
 	public void stripIgnoreCaseTest() {
 		String str = "abcd123";
@@ -145,6 +148,13 @@ public class StrUtilTest {
 		Assert.assertEquals(2, StrUtil.indexOfIgnoreCase("aabaabaa", "", 2));
 		Assert.assertEquals(-1, StrUtil.indexOfIgnoreCase("abc", "", 9));
 	}
+	
+	@Test
+	public void lastIndexOfTest() {
+		String a = "aabbccddcc";
+		int lastIndexOf = StrUtil.lastIndexOf(a, "c", 0, false);
+		Assert.assertEquals(-1, lastIndexOf);
+	}
 
 	@Test
 	public void lastIndexOfIgnoreCaseTest() {
@@ -180,6 +190,13 @@ public class StrUtilTest {
 		String result = StrUtil.replace(",abcdef,", ",", "|");
 		Assert.assertEquals("|abcdef|", result);
 	}
+	
+	@Test
+	public void replaceTest4() {
+		String a = "1039";
+		String result = StrUtil.padPre(a,8,"0"); //在字符串1039前补4个0
+		Assert.assertEquals("00001039", result);
+	}
 
 	@Test
 	public void upperFirstTest() {
@@ -200,6 +217,40 @@ public class StrUtilTest {
 		String a = "abcderghigh";
 		String pre = StrUtil.sub(a, -5, a.length());
 		Assert.assertEquals("ghigh", pre);
+	}
+	
+	@Test
+	public void subBeforeTest() {
+		String a = "abcderghigh";
+		String pre = StrUtil.subBefore(a, "d", false);
+		Assert.assertEquals("abc", pre);
+		pre = StrUtil.subBefore(a, 'd', false);
+		Assert.assertEquals("abc", pre);
+		pre = StrUtil.subBefore(a, 'a', false);
+		Assert.assertEquals("", pre);
+		
+		//找不到返回原串
+		pre = StrUtil.subBefore(a, 'k', false);
+		Assert.assertEquals(a, pre);
+		pre = StrUtil.subBefore(a, 'k', true);
+		Assert.assertEquals(a, pre);
+	}
+	
+	@Test
+	public void subAfterTest() {
+		String a = "abcderghigh";
+		String pre = StrUtil.subAfter(a, "d", false);
+		Assert.assertEquals("erghigh", pre);
+		pre = StrUtil.subAfter(a, 'd', false);
+		Assert.assertEquals("erghigh", pre);
+		pre = StrUtil.subAfter(a, 'h', true);
+		Assert.assertEquals("", pre);
+		
+		//找不到字符返回空串
+		pre = StrUtil.subAfter(a, 'k', false);
+		Assert.assertEquals("", pre);
+		pre = StrUtil.subAfter(a, 'k', true);
+		Assert.assertEquals("", pre);
 	}
 
 	@Test
@@ -303,4 +354,56 @@ public class StrUtilTest {
 		String result4 = StrUtil.toUnderlineCase(str4);
 		Assert.assertEquals("hello_world_test", result4);
 	}
+	
+	@Test
+	public void containsAnyTest() {
+		//字符
+		boolean containsAny = StrUtil.containsAny("aaabbbccc", 'a', 'd');
+		Assert.assertTrue(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", 'e', 'd');
+		Assert.assertFalse(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", 'd', 'c');
+		Assert.assertTrue(containsAny);
+		
+		//字符串
+		containsAny = StrUtil.containsAny("aaabbbccc", "a", "d");
+		Assert.assertTrue(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", "e", "d");
+		Assert.assertFalse(containsAny);
+		containsAny = StrUtil.containsAny("aaabbbccc", "d", "c");
+		Assert.assertTrue(containsAny);
+	}
+	
+	@Test
+	public void centerTest() {
+		Assert.assertNull(StrUtil.center(null, 10));
+		Assert.assertEquals("    ", StrUtil.center("", 4));
+		Assert.assertEquals("ab", StrUtil.center("ab", -1));
+		Assert.assertEquals(" ab ", StrUtil.center("ab", 4));
+		Assert.assertEquals("abcd", StrUtil.center("abcd", 2));
+		Assert.assertEquals(" a  ", StrUtil.center("a", 4));
+	}
+	
+	@Test
+	public void padPreTest() {
+		Assert.assertNull(StrUtil.padPre(null, 10, ' '));
+		Assert.assertEquals("001", StrUtil.padPre("1", 3, '0'));
+		Assert.assertEquals("12", StrUtil.padPre("123", 2, '0'));
+		
+		Assert.assertNull(StrUtil.padPre(null, 10, "AA"));
+		Assert.assertEquals("AB1", StrUtil.padPre("1", 3, "ABC"));
+		Assert.assertEquals("12", StrUtil.padPre("123", 2, "ABC"));
+	}
+	
+	@Test
+	public void padAfterTest() {
+		Assert.assertNull(StrUtil.padAfter(null, 10, ' '));
+		Assert.assertEquals("100", StrUtil.padAfter("1", 3, '0'));
+		Assert.assertEquals("23", StrUtil.padAfter("123", 2, '0'));
+		
+		Assert.assertNull(StrUtil.padAfter(null, 10, "ABC"));
+		Assert.assertEquals("1AB", StrUtil.padAfter("1", 3, "ABC"));
+		Assert.assertEquals("23", StrUtil.padAfter("123", 2, "ABC"));
+	}
+	
 }

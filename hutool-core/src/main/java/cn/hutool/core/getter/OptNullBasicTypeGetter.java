@@ -2,6 +2,7 @@ package cn.hutool.core.getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * 基本类型的getter接口抽象实现<br>
@@ -160,5 +161,17 @@ public abstract class OptNullBasicTypeGetter<K> implements BasicTypeGetter<K>, O
 	@Override
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, K key) {
 		return this.getEnum(clazz, key, null);
+	}
+	
+	/**
+	 * 获取Date型属性值<br>
+	 * 无值或获取错误返回null
+	 * 
+	 * @param key 属性名
+	 * @return 属性值
+	 */
+	@Override
+	public Date getDate(K key) {
+		return this.getDate(key, null);
 	}
 }

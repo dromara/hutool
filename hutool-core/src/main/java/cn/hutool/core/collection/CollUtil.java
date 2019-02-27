@@ -39,6 +39,7 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PageUtil;
@@ -47,10 +48,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 
 /**
- * 集合相关工具类，包括数组
+ * 集合相关工具类<p>
+ * 此工具方法针对{@link Collection}及其实现类封装的工具。<p>
+ * 由于{@link Collection} 实现了{@link Iterable}接口，因此部分工具此类不提供，而是在{@link IterUtil} 中提供
  * 
  * @author xiaoleilu
  * @since 3.1.1
+ * @see IterUtil
  */
 public class CollUtil {
 
@@ -197,6 +201,18 @@ public class CollUtil {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * 
+	 * @param collection 集合
+	 * @param value 需要查找的值
+	 * @return 如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
+	 * @since 4.1.10
+	 */
+	public static boolean contains(final Collection<?> collection, Object value) {
+		return isNotEmpty(collection) && collection.contains(value);
 	}
 
 	/**
@@ -384,6 +400,19 @@ public class CollUtil {
 	public static <T> HashSet<T> newHashSet(T... ts) {
 		return newHashSet(false, ts);
 	}
+	
+	/**
+	 * 新建一个LinkedHashSet
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param ts 元素数组
+	 * @return HashSet对象
+	 * @since 4.1.10
+	 */
+	@SafeVarargs
+	public static <T> LinkedHashSet<T> newLinkedHashSet(T... ts) {
+		return (LinkedHashSet<T>)newHashSet(true, ts);
+	}
 
 	/**
 	 * 新建一个HashSet
@@ -481,7 +510,7 @@ public class CollUtil {
 	public static <T> List<T> list(boolean isLinked) {
 		return isLinked ? new LinkedList<T>() : new ArrayList<T>();
 	}
-	
+
 	/**
 	 * 新建一个List
 	 * 
@@ -530,7 +559,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked, Iterable<T> iterable) {
-		if(null == iterable) {
+		if (null == iterable) {
 			return list(isLinked);
 		}
 		return list(isLinked, iterable.iterator());
@@ -575,7 +604,7 @@ public class CollUtil {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 新建一个ArrayList
 	 * 
@@ -900,9 +929,13 @@ public class CollUtil {
 	 * @param <T> 集合元素类型
 	 * @param collection 集合
 	 * @param editor 编辑器接口
-	 * @return 过滤后的数组
+	 * @return 过滤后的集合
 	 */
 	public static <T> Collection<T> filter(Collection<T> collection, Editor<T> editor) {
+		if(null == collection || null == editor) {
+			return collection;
+		}
+		
 		Collection<T> collection2 = ObjectUtil.clone(collection);
 		try {
 			collection2.clear();
@@ -923,7 +956,38 @@ public class CollUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+	 * 2、修改元素对象，返回集合中为修改后的对象
+	 * </pre>
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 集合
+	 * @param editor 编辑器接口
+	 * @return 过滤后的数组
+	 * @since 4.1.8
+	 */
+	public static <T> List<T> filter(List<T> list, Editor<T> editor) {
+		if(null == list || null == editor) {
+			return list;
+		}
+		
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
+		T modified;
+		for (T t : list) {
+			modified = editor.edit(t);
+			if (null != modified) {
+				list2.add(modified);
+			}
+		}
+		return list2;
+	}
+
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
 	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
@@ -936,6 +1000,10 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
+		if(null == collection || null == filter) {
+			return collection;
+		}
+		
 		Collection<T> collection2 = ObjectUtil.clone(collection);
 		try {
 			collection2.clear();
@@ -950,6 +1018,33 @@ public class CollUtil {
 			}
 		}
 		return collection2;
+	}
+
+	/**
+	 * 过滤<br>
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
+	 * 
+	 * <pre>
+	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
+	 * </pre>
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param list 集合
+	 * @param filter 过滤器
+	 * @return 过滤后的数组
+	 * @since 4.1.8
+	 */
+	public static <T> List<T> filter(List<T> list, Filter<T> filter) {
+		if(null == list || null == filter) {
+			return list;
+		}
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
+		for (T t : list) {
+			if (filter.accept(t)) {
+				list2.add(t);
+			}
+		}
+		return list2;
 	}
 
 	/**
@@ -1063,7 +1158,7 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> T findOne(Iterable<T> collection, Filter<T> filter) {
-		if(null != collection) {
+		if (null != collection) {
 			for (T t : collection) {
 				if (filter.accept(t)) {
 					return t;
@@ -1565,7 +1660,7 @@ public class CollUtil {
 			elementType = Object.class;
 		} else {
 			final Class<?> elementRowType = TypeUtil.getClass(elementType);
-			if (elementRowType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementRowType)) {
+			if (null != elementRowType && (elementRowType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementRowType))) {
 				// 其它类型按照单一元素处理
 				collection.add((T) value);
 				return collection;
@@ -1581,8 +1676,12 @@ public class CollUtil {
 			iter = new EnumerationIter<>((Enumeration) value);
 		} else if (ArrayUtil.isArray(value)) {
 			iter = new ArrayIter<>(value);
-		} else {
-			throw new UtilException("Unsupport value type [] !", value.getClass());
+		} else if(value instanceof CharSequence){
+			//String按照逗号分隔的列表对待
+			iter = StrUtil.splitTrim((CharSequence)value, CharUtil.COMMA).iterator();
+		}else {
+			//其它类型按照单一元素处理
+			iter = CollUtil.newArrayList(value).iterator();
 		}
 
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
@@ -1590,7 +1689,7 @@ public class CollUtil {
 			try {
 				collection.add((T) convert.convert(elementType, iter.next()));
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new UtilException(e);
 			}
 		}
 
@@ -1679,7 +1778,8 @@ public class CollUtil {
 	}
 
 	/**
-	 * 获取集合中指定下标的元素值，下标可以为负数，例如-1表示最后一个元素
+	 * 获取集合中指定下标的元素值，下标可以为负数，例如-1表示最后一个元素<br>
+	 * 如果元素越界，返回null
 	 * 
 	 * @param <T> 元素类型
 	 * @param collection 集合
@@ -1687,17 +1787,36 @@ public class CollUtil {
 	 * @return 元素值
 	 * @since 4.0.6
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T get(Collection<T> collection, int index) {
-		if (index < 0) {
-			index += collection.size();
+		if(null == collection) {
+			return null;
 		}
+		
+		final int size = collection.size();
+		if (index < 0) {
+			index += size;
+		}
+		
+		//检查越界
+		if(index >= size) {
+			return null;
+		}
+		
 		if (collection instanceof List) {
 			final List<T> list = ((List<T>) collection);
 			return list.get(index);
 		} else {
-			return (T) ((Collection<T>) collection).toArray()[index];
+			int i = 0;
+			for(T t : collection) {
+				if(i > index) {
+					break;
+				}else if(i == index) {
+					return t;
+				}
+				i++;
+			}
 		}
+		return null;
 	}
 
 	/**
@@ -1757,6 +1876,18 @@ public class CollUtil {
 	 */
 	public static <T> T getFirst(Iterator<T> iterator) {
 		return IterUtil.getFirst(iterator);
+	}
+	
+	/**
+	 * 获取集合的最后一个元素
+	 * 
+	 * @param <T> 集合元素类型
+	 * @param collection {@link Collection}
+	 * @return 最后一个元素
+	 * @since 4.1.10
+	 */
+	public static <T> T getLast(Collection<T> collection) {
+		return get(collection, -1);
 	}
 
 	/**
@@ -1840,68 +1971,58 @@ public class CollUtil {
 	// ------------------------------------------------------------------------------------------------- sort
 	/**
 	 * 将多个集合排序并显示不同的段落（分页）<br>
-	 * 采用先排序，后截断的方式取分页的部分
+	 * 采用{@link BoundedPriorityQueue}实现分页取局部
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param pageNo 页码，从1开始
-	 * @param numPerPage 每页的条目数
+	 * @param pageNo 页码，从1开始计数，0和1效果相同
+	 * @param pageSize 每页的条目数
 	 * @param comparator 比较器
 	 * @param colls 集合数组
 	 * @return 分页后的段落内容
 	 */
 	@SafeVarargs
-	public static <T> List<T> sortPageAll(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		final List<T> result = new ArrayList<>();
+	public static <T> List<T> sortPageAll(int pageNo, int pageSize, Comparator<T> comparator, Collection<T>... colls) {
+		final List<T> list = new ArrayList<>(pageNo * pageSize);
 		for (Collection<T> coll : colls) {
-			result.addAll(coll);
+			list.addAll(coll);
 		}
-
-		Collections.sort(result, comparator);
-
-		int resultSize = result.size();
-		// 每页条目数大于总数直接返回所有
-		if (resultSize <= numPerPage) {
-			return result;
+		if(null != comparator) {
+			Collections.sort(list, comparator);
 		}
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
-		if (startEnd[1] > resultSize) {
-			// 越界直接返回空
-			return new ArrayList<>();
-		}
-
-		return result.subList(startEnd[0], startEnd[1]);
+		
+		return page(pageNo, pageSize, list);
 	}
-
+	
 	/**
-	 * 将多个集合排序并显示不同的段落（分页）<br>
-	 * 采用{@link BoundedPriorityQueue}实现分页取局部
+	 * 对指定List分页取值
 	 * 
 	 * @param <T> 集合元素类型
-	 * @param pageNo 页码
-	 * @param numPerPage 每页的条目数
-	 * @param comparator 比较器
-	 * @param colls 集合数组
-	 * @return 分业后的段落内容
+	 * @param pageNo 页码，从1开始计数，0和1效果相同
+	 * @param pageSize 每页的条目数
+	 * @param list 列表
+	 * @return 分页后的段落内容
+	 * @since 4.1.20
 	 */
-	@SafeVarargs
-	public static <T> List<T> sortPageAll2(int pageNo, int numPerPage, Comparator<T> comparator, Collection<T>... colls) {
-		BoundedPriorityQueue<T> queue = new BoundedPriorityQueue<>(pageNo * numPerPage, comparator);
-		for (Collection<T> coll : colls) {
-			queue.addAll(coll);
+	public static <T> List<T> page(int pageNo, int pageSize, List<T> list) {
+		if(isEmpty(list)) {
+			return new ArrayList<>(0); 
 		}
-
-		int resultSize = queue.size();
+		
+		int resultSize = list.size();
 		// 每页条目数大于总数直接返回所有
-		if (resultSize <= numPerPage) {
-			return queue.toList();
+		if (resultSize <= pageSize) {
+			if(pageNo <=1) {
+				return Collections.unmodifiableList(list);
+			} else {
+				// 越界直接返回空
+				return new ArrayList<>(0);
+			}
 		}
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, numPerPage);
+		final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
 		if (startEnd[1] > resultSize) {
-			// 越界直接返回空
-			return new ArrayList<>();
+			startEnd[1] = resultSize;
 		}
-
-		return queue.toList().subList(startEnd[0], startEnd[1]);
+		return list.subList(startEnd[0], startEnd[1]);
 	}
 
 	/**

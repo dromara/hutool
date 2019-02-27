@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,8 +27,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor(int threadSize) {
-		return new ThreadPoolExecutor(threadSize, threadSize, 0L, TimeUnit.MILLISECONDS,
-				new LinkedBlockingQueue<Runnable>());
+		return ExecutorBuilder.create().setCorePoolSize(threadSize).build();
 	}
 
 	/**
@@ -38,7 +36,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor() {
-		return new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+		return ExecutorBuilder.create().setWorkQueue(new SynchronousQueue<Runnable>()).build();
 	}
 
 	/**
@@ -59,9 +57,7 @@ public class ThreadUtil {
 	 * @return {@link ThreadPoolExecutor}
 	 */
 	public static ThreadPoolExecutor newExecutor(int corePoolSize, int maximumPoolSize) {
-		return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, //
-				60L, TimeUnit.SECONDS, //
-				new LinkedBlockingQueue<Runnable>());
+		return ExecutorBuilder.create().setCorePoolSize(corePoolSize).setMaxPoolSize(maximumPoolSize).build();
 	}
 
 	/**
@@ -83,10 +79,7 @@ public class ThreadUtil {
 
 		// 最佳的线程数 = CPU可用核心数 / (1 - 阻塞系数)
 		int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
-
-		return new ThreadPoolExecutor(poolSize, poolSize, //
-				0L, TimeUnit.MILLISECONDS, //
-				new LinkedBlockingQueue<Runnable>());
+		return ExecutorBuilder.create().setCorePoolSize(poolSize).setMaxPoolSize(poolSize).setKeepAliveTime(0L).build();
 	}
 
 	/**
@@ -190,7 +183,7 @@ public class ThreadUtil {
 		}
 		return t;
 	}
-	
+
 	/**
 	 * 创建新线程
 	 * 
@@ -299,6 +292,17 @@ public class ThreadUtil {
 	}
 
 	/**
+	 * 创建ThreadFactoryBuilder
+	 * 
+	 * @return ThreadFactoryBuilder
+	 * @see ThreadFactoryBuilder#build()
+	 * @since 4.1.13
+	 */
+	public static ThreadFactoryBuilder createThreadFactoryBuilder() {
+		return ThreadFactoryBuilder.create();
+	}
+
+	/**
 	 * 结束线程，调用此方法后，线程将抛出 {@link InterruptedException}异常
 	 * 
 	 * @param thread 线程
@@ -380,7 +384,7 @@ public class ThreadUtil {
 		final SecurityManager s = System.getSecurityManager();
 		return (null != s) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
 	}
-	
+
 	/**
 	 * 创建线程工厂
 	 * 
@@ -391,7 +395,7 @@ public class ThreadUtil {
 	public static ThreadFactory newNamedThreadFactory(String prefix, boolean isDeamon) {
 		return new NamedThreadFactory(prefix, isDeamon);
 	}
-	
+
 	/**
 	 * 创建线程工厂
 	 * 
@@ -403,7 +407,7 @@ public class ThreadUtil {
 	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDeamon) {
 		return new NamedThreadFactory(prefix, threadGroup, isDeamon);
 	}
-	
+
 	/**
 	 * 创建线程工厂
 	 * 

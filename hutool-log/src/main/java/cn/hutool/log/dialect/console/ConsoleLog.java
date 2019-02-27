@@ -1,6 +1,7 @@
 package cn.hutool.log.dialect.console;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
@@ -42,6 +43,16 @@ public class ConsoleLog extends AbstractLog {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+	
+	/**
+	 * 设置自定义的日志显示级别
+	 * @param customLevel 自定义级别
+	 * @since 4.1.10
+	 */
+	public static void setLevel(Level customLevel) {
+		Assert.notNull(customLevel);
+		level = customLevel;
 	}
 
 	//------------------------------------------------------------------------- Trace
@@ -142,7 +153,7 @@ public class ConsoleLog extends AbstractLog {
 				.set("name", this.name)
 				.set("msg", StrUtil.format(format, arguments));
 		
-		String logMsg = StrUtil.format(logFormat, dict);
+		final String logMsg = StrUtil.format(logFormat, dict);
 		
 		//WARN以上级别打印至System.err
 		if(level.ordinal() >= Level.WARN.ordinal()){

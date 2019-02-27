@@ -2,17 +2,18 @@ package cn.hutool.extra.template.engine.rythm;
 
 import java.util.Properties;
 
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 
 /**
- * Rythm模板引擎
+ * Rythm模板引擎<br>
+ * 文档：http://rythmengine.org/doc/index
  * 
  * @author looly
  *
  */
-public class RythmEngine implements Engine {
+public class RythmEngine implements TemplateEngine {
 
 	org.rythmengine.RythmEngine engine;
 
@@ -43,11 +44,6 @@ public class RythmEngine implements Engine {
 	}
 	// --------------------------------------------------------------------------------- Constructor end
 	
-	@Override
-	public String getName() {
-		return "Rythm";
-	}
-
 	@Override
 	public Template getTemplate(String resource) {
 		return RythmTemplate.wrap(engine.getTemplate(resource));

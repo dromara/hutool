@@ -3,9 +3,6 @@ package cn.hutool.core.thread;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.exceptions.UtilException;
 
@@ -32,8 +29,7 @@ public class GlobalThreadPool {
 		if (null != executor) {
 			executor.shutdownNow();
 		}
-		executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS,
-				new SynchronousQueue<Runnable>());
+		executor = ExecutorBuilder.create().useSynchronousQueue().build();
 	}
 
 	/**

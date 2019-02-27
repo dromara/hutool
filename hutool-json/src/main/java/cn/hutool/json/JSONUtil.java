@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Collection;
@@ -78,6 +79,19 @@ public final class JSONUtil {
 	 */
 	public static JSONObject parseObj(Object obj, boolean ignoreNullValue) {
 		return new JSONObject(obj, ignoreNullValue);
+	}
+
+	/**
+	 * JSON字符串转JSONObject对象
+	 * 
+	 * @param obj Bean对象或者Map
+	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
+	 * @param isOrder 是否有序
+	 * @return JSONObject
+	 * @since 4.2.2
+	 */
+	public static JSONObject parseObj(Object obj, boolean ignoreNullValue, boolean isOrder) {
+		return new JSONObject(obj, ignoreNullValue, isOrder);
 	}
 
 	/**
@@ -233,6 +247,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(JSON json, int indentFactor) {
+		if(null == json) {
+			return null;
+		}
 		return json.toJSONString(indentFactor);
 	}
 
@@ -243,6 +260,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(JSON json) {
+		if(null == json) {
+			return null;
+		}
 		return json.toJSONString(0);
 	}
 
@@ -253,6 +273,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonPrettyStr(JSON json) {
+		if(null == json) {
+			return null;
+		}
 		return json.toJSONString(4);
 	}
 
@@ -263,6 +286,9 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(Object obj) {
+		if(null == obj) {
+			return null;
+		}
 		if (obj instanceof String) {
 			return (String) obj;
 		}
@@ -302,7 +328,7 @@ public final class JSONUtil {
 	 * @since 3.1.2
 	 */
 	public static <T> T toBean(String jsonString, Class<T> beanClass) {
-		return toBean(parseObj(jsonString), beanClass, false);
+		return toBean(parseObj(jsonString), beanClass);
 	}
 
 	/**
@@ -314,23 +340,40 @@ public final class JSONUtil {
 	 * @return 实体类对象
 	 */
 	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
-		return toBean(json, beanClass, false);
+		return null == json ? null : json.toBean(beanClass);
 	}
-
+	
+	/**
+	 * JSON字符串转为实体类对象，转换异常将被抛出
+	 * 
+	 * @param <T> Bean类型
+	 * @param jsonString JSON字符串
+	 * @param beanType 实体类对象类型
+	 * @return 实体类对象
+	 * @since 4.3.2
+	 */
+	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
+		return toBean(parseObj(jsonString), beanType, ignoreError);
+	}
+	
 	/**
 	 * 转为实体类对象
 	 * 
 	 * @param <T> Bean类型
 	 * @param json JSONObject
-	 * @param beanClass 实体类对象
-	 * @param ignoreError 是否忽略转换过程中某个字段的转换异常
+	 * @param beanType 实体类对象类型
+	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
+	 * @since 4.3.2
 	 */
-	public static <T> T toBean(JSONObject json, Class<T> beanClass, boolean ignoreError) {
-		return null == json ? null : json.toBean(beanClass, ignoreError);
+	public static <T> T toBean(JSONObject json, Type beanType, boolean ignoreError) {
+		if(null == json) {
+			return null;
+		}
+		return json.toBean(beanType, ignoreError);
 	}
 	// -------------------------------------------------------------------- toBean end
-	
+
 	/**
 	 * 将JSONArray转换为Bean的List，默认为ArrayList
 	 * 
@@ -339,7 +382,7 @@ public final class JSONUtil {
 	 * @return List
 	 * @since 4.0.7
 	 */
-	public static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType){
+	public static <T> List<T> toList(JSONArray jsonArray, Class<T> elementType) {
 		return null == jsonArray ? null : jsonArray.toList(elementType);
 	}
 
@@ -362,34 +405,7 @@ public final class JSONUtil {
 	 * @param json {@link JSON}
 	 * @param expression 表达式
 	 * @return 对象
-	 * @see JSON#getByExp(String)
-	 * @deprecated 请使用{@link JSONUtil#getByPath(JSON, String)}
-	 */
-	@Deprecated
-	public static Object getByExp(JSON json, String expression) {
-		return (null == json || StrUtil.isBlank(expression)) ? null : json.getByPath(expression);
-	}
-
-	/**
-	 * 通过表达式获取JSON中嵌套的对象<br>
-	 * <ol>
-	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
-	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
-	 * </ol>
-	 * 
-	 * 表达式栗子：
-	 * 
-	 * <pre>
-	 * persion
-	 * persion.name
-	 * persons[3]
-	 * person.friends[5].name
-	 * </pre>
-	 * 
-	 * @param json {@link JSON}
-	 * @param expression 表达式
-	 * @return 对象
-	 * @see JSON#getByExp(String)
+	 * @see JSON#getByPath(String)
 	 */
 	public static Object getByPath(JSON json, String expression) {
 		return (null == json || StrUtil.isBlank(expression)) ? null : json.getByPath(expression);
@@ -570,11 +586,11 @@ public final class JSONUtil {
 				builder.append("\\r");
 				break;
 			default:
-				//无法显示字符转为Unicode符：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
+				// 无法显示字符转为Unicode符：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
 				if (c < StrUtil.C_SPACE || //
 						(c >= '\u0080' && c <= '\u00a0') || //
-						(c >= '\u2000' && c <= '\u2010') ||//
-						(c >= '\u2028' && c <= '\u202F') ||//
+						(c >= '\u2000' && c <= '\u2010') || //
+						(c >= '\u2028' && c <= '\u202F') || //
 						(c >= '\u2066' && c <= '\u206F')//
 				) {
 					builder.append(HexUtil.toUnicodeHex(c));
@@ -600,11 +616,11 @@ public final class JSONUtil {
 	 * 
 	 * @param object 被包装的对象
 	 * @param ignoreNullValue 是否忽略{@code null} 值
-	 * @return 包装后的值
+	 * @return 包装后的值，null表示此值需被忽略
 	 */
 	public static Object wrap(Object object, boolean ignoreNullValue) {
 		if (object == null) {
-			return JSONNull.NULL;
+			return ignoreNullValue ? null : JSONNull.NULL;
 		}
 		if (object instanceof JSON //
 				|| JSONNull.NULL.equals(object) //
@@ -626,9 +642,9 @@ public final class JSONUtil {
 				return new JSONObject(object, ignoreNullValue);
 			}
 
-			// 日期类型特殊处理
-			if (object instanceof Date) {
-				return ((Date) object).getTime();
+			// 日期类型原样保存，便于格式化
+			if (object instanceof Date || object instanceof Calendar) {
+				return object;
 			}
 			if (object instanceof Calendar) {
 				return ((Calendar) object).getTimeInMillis();
@@ -702,7 +718,7 @@ public final class JSONUtil {
 		}
 		return StrUtil.isWrap(str.trim(), '[', ']');
 	}
-	
+
 	/**
 	 * XML转JSONObject<br>
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。

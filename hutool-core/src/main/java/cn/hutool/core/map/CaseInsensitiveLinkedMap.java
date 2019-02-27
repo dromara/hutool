@@ -1,5 +1,6 @@
 package cn.hutool.core.map;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -12,24 +13,15 @@ import java.util.Map;
  * @param <V> 值类型
  * @since 3.3.1
  */
-public class CaseInsensitiveLinkedMap<K, V> extends CustomKeyLinkedMap<K, V> {
+public class CaseInsensitiveLinkedMap<K, V> extends CaseInsensitiveMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
+	// ------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
 	 */
 	public CaseInsensitiveLinkedMap() {
-		super();
-	}
-
-	/**
-	 * 构造
-	 * 
-	 * @param initialCapacity 初始大小
-	 * @param loadFactor 加载因子
-	 */
-	public CaseInsensitiveLinkedMap(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
+		this(DEFAULT_INITIAL_CAPACITY);
 	}
 
 	/**
@@ -38,7 +30,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends CustomKeyLinkedMap<K, V> {
 	 * @param initialCapacity 初始大小
 	 */
 	public CaseInsensitiveLinkedMap(int initialCapacity) {
-		super(initialCapacity);
+		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
@@ -47,7 +39,7 @@ public class CaseInsensitiveLinkedMap<K, V> extends CustomKeyLinkedMap<K, V> {
 	 * @param m Map
 	 */
 	public CaseInsensitiveLinkedMap(Map<? extends K, ? extends V> m) {
-		super(m);
+		this(DEFAULT_LOAD_FACTOR, m);
 	}
 
 	/**
@@ -58,20 +50,18 @@ public class CaseInsensitiveLinkedMap<K, V> extends CustomKeyLinkedMap<K, V> {
 	 * @since 3.1.2
 	 */
 	public CaseInsensitiveLinkedMap(float loadFactor, Map<? extends K, ? extends V> m) {
-		super(loadFactor, m);
+		this(m.size(), loadFactor);
+		this.putAll(m);
 	}
 
 	/**
-	 * 将Key转为小写
+	 * 构造
 	 * 
-	 * @param key KEY
-	 * @return 小写KEy
+	 * @param initialCapacity 初始大小
+	 * @param loadFactor 加载因子
 	 */
-	@Override
-	protected Object customKey(Object key) {
-		if (null != key && key instanceof CharSequence) {
-			key = key.toString().toLowerCase();
-		}
-		return key;
+	public CaseInsensitiveLinkedMap(int initialCapacity, float loadFactor) {
+		super(new LinkedHashMap<K, V>(initialCapacity, loadFactor));
 	}
+	// ------------------------------------------------------------------------- Constructor end
 }

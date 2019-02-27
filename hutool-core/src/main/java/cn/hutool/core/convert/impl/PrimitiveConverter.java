@@ -1,6 +1,8 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -44,6 +46,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			if (byte.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).byteValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toByte((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -54,6 +58,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (short.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).shortValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toShort((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -64,26 +70,32 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (int.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).intValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toInt((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
 					return 0;
 				}
-				return Integer.parseInt(valueStr);
+				return NumberUtil.parseInt(valueStr);
 				
 			} else if (long.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).longValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toLong((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
 					return 0;
 				}
-				return Long.parseLong(valueStr);
+				return NumberUtil.parseLong(valueStr);
 				
 			} else if (float.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).floatValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toFloat((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -94,6 +106,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (double.class == this.targetType) {
 				if (value instanceof Number) {
 					return ((Number) value).doubleValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toDouble((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -104,6 +118,8 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 			} else if (char.class == this.targetType) {
 				if(value instanceof Character){
 					return ((Character)value).charValue();
+				} else if(value instanceof Boolean) {
+					return BooleanUtil.toChar((Boolean)value);
 				}
 				final String valueStr = convertToStr(value);
 				if (StrUtil.isBlank(valueStr)) {
@@ -115,7 +131,7 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 					return ((Boolean)value).booleanValue();
 				}
 				String valueStr = convertToStr(value);
-				return parseBoolean(valueStr);
+				return BooleanUtil.toBoolean(valueStr);
 			}
 		} catch (Exception e) {
 			// Ignore Exception
@@ -123,36 +139,9 @@ public class PrimitiveConverter extends AbstractConverter<Object> {
 		return 0;
 	}
 	
-	/**
-	 * 转换字符串为boolean值
-	 * @param valueStr 字符串
-	 * @return boolean值
-	 */
-	static boolean parseBoolean(String valueStr){
-		if (StrUtil.isNotBlank(valueStr)) {
-			valueStr = valueStr.trim().toLowerCase();
-			switch (valueStr) {
-				case "true":
-					return true;
-				case "false":
-					return false;
-				case "yes":
-					return true;
-				case "y":
-					return true;
-				case "ok":
-					return true;
-				case "no":
-					return false;
-				case "n":
-					return false;
-				case "1":
-					return true;
-				case "0":
-					return false;
-			}
-		}
-		return false;
+	@Override
+	protected String convertToStr(Object value) {
+		return StrUtil.trim(super.convertToStr(value));
 	}
 	
 	@Override

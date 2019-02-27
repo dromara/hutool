@@ -1,6 +1,6 @@
 package cn.hutool.db.meta;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -10,7 +10,7 @@ import java.util.Set;
  * @author loolly
  *
  */
-public class Table extends HashMap<String, Column> {
+public class Table extends LinkedHashMap<String, Column> {
 	private static final long serialVersionUID = -810699625961392983L;
 
 	/** 表名 */
@@ -77,6 +77,16 @@ public class Table extends HashMap<String, Column> {
 	public Table setColumn(Column column) {
 		put(column.getName(), column);
 		return this;
+	}
+	
+	/**
+	 * 获取某列信息
+	 * @param name 列名
+	 * @return 列对象
+	 * @since 4.2.2
+	 */
+	public Column getColumn(String name) {
+		return get(name);
 	}
 
 	/**

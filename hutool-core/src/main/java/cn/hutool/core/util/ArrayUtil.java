@@ -298,14 +298,12 @@ public class ArrayUtil {
 	/**
 	 * 新建一个空数组
 	 * 
-	 * @param <T> 数组元素类型
 	 * @param newSize 大小
 	 * @return 空数组
 	 * @since 3.3.0
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T[] newArray(int newSize) {
-		return (T[]) new Object[newSize];
+	public static Object[] newArray(int newSize) {
+		return new Object[newSize];
 	}
 
 	/**
@@ -339,7 +337,7 @@ public class ArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static Class<?> getArrayType(Class<?> componentType) {
-		return newArray(componentType, 0).getClass();
+		return Array.newInstance(componentType, 0).getClass();
 	}
 
 	/**
@@ -746,7 +744,7 @@ public class ArrayUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
 	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
@@ -754,20 +752,23 @@ public class ArrayUtil {
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param array 数组
-	 * @param filter 过滤器接口，用于定义过滤规则
+	 * @param filter 过滤器接口，用于定义过滤规则，null表示不过滤，返回原数组
 	 * @return 过滤后的数组
 	 * @since 3.2.1
 	 */
 	public static <T> T[] filter(T[] array, Filter<T> filter) {
-		ArrayList<T> list = new ArrayList<T>(array.length);
-		boolean isAccept;
+		if(null == filter) {
+			return array;
+		}
+		
+		final ArrayList<T> list = new ArrayList<T>(array.length);
 		for (T t : array) {
-			isAccept = filter.accept(t);
-			if (isAccept) {
+			if (filter.accept(t)) {
 				list.add(t);
 			}
 		}
-		return list.toArray(Arrays.copyOf(array, list.size()));
+		final T[] result = newArray(array.getClass().getComponentType(), list.size());
+		return list.toArray(result);
 	}
 
 	/**
@@ -954,6 +955,26 @@ public class ArrayUtil {
 	 */
 	public static <T> boolean contains(T[] array, T value) {
 		return indexOf(array, value) > INDEX_NOT_FOUND;
+	}
+	
+	/**
+	 * 数组中是否包含指定元素中的任意一个
+	 * 
+	 * @param <T> 数组元素类型
+	 * 
+	 * @param array 数组
+	 * @param values 被检查的多个元素
+	 * @return 是否包含指定元素中的任意一个
+	 * @since 4.1.20
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> boolean containsAny(T[] array, T... values) {
+		for (T value : values) {
+			if(contains(array, value)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -1777,7 +1798,8 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值
+	 * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值<br>
+	 * 如果数组下标越界，返回null
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param array 数组对象
@@ -1787,10 +1809,18 @@ public class ArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Object array, int index) {
+		if(null == array) {
+			return null;
+		}
+		
 		if (index < 0) {
 			index += Array.getLength(array);
 		}
-		return (T) Array.get(array, index);
+		try {
+			return (T) Array.get(array, index);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	/**
@@ -1802,11 +1832,50 @@ public class ArrayUtil {
 	 * @return 结果
 	 */
 	public static <T> T[] getAny(Object array, int... indexes) {
-		final T[] result = newArray(indexes.length);
+		if(null == array) {
+			return null;
+		}
+		
+		final T[] result = newArray(array.getClass().getComponentType(), indexes.length);
 		for (int i : indexes) {
 			result[i] = get(array, i);
 		}
 		return result;
+	}
+	
+	/**
+	 * 获取子数组
+	 * 
+	 * @param array 数组
+	 * @param start 开始位置（包括）
+	 * @param end 结束位置（不包括）
+	 * @return 新的数组
+	 * @since 4.2.2
+	 * @see Arrays#copyOfRange(Object[], int, int)
+	 */
+	public static <T> T[] sub(T[] array, int start, int end) {
+		int length = length(array);
+		if (start < 0) {
+			start += length;
+		}
+		if (end < 0) {
+			end += length;
+		}
+		if (start == length) {
+			return newArray(array.getClass().getComponentType(), 0);
+		}
+		if (start > end) {
+			int tmp = start;
+			start = end;
+			end = tmp;
+		}
+		if (end > length) {
+			if (start >= length) {
+				return newArray(array.getClass().getComponentType(), 0);
+			}
+			end = length;
+		}
+		return Arrays.copyOfRange(array, start, end);
 	}
 
 	/**
@@ -3230,7 +3299,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3249,7 +3318,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3268,7 +3337,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3287,7 +3356,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3306,7 +3375,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3325,7 +3394,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3344,7 +3413,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3363,7 +3432,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组
 	 * @param index1 位置1
@@ -3382,7 +3451,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param <T> 元素类型
 	 * @param array 数组
@@ -3402,7 +3471,7 @@ public class ArrayUtil {
 	}
 
 	/**
-	 * 交换数组中连个位置的值
+	 * 交换数组中两个位置的值
 	 * 
 	 * @param array 数组对象
 	 * @param index1 位置1

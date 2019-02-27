@@ -142,7 +142,7 @@ public class CronPattern {
 	 * @return 如果匹配返回 <code>true</code>, 否则返回 <code>false</code>
 	 */
 	public boolean match(TimeZone timezone, long millis, boolean isMatchSecond) {
-		GregorianCalendar calendar = new GregorianCalendar(timezone);
+		final GregorianCalendar calendar = new GregorianCalendar(timezone);
 		calendar.setTimeInMillis(millis);
 		return match(calendar, isMatchSecond);
 	}

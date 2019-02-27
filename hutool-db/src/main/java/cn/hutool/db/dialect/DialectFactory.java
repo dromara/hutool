@@ -1,6 +1,8 @@
 package cn.hutool.db.dialect;
 
 import java.sql.Connection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -13,6 +15,7 @@ import cn.hutool.db.dialect.impl.OracleDialect;
 import cn.hutool.db.dialect.impl.PostgresqlDialect;
 import cn.hutool.db.dialect.impl.SqlServer2012Dialect;
 import cn.hutool.db.dialect.impl.Sqlite3Dialect;
+import cn.hutool.log.StaticLog;
 
 /**
  * 方言工厂类
@@ -21,7 +24,7 @@ import cn.hutool.db.dialect.impl.Sqlite3Dialect;
  *
  */
 public class DialectFactory {
-
+	
 	/** JDBC 驱动 MySQL */
 	public final static String DRIVER_MYSQL = "com.mysql.jdbc.Driver";
 	/** JDBC 驱动 MySQL，在6.X版本中变动驱动类名，且使用SPI机制 */
@@ -46,8 +49,28 @@ public class DialectFactory {
 	public final static String DRIVER_DERBY = "org.apache.derby.jdbc.ClientDriver";
 	/** JDBC 驱动 Derby嵌入式 */
 	public final static String DRIVER_DERBY_EMBEDDED = "org.apache.derby.jdbc.EmbeddedDriver";
+	/** JDBC 驱动 HSQLDB */
+	public final static String DRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
+	/** JDBC 驱动 达梦7 */
+	public final static String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
+	
+	private static Map<DataSource, Dialect> dialectPool = new ConcurrentHashMap<>();
+	private static Object lock = new Object();
 
 	private DialectFactory() {
+	}
+	
+	/**
+	 * 根据驱动名创建方言<br>
+	 * 驱动名是不分区大小写完全匹配的
+	 * 
+	 * @param driverName JDBC驱动类名
+	 * @return 方言
+	 */
+	public static Dialect newDialect(String driverName) {
+		final Dialect dialect = internalNewDialect(driverName);
+		StaticLog.debug("Use Dialect: [{}].", dialect.getClass().getSimpleName());
+		return dialect;
 	}
 
 	/**
@@ -57,7 +80,7 @@ public class DialectFactory {
 	 * @param driverName JDBC驱动类名
 	 * @return 方言
 	 */
-	public static Dialect newDialect(String driverName) {
+	private static Dialect internalNewDialect(String driverName) {
 		if (StrUtil.isNotBlank(driverName)) {
 			if (DRIVER_MYSQL.equalsIgnoreCase(driverName) || DRIVER_MYSQL_V6.equalsIgnoreCase(driverName)) {
 				return new MysqlDialect();
@@ -73,7 +96,6 @@ public class DialectFactory {
 				return new SqlServer2012Dialect();
 			}
 		}
-
 		// 无法识别可支持的数据库类型默认使用ANSI方言，可兼容大部分SQL语句
 		return new AnsiSqlDialect();
 	}
@@ -89,7 +111,7 @@ public class DialectFactory {
 			return null;
 		}
 		// 全部转为小写，忽略大小写
-		nameContainsProductInfo = nameContainsProductInfo.toLowerCase();
+		nameContainsProductInfo = StrUtil.cleanBlank(nameContainsProductInfo.toLowerCase());
 
 		String driver = null;
 		if (nameContainsProductInfo.contains("mysql")) {
@@ -112,9 +134,34 @@ public class DialectFactory {
 		} else if (nameContainsProductInfo.contains("derby")) {
 			// 嵌入式Derby数据库
 			driver = DRIVER_DERBY_EMBEDDED;
+		} else if (nameContainsProductInfo.contains("hsqldb")) {
+			// HSQLDB
+			driver = DRIVER_HSQLDB;
+		} else if (nameContainsProductInfo.contains("dm")) {
+			// 达梦7
+			driver = DRIVER_DM7;
 		}
 
 		return driver;
+	}
+	
+	/**
+	 * 获取共享方言
+	 * @param ds 数据源，每一个数据源对应一个唯一方言
+	 * @return {@link Dialect}方言
+	 */
+	public static Dialect getDialect(DataSource ds) {
+		Dialect dialect = dialectPool.get(ds);
+		if(null == dialect) {
+			synchronized (lock) {
+				dialect = dialectPool.get(ds);
+				if(null == dialect) {
+					dialect = newDialect(ds);
+					dialectPool.put(ds, dialect);
+				}
+			}
+		}
+		return dialect;
 	}
 
 	/**

@@ -4,8 +4,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import cn.hutool.aop.aspects.Aspect;
+import cn.hutool.aop.proxy.ProxyFactory;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
 
 /**
  * 代理工具类
@@ -22,10 +23,8 @@ public final class ProxyUtil {
 	 * @param aspectClass 切面对象类
 	 * @return 代理对象
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T proxy(T target, Class<? extends Aspect> aspectClass){
-		final Aspect aspect = ReflectUtil.newInstance(aspectClass, target);
-		return (T) newProxyInstance(target.getClass().getClassLoader(), aspect, target.getClass().getInterfaces());
+		return ProxyFactory.createProxy(target, aspectClass);
 	}
 	
 	/**
@@ -35,10 +34,8 @@ public final class ProxyUtil {
 	 * @param aspect 切面对象
 	 * @return 代理对象
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T proxy(Aspect aspect){
-		final Object target = aspect.getTarget();
-		return (T) newProxyInstance(target.getClass().getClassLoader(), aspect, target.getClass().getInterfaces());
+	public static <T> T proxy(T target, Aspect aspect){
+		return ProxyFactory.createProxy(target, aspect);
 	}
 
 	/**

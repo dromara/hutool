@@ -69,11 +69,11 @@ public class RSA extends AsymmetricCrypto {
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
 	 * 
-	 * @param privateKeyBase64 私钥Base64
-	 * @param publicKeyBase64 公钥Base64
+	 * @param privateKeyStr 私钥Hex或Base64表示
+	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public RSA(String privateKeyBase64, String publicKeyBase64) {
-		super(ALGORITHM_RSA, privateKeyBase64, publicKeyBase64);
+	public RSA(String privateKeyStr, String publicKeyStr) {
+		super(ALGORITHM_RSA, privateKeyStr, publicKeyStr);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class RSA extends AsymmetricCrypto {
 		super(ALGORITHM_RSA, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
-
+	
 	/**
 	 * 分组加密
 	 * 
@@ -127,7 +127,7 @@ public class RSA extends AsymmetricCrypto {
 	 */
 	@Deprecated
 	public String encryptStr(String data, KeyType keyType) {
-		return encryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
+		return encryptBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -176,10 +176,23 @@ public class RSA extends AsymmetricCrypto {
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
 	 * @since 3.1.1
-	 * @deprecated 请使用 {@link #decryptFromBcd(String, KeyType, Charset)}
+	 * @deprecated 请使用 {@link #decryptFromBcdToStr(String, KeyType, Charset)}
 	 */
 	@Deprecated
 	public String decryptStr(String data, KeyType keyType, Charset charset) {
+		return decryptFromBcdToStr(data, keyType, charset);
+	}
+	
+	/**
+	 * 分组解密
+	 * 
+	 * @param data 数据
+	 * @param keyType 密钥类型
+	 * @param charset 加密前编码
+	 * @return 解密后的密文
+	 * @since 4.3.2
+	 */
+	public String decryptFromBcdToStr(String data, KeyType keyType, Charset charset) {
 		return StrUtil.str(decryptFromBcd(data, keyType, charset), charset);
 	}
 

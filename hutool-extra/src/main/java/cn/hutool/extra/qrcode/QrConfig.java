@@ -1,12 +1,16 @@
 package cn.hutool.extra.qrcode;
 
+import java.awt.Image;
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ImageUtil;
 
 /**
  * 二维码设置
@@ -20,20 +24,33 @@ public class QrConfig {
 	private static final int WHITE = 0xFFFFFFFF;
 
 	/** 宽 */
-	private int width;
+	protected int width;
 	/** 长 */
-	private int height;
+	protected int height;
 	/** 前景色（二维码颜色） */
-	private int foreColor = BLACK;
+	protected int foreColor = BLACK;
 	/** 背景色 */
-	private int backColor = WHITE;
+	protected int backColor = WHITE;
 	/** 边距1~4 */
-	private Integer margin = 2;
+	protected Integer margin = 2;
 	/** 纠错级别 */
-	private ErrorCorrectionLevel errorCorrection;
+	protected ErrorCorrectionLevel errorCorrection = ErrorCorrectionLevel.M;
 	/** 编码 */
-	private Charset charset = CharsetUtil.CHARSET_UTF_8;
+	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
+	/** 二维码中的Logo */
+	protected Image img;
+	/** 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5 */
+	protected int ratio = 6;
 	
+	/**
+	 * 创建QrConfig
+	 * @return QrConfig
+	 * @since 4.1.14
+	 */
+	public static QrConfig create() {
+		return new QrConfig();
+	}
+
 	/**
 	 * 构造，默认长宽为300
 	 */
@@ -65,9 +82,11 @@ public class QrConfig {
 	 * 设置宽度
 	 * 
 	 * @param width 宽度
+	 * @return this
 	 */
-	public void setWidth(int width) {
+	public QrConfig setWidth(int width) {
 		this.width = width;
+		return this;
 	}
 
 	/**
@@ -83,9 +102,11 @@ public class QrConfig {
 	 * 设置高度
 	 * 
 	 * @param height 高度
+	 * @return this;
 	 */
-	public void setHeight(int height) {
+	public QrConfig setHeight(int height) {
 		this.height = height;
+		return this;
 	}
 
 	/**
@@ -101,9 +122,11 @@ public class QrConfig {
 	 * 设置前景色，例如：Color.BLUE.getRGB()
 	 * 
 	 * @param foreColor 前景色
+	 * @return this
 	 */
-	public void setForeColor(int foreColor) {
+	public QrConfig setForeColor(int foreColor) {
 		this.foreColor = foreColor;
+		return this;
 	}
 
 	/**
@@ -119,9 +142,11 @@ public class QrConfig {
 	 * 设置背景色，例如：Color.BLUE.getRGB()
 	 * 
 	 * @param backColor 背景色
+	 * @return this
 	 */
-	public void setBackColor(int backColor) {
+	public QrConfig setBackColor(int backColor) {
 		this.backColor = backColor;
+		return this;
 	}
 
 	/**
@@ -137,9 +162,11 @@ public class QrConfig {
 	 * 设置边距
 	 * 
 	 * @param margin 边距
+	 * @return this
 	 */
-	public void setMargin(Integer margin) {
+	public QrConfig setMargin(Integer margin) {
 		this.margin = margin;
+		return this;
 	}
 
 	/**
@@ -155,9 +182,11 @@ public class QrConfig {
 	 * 设置纠错级别
 	 * 
 	 * @param errorCorrection 纠错级别
+	 * @return this
 	 */
-	public void setErrorCorrection(ErrorCorrectionLevel errorCorrection) {
+	public QrConfig setErrorCorrection(ErrorCorrectionLevel errorCorrection) {
 		this.errorCorrection = errorCorrection;
+		return this;
 	}
 
 	/**
@@ -173,13 +202,76 @@ public class QrConfig {
 	 * 设置编码
 	 * 
 	 * @param charset 编码
+	 * @return this
 	 */
-	public void setCharset(Charset charset) {
+	public QrConfig setCharset(Charset charset) {
 		this.charset = charset;
+		return this;
+	}
+
+	/**
+	 * 获取二维码中的Logo
+	 * 
+	 * @return Logo图片
+	 */
+	public Image getImg() {
+		return img;
+	}
+	
+	/**
+	 * 设置二维码中的Logo文件
+	 * 
+	 * @param imgPath 二维码中的Logo路径
+	 * @return this;
+	 */
+	public QrConfig setImg(String imgPath) {
+		return setImg(FileUtil.file(imgPath));
+	}
+	
+	/**
+	 * 设置二维码中的Logo文件
+	 * 
+	 * @param imgFile 二维码中的Logo
+	 * @return this;
+	 */
+	public QrConfig setImg(File imgFile) {
+		return setImg(ImageUtil.read(imgFile));
+	}
+
+	/**
+	 * 设置二维码中的Logo
+	 * 
+	 * @param img 二维码中的Logo
+	 * @return this;
+	 */
+	public QrConfig setImg(Image img) {
+		this.img = img;
+		return this;
+	}
+
+	/**
+	 * 获取二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
+	 * 
+	 * @return 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
+	 */
+	public int getRatio() {
+		return this.ratio;
+	}
+
+	/**
+	 * 设置二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
+	 * 
+	 * @param ratio 二维码中的Logo缩放的比例系数，如5表示长宽最小值的1/5
+	 * @return this;
+	 */
+	public QrConfig setRatio(int ratio) {
+		this.ratio = ratio;
+		return this;
 	}
 
 	/**
 	 * 转换为Zxing的二维码配置
+	 * 
 	 * @return 配置
 	 */
 	public HashMap<EncodeHintType, Object> toHints() {
@@ -188,10 +280,10 @@ public class QrConfig {
 		if (null != this.charset) {
 			hints.put(EncodeHintType.CHARACTER_SET, charset.toString());
 		}
-		if(null != this.errorCorrection) {
+		if (null != this.errorCorrection) {
 			hints.put(EncodeHintType.ERROR_CORRECTION, this.errorCorrection);
 		}
-		if(null != this.margin) {
+		if (null != this.margin) {
 			hints.put(EncodeHintType.MARGIN, this.margin);
 		}
 		return hints;

@@ -5,13 +5,12 @@ import java.io.IOException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateException;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 
 /**
@@ -19,9 +18,9 @@ import freemarker.template.Configuration;
  * 
  * @author looly
  */
-public class FreemarkerEngine implements Engine {
+public class FreemarkerEngine implements TemplateEngine {
 
-	Configuration cfg;
+	private Configuration cfg;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**
@@ -51,11 +50,6 @@ public class FreemarkerEngine implements Engine {
 	// --------------------------------------------------------------------------------- Constructor end
 	
 	@Override
-	public String getName() {
-		return "Freemarker";
-	}
-
-	@Override
 	public Template getTemplate(String resource) {
 		try {
 			return FreemarkerTemplate.wrap(this.cfg.getTemplate(resource));
@@ -78,6 +72,7 @@ public class FreemarkerEngine implements Engine {
 		}
 
 		final Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+		cfg.setLocalizedLookup(false);
 		cfg.setDefaultEncoding(config.getCharset().toString());
 
 		switch (config.getResourceMode()) {
@@ -95,7 +90,7 @@ public class FreemarkerEngine implements Engine {
 			// cfg.setTemplateLoader(new WebappTemplateLoader(null, config.getPath()));
 			break;
 		case STRING:
-			cfg.setTemplateLoader(new StringTemplateLoader());
+			cfg.setTemplateLoader(new SimpleStringTemplateLoader());
 			break;
 		default:
 			break;

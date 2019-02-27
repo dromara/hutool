@@ -166,8 +166,24 @@ public class CharUtil {
 	 * @param ch 被检查的字符
 	 * @return true表示为数字字符，数字字符指0~9
 	 */
-	public static boolean isNumber(final char ch) {
+	public static boolean isNumber(char ch) {
 		return ch >= '0' && ch <= '9';
+	}
+	
+	/**
+	 * 是否为16进制规范的字符，判断是否为如下字符
+	 * <pre>
+	 * 1. 0~9
+	 * 2. a~f
+	 * 4. A~F
+	 * </pre>
+	 * 
+	 * @param c 字符
+	 * @return 是否为16进制规范的字符
+	 * @since 4.1.5
+	 */
+	public static boolean isHexChar(char c) {
+		return isNumber(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 	}
 
 	/**
@@ -261,20 +277,31 @@ public class CharUtil {
 
 	/**
 	 * 判断是否为emoji表情符<br>
-	 * 参考：http://blog.csdn.net/a445020593/article/details/56667654
 	 * 
 	 * @param c 字符
 	 * @return 是否为emoji
 	 * @since 4.0.8
 	 */
 	public static boolean isEmoji(char c) {
-		return (c == 0x0) || //
+		return false ==  ((c == 0x0) || //
 				(c == 0x9) || //
 				(c == 0xA) || //
 				(c == 0xD) || //
 				((c >= 0x20) && (c <= 0xD7FF)) || //
 				((c >= 0xE000) && (c <= 0xFFFD)) || //
-				((c >= 0x10000) && (c <= 0x10FFFF));
+				((c >= 0x10000) && (c <= 0x10FFFF)));
+	}
+	
+	/**
+	 * 是否为Windows或者Linux（Unix）文件分隔符<br>
+	 * Windows平台下分隔符为\，Linux（Unix）为/
+	 * 
+	 * @param c 字符
+	 * @return 是否为Windows或者Linux（Unix）文件分隔符
+	 * @since 4.1.11
+	 */
+	public static boolean isFileSeparator(char c) {
+		return SLASH == c || BACKSLASH == c;
 	}
 
 	/**

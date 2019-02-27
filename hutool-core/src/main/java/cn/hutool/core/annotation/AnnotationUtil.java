@@ -93,11 +93,11 @@ public class AnnotationUtil {
 			return null;
 		}
 
-		final Method method = ReflectUtil.getMethodOfObj(annotationEle, propertyName);
+		final Method method = ReflectUtil.getMethodOfObj(annotation, propertyName);
 		if (null == method) {
 			return null;
 		}
-		return ReflectUtil.invoke(annotationEle, method);
+		return ReflectUtil.invoke(annotation, method);
 	}
 
 	/**

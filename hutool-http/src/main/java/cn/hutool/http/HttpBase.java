@@ -34,7 +34,7 @@ public abstract class HttpBase<T> {
 	protected String httpVersion = HTTP_1_1;
 	/**存储主体*/
 	protected byte[] bodyBytes;
-	
+
 	// ---------------------------------------------------------------- Headers start
 	/**
 	 * 根据name获取头信息<br>

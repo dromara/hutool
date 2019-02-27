@@ -86,7 +86,6 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	public ArrayList<E> toList() {
 		final ArrayList<E> list = new ArrayList<E>(this);
 		Collections.sort(list, comparator);
-		
 		return list;
 	}
 	

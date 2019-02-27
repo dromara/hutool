@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.IDN;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -374,16 +375,19 @@ public class NetUtil {
 		}
 		return null;
 	}
-
+	
 	/**
 	 * 创建 {@link InetSocketAddress}
 	 * 
-	 * @param host 域名或IP地址
-	 * @param port 端口
+	 * @param host 域名或IP地址，空表示任意地址
+	 * @param port 端口，0表示系统分配临时端口
 	 * @return {@link InetSocketAddress}
 	 * @since 3.3.0
 	 */
 	public static InetSocketAddress createAddress(String host, int port) {
+		if(StrUtil.isBlank(host)) {
+			return new InetSocketAddress(port);
+		}
 		return new InetSocketAddress(host, port);
 	}
 
@@ -448,6 +452,49 @@ public class NetUtil {
 		String[] cidrIps = cidrIp.split("\\.");
 		int cidrIpAddr = (Integer.parseInt(cidrIps[0]) << 24) | (Integer.parseInt(cidrIps[1]) << 16) | (Integer.parseInt(cidrIps[2]) << 8) | Integer.parseInt(cidrIps[3]);
 		return (ipAddr & mask) == (cidrIpAddr & mask);
+	}
+
+	/**
+	 * Unicode域名转puny code
+	 * 
+	 * @param unicode Unicode域名
+	 * @return puny code
+	 * @since 4.1.22
+	 */
+	public static String idnToASCII(String unicode) {
+		return IDN.toASCII(unicode);
+	}
+	
+	/**
+	 * 从多级反向代理中获得第一个非unknown IP地址
+	 * 
+	 * @param ip 获得的IP地址
+	 * @return 第一个非unknown IP地址
+	 * @since 4.4.1
+	 */
+	public static String getMultistageReverseProxyIp(String ip) {
+		// 多级反向代理检测
+		if (ip != null && ip.indexOf(",") > 0) {
+			final String[] ips = ip.trim().split(",");
+			for (String subIp : ips) {
+				if (false == isUnknow(subIp)) {
+					ip = subIp;
+					break;
+				}
+			}
+		}
+		return ip;
+	}
+
+	/**
+	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
+	 * 
+	 * @param checkString 被检测的字符串
+	 * @return 是否未知
+	 * @since 4.4.1
+	 */
+	public static boolean isUnknow(String checkString) {
+		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start

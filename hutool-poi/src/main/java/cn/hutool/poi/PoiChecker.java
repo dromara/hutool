@@ -10,7 +10,10 @@ import cn.hutool.core.util.ClassLoaderUtil;
  * @since 4.0.10
  */
 public class PoiChecker {
-	
+
+	/** 没有引入POI的错误消息 */
+	public static final String NO_POI_ERROR_MSG = "You need to add dependency of 'poi-ooxml' to your project, and version >= 3.17";
+
 	/**
 	 * 检查POI包的引入情况
 	 */
@@ -18,22 +21,7 @@ public class PoiChecker {
 		try {
 			Class.forName("org.apache.poi.ss.usermodel.Workbook", false, ClassLoaderUtil.getClassLoader());
 		} catch (ClassNotFoundException | NoClassDefFoundError e) {
-			throw new DependencyException(e, "You need to add POI dependency 'poi-ooxml' to your project, and version >= 3.17");
-		}
-	}
-	
-	/**
-	 * 当对应的包或类未找到时，抛出指定异常
-	 */
-	public static DependencyException transError(NoClassDefFoundError e) {
-		switch (e.getMessage()) {
-		case "org/apache/poi/ss/usermodel/Workbook":
-			return new DependencyException(e, "You need to add POI dependency 'poi-ooxml' to your project, and version >= 3.17");
-		case "org/apache/poi/poifs/filesystem/FileMagic":
-			return new DependencyException(e, "You need to add POI dependency 'poi-ooxml' to your project, and version >= 3.17");
-
-		default:
-			return new DependencyException(e);
+			throw new DependencyException(e, NO_POI_ERROR_MSG);
 		}
 	}
 }

@@ -99,15 +99,16 @@ public class SettingLoader {
 	 * @throws IOException IO异常
 	 */
 	public boolean load(InputStream settingStream) throws IOException {
-		groupedMap.clear();
+		this.groupedMap.clear();
 		BufferedReader reader = null;
 		try {
 			reader = IoUtil.getReader(settingStream, this.charset);
 			// 分组
 			String group = null;
 
+			String line;
 			while (true) {
-				String line = reader.readLine();
+				line = reader.readLine();
 				if (line == null) {
 					break;
 				}
@@ -124,14 +125,14 @@ public class SettingLoader {
 				}
 
 				final String[] keyValue = StrUtil.splitToArray(line, ASSIGN_FLAG, 2);
-				// 跳过不符合简直规范的行
+				// 跳过不符合键值规范的行
 				if (keyValue.length < 2) {
 					continue;
 				}
 
 				String value = keyValue[1].trim();
 				// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
-				if (isUseVariable) {
+				if (this.isUseVariable) {
 					value = replaceVar(group, value);
 				}
 				this.groupedMap.put(group, keyValue[0].trim(), value);

@@ -2,18 +2,13 @@ package cn.hutool.poi.excel;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PushbackInputStream;
 
-import org.apache.poi.poifs.filesystem.FileMagic;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-
+import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.PoiChecker;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
@@ -27,7 +22,7 @@ import cn.hutool.poi.excel.sax.handler.RowHandler;
  *
  */
 public class ExcelUtil {
-	
+
 	// ------------------------------------------------------------------------------------ Read by Sax start
 	/**
 	 * 通过Sax方式读取Excel，同时支持03和07格式
@@ -38,7 +33,13 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(String path, int sheetIndex, RowHandler rowHandler) {
-		readBySax(FileUtil.getInputStream(path), sheetIndex, rowHandler);
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(path);
+			readBySax(in, sheetIndex, rowHandler);
+		} finally {
+			IoUtil.close(in);
+		}
 	}
 
 	/**
@@ -50,7 +51,13 @@ public class ExcelUtil {
 	 * @since 3.2.0
 	 */
 	public static void readBySax(File file, int sheetIndex, RowHandler rowHandler) {
-		readBySax(FileUtil.getInputStream(file), sheetIndex, rowHandler);
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			readBySax(in, sheetIndex, rowHandler);
+		} finally {
+			IoUtil.close(in);
+		}
 	}
 
 	/**
@@ -63,7 +70,7 @@ public class ExcelUtil {
 	 */
 	public static void readBySax(InputStream in, int sheetIndex, RowHandler rowHandler) {
 		in = IoUtil.toMarkSupportStream(in);
-		if (isXlsx(in)) {
+		if (ExcelFileUtil.isXlsx(in)) {
 			read07BySax(in, sheetIndex, rowHandler);
 		} else {
 			read03BySax(in, sheetIndex, rowHandler);
@@ -83,7 +90,7 @@ public class ExcelUtil {
 		try {
 			return new Excel07SaxReader(rowHandler).read(in, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -100,7 +107,7 @@ public class ExcelUtil {
 		try {
 			return new Excel07SaxReader(rowHandler).read(file, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -117,7 +124,7 @@ public class ExcelUtil {
 		try {
 			return new Excel07SaxReader(rowHandler).read(path, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -134,7 +141,7 @@ public class ExcelUtil {
 		try {
 			return new Excel03SaxReader(rowHandler).read(in, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -151,7 +158,7 @@ public class ExcelUtil {
 		try {
 			return new Excel03SaxReader(rowHandler).read(file, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -168,11 +175,12 @@ public class ExcelUtil {
 		try {
 			return new Excel03SaxReader(rowHandler).read(path, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 	// ------------------------------------------------------------------------------------ Read by Sax end
 
+	// ------------------------------------------------------------------------------------------------ getReader
 	/**
 	 * 获取Excel读取器，通过调用{@link ExcelReader}的read或readXXX方法读取Excel内容<br>
 	 * 默认调用第一个sheet
@@ -208,7 +216,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookFilePath, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -223,7 +231,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookFile, sheetIndex);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -238,7 +246,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookFile, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -266,7 +274,7 @@ public class ExcelUtil {
 		try {
 			return getReader(bookStream, 0, closeAfterRead);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -282,7 +290,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookStream, sheetIndex, true);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -299,7 +307,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookStream, sheetIndex, closeAfterRead);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -315,7 +323,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookStream, sheetName, true);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -331,10 +339,11 @@ public class ExcelUtil {
 		try {
 			return new ExcelReader(bookStream, sheetName, closeAfterRead);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
+	// ------------------------------------------------------------------------------------------------ getWriter
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet<br>
 	 * 不传入写出的Excel文件路径，只能调用{@link ExcelWriter#flush(OutputStream)}方法写出到流<br>
@@ -347,7 +356,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter();
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -364,7 +373,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(isXlsx);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -378,7 +387,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFilePath);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -392,7 +401,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFile);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -407,7 +416,7 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFilePath, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
@@ -422,76 +431,143 @@ public class ExcelUtil {
 		try {
 			return new ExcelWriter(destFile, sheetName);
 		} catch (NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+		}
+	}
+
+	// ------------------------------------------------------------------------------------------------ getBigWriter
+	/**
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet<br>
+	 * 不传入写出的Excel文件路径，只能调用{@link BigExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link BigExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link BigExcelWriter#flush()}方法写出到文件
+	 * 
+	 * @return {@link BigExcelWriter}
+	 * @since 4.1.13
+	 */
+	public static ExcelWriter getBigWriter() {
+		try {
+			return new BigExcelWriter();
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
 	/**
-	 * 是否为XLS格式的Excel文件（HSSF）<br>
-	 * XLS文件主要用于Excel 97~2003创建
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet<br>
+	 * 不传入写出的Excel文件路径，只能调用{@link BigExcelWriter#flush(OutputStream)}方法写出到流<br>
+	 * 若写出到文件，还需调用{@link BigExcelWriter#setDestFile(File)}方法自定义写出的文件，然后调用{@link BigExcelWriter#flush()}方法写出到文件
 	 * 
-	 * @param in excel输入流
-	 * @return 是否为XLS格式的Excel文件（HSSF）
+	 * @param rowAccessWindowSize 在内存中的行数
+	 * @return {@link BigExcelWriter}
+	 * @since 4.1.13
 	 */
-	public static boolean isXls(InputStream in) {
-		final PushbackInputStream pin = IoUtil.toPushbackStream(in, 8);
+	public static ExcelWriter getBigWriter(int rowAccessWindowSize) {
 		try {
-			return FileMagic.valueOf(pin) == FileMagic.OLE2;
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
+			return new BigExcelWriter(rowAccessWindowSize);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
 
 	/**
-	 * 是否为XLSX格式的Excel文件（XSSF）<br>
-	 * XLSX文件主要用于Excel 2007+创建
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet
 	 * 
-	 * @param in excel输入流
-	 * @return 是否为XLSX格式的Excel文件（XSSF）
+	 * @param destFilePath 目标文件路径
+	 * @return {@link BigExcelWriter}
 	 */
-	public static boolean isXlsx(InputStream in) {
-		if (false == in.markSupported()) {
-			in = new BufferedInputStream(in);
-		}
+	public static BigExcelWriter getBigWriter(String destFilePath) {
 		try {
-			return FileMagic.valueOf(in) == FileMagic.OOXML;
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} catch(NoClassDefFoundError e) {
-			throw PoiChecker.transError(e);
+			return new BigExcelWriter(destFilePath);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
-	
+
 	/**
-	 * 获取或者创建sheet表<br>
-	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
+	 * 获得{@link BigExcelWriter}，默认写出到第一个sheet，名字为sheet1
 	 * 
-	 * @param book 工作簿{@link Workbook}
-	 * @param sheetName 工作表名
-	 * @return 工作表{@link Sheet}
-	 * @since 4.0.2
+	 * @param destFile 目标文件
+	 * @return {@link BigExcelWriter}
 	 */
-	public static Sheet getOrCreateSheet(Workbook book, String sheetName) {
-		if (null == book) {
+	public static BigExcelWriter getBigWriter(File destFile) {
+		try {
+			return new BigExcelWriter(destFile);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+		}
+	}
+
+	/**
+	 * 获得{@link BigExcelWriter}
+	 * 
+	 * @param destFilePath 目标文件路径
+	 * @param sheetName sheet表名
+	 * @return {@link BigExcelWriter}
+	 */
+	public static BigExcelWriter getBigWriter(String destFilePath, String sheetName) {
+		try {
+			return new BigExcelWriter(destFilePath, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+		}
+	}
+
+	/**
+	 * 获得{@link BigExcelWriter}
+	 * 
+	 * @param destFile 目标文件
+	 * @param sheetName sheet表名
+	 * @return {@link BigExcelWriter}
+	 */
+	public static BigExcelWriter getBigWriter(File destFile, String sheetName) {
+		try {
+			return new BigExcelWriter(destFile, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+		}
+	}
+
+	/**
+	 * 将Sheet列号变为列名
+	 * 
+	 * @param index 列号, 从0开始
+	 * @return 0->A; 1->B...26->AA
+	 * @since 4.1.20
+	 */
+	public static String indexToColName(int index) {
+		if (index < 0) {
 			return null;
 		}
-		sheetName = StrUtil.isBlank(sheetName) ? "sheet1" : sheetName;
-		Sheet sheet = book.getSheet(sheetName);
-		if (null == sheet) {
-			sheet = book.createSheet(sheetName);
-		}
-		return sheet;
+		final StringBuilder colName = StrUtil.builder();
+		do {
+			if (colName.length() > 0) {
+				index--;
+			}
+			int remainder = index % 26;
+			colName.append((char) (remainder + 'A'));
+			index = (int) ((index - remainder) / 26);
+		} while (index > 0);
+		return colName.reverse().toString();
 	}
 
 	/**
+	 * 根据表元的列名转换为列号
 	 * 
-	 * sheet是否为空
-	 * 
-	 * @param sheet {@link Sheet}
-	 * @return sheet是否为空
-	 * @since 4.0.1
+	 * @param colName 列名, 从A开始
+	 * @return A1->0; B1->1...AA1->26
+	 * @since 4.1.20
 	 */
-	public static boolean isEmpty(Sheet sheet) {
-		return null == sheet || (sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0);
+	public static int colNameToIndex(String colName) {
+		int length = colName.length();
+		char c;
+		int index = -1;
+		for (int i = 0; i < length; i++) {
+			c = Character.toUpperCase(colName.charAt(i));
+			if (Character.isDigit(c)) {
+				break;// 确定指定的char值是否为数字
+			}
+			index = (index + 1) * 26 + (int) c - 'A';
+		}
+		return index;
 	}
 }

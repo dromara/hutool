@@ -109,8 +109,13 @@ public class WeightRandom<T> implements Serializable {
 	 * @return this
 	 */
 	public WeightRandom<T> add(WeightObj<T> weightObj) {
-		double lastWeight = (this.weightMap.size() == 0) ? 0 : this.weightMap.lastKey();
-		this.weightMap.put(weightObj.getWeight() + lastWeight, weightObj.getObj());// 权重累加
+		if(null != weightObj) {
+			final double weight = weightObj.getWeight();
+			if(weightObj.getWeight() > 0) {
+				double lastWeight = (this.weightMap.size() == 0) ? 0 : this.weightMap.lastKey();
+				this.weightMap.put(weight + lastWeight, weightObj.getObj());// 权重累加
+			}
+		}
 		return this;
 	}
 
@@ -135,7 +140,7 @@ public class WeightRandom<T> implements Serializable {
 		if(MapUtil.isEmpty(this.weightMap)) {
 			return null;
 		}
-		double randomWeight = this.weightMap.lastKey() * random.nextDouble();
+		final double randomWeight = this.weightMap.lastKey() * random.nextDouble();
 		final SortedMap<Double, T> tailMap = this.weightMap.tailMap(randomWeight, false);
 		return this.weightMap.get(tailMap.firstKey());
 	}

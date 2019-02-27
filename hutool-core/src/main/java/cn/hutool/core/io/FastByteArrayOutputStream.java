@@ -25,6 +25,11 @@ public class FastByteArrayOutputStream extends OutputStream {
 		this(1024);
 	}
 
+	/**
+	 * 构造
+	 * 
+	 * @param size 预估大小
+	 */
 	public FastByteArrayOutputStream(int size) {
 		buffer = new FastByteBuffer(size);
 	}
@@ -47,7 +52,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * 此方法无任何效果，当流被关闭后不会抛出IOException
 	 */
 	@Override
-	public void close() {
+	public void close() throws IOException{
 		// nop
 	}
 

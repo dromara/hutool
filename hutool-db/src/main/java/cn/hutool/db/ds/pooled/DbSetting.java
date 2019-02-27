@@ -1,10 +1,8 @@
 package cn.hutool.db.ds.pooled;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.DbUtil;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.setting.Setting;
@@ -53,12 +51,6 @@ public class DbSetting {
 			throw new DbRuntimeException("No Hutool pool config for group: [{}]", group);
 		}
 
-		// 初始化SQL显示
-		final boolean isShowSql = Convert.toBool(config.remove("showSql"), false);
-		final boolean isFormatSql = Convert.toBool(config.remove("formatSql"), false);
-		final boolean isShowParams = Convert.toBool(config.remove("showParams"), false);
-		DbUtil.setShowSqlGlobal(isShowSql, isFormatSql, isShowParams);
-
 		final DbConfig dbConfig = new DbConfig();
 
 		// 基本信息
@@ -67,14 +59,11 @@ public class DbSetting {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
 		dbConfig.setUrl(url);
+		// 自动识别Driver
+		final String driver = config.getAndRemoveStr(DSFactory.KEY_ALIAS_DRIVER);
+		dbConfig.setDriver(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
 		dbConfig.setUser(config.getAndRemoveStr(DSFactory.KEY_ALIAS_USER));
 		dbConfig.setPass(config.getAndRemoveStr(DSFactory.KEY_ALIAS_PASSWORD));
-		final String driver = config.getAndRemoveStr(DSFactory.KEY_ALIAS_DRIVER);
-		if (StrUtil.isNotBlank(driver)) {
-			dbConfig.setDriver(driver);
-		} else {
-			dbConfig.setDriver(DriverUtil.identifyDriver(url));
-		}
 
 		// 连接池相关信息
 		dbConfig.setInitialSize(setting.getInt("initialSize", group, 0));

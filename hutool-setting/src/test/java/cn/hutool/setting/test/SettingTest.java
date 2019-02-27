@@ -1,13 +1,10 @@
 package cn.hutool.setting.test;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.log.LogFactory;
-import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.setting.Setting;
 
 /**
@@ -16,11 +13,6 @@ import cn.hutool.setting.Setting;
  *
  */
 public class SettingTest {
-	
-	@Before
-	public void init(){
-		LogFactory.setCurrentLogFactory(ConsoleLogFactory.class);
-	}
 	
 	@Test
 	public void settingTest(){
@@ -36,6 +28,10 @@ public class SettingTest {
 		//跨分组变量替换
 		String user2 = setting.getByGroup("user2", "demo");
 		Assert.assertEquals("rootcom.mysql.jdbc.Driver", user2);
+		
+		//默认值测试
+		String value = setting.getStr("keyNotExist", "defaultTest");
+		Assert.assertEquals("defaultTest", value);
 	}
 	
 	@Test

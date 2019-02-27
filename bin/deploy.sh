@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mvn clean deploy -P release -Dgpg.passphrase=$1
+mvn clean deploy -P release

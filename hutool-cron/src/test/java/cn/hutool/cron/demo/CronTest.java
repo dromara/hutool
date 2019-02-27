@@ -6,7 +6,6 @@ import org.junit.Test;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.cron.CronUtil;
-import cn.hutool.cron.task.InvokeTask;
 import cn.hutool.cron.task.Task;
 
 /**
@@ -41,9 +40,19 @@ public class CronTest {
 		ThreadUtil.sleep(3000);
 		CronUtil.stop();
 	}
-
+	
 	@Test
 	@Ignore
+	public void cronTest2() {
+		// 支持秒级别定时任务
+		CronUtil.setMatchSecond(true);
+		CronUtil.start();
+		
+		ThreadUtil.sleep(30000);
+	}
+
+	@Test
+//	@Ignore
 	public void addAndRemoveTest() {
 		String id = CronUtil.schedule("*/2 * * * * *", new Runnable() {
 
@@ -59,17 +68,5 @@ public class CronTest {
 		// 支持秒级别定时任务
 		CronUtil.setMatchSecond(true);
 		CronUtil.start();
-	}
-
-	public static void main(String[] args) {
-		// 测试守护线程是否对作业线程有效
-		CronUtil.schedule("*/2 * * * * *", new InvokeTask("cn.hutool.cron.demo.TestJob.doWhileTest"));
-		//当为守护线程时，stop方法调用后doWhileTest里的循环输出将终止，表示作业线程正常结束
-		//当非守护线程时，stop方法调用后，不再产生新的作业，原作业正常执行。
-		CronUtil.setMatchSecond(true);
-		CronUtil.start(true);
-
-		ThreadUtil.sleep(3000);
-		CronUtil.stop();
 	}
 }

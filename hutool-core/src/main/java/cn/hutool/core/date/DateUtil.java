@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
@@ -32,7 +33,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * {@link Date}类型时间转为{@link DateTime}
+	 * {@link Date}类型时间转为{@link DateTime}<br>
+	 * 如果date本身为DateTime对象，则返回强转后的对象，否则新建一个DateTime对象
 	 * 
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
@@ -42,12 +44,22 @@ public class DateUtil {
 		if (date instanceof DateTime) {
 			return (DateTime) date;
 		}
+		return dateNew(date);
+	}
+	
+	/**
+	 * 根据已有{@link Date} 产生新的{@link DateTime}对象
+	 * @param date Date对象
+	 * @return {@link DateTime}对象
+	 * @since 4.3.1
+	 */
+	public static DateTime dateNew(Date date) {
 		return new DateTime(date);
 	}
 
 	/**
 	 * Long类型时间转为{@link DateTime}<br>
-	 * 同时支持10位秒级别时间戳和13位毫秒级别时间戳
+	 * 只支持毫秒级别时间戳，如果需要秒级别时间戳，请自行×1000
 	 * 
 	 * @param date Long类型Date（Unix时间戳）
 	 * @return 时间对象
@@ -57,7 +69,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * {@link Calendar}类型时间转为{@link DateTime}
+	 * {@link Calendar}类型时间转为{@link DateTime}<br>
+	 * 始终根据已有{@link Calendar} 产生新的{@link DateTime}对象
 	 * 
 	 * @param calendar {@link Calendar}
 	 * @return 时间对象
@@ -98,7 +111,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 当前时间long
+	 * 当前时间的时间戳
 	 * 
 	 * @param isNano 是否为高精度时间
 	 * @return 时间
@@ -108,7 +121,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 当前时间秒数
+	 * 当前时间的时间戳（秒）
 	 * 
 	 * @return 当前时间秒数
 	 * @since 4.0.0
@@ -423,30 +436,7 @@ public class DateUtil {
 	 */
 	@Deprecated
 	public static LinkedHashSet<String> yearAndSeasons(Date startDate, Date endDate) {
-		final LinkedHashSet<String> seasons = new LinkedHashSet<String>();
-		if (startDate == null || endDate == null) {
-			return seasons;
-		}
-
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		while (true) {
-			// 如果开始时间超出结束时间，让结束时间为开始时间，处理完后结束循环
-			if (startDate.after(endDate)) {
-				startDate = endDate;
-			}
-
-			seasons.add(yearAndSeason(cal));
-
-			if (startDate.equals(endDate)) {
-				break;
-			}
-
-			cal.add(Calendar.MONTH, 3);
-			startDate = cal.getTime();
-		}
-
-		return seasons;
+		return yearAndQuarter(startDate, endDate);
 	}
 
 	/**
@@ -454,33 +444,35 @@ public class DateUtil {
 	 * 
 	 * @param startDate 起始日期（包含）
 	 * @param endDate 结束日期（包含）
-	 * @return Season列表 ，元素类似于 20132
+	 * @return 季度列表 ，元素类似于 20132
 	 */
 	public static LinkedHashSet<String> yearAndQuarter(Date startDate, Date endDate) {
-		final LinkedHashSet<String> quarter = new LinkedHashSet<String>();
 		if (startDate == null || endDate == null) {
-			return quarter;
+			return new LinkedHashSet<String>(0);
 		}
+		return yearAndQuarter(startDate.getTime(), endDate.getTime());
+	}
 
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		while (true) {
+	/**
+	 * 获得指定日期区间内的年份和季节<br>
+	 * 
+	 * @param startDate 起始日期（包含）
+	 * @param endDate 结束日期（包含）
+	 * @return 季度列表 ，元素类似于 20132
+	 * @since 4.1.15
+	 */
+	public static LinkedHashSet<String> yearAndQuarter(long startDate, long endDate) {
+		LinkedHashSet<String> quarters = new LinkedHashSet<>();
+		final Calendar cal = calendar(startDate);
+		while (startDate <= endDate) {
 			// 如果开始时间超出结束时间，让结束时间为开始时间，处理完后结束循环
-			if (startDate.after(endDate)) {
-				startDate = endDate;
-			}
-
-			quarter.add(yearAndSeason(cal));
-
-			if (startDate.equals(endDate)) {
-				break;
-			}
+			quarters.add(yearAndQuarter(cal));
 
 			cal.add(Calendar.MONTH, 3);
-			startDate = cal.getTime();
+			startDate = cal.getTimeInMillis();
 		}
 
-		return quarter;
+		return quarters;
 	}
 
 	// ------------------------------------ Format start ----------------------------------------------
@@ -570,7 +562,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 格式化为Http的标准日期格式
+	 * 格式化为Http的标准日期格式<br>
+	 * 标准日期格式遵循RFC 1123规范，格式类似于：Fri, 31 Dec 1999 23:59:59 GMT
 	 * 
 	 * @param date 被格式化的日期
 	 * @return HTTP标准形式日期字符串
@@ -580,6 +573,36 @@ public class DateUtil {
 			return null;
 		}
 		return DatePattern.HTTP_DATETIME_FORMAT.format(date);
+	}
+
+	/**
+	 * 格式化为中文日期格式，如果isUppercase为false，则返回类似：2018年10月24日，否则返回二〇一八年十月二十四日
+	 * 
+	 * @param date 被格式化的日期
+	 * @param isUppercase 是否采用大写形式
+	 * @return 中文日期字符串
+	 * @since 4.1.19
+	 */
+	public static String formatChineseDate(Date date, boolean isUppercase) {
+		if (null == date) {
+			return null;
+		}
+		
+		String format = DatePattern.CHINESE_DATE_FORMAT.format(date);
+		if (isUppercase) {
+			final StringBuilder builder = StrUtil.builder(format.length());
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(0, 1)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(1, 2)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(2, 3)), false));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(3, 4)), false));
+			builder.append(format.substring(4, 5));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(5, 7)), false));
+			builder.append(format.substring(7, 8));
+			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(8, 10)), false));
+			builder.append(format.substring(10));
+			format = builder.toString().replace('零', '〇');
+		}
+		return format;
 	}
 	// ------------------------------------ Format end ----------------------------------------------
 
@@ -660,7 +683,18 @@ public class DateUtil {
 	 */
 	public static DateTime parseTimeToday(String timeString) {
 		timeString = StrUtil.format("{} {}", today(), timeString);
-		return parse(timeString, DatePattern.NORM_DATETIME_PATTERN);
+		return parse(timeString, DatePattern.NORM_DATETIME_FORMAT);
+	}
+
+	/**
+	 * 解析UTC时间，格式为：yyyy-MM-dd'T'HH:mm:ss'Z
+	 * 
+	 * @param utcString UTC时间
+	 * @return 日期对象
+	 * @since 4.1.14
+	 */
+	public static DateTime parseUTC(String utcString) {
+		return parse(utcString, DatePattern.UTC_FORMAT);
 	}
 
 	/**
@@ -680,6 +714,8 @@ public class DateUtil {
 	 * <li>yyyyMMddHHmmss</li>
 	 * <li>yyyyMMddHHmmssSSS</li>
 	 * <li>yyyyMMdd</li>
+	 * <li>EEE, dd MMM yyyy HH:mm:ss z</li>
+	 * <li>EEE MMM dd HH:mm:ss zzz yyyy</li>
 	 * </ol>
 	 * 
 	 * @param dateStr 日期字符串
@@ -707,15 +743,19 @@ public class DateUtil {
 		}
 
 		if (length == DatePattern.NORM_DATETIME_PATTERN.length() || length == DatePattern.NORM_DATETIME_PATTERN.length() + 1) {
+			if(dateStr.contains("T")) {
+				//UTC时间格式：类似2018-09-13T05:34:31
+				return parseUTC(dateStr);
+			}
 			return parseDateTime(dateStr);
 		} else if (length == DatePattern.NORM_DATE_PATTERN.length()) {
 			return parseDate(dateStr);
 		} else if (length == DatePattern.NORM_TIME_PATTERN.length() || length == DatePattern.NORM_TIME_PATTERN.length() + 1) {
-			return parseTime(dateStr);
+			return parseTimeToday(dateStr);
 		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() || length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() + 1) {
-			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_PATTERN);
+			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
-			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_PATTERN);
+			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_FORMAT);
 		}
 
 		// 没有更多匹配的时间格式
@@ -1301,6 +1341,50 @@ public class DateUtil {
 	}
 
 	/**
+	 * 是否为相同时间
+	 * 
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为相同时间
+	 * @since 4.1.13
+	 */
+	public static boolean isSameTime(Date date1, Date date2) {
+		return date1.compareTo(date2) == 0;
+	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 * 
+	 * @param date1 日期1
+	 * @param date2 日期2
+	 * @return 是否为同一天
+	 * @since 4.1.13
+	 */
+	public static boolean isSameDay(final Date date1, final Date date2) {
+		if (date1 == null || date2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return isSameDay(calendar(date1), calendar(date2));
+	}
+
+	/**
+	 * 比较两个日期是否为同一天
+	 * 
+	 * @param cal1 日期1
+	 * @param cal2 日期2
+	 * @return 是否为同一天
+	 * @since 4.1.13
+	 */
+	public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+		if (cal1 == null || cal2 == null) {
+			throw new IllegalArgumentException("The date must not be null");
+		}
+		return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) && //
+				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && //
+				cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA);
+	}
+
+	/**
 	 * 计时，常用于记录某段代码的执行时间，单位：纳秒
 	 * 
 	 * @param preTime 之前记录的时间
@@ -1449,7 +1533,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 时间格式字符串转为秒数<br>
+	 * HH:mm:ss 时间格式字符串转为秒数<br>
 	 * 参考：https://github.com/iceroot
 	 * 
 	 * @param timeStr 字符串时分秒(HH:mm:ss)格式
@@ -1528,6 +1612,29 @@ public class DateUtil {
 	 */
 	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
+	}
+	
+	/**
+	 * 通过生日计算星座
+	 * 
+	 * @param month 月，从0开始计数
+	 * @param day 天
+	 * @return 星座名
+	 * @since 4.4.3
+	 */
+	public static String getZodiac(int month, int day) {
+		return Zodiac.getZodiac(month, day);
+	}
+	
+	/**
+	 * 计算生肖，只计算1900年后出生的人
+	 * 
+	 * @param year 农历年
+	 * @return 生肖名
+	 * @since 4.4.3
+	 */
+	public static String getChineseZodiac(int year) {
+		return Zodiac.getChineseZodiac(year);
 	}
 
 	// ------------------------------------------------------------------------ Private method start

@@ -380,6 +380,30 @@ public class MapUtil {
 	public static <K, V> Map<K, V> toCamelCaseMap(Map<K, V> map) {
 		return (map instanceof LinkedHashMap) ? new CamelCaseLinkedMap<>(map) : new CamelCaseMap<>(map);
 	}
+	
+	/**
+	 * 将键值对转换为二维数组，第一维是key，第二纬是value
+	 * 
+	 * @param map Map<?, ?> map
+	 * @return 数组
+	 * @since 4.1.9
+	 */
+	public static Object[][] toObjectArray(Map<?, ?> map) {
+		if(map == null) {
+			return null;
+		}
+		final Object[][] result = new Object[map.size()][2];
+		if(map.isEmpty()) {
+			return result;
+		}
+		int index = 0;
+		for(Entry<?, ?> entry : map.entrySet()) {
+			result[index][0] = entry.getKey();
+			result[index][1] = entry.getValue();
+			index++;
+		}
+		return result;
+	}
 
 	// ----------------------------------------------------------------------------------------------- join
 	/**
@@ -457,6 +481,10 @@ public class MapUtil {
 	 * @return 过滤后的Map
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
+		if(null == map || null == editor) {
+			return map;
+		}
+		
 		final Map<K, V> map2 = ObjectUtil.clone(map);
 		if (isEmpty(map2)) {
 			return map2;
@@ -475,11 +503,10 @@ public class MapUtil {
 
 	/**
 	 * 过滤<br>
-	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
+	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Filter实现可以实现以下功能：
 	 * 
 	 * <pre>
 	 * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
-	 * 2、修改元素对象，返回集合中为修改后的对象
 	 * </pre>
 	 * 
 	 * @param <K> Key类型
@@ -490,6 +517,10 @@ public class MapUtil {
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
+		if(null == map || null == filter) {
+			return map;
+		}
+		
 		final Map<K, V> map2 = ObjectUtil.clone(map);
 		if (isEmpty(map2)) {
 			return map2;

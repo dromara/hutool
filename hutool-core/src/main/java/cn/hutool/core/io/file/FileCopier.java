@@ -34,6 +34,8 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	private boolean isCopyAttributes;
 	/** 当拷贝来源是目录时是否只拷贝目录下的内容 */
 	private boolean isCopyContentIfDir;
+	/** 当拷贝来源是目录时是否只拷贝文件而忽略子目录 */
+	private boolean isOnlyCopyFile;
 	
 	//-------------------------------------------------------------------------------------------------------- static method start
 	/**
@@ -121,6 +123,27 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 		this.isCopyContentIfDir = isCopyContentIfDir;
 		return this;
 	}
+	
+	/**
+	 * 当拷贝来源是目录时是否只拷贝文件而忽略子目录
+	 * 
+	 * @return 当拷贝来源是目录时是否只拷贝文件而忽略子目录
+	 * @since 4.1.5
+	 */
+	public boolean isOnlyCopyFile() {
+		return isOnlyCopyFile;
+	}
+
+	/**
+	 * 设置当拷贝来源是目录时是否只拷贝文件而忽略子目录
+	 * 
+	 * @param isOnlyCopyFile 当拷贝来源是目录时是否只拷贝文件而忽略子目录
+	 * @since 4.1.5
+	 */
+	public FileCopier setOnlyCopyFile(boolean isOnlyCopyFile) {
+		this.isOnlyCopyFile = isOnlyCopyFile;
+		return this;
+	}
 	//-------------------------------------------------------------------------------------------------------- Getters and Setters end
 
 	/**
@@ -141,6 +164,8 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 */
 	@Override
 	public File copy() throws IORuntimeException{
+		final File src = this.src;
+		final File dest = this.dest;
 		// check
 		Assert.notNull(src, "Source File is null !");
 		if (false == src.exists()) {
@@ -152,7 +177,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 		}
 
 		if (src.isDirectory()) {// 复制目录
-			if(false == dest.isDirectory()) {
+			if(dest.exists() && false == dest.isDirectory()) {
 				//源为目录，目标为文件，抛出IO异常
 				throw new IORuntimeException("Src is a directory but dest is a file!");
 			}
@@ -191,7 +216,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 		File destFile;
 		for (String file : files) {
 			srcFile = new File(src, file);
-			destFile = new File(dest, file);
+			destFile = this.isOnlyCopyFile ? dest : new File(dest, file);
 			// 递归复制
 			if (srcFile.isDirectory()) {
 				internalCopyDirContent(srcFile, destFile);

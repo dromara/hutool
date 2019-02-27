@@ -45,7 +45,7 @@ public enum GlobalHeaders{
 		header(Header.ACCEPT_ENCODING, "gzip", true);
 		header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
 		header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded", true);
-		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36 Hutool", true);
+		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36 Hutool", true);
 		return this;
 	}
 

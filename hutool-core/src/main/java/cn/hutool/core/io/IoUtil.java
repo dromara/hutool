@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,7 +52,7 @@ import cn.hutool.core.util.StrUtil;
 public class IoUtil {
 
 	/** 默认缓存大小 */
-	public static final int DEFAULT_BUFFER_SIZE = 1024;
+	public static final int DEFAULT_BUFFER_SIZE = 2048;
 	/** 默认中等缓存大小 */
 	public static final int DEFAULT_MIDDLE_BUFFER_SIZE = 4096;
 	/** 默认大缓存大小 */
@@ -164,10 +165,10 @@ public class IoUtil {
 		}
 
 		byte[] buffer = new byte[bufferSize];
-		long size = 0;
 		if (null != streamProgress) {
 			streamProgress.start();
 		}
+		long size = 0;
 		try {
 			for (int readSize = -1; (readSize = in.read(buffer)) != EOF;) {
 				out.write(buffer, 0, readSize);
@@ -221,6 +222,33 @@ public class IoUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 拷贝流，使用NIO，不会关闭流
+	 * 
+	 * @param in {@link ReadableByteChannel}
+	 * @param out {@link WritableByteChannel}
+	 * @return 拷贝的字节数
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.0
+	 */
+	public static long copy(ReadableByteChannel in, WritableByteChannel out) throws IORuntimeException {
+		return copy(in, out, DEFAULT_BUFFER_SIZE);
+	}
+
+	/**
+	 * 拷贝流，使用NIO，不会关闭流
+	 * 
+	 * @param in {@link ReadableByteChannel}
+	 * @param out {@link WritableByteChannel}
+	 * @param bufferSize 缓冲大小，如果小于等于0，使用默认
+	 * @return 拷贝的字节数
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.0
+	 */
+	public static long copy(ReadableByteChannel in, WritableByteChannel out, int bufferSize) throws IORuntimeException {
+		return copy(in, out, bufferSize, null);
 	}
 
 	/**
@@ -384,6 +412,20 @@ public class IoUtil {
 	}
 
 	/**
+	 * 从流中读取内容，读取完毕后并不关闭流
+	 * 
+	 * @param channel 可读通道，读取完毕后并不关闭通道
+	 * @param charset 字符集
+	 * @return 内容
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.0
+	 */
+	public static String read(ReadableByteChannel channel, Charset charset) throws IORuntimeException {
+		FastByteArrayOutputStream out = read(channel);
+		return null == charset ? out.toString() : out.toString(charset);
+	}
+
+	/**
 	 * 从流中读取内容，读到输出流中
 	 * 
 	 * @param in 输入流
@@ -393,6 +435,19 @@ public class IoUtil {
 	public static FastByteArrayOutputStream read(InputStream in) throws IORuntimeException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(in, out);
+		return out;
+	}
+
+	/**
+	 * 从流中读取内容，读到输出流中
+	 * 
+	 * @param channel 可读通道，读取完毕后并不关闭通道
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 */
+	public static FastByteArrayOutputStream read(ReadableByteChannel channel) throws IORuntimeException {
+		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		copy(channel, Channels.newChannel(out));
 		return out;
 	}
 
@@ -696,7 +751,21 @@ public class IoUtil {
 		if (content == null) {
 			return null;
 		}
-		return new ByteArrayInputStream(StrUtil.bytes(content, charset));
+		return toStream(StrUtil.bytes(content, charset));
+	}
+
+	/**
+	 * String 转为流
+	 * 
+	 * @param content 内容bytes
+	 * @return 字节流
+	 * @since 4.1.8
+	 */
+	public static ByteArrayInputStream toStream(byte[] content) {
+		if (content == null) {
+			return null;
+		}
+		return new ByteArrayInputStream(content);
 	}
 
 	/**
@@ -723,7 +792,7 @@ public class IoUtil {
 	public static BufferedInputStream toBuffered(InputStream in) {
 		return (in instanceof BufferedInputStream) ? (BufferedInputStream) in : new BufferedInputStream(in);
 	}
-	
+
 	/**
 	 * 转换为{@link BufferedOutputStream}
 	 * 
@@ -869,6 +938,22 @@ public class IoUtil {
 	}
 
 	/**
+	 * 从缓存中刷出数据
+	 * 
+	 * @param flushable {@link Flushable}
+	 * @since 4.2.2
+	 */
+	public static void flush(Flushable flushable) {
+		if (null != flushable) {
+			try {
+				flushable.flush();
+			} catch (Exception e) {
+				// 静默刷出
+			}
+		}
+	}
+
+	/**
 	 * 关闭<br>
 	 * 关闭失败不会抛出异常
 	 * 
@@ -897,6 +982,19 @@ public class IoUtil {
 			} catch (Exception e) {
 				// 静默关闭
 			}
+		}
+	}
+
+	/**
+	 * 尝试关闭指定对象<br>
+	 * 判断对象如果实现了{@link AutoCloseable}，则调用之
+	 * 
+	 * @param obj 可关闭对象
+	 * @since 4.3.2
+	 */
+	public static void closeIfPosible(Object obj) {
+		if (obj instanceof AutoCloseable) {
+			close((AutoCloseable) obj);
 		}
 	}
 

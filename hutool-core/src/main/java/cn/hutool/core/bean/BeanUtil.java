@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,21 +40,56 @@ import cn.hutool.core.util.StrUtil;
  * @since 3.1.2
  */
 public class BeanUtil {
-
+	
 	/**
 	 * 判断是否为Bean对象<br>
 	 * 判定方法是是否存在只有一个参数的setXXX方法
 	 * 
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
+	 * @see #hasSetter(Class)
 	 */
 	public static boolean isBean(Class<?> clazz) {
+		return hasSetter(clazz);
+	}
+
+	/**
+	 * 判断是否有Setter方法<br>
+	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 * @since 4.2.2
+	 */
+	public static boolean hasSetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
 			final Method[] methods = clazz.getMethods();
 			for (Method method : methods) {
 				if (method.getParameterTypes().length == 1 && method.getName().startsWith("set")) {
 					// 检测包含标准的setXXX方法即视为标准的JavaBean
 					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 判断是否为Bean对象<br>
+	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 
+	 * @param clazz 待测试类
+	 * @return 是否为Bean对象
+	 * @since 4.2.2
+	 */
+	public static boolean hasGetter(Class<?> clazz) {
+		if (ClassUtil.isNormalClass(clazz)) {
+			final Method[] methods = clazz.getMethods();
+			for (Method method : methods) {
+				if (method.getParameterTypes().length == 0) {
+					if(method.getName().startsWith("get") || method.getName().startsWith("is")) {
+						return true;
+					}
 				}
 			}
 		}
@@ -81,7 +117,13 @@ public class BeanUtil {
 		return PropertyEditorManager.findEditor(type);
 	}
 
-	public static boolean hasNull(Object bean, boolean ignoreError) {
+	/**
+	 * 判断Bean中是否有值为null的字段
+	 * 
+	 * @param bean Bean
+	 * @return 是否有值为null的字段
+	 */
+	public static boolean hasNull(Object bean) {
 		final Field[] fields = ClassUtil.getDeclaredFields(bean.getClass());
 
 		Object fieldValue = null;
@@ -123,7 +165,7 @@ public class BeanUtil {
 	 * @return 字段描述数组
 	 * @throws BeanException 获取属性异常
 	 */
-	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) throws BeanException{
+	public static PropertyDescriptor[] getPropertyDescriptors(Class<?> clazz) throws BeanException {
 		BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(clazz);
@@ -133,7 +175,7 @@ public class BeanUtil {
 		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), new Filter<PropertyDescriptor>() {
 			@Override
 			public boolean accept(PropertyDescriptor t) {
-				//过滤掉getClass方法
+				// 过滤掉getClass方法
 				return false == "class".equals(t.getName());
 			}
 		});
@@ -246,7 +288,7 @@ public class BeanUtil {
 			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);
 		}
 	}
-
+	
 	/**
 	 * 解析Bean中的属性值
 	 * 
@@ -390,6 +432,20 @@ public class BeanUtil {
 
 	// --------------------------------------------------------------------------------------------- fillBean
 	/**
+	 * 对象或Map转Bean
+	 * 
+	 * @param source Bean对象或Map
+	 * @param clazz 目标的Bean类型
+	 * @return Bean对象
+	 * @since 4.1.20
+	 */
+	public static <T> T toBean(Object source, Class<T> clazz) {
+		final T target = ReflectUtil.newInstance(clazz);
+		copyProperties(source, target);
+		return target;
+	}
+
+	/**
 	 * ServletRequest 参数转Bean
 	 * 
 	 * @param <T> Bean类型
@@ -439,7 +495,7 @@ public class BeanUtil {
 	 * @return Map
 	 */
 	public static Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
-		return beanToMap(bean, new HashMap<String, Object>(), isToUnderlineCase, ignoreNullValue);
+		return beanToMap(bean, new LinkedHashMap<String, Object>(), isToUnderlineCase, ignoreNullValue);
 	}
 
 	/**
@@ -541,26 +597,24 @@ public class BeanUtil {
 
 	/**
 	 * 复制Bean对象属性<br>
+	 * 
+	 * @param source 源Bean对象
+	 * @param target 目标Bean对象
+	 * @param ignoreCase 是否忽略大小写
+	 */
+	public static void copyProperties(Object source, Object target, boolean ignoreCase) {
+		BeanCopier.create(source, target, CopyOptions.create().setIgnoreCase(ignoreCase)).copy();
+	}
+
+	/**
+	 * 复制Bean对象属性<br>
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
 	 * 
 	 * @param source 源Bean对象
 	 * @param target 目标Bean对象
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
-	public static void copyProperties(final Object source, Object target, CopyOptions copyOptions) {
-		copyProperties(source, target, false, copyOptions);
-	}
-
-	/**
-	 * 复制Bean对象属性<br>
-	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将CopyOptions.editable设置为父类
-	 * 
-	 * @param source 源Bean对象
-	 * @param target 目标Bean对象
-	 * @param ignoreCase 是否忽略大小写
-	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
-	 */
-	public static void copyProperties(final Object source, Object target, boolean ignoreCase, CopyOptions copyOptions) {
+	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
 		if (null == copyOptions) {
 			copyOptions = new CopyOptions();
 		}
@@ -618,4 +672,41 @@ public class BeanUtil {
 		return bean;
 	}
 
+	/**
+	 * 判断Bean是否为空对象，空对象表示本身为<code>null</code>或者所有属性都为<code>null</code>
+	 *
+	 * @param bean Bean对象
+	 * @return 是否为空，<code>true</code> - 空 / <code>false</code> - 非空
+	 * @since 4.1.10
+	 */
+	public static boolean isEmpty(Object bean) {
+		if (null != bean) {
+			for (Field field : ReflectUtil.getFields(bean.getClass())) {
+				if (null != ReflectUtil.getFieldValue(bean, field)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 判断Bean是否包含值为<code>null</code>的属性<br>
+	 * 对象本身为<code>null</code>也返回true
+	 *
+	 * @param bean Bean对象
+	 * @return 是否包含值为<code>null</code>的属性，<code>true</code> - 包含 / <code>false</code> - 不包含
+	 * @since 4.1.10
+	 */
+	public static boolean hasNullField(Object bean) {
+		if (null == bean) {
+			return true;
+		}
+		for (Field field : ReflectUtil.getFields(bean.getClass())) {
+			if (null == ReflectUtil.getFieldValue(bean, field)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -5,9 +5,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Caller;
+import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
+import cn.hutool.log.dialect.jboss.JbossLogFactory;
 import cn.hutool.log.dialect.jdk.JdkLogFactory;
 import cn.hutool.log.dialect.log4j.Log4jLogFactory;
 import cn.hutool.log.dialect.log4j2.Log4j2LogFactory;
@@ -22,6 +23,7 @@ import cn.hutool.log.dialect.tinylog.TinyLogFactory;
  * @see Log4jLogFactory
  * @see ApacheCommonsLogFactory
  * @see TinyLogFactory
+ * @see JbossLogFactory
  * @see ConsoleLogFactory
  * @see JdkLogFactory
  * 
@@ -30,12 +32,29 @@ import cn.hutool.log.dialect.tinylog.TinyLogFactory;
  */
 public abstract class LogFactory {
 
-	protected String logFramworkName;
+	/** 日志框架名，用于打印当前所用日志框架 */
+	protected String name;
+	/** 日志对象缓存 */
 	private Map<Object, Log> logCache;
 
-	public LogFactory(String logFramworkName) {
-		this.logFramworkName = logFramworkName;
+	/**
+	 * 构造
+	 * 
+	 * @param name 日志框架名
+	 */
+	public LogFactory(String name) {
+		this.name = name;
 		logCache = new ConcurrentHashMap<>();
+	}
+
+	/**
+	 * 获取日志框架名，用于打印当前所用日志框架
+	 * 
+	 * @return 日志框架名
+	 * @since 4.1.21
+	 */
+	public String getName() {
+		return this.name;
 	}
 
 	/**
@@ -107,11 +126,13 @@ public abstract class LogFactory {
 	 * 自定义日志实现
 	 * 
 	 * @see Slf4jLogFactory
-	 * @see Log4jLogFactory
 	 * @see Log4j2LogFactory
+	 * @see Log4jLogFactory
 	 * @see ApacheCommonsLogFactory
-	 * @see JdkLogFactory
+	 * @see TinyLogFactory
+	 * @see JbossLogFactory
 	 * @see ConsoleLogFactory
+	 * @see JdkLogFactory
 	 * 
 	 * @param logFactoryClass 日志工厂类
 	 * @return 自定义的日志工厂类
@@ -124,11 +145,13 @@ public abstract class LogFactory {
 	 * 自定义日志实现
 	 * 
 	 * @see Slf4jLogFactory
-	 * @see Log4jLogFactory
 	 * @see Log4j2LogFactory
+	 * @see Log4jLogFactory
 	 * @see ApacheCommonsLogFactory
-	 * @see JdkLogFactory
+	 * @see TinyLogFactory
+	 * @see JbossLogFactory
 	 * @see ConsoleLogFactory
+	 * @see JdkLogFactory
 	 * 
 	 * @param logFactory 日志工厂类对象
 	 * @return 自定义的日志工厂类
@@ -161,9 +184,9 @@ public abstract class LogFactory {
 	 * @return 获得调用者的日志
 	 */
 	public static Log get() {
-		return get(Caller.getCallerCaller());
+		return get(CallerUtil.getCallerCaller());
 	}
-	
+
 	/**
 	 * 决定日志实现
 	 * <p>
@@ -173,13 +196,15 @@ public abstract class LogFactory {
 	 * @see Log4j2LogFactory
 	 * @see Log4jLogFactory
 	 * @see ApacheCommonsLogFactory
+	 * @see TinyLogFactory
+	 * @see JbossLogFactory
 	 * @see ConsoleLogFactory
 	 * @see JdkLogFactory
 	 * @return 日志实现类
 	 */
 	public static LogFactory create() {
 		final LogFactory factory = doCreate();
-		factory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", factory.logFramworkName);
+		factory.getLog(LogFactory.class).debug("Use [{}] Logger As Default.", factory.name);
 		return factory;
 	}
 
@@ -192,6 +217,8 @@ public abstract class LogFactory {
 	 * @see Log4j2LogFactory
 	 * @see Log4jLogFactory
 	 * @see ApacheCommonsLogFactory
+	 * @see TinyLogFactory
+	 * @see JbossLogFactory
 	 * @see ConsoleLogFactory
 	 * @see JdkLogFactory
 	 * @return 日志实现类
@@ -219,6 +246,11 @@ public abstract class LogFactory {
 		}
 		try {
 			return new TinyLogFactory();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		try {
+			return new JbossLogFactory();
 		} catch (NoClassDefFoundError e) {
 			// ignore
 		}

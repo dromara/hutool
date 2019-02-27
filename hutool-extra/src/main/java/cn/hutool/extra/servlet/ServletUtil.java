@@ -1,5 +1,7 @@
 package cn.hutool.extra.servlet;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -22,12 +24,15 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.multipart.MultipartFormData;
 import cn.hutool.extra.servlet.multipart.UploadSetting;
 
@@ -46,7 +51,7 @@ public class ServletUtil {
 	public static final String METHOD_POST = "POST";
 	public static final String METHOD_PUT = "PUT";
 	public static final String METHOD_TRACE = "TRACE";
-	
+
 	// --------------------------------------------------------- getParam start
 	/**
 	 * 获得所有请求参数
@@ -58,7 +63,7 @@ public class ServletUtil {
 		final Map<String, String[]> map = request.getParameterMap();
 		return Collections.unmodifiableMap(map);
 	}
-	
+
 	/**
 	 * 获得所有请求参数
 	 * 
@@ -66,13 +71,13 @@ public class ServletUtil {
 	 * @return Map
 	 */
 	public static Map<String, String> getParamMap(ServletRequest request) {
-		Map<String,String> params = new HashMap<String,String>();
-		for (Map.Entry<String,String[]> entry : getParams(request).entrySet()) {
-			params.put( entry.getKey(), ArrayUtil.join(entry.getValue(), StrUtil.COMMA) );
+		Map<String, String> params = new HashMap<String, String>();
+		for (Map.Entry<String, String[]> entry : getParams(request).entrySet()) {
+			params.put(entry.getKey(), ArrayUtil.join(entry.getValue(), StrUtil.COMMA));
 		}
 		return params;
 	}
-	
+
 	/**
 	 * 获取请求体<br>
 	 * 调用该方法后，getParam方法将失效
@@ -81,14 +86,14 @@ public class ServletUtil {
 	 * @return 获得请求体
 	 * @since 4.0.2
 	 */
-	public static String getBody(ServletRequest request){
+	public static String getBody(ServletRequest request) {
 		try {
 			return IoUtil.read(request.getReader());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取请求体byte[]<br>
 	 * 调用该方法后，getParam方法将失效
@@ -97,7 +102,7 @@ public class ServletUtil {
 	 * @return 获得请求体byte[]
 	 * @since 4.0.2
 	 */
-	public static byte[] getBodyBytes(ServletRequest request){
+	public static byte[] getBodyBytes(ServletRequest request) {
 		try {
 			return IoUtil.readBytes(request.getInputStream());
 		} catch (IOException e) {
@@ -137,7 +142,7 @@ public class ServletUtil {
 			@Override
 			public boolean containsKey(String key) {
 				// 对于Servlet来说，返回值null意味着无此参数
-				return null != request.getParameter(key);
+				return (null != request.getParameter(key)) || (null != request.getParameter(beanName + StrUtil.DOT + key));
 			}
 		}, copyOptions);
 	}
@@ -170,16 +175,26 @@ public class ServletUtil {
 	// --------------------------------------------------------- fillBean end
 
 	/**
-	 * 获取客户端IP<br>
-	 * 默认检测的Header：<br>
-	 * 1、X-Forwarded-For<br>
-	 * 2、X-Real-IP<br>
-	 * 3、Proxy-Client-IP<br>
-	 * 4、WL-Proxy-Client-IP<br>
-	 * otherHeaderNames参数用于自定义检测的Header
+	 * 获取客户端IP
+	 * 
+	 * <p>
+	 * 默认检测的Header:
+	 * 
+	 * <pre>
+	 * 1、X-Forwarded-For
+	 * 2、X-Real-IP
+	 * 3、Proxy-Client-IP
+	 * 4、WL-Proxy-Client-IP
+	 * </pre>
+	 * </p>
+	 * 
+	 * <p>
+	 * otherHeaderNames参数用于自定义检测的Header<br>
+	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
+	 * </p>
 	 * 
 	 * @param request 请求对象{@link HttpServletRequest}
-	 * @param otherHeaderNames 其他自定义头文件
+	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
 	 * @return IP地址
 	 */
 	public static String getClientIP(HttpServletRequest request, String... otherHeaderNames) {
@@ -188,8 +203,25 @@ public class ServletUtil {
 			headers = ArrayUtil.addAll(headers, otherHeaderNames);
 		}
 
+		return getClientIPByHeader(request, headers);
+	}
+	
+	/**
+	 * 获取客户端IP
+	 * 
+	 * <p>
+	 * headerNames参数用于自定义检测的Header<br>
+	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
+	 * </p>
+	 * 
+	 * @param request 请求对象{@link HttpServletRequest}
+	 * @param headerNames 自定义头，通常在Http服务器（例如Nginx）中配置
+	 * @return IP地址
+	 * @since 4.4.1
+	 */
+	public static String getClientIPByHeader(HttpServletRequest request, String... headerNames) {
 		String ip;
-		for (String header : headers) {
+		for (String header : headerNames) {
 			ip = request.getHeader(header);
 			if (false == isUnknow(ip)) {
 				return getMultistageReverseProxyIp(ip);
@@ -199,7 +231,7 @@ public class ServletUtil {
 		ip = request.getRemoteAddr();
 		return getMultistageReverseProxyIp(ip);
 	}
-	
+
 	/**
 	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
 	 * 
@@ -223,7 +255,7 @@ public class ServletUtil {
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.2
 	 */
-	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException{
+	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException {
 		final MultipartFormData formData = new MultipartFormData(uploadSetting);
 		try {
 			formData.parseRequest(request);
@@ -457,6 +489,41 @@ public class ServletUtil {
 		} finally {
 			IoUtil.close(writer);
 		}
+	}
+
+	/**
+	 * 返回文件给客户端
+	 * 
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @param file 写出的文件对象
+	 * @since 4.1.15
+	 */
+	public static void write(HttpServletResponse response, File file) {
+		final String fileName = file.getName();
+		final String contentType = ObjectUtil.defaultIfNull(FileUtil.getMimeType(fileName), "application/octet-stream");
+		BufferedInputStream in = null;
+		try {
+			in = FileUtil.getInputStream(file);
+			write(response, in, contentType, fileName);
+		} finally {
+			IoUtil.close(in);
+		}
+	}
+
+	/**
+	 * 返回数据给客户端
+	 * 
+	 * @param response 响应对象{@link HttpServletResponse}
+	 * @param in 需要返回客户端的内容
+	 * @param contentType 返回的类型
+	 * @param fileName 文件名
+	 * @since 4.1.15
+	 */
+	public static void write(HttpServletResponse response, InputStream in, String contentType, String fileName) {
+		final String charset = ObjectUtil.defaultIfNull(response.getCharacterEncoding(), CharsetUtil.UTF_8);
+		response.setHeader("Content-Disposition", StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
+		response.setContentType(contentType);
+		write(response, in);
 	}
 
 	/**

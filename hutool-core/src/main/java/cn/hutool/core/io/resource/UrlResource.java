@@ -10,6 +10,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.URLUtil;
 
 /**
@@ -33,12 +34,12 @@ public class UrlResource implements Resource{
 	
 	/**
 	 * 构造
-	 * @param url URL
+	 * @param url URL，允许为空
 	 * @param name 资源名称
 	 */
 	public UrlResource(URL url, String name) {
 		this.url = url;
-		this.name = name;
+		this.name = ObjectUtil.defaultIfNull(name, (null != url) ? FileUtil.getName(url.getPath()) : null);
 	}
 	
 	/**

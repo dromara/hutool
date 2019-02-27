@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.hutool.log.StaticLog;
 
 /**
  *
@@ -181,7 +182,7 @@ public final class HTMLFilter {
 
 	private void debug(final String msg) {
 		if (vDebug) {
-			Logger.getAnonymousLogger().info(msg);
+			StaticLog.debug(msg);
 		}
 	}
 
@@ -331,7 +332,7 @@ public final class HTMLFilter {
 		if (m.find()) {
 			final String name = m.group(1).toLowerCase();
 			if (allowed(name)) {
-				if (!inArray(name, vSelfClosingTags)) {
+				if (false == inArray(name, vSelfClosingTags)) {
 					if (vTagCounts.containsKey(name)) {
 						vTagCounts.put(name, vTagCounts.get(name) - 1);
 						return "</" + name + ">";

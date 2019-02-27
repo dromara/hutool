@@ -1,5 +1,6 @@
 package cn.hutool.crypto.asymmetric;
 
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -11,6 +12,7 @@ import java.util.Set;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.SecureUtil;
 
 /**
  * 签名包装，{@link Signature} 包装类
@@ -22,40 +24,42 @@ public class Sign extends BaseAsymmetric<Sign> {
 
 	/** 签名，用于签名和验证 */
 	protected Signature signature;
-	
+
 	// ------------------------------------------------------------------ Constructor start
 	/**
 	 * 构造，创建新的私钥公钥对
+	 * 
 	 * @param algorithm {@link SignAlgorithm}
 	 */
 	public Sign(SignAlgorithm algorithm) {
-		this(algorithm, (byte[])null, (byte[])null);
+		this(algorithm, (byte[]) null, (byte[]) null);
 	}
-	
+
 	/**
 	 * 构造，创建新的私钥公钥对
+	 * 
 	 * @param algorithm 算法
 	 */
 	public Sign(String algorithm) {
-		this(algorithm, (byte[])null, (byte[])null);
+		this(algorithm, (byte[]) null, (byte[]) null);
 	}
-	
+
 	/**
-	 * 构造
-	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
+	 * 
 	 * @param algorithm {@link SignAlgorithm}
-	 * @param privateKeyBase64 私钥Base64
-	 * @param publicKeyBase64 公钥Base64
+	 * @param privateKeyStr 私钥Hex或Base64表示
+	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
-	public Sign(SignAlgorithm algorithm, String privateKeyBase64, String publicKeyBase64) {
-		this(algorithm.getValue(), Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
+	public Sign(SignAlgorithm algorithm, String privateKeyStr, String publicKeyStr) {
+		this(algorithm.getValue(), SecureUtil.decodeKey(privateKeyStr), SecureUtil.decodeKey(publicKeyStr));
 	}
-	
+
 	/**
-	 * 构造
-	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
+	 * 
 	 * @param algorithm {@link SignAlgorithm}
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
@@ -65,9 +69,20 @@ public class Sign extends BaseAsymmetric<Sign> {
 	}
 	
 	/**
-	 * 构造
-	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
+	 * 
+	 * @param algorithm {@link SignAlgorithm}
+	 * @param keyPair 密钥对（包括公钥和私钥）
+	 */
+	public Sign(SignAlgorithm algorithm, KeyPair keyPair) {
+		this(algorithm.getValue(), keyPair);
+	}
+
+	/**
+	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
+	 * 
 	 * @param algorithm {@link SignAlgorithm}
 	 * @param privateKey 私钥
 	 * @param publicKey 公钥
@@ -85,7 +100,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param publicKeyBase64 公钥Base64
 	 */
 	public Sign(String algorithm, String privateKeyBase64, String publicKeyBase64) {
-		super(algorithm, privateKeyBase64, publicKeyBase64);
+		this(algorithm, Base64.decode(privateKeyBase64), Base64.decode(publicKeyBase64));
 	}
 
 	/**
@@ -99,7 +114,21 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param publicKey 公钥
 	 */
 	public Sign(String algorithm, byte[] privateKey, byte[] publicKey) {
-		super(algorithm, privateKey, publicKey);
+		this(algorithm, //
+				SecureUtil.generatePrivateKey(algorithm, privateKey), //
+				SecureUtil.generatePublicKey(algorithm, publicKey)//
+		);
+	}
+	
+	/**
+	 * 构造 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
+	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做签名或验证
+	 * 
+	 * @param algorithm 算法，见{@link SignAlgorithm}
+	 * @param keyPair 密钥对（包括公钥和私钥）
+	 */
+	public Sign(String algorithm, KeyPair keyPair) {
+		this(algorithm, keyPair.getPrivate(), keyPair.getPublic());
 	}
 
 	/**
@@ -116,7 +145,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 		super(algorithm, privateKey, publicKey);
 	}
 	// ------------------------------------------------------------------ Constructor end
-
+	
 	/**
 	 * 初始化
 	 * 

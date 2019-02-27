@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -354,7 +355,7 @@ public class IterUtil {
 		}
 		return map;
 	}
-
+	
 	/**
 	 * 将键列表和值列表转换为Map<br>
 	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
@@ -368,9 +369,26 @@ public class IterUtil {
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> toMap(Iterable<K> keys, Iterable<V> values) {
-		return toMap(null == keys ? null : keys.iterator(), null == values ? null : values.iterator());
+		return toMap(keys, values, false);
 	}
 
+	/**
+	 * 将键列表和值列表转换为Map<br>
+	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
+	 * 如果值多于键，忽略多余的值。
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param keys 键列表
+	 * @param values 值列表
+	 * @param isOrder 是否有序
+	 * @return 标题内容Map
+	 * @since 4.1.12
+	 */
+	public static <K, V> Map<K, V> toMap(Iterable<K> keys, Iterable<V> values, boolean isOrder) {
+		return toMap(null == keys ? null : keys.iterator(), null == values ? null : values.iterator(), isOrder);
+	}
+	
 	/**
 	 * 将键列表和值列表转换为Map<br>
 	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
@@ -384,7 +402,24 @@ public class IterUtil {
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> toMap(Iterator<K> keys, Iterator<V> values) {
-		final Map<K, V> resultMap = new HashMap<>();
+		return toMap(keys, values, false);
+	}
+
+	/**
+	 * 将键列表和值列表转换为Map<br>
+	 * 以键为准，值与键位置需对应。如果键元素数多于值元素，多余部分值用null代替。<br>
+	 * 如果值多于键，忽略多余的值。
+	 * 
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param keys 键列表
+	 * @param values 值列表
+	 * @param isOrder 是否有序
+	 * @return 标题内容Map
+	 * @since 4.1.12
+	 */
+	public static <K, V> Map<K, V> toMap(Iterator<K> keys, Iterator<V> values, boolean isOrder) {
+		final Map<K, V> resultMap = MapUtil.newHashMap(isOrder);
 		if (isNotEmpty(keys)) {
 			while (keys.hasNext()) {
 				resultMap.put(keys.next(), (null != values && values.hasNext()) ? values.next() : null);

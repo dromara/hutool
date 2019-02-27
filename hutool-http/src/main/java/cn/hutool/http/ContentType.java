@@ -17,7 +17,9 @@ public enum ContentType {
 	/** Rest请求JSON编码 */
 	JSON("application/json"),
 	/** Rest请求XML编码 */
-	XML("application/xml");
+	XML("application/xml"),
+	/** Rest请求text/xml编码 */
+	TEXT_XML("text/xml");
 
 	private String value;
 	private ContentType(String value) {
@@ -27,6 +29,17 @@ public enum ContentType {
 	@Override
 	public String toString() {
 		return value;
+	}
+	
+	/**
+	 * 是否为默认Content-Type，默认包括<code>null</code>和application/x-www-form-urlencoded
+	 * 
+	 * @param contentType 内容类型
+	 * @return 是否为默认Content-Type
+	 * @since 4.1.5
+	 */
+	public static boolean isDefault(String contentType) {
+		return null == contentType || isFormUrlEncoed(contentType);
 	}
 
 	/**

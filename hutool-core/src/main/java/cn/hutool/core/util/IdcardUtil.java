@@ -14,6 +14,11 @@ import cn.hutool.core.lang.Validator;
  * 身份证相关工具类<br>
  * see https://www.oschina.net/code/snippet_1611_2881
  * 
+ * <p>
+ * 本工具并没有对行政区划代码做校验，如有需求，请参阅（2018年10月）：
+ * http://www.mca.gov.cn/article/sj/xzqh/2018/201804-12/20181011221630.html
+ * </p>
+ * 
  * @author Looly
  * @since 3.0.4
  */
@@ -156,7 +161,7 @@ public class IdcardUtil {
 			return isvalidCard15(idCard);
 		case 10: {// 10位身份证，港澳台地区
 			String[] cardval = isValidCard10(idCard);
-			if (cardval != null && cardval[2].equals("true")) {
+			if (null != cardval && cardval[2].equals("true")) {
 				return true;
 			} else {
 				return false;
@@ -203,6 +208,11 @@ public class IdcardUtil {
 		if (CHINA_ID_MAX_LENGTH != idCard.length()) {
 			return false;
 		}
+		
+		//校验生日
+		if(false == Validator.isBirthday(idCard.substring(6, 14))) {
+			return false;
+		}
 
 		// 前17位
 		String code17 = idCard.substring(0, 17);
@@ -237,7 +247,7 @@ public class IdcardUtil {
 
 			// 生日
 			DateTime birthDate = DateUtil.parse(idCard.substring(6, 12), "yyMMdd");
-			if (false == Validator.isBirthday(birthDate.year(), birthDate.month(), birthDate.dayOfMonth())) {
+			if (false == Validator.isBirthday(birthDate.year(), birthDate.month() + 1, birthDate.dayOfMonth())) {
 				return false;
 			}
 		} else {
@@ -256,6 +266,9 @@ public class IdcardUtil {
 	 *         </p>
 	 */
 	public static String[] isValidCard10(String idCard) {
+		if(StrUtil.isBlank(idCard)) {
+			return null;
+		}
 		String[] info = new String[3];
 		String card = idCard.replaceAll("[\\(|\\)]", "");
 		if (card.length() != 8 && card.length() != 9 && idCard.length() != 10) {
@@ -294,12 +307,18 @@ public class IdcardUtil {
 	 * @return 验证码是否符合
 	 */
 	public static boolean isValidTWCard(String idCard) {
+		if(StrUtil.isEmpty(idCard)) {
+			return false;
+		}
 		String start = idCard.substring(0, 1);
 		String mid = idCard.substring(1, 9);
 		String end = idCard.substring(9, 10);
 		Integer iStart = twFirstCode.get(start);
-		Integer sum = iStart / 10 + (iStart % 10) * 9;
-		char[] chars = mid.toCharArray();
+		if(null == iStart) {
+			return false;
+		}
+		int sum = iStart / 10 + (iStart % 10) * 9;
+		final char[] chars = mid.toCharArray();
 		Integer iflag = 8;
 		for (char c : chars) {
 			sum += Integer.valueOf(String.valueOf(c)) * iflag;
@@ -502,9 +521,10 @@ public class IdcardUtil {
 	 * @param endExclude 结束位置（不包含）
 	 * @return 隐藏后的身份证号码
 	 * @since 3.2.2
+	 * @see StrUtil#hide(CharSequence, int, int)
 	 */
 	public static String hide(String idCard, int startInclude, int endExclude) {
-		return StrUtil.replace(idCard, startInclude, endExclude, '*');
+		return StrUtil.hide(idCard, startInclude, endExclude);
 	}
 
 	// ----------------------------------------------------------------------------------- Private method start

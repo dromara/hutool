@@ -16,7 +16,7 @@ public class Log4jLog extends AbstractLocationAwareLog {
 	private static final long serialVersionUID = -6843151523380063975L;
 	private static final String FQCN = Log4jLog.class.getName();
 
-	private final transient Logger logger;
+	private final Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
 	public Log4jLog(Logger logger) {

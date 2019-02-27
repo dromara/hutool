@@ -17,10 +17,10 @@ import cn.hutool.db.sql.Wrapper;
  * 此类为线程安全的对象，可以单例使用
  * 
  * @author Luxiaolei
- * 
+ * @deprecated 请使用{@link Db}
  */
+@Deprecated
 public class SqlRunner extends AbstractDb{
-	private DataSource ds;
 	
 	/**
 	 * 创建SqlRunner<br>
@@ -80,17 +80,7 @@ public class SqlRunner extends AbstractDb{
 	 * @param ds 数据源
 	 */
 	public SqlRunner(DataSource ds) {
-		this(ds, DialectFactory.newDialect(ds));
-	}
-	
-	/**
-	 * 构造
-	 * @param ds 数据源
-	 * @param dialect 方言
-	 */
-	public SqlRunner(DataSource ds, Dialect dialect) {
-		this.runner = new SqlConnRunner(dialect);
-		this.ds = ds;
+		this(ds, DialectFactory.getDialect(ds));
 	}
 	
 	/**
@@ -99,8 +89,16 @@ public class SqlRunner extends AbstractDb{
 	 * @param driverClassName 数据库连接驱动类名，用于识别方言
 	 */
 	public SqlRunner(DataSource ds, String driverClassName) {
-		this.runner = new SqlConnRunner(driverClassName);
-		this.ds = ds;
+		this(ds, DialectFactory.newDialect(driverClassName));
+	}
+	
+	/**
+	 * 构造
+	 * @param ds 数据源
+	 * @param dialect 方言
+	 */
+	public SqlRunner(DataSource ds, Dialect dialect) {
+		super(ds, dialect);
 	}
 	//------------------------------------------------------- Constructor end
 
