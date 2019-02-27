@@ -132,7 +132,7 @@ public class BeanUtil {
 			try {
 				fieldValue = field.get(bean);
 			} catch (Exception e) {
-
+				// ignore
 			}
 			if (null == fieldValue) {
 				return true;
