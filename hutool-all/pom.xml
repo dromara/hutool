@@ -101,6 +101,11 @@
 			<artifactId>hutool-captcha</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-socket</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

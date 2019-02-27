@@ -587,12 +587,12 @@ public class ClassUtil {
 	 * 非单例模式，如果是非静态方法，每次创建一个新对象
 	 * 
 	 * @param <T> 对象类型
-	 * @param classNameDotMethodName 类名和方法名表达式，类名与方法名用<code>.</code>或<code>#</code>连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
+	 * @param classNameWithMethodName 类名和方法名表达式，类名与方法名用<code>.</code>或<code>#</code>连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameDotMethodName, Object[] args) {
-		return invoke(classNameDotMethodName, false, args);
+	public static <T> T invoke(String classNameWithMethodName, Object[] args) {
+		return invoke(classNameWithMethodName, false, args);
 	}
 
 	/**
@@ -653,7 +653,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object[] args) {
+	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object... args) {
 		Class<Object> clazz = loadClass(className);
 		try {
 			final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));

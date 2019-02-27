@@ -6,6 +6,10 @@
 ## 4.5.1
 
 ### 新特性
+* 【socket】     socket模块加入到all中
+* 【core】        增加Jdk8DateConverter用于支持jdk8中的时间（issue#IS32N@Gitee）
+* 【core】        StrUtil.subPreGbk优化代码规范（pull#277@Github）
+
 ### Bug修复
 
 -------------------------------------------------------------------------------------------------------------

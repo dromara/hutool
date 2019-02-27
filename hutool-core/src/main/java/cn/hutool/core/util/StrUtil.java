@@ -1578,7 +1578,7 @@ public class StrUtil {
 			return str(str);
 		}
 
-		byte b[];
+		byte[] b;
 		int counterOfDoubleByte = 0;
 		b = str.toString().getBytes(CharsetUtil.CHARSET_GBK);
 		if (b.length <= len) {
