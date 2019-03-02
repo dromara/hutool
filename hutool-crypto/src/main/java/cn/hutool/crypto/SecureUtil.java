@@ -32,6 +32,7 @@ import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.DES;
 import cn.hutool.crypto.symmetric.DESede;
@@ -496,8 +497,8 @@ public final class SecureUtil {
 	 * 
 	 * @return {@link Digester}
 	 */
-	public static Digester md5() {
-		return new Digester(DigestAlgorithm.MD5);
+	public static MD5 md5() {
+		return new MD5();
 	}
 
 	/**
@@ -507,7 +508,7 @@ public final class SecureUtil {
 	 * @return MD5字符串
 	 */
 	public static String md5(String data) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+		return new MD5().digestHex(data);
 	}
 
 	/**
@@ -517,7 +518,7 @@ public final class SecureUtil {
 	 * @return MD5字符串
 	 */
 	public static String md5(InputStream data) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+		return new MD5().digestHex(data);
 	}
 
 	/**
@@ -527,7 +528,7 @@ public final class SecureUtil {
 	 * @return MD5字符串
 	 */
 	public static String md5(File dataFile) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(dataFile);
+		return new MD5().digestHex(dataFile);
 	}
 
 	/**
