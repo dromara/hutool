@@ -11,6 +11,7 @@
 * 【core】        StrUtil.subPreGbk优化代码规范（pull#277@Github）
 * 【crypto】      MD5支持16位值生成
 * 【crypto】      Digester支持自定义盐所在位置
+* 【captcha】    增加算数计算类验证码（issue#282@Github）
 
 ### Bug修复
 
