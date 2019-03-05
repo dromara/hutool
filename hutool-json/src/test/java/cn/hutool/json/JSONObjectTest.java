@@ -81,6 +81,13 @@ public class JSONObjectTest {
 		Assert.assertEquals("F140", json.getStr("error_code"));
 		Assert.assertEquals("最早发送时间格式错误，该字段可以为空，当不为空时正确填写格式为“YYYYMMDDHHMISS”", json.getStr("error_info"));
 	}
+	
+	@Test
+	public void parseStringTest3() {
+		String jsonStr = "{\"test\":\"体”、“文\"}";
+		JSONObject json = new JSONObject(jsonStr);
+		Assert.assertEquals("体”、“文", json.getStr("test"));
+	}
 
 	@Test
 	public void toBeanTest() {
