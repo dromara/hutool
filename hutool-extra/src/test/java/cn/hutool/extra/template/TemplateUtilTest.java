@@ -54,7 +54,6 @@ public class TemplateUtilTest {
 		// 字符串模板
 		TemplateEngine engine = new RythmEngine(new TemplateConfig("templates"));
 		Template template = engine.getTemplate("hello,@name");
-		
 		String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
 
@@ -66,28 +65,33 @@ public class TemplateUtilTest {
 
 	@Test
 	public void freemarkerEngineTest() {
-		TemplateEngine engine = new FreemarkerEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
-		Template template = engine.getTemplate("freemarker_test.ftl");
+		// 字符串模板
+		TemplateEngine engine = new FreemarkerEngine(new TemplateConfig("templates", ResourceMode.STRING));
+		Template template = engine.getTemplate("hello,${name}");
 		String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
 		
-		engine = new FreemarkerEngine(new TemplateConfig("templates", ResourceMode.STRING));
-		template = engine.getTemplate("hello,${name}");
+		//ClassPath模板
+		engine = new FreemarkerEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
+		template = engine.getTemplate("freemarker_test.ftl");
 		result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("hello,hutool", result);
 	}
 	
 	@Test
 	public void velocityEngineTest() {
-		TemplateEngine engine = new VelocityEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
-		Template template = engine.getTemplate("templates/velocity_test.vtl");
+		// 字符串模板
+		TemplateEngine engine = new VelocityEngine(new TemplateConfig("templates", ResourceMode.STRING));
+		Template template = engine.getTemplate("你好,$name");
 		String result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("你好,hutool", result);
 		
-		engine = new VelocityEngine(new TemplateConfig("templates", ResourceMode.STRING));
-		template = engine.getTemplate("你好,$name");
+		//ClassPath模板
+		engine = new VelocityEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
+		template = engine.getTemplate("templates/velocity_test.vtl");
 		result = template.render(Dict.create().set("name", "hutool"));
 		Assert.assertEquals("你好,hutool", result);
+		
 	}
 
 	@Test
@@ -97,6 +101,12 @@ public class TemplateUtilTest {
 		Template template = engine.getTemplate("#(x + 123)");
 		String result = template.render(Dict.create().set("x", 1));
 		Assert.assertEquals("124", result);
+		
+		//ClassPath模板
+		engine = new EnjoyEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
+		template = engine.getTemplate("enjoy_test.etl");
+		result = template.render(Dict.create().set("x", 1));
+		Assert.assertEquals("124", result);
 	}
 
 	@Test
@@ -105,6 +115,12 @@ public class TemplateUtilTest {
 		TemplateEngine engine = new ThymeleafEngine(new TemplateConfig("templates"));
 		Template template = engine.getTemplate("<h3 th:text=\"${message}\"></h3>");
 		String result = template.render(Dict.create().set("message", "Hutool"));
+		Assert.assertEquals("<h3>Hutool</h3>", result);
+		
+		//ClassPath模板
+		engine = new ThymeleafEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
+		template = engine.getTemplate("thymeleaf_test.ttl");
+		result = template.render(Dict.create().set("message", "Hutool"));
 		Assert.assertEquals("<h3>Hutool</h3>", result);
 	}
 	
