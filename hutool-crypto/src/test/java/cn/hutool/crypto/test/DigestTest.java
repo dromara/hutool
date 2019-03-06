@@ -45,11 +45,15 @@ public class DigestTest {
 		md5.setSalt("saltTest".getBytes());
 		String md5Hex1 = md5.digestHex(testStr);
 		Assert.assertEquals("762f7335200299dfa09bebbb601a5bc6", md5Hex1);
+		String md5Hex2 = md5.digestHex(IoUtil.toUtf8Stream(testStr));
+		Assert.assertEquals("762f7335200299dfa09bebbb601a5bc6", md5Hex2);
 		
 		//重复2次
 		md5.setDigestCount(2);
-		String md5Hex2 = md5.digestHex(testStr);
-		Assert.assertEquals("2b0616296f6755d25efc07f90afe9684", md5Hex2);
+		String md5Hex3 = md5.digestHex(testStr);
+		Assert.assertEquals("2b0616296f6755d25efc07f90afe9684", md5Hex3);
+		String md5Hex4 = md5.digestHex(IoUtil.toUtf8Stream(testStr));
+		Assert.assertEquals("2b0616296f6755d25efc07f90afe9684", md5Hex4);
 	}
 	
 	@Test

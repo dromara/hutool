@@ -1,7 +1,6 @@
 package cn.hutool.captcha.generator;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 随机字符验证码生成器<br>
@@ -10,15 +9,20 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 4.1.2
  */
-public class RandomGenerator extends AbstractGenerator {
+public abstract class AbstractGenerator implements CodeGenerator {
 
+	/** 基础字符集合，用于随机获取字符串的字符集合 */
+	protected String baseStr;
+	/** 验证码长度 */
+	protected int length;
+	
 	/**
 	 * 构造，使用字母+数字做为基础
 	 * 
 	 * @param count 生成验证码长度
 	 */
-	public RandomGenerator(int count) {
-		super(count);
+	public AbstractGenerator(int count) {
+		this(RandomUtil.BASE_CHAR_NUMBER, count);
 	}
 
 	/**
@@ -27,20 +31,13 @@ public class RandomGenerator extends AbstractGenerator {
 	 * @param baseStr 基础字符集合，用于随机获取字符串的字符集合
 	 * @param length 生成验证码长度
 	 */
-	public RandomGenerator(String baseStr, int length) {
-		super(baseStr, length);
+	public AbstractGenerator(String baseStr, int length) {
+		this.baseStr = baseStr;
+		this.length = length;
 	}
 
 	@Override
-	public String generate() {
-		return RandomUtil.randomString(this.baseStr, this.length);
-	}
-	
-	@Override
-	public boolean verify(String code, String userInputCode) {
-		if (StrUtil.isNotBlank(userInputCode)) {
-			return StrUtil.equalsIgnoreCase(code, userInputCode);
-		}
-		return false;
+	public int getLength() {
+		return this.length;
 	}
 }

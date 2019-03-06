@@ -753,6 +753,17 @@ public class IoUtil {
 		}
 		return toStream(StrUtil.bytes(content, charset));
 	}
+	
+	/**
+	 * String 转为UTF-8编码的字节流流
+	 * 
+	 * @param content 内容
+	 * @return 字节流
+	 * @since 4.5.1
+	 */
+	public static ByteArrayInputStream toUtf8Stream(String content) {
+		return toStream(content, CharsetUtil.CHARSET_UTF_8);
+	}
 
 	/**
 	 * String 转为流

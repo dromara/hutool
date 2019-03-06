@@ -35,6 +35,7 @@ import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.CurrencyConverter;
 import cn.hutool.core.convert.impl.DateConverter;
 import cn.hutool.core.convert.impl.EnumConverter;
+import cn.hutool.core.convert.impl.Jdk8DateConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.convert.impl.NumberConverter;
 import cn.hutool.core.convert.impl.PathConverter;
@@ -46,6 +47,7 @@ import cn.hutool.core.convert.impl.URIConverter;
 import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
@@ -191,21 +193,21 @@ public class ConverterRegistry {
 			type = defaultValue.getClass();
 		}
 		Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
-		if(null == rowType) {
-			if(null != defaultValue) {
+		if (null == rowType) {
+			if (null != defaultValue) {
 				rowType = (Class<T>) defaultValue.getClass();
-			}else {
-				//无法识别的泛型类型，按照Object处理
+			} else {
+				// 无法识别的泛型类型，按照Object处理
 				return (T) value;
 			}
 		}
 
 		// 特殊类型转换，包括Collection、Map、强转、Array等
 		final T result = convertSpecial(type, rowType, value, defaultValue);
-		if(null != result) {
+		if (null != result) {
 			return result;
 		}
-		
+
 		// 标准转换器
 		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null != converter) {
@@ -216,8 +218,7 @@ public class ConverterRegistry {
 		if (BeanUtil.isBean(rowType)) {
 			return new BeanConverter<T>(rowType).convert(value, defaultValue);
 		}
-		
-		
+
 		// 无法转换
 		throw new ConvertException("No Converter for type [{}]", rowType.getName());
 	}
@@ -254,6 +255,7 @@ public class ConverterRegistry {
 	/**
 	 * 特殊类型转换<br>
 	 * 包括：
+	 * 
 	 * <pre>
 	 * Collection
 	 * Map
@@ -269,10 +271,9 @@ public class ConverterRegistry {
 	 */
 	@SuppressWarnings("unchecked")
 	private <T> T convertSpecial(Type type, Class<T> rowType, Object value, T defaultValue) {
-		if(null == rowType) {
+		if (null == rowType) {
 			return null;
 		}
-		
 
 		// 集合转换（不可以默认强转）
 		if (Collection.class.isAssignableFrom(rowType)) {
@@ -300,13 +301,13 @@ public class ConverterRegistry {
 				// 数组转换失败进行下一步
 			}
 		}
-		
-		//枚举转换
-		if(rowType.isEnum()) {
+
+		// 枚举转换
+		if (rowType.isEnum()) {
 			return (T) new EnumConverter(rowType).convert(value, defaultValue);
 		}
-		
-		//表示非需要特殊转换的对象
+
+		// 表示非需要特殊转换的对象
 		return null;
 	}
 
@@ -370,6 +371,18 @@ public class ConverterRegistry {
 		defaultConverterMap.put(Path.class, new PathConverter());
 		defaultConverterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
 		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
+
+		// JDK8+
+		try {
+			Class<?> clazz;
+			for (String className : Jdk8DateConverter.supportClassNames) {
+				clazz = ClassUtil.loadClass(className);
+				defaultConverterMap.put(clazz, new Jdk8DateConverter(clazz));// since 4.5.1
+			}
+		} catch (Exception e) {
+			// ignore
+			// 在使用jdk8以下版本时，其转换器自动跳过失效
+		}
 
 		return this;
 	}

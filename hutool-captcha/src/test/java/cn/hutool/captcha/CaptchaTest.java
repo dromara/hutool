@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.captcha.generator.MathGenerator;
 import cn.hutool.core.lang.Console;
 
 /**
@@ -20,6 +21,15 @@ public class CaptchaTest {
 		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
 		Assert.assertNotNull(lineCaptcha.getCode());
 		Assert.assertTrue(lineCaptcha.verify(lineCaptcha.getCode()));
+	}
+	
+	@Test
+	@Ignore
+	public void lineCaptchaWithMathTest() {
+		// 定义图形验证码的长和宽
+		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
+		lineCaptcha.setGenerator(new MathGenerator());
+		lineCaptcha.write("e:/code.png");
 	}
 
 	@Test

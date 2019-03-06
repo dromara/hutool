@@ -17,7 +17,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ImageUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 抽象验证码<br>
@@ -109,10 +108,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	@Override
 	public boolean verify(String userInputCode) {
-		if (StrUtil.isNotBlank(userInputCode)) {
-			return StrUtil.equalsIgnoreCase(getCode(), userInputCode);
-		}
-		return false;
+		return this.generator.verify(this.code, userInputCode);
 	}
 
 	/**
@@ -191,6 +187,8 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 */
 	public void setGenerator(CodeGenerator generator) {
 		this.generator = generator;
+		// 重新生成验证码
+		this.createCode();
 	}
 	
 	/**

@@ -66,13 +66,16 @@ public class EnjoyEngine implements TemplateEngine {
 	 */
 	private static com.jfinal.template.Engine createEngine(TemplateConfig config) {
 		Assert.notNull(config, "Template config is null !");
-		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine");
+		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine-" + config.toString());
 		engine.setEncoding(config.getCharset().toString());
 
 		switch (config.getResourceMode()) {
+		case STRING:
+			// 默认字符串类型资源:
+			break;
 		case CLASSPATH:
 			engine.setToClassPathSourceFactory();
-			engine.setBaseTemplatePath(null);
+			engine.setBaseTemplatePath(config.getPath());
 			break;
 		case FILE:
 			engine.setSourceFactory(new FileSourceFactory());

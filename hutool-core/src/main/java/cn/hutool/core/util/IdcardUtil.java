@@ -245,9 +245,8 @@ public class IdcardUtil {
 				return false;
 			}
 
-			// 生日
-			DateTime birthDate = DateUtil.parse(idCard.substring(6, 12), "yyMMdd");
-			if (false == Validator.isBirthday(birthDate.year(), birthDate.month() + 1, birthDate.dayOfMonth())) {
+			//校验生日（两位年份，补充为19XX）
+			if(false == Validator.isBirthday("19" + idCard.substring(6, 12))) {
 				return false;
 			}
 		} else {
