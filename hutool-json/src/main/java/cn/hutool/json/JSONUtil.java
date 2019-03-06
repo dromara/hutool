@@ -247,7 +247,7 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(JSON json, int indentFactor) {
-		if(null == json) {
+		if (null == json) {
 			return null;
 		}
 		return json.toJSONString(indentFactor);
@@ -260,7 +260,7 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(JSON json) {
-		if(null == json) {
+		if (null == json) {
 			return null;
 		}
 		return json.toJSONString(0);
@@ -273,7 +273,7 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonPrettyStr(JSON json) {
-		if(null == json) {
+		if (null == json) {
 			return null;
 		}
 		return json.toJSONString(4);
@@ -286,7 +286,7 @@ public final class JSONUtil {
 	 * @return JSON字符串
 	 */
 	public static String toJsonStr(Object obj) {
-		if(null == obj) {
+		if (null == obj) {
 			return null;
 		}
 		if (obj instanceof String) {
@@ -342,7 +342,7 @@ public final class JSONUtil {
 	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
 		return null == json ? null : json.toBean(beanClass);
 	}
-	
+
 	/**
 	 * JSON字符串转为实体类对象，转换异常将被抛出
 	 * 
@@ -355,7 +355,7 @@ public final class JSONUtil {
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
 		return toBean(parseObj(jsonString), beanType, ignoreError);
 	}
-	
+
 	/**
 	 * 转为实体类对象
 	 * 
@@ -367,7 +367,7 @@ public final class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(JSONObject json, Type beanType, boolean ignoreError) {
-		if(null == json) {
+		if (null == json) {
 			return null;
 		}
 		return json.toBean(beanType, ignoreError);
@@ -524,27 +524,8 @@ public final class JSONUtil {
 				}
 				writer.write(c);
 				break;
-			case '\b':
-				writer.write("\\b");
-				break;
-			case '\t':
-				writer.write("\\t");
-				break;
-			case '\n':
-				writer.write("\\n");
-				break;
-			case '\f':
-				writer.write("\\f");
-				break;
-			case '\r':
-				writer.write("\\r");
-				break;
 			default:
-				if (c < StrUtil.C_SPACE || (c >= '\u0080' && c < '\u00a0') || (c >= '\u2000' && c < '\u2100')) {
-					writer.write(HexUtil.toUnicodeHex(c));
-				} else {
-					writer.write(c);
-				}
+				writer.write(escape(c));
 			}
 		}
 		if (isWrap) {
@@ -569,35 +550,7 @@ public final class JSONUtil {
 		char c;
 		for (int i = 0; i < len; i++) {
 			c = str.charAt(i);
-			switch (c) {
-			case '\b':
-				builder.append("\\b");
-				break;
-			case '\t':
-				builder.append("\\t");
-				break;
-			case '\n':
-				builder.append("\\n");
-				break;
-			case '\f':
-				builder.append("\\f");
-				break;
-			case '\r':
-				builder.append("\\r");
-				break;
-			default:
-				// 无法显示字符转为Unicode符：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
-				if (c < StrUtil.C_SPACE || //
-						(c >= '\u0080' && c <= '\u00a0') || //
-						(c >= '\u2000' && c <= '\u2010') || //
-						(c >= '\u2028' && c <= '\u202F') || //
-						(c >= '\u2066' && c <= '\u206F')//
-				) {
-					builder.append(HexUtil.toUnicodeHex(c));
-				} else {
-					builder.append(c);
-				}
-			}
+			builder.append(escape(c));
 		}
 		return builder.toString();
 	}
@@ -730,4 +683,39 @@ public final class JSONUtil {
 	public static JSONObject xmlToJson(String xml) {
 		return XML.toJSONObject(xml);
 	}
+
+	// --------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 转义不可见字符<br>
+	 * 见：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
+	 * 
+	 * @param c 字符
+	 * @return 转义后的字符串
+	 */
+	private static String escape(char c) {
+		switch (c) {
+		case '\b':
+			return "\\b";
+		case '\t':
+			return "\\t";
+		case '\n':
+			return "\\n";
+		case '\f':
+			return "\\f";
+		case '\r':
+			return "\\r";
+		default:
+			if (c < StrUtil.C_SPACE || //
+					(c >= '\u0080' && c <= '\u00a0') || //
+					(c >= '\u2000' && c <= '\u2010') || //
+					(c >= '\u2028' && c <= '\u202F') || //
+					(c >= '\u2066' && c <= '\u206F')//
+			) {
+				return HexUtil.toUnicodeHex(c);
+			} else {
+				return Character.toString(c);
+			}
+		}
+	}
+	// --------------------------------------------------------------------------------------------- Private method end
 }

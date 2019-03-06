@@ -23,6 +23,9 @@ public class IdcardUtilTest {
 
 		boolean valid15 = IdcardUtil.isValidCard(ID_15);
 		Assert.assertTrue(valid15);
+
+		String idCard = "360198910283844";
+		Assert.assertFalse(IdcardUtil.isValidCard(idCard));
 	}
 
 	@Test
