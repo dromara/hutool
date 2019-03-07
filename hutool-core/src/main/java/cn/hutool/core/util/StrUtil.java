@@ -4131,8 +4131,20 @@ public class StrUtil {
 	 * @return 字符串的长度，如果为null返回0
 	 * @since 4.3.2
 	 */
-	public static int length(final CharSequence cs) {
+	public static int length(CharSequence cs) {
 		return cs == null ? 0 : cs.length();
+	}
+	
+	/**
+	 * 给定字符串转为bytes后的byte数（byte长度）
+	 * 
+	 * @param cs 字符串
+	 * @param charset 编码
+	 * @return byte长度
+	 * @since 4.5.2
+	 */
+	public static int byteLength(CharSequence cs, Charset charset) {
+		return cs == null ? 0 : cs.toString().getBytes(charset).length;
 	}
 
 	/**
