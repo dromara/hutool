@@ -303,7 +303,7 @@ public class ExceptionUtil {
 		}
 		if (checkCause) {
 			Throwable cause = throwable.getCause();
-			if (cause != throwable && exceptionClass.isAssignableFrom(cause.getClass())) {
+			if (cause != null && exceptionClass.isAssignableFrom(cause.getClass())) {
 				return (T) cause;
 			}
 		}
