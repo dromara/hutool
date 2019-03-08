@@ -85,7 +85,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得随机数[0, 1)
+	 * 获得随机整数
 	 * 
 	 * @return 随机数
 	 */
