@@ -19,7 +19,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.BouncyCastleSupport;
 import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.KeyUtil;
 
 /**
  * 对称加密算法<br>
@@ -87,7 +87,7 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 	 * @param key 密钥
 	 */
 	public SymmetricCrypto(String algorithm, byte[] key) {
-		this(algorithm, SecureUtil.generateKey(algorithm, key));
+		this(algorithm, KeyUtil.generateKey(algorithm, key));
 	}
 
 	/**

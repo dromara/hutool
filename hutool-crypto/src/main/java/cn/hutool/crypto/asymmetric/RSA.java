@@ -175,7 +175,7 @@ public class RSA extends AsymmetricCrypto {
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
 	 * @since 3.1.1
-	 * @deprecated 请使用 {@link #decryptFromBcdToStr(String, KeyType, Charset)}
+	 * @deprecated 请使用 {@link #decryptStrFromBcd(String, KeyType, Charset)}
 	 */
 	@Deprecated
 	public String decryptStr(String data, KeyType keyType, Charset charset) {

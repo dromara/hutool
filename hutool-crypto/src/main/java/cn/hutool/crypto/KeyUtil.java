@@ -95,13 +95,7 @@ public class KeyUtil {
 		if (slashIndex > 0) {
 			algorithm = algorithm.substring(0, slashIndex);
 		}
-		KeyGenerator keyGenerator;
-		try {
-			keyGenerator = KeyGenerator.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
-		}
-
+		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
 		if (keySize > 0) {
 			keyGenerator.init(keySize);
 		}
@@ -502,6 +496,30 @@ public class KeyUtil {
 			throw new CryptoException(e);
 		}
 		return keyFactory;
+	}
+	
+	/**
+	 * 获取{@link KeyGenerator}
+	 * 
+	 * @param algorithm 对称加密算法
+	 * @return {@link KeyGenerator}
+	 * @since 4.5.2
+	 */
+	public static KeyGenerator getKeyGenerator(String algorithm) {
+		Provider provider = null;
+		try {
+			provider = ProviderFactory.createBouncyCastleProvider();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		
+		KeyGenerator generator;
+		try {
+			generator = (null == provider) ? KeyGenerator.getInstance(algorithm) : KeyGenerator.getInstance(algorithm, provider);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+		return generator;
 	}
 
 	/**

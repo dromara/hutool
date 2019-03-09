@@ -119,7 +119,7 @@ public class SystemUtil {
 		try {
 			return System.getProperty(name);
 		} catch (SecurityException e) {
-			if (!quiet) {
+			if (false == quiet) {
 				Console.error("Caught a SecurityException reading the system property '{}'; the SystemUtil property value will default to null.", name);
 			}
 			return null;

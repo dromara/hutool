@@ -120,7 +120,7 @@ public class Digester extends BouncyCastleSupport {
 	 * </pre>
 	 * 
 	 * 
-	 * @param salt 盐值
+	 * @param saltPosition 盐的位置
 	 * @return this
 	 * @since 4.4.3
 	 */
