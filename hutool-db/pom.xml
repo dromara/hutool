@@ -18,7 +18,7 @@
 
 	<properties>
 		<!-- versions -->
-		<c3p0.version>0.9.5.2</c3p0.version>
+		<c3p0.version>0.9.5.3</c3p0.version>
 		<dbcp2.version>2.4.0</dbcp2.version>
 		<tomcat-jdbc.version>8.5.35</tomcat-jdbc.version>
 		<druid.version>1.1.12</druid.version>
