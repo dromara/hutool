@@ -1,9 +1,0 @@
-#--------------------------------------
-# cron4j 定时任务
-#分组为Job所在包，key为Job类名
-#定时规则请参阅： http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
-# author xiaoleilu
-#--------------------------------------
-
-[com.company.aaa.job]
-TestJob = */10 * * * *

@@ -241,10 +241,10 @@ p {
 }
 #fh5co-home .fh5co-copy-inner a {
   color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  # border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 }
 #fh5co-home .fh5co-copy-inner a:hover {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+  # border-bottom: 1px solid rgba(255, 255, 255, 0.9);
   text-decoration: none;
 }
 
@@ -1192,6 +1192,17 @@ p {
 }
 #fh5co-friends .friend a img{
   height: 2em;
+}
+
+.big_button{
+  border: 1px solid #006ab4;
+  border-radius:1rem;
+  padding: .85rem 2rem;
+  margin-right: 3rem;
+  line-height: 6rem;
+}
+.big_button:hover{
+  background-color: #006ab4;
 }
 
 /*# sourceMappingURL=style.css.map */
