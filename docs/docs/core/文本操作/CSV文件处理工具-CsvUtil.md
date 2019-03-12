@@ -23,7 +23,7 @@ CsvReader reader = CsvUtil.getReader();
 CsvData data = reader.read(FileUtil.file("test.csv"));
 List<CsvRow> rows = data.getRows();
 //遍历行
-for (CsvRow csvRow : data) {
+for (CsvRow csvRow : rows) {
 	//getRawList返回一个List列表，列表的每一项为CSV中的一个单元格（既逗号分隔部分）
 	Console.log(csvRow.getRawList());
 }
