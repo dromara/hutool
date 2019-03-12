@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.security.KeyPair;
 import java.security.KeyStore;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
@@ -15,6 +16,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
 import java.util.Map;
 
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 
 import cn.hutool.core.codec.Base64;
@@ -962,5 +964,43 @@ public final class SecureUtil {
 	 */
 	public static byte[] decodeKey(String key) {
 		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
+	}
+
+	/**
+	 * 创建{@link Cipher}
+	 * 
+	 * @param algorithm 算法
+	 * @since 4.5.2
+	 */
+	public static Cipher createCipher(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		Cipher cipher;
+		try {
+			cipher = (null == provider) ? Cipher.getInstance(algorithm) : Cipher.getInstance(algorithm, provider);
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		}
+		
+		return cipher;
+	}
+	
+	/**
+	 * 创建{@link MessageDigest}
+	 * 
+	 * @param algorithm 算法
+	 * @since 4.5.2
+	 */
+	public static MessageDigest createMessageDigest(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+		
+		MessageDigest messageDigest;
+		try {
+			messageDigest = (null == provider) ? MessageDigest.getInstance(algorithm) : MessageDigest.getInstance(algorithm, provider);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+		
+		return messageDigest;
 	}
 }

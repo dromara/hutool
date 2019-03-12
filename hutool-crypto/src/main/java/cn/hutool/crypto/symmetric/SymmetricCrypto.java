@@ -17,9 +17,9 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.BouncyCastleSupport;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.KeyUtil;
+import cn.hutool.crypto.SecureUtil;
 
 /**
  * 对称加密算法<br>
@@ -30,12 +30,12 @@ import cn.hutool.crypto.KeyUtil;
  * @author Looly
  *
  */
-public class SymmetricCrypto extends BouncyCastleSupport{
+public class SymmetricCrypto {
 
 	/** SecretKey 负责保存对称密钥 */
 	private SecretKey secretKey;
 	/** Cipher负责完成加密或解密工作 */
-	private Cipher clipher;
+	private Cipher cipher;
 	/** 加密解密参数 */
 	private AlgorithmParameterSpec params;
 	private Lock lock = new ReentrantLock();
@@ -130,11 +130,7 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 			// 对于PBE算法使用随机数加盐
 			this.params = new PBEParameterSpec(RandomUtil.randomBytes(8), 100);
 		}
-		try {
-			clipher = Cipher.getInstance(algorithm);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
+		this.cipher = SecureUtil.createCipher(algorithm);
 		return this;
 	}
 
@@ -160,11 +156,11 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 		lock.lock();
 		try {
 			if (null == this.params) {
-				clipher.init(Cipher.ENCRYPT_MODE, secretKey);
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 			} else {
-				clipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
 			}
-			return clipher.doFinal(data);
+			return cipher.doFinal(data);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -298,11 +294,11 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 		lock.lock();
 		try {
 			if (null == this.params) {
-				clipher.init(Cipher.DECRYPT_MODE, secretKey);
+				cipher.init(Cipher.DECRYPT_MODE, secretKey);
 			} else {
-				clipher.init(Cipher.DECRYPT_MODE, secretKey, params);
+				cipher.init(Cipher.DECRYPT_MODE, secretKey, params);
 			}
-			return clipher.doFinal(bytes);
+			return cipher.doFinal(bytes);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -444,6 +440,6 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 	 * @return 加密或解密
 	 */
 	public Cipher getClipher() {
-		return clipher;
+		return cipher;
 	}
 }

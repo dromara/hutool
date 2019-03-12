@@ -5,6 +5,11 @@ import java.security.Provider;
 /**
  * Provider对象生产法工厂类
  * 
+ * <pre>
+ * 1. 调用{@link #createBouncyCastleProvider()} 用于新建一个org.bouncycastle.jce.provider.BouncyCastleProvider对象
+ * 2. 调用{@link #getBouncyCastleProvider()} 用于获取一个全局单例的org.bouncycastle.jce.provider.BouncyCastleProvider对象
+ * </pre>
+ * 
  * @author looly
  * @since 4.2.1
  */

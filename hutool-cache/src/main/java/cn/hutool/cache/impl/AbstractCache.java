@@ -245,6 +245,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @param cachedObject 被缓存的对象
 	 */
 	protected void onRemove(K key, V cachedObject) {
+		// ignore
 	}
 
 	/**

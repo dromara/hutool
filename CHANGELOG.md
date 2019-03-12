@@ -8,10 +8,12 @@
 ### 新特性
 * 【crypto】    增加读取pem格式私钥文件和公钥证书的方法，位于BCUtil（issue#ISJ5M@Gitee）
 * 【core】       增加StrUtil.byteLength（issue#284@Github）
+* 【core】       增加GlobalBouncyCastleProvider，单例使用BouncyCastleProvider
 
 ### Bug修复
 * 【core】       修复ExceptionUtil（pr#35@Gitee）
 * 【core】       修复RandomUtil注释标注问题（pr#288@Github）
+* 【core】       修复TimedCache中onRemove失效问题（issue#ITD0O@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

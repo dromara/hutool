@@ -13,9 +13,15 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 /**
- * 非对称加密算法<br>
- * 1、签名：使用私钥加密，公钥解密。用于让所有公钥所有者验证私钥所有者的身份并且用来防止私钥所有者发布的内容被篡改，但是不用来保证内容不被他人获得。<br>
- * 2、加密：用公钥加密，私钥解密。用于向公钥所有者发布信息,这个信息可能被他人篡改,但是无法被他人获得。
+ * 非对称加密算法
+ * 
+ * <pre>
+ * 1、签名：使用私钥加密，公钥解密。
+ * 用于让所有公钥所有者验证私钥所有者的身份并且用来防止私钥所有者发布的内容被篡改，但是不用来保证内容不被他人获得。
+ * 
+ * 2、加密：用公钥加密，私钥解密。
+ * 用于向公钥所有者发布信息,这个信息可能被他人篡改,但是无法被他人获得。
+ * </pre>
  * 
  * @author Looly
  *
@@ -23,7 +29,7 @@ import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto> {
 
 	/** Cipher负责完成加密或解密工作 */
-	protected Cipher clipher;
+	protected Cipher cipher;
 
 	/** 加密的块大小 */
 	protected int encryptBlockSize = -1;
@@ -169,12 +175,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 	@Override
 	public AsymmetricCrypto init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
-		try {
-			this.clipher = Cipher.getInstance(algorithm);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
-
+		this.cipher = SecureUtil.createCipher(algorithm);
 		super.init(algorithm, privateKey, publicKey);
 		return this;
 	}
@@ -195,14 +196,14 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 		lock.lock();
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-			clipher.init(Cipher.ENCRYPT_MODE, key);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
 			int offSet = 0;
 			byte[] cache;
 			// 剩余长度
 			int remainLength = inputLen;
 			// 对数据分段加密
 			while (remainLength > 0) {
-				cache = clipher.doFinal(data, offSet, Math.min(remainLength, maxBlockSize));
+				cache = cipher.doFinal(data, offSet, Math.min(remainLength, maxBlockSize));
 				out.write(cache, 0, cache.length);
 
 				offSet += maxBlockSize;
@@ -233,14 +234,14 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 		lock.lock();
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-			clipher.init(Cipher.DECRYPT_MODE, key);
+			cipher.init(Cipher.DECRYPT_MODE, key);
 			int offSet = 0;
 			byte[] cache;
 			// 剩余长度
 			int remainLength = inputLen;
 			// 对数据分段解密
 			while (remainLength > 0) {
-				cache = clipher.doFinal(bytes, offSet, Math.min(remainLength, maxBlockSize));
+				cache = cipher.doFinal(bytes, offSet, Math.min(remainLength, maxBlockSize));
 				out.write(cache, 0, cache.length);
 
 				offSet += maxBlockSize;
@@ -262,6 +263,6 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @return 加密或解密
 	 */
 	public Cipher getClipher() {
-		return clipher;
+		return cipher;
 	}
 }

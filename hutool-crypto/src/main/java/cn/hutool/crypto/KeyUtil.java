@@ -39,6 +39,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 /**
  * 密钥工具类
@@ -98,6 +99,9 @@ public class KeyUtil {
 		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
 		if (keySize > 0) {
 			keyGenerator.init(keySize);
+		} else if(SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
+			// 对于AES的密钥，除非指定，否则强制使用128位
+			keyGenerator.init(128);
 		}
 		return keyGenerator.generateKey();
 	}
@@ -434,12 +438,7 @@ public class KeyUtil {
 	 * @since 4.4.3
 	 */
 	public static KeyPairGenerator getKeyPairGenerator(String algorithm) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
 		KeyPairGenerator keyPairGen;
 		try {
@@ -458,12 +457,7 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static KeyFactory getKeyFactory(String algorithm) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
 		KeyFactory keyFactory;
 		try {
@@ -482,12 +476,7 @@ public class KeyUtil {
 	 * @since 4.5.2
 	 */
 	public static SecretKeyFactory getSecretKeyFactory(String algorithm) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 		
 		SecretKeyFactory keyFactory;
 		try {
@@ -506,12 +495,7 @@ public class KeyUtil {
 	 * @since 4.5.2
 	 */
 	public static KeyGenerator getKeyGenerator(String algorithm) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 		
 		KeyGenerator generator;
 		try {
@@ -717,12 +701,7 @@ public class KeyUtil {
 	 * @since 4.5.0
 	 */
 	public static CertificateFactory getCertificateFactory(String type) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
 		CertificateFactory factory;
 		try {
