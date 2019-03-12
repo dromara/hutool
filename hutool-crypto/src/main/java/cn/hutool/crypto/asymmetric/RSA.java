@@ -154,34 +154,6 @@ public class RSA extends AsymmetricCrypto {
 		return super.encrypt(data, keyType);
 	}
 
-	/**
-	 * 分组解密
-	 * 
-	 * @param data 数据
-	 * @param keyType 密钥类型
-	 * @return 解密后的密文
-	 * @deprecated 请使用 {@link #decryptFromBcd(String, KeyType)}
-	 */
-	@Deprecated
-	public String decryptStr(String data, KeyType keyType) {
-		return decryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 分组解密
-	 * 
-	 * @param data 数据
-	 * @param keyType 密钥类型
-	 * @param charset 加密前编码
-	 * @return 解密后的密文
-	 * @since 3.1.1
-	 * @deprecated 请使用 {@link #decryptStrFromBcd(String, KeyType, Charset)}
-	 */
-	@Deprecated
-	public String decryptStr(String data, KeyType keyType, Charset charset) {
-		return decryptStrFromBcd(data, keyType, charset);
-	}
-	
 	@Override
 	public byte[] decrypt(byte[] bytes, KeyType keyType) {
 		if(this.decryptBlockSize < 0) {

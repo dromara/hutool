@@ -53,7 +53,7 @@ public class Sign extends BaseAsymmetric<Sign> {
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
 	public Sign(SignAlgorithm algorithm, String privateKeyStr, String publicKeyStr) {
-		this(algorithm.getValue(), SecureUtil.decodeKey(privateKeyStr), SecureUtil.decodeKey(publicKeyStr));
+		this(algorithm.getValue(), SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
 	}
 
 	/**

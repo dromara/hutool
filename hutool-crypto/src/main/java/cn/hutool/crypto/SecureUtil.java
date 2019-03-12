@@ -962,7 +962,7 @@ public final class SecureUtil {
 	 * @return 密钥
 	 * @since 4.3.3
 	 */
-	public static byte[] decodeKey(String key) {
+	public static byte[] decode(String key) {
 		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
 	}
 

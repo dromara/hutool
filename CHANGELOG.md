@@ -9,6 +9,7 @@
 * 【crypto】    增加读取pem格式私钥文件和公钥证书的方法，位于BCUtil（issue#ISJ5M@Gitee）
 * 【core】       增加StrUtil.byteLength（issue#284@Github）
 * 【core】       增加GlobalBouncyCastleProvider，单例使用BouncyCastleProvider
+* 【crypto】    增强对BC库的兼容性，明确RSA为RSA/ECB/PKCS1Padding
 
 ### Bug修复
 * 【core】       修复ExceptionUtil（pr#35@Gitee）

@@ -64,7 +64,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
 	public AsymmetricCrypto(AsymmetricAlgorithm algorithm, String privateKeyStr, String publicKeyStr) {
-		this(algorithm.getValue(), SecureUtil.decodeKey(privateKeyStr), SecureUtil.decodeKey(publicKeyStr));
+		this(algorithm.getValue(), SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
 	}
 
 	/**
@@ -175,11 +175,11 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 
 	@Override
 	public AsymmetricCrypto init(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
-		this.cipher = SecureUtil.createCipher(algorithm);
 		super.init(algorithm, privateKey, publicKey);
+		initCipher();
 		return this;
 	}
-
+	
 	// --------------------------------------------------------------------------------- Encrypt
 	/**
 	 * 加密
@@ -264,5 +264,13 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 */
 	public Cipher getClipher() {
 		return cipher;
+	}
+	
+	/**
+	 * 初始化{@link Cipher}，默认尝试加载BC库
+	 * @since 4.5.2
+	 */
+	protected void initCipher() {
+		this.cipher = SecureUtil.createCipher(algorithm);
 	}
 }

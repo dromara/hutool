@@ -34,7 +34,7 @@ public class BCUtilTest {
 		String str = "你好，Hutool";//测试字符串
 		
 		String encryptStr = rsa.encryptBase64(str, KeyType.PublicKey);
-		String decryptStr = rsa.decryptStrFromBase64(encryptStr, KeyType.PrivateKey);
+		String decryptStr = rsa.decryptStr(encryptStr, KeyType.PrivateKey);
 		Assert.assertEquals(str, decryptStr);
 	}
 }

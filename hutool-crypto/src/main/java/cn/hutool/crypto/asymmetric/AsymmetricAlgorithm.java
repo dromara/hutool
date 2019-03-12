@@ -8,8 +8,8 @@ package cn.hutool.crypto.asymmetric;
  *
  */
 public enum AsymmetricAlgorithm {
-	/** RSA算法，此算法用了默认补位方式为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA/None/NoPadding */
-	RSA("RSA"), 
+	/** RSA算法，此算法用了默认补位方式为RSA/ECB/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA/None/NoPadding */
+	RSA("RSA/ECB/PKCS1Padding"), 
 	EC("EC");
 
 	private String value;

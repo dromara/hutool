@@ -53,7 +53,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * @param publicKeyStr 公钥Hex或Base64表示
 	 */
 	public SM2(String privateKeyStr, String publicKeyStr) {
-		this(SecureUtil.decodeKey(privateKeyStr), SecureUtil.decodeKey(publicKeyStr));
+		this(SecureUtil.decode(privateKeyStr), SecureUtil.decode(publicKeyStr));
 	}
 
 	/**

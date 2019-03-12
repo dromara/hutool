@@ -96,7 +96,7 @@ public class SM2Test {
 
 		// 公钥加密，私钥解密
 		String encryptStr = sm2.encryptBase64(text, KeyType.PublicKey);
-		String decryptStr = StrUtil.utf8Str(sm2.decryptFromBase64(encryptStr, KeyType.PrivateKey));
+		String decryptStr = StrUtil.utf8Str(sm2.decrypt(encryptStr, KeyType.PrivateKey));
 		Assert.assertEquals(text, decryptStr);
 	}
 

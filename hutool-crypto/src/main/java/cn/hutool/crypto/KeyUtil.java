@@ -92,14 +92,12 @@ public class KeyUtil {
 	 * @since 3.1.2
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
-		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
-		if (slashIndex > 0) {
-			algorithm = algorithm.substring(0, slashIndex);
-		}
+		algorithm = getMainAlgorithm(algorithm);
+		
 		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
 		if (keySize > 0) {
 			keyGenerator.init(keySize);
-		} else if(SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
+		} else if (SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
 			// 对于AES的密钥，除非指定，否则强制使用128位
 			keyGenerator.init(128);
 		}
@@ -208,7 +206,7 @@ public class KeyUtil {
 	public static PrivateKey generateRSAPrivateKey(byte[] key) {
 		return generatePrivateKey(AsymmetricAlgorithm.RSA.getValue(), key);
 	}
-	
+
 	/**
 	 * 生成私钥，仅用于非对称加密<br>
 	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
@@ -261,7 +259,7 @@ public class KeyUtil {
 			throw new CryptoException(e);
 		}
 	}
-	
+
 	/**
 	 * 生成RSA公钥，仅用于非对称加密<br>
 	 * 采用X509证书规范<br>
@@ -442,7 +440,9 @@ public class KeyUtil {
 
 		KeyPairGenerator keyPairGen;
 		try {
-			keyPairGen = (null == provider) ? KeyPairGenerator.getInstance(algorithm) : KeyPairGenerator.getInstance(algorithm, provider);
+			keyPairGen = (null == provider) //
+					? KeyPairGenerator.getInstance(getMainAlgorithm(algorithm)) //
+					: KeyPairGenerator.getInstance(getMainAlgorithm(algorithm), provider);//
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
@@ -461,13 +461,15 @@ public class KeyUtil {
 
 		KeyFactory keyFactory;
 		try {
-			keyFactory = (null == provider) ? KeyFactory.getInstance(algorithm) : KeyFactory.getInstance(algorithm, provider);
+			keyFactory = (null == provider) //
+					? KeyFactory.getInstance(getMainAlgorithm(algorithm)) //
+					: KeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return keyFactory;
 	}
-	
+
 	/**
 	 * 获取{@link SecretKeyFactory}
 	 * 
@@ -477,16 +479,18 @@ public class KeyUtil {
 	 */
 	public static SecretKeyFactory getSecretKeyFactory(String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
-		
+
 		SecretKeyFactory keyFactory;
 		try {
-			keyFactory = (null == provider) ? SecretKeyFactory.getInstance(algorithm) : SecretKeyFactory.getInstance(algorithm, provider);
+			keyFactory = (null == provider) //
+					? SecretKeyFactory.getInstance(getMainAlgorithm(algorithm)) //
+					: SecretKeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return keyFactory;
 	}
-	
+
 	/**
 	 * 获取{@link KeyGenerator}
 	 * 
@@ -496,14 +500,30 @@ public class KeyUtil {
 	 */
 	public static KeyGenerator getKeyGenerator(String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
-		
+
 		KeyGenerator generator;
 		try {
-			generator = (null == provider) ? KeyGenerator.getInstance(algorithm) : KeyGenerator.getInstance(algorithm, provider);
+			generator = (null == provider) //
+					? KeyGenerator.getInstance(getMainAlgorithm(algorithm)) //
+					: KeyGenerator.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return generator;
+	}
+
+	/**
+	 * 获取主体算法名，例如RSA/ECB/PKCS1Padding的主体算法是RSA
+	 * 
+	 * @return 主体算法名
+	 * @since 4.5.2
+	 */
+	public static String getMainAlgorithm(String algorithm) {
+		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
+		if (slashIndex > 0) {
+			return algorithm.substring(0, slashIndex);
+		}
+		return algorithm;
 	}
 
 	/**
@@ -621,7 +641,7 @@ public class KeyUtil {
 	 */
 	public static PublicKey readPublicKeyFromCert(InputStream in) {
 		final Certificate certificate = readX509Certificate(in);
-		if(null != certificate) {
+		if (null != certificate) {
 			return certificate.getPublicKey();
 		}
 		return null;

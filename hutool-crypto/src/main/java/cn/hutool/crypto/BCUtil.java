@@ -55,7 +55,7 @@ public class BCUtil {
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(String encode, String curveName) {
-		return decodeECPoint(SecureUtil.decodeKey(encode), curveName);
+		return decodeECPoint(SecureUtil.decode(encode), curveName);
 	}
 
 	/**
