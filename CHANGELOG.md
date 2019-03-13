@@ -10,6 +10,7 @@
 * 【core】       增加StrUtil.byteLength（issue#284@Github）
 * 【core】       增加GlobalBouncyCastleProvider，单例使用BouncyCastleProvider
 * 【crypto】    增强对BC库的兼容性，明确RSA为RSA/ECB/PKCS1Padding
+* 【core】       snowflake生成器添加id反推生成时间等信息的方法（pr#293@Github）
 
 ### Bug修复
 * 【core】       修复ExceptionUtil（pr#35@Gitee）

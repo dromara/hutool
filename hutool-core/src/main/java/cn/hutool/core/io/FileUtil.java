@@ -1501,11 +1501,11 @@ public class FileUtil {
 		}
 
 		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
-		String pathToUse = StrUtil.removePrefixIgnoreCase(path, "classpath:");
+		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
 		// 去除file:前缀
-		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, "file:");
+		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
 		// 统一使用斜杠
-		pathToUse = pathToUse.replaceAll("[/\\\\]{1,}", "/").trim();
+		pathToUse = pathToUse.replaceAll("[/\\\\]{1,}", StrUtil.SLASH).trim();
 
 		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		String prefix = "";
@@ -1516,7 +1516,7 @@ public class FileUtil {
 				// 去除类似于/C:这类路径开头的斜杠
 				prefix = prefix.substring(1);
 			}
-			if (false == prefix.contains("/")) {
+			if (false == prefix.contains(StrUtil.SLASH)) {
 				pathToUse = pathToUse.substring(prefixIndex + 1);
 			} else {
 				// 如果前缀中包含/,说明非Windows风格path

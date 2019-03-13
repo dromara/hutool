@@ -32,4 +32,15 @@ public class SnowflakeTest {
 		}
 		Assert.assertEquals(1000L, hashSet.size());
 	}
+	
+	@Test
+	public void snowflakeGetTest(){
+		//构建Snowflake，提供终端ID和数据中心ID
+		Snowflake idWorker = new Snowflake(1, 2);
+		long nextId = idWorker.nextId();
+		
+		Assert.assertEquals(1, idWorker.getWorkerId(nextId));
+		Assert.assertEquals(2, idWorker.getDataCenterId(nextId));
+		Assert.assertTrue(idWorker.getGenerateDateTime(nextId) - System.currentTimeMillis() < 10);
+	}
 }

@@ -18,6 +18,7 @@ import cn.hutool.core.util.StrUtil;
  * 然后是5位datacenterId和5位workerId(10位的长度最多支持部署1024个节点）<br>
  * 最后12位是毫秒内的计数（12位的计数顺序号支持每个节点每毫秒产生4096个ID序号）
  * 
+ * 并且可以通过生成的id反推出生成时间,datacenterId和workerId
  * <p>
  * 参考：http://www.cnblogs.com/relucent/p/4955340.html
  * 
@@ -26,23 +27,55 @@ import cn.hutool.core.util.StrUtil;
  */
 public class Snowflake {
 
-	//Thu, 04 Nov 2010 01:42:54 GMT
+	// ----------------------------------------------------------------------------------------------------------- Static method start
+	/**
+	 * 根据Snowflake的ID，获取机器id
+	 *
+	 * @param id snowflake算法生成的id
+	 * @return 所属机器的id
+	 */
+	public long getWorkerId(long id) {
+		return id >> workerIdShift & ~(-1L << workerIdBits);
+	}
+
+	/**
+	 * 根据Snowflake的ID，获取数据中心id
+	 *
+	 * @param id snowflake算法生成的id
+	 * @return 所属数据中心
+	 */
+	public long getDataCenterId(long id) {
+		return id >> datacenterIdShift & ~(-1L << datacenterIdBits);
+	}
+
+	/**
+	 *根据Snowflake的ID，获取生成时间
+	 *
+	 * @param id snowflake算法生成的id
+	 * @return 生成的时间
+	 */
+	public long getGenerateDateTime(long id) {
+		return (id >> timestampLeftShift & ~(-1L << 41L)) + twepoch;
+	}
+	// ----------------------------------------------------------------------------------------------------------- Static method end
+
+	// Thu, 04 Nov 2010 01:42:54 GMT
 	private final long twepoch = 1288834974657L;
 	private final long workerIdBits = 5L;
 	private final long datacenterIdBits = 5L;
-	////最大支持机器节点数0~31，一共32个
+	//// 最大支持机器节点数0~31，一共32个
 	private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
-	//最大支持数据中心节点数0~31，一共32个
+	// 最大支持数据中心节点数0~31，一共32个
 	private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
-	//序列号12位
+	// 序列号12位
 	private final long sequenceBits = 12L;
-	//机器节点左移12位
+	// 机器节点左移12位
 	private final long workerIdShift = sequenceBits;
-	//数据中心节点左移17位
+	// 数据中心节点左移17位
 	private final long datacenterIdShift = sequenceBits + workerIdBits;
-	//时间毫秒数左移22位
+	// 时间毫秒数左移22位
 	private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
-	private final long sequenceMask = -1L ^ (-1L << sequenceBits);//4095
+	private final long sequenceMask = -1L ^ (-1L << sequenceBits);// 4095
 
 	private long workerId;
 	private long datacenterId;
@@ -87,7 +120,7 @@ public class Snowflake {
 	public synchronized long nextId() {
 		long timestamp = genTime();
 		if (timestamp < lastTimestamp) {
-			 //如果服务器时间有问题(时钟后退) 报错。
+			// 如果服务器时间有问题(时钟后退) 报错。
 			throw new IllegalStateException(StrUtil.format("Clock moved backwards. Refusing to generate id for {}ms", lastTimestamp - timestamp));
 		}
 		if (lastTimestamp == timestamp) {
@@ -104,7 +137,7 @@ public class Snowflake {
 		return ((timestamp - twepoch) << timestampLeftShift) | (datacenterId << datacenterIdShift) | (workerId << workerIdShift) | sequence;
 	}
 
-	//------------------------------------------------------------------------------------------------------------------------------------ Private method start
+	// ------------------------------------------------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 循环等待下一个时间
 	 * 
@@ -118,13 +151,14 @@ public class Snowflake {
 		}
 		return timestamp;
 	}
-	
+
 	/**
 	 * 生成时间戳
+	 * 
 	 * @return 时间戳
 	 */
 	private long genTime() {
 		return this.useSystemClock ? SystemClock.now() : System.currentTimeMillis();
 	}
-	//------------------------------------------------------------------------------------------------------------------------------------ Private method end
+	// ------------------------------------------------------------------------------------------------------------------------------------ Private method end
 }

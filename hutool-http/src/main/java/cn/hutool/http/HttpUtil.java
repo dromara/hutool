@@ -424,69 +424,6 @@ public class HttpUtil {
 	}
 	
 	/**
-	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
-	 * 
-	 * @param content 被编码内容
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#encode(String)}
-	 */
-	@Deprecated
-	public static String encodeUtf8(String content) {
-		return encode(content, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#encode(String, Charset)}
-	 */
-	@Deprecated
-	public static String encode(String content, Charset charset) {
-		return URLUtil.encode(content, charset);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 * @see URLUtil#encode(String, String)
-	 */
-	public static String encode(String content, String charsetStr) {
-		return URLUtil.encode(content, charsetStr);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#decode(String, Charset)}
-	 */
-	@Deprecated
-	public static String decode(String content, Charset charset) {
-		return URLUtil.decode(content, charset);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#decode(String, String)}
-	 */
-	@Deprecated
-	public static String decode(String content, String charsetStr) {
-		return URLUtil.decode(content, charsetStr);
-	}
-
-	/**
 	 * 对URL参数做编码，只编码键和值<br>
 	 * 提供的值可以是url附带编码，但是不能只是url
 	 * 
@@ -496,7 +433,7 @@ public class HttpUtil {
 	 * @return 编码后的url和参数
 	 * @since 4.0.1
 	 */
-	public static String encodeParams(final String paramsStr, Charset charset) {
+	public static String encodeParams(String paramsStr, Charset charset) {
 		if (StrUtil.isBlank(paramsStr)) {
 			return StrUtil.EMPTY;
 		}
@@ -517,51 +454,8 @@ public class HttpUtil {
 			paramPart = paramsStr;
 		}
 
-		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
-		final int len = paramPart.length();
-		String name = null;
-		int pos = 0; // 未处理字符开始位置
-		char c; // 当前字符
-		int i; // 当前字符位置
-		for (i = 0; i < len; i++) {
-			c = paramPart.charAt(i);
-			if (c == '=') { // 键值对的分界点
-				if (null == name) {
-					// 只有=前未定义name时被当作键值分界符，否则做为普通字符
-					name = (pos == i) ? StrUtil.EMPTY : paramPart.substring(pos, i);
-					pos = i + 1;
-				}
-			} else if (c == '&') { // 参数对的分界点
-				if (pos != i) {
-					if (null == name) {
-						// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
-						name = paramPart.substring(pos, i);
-						builder.append(URLUtil.encodeQuery(name, charset)).append('=');
-					} else {
-						builder.append(URLUtil.encodeQuery(name, charset)).append('=').append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset)).append('&');
-					}
-					name = null;
-				}
-				pos = i + 1;
-			}
-		}
-
-		// 结尾处理
-		if (null != name) {
-			builder.append(URLUtil.encodeQuery(name, charset)).append('=');
-		}
-		if (pos != i) {
-			if (null == name) {
-				builder.append('=');
-			}
-			builder.append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset));
-		}
-
-		int lastIndex = builder.length() - 1;
-		if ('&' == builder.charAt(lastIndex)) {
-			builder.delTo(lastIndex);
-		}
-		return StrUtil.isBlank(urlPart) ? builder.toString() : urlPart + "?" + builder.toString();
+		paramPart = URLUtil.encodeQuery(paramPart, charset);
+		return StrUtil.isBlank(urlPart) ? paramPart : urlPart + "?" + paramPart;
 	}
 
 	/**
