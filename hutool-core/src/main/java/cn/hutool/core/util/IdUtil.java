@@ -91,7 +91,8 @@ public class IdUtil {
 	 * 第一位为未使用，接下来的41位为毫秒级时间(41位的长度可以使用69年)<br>
 	 * 然后是5位datacenterId和5位workerId(10位的长度最多支持部署1024个节点）<br>
 	 * 最后12位是毫秒内的计数（12位的计数顺序号支持每个节点每毫秒产生4096个ID序号）
-	 * 
+	 *
+	 * 并且可以通过生成的id反推出生成时间,datacenterId和workerId.
 	 * <p>
 	 * 参考：http://www.cnblogs.com/relucent/p/4955340.html
 	 * 
