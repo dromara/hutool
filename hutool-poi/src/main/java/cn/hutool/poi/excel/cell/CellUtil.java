@@ -20,10 +20,12 @@ import cn.hutool.poi.excel.editors.TrimEditor;
 
 /**
  * Excel表格中单元格工具类
+ * 
  * @author looly
- *@since 4.0.7
+ * @since 4.0.7
  */
 public class CellUtil {
+	
 	/**
 	 * 获取单元格值
 	 * 
@@ -32,6 +34,9 @@ public class CellUtil {
 	 * @return 值，类型可能为：Date、Double、Boolean、String
 	 */
 	public static Object getCellValue(Cell cell, boolean isTrimCellValue) {
+		if (null == cell) {
+			return null;
+		}
 		return getCellValue(cell, cell.getCellTypeEnum(), isTrimCellValue);
 	}
 
@@ -117,17 +122,17 @@ public class CellUtil {
 	public static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
 		final CellStyle headCellStyle = styleSet.getHeadCellStyle();
 		final CellStyle cellStyle = styleSet.getCellStyle();
-		if(isHeader && null != headCellStyle) {
+		if (isHeader && null != headCellStyle) {
 			cell.setCellStyle(headCellStyle);
 		} else if (null != cellStyle) {
 			cell.setCellStyle(cellStyle);
 		}
-		
+
 		if (null == value) {
 			cell.setCellValue(StrUtil.EMPTY);
-		}else if (value instanceof FormulaCellValue) {
-			//公式
-			cell.setCellFormula(((FormulaCellValue)value).getValue());
+		} else if (value instanceof FormulaCellValue) {
+			// 公式
+			cell.setCellFormula(((FormulaCellValue) value).getValue());
 		} else if (value instanceof Date) {
 			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
 				cell.setCellStyle(styleSet.getCellStyleForDate());
@@ -164,7 +169,7 @@ public class CellUtil {
 		}
 		return cell;
 	}
-	
+
 	/**
 	 * 判断指定的单元格是否是合并单元格
 	 * 
@@ -212,7 +217,7 @@ public class CellUtil {
 		}
 		return sheet.addMergedRegion(cellRangeAddress);
 	}
-	
+
 	// -------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获取数字类型的单元格值
