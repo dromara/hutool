@@ -13,6 +13,7 @@
 * 【core】       snowflake生成器添加id反推生成时间等信息的方法（pr#293@Github）
 * 【poi】         CellUtil.getCellValue增加null验证
 * 【core】       增加文件内容跟随器Tailer
+* 【crypto】    增加RC4算法
 
 ### Bug修复
 * 【core】       修复ExceptionUtil（pr#35@Gitee）

@@ -328,28 +328,17 @@ public class SymmetricCrypto {
 	}
 
 	/**
-	 * 解密Hex表示的字符串
+	 * 解密Hex（16进制）或Base64表示的字符串
 	 * 
-	 * @param data 被解密的String，必须为16进制字符串表示形式
+	 * @param data 被解密的String，必须为16进制字符串或Base64表示形式
 	 * @return 解密后的bytes
 	 */
 	public byte[] decrypt(String data) {
-		return decrypt(HexUtil.decodeHex(data));
+		return decrypt(SecureUtil.decode(data));
 	}
 
 	/**
-	 * 解密Base64表示的字符串
-	 * 
-	 * @param data 被解密的String，必须为Base64形式
-	 * @return 解密后的bytes
-	 * @since 4.0.1
-	 */
-	public byte[] decryptFromBase64(String data) {
-		return decrypt(Base64.decode(data));
-	}
-
-	/**
-	 * 解密Hex表示的字符串
+	 * 解密Hex（16进制）或Base64表示的字符串
 	 * 
 	 * @param data 被解密的String
 	 * @param charset 解密后的charset
@@ -360,18 +349,6 @@ public class SymmetricCrypto {
 	}
 
 	/**
-	 * 解密Base64表示的字符串
-	 * 
-	 * @param data 被解密的String，必须为Base64形式
-	 * @param charset 解密后的charset
-	 * @return 解密后的String
-	 * @since 4.0.1
-	 */
-	public String decryptStrFromBase64(String data, Charset charset) {
-		return StrUtil.str(decrypt(Base64.decode(data, charset)), charset);
-	}
-
-	/**
 	 * 解密Hex表示的字符串，默认UTF-8编码
 	 * 
 	 * @param data 被解密的String
@@ -379,17 +356,6 @@ public class SymmetricCrypto {
 	 */
 	public String decryptStr(String data) {
 		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 解密Base64表示的字符串，默认UTF-8编码
-	 * 
-	 * @param data 被解密的String
-	 * @return 解密后的String
-	 * @since 4.0.1
-	 */
-	public String decryptStrFromBase64(String data) {
-		return decryptStrFromBase64(data, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
