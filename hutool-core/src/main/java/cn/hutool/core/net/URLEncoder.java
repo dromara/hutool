@@ -49,8 +49,6 @@ public final class URLEncoder {
 	 * </pre>
 	 * 
 	 * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
-	 * 
-	 * @return {@link URLEncoder}
 	 */
 	public static final URLEncoder QUERY = createQuery();
 

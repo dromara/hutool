@@ -454,8 +454,64 @@ public class HttpUtil {
 			paramPart = paramsStr;
 		}
 
-		paramPart = URLUtil.encodeQuery(paramPart, charset);
+		paramPart = normalizeParams(paramPart, charset);
+		
 		return StrUtil.isBlank(urlPart) ? paramPart : urlPart + "?" + paramPart;
+	}
+	
+	/**
+	 * 标准化参数字符串，即URL中？后的部分
+	 * @param paramPart 参数字符串
+	 * @param charset 编码
+	 * @return 标准化的参数字符串
+	 * @since 4.5.2
+	 */
+	public static String normalizeParams(String paramPart, Charset charset) {
+		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
+		final int len = paramPart.length();
+		String name = null;
+		int pos = 0; // 未处理字符开始位置
+		char c; // 当前字符
+		int i; // 当前字符位置
+		for (i = 0; i < len; i++) {
+			c = paramPart.charAt(i);
+			if (c == '=') { // 键值对的分界点
+				if (null == name) {
+					// 只有=前未定义name时被当作键值分界符，否则做为普通字符
+					name = (pos == i) ? StrUtil.EMPTY : paramPart.substring(pos, i);
+					pos = i + 1;
+				}
+			} else if (c == '&') { // 参数对的分界点
+				if (pos != i) {
+					if (null == name) {
+						// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
+						name = paramPart.substring(pos, i);
+						builder.append(URLUtil.encodeQuery(name, charset)).append('=');
+					} else {
+						builder.append(URLUtil.encodeQuery(name, charset)).append('=').append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset)).append('&');
+					}
+					name = null;
+				}
+				pos = i + 1;
+			}
+		}
+
+		// 结尾处理
+		if (null != name) {
+			builder.append(URLUtil.encodeQuery(name, charset)).append('=');
+		}
+		if (pos != i) {
+			if (null == name) {
+				builder.append('=');
+			}
+			builder.append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset));
+		}
+
+		int lastIndex = builder.length() - 1;
+		if ('&' == builder.charAt(lastIndex)) {
+			builder.delTo(lastIndex);
+		}
+		return builder.toString();
 	}
 
 	/**

@@ -38,6 +38,7 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.DES;
 import cn.hutool.crypto.symmetric.DESede;
+import cn.hutool.crypto.symmetric.RC4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
 /**
@@ -1002,5 +1003,15 @@ public final class SecureUtil {
 		}
 		
 		return messageDigest;
+	}
+	
+	/**
+	 * RC4算法
+	 * 
+	 * @param key 密钥
+	 * @return {@link RC4}
+	 */
+	public static RC4 rc4(String key) {
+		return new RC4(key);
 	}
 }
