@@ -14,7 +14,7 @@ public class CurrencyConverter extends AbstractConverter<Currency> {
 
 	@Override
 	protected Currency convertInternal(Object value) {
-		return Currency.getInstance(value.toString());
+		return Currency.getInstance(convertToStr(value));
 	}
 
 }

@@ -60,25 +60,24 @@ public class DateConverter extends AbstractConverter<Date> {
 
 	@Override
 	protected Date convertInternal(Object value) {
-		long mills = -1;
+		Long mills = null;
 		if (value instanceof Calendar) {
 			// Handle Calendar
 			mills = ((Calendar) value).getTimeInMillis();
 		} else if (value instanceof Long) {
 			// Handle Long
-			// 此处使用自动拆装箱
 			mills = (Long) value;
 		} else {
 			// 统一按照字符串处理
 			final String valueStr = convertToStr(value);
 			try {
-				mills = StrUtil.isBlank(format) ? DateUtil.parse(valueStr).getTime() : DateUtil.parse(valueStr, format).getTime();
+				mills = StrUtil.isBlank(this.format) ? DateUtil.parse(valueStr).getTime() : DateUtil.parse(valueStr, this.format).getTime();
 			} catch (Exception e) {
 				// Ignore Exception
 			}
 		}
 
-		if (mills < 0) {
+		if (null == mills) {
 			return null;
 		}
 

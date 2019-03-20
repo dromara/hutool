@@ -709,4 +709,6 @@ public class BeanUtil {
 		}
 		return false;
 	}
+	
+	
 }

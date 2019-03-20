@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 
 /**
  * 针对 {@link Type} 的工具类封装<br>
@@ -31,6 +33,13 @@ public class TypeUtil {
 				return (Class<?>) type;
 			} else if (type instanceof ParameterizedType) {
 				return (Class<?>) ((ParameterizedType) type).getRawType();
+			} else if (type instanceof TypeVariable) {
+				return (Class<?>) ((TypeVariable<?>) type).getBounds()[0];
+			} else if (type instanceof WildcardType) {
+				final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
+				if (upperBounds.length == 1) {
+					return getClass(upperBounds[0]);
+				}
 			}
 		}
 		return null;
@@ -203,7 +212,14 @@ public class TypeUtil {
 	}
 
 	/**
-	 * 获得指定类型中所有泛型参数类型
+	 * 获得指定类型中所有泛型参数类型，例如：
+	 * 
+	 * <pre>
+	 * class A&lt;T&gt;
+	 * class B extends A&lt;String&gt;
+	 * </pre>
+	 * 
+	 * 通过此方法，传入B.class即可得到String
 	 * 
 	 * @param type 指定类型
 	 * @return 所有泛型参数类型
@@ -212,13 +228,64 @@ public class TypeUtil {
 		if (null == type) {
 			return null;
 		}
-		Type[] types = null;
+		
+		final ParameterizedType parameterizedType = toParameterizedType(type);
+		return (null == parameterizedType) ? null : parameterizedType.getActualTypeArguments();
+	}
+	
+	/**
+	 * 将{@link Type} 转换为{@link ParameterizedType}<br>
+	 * {@link ParameterizedType}用于获取当前类或父类中泛型参数化后的类型<br>
+	 * 一般用于获取泛型参数具体的参数类型，例如：
+	 * 
+	 * <pre>
+	 * class A&lt;T&gt;
+	 * class B extends A&lt;String&gt;
+	 * </pre>
+	 * 
+	 * 通过此方法，传入B.class即可得到B{@link ParameterizedType}，从而获取到String
+	 * 
+	 * @param type {@link Type}
+	 * @return {@link ParameterizedType}
+	 * @since 4.5.2
+	 */
+	public static ParameterizedType toParameterizedType(Type type) {
 		if (type instanceof ParameterizedType) {
-			final ParameterizedType genericSuperclass = (ParameterizedType) type;
-			types = genericSuperclass.getActualTypeArguments();
-		} else if(type instanceof Class) {
-			types = getTypeArguments(((Class<?>)type).getGenericSuperclass());
+			return (ParameterizedType) type;
+		} else if (type instanceof Class) {
+			return toParameterizedType(((Class<?>) type).getGenericSuperclass());
 		}
-		return types;
+		return null;
+	}
+	
+	/**
+	 * 获取指定泛型变量对应的真实类型<br>
+	 * 由于子类中泛型参数实现和父类（接口）中泛型定义位置是一一对应的，因此可以通过对应关系找到泛型实现类型<br>
+	 * 使用此方法注意：
+	 * 
+	 * <pre>
+	 * 1. superClass必须是clazz的父类或者clazz实现的接口
+	 * 2. typeVariable必须在superClass中声明
+	 * </pre>
+	 * 
+	 * 
+	 * @param clazz 真实类型所在类
+	 * @param superClass 泛型变量声明所在类或接口
+	 * @param typeVariable 泛型变量
+	 * @return 真实类型
+	 * @since 4.5.2
+	 */
+	public static Type getActualType(Class<?> clazz, Class<?> superClass, TypeVariable<?> typeVariable) {
+		if(false == superClass.isAssignableFrom(clazz)) {
+			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
+		}
+		
+		final Type[] typeArguments = TypeUtil.getTypeArguments(clazz);
+		// 查找方法定义所在类或接口中此泛型参数的位置
+		int index = ArrayUtil.indexOf(superClass.getTypeParameters(), typeVariable);
+		if(index > -1 && index < typeArguments.length) {
+			return typeArguments[index];
+		}
+		return null;
 	}
 }

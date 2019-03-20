@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Currency;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -36,11 +37,13 @@ import cn.hutool.core.convert.impl.CurrencyConverter;
 import cn.hutool.core.convert.impl.DateConverter;
 import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.Jdk8DateConverter;
+import cn.hutool.core.convert.impl.LocaleConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.convert.impl.NumberConverter;
 import cn.hutool.core.convert.impl.PathConverter;
 import cn.hutool.core.convert.impl.PrimitiveConverter;
 import cn.hutool.core.convert.impl.ReferenceConverter;
+import cn.hutool.core.convert.impl.StackTraceElementConverter;
 import cn.hutool.core.convert.impl.StringConverter;
 import cn.hutool.core.convert.impl.TimeZoneConverter;
 import cn.hutool.core.convert.impl.URIConverter;
@@ -367,10 +370,12 @@ public class ConverterRegistry {
 		// 其它类型
 		defaultConverterMap.put(Class.class, new ClassConverter());
 		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
+		defaultConverterMap.put(Locale.class, new LocaleConverter());
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
 		defaultConverterMap.put(Path.class, new PathConverter());
 		defaultConverterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
 		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
+		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 
 		// JDK8+
 		try {

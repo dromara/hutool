@@ -41,6 +41,7 @@ public class MapValueProvider implements ValueProvider<String> {
 			//检查下划线模式
 			value = map.get(StrUtil.toUnderlineCase(key));
 		}
+		
 		return Convert.convert(valueType, value);
 	}
 

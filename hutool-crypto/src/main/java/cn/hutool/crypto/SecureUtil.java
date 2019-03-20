@@ -982,10 +982,10 @@ public final class SecureUtil {
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
-		
+
 		return cipher;
 	}
-	
+
 	/**
 	 * 创建{@link MessageDigest}
 	 * 
@@ -994,17 +994,17 @@ public final class SecureUtil {
 	 */
 	public static MessageDigest createMessageDigest(String algorithm) {
 		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
-		
+
 		MessageDigest messageDigest;
 		try {
 			messageDigest = (null == provider) ? MessageDigest.getInstance(algorithm) : MessageDigest.getInstance(algorithm, provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
-		
+
 		return messageDigest;
 	}
-	
+
 	/**
 	 * RC4算法
 	 * 
@@ -1013,5 +1013,14 @@ public final class SecureUtil {
 	 */
 	public static RC4 rc4(String key) {
 		return new RC4(key);
+	}
+
+	/**
+	 * 强制关闭Bouncy Castle库的使用，全局有效
+	 * 
+	 * @since 4.5.2
+	 */
+	public static void disableBouncyCastle() {
+		GlobalBouncyCastleProvider.setUseBouncyCastle(false);
 	}
 }

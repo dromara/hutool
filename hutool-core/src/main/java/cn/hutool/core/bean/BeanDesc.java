@@ -9,6 +9,7 @@ import java.util.Map;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -162,7 +163,7 @@ public class BeanDesc {
 	private PropDesc createProp(Field field) {
 		final String fieldName = field.getName();
 		final Class<?> fieldType = field.getType();
-		final boolean isBooeanField = (fieldType == Boolean.class || fieldType == boolean.class);
+		final boolean isBooeanField = BooleanUtil.isBoolean(fieldType);
 
 		Method getter = null;
 		Method setter = null;

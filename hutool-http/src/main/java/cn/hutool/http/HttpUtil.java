@@ -425,7 +425,7 @@ public class HttpUtil {
 	
 	/**
 	 * 对URL参数做编码，只编码键和值<br>
-	 * 提供的值可以是url附带编码，但是不能只是url
+	 * 提供的值可以是url附带参数，但是不能只是url
 	 * 
 	 * 
 	 * @param paramsStr url参数，可以包含url本身

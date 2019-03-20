@@ -19,6 +19,8 @@
 * 【core】       修复ExceptionUtil（pr#35@Gitee）
 * 【core】       修复RandomUtil注释标注问题（pr#288@Github）
 * 【core】       修复TimedCache中onRemove失效问题（issue#ITD0O@Gitee）
+* 【core】       修复DateConverter日期负数问题（issue#ITWK4@Gitee）
+* 【json】       修复toBean时父类定义泛型字段导致的注入问题（issue#ITGGN@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

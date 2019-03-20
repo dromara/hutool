@@ -11,7 +11,7 @@ import cn.hutool.core.bean.BeanPath;
  * @author Looly
  *
  */
-public interface JSON extends Serializable{
+public interface JSON extends Cloneable, Serializable{
 
 	/**
 	 * 通过表达式获取JSON中嵌套的对象<br>
