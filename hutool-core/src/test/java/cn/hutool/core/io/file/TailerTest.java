@@ -9,7 +9,7 @@ import cn.hutool.core.util.CharsetUtil;
 public class TailerTest {
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void tailTest() {
 		FileUtil.tail(FileUtil.file("e:/tail.txt"), CharsetUtil.CHARSET_GBK);
 	}
