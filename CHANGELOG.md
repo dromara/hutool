@@ -17,6 +17,7 @@
 * 【core】       增加FixedLinkedHashMap
 * 【extra】       增加ChannelType，JschUtil增加createSession、createChannel、openChannel等方法
 * 【core】       WatchUtil增加createModify
+* 【core】       新增ImgUtil，废弃ImageUtil
 
 ### Bug修复
 * 【core】       修复ExceptionUtil（pr#35@Gitee）
@@ -25,6 +26,7 @@
 * 【core】       修复DateConverter日期负数问题（issue#ITWK4@Gitee）
 * 【json】       修复toBean时父类定义泛型字段导致的注入问题（issue#ITGGN@Gitee）
 * 【cahce】    修复读锁导致的LRU异常（issue#303@Gtihub）
+* 【captcha】 修复在某些未知情况下获取字体高度导致的问题
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.util.ImageUtil;
+import cn.hutool.core.img.ImgUtil;
 
 /**
  * {@link Robot} 封装工具类，提供截屏等工具
@@ -42,7 +42,7 @@ public class RobotUtil {
 	 * @return 写出到的文件
 	 */
 	public static File captureScreen(File outFile) {
-		ImageUtil.write(captureScreen(), outFile);
+		ImgUtil.write(captureScreen(), outFile);
 		return outFile;
 	}
 
@@ -64,7 +64,7 @@ public class RobotUtil {
 	 * @return 写出到的文件
 	 */
 	public static File captureScreen(Rectangle screenRect, File outFile) {
-		ImageUtil.write(captureScreen(screenRect), outFile);
+		ImgUtil.write(captureScreen(screenRect), outFile);
 		return outFile;
 	}
 }

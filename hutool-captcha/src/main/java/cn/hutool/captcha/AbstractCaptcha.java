@@ -13,10 +13,10 @@ import java.io.OutputStream;
 import cn.hutool.captcha.generator.CodeGenerator;
 import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ImageUtil;
 
 /**
  * 抽象验证码<br>
@@ -81,7 +81,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		generateCode();
 
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ImageUtil.writePng(createImage(this.code), out);
+		ImgUtil.writePng(createImage(this.code), out);
 		this.imageBytes = out.toByteArray();
 	}
 
@@ -149,7 +149,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		if (null == this.imageBytes) {
 			createCode();
 		}
-		return ImageUtil.read(new ByteArrayInputStream(this.imageBytes));
+		return ImgUtil.read(new ByteArrayInputStream(this.imageBytes));
 	}
 
 	/**

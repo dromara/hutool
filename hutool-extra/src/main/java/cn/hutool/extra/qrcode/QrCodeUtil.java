@@ -22,8 +22,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ImageUtil;
 
 /**
  * 基于Zxing的二维码工具类
@@ -45,7 +45,7 @@ public class QrCodeUtil {
 	 */
 	public static byte[] generatePng(String content, int width, int height) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		generate(content, width, height, ImageUtil.IMAGE_TYPE_PNG, out);
+		generate(content, width, height, ImgUtil.IMAGE_TYPE_PNG, out);
 		return out.toByteArray();
 	}
 
@@ -59,7 +59,7 @@ public class QrCodeUtil {
 	 */
 	public static byte[] generatePng(String content, QrConfig config) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		generate(content, config, ImageUtil.IMAGE_TYPE_PNG, out);
+		generate(content, config, ImgUtil.IMAGE_TYPE_PNG, out);
 		return out.toByteArray();
 	}
 
@@ -74,7 +74,7 @@ public class QrCodeUtil {
 	 */
 	public static File generate(String content, int width, int height, File targetFile) {
 		final BufferedImage image = generate(content, width, height);
-		ImageUtil.write(image, targetFile);
+		ImgUtil.write(image, targetFile);
 		return targetFile;
 	}
 
@@ -89,7 +89,7 @@ public class QrCodeUtil {
 	 */
 	public static File generate(String content, QrConfig config, File targetFile) {
 		final BufferedImage image = generate(content, config);
-		ImageUtil.write(image, targetFile);
+		ImgUtil.write(image, targetFile);
 		return targetFile;
 	}
 
@@ -99,12 +99,12 @@ public class QrCodeUtil {
 	 * @param content 文本内容
 	 * @param width 宽度
 	 * @param height 高度
-	 * @param imageType 图片类型（图片扩展名），见{@link ImageUtil}
+	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @param out 目标流
 	 */
 	public static void generate(String content, int width, int height, String imageType, OutputStream out) {
 		final BufferedImage image = generate(content, width, height);
-		ImageUtil.write(image, imageType, out);
+		ImgUtil.write(image, imageType, out);
 	}
 
 	/**
@@ -112,13 +112,13 @@ public class QrCodeUtil {
 	 * 
 	 * @param content 文本内容
 	 * @param config 二维码配置，包括长、宽、边距、颜色等
-	 * @param imageType 图片类型（图片扩展名），见{@link ImageUtil}
+	 * @param imageType 图片类型（图片扩展名），见{@link ImgUtil}
 	 * @param out 目标流
 	 * @since 4.1.2
 	 */
 	public static void generate(String content, QrConfig config, String imageType, OutputStream out) {
 		final BufferedImage image = generate(content, config);
-		ImageUtil.write(image, imageType, out);
+		ImgUtil.write(image, imageType, out);
 	}
 	
 	/**
@@ -186,7 +186,7 @@ public class QrCodeUtil {
 				height = qrHeight / config.ratio;
 				width = logoImg.getWidth(null) * height / logoImg.getHeight(null);
 			}
-			ImageUtil.pressImage(image, logoImg, new Rectangle(width, height), 1);
+			ImgUtil.pressImage(image, logoImg, new Rectangle(width, height), 1);
 		}
 		return image;
 	}
@@ -262,7 +262,7 @@ public class QrCodeUtil {
 	 * @return 解码文本
 	 */
 	public static String decode(InputStream qrCodeInputstream) {
-		return decode(ImageUtil.read(qrCodeInputstream));
+		return decode(ImgUtil.read(qrCodeInputstream));
 	}
 
 	/**
@@ -272,7 +272,7 @@ public class QrCodeUtil {
 	 * @return 解码文本
 	 */
 	public static String decode(File qrCodeFile) {
-		return decode(ImageUtil.read(qrCodeFile));
+		return decode(ImgUtil.read(qrCodeFile));
 	}
 	
 	/**
@@ -297,7 +297,7 @@ public class QrCodeUtil {
 	public static String decode(Image image, boolean isTryHarder, boolean isPureBarcode) {
 		final MultiFormatReader formatReader = new MultiFormatReader();
 
-		final LuminanceSource source = new BufferedImageLuminanceSource(ImageUtil.toBufferedImage(image));
+		final LuminanceSource source = new BufferedImageLuminanceSource(ImgUtil.toBufferedImage(image));
 		final Binarizer binarizer = new HybridBinarizer(source);
 		final BinaryBitmap binaryBitmap = new BinaryBitmap(binarizer);
 
