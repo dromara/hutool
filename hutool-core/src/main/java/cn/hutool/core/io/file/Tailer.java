@@ -58,12 +58,8 @@ public class Tailer {
 	 * @return this
 	 */
 	public Tailer init(File file, final Charset charset, final LineHandler lineHandler) {
-		if (false == file.exists()) {
-			throw new UtilException("File [{}] not exist !", file.getAbsolutePath());
-		}
-		if (false == file.isFile()) {
-			throw new UtilException("Path [{}] is not a file !", file.getAbsolutePath());
-		}
+		checkFile(file);
+
 		this.randomAccessFile = FileUtil.createRandomAccessFile(file, FileMode.r);
 		// 将指针置于末尾
 		try {
@@ -71,8 +67,7 @@ public class Tailer {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		this.monitor = WatchUtil.create(file, WatchMonitor.ENTRY_MODIFY);
-		this.monitor.setWatcher(new SimpleWatcher() {
+		this.monitor = WatchUtil.create(file, WatchMonitor.ENTRY_MODIFY).setWatcher(new SimpleWatcher() {
 			@Override
 			public void onModify(WatchEvent<?> event, Path currentPath) {
 				final RandomAccessFile file = Tailer.this.randomAccessFile;
@@ -88,6 +83,7 @@ public class Tailer {
 						return;
 					}
 
+					// 读取行
 					FileUtil.readLines(file, charset, lineHandler);
 
 					// 记录当前读到的位置
@@ -120,4 +116,20 @@ public class Tailer {
 			this.monitor.watch();
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 检查文件有效性
+	 * 
+	 * @param file 文件
+	 */
+	private static void checkFile(File file) {
+		if (false == file.exists()) {
+			throw new UtilException("File [{}] not exist !", file.getAbsolutePath());
+		}
+		if (false == file.isFile()) {
+			throw new UtilException("Path [{}] is not a file !", file.getAbsolutePath());
+		}
+	}
+	// ---------------------------------------------------------------------------------------- Private method end
 }
