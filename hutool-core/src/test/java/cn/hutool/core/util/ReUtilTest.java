@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Func1;
+import cn.hutool.core.lang.func.Func1;
 
 public class ReUtilTest {
 	final String content = "ZZZaaabbbccc中文1234";

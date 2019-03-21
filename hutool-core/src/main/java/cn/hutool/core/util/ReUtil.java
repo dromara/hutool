@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Func1;
 import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.lang.func.Func1;
 
 /**
  * 正则相关工具类<br>

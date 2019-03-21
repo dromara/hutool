@@ -4,18 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.LineHandler;
-import cn.hutool.core.io.watch.WatchMonitor;
-import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 文件内容跟随器，实现类似Linux下"tail -f"命令功能
@@ -24,7 +26,7 @@ import cn.hutool.core.util.StrUtil;
  * @since 4.5.2
  */
 public class Tailer {
-	
+
 	public static final LineHandler CONSOLE_HANDLER = new ConsoleLineHandler();
 
 	/** 编码 */
@@ -33,9 +35,11 @@ public class Tailer {
 	private LineHandler lineHandler;
 	/** 初始读取的行数 */
 	private int initReadLine;
+	/** 定时任务检查间隔时长 */
+	private long period;
 
 	private RandomAccessFile randomAccessFile;
-	private WatchMonitor monitor;
+	private ScheduledExecutorService executorService;
 
 	/**
 	 * 构造，默认UTF-8编码
@@ -55,7 +59,7 @@ public class Tailer {
 	 * @param initReadLine 启动时预读取的行数
 	 */
 	public Tailer(File file, LineHandler lineHandler, int initReadLine) {
-		this(file, CharsetUtil.CHARSET_UTF_8, lineHandler, initReadLine);
+		this(file, CharsetUtil.CHARSET_UTF_8, lineHandler, initReadLine, DateUnit.SECOND.getMillis());
 	}
 
 	/**
@@ -66,7 +70,7 @@ public class Tailer {
 	 * @param lineHandler 行处理器
 	 */
 	public Tailer(File file, Charset charset, LineHandler lineHandler) {
-		this(file, charset, lineHandler, 0);
+		this(file, charset, lineHandler, 0, DateUnit.SECOND.getMillis());
 	}
 
 	/**
@@ -76,14 +80,16 @@ public class Tailer {
 	 * @param charset 编码
 	 * @param lineHandler 行处理器
 	 * @param initReadLine 启动时预读取的行数
+	 * @param period 检查间隔
 	 */
-	public Tailer(File file, Charset charset, LineHandler lineHandler, int initReadLine) {
+	public Tailer(File file, Charset charset, LineHandler lineHandler, int initReadLine,long period) {
 		checkFile(file);
 		this.charset = charset;
 		this.lineHandler = lineHandler;
-		this.randomAccessFile = FileUtil.createRandomAccessFile(file, FileMode.r);
-		this.monitor = WatchUtil.create(file, WatchMonitor.ENTRY_MODIFY);
+		this.period = period;
 		this.initReadLine = initReadLine;
+		this.randomAccessFile = FileUtil.createRandomAccessFile(file, FileMode.r);
+		this.executorService = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	/**
@@ -106,11 +112,21 @@ public class Tailer {
 			throw new IORuntimeException(e);
 		}
 
-		final WatchMonitor monitor = this.monitor.setWatcher(new LineReadWatcher(this.randomAccessFile, this.charset, this.lineHandler));
-		if (async) {
-			ThreadUtil.execute(monitor);
-		} else {
-			monitor.watch();
+		final LineReadWatcher lineReadWatcher = new LineReadWatcher(this.randomAccessFile, this.charset, this.lineHandler);
+		final ScheduledFuture<?> scheduledFuture = this.executorService.scheduleAtFixedRate(//
+				lineReadWatcher, //
+				0, //
+				this.period, TimeUnit.MILLISECONDS//
+		);
+
+		if (false == async) {
+			try {
+				scheduledFuture.get();
+			} catch (ExecutionException e) {
+				throw new UtilException(e);
+			} catch (InterruptedException e) {
+				// ignore and exist
+			}
 		}
 	}
 
@@ -177,15 +193,12 @@ public class Tailer {
 	 * 命令行打印的行处理器
 	 * 
 	 * @author looly
-	 *@since 4.5.2
+	 * @since 4.5.2
 	 */
 	public static class ConsoleLineHandler implements LineHandler {
 		@Override
 		public void handle(String line) {
-			if (StrUtil.isEmpty(line)) {
-				Console.log();
-			}
-			Console.print("{}", line);
+			Console.log(line);
 		}
 	}
 }

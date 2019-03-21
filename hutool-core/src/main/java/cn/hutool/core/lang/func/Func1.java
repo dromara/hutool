@@ -1,4 +1,4 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.func;
 
 /**
  * 只有一个参数的函数对象<br>

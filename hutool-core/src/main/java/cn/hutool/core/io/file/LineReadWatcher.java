@@ -17,12 +17,12 @@ import cn.hutool.core.io.watch.SimpleWatcher;
  * @author looly
  * @since 4.5.2
  */
-public class LineReadWatcher extends SimpleWatcher {
+public class LineReadWatcher extends SimpleWatcher implements Runnable {
 
 	private RandomAccessFile randomAccessFile;
 	private Charset charset;
 	private LineHandler lineHandler;
-	
+
 	/**
 	 * 构造
 	 * 
@@ -36,7 +36,10 @@ public class LineReadWatcher extends SimpleWatcher {
 		this.lineHandler = lineHandler;
 	}
 
-
+	@Override
+	public void run() {
+		onModify(null, null);
+	}
 
 	@Override
 	public void onModify(WatchEvent<?> event, Path currentPath) {
