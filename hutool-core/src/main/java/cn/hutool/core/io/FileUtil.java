@@ -2389,7 +2389,7 @@ public class FileUtil {
 	public static void readLines(File file, Charset charset, LineHandler lineHandler) throws IORuntimeException {
 		FileReader.create(file, charset).readLines(lineHandler);
 	}
-	
+
 	/**
 	 * 按行处理文件内容
 	 * 
@@ -2407,6 +2407,27 @@ public class FileUtil {
 			}
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 单行处理文件内容
+	 * 
+	 * @param file {@link RandomAccessFile}文件
+	 * @param charset 编码
+	 * @param lineHandler {@link LineHandler}行处理器
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.2
+	 */
+	public static void readLine(RandomAccessFile file, Charset charset, LineHandler lineHandler) {
+		String line = null;
+		try {
+			line = file.readLine();
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		if(null != line) {
+			lineHandler.handle(CharsetUtil.convert(line, CharsetUtil.CHARSET_ISO_8859_1, charset));
 		}
 	}
 
@@ -3400,7 +3421,7 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 文件内容跟随器，实现类似Linux下"tail -f"命令功能<br>
 	 * 此方法会阻塞当前线程
@@ -3411,7 +3432,7 @@ public class FileUtil {
 	public static void tail(File file, LineHandler handler) {
 		tail(file, CharsetUtil.CHARSET_UTF_8, handler);
 	}
-	
+
 	/**
 	 * 文件内容跟随器，实现类似Linux下"tail -f"命令功能<br>
 	 * 此方法会阻塞当前线程
@@ -3422,5 +3443,16 @@ public class FileUtil {
 	 */
 	public static void tail(File file, Charset charset, LineHandler handler) {
 		new Tailer(file, charset, handler).start();
+	}
+
+	/**
+	 * 文件内容跟随器，实现类似Linux下"tail -f"命令功能<br>
+	 * 此方法会阻塞当前线程
+	 * 
+	 * @param file 文件
+	 * @param charset 编码
+	 */
+	public static void tail(File file, Charset charset) {
+		FileUtil.tail(file, charset, Tailer.CONSOLE_HANDLER);
 	}
 }

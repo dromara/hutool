@@ -16,6 +16,7 @@
 * 【crypto】    增加RC4算法
 * 【core】       增加FixedLinkedHashMap
 * 【extra】       增加ChannelType，JschUtil增加createSession、createChannel、openChannel等方法
+* 【core】       WatchUtil增加createModify
 
 ### Bug修复
 * 【core】       修复ExceptionUtil（pr#35@Gitee）

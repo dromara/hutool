@@ -4,24 +4,20 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.LineHandler;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.CharsetUtil;
 
 public class TailerTest {
 	
 	@Test
 	@Ignore
 	public void tailTest() {
-		FileUtil.tail(FileUtil.file("e:/tail.txt"), new LineHandler() {
-			
-			@Override
-			public void handle(String line) {
-				if(StrUtil.isEmpty(line)) {
-					Console.log();
-				}
-				Console.print("{}", line);
-			}
-		});
+		FileUtil.tail(FileUtil.file("e:/tail.txt"), CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	@Test
+	@Ignore
+	public void tailWithLinesTest() {
+		Tailer tailer = new Tailer(FileUtil.file("e:/tail.txt"), Tailer.CONSOLE_HANDLER, 2);
+		tailer.start();
 	}
 }
