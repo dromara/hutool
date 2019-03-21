@@ -64,7 +64,7 @@ public class UrlResource implements Resource{
 	}
 	
 	@Override
-	public InputStream getStream(){
+	public InputStream getStream() throws NoResourceException{
 		if(null == this.url){
 			throw new NoResourceException("Resource [{}] not exist!", this.url);
 		}

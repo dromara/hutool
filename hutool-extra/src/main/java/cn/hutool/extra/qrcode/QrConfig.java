@@ -8,9 +8,9 @@ import java.util.HashMap;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ImageUtil;
 
 /**
  * 二维码设置
@@ -235,7 +235,7 @@ public class QrConfig {
 	 * @return this;
 	 */
 	public QrConfig setImg(File imgFile) {
-		return setImg(ImageUtil.read(imgFile));
+		return setImg(ImgUtil.read(imgFile));
 	}
 
 	/**

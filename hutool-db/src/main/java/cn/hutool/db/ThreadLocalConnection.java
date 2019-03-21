@@ -46,6 +46,7 @@ public enum ThreadLocalConnection {
 		GroupedConnection groupedConnection = threadLocal.get();
 		if (null != groupedConnection) {
 			groupedConnection.close(ds);
+			threadLocal.remove();
 		}
 	}
 

@@ -198,7 +198,7 @@ public class SM2Engine {
 
 		this.digest.doFinal(c3, 0);
 
-		// 按照莫属输出结果
+		// 按照对应模式输出结果
 		switch (mode) {
 		case C1C3C2:
 			return Arrays.concatenate(c1, c3, c2);

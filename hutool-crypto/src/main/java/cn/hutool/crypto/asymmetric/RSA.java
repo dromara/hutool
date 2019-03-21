@@ -9,7 +9,6 @@ import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
@@ -153,47 +152,6 @@ public class RSA extends AsymmetricCrypto {
 			this.encryptBlockSize = ((RSAKey) getKeyByType(keyType)).getModulus().bitLength() / 8 - 11;
 		}
 		return super.encrypt(data, keyType);
-	}
-
-	/**
-	 * 分组解密
-	 * 
-	 * @param data 数据
-	 * @param keyType 密钥类型
-	 * @return 解密后的密文
-	 * @deprecated 请使用 {@link #decryptFromBcd(String, KeyType)}
-	 */
-	@Deprecated
-	public String decryptStr(String data, KeyType keyType) {
-		return decryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 分组解密
-	 * 
-	 * @param data 数据
-	 * @param keyType 密钥类型
-	 * @param charset 加密前编码
-	 * @return 解密后的密文
-	 * @since 3.1.1
-	 * @deprecated 请使用 {@link #decryptFromBcdToStr(String, KeyType, Charset)}
-	 */
-	@Deprecated
-	public String decryptStr(String data, KeyType keyType, Charset charset) {
-		return decryptFromBcdToStr(data, keyType, charset);
-	}
-	
-	/**
-	 * 分组解密
-	 * 
-	 * @param data 数据
-	 * @param keyType 密钥类型
-	 * @param charset 加密前编码
-	 * @return 解密后的密文
-	 * @since 4.3.2
-	 */
-	public String decryptFromBcdToStr(String data, KeyType keyType, Charset charset) {
-		return StrUtil.str(decryptFromBcd(data, keyType, charset), charset);
 	}
 
 	@Override

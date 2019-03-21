@@ -207,7 +207,8 @@ public class URLUtil {
 
 	/**
 	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
+	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
 	 * 
 	 * @param url URL
 	 * @return 编码后的URL
@@ -220,7 +221,8 @@ public class URLUtil {
 	
 	/**
 	 * 编码URL，默认使用UTF-8编码<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
+	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
 	 * 
 	 * @param url URL
 	 * @return 编码后的URL
@@ -232,7 +234,9 @@ public class URLUtil {
 	}
 	
 	/**
-	 * 编码字符为 application/x-www-form-urlencoded
+	 * 编码字符为 application/x-www-form-urlencoded<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
+	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
 	 * 
 	 * @param url 被编码内容
 	 * @param charset 编码
@@ -250,7 +254,9 @@ public class URLUtil {
 	}
 	
 	/**
-	 * 编码字符为URL中查询语句
+	 * 编码字符为URL中查询语句<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
+	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
 	 * 
 	 * @param url 被编码内容
 	 * @param charset 编码
@@ -269,7 +275,8 @@ public class URLUtil {
 
 	/**
 	 * 编码URL字符为 application/x-www-form-urlencoded<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
+	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
 	 * 
 	 * @param url URL
 	 * @param charset 编码
@@ -285,7 +292,8 @@ public class URLUtil {
 	
 	/**
 	 * 编码URL<br>
-	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
+	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
 	 * 
 	 * @param url URL
 	 * @param charset 编码

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.security.KeyPair;
 import java.security.KeyStore;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
@@ -15,6 +16,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
 import java.util.Map;
 
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 
 import cn.hutool.core.codec.Base64;
@@ -36,6 +38,7 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.DES;
 import cn.hutool.crypto.symmetric.DESede;
+import cn.hutool.crypto.symmetric.RC4;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
 /**
@@ -960,7 +963,64 @@ public final class SecureUtil {
 	 * @return 密钥
 	 * @since 4.3.3
 	 */
-	public static byte[] decodeKey(String key) {
+	public static byte[] decode(String key) {
 		return Validator.isHex(key) ? HexUtil.decodeHex(key) : Base64.decode(key);
+	}
+
+	/**
+	 * 创建{@link Cipher}
+	 * 
+	 * @param algorithm 算法
+	 * @since 4.5.2
+	 */
+	public static Cipher createCipher(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		Cipher cipher;
+		try {
+			cipher = (null == provider) ? Cipher.getInstance(algorithm) : Cipher.getInstance(algorithm, provider);
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		}
+
+		return cipher;
+	}
+
+	/**
+	 * 创建{@link MessageDigest}
+	 * 
+	 * @param algorithm 算法
+	 * @since 4.5.2
+	 */
+	public static MessageDigest createMessageDigest(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		MessageDigest messageDigest;
+		try {
+			messageDigest = (null == provider) ? MessageDigest.getInstance(algorithm) : MessageDigest.getInstance(algorithm, provider);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+
+		return messageDigest;
+	}
+
+	/**
+	 * RC4算法
+	 * 
+	 * @param key 密钥
+	 * @return {@link RC4}
+	 */
+	public static RC4 rc4(String key) {
+		return new RC4(key);
+	}
+
+	/**
+	 * 强制关闭Bouncy Castle库的使用，全局有效
+	 * 
+	 * @since 4.5.2
+	 */
+	public static void disableBouncyCastle() {
+		GlobalBouncyCastleProvider.setUseBouncyCastle(false);
 	}
 }

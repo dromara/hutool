@@ -424,71 +424,8 @@ public class HttpUtil {
 	}
 	
 	/**
-	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
-	 * 
-	 * @param content 被编码内容
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#encode(String)}
-	 */
-	@Deprecated
-	public static String encodeUtf8(String content) {
-		return encode(content, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#encode(String, Charset)}
-	 */
-	@Deprecated
-	public static String encode(String content, Charset charset) {
-		return URLUtil.encode(content, charset);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 * @see URLUtil#encode(String, String)
-	 */
-	public static String encode(String content, String charsetStr) {
-		return URLUtil.encode(content, charsetStr);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#decode(String, Charset)}
-	 */
-	@Deprecated
-	public static String decode(String content, Charset charset) {
-		return URLUtil.decode(content, charset);
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 * @deprecated 请使用{@link URLUtil#decode(String, String)}
-	 */
-	@Deprecated
-	public static String decode(String content, String charsetStr) {
-		return URLUtil.decode(content, charsetStr);
-	}
-
-	/**
 	 * 对URL参数做编码，只编码键和值<br>
-	 * 提供的值可以是url附带编码，但是不能只是url
+	 * 提供的值可以是url附带参数，但是不能只是url
 	 * 
 	 * 
 	 * @param paramsStr url参数，可以包含url本身
@@ -496,7 +433,7 @@ public class HttpUtil {
 	 * @return 编码后的url和参数
 	 * @since 4.0.1
 	 */
-	public static String encodeParams(final String paramsStr, Charset charset) {
+	public static String encodeParams(String paramsStr, Charset charset) {
 		if (StrUtil.isBlank(paramsStr)) {
 			return StrUtil.EMPTY;
 		}
@@ -517,6 +454,19 @@ public class HttpUtil {
 			paramPart = paramsStr;
 		}
 
+		paramPart = normalizeParams(paramPart, charset);
+		
+		return StrUtil.isBlank(urlPart) ? paramPart : urlPart + "?" + paramPart;
+	}
+	
+	/**
+	 * 标准化参数字符串，即URL中？后的部分
+	 * @param paramPart 参数字符串
+	 * @param charset 编码
+	 * @return 标准化的参数字符串
+	 * @since 4.5.2
+	 */
+	public static String normalizeParams(String paramPart, Charset charset) {
 		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
 		final int len = paramPart.length();
 		String name = null;
@@ -561,7 +511,7 @@ public class HttpUtil {
 		if ('&' == builder.charAt(lastIndex)) {
 			builder.delTo(lastIndex);
 		}
-		return StrUtil.isBlank(urlPart) ? builder.toString() : urlPart + "?" + builder.toString();
+		return builder.toString();
 	}
 
 	/**

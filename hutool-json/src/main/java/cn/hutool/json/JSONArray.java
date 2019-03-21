@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.RandomAccess;
 
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
@@ -26,7 +27,7 @@ import cn.hutool.core.util.ObjectUtil;
  * 
  * @author looly
  */
-public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object> {
+public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>, RandomAccess {
 	private static final long serialVersionUID = 2664900568717612292L;
 
 	/** 默认初始大小 */

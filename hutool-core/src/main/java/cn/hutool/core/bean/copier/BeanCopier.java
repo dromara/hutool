@@ -1,6 +1,8 @@
 package cn.hutool.core.bean.copier;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -172,7 +174,7 @@ public class BeanCopier<T> implements Copier<T> {
 		if (null == valueProvider) {
 			return;
 		}
-
+		
 		final CopyOptions copyOptions = this.copyOptions;
 		Class<?> actualEditable = bean.getClass();
 		if (copyOptions.editable != null) {
@@ -207,7 +209,14 @@ public class BeanCopier<T> implements Copier<T> {
 				// Setter方法不存在跳过
 				continue;
 			}
-			value = valueProvider.value(providerKey, TypeUtil.getFirstParamType(setterMethod));
+			
+			Type firstParamType = TypeUtil.getFirstParamType(setterMethod);
+			if(firstParamType instanceof TypeVariable) {
+				// 参数为泛型，查找其真实类型
+				firstParamType = TypeUtil.getActualType(actualEditable, setterMethod.getDeclaringClass(), (TypeVariable<?>)firstParamType);
+			}
+			
+			value = valueProvider.value(providerKey, firstParamType);
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;// 当允许跳过空时，跳过
 			}

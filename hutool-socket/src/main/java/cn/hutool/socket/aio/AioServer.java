@@ -60,7 +60,7 @@ public class AioServer {
 		try {
 			this.group = AsynchronousChannelGroup.withFixedThreadPool(//
 					config.getThreadPoolSize(), // 默认线程池大小
-					ThreadFactoryBuilder.create().setNamePrefix("Huool-socket-").build()//
+					ThreadFactoryBuilder.create().setNamePrefix("Hutool-socket-").build()//
 			);
 			this.channel = AsynchronousServerSocketChannel.open(group).bind(address);
 		} catch (IOException e) {

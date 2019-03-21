@@ -75,9 +75,9 @@ public class MathGenerator implements CodeGenerator {
 	}
 
 	/**
-	 * 根据长度获取参与计算数字最大
+	 * 根据长度获取参与计算数字最大值
 	 * 
-	 * @return
+	 * @return 最大值
 	 */
 	private int getLimit() {
 		return Integer.parseInt("1" + StrUtil.repeat('0', this.numberLength));

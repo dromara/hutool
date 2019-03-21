@@ -102,15 +102,6 @@ public class DateUtil {
 	}
 
 	/**
-	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
-	 * 
-	 * @return 当前时间的标准形式字符串
-	 */
-	public static String now() {
-		return formatDateTime(new DateTime());
-	}
-
-	/**
 	 * 当前时间的时间戳
 	 * 
 	 * @param isNano 是否为高精度时间
@@ -128,6 +119,15 @@ public class DateUtil {
 	 */
 	public static long currentSeconds() {
 		return System.currentTimeMillis() / 1000;
+	}
+	
+	/**
+	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
+	 * 
+	 * @return 当前时间的标准形式字符串
+	 */
+	public static String now() {
+		return formatDateTime(new DateTime());
 	}
 
 	/**

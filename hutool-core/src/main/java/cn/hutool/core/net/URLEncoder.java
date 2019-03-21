@@ -24,64 +24,115 @@ import cn.hutool.core.util.HexUtil;
  */
 public final class URLEncoder {
 
-	public static final URLEncoder DEFAULT = new URLEncoder();
-	public static final URLEncoder QUERY = new URLEncoder();
+	// --------------------------------------------------------------------------------------------- Static method start
+	/**
+	 * 默认{@link URLEncoder}<br>
+	 * 默认的编码器针对URI路径编码，定义如下：
+	 * 
+	 * <pre>
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
+	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+	 * sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * </pre>
+	 */
+	public static final URLEncoder DEFAULT = createDefault();
+	
+	/**
+	 * 用于查询语句的{@link URLEncoder}<br>
+	 * 编码器针对URI路径编码，定义如下：
+	 * 
+	 * <pre>
+	 * 0x20 ' ' =》 '+' 
+	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is 
+	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&' 不编码
+	 * 其它编码为 %nn 形式
+	 * </pre>
+	 * 
+	 * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
+	 */
+	public static final URLEncoder QUERY = createQuery();
 
-	static {
-		/*
-		 * Encoder for URI paths, so from the spec:
-		 *
-		 * pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
-		 *
-		 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-		 *
-		 * sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-		 */
-		// ALPHA and DIGIT are always treated as safe characters
-		// Add the remaining unreserved characters
-		DEFAULT.addSafeCharacter('-');
-		DEFAULT.addSafeCharacter('.');
-		DEFAULT.addSafeCharacter('_');
-		DEFAULT.addSafeCharacter('~');
+	/**
+	 * 创建默认{@link URLEncoder}<br>
+	 * 默认的编码器针对URI路径编码，定义如下：
+	 * 
+	 * <pre>
+	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
+	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+	 * sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * </pre>
+	 * 
+	 * @return {@link URLEncoder}
+	 */
+	public static URLEncoder createDefault() {
+		final URLEncoder encoder = new URLEncoder();
+		encoder.addSafeCharacter('-');
+		encoder.addSafeCharacter('.');
+		encoder.addSafeCharacter('_');
+		encoder.addSafeCharacter('~');
 		// Add the sub-delims
-		DEFAULT.addSafeCharacter('!');
-		DEFAULT.addSafeCharacter('$');
-		DEFAULT.addSafeCharacter('&');
-		DEFAULT.addSafeCharacter('\'');
-		DEFAULT.addSafeCharacter('(');
-		DEFAULT.addSafeCharacter(')');
-		DEFAULT.addSafeCharacter('*');
-		DEFAULT.addSafeCharacter('+');
-		DEFAULT.addSafeCharacter(',');
-		DEFAULT.addSafeCharacter(';');
-		DEFAULT.addSafeCharacter('=');
+		encoder.addSafeCharacter('!');
+		encoder.addSafeCharacter('$');
+		encoder.addSafeCharacter('&');
+		encoder.addSafeCharacter('\'');
+		encoder.addSafeCharacter('(');
+		encoder.addSafeCharacter(')');
+		encoder.addSafeCharacter('*');
+		encoder.addSafeCharacter('+');
+		encoder.addSafeCharacter(',');
+		encoder.addSafeCharacter(';');
+		encoder.addSafeCharacter('=');
 		// Add the remaining literals
-		DEFAULT.addSafeCharacter(':');
-		DEFAULT.addSafeCharacter('@');
+		encoder.addSafeCharacter(':');
+		encoder.addSafeCharacter('@');
 		// Add '/' so it isn't encoded when we encode a path
-		DEFAULT.addSafeCharacter('/');
+		encoder.addSafeCharacter('/');
 
-		/*
-		 * Encoder for query strings https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm 0x20 ' ' -> '+' 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F,
-		 * 0x61 to 0x7A as-is '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&' are not encoded Everything else %nn encoded
-		 */
-		// Special encoding for space
-		QUERY.setEncodeSpaceAsPlus(true);
-		// Alpha and digit are safe by default
-		// Add the other permitted characters
-		QUERY.addSafeCharacter('*');
-		QUERY.addSafeCharacter('-');
-		QUERY.addSafeCharacter('.');
-		QUERY.addSafeCharacter('_');
-		QUERY.addSafeCharacter('=');
-		QUERY.addSafeCharacter('&');
+		return encoder;
 	}
 
-	// Array containing the safe characters set.
-	private final BitSet safeCharacters;
+	/**
+	 * 创建用于查询语句的{@link URLEncoder}<br>
+	 * 编码器针对URI路径编码，定义如下：
+	 * 
+	 * <pre>
+	 * 0x20 ' ' =》 '+' 
+	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is 
+	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&' 不编码
+	 * 其它编码为 %nn 形式
+	 * </pre>
+	 * 
+	 * 详细见：https://www.w3.org/TR/html5/forms.html#application/x-www-form-urlencoded-encoding-algorithm
+	 * 
+	 * @return {@link URLEncoder}
+	 */
+	public static URLEncoder createQuery() {
+		final URLEncoder encoder = new URLEncoder();
+		// Special encoding for space
+		encoder.setEncodeSpaceAsPlus(true);
+		// Alpha and digit are safe by default
+		// Add the other permitted characters
+		encoder.addSafeCharacter('*');
+		encoder.addSafeCharacter('-');
+		encoder.addSafeCharacter('.');
+		encoder.addSafeCharacter('_');
+		encoder.addSafeCharacter('=');
+		encoder.addSafeCharacter('&');
 
+		return encoder;
+	}
+	// --------------------------------------------------------------------------------------------- Static method end
+
+	/** 存放安全编码 */
+	private final BitSet safeCharacters;
+	/** 是否编码空格为+ */
 	private boolean encodeSpaceAsPlus = false;
 
+	/**
+	 * 构造<br>
+	 * 
+	 * [a-zA-Z0-9]默认不被编码
+	 */
 	public URLEncoder() {
 		this(new BitSet(256));
 
@@ -96,18 +147,40 @@ public final class URLEncoder {
 		}
 	}
 
+	/**
+	 * 构造
+	 * 
+	 * @param safeCharacters 安全字符，安全字符不被编码
+	 */
 	private URLEncoder(BitSet safeCharacters) {
 		this.safeCharacters = safeCharacters;
 	}
 
+	/**
+	 * 增加安全字符<br>
+	 * 安全字符不被编码
+	 * 
+	 * @param c 字符
+	 */
 	public void addSafeCharacter(char c) {
 		safeCharacters.set(c);
 	}
 
+	/**
+	 * 移除安全字符<br>
+	 * 安全字符不被编码
+	 * 
+	 * @param c 字符
+	 */
 	public void removeSafeCharacter(char c) {
 		safeCharacters.clear(c);
 	}
 
+	/**
+	 * 是否将空格编码为+
+	 * 
+	 * @param encodeSpaceAsPlus 是否将空格编码为+
+	 */
 	public void setEncodeSpaceAsPlus(boolean encodeSpaceAsPlus) {
 		this.encodeSpaceAsPlus = encodeSpaceAsPlus;
 	}
@@ -133,7 +206,7 @@ public final class URLEncoder {
 			if (safeCharacters.get(c)) {
 				rewrittenPath.append((char) c);
 			} else if (encodeSpaceAsPlus && c == CharUtil.SPACE) {
-				//对于空格单独处理
+				// 对于空格单独处理
 				rewrittenPath.append('+');
 			} else {
 				// convert to external encoding before hex conversion

@@ -31,7 +31,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ImageUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -47,7 +46,7 @@ public class Img {
 	private BufferedImage srcImage;
 	private BufferedImage targetImage;
 	/** 目标图片文件格式，用于写出 */
-	private String targetImageType = ImageUtil.IMAGE_TYPE_JPG;
+	private String targetImageType = ImgUtil.IMAGE_TYPE_JPG;
 	/** 计算x,y坐标的时候是否从中心做为原始坐标开始计算 */
 	private boolean positionBaseCentre = true;
 	/** 图片输出质量，用于压缩 */
@@ -70,7 +69,7 @@ public class Img {
 	 * @return {@link Img}
 	 */
 	public static Img from(File imageFile) {
-		return new Img(ImageUtil.read(imageFile));
+		return new Img(ImgUtil.read(imageFile));
 	}
 	
 	/**
@@ -91,7 +90,7 @@ public class Img {
 	 * @return {@link Img}
 	 */
 	public static Img from(InputStream in) {
-		return new Img(ImageUtil.read(in));
+		return new Img(ImgUtil.read(in));
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class Img {
 	 * @return {@link Img}
 	 */
 	public static Img from(ImageInputStream imageStream) {
-		return new Img(ImageUtil.read(imageStream));
+		return new Img(ImgUtil.read(imageStream));
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class Img {
 	 * @return {@link Img}
 	 */
 	public static Img from(URL imageUrl) {
-		return new Img(ImageUtil.read(imageUrl));
+		return new Img(ImgUtil.read(imageUrl));
 	}
 
 	/**
@@ -121,7 +120,7 @@ public class Img {
 	 * @return {@link Img}
 	 */
 	public static Img from(Image image) {
-		return new Img(ImageUtil.toBufferedImage(image));
+		return new Img(ImgUtil.toBufferedImage(image));
 	}
 
 	/**
@@ -138,8 +137,8 @@ public class Img {
 	 * 
 	 * @param imgType 图片格式
 	 * @return this
-	 * @see ImageUtil#IMAGE_TYPE_JPG
-	 * @see ImageUtil#IMAGE_TYPE_PNG
+	 * @see ImgUtil#IMAGE_TYPE_JPG
+	 * @see ImgUtil#IMAGE_TYPE_PNG
 	 */
 	public Img setTargetImageType(String imgType) {
 		this.targetImageType = imgType;
@@ -224,7 +223,7 @@ public class Img {
 			scaleType = Image.SCALE_DEFAULT;
 		}
 		final Image image = srcImg.getScaledInstance(width, height, scaleType);
-		this.targetImage = ImageUtil.toBufferedImage(image);
+		this.targetImage = ImgUtil.toBufferedImage(image);
 		return this;
 	}
 
@@ -288,7 +287,7 @@ public class Img {
 
 		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		final Image image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
-		this.targetImage = ImageUtil.toBufferedImage(image);
+		this.targetImage = ImgUtil.toBufferedImage(image);
 		return this;
 	}
 
@@ -350,7 +349,7 @@ public class Img {
 	 * @return this
 	 */
 	public Img binary() {
-		this.targetImage = ImageUtil.copyImage(getValidSrcImg(), BufferedImage.TYPE_BYTE_BINARY);
+		this.targetImage = ImgUtil.copyImage(getValidSrcImg(), BufferedImage.TYPE_BYTE_BINARY);
 		return this;
 	}
 
@@ -484,7 +483,7 @@ public class Img {
 	 * @throws IORuntimeException IO异常
 	 */
 	public boolean write(OutputStream out) throws IORuntimeException {
-		return write(ImageUtil.getImageOutputStream(out));
+		return write(ImgUtil.getImageOutputStream(out));
 	}
 
 	/**
@@ -501,7 +500,7 @@ public class Img {
 		final BufferedImage targetImage = (null == this.targetImage) ? this.srcImage : this.targetImage;
 		Assert.notNull(targetImage, "Target image is null !");
 		
-		return ImageUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality);
+		return ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality);
 	}
 
 	/**
@@ -523,7 +522,7 @@ public class Img {
 		
 		ImageOutputStream out = null;
 		try {
-			out = ImageUtil.getImageOutputStream(targetFile);
+			out = ImgUtil.getImageOutputStream(targetFile);
 			return write(out);
 		} finally {
 			IoUtil.close(out);
@@ -556,7 +555,7 @@ public class Img {
 	 */
 	private int getTypeInt() {
 		switch (this.targetImageType) {
-		case ImageUtil.IMAGE_TYPE_PNG:
+		case ImgUtil.IMAGE_TYPE_PNG:
 			return BufferedImage.TYPE_INT_ARGB;
 		default:
 			return BufferedImage.TYPE_INT_RGB;

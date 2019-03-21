@@ -39,6 +39,12 @@ public class NumberUtilTest {
 	}
 	
 	@Test
+	public void addTest4() {
+		BigDecimal result = NumberUtil.add(new BigDecimal("133"), new BigDecimal("331"));
+		Assert.assertEquals(new BigDecimal("464"), result);
+	}
+	
+	@Test
 	public void isIntegerTest() {
 		Assert.assertTrue(NumberUtil.isInteger("-12"));
 		Assert.assertTrue(NumberUtil.isInteger("256"));

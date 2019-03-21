@@ -13,6 +13,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.SecureUtil;
 
 public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypto<T>> extends BaseAsymmetric<T> {
 	// ------------------------------------------------------------------ Constructor start
@@ -126,7 +127,7 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	}
 
 	/**
-	 * 编码为Base64字符串
+	 * 编码为Base64字符串，使用UTF-8编码
 	 * 
 	 * @param data 被加密的字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
@@ -235,27 +236,40 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	}
 
 	/**
-	 * 从Hex字符串解密
+	 * 从Hex或Base64字符串解密，编码为UTF-8格式
 	 * 
-	 * @param hexStr Hex字符串
+	 * @param data Hex（16进制）或Base64字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 解密后的bytes
-	 * @since 4.0.1
+	 * @since 4.5.2
 	 */
-	public byte[] decryptFromHex(String hexStr, KeyType keyType) {
-		return decrypt(HexUtil.decodeHex(hexStr), keyType);
+	public byte[] decrypt(String data, KeyType keyType) {
+		return decrypt(SecureUtil.decode(data), keyType);
 	}
 
 	/**
-	 * 从Base64字符串解密
+	 * 解密为字符串，密文需为Hex（16进制）或Base64字符串
 	 * 
-	 * @param base64Str Base64字符串
-	 * @param keyType 私钥或公钥 {@link KeyType}
-	 * @return 解密后的bytes
-	 * @since 4.0.1
+	 * @param data 数据，Hex（16进制）或Base64字符串
+	 * @param keyType 密钥类型
+	 * @param charset 加密前编码
+	 * @return 解密后的密文
+	 * @since 4.5.2
 	 */
-	public byte[] decryptFromBase64(String base64Str, KeyType keyType) {
-		return decrypt(Base64.decode(base64Str, CharsetUtil.CHARSET_UTF_8), keyType);
+	public String decryptStr(String data, KeyType keyType, Charset charset) {
+		return StrUtil.str(decrypt(data, keyType), charset);
+	}
+
+	/**
+	 * 解密为字符串，密文需为Hex（16进制）或Base64字符串
+	 * 
+	 * @param data 数据，Hex（16进制）或Base64字符串
+	 * @param keyType 密钥类型
+	 * @return 解密后的密文
+	 * @since 4.5.2
+	 */
+	public String decryptStr(String data, KeyType keyType) {
+		return decryptStr(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -282,5 +296,30 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	public byte[] decryptFromBcd(String data, KeyType keyType, Charset charset) {
 		final byte[] dataBytes = BCD.ascToBcd(StrUtil.bytes(data, charset));
 		return decrypt(dataBytes, keyType);
+	}
+
+	/**
+	 * 解密为字符串，密文需为BCD格式
+	 * 
+	 * @param data 数据，BCD格式
+	 * @param keyType 密钥类型
+	 * @param charset 加密前编码
+	 * @return 解密后的密文
+	 * @since 4.5.2
+	 */
+	public String decryptStrFromBcd(String data, KeyType keyType, Charset charset) {
+		return StrUtil.str(decryptFromBcd(data, keyType, charset), charset);
+	}
+
+	/**
+	 * 解密为字符串，密文需为BCD格式，编码为UTF-8格式
+	 * 
+	 * @param data 数据，BCD格式
+	 * @param keyType 密钥类型
+	 * @return 解密后的密文
+	 * @since 4.5.2
+	 */
+	public String decryptStrFromBcd(String data, KeyType keyType) {
+		return decryptStrFromBcd(data, keyType, CharsetUtil.CHARSET_UTF_8);
 	}
 }

@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Currency;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -36,11 +37,13 @@ import cn.hutool.core.convert.impl.CurrencyConverter;
 import cn.hutool.core.convert.impl.DateConverter;
 import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.Jdk8DateConverter;
+import cn.hutool.core.convert.impl.LocaleConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.convert.impl.NumberConverter;
 import cn.hutool.core.convert.impl.PathConverter;
 import cn.hutool.core.convert.impl.PrimitiveConverter;
 import cn.hutool.core.convert.impl.ReferenceConverter;
+import cn.hutool.core.convert.impl.StackTraceElementConverter;
 import cn.hutool.core.convert.impl.StringConverter;
 import cn.hutool.core.convert.impl.TimeZoneConverter;
 import cn.hutool.core.convert.impl.URIConverter;
@@ -174,8 +177,8 @@ public class ConverterRegistry {
 	 * 转换值为指定类型
 	 * 
 	 * @param <T> 转换的目标类型（转换器转换到的类型）
-	 * @param type 类型
-	 * @param value 值
+	 * @param type 类型目标
+	 * @param value 被转换值
 	 * @param defaultValue 默认值
 	 * @param isCustomFirst 是否自定义转换器优先
 	 * @return 转换后的值
@@ -183,13 +186,15 @@ public class ConverterRegistry {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T convert(Type type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException {
-		if (null == type && null == defaultValue) {
-			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
+		if (TypeUtil.isUnknow(type) && null == defaultValue) {
+//			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
+			// 对于用户不指定目标类型的情况，返回原值
+			return (T) value;
 		}
 		if (ObjectUtil.isNull(value)) {
 			return defaultValue;
 		}
-		if (null == type) {
+		if (TypeUtil.isUnknow(type)) {
 			type = defaultValue.getClass();
 		}
 		Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
@@ -367,10 +372,12 @@ public class ConverterRegistry {
 		// 其它类型
 		defaultConverterMap.put(Class.class, new ClassConverter());
 		defaultConverterMap.put(TimeZone.class, new TimeZoneConverter());
+		defaultConverterMap.put(Locale.class, new LocaleConverter());
 		defaultConverterMap.put(Charset.class, new CharsetConverter());
 		defaultConverterMap.put(Path.class, new PathConverter());
 		defaultConverterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
 		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
+		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
 
 		// JDK8+
 		try {

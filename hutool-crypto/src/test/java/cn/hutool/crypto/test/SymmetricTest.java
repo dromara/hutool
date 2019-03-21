@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
@@ -28,7 +29,7 @@ public class SymmetricTest {
 		String content = "test中文";
 
 		// 随机生成密钥
-		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+		byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
 
 		// 构建
 		SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, key);
@@ -53,7 +54,7 @@ public class SymmetricTest {
 		String content = "test中文";
 
 		// 随机生成密钥
-		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+		byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
 
 		// 构建
 		AES aes = SecureUtil.aes(key);

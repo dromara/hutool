@@ -14,8 +14,8 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.BouncyCastleSupport;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.SecureUtil;
 
 /**
  * 摘要算法<br>
@@ -24,7 +24,7 @@ import cn.hutool.crypto.CryptoException;
  * @author Looly
  *
  */
-public class Digester extends BouncyCastleSupport {
+public class Digester {
 
 	private MessageDigest digest;
 	/** 盐值 */
@@ -85,14 +85,18 @@ public class Digester extends BouncyCastleSupport {
 	 * @throws CryptoException Cause by IOException
 	 */
 	public Digester init(String algorithm, Provider provider) {
-		try {
-			digest = (null == provider) ? MessageDigest.getInstance(algorithm) : MessageDigest.getInstance(algorithm, provider);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
+		if(null == provider) {
+			this.digest = SecureUtil.createMessageDigest(algorithm);
+		}else {
+			try {
+				this.digest = MessageDigest.getInstance(algorithm, provider);
+			} catch (NoSuchAlgorithmException e) {
+				throw new CryptoException(e);
+			}
 		}
 		return this;
 	}
-
+	
 	/**
 	 * 设置加盐内容
 	 * 
@@ -120,7 +124,7 @@ public class Digester extends BouncyCastleSupport {
 	 * </pre>
 	 * 
 	 * 
-	 * @param salt 盐值
+	 * @param saltPosition 盐的位置
 	 * @return this
 	 * @since 4.4.3
 	 */

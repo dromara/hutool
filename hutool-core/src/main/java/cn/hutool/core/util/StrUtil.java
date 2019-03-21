@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Func1;
 import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.text.StrSpliter;
@@ -867,8 +867,14 @@ public class StrUtil {
 	}
 
 	/**
-	 * 获得set或get方法对应的标准属性名<br>
+	 * 获得set或get或is方法对应的标准属性名<br>
 	 * 例如：setName 返回 name
+	 * 
+	 * <pre>
+	 * getName =》name
+	 * setName =》name
+	 * isName  =》name
+	 * </pre>
 	 * 
 	 * @param getOrSetMethodName Get或Set方法名
 	 * @return 如果是set或get方法名，返回field， 否则null
@@ -877,6 +883,8 @@ public class StrUtil {
 		final String getOrSetMethodNameStr = getOrSetMethodName.toString();
 		if (getOrSetMethodNameStr.startsWith("get") || getOrSetMethodNameStr.startsWith("set")) {
 			return removePreAndLowerFirst(getOrSetMethodName, 3);
+		} else if(getOrSetMethodNameStr.startsWith("is")) {
+			return removePreAndLowerFirst(getOrSetMethodName, 2);
 		}
 		return null;
 	}
@@ -4131,8 +4139,20 @@ public class StrUtil {
 	 * @return 字符串的长度，如果为null返回0
 	 * @since 4.3.2
 	 */
-	public static int length(final CharSequence cs) {
+	public static int length(CharSequence cs) {
 		return cs == null ? 0 : cs.length();
+	}
+	
+	/**
+	 * 给定字符串转为bytes后的byte数（byte长度）
+	 * 
+	 * @param cs 字符串
+	 * @param charset 编码
+	 * @return byte长度
+	 * @since 4.5.2
+	 */
+	public static int byteLength(CharSequence cs, Charset charset) {
+		return cs == null ? 0 : cs.toString().getBytes(charset).length;
 	}
 
 	/**

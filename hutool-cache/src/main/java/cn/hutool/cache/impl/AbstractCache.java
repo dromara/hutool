@@ -32,7 +32,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	/** 返回缓存容量，<code>0</code>表示无大小限制 */
 	protected int capacity;
-	/** 缓存失效时长， <code>0</code> 表示没有设置，单位毫秒 */
+	/** 缓存失效时长， <code>0</code> 表示无限制，单位毫秒 */
 	protected long timeout;
 
 	/** 每个对象是否有单独的失效时长，用于决定清理过期对象是否有必要。 */
@@ -97,14 +97,24 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @return 命中数
 	 */
 	public int getHitCount() {
-		return hitCount;
+		this.readLock.lock();
+		try {
+			return hitCount;
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 
 	/**
 	 * @return 丢失数
 	 */
 	public int getMissCount() {
-		return missCount;
+		this.readLock.lock();
+		try {
+			return missCount;
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 
 	@Override
@@ -199,12 +209,22 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @return 过期对象清理是否可用，内部使用
 	 */
 	protected boolean isPruneExpiredActive() {
-		return (timeout != 0) || existCustomTimeout;
+		this.readLock.lock();
+		try {
+			return (timeout != 0) || existCustomTimeout;
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 
 	@Override
 	public boolean isFull() {
-		return (capacity > 0) && (cacheMap.size() >= capacity);
+		this.readLock.lock();
+		try {
+			return (capacity > 0) && (cacheMap.size() >= capacity);
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 
 	@Override
@@ -224,17 +244,32 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	@Override
 	public int size() {
-		return cacheMap.size();
+		this.readLock.lock();
+		try {
+			return cacheMap.size();
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return cacheMap.isEmpty();
+		this.readLock.lock();
+		try {
+			return cacheMap.isEmpty();
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 
 	@Override
 	public String toString() {
-		return this.cacheMap.toString();
+		this.readLock.lock();
+		try {
+			return this.cacheMap.toString();
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 	// ---------------------------------------------------------------- common end
 
@@ -245,6 +280,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @param cachedObject 被缓存的对象
 	 */
 	protected void onRemove(K key, V cachedObject) {
+		// ignore
 	}
 
 	/**

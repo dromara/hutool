@@ -17,8 +17,8 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.BouncyCastleSupport;
 import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 
 /**
@@ -30,12 +30,12 @@ import cn.hutool.crypto.SecureUtil;
  * @author Looly
  *
  */
-public class SymmetricCrypto extends BouncyCastleSupport{
+public class SymmetricCrypto {
 
 	/** SecretKey 负责保存对称密钥 */
 	private SecretKey secretKey;
 	/** Cipher负责完成加密或解密工作 */
-	private Cipher clipher;
+	private Cipher cipher;
 	/** 加密解密参数 */
 	private AlgorithmParameterSpec params;
 	private Lock lock = new ReentrantLock();
@@ -87,7 +87,7 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 	 * @param key 密钥
 	 */
 	public SymmetricCrypto(String algorithm, byte[] key) {
-		this(algorithm, SecureUtil.generateKey(algorithm, key));
+		this(algorithm, KeyUtil.generateKey(algorithm, key));
 	}
 
 	/**
@@ -130,11 +130,7 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 			// 对于PBE算法使用随机数加盐
 			this.params = new PBEParameterSpec(RandomUtil.randomBytes(8), 100);
 		}
-		try {
-			clipher = Cipher.getInstance(algorithm);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
+		this.cipher = SecureUtil.createCipher(algorithm);
 		return this;
 	}
 
@@ -160,11 +156,11 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 		lock.lock();
 		try {
 			if (null == this.params) {
-				clipher.init(Cipher.ENCRYPT_MODE, secretKey);
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 			} else {
-				clipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
 			}
-			return clipher.doFinal(data);
+			return cipher.doFinal(data);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -298,11 +294,11 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 		lock.lock();
 		try {
 			if (null == this.params) {
-				clipher.init(Cipher.DECRYPT_MODE, secretKey);
+				cipher.init(Cipher.DECRYPT_MODE, secretKey);
 			} else {
-				clipher.init(Cipher.DECRYPT_MODE, secretKey, params);
+				cipher.init(Cipher.DECRYPT_MODE, secretKey, params);
 			}
-			return clipher.doFinal(bytes);
+			return cipher.doFinal(bytes);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -332,28 +328,17 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 	}
 
 	/**
-	 * 解密Hex表示的字符串
+	 * 解密Hex（16进制）或Base64表示的字符串
 	 * 
-	 * @param data 被解密的String，必须为16进制字符串表示形式
+	 * @param data 被解密的String，必须为16进制字符串或Base64表示形式
 	 * @return 解密后的bytes
 	 */
 	public byte[] decrypt(String data) {
-		return decrypt(HexUtil.decodeHex(data));
+		return decrypt(SecureUtil.decode(data));
 	}
 
 	/**
-	 * 解密Base64表示的字符串
-	 * 
-	 * @param data 被解密的String，必须为Base64形式
-	 * @return 解密后的bytes
-	 * @since 4.0.1
-	 */
-	public byte[] decryptFromBase64(String data) {
-		return decrypt(Base64.decode(data));
-	}
-
-	/**
-	 * 解密Hex表示的字符串
+	 * 解密Hex（16进制）或Base64表示的字符串
 	 * 
 	 * @param data 被解密的String
 	 * @param charset 解密后的charset
@@ -364,18 +349,6 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 	}
 
 	/**
-	 * 解密Base64表示的字符串
-	 * 
-	 * @param data 被解密的String，必须为Base64形式
-	 * @param charset 解密后的charset
-	 * @return 解密后的String
-	 * @since 4.0.1
-	 */
-	public String decryptStrFromBase64(String data, Charset charset) {
-		return StrUtil.str(decrypt(Base64.decode(data, charset)), charset);
-	}
-
-	/**
 	 * 解密Hex表示的字符串，默认UTF-8编码
 	 * 
 	 * @param data 被解密的String
@@ -383,17 +356,6 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 	 */
 	public String decryptStr(String data) {
 		return decryptStr(data, CharsetUtil.CHARSET_UTF_8);
-	}
-
-	/**
-	 * 解密Base64表示的字符串，默认UTF-8编码
-	 * 
-	 * @param data 被解密的String
-	 * @return 解密后的String
-	 * @since 4.0.1
-	 */
-	public String decryptStrFromBase64(String data) {
-		return decryptStrFromBase64(data, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -444,6 +406,6 @@ public class SymmetricCrypto extends BouncyCastleSupport{
 	 * @return 加密或解密
 	 */
 	public Cipher getClipher() {
-		return clipher;
+		return cipher;
 	}
 }

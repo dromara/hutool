@@ -18,6 +18,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -37,6 +38,8 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 /**
  * 密钥工具类
@@ -89,19 +92,14 @@ public class KeyUtil {
 	 * @since 3.1.2
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
-		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
-		if (slashIndex > 0) {
-			algorithm = algorithm.substring(0, slashIndex);
-		}
-		KeyGenerator keyGenerator;
-		try {
-			keyGenerator = KeyGenerator.getInstance(algorithm);
-		} catch (NoSuchAlgorithmException e) {
-			throw new CryptoException(e);
-		}
-
+		algorithm = getMainAlgorithm(algorithm);
+		
+		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
 		if (keySize > 0) {
 			keyGenerator.init(keySize);
+		} else if (SymmetricAlgorithm.AES.getValue().equals(algorithm)) {
+			// 对于AES的密钥，除非指定，否则强制使用128位
+			keyGenerator.init(128);
 		}
 		return keyGenerator.generateKey();
 	}
@@ -188,20 +186,34 @@ public class KeyUtil {
 	 * @return {@link SecretKey}
 	 */
 	public static SecretKey generateKey(String algorithm, KeySpec keySpec) {
+		final SecretKeyFactory keyFactory = getSecretKeyFactory(algorithm);
 		try {
-			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(algorithm);
 			return keyFactory.generateSecret(keySpec);
-		} catch (Exception e) {
+		} catch (InvalidKeySpecException e) {
 			throw new CryptoException(e);
 		}
 	}
 
 	/**
+	 * 生成RSA私钥，仅用于非对称加密<br>
+	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 
+	 * @param key 密钥，必须为DER编码存储
+	 * @return RSA私钥 {@link PrivateKey}
+	 * @since 4.5.2
+	 */
+	public static PrivateKey generateRSAPrivateKey(byte[] key) {
+		return generatePrivateKey(AsymmetricAlgorithm.RSA.getValue(), key);
+	}
+
+	/**
 	 * 生成私钥，仅用于非对称加密<br>
+	 * 采用PKCS#8规范，此规范定义了私钥信息语法和加密私钥语法<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
-	 * @param key 密钥
+	 * @param key 密钥，必须为DER编码存储
 	 * @return 私钥 {@link PrivateKey}
 	 */
 	public static PrivateKey generatePrivateKey(String algorithm, byte[] key) {
@@ -226,7 +238,7 @@ public class KeyUtil {
 		}
 		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
-			return KeyFactory.getInstance(algorithm).generatePrivate(keySpec);
+			return getKeyFactory(algorithm).generatePrivate(keySpec);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
@@ -249,11 +261,25 @@ public class KeyUtil {
 	}
 
 	/**
+	 * 生成RSA公钥，仅用于非对称加密<br>
+	 * 采用X509证书规范<br>
+	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
+	 * 
+	 * @param key 密钥，必须为DER编码存储
+	 * @return 公钥 {@link PublicKey}
+	 * @since 4.5.2
+	 */
+	public static PublicKey generateRSAPublicKey(byte[] key) {
+		return generatePublicKey(AsymmetricAlgorithm.RSA.getValue(), key);
+	}
+
+	/**
 	 * 生成公钥，仅用于非对称加密<br>
+	 * 采用X509证书规范<br>
 	 * 算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyFactory
 	 * 
 	 * @param algorithm 算法
-	 * @param key 密钥
+	 * @param key 密钥，必须为DER编码存储
 	 * @return 公钥 {@link PublicKey}
 	 */
 	public static PublicKey generatePublicKey(String algorithm, byte[] key) {
@@ -278,7 +304,7 @@ public class KeyUtil {
 		}
 		algorithm = getAlgorithmAfterWith(algorithm);
 		try {
-			return KeyFactory.getInstance(algorithm).generatePublic(keySpec);
+			return getKeyFactory(algorithm).generatePublic(keySpec);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
@@ -410,16 +436,13 @@ public class KeyUtil {
 	 * @since 4.4.3
 	 */
 	public static KeyPairGenerator getKeyPairGenerator(String algorithm) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
 		KeyPairGenerator keyPairGen;
 		try {
-			keyPairGen = (null == provider) ? KeyPairGenerator.getInstance(algorithm) : KeyPairGenerator.getInstance(algorithm, provider);
+			keyPairGen = (null == provider) //
+					? KeyPairGenerator.getInstance(getMainAlgorithm(algorithm)) //
+					: KeyPairGenerator.getInstance(getMainAlgorithm(algorithm), provider);//
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
@@ -434,20 +457,73 @@ public class KeyUtil {
 	 * @since 4.4.4
 	 */
 	public static KeyFactory getKeyFactory(String algorithm) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
 		KeyFactory keyFactory;
 		try {
-			keyFactory = (null == provider) ? KeyFactory.getInstance(algorithm) : KeyFactory.getInstance(algorithm, provider);
+			keyFactory = (null == provider) //
+					? KeyFactory.getInstance(getMainAlgorithm(algorithm)) //
+					: KeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptoException(e);
 		}
 		return keyFactory;
+	}
+
+	/**
+	 * 获取{@link SecretKeyFactory}
+	 * 
+	 * @param algorithm 对称加密算法
+	 * @return {@link KeyFactory}
+	 * @since 4.5.2
+	 */
+	public static SecretKeyFactory getSecretKeyFactory(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		SecretKeyFactory keyFactory;
+		try {
+			keyFactory = (null == provider) //
+					? SecretKeyFactory.getInstance(getMainAlgorithm(algorithm)) //
+					: SecretKeyFactory.getInstance(getMainAlgorithm(algorithm), provider);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+		return keyFactory;
+	}
+
+	/**
+	 * 获取{@link KeyGenerator}
+	 * 
+	 * @param algorithm 对称加密算法
+	 * @return {@link KeyGenerator}
+	 * @since 4.5.2
+	 */
+	public static KeyGenerator getKeyGenerator(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		KeyGenerator generator;
+		try {
+			generator = (null == provider) //
+					? KeyGenerator.getInstance(getMainAlgorithm(algorithm)) //
+					: KeyGenerator.getInstance(getMainAlgorithm(algorithm), provider);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+		return generator;
+	}
+
+	/**
+	 * 获取主体算法名，例如RSA/ECB/PKCS1Padding的主体算法是RSA
+	 * 
+	 * @return 主体算法名
+	 * @since 4.5.2
+	 */
+	public static String getMainAlgorithm(String algorithm) {
+		final int slashIndex = algorithm.indexOf(CharUtil.SLASH);
+		if (slashIndex > 0) {
+			return algorithm.substring(0, slashIndex);
+		}
+		return algorithm;
 	}
 
 	/**
@@ -555,6 +631,23 @@ public class KeyUtil {
 	}
 
 	/**
+	 * 读取X.509 Certification文件中的公钥<br>
+	 * Certification为证书文件<br>
+	 * see: https://www.cnblogs.com/yinliang/p/10115519.html
+	 * 
+	 * @param in {@link InputStream} 如果想从文件读取.cer文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @return {@link KeyStore}
+	 * @since 4.5.2
+	 */
+	public static PublicKey readPublicKeyFromCert(InputStream in) {
+		final Certificate certificate = readX509Certificate(in);
+		if (null != certificate) {
+			return certificate.getPublicKey();
+		}
+		return null;
+	}
+
+	/**
 	 * 读取X.509 Certification文件<br>
 	 * Certification为证书文件<br>
 	 * see: http://snowolf.iteye.com/blog/391931
@@ -619,7 +712,7 @@ public class KeyUtil {
 			throw new CryptoException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取{@link CertificateFactory}
 	 * 
@@ -628,12 +721,7 @@ public class KeyUtil {
 	 * @since 4.5.0
 	 */
 	public static CertificateFactory getCertificateFactory(String type) {
-		Provider provider = null;
-		try {
-			provider = ProviderFactory.createBouncyCastleProvider();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
 
 		CertificateFactory factory;
 		try {
@@ -655,7 +743,7 @@ public class KeyUtil {
 	public static byte[] encodeECPublicKey(PublicKey publicKey) {
 		return BCUtil.encodeECPublicKey(publicKey);
 	}
-	
+
 	/**
 	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
 	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html

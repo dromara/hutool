@@ -69,7 +69,7 @@ public class CollUtil {
 	 * @param coll2 集合2
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
-	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2) {
+	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2) {
 		final ArrayList<T> list = new ArrayList<>();
 		if (isEmpty(coll1)) {
 			list.addAll(coll2);
@@ -104,7 +104,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> union(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
+	public static <T> Collection<T> union(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
 		Collection<T> union = union(coll1, coll2);
 		for (Collection<T> coll : otherColls) {
 			union = union(union, coll);
@@ -123,7 +123,7 @@ public class CollUtil {
 	 * @param coll2 集合2
 	 * @return 交集的集合，返回 {@link ArrayList}
 	 */
-	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2) {
+	public static <T> Collection<T> intersection(Collection<T> coll1, Collection<T> coll2) {
 		final ArrayList<T> list = new ArrayList<>();
 		if (isNotEmpty(coll1) && isNotEmpty(coll2)) {
 			final Map<T, Integer> map1 = countMap(coll1);
@@ -153,7 +153,7 @@ public class CollUtil {
 	 * @return 并集的集合，返回 {@link ArrayList}
 	 */
 	@SafeVarargs
-	public static <T> Collection<T> intersection(final Collection<T> coll1, final Collection<T> coll2, final Collection<T>... otherColls) {
+	public static <T> Collection<T> intersection(Collection<T> coll1, Collection<T> coll2, Collection<T>... otherColls) {
 		Collection<T> intersection = intersection(coll1, coll2);
 		if (isEmpty(intersection)) {
 			return intersection;
@@ -180,7 +180,7 @@ public class CollUtil {
 	 * @param coll2 集合2
 	 * @return 差集的集合，返回 {@link ArrayList}
 	 */
-	public static <T> Collection<T> disjunction(final Collection<T> coll1, final Collection<T> coll2) {
+	public static <T> Collection<T> disjunction(Collection<T> coll1, Collection<T> coll2) {
 		if (isEmpty(coll1)) {
 			return coll2;
 		}
@@ -211,7 +211,7 @@ public class CollUtil {
 	 * @return 如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
 	 * @since 4.1.10
 	 */
-	public static boolean contains(final Collection<?> collection, Object value) {
+	public static boolean contains(Collection<?> collection, Object value) {
 		return isNotEmpty(collection) && collection.contains(value);
 	}
 
@@ -224,7 +224,7 @@ public class CollUtil {
 	 * @since 2.1
 	 * @see #intersection
 	 */
-	public static boolean containsAny(final Collection<?> coll1, final Collection<?> coll2) {
+	public static boolean containsAny(Collection<?> coll1, Collection<?> coll2) {
 		if (isEmpty(coll1) || isEmpty(coll2)) {
 			return false;
 		}
@@ -1655,7 +1655,7 @@ public class CollUtil {
 		if (null == collection || null == value) {
 			return collection;
 		}
-		if (null == elementType) {
+		if (TypeUtil.isUnknow(elementType)) {
 			// 元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
 		} else {
@@ -1666,7 +1666,7 @@ public class CollUtil {
 				return collection;
 			}
 		}
-
+		
 		Iterator iter;
 		if (value instanceof Iterator) {
 			iter = (Iterator) value;

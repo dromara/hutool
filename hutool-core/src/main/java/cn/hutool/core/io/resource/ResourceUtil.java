@@ -12,7 +12,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 
 /**
  * ClassPath资源工具类
@@ -30,7 +33,7 @@ public class ResourceUtil {
 	 * @since 3.1.1
 	 */
 	public static String readUtf8Str(String resource) {
-		return new ClassPathResource(resource).readUtf8Str();
+		return readStr(resource, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
@@ -42,7 +45,7 @@ public class ResourceUtil {
 	 * @since 3.1.1
 	 */
 	public static String readStr(String resource, Charset charset) {
-		return new ClassPathResource(resource).readStr(charset);
+		return getResourceObj(resource).readStr(charset);
 	}
 
 	/**
@@ -54,7 +57,7 @@ public class ResourceUtil {
 	 * @since 3.1.2
 	 */
 	public static InputStream getStream(String resurce) throws NoResourceException {
-		return new ClassPathResource(resurce).getStream();
+		return getResourceObj(resurce).getStream();
 	}
 
 	/**
@@ -66,7 +69,7 @@ public class ResourceUtil {
 	 */
 	public static InputStream getStreamSafe(String resurce) {
 		try {
-			return new ClassPathResource(resurce).getStream();
+			return getResourceObj(resurce).getStream();
 		} catch (NoResourceException e) {
 			// ignore
 		}
@@ -82,7 +85,7 @@ public class ResourceUtil {
 	 * @since 3.1.2
 	 */
 	public static BufferedReader getReader(String resurce, Charset charset) {
-		return new ClassPathResource(resurce).getReader(charset);
+		return getResourceObj(resurce).getReader(charset);
 	}
 
 	/**
@@ -159,13 +162,18 @@ public class ResourceUtil {
 
 	/**
 	 * 获取{@link Resource} 资源对象<br>
-	 * 如果提供路径为绝对路径，返回{@link FileResource}，否则返回{@link ClassPathResource}
+	 * 如果提供路径为绝对路径或路径以file:开头，返回{@link FileResource}，否则返回{@link ClassPathResource}
 	 * 
 	 * @param path 路径，可以是绝对路径，也可以是相对路径
 	 * @return {@link Resource} 资源对象
 	 * @since 3.2.1
 	 */
 	public static Resource getResourceObj(String path) {
-		return FileUtil.isAbsolutePath(path) ? new FileResource(path) : new ClassPathResource(path);
+		if(StrUtil.isNotBlank(path)) {
+			if(path.startsWith(URLUtil.FILE_URL_PREFIX) || FileUtil.isAbsolutePath(path)) {
+				return new FileResource(path);
+			}
+		}
+		return new ClassPathResource(path);
 	}
 }

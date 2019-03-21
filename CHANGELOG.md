@@ -3,6 +3,33 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.5.2
+
+### 新特性
+* 【crypto】    增加读取pem格式私钥文件和公钥证书的方法，位于BCUtil（issue#ISJ5M@Gitee）
+* 【core】       增加StrUtil.byteLength（issue#284@Github）
+* 【core】       增加GlobalBouncyCastleProvider，单例使用BouncyCastleProvider
+* 【crypto】    增强对BC库的兼容性，明确RSA为RSA/ECB/PKCS1Padding
+* 【core】       snowflake生成器添加id反推生成时间等信息的方法（pr#293@Github）
+* 【poi】         CellUtil.getCellValue增加null验证
+* 【core】       增加文件内容跟随器Tailer
+* 【crypto】    增加RC4算法
+* 【core】       增加FixedLinkedHashMap
+* 【extra】       增加ChannelType，JschUtil增加createSession、createChannel、openChannel等方法
+* 【core】       WatchUtil增加createModify
+* 【core】       新增ImgUtil，废弃ImageUtil
+
+### Bug修复
+* 【core】       修复ExceptionUtil（pr#35@Gitee）
+* 【core】       修复RandomUtil注释标注问题（pr#288@Github）
+* 【core】       修复TimedCache中onRemove失效问题（issue#ITD0O@Gitee）
+* 【core】       修复DateConverter日期负数问题（issue#ITWK4@Gitee）
+* 【json】       修复toBean时父类定义泛型字段导致的注入问题（issue#ITGGN@Gitee）
+* 【cahce】    修复读锁导致的LRU异常（issue#303@Gtihub）
+* 【captcha】 修复在某些未知情况下获取字体高度导致的问题
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.5.1
 
 ### 新特性

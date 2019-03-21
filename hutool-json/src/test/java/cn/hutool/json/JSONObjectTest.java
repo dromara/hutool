@@ -16,6 +16,8 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.test.bean.JSONBean;
 import cn.hutool.json.test.bean.Seq;
+import cn.hutool.json.test.bean.TokenAuthResponse;
+import cn.hutool.json.test.bean.TokenAuthWarp2;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
 import cn.hutool.json.test.bean.UserWithMap;
@@ -174,7 +176,27 @@ public class JSONObjectTest {
 		StepReport stepReport = stepReports.get(0);
 		Assert.assertNotNull(stepReport);
 	}
-
+	
+	/**
+	 * 在JSON转Bean过程中，Bean中字段如果为父类定义的泛型类型，则应正确转换，此方法用于测试这类情况
+	 */
+	@Test
+	public void toBeanTest6() {
+		JSONObject json = JSONUtil.createObj()
+			.put("targetUrl", "http://test.com")
+			.put("success", "true")
+			.put("result", JSONUtil.createObj().put("token", "tokenTest").put("userId", "测试用户1"));
+		
+		TokenAuthWarp2 bean = json.toBean(TokenAuthWarp2.class);
+		Assert.assertEquals("http://test.com", bean.getTargetUrl());
+		Assert.assertEquals("true", bean.getSuccess());
+		
+		TokenAuthResponse result = bean.getResult();
+		Assert.assertNotNull(result);
+		Assert.assertEquals("tokenTest", result.getToken());
+		Assert.assertEquals("测试用户1", result.getUserId());
+	}
+	
 	@Test
 	public void parseBeanTest() {
 		UserA userA = new UserA();

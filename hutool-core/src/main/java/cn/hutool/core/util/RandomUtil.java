@@ -59,7 +59,7 @@ public class RandomUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取随机数产生器
 	 * 
@@ -85,7 +85,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得随机数[0, 1)
+	 * 获得随机数[0, 2^32)
 	 * 
 	 * @return 随机数
 	 */
@@ -104,7 +104,7 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获得指定范围内的随机数
+	 * 获得指定范围内的随机数[min, max)
 	 * 
 	 * @param min 最小数（包含）
 	 * @param max 最大数（不包含）
@@ -206,7 +206,7 @@ public class RandomUtil {
 	public static double randomDouble(double limit, int scale, RoundingMode roundingMode) {
 		return NumberUtil.round(randomDouble(limit), scale, roundingMode).doubleValue();
 	}
-	
+
 	/**
 	 * 获得指定范围内的随机数[0, 1)
 	 * 
@@ -216,7 +216,7 @@ public class RandomUtil {
 	public static BigDecimal randomBigDecimal() {
 		return NumberUtil.toBigDecimal(getRandom().nextDouble());
 	}
-	
+
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
 	 * 
@@ -227,7 +227,7 @@ public class RandomUtil {
 	public static BigDecimal randomBigDecimal(BigDecimal limit) {
 		return NumberUtil.toBigDecimal(getRandom().nextDouble(limit.doubleValue()));
 	}
-	
+
 	/**
 	 * 获得指定范围内的随机数
 	 * 
@@ -351,7 +351,7 @@ public class RandomUtil {
 	public static String randomString(int length) {
 		return randomString(BASE_CHAR_NUMBER, length);
 	}
-	
+
 	/**
 	 * 获得一个随机的字符串（只包含数字和大写字符）
 	 * 
@@ -424,7 +424,7 @@ public class RandomUtil {
 	public static char randomChar(String baseString) {
 		return baseString.charAt(getRandom().nextInt(baseString.length()));
 	}
-	
+
 	/**
 	 * 生成随机颜色
 	 * 
