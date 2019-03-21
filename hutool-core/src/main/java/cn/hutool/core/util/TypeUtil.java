@@ -228,11 +228,11 @@ public class TypeUtil {
 		if (null == type) {
 			return null;
 		}
-		
+
 		final ParameterizedType parameterizedType = toParameterizedType(type);
 		return (null == parameterizedType) ? null : parameterizedType.getActualTypeArguments();
 	}
-	
+
 	/**
 	 * 将{@link Type} 转换为{@link ParameterizedType}<br>
 	 * {@link ParameterizedType}用于获取当前类或父类中泛型参数化后的类型<br>
@@ -257,7 +257,7 @@ public class TypeUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 获取指定泛型变量对应的真实类型<br>
 	 * 由于子类中泛型参数实现和父类（接口）中泛型定义位置是一一对应的，因此可以通过对应关系找到泛型实现类型<br>
@@ -276,16 +276,28 @@ public class TypeUtil {
 	 * @since 4.5.2
 	 */
 	public static Type getActualType(Class<?> clazz, Class<?> superClass, TypeVariable<?> typeVariable) {
-		if(false == superClass.isAssignableFrom(clazz)) {
+		if (false == superClass.isAssignableFrom(clazz)) {
 			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
 		}
-		
+
 		final Type[] typeArguments = TypeUtil.getTypeArguments(clazz);
 		// 查找方法定义所在类或接口中此泛型参数的位置
 		int index = ArrayUtil.indexOf(superClass.getTypeParameters(), typeVariable);
-		if(index > -1 && index < typeArguments.length) {
+		if (index > -1 && index < typeArguments.length) {
 			return typeArguments[index];
 		}
 		return null;
+	}
+
+	/**
+	 * 是否未知类型<br>
+	 * type为null或者{@link TypeVariable} 都视为未知类型
+	 * 
+	 * @param type Type类型
+	 * @return 是否未知类型
+	 * @since 4.5.2
+	 */
+	public static boolean isUnknow(Type type) {
+		return null == type || type instanceof TypeVariable;
 	}
 }

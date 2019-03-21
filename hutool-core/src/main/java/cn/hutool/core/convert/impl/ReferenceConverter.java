@@ -36,7 +36,7 @@ public class ReferenceConverter extends AbstractConverter<Reference> {
 		//尝试将值转换为Reference泛型的类型
 		Object targetValue = null;
 		final Type paramType = TypeUtil.getTypeArgument(targetType);
-		if(null != paramType){
+		if(false == TypeUtil.isUnknow(paramType)){
 			targetValue = ConverterRegistry.getInstance().convert(paramType, value);
 		}
 		if(null == targetValue){

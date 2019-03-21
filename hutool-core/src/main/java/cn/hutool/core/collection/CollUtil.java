@@ -1655,7 +1655,7 @@ public class CollUtil {
 		if (null == collection || null == value) {
 			return collection;
 		}
-		if (null == elementType) {
+		if (TypeUtil.isUnknow(elementType)) {
 			// 元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
 		} else {
@@ -1666,7 +1666,7 @@ public class CollUtil {
 				return collection;
 			}
 		}
-
+		
 		Iterator iter;
 		if (value instanceof Iterator) {
 			iter = (Iterator) value;
