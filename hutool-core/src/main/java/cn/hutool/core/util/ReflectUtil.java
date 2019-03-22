@@ -5,21 +5,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.SimpleCache;
-import cn.hutool.core.map.MapUtil;
 
 /**
  * 反射工具类
@@ -672,29 +666,8 @@ public class ReflectUtil {
 	 * @return 对象
 	 * @throws UtilException 包装各类异常
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
-			if (Map.class.isAssignableFrom(clazz)) {
-				// Map
-				if (LinkedHashMap.class.isAssignableFrom(clazz)) {
-					return (T) MapUtil.newHashMap(true);
-				} else {
-					return (T) MapUtil.newHashMap();
-				}
-			} else if (Iterable.class.isAssignableFrom(clazz)) {
-				// Iterable
-				if (LinkedHashSet.class.isAssignableFrom(clazz)) {
-					return (T) new LinkedHashSet<>();
-				} else if (Set.class.isAssignableFrom(clazz)) {
-					return (T) new HashSet<>();
-				} else if (LinkedList.class.isAssignableFrom(clazz)) {
-					return (T) new LinkedList<>();
-				} else {
-					return (T) CollUtil.newArrayList();
-				}
-			}
-
 			final Constructor<T> constructor = getConstructor(clazz);
 			try {
 				return constructor.newInstance();
