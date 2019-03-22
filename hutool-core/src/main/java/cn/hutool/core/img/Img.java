@@ -11,6 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.CropImageFilter;
@@ -317,6 +318,7 @@ public class Img {
 		final int width = srcImage.getWidth();
 		final int height = srcImage.getHeight();
 
+		// 计算直径
 		final int diameter = radius > 0 ? radius * 2 : Math.min(width, height);
 		final BufferedImage targetImage = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g = targetImage.createGraphics();
@@ -328,6 +330,34 @@ public class Img {
 		}
 		g.drawImage(srcImage, x, y, null);
 		g.dispose();
+		this.targetImage = targetImage;
+		return this;
+	}
+	
+	/**
+	 * 图片圆角处理
+	 * 
+	 * @param arc 圆角弧度，0~1，为长宽占比
+	 * @return this
+	 * @since 4.5.3
+	 */
+	public Img round(double arc) {
+		final BufferedImage srcImage = getValidSrcImg();
+		final int width = srcImage.getWidth();
+		final int height = srcImage.getHeight();
+		
+		// 通过弧度占比计算弧度
+		arc = NumberUtil.mul(arc, Math.min(width, height));
+		
+		final BufferedImage targetImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		final Graphics2D g2 = targetImage.createGraphics();
+		g2.setComposite(AlphaComposite.Src);
+		// 抗锯齿
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.fill(new RoundRectangle2D.Double(0, 0, width, height, arc, arc));
+		g2.setComposite(AlphaComposite.SrcAtop);
+		g2.drawImage(srcImage, 0, 0, null);
+		g2.dispose();
 		this.targetImage = targetImage;
 		return this;
 	}
@@ -368,6 +398,11 @@ public class Img {
 	public Img pressText(String pressText, Color color, Font font, int x, int y, float alpha) {
 		final BufferedImage targetImage = getValidSrcImg();
 		final Graphics2D g = targetImage.createGraphics();
+		
+		if(null == font) {
+			// 默认字体
+			font = new Font("Courier", Font.PLAIN, (int)(targetImage.getHeight() * 0.75));
+		}
 
 		// 抗锯齿
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -387,8 +422,7 @@ public class Img {
 	}
 
 	/**
-	 * 给图片添加图片水印<br>
-	 * 此方法并不关闭流
+	 * 给图片添加图片水印
 	 * 
 	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param x 修正值。 默认在中间，偏移量相对于中间偏移
@@ -404,8 +438,7 @@ public class Img {
 	}
 
 	/**
-	 * 给图片添加图片水印<br>
-	 * 此方法并不关闭流
+	 * 给图片添加图片水印
 	 * 
 	 * @param pressImg 水印图片，可以使用{@link ImageIO#read(File)}方法读取文件
 	 * @param rectangle 矩形对象，表示矩形区域的x，y，width，height，x,y从背景图片中心计算
