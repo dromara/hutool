@@ -9,6 +9,7 @@
 * 【core】       Simhash添加读写锁（issue#IUF9O@Gitee）
 * 【core】       Img增加round方法，圆角给定图片
 * 【extra】      二维码中的图片做圆角处理
+* 【core】       CsvData实现Iterable接口
 
 ### Bug修复
 * 【core】       修复ReflectUtil新建Map对象错误问题（issue#IUF9O@Gitee）
