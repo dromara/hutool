@@ -101,7 +101,6 @@ public abstract class AbstractFtp implements Closeable {
 		final String[] dirs = dir.split("[\\\\/]");
 
 		final String now = pwd();
-		cd("/");
 		for (int i = 0; i < dirs.length; i++) {
 			if (StrUtil.isNotEmpty(dirs[i])) {
 				if (false == cd(dirs[i])) {

@@ -21,7 +21,7 @@ GET请求栗子：
 String result1= HttpUtil.get("https://www.baidu.com");
 
 // 当无法识别页面编码的时候，可以自定义请求页面的编码
-String result2= HttpUtil.get("https://www.baidu.com", "UTF-8");
+String result2= HttpUtil.get("https://www.baidu.com", CharsetUtil.CHARSET_UTF_8);
 
 //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
 HashMap<String, Object> paramMap = new HashMap<>();
@@ -29,7 +29,7 @@ paramMap.put("city", "北京");
 String result3= HttpUtil.get("https://www.baidu.com", paramMap);
 ```
 
-POST请求栗子：
+POST请求例子：
 
 ```java
 HashMap<String, Object> paramMap = new HashMap<>();
@@ -80,11 +80,10 @@ StreamProgress接口实现后可以感知下载过程中的各个阶段。
 
 ### 更多有用的工具方法
 
-- `HttpUtil.encode`和`HttpUtil.decode` 两个方法封装了JDK的`URLEncoder.encode`和`URLDecoder.decode`方法，可以方便的对URL参数进行URL编码和解码。
+- `HttpUtil.encodeParams` 对URL参数做编码，只编码键和值，提供的值可以是url附带参数，但是不能只是url
 - `HttpUtil.toParams`和`HttpUtil.decodeParams` 两个方法是将Map参数转为URL参数字符串和将URL参数字符串转为Map对象
 - `HttpUtil.urlWithForm`是将URL字符串和Map参数拼接为GET请求所用的完整字符串使用
 - `HttpUtil.getMimeType` 根据文件扩展名快速获取其MimeType（参数也可以是完整文件路径）
-- `HttpUtil.getClientIP` 根据指定Http头信息获取客户端IP地址，此方法适用于在Nginx转发时获取真实客户端地址的快捷方法（此方法依赖于Servlet-api）
 
 ### 更多请求参数
 

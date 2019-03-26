@@ -487,7 +487,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	public Set<Entry<String, String>> entrySet(String group) {
 		return this.groupedMap.entrySet(group);
 	}
-
+	
 	/**
 	 * 设置值
 	 * 
@@ -497,7 +497,20 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @since 3.3.1
 	 */
 	public Setting set(String key, String value) {
-		this.groupedMap.put(DEFAULT_GROUP, key, value);
+		this.put(key, value);
+		return this;
+	}
+	
+	/**
+	 * 将键值对加入到对应分组中
+	 * 
+	 * @param group 分组
+	 * @param key 键
+	 * @param value 值
+	 * @return 此key之前存在的值，如果没有返回null
+	 */
+	public Setting set(String group, String key, String value) {
+		this.put(group, key, value);
 		return this;
 	}
 

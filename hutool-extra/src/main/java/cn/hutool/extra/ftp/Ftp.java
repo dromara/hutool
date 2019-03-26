@@ -164,6 +164,7 @@ public class Ftp extends AbstractFtp {
 
 	@Override
 	public List<String> ls(String path) {
+		cd(path);
 		FTPFile[] ftpFiles;
 		try {
 			ftpFiles = this.client.listFiles();
@@ -299,7 +300,10 @@ public class Ftp extends AbstractFtp {
 			throw new FtpException(e);
 		}
 		mkDirs(path);
-		cd(path);
+		boolean isOk = cd(path);
+		if(false == isOk) {
+			return false;
+		}
 		try {
 			return client.storeFile(fileName, fileStream);
 		} catch (IOException e) {
