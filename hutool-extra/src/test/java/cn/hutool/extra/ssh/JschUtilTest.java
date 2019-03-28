@@ -49,7 +49,7 @@ public class JschUtilTest {
 			// 当连接超时时，isConnected()仍然返回true，pwd命令也能正常返回，因此，利用发送cd命令的返回结果，来判断是否连接超时
 			Console.log("isConnected " + sftp.getClient().isConnected());
 			Console.log("打印pwd: " + sftp.pwd());
-			Console.log("cd / : " + sftp.cd("/data"));
+			Console.log("cd / : " + sftp.cd("/"));
 		}catch (JschRuntimeException e) {
 			e.printStackTrace();
 		}
