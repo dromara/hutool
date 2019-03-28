@@ -185,12 +185,13 @@ public class Ftp extends AbstractFtp {
 	 */
 	@Override
 	public Ftp reconnectIfTimeout() {
-		String pwd;
+		String pwd = null;
 		try {
 			pwd = pwd();
 		} catch (FtpException fex) {
-			pwd = null;
+			//ignore
 		}
+		
 		if (pwd == null) {
 			return this.init();
 		}
@@ -231,7 +232,28 @@ public class Ftp extends AbstractFtp {
 
 	@Override
 	public List<String> ls(String path) {
-		cd(path);
+		final FTPFile[] ftpFiles = lsFiles(path);
+		
+		final List<String> fileNames = new ArrayList<>();
+		for (FTPFile ftpFile : ftpFiles) {
+			fileNames.add(ftpFile.getName());
+		}
+		return fileNames;
+	}
+	
+	/**
+	 * 遍历某个目录下所有文件和目录，不会递归遍历
+	 * 
+	 * @param path 目录
+	 * @return 文件或目录列表
+	 */
+	public FTPFile[] lsFiles(String path){
+		String pwd = null;
+		if(StrUtil.isNotBlank(path)) {
+			pwd = pwd();
+			cd(path);
+		}
+		
 		FTPFile[] ftpFiles;
 		try {
 			ftpFiles = this.client.listFiles();
@@ -239,11 +261,12 @@ public class Ftp extends AbstractFtp {
 			throw new FtpException(e);
 		}
 		
-		final List<String> fileNames = new ArrayList<>();
-		for (FTPFile ftpFile : ftpFiles) {
-			fileNames.add(ftpFile.getName());
+		if(StrUtil.isNotBlank(pwd)) {
+			// 回到原目录
+			cd(pwd);
 		}
-		return fileNames;
+		
+		return ftpFiles;
 	}
 
 	@Override
@@ -324,9 +347,15 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
-	 * 上传文件
+	 * 上传文件到指定目录，可选：
 	 * 
-	 * @param path 服务端路径（目录）
+	 * <pre>
+	 * 1. path为null或""上传到当前路径
+	 * 2. path为相对路径则相对于当前路径的子路径
+	 * 3. path为绝对路径则上传到此路径
+	 * </pre>
+	 * 
+	 * @param path 服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param file 文件
 	 * @return 是否上传成功
 	 */
@@ -337,11 +366,17 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
-	 * 上传文件
+	 * 上传文件到指定目录，可选：
+	 * 
+	 * <pre>
+	 * 1. path为null或""上传到当前路径
+	 * 2. path为相对路径则相对于当前路径的子路径
+	 * 3. path为绝对路径则上传到此路径
+	 * </pre>
 	 * 
 	 * @param file 文件
-	 * @param path 服务端路径
-	 * @param fileName 文件名
+	 * @param path 服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param fileName 自定义在服务端保存的文件名
 	 * @return 是否上传成功
 	 */
 	public boolean upload(String path, String fileName, File file) {
@@ -353,9 +388,16 @@ public class Ftp extends AbstractFtp {
 	}
 
 	/**
-	 * 上传文件
+	 * 上传文件到指定目录，可选：
 	 * 
-	 * @param path 服务端路径
+	 * <pre>
+	 * 1. path为null或""上传到当前路径
+	 * 2. path为相对路径则相对于当前路径的子路径
+	 * 3. path为绝对路径则上传到此路径
+	 * </pre>
+	 * 
+	 * 
+	 * @param path 服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param fileName 文件名
 	 * @param fileStream 文件流
 	 * @return 是否上传成功
@@ -366,11 +408,15 @@ public class Ftp extends AbstractFtp {
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
-		mkDirs(path);
-		boolean isOk = cd(path);
-		if(false == isOk) {
-			return false;
+		
+		if(StrUtil.isNotBlank(path)) {
+			mkDirs(path);
+			boolean isOk = cd(path);
+			if(false == isOk) {
+				return false;
+			}
 		}
+		
 		try {
 			return client.storeFile(fileName, fileStream);
 		} catch (IOException e) {
@@ -440,9 +486,12 @@ public class Ftp extends AbstractFtp {
 
 	@Override
 	public void close() throws IOException {
-		this.client.logout();
-		if (this.client.isConnected()) {
-			this.client.disconnect();
+		if(null != this.client) {
+			this.client.logout();
+			if (this.client.isConnected()) {
+				this.client.disconnect();
+			}
+			this.client = null;
 		}
 	}
 }

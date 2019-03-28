@@ -10,10 +10,12 @@
 * 【core】       Img增加round方法，圆角给定图片
 * 【extra】      二维码中的图片做圆角处理
 * 【core】       CsvData实现Iterable接口
+* 【extra】      Ftp增加重连方法（pr#38@Gitee）
 
 ### Bug修复
 * 【core】       修复ReflectUtil新建Map对象错误问题（issue#IUF9O@Gitee）
 * 【core】       修复ImgUtil字体为null导致的空指针问题（issue#IUF3X@Gitee）
+* 【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

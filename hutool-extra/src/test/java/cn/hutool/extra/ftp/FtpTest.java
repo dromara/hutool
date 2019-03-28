@@ -1,5 +1,7 @@
 package cn.hutool.extra.ftp;
 
+import java.util.List;
+
 import org.apache.velocity.texen.util.FileUtil;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,11 +13,24 @@ public class FtpTest {
 	
 	@Test
 	@Ignore
+	public void cdTest() {
+		Ftp ftp = new Ftp("looly.centos");
+		
+		ftp.cd("/file/aaa");
+		Console.log(ftp.pwd());
+		
+		IoUtil.close(ftp);
+	}
+	
+	@Test
+	@Ignore
 	public void uploadTest() {
 		Ftp ftp = new Ftp("looly.centos");
 		
-		boolean upload = ftp.upload("/file/", FileUtil.file("E:/qrcodeWithLogo.jpg"));
+		List<String> ls = ftp.ls("/file");
+		Console.log(ls);
 		
+		boolean upload = ftp.upload("/file/aaa", FileUtil.file("E:/qrcodeWithLogo.jpg"));
 		Console.log(upload);
 		
 		IoUtil.close(ftp);
@@ -24,7 +39,7 @@ public class FtpTest {
 	@Test
 	@Ignore
 	public void reconnectIfTimeoutTest() throws InterruptedException {
-		Ftp ftp = new Ftp("localhost");
+		Ftp ftp = new Ftp("looly.centos");
 
 		Console.log("打印pwd: " + ftp.pwd());
 
@@ -43,12 +58,5 @@ public class FtpTest {
 		Console.log("打印pwd: " + ftp.pwd());
 
 		IoUtil.close(ftp);
-	}
-
-	@Test
-	@Ignore
-	public void initTest() {
-		Ftp ftp = new Ftp("localhost",21,"vpclub-jinan-008","5634156",Ftp.DEFAULT_CHARSET,FtpMode.Passive);
-		Console.log("打印pwd: " + ftp.pwd());
 	}
 }

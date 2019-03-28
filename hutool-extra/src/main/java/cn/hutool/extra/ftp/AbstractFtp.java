@@ -21,17 +21,16 @@ public abstract class AbstractFtp implements Closeable {
 	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8 ;
 	
 	protected String host;
-	
 	protected int port;
 	
 	protected String user;
-	
 	protected String password;
 	
 	protected Charset charset;
 
 	/**
 	 * 如果连接超时的话，重新进行连接
+	 * @since 4.5.2
 	 * 
 	 * @return this
 	 */
@@ -113,9 +112,13 @@ public abstract class AbstractFtp implements Closeable {
 	 * @param dir 文件夹路径，绝对路径
 	 */
 	public void mkDirs(String dir) {
-		final String[] dirs = dir.split("[\\\\/]");
+		final String[] dirs = StrUtil.trim(dir).split("[\\\\/]+");
 
 		final String now = pwd();
+		if(dirs.length > 0 && StrUtil.isEmpty(dirs[0])) {
+			//首位为空，表示以/开头
+			this.cd(StrUtil.SLASH);
+		}
 		for (int i = 0; i < dirs.length; i++) {
 			if (StrUtil.isNotEmpty(dirs[i])) {
 				if (false == cd(dirs[i])) {
