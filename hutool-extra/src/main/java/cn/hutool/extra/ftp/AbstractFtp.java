@@ -19,9 +19,24 @@ import cn.hutool.core.util.StrUtil;
 public abstract class AbstractFtp implements Closeable {
 	
 	public static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8 ;
-
+	
+	protected String host;
+	
+	protected int port;
+	
+	protected String user;
+	
+	protected String password;
+	
 	protected Charset charset;
 
+	/**
+	 * 如果连接超时的话，重新进行连接
+	 * 
+	 * @return this
+	 */
+	public abstract AbstractFtp reconnectIfTimeout();
+	
 	/**
 	 * 打开指定目录
 	 * 
