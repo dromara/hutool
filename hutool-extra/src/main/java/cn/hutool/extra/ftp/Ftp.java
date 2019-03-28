@@ -31,7 +31,7 @@ public class Ftp extends AbstractFtp {
 	public static final int DEFAULT_PORT = 21;
 
 	private FTPClient client;
-	private Charset charset;
+	private FtpMode mode;
 
 	/**
 	 * 构造，匿名登录
@@ -74,8 +74,49 @@ public class Ftp extends AbstractFtp {
 	 * @param charset 编码
 	 */
 	public Ftp(String host, int port, String user, String password, Charset charset) {
+		this(host, port, user, password, charset, null);
+	}
+	
+	/**
+	 * 构造
+	 *
+	 * @param host 域名或IP
+	 * @param port 端口
+	 * @param user 用户名
+	 * @param password 密码
+	 * @param charset 编码
+	 * @param mode 模式
+	 */
+	public Ftp(String host, int port, String user, String password, Charset charset, FtpMode mode) {
+		this.host = host;
+		this.port = port;
+		this.user = user;
+		this.password = password;
 		this.charset = charset;
-		init(host, port, user, password);
+		this.mode = mode;
+		this.init();
+	}
+
+	/**
+	 * 初始化连接
+	 *
+	 * @return this
+	 */
+	public Ftp init() {
+		return this.init(this.host, this.port, this.user, this.password, this.mode);
+	}
+	
+	/**
+	 * 初始化连接
+	 *
+	 * @param host 域名或IP
+	 * @param port 端口
+	 * @param user 用户名
+	 * @param password 密码
+	 * @return this
+	 */
+	public Ftp init(String host, int port, String user, String password) {
+		return this.init(host,port,user,password,null);
 	}
 
 	/**
@@ -85,9 +126,10 @@ public class Ftp extends AbstractFtp {
 	 * @param port 端口
 	 * @param user 用户名
 	 * @param password 密码
+	 * @oaram mode 模式
 	 * @return this
 	 */
-	public Ftp init(String host, int port, String user, String password) {
+	public Ftp init(String host, int port, String user, String password, FtpMode mode) {
 		final FTPClient client = new FTPClient();
 		client.setControlEncoding(this.charset.toString());
 		try {
@@ -108,6 +150,9 @@ public class Ftp extends AbstractFtp {
 			throw new FtpException("Login failed for user [{}], reply code is: [{}]", user, replyCode);
 		}
 		this.client = client;
+		if (mode != null ) {
+			setMode(mode);
+		}
 		return this;
 	}
 
@@ -119,6 +164,7 @@ public class Ftp extends AbstractFtp {
 	 * @since 4.1.19
 	 */
 	public Ftp setMode(FtpMode mode) {
+		this.mode = mode;
 		switch (mode) {
 		case Active:
 			this.client.enterLocalActiveMode();
@@ -126,6 +172,27 @@ public class Ftp extends AbstractFtp {
 		case Passive:
 			this.client.enterLocalPassiveMode();
 			break;
+		}
+		return this;
+	}
+	
+	/**
+	 * 如果连接超时的话，重新进行连接
+	 * 经测试，当连接超时时，client.isConnected()仍然返回ture，无法判断是否连接超时
+	 * 因此，通过发送pwd命令的方式，检查连接是否超时
+	 * 
+	 * @return this
+	 */
+	@Override
+	public Ftp reconnectIfTimeout() {
+		String pwd;
+		try {
+			pwd = pwd();
+		} catch (FtpException fex) {
+			pwd = null;
+		}
+		if (pwd == null) {
+			return this.init();
 		}
 		return this;
 	}

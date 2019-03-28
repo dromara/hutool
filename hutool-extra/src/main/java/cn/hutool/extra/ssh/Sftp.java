@@ -61,6 +61,10 @@ public class Sftp extends AbstractFtp {
 	 */
 	public Sftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
 		this(JschUtil.getSession(sshHost, sshPort, sshUser, sshPass), charset);
+		this.host = sshHost;
+		this.port = sshPort;
+		this.user = sshUser;
+		this.password = sshPass;
 	}
 
 	/**
@@ -101,6 +105,19 @@ public class Sftp extends AbstractFtp {
 	}
 	// ---------------------------------------------------------------------------------------- Constructor end
 
+	/**
+	 * 如果连接超时的话，重新进行连接
+	 * 经测试，当连接超时时，isConnected()仍然返回true，pwd命令也能正常返回
+	 * 因此，利用发送cd命令的返回结果，来判断是否连接超时
+	 */
+	@Override
+	public Sftp reconnectIfTimeout() {
+		if (false == this.cd("/")) {
+			return new Sftp(host, port, user, password,charset);
+		}
+        return this;
+    }
+	
 	/**
 	 * 获取SFTP通道客户端
 	 * 
