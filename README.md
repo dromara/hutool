@@ -26,6 +26,9 @@
 	<a target="_blank" href='https://github.com/looly/hutool'>
 		<img src="https://img.shields.io/github/stars/looly/hutool.svg?style=social" alt="github star"></img>
 	</a>
+	<a target="_blank" href='https://app.netlify.com/sites/hutool/deploys'>
+		<img src="https://api.netlify.com/api/v1/badges/7e0824f9-5f9a-4df0-89dd-b2fccfbeccb1/deploy-status" alt="netlify"></img>
+	</a>
 </p>
 <p align="center">
 	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> --
