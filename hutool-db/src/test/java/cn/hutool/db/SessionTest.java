@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.VoidFunc;
+import cn.hutool.core.lang.func.VoidFunc;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
