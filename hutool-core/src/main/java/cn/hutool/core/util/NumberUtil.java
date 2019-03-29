@@ -43,6 +43,60 @@ public class NumberUtil {
 	private static final int DEFAUT_DIV_SCALE = 10;
 
 	/**
+	 * null 转 0
+	 * @param num 待检测的包装对象
+	 * @return 非 null 的包装对象
+	 */
+	public static Byte null2Zero(Byte num) {
+		return num == null ? 0 : num;
+	}
+
+	/**
+	 * null 转 0
+	 * @param num 待检测的包装对象
+	 * @return 非 null 的包装对象
+	 */
+	public static Short null2Zero(Short num) {
+		return num == null ? 0 : num;
+	}
+
+	/**
+	 * null 转 0
+	 * @param num 待检测的包装对象
+	 * @return 非 null 的包装对象
+	 */
+	public static Integer null2Zero(Integer num) {
+		return num == null ? 0 : num;
+	}
+
+	/**
+	 * null 转 0
+	 * @param num 待检测的包装对象
+	 * @return 非 null 的包装对象
+	 */
+	public static Long null2Zero(Long num){
+		return num == null ? 0 : num;
+	}
+
+	/**
+	 * null 转 0
+	 * @param num 待检测的包装对象
+	 * @return 非 null 的包装对象
+	 */
+	public static Float null2Zero(Float num) {
+		return num == null ? 0 : num;
+	}
+
+	/**
+	 * null 转 0
+	 * @param num 待检测的包装对象
+	 * @return 非 null 的包装对象
+	 */
+	public static Double null2Zero(Double num) {
+		return num == null ? 0 : num;
+	}
+
+	/**
 	 * 提供精确的加法运算
 	 * 
 	 * @param v1 被加数
