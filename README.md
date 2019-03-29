@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="https://hutool.cn/"><img src="https://hutool.cn/images/logo.jpg" width="400"></a>
+	<a href="https://hutool.cn/"><img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/logo.jpg" width="400"></a>
 </p>
 <p align="center">
 	<strong>A set of tools that keep Java sweet.</strong>
@@ -31,7 +31,7 @@
 	</a>
 </p>
 <p align="center">
-	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> --
+	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> | <a href="https://www.hutool.club/">https://www.hutool.club/</a> --
 </p>
 <p align="center">
 	-- QQ群②：<a href="https://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
@@ -75,7 +75,8 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 
 ## 文档 
 
-[中文文档](https://www.hutool.cn/docs/#/)
+[中文文档](https://www.hutool.cn/docs/)
+[中文文档（备用）](https://www.hutool.club/docs/)
 
 [参考API](https://apidoc.gitee.com/loolly/hutool/)
 
@@ -116,6 +117,8 @@ compile 'cn.hutool:hutool-all:4.5.3'
 ```sh
 bin/hutool.sh install
 ```
+
+然后就可以使用Maven引入了。
 
 -------------------------------------------------------------------------------
 
