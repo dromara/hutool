@@ -15,7 +15,6 @@ import java.util.TreeMap;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
@@ -148,11 +147,7 @@ public class MapUtil {
 		if (mapType.isAssignableFrom(AbstractMap.class)) {
 			return new HashMap<>();
 		} else {
-			try {
-				return (Map<K, V>) ReflectUtil.newInstance(mapType);
-			} catch (Exception e) {
-				throw new UtilException(e);
-			}
+			return (Map<K, V>) ReflectUtil.newInstance(mapType);
 		}
 	}
 

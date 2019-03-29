@@ -39,7 +39,6 @@
     * [数字工具-NumberUtil](core/工具类/数字工具-NumberUtil.md)
     * [数组工具-ArrayUtil](core/工具类/数组工具-ArrayUtil.md)
     * [随机工具-RandomUtil](core/工具类/随机工具-RandomUtil.md)
-    * [图片工具-ImageUtil](core/工具类/图片工具-ImageUtil.md)
     * [网络工具-NetUtil](core/工具类/网络工具-NetUtil.md)
     * [唯一ID工具-IdUtil](core/工具类/唯一ID工具-IdUtil.md)
     * [压缩工具-ZipUtil](core/工具类/压缩工具-ZipUtil.md)
@@ -86,6 +85,9 @@
     * [数学相关-MathUtil](core/数学/数学相关-MathUtil.md)
   * 线程和并发
     * [线程工具-ThreadUtil](core/线程和并发/线程工具-ThreadUtil.md)
+  * 图片
+    * [图片工具-ImgUtil](core/图片/图片工具-ImgUtil.md)
+    * [图片编辑器-Img](core/图片/图片编辑器-Img.md)
 * 配置文件(Hutool-setting）
   * [概述](setting/概述.md)
   * [设置文件-Setting](setting/设置文件-Setting.md)

@@ -7,7 +7,7 @@ import java.sql.Savepoint;
 
 import javax.sql.DataSource;
 
-import cn.hutool.core.lang.VoidFunc;
+import cn.hutool.core.lang.func.VoidFunc;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;

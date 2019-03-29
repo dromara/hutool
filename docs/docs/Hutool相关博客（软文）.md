@@ -29,3 +29,4 @@ Hutool相关博客（软文）
 - [Halo](https://github.com/ruibaby/halo)
 - [RuoYi](https://github.com/lerry903/RuoYi)
 - [seckill](https://github.com/colg-cloud/seckill)
+- [JustAuth](https://gitee.com/yadong.zhang/JustAuth)

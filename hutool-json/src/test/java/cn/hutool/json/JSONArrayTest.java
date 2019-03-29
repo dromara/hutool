@@ -12,6 +12,7 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.json.test.bean.Exam;
 import cn.hutool.json.test.bean.JsonNode;
@@ -87,6 +88,7 @@ public class JSONArrayTest {
 		
 		JSONArray array = JSONUtil.parseArray(jsonArr);
 		List<User> userList = JSONUtil.toList(array, User.class);
+		
 		Assert.assertFalse(userList.isEmpty());
 		Assert.assertEquals(User.class, userList.get(0).getClass());
 		
@@ -95,6 +97,24 @@ public class JSONArrayTest {
 		
 		Assert.assertEquals("test1", userList.get(0).getName());
 		Assert.assertEquals("test2", userList.get(1).getName());
+	}
+	
+	@Test
+	public void toDictListTest() {
+		String jsonArr = "[{\"id\":111,\"name\":\"test1\"},{\"id\":112,\"name\":\"test2\"}]";
+		
+		JSONArray array = JSONUtil.parseArray(jsonArr);
+		
+		List<Dict> list = JSONUtil.toList(array, Dict.class);
+		
+		Assert.assertFalse(list.isEmpty());
+		Assert.assertEquals(Dict.class, list.get(0).getClass());
+		
+		Assert.assertEquals(Integer.valueOf(111), list.get(0).getInt("id"));
+		Assert.assertEquals(Integer.valueOf(112), list.get(1).getInt("id"));
+		
+		Assert.assertEquals("test1", list.get(0).getStr("name"));
+		Assert.assertEquals("test2", list.get(1).getStr("name"));
 	}
 
 	@Test

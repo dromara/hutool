@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import cn.hutool.core.lang.MurmurHash;
 
@@ -24,14 +27,16 @@ import cn.hutool.core.lang.MurmurHash;
  */
 public class Simhash {
 
+	private final int bitNum = 64;
+	/** 存储段数，默认按照4段进行simhash存储 */
+	private final int fracCount;
+	private final int fracBitNum;
+	/** 汉明距离的衡量标准，小于此距离标准表示相似 */
+	private final int hammingThresh;
+	
 	/** 按照分段存储simhash，查找更快速 */
 	private List<Map<String, List<Long>>> storage;
-	private int bitNum = 64;
-	/** 存储段数，默认按照4段进行simhash存储 */
-	private int fracCount;
-	private int fracBitNum;
-	/** 汉明距离的衡量标准，小于此距离标准表示相似 */
-	private int hammingThresh;
+	private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
 	/**
 	 * 构造
@@ -99,17 +104,23 @@ public class Simhash {
 
 		String frac;
 		Map<String, List<Long>> fracMap;
-		for (int i = 0; i < fracCount; i++) {
-			frac = fracList.get(i);
-			fracMap = storage.get(i);
-			if (fracMap.containsKey(frac)) {
-				for (Long simhash2 : fracMap.get(frac)) {
-					// 当汉明距离小于标准时相似
-					if (hamming(simhash, simhash2) < hammingThresh) {
-						return true;
+		final ReadLock readLock = this.lock.readLock();
+		readLock.lock();
+		try {
+			for (int i = 0; i < fracCount; i++) {
+				frac = fracList.get(i);
+				fracMap = storage.get(i);
+				if (fracMap.containsKey(frac)) {
+					for (Long simhash2 : fracMap.get(frac)) {
+						// 当汉明距离小于标准时相似
+						if (hamming(simhash, simhash2) < hammingThresh) {
+							return true;
+						}
 					}
 				}
 			}
+		} finally {
+			readLock.unlock();
 		}
 		return false;
 	}
@@ -120,23 +131,32 @@ public class Simhash {
 	 * @param simhash Simhash值
 	 */
 	public void store(Long simhash) {
+		final int fracCount = this.fracCount;
+		final List<Map<String, List<Long>>> storage = this.storage;
 		final List<String> lFrac = splitSimhash(simhash);
+		
 		String frac;
 		Map<String, List<Long>> fracMap;
-		for (int i = 0; i < fracCount; i++) {
-			frac = lFrac.get(i);
-			fracMap = storage.get(i);
-			if (fracMap.containsKey(frac)) {
-				fracMap.get(frac).add(simhash);
-			} else {
-				final List<Long> ls = new ArrayList<Long>();
-				ls.add(simhash);
-				fracMap.put(frac, ls);
+		final WriteLock writeLock = this.lock.writeLock();
+		writeLock.lock();
+		try {
+			for (int i = 0; i < fracCount; i++) {
+				frac = lFrac.get(i);
+				fracMap = storage.get(i);
+				if (fracMap.containsKey(frac)) {
+					fracMap.get(frac).add(simhash);
+				} else {
+					final List<Long> ls = new ArrayList<Long>();
+					ls.add(simhash);
+					fracMap.put(frac, ls);
+				}
 			}
+		} finally {
+			writeLock.unlock();
 		}
-
 	}
 
+	//------------------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 计算汉明距离
 	 * 
@@ -175,4 +195,5 @@ public class Simhash {
 		}
 		return ls;
 	}
+	//------------------------------------------------------------------------------------------------------ Private method end
 }

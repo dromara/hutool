@@ -1683,14 +1683,10 @@ public class CollUtil {
 			//其它类型按照单一元素处理
 			iter = CollUtil.newArrayList(value).iterator();
 		}
-
+		
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
 		while (iter.hasNext()) {
-			try {
-				collection.add((T) convert.convert(elementType, iter.next()));
-			} catch (Exception e) {
-				throw new UtilException(e);
-			}
+			collection.add((T) convert.convert(elementType, iter.next()));
 		}
 
 		return collection;

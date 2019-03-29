@@ -22,6 +22,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 
+import cn.hutool.core.img.Img;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.CharsetUtil;
 
@@ -120,7 +121,7 @@ public class QrCodeUtil {
 		final BufferedImage image = generate(content, config);
 		ImgUtil.write(image, imageType, out);
 	}
-	
+
 	/**
 	 * 生成二维码图片
 	 * 
@@ -132,7 +133,7 @@ public class QrCodeUtil {
 	public static BufferedImage generate(String content, int width, int height) {
 		return generate(content, new QrConfig(width, height));
 	}
-	
+
 	/**
 	 * 生成二维码或条形码图片
 	 * 
@@ -186,7 +187,12 @@ public class QrCodeUtil {
 				height = qrHeight / config.ratio;
 				width = logoImg.getWidth(null) * height / logoImg.getHeight(null);
 			}
-			ImgUtil.pressImage(image, logoImg, new Rectangle(width, height), 1);
+
+			Img.from(image).pressImage(//
+					Img.from(logoImg).round(0.3).getImg(), // 圆角
+					new Rectangle(width, height), //
+					1//
+			);
 		}
 		return image;
 	}
@@ -274,7 +280,7 @@ public class QrCodeUtil {
 	public static String decode(File qrCodeFile) {
 		return decode(ImgUtil.read(qrCodeFile));
 	}
-	
+
 	/**
 	 * 将二维码图片解码为文本
 	 * 

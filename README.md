@@ -1,5 +1,5 @@
 <p align="center">
-	<a href="https://hutool.cn/"><img src="https://hutool.cn/images/logo.jpg" width="400"></a>
+	<a href="https://hutool.cn/"><img src="https://cdn.jsdelivr.net/gh/looly/hutool-site/images/logo.jpg" width="400"></a>
 </p>
 <p align="center">
 	<strong>A set of tools that keep Java sweet.</strong>
@@ -26,9 +26,12 @@
 	<a target="_blank" href='https://github.com/looly/hutool'>
 		<img src="https://img.shields.io/github/stars/looly/hutool.svg?style=social" alt="github star"></img>
 	</a>
+	<a target="_blank" href='https://app.netlify.com/sites/hutool/deploys'>
+		<img src="https://api.netlify.com/api/v1/badges/7e0824f9-5f9a-4df0-89dd-b2fccfbeccb1/deploy-status" alt="netlify"></img>
+	</a>
 </p>
 <p align="center">
-	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> --
+	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> | <a href="https://www.hutool.club/">https://www.hutool.club/</a> --
 </p>
 <p align="center">
 	-- QQ群②：<a href="https://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
@@ -72,7 +75,8 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 
 ## 文档 
 
-[中文文档](https://www.hutool.cn/docs/#/)
+[中文文档](https://www.hutool.cn/docs/)
+[中文文档（备用）](https://www.hutool.club/docs/)
 
 [参考API](https://apidoc.gitee.com/loolly/hutool/)
 
@@ -87,21 +91,21 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.5.2</version>
+    <version>4.5.3</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.5.2'
+compile 'cn.hutool:hutool-all:4.5.3'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.5.2/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.5.2/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.5.3/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.5.3/)
 
 > 注意
 > Hutool只支持JDK7+，对应Android平台没有测试，部分方法并不支持。
@@ -113,6 +117,8 @@ compile 'cn.hutool:hutool-all:4.5.2'
 ```sh
 bin/hutool.sh install
 ```
+
+然后就可以使用Maven引入了。
 
 -------------------------------------------------------------------------------
 
