@@ -286,6 +286,16 @@ public class Session extends AbstractDb implements Closeable {
 
 	@Override
 	public void closeConnection(Connection conn) {
+		try {
+			if(conn != null && false == conn.getAutoCommit()) {
+				// 事务中的Session忽略关闭事件
+				return;
+			}
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		// 普通请求关闭（或归还）连接
 		ThreadLocalConnection.INSTANCE.close(this.ds);
 	}
 
