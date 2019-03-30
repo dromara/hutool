@@ -15,7 +15,7 @@ import com.jcraft.jsch.Session;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.LocalPortGenerater;
+import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
