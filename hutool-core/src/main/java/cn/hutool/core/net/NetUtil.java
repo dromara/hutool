@@ -1,4 +1,4 @@
-package cn.hutool.core.util;
+package cn.hutool.core.net;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,12 +17,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
+import java.util.TreeSet;
+
+import javax.net.ServerSocketFactory;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 网络相关工具
@@ -31,7 +36,13 @@ import cn.hutool.core.lang.Validator;
  *
  */
 public class NetUtil {
+
 	public final static String LOCAL_IP = "127.0.0.1";
+
+	/** 默认最小端口，1024 */
+	public static final int PORT_RANGE_MIN = 1024;
+	/** 默认最大端口，65535 */
+	public static final int PORT_RANGE_MAX = 0xFFFF;
 
 	/**
 	 * 根据long值获取ip v4地址
@@ -77,7 +88,8 @@ public class NetUtil {
 	}
 
 	/**
-	 * 检测本地端口可用性
+	 * 检测本地端口可用性<br>
+	 * 来自org.springframework.util.SocketUtils
 	 * 
 	 * @param port 被检测的端口
 	 * @return 是否可用
@@ -88,23 +100,91 @@ public class NetUtil {
 			return false;
 		}
 		try {
-			new Socket(LOCAL_IP, port).close();
-			// socket链接正常，说明这个端口正在使用
-			return false;
-		} catch (Exception e) {
+			ServerSocketFactory.getDefault().createServerSocket(port, 1, InetAddress.getByName(LOCAL_IP)).close();
 			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 
 	/**
-	 * 是否为有效的端口
+	 * 是否为有效的端口<br>
+	 * 此方法并不检查端口是否被占用
 	 * 
 	 * @param port 端口号
 	 * @return 是否有效
 	 */
 	public static boolean isValidPort(int port) {
 		// 有效端口是0～65535
-		return port >= 0 && port <= 0xFFFF;
+		return port >= 0 && port <= PORT_RANGE_MAX;
+	}
+
+	/**
+	 * 查找1024~65535范围内的可用端口<br>
+	 * 此方法只检测给定范围内的随机一个端口，检测65535-1024次<br>
+	 * 来自org.springframework.util.SocketUtils
+	 * 
+	 * @return 可用的端口
+	 * @since 4.5.4
+	 */
+	public static int getUsableLocalPort() {
+		return getUsableLocalPort(PORT_RANGE_MIN);
+	}
+
+	/**
+	 * 查找指定范围内的可用端口，最大值为65535<br>
+	 * 此方法只检测给定范围内的随机一个端口，检测65535-minPort次<br>
+	 * 来自org.springframework.util.SocketUtils
+	 * 
+	 * @param minPort 端口最小值（包含）
+	 * @return 可用的端口
+	 * @since 4.5.4
+	 */
+	public static int getUsableLocalPort(int minPort) {
+		return getUsableLocalPort(minPort, PORT_RANGE_MAX);
+	}
+
+	/**
+	 * 查找指定范围内的可用端口<br>
+	 * 此方法只检测给定范围内的随机一个端口，检测maxPort-minPort次<br>
+	 * 来自org.springframework.util.SocketUtils
+	 * 
+	 * @param minPort 端口最小值（包含）
+	 * @param maxPort 端口最大值（包含）
+	 * @return 可用的端口
+	 * @since 4.5.4
+	 */
+	public static int getUsableLocalPort(int minPort, int maxPort) {
+		for (int i = minPort; i <= maxPort; i++) {
+			if (isUsableLocalPort(RandomUtil.randomInt(minPort, maxPort + 1))) {
+				return i;
+			}
+		}
+
+		throw new UtilException("Could not find an available port in the range [{}, {}] after {} attempts", minPort, maxPort, maxPort - minPort);
+	}
+
+	/**
+	 * 获取多个本地可用端口<br>
+	 * 来自org.springframework.util.SocketUtils
+	 * 
+	 * @param minPort 端口最小值（包含）
+	 * @param maxPort 端口最大值（包含）
+	 * @return 可用的端口
+	 * @since 4.5.4
+	 */
+	public static TreeSet<Integer> getUsableLocalPorts(int numRequested, int minPort, int maxPort) {
+		final TreeSet<Integer> availablePorts = new TreeSet<>();
+		int attemptCount = 0;
+		while ((++attemptCount <= numRequested + 100) && availablePorts.size() < numRequested) {
+			availablePorts.add(getUsableLocalPort(minPort, maxPort));
+		}
+
+		if (availablePorts.size() != numRequested) {
+			throw new UtilException("Could not find {} available  ports in the range [{}, {}]", numRequested, minPort, maxPort);
+		}
+
+		return availablePorts;
 	}
 
 	/**
@@ -375,7 +455,7 @@ public class NetUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 创建 {@link InetSocketAddress}
 	 * 
@@ -385,7 +465,7 @@ public class NetUtil {
 	 * @since 3.3.0
 	 */
 	public static InetSocketAddress createAddress(String host, int port) {
-		if(StrUtil.isBlank(host)) {
+		if (StrUtil.isBlank(host)) {
 			return new InetSocketAddress(port);
 		}
 		return new InetSocketAddress(host, port);
@@ -464,7 +544,7 @@ public class NetUtil {
 	public static String idnToASCII(String unicode) {
 		return IDN.toASCII(unicode);
 	}
-	
+
 	/**
 	 * 从多级反向代理中获得第一个非unknown IP地址
 	 * 

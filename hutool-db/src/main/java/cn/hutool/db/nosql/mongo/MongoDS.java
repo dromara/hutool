@@ -15,7 +15,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 import cn.hutool.core.exceptions.NotInitedException;
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.log.Log;

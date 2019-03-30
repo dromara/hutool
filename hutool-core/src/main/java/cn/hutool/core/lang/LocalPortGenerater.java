@@ -2,7 +2,7 @@ package cn.hutool.core.lang;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 
 /**
  * 本地端口生成器<br>

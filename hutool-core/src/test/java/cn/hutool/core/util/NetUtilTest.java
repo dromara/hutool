@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.lang.PatternPool;
-import cn.hutool.core.util.NetUtil;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ReUtil;
 
 /**
