@@ -74,7 +74,7 @@ public class VelocityEngine implements TemplateEngine {
 		// 编码
 		final String charsetStr = config.getCharset().toString();
 		ve.setProperty(Velocity.INPUT_ENCODING, charsetStr);
-		ve.setProperty(Velocity.OUTPUT_ENCODING, charsetStr);
+		// ve.setProperty(Velocity.OUTPUT_ENCODING, charsetStr);
 		ve.setProperty(Velocity.FILE_RESOURCE_LOADER_CACHE, true); // 使用缓存
 
 		// loader
@@ -96,7 +96,7 @@ public class VelocityEngine implements TemplateEngine {
 			break;
 		case STRING:
 			ve.setProperty(Velocity.RESOURCE_LOADER, "str");
-			 ve.setProperty("str.resource.loader.class", SimpleStringResourceLoader.class.getName());
+			ve.setProperty("str.resource.loader.class", SimpleStringResourceLoader.class.getName());
 			break;
 		default:
 			break;

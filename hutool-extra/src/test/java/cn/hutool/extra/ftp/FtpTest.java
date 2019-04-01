@@ -2,10 +2,10 @@ package cn.hutool.extra.ftp;
 
 import java.util.List;
 
-import org.apache.velocity.texen.util.FileUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 

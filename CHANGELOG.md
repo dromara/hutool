@@ -21,6 +21,7 @@
 * 【extra】      二维码中的图片做圆角处理
 * 【core】       CsvData实现Iterable接口
 * 【extra】      Ftp增加重连方法（pr#38@Gitee）
+* 【extra】      Velocity升级至2.x，不再兼容1.7
 
 ### Bug修复
 * 【core】       修复ReflectUtil新建Map对象错误问题（issue#IUF9O@Gitee）
