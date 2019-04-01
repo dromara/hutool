@@ -347,6 +347,18 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 	
 	/**
+	 * 清空标题别名，key为Map中的key，value为别名
+	 * 
+	 * @param headerAlias 标题别名
+	 * @return this
+	 * @since 4.5.4
+	 */
+	public ExcelWriter clearHeaderAlias() {
+		this.headerAlias = null;
+		return this;
+	}
+	
+	/**
 	 * 设置是否只保留别名中的字段值，如果为true，则不设置alias的字段将不被输出，false表示原样输出
 	 * 
 	 * @param isOnlyAlias 是否只保留别名中的字段值

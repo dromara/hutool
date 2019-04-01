@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包
+* 【core】     FileUtil增加isSub方法（pr#39@Gitee）
 
 ### Bug修复
 * 【db】        修复Session中事务问题（issue#IUQMN@Gitee）

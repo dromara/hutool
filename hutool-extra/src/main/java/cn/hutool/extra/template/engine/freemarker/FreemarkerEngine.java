@@ -87,7 +87,11 @@ public class FreemarkerEngine implements TemplateEngine {
 			}
 			break;
 		case WEB_ROOT:
-			// cfg.setTemplateLoader(new WebappTemplateLoader(null, config.getPath()));
+			 try {
+				 cfg.setTemplateLoader(new FileTemplateLoader(FileUtil.file(FileUtil.getWebRoot(), config.getPath())));
+			 } catch (IOException e) {
+				 throw new IORuntimeException(e);
+			 }
 			break;
 		case STRING:
 			cfg.setTemplateLoader(new SimpleStringTemplateLoader());
