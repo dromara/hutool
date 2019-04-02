@@ -187,7 +187,7 @@ public class StatementUtil {
 
 		sql = sql.trim();
 		SqlLog.INSTASNCE.log(sql, params);
-		CallableStatement call = conn.prepareCall(sql);
+		final CallableStatement call = conn.prepareCall(sql);
 		fillParams(call, params);
 		return call;
 	}
