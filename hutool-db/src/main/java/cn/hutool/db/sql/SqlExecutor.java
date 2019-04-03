@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
+import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.handler.RsHandler;
@@ -160,6 +161,21 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static int[] executeBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
+		return executeBatch(conn, sql, new ArrayIter<Object[]>(paramsBatch));
+	}
+	
+	/**
+	 * 批量执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sql SQL
+	 * @param paramsBatch 批量的参数
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 */
+	public static int[] executeBatch(Connection conn, String sql, Iterable<Object[]> paramsBatch) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatementForBatch(conn, sql, paramsBatch);
