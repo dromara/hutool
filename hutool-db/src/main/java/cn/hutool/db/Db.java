@@ -166,8 +166,7 @@ public class Db extends AbstractDb {
 		}
 
 		// 开始事务
-		Boolean autoCommit = null;
-		autoCommit = conn.getAutoCommit();
+		boolean autoCommit = conn.getAutoCommit();
 		if (autoCommit) {
 			conn.setAutoCommit(false);
 		}

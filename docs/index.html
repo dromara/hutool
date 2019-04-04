@@ -55,17 +55,17 @@
 
 		<!-- Loader -->
 		<div class="fh5co-loader"></div>
-		<div class="fh5co-page">
+		<div class="fh5co-page" id="app">
 
 			<div id="fh5co-container">
-				<div id="fh5co-home" class="js-fullheight-home" data-section="home" style="background-image: url(https://bing.ioliu.cn/v1?w=1920&h=1080);" data-stellar-background-ratio="0.5">
+				<div id="fh5co-home" class="js-fullheight-home" data-section="home" style="background-image: url(https://cdn.jsdelivr.net/gh/looly/bing-bg/bing.jpg);" data-stellar-background-ratio="0.5">
 					<div class="container">
 						<div class="col-md-6">
 							<div class="js-fullheight-home fh5co-copy">
 								<div class="js-fullheight-home fh5co-copy-inner" style="padding-left: 11%; background-color: rgba(0,106,180,0.4)">
 									<h1>
 										<b style="font-size: 180%;margin-left:-10px">Hutool</b>
-										<span style="font-size: 50%">v4.5.2</span>
+										<span style="font-size: 50%">v{{version}}</span>
 									</h1>
 									<h2>A set of tools that keep Java sweet.</h2>
 									<div style="margin-top: 100px">
@@ -146,12 +146,12 @@
 									<code>&lt;dependency&gt;
 									      &lt;groupId&gt;cn.hutool&lt;/groupId&gt;
 									      &lt;artifactId&gt;hutool-all&lt;/artifactId&gt;
-									      &lt;version&gt;4.5.2&lt;/version&gt;
+									      &lt;version&gt;{{version}}&lt;/version&gt;
 									  &lt;/dependency&gt;</code>
 								</pre>
 									<div>Gradle:</div>
 									<pre style="background: none; padding: 0;margin: 0;border: none;">
-									<code>compile 'cn.hutool:hutool-all:4.5.2'</code>
+									<code>compile 'cn.hutool:hutool-all:{{version}}'</code>
 								</pre>
 									<p>
 										<a href="http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22hutool-all%22" class="btn btn-primary btn-outline" target="_blank">从Maven安装</a>
@@ -457,6 +457,8 @@
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
 	</div>
 	
+	<!-- vue -->
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
 	<!-- jQuery -->
 	<script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
 	<!-- jQuery Easing -->
@@ -473,6 +475,16 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 	<!-- Main JS -->
 	<script src="https://cdn.jsdelivr.net/gh/looly/hutool-site/js/main.min.js"></script>
+	<!-- version -->
+	<script src="https://cdn.jsdelivr.net/gh/looly/hutool-site/js/version.min.js"></script>
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				version: version
+			}
+		});
+	</script>
 	<!-- gitter -->
 	<script>
 		((window.gitter = {}).chat = {}).options = {
