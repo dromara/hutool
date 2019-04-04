@@ -352,7 +352,7 @@ public class XmlUtil {
 		final TransformerFactory factory = TransformerFactory.newInstance();
 		try {
 			final Transformer xformer = factory.newTransformer();
-			if(indent > 0) {
+			if (indent > 0) {
 				xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 				xformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
 			}

@@ -20,6 +20,10 @@ import cn.hutool.core.map.MapUtil;
  *
  */
 public class XmlUtilTest {
+	
+	@Test
+	public void buildTest() {
+	}
 
 	@Test
 	public void parseTest() {
