@@ -35,8 +35,8 @@ public class MySQLTest {
 	 * 
 	 * @throws SQLException
 	 */
-	@Test
-//	@Ignore
+	@Test(expected=SQLException.class)
+	@Ignore
 	public void txTest() throws SQLException {
 		Db.use("mysql").tx(new VoidFunc1<Db>() {
 			
