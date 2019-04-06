@@ -20,6 +20,7 @@ public final class CronUtil {
 
 	/** Crontab配置文件 */
 	public final static String CRONTAB_CONFIG_PATH = "config/cron.setting";
+	public final static String CRONTAB_CONFIG_PATH2 = "cron.setting";
 
 	private final static Scheduler scheduler = new Scheduler();
 	private static Setting crontabSetting;
@@ -147,7 +148,12 @@ public final class CronUtil {
 	 */
 	synchronized public static void start(boolean isDeamon) {
 		if (null == crontabSetting) {
+			// 尝试查找config/cron.setting
 			setCronSetting(CRONTAB_CONFIG_PATH);
+		}
+		// 尝试查找cron.setting
+		if (null == crontabSetting) {
+			setCronSetting(CRONTAB_CONFIG_PATH2);
 		}
 		if (scheduler.isStarted()) {
 			throw new UtilException("Scheduler has been started, please stop it first!");

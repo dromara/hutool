@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
@@ -666,7 +667,11 @@ public class ReUtil {
 		final Matcher matcher = pattern.matcher(str);
 		final StringBuffer buffer = new StringBuffer();
 		while (matcher.find()) {
-			matcher.appendReplacement(buffer, replaceFun.call(matcher));
+			try {
+				matcher.appendReplacement(buffer, replaceFun.call(matcher));
+			} catch (Exception e) {
+				throw new UtilException(e);
+			}
 		}
 		matcher.appendTail(buffer);
 		return buffer.toString();

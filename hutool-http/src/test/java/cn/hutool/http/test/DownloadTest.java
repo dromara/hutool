@@ -15,7 +15,7 @@ import cn.hutool.http.HttpUtil;
  * @author looly
  */
 public class DownloadTest {
-	
+
 	@Test
 	@Ignore
 	public void downloadPicTest() {
@@ -23,17 +23,14 @@ public class DownloadTest {
 		HttpUtil.downloadFile(url, "e:/pic/t3.jpg");
 		Console.log("ok");
 	}
-	
+
 	@Test
 	@Ignore
 	public void downloadSizeTest() {
 		String url = "https://res.t-io.org/im/upload/img/67/8948/1119501/88097554/74541310922/85/231910/366466 - 副本.jpg";
-		HttpRequest
-				.get(url)
-				.setSSLProtocol("TLSv1.2")
-				.executeAsync().writeBody("e:/pic/366466.jpg");
+		HttpRequest.get(url).setSSLProtocol("TLSv1.2").executeAsync().writeBody("e:/pic/366466.jpg");
 	}
-	
+
 	@Test
 	@Ignore
 	public void downloadTest1() {

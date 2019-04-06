@@ -1,5 +1,7 @@
 package cn.hutool.http;
 
+import java.nio.charset.Charset;
+
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -32,6 +34,15 @@ public enum ContentType {
 	}
 	
 	/**
+	 * 输出Content-Type字符串，附带编码信息
+	 * @param charset 编码
+	 * @return Content-Type字符串
+	 */
+	public String toString(Charset charset) {
+		return build(this.value, charset);
+	}
+	
+	/**
 	 * 是否为默认Content-Type，默认包括<code>null</code>和application/x-www-form-urlencoded
 	 * 
 	 * @param contentType 内容类型
@@ -49,7 +60,7 @@ public enum ContentType {
 	 * @return 是否为application/x-www-form-urlencoded
 	 */
 	public static boolean isFormUrlEncoed(String contentType) {
-		return FORM_URLENCODED.toString().equals(contentType);
+		return StrUtil.startWithIgnoreCase(contentType, FORM_URLENCODED.toString());
 	}
 
 	/**
@@ -83,5 +94,17 @@ public enum ContentType {
 			}
 		}
 		return contentType;
+	}
+	
+	/**
+	 * 输出Content-Type字符串，附带编码信息
+	 * 
+	 * @param contentType Content-Type类型
+	 * @param charset 编码
+	 * @return Content-Type字符串
+	 * @since 4.5.4
+	 */
+	public static String build(String contentType, Charset charset) {
+		return StrUtil.format("{};charset={}", contentType, charset.name());
 	}
 }

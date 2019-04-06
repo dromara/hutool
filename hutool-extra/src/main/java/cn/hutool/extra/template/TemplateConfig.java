@@ -76,7 +76,10 @@ public class TemplateConfig implements Serializable {
 	 * @since 4.1.11
 	 */
 	public String getCharsetStr() {
-		return charset.toString();
+		if(null == this.charset) {
+			return null;
+		}
+		return this.charset.toString();
 	}
 
 	/**

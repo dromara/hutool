@@ -3,6 +3,25 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.5.4
+
+### 新特性
+* 【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包
+* 【core】     FileUtil增加isSub方法（pr#39@Gitee）
+* 【core】     增加VoidFunc
+* 【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）
+* 【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）
+* 【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）
+* 【http】      添加SoapClient，删除SoapRequest
+
+### Bug修复
+* 【db】        修复Session中事务问题（issue#IUQMN@Gitee）
+* 【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）
+* 【http】      修复form方法使用Resource可能导致的空指针问题
+* 【crypto】   修复SM2Engine逻辑错误（感谢bcgit/bc-java）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.5.3
 
 ### 新特性
@@ -11,10 +30,12 @@
 * 【extra】      二维码中的图片做圆角处理
 * 【core】       CsvData实现Iterable接口
 * 【extra】      Ftp增加重连方法（pr#38@Gitee）
+* 【extra】      Velocity升级至2.x，不再兼容1.7
 
 ### Bug修复
 * 【core】       修复ReflectUtil新建Map对象错误问题（issue#IUF9O@Gitee）
 * 【core】       修复ImgUtil字体为null导致的空指针问题（issue#IUF3X@Gitee）
+* 【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）
 * 【extra】      修复Ftp中文件上传mkdirs方法创建多余文件夹的问题（issue#ITAYV@Gitee）
 
 -------------------------------------------------------------------------------------------------------------

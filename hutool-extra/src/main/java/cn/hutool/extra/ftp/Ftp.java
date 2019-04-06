@@ -126,7 +126,7 @@ public class Ftp extends AbstractFtp {
 	 * @param port 端口
 	 * @param user 用户名
 	 * @param password 密码
-	 * @oaram mode 模式
+	 * @param mode 模式
 	 * @return this
 	 */
 	public Ftp init(String host, int port, String user, String password, FtpMode mode) {

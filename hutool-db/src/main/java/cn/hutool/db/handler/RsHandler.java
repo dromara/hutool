@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 /**
  * 结果集处理接口<br>
+ * 此接口用于实现{@link ResultSet} 转换或映射为用户指定的pojo对象
+ * 
  * 默认实现有：
  * @see EntityHandler
  * @see EntityListHandler

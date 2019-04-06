@@ -662,6 +662,18 @@ public class MapUtil {
 	public static MapProxy createProxy(Map<?, ?> map) {
 		return MapProxy.create(map);
 	}
+	
+	/**
+	 * 创建Map包装类MapWrapper<br>
+	 * {@link MapWrapper}对Map做一次包装
+	 * 
+	 * @param map 被代理的Map
+	 * @return {@link MapWrapper}
+	 * @since 4.5.4
+	 */
+	public static <K, V> MapWrapper<K, V> wrap(Map<K, V> map) {
+		return new MapWrapper<K, V>(map);
+	}
 
 	// ----------------------------------------------------------------------------------------------- builder
 	/**

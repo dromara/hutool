@@ -5,12 +5,12 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.Wrapper;
 import cn.hutool.db.transaction.TransactionLevel;
-import cn.hutool.db.transaction.TxFunc;
 import cn.hutool.log.StaticLog;
 
 /**
@@ -85,7 +85,7 @@ public class Db extends AbstractDb {
 	public Db(DataSource ds) {
 		this(ds, DialectFactory.getDialect(ds));
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -126,9 +126,18 @@ public class Db extends AbstractDb {
 
 	@Override
 	public void closeConnection(Connection conn) {
+		try {
+			if (conn != null && false == conn.getAutoCommit()) {
+				// 事务中的Session忽略关闭事件
+				return;
+			}
+		} catch (SQLException e) {
+			// ignore
+		}
+
 		ThreadLocalConnection.INSTANCE.close(this.ds);
 	}
-	
+
 	/**
 	 * 执行事务，使用默认的事务级别<br>
 	 * 在同一事务中，所有对数据库操作都是原子的，同时提交或者同时回滚
@@ -137,7 +146,7 @@ public class Db extends AbstractDb {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(TxFunc func) throws SQLException {
+	public Db tx(VoidFunc1<Db> func) throws SQLException {
 		return tx(null, func);
 	}
 
@@ -150,7 +159,7 @@ public class Db extends AbstractDb {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(TransactionLevel transactionLevel, TxFunc func) throws SQLException {
+	public Db tx(TransactionLevel transactionLevel, VoidFunc1<Db> func) throws SQLException {
 		final Connection conn = getConnection();
 
 		// 检查是否支持事务
@@ -160,14 +169,13 @@ public class Db extends AbstractDb {
 		if (null != transactionLevel) {
 			final int level = transactionLevel.getLevel();
 			if (conn.getTransactionIsolation() < level) {
-				//用户定义的事务级别如果比默认级别更严格，则按照严格的级别进行
+				// 用户定义的事务级别如果比默认级别更严格，则按照严格的级别进行
 				conn.setTransactionIsolation(level);
 			}
 		}
 
 		// 开始事务
-		Boolean autoCommit = null;
-		autoCommit = conn.getAutoCommit();
+		boolean autoCommit = conn.getAutoCommit();
 		if (autoCommit) {
 			conn.setAutoCommit(false);
 		}
@@ -179,7 +187,7 @@ public class Db extends AbstractDb {
 			conn.commit();
 		} catch (Throwable e) {
 			quietRollback(conn);
-			throw e;
+			throw (e instanceof SQLException) ? (SQLException) e : new SQLException(e);
 		} finally {
 			// 还原事务状态
 			quietSetAutoCommit(conn, autoCommit);

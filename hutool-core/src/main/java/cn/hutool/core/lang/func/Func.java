@@ -18,7 +18,8 @@ public interface Func<P, R> {
 	 * 
 	 * @param parameters 参数列表
 	 * @return 函数执行结果
+	 * @throws Exception 自定义异常
 	 */
 	@SuppressWarnings("unchecked")
-	R call(P... parameters);
+	R call(P... parameters) throws Exception;
 }

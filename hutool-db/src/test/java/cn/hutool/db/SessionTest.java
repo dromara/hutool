@@ -5,9 +5,7 @@ import java.sql.SQLException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.func.VoidFunc;
-import cn.hutool.db.Entity;
-import cn.hutool.db.Session;
+import cn.hutool.core.lang.func.VoidFunc1;
 
 /**
  * 事务性数据库操作单元测试
@@ -31,11 +29,10 @@ public class SessionTest {
 	
 	@Test
 	@Ignore
-	public void transFuncTest() {
-		final Session session = Session.create("test");
-		session.trans(new VoidFunc() {
+	public void txTest() throws SQLException {
+		Session.create("test").tx(new VoidFunc1<Session>() {
 			@Override
-			public void call() throws SQLException {
+			public void call(Session session) throws SQLException {
 				session.update(Entity.create().set("age", 78), Entity.create("user").set("name", "unitTestUser"));
 			}
 		});

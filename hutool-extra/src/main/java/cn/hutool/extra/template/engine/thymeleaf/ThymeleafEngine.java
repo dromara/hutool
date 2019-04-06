@@ -88,7 +88,7 @@ public class ThymeleafEngine implements TemplateEngine {
 			final FileTemplateResolver webRootResolver = new FileTemplateResolver();
 			webRootResolver.setCharacterEncoding(config.getCharsetStr());
 			webRootResolver.setTemplateMode(TemplateMode.HTML);
-			webRootResolver.setPrefix(FileUtil.getWebRoot().getAbsolutePath() + StrUtil.addSuffixIfNot(config.getPath(), "/"));
+			webRootResolver.setPrefix(StrUtil.addSuffixIfNot(FileUtil.getAbsolutePath(FileUtil.file(FileUtil.getWebRoot(), config.getPath())), "/"));
 			resolver = webRootResolver;
 			break;
 		case STRING:

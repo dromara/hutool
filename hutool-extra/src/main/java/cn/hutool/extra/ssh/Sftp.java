@@ -114,7 +114,7 @@ public class Sftp extends AbstractFtp {
 	/**
 	 * 初始化
 	 * 
-	 * @param channel {@link ChannelSftp}
+	 * @param session {@link Session}
 	 * @param charset 编码
 	 */
 	public void init(Session session, Charset charset) {

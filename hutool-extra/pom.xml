@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.5.3</version>
+		<version>4.5.4</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -18,7 +18,7 @@
 
 	<properties>
 		<!-- versions -->
-		<velocity.version>1.7</velocity.version>
+		<velocity.version>2.0</velocity.version>
 		<beetl.version>2.9.8</beetl.version>
 		<rythm.version>1.3.0</rythm.version>
 		<freemarker.version>2.3.28</freemarker.version>
@@ -54,7 +54,7 @@
 		<!-- 模板引擎 -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
+			<artifactId>velocity-engine-core</artifactId>
 			<version>${velocity.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>

@@ -197,6 +197,22 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		this.workbook.setSheetName(sheet, sheetName);
 		return this;
 	}
+	
+	/**
+	 * 设置所有列为自动宽度，不考虑合并单元格<br>
+	 * 此方法必须在指定列数据完全写出后调用才有效。<br>
+	 * 列数计算是通过第一行计算的
+	 * 
+	 * @return this
+	 * @since 4.0.12
+	 */
+	public ExcelWriter autoSizeColumnAll() {
+		final int columnCount = this.getColumnCount();
+		for(int i = 0; i < columnCount; i++) {
+			autoSizeColumn(i);
+		}
+		return this;
+	}
 
 	/**
 	 * 设置某列为自动宽度，不考虑合并单元格<br>
@@ -343,6 +359,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter setHeaderAlias(Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;
+		return this;
+	}
+	
+	/**
+	 * 清空标题别名，key为Map中的key，value为别名
+	 * 
+	 * @return this
+	 * @since 4.5.4
+	 */
+	public ExcelWriter clearHeaderAlias() {
+		this.headerAlias = null;
 		return this;
 	}
 	

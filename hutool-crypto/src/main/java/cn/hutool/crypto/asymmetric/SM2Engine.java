@@ -82,7 +82,7 @@ public class SM2Engine {
 	 */
 	public SM2Engine(Digest digest, SM2Mode mode) {
 		this.digest = digest;
-		this.mode = ObjectUtil.defaultIfNull(mode, SM2Mode.C1C2C3);
+		this.mode = ObjectUtil.defaultIfNull(mode, SM2Mode.C1C3C2);
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class SM2Engine {
 
 	private boolean notEncrypted(byte[] encData, byte[] in, int inOff) {
 		for (int i = 0; i != encData.length; i++) {
-			if (encData[i] != in[inOff]) {
+			if (encData[i] != in[inOff + i]) {
 				return false;
 			}
 		}
