@@ -12,6 +12,7 @@
 * 【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）
 * 【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）
 * 【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）
+* 【http】      添加SoapClient，删除SoapRequest
 
 ### Bug修复
 * 【db】        修复Session中事务问题（issue#IUQMN@Gitee）

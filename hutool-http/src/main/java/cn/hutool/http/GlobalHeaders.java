@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -44,7 +45,7 @@ public enum GlobalHeaders{
 		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml,application/json;q=0.9,*/*;q=0.8", true);
 		header(Header.ACCEPT_ENCODING, "gzip", true);
 		header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
-		header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded", true);
+		header(Header.CONTENT_TYPE, HttpRequest.CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX.concat(CharsetUtil.UTF_8), true);
 		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36 Hutool", true);
 		return this;
 	}

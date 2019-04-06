@@ -254,15 +254,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 			}
 			destFile = FileUtil.file(destFile, fileName);
 		}
-		OutputStream out = null;
-		try {
-			out = FileUtil.getOutputStream(destFile);
-			return writeBody(out, false, streamProgress);
-		} catch (IORuntimeException e) {
-			throw new HttpException(e);
-		} finally {
-			IoUtil.close(out);
-		}
+		
+		return writeBody(FileUtil.getOutputStream(destFile), true, streamProgress);
 	}
 	
 	/**
