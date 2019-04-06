@@ -207,7 +207,7 @@ public class SoapClient {
 	/**
 	 * 设置请求方法
 	 * 
-	 * @param name 方法名
+	 * @param methodName 方法名
 	 * @return this
 	 */
 	public SoapClient setMethod(String methodName) {
@@ -218,7 +218,8 @@ public class SoapClient {
 	 * 设置请求方法<br>
 	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔
 	 * 
-	 * @param name 方法名（可有前缀也可无）
+	 * @param methodName 方法名（可有前缀也可无）
+	 * @param namespaceURI 命名空间URI
 	 * @return this
 	 */
 	public SoapClient setMethod(String methodName, String namespaceURI) {

@@ -57,7 +57,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final String CONTENT_DISPOSITION_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"\r\n\r\n";
 	private static final String CONTENT_DISPOSITION_FILE_TEMPLATE = "Content-Disposition: form-data; name=\"{}\"; filename=\"{}\"\r\n";
 
-	protected static final String CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX = "application/x-www-form-urlencoded;charset=";
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
 
@@ -613,7 +612,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * </pre>
 	 * 
 	 * @param body 请求体
-	 * @param contentType 请求体类型
+	 * @param contentType 请求体类型，{@code null}表示自动判断类型
 	 * @return this
 	 */
 	public HttpRequest body(String body, String contentType) {
@@ -630,7 +629,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			if (null != contentType && ContentType.isDefault(this.header(Header.CONTENT_TYPE))) {
 				if (null != this.charset) {
 					// 附加编码信息
-					contentType = StrUtil.format("{};charset={}", contentType, this.charset.name());
+					contentType = ContentType.build(contentType, this.charset);
 				}
 				this.contentType(contentType);
 			}
@@ -967,7 +966,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private void sendFormUrlEncoded() throws IOException {
 		if (StrUtil.isBlank(this.header(Header.CONTENT_TYPE))) {
 			// 如果未自定义Content-Type，使用默认的application/x-www-form-urlencoded
-			this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_X_WWW_FORM_URLENCODED_PREFIX + this.charset, true);
+			this.httpConnection.header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(this.charset), true);
 		}
 
 		// Write的时候会优先使用body中的内容，write时自动关闭OutputStream
