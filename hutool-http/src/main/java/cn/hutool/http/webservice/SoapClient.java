@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -181,7 +182,7 @@ public class SoapClient {
 	 * @param useMethodPrefix 是否使用方法的命名空间前缀
 	 * @return this
 	 */
-	public SoapClient setMethod(Name name, Map<String, String> params, boolean useMethodPrefix) {
+	public SoapClient setMethod(Name name, Map<String, Object> params, boolean useMethodPrefix) {
 		return setMethod(new QName(name.getURI(), name.getLocalName(), name.getPrefix()), params, useMethodPrefix);
 	}
 
@@ -193,11 +194,11 @@ public class SoapClient {
 	 * @param useMethodPrefix 是否使用方法的命名空间前缀
 	 * @return this
 	 */
-	public SoapClient setMethod(QName name, Map<String, String> params, boolean useMethodPrefix) {
+	public SoapClient setMethod(QName name, Map<String, Object> params, boolean useMethodPrefix) {
 		setMethod(name);
 		final String prefix = name.getPrefix();
 		final SOAPBodyElement methodEle = this.methodEle;
-		for (Entry<String, String> entry : MapUtil.wrap(params)) {
+		for (Entry<String, Object> entry : MapUtil.wrap(params)) {
 			setParam(methodEle, entry.getKey(), entry.getValue(), prefix);
 		}
 
@@ -253,10 +254,10 @@ public class SoapClient {
 	 * 设置方法参数，使用方法的前缀
 	 * 
 	 * @param name 参数名
-	 * @param value 参数值
+	 * @param value 参数值，可以是字符串或Map或{@link SOAPElement}
 	 * @return this
 	 */
-	public SoapClient setParam(String name, String value) {
+	public SoapClient setParam(String name, Object value) {
 		return setParam(name, value, true);
 	}
 
@@ -264,15 +265,15 @@ public class SoapClient {
 	 * 设置方法参数
 	 * 
 	 * @param name 参数名
-	 * @param value 参数值
+	 * @param value 参数值，可以是字符串或Map或{@link SOAPElement}
 	 * @param useMethodPrefix 是否使用方法的命名空间前缀
 	 * @return this
 	 */
-	public SoapClient setParam(String name, String value, boolean useMethodPrefix) {
+	public SoapClient setParam(String name, Object value, boolean useMethodPrefix) {
 		setParam(this.methodEle, name, value, useMethodPrefix ? this.methodEle.getPrefix() : null);
 		return this;
 	}
-
+	
 	/**
 	 * 获取SOAP请求消息
 	 * 
@@ -327,23 +328,45 @@ public class SoapClient {
 	/**
 	 * 设置方法参数
 	 * 
-	 * @param methodEle 方法节点
+	 * @param ele 方法节点
 	 * @param name 参数名
 	 * @param value 参数值
 	 * @param prefix 命名空间前缀
+	 * @return {@link SOAPElement}子节点
 	 */
-	private static void setParam(SOAPBodyElement methodEle, String name, String value, String prefix) {
+	@SuppressWarnings("rawtypes")
+	private static SOAPElement setParam(SOAPElement ele, String name, Object value, String prefix) {
 		final SOAPElement childEle;
 		try {
 			if (StrUtil.isNotBlank(prefix)) {
-				childEle = methodEle.addChildElement(name, prefix);
+				childEle = ele.addChildElement(name, prefix);
 			} else {
-				childEle = methodEle.addChildElement(name);
+				childEle = ele.addChildElement(name);
 			}
 		} catch (SOAPException e) {
 			throw new SoapRuntimeException(e);
 		}
-		childEle.setValue(value);
+		
+		if(value instanceof CharSequence) {
+			//单个值
+			childEle.setValue(value.toString());
+		}else if(value instanceof SOAPElement) {
+			//单个子节点
+			try {
+				ele.addChildElement((SOAPElement)value);
+			} catch (SOAPException e) {
+				throw new SoapRuntimeException(e);
+			}
+		}else if(value instanceof Map) {
+			//多个字节点
+			Set set = ((Map)value).entrySet();
+			Entry entry;
+			for (Object obj : set) {
+				entry = (Entry)obj;
+				setParam(childEle, entry.getKey().toString(), entry.getValue(), prefix);
+			}
+		}
+		return childEle;
 	}
 	// -------------------------------------------------------------------------------------------------------- Private method end
 }
