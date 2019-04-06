@@ -29,7 +29,7 @@ public class SessionTest {
 	
 	@Test
 	@Ignore
-	public void transFuncTest() throws SQLException {
+	public void txTest() throws SQLException {
 		Session.create("test").tx(new VoidFunc1<Session>() {
 			@Override
 			public void call(Session session) throws SQLException {

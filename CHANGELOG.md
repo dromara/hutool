@@ -11,11 +11,12 @@
 * 【core】     增加VoidFunc
 * 【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）
 * 【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）
+* 【poi】       ExcelWriter增加autoSizeColumnAll方法，ExcelBase增加getColumnCount、getRowCount方法（感谢@@【长沙】M）
 
 ### Bug修复
 * 【db】        修复Session中事务问题（issue#IUQMN@Gitee）
+* 【db】        修复Db中关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）
 * 【http】      修复form方法使用Resource可能导致的空指针问题
-* 【db】        修复关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）
 
 -------------------------------------------------------------------------------------------------------------
 
