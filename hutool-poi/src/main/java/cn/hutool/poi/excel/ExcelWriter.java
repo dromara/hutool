@@ -365,7 +365,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 清空标题别名，key为Map中的key，value为别名
 	 * 
-	 * @param headerAlias 标题别名
 	 * @return this
 	 * @since 4.5.4
 	 */
