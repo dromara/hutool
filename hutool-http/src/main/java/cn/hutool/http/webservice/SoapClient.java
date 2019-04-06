@@ -294,8 +294,8 @@ public class SoapClient {
 	 * 
 	 * @return 返回结果
 	 */
-	public String execute() {
-		return execute(false);
+	public String send() {
+		return send(false);
 	}
 
 	/**
@@ -304,7 +304,7 @@ public class SoapClient {
 	 * @param pretty 是否格式化
 	 * @return 返回结果
 	 */
-	public String execute(boolean pretty) {
+	public String send(boolean pretty) {
 		String res = HttpRequest.post(this.url)//
 				.setFollowRedirects(true).contentType(getXmlContentType())//
 				.body(getMsgStr(false))//

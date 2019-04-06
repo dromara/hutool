@@ -22,6 +22,6 @@ public class SoapClientTest {
 		
 		Console.log(client.getMsgStr(true));
 		
-		Console.log(client.execute(true));
+		Console.log(client.send(true));
 	}
 }
