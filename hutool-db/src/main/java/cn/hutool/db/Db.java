@@ -85,7 +85,7 @@ public class Db extends AbstractDb {
 	public Db(DataSource ds) {
 		this(ds, DialectFactory.getDialect(ds));
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -127,17 +127,17 @@ public class Db extends AbstractDb {
 	@Override
 	public void closeConnection(Connection conn) {
 		try {
-			if(conn != null && false == conn.getAutoCommit()) {
+			if (conn != null && false == conn.getAutoCommit()) {
 				// 事务中的Session忽略关闭事件
 				return;
 			}
 		} catch (SQLException e) {
-			//ignore
+			// ignore
 		}
-		
+
 		ThreadLocalConnection.INSTANCE.close(this.ds);
 	}
-	
+
 	/**
 	 * 执行事务，使用默认的事务级别<br>
 	 * 在同一事务中，所有对数据库操作都是原子的，同时提交或者同时回滚
@@ -169,7 +169,7 @@ public class Db extends AbstractDb {
 		if (null != transactionLevel) {
 			final int level = transactionLevel.getLevel();
 			if (conn.getTransactionIsolation() < level) {
-				//用户定义的事务级别如果比默认级别更严格，则按照严格的级别进行
+				// 用户定义的事务级别如果比默认级别更严格，则按照严格的级别进行
 				conn.setTransactionIsolation(level);
 			}
 		}
@@ -187,7 +187,7 @@ public class Db extends AbstractDb {
 			conn.commit();
 		} catch (Throwable e) {
 			quietRollback(conn);
-			throw e;
+			throw (e instanceof SQLException) ? (SQLException) e : new SQLException(e);
 		} finally {
 			// 还原事务状态
 			quietSetAutoCommit(conn, autoCommit);

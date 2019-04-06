@@ -249,13 +249,33 @@ public class Session extends AbstractDb implements Closeable {
 		}
 		getConnection().setTransactionIsolation(level);
 	}
+	
+	/**
+	 * 在事务中执行操作，通过实现{@link VoidFunc0}接口的call方法执行多条SQL语句从而完成事务
+	 * 
+	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
+	 * @throws SQLException 
+	 * @since 3.2.3
+	 */
+	public void tx(VoidFunc1<Session> func) throws SQLException {
+		try {
+			beginTransaction();
+			func.call(this);
+			commit();
+		} catch (Throwable e) {
+			quietRollback();
+			throw (e instanceof SQLException) ? (SQLException) e : new SQLException(e);
+		}
+	}
 
 	/**
 	 * 在事务中执行操作，通过实现{@link VoidFunc0}接口的call方法执行多条SQL语句从而完成事务
 	 * 
 	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
 	 * @since 3.2.3
+	 * @deprecated 请使用{@link #tx(VoidFunc1)}
 	 */
+	@Deprecated
 	public void trans(VoidFunc1<Session> func) {
 		try {
 			beginTransaction();

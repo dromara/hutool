@@ -34,6 +34,7 @@ public class MailAccount implements Serializable {
 
 	public static final String MAIL_SETTING_PATH = "config/mail.setting";
 	public static final String MAIL_SETTING_PATH2 = "config/mailAccount.setting";
+	public static final String MAIL_SETTING_PATH3 = "mail.setting";
 
 	/** SMTP服务器域名 */
 	private String host;

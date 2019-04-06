@@ -8,10 +8,14 @@
 ### 新特性
 * 【core】     NetUtil增加getUsableLocalPort方法，并迁移至cn.hutool.core.net包
 * 【core】     FileUtil增加isSub方法（pr#39@Gitee）
+* 【core】     增加VoidFunc
+* 【extra】     mail适配mail.setting和config/mail.setting双配置文件（感谢@【江门】小草哥）
+* 【corn】     cron适配cron.setting和config/cron.setting双配置文件（感谢@【江门】小草哥）
 
 ### Bug修复
 * 【db】        修复Session中事务问题（issue#IUQMN@Gitee）
 * 【http】      修复form方法使用Resource可能导致的空指针问题
+* 【db】        修复关闭逻辑错误导致的事务问题（感谢@【宁波】mojie126）
 
 -------------------------------------------------------------------------------------------------------------
 
