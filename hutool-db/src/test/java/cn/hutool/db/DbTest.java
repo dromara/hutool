@@ -8,10 +8,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
+import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.db.sql.Condition;
-import cn.hutool.db.transaction.TxFunc;
 
 /**
  * Db对象单元测试
@@ -45,7 +43,7 @@ public class DbTest {
 	@Test
 	@Ignore
 	public void txTest() throws SQLException {
-		Db.use().tx(new TxFunc() {
+		Db.use().tx(new VoidFunc1<Db>() {
 			
 			@Override
 			public void call(Db db) throws SQLException {

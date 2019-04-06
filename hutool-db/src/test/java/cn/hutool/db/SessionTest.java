@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.func.VoidFunc;
+import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.db.Entity;
 import cn.hutool.db.Session;
 
@@ -33,7 +33,7 @@ public class SessionTest {
 	@Ignore
 	public void transFuncTest() {
 		final Session session = Session.create("test");
-		session.trans(new VoidFunc() {
+		session.trans(new VoidFunc0() {
 			@Override
 			public void call() throws SQLException {
 				session.update(Entity.create().set("age", 78), Entity.create("user").set("name", "unitTestUser"));

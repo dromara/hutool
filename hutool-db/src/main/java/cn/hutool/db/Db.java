@@ -5,12 +5,12 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
 import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.Wrapper;
 import cn.hutool.db.transaction.TransactionLevel;
-import cn.hutool.db.transaction.TxFunc;
 import cn.hutool.log.StaticLog;
 
 /**
@@ -126,6 +126,15 @@ public class Db extends AbstractDb {
 
 	@Override
 	public void closeConnection(Connection conn) {
+		try {
+			if(conn != null && false == conn.getAutoCommit()) {
+				// 事务中的Session忽略关闭事件
+				return;
+			}
+		} catch (SQLException e) {
+			//ignore
+		}
+		
 		ThreadLocalConnection.INSTANCE.close(this.ds);
 	}
 	
@@ -137,7 +146,7 @@ public class Db extends AbstractDb {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(TxFunc func) throws SQLException {
+	public Db tx(VoidFunc1<Db> func) throws SQLException {
 		return tx(null, func);
 	}
 
@@ -150,7 +159,7 @@ public class Db extends AbstractDb {
 	 * @return this
 	 * @throws SQLException SQL异常
 	 */
-	public Db tx(TransactionLevel transactionLevel, TxFunc func) throws SQLException {
+	public Db tx(TransactionLevel transactionLevel, VoidFunc1<Db> func) throws SQLException {
 		final Connection conn = getConnection();
 
 		// 检查是否支持事务

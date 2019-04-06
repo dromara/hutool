@@ -8,12 +8,17 @@ package cn.hutool.core.lang.func;
  * 
  * @author Looly
  *
- * @since 3.2.3
+ * @param <P> 参数类型
+ * @since 3.1.0
  */
-public interface VoidFunc {
+public interface VoidFunc<P> {
 	
 	/**
 	 * 执行函数
+	 * 
+	 * @param parameters 参数列表
+	 * @throws Exception 自定义异常
 	 */
-	void call() throws Exception;
+	@SuppressWarnings("unchecked")
+	void call(P... parameters) throws Exception;
 }
