@@ -1,15 +1,16 @@
 package cn.hutool.core.lang;
 
-import java.net.MalformedURLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import sun.net.util.IPAddressUtil;
+
+import java.net.MalformedURLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字段验证器
@@ -30,6 +31,8 @@ public class Validator {
 	public final static Pattern GROUP_VAR = PatternPool.GROUP_VAR;
 	/** IP v4 */
 	public final static Pattern IPV4 = PatternPool.IPV4;
+	/** IP V6压缩正则 */
+	public final static Pattern IPV6_COMPRESS = PatternPool.IPV6_COMPRESS;
 	/** IP v6 */
 	public final static Pattern IPV6 = PatternPool.IPV6;
 	/** 货币 */
@@ -795,6 +798,15 @@ public class Validator {
 	 */
 	public static boolean isIpv4(CharSequence value) {
 		return isMactchRegex(IPV4, value);
+	}
+
+	/**
+	 * 是否是合法IP, ipv4 or ipv6
+	 * @param ip
+	 * @return
+	 */
+	public static boolean isIp(String ip){
+		return IPAddressUtil.isIPv4LiteralAddress(ip) || IPAddressUtil.isIPv6LiteralAddress(ip);
 	}
 
 	/**

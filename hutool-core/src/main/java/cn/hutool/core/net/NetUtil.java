@@ -1,33 +1,23 @@
 package cn.hutool.core.net;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.IDN;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.TreeSet;
-
-import javax.net.ServerSocketFactory;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import sun.net.util.IPAddressUtil;
+
+import javax.net.ServerSocketFactory;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigInteger;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.util.*;
 
 /**
  * 网络相关工具
@@ -85,6 +75,110 @@ public class NetUtil {
 			return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
 		}
 		return 0;
+	}
+
+	/**
+	 * 数字转IP
+	 * @param bigInteger
+	 * @param isIpV6 是否是IPV6地址
+	 * @return
+	 */
+	public static String bigIntegerToIp(BigInteger bigInteger, boolean isIpV6) {
+		return isIpV6 ? bigIntegerToIpv6(bigInteger) : bigIntegerToIpV4(bigInteger);
+	}
+	/**
+	 * 根据BigInteger值获取ip v4地址
+	 * @param bigInteger
+	 * @return
+	 */
+	public static String bigIntegerToIpV4(BigInteger bigInteger) {
+		long number = bigInteger.longValue();
+		return (number >> 24) +
+				"." +
+				((number & 0x00FFFFFF) >> 16) +
+				"." +
+				((number & 0x0000FFFF) >> 8) +
+				"." +
+				(number & 0x000000FF);
+	}
+
+	/**
+	 * 根据BigInteger值获取ip v6地址
+	 * @param number
+	 * @return
+	 */
+	public static String bigIntegerToIpv6(BigInteger number) {
+		return bigIntegerToIpv6(number,true);
+	}
+
+	/**
+	 * 根据BigInteger值获取ip v6地址
+	 * @param number
+	 * @param isCompress 是否压缩IPv6
+	 * @return
+	 */
+	public static String bigIntegerToIpv6(BigInteger number, boolean isCompress) {
+		StringBuilder str = new StringBuilder();
+		BigInteger ff = BigInteger.valueOf(0xffff);
+		for (int i = 0; i < 8; i++) {
+			str.insert(0, number.and(ff).toString(16) + ":");
+			number = number.shiftRight(16);
+		}
+		str = new StringBuilder(str.substring(0, str.length() - 1));
+		return isCompress ? PatternPool.IPV6_COMPRESS.matcher(str.toString()).replaceFirst("::") : str.toString();
+	}
+
+	/**
+	 * 校验ip是否在指定IP范围内
+	 *
+	 * @param ip  待校验IP
+	 * @param beginIp 起始IP
+	 * @param endIp 结束IP
+	 * @return 是否在起始和结束IP范围内
+	 */
+	public static boolean isInner(String ip, String beginIp, String endIp) throws UnknownHostException {
+		BigInteger ipNum = ipToBigInteger(ip);
+		BigInteger beginIpNum = ipToBigInteger(beginIp);
+		BigInteger endIpNum = ipToBigInteger(endIp);
+		// 如果起始IP小于结束IP
+		if (beginIpNum.compareTo(endIpNum) < 0) {
+			return ipNum.compareTo(beginIpNum) >= 0 && ipNum.compareTo(endIpNum) <= 0;
+		// 如果起始IP大于等于结束IP
+		} else {
+			return ipNum.compareTo(endIpNum) >= 0 && ipNum.compareTo(beginIpNum) <= 0;
+		}
+
+	}
+
+	/**
+	 * IP转BigInteger
+	 * @param ip IP字符串，支持IPV4和IPv6
+	 * @return IP 数值
+	 * @throws UnknownHostException
+	 */
+	public static BigInteger ipToBigInteger(String ip) throws UnknownHostException {
+		// 转换为完整形式的ip字符串
+		ip = InetAddress.getByName(ip).getHostAddress();
+		// ipv4转数字
+		if (IPAddressUtil.isIPv4LiteralAddress(ip)) {
+			final long[] numbers = StrUtil.splitToLong(ip, ".");
+			return BigInteger.valueOf((numbers[0] << 24)
+					+ (numbers[1] << 16)
+					+ (numbers[2] << 8)
+					+ (numbers[3]));
+			//ipv6转数字
+		} else if (IPAddressUtil.isIPv6LiteralAddress(ip)) {
+			final String[] numbers = StrUtil.split(ip, ":");
+			BigInteger bigInteger = BigInteger.ZERO;
+			for (int i = 0; i < numbers.length; i++) {
+				bigInteger = bigInteger.add(
+						BigInteger.valueOf(Long.valueOf(numbers[i], 16)).shiftLeft(16 * (numbers.length - 1 - i))
+				);
+			}
+			return bigInteger;
+		} else {
+			return BigInteger.ZERO;
+		}
 	}
 
 	/**
