@@ -96,7 +96,7 @@ public class URLUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 将URL字符串转换为URL对象，并做必要验证
 	 * 
@@ -107,7 +107,7 @@ public class URLUtil {
 	public static URL toUrlForHttp(String urlStr) {
 		return toUrlForHttp(urlStr, null);
 	}
-	
+
 	/**
 	 * 将URL字符串转换为URL对象，并做必要验证
 	 * 
@@ -207,6 +207,35 @@ public class URLUtil {
 
 	/**
 	 * 编码URL，默认使用UTF-8编码<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
+	 * @param url URL
+	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 */
+	public static String encodeAll(String url) {
+		return encodeAll(url, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * 编码URL<br>
+	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
+	 * 
+	 * @param url URL
+	 * @param charset 编码
+	 * @return 编码后的URL
+	 * @exception UtilException UnsupportedEncodingException
+	 */
+	public static String encodeAll(String url, Charset charset) throws UtilException {
+		try {
+			return java.net.URLEncoder.encode(url, charset.toString());
+		} catch (UnsupportedEncodingException e) {
+			throw new UtilException(e);
+		}
+	}
+
+	/**
+	 * 编码URL，默认使用UTF-8编码<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
 	 * 
@@ -218,7 +247,7 @@ public class URLUtil {
 	public static String encode(String url) throws UtilException {
 		return encode(url, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 编码URL，默认使用UTF-8编码<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
@@ -232,7 +261,7 @@ public class URLUtil {
 	public static String encodeQuery(String url) throws UtilException {
 		return encodeQuery(url, CharsetUtil.CHARSET_UTF_8);
 	}
-	
+
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
@@ -252,7 +281,7 @@ public class URLUtil {
 		}
 		return URLEncoder.DEFAULT.encode(url, charset);
 	}
-	
+
 	/**
 	 * 编码字符为URL中查询语句<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
@@ -289,7 +318,7 @@ public class URLUtil {
 		}
 		return encode(url, StrUtil.isBlank(charset) ? CharsetUtil.defaultCharset() : CharsetUtil.charset(charset));
 	}
-	
+
 	/**
 	 * 编码URL<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
@@ -316,7 +345,7 @@ public class URLUtil {
 	public static String decode(String url) throws UtilException {
 		return decode(url, CharsetUtil.UTF_8);
 	}
-	
+
 	/**
 	 * 解码application/x-www-form-urlencoded字符
 	 * 
@@ -510,9 +539,10 @@ public class URLUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 标准化URL字符串，包括：
+	 * 
 	 * <pre>
 	 * 1. 多个/替换为一个
 	 * </pre>
@@ -523,9 +553,10 @@ public class URLUtil {
 	public static String normalize(String url) {
 		return normalize(url, false);
 	}
-	
+
 	/**
 	 * 标准化URL字符串，包括：
+	 * 
 	 * <pre>
 	 * 1. 多个/替换为一个
 	 * </pre>
@@ -536,32 +567,32 @@ public class URLUtil {
 	 * @since 4.4.1
 	 */
 	public static String normalize(String url, boolean isEncodeBody) {
-		if(StrUtil.isBlank(url)) {
+		if (StrUtil.isBlank(url)) {
 			return url;
 		}
 		final int sepIndex = url.indexOf("://");
 		String pre;
 		String body;
-		if(sepIndex > 0) {
+		if (sepIndex > 0) {
 			pre = StrUtil.subPre(url, sepIndex + 3);
 			body = StrUtil.subSuf(url, sepIndex + 3);
-		}else {
+		} else {
 			pre = "http://";
 			body = url;
 		}
-		
+
 		final int paramsSepIndex = StrUtil.indexOf(body, '?');
 		String params = null;
-		if(paramsSepIndex > 0) {
+		if (paramsSepIndex > 0) {
 			params = StrUtil.subSuf(body, paramsSepIndex);
 			body = StrUtil.subPre(body, paramsSepIndex);
 		}
-		
-		//去除开头的\或者/
+
+		// 去除开头的\或者/
 		body = body.replaceAll("^[\\/]+", StrUtil.EMPTY);
-		//替换多个\或/为单个/
+		// 替换多个\或/为单个/
 		body = body.replace("\\", "/").replaceAll("//+", "/");
-		if(isEncodeBody) {
+		if (isEncodeBody) {
 			body = encode(body);
 		}
 		return pre + body + StrUtil.nullToEmpty(params);

@@ -22,7 +22,7 @@ import cn.hutool.core.util.HexUtil;
  * @author looly,
  *
  */
-public final class URLEncoder {
+public class URLEncoder {
 
 	// --------------------------------------------------------------------------------------------- Static method start
 	/**
