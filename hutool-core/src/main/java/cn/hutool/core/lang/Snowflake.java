@@ -136,6 +136,15 @@ public class Snowflake {
 
 		return ((timestamp - twepoch) << timestampLeftShift) | (datacenterId << datacenterIdShift) | (workerId << workerIdShift) | sequence;
 	}
+	
+	/**
+	 * 下一个ID（字符串形式）
+	 *
+	 * @return ID 字符串形式
+	 */
+	public String nextIdStr() {
+		return Long.toString(nextId());
+	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------------ Private method start
 	/**

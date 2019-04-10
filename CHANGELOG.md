@@ -8,6 +8,8 @@
 ### 新特性
 
 ### Bug修复
+* 【core】     Assert中NullPointerException改为IllegalArgumentException（issue#IV41L@Gitee）
+* 【core】     修复创建新sheet时比较器未清空导致的顺序问题（issue#318@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
