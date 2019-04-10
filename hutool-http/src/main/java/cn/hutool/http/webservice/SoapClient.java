@@ -2,6 +2,7 @@ package cn.hutool.http.webservice;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class SoapClient {
 	public static SoapClient create(String url, SoapProtocol protocol) {
 		return new SoapClient(url, protocol);
 	}
-	
+
 	/**
 	 * 创建SOAP客户端
 	 * 
@@ -99,7 +100,7 @@ public class SoapClient {
 	public SoapClient(String url, SoapProtocol protocol) {
 		this(url, protocol, null);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -304,7 +305,7 @@ public class SoapClient {
 		setParam(this.methodEle, name, value, useMethodPrefix ? this.methodEle.getPrefix() : null);
 		return this;
 	}
-	
+
 	/**
 	 * 批量设置参数，使用方法的前缀
 	 * 
@@ -315,7 +316,7 @@ public class SoapClient {
 	public SoapClient setParams(Map<String, Object> params) {
 		return setParams(params, true);
 	}
-	
+
 	/**
 	 * 批量设置参数
 	 * 
@@ -330,7 +331,28 @@ public class SoapClient {
 		}
 		return this;
 	}
-	
+
+	/**
+	 * 获取方法节点<br>
+	 * 用于创建子节点等操作
+	 * 
+	 * @return {@link SOAPBodyElement}
+	 * @since 4.5.6
+	 */
+	public SOAPBodyElement getMethodEle() {
+		return this.methodEle;
+	}
+
+	/**
+	 * 获取SOAP消息对象 {@link SOAPMessage}
+	 * 
+	 * @return {@link SOAPMessage}
+	 * @since 4.5.6
+	 */
+	public SOAPMessage getMessage() {
+		return this.message;
+	}
+
 	/**
 	 * 获取SOAP请求消息
 	 * 
@@ -339,12 +361,24 @@ public class SoapClient {
 	 */
 	public String getMsgStr(boolean pretty) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		write(out);
+		return pretty ? XmlUtil.format(out.toString()) : out.toString();
+	}
+	
+	/**
+	 * 将SOAP消息的XML内容输出到流
+	 * 
+	 * @param out 输出流
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient write(OutputStream out) {
 		try {
 			this.message.writeTo(out);
 		} catch (SOAPException | IOException e) {
 			throw new SoapRuntimeException(e);
 		}
-		return pretty ? XmlUtil.format(out.toString()) : out.toString();
+		return this;
 	}
 
 	/**
@@ -403,22 +437,22 @@ public class SoapClient {
 		} catch (SOAPException e) {
 			throw new SoapRuntimeException(e);
 		}
-		
-		if(value instanceof CharSequence) {
-			//单个值
+
+		if (value instanceof CharSequence) {
+			// 单个值
 			childEle.setValue(value.toString());
-		}else if(value instanceof SOAPElement) {
-			//单个子节点
+		} else if (value instanceof SOAPElement) {
+			// 单个子节点
 			try {
-				ele.addChildElement((SOAPElement)value);
+				ele.addChildElement((SOAPElement) value);
 			} catch (SOAPException e) {
 				throw new SoapRuntimeException(e);
 			}
-		}else if(value instanceof Map) {
-			//多个字节点
+		} else if (value instanceof Map) {
+			// 多个字节点
 			Entry entry;
-			for (Object obj : ((Map)value).entrySet()) {
-				entry = (Entry)obj;
+			for (Object obj : ((Map) value).entrySet()) {
+				entry = (Entry) obj;
 				setParam(childEle, entry.getKey().toString(), entry.getValue(), prefix);
 			}
 		}

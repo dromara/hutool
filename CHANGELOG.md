@@ -9,6 +9,7 @@
 * 【http】           SoapClient增加setParams，增加构造使用默认的namespaceURI方法
 * 【core】          FileUtil增加cleanEmpty方法（issue#319@Github）
 * 【core】          增加ClipboardMonitor（issue#320@Github）
+* 【http】          SoapClient增加部分方法
 
 ### Bug修复
 * 【bloomFilter】修复负数导致的问题（issue#IV6X6@Gitee）
