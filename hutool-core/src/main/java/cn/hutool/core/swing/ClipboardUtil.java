@@ -11,6 +11,9 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.swing.clipboard.ClipboardListener;
+import cn.hutool.core.swing.clipboard.ClipboardMonitor;
+import cn.hutool.core.swing.clipboard.ImageSelection;
 
 /**
  * 系统剪贴板工具类
@@ -55,18 +58,17 @@ public class ClipboardUtil {
 	 * @return 剪贴板内容，类型根据flavor不同而不同
 	 */
 	public static Object get(DataFlavor flavor) {
-		return get(flavor, null);
+		return get(getClipboard().getContents(null), flavor);
 	}
 
 	/**
 	 * 获取剪贴板内容
 	 * 
+	 * @param content {@link Transferable}
 	 * @param flavor 数据元信息，标识数据类型
-	 * @param owner 所有者
 	 * @return 剪贴板内容，类型根据flavor不同而不同
 	 */
-	public static Object get(DataFlavor flavor, ClipboardOwner owner) {
-		final Transferable content = getClipboard().getContents(null);
+	public static Object get(Transferable content, DataFlavor flavor) {
 		if (null != content && content.isDataFlavorSupported(flavor)) {
 			try {
 				return content.getTransferData(flavor);
@@ -114,57 +116,26 @@ public class ClipboardUtil {
 	}
 
 	/**
-	 * 图片转换器，用于将图片对象转换为剪贴板支持的对象<br>
-	 * 此对象也用于将图像文件和{@link DataFlavor#imageFlavor} 元信息对应
+	 * 监听剪贴板修改事件
 	 * 
-	 * @author looly
-	 * @since 3.2.0
+	 * @param listener 监听处理接口
+	 * @since 4.5.6
+	 * @see ClipboardMonitor#listen(boolean)
 	 */
-	public static class ImageSelection implements Transferable {
-		private Image image;
+	public static void listen(ClipboardListener listener) {
+		ClipboardMonitor.create(listener).listen(true);
+	}
 
-		/**
-		 * 构造
-		 * 
-		 * @param image 图片
-		 */
-		public ImageSelection(Image image) {
-			this.image = image;
-		}
-
-		/**
-		 * 获取元数据类型信息
-		 * 
-		 * @return 元数据类型列表
-		 */
-		@Override
-		public DataFlavor[] getTransferDataFlavors() {
-			return new DataFlavor[] { DataFlavor.imageFlavor };
-		}
-
-		/**
-		 * 是否支持指定元数据类型
-		 * 
-		 * @param flavor 元数据类型
-		 * @return 是否支持
-		 */
-		@Override
-		public boolean isDataFlavorSupported(DataFlavor flavor) {
-			return DataFlavor.imageFlavor.equals(flavor);
-		}
-
-		/**
-		 * 获取图片
-		 * 
-		 * @param flavor 元数据类型
-		 * @return 转换后的对象
-		 */
-		@Override
-		public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-			if (false == DataFlavor.imageFlavor.equals(flavor)) {
-				throw new UnsupportedFlavorException(flavor);
-			}
-			return image;
-		}
+	/**
+	 * 监听剪贴板修改事件
+	 * 
+	 * @param tryCount 尝试获取剪贴板内容的次数
+	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取
+	 * @param listener 监听处理接口
+	 * @since 4.5.6
+	 * @see ClipboardMonitor#listen(boolean)
+	 */
+	public static void listen(int tryCount, long delay, ClipboardListener listener) {
+		ClipboardMonitor.create(tryCount, delay, listener).listen(true);
 	}
 }
