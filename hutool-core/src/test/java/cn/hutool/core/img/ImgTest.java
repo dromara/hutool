@@ -20,7 +20,7 @@ public class ImgTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void roundTest() {
 		Img.from(FileUtil.file("e:/pic/face.jpg")).round(0.5).write(FileUtil.file("e:/pic/face_round.png"));
 	}
