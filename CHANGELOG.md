@@ -6,6 +6,7 @@
 ## 4.5.6
 
 ### 新特性
+* 【http】     SoapClient增加setParams方法
 
 ### Bug修复
 

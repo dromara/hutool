@@ -6,7 +6,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -275,6 +274,32 @@ public class SoapClient {
 	}
 	
 	/**
+	 * 批量设置参数，使用方法的前缀
+	 * 
+	 * @param params 参数列表
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient setParams(Map<String, Object> params) {
+		return setParams(params, true);
+	}
+	
+	/**
+	 * 批量设置参数
+	 * 
+	 * @param params 参数列表
+	 * @param useMethodPrefix 是否使用方法的命名空间前缀
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient setParams(Map<String, Object> params, boolean useMethodPrefix) {
+		for (Entry<String, Object> entry : MapUtil.wrap(params)) {
+			setParam(entry.getKey(), entry.getValue(), useMethodPrefix);
+		}
+		return this;
+	}
+	
+	/**
 	 * 获取SOAP请求消息
 	 * 
 	 * @param pretty 是否格式化
@@ -359,9 +384,8 @@ public class SoapClient {
 			}
 		}else if(value instanceof Map) {
 			//多个字节点
-			Set set = ((Map)value).entrySet();
 			Entry entry;
-			for (Object obj : set) {
+			for (Object obj : ((Map)value).entrySet()) {
 				entry = (Entry)obj;
 				setParam(childEle, entry.getKey().toString(), entry.getValue(), prefix);
 			}
