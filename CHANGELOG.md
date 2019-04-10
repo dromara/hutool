@@ -6,7 +6,7 @@
 ## 4.5.6
 
 ### 新特性
-* 【http】     SoapClient增加setParams方法
+* 【http】     SoapClient增加setParams，增加构造使用默认的namespaceURI方法
 
 ### Bug修复
 

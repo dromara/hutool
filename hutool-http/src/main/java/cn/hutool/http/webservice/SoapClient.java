@@ -20,6 +20,7 @@ import javax.xml.soap.SOAPMessage;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpRequest;
@@ -43,6 +44,8 @@ public class SoapClient {
 	private SOAPMessage message;
 	/** 消息方法节点 */
 	private SOAPBodyElement methodEle;
+	/** 应用于方法上的命名空间URI */
+	private String namespaceURI;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
@@ -64,6 +67,19 @@ public class SoapClient {
 	public static SoapClient create(String url, SoapProtocol protocol) {
 		return new SoapClient(url, protocol);
 	}
+	
+	/**
+	 * 创建SOAP客户端
+	 * 
+	 * @param url WS的URL地址
+	 * @param protocol 协议，见{@link SoapProtocol}
+	 * @param namespaceURI 方法上的命名空间URI
+	 * @return {@link SoapClient}
+	 * @since 4.5.6
+	 */
+	public static SoapClient create(String url, SoapProtocol protocol, String namespaceURI) {
+		return new SoapClient(url, protocol, namespaceURI);
+	}
 
 	/**
 	 * 构造，默认使用soap1.1版本协议
@@ -81,7 +97,20 @@ public class SoapClient {
 	 * @param protocol 协议版本，见{@link SoapProtocol}
 	 */
 	public SoapClient(String url, SoapProtocol protocol) {
+		this(url, protocol, null);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param url WS的URL地址
+	 * @param protocol 协议版本，见{@link SoapProtocol}
+	 * @param namespaceURI 方法上的命名空间URI
+	 * @since 4.5.6
+	 */
+	public SoapClient(String url, SoapProtocol protocol, String namespaceURI) {
 		this.url = url;
+		this.namespaceURI = namespaceURI;
 		init(protocol);
 	}
 
@@ -205,18 +234,21 @@ public class SoapClient {
 	}
 
 	/**
-	 * 设置请求方法
+	 * 设置请求方法<br>
+	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔<br>
+	 * 当识别到前缀后，自动添加xmlns属性，关联到默认的namespaceURI
 	 * 
 	 * @param methodName 方法名
 	 * @return this
 	 */
 	public SoapClient setMethod(String methodName) {
-		return setMethod(methodName, XMLConstants.NULL_NS_URI);
+		return setMethod(methodName, ObjectUtil.defaultIfNull(this.namespaceURI, XMLConstants.NULL_NS_URI));
 	}
 
 	/**
 	 * 设置请求方法<br>
-	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔
+	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔<br>
+	 * 当识别到前缀后，自动添加xmlns属性，关联到传入的namespaceURI
 	 * 
 	 * @param methodName 方法名（可有前缀也可无）
 	 * @param namespaceURI 命名空间URI
