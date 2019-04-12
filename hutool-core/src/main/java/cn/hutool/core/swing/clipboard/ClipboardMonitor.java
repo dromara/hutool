@@ -44,6 +44,8 @@ public class ClipboardMonitor implements ClipboardOwner, Runnable {
 	private long delay;
 	/** 监听事件处理 */
 	private ClipboardListener listener;
+	/** 系统剪贴板对象 */
+	Clipboard clipboard;
 
 	/**
 	 * 构造，尝试获取剪贴板内容的次数为10，第二次之后延迟100毫秒
@@ -64,8 +66,21 @@ public class ClipboardMonitor implements ClipboardOwner, Runnable {
 	 * @param listener 剪贴板事件监听
 	 */
 	public ClipboardMonitor(int tryCount, long delay, ClipboardListener listener) {
+		this(tryCount, delay, ClipboardUtil.getClipboard(), listener);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param tryCount 尝试获取剪贴板内容的次数
+	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
+	 * @param clipboard 剪贴板对象
+	 * @param listener 剪贴板事件监听
+	 */
+	public ClipboardMonitor(int tryCount, long delay, Clipboard clipboard, ClipboardListener listener) {
 		this.tryCount = tryCount;
 		this.delay = delay;
+		this.clipboard = clipboard;
 		this.listener = listener;
 	}
 
@@ -85,7 +100,7 @@ public class ClipboardMonitor implements ClipboardOwner, Runnable {
 
 	@Override
 	public void run() {
-		final Clipboard clipboard = ClipboardUtil.getClipboard();
+		final Clipboard clipboard = this.clipboard;
 		clipboard.setContents(clipboard.getContents(null), this);
 	}
 

@@ -16,7 +16,7 @@ public class ClipboardMonitorTest {
 	@Ignore
 	public void monitorTest() {
 		ClipboardUtil.listen(new ClipboardListener() {
-
+			
 			@Override
 			public Transferable onChange(Clipboard clipboard, Transferable contents) {
 				Object object = ClipboardUtil.get(contents, DataFlavor.stringFlavor);
