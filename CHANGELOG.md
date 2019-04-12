@@ -10,6 +10,8 @@
 * 【core】          FileUtil增加cleanEmpty方法（issue#319@Github）
 * 【core】          增加ClipboardMonitor（issue#320@Github）
 * 【http】          SoapClient增加部分方法
+* 【http】          HttpRequest增加setConnectionTimeout和setReadTimeout（issue#322@Github）
+* 【core】         Console增printPrograss
 
 ### Bug修复
 * 【bloomFilter】修复负数导致的问题（issue#IV6X6@Gitee）
