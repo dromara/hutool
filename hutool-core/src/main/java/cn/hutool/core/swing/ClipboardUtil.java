@@ -123,7 +123,7 @@ public class ClipboardUtil {
 	 * @see ClipboardMonitor#listen(boolean)
 	 */
 	public static void listen(ClipboardListener listener) {
-		ClipboardMonitor.create(listener).listen(true);
+		ClipboardMonitor.INSTANCE.setListener(listener).listen(true);
 	}
 
 	/**
@@ -136,6 +136,10 @@ public class ClipboardUtil {
 	 * @see ClipboardMonitor#listen(boolean)
 	 */
 	public static void listen(int tryCount, long delay, ClipboardListener listener) {
-		ClipboardMonitor.create(tryCount, delay, listener).listen(true);
+		ClipboardMonitor.INSTANCE//
+				.setTryCount(tryCount)//
+				.setDelay(delay)//
+				.setListener(listener)//
+				.listen(true);
 	}
 }
