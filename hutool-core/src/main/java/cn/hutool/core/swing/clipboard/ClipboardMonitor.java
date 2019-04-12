@@ -6,6 +6,8 @@ import java.awt.datatransfer.Transferable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.sun.xml.internal.ws.Closeable;
+
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -16,8 +18,13 @@ import cn.hutool.core.util.ObjectUtil;
  * @author looly
  * @since 4.5.6
  */
-public enum ClipboardMonitor implements ClipboardOwner, Runnable {
-	INSTANCE();
+public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
+	INSTANCE;
+	
+	/** 默认重试此时：10 */
+	public static final int DEFAULT_TRY_COUNT = 10;
+	/** 默认重试等待：100 */
+	public static final long DEFAULT_DELAY = 100;
 
 	/** 重试次数 */
 	private int tryCount;
@@ -27,13 +34,15 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable {
 	private Clipboard clipboard;
 	/** 监听事件处理 */
 	private Set<ClipboardListener> listenerSet = new LinkedHashSet<>();
+	/** 是否正在监听 */
+	private boolean isRunning;
 
-	//---------------------------------------------------------------------------------------------------------- Constructor start
+	// ---------------------------------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造，尝试获取剪贴板内容的次数为10，第二次之后延迟100毫秒
 	 */
 	private ClipboardMonitor() {
-		this(10, 100);
+		this(DEFAULT_TRY_COUNT, DEFAULT_DELAY);
 	}
 
 	/**
@@ -53,15 +62,16 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable {
 	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
 	 * @param clipboard 剪贴板对象
 	 */
-	private ClipboardMonitor(int tryCount, long delay, Clipboard clipboard ) {
+	private ClipboardMonitor(int tryCount, long delay, Clipboard clipboard) {
 		this.tryCount = tryCount;
 		this.delay = delay;
 		this.clipboard = clipboard;
 	}
-	//---------------------------------------------------------------------------------------------------------- Constructor end
+	// ---------------------------------------------------------------------------------------------------------- Constructor end
 
 	/**
 	 * 设置重试次数
+	 * 
 	 * @param tryCount 重试次数
 	 * @return this
 	 */
@@ -84,11 +94,32 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable {
 	/**
 	 * 设置 监听事件处理
 	 * 
-	 * @param listener  监听事件处理
+	 * @param listener 监听事件处理
 	 * @return this
 	 */
-	public ClipboardMonitor setListener(ClipboardListener listener) {
+	public ClipboardMonitor addListener(ClipboardListener listener) {
 		this.listenerSet.add(listener);
+		return this;
+	}
+
+	/**
+	 * 去除指定监听
+	 * 
+	 * @param listener 监听
+	 * @return this
+	 */
+	public ClipboardMonitor removeListener(ClipboardListener listener) {
+		this.listenerSet.remove(listener);
+		return this;
+	}
+
+	/**
+	 * 清空监听
+	 * 
+	 * @return this
+	 */
+	public ClipboardMonitor clearListener() {
+		this.listenerSet.clear();
 		return this;
 	}
 
@@ -107,16 +138,23 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable {
 			try {
 				transferable = listener.onChange(clipboard, ObjectUtil.defaultIfNull(transferable, newContents));
 			} catch (Throwable e) {
-				//忽略事件处理异常，保证所有监听正常执行
+				// 忽略事件处理异常，保证所有监听正常执行
 			}
 		}
-		clipboard.setContents(ObjectUtil.defaultIfNull(transferable, ObjectUtil.defaultIfNull(newContents, contents)), this);
+
+		if (isRunning) {
+			// 继续监听
+			clipboard.setContents(ObjectUtil.defaultIfNull(transferable, ObjectUtil.defaultIfNull(newContents, contents)), this);
+		}
 	}
 
 	@Override
 	public void run() {
-		final Clipboard clipboard = this.clipboard;
-		clipboard.setContents(clipboard.getContents(null), this);
+		if(false == isRunning) {
+			final Clipboard clipboard = this.clipboard;
+			clipboard.setContents(clipboard.getContents(null), this);
+			isRunning = true;
+		}
 	}
 
 	/**
@@ -130,6 +168,14 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable {
 		if (sync) {
 			ThreadUtil.sync(this);
 		}
+	}
+
+	/**
+	 * 关闭（停止）监听
+	 */
+	@Override
+	public void close() {
+		this.isRunning = false;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------- Private method start
