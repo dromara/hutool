@@ -18,9 +18,21 @@ public class CronPatternTest {
 	public void matchAllTest() {
 		CronPattern pattern;
 		// 任何时间匹配
-		pattern = new CronPattern("* * * * *");
+		pattern = new CronPattern("* * * * * *");
 		Assert.assertTrue(pattern.match(DateUtil.current(false), true));
 		Assert.assertTrue(pattern.match(DateUtil.current(false), false));
+	}
+	
+	@Test
+	public void matchAllTest2() {
+		// 在5位表达式中，秒部分并不是任意匹配，而是一个固定值
+		// 因此此处匹配就不能匹配秒
+		CronPattern pattern;
+		// 任何时间匹配
+		pattern = new CronPattern("* * * * *");
+		for(int i = 0; i < 1; i++) {
+			Assert.assertTrue(pattern.match(DateUtil.current(false), false));
+		}
 	}
 
 	@Test
