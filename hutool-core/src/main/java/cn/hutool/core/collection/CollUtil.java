@@ -1147,6 +1147,22 @@ public class CollUtil {
 			}
 		});
 	}
+	
+	/**
+	 * 获取给定Bean列表中指定字段名对应字段值的列表<br>
+	 * 列表元素支持Bean与Map
+	 * 
+	 * @param <T> 元素类型
+	 * @param collection Bean集合或Map集合
+	 * @param fieldName 字段名或map的键
+	 * @param elementType 元素类型类
+	 * @return 字段值列表
+	 * @since 4.5.6
+	 */
+	public static <T> List<T> getFieldValues(Iterable<?> collection, final String fieldName, final Class<T> elementType) {
+		List<Object> fieldValues = getFieldValues(collection, fieldName);
+		return Convert.toList(elementType, fieldValues);
+	}
 
 	/**
 	 * 查找第一个匹配元素对象
