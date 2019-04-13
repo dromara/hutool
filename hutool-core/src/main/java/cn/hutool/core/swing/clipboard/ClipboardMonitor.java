@@ -3,10 +3,9 @@ package cn.hutool.core.swing.clipboard;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
+import java.io.Closeable;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import com.sun.xml.internal.ws.Closeable;
 
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadUtil;

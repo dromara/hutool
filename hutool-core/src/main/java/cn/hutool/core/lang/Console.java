@@ -55,7 +55,7 @@ public class Console {
 	/**
 	 * 打印进度条
 	 * 
-	 * @param showChar进度条提示字符，例如“#”
+	 * @param showChar 进度条提示字符，例如“#”
 	 * @param len 打印长度
 	 * @since 4.5.6
 	 */
@@ -66,7 +66,7 @@ public class Console {
 	/**
 	 * 打印进度条
 	 * 
-	 * @param showChar进度条提示字符，例如“#”
+	 * @param showChar 进度条提示字符，例如“#”
 	 * @param totalLen 总长度
 	 * @param rate 总长度所占比取值0~1
 	 * @param len 打印长度
