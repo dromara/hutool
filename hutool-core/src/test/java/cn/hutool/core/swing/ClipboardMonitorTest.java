@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.swing.clipboard.ClipboardListener;
+import cn.hutool.core.swing.clipboard.ClipboardUtil;
 
 public class ClipboardMonitorTest {
 

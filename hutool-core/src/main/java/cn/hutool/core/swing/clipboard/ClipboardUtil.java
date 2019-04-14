@@ -1,4 +1,4 @@
-package cn.hutool.core.swing;
+package cn.hutool.core.swing.clipboard;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -11,9 +11,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.swing.clipboard.ClipboardListener;
-import cn.hutool.core.swing.clipboard.ClipboardMonitor;
-import cn.hutool.core.swing.clipboard.ImageSelection;
 
 /**
  * 系统剪贴板工具类

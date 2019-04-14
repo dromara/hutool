@@ -7,7 +7,6 @@ import java.io.Closeable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 
@@ -148,7 +147,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	}
 
 	@Override
-	public void run() {
+	public synchronized void run() {
 		if(false == isRunning) {
 			final Clipboard clipboard = this.clipboard;
 			clipboard.setContents(clipboard.getContents(null), this);
