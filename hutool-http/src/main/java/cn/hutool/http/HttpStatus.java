@@ -7,10 +7,7 @@ package cn.hutool.http;
  * @see java.net.HttpURLConnection
  *
  */
-public final class HttpStatus {
-	
-	private HttpStatus() {
-	}
+public class HttpStatus {
 	
 	/* 2XX: generally "OK" */
 	

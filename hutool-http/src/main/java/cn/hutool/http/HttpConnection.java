@@ -69,11 +69,6 @@ public class HttpConnection {
 	 * 构造HttpConnection
 	 * 
 	 * @param url URL
-	 * @param method HTTP方法
-	 * @param hostnameVerifier 域名验证器
-	 * @param ssf SSLSocketFactory
-	 * @param connectionTimeout 连接超时时长
-	 * @param readTimeout 读取超时时长
 	 * @param proxy 代理
 	 */
 	public HttpConnection(URL url, Proxy proxy) {
@@ -89,10 +84,6 @@ public class HttpConnection {
 	/**
 	 * 初始化连接相关信息
 	 * 
-	 * @param hostnameVerifier 域名验证器
-	 * @param ssf SSLSocketFactory
-	 * @param connectionTimeout 连接超时时长
-	 * @param readTimeout 读取超时时长
 	 * @return HttpConnection
 	 * @since 4.4.1
 	 */

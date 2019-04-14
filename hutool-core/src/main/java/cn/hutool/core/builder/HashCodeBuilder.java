@@ -128,7 +128,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      * @return Set the registry of objects being traversed
      * @since 2.3
      */
-    static Set<IDKey> getRegistry() {
+    private static Set<IDKey> getRegistry() {
         return REGISTRY.get();
     }
 
@@ -143,7 +143,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      * @return boolean <code>true</code> if the registry contains the given object.
      * @since 2.3
      */
-    static boolean isRegistered(final Object value) {
+    private static boolean isRegistered(final Object value) {
         final Set<IDKey> registry = getRegistry();
         return registry != null && registry.contains(new IDKey(value));
     }

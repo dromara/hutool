@@ -9,17 +9,24 @@ package cn.hutool.cache.impl;
  */
 public class CacheObj<K, V> {
 	
-	final K key;
-	final V obj;
+	protected final K key;
+	protected final V obj;
 	
 	/** 上次访问时间 */
-	long lastAccess; 
+	private long lastAccess; 
 	/** 访问次数 */
-	long accessCount;
+	protected long accessCount;
 	/** 对象存活时长，0表示永久存活*/
-	long ttl;
+	private long ttl;
 	
-	CacheObj(K key, V obj, long ttl) {
+	/**
+	 * 构造
+	 * 
+	 * @param key 键
+	 * @param obj 值
+	 * @param ttl 超时时长
+	 */
+	protected CacheObj(K key, V obj, long ttl) {
 		this.key = key;
 		this.obj = obj;
 		this.ttl = ttl;

@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.resource.NoResourceException;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
@@ -44,6 +45,8 @@ public abstract class AbstractDSFactory extends DSFactory {
 	 */
 	public AbstractDSFactory(String dataSourceName, Class<? extends DataSource> dataSourceClass, Setting setting) {
 		super(dataSourceName);
+		//此参数的作用是在detectDSFactory方法自动检测所用连接池时，如果实现类不存在，调用此方法会自动抛出异常，从而切换到下一种连接池的检测。
+		Assert.notNull(dataSourceClass);
 		if (null == setting) {
 			try {
 				setting = new Setting(DEFAULT_DB_SETTING_PATH, true);

@@ -5,7 +5,6 @@ import java.io.StringReader;
 import com.chenlb.mmseg4j.ComplexSeg;
 import com.chenlb.mmseg4j.Dictionary;
 import com.chenlb.mmseg4j.MMSeg;
-import com.huaban.analysis.jieba.JiebaSegmenter.SegMode;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
@@ -24,17 +23,10 @@ public class MmsegEngine implements TokenizerEngine {
 	
 	/**
 	 * 构造
-	 */
-	public MmsegEngine() {
-		this(SegMode.INDEX);
-	}
-	
-	/**
-	 * 构造
 	 * 
 	 * @param mode 模式{@link SegMode}
 	 */
-	public MmsegEngine(SegMode mode) {
+	public MmsegEngine() {
 		final Dictionary dict = Dictionary.getInstance();
 		final ComplexSeg seg = new ComplexSeg(dict);
 		this.mmSeg = new MMSeg(new StringReader(""), seg);

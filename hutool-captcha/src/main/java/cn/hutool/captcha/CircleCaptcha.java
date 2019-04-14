@@ -96,7 +96,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
 			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
 			g.setColor(ImgUtil.randomColor());
-			g.drawString(String.valueOf(this.code.charAt(i)), i * charWidth, RandomUtil.randomInt(minY, this.height));
+			g.drawString(String.valueOf(code.charAt(i)), i * charWidth, RandomUtil.randomInt(minY, this.height));
 		}
 	}
 	

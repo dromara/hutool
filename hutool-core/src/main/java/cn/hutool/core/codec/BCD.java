@@ -7,9 +7,7 @@ package cn.hutool.core.codec;
  * @author Looly
  *
  */
-public final class BCD {
-	
-	private BCD() {}
+public class BCD {
 	
 	/**
 	 * 字符串转BCD码
@@ -29,7 +27,8 @@ public final class BCD {
 		}
 		byte bbt[] = new byte[len];
 		abt = asc.getBytes();
-		int j, k;
+		int j;
+		int k;
 		for (int p = 0; p < asc.length() / 2; p++) {
 			if ((abt[2 * p] >= '0') && (abt[2 * p] <= '9')) {
 				j = abt[2 * p] - '0';
