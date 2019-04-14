@@ -63,7 +63,7 @@ public abstract class AbstractFilter implements BloomFilter {
 
 	@Override
 	public boolean add(String str) {
-		final long hash = this.hash(str);
+		final long hash = Math.abs(hash(str));
 		if (bm.contains(hash)) {
 			return false;
 		}

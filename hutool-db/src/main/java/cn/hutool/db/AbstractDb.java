@@ -1,4 +1,3 @@
-
 package cn.hutool.db;
 
 import java.sql.Connection;
@@ -205,6 +204,26 @@ public abstract class AbstractDb{
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.executeBatch(conn, sql, paramsBatch);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+	
+	/**
+	 * 批量执行非查询语句
+	 * 
+	 * @param sqls SQL列表
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 * @since 4.5.6
+	 */
+	public int[] executeBatch(String... sqls) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return SqlExecutor.executeBatch(conn, sqls);
 		} catch (SQLException e) {
 			throw e;
 		} finally {

@@ -281,10 +281,12 @@ public class TypeUtil {
 		}
 
 		final Type[] typeArguments = TypeUtil.getTypeArguments(clazz);
-		// 查找方法定义所在类或接口中此泛型参数的位置
-		int index = ArrayUtil.indexOf(superClass.getTypeParameters(), typeVariable);
-		if (index > -1 && index < typeArguments.length) {
-			return typeArguments[index];
+		if(ArrayUtil.isNotEmpty(typeArguments)) {
+			// 查找方法定义所在类或接口中此泛型参数的位置
+			int index = ArrayUtil.indexOf(superClass.getTypeParameters(), typeVariable);
+			if (index > -1 && index < typeArguments.length) {
+				return typeArguments[index];
+			}
 		}
 		return null;
 	}

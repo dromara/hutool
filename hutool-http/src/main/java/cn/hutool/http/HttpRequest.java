@@ -90,8 +90,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private String url;
 	private URLStreamHandler urlHandler;
 	private Method method = Method.GET;
-	/** 默认超时 */
-	private int timeout = TIMEOUT_DEFAULT;
+	/** 默认连接超时 */
+	private int connectionTimeout = TIMEOUT_DEFAULT;
+	/** 默认读取超时 */
+	private int readTimeout = TIMEOUT_DEFAULT;
 	/** 存储表单数据 */
 	private Map<String, Object> form;
 	/** 文件表单对象，用于文件上传 */
@@ -238,8 +240,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置{@link URLStreamHandler}
 	 * <p>
-	 * 部分环境下需要单独设置此项，例如当 WebLogic Server 实例充当 SSL 客户端角色（它会尝试通过 SSL 连接到其他服务器或应用程序）时，它会验证 SSL 服务器在数字证书中返回的主机名是否与用于连接 SSL 服务器的 URL 主机名相匹配。<br>
-	 * 如果主机名不匹配，则删除此连接。<br>
+	 * 部分环境下需要单独设置此项，例如当 WebLogic Server 实例充当 SSL 客户端角色（它会尝试通过 SSL 连接到其他服务器或应用程序）时，<br>
+	 * 它会验证 SSL 服务器在数字证书中返回的主机名是否与用于连接 SSL 服务器的 URL 主机名相匹配。如果主机名不匹配，则删除此连接。<br>
 	 * 因此weblogic不支持https的sni协议的主机名验证，此时需要将此值设置为sun.net.www.protocol.https.Handler对象。
 	 * <p>
 	 * 相关issue见：https://gitee.com/loolly/hutool/issues/IMD1X
@@ -667,13 +669,46 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- Body end
 
 	/**
-	 * 设置超时，单位：毫秒
+	 * 设置超时，单位：毫秒<br>
+	 * 超时包括：
+	 * 
+	 * <pre>
+	 * 1. 连接超时
+	 * 2. 读取响应超时
+	 * </pre>
 	 * 
 	 * @param milliseconds 超时毫秒数
 	 * @return this
+	 * @see #setConnectionTimeout(int)
+	 * @see #setReadTimeout(int)
 	 */
 	public HttpRequest timeout(int milliseconds) {
-		this.timeout = milliseconds;
+		setConnectionTimeout(milliseconds);
+		setReadTimeout(milliseconds);
+		return this;
+	}
+
+	/**
+	 * 设置连接超时，单位：毫秒
+	 * 
+	 * @param milliseconds 超时毫秒数
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public HttpRequest setConnectionTimeout(int milliseconds) {
+		this.connectionTimeout = milliseconds;
+		return this;
+	}
+
+	/**
+	 * 设置连接超时，单位：毫秒
+	 * 
+	 * @param milliseconds 超时毫秒数
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public HttpRequest setReadTimeout(int milliseconds) {
+		this.readTimeout = milliseconds;
 		return this;
 	}
 
@@ -829,8 +864,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpResponse execute(boolean isAsync) {
 		// 初始化URL
 		urlWithParamIfGet();
-		//编码URL
-		if(this.encodeUrlParams) {
+		// 编码URL
+		if (this.encodeUrlParams) {
 			this.url = HttpUtil.encodeParams(this.url, this.charset);
 		}
 		// 初始化 connection
@@ -870,22 +905,22 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 初始化网络连接
 	 */
 	private void initConnecton() {
-		// 初始化 connection
-		this.httpConnection = HttpConnection.create(URLUtil.toUrlForHttp(this.url, this.urlHandler), this.method, this.hostnameVerifier, this.ssf, this.timeout, this.proxy)//
-				.header(this.headers, true); // 覆盖默认Header
-
-		// 自定义Cookie
-		if (null != this.cookie) {
-			this.httpConnection.setCookie(this.cookie);
-		}
+		this.httpConnection = HttpConnection.create(URLUtil.toUrlForHttp(this.url, this.urlHandler), this.proxy)//
+				.setMethod(this.method)//
+				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
+				.setConnectTimeout(this.connectionTimeout)//
+				.setReadTimeout(this.readTimeout)//
+				// 自定义Cookie
+				.setCookie(this.cookie)
+				// 定义转发
+				.setInstanceFollowRedirects(this.maxRedirectCount > 0 ? true : false)
+				// 覆盖默认Header
+				.header(this.headers, true);
 
 		// 是否禁用缓存
 		if (this.isDisableCache) {
 			this.httpConnection.disableCache();
 		}
-
-		// 定义转发
-		this.httpConnection.setInstanceFollowRedirects(maxRedirectCount > 0 ? true : false);
 	}
 
 	/**

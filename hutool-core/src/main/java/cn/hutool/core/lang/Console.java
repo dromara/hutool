@@ -4,6 +4,7 @@ import static java.lang.System.out;
 
 import java.util.Scanner;
 
+import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
 import static java.lang.System.err;
@@ -49,6 +50,31 @@ public class Console {
 	 */
 	public static void print(Object obj) {
 		print("{}", obj);
+	}
+
+	/**
+	 * 打印进度条
+	 * 
+	 * @param showChar 进度条提示字符，例如“#”
+	 * @param len 打印长度
+	 * @since 4.5.6
+	 */
+	public static void printProgress(char showChar, int len) {
+		print("{}{}", CharUtil.CR, StrUtil.repeat(showChar, len));
+	}
+
+	/**
+	 * 打印进度条
+	 * 
+	 * @param showChar 进度条提示字符，例如“#”
+	 * @param totalLen 总长度
+	 * @param rate 总长度所占比取值0~1
+	 * @param len 打印长度
+	 * @since 4.5.6
+	 */
+	public static void printProgress(char showChar, int totalLen, double rate) {
+		Assert.isTrue(rate >= 0 && rate <= 1, "Rate must between 0 and 1 (both include)");
+		printProgress(showChar, (int) (totalLen * rate));
 	}
 
 	/**

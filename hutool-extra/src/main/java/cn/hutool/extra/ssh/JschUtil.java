@@ -273,13 +273,7 @@ public class JschUtil {
 		if (null == charset) {
 			charset = CharsetUtil.CHARSET_UTF_8;
 		}
-		ChannelExec channel;
-		try {
-			channel = (ChannelExec) session.openChannel("exec");
-		} catch (JSchException e) {
-			throw new JschRuntimeException(e);
-		}
-
+		ChannelExec channel = (ChannelExec) openChannel(session, ChannelType.EXEC);
 		channel.setCommand(StrUtil.bytes(cmd, charset));
 		channel.setInputStream(null);
 		channel.setErrStream(errStream);

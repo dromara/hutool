@@ -70,6 +70,7 @@ public class JSONConverter implements Converter<JSON> {
 		if (value instanceof JSONNull) {
 			return null;
 		}
+		
 		Object targetValue = null;
 		try {
 			targetValue = Convert.convert(targetType, value);

@@ -34,7 +34,7 @@ public class DownloadTest {
 	@Test
 	@Ignore
 	public void downloadTest1() {
-		long size = HttpUtil.downloadFile("http://explorer.bbfriend.com/crossdomain.xml", "d:/");
+		long size = HttpUtil.downloadFile("http://explorer.bbfriend.com/crossdomain.xml", "e:/temp/");
 		System.out.println("Download size: " + size);
 	}
 
@@ -42,7 +42,7 @@ public class DownloadTest {
 	@Ignore
 	public void downloadTest() {
 		// 带进度显示的文件下载
-		HttpUtil.downloadFile("http://mirrors.sohu.com/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1708.iso", FileUtil.file("d:/"), new StreamProgress() {
+		HttpUtil.downloadFile("http://mirrors.sohu.com/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1804.iso", FileUtil.file("d:/"), new StreamProgress() {
 
 			long time = System.currentTimeMillis();
 

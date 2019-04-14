@@ -3,7 +3,27 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 4.5.4
+## 4.5.6
+
+### 新特性
+* 【http】           SoapClient增加setParams，增加构造使用默认的namespaceURI方法
+* 【core】          FileUtil增加cleanEmpty方法（issue#319@Github）
+* 【core】          增加ClipboardMonitor（issue#320@Github）
+* 【http】          SoapClient增加部分方法
+* 【http】          HttpRequest增加setConnectionTimeout和setReadTimeout（issue#322@Github）
+* 【core】         Console增printPrograss
+* 【core】         DateBetween增加null校验（issue#IVC23@Gitee）
+* 【core】         增加CollUtil.getFieldValues重载（issue#IV96S@Gitee）
+* 【db】           SqlExecutor和Db增加executeBatch重载，支持批量SQL（issue#324@Github）
+
+### Bug修复
+* 【bloomFilter】修复负数导致的问题（issue#IV6X6@Gitee）
+* 【setting】       修复Props监听问题
+* 【json】           修复TypeUtil中空指针导致的注入失败问题（issue#IVCLW@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
+## 4.5.5
 
 ### 新特性
 

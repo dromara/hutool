@@ -420,4 +420,20 @@ public class ThreadUtil {
 	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDeamon, UncaughtExceptionHandler handler) {
 		return new NamedThreadFactory(prefix, threadGroup, isDeamon, handler);
 	}
+
+	/**
+	 * 阻塞当前线程，保证在main方法中执行不被退出
+	 * 
+	 * @param obj 对象所在线程
+	 * @since 4.5.6
+	 */
+	public static void sync(Object obj) {
+		synchronized (obj) {
+			try {
+				obj.wait();
+			} catch (InterruptedException e) {
+				// ignore
+			}
+		}
+	}
 }

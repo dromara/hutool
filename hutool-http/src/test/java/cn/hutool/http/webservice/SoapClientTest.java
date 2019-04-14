@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.XmlUtil;
 
 /**
  * SOAP相关单元测试
@@ -23,5 +24,15 @@ public class SoapClientTest {
 		Console.log(client.getMsgStr(true));
 		
 		Console.log(client.send(true));
+	}
+	
+	@Test
+	public void requestTest2() {
+		String send = SoapClient.create("http://222.85.138.39:6088/comm-watch-web-nmsf/SendComdService")
+		.setMethod("unk:sayHi", "http://unknown.namespace/")
+		.setParam("arg0", "aaa", false)
+		.send();
+		
+		Console.log(XmlUtil.format(send));
 	}
 }

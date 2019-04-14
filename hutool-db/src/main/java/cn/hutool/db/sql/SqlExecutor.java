@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 
 import cn.hutool.core.collection.ArrayIter;
@@ -182,6 +183,45 @@ public class SqlExecutor {
 			return ps.executeBatch();
 		} finally {
 			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 批量执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sqls SQL列表
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 * @since 4.5.6
+	 */
+	public static int[] executeBatch(Connection conn, String... sqls) throws SQLException {
+		return executeBatch(conn, new ArrayIter<String>(sqls));
+	}
+	
+	/**
+	 * 批量执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sqls SQL列表
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 * @since 4.5.6
+	 */
+	public static int[] executeBatch(Connection conn, Iterable<String> sqls) throws SQLException {
+		Statement statement = null;
+		try {
+			statement = conn.createStatement();
+			for (String sql : sqls) {
+				statement.addBatch(sql);
+			}
+			return statement.executeBatch();
+		} finally {
+			DbUtil.close(statement);
 		}
 	}
 
