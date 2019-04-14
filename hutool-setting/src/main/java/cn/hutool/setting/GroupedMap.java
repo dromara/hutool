@@ -207,7 +207,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param group 分组
 	 * @return 键值对
 	 */
-	public Set<java.util.Map.Entry<String, String>> entrySet(String group) {
+	public Set<Entry<String, String>> entrySet(String group) {
 		group = StrUtil.nullToEmpty(group).trim();
 		final LinkedHashMap<String, String> valueMap = this.get(group);
 		if (MapUtil.isNotEmpty(valueMap)) {

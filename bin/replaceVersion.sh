@@ -6,7 +6,7 @@
 
 set -o errexit
 
-pwd=`pwd`
+pwd=$(pwd)
 
 echo "当前路径：${pwd}"
 

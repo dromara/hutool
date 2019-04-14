@@ -43,6 +43,7 @@ public class BitMapBloomFilter implements BloomFilter{
 	 * @param filters Bloom过滤器列表
 	 */
 	public BitMapBloomFilter(int m, BloomFilter... filters) {
+		this(m);
 		this.filters = filters;
 	}
 
