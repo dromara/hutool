@@ -808,7 +808,7 @@ public class FileUtil {
 	 * @param directory 文件夹
 	 * @return 成功与否
 	 * @throws IORuntimeException IO异常
-	 * @since 3.0.6
+	 * @since 4.5.5
 	 */
 	public static boolean cleanEmpty(File directory) throws IORuntimeException {
 		if (directory == null || directory.exists() == false || false == directory.isDirectory()) {
