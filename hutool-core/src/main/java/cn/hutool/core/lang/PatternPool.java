@@ -44,7 +44,7 @@ public class PatternPool {
 	/** URL */
 	public final static Pattern URL = Pattern.compile("[a-zA-z]+://[^\\s]*");
 	/** Http URL */
-	public final static Pattern URL_HTTP = Pattern.compile("(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?");
+	public final static Pattern URL_HTTP = Pattern.compile("(https://|http://)?([\\w-]+\\.)+[\\w-]+(:\\d+)*(/[\\w- ./?%&=]*)?");
 	/** 中文字、英文字母、数字和下划线 */
 	public final static Pattern GENERAL_WITH_CHINESE = Pattern.compile("^[\u4E00-\u9FFF\\w]+$");
 	/** UUID */

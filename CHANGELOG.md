@@ -8,8 +8,10 @@
 ### 新特性
 * 【core】          新增StrClipboardListener（issue#325@Github）
 * 【core】          新增DesktopUtil（issue#326@Github）
+* 【core】          CollUtil.getFieldValues增加可选是否忽略null值（issue#IVGEE@Gitee）
 
 ### Bug修复
+* 【core】          修复PatternPool中的URL_HTTP不支持端口的问题（issue#IVF1V@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

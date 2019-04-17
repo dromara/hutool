@@ -104,4 +104,16 @@ public class ValidatorTest {
 		boolean m3 = Validator.isMobile("+8618600221432");
 		Assert.assertTrue(m3);
 	}
+	
+	@Test
+	public void isMatchTest() {
+		String url = "http://aaa-bbb.somthing.com/a.php?a=b&c=2";
+		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+		
+		url = "https://aaa-bbb.somthing.com/a.php?a=b&c=2";
+		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+		
+		url = "https://aaa-bbb.somthing.com:8080/a.php?a=b&c=2";
+		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+	}
 }
