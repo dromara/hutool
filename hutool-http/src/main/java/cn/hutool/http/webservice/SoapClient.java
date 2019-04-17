@@ -1,6 +1,5 @@
 package cn.hutool.http.webservice;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -11,6 +10,7 @@ import java.util.Map.Entry;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
@@ -19,12 +19,14 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 
 /**
  * SOAP客户端
@@ -47,6 +49,8 @@ public class SoapClient {
 	private SOAPBodyElement methodEle;
 	/** 应用于方法上的命名空间URI */
 	private String namespaceURI;
+	/** 消息工厂，用于创建消息 */
+	private MessageFactory factory;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
@@ -123,9 +127,8 @@ public class SoapClient {
 	 */
 	public SoapClient init(SoapProtocol protocol) {
 		// 创建消息工厂
-		MessageFactory factory;
 		try {
-			factory = MessageFactory.newInstance(protocol.getValue());
+			this.factory = MessageFactory.newInstance(protocol.getValue());
 			// 根据消息工厂创建SoapMessage
 			this.message = factory.createMessage();
 		} catch (SOAPException e) {
@@ -360,9 +363,7 @@ public class SoapClient {
 	 * @return 消息字符串
 	 */
 	public String getMsgStr(boolean pretty) {
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		write(out);
-		return pretty ? XmlUtil.format(out.toString()) : out.toString();
+		return SoapUtil.toString(this.message, pretty);
 	}
 	
 	/**
@@ -379,6 +380,26 @@ public class SoapClient {
 			throw new SoapRuntimeException(e);
 		}
 		return this;
+	}
+	
+	/**
+	 * 执行Webservice请求，既发送SOAP内容
+	 * 
+	 * @return 返回结果
+	 */
+	public SOAPMessage sendForMessage() {
+		final HttpResponse res = sendForResponse();
+		final MimeHeaders headers = new MimeHeaders();
+		for (Entry<String, List<String>> entry : res.headers().entrySet()) {
+			if(StrUtil.isNotEmpty(entry.getKey())) {
+				headers.setHeader(entry.getKey(), CollUtil.get(entry.getValue(), 0));
+			}
+		}
+		try {
+			return this.factory.createMessage(headers, res.bodyStream());
+		} catch (IOException | SOAPException e) {
+			throw new SoapRuntimeException(e);
+		}
 	}
 
 	/**
@@ -397,16 +418,23 @@ public class SoapClient {
 	 * @return 返回结果
 	 */
 	public String send(boolean pretty) {
-		String res = HttpRequest.post(this.url)//
-				.setFollowRedirects(true).contentType(getXmlContentType())//
-				.body(getMsgStr(false))//
-				.execute()//
-				.body();
-
-		return pretty ? XmlUtil.format(res) : res;
+		final String body = sendForResponse().body();
+		return pretty ? XmlUtil.format(body) : body;
 	}
 
 	// -------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 发送请求，获取异步响应
+	 * 
+	 * @return 响应对象
+	 */
+	private HttpResponse sendForResponse() {
+		return HttpRequest.post(this.url)//
+		.setFollowRedirects(true).contentType(getXmlContentType())//
+		.body(getMsgStr(false))//
+		.executeAsync();
+	}
+	
 	/**
 	 * 获取请求的Content-Type，附加编码信息
 	 * 
