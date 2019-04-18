@@ -10,6 +10,7 @@
 * 【core】          新增DesktopUtil（issue#326@Github）
 * 【core】          CollUtil.getFieldValues增加可选是否忽略null值（issue#IVGEE@Gitee）
 * 【http】          新增SoapUtil，SoapClient支持返回SOAPMessage
+* 【core】         RobotUtil增加鼠标相关操作
 
 ### Bug修复
 * 【core】          修复PatternPool中的URL_HTTP不支持端口的问题（issue#IVF1V@Gitee）
