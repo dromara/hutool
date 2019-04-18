@@ -45,7 +45,11 @@
 			<artifactId>hutool-log</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-json</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 		<!-- 数据库连接池 -->
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -128,6 +132,12 @@
 			<artifactId>mssql-jdbc</artifactId>
 			<version>6.4.0.jre7</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hbase</groupId>
+			<artifactId>hbase-client</artifactId>
+			<version>1.3.1</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>
