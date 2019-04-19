@@ -22,6 +22,8 @@ public abstract class ConnectionPoolBase<T> implements Closeable, Serializable {
      * internalPool
      */
     protected GenericObjectPool<T> internalPool;
+    
+    private transient Charset charset;
 
     /**
      * <p>Title: ConnectionPoolBase</p>
@@ -30,8 +32,6 @@ public abstract class ConnectionPoolBase<T> implements Closeable, Serializable {
     public ConnectionPoolBase() {
         this(StandardCharsets.UTF_8);
     }
-
-    private transient Charset charset;
 
     public ConnectionPoolBase(Charset charset) {
         this.charset = charset;
