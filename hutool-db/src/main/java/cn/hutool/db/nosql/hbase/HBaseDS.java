@@ -66,16 +66,14 @@ public class HBaseDS {
      *
      * </pre>
      */
-    synchronized void initCloud() {
+    synchronized private void initCloud() {
         if (setting == null) {
             // 若未指定配置文件，则使用默认配置文件
             this.setting = new Setting(HBASE_CONFIG_PATH, true);
         }
 
         Configuration hbaseConfig = HBaseConfiguration.create();
-        String zkQuorum = setting.getStr(HBASE_ZOOKEEPER_QUORUM,group);
-        if (StrUtil.isBlank(zkQuorum))
-            throw new NullPointerException("");
+        @Nonnull String zkQuorum = setting.getStr(HBASE_ZOOKEEPER_QUORUM,group);
         hbaseConfig.set("hbase.zookeeper.quorum",zkQuorum);
         String znodeParent = setting.getStr(ZOOKEEPER_ZNODE_PARENT,group);
         if (StrUtil.isNotBlank(znodeParent))
