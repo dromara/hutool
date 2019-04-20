@@ -1695,7 +1695,7 @@ public class DateUtil {
 	 */
 	public static int getEndValue(Calendar calendar, int dateField) {
 		if(Calendar.DAY_OF_WEEK == dateField) {
-			return (calendar.getMinimalDaysInFirstWeek() + 6) % 7;
+			return (calendar.getFirstDayOfWeek() + 6) % 7;
 		}
 		return calendar.getActualMaximum(dateField);
 	}

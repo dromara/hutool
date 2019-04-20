@@ -76,7 +76,8 @@ public class DateUtilTest {
 	@Test
 	public void beginAndWeedTest() {
 		String dateStr = "2017-03-01 22:33:23";
-		Date date = DateUtil.parse(dateStr);
+		DateTime date = DateUtil.parse(dateStr);
+		date.setFirstDayOfWeek(Week.MONDAY);
 
 		// 一周的开始
 		Date beginOfWeek = DateUtil.beginOfWeek(date);
