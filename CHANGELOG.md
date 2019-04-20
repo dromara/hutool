@@ -11,6 +11,7 @@
 * 【core】          CollUtil.getFieldValues增加可选是否忽略null值（issue#IVGEE@Gitee）
 * 【http】          新增SoapUtil，SoapClient支持返回SOAPMessage
 * 【core】         RobotUtil增加鼠标相关操作
+* 【core】         增加DateModifier，DateUtil增加truncate和ceiling方法（issue#IVL9A@Gitee）
 
 ### Bug修复
 * 【core】          修复PatternPool中的URL_HTTP不支持端口的问题（issue#IVF1V@Gitee）

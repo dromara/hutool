@@ -7,6 +7,7 @@ import java.security.Key;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.security.spec.ECFieldFp;
 import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
@@ -106,7 +107,11 @@ public class BCUtil {
 	 * @since 4.5.2
 	 */
 	public static PublicKey readPublicKey(InputStream pemStream) {
-		return KeyUtil.readX509Certificate(pemStream).getPublicKey();
+		final Certificate certificate = KeyUtil.readX509Certificate(pemStream);
+		if(null == certificate) {
+			return null;
+		}
+		return certificate.getPublicKey();
 	}
 
 	/**

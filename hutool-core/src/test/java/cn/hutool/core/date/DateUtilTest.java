@@ -59,7 +59,7 @@ public class DateUtilTest {
 		String formatTime = DateUtil.formatTime(date);
 		Assert.assertEquals("00:00:00", formatTime);
 	}
-
+	
 	@Test
 	public void beginAndEndTest() {
 		String dateStr = "2017-03-01 22:33:23";
