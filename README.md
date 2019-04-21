@@ -36,7 +36,7 @@
 	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> | <a href="https://www.hutool.club/">https://www.hutool.club/</a> --
 </p>
 <p align="center">
-	-- QQ群②：<a href="https://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
+	-- QQ群③：<a href="https://shang.qq.com/wpa/qunwpa?idkey=c87620fedb6df1e1f291becf4e4d74473cefdf11d5b4fe94b74d615a3467ec6f">1014644797</a> --
 </p>
 
 -------------------------------------------------------------------------------
