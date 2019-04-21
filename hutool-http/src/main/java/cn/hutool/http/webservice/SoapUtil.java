@@ -2,6 +2,7 @@ package cn.hutool.http.webservice;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -52,18 +53,20 @@ public class SoapUtil {
 
 	/**
 	 * {@link SOAPMessage} 转为字符串
-	 * 
+	 *
 	 * @param message SOAP消息对象
 	 * @param pretty 是否格式化
+	 * @param charset 编码
 	 * @return SOAP XML字符串
 	 */
-	public static String toString(SOAPMessage message, boolean pretty) {
+	public static String toString(SOAPMessage message, boolean pretty, Charset charset) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			message.writeTo(out);
 		} catch (SOAPException | IOException e) {
 			throw new SoapRuntimeException(e);
 		}
-		return pretty ? XmlUtil.format(out.toString()) : out.toString();
+		String messageToString = new String(out.toByteArray(), charset);
+		return pretty ? XmlUtil.format(messageToString) : messageToString;
 	}
 }
