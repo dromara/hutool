@@ -12,9 +12,12 @@
 * 【http】          新增SoapUtil，SoapClient支持返回SOAPMessage
 * 【core】         RobotUtil增加鼠标相关操作
 * 【core】         增加DateModifier，DateUtil增加truncate和ceiling方法（issue#IVL9A@Gitee）
+* 【core】         PageUtil增加getStart（issue#IVN0C@Gitee）
+* 【core】         CopyOptions增加ignoreXXX方法（感谢@【南昌】...）
 
 ### Bug修复
 * 【core】          修复PatternPool中的URL_HTTP不支持端口的问题（issue#IVF1V@Gitee）
+* 【extra】         修复JschUtil.exec多次connect的问题（issue#339@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
