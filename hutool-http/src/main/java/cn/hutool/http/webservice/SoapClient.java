@@ -363,7 +363,7 @@ public class SoapClient {
 	 * @return 消息字符串
 	 */
 	public String getMsgStr(boolean pretty) {
-		return SoapUtil.toString(this.message, pretty);
+		return SoapUtil.toString(this.message, pretty, charset);
 	}
 	
 	/**
