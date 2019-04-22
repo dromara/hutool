@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharsetUtil;
 
 /**
  * SOAP相关单元测试
@@ -21,6 +22,7 @@ public class SoapClientTest {
 	public void requestTest() {
 		SoapClient client = SoapClient.create("http://www.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx")
 		.setMethod("web:getCountryCityByIp", "http://WebXml.com.cn/")
+		.setCharset(CharsetUtil.CHARSET_GBK)
 		.setParam("theIpAddress", "218.21.240.106");
 		
 		Console.log(client.getMsgStr(true));

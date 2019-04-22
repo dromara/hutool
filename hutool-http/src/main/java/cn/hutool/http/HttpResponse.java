@@ -24,6 +24,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.log.StaticLog;
 
 /**
  * Http响应类<br>
@@ -323,13 +324,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 	private HttpResponse init() throws HttpException{
 		try {
 			this.status = httpConnection.responseCode();
-			this.headers = httpConnection.headers();
-			final Charset charset = httpConnection.getCharset();
-			this.charsetFromResponse = charset;
-			if(null != charset) {
-				this.charset = charset;
-			}
-			
 			this.in = (this.status < HttpStatus.HTTP_BAD_REQUEST) ? httpConnection.getInputStream() : httpConnection.getErrorStream();
 		} catch (IOException e) {
 			if(e instanceof FileNotFoundException){
@@ -338,6 +332,18 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable{
 				throw new HttpException(e);
 			}
 		}
+		
+		try {
+			this.headers = httpConnection.headers();
+		} catch (IllegalArgumentException e) {
+			StaticLog.warn(e, e.getMessage());
+		}
+		final Charset charset = httpConnection.getCharset();
+		this.charsetFromResponse = charset;
+		if(null != charset) {
+			this.charset = charset;
+		}
+		
 		if(null == this.in) {
 			//在一些情况下，返回的流为null，此时提供状态码说明
 			this.in = new ByteArrayInputStream(StrUtil.format("Error request, response status: {}", this.status).getBytes());

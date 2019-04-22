@@ -2,11 +2,14 @@ package cn.hutool.http.webservice;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.XmlUtil;
 
 /**
@@ -56,8 +59,20 @@ public class SoapUtil {
 	 *
 	 * @param message SOAP消息对象
 	 * @param pretty 是否格式化
+	 * @return SOAP XML字符串
+	 */
+	public static String toString(SOAPMessage message, boolean pretty) {
+		return toString(message, pretty, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
+	 * {@link SOAPMessage} 转为字符串
+	 *
+	 * @param message SOAP消息对象
+	 * @param pretty 是否格式化
 	 * @param charset 编码
 	 * @return SOAP XML字符串
+	 * @since 4.5.7
 	 */
 	public static String toString(SOAPMessage message, boolean pretty, Charset charset) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -66,7 +81,12 @@ public class SoapUtil {
 		} catch (SOAPException | IOException e) {
 			throw new SoapRuntimeException(e);
 		}
-		String messageToString = new String(out.toByteArray(), charset);
+		String messageToString = null;
+		try {
+			messageToString = out.toString(charset.toString());
+		} catch (UnsupportedEncodingException e) {
+			throw new UtilException(e);
+		}
 		return pretty ? XmlUtil.format(messageToString) : messageToString;
 	}
 }

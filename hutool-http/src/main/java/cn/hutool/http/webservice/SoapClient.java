@@ -146,6 +146,13 @@ public class SoapClient {
 	 */
 	public SoapClient setCharset(Charset charset) {
 		this.charset = charset;
+		try {
+			this.message.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, this.charset.toString());
+			this.message.setProperty(SOAPMessage.WRITE_XML_DECLARATION, "true");
+		} catch (SOAPException e) {
+			// ignore
+		}
+		
 		return this;
 	}
 
@@ -363,7 +370,7 @@ public class SoapClient {
 	 * @return 消息字符串
 	 */
 	public String getMsgStr(boolean pretty) {
-		return SoapUtil.toString(this.message, pretty, charset);
+		return SoapUtil.toString(this.message, pretty, this.charset);
 	}
 	
 	/**

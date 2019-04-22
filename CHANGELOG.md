@@ -18,6 +18,8 @@
 ### Bug修复
 * 【core】          修复PatternPool中的URL_HTTP不支持端口的问题（issue#IVF1V@Gitee）
 * 【extra】         修复JschUtil.exec多次connect的问题（issue#339@Github）
+* 【http】          修复SoapUtil.toString乱码问题（pr#337@Github）
+* 【http】          解决Cookie不规范导致的请求响应失败问题（issue#336@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
