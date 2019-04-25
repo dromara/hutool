@@ -22,6 +22,7 @@
 * 【http】          修复SoapUtil.toString乱码问题（pr#337@Github）
 * 【http】          解决Cookie不规范导致的请求响应失败问题（issue#336@Github）
 * 【setting】      GroupedMap增加读写锁解决并发问题（issue#336@Github）
+* 【json】          修复JSONArray中add方法导致覆盖问题（感谢@【江门】小草哥）
 
 -------------------------------------------------------------------------------------------------------------
 

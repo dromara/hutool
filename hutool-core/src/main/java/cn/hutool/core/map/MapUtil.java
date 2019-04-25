@@ -192,10 +192,11 @@ public class MapUtil {
 	 * </pre>
 	 * 
 	 * <pre>
-	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {{
+	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {
 	 *     {"RED", "#FF0000"},
 	 *     {"GREEN", "#00FF00"},
-	 *     {"BLUE", "#0000FF"}});
+	 *     {"BLUE", "#0000FF"}
+	 * });
 	 * </pre>
 	 * 
 	 * 参考：commons-lang

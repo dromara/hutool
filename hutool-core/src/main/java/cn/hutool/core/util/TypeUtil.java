@@ -269,18 +269,18 @@ public class TypeUtil {
 	 * </pre>
 	 * 
 	 * 
-	 * @param clazz 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param type 真实类型所在类，此类中记录了泛型参数对应的实际类型
 	 * @param superClass 泛型变量声明所在类或接口，此类中定义了泛型类型
 	 * @param typeVariable 泛型变量，需要的实际类型对应的泛型参数
 	 * @return 给定泛型参数对应的实际类型
 	 * @since 4.5.2
 	 */
-	public static Type getActualType(Class<?> clazz, Class<?> superClass, TypeVariable<?> typeVariable) {
-		if (false == superClass.isAssignableFrom(clazz)) {
+	public static Type getActualType(Type type, Class<?> superClass, TypeVariable<?> typeVariable) {
+		if (false == superClass.isAssignableFrom(getClass(type))) {
 			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
 		}
 
-		final Type[] typeArguments = TypeUtil.getTypeArguments(clazz);
+		final Type[] typeArguments = TypeUtil.getTypeArguments(type);
 		if(ArrayUtil.isNotEmpty(typeArguments)) {
 			// 查找方法定义所在类或接口中此泛型参数的位置
 			int index = ArrayUtil.indexOf(superClass.getTypeParameters(), typeVariable);

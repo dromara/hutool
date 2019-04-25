@@ -223,7 +223,7 @@ public class ConverterRegistry {
 		
 		// 尝试转Bean
 		if (BeanUtil.isBean(rowType)) {
-			return new BeanConverter<T>(rowType).convert(value, defaultValue);
+			return new BeanConverter<T>(type).convert(value, defaultValue);
 		}
 		
 		// 无法转换

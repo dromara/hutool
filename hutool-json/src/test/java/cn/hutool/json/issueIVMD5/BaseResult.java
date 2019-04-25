@@ -12,6 +12,7 @@ public class BaseResult<E> {
 	
 	private int result;
 	private List<E> data;
+	private E data2;
 	private String nextDataUri;
 	private String message;
 	private int dataCount;

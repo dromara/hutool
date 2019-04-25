@@ -31,10 +31,15 @@ import cn.hutool.core.util.TypeUtil;
  */
 public class BeanCopier<T> implements Copier<T> {
 
+	/** 源对象 */
 	private Object source;
+	/** 目标对象 */
 	private T dest;
+	/** 目标的类型（用于泛型类注入） */
+	private Type destType;
+	/** 拷贝选项 */
 	private CopyOptions copyOptions;
-
+	
 	/**
 	 * 创建BeanCopier
 	 * 
@@ -45,7 +50,21 @@ public class BeanCopier<T> implements Copier<T> {
 	 * @return BeanCopier
 	 */
 	public static <T> BeanCopier<T> create(Object source, T dest, CopyOptions copyOptions) {
-		return new BeanCopier<>(source, dest, copyOptions);
+		return create(source, dest, dest.getClass(), copyOptions);
+	}
+
+	/**
+	 * 创建BeanCopier
+	 * 
+	 * @param <T> 目标Bean类型
+	 * @param source 来源对象，可以是Bean或者Map
+	 * @param dest 目标Bean对象
+	 * @param destType 目标的泛型类型，用于标注有泛型参数的Bean对象
+	 * @param copyOptions 拷贝属性选项
+	 * @return BeanCopier
+	 */
+	public static <T> BeanCopier<T> create(Object source, T dest, Type destType, CopyOptions copyOptions) {
+		return new BeanCopier<>(source, dest, destType, copyOptions);
 	}
 
 	/**
@@ -53,11 +72,13 @@ public class BeanCopier<T> implements Copier<T> {
 	 * 
 	 * @param source 来源对象，可以是Bean或者Map
 	 * @param dest 目标Bean对象
+	 * @param destType 目标的泛型类型，用于标注有泛型参数的Bean对象
 	 * @param copyOptions 拷贝属性选项
 	 */
-	public BeanCopier(Object source, T dest, CopyOptions copyOptions) {
+	public BeanCopier(Object source, T dest, Type destType, CopyOptions copyOptions) {
 		this.source = source;
 		this.dest = dest;
+		this.destType = destType;
 		this.copyOptions = copyOptions;
 	}
 
@@ -215,8 +236,8 @@ public class BeanCopier<T> implements Copier<T> {
 			Type firstParamType = TypeUtil.getFirstParamType(setterMethod);
 			if(firstParamType instanceof ParameterizedType) {
 			}else if(firstParamType instanceof TypeVariable) {
-				// 参数为泛型，查找其真实类型
-				firstParamType = TypeUtil.getActualType(actualEditable, setterMethod.getDeclaringClass(), (TypeVariable<?>)firstParamType);
+				// 参数为泛型，查找其真实类型（适用于泛型方法定义于泛型父类）
+				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), (TypeVariable<?>)firstParamType);
 			}
 			
 			value = valueProvider.value(providerKey, firstParamType);
