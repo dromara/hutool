@@ -11,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
  * @since 4.1.2
  */
 public class MathGenerator implements CodeGenerator {
+	private static final long serialVersionUID = -5514819971774091076L;
 
 	private static final String operators = "+-*";
 

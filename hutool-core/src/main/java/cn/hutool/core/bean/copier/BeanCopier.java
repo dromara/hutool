@@ -1,6 +1,7 @@
 package cn.hutool.core.bean.copier;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Collection;
@@ -210,8 +211,10 @@ public class BeanCopier<T> implements Copier<T> {
 				continue;
 			}
 			
+			
 			Type firstParamType = TypeUtil.getFirstParamType(setterMethod);
-			if(firstParamType instanceof TypeVariable) {
+			if(firstParamType instanceof ParameterizedType) {
+			}else if(firstParamType instanceof TypeVariable) {
 				// 参数为泛型，查找其真实类型
 				firstParamType = TypeUtil.getActualType(actualEditable, setterMethod.getDeclaringClass(), (TypeVariable<?>)firstParamType);
 			}

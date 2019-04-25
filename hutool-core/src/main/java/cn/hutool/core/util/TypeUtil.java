@@ -269,10 +269,10 @@ public class TypeUtil {
 	 * </pre>
 	 * 
 	 * 
-	 * @param clazz 真实类型所在类
-	 * @param superClass 泛型变量声明所在类或接口
-	 * @param typeVariable 泛型变量
-	 * @return 真实类型
+	 * @param clazz 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param superClass 泛型变量声明所在类或接口，此类中定义了泛型类型
+	 * @param typeVariable 泛型变量，需要的实际类型对应的泛型参数
+	 * @return 给定泛型参数对应的实际类型
 	 * @since 4.5.2
 	 */
 	public static Type getActualType(Class<?> clazz, Class<?> superClass, TypeVariable<?> typeVariable) {

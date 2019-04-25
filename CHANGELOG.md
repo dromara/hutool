@@ -14,6 +14,7 @@
 * 【core】         增加DateModifier，DateUtil增加truncate和ceiling方法（issue#IVL9A@Gitee）
 * 【core】         PageUtil增加getStart（issue#IVN0C@Gitee）
 * 【core】         CopyOptions增加ignoreXXX方法（感谢@【南昌】...）
+* 【core】         ObjectUtil增加isEmpty方法（感谢@【成都】AliK）
 
 ### Bug修复
 * 【core】          修复PatternPool中的URL_HTTP不支持端口的问题（issue#IVF1V@Gitee）

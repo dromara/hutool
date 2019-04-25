@@ -1,12 +1,14 @@
 package cn.hutool.captcha.generator;
 
+import java.io.Serializable;
+
 /**
  * 验证码文字生成器
  * 
  * @author looly
  * @since 4.1.2
  */
-public interface CodeGenerator {
+public interface CodeGenerator extends Serializable{
 	/**
 	 * 生成验证码
 	 * 

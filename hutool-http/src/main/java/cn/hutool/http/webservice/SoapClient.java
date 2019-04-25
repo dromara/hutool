@@ -437,7 +437,8 @@ public class SoapClient {
 	 */
 	private HttpResponse sendForResponse() {
 		return HttpRequest.post(this.url)//
-		.setFollowRedirects(true).contentType(getXmlContentType())//
+		.setFollowRedirects(true)//
+		.contentType(getXmlContentType())//
 		.body(getMsgStr(false))//
 		.executeAsync();
 	}

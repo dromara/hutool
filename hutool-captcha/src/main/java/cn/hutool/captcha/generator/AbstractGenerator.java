@@ -10,7 +10,8 @@ import cn.hutool.core.util.RandomUtil;
  * @since 4.1.2
  */
 public abstract class AbstractGenerator implements CodeGenerator {
-
+	private static final long serialVersionUID = 8685744597154953479L;
+	
 	/** 基础字符集合，用于随机获取字符串的字符集合 */
 	protected String baseStr;
 	/** 验证码长度 */
