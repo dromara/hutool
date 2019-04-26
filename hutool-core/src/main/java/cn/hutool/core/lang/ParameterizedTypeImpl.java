@@ -3,6 +3,9 @@ package cn.hutool.core.lang;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
+
 /**
  * {@link ParameterizedType} 接口实现，用于重新定义泛型类型
  * 
@@ -43,4 +46,56 @@ public class ParameterizedTypeImpl implements ParameterizedType {
 		return rawType;
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder buf = new StringBuilder();
+
+		final Type useOwner = this.ownerType;
+		final Class<?> raw = (Class<?>) this.rawType;
+		final Type[] typeArguments = this.actualTypeArguments;
+		if (useOwner == null) {
+			buf.append(raw.getName());
+		} else {
+			if (useOwner instanceof Class<?>) {
+				buf.append(((Class<?>) useOwner).getName());
+			} else {
+				buf.append(useOwner.toString());
+			}
+			buf.append('.').append(raw.getSimpleName());
+		}
+
+		appendAllTo(buf.append('<'), ", ", typeArguments).append('>');
+		return buf.toString();
+	}
+
+	/**
+	 * 追加 {@code types} 到 @{code buf}，使用 {@code sep} 分隔
+	 * 
+	 * @param buf 目标
+	 * @param sep 分隔符
+	 * @param types 加入的类型
+	 * @return {@code buf}
+	 */
+	private static StringBuilder appendAllTo(final StringBuilder buf, final String sep, final Type... types) {
+		if (ArrayUtil.isNotEmpty(types)) {
+			boolean isFirst = true;
+			for (Type type : types) {
+				if (isFirst) {
+					isFirst = false;
+				} else {
+					buf.append(sep);
+				}
+				
+				String typeStr;
+				if(type instanceof Class) {
+					typeStr = ((Class<?>)type).getName();
+				}else {
+					typeStr = StrUtil.toString(type);
+				}
+				
+				buf.append(typeStr);
+			}
+		}
+		return buf;
+	}
 }

@@ -51,7 +51,7 @@ public class BeanConverter<T> extends AbstractConverter<T> {
 	/**
 	 * 构造
 	 * 
-	 * @param beanClass 转换成的目标Bean类
+	 * @param beanType 转换成的目标Bean类
 	 * @param copyOptions Bean转换选项参数
 	 */
 	@SuppressWarnings("unchecked")

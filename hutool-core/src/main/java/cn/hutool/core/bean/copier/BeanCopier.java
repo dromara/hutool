@@ -18,6 +18,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.copier.Copier;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
@@ -40,7 +41,7 @@ public class BeanCopier<T> implements Copier<T> {
 	private Type destType;
 	/** 拷贝选项 */
 	private CopyOptions copyOptions;
-	
+
 	/**
 	 * 创建BeanCopier
 	 * 
@@ -88,17 +89,17 @@ public class BeanCopier<T> implements Copier<T> {
 	public T copy() {
 		if (null != this.source) {
 			if (this.source instanceof ValueProvider) {
-				//目标只支持Bean
+				// 目标只支持Bean
 				valueProviderToBean((ValueProvider<String>) this.source, this.dest);
 			} else if (this.source instanceof Map) {
-				if(this.dest instanceof Map) {
-					mapToMap((Map<?, ?>)this.source, (Map<?, ?>)this.dest);
+				if (this.dest instanceof Map) {
+					mapToMap((Map<?, ?>) this.source, (Map<?, ?>) this.dest);
 				} else {
 					mapToBean((Map<?, ?>) this.source, this.dest);
 				}
 			} else {
-				if(this.dest instanceof Map) {
-					beanToMap(this.source, (Map<?, ?>)this.dest);
+				if (this.dest instanceof Map) {
+					beanToMap(this.source, (Map<?, ?>) this.dest);
 				} else {
 					beanToBean(this.source, this.dest);
 				}
@@ -126,19 +127,20 @@ public class BeanCopier<T> implements Copier<T> {
 	private void mapToBean(Map<?, ?> map, Object bean) {
 		valueProviderToBean(new MapValueProvider(map, this.copyOptions.ignoreCase), bean);
 	}
-	
+
 	/**
 	 * Map转Map
+	 * 
 	 * @param source 源Map
 	 * @param dest 目标Map
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void mapToMap(Map source, Map dest) {
-		if(null != dest && null != source) {
+		if (null != dest && null != source) {
 			dest.putAll(source);
 		}
 	}
-	
+
 	/**
 	 * 对象转Map
 	 * 
@@ -152,7 +154,7 @@ public class BeanCopier<T> implements Copier<T> {
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
 		final HashSet<String> ignoreSet = (null != copyOptions.ignoreProperties) ? CollUtil.newHashSet(copyOptions.ignoreProperties) : null;
 		final CopyOptions copyOptions = this.copyOptions;
-		
+
 		String key;
 		Method getter;
 		Object value;
@@ -197,7 +199,7 @@ public class BeanCopier<T> implements Copier<T> {
 		if (null == valueProvider) {
 			return;
 		}
-		
+
 		final CopyOptions copyOptions = this.copyOptions;
 		Class<?> actualEditable = bean.getClass();
 		if (copyOptions.editable != null) {
@@ -232,24 +234,30 @@ public class BeanCopier<T> implements Copier<T> {
 				// Setter方法不存在跳过
 				continue;
 			}
-			
-			
+
 			Type firstParamType = TypeUtil.getFirstParamType(setterMethod);
-			if(firstParamType instanceof ParameterizedType) {
+			if (firstParamType instanceof ParameterizedType) {
 				// 参数为泛型参数类型，解析对应泛型类型为真实类型
 				ParameterizedType tmp = (ParameterizedType) firstParamType;
-				Type[] actualTypeArguments = TypeUtil.getActualTypes(this.destType, setterMethod.getDeclaringClass(), tmp.getActualTypeArguments());
-				firstParamType = new ParameterizedTypeImpl(actualTypeArguments, tmp.getOwnerType(), tmp.getRawType());
-			}else if(firstParamType instanceof TypeVariable) {
+				Type[] actualTypeArguments = tmp.getActualTypeArguments();
+				if (TypeUtil.hasTypeVeriable(actualTypeArguments)) {
+					// 泛型对象中含有未被转换的泛型变量
+					actualTypeArguments = TypeUtil.getActualTypes(this.destType, setterMethod.getDeclaringClass(), tmp.getActualTypeArguments());
+					if (ArrayUtil.isNotEmpty(actualTypeArguments)) {
+						// 替换泛型变量为实际类型
+						firstParamType = new ParameterizedTypeImpl(actualTypeArguments, tmp.getOwnerType(), tmp.getRawType());
+					}
+				}
+			} else if (firstParamType instanceof TypeVariable) {
 				// 参数为泛型，查找其真实类型（适用于泛型方法定义于泛型父类）
-				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), (TypeVariable<?>)firstParamType);
+				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), (TypeVariable<?>) firstParamType);
 			}
-			
+
 			value = valueProvider.value(providerKey, firstParamType);
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;// 当允许跳过空时，跳过
 			}
-			if(bean.equals(value)) {
+			if (bean.equals(value)) {
 				continue;// 值不能为bean本身，防止循环引用
 			}
 

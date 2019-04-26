@@ -272,22 +272,25 @@ public class TypeUtil {
 	 * </pre>
 	 * 
 	 * 
-	 * @param type 真实类型所在类，此类中记录了泛型参数对应的实际类型
-	 * @param superClass 泛型变量声明所在类或接口，此类中定义了泛型类型
+	 * @param actualType 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param typeDefineClass 泛型变量声明所在类或接口，此类中定义了泛型类型
 	 * @param typeVariables 泛型变量，需要的实际类型对应的泛型参数
-	 * @return 给定泛型参数对应的实际类型
+	 * @return 给定泛型参数对应的实际类型，如果无对应类型，返回null
 	 * @since 4.5.7
 	 */
-	public static Type[] getActualTypes(Type type, Class<?> superClass, Type... typeVariables) {
-		if (false == superClass.isAssignableFrom(getClass(type))) {
+	public static Type[] getActualTypes(Type actualType, Class<?> typeDefineClass, Type... typeVariables) {
+		if (false == typeDefineClass.isAssignableFrom(getClass(actualType))) {
 			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
 		}
 
-		// 实际类型列表
-		final Type[] actualTypeArguments = TypeUtil.getTypeArguments(type);
 		// 泛型参数标识符列表
-		final TypeVariable<?>[] typeVars = superClass.getTypeParameters();
-		if(ArrayUtil.isEmpty(actualTypeArguments) || ArrayUtil.isEmpty(typeVars)) {
+		final TypeVariable<?>[] typeVars = typeDefineClass.getTypeParameters();
+		if(ArrayUtil.isEmpty(typeVars)) {
+			return null;
+		}
+		// 实际类型列表
+		final Type[] actualTypeArguments = TypeUtil.getTypeArguments(actualType);
+		if(ArrayUtil.isEmpty(actualTypeArguments)) {
 			return null;
 		}
 		
@@ -313,14 +316,14 @@ public class TypeUtil {
 	 * </pre>
 	 * 
 	 * 
-	 * @param type 真实类型所在类，此类中记录了泛型参数对应的实际类型
-	 * @param superClass 泛型变量声明所在类或接口，此类中定义了泛型类型
+	 * @param actualType 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param typeDefineClass 泛型变量声明所在类或接口，此类中定义了泛型类型
 	 * @param typeVariable 泛型变量，需要的实际类型对应的泛型参数
 	 * @return 给定泛型参数对应的实际类型
 	 * @since 4.5.2
 	 */
-	public static Type getActualType(Type type, Class<?> superClass, Type typeVariable) {
-		Type[] types = getActualTypes(type, superClass, typeVariable);
+	public static Type getActualType(Type actualType, Class<?> typeDefineClass, Type typeVariable) {
+		Type[] types = getActualTypes(actualType, typeDefineClass, typeVariable);
 		if(ArrayUtil.isNotEmpty(types)) {
 			return types[0];
 		}
@@ -337,5 +340,20 @@ public class TypeUtil {
 	 */
 	public static boolean isUnknow(Type type) {
 		return null == type || type instanceof TypeVariable;
+	}
+	
+	/**
+	 * 指定泛型数组中是否含有泛型变量
+	 * @param types 泛型数组
+	 * @return 是否含有泛型变量
+	 * @since 4.5.7
+	 */
+	public static boolean hasTypeVeriable(Type... types) {
+		for (Type type : types) {
+			if(type instanceof TypeVariable) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
