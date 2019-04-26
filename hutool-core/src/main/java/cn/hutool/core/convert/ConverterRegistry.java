@@ -186,9 +186,7 @@ public class ConverterRegistry {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T convert(Type type, Object value, T defaultValue, boolean isCustomFirst) throws ConvertException {
-		
 		if (TypeUtil.isUnknow(type) && null == defaultValue) {
-//			throw new NullPointerException("[type] and [defaultValue] are both null, we can not know what type to convert !");
 			// 对于用户不指定目标类型的情况，返回原值
 			return (T) value;
 		}
@@ -199,6 +197,12 @@ public class ConverterRegistry {
 			type = defaultValue.getClass();
 		}
 		
+		// 标准转换器
+		final Converter<T> converter = getConverter(type, isCustomFirst);
+		if (null != converter) {
+			return converter.convert(value, defaultValue);
+		}
+
 		Class<T> rowType = (Class<T>) TypeUtil.getClass(type);
 		if (null == rowType) {
 			if (null != defaultValue) {
@@ -213,12 +217,6 @@ public class ConverterRegistry {
 		final T result = convertSpecial(type, rowType, value, defaultValue);
 		if (null != result) {
 			return result;
-		}
-
-		// 标准转换器
-		final Converter<T> converter = getConverter(type, isCustomFirst);
-		if (null != converter) {
-			return converter.convert(value, defaultValue);
 		}
 		
 		// 尝试转Bean

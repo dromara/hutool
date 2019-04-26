@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -131,6 +132,16 @@ public class MapUtil {
 			treeMap.putAll(map);
 		}
 		return treeMap;
+	}
+	
+	/**
+	 * 创建键不重复Map
+	 * 
+	 * @return {@link IdentityHashMap}
+	 * @since 4.5.7
+	 */
+	public static <K, V> Map<K, V> newIdentityMap(int size){
+		return new IdentityHashMap<>(size);
 	}
 
 	/**

@@ -15,6 +15,7 @@ import cn.hutool.core.bean.copier.provider.MapValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.copier.Copier;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -235,6 +236,10 @@ public class BeanCopier<T> implements Copier<T> {
 			
 			Type firstParamType = TypeUtil.getFirstParamType(setterMethod);
 			if(firstParamType instanceof ParameterizedType) {
+				// 参数为泛型参数类型，解析对应泛型类型为真实类型
+				ParameterizedType tmp = (ParameterizedType) firstParamType;
+				Type[] actualTypeArguments = TypeUtil.getActualTypes(this.destType, setterMethod.getDeclaringClass(), tmp.getActualTypeArguments());
+				firstParamType = new ParameterizedTypeImpl(actualTypeArguments, tmp.getOwnerType(), tmp.getRawType());
 			}else if(firstParamType instanceof TypeVariable) {
 				// 参数为泛型，查找其真实类型（适用于泛型方法定义于泛型父类）
 				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), (TypeVariable<?>)firstParamType);

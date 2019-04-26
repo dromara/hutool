@@ -4,11 +4,13 @@ import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.swing.clipboard.ClipboardUtil;
 
 /**
  * {@link Robot} 封装工具类，提供截屏等工具
@@ -17,7 +19,9 @@ import cn.hutool.core.img.ImgUtil;
  * @since 4.1.14
  */
 public class RobotUtil {
-	public static final Robot robot;
+
+	private static final Robot robot;
+	private static int delay;
 
 	static {
 		try {
@@ -25,6 +29,17 @@ public class RobotUtil {
 		} catch (AWTException e) {
 			throw new UtilException(e);
 		}
+	}
+
+	/**
+	 * 设置默认的延迟时间<br>
+	 * 当按键执行完后的等待时间，也可以用ThreadUtil.sleep方法代替
+	 * 
+	 * @param delayMillis 等待毫秒数
+	 * @since 4.5.7
+	 */
+	public static void setDelay(int delayMillis) {
+		delay = delayMillis;
 	}
 
 	/**
@@ -47,6 +62,7 @@ public class RobotUtil {
 	public static void click() {
 		robot.mousePress(InputEvent.BUTTON1_MASK);
 		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+		delay();
 	}
 
 	/**
@@ -58,6 +74,7 @@ public class RobotUtil {
 	public static void rightClick() {
 		robot.mousePress(InputEvent.BUTTON1_MASK);
 		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+		delay();
 	}
 
 	/**
@@ -68,6 +85,7 @@ public class RobotUtil {
 	 */
 	public static void mouseWheel(int wheelAmt) {
 		robot.mouseWheel(wheelAmt);
+		delay();
 	}
 
 	/**
@@ -82,6 +100,57 @@ public class RobotUtil {
 			robot.keyPress(keyCode);
 			robot.keyRelease(keyCode);
 		}
+		delay();
+	}
+
+	/**
+	 * 打印输出指定字符串（借助剪贴板）
+	 * 
+	 * @param str 字符串
+	 */
+	public static void keyPressString(String str) {
+		ClipboardUtil.setStr(str);
+		keyPressWithCtrl(KeyEvent.VK_V);// 粘贴
+		delay();
+	}
+
+	/**
+	 * shift+ 按键
+	 * 
+	 * @param key 按键
+	 */
+	public static void keyPressWithShift(int key) {
+		robot.keyPress(KeyEvent.VK_SHIFT);
+		robot.keyPress(key);
+		robot.keyRelease(key);
+		robot.keyRelease(KeyEvent.VK_SHIFT);
+		delay();
+	}
+
+	/**
+	 * ctrl+ 按键
+	 * 
+	 * @param key 按键
+	 */
+	public static void keyPressWithCtrl(int key) {
+		robot.keyPress(KeyEvent.VK_CONTROL);
+		robot.keyPress(key);
+		robot.keyRelease(key);
+		robot.keyRelease(KeyEvent.VK_CONTROL);
+		delay();
+	}
+
+	/**
+	 * alt+ 按键
+	 * 
+	 * @param key 按键
+	 */
+	public static void keyPressWithAlt(int key) {
+		robot.keyPress(KeyEvent.VK_ALT);
+		robot.keyPress(key);
+		robot.keyRelease(key);
+		robot.keyRelease(KeyEvent.VK_ALT);
+		delay();
 	}
 
 	/**
@@ -124,5 +193,14 @@ public class RobotUtil {
 	public static File captureScreen(Rectangle screenRect, File outFile) {
 		ImgUtil.write(captureScreen(screenRect), outFile);
 		return outFile;
+	}
+
+	/**
+	 * 等待指定毫秒数
+	 */
+	private static void delay() {
+		if (delay > 0) {
+			robot.delay(delay);
+		}
 	}
 }

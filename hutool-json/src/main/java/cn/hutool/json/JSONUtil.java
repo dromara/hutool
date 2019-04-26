@@ -671,6 +671,22 @@ public final class JSONUtil {
 		}
 		return StrUtil.isWrap(str.trim(), '[', ']');
 	}
+	
+	/**
+	 * 是否为null对象，null的情况包括：
+	 * 
+	 * <pre>
+	 * 1. {@code null}
+	 * 2. {@link JSONNull}
+	 * </pre>
+	 * 
+	 * @param obj 对象
+	 * @return 是否为null
+	 * @since 4.5.7
+	 */
+	public static boolean isNull(Object obj) {
+		return null == obj || obj instanceof JSONNull;
+	}
 
 	/**
 	 * XML转JSONObject<br>

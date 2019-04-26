@@ -6,6 +6,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.Map;
+
+import cn.hutool.core.map.TableMap;
 
 /**
  * 针对 {@link Type} 的工具类封装<br>
@@ -257,7 +260,48 @@ public class TypeUtil {
 		}
 		return null;
 	}
+	
+	/**
+	 * 获取指定泛型变量对应的真实类型<br>
+	 * 由于子类中泛型参数实现和父类（接口）中泛型定义位置是一一对应的，因此可以通过对应关系找到泛型实现类型<br>
+	 * 使用此方法注意：
+	 * 
+	 * <pre>
+	 * 1. superClass必须是clazz的父类或者clazz实现的接口
+	 * 2. typeVariable必须在superClass中声明
+	 * </pre>
+	 * 
+	 * 
+	 * @param type 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param superClass 泛型变量声明所在类或接口，此类中定义了泛型类型
+	 * @param typeVariables 泛型变量，需要的实际类型对应的泛型参数
+	 * @return 给定泛型参数对应的实际类型
+	 * @since 4.5.7
+	 */
+	public static Type[] getActualTypes(Type type, Class<?> superClass, Type... typeVariables) {
+		if (false == superClass.isAssignableFrom(getClass(type))) {
+			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
+		}
 
+		// 实际类型列表
+		final Type[] actualTypeArguments = TypeUtil.getTypeArguments(type);
+		// 泛型参数标识符列表
+		final TypeVariable<?>[] typeVars = superClass.getTypeParameters();
+		if(ArrayUtil.isEmpty(actualTypeArguments) || ArrayUtil.isEmpty(typeVars)) {
+			return null;
+		}
+		
+		int size = Math.min(actualTypeArguments.length, typeVars.length);
+		final Map<TypeVariable<?>, Type> tableMap = new TableMap<>(typeVars, actualTypeArguments);
+		
+		// 查找方法定义所在类或接口中此泛型参数的位置
+		final Type[] result = new Type[size];
+		for(int i = 0; i < typeVariables.length; i++) {
+			result[i] = (typeVariables[i] instanceof TypeVariable) ? tableMap.get(typeVariables[i]) : typeVariables[i];
+		}
+		return result;
+	}
+	
 	/**
 	 * 获取指定泛型变量对应的真实类型<br>
 	 * 由于子类中泛型参数实现和父类（接口）中泛型定义位置是一一对应的，因此可以通过对应关系找到泛型实现类型<br>
@@ -275,18 +319,10 @@ public class TypeUtil {
 	 * @return 给定泛型参数对应的实际类型
 	 * @since 4.5.2
 	 */
-	public static Type getActualType(Type type, Class<?> superClass, TypeVariable<?> typeVariable) {
-		if (false == superClass.isAssignableFrom(getClass(type))) {
-			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
-		}
-
-		final Type[] typeArguments = TypeUtil.getTypeArguments(type);
-		if(ArrayUtil.isNotEmpty(typeArguments)) {
-			// 查找方法定义所在类或接口中此泛型参数的位置
-			int index = ArrayUtil.indexOf(superClass.getTypeParameters(), typeVariable);
-			if (index > -1 && index < typeArguments.length) {
-				return typeArguments[index];
-			}
+	public static Type getActualType(Type type, Class<?> superClass, Type typeVariable) {
+		Type[] types = getActualTypes(type, superClass, typeVariable);
+		if(ArrayUtil.isNotEmpty(types)) {
+			return types[0];
 		}
 		return null;
 	}
