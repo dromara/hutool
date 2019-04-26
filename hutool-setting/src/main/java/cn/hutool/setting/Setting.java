@@ -649,14 +649,14 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			if (other.charset != null) {
 				return false;
 			}
-		} else if (!charset.equals(other.charset)) {
+		} else if (false == charset.equals(other.charset)) {
 			return false;
 		}
 		if (groupedMap == null) {
 			if (other.groupedMap != null) {
 				return false;
 			}
-		} else if (!groupedMap.equals(other.groupedMap)) {
+		} else if (false == groupedMap.equals(other.groupedMap)) {
 			return false;
 		}
 		if (isUseVariable != other.isUseVariable) {

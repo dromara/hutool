@@ -64,10 +64,7 @@ public class JSONConverter implements Converter<JSON> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> T jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
-		if (null == value) {
-			return null;
-		}
-		if (value instanceof JSONNull) {
+		if (JSONUtil.isNull(value)) {
 			return null;
 		}
 		
@@ -80,13 +77,14 @@ public class JSONConverter implements Converter<JSON> {
 			}
 			throw e;
 		}
-
+		
 		if (null == targetValue && false == ignoreError) {
 			if (StrUtil.isBlankIfStr(value)) {
 				// 对于传入空字符串的情况，如果转换的目标对象是非字符串或非原始类型，转换器会返回false。
 				// 此处特殊处理，认为返回null属于正常情况
 				return null;
 			}
+			
 			throw new ConvertException("Can not convert {} to type {}", value, ObjectUtil.defaultIfNull(TypeUtil.getClass(targetType), targetType));
 		}
 

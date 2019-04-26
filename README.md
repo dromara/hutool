@@ -36,7 +36,8 @@
 	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> | <a href="https://www.hutool.club/">https://www.hutool.club/</a> --
 </p>
 <p align="center">
-	-- QQ群②：<a href="https://shang.qq.com/wpa/qunwpa?idkey=717c8e1444c2f3538ea37d792a19a23837cfc201e0d0de783e353b87009252eb">871141901</a> --
+	-- QQ群③：<a href="https://shang.qq.com/wpa/qunwpa?idkey=35764b2247c46ffebe28e4541e5b2af8f5dee5efcf47ceec69d21e4521aa8c75">555368316</a> --
+	-- QQ群④：<a href="https://shang.qq.com/wpa/qunwpa?idkey=309056e409a304a454c7ba250a10d38dd82b9b49cd0e1f180fedbde78b02ae0d">718802356</a> --
 </p>
 
 -------------------------------------------------------------------------------
@@ -93,21 +94,21 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.5.6</version>
+    <version>4.5.7</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.5.6'
+compile 'cn.hutool:hutool-all:4.5.7'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.5.6/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.5.6/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.5.7/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.5.7/)
 
 > 注意
 > Hutool只支持JDK7+，对应Android平台没有测试，部分方法并不支持。

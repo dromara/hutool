@@ -69,7 +69,6 @@ public class Console {
 	 * @param showChar 进度条提示字符，例如“#”
 	 * @param totalLen 总长度
 	 * @param rate 总长度所占比取值0~1
-	 * @param len 打印长度
 	 * @since 4.5.6
 	 */
 	public static void printProgress(char showChar, int totalLen, double rate) {

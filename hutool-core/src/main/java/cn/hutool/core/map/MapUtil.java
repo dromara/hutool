@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -132,6 +133,16 @@ public class MapUtil {
 		}
 		return treeMap;
 	}
+	
+	/**
+	 * 创建键不重复Map
+	 * 
+	 * @return {@link IdentityHashMap}
+	 * @since 4.5.7
+	 */
+	public static <K, V> Map<K, V> newIdentityMap(int size){
+		return new IdentityHashMap<>(size);
+	}
 
 	/**
 	 * 创建Map<br>
@@ -192,10 +203,11 @@ public class MapUtil {
 	 * </pre>
 	 * 
 	 * <pre>
-	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {{
+	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {
 	 *     {"RED", "#FF0000"},
 	 *     {"GREEN", "#00FF00"},
-	 *     {"BLUE", "#0000FF"}});
+	 *     {"BLUE", "#0000FF"}
+	 * });
 	 * </pre>
 	 * 
 	 * 参考：commons-lang

@@ -73,6 +73,9 @@ public class JSONUtilTest {
 		Assert.assertEquals("{\"name\":\"123123\",\"value\":\"\\\\\",\"value2\":\"<\\/\"}", json2.get("user"));
 	}
 
+	/**
+	 * 泛型多层嵌套测试
+	 */
 	@Test
 	public void toBeanTest() {
 		String json = "{\"ADT\":[[{\"BookingCode\":[\"N\",\"N\"]}]]}";

@@ -134,7 +134,7 @@ public class Validator {
 	}
 
 	/**
-	 * 检查指定值是否为非<code>null</code>
+	 * 检查指定值是否为<code>null</code>
 	 * 
 	 * @param <T> 被检查的对象类型
 	 * @param value 值
@@ -152,7 +152,7 @@ public class Validator {
 	}
 
 	/**
-	 * 检查指定值是否为<code>null</code>
+	 * 检查指定值是否非<code>null</code>
 	 * 
 	 * @param <T> 被检查的对象类型
 	 * @param value 值
@@ -181,7 +181,7 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为空<br>
+	 * 验证是否为非空<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
 	 * 
 	 * @param value 值
@@ -193,7 +193,7 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为空，为空时抛出异常<br>
+	 * 验证是否为空，非空时抛出异常<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
 	 * 
 	 * @param value 值
@@ -209,7 +209,7 @@ public class Validator {
 	}
 
 	/**
-	 * 验证是否为空，为空时抛出异常<br>
+	 * 验证是否为非空，为空时抛出异常<br>
 	 * 对于String类型判定是否为empty(null 或 "")<br>
 	 * 
 	 * @param value 值

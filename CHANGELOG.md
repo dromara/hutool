@@ -3,6 +3,30 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.5.7
+
+### 新特性
+* 【core】          新增StrClipboardListener（issue#325@Github）
+* 【core】          新增DesktopUtil（issue#326@Github）
+* 【core】          CollUtil.getFieldValues增加可选是否忽略null值（issue#IVGEE@Gitee）
+* 【http】          新增SoapUtil，SoapClient支持返回SOAPMessage
+* 【core】         RobotUtil增加鼠标相关操作
+* 【core】         增加DateModifier，DateUtil增加truncate和ceiling方法（issue#IVL9A@Gitee）
+* 【core】         PageUtil增加getStart（issue#IVN0C@Gitee）
+* 【core】         CopyOptions增加ignoreXXX方法（感谢@【南昌】...）
+* 【core】         ObjectUtil增加isEmpty方法（感谢@【成都】AliK）
+
+### Bug修复
+* 【core】          修复PatternPool中的URL_HTTP不支持端口的问题（issue#IVF1V@Gitee）
+* 【extra】         修复JschUtil.exec多次connect的问题（issue#339@Github）
+* 【http】          修复SoapUtil.toString乱码问题（pr#337@Github）
+* 【http】          解决Cookie不规范导致的请求响应失败问题（issue#336@Github）
+* 【setting】      GroupedMap增加读写锁解决并发问题（issue#336@Github）
+* 【json】          修复JSONArray中add方法导致覆盖问题（感谢@【江门】小草哥）
+* 【core】         修复Convert对泛型支持不完善的问题（issue#IVMD5@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.5.6
 
 ### 新特性

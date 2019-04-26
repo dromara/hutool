@@ -11,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
  * @since 4.1.2
  */
 public class RandomGenerator extends AbstractGenerator {
+	private static final long serialVersionUID = -7802758587765561876L;
 
 	/**
 	 * 构造，使用字母+数字做为基础

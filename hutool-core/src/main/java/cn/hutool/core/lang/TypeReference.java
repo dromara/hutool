@@ -43,4 +43,9 @@ public abstract class TypeReference<T> implements Type {
 	public Type getType() {
 		return this.type;
 	}
+	
+	@Override
+	public String toString() {
+		return this.type.toString();
+	}
 }

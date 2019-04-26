@@ -23,8 +23,6 @@ public class MmsegEngine implements TokenizerEngine {
 	
 	/**
 	 * 构造
-	 * 
-	 * @param mode 模式{@link SegMode}
 	 */
 	public MmsegEngine() {
 		final Dictionary dict = Dictionary.getInstance();

@@ -44,6 +44,31 @@ public class ClassUtil {
 	public static <T> Class<T> getClass(T obj) {
 		return ((null == obj) ? null : (Class<T>) obj.getClass());
 	}
+	
+	/**
+	 * 获得外围类<br>
+	 * 返回定义此类或匿名类所在的类，如果类本身是在包中定义的，返回{@code null}
+	 * 
+	 * @param clazz 类
+	 * @return 外围类
+	 * @since 4.5.7
+	 */
+	public static Class<?> getEnclosingClass(Class<?> clazz) {
+		return null == clazz ? null : clazz.getEnclosingClass();
+	}
+	
+	/**
+	 * 是否为顶层类，既定义在包中的类，而非定义在类中的内部类
+	 * @param clazz 类
+	 * @return 是否为顶层类
+	 * @since 4.5.7
+	 */
+	public static boolean isTopLevelClass(Class<?> clazz) {
+		if(null == clazz) {
+			return false;
+		}
+		return null == getEnclosingClass(clazz);
+	}
 
 	/**
 	 * 获取类名

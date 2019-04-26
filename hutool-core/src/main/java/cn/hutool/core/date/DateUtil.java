@@ -10,6 +10,7 @@ import java.util.List;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateModifier.ModifyType;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
@@ -46,9 +47,10 @@ public class DateUtil {
 		}
 		return dateNew(date);
 	}
-	
+
 	/**
 	 * 根据已有{@link Date} 产生新的{@link DateTime}对象
+	 * 
 	 * @param date Date对象
 	 * @return {@link DateTime}对象
 	 * @since 4.3.1
@@ -86,7 +88,11 @@ public class DateUtil {
 	 * @return Calendar对象
 	 */
 	public static Calendar calendar(Date date) {
-		return calendar(date.getTime());
+		if(date instanceof DateTime) {
+			return ((DateTime)date).toCalendar();
+		}else {
+			return calendar(date.getTime());
+		}
 	}
 
 	/**
@@ -120,7 +126,7 @@ public class DateUtil {
 	public static long currentSeconds() {
 		return System.currentTimeMillis() / 1000;
 	}
-	
+
 	/**
 	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
 	 * 
@@ -148,18 +154,6 @@ public class DateUtil {
 	 */
 	public static int year(Date date) {
 		return DateTime.of(date).year();
-	}
-
-	/**
-	 * 获得指定日期所属季度
-	 * 
-	 * @param date 日期
-	 * @return 第几个季度
-	 * @deprecated 请使用{@link #quarter(Date)}
-	 */
-	@Deprecated
-	public static int season(Date date) {
-		return quarter(date);
 	}
 
 	/**
@@ -307,6 +301,17 @@ public class DateUtil {
 	}
 
 	/**
+	 * 是否为上午
+	 * 
+	 * @param calendar {@link Calendar}
+	 * @return 是否为上午
+	 * @since 4.5.7
+	 */
+	public static boolean isAM(Calendar calendar) {
+		return Calendar.AM == calendar.get(Calendar.AM_PM);
+	}
+
+	/**
 	 * 是否为下午
 	 * 
 	 * @param date 日期
@@ -407,36 +412,10 @@ public class DateUtil {
 	 * 格式：[20131]表示2013年第一季度
 	 * 
 	 * @param date 日期
-	 * @return Season ，类似于 20132
-	 * @deprecated 请使用{@link #yearAndQuarter} 代替
-	 */
-	@Deprecated
-	public static String yearAndSeason(Date date) {
-		return yearAndSeason(calendar(date));
-	}
-
-	/**
-	 * 获得指定日期年份和季节<br>
-	 * 格式：[20131]表示2013年第一季度
-	 * 
-	 * @param date 日期
 	 * @return Quarter ，类似于 20132
 	 */
 	public static String yearAndQuarter(Date date) {
 		return yearAndQuarter(calendar(date));
-	}
-
-	/**
-	 * 获得指定日期区间内的年份和季节<br>
-	 * 
-	 * @param startDate 起始日期（包含）
-	 * @param endDate 结束日期（包含）
-	 * @return Season列表 ，元素类似于 20132
-	 * @deprecated 请使用{@link #yearAndQuarter} 代替
-	 */
-	@Deprecated
-	public static LinkedHashSet<String> yearAndSeasons(Date startDate, Date endDate) {
-		return yearAndQuarter(startDate, endDate);
 	}
 
 	/**
@@ -587,7 +566,7 @@ public class DateUtil {
 		if (null == date) {
 			return null;
 		}
-		
+
 		String format = DatePattern.CHINESE_DATE_FORMAT.format(date);
 		if (isUppercase) {
 			final StringBuilder builder = StrUtil.builder(format.length());
@@ -743,8 +722,8 @@ public class DateUtil {
 		}
 
 		if (length == DatePattern.NORM_DATETIME_PATTERN.length() || length == DatePattern.NORM_DATETIME_PATTERN.length() + 1) {
-			if(dateStr.contains("T")) {
-				//UTC时间格式：类似2018-09-13T05:34:31
+			if (dateStr.contains("T")) {
+				// UTC时间格式：类似2018-09-13T05:34:31
 				return parseUTC(dateStr);
 			}
 			return parseDateTime(dateStr);
@@ -765,6 +744,78 @@ public class DateUtil {
 	// ------------------------------------ Parse end ----------------------------------------------
 
 	// ------------------------------------ Offset start ----------------------------------------------
+	/**
+	 * 修改日期为某个时间字段起始时间
+	 * 
+	 * @param date {@link Date}
+	 * @param dateField 时间字段
+	 * @return {@link DateTime}
+	 * @since 4.5.7
+	 */
+	public static DateTime truncate(Date date, DateField dateField) {
+		return new DateTime(truncate(calendar(date), dateField));
+	}
+
+	/**
+	 * 修改日期为某个时间字段起始时间
+	 * 
+	 * @param calendar {@link Calendar}
+	 * @param dateField 时间字段
+	 * @return 原{@link Calendar}
+	 * @since 4.5.7
+	 */
+	public static Calendar truncate(Calendar calendar, DateField dateField) {
+		return DateModifier.modify(calendar, dateField.getValue(), ModifyType.TRUNCATE);
+	}
+
+	/**
+	 * 修改日期为某个时间字段四舍五入时间
+	 * 
+	 * @param date {@link Date}
+	 * @param dateField 时间字段
+	 * @return {@link DateTime}
+	 * @since 4.5.7
+	 */
+	public static DateTime round(Date date, DateField dateField) {
+		return new DateTime(round(calendar(date), dateField));
+	}
+
+	/**
+	 * 修改日期为某个时间字段四舍五入时间
+	 * 
+	 * @param calendar {@link Calendar}
+	 * @param dateField 时间字段
+	 * @return 原{@link Calendar}
+	 * @since 4.5.7
+	 */
+	public static Calendar round(Calendar calendar, DateField dateField) {
+		return DateModifier.modify(calendar, dateField.getValue(), ModifyType.ROUND);
+	}
+
+	/**
+	 * 修改日期为某个时间字段结束时间
+	 * 
+	 * @param date {@link Date}
+	 * @param dateField 时间字段
+	 * @return {@link DateTime}
+	 * @since 4.5.7
+	 */
+	public static DateTime ceiling(Date date, DateField dateField) {
+		return new DateTime(ceiling(calendar(date), dateField));
+	}
+
+	/**
+	 * 修改日期为某个时间字段结束时间
+	 * 
+	 * @param calendar {@link Calendar}
+	 * @param dateField 时间字段
+	 * @return 原{@link Calendar}
+	 * @since 4.5.7
+	 */
+	public static Calendar ceiling(Calendar calendar, DateField dateField) {
+		return DateModifier.modify(calendar, dateField.getValue(), ModifyType.CEILING);
+	}
+
 	/**
 	 * 获取某天的开始时间
 	 * 
@@ -792,11 +843,7 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar beginOfDay(Calendar calendar) {
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-		return calendar;
+		return truncate(calendar, DateField.DAY_OF_MONTH);
 	}
 
 	/**
@@ -806,11 +853,7 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar endOfDay(Calendar calendar) {
-		calendar.set(Calendar.HOUR_OF_DAY, 23);
-		calendar.set(Calendar.MINUTE, 59);
-		calendar.set(Calendar.SECOND, 59);
-		calendar.set(Calendar.MILLISECOND, 999);
-		return calendar;
+		return ceiling(calendar, DateField.DAY_OF_MONTH);
 	}
 
 	/**
@@ -852,14 +895,10 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar beginOfWeek(Calendar calendar, boolean isMondayAsFirstDay) {
-		if (isMondayAsFirstDay) {
-			// 设置周一为一周开始
-			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		} else {
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		if(isMondayAsFirstDay) {
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		}
-		return beginOfDay(calendar);
+		return truncate(calendar, DateField.WEEK_OF_MONTH);
 	}
 
 	/**
@@ -881,14 +920,10 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar endOfWeek(Calendar calendar, boolean isSundayAsLastDay) {
-		if (isSundayAsLastDay) {
-			// 设置周一为一周开始
-			calendar.setFirstDayOfWeek(Week.MONDAY.getValue());
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		} else {
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+		if(isSundayAsLastDay) {
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		}
-		return endOfDay(calendar);
+		return ceiling(calendar, DateField.WEEK_OF_MONTH);
 	}
 
 	/**
@@ -918,8 +953,7 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar beginOfMonth(Calendar calendar) {
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		return beginOfDay(calendar);
+		return truncate(calendar, DateField.MONTH);
 	}
 
 	/**
@@ -929,8 +963,7 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar endOfMonth(Calendar calendar) {
-		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-		return endOfDay(calendar);
+		return ceiling(calendar, DateField.MONTH);
 	}
 
 	/**
@@ -1006,8 +1039,7 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar beginOfYear(Calendar calendar) {
-		calendar.set(Calendar.MONTH, Calendar.JANUARY);
-		return beginOfMonth(calendar);
+		return truncate(calendar, DateField.YEAR);
 	}
 
 	/**
@@ -1017,8 +1049,7 @@ public class DateUtil {
 	 * @return {@link Calendar}
 	 */
 	public static Calendar endOfYear(Calendar calendar) {
-		calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-		return endOfMonth(calendar);
+		return ceiling(calendar, DateField.YEAR);
 	}
 
 	// --------------------------------------------------- Offset for now
@@ -1613,7 +1644,7 @@ public class DateUtil {
 	public static List<DateTime> rangeToList(Date start, Date end, final DateField unit) {
 		return CollUtil.newArrayList((Iterable<DateTime>) range(start, end, unit));
 	}
-	
+
 	/**
 	 * 通过生日计算星座
 	 * 
@@ -1625,7 +1656,7 @@ public class DateUtil {
 	public static String getZodiac(int month, int day) {
 		return Zodiac.getZodiac(month, day);
 	}
-	
+
 	/**
 	 * 计算生肖，只计算1900年后出生的人
 	 * 
@@ -1636,20 +1667,40 @@ public class DateUtil {
 	public static String getChineseZodiac(int year) {
 		return Zodiac.getChineseZodiac(year);
 	}
-
-	// ------------------------------------------------------------------------ Private method start
+	
 	/**
-	 * 获得指定日期年份和季节<br>
-	 * 格式：[20131]表示2013年第一季度
+	 * 获取指定日期字段的最小值，例如分钟的最小值是0
 	 * 
-	 * @param cal 日期
-	 * @deprecated 请使用{@link yearAndQuarter}
+	 * @param calendar {@link Calendar}
+	 * @param dateField {@link DateField}
+	 * @return 字段最小值
+	 * @since 4.5.7
+	 * @see Calendar#getActualMinimum(int)
 	 */
-	@Deprecated
-	private static String yearAndSeason(Calendar cal) {
-		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
+	public static int getBeginValue(Calendar calendar, int dateField) {
+		if(Calendar.DAY_OF_WEEK == dateField) {
+			return calendar.getFirstDayOfWeek();
+		}
+		return calendar.getActualMinimum(dateField);
+	}
+	
+	/**
+	 * 获取指定日期字段的最大值，例如分钟的最小值是59
+	 * 
+	 * @param calendar {@link Calendar}
+	 * @param dateField {@link DateField}
+	 * @return 字段最大值
+	 * @since 4.5.7
+	 * @see Calendar#getActualMaximum(int)
+	 */
+	public static int getEndValue(Calendar calendar, int dateField) {
+		if(Calendar.DAY_OF_WEEK == dateField) {
+			return (calendar.getFirstDayOfWeek() + 6) % 7;
+		}
+		return calendar.getActualMaximum(dateField);
 	}
 
+	// ------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>
 	 * 格式：[20131]表示2013年第一季度
