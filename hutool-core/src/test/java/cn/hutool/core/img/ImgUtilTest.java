@@ -22,7 +22,7 @@ public class ImgUtilTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void scalePngTest() {
 		ImgUtil.scale(FileUtil.file("e:/pic/hutool.png"), FileUtil.file("e:/pic/hutool_result.png"), 0.5f);
 	}

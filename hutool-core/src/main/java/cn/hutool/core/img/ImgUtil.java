@@ -113,7 +113,7 @@ public class ImgUtil {
 	 * @since 3.2.2
 	 */
 	public static void scale(Image srcImg, File destFile, float scale) throws IORuntimeException {
-		write(scale(srcImg, scale), destFile);
+		Img.from(srcImg).setTargetImageType(FileUtil.extName(destFile)).scale(scale).write(destFile);
 	}
 
 	/**

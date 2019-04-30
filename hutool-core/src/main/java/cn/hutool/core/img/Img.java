@@ -10,8 +10,10 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.CropImageFilter;
@@ -195,12 +197,20 @@ public class Img {
 		}
 
 		final Image srcImg = getValidSrcImg();
-		final String scaleStr = Float.toString(scale);
-		// 缩放后的图片宽
-		int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), scaleStr).intValue();
-		// 缩放后的图片高
-		int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), scaleStr).intValue();
-		return scale(width, height);
+
+		// PNG图片特殊处理
+		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
+			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance((double) scale, (double) scale), null);
+			this.targetImage = op.filter(ImgUtil.toBufferedImage(srcImg), null);
+		} else {
+			final String scaleStr = Float.toString(scale);
+			// 缩放后的图片宽
+			int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), scaleStr).intValue();
+			// 缩放后的图片高
+			int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), scaleStr).intValue();
+			scale(width, height);
+		}
+		return this;
 	}
 
 	/**
@@ -227,14 +237,22 @@ public class Img {
 		} else {
 			scaleType = Image.SCALE_DEFAULT;
 		}
-		final Image image = srcImg.getScaledInstance(width, height, scaleType);
-//		ImgUtil.write(ImgUtil.toBufferedImage(image), FileUtil.file("e:/pic/hutool2.png"));
-		this.targetImage = image;
+		
+		double sx = NumberUtil.div(width, srcWidth);
+		double sy = NumberUtil.div(height, srcHeight);
+
+		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
+			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(sx, sy), null);
+			this.targetImage = op.filter(ImgUtil.toBufferedImage(srcImg), null);
+		} else {
+			this.targetImage = srcImg.getScaledInstance(width, height, scaleType);
+		}
+
 		return this;
 	}
 
 	/**
-	 * 缩放图像（按高度和宽度缩放）<br>
+	 * 等比缩放图像，此方法按照按照给定的长宽等比缩放图片，按照长宽缩放比最多的一边等比缩放，空白部分填充背景色<br>
 	 * 缩放后默认为jpeg格式
 	 * 
 	 * @param width 缩放后的宽度
@@ -253,7 +271,7 @@ public class Img {
 			return scale(width, height);
 		}
 
-		// 宽缩放比例小就按照宽缩放，否则按照高缩放
+		// 宽缩放比例多就按照宽缩放，否则按照高缩放
 		if (widthRatio < heightRatio) {
 			scale(width, (int) (srcHeight * widthRatio));
 		} else {

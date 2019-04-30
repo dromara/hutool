@@ -56,7 +56,7 @@ public class ExcelSaxReadTest {
 	@Test
 	@Ignore
 	public void readBySaxTest3() {
-		ExcelUtil.readBySax("e:/test.xlsx", 0, new RowHandler() {
+		ExcelUtil.readBySax("e:/excel/writeMapTest.xlsx", 0, new RowHandler() {
 			
 			@Override
 			public void handle(int sheetIndex, int rowIndex, List<Object> rowList) {
