@@ -228,6 +228,7 @@ public class Img {
 			scaleType = Image.SCALE_DEFAULT;
 		}
 		final Image image = srcImg.getScaledInstance(width, height, scaleType);
+//		ImgUtil.write(ImgUtil.toBufferedImage(image), FileUtil.file("e:/pic/hutool2.png"));
 		this.targetImage = image;
 		return this;
 	}
