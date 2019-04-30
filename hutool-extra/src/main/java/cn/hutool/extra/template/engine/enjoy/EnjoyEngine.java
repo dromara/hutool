@@ -6,6 +6,7 @@ import com.jfinal.template.source.FileSourceFactory;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
@@ -67,7 +68,7 @@ public class EnjoyEngine implements TemplateEngine {
 	 */
 	private static com.jfinal.template.Engine createEngine(TemplateConfig config) {
 		Assert.notNull(config, "Template config is null !");
-		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine-" + config.toString());
+		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine-" + IdUtil.fastSimpleUUID());
 		engine.setEncoding(config.getCharsetStr());
 
 		switch (config.getResourceMode()) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -15,6 +16,23 @@ import cn.hutool.core.lang.Assert;
  *
  */
 public class CronPatternUtil {
+
+	/**
+	 * 列举指定日期之后（到开始日期对应年年底）内第一个匹配表达式的日期
+	 * 
+	 * @param pattern 表达式
+	 * @param start 起始时间
+	 * @param isMatchSecond 是否匹配秒
+	 * @return 日期
+	 * @since 4.5.8
+	 */
+	public static Date nextDateAfter(CronPattern pattern, Date start, boolean isMatchSecond) {
+		List<Date> matchedDates = matchedDates(pattern, start.getTime(), DateUtil.endOfYear(start).getTime(), 1, isMatchSecond);
+		if (CollUtil.isNotEmpty(matchedDates)) {
+			return matchedDates.get(0);
+		}
+		return null;
+	}
 
 	/**
 	 * 列举指定日期之后（到开始日期对应年年底）内所有匹配表达式的日期

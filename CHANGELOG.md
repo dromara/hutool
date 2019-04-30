@@ -6,7 +6,11 @@
 ## 4.5.8
 
 ### 新特性
+* 【cron】          CronPatternUtil增加nextDateAfter方法（issue#IVYNL@Github）
+
 ### Bug修复
+* 【core】          修复Enjoy模板创建多个引擎报错问题（issue#344@Github）
+* 【crypto】       修复Linux下RSA/ECB/PKCS1Padding算法无效问题
 
 -------------------------------------------------------------------------------------------------------------
 
