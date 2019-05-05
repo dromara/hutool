@@ -28,7 +28,7 @@ public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 	}
 
 	public ApacheCommonsLog4JLog(Class<?> clazz) {
-		this(LogFactory.getLog(clazz), clazz.getName());
+		this(LogFactory.getLog(clazz), null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
 	public ApacheCommonsLog4JLog(String name) {

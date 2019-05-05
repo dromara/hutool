@@ -1,5 +1,6 @@
 package cn.hutool.db.meta;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -12,7 +13,8 @@ import cn.hutool.db.DbRuntimeException;
  * @author loolly
  *
  */
-public class Column implements Cloneable {
+public class Column implements Serializable, Cloneable {
+	private static final long serialVersionUID = 577527740359719367L;
 
 	// ----------------------------------------------------- Fields start
 	/** 表名 */
@@ -22,6 +24,8 @@ public class Column implements Cloneable {
 	private String name;
 	/** 类型，对应java.sql.Types中的类型 */
 	private int type;
+	/** 类型名称 */
+	private String typeName;
 	/** 大小或数据长度 */
 	private int size;
 	/** 是否为可空 */
@@ -75,6 +79,7 @@ public class Column implements Cloneable {
 
 		this.name = columnMetaRs.getString("COLUMN_NAME");
 		this.type = columnMetaRs.getInt("DATA_TYPE");
+		this.typeName = columnMetaRs.getString("TYPE_NAME");
 		this.size = columnMetaRs.getInt("COLUMN_SIZE");
 		this.isNullable = columnMetaRs.getBoolean("NULLABLE");
 		this.comment = columnMetaRs.getString("REMARKS");
@@ -94,9 +99,11 @@ public class Column implements Cloneable {
 	 * 设置表名
 	 * 
 	 * @param tableName 表名
+	 * @return this
 	 */
-	public void setTableName(String tableName) {
+	public Column setTableName(String tableName) {
 		this.tableName = tableName;
+		return this;
 	}
 
 	/**
@@ -112,13 +119,25 @@ public class Column implements Cloneable {
 	 * 设置列名
 	 * 
 	 * @param name 列名
+	 * @return this
 	 */
-	public void setName(String name) {
+	public Column setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	/**
-	 * 获取类型，对应java.sql.Types中的类型
+	 * 获取字段类型的枚举
+	 * 
+	 * @return 阻断类型枚举
+	 * @since 4.5.8
+	 */
+	public JdbcType getTypeEnum() {
+		return JdbcType.valueOf(this.type);
+	}
+	
+	/**
+	 * 获取类型，对应{@link java.sql.Types}中的类型
 	 * 
 	 * @return 类型
 	 */
@@ -130,9 +149,31 @@ public class Column implements Cloneable {
 	 * 设置类型，对应java.sql.Types中的类型
 	 * 
 	 * @param type 类型
+	 * @return this
 	 */
-	public void setType(int type) {
+	public Column setType(int type) {
 		this.type = type;
+		return this;
+	}
+	
+	/**
+	 * 获取类型名称
+	 * 
+	 * @return 类型名称
+	 */
+	public String getTypeName() {
+		return typeName;
+	}
+	
+	/**
+	 * 设置类型名称
+	 * 
+	 * @param typeName 类型名称
+	 * @return this
+	 */
+	public Column setTypeName(String typeName) {
+		this.typeName = typeName;
+		return this;
 	}
 
 	/**
@@ -148,9 +189,11 @@ public class Column implements Cloneable {
 	 * 设置大小或数据长度
 	 * 
 	 * @param size 大小或数据长度
+	 * @return this
 	 */
-	public void setSize(int size) {
+	public Column setSize(int size) {
 		this.size = size;
+		return this;
 	}
 
 	/**
@@ -166,9 +209,11 @@ public class Column implements Cloneable {
 	 * 设置是否为可空
 	 * 
 	 * @param isNullable 是否为可空
+	 * @return this
 	 */
-	public void setNullable(boolean isNullable) {
+	public Column setNullable(boolean isNullable) {
 		this.isNullable = isNullable;
+		return this;
 	}
 
 	/**
@@ -184,9 +229,11 @@ public class Column implements Cloneable {
 	 * 设置注释
 	 * 
 	 * @param comment 注释
+	 * @return this
 	 */
-	public void setComment(String comment) {
+	public Column setComment(String comment) {
 		this.comment = comment;
+		return this;
 	}
 	// ----------------------------------------------------- Getters and Setters end
 

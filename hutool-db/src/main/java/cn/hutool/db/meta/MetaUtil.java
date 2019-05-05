@@ -129,7 +129,7 @@ public class MetaUtil {
 		try {
 			conn = ds.getConnection();
 			final DatabaseMetaData metaData = conn.getMetaData();
-			rs = metaData.getColumns(conn.getCatalog(), null, tableName, null);
+			rs = metaData.getColumns(conn.getCatalog(), conn.getSchema(), tableName, null);
 			while (rs.next()) {
 				columnNames.add(rs.getString("COLUMN_NAME"));
 			}
@@ -168,15 +168,25 @@ public class MetaUtil {
 		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
+			final String catalog = conn.getCatalog();
+			final String schema = conn.getSchema();
+			
 			final DatabaseMetaData metaData = conn.getMetaData();
+			
+			// 获得表元数据（表注释）
+			rs = metaData.getTables(catalog, schema, tableName, new String[] {TableType.TABLE.value()});
+			if(rs.next()) {
+				table.setComment(rs.getString("REMARKS"));
+			}
+			
 			// 获得主键
-			rs = metaData.getPrimaryKeys(conn.getCatalog(), null, tableName);
+			rs = metaData.getPrimaryKeys(catalog, schema, tableName);
 			while (rs.next()) {
 				table.addPk(rs.getString("COLUMN_NAME"));
 			}
 
 			// 获得列
-			rs = metaData.getColumns(conn.getCatalog(), null, tableName, null);
+			rs = metaData.getColumns(catalog, schema, tableName, null);
 			while (rs.next()) {
 				table.setColumn(Column.create(tableName, rs));
 			}

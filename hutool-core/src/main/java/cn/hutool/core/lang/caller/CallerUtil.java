@@ -64,11 +64,18 @@ public class CallerUtil {
 	 * @return {@link Caller}实现
 	 */
 	private static Caller tryCreateCaller() {
+		Caller caller = null;
 		try {
-			return new SecurityManagerCaller();
+			caller = new SecurityManagerCaller();
+			if(null != caller.getCaller() && null != caller.getCallerCaller()) {
+				return caller;
+			}
 		} catch (Throwable e) {
+			//ignore
 		}
-		return new StackTraceCaller();
+		
+		caller = new StackTraceCaller();
+		return caller;
 	}
 	// ---------------------------------------------------------------------------------------------- static interface and class
 }

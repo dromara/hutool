@@ -19,14 +19,29 @@ public class JbossLog extends AbstractLocationAwareLog {
 	private final transient Logger logger;
 
 	// ------------------------------------------------------------------------- Constructor
+	/**
+	 * 构造
+	 * 
+	 * @param logger {@link Logger}
+	 */
 	public JbossLog(Logger logger) {
 		this.logger = logger;
 	}
 
+	/**
+	 * 构造
+	 * 
+	 * @param clazz 日志打印所在类
+	 */
 	public JbossLog(Class<?> clazz) {
-		this(Logger.getLogger(clazz));
+		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
+	/**
+	 * 构造
+	 * 
+	 * @param name 日志打印所在类名
+	 */
 	public JbossLog(String name) {
 		this(Logger.getLogger(name));
 	}
