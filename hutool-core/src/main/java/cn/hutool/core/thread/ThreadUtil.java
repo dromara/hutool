@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +26,11 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor(int threadSize) {
-		return ExecutorBuilder.create().setCorePoolSize(threadSize).build();
+		ExecutorBuilder builder = ExecutorBuilder.create();
+		if(threadSize > 0) {
+			builder.setCorePoolSize(threadSize);
+		}
+		return builder.build();
 	}
 
 	/**
@@ -36,7 +39,7 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor() {
-		return ExecutorBuilder.create().setWorkQueue(new SynchronousQueue<Runnable>()).build();
+		return ExecutorBuilder.create().useSynchronousQueue().build();
 	}
 
 	/**
