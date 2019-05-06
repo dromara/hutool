@@ -36,6 +36,12 @@ public class HighConcurrencyTestUtil {
         end = new CountDownLatch(size);
     }
 
+    /**
+     * 启动并发测试
+     *
+     * @param executeFun
+     * @throws InterruptedException
+     */
     public void run(final ExecuteFun executeFun) throws InterruptedException {
         ExecutorService executorService = ThreadUtil.newExecutor(size);
         for (int i = 0; i < size; i++) {
@@ -63,7 +69,9 @@ public class HighConcurrencyTestUtil {
         executorService.shutdown();
     }
 
-
+    /**
+     * 并发测试业务代码函数入口
+     */
     public interface ExecuteFun {
         void run();
     }
