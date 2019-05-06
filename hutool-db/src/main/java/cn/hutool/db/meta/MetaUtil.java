@@ -140,7 +140,7 @@ public class MetaUtil {
 			DbUtil.close(rs, conn);
 		}
 	}
-	
+
 	/**
 	 * 创建带有字段限制的Entity对象<br>
 	 * 此方法读取数据库中对应表的字段列表，加入到Entity中，当Entity被设置内容时，会忽略对应表字段外的所有KEY
@@ -153,7 +153,7 @@ public class MetaUtil {
 		final String[] columnNames = getColumnNames(ds, tableName);
 		return Entity.create(tableName).setFieldNames(columnNames);
 	}
-	
+
 	/**
 	 * 获得表的元信息
 	 * 
@@ -168,17 +168,29 @@ public class MetaUtil {
 		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
-			final String catalog = conn.getCatalog();
-			final String schema = conn.getSchema();
-			
+
+			// catalog和schema获取失败默认使用null代替
+			String catalog = null;
+			try {
+				catalog = conn.getCatalog();
+			} catch (SQLException e) {
+				// ignore
+			}
+			String schema = null;
+			try {
+				schema = conn.getSchema();
+			} catch (SQLException e) {
+				// ignore
+			}
+
 			final DatabaseMetaData metaData = conn.getMetaData();
-			
+
 			// 获得表元数据（表注释）
-			rs = metaData.getTables(catalog, schema, tableName, new String[] {TableType.TABLE.value()});
-			if(rs.next()) {
+			rs = metaData.getTables(catalog, schema, tableName, new String[] { TableType.TABLE.value() });
+			if (rs.next()) {
 				table.setComment(rs.getString("REMARKS"));
 			}
-			
+
 			// 获得主键
 			rs = metaData.getPrimaryKeys(catalog, schema, tableName);
 			while (rs.next()) {

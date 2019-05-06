@@ -229,7 +229,7 @@ public class Slf4jLog extends AbstractLocationAwareLog {
 	 * 获取Slf4j Logger对象
 	 * 
 	 * @param clazz 打印日志所在类，当为{@code null}时使用“null”表示
-	 * @return
+	 * @return {@link Logger}
 	 */
 	private static Logger getSlf4jLogger(Class<?> clazz) {
 		return (null == clazz) ? LoggerFactory.getLogger(StrUtil.EMPTY) : LoggerFactory.getLogger(clazz);

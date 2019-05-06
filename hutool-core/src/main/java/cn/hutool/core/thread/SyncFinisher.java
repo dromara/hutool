@@ -41,7 +41,6 @@ public class SyncFinisher {
 	 * 构造
 	 * 
 	 * @param threadSize 线程数
-	 * @return this
 	 */
 	public SyncFinisher(int threadSize) {
 		this.beginLatch = new CountDownLatch(1);
