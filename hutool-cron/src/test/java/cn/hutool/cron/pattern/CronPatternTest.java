@@ -101,7 +101,7 @@ public class CronPatternTest {
 	}
 
 	@Test
-	public void quartzPatternTest() {
+	public void patternTest() {
 		CronPattern pattern = new CronPattern("* 0 4 * * ?");
 		assertMatch(pattern, "2017-02-09 04:00:00");
 		assertMatch(pattern, "2017-02-19 04:00:33");
@@ -113,7 +113,7 @@ public class CronPatternTest {
 	}
 
 	@Test
-	public void quartzRangePatternTest() {
+	public void rangePatternTest() {
 		CronPattern pattern = new CronPattern("* 20/2 * * * ?");
 		assertMatch(pattern, "2017-02-09 04:20:00");
 		assertMatch(pattern, "2017-02-09 05:20:00");

@@ -25,8 +25,7 @@ public class TinyLog extends AbstractLog {
 
 	// ------------------------------------------------------------------------- Constructor
 	public TinyLog(Class<?> clazz) {
-		this.name = clazz.getName();
-		this.level = Logger.getLevel(name).ordinal();
+		this(null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
 	public TinyLog(String name) {

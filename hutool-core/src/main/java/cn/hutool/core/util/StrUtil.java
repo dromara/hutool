@@ -55,6 +55,7 @@ public class StrUtil {
 	public static final String SLASH = "/";
 	public static final String BACKSLASH = "\\";
 	public static final String EMPTY = "";
+	public static final String NULL = "null";
 	public static final String CR = "\r";
 	public static final String LF = "\n";
 	public static final String CRLF = "\r\n";
@@ -383,7 +384,7 @@ public class StrUtil {
 	 */
 	private static boolean isNullOrUndefinedStr(CharSequence str) {
 		String strString = str.toString().trim();
-		return "null".equals(strString) || "undefined".equals(strString);
+		return NULL.equals(strString) || "undefined".equals(strString);
 	}
 
 	// ------------------------------------------------------------------------ Trim
@@ -2447,7 +2448,7 @@ public class StrUtil {
 	 * @since 4.1.3
 	 */
 	public static String toString(Object obj) {
-		return null == obj ? "null" : obj.toString();
+		return null == obj ? NULL : obj.toString();
 	}
 
 	/**

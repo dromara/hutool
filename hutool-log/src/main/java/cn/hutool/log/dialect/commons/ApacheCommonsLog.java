@@ -25,7 +25,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	public ApacheCommonsLog(Class<?> clazz) {
-		this(LogFactory.getLog(clazz), clazz.getName());
+		this(LogFactory.getLog(clazz), null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
 	public ApacheCommonsLog(String name) {

@@ -24,7 +24,7 @@ public class Log4jLog extends AbstractLocationAwareLog {
 	}
 
 	public Log4jLog(Class<?> clazz) {
-		this(Logger.getLogger(clazz));
+		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
 	public Log4jLog(String name) {

@@ -3,6 +3,25 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.5.8
+
+### 新特性
+* 【cron】          CronPatternUtil增加nextDateAfter方法（issue#IVYNL@Github）
+* 【core】          增加RandomUtil.randomDate方法（issue#IW49T@Github）
+* 【db】             Table增加comment字段，调整元信息逻辑（issue#IW49S@Gitee）
+* 【core】          增加ConcurrencyTester（pr#41@Gitee）
+* 【core】          ZipUtil增加对流的解压支持（issue#IW798@Gitee）
+
+### Bug修复
+* 【core】          修复Enjoy模板创建多个引擎报错问题（issue#344@Github）
+* 【crypto】       修复Linux下RSA/ECB/PKCS1Padding算法无效问题
+* 【core】          修复ImgUtil.scale方法操作png图片透明失效问题（issue#341@Github）
+* 【core】          修复JSON自定义日期格式无引号问题（issue#IW4F6@Gitee）
+* 【core】          修复Android下CallerUtil.getCallerCaller空指针问题（issue#IW68U@Gitee）
+* 【cache】        修复Cache中超时太大导致Long越界问题（issue#347@Github）
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.5.7
 
 ### 新特性

@@ -51,7 +51,7 @@ final class InternalJSONUtil {
 			writer.write(NumberUtil.toStr((Number) value));
 		} else if (value instanceof Date || value instanceof Calendar) {
 			final String format = (null == config) ? null : config.getDateFormat();
-			writer.write(formatDate(value, format));
+			writer.write(JSONUtil.quote(formatDate(value, format)));
 		} else if (value instanceof Boolean) {
 			writer.write(value.toString());
 		} else if (value instanceof JSONString) {

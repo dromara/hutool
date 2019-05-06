@@ -8,7 +8,7 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>4.5.7</version>
+	<version>4.5.8</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
@@ -40,6 +40,7 @@
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 
 		<!-- versions -->
+		<compile.version>7</compile.version>
 		<junit.version>4.12</junit.version>
 	</properties>
 
@@ -85,8 +86,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<source>7</source>
-					<target>7</target>
+					<source>${compile.version}</source>
+					<target>${compile.version}</target>
 				</configuration>
 			</plugin>
 			<!-- Javadoc -->

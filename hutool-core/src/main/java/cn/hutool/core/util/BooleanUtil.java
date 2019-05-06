@@ -52,7 +52,7 @@ public class BooleanUtil {
 	 * </pre>
 	 *
 	 * @param bool 被检查的Boolean值
-	 * @return 当值为true且非null时返回{@code true}
+	 * @return 当值为false且非null时返回{@code true}
 	 */
 	public static boolean isFalse(Boolean bool) {
 		return Boolean.FALSE.equals(bool);

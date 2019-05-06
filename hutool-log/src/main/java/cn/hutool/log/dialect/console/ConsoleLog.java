@@ -28,7 +28,7 @@ public class ConsoleLog extends AbstractLog {
 	 * @param clazz 类
 	 */
 	public ConsoleLog(Class<?> clazz) {
-		this.name = clazz.getName();
+		this.name = (null == clazz) ? StrUtil.NULL : clazz.getName();
 	}
 	
 	/**
