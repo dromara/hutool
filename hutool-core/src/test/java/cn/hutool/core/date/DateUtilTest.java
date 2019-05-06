@@ -181,6 +181,12 @@ public class DateUtilTest {
 	}
 	
 	@Test
+	public void betweenTest2(){
+		long between = DateUtil.between(DateUtil.parse("2019-05-06 02:15:00"),DateUtil.parse("2019-05-06 02:20:00"), DateUnit.HOUR);
+		Assert.assertEquals(0, between);
+	}
+	
+	@Test
 	public void formatChineseDateTest() {
 		String formatChineseDate = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24"), true);
 		Assert.assertEquals("二〇一八年二月二十四日", formatChineseDate);

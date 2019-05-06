@@ -632,7 +632,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 格式yyyy-MM-dd
+	 * 解析格式为yyyy-MM-dd的日期，忽略时分秒
 	 * 
 	 * @param dateString 标准形式的日期字符串
 	 * @return 日期对象
@@ -643,7 +643,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 解析时间，格式HH:mm:ss，默认为1970-01-01
+	 * 解析时间，格式HH:mm:ss，日期部分默认为1970-01-01
 	 * 
 	 * @param timeString 标准形式的日期字符串
 	 * @return 日期对象
