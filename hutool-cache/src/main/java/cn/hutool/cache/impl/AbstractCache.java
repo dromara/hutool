@@ -133,7 +133,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 				missCount++;
 				return null;
 			}
-
+			
 			if (false == co.isExpired()) {
 				// 命中
 				hitCount++;

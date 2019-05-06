@@ -39,7 +39,14 @@ public class CacheObj<K, V> {
 	 * @return 是否过期
 	 */
 	boolean isExpired() {
-		return (this.ttl > 0) && (this.lastAccess + this.ttl < System.currentTimeMillis());
+		if(this.ttl > 0) {
+			final long expiredTime = this.lastAccess + this.ttl;
+			if(expiredTime > 0 && expiredTime < System.currentTimeMillis()) {
+				// expiredTime > 0 杜绝Long类型溢出变负数问题，当当前时间超过过期时间，表示过期
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**

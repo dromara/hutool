@@ -16,6 +16,7 @@
 * 【core】          修复ImgUtil.scale方法操作png图片透明失效问题（issue#341@Github）
 * 【core】          修复JSON自定义日期格式无引号问题（issue#IW4F6@Gitee）
 * 【core】          修复Android下CallerUtil.getCallerCaller空指针问题（issue#IW68U@Gitee）
+* 【cache】        修复Cache中超时太大导致Long越界问题（issue#347@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
