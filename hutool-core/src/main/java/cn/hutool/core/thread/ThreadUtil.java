@@ -27,7 +27,7 @@ public class ThreadUtil {
 	 */
 	public static ExecutorService newExecutor(int threadSize) {
 		ExecutorBuilder builder = ExecutorBuilder.create();
-		if(threadSize > 0) {
+		if (threadSize > 0) {
 			builder.setCorePoolSize(threadSize);
 		}
 		return builder.build();
@@ -438,5 +438,20 @@ public class ThreadUtil {
 				// ignore
 			}
 		}
+	}
+
+	/**
+	 * 并发测试<br>
+	 * 此方法用于测试多线程下执行某些逻辑的并发性能<br>
+	 * 调用此方法会导致当前线程阻塞。<br>
+	 * 结束后可调用{@link ConcurrencyTester#getInterval()} 方法获取执行时间
+	 * 
+	 * @param threadSize 并发线程数
+	 * @param runnable 执行的逻辑实现
+	 * @return {@link ConcurrencyTester}
+	 * @since 4.5.8
+	 */
+	public static ConcurrencyTester concurrencyTest(int threadSize, Runnable runnable) {
+		return (new ConcurrencyTester(threadSize)).test(runnable);
 	}
 }

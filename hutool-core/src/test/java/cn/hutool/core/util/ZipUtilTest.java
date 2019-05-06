@@ -34,6 +34,13 @@ public class ZipUtilTest {
 	
 	@Test
 	@Ignore
+	public void unzipFromStreamTest() {
+		File unzip = ZipUtil.unzip(FileUtil.getInputStream("e:/test/antlr.zip"), FileUtil.file("e:/test/"), CharsetUtil.CHARSET_UTF_8);
+		Console.log(unzip);
+	}
+	
+	@Test
+	@Ignore
 	public void unzipChineseTest() {
 		ZipUtil.unzip("d:/测试.zip");
 	}

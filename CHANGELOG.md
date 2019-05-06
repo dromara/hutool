@@ -10,6 +10,7 @@
 * 【core】          增加RandomUtil.randomDate方法（issue#IW49T@Github）
 * 【db】             Table增加comment字段，调整元信息逻辑（issue#IW49S@Gitee）
 * 【core】          增加ConcurrencyTester（pr#41@Gitee）
+* 【core】          ZipUtil增加对流的解压支持（issue#IW798@Gitee）
 
 ### Bug修复
 * 【core】          修复Enjoy模板创建多个引擎报错问题（issue#344@Github）
