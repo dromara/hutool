@@ -51,7 +51,7 @@ final class InternalJSONUtil {
 			writer.write(NumberUtil.toStr((Number) value));
 		} else if (value instanceof Date || value instanceof Calendar) {
 			final String format = (null == config) ? null : config.getDateFormat();
-			writer.write(JSONUtil.quote(formatDate(value, format)));
+			writer.write(formatDate(value, format));
 		} else if (value instanceof Boolean) {
 			writer.write(value.toString());
 		} else if (value instanceof JSONString) {
@@ -232,7 +232,7 @@ final class InternalJSONUtil {
 		if (StrUtil.isNotBlank(format)) {
 			final Date date = (dateObj instanceof Date) ? (Date)dateObj : ((Calendar)dateObj).getTime();
 			//用户定义了日期格式
-			return DateUtil.format(date, format);
+			return JSONUtil.quote(DateUtil.format(date, format));
 		}
 		
 		//默认使用时间戳

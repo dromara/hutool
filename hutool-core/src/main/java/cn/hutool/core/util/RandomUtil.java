@@ -74,6 +74,16 @@ public class RandomUtil {
 	public static Random getRandom(boolean isSecure) {
 		return isSecure ? getSecureRandom() : getRandom();
 	}
+	
+	/**
+	 * 获得随机Boolean值
+	 * 
+	 * @return true or false
+	 * @since 4.5.9
+	 */
+	public static boolean randomBoolean() {
+		return 0 == randomInt(2);
+	}
 
 	/**
 	 * 获得指定范围内的随机数

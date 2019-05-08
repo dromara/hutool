@@ -62,6 +62,15 @@ public class JSONObjectTest {
 				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
 	}
+	
+	@Test
+	public void toStringWithDateTest() {
+		JSONObject json = JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21"));
+		Assert.assertEquals("{\"date\":1557314301000}", json.toString());
+		
+		json = JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21")).setDateFormat(DatePattern.NORM_DATE_PATTERN);
+		Assert.assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
+	}
 
 	@Test
 	public void putAllTest() {
