@@ -17,7 +17,7 @@ public class Base62Test {
 		String encode = Base62.encode(a);
 		Assert.assertEquals("17vKU8W4JMG8dQF8lk9VNnkdMOeWn4rJMva6F0XsLrrT53iKBnqo", encode);
 
-		String decodeStr = Base64.decodeStr(encode);
+		String decodeStr = Base62.decodeStr(encode);
 		Assert.assertEquals(a, decodeStr);
 	}
 }

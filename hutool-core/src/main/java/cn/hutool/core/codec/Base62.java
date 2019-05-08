@@ -103,7 +103,7 @@ public class Base62 {
 	 * @return 被加密后的字符串
 	 */
 	public static String decodeStr(CharSequence source, Charset charset) {
-		return decodeStr(source, charset);
+		return StrUtil.str(decode(source), charset);
 	}
 
 	/**
@@ -137,18 +137,7 @@ public class Base62 {
 	 * @return 被加密后的字符串
 	 */
 	public static byte[] decode(CharSequence base62Str) {
-		return decode(base62Str, DEFAULT_CHARSET);
-	}
-
-	/**
-	 * Base62解码
-	 * 
-	 * @param source 被解码的Base62字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static byte[] decode(CharSequence source, Charset charset) {
-		return decode(StrUtil.bytes(source, charset));
+		return decode(StrUtil.bytes(base62Str, DEFAULT_CHARSET));
 	}
 
 	/**
