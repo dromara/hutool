@@ -17,7 +17,7 @@
 	<a target="_blank" href="https://travis-ci.org/looly/hutool">
 		<img src="https://travis-ci.org/looly/hutool.svg?branch=v4-master" ></img>
 	</a>
-	<a href="https://www.codacy.com/app/looly/hutool?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=looly/hutool&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/3e1b8a70248c46579b7b0d01d60c6377"/>
+	<a href="https://www.codacy.com/app/looly/hutool?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=looly/hutool&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/3e1b8a70248c4.5.9b7b0d01d60c6377"/>
 	</a>
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" ></img>
