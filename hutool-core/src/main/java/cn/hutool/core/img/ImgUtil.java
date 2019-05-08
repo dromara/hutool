@@ -42,7 +42,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -1227,8 +1226,7 @@ public class ImgUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static BufferedImage toImage(String base64) throws IORuntimeException {
-		byte[] decode = Base64.decode(base64, CharsetUtil.CHARSET_UTF_8);
-		return toImage(decode);
+		return toImage(Base64.decode(base64));
 	}
 
 	/**

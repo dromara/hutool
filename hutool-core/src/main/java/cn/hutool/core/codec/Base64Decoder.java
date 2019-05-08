@@ -14,6 +14,7 @@ import cn.hutool.core.util.StrUtil;
  */
 public class Base64Decoder {
 
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	private static final byte PADDING = -2;
 
 	/** Base64解码表，共128位，-1表示非base64字符，-2表示padding */
@@ -44,8 +45,8 @@ public class Base64Decoder {
 	 * @param source 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(String source) {
-		return decodeStr(source, CharsetUtil.UTF_8);
+	public static String decodeStr(CharSequence source) {
+		return decodeStr(source, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -55,19 +56,8 @@ public class Base64Decoder {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(String source, String charset) {
-		return StrUtil.str(decode(source, charset), charset);
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String decodeStr(String source, Charset charset) {
-		return StrUtil.str(decode(source, charset), charset);
+	public static String decodeStr(CharSequence source, Charset charset) {
+		return StrUtil.str(decode(source), charset);
 	}
 
 	/**
@@ -76,30 +66,8 @@ public class Base64Decoder {
 	 * @param source 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 */
-	public static byte[] decode(String source) {
-		return decode(source, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static byte[] decode(String source, String charset) {
-		return decode(StrUtil.bytes(source, charset));
-	}
-
-	/**
-	 * base64解码
-	 * 
-	 * @param source 被解码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static byte[] decode(String source, Charset charset) {
-		return decode(StrUtil.bytes(source, charset));
+	public static byte[] decode(CharSequence source) {
+		return decode(StrUtil.bytes(source, DEFAULT_CHARSET));
 	}
 
 	/**

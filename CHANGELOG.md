@@ -6,6 +6,10 @@
 ## 4.5.9
 
 ### 新特性
+* 【core】          修改Singleton单例策略，IdUtil增加getSnowflake（issue#IWA0G@Gitee）
+* 【core】          增加RandomUtil.randomBoolean（issue#351@Github）
+* 【core】          增加Base62实现，Base62类
+
 ### Bug修复
 
 -------------------------------------------------------------------------------------------------------------

@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Console;
 
 public class RandomUtilTest {
 	
@@ -27,5 +29,11 @@ public class RandomUtilTest {
 	public void randomDoubleTest() {
 		double randomDouble = RandomUtil.randomDouble(0, 1, 0, RoundingMode.HALF_UP);
 		Assert.assertTrue(randomDouble <= 1);
+	}
+	
+	@Test
+	@Ignore
+	public void randomBooleanTest() {
+		Console.log(RandomUtil.randomBoolean());
 	}
 }
