@@ -39,9 +39,11 @@ public class CacheTest {
 		lfuCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
 		lfuCache.put("key4", "value4", DateUnit.SECOND.getMillis() * 3);
 		
-		//由于缓存容量只有3，当加入第四个元素的时候，根据LRU规则，最少使用的将被移除（2,3被移除）
+		//由于缓存容量只有3，当加入第四个元素的时候，根据LFU规则，最少使用的将被移除（2,3被移除）
+		String value1 = lfuCache.get("key1");
 		String value2 = lfuCache.get("key2");
 		String value3 = lfuCache.get("key3");
+		Assert.assertTrue(null != value1);
 		Assert.assertTrue(null == value2);
 		Assert.assertTrue(null == value3);
 	}
