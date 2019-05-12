@@ -6,6 +6,7 @@
 ## 4.5.10
 
 ### 新特性
+* 【extra】         修改MailUtil中的逻辑，默认为非单例邮件客户端（issue#IWFRQ@Gitee）
 ### Bug修复
 * 【http】          修复HttpUtil.toParams方法某些符号未转义问题（issue#356@Github）
 
