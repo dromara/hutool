@@ -37,7 +37,11 @@ public abstract class AbstractGenerator implements CodeGenerator {
 		this.length = length;
 	}
 
-	@Override
+	/**
+	 * 获取长度验证码
+	 * 
+	 * @return 验证码长度
+	 */
 	public int getLength() {
 		return this.length;
 	}
