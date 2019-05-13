@@ -7,9 +7,11 @@
 
 ### 新特性
 * 【extra】         修改MailUtil中的逻辑，默认为非单例邮件客户端（issue#IWFRQ@Gitee）
+
 ### Bug修复
 * 【http】          修复HttpUtil.toParams方法某些符号未转义问题（issue#356@Github）
 * 【captcha】    修复验证码被遮挡问题（issue#IWERW@Gitee）
+* 【poi】           修复readBySax重复问题（issue#IVKLQ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
