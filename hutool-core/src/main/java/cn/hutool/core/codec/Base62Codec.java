@@ -124,7 +124,7 @@ public class Base62Codec {
 	 * @param message 消息bytes
 	 * @param sourceBase 源基准长度
 	 * @param targetBase 目标基准长度
-	 * @return
+	 * @return 计算结果
 	 */
 	private byte[] convert(byte[] message, int sourceBase, int targetBase) {
 		/** 计算结果长度，算法来自：http://codegolf.stackexchange.com/a/21672 */

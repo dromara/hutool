@@ -71,7 +71,7 @@ public class SM2Test {
 		byte[] decrypt = sm2.decrypt(encrypt, KeyType.PrivateKey);
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 	}
-
+	
 	@Test
 	public void sm2BcdTest() {
 		String text = "我是一段测试aaaa";

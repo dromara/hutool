@@ -79,7 +79,6 @@ public class Base62 {
 	 * 
 	 * @param source 被解码的Base62字符串
 	 * @return 被加密后的字符串
-	 * @since 4.3.2
 	 */
 	public static String decodeStrGbk(CharSequence source) {
 		return decodeStr(source, CharsetUtil.CHARSET_GBK);
@@ -112,7 +111,6 @@ public class Base62 {
 	 * @param Base62 被解码的Base62字符串
 	 * @param destFile 目标文件
 	 * @return 目标文件
-	 * @since 4.0.9
 	 */
 	public static File decodeToFile(CharSequence Base62, File destFile) {
 		return FileUtil.writeBytes(decode(Base62), destFile);
@@ -124,7 +122,6 @@ public class Base62 {
 	 * @param base62Str 被解码的Base62字符串
 	 * @param out 写出到的流
 	 * @param isCloseOut 是否关闭输出流
-	 * @since 4.0.9
 	 */
 	public static void decodeToStream(CharSequence base62Str, OutputStream out, boolean isCloseOut) {
 		IoUtil.write(out, isCloseOut, decode(base62Str));

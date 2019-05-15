@@ -17,13 +17,6 @@ public interface CodeGenerator extends Serializable{
 	public String generate();
 
 	/**
-	 * 获取验证码长度
-	 * 
-	 * @return 验证码长度
-	 */
-	public int getLength();
-
-	/**
 	 * 验证用户输入的字符串是否与生成的验证码匹配<br>
 	 * 用户通过实现此方法定义验证码匹配方式
 	 * 

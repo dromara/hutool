@@ -15,7 +15,7 @@ import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
 
 public class JSONUtilTest {
-
+	
 	@Test
 	public void toJsonStrTest() {
 		UserA a1 = new UserA();

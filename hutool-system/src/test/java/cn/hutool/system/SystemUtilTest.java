@@ -23,4 +23,5 @@ public class SystemUtilTest {
 		JavaInfo javaInfo = SystemUtil.getJavaInfo();
 		Assert.assertNotNull(javaInfo);
 	}
+	
 }

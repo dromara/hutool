@@ -1,9 +1,9 @@
 package cn.hutool.captcha;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -64,29 +64,11 @@ public class LineCaptcha extends AbstractCaptcha {
 	/**
 	 * 绘制字符串
 	 * 
-	 * @param g {@link Graphics2D}画笔
-	 * @param random 随机对象
+	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
-	private void drawString(Graphics2D g, String code) {
-		// 抗锯齿
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		// 创建字体
-		g.setFont(this.font);
-
-		// 文字
-		int minY = GraphicsUtil.getMinY(g);
-		if(minY < 0) {
-			minY = this.height -1;
-		}
-		
-		final int len = this.generator.getLength();
-		int charWidth = width / len;
-		for (int i = 0; i < len; i++) {
-			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
-			g.setColor(ImgUtil.randomColor());
-			g.drawString(String.valueOf(code.charAt(i)), i * charWidth, RandomUtil.randomInt(minY, this.height));
-		}
+	private void drawString(Graphics g, String code) {
+		GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height);
 	}
 
 	/**

@@ -36,11 +36,17 @@ public class MathGenerator implements CodeGenerator {
 
 	@Override
 	public String generate() {
+		final int limit = getLimit();
+		String number1 = Integer.toString(RandomUtil.randomInt(limit));
+		String number2 = Integer.toString(RandomUtil.randomInt(limit));
+		number1 = StrUtil.padAfter(number1, this.numberLength, CharUtil.SPACE);
+		number2 = StrUtil.padAfter(number2, this.numberLength, CharUtil.SPACE);
+
 		final String code = StrUtil.builder()//
-				.append(StrUtil.padAfter(Integer.toString(RandomUtil.randomInt(getLimit())), this.numberLength, CharUtil.SPACE))//
+				.append(number1)//
 				.append(RandomUtil.randomChar(operators))//
-				.append(StrUtil.padAfter(Integer.toString(RandomUtil.randomInt(getLimit())), this.numberLength, CharUtil.SPACE))//
-				.toString();
+				.append(number2)//
+				.append('=').toString();
 		return code;
 	}
 
@@ -57,7 +63,7 @@ public class MathGenerator implements CodeGenerator {
 		final int a = Integer.parseInt(StrUtil.sub(code, 0, this.numberLength).trim());
 		final char operator = code.charAt(this.numberLength);
 		final int b = Integer.parseInt(StrUtil.sub(code, this.numberLength + 1, this.numberLength + 1 + this.numberLength).trim());
-		
+
 		switch (operator) {
 		case '+':
 			return (a + b) == result;
@@ -70,9 +76,13 @@ public class MathGenerator implements CodeGenerator {
 		}
 	}
 
-	@Override
+	/**
+	 * 获取长度验证码
+	 * 
+	 * @return 验证码长度
+	 */
 	public int getLength() {
-		return this.numberLength * 2 +1;
+		return this.numberLength * 2 + 2;
 	}
 
 	/**
