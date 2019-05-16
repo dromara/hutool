@@ -74,7 +74,7 @@ public class DatePattern {
 	/** JDK中日期时间格式：EEE MMM dd HH:mm:ss zzz yyyy */
 	public final static String JDK_DATETIME_PATTERN = "EEE MMM dd HH:mm:ss zzz yyyy";
 	/** JDK中日期时间格式 {@link FastDateFormat}：EEE MMM dd HH:mm:ss zzz yyyy */
-	public final static FastDateFormat JDK_DATETIME_FORMAT = FastDateFormat.getInstance(JDK_DATETIME_PATTERN);
+	public final static FastDateFormat JDK_DATETIME_FORMAT = FastDateFormat.getInstance(JDK_DATETIME_PATTERN, Locale.US);
 	
 	/** UTC时间：yyyy-MM-dd'T'HH:mm:ss'Z' */
 	public final static String UTC_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";

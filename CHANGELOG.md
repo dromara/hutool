@@ -7,9 +7,11 @@
 
 ### 新特性
 * 【core】           Convert增加convertQuietly方法（issue#364@Github）
+* 【core】           DateUtil.parse方法识别时间增强（issue#IWMM6@Gitee）
 
 ### Bug修复
 * 【core】           修复NumberUtil.decimalFormatMoney只有整数的bug（issue#IWKVL@Gitee）
+* 【bloomFilter】 修复BitMapBloomFilter构造数bug（issue#IWMIN@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -14,7 +14,9 @@ import cn.hutool.core.date.DateModifier.ModifyType;
 import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -654,7 +656,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 解析时间，格式HH:mm:ss，日期默认为今天
+	 * 解析时间，格式HH:mm 或 HH:mm:ss，日期默认为今天
 	 * 
 	 * @param timeString 标准形式的日期字符串
 	 * @return 日期对象
@@ -662,9 +664,15 @@ public class DateUtil {
 	 */
 	public static DateTime parseTimeToday(String timeString) {
 		timeString = StrUtil.format("{} {}", today(), timeString);
-		return parse(timeString, DatePattern.NORM_DATETIME_FORMAT);
+		if(1 == StrUtil.count(timeString, ':')) {
+			// 时间格式为 HH:mm
+			return parse(timeString, DatePattern.NORM_DATETIME_MINUTE_PATTERN);
+		}else {
+			// 时间格式为 HH:mm:ss
+			return parse(timeString, DatePattern.NORM_DATETIME_FORMAT);
+		}
 	}
-
+	
 	/**
 	 * 解析UTC时间，格式为：yyyy-MM-dd'T'HH:mm:ss'Z
 	 * 
@@ -704,8 +712,8 @@ public class DateUtil {
 		if (null == dateStr) {
 			return null;
 		}
-		// 去掉两边空格并去掉中文日期中的“日”，以规范长度
-		dateStr = dateStr.trim().replace("日", "");
+		// 去掉两边空格并去掉中文日期中的“日”和“秒”，以规范长度
+		dateStr = StrUtil.removeAll(dateStr.trim(), '日', '秒');
 		int length = dateStr.length();
 
 		if (Validator.isNumber(dateStr)) {
@@ -719,19 +727,25 @@ public class DateUtil {
 			} else if (length == DatePattern.PURE_TIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_TIME_FORMAT);
 			}
+		} else if(ReUtil.isMatch(PatternPool.TIME, dateStr)) {
+			//HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
+			return parseTimeToday(dateStr);
+		} else if(StrUtil.containsIgnoreCase(dateStr, "GMT")) {
+			// JDK的Date对象toString默认格式，类似于：Thu May 16 17:57:18 GMT+08:00 2019
+			return parse(dateStr, DatePattern.JDK_DATETIME_FORMAT);
+		} else if(dateStr.contains("T")) {
+			// UTC时间格式：类似2018-09-13T05:34:31
+			return parseUTC(dateStr);
 		}
-
-		if (length == DatePattern.NORM_DATETIME_PATTERN.length() || length == DatePattern.NORM_DATETIME_PATTERN.length() + 1) {
-			if (dateStr.contains("T")) {
-				// UTC时间格式：类似2018-09-13T05:34:31
-				return parseUTC(dateStr);
-			}
+		
+		if (length == DatePattern.NORM_DATETIME_PATTERN.length()) {
+			// yyyy-MM-dd HH:mm:ss
 			return parseDateTime(dateStr);
 		} else if (length == DatePattern.NORM_DATE_PATTERN.length()) {
+			// yyyy-MM-dd
 			return parseDate(dateStr);
-		} else if (length == DatePattern.NORM_TIME_PATTERN.length() || length == DatePattern.NORM_TIME_PATTERN.length() + 1) {
-			return parseTimeToday(dateStr);
-		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() || length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length() + 1) {
+		} else if (length == DatePattern.NORM_DATETIME_MINUTE_PATTERN.length()) {
+			//yyyy-MM-dd HH:mm
 			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MINUTE_FORMAT);
 		} else if (length >= DatePattern.NORM_DATETIME_MS_PATTERN.length() - 2) {
 			return parse(normalize(dateStr), DatePattern.NORM_DATETIME_MS_FORMAT);
