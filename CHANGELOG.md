@@ -8,6 +8,7 @@
 ### 新特性
 * 【core】           Convert增加convertQuietly方法（issue#364@Github）
 * 【core】           DateUtil.parse方法识别时间增强（issue#IWMM6@Gitee）
+* 【extra】           Mail中Files附件可选为空（issue#365@Github）
 
 ### Bug修复
 * 【core】           修复NumberUtil.decimalFormatMoney只有整数的bug（issue#IWKVL@Gitee）
