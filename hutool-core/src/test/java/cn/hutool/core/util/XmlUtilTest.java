@@ -110,7 +110,7 @@ public class XmlUtilTest {
 				+ "</user>", //
 				XmlUtil.toStr(doc, false));
 	}
-
+	
 	@Test
 	public void readTest() {
 		Document doc = XmlUtil.readXML("test.xml");

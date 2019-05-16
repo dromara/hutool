@@ -1,5 +1,6 @@
 package cn.hutool.core.convert;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.junit.Assert;
@@ -73,6 +74,15 @@ public class ConvertTest {
 		Assert.assertEquals(Integer.valueOf(8), dInteger);
 		int dInt = ConverterRegistry.getInstance().convert(int.class, d);
 		Assert.assertTrue(8 == dInt);
+	}
+
+	@Test
+	public void toIntTest2() {
+		ArrayList<String> array = new ArrayList<>();
+		Integer aLong = Convert.toInt(array, -1);
+
+		System.out.println(aLong);
+
 	}
 
 	@Test

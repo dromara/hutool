@@ -3,9 +3,10 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 4.5.10
+## 4.5.11
 
 ### 新特性
+* 【core】           Convert增加convertQuietly方法（issue#364@Github）
 
 ### Bug修复
 * 【core】           修复NumberUtil.decimalFormatMoney只有整数的bug（issue#IWKVL@Gitee）
