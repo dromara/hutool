@@ -3,13 +3,15 @@ package cn.hutool.cron;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.TimeZone;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.listener.TaskListener;
 import cn.hutool.cron.listener.TaskListenerManager;
@@ -50,7 +52,7 @@ import cn.hutool.setting.Setting;
  *
  */
 public class Scheduler {
-	private Object lock = new Object();
+	private Lock lock = new ReentrantLock();
 
 	/** 时区 */
 	private TimeZone timezone;
@@ -104,11 +106,14 @@ public class Scheduler {
 	 * @throws CronException 定时任务已经启动抛出此异常
 	 */
 	public Scheduler setDaemon(boolean on) throws CronException {
-		synchronized (lock) {
-			if (started) {
+		lock.lock();
+		try {
+			if (this.started) {
 				throw new CronException("Scheduler already started!");
 			}
 			this.daemon = on;
+		} finally {
+			lock.unlock();
 		}
 		return this;
 	}
@@ -215,7 +220,7 @@ public class Scheduler {
 	 * @return ID
 	 */
 	public String schedule(String pattern, Task task) {
-		String id = UUID.randomUUID().toString();
+		String id = IdUtil.fastUUID();
 		schedule(id, pattern, task);
 		return id;
 	}
@@ -358,7 +363,8 @@ public class Scheduler {
 	 * @return this
 	 */
 	public Scheduler start() {
-		synchronized (lock) {
+		lock.lock();
+		try {
 			if (this.started) {
 				throw new CronException("Schedule is started!");
 			}
@@ -375,6 +381,8 @@ public class Scheduler {
 			timer.setDaemon(this.daemon);
 			timer.start();
 			this.started = true;
+		} finally {
+			lock.unlock();
 		}
 		return this;
 	}
@@ -398,7 +406,8 @@ public class Scheduler {
 	 * @since 4.1.17
 	 */
 	public Scheduler stop(boolean clearTasks) {
-		synchronized (lock) {
+		lock.lock();
+		try {
 			if (false == started) {
 				throw new IllegalStateException("Scheduler not started !");
 			}
@@ -418,6 +427,8 @@ public class Scheduler {
 
 			// 修改标志
 			started = false;
+		} finally {
+			lock.unlock();
 		}
 		return this;
 	}
