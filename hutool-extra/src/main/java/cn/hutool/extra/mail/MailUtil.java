@@ -155,7 +155,7 @@ public class MailUtil {
 	 * @param files 附件列表
 	 */
 	public static void send(MailAccount mailAccount, Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
-		send(tos, null, null, subject, content, isHtml, files);
+		send(mailAccount, tos, null, null, subject, content, isHtml, files);
 	}
 	
 	/**
