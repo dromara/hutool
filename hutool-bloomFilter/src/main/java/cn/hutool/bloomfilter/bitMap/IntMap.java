@@ -48,7 +48,7 @@ public class IntMap implements BitMap {
 	public void remove(long i) {
 		int r = (int) (i / BitMap.MACHINE32);
 		int c = (int) (i % BitMap.MACHINE32);
-		ints[r] = (int) (ints[r] & (((1 << (c + 1)) - 1) ^ MAX));
+		ints[r] &= ~(1 << c);
 	}
 
 }
