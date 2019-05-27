@@ -36,7 +36,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void generateWithLogoTest() {
 		QrCodeUtil.generate(//
 				"http://hutool.cn/", //
@@ -45,7 +45,7 @@ public class QrCodeUtilTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void decodeTest() {
 		String decode = QrCodeUtil.decode(FileUtil.file("e:/pic/qr.png"));
 		Console.log(decode);
