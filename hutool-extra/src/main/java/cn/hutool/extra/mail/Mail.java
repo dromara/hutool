@@ -44,8 +44,8 @@ public class Mail {
 	private boolean isHtml;
 	/** 附件列表 */
 	private DataSource[] attachments;
-	/** 是否使用全局会话，默认为true */
-	private boolean useGlobalSession = true;
+	/** 是否使用全局会话，默认为false */
+	private boolean useGlobalSession = false;
 
 	/**
 	 * 创建邮件客户端

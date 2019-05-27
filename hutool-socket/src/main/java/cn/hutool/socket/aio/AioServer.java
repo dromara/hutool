@@ -10,6 +10,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.socket.SocketConfig;
@@ -178,14 +179,7 @@ public class AioServer {
 		accept();
 
 		if (sync) {
-			// 阻塞当前线程，保证在main方法中执行不被退出
-			synchronized (this) {
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					// ignore
-				}
-			}
+			ThreadUtil.sync(this);
 		}
 	}
 	// ------------------------------------------------------------------------------------- Private method end

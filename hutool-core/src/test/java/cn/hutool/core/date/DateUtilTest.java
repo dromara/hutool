@@ -59,7 +59,7 @@ public class DateUtilTest {
 		String formatTime = DateUtil.formatTime(date);
 		Assert.assertEquals("00:00:00", formatTime);
 	}
-
+	
 	@Test
 	public void beginAndEndTest() {
 		String dateStr = "2017-03-01 22:33:23";
@@ -76,7 +76,8 @@ public class DateUtilTest {
 	@Test
 	public void beginAndWeedTest() {
 		String dateStr = "2017-03-01 22:33:23";
-		Date date = DateUtil.parse(dateStr);
+		DateTime date = DateUtil.parse(dateStr);
+		date.setFirstDayOfWeek(Week.MONDAY);
 
 		// 一周的开始
 		Date beginOfWeek = DateUtil.beginOfWeek(date);
@@ -177,6 +178,12 @@ public class DateUtilTest {
 		// 反向
 		betweenMS = DateUtil.between(date2, date1, DateUnit.MS);
 		Assert.assertEquals(2683311000L, betweenMS);
+	}
+	
+	@Test
+	public void betweenTest2(){
+		long between = DateUtil.between(DateUtil.parse("2019-05-06 02:15:00"),DateUtil.parse("2019-05-06 02:20:00"), DateUnit.HOUR);
+		Assert.assertEquals(0, between);
 	}
 	
 	@Test

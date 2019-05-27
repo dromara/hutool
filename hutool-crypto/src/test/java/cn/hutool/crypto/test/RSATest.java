@@ -127,7 +127,7 @@ public class RSATest {
 
 		byte[] aByte = HexUtil.decodeHex(a);
 		byte[] decrypt = rsa.decrypt(aByte, KeyType.PrivateKey);
-		
+
 		Assert.assertEquals("虎头闯杭州,多抬头看天,切勿只管种地", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 	}
 }

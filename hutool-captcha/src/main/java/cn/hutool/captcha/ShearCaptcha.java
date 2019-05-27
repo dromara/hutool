@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import cn.hutool.core.img.GraphicsUtil;
@@ -63,8 +62,10 @@ public class ShearCaptcha extends AbstractCaptcha {
 		// 画字符串
 		drawString(g, code);
 
-		shear(g, width, height, Color.white);
-		drawInterfere(g, 0, RandomUtil.randomInt(height) + 1, width, RandomUtil.randomInt(height) + 1, this.interfereCount, ImgUtil.randomColor());
+		// 扭曲
+		shear(g, this.width, this.height, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+		// 画干扰线
+		drawInterfere(g, 0, RandomUtil.randomInt(this.height) + 1, this.width, RandomUtil.randomInt(this.height) + 1, this.interfereCount, ImgUtil.randomColor());
 
 		return image;
 	}
@@ -73,29 +74,11 @@ public class ShearCaptcha extends AbstractCaptcha {
 	/**
 	 * 绘制字符串
 	 * 
-	 * @param g {@link Graphics2D}画笔
-	 * @param random 随机对象
+	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
-	private void drawString(Graphics2D g, String code) {
-		// 抗锯齿
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		// 创建字体
-		g.setFont(this.font);
-
-		// 文字
-		int minY = GraphicsUtil.getMinY(g);
-		if (minY < 0) {
-			minY = this.height - 4;
-		}
-
-		final int len = this.generator.getLength();
-		int charWidth = width / len;
-		for (int i = 0; i < len; i++) {
-			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
-			g.setColor(ImgUtil.randomColor());
-			g.drawString(String.valueOf(code.charAt(i)), i * charWidth, minY);
-		}
+	private void drawString(Graphics g, String code) {
+		GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height);
 	}
 
 	/**
@@ -112,16 +95,16 @@ public class ShearCaptcha extends AbstractCaptcha {
 	}
 
 	/**
-	 * Y坐标扭曲
+	 * X坐标扭曲
 	 * 
 	 * @param g {@link Graphics}
-	 * @param w1 w1
-	 * @param h1 h1
+	 * @param w1 宽
+	 * @param h1 高
 	 * @param color 颜色
 	 */
 	private void shearX(Graphics g, int w1, int h1, Color color) {
 
-		int period = RandomUtil.randomInt(2);
+		int period = RandomUtil.randomInt(this.width);
 
 		boolean borderGap = true;
 		int frames = 1;
@@ -140,29 +123,26 @@ public class ShearCaptcha extends AbstractCaptcha {
 	}
 
 	/**
-	 * X坐标扭曲
+	 * Y坐标扭曲
 	 * 
 	 * @param g {@link Graphics}
-	 * @param w1 w1
-	 * @param h1 h1
+	 * @param w1 宽
+	 * @param h1 高
 	 * @param color 颜色
 	 */
 	private void shearY(Graphics g, int w1, int h1, Color color) {
 
-		int period = RandomUtil.randomInt(40) + 10; // 50;
+		int period = RandomUtil.randomInt(this.height >> 1);
 
-		boolean borderGap = true;
 		int frames = 20;
 		int phase = 7;
 		for (int i = 0; i < w1; i++) {
 			double d = (double) (period >> 1) * Math.sin((double) i / (double) period + (6.2831853071795862D * (double) phase) / (double) frames);
 			g.copyArea(i, 0, 1, h1, 0, (int) d);
-			if (borderGap) {
-				g.setColor(color);
-				g.drawLine(i, (int) d, i, 0);
-				g.drawLine(i, (int) d + h1, i, h1);
-			}
-
+			g.setColor(color);
+			// 擦除原位置的痕迹
+			g.drawLine(i, (int) d, i, 0);
+			g.drawLine(i, (int) d + h1, i, h1);
 		}
 
 	}

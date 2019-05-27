@@ -27,7 +27,7 @@ public class JdkLog extends AbstractLocationAwareLog {
 	}
 
 	public JdkLog(Class<?> clazz) {
-		this(clazz.getName());
+		this((null == clazz) ? StrUtil.NULL : clazz.getName());
 	}
 
 	public JdkLog(String name) {

@@ -1,4 +1,4 @@
-package cn.hutool.db;
+package cn.hutool.db.meta;
 
 import java.util.List;
 
@@ -9,8 +9,6 @@ import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.meta.MetaUtil;
-import cn.hutool.db.meta.Table;
 
 /**
  * 元数据信息单元测试
@@ -18,7 +16,7 @@ import cn.hutool.db.meta.Table;
  * @author Looly
  *
  */
-public class MetaTest {
+public class MetaUtilTest {
 	DataSource ds = DSFactory.get("test");
 
 	@Test
@@ -29,7 +27,6 @@ public class MetaTest {
 
 	@Test
 	public void getTableMetaTest() {
-
 		Table table = MetaUtil.getTableMeta(ds, "user");
 		Assert.assertEquals(CollectionUtil.newHashSet("id"), table.getPkNames());
 	}

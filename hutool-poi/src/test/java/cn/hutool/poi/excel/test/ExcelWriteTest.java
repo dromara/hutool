@@ -35,7 +35,7 @@ public class ExcelWriteTest {
 	@Ignore
 	public void writeTest2() {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
-		ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/single_line.xlsx");
+		ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/excel/single_line.xlsx");
 		overtimeWriter.write(row);
 		overtimeWriter.close();
 	}
@@ -123,7 +123,7 @@ public class ExcelWriteTest {
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("e:/excel/writeMapTest.xlsx");
 
 		// 设置内容字体
 		Font font = writer.createFont();

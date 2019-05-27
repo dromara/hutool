@@ -18,4 +18,4 @@ mvn versions:set -DnewVersion=$1
 version=${1%-SNAPSHOT}
 
 # 替换其它地方的版本
-`pwd`/bin/replaceVersion.sh "$version"
+$(pwd)/bin/replaceVersion.sh "$version"

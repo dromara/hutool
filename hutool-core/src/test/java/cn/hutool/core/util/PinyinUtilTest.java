@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import org.junit.Assert;
 import org.junit.Test;
 
+@SuppressWarnings("deprecation")
 public class PinyinUtilTest {
 	
 	@Test

@@ -273,25 +273,16 @@ public class JschUtil {
 		if (null == charset) {
 			charset = CharsetUtil.CHARSET_UTF_8;
 		}
-		ChannelExec channel;
-		try {
-			channel = (ChannelExec) session.openChannel("exec");
-		} catch (JSchException e) {
-			throw new JschRuntimeException(e);
-		}
-
+		ChannelExec channel = (ChannelExec) openChannel(session, ChannelType.EXEC);
 		channel.setCommand(StrUtil.bytes(cmd, charset));
 		channel.setInputStream(null);
 		channel.setErrStream(errStream);
 		InputStream in = null;
 		try {
-			channel.connect();// 执行命令 等待执行结束
 			in = channel.getInputStream();
 			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
-		} catch (JSchException e) {
-			throw new JschRuntimeException(e);
 		} finally {
 			IoUtil.close(in);
 			close(channel);

@@ -22,7 +22,10 @@ public class CallerTest {
 		
 		Class<?> caller1 = CallerUtil.getCaller(1);
 		Assert.assertEquals(this.getClass(), caller1);
-		
+	}
+	
+	@Test
+	public void getCallerCallerTest() {
 		Class<?> callerCaller = CallerTestClass.getCaller();
 		Assert.assertEquals(this.getClass(), callerCaller);
 	}

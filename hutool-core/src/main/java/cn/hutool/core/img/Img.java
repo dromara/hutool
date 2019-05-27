@@ -10,8 +10,10 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.CropImageFilter;
@@ -45,14 +47,14 @@ import cn.hutool.core.util.StrUtil;
 public class Img {
 
 	private BufferedImage srcImage;
-	private BufferedImage targetImage;
+	private Image targetImage;
 	/** 目标图片文件格式，用于写出 */
 	private String targetImageType = ImgUtil.IMAGE_TYPE_JPG;
 	/** 计算x,y坐标的时候是否从中心做为原始坐标开始计算 */
 	private boolean positionBaseCentre = true;
 	/** 图片输出质量，用于压缩 */
 	private float quality = -1;
-	
+
 	/**
 	 * 从Path读取图片并开始处理
 	 * 
@@ -72,7 +74,7 @@ public class Img {
 	public static Img from(File imageFile) {
 		return new Img(ImgUtil.read(imageFile));
 	}
-	
+
 	/**
 	 * 从资源对象中读取图片并开始处理
 	 * 
@@ -156,7 +158,7 @@ public class Img {
 		this.positionBaseCentre = positionBaseCentre;
 		return this;
 	}
-	
+
 	/**
 	 * 设置图片输出质量，数字为0~1（不包括0和1）表示质量压缩比，除此数字外设置表示不压缩
 	 * 
@@ -164,7 +166,7 @@ public class Img {
 	 * @since 4.3.2
 	 */
 	public Img setQuality(double quality) {
-		return setQuality((float)quality);
+		return setQuality((float) quality);
 	}
 
 	/**
@@ -194,10 +196,21 @@ public class Img {
 			scale = -scale;
 		}
 
-		final BufferedImage srcImg = getValidSrcImg();
-		int width = NumberUtil.mul(Integer.toString(srcImg.getWidth()), Float.toString(scale)).intValue(); // 得到源图宽
-		int height = NumberUtil.mul(Integer.toString(srcImg.getHeight()), Float.toString(scale)).intValue(); // 得到源图长
-		return scale(width, height);
+		final Image srcImg = getValidSrcImg();
+
+		// PNG图片特殊处理
+		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
+			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance((double) scale, (double) scale), null);
+			this.targetImage = op.filter(ImgUtil.toBufferedImage(srcImg), null);
+		} else {
+			final String scaleStr = Float.toString(scale);
+			// 缩放后的图片宽
+			int width = NumberUtil.mul(Integer.toString(srcImg.getWidth(null)), scaleStr).intValue();
+			// 缩放后的图片高
+			int height = NumberUtil.mul(Integer.toString(srcImg.getHeight(null)), scaleStr).intValue();
+			scale(width, height);
+		}
+		return this;
 	}
 
 	/**
@@ -209,9 +222,10 @@ public class Img {
 	 * @return this
 	 */
 	public Img scale(int width, int height) {
-		final BufferedImage srcImg = getValidSrcImg();
-		int srcHeight = srcImg.getHeight();
-		int srcWidth = srcImg.getWidth();
+		final Image srcImg = getValidSrcImg();
+
+		int srcHeight = srcImg.getHeight(null);
+		int srcWidth = srcImg.getWidth(null);
 		int scaleType;
 		if (srcHeight == height && srcWidth == width) {
 			// 源与目标长宽一致返回原图
@@ -223,13 +237,22 @@ public class Img {
 		} else {
 			scaleType = Image.SCALE_DEFAULT;
 		}
-		final Image image = srcImg.getScaledInstance(width, height, scaleType);
-		this.targetImage = ImgUtil.toBufferedImage(image);
+		
+		double sx = NumberUtil.div(width, srcWidth);
+		double sy = NumberUtil.div(height, srcHeight);
+
+		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
+			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(sx, sy), null);
+			this.targetImage = op.filter(ImgUtil.toBufferedImage(srcImg), null);
+		} else {
+			this.targetImage = srcImg.getScaledInstance(width, height, scaleType);
+		}
+
 		return this;
 	}
 
 	/**
-	 * 缩放图像（按高度和宽度缩放）<br>
+	 * 等比缩放图像，此方法按照按照给定的长宽等比缩放图片，按照长宽缩放比最多的一边等比缩放，空白部分填充背景色<br>
 	 * 缩放后默认为jpeg格式
 	 * 
 	 * @param width 缩放后的宽度
@@ -238,7 +261,7 @@ public class Img {
 	 * @return this
 	 */
 	public Img scale(int width, int height, Color fixedColor) {
-		final BufferedImage srcImage = getValidSrcImg();
+		final Image srcImage = getValidSrcImg();
 		int srcHeight = srcImage.getHeight(null);
 		int srcWidth = srcImage.getWidth(null);
 		double heightRatio = NumberUtil.div(height, srcHeight);
@@ -248,7 +271,7 @@ public class Img {
 			return scale(width, height);
 		}
 
-		// 宽缩放比例小就按照宽缩放，否则按照高缩放
+		// 宽缩放比例多就按照宽缩放，否则按照高缩放
 		if (widthRatio < heightRatio) {
 			scale(width, (int) (srcHeight * widthRatio));
 		} else {
@@ -265,11 +288,8 @@ public class Img {
 		g.setBackground(fixedColor);
 		g.clearRect(0, 0, width, height);
 
-		final BufferedImage itemp = this.targetImage;
-		final int itempHeight = itemp.getHeight();
-		final int itempWidth = itemp.getWidth();
 		// 在中间贴图
-		g.drawImage(itemp, (width - itempWidth) / 2, (height - itempHeight) / 2, itempWidth, itempHeight, fixedColor, null);
+		g.drawImage(srcImage, (width - srcWidth) / 2, (height - srcHeight) / 2, srcWidth, srcHeight, fixedColor, null);
 
 		g.dispose();
 		this.targetImage = image;
@@ -283,8 +303,8 @@ public class Img {
 	 * @return this
 	 */
 	public Img cut(Rectangle rectangle) {
-		final BufferedImage srcImage = getValidSrcImg();
-		rectangle = fixRectangle(rectangle, srcImage.getWidth(), srcImage.getHeight());
+		final Image srcImage = getValidSrcImg();
+		rectangle = fixRectangle(rectangle, srcImage.getWidth(null), srcImage.getHeight(null));
 
 		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		final Image image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
@@ -314,9 +334,9 @@ public class Img {
 	 * @since 4.1.15
 	 */
 	public Img cut(int x, int y, int radius) {
-		final BufferedImage srcImage = getValidSrcImg();
-		final int width = srcImage.getWidth();
-		final int height = srcImage.getHeight();
+		final Image srcImage = getValidSrcImg();
+		final int width = srcImage.getWidth(null);
+		final int height = srcImage.getHeight(null);
 
 		// 计算直径
 		final int diameter = radius > 0 ? radius * 2 : Math.min(width, height);
@@ -333,7 +353,7 @@ public class Img {
 		this.targetImage = targetImage;
 		return this;
 	}
-	
+
 	/**
 	 * 图片圆角处理
 	 * 
@@ -342,13 +362,13 @@ public class Img {
 	 * @since 4.5.3
 	 */
 	public Img round(double arc) {
-		final BufferedImage srcImage = getValidSrcImg();
-		final int width = srcImage.getWidth();
-		final int height = srcImage.getHeight();
-		
+		final Image srcImage = getValidSrcImg();
+		final int width = srcImage.getWidth(null);
+		final int height = srcImage.getHeight(null);
+
 		// 通过弧度占比计算弧度
 		arc = NumberUtil.mul(arc, Math.min(width, height));
-		
+
 		final BufferedImage targetImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g2 = targetImage.createGraphics();
 		g2.setComposite(AlphaComposite.Src);
@@ -369,7 +389,7 @@ public class Img {
 	 */
 	public Img gray() {
 		final ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-		this.targetImage = op.filter(getValidSrcImg(), null);
+		this.targetImage = op.filter(ImgUtil.toBufferedImage(getValidSrcImg()), null);
 		return this;
 	}
 
@@ -396,12 +416,12 @@ public class Img {
 	 * @return 处理后的图像
 	 */
 	public Img pressText(String pressText, Color color, Font font, int x, int y, float alpha) {
-		final BufferedImage targetImage = getValidSrcImg();
+		final BufferedImage targetImage = ImgUtil.toBufferedImage(getValidSrcImg());
 		final Graphics2D g = targetImage.createGraphics();
-		
-		if(null == font) {
+
+		if (null == font) {
 			// 默认字体
-			font = new Font("Courier", Font.PLAIN, (int)(targetImage.getHeight() * 0.75));
+			font = new Font("Courier", Font.PLAIN, (int) (targetImage.getHeight() * 0.75));
 		}
 
 		// 抗锯齿
@@ -447,11 +467,10 @@ public class Img {
 	 * @since 4.1.14
 	 */
 	public Img pressImage(Image pressImg, Rectangle rectangle, float alpha) {
-		final BufferedImage targetImg = getValidSrcImg();
+		final Image targetImg = getValidSrcImg();
 
-		rectangle = fixRectangle(rectangle, targetImg.getWidth(), targetImg.getHeight());
-		draw(targetImg, pressImg, rectangle, alpha);
-		this.targetImage = targetImg;
+		rectangle = fixRectangle(rectangle, targetImg.getWidth(null), targetImg.getHeight(null));
+		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg), pressImg, rectangle, alpha);
 		return this;
 	}
 
@@ -464,7 +483,7 @@ public class Img {
 	 * @since 3.2.2
 	 */
 	public Img rotate(int degree) {
-		final BufferedImage image = getValidSrcImg();
+		final Image image = getValidSrcImg();
 		int width = image.getWidth(null);
 		int height = image.getHeight(null);
 		final Rectangle rectangle = calcRotatedSize(width, height, degree);
@@ -487,9 +506,9 @@ public class Img {
 	 * @return this
 	 */
 	public Img flip() {
-		final BufferedImage image = getValidSrcImg();
-		int width = image.getWidth();
-		int height = image.getHeight();
+		final Image image = getValidSrcImg();
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
 		final BufferedImage targetImg = new BufferedImage(width, height, getTypeInt());
 		Graphics2D graphics2d = targetImg.createGraphics();
 		graphics2d.drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
@@ -504,7 +523,7 @@ public class Img {
 	 * 
 	 * @return 处理过的图片
 	 */
-	public BufferedImage getImg() {
+	public Image getImg() {
 		return this.targetImage;
 	}
 
@@ -530,9 +549,9 @@ public class Img {
 		Assert.notBlank(this.targetImageType, "Target image type is blank !");
 		Assert.notNull(targetImageStream, "Target output stream is null !");
 
-		final BufferedImage targetImage = (null == this.targetImage) ? this.srcImage : this.targetImage;
+		final Image targetImage = (null == this.targetImage) ? this.srcImage : this.targetImage;
 		Assert.notNull(targetImage, "Target image is null !");
-		
+
 		return ImgUtil.write(targetImage, this.targetImageType, targetImageStream, this.quality);
 	}
 
@@ -548,11 +567,11 @@ public class Img {
 		if (StrUtil.isNotBlank(formatName)) {
 			this.targetImageType = formatName;
 		}
-		
-		if(targetFile.exists()) {
+
+		if (targetFile.exists()) {
 			targetFile.delete();
 		}
-		
+
 		ImageOutputStream out = null;
 		try {
 			out = ImgUtil.getImageOutputStream(targetFile);
@@ -600,7 +619,7 @@ public class Img {
 	 * 
 	 * @return 有效的源图片
 	 */
-	private BufferedImage getValidSrcImg() {
+	private Image getValidSrcImg() {
 		return ObjectUtil.defaultIfNull(this.targetImage, this.srcImage);
 	}
 

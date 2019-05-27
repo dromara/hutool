@@ -9,7 +9,9 @@ import cn.hutool.core.text.StrBuilder;
  * 
  * @author looly
  * @since 4.0.7
+ * @deprecated 此工具不再建议使用，因为某些汉字拼音不准确且无法处理多音字，建议使用Jpinyin或Pinyin4j
  */
+@Deprecated
 public class PinyinUtil {
 	
 	/** 汉字对应ascii范围 */

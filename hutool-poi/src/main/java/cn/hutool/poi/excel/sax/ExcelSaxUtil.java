@@ -47,7 +47,7 @@ public class ExcelSaxUtil {
 			result = StrUtil.format("\"{}\"", value);
 			break;
 		case INLINESTR:
-			result = new XSSFRichTextString(value.toString()).toString();
+			result = new XSSFRichTextString(value).toString();
 			break;
 		case SSTINDEX:
 			try {

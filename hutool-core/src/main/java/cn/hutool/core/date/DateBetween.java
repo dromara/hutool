@@ -3,6 +3,8 @@ package cn.hutool.core.date;
 import java.util.Calendar;
 import java.util.Date;
 
+import cn.hutool.core.lang.Assert;
+
 /**
  * 日期间隔
  * 
@@ -64,6 +66,9 @@ public class DateBetween {
 	 * @since 3.1.1
 	 */
 	public DateBetween(Date begin, Date end, boolean isAbs) {
+		Assert.notNull(begin, "Begin date is null !");
+		Assert.notNull(end, "End date is null !");
+		
 		if (isAbs && begin.after(end)) {
 			// 间隔只为正数的情况下，如果开始日期晚于结束日期，置换之
 			this.begin = end;

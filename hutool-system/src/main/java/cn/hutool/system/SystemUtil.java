@@ -381,7 +381,7 @@ public class SystemUtil {
 	}
 
 	/**
-	 * 获取内存总大小
+	 * 获取JVM中内存总大小
 	 * 
 	 * @return 内存总大小
 	 * @since 4.5.4
@@ -391,7 +391,7 @@ public class SystemUtil {
 	}
 
 	/**
-	 * 获取内存剩余大小
+	 * 获取JVM中内存剩余大小
 	 * 
 	 * @return 内存剩余大小
 	 * @since 4.5.4

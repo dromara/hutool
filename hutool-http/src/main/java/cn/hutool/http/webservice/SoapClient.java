@@ -1,16 +1,16 @@
 package cn.hutool.http.webservice;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPElement;
@@ -19,11 +19,14 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 
 /**
  * SOAP客户端
@@ -44,6 +47,10 @@ public class SoapClient {
 	private SOAPMessage message;
 	/** 消息方法节点 */
 	private SOAPBodyElement methodEle;
+	/** 应用于方法上的命名空间URI */
+	private String namespaceURI;
+	/** 消息工厂，用于创建消息 */
+	private MessageFactory factory;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
@@ -67,6 +74,19 @@ public class SoapClient {
 	}
 
 	/**
+	 * 创建SOAP客户端
+	 * 
+	 * @param url WS的URL地址
+	 * @param protocol 协议，见{@link SoapProtocol}
+	 * @param namespaceURI 方法上的命名空间URI
+	 * @return {@link SoapClient}
+	 * @since 4.5.6
+	 */
+	public static SoapClient create(String url, SoapProtocol protocol, String namespaceURI) {
+		return new SoapClient(url, protocol, namespaceURI);
+	}
+
+	/**
 	 * 构造，默认使用soap1.1版本协议
 	 * 
 	 * @param url WS的URL地址
@@ -82,7 +102,20 @@ public class SoapClient {
 	 * @param protocol 协议版本，见{@link SoapProtocol}
 	 */
 	public SoapClient(String url, SoapProtocol protocol) {
+		this(url, protocol, null);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param url WS的URL地址
+	 * @param protocol 协议版本，见{@link SoapProtocol}
+	 * @param namespaceURI 方法上的命名空间URI
+	 * @since 4.5.6
+	 */
+	public SoapClient(String url, SoapProtocol protocol, String namespaceURI) {
 		this.url = url;
+		this.namespaceURI = namespaceURI;
 		init(protocol);
 	}
 
@@ -94,9 +127,8 @@ public class SoapClient {
 	 */
 	public SoapClient init(SoapProtocol protocol) {
 		// 创建消息工厂
-		MessageFactory factory;
 		try {
-			factory = MessageFactory.newInstance(protocol.getValue());
+			this.factory = MessageFactory.newInstance(protocol.getValue());
 			// 根据消息工厂创建SoapMessage
 			this.message = factory.createMessage();
 		} catch (SOAPException e) {
@@ -114,6 +146,13 @@ public class SoapClient {
 	 */
 	public SoapClient setCharset(Charset charset) {
 		this.charset = charset;
+		try {
+			this.message.setProperty(SOAPMessage.CHARACTER_SET_ENCODING, this.charset.toString());
+			this.message.setProperty(SOAPMessage.WRITE_XML_DECLARATION, "true");
+		} catch (SOAPException e) {
+			// ignore
+		}
+		
 		return this;
 	}
 
@@ -206,18 +245,21 @@ public class SoapClient {
 	}
 
 	/**
-	 * 设置请求方法
+	 * 设置请求方法<br>
+	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔<br>
+	 * 当识别到前缀后，自动添加xmlns属性，关联到默认的namespaceURI
 	 * 
 	 * @param methodName 方法名
 	 * @return this
 	 */
 	public SoapClient setMethod(String methodName) {
-		return setMethod(methodName, XMLConstants.NULL_NS_URI);
+		return setMethod(methodName, ObjectUtil.defaultIfNull(this.namespaceURI, XMLConstants.NULL_NS_URI));
 	}
 
 	/**
 	 * 设置请求方法<br>
-	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔
+	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔<br>
+	 * 当识别到前缀后，自动添加xmlns属性，关联到传入的namespaceURI
 	 * 
 	 * @param methodName 方法名（可有前缀也可无）
 	 * @param namespaceURI 命名空间URI
@@ -273,7 +315,54 @@ public class SoapClient {
 		setParam(this.methodEle, name, value, useMethodPrefix ? this.methodEle.getPrefix() : null);
 		return this;
 	}
-	
+
+	/**
+	 * 批量设置参数，使用方法的前缀
+	 * 
+	 * @param params 参数列表
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient setParams(Map<String, Object> params) {
+		return setParams(params, true);
+	}
+
+	/**
+	 * 批量设置参数
+	 * 
+	 * @param params 参数列表
+	 * @param useMethodPrefix 是否使用方法的命名空间前缀
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient setParams(Map<String, Object> params, boolean useMethodPrefix) {
+		for (Entry<String, Object> entry : MapUtil.wrap(params)) {
+			setParam(entry.getKey(), entry.getValue(), useMethodPrefix);
+		}
+		return this;
+	}
+
+	/**
+	 * 获取方法节点<br>
+	 * 用于创建子节点等操作
+	 * 
+	 * @return {@link SOAPBodyElement}
+	 * @since 4.5.6
+	 */
+	public SOAPBodyElement getMethodEle() {
+		return this.methodEle;
+	}
+
+	/**
+	 * 获取SOAP消息对象 {@link SOAPMessage}
+	 * 
+	 * @return {@link SOAPMessage}
+	 * @since 4.5.6
+	 */
+	public SOAPMessage getMessage() {
+		return this.message;
+	}
+
 	/**
 	 * 获取SOAP请求消息
 	 * 
@@ -281,13 +370,43 @@ public class SoapClient {
 	 * @return 消息字符串
 	 */
 	public String getMsgStr(boolean pretty) {
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		return SoapUtil.toString(this.message, pretty, this.charset);
+	}
+	
+	/**
+	 * 将SOAP消息的XML内容输出到流
+	 * 
+	 * @param out 输出流
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient write(OutputStream out) {
 		try {
 			this.message.writeTo(out);
 		} catch (SOAPException | IOException e) {
 			throw new SoapRuntimeException(e);
 		}
-		return pretty ? XmlUtil.format(out.toString()) : out.toString();
+		return this;
+	}
+	
+	/**
+	 * 执行Webservice请求，既发送SOAP内容
+	 * 
+	 * @return 返回结果
+	 */
+	public SOAPMessage sendForMessage() {
+		final HttpResponse res = sendForResponse();
+		final MimeHeaders headers = new MimeHeaders();
+		for (Entry<String, List<String>> entry : res.headers().entrySet()) {
+			if(StrUtil.isNotEmpty(entry.getKey())) {
+				headers.setHeader(entry.getKey(), CollUtil.get(entry.getValue(), 0));
+			}
+		}
+		try {
+			return this.factory.createMessage(headers, res.bodyStream());
+		} catch (IOException | SOAPException e) {
+			throw new SoapRuntimeException(e);
+		}
 	}
 
 	/**
@@ -306,16 +425,24 @@ public class SoapClient {
 	 * @return 返回结果
 	 */
 	public String send(boolean pretty) {
-		String res = HttpRequest.post(this.url)//
-				.setFollowRedirects(true).contentType(getXmlContentType())//
-				.body(getMsgStr(false))//
-				.execute()//
-				.body();
-
-		return pretty ? XmlUtil.format(res) : res;
+		final String body = sendForResponse().body();
+		return pretty ? XmlUtil.format(body) : body;
 	}
 
 	// -------------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 发送请求，获取异步响应
+	 * 
+	 * @return 响应对象
+	 */
+	private HttpResponse sendForResponse() {
+		return HttpRequest.post(this.url)//
+		.setFollowRedirects(true)//
+		.contentType(getXmlContentType())//
+		.body(getMsgStr(false))//
+		.executeAsync();
+	}
+	
 	/**
 	 * 获取请求的Content-Type，附加编码信息
 	 * 
@@ -346,23 +473,22 @@ public class SoapClient {
 		} catch (SOAPException e) {
 			throw new SoapRuntimeException(e);
 		}
-		
-		if(value instanceof CharSequence) {
-			//单个值
+
+		if (value instanceof CharSequence) {
+			// 单个值
 			childEle.setValue(value.toString());
-		}else if(value instanceof SOAPElement) {
-			//单个子节点
+		} else if (value instanceof SOAPElement) {
+			// 单个子节点
 			try {
-				ele.addChildElement((SOAPElement)value);
+				ele.addChildElement((SOAPElement) value);
 			} catch (SOAPException e) {
 				throw new SoapRuntimeException(e);
 			}
-		}else if(value instanceof Map) {
-			//多个字节点
-			Set set = ((Map)value).entrySet();
+		} else if (value instanceof Map) {
+			// 多个字节点
 			Entry entry;
-			for (Object obj : set) {
-				entry = (Entry)obj;
+			for (Object obj : ((Map) value).entrySet()) {
+				entry = (Entry) obj;
 				setParam(childEle, entry.getKey().toString(), entry.getValue(), prefix);
 			}
 		}

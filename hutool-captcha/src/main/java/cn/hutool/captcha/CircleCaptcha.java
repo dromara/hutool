@@ -2,9 +2,9 @@ package cn.hutool.captcha;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -60,13 +60,13 @@ public class CircleCaptcha extends AbstractCaptcha {
 	public Image createImage(String code) {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = ImgUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
-		
+
 		// 随机画干扰圈圈
 		drawInterfere(g);
-		
+
 		// 画字符串
 		drawString(g, code);
-		
+
 		return image;
 	}
 
@@ -74,32 +74,15 @@ public class CircleCaptcha extends AbstractCaptcha {
 	/**
 	 * 绘制字符串
 	 * 
-	 * @param g {@link Graphics2D}画笔
+	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
 	private void drawString(Graphics2D g, String code) {
-		// 抗锯齿
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		// 创建字体
-		g.setFont(this.font);
-
-		// 文字
-		int minY = GraphicsUtil.getMinY(g);
-		if(minY < 0) {
-			minY = this.height -1;
-		}
-		
-		final int len = this.generator.getLength();
-		int charWidth = width / len;
-		for (int i = 0; i < len; i++) {
-			// 指定透明度
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
-			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
-			g.setColor(ImgUtil.randomColor());
-			g.drawString(String.valueOf(this.code.charAt(i)), i * charWidth, RandomUtil.randomInt(minY, this.height));
-		}
+		// 指定透明度
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+		GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height);
 	}
-	
+
 	/**
 	 * 画随机干扰
 	 * 

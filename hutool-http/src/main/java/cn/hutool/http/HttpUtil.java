@@ -414,9 +414,9 @@ public class HttpUtil {
 			}
 			valueStr = Convert.toStr(value);
 			if (StrUtil.isNotEmpty(key)) {
-				sb.append(URLUtil.encodeQuery(key, charset)).append("=");
+				sb.append(URLUtil.encodeAll(key, charset)).append("=");
 				if (StrUtil.isNotEmpty(valueStr)) {
-					sb.append(URLUtil.encodeQuery(valueStr, charset));
+					sb.append(URLUtil.encodeAll(valueStr, charset));
 				}
 			}
 		}

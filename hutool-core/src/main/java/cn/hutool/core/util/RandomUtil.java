@@ -7,12 +7,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.UtilException;
@@ -71,6 +73,16 @@ public class RandomUtil {
 	 */
 	public static Random getRandom(boolean isSecure) {
 		return isSecure ? getSecureRandom() : getRandom();
+	}
+	
+	/**
+	 * 获得随机Boolean值
+	 * 
+	 * @return true or false
+	 * @since 4.5.9
+	 */
+	public static boolean randomBoolean() {
+		return 0 == randomInt(2);
 	}
 
 	/**
@@ -483,12 +495,30 @@ public class RandomUtil {
 	/**
 	 * 以当天为基准，随机产生一个日期
 	 * 
-	 * @param min 偏移最小天，可以为负数表示过去的时间
-	 * @param max 偏移最大天，可以为负数表示过去的时间
+	 * @param min 偏移最小天，可以为负数表示过去的时间（包含）
+	 * @param max 偏移最大天，可以为负数表示过去的时间（不包含）
 	 * @return 随机日期（随机天，其它时间不变）
 	 * @since 4.0.8
 	 */
 	public static DateTime randomDay(int min, int max) {
-		return DateUtil.offsetDay(DateUtil.date(), randomInt(min, max));
+		return randomDate(DateUtil.date(), DateField.DAY_OF_YEAR, min, max);
+	}
+
+	/**
+	 * 以给定日期为基准，随机产生一个日期
+	 * 
+	 * @param baseDate 基准日期
+	 * @param dateField 偏移的时间字段，例如时、分、秒等
+	 * @param min 偏移最小量，可以为负数表示过去的时间（包含）
+	 * @param max 偏移最大量，可以为负数表示过去的时间（不包含）
+	 * @return 随机日期
+	 * @since 4.5.8
+	 */
+	public static DateTime randomDate(Date baseDate, DateField dateField, int min, int max) {
+		if (null == baseDate) {
+			baseDate = DateUtil.date();
+		}
+
+		return DateUtil.offset(baseDate, dateField, randomInt(min, max));
 	}
 }

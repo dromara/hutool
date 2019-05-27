@@ -1,25 +1,20 @@
 package cn.hutool.captcha.generator;
 
+import java.io.Serializable;
+
 /**
  * 验证码文字生成器
  * 
  * @author looly
  * @since 4.1.2
  */
-public interface CodeGenerator {
+public interface CodeGenerator extends Serializable{
 	/**
 	 * 生成验证码
 	 * 
 	 * @return 验证码
 	 */
 	public String generate();
-
-	/**
-	 * 获取验证码长度
-	 * 
-	 * @return 验证码长度
-	 */
-	public int getLength();
 
 	/**
 	 * 验证用户输入的字符串是否与生成的验证码匹配<br>

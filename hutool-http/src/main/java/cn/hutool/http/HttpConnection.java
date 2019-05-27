@@ -21,7 +21,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ssl.AndroidSupportSSLFactory;
@@ -40,8 +39,6 @@ public class HttpConnection {
 	private final static Log log = LogFactory.get();
 
 	private URL url;
-	/** method请求方法 */
-	private Method method;
 	private Proxy proxy;
 	private HttpURLConnection conn;
 
@@ -49,122 +46,37 @@ public class HttpConnection {
 	 * 创建HttpConnection
 	 * 
 	 * @param urlStr URL
-	 * @param method HTTP方法
+	 * @param proxy 代理，无代理传{@code null}
 	 * @return HttpConnection
 	 */
-	public static HttpConnection create(String urlStr, Method method) {
-		return new HttpConnection(urlStr, method);
-	}
-
-	/**
-	 * 创建HttpConnection
-	 * 
-	 * @param urlStr URL
-	 * @param method HTTP方法
-	 * @param timeout 超时时长
-	 * @return HttpConnection
-	 */
-	public static HttpConnection create(String urlStr, Method method, int timeout) {
-		return new HttpConnection(urlStr, method, timeout);
-	}
-
-	/**
-	 * 创建HttpConnection
-	 * 
-	 * @param urlStr URL
-	 * @param method HTTP方法
-	 * @param hostnameVerifier {@link HostnameVerifier}
-	 * @param ssf {@link SSLSocketFactory}
-	 * @return HttpConnection
-	 */
-	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) {
-		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, 0, null);
-	}
-
-	/**
-	 * 创建HttpConnection
-	 * 
-	 * @param urlStr URL
-	 * @param method HTTP方法
-	 * @param hostnameVerifier {@link HostnameVerifier}
-	 * @param ssf {@link SSLSocketFactory}
-	 * @param timeout 超时时间
-	 * @param proxy 代理
-	 * @return HttpConnection
-	 */
-	public static HttpConnection create(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
-		return new HttpConnection(urlStr, method, hostnameVerifier, ssf, timeout, proxy);
+	public static HttpConnection create(String urlStr, Proxy proxy) {
+		return create(URLUtil.toUrlForHttp(urlStr), proxy);
 	}
 
 	/**
 	 * 创建HttpConnection
 	 * 
 	 * @param url URL
-	 * @param method HTTP方法
-	 * @param hostnameVerifier {@link HostnameVerifier}
-	 * @param ssf {@link SSLSocketFactory}
-	 * @param timeout 超时时间
-	 * @param proxy 代理
+	 * @param proxy 代理，无代理传{@code null}
 	 * @return HttpConnection
-	 * @since 4.1.9
 	 */
-	public static HttpConnection create(URL url, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
-		return new HttpConnection(url, method, hostnameVerifier, ssf, timeout, proxy);
+	public static HttpConnection create(URL url, Proxy proxy) {
+		return new HttpConnection(url, proxy);
 	}
 
 	// --------------------------------------------------------------- Constructor start
 	/**
 	 * 构造HttpConnection
 	 * 
-	 * @param urlStr URL
-	 * @param method HTTP方法
-	 */
-	public HttpConnection(String urlStr, Method method) {
-		this(urlStr, method, null, null, 0, null);
-	}
-
-	/**
-	 * 构造HttpConnection
-	 * 
-	 * @param urlStr URL
-	 * @param method HTTP方法
-	 * @param timeout 超时时长
-	 */
-	public HttpConnection(String urlStr, Method method, int timeout) {
-		this(urlStr, method, null, null, timeout, null);
-	}
-
-	/**
-	 * 构造HttpConnection
-	 * 
-	 * @param urlStr URL
-	 * @param method HTTP方法
-	 * @param hostnameVerifier 域名验证器
-	 * @param ssf SSLSocketFactory
-	 * @param timeout 超时时长
-	 * @param proxy 代理
-	 */
-	public HttpConnection(String urlStr, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
-		this(URLUtil.toUrlForHttp(urlStr), method, hostnameVerifier, ssf, timeout, proxy);
-	}
-
-	/**
-	 * 构造HttpConnection
-	 * 
 	 * @param url URL
-	 * @param method HTTP方法
-	 * @param hostnameVerifier 域名验证器
-	 * @param ssf SSLSocketFactory
-	 * @param timeout 超时时长
 	 * @param proxy 代理
 	 */
-	public HttpConnection(URL url, Method method, HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout, Proxy proxy) {
+	public HttpConnection(URL url, Proxy proxy) {
 		this.url = url;
-		this.method = ObjectUtil.defaultIfNull(method, Method.GET);
 		this.proxy = proxy;
 
-		//初始化Http连接
-		initConn(hostnameVerifier, ssf, timeout);
+		// 初始化Http连接
+		initConn();
 	}
 
 	// --------------------------------------------------------------- Constructor end
@@ -172,46 +84,15 @@ public class HttpConnection {
 	/**
 	 * 初始化连接相关信息
 	 * 
-	 * @param hostnameVerifier 域名验证器
-	 * @param ssf SSLSocketFactory
-	 * @param timeout 超时时长
 	 * @return HttpConnection
 	 * @since 4.4.1
 	 */
-	public HttpConnection initConn(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf, int timeout) {
+	public HttpConnection initConn() {
 		try {
-			this.conn = openHttp(hostnameVerifier, ssf);
-		} catch (Exception e) {
-			throw new HttpException(e.getMessage(), e);
+			this.conn = openHttp();
+		} catch (IOException e) {
+			throw new HttpException(e);
 		}
-		if (timeout > 0) {
-			this.setConnectionAndReadTimeout(timeout);
-		}
-		
-		// method
-		try {
-			this.conn.setRequestMethod(this.method.toString());
-		} catch (ProtocolException e) {
-			throw new HttpException(e.getMessage(), e);
-		}
-
-		// //对于非GET请求，默认不支持30X跳转
-		// if(false == Method.GET.equals(this.method)){
-		// this.conn.setInstanceFollowRedirects(false);
-		// }
-
-		// do input and output
-		this.conn.setDoInput(true);
-		if (Method.POST.equals(this.method) || Method.PUT.equals(this.method) || Method.PATCH.equals(this.method) || Method.DELETE.equals(this.method)) {
-			this.conn.setDoOutput(true);
-			this.conn.setUseCaches(false);
-		}
-
-		// default header，默认头信息在构建HttpRequest时加入，便于操作，此处删除
-		// this.header(GlobalHeaders.INSTANCE.headers, true);
-
-		// Cookie
-		// setCookie(CookiePool.get(this.url.getHost()));
 
 		return this;
 	}
@@ -223,7 +104,7 @@ public class HttpConnection {
 	 * @return 请求方法,GET/POST
 	 */
 	public Method getMethod() {
-		return method;
+		return Method.valueOf(this.conn.getRequestMethod());
 	}
 
 	/**
@@ -233,7 +114,22 @@ public class HttpConnection {
 	 * @return 自己
 	 */
 	public HttpConnection setMethod(Method method) {
-		this.method = method;
+		// method
+		try {
+			this.conn.setRequestMethod(method.toString());
+		} catch (ProtocolException e) {
+			throw new HttpException(e);
+		}
+
+		// do input and output
+		this.conn.setDoInput(true);
+		if (Method.POST.equals(method) //
+				|| Method.PUT.equals(method)//
+				|| Method.PATCH.equals(method)//
+				|| Method.DELETE.equals(method)) {
+			this.conn.setDoOutput(true);
+			this.conn.setUseCaches(false);
+		}
 		return this;
 	}
 
@@ -352,6 +248,41 @@ public class HttpConnection {
 	}
 
 	// ---------------------------------------------------------------- Headers end
+
+	/**
+	 * 设置https请求参数<br>
+	 * 有些时候htts请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
+	 * 
+	 * @param hostnameVerifier 域名验证器，非https传入null
+	 * @param ssf SSLSocketFactory，非https传入null
+	 * @return this
+	 * @throws HttpException KeyManagementException和NoSuchAlgorithmException异常包装
+	 */
+	public HttpConnection setHttpsInfo(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws HttpException {
+		final HttpURLConnection conn = this.conn;
+
+		if (conn instanceof HttpsURLConnection) {
+			// Https请求
+			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
+			// 验证域
+			httpsConn.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
+			if (null == ssf) {
+				try {
+					if (StrUtil.equalsIgnoreCase("dalvik", System.getProperty("java.vm.name"))) {
+						// 兼容android低版本SSL连接
+						ssf = new AndroidSupportSSLFactory();
+					} else {
+						ssf = SSLSocketFactoryBuilder.create().build();
+					}
+				} catch (KeyManagementException | NoSuchAlgorithmException e) {
+					throw new HttpException(e);
+				}
+			}
+			httpsConn.setSSLSocketFactory(ssf);
+		}
+
+		return this;
+	}
 
 	/**
 	 * 关闭缓存
@@ -555,7 +486,7 @@ public class HttpConnection {
 	public String toString() {
 		StringBuilder sb = StrUtil.builder();
 		sb.append("Request URL: ").append(this.url).append(StrUtil.CRLF);
-		sb.append("Request Method: ").append(this.method).append(StrUtil.CRLF);
+		sb.append("Request Method: ").append(this.getMethod()).append(StrUtil.CRLF);
 		// sb.append("Request Headers: ").append(StrUtil.CRLF);
 		// for (Entry<String, List<String>> entry : this.conn.getHeaderFields().entrySet()) {
 		// sb.append(" ").append(entry).append(StrUtil.CRLF);
@@ -573,30 +504,14 @@ public class HttpConnection {
 	 * @param ssf SSLSocketFactory，非https传入null
 	 * @return {@link HttpURLConnection}，https返回{@link HttpsURLConnection}
 	 */
-	private HttpURLConnection openHttp(HostnameVerifier hostnameVerifier, SSLSocketFactory ssf) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+	private HttpURLConnection openHttp() throws IOException {
 		final URLConnection conn = openConnection();
-		if(false == conn instanceof HttpURLConnection) {
-			//防止其它协议造成的转换异常
+		if (false == conn instanceof HttpURLConnection) {
+			// 防止其它协议造成的转换异常
 			throw new HttpException("'{}' is not a http connection, make sure URL is format for http.", conn.getClass().getName());
 		}
 
-		if (conn instanceof HttpsURLConnection) {
-			// Https请求
-			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
-			// 验证域
-			httpsConn.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
-			if (null == ssf) {
-				if (StrUtil.equalsIgnoreCase("dalvik", System.getProperty("java.vm.name"))) {
-					// 兼容android低版本SSL连接
-					ssf = new AndroidSupportSSLFactory();
-				} else {
-					ssf = SSLSocketFactoryBuilder.create().build();
-				}
-			}
-			httpsConn.setSSLSocketFactory(ssf);
-		}
-		
-		return (HttpURLConnection)conn;
+		return (HttpURLConnection) conn;
 	}
 
 	/**
@@ -608,6 +523,5 @@ public class HttpConnection {
 	private URLConnection openConnection() throws IOException {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);
 	}
-
 	// --------------------------------------------------------------- Private Method end
 }

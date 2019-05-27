@@ -114,7 +114,7 @@ public class Assert {
 
 	// ----------------------------------------------------------------------------------------------------------- Check not null
 	/**
-	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link NullPointerException} 异常 Assert that an object is not {@code null} .
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz, "The class must not be null");
@@ -135,7 +135,7 @@ public class Assert {
 	}
 
 	/**
-	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link NullPointerException} 异常
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz);

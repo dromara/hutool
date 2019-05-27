@@ -107,4 +107,37 @@ public class IdUtilTest {
 		}
 		Assert.assertEquals(threadCount * idCountPerThread, set.size());
 	}
+	
+	@Test
+	public void snowflakeBenchTest2() {
+		final Set<Long> set = new ConcurrentHashSet<>();
+		
+		//线程数
+		int threadCount = 100;
+		//每个线程生成的ID数
+		final int idCountPerThread = 10000;
+		final CountDownLatch latch = new CountDownLatch(threadCount);
+		for(int i =0; i < threadCount; i++) {
+			ThreadUtil.execute(new Runnable() {
+				
+				@Override
+				public void run() {
+					for(int i =0; i < idCountPerThread; i++) {
+						long id = IdUtil.getSnowflake(1, 1).nextId();
+						set.add(id);
+//						Console.log("Add new id: {}", id);
+					}
+					latch.countDown();
+				}
+			});
+		}
+		
+		//等待全部线程结束
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			throw new UtilException(e);
+		}
+		Assert.assertEquals(threadCount * idCountPerThread, set.size());
+	}
 }

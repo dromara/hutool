@@ -799,6 +799,32 @@ public class FileUtil {
 		}
 		return true;
 	}
+	
+	/**
+	 * 清理空文件夹<br>
+	 * 此方法用于递归删除空的文件夹，不删除文件<br>
+	 * 如果传入的文件夹本身就是空的，删除这个文件夹
+	 * 
+	 * @param directory 文件夹
+	 * @return 成功与否
+	 * @throws IORuntimeException IO异常
+	 * @since 4.5.5
+	 */
+	public static boolean cleanEmpty(File directory) throws IORuntimeException {
+		if (directory == null || directory.exists() == false || false == directory.isDirectory()) {
+			return true;
+		}
+
+		final File[] files = directory.listFiles();
+		if(ArrayUtil.isEmpty(files)) {
+			//空文件夹则删除之
+			directory.delete();
+		}
+		for (File childFile : files) {
+			clean(childFile);
+		}
+		return true;
+	}
 
 	/**
 	 * 创建文件夹，如果存在直接返回此文件夹<br>

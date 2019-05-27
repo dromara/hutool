@@ -88,6 +88,16 @@ public class CopyOptions {
 		this.ignoreNullValue = ignoreNullVall;
 		return this;
 	}
+	
+	/**
+	 * 设置忽略空值，当源对象的值为null时，忽略而不注入此值
+	 * 
+	 * @return CopyOptions
+	 * @since 4.5.7
+	 */
+	public CopyOptions ignoreNullValue() {
+		return setIgnoreNullValue(true);
+	}
 
 	/**
 	 * 设置忽略的目标对象中属性列表，设置一个属性列表，不拷贝这些属性值
@@ -112,6 +122,16 @@ public class CopyOptions {
 	}
 	
 	/**
+	 * 设置忽略字段的注入错误
+	 * 
+	 * @return CopyOptions
+	 * @since 4.5.7
+	 */
+	public CopyOptions ignoreError() {
+		return setIgnoreError(true);
+	}
+	
+	/**
 	 * 设置是否忽略字段的大小写
 	 * 
 	 * @param ignoreCase 是否忽略大小写
@@ -120,6 +140,16 @@ public class CopyOptions {
 	public CopyOptions setIgnoreCase(boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
 		return this;
+	}
+	
+	/**
+	 * 设置忽略字段的大小写
+	 * 
+	 * @return CopyOptions
+	 * @since 4.5.7
+	 */
+	public CopyOptions ignoreCase() {
+		return setIgnoreCase(true);
 	}
 
 	/**

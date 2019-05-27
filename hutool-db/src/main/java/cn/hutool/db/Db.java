@@ -117,6 +117,11 @@ public class Db extends AbstractDb {
 	public Db setWrapper(Wrapper wrapper) {
 		return (Db) super.setWrapper(wrapper);
 	}
+	
+	@Override
+	public Db disableWrapper() {
+		return (Db)super.disableWrapper();
+	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
 
 	@Override

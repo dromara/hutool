@@ -49,7 +49,7 @@ public class Base64 {
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(String source) {
+	public static String encode(CharSequence source) {
 		return Base64Encoder.encode(source);
 	}
 
@@ -60,7 +60,7 @@ public class Base64 {
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
 	 */
-	public static String encodeUrlSafe(String source) {
+	public static String encodeUrlSafe(CharSequence source) {
 		return Base64Encoder.encodeUrlSafe(source);
 	}
 
@@ -71,8 +71,8 @@ public class Base64 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(String source, String charset) {
-		return Base64Encoder.encode(source, charset);
+	public static String encode(CharSequence source, String charset) {
+		return Base64Encoder.encode(source, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -83,8 +83,8 @@ public class Base64 {
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
 	 */
-	public static String encodeUrlSafe(String source, String charset) {
-		return Base64Encoder.encodeUrlSafe(source, charset);
+	public static String encodeUrlSafe(CharSequence source, String charset) {
+		return Base64Encoder.encodeUrlSafe(source, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Base64 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(String source, Charset charset) {
+	public static String encode(CharSequence source, Charset charset) {
 		return Base64Encoder.encode(source, charset);
 	}
 
@@ -106,7 +106,7 @@ public class Base64 {
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
 	 */
-	public static String encodeUrlSafe(String source, Charset charset) {
+	public static String encodeUrlSafe(CharSequence source, Charset charset) {
 		return Base64Encoder.encodeUrlSafe(source, charset);
 	}
 
@@ -130,7 +130,7 @@ public class Base64 {
 	public static String encodeUrlSafe(byte[] source) {
 		return Base64Encoder.encodeUrlSafe(source);
 	}
-	
+
 	/**
 	 * base64编码
 	 * 
@@ -152,7 +152,7 @@ public class Base64 {
 	public static String encodeUrlSafe(InputStream in) {
 		return Base64Encoder.encodeUrlSafe(IoUtil.readBytes(in));
 	}
-	
+
 	/**
 	 * base64编码
 	 * 
@@ -181,9 +181,11 @@ public class Base64 {
 	 * @param source 被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
+	 * @deprecated 编码参数无意义，作废
 	 */
+	@Deprecated
 	public static String encode(byte[] source, String charset) {
-		return Base64Encoder.encode(source, charset);
+		return Base64Encoder.encode(source);
 	}
 
 	/**
@@ -193,9 +195,11 @@ public class Base64 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
+	 * @deprecated 编码参数无意义，作废
 	 */
+	@Deprecated
 	public static String encodeUrlSafe(byte[] source, String charset) {
-		return Base64Encoder.encodeUrlSafe(source, charset);
+		return Base64Encoder.encodeUrlSafe(source);
 	}
 
 	/**
@@ -204,9 +208,11 @@ public class Base64 {
 	 * @param source 被编码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
+	 * @deprecated 编码参数无意义，作废
 	 */
+	@Deprecated
 	public static String encode(byte[] source, Charset charset) {
-		return Base64Encoder.encode(source, charset);
+		return Base64Encoder.encode(source);
 	}
 
 	/**
@@ -216,9 +222,11 @@ public class Base64 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
+	 * @deprecated 编码参数无意义，作废
 	 */
+	@Deprecated
 	public static String encodeUrlSafe(byte[] source, Charset charset) {
-		return Base64Encoder.encodeUrlSafe(source, charset);
+		return Base64Encoder.encodeUrlSafe(source);
 	}
 
 	/**
@@ -242,17 +250,17 @@ public class Base64 {
 	 * @return 被加密后的字符串
 	 * @since 4.3.2
 	 */
-	public static String decodeStrGbk(String source) {
+	public static String decodeStrGbk(CharSequence source) {
 		return Base64Decoder.decodeStr(source, CharsetUtil.CHARSET_GBK);
 	}
-	
+
 	/**
 	 * base64解码
 	 * 
 	 * @param source 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(String source) {
+	public static String decodeStr(CharSequence source) {
 		return Base64Decoder.decodeStr(source);
 	}
 
@@ -263,8 +271,8 @@ public class Base64 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(String source, String charset) {
-		return Base64Decoder.decodeStr(source, charset);
+	public static String decodeStr(CharSequence source, String charset) {
+		return Base64Decoder.decodeStr(source, CharsetUtil.charset(charset));
 	}
 
 	/**
@@ -274,10 +282,10 @@ public class Base64 {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String decodeStr(String source, Charset charset) {
+	public static String decodeStr(CharSequence source, Charset charset) {
 		return Base64Decoder.decodeStr(source, charset);
 	}
-	
+
 	/**
 	 * base64解码
 	 * 
@@ -286,10 +294,10 @@ public class Base64 {
 	 * @return 目标文件
 	 * @since 4.0.9
 	 */
-	public static File decodeToFile(String base64, File destFile) {
+	public static File decodeToFile(CharSequence base64, File destFile) {
 		return FileUtil.writeBytes(Base64Decoder.decode(base64), destFile);
 	}
-	
+
 	/**
 	 * base64解码
 	 * 
@@ -298,7 +306,7 @@ public class Base64 {
 	 * @param isCloseOut 是否关闭输出流
 	 * @since 4.0.9
 	 */
-	public static void decodeToStream(String base64, OutputStream out, boolean isCloseOut) {
+	public static void decodeToStream(CharSequence base64, OutputStream out, boolean isCloseOut) {
 		IoUtil.write(out, isCloseOut, Base64Decoder.decode(base64));
 	}
 
@@ -308,7 +316,7 @@ public class Base64 {
 	 * @param base64 被解码的base64字符串
 	 * @return 被加密后的字符串
 	 */
-	public static byte[] decode(String base64) {
+	public static byte[] decode(CharSequence base64) {
 		return Base64Decoder.decode(base64);
 	}
 
@@ -318,9 +326,11 @@ public class Base64 {
 	 * @param source 被解码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
+	 *@deprecated 编码参数无意义，作废
 	 */
-	public static byte[] decode(String source, String charset) {
-		return Base64Decoder.decode(source, charset);
+	@Deprecated
+	public static byte[] decode(CharSequence source, String charset) {
+		return Base64Decoder.decode(source);
 	}
 
 	/**
@@ -329,9 +339,11 @@ public class Base64 {
 	 * @param source 被解码的base64字符串
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
+	 *@deprecated 编码参数无意义，作废
 	 */
-	public static byte[] decode(String source, Charset charset) {
-		return Base64Decoder.decode(source, charset);
+	@Deprecated
+	public static byte[] decode(CharSequence source, Charset charset) {
+		return Base64Decoder.decode(source);
 	}
 
 	/**

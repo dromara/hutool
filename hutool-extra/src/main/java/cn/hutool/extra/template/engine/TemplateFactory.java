@@ -22,7 +22,8 @@ import cn.hutool.log.StaticLog;
  */
 public class TemplateFactory {
 	/**
-	 * 根据用户引入的模板引擎jar，自动创建对应的模板引擎对象
+	 * 根据用户引入的模板引擎jar，自动创建对应的模板引擎对象<br>
+	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
 	 * 
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link Engine}
@@ -34,7 +35,8 @@ public class TemplateFactory {
 	}
 
 	/**
-	 * 根据用户引入的模板引擎jar，自动创建对应的模板引擎对象
+	 * 根据用户引入的模板引擎jar，自动创建对应的模板引擎对象<br>
+	 * 推荐创建的引擎单例使用，此方法每次调用会返回新的引擎
 	 * 
 	 * @param config 模板配置，包括编码、模板文件path等信息
 	 * @return {@link Engine}

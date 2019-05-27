@@ -20,8 +20,6 @@ import cn.hutool.core.util.StrUtil;
  */
 public class ExceptionUtil {
 
-	private static final String NULL = "null";
-
 	/**
 	 * 获得完整消息，包括异常名
 	 * 
@@ -30,7 +28,7 @@ public class ExceptionUtil {
 	 */
 	public static String getMessage(Throwable e) {
 		if (null == e) {
-			return NULL;
+			return StrUtil.NULL;
 		}
 		return StrUtil.format("{}: {}", e.getClass().getSimpleName(), e.getMessage());
 	}
@@ -42,7 +40,7 @@ public class ExceptionUtil {
 	 * @return 消息
 	 */
 	public static String getSimpleMessage(Throwable e) {
-		return (null == e) ? NULL : e.getMessage();
+		return (null == e) ? StrUtil.NULL : e.getMessage();
 	}
 
 	/**

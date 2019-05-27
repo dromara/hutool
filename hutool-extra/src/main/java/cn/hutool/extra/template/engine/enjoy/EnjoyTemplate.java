@@ -16,7 +16,7 @@ import cn.hutool.extra.template.AbstractTemplate;
 public class EnjoyTemplate extends AbstractTemplate implements Serializable{
 	private static final long serialVersionUID = -8157926902932567280L;
 
-	com.jfinal.template.Template rawTemplate;
+	private com.jfinal.template.Template rawTemplate;
 	
 	/**
 	 * 包装Enjoy模板

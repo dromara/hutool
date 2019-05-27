@@ -398,7 +398,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		}
 		if (index < this.size()) {
 			InternalJSONUtil.testValidity(element);
-			this.rawList.set(index, JSONUtil.wrap(element, this.config.isIgnoreNullValue()));
+			this.rawList.add(index, JSONUtil.wrap(element, this.config.isIgnoreNullValue()));
 		} else {
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);

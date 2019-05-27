@@ -69,6 +69,7 @@ public class CustomLogTest {
 		
 		log.info(null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+		
 	}
 	
 	@Test

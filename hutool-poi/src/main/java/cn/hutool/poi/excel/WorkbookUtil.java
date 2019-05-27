@@ -105,7 +105,7 @@ public class WorkbookUtil {
 	public static Workbook createBook(boolean isXlsx) {
 		Workbook workbook;
 		if (isXlsx) {
-			workbook = new org.apache.poi.xssf.usermodel.XSSFWorkbook();
+			workbook = new XSSFWorkbook();
 		} else {
 			workbook = new org.apache.poi.hssf.usermodel.HSSFWorkbook();
 		}

@@ -2,8 +2,8 @@ package cn.hutool.core.img;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -19,6 +19,12 @@ public class ImgUtilTest {
 	@Ignore
 	public void scaleTest() {
 		ImgUtil.scale(FileUtil.file("d:/face.jpg"), FileUtil.file("d:/face_result.jpg"), 0.5f);
+	}
+	
+	@Test
+	@Ignore
+	public void scalePngTest() {
+		ImgUtil.scale(FileUtil.file("e:/pic/hutool.png"), FileUtil.file("e:/pic/hutool_result.png"), 0.5f);
 	}
 
 	@Test
@@ -36,7 +42,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void rotateTest() throws IOException {
-		BufferedImage image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
+		Image image = ImgUtil.rotate(ImageIO.read(FileUtil.file("e:/pic/366466.jpg")), 180);
 		ImgUtil.write(image, FileUtil.file("e:/pic/result.png"));
 	}
 

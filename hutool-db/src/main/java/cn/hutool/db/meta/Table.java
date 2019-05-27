@@ -1,7 +1,10 @@
 package cn.hutool.db.meta;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -10,13 +13,16 @@ import java.util.Set;
  * @author loolly
  *
  */
-public class Table extends LinkedHashMap<String, Column> {
+public class Table implements Serializable, Cloneable {
 	private static final long serialVersionUID = -810699625961392983L;
 
 	/** 表名 */
 	private String tableName;
+	/** 注释 */
+	private String comment;
 	/** 主键字段名列表 */
 	private Set<String> pkNames = new LinkedHashSet<String>();
+	private Map<String, Column> columns = new LinkedHashMap<>();
 
 	public static Table create(String tableName) {
 		return new Table(tableName);
@@ -42,6 +48,7 @@ public class Table extends LinkedHashMap<String, Column> {
 	public String getTableName() {
 		return tableName;
 	}
+
 	/**
 	 * 设置表名
 	 * 
@@ -52,7 +59,28 @@ public class Table extends LinkedHashMap<String, Column> {
 	}
 
 	/**
+	 * 获取注释
+	 * 
+	 * @return 注释
+	 */
+	public String getComment() {
+		return comment;
+	}
+
+	/**
+	 * 设置注释
+	 * 
+	 * @param comment 注释
+	 * @return this
+	 */
+	public Table setComment(String comment) {
+		this.comment = comment;
+		return this;
+	}
+
+	/**
 	 * 获取主键列表
+	 * 
 	 * @return 主键列表
 	 */
 	public Set<String> getPkNames() {
@@ -61,6 +89,7 @@ public class Table extends LinkedHashMap<String, Column> {
 
 	/**
 	 * 设置主键列表
+	 * 
 	 * @param pkNames 主键列表
 	 */
 	public void setPkNames(Set<String> pkNames) {
@@ -75,18 +104,29 @@ public class Table extends LinkedHashMap<String, Column> {
 	 * @return 自己
 	 */
 	public Table setColumn(Column column) {
-		put(column.getName(), column);
+		this.columns.put(column.getName(), column);
 		return this;
 	}
-	
+
 	/**
 	 * 获取某列信息
+	 * 
 	 * @param name 列名
 	 * @return 列对象
 	 * @since 4.2.2
 	 */
 	public Column getColumn(String name) {
-		return get(name);
+		return this.columns.get(name);
+	}
+
+	/**
+	 * 获取所有字段元信息
+	 * 
+	 * @return 字段元信息集合
+	 * @since 4.5.8
+	 */
+	public Collection<Column> getColumns() {
+		return this.columns.values();
 	}
 
 	/**

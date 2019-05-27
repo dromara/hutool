@@ -1,7 +1,6 @@
 package cn.hutool.aop;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import cn.hutool.aop.aspects.Aspect;
@@ -46,7 +45,7 @@ public final class ProxyUtil {
 	 * 2、通过传入的classloder将刚生成的类加载到jvm中。即将$Proxy0类load<br>
 	 * 3、调用$Proxy0的$Proxy0(InvocationHandler)构造函数 创建$Proxy0的对象，并且用interfaces参数遍历其所有接口的方法，这些实现方法的实现本质上是通过反射调用被代理对象的方法<br>
 	 * 4、将$Proxy0的实例返回给客户端。 <br>
-	 * 5、当调用代理类的相应方法时，相当于调用 {@link InvocationHandler#invoke(Object, Method, Object[])} 方法
+	 * 5、当调用代理类的相应方法时，相当于调用 {@link InvocationHandler#invoke(Object, java.lang.reflect.Method, Object[])} 方法
 	 * 
 	 * 
 	 * @param <T> 被代理对象类型

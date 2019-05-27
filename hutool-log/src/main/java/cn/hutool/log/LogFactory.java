@@ -110,7 +110,7 @@ public abstract class LogFactory {
 	 * 
 	 * @param logClassName 日志实现相关类
 	 */
-	protected void checkLogExist(Object logClassName) {
+	protected void checkLogExist(Class<?> logClassName) {
 		// 不做任何操作
 	}
 

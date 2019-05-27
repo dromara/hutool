@@ -232,7 +232,7 @@ final class InternalJSONUtil {
 		if (StrUtil.isNotBlank(format)) {
 			final Date date = (dateObj instanceof Date) ? (Date)dateObj : ((Calendar)dateObj).getTime();
 			//用户定义了日期格式
-			return DateUtil.format(date, format);
+			return JSONUtil.quote(DateUtil.format(date, format));
 		}
 		
 		//默认使用时间戳

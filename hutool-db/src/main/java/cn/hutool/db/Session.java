@@ -298,6 +298,11 @@ public class Session extends AbstractDb implements Closeable {
 	public Session setWrapper(Wrapper wrapper) {
 		return (Session) super.setWrapper(wrapper);
 	}
+	
+	@Override
+	public Session disableWrapper() {
+		return (Session) super.disableWrapper();
+	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
 
 	@Override
