@@ -11,7 +11,13 @@
 		<artifactId>hutool-parent</artifactId>
 		<version>4.5.4</version>
 	</parent>
-
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+	</dependencies>
 	<artifactId>hutool-core</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool核心</description>
