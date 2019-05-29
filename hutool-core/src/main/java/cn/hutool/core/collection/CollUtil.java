@@ -58,6 +58,7 @@ import cn.hutool.core.util.TypeUtil;
  * @since 3.1.1
  * @see IterUtil
  */
+@SuppressWarnings("unused")
 public class CollUtil {
 
 	/**
@@ -2350,6 +2351,37 @@ public class CollUtil {
 	}
 
 	/**
+	 * 根据元素的指定字段名分组，非Bean都放在以null为键的列表中
+	 *
+	 * @param <T> 元素类型
+	 * @param collection 集合
+	 * @param fieldName 元素Bean中的字段名，非Bean都放在第一个分组中
+	 * @return 分组列表，以字段命对应的值为键
+	 */
+	public static <T> Map<?, List<T>> groupByFieldToMap(Collection<T> collection, String fieldName) {
+		Map<Object, List<T>> result = new HashMap<>();
+		if (isEmpty(collection)) {
+			return result;
+		}
+
+		Object key;
+		for (T t : collection) {
+			if (null == t || !BeanUtil.isBean(t.getClass())) {
+				key = null;
+			} else {
+				key = ReflectUtil.getFieldValue(t, fieldName);
+			}
+
+			if (result.containsKey(key)) {
+				result.get(key).add(t);
+			} else {
+				result.put(key, newArrayList(t));
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * 反序给定List，会在原List基础上直接修改
 	 * 
 	 * @param <T> 元素类型
@@ -2392,6 +2424,7 @@ public class CollUtil {
 		}
 		return list;
 	}
+
 
 	// ---------------------------------------------------------------------------------------------- Interface start
 	/**

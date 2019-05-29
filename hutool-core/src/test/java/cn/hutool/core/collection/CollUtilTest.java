@@ -546,4 +546,30 @@ public class CollUtilTest {
 		
 		Assert.assertEquals(CollUtil.newArrayList(4,3,2,1), sortPageAll);
 	}
+
+	@Test
+	public void groupByFieldToMapTest0() {
+		TestBean gaga = new TestBean("gaga", 1);
+		TestBean wowo = new TestBean("wowo", 1);
+		TestBean hoho = new TestBean("hoho", 1);
+
+		Map<?, List<TestBean>> groupByResult = CollUtil.groupByFieldToMap(CollUtil.newArrayList(gaga, wowo, hoho), "name");
+
+		Assert.assertTrue(groupByResult.containsKey("gaga"));
+		Assert.assertTrue(groupByResult.containsKey("wowo"));
+		Assert.assertTrue(groupByResult.containsKey("hoho"));
+		Assert.assertEquals(1, groupByResult.get("gaga").size());
+	}
+
+	@Test
+	public void groupByFieldToMapTest1() {
+		TestBean gaga = new TestBean("gaga", 1);
+		TestBean wowo = new TestBean("wowo", 1);
+		TestBean hoho = new TestBean("hoho", 1);
+
+		Map<?, List<TestBean>> groupByResult = CollUtil.groupByFieldToMap(CollUtil.newArrayList(gaga, wowo, hoho), "age");
+
+		Assert.assertTrue(groupByResult.containsKey(1));
+		Assert.assertEquals(3, groupByResult.get(1).size());
+	}
 }
