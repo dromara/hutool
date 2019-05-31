@@ -17,7 +17,7 @@
 	<a target="_blank" href="https://travis-ci.org/looly/hutool">
 		<img src="https://travis-ci.org/looly/hutool.svg?branch=v4-master" ></img>
 	</a>
-	<a href="https://www.codacy.com/app/looly/hutool?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=looly/hutool&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/3e1b8a70248c4.5.10b7b0d01d60c6377"/>
+	<a href="https://www.codacy.com/app/looly/hutool?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=looly/hutool&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/3e1b8a70248c46579b7b0d01d60c6377"/>
 	</a>
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
 		<img src="https://badges.gitter.im/hutool/Lobby.svg" ></img>
@@ -94,21 +94,21 @@ Hutool是Hu + tool的自造词，谐音“糊涂”，寓意追求“万事都�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.5.10</version>
+    <version>4.5.11</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.5.10'
+compile 'cn.hutool:hutool-all:4.5.11'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.5.10/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.5.10/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.5.11/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.5.11/)
 
 > 注意
 > Hutool只支持JDK7+，对应Android平台没有测试，部分方法并不支持。

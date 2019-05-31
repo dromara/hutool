@@ -172,7 +172,11 @@ public class Mail {
 	 * @return this
 	 */
 	public Mail setFiles(File... files) {
-		DataSource[] attachments = new DataSource[files.length];
+		if(ArrayUtil.isEmpty(files)) {
+			return this;
+		}
+		
+		final DataSource[] attachments = new DataSource[files.length];
 		for (int i = 0; i < files.length; i++) {
 			attachments[i] = new FileDataSource(files[i]);
 		}
@@ -187,7 +191,9 @@ public class Mail {
 	 * @since 4.0.9
 	 */
 	public Mail setAttachments(DataSource... attachments) {
-		this.attachments = attachments;
+		if(ArrayUtil.isNotEmpty(attachments)) {
+			this.attachments = attachments;
+		}
 		return this;
 	}
 

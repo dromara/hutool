@@ -1,11 +1,13 @@
 package cn.hutool.extra.emoji;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
+import com.vdurmont.emoji.EmojiTrie;
 import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
 
 /**
@@ -14,7 +16,7 @@ import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
  * emoji-java文档以及别名列表见：<a href="https://github.com/vdurmont/emoji-java">https://github.com/vdurmont/emoji-java</a>
  * 
  * @author looly
- *@since 4.2.1
+ * @since 4.2.1
  */
 public class EmojiUtil {
 
@@ -26,6 +28,32 @@ public class EmojiUtil {
 	 */
 	public static boolean isEmoji(String str) {
 		return EmojiManager.isEmoji(str);
+	}
+
+	/**
+	 * 是否包含Emoji表情的Unicode符
+	 * 
+	 * @param str 被测试的字符串
+	 * @return 是否包含Emoji表情的Unicode符
+	 * @since 4.5.11
+	 */
+	public static boolean containsEmoji(String str) {
+		if (str == null) {
+			return false;
+		}
+		final char[] chars = str.toCharArray();
+		EmojiTrie.Matches status;
+		for (int i = 0; i < chars.length; i++) {
+			for (int j = i + 1; j <= chars.length; j++) {
+				status = EmojiManager.isEmoji(Arrays.copyOfRange(chars, i, j));
+				if (status.impossibleMatch()) {
+					break;
+				} else if (status.exactMatch()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

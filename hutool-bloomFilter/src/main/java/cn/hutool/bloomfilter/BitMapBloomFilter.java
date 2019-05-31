@@ -5,6 +5,7 @@ import cn.hutool.bloomfilter.filter.ELFFilter;
 import cn.hutool.bloomfilter.filter.JSFilter;
 import cn.hutool.bloomfilter.filter.PJWFilter;
 import cn.hutool.bloomfilter.filter.SDBMFilter;
+import cn.hutool.core.util.NumberUtil;
 
 /**
  * BlommFilter 实现 <br>
@@ -24,7 +25,7 @@ public class BitMapBloomFilter implements BloomFilter{
 	 * @param m M值决定BitMap的大小
 	 */
 	public BitMapBloomFilter(int m) {
-		float mNum = m / 5;
+		int mNum =NumberUtil.div(String.valueOf(m), String.valueOf(5)).intValue();
 		long size = (long) (1L * mNum * 1024 * 1024 * 8);
 		
 		filters = new BloomFilter[]{

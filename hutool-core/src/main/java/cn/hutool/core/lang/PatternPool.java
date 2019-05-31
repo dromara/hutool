@@ -57,6 +57,8 @@ public class PatternPool {
 	public static final Pattern MAC_ADDRESS = Pattern.compile("((?:[A-F0-9]{1,2}[:-]){5}[A-F0-9]{1,2})|(?:0x)(\\d{12})(?:.+ETHER)", Pattern.CASE_INSENSITIVE);
 	/** 16进制字符串 */
 	public static final Pattern HEX = Pattern.compile("^[a-f0-9]+$", Pattern.CASE_INSENSITIVE);
+	/** 时间正则 */
+	public static final Pattern TIME = Pattern.compile("\\d{1,2}:\\d{1,2}(:\\d{1,2})?");
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/** Pattern池 */

@@ -80,6 +80,7 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
+	@Ignore
 	public void readBySaxTest4() {
 		ExcelUtil.readBySax("e:/excel/single_line.xlsx", 2, createRowHandler());
 	}

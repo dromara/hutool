@@ -265,13 +265,6 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseTest() {
-		String time = "12:11:39";
-		DateTime parse = DateUtil.parse("12:11:39");
-		Assert.assertEquals(DateUtil.parseTimeToday(time).getTime(), parse.getTime());
-	}
-
-	@Test
 	public void parseTest2() {
 		// 转换时间与SimpleDateFormat结果保持一致即可
 		String birthday = "700403";
@@ -293,6 +286,32 @@ public class DateUtilTest {
 	public void parseTest4() throws ParseException {
 		String ymd = DateUtil.parse("2019-3-21 12:20:15", "yyyy-MM-dd").toString(DatePattern.PURE_DATE_PATTERN);
 		Assert.assertEquals("20190321", ymd);
+	}
+	
+	@Test
+	public void parseTest5() throws ParseException {
+		// 测试时间解析
+		String time = DateUtil.parse("22:12:12").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("22:12:12", time);
+		time = DateUtil.parse("2:12:12").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("02:12:12", time);
+		time = DateUtil.parse("2:2:12").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("02:02:12", time);
+		time = DateUtil.parse("2:2:1").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("02:02:01", time);
+		time = DateUtil.parse("22:2:1").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("22:02:01", time);
+		time = DateUtil.parse("2:22:1").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("02:22:01", time);
+		
+		// 测试两位时间解析
+		time = DateUtil.parse("2:22").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("02:22:00", time);
+		time = DateUtil.parse("12:22").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("12:22:00", time);
+		time = DateUtil.parse("12:2").toString(DatePattern.NORM_TIME_FORMAT);
+		Assert.assertEquals("12:02:00", time);
+		
 	}
 
 	@Test
@@ -387,6 +406,13 @@ public class DateUtilTest {
 		//使用当前（上海）时区
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
+	}
+	
+	@Test
+	public void parseJDkTest() throws ParseException {
+		String dateStr = "Thu May 16 17:57:18 GMT+08:00 2019";
+		DateTime time = DateUtil.parse(dateStr);
+		Assert.assertEquals("2019-05-16 17:57:18", time.toString());
 	}
 	
 	@Test
