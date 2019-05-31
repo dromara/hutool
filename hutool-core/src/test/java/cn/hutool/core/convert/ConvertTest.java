@@ -79,10 +79,8 @@ public class ConvertTest {
 	@Test
 	public void toIntTest2() {
 		ArrayList<String> array = new ArrayList<>();
-		Integer aLong = Convert.toInt(array, -1);
-
-		System.out.println(aLong);
-
+		Integer aInt = Convert.convertQuietly(Integer.class, array, -1);
+		Assert.assertEquals(Integer.valueOf(-1), aInt);
 	}
 
 	@Test
