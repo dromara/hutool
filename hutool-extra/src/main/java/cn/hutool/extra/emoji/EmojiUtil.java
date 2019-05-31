@@ -1,11 +1,13 @@
 package cn.hutool.extra.emoji;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
+import com.vdurmont.emoji.EmojiTrie;
 import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
 
 /**
@@ -27,7 +29,29 @@ public class EmojiUtil {
 	public static boolean isEmoji(String str) {
 		return EmojiManager.isEmoji(str);
 	}
-
+	
+	/**
+	 * 是否包含Emoji表情的Unicode符
+	 * 
+	 * @param str 被测试的字符串
+	 * @return 是否包含Emoji表情的Unicode符
+	 */
+	public static boolean containsEmoji(String str) {
+		if (str == null) return false;
+		char[] chars = str.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			for (int j = i + 1; j <= chars.length; j++) {
+				EmojiTrie.Matches status = EmojiManager.isEmoji(Arrays.copyOfRange(chars, i, j));
+				if (status.impossibleMatch()) {
+					break;
+				}else if (status.exactMatch()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * 通过tag方式获取对应的所有Emoji表情
 	 * 
