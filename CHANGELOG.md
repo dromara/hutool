@@ -16,6 +16,7 @@
 * 【core】           修复NumberUtil.decimalFormatMoney只有整数的bug（issue#IWKVL@Gitee）
 * 【bloomFilter】 修复BitMapBloomFilter构造数bug（issue#IWMIN@Gitee）
 * 【extra】           MailUtil.send方法传入自定义Setting失效问题（感谢@【上海】康）
+* 【core】           修复NetUtil.localIpv4s方法名，改为localIps（issue#IWS2C@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

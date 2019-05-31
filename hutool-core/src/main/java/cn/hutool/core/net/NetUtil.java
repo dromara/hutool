@@ -306,14 +306,26 @@ public class NetUtil {
 
 		return CollectionUtil.addAll(new ArrayList<NetworkInterface>(), networkInterfaces);
 	}
-
+	
 	/**
 	 * 获得本机的IP地址列表<br>
 	 * 返回的IP列表有序，按照系统设备顺序
 	 * 
 	 * @return IP地址列表 {@link LinkedHashSet}
+	 * @deprecated 请使用{@link #localIps()}
 	 */
+	@Deprecated
 	public static LinkedHashSet<String> localIpv4s() {
+		return localIps();
+	}
+
+	/**
+	 * 获得本机的IP地址列表（包括Ipv4和Ipv6）<br>
+	 * 返回的IP列表有序，按照系统设备顺序
+	 * 
+	 * @return IP地址列表 {@link LinkedHashSet}
+	 */
+	public static LinkedHashSet<String> localIps() {
 		Enumeration<NetworkInterface> networkInterfaces = null;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();

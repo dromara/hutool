@@ -1709,13 +1709,6 @@ public class CollUtil {
 		if (TypeUtil.isUnknow(elementType)) {
 			// 元素类型为空时，使用Object类型来接纳所有类型
 			elementType = Object.class;
-		} else {
-			final Class<?> elementRowType = TypeUtil.getClass(elementType);
-			if (null != elementRowType && (elementRowType.isInstance(value) && false == Iterable.class.isAssignableFrom(elementRowType))) {
-				// 其它类型按照单一元素处理
-				collection.add((T) value);
-				return collection;
-			}
 		}
 
 		Iterator iter;

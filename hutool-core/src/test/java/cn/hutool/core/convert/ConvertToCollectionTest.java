@@ -91,6 +91,17 @@ public class ConvertToCollectionTest {
 		Assert.assertEquals(1, list2.size());
 		Assert.assertEquals("a", list2.get(0));
 	}
+	
+	@Test
+	public void strToListTest2() {
+		String a = "a,你,好,123";
+		List<String> list = Convert.toList(String.class, a);
+		Assert.assertEquals(4, list.size());
+		Assert.assertEquals("a", list.get(0));
+		Assert.assertEquals("你", list.get(1));
+		Assert.assertEquals("好", list.get(2));
+		Assert.assertEquals("123", list.get(3));
+	}
 
 	@Test
 	public void numberToListTest() {
