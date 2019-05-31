@@ -7,7 +7,6 @@ package cn.hutool.bloomfilter.bitMap;
  *
  */
 public class IntMap implements BitMap {
-	private static final int MAX = Integer.MAX_VALUE;
 
 	private int[] ints = null;
 

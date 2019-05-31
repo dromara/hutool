@@ -1,10 +1,10 @@
 package cn.hutool.bloomfilter;
 
-import cn.hutool.bloomfilter.bitMap.IntMap;
-import cn.hutool.bloomfilter.bitMap.LongMap;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
+
+import cn.hutool.bloomfilter.bitMap.IntMap;
+import cn.hutool.bloomfilter.bitMap.LongMap;
 
 public class BitMapBloomFilterTest {
 	

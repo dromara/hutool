@@ -8,8 +8,6 @@ package cn.hutool.bloomfilter.bitMap;
  */
 public class LongMap implements BitMap {
 
-	private static final long MAX = Long.MAX_VALUE;
-
 	private long[] longs = null;
 
 	/**
