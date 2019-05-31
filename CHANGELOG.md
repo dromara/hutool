@@ -10,6 +10,7 @@
 * 【core】           DateUtil.parse方法识别时间增强（issue#IWMM6@Gitee）
 * 【extra】           Mail中Files附件可选为空（issue#365@Github）
 * 【extra】           EmojiUtil增加containsEmoji方法（pr#373@Github）
+* 【core】            Convert.toDBC()增加空校验（issue#369@Github）
 
 ### Bug修复
 * 【core】           修复NumberUtil.decimalFormatMoney只有整数的bug（issue#IWKVL@Gitee）

@@ -697,6 +697,9 @@ public class Convert {
 	 * @return 替换后的字符
 	 */
 	public static String toDBC(String text, Set<Character> notConvertSet) {
+		if(StrUtil.isBlank(text)) {
+			return text;
+		}
 		char c[] = text.toCharArray();
 		for (int i = 0; i < c.length; i++) {
 			if (null != notConvertSet && notConvertSet.contains(c[i])) {
