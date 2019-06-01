@@ -78,7 +78,7 @@ public class SimpleDataSource extends AbstractDataSource {
 		}
 		final Setting config = setting.getSetting(group);
 		if (CollectionUtil.isEmpty(config)) {
-			throw new DbRuntimeException("No C3P0 config for group: [{}]", group);
+			throw new DbRuntimeException("No DataSource config for group: [{}]", group);
 		}
 
 		init(//
