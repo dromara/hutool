@@ -6,6 +6,7 @@
 ## 4.5.12
 
 ### 新特性
+* 【json】          解析JSON字符串去除两边空白符(同时解决字符串中bom问题)（issue#381@Github）
 
 ### Bug修复
 
@@ -14,7 +15,6 @@
 ## 4.5.11
 
 ### 新特性
-* 【core】           Convert增加convertQuietly方法（issue#364@Github）
 * 【core】           DateUtil.parse方法识别时间增强（issue#IWMM6@Gitee）
 * 【extra】           Mail中Files附件可选为空（issue#365@Github）
 * 【extra】           EmojiUtil增加containsEmoji方法（pr#373@Github）

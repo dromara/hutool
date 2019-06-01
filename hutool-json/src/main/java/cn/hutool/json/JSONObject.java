@@ -25,6 +25,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * JSON对象<br>
@@ -746,7 +747,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * @param source JSON字符串
 	 */
 	private void init(CharSequence source) {
-		init(new JSONTokener(source.toString()));
+		init(new JSONTokener(StrUtil.trim(source)));
 	}
 
 	/**

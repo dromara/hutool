@@ -12,6 +12,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
@@ -118,6 +119,16 @@ public class JSONObjectTest {
 		String jsonStr = "{\"test\":\"体”、“文\"}";
 		JSONObject json = new JSONObject(jsonStr);
 		Assert.assertEquals("体”、“文", json.getStr("test"));
+	}
+	
+	@Test
+	@Ignore
+	public void parseStringWithBomTest() {
+		String jsonStr = FileUtil.readUtf8String("f:/test/jsontest.txt");
+		JSONObject json = new JSONObject(jsonStr);
+		JSONObject json2 = JSONUtil.parseObj(json);
+		Console.log(json);
+		Console.log(json2);
 	}
 
 	@Test

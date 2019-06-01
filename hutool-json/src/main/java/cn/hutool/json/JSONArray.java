@@ -15,6 +15,7 @@ import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * JSON数组<br>
@@ -585,7 +586,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 */
 	private void init(CharSequence source) {
 		if (null != source) {
-			init(new JSONTokener(source.toString()));
+			init(new JSONTokener(StrUtil.trim(source)));
 		}
 	}
 
