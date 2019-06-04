@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<packaging>jar</packaging>
-	
+
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
@@ -13,7 +13,7 @@
 	<artifactId>hutool-http</artifactId>
 	<name>${project.artifactId}</name>
 	<description>Hutool Http客户端</description>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>cn.hutool</groupId>
@@ -29,6 +29,20 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-json</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.8.1</version>
+			<scope>compile</scope>
+      <optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.8</version>
+			<optional>true</optional>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>
