@@ -6,7 +6,8 @@
 ## 4.5.12
 
 ### 新特性
-* 【json】          解析JSON字符串去除两边空白符(同时解决字符串中bom问题)（issue#381@Github）
+* 【json】          解析JSON字符串去除两边空白符(同时解决字符串中bom问题（issue#381@Github）
+* 【poi】           Sax解析增加在异常后关闭文件的逻辑（issue#IXBOU@Github）
 
 ### Bug修复
 

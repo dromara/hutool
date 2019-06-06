@@ -168,6 +168,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			throw ExceptionUtil.wrap(e, POIException.class);
 		} finally {
 			IoUtil.close(sheetInputStream);
+			IoUtil.close(opcPackage);
 		}
 		return this;
 	}

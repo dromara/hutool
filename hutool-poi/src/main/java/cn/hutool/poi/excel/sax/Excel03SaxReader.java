@@ -29,6 +29,7 @@ import org.apache.poi.hssf.record.StringRecord;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
@@ -122,6 +123,8 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 			factory.processWorkbookEvents(request, fs);
 		} catch (IOException e) {
 			throw new POIException(e);
+		} finally {
+			IoUtil.close(fs);
 		}
 		return this;
 	}
