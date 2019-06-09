@@ -18,6 +18,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -864,6 +865,20 @@ public class MapUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> T get(Map<?, ?> map, Object key, Class<T> type) {
+		return null == map ? null : Convert.convert(type, map.get(key));
+	}
+	
+	/**
+	 * 获取Map指定key的值，并转换为指定类型
+	 * 
+	 * @param <T> 目标值类型
+	 * @param map Map
+	 * @param key 键
+	 * @param type 值类型
+	 * @return 值
+	 * @since 4.5.12
+	 */
+	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type) {
 		return null == map ? null : Convert.convert(type, map.get(key));
 	}
 }

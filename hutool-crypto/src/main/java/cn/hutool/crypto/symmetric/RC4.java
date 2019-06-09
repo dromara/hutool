@@ -5,7 +5,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 
@@ -59,6 +61,52 @@ public class RC4 {
 	 */
 	public byte[] encrypt(String message) throws CryptoException {
 		return encrypt(message, CharsetUtil.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * 加密
+	 * 
+	 * @param data 数据
+	 * @return 加密后的Hex
+	 * @since 4.5.12
+	 */
+	public String encryptHex(byte[] data) {
+		return HexUtil.encodeHexStr(crypt(data));
+	}
+
+	/**
+	 * 加密
+	 * 
+	 * @param data 数据
+	 * @return 加密后的Base64
+	 * @since 4.5.12
+	 */
+	public String encryptBase64(byte[] data) {
+		return Base64.encode(crypt(data));
+	}
+	
+	/**
+	 * 加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @param charset 编码
+	 * @return 加密后的Hex
+	 * @since 4.5.12
+	 */
+	public String encryptHex(String data, Charset charset) {
+		return HexUtil.encodeHexStr(encrypt(data, charset));
+	}
+
+	/**
+	 * 加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @param charset 编码
+	 * @return 加密后的Base64
+	 * @since 4.5.12
+	 */
+	public String encryptBase64(String data, Charset charset) {
+		return Base64.encode(encrypt(data, charset));
 	}
 
 	/**

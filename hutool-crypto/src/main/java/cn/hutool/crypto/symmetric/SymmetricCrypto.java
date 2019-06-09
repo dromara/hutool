@@ -199,6 +199,17 @@ public class SymmetricCrypto {
 	public byte[] encrypt(String data, String charset) {
 		return encrypt(StrUtil.bytes(data, charset));
 	}
+	
+	/**
+	 * 加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @param charset 编码
+	 * @return 加密后的bytes
+	 */
+	public byte[] encrypt(String data, Charset charset) {
+		return encrypt(StrUtil.bytes(data, charset));
+	}
 
 	/**
 	 * 加密
@@ -206,8 +217,21 @@ public class SymmetricCrypto {
 	 * @param data 被加密的字符串
 	 * @param charset 编码
 	 * @return 加密后的Hex
+	 * @since 4.5.12
 	 */
 	public String encryptHex(String data, String charset) {
+		return HexUtil.encodeHexStr(encrypt(data, charset));
+	}
+	
+	/**
+	 * 加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @param charset 编码
+	 * @return 加密后的Hex
+	 * @since 4.5.12
+	 */
+	public String encryptHex(String data, Charset charset) {
 		return HexUtil.encodeHexStr(encrypt(data, charset));
 	}
 
@@ -219,6 +243,18 @@ public class SymmetricCrypto {
 	 * @return 加密后的Base64
 	 */
 	public String encryptBase64(String data, String charset) {
+		return Base64.encode(encrypt(data, charset));
+	}
+	
+	/**
+	 * 加密
+	 * 
+	 * @param data 被加密的字符串
+	 * @param charset 编码
+	 * @return 加密后的Base64
+	 * @since 4.5.12
+	 */
+	public String encryptBase64(String data, Charset charset) {
 		return Base64.encode(encrypt(data, charset));
 	}
 

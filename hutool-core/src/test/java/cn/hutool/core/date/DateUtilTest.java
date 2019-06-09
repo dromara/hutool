@@ -59,7 +59,7 @@ public class DateUtilTest {
 		String formatTime = DateUtil.formatTime(date);
 		Assert.assertEquals("00:00:00", formatTime);
 	}
-	
+
 	@Test
 	public void beginAndEndTest() {
 		String dateStr = "2017-03-01 22:33:23";
@@ -128,7 +128,7 @@ public class DateUtilTest {
 		Assert.assertEquals("2018-07-31 00:00:00", list.get(2).toString());
 		Assert.assertEquals("2018-08-31 00:00:00", list.get(3).toString());
 	}
-	
+
 	@Test
 	public void betweenTest() {
 		String dateStr1 = "2017-03-01 22:34:23";
@@ -179,13 +179,13 @@ public class DateUtilTest {
 		betweenMS = DateUtil.between(date2, date1, DateUnit.MS);
 		Assert.assertEquals(2683311000L, betweenMS);
 	}
-	
+
 	@Test
-	public void betweenTest2(){
-		long between = DateUtil.between(DateUtil.parse("2019-05-06 02:15:00"),DateUtil.parse("2019-05-06 02:20:00"), DateUnit.HOUR);
+	public void betweenTest2() {
+		long between = DateUtil.between(DateUtil.parse("2019-05-06 02:15:00"), DateUtil.parse("2019-05-06 02:20:00"), DateUnit.HOUR);
 		Assert.assertEquals(0, between);
 	}
-	
+
 	@Test
 	public void formatChineseDateTest() {
 		String formatChineseDate = DateUtil.formatChineseDate(DateUtil.parse("2018-02-24"), true);
@@ -281,13 +281,13 @@ public class DateUtilTest {
 		String format = DateUtil.format(date, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals(dateStr, format);
 	}
-	
+
 	@Test
 	public void parseTest4() throws ParseException {
 		String ymd = DateUtil.parse("2019-3-21 12:20:15", "yyyy-MM-dd").toString(DatePattern.PURE_DATE_PATTERN);
 		Assert.assertEquals("20190321", ymd);
 	}
-	
+
 	@Test
 	public void parseTest5() throws ParseException {
 		// 测试时间解析
@@ -303,7 +303,7 @@ public class DateUtilTest {
 		Assert.assertEquals("22:02:01", time);
 		time = DateUtil.parse("2:22:1").toString(DatePattern.NORM_TIME_FORMAT);
 		Assert.assertEquals("02:22:01", time);
-		
+
 		// 测试两位时间解析
 		time = DateUtil.parse("2:22").toString(DatePattern.NORM_TIME_FORMAT);
 		Assert.assertEquals("02:22:00", time);
@@ -311,7 +311,14 @@ public class DateUtilTest {
 		Assert.assertEquals("12:22:00", time);
 		time = DateUtil.parse("12:2").toString(DatePattern.NORM_TIME_FORMAT);
 		Assert.assertEquals("12:02:00", time);
-		
+
+	}
+
+	@Test
+	public void parseTest6() throws ParseException {
+		String str = "Tue Jun 4 16:25:15 +0800 2019";
+		DateTime dateTime = DateUtil.parse(str);
+		Assert.assertEquals("2019-06-04 16:25:15", dateTime.toString());
 	}
 
 	@Test
@@ -394,27 +401,27 @@ public class DateUtilTest {
 	public void parseUTCTest() throws ParseException {
 		String dateStr1 = "2018-09-13T05:34:31Z";
 		DateTime dt = DateUtil.parseUTC(dateStr1);
-		
-		//parse方法支持UTC格式测试
+
+		// parse方法支持UTC格式测试
 		DateTime dt2 = DateUtil.parse(dateStr1);
 		Assert.assertEquals(dt, dt2);
-		
-		//默认使用Pattern对应的时区，既UTC时区
+
+		// 默认使用Pattern对应的时区，既UTC时区
 		String dateStr = dt.toString();
 		Assert.assertEquals("2018-09-13 05:34:31", dateStr);
-		
-		//使用当前（上海）时区
+
+		// 使用当前（上海）时区
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
 	}
-	
+
 	@Test
 	public void parseJDkTest() throws ParseException {
 		String dateStr = "Thu May 16 17:57:18 GMT+08:00 2019";
 		DateTime time = DateUtil.parse(dateStr);
 		Assert.assertEquals("2019-05-16 17:57:18", time.toString());
 	}
-	
+
 	@Test
 	public void endOfWeekTest() {
 		DateTime now = DateUtil.date();
@@ -475,24 +482,24 @@ public class DateUtilTest {
 		Assert.assertEquals(rangeToList.get(0), DateUtil.parse("2017-01-01"));
 		Assert.assertEquals(rangeToList.get(1), DateUtil.parse("2017-01-02"));
 	}
-	
+
 	@Test
 	public void yearAndQTest() {
 		String yearAndQuarter = DateUtil.yearAndQuarter(DateUtil.parse("2018-12-01"));
 		Assert.assertEquals("20184", yearAndQuarter);
-		
+
 		LinkedHashSet<String> yearAndQuarters = DateUtil.yearAndQuarter(DateUtil.parse("2018-09-10"), DateUtil.parse("2018-12-20"));
 		List<String> list = CollUtil.list(false, yearAndQuarters);
 		Assert.assertEquals(2, list.size());
 		Assert.assertEquals("20183", list.get(0));
 		Assert.assertEquals("20184", list.get(1));
-		
+
 		LinkedHashSet<String> yearAndQuarters2 = DateUtil.yearAndQuarter(DateUtil.parse("2018-10-10"), DateUtil.parse("2018-12-10"));
 		List<String> list2 = CollUtil.list(false, yearAndQuarters2);
 		Assert.assertEquals(1, list2.size());
 		Assert.assertEquals("20184", list2.get(0));
 	}
-	
+
 	@Test
 	public void formatHttpDateTest() {
 		String formatHttpDate = DateUtil.formatHttpDate(DateUtil.parse("2019-01-02 22:32:01"));

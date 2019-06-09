@@ -7,7 +7,10 @@
 
 ### 新特性
 * 【json】          解析JSON字符串去除两边空白符(同时解决字符串中bom问题（issue#381@Github）
-* 【poi】           Sax解析增加在异常后关闭文件的逻辑（issue#IXBOU@Github）
+* 【poi】           Sax解析增加在异常后关闭文件的逻辑（issue#IXBOU@Gitee）
+* 【core】         MapUtil增加get重载（TypeReference）（issue#IXL81@Gitee）
+* 【crypto】      RC4增加encryptHex和encryptBase64方法（issue#387@Github）
+* 【core】         DateUtil.parse增加格式（issue#385@Github）
 
 ### Bug修复
 
