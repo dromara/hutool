@@ -263,7 +263,11 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 				double numValue = numrec.getValue();
 				final long longPart = (long) numValue;
 				// 对于无小数部分的数字类型，转为Long，否则保留原数字
-				value = (longPart == numValue) ? longPart : numValue;
+				if(longPart == numValue) {
+					value = longPart;
+				}else {
+					value = numValue;
+				}
 			}
 
 			// 向容器加入列值
