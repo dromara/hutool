@@ -154,6 +154,14 @@ public class NumberUtilTest {
 		String format = NumberUtil.decimalFormat(",###", c);
 		Assert.assertEquals("299,792,458", format);
 	}
+	
+	@Test
+	public void decimalFormatMoneyTest() {
+		double c = 299792400.543534534;
+		
+		String format = NumberUtil.decimalFormatMoney(c);
+		Assert.assertEquals("299,792,400.54", format);
+	}
 
 	@Test
 	public void equalsTest() {

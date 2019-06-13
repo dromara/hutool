@@ -1024,7 +1024,7 @@ public class NumberUtil {
 	 * @since 3.0.9
 	 */
 	public static String decimalFormatMoney(double value) {
-		return decimalFormat(",###0.00", value);
+		return decimalFormat(",###.00", value);
 	}
 
 	/**

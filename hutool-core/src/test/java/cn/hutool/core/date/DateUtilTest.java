@@ -320,6 +320,13 @@ public class DateUtilTest {
 		DateTime dateTime = DateUtil.parse(str);
 		Assert.assertEquals("2019-06-04 16:25:15", dateTime.toString());
 	}
+	
+	@Test
+	public void parseTest7() throws ParseException {
+		String str = "2019-06-01T19:45:43.000 +0800";
+		DateTime dateTime = DateUtil.parse(str, "yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
+	}
 
 	@Test
 	public void parseDateTest() throws ParseException {
