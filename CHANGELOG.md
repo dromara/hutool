@@ -11,6 +11,7 @@
 * 【core】         MapUtil增加get重载（TypeReference）（issue#IXL81@Gitee）
 * 【crypto】      RC4增加encryptHex和encryptBase64方法（issue#387@Github）
 * 【core】         DateUtil.parse增加格式（issue#385@Github）
+* 【core】         增加CollUtil.containsAny（感谢【北京】宁静）
 
 ### Bug修复
 * 【poi】           解决三目运算符导致类型转换问题（issue#385@Github）

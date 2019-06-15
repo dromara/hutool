@@ -245,6 +245,27 @@ public class CollUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 集合1中是否包含集合2中所有的元素，既集合2是否为集合1的子集
+	 * 
+	 * @param coll1 集合1
+	 * @param coll2 集合2
+	 * @return 集合1中是否包含集合2中所有的元素
+	 * @since 4.5.12
+	 */
+	public static boolean containsAll(Collection<?> coll1, Collection<?> coll2) {
+		if (isEmpty(coll1) || isEmpty(coll2) || coll1.size() < coll2.size()) {
+			return false;
+		}
+		
+		for (Object object : coll2) {
+			if (false == coll1.contains(object)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * 根据集合返回一个元素计数的 {@link Map}<br>
