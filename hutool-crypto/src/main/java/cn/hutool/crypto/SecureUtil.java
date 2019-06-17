@@ -17,6 +17,7 @@ import java.security.spec.KeySpec;
 import java.util.Map;
 
 import javax.crypto.Cipher;
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 
 import cn.hutool.core.codec.Base64;
@@ -1003,6 +1004,25 @@ public final class SecureUtil {
 		}
 
 		return messageDigest;
+	}
+
+	/**
+	 * 创建{@link Mac}
+	 * 
+	 * @param algorithm 算法
+	 * @since 4.5.13
+	 */
+	public static Mac createMac(String algorithm) {
+		final Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+
+		Mac mac;
+		try {
+			mac = (null == provider) ? Mac.getInstance(algorithm) : Mac.getInstance(algorithm, provider);
+		} catch (NoSuchAlgorithmException e) {
+			throw new CryptoException(e);
+		}
+
+		return mac;
 	}
 
 	/**

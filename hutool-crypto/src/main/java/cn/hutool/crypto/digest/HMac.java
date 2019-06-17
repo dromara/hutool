@@ -46,7 +46,17 @@ public class HMac {
 	 * @param key 密钥
 	 */
 	public HMac(HmacAlgorithm algorithm, byte[] key) {
-		init(algorithm.getValue(), key);
+		this(algorithm.getValue(), key);
+	}
+	
+	/**
+	 * 构造
+	 * @param algorithm 算法
+	 * @param key 密钥
+	 * @since 4.5.13
+	 */
+	public HMac(String algorithm, byte[] key) {
+		init(algorithm, key);
 	}
 	
 	/**
@@ -55,7 +65,17 @@ public class HMac {
 	 * @param key 密钥
 	 */
 	public HMac(HmacAlgorithm algorithm, SecretKey key) {
-		init(algorithm.getValue(), key);
+		this(algorithm.getValue(), key);
+	}
+	
+	/**
+	 * 构造
+	 * @param algorithm 算法
+	 * @param key 密钥
+	 * @since 4.5.13
+	 */
+	public HMac(String algorithm, SecretKey key) {
+		init(algorithm, key);
 	}
 	// ------------------------------------------------------------------------------------------- Constructor end
 	
@@ -79,7 +99,7 @@ public class HMac {
 	 */
 	public HMac init(String algorithm, SecretKey key){
 		try {
-			mac = Mac.getInstance(algorithm);
+			mac = SecureUtil.createMac(algorithm);
 			if(null != key){
 				this.secretKey = key;
 			}else{
