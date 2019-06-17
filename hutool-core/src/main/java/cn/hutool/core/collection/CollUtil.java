@@ -2406,6 +2406,43 @@ public class CollUtil {
 		}
 		return list;
 	}
+	
+	/**
+	 * 获取指定Map列表中所有的Key
+	 * 
+	 * @param <K> 键类型
+	 * @param mapCollection Map列表
+	 * @return key集合
+	 * @since 4.5.12
+	 */
+	public static <K> Set<K> keySet(Collection<Map<K, ?>> mapCollection){
+		if(isEmpty(mapCollection)) {
+			return new HashSet<>();
+		}
+		final HashSet<K> set = new HashSet<>(mapCollection.size() * 16);
+		for (Map<K,?> map : mapCollection) {
+			set.addAll(map.keySet());
+		}
+		
+		return set;
+	}
+	
+	/**
+	 * 获取指定Map列表中所有的Value
+	 * 
+	 * @param <V> 值类型
+	 * @param mapCollection Map列表
+	 * @return Value集合
+	 * @since 4.5.12
+	 */
+	public static <V> List<V> values(Collection<Map<?, V>> mapCollection){
+		final List<V> values = new ArrayList<>();
+		for (Map<?, V> map : mapCollection) {
+			values.addAll(map.values());
+		}
+		
+		return values;
+	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start
 	/**
