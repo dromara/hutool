@@ -12,6 +12,7 @@
 * 【crypto】      RC4增加encryptHex和encryptBase64方法（issue#387@Github）
 * 【core】         DateUtil.parse增加格式（issue#385@Github）
 * 【core】         增加CollUtil.containsAny（感谢【北京】宁静）
+* 【core】         增加CollUtil.keySet和values（issue#IXYQJ@Gitee）
 
 ### Bug修复
 * 【poi】           解决三目运算符导致类型转换问题（issue#385@Github）
