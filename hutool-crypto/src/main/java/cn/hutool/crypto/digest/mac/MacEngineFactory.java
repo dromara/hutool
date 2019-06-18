@@ -2,8 +2,7 @@ package cn.hutool.crypto.digest.mac;
 
 import javax.crypto.SecretKey;
 
-import org.bouncycastle.crypto.digests.SM3Digest;
-
+import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.digest.HmacAlgorithm;
 
 /**
@@ -23,7 +22,7 @@ public class MacEngineFactory {
 	public static MacEngine createEngine(String algorithm, SecretKey key) {
 		if(algorithm.equalsIgnoreCase(HmacAlgorithm.HmacSM3.getValue())) {
 			// HmacSM3算法是BC库实现的
-			return new BCHMacEngine(new SM3Digest(), key.getEncoded());
+			return SmUtil.createHmacSm3Engine(key.getEncoded());
 		}
 		return new DefaultHMacEngine(algorithm, key);
 	}

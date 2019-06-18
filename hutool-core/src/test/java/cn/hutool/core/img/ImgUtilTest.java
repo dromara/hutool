@@ -18,7 +18,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void scaleTest() {
-		ImgUtil.scale(FileUtil.file("d:/face.jpg"), FileUtil.file("d:/face_result.jpg"), 0.5f);
+		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
 	}
 	
 	@Test

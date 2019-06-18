@@ -9,6 +9,7 @@ import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
@@ -18,6 +19,8 @@ import cn.hutool.crypto.asymmetric.SM2;
 import cn.hutool.crypto.digest.Digester;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
+import cn.hutool.crypto.digest.mac.BCHMacEngine;
+import cn.hutool.crypto.digest.mac.MacEngine;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
 /**
@@ -220,7 +223,18 @@ public class SmUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
+	/**
+	 * 创建HmacSM3算法的{@link MacEngine}
+	 * 
+	 * @param key 密钥
+	 * @return {@link MacEngine}
+	 * @since 4.5.13
+	 */
+	public static MacEngine createHmacSm3Engine(byte[] key) {
+		return new BCHMacEngine(new SM3Digest(), key);
+	}
+
 	/**
 	 * HmacSM3算法实现
 	 * 
