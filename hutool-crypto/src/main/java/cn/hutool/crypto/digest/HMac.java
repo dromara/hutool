@@ -1,10 +1,9 @@
 package cn.hutool.crypto.digest;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
-import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -14,7 +13,8 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.mac.MacEngine;
+import cn.hutool.crypto.digest.mac.MacEngineFactory;
 
 /**
  * HMAC摘要算法<br>
@@ -28,8 +28,7 @@ import cn.hutool.crypto.SecureUtil;
  */
 public class HMac {
 	
-	private Mac mac;
-	private SecretKey secretKey;
+	private MacEngine engine;
 	
 	// ------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -51,16 +50,6 @@ public class HMac {
 	
 	/**
 	 * 构造
-	 * @param algorithm 算法
-	 * @param key 密钥
-	 * @since 4.5.13
-	 */
-	public HMac(String algorithm, byte[] key) {
-		init(algorithm, key);
-	}
-	
-	/**
-	 * 构造
 	 * @param algorithm 算法 {@link HmacAlgorithm}
 	 * @param key 密钥
 	 */
@@ -74,43 +63,29 @@ public class HMac {
 	 * @param key 密钥
 	 * @since 4.5.13
 	 */
-	public HMac(String algorithm, SecretKey key) {
-		init(algorithm, key);
+	public HMac(String algorithm, byte[] key) {
+		this(algorithm, new SecretKeySpec(key, algorithm));
 	}
-	// ------------------------------------------------------------------------------------------- Constructor end
 	
 	/**
-	 * 初始化
+	 * 构造
 	 * @param algorithm 算法
 	 * @param key 密钥
-	 * @return {@link HMac}
-	 * @throws CryptoException Cause by IOException
+	 * @since 4.5.13
 	 */
-	public HMac init(String algorithm, byte[] key){
-		return init(algorithm, (null == key) ? null : new SecretKeySpec(key, algorithm));
+	public HMac(String algorithm, SecretKey key) {
+		this(MacEngineFactory.createEngine(algorithm, key));
 	}
 	
 	/**
-	 * 初始化
-	 * @param algorithm 算法
-	 * @param key 密钥 {@link SecretKey}
-	 * @return {@link HMac}
-	 * @throws CryptoException Cause by IOException
+	 * 构造
+	 * @param engine MAC算法实现引擎
+	 * @since 4.5.13
 	 */
-	public HMac init(String algorithm, SecretKey key){
-		try {
-			mac = SecureUtil.createMac(algorithm);
-			if(null != key){
-				this.secretKey = key;
-			}else{
-				this.secretKey = SecureUtil.generateKey(algorithm);
-			}
-			mac.init(this.secretKey);
-		} catch (Exception e) {
-			throw new CryptoException(e);
-		}
-		return this;
+	public HMac(MacEngine engine) {
+		this.engine = engine;
 	}
+	// ------------------------------------------------------------------------------------------- Constructor end
 	
 	// ------------------------------------------------------------------------------------------- Digest
 	/**
@@ -191,13 +166,7 @@ public class HMac {
 	 * @return 摘要bytes
 	 */
 	public byte[] digest(byte[] data) {
-		byte[] result;
-		try {
-			result = mac.doFinal(data);
-		} finally {
-			mac.reset();
-		}
-		return result;
+		return digest(new ByteArrayInputStream(data), -1);
 	}
 	
 	/**
@@ -239,26 +208,7 @@ public class HMac {
 	 * @return 摘要bytes
 	 */
 	public byte[] digest(InputStream data, int bufferLength) {
-		if (bufferLength < 1) {
-			bufferLength = IoUtil.DEFAULT_BUFFER_SIZE;
-		}
-		byte[] buffer = new byte[bufferLength];
-		
-		byte[] result = null;
-		try {
-			int read = data.read(buffer, 0, bufferLength);
-			
-			while (read > -1) {
-				mac.update(buffer, 0, read);
-				read = data.read(buffer, 0, bufferLength);
-			}
-			result = mac.doFinal();
-		} catch (IOException e) {
-			throw new CryptoException(e);
-		}finally{
-			mac.reset();
-		}
-		return result;
+		return this.engine.digest(data, bufferLength);
 	}
 	
 	/**
@@ -273,20 +223,4 @@ public class HMac {
 		return HexUtil.encodeHexStr(digest(data, bufferLength));
 	}
 	
-	/**
-	 * 获得 {@link Mac}
-	 * @return {@link Mac}
-	 */
-	public Mac getMac() {
-		return mac;
-	}
-	
-	/**
-	 * 获得密钥
-	 * @return 密钥
-	 * @since 3.0.3
-	 */
-	public SecretKey getSecretKey() {
-		return secretKey;
-	}
 }

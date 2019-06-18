@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.SmUtil;
+import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
 /**
@@ -38,5 +39,13 @@ public class SmTest {
 		String encryptHex = sm4.encryptHex(content);
 		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals(content, decryptStr);
+	}
+	
+	@Test
+	public void hmacSm3Test() {
+		String content = "test中文";
+		HMac hMac = SmUtil.hmacSm3("password".getBytes());
+		String digest = hMac.digestHex(content);
+		Assert.assertEquals("493e3f9a1896b43075fbe54658076727960d69632ac6b6ed932195857a6840c6", digest);
 	}
 }
