@@ -216,9 +216,7 @@ public class Slf4jLog extends AbstractLocationAwareLog {
 	 */
 	private boolean locationAwareLog(String fqcn, int level_int, Throwable t, String msgTemplate, Object[] arguments) {
 		if (this.logger instanceof LocationAwareLogger) {
-			// ((LocationAwareLogger)this.logger).log(null, fqcn, level_int, msgTemplate, arguments, t);
-			// 由于slf4j-log4j12中此方法的实现存在bug，故在此拼接参数
-			((LocationAwareLogger) this.logger).log(null, fqcn, level_int, StrUtil.format(msgTemplate, arguments), null, t);
+			 ((LocationAwareLogger)this.logger).log(null, fqcn, level_int, msgTemplate, arguments, t);
 			return true;
 		} else {
 			return false;

@@ -191,7 +191,9 @@ public class Log4j2Log extends AbstractLocationAwareLog {
 	 */
 	private boolean logIfEnabled(String fqcn, Level level, Throwable t, String msgTemplate, Object... arguments) {
 		if(this.logger instanceof AbstractLogger){
-			((AbstractLogger)this.logger).logIfEnabled(fqcn, level, null, StrUtil.format(msgTemplate, arguments), t);
+			if(this.logger.isEnabled(level)) {
+				((AbstractLogger)this.logger).logIfEnabled(fqcn, level, null, StrUtil.format(msgTemplate, arguments), t);
+			}
 			return true;
 		}else{
 			return false;

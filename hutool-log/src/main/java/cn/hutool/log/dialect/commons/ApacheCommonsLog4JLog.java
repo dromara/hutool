@@ -53,7 +53,9 @@ public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void trace(Throwable t, String format, Object... arguments) {
-		logger.getLogger().log(FQCN, Level.TRACE, StrUtil.format(format, arguments), t);
+		if(isTraceEnabled()) {
+			logger.getLogger().log(FQCN, Level.TRACE, StrUtil.format(format, arguments), t);
+		}
 	}
 
 	// ------------------------------------------------------------------------- Debug
@@ -69,7 +71,9 @@ public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void debug(Throwable t, String format, Object... arguments) {
-		logger.getLogger().log(FQCN, Level.DEBUG, StrUtil.format(format, arguments), t);
+		if(isDebugEnabled()) {
+			logger.getLogger().log(FQCN, Level.DEBUG, StrUtil.format(format, arguments), t);
+		}
 	}
 
 	// ------------------------------------------------------------------------- Info
@@ -85,7 +89,9 @@ public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void info(Throwable t, String format, Object... arguments) {
-		logger.getLogger().log(FQCN, Level.INFO, StrUtil.format(format, arguments), t);
+		if(isInfoEnabled()) {
+			logger.getLogger().log(FQCN, Level.INFO, StrUtil.format(format, arguments), t);
+		}
 	}
 
 	// ------------------------------------------------------------------------- Warn
@@ -101,7 +107,9 @@ public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
-		logger.getLogger().log(FQCN, Level.WARN, StrUtil.format(format, arguments), t);
+		if(isWarnEnabled()) {
+			logger.getLogger().log(FQCN, Level.WARN, StrUtil.format(format, arguments), t);
+		}
 	}
 
 	// ------------------------------------------------------------------------- Error
@@ -117,7 +125,9 @@ public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 
 	@Override
 	public void error(Throwable t, String format, Object... arguments) {
-		logger.getLogger().log(FQCN, Level.ERROR, StrUtil.format(format, arguments), t);
+		if(isErrorEnabled()) {
+			logger.getLogger().log(FQCN, Level.ERROR, StrUtil.format(format, arguments), t);
+		}
 	}
 
 	// ------------------------------------------------------------------------- Log
@@ -136,18 +146,33 @@ public class ApacheCommonsLog4JLog extends AbstractLocationAwareLog {
 		Level log4jLevel;
 		switch (level) {
 			case TRACE:
+				if(false == isTraceEnabled()) {
+					return;
+				}
 				log4jLevel = Level.TRACE;
 				break;
 			case DEBUG:
+				if(false == isDebugEnabled()) {
+					return;
+				}
 				log4jLevel = Level.DEBUG;
 				break;
 			case INFO:
+				if(false == isInfoEnabled()) {
+					return;
+				}
 				log4jLevel = Level.INFO;
 				break;
 			case WARN:
+				if(false == isWarnEnabled()) {
+					return;
+				}
 				log4jLevel = Level.WARN;
 				break;
 			case ERROR:
+				if(false == isErrorEnabled()) {
+					return;
+				}
 				log4jLevel = Level.ERROR;
 				break;
 			default:
