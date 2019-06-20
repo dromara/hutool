@@ -98,7 +98,7 @@ public class SettingLoader {
 	 * @return 加载成功与否
 	 * @throws IOException IO异常
 	 */
-	public boolean load(InputStream settingStream) throws IOException {
+	synchronized public boolean load(InputStream settingStream) throws IOException {
 		this.groupedMap.clear();
 		BufferedReader reader = null;
 		try {
@@ -177,7 +177,7 @@ public class SettingLoader {
 	 * @param writer Writer
 	 * @throws IOException IO异常
 	 */
-	private void store(PrintWriter writer) throws IOException {
+	synchronized private void store(PrintWriter writer) throws IOException {
 		for (Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
 			writer.println(StrUtil.format("{}{}{}", CharUtil.BRACKET_START, groupEntry.getKey(), CharUtil.BRACKET_END));
 			for (Entry<String, String> entry : groupEntry.getValue().entrySet()) {

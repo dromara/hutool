@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【crypto】      提供HmacSM3支持（issue#396@Github）
+* 【setting】     SettingLoader添加同步锁（issue#396@Github）
 
 ### Bug修复
 * 【log】           修复log模块模板拼接时没有判断等级关闭与否的问题

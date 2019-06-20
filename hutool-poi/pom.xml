@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.5.13-SNAPSHOT</version>
+		<version>4.5.13</version>
 	</parent>
 
 	<artifactId>hutool-poi</artifactId>
