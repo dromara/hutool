@@ -51,9 +51,14 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 		if (null == defaultValue || targetType.isInstance(defaultValue)) {
 			if (targetType.isInstance(value) && false == Map.class.isAssignableFrom(targetType)) {
 				// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
-				return (T) targetType.cast(value);
+				return targetType.cast(value);
 			}
-			T result = convertInternal(value);
+			T result;
+			try {
+				result = convertInternal(value);
+			} catch (RuntimeException e) {
+				return defaultValue;
+			}
 			return ((null == result) ? defaultValue : result);
 		} else {
 			throw new IllegalArgumentException(StrUtil.format("Default value [{}] is not the instance of [{}]", defaultValue, targetType));
