@@ -74,6 +74,11 @@ public class ConvertTest {
 		Assert.assertEquals(Integer.valueOf(8), dInteger);
 		int dInt = ConverterRegistry.getInstance().convert(int.class, d);
 		Assert.assertTrue(8 == dInt);
+
+		//转换报错使用默认值
+		String e = "testToInt";
+		Integer eInteger = Convert.toInt(e);
+		Assert.assertTrue(null == eInteger);
 	}
 
 	@Test
