@@ -10,6 +10,7 @@ import cn.hutool.log.dialect.jboss.JbossLogFactory;
 import cn.hutool.log.dialect.jdk.JdkLogFactory;
 import cn.hutool.log.dialect.log4j.Log4jLogFactory;
 import cn.hutool.log.dialect.log4j2.Log4j2LogFactory;
+import cn.hutool.log.dialect.slf4j.Slf4jLogFactory;
 import cn.hutool.log.dialect.tinylog.TinyLogFactory;
 
 /**
@@ -85,6 +86,16 @@ public class CustomLogTest {
 	@Test
 	public void jdkLogTest(){
 		LogFactory factory = new JdkLogFactory();
+		LogFactory.setCurrentLogFactory(factory);
+		Log log = LogFactory.get();
+		
+		log.info(null);
+		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
+	}
+	
+	@Test
+	public void slf4jTest(){
+		LogFactory factory = new Slf4jLogFactory();
 		LogFactory.setCurrentLogFactory(factory);
 		Log log = LogFactory.get();
 		
