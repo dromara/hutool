@@ -9,13 +9,25 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 您使用这个缓存的场景：
+ *
+ * 我不在乎这里有没有这个缓存，有最好没有也无所谓，但是无论如何不能让我的程序出现OOM
+ * @param <K>
+ * @param <V>
+ */
 public class SimpleCache<K,V> implements Cache<K, V> {
     private ConcurrentHashMap<K,SoftValue<K,V>> map;
     public SimpleCache() {
         this.map=new ConcurrentHashMap<K,SoftValue<K,V>>();
     }
 
-
+    /**
+     * 添加缓存 k-v
+     * k存在就覆盖
+     * @param key 键
+     * @param value
+     */
     @Override
     public void put(K key, V value) {
         if (value==null){
@@ -24,7 +36,11 @@ public class SimpleCache<K,V> implements Cache<K, V> {
         map.put(key,new SoftValue<K,V>(this.map,key,value));
     }
 
-
+    /**
+     * 通过k获取v
+     * @param key 键
+     * @return null if cache not available anymore OR cache value is null
+     */
     @Override
     public V get(K key) {
         int i = key.hashCode();
@@ -38,9 +54,21 @@ public class SimpleCache<K,V> implements Cache<K, V> {
         V v = sv.get();
         return v==SoftValue.NULL_OBJECT?null:v;
     }
+
+    /**
+     * 当前仍在缓存中的键集合
+     * @return
+     */
     public  Set<K> keySet(){
         return  map.keySet();
     }
+
+    /**
+     * 通过k获取v，如果缓存不可用，就从supplier方法获取v
+     * @param key
+     * @param supplier
+     * @return
+     */
     public V getOrDefault(K key, Supplier<V> supplier){
         SoftValue<K,V> sv = getValueWrapper(key);
         if (sv==null){
@@ -57,7 +85,7 @@ public class SimpleCache<K,V> implements Cache<K, V> {
     }
     @Override
     public void clear() {
-
+        map.clear();
     }
 
     @Override
@@ -80,12 +108,12 @@ public class SimpleCache<K,V> implements Cache<K, V> {
     public boolean containsKey(K key) {
         return map.containsKey(key);
     }
-
+    @Deprecated
     @Override
     public void put(K key, V value, long timeout) {
         put(key,value);
     }
-
+    @Deprecated
     @Override
     public V get(K key, boolean isUpdateLastAccess) {
         return get(key);
