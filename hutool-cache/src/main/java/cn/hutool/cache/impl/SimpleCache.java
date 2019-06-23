@@ -70,6 +70,12 @@ public class SimpleCache<K,V> implements Cache<K, V> {
         return map.isEmpty();
     }
 
+    /**
+     * 简单缓存，不应该太在意这个是不是还在缓存中了，如果不是 调用方应当有办法处理
+     * @param key KEY
+     * @return
+     */
+    @Deprecated
     @Override
     public boolean containsKey(K key) {
         return map.containsKey(key);
