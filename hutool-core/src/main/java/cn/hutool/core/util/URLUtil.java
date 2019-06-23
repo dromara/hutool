@@ -118,9 +118,35 @@ public class URLUtil {
 	 */
 	public static URL toUrlForHttp(String urlStr, URLStreamHandler handler) {
 		Assert.notBlank(urlStr, "Url is blank !");
-		// 去掉url中的空白符，防止空白符导致的异常
-		urlStr = StrUtil.cleanBlank(urlStr);
+		// 编码空白符，防止空格引起的请求异常
+		urlStr = encodeBlank(urlStr);
 		return URLUtil.url(urlStr, handler);
+	}
+	
+	/**
+	 * 单独编码URL中的空白符，空白符编码为%20
+	 * 
+	 * @param urlStr URL字符串
+	 * @return 编码后的字符串
+	 * @since 4.5.14
+	 */
+	public static String encodeBlank(CharSequence urlStr) {
+		if (urlStr == null) {
+			return null;
+		}
+
+		int len = urlStr.length();
+		final StringBuilder sb = new StringBuilder(len);
+		char c;
+		for (int i = 0; i < len; i++) {
+			c = urlStr.charAt(i);
+			if (CharUtil.isBlankChar(c)) {
+				sb.append("%20");
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 	/**

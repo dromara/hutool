@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【log】           调整log模块层次结构，兼容slf4j的API（issue#IY8DX@Gitee）
+* 【core】         Convert.toXXX带默认值换成convertQuietly实现，避免异常（issue#403@Gitee）
 
 ### Bug修复
 * 【log】           解决行号错误问题
