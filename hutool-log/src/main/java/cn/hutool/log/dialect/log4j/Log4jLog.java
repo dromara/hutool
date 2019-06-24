@@ -4,7 +4,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.log.AbstractLocationAwareLog;
+import cn.hutool.log.AbstractLog;
 
 /**
  * <a href="http://logging.apache.org/log4j/1.2/index.html">Apache Log4J</a> log.<br>
@@ -12,9 +12,8 @@ import cn.hutool.log.AbstractLocationAwareLog;
  * @author Looly
  *
  */
-public class Log4jLog extends AbstractLocationAwareLog {
+public class Log4jLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
-	private static final String FQCN = Log4jLog.class.getName();
 
 	private final Logger logger;
 
@@ -43,13 +42,8 @@ public class Log4jLog extends AbstractLocationAwareLog {
 	}
 
 	@Override
-	public void trace(String format, Object... arguments) {
-		trace(null, format, arguments);
-	}
-
-	@Override
-	public void trace(Throwable t, String format, Object... arguments) {
-		logIfEnabled(FQCN, cn.hutool.log.level.Level.TRACE, t, format, arguments);
+	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, cn.hutool.log.level.Level.TRACE, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Debug
@@ -59,15 +53,9 @@ public class Log4jLog extends AbstractLocationAwareLog {
 	}
 
 	@Override
-	public void debug(String format, Object... arguments) {
-		debug(null, format, arguments);
+	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, cn.hutool.log.level.Level.DEBUG, t, format, arguments);
 	}
-
-	@Override
-	public void debug(Throwable t, String format, Object... arguments) {
-		logIfEnabled(FQCN, cn.hutool.log.level.Level.DEBUG, t, format, arguments);
-	}
-
 	// ------------------------------------------------------------------------- Info
 	@Override
 	public boolean isInfoEnabled() {
@@ -75,13 +63,8 @@ public class Log4jLog extends AbstractLocationAwareLog {
 	}
 
 	@Override
-	public void info(String format, Object... arguments) {
-		info(null, format, arguments);
-	}
-
-	@Override
-	public void info(Throwable t, String format, Object... arguments) {
-		logIfEnabled(FQCN, cn.hutool.log.level.Level.INFO, t, format, arguments);
+	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, cn.hutool.log.level.Level.INFO, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Warn
@@ -91,15 +74,10 @@ public class Log4jLog extends AbstractLocationAwareLog {
 	}
 
 	@Override
-	public void warn(String format, Object... arguments) {
-		warn(null, format, arguments);
+	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, cn.hutool.log.level.Level.WARN, t, format, arguments);
 	}
-
-	@Override
-	public void warn(Throwable t, String format, Object... arguments) {
-		logIfEnabled(FQCN, cn.hutool.log.level.Level.WARN, t, format, arguments);
-	}
-
+	
 	// ------------------------------------------------------------------------- Error
 	@Override
 	public boolean isErrorEnabled() {
@@ -107,41 +85,13 @@ public class Log4jLog extends AbstractLocationAwareLog {
 	}
 
 	@Override
-	public void error(String format, Object... arguments) {
-		error(null, format, arguments);
-	}
-
-	@Override
-	public void error(Throwable t, String format, Object... arguments) {
-		logIfEnabled(FQCN, cn.hutool.log.level.Level.ERROR, t, format, arguments);
+	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, cn.hutool.log.level.Level.ERROR, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(cn.hutool.log.level.Level level, String format, Object... arguments) {
-		log(level, null, format, arguments);
-	}
-	
-	@Override
-	public void log(cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
-		this.log(FQCN, level, t, format, arguments);
-	}
-	
-	@Override
 	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
-		logIfEnabled(fqcn, level, t, format, arguments);
-	}
-	
-	/**
-	 * 打印对应等级的日志
-	 * @param fqcn FQCN
-	 * @param level 等级
-	 * @param t 异常
-	 * @param format 消息模板
-	 * @param arguments 参数
-	 * @since 4.5.13
-	 */
-	private void logIfEnabled(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
 		Level log4jLevel;
 		switch (level) {
 			case TRACE:
@@ -167,6 +117,4 @@ public class Log4jLog extends AbstractLocationAwareLog {
 			logger.log(fqcn, log4jLevel, StrUtil.format(format, arguments), t);
 		}
 	}
-	
-	// ------------------------------------------------------------------------- Private method
 }

@@ -1,6 +1,7 @@
 package cn.hutool.bloomfilter;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.bloomfilter.bitMap.IntMap;
@@ -21,6 +22,7 @@ public class BitMapBloomFilterTest {
 	}
 
 	@Test
+	@Ignore
 	public void testIntMap(){
 		IntMap intMap = new IntMap();
 

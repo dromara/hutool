@@ -18,7 +18,7 @@ public class TinyLog extends AbstractLog {
 	private static final long serialVersionUID = -4848042277045993735L;
 	
 	/** 堆栈增加层数，因为封装因此多了两层，此值用于正确获取当前类名 */
-	private static final int DEPTH = 2;
+	private static final int DEPTH = 4;
 
 	private int level;
 	private String name;
@@ -41,49 +41,33 @@ public class TinyLog extends AbstractLog {
 	// ------------------------------------------------------------------------- Trace
 	@Override
 	public boolean isTraceEnabled() {
-		return this.level <= org.pmw.tinylog.Level.TRACE.ordinal();
+		return this.level <= Level.TRACE.ordinal();
 	}
 
 	@Override
-	public void trace(String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.TRACE, format, arguments);
-	}
-
-	@Override
-	public void trace(Throwable t, String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.TRACE, t, format, arguments);
+	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+		logIfEnabled(fqcn, Level.TRACE, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Debug
 	@Override
 	public boolean isDebugEnabled() {
-		return this.level <= org.pmw.tinylog.Level.DEBUG.ordinal();
+		return this.level <= Level.DEBUG.ordinal();
 	}
 
 	@Override
-	public void debug(String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.DEBUG, format, arguments);
+	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+		logIfEnabled(fqcn, Level.DEBUG, t, format, arguments);
 	}
-
-	@Override
-	public void debug(Throwable t, String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.DEBUG, t, format, arguments);
-	}
-
 	// ------------------------------------------------------------------------- Info
 	@Override
 	public boolean isInfoEnabled() {
-		return this.level <= org.pmw.tinylog.Level.INFO.ordinal();
+		return this.level <= Level.INFO.ordinal();
 	}
 
 	@Override
-	public void info(String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.INFO, format, arguments);
-	}
-
-	@Override
-	public void info(Throwable t, String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.INFO, t, format, arguments);
+	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+		logIfEnabled(fqcn, Level.INFO, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Warn
@@ -93,42 +77,48 @@ public class TinyLog extends AbstractLog {
 	}
 
 	@Override
-	public void warn(String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.WARN, format, arguments);
-	}
-
-	@Override
-	public void warn(Throwable t, String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.WARN, t, format, arguments);
+	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+		logIfEnabled(fqcn, Level.WARNING, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Error
 	@Override
 	public boolean isErrorEnabled() {
-		return this.level <= org.pmw.tinylog.Level.ERROR.ordinal();
+		return this.level <= Level.ERROR.ordinal();
 	}
 
 	@Override
-	public void error(String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.ERROR, format, arguments);
-	}
-
-	@Override
-	public void error(Throwable t, String format, Object... arguments) {
-		log(cn.hutool.log.level.Level.ERROR, t, format, arguments);
+	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+		logIfEnabled(fqcn, Level.ERROR, t, format, arguments);
 	}
 
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(cn.hutool.log.level.Level level, String format, Object... arguments) {
-		LogEntryForwarder.forward(DEPTH, toTinyLevel(level), getLastArgumentIfThrowable(level, arguments), format, arguments);
+	public void log(String fqcn, cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
+		logIfEnabled(fqcn, toTinyLevel(level), t, format, arguments);
 	}
-
+	
 	@Override
-	public void log(cn.hutool.log.level.Level level, Throwable t, String format, Object... arguments) {
-		LogEntryForwarder.forward(DEPTH, toTinyLevel(level), t, format, arguments);
+	public boolean isEnabled(cn.hutool.log.level.Level level) {
+		return this.level <= toTinyLevel(level).ordinal();
 	}
-
+	
+	/**
+	 * 在对应日志级别打开情况下打印日志
+	 * @param fqcn 完全限定类名(Fully Qualified Class Name)，用于定位日志位置
+	 * @param level 日志级别
+	 * @param t 异常，null则检查最后一个参数是否为Throwable类型，是则取之，否则不打印堆栈
+	 * @param format 日志消息模板
+	 * @param arguments 日志消息参数
+	 */
+	private void logIfEnabled(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+		// fqcn 无效
+		if(null == t){
+			t = getLastArgumentIfThrowable(arguments);
+		}
+		LogEntryForwarder.forward(DEPTH, level, t, format, arguments);
+	}
+	
 	/**
 	 * 将Hutool的Level等级转换为Tinylog的Level等级
 	 * 
