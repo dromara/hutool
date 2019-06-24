@@ -120,7 +120,11 @@ public class URLUtil {
 		Assert.notBlank(urlStr, "Url is blank !");
 		// 编码空白符，防止空格引起的请求异常
 		urlStr = encodeBlank(urlStr);
-		return URLUtil.url(urlStr, handler);
+		try {
+			return new URL(null, urlStr, handler);
+		} catch (MalformedURLException e) {
+			throw new UtilException(e);
+		}
 	}
 	
 	/**

@@ -256,7 +256,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * <p>
 	 * 相关issue见：https://gitee.com/loolly/hutool/issues/IMD1X
 	 * 
-	 * @param urlHandler url字符串
+	 * @param urlHandler {@link URLStreamHandler}
 	 * @since 4.1.9
 	 */
 	public HttpRequest setUrlHandler(URLStreamHandler urlHandler) {

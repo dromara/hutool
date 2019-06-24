@@ -8,6 +8,7 @@
 ### 新特性
 * 【poi】          增加TableUtil
 * 【http】        HttpRequest增加setCookieManager方法
+* 【http】        改进url错误时的报错信息（感谢@【北京】thumb）
 
 ### Bug修复
 * 【core】        修复ZipUtil.zlib压缩识别问题（感谢@【上海】 沙漏）

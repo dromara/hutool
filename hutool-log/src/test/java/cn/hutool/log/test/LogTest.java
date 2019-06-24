@@ -1,5 +1,6 @@
 package cn.hutool.log.test;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.log.Log;
@@ -24,5 +25,16 @@ public class LogTest {
 		
 //		Exception e = new Exception("test Exception");
 //		log.error(e, "This is {} log", Level.ERROR);
+	}
+	
+	/**
+	 * 兼容slf4j日志消息格式测试，既第二个参数是异常对象时正常输出异常信息
+	 */
+	@Test
+	@Ignore
+	public void logWithExceptionTest() {
+		Log log = LogFactory.get();
+		Exception e = new Exception("test Exception");
+		log.error("我是错误消息", e);
 	}
 }
