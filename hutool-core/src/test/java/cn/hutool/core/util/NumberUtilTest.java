@@ -161,6 +161,10 @@ public class NumberUtilTest {
 		
 		String format = NumberUtil.decimalFormatMoney(c);
 		Assert.assertEquals("299,792,400.54", format);
+		
+		double value = 0.5;
+		String money = NumberUtil.decimalFormatMoney(value);
+		Assert.assertEquals("0.50", money);
 	}
 
 	@Test

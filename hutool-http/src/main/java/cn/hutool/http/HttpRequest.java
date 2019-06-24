@@ -76,6 +76,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public static CookieManager getCookieManager() {
 		return cookieManager;
 	}
+	
+	/**
+	 * 自定义{@link CookieManager}
+	 * 
+	 * @param customCookieManager 自定义的{@link CookieManager}
+	 * @since 4.5.14
+	 */
+	public static void setCookieManager(CookieManager customCookieManager) {
+		cookieManager = customCookieManager;
+	}
 
 	/**
 	 * 关闭Cookie
