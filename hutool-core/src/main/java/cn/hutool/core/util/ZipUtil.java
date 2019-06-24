@@ -749,7 +749,7 @@ public class ZipUtil {
 	 */
 	public static byte[] zlib(InputStream in, int level, int length) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
-		deflater(in, out, level);
+		deflater(in, out, level, false);
 		return out.toByteArray();
 	}
 
@@ -797,7 +797,7 @@ public class ZipUtil {
 	 */
 	public static byte[] unZlib(InputStream in, int length) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream(length);
-		inflater(in, out);
+		inflater(in, out, false);
 		return out.toByteArray();
 	}
 
@@ -985,9 +985,10 @@ public class ZipUtil {
 	 * 
 	 * @param in zlib数据流
 	 * @param out 输出
+	 * @param nowrap true表示兼容Gzip压缩
 	 */
-	private static void inflater(InputStream in, OutputStream out) {
-		final InflaterOutputStream ios = (out instanceof InflaterOutputStream) ? (InflaterOutputStream) out : new InflaterOutputStream(out, new Inflater(true));
+	private static void inflater(InputStream in, OutputStream out, boolean nowrap) {
+		final InflaterOutputStream ios = (out instanceof InflaterOutputStream) ? (InflaterOutputStream) out : new InflaterOutputStream(out, new Inflater(nowrap));
 		IoUtil.copy(in, ios);
 		try {
 			ios.finish();
@@ -1002,9 +1003,10 @@ public class ZipUtil {
 	 * @param in zlib数据流
 	 * @param out 输出
 	 * @param level 压缩级别，0~9
+	 * @param nowrap true表示兼容Gzip压缩
 	 */
-	private static void deflater(InputStream in, OutputStream out, int level) {
-		final DeflaterOutputStream ios = (out instanceof DeflaterOutputStream) ? (DeflaterOutputStream) out : new DeflaterOutputStream(out, new Deflater(level, true));
+	private static void deflater(InputStream in, OutputStream out, int level, boolean nowrap) {
+		final DeflaterOutputStream ios = (out instanceof DeflaterOutputStream) ? (DeflaterOutputStream) out : new DeflaterOutputStream(out, new Deflater(level, nowrap));
 		IoUtil.copy(in, ios);
 		try {
 			ios.finish();

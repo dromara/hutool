@@ -27,7 +27,7 @@ public class CsvUtilTest {
 	public void writeTest() {
 		CsvWriter writer = CsvUtil.getWriter("e:/testWrite.csv", CharsetUtil.CHARSET_UTF_8);
 		writer.write(
-				new String[] {"a1", "b1", "c1"}, 
+				new String[] {"a1", "b1", "c1", "123345346456745756756785656"}, 
 				new String[] {"a2", "b2", "c2"}, 
 				new String[] {"a3", "b3", "c3"}
 		);
