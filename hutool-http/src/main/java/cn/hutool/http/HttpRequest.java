@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
@@ -36,7 +34,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.cookie.ThreadLocalCookieStore;
+import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.json.JSON;
 import cn.hutool.log.StaticLog;
@@ -60,41 +58,36 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private static final String CONTENT_TYPE_MULTIPART_PREFIX = "multipart/form-data; boundary=";
 	private static final String CONTENT_TYPE_FILE_TEMPLATE = "Content-Type: {}\r\n\r\n";
 
-	/** Cookie管理 */
-	protected static CookieManager cookieManager;
-	static {
-		cookieManager = new CookieManager(new ThreadLocalCookieStore(), CookiePolicy.ACCEPT_ALL);
-		CookieHandler.setDefault(cookieManager);
-	}
-
 	/**
 	 * 获取Cookie管理器，用于自定义Cookie管理
 	 * 
 	 * @return {@link CookieManager}
 	 * @since 4.1.0
+	 * @see GlobalCookieManager#getCookieManager()
 	 */
 	public static CookieManager getCookieManager() {
-		return cookieManager;
+		return GlobalCookieManager.getCookieManager();
 	}
-	
+
 	/**
 	 * 自定义{@link CookieManager}
 	 * 
 	 * @param customCookieManager 自定义的{@link CookieManager}
 	 * @since 4.5.14
+	 * @see GlobalCookieManager#setCookieManager(CookieManager)
 	 */
 	public static void setCookieManager(CookieManager customCookieManager) {
-		cookieManager = customCookieManager;
+		GlobalCookieManager.setCookieManager(customCookieManager);
 	}
 
 	/**
 	 * 关闭Cookie
 	 * 
 	 * @since 4.1.9
+	 * @see GlobalCookieManager#setCookieManager(CookieManager)
 	 */
 	public static void closeCookie() {
-		cookieManager = null;
-		CookieHandler.setDefault(null);
+		GlobalCookieManager.setCookieManager(null);
 	}
 
 	private String url;
@@ -926,6 +919,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				.setInstanceFollowRedirects(this.maxRedirectCount > 0 ? true : false)
 				// 覆盖默认Header
 				.header(this.headers, true);
+		
+		// 读取全局Cookie信息并附带到请求中
+		GlobalCookieManager.add(this.httpConnection);
 
 		// 是否禁用缓存
 		if (this.isDisableCache) {

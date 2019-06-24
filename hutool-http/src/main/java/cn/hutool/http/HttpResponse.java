@@ -25,6 +25,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.log.StaticLog;
 
 /**
@@ -143,9 +144,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 
 	 * @return Cookie列表
 	 * @since 3.1.1
+	 * @see GlobalCookieManager#getCookieManager()
 	 */
 	public List<HttpCookie> getCookies() {
-		return HttpRequest.cookieManager.getCookieStore().getCookies();
+		return GlobalCookieManager.getCookieManager().getCookieStore().getCookies();
 	}
 
 	/**
@@ -353,11 +355,16 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			}
 		}
 
+		// 读取响应头信息
 		try {
 			this.headers = httpConnection.headers();
 		} catch (IllegalArgumentException e) {
 			StaticLog.warn(e, e.getMessage());
 		}
+		
+		// 存储服务端设置的Cookie信息
+		GlobalCookieManager.store(httpConnection);
+		
 		final Charset charset = httpConnection.getCharset();
 		this.charsetFromResponse = charset;
 		if (null != charset) {

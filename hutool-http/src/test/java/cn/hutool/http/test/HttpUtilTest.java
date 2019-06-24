@@ -76,6 +76,9 @@ public class HttpUtilTest {
 			// 打印标题
 			Console.log(title);
 		}
+		
+		// 请求下一页，检查Cookie是否复用
+		listContent = HttpUtil.get("https://www.oschina.net/action/ajax/get_more_news_list?newsType=&p=3");
 	}
 
 	@Test
