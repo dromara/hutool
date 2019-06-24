@@ -279,9 +279,12 @@ public class JschUtil {
 		channel.setErrStream(errStream);
 		InputStream in = null;
 		try {
+			channel.start();
 			in = channel.getInputStream();
 			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
 		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} catch (JSchException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
