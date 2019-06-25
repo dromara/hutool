@@ -24,4 +24,10 @@ public class SystemUtilTest {
 		Assert.assertNotNull(javaInfo);
 	}
 	
+	@Test
+	public void getOsInfoTest() {
+		OsInfo osInfo = SystemUtil.getOsInfo();
+		Assert.assertNotNull(osInfo);
+	}
+	
 }
