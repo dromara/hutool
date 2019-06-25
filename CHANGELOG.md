@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【cache】       缓存增加get重载（pr#404@Github）
+* 【poi    】       增加WordUtil
 
 ### Bug修复
 
