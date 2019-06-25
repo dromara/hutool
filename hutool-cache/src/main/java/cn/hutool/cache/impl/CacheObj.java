@@ -61,7 +61,7 @@ public class CacheObj<K, V> {
 			lastAccess = System.currentTimeMillis();
 		}
 		accessCount++;
-		return obj;
+		return this.obj;
 	}
 	
 	/**

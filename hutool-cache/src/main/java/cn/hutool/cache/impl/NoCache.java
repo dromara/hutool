@@ -3,6 +3,7 @@ package cn.hutool.cache.impl;
 import java.util.Iterator;
 
 import cn.hutool.cache.Cache;
+import cn.hutool.core.lang.func.Func0;
 
 /**
  * 无缓存实现，用于快速关闭缓存
@@ -46,6 +47,15 @@ public class NoCache<K, V> implements Cache<K, V> {
 	@Override
 	public V get(K key, boolean isUpdateLastAccess) {
 		return null;
+	}
+	
+	@Override
+	public V get(K key, Func0<V> supplier) {
+		try {
+			return (null == supplier) ? null : supplier.call();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

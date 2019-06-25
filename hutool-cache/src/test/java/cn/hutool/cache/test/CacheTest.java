@@ -7,6 +7,7 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.thread.ThreadUtil;
 
 /**
@@ -90,6 +91,15 @@ public class CacheTest {
 		//5毫秒后，由于设置了默认过期，key3只被保留4毫秒，因此为null
 		String value3 = timedCache.get("key3");
 		Assert.assertTrue(null == value3);
+		
+		String value3Supplier = timedCache.get("key3", new Func0<String>() {
+			
+			@Override
+			public String call() throws Exception {
+				return "Default supplier";
+			}
+		});
+		Assert.assertEquals("Default supplier", value3Supplier);
 		
 		// 永不过期
 		String value4 = timedCache.get("key4");

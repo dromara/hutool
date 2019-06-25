@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.core.collection.CopiedIter;
+import cn.hutool.core.lang.func.Func0;
 
 /**
  * 超时和限制大小的缓存的默认实现<br>
@@ -54,17 +55,29 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		writeLock.lock();
 
 		try {
-			CacheObj<K, V> co = new CacheObj<K, V>(key, object, timeout);
-			if (timeout != 0) {
-				existCustomTimeout = true;
-			}
-			if (isFull()) {
-				pruneCache();
-			}
-			cacheMap.put(key, co);
+			putWithoutLock(key, object, timeout);
 		} finally {
 			writeLock.unlock();
 		}
+	}
+
+	/**
+	 * 加入元素，无锁
+	 * 
+	 * @param key 键
+	 * @param object 值
+	 * @param timeout 超时时长
+	 * @since 4.5.16
+	 */
+	private void putWithoutLock(K key, V object, long timeout) {
+		CacheObj<K, V> co = new CacheObj<K, V>(key, object, timeout);
+		if (timeout != 0) {
+			existCustomTimeout = true;
+		}
+		if (isFull()) {
+			pruneCache();
+		}
+		cacheMap.put(key, co);
 	}
 	// ---------------------------------------------------------------- put end
 
@@ -123,6 +136,31 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	}
 
 	@Override
+	public V get(K key, Func0<V> supplier) {
+		V v = get(key);
+		if (null == v && null != supplier) {
+			writeLock.lock();
+			try {
+				// 双重检查锁
+				final CacheObj<K, V> co = cacheMap.get(key);
+				if(null == co || co.isExpired() || null == co.getValue()) {
+					try {
+						v = supplier.call();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+					putWithoutLock(key, v, this.timeout);
+				} else {
+					v = co.get(true);
+				}
+			} finally {
+				writeLock.unlock();
+			}
+		}
+		return v;
+	}
+
+	@Override
 	public V get(K key, boolean isUpdateLastAccess) {
 		readLock.lock();
 
@@ -133,7 +171,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 				missCount++;
 				return null;
 			}
-			
+
 			if (false == co.isExpired()) {
 				// 命中
 				hitCount++;
@@ -293,15 +331,27 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 		writeLock.lock();
 		CacheObj<K, V> co;
 		try {
-			co = cacheMap.remove(key);
-			if (withMissCount) {
-				this.missCount--;
-			}
+			co = removeWithoutLock(key, withMissCount);
 		} finally {
 			writeLock.unlock();
 		}
 		if (null != co) {
 			onRemove(co.key, co.obj);
 		}
+	}
+	
+	/**
+	 * 移除key对应的对象，不加锁
+	 * 
+	 * @param key 键
+	 * @param withMissCount 是否计数丢失数
+	 * @return 移除的对象，无返回null
+	 */
+	private CacheObj<K, V> removeWithoutLock(K key, boolean withMissCount) {
+		final CacheObj<K, V> co = cacheMap.remove(key);
+		if (withMissCount) {
+			this.missCount--;
+		}
+		return co;
 	}
 }

@@ -35,7 +35,7 @@ public class Word07Writer implements Closeable {
 	public Word07Writer() {
 		this(new XWPFDocument());
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -44,7 +44,7 @@ public class Word07Writer implements Closeable {
 	public Word07Writer(File destFile) {
 		this(DocUtil.create(destFile), destFile);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -53,7 +53,7 @@ public class Word07Writer implements Closeable {
 	public Word07Writer(XWPFDocument doc) {
 		this(doc, null);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -64,7 +64,7 @@ public class Word07Writer implements Closeable {
 		this.doc = doc;
 		this.destFile = destFile;
 	}
-	
+
 	// -------------------------------------------------------------------------- Constructor end
 
 	/**
@@ -75,7 +75,7 @@ public class Word07Writer implements Closeable {
 	public XWPFDocument getDoc() {
 		return this.doc;
 	}
-	
+
 	/**
 	 * 设置写出的目标文件
 	 * 
@@ -126,7 +126,19 @@ public class Word07Writer implements Closeable {
 		}
 		return this;
 	}
-	
+
+	/**
+	 * 增加表格数据
+	 * 
+	 * @param data 表格数据，多行数据。元素表示一行数据，当为集合或者数组时，为一行；当为Map或者Bean时key表示标题，values为数据
+	 * @return this
+	 * @since 4.5.16
+	 */
+	public Word07Writer addTable(Iterable<?> data) {
+		TableUtil.createTable(this.doc, data);
+		return this;
+	}
+
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>
