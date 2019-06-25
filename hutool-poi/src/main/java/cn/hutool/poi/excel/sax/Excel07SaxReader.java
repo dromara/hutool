@@ -108,18 +108,18 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 
 	// ------------------------------------------------------------------------------ Read start
 	@Override
-	public Excel07SaxReader read(File file, int sheetIndex) throws POIException {
+	public Excel07SaxReader read(File file, int rid) throws POIException {
 		try {
-			return read(OPCPackage.open(file), sheetIndex);
+			return read(OPCPackage.open(file), rid);
 		} catch (Exception e) {
 			throw new POIException(e);
 		}
 	}
 
 	@Override
-	public Excel07SaxReader read(InputStream in, int sheetIndex) throws POIException {
+	public Excel07SaxReader read(InputStream in, int rid) throws POIException {
 		try {
-			return read(OPCPackage.open(in), sheetIndex);
+			return read(OPCPackage.open(in), rid);
 		} catch (DependencyException e) {
 			throw e;
 		} catch (Exception e) {
@@ -131,11 +131,11 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 * 开始读取Excel，Sheet编号从0开始计数
 	 * 
 	 * @param opcPackage {@link OPCPackage}，Excel包
-	 * @param sheetIndex Excel中的sheet编号，如果为-1处理所有编号的sheet
+	 * @param rid Excel中的sheet rid编号，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	public Excel07SaxReader read(OPCPackage opcPackage, int sheetIndex) throws POIException {
+	public Excel07SaxReader read(OPCPackage opcPackage, int rid) throws POIException {
 		InputStream sheetInputStream = null;
 		try {
 			final XSSFReader xssfReader = new XSSFReader(opcPackage);
@@ -145,10 +145,10 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			// 获取共享字符串表
 			this.sharedStringsTable = xssfReader.getSharedStringsTable();
 
-			if (sheetIndex > -1) {
-				this.sheetIndex = sheetIndex;
+			if (rid > -1) {
+				this.sheetIndex = rid;
 				// 根据 rId# 或 rSheet# 查找sheet
-				sheetInputStream = xssfReader.getSheet(RID_PREFIX + (sheetIndex + 1));
+				sheetInputStream = xssfReader.getSheet(RID_PREFIX + (rid + 1));
 				parse(sheetInputStream);
 			} else {
 				this.sheetIndex = -1;

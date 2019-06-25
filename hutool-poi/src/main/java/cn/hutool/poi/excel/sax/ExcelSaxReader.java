@@ -44,29 +44,29 @@ public interface ExcelSaxReader<T> {
 	 * 开始读取Excel
 	 * 
 	 * @param path 文件路径
-	 * @param sheetIndex Excel中的sheet编号，如果为-1处理所有编号的sheet
+	 * @param rid Excel中的sheet rid编号，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	T read(String path, int sheetIndex) throws POIException;
+	T read(String path, int rid) throws POIException;
 
 	/**
 	 * 开始读取Excel
 	 * 
 	 * @param file Excel文件
-	 * @param sheetIndex Excel中的sheet编号，如果为-1处理所有编号的sheet
+	 * @param rid Excel中的sheet rid编号，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	T read(File file, int sheetIndex) throws POIException;
+	T read(File file, int rid) throws POIException;
 
 	/**
 	 * 开始读取Excel，读取结束后并不关闭流
 	 * 
 	 * @param in Excel流
-	 * @param sheetIndex Excel中的sheet编号，如果为-1处理所有编号的sheet
+	 * @param rid Excel中的sheet rid编号，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
-	T read(InputStream in, int sheetIndex) throws POIException;
+	T read(InputStream in, int rid) throws POIException;
 }
