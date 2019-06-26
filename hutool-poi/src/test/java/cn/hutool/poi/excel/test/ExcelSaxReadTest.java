@@ -84,6 +84,12 @@ public class ExcelSaxReadTest {
 	public void readBySaxTest4() {
 		ExcelUtil.readBySax("e:/excel/single_line.xlsx", 2, createRowHandler());
 	}
+	
+	@Test
+	@Ignore
+	public void readBySaxTest5() {
+		ExcelUtil.readBySax("f:\\test\\222.xlsx", 0, createRowHandler());
+	}
 
 	private RowHandler createRowHandler() {
 		return new RowHandler() {

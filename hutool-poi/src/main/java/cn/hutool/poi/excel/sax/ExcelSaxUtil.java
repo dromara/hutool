@@ -34,6 +34,10 @@ public class ExcelSaxUtil {
 		if (null == value) {
 			return null;
 		}
+		
+		if(null == cellDataType) {
+			cellDataType = CellDataType.NULL;
+		}
 
 		Object result;
 		switch (cellDataType) {

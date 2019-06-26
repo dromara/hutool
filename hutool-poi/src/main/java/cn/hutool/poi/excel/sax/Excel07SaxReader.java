@@ -220,9 +220,8 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			numFmtString = xssfCellStyle.getDataFormatString();
 
 			if (numFmtString == null) {
-				cellDataType = CellDataType.NULL;
 				numFmtString = BuiltinFormats.getBuiltinFormat(numFmtIndex);
-			} else if (org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
+			} else if (CellDataType.NUMBER == this.cellDataType && org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
 				cellDataType = CellDataType.DATE;
 			}
 		}
