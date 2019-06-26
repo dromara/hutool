@@ -249,7 +249,7 @@ public class BeanCopier<T> implements Copier<T> {
 				}
 			} else if (firstParamType instanceof TypeVariable) {
 				// 参数为泛型，查找其真实类型（适用于泛型方法定义于泛型父类）
-				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), (TypeVariable<?>) firstParamType);
+				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), firstParamType);
 			}
 
 			value = valueProvider.value(providerKey, firstParamType);
