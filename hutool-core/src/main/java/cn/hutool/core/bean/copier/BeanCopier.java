@@ -273,11 +273,10 @@ public class BeanCopier<T> implements Copier<T> {
 				// 执行set方法注入值
 				setterMethod.invoke(bean, value);
 			} catch (Exception e) {
-				if (copyOptions.ignoreError) {
-					continue;// 忽略注入失败
-				} else {
+				if (!copyOptions.ignoreError) {
 					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
 				}
+				// 忽略注入失败
 			}
 		}
 	}
