@@ -7,7 +7,8 @@
 
 ### 新特性
 * 【cache】       缓存增加get重载（pr#404@Github）
-* 【poi    】       增加WordUtil
+* 【poi】           增加WordUtil
+* 【core】         改进fnvHash避免负数（issue#IYDK6@Gitee）
 
 ### Bug修复
 
