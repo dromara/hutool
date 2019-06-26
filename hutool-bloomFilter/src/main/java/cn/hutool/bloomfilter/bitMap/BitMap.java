@@ -1,12 +1,14 @@
 package cn.hutool.bloomfilter.bitMap;
 
+import java.io.Serializable;
+
 /**
  * BitMap接口，用于将某个int或long值映射到一个数组中，从而判定某个值是否存在
  * 
  * @author looly
  *
  */
-public interface BitMap {
+public interface BitMap extends Serializable{
 
 	public final int MACHINE32 = 32;
 	public final int MACHINE64 = 64;

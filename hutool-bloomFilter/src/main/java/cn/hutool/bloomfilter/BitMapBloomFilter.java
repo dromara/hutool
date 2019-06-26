@@ -17,6 +17,7 @@ import cn.hutool.core.util.NumberUtil;
  * @author Ansj
  */
 public class BitMapBloomFilter implements BloomFilter{
+	private static final long serialVersionUID = 1L;
 
 	private BloomFilter[] filters;
 

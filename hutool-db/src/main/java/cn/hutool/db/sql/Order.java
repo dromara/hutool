@@ -1,5 +1,7 @@
 package cn.hutool.db.sql;
 
+import java.io.Serializable;
+
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -7,7 +9,9 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public class Order {
+public class Order implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	/** 排序的字段 */
 	private String field;
 	/** 排序方式（正序还是反序） */

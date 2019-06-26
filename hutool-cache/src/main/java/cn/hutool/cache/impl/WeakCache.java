@@ -15,6 +15,7 @@ import java.util.WeakHashMap;
  * @since 3.0.7
  */
 public class WeakCache<K, V> extends TimedCache<K, V>{
+	private static final long serialVersionUID = 1L;
 
 	public WeakCache(long timeout) {
 		super(timeout, new WeakHashMap<K, CacheObj<K, V>>());

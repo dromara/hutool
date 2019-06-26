@@ -1,5 +1,6 @@
 package cn.hutool.core.annotation;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
@@ -21,7 +22,8 @@ import cn.hutool.core.collection.CollUtil;
  * @since 4.0.9
  **/
 
-public class CombinationAnnotationElement implements AnnotatedElement {
+public class CombinationAnnotationElement implements AnnotatedElement, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** 元注解 */
 	private static final Set<Class<? extends Annotation>> META_ANNOTATIONS = CollUtil.newHashSet(Target.class, //

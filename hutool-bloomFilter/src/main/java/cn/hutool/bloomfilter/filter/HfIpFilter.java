@@ -1,6 +1,7 @@
 package cn.hutool.bloomfilter.filter;
 
 public class HfIpFilter extends AbstractFilter {
+	private static final long serialVersionUID = 1L;
 
 	public HfIpFilter(long maxValue, int machineNum) {
 		super(maxValue, machineNum);

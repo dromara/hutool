@@ -11,7 +11,8 @@ import cn.hutool.db.sql.Wrapper;
  *
  */
 public class MysqlDialect extends AnsiSqlDialect{
-	
+	private static final long serialVersionUID = -3734718212043823636L;
+
 	public MysqlDialect() {
 		wrapper = new Wrapper('`');
 	}

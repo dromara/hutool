@@ -9,7 +9,8 @@ import java.sql.SQLException;
  * @author  weibaohui
  */
 public class StringHandler implements RsHandler<String>{
-	
+	private static final long serialVersionUID = -5296733366845720383L;
+
 	/**
 	 * 创建一个 NumberHandler对象
 	 * @return NumberHandler对象

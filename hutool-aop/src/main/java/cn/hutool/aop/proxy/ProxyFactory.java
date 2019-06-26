@@ -1,5 +1,7 @@
 package cn.hutool.aop.proxy;
 
+import java.io.Serializable;
+
 import cn.hutool.aop.aspects.Aspect;
 import cn.hutool.core.util.ReflectUtil;
 
@@ -10,7 +12,8 @@ import cn.hutool.core.util.ReflectUtil;
  * @author looly
  *
  */
-public abstract class ProxyFactory {
+public abstract class ProxyFactory implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 创建代理

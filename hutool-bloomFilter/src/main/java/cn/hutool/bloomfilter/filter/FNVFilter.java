@@ -3,6 +3,7 @@ package cn.hutool.bloomfilter.filter;
 import cn.hutool.core.util.HashUtil;
 
 public class FNVFilter extends AbstractFilter {
+	private static final long serialVersionUID = 1L;
 
 	public FNVFilter(long maxValue, int machineNum) {
 		super(maxValue, machineNum);

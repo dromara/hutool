@@ -11,6 +11,7 @@ import cn.hutool.aop.interceptor.JdkInterceptor;
  *
  */
 public class JdkProxyFactory extends ProxyFactory{
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	@SuppressWarnings("unchecked")

@@ -21,6 +21,7 @@ import cn.hutool.log.StaticLog;
  * @since 4.1.2
  */
 public class Db extends AbstractDb {
+	private static final long serialVersionUID = -3378415769645309514L;
 
 	/**
 	 * 创建Db<br>

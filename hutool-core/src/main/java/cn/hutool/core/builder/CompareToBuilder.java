@@ -51,6 +51,7 @@ import cn.hutool.core.util.ArrayUtil;
  * @since 4.2.2
  */
 public class CompareToBuilder implements Builder<Integer> {
+	private static final long serialVersionUID = 1L;
     
 	/** 当前比较状态 */
     private int comparison;

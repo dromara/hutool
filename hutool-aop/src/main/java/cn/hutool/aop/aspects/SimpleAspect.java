@@ -10,7 +10,8 @@ import java.lang.reflect.Method;
  *
  */
 public class SimpleAspect implements Aspect{
-	
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public boolean before(Object target, Method method, Object[] args) {
 		//继承此类后实现此方法

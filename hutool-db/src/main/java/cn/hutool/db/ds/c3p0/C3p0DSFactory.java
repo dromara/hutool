@@ -17,7 +17,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public class C3p0DSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = -6090788225842047281L;
+	
 	public static final String DS_NAME = "C3P0";
 
 	/**

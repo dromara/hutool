@@ -1,5 +1,6 @@
 package cn.hutool.core.bean;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -30,7 +31,8 @@ import cn.hutool.core.util.TypeUtil;
  * @author looly
  * @since 3.1.2
  */
-public class BeanDesc {
+public class BeanDesc implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** Bean类 */
 	private Class<?> beanClass;

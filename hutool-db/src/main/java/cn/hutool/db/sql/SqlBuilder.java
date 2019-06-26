@@ -24,6 +24,7 @@ import cn.hutool.db.dialect.DialectName;
  *
  */
 public class SqlBuilder implements Builder<String>{
+	private static final long serialVersionUID = 1L;
 
 	// --------------------------------------------------------------- Static methods start
 	/**

@@ -14,7 +14,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public class DbcpDSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = -9133501414334104548L;
+	
 	public static final String DS_NAME = "commons-dbcp2";
 
 	public DbcpDSFactory() {

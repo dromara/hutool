@@ -1,5 +1,6 @@
 package cn.hutool.db.dialect;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ import cn.hutool.db.sql.Wrapper;
  * @author loolly
  *
  */
-public interface Dialect {
+public interface Dialect extends Serializable{
 
 	/**
 	 * @return 包装器

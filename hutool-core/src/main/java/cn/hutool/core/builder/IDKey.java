@@ -1,5 +1,7 @@
 package cn.hutool.core.builder;
 
+import java.io.Serializable;
+
 /**
  * Wrap an identity key (System.identityHashCode()) so that an object can only be equal() to itself.
  * 
@@ -10,7 +12,9 @@ package cn.hutool.core.builder;
  * @author looly，Apache-Commons
  * @since 4.2.2
  */
-final class IDKey {
+final class IDKey implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	private final Object value;
 	private final int id;
 

@@ -1,5 +1,7 @@
 package cn.hutool.cache.impl;
 
+import java.io.Serializable;
+
 /**
  * 缓存对象
  * @author Looly
@@ -7,7 +9,8 @@ package cn.hutool.cache.impl;
  * @param <K> Key类型
  * @param <V> Value类型
  */
-public class CacheObj<K, V> {
+public class CacheObj<K, V> implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	protected final K key;
 	protected final V obj;

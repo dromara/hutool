@@ -11,6 +11,7 @@ import net.sf.cglib.proxy.Enhancer;
  *
  */
 public class CglibProxyFactory extends ProxyFactory{
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	@SuppressWarnings("unchecked")

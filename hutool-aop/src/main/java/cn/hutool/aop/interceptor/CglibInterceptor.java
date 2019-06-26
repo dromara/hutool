@@ -1,5 +1,6 @@
 package cn.hutool.aop.interceptor;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -14,7 +15,9 @@ import net.sf.cglib.proxy.MethodProxy;
  * @author looly
  *
  */
-public class CglibInterceptor implements MethodInterceptor {
+public class CglibInterceptor implements MethodInterceptor, Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private Object target;
 	private Aspect aspect;
 

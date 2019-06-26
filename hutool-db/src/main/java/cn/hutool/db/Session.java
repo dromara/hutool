@@ -27,6 +27,7 @@ import cn.hutool.log.LogFactory;
  *
  */
 public class Session extends AbstractDb implements Closeable {
+	private static final long serialVersionUID = 3421251905539056945L;
 	private final static Log log = LogFactory.get();
 
 	/**

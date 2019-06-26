@@ -2,6 +2,7 @@ package cn.hutool.bloomfilter.filter;
 
 
 public class JSFilter extends AbstractFilter {
+	private static final long serialVersionUID = 1L;
 
 	public JSFilter(long maxValue, int machineNum) {
 		super(maxValue, machineNum);

@@ -24,6 +24,7 @@ import cn.hutool.core.lang.func.Func0;
  * @param <V> 值类型
  */
 public abstract class AbstractCache<K, V> implements Cache<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	protected Map<K, CacheObj<K, V>> cacheMap;
 

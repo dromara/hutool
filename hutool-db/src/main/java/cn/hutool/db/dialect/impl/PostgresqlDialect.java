@@ -10,6 +10,8 @@ import cn.hutool.db.sql.Wrapper;
  *
  */
 public class PostgresqlDialect extends AnsiSqlDialect{
+	private static final long serialVersionUID = 3889210427543389642L;
+
 	public PostgresqlDialect() {
 		wrapper = new Wrapper('"');
 	}

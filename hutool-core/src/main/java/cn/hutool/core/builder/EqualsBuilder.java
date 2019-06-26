@@ -66,6 +66,7 @@ import cn.hutool.core.util.ArrayUtil;
  * @version $Id: EqualsBuilder.java 1623970 2014-09-10 11:32:53Z djones $
  */
 public class EqualsBuilder implements Builder<Boolean> {
+	private static final long serialVersionUID = 1L;
 
     /**
      * <p>

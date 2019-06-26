@@ -16,7 +16,8 @@ import cn.hutool.setting.dialect.Props;
  *
  */
 public class HikariDSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = -8834744983614749401L;
+	
 	public static final String DS_NAME = "HikariCP";
 
 	public HikariDSFactory() {

@@ -20,7 +20,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public class JndiDSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = 1573625812927370432L;
+	
 	public static final String DS_NAME = "JNDI DataSource";
 
 	public JndiDSFactory() {

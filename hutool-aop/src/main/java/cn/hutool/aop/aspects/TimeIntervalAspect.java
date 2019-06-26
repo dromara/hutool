@@ -11,6 +11,7 @@ import cn.hutool.core.lang.Console;
  *
  */
 public class TimeIntervalAspect extends SimpleAspect{
+	private static final long serialVersionUID = 1L;
 
 	private TimeInterval interval = new TimeInterval();
 

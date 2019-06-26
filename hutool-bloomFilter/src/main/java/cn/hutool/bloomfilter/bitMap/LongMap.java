@@ -7,6 +7,7 @@ package cn.hutool.bloomfilter.bitMap;
  *
  */
 public class LongMap implements BitMap {
+	private static final long serialVersionUID = 1L;
 
 	private long[] longs = null;
 

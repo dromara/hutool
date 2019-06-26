@@ -13,6 +13,7 @@ import cn.hutool.core.lang.func.Func0;
  * @author Looly,jodd
  */
 public class NoCache<K, V> implements Cache<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public int capacity() {

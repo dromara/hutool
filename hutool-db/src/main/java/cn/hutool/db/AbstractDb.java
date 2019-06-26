@@ -1,5 +1,6 @@
 package cn.hutool.db;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -30,8 +31,9 @@ import cn.hutool.db.sql.Wrapper;
  * @author Luxiaolei
  * 
  */
-public abstract class AbstractDb {
-
+public abstract class AbstractDb implements Serializable{
+	private static final long serialVersionUID = 3858951941916349062L;
+	
 	protected DataSource ds;
 	/** 是否支持事务 */
 	protected Boolean isSupportTransaction = null;

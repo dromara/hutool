@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -10,7 +11,8 @@ import java.util.Iterator;
  * @param <E> 元素类型
  * @since 3.0.8
  */
-public class IteratorEnumeration<E> implements Enumeration<E>{
+public class IteratorEnumeration<E> implements Enumeration<E>, Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	private final Iterator<E> iterator;
 	

@@ -19,6 +19,7 @@ import cn.hutool.core.util.ObjectUtil;
  * @since 4.1.9
  */
 public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
+	private static final long serialVersionUID = 1L;
 
 	/** 初始池大小 */
 	private int corePoolSize;

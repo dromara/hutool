@@ -1,5 +1,6 @@
 package cn.hutool.core.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,7 +37,8 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  * @since 4.0.6
  */
-public class BeanPath {
+public class BeanPath implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** 表达式边界符号数组 */
 	private static final char[] expChars = { CharUtil.DOT, CharUtil.BRACKET_START, CharUtil.BRACKET_END };

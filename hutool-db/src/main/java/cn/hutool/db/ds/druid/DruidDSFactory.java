@@ -18,7 +18,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public class DruidDSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = 4680621702534433222L;
+	
 	public static final String DS_NAME = "Druid";
 
 	/**

@@ -1,5 +1,6 @@
 package cn.hutool.db.handler;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,7 +19,7 @@ import java.sql.SQLException;
  * @author Luxiaolei
  *
  */
-public interface RsHandler<T> {
+public interface RsHandler<T> extends Serializable{
 	
 	/**
 	 * 处理结果集<br>

@@ -84,6 +84,8 @@ import cn.hutool.core.util.ArrayUtil;
  * @since 4.2.2
  */
 public class HashCodeBuilder implements Builder<Integer> {
+	private static final long serialVersionUID = 1L;
+	
     /**
      * The default initial value to use in reflection hash code building.
      */

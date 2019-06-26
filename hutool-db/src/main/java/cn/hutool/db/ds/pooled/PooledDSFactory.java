@@ -12,7 +12,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public class PooledDSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = 8093886210895248277L;
+	
 	public static final String DS_NAME = "Hutool-Pooled-DataSource";
 
 	public PooledDSFactory() {

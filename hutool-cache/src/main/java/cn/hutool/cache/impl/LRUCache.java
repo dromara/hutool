@@ -17,6 +17,7 @@ import cn.hutool.core.map.FixedLinkedHashMap;
  * @param <V> 值类型
  */
 public class LRUCache<K, V> extends AbstractCache<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造<br>

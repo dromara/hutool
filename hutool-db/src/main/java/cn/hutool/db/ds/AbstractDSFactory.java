@@ -24,7 +24,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public abstract class AbstractDSFactory extends DSFactory {
-
+	private static final long serialVersionUID = -6407302276272379881L;
+	
 	/** 数据库配置文件可选路径1 */
 	private static final String DEFAULT_DB_SETTING_PATH = "config/db.setting";
 	/** 数据库配置文件可选路径2 */

@@ -1,6 +1,7 @@
 package cn.hutool.db.ds;
 
 import java.io.Closeable;
+import java.io.Serializable;
 
 import javax.sql.DataSource;
 
@@ -23,7 +24,9 @@ import cn.hutool.setting.Setting;
  * @author Looly
  *
  */
-public abstract class DSFactory implements Closeable{
+public abstract class DSFactory implements Closeable, Serializable{
+	private static final long serialVersionUID = -8789780234095234765L;
+
 	private static final Log log = LogFactory.get();
 
 	/** 别名字段名：URL */

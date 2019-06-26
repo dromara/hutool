@@ -1,6 +1,7 @@
 package cn.hutool.core.codec;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
 import cn.hutool.core.util.ArrayUtil;
 
@@ -11,7 +12,8 @@ import cn.hutool.core.util.ArrayUtil;
  * @author Looly, Sebastian Ruhleder, sebastian@seruco.io
  * @since 4.5.9
  */
-public class Base62Codec {
+public class Base62Codec implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private static final int STANDARD_BASE = 256;
 	private static final int TARGET_BASE = 62;

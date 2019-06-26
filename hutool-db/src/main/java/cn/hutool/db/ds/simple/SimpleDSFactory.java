@@ -12,7 +12,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public class SimpleDSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = 4738029988261034743L;
+	
 	public static final String DS_NAME = "Hutool-Simple-DataSource";
 
 	public SimpleDSFactory() {

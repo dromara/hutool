@@ -13,7 +13,8 @@ import cn.hutool.db.Entity;
  *
  */
 public class EntityHandler implements RsHandler<Entity>{
-	
+	private static final long serialVersionUID = -8742432871908355992L;
+
 	/**
 	 * 创建一个 EntityHandler对象
 	 * @return EntityHandler对象

@@ -1,5 +1,7 @@
 package cn.hutool.core.builder;
 
+import java.io.Serializable;
+
 /**
  * 建造者模式接口定义
  * 
@@ -7,7 +9,7 @@ package cn.hutool.core.builder;
  * @author Looly
  * @since 4.2.2
  */
-public interface Builder<T> {
+public interface Builder<T> extends Serializable{
 	/**
 	 * 构建
 	 * 

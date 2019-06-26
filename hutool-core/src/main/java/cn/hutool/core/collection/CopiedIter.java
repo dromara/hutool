@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,8 @@ import java.util.List;
  * @author Looly
  * @since 3.0.7
  */
-public class CopiedIter<E> implements Iterator<E>, Iterable<E> {
+public class CopiedIter<E> implements Iterator<E>, Iterable<E>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private List<E> eleList = new LinkedList<>();
 	private Iterator<E> listIterator;

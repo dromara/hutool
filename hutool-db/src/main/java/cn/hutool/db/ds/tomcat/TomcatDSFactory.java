@@ -13,7 +13,8 @@ import cn.hutool.setting.Setting;
  *
  */
 public class TomcatDSFactory extends AbstractDSFactory {
-
+	private static final long serialVersionUID = 4925514193275150156L;
+	
 	public static final String DS_NAME = "Tomcat-Jdbc-Pool";
 
 	/**
