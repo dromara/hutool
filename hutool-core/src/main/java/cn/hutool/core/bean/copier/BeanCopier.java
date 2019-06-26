@@ -146,7 +146,6 @@ public class BeanCopier<T> implements Copier<T> {
 	 * 
 	 * @param bean bean对象
 	 * @param targetMap 目标的Map
-	 * @return Map
 	 * @since 4.1.22
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
