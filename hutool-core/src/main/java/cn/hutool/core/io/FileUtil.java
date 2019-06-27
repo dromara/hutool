@@ -811,7 +811,7 @@ public class FileUtil {
 	 * @since 4.5.5
 	 */
 	public static boolean cleanEmpty(File directory) throws IORuntimeException {
-		if (directory == null || directory.exists() == false || false == directory.isDirectory()) {
+		if (directory == null || false == directory.exists() || false == directory.isDirectory()) {
 			return true;
 		}
 
@@ -821,7 +821,7 @@ public class FileUtil {
 			directory.delete();
 		}
 		for (File childFile : files) {
-			clean(childFile);
+			cleanEmpty(childFile);
 		}
 		return true;
 	}
