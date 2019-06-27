@@ -3,6 +3,7 @@ package cn.hutool.core.swing.clipboard;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.io.Serializable;
 
 /**
  * 剪贴板字符串内容监听
@@ -10,7 +11,8 @@ import java.awt.datatransfer.Transferable;
  * @author looly
  * @since 4.5.7
  */
-public abstract class StrClipboardListener implements ClipboardListener {
+public abstract class StrClipboardListener implements ClipboardListener, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public Transferable onChange(Clipboard clipboard, Transferable contents) {

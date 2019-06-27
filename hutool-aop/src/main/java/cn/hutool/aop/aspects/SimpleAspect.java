@@ -1,5 +1,6 @@
 package cn.hutool.aop.aspects;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
@@ -9,7 +10,7 @@ import java.lang.reflect.Method;
  * @author Looly
  *
  */
-public class SimpleAspect implements Aspect{
+public class SimpleAspect implements Aspect, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Override

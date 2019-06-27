@@ -25,6 +25,7 @@ import cn.hutool.core.util.ReflectUtil;
  *
  */
 public class Jdk8DateConverter extends AbstractConverter<Object> {
+	private static final long serialVersionUID = 1L;
 
 	/** 支持的JDK中的类名 */
 	public static String[] supportClassNames = new String[] { //

@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -15,7 +16,9 @@ import cn.hutool.core.lang.func.Func0;
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public class SimpleCache<K, V> {
+public class SimpleCache<K, V> implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	/** 池 */
 	private final Map<K, V> cache = new WeakHashMap<>();
 	

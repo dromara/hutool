@@ -11,6 +11,7 @@ import cn.hutool.core.util.CharsetUtil;
  *
  */
 public class CharsetConverter extends AbstractConverter<Charset>{
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected Charset convertInternal(Object value) {

@@ -1,5 +1,7 @@
 package cn.hutool.core.date;
 
+import java.io.Serializable;
+
 /**
  * 计时器<br>
  * 计算某个过程花费的时间，精确到毫秒
@@ -7,7 +9,9 @@ package cn.hutool.core.date;
  * @author Looly
  *
  */
-public class TimeInterval {
+public class TimeInterval implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	private long time;
 	private boolean isNano;
 

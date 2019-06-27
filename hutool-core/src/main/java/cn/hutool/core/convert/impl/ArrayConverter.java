@@ -17,6 +17,7 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  */
 public class ArrayConverter extends AbstractConverter<Object> {
+	private static final long serialVersionUID = 1L;
 
 	private final Class<?> targetType;
 	/** 目标元素类型 */

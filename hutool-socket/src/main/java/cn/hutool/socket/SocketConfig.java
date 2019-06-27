@@ -1,5 +1,7 @@
 package cn.hutool.socket;
 
+import java.io.Serializable;
+
 import cn.hutool.core.io.IoUtil;
 
 /**
@@ -8,8 +10,9 @@ import cn.hutool.core.io.IoUtil;
  * @author looly
  *
  */
-public class SocketConfig {
-	
+public class SocketConfig implements Serializable{
+	private static final long serialVersionUID = 1L;
+
 	/** CPU核心数 */
 	private static int CPU_COUNT = Runtime.getRuntime().availableProcessors();
 

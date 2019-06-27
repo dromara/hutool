@@ -22,6 +22,7 @@ import java.awt.image.ImageFilter;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -44,7 +45,8 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 4.1.5
  */
-public class Img {
+public class Img implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private BufferedImage srcImage;
 	private Image targetImage;

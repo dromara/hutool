@@ -1,5 +1,6 @@
 package cn.hutool.core.map;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -20,7 +21,8 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 3.2.0
  */
-public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implements Map<Object, Object>, InvocationHandler {
+public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implements Map<Object, Object>, InvocationHandler, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("rawtypes")
 	Map map;

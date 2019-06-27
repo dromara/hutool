@@ -18,6 +18,7 @@ import cn.hutool.core.util.TypeUtil;
  */
 @SuppressWarnings("rawtypes")
 public class ReferenceConverter extends AbstractConverter<Reference> {
+	private static final long serialVersionUID = 1L;
 	
 	private Class<? extends Reference> targetType;
 	

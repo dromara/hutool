@@ -18,6 +18,7 @@ import cn.hutool.core.util.URLUtil;
  *
  */
 public class ClassPathResource extends UrlResource {
+	private static final long serialVersionUID = 1L;
 
 	private String path;
 	private ClassLoader classLoader;

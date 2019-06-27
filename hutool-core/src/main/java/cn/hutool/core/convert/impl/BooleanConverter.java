@@ -9,6 +9,7 @@ import cn.hutool.core.util.BooleanUtil;
  *
  */
 public class BooleanConverter extends AbstractConverter<Boolean>{
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected Boolean convertInternal(Object value) {

@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.loader;
 
+import java.io.Serializable;
+
 /**
  * 懒加载加载器<br>
  * 在load方法被调用前，对象未被加载，直到被调用后才开始加载<br>
@@ -10,7 +12,8 @@ package cn.hutool.core.lang.loader;
  *
  * @param <T> 被加载对象类型
  */
-public abstract class LazyLoader<T> implements Loader<T> {
+public abstract class LazyLoader<T> implements Loader<T>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** 被加载对象 */
 	private volatile T object;

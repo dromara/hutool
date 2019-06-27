@@ -5,6 +5,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -24,7 +25,8 @@ import cn.hutool.core.util.ObjectUtil;
  * @author Looly
  * @since 4.0.5
  */
-public final class CsvWriter implements Closeable, Flushable {
+public final class CsvWriter implements Closeable, Flushable, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** 写出器 */
 	private final Writer writer;

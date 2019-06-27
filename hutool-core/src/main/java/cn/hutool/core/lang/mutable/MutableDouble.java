@@ -9,7 +9,7 @@ import cn.hutool.core.util.NumberUtil;
  * @since 3.0.1
  */
 public class MutableDouble extends Number implements Comparable<MutableDouble>, Mutable<Number> {
-	private static final long serialVersionUID = -7381592836008495052L;
+	private static final long serialVersionUID = 1L;
 	
 	private double value;
 

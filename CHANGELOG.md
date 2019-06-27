@@ -10,6 +10,7 @@
 * 【poi】           增加WordUtil
 * 【core】         改进fnvHash避免负数（issue#IYDK6@Gitee）
 * 【core】         改进BeanCoper逻辑（pr#45@Gitee）
+* 【all】             实现必要序列化接口
 
 ### Bug修复
 * 【poi】           修复sax中读取Excel普通单元格设置日期格式识别问题（issue#IYD0L@Gitee）

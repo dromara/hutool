@@ -3,6 +3,7 @@ package cn.hutool.core.io.file;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -25,7 +26,8 @@ import cn.hutool.core.util.CharsetUtil;
  * @author looly
  * @since 4.5.2
  */
-public class Tailer {
+public class Tailer implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	public static final LineHandler CONSOLE_HANDLER = new ConsoleLineHandler();
 

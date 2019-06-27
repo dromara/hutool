@@ -3,6 +3,7 @@ package cn.hutool.core.text.csv;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -22,7 +23,8 @@ import cn.hutool.core.util.StrUtil;
  *
  * @author Looly
  */
-public final class CsvParser implements Closeable {
+public final class CsvParser implements Closeable, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private static final int DEFAULT_ROW_CAPACITY = 10;
 

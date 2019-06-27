@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -29,7 +30,8 @@ import cn.hutool.core.util.URLUtil;
  * @since 4.1.5
  *
  */
-public class ClassScaner {
+public class ClassScaner implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** 包名 */
 	private String packageName;

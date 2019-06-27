@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -12,8 +13,9 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 4.5.7
  */
-public class ParameterizedTypeImpl implements ParameterizedType {
-
+public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private final Type[] actualTypeArguments;
 	private final Type ownerType;
 	private final Type rawType;

@@ -1,5 +1,6 @@
 package cn.hutool.core.bean.copier;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import cn.hutool.core.map.MapUtil;
@@ -13,7 +14,9 @@ import cn.hutool.core.map.MapUtil;
  * 
  * @author Looly
  */
-public class CopyOptions {
+public class CopyOptions implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	/** 限制的类或接口，必须为目标对象的实现接口或父类，用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类 */
 	protected Class<?> editable;
 	/** 是否忽略空值，当源对象的值为null时，true: 忽略而不注入此值，false: 注入null */

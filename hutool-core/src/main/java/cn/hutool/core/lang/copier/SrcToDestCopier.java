@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.copier;
 
+import java.io.Serializable;
+
 import cn.hutool.core.lang.Filter;
 
 /**
@@ -12,7 +14,8 @@ import cn.hutool.core.lang.Filter;
  * @param <C> 本类的类型。用于set方法返回本对象，方便流式编程
  * @since 3.0.9
  */
-public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implements Copier<T>{
+public abstract class SrcToDestCopier<T, C extends SrcToDestCopier<T, C>> implements Copier<T>, Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	/** 源 */
 	protected T src;

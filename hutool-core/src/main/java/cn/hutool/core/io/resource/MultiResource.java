@@ -2,6 +2,7 @@ package cn.hutool.core.io.resource;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -19,7 +20,8 @@ import cn.hutool.core.io.IORuntimeException;
  * @author looly
  * @since 4.1.0
  */
-public class MultiResource implements Resource, Iterable<Resource>, Iterator<Resource> {
+public class MultiResource implements Resource, Iterable<Resource>, Iterator<Resource>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private List<Resource> resources;
 	private int cursor;

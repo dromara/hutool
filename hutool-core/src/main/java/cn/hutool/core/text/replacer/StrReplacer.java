@@ -1,5 +1,7 @@
 package cn.hutool.core.text.replacer;
 
+import java.io.Serializable;
+
 import cn.hutool.core.lang.Replacer;
 import cn.hutool.core.text.StrBuilder;
 
@@ -10,7 +12,8 @@ import cn.hutool.core.text.StrBuilder;
  * @author looly
  * @since 4.1.5
  */
-public abstract class StrReplacer implements Replacer<CharSequence>{
+public abstract class StrReplacer implements Replacer<CharSequence>, Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * 抽象的字符串替换方法，通过传入原字符串和当前位置，执行替换逻辑，返回处理或替换的字符串长度部分。

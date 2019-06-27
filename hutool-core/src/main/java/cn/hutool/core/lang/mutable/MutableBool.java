@@ -1,12 +1,15 @@
 package cn.hutool.core.lang.mutable;
 
+import java.io.Serializable;
+
 /**
  * 可变 <code>boolean</code> 类型
  * 
  * @see Boolean
  * @since 3.0.1
  */
-public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean> {
+public class MutableBool implements Comparable<MutableBool>, Mutable<Boolean>, Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	private boolean value;
 

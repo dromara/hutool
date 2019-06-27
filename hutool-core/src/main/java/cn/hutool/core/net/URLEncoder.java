@@ -3,6 +3,7 @@ package cn.hutool.core.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.BitSet;
 
@@ -22,7 +23,8 @@ import cn.hutool.core.util.HexUtil;
  * @author looly,
  *
  */
-public class URLEncoder {
+public class URLEncoder implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	// --------------------------------------------------------------------------------------------- Static method start
 	/**

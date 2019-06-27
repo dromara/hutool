@@ -1,5 +1,6 @@
 package cn.hutool.core.math;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,8 @@ import cn.hutool.core.util.NumberUtil;
  * @author looly
  * @since 4.0.6
  */
-public class Combination {
+public class Combination implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private String[] datas;
 

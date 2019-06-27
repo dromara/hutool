@@ -3,6 +3,7 @@ package cn.hutool.core.text.csv;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ import cn.hutool.core.util.ObjectUtil;
  * @author Looly
  * @since 4.0.1
  */
-public final class CsvReader {
+public final class CsvReader implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	CsvReadConfig config;
 

@@ -15,6 +15,7 @@ import cn.hutool.core.util.TypeUtil;
  */
 @SuppressWarnings("rawtypes")
 public class AtomicReferenceConverter extends AbstractConverter<AtomicReference> {
+	private static final long serialVersionUID = 1L;
 	
 	@Override
 	protected AtomicReference<?> convertInternal(Object value) {

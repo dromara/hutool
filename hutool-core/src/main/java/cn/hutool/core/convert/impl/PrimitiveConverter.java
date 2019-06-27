@@ -23,6 +23,7 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class PrimitiveConverter extends AbstractConverter<Object> {
+	private static final long serialVersionUID = 1L;
 	
 	private Class<?> targetType;
 

@@ -14,6 +14,7 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class DateConverter extends AbstractConverter<java.util.Date> {
+	private static final long serialVersionUID = 1L;
 
 	private Class<? extends java.util.Date> targetType;
 	/** 日期格式化 */

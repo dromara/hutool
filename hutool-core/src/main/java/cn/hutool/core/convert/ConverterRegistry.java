@@ -1,5 +1,6 @@
 package cn.hutool.core.convert;
 
+import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
@@ -67,7 +68,8 @@ import cn.hutool.core.util.TypeUtil;
  * @author Looly
  *
  */
-public class ConverterRegistry {
+public class ConverterRegistry implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** 默认类型转换器 */
 	private Map<Type, Converter<?>> defaultConverterMap;

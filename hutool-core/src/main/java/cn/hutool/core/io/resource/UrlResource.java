@@ -3,6 +3,7 @@ package cn.hutool.core.io.resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -18,7 +19,8 @@ import cn.hutool.core.util.URLUtil;
  * @author Looly
  *
  */
-public class UrlResource implements Resource{
+public class UrlResource implements Resource, Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	protected URL url;
 	protected String name;

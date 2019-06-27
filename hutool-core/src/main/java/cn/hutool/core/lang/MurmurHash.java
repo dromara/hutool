@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 
 import cn.hutool.core.util.CharsetUtil;
@@ -17,7 +18,8 @@ import cn.hutool.core.util.StrUtil;
  * @author looly,Simhash4J
  * @since 4.3.3
  */
-public class MurmurHash {
+public class MurmurHash implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	// Constants for 32 bit variant
 	private static final int C1_32 = 0xcc9e2d51;

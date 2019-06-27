@@ -14,6 +14,7 @@ import cn.hutool.core.util.ObjectUtil;
  * @since 3.0.8
  */
 public class StackTraceElementConverter extends AbstractConverter<StackTraceElement> {
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected StackTraceElement convertInternal(Object value) {

@@ -2,6 +2,7 @@ package cn.hutool.core.io.resource;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -16,7 +17,8 @@ import cn.hutool.core.util.CharsetUtil;
  * @author looly
  * @since 4.0.9
  */
-public class InputStreamResource implements Resource {
+public class InputStreamResource implements Resource, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private InputStream in;
 	private String name;

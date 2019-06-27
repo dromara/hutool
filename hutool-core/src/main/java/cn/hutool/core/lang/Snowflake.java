@@ -1,5 +1,7 @@
 package cn.hutool.core.lang;
 
+import java.io.Serializable;
+
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
 
@@ -25,7 +27,8 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  * @since 3.0.1
  */
-public class Snowflake {
+public class Snowflake implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	// Thu, 04 Nov 2010 01:42:54 GMT
 	private final long twepoch = 1288834974657L;

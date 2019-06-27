@@ -14,6 +14,7 @@ import cn.hutool.core.util.URLUtil;
  *
  */
 public class FileResource extends UrlResource {
+	private static final long serialVersionUID = 1L;
 
 	// ----------------------------------------------------------------------- Constructor start
 	/**

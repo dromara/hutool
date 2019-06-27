@@ -1,6 +1,5 @@
 package cn.hutool.aop.aspects;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
@@ -9,7 +8,7 @@ import java.lang.reflect.Method;
  * @author looly
  * @since 4.18
  */
-public interface Aspect extends Serializable{
+public interface Aspect{
 
 	/**
 	 * 目标方法执行前的操作

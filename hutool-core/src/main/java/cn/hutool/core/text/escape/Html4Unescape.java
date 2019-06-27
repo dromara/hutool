@@ -10,6 +10,7 @@ import cn.hutool.core.text.replacer.ReplacerChain;
  *
  */
 public class Html4Unescape extends ReplacerChain {
+	private static final long serialVersionUID = 1L;
 	
 	protected static final String[][] BASIC_UNESCAPE  = InternalEscapeUtil.invert(Html4Escape.BASIC_ESCAPE);
 	protected static final String[][] ISO8859_1_UNESCAPE  = InternalEscapeUtil.invert(Html4Escape.ISO8859_1_ESCAPE);

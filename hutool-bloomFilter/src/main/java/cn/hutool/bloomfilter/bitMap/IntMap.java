@@ -1,12 +1,14 @@
 package cn.hutool.bloomfilter.bitMap;
 
+import java.io.Serializable;
+
 /**
  * 过滤器BitMap在32位机器上.这个类能发生更好的效果.一般情况下建议使用此类
  * 
  * @author loolly
  *
  */
-public class IntMap implements BitMap {
+public class IntMap implements BitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int[] ints = null;

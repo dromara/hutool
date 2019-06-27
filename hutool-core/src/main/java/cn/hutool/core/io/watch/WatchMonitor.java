@@ -3,6 +3,7 @@ package cn.hutool.core.io.watch;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -40,7 +41,8 @@ import cn.hutool.core.util.URLUtil;
  * @author Looly
  *
  */
-public class WatchMonitor extends Thread implements Closeable{
+public class WatchMonitor extends Thread implements Closeable, Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	/** 事件丢失 */
 	public static final WatchEvent.Kind<?> OVERFLOW = StandardWatchEventKinds.OVERFLOW;

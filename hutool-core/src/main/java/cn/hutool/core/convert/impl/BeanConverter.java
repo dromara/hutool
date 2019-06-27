@@ -25,6 +25,7 @@ import cn.hutool.core.util.TypeUtil;
  * @since 4.0.2
  */
 public class BeanConverter<T> extends AbstractConverter<T> {
+	private static final long serialVersionUID = 1L;
 
 	private Type beanType;
 	private Class<T> beanClass;

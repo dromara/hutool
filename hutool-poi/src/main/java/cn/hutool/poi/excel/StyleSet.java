@@ -1,5 +1,7 @@
 package cn.hutool.poi.excel;
 
+import java.io.Serializable;
+
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -17,7 +19,8 @@ import cn.hutool.poi.excel.style.StyleUtil;
  * @author looly
  *
  */
-public class StyleSet {
+public class StyleSet implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** 工作簿引用 */
 	private Workbook workbook;

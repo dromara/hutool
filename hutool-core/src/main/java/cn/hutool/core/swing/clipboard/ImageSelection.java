@@ -5,6 +5,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * 图片转换器，用于将图片对象转换为剪贴板支持的对象<br>
@@ -13,7 +14,9 @@ import java.io.IOException;
  * @author looly
  * @since 4.5.6
  */
-public class ImageSelection implements Transferable {
+public class ImageSelection implements Transferable, Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private Image image;
 
 	/**

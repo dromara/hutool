@@ -1,5 +1,6 @@
 package cn.hutool.core.text.csv;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +10,8 @@ import java.util.List;
  *
  * @author Looly
  */
-public class CsvData implements Iterable<CsvRow> {
+public class CsvData implements Iterable<CsvRow>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private final List<String> header;
 	private final List<CsvRow> rows;

@@ -1,5 +1,6 @@
 package cn.hutool.core.bean.copier;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -31,8 +32,9 @@ import cn.hutool.core.util.TypeUtil;
  * @param <T> 目标对象类型
  * @since 3.2.3
  */
-public class BeanCopier<T> implements Copier<T> {
-
+public class BeanCopier<T> implements Copier<T>, Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	/** 源对象 */
 	private Object source;
 	/** 目标对象 */

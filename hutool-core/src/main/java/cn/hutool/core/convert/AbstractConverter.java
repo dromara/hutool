@@ -1,5 +1,6 @@
 package cn.hutool.core.convert;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import cn.hutool.core.util.ArrayUtil;
@@ -14,7 +15,8 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public abstract class AbstractConverter<T> implements Converter<T> {
+public abstract class AbstractConverter<T> implements Converter<T>, Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * 不抛异常转换<br>

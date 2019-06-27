@@ -27,6 +27,7 @@ import cn.hutool.core.util.StrUtil;
  * @since 3.0.9
  */
 public class FileCopier extends SrcToDestCopier<File, FileCopier>{
+	private static final long serialVersionUID = 1L;
 	
 	/** 是否覆盖目标文件 */
 	private boolean isOverride;

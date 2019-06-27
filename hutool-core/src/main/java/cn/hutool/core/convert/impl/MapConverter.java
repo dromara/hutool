@@ -18,6 +18,7 @@ import cn.hutool.core.util.TypeUtil;
  * @since 3.0.8
  */
 public class MapConverter extends AbstractConverter<Map<?, ?>> {
+	private static final long serialVersionUID = 1L;
 
 	/** Map类型 */
 	private final Type mapType;

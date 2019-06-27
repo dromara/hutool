@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.concurrent.locks.Lock;
@@ -20,7 +21,8 @@ import cn.hutool.core.thread.lock.NoLock;
  *
  * @param <T> 生成范围对象的类型
  */
-public class Range<T> implements Iterable<T>, Iterator<T> {
+public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** 锁保证线程安全 */
 	private Lock lock = new ReentrantLock();

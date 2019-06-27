@@ -1,5 +1,6 @@
 package cn.hutool.core.io.checksum;
 
+import java.io.Serializable;
 import java.util.zip.Checksum;
 
 /**
@@ -9,7 +10,8 @@ import java.util.zip.Checksum;
  * @author Bolek,Looly
  * @since 4.4.1
  */
-public class CRC8 implements Checksum {
+public class CRC8 implements Checksum, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private final short init;
 	private final short[] crcTable = new short[256];

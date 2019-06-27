@@ -14,6 +14,7 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class CalendarConverter extends AbstractConverter<Calendar> {
+	private static final long serialVersionUID = 1L;
 
 	/** 日期格式化 */
 	private String format;

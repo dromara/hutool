@@ -1,9 +1,12 @@
 package cn.hutool.system;
 
+import java.io.Serializable;
+
 /**
  * 代表Java Implementation的信息。
  */
-public class JavaInfo {
+public class JavaInfo implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private final String JAVA_VERSION = SystemUtil.get("java.version", false);
 	private final float JAVA_VERSION_FLOAT = getJavaVersionAsFloat();

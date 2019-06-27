@@ -14,6 +14,7 @@ import cn.hutool.core.util.StrUtil;
  * @since 4.5.2
  */
 public class LocaleConverter extends AbstractConverter<Locale> {
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected Locale convertInternal(Object value) {

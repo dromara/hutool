@@ -1,5 +1,6 @@
 package cn.hutool.core.io.checksum;
 
+import java.io.Serializable;
 import java.util.zip.Checksum;
 
 /**
@@ -9,7 +10,8 @@ import java.util.zip.Checksum;
  * @author looly
  * @since 4.4.1
  */
-public class CRC16 implements Checksum {
+public class CRC16 implements Checksum, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	// CRC16 = bb3d
 	// Uses irreducible polynomial: 1 + x^2 + x^15 + x^16

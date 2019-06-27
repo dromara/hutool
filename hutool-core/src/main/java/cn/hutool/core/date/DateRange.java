@@ -11,6 +11,7 @@ import cn.hutool.core.lang.Range;
  * @since 4.1.0
  */
 public class DateRange extends Range<DateTime> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造，包含开始和结束日期时间

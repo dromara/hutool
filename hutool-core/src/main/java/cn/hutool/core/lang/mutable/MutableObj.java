@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @since 3.0.1
  */
 public class MutableObj<T> implements Mutable<T>, Serializable {
-	private static final long serialVersionUID = -464493129773743673L;
+	private static final long serialVersionUID = 1L;
 
 	private T value;
 

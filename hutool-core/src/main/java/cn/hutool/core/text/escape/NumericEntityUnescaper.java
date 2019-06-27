@@ -11,6 +11,7 @@ import cn.hutool.core.util.CharUtil;
  *
  */
 public class NumericEntityUnescaper extends StrReplacer {
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected int replace(CharSequence str, int pos, StrBuilder out) {

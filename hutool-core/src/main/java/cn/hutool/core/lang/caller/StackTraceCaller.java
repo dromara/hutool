@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.caller;
 
+import java.io.Serializable;
+
 import cn.hutool.core.exceptions.UtilException;
 
 /**
@@ -7,7 +9,8 @@ import cn.hutool.core.exceptions.UtilException;
  * 
  * @author Looly
  */
-public class StackTraceCaller implements Caller {
+public class StackTraceCaller implements Caller, Serializable {
+	private static final long serialVersionUID = 1L;
 	private static final int OFFSET = 2;
 
 	@Override

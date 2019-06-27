@@ -1,5 +1,7 @@
 package cn.hutool.core.lang.caller;
 
+import java.io.Serializable;
+
 import cn.hutool.core.util.ArrayUtil;
 
 /**
@@ -7,7 +9,8 @@ import cn.hutool.core.util.ArrayUtil;
  * 
  * @author Looly
  */
-public class SecurityManagerCaller extends SecurityManager implements Caller {
+public class SecurityManagerCaller extends SecurityManager implements Caller, Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	private static final int OFFSET = 1;
 
