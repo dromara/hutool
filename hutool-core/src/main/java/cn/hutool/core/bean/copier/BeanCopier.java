@@ -201,9 +201,9 @@ public class BeanCopier<T> implements Copier<T> {
 
 		final CopyOptions copyOptions = this.copyOptions;
 		Class<?> actualEditable = bean.getClass();
-		if (copyOptions.editable != null) {
+		if (null != copyOptions.editable) {
 			// 检查限制类是否为target的父类或接口
-			if (!copyOptions.editable.isInstance(bean)) {
+			if (false == copyOptions.editable.isInstance(bean)) {
 				throw new IllegalArgumentException(StrUtil.format("Target class [{}] not assignable to Editable class [{}]", bean.getClass().getName(), copyOptions.editable.getName()));
 			}
 			actualEditable = copyOptions.editable;
@@ -224,7 +224,7 @@ public class BeanCopier<T> implements Copier<T> {
 				continue;
 			}
 			final String providerKey = mappingKey(fieldReverseMapping, fieldName);
-			if (!valueProvider.containsKey(providerKey)) {
+			if (false == valueProvider.containsKey(providerKey)) {
 				// 无对应值可提供
 				continue;
 			}
@@ -263,7 +263,7 @@ public class BeanCopier<T> implements Copier<T> {
 			try {
 				// valueProvider在没有对值做转换且当类型不匹配的时候，执行默认转换
 				propClass = prop.getFieldClass();
-				if (!propClass.isInstance(value)) {
+				if (false ==propClass.isInstance(value)) {
 					value = Convert.convert(propClass, value);
 					if (null == value && copyOptions.ignoreNullValue) {
 						continue;// 当允许跳过空时，跳过
@@ -273,7 +273,7 @@ public class BeanCopier<T> implements Copier<T> {
 				// 执行set方法注入值
 				setterMethod.invoke(bean, value);
 			} catch (Exception e) {
-				if (!copyOptions.ignoreError) {
+				if (false ==copyOptions.ignoreError) {
 					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
 				}
 				// 忽略注入失败

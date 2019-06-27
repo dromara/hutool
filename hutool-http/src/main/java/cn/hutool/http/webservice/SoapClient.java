@@ -473,25 +473,28 @@ public class SoapClient {
 		} catch (SOAPException e) {
 			throw new SoapRuntimeException(e);
 		}
-
-		if (value instanceof CharSequence) {
-			// 单个值
-			childEle.setValue(value.toString());
-		} else if (value instanceof SOAPElement) {
-			// 单个子节点
-			try {
-				ele.addChildElement((SOAPElement) value);
-			} catch (SOAPException e) {
-				throw new SoapRuntimeException(e);
-			}
-		} else if (value instanceof Map) {
-			// 多个字节点
-			Entry entry;
-			for (Object obj : ((Map) value).entrySet()) {
-				entry = (Entry) obj;
-				setParam(childEle, entry.getKey().toString(), entry.getValue(), prefix);
+		
+		if(null != value) {
+			if (value instanceof SOAPElement) {
+				// 单个子节点
+				try {
+					ele.addChildElement((SOAPElement) value);
+				} catch (SOAPException e) {
+					throw new SoapRuntimeException(e);
+				}
+			} else if (value instanceof Map) {
+				// 多个字节点
+				Entry entry;
+				for (Object obj : ((Map) value).entrySet()) {
+					entry = (Entry) obj;
+					setParam(childEle, entry.getKey().toString(), entry.getValue(), prefix);
+				}
+			} else {
+				// 单个值
+				childEle.setValue(value.toString());
 			}
 		}
+		
 		return childEle;
 	}
 	// -------------------------------------------------------------------------------------------------------- Private method end

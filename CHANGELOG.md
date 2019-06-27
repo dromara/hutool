@@ -9,9 +9,11 @@
 * 【cache】       缓存增加get重载（pr#404@Github）
 * 【poi】           增加WordUtil
 * 【core】         改进fnvHash避免负数（issue#IYDK6@Gitee）
+* 【core】         改进BeanCoper逻辑（pr#45@Gitee）
 
 ### Bug修复
 * 【poi】           修复sax中读取Excel普通单元格设置日期格式识别问题（issue#IYD0L@Gitee）
+* 【http】         修复setParam非String值失效问题（issue#IYF9Y@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
