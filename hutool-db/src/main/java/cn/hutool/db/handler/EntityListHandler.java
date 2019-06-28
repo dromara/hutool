@@ -14,7 +14,10 @@ import cn.hutool.db.Entity;
  */
 public class EntityListHandler implements RsHandler<List<Entity>>{
 	private static final long serialVersionUID = -2846240126316979895L;
-
+	
+	/** 是否大小写不敏感 */
+	private boolean caseInsensitive;
+	
 	/**
 	 * 创建一个 EntityListHandler对象
 	 * @return EntityListHandler对象
@@ -22,9 +25,25 @@ public class EntityListHandler implements RsHandler<List<Entity>>{
 	public static EntityListHandler create() {
 		return new EntityListHandler();
 	}
+	
+	/**
+	 * 构造
+	 */
+	public EntityListHandler() {
+		this(false);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param caseInsensitive 是否大小写不敏感
+	 */
+	public EntityListHandler(boolean caseInsensitive) {
+		this.caseInsensitive = caseInsensitive;
+	}
 
 	@Override
 	public List<Entity> handle(ResultSet rs) throws SQLException {
-		return HandleHelper.handleRs(rs, new ArrayList<Entity>());
+		return HandleHelper.handleRs(rs, new ArrayList<Entity>(), this.caseInsensitive);
 	}
 }

@@ -107,6 +107,18 @@ public class Entity extends Dict {
 		super();
 		this.tableName = tableName;
 	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param tableName 数据表名
+	 * @param caseInsensitive 是否大小写不敏感
+	 * @since 4.5.16
+	 */
+	public Entity(String tableName, boolean caseInsensitive) {
+		super(caseInsensitive);
+		this.tableName = tableName;
+	}
 	// --------------------------------------------------------------- Constructor end
 
 	// --------------------------------------------------------------- Getters and Setters start

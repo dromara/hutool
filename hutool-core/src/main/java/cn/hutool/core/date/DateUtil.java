@@ -1699,7 +1699,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取指定日期字段的最大值，例如分钟的最小值是59
+	 * 获取指定日期字段的最大值，例如分钟的最大值是59
 	 * 
 	 * @param calendar {@link Calendar}
 	 * @param dateField {@link DateField}

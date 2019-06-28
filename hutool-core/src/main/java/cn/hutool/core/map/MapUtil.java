@@ -881,4 +881,26 @@ public class MapUtil {
 	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type) {
 		return null == map ? null : Convert.convert(type, map.get(key));
 	}
+	
+	/**
+	 * 重命名键<br>
+	 * 实现方式为一处然后重新put，当旧的key不存在直接返回<br>
+	 * 当新的key存在，抛出{@link IllegalArgumentException} 异常
+	 * 
+	 * @param map Map
+	 * @param oldKey 原键
+	 * @param newKey 新键
+	 * @return map
+	 * @throws IllegalArgumentException 新key存在抛出此异常
+	 * @since 4.5.16
+	 */
+	public static <K, V> Map<K, V> renameKey(Map<K, V> map, K oldKey, K newKey) {
+		if(isNotEmpty(map) && map.containsKey(oldKey)) {
+			if(map.containsKey(newKey)) {
+				throw new IllegalArgumentException(StrUtil.format("The key '{}' exist !", newKey));
+			}
+			map.put(newKey, map.remove(oldKey));
+		}
+		return map;
+	}
 }
