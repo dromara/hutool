@@ -20,7 +20,7 @@ public class ZipUtilTest {
 	@Test
 	@Ignore
 	public void zipDirTest() {
-		ZipUtil.zip("e:/picTest");
+		ZipUtil.zip(new File("e:/picTest/picSubTest"));
 	}
 	
 	@Test
@@ -30,6 +30,13 @@ public class ZipUtilTest {
 		Console.log(unzip);
 		File unzip2 = ZipUtil.unzip("E:\\aaa\\RongGenetor V1.0.0.zip", "e:\\aaa");
 		Console.log(unzip2);
+	}
+	
+	@Test
+	@Ignore
+	public void unzipFromStreamTest() {
+		File unzip = ZipUtil.unzip(FileUtil.getInputStream("e:/test/antlr.zip"), FileUtil.file("e:/test/"), CharsetUtil.CHARSET_UTF_8);
+		Console.log(unzip);
 	}
 	
 	@Test
@@ -65,15 +72,15 @@ public class ZipUtilTest {
 		byte[] bytes = StrUtil.utf8Bytes(data);
 		byte[] gzip = ZipUtil.zlib(bytes, 0);
 		
-		//保证gzip长度正常
-		Assert.assertEquals(56, gzip.length);
+		//保证zlib长度正常
+		Assert.assertEquals(62, gzip.length);
 		byte[] unGzip = ZipUtil.unZlib(gzip);
 		//保证正常还原
 		Assert.assertEquals(data, StrUtil.utf8Str(unGzip));
 		
 		gzip = ZipUtil.zlib(bytes, 9);
-		//保证gzip长度正常
-		Assert.assertEquals(50, gzip.length);
+		//保证zlib长度正常
+		Assert.assertEquals(56, gzip.length);
 		byte[] unGzip2 = ZipUtil.unZlib(gzip);
 		//保证正常还原
 		Assert.assertEquals(data, StrUtil.utf8Str(unGzip2));

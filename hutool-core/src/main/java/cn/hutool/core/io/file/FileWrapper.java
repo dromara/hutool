@@ -1,6 +1,7 @@
 package cn.hutool.core.io.file;
 
 import java.io.File;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -13,7 +14,9 @@ import cn.hutool.core.util.CharsetUtil;
  * @author Looly
  *
  */
-public class FileWrapper {
+public class FileWrapper implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	protected File file;
 	protected Charset charset;
 	

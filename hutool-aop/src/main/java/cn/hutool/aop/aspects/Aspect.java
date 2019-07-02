@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
  * @author looly
  * @since 4.18
  */
-public interface Aspect {
+public interface Aspect{
 
 	/**
 	 * 目标方法执行前的操作

@@ -5,15 +5,28 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.test.bean.JSONBean;
+import cn.hutool.json.test.bean.ResultDto;
 import cn.hutool.json.test.bean.Seq;
+import cn.hutool.json.test.bean.TokenAuthResponse;
+import cn.hutool.json.test.bean.TokenAuthWarp2;
 import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserB;
 import cn.hutool.json.test.bean.UserWithMap;
+import cn.hutool.json.test.bean.report.CaseReport;
+import cn.hutool.json.test.bean.report.StepReport;
+import cn.hutool.json.test.bean.report.SuiteReport;
 
 /**
  * JSONObject单元测试
@@ -22,6 +35,43 @@ import cn.hutool.json.test.bean.UserWithMap;
  *
  */
 public class JSONObjectTest {
+
+	@Test
+	@Ignore
+	public void toStringTest() {
+		String str = "{\"code\": 500, \"data\":null}";
+		JSONObject jsonObject = new JSONObject(str);
+		Console.log(jsonObject);
+		jsonObject.getConfig().setIgnoreNullValue(true);
+		Console.log(jsonObject.toStringPretty());
+	}
+
+	@Test
+	public void toStringTest2() {
+		String str = "{\"test\":\"关于开展2018年度“文明集体”、“文明职工”评选表彰活动的通知\"}";
+		JSONObject json = new JSONObject(str);
+		Assert.assertEquals(str, json.toString());
+	}
+
+	/**
+	 * 测试JSON中自定义日期格式输出正确性
+	 */
+	@Test
+	public void toStringTest3() {
+		JSONObject json = JSONUtil.createObj()//
+				.put("dateTime", DateUtil.parse("2019-05-02 22:12:01"))//
+				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
+		Assert.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
+	}
+	
+	@Test
+	public void toStringWithDateTest() {
+		JSONObject json = JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21"));
+		Assert.assertEquals("{\"date\":1557314301000}", json.toString());
+		
+		json = JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21")).setDateFormat(DatePattern.NORM_DATE_PATTERN);
+		Assert.assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
+	}
 
 	@Test
 	public void putAllTest() {
@@ -65,6 +115,23 @@ public class JSONObjectTest {
 	}
 
 	@Test
+	public void parseStringTest3() {
+		String jsonStr = "{\"test\":\"体”、“文\"}";
+		JSONObject json = new JSONObject(jsonStr);
+		Assert.assertEquals("体”、“文", json.getStr("test"));
+	}
+	
+	@Test
+	@Ignore
+	public void parseStringWithBomTest() {
+		String jsonStr = FileUtil.readUtf8String("f:/test/jsontest.txt");
+		JSONObject json = new JSONObject(jsonStr);
+		JSONObject json2 = JSONUtil.parseObj(json);
+		Console.log(json);
+		Console.log(json2);
+	}
+
+	@Test
 	public void toBeanTest() {
 		JSONObject subJson = JSONUtil.createObj().put("value1", "strValue1").put("value2", "234");
 		JSONObject json = JSONUtil.createObj().put("strValue", "strTest").put("intValue", 123)
@@ -84,9 +151,13 @@ public class JSONObjectTest {
 
 	@Test
 	public void toBeanNullStrTest() {
-		JSONObject json = JSONUtil.createObj().put("strValue", "null").put("intValue", 123).put("beanValue", "null").put("list", JSONUtil.createArray().put("a").put("b"));
+		JSONObject json = JSONUtil.createObj()//
+				.put("strValue", "null")//
+				.put("intValue", 123)//
+				.put("beanValue", "null")//
+				.put("list", JSONUtil.createArray().put("a").put("b"));
 
-		TestBean bean = json.toBean(TestBean.class, true);
+		TestBean bean = json.toBean(TestBean.class);
 		// 当JSON中为字符串"null"时应被当作字符串处理
 		Assert.assertEquals("null", bean.getStrValue());
 		// 当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入
@@ -97,19 +168,22 @@ public class JSONObjectTest {
 	public void toBeanTest2() {
 		UserA userA = new UserA();
 		userA.setA("A user");
-		userA.setName("nameTest");
+		userA.setName("{\n\t\"body\":{\n\t\t\"loginId\":\"id\",\n\t\t\"password\":\"pwd\"\n\t}\n}");
 		userA.setDate(new Date());
 		userA.setSqs(CollectionUtil.newArrayList(new Seq("seq1"), new Seq("seq2")));
 
 		JSONObject json = JSONUtil.parseObj(userA);
 		UserA userA2 = json.toBean(UserA.class);
+		// 测试数组
 		Assert.assertEquals("seq1", userA2.getSqs().get(0).getSeq());
+		// 测试带换行符等特殊字符转换是否成功
+		Assert.assertTrue(StrUtil.isNotBlank(userA2.getName()));
 	}
 
 	@Test
 	public void toBeanTest3() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
-		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class, true);
+		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
 		String password = user.getData().get("password");
 		Assert.assertTrue(user.getData().containsKey("password"));
 		Assert.assertNull(password);
@@ -121,6 +195,51 @@ public class JSONObjectTest {
 
 		UserWithMap map = JSONUtil.toBean(json, UserWithMap.class);
 		Assert.assertEquals("c", map.getData().get("b"));
+	}
+
+	@Test
+	public void toBeanTest5() {
+		String readUtf8Str = ResourceUtil.readUtf8Str("suiteReport.json");
+		JSONObject json = JSONUtil.parseObj(readUtf8Str);
+		SuiteReport bean = json.toBean(SuiteReport.class);
+
+		// 第一层
+		List<CaseReport> caseReports = bean.getCaseReports();
+		CaseReport caseReport = caseReports.get(0);
+		Assert.assertNotNull(caseReport);
+
+		// 第二层
+		List<StepReport> stepReports = caseReports.get(0).getStepReports();
+		StepReport stepReport = stepReports.get(0);
+		Assert.assertNotNull(stepReport);
+	}
+
+	/**
+	 * 在JSON转Bean过程中，Bean中字段如果为父类定义的泛型类型，则应正确转换，此方法用于测试这类情况
+	 */
+	@Test
+	public void toBeanTest6() {
+		JSONObject json = JSONUtil.createObj().put("targetUrl", "http://test.com").put("success", "true").put("result", JSONUtil.createObj().put("token", "tokenTest").put("userId", "测试用户1"));
+
+		TokenAuthWarp2 bean = json.toBean(TokenAuthWarp2.class);
+		Assert.assertEquals("http://test.com", bean.getTargetUrl());
+		Assert.assertEquals("true", bean.getSuccess());
+
+		TokenAuthResponse result = bean.getResult();
+		Assert.assertNotNull(result);
+		Assert.assertEquals("tokenTest", result.getToken());
+		Assert.assertEquals("测试用户1", result.getUserId());
+	}
+
+	/**
+	 * 泛型对象中的泛型参数如果未定义具体类型，按照JSON处理<br>
+	 * 此处用于测试获取泛型类型实际类型错误导致的空指针问题
+	 */
+	@Test
+	public void toBeanTest7() {
+		String jsonStr = " {\"result\":{\"phone\":\"15926297342\",\"appKey\":\"e1ie12e1ewsdqw1\",\"secret\":\"dsadadqwdqs121d1e2\",\"message\":\"hello world\"},\"code\":100,\"message\":\"validate message\"}";
+		ResultDto<?> dto = JSONUtil.toBean(jsonStr, ResultDto.class);
+		Assert.assertEquals("validate message", dto.getMessage());
 	}
 
 	@Test
@@ -153,6 +272,16 @@ public class JSONObjectTest {
 	}
 
 	@Test
+	public void parseBeanTest3() {
+		JSONObject json = JSONUtil.createObj().put("code", 22).put("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
+
+		JSONBean bean = json.toBean(JSONBean.class);
+		Assert.assertEquals(22, bean.getCode());
+		Assert.assertEquals("abc", bean.getData().getObj("jobId"));
+		Assert.assertEquals("http://a.com/a.mp4", bean.getData().getObj("videoUrl"));
+	}
+
+	@Test
 	public void beanTransTest() {
 		UserA userA = new UserA();
 		userA.setA("A user");
@@ -165,20 +294,27 @@ public class JSONObjectTest {
 		Assert.assertEquals(userA.getName(), userB.getName());
 		Assert.assertEquals(userA.getDate(), userB.getDate());
 	}
-	
+
 	@Test
 	public void beanTransTest2() {
 		UserA userA = new UserA();
 		userA.setA("A user");
 		userA.setName("nameTest");
 		userA.setDate(DateUtil.parse("2018-10-25"));
-		
+
 		JSONObject userAJson = JSONUtil.parseObj(userA);
-		//自定义日期格式
+		// 自定义日期格式
 		userAJson.setDateFormat("yyyy-MM-dd");
-		
+
 		UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
 		Assert.assertEquals(DateUtil.parse("2018-10-25"), bean.getDate());
+	}
+
+	@Test
+	public void beanTransTest3() {
+		JSONObject userAJson = JSONUtil.createObj().put("a", "AValue").put("name", "nameValue").put("date", "08:00:00");
+		UserA bean = JSONUtil.toBean(userAJson.toString(), UserA.class);
+		Assert.assertEquals(DateUtil.today() + " 08:00:00", DateUtil.date(bean.getDate()).toString());
 	}
 
 	@Test
@@ -200,8 +336,19 @@ public class JSONObjectTest {
 	public void specialCharTest() {
 		String json = "{\"pattern\": \"[abc]\b\u2001\", \"pattern2Json\": {\"patternText\": \"[ab]\\b\"}}";
 		JSONObject obj = JSONUtil.parseObj(json);
-		Assert.assertEquals("[abc]\\b\\u2001", obj.getStr("pattern"));
-		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStr("pattern2Json"));
+		Assert.assertEquals("[abc]\\b\\u2001", obj.getStrEscaped("pattern"));
+		Assert.assertEquals("{\"patternText\":\"[ab]\\b\"}", obj.getStrEscaped("pattern2Json"));
+	}
+
+	@Test
+	public void getStrTest() {
+		String json = "{\"name\": \"yyb\\nbbb\"}";
+		JSONObject jsonObject = JSONUtil.parseObj(json);
+
+		// 没有转义按照默认规则显示
+		Assert.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
+		// 转义按照字符串显示
+		Assert.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
 	}
 
 	public static enum TestEnum {

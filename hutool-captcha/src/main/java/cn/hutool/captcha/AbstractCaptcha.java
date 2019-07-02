@@ -1,5 +1,6 @@
 package cn.hutool.captcha;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -12,11 +13,10 @@ import java.io.OutputStream;
 import cn.hutool.captcha.generator.CodeGenerator;
 import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ImageUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 抽象验证码<br>
@@ -29,20 +29,22 @@ import cn.hutool.core.util.StrUtil;
 public abstract class AbstractCaptcha implements ICaptcha {
 	private static final long serialVersionUID = 3180820918087507254L;
 
-	// 图片的宽度。
+	/** 图片的宽度 */
 	protected int width = 100;
-	// 图片的高度。
+	/** 图片的高度 */
 	protected int height = 37;
-	// 验证码干扰元素个数
+	/** 验证码干扰元素个数 */
 	protected int interfereCount = 15;
-	// 字体
+	/** 字体 */
 	protected Font font;
-	// 验证码
+	/** 验证码 */
 	protected String code;
-	// 验证码图片
+	/** 验证码图片 */
 	protected byte[] imageBytes;
 	/** 验证码生成器 */
 	protected CodeGenerator generator;
+	/** 背景色 */
+	protected Color background;
 
 	/**
 	 * 构造，使用随机验证码生成器生成验证码
@@ -79,7 +81,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		generateCode();
 
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ImageUtil.writePng(createImage(this.code), out);
+		ImgUtil.writePng(createImage(this.code), out);
 		this.imageBytes = out.toByteArray();
 	}
 
@@ -106,10 +108,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	@Override
 	public boolean verify(String userInputCode) {
-		if (StrUtil.isNotBlank(userInputCode)) {
-			return StrUtil.equalsIgnoreCase(getCode(), userInputCode);
-		}
-		return false;
+		return this.generator.verify(this.code, userInputCode);
 	}
 
 	/**
@@ -150,7 +149,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		if (null == this.imageBytes) {
 			createCode();
 		}
-		return ImageUtil.read(new ByteArrayInputStream(this.imageBytes));
+		return ImgUtil.read(new ByteArrayInputStream(this.imageBytes));
 	}
 
 	/**
@@ -188,5 +187,17 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 */
 	public void setGenerator(CodeGenerator generator) {
 		this.generator = generator;
+		// 重新生成验证码
+		this.createCode();
+	}
+	
+	/**
+	 * 设置背景色
+	 * 
+	 * @param background 背景色
+	 * @since 4.1.22
+	 */
+	public void setBackground(Color background) {
+		this.background = background;
 	}
 }

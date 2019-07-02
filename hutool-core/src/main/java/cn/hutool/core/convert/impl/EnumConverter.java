@@ -10,6 +10,7 @@ import cn.hutool.core.convert.AbstractConverter;
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class EnumConverter extends AbstractConverter<Object> {
+	private static final long serialVersionUID = 1L;
 
 	private Class enumClass;
 	

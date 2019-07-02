@@ -1,6 +1,7 @@
 package cn.hutool.core.io.resource;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
@@ -12,9 +13,20 @@ import cn.hutool.core.util.URLUtil;
  * @author looly
  *
  */
-public class FileResource extends UrlResource{
+public class FileResource extends UrlResource {
+	private static final long serialVersionUID = 1L;
 
 	// ----------------------------------------------------------------------- Constructor start
+	/**
+	 * 构造
+	 * 
+	 * @param path 文件
+	 * @since 4.4.1
+	 */
+	public FileResource(Path path) {
+		this(path.toFile());
+	}
+
 	/**
 	 * 构造
 	 * 
@@ -23,7 +35,7 @@ public class FileResource extends UrlResource{
 	public FileResource(File file) {
 		this(file, file.getName());
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -33,7 +45,7 @@ public class FileResource extends UrlResource{
 	public FileResource(File file, String fileName) {
 		super(URLUtil.getURL(file), StrUtil.isBlank(fileName) ? file.getName() : fileName);
 	}
-	
+
 	/**
 	 * 构造
 	 * 

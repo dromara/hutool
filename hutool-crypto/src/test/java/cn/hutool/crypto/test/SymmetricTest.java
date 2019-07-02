@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
@@ -13,6 +14,7 @@ import cn.hutool.crypto.symmetric.DES;
 import cn.hutool.crypto.symmetric.DESede;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.crypto.symmetric.Vigenere;
 
 /**
  * 对称加密算法单元测试
@@ -27,7 +29,7 @@ public class SymmetricTest {
 		String content = "test中文";
 
 		// 随机生成密钥
-		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+		byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
 
 		// 构建
 		SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, key);
@@ -52,7 +54,7 @@ public class SymmetricTest {
 		String content = "test中文";
 
 		// 随机生成密钥
-		byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+		byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
 
 		// 构建
 		AES aes = SecureUtil.aes(key);
@@ -182,5 +184,16 @@ public class SymmetricTest {
 		String decryptStr = des.decryptStr(encryptHex);
 		
 		Assert.assertEquals(content, decryptStr);
+	}
+	
+	@Test
+	public void vigenereTest() {
+		String content = "Wherethereisawillthereisaway";
+		String key = "CompleteVictory";
+		
+		String encrypt = Vigenere.encrypt(content, key);
+		Assert.assertEquals("zXScRZ]KIOMhQjc0\\bYRXZOJK[Vi", encrypt);
+		String decrypt = Vigenere.decrypt(encrypt, key);
+		Assert.assertEquals(content, decrypt);
 	}
 }

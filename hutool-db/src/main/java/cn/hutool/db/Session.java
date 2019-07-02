@@ -7,7 +7,8 @@ import java.sql.Savepoint;
 
 import javax.sql.DataSource;
 
-import cn.hutool.core.lang.VoidFunc;
+import cn.hutool.core.lang.func.VoidFunc0;
+import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectFactory;
@@ -26,6 +27,7 @@ import cn.hutool.log.LogFactory;
  *
  */
 public class Session extends AbstractDb implements Closeable {
+	private static final long serialVersionUID = 3421251905539056945L;
 	private final static Log log = LogFactory.get();
 
 	/**
@@ -248,17 +250,37 @@ public class Session extends AbstractDb implements Closeable {
 		}
 		getConnection().setTransactionIsolation(level);
 	}
+	
+	/**
+	 * 在事务中执行操作，通过实现{@link VoidFunc0}接口的call方法执行多条SQL语句从而完成事务
+	 * 
+	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
+	 * @throws SQLException 
+	 * @since 3.2.3
+	 */
+	public void tx(VoidFunc1<Session> func) throws SQLException {
+		try {
+			beginTransaction();
+			func.call(this);
+			commit();
+		} catch (Throwable e) {
+			quietRollback();
+			throw (e instanceof SQLException) ? (SQLException) e : new SQLException(e);
+		}
+	}
 
 	/**
-	 * 在事务中执行操作，通过实现{@link VoidFunc}接口的call方法执行多条SQL语句从而完成事务
+	 * 在事务中执行操作，通过实现{@link VoidFunc0}接口的call方法执行多条SQL语句从而完成事务
 	 * 
 	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
 	 * @since 3.2.3
+	 * @deprecated 请使用{@link #tx(VoidFunc1)}
 	 */
-	public void trans(VoidFunc func) {
+	@Deprecated
+	public void trans(VoidFunc1<Session> func) {
 		try {
 			beginTransaction();
-			func.call();
+			func.call(this);
 			commit();
 		} catch (Exception e) {
 			quietRollback();
@@ -277,6 +299,11 @@ public class Session extends AbstractDb implements Closeable {
 	public Session setWrapper(Wrapper wrapper) {
 		return (Session) super.setWrapper(wrapper);
 	}
+	
+	@Override
+	public Session disableWrapper() {
+		return (Session) super.disableWrapper();
+	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
 
 	@Override
@@ -286,6 +313,16 @@ public class Session extends AbstractDb implements Closeable {
 
 	@Override
 	public void closeConnection(Connection conn) {
+		try {
+			if(conn != null && false == conn.getAutoCommit()) {
+				// 事务中的Session忽略关闭事件
+				return;
+			}
+		} catch (SQLException e) {
+			log.error(e);
+		}
+		
+		// 普通请求关闭（或归还）连接
 		ThreadLocalConnection.INSTANCE.close(this.ds);
 	}
 

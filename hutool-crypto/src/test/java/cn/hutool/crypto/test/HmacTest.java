@@ -15,6 +15,7 @@ import cn.hutool.crypto.digest.HmacAlgorithm;
  *
  */
 public class HmacTest {
+	
 	@Test
 	public void hmacTest(){
 		String testStr = "test中文";

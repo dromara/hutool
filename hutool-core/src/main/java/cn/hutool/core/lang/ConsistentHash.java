@@ -1,5 +1,6 @@
 package cn.hutool.core.lang;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -14,7 +15,9 @@ import cn.hutool.core.util.HashUtil;
  *
  * @param <T>	节点类型
  */
-public class ConsistentHash<T> {
+public class ConsistentHash<T> implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	/** Hash计算对象，用于自定义hash算法 */
 	HashFunc hashFunc;
 	/** 复制的节点个数 */

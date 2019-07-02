@@ -7,6 +7,7 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.lang.func.Func0;
 import cn.hutool.core.thread.ThreadUtil;
 
 /**
@@ -39,9 +40,11 @@ public class CacheTest {
 		lfuCache.put("key3", "value3", DateUnit.SECOND.getMillis() * 3);
 		lfuCache.put("key4", "value4", DateUnit.SECOND.getMillis() * 3);
 		
-		//由于缓存容量只有3，当加入第四个元素的时候，根据LRU规则，最少使用的将被移除（2,3被移除）
+		//由于缓存容量只有3，当加入第四个元素的时候，根据LFU规则，最少使用的将被移除（2,3被移除）
+		String value1 = lfuCache.get("key1");
 		String value2 = lfuCache.get("key2");
 		String value3 = lfuCache.get("key3");
+		Assert.assertTrue(null != value1);
 		Assert.assertTrue(null == value2);
 		Assert.assertTrue(null == value3);
 	}
@@ -58,9 +61,11 @@ public class CacheTest {
 		lruCache.get("key1");
 		lruCache.put("key4", "value4", DateUnit.SECOND.getMillis() * 3);
 		
+		String value1 = lruCache.get("key1");
+		Assert.assertNotNull(value1);
 		//由于缓存容量只有3，当加入第四个元素的时候，根据LRU规则，最少使用的将被移除（2被移除）
 		String value2 = lruCache.get("key2");
-		Assert.assertTrue(null == value2);
+		Assert.assertNull(value2);
 	}
 	
 	@Test
@@ -70,6 +75,7 @@ public class CacheTest {
 		timedCache.put("key1", "value1", 1);//1毫秒过期
 		timedCache.put("key2", "value2", DateUnit.SECOND.getMillis() * 5);//5秒过期
 		timedCache.put("key3", "value3");//默认过期(4毫秒)
+		timedCache.put("key4", "value4", Long.MAX_VALUE);//永不过期
 		
 		//启动定时任务，每5毫秒秒检查一次过期
 		timedCache.schedulePrune(5);
@@ -80,10 +86,24 @@ public class CacheTest {
 		String value1 = timedCache.get("key1");
 		Assert.assertTrue(null == value1);
 		String value2 = timedCache.get("key2");
-		Assert.assertFalse(null == value2);
+		Assert.assertEquals("value2", value2);
+		
 		//5毫秒后，由于设置了默认过期，key3只被保留4毫秒，因此为null
 		String value3 = timedCache.get("key3");
 		Assert.assertTrue(null == value3);
+		
+		String value3Supplier = timedCache.get("key3", new Func0<String>() {
+			
+			@Override
+			public String call() throws Exception {
+				return "Default supplier";
+			}
+		});
+		Assert.assertEquals("Default supplier", value3Supplier);
+		
+		// 永不过期
+		String value4 = timedCache.get("key4");
+		Assert.assertEquals("value4", value4);
 		
 		//取消定时清理
 		timedCache.cancelPruneSchedule();

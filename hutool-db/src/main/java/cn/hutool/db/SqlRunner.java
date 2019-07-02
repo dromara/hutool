@@ -21,7 +21,8 @@ import cn.hutool.db.sql.Wrapper;
  */
 @Deprecated
 public class SqlRunner extends AbstractDb{
-	
+	private static final long serialVersionUID = 6626183393926198184L;
+
 	/**
 	 * 创建SqlRunner<br>
 	 * 使用默认数据源，自动探测数据库连接池

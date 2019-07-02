@@ -5,20 +5,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.SimpleCache;
-import cn.hutool.core.map.MapUtil;
 
 /**
  * 反射工具类
@@ -96,6 +91,19 @@ public class ReflectUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------------------- Field
+	/**
+	 * 查找指定类中是否包含指定名称对应的字段，包括所有字段（包括非public字段），也包括父类和Object类的字段
+	 * 
+	 * @param beanClass 被查找字段的类,不能为null
+	 * @param name 字段名
+	 * @return 是否包含字段
+	 * @throws SecurityException 安全异常
+	 * @since 4.1.21
+	 */
+	public static boolean hasField(Class<?> beanClass, String name) throws SecurityException {
+		return null != getField(beanClass, name);
+	}
+	
 	/**
 	 * 查找指定类中的所有字段（包括非public字段），也包括父类和Object类的字段， 字段不存在则返回<code>null</code>
 	 * 
@@ -243,7 +251,18 @@ public class ReflectUtil {
 		Assert.notNull(obj);
 		Assert.notNull(field);
 		field.setAccessible(true);
-
+		
+		if(null != value) {
+			Class<?> fieldType = field.getType();
+			if(false == fieldType.isAssignableFrom(value.getClass())) {
+				//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
+				final Object targetValue = Convert.convert(fieldType, value);
+				if(null != targetValue) {
+					value = targetValue;
+				}
+			}
+		}
+		
 		try {
 			field.set(obj, value);
 		} catch (IllegalAccessException e) {
@@ -361,6 +380,10 @@ public class ReflectUtil {
 	/**
 	 * 查找指定对象中的所有方法（包括非public方法），也包括父对象和Object类的方法
 	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
+	 * 
 	 * @param obj 被查找的对象，如果为{@code null}返回{@code null}
 	 * @param methodName 方法名，如果为空字符串返回{@code null}
 	 * @param args 参数
@@ -377,6 +400,10 @@ public class ReflectUtil {
 	/**
 	 * 忽略大小写查找指定方法，如果找不到对应的方法则返回<code>null</code>
 	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
+	 * 
 	 * @param clazz 类，如果为{@code null}返回{@code null}
 	 * @param methodName 方法名，如果为空字符串返回{@code null}
 	 * @param paramTypes 参数类型，指定参数类型如果是方法的子类也算
@@ -391,6 +418,10 @@ public class ReflectUtil {
 	/**
 	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
 	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
+	 * 
 	 * @param clazz 类，如果为{@code null}返回{@code null}
 	 * @param methodName 方法名，如果为空字符串返回{@code null}
 	 * @param paramTypes 参数类型，指定参数类型如果是方法的子类也算
@@ -403,6 +434,10 @@ public class ReflectUtil {
 
 	/**
 	 * 查找指定方法 如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法为精准获取方法名，即方法名和参数数量和类型必须一致，否则返回<code>null</code>。
+	 * </p>
 	 * 
 	 * @param clazz 类，如果为{@code null}返回{@code null}
 	 * @param ignoreCase 是否忽略大小写
@@ -424,6 +459,70 @@ public class ReflectUtil {
 					if (ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
 						return method;
 					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法只检查方法名是否一致，并不检查参数的一致性。
+	 * </p>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 4.3.2
+	 */
+	public static Method getMethodByName(Class<?> clazz, String methodName) throws SecurityException {
+		return getMethodByName(clazz, false, methodName);
+	}
+	
+	/**
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法只检查方法名是否一致（忽略大小写），并不检查参数的一致性。
+	 * </p>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 4.3.2
+	 */
+	public static Method getMethodByNameIgnoreCase(Class<?> clazz, String methodName) throws SecurityException {
+		return getMethodByName(clazz, true, methodName);
+	}
+	
+	/**
+	 * 按照方法名查找指定方法名的方法，只返回匹配到的第一个方法，如果找不到对应的方法则返回<code>null</code>
+	 * 
+	 * <p>
+	 * 此方法只检查方法名是否一致，并不检查参数的一致性。
+	 * </p>
+	 * 
+	 * @param clazz 类，如果为{@code null}返回{@code null}
+	 * @param ignoreCase 是否忽略大小写
+	 * @param methodName 方法名，如果为空字符串返回{@code null}
+	 * @return 方法
+	 * @throws SecurityException 无权访问抛出异常
+	 * @since 4.3.2
+	 */
+	public static Method getMethodByName(Class<?> clazz, boolean ignoreCase, String methodName) throws SecurityException {
+		if (null == clazz || StrUtil.isBlank(methodName)) {
+			return null;
+		}
+
+		final Method[] methods = getMethods(clazz);
+		if (ArrayUtil.isNotEmpty(methods)) {
+			for (Method method : methods) {
+				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
+					return method;
 				}
 			}
 		}
@@ -459,19 +558,7 @@ public class ReflectUtil {
 		if (null == clazz) {
 			return null;
 		}
-
-		final Method[] methods = getMethods(clazz);
-		if (null == filter) {
-			return methods;
-		}
-
-		final List<Method> methodList = new ArrayList<>();
-		for (Method method : methods) {
-			if (filter.accept(method)) {
-				methodList.add(method);
-			}
-		}
-		return methodList.toArray(new Method[methodList.size()]);
+		return ArrayUtil.filter(getMethods(clazz), filter);
 	}
 
 	/**
@@ -579,29 +666,8 @@ public class ReflectUtil {
 	 * @return 对象
 	 * @throws UtilException 包装各类异常
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(Class<T> clazz, Object... params) throws UtilException {
 		if (ArrayUtil.isEmpty(params)) {
-			if (Map.class.isAssignableFrom(clazz)) {
-				// Map
-				if (LinkedHashMap.class.isAssignableFrom(clazz)) {
-					return (T) MapUtil.newHashMap(true);
-				} else {
-					return (T) MapUtil.newHashMap();
-				}
-			} else if (Iterable.class.isAssignableFrom(clazz)) {
-				// Iterable
-				if (LinkedHashSet.class.isAssignableFrom(clazz)) {
-					return (T) new LinkedHashSet<>();
-				} else if (Set.class.isAssignableFrom(clazz)) {
-					return (T) new HashSet<>();
-				} else if (LinkedList.class.isAssignableFrom(clazz)) {
-					return (T) new LinkedList<>();
-				} else {
-					return (T) CollUtil.newArrayList();
-				}
-			}
-
 			final Constructor<T> constructor = getConstructor(clazz);
 			try {
 				return constructor.newInstance();
@@ -637,7 +703,7 @@ public class ReflectUtil {
 			// ignore
 			// 默认构造不存在的情况下查找其它构造
 		}
-
+		
 		final Constructor<T>[] constructors = getConstructors(beanClass);
 		Class<?>[] parameterTypes;
 		for (Constructor<T> constructor : constructors) {
@@ -647,7 +713,7 @@ public class ReflectUtil {
 			}
 			constructor.setAccessible(true);
 			try {
-				constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
+				return constructor.newInstance(ClassUtil.getDefaultValues(parameterTypes));
 			} catch (Exception e) {
 				// 构造出错时继续尝试下一种构造方式
 				continue;

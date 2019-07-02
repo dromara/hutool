@@ -1,8 +1,10 @@
 package cn.hutool.cache;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import cn.hutool.cache.impl.CacheObj;
+import cn.hutool.core.lang.func.Func0;
 
 /**
  * 缓存接口
@@ -12,7 +14,7 @@ import cn.hutool.cache.impl.CacheObj;
  * @param <K> 键类型
  * @param <V> 值类型
  */
-public interface Cache<K, V> extends Iterable<V> {
+public interface Cache<K, V> extends Iterable<V>, Serializable {
 
 	/**
 	 * 返回缓存容量，<code>0</code>表示无大小限制
@@ -60,6 +62,15 @@ public interface Cache<K, V> extends Iterable<V> {
 	 * @see #get(Object, boolean)
 	 */
 	V get(K key);
+	
+	/**
+	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回Func0回调产生的对象
+	 * 
+	 * @param key 键
+	 * @param supplier 如果不存在回调方法，用于生产值对象
+	 * @return 值对象
+	 */
+	V get(K key, Func0<V> supplier);
 
 	/**
 	 * 从缓存中获得对象，当对象不在缓存中或已经过期返回<code>null</code>

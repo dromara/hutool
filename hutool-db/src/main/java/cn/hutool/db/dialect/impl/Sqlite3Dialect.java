@@ -9,6 +9,8 @@ import cn.hutool.db.sql.Wrapper;
  *
  */
 public class Sqlite3Dialect extends AnsiSqlDialect{
+	private static final long serialVersionUID = -3527642408849291634L;
+
 	public Sqlite3Dialect() {
 		wrapper = new Wrapper('[', ']');
 	}

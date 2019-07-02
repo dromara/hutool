@@ -1,10 +1,12 @@
 package cn.hutool.db.sql;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.sql.Connection;
 import java.sql.RowId;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,10 +23,10 @@ import cn.hutool.db.sql.Condition.LikeType;
  * SQL相关工具类，包括相关SQL语句拼接等
  * 
  * @author looly
- *@since 4.0.10
+ * @since 4.0.10
  */
 public class SqlUtil {
-	
+
 	/**
 	 * 构件相等条件的where语句<br>
 	 * 如果没有条件语句，泽返回空串，表示没有条件
@@ -122,7 +124,7 @@ public class SqlUtil {
 		}
 		return likeValue.toString();
 	}
-	
+
 	/**
 	 * 格式化SQL
 	 * 
@@ -132,7 +134,7 @@ public class SqlUtil {
 	public static String formatSql(String sql) {
 		return SqlFormatter.format(sql);
 	}
-	
+
 	/**
 	 * 将RowId转为字符串
 	 * 
@@ -180,6 +182,52 @@ public class SqlUtil {
 		} finally {
 			IoUtil.close(in);
 		}
+	}
+
+	/**
+	 * 创建Blob对象
+	 * 
+	 * @param conn {@link Connection}
+	 * @param dataStream 数据流，使用完毕后关闭
+	 * @param closeAfterUse 使用完毕是否关闭流
+	 * @return {@link Blob}
+	 * @since 4.5.13
+	 */
+	public static Blob createBlob(Connection conn, InputStream dataStream, boolean closeAfterUse) {
+		Blob blob;
+		OutputStream out = null;
+		try {
+			blob = conn.createBlob();
+			out = blob.setBinaryStream(1);
+			IoUtil.copy(dataStream, out);
+		} catch (SQLException e) {
+			throw new DbRuntimeException(e);
+		} finally {
+			IoUtil.close(out);
+			if (closeAfterUse) {
+				IoUtil.close(dataStream);
+			}
+		}
+		return blob;
+	}
+	
+	/**
+	 * 创建Blob对象
+	 * 
+	 * @param conn {@link Connection}
+	 * @param data 数据
+	 * @return {@link Blob}
+	 * @since 4.5.13
+	 */
+	public static Blob createBlob(Connection conn, byte[] data) {
+		Blob blob;
+		try {
+			blob = conn.createBlob();
+			blob.setBytes(0, data);
+		} catch (SQLException e) {
+			throw new DbRuntimeException(e);
+		}
+		return blob;
 	}
 
 	/**

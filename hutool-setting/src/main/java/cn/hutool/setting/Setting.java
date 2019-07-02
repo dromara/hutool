@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -23,11 +22,13 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.resource.UrlResource;
 import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
+import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
+import cn.hutool.setting.dialect.Props;
 
 /**
  * 设置工具类。 用于支持设置（配置）文件<br>
@@ -178,20 +179,18 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public void autoLoad(boolean autoReload) {
 		if (autoReload) {
+			Assert.notNull(this.settingUrl, "Setting URL is null !");
 			if (null != this.watchMonitor) {
+				// 先关闭之前的监听
 				this.watchMonitor.close();
 			}
-			try {
-				watchMonitor = WatchMonitor.create(this.settingUrl, StandardWatchEventKinds.ENTRY_MODIFY);
-				watchMonitor.setWatcher(new SimpleWatcher() {
-					@Override
-					public void onModify(WatchEvent<?> event, Path currentPath) {
-						load();
-					}
-				}).start();
-			} catch (Exception e) {
-				throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.settingUrl);
-			}
+			this.watchMonitor = WatchUtil.createModify(this.settingUrl, new SimpleWatcher() {
+				@Override
+				public void onModify(WatchEvent<?> event, Path currentPath) {
+					load();
+				}
+			});
+			this.watchMonitor.start();
 			StaticLog.debug("Auto load for [{}] listenning...", this.settingUrl);
 		} else {
 			IoUtil.close(this.watchMonitor);
@@ -263,11 +262,12 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @return map
 	 */
 	public Map<String, String> getMap(String group) {
-		return this.groupedMap.get(group);
+		final LinkedHashMap<String, String> map = this.groupedMap.get(group);
+		return (null != map) ? map : new LinkedHashMap<String, String>(0);
 	}
 
 	/**
-	 * 获得group对应的子Setting
+	 * 获取group分组下所有配置键值对，组成新的{@link Setting}
 	 * 
 	 * @param group 分组
 	 * @return {@link Setting}
@@ -279,7 +279,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
-	 * 转换为Properties对象，原分组变为前缀
+	 * 获取group分组下所有配置键值对，组成新的{@link Properties}
 	 * 
 	 * @param group 分组
 	 * @return Properties对象
@@ -288,6 +288,19 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		final Properties properties = new Properties();
 		properties.putAll(getMap(group));
 		return properties;
+	}
+
+	/**
+	 * 获取group分组下所有配置键值对，组成新的{@link Props}
+	 * 
+	 * @param group 分组
+	 * @return Props对象
+	 * @since 4.1.21
+	 */
+	public Props getProps(String group) {
+		final Props props = new Props();
+		props.putAll(getMap(group));
+		return props;
 	}
 
 	// --------------------------------------------------------------------------------- Functions
@@ -472,7 +485,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	public Set<Entry<String, String>> entrySet(String group) {
 		return this.groupedMap.entrySet(group);
 	}
-
+	
 	/**
 	 * 设置值
 	 * 
@@ -482,7 +495,20 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @since 3.3.1
 	 */
 	public Setting set(String key, String value) {
-		this.groupedMap.put(DEFAULT_GROUP, key, value);
+		this.put(key, value);
+		return this;
+	}
+	
+	/**
+	 * 将键值对加入到对应分组中
+	 * 
+	 * @param group 分组
+	 * @param key 键
+	 * @param value 值
+	 * @return 此key之前存在的值，如果没有返回null
+	 */
+	public Setting set(String group, String key, String value) {
+		this.put(group, key, value);
 		return this;
 	}
 
@@ -623,14 +649,14 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			if (other.charset != null) {
 				return false;
 			}
-		} else if (!charset.equals(other.charset)) {
+		} else if (false == charset.equals(other.charset)) {
 			return false;
 		}
 		if (groupedMap == null) {
 			if (other.groupedMap != null) {
 				return false;
 			}
-		} else if (!groupedMap.equals(other.groupedMap)) {
+		} else if (false == groupedMap.equals(other.groupedMap)) {
 			return false;
 		}
 		if (isUseVariable != other.isUseVariable) {

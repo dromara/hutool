@@ -28,7 +28,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	protected Workbook workbook;
 	/** Excel中对应的Sheet */
 	protected Sheet sheet;
-	
+
 	/**
 	 * 构造
 	 * 
@@ -48,7 +48,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	public Workbook getWorkbook() {
 		return this.workbook;
 	}
-	
+
 	/**
 	 * 返回工作簿表格数
 	 * 
@@ -58,7 +58,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	public int getSheetCount() {
 		return this.workbook.getNumberOfSheets();
 	}
-	
+
 	/**
 	 * 获取此工作簿所有Sheet表
 	 * 
@@ -73,7 +73,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 获取表名列表
 	 * 
@@ -97,7 +97,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	public Sheet getSheet() {
 		return this.sheet;
 	}
-	
+
 	/**
 	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之。<br>
 	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet。
@@ -109,7 +109,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	@SuppressWarnings("unchecked")
 	public T setSheet(String sheetName) {
 		this.sheet = this.workbook.getSheet(sheetName);
-		if(null == this.sheet) {
+		if (null == this.sheet) {
 			this.sheet = this.workbook.createSheet(sheetName);
 		}
 		return (T) this;
@@ -125,8 +125,12 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	@SuppressWarnings("unchecked")
 	public T setSheet(int sheetIndex) {
-		this.sheet = this.workbook.getSheetAt(sheetIndex);
-		if(null == this.sheet) {
+		try {
+			this.sheet = this.workbook.getSheetAt(sheetIndex);
+		} catch (IllegalArgumentException e) {
+			this.sheet = this.workbook.createSheet();
+		}
+		if (null == this.sheet) {
 			this.sheet = this.workbook.createSheet();
 		}
 		return (T) this;
@@ -233,6 +237,62 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 			this.sheet.setDefaultColumnStyle(x, columnStyle);
 		}
 		return columnStyle;
+	}
+
+	/**
+	 * 获取总行数，计算方法为：
+	 * 
+	 * <pre>
+	 * 最后一行序号 + 1
+	 * </pre>
+	 * 
+	 * @return 行数
+	 * @since 4.5.4
+	 */
+	public int getRowCount() {
+		return this.sheet.getLastRowNum() + 1;
+	}
+
+	/**
+	 * 获取有记录的行数，计算方法为：
+	 * 
+	 * <pre>
+	 * 最后一行序号 - 第一行序号 + 1
+	 * </pre>
+	 * 
+	 * @return 行数
+	 * @since 4.5.4
+	 */
+	public int getPhysicalRowCount() {
+		return this.sheet.getPhysicalNumberOfRows();
+	}
+	
+	/**
+	 * 获取第一行总列数，计算方法为：
+	 * 
+	 * <pre>
+	 * 最后一列序号 + 1
+	 * </pre>
+	 * 
+	 * @return 列数
+	 */
+	public int getColumnCount() {
+		return getColumnCount(0);
+	}
+	
+	/**
+	 * 获取总列数，计算方法为：
+	 * 
+	 * <pre>
+	 * 最后一列序号 + 1
+	 * </pre>
+	 * 
+	 * @param rowNum 行号
+	 * @return 列数
+	 */
+	public int getColumnCount(int rowNum) {
+		// getLastCellNum方法返回序号+1的值
+		return this.sheet.getRow(rowNum).getLastCellNum();
 	}
 
 	/**

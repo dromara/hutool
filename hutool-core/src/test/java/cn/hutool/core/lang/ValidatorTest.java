@@ -59,6 +59,8 @@ public class ValidatorTest {
 		Assert.assertTrue(b4);
 		boolean b5 = Validator.isBirthday("2015.01.01");
 		Assert.assertTrue(b5);
+		boolean b6 = Validator.isBirthday("2018-08-15");
+		Assert.assertTrue(b6);
 		
 		//验证年非法
 		Assert.assertFalse(Validator.isBirthday("2095.05.01"));
@@ -101,5 +103,17 @@ public class ValidatorTest {
 		Assert.assertTrue(m2);
 		boolean m3 = Validator.isMobile("+8618600221432");
 		Assert.assertTrue(m3);
+	}
+	
+	@Test
+	public void isMatchTest() {
+		String url = "http://aaa-bbb.somthing.com/a.php?a=b&c=2";
+		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+		
+		url = "https://aaa-bbb.somthing.com/a.php?a=b&c=2";
+		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
+		
+		url = "https://aaa-bbb.somthing.com:8080/a.php?a=b&c=2";
+		Assert.assertTrue(Validator.isMactchRegex(PatternPool.URL_HTTP, url));
 	}
 }

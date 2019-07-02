@@ -1,11 +1,14 @@
 package cn.hutool.system;
 
+import java.io.Serializable;
+
 import cn.hutool.core.util.StrUtil;
 
 /**
  * 代表当前运行的JRE的信息。
  */
-public class JavaRuntimeInfo{
+public class JavaRuntimeInfo implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private final String JAVA_RUNTIME_NAME = SystemUtil.get("java.runtime.name", false);
 	private final String JAVA_RUNTIME_VERSION = SystemUtil.get("java.runtime.version", false);

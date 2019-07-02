@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.StrUtil;
 
@@ -40,7 +41,8 @@ public class MapValueProvider implements ValueProvider<String> {
 			//检查下划线模式
 			value = map.get(StrUtil.toUnderlineCase(key));
 		}
-		return value;
+		
+		return Convert.convert(valueType, value);
 	}
 
 	@Override

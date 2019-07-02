@@ -2,6 +2,7 @@ package cn.hutool.extra.ssh;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import com.jcraft.jsch.Channel;
@@ -14,12 +15,14 @@ import com.jcraft.jsch.Session;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.LocalPortGenerater;
+import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * JSch是Java Secure Channel的缩写。JSch是一个SSH2的纯Java实现。它允许你连接到一个SSH服务器，并且可以使用端口转发，X11转发，文件传输等。<br>
+ * Jsch工具类<br>
+ * Jsch是Java Secure Channel的缩写。JSch是一个SSH2的纯Java实现。<br>
+ * 它允许你连接到一个SSH服务器，并且可以使用端口转发，X11转发，文件传输等。<br>
  * 
  * @author Looly
  * @since 4.0.0
@@ -40,14 +43,14 @@ public class JschUtil {
 	public static int generateLocalPort() {
 		return portGenerater.generate();
 	}
-	
+
 	/**
-	 * 获得一个SSH跳板机会话，重用已经使用的会话
+	 * 获得一个SSH会话，重用已经使用的会话
 	 * 
-	 * @param sshHost 跳板机主机
-	 * @param sshPort 跳板机端口
-	 * @param sshUser 跳板机用户名
-	 * @param sshPass 跳板机密码
+	 * @param sshHost 主机
+	 * @param sshPort 端口
+	 * @param sshUser 用户名
+	 * @param sshPass 密码
 	 * @return SSH会话
 	 */
 	public static Session getSession(String sshHost, int sshPort, String sshUser, String sshPass) {
@@ -55,15 +58,35 @@ public class JschUtil {
 	}
 
 	/**
-	 * 打开一个新的SSH跳板机会话
+	 * 打开一个新的SSH会话
 	 * 
-	 * @param sshHost 跳板机主机
-	 * @param sshPort 跳板机端口
-	 * @param sshUser 跳板机用户名
-	 * @param sshPass 跳板机密码
+	 * @param sshHost 主机
+	 * @param sshPort 端口
+	 * @param sshUser 用户名
+	 * @param sshPass 密码
 	 * @return SSH会话
 	 */
 	public static Session openSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+		final Session session = createSession(sshHost, sshPort, sshUser, sshPass);
+		try {
+			session.connect();
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+		return session;
+	}
+
+	/**
+	 * 新建一个新的SSH会话
+	 * 
+	 * @param sshHost 主机
+	 * @param sshPort 端口
+	 * @param sshUser 机用户名
+	 * @param sshPass 密码
+	 * @return SSH会话
+	 * @since 4.5.2
+	 */
+	public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
 		if (StrUtil.isEmpty(sshHost) || sshPort < 0 || StrUtil.isEmpty(sshUser) || StrUtil.isEmpty(sshPass)) {
 			return null;
 		}
@@ -72,9 +95,8 @@ public class JschUtil {
 		try {
 			session = new JSch().getSession(sshUser, sshHost, sshPort);
 			session.setPassword(sshPass);
-			//设置第一次登陆的时候提示，可选值：(ask | yes | no) 
+			// 设置第一次登陆的时候提示，可选值：(ask | yes | no)
 			session.setConfig("StrictHostKeyChecking", "no");
-			session.connect();
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -146,14 +168,7 @@ public class JschUtil {
 	 * @since 4.0.3
 	 */
 	public static ChannelSftp openSftp(Session session) {
-		Channel channel;
-		try {
-			channel = session.openChannel("sftp");
-			channel.connect();
-		} catch (JSchException e) {
-			throw new JschRuntimeException(e);
-		}
-		return (ChannelSftp) channel;
+		return (ChannelSftp) openChannel(session, ChannelType.SFTP);
 	}
 
 	/**
@@ -189,19 +204,50 @@ public class JschUtil {
 	 * @since 4.0.3
 	 */
 	public static ChannelShell openShell(Session session) {
-		Channel channel;
+		return (ChannelShell) openChannel(session, ChannelType.SHELL);
+	}
+
+	/**
+	 * 打开Channel连接
+	 * 
+	 * @param session Session会话
+	 * @param channelType 通道类型，可以是shell或sftp等，见{@link ChannelType}
+	 * @return {@link Channel}
+	 * @since 4.5.2
+	 */
+	public static Channel openChannel(Session session, ChannelType channelType) {
+		final Channel channel = createChannel(session, channelType);
 		try {
-			channel = session.openChannel("shell");
 			channel.connect();
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}
-		return (ChannelShell) channel;
+		return channel;
+	}
+	
+	/**
+	 * 创建Channel连接
+	 * 
+	 * @param session Session会话
+	 * @param channelType 通道类型，可以是shell或sftp等，见{@link ChannelType}
+	 * @return {@link Channel}
+	 * @since 4.5.2
+	 */
+	public static Channel createChannel(Session session, ChannelType channelType) {
+		Channel channel;
+		try {
+			if (false == session.isConnected()) {
+				session.connect();
+			}
+			channel = session.openChannel(channelType.getValue());
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+		return channel;
 	}
 
 	/**
-	 * 打开Exec连接<br>
-	 * 获取ChannelExec后首先
+	 * 执行Shell命令
 	 * 
 	 * @param session Session会话
 	 * @param cmd 命令
@@ -210,28 +256,36 @@ public class JschUtil {
 	 * @since 4.0.3
 	 */
 	public static String exec(Session session, String cmd, Charset charset) {
+		return exec(session, cmd, charset, System.err);
+	}
+
+	/**
+	 * 执行Shell命令
+	 * 
+	 * @param session Session会话
+	 * @param cmd 命令
+	 * @param charset 发送和读取内容的编码
+	 * @param errStream 错误信息输出到的位置
+	 * @return {@link ChannelExec}
+	 * @since 4.3.1
+	 */
+	public static String exec(Session session, String cmd, Charset charset, OutputStream errStream) {
 		if (null == charset) {
 			charset = CharsetUtil.CHARSET_UTF_8;
 		}
-		ChannelExec channel;
-		try {
-			channel = (ChannelExec) session.openChannel("exec");
-		} catch (JSchException e) {
-			throw new JschRuntimeException(e);
-		}
-
+		ChannelExec channel = (ChannelExec) openChannel(session, ChannelType.EXEC);
 		channel.setCommand(StrUtil.bytes(cmd, charset));
 		channel.setInputStream(null);
-		channel.setErrStream(System.err);
+		channel.setErrStream(errStream);
 		InputStream in = null;
 		try {
-			channel.connect();// 执行命令 等待执行结束
+			channel.start();
 			in = channel.getInputStream();
 			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (JSchException e) {
-			throw new JschRuntimeException(e);
+			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(in);
 			close(channel);

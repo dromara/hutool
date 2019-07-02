@@ -1,5 +1,6 @@
 package cn.hutool.core.comparator;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;
@@ -10,7 +11,8 @@ import java.util.Locale;
  * @author looly
  * @since 4.0.8
  */
-public class PinyinComparator implements Comparator<String> {
+public class PinyinComparator implements Comparator<String>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	final Collator collator;
 

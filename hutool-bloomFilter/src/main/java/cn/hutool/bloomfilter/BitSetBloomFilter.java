@@ -15,6 +15,8 @@ import cn.hutool.core.util.HashUtil;
  *
  */
 public class BitSetBloomFilter implements BloomFilter{
+	private static final long serialVersionUID = 1L;
+	
 	private BitSet bitSet;
 	private int bitSetSize;
 	private int addedElements;

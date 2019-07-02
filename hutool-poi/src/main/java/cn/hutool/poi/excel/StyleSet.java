@@ -1,5 +1,7 @@
 package cn.hutool.poi.excel;
 
+import java.io.Serializable;
+
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -17,7 +19,8 @@ import cn.hutool.poi.excel.style.StyleUtil;
  * @author looly
  *
  */
-public class StyleSet {
+public class StyleSet implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** 工作簿引用 */
 	private Workbook workbook;
@@ -160,12 +163,25 @@ public class StyleSet {
 	 * @since 4.1.0
 	 */
 	public StyleSet setFont(Font font, boolean ignoreHead) {
-		if(false == ignoreHead) {
+		if (false == ignoreHead) {
 			this.headCellStyle.setFont(font);
 		}
 		this.cellStyle.setFont(font);
 		this.cellStyleForNumber.setFont(font);
 		this.cellStyleForDate.setFont(font);
+		return this;
+	}
+
+	/**
+	 * 设置单元格文本自动换行
+	 * 
+	 * @return this
+	 * @since 4.5.16
+	 */
+	public StyleSet setWrapText() {
+		this.cellStyle.setWrapText(true);
+		this.cellStyleForNumber.setWrapText(true);
+		this.cellStyleForDate.setWrapText(true);
 		return this;
 	}
 }

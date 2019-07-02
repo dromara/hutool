@@ -39,11 +39,27 @@ public class NumberUtilTest {
 	}
 	
 	@Test
+	public void addTest4() {
+		BigDecimal result = NumberUtil.add(new BigDecimal("133"), new BigDecimal("331"));
+		Assert.assertEquals(new BigDecimal("464"), result);
+	}
+	
+	@Test
 	public void isIntegerTest() {
 		Assert.assertTrue(NumberUtil.isInteger("-12"));
 		Assert.assertTrue(NumberUtil.isInteger("256"));
 		Assert.assertTrue(NumberUtil.isInteger("0256"));
 		Assert.assertTrue(NumberUtil.isInteger("0"));
+		Assert.assertFalse(NumberUtil.isInteger("23.4"));
+	}
+	
+	@Test
+	public void isLongTest() {
+		Assert.assertTrue(NumberUtil.isLong("-12"));
+		Assert.assertTrue(NumberUtil.isLong("256"));
+		Assert.assertTrue(NumberUtil.isLong("0256"));
+		Assert.assertTrue(NumberUtil.isLong("0"));
+		Assert.assertFalse(NumberUtil.isLong("23.4"));
 	}
 	
 	@Test
@@ -138,6 +154,18 @@ public class NumberUtilTest {
 		String format = NumberUtil.decimalFormat(",###", c);
 		Assert.assertEquals("299,792,458", format);
 	}
+	
+	@Test
+	public void decimalFormatMoneyTest() {
+		double c = 299792400.543534534;
+		
+		String format = NumberUtil.decimalFormatMoney(c);
+		Assert.assertEquals("299,792,400.54", format);
+		
+		double value = 0.5;
+		String money = NumberUtil.decimalFormatMoney(value);
+		Assert.assertEquals("0.50", money);
+	}
 
 	@Test
 	public void equalsTest() {
@@ -175,11 +203,15 @@ public class NumberUtilTest {
 		int v1 = NumberUtil.parseInt("0xFF");
 		Assert.assertEquals(255, v1);
 		int v2 = NumberUtil.parseInt("010");
-		Assert.assertEquals(8, v2);
+		Assert.assertEquals(10, v2);
 		int v3 = NumberUtil.parseInt("10");
 		Assert.assertEquals(10, v3);
 		int v4 = NumberUtil.parseInt("   ");
 		Assert.assertEquals(0, v4);
+		int v5 = NumberUtil.parseInt("10F");
+		Assert.assertEquals(10, v5);
+		int v6 = NumberUtil.parseInt("22.4D");
+		Assert.assertEquals(22, v6);
 	}
 	
 	@Test
@@ -187,10 +219,14 @@ public class NumberUtilTest {
 		long v1 = NumberUtil.parseLong("0xFF");
 		Assert.assertEquals(255L, v1);
 		long v2 = NumberUtil.parseLong("010");
-		Assert.assertEquals(8L, v2);
+		Assert.assertEquals(10L, v2);
 		long v3 = NumberUtil.parseLong("10");
 		Assert.assertEquals(10L, v3);
 		long v4 = NumberUtil.parseLong("   ");
 		Assert.assertEquals(0L, v4);
+		long v5 = NumberUtil.parseLong("10F");
+		Assert.assertEquals(10L, v5);
+		long v6 = NumberUtil.parseLong("22.4D");
+		Assert.assertEquals(22L, v6);
 	}
 }

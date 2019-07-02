@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -14,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.exceptions.POIException;
 
 /**
@@ -103,7 +105,7 @@ public class WorkbookUtil {
 	public static Workbook createBook(boolean isXlsx) {
 		Workbook workbook;
 		if (isXlsx) {
-			workbook = new org.apache.poi.xssf.usermodel.XSSFWorkbook();
+			workbook = new XSSFWorkbook();
 		} else {
 			workbook = new org.apache.poi.hssf.usermodel.HSSFWorkbook();
 		}
@@ -204,6 +206,39 @@ public class WorkbookUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+	
+	/**
+	 * 获取或者创建sheet表<br>
+	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
+	 * 
+	 * @param book 工作簿{@link Workbook}
+	 * @param sheetName 工作表名
+	 * @return 工作表{@link Sheet}
+	 * @since 4.0.2
+	 */
+	public static Sheet getOrCreateSheet(Workbook book, String sheetName) {
+		if (null == book) {
+			return null;
+		}
+		sheetName = StrUtil.isBlank(sheetName) ? "sheet1" : sheetName;
+		Sheet sheet = book.getSheet(sheetName);
+		if (null == sheet) {
+			sheet = book.createSheet(sheetName);
+		}
+		return sheet;
+	}
+
+	/**
+	 * 
+	 * sheet是否为空
+	 * 
+	 * @param sheet {@link Sheet}
+	 * @return sheet是否为空
+	 * @since 4.0.1
+	 */
+	public static boolean isEmpty(Sheet sheet) {
+		return null == sheet || (sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0);
 	}
 	
 	//-------------------------------------------------------------------------------------------------------- Private method start

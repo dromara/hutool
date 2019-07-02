@@ -1,14 +1,16 @@
 package cn.hutool.core.bean;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -29,12 +31,13 @@ import cn.hutool.core.util.TypeUtil;
  * @author looly
  * @since 3.1.2
  */
-public class BeanDesc {
+public class BeanDesc implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** Bean类 */
 	private Class<?> beanClass;
 	/** 属性Map */
-	private Map<String, PropDesc> propMap = new HashMap<>();
+	private Map<String, PropDesc> propMap = new LinkedHashMap<>();
 
 	/**
 	 * 构造
@@ -162,7 +165,7 @@ public class BeanDesc {
 	private PropDesc createProp(Field field) {
 		final String fieldName = field.getName();
 		final Class<?> fieldType = field.getType();
-		final boolean isBooeanField = (fieldType == Boolean.class || fieldType == boolean.class);
+		final boolean isBooeanField = BooleanUtil.isBoolean(fieldType);
 
 		Method getter = null;
 		Method setter = null;

@@ -11,6 +11,7 @@ import cn.hutool.core.convert.ConvertException;
  * @since 4.0.2
  */
 public class CastConverter<T> extends AbstractConverter<T> {
+	private static final long serialVersionUID = 1L;
 
 	private Class<T> targetType;
 

@@ -5,6 +5,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -24,7 +25,8 @@ import cn.hutool.core.util.ObjectUtil;
  * @author Looly
  * @since 4.0.5
  */
-public final class CsvWriter implements Closeable, Flushable {
+public final class CsvWriter implements Closeable, Flushable, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** 写出器 */
 	private final Writer writer;
@@ -143,18 +145,22 @@ public final class CsvWriter implements Closeable, Flushable {
 	 * 设置是否始终使用文本分隔符，文本包装符，默认false，按需添加
 	 * 
 	 * @param alwaysDelimitText 是否始终使用文本分隔符，文本包装符，默认false，按需添加
+	 * @return this
 	 */
-	public void setAlwaysDelimitText(boolean alwaysDelimitText) {
-		this.setAlwaysDelimitText(alwaysDelimitText);
+	public CsvWriter setAlwaysDelimitText(boolean alwaysDelimitText) {
+		this.config.setAlwaysDelimitText(alwaysDelimitText);
+		return this;
 	}
 
 	/**
 	 * 设置换行符
 	 * 
 	 * @param lineDelimiter 换行符
+	 * @return this
 	 */
-	public void setLineDelimiter(char[] lineDelimiter) {
-		this.setLineDelimiter(lineDelimiter);
+	public CsvWriter setLineDelimiter(char[] lineDelimiter) {
+		this.config.setLineDelimiter(lineDelimiter);
+		return this;
 	}
 
 	/**

@@ -28,6 +28,7 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class NumberConverter extends AbstractConverter<Number> {
+	private static final long serialVersionUID = 1L;
 
 	private Class<? extends Number> targetType;
 

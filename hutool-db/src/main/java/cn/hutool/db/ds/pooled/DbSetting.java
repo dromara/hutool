@@ -59,14 +59,11 @@ public class DbSetting {
 			throw new DbRuntimeException("No JDBC URL for group: [{}]", group);
 		}
 		dbConfig.setUrl(url);
+		// 自动识别Driver
+		final String driver = config.getAndRemoveStr(DSFactory.KEY_ALIAS_DRIVER);
+		dbConfig.setDriver(StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url));
 		dbConfig.setUser(config.getAndRemoveStr(DSFactory.KEY_ALIAS_USER));
 		dbConfig.setPass(config.getAndRemoveStr(DSFactory.KEY_ALIAS_PASSWORD));
-		final String driver = config.getAndRemoveStr(DSFactory.KEY_ALIAS_DRIVER);
-		if (StrUtil.isNotBlank(driver)) {
-			dbConfig.setDriver(driver);
-		} else {
-			dbConfig.setDriver(DriverUtil.identifyDriver(url));
-		}
 
 		// 连接池相关信息
 		dbConfig.setInitialSize(setting.getInt("initialSize", group, 0));

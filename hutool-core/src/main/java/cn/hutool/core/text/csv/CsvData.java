@@ -1,6 +1,8 @@
 package cn.hutool.core.text.csv;
 
+import java.io.Serializable;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -8,52 +10,63 @@ import java.util.List;
  *
  * @author Looly
  */
-public final class CsvData {
+public class CsvData implements Iterable<CsvRow>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private final List<String> header;
 	private final List<CsvRow> rows;
 
+	/**
+	 * 构造
+	 * 
+	 * @param header 头信息
+	 * @param rows 行
+	 */
 	public CsvData(final List<String> header, final List<CsvRow> rows) {
 		this.header = header;
 		this.rows = rows;
 	}
 
 	/**
-	 * Returns the number of rows in this container.
+	 * 总行数
 	 *
-	 * @return the number of rows in this container
+	 * @return 总行数
 	 */
 	public int getRowCount() {
-		return rows.size();
+		return this.rows.size();
 	}
 
 	/**
-	 * Returns the header row - might be {@code null} if no header exists. The returned list is unmodifiable.
+	 * 获取头信息列表，如果无头信息为{@code Null}，返回列表为只读列表
 	 *
 	 * @return the header row - might be {@code null} if no header exists
 	 */
 	public List<String> getHeader() {
-		return header;
+		return Collections.unmodifiableList(this.header);
 	}
 
 	/**
-	 * Returns a CsvRow by its index (starting with 0).
+	 * 获取指定行，从0开始
 	 *
-	 * @param index index of the row to return
-	 * @return the row by its index
+	 * @param index 行号
+	 * @return 行数据
 	 * @throws IndexOutOfBoundsException if index is out of range
 	 */
 	public CsvRow getRow(final int index) {
-		return rows.get(index);
+		return this.rows.get(index);
 	}
 
 	/**
-	 * Returns an unmodifiable list of rows.
-	 *
-	 * @return an unmodifiable list of rows
+	 * 获取所有行
+	 * 
+	 * @return 所有行
 	 */
 	public List<CsvRow> getRows() {
-		return Collections.unmodifiableList(rows);
+		return this.rows;
 	}
 
+	@Override
+	public Iterator<CsvRow> iterator() {
+		return this.rows.iterator();
+	}
 }

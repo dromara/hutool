@@ -15,9 +15,6 @@ import cn.hutool.core.util.CharsetUtil;
  */
 public class DigestUtil {
 
-	private DigestUtil() {
-	}
-
 	// ------------------------------------------------------------------------------------------- MD5
 	/**
 	 * 计算16位MD5摘要值
@@ -26,7 +23,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(byte[] data) {
-		return new Digester(DigestAlgorithm.MD5).digest(data);
+		return new MD5().digest(data);
 	}
 
 	/**
@@ -37,7 +34,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(String data, String charset) {
-		return new Digester(DigestAlgorithm.MD5).digest(data, charset);
+		return new MD5().digest(data, charset);
 	}
 
 	/**
@@ -57,7 +54,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(InputStream data) {
-		return new Digester(DigestAlgorithm.MD5).digest(data);
+		return new MD5().digest(data);
 	}
 
 	/**
@@ -67,7 +64,7 @@ public class DigestUtil {
 	 * @return MD5摘要
 	 */
 	public static byte[] md5(File file) {
-		return new Digester(DigestAlgorithm.MD5).digest(file);
+		return new MD5().digest(file);
 	}
 
 	/**
@@ -77,7 +74,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(byte[] data) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+		return new MD5().digestHex(data);
 	}
 
 	/**
@@ -88,7 +85,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(String data, String charset) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data, charset);
+		return new MD5().digestHex(data, charset);
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(InputStream data) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(data);
+		return new MD5().digestHex(data);
 	}
 
 	/**
@@ -118,7 +115,18 @@ public class DigestUtil {
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(File file) {
-		return new Digester(DigestAlgorithm.MD5).digestHex(file);
+		return new MD5().digestHex(file);
+	}
+
+	/**
+	 * 32位MD5转16位MD5
+	 * 
+	 * @param md5Hex 32位MD5
+	 * @return 16位MD5
+	 * @since 4.4.1
+	 */
+	public static String md5HexTo16(String md5Hex) {
+		return md5Hex.substring(8, 24);
 	}
 
 	// ------------------------------------------------------------------------------------------- SHA-1
@@ -374,6 +382,17 @@ public class DigestUtil {
 	}
 
 	/**
+	 * 新建摘要器
+	 * 
+	 * @param algorithm 签名算法
+	 * @return Digester
+	 * @since 4.2.1
+	 */
+	public static Digester digester(String algorithm) {
+		return new Digester(algorithm);
+	}
+
+	/**
 	 * 生成Bcrypt加密后的密文
 	 * 
 	 * @param password 明文密码
@@ -383,7 +402,7 @@ public class DigestUtil {
 	public static String bcrypt(String password) {
 		return BCrypt.hashpw(password);
 	}
-	
+
 	/**
 	 * 验证密码是否与Bcrypt加密后的密文匹配
 	 * 

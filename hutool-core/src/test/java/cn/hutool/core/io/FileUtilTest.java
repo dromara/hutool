@@ -51,10 +51,19 @@ public class FileUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void delTest() {
-		// 删除一个不存在的文件，应返回false
+		// 删除一个不存在的文件，应返回true
 		boolean result = FileUtil.del("e:/Hutool_test_3434543533409843.txt");
-		Assert.assertFalse(result);
+		Assert.assertTrue(result);
+	}
+	
+	@Test
+	@Ignore
+	public void delTest2() {
+		// 删除一个不存在的文件，应返回true
+		boolean result = FileUtil.del(Paths.get("e:/Hutool_test_3434543533409843.txt"));
+		Assert.assertTrue(result);
 	}
 
 	@Test
@@ -250,6 +259,10 @@ public class FileUtilTest {
 		String dir = "d:\\aaa\\bbb\\cc\\ddd";
 		int index = FileUtil.lastIndexOfSeparator(dir);
 		Assert.assertEquals(13, index);
+		
+		String file = "ddd.jpg";
+		int index2 = FileUtil.lastIndexOfSeparator(file);
+		Assert.assertEquals(-1, index2);
 	}
 
 	@Test

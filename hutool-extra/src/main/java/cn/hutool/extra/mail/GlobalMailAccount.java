@@ -35,12 +35,31 @@ public enum GlobalMailAccount {
 	 * @return MailAccount
 	 */
 	private MailAccount createDefaultAccount() {
-		MailAccount mailAccount;
+		MailAccount mailAccount = null;
 		try {
 			mailAccount = new MailAccount(MailAccount.MAIL_SETTING_PATH);
 		} catch (IORuntimeException e) {
-			mailAccount = new MailAccount(MailAccount.MAIL_SETTING_PATH2);
+			//ignore
 		}
+		
+		// 寻找config/mailAccount.setting
+		if(null == mailAccount) {
+			try {
+				mailAccount = new MailAccount(MailAccount.MAIL_SETTING_PATH2);
+			} catch (IORuntimeException e) {
+				//ignore
+			}
+		}
+		
+		// 寻找mail.setting
+		if(null == mailAccount) {
+			try {
+				mailAccount = new MailAccount(MailAccount.MAIL_SETTING_PATH3);
+			} catch (IORuntimeException e) {
+				//ignore
+			}
+		}
+		
 		return mailAccount;
 	}
 }

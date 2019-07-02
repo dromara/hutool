@@ -12,7 +12,8 @@ import java.sql.SQLException;
  *@since 3.1.0
  */
 public class BeanHandler<E> implements RsHandler<E>{
-	
+	private static final long serialVersionUID = -5491214744966544475L;
+
 	private Class<E> elementBeanType;
 	
 	/**

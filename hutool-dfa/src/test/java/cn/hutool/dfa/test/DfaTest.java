@@ -93,7 +93,7 @@ public class DfaTest {
 		List<String> all = tree.matchAll("AAAAAAAt-ioBBBBBBB");
 		Assert.assertEquals(all, CollectionUtil.newArrayList("t-io"));
 	}
-
+	
 	// ----------------------------------------------------------------------------------------------------------
 	/**
 	 * 构建查找树

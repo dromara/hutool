@@ -3,6 +3,7 @@ package cn.hutool.core.io.resource;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -18,7 +19,8 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 4.0.9
  */
-public class BytesResource implements Resource {
+public class BytesResource implements Resource, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private byte[] bytes;
 	private String name;

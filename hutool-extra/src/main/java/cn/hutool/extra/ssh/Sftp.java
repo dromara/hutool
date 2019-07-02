@@ -60,7 +60,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public Sftp(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
-		this(JschUtil.getSession(sshHost, sshPort, sshUser, sshPass), charset);
+		init(sshHost, sshPort, sshUser, sshPass, charset);
 	}
 
 	/**
@@ -80,8 +80,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.1.14
 	 */
 	public Sftp(Session session, Charset charset) {
-		this(JschUtil.openSftp(session), charset);
-		this.session = session;
+		init(session, charset);
 	}
 
 	/**
@@ -91,15 +90,61 @@ public class Sftp extends AbstractFtp {
 	 * @param charset 编码
 	 */
 	public Sftp(ChannelSftp channel, Charset charset) {
+		init(channel, charset);
+	}
+	// ---------------------------------------------------------------------------------------- Constructor end
+
+	/**
+	 * 构造
+	 * 
+	 * @param sshHost 远程主机
+	 * @param sshPort 远程主机端口
+	 * @param sshUser 远程主机用户名
+	 * @param sshPass 远程主机密码
+	 * @param charset 编码
+	 */
+	public void init(String sshHost, int sshPort, String sshUser, String sshPass, Charset charset) {
+		this.host = sshHost;
+		this.port = sshPort;
+		this.user = sshUser;
+		this.password = sshPass;
+		init(JschUtil.getSession(sshHost, sshPort, sshUser, sshPass), charset);
+	}
+
+	/**
+	 * 初始化
+	 * 
+	 * @param session {@link Session}
+	 * @param charset 编码
+	 */
+	public void init(Session session, Charset charset) {
+		this.session = session;
+		init(JschUtil.openSftp(session), charset);
+	}
+
+	/**
+	 * 初始化
+	 * 
+	 * @param channel {@link ChannelSftp}
+	 * @param charset 编码
+	 */
+	public void init(ChannelSftp channel, Charset charset) {
 		this.charset = charset;
-		this.channel = channel;
 		try {
-			this.channel.setFilenameEncoding(charset.toString());
+			channel.setFilenameEncoding(charset.toString());
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
+		this.channel = channel;
 	}
-	// ---------------------------------------------------------------------------------------- Constructor end
+
+	@Override
+	public Sftp reconnectIfTimeout() {
+		if (false == this.cd("/") && StrUtil.isNotBlank(this.host)) {
+			init(this.host, this.port, this.user, this.password, this.charset);
+		}
+		return this;
+	}
 
 	/**
 	 * 获取SFTP通道客户端
@@ -109,17 +154,6 @@ public class Sftp extends AbstractFtp {
 	 */
 	public ChannelSftp getClient() {
 		return this.channel;
-	}
-
-	/**
-	 * 获取SFTP通道
-	 * 
-	 * @return 通道
-	 * @deprecated 请使用{@link #getClient()}
-	 */
-	@Deprecated
-	public ChannelSftp getChannel() {
-		return getClient();
 	}
 
 	/**
@@ -234,20 +268,22 @@ public class Sftp extends AbstractFtp {
 	}
 
 	/**
-	 * 打开指定目录
+	 * 打开指定目录，如果指定路径非目录或不存在返回false
 	 * 
 	 * @param directory directory
 	 * @return 是否打开目录
 	 */
+	@Override
 	public boolean cd(String directory) {
 		if (StrUtil.isBlank(directory)) {
-			return false;
+			// 当前目录
+			return true;
 		}
 		try {
 			channel.cd(directory.replaceAll("\\\\", "/"));
 			return true;
 		} catch (SftpException e) {
-			throw new JschRuntimeException(e);
+			return false;
 		}
 	}
 

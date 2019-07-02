@@ -1,9 +1,12 @@
 package cn.hutool.system;
 
+import java.io.Serializable;
+
 /**
  * 代表当前OS的信息。
  */
-public class OsInfo{
+public class OsInfo implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private final String OS_VERSION = SystemUtil.get("os.version", false);
 	private final String OS_ARCH = SystemUtil.get("os.arch", false);

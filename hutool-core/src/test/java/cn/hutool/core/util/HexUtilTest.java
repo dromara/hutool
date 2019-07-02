@@ -31,4 +31,11 @@ public class HexUtilTest {
 		unicodeHex = HexUtil.toUnicodeHex('你');
 		Assert.assertEquals("\\u4f60", unicodeHex);
 	}
+	
+	@Test
+	public void isHexNumberTest() {
+		String a = "0x3544534F444";
+		boolean isHex = HexUtil.isHexNumber(a);
+		Assert.assertTrue(isHex);
+	}
 }

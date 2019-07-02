@@ -12,6 +12,7 @@ import cn.hutool.core.convert.AbstractConverter;
  *
  */
 public class UUIDConverter extends AbstractConverter<UUID> {
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected UUID convertInternal(Object value) {

@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.GenericEnumConverter;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -38,7 +39,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static String toStr(Object value, String defaultValue) {
-		return convert(String.class, value, defaultValue);
+		return convertQuietly(String.class, value, defaultValue);
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Character toChar(Object value, Character defaultValue) {
-		return convert(Character.class, value, defaultValue);
+		return convertQuietly(Character.class, value, defaultValue);
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Byte toByte(Object value, Byte defaultValue) {
-		return convert(Byte.class, value, defaultValue);
+		return convertQuietly(Byte.class, value, defaultValue);
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Short toShort(Object value, Short defaultValue) {
-		return convert(Short.class, value, defaultValue);
+		return convertQuietly(Short.class, value, defaultValue);
 	}
 
 	/**
@@ -182,7 +183,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Number toNumber(Object value, Number defaultValue) {
-		return convert(Number.class, value, defaultValue);
+		return convertQuietly(Number.class, value, defaultValue);
 	}
 
 	/**
@@ -218,7 +219,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Integer toInt(Object value, Integer defaultValue) {
-		return convert(Integer.class, value, defaultValue);
+		return convertQuietly(Integer.class, value, defaultValue);
 	}
 
 	/**
@@ -253,7 +254,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Long toLong(Object value, Long defaultValue) {
-		return convert(Long.class, value, defaultValue);
+		return convertQuietly(Long.class, value, defaultValue);
 	}
 
 	/**
@@ -288,7 +289,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Double toDouble(Object value, Double defaultValue) {
-		return convert(Double.class, value, defaultValue);
+		return convertQuietly(Double.class, value, defaultValue);
 	}
 
 	/**
@@ -323,7 +324,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Float toFloat(Object value, Float defaultValue) {
-		return convert(Float.class, value, defaultValue);
+		return convertQuietly(Float.class, value, defaultValue);
 	}
 
 	/**
@@ -358,7 +359,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static Boolean toBool(Object value, Boolean defaultValue) {
-		return convert(Boolean.class, value, defaultValue);
+		return convertQuietly(Boolean.class, value, defaultValue);
 	}
 
 	/**
@@ -393,7 +394,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static BigInteger toBigInteger(Object value, BigInteger defaultValue) {
-		return convert(BigInteger.class, value, defaultValue);
+		return convertQuietly(BigInteger.class, value, defaultValue);
 	}
 
 	/**
@@ -418,7 +419,7 @@ public class Convert {
 	 * @return 结果
 	 */
 	public static BigDecimal toBigDecimal(Object value, BigDecimal defaultValue) {
-		return convert(BigDecimal.class, value, defaultValue);
+		return convertQuietly(BigDecimal.class, value, defaultValue);
 	}
 
 	/**
@@ -444,7 +445,7 @@ public class Convert {
 	 * @since 4.1.6
 	 */
 	public static Date toDate(Object value, Date defaultValue) {
-		return convert(Date.class, value, defaultValue);
+		return convertQuietly(Date.class, value, defaultValue);
 	}
 	
 	/**
@@ -471,7 +472,7 @@ public class Convert {
 	 * @return Enum
 	 */
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
-		return (new GenericEnumConverter<>(clazz)).convert(value, defaultValue);
+		return (new GenericEnumConverter<>(clazz)).convertQuietly(value, defaultValue);
 	}
 
 	/**
@@ -514,13 +515,15 @@ public class Convert {
 	/**
 	 * 转换为ArrayList
 	 * 
+	 * @param <T> 元素类型
 	 * @param elementType 集合中元素类型
 	 * @param value 被转换的值
 	 * @return {@link List}
-	 * @since 4.0.11
+	 * @since 4.1.20
 	 */
-	public static List<?> toList(Class<?> elementType, Object value) {
-		return (List<?>) toCollection(ArrayList.class, elementType, value);
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> toList(Class<T> elementType, Object value) {
+		return (List<T>) toCollection(ArrayList.class, elementType, value);
 	}
 	
 	/**
@@ -550,6 +553,19 @@ public class Convert {
 	 */
 	public static <T> T convert(Class<T> type, Object value) throws ConvertException{
 		return convert((Type)type, value);
+	}
+	
+	/**
+	 * 转换值为指定类型
+	 * 
+	 * @param <T> 目标类型
+	 * @param reference 类型参考，用于持有转换后的泛型类型
+	 * @param value 值
+	 * @return 转换后的值
+	 * @throws ConvertException 转换器不存在
+	 */
+	public static <T> T convert(TypeReference<T> reference, Object value) throws ConvertException{
+		return convert(reference.getType(), value, null);
 	}
 
 	/**
@@ -593,7 +609,40 @@ public class Convert {
 	public static <T> T convert(Type type, Object value, T defaultValue) throws ConvertException {
 		return ConverterRegistry.getInstance().convert(type, value, defaultValue);
 	}
-
+	
+	/**
+	 * 转换值为指定类型，不抛异常转换<br>
+	 * 当转换失败时返回{@code null}
+	 * 
+	 * @param <T> 目标类型
+	 * @param type 目标类型
+	 * @param value 值
+	 * @return 转换后的值，转换失败返回null
+	 * @since 4.5.10
+	 */
+	public static <T> T convertQuietly(Type type, Object value) {
+		return convertQuietly(type, value, null);
+	}
+	
+	/**
+	 * 转换值为指定类型，不抛异常转换<br>
+	 * 当转换失败时返回默认值
+	 * 
+	 * @param <T> 目标类型
+	 * @param type 目标类型
+	 * @param value 值
+	 * @param defaultValue 默认值
+	 * @return 转换后的值
+	 * @since 4.5.10
+	 */
+	public static <T> T convertQuietly(Type type, Object value, T defaultValue) {
+		try {
+			return convert(type, value, defaultValue);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+	
 	// ----------------------------------------------------------------------- 全角半角转换
 	/**
 	 * 半角转全角
@@ -648,6 +697,9 @@ public class Convert {
 	 * @return 替换后的字符
 	 */
 	public static String toDBC(String text, Set<Character> notConvertSet) {
+		if(StrUtil.isBlank(text)) {
+			return text;
+		}
 		char c[] = text.toCharArray();
 		for (int i = 0; i < c.length; i++) {
 			if (null != notConvertSet && notConvertSet.contains(c[i])) {

@@ -13,6 +13,7 @@ import cn.hutool.db.sql.Wrapper;
  *
  */
 public class SqlServer2012Dialect extends AnsiSqlDialect {
+	private static final long serialVersionUID = -37598166015777797L;
 
 	public SqlServer2012Dialect() {
 		//双引号和中括号适用，双引号更广泛

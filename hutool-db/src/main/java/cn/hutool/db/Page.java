@@ -1,5 +1,6 @@
 package cn.hutool.db;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import cn.hutool.core.util.ArrayUtil;
@@ -8,11 +9,13 @@ import cn.hutool.db.sql.Order;
 
 /**
  * 分页对象
+ * 
  * @author Looly
  *
  */
-public class Page {
-	
+public class Page implements Serializable {
+	private static final long serialVersionUID = 97792549823353462L;
+
 	public static final int DEFAULT_PAGE_SIZE = 20;
 
 	/** 页码 */
@@ -24,6 +27,15 @@ public class Page {
 
 	// ---------------------------------------------------------- Constructor start
 	/**
+	 * 构造，默认第0页，每页{@value #DEFAULT_PAGE_SIZE} 条
+	 * 
+	 * @since 4.5.16
+	 */
+	public Page() {
+		this(0, DEFAULT_PAGE_SIZE);
+	}
+
+	/**
 	 * 构造
 	 * 
 	 * @param pageNumber 页码
@@ -33,7 +45,7 @@ public class Page {
 		this.pageNumber = pageNumber < 0 ? 0 : pageNumber;
 		this.pageSize = pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -43,7 +55,7 @@ public class Page {
 	 */
 	public Page(int pageNumber, int numPerPage, Order order) {
 		this(pageNumber, numPerPage);
-		this.orders = new Order[]{order};
+		this.orders = new Order[] { order };
 	}
 	// ---------------------------------------------------------- Constructor start
 
@@ -57,6 +69,7 @@ public class Page {
 
 	/**
 	 * 设置页码
+	 * 
 	 * @param pageNumber 页码
 	 */
 	public void setPageNumber(int pageNumber) {
@@ -82,14 +95,14 @@ public class Page {
 	public void setNumPerPage(int pageSize) {
 		setPageSize(pageSize);
 	}
-	
+
 	/**
 	 * @return 每页结果数
 	 */
 	public int getPageSize() {
 		return pageSize;
 	}
-	
+
 	/**
 	 * 设置每页结果数
 	 * 
@@ -114,14 +127,14 @@ public class Page {
 	public void setOrder(Order... orders) {
 		this.orders = orders;
 	}
-	
+
 	/**
 	 * 设置排序
 	 * 
 	 * @param orders 排序
 	 */
 	public void addOrder(Order... orders) {
-		if(null != this.orders){
+		if (null != this.orders) {
 			ArrayUtil.append(this.orders, orders);
 		}
 		this.orders = orders;

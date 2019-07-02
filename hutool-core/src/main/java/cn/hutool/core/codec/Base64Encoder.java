@@ -12,13 +12,30 @@ import cn.hutool.core.util.StrUtil;
  * @since 3.2.0
  */
 public class Base64Encoder {
-	
+
+	private static final Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 	/** 标准编码表 */
-	private static final byte[] STANDARD_ENCODE_TABLE = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
-			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/' };
+	private static final byte[] STANDARD_ENCODE_TABLE = { //
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', //
+			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', //
+			'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', //
+			'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', //
+			'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', //
+			'o', 'p', 'q', 'r', 's', 't', 'u', 'v', //
+			'w', 'x', 'y', 'z', '0', '1', '2', '3', //
+			'4', '5', '6', '7', '8', '9', '+', '/' //
+	};
 	/** URL安全的编码表，将 + 和 / 替换为 - 和 _ */
-	private static final byte[] URL_SAFE_ENCODE_TABLE = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
-			'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_' };
+	private static final byte[] URL_SAFE_ENCODE_TABLE = { //
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', //
+			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', //
+			'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', //
+			'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', //
+			'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', //
+			'o', 'p', 'q', 'r', 's', 't', 'u', 'v', //
+			'w', 'x', 'y', 'z', '0', '1', '2', '3', //
+			'4', '5', '6', '7', '8', '9', '-', '_' //
+	};
 
 	// -------------------------------------------------------------------- encode
 	/**
@@ -50,8 +67,8 @@ public class Base64Encoder {
 	 * @param source 被编码的base64字符串
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(String source) {
-		return encode(source, CharsetUtil.UTF_8);
+	public static String encode(CharSequence source) {
+		return encode(source, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -61,8 +78,8 @@ public class Base64Encoder {
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
 	 */
-	public static String encodeUrlSafe(String source) {
-		return encodeUrlSafe(source, CharsetUtil.UTF_8);
+	public static String encodeUrlSafe(CharSequence source) {
+		return encodeUrlSafe(source, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -72,31 +89,8 @@ public class Base64Encoder {
 	 * @param charset 字符集
 	 * @return 被加密后的字符串
 	 */
-	public static String encode(String source, String charset) {
-		return encode(StrUtil.bytes(source, charset), charset);
-	}
-
-	/**
-	 * base64编码,URL安全
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @since 3.0.6
-	 */
-	public static String encodeUrlSafe(String source, String charset) {
-		return encodeUrlSafe(StrUtil.bytes(source, charset), charset);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(String source, Charset charset) {
-		return encode(StrUtil.bytes(source, charset), charset);
+	public static String encode(CharSequence source, Charset charset) {
+		return encode(StrUtil.bytes(source, charset));
 	}
 
 	/**
@@ -107,8 +101,8 @@ public class Base64Encoder {
 	 * @return 被加密后的字符串
 	 * @since 3.0.6
 	 */
-	public static String encodeUrlSafe(String source, Charset charset) {
-		return encodeUrlSafe(StrUtil.bytes(source, charset), charset);
+	public static String encodeUrlSafe(CharSequence source, Charset charset) {
+		return encodeUrlSafe(StrUtil.bytes(source, charset));
 	}
 
 	/**
@@ -118,7 +112,7 @@ public class Base64Encoder {
 	 * @return 被加密后的字符串
 	 */
 	public static String encode(byte[] source) {
-		return encode(source, CharsetUtil.UTF_8);
+		return StrUtil.str(encode(source, false), DEFAULT_CHARSET);
 	}
 
 	/**
@@ -129,53 +123,7 @@ public class Base64Encoder {
 	 * @since 3.0.6
 	 */
 	public static String encodeUrlSafe(byte[] source) {
-		return encodeUrlSafe(source, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(byte[] source, String charset) {
-		return StrUtil.str(encode(source, false), charset);
-	}
-
-	/**
-	 * base64编码，URL安全的
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @since 3.0.6
-	 */
-	public static String encodeUrlSafe(byte[] source, String charset) {
-		return StrUtil.str(encodeUrlSafe(source, false), charset);
-	}
-
-	/**
-	 * base64编码
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 */
-	public static String encode(byte[] source, Charset charset) {
-		return StrUtil.str(encode(source, false), charset);
-	}
-
-	/**
-	 * base64编码，URL安全的
-	 * 
-	 * @param source 被编码的base64字符串
-	 * @param charset 字符集
-	 * @return 被加密后的字符串
-	 * @since 3.0.6
-	 */
-	public static String encodeUrlSafe(byte[] source, Charset charset) {
-		return StrUtil.str(encodeUrlSafe(source, false), charset);
+		return StrUtil.str(encodeUrlSafe(source, false), DEFAULT_CHARSET);
 	}
 
 	/**

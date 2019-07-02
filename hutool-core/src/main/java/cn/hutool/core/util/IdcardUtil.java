@@ -14,6 +14,11 @@ import cn.hutool.core.lang.Validator;
  * 身份证相关工具类<br>
  * see https://www.oschina.net/code/snippet_1611_2881
  * 
+ * <p>
+ * 本工具并没有对行政区划代码做校验，如有需求，请参阅（2018年10月）：
+ * http://www.mca.gov.cn/article/sj/xzqh/2018/201804-12/20181011221630.html
+ * </p>
+ * 
  * @author Looly
  * @since 3.0.4
  */
@@ -203,6 +208,11 @@ public class IdcardUtil {
 		if (CHINA_ID_MAX_LENGTH != idCard.length()) {
 			return false;
 		}
+		
+		//校验生日
+		if(false == Validator.isBirthday(idCard.substring(6, 14))) {
+			return false;
+		}
 
 		// 前17位
 		String code17 = idCard.substring(0, 17);
@@ -235,9 +245,8 @@ public class IdcardUtil {
 				return false;
 			}
 
-			// 生日
-			DateTime birthDate = DateUtil.parse(idCard.substring(6, 12), "yyMMdd");
-			if (false == Validator.isBirthday(birthDate.year(), birthDate.month(), birthDate.dayOfMonth())) {
+			//校验生日（两位年份，补充为19XX）
+			if(false == Validator.isBirthday("19" + idCard.substring(6, 12))) {
 				return false;
 			}
 		} else {

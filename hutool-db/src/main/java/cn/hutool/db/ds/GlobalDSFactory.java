@@ -66,7 +66,7 @@ public class GlobalDSFactory {
 	synchronized public static DSFactory set(DSFactory customDSFactory) {
 		if (null != factory) {
 			if (factory.equals(customDSFactory)) {
-				return factory;// 数据源不变时返回原数据源
+				return factory;// 数据源工厂不变时返回原数据源工厂
 			}
 			// 自定义数据源工厂前关闭之前的数据源
 			factory.destroy();

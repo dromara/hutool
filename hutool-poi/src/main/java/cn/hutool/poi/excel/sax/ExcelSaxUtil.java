@@ -34,6 +34,10 @@ public class ExcelSaxUtil {
 		if (null == value) {
 			return null;
 		}
+		
+		if(null == cellDataType) {
+			cellDataType = CellDataType.NULL;
+		}
 
 		Object result;
 		switch (cellDataType) {
@@ -47,7 +51,7 @@ public class ExcelSaxUtil {
 			result = StrUtil.format("\"{}\"", value);
 			break;
 		case INLINESTR:
-			result = new XSSFRichTextString(value.toString()).toString();
+			result = new XSSFRichTextString(value).toString();
 			break;
 		case SSTINDEX:
 			try {

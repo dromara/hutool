@@ -4,7 +4,6 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +56,8 @@ public class XmlUtil {
 
 	/** 在XML中无效的字符 正则 */
 	public final static String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
+	/** XML格式化输出默认缩进量 */
+	public final static int INDENT_DEFAULT = 2;
 
 	// -------------------------------------------------------------------------------------- Read
 	/**
@@ -211,13 +212,14 @@ public class XmlUtil {
 	// -------------------------------------------------------------------------------------- Write
 	/**
 	 * 将XML文档转换为String<br>
-	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8<br>
+	 * 默认非格式化输出，若想格式化请使用{@link #format(Document)}
 	 * 
 	 * @param doc XML文档
 	 * @return XML字符串
 	 */
 	public static String toStr(Document doc) {
-		return toStr(doc, true);
+		return toStr(doc, false);
 	}
 
 	/**
@@ -230,13 +232,7 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, boolean isPretty) {
-		final StringWriter writer = StrUtil.getWriter();
-		try {
-			write(doc, writer, isPretty);
-		} catch (Exception e) {
-			throw new UtilException(e, "Trans xml document to string error!");
-		}
-		return writer.toString();
+		return toStr(doc, CharsetUtil.UTF_8, isPretty);
 	}
 
 	/**
@@ -250,13 +246,35 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, String charset, boolean isPretty) {
-		final ByteArrayOutputStream out = new ByteArrayOutputStream();
+		final StringWriter writer = StrUtil.getWriter();
 		try {
-			write(doc, out, charset, isPretty);
+			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0);
 		} catch (Exception e) {
 			throw new UtilException(e, "Trans xml document to string error!");
 		}
-		return out.toString();
+		return writer.toString();
+	}
+
+	/**
+	 * 格式化XML输出
+	 * 
+	 * @param doc {@link Document} XML文档
+	 * @return 格式化后的XML字符串
+	 * @since 4.4.5
+	 */
+	public static String format(Document doc) {
+		return toStr(doc, true);
+	}
+
+	/**
+	 * 格式化XML输出
+	 * 
+	 * @param xmlStr XML字符串
+	 * @return 格式化后的XML字符串
+	 * @since 4.4.5
+	 */
+	public static String format(String xmlStr) {
+		return format(parseXml(xmlStr));
 	}
 
 	/**
@@ -288,7 +306,7 @@ public class XmlUtil {
 		BufferedWriter writer = null;
 		try {
 			writer = FileUtil.getWriter(path, charset, false);
-			write(doc, writer, true);
+			write(doc, writer, charset, INDENT_DEFAULT);
 		} finally {
 			IoUtil.close(writer);
 		}
@@ -299,11 +317,12 @@ public class XmlUtil {
 	 * 
 	 * @param node {@link Node} XML文档节点或文档本身
 	 * @param writer 写出的Writer，Writer决定了输出XML的编码
-	 * @param isPretty 是否格式化输出
+	 * @param charset 编码
+	 * @param indent 格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 3.0.9
 	 */
-	public static void write(Node node, Writer writer, boolean isPretty) {
-		transform(new DOMSource(node), new StreamResult(writer), null, isPretty);
+	public static void write(Node node, Writer writer, String charset, int indent) {
+		transform(new DOMSource(node), new StreamResult(writer), charset, indent);
 	}
 
 	/**
@@ -312,27 +331,31 @@ public class XmlUtil {
 	 * @param node {@link Node} XML文档节点或文档本身
 	 * @param out 写出的Writer，Writer决定了输出XML的编码
 	 * @param charset 编码
-	 * @param isPretty 是否格式化输出
+	 * @param indent 格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 4.0.8
 	 */
-	public static void write(Node node, OutputStream out, String charset, boolean isPretty) {
-		transform(new DOMSource(node), new StreamResult(out), charset, isPretty);
+	public static void write(Node node, OutputStream out, String charset, int indent) {
+		transform(new DOMSource(node), new StreamResult(out), charset, indent);
 	}
 
 	/**
-	 * 将XML文档写出
+	 * 将XML文档写出<br>
+	 * 格式化输出逻辑参考：https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java
 	 * 
 	 * @param source 源
 	 * @param result 目标
 	 * @param charset 编码
-	 * @param isPretty 是否格式化输出
+	 * @param indent 格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 4.0.9
 	 */
-	public static void transform(Source source, Result result, String charset, boolean isPretty) {
+	public static void transform(Source source, Result result, String charset, int indent) {
 		final TransformerFactory factory = TransformerFactory.newInstance();
 		try {
 			final Transformer xformer = factory.newTransformer();
-			xformer.setOutputProperty(OutputKeys.INDENT, isPretty ? "yes" : "no");
+			if (indent > 0) {
+				xformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				xformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
+			}
 			if (StrUtil.isNotBlank(charset)) {
 				xformer.setOutputProperty(OutputKeys.ENCODING, charset);
 			}
@@ -353,9 +376,10 @@ public class XmlUtil {
 	public static Document createXml() {
 		return createDocumentBuilder().newDocument();
 	}
-	
+
 	/**
 	 * 创建 DocumentBuilder
+	 * 
 	 * @return DocumentBuilder
 	 * @since 4.1.2
 	 */
@@ -768,23 +792,32 @@ public class XmlUtil {
 	 */
 	private static void mapToXml(Document doc, Element element, Map<?, ?> data) {
 		Element filedEle;
-		Object value;
+		Object key;
 		for (Entry<?, ?> entry : data.entrySet()) {
-			filedEle = doc.createElement(entry.getKey().toString());
-			element.appendChild(filedEle);
-			value = entry.getValue();
-			if (value instanceof Map) {
-				mapToXml(doc, filedEle, (Map<?, ?>) value);
+			key = entry.getKey();
+			if (null != key) {
+				// key作为标签名
+				filedEle = doc.createElement(key.toString());
 				element.appendChild(filedEle);
-			} else {
-				filedEle.appendChild(doc.createTextNode(value.toString()));
+				final Object value = entry.getValue();
+				// value作为标签内的值。
+				if (null != value) {
+					if (value instanceof Map) {
+						// 如果值依旧为map，递归继续
+						mapToXml(doc, filedEle, (Map<?, ?>) value);
+						element.appendChild(filedEle);
+					} else {
+						filedEle.appendChild(doc.createTextNode(value.toString()));
+					}
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 关闭XXE，避免漏洞攻击<br>
 	 * see: https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#JAXP_DocumentBuilderFactory.2C_SAXParserFactory_and_DOM4J
+	 * 
 	 * @param dbf DocumentBuilderFactory
 	 * @return DocumentBuilderFactory
 	 */

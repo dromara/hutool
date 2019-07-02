@@ -11,6 +11,7 @@ import cn.hutool.core.io.FileUtil;
  * @since 4.1.11
  */
 public class WebAppResource extends FileResource {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造

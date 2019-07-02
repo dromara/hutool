@@ -1,5 +1,7 @@
 package cn.hutool.core.lang;
 
+import java.io.Serializable;
+
 import cn.hutool.core.clone.CloneSupport;
 
 /**
@@ -11,7 +13,8 @@ import cn.hutool.core.clone.CloneSupport;
  * @param <V> 值类型
  * @since 4.1.5
  */
-public class Pair<K, V> extends CloneSupport<Pair<K, V>> {
+public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	private K key;
 	private V value;

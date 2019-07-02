@@ -8,6 +8,7 @@ import java.util.Map;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -19,8 +20,6 @@ import cn.hutool.core.util.StrUtil;
  */
 public class ExceptionUtil {
 
-	private static final String NULL = "null";
-
 	/**
 	 * 获得完整消息，包括异常名
 	 * 
@@ -29,7 +28,7 @@ public class ExceptionUtil {
 	 */
 	public static String getMessage(Throwable e) {
 		if (null == e) {
-			return NULL;
+			return StrUtil.NULL;
 		}
 		return StrUtil.format("{}: {}", e.getClass().getSimpleName(), e.getMessage());
 	}
@@ -41,7 +40,7 @@ public class ExceptionUtil {
 	 * @return 消息
 	 */
 	public static String getSimpleMessage(Throwable e) {
-		return (null == e) ? NULL : e.getMessage();
+		return (null == e) ? StrUtil.NULL : e.getMessage();
 	}
 
 	/**
@@ -205,7 +204,7 @@ public class ExceptionUtil {
 			}
 			return sb.toString();
 		} else {
-			return exceptionStr;
+			return StrUtil.subPre(exceptionStr, limit);
 		}
 	}
 
@@ -240,6 +239,79 @@ public class ExceptionUtil {
 				}
 			}
 			cause = cause.getCause();
+		}
+		return null;
+	}
+
+	/**
+	 * 判断指定异常是否来自或者包含指定异常
+	 *
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @return true 来自或者包含
+	 * @since 4.3.2
+	 */
+	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass) {
+		return convertFromOrSuppressedThrowable(throwable, exceptionClass, true) != null;
+	}
+
+	/**
+	 * 判断指定异常是否来自或者包含指定异常
+	 *
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @param checkCause 判断cause
+	 * @return true 来自或者包含
+	 * @since 4.4.1
+	 */
+	public static boolean isFromOrSuppressedThrowable(Throwable throwable, Class<? extends Throwable> exceptionClass, boolean checkCause) {
+		return convertFromOrSuppressedThrowable(throwable, exceptionClass, checkCause) != null;
+	}
+
+	/**
+	 * 转化指定异常为来自或者包含指定异常
+	 *
+	 * @param <T> 异常类型
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @return 结果为null 不是来自或者包含
+	 * @since 4.3.2
+	 */
+	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass) {
+		return convertFromOrSuppressedThrowable(throwable, exceptionClass, true);
+	}
+
+	/**
+	 * 转化指定异常为来自或者包含指定异常
+	 *
+	 * @param <T> 异常类型
+	 * @param throwable 异常
+	 * @param exceptionClass 定义的引起异常的类
+	 * @param checkCause 判断cause
+	 * @return 结果为null 不是来自或者包含
+	 * @since 4.4.1
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Throwable> T convertFromOrSuppressedThrowable(Throwable throwable, Class<T> exceptionClass, boolean checkCause) {
+		if (throwable == null || exceptionClass == null) {
+			return null;
+		}
+		if (exceptionClass.isAssignableFrom(throwable.getClass())) {
+			return (T) throwable;
+		}
+		if (checkCause) {
+			Throwable cause = throwable.getCause();
+			if (cause != null && exceptionClass.isAssignableFrom(cause.getClass())) {
+				return (T) cause;
+			}
+		}
+		Throwable[] throwables = throwable.getSuppressed();
+		if (ArrayUtil.isNotEmpty(throwables)) {
+			for (Throwable throwable1 : throwables) {
+				if (exceptionClass.isAssignableFrom(throwable1.getClass())) {
+					return (T) throwable1;
+				}
+			}
 		}
 		return null;
 	}

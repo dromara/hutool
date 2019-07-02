@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
-import cn.hutool.core.lang.Builder;
+import cn.hutool.core.builder.Builder;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -16,6 +16,7 @@ import cn.hutool.core.util.StrUtil;
  * @since 4.1.9
  */
 public class ThreadFactoryBuilder implements Builder<ThreadFactory>{
+	private static final long serialVersionUID = 1L;
 
 	/** 用于线程创建的线程工厂类 */
 	private ThreadFactory backingThreadFactory;

@@ -1,5 +1,6 @@
 package cn.hutool.core.lang.loader;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -16,7 +17,8 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @param <T> 被加载对象类型
  */
-public abstract class AtomicLoader<T> implements Loader<T> {
+public abstract class AtomicLoader<T> implements Loader<T>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/** 被加载对象的引用 */
 	private final AtomicReference<T> reference = new AtomicReference<T>();

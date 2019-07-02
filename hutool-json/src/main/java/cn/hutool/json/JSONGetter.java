@@ -21,13 +21,27 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 		return JSONNull.NULL.equals(this.getObj(key));
 	}
 	
-	@Override
-	public String getStr(K key, String defaultValue) {
-		String str = super.getStr(key, defaultValue);
-		if(null == str) {
-			return defaultValue;
-		}
-		return JSONUtil.escape(str);
+	/**
+	 * 获取字符串类型值，并转义不可见字符，如'\n'换行符会被转义为字符串"\n"
+	 * 
+	 * @param key 键
+	 * @return 字符串类型值
+	 * @since 4.2.2
+	 */
+	public String getStrEscaped(K key) {
+		return getStrEscaped(key, null);
+	}
+	
+	/**
+	 * 获取字符串类型值，并转义不可见字符，如'\n'换行符会被转义为字符串"\n"
+	 * 
+	 * @param key 键
+	 * @param defaultValue 默认值
+	 * @return 字符串类型值
+	 * @since 4.2.2
+	 */
+	public String getStrEscaped(K key, String defaultValue) {
+		return JSONUtil.escape(getStr(key, defaultValue));
 	}
 	
 	/**
@@ -109,12 +123,11 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T get(K key, Class<T> type, boolean ignoreError) throws ConvertException{
 		final Object value = this.getObj(key);
 		if(null == value){
 			return null;
 		}
-		return (T) InternalJSONUtil.jsonConvert(type, value, ignoreError);
+		return JSONConverter.jsonConvert(type, value, ignoreError);
 	}
 }

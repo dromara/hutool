@@ -10,6 +10,7 @@ import cn.hutool.core.util.ClassUtil;
  *
  */
 public class ClassConverter extends AbstractConverter<Class<?>>{
+	private static final long serialVersionUID = 1L;
 	
 	@Override
 	protected Class<?> convertInternal(Object value) {

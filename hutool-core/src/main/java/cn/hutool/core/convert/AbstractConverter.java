@@ -1,5 +1,6 @@
 package cn.hutool.core.convert;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import cn.hutool.core.util.ArrayUtil;
@@ -14,7 +15,25 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public abstract class AbstractConverter<T> implements Converter<T> {
+public abstract class AbstractConverter<T> implements Converter<T>, Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 不抛异常转换<br>
+	 * 当转换失败时返回默认值
+	 * 
+	 * @param value 被转换的值
+	 * @param defaultValue 默认值
+	 * @return 转换后的值
+	 * @since 4.5.7
+	 */
+	public T convertQuietly(Object value, T defaultValue) {
+		try {
+			return convert(value, defaultValue);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -24,23 +43,19 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 			throw new NullPointerException(StrUtil.format("[type] and [defaultValue] are both null for Converter [{}], we can not know what type to convert !", this.getClass().getName()));
 		}
 		if (null == targetType) {
+			// 目标类型不确定时使用默认值的类型
 			targetType = (Class<T>) defaultValue.getClass();
 		}
 		if (null == value) {
 			return defaultValue;
 		}
-
+		
 		if (null == defaultValue || targetType.isInstance(defaultValue)) {
 			if (targetType.isInstance(value) && false == Map.class.isAssignableFrom(targetType)) {
 				// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
 				return (T) targetType.cast(value);
 			}
-			T result = null;
-			try {
-				result = convertInternal(value);
-			} catch (RuntimeException e) {
-				return defaultValue;
-			}
+			T result = convertInternal(value);
 			return ((null == result) ? defaultValue : result);
 		} else {
 			throw new IllegalArgumentException(StrUtil.format("Default value [{}] is not the instance of [{}]", defaultValue, targetType));
@@ -62,7 +77,7 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 	protected abstract T convertInternal(Object value);
 
 	/**
-	 * 值转为String<br>
+	 * 值转为String，用于内部转换中需要使用String中转的情况<br>
 	 * 转换规则为：
 	 * 
 	 * <pre>
@@ -78,8 +93,8 @@ public abstract class AbstractConverter<T> implements Converter<T> {
 		if (null == value) {
 			return null;
 		}
-		if (value instanceof String) {
-			return (String) value;
+		if (value instanceof CharSequence) {
+			return value.toString();
 		} else if (ArrayUtil.isArray(value)) {
 			return ArrayUtil.toString(value);
 		} else if(CharUtil.isChar(value)) {

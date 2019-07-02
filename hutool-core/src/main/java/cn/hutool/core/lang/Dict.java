@@ -24,6 +24,12 @@ import cn.hutool.core.getter.BasicTypeGetter;
 public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGetter<String> {
 	private static final long serialVersionUID = 6135423866861206530L;
 
+	static final float DEFAULT_LOAD_FACTOR = 0.75f;
+	static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+	
+	/** 是否大小写不敏感 */
+	private boolean caseInsensitive;
+
 	// --------------------------------------------------------------- Static method start
 	/**
 	 * 创建Dict
@@ -51,7 +57,16 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * 构造
 	 */
 	public Dict() {
-		super();
+		this(false);
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param caseInsensitive 是否大小写不敏感
+	 */
+	public Dict(boolean caseInsensitive) {
+		this(DEFAULT_INITIAL_CAPACITY, caseInsensitive);
 	}
 
 	/**
@@ -60,9 +75,19 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param initialCapacity 初始容量
 	 */
 	public Dict(int initialCapacity) {
-		super(initialCapacity);
+		this(initialCapacity, false);
 	}
-
+	
+	/**
+	 * 构造
+	 * 
+	 * @param initialCapacity 初始容量
+	 * @param caseInsensitive 是否大小写不敏感
+	 */
+	public Dict(int initialCapacity, boolean caseInsensitive) {
+		this(initialCapacity, DEFAULT_LOAD_FACTOR, caseInsensitive);
+	}
+	
 	/**
 	 * 构造
 	 * 
@@ -70,7 +95,20 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param loadFactor 容量增长因子，0~1，即达到容量的百分之多少时扩容
 	 */
 	public Dict(int initialCapacity, float loadFactor) {
+		this(initialCapacity, loadFactor, false);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param initialCapacity 初始容量
+	 * @param loadFactor 容量增长因子，0~1，即达到容量的百分之多少时扩容
+	 * @param caseInsensitive 是否大小写不敏感
+	 * @since 4.5.16
+	 */
+	public Dict(int initialCapacity, float loadFactor, boolean caseInsensitive) {
 		super(initialCapacity, loadFactor);
+		this.caseInsensitive = caseInsensitive;
 	}
 
 	/**
@@ -401,9 +439,27 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 		return get(attr, null);
 	}
 	// -------------------------------------------------------------------- Get end
+	
+	@Override
+	public Object put(String key, Object value) {
+		return super.put(customKey(key), value);
+	}
 
 	@Override
 	public Dict clone() {
 		return (Dict) super.clone();
+	}
+	
+	/**
+	 * 将Key转为小写
+	 * 
+	 * @param key KEY
+	 * @return 小写KEY
+	 */
+	private String customKey(String key) {
+		if (this.caseInsensitive && null != key) {
+			key = key.toLowerCase();
+		}
+		return key;
 	}
 }

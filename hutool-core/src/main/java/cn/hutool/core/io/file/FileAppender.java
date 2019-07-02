@@ -2,6 +2,7 @@ package cn.hutool.core.io.file;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,8 @@ import cn.hutool.core.util.CharsetUtil;
  * @author looly
  * @since 3.1.2
  */
-public class FileAppender {
+public class FileAppender implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private FileWriter writer;
 	/** 内存中持有的字符串数 */

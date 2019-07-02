@@ -3,12 +3,10 @@ package cn.hutool.poi.excel;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,6 +50,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private AtomicInteger currentRow = new AtomicInteger(0);
 	/** 标题行别名 */
 	private Map<String, String> headerAlias;
+	/** 是否只保留别名对应的字段 */
+	private boolean onlyAlias;
+	/** 标题顺序比较器 */
 	private Comparator<String> aliasComparator;
 	/** 样式集，定义不同类型数据样式 */
 	private StyleSet styleSet;
@@ -141,7 +142,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(Workbook workbook, String sheetName) {
-		this(ExcelUtil.getOrCreateSheet(workbook, sheetName));
+		this(WorkbookUtil.getOrCreateSheet(workbook, sheetName));
 	}
 
 	/**
@@ -162,15 +163,31 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	@Override
 	public ExcelWriter setSheet(int sheetIndex) {
 		// 切换到新sheet需要重置开始行
-		resetRow();
+		reset();
 		return super.setSheet(sheetIndex);
 	}
 
 	@Override
 	public ExcelWriter setSheet(String sheetName) {
 		// 切换到新sheet需要重置开始行
-		resetRow();
+		reset();
 		return super.setSheet(sheetName);
+	}
+
+	/**
+	 * 重置Writer，包括：
+	 * 
+	 * <pre>
+	 * 1. 当前行游标归零
+	 * 2. 清空别名比较器
+	 * </pre>
+	 * 
+	 * @return this
+	 */
+	public ExcelWriter reset() {
+		resetRow();
+		this.aliasComparator = null;
+		return this;
 	}
 
 	/**
@@ -194,6 +211,22 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter renameSheet(int sheet, String sheetName) {
 		this.workbook.setSheetName(sheet, sheetName);
+		return this;
+	}
+
+	/**
+	 * 设置所有列为自动宽度，不考虑合并单元格<br>
+	 * 此方法必须在指定列数据完全写出后调用才有效。<br>
+	 * 列数计算是通过第一行计算的
+	 * 
+	 * @return this
+	 * @since 4.0.12
+	 */
+	public ExcelWriter autoSizeColumnAll() {
+		final int columnCount = this.getColumnCount();
+		for (int i = 0; i < columnCount; i++) {
+			autoSizeColumn(i);
+		}
 		return this;
 	}
 
@@ -342,6 +375,29 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter setHeaderAlias(Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;
+		return this;
+	}
+
+	/**
+	 * 清空标题别名，key为Map中的key，value为别名
+	 * 
+	 * @return this
+	 * @since 4.5.4
+	 */
+	public ExcelWriter clearHeaderAlias() {
+		this.headerAlias = null;
+		return this;
+	}
+
+	/**
+	 * 设置是否只保留别名中的字段值，如果为true，则不设置alias的字段将不被输出，false表示原样输出
+	 * 
+	 * @param isOnlyAlias 是否只保留别名中的字段值
+	 * @return this
+	 * @since 4.1.22
+	 */
+	public ExcelWriter setOnlyAlias(boolean isOnlyAlias) {
+		this.onlyAlias = isOnlyAlias;
 		return this;
 	}
 
@@ -500,11 +556,13 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
 	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
-	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式<br>
+	 * 默认的，当当前行号为0时，写出标题（如果为Map或Bean），否则不写标题
 	 * 
 	 * <p>
 	 * data中元素支持的类型有：
-	 *  <pre>
+	 * 
+	 * <pre>
 	 * 1. Iterable，既元素为一个集合，元素被当作一行，data表示多行<br>
 	 * 2. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
 	 * 3. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
@@ -515,11 +573,36 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @return this
 	 */
 	public ExcelWriter write(Iterable<?> data) {
+		return write(data, 0 == getCurrentRow());
+	}
+
+	/**
+	 * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
+	 * 写出的起始行为当前行号，可使用{@link #getCurrentRow()}方法调用，根据写出的的行数，当前行号自动增加<br>
+	 * 样式为默认样式，可使用{@link #getCellStyle()}方法调用后自定义默认样式
+	 * 
+	 * <p>
+	 * data中元素支持的类型有：
+	 * 
+	 * <pre>
+	 * 1. Iterable，既元素为一个集合，元素被当作一行，data表示多行<br>
+	 * 2. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
+	 * 3. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
+	 * 4. 其它类型，按照基本类型输出（例如字符串）
+	 * </pre>
+	 * 
+	 * @param data 数据
+	 * @param isWriteKeyAsHead 是否强制写出标题行（Map或Bean）
+	 * @return this
+	 */
+	public ExcelWriter write(Iterable<?> data, boolean isWriteKeyAsHead) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		int index = 0;
+		boolean isFirst = true;
 		for (Object object : data) {
-			writeRow(object, 0 == index);
-			index++;
+			writeRow(object, isFirst && isWriteKeyAsHead);
+			if (isFirst) {
+				isFirst = false;
+			}
 		}
 		return this;
 	}
@@ -591,22 +674,27 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @see #writeRow(Map, boolean)
 	 * @since 4.1.5
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ExcelWriter writeRow(Object rowBean, boolean isWriteKeyAsHead) {
 		if (rowBean instanceof Iterable) {
 			return writeRow((Iterable<?>) rowBean);
 		}
-		Map<?, ?> rowMap = null;
+		Map rowMap = null;
 		if (rowBean instanceof Map) {
-			rowMap = (Map<?, ?>) rowBean;
-		} else if(BeanUtil.isBean(rowBean.getClass())){
+			if (MapUtil.isNotEmpty(this.headerAlias)) {
+				rowMap = MapUtil.newTreeMap((Map) rowBean, getInitedAliasComparator());
+			} else {
+				rowMap = (Map) rowBean;
+			}
+		} else if (BeanUtil.isBean(rowBean.getClass())) {
 			if (MapUtil.isEmpty(this.headerAlias)) {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
 				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<String, Object>(getInitedAliasComparator()), false, false);
 			}
-		}else {
-			//其它转为字符串默认输出
+		} else {
+			// 其它转为字符串默认输出
 			return writeRow(CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
 		}
 		return writeRow(rowMap, isWriteKeyAsHead);
@@ -627,10 +715,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			return passCurrentRow();
 		}
 
+		final Map<?, ?> aliasMap = aliasMap(rowMap);
+
 		if (isWriteKeyAsHead) {
-			writeHeadRow(aliasHeader(rowMap.keySet()));
+			writeHeadRow(aliasMap.keySet());
 		}
-		writeRow(rowMap.values());
+		writeRow(aliasMap.values());
 		return this;
 	}
 
@@ -690,7 +780,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public Font createFont() {
 		return getWorkbook().createFont();
 	}
-	
+
 	/**
 	 * 将Excel Workbook刷出到预定义的文件<br>
 	 * 如果用户未自定义输出的文件，将抛出{@link NullPointerException}<br>
@@ -714,14 +804,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter flush(File destFile) throws IORuntimeException {
 		Assert.notNull(destFile, "[destFile] is null, and you must call setDestFile(File) first or call flush(OutputStream).");
-		OutputStream out = null;
-		try {
-			out = FileUtil.getOutputStream(destFile);
-			flush(out);
-		} finally {
-			IoUtil.close(out);
-		}
-		return this;
+		return flush(FileUtil.getOutputStream(destFile), true);
 	}
 
 	/**
@@ -732,11 +815,29 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @throws IORuntimeException IO异常
 	 */
 	public ExcelWriter flush(OutputStream out) throws IORuntimeException {
+		return flush(out, false);
+	}
+
+	/**
+	 * 将Excel Workbook刷出到输出流
+	 * 
+	 * @param out 输出流
+	 * @param isCloseOut 是否关闭输出流
+	 * @return this
+	 * @throws IORuntimeException IO异常
+	 * @since 4.4.1
+	 */
+	public ExcelWriter flush(OutputStream out, boolean isCloseOut) throws IORuntimeException {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 		try {
 			this.workbook.write(out);
+			out.flush();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		} finally {
+			if (isCloseOut) {
+				IoUtil.close(out);
+			}
 		}
 		return this;
 	}
@@ -752,7 +853,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 		closeWithoutFlush();
 	}
-	
+
 	/**
 	 * 关闭工作簿但是不写出
 	 */
@@ -766,22 +867,29 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	// -------------------------------------------------------------------------- Private method start
 	/**
-	 * 为指定的key列表添加标题别名，如果没有定义key的别名，使用原key
+	 * 为指定的key列表添加标题别名，如果没有定义key的别名，在onlyAlias为false时使用原key
 	 * 
 	 * @param keys 键列表
 	 * @return 别名列表
 	 */
-	private Collection<?> aliasHeader(Collection<?> keys) {
+	private Map<?, ?> aliasMap(Map<?, ?> rowMap) {
 		if (MapUtil.isEmpty(this.headerAlias)) {
-			return keys;
+			return rowMap;
 		}
-		final List<Object> alias = new ArrayList<>();
+
+		final Map<Object, Object> filteredMap = new LinkedHashMap<>();
 		String aliasName;
-		for (Object key : keys) {
-			aliasName = this.headerAlias.get(key);
-			alias.add(null == aliasName ? key : aliasName);
+		for (Entry<?, ?> entry : rowMap.entrySet()) {
+			aliasName = this.headerAlias.get(entry.getKey());
+			if (null != aliasName) {
+				// 别名键值对加入
+				filteredMap.put(aliasName, entry.getValue());
+			} else if (false == this.onlyAlias) {
+				// 保留无别名设置的键值对
+				filteredMap.put(entry.getKey(), entry.getValue());
+			}
 		}
-		return alias;
+		return filteredMap;
 	}
 
 	/**

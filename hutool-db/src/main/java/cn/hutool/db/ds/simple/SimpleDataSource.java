@@ -78,7 +78,7 @@ public class SimpleDataSource extends AbstractDataSource {
 		}
 		final Setting config = setting.getSetting(group);
 		if (CollectionUtil.isEmpty(config)) {
-			throw new DbRuntimeException("No C3P0 config for group: [{}]", group);
+			throw new DbRuntimeException("No DataSource config for group: [{}]", group);
 		}
 
 		init(//
@@ -135,7 +135,7 @@ public class SimpleDataSource extends AbstractDataSource {
 	 * @since 3.1.2
 	 */
 	public void init(String url, String user, String pass, String driver) {
-		this.driver = StrUtil.isBlank(driver) ? DriverUtil.identifyDriver(url) : driver;
+		this.driver = StrUtil.isNotBlank(driver) ? driver : DriverUtil.identifyDriver(url);
 		try {
 			Class.forName(this.driver);
 		} catch (ClassNotFoundException e) {

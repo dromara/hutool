@@ -106,15 +106,15 @@ public class Assert {
 	 * </pre>
 	 * 
 	 * @param object 被检查对象
-	 * @throws NullPointerException if the object is not {@code null}
+	 * @throws IllegalArgumentException if the object is not {@code null}
 	 */
-	public static void isNull(Object object) throws NullPointerException {
+	public static void isNull(Object object) throws IllegalArgumentException {
 		isNull(object, "[Assertion failed] - the object argument must be null");
 	}
 
 	// ----------------------------------------------------------------------------------------------------------- Check not null
 	/**
-	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link NullPointerException} 异常 Assert that an object is not {@code null} .
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常 Assert that an object is not {@code null} .
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz, "The class must not be null");
@@ -125,17 +125,17 @@ public class Assert {
 	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
 	 * @param params 参数
 	 * @return 被检查后的对象
-	 * @throws NullPointerException if the object is {@code null}
+	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
-	public static <T> T notNull(T object, String errorMsgTemplate, Object... params) throws NullPointerException {
+	public static <T> T notNull(T object, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (object == null) {
-			throw new NullPointerException(StrUtil.format(errorMsgTemplate, params));
+			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
 		return object;
 	}
 
 	/**
-	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link NullPointerException} 异常
+	 * 断言对象是否不为{@code null} ，如果为{@code null} 抛出{@link IllegalArgumentException} 异常
 	 * 
 	 * <pre class="code">
 	 * Assert.notNull(clazz);
@@ -144,9 +144,9 @@ public class Assert {
 	 * @param <T> 被检查对象类型
 	 * @param object 被检查对象
 	 * @return 非空对象
-	 * @throws NullPointerException if the object is {@code null}
+	 * @throws IllegalArgumentException if the object is {@code null}
 	 */
-	public static <T> T notNull(T object) throws NullPointerException {
+	public static <T> T notNull(T object) throws IllegalArgumentException {
 		return notNull(object, "[Assertion failed] - this argument is required; it must not be null");
 	}
 

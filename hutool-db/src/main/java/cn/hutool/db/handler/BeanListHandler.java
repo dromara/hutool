@@ -13,7 +13,8 @@ import java.util.List;
  * @since 3.1.0
  */
 public class BeanListHandler<E> implements RsHandler<List<E>> {
-
+	private static final long serialVersionUID = 4510569754766197707L;
+	
 	private Class<E> elementBeanType;
 
 	/**

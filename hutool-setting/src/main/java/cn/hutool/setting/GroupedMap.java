@@ -6,12 +6,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
- * 基于分组的Map
+ * 基于分组的Map<br>
+ * 此对象方法线程安全
  * 
  * @author looly
  * @since 4.0.11
@@ -19,6 +23,9 @@ import cn.hutool.core.util.StrUtil;
 public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, String>> {
 	private static final long serialVersionUID = -7777365130776081931L;
 
+	private final ReentrantReadWriteLock cacheLock = new ReentrantReadWriteLock();
+	private final ReadLock readLock = cacheLock.readLock();
+	private final WriteLock writeLock = cacheLock.writeLock();
 	private int size = -1;
 
 	/**
@@ -29,11 +36,26 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 值，如果分组不存在或者值不存在则返回null
 	 */
 	public String get(String group, String key) {
-		LinkedHashMap<String, String> map = this.get(StrUtil.nullToEmpty(group));
-		if (MapUtil.isNotEmpty(map)) {
-			return map.get(key);
+		readLock.lock();
+		try {
+			LinkedHashMap<String, String> map = this.get(StrUtil.nullToEmpty(group));
+			if (MapUtil.isNotEmpty(map)) {
+				return map.get(key);
+			}
+		} finally {
+			readLock.unlock();
 		}
 		return null;
+	}
+
+	@Override
+	public LinkedHashMap<String, String> get(Object key) {
+		readLock.lock();
+		try {
+			return super.get(key);
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	/**
@@ -42,11 +64,16 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @return 总键值对数
 	 */
 	public int size() {
-		if (this.size < 0) {
-			this.size = 0;
-			for (LinkedHashMap<String, String> value : this.values()) {
-				this.size += value.size();
+		writeLock.lock();
+		try {
+			if (this.size < 0) {
+				this.size = 0;
+				for (LinkedHashMap<String, String> value : this.values()) {
+					this.size += value.size();
+				}
 			}
+		} finally {
+			writeLock.unlock();
 		}
 		return this.size;
 	}
@@ -61,13 +88,18 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public String put(String group, String key, String value) {
 		group = StrUtil.nullToEmpty(group).trim();
-		LinkedHashMap<String, String> valueMap = this.get(group);
-		if (null == valueMap) {
-			valueMap = new LinkedHashMap<>();
-			this.put(group, valueMap);
+		writeLock.lock();
+		try {
+			LinkedHashMap<String, String> valueMap = this.get(group);
+			if (null == valueMap) {
+				valueMap = new LinkedHashMap<>();
+				this.put(group, valueMap);
+			}
+			this.size = -1;
+			return valueMap.put(key, value);
+		} finally {
+			writeLock.unlock();
 		}
-
-		return valueMap.put(key, value);
 	}
 
 	/**
@@ -93,9 +125,14 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public String remove(String group, String key) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			return valueMap.remove(key);
+		writeLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				return valueMap.remove(key);
+			}
+		} finally {
+			writeLock.unlock();
 		}
 		return null;
 	}
@@ -108,9 +145,14 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public boolean isEmpty(String group) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			return valueMap.isEmpty();
+		readLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				return valueMap.isEmpty();
+			}
+		} finally {
+			readLock.unlock();
 		}
 		return true;
 	}
@@ -120,6 +162,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * 
 	 * @return 是否为空，如果多个分组同时为空，也按照空处理
 	 */
+	@Override
 	public boolean isEmpty() {
 		return this.size() == 0;
 	}
@@ -133,9 +176,14 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public boolean containsKey(String group, String key) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			return valueMap.containsKey(key);
+		readLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				return valueMap.containsKey(key);
+			}
+		} finally {
+			readLock.unlock();
 		}
 		return false;
 	}
@@ -149,9 +197,14 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public boolean containsValue(String group, String value) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			return valueMap.containsValue(value);
+		readLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				return valueMap.containsValue(value);
+			}
+		} finally {
+			readLock.unlock();
 		}
 		return false;
 	}
@@ -164,11 +217,26 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public GroupedMap clear(String group) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			valueMap.clear();
+		writeLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				valueMap.clear();
+			}
+		} finally {
+			writeLock.unlock();
 		}
 		return this;
+	}
+
+	@Override
+	public Set<String> keySet() {
+		readLock.lock();
+		try {
+			return super.keySet();
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	/**
@@ -179,9 +247,14 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public Set<String> keySet(String group) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			return valueMap.keySet();
+		readLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				return valueMap.keySet();
+			}
+		} finally {
+			readLock.unlock();
 		}
 		return Collections.emptySet();
 	}
@@ -194,11 +267,26 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 */
 	public Collection<String> values(String group) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			return valueMap.values();
+		readLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				return valueMap.values();
+			}
+		} finally {
+			readLock.unlock();
 		}
 		return Collections.emptyList();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<String, LinkedHashMap<String, String>>> entrySet() {
+		readLock.lock();
+		try {
+			return super.entrySet();
+		} finally {
+			readLock.unlock();
+		}
 	}
 
 	/**
@@ -207,12 +295,27 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * @param group 分组
 	 * @return 键值对
 	 */
-	public Set<java.util.Map.Entry<String, String>> entrySet(String group) {
+	public Set<Entry<String, String>> entrySet(String group) {
 		group = StrUtil.nullToEmpty(group).trim();
-		final LinkedHashMap<String, String> valueMap = this.get(group);
-		if (MapUtil.isNotEmpty(valueMap)) {
-			return valueMap.entrySet();
+		readLock.lock();
+		try {
+			final LinkedHashMap<String, String> valueMap = this.get(group);
+			if (MapUtil.isNotEmpty(valueMap)) {
+				return valueMap.entrySet();
+			}
+		} finally {
+			readLock.unlock();
 		}
 		return Collections.emptySet();
+	}
+
+	@Override
+	public String toString() {
+		readLock.lock();
+		try {
+			return super.toString();
+		} finally {
+			readLock.unlock();
+		}
 	}
 }

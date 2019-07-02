@@ -1,5 +1,7 @@
 package cn.hutool.bloomfilter;
 
+import java.io.Serializable;
+
 /**
  * Bloom filter 是由 Howard Bloom 在 1970 年提出的二进制向量数据结构，它具有很好的空间和时间效率，被用来检测一个元素是不是集合中的一个成员。<br>
  * 如果检测结果为是，该元素不一定在集合中；但如果检测结果为否，该元素一定不在集合中。<br>
@@ -7,7 +9,7 @@ package cn.hutool.bloomfilter;
  * @author Looly
  *
  */
-public interface BloomFilter {
+public interface BloomFilter extends Serializable{
 
 	/**
 	 * 

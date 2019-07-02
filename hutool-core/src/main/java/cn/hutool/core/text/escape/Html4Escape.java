@@ -9,6 +9,7 @@ import cn.hutool.core.text.replacer.ReplacerChain;
  *
  */
 public class Html4Escape extends ReplacerChain {
+	private static final long serialVersionUID = 1L;
 
 	protected static final String[][] BASIC_ESCAPE = { //
 			{ "\"", "&quot;" }, // " - double-quote

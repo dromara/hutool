@@ -8,6 +8,7 @@ import cn.hutool.core.util.HashUtil;
  *
  */
 public class DefaultFilter extends AbstractFilter {
+	private static final long serialVersionUID = 1L;
 
 	public DefaultFilter(long maxValue, int MACHINENUM) {
 		super(maxValue, MACHINENUM);

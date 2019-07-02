@@ -1,9 +1,12 @@
 package cn.hutool.system;
 
+import java.io.Serializable;
+
 /**
  * 代表当前用户的信息。
  */
-public class UserInfo{
+public class UserInfo implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private final String USER_NAME = SystemUtil.get("user.name", false);
 	private final String USER_HOME = SystemUtil.get("user.home", false);

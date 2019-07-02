@@ -16,6 +16,7 @@ import java.util.Iterator;
  * @param <V> 值类型
  */
 public class LFUCache<K, V> extends AbstractCache<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造

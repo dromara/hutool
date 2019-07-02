@@ -11,7 +11,9 @@ public enum HmacAlgorithm {
 	HmacSHA1("HmacSHA1"), 
 	HmacSHA256("HmacSHA256"), 
 	HmacSHA384("HmacSHA384"), 
-	HmacSHA512("HmacSHA512");
+	HmacSHA512("HmacSHA512"),
+	/** HmacSM3算法实现，需要BouncyCastle库支持 */
+	HmacSM3("HmacSM3");
 
 	private String value;
 

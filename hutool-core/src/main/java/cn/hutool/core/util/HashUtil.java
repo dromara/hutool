@@ -1,5 +1,7 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.MurmurHash;
+
 /**
  * Hash算法大全<br>
  * 推荐使用FNV1算法
@@ -7,7 +9,7 @@ package cn.hutool.core.util;
  * @author Goodzzp,Looly
  */
 public class HashUtil {
-	
+
 	/**
 	 * 加法hash
 	 * 
@@ -17,7 +19,7 @@ public class HashUtil {
 	 */
 	public static int additiveHash(String key, int prime) {
 		int hash, i;
-		for (hash = key.length(), i = 0; i < key.length(); i++){
+		for (hash = key.length(), i = 0; i < key.length(); i++) {
 			hash += key.charAt(i);
 		}
 		return hash % prime;
@@ -32,7 +34,7 @@ public class HashUtil {
 	 */
 	public static int rotatingHash(String key, int prime) {
 		int hash, i;
-		for (hash = key.length(), i = 0; i < key.length(); ++i){
+		for (hash = key.length(), i = 0; i < key.length(); ++i) {
 			hash = (hash << 4) ^ (hash >> 28) ^ key.charAt(i);
 		}
 
@@ -71,7 +73,7 @@ public class HashUtil {
 	public static int bernstein(String key) {
 		int hash = 0;
 		int i;
-		for (i = 0; i < key.length(); ++i){
+		for (i = 0; i < key.length(); ++i) {
 			hash = 33 * hash + key.charAt(i);
 		}
 		return hash;
@@ -89,28 +91,28 @@ public class HashUtil {
 		int hash = key.length, i, len = key.length;
 		for (i = 0; i < (len << 3); i += 8) {
 			char k = key[i >> 3];
-			if ((k & 0x01) == 0){
+			if ((k & 0x01) == 0) {
 				hash ^= tab[i + 0];
 			}
-			if ((k & 0x02) == 0){
+			if ((k & 0x02) == 0) {
 				hash ^= tab[i + 1];
 			}
-			if ((k & 0x04) == 0){
+			if ((k & 0x04) == 0) {
 				hash ^= tab[i + 2];
 			}
-			if ((k & 0x08) == 0){
+			if ((k & 0x08) == 0) {
 				hash ^= tab[i + 3];
 			}
-			if ((k & 0x10) == 0){
+			if ((k & 0x10) == 0) {
 				hash ^= tab[i + 4];
 			}
-			if ((k & 0x20) == 0){
+			if ((k & 0x20) == 0) {
 				hash ^= tab[i + 5];
 			}
-			if ((k & 0x40) == 0){
+			if ((k & 0x40) == 0) {
 				hash ^= tab[i + 6];
 			}
-			if ((k & 0x80) == 0){
+			if ((k & 0x80) == 0) {
 				hash ^= tab[i + 7];
 			}
 		}
@@ -127,7 +129,7 @@ public class HashUtil {
 	 */
 	public static int zobrist(char[] key, int mask, int[][] tab) {
 		int hash, i;
-		for (hash = key.length, i = 0; i < key.length; ++i){
+		for (hash = key.length, i = 0; i < key.length; ++i) {
 			hash ^= tab[i][key[i]];
 		}
 		return (hash & mask);
@@ -142,7 +144,7 @@ public class HashUtil {
 	public static int fnvHash(byte[] data) {
 		final int p = 16777619;
 		int hash = (int) 2166136261L;
-		for (byte b : data){
+		for (byte b : data) {
 			hash = (hash ^ b) * p;
 		}
 		hash += hash << 13;
@@ -150,7 +152,7 @@ public class HashUtil {
 		hash += hash << 3;
 		hash ^= hash >> 17;
 		hash += hash << 5;
-		return hash;
+		return Math.abs(hash);
 	}
 
 	/**
@@ -162,7 +164,7 @@ public class HashUtil {
 	public static int fnvHash(String data) {
 		final int p = 16777619;
 		int hash = (int) 2166136261L;
-		for (int i = 0; i < data.length(); i++){
+		for (int i = 0; i < data.length(); i++) {
 			hash = (hash ^ data.charAt(i)) * p;
 		}
 		hash += hash << 13;
@@ -170,9 +172,9 @@ public class HashUtil {
 		hash += hash << 3;
 		hash ^= hash >> 17;
 		hash += hash << 5;
-		return hash;
+		return Math.abs(hash);
 	}
-
+	
 	/**
 	 * Thomas Wang的算法，整数hash
 	 * 
@@ -351,9 +353,10 @@ public class HashUtil {
 		// return (hash & 0x7FFFFFFF);
 		return hash;
 	}
-	
+
 	/**
 	 * TianL Hash算法
+	 * 
 	 * @param str 字符串
 	 * @return Hash值
 	 */
@@ -361,13 +364,13 @@ public class HashUtil {
 		long hash = 0;
 
 		int iLength = str.length();
-		if (iLength == 0){
+		if (iLength == 0) {
 			return 0;
 		}
 
-		if (iLength <= 256){
+		if (iLength <= 256) {
 			hash = 16777216L * (iLength - 1);
-		}else{
+		} else {
 			hash = 4278190080L;
 		}
 
@@ -386,7 +389,7 @@ public class HashUtil {
 		} else {
 			for (i = 1; i <= 96; i++) {
 				ucChar = str.charAt(i + iLength - 96 - 1);
-				if (ucChar <= 'Z' && ucChar >= 'A'){
+				if (ucChar <= 'Z' && ucChar >= 'A') {
 					ucChar = (char) (ucChar + 32);
 				}
 				hash += (3 * i * ucChar * ucChar + 5 * i * ucChar + 7 * i + 11 * ucChar) % 16777216;
@@ -425,5 +428,49 @@ public class HashUtil {
 		hash <<= 32;
 		hash |= fnvHash(str);
 		return hash;
+	}
+
+	/**
+	 * 根据对象的内存地址生成相应的Hash值
+	 * 
+	 * @param obj 对象
+	 * @return hash值
+	 * @since 4.2.2
+	 */
+	public static int identityHashCode(Object obj) {
+		return System.identityHashCode(obj);
+	}
+	
+	/**
+	 * MurmurHash算法32-bit实现
+	 * 
+	 * @param data 数据
+	 * @return hash值
+	 * @since 4.3.3
+	 */
+	public static int murmur32(byte[] data) {
+		return MurmurHash.hash32(data);
+	}
+	
+	/**
+	 * MurmurHash算法64-bit实现
+	 * 
+	 * @param data 数据
+	 * @return hash值
+	 * @since 4.3.3
+	 */
+	public static long murmur64(byte[] data) {
+		return MurmurHash.hash64(data);
+	}
+	
+	/**
+	 * MurmurHash算法128-bit实现
+	 * 
+	 * @param data 数据
+	 * @return hash值
+	 * @since 4.3.3
+	 */
+	public static long[] murmur128(byte[] data) {
+		return MurmurHash.hash128(data);
 	}
 }

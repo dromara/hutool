@@ -109,7 +109,22 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs) throws SQLException {
-		return handleRow(Entity.create(), columnCount, meta, rs, false);
+		return handleRow(columnCount, meta, rs, false);
+	}
+	
+	/**
+	 * 处理单条数据
+	 * 
+	 * @param columnCount 列数
+	 * @param meta ResultSetMetaData
+	 * @param rs 数据集
+	 * @param caseInsensitive 是否大小写不敏感
+	 * @return 每一行的Entity
+	 * @throws SQLException SQL执行异常
+	 * @since 4.5.16
+	 */
+	public static Entity handleRow(int columnCount, ResultSetMetaData meta, ResultSet rs, boolean caseInsensitive) throws SQLException {
+		return handleRow(new Entity(null, caseInsensitive), columnCount, meta, rs, true);
 	}
 
 	/**
@@ -120,21 +135,22 @@ public class HandleHelper {
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
-	 * @param withTableName 是否包含表名
+	 * @param withMetaInfo 是否包含表名、字段名等元信息
 	 * @return 每一行的Entity
 	 * @throws SQLException SQL执行异常
 	 * @since 3.3.1
 	 */
-	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withTableName) throws SQLException {
-		if (withTableName) {
-			row.setTableName(meta.getTableName(1));
-		}
+	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withMetaInfo) throws SQLException {
 		String columnLabel;
 		int type;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);
 			type = meta.getColumnType(i);
 			row.put(columnLabel, getColumnValue(rs, columnLabel, type, null));
+		}
+		if (withMetaInfo) {
+			row.setTableName(meta.getTableName(1));
+			row.setFieldNames(row.keySet());
 		}
 		return row;
 	}
@@ -162,11 +178,26 @@ public class HandleHelper {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static <T extends Collection<Entity>> T handleRs(ResultSet rs, T collection) throws SQLException {
+		return handleRs(rs, collection, false);
+	}
+	
+	/**
+	 * 处理多条数据
+	 * 
+	 * @param <T> 集合类型
+	 * @param rs 数据集
+	 * @param collection 数据集
+	 * @param caseInsensitive 是否大小写不敏感
+	 * @return Entity列表
+	 * @throws SQLException SQL执行异常
+	 * @since 4.5.16
+	 */
+	public static <T extends Collection<Entity>> T handleRs(ResultSet rs, T collection, boolean caseInsensitive) throws SQLException {
 		final ResultSetMetaData meta = rs.getMetaData();
 		final int columnCount = meta.getColumnCount();
 
 		while (rs.next()) {
-			collection.add(HandleHelper.handleRow(columnCount, meta, rs));
+			collection.add(HandleHelper.handleRow(columnCount, meta, rs, caseInsensitive));
 		}
 
 		return collection;

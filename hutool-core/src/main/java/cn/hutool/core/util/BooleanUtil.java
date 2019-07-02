@@ -52,7 +52,7 @@ public class BooleanUtil {
 	 * </pre>
 	 *
 	 * @param bool 被检查的Boolean值
-	 * @return 当值为true且非null时返回{@code true}
+	 * @return 当值为false且非null时返回{@code true}
 	 */
 	public static boolean isFalse(Boolean bool) {
 		return Boolean.FALSE.equals(bool);
@@ -432,5 +432,16 @@ public class BooleanUtil {
 		}
 		final boolean[] primitive = Convert.convert(boolean[].class, array);
 		return Boolean.valueOf(xor(primitive));
+	}
+
+	/**
+	 * 给定类是否为Boolean或者boolean
+	 * 
+	 * @param clazz 类
+	 * @return 是否为Boolean或者boolean
+	 * @since 4.5.2
+	 */
+	public static boolean isBoolean(Class<?> clazz) {
+		return (clazz == Boolean.class || clazz == boolean.class);
 	}
 }

@@ -1,0 +1,115 @@
+{
+	"reportName": "Web自动化_20181104194718",
+	"failCount": 0,
+	"finished": true,
+	"title": "Web自动化",
+	"totalCount": 1,
+	"env": {
+		"cronSuite": "testsuite",
+		"firefoxDriverPath": "F:\\Eclipse2017Workplace\\MasterYIUITest/src/main/resources/geckodriver.exe",
+		"mailAccount": {
+			"charset": "UTF-8",
+			"debug": false,
+			"auth": true,
+			"pass": "q1w2e3",
+			"socketFactoryFallback": false,
+			"socketFactoryPort": 465,
+			"startttlsEnable": false,
+			"port": 25,
+			"socketFactoryClass": "javax.net.ssl.SSLSocketFactory",
+			"host": "smtp.yeah.net",
+			"splitlongparameters": false,
+			"from": "hutool@yeah.net",
+			"user": "hutool"
+		},
+		"remoteMode": false,
+		"hubRemoteUrl": "http://192.168.2.40:4444/wd/hub",
+		"screenshotFolder": "/screenshot",
+		"cronEnabled": true,
+		"cronExpression": "*/2 * * * *",
+		"elementFolder": "F:\\Eclipse2017Workplace\\MasterYIUITest/config/element/",
+		"ccs": [""],
+		"elementLocationRetryCount": 3,
+		"sqlitePath": "F:\\Eclipse2017Workplace\\MasterYIUITest\\report.db",
+		"defaultSleepSeconds": 0.5,
+		"suiteFolder": "F:\\Eclipse2017Workplace\\MasterYIUITest/config/suite/",
+		"tos": ["309873223@qq.com", "610421185@qq.com", "xuwangcheng14@163.com"],
+		"ieDriverPath": "F:\\Eclipse2017Workplace\\MasterYIUITest/src/main/resources/IEDriverServer.exe",
+		"elementLocationTimeouts": 9,
+		"reportFolder": "F:\\Eclipse2017Workplace\\MasterYIUITest/report",
+		"operaDriverPath": "F:\\Eclipse2017Workplace\\MasterYIUITest/src/main/resources/operadriver.exe",
+		"chromeDriverPath": "F:\\Eclipse2017Workplace\\MasterYIUITest/src/main/resources/chromedriver.exe",
+		"bccs": [""]
+	},
+	"browserName": ["chrome"],
+	"successCount": 1,
+	"useTime": 11069,
+	"testTime": "2018-11-04 19:47:07",
+	"endTime": "2018-11-04 19:47:18",
+	"skipCount": 0,
+	"caseReports": [{
+		"finishTime": "2018-11-04 19:47:18",
+		"caseName": "百度搜索",
+		"useTime": "6320",
+		"runCount": 0,
+		"caseMethodPath": "com.dcits.test.baidu.usecase.Baidu.search",
+		"stepReports": [{
+			"stepName": "打开Url地址",
+			"stepId": 0,
+			"testTime": "2018-11-04 19:47:11",
+			"params": "https://www.baidu.com/",
+			"actionName": "打开Url地址",
+			"status": true
+		}, {
+			"stepName": "输入 => 搜索框",
+			"stepId": 1,
+			"location": "id => kw",
+			"testTime": "2018-11-04 19:47:12",
+			"params": "xuwangcheng.com",
+			"elementName": "搜索框",
+			"actionName": "输入",
+			"status": true
+		}, {
+			"stepName": "点击 => 搜索按钮",
+			"stepId": 2,
+			"location": "id => su",
+			"testTime": "2018-11-04 19:47:14",
+			"params": "",
+			"elementName": "搜索按钮",
+			"actionName": "点击",
+			"status": true
+		}, {
+			"stepName": "点击 => 搜索结果",
+			"stepId": 3,
+			"location": "xpath => //*[@id=\"1\"]/h3/a",
+			"testTime": "2018-11-04 19:47:15",
+			"params": "",
+			"elementName": "搜索结果",
+			"actionName": "点击",
+			"status": true
+		}, {
+			"stepName": "切换到指定窗口",
+			"stepId": 4,
+			"testTime": "2018-11-04 19:47:17",
+			"params": "1",
+			"actionName": "切换到指定窗口",
+			"status": true
+		}, {
+			"stepName": "切换到指定窗口",
+			"stepId": 5,
+			"testTime": "2018-11-04 19:47:17",
+			"params": "0",
+			"actionName": "切换到指定窗口",
+			"status": true
+		}, {
+			"stepName": "刷新页面",
+			"stepId": 6,
+			"testTime": "2018-11-04 19:47:17",
+			"params": "",
+			"actionName": "刷新页面",
+			"status": true
+		}],
+		"browserType": "chrome",
+		"status": "success"
+	}]
+}

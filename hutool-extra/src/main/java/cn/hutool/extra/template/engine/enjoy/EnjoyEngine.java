@@ -4,12 +4,14 @@ import org.beetl.core.GroupTemplate;
 
 import com.jfinal.template.source.FileSourceFactory;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.extra.template.Engine;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateConfig.ResourceMode;
+import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Enjoy库的引擎包装
@@ -17,7 +19,7 @@ import cn.hutool.extra.template.TemplateConfig.ResourceMode;
  * @author looly
  * @since 4.1.10
  */
-public class EnjoyEngine implements Engine {
+public class EnjoyEngine implements TemplateEngine {
 
 	private com.jfinal.template.Engine engine;
 	private ResourceMode resourceMode;
@@ -66,16 +68,24 @@ public class EnjoyEngine implements Engine {
 	 */
 	private static com.jfinal.template.Engine createEngine(TemplateConfig config) {
 		Assert.notNull(config, "Template config is null !");
-		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine");
-		engine.setEncoding(config.getCharset().toString());
+		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine-" + IdUtil.fastSimpleUUID());
+		engine.setEncoding(config.getCharsetStr());
 
 		switch (config.getResourceMode()) {
+		case STRING:
+			// 默认字符串类型资源:
+			break;
 		case CLASSPATH:
 			engine.setToClassPathSourceFactory();
-			engine.setBaseTemplatePath(null);
+			engine.setBaseTemplatePath(config.getPath());
 			break;
 		case FILE:
 			engine.setSourceFactory(new FileSourceFactory());
+			engine.setBaseTemplatePath(config.getPath());
+			break;
+		case WEB_ROOT:
+			engine.setSourceFactory(new FileSourceFactory());
+			engine.setBaseTemplatePath(FileUtil.getAbsolutePath(FileUtil.getWebRoot()));
 			break;
 		default:
 			break;

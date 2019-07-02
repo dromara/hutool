@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.1.19</version>
+		<version>4.5.16</version>
 	</parent>
 
 	<artifactId>hutool-extra</artifactId>
@@ -18,16 +18,18 @@
 
 	<properties>
 		<!-- versions -->
-		<velocity.version>1.7</velocity.version>
-		<beetl.version>2.9.3</beetl.version>
+		<velocity.version>2.0</velocity.version>
+		<beetl.version>2.9.8</beetl.version>
 		<rythm.version>1.3.0</rythm.version>
 		<freemarker.version>2.3.28</freemarker.version>
 		<enjoy.version>3.4</enjoy.version>
-		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
-		<mail.version>1.6.1</mail.version>
-		<jsch.version>0.1.54</jsch.version>
+		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+		<mail.version>1.6.2</mail.version>
+		<jsch.version>0.1.55</jsch.version>
 		<zxing.version>3.3.3</zxing.version>
 		<net.version>3.6</net.version>
+		<emoji-java.version>4.0.0</emoji-java.version>
+		<servlet-api.version>3.1.0</servlet-api.version>
 	</properties>
 
 	<dependencies>
@@ -44,6 +46,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet-api.version}</version>
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
@@ -51,7 +54,7 @@
 		<!-- 模板引擎 -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
+			<artifactId>velocity-engine-core</artifactId>
 			<version>${velocity.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
@@ -109,7 +112,6 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-
 		<!-- 二维码 -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>
@@ -118,12 +120,84 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-
+		<!-- FTP工具 -->
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
 			<version>${net.version}</version>
 			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<!-- Emoji工具依赖 -->
+		<dependency>
+			<groupId>com.vdurmont</groupId>
+			<artifactId>emoji-java</artifactId>
+			<version>${emoji-java.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- 分词实现 -->
+		<dependency>
+			<groupId>org.ansj</groupId>
+			<artifactId>ansj_seg</artifactId>
+			<version>5.1.6</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.huaban</groupId>
+			<artifactId>jieba-analysis</artifactId>
+			<version>1.0.2</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.lionsoul</groupId>
+			<artifactId>jcseg-core</artifactId>
+			<version>2.0.1</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.chenlb.mmseg4j</groupId>
+			<artifactId>mmseg4j-core</artifactId>
+			<version>1.10.0</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.janeluo</groupId>
+			<artifactId>ikanalyzer</artifactId>
+			<version>2012_u6</version>
+			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>lucene-analyzers-common</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>lucene-queryparser</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>lucene-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.hankcs</groupId>
+			<artifactId>hanlp</artifactId>
+			<version>portable-1.7.2</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-smartcn</artifactId>
+			<version>5.5.5</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apdplat</groupId>
+			<artifactId>word</artifactId>
+			<version>1.2</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

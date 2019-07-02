@@ -17,7 +17,7 @@ import cn.hutool.core.util.ReflectUtil;
  * @since 3.0.7
  */
 public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
-	private static final long serialVersionUID = 1197818330017827323L;
+	private static final long serialVersionUID = 1L;
 
 	private Class<?> beanClass;
 	private Object bean;

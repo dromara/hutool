@@ -25,6 +25,7 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class FileReader extends FileWrapper {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * 创建 FileReader

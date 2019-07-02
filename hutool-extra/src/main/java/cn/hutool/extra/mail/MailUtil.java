@@ -109,7 +109,7 @@ public class MailUtil {
 	 * @param files 附件列表
 	 */
 	public static void send(Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
-		send(GlobalMailAccount.INSTANCE.getAccount(), tos, subject, content, isHtml, files);
+		send(tos, null, null, subject, content, isHtml, files);
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class MailUtil {
 	 * @since 4.0.3
 	 */
 	public static void send(Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, boolean isHtml, File... files) {
-		send(GlobalMailAccount.INSTANCE.getAccount(), tos, ccs, bccs, subject, content, isHtml, files);
+		send(GlobalMailAccount.INSTANCE.getAccount(), true, tos, ccs, bccs, subject, content, isHtml, files);
 	}
 	
 	//------------------------------------------------------------------------------------------------------------------------------- Custom MailAccount
@@ -147,7 +147,7 @@ public class MailUtil {
 	/**
 	 * 发送邮件给多人
 	 * 
-	 * @param mailAccount 邮件认证对象
+	 * @param mailAccount 邮件帐户信息
 	 * @param tos 收件人列表
 	 * @param subject 标题
 	 * @param content 正文
@@ -155,19 +155,13 @@ public class MailUtil {
 	 * @param files 附件列表
 	 */
 	public static void send(MailAccount mailAccount, Collection<String> tos, String subject, String content, boolean isHtml, File... files) {
-		Mail.create(mailAccount)//
-				.setTos(tos.toArray(new String[tos.size()]))//
-				.setTitle(subject)//
-				.setContent(content)//
-				.setHtml(isHtml)//
-				.setFiles(files)//
-				.send();
+		send(mailAccount, tos, null, null, subject, content, isHtml, files);
 	}
 	
 	/**
 	 * 发送邮件给多人
 	 * 
-	 * @param mailAccount 邮件认证对象
+	 * @param mailAccount 邮件帐户信息
 	 * @param tos 收件人列表
 	 * @param ccs 抄送人列表，可以为null或空
 	 * @param bccs 密送人列表，可以为null或空
@@ -178,7 +172,26 @@ public class MailUtil {
 	 * @since 4.0.3
 	 */
 	public static void send(MailAccount mailAccount, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, boolean isHtml, File... files) {
-		final Mail mail = Mail.create(mailAccount);
+		send(mailAccount, false, tos, ccs, bccs, subject, content, isHtml, files);
+	}
+	
+	//------------------------------------------------------------------------------------------------------------------------ Private method start
+	/**
+	 * 发送邮件给多人
+	 * 
+	 * @param mailAccount 邮件帐户信息
+	 * @param useGlobalSession 是否全局共享Session
+	 * @param tos 收件人列表
+	 * @param ccs 抄送人列表，可以为null或空
+	 * @param bccs 密送人列表，可以为null或空
+	 * @param subject 标题
+	 * @param content 正文
+	 * @param isHtml 是否为HTML格式
+	 * @param files 附件列表
+	 * @since 4.0.3
+	 */
+	private static void send(MailAccount mailAccount, boolean useGlobalSession, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, boolean isHtml, File... files) {
+		final Mail mail = Mail.create(mailAccount).setUseGlobalSession(useGlobalSession);
 		
 		//可选抄送人
 		if(CollUtil.isNotEmpty(ccs)) {
@@ -198,7 +211,6 @@ public class MailUtil {
 		mail.send();
 	}
 	
-	//------------------------------------------------------------------------------------------------------------------------ Private method start
 	/**
 	 * 将多个联系人转为列表，分隔符为逗号或者分号
 	 * 

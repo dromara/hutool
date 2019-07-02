@@ -14,6 +14,7 @@ import cn.hutool.core.text.StrBuilder;
  * @since 4.1.5
  */
 public class ReplacerChain extends StrReplacer implements Chain<StrReplacer, ReplacerChain> {
+	private static final long serialVersionUID = 1L;
 
 	private List<StrReplacer> replacers = new LinkedList<>();
 

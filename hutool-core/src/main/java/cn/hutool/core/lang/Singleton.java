@@ -3,19 +3,20 @@ package cn.hutool.core.lang;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * 单例类<br>
  * 提供单例对象的统一管理，当调用get方法时，如果对象池中存在此对象，返回此对象，否则创建新对象返回<br>
- * 注意：单例针对的是类和对象，因此get方法第一次调用时创建的对象始终唯一，也就是说就算参数变更，返回的依旧是第一次创建的对象
  * 
  * @author loolly
  *
  */
 public final class Singleton {
-	private static Map<Class<?>, Object> pool = new ConcurrentHashMap<>();
+	private static Map<String, Object> pool = new ConcurrentHashMap<>();
 
 	private Singleton() {
 	}
@@ -32,14 +33,16 @@ public final class Singleton {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Class<T> clazz, Object... params) {
-		T obj = (T) pool.get(clazz);
+		Assert.notNull(clazz, "Class must be not null !");
+		final String key = buildKey(clazz.getName(), params);
+		T obj = (T) pool.get(key);
 
 		if (null == obj) {
 			synchronized (Singleton.class) {
-				obj = (T) pool.get(clazz);
+				obj = (T) pool.get(key);
 				if (null == obj) {
-					obj = ReflectUtil.newInstance(clazz, params);
-					pool.put(clazz, obj);
+					obj = (T) ReflectUtil.newInstance(clazz, params);
+					pool.put(key, obj);
 				}
 			}
 		}
@@ -50,7 +53,6 @@ public final class Singleton {
 	/**
 	 * 获得指定类的单例对象<br>
 	 * 对象存在于池中返回，否则创建，每次调用此方法获得的对象为同一个对象<br>
-	 * 注意：单例针对的是类和对象，因此get方法第一次调用时创建的对象始终唯一，也就是说就算参数变更，返回的依旧是第一次创建的对象
 	 * 
 	 * @param <T> 单例对象类型
 	 * @param className 类名
@@ -58,6 +60,7 @@ public final class Singleton {
 	 * @return 单例对象
 	 */
 	public static <T> T get(String className, Object... params) {
+		Assert.notBlank(className, "Class name must be not blank !");
 		final Class<T> clazz = ClassUtil.loadClass(className);
 		return get(clazz, params);
 	}
@@ -69,7 +72,8 @@ public final class Singleton {
 	 * @since 4.0.7
 	 */
 	public static void put(Object obj) {
-		pool.put(obj.getClass(), obj);
+		Assert.notNull(obj, "Bean object must be not null !");
+		pool.put(obj.getClass().getName(), obj);
 	}
 
 	/**
@@ -78,7 +82,9 @@ public final class Singleton {
 	 * @param clazz 类
 	 */
 	public static void remove(Class<?> clazz) {
-		pool.remove(clazz);
+		if (null != clazz) {
+			pool.remove(clazz.getName());
+		}
 	}
 
 	/**
@@ -87,4 +93,20 @@ public final class Singleton {
 	public static void destroy() {
 		pool.clear();
 	}
+
+	// ------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 构建key
+	 * 
+	 * @param className 类名
+	 * @param params 参数列表
+	 * @return key
+	 */
+	private static String buildKey(String className, Object... params) {
+		if (ArrayUtil.isEmpty(params)) {
+			return className;
+		}
+		return StrUtil.format("{}#{}", className, ArrayUtil.join(params, "_"));
+	}
+	// ------------------------------------------------------------------------------------------- Private method end
 }

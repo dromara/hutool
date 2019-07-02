@@ -11,6 +11,7 @@ import java.util.Collection;
  *
  */
 public class MultiFileResource extends MultiResource{
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * 构造

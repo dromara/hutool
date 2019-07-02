@@ -1,5 +1,7 @@
 package cn.hutool.core.date;
 
+import java.io.Serializable;
+
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -7,7 +9,8 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public class BetweenFormater {
+public class BetweenFormater implements Serializable{
+	private static final long serialVersionUID = 1L;
 	
 	/** 时长毫秒数 */
 	private long betweenMs;

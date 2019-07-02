@@ -14,6 +14,7 @@ import cn.hutool.core.text.StrBuilder;
  * @since 4.1.5
  */
 public class LookupReplacer extends StrReplacer {
+	private static final long serialVersionUID = 1L;
 
 	private final Map<String, String> lookupMap;
 	private final Set<Character> prefixSet;

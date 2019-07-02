@@ -14,6 +14,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.map.MapUtil;
 
 /**
  * Bean工具单元测试
@@ -155,23 +156,49 @@ public class BeanUtilTest {
 	}
 	
 	@Test
-	public void copyPropertiesTest() {
+	public void copyPropertiesHasBooleanTest() {
 		SubPerson p1 = new SubPerson();
 		p1.setSlow(true);
 		
+		//测试boolean参数值isXXX形式
 		SubPerson p2 = new SubPerson();
 		BeanUtil.copyProperties(p1, p2);
 		Assert.assertTrue(p2.isSlow());
+		
+		//测试boolean参数值非isXXX形式
+		SubPerson2 p3 = new SubPerson2();
+		BeanUtil.copyProperties(p1, p3);
+		Assert.assertTrue(p3.isSlow());
 	}
 	
 	@Test
-	public void copyPropertiesTest2() {
+	public void copyPropertiesBeanToMapTest() {
+		//测试BeanToMap
 		SubPerson p1 = new SubPerson();
 		p1.setSlow(true);
+		p1.setName("测试");
+		p1.setSubName("sub测试");
 		
-		SubPerson2 p2 = new SubPerson2();
-		BeanUtil.copyProperties(p1, p2);
-		Assert.assertTrue(p2.isSlow());
+		Map<String, Object> map = MapUtil.newHashMap();
+		BeanUtil.copyProperties(p1, map);
+		Assert.assertTrue((Boolean)map.get("isSlow"));
+		Assert.assertEquals("测试", map.get("name"));
+		Assert.assertEquals("sub测试", map.get("subName"));
+	}
+	
+	@Test
+	public void copyPropertiesMapToMapTest() {
+		//测试MapToMap
+		Map<String, Object> p1 = new HashMap<>();
+		p1.put("isSlow", true);
+		p1.put("name", "测试");
+		p1.put("subName", "sub测试");
+		
+		Map<String, Object> map = MapUtil.newHashMap();
+		BeanUtil.copyProperties(p1, map);
+		Assert.assertTrue((Boolean)map.get("isSlow"));
+		Assert.assertEquals("测试", map.get("name"));
+		Assert.assertEquals("sub测试", map.get("subName"));
 	}
 	
 	@Test

@@ -9,6 +9,8 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import cn.hutool.core.lang.Assert;
+
 /**
  * 日期格式化器缓存<br>
  * Thanks to Apache Commons Lang 3.5
@@ -44,9 +46,7 @@ abstract class FormatCache<F extends Format> {
 	 * @throws IllegalArgumentException pattern 无效或<code>null</code>
 	 */
 	public F getInstance(final String pattern, TimeZone timeZone, Locale locale) {
-		if (pattern == null) {
-			throw new NullPointerException("pattern must not be null");
-		}
+		Assert.notBlank(pattern, "pattern must not be blank") ;
 		if (timeZone == null) {
 			timeZone = TimeZone.getDefault();
 		}

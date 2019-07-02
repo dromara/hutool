@@ -37,9 +37,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void trace(Log log, String format, Object... arguments) {
-		if (false == log(log, Level.TRACE, null, format, arguments)) {
-			log.trace(format, arguments);
-		}
+		log.trace(FQCN, null, format, arguments);
 	}
 
 	// ------------------------ debug
@@ -62,9 +60,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void debug(Log log, String format, Object... arguments) {
-		if (false == log(log, Level.DEBUG, null, format, arguments)) {
-			log.debug(format, arguments);
-		}
+		log.debug(FQCN, null, format, arguments);
 	}
 
 	// ------------------------ info
@@ -87,9 +83,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void info(Log log, String format, Object... arguments) {
-		if (false == log(log, Level.INFO, null, format, arguments)) {
-			log.info(format, arguments);
-		}
+		log.info(FQCN, null, format, arguments);
 	}
 
 	// ------------------------ warn
@@ -136,9 +130,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void warn(Log log, Throwable e, String format, Object... arguments) {
-		if (false == log(log, Level.WARN, e, format, arguments)) {
-			log.warn(e, format, arguments);
-		}
+		log.warn(FQCN, e, format, arguments);
 	}
 
 	// ------------------------ error
@@ -205,9 +197,7 @@ public final class StaticLog {
 	 * @param arguments 变量对应的参数
 	 */
 	public static void error(Log log, Throwable e, String format, Object... arguments) {
-		if (false == log(log, Level.ERROR, e, format, arguments)) {
-			log.error(e, format, arguments);
-		}
+		log.error(FQCN, e, format, arguments);
 	}
 
 	// ------------------------ Log
@@ -218,29 +208,9 @@ public final class StaticLog {
 	 * @param t 需在日志中堆栈打印的异常
 	 * @param format 格式文本，{} 代表变量
 	 * @param arguments 变量对应的参数
-	 * @return 是否为LocationAwareLog日志
 	 */
-	public static boolean log(Level level, Throwable t, String format, Object... arguments) {
-		return log(LogFactory.get(CallerUtil.getCallerCaller()), level, t, format, arguments);
-	}
-
-	/**
-	 * 打印日志<br>
-	 * 
-	 * @param log 日志对象
-	 * @param level 日志级别
-	 * @param t 需在日志中堆栈打印的异常
-	 * @param format 格式文本，{} 代表变量
-	 * @param arguments 变量对应的参数
-	 * @return 是否为LocationAwareLog日志
-	 */
-	public static boolean log(Log log, Level level, Throwable t, String format, Object... arguments) {
-		if (log instanceof LocationAwareLog) {
-			((LocationAwareLog) log).log(FQCN, level, t, format, arguments);
-			return true;
-		} else {
-			return false;
-		}
+	public static void log(Level level, Throwable t, String format, Object... arguments) {
+		LogFactory.get(CallerUtil.getCallerCaller()).log(FQCN, level, t, format, arguments);
 	}
 
 	// ----------------------------------------------------------- Log method end

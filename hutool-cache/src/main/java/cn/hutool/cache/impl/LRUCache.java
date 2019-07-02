@@ -1,8 +1,8 @@
 package cn.hutool.cache.impl;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Iterator;
+
+import cn.hutool.core.map.FixedLinkedHashMap;
 
 /**
  * LRU (least recently used)最近最久未使用缓存<br>
@@ -17,6 +17,7 @@ import java.util.Iterator;
  * @param <V> 值类型
  */
 public class LRUCache<K, V> extends AbstractCache<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造<br>
@@ -41,18 +42,7 @@ public class LRUCache<K, V> extends AbstractCache<K, V> {
 		this.timeout = timeout;
 		
 		//链表key按照访问顺序排序，调用get方法后，会将这次访问的元素移至头部
-		cacheMap = new LinkedHashMap<K, CacheObj<K, V>>(capacity + 1, 1.0f, true){
-			private static final long serialVersionUID = -1806954614512571136L;
-
-			@Override
-			protected boolean removeEldestEntry(Map.Entry<K, CacheObj<K, V>> eldest) {
-				if(LRUCache.this.capacity == 0) {
-					return false;
-				}
-				//当链表元素大于容量时，移除最老（最久未被使用）的元素
-				return size() > LRUCache.this.capacity;
-			}
-		};
+		cacheMap = new FixedLinkedHashMap<K, CacheObj<K, V>>(capacity);
 	}
 
 	// ---------------------------------------------------------------- prune

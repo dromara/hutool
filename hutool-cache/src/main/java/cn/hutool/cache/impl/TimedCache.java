@@ -17,6 +17,7 @@ import cn.hutool.cache.GlobalPruneTimer;
  * @param <V> 值类型
  */
 public class TimedCache<K, V> extends AbstractCache<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	/** 正在执行的定时任务 */
 	private ScheduledFuture<?> pruneJobFuture;
@@ -57,6 +58,7 @@ public class TimedCache<K, V> extends AbstractCache<K, V> {
 			co = values.next();
 			if (co.isExpired()) {
 				values.remove();
+				onRemove(co.key, co.obj);
 				count++;
 			}
 		}

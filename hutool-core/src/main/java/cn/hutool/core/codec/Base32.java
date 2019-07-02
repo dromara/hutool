@@ -13,7 +13,7 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public final class Base32 {
+public class Base32 {
 	
 	private Base32() {}
 

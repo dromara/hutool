@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
  * @param <V> 值类型
  */
 public class FIFOCache<K, V> extends AbstractCache<K, V> {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 构造，默认对象不过期

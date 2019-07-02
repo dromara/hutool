@@ -25,7 +25,7 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	public ApacheCommonsLog(Class<?> clazz) {
-		this(LogFactory.getLog(clazz), clazz.getName());
+		this(LogFactory.getLog(clazz), null == clazz ? StrUtil.NULL : clazz.getName());
 	}
 
 	public ApacheCommonsLog(String name) {
@@ -44,14 +44,8 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void trace(String format, Object... arguments) {
-		if (isTraceEnabled()) {
-			logger.trace(StrUtil.format(format, arguments));
-		}
-	}
-
-	@Override
-	public void trace(Throwable t, String format, Object... arguments) {
+	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+		// fqcn此处无效
 		if(isTraceEnabled()){
 			logger.trace(StrUtil.format(format, arguments), t);
 		}
@@ -64,14 +58,8 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String format, Object... arguments) {
-		if(isDebugEnabled()){
-			logger.debug(StrUtil.format(format, arguments));
-		}
-	}
-
-	@Override
-	public void debug(Throwable t, String format, Object... arguments) {
+	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+		// fqcn此处无效
 		if(isDebugEnabled()){
 			logger.debug(StrUtil.format(format, arguments), t);
 		}
@@ -84,14 +72,8 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void info(String format, Object... arguments) {
-		if(isInfoEnabled()){
-			logger.info(StrUtil.format(format, arguments));
-		}
-	}
-
-	@Override
-	public void info(Throwable t, String format, Object... arguments) {
+	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+		// fqcn此处无效
 		if(isInfoEnabled()){
 			logger.info(StrUtil.format(format, arguments), t);
 		}
@@ -112,6 +94,11 @@ public class ApacheCommonsLog extends AbstractLog {
 
 	@Override
 	public void warn(Throwable t, String format, Object... arguments) {
+	}
+	
+	@Override
+	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+		// fqcn此处无效
 		if(isWarnEnabled()){
 			logger.warn(StrUtil.format(format, arguments), t);
 		}
@@ -124,65 +111,36 @@ public class ApacheCommonsLog extends AbstractLog {
 	}
 
 	@Override
-	public void error(String format, Object... arguments) {
-		if(isErrorEnabled()){
-			logger.error(StrUtil.format(format, arguments));
-		}
-	}
-
-	@Override
-	public void error(Throwable t, String format, Object... arguments) {
+	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+		// fqcn此处无效
 		if(isErrorEnabled()){
 			logger.warn(StrUtil.format(format, arguments), t);
 		}
+		
 	}
 	
 	// ------------------------------------------------------------------------- Log
 	@Override
-	public void log(Level level, String format, Object... arguments) {
+	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
 		switch (level) {
-			case TRACE:
-				trace(format, arguments);
-				break;
-			case DEBUG:
-				debug(format, arguments);
-				break;
-			case INFO:
-				info(format, arguments);
-				break;
-			case WARN:
-				warn(format, arguments);
-				break;
-			case ERROR:
-				error(format, arguments);
-				break;
-			default:
-				throw new Error(StrUtil.format("Can not identify level: {}", level));
+		case TRACE:
+			trace(t, format, arguments);
+			break;
+		case DEBUG:
+			debug(t, format, arguments);
+			break;
+		case INFO:
+			info(t, format, arguments);
+			break;
+		case WARN:
+			warn(t, format, arguments);
+			break;
+		case ERROR:
+			error(t, format, arguments);
+			break;
+		default:
+			throw new Error(StrUtil.format("Can not identify level: {}", level));
 		}
 	}
-
-	@Override
-	public void log(Level level, Throwable t, String format, Object... arguments) {
-		switch (level) {
-			case TRACE:
-				trace(t, format, arguments);
-				break;
-			case DEBUG:
-				debug(t, format, arguments);
-				break;
-			case INFO:
-				info(t, format, arguments);
-				break;
-			case WARN:
-				warn(t, format, arguments);
-				break;
-			case ERROR:
-				error(t, format, arguments);
-				break;
-			default:
-				throw new Error(StrUtil.format("Can not identify level: {}", level));
-		}
-	}
-
 	// ------------------------------------------------------------------------- Private method
 }

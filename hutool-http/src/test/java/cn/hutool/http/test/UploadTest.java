@@ -23,7 +23,7 @@ public class UploadTest {
 	 */
 	@Test
 	@Ignore
-	public void uploadTest() {
+	public void uploadFilesTest() {
 		File file = FileUtil.file("e:\\face.jpg");
 		File file2 = FileUtil.file("e:\\face2.jpg");
 
@@ -35,10 +35,10 @@ public class UploadTest {
 		HttpResponse response = request.execute();
 		System.out.println(response.body());
 	}
-
+	
 	@Test
 	@Ignore
-	public void uploadTest2() {
+	public void uploadFileTest() {
 		File file = FileUtil.file("D:\\face.jpg");
 
 		// 方法二：使用统一的表单，Http模块会自动识别参数类型，并完成上传

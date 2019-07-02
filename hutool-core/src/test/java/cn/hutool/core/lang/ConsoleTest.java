@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.thread.ThreadUtil;
 
 /**
  * 控制台单元测试
@@ -46,5 +47,14 @@ public class ConsoleTest {
 		Console.log("Please input something: ");
 		String input = Console.input();
 		Console.log(input);
+	}
+	
+	@Test
+	@Ignore
+	public void printProgressTest() {
+		for(int i = 0; i < 100; i++) {
+			Console.printProgress('#', 100, i / 100D);
+			ThreadUtil.sleep(200);
+		}
 	}
 }

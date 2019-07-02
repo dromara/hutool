@@ -1,5 +1,6 @@
 package cn.hutool.core.map;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import cn.hutool.core.util.StrUtil;
@@ -17,11 +18,41 @@ import cn.hutool.core.util.StrUtil;
 public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 	private static final long serialVersionUID = 4043263744224569870L;
 
+	// ------------------------------------------------------------------------- Constructor start
 	/**
 	 * 构造
 	 */
 	public CamelCaseMap() {
-		super();
+		this(DEFAULT_INITIAL_CAPACITY);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param initialCapacity 初始大小
+	 */
+	public CamelCaseMap(int initialCapacity) {
+		this(initialCapacity, DEFAULT_LOAD_FACTOR);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param m Map
+	 */
+	public CamelCaseMap(Map<? extends K, ? extends V> m) {
+		this(DEFAULT_LOAD_FACTOR, m);
+	}
+
+	/**
+	 * 构造
+	 * 
+	 * @param loadFactor 加载因子
+	 * @param m Map
+	 */
+	public CamelCaseMap(float loadFactor, Map<? extends K, ? extends V> m) {
+		this(m.size(), loadFactor);
+		this.putAll(m);
 	}
 
 	/**
@@ -31,27 +62,10 @@ public class CamelCaseMap<K, V> extends CustomKeyMap<K, V> {
 	 * @param loadFactor 加载因子
 	 */
 	public CamelCaseMap(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
+		super(new HashMap<K, V>(initialCapacity, loadFactor));
 	}
+	// ------------------------------------------------------------------------- Constructor end
 
-	/**
-	 * 构造
-	 * 
-	 * @param initialCapacity 初始大小
-	 */
-	public CamelCaseMap(int initialCapacity) {
-		super(initialCapacity);
-	}
-
-	/**
-	 * 构造
-	 * 
-	 * @param m Map
-	 */
-	public CamelCaseMap(Map<? extends K, ? extends V> m) {
-		super(m);
-	}
-	
 	/**
 	 * 将Key转为驼峰风格，如果key为字符串的话
 	 * 

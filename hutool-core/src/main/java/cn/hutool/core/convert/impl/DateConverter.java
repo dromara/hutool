@@ -1,7 +1,6 @@
 package cn.hutool.core.convert.impl;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateTime;
@@ -14,16 +13,28 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public class DateConverter extends AbstractConverter<Date> {
+public class DateConverter extends AbstractConverter<java.util.Date> {
+	private static final long serialVersionUID = 1L;
 
 	private Class<? extends java.util.Date> targetType;
 	/** 日期格式化 */
 	private String format;
 
+	/**
+	 * 构造
+	 * 
+	 * @param targetType 目标类型
+	 */
 	public DateConverter(Class<? extends java.util.Date> targetType) {
 		this.targetType = targetType;
 	}
 
+	/**
+	 * 构造
+	 * 
+	 * @param targetType 目标类型
+	 * @param format 日期格式
+	 */
 	public DateConverter(Class<? extends java.util.Date> targetType, String format) {
 		this.targetType = targetType;
 		this.format = format;
@@ -48,32 +59,30 @@ public class DateConverter extends AbstractConverter<Date> {
 	}
 
 	@Override
-	protected Date convertInternal(Object value) {
-		long mills = 0;
-		// Handle Calendar
+	protected java.util.Date convertInternal(Object value) {
+		Long mills = null;
 		if (value instanceof Calendar) {
+			// Handle Calendar
 			mills = ((Calendar) value).getTimeInMillis();
-		}
-
-		// Handle Long
-		if (value instanceof Long) {
-			// 此处使用自动拆装箱
+		} else if (value instanceof Long) {
+			// Handle Long
 			mills = (Long) value;
+		} else {
+			// 统一按照字符串处理
+			final String valueStr = convertToStr(value);
+			try {
+				mills = StrUtil.isBlank(this.format) ? DateUtil.parse(valueStr).getTime() : DateUtil.parse(valueStr, this.format).getTime();
+			} catch (Exception e) {
+				// Ignore Exception
+			}
 		}
 
-		final String valueStr = convertToStr(value);
-		try {
-			mills = StrUtil.isBlank(format) ? DateUtil.parse(valueStr).getTime() : DateUtil.parse(valueStr, format).getTime();
-		} catch (Exception e) {
-			// Ignore Exception
-		}
-
-		if (0 == mills) {
+		if (null == mills) {
 			return null;
 		}
 
 		// 返回指定类型
-		else if (java.util.Date.class == targetType) {
+		if (java.util.Date.class == targetType) {
 			return new java.util.Date(mills);
 		}
 		if (DateTime.class == targetType) {

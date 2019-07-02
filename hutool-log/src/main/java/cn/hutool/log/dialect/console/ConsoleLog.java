@@ -17,7 +17,7 @@ public class ConsoleLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
 
 	private static String logFormat = "[{date}] [{level}] {name}: {msg}";
-	private static Level level = Level.DEBUG;
+	private static Level currentLevel = Level.DEBUG;
 	
 	private String name;
 	
@@ -28,7 +28,7 @@ public class ConsoleLog extends AbstractLog {
 	 * @param clazz 类
 	 */
 	public ConsoleLog(Class<?> clazz) {
-		this.name = clazz.getName();
+		this.name = (null == clazz) ? StrUtil.NULL : clazz.getName();
 	}
 	
 	/**
@@ -52,97 +52,67 @@ public class ConsoleLog extends AbstractLog {
 	 */
 	public static void setLevel(Level customLevel) {
 		Assert.notNull(customLevel);
-		level = customLevel;
+		currentLevel = customLevel;
 	}
 
 	//------------------------------------------------------------------------- Trace
 	@Override
 	public boolean isTraceEnabled() {
-		return level.compareTo(Level.TRACE) <= 0;
+		return isEnabled(Level.TRACE);
 	}
 
 	@Override
-	public void trace(String format, Object... arguments) {
-		log(Level.TRACE, format, arguments);
+	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, Level.TRACE, t, format, arguments);
 	}
-
-	@Override
-	public void trace(Throwable t, String format, Object... arguments) {
-		log(Level.TRACE, t, format, arguments);
-	}
-
 	//------------------------------------------------------------------------- Debug
 	@Override
 	public boolean isDebugEnabled() {
-		return level.compareTo(Level.DEBUG) <= 0;
+		return isEnabled(Level.DEBUG);
 	}
 
 	@Override
-	public void debug(String format, Object... arguments) {
-		log(Level.DEBUG, format, arguments);
-	}
-
-	@Override
-	public void debug(Throwable t, String format, Object... arguments) {
-		log(Level.DEBUG, t, format, arguments);
+	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, Level.DEBUG, t, format, arguments);
 	}
 
 	//------------------------------------------------------------------------- Info
 	@Override
 	public boolean isInfoEnabled() {
-		return level.compareTo(Level.INFO) <= 0;
+		return isEnabled(Level.INFO);
 	}
 
 	@Override
-	public void info(String format, Object... arguments) {
-		log(Level.INFO, format, arguments);
-	}
-
-	@Override
-	public void info(Throwable t, String format, Object... arguments) {
-		log(Level.INFO, t, format, arguments);
+	public void info(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, Level.INFO, t, format, arguments);
 	}
 
 	//------------------------------------------------------------------------- Warn
 	@Override
 	public boolean isWarnEnabled() {
-		return level.compareTo(Level.WARN) <= 0;
+		return isEnabled(Level.WARN);
 	}
 
 	@Override
-	public void warn(String format, Object... arguments) {
-		log(Level.WARN, format, arguments);
-	}
-
-	@Override
-	public void warn(Throwable t, String format, Object... arguments) {
-		log(Level.WARN, t, format, arguments);
+	public void warn(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, Level.WARN, t, format, arguments);
 	}
 
 	//------------------------------------------------------------------------- Error
 	@Override
 	public boolean isErrorEnabled() {
-		return level.compareTo(Level.ERROR) <= 0;
+		return isEnabled(Level.ERROR);
 	}
 
 	@Override
-	public void error(String format, Object... arguments) {
-		log(Level.ERROR, format, arguments);
-	}
-
-	@Override
-	public void error(Throwable t, String format, Object... arguments) {
-		log(Level.ERROR, t, format, arguments);
+	public void error(String fqcn, Throwable t, String format, Object... arguments) {
+		log(fqcn, Level.ERROR, t, format, arguments);
 	}
 	
 	//------------------------------------------------------------------------- Log
 	@Override
-	public void log(Level level, String format, Object... arguments) {
-		this.log(level, null, format, arguments);
-	}
-
-	@Override
-	public void log(Level level, Throwable t, String format, Object... arguments) {
+	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
+		// fqcn 无效
 		if(false == isEnabled(level)){
 			return;
 		}
@@ -161,6 +131,10 @@ public class ConsoleLog extends AbstractLog {
 		}else{
 			Console.log(t, logMsg);
 		}
-		
+	}
+	
+	@Override
+	public boolean isEnabled(Level level) {
+		return currentLevel.compareTo(level) <= 0;
 	}
 }

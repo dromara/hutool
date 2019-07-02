@@ -10,7 +10,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.util.Date;
 import java.util.Properties;
@@ -29,6 +28,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.io.resource.UrlResource;
 import cn.hutool.core.io.watch.SimpleWatcher;
 import cn.hutool.core.io.watch.WatchMonitor;
+import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -271,20 +271,18 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 */
 	public void autoLoad(boolean autoReload) {
 		if (autoReload) {
+			Assert.notNull(this.propertiesFileUrl, "Properties URL is null !");
 			if (null != this.watchMonitor) {
+				// 先关闭之前的监听
 				this.watchMonitor.close();
 			}
-			try {
-				watchMonitor = WatchMonitor.create(Paths.get(this.propertiesFileUrl.toURI()));
-				watchMonitor.setWatcher(new SimpleWatcher(){
-					@Override
-					public void onModify(WatchEvent<?> event, Path currentPath) {
-						load();
-					}
-				}).start();
-			} catch (Exception e) {
-				throw new SettingRuntimeException(e, "Setting auto load not support url: [{}]", this.propertiesFileUrl);
-			}
+			this.watchMonitor = WatchUtil.createModify(this.propertiesFileUrl, new SimpleWatcher(){
+				@Override
+				public void onModify(WatchEvent<?> event, Path currentPath) {
+					load();
+				}
+			});
+			this.watchMonitor.start();
 		} else {
 			IoUtil.close(this.watchMonitor);
 			this.watchMonitor = null;
@@ -452,6 +450,24 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	@Override
 	public Date getDate(String key) {
 		return getDate(key, null);
+	}
+	
+	/**
+	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
+	 * 
+	 * @param keys 键列表，常用于别名
+	 * @return 字符串值
+	 * @since 4.1.21
+	 */
+	public String getAndRemoveStr(String... keys) {
+		Object value = null;
+		for (String key : keys) {
+			value = remove(key);
+			if (null != value) {
+				break;
+			}
+		}
+		return (String) value;
 	}
 
 	// ----------------------------------------------------------------------- Get end

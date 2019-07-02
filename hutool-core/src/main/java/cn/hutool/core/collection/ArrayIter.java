@@ -1,5 +1,6 @@
 package cn.hutool.core.collection;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,7 +12,8 @@ import java.util.NoSuchElementException;
  * @param <E> 元素类型
  * @since 4.1.1
  */
-public class ArrayIter<E> implements Iterator<E>, Iterable<E>{
+public class ArrayIter<E> implements Iterator<E>, Iterable<E>, Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** 数组 */
 	private Object array;

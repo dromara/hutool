@@ -15,7 +15,8 @@ import cn.hutool.core.thread.ThreadUtil;
  * 延迟观察者<br>
  * 使用此观察者通过定义一定的延迟时间，解决{@link WatchService}多个modify的问题<br>
  * 在监听目录或文件时，如果这个文件有修改操作，会多次触发modify方法。<br>
- * 此类通过维护一个Set将短时间内相同文件多次modify的事件合并处理触发，从而避免以上问题。
+ * 此类通过维护一个Set将短时间内相同文件多次modify的事件合并处理触发，从而避免以上问题。<br>
+ * 注意：延迟只针对modify事件，其它事件无效
  * 
  * @author Looly
  * @since 3.1.0

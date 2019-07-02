@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.captcha.generator.MathGenerator;
 import cn.hutool.core.lang.Console;
 
 /**
@@ -21,6 +22,15 @@ public class CaptchaTest {
 		Assert.assertNotNull(lineCaptcha.getCode());
 		Assert.assertTrue(lineCaptcha.verify(lineCaptcha.getCode()));
 	}
+	
+	@Test
+	@Ignore
+	public void lineCaptchaWithMathTest() {
+		// 定义图形验证码的长和宽
+		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
+		lineCaptcha.setGenerator(new MathGenerator());
+		lineCaptcha.write("e:/captcha/math.png");
+	}
 
 	@Test
 	@Ignore
@@ -30,13 +40,13 @@ public class CaptchaTest {
 		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
 		// LineCaptcha lineCaptcha = new LineCaptcha(200, 100, 4, 150);
 		// 图形验证码写出，可以写出到文件，也可以写出到流
-		lineCaptcha.write("e:/line.png");
+		lineCaptcha.write("e:/captcha/line.png");
 		Console.log(lineCaptcha.getCode());
 		// 验证图形验证码的有效性，返回boolean值
 		lineCaptcha.verify("1234");
 
 		lineCaptcha.createCode();
-		lineCaptcha.write("e:/line.png");
+		lineCaptcha.write("e:/captcha/line.png");
 		Console.log(lineCaptcha.getCode());
 		// 验证图形验证码的有效性，返回boolean值
 		lineCaptcha.verify("1234");
@@ -50,7 +60,7 @@ public class CaptchaTest {
 		CircleCaptcha captcha = CaptchaUtil.createCircleCaptcha(200, 100, 4, 20);
 		// CircleCaptcha captcha = new CircleCaptcha(200, 100, 4, 20);
 		// 图形验证码写出，可以写出到文件，也可以写出到流
-		captcha.write("e:/circle.png");
+		captcha.write("e:/captcha/circle.png");
 		// 验证图形验证码的有效性，返回boolean值
 		captcha.verify("1234");
 	}
@@ -63,7 +73,21 @@ public class CaptchaTest {
 		ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 100, 4, 4);
 		// ShearCaptcha captcha = new ShearCaptcha(200, 100, 4, 4);
 		// 图形验证码写出，可以写出到文件，也可以写出到流
-		captcha.write("e:/shear.png");
+		captcha.write("e:/captcha/shear.png");
+		// 验证图形验证码的有效性，返回boolean值
+		captcha.verify("1234");
+	}
+	
+	@Test
+	@Ignore
+	public void ShearCaptchaTest2() {
+		
+		// 定义图形验证码的长和宽
+		ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 45, 4, 4);
+		captcha.setGenerator(new MathGenerator());
+		// ShearCaptcha captcha = new ShearCaptcha(200, 100, 4, 4);
+		// 图形验证码写出，可以写出到文件，也可以写出到流
+		captcha.write("e:/captcha/shear.png");
 		// 验证图形验证码的有效性，返回boolean值
 		captcha.verify("1234");
 	}

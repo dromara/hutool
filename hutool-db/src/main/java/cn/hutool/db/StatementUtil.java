@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -160,10 +161,24 @@ public class StatementUtil {
 	 * @since 4.1.13
 	 */
 	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
+		return prepareStatementForBatch(conn, sql, new ArrayIter<Object[]>(paramsBatch));
+	}
+
+	/**
+	 * 创建批量操作的{@link PreparedStatement}
+	 * 
+	 * @param conn 数据库连接
+	 * @param sql SQL语句，使用"?"做为占位符
+	 * @param paramsBatch "?"对应参数批次列表
+	 * @return {@link PreparedStatement}
+	 * @throws SQLException SQL异常
+	 * @since 4.1.13
+	 */
+	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Iterable<Object[]> paramsBatch) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
-		
+
 		sql = sql.trim();
-//		SqlLog.INSTASNCE.log(sql, paramsBatch);
+		SqlLog.INSTASNCE.log(sql, paramsBatch);
 		PreparedStatement ps = conn.prepareStatement(sql);
 		for (Object[] params : paramsBatch) {
 			StatementUtil.fillParams(ps, params);
@@ -187,7 +202,7 @@ public class StatementUtil {
 
 		sql = sql.trim();
 		SqlLog.INSTASNCE.log(sql, params);
-		CallableStatement call = conn.prepareCall(sql);
+		final CallableStatement call = conn.prepareCall(sql);
 		fillParams(call, params);
 		return call;
 	}

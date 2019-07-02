@@ -44,6 +44,31 @@ public class ClassUtil {
 	public static <T> Class<T> getClass(T obj) {
 		return ((null == obj) ? null : (Class<T>) obj.getClass());
 	}
+	
+	/**
+	 * 获得外围类<br>
+	 * 返回定义此类或匿名类所在的类，如果类本身是在包中定义的，返回{@code null}
+	 * 
+	 * @param clazz 类
+	 * @return 外围类
+	 * @since 4.5.7
+	 */
+	public static Class<?> getEnclosingClass(Class<?> clazz) {
+		return null == clazz ? null : clazz.getEnclosingClass();
+	}
+	
+	/**
+	 * 是否为顶层类，既定义在包中的类，而非定义在类中的内部类
+	 * @param clazz 类
+	 * @return 是否为顶层类
+	 * @since 4.5.7
+	 */
+	public static boolean isTopLevelClass(Class<?> clazz) {
+		if(null == clazz) {
+			return false;
+		}
+		return null == getEnclosingClass(clazz);
+	}
 
 	/**
 	 * 获取类名
@@ -587,12 +612,12 @@ public class ClassUtil {
 	 * 非单例模式，如果是非静态方法，每次创建一个新对象
 	 * 
 	 * @param <T> 对象类型
-	 * @param classNameDotMethodName 类名和方法名表达式，类名与方法名用<code>.</code>或<code>#</code>连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
+	 * @param classNameWithMethodName 类名和方法名表达式，类名与方法名用<code>.</code>或<code>#</code>连接 例如：com.xiaoleilu.hutool.StrUtil.isEmpty 或 com.xiaoleilu.hutool.StrUtil#isEmpty
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String classNameDotMethodName, Object[] args) {
-		return invoke(classNameDotMethodName, false, args);
+	public static <T> T invoke(String classNameWithMethodName, Object[] args) {
+		return invoke(classNameWithMethodName, false, args);
 	}
 
 	/**
@@ -653,7 +678,7 @@ public class ClassUtil {
 	 * @param args 参数，必须严格对应指定方法的参数类型和数量
 	 * @return 返回结果
 	 */
-	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object[] args) {
+	public static <T> T invoke(String className, String methodName, boolean isSingleton, Object... args) {
 		Class<Object> clazz = loadClass(className);
 		try {
 			final Method method = getDeclaredMethod(clazz, methodName, getClasses(args));

@@ -1,9 +1,12 @@
 package cn.hutool.system;
 
+import java.io.Serializable;
+
 /**
  * 代表Java Virtual Machine Implementation的信息。
  */
-public class JvmInfo {
+public class JvmInfo implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private final String JAVA_VM_NAME = SystemUtil.get("java.vm.name", false);
 	private final String JAVA_VM_VERSION = SystemUtil.get("java.vm.version", false);

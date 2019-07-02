@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -29,7 +30,8 @@ import cn.hutool.core.util.URLUtil;
  * @since 4.1.5
  *
  */
-public class ClassScaner {
+public class ClassScaner implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	/** 包名 */
 	private String packageName;
@@ -81,7 +83,7 @@ public class ClassScaner {
 	}
 
 	/**
-	 * 扫面该包路径下所有class文件
+	 * 扫描该包路径下所有class文件
 	 * 
 	 * @return 类集合
 	 */
@@ -90,7 +92,7 @@ public class ClassScaner {
 	}
 
 	/**
-	 * 扫面该包路径下所有class文件
+	 * 扫描该包路径下所有class文件
 	 * 
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @return 类集合
@@ -100,7 +102,7 @@ public class ClassScaner {
 	}
 
 	/**
-	 * 扫面包路径下满足class过滤器条件的所有class文件，<br>
+	 * 扫描包路径下满足class过滤器条件的所有class文件，<br>
 	 * 如果包路径为 com.abs + A.class 但是输入 abs会产生classNotFoundException<br>
 	 * 因为className 应该为 com.abs.A 现在却成为abs.A,此工具类对该异常进行忽略处理<br>
 	 * 
@@ -156,7 +158,7 @@ public class ClassScaner {
 	}
 
 	/**
-	 * 扫面包路径下满足class过滤器条件的所有class文件
+	 * 扫描包路径下满足class过滤器条件的所有class文件
 	 * 
 	 * @return 类集合
 	 */

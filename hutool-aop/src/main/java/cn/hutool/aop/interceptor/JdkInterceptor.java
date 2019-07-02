@@ -1,5 +1,6 @@
 package cn.hutool.aop.interceptor;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +15,8 @@ import cn.hutool.core.util.ReflectUtil;
  * @author Looly
  *
  */
-public class JdkInterceptor implements InvocationHandler {
+public class JdkInterceptor implements InvocationHandler, Serializable{
+	private static final long serialVersionUID = 1L;
 
 	private Object target;
 	private Aspect aspect;

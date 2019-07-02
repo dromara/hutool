@@ -29,6 +29,7 @@ import org.apache.poi.hssf.record.StringRecord;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
 import cn.hutool.poi.exceptions.POIException;
@@ -64,9 +65,9 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	private List<Object> rowCellList = new ArrayList<>();
 
 	/** 自定义需要处理的sheet编号，如果-1表示处理所有sheet */
-	private int sheetIndex = -1;
+	private int rid = -1;
 	// 当前表索引
-	private int curSheetIndex = -1;
+	private int curRid = -1;
 
 	private RowHandler rowHandler;
 
@@ -81,18 +82,18 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 
 	// ------------------------------------------------------------------------------ Read start
 	@Override
-	public Excel03SaxReader read(File file, int sheetIndex) throws POIException {
+	public Excel03SaxReader read(File file, int rid) throws POIException {
 		try {
-			return read(new POIFSFileSystem(file), sheetIndex);
+			return read(new POIFSFileSystem(file), rid);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}
 	}
 
 	@Override
-	public Excel03SaxReader read(InputStream excelStream, int sheetIndex) throws POIException {
+	public Excel03SaxReader read(InputStream excelStream, int rid) throws POIException {
 		try {
-			return read(new POIFSFileSystem(excelStream), sheetIndex);
+			return read(new POIFSFileSystem(excelStream), rid);
 		} catch (IOException e) {
 			throw new POIException(e);
 		}
@@ -102,12 +103,12 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	 * 读取
 	 * 
 	 * @param fs {@link POIFSFileSystem}
-	 * @param sheetIndex sheet序号
+	 * @param rid sheet序号
 	 * @return this
 	 * @throws POIException IO异常包装
 	 */
-	public Excel03SaxReader read(POIFSFileSystem fs, int sheetIndex) throws POIException {
-		this.sheetIndex = sheetIndex;
+	public Excel03SaxReader read(POIFSFileSystem fs, int rid) throws POIException {
+		this.rid = rid;
 
 		formatListener = new FormatTrackingHSSFListener(new MissingRecordAwareHSSFListener(this));
 		final HSSFRequest request = new HSSFRequest();
@@ -122,6 +123,8 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 			factory.processWorkbookEvents(request, fs);
 		} catch (IOException e) {
 			throw new POIException(e);
+		} finally {
+			IoUtil.close(fs);
 		}
 		return this;
 	}
@@ -133,7 +136,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	 * @return sheet序号
 	 */
 	public int getSheetIndex() {
-		return this.sheetIndex;
+		return this.rid;
 	}
 
 	/**
@@ -142,8 +145,8 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	 * @return Sheet名
 	 */
 	public String getSheetName() {
-		if (this.boundSheetRecords.size() > this.sheetIndex) {
-			return this.boundSheetRecords.get(this.sheetIndex > -1 ? this.sheetIndex : this.curSheetIndex).getSheetname();
+		if (this.boundSheetRecords.size() > this.rid) {
+			return this.boundSheetRecords.get(this.rid > -1 ? this.rid : this.curRid).getSheetname();
 		}
 		return null;
 	}
@@ -155,7 +158,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	 */
 	@Override
 	public void processRecord(Record record) {
-		if (this.sheetIndex > -1 && this.curSheetIndex > this.sheetIndex) {
+		if (this.rid > -1 && this.curRid > this.rid) {
 			// 指定Sheet之后的数据不再处理
 			return;
 		}
@@ -173,7 +176,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 				if (workbookBuildingListener != null && stubWorkbook == null) {
 					stubWorkbook = workbookBuildingListener.getStubHSSFWorkbook();
 				}
-				curSheetIndex++;
+				curRid++;
 			}
 		} else if (isProcessCurrentSheet()) {
 			if (record instanceof MissingCellDummyRecord) {
@@ -260,7 +263,11 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 				double numValue = numrec.getValue();
 				final long longPart = (long) numValue;
 				// 对于无小数部分的数字类型，转为Long，否则保留原数字
-				value = (longPart == numValue) ? longPart : numValue;
+				if(longPart == numValue) {
+					value = longPart;
+				}else {
+					value = numValue;
+				}
 			}
 
 			// 向容器加入列值
@@ -278,7 +285,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	 */
 	private void processLastCell(LastCellOfRowDummyRecord lastCell) {
 		// 每行结束时， 调用handle() 方法
-		this.rowHandler.handle(curSheetIndex, lastCell.getRow(), this.rowCellList);
+		this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
 		// 清空行Cache
 		this.rowCellList.clear();
 	}
@@ -289,7 +296,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	 * @return 是否处理当前sheet
 	 */
 	private boolean isProcessCurrentSheet() {
-		return this.sheetIndex < 0 || this.curSheetIndex == this.sheetIndex;
+		return this.rid < 0 || this.curRid == this.rid;
 	}
 	// ---------------------------------------------------------------------------------------------- Private method end
 }

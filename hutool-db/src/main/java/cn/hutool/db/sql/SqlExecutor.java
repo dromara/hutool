@@ -5,8 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 
+import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.handler.RsHandler;
@@ -65,7 +67,7 @@ public class SqlExecutor {
 	 * @param conn 数据库连接对象
 	 * @param sql SQL
 	 * @param params 参数
-	 * @return 是否成功
+	 * @return 如果执行后第一个结果是ResultSet，则返回true，否则返回false。
 	 * @throws SQLException SQL执行异常
 	 */
 	public static boolean call(Connection conn, String sql, Object... params) throws SQLException {
@@ -160,12 +162,66 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static int[] executeBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
+		return executeBatch(conn, sql, new ArrayIter<Object[]>(paramsBatch));
+	}
+	
+	/**
+	 * 批量执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sql SQL
+	 * @param paramsBatch 批量的参数
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 */
+	public static int[] executeBatch(Connection conn, String sql, Iterable<Object[]> paramsBatch) throws SQLException {
 		PreparedStatement ps = null;
 		try {
 			ps = StatementUtil.prepareStatementForBatch(conn, sql, paramsBatch);
 			return ps.executeBatch();
 		} finally {
 			DbUtil.close(ps);
+		}
+	}
+	
+	/**
+	 * 批量执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sqls SQL列表
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 * @since 4.5.6
+	 */
+	public static int[] executeBatch(Connection conn, String... sqls) throws SQLException {
+		return executeBatch(conn, new ArrayIter<String>(sqls));
+	}
+	
+	/**
+	 * 批量执行非查询语句<br>
+	 * 语句包括 插入、更新、删除<br>
+	 * 此方法不会关闭Connection
+	 * 
+	 * @param conn 数据库连接对象
+	 * @param sqls SQL列表
+	 * @return 每个SQL执行影响的行数
+	 * @throws SQLException SQL执行异常
+	 * @since 4.5.6
+	 */
+	public static int[] executeBatch(Connection conn, Iterable<String> sqls) throws SQLException {
+		Statement statement = null;
+		try {
+			statement = conn.createStatement();
+			for (String sql : sqls) {
+				statement.addBatch(sql);
+			}
+			return statement.executeBatch();
+		} finally {
+			DbUtil.close(statement);
 		}
 	}
 
@@ -211,8 +267,10 @@ public class SqlExecutor {
 
 	// -------------------------------------------------------------------------------------- Execute With PreparedStatement
 	/**
-	 * 执行非查询语句<br>
-	 * 语句包括 插入、更新、删除<br>
+	 * 用于执行 INSERT、UPDATE 或 DELETE 语句以及 SQL DDL（数据定义语言）语句，例如 CREATE TABLE 和 DROP TABLE。<br>
+	 * INSERT、UPDATE 或 DELETE 语句的效果是修改表中零行或多行中的一列或多列。<br>
+	 * executeUpdate 的返回值是一个整数（int），指示受影响的行数（即更新计数）。<br>
+	 * 对于 CREATE TABLE 或 DROP TABLE 等不操作行的语句，executeUpdate 的返回值总为零。<br>
 	 * 此方法不会关闭PreparedStatement
 	 * 
 	 * @param ps PreparedStatement对象
@@ -226,13 +284,13 @@ public class SqlExecutor {
 	}
 
 	/**
-	 * 执行非查询语句<br>
-	 * 语句包括 插入、更新、删除<br>
+	 * 可用于执行任何SQL语句，返回一个boolean值，表明执行该SQL语句是否返回了ResultSet。<br>
+	 * 如果执行后第一个结果是ResultSet，则返回true，否则返回false。<br>
 	 * 此方法不会关闭PreparedStatement
 	 * 
 	 * @param ps PreparedStatement对象
 	 * @param params 参数
-	 * @return 影响的行数
+	 * @return 如果执行后第一个结果是ResultSet，则返回true，否则返回false。
 	 * @throws SQLException SQL执行异常
 	 */
 	public static boolean execute(PreparedStatement ps, Object... params) throws SQLException {
@@ -255,7 +313,7 @@ public class SqlExecutor {
 		StatementUtil.fillParams(ps, params);
 		return executeQuery(ps, rsh);
 	}
-	
+
 	/**
 	 * 执行查询语句并关闭PreparedStatement
 	 * 
@@ -273,18 +331,18 @@ public class SqlExecutor {
 			DbUtil.close(ps);
 		}
 	}
-	
-	//-------------------------------------------------------------------------------------------------------------------------------- Private method start
+
+	// -------------------------------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 执行查询
+	 * 
 	 * @param ps {@link PreparedStatement}
-	 * @param rsh  结果集处理对象
-	 * @param params 参数
+	 * @param rsh 结果集处理对象
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 4.1.13
 	 */
-	private static <T> T executeQuery(PreparedStatement ps, RsHandler<T> rsh) throws SQLException{
+	private static <T> T executeQuery(PreparedStatement ps, RsHandler<T> rsh) throws SQLException {
 		ResultSet rs = null;
 		try {
 			rs = ps.executeQuery();
@@ -293,5 +351,5 @@ public class SqlExecutor {
 			DbUtil.close(rs);
 		}
 	}
-	//-------------------------------------------------------------------------------------------------------------------------------- Private method end
+	// -------------------------------------------------------------------------------------------------------------------------------- Private method end
 }

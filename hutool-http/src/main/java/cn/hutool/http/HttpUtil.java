@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +25,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 
 /**
  * Http请求工具类
@@ -44,114 +41,6 @@ public class HttpUtil {
 	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset\\s*=\\s*([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
 	/** 正则：匹配meta标签的编码信息 */
 	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta[^>]*?charset\\s*=\\s*['\"]?([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded，使用UTF-8编码
-	 * 
-	 * @param content 被编码内容
-	 * @return 编码后的字符
-	 */
-	public static String encodeUtf8(String content) {
-		return encode(content, CharsetUtil.UTF_8);
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 */
-	public static String encode(String content, Charset charset) {
-		if (null == charset) {
-			charset = CharsetUtil.defaultCharset();
-		}
-		return encode(content, charset.name());
-	}
-
-	/**
-	 * 编码字符为 application/x-www-form-urlencoded
-	 * 
-	 * @param content 被编码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 * @throws HttpException 编码不支持
-	 */
-	public static String encode(String content, String charsetStr) throws HttpException {
-		if (StrUtil.isBlank(content)) {
-			return content;
-		}
-
-		String encodeContent = null;
-		try {
-			encodeContent = URLEncoder.encode(content, charsetStr);
-		} catch (UnsupportedEncodingException e) {
-			throw new HttpException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
-		}
-		return encodeContent;
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charset 编码
-	 * @return 编码后的字符
-	 */
-	public static String decode(String content, Charset charset) {
-		return decode(content, charset.name());
-	}
-
-	/**
-	 * 解码application/x-www-form-urlencoded字符
-	 * 
-	 * @param content 被解码内容
-	 * @param charsetStr 编码
-	 * @return 编码后的字符
-	 */
-	public static String decode(String content, String charsetStr) {
-		if (StrUtil.isBlank(content)) {
-			return content;
-		}
-		String encodeContnt = null;
-		try {
-			encodeContnt = URLDecoder.decode(content, charsetStr);
-		} catch (UnsupportedEncodingException e) {
-			throw new HttpException(StrUtil.format("Unsupported encoding: [{}]", charsetStr), e);
-		}
-		return encodeContnt;
-	}
-
-	/**
-	 * 获取客户端IP<br>
-	 * 默认检测的Header：<br>
-	 * 1、X-Forwarded-For<br>
-	 * 2、X-Real-IP<br>
-	 * 3、Proxy-Client-IP<br>
-	 * 4、WL-Proxy-Client-IP<br>
-	 * otherHeaderNames参数用于自定义检测的Header
-	 * 
-	 * @param request 请求对象
-	 * @param otherHeaderNames 其他自定义头文件
-	 * @return IP地址
-	 */
-	public static String getClientIP(javax.servlet.http.HttpServletRequest request, String... otherHeaderNames) {
-		String[] headers = { "X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR" };
-		if (ArrayUtil.isNotEmpty(otherHeaderNames)) {
-			headers = ArrayUtil.addAll(headers, otherHeaderNames);
-		}
-
-		String ip;
-		for (String header : headers) {
-			ip = request.getHeader(header);
-			if (false == isUnknow(ip)) {
-				return getMultistageReverseProxyIp(ip);
-			}
-		}
-
-		ip = request.getRemoteAddr();
-		return getMultistageReverseProxyIp(ip);
-	}
 
 	/**
 	 * 检测是否https
@@ -525,18 +414,18 @@ public class HttpUtil {
 			}
 			valueStr = Convert.toStr(value);
 			if (StrUtil.isNotEmpty(key)) {
-				sb.append(encode(key, charset)).append("=");
+				sb.append(URLUtil.encodeAll(key, charset)).append("=");
 				if (StrUtil.isNotEmpty(valueStr)) {
-					sb.append(encode(valueStr, charset));
+					sb.append(URLUtil.encodeAll(valueStr, charset));
 				}
 			}
 		}
 		return sb.toString();
 	}
-
+	
 	/**
 	 * 对URL参数做编码，只编码键和值<br>
-	 * 提供的值可以是url附带编码，但是不能只是url
+	 * 提供的值可以是url附带参数，但是不能只是url
 	 * 
 	 * 
 	 * @param paramsStr url参数，可以包含url本身
@@ -544,7 +433,7 @@ public class HttpUtil {
 	 * @return 编码后的url和参数
 	 * @since 4.0.1
 	 */
-	public static String encodeParams(final String paramsStr, Charset charset) {
+	public static String encodeParams(String paramsStr, Charset charset) {
 		if (StrUtil.isBlank(paramsStr)) {
 			return StrUtil.EMPTY;
 		}
@@ -565,6 +454,19 @@ public class HttpUtil {
 			paramPart = paramsStr;
 		}
 
+		paramPart = normalizeParams(paramPart, charset);
+		
+		return StrUtil.isBlank(urlPart) ? paramPart : urlPart + "?" + paramPart;
+	}
+	
+	/**
+	 * 标准化参数字符串，即URL中？后的部分
+	 * @param paramPart 参数字符串
+	 * @param charset 编码
+	 * @return 标准化的参数字符串
+	 * @since 4.5.2
+	 */
+	public static String normalizeParams(String paramPart, Charset charset) {
 		final StrBuilder builder = StrBuilder.create(paramPart.length() + 16);
 		final int len = paramPart.length();
 		String name = null;
@@ -584,9 +486,9 @@ public class HttpUtil {
 					if (null == name) {
 						// 对于像&a&这类无参数值的字符串，我们将name为a的值设为""
 						name = paramPart.substring(pos, i);
-						builder.append(encode(name, charset)).append('=');
+						builder.append(URLUtil.encodeQuery(name, charset)).append('=');
 					} else {
-						builder.append(encode(name, charset)).append('=').append(encode(paramPart.substring(pos, i), charset)).append('&');
+						builder.append(URLUtil.encodeQuery(name, charset)).append('=').append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset)).append('&');
 					}
 					name = null;
 				}
@@ -596,20 +498,20 @@ public class HttpUtil {
 
 		// 结尾处理
 		if (null != name) {
-			builder.append(encode(name, charset)).append('=');
+			builder.append(URLUtil.encodeQuery(name, charset)).append('=');
 		}
 		if (pos != i) {
 			if (null == name) {
 				builder.append('=');
 			}
-			builder.append(encode(paramPart.substring(pos, i), charset));
+			builder.append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset));
 		}
 
 		int lastIndex = builder.length() - 1;
 		if ('&' == builder.charAt(lastIndex)) {
 			builder.delTo(lastIndex);
 		}
-		return StrUtil.isBlank(urlPart) ? builder.toString() : urlPart + "?" + builder.toString();
+		return builder.toString();
 	}
 
 	/**
@@ -696,11 +598,11 @@ public class HttpUtil {
 	 * @param url URL
 	 * @param form 表单数据
 	 * @param charset 编码
-	 * @param isEncode 是否对键和值做转义处理
+	 * @param isEncodeParams 是否对键和值做转义处理
 	 * @return 合成后的URL
 	 */
-	public static String urlWithForm(String url, Map<String, Object> form, Charset charset, boolean isEncode) {
-		if (isEncode && StrUtil.contains(url, '?')) {
+	public static String urlWithForm(String url, Map<String, Object> form, Charset charset, boolean isEncodeParams) {
+		if (isEncodeParams && StrUtil.contains(url, '?')) {
 			// 在需要编码的情况下，如果url中已经有部分参数，则编码之
 			url = encodeParams(url, charset);
 		}
@@ -762,36 +664,6 @@ public class HttpUtil {
 			return null;
 		}
 		return ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
-	}
-
-	/**
-	 * 从多级反向代理中获得第一个非unknown IP地址
-	 * 
-	 * @param ip 获得的IP地址
-	 * @return 第一个非unknown IP地址
-	 */
-	public static String getMultistageReverseProxyIp(String ip) {
-		// 多级反向代理检测
-		if (ip != null && ip.indexOf(",") > 0) {
-			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
-				if (false == isUnknow(subIp)) {
-					ip = subIp;
-					break;
-				}
-			}
-		}
-		return ip;
-	}
-
-	/**
-	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
-	 * 
-	 * @param checkString 被检测的字符串
-	 * @return 是否未知
-	 */
-	public static boolean isUnknow(String checkString) {
-		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 
 	/**
@@ -889,8 +761,8 @@ public class HttpUtil {
 	 * @param charset 编码
 	 */
 	private static void addParam(Map<String, List<String>> params, String name, String value, String charset) {
-		name = decode(name, charset);
-		value = decode(value, charset);
+		name = URLUtil.decode(name, charset);
+		value = URLUtil.decode(value, charset);
 		List<String> values = params.get(name);
 		if (values == null) {
 			values = new ArrayList<String>(1); // 一般是一个参数

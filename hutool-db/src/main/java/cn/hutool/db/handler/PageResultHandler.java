@@ -12,8 +12,9 @@ import cn.hutool.db.PageResult;
  *
  */
 public class PageResultHandler implements RsHandler<PageResult<Entity>>{
-	
-	PageResult<Entity> pageResult;
+	private static final long serialVersionUID = -1474161855834070108L;
+
+	private PageResult<Entity> pageResult;
 	
 	/**
 	 * 创建一个 EntityHandler对象<br>

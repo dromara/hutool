@@ -4,6 +4,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.util.Map;
+
+import cn.hutool.core.map.TableMap;
 
 /**
  * 针对 {@link Type} 的工具类封装<br>
@@ -31,6 +36,13 @@ public class TypeUtil {
 				return (Class<?>) type;
 			} else if (type instanceof ParameterizedType) {
 				return (Class<?>) ((ParameterizedType) type).getRawType();
+			} else if (type instanceof TypeVariable) {
+				return (Class<?>) ((TypeVariable<?>) type).getBounds()[0];
+			} else if (type instanceof WildcardType) {
+				final Type[] upperBounds = ((WildcardType) type).getUpperBounds();
+				if (upperBounds.length == 1) {
+					return getClass(upperBounds[0]);
+				}
 			}
 		}
 		return null;
@@ -180,31 +192,6 @@ public class TypeUtil {
 	/**
 	 * 获得给定类的第一个泛型参数
 	 * 
-	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
-	 * @return {@link Type}，可能为{@code null}
-	 */
-	public static Type getTypeArgument(Class<?> clazz) {
-		return getTypeArgument(clazz, 0);
-	}
-
-	/**
-	 * 获得给定类的泛型参数
-	 * 
-	 * @param clazz 被检查的类，必须是已经确定泛型类型的类
-	 * @param index 泛型类型的索引号，既第几个泛型类型
-	 * @return {@link Type}
-	 */
-	public static Type getTypeArgument(Class<?> clazz, int index) {
-		Type type = clazz;
-		if (false == (type instanceof ParameterizedType)) {
-			type = clazz.getGenericSuperclass();
-		}
-		return getTypeArgument(type, index);
-	}
-
-	/**
-	 * 获得给定类的第一个泛型参数
-	 * 
 	 * @param type 被检查的类型，必须是已经确定泛型类型的类型
 	 * @return {@link Type}，可能为{@code null}
 	 */
@@ -228,16 +215,145 @@ public class TypeUtil {
 	}
 
 	/**
-	 * 获得指定类型中所有泛型参数类型
+	 * 获得指定类型中所有泛型参数类型，例如：
+	 * 
+	 * <pre>
+	 * class A&lt;T&gt;
+	 * class B extends A&lt;String&gt;
+	 * </pre>
+	 * 
+	 * 通过此方法，传入B.class即可得到String
 	 * 
 	 * @param type 指定类型
 	 * @return 所有泛型参数类型
 	 */
 	public static Type[] getTypeArguments(Type type) {
+		if (null == type) {
+			return null;
+		}
+
+		final ParameterizedType parameterizedType = toParameterizedType(type);
+		return (null == parameterizedType) ? null : parameterizedType.getActualTypeArguments();
+	}
+
+	/**
+	 * 将{@link Type} 转换为{@link ParameterizedType}<br>
+	 * {@link ParameterizedType}用于获取当前类或父类中泛型参数化后的类型<br>
+	 * 一般用于获取泛型参数具体的参数类型，例如：
+	 * 
+	 * <pre>
+	 * class A&lt;T&gt;
+	 * class B extends A&lt;String&gt;
+	 * </pre>
+	 * 
+	 * 通过此方法，传入B.class即可得到B{@link ParameterizedType}，从而获取到String
+	 * 
+	 * @param type {@link Type}
+	 * @return {@link ParameterizedType}
+	 * @since 4.5.2
+	 */
+	public static ParameterizedType toParameterizedType(Type type) {
 		if (type instanceof ParameterizedType) {
-			final ParameterizedType genericSuperclass = (ParameterizedType) type;
-			return genericSuperclass.getActualTypeArguments();
+			return (ParameterizedType) type;
+		} else if (type instanceof Class) {
+			return toParameterizedType(((Class<?>) type).getGenericSuperclass());
 		}
 		return null;
+	}
+	
+	/**
+	 * 获取指定泛型变量对应的真实类型<br>
+	 * 由于子类中泛型参数实现和父类（接口）中泛型定义位置是一一对应的，因此可以通过对应关系找到泛型实现类型<br>
+	 * 使用此方法注意：
+	 * 
+	 * <pre>
+	 * 1. superClass必须是clazz的父类或者clazz实现的接口
+	 * 2. typeVariable必须在superClass中声明
+	 * </pre>
+	 * 
+	 * 
+	 * @param actualType 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param typeDefineClass 泛型变量声明所在类或接口，此类中定义了泛型类型
+	 * @param typeVariables 泛型变量，需要的实际类型对应的泛型参数
+	 * @return 给定泛型参数对应的实际类型，如果无对应类型，返回null
+	 * @since 4.5.7
+	 */
+	public static Type[] getActualTypes(Type actualType, Class<?> typeDefineClass, Type... typeVariables) {
+		if (false == typeDefineClass.isAssignableFrom(getClass(actualType))) {
+			throw new IllegalArgumentException("Parameter [superClass] must be assignable from [clazz]");
+		}
+
+		// 泛型参数标识符列表
+		final TypeVariable<?>[] typeVars = typeDefineClass.getTypeParameters();
+		if(ArrayUtil.isEmpty(typeVars)) {
+			return null;
+		}
+		// 实际类型列表
+		final Type[] actualTypeArguments = TypeUtil.getTypeArguments(actualType);
+		if(ArrayUtil.isEmpty(actualTypeArguments)) {
+			return null;
+		}
+		
+		int size = Math.min(actualTypeArguments.length, typeVars.length);
+		final Map<TypeVariable<?>, Type> tableMap = new TableMap<>(typeVars, actualTypeArguments);
+		
+		// 查找方法定义所在类或接口中此泛型参数的位置
+		final Type[] result = new Type[size];
+		for(int i = 0; i < typeVariables.length; i++) {
+			result[i] = (typeVariables[i] instanceof TypeVariable) ? tableMap.get(typeVariables[i]) : typeVariables[i];
+		}
+		return result;
+	}
+	
+	/**
+	 * 获取指定泛型变量对应的真实类型<br>
+	 * 由于子类中泛型参数实现和父类（接口）中泛型定义位置是一一对应的，因此可以通过对应关系找到泛型实现类型<br>
+	 * 使用此方法注意：
+	 * 
+	 * <pre>
+	 * 1. superClass必须是clazz的父类或者clazz实现的接口
+	 * 2. typeVariable必须在superClass中声明
+	 * </pre>
+	 * 
+	 * 
+	 * @param actualType 真实类型所在类，此类中记录了泛型参数对应的实际类型
+	 * @param typeDefineClass 泛型变量声明所在类或接口，此类中定义了泛型类型
+	 * @param typeVariable 泛型变量，需要的实际类型对应的泛型参数
+	 * @return 给定泛型参数对应的实际类型
+	 * @since 4.5.2
+	 */
+	public static Type getActualType(Type actualType, Class<?> typeDefineClass, Type typeVariable) {
+		Type[] types = getActualTypes(actualType, typeDefineClass, typeVariable);
+		if(ArrayUtil.isNotEmpty(types)) {
+			return types[0];
+		}
+		return null;
+	}
+
+	/**
+	 * 是否未知类型<br>
+	 * type为null或者{@link TypeVariable} 都视为未知类型
+	 * 
+	 * @param type Type类型
+	 * @return 是否未知类型
+	 * @since 4.5.2
+	 */
+	public static boolean isUnknow(Type type) {
+		return null == type || type instanceof TypeVariable;
+	}
+	
+	/**
+	 * 指定泛型数组中是否含有泛型变量
+	 * @param types 泛型数组
+	 * @return 是否含有泛型变量
+	 * @since 4.5.7
+	 */
+	public static boolean hasTypeVeriable(Type... types) {
+		for (Type type : types) {
+			if(type instanceof TypeVariable) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

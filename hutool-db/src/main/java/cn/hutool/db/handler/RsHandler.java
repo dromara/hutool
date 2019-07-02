@@ -1,10 +1,13 @@
 package cn.hutool.db.handler;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * 结果集处理接口<br>
+ * 此接口用于实现{@link ResultSet} 转换或映射为用户指定的pojo对象
+ * 
  * 默认实现有：
  * @see EntityHandler
  * @see EntityListHandler
@@ -16,7 +19,7 @@ import java.sql.SQLException;
  * @author Luxiaolei
  *
  */
-public interface RsHandler<T> {
+public interface RsHandler<T> extends Serializable{
 	
 	/**
 	 * 处理结果集<br>

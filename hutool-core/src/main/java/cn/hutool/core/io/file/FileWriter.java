@@ -26,6 +26,8 @@ import cn.hutool.core.util.StrUtil;
  *
  */
 public class FileWriter extends FileWrapper{
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 创建 FileWriter
 	 * @param file 文件

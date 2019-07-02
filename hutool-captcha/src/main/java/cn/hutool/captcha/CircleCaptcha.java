@@ -2,14 +2,15 @@ package cn.hutool.captcha;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ThreadLocalRandom;
 
-import cn.hutool.core.util.ImageUtil;
+import cn.hutool.core.img.GraphicsUtil;
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 
 /**
@@ -58,30 +59,30 @@ public class CircleCaptcha extends AbstractCaptcha {
 	@Override
 	public Image createImage(String code) {
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = ImageUtil.createGraphics(image, Color.WHITE);
-		
+		final Graphics2D g = ImgUtil.createGraphics(image, ObjectUtil.defaultIfNull(this.background, Color.WHITE));
+
 		// 随机画干扰圈圈
 		drawInterfere(g);
-		
+
 		// 画字符串
-		// 抗锯齿
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setFont(font);
-		final FontMetrics metrics = g.getFontMetrics();
-		final int minY = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
-		int len = code.length();
-		int charWidth = width / len;
-		for (int i = 0; i < len; i++) {
-			// 指定透明度
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
-			g.setColor(ImageUtil.randomColor());
-			g.drawString(String.valueOf(code.charAt(i)), i * charWidth, RandomUtil.randomInt(minY, this.height));
-		}
-		
+		drawString(g, code);
+
 		return image;
 	}
 
 	// ----------------------------------------------------------------------------------------------------- Private method start
+	/**
+	 * 绘制字符串
+	 * 
+	 * @param g {@link Graphics}画笔
+	 * @param code 验证码
+	 */
+	private void drawString(Graphics2D g, String code) {
+		// 指定透明度
+		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+		GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height);
+	}
+
 	/**
 	 * 画随机干扰
 	 * 
@@ -91,7 +92,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 		final ThreadLocalRandom random = RandomUtil.getRandom();
 
 		for (int i = 0; i < this.interfereCount; i++) {
-			g.setColor(ImageUtil.randomColor(random));
+			g.setColor(ImgUtil.randomColor(random));
 			g.drawOval(random.nextInt(width), random.nextInt(height), random.nextInt(height >> 1), random.nextInt(height >> 1));
 		}
 	}

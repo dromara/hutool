@@ -38,7 +38,7 @@ public class ArrayUtilTest {
 		String[] newArray = ArrayUtil.newArray(String.class, 3);
 		Assert.assertEquals(3, newArray.length);
 	}
-
+	
 	@Test
 	public void cloneTest() {
 		Integer[] b = { 1, 2, 3 };
@@ -215,5 +215,14 @@ public class ArrayUtilTest {
 		String[] array = {"aa", "bb", "cc", "dd"};
 		String join = ArrayUtil.join(array, ",", "[", "]");
 		Assert.assertEquals("[aa],[bb],[cc],[dd]", join);
+	}
+	
+	@Test
+	public void getArrayTypeTest() {
+		Class<?> arrayType = ArrayUtil.getArrayType(int.class);
+		Assert.assertEquals(int[].class, arrayType);
+		
+		arrayType = ArrayUtil.getArrayType(String.class);
+		Assert.assertEquals(String[].class, arrayType);
 	}
 }

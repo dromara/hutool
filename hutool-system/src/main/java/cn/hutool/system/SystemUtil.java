@@ -119,7 +119,7 @@ public class SystemUtil {
 		try {
 			return System.getProperty(name);
 		} catch (SecurityException e) {
-			if (!quiet) {
+			if (false == quiet) {
 				Console.error("Caught a SecurityException reading the system property '{}'; the SystemUtil property value will default to null.", name);
 			}
 			return null;
@@ -266,7 +266,8 @@ public class SystemUtil {
 	}
 
 	/**
-	 * Returns a list of {@link MemoryPoolMXBean} objects in the Java virtual machine. The Java virtual machine can have one or more memory pools. It may add or remove memory pools during execution.
+	 * Returns a list of {@link MemoryPoolMXBean} objects in the Java virtual machine. <br>
+	 * The Java virtual machine can have one or more memory pools. It may add or remove memory pools during execution.
 	 *
 	 * @return a list of <tt>MemoryPoolMXBean</tt> objects.
 	 *
@@ -276,8 +277,8 @@ public class SystemUtil {
 	}
 
 	/**
-	 * Returns a list of {@link MemoryManagerMXBean} objects in the Java virtual machine. The Java virtual machine can have one or more memory managers. It may add or remove memory managers during
-	 * execution.
+	 * Returns a list of {@link MemoryManagerMXBean} objects in the Java virtual machine. <br>
+	 * The Java virtual machine can have one or more memory managers. It may add or remove memory managers during execution.
 	 *
 	 * @return a list of <tt>MemoryManagerMXBean</tt> objects.
 	 *
@@ -287,8 +288,9 @@ public class SystemUtil {
 	}
 
 	/**
-	 * Returns a list of {@link GarbageCollectorMXBean} objects in the Java virtual machine. The Java virtual machine may have one or more <tt>GarbageCollectorMXBean</tt> objects. It may add or remove
-	 * <tt>GarbageCollectorMXBean</tt> during execution.
+	 * Returns a list of {@link GarbageCollectorMXBean} objects in the Java virtual machine. <br>
+	 * The Java virtual machine may have one or more <tt>GarbageCollectorMXBean</tt> objects. <br>
+	 * It may add or remove <tt>GarbageCollectorMXBean</tt> during execution.
 	 *
 	 * @return a list of <tt>GarbageCollectorMXBean</tt> objects.
 	 *
@@ -376,6 +378,49 @@ public class SystemUtil {
 	 */
 	public static RuntimeInfo getRuntimeInfo() {
 		return Singleton.get(RuntimeInfo.class);
+	}
+
+	/**
+	 * 获取JVM中内存总大小
+	 * 
+	 * @return 内存总大小
+	 * @since 4.5.4
+	 */
+	public static long getTotalMemory() {
+		return Runtime.getRuntime().totalMemory();
+	}
+
+	/**
+	 * 获取JVM中内存剩余大小
+	 * 
+	 * @return 内存剩余大小
+	 * @since 4.5.4
+	 */
+	public static long getFreeMemory() {
+		return Runtime.getRuntime().freeMemory();
+	}
+
+	/**
+	 * 获取JVM可用的内存总大小
+	 * 
+	 * @return JVM可用的内存总大小
+	 * @since 4.5.4
+	 */
+	public static long getMaxMemory() {
+		return Runtime.getRuntime().maxMemory();
+	}
+
+	/**
+	 * 获取总线程数
+	 * 
+	 * @return 总线程数
+	 */
+	public static int getTotalThreadCount() {
+		ThreadGroup parentThread = Thread.currentThread().getThreadGroup();
+		while(null != parentThread.getParent()) {
+			parentThread = parentThread.getParent();
+		}
+		return parentThread.activeCount();
 	}
 
 	// ------------------------------------------------------------------ Dump

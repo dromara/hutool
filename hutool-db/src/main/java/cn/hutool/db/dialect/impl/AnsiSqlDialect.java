@@ -27,7 +27,8 @@ import cn.hutool.db.sql.Wrapper;
  *
  */
 public class AnsiSqlDialect implements Dialect {
-
+	private static final long serialVersionUID = 2088101129774974580L;
+	
 	protected Wrapper wrapper = new Wrapper();
 
 	@Override

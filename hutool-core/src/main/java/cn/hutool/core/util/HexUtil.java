@@ -33,8 +33,17 @@ public class HexUtil {
 	 * @return 是否为16进制
 	 */
 	public static boolean isHexNumber(String value) {
-		int index = (value.startsWith("-") ? 1 : 0);
-		return (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index));
+		final int index = (value.startsWith("-") ? 1 : 0);
+		if (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index)) {
+			try {
+				Long.decode(value);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------------------- encode
@@ -257,7 +266,7 @@ public class HexUtil {
 		final StringBuilder builder = new StringBuilder(6);
 
 		builder.append("\\u");
-		String hex = Integer.toHexString(value);
+		String hex = toHex(value);
 		int len = hex.length();
 		if (len < 4) {
 			builder.append("0000", 0, 4 - len);// 不足4位补0
@@ -289,6 +298,44 @@ public class HexUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * 转为16进制字符串
+	 * 
+	 * @param value int值
+	 * @return 16进制字符串
+	 * @since 4.4.1
+	 */
+	public static String toHex(int value) {
+		return Integer.toHexString(value);
+	}
+
+	/**
+	 * 转为16进制字符串
+	 * 
+	 * @param value int值
+	 * @return 16进制字符串
+	 * @since 4.4.1
+	 */
+	public static String toHex(long value) {
+		return Long.toHexString(value);
+	}
+	
+	/**
+	 * 将byte值转为16进制并添加到{@link StringBuilder}中
+	 * @param builder {@link StringBuilder}
+	 * @param b byte
+	 * @param toLowerCase 是否使用小写
+	 * @since 4.4.1
+	 */
+	public static void appendHex(StringBuilder builder, byte b, boolean toLowerCase) {
+		final char[] toDigits = toLowerCase ? DIGITS_LOWER : DIGITS_UPPER;
+		
+		int high = (b & 0xf0) >>> 4;//高位
+		int low = b & 0x0f;//低位
+		builder.append(toDigits[high]);
+		builder.append(toDigits[low]);
+	}
+
 	// ---------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 将字节数组转换为十六进制字符串
@@ -309,12 +356,12 @@ public class HexUtil {
 	 * @return 十六进制char[]
 	 */
 	private static char[] encodeHex(byte[] data, char[] toDigits) {
-		int l = data.length;
-		char[] out = new char[l << 1];
+		final int len = data.length;
+		final char[] out = new char[len << 1];//len*2
 		// two characters from the hex value.
-		for (int i = 0, j = 0; i < l; i++) {
-			out[j++] = toDigits[(0xF0 & data[i]) >>> 4];
-			out[j++] = toDigits[0x0F & data[i]];
+		for (int i = 0, j = 0; i < len; i++) {
+			out[j++] = toDigits[(0xF0 & data[i]) >>> 4];// 高位
+			out[j++] = toDigits[0x0F & data[i]];// 低位
 		}
 		return out;
 	}
