@@ -19,66 +19,118 @@ public abstract class OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTy
 	
 	@Override
 	public String getStr(K key, String defaultValue) {
-		return Convert.toStr(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toStr(obj, defaultValue);
 	}
 	
 	@Override
 	public Integer getInt(K key, Integer defaultValue) {
-		return Convert.toInt(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toInt(obj, defaultValue);
 	}
 
 	@Override
 	public Short getShort(K key, Short defaultValue) {
-		return Convert.toShort(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toShort(obj, defaultValue);
 	}
 
 	@Override
 	public Boolean getBool(K key, Boolean defaultValue) {
-		return Convert.toBool(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toBool(obj, defaultValue);
 	}
 
 	@Override
 	public Long getLong(K key, Long defaultValue) {
-		return Convert.toLong(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toLong(obj, defaultValue);
 	}
 
 	@Override
 	public Character getChar(K key, Character defaultValue) {
-		return Convert.toChar(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toChar(obj, defaultValue);
 	}
 	
 	@Override
 	public Float getFloat(K key, Float defaultValue) {
-		return Convert.toFloat(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toFloat(obj, defaultValue);
 	}
 
 	@Override
 	public Double getDouble(K key, Double defaultValue) {
-		return Convert.toDouble(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toDouble(obj, defaultValue);
 	}
 
 	@Override
 	public Byte getByte(K key, Byte defaultValue) {
-		return Convert.toByte(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toByte(obj, defaultValue);
 	}
 
 	@Override
 	public BigDecimal getBigDecimal(K key, BigDecimal defaultValue) {
-		return Convert.toBigDecimal(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toBigDecimal(obj, defaultValue);
 	}
 
 	@Override
 	public BigInteger getBigInteger(K key, BigInteger defaultValue) {
-		return Convert.toBigInteger(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toBigInteger(obj, defaultValue);
 	}
 	
 	@Override
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, K key, E defaultValue) {
-		return Convert.toEnum(clazz, getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toEnum(clazz, obj, defaultValue);
 	}
 	
 	@Override
 	public Date getDate(K key, Date defaultValue) {
-		return Convert.toDate(getObj(key), defaultValue);
+		final Object obj = getObj(key);
+		if(null == obj) {
+			return defaultValue;
+		}
+		return Convert.toDate(obj, defaultValue);
 	}
 }

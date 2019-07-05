@@ -51,6 +51,10 @@ public class SoapClient {
 	private String namespaceURI;
 	/** 消息工厂，用于创建消息 */
 	private MessageFactory factory;
+	/** 默认连接超时 */
+	private int connectionTimeout = HttpRequest.TIMEOUT_DEFAULT;
+	/** 默认读取超时 */
+	private int readTimeout = HttpRequest.TIMEOUT_DEFAULT;
 
 	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
@@ -390,6 +394,50 @@ public class SoapClient {
 	}
 	
 	/**
+	 * 设置超时，单位：毫秒<br>
+	 * 超时包括：
+	 * 
+	 * <pre>
+	 * 1. 连接超时
+	 * 2. 读取响应超时
+	 * </pre>
+	 * 
+	 * @param milliseconds 超时毫秒数
+	 * @return this
+	 * @see #setConnectionTimeout(int)
+	 * @see #setReadTimeout(int)
+	 */
+	public SoapClient timeout(int milliseconds) {
+		setConnectionTimeout(milliseconds);
+		setReadTimeout(milliseconds);
+		return this;
+	}
+
+	/**
+	 * 设置连接超时，单位：毫秒
+	 * 
+	 * @param milliseconds 超时毫秒数
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient setConnectionTimeout(int milliseconds) {
+		this.connectionTimeout = milliseconds;
+		return this;
+	}
+
+	/**
+	 * 设置连接超时，单位：毫秒
+	 * 
+	 * @param milliseconds 超时毫秒数
+	 * @return this
+	 * @since 4.5.6
+	 */
+	public SoapClient setReadTimeout(int milliseconds) {
+		this.readTimeout = milliseconds;
+		return this;
+	}
+	
+	/**
 	 * 执行Webservice请求，既发送SOAP内容
 	 * 
 	 * @return 返回结果
@@ -438,6 +486,8 @@ public class SoapClient {
 	private HttpResponse sendForResponse() {
 		return HttpRequest.post(this.url)//
 		.setFollowRedirects(true)//
+		.setConnectionTimeout(this.connectionTimeout)
+		.setReadTimeout(this.readTimeout)
 		.contentType(getXmlContentType())//
 		.body(getMsgStr(false))//
 		.executeAsync();

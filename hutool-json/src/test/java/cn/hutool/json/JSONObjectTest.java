@@ -349,6 +349,9 @@ public class JSONObjectTest {
 		Assert.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
 		// 转义按照字符串显示
 		Assert.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
+		
+		String bbb = jsonObject.getStr("bbb", "defaultBBB");
+		Console.log(bbb);
 	}
 
 	public static enum TestEnum {
