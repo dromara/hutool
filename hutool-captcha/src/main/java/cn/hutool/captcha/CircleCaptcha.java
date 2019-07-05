@@ -1,6 +1,5 @@
 package cn.hutool.captcha;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -79,7 +78,9 @@ public class CircleCaptcha extends AbstractCaptcha {
 	 */
 	private void drawString(Graphics2D g, String code) {
 		// 指定透明度
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+		if (null != this.textAlpha) {
+			g.setComposite(this.textAlpha);
+		}
 		GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height);
 	}
 

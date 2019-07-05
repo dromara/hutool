@@ -1,10 +1,10 @@
 package cn.hutool.captcha;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +45,8 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	protected CodeGenerator generator;
 	/** 背景色 */
 	protected Color background;
+	/** 文字透明度 */
+	protected AlphaComposite textAlpha;
 
 	/**
 	 * 构造，使用随机验证码生成器生成验证码
@@ -72,8 +74,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		this.generator = generator;
 		this.interfereCount = interfereCount;
 		// 字体高度设为验证码高度-2，留边距
-		this.font = new Font("Courier", Font.PLAIN, (int)(this.height * 0.75));
-		createCode();
+		this.font = new Font("Courier", Font.PLAIN, (int) (this.height * 0.75));
 	}
 
 	@Override
@@ -103,12 +104,15 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	@Override
 	public String getCode() {
+		if(null == this.code) {
+			createCode();
+		}
 		return this.code;
 	}
 
 	@Override
 	public boolean verify(String userInputCode) {
-		return this.generator.verify(this.code, userInputCode);
+		return this.generator.verify(getCode(), userInputCode);
 	}
 
 	/**
@@ -137,7 +141,20 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	@Override
 	public void write(OutputStream out) {
-		IoUtil.write(out, false, this.imageBytes);
+		IoUtil.write(out, false, getImageBytes());
+	}
+	
+	/**
+	 * 获取图形验证码图片bytes
+	 * 
+	 * @return 图形验证码图片bytes
+	 * @since 4.5.17
+	 */
+	public byte[] getImageBytes() {
+		if (null == this.imageBytes) {
+			createCode();
+		}
+		return this.imageBytes;
 	}
 
 	/**
@@ -146,10 +163,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @return 验证码图
 	 */
 	public BufferedImage getImage() {
-		if (null == this.imageBytes) {
-			createCode();
-		}
-		return ImgUtil.read(new ByteArrayInputStream(this.imageBytes));
+		return ImgUtil.read(IoUtil.toStream(getImageBytes()));
 	}
 
 	/**
@@ -159,7 +173,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 * @since 3.3.0
 	 */
 	public String getImageBase64() {
-		return Base64.encode(this.imageBytes);
+		return Base64.encode(getImageBytes());
 	}
 
 	/**
@@ -187,10 +201,8 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	 */
 	public void setGenerator(CodeGenerator generator) {
 		this.generator = generator;
-		// 重新生成验证码
-		this.createCode();
 	}
-	
+
 	/**
 	 * 设置背景色
 	 * 
@@ -200,4 +212,15 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	public void setBackground(Color background) {
 		this.background = background;
 	}
+
+	/**
+	 * 设置文字透明度
+	 * 
+	 * @param textAlpha 文字透明度，取值0~1，1表示不透明
+	 * @since 4.5.17
+	 */
+	public void setTextAlpha(float textAlpha) {
+		this.textAlpha = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, textAlpha);
+	}
+
 }

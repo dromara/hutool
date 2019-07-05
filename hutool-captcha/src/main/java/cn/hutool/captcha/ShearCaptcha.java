@@ -77,7 +77,11 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * @param g {@link Graphics}画笔
 	 * @param code 验证码
 	 */
-	private void drawString(Graphics g, String code) {
+	private void drawString(Graphics2D g, String code) {
+		// 指定透明度
+		if (null != this.textAlpha) {
+			g.setComposite(this.textAlpha);
+		}
 		GraphicsUtil.drawStringColourful(g, code, this.font, this.width, this.height);
 	}
 

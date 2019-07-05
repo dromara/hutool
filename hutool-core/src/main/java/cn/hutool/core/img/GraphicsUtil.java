@@ -34,12 +34,15 @@ public class GraphicsUtil {
 	}
 
 	/**
-	 * 获取最小高度
+	 * 获取文字居中高度的Y坐标（距离上边距距离）<br>
+	 * 此方法依赖FontMetrics，如果获取失败，默认为背景高度的1/3
 	 * 
 	 * @param g {@link Graphics2D}画笔
+	 * @param backgroundHeight 背景高度
 	 * @return 最小高度，-1表示无法获取
+	 * @since 4.5.17
 	 */
-	public static int getMinY(Graphics g) {
+	public static int getCenterY(Graphics g, int backgroundHeight) {
 		// 获取允许文字最小高度
 		FontMetrics metrics = null;
 		try {
@@ -47,13 +50,13 @@ public class GraphicsUtil {
 		} catch (Exception e) {
 			// 此处报告bug某些情况下会抛出IndexOutOfBoundsException，在此做容错处理
 		}
-		int minY;
+		int y;
 		if (null != metrics) {
-			minY = metrics.getAscent() - metrics.getLeading() - metrics.getDescent();
+			y = (backgroundHeight - metrics.getHeight()) / 2 + metrics.getAscent();
 		} else {
-			minY = -1;
+			y = backgroundHeight / 3;
 		}
-		return minY;
+		return y;
 	}
 
 	/**
@@ -63,7 +66,7 @@ public class GraphicsUtil {
 	 * @param str 字符串
 	 * @param font 字体
 	 * @param width 字符串总宽度
-	 * @param height 字符串高度，填充请使用{@link #getMinY(Graphics)}获取
+	 * @param height 字符串背景高度
 	 * @return 画笔对象
 	 * @since 4.5.10
 	 */
@@ -92,11 +95,7 @@ public class GraphicsUtil {
 		g.setFont(font);
 
 		// 文字高度（必须在设置字体后调用）
-		int minY = GraphicsUtil.getMinY(g);
-		if (minY < 0) {
-			minY = height - 4;
-		}
-		
+		int midY = GraphicsUtil.getCenterY(g, height);
 		if (null != color) {
 			g.setColor(color);
 		}
@@ -108,7 +107,7 @@ public class GraphicsUtil {
 				// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
 				g.setColor(ImgUtil.randomColor());
 			}
-			g.drawString(String.valueOf(str.charAt(i)), i * charWidth, minY);
+			g.drawString(String.valueOf(str.charAt(i)), i * charWidth, midY);
 		}
 		return g;
 	}
