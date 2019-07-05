@@ -18,7 +18,7 @@ public class Page implements Serializable {
 
 	public static final int DEFAULT_PAGE_SIZE = 20;
 
-	/** 页码 */
+	/** 页码，0表示第一页 */
 	private int pageNumber;
 	/** 每页结果数 */
 	private int pageSize;
@@ -38,7 +38,7 @@ public class Page implements Serializable {
 	/**
 	 * 构造
 	 * 
-	 * @param pageNumber 页码
+	 * @param pageNumber 页码，0表示第一页
 	 * @param pageSize 每页结果数
 	 */
 	public Page(int pageNumber, int pageSize) {
@@ -68,7 +68,7 @@ public class Page implements Serializable {
 	}
 
 	/**
-	 * 设置页码
+	 * 设置页码，0表示第一页
 	 * 
 	 * @param pageNumber 页码
 	 */

@@ -17,7 +17,7 @@ public class DigestUtil {
 
 	// ------------------------------------------------------------------------------------------- MD5
 	/**
-	 * 计算16位MD5摘要值
+	 * 计算32位MD5摘要值
 	 * 
 	 * @param data 被摘要数据
 	 * @return MD5摘要
@@ -27,7 +27,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值
+	 * 计算32位MD5摘要值
 	 * 
 	 * @param data 被摘要数据
 	 * @param charset 编码
@@ -38,7 +38,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值，使用UTF-8编码
+	 * 计算32位MD5摘要值，使用UTF-8编码
 	 * 
 	 * @param data 被摘要数据
 	 * @return MD5摘要
@@ -48,7 +48,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值
+	 * 计算32位MD5摘要值
 	 * 
 	 * @param data 被摘要数据
 	 * @return MD5摘要
@@ -58,7 +58,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值
+	 * 计算32位MD5摘要值
 	 * 
 	 * @param file 被摘要文件
 	 * @return MD5摘要
@@ -68,7 +68,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值，并转为16进制字符串
+	 * 计算32位MD5摘要值，并转为16进制字符串
 	 * 
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
@@ -78,7 +78,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值，并转为16进制字符串
+	 * 计算32位MD5摘要值，并转为16进制字符串
 	 * 
 	 * @param data 被摘要数据
 	 * @param charset 编码
@@ -89,7 +89,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值，并转为16进制字符串
+	 * 计算32位MD5摘要值，并转为16进制字符串
 	 * 
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
@@ -99,7 +99,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值，并转为16进制字符串
+	 * 计算32位MD5摘要值，并转为16进制字符串
 	 * 
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
@@ -109,7 +109,7 @@ public class DigestUtil {
 	}
 
 	/**
-	 * 计算16位MD5摘要值，并转为16进制字符串
+	 * 计算32位MD5摘要值，并转为16进制字符串
 	 * 
 	 * @param file 被摘要文件
 	 * @return MD5摘要的16进制表示

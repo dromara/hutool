@@ -11,6 +11,9 @@ import java.io.InputStream;
  */
 public class MD5 extends Digester {
 
+	/**
+	 * 构造
+	 */
 	public MD5() {
 		super(DigestAlgorithm.MD5);
 	}
