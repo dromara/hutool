@@ -8,6 +8,7 @@
 ### 新特性
 * 【http】         SoapClient增加超时设置（issue#IYQHK@Gitee）
 * 【captcha】   修正验证码位置，增加可选文字透明度（issue#421@Github）
+* 【poi】          ExcelWriter.setRowHeight增加空指针检查（issue#IYN63@Gitee）
 
 ### Bug修复
 * 【crypto】      修复DigestUtil.md5方法的注释（issue#IYQHG@Gitee）

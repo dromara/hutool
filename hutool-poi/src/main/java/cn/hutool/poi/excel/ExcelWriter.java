@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HeaderFooter;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -448,7 +449,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (rownum < 0) {
 			this.sheet.setDefaultRowHeightInPoints(height);
 		} else {
-			this.sheet.getRow(rownum).setHeightInPoints(height);
+			final Row row = this.sheet.getRow(rownum);
+			if(null != row) {
+				row.setHeightInPoints(height);
+			}
 		}
 		return this;
 	}
