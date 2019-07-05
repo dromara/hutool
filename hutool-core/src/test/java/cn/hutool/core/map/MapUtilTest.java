@@ -11,7 +11,7 @@ import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 
 public class MapUtilTest {
-
+	
 	@Test
 	public void filterTest() {
 		Map<String, String> map = MapUtil.newHashMap();
