@@ -52,20 +52,6 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.6.5</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.diffblue</groupId>
-			<artifactId>deeptestutils</artifactId>
-			<version>1.9.0</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<issueManagement>
