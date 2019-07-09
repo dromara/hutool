@@ -11,25 +11,11 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.ArrayUtil;
 
 /**
- * <p>Assists in implementing {@link Object#equals(Object)} methods.</p>
+ * <p>{@link Object#equals(Object)} 方法的构建器</p>
+ * 
+ * <p>两个对象equals必须保证hashCode值相等，hashCode值相等不能保证一定equals</p>
  *
- * <p> This class provides methods to build a good equals method for any
- * class. It follows rules laid out in
- * <a href="http://www.oracle.com/technetwork/java/effectivejava-136174.html">Effective Java</a>
- * , by Joshua Bloch. In particular the rule for comparing <code>doubles</code>,
- * <code>floats</code>, and arrays can be tricky. Also, making sure that
- * <code>equals()</code> and <code>hashCode()</code> are consistent can be
- * difficult.</p>
- *
- * <p>Two Objects that compare as equals must generate the same hash code,
- * but two Objects with the same hash code do not have to be equal.</p>
- *
- * <p>All relevant fields should be included in the calculation of equals.
- * Derived fields may be ignored. In particular, any field used in
- * generating a hash code must be used in the equals method, and vice
- * versa.</p>
- *
- * <p>Typical use for the code is as follows:</p>
+ * <p>使用方法如下：</p>
  * <pre>
  * public boolean equals(Object obj) {
  *   if (obj == null) { return false; }
@@ -47,23 +33,13 @@ import cn.hutool.core.util.ArrayUtil;
  *  }
  * </pre>
  *
- * <p> Alternatively, there is a method that uses reflection to determine
- * the fields to test. Because these fields are usually private, the method,
- * <code>reflectionEquals</code>, uses <code>AccessibleObject.setAccessible</code> to
- * change the visibility of the fields. This will fail under a security
- * manager, unless the appropriate permissions are set up correctly. It is
- * also slower than testing explicitly.  Non-primitive fields are compared using 
- * <code>equals()</code>.</p>
- *
- * <p> A typical invocation for this method would look like:</p>
+ * <p> 我们也可以通过反射判断所有字段是否equals：</p>
  * <pre>
  * public boolean equals(Object obj) {
  *   return EqualsBuilder.reflectionEquals(this, obj);
  * }
  * </pre>
  *
- * @since 1.0
- * @version $Id: EqualsBuilder.java 1623970 2014-09-10 11:32:53Z djones $
  */
 public class EqualsBuilder implements Builder<Boolean> {
 	private static final long serialVersionUID = 1L;
@@ -76,23 +52,6 @@ public class EqualsBuilder implements Builder<Boolean> {
      * @since 3.0
      */
     private static final ThreadLocal<Set<Pair<IDKey, IDKey>>> REGISTRY = new ThreadLocal<Set<Pair<IDKey, IDKey>>>();
-
-    /*
-     * NOTE: we cannot store the actual objects in a HashSet, as that would use the very hashCode()
-     * we are in the process of calculating.
-     *
-     * So we generate a one-to-one mapping from the original object to a new object.
-     *
-     * Now HashSet uses equals() to determine if two elements with the same hashcode really
-     * are equal, so we also need to ensure that the replacement objects are only equal
-     * if the original objects are identical.
-     *
-     * The original implementation (2.4 and before) used the System.indentityHashCode()
-     * method - however this is not guaranteed to generate unique ids (e.g. LANG-459)
-     *
-     * We now use the IDKey helper class (adapted from org.apache.axis.utils.IDKey)
-     * to disambiguate the duplicate ids.
-     */
 
     /**
      * <p>
@@ -197,6 +156,7 @@ public class EqualsBuilder implements Builder<Boolean> {
      * If the fields tested are equals.
      * The default value is <code>true</code>.
      */
+    /** 是否equals，此值随着构建会变更，默认true */
     private boolean isEquals = true;
 
     /**
@@ -205,6 +165,9 @@ public class EqualsBuilder implements Builder<Boolean> {
      * <p>Starts off assuming that equals is <code>true</code>.</p>
      * @see Object#equals(Object)
      */
+    /**
+     * 构造，初始状态值为true
+     */
     public EqualsBuilder() {
         // do nothing for now.
     }
@@ -212,48 +175,24 @@ public class EqualsBuilder implements Builder<Boolean> {
     //-------------------------------------------------------------------------
 
     /**
-     * <p>This method uses reflection to determine if the two <code>Object</code>s
-     * are equal.</p>
+     * <p>反射检查两个对象是否equals，此方法检查对象及其父对象的属性（包括私有属性）是否equals</p>
      *
-     * <p>It uses <code>AccessibleObject.setAccessible</code> to gain access to private
-     * fields. This means that it will throw a security exception if run under
-     * a security manager, if the permissions are not set up correctly. It is also
-     * not as efficient as testing explicitly. Non-primitive fields are compared using 
-     * <code>equals()</code>.</p>
-     * 
-     * <p>Transient members will be not be tested, as they are likely derived
-     * fields, and not part of the value of the Object.</p>
-     *
-     * <p>Static fields will not be tested. Superclass fields will be included.</p>
-     *
-     * @param lhs  <code>this</code> object
-     * @param rhs  the other object
-     * @param excludeFields  Collection of String field names to exclude from testing
-     * @return <code>true</code> if the two Objects have tested equals.
+     * @param lhs  此对象
+     * @param rhs  另一个对象
+     * @param excludeFields  排除的字段集合，如果有不参与计算equals的字段加入此集合即可
+     * @return 两个对象是否equals，是返回<code>true</code>
      */
     public static boolean reflectionEquals(final Object lhs, final Object rhs, final Collection<String> excludeFields) {
         return reflectionEquals(lhs, rhs, ArrayUtil.toArray(excludeFields, String.class));
     }
 
     /**
-     * <p>This method uses reflection to determine if the two <code>Object</code>s
-     * are equal.</p>
+     * <p>反射检查两个对象是否equals，此方法检查对象及其父对象的属性（包括私有属性）是否equals</p>
      *
-     * <p>It uses <code>AccessibleObject.setAccessible</code> to gain access to private
-     * fields. This means that it will throw a security exception if run under
-     * a security manager, if the permissions are not set up correctly. It is also
-     * not as efficient as testing explicitly. Non-primitive fields are compared using 
-     * <code>equals()</code>.</p>
-     *
-     * <p>Transient members will be not be tested, as they are likely derived
-     * fields, and not part of the value of the Object.</p>
-     *
-     * <p>Static fields will not be tested. Superclass fields will be included.</p>
-     *
-     * @param lhs  <code>this</code> object
-     * @param rhs  the other object
-     * @param excludeFields  array of field names to exclude from testing
-     * @return <code>true</code> if the two Objects have tested equals.
+     * @param lhs  此对象
+     * @param rhs  另一个对象
+     * @param excludeFields  排除的字段集合，如果有不参与计算equals的字段加入此集合即可
+     * @return 两个对象是否equals，是返回<code>true</code>
      */
     public static boolean reflectionEquals(final Object lhs, final Object rhs, final String... excludeFields) {
         return reflectionEquals(lhs, rhs, false, null, excludeFields);
