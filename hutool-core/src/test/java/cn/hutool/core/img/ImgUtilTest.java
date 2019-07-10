@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -93,5 +94,11 @@ public class ImgUtilTest {
 	@Ignore
 	public void compressTest() {
 		ImgUtil.compress(FileUtil.file("e:/pic/1111.png"), FileUtil.file("e:/pic/1111_target.jpg"), 0.8f);
+	}
+	
+	@Test
+	public void copyTest() {
+		BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
+		ImgUtil.write(image, FileUtil.file("f:/pic/test_dest.jpg"));
 	}
 }

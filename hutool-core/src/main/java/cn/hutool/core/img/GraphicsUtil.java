@@ -20,15 +20,18 @@ public class GraphicsUtil {
 	 * 创建{@link Graphics2D}
 	 * 
 	 * @param image {@link BufferedImage}
-	 * @param color {@link Color}背景颜色以及当前画笔颜色
+	 * @param color {@link Color}背景颜色以及当前画笔颜色，{@code null}表示不设置背景色
 	 * @return {@link Graphics2D}
 	 * @since 4.5.2
 	 */
 	public static Graphics2D createGraphics(BufferedImage image, Color color) {
 		final Graphics2D g = image.createGraphics();
-		// 填充背景
-		g.setColor(color);
-		g.fillRect(0, 0, image.getWidth(), image.getHeight());
+		
+		if(null != color) {
+			// 填充背景
+			g.setColor(color);
+			g.fillRect(0, 0, image.getWidth(), image.getHeight());
+		}
 
 		return g;
 	}

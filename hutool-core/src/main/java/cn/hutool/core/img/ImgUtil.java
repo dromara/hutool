@@ -1188,12 +1188,12 @@ public class ImgUtil {
 		}
 		return bufferedImage;
 	}
-
+	
 	/**
 	 * 将已有Image复制新的一份出来
 	 * 
 	 * @param img {@link Image}
-	 * @param imageType {@link BufferedImage}中的常量，图像类型，例如黑白等
+	 * @param imageType 目标图片类型，{@link BufferedImage}中的常量，例如黑白等
 	 * @return {@link BufferedImage}
 	 * @see BufferedImage#TYPE_INT_RGB
 	 * @see BufferedImage#TYPE_INT_ARGB
@@ -1210,8 +1210,34 @@ public class ImgUtil {
 	 * @see BufferedImage#TYPE_USHORT_555_RGB
 	 */
 	public static BufferedImage copyImage(Image img, int imageType) {
+		return copyImage(img, imageType, null);
+	}
+
+	/**
+	 * 将已有Image复制新的一份出来
+	 * 
+	 * @param img {@link Image}
+	 * @param imageType 目标图片类型，{@link BufferedImage}中的常量，例如黑白等
+	 * @param backgroundColor 背景色，{@code null} 表示默认背景色（黑色或者透明）
+	 * @return {@link BufferedImage}
+	 * @see BufferedImage#TYPE_INT_RGB
+	 * @see BufferedImage#TYPE_INT_ARGB
+	 * @see BufferedImage#TYPE_INT_ARGB_PRE
+	 * @see BufferedImage#TYPE_INT_BGR
+	 * @see BufferedImage#TYPE_3BYTE_BGR
+	 * @see BufferedImage#TYPE_4BYTE_ABGR
+	 * @see BufferedImage#TYPE_4BYTE_ABGR_PRE
+	 * @see BufferedImage#TYPE_BYTE_GRAY
+	 * @see BufferedImage#TYPE_USHORT_GRAY
+	 * @see BufferedImage#TYPE_BYTE_BINARY
+	 * @see BufferedImage#TYPE_BYTE_INDEXED
+	 * @see BufferedImage#TYPE_USHORT_565_RGB
+	 * @see BufferedImage#TYPE_USHORT_555_RGB
+	 * @since 4.5.17
+	 */
+	public static BufferedImage copyImage(Image img, int imageType, Color backgroundColor) {
 		final BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), imageType);
-		final Graphics2D bGr = bimage.createGraphics();
+		final Graphics2D bGr = GraphicsUtil.createGraphics(bimage, backgroundColor);
 		bGr.drawImage(img, 0, 0, null);
 		bGr.dispose();
 
