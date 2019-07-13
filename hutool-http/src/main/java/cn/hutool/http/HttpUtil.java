@@ -427,6 +427,8 @@ public class HttpUtil {
 	 * 对URL参数做编码，只编码键和值<br>
 	 * 提供的值可以是url附带参数，但是不能只是url
 	 * 
+	 * <p>注意，此方法只能标准化整个URL，并不适合于单独编码参数值</p>
+	 * 
 	 * 
 	 * @param paramsStr url参数，可以包含url本身
 	 * @param charset 编码
@@ -461,6 +463,9 @@ public class HttpUtil {
 	
 	/**
 	 * 标准化参数字符串，即URL中？后的部分
+	 * 
+	 * <p>注意，此方法只能标准化整个URL，并不适合于单独编码参数值</p>
+	 * 
 	 * @param paramPart 参数字符串
 	 * @param charset 编码
 	 * @return 标准化的参数字符串
@@ -501,12 +506,13 @@ public class HttpUtil {
 			builder.append(URLUtil.encodeQuery(name, charset)).append('=');
 		}
 		if (pos != i) {
-			if (null == name) {
+			if (null == name && pos > 0) {
 				builder.append('=');
 			}
 			builder.append(URLUtil.encodeQuery(paramPart.substring(pos, i), charset));
 		}
 
+		// 以&结尾则去除之
 		int lastIndex = builder.length() - 1;
 		if ('&' == builder.charAt(lastIndex)) {
 			builder.delTo(lastIndex);

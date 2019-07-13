@@ -238,4 +238,10 @@ public class HttpUtilTest {
 		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset = \"utf-8\"", 1);
 		Assert.assertEquals("utf-8", charsetName);
 	}
+	
+	@Test
+	public void normalizeParamsTest() {
+		String encodeResult = HttpUtil.normalizeParams("参数", CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("%E5%8F%82%E6%95%B0", encodeResult);
+	}
 }
