@@ -14,6 +14,7 @@
 ### Bug修复
 * 【crypto】      修复DigestUtil.md5方法的注释（issue#IYQHG@Gitee）
 * 【core】         修复MapUtil.newHashMap初始容量问题（issue#IYKJJ@Gitee）
+* 【core】         修复HttpUtil.encodeParam多出=问题（issue#IZ3PI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
