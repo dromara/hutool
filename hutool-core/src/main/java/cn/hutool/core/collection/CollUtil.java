@@ -848,8 +848,12 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> sub(List<T> list, int start, int end, int step) {
-		if (list == null || list.isEmpty()) {
+		if (list == null) {
 			return null;
+		}
+		
+		if(list.isEmpty()) {
+			return new ArrayList<>(0); 
 		}
 
 		final int size = list.size();
