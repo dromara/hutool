@@ -263,7 +263,7 @@ public class Img implements Serializable{
 	 * @return this
 	 */
 	public Img scale(int width, int height, Color fixedColor) {
-		final Image srcImage = getValidSrcImg();
+		Image srcImage = getValidSrcImg();
 		int srcHeight = srcImage.getHeight(null);
 		int srcWidth = srcImage.getWidth(null);
 		double heightRatio = NumberUtil.div(height, srcHeight);
@@ -279,6 +279,11 @@ public class Img implements Serializable{
 		} else {
 			scale((int) (srcWidth * heightRatio), height);
 		}
+		
+		// 获取缩放后的新的宽和高
+		srcImage = getValidSrcImg();
+		srcHeight = srcImage.getHeight(null);
+		srcWidth = srcImage.getWidth(null);
 
 		if (null == fixedColor) {// 补白
 			fixedColor = Color.WHITE;

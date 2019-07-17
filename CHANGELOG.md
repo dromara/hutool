@@ -11,11 +11,13 @@
 * 【poi】          ExcelWriter.setRowHeight增加空指针检查（issue#IYN63@Gitee）
 * 【core】        ImgUtil增加copyImage可选背景色（issue#IYX3E@Gitee）
 * 【core】        CollUtil.sub方法在空列表时返回空数组而非null（issue#430@Github）
+* 【core】        改进本地IP地址获取方法（issue#428@Github）
 
 ### Bug修复
 * 【crypto】      修复DigestUtil.md5方法的注释（issue#IYQHG@Gitee）
 * 【core】         修复MapUtil.newHashMap初始容量问题（issue#IYKJJ@Gitee）
 * 【core】         修复HttpUtil.encodeParam多出=问题（issue#IZ3PI@Gitee）
+* 【core】         修复Img.scale变形问题（issue#431@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -31,7 +31,7 @@ public class ImgUtilTest {
 	@Test
 	@Ignore
 	public void scaleByWidthAndHeightTest() {
-		ImgUtil.scale(FileUtil.file("d:/face.jpg"), FileUtil.file("d:/face_result.jpg"), 100, 800, Color.BLUE);
+		ImgUtil.scale(FileUtil.file("f:/test/aaa.jpg"), FileUtil.file("f:/test/aaa_result.jpg"), 100, 400, Color.BLUE);
 	}
 
 	@Test

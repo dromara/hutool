@@ -25,6 +25,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -306,17 +307,28 @@ public class NetUtil {
 
 		return CollectionUtil.addAll(new ArrayList<NetworkInterface>(), networkInterfaces);
 	}
-	
+
 	/**
 	 * 获得本机的IP地址列表<br>
 	 * 返回的IP列表有序，按照系统设备顺序
 	 * 
 	 * @return IP地址列表 {@link LinkedHashSet}
-	 * @deprecated 请使用{@link #localIps()}
 	 */
-	@Deprecated
 	public static LinkedHashSet<String> localIpv4s() {
-		return localIps();
+		final LinkedHashSet<InetAddress> localAddressList = localAddressList(new Filter<InetAddress>() {
+
+			@Override
+			public boolean accept(InetAddress t) {
+				return t instanceof Inet4Address;
+			}
+		});
+
+		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
+		for (InetAddress address : localAddressList) {
+			ipSet.add(address.getHostAddress());
+		}
+
+		return ipSet;
 	}
 
 	/**
@@ -326,6 +338,24 @@ public class NetUtil {
 	 * @return IP地址列表 {@link LinkedHashSet}
 	 */
 	public static LinkedHashSet<String> localIps() {
+		final LinkedHashSet<InetAddress> localAddressList = localAddressList(null);
+
+		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
+		for (InetAddress address : localAddressList) {
+			ipSet.add(address.getHostAddress());
+		}
+
+		return ipSet;
+	}
+
+	/**
+	 * 获取所有满足过滤条件的本地IP地址对象
+	 * 
+	 * @param addressFilter 过滤器，null表示不过滤，获取所有地址
+	 * @return 过滤后的地址对象列表
+	 * @since 4.5.17
+	 */
+	public static LinkedHashSet<InetAddress> localAddressList(Filter<InetAddress> addressFilter) {
 		Enumeration<NetworkInterface> networkInterfaces = null;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -337,15 +367,15 @@ public class NetUtil {
 			throw new UtilException("Get network interface error!");
 		}
 
-		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
+		final LinkedHashSet<InetAddress> ipSet = new LinkedHashSet<>();
 
 		while (networkInterfaces.hasMoreElements()) {
 			final NetworkInterface networkInterface = networkInterfaces.nextElement();
 			final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
 			while (inetAddresses.hasMoreElements()) {
 				final InetAddress inetAddress = inetAddresses.nextElement();
-				if (inetAddress != null && inetAddress instanceof Inet4Address) {
-					ipSet.add(inetAddress.getHostAddress());
+				if (inetAddress != null && (null == addressFilter || addressFilter.accept(inetAddress))) {
+					ipSet.add(inetAddress);
 				}
 			}
 		}
