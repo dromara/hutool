@@ -97,6 +97,7 @@ public class ImgUtilTest {
 	}
 	
 	@Test
+	@Ignore
 	public void copyTest() {
 		BufferedImage image = ImgUtil.copyImage(ImgUtil.read("f:/pic/test.png"), BufferedImage.TYPE_INT_RGB);
 		ImgUtil.write(image, FileUtil.file("f:/pic/test_dest.jpg"));

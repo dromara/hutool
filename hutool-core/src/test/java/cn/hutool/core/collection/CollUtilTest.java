@@ -413,7 +413,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
-		Assert.assertNull(retval);
+		Assert.assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -474,7 +474,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end, step);
 		// Assert result
-		Assert.assertNull(retval);
+		Assert.assertTrue(retval.isEmpty());
 	}
 
 	@Test
@@ -531,7 +531,7 @@ public class CollUtilTest {
 		// Act
 		final List<Integer> retval = CollUtil.sub(list, start, end);
 		// Assert result
-		Assert.assertNull(retval);
+		Assert.assertTrue(retval.isEmpty());
 	}
 
 	@Test

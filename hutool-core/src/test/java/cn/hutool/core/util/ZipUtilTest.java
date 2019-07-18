@@ -33,6 +33,7 @@ public class ZipUtilTest {
 	}
 	
 	@Test
+	@Ignore
 	public void unzipTest2() {
 		File unzip = ZipUtil.unzip("f:/test/各种资源.zip", "f:/test/各种资源", CharsetUtil.CHARSET_GBK);
 		Console.log(unzip);
