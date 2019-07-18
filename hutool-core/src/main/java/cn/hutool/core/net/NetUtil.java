@@ -429,11 +429,16 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获取本机网卡IP地址，这个地址为所有网卡中非回路地址的第一个<br>
-	 * 如果获取失败调用 {@link InetAddress#getLocalHost()}方法获取。<br>
+	 * 获取本机网卡IP地址，规则如下：
+	 * 
+	 * <pre>
+	 * 1. 查找所有网卡地址，必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv4地址
+	 * 2. 如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址
+	 * </pre>
+	 *
 	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
 	 * 
-	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+	 * 见：https://github.com/looly/hutool/issues/428
 	 * 
 	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
 	 * @since 3.0.1
@@ -442,8 +447,11 @@ public class NetUtil {
 		final LinkedHashSet<InetAddress> localAddressList = localAddressList(new Filter<InetAddress>() {
 			@Override
 			public boolean accept(InetAddress address) {
-				return false == address.isLoopbackAddress() //
-						&& false == address.isSiteLocalAddress() //
+				// 非loopback地址，指127.*.*.*的地址
+				return false == address.isLoopbackAddress()
+						// 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
+						&& false == address.isSiteLocalAddress()
+				// 需为IPV4地址
 						&& address instanceof Inet4Address;
 			}
 		});
