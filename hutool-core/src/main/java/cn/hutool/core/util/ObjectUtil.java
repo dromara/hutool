@@ -497,46 +497,56 @@ public class ObjectUtil {
     /**
      * 存在多少个NULL
      *
-     * @param args 被检查的对象数组
+     * @param args 被检查的对象,一个或者多个
      * @retur 存在NULL的数量
      */
-    public static int hasNullCount(Object... args) {
-        int count = 0;
-        for (int i = 0; i < args.length; i++) {
-            if (isNull(args))
-                count++;
+    public static int hasEmptyCount(Object... args) {
+        if (ArrayUtil.isNotEmpty(args)) {
+            int count = 0;
+            for (Object element : args) {
+                if (isEmpty(element)) {
+                    return count++;
+                }
+            }
         }
-        return count;
+        return 0;
     }
 
     /**
      * 是否存在NULL
      *
-     * @param args
+     * @param args 被检查对象
      * @return 是否存在
      */
-    public static boolean hasNull(Object... args) {
-        return hasNullCount(args) > 0;
+    public static boolean hasEmpty(Object... args) {
+        if (isNotEmpty(args)) {
+            for (Object element : args) {
+                if (isEmpty(element)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
     /**
      * 是否存都为NULL
      *
-     * @param args 被检查的对象数组
+     * @param args 被检查的对象,一个或者多个
      * @return 是否都为空
      */
-    public static boolean isAllNull(Object... args) {
-        return hasNullCount(args) == args.length;
+    public static boolean isAllEmpty(Object... args) {
+        return hasEmptyCount(args) == args.length;
     }
 
     /**
      * 是否存都不为NULL
      *
-     * @param args 被检查的对象数组
+     * @param args 被检查的对象,一个或者多个
      * @return 是否都不为空
      */
-    public static boolean isAllNotNull(Object... args) {
-        return hasNullCount(args) == 0;
+    public static boolean isAllNotEmpty(Object... args) {
+        return !hasEmpty(args);
     }
 }
