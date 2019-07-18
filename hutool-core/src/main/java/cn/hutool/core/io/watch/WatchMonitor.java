@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.AccessDeniedException;
+import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
@@ -377,7 +378,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable{
 			WatchKey wk;
 			try {
 				wk = watchService.take();
-			} catch (InterruptedException e) {
+			} catch (InterruptedException | ClosedWatchServiceException e) {
 //				log.warn(e);
 				return;
 			}

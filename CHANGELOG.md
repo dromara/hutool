@@ -12,6 +12,7 @@
 * 【core】        ImgUtil增加copyImage可选背景色（issue#IYX3E@Gitee）
 * 【core】        CollUtil.sub方法在空列表时返回空数组而非null（issue#430@Github）
 * 【core】        改进本地IP地址获取方法（issue#428@Github）
+* 【core】        WatchMonitor增加ClosedWatchServiceException异常处理（issue#427@Github）
 
 ### Bug修复
 * 【crypto】      修复DigestUtil.md5方法的注释（issue#IYQHG@Gitee）

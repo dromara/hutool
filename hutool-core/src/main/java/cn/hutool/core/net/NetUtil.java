@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.IDN;
 import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -17,10 +18,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.net.ServerSocketFactory;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
@@ -309,7 +312,7 @@ public class NetUtil {
 	}
 
 	/**
-	 * 获得本机的IP地址列表<br>
+	 * 获得本机的IPv4地址列表<br>
 	 * 返回的IP列表有序，按照系统设备顺序
 	 * 
 	 * @return IP地址列表 {@link LinkedHashSet}
@@ -323,8 +326,38 @@ public class NetUtil {
 			}
 		});
 
+		return toIpList(localAddressList);
+	}
+
+	/**
+	 * 获得本机的IPv6地址列表<br>
+	 * 返回的IP列表有序，按照系统设备顺序
+	 * 
+	 * @return IP地址列表 {@link LinkedHashSet}
+	 * @since 4.5.17
+	 */
+	public static LinkedHashSet<String> localIpv6s() {
+		final LinkedHashSet<InetAddress> localAddressList = localAddressList(new Filter<InetAddress>() {
+
+			@Override
+			public boolean accept(InetAddress t) {
+				return t instanceof Inet6Address;
+			}
+		});
+
+		return toIpList(localAddressList);
+	}
+
+	/**
+	 * 地址列表转换为IP地址列表
+	 * 
+	 * @param addressList 地址{@link Inet4Address} 列表
+	 * @return IP地址字符串列表
+	 * @since 4.5.17
+	 */
+	public static LinkedHashSet<String> toIpList(Set<InetAddress> addressList) {
 		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
-		for (InetAddress address : localAddressList) {
+		for (InetAddress address : addressList) {
 			ipSet.add(address.getHostAddress());
 		}
 
@@ -339,13 +372,7 @@ public class NetUtil {
 	 */
 	public static LinkedHashSet<String> localIps() {
 		final LinkedHashSet<InetAddress> localAddressList = localAddressList(null);
-
-		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
-		for (InetAddress address : localAddressList) {
-			ipSet.add(address.getHostAddress());
-		}
-
-		return ipSet;
+		return toIpList(localAddressList);
 	}
 
 	/**
@@ -412,37 +439,27 @@ public class NetUtil {
 	 * @since 3.0.1
 	 */
 	public static InetAddress getLocalhost() {
-		InetAddress candidateAddress = null;
-		NetworkInterface iface;
-		InetAddress inetAddr;
+		final LinkedHashSet<InetAddress> localAddressList = localAddressList(new Filter<InetAddress>() {
+
+			@Override
+			public boolean accept(InetAddress address) {
+				
+				return false  == address.isLoopbackAddress() && false == address.isSiteLocalAddress() && false == StrUtil.contains(address.getHostAddress(), ':');
+			}
+		});
+		
+		if(CollUtil.isNotEmpty(localAddressList)) {
+			InetAddress address = CollUtil.get(localAddressList, 0);
+			return address;
+		}
+
 		try {
-			for (Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
-				iface = ifaces.nextElement();
-				for (Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
-					inetAddr = inetAddrs.nextElement();
-					if (false == inetAddr.isLoopbackAddress()) {
-						if (inetAddr.isSiteLocalAddress()) {
-							return inetAddr;
-						} else if (null == candidateAddress) {
-							// 非site-local地址做为候选地址返回
-							candidateAddress = inetAddr;
-						}
-					}
-				}
-			}
-		} catch (SocketException e) {
-			// ignore socket exception, and return null;
+			return InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			// ignore
 		}
-
-		if (null == candidateAddress) {
-			try {
-				candidateAddress = InetAddress.getLocalHost();
-			} catch (UnknownHostException e) {
-				// ignore
-			}
-		}
-
-		return candidateAddress;
+		
+		return null;
 	}
 
 	/**
