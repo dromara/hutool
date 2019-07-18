@@ -440,15 +440,15 @@ public class NetUtil {
 	 */
 	public static InetAddress getLocalhost() {
 		final LinkedHashSet<InetAddress> localAddressList = localAddressList(new Filter<InetAddress>() {
-
 			@Override
 			public boolean accept(InetAddress address) {
-				
-				return false  == address.isLoopbackAddress() && false == address.isSiteLocalAddress() && false == StrUtil.contains(address.getHostAddress(), ':');
+				return false == address.isLoopbackAddress() //
+						&& false == address.isSiteLocalAddress() //
+						&& address instanceof Inet4Address;
 			}
 		});
-		
-		if(CollUtil.isNotEmpty(localAddressList)) {
+
+		if (CollUtil.isNotEmpty(localAddressList)) {
 			InetAddress address = CollUtil.get(localAddressList, 0);
 			return address;
 		}
@@ -458,7 +458,7 @@ public class NetUtil {
 		} catch (UnknownHostException e) {
 			// ignore
 		}
-		
+
 		return null;
 	}
 
