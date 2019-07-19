@@ -3768,4 +3768,63 @@ public class ArrayUtil {
 		Array.set(array, index2, tmp);
 		return array;
 	}
+	
+	/**
+	 * 是否存在一个以上{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 *
+	 * @param args 被检查的对象,一个或者多个
+	 * @retur 存在NULL的数量
+	 * @since 4.5.18
+	 */
+	public static int emptyCount(Object... args) {
+		int count = 0;
+		if (isNotEmpty(args)) {
+			for (Object element : args) {
+				if (ObjectUtil.isEmpty(element)) {
+					return count++;
+				}
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 是否存在{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 *
+	 * @param args 被检查对象
+	 * @return 是否存在
+	 * @since 4.5.18
+	 */
+	public static boolean hasEmpty(Object... args) {
+		if (isNotEmpty(args)) {
+			for (Object element : args) {
+				if (ObjectUtil.isEmpty(element)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 是否存都为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 *
+	 * @param args 被检查的对象,一个或者多个
+	 * @return 是否都为空
+	 * @since 4.5.18
+	 */
+	public static boolean isAllEmpty(Object... args) {
+		return emptyCount(args) == args.length;
+	}
+
+	/**
+	 * 是否存都不为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 *
+	 * @param args 被检查的对象,一个或者多个
+	 * @return 是否都不为空
+	 * @since 4.5.18
+	 */
+	public static boolean isAllNotEmpty(Object... args) {
+		return false == hasEmpty(args);
+	}
 }

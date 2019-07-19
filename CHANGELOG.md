@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【poi】          增加ExcelUtil.getWriterWithSheet方法（感谢@【长沙】NULL）
+* 【core】        EnumUtil和ObjectUtil增加方法（pr#57@Gitee）
 
 ### Bug修复
 * 【core】         修复无效的日志打印（issue#IZFW9@Gitee）
