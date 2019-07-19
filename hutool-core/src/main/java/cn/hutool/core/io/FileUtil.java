@@ -53,7 +53,6 @@ import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -704,8 +703,6 @@ public class FileUtil {
 			return true;
 		}
 		
-		Console.log(file);
-
 		if (file.isDirectory()) {
 			// 清空目录下所有文件和目录
 			boolean isOk = clean(file);

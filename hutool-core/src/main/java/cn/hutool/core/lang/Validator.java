@@ -751,7 +751,7 @@ public class Validator {
 	 * <li>yyyyMMdd</li>
 	 * <li>yyyy-MM-dd</li>
 	 * <li>yyyy/MM/dd</li>
-	 * <li>yyyyMMdd</li>
+	 * <li>yyyy.MM.dd</li>
 	 * <li>yyyy年MM月dd日</li>
 	 * </ul>
 	 * 
