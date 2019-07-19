@@ -64,6 +64,42 @@ public class EnumUtil {
 	}
 
 	/**
+	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}<br>
+	 * 如果无枚举值，返回默认值
+	 *
+	 * @param <T> 枚举类型泛型
+	 * @param enumClass 枚举类
+	 * @param value 值
+	 * @param defaultValue 无对应枚举值返回的默认值
+	 * @return 枚举值
+	 * @since 4.5.18
+	 */
+	public static <T extends Enum<T>> T fromString(Class<T> enumClass, String value, T defaultValue) {
+		return ObjectUtil.defaultIfNull(fromStringQuietly(enumClass, value), defaultValue);
+	}
+	
+	/**
+	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}，转换失败返回{@code null} 而非报错
+	 *
+	 * @param <T> 枚举类型泛型
+	 * @param enumClass 枚举类
+	 * @param value 值
+	 * @return 枚举值
+	 * @since 4.5.18
+	 */
+	public static <T extends Enum<T>> T fromStringQuietly(Class<T> enumClass, String value) {
+		if(null == enumClass || StrUtil.isBlank(value)) {
+			return null;
+		}
+		
+		try {
+			return fromString(enumClass, value);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
+	/**
 	 * 模糊匹配转换为枚举，给定一个值，匹配枚举中定义的所有字段名（包括name属性），一旦匹配到返回这个枚举对象，否则返回null
 	 *
 	 * @param enumClass 枚举类
