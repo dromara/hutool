@@ -36,8 +36,28 @@ public class ExcelWriteTest {
 	public void writeTest2() {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		ExcelWriter overtimeWriter = ExcelUtil.getWriter("e:/excel/single_line.xlsx");
-		overtimeWriter.write(row);
+		overtimeWriter.writeRow(row);
 		overtimeWriter.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeWithSheetTest() {
+		ExcelWriter writer = ExcelUtil.getWriterWithSheet("表格1");
+
+		// 写出第一张表
+		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
+		writer.writeRow(row);
+
+		// 写出第二张表
+		writer.setSheet("表格2");
+		List<String> row2 = CollUtil.newArrayList("姓名2", "加班日期2", "下班时间2", "加班时长2", "餐补2", "车补次数2", "车补2", "总计2");
+		writer.writeRow(row2);
+
+		// 生成文件或导出Excel
+		writer.flush(FileUtil.file("f:/test/writeWithSheetTest.xlsx"));
+
+		writer.close();
 	}
 
 	@Test
@@ -102,7 +122,7 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void mergeTest2() {
@@ -112,14 +132,14 @@ public class ExcelWriteTest {
 		row1.put("成绩", 88.32);
 		row1.put("是否合格", true);
 		row1.put("考试日期", DateUtil.date());
-		
+
 		Map<String, Object> row2 = new LinkedHashMap<>();
 		row2.put("姓名", "李四");
 		row2.put("年龄", 33);
 		row2.put("成绩", 59.50);
 		row2.put("是否合格", false);
 		row2.put("考试日期", DateUtil.date());
-		
+
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
 
 		// 通过工具类创建writer
@@ -130,7 +150,7 @@ public class ExcelWriteTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		// 一次性写出内容，使用默认样式，强制输出标题
 		writer.write(rows, true);
 		// 关闭writer，释放内存
@@ -192,7 +212,7 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeMapAliasTest() {
@@ -208,7 +228,7 @@ public class ExcelWriteTest {
 		row2.put("isPass", false);
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
-		
+
 		List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
 		// 通过工具类创建writer
 		String file = "e:/writeMapAlias.xlsx";
@@ -227,7 +247,7 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeMapOnlyAliasTest() {
@@ -243,7 +263,7 @@ public class ExcelWriteTest {
 		row2.put("isPass", false);
 		row2.put("score", 32.30);
 		row2.put("examDate", DateUtil.date());
-		
+
 		List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
 		// 通过工具类创建writer
 		String file = "e:/writeMapOnlyAlias.xlsx";
@@ -260,7 +280,7 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
-	
+
 	@Test
 	@Ignore
 	public void writeBeanTest() {

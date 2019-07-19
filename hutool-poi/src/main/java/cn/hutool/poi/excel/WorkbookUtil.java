@@ -26,7 +26,7 @@ import cn.hutool.poi.exceptions.POIException;
  *
  */
 public class WorkbookUtil {
-	
+
 	/**
 	 * 创建或加载工作簿
 	 * 
@@ -46,6 +46,31 @@ public class WorkbookUtil {
 	 */
 	public static Workbook createBook(File excelFile) {
 		return createBook(excelFile, null);
+	}
+
+	/**
+	 * 创建工作簿，用于Excel写出
+	 * 
+	 * <pre>
+	 * 1. excelFile为null时直接返回一个空的工作簿，默认xlsx格式
+	 * 2. 文件已存在则通过流的方式读取到这个工作簿
+	 * 3. 文件不存在则检查传入文件路径是否以xlsx为扩展名，是则创建xlsx工作簿，否则创建xls工作簿
+	 * </pre>
+	 * 
+	 * @param excelFile Excel文件
+	 * @return {@link Workbook}
+	 * @since 4.5.18
+	 */
+	public static Workbook createBookForWriter(File excelFile) {
+		if (null == excelFile) {
+			return createBook(true);
+		}
+
+		if (excelFile.exists()) {
+			return createBook(FileUtil.getInputStream(excelFile), true);
+		}
+		
+		return createBook(StrUtil.endWithIgnoreCase(excelFile.getName(), ".xlsx"));
 	}
 
 	/**
@@ -94,7 +119,7 @@ public class WorkbookUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 根据文件类型创建新的工作簿，文件路径
 	 * 
@@ -111,7 +136,7 @@ public class WorkbookUtil {
 		}
 		return workbook;
 	}
-	
+
 	/**
 	 * 创建或加载SXSSFWorkbook工作簿
 	 * 
@@ -145,7 +170,7 @@ public class WorkbookUtil {
 	public static SXSSFWorkbook createSXSSFBook(File excelFile, String password) {
 		return toSXSSFBook(createBook(excelFile, password));
 	}
-	
+
 	/**
 	 * 创建或加载SXSSFWorkbook工作簿
 	 * 
@@ -157,7 +182,7 @@ public class WorkbookUtil {
 	public static SXSSFWorkbook createSXSSFBook(InputStream in, boolean closeAfterRead) {
 		return createSXSSFBook(in, null, closeAfterRead);
 	}
-	
+
 	/**
 	 * 创建或加载SXSSFWorkbook工作簿
 	 * 
@@ -170,7 +195,7 @@ public class WorkbookUtil {
 	public static SXSSFWorkbook createSXSSFBook(InputStream in, String password, boolean closeAfterRead) {
 		return toSXSSFBook(createBook(in, password, closeAfterRead));
 	}
-	
+
 	/**
 	 * 创建SXSSFWorkbook，用于大批量数据写出
 	 * 
@@ -180,7 +205,7 @@ public class WorkbookUtil {
 	public static SXSSFWorkbook createSXSSFBook() {
 		return new SXSSFWorkbook();
 	}
-	
+
 	/**
 	 * 创建SXSSFWorkbook，用于大批量数据写出
 	 * 
@@ -207,7 +232,7 @@ public class WorkbookUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 获取或者创建sheet表<br>
 	 * 如果sheet表在Workbook中已经存在，则获取之，否则创建之
@@ -240,22 +265,23 @@ public class WorkbookUtil {
 	public static boolean isEmpty(Sheet sheet) {
 		return null == sheet || (sheet.getLastRowNum() == 0 && sheet.getPhysicalNumberOfRows() == 0);
 	}
-	
-	//-------------------------------------------------------------------------------------------------------- Private method start
+
+	// -------------------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 将普通工作簿转换为SXSSFWorkbook
+	 * 
 	 * @param book 工作簿
 	 * @return SXSSFWorkbook
 	 * @since 4.1.13
 	 */
 	private static SXSSFWorkbook toSXSSFBook(Workbook book) {
-		if(book instanceof SXSSFWorkbook) {
+		if (book instanceof SXSSFWorkbook) {
 			return (SXSSFWorkbook) book;
 		}
-		if(book instanceof XSSFWorkbook) {
+		if (book instanceof XSSFWorkbook) {
 			return new SXSSFWorkbook((XSSFWorkbook) book);
 		}
 		throw new POIException("The input is not a [xlsx] format.");
 	}
-	//-------------------------------------------------------------------------------------------------------- Private method end
+	// -------------------------------------------------------------------------------------------------------- Private method end
 }

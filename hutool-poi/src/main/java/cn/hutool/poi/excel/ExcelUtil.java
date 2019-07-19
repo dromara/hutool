@@ -390,6 +390,21 @@ public class ExcelUtil {
 			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
 		}
 	}
+	
+	/**
+	 * 获得{@link ExcelWriter}，默认写出到第一个sheet
+	 * 
+	 * @param sheetName Sheet名
+	 * @return {@link ExcelWriter}
+	 * @since 4.5.18
+	 */
+	public static ExcelWriter getWriterWithSheet(String sheetName) {
+		try {
+			return new ExcelWriter((File)null, sheetName);
+		} catch (NoClassDefFoundError e) {
+			throw new DependencyException(ObjectUtil.defaultIfNull(e.getCause(), e), PoiChecker.NO_POI_ERROR_MSG);
+		}
+	}
 
 	/**
 	 * 获得{@link ExcelWriter}，默认写出到第一个sheet，名字为sheet1

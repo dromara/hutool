@@ -6,6 +6,7 @@
 ## 4.5.18
 
 ### 新特性
+* 【poi】          增加ExcelUtil.getWriterWithSheet方法（感谢@【长沙】NULL）
 
 ### Bug修复
 * 【core】         修复无效的日志打印（issue#IZFW9@Gitee）

@@ -27,7 +27,6 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.Align;
 
@@ -130,7 +129,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param sheetName sheet名，做为第一个sheet名并写出到此sheet，例如sheet1
 	 */
 	public ExcelWriter(File destFile, String sheetName) {
-		this(destFile.exists() ? WorkbookUtil.createBook(FileUtil.getInputStream(destFile), true) : WorkbookUtil.createBook(StrUtil.endWithIgnoreCase(destFile.getName(), ".xlsx")), sheetName);
+		this(WorkbookUtil.createBookForWriter(destFile), sheetName);
 		this.destFile = destFile;
 	}
 
