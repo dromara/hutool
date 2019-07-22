@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -26,7 +27,7 @@ import cn.hutool.core.util.CharsetUtil;
  * @author looly
  * @since 4.5.2
  */
-public class Tailer implements Serializable{
+public class Tailer implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final LineHandler CONSOLE_HANDLER = new ConsoleLineHandler();
@@ -84,7 +85,7 @@ public class Tailer implements Serializable{
 	 * @param initReadLine 启动时预读取的行数
 	 * @param period 检查间隔
 	 */
-	public Tailer(File file, Charset charset, LineHandler lineHandler, int initReadLine,long period) {
+	public Tailer(File file, Charset charset, LineHandler lineHandler, int initReadLine, long period) {
 		checkFile(file);
 		this.charset = charset;
 		this.lineHandler = lineHandler;
@@ -142,6 +143,8 @@ public class Tailer implements Serializable{
 		final long len = this.randomAccessFile.length();
 
 		if (initReadLine > 0) {
+			Stack<String> stack = new Stack<>();
+
 			long start = this.randomAccessFile.getFilePointer();
 			long nextEnd = len - 1;
 			this.randomAccessFile.seek(nextEnd);
@@ -152,9 +155,14 @@ public class Tailer implements Serializable{
 				if (currentLine > initReadLine) {
 					break;
 				}
+
 				c = this.randomAccessFile.read();
 				if (c == CharUtil.LF || c == CharUtil.CR) {
-					FileUtil.readLine(this.randomAccessFile, this.charset, this.lineHandler);
+					// FileUtil.readLine(this.randomAccessFile, this.charset, this.lineHandler);
+					final String line = FileUtil.readLine(this.randomAccessFile, this.charset);
+					if(null != line) {
+						stack.push(line);
+					}
 					currentLine++;
 					nextEnd--;
 				}
@@ -162,9 +170,18 @@ public class Tailer implements Serializable{
 				this.randomAccessFile.seek(nextEnd);
 				if (nextEnd == 0) {
 					// 当文件指针退至文件开始处，输出第一行
-					FileUtil.readLine(this.randomAccessFile, this.charset, this.lineHandler);
+					// FileUtil.readLine(this.randomAccessFile, this.charset, this.lineHandler);
+					final String line = FileUtil.readLine(this.randomAccessFile, this.charset);
+					if(null != line) {
+						stack.push(line);
+					}
 					break;
 				}
+			}
+
+			// 输出缓存栈中的内容
+			while (false == stack.isEmpty()) {
+				this.lineHandler.handle(stack.pop());
 			}
 		}
 

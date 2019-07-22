@@ -15,6 +15,7 @@
 * 【core】         修复无效的日志打印（issue#IZFW9@Gitee）
 * 【core】         修复Validator.isBirthday注释（issue#IZFMG@Gitee）
 * 【core】         修复TextSimilarity 的bug（issue#435@Github）
+* 【core】         修复Tailer预读取行bug（issue#IZHAT@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

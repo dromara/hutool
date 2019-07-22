@@ -563,4 +563,12 @@ public class CollUtilTest {
 		
 		Assert.assertTrue(CollUtil.containsAll(list1, list2));
 	}
+	
+	@Test
+	public void getLastTest() {
+		// 测试：空数组返回null而不是报错
+		List<String> test = CollUtil.newArrayList();
+		String last = CollUtil.getLast(test);
+		Assert.assertNull(last);
+	}
 }

@@ -1858,10 +1858,14 @@ public class CollUtil {
 		}
 
 		final int size = collection.size();
+		if(0 == size) {
+			return null;
+		}
+		
 		if (index < 0) {
 			index += size;
 		}
-
+		
 		// 检查越界
 		if (index >= size) {
 			return null;
