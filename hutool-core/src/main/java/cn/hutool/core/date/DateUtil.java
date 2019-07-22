@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
@@ -620,6 +621,19 @@ public class DateUtil {
 	 */
 	public static DateTime parse(String dateStr, String format) {
 		return new DateTime(dateStr, format);
+	}
+	
+	/**
+	 * 将特定格式的日期转换为Date对象
+	 * 
+	 * @param dateStr 特定格式的日期
+	 * @param format 格式，例如yyyy-MM-dd
+	 * @param locale 区域信息
+	 * @return 日期对象
+	 * @since 4.5.18
+	 */
+	public static DateTime parse(String dateStr, String format, Locale locale) {
+		return new DateTime(dateStr, new SimpleDateFormat(format, locale));
 	}
 
 	/**

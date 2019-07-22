@@ -54,12 +54,17 @@ public class TextSimilarity {
 	 * @return 处理后的字符串
 	 */
 	private static String removeSign(String str) {
-		StringBuilder sb = StrUtil.builder(str.length());
-		// 遍历字符串str,如果是汉字数字或字母，则追加到ab上面
 		int length = str.length();
+		StringBuilder sb = StrUtil.builder(length);
+		// 遍历字符串str,如果是汉字数字或字母，则追加到ab上面
+		char c;
 		for (int i = 0; i < length; i++) {
-			sb.append(charReg(str.charAt(i)));
+			c = str.charAt(i);
+			if(false == charReg(c)) {
+				sb.append(c);
+			}
 		}
+		
 		return sb.toString();
 	}
 

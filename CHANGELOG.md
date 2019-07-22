@@ -9,10 +9,12 @@
 * 【poi】          增加ExcelUtil.getWriterWithSheet方法（感谢@【长沙】NULL）
 * 【core】        EnumUtil和ObjectUtil增加方法（pr#57@Gitee）
 * 【core】        EnumUtil增加fromString重载支持默认值（issue#IZFXJ@Gitee）
+* 【core】        DateUtil.parse增加Locale对象重载（issue#437@Github）
 
 ### Bug修复
 * 【core】         修复无效的日志打印（issue#IZFW9@Gitee）
 * 【core】         修复Validator.isBirthday注释（issue#IZFMG@Gitee）
+* 【core】         修复TextSimilarity 的bug（issue#435@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
