@@ -78,8 +78,7 @@ public class GlobalCookieManager {
 	/**
 	 * 存储响应的Cookie信息到本地
 	 * 
-	 * @param uri 域名URI
-	 * @param responseHeaders 响应的头信息
+	 * @param conn {@link HttpConnection}
 	 */
 	public static void store(HttpConnection conn) {
 		if(null == cookieManager) {
