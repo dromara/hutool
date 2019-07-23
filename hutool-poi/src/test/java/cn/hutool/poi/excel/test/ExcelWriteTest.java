@@ -266,7 +266,7 @@ public class ExcelWriteTest {
 
 		List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
 		// 通过工具类创建writer
-		String file = "e:/writeMapOnlyAlias.xlsx";
+		String file = "f:/test/test_alias.xlsx";
 		FileUtil.del(file);
 		ExcelWriter writer = ExcelUtil.getWriter(file);
 		writer.setOnlyAlias(true);
@@ -275,6 +275,36 @@ public class ExcelWriteTest {
 		writer.addHeaderAlias("age", "年龄");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(4, "一班成绩单");
+		// 一次性写出内容，使用默认样式
+		writer.write(rows, true);
+		// 关闭writer，释放内存
+		writer.close();
+	}
+	
+	@Test
+//	@Ignore
+	public void writeMapOnlyAliasTest2() {
+		Map<Object, Object> row1 = new LinkedHashMap<>();
+		row1.put("name", "张三");
+		row1.put("age", 22);
+		row1.put("isPass", true);
+		row1.put("score", 66.30);
+		row1.put("examDate", DateUtil.date());
+		Map<Object, Object> row2 = new LinkedHashMap<>();
+		row2.put("name", "李四");
+		row2.put("age", 233);
+		row2.put("isPass", false);
+		row2.put("score", 32.30);
+		row2.put("examDate", DateUtil.date());
+
+		List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
+		// 通过工具类创建writer
+		String file = "f:/test/test_alias.xls";
+		ExcelWriter writer = ExcelUtil.getWriter(file, "test1");
+//		writer.setOnlyAlias(true);
+		// 自定义标题
+		writer.addHeaderAlias("name", "姓名");
+		writer.addHeaderAlias("age", "年龄");
 		// 一次性写出内容，使用默认样式
 		writer.write(rows, true);
 		// 关闭writer，释放内存

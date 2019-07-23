@@ -16,6 +16,7 @@
 * 【core】         修复Validator.isBirthday注释（issue#IZFMG@Gitee）
 * 【core】         修复TextSimilarity 的bug（issue#435@Github）
 * 【core】         修复Tailer预读取行bug（issue#IZHAT@Gitee）
+* 【core】         修复使用slf4j-simple不打印日志问题
 
 -------------------------------------------------------------------------------------------------------------
 

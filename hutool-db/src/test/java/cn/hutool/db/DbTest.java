@@ -7,9 +7,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.db.sql.Condition;
+import cn.hutool.log.StaticLog;
 
 /**
  * Db对象单元测试
@@ -35,7 +35,7 @@ public class DbTest {
 				Condition.parse("age", "< 100")
 		);
 		for (Entity entity : find) {
-			Console.log(entity);
+			StaticLog.debug("{}", entity);
 		}
 		Assert.assertEquals("unitTestUser", find.get(0).get("name"));
 	}
