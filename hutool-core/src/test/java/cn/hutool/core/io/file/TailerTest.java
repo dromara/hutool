@@ -15,7 +15,7 @@ public class TailerTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void tailWithLinesTest() {
 		Tailer tailer = new Tailer(FileUtil.file("f:/test/test.log"), Tailer.CONSOLE_HANDLER, 2);
 		tailer.start();
