@@ -2446,14 +2446,9 @@ public class FileUtil {
 	 * @since 4.5.2
 	 */
 	public static void readLine(RandomAccessFile file, Charset charset, LineHandler lineHandler) {
-		String line = null;
-		try {
-			line = file.readLine();
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		}
+		final String line = readLine(file, charset);
 		if(null != line) {
-			lineHandler.handle(CharsetUtil.convert(line, CharsetUtil.CHARSET_ISO_8859_1, charset));
+			lineHandler.handle(line);
 		}
 	}
 	
@@ -2462,7 +2457,6 @@ public class FileUtil {
 	 * 
 	 * @param file {@link RandomAccessFile}文件
 	 * @param charset 编码
-	 * @param lineHandler {@link LineHandler}行处理器
 	 * @return 行内容
 	 * @throws IORuntimeException IO异常
 	 * @since 4.5.18

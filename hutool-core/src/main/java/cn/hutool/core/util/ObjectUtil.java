@@ -498,7 +498,7 @@ public class ObjectUtil {
 	 * 存在多少个{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查的对象,一个或者多个
-	 * @retur 存在NULL的数量
+	 * @return 存在{@code null}的数量
 	 */
 	public static int emptyCount(Object... objs) {
 		return ArrayUtil.emptyCount(objs);

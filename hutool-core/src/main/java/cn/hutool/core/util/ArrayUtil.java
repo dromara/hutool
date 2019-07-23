@@ -3773,7 +3773,7 @@ public class ArrayUtil {
 	 * 是否存在一个以上{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param args 被检查的对象,一个或者多个
-	 * @retur 存在NULL的数量
+	 * @return 存在{@code null}的数量
 	 * @since 4.5.18
 	 */
 	public static int emptyCount(Object... args) {
