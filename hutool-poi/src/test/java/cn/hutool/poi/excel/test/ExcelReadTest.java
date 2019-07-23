@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
@@ -138,6 +140,20 @@ public class ExcelReadTest {
 		Assert.assertEquals("张三", all.get(0).getName());
 		Assert.assertEquals("男", all.get(0).getGender());
 		Assert.assertEquals(Integer.valueOf(11), all.get(0).getAge());
+	}
+	
+	@Test
+	@Ignore
+	public void excelReadToBeanListTest2() {
+		ExcelReader reader = ExcelUtil.getReader("f:/test/toBean.xlsx");
+		reader.addHeaderAlias("姓名", "name");
+		reader.addHeaderAlias("年龄", "age");
+		reader.addHeaderAlias("性别", "gender");
+
+		List<Person> all = reader.read(0,2, Person.class);
+		for (Person person : all) {
+			Console.log(person);
+		}
 	}
 
 	public static class Person {

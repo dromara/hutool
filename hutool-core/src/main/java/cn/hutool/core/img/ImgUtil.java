@@ -385,8 +385,8 @@ public class ImgUtil {
 		if (destHeight <= 0) {
 			destHeight = 150; // 切片高度
 		}
-		int srcWidth = srcImage.getHeight(null); // 源图宽度
-		int srcHeight = srcImage.getWidth(null); // 源图高度
+		int srcWidth = srcImage.getWidth(null); // 源图宽度
+		int srcHeight = srcImage.getHeight(null); // 源图高度
 
 		try {
 			if (srcWidth > destWidth && srcHeight > destHeight) {
