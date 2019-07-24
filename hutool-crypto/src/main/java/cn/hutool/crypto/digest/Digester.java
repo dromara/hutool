@@ -3,6 +3,7 @@ package cn.hutool.crypto.digest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
@@ -160,10 +161,22 @@ public class Digester {
 	 * 生成文件摘要
 	 * 
 	 * @param data 被摘要数据
-	 * @param charset 编码
+	 * @param charsetName 编码
 	 * @return 摘要
 	 */
-	public byte[] digest(String data, String charset) {
+	public byte[] digest(String data, String charsetName) {
+		return digest(data, CharsetUtil.charset(charsetName));
+	}
+	
+	/**
+	 * 生成文件摘要
+	 * 
+	 * @param data 被摘要数据
+	 * @param charset 编码
+	 * @return 摘要
+	 * @since 4.6.0
+	 */
+	public byte[] digest(String data, Charset charset) {
 		return digest(StrUtil.bytes(data, charset));
 	}
 
@@ -174,17 +187,29 @@ public class Digester {
 	 * @return 摘要
 	 */
 	public byte[] digest(String data) {
-		return digest(data, CharsetUtil.UTF_8);
+		return digest(data, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**
 	 * 生成文件摘要，并转为16进制字符串
 	 * 
 	 * @param data 被摘要数据
-	 * @param charset 编码
+	 * @param charsetName 编码
 	 * @return 摘要
 	 */
-	public String digestHex(String data, String charset) {
+	public String digestHex(String data, String charsetName) {
+		return digestHex(data, CharsetUtil.charset(charsetName));
+	}
+	
+	/**
+	 * 生成文件摘要，并转为16进制字符串
+	 * 
+	 * @param data 被摘要数据
+	 * @param charset 编码
+	 * @return 摘要
+	 * @since 4.6.0
+	 */
+	public String digestHex(String data, Charset charset) {
 		return HexUtil.encodeHexStr(digest(data, charset));
 	}
 
