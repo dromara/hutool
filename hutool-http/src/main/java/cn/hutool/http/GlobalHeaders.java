@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -18,7 +17,7 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  *
  */
-public enum GlobalHeaders{
+public enum GlobalHeaders {
 	INSTANCE;
 
 	/** 存储头信息 */
@@ -30,7 +29,7 @@ public enum GlobalHeaders{
 	private GlobalHeaders() {
 		putDefault(false);
 	}
-	
+
 	/**
 	 * 加入默认的头部信息
 	 * 
@@ -38,15 +37,16 @@ public enum GlobalHeaders{
 	 * @return this
 	 */
 	public GlobalHeaders putDefault(boolean isReset) {
-		if(isReset) {
+		if (isReset) {
 			this.headers.clear();
 		}
-		
+
 		header(Header.ACCEPT, "text/html,application/xhtml+xml,application/xml,application/json;q=0.9,*/*;q=0.8", true);
 		header(Header.ACCEPT_ENCODING, "gzip", true);
 		header(Header.ACCEPT_LANGUAGE, "zh-CN,zh;q=0.8", true);
-		header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(CharsetUtil.CHARSET_UTF_8), true);
-		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36 Hutool", true);
+		// 此Header只有在post请求中有用，因此在HttpRequest的method方法中设置此头信息，此处去掉
+		// header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(CharsetUtil.CHARSET_UTF_8), true);
+		header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 Hutool", true);
 		return this;
 	}
 

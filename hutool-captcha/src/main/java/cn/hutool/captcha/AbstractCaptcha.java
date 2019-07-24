@@ -74,7 +74,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 		this.generator = generator;
 		this.interfereCount = interfereCount;
 		// 字体高度设为验证码高度-2，留边距
-		this.font = new Font("Courier", Font.PLAIN, (int) (this.height * 0.75));
+		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, (int) (this.height * 0.75));
 	}
 
 	@Override

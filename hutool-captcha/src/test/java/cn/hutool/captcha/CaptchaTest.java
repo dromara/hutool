@@ -1,6 +1,7 @@
 package cn.hutool.captcha;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.captcha.generator.MathGenerator;
@@ -23,7 +24,7 @@ public class CaptchaTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void lineCaptchaWithMathTest() {
 		// 定义图形验证码的长和宽
 		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 80);
@@ -33,7 +34,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void lineCaptchaTest2() {
 
 		// 定义图形验证码的长和宽
@@ -53,7 +54,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void circleCaptchaTest() {
 
 		// 定义图形验证码的长和宽
@@ -66,7 +67,7 @@ public class CaptchaTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void ShearCaptchaTest() {
 
 		// 定义图形验证码的长和宽
@@ -79,7 +80,7 @@ public class CaptchaTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void ShearCaptchaWithMathTest() {
 		
 		// 定义图形验证码的长和宽

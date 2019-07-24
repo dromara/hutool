@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
@@ -30,7 +31,7 @@ public class HttpUtilTest {
 		String result1 = HttpUtil.get("http://photo.qzone.qq.com/fcgi-bin/fcg_list_album?uin=88888&outstyle=2", CharsetUtil.CHARSET_GBK);
 		Console.log(result1);
 	}
-	
+
 	@Test
 	@Ignore
 	public void getTest2() {
@@ -48,7 +49,17 @@ public class HttpUtilTest {
 		String result1 = HttpUtil.get("http://122.152.198.206:5000/kf?abc= d");
 		Console.log(result1);
 	}
-	
+
+	@Test
+	@Ignore
+	public void getTest4() {
+		// 测试url中带有空格的情况
+		byte[] str = HttpRequest.get("http://img01.fs.yiban.cn/mobile/2D0Y71").execute().bodyBytes();
+
+		FileUtil.writeBytes(str, "f:/test/2D.jpg");
+		Console.log(str);
+	}
+
 	@Test
 	@Ignore
 	public void get12306Test() {
@@ -76,7 +87,7 @@ public class HttpUtilTest {
 			// 打印标题
 			Console.log(title);
 		}
-		
+
 		// 请求下一页，检查Cookie是否复用
 		listContent = HttpUtil.get("https://www.oschina.net/action/ajax/get_more_news_list?newsType=&p=3");
 	}
@@ -223,12 +234,12 @@ public class HttpUtilTest {
 				"http://api.hutool.cn/login?type=aaa&Format=date&Action=DescribeDomainRecords&AccessKeyId=123&SignatureMethod=POST&DomainName=lesper.cn&SignatureNonce=123&Version=1.0&SignatureVersion=4.3.1&Timestamp=123432453",
 				urlWithForm);
 	}
-	
+
 	@Test
 	public void getCharsetTest() {
 		String charsetName = ReUtil.get(HttpUtil.CHARSET_PATTERN, "Charset=UTF-8;fq=0.9", 1);
 		Assert.assertEquals("UTF-8", charsetName);
-		
+
 		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset=utf-8", 1);
 		Assert.assertEquals("utf-8", charsetName);
 		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset='utf-8'", 1);
@@ -238,7 +249,7 @@ public class HttpUtilTest {
 		charsetName = ReUtil.get(HttpUtil.META_CHARSET_PATTERN, "<meta charset = \"utf-8\"", 1);
 		Assert.assertEquals("utf-8", charsetName);
 	}
-	
+
 	@Test
 	public void normalizeParamsTest() {
 		String encodeResult = HttpUtil.normalizeParams("参数", CharsetUtil.CHARSET_UTF_8);

@@ -36,6 +36,8 @@ public class Mail {
 	private String[] ccs;
 	/** 密送人列表（blind carbon copy） */
 	private String[] bccs;
+	/** 回复地址(reply-to) */
+	private String[] reply;
 	/** 标题 */
 	private String title;
 	/** 内容 */
@@ -129,6 +131,18 @@ public class Mail {
 	 */
 	public Mail setBccs(String... bccs) {
 		this.bccs = bccs;
+		return this;
+	}
+	
+	/**
+	 * 设置多个回复地址(reply-to)
+	 * 
+	 * @param reply 回复地址(reply-to)列表
+	 * @return this
+	 * @since 4.6.0
+	 */
+	public Mail setReply(String... reply) {
+		this.reply = reply;
 		return this;
 	}
 
@@ -281,6 +295,11 @@ public class Mail {
 		if (ArrayUtil.isNotEmpty(this.bccs)) {
 			msg.setRecipients(MimeMessage.RecipientType.BCC, InternalMailUtil.parseAddressFromStrs(this.bccs, charset));
 		}
+		// 回复地址(reply-to)
+		if (ArrayUtil.isNotEmpty(this.reply)) {
+			msg.setReplyTo(InternalMailUtil.parseAddressFromStrs(this.reply, charset));
+		}
+		
 		return msg;
 	}
 

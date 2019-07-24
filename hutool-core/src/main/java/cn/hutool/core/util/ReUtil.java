@@ -592,6 +592,15 @@ public class ReUtil {
 	 * 正则替换指定值<br>
 	 * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
 	 * 
+	 * <p>
+	 * 例如：原字符串是：中文1234，我想把1234换成(1234)，则可以：
+	 * 
+	 * <pre>
+	 * ReUtil.replaceAll("中文1234", "(\\d+)", "($1)"))
+	 * 
+	 * 结果：中文(1234)
+	 * </pre>
+	 * 
 	 * @param content 文本
 	 * @param regex 正则
 	 * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容

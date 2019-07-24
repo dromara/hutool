@@ -7,6 +7,8 @@
 
 ### 新特性
 * 【core】         ResourceUtil增加readBytes方法
+* 【captcha】   更换为逻辑字体
+* 【extra】       Mail增加reply（issue#445@Github）
 
 ### Bug修复
 * 【core】         修复ImgUtil.slice宽高取反问题（issue#438@Github）

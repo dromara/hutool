@@ -302,6 +302,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		} else {
 			this.method = method;
 		}
+		
+		// 对于POST请求添加Content-Type: application/x-www-form-urlencoded
+		if(Method.POST == this.method) {
+			this.header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(this.charset));
+		}
+		
 		return this;
 	}
 
