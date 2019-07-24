@@ -39,13 +39,24 @@ public class ResourceUtil {
 	/**
 	 * 读取Classpath下的资源为字符串
 	 * 
-	 * @param resource 资源路径，使用相对ClassPath的路径
+	 * @param resource 可以是绝对路径，也可以是相对路径（相对ClassPath）
 	 * @param charset 编码
 	 * @return 资源内容
 	 * @since 3.1.1
 	 */
 	public static String readStr(String resource, Charset charset) {
 		return getResourceObj(resource).readStr(charset);
+	}
+	
+	/**
+	 * 读取Classpath下的资源为byte[]
+	 * 
+	 * @param resource 可以是绝对路径，也可以是相对路径（相对ClassPath）
+	 * @return 资源内容
+	 * @since 4.5.19
+	 */
+	public static byte[] readBytes(String resource) {
+		return getResourceObj(resource).readBytes();
 	}
 
 	/**
@@ -164,7 +175,7 @@ public class ResourceUtil {
 	 * 获取{@link Resource} 资源对象<br>
 	 * 如果提供路径为绝对路径或路径以file:开头，返回{@link FileResource}，否则返回{@link ClassPathResource}
 	 * 
-	 * @param path 路径，可以是绝对路径，也可以是相对路径
+	 * @param path 路径，可以是绝对路径，也可以是相对路径（相对ClassPath）
 	 * @return {@link Resource} 资源对象
 	 * @since 3.2.1
 	 */

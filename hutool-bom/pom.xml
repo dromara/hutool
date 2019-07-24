@@ -10,7 +10,7 @@
 		<version>4.6.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>hutool-all</artifactId>
+	<artifactId>hutool-bom</artifactId>
 	<name>${project.artifactId}</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
@@ -107,32 +107,5 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<!-- 创建源码jar -->
-							<createSourcesJar>true</createSourcesJar>
-							<artifactSet>
-								<includes>
-									<include>${project.groupId}:*:*</include>
-								</includes>
-							</artifactSet>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>

@@ -8,13 +8,14 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>4.5.19-SNAPSHOT</version>
+	<version>4.6.0-SNAPSHOT</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
 
 	<modules>
 		<module>hutool-all</module>
+		<module>hutool-bom</module>
 		<module>hutool-aop</module>
 		<module>hutool-bloomFilter</module>
 		<module>hutool-cache</module>
