@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.DSFactory;
 
 /**
@@ -29,5 +30,11 @@ public class MetaUtilTest {
 	public void getTableMetaTest() {
 		Table table = MetaUtil.getTableMeta(ds, "user");
 		Assert.assertEquals(CollectionUtil.newHashSet("id"), table.getPkNames());
+	}
+	
+	@Test
+	public void getColumnNamesTest() {
+		String[] names = MetaUtil.getColumnNames(ds, "user");
+		Assert.assertArrayEquals(StrUtil.splitToArray("id,name,age,birthday,gender", ','), names);
 	}
 }
