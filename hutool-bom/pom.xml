@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>cn.hutool</groupId>
@@ -12,7 +12,7 @@
 
 	<artifactId>hutool-bom</artifactId>
 	<name>${project.artifactId}</name>
-	<description>提供丰富的Java工具方法</description>
+	<description>提供丰富的Java工具方法，此模块为Hutool所有模块汇总，最终形式为拆分开的多个jar包，可以通过exclude方式排除不需要的模块</description>
 	<url>https://github.com/looly/hutool</url>
 
 	<dependencies>
