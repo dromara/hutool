@@ -73,8 +73,15 @@ public class MetaUtil {
 		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
+
+			// catalog和schema获取失败默认使用null代替
+			String catalog = getCataLog(conn);
+			if(null == schema) {
+				schema = getSchema(conn);
+			}
+
 			final DatabaseMetaData metaData = conn.getMetaData();
-			rs = metaData.getTables(conn.getCatalog(), schema, tableName, Convert.toStrArray(types));
+			rs = metaData.getTables(catalog, schema, tableName, Convert.toStrArray(types));
 			if (rs == null) {
 				return null;
 			}
@@ -128,8 +135,13 @@ public class MetaUtil {
 		ResultSet rs = null;
 		try {
 			conn = ds.getConnection();
+
+			// catalog和schema获取失败默认使用null代替
+			String catalog = getCataLog(conn);
+			String schema = getSchema(conn);
+
 			final DatabaseMetaData metaData = conn.getMetaData();
-			rs = metaData.getColumns(conn.getCatalog(), conn.getSchema(), tableName, null);
+			rs = metaData.getColumns(catalog, schema, tableName, null);
 			while (rs.next()) {
 				columnNames.add(rs.getString("COLUMN_NAME"));
 			}
@@ -170,18 +182,8 @@ public class MetaUtil {
 			conn = ds.getConnection();
 
 			// catalog和schema获取失败默认使用null代替
-			String catalog = null;
-			try {
-				catalog = conn.getCatalog();
-			} catch (SQLException e) {
-				// ignore
-			}
-			String schema = null;
-			try {
-				schema = conn.getSchema();
-			} catch (SQLException e) {
-				// ignore
-			}
+			String catalog = getCataLog(conn);
+			String schema = getSchema(conn);
 
 			final DatabaseMetaData metaData = conn.getMetaData();
 
@@ -209,5 +211,45 @@ public class MetaUtil {
 		}
 
 		return table;
+	}
+
+	/**
+	 * 获取catalog，获取失败返回{@code null}
+	 * 
+	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
+	 * @return catalog，获取失败返回{@code null}
+	 * @since 4.6.0
+	 */
+	public static String getCataLog(Connection conn) {
+		if (null == conn) {
+			return null;
+		}
+		try {
+			return conn.getCatalog();
+		} catch (SQLException e) {
+			// ignore
+		}
+
+		return null;
+	}
+
+	/**
+	 * 获取schema，获取失败返回{@code null}
+	 * 
+	 * @param conn {@link Connection} 数据库连接，{@code null}时返回null
+	 * @return schema，获取失败返回{@code null}
+	 * @since 4.6.0
+	 */
+	public static String getSchema(Connection conn) {
+		if (null == conn) {
+			return null;
+		}
+		try {
+			return conn.getSchema();
+		} catch (SQLException e) {
+			// ignore
+		}
+
+		return null;
 	}
 }
