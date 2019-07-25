@@ -20,6 +20,7 @@
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-bom</artifactId>
 			<version>${project.parent.version}</version>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 
