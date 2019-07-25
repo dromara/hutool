@@ -1,9 +1,10 @@
 language: java
 
+sudo: false # faster builds
+
 jdk:
   - openjdk8
-
-script: "mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
+  - oraclejdk8
 
 notifications:
   email: false
@@ -11,3 +12,10 @@ notifications:
 cache:
   directories:
     - '$HOME/.m2/repository'
+
+script: 
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn cobertura:cobertura -DskipTests=true -Dmaven.javadoc.skip.true
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
