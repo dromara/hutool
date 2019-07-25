@@ -6,7 +6,6 @@ install: true
 
 jdk:
   - openjdk8
-  - oraclejdk11
 
 notifications:
   email: false
