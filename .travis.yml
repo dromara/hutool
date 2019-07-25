@@ -4,7 +4,7 @@ sudo: false # faster builds
 
 jdk:
   - openjdk8
-  - oraclejdk8
+  - oraclejdk11
 
 notifications:
   email: false
