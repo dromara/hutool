@@ -1,12 +1,14 @@
-package cn.hutool.core.util;
+package cn.hutool.core.net;
 
 import java.net.InetAddress;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.util.ReUtil;
 
 /**
  * NetUtil单元测试
@@ -17,18 +19,21 @@ import cn.hutool.core.net.NetUtil;
 public class NetUtilTest {
 
 	@Test
+	@Ignore
 	public void getLocalhostStrTest() {
 		String localhost = NetUtil.getLocalhostStr();
 		Assert.assertNotNull(localhost);
 	}
 
 	@Test
+	@Ignore
 	public void getLocalhostTest() {
 		InetAddress localhost = NetUtil.getLocalhost();
 		Assert.assertNotNull(localhost);
 	}
 
 	@Test
+	@Ignore
 	public void getLocalMacAddressTest() {
 		String macAddress = NetUtil.getLocalMacAddress();
 		Assert.assertNotNull(macAddress);

@@ -1,6 +1,6 @@
 package cn.hutool.http.test;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -213,7 +213,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void urlWithFormTest() {
-		Map<String, Object> param = new HashMap<>();
+		Map<String, Object> param = new LinkedHashMap<>();
 		param.put("AccessKeyId", "123");
 		param.put("Action", "DescribeDomainRecords");
 		param.put("Format", "date");

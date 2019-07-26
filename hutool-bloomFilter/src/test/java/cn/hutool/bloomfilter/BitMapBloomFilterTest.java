@@ -38,6 +38,7 @@ public class BitMapBloomFilterTest {
 	}
 
 	@Test
+	@Ignore
 	public void testLongMap(){
 		LongMap longMap = new LongMap();
 

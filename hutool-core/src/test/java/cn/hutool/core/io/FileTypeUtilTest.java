@@ -18,6 +18,7 @@ import cn.hutool.core.lang.Console;
 public class FileTypeUtilTest {
 	
 	@Test
+	@Ignore
 	public void fileTypeUtilTest() {
 		File file = FileUtil.file("hutool.jpg");
 		String type = FileTypeUtil.getType(file);
