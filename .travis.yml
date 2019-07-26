@@ -16,7 +16,8 @@ cache:
 
 script: 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - mvn cobertura:cobertura -DskipTests=true -Dmaven.javadoc.skip.true
+  - mvn cobertura:cobertura -Dcobertura.report.format=xml -Dmaven.javadoc.skip.true
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -t 6f46f298-6030-476d-8ff1-0fac047342b0
+  - bash <(curl -s https://codecov.io/bash)
+
