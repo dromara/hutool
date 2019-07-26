@@ -11,6 +11,7 @@
 * 【extra】       Mail增加reply（issue#445@Github）
 * 【core】        去掉重复方法（issue#IZQYR@Gitee）
 * 【db】          改进结果集转Bean的下划线和驼峰兼容性（issue#IZOPL@Gitee）
+* 【system】    增加JavaInfo对新版本java的支持（pr#454@Github）
 
 ### Bug修复
 * 【core】         修复ImgUtil.slice宽高取反问题（issue#438@Github）
