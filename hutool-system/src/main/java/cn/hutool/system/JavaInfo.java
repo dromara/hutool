@@ -1,5 +1,7 @@
 package cn.hutool.system;
 
+import cn.hutool.core.util.ReUtil;
+
 import java.io.Serializable;
 
 /**
@@ -23,6 +25,10 @@ public class JavaInfo implements Serializable{
 	private final boolean IS_JAVA_1_6 = getJavaVersionMatches("1.6");
 	private final boolean IS_JAVA_1_7 = getJavaVersionMatches("1.7");
 	private final boolean IS_JAVA_1_8 = getJavaVersionMatches("1.8");
+	private final boolean IS_JAVA_9 = getJavaVersionMatches("9");
+	private final boolean IS_JAVA_10 = getJavaVersionMatches("10");
+	private final boolean IS_JAVA_11 = getJavaVersionMatches("11");
+	private final boolean IS_JAVA_12 = getJavaVersionMatches("12");
 
 	/**
 	 * 取得当前Java impl.的版本（取自系统属性：<code>java.version</code>）。
@@ -57,7 +63,7 @@ public class JavaInfo implements Serializable{
 	}
 
 	/**
-	 * 取得当前Java impl.的版本（取自系统属性：<code>java.version</code>）。
+	 * 取得当前Java impl.的版本（取自系统属性：<code>java.version</code>），java10及其之后的版本返回值为4位。
 	 * 
 	 * <p>
 	 * 例如：
@@ -65,6 +71,7 @@ public class JavaInfo implements Serializable{
 	 * <ul>
 	 * <li>JDK 1.2：<code>120</code>。</li>
 	 * <li>JDK 1.3.1：<code>131</code></li>
+	 * <li>JDK 11.0.2：<code>1102</code></li>
 	 * </ul>
 	 * 
 	 * 
@@ -86,13 +93,11 @@ public class JavaInfo implements Serializable{
 			return 0f;
 		}
 
-		String str = JAVA_VERSION.substring(0, 3);
+		String str = JAVA_VERSION;
 
-		if (JAVA_VERSION.length() >= 5) {
-			str = str + JAVA_VERSION.substring(4, 5);
-		}
+        str = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2})?", str,0);
 
-		return Float.parseFloat(str);
+        return Float.parseFloat(str);
 	}
 
 	/**
@@ -105,17 +110,25 @@ public class JavaInfo implements Serializable{
 			return 0;
 		}
 
-		String str = JAVA_VERSION.substring(0, 1);
+        String java_version = JAVA_VERSION;
 
-		str = str + JAVA_VERSION.substring(2, 3);
+        java_version = ReUtil.get("^[0-9]{1,2}(\\.[0-9]{1,2}){0,2}", java_version,0);
 
-		if (JAVA_VERSION.length() >= 5) {
-			str = str + JAVA_VERSION.substring(4, 5);
-		} else {
-			str = str + "0";
+        String[] split = java_version.split("\\.");
+
+        String result = "";
+
+        for (int i = 0; i < split.length; i++) {
+            result = result + split[i];
+        }
+
+        //保证java10及其之后的版本返回的值为4位
+        if (split[0].length()>1 && result.length()!=4){
+        	result = result + "0000";
+        	result = result.substring(0,4);
 		}
 
-		return Integer.parseInt(str);
+		return Integer.parseInt(result);
 	}
 
 	/**
@@ -157,7 +170,7 @@ public class JavaInfo implements Serializable{
 	 * 
 	 * @return 如果当前Java版本为1.1，则返回<code>true</code>
 	 */
-	public final boolean isJava11() {
+	public final boolean isJava1_1() {
 		return IS_JAVA_1_1;
 	}
 
@@ -170,7 +183,7 @@ public class JavaInfo implements Serializable{
 	 * 
 	 * @return 如果当前Java版本为1.2，则返回<code>true</code>
 	 */
-	public final boolean isJava12() {
+	public final boolean isJava1_2() {
 		return IS_JAVA_1_2;
 	}
 
@@ -183,7 +196,7 @@ public class JavaInfo implements Serializable{
 	 * 
 	 * @return 如果当前Java版本为1.3，则返回<code>true</code>
 	 */
-	public final boolean isJava13() {
+	public final boolean isJava1_3() {
 		return IS_JAVA_1_3;
 	}
 
@@ -196,7 +209,7 @@ public class JavaInfo implements Serializable{
 	 * 
 	 * @return 如果当前Java版本为1.4，则返回<code>true</code>
 	 */
-	public final boolean isJava14() {
+	public final boolean isJava1_4() {
 		return IS_JAVA_1_4;
 	}
 
@@ -209,7 +222,7 @@ public class JavaInfo implements Serializable{
 	 * 
 	 * @return 如果当前Java版本为1.5，则返回<code>true</code>
 	 */
-	public final boolean isJava15() {
+	public final boolean isJava1_5() {
 		return IS_JAVA_1_5;
 	}
 
@@ -222,7 +235,7 @@ public class JavaInfo implements Serializable{
 	 * 
 	 * @return 如果当前Java版本为1.6，则返回<code>true</code>
 	 */
-	public final boolean isJava16() {
+	public final boolean isJava1_6() {
 		return IS_JAVA_1_6;
 	}
 
@@ -235,7 +248,7 @@ public class JavaInfo implements Serializable{
 	 * 
 	 * @return 如果当前Java版本为1.7，则返回<code>true</code>
 	 */
-	public final boolean isJava17() {
+	public final boolean isJava1_7() {
 		return IS_JAVA_1_7;
 	}
 
@@ -248,8 +261,60 @@ public class JavaInfo implements Serializable{
 	 *
 	 * @return 如果当前Java版本为1.8，则返回<code>true</code>
 	 */
-	public final boolean isJava18() {
+	public final boolean isJava1_8() {
 		return IS_JAVA_1_8;
+	}
+
+	/**
+	 * 判断当前Java的版本。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
+	 *
+	 *
+	 * @return 如果当前Java版本为9，则返回<code>true</code>
+	 */
+	public final boolean isJava9() {
+		return IS_JAVA_9;
+	}
+
+	/**
+	 * 判断当前Java的版本。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
+	 *
+	 *
+	 * @return 如果当前Java版本为10，则返回<code>true</code>
+	 */
+	public final boolean isJava10() {
+		return IS_JAVA_10;
+	}
+
+	/**
+	 * 判断当前Java的版本。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
+	 *
+	 *
+	 * @return 如果当前Java版本为11，则返回<code>true</code>
+	 */
+	public final boolean isJava11() {
+		return IS_JAVA_11;
+	}
+
+	/**
+	 * 判断当前Java的版本。
+	 *
+	 * <p>
+	 * 如果不能取得系统属性<code>java.version</code>（因为Java安全限制），则总是返回 <code>false</code>
+	 *
+	 *
+	 * @return 如果当前Java版本为12，则返回<code>true</code>
+	 */
+	public final boolean isJava12() {
+		return IS_JAVA_12;
 	}
 
 	/**
