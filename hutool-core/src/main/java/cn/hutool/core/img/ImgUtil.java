@@ -64,11 +64,10 @@ public class ImgUtil {
 
 	// ---------------------------------------------------------------------------------------------------------------------- scale
 	/**
-	 * 缩放图像（按比例缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放图像（按比例缩放），目标文件的扩展名决定目标文件类型
 	 * 
 	 * @param srcImageFile 源图像文件
-	 * @param destImageFile 缩放后的图像文件
+	 * @param destImageFile 缩放后的图像文件，扩展名决定目标类型
 	 * @param scale 缩放比例。比例大于1时为放大，小于1大于0为缩小
 	 */
 	public static void scale(File srcImageFile, File destImageFile, float scale) {

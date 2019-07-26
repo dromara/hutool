@@ -6,12 +6,14 @@
 ## 4.6.0
 
 ### 新特性
+* 【all  】         增加hutool-bom模块，用于可排除的依赖引入
 * 【core】         ResourceUtil增加readBytes方法
 * 【captcha】   更换为逻辑字体
 * 【extra】       Mail增加reply（issue#445@Github）
 * 【core】        去掉重复方法（issue#IZQYR@Gitee）
 * 【db】          改进结果集转Bean的下划线和驼峰兼容性（issue#IZOPL@Gitee）
 * 【system】    增加JavaInfo对新版本java的支持（pr#454@Github）
+* 【extra】      增加可选标志位，是否返回当前目录（issue#446@Github）
 
 ### Bug修复
 * 【core】         修复ImgUtil.slice宽高取反问题（issue#438@Github）

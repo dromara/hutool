@@ -32,6 +32,8 @@ public class Ftp extends AbstractFtp {
 
 	private FTPClient client;
 	private FtpMode mode;
+	/** 执行完操作是否返回当前目录 */
+	private boolean backToPwd;
 
 	/**
 	 * 构造，匿名登录
@@ -76,7 +78,7 @@ public class Ftp extends AbstractFtp {
 	public Ftp(String host, int port, String user, String password, Charset charset) {
 		this(host, port, user, password, charset, null);
 	}
-	
+
 	/**
 	 * 构造
 	 *
@@ -105,7 +107,7 @@ public class Ftp extends AbstractFtp {
 	public Ftp init() {
 		return this.init(this.host, this.port, this.user, this.password, this.mode);
 	}
-	
+
 	/**
 	 * 初始化连接
 	 *
@@ -116,7 +118,7 @@ public class Ftp extends AbstractFtp {
 	 * @return this
 	 */
 	public Ftp init(String host, int port, String user, String password) {
-		return this.init(host,port,user,password,null);
+		return this.init(host, port, user, password, null);
 	}
 
 	/**
@@ -150,7 +152,7 @@ public class Ftp extends AbstractFtp {
 			throw new FtpException("Login failed for user [{}], reply code is: [{}]", user, replyCode);
 		}
 		this.client = client;
-		if (mode != null ) {
+		if (mode != null) {
 			setMode(mode);
 		}
 		return this;
@@ -175,11 +177,21 @@ public class Ftp extends AbstractFtp {
 		}
 		return this;
 	}
-	
+
 	/**
-	 * 如果连接超时的话，重新进行连接
-	 * 经测试，当连接超时时，client.isConnected()仍然返回ture，无法判断是否连接超时
-	 * 因此，通过发送pwd命令的方式，检查连接是否超时
+	 * 设置执行完操作是否返回当前目录
+	 * 
+	 * @param backToPwd 执行完操作是否返回当前目录
+	 * @return this
+	 * @since 4.6.0
+	 */
+	public Ftp setBackToPwd(boolean backToPwd) {
+		this.backToPwd = backToPwd;
+		return this;
+	}
+
+	/**
+	 * 如果连接超时的话，重新进行连接 经测试，当连接超时时，client.isConnected()仍然返回ture，无法判断是否连接超时 因此，通过发送pwd命令的方式，检查连接是否超时
 	 * 
 	 * @return this
 	 */
@@ -189,9 +201,9 @@ public class Ftp extends AbstractFtp {
 		try {
 			pwd = pwd();
 		} catch (FtpException fex) {
-			//ignore
+			// ignore
 		}
-		
+
 		if (pwd == null) {
 			return this.init();
 		}
@@ -206,6 +218,10 @@ public class Ftp extends AbstractFtp {
 	 */
 	@Override
 	public boolean cd(String directory) {
+		if (StrUtil.isBlank(directory)) {
+			return false;
+		}
+
 		boolean flag = true;
 		try {
 			flag = client.changeWorkingDirectory(directory);
@@ -233,39 +249,37 @@ public class Ftp extends AbstractFtp {
 	@Override
 	public List<String> ls(String path) {
 		final FTPFile[] ftpFiles = lsFiles(path);
-		
+
 		final List<String> fileNames = new ArrayList<>();
 		for (FTPFile ftpFile : ftpFiles) {
 			fileNames.add(ftpFile.getName());
 		}
 		return fileNames;
 	}
-	
+
 	/**
 	 * 遍历某个目录下所有文件和目录，不会递归遍历
 	 * 
 	 * @param path 目录
 	 * @return 文件或目录列表
 	 */
-	public FTPFile[] lsFiles(String path){
+	public FTPFile[] lsFiles(String path) {
 		String pwd = null;
-		if(StrUtil.isNotBlank(path)) {
+		if (StrUtil.isNotBlank(path)) {
 			pwd = pwd();
 			cd(path);
 		}
-		
+
 		FTPFile[] ftpFiles;
 		try {
 			ftpFiles = this.client.listFiles();
 		} catch (IOException e) {
 			throw new FtpException(e);
-		}
-		
-		if(StrUtil.isNotBlank(pwd)) {
+		} finally {
 			// 回到原目录
 			cd(pwd);
 		}
-		
+
 		return ftpFiles;
 	}
 
@@ -310,8 +324,10 @@ public class Ftp extends AbstractFtp {
 			isSuccess = client.deleteFile(fileName);
 		} catch (IOException e) {
 			throw new FtpException(e);
+		} finally {
+			// 回到原目录
+			cd(pwd);
 		}
-		cd(pwd);
 		return isSuccess;
 	}
 
@@ -408,19 +424,28 @@ public class Ftp extends AbstractFtp {
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
-		
-		if(StrUtil.isNotBlank(path)) {
+
+		String pwd = null;
+		if (this.backToPwd) {
+			pwd = pwd();
+		}
+
+		if (StrUtil.isNotBlank(path)) {
 			mkDirs(path);
 			boolean isOk = cd(path);
-			if(false == isOk) {
+			if (false == isOk) {
 				return false;
 			}
 		}
-		
+
 		try {
 			return client.storeFile(fileName, fileStream);
 		} catch (IOException e) {
 			throw new FtpException(e);
+		} finally {
+			if (this.backToPwd) {
+				cd(pwd);
+			}
 		}
 	}
 
@@ -466,12 +491,21 @@ public class Ftp extends AbstractFtp {
 	 * @param out 输出位置
 	 */
 	public void download(String path, String fileName, OutputStream out) {
+		String pwd = null;
+		if (this.backToPwd) {
+			pwd = pwd();
+		}
+
 		cd(path);
 		try {
 			client.setFileType(FTPClient.BINARY_FILE_TYPE);
 			client.retrieveFile(fileName, out);
 		} catch (IOException e) {
 			throw new FtpException(e);
+		} finally {
+			if (backToPwd) {
+				cd(pwd);
+			}
 		}
 	}
 
@@ -486,7 +520,7 @@ public class Ftp extends AbstractFtp {
 
 	@Override
 	public void close() throws IOException {
-		if(null != this.client) {
+		if (null != this.client) {
 			this.client.logout();
 			if (this.client.isConnected()) {
 				this.client.disconnect();
