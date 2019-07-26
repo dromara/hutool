@@ -122,7 +122,9 @@ public class BeanUtil {
 	 * 
 	 * @param bean Bean
 	 * @return 是否有值为null的字段
+	 * @deprecated 请使用{@link #hasNullField(Object)}
 	 */
+	@Deprecated
 	public static boolean hasNull(Object bean) {
 		final Field[] fields = ClassUtil.getDeclaredFields(bean.getClass());
 
