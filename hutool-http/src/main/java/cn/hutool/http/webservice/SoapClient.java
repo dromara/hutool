@@ -20,6 +20,7 @@ import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -454,6 +455,8 @@ public class SoapClient {
 			return this.factory.createMessage(headers, res.bodyStream());
 		} catch (IOException | SOAPException e) {
 			throw new SoapRuntimeException(e);
+		} finally {
+			IoUtil.close(res);
 		}
 	}
 

@@ -303,11 +303,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			this.method = method;
 		}
 		
-		// 对于POST请求添加Content-Type: application/x-www-form-urlencoded
-		if(Method.POST == this.method) {
-			this.header(Header.CONTENT_TYPE, ContentType.FORM_URLENCODED.toString(this.charset));
-		}
-		
 		return this;
 	}
 
@@ -914,6 +909,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 初始化网络连接
 	 */
 	private void initConnecton() {
+		if(null != this.httpConnection) {
+			// 执行下次请求时自动关闭上次请求（常用于转发）
+			this.httpConnection.disconnectQuietly();
+		}
+		
 		this.httpConnection = HttpConnection.create(URLUtil.toUrlForHttp(this.url, this.urlHandler), this.proxy)//
 				.setMethod(this.method)//
 				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
@@ -967,6 +967,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			try {
 				responseCode = httpConnection.responseCode();
 			} catch (IOException e) {
+				// 错误时静默关闭连接
+				this.httpConnection.disconnectQuietly();
 				throw new HttpException(e);
 			}
 			if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -976,7 +978,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 						redirectCount++;
 						return execute();
 					} else {
-						StaticLog.warn("URL [{}] redirect count more than two !", this.url);
+						StaticLog.warn("URL [{}] redirect count more than {} !", this.url, this.maxRedirectCount);
 					}
 				}
 			}
@@ -1001,12 +1003,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				this.httpConnection.connect();
 			}
 		} catch (IOException e) {
-			throw new HttpException(e.getMessage(), e);
+			// 异常时关闭连接
+			this.httpConnection.disconnectQuietly();
+			throw new HttpException(e);
 		}
 	}
 
 	/**
-	 * 发送普通表单
+	 * 发送普通表单<br>
+	 * 发送数据后自动关闭输出流
 	 * 
 	 * @throws IOException
 	 */
@@ -1026,22 +1031,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 发送多组件请求（例如包含文件的表单）
+	 * 发送多组件请求（例如包含文件的表单）<br>
+	 * 发送数据后自动关闭输出流
 	 * 
 	 * @throws IOException
 	 */
 	private void sendMultipart() throws IOException {
 		setMultipart();// 设置表单类型为Multipart
 
-		final OutputStream out = this.httpConnection.getOutputStream();
-		try {
+		try(OutputStream out = this.httpConnection.getOutputStream()) {
 			writeFileForm(out);
 			writeForm(out);
 			formEnd(out);
 		} catch (IOException e) {
 			throw e;
-		} finally {
-			IoUtil.close(out);
 		}
 	}
 

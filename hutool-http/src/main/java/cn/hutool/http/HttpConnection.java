@@ -384,6 +384,22 @@ public class HttpConnection {
 		}
 		return this;
 	}
+	
+	/**
+	 * 静默断开连接。不抛出异常
+	 * 
+	 * @return this
+	 * @since 4.6.0
+	 */
+	public HttpConnection disconnectQuietly() {
+		try {
+			disconnect();
+		} catch (Throwable e) {
+			// ignore
+		}
+		
+		return this;
+	}
 
 	/**
 	 * 断开连接

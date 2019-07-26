@@ -64,7 +64,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		this.charset = charset;
 		this.isAsync = isAsync;
 		this.ignoreBody = isIgnoreBody;
-		init();
+		initWithDisconnect();
 	}
 
 	/**
@@ -92,9 +92,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 当调用此方法时，异步状态转为同步状态，此时从Http链接流中读取body内容并暂存在内容中。如果已经是同步状态，则不进行任何操作。
 	 * 
 	 * @return this
-	 * @throws HttpException IO异常
 	 */
-	public HttpResponse sync() throws HttpException {
+	public HttpResponse sync() {
 		return this.isAsync ? forceSync() : this;
 	}
 
@@ -216,11 +215,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @throws HttpException 包装IO异常
 	 */
 	public String body() throws HttpException {
-		try {
-			return HttpUtil.getString(bodyBytes(), this.charset, null == this.charsetFromResponse);
-		} catch (IOException e) {
-			throw new HttpException(e);
-		}
+		return HttpUtil.getString(bodyBytes(), this.charset, null == this.charsetFromResponse);
 	}
 
 	/**
@@ -312,7 +307,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		IoUtil.close(this.in);
 		this.in = null;
 		// 关闭连接
-		this.httpConnection.disconnect();
+		this.httpConnection.disconnectQuietly();
 	}
 
 	@Override
@@ -331,6 +326,29 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	// ---------------------------------------------------------------- Private method start
 	/**
+	 * 初始化Http响应，并在报错时关闭连接。<br>
+	 * 初始化包括：
+	 * 
+	 * <pre>
+	 * 1、读取Http状态
+	 * 2、读取头信息
+	 * 3、持有Http流，并不关闭流
+	 * </pre>
+	 * 
+	 * @return this
+	 * @throws HttpException IO异常
+	 */
+	private HttpResponse initWithDisconnect() throws HttpException {
+		try {
+			init();
+		} catch (HttpException e) {
+			this.httpConnection.disconnectQuietly();
+			throw e;
+		}
+		return this;
+	}
+	
+	/**
 	 * 初始化Http响应<br>
 	 * 初始化包括：
 	 * 
@@ -346,7 +364,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	private HttpResponse init() throws HttpException {
 		try {
 			this.status = httpConnection.responseCode();
-			this.in = (this.status < HttpStatus.HTTP_BAD_REQUEST) ? httpConnection.getInputStream() : httpConnection.getErrorStream();
+			this.in = (this.status < HttpStatus.HTTP_BAD_REQUEST) ? this.httpConnection.getInputStream() : this.httpConnection.getErrorStream();
 		} catch (IOException e) {
 			if (e instanceof FileNotFoundException) {
 				// 服务器无返回内容，忽略之

@@ -16,6 +16,7 @@
 * 【core】         修复ImgUtil.slice宽高取反问题（issue#438@Github）
 * 【crypto】      修复MD516位摘要长度错误问题（issue#IZNPE@Gitee）
 * 【core】         修复ImgUtil.hexToColor调用参数问题（issue#449@Github）
+* 【http】          修复可能存在的Http请求结束未关闭连接的情况（issue#449@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

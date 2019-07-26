@@ -695,9 +695,8 @@ public class HttpUtil {
 	 * @param charset 字符集
 	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
 	 * @return 内容
-	 * @throws IOException IO异常
 	 */
-	public static String getString(byte[] contentBytes, Charset charset, boolean isGetCharsetFromContent) throws IOException {
+	public static String getString(byte[] contentBytes, Charset charset, boolean isGetCharsetFromContent) {
 		if (null == contentBytes) {
 			return null;
 		}
