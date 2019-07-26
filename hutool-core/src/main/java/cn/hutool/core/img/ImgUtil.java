@@ -1730,7 +1730,7 @@ public class ImgUtil {
 	 * @since 4.1.14
 	 */
 	public static Color hexToColor(String hex) {
-		return getColor(Integer.parseInt(StrUtil.removePrefix("#", hex), 16));
+		return getColor(Integer.parseInt(StrUtil.removePrefix(hex, "#"), 16));
 	}
 
 	/**

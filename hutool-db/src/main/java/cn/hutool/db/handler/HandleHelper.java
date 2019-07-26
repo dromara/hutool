@@ -88,8 +88,11 @@ public class HandleHelper {
 		Object value = null;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);
-			//驼峰命名风格
-			pd = propMap.get(StrUtil.toCamelCase(columnLabel));
+			pd = propMap.get(columnLabel);
+			if(null == pd) {
+				// 尝试驼峰命名风格
+				pd = propMap.get(StrUtil.toCamelCase(columnLabel));
+			}
 			setter = (null == pd) ? null : pd.getSetter();
 			if(null != setter) {
 				value = getColumnValue(rs, columnLabel,  meta.getColumnType(i), TypeUtil.getFirstParamType(setter));
