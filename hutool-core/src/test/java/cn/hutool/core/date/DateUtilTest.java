@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.TimeZone;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import cn.hutool.core.collection.CollUtil;
@@ -24,7 +25,7 @@ import cn.hutool.core.date.BetweenFormater.Level;
  */
 public class DateUtilTest {
 
-	@Test
+	@Before
 	public void init() {
 		// 设置当前时区，防止CI错误
 		Locale.setDefault(Locale.CHINA);
