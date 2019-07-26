@@ -15,6 +15,7 @@ cache:
     - '$HOME/.m2/repository'
 
 script: 
+  - export TZ=Asia/Shanghai
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - mvn cobertura:cobertura -Dcobertura.report.format=xml -Dmaven.javadoc.skip.true
 
