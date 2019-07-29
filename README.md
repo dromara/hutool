@@ -132,7 +132,7 @@ compile 'cn.hutool:hutool-all:4.6.2'
 访问Hutool的码云主页：[https://gitee.com/loolly/hutool](https://gitee.com/loolly/hutool) 下载整个项目源码（v4-master或v4-dev分支都可）然后进入Hutool项目目录执行：
 
 ```sh
-bin/hutool.sh install
+./hutool.sh install
 ```
 
 然后就可以使用Maven引入了。
