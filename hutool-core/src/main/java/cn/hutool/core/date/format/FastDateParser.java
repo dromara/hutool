@@ -654,6 +654,7 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 	 */
 	static class TimeZoneStrategy extends PatternStrategy {
 		private static final String RFC_822_TIME_ZONE = "[+-]\\d{4}";
+		private static final String UTC_TIME_ZONE_WITH_OFFSET = "[+-]\\d{2}:\\d{2}";
 		private static final String GMT_OPTION = "GMT[+-]\\d{1,2}:\\d{2}";
 
 		private final Locale locale;
@@ -683,7 +684,7 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 			this.locale = locale;
 
 			final StringBuilder sb = new StringBuilder();
-			sb.append("((?iu)" + RFC_822_TIME_ZONE + "|" + GMT_OPTION);
+			sb.append("((?iu)" + RFC_822_TIME_ZONE + "|" + UTC_TIME_ZONE_WITH_OFFSET + "|" + GMT_OPTION);
 
 			final Set<String> sorted = new TreeSet<>(LONGER_FIRST_LOWERCASE);
 

@@ -26,6 +26,15 @@ import cn.hutool.core.util.StrUtil;
  * @author xiaoleilu
  */
 public class DateUtil {
+	
+	/**
+	 * java.util.Date EEE MMM zzz 缩写数组
+	 */
+	private final static String wtb[] = {
+		"sun", "mon", "tue", "wed", "thu", "fri", "sat",
+		"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec",
+		"gmt", "ut", "utc", "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"
+	};
 
 	/**
 	 * 转换为{@link DateTime}对象
@@ -688,14 +697,42 @@ public class DateUtil {
 	}
 
 	/**
-	 * 解析UTC时间，格式为：yyyy-MM-dd'T'HH:mm:ss'Z
+	 * 解析UTC时间，格式：<br>
+	 * <ol>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
+	 * </ol>
 	 * 
 	 * @param utcString UTC时间
 	 * @return 日期对象
 	 * @since 4.1.14
 	 */
 	public static DateTime parseUTC(String utcString) {
-		return parse(utcString, DatePattern.UTC_FORMAT);
+		if (utcString == null) {
+			return null;
+		}
+		int length = utcString.length();
+		if (StrUtil.contains(utcString, 'Z')) {
+			if (length == DatePattern.UTC_PATTERN.length() - 4) {
+				// 格式类似：2018-09-13T05:34:31Z
+				return parse(utcString, DatePattern.UTC_FORMAT);
+			} else if (length == DatePattern.UTC_MS_PATTERN.length() - 4) {
+				// 格式类似：2018-09-13T05:34:31.999Z
+				return parse(utcString, DatePattern.UTC_MS_FORMAT);
+			}
+		} else {
+			if (length == DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN.length() - 3 + 5 || length == DatePattern.UTC_WITH_ZONE_OFFSET_PATTERN.length() - 3 + 6) {
+				// 格式类似：2018-09-13T05:34:31+0800 或 2018-09-13T05:34:31+08:00
+				return parse(utcString, DatePattern.UTC_WITH_ZONE_OFFSET_FORMAT);
+			}  else if (length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() - 3 + 5 || length == DatePattern.UTC_MS_WITH_ZONE_OFFSET_PATTERN.length() - 3 + 6) {
+				// 格式类似：2018-09-13T05:34:31.999+0800 或 2018-09-13T05:34:31.999+08:00
+				return parse(utcString, DatePattern.UTC_MS_WITH_ZONE_OFFSET_FORMAT);
+			}
+		}
+		// 没有更多匹配的时间格式
+		throw new DateException("No format fit for date String [{}] !", utcString);
 	}
 
 	/**
@@ -717,6 +754,10 @@ public class DateUtil {
 	 * <li>yyyyMMdd</li>
 	 * <li>EEE, dd MMM yyyy HH:mm:ss z</li>
 	 * <li>EEE MMM dd HH:mm:ss zzz yyyy</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ssZ</li>
+	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
 	 * </ol>
 	 * 
 	 * @param dateStr 日期字符串
@@ -744,11 +785,11 @@ public class DateUtil {
 		} else if (ReUtil.isMatch(PatternPool.TIME, dateStr)) {
 			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
 			return parseTimeToday(dateStr);
-		} else if (StrUtil.contains(dateStr, '+') || StrUtil.containsIgnoreCase(dateStr, "GMT")) {
+		} else if (StrUtil.containsAnyIgnoreCase(dateStr, wtb)) {
 			// JDK的Date对象toString默认格式，类似于：Tue Jun 4 16:25:15 +0800 2019 或 Thu May 16 17:57:18 GMT+08:00 2019
 			return parse(dateStr, DatePattern.JDK_DATETIME_FORMAT);
 		} else if (StrUtil.contains(dateStr, 'T')) {
-			// UTC时间格式：类似2018-09-13T05:34:31
+			// UTC时间
 			return parseUTC(dateStr);
 		}
 

@@ -80,4 +80,19 @@ public class DatePattern {
 	public final static String UTC_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	/** UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss'Z' */
 	public final static FastDateFormat UTC_FORMAT = FastDateFormat.getInstance(UTC_PATTERN, TimeZone.getTimeZone("UTC"));
+	
+	/** UTC时间：yyyy-MM-dd'T'HH:mm:ssZ */
+	public final static String UTC_WITH_ZONE_OFFSET_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+	/** UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ssZ */
+	public final static FastDateFormat UTC_WITH_ZONE_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_WITH_ZONE_OFFSET_PATTERN, TimeZone.getTimeZone("UTC"));
+	
+	/** UTC时间：yyyy-MM-dd'T'HH:mm:ss.SSS'Z' */
+	public final static String UTC_MS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	/** UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ss.SSS'Z' */
+	public final static FastDateFormat UTC_MS_FORMAT = FastDateFormat.getInstance(UTC_MS_PATTERN, TimeZone.getTimeZone("UTC"));
+	
+	/** UTC时间：yyyy-MM-dd'T'HH:mm:ssZ */
+	public final static String UTC_MS_WITH_ZONE_OFFSET_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	/** UTC时间{@link FastDateFormat}：yyyy-MM-dd'T'HH:mm:ssZ */
+	public final static FastDateFormat UTC_MS_WITH_ZONE_OFFSET_FORMAT = FastDateFormat.getInstance(UTC_MS_WITH_ZONE_OFFSET_PATTERN, TimeZone.getTimeZone("UTC"));
 }

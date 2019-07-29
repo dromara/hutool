@@ -1,6 +1,7 @@
 package cn.hutool.core.date;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -425,6 +426,48 @@ public class DateUtilTest {
 		// 使用当前（上海）时区
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:32+0800";
+		dt = DateUtil.parseUTC(dateStr1);
+		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		Assert.assertEquals("2018-09-13 13:34:32", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:33+08:00";
+		dt = DateUtil.parseUTC(dateStr1);
+		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		Assert.assertEquals("2018-09-13 13:34:33", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:34+0800";
+		dt = DateUtil.parse(dateStr1);
+		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		Assert.assertEquals("2018-09-13 13:34:34", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:35+08:00";
+		dt = DateUtil.parse(dateStr1);
+		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
+		Assert.assertEquals("2018-09-13 13:34:35", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:36.999+0800";
+		dt = DateUtil.parseUTC(dateStr1);
+		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_MS_PATTERN);
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+		dateStr = dt.toString(simpleDateFormat);
+		Assert.assertEquals("2018-09-13 13:34:36.999", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:37.999+08:00";
+		dt = DateUtil.parseUTC(dateStr1);
+		dateStr = dt.toString(simpleDateFormat);
+		Assert.assertEquals("2018-09-13 13:34:37.999", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:38.999+0800";
+		dt = DateUtil.parse(dateStr1);
+		dateStr = dt.toString(simpleDateFormat);
+		Assert.assertEquals("2018-09-13 13:34:38.999", dateStr);
+		
+		dateStr1 = "2018-09-13T13:34:39.999+08:00";
+		dt = DateUtil.parse(dateStr1);
+		dateStr = dt.toString(simpleDateFormat);
+		Assert.assertEquals("2018-09-13 13:34:39.999", dateStr);
 	}
 
 	@Test
