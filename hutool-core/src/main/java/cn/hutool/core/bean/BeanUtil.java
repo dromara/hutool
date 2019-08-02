@@ -24,6 +24,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.CaseInsensitiveMap;
@@ -726,9 +727,7 @@ public class BeanUtil {
 	 * @param complexCompareOption 比较选项，见 {@link ComplexCompareOption}
 	 */
 	public static <T> List<ModifyField> compareProperties(T source, T target, ComplexCompareOption complexCompareOption) {
-		if (null == complexCompareOption) {
-			complexCompareOption = new ComplexCompareOption();
-		}
+		Assert.notNull(complexCompareOption, "ComplexCompareOption not null or use method [compareProperties(T source, T target)]");
 		return BeanCompare.create(source, target, complexCompareOption).compare();
 	}
 
@@ -741,9 +740,7 @@ public class BeanUtil {
 	 * @param compareOption 比较选项，见 {@link CompareOption}
 	 */
 	public static <T> List<ModifyField> compareProperties(T source, T target, CompareOption compareOption) {
-		if (null == compareOption) {
-			compareOption = new CompareOption();
-		}
+		Assert.notNull(compareOption, "CompareOption not null or use method [compareProperties(T source, T target)]");
 		return BeanCompare.create(source, target, compareOption).compare();
 	}
 
@@ -755,6 +752,6 @@ public class BeanUtil {
 	 * @param target 目标Bean对象
 	 */
 	public static <T> List<ModifyField> compareProperties(T source, T target) {
-		return compareProperties(source, target, (CompareOption)null);
+		return BeanCompare.create(source, target).compare();
 	}
 }

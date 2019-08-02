@@ -379,6 +379,10 @@ public class BeanUtilTest {
 						OrderHeader.class, new CompareOption(null, new String[]{OrderHeader.FIELD_ORDER_LINE_LIST}))
 						.setSimpleCompareOption(OrderLine.class, new CompareOption(Audit.class, new String[]{Audit.FIELD_CREATED_BY})));
 		Assert.assertTrue(modifyFieldList3.size() == 9);
+		List<ModifyField> modifyFieldList4 = BeanUtil.compareProperties(
+				orderLineList1,
+				orderLineList2);
+		Assert.assertTrue(modifyFieldList3.size() == 9);
 	}
 
 	public class OrderHeader extends Audit{

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanDesc;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.CompareUtil;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -35,6 +36,10 @@ public class BeanCompare<T> {
 	 */
 	private ComplexCompareOption complexCompareOption;
 
+	/**
+	 * 比较器调度,如果传入为list则直接调用list比较器
+	 * @return 差异值list
+	 */
 	public List<ModifyField> compare() {
 		if (source instanceof Collection) {
 			return this.collCompare();
@@ -63,6 +68,20 @@ public class BeanCompare<T> {
 		final Set<String> ignoreSet = (compareOption.ignoreProperties != null) ?
 				CollUtil.newHashSet(compareOption.ignoreProperties) : null;
 		Collection<BeanDesc.PropDesc> propDescList = BeanUtil.getBeanDesc(actualEditable).getProps();
+		List<ModifyField> list = compareOfGetter(ignoreSet, propDescList);
+		if (CollUtil.isEmpty(list)) {
+			return Collections.emptyList();
+		}
+		return list;
+	}
+
+	/**
+	 * 通过gatter获取属性进行比较
+	 * @param ignoreSet 忽略字段set
+	 * @param propDescList bean属性字段list
+	 * @return 差异值list
+	 */
+	private List<ModifyField> compareOfGetter(Set<String> ignoreSet, Collection<BeanDesc.PropDesc> propDescList) {
 		String fieldName;
 		Method getterMethod;
 		Class<?> propClass;
@@ -79,28 +98,38 @@ public class BeanCompare<T> {
 				}
 				// getter方法获取值然后比较
 				getterMethod = propDesc.getGetter();
+				if (getterMethod == null){
+					continue;
+				}
+				sourceValue = getterMethod.invoke(source);
+				targetValue = getterMethod.invoke(target);
 				// 如果是集合字段, 则调用collCompare
-				if (getterMethod != null){
-					sourceValue = getterMethod.invoke(source);
-					targetValue = getterMethod.invoke(target);
-					if (ClassUtil.isAssignable(Collection.class, TypeUtil.getClass(propDesc.getFieldType()))) {
-						processResult(list, BeanCompare.create(sourceValue, targetValue, this.complexCompareOption).collCompare());
-					} else if (ObjectUtil.isNotNull(getterMethod)) {
-						// 属性字段直接进行比较
-						if (CompareUtil.compare(sourceValue, targetValue, false) != 0) {
-							list.add(new ModifyField(source.getClass().getName(), fieldName, propClass, source.hashCode(),
-									sourceValue, targetValue));
-						}
-					}
+				if (ClassUtil.isAssignable(Collection.class, TypeUtil.getClass(propDesc.getFieldType()))) {
+					// list字段比较
+					processListResult(list, BeanCompare.create(sourceValue, targetValue, this.complexCompareOption).collCompare());
+				} else if (ObjectUtil.isNotNull(getterMethod)) {
+					// 属性字段直接进行比较
+					processFieldResult(fieldName, propClass, sourceValue, targetValue, list);
 				}
 			}
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		if (CollUtil.isEmpty(list)) {
-			return null;
+			throw new UtilException(e);
 		}
 		return list;
+	}
+
+	/**
+	 * 处理属性字段比较结果
+	 * @param fieldName 字段名称
+	 * @param propClass 属性类
+	 * @param sourceValue 原值
+	 * @param targetValue 新值
+	 * @param list 差异值list
+	 */
+	private void processFieldResult(String fieldName, Class<?> propClass, Object sourceValue, Object targetValue, List<ModifyField> list) {
+		if (CompareUtil.compare(sourceValue, targetValue, false) != 0) {
+			list.add(new ModifyField(source.getClass().getName(), fieldName, propClass, source.hashCode(), sourceValue, targetValue));
+		}
 	}
 
 	/**
@@ -118,13 +147,13 @@ public class BeanCompare<T> {
 			for (Object sour : (Collection) source) {
 				if (ClassUtil.isAssignable(Collection.class, sour.getClass()) && ObjectUtil.isNotNull(targetGroup.get(sour.hashCode()))) {
 					// 如果集合中的类型是collection集合, 则调自己
-					processResult(list, BeanCompare.create(sour, targetGroup.get(sour.hashCode()),
+					processListResult(list, BeanCompare.create(sour, targetGroup.get(sour.hashCode()),
 							new ComplexCompareOption()).collCompare());
 				} else if (ObjectUtil.isNull(targetGroup.get(sour.hashCode()))) {
 					// 如果新数据拿不到老数据的key，证明是数据被删除
 					list.add(new ModifyField().setDeleteLine(sour.getClass().getName(), sour.hashCode(), sour));
 				} else {
-					processResult(list,
+					processListResult(list,
 							BeanCompare.create(sour, targetGroup.get(sour.hashCode()), this.complexCompareOption).fieldCompare());
 					targetGroup.remove(sour.hashCode());
 				}
@@ -136,12 +165,12 @@ public class BeanCompare<T> {
 			}
 		}
 		if (CollUtil.isEmpty(list)) {
-			return null;
+			return Collections.emptyList();
 		}
 		return list;
 	}
 
-	private static void processResult(List<ModifyField> list, List<ModifyField> modifyFieldList) {
+	private static void processListResult(List<ModifyField> list, List<ModifyField> modifyFieldList) {
 		if (CollUtil.isNotEmpty(modifyFieldList)) {
 			list.addAll(modifyFieldList);
 		}
@@ -158,6 +187,13 @@ public class BeanCompare<T> {
 		Objects.requireNonNull(target);
 		return new BeanCompare<>(source, target, new ComplexCompareOption().setSimpleCompareOption(source.getClass(),
 				compareOption));
+	}
+
+	public static <T> BeanCompare<T> create(T source, T target) {
+		Objects.requireNonNull(source);
+		Objects.requireNonNull(target);
+		return new BeanCompare<>(source, target, new ComplexCompareOption().setSimpleCompareOption(source.getClass(),
+				null));
 	}
 
 	private BeanCompare(T source, T target, ComplexCompareOption complexCompareOption) {

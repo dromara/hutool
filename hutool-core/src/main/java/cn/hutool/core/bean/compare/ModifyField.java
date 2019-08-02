@@ -2,7 +2,7 @@ package cn.hutool.core.bean.compare;
 
 
 /**
- * 字段修改数据, 里面可以存储修改字段的类型, 所属bean的类型, 旧值, 新值, bean的hashcode
+ * 字段修改数据, 里面可以存储修改字段的类型, 所属bean的类名, 旧值, 新值, bean的hashcode
  * 如果是行操作, 则字段名称会记为{@link ModifyField#ADD_LINE}或{@link ModifyField#DELETE_LINE}
  * @author dawn
  */
@@ -45,11 +45,29 @@ public class ModifyField {
 	public ModifyField() {
 	}
 
+	/**
+	 * 类名
+	 */
 	private String className;
+	/**
+	 * 字段名
+	 */
 	private String fieldName;
+	/**
+	 * 字段类型
+	 */
 	private Class<?> propClass;
+	/**
+	 * 类的hashcode
+	 */
 	private Integer hashCode;
+	/**
+	 * 旧值
+	 */
 	private Object oldValue;
+	/**
+	 * 新值
+	 */
 	private Object newValue;
 
 	public Integer getHashCode() {
