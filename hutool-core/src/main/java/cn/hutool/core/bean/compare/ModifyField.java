@@ -12,6 +12,18 @@ public class ModifyField {
 	public static final String ADD_LINE = "ADD_LINE";
 	/** 删除行 */
 	public static final String DELETE_LINE = "DELETE_LINE";
+	/** 类名 */
+	private String className;
+	/** 字段名 */
+	private String fieldName;
+	/** 字段类型 */
+	private Class<?> propClass;
+	/** 类的hashcode */
+	private Integer hashCode;
+	/** 旧值 */
+	private Object oldValue;
+	/** 新值 */
+	private Object newValue;
 
 	public ModifyField setAddLine(String className, Integer hashCode, Object newValue){
 		this.className = className;
@@ -40,19 +52,6 @@ public class ModifyField {
 
 	public ModifyField() {
 	}
-
-	/** 类名 */
-	private String className;
-	/** 字段名 */
-	private String fieldName;
-	/** 字段类型 */
-	private Class<?> propClass;
-	/** 类的hashcode */
-	private Integer hashCode;
-	/** 旧值 */
-	private Object oldValue;
-	/** 新值 */
-	private Object newValue;
 
 	public Integer getHashCode() {
 		return hashCode;
