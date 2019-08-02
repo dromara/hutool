@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.bean.BeanDesc.PropDesc;
+import cn.hutool.core.bean.compare.BeanCompare;
+import cn.hutool.core.bean.compare.CompareOption;
+import cn.hutool.core.bean.compare.ComplexCompareOption;
+import cn.hutool.core.bean.compare.ModifyField;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
@@ -31,20 +35,20 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * Bean工具类
- * 
+ *
  * <p>
  * 把一个拥有对属性进行set和get方法的类，我们就可以称之为JavaBean。
  * </p>
- * 
+ *
  * @author Looly
  * @since 3.1.2
  */
 public class BeanUtil {
-	
+
 	/**
 	 * 判断是否为Bean对象<br>
 	 * 判定方法是是否存在只有一个参数的setXXX方法
-	 * 
+	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
 	 * @see #hasSetter(Class)
@@ -56,7 +60,7 @@ public class BeanUtil {
 	/**
 	 * 判断是否有Setter方法<br>
 	 * 判定方法是是否存在只有一个参数的setXXX方法
-	 * 
+	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
 	 * @since 4.2.2
@@ -73,11 +77,11 @@ public class BeanUtil {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 判断是否为Bean对象<br>
 	 * 判定方法是是否存在只有一个参数的setXXX方法
-	 * 
+	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
 	 * @since 4.2.2
@@ -98,7 +102,7 @@ public class BeanUtil {
 
 	/**
 	 * 创建动态Bean
-	 * 
+	 *
 	 * @param bean 普通Bean或Map
 	 * @return {@link DynaBean}
 	 * @since 3.0.7
@@ -109,7 +113,7 @@ public class BeanUtil {
 
 	/**
 	 * 查找类型转换器 {@link PropertyEditor}
-	 * 
+	 *
 	 * @param type 需要转换的目标类型
 	 * @return {@link PropertyEditor}
 	 */
@@ -119,7 +123,7 @@ public class BeanUtil {
 
 	/**
 	 * 判断Bean中是否有值为null的字段
-	 * 
+	 *
 	 * @param bean Bean
 	 * @return 是否有值为null的字段
 	 * @deprecated 请使用{@link #hasNullField(Object)}
@@ -145,7 +149,7 @@ public class BeanUtil {
 
 	/**
 	 * 获取{@link BeanDesc} Bean描述信息
-	 * 
+	 *
 	 * @param clazz Bean类
 	 * @return {@link BeanDesc}
 	 * @since 3.1.2
@@ -162,7 +166,7 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------------------- PropertyDescriptor
 	/**
 	 * 获得Bean字段描述数组
-	 * 
+	 *
 	 * @param clazz Bean类
 	 * @return 字段描述数组
 	 * @throws BeanException 获取属性异常
@@ -185,7 +189,7 @@ public class BeanUtil {
 
 	/**
 	 * 获得字段名和字段描述Map，获得的结果会缓存在 {@link BeanInfoCache}中
-	 * 
+	 *
 	 * @param clazz Bean类
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
@@ -202,7 +206,7 @@ public class BeanUtil {
 
 	/**
 	 * 获得字段名和字段描述Map。内部使用，直接获取Bean类的PropertyDescriptor
-	 * 
+	 *
 	 * @param clazz Bean类
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
@@ -221,7 +225,7 @@ public class BeanUtil {
 
 	/**
 	 * 获得Bean类属性描述，大小写敏感
-	 * 
+	 *
 	 * @param clazz Bean类
 	 * @param fieldName 字段名
 	 * @return PropertyDescriptor
@@ -233,7 +237,7 @@ public class BeanUtil {
 
 	/**
 	 * 获得Bean类属性描述
-	 * 
+	 *
 	 * @param clazz Bean类
 	 * @param fieldName 字段名
 	 * @param ignoreCase 是否忽略大小写
@@ -248,7 +252,7 @@ public class BeanUtil {
 	/**
 	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
-	 * 
+	 *
 	 * @param bean Bean对象
 	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @return 字段值
@@ -272,7 +276,7 @@ public class BeanUtil {
 	/**
 	 * 设置字段值，，通过反射设置字段值，并不调用setXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
-	 * 
+	 *
 	 * @param bean Bean
 	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @param value 值
@@ -290,10 +294,10 @@ public class BeanUtil {
 			ReflectUtil.setFieldValue(bean, fieldNameOrIndex, value);
 		}
 	}
-	
+
 	/**
 	 * 解析Bean中的属性值
-	 * 
+	 *
 	 * @param bean Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值
@@ -306,7 +310,7 @@ public class BeanUtil {
 
 	/**
 	 * 解析Bean中的属性值
-	 * 
+	 *
 	 * @param bean Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @see BeanPath#get(Object)
@@ -319,7 +323,7 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------- mapToBean
 	/**
 	 * Map转换为Bean对象
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map {@link Map}
 	 * @param beanClass Bean Class
@@ -333,7 +337,7 @@ public class BeanUtil {
 	/**
 	 * Map转换为Bean对象<br>
 	 * 忽略大小写
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param beanClass Bean Class
@@ -346,7 +350,7 @@ public class BeanUtil {
 
 	/**
 	 * Map转换为Bean对象
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map {@link Map}
 	 * @param beanClass Bean Class
@@ -360,7 +364,7 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------- fillBeanWithMap
 	/**
 	 * 使用Map填充Bean对象
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
@@ -373,7 +377,7 @@ public class BeanUtil {
 
 	/**
 	 * 使用Map填充Bean对象，可配置将下划线转换为驼峰
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
@@ -387,7 +391,7 @@ public class BeanUtil {
 
 	/**
 	 * 使用Map填充Bean对象，忽略大小写
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
@@ -400,7 +404,7 @@ public class BeanUtil {
 
 	/**
 	 * 使用Map填充Bean对象
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
@@ -413,7 +417,7 @@ public class BeanUtil {
 
 	/**
 	 * 使用Map填充Bean对象
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param map Map
 	 * @param bean Bean
@@ -435,7 +439,7 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------- fillBean
 	/**
 	 * 对象或Map转Bean
-	 * 
+	 *
 	 * @param source Bean对象或Map
 	 * @param clazz 目标的Bean类型
 	 * @return Bean对象
@@ -449,7 +453,7 @@ public class BeanUtil {
 
 	/**
 	 * ServletRequest 参数转Bean
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param beanClass Bean Class
 	 * @param valueProvider 值提供者
@@ -462,7 +466,7 @@ public class BeanUtil {
 
 	/**
 	 * 填充Bean的核心方法
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param bean Bean
 	 * @param valueProvider 值提供者
@@ -480,7 +484,7 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------- beanToMap
 	/**
 	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
-	 * 
+	 *
 	 * @param bean bean对象
 	 * @return Map
 	 */
@@ -490,7 +494,7 @@ public class BeanUtil {
 
 	/**
 	 * 对象转Map
-	 * 
+	 *
 	 * @param bean bean对象
 	 * @param isToUnderlineCase 是否转换为下划线模式
 	 * @param ignoreNullValue 是否忽略值为空的字段
@@ -502,7 +506,7 @@ public class BeanUtil {
 
 	/**
 	 * 对象转Map
-	 * 
+	 *
 	 * @param bean bean对象
 	 * @param targetMap 目标的Map
 	 * @param isToUnderlineCase 是否转换为下划线模式
@@ -527,13 +531,13 @@ public class BeanUtil {
 	/**
 	 * 对象转Map<br>
 	 * 通过实现{@link Editor} 可以自定义字段值，如果这个Editor返回null则忽略这个字段，以便实现：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 字段筛选，可以去除不需要的字段
 	 * 2. 字段变换，例如实现驼峰转下划线
 	 * 3. 自定义字段前缀或后缀等等
 	 * </pre>
-	 * 
+	 *
 	 * @param bean bean对象
 	 * @param targetMap 目标的Map
 	 * @param ignoreNullValue 是否忽略值为空的字段
@@ -577,7 +581,7 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------- copyProperties
 	/**
 	 * 复制Bean对象属性
-	 * 
+	 *
 	 * @param source 源Bean对象
 	 * @param target 目标Bean对象
 	 */
@@ -588,7 +592,7 @@ public class BeanUtil {
 	/**
 	 * 复制Bean对象属性<br>
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
-	 * 
+	 *
 	 * @param source 源Bean对象
 	 * @param target 目标Bean对象
 	 * @param ignoreProperties 不拷贝的的属性列表
@@ -599,7 +603,7 @@ public class BeanUtil {
 
 	/**
 	 * 复制Bean对象属性<br>
-	 * 
+	 *
 	 * @param source 源Bean对象
 	 * @param target 目标Bean对象
 	 * @param ignoreCase 是否忽略大小写
@@ -611,7 +615,7 @@ public class BeanUtil {
 	/**
 	 * 复制Bean对象属性<br>
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
-	 * 
+	 *
 	 * @param source 源Bean对象
 	 * @param target 目标Bean对象
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
@@ -627,7 +631,7 @@ public class BeanUtil {
 	 * 给定的Bean的类名是否匹配指定类名字符串<br>
 	 * 如果isSimple为{@code false}，则只匹配类名而忽略包名，例如：cn.hutool.TestEntity只匹配TestEntity<br>
 	 * 如果isSimple为{@code true}，则匹配包括包名的全类名，例如：cn.hutool.TestEntity匹配cn.hutool.TestEntity
-	 * 
+	 *
 	 * @param bean Bean
 	 * @param beanClassName Bean的类名
 	 * @param isSimple 是否只匹配类名而忽略包名，true表示忽略包名
@@ -640,9 +644,9 @@ public class BeanUtil {
 
 	/**
 	 * 把Bean里面的String属性做trim操作。
-	 * 
+	 *
 	 * 通常bean直接用来绑定页面的input，用户的输入可能首尾存在空格，通常保存数据库前需要把首尾空格去掉
-	 * 
+	 *
 	 * @param <T> Bean类型
 	 * @param bean Bean对象
 	 * @param ignoreFields 不需要trim的Field名称列表（不区分大小写）
@@ -711,6 +715,46 @@ public class BeanUtil {
 		}
 		return false;
 	}
-	
-	
+
+	/**
+	 * 通用对象属性比较, 可对属性中的集合类型等复杂类型进行单独匹配
+	 * 限制类和忽略字段可单独定制
+	 * 用于比较对象同名属性值的差异
+	 *
+	 * @param source 源Bean对象
+	 * @param target 目标Bean对象
+	 * @param complexCompareOption 比较选项，见 {@link ComplexCompareOption}
+	 */
+	public static <T> List<ModifyField> compareProperties(T source, T target, ComplexCompareOption complexCompareOption) {
+		if (null == complexCompareOption) {
+			complexCompareOption = new ComplexCompareOption();
+		}
+		return BeanCompare.create(source, target, complexCompareOption).compare();
+	}
+
+	/**
+	 * 单一对象属性比较, 仅能定义一种限制类和忽略字段
+	 * 用于比较对象同名属性值的差异
+	 *
+	 * @param source 源Bean对象
+	 * @param target 目标Bean对象
+	 * @param compareOption 比较选项，见 {@link CompareOption}
+	 */
+	public static <T> List<ModifyField> compareProperties(T source, T target, CompareOption compareOption) {
+		if (null == compareOption) {
+			compareOption = new CompareOption();
+		}
+		return BeanCompare.create(source, target, compareOption).compare();
+	}
+
+	/**
+	 * 单一对象属性比较, 仅能定义一种限制类和忽略字段
+	 * 用于比较对象同名属性值的差异
+	 *
+	 * @param source 源Bean对象
+	 * @param target 目标Bean对象
+	 */
+	public static <T> List<ModifyField> compareProperties(T source, T target) {
+		return compareProperties(source, target, (CompareOption)null);
+	}
 }
