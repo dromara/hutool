@@ -1,0 +1,51 @@
+#===================================================================
+# 数据库配置文件样例
+# DsFactory默认读取的配置文件是config/db.setting
+# db.setting的配置包括两部分：基本连接信息和连接池配置信息。
+# 基本连接信息所有连接池都支持，连接池配置信息根据不同的连接池，连接池配置是根据连接池相应的配置项移植而来
+#===================================================================
+
+## 打印SQL的配置
+# 是否在日志中显示执行的SQL，默认false
+showSql = true
+# 是否格式化显示的SQL，默认false
+formatSql = true
+# 是否显示SQL参数，默认false
+showParams = true
+# 打印SQL的日志等级，默认debug
+sqlLevel = debug
+
+# 默认数据源
+url = jdbc:sqlite:test.db
+
+
+# 测试数据源
+[test]
+url = jdbc:sqlite:test.db
+
+# 测试用HSQLDB数据库
+[hsqldb]
+url = jdbc:hsqldb:mem:mem_hutool
+user = SA
+pass = 
+
+# 测试用Oracle数据库
+[orcl]
+url = jdbc:oracle:thin:@//looly.centos:1521/XE
+user = looly
+pass = 123456
+
+[mysql]
+url = jdbc:mysql://looly.centos:3306/test_hutool?useSSL=false
+user = root
+pass = 123456
+
+[postgre]
+url = jdbc:postgresql://looly.centos:5432/test_hutool
+user = postgres
+pass = 123456
+
+[sqlserver]
+url = jdbc:sqlserver://looly.database.chinacloudapi.cn:1433;database=test;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.chinacloudapi.cn;loginTimeout=30;
+user = looly@looly
+pass = 123

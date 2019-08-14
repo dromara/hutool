@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- @see http://www.cnblogs.com/hanfight/p/5721855.html -->
+<!-- status : 这个用于设置log4j2自身内部的信息输出,可以不设置,当设置成trace时,会看到log4j2内部各种详细输出 monitorInterval : Log4j能够自动检测修改配置文件和重新配置本身, 设置间隔秒数。 -->
+<Configuration status="WARN" monitorInterval="600">
+
+	<Appenders>
+		<!--这个输出控制台的配置 -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<!-- 控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch) -->
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+			<!-- 输出日志的格式 -->
+			<PatternLayout pattern="[%d{HH:mm:ss.SSS}][%-5level] %class{36}:%L %M - %msg%xEx%n" />
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<!-- 配置日志的根节点 -->
+		<root level="debug">
+			<appender-ref ref="Console" />
+		</root>
+	</Loggers>
+
+</Configuration>

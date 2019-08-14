@@ -1,0 +1,24 @@
+language: java
+
+sudo: false # faster builds
+
+install: true
+
+jdk:
+  - openjdk8
+
+notifications:
+  email: false
+
+cache:
+  directories:
+    - '$HOME/.m2'
+
+script: 
+  - export TZ=Asia/Shanghai
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn cobertura:cobertura -Dcobertura.report.format=xml -Dmaven.javadoc.skip.true
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+

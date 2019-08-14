@@ -1,0 +1,16 @@
+# -------------------------------------------------------------
+# ----- Setting File with UTF8-----
+# ----- 数据库配置文件 -----
+# -------------------------------------------------------------
+
+#中括表示一个分组，其下面的所有属性归属于这个分组，在此分组名为demo，也可以没有分组
+[demo]
+#数据库驱动名，如果不指定，则会根据url自动判定
+driver = com.mysql.jdbc.Driver
+#JDBC url，必须
+url = jdbc:mysql://fedora.vmware:3306/extractor
+#用户名，必须
+user = root${driver}
+user2 = root${demo.driver}
+#密码，必须，如果密码为空，请填写 pass = 
+pass = 123456

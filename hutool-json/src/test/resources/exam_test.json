@@ -1,0 +1,281 @@
+[
+    {
+        "id": 1753,
+        "examNumber": 1,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 0
+            }
+        ],
+        "isRight": 1,
+        "isSubject": 0
+    },
+    {
+        "id": 1754,
+        "examNumber": 2,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 1
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 1756,
+        "examNumber": 3,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 1
+            },
+            {
+                "seq": 2
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 1757,
+        "examNumber": 4,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 1
+            },
+            {
+                "seq": 3
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 1759,
+        "examNumber": 5,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 0
+            }
+        ],
+        "isRight": 1,
+        "isSubject": 0
+    },
+    {
+        "id": 1760,
+        "examNumber": 6,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 1
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 1762,
+        "examNumber": 7,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "公司的发生地方"
+            },
+            {
+                "detailContent": "告诉对方"
+            },
+            {
+                "detailContent": "二位水电费"
+            },
+            {
+                "detailContent": "公司东方闪电"
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 1763,
+        "examNumber": 8,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "告诉对方s"
+            },
+            {
+                "detailContent": "公司垫付多少"
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 1765,
+        "examNumber": 9,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg,http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg"
+            }
+        ],
+        "isSubject": 1
+    },
+    {
+        "id": 1766,
+        "examNumber": 10,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg,http://…_1.jpg,http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg"
+            }
+        ],
+        "isSubject": 1
+    },
+    {
+        "id": 0,
+        "examNumber": 11,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 0
+            }
+        ],
+        "isRight": 1,
+        "isSubject": 0
+    },
+    {
+        "id": 1,
+        "examNumber": 12,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 1
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 2,
+        "examNumber": 13,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 0
+            }
+        ],
+        "isRight": 1,
+        "isSubject": 0
+    },
+    {
+        "id": 3,
+        "examNumber": 14,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "seq": 1
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 4,
+        "examNumber": 15,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "公司东方闪电"
+            },
+            {
+                "detailContent": "国顺副食店"
+            },
+            {
+                "detailContent": "无二水电费是的"
+            },
+            {
+                "detailContent": "公司东方闪电"
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 5,
+        "examNumber": 16,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "公司东方闪电"
+            },
+            {
+                "detailContent": "格式的维尔士大夫"
+            },
+            {
+                "detailContent": "公司东风"
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 6,
+        "examNumber": 17,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg"
+            }
+        ],
+        "isSubject": 1
+    },
+    {
+        "id": 0,
+        "examNumber": 18,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "告诉对方"
+            },
+            {
+                "detailContent": "个涉外收电费"
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 0,
+        "examNumber": 19,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "公司发的"
+            },
+            {
+                "detailContent": "公司东方闪电"
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    },
+    {
+        "id": 1774,
+        "examNumber": 20,
+        "isAnswer": true,
+        "answerArray": [
+            {
+                "detailContent": "好改送的非官方的"
+            },
+            {
+                "detailContent": "和是发送到发送到"
+            }
+        ],
+        "isRight": 0,
+        "isSubject": 0
+    }
+]

@@ -1,0 +1,55 @@
+#===================================================================
+# 数据库配置文件样例
+# DsFactory默认读取的配置文件是config/db.setting
+# db.setting的配置包括两部分：基本连接信息和连接池配置信息。
+# 基本连接信息所有连接池都支持，连接池配置信息根据不同的连接池，连接池配置是根据连接池相应的配置项移植而来
+#===================================================================
+
+#----------------------------------------------------------------------------------------------------------------
+## 基本配置信息
+# JDBC URL，根据不同的数据库，使用相应的JDBC连接字符串
+url = jdbc:mysql://<host>:<port>/<database_name>
+# 用户名，此处也可以使用 user 代替
+username = 用户名
+# 密码，此处也可以使用 pass 代替
+password = 密码
+# JDBC驱动名，可选（Hutool会自动识别）
+driver = com.mysql.jdbc.Driver
+# 是否在日志中显示执行的SQL
+showSql = true
+# 是否格式化显示的SQL
+formatSql = true
+
+
+#----------------------------------------------------------------------------------------------------------------
+## 连接池配置项
+
+## ---------------------------------------------------- Druid
+# 初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
+initialSize = 0
+# 最大连接池数量
+maxActive = 8
+# 最小连接池数量
+minIdle = 0
+# 获取连接时最大等待时间，单位毫秒。配置了maxWait之后， 缺省启用公平锁，并发效率会有所下降， 如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
+maxWait = 0
+# 是否缓存preparedStatement，也就是PSCache。 PSCache对支持游标的数据库性能提升巨大，比如说oracle。 在mysql5.5以下的版本中没有PSCache功能，建议关闭掉。作者在5.5版本中使用PSCache，通过监控界面发现PSCache有缓存命中率记录， 该应该是支持PSCache。
+poolPreparedStatements = false
+# 要启用PSCache，必须配置大于0，当大于0时， poolPreparedStatements自动触发修改为true。 在Druid中，不会存在Oracle下PSCache占用内存过多的问题， 可以把这个数值配置大一些，比如说100
+maxOpenPreparedStatements = -1
+# 用来检测连接是否有效的sql，要求是一个查询语句。 如果validationQuery为null，testOnBorrow、testOnReturn、 testWhileIdle都不会其作用。
+validationQuery = SELECT 1
+# 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+testOnBorrow = true
+# 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+testOnReturn = false
+# 建议配置为true，不影响性能，并且保证安全性。 申请连接的时候检测，如果空闲时间大于 timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+testWhileIdle = false
+# 有两个含义： 1) Destroy线程会检测连接的间隔时间 2) testWhileIdle的判断依据，详细看testWhileIdle属性的说明
+timeBetweenEvictionRunsMillis = 60000
+# 物理连接初始化的时候执行的sql
+connectionInitSqls = SELECT 1
+# 属性类型是字符串，通过别名的方式配置扩展插件， 常用的插件有： 监控统计用的filter:stat  日志用的filter:log4j 防御sql注入的filter:wall
+filters = stat
+# 类型是List<com.alibaba.druid.filter.Filter>， 如果同时配置了filters和proxyFilters， 是组合关系，并非替换关系
+proxyFilters = 

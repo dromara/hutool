@@ -1,0 +1,59 @@
+#----------------------------------------------------------------------------------
+# Redis客户端配置样例
+# 每一个分组代表一个Redis实例
+# 无分组的Pool配置为所有分组的共用配置，如果分组自己定义Pool配置，则覆盖共用配置
+# 池配置来自于：https://www.cnblogs.com/jklk/p/7095067.html
+#----------------------------------------------------------------------------------
+
+#----- 默认（公有）配置
+# 地址，默认localhost
+host = localhost
+# 端口，默认6379
+port = 6379
+# 超时，默认2000
+timeout = 2000
+# 连接超时，默认timeout
+connectionTimeout = 2000
+# 读取超时，默认timeout
+soTimeout = 2000
+# 密码，默认无
+password = 
+# 数据库序号，默认0
+database = 0
+# 客户端名，默认"Hutool"
+clientName = Hutool
+# SSL连接，默认false
+ssl = false;
+
+#----- 自定义分组的连接
+[custom]
+# 地址，默认localhost
+host = localhost
+# 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true
+BlockWhenExhausted = true;
+# 设置的逐出策略类名, 默认DefaultEvictionPolicy(当连接超过最大空闲时间,或连接数超过最大空闲连接数)
+evictionPolicyClassName = org.apache.commons.pool2.impl.DefaultEvictionPolicy
+# 是否启用pool的jmx管理功能, 默认true
+jmxEnabled = true;
+# 是否启用后进先出, 默认true
+lifo = true;
+# 最大空闲连接数, 默认8个
+maxIdle = 8
+# 最小空闲连接数, 默认0
+minIdle = 0
+# 最大连接数, 默认8个
+maxTotal = 8
+# 获取连接时的最大等待毫秒数(如果设置为阻塞时BlockWhenExhausted),如果超时就抛异常, 小于零:阻塞不确定的时间,  默认-1
+maxWaitMillis = -1
+# 逐出连接的最小空闲时间 默认1800000毫秒(30分钟)
+minEvictableIdleTimeMillis = 1800000
+# 每次逐出检查时 逐出的最大数目 如果为负数就是 : 1/abs(n), 默认3
+numTestsPerEvictionRun = 3;
+# 对象空闲多久后逐出, 当空闲时间>该值 且 空闲连接>最大空闲数 时直接逐出,不再根据MinEvictableIdleTimeMillis判断  (默认逐出策略)
+SoftMinEvictableIdleTimeMillis = 1800000
+# 在获取连接的时候检查有效性, 默认false
+testOnBorrow = false
+# 在空闲时检查有效性, 默认false
+testWhileIdle = false
+# 逐出扫描的时间间隔(毫秒) 如果为负数,则不运行逐出线程, 默认-1
+timeBetweenEvictionRunsMillis = -1
