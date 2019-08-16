@@ -1,0 +1,16 @@
+{
+	"context": "https://graph.microsoft.com/beta/$metadata#Collection(microsoft.graph.emailAddress)",
+	"value": [{
+		"name": "\u4f1a\u8bae\u5ba4101",
+		"address": "MeetingRoom101@abc.com"
+	}, {
+		"name": "\u4f1a\u8bae\u5ba4102",
+		"address": "MeetingRoom102@abc.com"
+	}, {
+		"name": "\u4f1a\u8bae\u5ba4103",
+		"address": "MeetingRoom103@abc.com"
+	}, {
+		"name": "\u4f1a\u8bae\u5ba4219",
+		"address": "MeetingRoom219@abc.com"
+	}]
+}

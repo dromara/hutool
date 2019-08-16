@@ -51,6 +51,7 @@ import cn.hutool.core.convert.impl.URIConverter;
 import cn.hutool.core.convert.impl.URLConverter;
 import cn.hutool.core.convert.impl.UUIDConverter;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -197,6 +198,10 @@ public class ConverterRegistry implements Serializable{
 		}
 		if (TypeUtil.isUnknow(type)) {
 			type = defaultValue.getClass();
+		}
+		
+		if(type instanceof TypeReference) {
+			type = ((TypeReference<?>)type).getType();
 		}
 		
 		// 标准转换器

@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -342,6 +343,19 @@ public final class JSONUtil {
 	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
 		return null == json ? null : json.toBean(beanClass);
 	}
+	
+	/**
+	 * JSON字符串转为实体类对象，转换异常将被抛出
+	 * 
+	 * @param <T> Bean类型
+	 * @param jsonString JSON字符串
+	 * @param typeReference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
+	 * @return 实体类对象
+	 * @since 4.3.2
+	 */
+	public static <T> T toBean(String jsonString, TypeReference<T> typeReference, boolean ignoreError) {
+		return toBean(jsonString, typeReference.getType(), ignoreError);
+	}
 
 	/**
 	 * JSON字符串转为实体类对象，转换异常将被抛出
@@ -354,6 +368,20 @@ public final class JSONUtil {
 	 */
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
 		return toBean(parseObj(jsonString), beanType, ignoreError);
+	}
+	
+	/**
+	 * 转为实体类对象
+	 * 
+	 * @param <T> Bean类型
+	 * @param json JSONObject
+	 * @param typeReference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
+	 * @param ignoreError 是否忽略转换错误
+	 * @return 实体类对象
+	 * @since 4.6.2
+	 */
+	public static <T> T toBean(JSONObject json, TypeReference<T> typeReference, boolean ignoreError) {
+		return toBean(json, typeReference.getType(), ignoreError);
 	}
 
 	/**
