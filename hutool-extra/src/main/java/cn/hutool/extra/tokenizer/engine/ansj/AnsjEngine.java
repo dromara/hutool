@@ -4,8 +4,8 @@ import org.ansj.splitWord.Analysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.Result;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 
 /**
  * Ansj分词引擎实现<br>
@@ -38,5 +38,5 @@ public class AnsjEngine implements TokenizerEngine {
 	public Result parse(CharSequence text) {
 		return new AnsjResult(analysis.parseStr(StrUtil.str(text)));
 	}
-
+	
 }

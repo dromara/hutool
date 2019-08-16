@@ -39,5 +39,4 @@ public class IKAnalyzerEngine implements TokenizerEngine {
 		this.seg.reset(StrUtil.getReader(text));
 		return new IKAnalyzerResult(this.seg);
 	}
-
 }

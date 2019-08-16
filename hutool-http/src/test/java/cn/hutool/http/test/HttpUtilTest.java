@@ -63,7 +63,8 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void getTest5() {
-		String res = HttpUtil.get("https://comment.bilibili.com/67573272.xml");
+		String res = HttpRequest.get("https://comment.bilibili.com/67573272.xml")
+				.execute().body();
 		Console.log(res);
 	}
 

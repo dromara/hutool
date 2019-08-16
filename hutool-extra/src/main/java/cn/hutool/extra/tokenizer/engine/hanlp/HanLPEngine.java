@@ -39,5 +39,5 @@ public class HanLPEngine implements TokenizerEngine {
 	public Result parse(CharSequence text) {
 		return new HanLPResult(this.seg.seg(StrUtil.str(text)));
 	}
-
+	
 }

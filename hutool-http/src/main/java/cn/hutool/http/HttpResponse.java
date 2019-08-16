@@ -12,8 +12,6 @@ import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.zip.DeflaterInputStream;
-import java.util.zip.GZIPInputStream;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FastByteArrayOutputStream;
@@ -38,13 +36,13 @@ import cn.hutool.log.StaticLog;
 public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 
 	/** 持有连接对象 */
-	private HttpConnection httpConnection;
+	protected HttpConnection httpConnection;
 	/** Http请求原始流 */
-	private InputStream in;
+	protected InputStream in;
 	/** 是否异步，异步下只持有流，否则将在初始化时直接读取body内容 */
 	private volatile boolean isAsync;
 	/** 响应状态码 */
-	private int status;
+	protected int status;
 	/** 是否忽略读取Http响应体 */
 	private boolean ignoreBody;
 	/** 从响应中获取的编码 */
@@ -373,9 +371,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * @throws HttpException IO异常
 	 */
 	private HttpResponse init() throws HttpException {
+		// 获取响应状态码
 		try {
 			this.status = httpConnection.responseCode();
-			this.in = (this.status < HttpStatus.HTTP_BAD_REQUEST) ? this.httpConnection.getInputStream() : this.httpConnection.getErrorStream();
 		} catch (IOException e) {
 			if (e instanceof FileNotFoundException) {
 				// 服务器无返回内容，忽略之
@@ -394,31 +392,15 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		// 存储服务端设置的Cookie信息
 		GlobalCookieManager.store(httpConnection);
 
+		// 获取响应编码
 		final Charset charset = httpConnection.getCharset();
 		this.charsetFromResponse = charset;
 		if (null != charset) {
 			this.charset = charset;
 		}
 
-		if (null == this.in) {
-			// 在一些情况下，返回的流为null，此时提供状态码说明
-			this.in = new ByteArrayInputStream(StrUtil.format("Error request, response status: {}", this.status).getBytes());
-		} else {
-			// TODO 分段响应内容解析
-			
-			if (isGzip() && false == (in instanceof GZIPInputStream)) {
-				// Accept-Encoding: gzip
-				try {
-					in = new GZIPInputStream(in);
-				} catch (IOException e) {
-					// 在类似于Head等方法中无body返回，此时GZIPInputStream构造会出现错误，在此忽略此错误读取普通数据
-					// ignore
-				}
-			} else if (isDeflate() && false == (in instanceof DeflaterInputStream)) {
-				// Accept-Encoding: defalte
-				in = new DeflaterInputStream(in);
-			}
-		}
+		// 获取响应内容流
+		this.in = new HttpInputStream(this);
 
 		// 同步情况下强制同步
 		return this.isAsync ? this : forceSync();

@@ -16,6 +16,7 @@
 * 【core】         强化ExceptionUtil（issue#459@Github）
 * 【core】         增强日期工具类（pr#455@Github）
 * 【setting】      构造Setting增加默认字符编码
+* 【extra】        ServletUtil增加getHeaderMap方法
 
 ### Bug修复
 * 【cache】       修复missCount规则（issue#465@Github）

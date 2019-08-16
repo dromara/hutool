@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -268,14 +268,35 @@ public class ServletUtil {
 
 	// --------------------------------------------------------- Header start
 	/**
+	 * 获取请求所有的头（header）信息
+	 * 
+	 * @param request 请求对象{@link HttpServletRequest}
+	 * @return header值
+	 * @since 4.6.2
+	 */
+	public static Map<String, String> getHeaderMap(HttpServletRequest request) {
+		final Map<String, String> headerMap = new HashMap<>();
+		
+		final Enumeration<String> names = request.getHeaderNames();
+		String name = null;
+		while (names.hasMoreElements()) {
+			name = names.nextElement();
+			headerMap.put(name, request.getHeader(name));
+		}
+		
+		return headerMap;
+	}
+	
+	
+	/**
 	 * 忽略大小写获得请求header中的信息
 	 * 
 	 * @param request 请求对象{@link HttpServletRequest}
 	 * @param nameIgnoreCase 忽略大小写头信息的KEY
 	 * @return header值
 	 */
-	public final static String getHeaderIgnoreCase(HttpServletRequest request, String nameIgnoreCase) {
-		Enumeration<String> names = request.getHeaderNames();
+	public static String getHeaderIgnoreCase(HttpServletRequest request, String nameIgnoreCase) {
+		final Enumeration<String> names = request.getHeaderNames();
 		String name = null;
 		while (names.hasMoreElements()) {
 			name = names.nextElement();
@@ -286,6 +307,18 @@ public class ServletUtil {
 
 		return null;
 	}
+	
+	/**
+	 * 获得请求header中的信息
+	 * 
+	 * @param request 请求对象{@link HttpServletRequest}
+	 * @param name 头信息的KEY
+	 * @param charsetName 字符集
+	 * @return header值
+	 */
+	public static String getHeader(HttpServletRequest request, String name, String charsetName) {
+		return getHeader(request, name, CharsetUtil.charset(charsetName));
+	}
 
 	/**
 	 * 获得请求header中的信息
@@ -294,15 +327,12 @@ public class ServletUtil {
 	 * @param name 头信息的KEY
 	 * @param charset 字符集
 	 * @return header值
+	 * @since 4.6.2
 	 */
-	public final static String getHeader(HttpServletRequest request, String name, String charset) {
+	public static String getHeader(HttpServletRequest request, String name, Charset charset) {
 		final String header = request.getHeader(name);
 		if (null != header) {
-			try {
-				return new String(header.getBytes(CharsetUtil.ISO_8859_1), charset);
-			} catch (UnsupportedEncodingException e) {
-				throw new UtilException(StrUtil.format("Error charset {} for http request header.", charset));
-			}
+			return CharsetUtil.convert(header, CharsetUtil.CHARSET_ISO_8859_1, charset);
 		}
 		return null;
 	}
@@ -375,7 +405,7 @@ public class ServletUtil {
 	 * @param name cookie名
 	 * @return Cookie对象
 	 */
-	public final static Cookie getCookie(HttpServletRequest httpServletRequest, String name) {
+	public static Cookie getCookie(HttpServletRequest httpServletRequest, String name) {
 		final Map<String, Cookie> cookieMap = readCookieMap(httpServletRequest);
 		return cookieMap == null ? null : cookieMap.get(name);
 	}
@@ -386,7 +416,7 @@ public class ServletUtil {
 	 * @param httpServletRequest {@link HttpServletRequest}
 	 * @return Cookie map
 	 */
-	public final static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
+	public static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
 		Map<String, Cookie> cookieMap = new HashMap<String, Cookie>();
 		Cookie[] cookies = httpServletRequest.getCookies();
 		if (null == cookies) {
@@ -404,7 +434,7 @@ public class ServletUtil {
 	 * @param response 响应对象{@link HttpServletResponse}
 	 * @param cookie Servlet Cookie对象
 	 */
-	public final static void addCookie(HttpServletResponse response, Cookie cookie) {
+	public static void addCookie(HttpServletResponse response, Cookie cookie) {
 		response.addCookie(cookie);
 	}
 
@@ -415,7 +445,7 @@ public class ServletUtil {
 	 * @param name Cookie名
 	 * @param value Cookie值
 	 */
-	public final static void addCookie(HttpServletResponse response, String name, String value) {
+	public static void addCookie(HttpServletResponse response, String name, String value) {
 		response.addCookie(new Cookie(name, value));
 	}
 
@@ -429,7 +459,7 @@ public class ServletUtil {
 	 * @param path Cookie的有效路径
 	 * @param domain the domain name within which this cookie is visible; form is according to RFC 2109
 	 */
-	public final static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds, String path, String domain) {
+	public static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds, String path, String domain) {
 		Cookie cookie = new Cookie(name, value);
 		if (domain != null) {
 			cookie.setDomain(domain);
@@ -449,7 +479,7 @@ public class ServletUtil {
 	 * @param value cookie值
 	 * @param maxAgeInSeconds -1: 关闭浏览器清除Cookie. 0: 立即清除Cookie. &gt;0 : Cookie存在的秒数.
 	 */
-	public final static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds) {
+	public static void addCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds) {
 		addCookie(response, name, value, maxAgeInSeconds, "/", null);
 	}
 
