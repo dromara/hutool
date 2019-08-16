@@ -1,5 +1,6 @@
 package cn.hutool.poi.excel.cell;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -120,12 +121,14 @@ public class CellUtil {
 	 * @param isHeader 是否为标题单元格
 	 */
 	public static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
-		final CellStyle headCellStyle = styleSet.getHeadCellStyle();
-		final CellStyle cellStyle = styleSet.getCellStyle();
-		if (isHeader && null != headCellStyle) {
-			cell.setCellStyle(headCellStyle);
-		} else if (null != cellStyle) {
-			cell.setCellStyle(cellStyle);
+		if(null != styleSet) {
+			final CellStyle headCellStyle = styleSet.getHeadCellStyle();
+			final CellStyle cellStyle = styleSet.getCellStyle();
+			if (isHeader && null != headCellStyle) {
+				cell.setCellStyle(headCellStyle);
+			} else if (null != cellStyle) {
+				cell.setCellStyle(cellStyle);
+			}
 		}
 
 		if (null == value) {
@@ -145,7 +148,7 @@ public class CellUtil {
 		} else if (value instanceof RichTextString) {
 			cell.setCellValue((RichTextString) value);
 		} else if (value instanceof Number) {
-			if ((value instanceof Double || value instanceof Float) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
+			if ((value instanceof Double || value instanceof Float  || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
 				cell.setCellStyle(styleSet.getCellStyleForNumber());
 			}
 			cell.setCellValue(((Number) value).doubleValue());

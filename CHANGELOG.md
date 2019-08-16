@@ -17,6 +17,7 @@
 * 【core】         增强日期工具类（pr#455@Github）
 * 【setting】      构造Setting增加默认字符编码
 * 【extra】        ServletUtil增加getHeaderMap方法
+* 【poi】           CellUtil改进数字支持，解决空指针问题（pr#489@Github）
 
 ### Bug修复
 * 【cache】       修复missCount规则（issue#465@Github）
