@@ -1,5 +1,6 @@
 package cn.hutool.poi.excel.cell;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -145,7 +146,7 @@ public class CellUtil {
 		} else if (value instanceof RichTextString) {
 			cell.setCellValue((RichTextString) value);
 		} else if (value instanceof Number) {
-			if ((value instanceof Double || value instanceof Float) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
+			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet.getCellStyleForNumber()) {
 				cell.setCellStyle(styleSet.getCellStyleForNumber());
 			}
 			cell.setCellValue(((Number) value).doubleValue());
