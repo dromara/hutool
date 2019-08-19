@@ -10,7 +10,7 @@ public interface TemplateEngine {
 	/**
 	 * 获取模板
 	 * 
-	 * @param resource 资源，根据事先不同，此资源可以是模板本身，也可以是模板的相对路径
+	 * @param resource 资源，根据实现不同，此资源可以是模板本身，也可以是模板的相对路径
 	 * @return 模板实现
 	 */
 	Template getTemplate(String resource);
