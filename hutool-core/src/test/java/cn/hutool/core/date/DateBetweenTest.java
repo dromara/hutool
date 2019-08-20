@@ -5,8 +5,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.date.DateBetween;
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.BetweenFormater.Level;
 
 public class DateBetweenTest {
 
@@ -46,5 +45,13 @@ public class DateBetweenTest {
 		Date end2 = DateUtil.parse("2018-02-01 11:23:46");
 		long betweenMonth2 = new DateBetween(start2, end2).betweenMonth(false);
 		Assert.assertEquals(11, betweenMonth2);
+	}
+	
+	@Test
+	public void betweenMinuteTest() {
+		Date date1 = DateUtil.parse("2017-03-01 20:33:23");
+		Date date2 = DateUtil.parse("2017-03-01 23:33:23");
+		String formatBetween = DateUtil.formatBetween(date1, date2, Level.SECOND);
+		Assert.assertEquals("3小时", formatBetween);
 	}
 }
