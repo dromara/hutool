@@ -1517,13 +1517,14 @@ public class CollUtil {
 			return null;
 		}
 
-		final List<K> keyList = new ArrayList<K>(keys);
-		final List<V> valueList = new ArrayList<V>(values);
-
-		final int size = Math.min(keys.size(), values.size());
-		final Map<K, V> map = new HashMap<K, V>((int) (size / 0.75));
-		for (int i = 0; i < size; i++) {
-			map.put(keyList.get(i), valueList.get(i));
+		int entryCount = Math.min(keys.size(), values.size());
+		final Map<K, V> map = newHashMap(entryCount);
+		
+		final Iterator<K> keyIterator = keys.iterator();
+		final Iterator<V> valueIterator = values.iterator();
+		while (entryCount > 0) {
+			map.put(keyIterator.next(), valueIterator.next());
+			entryCount--;
 		}
 
 		return map;

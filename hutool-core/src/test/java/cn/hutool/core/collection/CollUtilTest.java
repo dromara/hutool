@@ -547,12 +547,12 @@ public class CollUtilTest {
 
 		Assert.assertEquals(CollUtil.newArrayList(4, 3, 2, 1), sortPageAll);
 	}
-	
+
 	@Test
 	public void containsAnyTest() {
 		ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4, 5);
 		ArrayList<Integer> list2 = CollUtil.newArrayList(5, 3, 1, 9, 11);
-		
+
 		Assert.assertTrue(CollUtil.containsAny(list1, list2));
 	}
 
@@ -560,15 +560,30 @@ public class CollUtilTest {
 	public void containsAllTest() {
 		ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4, 5);
 		ArrayList<Integer> list2 = CollUtil.newArrayList(5, 3, 1);
-		
+
 		Assert.assertTrue(CollUtil.containsAll(list1, list2));
 	}
-	
+
 	@Test
 	public void getLastTest() {
 		// 测试：空数组返回null而不是报错
 		List<String> test = CollUtil.newArrayList();
 		String last = CollUtil.getLast(test);
 		Assert.assertNull(last);
+	}
+
+	@Test
+	public void zipTest() {
+		Collection<String> keys = CollUtil.newArrayList("a", "b", "c", "d");
+		Collection<Integer> values = CollUtil.newArrayList(1, 2, 3, 4);
+		
+		Map<String, Integer> map = CollUtil.zip(keys, values);
+		
+		Assert.assertEquals(4, map.size());
+		
+		Assert.assertEquals(1, map.get("a").intValue());
+		Assert.assertEquals(2, map.get("b").intValue());
+		Assert.assertEquals(3, map.get("c").intValue());
+		Assert.assertEquals(4, map.get("d").intValue());
 	}
 }
