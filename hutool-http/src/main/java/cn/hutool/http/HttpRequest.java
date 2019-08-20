@@ -630,9 +630,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(String body, String contentType) {
-		body(StrUtil.bytes(body, this.charset));
+		byte[] bytes = StrUtil.bytes(body, this.charset);
+		body(bytes);
 		this.form = null; // 当使用body时，停止form的使用
-		contentLength((null != body ? body.length() : 0));
+		contentLength(bytes.length);
 
 		if (null != contentType) {
 			// Content-Type自定义设置
@@ -675,6 +676,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @return this
 	 */
 	public HttpRequest body(byte[] bodyBytes) {
+		Assert.notNull(bodyBytes, "Body must be not null !");
 		this.bodyBytes = bodyBytes;
 		return this;
 	}

@@ -124,7 +124,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void mergeTest2() {
 		Map<String, Object> row1 = new LinkedHashMap<>();
 		row1.put("姓名", "张三");
@@ -143,13 +143,9 @@ public class ExcelWriteTest {
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("e:/writeMapTest.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("f:/test/writeMapTest.xlsx");
 		// 合并单元格后的标题行，使用默认标题样式
-		try {
-			writer.merge(row1.size() - 1, "一班成绩单");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		writer.merge(row1.size() - 1, "一班成绩单");
 
 		// 一次性写出内容，使用默认样式，强制输出标题
 		writer.write(rows, true);
