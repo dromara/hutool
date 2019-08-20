@@ -29,5 +29,11 @@ public class SystemUtilTest {
 		OsInfo osInfo = SystemUtil.getOsInfo();
 		Assert.assertNotNull(osInfo);
 	}
+
+	@Test
+	public void getHostInfo() {
+		HostInfo hostInfo = SystemUtil.getHostInfo();
+		Assert.assertNotNull(hostInfo);
+	}
 	
 }
