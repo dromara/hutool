@@ -1,5 +1,8 @@
 package cn.hutool.extra.mail;
 
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Assert;
@@ -17,15 +20,23 @@ public class MailTest {
 	
 	@Test
 	@Ignore
-	public void sendTest() {
+	public void sendWithFileTest() {
 		MailUtil.send("hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1>", true, FileUtil.file("d:/测试附件文本.txt"));
 	}
 	
 	@Test
 	@Ignore
-	public void sendTest2() {
+	public void sendWithLongNameFileTest() {
 		//附件名长度大于60时的测试
 		MailUtil.send("hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1>", true, FileUtil.file("d:/6-LongLong一阶段平台建设周报2018.3.12-3.16.xlsx"));
+	}
+	
+	@Test
+	@Ignore
+	public void sendWithImageTest() {
+		Map<String, InputStream> map = new HashMap<>();
+		map.put("testImage", FileUtil.getInputStream("f:/test/me.png"));
+		MailUtil.sendHtml("hutool@foxmail.com", "测试", "<h1>邮件来自Hutool测试</h1><img src=\"cid:testImage\" />", map);
 	}
 	
 	@Test

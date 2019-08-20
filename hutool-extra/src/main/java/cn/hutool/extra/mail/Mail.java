@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Date;
-import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.activation.FileTypeMap;
 import javax.mail.Authenticator;
-import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -21,8 +20,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -49,10 +51,8 @@ public class Mail {
 	private String content;
 	/** 是否为HTML */
 	private boolean isHtml;
-	/** 附件列表 */
-	private DataSource[] attachments;
-	/** 图片列表 */
-	private Map<String, InputStream> imageMap;
+	/** 正文、附件和图片的混合部分 */
+	private Multipart multipart = new MimeMultipart();
 	/** 是否使用全局会话，默认为false */
 	private boolean useGlobalSession = false;
 
@@ -165,7 +165,8 @@ public class Mail {
 	}
 
 	/**
-	 * 设置正文
+	 * 设置正文<br>
+	 * 正文可以是普通文本也可以是HTML（默认普通文本），可以通过调用{@link #setHtml(boolean)} 设置是否为HTML
 	 * 
 	 * @param content 正文
 	 * @return this
@@ -185,9 +186,21 @@ public class Mail {
 		this.isHtml = isHtml;
 		return this;
 	}
+	
+	/**
+	 * 设置正文
+	 * 
+	 * @param content 正文内容
+	 * @param isHtml 是否为HTML
+	 * @return this
+	 */
+	public Mail setContent(String content, boolean isHtml) {
+		setContent(content);
+		return setHtml(isHtml);
+	}
 
 	/**
-	 * 设置文件类型附件
+	 * 设置文件类型附件，文件可以是图片文件，此时自动设置cid（正文中引用图片），默认cid为文件名
 	 * 
 	 * @param files 附件文件列表
 	 * @return this
@@ -205,7 +218,7 @@ public class Mail {
 	}
 
 	/**
-	 * 设置附件，附件使用{@link DataSource} 形式表示，可以使用{@link FileDataSource}包装文件表示文件附件
+	 * 增加附件或图片，附件使用{@link DataSource} 形式表示，可以使用{@link FileDataSource}包装文件表示文件附件
 	 * 
 	 * @param attachments 附件列表
 	 * @return this
@@ -213,21 +226,74 @@ public class Mail {
 	 */
 	public Mail setAttachments(DataSource... attachments) {
 		if (ArrayUtil.isNotEmpty(attachments)) {
-			this.attachments = attachments;
+			final Charset charset = this.mailAccount.getCharset();
+			MimeBodyPart bodyPart;
+			String nameEncoded;
+			try {
+				for (DataSource attachment : attachments) {
+					bodyPart = new MimeBodyPart();
+					bodyPart.setDataHandler(new DataHandler(attachment));
+					nameEncoded = InternalMailUtil.encodeText(attachment.getName(), charset);
+					// 普通附件文件名
+					bodyPart.setFileName(nameEncoded);
+					if(StrUtil.startWith(attachment.getContentType(), "image/")) {
+						// 图片附件，用于正文中引用图片
+						bodyPart.setContentID(nameEncoded);
+					}
+					this.multipart.addBodyPart(bodyPart);
+				}
+			} catch (MessagingException e) {
+				throw new MailException(e);
+			}
 		}
 		return this;
 	}
+	
+	/**
+	 * 增加图片，图片的键对应到邮件模板中的占位字符串，图片类型默认为"image/jpeg"
+	 *
+	 * @param cid 图片与占位符，占位符格式为cid:${cid}
+	 * @param imageStream 图片文件
+	 * @since 4.6.3
+	 */
+	public Mail addImage(String cid, InputStream imageStream) {
+		return addImage(cid, imageStream, null);
+	}
+	
+	/**
+	 * 增加图片，图片的键对应到邮件模板中的占位字符串
+	 *
+	 * @param cid 图片与占位符，占位符格式为cid:${cid}
+	 * @param imageStream 图片流，不关闭
+	 * @param contentType 图片类型，null赋值默认的"image/jpeg"
+	 * @since 4.6.3
+	 */
+	public Mail addImage(String cid, InputStream imageStream, String contentType) {
+		ByteArrayDataSource imgSource;
+		try {
+			imgSource = new ByteArrayDataSource(imageStream, ObjectUtil.defaultIfNull(contentType, "image/jpeg"));
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+		imgSource.setName(cid);
+		return setAttachments(imgSource);
+	}
 
 	/**
-	 * 设置图片，图片的键对应到邮件模板中的占位字符串
+	 * 增加图片，图片的键对应到邮件模板中的占位字符串
 	 *
-	 * @param imageMap 图片与占位符，占位符格式为cid:$IMAGE_PLACEHOLDER
+	 * @param cid 图片与占位符，占位符格式为cid:${cid}
+	 * @param imageFile 图片文件
+	 * @since 4.6.3
 	 */
-	public Mail setImageMap(Map<String, InputStream> imageMap) {
-		if (imageMap != null && imageMap.size() > 0) {
-			this.imageMap = imageMap;
+	public Mail addImage(String cid, File imageFile) {
+		InputStream in = null;
+		try{
+			in = FileUtil.getInputStream(imageFile);
+			return addImage(cid, in, FileTypeMap.getDefaultFileTypeMap().getContentType(imageFile));
+		} finally {
+			IoUtil.close(in);
 		}
-		return this;
 	}
 
 	/**
@@ -330,43 +396,12 @@ public class Mail {
 	 * @throws MessagingException 消息异常
 	 */
 	private Multipart buildContent(Charset charset) throws MessagingException {
-		final Multipart mainPart = new MimeMultipart();
-
 		// 正文
-		final BodyPart body = new MimeBodyPart();
+		final MimeBodyPart body = new MimeBodyPart();
 		body.setContent(content, StrUtil.format("text/{}; charset={}", isHtml ? "html" : "plain", charset));
-		mainPart.addBodyPart(body);
+		this.multipart.addBodyPart(body);
 
-		// 附件
-		if (ArrayUtil.isNotEmpty(this.attachments)) {
-			BodyPart bodyPart;
-			for (DataSource attachment : attachments) {
-				bodyPart = new MimeBodyPart();
-				bodyPart.setDataHandler(new DataHandler(attachment));
-				bodyPart.setFileName(InternalMailUtil.encodeText(attachment.getName(), charset));
-				mainPart.addBodyPart(bodyPart);
-			}
-		}
-
-		// 图片
-		for (Map.Entry<String, InputStream> entry : imageMap.entrySet()) {
-			MimeBodyPart imgBodyPart = new MimeBodyPart();
-			DataSource ds;
-			try {
-				ds = new ByteArrayDataSource(entry.getValue(), "image/jpeg");
-				IoUtil.close(entry.getValue());
-			} catch (IOException e) {
-				throw new MailException(e);
-			}
-
-			imgBodyPart.setDataHandler(new DataHandler(ds));
-			// imgBodyPart.setHeader("Content-ID", String.format("<%s>", entry.getKey()));
-			imgBodyPart.setContentID(entry.getKey());
-			// add it
-			mainPart.addBodyPart(imgBodyPart);
-		}
-
-		return mainPart;
+		return this.multipart;
 	}
 
 	/**
