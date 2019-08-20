@@ -124,7 +124,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void mergeTest2() {
 		Map<String, Object> row1 = new LinkedHashMap<>();
 		row1.put("姓名", "张三");
