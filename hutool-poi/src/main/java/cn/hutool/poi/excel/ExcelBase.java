@@ -289,11 +289,15 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * </pre>
 	 * 
 	 * @param rowNum 行号
-	 * @return 列数
+	 * @return 列数，-1表示获取失败
 	 */
 	public int getColumnCount(int rowNum) {
-		// getLastCellNum方法返回序号+1的值
-		return this.sheet.getRow(rowNum).getLastCellNum();
+		final Row row = this.sheet.getRow(rowNum);
+		if(null != row) {
+			// getLastCellNum方法返回序号+1的值
+			return row.getLastCellNum();
+		}
+		return -1;
 	}
 	
 	/**

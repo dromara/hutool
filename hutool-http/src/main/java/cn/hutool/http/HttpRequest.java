@@ -288,7 +288,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 获取{@link HttpConnection}
+	 * 获取{@link HttpConnection}<br>
+	 * 在{@link #execute()} 执行前此对象为null
 	 * 
 	 * @return {@link HttpConnection}
 	 * @since 4.2.2
