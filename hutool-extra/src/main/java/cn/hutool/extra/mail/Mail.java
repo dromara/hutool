@@ -1,8 +1,11 @@
 package cn.hutool.extra.mail;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -16,6 +19,7 @@ import javax.mail.Transport;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
@@ -46,6 +50,8 @@ public class Mail {
 	private boolean isHtml;
 	/** 附件列表 */
 	private DataSource[] attachments;
+	/** 图片列表 */
+	private Map<String, InputStream> imageMap;
 	/** 是否使用全局会话，默认为false */
 	private boolean useGlobalSession = false;
 
@@ -212,6 +218,18 @@ public class Mail {
 	}
 
 	/**
+	 * 设置图片，图片的键对应到邮件模板中的占位字符串
+	 *
+	 * @param imageMap 图片与占位符，占位符格式为cid:$IMAGE_PLACEHOLDER
+	 */
+	public Mail setImageMap(Map<String, InputStream> imageMap) {
+		if (imageMap != null && imageMap.size() > 0) {
+			this.imageMap = imageMap;
+		}
+		return this;
+	}
+
+	/**
 	 * 设置字符集编码
 	 * 
 	 * @param charset 字符集编码
@@ -327,6 +345,22 @@ public class Mail {
 				bodyPart.setFileName(InternalMailUtil.encodeText(attachment.getName(), charset));
 				mainPart.addBodyPart(bodyPart);
 			}
+		}
+
+		// 图片
+		for (Map.Entry<String, InputStream> entry : imageMap.entrySet()) {
+			BodyPart messageBodyPart = new MimeBodyPart();
+			DataSource ds;
+			try {
+				ds = new ByteArrayDataSource(entry.getValue(), "image/jpeg");
+			} catch (IOException e) {
+				throw new MailException(e);
+			}
+
+			messageBodyPart.setDataHandler(new DataHandler(ds));
+			messageBodyPart.setHeader("Content-ID", String.format("<%s>", entry.getKey()));
+			// add it
+			mainPart.addBodyPart(messageBodyPart);
 		}
 
 		return mainPart;
