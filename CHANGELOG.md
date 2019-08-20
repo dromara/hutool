@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core】        改进CollUtil.zip逻辑，减少内存复制（issue#I10T01@Gitee）
+* 【extra】        邮件支持图片（pr#495@Github）
 
 ### Bug修复
 * 【http】         修复HttpRquest中body方法长度计算问题（issue#I10UPG@Gitee）

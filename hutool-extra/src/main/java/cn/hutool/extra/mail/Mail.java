@@ -21,6 +21,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -139,7 +140,7 @@ public class Mail {
 		this.bccs = bccs;
 		return this;
 	}
-	
+
 	/**
 	 * 设置多个回复地址(reply-to)
 	 * 
@@ -192,10 +193,10 @@ public class Mail {
 	 * @return this
 	 */
 	public Mail setFiles(File... files) {
-		if(ArrayUtil.isEmpty(files)) {
+		if (ArrayUtil.isEmpty(files)) {
 			return this;
 		}
-		
+
 		final DataSource[] attachments = new DataSource[files.length];
 		for (int i = 0; i < files.length; i++) {
 			attachments[i] = new FileDataSource(files[i]);
@@ -211,7 +212,7 @@ public class Mail {
 	 * @since 4.0.9
 	 */
 	public Mail setAttachments(DataSource... attachments) {
-		if(ArrayUtil.isNotEmpty(attachments)) {
+		if (ArrayUtil.isNotEmpty(attachments)) {
 			this.attachments = attachments;
 		}
 		return this;
@@ -317,7 +318,7 @@ public class Mail {
 		if (ArrayUtil.isNotEmpty(this.reply)) {
 			msg.setReplyTo(InternalMailUtil.parseAddressFromStrs(this.reply, charset));
 		}
-		
+
 		return msg;
 	}
 
@@ -349,18 +350,20 @@ public class Mail {
 
 		// 图片
 		for (Map.Entry<String, InputStream> entry : imageMap.entrySet()) {
-			BodyPart messageBodyPart = new MimeBodyPart();
+			MimeBodyPart imgBodyPart = new MimeBodyPart();
 			DataSource ds;
 			try {
 				ds = new ByteArrayDataSource(entry.getValue(), "image/jpeg");
+				IoUtil.close(entry.getValue());
 			} catch (IOException e) {
 				throw new MailException(e);
 			}
 
-			messageBodyPart.setDataHandler(new DataHandler(ds));
-			messageBodyPart.setHeader("Content-ID", String.format("<%s>", entry.getKey()));
+			imgBodyPart.setDataHandler(new DataHandler(ds));
+			// imgBodyPart.setHeader("Content-ID", String.format("<%s>", entry.getKey()));
+			imgBodyPart.setContentID(entry.getKey());
 			// add it
-			mainPart.addBodyPart(messageBodyPart);
+			mainPart.addBodyPart(imgBodyPart);
 		}
 
 		return mainPart;
