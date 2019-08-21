@@ -3,6 +3,7 @@ package cn.hutool.core.swing;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.URLUtil;
@@ -31,9 +32,19 @@ public class DesktopUtil {
 	 * @param url URL地址
 	 */
 	public static void browse(String url) {
+		browse(URLUtil.toURI(url));
+	}
+	
+	/**
+	 * 使用平台默认浏览器打开指定URI地址
+	 * 
+	 * @param uri URI地址
+	 * @since 4.6.3
+	 */
+	public static void browse(URI uri) {
 		final Desktop dsktop = getDsktop();
 		try {
-			dsktop.browse(URLUtil.toURI(url));
+			dsktop.browse(uri);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

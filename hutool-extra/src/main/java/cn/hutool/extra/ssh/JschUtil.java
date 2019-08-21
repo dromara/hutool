@@ -285,7 +285,7 @@ public class JschUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (JSchException e) {
-			throw new IORuntimeException(e);
+			throw new JschRuntimeException(e);
 		} finally {
 			IoUtil.close(in);
 			close(channel);

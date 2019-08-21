@@ -26,7 +26,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 
 	static final float DEFAULT_LOAD_FACTOR = 0.75f;
 	static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
-	
+
 	/** 是否大小写不敏感 */
 	private boolean caseInsensitive;
 
@@ -59,7 +59,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	public Dict() {
 		this(false);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -77,7 +77,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	public Dict(int initialCapacity) {
 		this(initialCapacity, false);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -87,7 +87,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	public Dict(int initialCapacity, boolean caseInsensitive) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR, caseInsensitive);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -304,6 +304,19 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param attr 字段名
 	 * @param defaultValue 默认值
 	 * @return 字段值
+	 * @since 4.6.3
+	 */
+	public <T> T getBean(String attr) {
+		return get(attr, null);
+	}
+
+	/**
+	 * 获得特定类型值
+	 * 
+	 * @param <T> 值类型
+	 * @param attr 字段名
+	 * @param defaultValue 默认值
+	 * @return 字段值
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(String attr, T defaultValue) {
@@ -439,7 +452,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 		return get(attr, null);
 	}
 	// -------------------------------------------------------------------- Get end
-	
+
 	@Override
 	public Object put(String key, Object value) {
 		return super.put(customKey(key), value);
@@ -449,7 +462,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	public Dict clone() {
 		return (Dict) super.clone();
 	}
-	
+
 	/**
 	 * 将Key转为小写
 	 * 
