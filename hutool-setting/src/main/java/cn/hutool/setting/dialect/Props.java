@@ -14,6 +14,7 @@ import java.nio.file.WatchEvent;
 import java.util.Date;
 import java.util.Properties;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.getter.BasicTypeGetter;
@@ -31,9 +32,11 @@ import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.WatchUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import cn.hutool.log.StaticLog;
 import cn.hutool.setting.SettingRuntimeException;
 
 /**
@@ -57,9 +60,9 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * 获得Classpath下的Properties文件
 	 * 
 	 * @param resource 资源（相对Classpath的路径）
-	 * @return Properties
+	 * @return Props
 	 */
-	public static Properties getProp(String resource) {
+	public static Props getProp(String resource) {
 		return new Props(resource);
 	}
 
@@ -70,7 +73,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param charsetName 字符集
 	 * @return Properties
 	 */
-	public static Properties getProp(String resource, String charsetName) {
+	public static Props getProp(String resource, String charsetName) {
 		return new Props(resource, charsetName);
 	}
 
@@ -81,7 +84,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param charset 字符集
 	 * @return Properties
 	 */
-	public static Properties getProp(String resource, Charset charset) {
+	public static Props getProp(String resource, Charset charset) {
 		return new Props(resource, charset);
 	}
 
@@ -120,7 +123,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 */
 	public Props(String path, Charset charset) {
 		Assert.notBlank(path, "Blank properties file path !");
-		if(null != charset) {
+		if (null != charset) {
 			this.charset = charset;
 		}
 		this.load(ResourceUtil.getResourceObj(path));
@@ -187,7 +190,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 */
 	public Props(String path, Class<?> clazz, Charset charset) {
 		Assert.notBlank(path, "Blank properties file path !");
-		if(null != charset) {
+		if (null != charset) {
 			this.charset = charset;
 		}
 		this.load(new ClassPathResource(path, clazz));
@@ -220,7 +223,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 */
 	public Props(URL propertiesUrl, Charset charset) {
 		Assert.notNull(propertiesUrl, "Null properties URL !");
-		if(null != charset) {
+		if (null != charset) {
 			this.charset = charset;
 		}
 		this.load(new UrlResource(propertiesUrl));
@@ -276,7 +279,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 				// 先关闭之前的监听
 				this.watchMonitor.close();
 			}
-			this.watchMonitor = WatchUtil.createModify(this.propertiesFileUrl, new SimpleWatcher(){
+			this.watchMonitor = WatchUtil.createModify(this.propertiesFileUrl, new SimpleWatcher() {
 				@Override
 				public void onModify(WatchEvent<?> event, Path currentPath) {
 					load();
@@ -441,17 +444,17 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	public <E extends Enum<E>> E getEnum(Class<E> clazz, String key) {
 		return getEnum(clazz, key, null);
 	}
-	
+
 	@Override
 	public Date getDate(String key, Date defaultValue) {
 		return Convert.toDate(getStr(key), defaultValue);
 	}
-	
+
 	@Override
 	public Date getDate(String key) {
 		return getDate(key, null);
 	}
-	
+
 	/**
 	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
 	 * 
@@ -468,6 +471,86 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 			}
 		}
 		return (String) value;
+	}
+	
+	/**
+	 * 将配置文件转换为Bean，支持嵌套Bean<br>
+	 * 支持的表达式：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * ['person']['friends'][5]['name']
+	 * </pre>
+	 * 
+	 * @param beanClass Bean类
+	 * @return Bean对象
+	 * @since 4.6.3
+	 */
+	public <T> T toBean(Class<T> beanClass) {
+		return toBean(beanClass, null);
+	}
+
+	/**
+	 * 将配置文件转换为Bean，支持嵌套Bean<br>
+	 * 支持的表达式：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * ['person']['friends'][5]['name']
+	 * </pre>
+	 * 
+	 * @param beanClass Bean类
+	 * @param prefix 公共前缀，不指定前缀传null，当指定前缀后非此前缀的属性被忽略
+	 * @return Bean对象
+	 * @since 4.6.3
+	 */
+	public <T> T toBean(Class<T> beanClass, String prefix) {
+		final T bean = ReflectUtil.newInstanceIfPossible(beanClass);
+		return fillBean(bean, prefix);
+	}
+	
+	/**
+	 * 将配置文件转换为Bean，支持嵌套Bean<br>
+	 * 支持的表达式：
+	 * 
+	 * <pre>
+	 * persion
+	 * persion.name
+	 * persons[3]
+	 * person.friends[5].name
+	 * ['person']['friends'][5]['name']
+	 * </pre>
+	 * 
+	 * @param bean Bean对象
+	 * @param prefix 公共前缀，不指定前缀传null，当指定前缀后非此前缀的属性被忽略
+	 * @return Bean对象
+	 * @since 4.6.3
+	 */
+	public <T> T fillBean(T bean, String prefix) {
+		prefix = StrUtil.addSuffixIfNot(prefix, StrUtil.DOT);
+
+		String key;
+		for (java.util.Map.Entry<Object, Object> entry : this.entrySet()) {
+			key = (String) entry.getKey();
+			if(false == StrUtil.startWith(key, prefix)) {
+				// 非指定开头的属性忽略掉
+				continue;
+			}
+			try {
+				BeanUtil.setProperty(bean, StrUtil.subSuf(key, prefix.length()), entry.getValue());
+			} catch (Exception e) {
+				// 忽略注入失败的字段（这些字段可能用于其它配置）
+				StaticLog.debug("Ignore property: [{}]", key);
+			}
+		}
+
+		return bean;
 	}
 
 	// ----------------------------------------------------------------------- Get end
@@ -489,7 +572,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * @param absolutePath 设置文件的绝对路径
 	 * @throws IORuntimeException IO异常，可能为文件未找到
 	 */
-	public void store(String absolutePath) throws IORuntimeException{
+	public void store(String absolutePath) throws IORuntimeException {
 		Writer writer = null;
 		try {
 			writer = FileUtil.getWriter(absolutePath, charset, false);

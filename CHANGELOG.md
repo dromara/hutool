@@ -10,6 +10,7 @@
 * 【extra】        邮件增加图片支持（pr#495@Github）
 * 【core】        MapUtil、CollUtil增加emptyIfNull（issue#502@Github）
 * 【core】        增加emptyIfNull等（issue#503@Github）
+* 【setting】     Props增加toBean方法（issue#499@Github）
 
 ### Bug修复
 * 【http】         修复HttpRquest中body方法长度计算问题（issue#I10UPG@Gitee）

@@ -236,7 +236,10 @@ public class ReflectUtil {
 	public static void setFieldValue(Object obj, String fieldName, Object value) throws UtilException {
 		Assert.notNull(obj);
 		Assert.notBlank(fieldName);
-		setFieldValue(obj, getField(obj.getClass(), fieldName), value);
+		
+		final Field field = getField(obj.getClass(), fieldName);
+		Assert.notNull(field, "Field [{}] is not exist in [{}]", fieldName, obj.getClass().getName());
+		setFieldValue(obj, field, value);
 	}
 
 	/**
@@ -249,7 +252,7 @@ public class ReflectUtil {
 	 */
 	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException {
 		Assert.notNull(obj);
-		Assert.notNull(field);
+		Assert.notNull(field, "Field in [{}] not exist !", obj.getClass().getName());
 		field.setAccessible(true);
 		
 		if(null != value) {
