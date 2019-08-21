@@ -216,6 +216,18 @@ public class StrUtil {
 	public static boolean isNotEmpty(CharSequence str) {
 		return false == isEmpty(str);
 	}
+	
+	/**
+	 * 当给定字符串为null时，转换为Empty
+	 * 
+	 * @param str 被检查的字符串
+	 * @return 原字符串或者空串
+	 * @since 4.6.3
+	 * @see #nullToEmpty(CharSequence)
+	 */
+	public static String emptyIfNull(CharSequence str) {
+		return nullToEmpty(str);
+	}
 
 	/**
 	 * 当给定字符串为null时，转换为Empty

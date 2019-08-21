@@ -302,7 +302,6 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * 
 	 * @param <T> 值类型
 	 * @param attr 字段名
-	 * @param defaultValue 默认值
 	 * @return 字段值
 	 * @since 4.6.3
 	 */

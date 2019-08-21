@@ -62,7 +62,8 @@ public class MapUtil {
 	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
 	 * 空集合使用{@link Collections#emptyMap()}
 	 *
-	 * @param <T> 集合元素类型
+	 * @param <K> 键类型
+	 * @param <V> 值类型
 	 * @param set 提供的集合，可能为null
 	 * @return 原集合，若为null返回空集合
 	 * @since 4.6.3
