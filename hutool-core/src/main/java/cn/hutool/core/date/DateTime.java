@@ -30,6 +30,17 @@ public class DateTime extends Date {
 	private Week firstDayOfWeek = Week.MONDAY;
 	/** 时区 */
 	private TimeZone timeZone;
+	
+	/**
+	 * 转换时间戳为 DateTime
+	 * 
+	 * @param timeMillis 时间戳，毫秒数
+	 * @return DateTime
+	 * @since 4.6.3
+	 */
+	public static DateTime of(long timeMillis) {
+		return new DateTime(timeMillis);
+	}
 
 	/**
 	 * 转换JDK date为 DateTime

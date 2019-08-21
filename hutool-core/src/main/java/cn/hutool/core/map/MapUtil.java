@@ -2,6 +2,7 @@ package cn.hutool.core.map;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,6 +56,19 @@ public class MapUtil {
 	 */
 	public static boolean isNotEmpty(Map<?, ?> map) {
 		return null != map && false == map.isEmpty();
+	}
+
+	/**
+	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
+	 * 空集合使用{@link Collections#emptyMap()}
+	 *
+	 * @param <T> 集合元素类型
+	 * @param set 提供的集合，可能为null
+	 * @return 原集合，若为null返回空集合
+	 * @since 4.6.3
+	 */
+	public static <K, V> Map<K, V> emptyIfNull(Map<K, V> set) {
+		return (null == set) ? Collections.<K, V>emptyMap() : set;
 	}
 
 	// ----------------------------------------------------------------------------------------------- new HashMap
@@ -134,14 +148,14 @@ public class MapUtil {
 		}
 		return treeMap;
 	}
-	
+
 	/**
 	 * 创建键不重复Map
 	 * 
 	 * @return {@link IdentityHashMap}
 	 * @since 4.5.7
 	 */
-	public static <K, V> Map<K, V> newIdentityMap(int size){
+	public static <K, V> Map<K, V> newIdentityMap(int size) {
 		return new IdentityHashMap<>(size);
 	}
 
@@ -204,11 +218,7 @@ public class MapUtil {
 	 * </pre>
 	 * 
 	 * <pre>
-	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] {
-	 *     {"RED", "#FF0000"},
-	 *     {"GREEN", "#00FF00"},
-	 *     {"BLUE", "#0000FF"}
-	 * });
+	 * Map&lt;Object, Object&gt; colorMap = MapUtil.of(new String[][] { { "RED", "#FF0000" }, { "GREEN", "#00FF00" }, { "BLUE", "#0000FF" } });
 	 * </pre>
 	 * 
 	 * 参考：commons-lang
@@ -388,7 +398,7 @@ public class MapUtil {
 	public static <K, V> Map<K, V> toCamelCaseMap(Map<K, V> map) {
 		return (map instanceof LinkedHashMap) ? new CamelCaseLinkedMap<>(map) : new CamelCaseMap<>(map);
 	}
-	
+
 	/**
 	 * 将键值对转换为二维数组，第一维是key，第二纬是value
 	 * 
@@ -397,15 +407,15 @@ public class MapUtil {
 	 * @since 4.1.9
 	 */
 	public static Object[][] toObjectArray(Map<?, ?> map) {
-		if(map == null) {
+		if (map == null) {
 			return null;
 		}
 		final Object[][] result = new Object[map.size()][2];
-		if(map.isEmpty()) {
+		if (map.isEmpty()) {
 			return result;
 		}
 		int index = 0;
-		for(Entry<?, ?> entry : map.entrySet()) {
+		for (Entry<?, ?> entry : map.entrySet()) {
 			result[index][0] = entry.getKey();
 			result[index][1] = entry.getValue();
 			index++;
@@ -489,10 +499,10 @@ public class MapUtil {
 	 * @return 过滤后的Map
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Editor<Entry<K, V>> editor) {
-		if(null == map || null == editor) {
+		if (null == map || null == editor) {
 			return map;
 		}
-		
+
 		final Map<K, V> map2 = ObjectUtil.clone(map);
 		if (isEmpty(map2)) {
 			return map2;
@@ -525,10 +535,10 @@ public class MapUtil {
 	 * @since 3.1.0
 	 */
 	public static <K, V> Map<K, V> filter(Map<K, V> map, Filter<Entry<K, V>> filter) {
-		if(null == map || null == filter) {
+		if (null == map || null == filter) {
 			return map;
 		}
-		
+
 		final Map<K, V> map2 = ObjectUtil.clone(map);
 		if (isEmpty(map2)) {
 			return map2;
@@ -542,7 +552,7 @@ public class MapUtil {
 		}
 		return map2;
 	}
-	
+
 	/**
 	 * 过滤Map保留指定键值对，如果键不存在跳过
 	 * 
@@ -562,7 +572,7 @@ public class MapUtil {
 
 		map2.clear();
 		for (K key : keys) {
-			if(map.containsKey(key)) {
+			if (map.containsKey(key)) {
 				map2.put(key, map.get(key));
 			}
 		}
@@ -675,7 +685,7 @@ public class MapUtil {
 	public static MapProxy createProxy(Map<?, ?> map) {
 		return MapProxy.create(map);
 	}
-	
+
 	/**
 	 * 创建Map包装类MapWrapper<br>
 	 * {@link MapWrapper}对Map做一次包装
@@ -745,7 +755,7 @@ public class MapUtil {
 			}
 		});
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为字符串
 	 * 
@@ -757,7 +767,7 @@ public class MapUtil {
 	public static String getStr(Map<?, ?> map, Object key) {
 		return get(map, key, String.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为Integer
 	 * 
@@ -769,7 +779,7 @@ public class MapUtil {
 	public static Integer getInt(Map<?, ?> map, Object key) {
 		return get(map, key, Integer.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为Double
 	 * 
@@ -781,7 +791,7 @@ public class MapUtil {
 	public static Double getDouble(Map<?, ?> map, Object key) {
 		return get(map, key, Double.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为Float
 	 * 
@@ -793,7 +803,7 @@ public class MapUtil {
 	public static Float getFloat(Map<?, ?> map, Object key) {
 		return get(map, key, Float.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为Short
 	 * 
@@ -805,7 +815,7 @@ public class MapUtil {
 	public static Short getShort(Map<?, ?> map, Object key) {
 		return get(map, key, Short.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为Bool
 	 * 
@@ -817,7 +827,7 @@ public class MapUtil {
 	public static Boolean getBool(Map<?, ?> map, Object key) {
 		return get(map, key, Boolean.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为Character
 	 * 
@@ -829,7 +839,7 @@ public class MapUtil {
 	public static Character getChar(Map<?, ?> map, Object key) {
 		return get(map, key, Character.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为Long
 	 * 
@@ -841,7 +851,7 @@ public class MapUtil {
 	public static Long getLong(Map<?, ?> map, Object key) {
 		return get(map, key, Long.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为{@link Date}
 	 * 
@@ -853,7 +863,7 @@ public class MapUtil {
 	public static Date getDate(Map<?, ?> map, Object key) {
 		return get(map, key, Date.class);
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为指定类型
 	 * 
@@ -867,7 +877,7 @@ public class MapUtil {
 	public static <T> T get(Map<?, ?> map, Object key, Class<T> type) {
 		return null == map ? null : Convert.convert(type, map.get(key));
 	}
-	
+
 	/**
 	 * 获取Map指定key的值，并转换为指定类型
 	 * 
@@ -881,7 +891,7 @@ public class MapUtil {
 	public static <T> T get(Map<?, ?> map, Object key, TypeReference<T> type) {
 		return null == map ? null : Convert.convert(type, map.get(key));
 	}
-	
+
 	/**
 	 * 重命名键<br>
 	 * 实现方式为一处然后重新put，当旧的key不存在直接返回<br>
@@ -895,8 +905,8 @@ public class MapUtil {
 	 * @since 4.5.16
 	 */
 	public static <K, V> Map<K, V> renameKey(Map<K, V> map, K oldKey, K newKey) {
-		if(isNotEmpty(map) && map.containsKey(oldKey)) {
-			if(map.containsKey(newKey)) {
+		if (isNotEmpty(map) && map.containsKey(oldKey)) {
+			if (map.containsKey(newKey)) {
 				throw new IllegalArgumentException(StrUtil.format("The key '{}' exist !", newKey));
 			}
 			map.put(newKey, map.remove(oldKey));

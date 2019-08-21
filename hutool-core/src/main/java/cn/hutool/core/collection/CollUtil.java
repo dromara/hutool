@@ -61,6 +61,32 @@ import cn.hutool.core.util.TypeUtil;
 public class CollUtil {
 
 	/**
+	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
+	 * 空集合使用{@link Collections#emptySet()}
+	 *
+	 * @param <T> 集合元素类型
+	 * @param set 提供的集合，可能为null
+	 * @return 原集合，若为null返回空集合
+	 * @since 4.6.3
+	 */
+	public static <T> Set<T> emptyIfNull(Set<T> set) {
+		return (null == set) ? Collections.<T>emptySet() : set;
+	}
+	
+	/**
+	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
+	 * 空集合使用{@link Collections#emptyList()}
+	 *
+	 * @param <T> 集合元素类型
+	 * @param set 提供的集合，可能为null
+	 * @return 原集合，若为null返回空集合
+	 * @since 4.6.3
+	 */
+	public static <T> List<T> emptyIfNull(List<T> set) {
+		return (null == set) ? Collections.<T>emptyList() : set;
+	}
+
+	/**
 	 * 两个集合的并集<br>
 	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留最多的个数<br>
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
@@ -245,7 +271,7 @@ public class CollUtil {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 集合1中是否包含集合2中所有的元素，既集合2是否为集合1的子集
 	 * 
@@ -258,7 +284,7 @@ public class CollUtil {
 		if (isEmpty(coll1) || isEmpty(coll2) || coll1.size() < coll2.size()) {
 			return false;
 		}
-		
+
 		for (Object object : coll2) {
 			if (false == coll1.contains(object)) {
 				return false;
@@ -851,9 +877,9 @@ public class CollUtil {
 		if (list == null) {
 			return null;
 		}
-		
-		if(list.isEmpty()) {
-			return new ArrayList<>(0); 
+
+		if (list.isEmpty()) {
+			return new ArrayList<>(0);
 		}
 
 		final int size = list.size();
@@ -1161,10 +1187,10 @@ public class CollUtil {
 	 */
 	public static List<Object> extract(Iterable<?> collection, Editor<Object> editor, boolean ignoreNull) {
 		final List<Object> fieldValueList = new ArrayList<>();
-		if(null == collection) {
+		if (null == collection) {
 			return fieldValueList;
 		}
-		
+
 		Object value;
 		for (Object bean : collection) {
 			value = editor.edit(bean);
@@ -1519,7 +1545,7 @@ public class CollUtil {
 
 		int entryCount = Math.min(keys.size(), values.size());
 		final Map<K, V> map = newHashMap(entryCount);
-		
+
 		final Iterator<K> keyIterator = keys.iterator();
 		final Iterator<V> valueIterator = values.iterator();
 		while (entryCount > 0) {
@@ -1863,14 +1889,14 @@ public class CollUtil {
 		}
 
 		final int size = collection.size();
-		if(0 == size) {
+		if (0 == size) {
 			return null;
 		}
-		
+
 		if (index < 0) {
 			index += size;
 		}
-		
+
 		// 检查越界
 		if (index >= size) {
 			return null;
@@ -2419,7 +2445,7 @@ public class CollUtil {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 获取指定Map列表中所有的Key
 	 * 
@@ -2428,18 +2454,18 @@ public class CollUtil {
 	 * @return key集合
 	 * @since 4.5.12
 	 */
-	public static <K> Set<K> keySet(Collection<Map<K, ?>> mapCollection){
-		if(isEmpty(mapCollection)) {
+	public static <K> Set<K> keySet(Collection<Map<K, ?>> mapCollection) {
+		if (isEmpty(mapCollection)) {
 			return new HashSet<>();
 		}
 		final HashSet<K> set = new HashSet<>(mapCollection.size() * 16);
-		for (Map<K,?> map : mapCollection) {
+		for (Map<K, ?> map : mapCollection) {
 			set.addAll(map.keySet());
 		}
-		
+
 		return set;
 	}
-	
+
 	/**
 	 * 获取指定Map列表中所有的Value
 	 * 
@@ -2448,12 +2474,12 @@ public class CollUtil {
 	 * @return Value集合
 	 * @since 4.5.12
 	 */
-	public static <V> List<V> values(Collection<Map<?, V>> mapCollection){
+	public static <V> List<V> values(Collection<Map<?, V>> mapCollection) {
 		final List<V> values = new ArrayList<>();
 		for (Map<?, V> map : mapCollection) {
 			values.addAll(map.values());
 		}
-		
+
 		return values;
 	}
 
