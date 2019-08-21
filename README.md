@@ -8,8 +8,8 @@
 	<a target="_blank" href="https://search.maven.org/search?q=g:%22cn.hutool%22%20AND%20a:%22hutool-all%22">
 		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" ></img>
 	</a>
-	<a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0.html">
-		<img src="https://img.shields.io/:license-apache-blue.svg" ></img>
+	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL/">
+		<img src="https://img.shields.io/:license-MulanPSL-blue.svg" ></img>
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
 		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" ></img>
