@@ -135,6 +135,25 @@ public abstract class HttpBase<T> {
 	}
 	
 	/**
+	 * 设置请求头
+	 * 
+	 * @param headers 请求头
+	 * @param isOverride 是否覆盖已有头信息
+	 * @return this
+	 * @since 4.6.3
+	 */
+	public T headerMap(Map<String, String> headers, boolean isOverride) {
+		if(CollectionUtil.isEmpty(headers)) {
+			return (T)this;
+		}
+		
+		for (Entry<String, String> entry : headers.entrySet()) {
+			this.header(entry.getKey(), StrUtil.nullToEmpty(entry.getValue()), isOverride);
+		}
+		return (T)this;
+	}
+	
+	/**
 	 * 设置请求头<br>
 	 * 不覆盖原有请求头
 	 * 
@@ -146,8 +165,7 @@ public abstract class HttpBase<T> {
 	}
 	
 	/**
-	 * 设置请求头<br>
-	 * 不覆盖原有请求头
+	 * 设置请求头
 	 * 
 	 * @param headers 请求头
 	 * @param isOverride 是否覆盖已有头信息

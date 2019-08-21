@@ -14,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.poi.excel.cell.CellUtil;
+import cn.hutool.poi.excel.style.StyleUtil;
 
 /**
  * Excel基础类，用于抽象ExcelWriter和ExcelReader中共用部分的对象和方法
@@ -198,45 +199,74 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @since 4.1.4
 	 */
 	public CellStyle getOrCreateCellStyle(int x, int y) {
+		final CellStyle cellStyle = getOrCreateCell(x, y).getCellStyle();
+		return StyleUtil.isNullOrDefaultStyle(this.workbook, cellStyle) ? createCellStyle(x, y) : cellStyle;
+	}
+	
+	/**
+	 * 为指定单元格创建样式，返回样式后可以设置样式内容
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return {@link CellStyle}
+	 * @since 4.6.3
+	 */
+	public CellStyle createCellStyle(int x, int y) {
 		final Cell cell = getOrCreateCell(x, y);
-		CellStyle cellStyle = cell.getCellStyle();
-		if (null == cellStyle) {
-			cellStyle = this.workbook.createCellStyle();
-			cell.setCellStyle(cellStyle);
-		}
+		final CellStyle cellStyle = this.workbook.createCellStyle();
+		cell.setCellStyle(cellStyle);
 		return cellStyle;
 	}
 
 	/**
-	 * 获取或创建某一行的样式，返回样式后可以设置样式内容
+	 * 获取或创建某一行的样式，返回样式后可以设置样式内容<br>
+	 * 需要注意，此方法返回行样式，设置背景色在单元格设置值后会被覆盖，需要单独设置其单元格的样式。
 	 * 
 	 * @param y Y坐标，从0计数，既行号
 	 * @return {@link CellStyle}
 	 * @since 4.1.4
 	 */
 	public CellStyle getOrCreateRowStyle(int y) {
-		final Row row = getOrCreateRow(y);
-		CellStyle rowStyle = row.getRowStyle();
-		if (null == rowStyle) {
-			rowStyle = this.workbook.createCellStyle();
-			row.setRowStyle(rowStyle);
-		}
+		CellStyle rowStyle = getOrCreateRow(y).getRowStyle();
+		return StyleUtil.isNullOrDefaultStyle(this.workbook, rowStyle) ? createRowStyle(y) : rowStyle;
+	}
+	
+	/**
+	 * 创建某一行的样式，返回样式后可以设置样式内容
+	 * 
+	 * @param y Y坐标，从0计数，既行号
+	 * @return {@link CellStyle}
+	 * @since 4.6.3
+	 */
+	public CellStyle createRowStyle(int y) {
+		final CellStyle rowStyle = this.workbook.createCellStyle();
+		getOrCreateRow(y).setRowStyle(rowStyle);
 		return rowStyle;
 	}
 
 	/**
-	 * 获取或创建某一行的样式，返回样式后可以设置样式内容
+	 * 获取或创建某一行的样式，返回样式后可以设置样式内容<br>
+	 * 需要注意，此方法返回行样式，设置背景色在单元格设置值后会被覆盖，需要单独设置其单元格的样式。
 	 * 
 	 * @param x X坐标，从0计数，既列号
 	 * @return {@link CellStyle}
 	 * @since 4.1.4
 	 */
 	public CellStyle getOrCreateColumnStyle(int x) {
-		CellStyle columnStyle = this.sheet.getColumnStyle(x);
-		if (null == columnStyle) {
-			columnStyle = this.workbook.createCellStyle();
-			this.sheet.setDefaultColumnStyle(x, columnStyle);
-		}
+		final CellStyle columnStyle = this.sheet.getColumnStyle(x);
+		return StyleUtil.isNullOrDefaultStyle(this.workbook, columnStyle) ? createColumnStyle(x) : columnStyle;
+	}
+	
+	/**
+	 * 创建某一行的样式，返回样式后可以设置样式内容
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @return {@link CellStyle}
+	 * @since 4.6.3
+	 */
+	public CellStyle createColumnStyle(int x) {
+		final CellStyle columnStyle = this.workbook.createCellStyle();
+		this.sheet.setDefaultColumnStyle(x, columnStyle);
 		return columnStyle;
 	}
 

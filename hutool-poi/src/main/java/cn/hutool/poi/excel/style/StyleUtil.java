@@ -175,4 +175,18 @@ public class StyleUtil {
 		setColor(cellStyle, IndexedColors.GREY_25_PERCENT, FillPatternType.SOLID_FOREGROUND);
 		return cellStyle;
 	}
+	
+	/**
+	 * 给定样式是否为null（无样式）或默认样式，默认样式为<code>workbook.getCellStyleAt(0)</code>
+	 * @param workbook 工作簿
+	 * @param style 被检查的样式
+	 * @return 是否为null（无样式）或默认样式
+	 * @since 4.6.3
+	 */
+	public static boolean isNullOrDefaultStyle(Workbook workbook, CellStyle style) {
+		if(null == style || style.equals(workbook.getCellStyleAt(0))) {
+			return true;
+		}
+		return false;
+	}
 }

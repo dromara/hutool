@@ -3,6 +3,7 @@ package cn.hutool.poi.excel;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,6 +35,10 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.Align;
 
@@ -263,6 +268,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		this.sheet.autoSizeColumn(columnIndex, useMergedCells);
 		return this;
 	}
+	
+	/**
+	 * 禁用默认样式
+	 * 
+	 * @return this
+	 * @see #setStyleSet(StyleSet)
+	 * @since 4.6.3
+	 */
+	public ExcelWriter disableDefaultStyle() {
+		return setStyleSet(null);
+	}
 
 	/**
 	 * 设置样式集，如果不使用样式，传入{@code null}
@@ -318,6 +334,31 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public int getCurrentRow() {
 		return this.currentRow.get();
+	}
+	
+	/**
+	 * 获取Content-Disposition头对应的值，可以通过调用以下方法快速设置下载Excel的头信息：
+	 * 
+	 * <pre>
+	 * response.setHeader("Content-Disposition", excelWriter.getDisposition("test.xlsx", CharsetUtil.CHARSET_UTF_8));
+	 * </pre>
+	 * 
+	 * @param fileName 文件名，如果文件名没有扩展名，会自动按照生成Excel类型补齐扩展名，如果提供空，使用随机UUID
+	 * @param charset 编码，null则使用默认UTF-8编码
+	 * @return Content-Disposition值
+	 */
+	public String getDisposition(String fileName, Charset charset) {
+		if(null == charset) {
+			charset = CharsetUtil.CHARSET_UTF_8;
+		}
+		
+		if(StrUtil.isBlank(fileName)) {
+			// 未提供文件名使用随机UUID作为文件名
+			fileName = IdUtil.fastSimpleUUID();
+		}
+		
+		fileName = StrUtil.addSuffixIfNot(URLUtil.encodeAll(fileName, charset), isXlsx() ? ".xlsx" : ".xls");
+		return StrUtil.format("attachment; filename=\"{}\"; filename*={}''{}", fileName, charset.name(), fileName);
 	}
 
 	/**
@@ -824,7 +865,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @param y Y坐标，从0计数，既行号
 	 * @return {@link CellStyle}
 	 * @since 4.0.9
-	 * @deprecated 请使用{@link #getOrCreateCellStyle(int, int)}
+	 * @deprecated 请使用{@link #createCellStyle(int, int)}
 	 */
 	@Deprecated
 	public CellStyle createStyleForCell(int x, int y) {
@@ -832,6 +873,25 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		final CellStyle cellStyle = this.workbook.createCellStyle();
 		cell.setCellStyle(cellStyle);
 		return cellStyle;
+	}
+	
+	/**
+	 * 设置某个单元格的样式<br>
+	 * 此方法用于多个单元格共享样式的情况<br>
+	 * 可以调用{@link #getOrCreateCellStyle(int, int)} 方法创建或取得一个样式对象。
+	 * 
+	 * <p>
+	 * 需要注意的是，共享样式会共享同一个{@link CellStyle}，一个单元格样式改变，全部改变。
+	 * 
+	 * @param x X坐标，从0计数，既列号
+	 * @param y Y坐标，从0计数，既行号
+	 * @return this
+	 * @since 4.6.3
+	 */
+	public ExcelWriter setStyle(CellStyle style, int x, int y) {
+		final Cell cell = getOrCreateCell(x, y);
+		cell.setCellStyle(style);
+		return this;
 	}
 
 	/**

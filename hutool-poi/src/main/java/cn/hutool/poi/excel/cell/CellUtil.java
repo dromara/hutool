@@ -3,6 +3,7 @@ package cn.hutool.poi.excel.cell;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -13,6 +14,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
+import org.apache.poi.ss.util.SheetUtil;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -26,7 +28,18 @@ import cn.hutool.poi.excel.editors.TrimEditor;
  * @since 4.0.7
  */
 public class CellUtil {
-	
+
+	/**
+	 * 获取单元格值
+	 * 
+	 * @param cell {@link Cell}单元格
+	 * @return 值，类型可能为：Date、Double、Boolean、String
+	 * @since 4.6.3
+	 */
+	public static Object getCellValue(Cell cell) {
+		return getCellValue(cell, false);
+	}
+
 	/**
 	 * 获取单元格值
 	 * 
@@ -121,7 +134,11 @@ public class CellUtil {
 	 * @param isHeader 是否为标题单元格
 	 */
 	public static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
-		if(null != styleSet) {
+		if(null == cell) {
+			return;
+		}
+		
+		if (null != styleSet) {
 			final CellStyle headCellStyle = styleSet.getHeadCellStyle();
 			final CellStyle cellStyle = styleSet.getCellStyle();
 			if (isHeader && null != headCellStyle) {
@@ -148,7 +165,7 @@ public class CellUtil {
 		} else if (value instanceof RichTextString) {
 			cell.setCellValue((RichTextString) value);
 		} else if (value instanceof Number) {
-			if ((value instanceof Double || value instanceof Float  || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
+			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
 				cell.setCellStyle(styleSet.getCellStyleForNumber());
 			}
 			cell.setCellValue(((Number) value).doubleValue());
@@ -219,6 +236,40 @@ public class CellUtil {
 			RegionUtil.setBorderLeft(cellStyle.getBorderLeftEnum(), cellRangeAddress, sheet);
 		}
 		return sheet.addMergedRegion(cellRangeAddress);
+	}
+
+	/**
+	 * 获取合并单元格的值<br>
+	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
+	 * 
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param y 行号，从0开始，可以是合并单元格范围中的任意一行
+	 * @param x 列号，从0开始，可以是合并单元格范围中的任意一列
+	 * @return 合并单元格的值
+	 * @since 4.6.3
+	 */
+	public static Object getMergedRegionValue(Sheet sheet, int x, int y) {
+		final List<CellRangeAddress> addrs = sheet.getMergedRegions();
+
+		int firstColumn;
+		int lastColumn;
+		int firstRow;
+		int lastRow;
+		for (CellRangeAddress ca : addrs) {
+			firstColumn = ca.getFirstColumn();
+			lastColumn = ca.getLastColumn();
+			firstRow = ca.getFirstRow();
+			lastRow = ca.getLastRow();
+
+			if (y >= firstRow && y <= lastRow) {
+				if (x >= firstColumn && x <= lastColumn) {
+					return getCellValue(SheetUtil.getCell(sheet, firstRow, firstColumn));
+				}
+			}
+		}
+
+		return null;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start

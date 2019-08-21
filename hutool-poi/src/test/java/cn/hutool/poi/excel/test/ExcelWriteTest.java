@@ -208,6 +208,33 @@ public class ExcelWriteTest {
 		// 关闭writer，释放内存
 		writer.close();
 	}
+	
+	@Test
+	@Ignore
+	public void writeMapWithStyleTest() {
+		Map<String, Object> row1 = MapUtil.newHashMap(true);
+		row1.put("姓名", "张三");
+		row1.put("年龄", 23);
+		row1.put("成绩", 88.32);
+		row1.put("是否合格", true);
+		row1.put("考试日期", DateUtil.date());
+
+		// 通过工具类创建writer
+		String path = "f:/test/writeMapWithStyleTest.xlsx";
+		FileUtil.del(path);
+		ExcelWriter writer = ExcelUtil.getWriter(path);
+		writer.setStyleSet(null);
+		
+		// 一次性写出内容，使用默认样式
+		writer.writeRow(row1, true);
+		
+		// 设置某个单元格样式
+		CellStyle orCreateRowStyle = writer.getOrCreateCellStyle(0, 1);
+		StyleUtil.setColor(orCreateRowStyle,IndexedColors.RED.getIndex(),FillPatternType.SOLID_FOREGROUND );
+		
+		// 关闭writer，释放内存
+		writer.close();
+	}
 
 	@Test
 	@Ignore
@@ -278,7 +305,7 @@ public class ExcelWriteTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void writeMapOnlyAliasTest2() {
 		Map<Object, Object> row1 = new LinkedHashMap<>();
 		row1.put("name", "张三");

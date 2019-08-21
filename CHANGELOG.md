@@ -11,10 +11,13 @@
 * 【core】        MapUtil、CollUtil增加emptyIfNull（issue#502@Github）
 * 【core】        增加emptyIfNull等（issue#503@Github）
 * 【setting】     Props增加toBean方法（issue#499@Github）
+* 【poi】          CellUtil增加getMergedRegionValue方法，ExcelWriter增加getDisposition方法
+* 【http】         HttpBase增加headerMap方法
 
 ### Bug修复
 * 【http】         修复HttpRquest中body方法长度计算问题（issue#I10UPG@Gitee）
 * 【system】     修复获取本地IP问题（pr#65@Gitee）
+* 【poi】          修复设置单元格样式无效问题
 
 -------------------------------------------------------------------------------------------------------------
 
