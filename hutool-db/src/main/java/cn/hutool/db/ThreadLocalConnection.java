@@ -46,7 +46,9 @@ public enum ThreadLocalConnection {
 		GroupedConnection groupedConnection = threadLocal.get();
 		if (null != groupedConnection) {
 			groupedConnection.close(ds);
-			threadLocal.remove();
+			if(groupedConnection.removeAble()){
+				threadLocal.remove();
+			}
 		}
 	}
 
@@ -96,6 +98,14 @@ public enum ThreadLocalConnection {
 				DbUtil.close(conn);
 			}
 			return this;
+		}
+		
+		/**
+		 * 多数据源情况情况下判断是否能从上下文中删除
+		 * @return
+		 */
+		public boolean removeAble(){
+			return connMap.size()==0;
 		}
 	}
 }
