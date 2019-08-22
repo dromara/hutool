@@ -35,7 +35,7 @@ public enum ThreadLocalConnection {
 		}
 		return groupedConnection.get(ds);
 	}
-	
+
 	/**
 	 * 关闭数据库，并从线程池中移除
 	 * 
@@ -46,7 +46,8 @@ public enum ThreadLocalConnection {
 		GroupedConnection groupedConnection = threadLocal.get();
 		if (null != groupedConnection) {
 			groupedConnection.close(ds);
-			if(groupedConnection.removeAble()){
+			if (groupedConnection.isEmpty()) {
+				// 当所有分组都没有持有的连接时，移除这个分组连接
 				threadLocal.remove();
 			}
 		}
@@ -54,6 +55,8 @@ public enum ThreadLocalConnection {
 
 	/**
 	 * 分组连接，根据不同的分组获取对应的连接，用于多数据源情况
+	 * 
+	 * @author Looly
 	 */
 	public static class GroupedConnection {
 
@@ -75,7 +78,7 @@ public enum ThreadLocalConnection {
 			}
 			return conn;
 		}
-		
+
 		/**
 		 * 关闭并移除Connection<br>
 		 * 如果处于事务中，则不进行任何操作
@@ -85,27 +88,29 @@ public enum ThreadLocalConnection {
 		 */
 		public GroupedConnection close(DataSource ds) {
 			final Connection conn = connMap.get(ds);
-			if(null != conn) {
+			if (null != conn) {
 				try {
-					if(false == conn.getAutoCommit()) {
-						//非自动提交事务的连接，不做关闭（可能处于事务中）
+					if (false == conn.getAutoCommit()) {
+						// 非自动提交事务的连接，不做关闭（可能处于事务中）
 						return this;
 					}
 				} catch (SQLException e) {
-					//ignore
+					// ignore
 				}
 				connMap.remove(ds);
 				DbUtil.close(conn);
 			}
 			return this;
 		}
-		
+
 		/**
-		 * 多数据源情况情况下判断是否能从上下文中删除
-		 * @return
+		 * 持有的连接是否为空
+		 * 
+		 * @return 持有的连接是否为空
+		 * @since 4.6.4
 		 */
-		public boolean removeAble(){
-			return connMap.size()==0;
+		public boolean isEmpty() {
+			return connMap.isEmpty();
 		}
 	}
 }
