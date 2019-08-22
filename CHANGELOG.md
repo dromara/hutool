@@ -13,6 +13,7 @@
 * 【setting】     Props增加toBean方法（issue#499@Github）
 * 【poi】          CellUtil增加getMergedRegionValue方法，ExcelWriter增加getDisposition方法
 * 【http】         HttpBase增加headerMap方法
+* 【core】        FileUtil.loopFile增加重载，支持定义深度
 
 ### Bug修复
 * 【http】         修复HttpRquest中body方法长度计算问题（issue#I10UPG@Gitee）

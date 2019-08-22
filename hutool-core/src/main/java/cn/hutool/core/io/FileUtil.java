@@ -21,7 +21,9 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -34,9 +36,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
@@ -197,10 +201,8 @@ public class FileUtil {
 	 * @return 文件列表
 	 */
 	public static List<File> loopFiles(File file, FileFilter fileFilter) {
-		List<File> fileList = new ArrayList<File>();
-		if (null == file) {
-			return fileList;
-		} else if (false == file.exists()) {
+		final List<File> fileList = new ArrayList<File>();
+		if (null == file || false == file.exists()) {
 			return fileList;
 		}
 
@@ -218,6 +220,64 @@ public class FileUtil {
 		}
 
 		return fileList;
+	}
+
+	/**
+	 * 递归遍历目录以及子目录中的所有文件<br>
+	 * 如果提供file为文件，直接返回过滤结果
+	 * 
+	 * @param file 当前遍历文件或目录
+	 * @param maxDepth 遍历最大深度，-1表示遍历到没有目录为止
+	 * @param fileFilter 文件过滤规则对象，选择要保留的文件，只对文件有效，不过滤目录，null表示接收全部文件
+	 * @return 文件列表
+	 * @since 4.6.3
+	 */
+	public static List<File> loopFiles(File file, int maxDepth, final FileFilter fileFilter) {
+		final List<File> fileList = new ArrayList<>();
+		if (null == file || false == file.exists()) {
+			return fileList;
+		} else if (false == file.isDirectory()) {
+			if (null == fileFilter || fileFilter.accept(file)) {
+				fileList.add(file);
+			}
+			return fileList;
+		}
+
+		walkFiles(file.toPath(), maxDepth, new SimpleFileVisitor<Path>() {
+
+			@Override
+			public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+				final File file = path.toFile();
+				if (null == fileFilter || fileFilter.accept(file)) {
+					fileList.add(file);
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
+
+		return fileList;
+	}
+
+	/**
+	 * 遍历指定path下的文件并做处理
+	 * 
+	 * @param start 起始路径，必须为目录
+	 * @param maxDepth 最大遍历深度，-1表示不限制深度
+	 * @param visitor {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
+	 * @since 4.6.3
+	 * @see Files#walkFileTree(Path, Set, int, FileVisitor)
+	 */
+	public static void walkFiles(Path start, int maxDepth, FileVisitor<? super Path> visitor) {
+		if (maxDepth < 0) {
+			// < 0 表示遍历到最底层
+			maxDepth = Integer.MAX_VALUE;
+		}
+
+		try {
+			Files.walkFileTree(start, EnumSet.noneOf(FileVisitOption.class), maxDepth, visitor);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
 	}
 
 	/**
@@ -702,7 +762,7 @@ public class FileUtil {
 			// 如果文件不存在或已被删除，此处返回true表示删除成功
 			return true;
 		}
-		
+
 		if (file.isDirectory()) {
 			// 清空目录下所有文件和目录
 			boolean isOk = clean(file);
@@ -799,7 +859,7 @@ public class FileUtil {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 清理空文件夹<br>
 	 * 此方法用于递归删除空的文件夹，不删除文件<br>
@@ -816,8 +876,8 @@ public class FileUtil {
 		}
 
 		final File[] files = directory.listFiles();
-		if(ArrayUtil.isEmpty(files)) {
-			//空文件夹则删除之
+		if (ArrayUtil.isEmpty(files)) {
+			// 空文件夹则删除之
 			directory.delete();
 		}
 		for (File childFile : files) {
@@ -2435,7 +2495,7 @@ public class FileUtil {
 			throw new IORuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * 单行处理文件内容
 	 * 
@@ -2447,11 +2507,11 @@ public class FileUtil {
 	 */
 	public static void readLine(RandomAccessFile file, Charset charset, LineHandler lineHandler) {
 		final String line = readLine(file, charset);
-		if(null != line) {
+		if (null != line) {
 			lineHandler.handle(line);
 		}
 	}
-	
+
 	/**
 	 * 单行处理文件内容
 	 * 
@@ -2468,10 +2528,10 @@ public class FileUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		if(null != line) {
+		if (null != line) {
 			return CharsetUtil.convert(line, CharsetUtil.CHARSET_ISO_8859_1, charset);
 		}
-		
+
 		return null;
 	}
 
@@ -3437,7 +3497,7 @@ public class FileUtil {
 	public static boolean isSymlink(File file) throws IORuntimeException {
 		return Files.isSymbolicLink(file.toPath());
 	}
-	
+
 	/**
 	 * 判断给定的目录是否为给定文件或文件夹的子目录
 	 * 

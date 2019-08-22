@@ -231,6 +231,15 @@ public class FileUtilTest {
 			Console.log(file.getPath());
 		}
 	}
+	
+	@Test
+	@Ignore
+	public void loopFilesWithDepthTest() {
+		List<File> files = FileUtil.loopFiles(FileUtil.file("d:/m2_repo"), 2, null);
+		for (File file : files) {
+			Console.log(file.getPath());
+		}
+	}
 
 	@Test
 	public void getParentTest() {
