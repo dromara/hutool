@@ -3770,7 +3770,7 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * 是否存在一个以上{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 计算{@code null}或空元素对象的个数，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param args 被检查的对象,一个或者多个
 	 * @return 存在{@code null}的数量
@@ -3781,7 +3781,7 @@ public class ArrayUtil {
 		if (isNotEmpty(args)) {
 			for (Object element : args) {
 				if (ObjectUtil.isEmpty(element)) {
-					return count++;
+					count++;
 				}
 			}
 		}
