@@ -369,6 +369,19 @@ public class ObjectUtil {
 		}
 		return byteOut.toByteArray();
 	}
+	
+	/**
+	 * 反序列化<br>
+	 * 对象必须实现Serializable接口
+	 *
+	 * @param <T> 对象类型
+	 * @param bytes 反序列化的字节码
+	 * @return 反序列化后的对象
+	 * @see #unserialize(byte[])
+	 */
+	public static <T> T deserialize(byte[] bytes) {
+		return unserialize(bytes);
+	}
 
 	/**
 	 * 反序列化<br>
