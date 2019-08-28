@@ -673,7 +673,7 @@ public final class JSONUtil {
 	}
 
 	/**
-	 * 是否为JSONObject字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * 是否为JSONObject字符串，首尾都为大括号判定为JSONObject字符串
 	 * 
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
@@ -687,7 +687,7 @@ public final class JSONUtil {
 	}
 
 	/**
-	 * 是否为JSONObject字符串，首尾都为大括号或中括号判定为JSON字符串
+	 * 是否为JSONArray字符串，首尾都为中括号判定为JSONArray字符串
 	 * 
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
