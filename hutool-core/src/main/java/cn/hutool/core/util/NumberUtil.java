@@ -1097,7 +1097,7 @@ public class NumberUtil {
 					// two E's
 					return false;
 				}
-				if (!foundDigit) {
+				if (false == foundDigit) {
 					return false;
 				}
 				hasExp = true;
@@ -1142,12 +1142,12 @@ public class NumberUtil {
 		}
 		// allowSigns is true iff the val ends in 'E'
 		// found digit it to make sure weird stuff like '.' and '1E-' doesn't pass
-		return !allowSigns && foundDigit;
+		return false == allowSigns && foundDigit;
 	}
 
 	/**
 	 * 判断String是否是整数<br>
-	 * 支持8、10、16进制
+	 * 支持10进制
 	 * 
 	 * @param s String
 	 * @return 是否为整数
@@ -1163,7 +1163,7 @@ public class NumberUtil {
 
 	/**
 	 * 判断字符串是否是Long类型<br>
-	 * 支持8、10、16进制
+	 * 支持10进制
 	 * 
 	 * @param s String
 	 * @return 是否为{@link Long}类型

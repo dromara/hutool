@@ -8,6 +8,7 @@
 ### 新特性
 * 【http】         自动关闭HttpURLConnection的头安全检查（issue#512@Github）
 * 【setting】     Setting变量替换支持从系统参数中取值
+* 【core】        改进NumberUtil.isNumber方法（pr#68@Gitee）
 
 ### Bug修复
 * 【db】           解决ThreadLocalConnection多数据源被移除问题（pr#66@Gitee）
