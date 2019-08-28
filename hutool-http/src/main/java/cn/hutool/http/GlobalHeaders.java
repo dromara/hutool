@@ -37,6 +37,10 @@ public enum GlobalHeaders {
 	 * @return this
 	 */
 	public GlobalHeaders putDefault(boolean isReset) {
+		// 解决HttpURLConnection中无法自定义Host等头信息的问题
+		// https://stackoverflow.com/questions/9096987/how-to-overwrite-http-header-host-in-a-httpurlconnection/9098440
+		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+		
 		if (isReset) {
 			this.headers.clear();
 		}

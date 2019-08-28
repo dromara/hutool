@@ -201,21 +201,22 @@ public class SettingLoader {
 		for (String var : vars) {
 			key = ReUtil.get(reg_var, var, 1);
 			if (StrUtil.isNotBlank(key)) {
-				// 查找变量名对应的值
+				// 本分组中查找变量名对应的值
 				String varValue = this.groupedMap.get(group, key);
-				if (null != varValue) {
-					// 替换标识
-					value = value.replace(var, varValue);
-				} else {
-					// 跨分组查找
+				// 跨分组查找
+				if (null == varValue) {
 					final List<String> groupAndKey = StrUtil.split(key, CharUtil.DOT, 2);
 					if (groupAndKey.size() > 1) {
 						varValue = this.groupedMap.get(groupAndKey.get(0), groupAndKey.get(1));
-						if (null != varValue) {
-							// 替换标识
-							value = value.replace(var, varValue);
-						}
 					}
+				}
+				// 系统参数中查找
+				if(null == varValue) {
+					varValue = System.getProperty(key);
+				}
+				if (null != varValue) {
+					// 替换标识
+					value = value.replace(var, varValue);
 				}
 			}
 		}
