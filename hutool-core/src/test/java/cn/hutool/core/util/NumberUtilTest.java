@@ -66,6 +66,9 @@ public class NumberUtilTest {
 	public void isNumberTest() {
 		Assert.assertTrue(NumberUtil.isNumber("28.55"));
 		Assert.assertTrue(NumberUtil.isNumber("0"));
+		Assert.assertTrue(NumberUtil.isNumber("+100.10"));
+		Assert.assertTrue(NumberUtil.isNumber("-22.022"));
+		Assert.assertTrue(NumberUtil.isNumber("0X22"));
 	}
 
 	@Test
