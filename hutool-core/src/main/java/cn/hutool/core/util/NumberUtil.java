@@ -1059,9 +1059,9 @@ public class NumberUtil {
 		boolean allowSigns = false;
 		boolean foundDigit = false;
 		// deal with any possible sign up front
-		int start = (chars[0] == '-') ? 1 : 0;
+		int start = (chars[0] == '-' || chars[0] == '+') ? 1 : 0;
 		if (sz > start + 1) {
-			if (chars[start] == '0' && chars[start + 1] == 'x') {
+			if (chars[start] == '0' && (chars[start + 1] == 'x' || chars[start + 1] == 'X')) {
 				int i = start + 2;
 				if (i == sz) {
 					return false; // str == "0x"
