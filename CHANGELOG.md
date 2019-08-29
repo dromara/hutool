@@ -7,7 +7,7 @@
 
 ### 新特性
 * 【http】         自动关闭HttpURLConnection的头安全检查（issue#512@Github）
-* 【setting】     Setting变量替换支持从系统参数中取值
+* 【setting】     Setting变量替换支持从系统参数中取值（issue#I11BV1@Gitee）
 * 【core】        改进NumberUtil.isNumber方法（pr#68@Gitee）
 * 【system】     增加Oshi工具封装
 
