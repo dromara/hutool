@@ -14,7 +14,7 @@ public enum AsymmetricAlgorithm {
 	RSA_ECB_PKCS1("RSA/ECB/PKCS1Padding"), 
 	/** RSA算法，此算法用了RSA/None/NoPadding */
 	RSA_None("RSA/None/NoPadding"), 
-	/** EC算法 */
+	/** EC（Elliptic Curve）算法 */
 	EC("EC");
 
 	private String value;

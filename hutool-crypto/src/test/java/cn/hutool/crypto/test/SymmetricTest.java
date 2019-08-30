@@ -30,7 +30,7 @@ public class SymmetricTest {
 
 		// 随机生成密钥
 		byte[] key = KeyUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
-
+		
 		// 构建
 		SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, key);
 

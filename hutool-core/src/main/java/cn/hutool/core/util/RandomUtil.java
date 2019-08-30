@@ -49,7 +49,22 @@ public class RandomUtil {
 	}
 
 	/**
-	 * 获取{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)
+	 * 创建{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
+	 * 
+	 * @param seed 自定义随机种子
+	 * @return {@link SecureRandom}
+	 * @since 4.6.5
+	 */
+	public static SecureRandom createSecureRandom(byte[] seed) {
+		return (null == seed) ? new SecureRandom() : new SecureRandom(seed);
+	}
+
+	/**
+	 * 获取{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
+	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）
+	 * 
+	 * <p>
+	 * 相关说明见：https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom
 	 * 
 	 * @return {@link SecureRandom}
 	 * @since 3.1.2
@@ -74,7 +89,7 @@ public class RandomUtil {
 	public static Random getRandom(boolean isSecure) {
 		return isSecure ? getSecureRandom() : getRandom();
 	}
-	
+
 	/**
 	 * 获得随机Boolean值
 	 * 

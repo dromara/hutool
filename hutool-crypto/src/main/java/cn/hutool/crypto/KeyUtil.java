@@ -93,7 +93,7 @@ public class KeyUtil {
 	 */
 	public static SecretKey generateKey(String algorithm, int keySize) {
 		algorithm = getMainAlgorithm(algorithm);
-		
+
 		final KeyGenerator keyGenerator = getKeyGenerator(algorithm);
 		if (keySize > 0) {
 			keyGenerator.init(keySize);
@@ -383,14 +383,67 @@ public class KeyUtil {
 	 * 生成用于非对称加密的公钥和私钥<br>
 	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
 	 * 
+	 * <p>
+	 * 对于非对称加密算法，密钥长度有严格限制，具体如下：
+	 * 
+	 * <p>
+	 * <b>RSA：</b>
+	 * <pre>
+	 * RS256、PS256：2048 bits
+	 * RS384、PS384：3072 bits
+	 * RS512、RS512：4096 bits
+	 * </pre>
+	 * 
+	 * <p>
+	 * <b>EC（Elliptic Curve）：</b>
+	 * <pre>
+	 * EC256：256 bits
+	 * EC384：384 bits
+	 * EC512：512 bits
+	 * </pre>
+	 * 
 	 * @param algorithm 非对称加密算法
-	 * @param keySize 密钥模（modulus ）长度
+	 * @param keySize 密钥模（modulus ）长度（单位bit）
 	 * @param seed 种子
 	 * @param params {@link AlgorithmParameterSpec}
 	 * @return {@link KeyPair}
 	 * @since 4.3.3
 	 */
 	public static KeyPair generateKeyPair(String algorithm, int keySize, byte[] seed, AlgorithmParameterSpec... params) {
+		return generateKeyPair(algorithm, keySize, RandomUtil.createSecureRandom(seed), params);
+	}
+
+	/**
+	 * 生成用于非对称加密的公钥和私钥<br>
+	 * 密钥对生成算法见：https://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html#KeyPairGenerator
+	 * 
+	 * <p>
+	 * 对于非对称加密算法，密钥长度有严格限制，具体如下：
+	 * 
+	 * <p>
+	 * <b>RSA：</b>
+	 * <pre>
+	 * RS256、PS256：2048 bits
+	 * RS384、PS384：3072 bits
+	 * RS512、RS512：4096 bits
+	 * </pre>
+	 * 
+	 * <p>
+	 * <b>EC（Elliptic Curve）：</b>
+	 * <pre>
+	 * EC256：256 bits
+	 * EC384：384 bits
+	 * EC512：512 bits
+	 * </pre>
+	 * 
+	 * @param algorithm 非对称加密算法
+	 * @param keySize 密钥模（modulus ）长度（单位bit）
+	 * @param random {@link SecureRandom} 对象，创建时可选传入seed
+	 * @param params {@link AlgorithmParameterSpec}
+	 * @return {@link KeyPair}
+	 * @since 4.6.5
+	 */
+	public static KeyPair generateKeyPair(String algorithm, int keySize, SecureRandom random, AlgorithmParameterSpec... params) {
 		algorithm = getAlgorithmAfterWith(algorithm);
 		final KeyPairGenerator keyPairGen = getKeyPairGenerator(algorithm);
 
@@ -398,11 +451,11 @@ public class KeyUtil {
 		if (keySize > 0) {
 			// key长度适配修正
 			if ("EC".equalsIgnoreCase(algorithm) && keySize > 256) {
-				// 对于EC算法，密钥长度有限制，在此使用默认256
+				// 对于EC（EllipticCurve）算法，密钥长度有限制，在此使用默认256
 				keySize = 256;
 			}
-			if (null != seed) {
-				keyPairGen.initialize(keySize, new SecureRandom(seed));
+			if (null != random) {
+				keyPairGen.initialize(keySize, random);
 			} else {
 				keyPairGen.initialize(keySize);
 			}
@@ -415,8 +468,8 @@ public class KeyUtil {
 					continue;
 				}
 				try {
-					if (null != seed) {
-						keyPairGen.initialize(param, new SecureRandom(seed));
+					if (null != random) {
+						keyPairGen.initialize(param, random);
 					} else {
 						keyPairGen.initialize(param);
 					}

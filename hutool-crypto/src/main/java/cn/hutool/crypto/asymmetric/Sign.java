@@ -1,5 +1,6 @@
 package cn.hutool.crypto.asymmetric;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -7,6 +8,7 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Set;
 
 import cn.hutool.core.codec.Base64;
@@ -162,6 +164,22 @@ public class Sign extends BaseAsymmetric<Sign> {
 			throw new CryptoException(e);
 		}
 		super.init(algorithm, privateKey, publicKey);
+		return this;
+	}
+	
+	/**
+	 * 设置签名的参数
+	 * 
+	 * @param params {@link AlgorithmParameterSpec}
+	 * @return this
+	 * @since 4.6.5
+	 */
+	public Sign setParameter(AlgorithmParameterSpec params) {
+		try {
+			this.signature.setParameter(params);
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new CryptoException(e);
+		}
 		return this;
 	}
 

@@ -862,7 +862,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * 异步请求<br>
-	 * 异步请求后获取的{@link HttpResponse} 为异步模式，此时此对象持有Http链接（http链接并不会关闭），直调用获取内容方法为止
+	 * 异步请求后获取的{@link HttpResponse} 为异步模式，执行完此方法后发送请求到服务器，但是并不立即读取响应内容。<br>
+	 * 此时保持Http连接不关闭，直调用获取内容方法为止。
+	 * 
+	 * <p>
+	 * 一般执行完execute之后会把响应内容全部读出来放在一个 byte数组里，如果你响应的内容太多内存就爆了，此法是发送完请求不直接读响应内容，等有需要的时候读。
+
 	 * 
 	 * @return 异步对象，使用get方法获取HttpResponse对象
 	 */
