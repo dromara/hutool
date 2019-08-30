@@ -914,4 +914,29 @@ public class MapUtil {
 		}
 		return map;
 	}
+	
+	/**
+	 * 去除Map中值为{@code null}的键值对<br>
+	 * 注意：此方法在传入的Map上直接修改。
+	 * 
+	 * @param map Map
+	 * @return map
+	 * @since 4.6.5
+	 */
+	public static <K, V> Map<K, V> removeNullValue(Map<K, V> map) {
+		if (isEmpty(map)) {
+			return map;
+		}
+		
+		final Iterator<Entry<K, V>> iter = map.entrySet().iterator();
+		Entry<K, V> entry;
+		while(iter.hasNext()) {
+			entry = iter.next();
+			if(null == entry.getValue()) {
+				iter.remove();
+			}
+		}
+		
+		return map;
+	}
 }

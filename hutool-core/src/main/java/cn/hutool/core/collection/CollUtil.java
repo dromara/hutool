@@ -72,7 +72,7 @@ public class CollUtil {
 	public static <T> Set<T> emptyIfNull(Set<T> set) {
 		return (null == set) ? Collections.<T>emptySet() : set;
 	}
-	
+
 	/**
 	 * 如果提供的集合为{@code null}，返回一个不可变的默认空集合，否则返回原集合<br>
 	 * 空集合使用{@link Collections#emptyList()}
@@ -971,7 +971,7 @@ public class CollUtil {
 	}
 
 	/**
-	 * 过滤<br>
+	 * 过滤，此方法产生一个新集合<br>
 	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
 	 * 
 	 * <pre>
@@ -1052,7 +1052,7 @@ public class CollUtil {
 	 * @return 过滤后的数组
 	 * @since 3.1.0
 	 */
-	public static <T> Collection<T> filter(Collection<T> collection, Filter<T> filter) {
+	public static <T> Collection<T> filterNew(Collection<T> collection, Filter<T> filter) {
 		if (null == collection || null == filter) {
 			return collection;
 		}
@@ -1087,7 +1087,7 @@ public class CollUtil {
 	 * @return 过滤后的数组
 	 * @since 4.1.8
 	 */
-	public static <T> List<T> filter(List<T> list, Filter<T> filter) {
+	public static <T> List<T> filterNew(List<T> list, Filter<T> filter) {
 		if (null == list || null == filter) {
 			return list;
 		}
@@ -1101,64 +1101,81 @@ public class CollUtil {
 	}
 
 	/**
-	 * 去除{@code null} 元素
+	 * 去掉集合中的多个元素，此方法直接修改原集合
 	 * 
-	 * @param collection 集合
-	 * @return 处理后的集合
-	 * @since 3.2.2
-	 */
-	public static <T> Collection<T> removeNull(Collection<T> collection) {
-		return filter(collection, new Editor<T>() {
-			@Override
-			public T edit(T t) {
-				// 返回null便不加入集合
-				return t;
-			}
-		});
-	}
-
-	/**
-	 * 去掉集合中的多个元素
-	 * 
+	 * @param <T> 集合类型
+	 * @param <E> 集合元素类型
 	 * @param collection 集合
 	 * @param elesRemoved 被去掉的元素数组
 	 * @return 原集合
 	 * @since 4.1.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Collection<T> removeAny(Collection<T> collection, T... elesRemoved) {
+	public static <T extends Collection<E>, E> T removeAny(T collection, E... elesRemoved) {
 		collection.removeAll(newHashSet(elesRemoved));
 		return collection;
 	}
 
 	/**
-	 * 去除{@code null}或者"" 元素
+	 * 去除指定元素，此方法直接修改原集合
 	 * 
+	 * @param <T> 集合类型
+	 * @param <E> 集合元素类型
+	 * @param collection 集合
+	 * @param filter 过滤器
+	 * @return 处理后的集合
+	 * @since 4.6.5
+	 */
+	public static <T extends Collection<E>, E> T filter(T collection, final Filter<E> filter) {
+		return IterUtil.filter(collection, filter);
+	}
+
+	/**
+	 * 去除{@code null} 元素，此方法直接修改原集合
+	 * 
+	 * @param <T> 集合类型
+	 * @param <E> 集合元素类型
 	 * @param collection 集合
 	 * @return 处理后的集合
 	 * @since 3.2.2
 	 */
-	public static <T extends CharSequence> Collection<T> removeEmpty(Collection<T> collection) {
-		return filter(collection, new Filter<T>() {
+	public static <T extends Collection<E>, E> T removeNull(T collection) {
+		return filter(collection, new Filter<E>() {
 			@Override
-			public boolean accept(T t) {
-				return false == StrUtil.isEmpty(t);
+			public boolean accept(E e) {
+				return null != e;
 			}
 		});
 	}
 
 	/**
-	 * 去除{@code null}或者""或者空白字符串 元素
+	 * 去除{@code null}或者"" 元素，此方法直接修改原集合
 	 * 
 	 * @param collection 集合
 	 * @return 处理后的集合
 	 * @since 3.2.2
 	 */
-	public static <T extends CharSequence> Collection<T> removeBlank(Collection<T> collection) {
-		return filter(collection, new Filter<T>() {
+	public static <T extends Collection<E>, E extends CharSequence> T removeEmpty(T collection) {
+		return filter(collection, new Filter<E>() {
 			@Override
-			public boolean accept(T t) {
-				return false == StrUtil.isBlank(t);
+			public boolean accept(E e) {
+				return StrUtil.isNotEmpty(e);
+			}
+		});
+	}
+
+	/**
+	 * 去除{@code null}或者""或者空白字符串 元素，此方法直接修改原集合
+	 * 
+	 * @param collection 集合
+	 * @return 处理后的集合
+	 * @since 3.2.2
+	 */
+	public static <T extends Collection<E>, E extends CharSequence> T removeBlank(T collection) {
+		return filter(collection, new Filter<E>() {
+			@Override
+			public boolean accept(E e) {
+				return StrUtil.isNotBlank(e);
 			}
 		});
 	}

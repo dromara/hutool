@@ -21,6 +21,7 @@ import cn.hutool.core.collection.CollUtil.Hash;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.Editor;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.map.MapUtil;
 
@@ -210,6 +211,56 @@ public class CollUtilTest {
 		});
 
 		Assert.assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
+	}
+
+	@Test
+	public void filterTest2() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
+
+		ArrayList<String> filtered = CollUtil.filter(list, new Filter<String>() {
+
+			@Override
+			public boolean accept(String t) {
+				return false == "a".equals(t);
+			}
+		});
+
+		// 原地过滤
+		Assert.assertTrue(list == filtered);
+		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
+	}
+	
+	@Test
+	public void removeNullTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
+
+		ArrayList<String> filtered = CollUtil.removeNull(list);
+
+		// 原地过滤
+		Assert.assertTrue(list == filtered);
+		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "", "  "), filtered);
+	}
+	
+	@Test
+	public void removeEmptyTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
+
+		ArrayList<String> filtered = CollUtil.removeEmpty(list);
+
+		// 原地过滤
+		Assert.assertTrue(list == filtered);
+		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "  "), filtered);
+	}
+	
+	@Test
+	public void removeBlankTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
+		
+		ArrayList<String> filtered = CollUtil.removeBlank(list);
+		
+		// 原地过滤
+		Assert.assertTrue(list == filtered);
+		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c"), filtered);
 	}
 
 	@Test
@@ -576,11 +627,11 @@ public class CollUtilTest {
 	public void zipTest() {
 		Collection<String> keys = CollUtil.newArrayList("a", "b", "c", "d");
 		Collection<Integer> values = CollUtil.newArrayList(1, 2, 3, 4);
-		
+
 		Map<String, Integer> map = CollUtil.zip(keys, values);
-		
+
 		Assert.assertEquals(4, map.size());
-		
+
 		Assert.assertEquals(1, map.get("a").intValue());
 		Assert.assertEquals(2, map.get("b").intValue());
 		Assert.assertEquals(3, map.get("c").intValue());
