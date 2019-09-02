@@ -12,6 +12,7 @@ import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.SftpProgressMonitor;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Filter;
@@ -373,8 +374,22 @@ public class Sftp extends AbstractFtp {
 	 * @return this
 	 */
 	public Sftp put(String srcFilePath, String destPath, Mode mode) {
+		return put(srcFilePath, destPath, null, mode);
+	}
+	
+	/**
+	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。
+	 * 
+	 * @param srcFilePath 本地文件路径
+	 * @param destPath 目标路径，
+	 * @param monitor 上传进度监控，通过实现此接口完成进度显示
+	 * @param mode {@link Mode} 模式
+	 * @return this
+	 * @since 4.6.5
+	 */
+	public Sftp put(String srcFilePath, String destPath, SftpProgressMonitor monitor, Mode mode) {
 		try {
-			channel.put(srcFilePath, destPath, mode.ordinal());
+			channel.put(srcFilePath, destPath, monitor, mode.ordinal());
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
 		}
