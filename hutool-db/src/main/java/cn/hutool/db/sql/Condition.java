@@ -118,7 +118,7 @@ public class Condition extends CloneSupport<Condition> {
 		this.operator = OPERATOR_LIKE;
 		this.value = SqlUtil.buildLikeValue(value, likeType, false);
 	}
-	// --------------------------------------------------------------- Constructor start
+	// --------------------------------------------------------------- Constructor end
 
 	// --------------------------------------------------------------- Getters and Setters start
 	/**
