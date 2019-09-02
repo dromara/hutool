@@ -9,6 +9,7 @@
 * 【core】        CollUtil增加filterNew等方法（原filter变更为filterNew，新增filter）
 * 【crypto】      Sign增加setParameter方法
 * 【extra】        Sftp得put方法增加进度支持（issue#518@Github）
+* 【core】        ArrayUtil增加distinct方法
 
 ### Bug修复
 

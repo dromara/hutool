@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
@@ -3826,5 +3828,25 @@ public class ArrayUtil {
 	 */
 	public static boolean isAllNotEmpty(Object... args) {
 		return false == hasEmpty(args);
+	}
+	
+	/**
+	 * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
+	 * 此方法通过{@link LinkedHashSet} 去重
+	 * 
+	 * @param array 数组
+	 * @return 去重后的数组
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T[] distinct(T[] array) {
+		if(isEmpty(array)) {
+			return array;
+		}
+		
+		final Set<T> set = new LinkedHashSet<>(array.length, 1);
+		for (T t : array) {
+			set.add(t);
+		}
+		return toArray(set, (Class<T>)getComponentType(array));
 	}
 }

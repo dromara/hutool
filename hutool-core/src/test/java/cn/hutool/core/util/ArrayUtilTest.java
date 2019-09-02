@@ -225,4 +225,11 @@ public class ArrayUtilTest {
 		arrayType = ArrayUtil.getArrayType(String.class);
 		Assert.assertEquals(String[].class, arrayType);
 	}
+	
+	@Test
+	public void distinctTest() {
+		String[] array = {"aa", "bb", "cc", "dd", "bb", "dd"};
+		String[] distinct = ArrayUtil.distinct(array);
+		Assert.assertArrayEquals(new String[] {"aa", "bb", "cc", "dd"}, distinct);
+	}
 }
