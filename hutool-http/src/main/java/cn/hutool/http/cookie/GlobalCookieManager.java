@@ -8,13 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpConnection;
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 
 /**
  * 全局Cooki管理器，只针对Hutool请求有效
@@ -23,7 +18,6 @@ import cn.hutool.log.LogFactory;
  * @since 4.5.15
  */
 public class GlobalCookieManager {
-	private static Log log = LogFactory.get();
 
 	/** Cookie管理 */
 	private static CookieManager cookieManager;
@@ -67,10 +61,6 @@ public class GlobalCookieManager {
 			throw new IORuntimeException(e);
 		}
 		
-		if(log.isDebugEnabled() && MapUtil.isNotEmpty(cookieHeader)) {
-			log.debug("Add Cookie from local store: {}", cookieHeader.get(Header.COOKIE.toString()));
-		}
-		
 		// 不覆盖模式回填Cookie头，这样用户定义的Cookie将优先
 		conn.header(cookieHeader, false);
 	}
@@ -84,13 +74,6 @@ public class GlobalCookieManager {
 		if(null == cookieManager) {
 			// 全局Cookie管理器关闭
 			return;
-		}
-		
-		if(log.isDebugEnabled()) {
-			String setCookie = conn.header(Header.SET_COOKIE);
-			if(StrUtil.isNotEmpty(setCookie)) {
-				log.debug("Store Cookie: {}", setCookie);
-			}
 		}
 		
 		try {

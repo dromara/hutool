@@ -37,7 +37,6 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.json.JSON;
-import cn.hutool.log.StaticLog;
 
 /**
  * http请求类<br>
@@ -608,7 +607,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	// ---------------------------------------------------------------- Body start
 	/**
-	 * 设置内容主体
+	 * 设置内容主体<br>
+	 * 请求体body参数支持两种类型：
+	 * 
+	 * <pre>
+	 * 1. 标准参数，例如 a=1&amp;b=2 这种格式
+	 * 2. Rest模式，此时body需要传入一个JSON或者XML字符串，Hutool会自动绑定其对应的Content-Type
+	 * </pre>
 	 * 
 	 * @param body 请求体
 	 * @return this
@@ -664,7 +669,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 
 	 * @param json JSON请求体
 	 * @return this
+	 * @deprecated 未来可能去除此方法，使用{@link #body(String)} 传入JSON字符串即可
 	 */
+	@Deprecated
 	public HttpRequest body(JSON json) {
 		return this.body(json.toString());
 	}
@@ -993,8 +1000,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 					if (redirectCount < this.maxRedirectCount) {
 						redirectCount++;
 						return execute();
-					} else {
-						StaticLog.warn("URL [{}] redirect count more than {} !", this.url, this.maxRedirectCount);
 					}
 				}
 			}

@@ -24,7 +24,6 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
-import cn.hutool.log.StaticLog;
 
 /**
  * Http响应类<br>
@@ -386,7 +385,8 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			this.headers = httpConnection.headers();
 		} catch (IllegalArgumentException e) {
-			StaticLog.warn(e, e.getMessage());
+			// ignore
+			// StaticLog.warn(e, e.getMessage());
 		}
 
 		// 存储服务端设置的Cookie信息

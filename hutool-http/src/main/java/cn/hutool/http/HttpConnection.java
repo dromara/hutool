@@ -26,8 +26,6 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ssl.AndroidSupportSSLFactory;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.http.ssl.TrustAnyHostnameVerifier;
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 
 /**
  * http连接对象，对HttpURLConnection的包装
@@ -36,7 +34,6 @@ import cn.hutool.log.LogFactory;
  *
  */
 public class HttpConnection {
-	private final static Log log = LogFactory.get();
 
 	private URL url;
 	private Proxy proxy;
@@ -343,7 +340,6 @@ public class HttpConnection {
 	 */
 	public HttpConnection setCookie(String cookie) {
 		if (cookie != null) {
-			log.debug("With Cookie: {}", cookie);
 			header(Header.COOKIE, cookie, true);
 		}
 		return this;

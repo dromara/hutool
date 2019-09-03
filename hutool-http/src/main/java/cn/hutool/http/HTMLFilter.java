@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.hutool.log.StaticLog;
+import cn.hutool.core.lang.Console;
 
 /**
  *
@@ -182,7 +182,7 @@ public final class HTMLFilter {
 
 	private void debug(final String msg) {
 		if (vDebug) {
-			StaticLog.debug(msg);
+			Console.log(msg);
 		}
 	}
 
