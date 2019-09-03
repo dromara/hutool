@@ -18,9 +18,16 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.TypeUtil;
+import cn.hutool.json.serialize.GlobalSerializeMapping;
+import cn.hutool.json.serialize.JSONArraySerializer;
+import cn.hutool.json.serialize.JSONDeserializer;
+import cn.hutool.json.serialize.JSONObjectSerializer;
+import cn.hutool.json.serialize.JSONSerializer;
 
 /**
  * JSON工具类
@@ -596,12 +603,13 @@ public final class JSONUtil {
 	 * </ul>
 	 * 
 	 * @param object 被包装的对象
-	 * @param ignoreNullValue 是否忽略{@code null} 值
+	 * @param jsonConfig JSON选项
 	 * @return 包装后的值，null表示此值需被忽略
 	 */
-	public static Object wrap(Object object, boolean ignoreNullValue) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Object wrap(Object object, JSONConfig jsonConfig) {
 		if (object == null) {
-			return ignoreNullValue ? null : JSONNull.NULL;
+			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
 		}
 		if (object instanceof JSON //
 				|| JSONNull.NULL.equals(object) //
@@ -612,15 +620,28 @@ public final class JSONUtil {
 		) {
 			return object;
 		}
+		
+		// 自定义序列化
+		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(object.getClass());
+		if(null != serializer) {
+			final Type jsonType = TypeUtil.getTypeArgument(serializer.getClass());
+			if(null != jsonType) {
+				if(serializer instanceof JSONObjectSerializer) {
+					serializer.serialize(new JSONObject(jsonConfig), object);
+				} else if(serializer instanceof JSONArraySerializer) {
+					serializer.serialize(new JSONArray(jsonConfig), object);
+				}
+			}
+		}
 
 		try {
 			// JSONArray
 			if (object instanceof Iterable || ArrayUtil.isArray(object)) {
-				return new JSONArray(object, ignoreNullValue);
+				return new JSONArray(object, jsonConfig);
 			}
 			// JSONObject
 			if (object instanceof Map) {
-				return new JSONObject(object, ignoreNullValue);
+				return new JSONObject(object, jsonConfig);
 			}
 
 			// 日期类型原样保存，便于格式化
@@ -636,15 +657,12 @@ public final class JSONUtil {
 			}
 
 			// Java内部类不做转换
-			final Class<?> objectClass = object.getClass();
-			final Package objectPackage = objectClass.getPackage();
-			final String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
-			if (objectPackageName.startsWith("java.") || objectPackageName.startsWith("javax.") || objectClass.getClassLoader() == null) {
+			if(ClassUtil.isJdkClass(object.getClass())) {
 				return object.toString();
 			}
 
 			// 默认按照JSONObject对待
-			return new JSONObject(object, ignoreNullValue);
+			return new JSONObject(object, jsonConfig);
 		} catch (Exception exception) {
 			return null;
 		}
@@ -726,6 +744,42 @@ public final class JSONUtil {
 	 */
 	public static JSONObject xmlToJson(String xml) {
 		return XML.toJSONObject(xml);
+	}
+	
+	/**
+	 * 加入自定义的序列化器
+	 * 
+	 * @param type 对象类型
+	 * @param serializer 序列化器实现
+	 * @see GlobalSerializeMapping#put(Type, JSONArraySerializer)
+	 * @since 4.6.5
+	 */
+	public static void putSerializer(Type type, JSONArraySerializer<?> serializer) {
+		GlobalSerializeMapping.put(type, serializer);
+	}
+	
+	/**
+	 * 加入自定义的序列化器
+	 * 
+	 * @param type 对象类型
+	 * @param serializer 序列化器实现
+	 * @see GlobalSerializeMapping#put(Type, JSONObjectSerializer)
+	 * @since 4.6.5
+	 */
+	public static void putSerializer(Type type, JSONObjectSerializer<?> serializer) {
+		GlobalSerializeMapping.put(type, serializer);
+	}
+	
+	/**
+	 * 加入自定义的反序列化器
+	 * 
+	 * @param type 对象类型
+	 * @param serializer 反序列化器实现
+	 * @see GlobalSerializeMapping#put(Type, JSONDeserializer)
+	 * @since 4.6.5
+	 */
+	public static void putDeserializer(Type type, JSONDeserializer<?> deserializer) {
+		GlobalSerializeMapping.put(type, deserializer);
 	}
 
 	// --------------------------------------------------------------------------------------------- Private method start

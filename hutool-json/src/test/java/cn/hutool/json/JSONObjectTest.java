@@ -351,7 +351,7 @@ public class JSONObjectTest {
 		Assert.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
 		
 		String bbb = jsonObject.getStr("bbb", "defaultBBB");
-		Console.log(bbb);
+		Assert.assertEquals("defaultBBB", bbb);
 	}
 
 	public static enum TestEnum {

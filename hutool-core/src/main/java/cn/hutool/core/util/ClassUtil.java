@@ -44,7 +44,7 @@ public class ClassUtil {
 	public static <T> Class<T> getClass(T obj) {
 		return ((null == obj) ? null : (Class<T>) obj.getClass());
 	}
-	
+
 	/**
 	 * 获得外围类<br>
 	 * 返回定义此类或匿名类所在的类，如果类本身是在包中定义的，返回{@code null}
@@ -56,15 +56,16 @@ public class ClassUtil {
 	public static Class<?> getEnclosingClass(Class<?> clazz) {
 		return null == clazz ? null : clazz.getEnclosingClass();
 	}
-	
+
 	/**
 	 * 是否为顶层类，既定义在包中的类，而非定义在类中的内部类
+	 * 
 	 * @param clazz 类
 	 * @return 是否为顶层类
 	 * @since 4.5.7
 	 */
 	public static boolean isTopLevelClass(Class<?> clazz) {
-		if(null == clazz) {
+		if (null == clazz) {
 			return false;
 		}
 		return null == getEnclosingClass(clazz);
@@ -1017,5 +1018,29 @@ public class ClassUtil {
 			values[i] = getDefaultValue(classes[i]);
 		}
 		return values;
+	}
+
+	/**
+	 * 是否为JDK中定义的类或接口，判断依据：
+	 * 
+	 * <pre>
+	 * 1、以java.、javax.开头的包名
+	 * 2、ClassLoader为null
+	 * </pre>
+	 * 
+	 * @param clazz 被检查的类
+	 * @return 是否为JDK中定义的类或接口
+	 * @since 4.6.5
+	 */
+	public static boolean isJdkClass(Class<?> clazz) {
+		final Package objectPackage = clazz.getPackage();
+		if(null == objectPackage) {
+			return false;
+		}
+		final String objectPackageName = objectPackage.getName();
+		if (objectPackageName.startsWith("java.") || objectPackageName.startsWith("javax.") || clazz.getClassLoader() == null) {
+			return true;
+		}
+		return false;
 	}
 }

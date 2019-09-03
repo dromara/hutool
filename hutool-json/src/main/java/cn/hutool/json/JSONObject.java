@@ -26,6 +26,9 @@ import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.serialize.GlobalSerializeMapping;
+import cn.hutool.json.serialize.JSONObjectSerializer;
+import cn.hutool.json.serialize.JSONSerializer;
 
 /**
  * JSON对象<br>
@@ -41,7 +44,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	private static final long serialVersionUID = -330220388580734346L;
 
 	/** 默认初始大小 */
-	private static final int DEFAULT_CAPACITY = 16;
+	public static final int DEFAULT_CAPACITY = 16;
 
 	/** JSON的KV持有Map */
 	private final Map<String, Object> rawHashMap;
@@ -87,6 +90,16 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	public JSONObject(int capacity, boolean isIgnoreCase, boolean isOrder) {
 		this(capacity, JSONConfig.create().setIgnoreCase(isIgnoreCase).setOrder(isOrder));
+	}
+	
+	/**
+	 * 构造
+	 * 
+	 * @param config JSON配置项
+	 * @since 4.6.5
+	 */
+	public JSONObject(JSONConfig config) {
+		this(DEFAULT_CAPACITY, config);
 	}
 
 	/**
@@ -389,7 +402,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			this.remove(key);
 		} else {
 			InternalJSONUtil.testValidity(value);
-			this.rawHashMap.put(key, JSONUtil.wrap(value, ignoreNullValue));
+			this.rawHashMap.put(key, JSONUtil.wrap(value, this.config));
 		}
 		return this;
 	}
@@ -699,7 +712,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 
 			if (value != bean) {
 				// 防止循环引用
-				this.rawHashMap.put(prop.getFieldName(), JSONUtil.wrap(value, this.config.isIgnoreNullValue()));
+				this.put(prop.getFieldName(), value);
 			}
 		}
 	}
@@ -715,23 +728,26 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 
 	 * @param source JavaBean或者Map对象或者String
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void init(Object source) {
 		if (null == source) {
 			return;
 		}
-
-		if (source instanceof Map) {
-			boolean ignoreNullValue = this.config.isIgnoreNullValue();
+		
+		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
+		if(null != serializer && serializer instanceof JSONObjectSerializer) {
+			// 自定义序列化
+			serializer.serialize(this, source);
+		} else if (source instanceof Map) {
+			// Map
 			for (final Entry<?, ?> e : ((Map<?, ?>) source).entrySet()) {
-				final Object value = e.getValue();
-				if (false == ignoreNullValue || null != value) {
-					this.rawHashMap.put(Convert.toStr(e.getKey()), JSONUtil.wrap(value, ignoreNullValue));
-				}
+				this.put(Convert.toStr(e.getKey()), e.getValue());
 			}
 		} else if (source instanceof CharSequence) {
 			// 可能为JSON字符串
 			init((CharSequence) source);
 		} else if (source instanceof JSONTokener) {
+			// JSONTokener
 			init((JSONTokener) source);
 		} else if (source instanceof Number) {
 			// ignore Number

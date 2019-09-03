@@ -11,6 +11,8 @@ import cn.hutool.core.convert.impl.ArrayConverter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
+import cn.hutool.json.serialize.GlobalSerializeMapping;
+import cn.hutool.json.serialize.JSONDeserializer;
 
 /**
  * JSON转换器
@@ -66,6 +68,13 @@ public class JSONConverter implements Converter<JSON> {
 	protected static <T> T jsonConvert(Type targetType, Object value, boolean ignoreError) throws ConvertException {
 		if (JSONUtil.isNull(value)) {
 			return null;
+		}
+		
+		if(value instanceof JSON) {
+			JSONDeserializer<?> deserializer = GlobalSerializeMapping.getDeserializer(targetType);
+			if(null != deserializer) {
+				return (T) deserializer.deserialize((JSON)value);
+			}
 		}
 		
 		Object targetValue = null;
