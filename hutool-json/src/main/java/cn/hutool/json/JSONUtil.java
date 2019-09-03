@@ -774,7 +774,7 @@ public final class JSONUtil {
 	 * 加入自定义的反序列化器
 	 * 
 	 * @param type 对象类型
-	 * @param serializer 反序列化器实现
+	 * @param deserializer 反序列化器实现
 	 * @see GlobalSerializeMapping#put(Type, JSONDeserializer)
 	 * @since 4.6.5
 	 */

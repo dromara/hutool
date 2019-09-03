@@ -534,9 +534,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 增加下拉列表
 	 * 
-	 * @param regions {@link CellRangeAddressList} 指定下拉列表所占的单元格范围
 	 * @param x x坐标，列号，从0开始
 	 * @param y y坐标，行号，从0开始
+	 * @param selectList 下拉列表
 	 * @return this
 	 * @since 4.6.2
 	 */

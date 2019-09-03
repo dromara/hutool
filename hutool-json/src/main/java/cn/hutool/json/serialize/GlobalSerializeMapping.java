@@ -55,7 +55,7 @@ public class GlobalSerializeMapping {
 	 * 加入自定义的反序列化器
 	 * 
 	 * @param type 对象类型
-	 * @param serializer 反序列化器实现
+	 * @param deserializer 反序列化器实现
 	 */
 	synchronized public static void put(Type type, JSONDeserializer<?> deserializer) {
 		if(null == deserializerMap) {
