@@ -89,6 +89,7 @@
 				<configuration>
 					<source>${compile.version}</source>
 					<target>${compile.version}</target>
+					<verbose>true</verbose>
 				</configuration>
 			</plugin>
 			<!-- Javadoc -->

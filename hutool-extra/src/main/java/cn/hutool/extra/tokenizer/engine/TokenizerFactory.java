@@ -10,6 +10,7 @@ import cn.hutool.extra.tokenizer.engine.ikanalyzer.IKAnalyzerEngine;
 import cn.hutool.extra.tokenizer.engine.jcseg.JcsegEngine;
 import cn.hutool.extra.tokenizer.engine.jieba.JiebaEngine;
 import cn.hutool.extra.tokenizer.engine.mmseg.MmsegEngine;
+import cn.hutool.extra.tokenizer.engine.mynlp.MynlpEngine;
 import cn.hutool.extra.tokenizer.engine.word.WordEngine;
 import cn.hutool.log.StaticLog;
 
@@ -74,6 +75,11 @@ public class TokenizerFactory {
 		}
 		try {
 			return new SmartcnEngine();
+		} catch (NoClassDefFoundError e) {
+			// ignore
+		}
+		try {
+			return new MynlpEngine();
 		} catch (NoClassDefFoundError e) {
 			// ignore
 		}

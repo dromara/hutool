@@ -200,5 +200,11 @@
 			<version>1.2</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>com.mayabot.mynlp</groupId>
+			<artifactId>mynlp-segment</artifactId>
+			<version>3.0.0</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 </project>

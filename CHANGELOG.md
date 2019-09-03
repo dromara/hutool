@@ -11,6 +11,7 @@
 * 【extra】        Sftp得put方法增加进度支持（issue#518@Github）
 * 【core】        ArrayUtil增加distinct方法
 * 【http】         去除log模块依赖，Cookie中去除日志提示，body方法传入JSON对象废弃，未来移除json模块依赖
+* 【extra】        添加MyNLP支持（issue#519@Github）
 
 ### Bug修复
 
