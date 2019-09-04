@@ -160,8 +160,9 @@ public class NetUtil {
 	 */
 	public static int getUsableLocalPort(int minPort, int maxPort) {
 		for (int i = minPort; i <= maxPort; i++) {
-			if (isUsableLocalPort(RandomUtil.randomInt(minPort, maxPort + 1))) {
-				return i;
+			int randomPort = RandomUtil.randomInt(minPort, maxPort + 1);
+			if (isUsableLocalPort(randomPort)) {
+				return randomPort;
 			}
 		}
 
