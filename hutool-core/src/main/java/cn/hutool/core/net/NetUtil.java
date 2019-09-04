@@ -159,8 +159,10 @@ public class NetUtil {
 	 * @since 4.5.4
 	 */
 	public static int getUsableLocalPort(int minPort, int maxPort) {
-		for (int i = minPort; i <= maxPort; i++) {
-			int randomPort = RandomUtil.randomInt(minPort, maxPort + 1);
+		final int maxPortExclude = maxPort +1;
+		int randomPort;
+		for (int i = minPort; i < maxPortExclude; i++) {
+			randomPort = RandomUtil.randomInt(minPort, maxPortExclude);
 			if (isUsableLocalPort(randomPort)) {
 				return randomPort;
 			}
