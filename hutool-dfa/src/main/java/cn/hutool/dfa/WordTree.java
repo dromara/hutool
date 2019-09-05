@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -162,10 +163,11 @@ public class WordTree extends HashMap<Character, WordTree>{
 		List<String> findedWords = new ArrayList<String>();
 		WordTree current = this;
 		int length = text.length();
-		StringBuilder wordBuffer;//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
+		//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
+		final StrBuilder wordBuffer = StrUtil.strBuilder();
 		char currentChar;
 		for (int i = 0; i < length; i++) {
-			wordBuffer = StrUtil.builder();
+			wordBuffer.reset();
 			for (int j = i; j < length; j++) {
 				currentChar = text.charAt(j);
 //				Console.log("i: {}, j: {}, currentChar: {}", i, j, currentChar);
