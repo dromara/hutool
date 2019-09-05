@@ -13,6 +13,7 @@
 * 【http】         去除log模块依赖，Cookie中去除日志提示，body方法传入JSON对象废弃，未来移除json模块依赖
 * 【extra】        添加MyNLP支持（issue#519@Github）
 * 【json】         添加自定义序列化反序列化支持（issue#I1052A@Gitee）
+* 【dfa】          优化特殊字符构建，优化查找，改为使用StrBuilder
 
 ### Bug修复
 * 【core】         修复NetUtil.getUsableLocalPort问题（pr#69@Gitee）
