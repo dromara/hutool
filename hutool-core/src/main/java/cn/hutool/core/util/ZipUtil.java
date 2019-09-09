@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -143,7 +144,7 @@ public class ZipUtil {
 	public static File zip(File zipFile, boolean withSrcDir, File... srcFiles) throws UtilException {
 		return zip(zipFile, DEFAULT_CHARSET, withSrcDir, srcFiles);
 	}
-
+	
 	/**
 	 * 对文件或文件目录进行压缩
 	 * 
@@ -155,6 +156,22 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	public static File zip(File zipFile, Charset charset, boolean withSrcDir, File... srcFiles) throws UtilException {
+		return zip(zipFile, charset, withSrcDir, null, srcFiles);
+	}
+
+	/**
+	 * 对文件或文件目录进行压缩
+	 * 
+	 * @param zipFile 生成的Zip文件，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param charset 编码
+	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
+	 * @param filter 文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
+	 * @param srcFiles 要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @return 压缩文件
+	 * @throws UtilException IO异常
+	 * @since 4.6.5
+	 */
+	public static File zip(File zipFile, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws UtilException {
 		validateFiles(zipFile, srcFiles);
 
 		try (ZipOutputStream out = getZipOutputStream(zipFile, charset)) {
@@ -170,7 +187,7 @@ public class ZipUtil {
 					srcRootDir = srcFile.getCanonicalFile().getParentFile().getCanonicalPath();
 				}
 				// 调用递归压缩方法进行目录或文件压缩
-				zip(srcFile, srcRootDir, out);
+				zip(srcFile, srcRootDir, out, filter);
 				out.flush();
 			}
 		} catch (IOException e) {
@@ -833,10 +850,11 @@ public class ZipUtil {
 	 * @param out 压缩文件存储对象
 	 * @param srcRootDir 被压缩的文件夹根目录
 	 * @param file 当前递归压缩的文件或目录对象
+	 * @param filter 文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
 	 * @throws UtilException IO异常
 	 */
-	private static void zip(File file, String srcRootDir, ZipOutputStream out) throws UtilException {
-		if (file == null) {
+	private static void zip(File file, String srcRootDir, ZipOutputStream out, FileFilter filter) throws UtilException {
+		if(null == file || (null != filter && false == filter.accept(file))) {
 			return;
 		}
 
@@ -849,7 +867,7 @@ public class ZipUtil {
 			}
 			// 压缩目录下的子文件或目录
 			for (File childFile : files) {
-				zip(childFile, srcRootDir, out);
+				zip(childFile, srcRootDir, out, filter);
 			}
 		} else {// 如果是文件或其它符号，则直接压缩该文件
 			addFile(file, subPath, out);

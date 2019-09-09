@@ -310,7 +310,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	public <T> T toBean(TypeReference<T> reference) {
 		return toBean(reference.getType());
 	}
-
+	
 	/**
 	 * 转为实体类对象
 	 * 
