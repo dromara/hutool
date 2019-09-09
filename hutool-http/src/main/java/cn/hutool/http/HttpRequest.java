@@ -123,6 +123,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	private int redirectCount;
 	/** 最大重定向次数 */
 	private int maxRedirectCount;
+	/** Chuncked块大小，0或小于0表示不设置Chuncked模式 */
+	private int blockSize;
 	/** 代理 */
 	private Proxy proxy;
 
@@ -857,6 +859,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		this.isRest = isRest;
 		return this;
 	}
+	
+	/**
+	 * 采用流方式上传数据，无需本地缓存数据。<br>
+	 * HttpUrlConnection默认是将所有数据读到本地缓存，然后再发送给服务器，这样上传大文件时就会导致内存溢出。
+	 * 
+	 * @param blockSize 块大小（bytes数），0或小于0表示不设置Chuncked模式
+	 * @return this
+	 * @since 4.6.5
+	 */
+	public HttpRequest setChunkedStreamingMode(int blockSize) {
+		this.blockSize = blockSize;
+		return this;
+	}
 
 	/**
 	 * 执行Reuqest请求
@@ -946,6 +961,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				.setCookie(this.cookie)
 				// 定义转发
 				.setInstanceFollowRedirects(this.maxRedirectCount > 0 ? true : false)
+				// 流方式上传数据
+				.setChunkedStreamingMode(this.blockSize)
 				// 覆盖默认Header
 				.header(this.headers, true);
 		
