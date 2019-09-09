@@ -16,6 +16,7 @@
 * 【dfa】          优化特殊字符构建，优化查找，改为使用StrBuilder
 * 【core】        ZipUtil增加FileFilter参数的重载，支持文件过滤（issue#I11RTP@Gitee）
 * 【http】         HttpRequest增加setChunkedStreamingMode方法（issue#525@Github）
+* 【setting】     SettingLoader支持自定义分隔符
 
 ### Bug修复
 * 【core】         修复NetUtil.getUsableLocalPort问题（pr#69@Gitee）

@@ -34,9 +34,9 @@ public class SettingLoader {
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
 	private final static char COMMENT_FLAG_PRE = '#';
 	/** 赋值分隔符（用于分隔键值对） */
-	private final static char ASSIGN_FLAG = '=';
+	private char assignFlag = '=';
 	/** 变量名称的正则 */
-	private String reg_var = "\\$\\{(.*?)\\}";
+	private String varRegex = "\\$\\{(.*?)\\}";
 
 	/** 本设置对象的字符集 */
 	private Charset charset;
@@ -124,7 +124,7 @@ public class SettingLoader {
 					continue;
 				}
 
-				final String[] keyValue = StrUtil.splitToArray(line, ASSIGN_FLAG, 2);
+				final String[] keyValue = StrUtil.splitToArray(line, this.assignFlag, 2);
 				// 跳过不符合键值规范的行
 				if (keyValue.length < 2) {
 					continue;
@@ -150,7 +150,17 @@ public class SettingLoader {
 	 * @param regex 正则
 	 */
 	public void setVarRegex(String regex) {
-		this.reg_var = regex;
+		this.varRegex = regex;
+	}
+
+	/**
+	 * 赋值分隔符（用于分隔键值对）
+	 * 
+	 * @param regex 正则
+	 * @since 4.6.5
+	 */
+	public void setAssignFlag(char assignFlag) {
+		this.assignFlag = assignFlag;
 	}
 
 	/**
@@ -181,7 +191,7 @@ public class SettingLoader {
 		for (Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
 			writer.println(StrUtil.format("{}{}{}", CharUtil.BRACKET_START, groupEntry.getKey(), CharUtil.BRACKET_END));
 			for (Entry<String, String> entry : groupEntry.getValue().entrySet()) {
-				writer.println(StrUtil.format("{} {} {}", entry.getKey(), ASSIGN_FLAG, entry.getValue()));
+				writer.println(StrUtil.format("{} {} {}", entry.getKey(), this.assignFlag, entry.getValue()));
 			}
 		}
 	}
@@ -196,10 +206,10 @@ public class SettingLoader {
 	 */
 	private String replaceVar(String group, String value) {
 		// 找到所有变量标识
-		final Set<String> vars = ReUtil.findAll(reg_var, value, 0, new HashSet<String>());
+		final Set<String> vars = ReUtil.findAll(varRegex, value, 0, new HashSet<String>());
 		String key;
 		for (String var : vars) {
-			key = ReUtil.get(reg_var, var, 1);
+			key = ReUtil.get(varRegex, var, 1);
 			if (StrUtil.isNotBlank(key)) {
 				// 本分组中查找变量名对应的值
 				String varValue = this.groupedMap.get(group, key);
@@ -211,7 +221,7 @@ public class SettingLoader {
 					}
 				}
 				// 系统参数中查找
-				if(null == varValue) {
+				if (null == varValue) {
 					varValue = System.getProperty(key);
 				}
 				if (null != varValue) {
