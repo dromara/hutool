@@ -20,6 +20,7 @@
 
 ### Bug修复
 * 【core】         修复NetUtil.getUsableLocalPort问题（pr#69@Gitee）
+* 【core】         修复MathUtil.arrangementSelect重复元素导致无结果问题（issue#529@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

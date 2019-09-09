@@ -3,7 +3,10 @@ package cn.hutool.core.math;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import cn.hutool.core.lang.Console;
 
 /**
  * 排列单元测试
@@ -50,5 +53,14 @@ public class ArrangementTest {
 		
 		List<String[]> list2 = arrangement.select(0);
 		Assert.assertTrue(1 == list2.size());
+	}
+	
+	@Test
+	@Ignore
+	public void selectTest2() {
+		List<String[]> list = MathUtil.arrangementSelect(new String[] { "1", "1", "3", "4" });
+		for (String[] strings : list) {
+			Console.log(strings);
+		}
 	}
 }

@@ -75,7 +75,7 @@ public class ExcelWriteTest {
 			rows.add(ObjectUtil.clone(row1));
 		}
 
-		String filePath = "e:/writeTest.xlsx";
+		String filePath = "f:/test/writeTest.xlsx";
 		FileUtil.del(filePath);
 		// 通过工具类创建writer
 		ExcelWriter writer = ExcelUtil.getWriter(filePath);

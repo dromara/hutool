@@ -483,6 +483,17 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 		return this;
 	}
+	
+	/**
+	 * 设置默认行高，值为一个点的高度
+	 * 
+	 * @param height 高度
+	 * @return this
+	 * @since 4.6.5
+	 */
+	public ExcelWriter setDefaultRowHeight(int height) {
+		return setRowHeight(-1, height);
+	}
 
 	/**
 	 * 设置行高，值为一个点的高度

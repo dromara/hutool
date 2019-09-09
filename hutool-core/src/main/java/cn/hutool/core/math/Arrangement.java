@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 
 /**
@@ -14,7 +15,7 @@ import cn.hutool.core.util.NumberUtil;
  * @author looly
  * @since 4.0.7
  */
-public class Arrangement implements Serializable{
+public class Arrangement implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String[] datas;
@@ -27,7 +28,7 @@ public class Arrangement implements Serializable{
 	public Arrangement(String[] datas) {
 		this.datas = datas;
 	}
-	
+
 	/**
 	 * 计算排列数，即A(n, n) = n!
 	 * 
@@ -46,12 +47,12 @@ public class Arrangement implements Serializable{
 	 * @return 排列数
 	 */
 	public static long count(int n, int m) {
-		if(n == m) {
+		if (n == m) {
 			return NumberUtil.factorial(n);
 		}
 		return (n > m) ? NumberUtil.factorial(n, n - m) : 0;
 	}
-	
+
 	/**
 	 * 计算排列总数，即A(n, 1) + A(n, 2) + A(n, 3)...
 	 * 
@@ -60,14 +61,15 @@ public class Arrangement implements Serializable{
 	 */
 	public static long countAll(int n) {
 		long total = 0;
-		for(int i = 1; i <= n; i++) {
+		for (int i = 1; i <= n; i++) {
 			total += count(n, i);
 		}
 		return total;
 	}
-	
+
 	/**
 	 * 全排列选择（列表全部参与排列）
+	 * 
 	 * @return 所有排列列表
 	 */
 	public List<String[]> select() {
@@ -82,52 +84,45 @@ public class Arrangement implements Serializable{
 	 */
 	public List<String[]> select(int m) {
 		final List<String[]> result = new ArrayList<>((int) count(this.datas.length, m));
-		select(new String[m], 0, result);
+		select(this.datas, new String[m], 0, result);
 		return result;
 	}
-	
+
 	/**
 	 * 排列所有组合，即A(n, 1) + A(n, 2) + A(n, 3)...
 	 * 
 	 * @return 全排列结果
 	 */
-	public List<String[]> selectAll(){
-		final List<String[]> result = new ArrayList<>((int)countAll(this.datas.length));
-		for(int i = 1; i <= this.datas.length; i++) {
+	public List<String[]> selectAll() {
+		final List<String[]> result = new ArrayList<>((int) countAll(this.datas.length));
+		for (int i = 1; i <= this.datas.length; i++) {
 			result.addAll(select(i));
 		}
 		return result;
 	}
 
 	/**
-	 * 排列选择
+	 * 排列选择<br>
+	 * 排列方式为先从数据数组中取出一个元素，再把剩余的元素作为新的基数，依次列推，直到选择到足够的元素
 	 * 
+	 * @param datas 选择的基数
 	 * @param dataList 待选列表
 	 * @param resultList 前面（resultIndex-1）个的排列结果
 	 * @param resultIndex 选择索引，从0开始
 	 * @param result 最终结果
 	 */
-	private void select(String[] resultList, int resultIndex, List<String[]> result) {
-		int resultLen = resultList.length;
-		if (resultIndex >= resultLen) { // 全部选择完时，输出排列结果
-			result.add(Arrays.copyOf(resultList, resultList.length));
+	private void select(String[] datas, String[] resultList, int resultIndex, List<String[]> result) {
+		if (resultIndex >= resultList.length) { // 全部选择完时，输出排列结果
+			if (false == result.contains(resultList)) {
+				result.add(Arrays.copyOf(resultList, resultList.length));
+			}
 			return;
 		}
 
 		// 递归选择下一个
 		for (int i = 0; i < datas.length; i++) {
-			// 判断待选项是否存在于排列结果中
-			boolean exists = false;
-			for (int j = 0; j < resultIndex; j++) {
-				if (datas[i].equals(resultList[j])) {
-					exists = true;
-					break;
-				}
-			}
-			if (false == exists) { // 排列结果不存在该项，才可选择
-				resultList[resultIndex] = datas[i];
-				select(resultList, resultIndex + 1, result);
-			}
+			resultList[resultIndex] = datas[i];
+			select(ArrayUtil.remove(datas, i), resultList, resultIndex + 1, result);
 		}
 	}
 }
