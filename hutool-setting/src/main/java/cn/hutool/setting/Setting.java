@@ -33,16 +33,16 @@ import cn.hutool.setting.dialect.Props;
 /**
  * 设置工具类。 用于支持设置（配置）文件<br>
  * BasicSetting用于替换Properties类，提供功能更加强大的配置文件，同时对Properties文件向下兼容
- * 
+ *
  * <pre>
  *  1、支持变量，默认变量命名为 ${变量名}，变量只能识别读入行的变量，例如第6行的变量在第三行无法读取
  *  2、支持分组，分组为中括号括起来的内容，中括号以下的行都为此分组的内容，无分组相当于空字符分组，若某个key是name，加上分组后的键相当于group.name
  *  3、注释以#开头，但是空行和不带“=”的行也会被跳过，但是建议加#
  *  4、store方法不会保存注释内容，慎重使用
  * </pre>
- * 
+ *
  * @author looly
- * 
+ *
  */
 public class Setting extends AbsSetting implements Map<String, String> {
 	private static final long serialVersionUID = 3618305164959883393L;
@@ -75,7 +75,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param path 相对路径或绝对路径
 	 */
 	public Setting(String path) {
@@ -84,7 +84,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param path 相对路径或绝对路径
 	 * @param isUseVariable 是否使用变量
 	 */
@@ -94,7 +94,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
-	 * 
+	 *
 	 * @param path 相对路径或绝对路径
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
@@ -106,7 +106,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param configFile 配置文件对象
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
@@ -118,7 +118,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 构造，相对于classes读取文件
-	 * 
+	 *
 	 * @param path 相对ClassPath路径或绝对路径
 	 * @param clazz 基准类
 	 * @param charset 字符集
@@ -131,7 +131,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param url 设定文件的URL
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
@@ -144,7 +144,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 初始化设定文件
-	 * 
+	 *
 	 * @param resource {@link Resource}
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
@@ -163,7 +163,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 重新加载配置文件
-	 * 
+	 *
 	 * @return 是否加载成功
 	 */
 	synchronized public boolean load() {
@@ -174,8 +174,22 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
+	 * 重新加载配置文件
+	 * @param assignFlag 建值对分隔符（用于切割建值对）
+	 *
+	 * @return 是否加载成功
+	 */
+	synchronized public boolean load(String assignFlag) {
+		if (null == this.settingLoader) {
+			settingLoader = new SettingLoader(this.groupedMap, this.charset, this.isUseVariable);
+			settingLoader.setAssignFlag(assignFlag);
+		}
+		return settingLoader.load(new UrlResource(this.settingUrl));
+	}
+
+	/**
 	 * 在配置文件变更时自动加载
-	 * 
+	 *
 	 * @param autoReload 是否自动加载
 	 */
 	public void autoLoad(boolean autoReload) {
@@ -208,7 +222,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 键值总数
-	 * 
+	 *
 	 * @return 键值总数
 	 */
 	public int size() {
@@ -222,7 +236,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
-	 * 
+	 *
 	 * @param keys 键列表，常用于别名
 	 * @return 值
 	 * @since 3.1.2
@@ -240,25 +254,25 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取并删除键值对，当指定键对应值非空时，返回并删除这个值，后边的键对应的值不再查找
-	 * 
+	 *
 	 * @param keys 键列表，常用于别名
 	 * @return 字符串值
 	 * @since 3.1.2
 	 */
 	public String getAndRemoveStr(String... keys) {
-		Object value = null;
+		String value = null;
 		for (String key : keys) {
 			value = remove(key);
 			if (null != value) {
 				break;
 			}
 		}
-		return (String) value;
+		return value;
 	}
 
 	/**
 	 * 获得指定分组的所有键值对，此方法获取的是原始键值对，获取的键值对可以被修改
-	 * 
+	 *
 	 * @param group 分组
 	 * @return map
 	 */
@@ -269,7 +283,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取group分组下所有配置键值对，组成新的{@link Setting}
-	 * 
+	 *
 	 * @param group 分组
 	 * @return {@link Setting}
 	 */
@@ -280,8 +294,16 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
+	 * 获取SettingLoader
+	 * @return {@link SettingLoader}
+	 */
+	public SettingLoader getSettingLoader() {
+		return settingLoader;
+	}
+
+	/**
 	 * 获取group分组下所有配置键值对，组成新的{@link Properties}
-	 * 
+	 *
 	 * @param group 分组
 	 * @return Properties对象
 	 */
@@ -293,7 +315,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取group分组下所有配置键值对，组成新的{@link Props}
-	 * 
+	 *
 	 * @param group 分组
 	 * @return Props对象
 	 * @since 4.1.21
@@ -308,7 +330,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	/**
 	 * 持久化当前设置，会覆盖掉之前的设置<br>
 	 * 持久化不会保留之前的分组
-	 * 
+	 *
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
@@ -320,7 +342,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 转换为Properties对象，原分组变为前缀
-	 * 
+	 *
 	 * @return Properties对象
 	 */
 	public Properties toProperties() {
@@ -337,7 +359,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取GroupedMap
-	 * 
+	 *
 	 * @return GroupedMap
 	 * @since 4.0.12
 	 */
@@ -347,7 +369,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取所有分组
-	 * 
+	 *
 	 * @return 获得所有分组名
 	 */
 	public List<String> getGroups() {
@@ -357,7 +379,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	/**
 	 * 设置变量的正则<br>
 	 * 正则只能有一个group表示变量本身，剩余为字符 例如 \$\{(name)\}表示${name}变量名为name的一个变量表示
-	 * 
+	 *
 	 * @param regex 正则
 	 */
 	public Setting setVarRegex(String regex) {
@@ -367,10 +389,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		this.settingLoader.setVarRegex(regex);
 		return this;
 	}
-	
+
 	/**
 	 * 自定义字符编码
-	 * 
+	 *
 	 * @param charset 字符编码
 	 * @return this
 	 * @since 4.6.2
@@ -380,10 +402,27 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		return this;
 	}
 
+	/**
+	 * 设置是否使用变量
+	 * @param use 是否使用变量
+	 */
+	public void setUseVariable(boolean use) {
+		isUseVariable = use;
+	}
+
+	/**
+	 * 设置文件的URL
+	 * @param url 文件路径
+	 */
+	public void setSettingUrl(URL url) {
+		Assert.notNull(url, "Null setting url define!");
+		this.settingUrl = url;
+	}
+
 	// ------------------------------------------------- Map interface with group
 	/**
 	 * 某个分组对应的键值对是否为空
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 是否为空
 	 */
@@ -393,7 +432,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 指定分组中是否包含指定key
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @return 是否包含key
@@ -404,7 +443,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 指定分组中是否包含指定值
-	 * 
+	 *
 	 * @param group 分组
 	 * @param value 值
 	 * @return 是否包含值
@@ -415,7 +454,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取分组对应的值，如果分组不存在或者值不存在则返回null
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @return 值，如果分组不存在或者值不存在则返回null
@@ -426,7 +465,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 将键值对加入到对应分组中
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @param value 值
@@ -438,7 +477,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 从指定分组中删除指定值
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @return 被删除的值，如果值不存在，返回null
@@ -449,7 +488,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 加入多个键值对到某个分组下
-	 * 
+	 *
 	 * @param group 分组
 	 * @param m 键值对
 	 * @return this
@@ -461,7 +500,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 清除指定分组下的所有键值对
-	 * 
+	 *
 	 * @param group 分组
 	 * @return this
 	 */
@@ -472,7 +511,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 指定分组所有键的Set
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 键Set
 	 */
@@ -482,7 +521,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 指定分组下所有值
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 值
 	 */
@@ -492,17 +531,17 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 指定分组下所有键值对
-	 * 
+	 *
 	 * @param group 分组
 	 * @return 键值对
 	 */
 	public Set<Entry<String, String>> entrySet(String group) {
 		return this.groupedMap.entrySet(group);
 	}
-	
+
 	/**
 	 * 设置值
-	 * 
+	 *
 	 * @param key 键
 	 * @param value 值
 	 * @return this
@@ -512,10 +551,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		this.put(key, value);
 		return this;
 	}
-	
+
 	/**
 	 * 将键值对加入到对应分组中
-	 * 
+	 *
 	 * @param group 分组
 	 * @param key 键
 	 * @param value 值
@@ -534,7 +573,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 默认分组（空分组）中是否包含指定key对应的值
-	 * 
+	 *
 	 * @param key 键
 	 * @return 默认分组中是否包含指定key对应的值
 	 */
@@ -545,7 +584,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 默认分组（空分组）中是否包含指定值
-	 * 
+	 *
 	 * @param value 值
 	 * @return 默认分组中是否包含指定值
 	 */
@@ -556,7 +595,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取默认分组（空分组）中指定key对应的值
-	 * 
+	 *
 	 * @param key 键
 	 * @return 默认分组（空分组）中指定key对应的值
 	 */
@@ -567,7 +606,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 将指定键值对加入到默认分组（空分组）中
-	 * 
+	 *
 	 * @param key 键
 	 * @param value 值
 	 * @return 加入的值
@@ -579,7 +618,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 移除默认分组（空分组）中指定值
-	 * 
+	 *
 	 * @param key 键
 	 * @return 移除的值
 	 */
@@ -590,7 +629,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 将键值对Map加入默认分组（空分组）中
-	 * 
+	 *
 	 * @param m Map
 	 */
 	@Override
@@ -607,8 +646,17 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	}
 
 	/**
+	 * 清空所有分组中的所有键值对
+	 */
+	public void clearAll() {
+		for (String group : this.groupedMap.keySet()) {
+			this.groupedMap.clear(group);
+		}
+	}
+
+	/**
 	 * 获取默认分组（空分组）中的所有键列表
-	 * 
+	 *
 	 * @return 默认分组（空分组）中的所有键列表
 	 */
 	@Override
@@ -618,7 +666,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取默认分组（空分组）中的所有值列表
-	 * 
+	 *
 	 * @return 默认分组（空分组）中的所有值列表
 	 */
 	@Override
@@ -628,7 +676,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 
 	/**
 	 * 获取默认分组（空分组）中的所有键值对列表
-	 * 
+	 *
 	 * @return 默认分组（空分组）中的所有键值对列表
 	 */
 	@Override

@@ -1520,6 +1520,23 @@ public class StrUtil {
 	}
 
 	/**
+	 * 切分字符串
+	 *
+	 * @param str 被切分的字符串
+	 * @param separator 分隔符
+	 * @param limit 限制分片数
+	 * @return 字符串
+	 */
+	public static String[] split(CharSequence str, CharSequence separator, int limit) {
+		if (str == null) {
+			return new String[] {};
+		}
+
+		final String separatorStr = (null == separator) ? null : separator.toString();
+		return StrSpliter.splitToArray(str.toString(), separatorStr, limit, false, false);
+	}
+
+	/**
 	 * 根据给定长度，将给定字符串截取为多个部分
 	 * 
 	 * @param str 字符串

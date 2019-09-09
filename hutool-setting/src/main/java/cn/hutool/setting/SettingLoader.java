@@ -34,7 +34,7 @@ public class SettingLoader {
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
 	private final static char COMMENT_FLAG_PRE = '#';
 	/** 赋值分隔符（用于分隔键值对） */
-	private final static char ASSIGN_FLAG = '=';
+	private String assignFlag = "=";
 	/** 变量名称的正则 */
 	private String reg_var = "\\$\\{(.*?)\\}";
 
@@ -124,7 +124,7 @@ public class SettingLoader {
 					continue;
 				}
 
-				final String[] keyValue = StrUtil.splitToArray(line, ASSIGN_FLAG, 2);
+				final String[] keyValue = StrUtil.split(line, assignFlag, 2);
 				// 跳过不符合键值规范的行
 				if (keyValue.length < 2) {
 					continue;
@@ -151,6 +151,14 @@ public class SettingLoader {
 	 */
 	public void setVarRegex(String regex) {
 		this.reg_var = regex;
+	}
+
+	/**
+	 * 自定义分隔符（用于分隔键值对）
+	 * @param flag 符号
+	 */
+	public void setAssignFlag(String flag) {
+		this.assignFlag = flag;
 	}
 
 	/**
@@ -181,7 +189,7 @@ public class SettingLoader {
 		for (Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
 			writer.println(StrUtil.format("{}{}{}", CharUtil.BRACKET_START, groupEntry.getKey(), CharUtil.BRACKET_END));
 			for (Entry<String, String> entry : groupEntry.getValue().entrySet()) {
-				writer.println(StrUtil.format("{} {} {}", entry.getKey(), ASSIGN_FLAG, entry.getValue()));
+				writer.println(StrUtil.format("{} {} {}", entry.getKey(), assignFlag, entry.getValue()));
 			}
 		}
 	}
