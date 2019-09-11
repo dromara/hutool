@@ -5,7 +5,6 @@ import java.security.KeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
@@ -60,7 +59,6 @@ public class RSATest {
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
-		Console.log(HexUtil.encodeHexStr(encrypt));
 		
 		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
