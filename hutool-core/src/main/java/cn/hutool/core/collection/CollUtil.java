@@ -2499,6 +2499,32 @@ public class CollUtil {
 
 		return values;
 	}
+	
+	/**
+	 * 取最大值
+	 * 
+	 * @param <T> 元素类型
+	 * @param coll 集合
+	 * @return 最大值
+	 * @since 4.6.5
+	 * @see Collections#max(Collection)
+	 */
+	public static <T extends Comparable<? super T>> T max(Collection<T> coll) {
+		return Collections.max(coll);
+	}
+	
+	/**
+	 * 取最大值
+	 * 
+	 * @param <T> 元素类型
+	 * @param coll 集合
+	 * @return 最大值
+	 * @since 4.6.5
+	 * @see Collections#min(Collection)
+	 */
+	public static <T extends Comparable<? super T>> T min(Collection<T> coll) {
+		return Collections.min(coll);
+	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start
 	/**

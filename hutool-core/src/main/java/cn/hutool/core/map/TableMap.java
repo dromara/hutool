@@ -19,7 +19,7 @@ import cn.hutool.core.util.ArrayUtil;
  * @param <V>
  */
 public class TableMap<K, V> implements Map<K, V>, Serializable {
-	private static final long serialVersionUID = -5852304468076152385L;
+	private static final long serialVersionUID = 1L;
 
 	private List<K> keys;
 	private List<V> values;

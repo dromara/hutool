@@ -19,6 +19,7 @@
 * 【setting】     SettingLoader支持自定义分隔符
 * 【http】         Content-Type添加默认值（issue#I11YHI@Gitee）
 * 【socket】     增加Closeable接口（issue#532@Github）
+* 【core】        CollUtil增加min和max方法
 
 ### Bug修复
 * 【core】         修复NetUtil.getUsableLocalPort问题（pr#69@Gitee）
