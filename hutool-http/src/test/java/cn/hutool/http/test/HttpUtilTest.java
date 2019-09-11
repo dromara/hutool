@@ -263,4 +263,10 @@ public class HttpUtilTest {
 		String encodeResult = HttpUtil.normalizeParams("参数", CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("%E5%8F%82%E6%95%B0", encodeResult);
 	}
+	
+	@Test
+	public void getMimeTypeTest() {
+		String mimeType = HttpUtil.getMimeType("aaa.aaa");
+		Assert.assertNull(mimeType);
+	}
 }

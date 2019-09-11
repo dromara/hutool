@@ -17,6 +17,7 @@
 * 【core】        ZipUtil增加FileFilter参数的重载，支持文件过滤（issue#I11RTP@Gitee）
 * 【http】         HttpRequest增加setChunkedStreamingMode方法（issue#525@Github）
 * 【setting】     SettingLoader支持自定义分隔符
+* 【http】         Content-Type添加默认值（issue#I11YHI@Gitee）
 
 ### Bug修复
 * 【core】         修复NetUtil.getUsableLocalPort问题（pr#69@Gitee）

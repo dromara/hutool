@@ -1136,7 +1136,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			final StringBuilder builder = StrUtil.builder().append("--").append(BOUNDARY).append(StrUtil.CRLF);
 			final String fileName = resource.getName();
 			builder.append(StrUtil.format(CONTENT_DISPOSITION_FILE_TEMPLATE, formFieldName, ObjectUtil.defaultIfNull(fileName, formFieldName)));
-			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(fileName)));
+			// 根据name的扩展名指定互联网媒体类型，默认二进制流数据
+			builder.append(StrUtil.format(CONTENT_TYPE_FILE_TEMPLATE, HttpUtil.getMimeType(fileName, "application/octet-stream")));
 			IoUtil.write(out, this.charset, false, builder);
 			InputStream in = null;
 			try {

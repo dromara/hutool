@@ -26,6 +26,7 @@ import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -725,6 +726,19 @@ public class HttpUtil {
 			}
 		}
 		return content;
+	}
+	
+	/**
+	 * 根据文件扩展名获得MimeType
+	 * 
+	 * @param filePath 文件路径或文件名
+	 * @param defaultValue 当获取MimeType为null时的默认值
+	 * @return MimeType
+	 * @see FileUtil#getMimeType(String)
+	 * @since 4.6.5
+	 */
+	public static String getMimeType(String filePath, String defaultValue) {
+		return ObjectUtil.defaultIfNull(getMimeType(filePath), defaultValue);
 	}
 
 	/**
