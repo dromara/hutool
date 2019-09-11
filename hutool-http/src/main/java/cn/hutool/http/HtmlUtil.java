@@ -7,11 +7,15 @@ import cn.hutool.core.util.StrUtil;
 /**
  * HTML工具类
  * 
+ * <p>
+ * 比如我们在使用爬虫爬取HTML页面后，需要对返回页面的HTML内容做一定处理，<br>
+ * 比如去掉指定标签（例如广告栏等）、去除JS、去掉样式等等，这些操作都可以使用此工具类完成。
+ * 
  * @author xiaoleilu
  * 
  */
 public class HtmlUtil {
-	
+
 	public static final String NBSP = StrUtil.HTML_NBSP;
 	public static final String AMP = StrUtil.HTML_AMP;
 	public static final String QUOTE = StrUtil.HTML_QUOTE;
@@ -36,12 +40,12 @@ public class HtmlUtil {
 		TEXT['<'] = LT.toCharArray(); // 小于号
 		TEXT['>'] = GT.toCharArray(); // 大于号
 	}
-	
+
 	/**
 	 * 转义文本中的HTML字符为安全的字符，以下字符被转义：
 	 * <ul>
-	 * <li>'  替换为 &amp;#039; (&amp;apos; doesn't work in HTML4)</li>
-	 * <li>"  替换为 &amp;quot;</li>
+	 * <li>' 替换为 &amp;#039; (&amp;apos; doesn't work in HTML4)</li>
+	 * <li>" 替换为 &amp;quot;</li>
 	 * <li>&amp; 替换为 &amp;amp;</li>
 	 * <li>&lt; 替换为 &amp;lt;</li>
 	 * <li>&gt; 替换为 &amp;gt;</li>
@@ -64,14 +68,14 @@ public class HtmlUtil {
 		if (StrUtil.isBlank(htmlStr)) {
 			return htmlStr;
 		}
-		
+
 		return EscapeUtil.unescapeHtml4(htmlStr);
 	}
 
 	// ---------------------------------------------------------------- encode text
 
 	/**
-	 * 清除所有HTML标签
+	 * 清除所有HTML标签，但是不删除标签内的内容
 	 * 
 	 * @param content 文本
 	 * @return 清除标签后的文本
@@ -135,7 +139,7 @@ public class HtmlUtil {
 	}
 
 	/**
-	 * 去除HTML标签中的属性
+	 * 去除HTML标签中的属性，如果多个标签有相同属性，都去除
 	 * 
 	 * @param content 文本
 	 * @param attrs 属性名（不区分大小写）
@@ -144,6 +148,7 @@ public class HtmlUtil {
 	public static String removeHtmlAttr(String content, String... attrs) {
 		String regex = null;
 		for (String attr : attrs) {
+			// (?i)表示忽略大小写
 			regex = StrUtil.format("(?i)\\s*{}=([\"']).*?\\1", attr);
 			content = content.replaceAll(regex, StrUtil.EMPTY);
 		}

@@ -47,6 +47,39 @@ public class HtmlUtilTest {
 	}
 	
 	@Test
+	public void cleanHtmlTagTest() {
+		//非闭合标签
+		String str = "pre<img src=\"xxx/dfdsfds/test.jpg\">";
+		String result = HtmlUtil.cleanHtmlTag(str);
+		Assert.assertEquals("pre", result);
+		
+		//闭合标签
+		str = "pre<img>";
+		result = HtmlUtil.cleanHtmlTag(str);
+		Assert.assertEquals("pre", result);
+		
+		//闭合标签
+		str = "pre<img src=\"xxx/dfdsfds/test.jpg\" />";
+		result = HtmlUtil.cleanHtmlTag(str);
+		Assert.assertEquals("pre", result);
+		
+		//闭合标签
+		str = "pre<img />";
+		result = HtmlUtil.cleanHtmlTag(str);
+		Assert.assertEquals("pre", result);
+		
+		//包含内容标签
+		str = "pre<div class=\"test_div\">dfdsfdsfdsf</div>";
+		result = HtmlUtil.cleanHtmlTag(str);
+		Assert.assertEquals("predfdsfdsfdsf", result);
+		
+		//带换行
+		str = "pre<div class=\"test_div\">\r\n\t\tdfdsfdsfdsf\r\n</div><div class=\"test_div\">BBBB</div>";
+		result = HtmlUtil.cleanHtmlTag(str);
+		Assert.assertEquals("pre\r\n\t\tdfdsfdsfdsf\r\nBBBB", result);
+	}
+	
+	@Test
 	public void unwrapHtmlTagTest() {
 		//非闭合标签
 		String str = "pre<img src=\"xxx/dfdsfds/test.jpg\">";
@@ -83,6 +116,7 @@ public class HtmlUtilTest {
 	public void escapeTest() {
 		String html = "<html><body>123'123'</body></html>";
 		String escape = HtmlUtil.escape(html);
+		Assert.assertEquals("&lt;html&gt;&lt;body&gt;123&#039;123&#039;&lt;/body&gt;&lt;/html&gt;", escape);
 		String restoreEscaped = HtmlUtil.unescape(escape);
 		Assert.assertEquals(html, restoreEscaped);
 	}
@@ -92,5 +126,19 @@ public class HtmlUtilTest {
 		String html = "<alert></alert>";
 		String filter = HtmlUtil.filter(html);
 		Assert.assertEquals("", filter);
+	}
+	
+	@Test
+	public void removeHtmlAttrTest() {
+		String html = "<div class=\"test_div\"></div><span class=\"test_div\"></span>";
+		String result = HtmlUtil.removeHtmlAttr(html, "class");
+		Assert.assertEquals("<div></div><span></span>", result);
+	}
+	
+	@Test
+	public void removeAllHtmlAttrTest() {
+		String html = "<div class=\"test_div\" width=\"120\"></div>";
+		String result = HtmlUtil.removeAllHtmlAttr(html, "div");
+		Assert.assertEquals("<div></div>", result);
 	}
 }
