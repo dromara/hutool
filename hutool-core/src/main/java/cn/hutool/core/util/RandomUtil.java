@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -355,13 +356,13 @@ public class RandomUtil {
 	 * @throws IllegalArgumentException 需要的长度大于给定集合非重复总数
 	 */
 	public static <T> Set<T> randomEleSet(Collection<T> collection, int count) {
-		ArrayList<T> source = new ArrayList<>(new HashSet<>(collection));
+		final ArrayList<T> source = CollUtil.distinct(collection);
 		if (count > source.size()) {
 			throw new IllegalArgumentException("Count is larger than collection distinct size !");
 		}
 
 		final HashSet<T> result = new HashSet<T>(count);
-		int limit = collection.size();
+		int limit = source.size();
 		while (result.size() < count) {
 			result.add(randomEle(source, limit));
 		}
