@@ -15,6 +15,7 @@ public class AioServerTest {
 	
 	public static void main(String[] args) {
 		
+		@SuppressWarnings("resource")
 		AioServer aioServer = new AioServer(8899);
 		aioServer.setIoAction(new SimpleIoAction() {
 			

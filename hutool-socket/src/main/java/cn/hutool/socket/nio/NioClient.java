@@ -1,11 +1,13 @@
 package cn.hutool.socket.nio;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 
 /**
  * NIO客户端
@@ -13,7 +15,7 @@ import cn.hutool.core.io.IORuntimeException;
  * @author looly
  * @since 4.4.5
  */
-public class NioClient {
+public class NioClient implements Closeable{
 
 	private SocketChannel channel;
 
@@ -79,5 +81,10 @@ public class NioClient {
 			throw new IORuntimeException(e);
 		}
 		return this;
+	}
+
+	@Override
+	public void close() {
+		IoUtil.close(this.channel);
 	}
 }

@@ -1,5 +1,6 @@
 package cn.hutool.socket.aio;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketOption;
@@ -19,7 +20,7 @@ import cn.hutool.socket.SocketRuntimeException;
  * @author looly
  * @since 4.5.0
  */
-public class AioClient {
+public class AioClient implements Closeable{
 
 	private AioSession session;
 
@@ -102,6 +103,7 @@ public class AioClient {
 	/**
 	 * 关闭客户端
 	 */
+	@Override
 	public void close() {
 		this.session.close();
 	}

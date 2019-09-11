@@ -1,5 +1,6 @@
 package cn.hutool.socket.aio;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketOption;
@@ -21,7 +22,7 @@ import cn.hutool.socket.SocketConfig;
  * @author looly
  *
  */
-public class AioServer {
+public class AioServer implements Closeable{
 	private static final Log log = LogFactory.get();
 	private static AcceptHandler ACCEPT_HANDLER = new AcceptHandler();
 
@@ -148,6 +149,7 @@ public class AioServer {
 	/**
 	 * 关闭服务
 	 */
+	@Override
 	public void close() {
 		IoUtil.close(this.channel);
 

@@ -1,5 +1,6 @@
 package cn.hutool.socket.aio;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -20,7 +21,7 @@ import cn.hutool.socket.SocketUtil;
  * @author looly
  *
  */
-public class AioSession {
+public class AioSession implements Closeable{
 
 	private static final ReadHandler READ_HANDLER = new ReadHandler();
 
@@ -190,6 +191,7 @@ public class AioSession {
 	/**
 	 * 关闭会话
 	 */
+	@Override
 	public void close() {
 		IoUtil.close(this.channel);
 		this.readBuffer = null;
