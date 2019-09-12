@@ -961,8 +961,8 @@ public class MapUtil {
 	 * @return ConcurrentHashMap
 	 */
 	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMapWithSize(int size) {
-		size = size <= 0 ? DEFAULT_INITIAL_CAPACITY : size;
-		return new ConcurrentHashMap<>(size);
+		int initCapacity = size <= 0 ? DEFAULT_INITIAL_CAPACITY : size;
+		return new ConcurrentHashMap<>(initCapacity);
 	}
 
 	/**
