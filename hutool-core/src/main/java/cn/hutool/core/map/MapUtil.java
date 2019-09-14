@@ -960,7 +960,7 @@ public class MapUtil {
 	 * @param <V> value的类型
 	 * @return ConcurrentHashMap
 	 */
-	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMapWithSize(int size) {
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int size) {
 		int initCapacity = size <= 0 ? DEFAULT_INITIAL_CAPACITY : size;
 		return new ConcurrentHashMap<>(initCapacity);
 	}
