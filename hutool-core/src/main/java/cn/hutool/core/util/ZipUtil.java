@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -144,7 +147,7 @@ public class ZipUtil {
 	public static File zip(File zipFile, boolean withSrcDir, File... srcFiles) throws UtilException {
 		return zip(zipFile, DEFAULT_CHARSET, withSrcDir, srcFiles);
 	}
-	
+
 	/**
 	 * 对文件或文件目录进行压缩
 	 * 
@@ -818,6 +821,35 @@ public class ZipUtil {
 		return out.toByteArray();
 	}
 
+	/**
+	 * 获取Zip文件中指定目录下的所有文件，只显示文件，不显示目录
+	 * 
+	 * @param zipFile Zip文件
+	 * @param dir 目录前缀
+	 * @return 文件列表
+	 * @since 4.6.6
+	 */
+	public static List<String> listFileNames(ZipFile zipFile, String dir) {
+		if (StrUtil.isNotBlank(dir)) {
+			// 目录尾部添加"/"
+			dir = StrUtil.addSuffixIfNot(dir, StrUtil.SLASH);
+		}
+
+		final List<String> fileNames = new ArrayList<>();
+		String name;
+		for (ZipEntry entry : Collections.list(zipFile.entries())) {
+			name = entry.getName();
+			if (StrUtil.isEmpty(dir) || name.startsWith(dir)) {
+				final String nameSuffix = StrUtil.removePrefix(name, dir);
+				if (StrUtil.isNotEmpty(nameSuffix) && false == StrUtil.contains(nameSuffix, CharUtil.SLASH)) {
+					fileNames.add(nameSuffix);
+				}
+			}
+		}
+
+		return fileNames;
+	}
+
 	// ---------------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 获得 {@link ZipOutputStream}
@@ -854,7 +886,7 @@ public class ZipUtil {
 	 * @throws UtilException IO异常
 	 */
 	private static void zip(File file, String srcRootDir, ZipOutputStream out, FileFilter filter) throws UtilException {
-		if(null == file || (null != filter && false == filter.accept(file))) {
+		if (null == file || (null != filter && false == filter.accept(file))) {
 			return;
 		}
 

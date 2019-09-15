@@ -222,6 +222,15 @@ public class FileUtilTest {
 		names = FileUtil.listFileNames(".");
 		Assert.assertTrue(names.contains("hutool.jpg"));
 	}
+	
+	@Test
+	@Ignore
+	public void listFileNamesTest2() {
+		List<String> names = FileUtil.listFileNames("D:\\m2_repo\\commons-cli\\commons-cli\\1.0\\commons-cli-1.0.jar!org/apache/commons/cli/");
+		for (String string : names) {
+			Console.log(string);
+		}
+	}
 
 	@Test
 	@Ignore
