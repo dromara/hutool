@@ -19,13 +19,14 @@ import cn.hutool.core.util.ArrayUtil;
  */
 public class DateModifier {
 
-	/** 忽略的字段 */
+	/** 忽略的计算的字段 */
 	private static final int[] ignoreFields = new int[] { //
-			Calendar.HOUR, //
-			Calendar.AM_PM, //
-			Calendar.DAY_OF_WEEK, //
-			Calendar.DAY_OF_YEAR, //
-			Calendar.WEEK_OF_YEAR//
+			Calendar.HOUR_OF_DAY, // 与HOUR同名
+			Calendar.AM_PM, // 此字段单独处理，不参与计算起始和结束
+			Calendar.DAY_OF_WEEK_IN_MONTH, // 不参与计算
+			Calendar.DAY_OF_YEAR, // DAY_OF_MONTH体现
+			Calendar.WEEK_OF_MONTH, // 特殊处理
+			Calendar.WEEK_OF_YEAR // WEEK_OF_MONTH体现
 	};
 
 	/**
@@ -37,7 +38,7 @@ public class DateModifier {
 	 * @return 修改后的{@link Calendar}
 	 */
 	public static Calendar modify(Calendar calendar, int dateField, ModifyType modifyType) {
-		// 上下午特殊处理
+		// AM_PM上下午特殊处理
 		if (Calendar.AM_PM == dateField) {
 			boolean isAM = DateUtil.isAM(calendar);
 			switch (modifyType) {
@@ -55,31 +56,27 @@ public class DateModifier {
 				calendar.set(Calendar.HOUR_OF_DAY, (value < href) ? min : max);
 				break;
 			}
-		}
-
-		// 当用户指定了无关字段时，降级字段
-		if (ArrayUtil.contains(ignoreFields, dateField)) {
+			// 处理下一级别字段
 			return modify(calendar, dateField + 1, modifyType);
 		}
 
-		for (int i = Calendar.MILLISECOND; i > dateField; i--) {
-			if (ArrayUtil.contains(ignoreFields, i) || Calendar.WEEK_OF_MONTH == i) {
+		// 循环处理各级字段，精确到毫秒字段
+		for (int i = dateField + 1; i <= Calendar.MILLISECOND; i++) {
+			if (ArrayUtil.contains(ignoreFields, i)) {
 				// 忽略无关字段（WEEK_OF_MONTH）始终不做修改
 				continue;
 			}
 
-			if (Calendar.WEEK_OF_MONTH == dateField) {
-				// 在星期模式下，月的处理忽略之
+			// 在计算本周的起始和结束日时，月相关的字段忽略。
+			if (Calendar.WEEK_OF_MONTH == dateField || Calendar.WEEK_OF_YEAR == dateField) {
 				if (Calendar.DAY_OF_MONTH == i) {
 					continue;
-				} else if (Calendar.DAY_OF_WEEK_IN_MONTH == i) {
-					// 星期模式下，星期几统一用DAY_OF_WEEK处理
-					i = Calendar.DAY_OF_WEEK;
 				}
-			} else if (Calendar.DAY_OF_WEEK_IN_MONTH == i) {
-				// 非星期模式下，星期处理忽略之
-				// 由于DAY_OF_WEEK忽略，自动降级到DAY_OF_WEEK_IN_MONTH
-				continue;
+			} else {
+				// 其它情况忽略周相关字段计算
+				if (Calendar.DAY_OF_WEEK == i) {
+					continue;
+				}
 			}
 
 			modifyField(calendar, i, modifyType);
@@ -96,7 +93,11 @@ public class DateModifier {
 	 * @param modifyType {@link ModifyType}
 	 */
 	private static void modifyField(Calendar calendar, int field, ModifyType modifyType) {
-		// Console.log("# {} {}", DateField.of(field), calendar.getActualMinimum(field));
+		if (Calendar.HOUR == field) {
+			// 修正小时。HOUR为12小时制，上午的结束时间为12:00，此处改为HOUR_OF_DAY: 23:59
+			field = Calendar.HOUR_OF_DAY;
+		}
+
 		switch (modifyType) {
 		case TRUNCATE:
 			calendar.set(field, DateUtil.getBeginValue(calendar, field));
@@ -118,6 +119,7 @@ public class DateModifier {
 			calendar.set(field, (value < href) ? min : max);
 			break;
 		}
+		// Console.log("# {} -> {}", DateField.of(field), calendar.get(field));
 	}
 	// -------------------------------------------------------------------------------------------------- Private method end
 

@@ -56,6 +56,16 @@ public class DateModifierTest {
 		begin = DateUtil.truncate(date, DateField.YEAR);
 		Assert.assertEquals("2017-01-01 00:00:00.000", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
 	}
+	
+	@Test
+	public void truncateDayOfWeekInMonthTest() {
+		String dateStr = "2017-03-01 22:33:23.123";
+		Date date = DateUtil.parse(dateStr);
+
+		// 天，day of xxx按照day处理
+		DateTime begin = DateUtil.truncate(date, DateField.DAY_OF_WEEK_IN_MONTH);
+		Assert.assertEquals("2017-03-01 00:00:00.000", begin.toString(DatePattern.NORM_DATETIME_MS_PATTERN));
+	}
 
 	@Test
 	public void ceilingTest() {

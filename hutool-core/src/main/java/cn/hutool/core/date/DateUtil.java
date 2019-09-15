@@ -45,7 +45,7 @@ public class DateUtil {
 	public static DateTime date() {
 		return new DateTime();
 	}
-	
+
 	/**
 	 * 当前时间，转换为{@link DateTime}对象，忽略毫秒部分
 	 * 
@@ -102,6 +102,16 @@ public class DateUtil {
 	 */
 	public static DateTime date(Calendar calendar) {
 		return new DateTime(calendar);
+	}
+
+	/**
+	 * 创建Calendar对象，时间为默认时区的当前时间
+	 * 
+	 * @return Calendar对象
+	 * @since 4.6.6
+	 */
+	public static Calendar calendar() {
+		return Calendar.getInstance();
 	}
 
 	/**
@@ -895,7 +905,7 @@ public class DateUtil {
 	public static Calendar ceiling(Calendar calendar, DateField dateField) {
 		return DateModifier.modify(calendar, dateField.getValue(), ModifyType.CEILING);
 	}
-	
+
 	/**
 	 * 获取秒级别的开始时间，既忽略毫秒部分
 	 * 
@@ -981,7 +991,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某周的开始时间
+	 * 获取某周的开始时间，周一定为一周的开始时间
 	 * 
 	 * @param date 日期
 	 * @return {@link DateTime}
@@ -991,7 +1001,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某周的结束时间
+	 * 获取某周的结束时间，周日定为一周的结束
 	 * 
 	 * @param date 日期
 	 * @return {@link DateTime}
@@ -1001,7 +1011,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某周的开始时间
+	 * 获取给定日期当前周的开始时间，周一定为一周的开始时间
 	 * 
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -1011,7 +1021,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取某周的开始时间，周一定为一周的开始时间
+	 * 获取给定日期当前周的开始时间
 	 * 
 	 * @param calendar 日期 {@link Calendar}
 	 * @param isMondayAsFirstDay 是否周一做为一周的第一天（false表示周日做为第一天）
@@ -1022,6 +1032,7 @@ public class DateUtil {
 		if (isMondayAsFirstDay) {
 			calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		}
+		// WEEK_OF_MONTH为上限的字段（不包括），实际调整的为DAY_OF_MONTH
 		return truncate(calendar, DateField.WEEK_OF_MONTH);
 	}
 
@@ -1047,6 +1058,7 @@ public class DateUtil {
 		if (isSundayAsLastDay) {
 			calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		}
+		// WEEK_OF_MONTH为上限的字段（不包括），实际调整的为DAY_OF_MONTH
 		return ceiling(calendar, DateField.WEEK_OF_MONTH);
 	}
 

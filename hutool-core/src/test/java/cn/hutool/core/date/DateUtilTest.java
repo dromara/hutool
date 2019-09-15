@@ -478,11 +478,22 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void endOfYearTest() {
+		DateTime date = DateUtil.date();
+		date.setField(DateField.YEAR, 2019);
+		DateTime endOfYear = DateUtil.endOfYear(date);
+		Assert.assertEquals("2019-12-31 23:59:59", endOfYear.toString());
+	}
+	
+	@Test
 	public void endOfWeekTest() {
-		DateTime now = DateUtil.date();
+		// 周日
+		DateTime now = DateUtil.parse("2019-09-15 13:00");
 
 		DateTime startOfWeek = DateUtil.beginOfWeek(now);
+		Assert.assertEquals("2019-09-09 00:00:00", startOfWeek.toString());
 		DateTime endOfWeek = DateUtil.endOfWeek(now);
+		Assert.assertEquals("2019-09-15 23:59:59", endOfWeek.toString());
 
 		long between = DateUtil.between(endOfWeek, startOfWeek, DateUnit.DAY);
 		// 周一和周日相距6天

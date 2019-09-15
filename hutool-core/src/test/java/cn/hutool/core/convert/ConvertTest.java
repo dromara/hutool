@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 
 /**
  * 类型转换工具单元测试
@@ -28,7 +27,7 @@ public class ConvertTest {
 		int a = 1;
 		long[] b = { 1, 2, 3, 4, 5 };
 		
-		Console.log(Convert.convert(String.class, b));
+		Assert.assertEquals("[1, 2, 3, 4, 5]", Convert.convert(String.class, b));
 
 		String aStr = Convert.toStr(a);
 		Assert.assertEquals("1", aStr);

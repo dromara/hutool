@@ -13,10 +13,11 @@ import cn.hutool.core.util.ArrayUtil;
 
 /**
  * 无重复键的Map
+ * 
  * @author looly
  *
- * @param <K>
- * @param <V>
+ * @param <K> 键类型
+ * @param <V> 值类型
  */
 public class TableMap<K, V> implements Map<K, V>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -33,7 +34,7 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 		this.keys = new ArrayList<>(size);
 		this.values = new ArrayList<>(size);
 	}
-	
+
 	/**
 	 * 构造
 	 * 
@@ -119,17 +120,17 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 	@Override
 	public Set<Map.Entry<K, V>> entrySet() {
 		HashSet<Map.Entry<K, V>> hashSet = new HashSet<>();
-		for(int i = 0; i < size(); i++) {
+		for (int i = 0; i < size(); i++) {
 			hashSet.add(new Entry<K, V>(keys.get(i), values.get(i)));
 		}
 		return hashSet;
 	}
 
-	private static class Entry<K, V> implements Map.Entry<K, V>{
-		
+	private static class Entry<K, V> implements Map.Entry<K, V> {
+
 		private K key;
 		private V value;
-		
+
 		public Entry(K key, V value) {
 			this.key = key;
 			this.value = value;
@@ -149,6 +150,6 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 		public V setValue(V value) {
 			throw new UnsupportedOperationException("setValue not supported.");
 		}
-		
+
 	}
 }
