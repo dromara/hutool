@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.CompareUtil;
@@ -1858,6 +1859,28 @@ public class DateUtil {
 	 */
 	public static int compare(Calendar calendar1, Calendar calendar2) {
 		return CompareUtil.compare(calendar1, calendar2);
+	}
+	
+	/**
+	 * 纳秒转毫秒
+	 * 
+	 * @param duration 时长
+	 * @return 时长毫秒
+	 * @since 4.6.6
+	 */
+	public static long nanosToMillis(long duration) {
+		return TimeUnit.NANOSECONDS.toMillis(duration);
+	}
+
+	/**
+	 * 纳秒转秒，保留小数
+	 * 
+	 * @param duration 时长
+	 * @return 秒
+	 * @since 4.6.6
+	 */
+	public static double nanosToSeconds(long duration) {
+		return duration / 1_000_000_000.0;
 	}
 
 	// ------------------------------------------------------------------------ Private method start

@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core】        MapUtil增加newConcurrentHashMap（pr#538@Github）
+* 【core】        增加StopWatch（issuepr#539@Github）
 
 ### Bug修复
 * 【core】        修复DateUtil.endOfYear计算错误问题（issuepr#540@Github）
