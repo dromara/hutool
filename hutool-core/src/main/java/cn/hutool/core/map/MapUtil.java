@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
@@ -938,5 +939,44 @@ public class MapUtil {
 		}
 		
 		return map;
+	}
+
+	/**
+	 * 新建一个初始容量为{@link MapUtil#DEFAULT_INITIAL_CAPACITY} 的ConcurrentHashMap
+	 *
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @return ConcurrentHashMap
+	 */
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap() {
+		return new ConcurrentHashMap<>(DEFAULT_INITIAL_CAPACITY);
+	}
+
+	/**
+	 * 新建一个ConcurrentHashMap
+	 *
+	 * @param size 初始容量，当传入的容量小于等于0时，容量为{@link MapUtil#DEFAULT_INITIAL_CAPACITY}
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @return ConcurrentHashMap
+	 */
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int size) {
+		int initCapacity = size <= 0 ? DEFAULT_INITIAL_CAPACITY : size;
+		return new ConcurrentHashMap<>(initCapacity);
+	}
+
+	/**
+	 *  传入一个Map将其转化为ConcurrentHashMap类型
+	 *
+	 * @param map map
+	 * @param <K> key的类型
+	 * @param <V> value的类型
+	 * @return ConcurrentHashMap
+	 */
+	public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(Map<K, V> map) {
+		if(isEmpty(map)) {
+			return new ConcurrentHashMap<>(DEFAULT_INITIAL_CAPACITY);
+		}
+		return new ConcurrentHashMap<>(map);
 	}
 }
