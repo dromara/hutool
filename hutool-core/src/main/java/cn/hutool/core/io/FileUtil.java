@@ -55,6 +55,7 @@ import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -313,30 +314,29 @@ public class FileUtil {
 		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
 		if (index < 0) {
 			// 普通目录
-			final List<String> paths = new ArrayList<String>();
+			final List<String> paths = new ArrayList<>();
 			final File[] files = ls(path);
 			for (File file : files) {
 				if (file.isFile()) {
 					paths.add(file.getName());
 				}
 			}
-		} else {
-			// jar文件
-			path = getAbsolutePath(path);
-			// jar文件中的路径
-			index = index + FileUtil.JAR_FILE_EXT.length();
-			JarFile jarFile = null;
-			try {
-				jarFile = new JarFile(path.substring(0, index));
-				return ZipUtil.listFileNames(jarFile, path.substring(index + 1));
-			} catch (IOException e) {
-				throw new IORuntimeException(StrUtil.format("Can not read file path of [{}]", path), e);
-			} finally {
-				IoUtil.close(jarFile);
-			}
+			return paths;
 		}
-		
-		return new ArrayList<>(0);
+
+		// jar文件
+		path = getAbsolutePath(path);
+		// jar文件中的路径
+		index = index + FileUtil.JAR_FILE_EXT.length();
+		JarFile jarFile = null;
+		try {
+			jarFile = new JarFile(path.substring(0, index));
+			return ZipUtil.listFileNames(jarFile, path.substring(index + 1));
+		} catch (IOException e) {
+			throw new IORuntimeException(StrUtil.format("Can not read file path of [{}]", path), e);
+		} finally {
+			IoUtil.close(jarFile);
+		}
 	}
 
 	/**
@@ -357,8 +357,8 @@ public class FileUtil {
 	 * @return File
 	 */
 	public static File file(String path) {
-		if (StrUtil.isBlank(path)) {
-			throw new NullPointerException("File path is blank!");
+		if (null == path) {
+			return null;
 		}
 		return new File(getAbsolutePath(path));
 	}
@@ -1765,7 +1765,7 @@ public class FileUtil {
 	 */
 	public static String getName(String filePath) {
 		if (null == filePath) {
-			return filePath;
+			return null;
 		}
 		int len = filePath.length();
 		if (0 == len) {
