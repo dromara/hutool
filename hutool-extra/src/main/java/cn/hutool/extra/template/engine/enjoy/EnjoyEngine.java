@@ -15,7 +15,7 @@ import cn.hutool.extra.template.TemplateEngine;
 
 /**
  * Enjoy库的引擎包装
- * 
+ *
  * @author looly
  * @since 4.1.10
  */
@@ -25,6 +25,7 @@ public class EnjoyEngine implements TemplateEngine {
 	private ResourceMode resourceMode;
 
 	// --------------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 默认构造
 	 */
@@ -34,7 +35,7 @@ public class EnjoyEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param config 模板配置
 	 */
 	public EnjoyEngine(TemplateConfig config) {
@@ -44,7 +45,7 @@ public class EnjoyEngine implements TemplateEngine {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param engine {@link com.jfinal.template.Engine}
 	 */
 	public EnjoyEngine(com.jfinal.template.Engine engine) {
@@ -54,7 +55,7 @@ public class EnjoyEngine implements TemplateEngine {
 
 	@Override
 	public Template getTemplate(String resource) {
-		if(ObjectUtil.equal(ResourceMode.STRING, this.resourceMode)) {
+		if (ObjectUtil.equal(ResourceMode.STRING, this.resourceMode)) {
 			return EnjoyTemplate.wrap(this.engine.getTemplateByString(resource));
 		}
 		return EnjoyTemplate.wrap(this.engine.getTemplate(resource));
@@ -62,7 +63,7 @@ public class EnjoyEngine implements TemplateEngine {
 
 	/**
 	 * 创建引擎
-	 * 
+	 *
 	 * @param config 模板配置
 	 * @return {@link GroupTemplate}
 	 */
@@ -72,23 +73,23 @@ public class EnjoyEngine implements TemplateEngine {
 		engine.setEncoding(config.getCharsetStr());
 
 		switch (config.getResourceMode()) {
-		case STRING:
-			// 默认字符串类型资源:
-			break;
-		case CLASSPATH:
-			engine.setToClassPathSourceFactory();
-			engine.setBaseTemplatePath(config.getPath());
-			break;
-		case FILE:
-			engine.setSourceFactory(new FileSourceFactory());
-			engine.setBaseTemplatePath(config.getPath());
-			break;
-		case WEB_ROOT:
-			engine.setSourceFactory(new FileSourceFactory());
-			engine.setBaseTemplatePath(FileUtil.getAbsolutePath(FileUtil.getWebRoot()));
-			break;
-		default:
-			break;
+			case STRING:
+				// 默认字符串类型资源:
+				break;
+			case CLASSPATH:
+				engine.setToClassPathSourceFactory();
+				engine.setBaseTemplatePath(config.getPath());
+				break;
+			case FILE:
+				engine.setSourceFactory(new FileSourceFactory());
+				engine.setBaseTemplatePath(config.getPath());
+				break;
+			case WEB_ROOT:
+				engine.setSourceFactory(new FileSourceFactory());
+				engine.setBaseTemplatePath(FileUtil.getAbsolutePath(FileUtil.getWebRoot()));
+				break;
+			default:
+				break;
 		}
 
 		return engine;

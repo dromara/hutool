@@ -101,7 +101,7 @@ public class TemplateUtilTest {
 		Template template = engine.getTemplate("#(x + 123)");
 		String result = template.render(Dict.create().set("x", 1));
 		Assert.assertEquals("124", result);
-		
+
 		//ClassPath模板
 		engine = new EnjoyEngine(new TemplateConfig("templates", ResourceMode.CLASSPATH));
 		template = engine.getTemplate("enjoy_test.etl");
