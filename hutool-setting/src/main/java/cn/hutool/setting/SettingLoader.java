@@ -156,7 +156,7 @@ public class SettingLoader {
 	/**
 	 * 赋值分隔符（用于分隔键值对）
 	 * 
-	 * @param regex 正则
+	 * @param assignFlag 正则
 	 * @since 4.6.5
 	 */
 	public void setAssignFlag(char assignFlag) {
@@ -174,8 +174,6 @@ public class SettingLoader {
 		try {
 			writer = FileUtil.getPrintWriter(absolutePath, charset, false);
 			store(writer);
-		} catch (IOException e) {
-			throw new IORuntimeException(e, "Store Setting to [{}] error!", absolutePath);
 		} finally {
 			IoUtil.close(writer);
 		}
@@ -185,9 +183,8 @@ public class SettingLoader {
 	 * 存储到Writer
 	 * 
 	 * @param writer Writer
-	 * @throws IOException IO异常
 	 */
-	synchronized private void store(PrintWriter writer) throws IOException {
+	synchronized private void store(PrintWriter writer) {
 		for (Entry<String, LinkedHashMap<String, String>> groupEntry : this.groupedMap.entrySet()) {
 			writer.println(StrUtil.format("{}{}{}", CharUtil.BRACKET_START, groupEntry.getKey(), CharUtil.BRACKET_END));
 			for (Entry<String, String> entry : groupEntry.getValue().entrySet()) {

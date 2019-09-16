@@ -11,53 +11,66 @@ import cn.hutool.core.util.StrUtil;
  * 秒表封装<br>
  * 此工具用于存储一组任务的耗时时间，并一次性打印对比。<br>
  * 比如：我们可以记录多段代码耗时时间，然后一次性打印（StopWatch提供了一个prettyString()函数用于按照指定格式打印出耗时）
- * 
+ *
  * <p>
  * 此工具来自：https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/StopWatch.java
- * 
+ *
  * <p>
  * 使用方法如下：
- * 
+ *
  * <pre>
  * StopWatch stopWatch = new StopWatch("任务名称");
- * 
+ *
  * // 任务1
  * stopWatch.start("任务一");
  * Thread.sleep(1000);
  * stopWatch.stop();
- * 
+ *
  * // 任务2
  * stopWatch.start("任务一");
  * Thread.sleep(2000);
  * stopWatch.stop();
- * 
+ *
  * // 打印出耗时
  * Console.log(stopWatch.prettyPrint());
- * 
+ *
  * </pre>
- * 
+ *
  * @author Spring Framework, Looly
  * @since 4.6.6
  */
 public class StopWatch {
 
-	/** 秒表唯一标识，用于多个秒表对象的区分 */
+	/**
+	 * 秒表唯一标识，用于多个秒表对象的区分
+	 */
 	private final String id;
 	private List<TaskInfo> taskList;
 
-	/** 任务名称 */
+	/**
+	 * 任务名称
+	 */
 	private String currentTaskName;
-	/** 开始时间 */
+	/**
+	 * 开始时间
+	 */
 	private long startTimeNanos;
 
-	/** 最后一次任务对象 */
+	/**
+	 * 最后一次任务对象
+	 */
 	private TaskInfo lastTaskInfo;
-	/** 总任务数 */
+	/**
+	 * 总任务数
+	 */
 	private int taskCount;
-	/** 总运行时间 */
+	/**
+	 * 总运行时间
+	 */
 	private long totalTimeNanos;
 
 	// ------------------------------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造，不启动任何任务
 	 */
@@ -67,7 +80,7 @@ public class StopWatch {
 
 	/**
 	 * 构造，不启动任何任务
-	 * 
+	 *
 	 * @param id 用于标识秒表的唯一ID
 	 */
 	public StopWatch(String id) {
@@ -76,8 +89,8 @@ public class StopWatch {
 
 	/**
 	 * 构造，不启动任何任务
-	 * 
-	 * @param id 用于标识秒表的唯一ID
+	 *
+	 * @param id           用于标识秒表的唯一ID
 	 * @param keepTaskList 是否在停止后保留任务，{@code false} 表示停止运行后不保留任务
 	 */
 	public StopWatch(String id, boolean keepTaskList) {
@@ -90,7 +103,7 @@ public class StopWatch {
 
 	/**
 	 * 获取{@link StopWatch} 的ID，用于多个秒表对象的区分
-	 * 
+	 *
 	 * @return the ID 空字符串为
 	 * @see #StopWatch(String)
 	 */
@@ -100,7 +113,7 @@ public class StopWatch {
 
 	/**
 	 * 设置是否在停止后保留任务，{@code false} 表示停止运行后不保留任务
-	 * 
+	 *
 	 * @param keepTaskList 是否在停止后保留任务
 	 */
 	public void setKeepTaskList(boolean keepTaskList) {
@@ -115,7 +128,7 @@ public class StopWatch {
 
 	/**
 	 * 开始默认的新任务
-	 * 
+	 *
 	 * @throws IllegalStateException 前一个任务没有结束
 	 */
 	public void start() throws IllegalStateException {
@@ -124,7 +137,7 @@ public class StopWatch {
 
 	/**
 	 * 开始指定名称的新任务
-	 * 
+	 *
 	 * @param taskName 新开始的任务名称
 	 * @throws IllegalStateException 前一个任务没有结束
 	 */
@@ -138,7 +151,7 @@ public class StopWatch {
 
 	/**
 	 * 停止当前任务
-	 * 
+	 *
 	 * @throws IllegalStateException 任务没有开始
 	 */
 	public void stop() throws IllegalStateException {
@@ -158,7 +171,7 @@ public class StopWatch {
 
 	/**
 	 * 检查是否有正在运行的任务
-	 * 
+	 *
 	 * @return 是否有正在运行的任务
 	 * @see #currentTaskName()
 	 */
@@ -168,7 +181,7 @@ public class StopWatch {
 
 	/**
 	 * 获取当前任务名，{@code null} 表示无任务
-	 * 
+	 *
 	 * @return 当前任务名，{@code null} 表示无任务
 	 * @see #isRunning()
 	 */
@@ -178,7 +191,7 @@ public class StopWatch {
 
 	/**
 	 * 获取最后任务的花费时间（纳秒）
-	 * 
+	 *
 	 * @return 任务的花费时间（纳秒）
 	 * @throws IllegalStateException 无任务
 	 */
@@ -191,7 +204,7 @@ public class StopWatch {
 
 	/**
 	 * 获取最后任务的花费时间（毫秒）
-	 * 
+	 *
 	 * @return 任务的花费时间（毫秒）
 	 * @throws IllegalStateException 无任务
 	 */
@@ -204,7 +217,7 @@ public class StopWatch {
 
 	/**
 	 * 获取最后的任务名
-	 * 
+	 *
 	 * @return 任务名
 	 * @throws IllegalStateException 无任务
 	 */
@@ -217,7 +230,7 @@ public class StopWatch {
 
 	/**
 	 * 获取最后的任务对象
-	 * 
+	 *
 	 * @return {@link TaskInfo} 任务对象，包括任务名和花费时间
 	 * @throws IllegalStateException 无任务
 	 */
@@ -230,7 +243,7 @@ public class StopWatch {
 
 	/**
 	 * 获取所有任务的总花费时间（纳秒）
-	 * 
+	 *
 	 * @return 所有任务的总花费时间（纳秒）
 	 * @see #getTotalTimeMillis()
 	 * @see #getTotalTimeSeconds()
@@ -241,7 +254,7 @@ public class StopWatch {
 
 	/**
 	 * 获取所有任务的总花费时间（毫秒）
-	 * 
+	 *
 	 * @return 所有任务的总花费时间（毫秒）
 	 * @see #getTotalTimeNanos()
 	 * @see #getTotalTimeSeconds()
@@ -252,7 +265,7 @@ public class StopWatch {
 
 	/**
 	 * 获取所有任务的总花费时间（秒）
-	 * 
+	 *
 	 * @return 所有任务的总花费时间（秒）
 	 * @see #getTotalTimeNanos()
 	 * @see #getTotalTimeMillis()
@@ -263,7 +276,7 @@ public class StopWatch {
 
 	/**
 	 * 获取任务数
-	 * 
+	 *
 	 * @return 任务数
 	 */
 	public int getTaskCount() {
@@ -272,7 +285,7 @@ public class StopWatch {
 
 	/**
 	 * 获取任务列表
-	 * 
+	 *
 	 * @return 任务列表
 	 */
 	public TaskInfo[] getTaskInfo() {
@@ -283,12 +296,9 @@ public class StopWatch {
 	}
 
 	/**
-	 * Get a short description of the total running time.
-	 */
-	/**
-	 * 获取任务
-	 * 
-	 * @return
+	 * 获取任务信息
+	 *
+	 * @return 任务信息
 	 */
 	public String shortSummary() {
 		return StrUtil.format("StopWatch '{}': running time = {} ns", this.id, this.totalTimeNanos);
@@ -296,7 +306,7 @@ public class StopWatch {
 
 	/**
 	 * 生成所有任务的一个任务花费时间表
-	 * 
+	 *
 	 * @return 任务时间表
 	 */
 	public String prettyPrint() {
@@ -308,11 +318,11 @@ public class StopWatch {
 			sb.append("---------------------------------------------").append(FileUtil.getLineSeparator());
 			sb.append("ns         %     Task name").append(FileUtil.getLineSeparator());
 			sb.append("---------------------------------------------").append(FileUtil.getLineSeparator());
-			
+
 			final NumberFormat nf = NumberFormat.getNumberInstance();
 			nf.setMinimumIntegerDigits(9);
 			nf.setGroupingUsed(false);
-			
+
 			final NumberFormat pf = NumberFormat.getPercentInstance();
 			pf.setMinimumIntegerDigits(3);
 			pf.setGroupingUsed(false);
@@ -342,9 +352,8 @@ public class StopWatch {
 
 	/**
 	 * 存放任务名称和花费时间对象
-	 * 
-	 * @author Looly
 	 *
+	 * @author Looly
 	 */
 	public static final class TaskInfo {
 
@@ -365,7 +374,7 @@ public class StopWatch {
 
 		/**
 		 * 获取任务花费时间（单位：纳秒）
-		 * 
+		 *
 		 * @see #getTimeMillis()
 		 * @see #getTimeSeconds()
 		 */
@@ -375,7 +384,7 @@ public class StopWatch {
 
 		/**
 		 * 获取任务花费时间（单位：毫秒）
-		 * 
+		 *
 		 * @see #getTimeNanos()
 		 * @see #getTimeSeconds()
 		 */
@@ -385,7 +394,7 @@ public class StopWatch {
 
 		/**
 		 * 获取任务花费时间（单位：秒）
-		 * 
+		 *
 		 * @see #getTimeMillis()
 		 * @see #getTimeNanos()
 		 */
