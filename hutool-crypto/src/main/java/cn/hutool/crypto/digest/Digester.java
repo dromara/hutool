@@ -259,7 +259,7 @@ public class Digester {
 	 * @return 摘要bytes
 	 */
 	public byte[] digest(byte[] data) {
-		byte[] result = null;
+		byte[] result;
 		if (this.saltPosition <= 0) {
 			// 加盐在开头，自动忽略空盐值
 			result = doDigest(this.salt, data);
