@@ -477,10 +477,8 @@ public class CollUtil {
 			return isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
 		}
 		int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
-		HashSet<T> set = isSorted ? new LinkedHashSet<T>(initialCapacity) : new HashSet<T>(initialCapacity);
-		for (T t : ts) {
-			set.add(t);
-		}
+		final HashSet<T> set = isSorted ? new LinkedHashSet<T>(initialCapacity) : new HashSet<T>(initialCapacity);
+		Collections.addAll(set, ts);
 		return set;
 	}
 
@@ -504,7 +502,7 @@ public class CollUtil {
 	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Collection<T> collection) {
-		return isSorted ? new LinkedHashSet<T>(collection) : new HashSet<T>(collection);
+		return isSorted ? new LinkedHashSet<>(collection) : new HashSet<>(collection);
 	}
 
 	/**
@@ -574,10 +572,8 @@ public class CollUtil {
 		if (ArrayUtil.isEmpty(values)) {
 			return list(isLinked);
 		}
-		List<T> arrayList = isLinked ? new LinkedList<T>() : new ArrayList<T>(values.length);
-		for (T t : values) {
-			arrayList.add(t);
-		}
+		final List<T> arrayList = isLinked ? new LinkedList<T>() : new ArrayList<T>(values.length);
+		Collections.addAll(arrayList, values);
 		return arrayList;
 	}
 
@@ -594,7 +590,7 @@ public class CollUtil {
 		if (null == collection) {
 			return list(isLinked);
 		}
-		return isLinked ? new LinkedList<T>(collection) : new ArrayList<T>(collection);
+		return isLinked ? new LinkedList<>(collection) : new ArrayList<>(collection);
 	}
 
 	/**
@@ -751,7 +747,7 @@ public class CollUtil {
 	 * @return {@link CopyOnWriteArrayList}
 	 */
 	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
-		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<T>(collection));
+		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<>(collection));
 	}
 
 	/**
@@ -783,7 +779,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Collection<T> create(Class<?> collectionType) {
-		Collection<T> list = null;
+		Collection<T> list;
 		if (collectionType.isAssignableFrom(AbstractCollection.class)) {
 			// 抽象集合默认使用ArrayList
 			list = new ArrayList<>();
@@ -944,7 +940,7 @@ public class CollUtil {
 			return null;
 		}
 
-		return sub(new ArrayList<T>(list), start, end, step);
+		return sub(new ArrayList<>(list), start, end, step);
 	}
 
 	/**
@@ -1623,10 +1619,8 @@ public class CollUtil {
 	 * @return treeSet
 	 */
 	public static <T> TreeSet<T> toTreeSet(Collection<T> collection, Comparator<T> comparator) {
-		final TreeSet<T> treeSet = new TreeSet<T>(comparator);
-		for (T t : collection) {
-			treeSet.add(t);
-		}
+		final TreeSet<T> treeSet = new TreeSet<>(comparator);
+		treeSet.addAll(collection);
 		return treeSet;
 	}
 
@@ -1640,7 +1634,7 @@ public class CollUtil {
 	 * @return {@link Enumeration}
 	 */
 	public static <E> Enumeration<E> asEnumeration(Iterator<E> iter) {
-		return new IteratorEnumeration<E>(iter);
+		return new IteratorEnumeration<>(iter);
 	}
 
 	/**
@@ -1866,9 +1860,7 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> addAll(Collection<T> collection, T[] values) {
 		if (null != collection && null != values) {
-			for (T value : values) {
-				collection.add(value);
-			}
+			Collections.addAll(collection, values);
 		}
 		return collection;
 	}
@@ -1958,7 +1950,7 @@ public class CollUtil {
 				result.add(list.get(index));
 			}
 		} else {
-			Object[] array = ((Collection<T>) collection).toArray();
+			final Object[] array = collection.toArray();
 			for (int index : indexes) {
 				if (index < 0) {
 					index += size;
@@ -2151,7 +2143,7 @@ public class CollUtil {
 	 * @return treeSet
 	 */
 	public static <T> List<T> sort(Collection<T> collection, Comparator<? super T> comparator) {
-		List<T> list = new ArrayList<T>(collection);
+		List<T> list = new ArrayList<>(collection);
 		Collections.sort(list, comparator);
 		return list;
 	}
@@ -2229,7 +2221,7 @@ public class CollUtil {
 	 * @since 3.0.9
 	 */
 	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
-		final TreeMap<K, V> result = new TreeMap<K, V>(comparator);
+		final TreeMap<K, V> result = new TreeMap<>(comparator);
 		result.putAll(map);
 		return result;
 	}
@@ -2534,7 +2526,7 @@ public class CollUtil {
 	 *
 	 * @param <T> 处理参数类型
 	 */
-	public static interface Consumer<T> {
+	public interface Consumer<T> {
 		/**
 		 * 接受并处理一个参数
 		 * 
@@ -2552,7 +2544,7 @@ public class CollUtil {
 	 * @param <K> KEY类型
 	 * @param <V> VALUE类型
 	 */
-	public static interface KVConsumer<K, V> {
+	public interface KVConsumer<K, V> {
 		/**
 		 * 接受并处理一对参数
 		 * 
@@ -2571,7 +2563,7 @@ public class CollUtil {
 	 * @param <T> 被计算hash的对象类型
 	 * @since 3.2.2
 	 */
-	public static interface Hash<T> {
+	public interface Hash<T> {
 		/**
 		 * 计算Hash值
 		 * 
