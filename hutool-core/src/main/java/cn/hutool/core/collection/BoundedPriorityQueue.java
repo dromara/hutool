@@ -35,7 +35,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 
 			@Override
 			public int compare(E o1, E o2) {
-				int cResult = 0;
+				int cResult;
 				if(comparator != null) {
 					cResult = comparator.compare(o1, o2);
 				}else {

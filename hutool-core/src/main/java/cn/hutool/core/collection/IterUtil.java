@@ -376,7 +376,7 @@ public class IterUtil {
 	 * @return Map
 	 */
 	public static <K, V> HashMap<K, V> toMap(Iterable<Entry<K, V>> entryIter) {
-		final HashMap<K, V> map = new HashMap<K, V>();
+		final HashMap<K, V> map = new HashMap<>();
 		if (isNotEmpty(entryIter)) {
 			for (Entry<K, V> entry : entryIter) {
 				map.put(entry.getKey(), entry.getValue());
@@ -500,7 +500,7 @@ public class IterUtil {
 	 * @return {@link Iterator}
 	 */
 	public static <E> Iterator<E> asIterator(Enumeration<E> e) {
-		return new EnumerationIter<E>(e);
+		return new EnumerationIter<>(e);
 	}
 
 	/**
@@ -571,13 +571,10 @@ public class IterUtil {
 	 */
 	public static Class<?> getElementType(Iterator<?> iterator) {
 		final Iterator<?> iter2 = new CopiedIter<>(iterator);
-		if (null != iter2) {
-			Object t;
-			while (iter2.hasNext()) {
-				t = iter2.next();
-				if (null != t) {
-					return t.getClass();
-				}
+		if (iter2.hasNext()) {
+			final Object t = iter2.next();
+			if (null != t) {
+				return t.getClass();
 			}
 		}
 		return null;

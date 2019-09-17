@@ -21,28 +21,28 @@ import cn.hutool.core.util.ReflectUtil;
 /**
  * 注解工具类<br>
  * 快速获取注解对象、注解值等工具封装
- * 
+ *
  * @author looly
  * @since 4.0.9
  */
 public class AnnotationUtil {
-	
+
 	/**
 	 * 将指定的被注解的元素转换为组合注解元素
-	 * 
+	 *
 	 * @param annotationEle 注解元素
 	 * @return 组合注解元素
 	 */
 	public static CombinationAnnotationElement toCombination(AnnotatedElement annotationEle) {
-		if(annotationEle instanceof CombinationAnnotationElement) {
-			return (CombinationAnnotationElement)annotationEle;
+		if (annotationEle instanceof CombinationAnnotationElement) {
+			return (CombinationAnnotationElement) annotationEle;
 		}
 		return new CombinationAnnotationElement(annotationEle);
 	}
 
 	/**
 	 * 获取指定注解
-	 * 
+	 *
 	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @return 注解对象
 	 */
@@ -52,9 +52,9 @@ public class AnnotationUtil {
 
 	/**
 	 * 获取指定注解
-	 * 
-	 * @param <A> 注解类型
-	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 *
+	 * @param <A>            注解类型
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @return 注解对象
 	 */
@@ -65,9 +65,9 @@ public class AnnotationUtil {
 	/**
 	 * 获取指定注解默认值<br>
 	 * 如果无指定的属性方法返回null
-	 * 
-	 * @param <T> 注解值类型
-	 * @param annotationEle {@link AccessibleObject}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 *
+	 * @param <T>            注解值类型
+	 * @param annotationEle  {@link AccessibleObject}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
@@ -79,11 +79,11 @@ public class AnnotationUtil {
 	/**
 	 * 获取指定注解属性的值<br>
 	 * 如果无指定的属性方法返回null
-	 * 
-	 * @param <T> 注解值类型
-	 * @param annotationEle {@link AccessibleObject}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 *
+	 * @param <T>            注解值类型
+	 * @param annotationEle  {@link AccessibleObject}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
-	 * @param propertyName 属性名，例如注解中定义了name()方法，则 此处传入name
+	 * @param propertyName   属性名，例如注解中定义了name()方法，则 此处传入name
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
 	 */
@@ -103,8 +103,8 @@ public class AnnotationUtil {
 	/**
 	 * 获取指定注解中所有属性值<br>
 	 * 如果无指定的属性方法返回null
-	 * 
-	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 *
+	 * @param annotationEle  {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
 	 * @param annotationType 注解类型
 	 * @return 注解对象
 	 * @throws UtilException 调用注解中的方法时执行异常
@@ -121,11 +121,10 @@ public class AnnotationUtil {
 				if (ArrayUtil.isEmpty(t.getParameterTypes())) {
 					// 只读取无参方法
 					final String name = t.getName();
-					if ("hashCode".equals(name) || "toString".equals(name) || "annotationType".equals(name)) {
-						// 跳过自有的几个方法
-						return false;
-					}
-					return true;
+					// 跳过自有的几个方法
+					return (false == "hashCode".equals(name)) //
+							&& (false == "toString".equals(name)) //
+							&& (false == "annotationType".equals(name));
 				}
 				return false;
 			}
@@ -140,7 +139,7 @@ public class AnnotationUtil {
 
 	/**
 	 * 获取注解类的保留时间，可选值 SOURCE（源码时），CLASS（编译时），RUNTIME（运行时），默认为 CLASS
-	 * 
+	 *
 	 * @param annotationType 注解类
 	 * @return 保留时间枚举
 	 */
@@ -154,14 +153,14 @@ public class AnnotationUtil {
 
 	/**
 	 * 获取注解类可以用来修饰哪些程序元素，如 TYPE, METHOD, CONSTRUCTOR, FIELD, PARAMETER 等
-	 * 
+	 *
 	 * @param annotationType 注解类
 	 * @return 注解修饰的程序元素数组
 	 */
 	public static ElementType[] getTargetType(Class<? extends Annotation> annotationType) {
 		final Target target = annotationType.getAnnotation(Target.class);
 		if (null == target) {
-			return new ElementType[] { ElementType.TYPE, //
+			return new ElementType[]{ElementType.TYPE, //
 					ElementType.FIELD, //
 					ElementType.METHOD, //
 					ElementType.PARAMETER, //
@@ -176,17 +175,17 @@ public class AnnotationUtil {
 
 	/**
 	 * 是否会保存到 Javadoc 文档中
-	 * 
+	 *
 	 * @param annotationType 注解类
 	 * @return 是否会保存到 Javadoc 文档中
 	 */
 	public static boolean isDocumented(Class<? extends Annotation> annotationType) {
 		return annotationType.isAnnotationPresent(Documented.class);
 	}
-	
+
 	/**
 	 * 是否可以被继承，默认为 false
-	 * 
+	 *
 	 * @param annotationType 注解类
 	 * @return 是否会保存到 Javadoc 文档中
 	 */

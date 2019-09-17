@@ -25,7 +25,6 @@ import java.util.List;
 public class CopiedIter<E> implements Iterator<E>, Iterable<E>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<E> eleList = new LinkedList<>();
 	private Iterator<E> listIterator;
 	
 	public static <V> CopiedIter<V> copyOf(Iterator<V> iterator){
@@ -37,9 +36,7 @@ public class CopiedIter<E> implements Iterator<E>, Iterable<E>, Serializable {
 	 * @param iterator 被复制的Iterator
 	 */
 	public CopiedIter(Iterator<E> iterator) {
-		while (iterator.hasNext()) {
-			eleList.add(iterator.next());
-		}
+		final List<E> eleList = CollUtil.newArrayList(iterator);
 		this.listIterator = eleList.iterator();
 	}
 

@@ -18,11 +18,11 @@ public class ArrayIter<E> implements Iterator<E>, Iterable<E>, Serializable{
 	/** 数组 */
 	private Object array;
 	/** 起始位置 */
-	private int startIndex = 0;
+	private int startIndex;
 	/** 结束位置 */
-	private int endIndex = 0;
+	private int endIndex;
 	/** 当前位置 */
-	private int index = 0;
+	private int index;
 
 	/**
 	 * 构造
