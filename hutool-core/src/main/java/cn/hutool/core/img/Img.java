@@ -202,7 +202,7 @@ public class Img implements Serializable{
 
 		// PNG图片特殊处理
 		if (ImgUtil.IMAGE_TYPE_PNG.equals(this.targetImageType)) {
-			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance((double) scale, (double) scale), null);
+			final AffineTransformOp op = new AffineTransformOp(AffineTransform.getScaleInstance(scale, scale), null);
 			this.targetImage = op.filter(ImgUtil.toBufferedImage(srcImg), null);
 		} else {
 			final String scaleStr = Float.toString(scale);
@@ -311,7 +311,7 @@ public class Img implements Serializable{
 	 */
 	public Img cut(Rectangle rectangle) {
 		final Image srcImage = getValidSrcImg();
-		rectangle = fixRectangle(rectangle, srcImage.getWidth(null), srcImage.getHeight(null));
+		fixRectangle(rectangle, srcImage.getWidth(null), srcImage.getHeight(null));
 
 		final ImageFilter cropFilter = new CropImageFilter(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		final Image image = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(srcImage.getSource(), cropFilter));
@@ -476,7 +476,7 @@ public class Img implements Serializable{
 	public Img pressImage(Image pressImg, Rectangle rectangle, float alpha) {
 		final Image targetImg = getValidSrcImg();
 
-		rectangle = fixRectangle(rectangle, targetImg.getWidth(null), targetImg.getHeight(null));
+		fixRectangle(rectangle, targetImg.getWidth(null), targetImg.getHeight(null));
 		this.targetImage = draw(ImgUtil.toBufferedImage(targetImg), pressImg, rectangle, alpha);
 		return this;
 	}
@@ -499,8 +499,8 @@ public class Img implements Serializable{
 		// 抗锯齿
 		graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		// 从中心旋转
-		graphics2d.translate((rectangle.width - width) / 2, (rectangle.height - height) / 2);
-		graphics2d.rotate(Math.toRadians(degree), width / 2, height / 2);
+		graphics2d.translate((rectangle.width - width) / 2D, (rectangle.height - height) / 2D);
+		graphics2d.rotate(Math.toRadians(degree), width / 2D, height / 2D);
 		graphics2d.drawImage(image, 0, 0, null);
 		graphics2d.dispose();
 		this.targetImage = targetImg;
@@ -631,7 +631,7 @@ public class Img implements Serializable{
 	}
 
 	/**
-	 * 修正矩形框位置，如果{@link Img#setPositionFromCentre(boolean)} 设为{@code true}，则坐标修正为基于图形中心，否则基于左上角
+	 * 修正矩形框位置，如果{@link Img#setPositionBaseCentre(boolean)} 设为{@code true}，则坐标修正为基于图形中心，否则基于左上角
 	 * 
 	 * @param rectangle 矩形
 	 * @param baseWidth 参考宽
@@ -643,8 +643,8 @@ public class Img implements Serializable{
 		if (this.positionBaseCentre) {
 			// 修正图片位置从背景的中心计算
 			rectangle.setLocation(//
-					rectangle.x + (int) (Math.abs(baseWidth - rectangle.width) / 2), //
-					rectangle.y + (int) (Math.abs(baseHeight - rectangle.height) / 2)//
+					rectangle.x + (Math.abs(baseWidth - rectangle.width) / 2), //
+					rectangle.y + (Math.abs(baseHeight - rectangle.height) / 2)//
 			);
 		}
 		return rectangle;
@@ -660,6 +660,10 @@ public class Img implements Serializable{
 	 * @since 4.1.20
 	 */
 	private static Rectangle calcRotatedSize(int width, int height, int degree) {
+		if(degree < 0){
+			// 负数角度转换为正数角度
+			degree  += 360;
+		}
 		if (degree >= 90) {
 			if (degree / 90 % 2 == 1) {
 				int temp = height;
