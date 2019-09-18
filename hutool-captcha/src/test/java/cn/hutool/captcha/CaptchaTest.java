@@ -7,6 +7,8 @@ import org.junit.Test;
 import cn.hutool.captcha.generator.MathGenerator;
 import cn.hutool.core.lang.Console;
 
+import java.awt.*;
+
 /**
  * 直线干扰验证码单元测试
  * 
@@ -21,6 +23,15 @@ public class CaptchaTest {
 		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
 		Assert.assertNotNull(lineCaptcha.getCode());
 		Assert.assertTrue(lineCaptcha.verify(lineCaptcha.getCode()));
+	}
+
+	@Test
+	@Ignore
+	public void lineCaptchaTest3() {
+		// 定义图形验证码的长和宽
+		LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 70, 4, 15);
+		lineCaptcha.setBackground(Color.yellow);
+		lineCaptcha.write("f:/test/captcha/tellow.png");
 	}
 	
 	@Test

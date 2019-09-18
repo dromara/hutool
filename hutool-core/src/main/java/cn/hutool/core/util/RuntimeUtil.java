@@ -106,7 +106,7 @@ public class RuntimeUtil {
 	 * @since 4.1.6
 	 */
 	public static Process exec(String[] envp, String... cmds) {
-		return exec(envp, cmds);
+		return exec(envp, null, cmds);
 	}
 
 	/**
