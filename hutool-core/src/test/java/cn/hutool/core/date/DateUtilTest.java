@@ -1,31 +1,23 @@
 package cn.hutool.core.date;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.TimeZone;
-
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.BetweenFormater.Level;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.BetweenFormater.Level;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 时间工具单元测试<br>
  * 此单元测试依赖时区为中国+08:00
- * 
+ *
  * <pre>
  * export TZ=Asia/Shanghai
  * </pre>
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class DateUtilTest {
 
@@ -289,13 +281,13 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseTest4() throws ParseException {
+	public void parseTest4() {
 		String ymd = DateUtil.parse("2019-3-21 12:20:15", "yyyy-MM-dd").toString(DatePattern.PURE_DATE_PATTERN);
 		Assert.assertEquals("20190321", ymd);
 	}
 
 	@Test
-	public void parseTest5() throws ParseException {
+	public void parseTest5() {
 		// 测试时间解析
 		String time = DateUtil.parse("22:12:12").toString(DatePattern.NORM_TIME_FORMAT);
 		Assert.assertEquals("22:12:12", time);
@@ -321,21 +313,32 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseTest6() throws ParseException {
+	public void parseTest6() {
 		String str = "Tue Jun 4 16:25:15 +0800 2019";
 		DateTime dateTime = DateUtil.parse(str);
 		Assert.assertEquals("2019-06-04 16:25:15", dateTime.toString());
 	}
-	
+
 	@Test
-	public void parseTest7() throws ParseException {
+	public void parseTest7() {
 		String str = "2019-06-01T19:45:43.000 +0800";
 		DateTime dateTime = DateUtil.parse(str, "yyyy-MM-dd'T'HH:mm:ss.SSS Z");
 		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
 	}
 
 	@Test
-	public void parseDateTest() throws ParseException {
+	public void parseAndOffsetTest() {
+		// 检查UTC时间偏移是否准确
+		String str = "2019-09-17T13:26:17.948Z";
+		DateTime dateTime = DateUtil.parse(str);
+		Assert.assertEquals("2019-09-17 13:26:17", dateTime.toString());
+
+		DateTime offset = DateUtil.offsetHour(dateTime, 8);
+		Assert.assertEquals("2019-09-17 21:26:17", offset.toString());
+	}
+
+	@Test
+	public void parseDateTest() {
 		String dateStr = "2018-4-10";
 		Date date = DateUtil.parseDate(dateStr);
 		String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
@@ -411,7 +414,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseUTCTest() throws ParseException {
+	public void parseUTCTest() {
 		String dateStr1 = "2018-09-13T05:34:31Z";
 		DateTime dt = DateUtil.parseUTC(dateStr1);
 
@@ -426,44 +429,44 @@ public class DateUtilTest {
 		// 使用当前（上海）时区
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:31", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:32+0800";
 		dt = DateUtil.parseUTC(dateStr1);
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:32", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:33+08:00";
 		dt = DateUtil.parseUTC(dateStr1);
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:33", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:34+0800";
 		dt = DateUtil.parse(dateStr1);
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:34", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:35+08:00";
 		dt = DateUtil.parse(dateStr1);
 		dateStr = dt.toString(TimeZone.getTimeZone("GMT+8:00"));
 		Assert.assertEquals("2018-09-13 13:34:35", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:36.999+0800";
 		dt = DateUtil.parseUTC(dateStr1);
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatePattern.NORM_DATETIME_MS_PATTERN);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 		dateStr = dt.toString(simpleDateFormat);
 		Assert.assertEquals("2018-09-13 13:34:36.999", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:37.999+08:00";
 		dt = DateUtil.parseUTC(dateStr1);
 		dateStr = dt.toString(simpleDateFormat);
 		Assert.assertEquals("2018-09-13 13:34:37.999", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:38.999+0800";
 		dt = DateUtil.parse(dateStr1);
 		dateStr = dt.toString(simpleDateFormat);
 		Assert.assertEquals("2018-09-13 13:34:38.999", dateStr);
-		
+
 		dateStr1 = "2018-09-13T13:34:39.999+08:00";
 		dt = DateUtil.parse(dateStr1);
 		dateStr = dt.toString(simpleDateFormat);
@@ -471,7 +474,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void parseJDkTest() throws ParseException {
+	public void parseJDkTest() {
 		String dateStr = "Thu May 16 17:57:18 GMT+08:00 2019";
 		DateTime time = DateUtil.parse(dateStr);
 		Assert.assertEquals("2019-05-16 17:57:18", time.toString());
@@ -484,7 +487,7 @@ public class DateUtilTest {
 		DateTime endOfYear = DateUtil.endOfYear(date);
 		Assert.assertEquals("2019-12-31 23:59:59", endOfYear.toString());
 	}
-	
+
 	@Test
 	public void endOfWeekTest() {
 		// 周日
@@ -521,7 +524,7 @@ public class DateUtilTest {
 		try {
 			range.next();
 			Assert.fail("已超过边界，下一个元素不应该存在！");
-		} catch (NoSuchElementException e) {
+		} catch (NoSuchElementException ignored) {
 		}
 
 		// 测试多步进的情况
@@ -535,7 +538,7 @@ public class DateUtilTest {
 		try {
 			range.next();
 			Assert.fail("不包含结束时间情况下，下一个元素不应该存在！");
-		} catch (NoSuchElementException e) {
+		} catch (NoSuchElementException ignored) {
 		}
 	}
 

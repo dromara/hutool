@@ -1325,7 +1325,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取指定日期偏移指定时间后的时间
+	 * 获取指定日期偏移指定时间后的时间，生成的偏移日期不影响原日期
 	 * 
 	 * @param date 基准日期
 	 * @param dateField 偏移的粒度大小（小时、天、月等）{@link DateField}
@@ -1333,10 +1333,7 @@ public class DateUtil {
 	 * @return 偏移后的日期
 	 */
 	public static DateTime offset(Date date, DateField dateField, int offset) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(dateField.getValue(), offset);
-		return new DateTime(cal.getTime());
+		return dateNew(date).offset(dateField, offset);
 	}
 
 	/**

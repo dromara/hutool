@@ -5,13 +5,12 @@ import java.io.Serializable;
 /**
  * 计时器<br>
  * 计算某个过程花费的时间，精确到毫秒
- * 
- * @author Looly
  *
+ * @author Looly
  */
-public class TimeInterval implements Serializable{
+public class TimeInterval implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private long time;
 	private boolean isNano;
 
@@ -41,73 +40,92 @@ public class TimeInterval implements Serializable{
 		time = now;
 		return d;
 	}
-	
+
 	/**
 	 * 重新开始计算时间（重置开始时间）
+	 *
 	 * @return this
 	 * @since 3.0.1
 	 */
-	public TimeInterval restart(){
+	public TimeInterval restart() {
 		time = DateUtil.current(isNano);
 		return this;
 	}
 
 	//----------------------------------------------------------- Interval
+
 	/**
 	 * 从开始到当前的间隔时间（毫秒数）<br>
 	 * 如果使用纳秒计时，返回纳秒差，否则返回毫秒差
+	 *
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public long interval() {
 		return DateUtil.current(isNano) - time;
 	}
-	
+
+	/**
+	 * 从开始到当前的间隔时间（毫秒数），返回XX天XX小时XX分XX秒XX毫秒
+	 *
+	 * @return 从开始到当前的间隔时间（毫秒数）
+	 * @since 4.6.7
+	 */
+	public String intervalPretty() {
+		return DateUtil.formatBetween(intervalMs());
+	}
+
 	/**
 	 * 从开始到当前的间隔时间（毫秒数）
+	 *
 	 * @return 从开始到当前的间隔时间（毫秒数）
 	 */
 	public long intervalMs() {
 		return isNano ? interval() / 1000000L : interval();
 	}
-	
+
 	/**
 	 * 从开始到当前的间隔秒数，取绝对值
+	 *
 	 * @return 从开始到当前的间隔秒数，取绝对值
 	 */
-	public long intervalSecond(){
+	public long intervalSecond() {
 		return intervalMs() / DateUnit.SECOND.getMillis();
 	}
-	
+
 	/**
 	 * 从开始到当前的间隔分钟数，取绝对值
+	 *
 	 * @return 从开始到当前的间隔分钟数，取绝对值
 	 */
-	public long intervalMinute(){
+	public long intervalMinute() {
 		return intervalMs() / DateUnit.MINUTE.getMillis();
 	}
-	
+
 	/**
 	 * 从开始到当前的间隔小时数，取绝对值
+	 *
 	 * @return 从开始到当前的间隔小时数，取绝对值
 	 */
-	public long intervalHour(){
+	public long intervalHour() {
 		return intervalMs() / DateUnit.HOUR.getMillis();
 	}
-	
+
 	/**
 	 * 从开始到当前的间隔天数，取绝对值
+	 *
 	 * @return 从开始到当前的间隔天数，取绝对值
 	 */
-	public long intervalDay(){
+	public long intervalDay() {
 		return intervalMs() / DateUnit.DAY.getMillis();
 	}
-	
+
 	/**
 	 * 从开始到当前的间隔周数，取绝对值
+	 *
 	 * @return 从开始到当前的间隔周数，取绝对值
 	 */
-	public long intervalWeek(){
+	public long intervalWeek() {
 		return intervalMs() / DateUnit.WEEK.getMillis();
 	}
-	
+
 }
