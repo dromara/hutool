@@ -24,15 +24,15 @@ import cn.hutool.db.sql.SqlUtil;
 
 /**
  * Statement和PreparedStatement工具类
- * 
+ *
  * @author looly
  * @since 4.0.10
  */
 public class StatementUtil {
 	/**
 	 * 填充SQL的参数。
-	 * 
-	 * @param ps PreparedStatement
+	 *
+	 * @param ps     PreparedStatement
 	 * @param params SQL参数
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
@@ -44,8 +44,8 @@ public class StatementUtil {
 	/**
 	 * 填充SQL的参数。<br>
 	 * 对于日期对象特殊处理：传入java.util.Date默认按照Timestamp处理
-	 * 
-	 * @param ps PreparedStatement
+	 *
+	 * @param ps     PreparedStatement
 	 * @param params SQL参数
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
@@ -84,15 +84,7 @@ public class StatementUtil {
 					ps.setObject(paramIndex, param);
 				}
 			} else {
-				final ParameterMetaData pmd = ps.getParameterMetaData();
-				int sqlType = Types.VARCHAR;
-				try {
-					sqlType = pmd.getParameterType(paramIndex);
-				} catch (SQLException e) {
-					// ignore
-					// log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
-				}
-				ps.setNull(paramIndex, sqlType);
+				ps.setNull(paramIndex, getTypeOfNull(ps, paramIndex));
 			}
 		}
 		return ps;
@@ -100,8 +92,8 @@ public class StatementUtil {
 
 	/**
 	 * 创建{@link PreparedStatement}
-	 * 
-	 * @param conn 数据库连接
+	 *
+	 * @param conn       数据库连接
 	 * @param sqlBuilder {@link SqlBuilder}包括SQL语句和参数
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL异常
@@ -113,9 +105,9 @@ public class StatementUtil {
 
 	/**
 	 * 创建{@link PreparedStatement}
-	 * 
-	 * @param conn 数据库连接
-	 * @param sql SQL语句，使用"?"做为占位符
+	 *
+	 * @param conn   数据库连接
+	 * @param sql    SQL语句，使用"?"做为占位符
 	 * @param params "?"对应参数列表
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL异常
@@ -127,9 +119,9 @@ public class StatementUtil {
 
 	/**
 	 * 创建{@link PreparedStatement}
-	 * 
-	 * @param conn 数据库连接
-	 * @param sql SQL语句，使用"?"做为占位符
+	 *
+	 * @param conn   数据库连接
+	 * @param sql    SQL语句，使用"?"做为占位符
 	 * @param params "?"对应参数列表
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL异常
@@ -149,12 +141,12 @@ public class StatementUtil {
 		}
 		return fillParams(ps, params);
 	}
-	
+
 	/**
 	 * 创建批量操作的{@link PreparedStatement}
-	 * 
-	 * @param conn 数据库连接
-	 * @param sql SQL语句，使用"?"做为占位符
+	 *
+	 * @param conn        数据库连接
+	 * @param sql         SQL语句，使用"?"做为占位符
 	 * @param paramsBatch "?"对应参数批次列表
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL异常
@@ -166,9 +158,9 @@ public class StatementUtil {
 
 	/**
 	 * 创建批量操作的{@link PreparedStatement}
-	 * 
-	 * @param conn 数据库连接
-	 * @param sql SQL语句，使用"?"做为占位符
+	 *
+	 * @param conn        数据库连接
+	 * @param sql         SQL语句，使用"?"做为占位符
 	 * @param paramsBatch "?"对应参数批次列表
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL异常
@@ -189,9 +181,9 @@ public class StatementUtil {
 
 	/**
 	 * 创建{@link CallableStatement}
-	 * 
-	 * @param conn 数据库连接
-	 * @param sql SQL语句，使用"?"做为占位符
+	 *
+	 * @param conn   数据库连接
+	 * @param sql    SQL语句，使用"?"做为占位符
 	 * @param params "?"对应参数列表
 	 * @return {@link CallableStatement}
 	 * @throws SQLException SQL异常
@@ -210,15 +202,13 @@ public class StatementUtil {
 	/**
 	 * 获得自增键的值<br>
 	 * 此方法对于Oracle无效
-	 * 
+	 *
 	 * @param ps PreparedStatement
 	 * @return 自增键的值
 	 * @throws SQLException SQL执行异常
 	 */
-	public static Long getGeneratedKeyOfLong(PreparedStatement ps) throws SQLException {
-		ResultSet rs = null;
-		try {
-			rs = ps.getGeneratedKeys();
+	public static Long getGeneratedKeyOfLong(Statement ps) throws SQLException {
+		try(final ResultSet rs = ps.getGeneratedKeys()) {
 			Long generatedKey = null;
 			if (rs != null && rs.next()) {
 				try {
@@ -228,34 +218,50 @@ public class StatementUtil {
 				}
 			}
 			return generatedKey;
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(rs);
 		}
 	}
 
 	/**
-	 * 获得所有主键<br>
-	 * 
+	 * 获得所有主键
+	 *
 	 * @param ps PreparedStatement
 	 * @return 所有主键
 	 * @throws SQLException SQL执行异常
 	 */
-	public static List<Object> getGeneratedKeys(PreparedStatement ps) throws SQLException {
-		List<Object> keys = new ArrayList<Object>();
-		ResultSet rs = null;
-		int i = 1;
-		try {
-			rs = ps.getGeneratedKeys();
-			if (rs != null && rs.next()) {
-				keys.add(rs.getObject(i++));
+	public static List<Object> getGeneratedKeys(Statement ps) throws SQLException {
+		final List<Object> keys = new ArrayList<>();
+		try (final ResultSet rs = ps.getGeneratedKeys()) {
+			if (null != rs) {
+				int i = 1;
+				while (rs.next()) {
+					keys.add(rs.getObject(i++));
+				}
 			}
 			return keys;
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			DbUtil.close(rs);
 		}
+	}
+
+	/**
+	 * 获取null字段对应位置的数据类型<br>
+	 * 有些数据库对于null字段必须指定类型，否则会插入报错，此方法用于获取其类型，如果获取失败，使用默认的{@link Types#VARCHAR}
+	 *
+	 * @param ps {@link Statement}
+	 * @param paramIndex 参数位置，第一位从1开始
+	 * @return 数据类型，默认{@link Types#VARCHAR}
+	 * @since 4.6.7
+	 */
+	public static int getTypeOfNull(PreparedStatement ps, int paramIndex) {
+		int sqlType = Types.VARCHAR;
+
+		final ParameterMetaData pmd;
+		try {
+			pmd = ps.getParameterMetaData();
+			sqlType = pmd.getParameterType(paramIndex);
+		} catch (SQLException ignore) {
+			// ignore
+			// log.warn("Null param of index [{}] type get failed, by: {}", paramIndex, e.getMessage());
+		}
+
+		return sqlType;
 	}
 }

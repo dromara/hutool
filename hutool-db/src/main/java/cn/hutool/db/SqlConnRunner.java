@@ -101,15 +101,13 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForInsert(conn, record);
 			return ps.executeUpdate();
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
 	}
 	
 	/**
-	 * 插入数据<br>
+	 * 插入或更新数据<br>
 	 * 此方法不会关闭Connection
 	 * 
 	 * @param conn 数据库连接
@@ -191,8 +189,6 @@ public class SqlConnRunner{
 			ps = dialect.psForInsert(conn, record);
 			ps.executeUpdate();
 			return StatementUtil.getGeneratedKeys(ps);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -217,8 +213,6 @@ public class SqlConnRunner{
 			ps = dialect.psForInsert(conn, record);
 			ps.executeUpdate();
 			return StatementUtil.getGeneratedKeyOfLong(ps);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -244,8 +238,6 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForDelete(conn, query);
 			return ps.executeUpdate();
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -282,8 +274,6 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForUpdate(conn, record, query);
 			return ps.executeUpdate();
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -308,8 +298,6 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForFind(conn, query);
 			return SqlExecutor.query(ps, rsh);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -444,8 +432,6 @@ public class SqlConnRunner{
 		try {
 			ps = dialect.psForCount(conn, query);
 			return SqlExecutor.query(ps, new NumberHandler()).intValue();
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			DbUtil.close(ps);
 		}
@@ -531,7 +517,7 @@ public class SqlConnRunner{
 		//查询全部
 		if(null == page){
 			List<Entity> entityList = this.find(conn, fields, where, new EntityListHandler());
-			final PageResult<Entity> pageResult = new PageResult<Entity>(0, entityList.size(), entityList.size());
+			final PageResult<Entity> pageResult = new PageResult<>(0, entityList.size(), entityList.size());
 			pageResult.addAll(entityList);
 			return pageResult;
 		}

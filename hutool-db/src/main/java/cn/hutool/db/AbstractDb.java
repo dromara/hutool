@@ -94,7 +94,7 @@ public abstract class AbstractDb implements Serializable{
 	 * @since 3.2.2
 	 */
 	public <T> List<T> query(String sql, Class<T> beanClass, Object... params) throws SQLException {
-		return query(sql, new BeanListHandler<T>(beanClass), params);
+		return query(sql, new BeanListHandler<>(beanClass), params);
 	}
 
 	/**
@@ -148,8 +148,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.query(conn, sql, rsh, params);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -169,8 +167,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.execute(conn, sql, params);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -190,8 +186,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.executeForGeneratedKey(conn, sql, params);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -210,8 +204,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.executeBatch(conn, sql, paramsBatch);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -230,8 +222,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.executeBatch(conn, sqls);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -250,8 +240,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.insert(conn, record);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -272,8 +260,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.insertOrUpdate(conn, record, keys);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -293,8 +279,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.insert(conn, records);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -312,8 +296,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.insertForGeneratedKeys(conn, record);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -331,8 +313,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.insertForGeneratedKey(conn, record);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -363,8 +343,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.del(conn, where);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -384,8 +362,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.update(conn, record, where);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -436,8 +412,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.find(conn, fields, where, rsh);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -450,7 +424,6 @@ public abstract class AbstractDb implements Serializable{
 	 * @param fields 返回的字段列表，null则返回所有字段
 	 * @param where 条件实体类（包含表名）
 	 * @return 结果Entity列表
-	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
 	 * @since 4.5.16
 	 */
@@ -474,8 +447,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.find(conn, query, rsh);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -613,8 +584,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.count(conn, where);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -638,8 +607,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.page(conn, fields, where, page, numPerPage, rsh);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -724,8 +691,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.page(conn, fields, where, page, rsh);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -747,8 +712,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.page(conn, fields, where, page, numPerPage);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -769,8 +732,6 @@ public abstract class AbstractDb implements Serializable{
 		try {
 			conn = this.getConnection();
 			return runner.page(conn, fields, where, page);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			this.closeConnection(conn);
 		}
