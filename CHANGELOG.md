@@ -14,6 +14,7 @@
 * 【core】        修复DateUtil.offset导致的时区错误问题（issue#I1294O@Gitee）
 * 【core】        修复RuntimeUtil.exec重载导致的问题（issue#544@Github）
 * 【db】          修复StatementUtil.getGeneratedKeys返回主键数量不足问题
+* 【db】          修复锁的问题（issue#546@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
