@@ -13,10 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 对象工具类，包括判空、克隆、序列化等操作
@@ -37,10 +34,11 @@ public class ObjectUtil {
 	 * @param obj1 对象1
 	 * @param obj2 对象2
 	 * @return 是否相等
+	 * @see Objects#equals(Object, Object)
 	 */
 	public static boolean equal(Object obj1, Object obj2) {
 		// return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
-		return (obj1 == obj2) || (obj1 != null && obj1.equals(obj2));
+		return Objects.equals(obj1, obj2);
 	}
 
 	/**
@@ -120,7 +118,7 @@ public class ObjectUtil {
 	 * <li>Array</li>
 	 * </ul>
 	 *
-	 * @param obj 对象
+	 * @param obj     对象
 	 * @param element 元素
 	 * @return 是否包含
 	 */
@@ -138,7 +136,7 @@ public class ObjectUtil {
 			return ((Collection<?>) obj).contains(element);
 		}
 		if (obj instanceof Map) {
-			return ((Map<?, ?>) obj).values().contains(element);
+			return ((Map<?, ?>) obj).containsValue(element);
 		}
 
 		if (obj instanceof Iterator) {
@@ -176,7 +174,7 @@ public class ObjectUtil {
 	/**
 	 * 检查对象是否为null<br>
 	 * 判断标准为：
-	 * 
+	 *
 	 * <pre>
 	 * 1. == null
 	 * 2. equals(null)
@@ -265,8 +263,8 @@ public class ObjectUtil {
 	 * ObjectUtil.defaultIfNull(Boolean.TRUE, *) = Boolean.TRUE
 	 * </pre>
 	 *
-	 * @param <T> 对象类型
-	 * @param object 被检查对象，可能为{@code null}
+	 * @param <T>          对象类型
+	 * @param object       被检查对象，可能为{@code null}
 	 * @param defaultValue 被检查对象为{@code null}返回的默认值，可以为{@code null}
 	 * @return 被检查对象为{@code null}返回默认值，否则返回原值
 	 * @since 3.0.7
@@ -325,7 +323,7 @@ public class ObjectUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T cloneByStream(T obj) {
-		if (null == obj || false == (obj instanceof Serializable)) {
+		if (false == (obj instanceof Serializable)) {
 			return null;
 		}
 		final FastByteArrayOutputStream byteOut = new FastByteArrayOutputStream();
@@ -352,7 +350,7 @@ public class ObjectUtil {
 	 * @return 序列化后的字节码
 	 */
 	public static <T> byte[] serialize(T obj) {
-		if (null == obj || false == (obj instanceof Serializable)) {
+		if (false == (obj instanceof Serializable)) {
 			return null;
 		}
 
@@ -369,12 +367,12 @@ public class ObjectUtil {
 		}
 		return byteOut.toByteArray();
 	}
-	
+
 	/**
 	 * 反序列化<br>
 	 * 对象必须实现Serializable接口
 	 *
-	 * @param <T> 对象类型
+	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
 	 * @see #unserialize(byte[])
@@ -387,13 +385,13 @@ public class ObjectUtil {
 	 * 反序列化<br>
 	 * 对象必须实现Serializable接口
 	 *
-	 * @param <T> 对象类型
+	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T unserialize(byte[] bytes) {
-		ObjectInputStream ois = null;
+		ObjectInputStream ois;
 		try {
 			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 			ois = new ObjectInputStream(bais);
@@ -423,16 +421,8 @@ public class ObjectUtil {
 	 * @return 检查结果，非数字类型和Null将返回true
 	 */
 	public static boolean isValidIfNumber(Object obj) {
-		if (obj != null && obj instanceof Number) {
-			if (obj instanceof Double) {
-				if (((Double) obj).isInfinite() || ((Double) obj).isNaN()) {
-					return false;
-				}
-			} else if (obj instanceof Float) {
-				if (((Float) obj).isInfinite() || ((Float) obj).isNaN()) {
-					return false;
-				}
-			}
+		if (obj instanceof Number) {
+			return NumberUtil.isValidNumber((Number) obj);
 		}
 		return true;
 	}
@@ -441,8 +431,8 @@ public class ObjectUtil {
 	 * {@code null}安全的对象比较，{@code null}对象排在末尾
 	 *
 	 * @param <T> 被比较对象类型
-	 * @param c1 对象1，可以为{@code null}
-	 * @param c2 对象2，可以为{@code null}
+	 * @param c1  对象1，可以为{@code null}
+	 * @param c2  对象2，可以为{@code null}
 	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
 	 * @see java.util.Comparator#compare(Object, Object)
 	 * @since 3.0.7
@@ -454,9 +444,9 @@ public class ObjectUtil {
 	/**
 	 * {@code null}安全的对象比较
 	 *
-	 * @param <T> 被比较对象类型
-	 * @param c1 对象1，可以为{@code null}
-	 * @param c2 对象2，可以为{@code null}
+	 * @param <T>         被比较对象类型
+	 * @param c1          对象1，可以为{@code null}
+	 * @param c2          对象2，可以为{@code null}
 	 * @param nullGreater 当被比较对象为null时是否排在前面
 	 * @return 比较结果，如果c1 &lt; c2，返回数小于0，c1==c2返回0，c1 &gt; c2 大于0
 	 * @see java.util.Comparator#compare(Object, Object)
@@ -480,7 +470,7 @@ public class ObjectUtil {
 	/**
 	 * 获得给定类的第一个泛型参数
 	 *
-	 * @param obj 被检查的对象
+	 * @param obj   被检查的对象
 	 * @param index 泛型类型的索引号，既第几个泛型类型
 	 * @return {@link Class}
 	 * @since 3.0.8
@@ -490,7 +480,12 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 将Object转为String
+	 * 将Object转为String<br>
+	 * 策略为：
+	 * <pre>
+	 *  1、null转为"null"
+	 *  2、调用Convert.toStr(Object)转换
+	 * </pre>
 	 *
 	 * @param obj Bean对象
 	 * @return Bean所有字段转为Map后的字符串
@@ -498,10 +493,10 @@ public class ObjectUtil {
 	 */
 	public static String toString(Object obj) {
 		if (null == obj) {
-			return "null";
+			return StrUtil.NULL;
 		}
 		if (obj instanceof Map) {
-			return ((Map<?, ?>) obj).toString();
+			return obj.toString();
 		}
 
 		return Convert.toStr(obj);

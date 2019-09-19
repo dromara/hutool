@@ -9,17 +9,17 @@ package cn.hutool.crypto;
 public enum Mode{
 	/** 无模式 */
 	NONE, 
-	/** Cipher Block Chaining */
+	/** 密码分组连接模式（Cipher Block Chaining） */
 	CBC, 
-	/** Cipher Feedback */
+	/** 密文反馈模式（Cipher Feedback） */
 	CFB, 
-	/** A simplification of OFB */
+	/** 计数器模式（A simplification of OFB） */
 	CTR,
 	/** Cipher Text Stealing */
 	CTS,
-	/** Electronic Codebook */
+	/** 电子密码本模式（Electronic CodeBook） */
 	ECB, 
-	/** Output Feedback */
+	/** 输出反馈模式（Output Feedback） */
 	OFB, 
 	/** Propagating Cipher Block */
 	PCBC;

@@ -1195,13 +1195,11 @@ public class NumberUtil {
 	public static boolean isDouble(String s) {
 		try {
 			Double.parseDouble(s);
-			if (s.contains(".")) {
-				return true;
-			}
-			return false;
-		} catch (NumberFormatException e) {
-			return false;
+			return s.contains(".");
+		} catch (NumberFormatException ignore) {
+			// ignore
 		}
+		return false;
 	}
 
 	/**
@@ -1281,13 +1279,12 @@ public class NumberUtil {
 		}
 
 		Random ran = new Random();
-		Set<Integer> set = new HashSet<Integer>();
+		Set<Integer> set = new HashSet<>();
 		while (set.size() < size) {
 			set.add(begin + ran.nextInt(end - begin));
 		}
 
-		Integer[] ranArr = set.toArray(new Integer[size]);
-		return ranArr;
+		return set.toArray(new Integer[size]);
 	}
 
 	// ------------------------------------------------------------------------------------------- range
@@ -1553,14 +1550,7 @@ public class NumberUtil {
 	 * @since 3.0.1
 	 */
 	public static int compare(int x, int y) {
-		if (x == y) {
-			return 0;
-		}
-		if (x < y) {
-			return -1;
-		} else {
-			return 1;
-		}
+		return Integer.compare(x, y);
 	}
 
 	/**
@@ -1574,14 +1564,7 @@ public class NumberUtil {
 	 * @since 3.0.1
 	 */
 	public static int compare(long x, long y) {
-		if (x == y) {
-			return 0;
-		}
-		if (x < y) {
-			return -1;
-		} else {
-			return 1;
-		}
+		return Long.compare(x, y);
 	}
 
 	/**
@@ -1595,14 +1578,7 @@ public class NumberUtil {
 	 * @since 3.0.1
 	 */
 	public static int compare(short x, short y) {
-		if (x == y) {
-			return 0;
-		}
-		if (x < y) {
-			return -1;
-		} else {
-			return 1;
-		}
+		return Short.compare(x, y);
 	}
 
 	/**
@@ -1616,7 +1592,7 @@ public class NumberUtil {
 	 * @since 3.0.1
 	 */
 	public static int compare(byte x, byte y) {
-		return x - y;
+		return Byte.compare(x, y);
 	}
 
 	/**
@@ -2078,7 +2054,7 @@ public class NumberUtil {
 	 * @since 4.0.7
 	 */
 	public static int partValue(int total, int partCount, boolean isPlusOneWhenHasRem) {
-		int partValue = 0;
+		int partValue;
 		if (total % partCount == 0) {
 			partValue = total / partCount;
 		} else {
@@ -2222,7 +2198,7 @@ public class NumberUtil {
 	 * byte数组转int，使用大端字节序（高位字节在前，低位字节在后）<br>
 	 * 见：http://www.ruanyifeng.com/blog/2016/11/byte-order.html
 	 * 
-	 * @param bytes
+	 * @param bytes byte数组
 	 * @return int
 	 * @since 4.4.5
 	 */
@@ -2305,6 +2281,24 @@ public class NumberUtil {
 			System.arraycopy(buf, off, mag, 0, length);
 		}
 		return new BigInteger(1, mag);
+	}
+
+	/**
+	 * 检查是否为有效的数字<br>
+	 * 检查Double和Float是否为无限大，或者Not a Number<br>
+	 * 非数字类型和Null将返回true
+	 *
+	 * @param number 被检查类型
+	 * @return 检查结果，非数字类型和Null将返回true
+	 * @since 4.6.7
+	 */
+	public static boolean isValidNumber(Number number) {
+		if (number instanceof Double) {
+			return (false == ((Double) number).isInfinite()) && (false == ((Double) number).isNaN());
+		} else if (number instanceof Float) {
+			return (false == ((Float) number).isInfinite()) && (false == ((Float) number).isNaN());
+		}
+		return true;
 	}
 
 	// ------------------------------------------------------------------------------------------- Private method start

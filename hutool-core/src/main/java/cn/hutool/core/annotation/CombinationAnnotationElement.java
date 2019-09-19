@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 组合注解 对JDK的原生注解机制做一个增强，支持类似Spring的组合注解。<br>
@@ -79,12 +80,12 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	 * @param element 元素
 	 */
 	private void init(AnnotatedElement element) {
-		Annotation[] declaredAnnotations = element.getDeclaredAnnotations();
+		final Annotation[] declaredAnnotations = element.getDeclaredAnnotations();
 		this.declaredAnnotationMap = new HashMap<>();
 		parseDeclared(declaredAnnotations);
 		
-		Annotation[] annotations = element.getAnnotations();
-		if(declaredAnnotations == annotations) {
+		final Annotation[] annotations = element.getAnnotations();
+		if(ObjectUtil.equal(declaredAnnotations, annotations)) {
 			this.annotationMap = this.declaredAnnotationMap;
 		}else {
 			this.annotationMap = new HashMap<>();
@@ -112,7 +113,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	/**
 	 * 进行递归解析注解，直到全部都是元注解为止
 	 *
-	 * @param element Class, Method, Field等
+	 * @param annotations Class, Method, Field等
 	 */
 	private void parse(Annotation[] annotations) {
 		Class<? extends Annotation> annotationType;
