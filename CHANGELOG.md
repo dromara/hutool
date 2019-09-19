@@ -10,6 +10,7 @@
 * 【http】        body方法传null跳过而非报错（issue#I12AP2@Gitee）
 * 【core】        TimeInterval增加intervalPretty方法（issue#I12A6T@Gitee）
 * 【core】        改进ArrayUtil.toString，提高性能
+* 【system】      增加SystemPropsKeys（issue#550@Github）
 
 ### Bug修复
 * 【core】        修复DateUtil.offset导致的时区错误问题（issue#I1294O@Gitee）

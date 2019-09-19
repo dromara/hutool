@@ -28,71 +28,71 @@ import cn.hutool.core.util.StrUtil;
  */
 public class SystemUtil {
 
-	/***** Java运行时环境信息 *****/
-	// Java 运行时环境规范名称
-	public final static String SPECIFICATION_NAME = "java.specification.name";
-	// Java 运行时环境版本
-	public final static String VERSION = "java.version";
-	// Java 运行时环境规范版本
-	public final static String SPECIFICATION_VERSION = "java.specification.version";
-	// Java 运行时环境供应商
-	public final static String VENDOR = "java.vendor";
-	// Java 运行时环境规范供应商
-	public final static String SPECIFICATION_VENDOR = "java.specification.vendor";
-	// Java 供应商的 URL
-	public final static String VENDOR_URL = "java.vendor.url";
-	// Java 安装目录
-	public final static String HOME = "java.home";
-	// 加载库时搜索的路径列表
-	public final static String LIBRARY_PATH = "java.library.path";
-	// 默认的临时文件路径
-	public final static String TMPDIR = "java.io.tmpdir";
-	// 要使用的 JIT 编译器的名称
-	public final static String COMPILER = "java.compiler";
-	// 一个或多个扩展目录的路径
-	public final static String EXT_DIRS = "java.ext.dirs";
+	// ----- Java运行时环境信息 -----/
+	/** Java 运行时环境规范名称的KEY */
+	public final static String SPECIFICATION_NAME = SystemPropsKeys.SPECIFICATION_NAME;
+	/** Java 运行时环境版本的KEY */
+	public final static String VERSION = SystemPropsKeys.VERSION;
+	/** Java 运行时环境规范版本的KEY */
+	public final static String SPECIFICATION_VERSION = SystemPropsKeys.SPECIFICATION_VERSION;
+	/** Java 运行时环境供应商的KEY */
+	public final static String VENDOR = SystemPropsKeys.VENDOR;
+	/** Java 运行时环境规范供应商的KEY */
+	public final static String SPECIFICATION_VENDOR = SystemPropsKeys.SPECIFICATION_VENDOR;
+	/** Java 供应商的 URL的KEY */
+	public final static String VENDOR_URL = SystemPropsKeys.VENDOR_URL;
+	/** Java 安装目录的KEY */
+	public final static String HOME = SystemPropsKeys.HOME;
+	/** 加载库时搜索的路径列表的KEY */
+	public final static String LIBRARY_PATH = SystemPropsKeys.LIBRARY_PATH;
+	/** 默认的临时文件路径的KEY */
+	public final static String TMPDIR = SystemPropsKeys.TMPDIR;
+	/** 要使用的 JIT 编译器的名称的KEY */
+	public final static String COMPILER = SystemPropsKeys.COMPILER;
+	/** 一个或多个扩展目录的路径的KEY */
+	public final static String EXT_DIRS = SystemPropsKeys.EXT_DIRS;
 
-	/***** Java虚拟机信息 *****/
-	// Java 虚拟机实现名称
-	public final static String VM_NAME = "java.vm.name";
-	// Java 虚拟机规范名称
-	public final static String VM_SPECIFICATION_NAME = "java.vm.specification.name";
-	// Java 虚拟机实现版本
-	public final static String VM_VERSION = "java.vm.version";
-	// Java 虚拟机规范版本
-	public final static String VM_SPECIFICATION_VERSION = "java.vm.specification.version";
-	// Java 虚拟机实现供应商
-	public final static String VM_VENDEOR = "java.vm.vendor";
-	// Java 虚拟机规范供应商
-	public final static String VM_SPECIFICATION_VENDOR = "java.vm.specification.vendor";
+	// ----- Java虚拟机信息 -----/
+	/** Java 虚拟机实现名称的KEY */
+	public final static String VM_NAME = SystemPropsKeys.VM_NAME;
+	/** Java 虚拟机规范名称的KEY */
+	public final static String VM_SPECIFICATION_NAME = SystemPropsKeys.VM_SPECIFICATION_NAME;
+	/** Java 虚拟机实现版本的KEY */
+	public final static String VM_VERSION = SystemPropsKeys.VM_VERSION;
+	/** Java 虚拟机规范版本的KEY */
+	public final static String VM_SPECIFICATION_VERSION = SystemPropsKeys.VM_SPECIFICATION_VERSION;
+	/** Java 虚拟机实现供应商的KEY */
+	public final static String VM_VENDOR = SystemPropsKeys.VM_VENDOR;
+	/** Java 虚拟机规范供应商的KEY */
+	public final static String VM_SPECIFICATION_VENDOR = SystemPropsKeys.VM_SPECIFICATION_VENDOR;
 
-	/***** Java类信息 *****/
-	// Java 类格式版本号
-	public final static String CLASS_VERSION = "java.class.version";
-	// Java 类路径
-	public final static String CLASS_PATH = "java.class.path";
+	// ----- Java类信息 -----/
+	/** Java 类格式版本号的KEY */
+	public final static String CLASS_VERSION = SystemPropsKeys.CLASS_VERSION;
+	/** Java 类路径的KEY */
+	public final static String CLASS_PATH = SystemPropsKeys.CLASS_PATH;
 
-	/***** OS信息 *****/
-	// 操作系统的名称
-	public final static String OS_NAME = "os.name";
-	// 操作系统的架构
-	public final static String OS_ARCH = "os.arch";
-	// 操作系统的版本
-	public final static String OS_VERSION = "os.version";
-	// 文件分隔符（在 UNIX 系统中是“/”）
-	public final static String FILE_SEPRATOR = "file.separator";
-	// 路径分隔符（在 UNIX 系统中是“:”）
-	public final static String PATH_SEPRATOR = "path.separator";
-	// 行分隔符（在 UNIX 系统中是“\n”）
-	public final static String LINE_SEPRATOR = "line.separator";
+	// ----- OS信息 -----/
+	/** 操作系统的名称的KEY */
+	public final static String OS_NAME = SystemPropsKeys.OS_NAME;
+	/** 操作系统的架构的KEY */
+	public final static String OS_ARCH = SystemPropsKeys.OS_ARCH;
+	/** 操作系统的版本的KEY */
+	public final static String OS_VERSION = SystemPropsKeys.OS_VERSION;
+	/** 文件分隔符（在 UNIX 系统中是“/”）的KEY */
+	public final static String FILE_SEPARATOR = SystemPropsKeys.FILE_SEPARATOR;
+	/** 路径分隔符（在 UNIX 系统中是“:”）的KEY */
+	public final static String PATH_SEPARATOR = SystemPropsKeys.PATH_SEPARATOR;
+	/** 行分隔符（在 UNIX 系统中是“\n”）的KEY */
+	public final static String LINE_SEPARATOR = SystemPropsKeys.LINE_SEPARATOR;
 
-	/***** 用户信息 *****/
-	// 用户的账户名称
-	public final static String USER_NAME = "user.name";
-	// 用户的主目录
-	public final static String USER_HOME = "user.home";
-	// 用户的当前工作目录
-	public final static String USER_DIR = "user.dir";
+	// ----- 用户信息 -----/
+	/** 用户的账户名称的KEY */
+	public final static String USER_NAME = SystemPropsKeys.USER_NAME;
+	/** 用户的主目录的KEY */
+	public final static String USER_HOME = SystemPropsKeys.USER_HOME;
+	/** 用户的当前工作目录的KEY */
+	public final static String USER_DIR = SystemPropsKeys.USER_DIR;
 
 	// ----------------------------------------------------------------------- Basic start
 
