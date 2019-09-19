@@ -9,6 +9,7 @@
 * 【core】        ImgUtil.rotate支持负数（issue#543@Github）
 * 【http】        body方法传null跳过而非报错（issue#I12AP2@Gitee）
 * 【core】        TimeInterval增加intervalPretty方法（issue#I12A6T@Gitee）
+* 【core】        改进ArrayUtil.toString，提高性能
 ### Bug修复
 * 【core】        修复DateUtil.offset导致的时区错误问题（issue#I1294O@Gitee）
 * 【core】        修复RuntimeUtil.exec重载导致的问题（issue#544@Github）

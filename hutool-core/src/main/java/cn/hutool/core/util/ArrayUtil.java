@@ -2,13 +2,7 @@ package cn.hutool.core.util;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
@@ -160,8 +154,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final Object array) {
-		return false == isEmpty((Object) array);
+	public static boolean isNotEmpty(Object array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -170,7 +164,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final long... array) {
+	public static boolean isNotEmpty(long... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -180,7 +174,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final int... array) {
+	public static boolean isNotEmpty(int... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -190,7 +184,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final short... array) {
+	public static boolean isNotEmpty(short... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -200,7 +194,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final char... array) {
+	public static boolean isNotEmpty(char... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -210,7 +204,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final byte... array) {
+	public static boolean isNotEmpty(byte... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -220,7 +214,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final double... array) {
+	public static boolean isNotEmpty(double... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -230,7 +224,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final float... array) {
+	public static boolean isNotEmpty(float... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -240,7 +234,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(final boolean... array) {
+	public static boolean isNotEmpty(boolean... array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -733,7 +727,7 @@ public class ArrayUtil {
 	 * @return 过滤后的数组
 	 */
 	public static <T> T[] filter(T[] array, Editor<T> editor) {
-		ArrayList<T> list = new ArrayList<T>(array.length);
+		ArrayList<T> list = new ArrayList<>(array.length);
 		T modified;
 		for (T t : array) {
 			modified = editor.edit(t);
@@ -763,7 +757,7 @@ public class ArrayUtil {
 			return array;
 		}
 		
-		final ArrayList<T> list = new ArrayList<T>(array.length);
+		final ArrayList<T> list = new ArrayList<>(array.length);
 		for (T t : array) {
 			if (filter.accept(t)) {
 				list.add(t);
@@ -2228,33 +2222,32 @@ public class ArrayUtil {
 		if (null == obj) {
 			return null;
 		}
-		if (ArrayUtil.isArray(obj)) {
+
+		if(obj instanceof long[]){
+			return Arrays.toString((long[]) obj);
+		} else if(obj instanceof int[]){
+			return Arrays.toString((int[]) obj);
+		} else if(obj instanceof short[]){
+			return Arrays.toString((short[]) obj);
+		} else if(obj instanceof char[]){
+			return Arrays.toString((char[]) obj);
+		} else if(obj instanceof byte[]){
+			return Arrays.toString((byte[]) obj);
+		} else if(obj instanceof boolean[]){
+			return Arrays.toString((boolean[]) obj);
+		} else if(obj instanceof float[]){
+			return Arrays.toString((float[]) obj);
+		} else if(obj instanceof double[]){
+			return Arrays.toString((double[]) obj);
+		} else if (ArrayUtil.isArray(obj)) {
+			// 对象数组
 			try {
 				return Arrays.deepToString((Object[]) obj);
-			} catch (Exception e) {
-				final String className = obj.getClass().getComponentType().getName();
-				switch (className) {
-				case "long":
-					return Arrays.toString((long[]) obj);
-				case "int":
-					return Arrays.toString((int[]) obj);
-				case "short":
-					return Arrays.toString((short[]) obj);
-				case "char":
-					return Arrays.toString((char[]) obj);
-				case "byte":
-					return Arrays.toString((byte[]) obj);
-				case "boolean":
-					return Arrays.toString((boolean[]) obj);
-				case "float":
-					return Arrays.toString((float[]) obj);
-				case "double":
-					return Arrays.toString((double[]) obj);
-				default:
-					throw new UtilException(e);
-				}
+			} catch (Exception ignore) {
+				//ignore
 			}
 		}
+
 		return obj.toString();
 	}
 
@@ -2775,7 +2768,7 @@ public class ArrayUtil {
 	 */
 	public static Object remove(Object array, int index) throws IllegalArgumentException {
 		if (null == array) {
-			return array;
+			return null;
 		}
 		int length = length(array);
 		if (index < 0 || index >= length) {
@@ -2927,7 +2920,7 @@ public class ArrayUtil {
 	 * 
 	 * @param <T> 数组元素类型
 	 * @param array 数组，会变更
-	 * @param startIndexInclusive 其实位置（包含）
+	 * @param startIndexInclusive 开始位置（包含）
 	 * @param endIndexExclusive 结束位置（不包含）
 	 * @return 变更后的原数组
 	 * @since 3.0.9
@@ -2936,7 +2929,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		T tmp;
 		while (j > i) {
@@ -2974,7 +2967,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		long tmp;
 		while (j > i) {
@@ -3011,7 +3004,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		int tmp;
 		while (j > i) {
@@ -3048,7 +3041,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		short tmp;
 		while (j > i) {
@@ -3085,7 +3078,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		char tmp;
 		while (j > i) {
@@ -3122,7 +3115,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		byte tmp;
 		while (j > i) {
@@ -3159,7 +3152,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		double tmp;
 		while (j > i) {
@@ -3196,7 +3189,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		float tmp;
 		while (j > i) {
@@ -3233,7 +3226,7 @@ public class ArrayUtil {
 		if (isEmpty(array)) {
 			return array;
 		}
-		int i = startIndexInclusive < 0 ? 0 : startIndexInclusive;
+		int i = Math.max(startIndexInclusive, 0);
 		int j = Math.min(array.length, endIndexExclusive) - 1;
 		boolean tmp;
 		while (j > i) {
@@ -3844,9 +3837,7 @@ public class ArrayUtil {
 		}
 		
 		final Set<T> set = new LinkedHashSet<>(array.length, 1);
-		for (T t : array) {
-			set.add(t);
-		}
+		Collections.addAll(set, array);
 		return toArray(set, (Class<T>)getComponentType(array));
 	}
 }
