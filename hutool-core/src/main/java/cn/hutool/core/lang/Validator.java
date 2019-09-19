@@ -371,10 +371,10 @@ public class Validator {
 	 * @return 是否为给定长度范围的英文字母 、数字和下划线
 	 */
 	public static boolean isGeneral(CharSequence value, int min, int max) {
-		String reg = "^\\w{" + min + "," + max + "}$";
 		if (min < 0) {
 			min = 0;
 		}
+		String reg = "^\\w{" + min + "," + max + "}$";
 		if (max <= 0) {
 			reg = "^\\w{" + min + ",}$";
 		}

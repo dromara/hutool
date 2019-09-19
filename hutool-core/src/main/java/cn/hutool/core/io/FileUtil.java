@@ -48,6 +48,7 @@ import cn.hutool.core.io.file.LineSeparator;
 import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -1576,15 +1577,20 @@ public class FileUtil {
 			return null;
 		}
 
+
 		// 兼容Spring风格的ClassPath路径，去除前缀，不区分大小写
 		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
 		// 去除file:前缀
 		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
 		// 统一使用斜杠
 		pathToUse = pathToUse.replaceAll("[/\\\\]{1,}", StrUtil.SLASH).trim();
+		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
+		if(path.startsWith("\\\\")){
+			pathToUse = "\\" + pathToUse;
+		}
 
-		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		String prefix = "";
+		int prefixIndex = pathToUse.indexOf(StrUtil.COLON);
 		if (prefixIndex > -1) {
 			// 可能Windows风格路径
 			prefix = pathToUse.substring(0, prefixIndex + 1);
