@@ -174,7 +174,6 @@ public class Validator {
 	 * 
 	 * @param value 值
 	 * @return 是否为空
-	 * @return 是否为空
 	 */
 	public static boolean isEmpty(Object value) {
 		return (null == value || (value instanceof String && StrUtil.isEmpty((String) value)));
@@ -185,7 +184,6 @@ public class Validator {
 	 * 对于String类型判定是否为empty(null 或 "")<br>
 	 * 
 	 * @param value 值
-	 * @return 是否为空
 	 * @return 是否为空
 	 */
 	public static boolean isNotEmpty(Object value) {
@@ -733,13 +731,13 @@ public class Validator {
 		if (day < 1 || day > 31) {
 			return false;
 		}
-		if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
+		// 检查几个特殊月的最大天数
+		if (day == 31 && (month == 4 || month == 6 || month == 9 || month == 11)) {
 			return false;
 		}
 		if (month == 2) {
-			if (day > 29 || (day == 29 && false == DateUtil.isLeapYear(year))) {
-				return false;
-			}
+			// 在2月，非闰年最大28，闰年最大29
+			return day < 29 || (day == 29 && DateUtil.isLeapYear(year));
 		}
 		return true;
 	}

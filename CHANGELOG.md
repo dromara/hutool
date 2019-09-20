@@ -12,6 +12,7 @@
 * 【core】        改进ArrayUtil.toString，提高性能
 * 【system】      增加SystemPropsKeys（issue#550@Github）
 * 【core】        FileUtil.normalize在win下支持samba路径（issue#549@Github）
+* 【core】        修复Validator注释错误（pr#70@Gitee）
 
 ### Bug修复
 * 【core】        修复DateUtil.offset导致的时区错误问题（issue#I1294O@Gitee）
