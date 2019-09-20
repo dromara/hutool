@@ -61,7 +61,7 @@ public class Validator {
 	 * 给定值是否为<code>true</code>
 	 * 
 	 * @param value 值
-	 * @return 是否为<code>ture</code>
+	 * @return 是否为<code>true</code>
 	 * @since 4.4.5
 	 */
 	public static boolean isTrue(boolean value) {
@@ -80,7 +80,7 @@ public class Validator {
 	}
 
 	/**
-	 * 检查指定值是否为<code>ture</code>
+	 * 检查指定值是否为<code>true</code>
 	 * 
 	 * @param value 值
 	 * @param errorMsgTemplate 错误消息内容模板（变量使用{}表示）
