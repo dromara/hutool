@@ -32,35 +32,70 @@ import cn.hutool.http.HttpResponse;
 
 /**
  * SOAP客户端
- * 
+ *
+ * <p>
+ * 此对象用于构建一个SOAP消息，并通过HTTP接口发出消息内容。
+ * SOAP消息本质上是一个XML文本，可以通过调用{@link #getMsgStr(boolean)} 方法获取消息体
+ * <p>
+ * 使用方法：
+ *
+ * <pre>
+ * SoapClient client = SoapClient.create(url)
+ * .setMethod(methodName, namespaceURI)
+ * .setCharset(CharsetUtil.CHARSET_GBK)
+ * .setParam(param1, "XXX");
+ *
+ * String response = client.send(true);
+ *
+ * </pre>
+ *
  * @author looly
  * @since 4.5.4
  */
 public class SoapClient {
 
-	/** XML消息体的Content-Type */
+	/**
+	 * XML消息体的Content-Type
+	 */
 	private static final String TEXT_XML_CONTENT_TYPE = "text/xml;charset=";
 
-	/** 请求的URL地址 */
+	/**
+	 * 请求的URL地址
+	 */
 	private String url;
-	/** 编码 */
+	/**
+	 * 编码
+	 */
 	private Charset charset = CharsetUtil.CHARSET_UTF_8;
-	/** SOAP消息 */
-	private SOAPMessage message;
-	/** 消息方法节点 */
-	private SOAPBodyElement methodEle;
-	/** 应用于方法上的命名空间URI */
-	private String namespaceURI;
-	/** 消息工厂，用于创建消息 */
-	private MessageFactory factory;
-	/** 默认连接超时 */
+	/**
+	 * 默认连接超时
+	 */
 	private int connectionTimeout = HttpGlobalConfig.getTimeout();
-	/** 默认读取超时 */
+	/**
+	 * 默认读取超时
+	 */
 	private int readTimeout = HttpGlobalConfig.getTimeout();
 
 	/**
+	 * 消息工厂，用于创建消息
+	 */
+	private MessageFactory factory;
+	/**
+	 * SOAP消息
+	 */
+	private SOAPMessage message;
+	/**
+	 * 消息方法节点
+	 */
+	private SOAPBodyElement methodEle;
+	/**
+	 * 应用于方法上的命名空间URI
+	 */
+	private String namespaceURI;
+
+	/**
 	 * 创建SOAP客户端，默认使用soap1.1版本协议
-	 * 
+	 *
 	 * @param url WS的URL地址
 	 * @return {@link SoapClient}
 	 */
@@ -70,8 +105,8 @@ public class SoapClient {
 
 	/**
 	 * 创建SOAP客户端
-	 * 
-	 * @param url WS的URL地址
+	 *
+	 * @param url      WS的URL地址
 	 * @param protocol 协议，见{@link SoapProtocol}
 	 * @return {@link SoapClient}
 	 */
@@ -81,9 +116,9 @@ public class SoapClient {
 
 	/**
 	 * 创建SOAP客户端
-	 * 
-	 * @param url WS的URL地址
-	 * @param protocol 协议，见{@link SoapProtocol}
+	 *
+	 * @param url          WS的URL地址
+	 * @param protocol     协议，见{@link SoapProtocol}
 	 * @param namespaceURI 方法上的命名空间URI
 	 * @return {@link SoapClient}
 	 * @since 4.5.6
@@ -94,7 +129,7 @@ public class SoapClient {
 
 	/**
 	 * 构造，默认使用soap1.1版本协议
-	 * 
+	 *
 	 * @param url WS的URL地址
 	 */
 	public SoapClient(String url) {
@@ -103,8 +138,8 @@ public class SoapClient {
 
 	/**
 	 * 构造
-	 * 
-	 * @param url WS的URL地址
+	 *
+	 * @param url      WS的URL地址
 	 * @param protocol 协议版本，见{@link SoapProtocol}
 	 */
 	public SoapClient(String url, SoapProtocol protocol) {
@@ -113,9 +148,9 @@ public class SoapClient {
 
 	/**
 	 * 构造
-	 * 
-	 * @param url WS的URL地址
-	 * @param protocol 协议版本，见{@link SoapProtocol}
+	 *
+	 * @param url          WS的URL地址
+	 * @param protocol     协议版本，见{@link SoapProtocol}
 	 * @param namespaceURI 方法上的命名空间URI
 	 * @since 4.5.6
 	 */
@@ -127,7 +162,7 @@ public class SoapClient {
 
 	/**
 	 * 初始化
-	 * 
+	 *
 	 * @param protocol 协议版本枚举，见{@link SoapProtocol}
 	 * @return this
 	 */
@@ -145,8 +180,28 @@ public class SoapClient {
 	}
 
 	/**
+	 * 重置SOAP客户端，用于客户端复用
+	 *
+	 * <p>
+	 * 重置后需调用serMethod方法重新指定请求方法，并调用setParam方法重新定义参数
+	 *
+	 * @return this
+	 * @since 4.6.7
+	 */
+	public SoapClient reset() {
+		try {
+			this.message = factory.createMessage();
+		} catch (SOAPException e) {
+			throw new SoapRuntimeException(e);
+		}
+		this.methodEle = null;
+
+		return this;
+	}
+
+	/**
 	 * 设置编码
-	 * 
+	 *
 	 * @param charset 编码
 	 * @return this
 	 */
@@ -158,13 +213,13 @@ public class SoapClient {
 		} catch (SOAPException e) {
 			// ignore
 		}
-		
+
 		return this;
 	}
 
 	/**
 	 * 设置Webservice请求地址
-	 * 
+	 *
 	 * @param url Webservice请求地址
 	 * @return this
 	 */
@@ -175,7 +230,7 @@ public class SoapClient {
 
 	/**
 	 * 设置头信息
-	 * 
+	 *
 	 * @param name 头信息标签名
 	 * @return this
 	 */
@@ -185,12 +240,12 @@ public class SoapClient {
 
 	/**
 	 * 设置头信息
-	 * 
-	 * @param name 头信息标签名
-	 * @param actorURI 中间的消息接收者
-	 * @param roleUri Role的URI
+	 *
+	 * @param name           头信息标签名
+	 * @param actorURI       中间的消息接收者
+	 * @param roleUri        Role的URI
 	 * @param mustUnderstand 标题项对于要对其进行处理的接收者来说是强制的还是可选的
-	 * @param relay relay属性
+	 * @param relay          relay属性
 	 * @return this
 	 */
 	public SoapClient setHeader(QName name, String actorURI, String roleUri, Boolean mustUnderstand, Boolean relay) {
@@ -221,9 +276,9 @@ public class SoapClient {
 
 	/**
 	 * 设置请求方法
-	 * 
-	 * @param name 方法名及其命名空间
-	 * @param params 参数
+	 *
+	 * @param name            方法名及其命名空间
+	 * @param params          参数
 	 * @param useMethodPrefix 是否使用方法的命名空间前缀
 	 * @return this
 	 */
@@ -233,9 +288,9 @@ public class SoapClient {
 
 	/**
 	 * 设置请求方法
-	 * 
-	 * @param name 方法名及其命名空间
-	 * @param params 参数
+	 *
+	 * @param name            方法名及其命名空间
+	 * @param params          参数
 	 * @param useMethodPrefix 是否使用方法的命名空间前缀
 	 * @return this
 	 */
@@ -254,7 +309,7 @@ public class SoapClient {
 	 * 设置请求方法<br>
 	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔<br>
 	 * 当识别到前缀后，自动添加xmlns属性，关联到默认的namespaceURI
-	 * 
+	 *
 	 * @param methodName 方法名
 	 * @return this
 	 */
@@ -266,8 +321,8 @@ public class SoapClient {
 	 * 设置请求方法<br>
 	 * 方法名自动识别前缀，前缀和方法名使用“:”分隔<br>
 	 * 当识别到前缀后，自动添加xmlns属性，关联到传入的namespaceURI
-	 * 
-	 * @param methodName 方法名（可有前缀也可无）
+	 *
+	 * @param methodName   方法名（可有前缀也可无）
 	 * @param namespaceURI 命名空间URI
 	 * @return this
 	 */
@@ -284,7 +339,7 @@ public class SoapClient {
 
 	/**
 	 * 设置请求方法
-	 * 
+	 *
 	 * @param name 方法名及其命名空间
 	 * @return this
 	 */
@@ -300,8 +355,8 @@ public class SoapClient {
 
 	/**
 	 * 设置方法参数，使用方法的前缀
-	 * 
-	 * @param name 参数名
+	 *
+	 * @param name  参数名
 	 * @param value 参数值，可以是字符串或Map或{@link SOAPElement}
 	 * @return this
 	 */
@@ -311,9 +366,9 @@ public class SoapClient {
 
 	/**
 	 * 设置方法参数
-	 * 
-	 * @param name 参数名
-	 * @param value 参数值，可以是字符串或Map或{@link SOAPElement}
+	 *
+	 * @param name            参数名
+	 * @param value           参数值，可以是字符串或Map或{@link SOAPElement}
 	 * @param useMethodPrefix 是否使用方法的命名空间前缀
 	 * @return this
 	 */
@@ -324,7 +379,7 @@ public class SoapClient {
 
 	/**
 	 * 批量设置参数，使用方法的前缀
-	 * 
+	 *
 	 * @param params 参数列表
 	 * @return this
 	 * @since 4.5.6
@@ -335,8 +390,8 @@ public class SoapClient {
 
 	/**
 	 * 批量设置参数
-	 * 
-	 * @param params 参数列表
+	 *
+	 * @param params          参数列表
 	 * @param useMethodPrefix 是否使用方法的命名空间前缀
 	 * @return this
 	 * @since 4.5.6
@@ -351,7 +406,7 @@ public class SoapClient {
 	/**
 	 * 获取方法节点<br>
 	 * 用于创建子节点等操作
-	 * 
+	 *
 	 * @return {@link SOAPBodyElement}
 	 * @since 4.5.6
 	 */
@@ -361,7 +416,7 @@ public class SoapClient {
 
 	/**
 	 * 获取SOAP消息对象 {@link SOAPMessage}
-	 * 
+	 *
 	 * @return {@link SOAPMessage}
 	 * @since 4.5.6
 	 */
@@ -371,17 +426,17 @@ public class SoapClient {
 
 	/**
 	 * 获取SOAP请求消息
-	 * 
+	 *
 	 * @param pretty 是否格式化
 	 * @return 消息字符串
 	 */
 	public String getMsgStr(boolean pretty) {
 		return SoapUtil.toString(this.message, pretty, this.charset);
 	}
-	
+
 	/**
 	 * 将SOAP消息的XML内容输出到流
-	 * 
+	 *
 	 * @param out 输出流
 	 * @return this
 	 * @since 4.5.6
@@ -394,16 +449,16 @@ public class SoapClient {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * 设置超时，单位：毫秒<br>
 	 * 超时包括：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 连接超时
 	 * 2. 读取响应超时
 	 * </pre>
-	 * 
+	 *
 	 * @param milliseconds 超时毫秒数
 	 * @return this
 	 * @see #setConnectionTimeout(int)
@@ -417,7 +472,7 @@ public class SoapClient {
 
 	/**
 	 * 设置连接超时，单位：毫秒
-	 * 
+	 *
 	 * @param milliseconds 超时毫秒数
 	 * @return this
 	 * @since 4.5.6
@@ -429,7 +484,7 @@ public class SoapClient {
 
 	/**
 	 * 设置连接超时，单位：毫秒
-	 * 
+	 *
 	 * @param milliseconds 超时毫秒数
 	 * @return this
 	 * @since 4.5.6
@@ -438,17 +493,17 @@ public class SoapClient {
 		this.readTimeout = milliseconds;
 		return this;
 	}
-	
+
 	/**
 	 * 执行Webservice请求，既发送SOAP内容
-	 * 
+	 *
 	 * @return 返回结果
 	 */
 	public SOAPMessage sendForMessage() {
 		final HttpResponse res = sendForResponse();
 		final MimeHeaders headers = new MimeHeaders();
 		for (Entry<String, List<String>> entry : res.headers().entrySet()) {
-			if(StrUtil.isNotEmpty(entry.getKey())) {
+			if (StrUtil.isNotEmpty(entry.getKey())) {
 				headers.setHeader(entry.getKey(), CollUtil.get(entry.getValue(), 0));
 			}
 		}
@@ -463,7 +518,7 @@ public class SoapClient {
 
 	/**
 	 * 执行Webservice请求，既发送SOAP内容
-	 * 
+	 *
 	 * @return 返回结果
 	 */
 	public String send() {
@@ -472,7 +527,7 @@ public class SoapClient {
 
 	/**
 	 * 执行Webservice请求，既发送SOAP内容
-	 * 
+	 *
 	 * @param pretty 是否格式化
 	 * @return 返回结果
 	 */
@@ -482,24 +537,25 @@ public class SoapClient {
 	}
 
 	// -------------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 发送请求，获取异步响应
-	 * 
+	 *
 	 * @return 响应对象
 	 */
 	private HttpResponse sendForResponse() {
 		return HttpRequest.post(this.url)//
-		.setFollowRedirects(true)//
-		.setConnectionTimeout(this.connectionTimeout)
-		.setReadTimeout(this.readTimeout)
-		.contentType(getXmlContentType())//
-		.body(getMsgStr(false))//
-		.executeAsync();
+				.setFollowRedirects(true)//
+				.setConnectionTimeout(this.connectionTimeout)
+				.setReadTimeout(this.readTimeout)
+				.contentType(getXmlContentType())//
+				.body(getMsgStr(false))//
+				.executeAsync();
 	}
-	
+
 	/**
 	 * 获取请求的Content-Type，附加编码信息
-	 * 
+	 *
 	 * @return 请求的Content-Type
 	 */
 	private String getXmlContentType() {
@@ -508,10 +564,10 @@ public class SoapClient {
 
 	/**
 	 * 设置方法参数
-	 * 
-	 * @param ele 方法节点
-	 * @param name 参数名
-	 * @param value 参数值
+	 *
+	 * @param ele    方法节点
+	 * @param name   参数名
+	 * @param value  参数值
 	 * @param prefix 命名空间前缀
 	 * @return {@link SOAPElement}子节点
 	 */
@@ -527,8 +583,8 @@ public class SoapClient {
 		} catch (SOAPException e) {
 			throw new SoapRuntimeException(e);
 		}
-		
-		if(null != value) {
+
+		if (null != value) {
 			if (value instanceof SOAPElement) {
 				// 单个子节点
 				try {
@@ -548,7 +604,7 @@ public class SoapClient {
 				childEle.setValue(value.toString());
 			}
 		}
-		
+
 		return childEle;
 	}
 	// -------------------------------------------------------------------------------------------------------- Private method end

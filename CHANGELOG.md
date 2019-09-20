@@ -14,6 +14,7 @@
 * 【core】        FileUtil.normalize在win下支持samba路径（issue#549@Github）
 * 【core】        修复Validator注释错误（pr#70@Gitee）
 * 【cron】        添加获取任务表的方法（issue#I12E5H@Gitee）
+* 【http】        SoapClient增加reset方法用于此对象的复用（issue#I12CCC@Gitee）
 
 ### Bug修复
 * 【core】        修复DateUtil.offset导致的时区错误问题（issue#I1294O@Gitee）
