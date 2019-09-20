@@ -1,5 +1,6 @@
 package cn.hutool.cron.listener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,10 @@ import cn.hutool.log.StaticLog;
  * @author Looly
  *
  */
-public class TaskListenerManager {
-	private List<TaskListener> listeners = new ArrayList<>();
+public class TaskListenerManager implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private final List<TaskListener> listeners = new ArrayList<>();
 	
 	/**
 	 * 增加监听器
@@ -45,9 +48,12 @@ public class TaskListenerManager {
 	public void notifyTaskStart(TaskExecutor executor) {
 		synchronized (listeners) {
 			int size = listeners.size();
+			TaskListener listener;
 			for (int i = 0; i < size; i++) {
-				TaskListener listenerl = listeners.get(i);
-				listenerl.onStart(executor);
+				listener = listeners.get(i);
+				if(null != listener){
+					listener.onStart(executor);
+				}
 			}
 		}
 	}

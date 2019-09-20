@@ -5,15 +5,19 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 
+import java.io.Serializable;
+
 /**
  * 定时任务计时器<br>
  * 计时器线程每隔一分钟检查一次任务列表，一旦匹配到执行对应的Task
  * @author Looly
  *
  */
-public class CronTimer extends Thread{
+public class CronTimer extends Thread implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private static final Log log = LogFactory.get();
-	
+
 	/** 定时单元：秒 */
 	private long TIMER_UNIT_SECOND = DateUnit.SECOND.getMillis();
 	/** 定时单元：分 */

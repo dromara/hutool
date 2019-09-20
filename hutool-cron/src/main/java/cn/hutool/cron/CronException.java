@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
  * @author xiaoleilu
  */
 public class CronException extends RuntimeException{
-	private static final long serialVersionUID = 8247610319171014183L;
+	private static final long serialVersionUID = 1L;
 
 	public CronException(Throwable e) {
 		super(e.getMessage(), e);

@@ -1,5 +1,6 @@
 package cn.hutool.cron;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.TimeZone;
@@ -51,7 +52,9 @@ import cn.hutool.setting.Setting;
  * @author Looly
  *
  */
-public class Scheduler {
+public class Scheduler implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private Lock lock = new ReentrantLock();
 
 	/** 时区 */
@@ -284,6 +287,16 @@ public class Scheduler {
 	public Scheduler updatePattern(String id, CronPattern pattern) {
 		this.taskTable.updatePattern(id, pattern);
 		return this;
+	}
+
+	/**
+	 * 获取定时任务表，注意此方法返回非复制对象，对返回对象的修改将影响已有定时任务
+	 *
+	 * @return 定时任务表{@link TaskTable}
+	 * @since 4.6.7
+	 */
+	public TaskTable getTaskTable() {
+		return this.taskTable;
 	}
 
 	/**

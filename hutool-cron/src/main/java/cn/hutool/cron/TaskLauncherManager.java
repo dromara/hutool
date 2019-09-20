@@ -1,5 +1,6 @@
 package cn.hutool.cron;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +10,12 @@ import java.util.List;
  * @author looly
  *
  */
-public class TaskLauncherManager {
-	
+public class TaskLauncherManager implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	protected Scheduler scheduler;
 	/** 启动器列表 */
-	protected List<TaskLauncher> launchers = new ArrayList<>();
+	protected final List<TaskLauncher> launchers = new ArrayList<>();
 	
 	public TaskLauncherManager(Scheduler scheduler) {
 		this.scheduler = scheduler;
