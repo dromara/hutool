@@ -1,13 +1,5 @@
 package cn.hutool.db;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
@@ -24,6 +16,13 @@ import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.SqlUtil;
 import cn.hutool.db.sql.Wrapper;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * SQL执行类<br>
@@ -155,7 +154,7 @@ public class SqlConnRunner{
 		if(ArrayUtil.isEmpty(records)){
 			return new int[]{0};
 		}
-		
+
 		//单条单独处理
 		if(1 == records.length) {
 			return new int[] { insert(conn, records[0])};

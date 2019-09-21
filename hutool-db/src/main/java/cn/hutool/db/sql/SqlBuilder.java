@@ -55,7 +55,7 @@ public class SqlBuilder implements Builder<String>{
 	 * @author Looly
 	 *
 	 */
-	public static enum Join {
+	public enum Join {
 		/** 如果表中有至少一个匹配，则返回行 */
 		INNER,
 		/** 即使右表中没有匹配，也从左表返回所有的行 */
@@ -69,9 +69,9 @@ public class SqlBuilder implements Builder<String>{
 
 	final private StringBuilder sql = new StringBuilder();
 	/** 字段列表（仅用于插入和更新） */
-	final private List<String> fields = new ArrayList<String>();
+	final private List<String> fields = new ArrayList<>();
 	/** 占位符对应的值列表 */
-	final private List<Object> paramValues = new ArrayList<Object>();
+	final private List<Object> paramValues = new ArrayList<>();
 	/** 包装器 */
 	private Wrapper wrapper;
 
@@ -527,20 +527,20 @@ public class SqlBuilder implements Builder<String>{
 
 	/**
 	 * 获得插入或更新的数据库字段列表
-	 * 
-	 * @return 插入或更新的数据库字段列表
-	 */
-	public List<String> getFields() {
-		return this.fields;
-	}
-
-	/**
-	 * 获得插入或更新的数据库字段列表
-	 * 
+	 *
 	 * @return 插入或更新的数据库字段列表
 	 */
 	public String[] getFieldArray() {
 		return this.fields.toArray(new String[this.fields.size()]);
+	}
+
+	/**
+	 * 获得插入或更新的数据库字段列表
+	 *
+	 * @return 插入或更新的数据库字段列表
+	 */
+	public List<String> getFields() {
+		return this.fields;
 	}
 
 	/**

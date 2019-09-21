@@ -257,6 +257,6 @@ public final class DbUtil {
 	 * @since 4.1.7
 	 */
 	public static void setShowSqlGlobal(boolean isShowSql, boolean isFormatSql, boolean isShowParams, Level level) {
-		SqlLog.INSTASNCE.init(isShowSql, isFormatSql, isShowParams, level);
+		SqlLog.INSTANCE.init(isShowSql, isFormatSql, isShowParams, level);
 	}
 }

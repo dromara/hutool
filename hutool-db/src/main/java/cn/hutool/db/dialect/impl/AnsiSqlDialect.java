@@ -3,6 +3,9 @@ package cn.hutool.db.dialect.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
@@ -53,15 +56,9 @@ public class AnsiSqlDialect implements Dialect {
 		if (ArrayUtil.isEmpty(entities)) {
 			throw new DbRuntimeException("Entities for batch insert is empty !");
 		}
-		// 批量
+		// 批量，根据第一行数据结构生成SQL占位符
 		final SqlBuilder insert = SqlBuilder.create(wrapper).insert(entities[0], this.dialectName());
-
-		final PreparedStatement ps = StatementUtil.prepareStatement(conn, insert.build());
-		for (Entity entity : entities) {
-			StatementUtil.fillParams(ps, CollectionUtil.valuesOfKeys(entity, insert.getFields()));
-			ps.addBatch();
-		}
-		return ps;
+		return StatementUtil.prepareStatementForBatch(conn, insert.build(), insert.getFields(), entities);
 	}
 
 	@Override

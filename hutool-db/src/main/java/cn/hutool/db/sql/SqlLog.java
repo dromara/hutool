@@ -11,7 +11,7 @@ import cn.hutool.log.level.Level;
  * @since 4.1.0
  */
 public enum SqlLog {
-	INSTASNCE;
+	INSTANCE;
 	
 	private final static Log log = LogFactory.get();
 
@@ -40,16 +40,38 @@ public enum SqlLog {
 
 	/**
 	 * 打印SQL日志
-	 * 
+	 *
+	 * @param sql SQL语句
+	 * @since 4.6.7
+	 */
+	public void log(String sql) {
+		log(sql, null);
+	}
+
+	/**
+	 * 打印批量 SQL日志
+	 *
+	 * @param sql SQL语句
+	 * @since 4.6.7
+	 */
+	public void logForBatch(String sql) {
+		if (this.showSql) {
+			log.log(this.level, "\n[Batch SQL] -> {}", this.formatSql ? SqlFormatter.format(sql) : sql);
+		}
+	}
+
+	/**
+	 * 打印SQL日志
+	 *
 	 * @param sql SQL语句
 	 * @param paramValues 参数，可为null
 	 */
 	public void log(String sql, Object paramValues) {
 		if (this.showSql) {
-			if (this.showParams) {
-				log.log(this.level, "\nSQL -> {}\nParams -> {}", this.formatSql ? SqlFormatter.format(sql) : sql, paramValues);
+			if (null != paramValues && this.showParams) {
+				log.log(this.level, "\n[SQL] -> {}\nParams -> {}", this.formatSql ? SqlFormatter.format(sql) : sql, paramValues);
 			} else {
-				log.log(this.level, "\nSQL -> {}", this.formatSql ? SqlFormatter.format(sql) : sql);
+				log.log(this.level, "\n[SQL] -> {}", this.formatSql ? SqlFormatter.format(sql) : sql);
 			}
 		}
 	}

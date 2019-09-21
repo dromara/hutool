@@ -18,6 +18,8 @@
 * 【db】          StatementUtil增加setParam方法
 * 【db】          Entity.fieldList改为有序实现
 * 【crypto】      AES、DES增加对ZeroPadding的支持（issue#551@Github）
+* 【db】          优化批量插入代码，减少类型判断导致的性能问题（issue#I12B4Z@Gitee）
+* 【db】          优化SQL日志格式和日志显示
 
 ### Bug修复
 * 【core】        修复DateUtil.offset导致的时区错误问题（issue#I1294O@Gitee）
