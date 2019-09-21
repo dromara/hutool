@@ -63,7 +63,7 @@ public class CronTimer extends Thread implements Serializable {
 	 */
 	synchronized public void stopTimer() {
 		this.isStoped = true;
-		ThreadUtil.interupt(this, true);
+		ThreadUtil.interrupt(this, true);
 	}
 	
 	/**
