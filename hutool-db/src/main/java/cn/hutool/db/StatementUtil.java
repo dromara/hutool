@@ -37,8 +37,8 @@ public class StatementUtil {
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
 	 */
-	public static PreparedStatement fillParams(PreparedStatement ps, Collection<Object> params) throws SQLException {
-		return fillParams(ps, params.toArray(new Object[params.size()]));
+	public static PreparedStatement fillParams(PreparedStatement ps, Object... params) throws SQLException {
+		return fillParams(ps, new ArrayIter<>(params));
 	}
 
 	/**
@@ -50,42 +50,14 @@ public class StatementUtil {
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException SQL执行异常
 	 */
-	public static PreparedStatement fillParams(PreparedStatement ps, Object... params) throws SQLException {
+	public static PreparedStatement fillParams(PreparedStatement ps, Iterable<?> params) throws SQLException {
 		if (ArrayUtil.isEmpty(params)) {
 			return ps;// 无参数
 		}
-		Object param;
-		for (int i = 0; i < params.length; i++) {
-			int paramIndex = i + 1;
-			param = params[i];
-			if (null != param) {
-				if (param instanceof java.util.Date) {
-					// 日期特殊处理
-					if (param instanceof java.sql.Date) {
-						ps.setDate(paramIndex, (java.sql.Date) param);
-					} else if (param instanceof java.sql.Time) {
-						ps.setTime(paramIndex, (java.sql.Time) param);
-					} else {
-						ps.setTimestamp(paramIndex, SqlUtil.toSqlTimestamp((java.util.Date) param));
-					}
-				} else if (param instanceof Number) {
-					// 针对大数字类型的特殊处理
-					if (param instanceof BigInteger) {
-						// BigInteger转为Long
-						ps.setLong(paramIndex, ((BigInteger) param).longValue());
-					} else if (param instanceof BigDecimal) {
-						// BigDecimal的转换交给JDBC驱动处理
-						ps.setBigDecimal(paramIndex, (BigDecimal) param);
-					} else {
-						// 普通数字类型按照默认传入
-						ps.setObject(paramIndex, param);
-					}
-				} else {
-					ps.setObject(paramIndex, param);
-				}
-			} else {
-				ps.setNull(paramIndex, getTypeOfNull(ps, paramIndex));
-			}
+
+		int paramIndex = 1;//第一个参数从1计数
+		for (Object param : params) {
+			setParam(ps, paramIndex++, param);
 		}
 		return ps;
 	}
@@ -208,7 +180,7 @@ public class StatementUtil {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static Long getGeneratedKeyOfLong(Statement ps) throws SQLException {
-		try(final ResultSet rs = ps.getGeneratedKeys()) {
+		try (final ResultSet rs = ps.getGeneratedKeys()) {
 			Long generatedKey = null;
 			if (rs != null && rs.next()) {
 				try {
@@ -245,7 +217,7 @@ public class StatementUtil {
 	 * 获取null字段对应位置的数据类型<br>
 	 * 有些数据库对于null字段必须指定类型，否则会插入报错，此方法用于获取其类型，如果获取失败，使用默认的{@link Types#VARCHAR}
 	 *
-	 * @param ps {@link Statement}
+	 * @param ps         {@link Statement}
 	 * @param paramIndex 参数位置，第一位从1开始
 	 * @return 数据类型，默认{@link Types#VARCHAR}
 	 * @since 4.6.7
@@ -263,5 +235,51 @@ public class StatementUtil {
 		}
 
 		return sqlType;
+	}
+
+	/**
+	 * 为{@link PreparedStatement} 设置单个参数
+	 *
+	 * @param ps         {@link PreparedStatement}
+	 * @param paramIndex 参数位置，从1开始
+	 * @param param      参数
+	 * @throws SQLException SQL异常
+	 * @since 4.6.7
+	 */
+	public static void setParam(PreparedStatement ps, int paramIndex, Object param) throws SQLException {
+		if (null == param) {
+			ps.setNull(paramIndex, getTypeOfNull(ps, paramIndex));
+			return;
+		}
+
+		// 日期特殊处理，默认按照时间戳传入，避免毫秒丢失
+		if (param instanceof java.util.Date) {
+			if (param instanceof java.sql.Date) {
+				ps.setDate(paramIndex, (java.sql.Date) param);
+			} else if (param instanceof java.sql.Time) {
+				ps.setTime(paramIndex, (java.sql.Time) param);
+			} else {
+				ps.setTimestamp(paramIndex, SqlUtil.toSqlTimestamp((java.util.Date) param));
+			}
+			return;
+		}
+
+		// 针对大数字类型的特殊处理
+		if (param instanceof Number) {
+			if (param instanceof BigDecimal) {
+				// BigDecimal的转换交给JDBC驱动处理
+				ps.setBigDecimal(paramIndex, (BigDecimal) param);
+				return;
+			}
+			if (param instanceof BigInteger) {
+				// BigInteger转为Long
+				ps.setBigDecimal(paramIndex, new BigDecimal((BigInteger) param));
+				return;
+			}
+			// 忽略其它数字类型，按照默认类型传入
+		}
+
+		// 其它参数类型
+		ps.setObject(paramIndex, param);
 	}
 }

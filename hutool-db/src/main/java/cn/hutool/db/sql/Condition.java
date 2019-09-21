@@ -26,7 +26,7 @@ public class Condition extends CloneSupport<Condition> {
 	 * @author Looly
 	 *
 	 */
-	public static enum LikeType {
+	public enum LikeType {
 		/** 以给定值开头，拼接后的SQL "value%" */
 		StartWith,
 		/** 以给定值开头，拼接后的SQL "%value" */
@@ -456,7 +456,6 @@ public class Condition extends CloneSupport<Condition> {
 			this.operator = OPERATOR_BETWEEN;
 			this.value = unwrapQuote(betweenValueStrs.get(0));
 			this.secondValue = unwrapQuote(betweenValueStrs.get(1));
-			return;
 		}
 	}
 

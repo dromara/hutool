@@ -116,7 +116,6 @@ public class NamedSql {
 				// 无变量对应值，原样输出
 				sqlBuilder.append(nameStartChar).append(name);
 			}
-			nameStartChar = null;
 			name.clear();
 		}
 
