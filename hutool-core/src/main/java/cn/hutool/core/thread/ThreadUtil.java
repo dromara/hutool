@@ -146,7 +146,7 @@ public class ThreadUtil {
 	 * @return CompletionService
 	 */
 	public static <T> CompletionService<T> newCompletionService() {
-		return new ExecutorCompletionService<T>(GlobalThreadPool.getExecutor());
+		return new ExecutorCompletionService<>(GlobalThreadPool.getExecutor());
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class ThreadUtil {
 	 * @return CompletionService
 	 */
 	public static <T> CompletionService<T> newCompletionService(ExecutorService executor) {
-		return new ExecutorCompletionService<T>(executor);
+		return new ExecutorCompletionService<>(executor);
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class ThreadUtil {
 	 * @param thread 线程
 	 * @param isJoin 是否等待结束
 	 */
-	public static void interupt(Thread thread, boolean isJoin) {
+	public static void interrupt(Thread thread, boolean isJoin) {
 		if (null != thread && false == thread.isInterrupted()) {
 			thread.interrupt();
 			if (isJoin) {
@@ -326,6 +326,10 @@ public class ThreadUtil {
 	 * @param thread 线程
 	 */
 	public static void waitForDie(Thread thread) {
+		if(null == thread){
+			return;
+		}
+
 		boolean dead = false;
 		do {
 			try {
@@ -334,7 +338,7 @@ public class ThreadUtil {
 			} catch (InterruptedException e) {
 				// ignore
 			}
-		} while (!dead);
+		} while (false == dead);
 	}
 
 	/**
