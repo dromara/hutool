@@ -6,10 +6,7 @@ import java.sql.Clob;
 import java.sql.RowId;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
@@ -156,7 +153,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(Collection<String> fieldNames) {
 		if (CollectionUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = new HashSet<String>(fieldNames);
+			this.fieldNames = CollectionUtil.newHashSet(true, fieldNames);
 		}
 		return this;
 	}
@@ -169,7 +166,7 @@ public class Entity extends Dict {
 	 */
 	public Entity setFieldNames(String... fieldNames) {
 		if (ArrayUtil.isNotEmpty(fieldNames)) {
-			this.fieldNames = CollectionUtil.newHashSet(fieldNames);
+			this.fieldNames = CollectionUtil.newLinkedHashSet(fieldNames);
 		}
 		return this;
 	}
@@ -185,9 +182,7 @@ public class Entity extends Dict {
 			if (null == this.fieldNames) {
 				return setFieldNames(fieldNames);
 			} else {
-				for (String fieldName : fieldNames) {
-					this.fieldNames.add(fieldName);
-				}
+				Collections.addAll(this.fieldNames, fieldNames);
 			}
 		}
 		return this;

@@ -1,14 +1,14 @@
 package cn.hutool.core.util;
 
-import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
-import java.util.*;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
+
+import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
  * 数组工具类
@@ -494,15 +494,63 @@ public class ArrayUtil {
 	 * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，缩小则截断
 	 * 
 	 * @param <T> 数组元素类型
-	 * @param buffer 原数组
+	 * @param data 原数组
 	 * @param newSize 新的数组大小
 	 * @param componentType 数组元素类型
 	 * @return 调整后的新数组
 	 */
-	public static <T> T[] resize(T[] buffer, int newSize, Class<?> componentType) {
-		T[] newArray = newArray(componentType, newSize);
-		if (isNotEmpty(buffer)) {
-			System.arraycopy(buffer, 0, newArray, 0, Math.min(buffer.length, newSize));
+	public static <T> T[] resize(T[] data, int newSize, Class<?> componentType) {
+		if(newSize < 0){
+			return data;
+		}
+
+		final T[] newArray = newArray(componentType, newSize);
+		if (newSize > 0 && isNotEmpty(data)) {
+			System.arraycopy(data, 0, newArray, 0, Math.min(data.length, newSize));
+		}
+		return newArray;
+	}
+
+	/**
+	 * 生成一个新的重新设置大小的数组<br>
+	 * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，其它位置补充0，缩小则截断
+	 *
+	 * @param array 原数组
+	 * @param newSize 新的数组大小
+	 * @return 调整后的新数组
+	 * @since 4.6.7
+	 */
+	public static Object resize(Object array, int newSize) {
+		if(newSize < 0){
+			return array;
+		}
+		if (null == array) {
+			return null;
+		}
+		final int length = length(array);
+		final Object newArray = Array.newInstance(array.getClass().getComponentType(), newSize);
+		if (newSize > 0 && isNotEmpty(array)) {
+			System.arraycopy(array, 0, newArray, 0, Math.min(length, newSize));
+		}
+		return newArray;
+	}
+
+	/**
+	 * 生成一个新的重新设置大小的数组<br>
+	 * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，其它位置补充0，缩小则截断
+	 *
+	 * @param bytes 原数组
+	 * @param newSize 新的数组大小
+	 * @return 调整后的新数组
+	 * @since 4.6.7
+	 */
+	public static byte[] resize(byte[] bytes, int newSize) {
+		if(newSize < 0){
+			return bytes;
+		}
+		final byte[] newArray = new byte[newSize];
+		if (newSize > 0 && isNotEmpty(bytes)) {
+			System.arraycopy(bytes, 0, newArray, 0, Math.min(bytes.length, newSize));
 		}
 		return newArray;
 	}

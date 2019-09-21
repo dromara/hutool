@@ -337,7 +337,7 @@ public class RandomUtil {
 	 * @return 随机元素
 	 */
 	public static <T> List<T> randomEles(List<T> list, int count) {
-		final List<T> result = new ArrayList<T>(count);
+		final List<T> result = new ArrayList<>(count);
 		int limit = list.size();
 		while (result.size() < count) {
 			result.add(randomEle(list, limit));
@@ -361,7 +361,7 @@ public class RandomUtil {
 			throw new IllegalArgumentException("Count is larger than collection distinct size !");
 		}
 
-		final HashSet<T> result = new HashSet<T>(count);
+		final HashSet<T> result = new HashSet<>(count);
 		int limit = source.size();
 		while (result.size() < count) {
 			result.add(randomEle(source, limit));
@@ -409,14 +409,14 @@ public class RandomUtil {
 	 * @return 随机字符串
 	 */
 	public static String randomString(String baseString, int length) {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder(length);
 
 		if (length < 1) {
 			length = 1;
 		}
 		int baseLength = baseString.length();
 		for (int i = 0; i < length; i++) {
-			int number = getRandom().nextInt(baseLength);
+			int number = randomInt(baseLength);
 			sb.append(baseString.charAt(number));
 		}
 		return sb.toString();
@@ -450,7 +450,7 @@ public class RandomUtil {
 	 * @since 3.1.2
 	 */
 	public static char randomChar(String baseString) {
-		return baseString.charAt(getRandom().nextInt(baseString.length()));
+		return baseString.charAt(randomInt(baseString.length()));
 	}
 
 	/**

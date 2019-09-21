@@ -1,5 +1,8 @@
 package cn.hutool.crypto.test;
 
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -104,6 +107,18 @@ public class SymmetricTest {
 		String encryptHex = aes.encryptHex(content);
 
 		Assert.assertEquals("cd0e3a249eaf0ed80c330338508898c4bddcfd665a1b414622164a273ca5daf7b4ebd2c00aaa66b84dd0a237708dac8e", encryptHex);
+	}
+
+	@Test
+	public void aesZeroPaddingTest() {
+		String content = RandomUtil.randomString(RandomUtil.randomInt(200));
+		AES aes = new AES(Mode.CBC, Padding.ZeroPadding, "0123456789ABHAEQ".getBytes(), "DYgjCEIMVrj2W9xN".getBytes());
+
+		// 加密为16进制表示
+		String encryptHex = aes.encryptHex(content);
+		// 解密
+		String decryptStr = aes.decryptStr(encryptHex);
+		Assert.assertEquals(content, decryptStr);
 	}
 
 	@Test
