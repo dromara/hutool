@@ -29,8 +29,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> boolean isEmpty(final T... array) {
+	public static <T> boolean isEmpty(T[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -58,7 +57,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final long... array) {
+	public static boolean isEmpty(long[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -68,7 +67,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final int... array) {
+	public static boolean isEmpty(int[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -78,7 +77,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final short... array) {
+	public static boolean isEmpty(short[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -88,7 +87,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final char... array) {
+	public static boolean isEmpty(char[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -98,7 +97,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final byte... array) {
+	public static boolean isEmpty(byte[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -108,7 +107,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final double... array) {
+	public static boolean isEmpty(double[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -118,7 +117,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final float... array) {
+	public static boolean isEmpty(float[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -128,7 +127,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为空
 	 */
-	public static boolean isEmpty(final boolean... array) {
+	public static boolean isEmpty(boolean[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -140,8 +139,7 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> boolean isNotEmpty(final T... array) {
+	public static <T> boolean isNotEmpty( T[] array) {
 		return (array != null && array.length != 0);
 	}
 
@@ -164,8 +162,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(long... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(long[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -174,8 +172,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(int... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(int[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -184,8 +182,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(short... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(short[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -194,8 +192,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(char... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(char[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -204,8 +202,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(byte... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(byte[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -214,8 +212,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(double... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(double[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -224,8 +222,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(float... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(float[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
@@ -234,8 +232,8 @@ public class ArrayUtil {
 	 * @param array 数组
 	 * @return 是否为非空
 	 */
-	public static boolean isNotEmpty(boolean... array) {
-		return (array != null && array.length != 0);
+	public static boolean isNotEmpty(boolean[] array) {
+		return false == isEmpty(array);
 	}
 
 	/**
