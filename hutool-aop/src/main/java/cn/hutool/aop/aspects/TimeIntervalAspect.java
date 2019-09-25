@@ -22,7 +22,7 @@ public class TimeIntervalAspect extends SimpleAspect{
 	}
 	
 	@Override
-	public boolean after(Object target, Method method, Object[] args) {
+	public boolean after(Object target, Method method, Object[] args, Object returnVal) {
 		Console.log("Method [{}.{}] execute spend [{}]ms", target.getClass().getName(), method.getName(), interval.intervalMs());
 		return true;
 	}

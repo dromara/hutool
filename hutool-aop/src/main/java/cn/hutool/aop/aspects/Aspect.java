@@ -26,9 +26,10 @@ public interface Aspect{
 	 * @param target 目标对象
 	 * @param method 目标方法
 	 * @param args 参数
+	 * @param returnVal 目标方法执行返回值
 	 * @return 是否允许返回值（接下来的操作）
 	 */
-	boolean after(Object target, Method method, Object[] args);
+	boolean after(Object target, Method method, Object[] args, Object returnVal);
 
 	/**
 	 * 目标方法抛出异常时的操作

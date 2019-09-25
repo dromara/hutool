@@ -20,7 +20,7 @@ public class SimpleAspect implements Aspect, Serializable{
 	}
 
 	@Override
-	public boolean after(Object target, Method method, Object[] args) {
+	public boolean after(Object target, Method method, Object[] args, Object returnVal) {
 		//继承此类后实现此方法
 		return true;
 	}
