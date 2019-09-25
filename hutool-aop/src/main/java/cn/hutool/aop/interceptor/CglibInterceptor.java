@@ -52,7 +52,7 @@ public class CglibInterceptor implements MethodInterceptor, Serializable {
 				}
 			}
 		}
-		if (aspect.after(target, method, args)) {
+		if (aspect.after(target, method, args, result)) {
 			return result;
 		}
 		return null;

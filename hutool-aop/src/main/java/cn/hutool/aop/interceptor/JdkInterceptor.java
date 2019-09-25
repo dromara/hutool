@@ -53,7 +53,7 @@ public class JdkInterceptor implements InvocationHandler, Serializable{
 				}
 			}
 		}
-		if (aspect.after(target, method, args)) {
+		if (aspect.after(target, method, args, result)) {
 			return result;
 		}
 		return null;
