@@ -13,6 +13,7 @@ import cn.hutool.core.util.ReflectUtil;
  * JDK实现的动态代理切面
  * 
  * @author Looly
+ * @author ted.L
  *
  */
 public class JdkInterceptor implements InvocationHandler, Serializable{

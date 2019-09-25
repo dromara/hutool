@@ -13,6 +13,7 @@ import net.sf.cglib.proxy.MethodProxy;
  * Cglib实现的动态代理切面
  * 
  * @author looly
+ * @author ted.L
  *
  */
 public class CglibInterceptor implements MethodInterceptor, Serializable {
