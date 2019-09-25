@@ -8,9 +8,10 @@ import java.lang.reflect.Method;
  * 可以继承此类实现自己需要的方法即可
  * 
  * @author Looly
+ * @author ted.L
  *
  */
-public class SimpleAspect implements Aspect, Serializable{
+public abstract class SimpleAspect implements Aspect, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Override
