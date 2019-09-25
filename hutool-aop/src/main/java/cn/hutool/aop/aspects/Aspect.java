@@ -23,7 +23,11 @@ public interface Aspect{
 
 	/**
 	 * 目标方法执行后的操作
-	 * 
+	 * 如果 target.method 抛出异常且
+	 * @see Aspect#afterException 返回true,则不会执行此操作
+	 * 如果
+	 * @see Aspect#afterException 返回false,则无论target.method是否抛出异常，均会执行此操作
+	 *
 	 * @param target 目标对象
 	 * @param method 目标方法
 	 * @param args 参数
