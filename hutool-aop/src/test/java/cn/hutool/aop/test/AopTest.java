@@ -14,47 +14,60 @@ import cn.hutool.aop.aspects.TimeIntervalAspect;
  */
 public class AopTest {
 
-	@Test
-	public void aopTest() {
-		Animal cat = ProxyUtil.proxy(new Cat(), TimeIntervalAspect.class);
-		String result = cat.eat();
-		Assert.assertEquals("猫吃鱼", result);
-	}
+    @Test
+    public void aopTest() {
+        Animal cat = ProxyUtil.proxy(new Cat(), TimeIntervalAspect.class);
+        String result = cat.eat();
+        Assert.assertEquals("猫吃鱼", result);
+        cat.seize();
+    }
 
-	@Test
-	public void aopByCglibTest() {
-		Dog dog = ProxyUtil.proxy(new Dog(), TimeIntervalAspect.class);
-		String result = dog.eat();
-		Assert.assertEquals("狗吃肉", result);
-	}
+    @Test
+    public void aopByCglibTest() {
+        Dog dog = ProxyUtil.proxy(new Dog(), TimeIntervalAspect.class);
+        String result = dog.eat();
+        Assert.assertEquals("狗吃肉", result);
+		dog.seize();
+    }
 
-	static interface Animal {
-		String eat();
-	}
+    interface Animal {
+        String eat();
 
-	/**
-	 * 有接口
-	 * 
-	 * @author looly
-	 *
-	 */
-	static class Cat implements Animal {
+        void seize();
+    }
 
-		@Override
-		public String eat() {
-			return "猫吃鱼";
-		}
-	}
+    /**
+     * 有接口
+     * 
+     * @author looly
+     *
+     */
+    static class Cat implements Animal {
 
-	/**
-	 * 无接口
-	 * 
-	 * @author looly
-	 *
-	 */
-	static class Dog {
-		public String eat() {
-			return "狗吃肉";
-		}
-	}
+        @Override
+        public String eat() {
+            return "猫吃鱼";
+        }
+
+        @Override
+        public void seize() {
+            System.out.println("抓了条鱼");
+        }
+    }
+
+    /**
+     * 无接口
+     * 
+     * @author looly
+     *
+     */
+    static class Dog {
+        public String eat() {
+            return "狗吃肉";
+        }
+
+        public void seize() {
+            System.out.println("抓了只鸡");
+        }
+    }
 }
