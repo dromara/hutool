@@ -25,6 +25,7 @@ public class MailAccount implements Serializable {
 	private static final String SMTP_TIMEOUT = "mail.smtp.timeout";
 
 	private static final String STARTTTLS_ENABLE = "mail.smtp.starttls.enable";
+    private static final String SSL_ENABLE = "mail.smtp.ssl.enable";
 	private static final String SOCKEY_FACTORY = "mail.smtp.socketFactory.class";
 	private static final String SOCKEY_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
 	private static final String SOCKEY_FACTORY_PORT = "smtp.socketFactory.port";
@@ -440,6 +441,7 @@ public class MailAccount implements Serializable {
 		
 		// SSL
 		if(null != this.sslEnable && this.sslEnable) {
+            p.put(SSL_ENABLE, sslEnable);
 			p.put(SOCKEY_FACTORY, socketFactoryClass);
 			p.put(SOCKEY_FACTORY_FALLBACK, String.valueOf(this.socketFactoryFallback));
 			p.put(SOCKEY_FACTORY_PORT, String.valueOf(this.socketFactoryPort));
