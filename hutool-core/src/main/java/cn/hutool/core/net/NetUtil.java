@@ -1,7 +1,6 @@
 package cn.hutool.core.net;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.IDN;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -121,6 +120,51 @@ public class NetUtil {
 	public static boolean isValidPort(int port) {
 		// 有效端口是0～65535
 		return port >= 0 && port <= PORT_RANGE_MAX;
+	}
+
+	/**
+	 *判断本机与给定的ip(或域名)所属的计算机之间网络是否畅通
+	 * @param ip 被连接的计算机域名/ip
+	 * @return
+	 */
+	public static boolean isConnect(String ip){
+		//定义其返回的状态，默认为false，网络不正常
+		boolean connect = false;
+		/**
+		 * 用Runtime.getRuntime().exec()来调用系统外部的某个程序，
+         * 他会生成一个新的进程去运行调用的程序。
+         * 此方法返回一个java.lang.Process对象，
+         * 该对象可以得到之前开启的进程的运行结果，
+         * 还可以操作进程的输入输出流。
+		 */
+		Runtime runtime = Runtime.getRuntime();
+		Process process;
+		try {
+			process = runtime.exec("ping " + ip);
+			InputStream is = process.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is, "GBK");
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			StringBuffer sb = new StringBuffer();
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+			is.close();
+			isr.close();
+			br.close();
+			if (null != sb && !sb.toString().equals("")) {
+				if (sb.indexOf("TTL") > 0) {
+					//网络畅通
+					connect = true;
+				} else {
+					//网络不通
+					connect = false;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return connect;
 	}
 
 	/**
