@@ -14,5 +14,9 @@ from = 小磊<hutool@yeah.net>
 user = hutool
 # 密码
 pass = q1w2e3
-#使用 STARTTLS安全连接
-startttlsEnable = true
+# 使用 STARTTLS安全连接
+starttlsEnable = true
+# 是否开启SSL
+sslEnable = true
+# 调试模式
+debug = true
