@@ -189,7 +189,7 @@ public final class CsvParser implements Closeable, Serializable {
 
 					if (localPreChar == config.fieldSeparator || localCurrentField.hasContent()) {
 						//剩余部分作为一个字段
-						currentFields.add(localCurrentField.toStringAndReset());
+						currentFields.add(StrUtil.unWrap(localCurrentField.toStringAndReset(), config.textDelimiter));
 					}
 					break;
 				}
