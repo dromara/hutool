@@ -125,7 +125,7 @@ public class NetUtil {
 	/**
 	 *判断本机与给定的ip(或域名)所属的计算机之间网络是否畅通
 	 * @param ip 被连接的计算机域名/ip
-	 * @return
+	 * @return boolen
 	 */
 	public static boolean isConnect(String ip){
 		//定义其返回的状态，默认为false，网络不正常
