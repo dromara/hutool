@@ -7,10 +7,12 @@
 
 ### 新特性
 * 【core】        ArrayUtil.isEmpty可变长参数改为数组（issue#555@Github）
+* 【core】        新增Convert.toMap方法（issue#I12ISI@Gitee）
 
 ### Bug修复
 * 【extra】       修复Mail中sslEnable无效问题（pr#74@Gitee）
 * 【extra】       修复CsvParser中最后一行双引号没有去除的问题（pr#73@Gitee）
+* 【crypto】      修复SM2算法在自定义密钥时无效问题（issue#I12P5I@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

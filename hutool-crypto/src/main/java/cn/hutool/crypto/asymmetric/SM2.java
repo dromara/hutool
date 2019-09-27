@@ -123,7 +123,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		if (KeyType.PublicKey != keyType) {
 			throw new IllegalArgumentException("Encrypt is only support by public key");
 		}
-		ckeckKey(keyType);
+		checkKey(keyType);
 
 		lock.lock();
 		final SM2Engine engine = getEngine();
@@ -149,7 +149,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		if (KeyType.PrivateKey != keyType) {
 			throw new IllegalArgumentException("Decrypt is only support by private key");
 		}
-		ckeckKey(keyType);
+		checkKey(keyType);
 
 		lock.lock();
 		final SM2Engine engine = getEngine();
@@ -234,6 +234,28 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 	}
 
+	@Override
+	public SM2 setPrivateKey(PrivateKey privateKey) {
+		super.setPrivateKey(privateKey);
+
+		// 重新初始化密钥参数，防止重新设置密钥时导致密钥无法更新
+		this.privateKeyParams = null;
+		initCipherParams();
+
+		return this;
+	}
+
+	@Override
+	public SM2 setPublicKey(PublicKey publicKey) {
+		super.setPublicKey(publicKey);
+
+		// 重新初始化密钥参数，防止重新设置密钥时导致密钥无法更新
+		this.publicKeyParams = null;
+		initCipherParams();
+
+		return this;
+	}
+
 	/**
 	 * 设置加密类型
 	 * 
@@ -250,7 +272,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 
 	// ------------------------------------------------------------------------------------------------------------------------- Private method start
 	/**
-	 * 初始化加密解密参数
+	 * 初始化加密解密参数（包括私钥和公钥参数）
 	 * 
 	 * @return this
 	 */
@@ -291,7 +313,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 
 	 * @param keyType key类型
 	 */
-	private void ckeckKey(KeyType keyType) {
+	private void checkKey(KeyType keyType) {
 		switch (keyType) {
 		case PublicKey:
 			if (null == this.publicKey) {

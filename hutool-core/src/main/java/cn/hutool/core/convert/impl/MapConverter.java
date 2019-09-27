@@ -52,7 +52,7 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Map<?, ?> convertInternal(Object value) {
-		Map map = null;
+		final Map map;
 		if (value instanceof Map) {
 			final Type[] typeArguments = TypeUtil.getTypeArguments(value.getClass());
 			if (null != typeArguments //

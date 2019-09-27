@@ -2,7 +2,10 @@ package cn.hutool.core.convert;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,28 +57,28 @@ public class ConvertTest {
 		Integer aInteger = Convert.toInt(a);
 		Assert.assertEquals(Integer.valueOf(34232), aInteger);
 		int aInt = ConverterRegistry.getInstance().convert(int.class, a);
-		Assert.assertTrue(34232 == aInt);
+		Assert.assertEquals(34232, aInt);
 
 		// 带小数测试
 		String b = " 34232.00";
 		Integer bInteger = Convert.toInt(b);
 		Assert.assertEquals(Integer.valueOf(34232), bInteger);
 		int bInt = ConverterRegistry.getInstance().convert(int.class, b);
-		Assert.assertTrue(34232 == bInt);
+		Assert.assertEquals(34232, bInt);
 
 		// boolean测试
 		boolean c = true;
 		Integer cInteger = Convert.toInt(c);
 		Assert.assertEquals(Integer.valueOf(1), cInteger);
 		int cInt = ConverterRegistry.getInstance().convert(int.class, c);
-		Assert.assertTrue(1 == cInt);
+		Assert.assertEquals(1, cInt);
 
 		// boolean测试
 		String d = "08";
 		Integer dInteger = Convert.toInt(d);
 		Assert.assertEquals(Integer.valueOf(8), dInteger);
 		int dInt = ConverterRegistry.getInstance().convert(int.class, d);
-		Assert.assertTrue(8 == dInt);
+		Assert.assertEquals(8, dInt);
 	}
 
 	@Test
@@ -91,28 +94,28 @@ public class ConvertTest {
 		Long aLong = Convert.toLong(a);
 		Assert.assertEquals(Long.valueOf(342324545435435L), aLong);
 		long aLong2 = ConverterRegistry.getInstance().convert(long.class, a);
-		Assert.assertTrue(342324545435435L == aLong2);
+		Assert.assertEquals(342324545435435L, aLong2);
 
 		// 带小数测试
 		String b = " 342324545435435.245435435";
 		Long bLong = Convert.toLong(b);
 		Assert.assertEquals(Long.valueOf(342324545435435L), bLong);
 		long bLong2 = ConverterRegistry.getInstance().convert(long.class, b);
-		Assert.assertTrue(342324545435435L == bLong2);
+		Assert.assertEquals(342324545435435L, bLong2);
 
 		// boolean测试
 		boolean c = true;
 		Long cLong = Convert.toLong(c);
 		Assert.assertEquals(Long.valueOf(1), cLong);
 		long cLong2 = ConverterRegistry.getInstance().convert(long.class, c);
-		Assert.assertTrue(1 == cLong2);
+		Assert.assertEquals(1, cLong2);
 
 		// boolean测试
 		String d = "08";
 		Long dLong = Convert.toLong(d);
 		Assert.assertEquals(Long.valueOf(8), dLong);
 		long dLong2 = ConverterRegistry.getInstance().convert(long.class, d);
-		Assert.assertTrue(8 == dLong2);
+		Assert.assertEquals(8, dLong2);
 	}
 
 	@Test

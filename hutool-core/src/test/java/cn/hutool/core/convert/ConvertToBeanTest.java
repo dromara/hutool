@@ -1,8 +1,10 @@
 package cn.hutool.core.convert;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,6 +31,37 @@ public class ConvertToBeanTest {
 		Assert.assertEquals(map.get("name"), "测试A11");
 		Assert.assertEquals(map.get("age"), 14);
 		Assert.assertEquals("11213232", map.get("openid"));
+	}
+
+	@Test
+	public void beanToMapTest2() {
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		Map<String, String> map = Convert.toMap(String.class, String.class, person);
+		Assert.assertEquals(map.get("name"), "测试A11");
+		Assert.assertEquals(map.get("age"), 14);
+		Assert.assertEquals("11213232", map.get("openid"));
+	}
+
+	@Test
+	public void mapToMapTest() {
+		LinkedHashMap<String, Integer> map1 = new LinkedHashMap<>();
+		map1.put("key1", 1);
+		map1.put("key2", 2);
+		map1.put("key3", 3);
+		map1.put("key4", 4);
+
+		Map<String, String> map2 = Convert.toMap(String.class, String.class, map1);
+		Console.log(map2);
+
+		Assert.assertEquals("1", map2.get("key1"));
+		Assert.assertEquals("2", map2.get("key2"));
+		Assert.assertEquals("3", map2.get("key3"));
+		Assert.assertEquals("4", map2.get("key4"));
 	}
 	
 	@Test
