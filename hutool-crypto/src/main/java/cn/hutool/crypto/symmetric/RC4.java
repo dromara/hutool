@@ -1,5 +1,6 @@
 package cn.hutool.crypto.symmetric;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
@@ -17,14 +18,13 @@ import cn.hutool.crypto.CryptoException;
  *
  * @author Iurii Sergiichuk，Looly
  */
-public class RC4 {
+public class RC4 implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private static final int SBOX_LENGTH = 256;
 	/** 密钥最小长度 */
 	private static final int KEY_MIN_LENGTH = 5;
 
-	/** Key array */
-	private byte[] key;
 	/** Sbox */
 	private int[] sbox;
 	
@@ -34,7 +34,7 @@ public class RC4 {
 	 * 构造
 	 * 
 	 * @param key 密钥
-	 * @throws CryptoException
+	 * @throws CryptoException key长度小于5或者大于255抛出此异常
 	 */
 	public RC4(String key) throws CryptoException {
 		setKey(key);
@@ -175,8 +175,7 @@ public class RC4 {
 		final WriteLock writeLock = this.lock.writeLock();
 		writeLock.lock();
 		try {
-			this.key = StrUtil.utf8Bytes(key);
-			this.sbox = initSBox(this.key);
+			this.sbox = initSBox(StrUtil.utf8Bytes(key));
 		} finally {
 			writeLock.unlock();
 		}

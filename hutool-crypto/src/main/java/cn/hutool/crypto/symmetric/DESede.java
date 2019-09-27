@@ -18,6 +18,7 @@ import cn.hutool.crypto.SecureUtil;
  * @since 3.3.0
  */
 public class DESede extends SymmetricCrypto {
+	private static final long serialVersionUID = 1L;
 
 	// ------------------------------------------------------------------------- Constructor start
 	/**
@@ -151,28 +152,4 @@ public class DESede extends SymmetricCrypto {
 		super(StrUtil.format("{}/{}/{}", SymmetricAlgorithm.DESede.getValue(), mode, padding), key, iv);
 	}
 	// ------------------------------------------------------------------------- Constructor end
-
-	/**
-	 * 设置偏移向量
-	 * 
-	 * @param iv {@link IvParameterSpec}偏移向量
-	 * @return 自身
-	 */
-	public DESede setIv(IvParameterSpec iv) {
-		super.setParams(iv);
-		return this;
-	}
-
-	/**
-	 * 设置偏移向量
-	 * 
-	 * @param iv 偏移向量，加盐
-	 * @return 自身
-	 * @since 3.3.0
-	 */
-	public DESede setIv(byte[] iv) {
-		setIv(new IvParameterSpec(iv));
-		return this;
-	}
-
 }
