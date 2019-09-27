@@ -1,8 +1,5 @@
 package cn.hutool.crypto.test;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;

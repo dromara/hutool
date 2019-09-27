@@ -19,7 +19,7 @@ public enum SoapProtocol {
 	 * 
 	 * @param value {@link SOAPConstants} 中的协议版本值
 	 */
-	private SoapProtocol(String value) {
+	SoapProtocol(String value) {
 		this.value = value;
 	}
 

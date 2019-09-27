@@ -55,7 +55,7 @@ public enum Month {
 	// ---------------------------------------------------------------
 	private int value;
 
-	private Month(int value) {
+	Month(int value) {
 		this.value = value;
 	}
 

@@ -31,6 +31,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.Checksum;
@@ -170,7 +171,7 @@ public class IoUtil {
 		}
 		long size = 0;
 		try {
-			for (int readSize = -1; (readSize = in.read(buffer)) != EOF;) {
+			for (int readSize; (readSize = in.read(buffer)) != EOF;) {
 				out.write(buffer, 0, readSize);
 				size += readSize;
 				out.flush();
@@ -314,7 +315,7 @@ public class IoUtil {
 			return null;
 		}
 
-		InputStreamReader reader = null;
+		InputStreamReader reader;
 		if (null == charset) {
 			reader = new InputStreamReader(in);
 		} else {
@@ -605,7 +606,7 @@ public class IoUtil {
 		if (in == null) {
 			throw new IllegalArgumentException("The InputStream must not be null");
 		}
-		ObjectInputStream ois = null;
+		ObjectInputStream ois;
 		try {
 			ois = new ObjectInputStream(in);
 			@SuppressWarnings("unchecked") // may fail with CCE if serialised form is incorrect
@@ -717,7 +718,7 @@ public class IoUtil {
 
 		// 从返回的内容中读取所需内容
 		final BufferedReader bReader = getReader(reader);
-		String line = null;
+		String line;
 		try {
 			while ((line = bReader.readLine()) != null) {
 				lineHandler.handle(line);
@@ -1092,11 +1093,11 @@ public class IoUtil {
 		try {
 			String line1 = br1.readLine();
 			String line2 = br2.readLine();
-			while (line1 != null && line2 != null && line1.equals(line2)) {
+			while (line1 != null && line1.equals(line2)) {
 				line1 = br1.readLine();
 				line2 = br2.readLine();
 			}
-			return line1 == null ? line2 == null ? true : false : line1.equals(line2);
+			return Objects.equals(line1, line2);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

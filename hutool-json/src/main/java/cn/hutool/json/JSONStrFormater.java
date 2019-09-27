@@ -12,9 +12,9 @@ import cn.hutool.core.util.StrUtil;
 public class JSONStrFormater {
 	
 	/** 单位缩进字符串。*/
-	private static String SPACE = "    ";
+	private static final String SPACE = "    ";
 	/** 换行符*/
-	private static char NEW_LINE = StrUtil.C_LF;
+	private static final char NEW_LINE = StrUtil.C_LF;
 
 	/**
 	 * 返回格式化JSON字符串。
@@ -23,13 +23,13 @@ public class JSONStrFormater {
 	 * @return 格式化的JSON字符串。
 	 */
 	public static String format(String json) {
-		final StringBuffer result = new StringBuffer();
+		final StringBuilder result = new StringBuilder();
 
 		Character wrapChar = null;
 		boolean isEscapeMode = false;
 		int length = json.length();
 		int number = 0;
-		char key = 0;
+		char key;
 		for (int i = 0; i < length; i++) {
 			key = json.charAt(i);
 			

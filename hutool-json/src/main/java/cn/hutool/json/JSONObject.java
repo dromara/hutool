@@ -441,8 +441,8 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	}
 
 	@Override
-	public void putAll(Map<? extends String, ? extends Object> m) {
-		for (Entry<? extends String, ? extends Object> entry : m.entrySet()) {
+	public void putAll(Map<? extends String, ?> m) {
+		for (Entry<? extends String, ?> entry : m.entrySet()) {
 			this.put(entry.getKey(), entry.getValue());
 		}
 	}
@@ -565,13 +565,10 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		}
 		final JSONObject other = (JSONObject) obj;
 		if (rawHashMap == null) {
-			if (other.rawHashMap != null) {
-				return false;
-			}
-		} else if (!rawHashMap.equals(other.rawHashMap)) {
-			return false;
+			return other.rawHashMap == null;
+		} else {
+			return rawHashMap.equals(other.rawHashMap);
 		}
-		return true;
 	}
 
 	/**
@@ -660,7 +657,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			}
 
 			InternalJSONUtil.indent(writer, newIndent);
-			writer.write(JSONUtil.quote(entry.getKey().toString()));
+			writer.write(JSONUtil.quote(entry.getKey()));
 			writer.write(CharUtil.COLON);
 			if (indentFactor > 0) {
 				// 冒号后的空格
@@ -682,7 +679,6 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * Bean对象转Map
 	 * 
 	 * @param bean Bean对象
-	 * @param ignoreNullValue 是否忽略空值
 	 */
 	private void populateMap(Object bean) {
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(bean.getClass()).getProps();
@@ -735,7 +731,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		}
 		
 		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(source.getClass());
-		if(null != serializer && serializer instanceof JSONObjectSerializer) {
+		if(serializer instanceof JSONObjectSerializer) {
 			// 自定义序列化
 			serializer.serialize(this, source);
 		} else if (source instanceof Map) {

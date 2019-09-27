@@ -21,7 +21,7 @@ public enum DigestAlgorithm {
 	 * 
 	 * @param value 算法字符串表示
 	 */
-	private DigestAlgorithm(String value) {
+	DigestAlgorithm(String value) {
 		this.value = value;
 	}
 

@@ -21,6 +21,7 @@ import javax.net.ssl.SSLSocketFactory;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.BytesResource;
 import cn.hutool.core.io.resource.FileResource;
@@ -811,11 +812,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 3.3.0
 	 */
 	public HttpRequest setMaxRedirectCount(int maxRedirectCount) {
-		if (maxRedirectCount > 0) {
-			this.maxRedirectCount = maxRedirectCount;
-		} else {
-			this.maxRedirectCount = 0;
-		}
+		this.maxRedirectCount = Math.max(maxRedirectCount, 0);
 		return this;
 	}
 
@@ -993,7 +990,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				// 自定义Cookie
 				.setCookie(this.cookie)
 				// 定义转发
-				.setInstanceFollowRedirects(this.maxRedirectCount > 0 ? true : false)
+				.setInstanceFollowRedirects(this.maxRedirectCount > 0)
 				// 流方式上传数据
 				.setChunkedStreamingMode(this.blockSize)
 				// 覆盖默认Header
@@ -1060,9 +1057,9 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 发送数据流
 	 *
-	 * @throws IOException
+	 * @throws IORuntimeException IO异常
 	 */
-	private void send() throws HttpException {
+	private void send() throws IORuntimeException {
 		try {
 			if (Method.POST.equals(this.method) || Method.PUT.equals(this.method) || Method.DELETE.equals(this.method) || this.isRest) {
 				if (CollectionUtil.isEmpty(this.fileForm)) {
@@ -1076,7 +1073,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		} catch (IOException e) {
 			// 异常时关闭连接
 			this.httpConnection.disconnectQuietly();
-			throw new HttpException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
@@ -1084,7 +1081,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 发送普通表单<br>
 	 * 发送数据后自动关闭输出流
 	 *
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	private void sendFormUrlEncoded() throws IOException {
 		if (StrUtil.isBlank(this.header(Header.CONTENT_TYPE))) {
@@ -1105,7 +1102,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 发送多组件请求（例如包含文件的表单）<br>
 	 * 发送数据后自动关闭输出流
 	 *
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	private void sendMultipart() throws IOException {
 		setMultipart();// 设置表单类型为Multipart
@@ -1114,8 +1111,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			writeFileForm(out);
 			writeForm(out);
 			formEnd(out);
-		} catch (IOException e) {
-			throw e;
 		}
 	}
 
@@ -1125,9 +1120,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 发送普通表单内容
 	 *
 	 * @param out 输出流
-	 * @throws IOException
 	 */
-	private void writeForm(OutputStream out) throws IOException {
+	private void writeForm(OutputStream out) {
 		if (CollectionUtil.isNotEmpty(this.form)) {
 			StringBuilder builder = StrUtil.builder();
 			for (Entry<String, Object> entry : this.form.entrySet()) {
@@ -1143,9 +1137,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 发送文件对象表单
 	 *
 	 * @param out 输出流
-	 * @throws IOException
 	 */
-	private void writeFileForm(OutputStream out) throws IOException {
+	private void writeFileForm(OutputStream out) {
 		for (Entry<String, Resource> entry : this.fileForm.entrySet()) {
 			appendPart(entry.getKey(), entry.getValue(), out);
 		}
@@ -1191,7 +1184,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 上传表单结束
 	 *
 	 * @param out 输出流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	private void formEnd(OutputStream out) throws IOException {
 		out.write(BOUNDARY_END);
@@ -1201,7 +1194,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 设置表单类型为Multipart（文件上传）
 	 *
-	 * @return HttpConnection
+	 * @return HttpConnection HTTP连接对象
 	 */
 	private void setMultipart() {
 		this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_MULTIPART_PREFIX + BOUNDARY, true);
@@ -1215,10 +1208,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 3.1.2
 	 */
 	private boolean isIgnoreResponseBody() {
-		if (Method.HEAD == this.method || Method.CONNECT == this.method || Method.OPTIONS == this.method || Method.TRACE == this.method) {
-			return true;
-		}
-		return false;
+		return Method.HEAD == this.method //
+				|| Method.CONNECT == this.method //
+				|| Method.OPTIONS == this.method //
+				|| Method.TRACE == this.method;
 	}
 	// ---------------------------------------------------------------- Private method end
 

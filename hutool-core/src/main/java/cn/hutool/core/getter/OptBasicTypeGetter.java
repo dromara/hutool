@@ -140,7 +140,7 @@ public interface OptBasicTypeGetter<K> {
 	 * @param defaultValue 默认值
 	 * @return Enum类型的值，无则返回Null
 	 */
-	public <E extends Enum<E>> E getEnum(Class<E> clazz, K key, E defaultValue);
+	<E extends Enum<E>> E getEnum(Class<E> clazz, K key, E defaultValue);
 	
 	/**
 	 * 获取Date类型值

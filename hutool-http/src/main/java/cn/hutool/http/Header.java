@@ -64,7 +64,7 @@ public enum Header {
 	LOCATION("Location");
 	
 	private String value;
-	private Header(String value) {
+	Header(String value) {
 		this.value = value;
 	}
 	

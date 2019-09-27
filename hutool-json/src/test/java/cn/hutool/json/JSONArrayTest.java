@@ -79,7 +79,6 @@ public class JSONArrayTest {
 		List<Exam> list = array.toList(Exam.class);
 		Assert.assertFalse(list.isEmpty());
 		Assert.assertEquals(Exam.class, list.get(0).getClass());
-		;
 	}
 
 	@Test
@@ -123,7 +122,7 @@ public class JSONArrayTest {
 		JSONArray array = JSONUtil.parseArray(jsonStr);
 
 		Exam[] list = array.toArray(new Exam[0]);
-		Assert.assertFalse(0 == list.length);
+		Assert.assertNotEquals(0, list.length);
 		Assert.assertEquals(Exam.class, list[0].getClass());
 	}
 
@@ -136,7 +135,7 @@ public class JSONArrayTest {
 		JSONArray ja = JSONUtil.parseArray(json);
 
 		List<KeyBean> list = ja.toList(KeyBean.class);
-		Assert.assertTrue(null == list.get(0));
+		Assert.assertNull(list.get(0));
 		Assert.assertEquals("avalue", list.get(1).getAkey());
 		Assert.assertEquals("bvalue", list.get(1).getBkey());
 	}
@@ -175,7 +174,7 @@ public class JSONArrayTest {
 		return map;
 	}
 	
-	class User {
+	static class User {
 		private Integer id;
 		private String name;
 		

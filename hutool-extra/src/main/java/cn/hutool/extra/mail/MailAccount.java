@@ -1,13 +1,12 @@
 package cn.hutool.extra.mail;
 
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.util.Properties;
-
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.setting.Setting;
+
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.util.Properties;
 
 /**
  * 邮件账户对象

@@ -19,5 +19,5 @@ public interface Editor<T> {
 	 * @param t 被过滤的对象
 	 * @return 修改后的对象，如果被过滤返回<code>null</code>
 	 */
-	public T edit(T t);
+	T edit(T t);
 }

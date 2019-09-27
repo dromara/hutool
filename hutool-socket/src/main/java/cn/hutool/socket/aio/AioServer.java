@@ -143,7 +143,7 @@ public class AioServer implements Closeable{
 	 * @return 服务是否开启状态
 	 */
 	public boolean isOpen() {
-		return (null == this.channel) ? false : this.channel.isOpen();
+		return (null != this.channel) && this.channel.isOpen();
 	}
 
 	/**

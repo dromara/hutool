@@ -129,7 +129,7 @@ public class DateModifier {
 	 * @author looly
 	 *
 	 */
-	public static enum ModifyType {
+	public enum ModifyType {
 		/**
 		 * 取指定日期短的起始值.
 		 */

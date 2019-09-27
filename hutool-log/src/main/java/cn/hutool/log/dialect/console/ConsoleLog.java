@@ -10,43 +10,45 @@ import cn.hutool.log.level.Level;
 
 /**
  * 利用System.out.println()打印日志
- * @author Looly
  *
+ * @author Looly
  */
 public class ConsoleLog extends AbstractLog {
 	private static final long serialVersionUID = -6843151523380063975L;
 
-	private static String logFormat = "[{date}] [{level}] {name}: {msg}";
+	private static final String logFormat = "[{date}] [{level}] {name}: {msg}";
 	private static Level currentLevel = Level.DEBUG;
-	
+
 	private String name;
-	
+
 	//------------------------------------------------------------------------- Constructor
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param clazz 类
 	 */
 	public ConsoleLog(Class<?> clazz) {
 		this.name = (null == clazz) ? StrUtil.NULL : clazz.getName();
 	}
-	
+
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param name 类名
 	 */
 	public ConsoleLog(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * 设置自定义的日志显示级别
+	 *
 	 * @param customLevel 自定义级别
 	 * @since 4.1.10
 	 */
@@ -65,6 +67,7 @@ public class ConsoleLog extends AbstractLog {
 	public void trace(String fqcn, Throwable t, String format, Object... arguments) {
 		log(fqcn, Level.TRACE, t, format, arguments);
 	}
+
 	//------------------------------------------------------------------------- Debug
 	@Override
 	public boolean isDebugEnabled() {
@@ -108,31 +111,31 @@ public class ConsoleLog extends AbstractLog {
 	public void error(String fqcn, Throwable t, String format, Object... arguments) {
 		log(fqcn, Level.ERROR, t, format, arguments);
 	}
-	
+
 	//------------------------------------------------------------------------- Log
 	@Override
 	public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
 		// fqcn 无效
-		if(false == isEnabled(level)){
+		if (false == isEnabled(level)) {
 			return;
 		}
-		
+
 		final Dict dict = Dict.create()
 				.set("date", DateUtil.now())
 				.set("level", level.toString())
 				.set("name", this.name)
 				.set("msg", StrUtil.format(format, arguments));
-		
+
 		final String logMsg = StrUtil.format(logFormat, dict);
-		
+
 		//WARN以上级别打印至System.err
-		if(level.ordinal() >= Level.WARN.ordinal()){
+		if (level.ordinal() >= Level.WARN.ordinal()) {
 			Console.error(t, logMsg);
-		}else{
+		} else {
 			Console.log(t, logMsg);
 		}
 	}
-	
+
 	@Override
 	public boolean isEnabled(Level level) {
 		return currentLevel.compareTo(level) <= 0;

@@ -16,7 +16,7 @@ public enum GlobalMailAccount {
 	/**
 	 * 构造
 	 */
-	private GlobalMailAccount() {
+	GlobalMailAccount() {
 		mailAccount = createDefaultAccount();
 	}
 

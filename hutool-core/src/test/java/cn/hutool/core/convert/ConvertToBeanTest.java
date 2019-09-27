@@ -42,8 +42,8 @@ public class ConvertToBeanTest {
 		person.setSubName("sub名字");
 
 		Map<String, String> map = Convert.toMap(String.class, String.class, person);
-		Assert.assertEquals(map.get("name"), "测试A11");
-		Assert.assertEquals(map.get("age"), 14);
+		Assert.assertEquals("测试A11", map.get("name"));
+		Assert.assertEquals("14", map.get("age"));
 		Assert.assertEquals("11213232", map.get("openid"));
 	}
 

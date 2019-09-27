@@ -129,7 +129,7 @@ public class Base62Codec implements Serializable{
 	 * @return 计算结果
 	 */
 	private byte[] convert(byte[] message, int sourceBase, int targetBase) {
-		/** 计算结果长度，算法来自：http://codegolf.stackexchange.com/a/21672 */
+		// 计算结果长度，算法来自：http://codegolf.stackexchange.com/a/21672
 		final int estimatedLength = estimateOutputLength(message.length, sourceBase, targetBase);
 
 		final ByteArrayOutputStream out = new ByteArrayOutputStream(estimatedLength);

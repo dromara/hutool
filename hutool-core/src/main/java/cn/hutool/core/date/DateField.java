@@ -105,7 +105,7 @@ public enum DateField {
 	// ---------------------------------------------------------------
 	private int value;
 
-	private DateField(int value) {
+	DateField(int value) {
 		this.value = value;
 	}
 

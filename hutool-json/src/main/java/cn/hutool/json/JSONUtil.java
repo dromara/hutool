@@ -150,7 +150,7 @@ public final class JSONUtil {
 			return null;
 		}
 
-		JSON json = null;
+		JSON json;
 		if (obj instanceof JSON) {
 			json = (JSON) obj;
 		} else if (obj instanceof String) {
@@ -647,9 +647,6 @@ public final class JSONUtil {
 			// 日期类型原样保存，便于格式化
 			if (object instanceof Date || object instanceof Calendar) {
 				return object;
-			}
-			if (object instanceof Calendar) {
-				return ((Calendar) object).getTimeInMillis();
 			}
 			// 枚举类保存其字符串形式（4.0.2新增）
 			if (object instanceof Enum) {

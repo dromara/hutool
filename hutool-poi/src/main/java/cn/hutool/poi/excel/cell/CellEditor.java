@@ -14,5 +14,5 @@ public interface CellEditor {
 	 * @param value 单元格值
 	 * @return 编辑后的对象
 	 */
-	public Object edit(Cell cell, Object value);
+	Object edit(Cell cell, Object value);
 }

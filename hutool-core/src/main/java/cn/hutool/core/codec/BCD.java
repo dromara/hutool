@@ -21,11 +21,12 @@ public class BCD {
 			asc = "0" + asc;
 			len = asc.length();
 		}
-		byte abt[] = new byte[len];
+		byte[] abt;
 		if (len >= 2) {
 			len >>= 1;
 		}
-		byte bbt[] = new byte[len];
+		byte[] bbt;
+		bbt = new byte[len];
 		abt = asc.getBytes();
 		int j;
 		int k;
@@ -82,7 +83,8 @@ public class BCD {
 	 * @return ASCII字符串
 	 */
 	public static String bcdToStr(byte[] bytes) {
-		char temp[] = new char[bytes.length * 2], val;
+		char[] temp = new char[bytes.length * 2];
+		char val;
 
 		for (int i = 0; i < bytes.length; i++) {
 			val = (char) (((bytes[i] & 0xf0) >> 4) & 0x0f);

@@ -18,7 +18,7 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	/**
 	 * @return 日志对象的Name
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * 是否开启指定日志

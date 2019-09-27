@@ -19,19 +19,19 @@ public interface ValueParser {
 	 * @param value String值
 	 * @return int
 	 */
-	public int parse(String value);
+	int parse(String value);
 
 	/**
 	 * 返回最小值
 	 * 
 	 * @return 最小值
 	 */
-	public int getMin();
+	int getMin();
 
 	/**
 	 * 返回最大值
 	 * 
 	 * @return 最大值
 	 */
-	public int getMax();
+	int getMax();
 }

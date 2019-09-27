@@ -1,15 +1,11 @@
 package cn.hutool.core.convert;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import cn.hutool.core.lang.Console;
+import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.date.DateUtil;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * 类型转换工具单元测试

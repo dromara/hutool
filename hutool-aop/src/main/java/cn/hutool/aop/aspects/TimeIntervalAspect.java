@@ -1,10 +1,9 @@
 package cn.hutool.aop.aspects;
 
-import java.lang.reflect.Method;
-
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.StrUtil;
+
+import java.lang.reflect.Method;
 
 /**
  * 通过日志打印方法的执行时间的切面

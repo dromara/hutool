@@ -28,7 +28,7 @@ public enum SymmetricAlgorithm {
 	 * 构造
 	 * @param value 算法的字符串表示，区分大小写
 	 */
-	private SymmetricAlgorithm(String value) {
+	SymmetricAlgorithm(String value) {
 		this.value = value;
 	}
 

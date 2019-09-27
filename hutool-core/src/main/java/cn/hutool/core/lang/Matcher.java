@@ -12,5 +12,5 @@ public interface Matcher<T>{
 	 * @param t 对象
 	 * @return 是否匹配
 	 */
-	public boolean match(T t);
+	boolean match(T t);
 }

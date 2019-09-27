@@ -19,7 +19,7 @@ public class ModifierUtil {
 	 * @author looly
 	 * @since 4.0.5
 	 */
-	public static enum ModifierType {
+	public enum ModifierType {
 		/** public修饰符，所有类都能访问 */
 		PUBLIC(Modifier.PUBLIC),
 		/** private修饰符，只能被自己访问和修改 */
@@ -51,7 +51,7 @@ public class ModifierUtil {
 		 * 构造
 		 * @param modifier 修饰符int表示，见{@link Modifier}
 		 */
-		private ModifierType(int modifier) {
+		ModifierType(int modifier) {
 			this.value = modifier;
 		}
 

@@ -350,7 +350,7 @@ public class OsInfo implements Serializable{
 	 * 
 	 * @return 如果匹配，则返回<code>true</code>
 	 */
-	private final boolean getOSMatches(String osNamePrefix) {
+	private boolean getOSMatches(String osNamePrefix) {
 		if (OS_NAME == null) {
 			return false;
 		}
@@ -366,7 +366,7 @@ public class OsInfo implements Serializable{
 	 * 
 	 * @return 如果匹配，则返回<code>true</code>
 	 */
-	private final boolean getOSMatches(String osNamePrefix, String osVersionPrefix) {
+	private boolean getOSMatches(String osNamePrefix, String osVersionPrefix) {
 		if ((OS_NAME == null) || (OS_VERSION == null)) {
 			return false;
 		}

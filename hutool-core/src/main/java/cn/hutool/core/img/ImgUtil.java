@@ -389,8 +389,8 @@ public class ImgUtil {
 
 		try {
 			if (srcWidth > destWidth && srcHeight > destHeight) {
-				int cols = 0; // 切片横向数量
-				int rows = 0; // 切片纵向数量
+				int cols; // 切片横向数量
+				int rows; // 切片纵向数量
 				// 计算切片的横向和纵向数量
 				if (srcWidth % destWidth == 0) {
 					cols = srcWidth / destWidth;
@@ -1772,7 +1772,7 @@ public class ImgUtil {
 			return Color.LIGHT_GRAY;
 		} else if ("GRAY".equals(colorName)) {
 			return Color.GRAY;
-		} else if ("DARK_GRAY".equals(colorName) || "DARK_GRAY".equals(colorName)) {
+		} else if ("DARKGRAY".equals(colorName) || "DARK_GRAY".equals(colorName)) {
 			return Color.DARK_GRAY;
 		} else if ("RED".equals(colorName)) {
 			return Color.RED;

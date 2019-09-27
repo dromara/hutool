@@ -13,7 +13,7 @@ public enum GlobalBouncyCastleProvider {
 	private Provider provider;
 	private static boolean useBouncyCastle = true;
 	
-	private GlobalBouncyCastleProvider() {
+	GlobalBouncyCastleProvider() {
 		try {
 			this.provider = ProviderFactory.createBouncyCastleProvider();
 		} catch (NoClassDefFoundError e) {
@@ -33,7 +33,7 @@ public enum GlobalBouncyCastleProvider {
 	 * 设置是否使用Bouncy Castle库<br>
 	 * 如果设置为false，表示强制关闭Bouncy Castle而使用JDK
 	 * 
-	 * @param isUseBouncyCastle
+	 * @param isUseBouncyCastle 是否使用BouncyCastle库
 	 * @since 4.5.2
 	 */
 	public static void setUseBouncyCastle(boolean isUseBouncyCastle) {
