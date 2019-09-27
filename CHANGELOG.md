@@ -13,6 +13,8 @@
 * 【extra】       修复Mail中sslEnable无效问题（pr#74@Gitee）
 * 【extra】       修复CsvParser中最后一行双引号没有去除的问题（pr#73@Gitee）
 * 【crypto】      修复SM2算法在自定义密钥时无效问题（issue#I12P5I@Gitee）
+* 【core】        修复StopWatch.prettyPrint条件问题（issue#I12RAC@Gitee）
+* 【core】        修复StrBuilder.del无法删除最后一个字符的问题（issue#I12R14@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
