@@ -9,6 +9,7 @@
 * 【core】        ArrayUtil.isEmpty可变长参数改为数组（issue#555@Github）
 * 【core】        新增Convert.toMap方法（issue#I12ISI@Gitee）
 * 【aop 】        增加返回值获取支持，优化逻辑和接口（pr#561@Github）
+* 【aop 】        改进HtmlUtil.removeHtmlAttr（issue#556@Github）
 
 ### Bug修复
 * 【extra】       修复Mail中sslEnable无效问题（pr#74@Gitee）
