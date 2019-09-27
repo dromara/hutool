@@ -20,6 +20,8 @@
 * 【core】        修复StrBuilder.del无法删除最后一个字符的问题（issue#I12R14@Gitee）
 * 【core】        修复StrBuilder.del无法删除最后一个字符的问题（issue#I12R14@Gitee）
 * 【poi】         修复sax方式读取复用行导致的问题（issue#I12O0U@Gitee）
+* 【core】        修复ClassUtil循环调用问题
+* 【core】        修复MapConvert转换Bean为Map类型没有转换成功问题
 
 -------------------------------------------------------------------------------------------------------------
 
