@@ -13,6 +13,7 @@ import cn.hutool.core.util.ReflectUtil;
  * JDK实现的动态代理切面
  * 
  * @author Looly
+ * @author ted.L
  *
  */
 public class JdkInterceptor implements InvocationHandler, Serializable{
@@ -46,14 +47,16 @@ public class JdkInterceptor implements InvocationHandler, Serializable{
 				result = ReflectUtil.invoke(target, method, args);
 			} catch (UtilException e) {
 				final Throwable cause = e.getCause();
-				if (e.getCause() instanceof InvocationTargetException) {
-					aspect.afterException(target, method, args, ((InvocationTargetException) cause).getTargetException());
-				} else {
-					throw e;// 其它异常属于代理的异常，直接抛出
+				if (!(e.getCause() instanceof InvocationTargetException)) {
+					// 其它异常属于代理的异常，直接抛出
+					throw e;
+				}
+				if(aspect.afterException(target, method, args, ((InvocationTargetException) cause).getTargetException())){
+					throw e;
 				}
 			}
 		}
-		if (aspect.after(target, method, args)) {
+		if (aspect.after(target, method, args, result)) {
 			return result;
 		}
 		return null;
