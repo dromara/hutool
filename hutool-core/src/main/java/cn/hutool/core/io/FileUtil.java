@@ -1548,7 +1548,7 @@ public class FileUtil {
 		// 去除file:前缀
 		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
 		// 统一使用斜杠
-		pathToUse = pathToUse.replaceAll("[/\\\\]{2,}", StrUtil.SLASH).trim();
+		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH).trim();
 		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
 		if(path.startsWith("\\\\")){
 			pathToUse = "\\" + pathToUse;
