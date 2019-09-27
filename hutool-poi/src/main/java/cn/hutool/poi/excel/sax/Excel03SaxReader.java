@@ -299,7 +299,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 		// 每行结束时， 调用handle() 方法
 		this.rowHandler.handle(curRid, lastCell.getRow(), this.rowCellList);
 		// 清空行Cache
-		this.rowCellList.clear();
+		this.rowCellList = new ArrayList<>(this.rowCellList.size());
 	}
 
 	/**
