@@ -10,6 +10,7 @@ import cn.hutool.core.util.TypeUtil;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * {@link Map} 转换器
@@ -57,8 +58,8 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 			final Type[] typeArguments = TypeUtil.getTypeArguments(value.getClass());
 			if (null != typeArguments //
 					&& 2 == typeArguments.length//
-					&& this.keyType.equals(typeArguments[0]) //
-					&& this.valueType.equals(typeArguments[1])) {
+					&& Objects.equals(this.keyType, typeArguments[0]) //
+					&& Objects.equals(this.valueType, typeArguments[1])) {
 				//对于键值对类型一致的Map对象，不再做转换，直接返回原对象
 				return (Map) value;
 			}
