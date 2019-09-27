@@ -15,6 +15,8 @@
 * 【crypto】      修复SM2算法在自定义密钥时无效问题（issue#I12P5I@Gitee）
 * 【core】        修复StopWatch.prettyPrint条件问题（issue#I12RAC@Gitee）
 * 【core】        修复StrBuilder.del无法删除最后一个字符的问题（issue#I12R14@Gitee）
+* 【core】        修复StrBuilder.del无法删除最后一个字符的问题（issue#I12R14@Gitee）
+* 【poi】         修复sax方式读取复用行导致的问题（issue#I12O0U@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
