@@ -126,7 +126,7 @@ public class Scheduler implements Serializable {
 	 * 
 	 * @return 是否为守护线程
 	 */
-	public boolean isDeamon() {
+	public boolean isDaemon() {
 		return this.daemon;
 	}
 
@@ -362,11 +362,11 @@ public class Scheduler implements Serializable {
 	/**
 	 * 启动
 	 * 
-	 * @param isDeamon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
+	 * @param isDaemon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
 	 * @return this
 	 */
-	public Scheduler start(boolean isDeamon) {
-		this.daemon = isDeamon;
+	public Scheduler start(boolean isDaemon) {
+		this.daemon = isDaemon;
 		return start();
 	}
 
