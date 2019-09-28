@@ -14,8 +14,8 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.event.listener.BaseListener;
 
 public class EventManagerTest {
-    DefaultEventManager eventFireHelper;
-    CatchEvent              event;
+    private DefaultEventManager eventFireHelper;
+    private CatchEvent              event;
 
     @Before
     public void before() {
@@ -71,6 +71,7 @@ public class EventManagerTest {
     @Test
     public void testAddListeners() throws Exception {
         eventFireHelper.addListeners(new FirstCatchListener(), new SecondCatchListener());
+        Assert.assertEquals(eventFireHelper.getAllListeners().size(),2);
     }
 
     @Test(expected = ValidateException.class)
@@ -81,6 +82,7 @@ public class EventManagerTest {
     @Test
     public void testRemoveAllListeners() throws Exception {
         eventFireHelper.removeAllListeners();
+        Assert.assertEquals(eventFireHelper.getAllListeners().size(),0);
     }
 
     @Test

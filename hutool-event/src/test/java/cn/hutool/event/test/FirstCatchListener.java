@@ -29,10 +29,7 @@ public class FirstCatchListener implements BaseListener {
      */
     @Override
     public boolean isSupportEvent(BaseEvent event) {
-        if (event instanceof CatchEvent) {
-            return true;
-        }
-        return false;
+        return event instanceof CatchEvent;
     }
 
     /**

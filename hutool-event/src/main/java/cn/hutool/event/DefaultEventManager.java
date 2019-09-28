@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.event.domain.BaseEvent;
+import cn.hutool.event.exception.ListenerExecuteException;
 import cn.hutool.event.listener.BaseListener;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -96,20 +97,20 @@ public final class DefaultEventManager extends AbstractEventManager {
     @Override
     public void broadcastEvent(final BaseEvent event, boolean sync) {
         for (final BaseListener listener : getAllListeners(event)) {
-            if (false == sync) {
-                // async
+            if (sync) {
+                // sync
                 try {
-                    getExecutorService().execute(new AnonymityEventHandler(event, listener));
+                    listener.onEventHappened(event);
                 } catch (Exception e) {
-                    log.error("[Process a async event, failure] event: " + event.getClass().getName() + ":" + event.getId(), e);
+                    throw new ListenerExecuteException(e);
                 }
                 continue;
             }
-            // sync
+            // async
             try {
-                listener.onEventHappened(event);
+                getExecutorService().execute(new AnonymityEventHandler(event, listener));
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                log.error("[Process a async event, failure] event: " + event.getClass().getName() + ":" + event.getId(), e);
             }
         }
     }
