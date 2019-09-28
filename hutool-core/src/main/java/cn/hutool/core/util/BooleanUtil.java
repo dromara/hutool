@@ -77,9 +77,7 @@ public class BooleanUtil {
 	public static boolean toBoolean(String valueStr) {
 		if (StrUtil.isNotBlank(valueStr)) {
 			valueStr = valueStr.trim().toLowerCase();
-			if (ArrayUtil.contains(TRUE_ARRAY, valueStr)) {
-				return true;
-			}
+			return ArrayUtil.contains(TRUE_ARRAY, valueStr);
 		}
 		return false;
 	}

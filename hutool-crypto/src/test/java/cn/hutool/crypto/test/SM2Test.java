@@ -1,6 +1,7 @@
 package cn.hutool.crypto.test;
 
 import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import org.junit.Assert;
@@ -87,17 +88,27 @@ public class SM2Test {
 	@Test
 	public void sm2Base64Test() {
 		String textBase = "我是一段特别长的测试";
-		String text = "";
+		StringBuilder text = new StringBuilder();
 		for (int i = 0; i < 100; i++) {
-			text += textBase;
+			text.append(textBase);
 		}
 
-		final SM2 sm2 = new SM2();
+		SM2 sm2 = new SM2();
 
 		// 公钥加密，私钥解密
-		String encryptStr = sm2.encryptBase64(text, KeyType.PublicKey);
+		String encryptStr = sm2.encryptBase64(text.toString(), KeyType.PublicKey);
 		String decryptStr = StrUtil.utf8Str(sm2.decrypt(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text, decryptStr);
+		Assert.assertEquals(text.toString(), decryptStr);
+
+		// 测试自定义密钥后是否生效
+		PrivateKey privateKey = sm2.getPrivateKey();
+		PublicKey publicKey = sm2.getPublicKey();
+
+		sm2 = SmUtil.sm2();
+		sm2.setPrivateKey(privateKey);
+		sm2.setPublicKey(publicKey);
+		String decryptStr2 = StrUtil.utf8Str(sm2.decrypt(encryptStr, KeyType.PrivateKey));
+		Assert.assertEquals(text.toString(), decryptStr2);
 	}
 
 	@Test

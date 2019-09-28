@@ -23,7 +23,7 @@ public interface ValueProvider<T>{
 	 * @param valueType 被注入的值得类型
 	 * @return 对应参数名的值
 	 */
-	public Object value(T key, Type valueType);
+	Object value(T key, Type valueType);
 
 	/**
 	 * 是否包含指定KEY，如果不包含则忽略注入<br>
@@ -32,5 +32,5 @@ public interface ValueProvider<T>{
 	 * @param key Bean对象中参数名
 	 * @return 是否包含指定KEY
 	 */
-	public boolean containsKey(T key);
+	boolean containsKey(T key);
 }

@@ -329,11 +329,7 @@ public class CellUtil {
 			return true;
 		}
 
-		if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
-			return true;
-		}
-
-		return false;
+		return org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell);
 	}
 	// -------------------------------------------------------------------------------------------------------------- Private method end
 }

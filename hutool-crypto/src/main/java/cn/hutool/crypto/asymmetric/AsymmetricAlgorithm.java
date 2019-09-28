@@ -23,7 +23,7 @@ public enum AsymmetricAlgorithm {
 	 * 构造
 	 * @param value 算法字符表示，区分大小写
 	 */
-	private AsymmetricAlgorithm(String value) {
+	AsymmetricAlgorithm(String value) {
 		this.value = value;
 	}
 

@@ -28,5 +28,5 @@ public interface RsHandler<T> extends Serializable{
 	 * @return 处理后生成的对象
 	 * @throws SQLException SQL异常
 	 */
-	public T handle(ResultSet rs) throws SQLException;
+	T handle(ResultSet rs) throws SQLException;
 }

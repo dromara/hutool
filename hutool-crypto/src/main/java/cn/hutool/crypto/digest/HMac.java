@@ -3,6 +3,7 @@ package cn.hutool.crypto.digest;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -26,7 +27,8 @@ import cn.hutool.crypto.digest.mac.MacEngineFactory;
  * @author Looly
  *
  */
-public class HMac {
+public class HMac implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	private MacEngine engine;
 	

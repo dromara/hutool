@@ -3,6 +3,7 @@ package cn.hutool.crypto.digest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,7 +26,8 @@ import cn.hutool.crypto.SecureUtil;
  * @author Looly
  *
  */
-public class Digester {
+public class Digester implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private MessageDigest digest;
 	/** 盐值 */

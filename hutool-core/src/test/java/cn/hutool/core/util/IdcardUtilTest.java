@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -64,6 +65,12 @@ public class IdcardUtilTest {
 
 		String province2 = IdcardUtil.getProvinceByIdCard(ID_15);
 		Assert.assertEquals(province2, "内蒙古");
+	}
+
+	@Test
+	public void getGenderByIdCardTest() {
+		int gender = IdcardUtil.getGenderByIdCard(ID_18);
+		Assert.assertEquals(1, gender);
 	}
 
 }

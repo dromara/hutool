@@ -17,9 +17,8 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
- * 
- * @author Looly
  *
+ * @author Looly
  */
 final class InternalJSONUtil {
 
@@ -28,17 +27,17 @@ final class InternalJSONUtil {
 
 	/**
 	 * 写入值到Writer
-	 * 
-	 * @param writer Writer
-	 * @param value 值
+	 *
+	 * @param writer       Writer
+	 * @param value        值
 	 * @param indentFactor 每一级别的缩进量
-	 * @param indent 缩进空格数
-	 * @param config 配置项
+	 * @param indent       缩进空格数
+	 * @param config       配置项
 	 * @return Writer
-	 * @throws JSONException
-	 * @throws IOException
+	 * @throws JSONException JSON异常
+	 * @throws IOException   IO异常
 	 */
-	protected static final Writer writeValue(Writer writer, Object value, int indentFactor, int indent, JSONConfig config) throws JSONException, IOException {
+	protected static Writer writeValue(Writer writer, Object value, int indentFactor, int indent, JSONConfig config) throws JSONException, IOException {
 		if (value == null || value instanceof JSONNull) {
 			writer.write(JSONNull.NULL.toString());
 		} else if (value instanceof JSON) {
@@ -67,15 +66,15 @@ final class InternalJSONUtil {
 		}
 		return writer;
 	}
-	
+
 	/**
 	 * 缩进，使用空格符
-	 * 
-	 * @param writer
-	 * @param indent
-	 * @throws IOException
+	 *
+	 * @param writer writer
+	 * @param indent 随进空格数
+	 * @throws IOException IO异常
 	 */
-	protected static final void indent(Writer writer, int indent) throws IOException {
+	protected static void indent(Writer writer, int indent) throws IOException {
 		for (int i = 0; i < indent; i += 1) {
 			writer.write(CharUtil.SPACE);
 		}
@@ -83,7 +82,7 @@ final class InternalJSONUtil {
 
 	/**
 	 * 如果对象是Number 且是 NaN or infinite，将抛出异常
-	 * 
+	 *
 	 * @param obj 被检查的对象
 	 * @throws JSONException If o is a non-finite number.
 	 */
@@ -182,10 +181,10 @@ final class InternalJSONUtil {
 	/**
 	 * 将Property的键转化为JSON形式<br>
 	 * 用于识别类似于：com.luxiaolei.package.hutool这类用点隔开的键
-	 * 
+	 *
 	 * @param jsonObject JSONObject
-	 * @param key 键
-	 * @param value 值
+	 * @param key        键
+	 * @param value      值
 	 * @return JSONObject
 	 */
 	protected static JSONObject propertyPut(JSONObject jsonObject, Object key, Object value) {
@@ -205,37 +204,36 @@ final class InternalJSONUtil {
 		target.put(path[last], value);
 		return jsonObject;
 	}
-	
+
 	/**
 	 * 默认情况下是否忽略null值的策略选择<br>
 	 * JavaBean默认忽略null值，其它对象不忽略
-	 * 
+	 *
 	 * @param obj 需要检查的对象
 	 * @return 是否忽略null值
 	 * @since 4.3.1
 	 */
 	protected static boolean defaultIgnoreNullValue(Object obj) {
-		if(obj instanceof CharSequence || obj instanceof JSONTokener || obj instanceof Map) {
-			return false;
-		}
-		return true;
+		return (false == (obj instanceof CharSequence))//
+				&& (false == (obj instanceof JSONTokener))//
+				&& (false == (obj instanceof Map));
 	}
 
 	/**
 	 * 按照给定格式格式化日期，格式为空时返回时间戳字符串
-	 * 
+	 *
 	 * @param dateObj Date或者Calendar对象
-	 * @param format 格式
+	 * @param format  格式
 	 * @return 日期字符串
 	 */
 	private static String formatDate(Object dateObj, String format) {
 		if (StrUtil.isNotBlank(format)) {
-			final Date date = (dateObj instanceof Date) ? (Date)dateObj : ((Calendar)dateObj).getTime();
+			final Date date = (dateObj instanceof Date) ? (Date) dateObj : ((Calendar) dateObj).getTime();
 			//用户定义了日期格式
 			return JSONUtil.quote(DateUtil.format(date, format));
 		}
-		
+
 		//默认使用时间戳
-		return String.valueOf((dateObj instanceof Date) ? ((Date)dateObj).getTime() : ((Calendar)dateObj).getTimeInMillis());
+		return String.valueOf((dateObj instanceof Date) ? ((Date) dateObj).getTime() : ((Calendar) dateObj).getTimeInMillis());
 	}
 }

@@ -55,16 +55,16 @@ public class NetUtil {
 	 * @return IP V4 地址
 	 */
 	public static String longToIpv4(long longIP) {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = StrUtil.builder();
 		// 直接右移24位
-		sb.append(String.valueOf(longIP >>> 24));
+		sb.append((longIP >>> 24));
 		sb.append(".");
 		// 将高8位置0，然后右移16位
-		sb.append(String.valueOf((longIP & 0x00FFFFFF) >>> 16));
+		sb.append(((longIP & 0x00FFFFFF) >>> 16));
 		sb.append(".");
-		sb.append(String.valueOf((longIP & 0x0000FFFF) >>> 8));
+		sb.append(((longIP & 0x0000FFFF) >>> 8));
 		sb.append(".");
-		sb.append(String.valueOf(longIP & 0x000000FF));
+		sb.append((longIP & 0x000000FF));
 		return sb.toString();
 	}
 
@@ -202,7 +202,7 @@ public class NetUtil {
 	 * @return 是否为内网IP
 	 */
 	public static boolean isInnerIP(String ipAddress) {
-		boolean isInnerIp = false;
+		boolean isInnerIp;
 		long ipNum = NetUtil.ipv4ToLong(ipAddress);
 
 		long aBegin = NetUtil.ipv4ToLong("10.0.0.0");
@@ -241,7 +241,7 @@ public class NetUtil {
 	 * @return 隐藏部分后的IP
 	 */
 	public static String hideIpPart(String ip) {
-		return new StringBuffer(ip.length()).append(ip.substring(0, ip.lastIndexOf(".") + 1)).append("*").toString();
+		return StrUtil.builder(ip.length()).append(ip, 0, ip.lastIndexOf(".") + 1).append("*").toString();
 	}
 
 	/**
@@ -268,8 +268,8 @@ public class NetUtil {
 			host = LOCAL_IP;
 		}
 
-		String destHost = null;
-		int port = 0;
+		String destHost;
+		int port;
 		int index = host.indexOf(":");
 		if (index != -1) {
 			// host:port形式
@@ -304,7 +304,7 @@ public class NetUtil {
 	 * @since 3.0.1
 	 */
 	public static Collection<NetworkInterface> getNetworkInterfaces() {
-		Enumeration<NetworkInterface> networkInterfaces = null;
+		Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
 		} catch (SocketException e) {
@@ -386,7 +386,7 @@ public class NetUtil {
 	 * @since 4.5.17
 	 */
 	public static LinkedHashSet<InetAddress> localAddressList(Filter<InetAddress> addressFilter) {
-		Enumeration<NetworkInterface> networkInterfaces = null;
+		Enumeration<NetworkInterface> networkInterfaces;
 		try {
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
 		} catch (SocketException e) {
@@ -460,8 +460,7 @@ public class NetUtil {
 		});
 
 		if (CollUtil.isNotEmpty(localAddressList)) {
-			InetAddress address = CollUtil.get(localAddressList, 0);
-			return address;
+			return CollUtil.get(localAddressList, 0);
 		}
 
 		try {
@@ -568,7 +567,7 @@ public class NetUtil {
 	 * @param host Server主机
 	 * @param port Server端口
 	 * @param data 数据
-	 * @throws IOException IO异常
+	 * @throws IORuntimeException IO异常
 	 * @since 3.3.0
 	 */
 	public static void netCat(String host, int port, byte[] data) throws IORuntimeException {

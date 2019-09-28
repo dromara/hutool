@@ -1,12 +1,5 @@
 package cn.hutool.db.dialect.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
@@ -17,11 +10,11 @@ import cn.hutool.db.Page;
 import cn.hutool.db.StatementUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.dialect.DialectName;
-import cn.hutool.db.sql.Condition;
-import cn.hutool.db.sql.LogicalOperator;
-import cn.hutool.db.sql.Query;
-import cn.hutool.db.sql.SqlBuilder;
-import cn.hutool.db.sql.Wrapper;
+import cn.hutool.db.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * ANSI SQL 方言

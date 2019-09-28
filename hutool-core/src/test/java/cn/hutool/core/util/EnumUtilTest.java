@@ -52,10 +52,10 @@ public class EnumUtilTest {
 		Assert.assertEquals("type1", enumMap.get("TEST1"));
 	}
 	
-	public static enum TestEnum{
+	public enum TestEnum{
 		TEST1("type1"), TEST2("type2"), TEST3("type3");
 		
-		private TestEnum(String type) {
+		TestEnum(String type) {
 			this.type = type;
 		}
 		

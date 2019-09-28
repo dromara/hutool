@@ -15,17 +15,24 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 
+/**
+ * 抽象的非对称加密对象，包装了加密和解密为Hex和Base64的封装
+ *
+ * @param <T> 返回自身类型
+ * @author Looly
+ */
 public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypto<T>> extends BaseAsymmetric<T> {
 	// ------------------------------------------------------------------ Constructor start
+
 	/**
 	 * 构造
-	 * 
+	 * <p>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
-	 * 
-	 * @param algorithm 算法
+	 *
+	 * @param algorithm  算法
 	 * @param privateKey 私钥
-	 * @param publicKey 公钥
+	 * @param publicKey  公钥
 	 * @since 3.1.1
 	 */
 	public AbstractAsymmetricCrypto(String algorithm, PrivateKey privateKey, PublicKey publicKey) {
@@ -34,10 +41,11 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	// ------------------------------------------------------------------ Constructor end
 
 	// --------------------------------------------------------------------------------- Encrypt
+
 	/**
 	 * 加密
-	 * 
-	 * @param data 被加密的bytes
+	 *
+	 * @param data    被加密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
 	 */
@@ -45,8 +53,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Hex字符串
-	 * 
-	 * @param data 被加密的bytes
+	 *
+	 * @param data    被加密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Hex字符串
 	 */
@@ -56,8 +64,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Base64字符串
-	 * 
-	 * @param data 被加密的bytes
+	 *
+	 * @param data    被加密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Base64字符串
 	 * @since 4.0.1
@@ -68,8 +76,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 加密
-	 * 
-	 * @param data 被加密的字符串
+	 *
+	 * @param data    被加密的字符串
 	 * @param charset 编码
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
@@ -80,8 +88,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 加密
-	 * 
-	 * @param data 被加密的字符串
+	 *
+	 * @param data    被加密的字符串
 	 * @param charset 编码
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
@@ -92,8 +100,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 加密，使用UTF-8编码
-	 * 
-	 * @param data 被加密的字符串
+	 *
+	 * @param data    被加密的字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
 	 */
@@ -103,8 +111,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Hex字符串
-	 * 
-	 * @param data 被加密的字符串
+	 *
+	 * @param data    被加密的字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Hex字符串
 	 * @since 4.0.1
@@ -115,8 +123,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Hex字符串
-	 * 
-	 * @param data 被加密的bytes
+	 *
+	 * @param data    被加密的bytes
 	 * @param charset 编码
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Hex字符串
@@ -128,8 +136,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Base64字符串，使用UTF-8编码
-	 * 
-	 * @param data 被加密的字符串
+	 *
+	 * @param data    被加密的字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Base64字符串
 	 * @since 4.0.1
@@ -140,8 +148,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Base64字符串
-	 * 
-	 * @param data 被加密的字符串
+	 *
+	 * @param data    被加密的字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Base64字符串
 	 * @since 4.0.1
@@ -152,8 +160,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 加密
-	 * 
-	 * @param data 被加密的数据流
+	 *
+	 * @param data    被加密的数据流
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 加密后的bytes
 	 * @throws IORuntimeException IO异常
@@ -164,8 +172,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Hex字符串
-	 * 
-	 * @param data 被加密的数据流
+	 *
+	 * @param data    被加密的数据流
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Hex字符串
 	 * @since 4.0.1
@@ -176,8 +184,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 编码为Base64字符串
-	 * 
-	 * @param data 被加密的数据流
+	 *
+	 * @param data    被加密的数据流
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Base64字符串
 	 * @since 4.0.1
@@ -188,8 +196,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 分组加密
-	 * 
-	 * @param data 数据
+	 *
+	 * @param data    数据
 	 * @param keyType 密钥类型
 	 * @return 加密后的密文
 	 * @throws CryptoException 加密异常
@@ -201,8 +209,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 分组加密
-	 * 
-	 * @param data 数据
+	 *
+	 * @param data    数据
 	 * @param keyType 密钥类型
 	 * @param charset 加密前编码
 	 * @return 加密后的密文
@@ -214,10 +222,11 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	}
 
 	// --------------------------------------------------------------------------------- Decrypt
+
 	/**
 	 * 解密
-	 * 
-	 * @param bytes 被解密的bytes
+	 *
+	 * @param bytes   被解密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 解密后的bytes
 	 */
@@ -225,8 +234,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 解密
-	 * 
-	 * @param data 被解密的bytes
+	 *
+	 * @param data    被解密的bytes
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 解密后的bytes
 	 * @throws IORuntimeException IO异常
@@ -237,8 +246,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 从Hex或Base64字符串解密，编码为UTF-8格式
-	 * 
-	 * @param data Hex（16进制）或Base64字符串
+	 *
+	 * @param data    Hex（16进制）或Base64字符串
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return 解密后的bytes
 	 * @since 4.5.2
@@ -249,8 +258,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 解密为字符串，密文需为Hex（16进制）或Base64字符串
-	 * 
-	 * @param data 数据，Hex（16进制）或Base64字符串
+	 *
+	 * @param data    数据，Hex（16进制）或Base64字符串
 	 * @param keyType 密钥类型
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
@@ -262,8 +271,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 解密为字符串，密文需为Hex（16进制）或Base64字符串
-	 * 
-	 * @param data 数据，Hex（16进制）或Base64字符串
+	 *
+	 * @param data    数据，Hex（16进制）或Base64字符串
 	 * @param keyType 密钥类型
 	 * @return 解密后的密文
 	 * @since 4.5.2
@@ -274,8 +283,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 解密BCD
-	 * 
-	 * @param data 数据
+	 *
+	 * @param data    数据
 	 * @param keyType 密钥类型
 	 * @return 解密后的密文
 	 * @since 4.1.0
@@ -286,8 +295,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 分组解密
-	 * 
-	 * @param data 数据
+	 *
+	 * @param data    数据
 	 * @param keyType 密钥类型
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
@@ -300,8 +309,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 解密为字符串，密文需为BCD格式
-	 * 
-	 * @param data 数据，BCD格式
+	 *
+	 * @param data    数据，BCD格式
 	 * @param keyType 密钥类型
 	 * @param charset 加密前编码
 	 * @return 解密后的密文
@@ -313,8 +322,8 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 
 	/**
 	 * 解密为字符串，密文需为BCD格式，编码为UTF-8格式
-	 * 
-	 * @param data 数据，BCD格式
+	 *
+	 * @param data    数据，BCD格式
 	 * @param keyType 密钥类型
 	 * @return 解密后的密文
 	 * @since 4.5.2

@@ -43,7 +43,7 @@ public enum Week {
 	 * 
 	 * @param value 星期对应{@link Calendar} 中的Week值
 	 */
-	private Week(int value) {
+	Week(int value) {
 		this.value = value;
 	}
 

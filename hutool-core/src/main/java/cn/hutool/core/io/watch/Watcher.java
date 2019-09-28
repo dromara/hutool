@@ -13,7 +13,7 @@ public interface Watcher {
 	 * @param event 事件
 	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onCreate(WatchEvent<?> event, Path currentPath);
+	void onCreate(WatchEvent<?> event, Path currentPath);
 	
 	/**
 	 * 文件修改时执行的方法<br>
@@ -21,19 +21,19 @@ public interface Watcher {
 	 * @param event 事件
 	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onModify(WatchEvent<?> event, Path currentPath);
+	void onModify(WatchEvent<?> event, Path currentPath);
 	
 	/**
 	 * 文件删除时执行的方法
 	 * @param event 事件
 	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onDelete(WatchEvent<?> event, Path currentPath);
+	void onDelete(WatchEvent<?> event, Path currentPath);
 	
 	/**
 	 * 事件丢失或出错时执行的方法
 	 * @param event 事件
 	 * @param currentPath 事件发生的当前Path路径
 	 */
-	public void onOverflow(WatchEvent<?> event, Path currentPath);
+	void onOverflow(WatchEvent<?> event, Path currentPath);
 }

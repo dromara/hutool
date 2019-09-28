@@ -17,5 +17,5 @@ public interface Replacer<T> {
 	 * @param t 被替换的对象
 	 * @return 替代后的对象
 	 */
-	public T replace(T t);
+	T replace(T t);
 }

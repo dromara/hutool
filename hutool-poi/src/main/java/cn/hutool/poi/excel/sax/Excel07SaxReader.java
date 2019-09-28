@@ -31,24 +31,33 @@ import cn.hutool.poi.exceptions.POIException;
 /**
  * Sax方式读取Excel文件<br>
  * Excel2007格式说明见：http://www.cnblogs.com/wangmingshun/p/6654143.html
- * 
+ *
  * @author Looly
  * @since 3.1.2
- *
  */
 public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> implements ContentHandler {
 
 	// saxParser
 	private static final String CLASS_SAXPARSER = "org.apache.xerces.parsers.SAXParser";
-	/** Cell单元格元素 */
+	/**
+	 * Cell单元格元素
+	 */
 	private static final String C_ELEMENT = "c";
-	/** 行元素 */
+	/**
+	 * 行元素
+	 */
 	private static final String ROW_ELEMENT = "row";
-	/** Cell中的行列号 */
+	/**
+	 * Cell中的行列号
+	 */
 	private static final String R_ATTR = "r";
-	/** Cell类型 */
+	/**
+	 * Cell类型
+	 */
 	private static final String T_ELEMENT = "t";
-	/** SST（SharedStringsTable） 的索引 */
+	/**
+	 * SST（SharedStringsTable） 的索引
+	 */
 	private static final String S_ATTR_VALUE = "s";
 	// 列中属性值
 	private static final String T_ATTR_VALUE = "t";
@@ -73,9 +82,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	private String maxCellCoordinate;
 	// 单元格的格式表，对应style.xml
 	private StylesTable stylesTable;
-	// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
-	private int numFmtIndex;
-	// 单元格存储的格式化字符串，nmtFmt的formateCode属性的值
+	// 单元格存储的格式化字符串，nmtFmt的formatCode属性的值
 	private String numFmtString;
 	// sheet的索引
 	private int sheetIndex;
@@ -83,12 +90,14 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	// 存储每行的列元素
 	List<Object> rowCellList = new ArrayList<>();
 
-	/** 行处理器 */
+	/**
+	 * 行处理器
+	 */
 	private RowHandler rowHandler;
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param rowHandler 行处理器
 	 */
 	public Excel07SaxReader(RowHandler rowHandler) {
@@ -97,7 +106,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 
 	/**
 	 * 设置行处理器
-	 * 
+	 *
 	 * @param rowHandler 行处理器
 	 * @return this
 	 */
@@ -129,9 +138,9 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 
 	/**
 	 * 开始读取Excel，Sheet编号从0开始计数
-	 * 
+	 *
 	 * @param opcPackage {@link OPCPackage}，Excel包
-	 * @param rid Excel中的sheet rid编号，如果为-1处理所有编号的sheet
+	 * @param rid        Excel中的sheet rid编号，如果为-1处理所有编号的sheet
 	 * @return this
 	 * @throws POIException POI异常
 	 */
@@ -178,7 +187,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 * 读到一个xml开始标签时的回调处理方法
 	 */
 	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		// 单元格元素
 		if (C_ELEMENT.equals(qName)) {
 
@@ -203,11 +212,12 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	/**
 	 * 设置单元格的类型
 	 *
-	 * @param attribute
+	 * @param attribute 属性
 	 */
 	private void setCellType(Attributes attribute) {
-		// 重置numFmtIndex,numFmtString的值
-		numFmtIndex = 0;
+		// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
+		int numFmtIndex;
+		// numFmtString的值
 		numFmtString = "";
 		this.cellDataType = CellDataType.of(attribute.getValue(T_ATTR_VALUE));
 
@@ -232,13 +242,14 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 * 标签结束的回调处理方法
 	 */
 	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName) {
 		final String contentStr = StrUtil.trim(lastContent);
 
-		if (T_ELEMENT.equals(qName)) {
-			// type标签
-			// rowCellList.add(curCell++, contentStr);
-		} else if (C_ELEMENT.equals(qName)) {
+//		if (T_ELEMENT.equals(qName)) {
+//			// type标签
+//			// rowCellList.add(curCell++, contentStr);
+//		} else
+		if (C_ELEMENT.equals(qName)) {
 			// cell标签
 			Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStringsTable, this.numFmtString);
 			// 补全单元格之间的空格
@@ -259,8 +270,8 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			rowHandler.handle(sheetIndex, curRow, rowCellList);
 
 			// 一行结束
-			// 清空rowCellList,
-			rowCellList.clear();
+			// 新建一个新列，之前的列抛弃（可能被回收或rowHandler处理）
+			rowCellList = new ArrayList<>(curCell + 1);
 			// 行数增加
 			curRow++;
 			// 当前列置0
@@ -275,7 +286,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 * s标签结束的回调处理方法
 	 */
 	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException {
+	public void characters(char[] ch, int start, int length) {
 		// 得到单元格内容的值
 		lastContent = lastContent.concat(new String(ch, start, length));
 	}
@@ -290,47 +301,48 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 * ?xml标签的回调处理方法
 	 */
 	@Override
-	public void startDocument() throws SAXException {
+	public void startDocument() {
 		// pass
 	}
 
 	@Override
-	public void endDocument() throws SAXException {
+	public void endDocument() {
 		// pass
 	}
 
 	@Override
-	public void startPrefixMapping(String prefix, String uri) throws SAXException {
+	public void startPrefixMapping(String prefix, String uri) {
 		// pass
 	}
 
 	@Override
-	public void endPrefixMapping(String prefix) throws SAXException {
+	public void endPrefixMapping(String prefix) {
 		// pass
 	}
 
 	@Override
-	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+	public void ignorableWhitespace(char[] ch, int start, int length) {
 		// pass
 	}
 
 	@Override
-	public void processingInstruction(String target, String data) throws SAXException {
+	public void processingInstruction(String target, String data) {
 		// pass
 	}
 
 	@Override
-	public void skippedEntity(String name) throws SAXException {
+	public void skippedEntity(String name) {
 		// pass
 	}
 	// --------------------------------------------------------------------------------------- Pass method end
 
 	// --------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 处理流中的Excel数据
-	 * 
+	 *
 	 * @param sheetInputStream sheet流
-	 * @throws IOException IO异常
+	 * @throws IOException  IO异常
 	 * @throws SAXException SAX异常
 	 */
 	private void parse(InputStream sheetInputStream) throws IOException, SAXException {
@@ -342,7 +354,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 *
 	 * @param preCoordinate 前一个单元格坐标
 	 * @param curCoordinate 当前单元格坐标
-	 * @param isEnd 是否为最后一个单元格
+	 * @param isEnd         是否为最后一个单元格
 	 */
 	private void fillBlankCell(String preCoordinate, String curCoordinate, boolean isEnd) {
 		if (false == curCoordinate.equals(preCoordinate)) {
@@ -359,12 +371,11 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	/**
 	 * 获取sheet的解析器
 	 *
-	 * @param sharedStringsTable
 	 * @return {@link XMLReader}
 	 * @throws SAXException SAX异常
 	 */
 	private XMLReader fetchSheetReader() throws SAXException {
-		XMLReader xmlReader = null;
+		XMLReader xmlReader;
 		try {
 			xmlReader = XMLReaderFactory.createXMLReader(CLASS_SAXPARSER);
 		} catch (SAXException e) {

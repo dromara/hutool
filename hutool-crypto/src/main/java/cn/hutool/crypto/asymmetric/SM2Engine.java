@@ -154,8 +154,8 @@ public class SM2Engine {
 	 * @author looly
 	 *
 	 */
-	public static enum SM2Mode {
-		C1C2C3, C1C3C2;
+	public enum SM2Mode {
+		C1C2C3, C1C3C2
 	}
 
 	protected ECMultiplier createBasePointMultiplier() {
@@ -348,8 +348,7 @@ public class SM2Engine {
 	/**
 	 * 增加字段节点
 	 * 
-	 * @param digest
-	 * @param v
+	 * @param v 节点
 	 */
 	private void addFieldElement(ECFieldElement v) {
 		final byte[] p = BigIntegers.asUnsignedByteArray(this.curveLength, v.toBigInteger());

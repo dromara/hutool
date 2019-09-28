@@ -82,7 +82,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 * @since 4.1.19
 	 */
 	public JSONArray(int initialCapacity, JSONConfig config) {
-		this.rawList = new ArrayList<Object>(initialCapacity);
+		this.rawList = new ArrayList<>(initialCapacity);
 		this.config = config;
 	}
 
@@ -107,9 +107,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	 */
 	public JSONArray(Collection<Object> list) {
 		this(list.size());
-		for (Object o : list) {
-			this.add(o);
-		}
+		this.addAll(list);
 	}
 
 	/**
@@ -311,13 +309,10 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		}
 		final JSONArray other = (JSONArray) obj;
 		if (rawList == null) {
-			if (other.rawList != null) {
-				return false;
-			}
-		} else if (!rawList.equals(other.rawList)) {
-			return false;
+			return other.rawList == null;
+		} else {
+			return rawList.equals(other.rawList);
 		}
-		return true;
 	}
 
 	@Override
@@ -382,7 +377,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends Object> c) {
+	public boolean addAll(Collection<?> c) {
 		if (CollUtil.isEmpty(c)) {
 			return false;
 		}
@@ -393,7 +388,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends Object> c) {
+	public boolean addAll(int index, Collection<?> c) {
 		if (CollUtil.isEmpty(c)) {
 			return false;
 		}

@@ -132,7 +132,7 @@ public class TemplateConfig implements Serializable {
 	 * 
 	 * @author looly
 	 */
-	public static enum ResourceMode {
+	public enum ResourceMode {
 		/** 从ClassPath加载模板 */
 		CLASSPATH,
 		/** 从File目录加载模板 */
@@ -142,7 +142,7 @@ public class TemplateConfig implements Serializable {
 		/** 从模板文本加载模板 */
 		STRING,
 		/** 复合加载模板（分别从File、ClassPath、Web-root、String方式尝试查找模板） */
-		COMPOSITE;
+		COMPOSITE
 	}
 
 	@Override
@@ -185,5 +185,5 @@ public class TemplateConfig implements Serializable {
 			return false;
 		}
 		return true;
-	};
+	}
 }

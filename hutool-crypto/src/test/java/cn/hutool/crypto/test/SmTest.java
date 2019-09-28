@@ -1,12 +1,16 @@
 package cn.hutool.crypto.test;
 
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.crypto.KeyUtil;
+import cn.hutool.crypto.Mode;
+import cn.hutool.crypto.Padding;
+import cn.hutool.crypto.SmUtil;
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.symmetric.SM4;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.crypto.SmUtil;
-import cn.hutool.crypto.digest.HMac;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import javax.crypto.SecretKey;
 
 /**
  * SM单元测试
@@ -25,17 +29,34 @@ public class SmTest {
 	@Test
 	public void sm4Test() {
 		String content = "test中文";
-		SymmetricCrypto sm4 = SmUtil.sm4();
-		
+		SM4 sm4 = SmUtil.sm4();
+
+		String encryptHex = sm4.encryptHex(content);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
+
+		Assert.assertEquals(content, decryptStr);
+	}
+
+	@Test
+	public void sm4ECBPKCS5PaddingTest2() {
+		String content = "test中文";
+		SM4 sm4 = new SM4(Mode.ECB, Padding.PKCS5Padding);
+		Assert.assertEquals("SM4/ECB/PKCS5Padding", sm4.getCipher().getAlgorithm());
+
 		String encryptHex = sm4.encryptHex(content);
 		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals(content, decryptStr);
 	}
+
 	@Test
-	public void sm4Test2() {
+	public void sm4TestWithCustomKeyTest() {
 		String content = "test中文";
-		SymmetricCrypto sm4 = new SymmetricCrypto("SM4/ECB/PKCS5Padding");
-		
+
+		SecretKey key = KeyUtil.generateKey(SM4.ALGORITHM_NAME);
+
+		SM4 sm4 = new SM4(Mode.ECB, Padding.PKCS5Padding, key);
+		Assert.assertEquals("SM4/ECB/PKCS5Padding", sm4.getCipher().getAlgorithm());
+
 		String encryptHex = sm4.encryptHex(content);
 		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals(content, decryptStr);

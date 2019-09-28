@@ -1,23 +1,15 @@
 package cn.hutool.crypto.test;
 
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.RandomUtil;
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.Mode;
 import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.symmetric.AES;
-import cn.hutool.crypto.symmetric.DES;
-import cn.hutool.crypto.symmetric.DESede;
-import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import cn.hutool.crypto.symmetric.Vigenere;
+import cn.hutool.crypto.symmetric.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 对称加密算法单元测试

@@ -82,7 +82,7 @@ public class MapUtil {
 	 * @return HashMap对象
 	 */
 	public static <K, V> HashMap<K, V> newHashMap() {
-		return new HashMap<K, V>();
+		return new HashMap<>();
 	}
 
 	/**
@@ -400,7 +400,7 @@ public class MapUtil {
 			return resultList;
 		}
 
-		boolean isEnd = true;// 是否结束。标准是元素列表已耗尽
+		boolean isEnd;// 是否结束。标准是元素列表已耗尽
 		int index = 0;// 值索引
 		Map<K, V> map;
 		do {
@@ -736,7 +736,7 @@ public class MapUtil {
 	 * @since 4.5.4
 	 */
 	public static <K, V> MapWrapper<K, V> wrap(Map<K, V> map) {
-		return new MapWrapper<K, V>(map);
+		return new MapWrapper<>(map);
 	}
 
 	// ----------------------------------------------------------------------------------------------- builder

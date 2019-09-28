@@ -34,7 +34,7 @@ public interface JSON extends Cloneable, Serializable{
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
-	public Object getByPath(String expression);
+	Object getByPath(String expression);
 
 	/**
 	 * 设置表达式指定位置（或filed对应）的值<br>
@@ -84,7 +84,7 @@ public interface JSON extends Cloneable, Serializable{
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
-	public <T> T getByPath(String expression, Class<T> resultType);
+	<T> T getByPath(String expression, Class<T> resultType);
 
 	/**
 	 * 将JSON内容写入Writer，无缩进<br>
@@ -94,7 +94,7 @@ public interface JSON extends Cloneable, Serializable{
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 */
-	public Writer write(Writer writer) throws JSONException;
+	Writer write(Writer writer) throws JSONException;
 
 	/**
 	 * 将JSON内容写入Writer<br>
@@ -106,7 +106,7 @@ public interface JSON extends Cloneable, Serializable{
 	 * @return Writer
 	 * @throws JSONException JSON相关异常
 	 */
-	public Writer write(Writer writer, int indentFactor, int indent) throws JSONException;
+	Writer write(Writer writer, int indentFactor, int indent) throws JSONException;
 
 	/**
 	 * 转换为JSON字符串
@@ -115,7 +115,7 @@ public interface JSON extends Cloneable, Serializable{
 	 * @return JSON字符串
 	 * @throws JSONException JSON相关异常
 	 */
-	public String toJSONString(int indentFactor) throws JSONException;
+	String toJSONString(int indentFactor) throws JSONException;
 
 	/**
 	 * 格式化打印JSON，缩进为4个空格
@@ -124,5 +124,5 @@ public interface JSON extends Cloneable, Serializable{
 	 * @throws JSONException 包含非法数抛出此异常
 	 * @since 3.0.9
 	 */
-	public String toStringPretty() throws JSONException;
+	String toStringPretty() throws JSONException;
 }

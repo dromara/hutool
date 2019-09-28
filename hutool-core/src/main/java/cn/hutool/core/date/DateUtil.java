@@ -32,7 +32,7 @@ public class DateUtil {
 	/**
 	 * java.util.Date EEE MMM zzz 缩写数组
 	 */
-	private final static String wtb[] = { //
+	private final static String[] wtb = { //
 			"sun", "mon", "tue", "wed", "thu", "fri", "sat", // 星期
 			"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec", //
 			"gmt", "ut", "utc", "est", "edt", "cst", "cdt", "mst", "mdt", "pst", "pdt"//
@@ -461,7 +461,7 @@ public class DateUtil {
 	 */
 	public static LinkedHashSet<String> yearAndQuarter(Date startDate, Date endDate) {
 		if (startDate == null || endDate == null) {
-			return new LinkedHashSet<String>(0);
+			return new LinkedHashSet<>(0);
 		}
 		return yearAndQuarter(startDate.getTime(), endDate.getTime());
 	}
@@ -608,9 +608,9 @@ public class DateUtil {
 			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(1, 2)), false));
 			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(2, 3)), false));
 			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(3, 4)), false));
-			builder.append(format.substring(4, 5));
+			builder.append(format, 4, 5);
 			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(5, 7)), false));
-			builder.append(format.substring(7, 8));
+			builder.append(format, 7, 8);
 			builder.append(Convert.numberToChinese(Integer.parseInt(format.substring(8, 10)), false));
 			builder.append(format.substring(10));
 			format = builder.toString().replace('零', '〇');
@@ -1888,7 +1888,7 @@ public class DateUtil {
 	 * @param cal 日期
 	 */
 	private static String yearAndQuarter(Calendar cal) {
-		return new StringBuilder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
+		return StrUtil.builder().append(cal.get(Calendar.YEAR)).append(cal.get(Calendar.MONTH) / 3 + 1).toString();
 	}
 
 	/**
@@ -1937,7 +1937,7 @@ public class DateUtil {
 		final StringBuilder builder = StrUtil.builder();
 
 		// 日期部分（"\"、"/"、"."、"年"、"月"都替换为"-"）
-		String datePart = dateAndTime.get(0).replaceAll("[\\/.年月]", "-");
+		String datePart = dateAndTime.get(0).replaceAll("[/.年月]", "-");
 		datePart = StrUtil.removeSuffix(datePart, "日");
 		builder.append(datePart);
 

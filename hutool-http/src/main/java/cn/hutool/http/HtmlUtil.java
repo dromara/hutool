@@ -55,7 +55,7 @@ public class HtmlUtil {
 	 * @return 转义后的文本
 	 */
 	public static String escape(String text) {
-		return encode(text, TEXT);
+		return encode(text);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class HtmlUtil {
 	 * @return 去除标签后的文本
 	 */
 	public static String removeHtmlTag(String content, boolean withTagContent, String... tagNames) {
-		String regex = null;
+		String regex;
 		for (String tagName : tagNames) {
 			if (StrUtil.isBlank(tagName)) {
 				continue;
@@ -146,10 +146,14 @@ public class HtmlUtil {
 	 * @return 处理后的文本
 	 */
 	public static String removeHtmlAttr(String content, String... attrs) {
-		String regex = null;
+		String regex;
 		for (String attr : attrs) {
-			// (?i)表示忽略大小写
-			regex = StrUtil.format("(?i)\\s*{}=([\"']).*?\\1", attr);
+			// (?i)     表示忽略大小写
+			// \s*      属性名前后的空白符去除
+			// [^>]+?   属性值，至少有一个非>的字符，>表示标签结束
+			// \s+(?=>) 表示属性值后跟空格加>，既末尾的属性，此时去掉空格
+			// (?=\s|>) 表示属性值后跟空格（属性后还有别的属性）或者跟>（最后一个属性）
+			regex = StrUtil.format("(?i)(\\s*{}\\s*=[^>]+?\\s+(?=>))|(\\s*{}\\s*=[^>]+?(?=\\s|>))", attr, attr);
 			content = content.replaceAll(regex, StrUtil.EMPTY);
 		}
 		return content;
@@ -163,7 +167,7 @@ public class HtmlUtil {
 	 * @return 处理后的文本
 	 */
 	public static String removeAllHtmlAttr(String content, String... tagNames) {
-		String regex = null;
+		String regex;
 		for (String tagName : tagNames) {
 			regex = StrUtil.format("(?i)<{}[^>]*?>", tagName);
 			content = content.replaceAll(regex, StrUtil.format("<{}>", tagName));
@@ -175,10 +179,9 @@ public class HtmlUtil {
 	 * Encoder
 	 * 
 	 * @param text 被编码的文本
-	 * @param array 特殊字符集合
 	 * @return 编码后的字符
 	 */
-	private static String encode(String text, char[][] array) {
+	private static String encode(String text) {
 		int len;
 		if ((text == null) || ((len = text.length()) == 0)) {
 			return StrUtil.EMPTY;
@@ -188,7 +191,7 @@ public class HtmlUtil {
 		for (int i = 0; i < len; i++) {
 			c = text.charAt(i);
 			if (c < 64) {
-				buffer.append(array[c]);
+				buffer.append(TEXT[c]);
 			} else {
 				buffer.append(c);
 			}

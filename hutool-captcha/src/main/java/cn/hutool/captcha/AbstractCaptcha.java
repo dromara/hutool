@@ -30,11 +30,11 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	private static final long serialVersionUID = 3180820918087507254L;
 
 	/** 图片的宽度 */
-	protected int width = 100;
+	protected int width;
 	/** 图片的高度 */
-	protected int height = 37;
+	protected int height;
 	/** 验证码干扰元素个数 */
-	protected int interfereCount = 15;
+	protected int interfereCount;
 	/** 字体 */
 	protected Font font;
 	/** 验证码 */

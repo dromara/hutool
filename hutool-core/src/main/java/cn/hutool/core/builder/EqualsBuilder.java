@@ -12,7 +12,7 @@ import cn.hutool.core.util.ArrayUtil;
 
 /**
  * <p>{@link Object#equals(Object)} 方法的构建器</p>
- * 
+ *
  * <p>两个对象equals必须保证hashCode值相等，hashCode值相等不能保证一定equals</p>
  *
  * <p>使用方法如下：</p>
@@ -152,19 +152,9 @@ public class EqualsBuilder implements Builder<Boolean> {
         }
     }
 
-    /**
-     * If the fields tested are equals.
-     * The default value is <code>true</code>.
-     */
     /** 是否equals，此值随着构建会变更，默认true */
     private boolean isEquals = true;
 
-    /**
-     * <p>Constructor for EqualsBuilder.</p>
-     *
-     * <p>Starts off assuming that equals is <code>true</code>.</p>
-     * @see Object#equals(Object)
-     */
     /**
      * 构造，初始状态值为true
      */
@@ -205,7 +195,7 @@ public class EqualsBuilder implements Builder<Boolean> {
      * <p>It uses <code>AccessibleObject.setAccessible</code> to gain access to private
      * fields. This means that it will throw a security exception if run under
      * a security manager, if the permissions are not set up correctly. It is also
-     * not as efficient as testing explicitly. Non-primitive fields are compared using 
+     * not as efficient as testing explicitly. Non-primitive fields are compared using
      * <code>equals()</code>.</p>
      *
      * <p>If the TestTransients parameter is set to <code>true</code>, transient
@@ -230,7 +220,7 @@ public class EqualsBuilder implements Builder<Boolean> {
      * <p>It uses <code>AccessibleObject.setAccessible</code> to gain access to private
      * fields. This means that it will throw a security exception if run under
      * a security manager, if the permissions are not set up correctly. It is also
-     * not as efficient as testing explicitly. Non-primitive fields are compared using 
+     * not as efficient as testing explicitly. Non-primitive fields are compared using
      * <code>equals()</code>.</p>
      *
      * <p>If the testTransients parameter is set to <code>true</code>, transient

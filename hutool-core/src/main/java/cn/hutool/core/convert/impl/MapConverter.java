@@ -1,15 +1,16 @@
 package cn.hutool.core.convert.impl;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.convert.ConverterRegistry;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
+
+import java.lang.reflect.Type;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * {@link Map} 转换器
@@ -52,13 +53,13 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Map<?, ?> convertInternal(Object value) {
-		Map map = null;
+		Map map;
 		if (value instanceof Map) {
 			final Type[] typeArguments = TypeUtil.getTypeArguments(value.getClass());
 			if (null != typeArguments //
 					&& 2 == typeArguments.length//
-					&& this.keyType.equals(typeArguments[0]) //
-					&& this.valueType.equals(typeArguments[1])) {
+					&& Objects.equals(this.keyType, typeArguments[0]) //
+					&& Objects.equals(this.valueType, typeArguments[1])) {
 				//对于键值对类型一致的Map对象，不再做转换，直接返回原对象
 				return (Map) value;
 			}
@@ -66,6 +67,8 @@ public class MapConverter extends AbstractConverter<Map<?, ?>> {
 			convertMapToMap((Map) value, map);
 		} else if (BeanUtil.isBean(value.getClass())) {
 			map = BeanUtil.beanToMap(value);
+			// 二次转换，转换键值类型
+			map = convertInternal(map);
 		} else {
 			throw new UnsupportedOperationException(StrUtil.format("Unsupport toMap value type: {}", value.getClass().getName()));
 		}

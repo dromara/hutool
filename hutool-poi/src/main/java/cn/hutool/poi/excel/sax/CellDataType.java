@@ -32,7 +32,7 @@ public enum CellDataType {
 	 * 
 	 * @param name 类型属性值
 	 */
-	private CellDataType(String name) {
+	CellDataType(String name) {
 		this.name = name;
 	}
 

@@ -108,6 +108,6 @@ public class ConsistentHash<T> implements Serializable{
 	 *
 	 */
 	public interface HashFunc {
-		public Integer hash(Object key);
+		Integer hash(Object key);
 	}
 }

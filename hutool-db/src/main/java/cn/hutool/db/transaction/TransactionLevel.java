@@ -60,7 +60,7 @@ public enum TransactionLevel {
 	/** 事务级别，对应Connection中的常量值 */
 	private int level;
 
-	private TransactionLevel(int level) {
+	TransactionLevel(int level) {
 		this.level = level;
 	}
 

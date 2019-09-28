@@ -19,10 +19,7 @@ import cn.hutool.core.util.StrUtil;
  * @author Looly
  *
  */
-public final class FileTypeUtil {
-
-	private FileTypeUtil() {
-	};
+public class FileTypeUtil {
 
 	private static final Map<String, String> fileTypeMap;
 
@@ -42,7 +39,6 @@ public final class FileTypeUtil {
 		fileTypeMap.put("38425053000100000000", "psd"); // Photoshop (psd)
 		fileTypeMap.put("46726f6d3a203d3f6762", "eml"); // Email [Outlook Express 6] (eml)
 		fileTypeMap.put("d0cf11e0a1b11ae10000", "doc"); // MS Excel 注意：word、msi 和 excel的文件头一样
-		fileTypeMap.put("d0cf11e0a1b11ae10000", "vsd"); // Visio 绘图
 		fileTypeMap.put("5374616E64617264204A", "mdb"); // MS Access (mdb)
 		fileTypeMap.put("252150532D41646F6265", "ps");
 		fileTypeMap.put("255044462d312e", "pdf"); // Adobe Acrobat (pdf)
@@ -70,7 +66,6 @@ public final class FileTypeUtil {
 		fileTypeMap.put("cafebabe0000002e0041", "class");// bat文件
 		fileTypeMap.put("49545346030000006000", "chm");// bat文件
 		fileTypeMap.put("04000000010000001300", "mxp");// bat文件
-		fileTypeMap.put("d0cf11e0a1b11ae10000", "wps");// WPS文字wps、表格et、演示dps都是一样的
 		fileTypeMap.put("6431303a637265617465", "torrent");
 		fileTypeMap.put("6D6F6F76", "mov"); // Quicktime (mov)
 		fileTypeMap.put("FF575043", "wpd"); // WordPerfect (wpd)

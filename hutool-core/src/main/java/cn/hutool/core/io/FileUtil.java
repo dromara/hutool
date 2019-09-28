@@ -1,35 +1,20 @@
 package cn.hutool.core.io;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.io.Reader;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.io.file.*;
+import cn.hutool.core.io.file.FileWriter;
+import cn.hutool.core.io.file.FileReader.ReaderHandler;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.*;
+
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.CopyOption;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -37,26 +22,6 @@ import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.file.FileCopier;
-import cn.hutool.core.io.file.FileMode;
-import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.io.file.FileReader.ReaderHandler;
-import cn.hutool.core.io.file.FileWriter;
-import cn.hutool.core.io.file.LineSeparator;
-import cn.hutool.core.io.file.Tailer;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.core.util.ZipUtil;
 
 /**
  * 文件工具类
@@ -1583,7 +1548,7 @@ public class FileUtil {
 		// 去除file:前缀
 		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
 		// 统一使用斜杠
-		pathToUse = pathToUse.replaceAll("[/\\\\]{1,}", StrUtil.SLASH).trim();
+		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH).trim();
 		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
 		if(path.startsWith("\\\\")){
 			pathToUse = "\\" + pathToUse;

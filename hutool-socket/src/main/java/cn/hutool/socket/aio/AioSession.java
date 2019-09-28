@@ -153,7 +153,7 @@ public class AioSession implements Closeable{
 	 * @return 会话是否打开状态
 	 */
 	public boolean isOpen() {
-		return (null == this.channel) ? false : this.channel.isOpen();
+		return (null != this.channel) && this.channel.isOpen();
 	}
 
 	/**

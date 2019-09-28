@@ -354,7 +354,7 @@ public class JSONObjectTest {
 		Assert.assertEquals("defaultBBB", bbb);
 	}
 
-	public static enum TestEnum {
+	public enum TestEnum {
 		TYPE_A, TYPE_B
 	}
 

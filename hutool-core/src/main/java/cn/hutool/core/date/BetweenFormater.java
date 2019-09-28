@@ -75,7 +75,7 @@ public class BetweenFormater implements Serializable{
 			}
 			if(isLevelCountValid(levelCount) && 0 != millisecond && level >= Level.MILLSECOND.ordinal()){
 				sb.append(millisecond).append(Level.MILLSECOND.name);
-				levelCount++;
+				// levelCount++;
 			}
 		}
 		
@@ -123,7 +123,7 @@ public class BetweenFormater implements Serializable{
 	 * 
 	 * @author Looly
 	 */
-	public static enum Level {
+	public enum Level {
 
 		/** 天 */
 		DAY("天"),
@@ -143,7 +143,7 @@ public class BetweenFormater implements Serializable{
 		 * 构造
 		 * @param name 级别名称
 		 */
-		private Level(String name) {
+		Level(String name) {
 			this.name = name;
 		}
 
