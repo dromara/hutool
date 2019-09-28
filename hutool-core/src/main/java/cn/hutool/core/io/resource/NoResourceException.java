@@ -41,7 +41,7 @@ public class NoResourceException extends IORuntimeException {
 	 */
 	public boolean causeInstanceOf(Class<? extends Throwable> clazz) {
 		Throwable cause = this.getCause();
-		if (null != cause && clazz.isInstance(cause)) {
+		if (clazz.isInstance(cause)) {
 			return true;
 		}
 		return false;

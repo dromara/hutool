@@ -1,6 +1,3 @@
-/**
- * 
- */
 package cn.hutool.poi.excel.test;
 
 import java.util.ArrayList;

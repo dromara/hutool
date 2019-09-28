@@ -30,7 +30,7 @@ public enum GlobalPruneTimer {
 	/**
 	 * 构造
 	 */
-	private GlobalPruneTimer() {
+	GlobalPruneTimer() {
 		create();
 	}
 

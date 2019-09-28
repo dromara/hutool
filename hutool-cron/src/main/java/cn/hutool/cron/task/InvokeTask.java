@@ -61,7 +61,7 @@ public class InvokeTask implements Task{
 	@Override
 	public void execute() {
 		try {
-			ReflectUtil.invoke(this.obj, this.method, new Object[]{});
+			ReflectUtil.invoke(this.obj, this.method);
 		} catch (UtilException e) {
 			throw new CronException(e.getCause());
 		}

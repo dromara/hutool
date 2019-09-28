@@ -34,7 +34,7 @@ public enum ChannelType {
 	 * 
 	 * @param value 类型值
 	 */
-	private ChannelType(String value) {
+	ChannelType(String value) {
 		this.value = value;
 	}
 

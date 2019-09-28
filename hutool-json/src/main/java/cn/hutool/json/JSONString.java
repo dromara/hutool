@@ -14,5 +14,5 @@ public interface JSONString {
 	 * 
 	 * @return JSON字符串
 	 */
-	public String toJSONString();
+	String toJSONString();
 }

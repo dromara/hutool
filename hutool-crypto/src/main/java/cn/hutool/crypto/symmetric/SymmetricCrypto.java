@@ -12,8 +12,10 @@ import cn.hutool.crypto.SecureUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEParameterSpec;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.concurrent.locks.Lock;
@@ -27,7 +29,8 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Looly
  */
-public class SymmetricCrypto {
+public class SymmetricCrypto implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * SecretKey 负责保存对称密钥
@@ -131,7 +134,7 @@ public class SymmetricCrypto {
 	 *
 	 * @param algorithm 算法
 	 * @param key       密钥，如果为<code>null</code>自动生成一个key
-	 * @return {@link SymmetricCrypto}
+	 * @return {@link SymmetricCrypto}的子对象，既子对象自身
 	 */
 	public SymmetricCrypto init(String algorithm, SecretKey key) {
 		Assert.notBlank(algorithm, "'algorithm' must be not blank !");
@@ -160,6 +163,28 @@ public class SymmetricCrypto {
 	 */
 	public SymmetricCrypto setParams(AlgorithmParameterSpec params) {
 		this.params = params;
+		return this;
+	}
+
+	/**
+	 * 设置偏移向量
+	 *
+	 * @param iv {@link IvParameterSpec}偏移向量
+	 * @return 自身
+	 */
+	public SymmetricCrypto setIv(IvParameterSpec iv) {
+		setParams(iv);
+		return this;
+	}
+
+	/**
+	 * 设置偏移向量
+	 *
+	 * @param iv 偏移向量，加盐
+	 * @return 自身
+	 */
+	public SymmetricCrypto setIv(byte[] iv) {
+		setIv(new IvParameterSpec(iv));
 		return this;
 	}
 

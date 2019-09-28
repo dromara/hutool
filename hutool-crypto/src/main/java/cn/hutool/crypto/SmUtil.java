@@ -1,10 +1,14 @@
 package cn.hutool.crypto;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
-
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.crypto.asymmetric.SM2;
+import cn.hutool.crypto.digest.HMac;
+import cn.hutool.crypto.digest.HmacAlgorithm;
+import cn.hutool.crypto.digest.SM3;
+import cn.hutool.crypto.digest.mac.BCHMacEngine;
+import cn.hutool.crypto.digest.mac.MacEngine;
+import cn.hutool.crypto.symmetric.SM4;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Sequence;
@@ -14,14 +18,10 @@ import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.crypto.asymmetric.SM2;
-import cn.hutool.crypto.digest.Digester;
-import cn.hutool.crypto.digest.HMac;
-import cn.hutool.crypto.digest.HmacAlgorithm;
-import cn.hutool.crypto.digest.mac.BCHMacEngine;
-import cn.hutool.crypto.digest.mac.MacEngine;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
 
 /**
  * SM国密算法工具类<br>
@@ -33,9 +33,6 @@ import cn.hutool.crypto.symmetric.SymmetricCrypto;
 public class SmUtil {
 
 	private final static int RS_LEN = 32;
-
-	private static String SM3 = "SM3";
-	private static String SM4 = "SM4";
 
 	/**
 	 * 创建SM2算法对象<br>
@@ -79,10 +76,10 @@ public class SmUtil {
 	 * SM3加密：sm3().digest(data)<br>
 	 * SM3加密并转为16进制字符串：sm3().digestHex(data)<br>
 	 * 
-	 * @return {@link Digester}
+	 * @return {@link SM3}
 	 */
-	public static Digester sm3() {
-		return new Digester(SM3);
+	public static SM3 sm3() {
+		return new SM3();
 	}
 
 	/**
@@ -92,7 +89,7 @@ public class SmUtil {
 	 * @return SM3字符串
 	 */
 	public static String sm3(String data) {
-		return new Digester(SM3).digestHex(data);
+		return sm3().digestHex(data);
 	}
 
 	/**
@@ -102,7 +99,7 @@ public class SmUtil {
 	 * @return SM3字符串
 	 */
 	public static String sm3(InputStream data) {
-		return new Digester(SM3).digestHex(data);
+		return sm3().digestHex(data);
 	}
 
 	/**
@@ -112,7 +109,7 @@ public class SmUtil {
 	 * @return SM3字符串
 	 */
 	public static String sm3(File dataFile) {
-		return new Digester(SM3).digestHex(dataFile);
+		return sm3().digestHex(dataFile);
 	}
 
 	/**
@@ -126,8 +123,8 @@ public class SmUtil {
 	 * 
 	 * @return {@link SymmetricCrypto}
 	 */
-	public static SymmetricCrypto sm4() {
-		return new SymmetricCrypto(SM4);
+	public static SM4 sm4() {
+		return new SM4();
 	}
 
 	/**
@@ -143,7 +140,7 @@ public class SmUtil {
 	 * @return {@link SymmetricCrypto}
 	 */
 	public static SymmetricCrypto sm4(byte[] key) {
-		return new SymmetricCrypto(SM4, key);
+		return new SM4(key);
 	}
 
 	/**

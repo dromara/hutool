@@ -165,7 +165,7 @@ public class CronPattern {
 
 		boolean eval;
 		for (int i = 0; i < matcherSize; i++) {
-			eval = (isMatchSecond ? secondMatchers.get(i).match(second) : true) // 匹配秒（非秒匹配模式下始终返回true）
+			eval = ((false == isMatchSecond) || secondMatchers.get(i).match(second)) // 匹配秒（非秒匹配模式下始终返回true）
 					&& minuteMatchers.get(i).match(minute)// 匹配分
 					&& hourMatchers.get(i).match(hour)// 匹配时
 					&& isMatchDayOfMonth(dayOfMonthMatchers.get(i), dayOfMonth, month, calendar.isLeapYear(year))// 匹配日
@@ -211,7 +211,7 @@ public class CronPattern {
 	 * @since 4.0.2
 	 */
 	private static boolean isMatch(List<ValueMatcher> matchers, int index, int value) {
-		return (matchers.size() > index) ? matchers.get(index).match(value) : true;
+		return (matchers.size() <= index) || matchers.get(index).match(value);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class CronPattern {
 		}
 		// 分
 		try {
-			this.minuteMatchers.add(ValueMatcherBuilder.build(parts[0 + offset], MINUTE_VALUE_PARSER));
+			this.minuteMatchers.add(ValueMatcherBuilder.build(parts[offset], MINUTE_VALUE_PARSER));
 		} catch (Exception e) {
 			throw new CronException(e, "Invalid pattern [{}], parsing 'minute' field error!", pattern);
 		}

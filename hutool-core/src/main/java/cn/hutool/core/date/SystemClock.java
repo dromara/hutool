@@ -25,7 +25,7 @@ public class SystemClock {
 
 	/**
 	 * 构造
-	 * @param period
+	 * @param period 时钟更新间隔，单位毫秒
 	 */
 	private SystemClock(long period) {
 		this.period = period;

@@ -6,33 +6,34 @@
 </p>
 <p align="center">
 	<a target="_blank" href="https://search.maven.org/search?q=g:%22cn.hutool%22%20AND%20a:%22hutool-all%22">
-		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" ></img>
+        <img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
 	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL/">
-		<img src="https://img.shields.io/:license-MulanPSL-blue.svg" ></img>
+        <img src="https://img.shields.io/:license-MulanPSL-blue.svg" />
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
-		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" ></img>
+		<img src="https://img.shields.io/badge/JDK-1.7+-green.svg" />
 	</a>
 	<a target="_blank" href="https://travis-ci.org/looly/hutool">
-		<img src="https://travis-ci.org/looly/hutool.svg?branch=v4-master" ></img>
+		<img src="https://travis-ci.org/looly/hutool.svg?branch=v4-master" />
 	</a>
-	<a href="https://www.codacy.com/app/looly/hutool?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=looly/hutool&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/3e1b8a70248c46579b7b0d01d60c6377"/>
+	<a href="https://www.codacy.com/app/looly/hutool?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=looly/hutool&amp;utm_campaign=Badge_Grade">
+		<img src="https://api.codacy.com/project/badge/Grade/3e1b8a70248c46579b7b0d01d60c6377"/>
 	</a>
 	<a href="https://codecov.io/gh/looly/hutool">
 		<img src="https://codecov.io/gh/looly/hutool/branch/v4-master/graph/badge.svg" />
 	</a>
 	<a target="_blank" href="https://gitter.im/hutool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
-		<img src="https://badges.gitter.im/hutool/Lobby.svg" ></img>
+		<img src="https://badges.gitter.im/hutool/Lobby.svg" />
 	</a>
 	<a target="_blank" href="https://gitee.com/loolly/hutool/stargazers">
-		<img src='https://gitee.com/loolly/hutool/badge/star.svg?theme=dark' alt='gitee star'></img>
+		<img src="https://gitee.com/loolly/hutool/badge/star.svg?theme=dark" alt='gitee star'/>
 	</a>
 	<a target="_blank" href='https://github.com/looly/hutool'>
-		<img src="https://img.shields.io/github/stars/looly/hutool.svg?style=social" alt="github star"></img>
+		<img src="https://img.shields.io/github/stars/looly/hutool.svg?style=social" alt="github star"/>
 	</a>
 	<a target="_blank" href='https://app.netlify.com/sites/hutool/deploys'>
-		<img src="https://api.netlify.com/api/v1/badges/7e0824f9-5f9a-4df0-89dd-b2fccfbeccb1/deploy-status" alt="netlify"></img>
+		<img src="https://api.netlify.com/api/v1/badges/7e0824f9-5f9a-4df0-89dd-b2fccfbeccb1/deploy-status" alt="netlify"/>
 	</a>
 </p>
 <p align="center">
@@ -108,21 +109,21 @@ Hutool的目标是使用一个工具方法代替一段复杂代码，从而最�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.6.8</version>
+    <version>4.6.9</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.6.8'
+compile 'cn.hutool:hutool-all:4.6.9'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.6.8/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.6.8/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.6.9/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.6.9/)
 
 > 注意
 > Hutool支持JDK7+，对Android平台没有测试，不能保证所有工具类获工具方法可用。

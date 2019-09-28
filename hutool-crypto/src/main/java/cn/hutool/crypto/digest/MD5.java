@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
  * @since 4.4.3
  */
 public class MD5 extends Digester {
+	private static final long serialVersionUID = 1L;
 	
 	/**
 	 * 创建MD5实例

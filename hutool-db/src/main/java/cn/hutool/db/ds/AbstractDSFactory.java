@@ -193,12 +193,9 @@ public abstract class AbstractDSFactory extends DSFactory {
 			return false;
 		}
 		if (setting == null) {
-			if (other.setting != null) {
-				return false;
-			}
-		} else if (!setting.equals(other.setting)) {
-			return false;
+			return other.setting == null;
+		} else {
+			return setting.equals(other.setting);
 		}
-		return true;
 	}
 }

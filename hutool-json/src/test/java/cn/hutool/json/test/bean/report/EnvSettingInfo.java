@@ -17,8 +17,8 @@ public class EnvSettingInfo {
 	private String hubRemoteUrl;
 	
 	private String reportFolder = "/report";
-	private String screenshotFolder = "/screenshot";;
-	
+	private String screenshotFolder = "/screenshot";
+
 	private String elementFolder = "/config/element/";
 	private String suiteFolder = "/config/suite/";
 	

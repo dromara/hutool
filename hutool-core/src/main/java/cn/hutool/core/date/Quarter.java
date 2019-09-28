@@ -25,7 +25,7 @@ public enum Quarter {
 	// ---------------------------------------------------------------
 	private int value;
 
-	private Quarter(int value) {
+	Quarter(int value) {
 		this.value = value;
 	}
 

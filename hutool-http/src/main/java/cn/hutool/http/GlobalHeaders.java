@@ -26,7 +26,7 @@ public enum GlobalHeaders {
 	/**
 	 * 构造
 	 */
-	private GlobalHeaders() {
+	GlobalHeaders() {
 		putDefault(false);
 	}
 
@@ -110,7 +110,7 @@ public enum GlobalHeaders {
 		if (null != name && null != value) {
 			final List<String> values = headers.get(name.trim());
 			if (isOverride || CollectionUtil.isEmpty(values)) {
-				final ArrayList<String> valueList = new ArrayList<String>();
+				final ArrayList<String> valueList = new ArrayList<>();
 				valueList.add(value);
 				headers.put(name.trim(), valueList);
 			} else {

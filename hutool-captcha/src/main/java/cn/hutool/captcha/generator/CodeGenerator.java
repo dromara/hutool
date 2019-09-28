@@ -14,7 +14,7 @@ public interface CodeGenerator extends Serializable{
 	 * 
 	 * @return 验证码
 	 */
-	public String generate();
+	String generate();
 
 	/**
 	 * 验证用户输入的字符串是否与生成的验证码匹配<br>
@@ -24,5 +24,5 @@ public interface CodeGenerator extends Serializable{
 	 * @param userInputCode 用户输入的验证码
 	 * @return 是否验证通过
 	 */
-	public boolean verify(String code, String userInputCode);
+	boolean verify(String code, String userInputCode);
 }

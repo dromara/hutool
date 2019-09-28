@@ -68,7 +68,7 @@ public class UploadFile {
 	 * 写入后原临时文件会被删除
 	 * @param destPath 目标文件路径
 	 * @return 目标文件
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public File write(String destPath) throws IOException {
 		if(data != null || tempFile != null) {
@@ -101,11 +101,8 @@ public class UploadFile {
 	}
 	
 	/**
-	 * Returns the content of file upload item.
-	 */
-	/**
 	 * @return 获得文件字节流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public byte[] getFileContent() throws IOException {
 		assertValid();
@@ -121,7 +118,7 @@ public class UploadFile {
 
 	/**
 	 * @return 获得文件流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	public InputStream getFileInputStream() throws IOException {
 		assertValid();
@@ -179,7 +176,7 @@ public class UploadFile {
 	 * 处理上传表单流，提取出文件
 	 * 
 	 * @param input 上传表单的流
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	protected boolean processStream(MultipartRequestInputStream input) throws IOException {
 		if (!isAllowedExtension()) {
@@ -260,7 +257,7 @@ public class UploadFile {
 	
 	/**
 	 * 断言是否文件流可用
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	private void assertValid() throws IOException {
 		if(! isUploaded()) {

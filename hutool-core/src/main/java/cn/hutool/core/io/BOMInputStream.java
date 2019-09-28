@@ -82,7 +82,7 @@ public class BOMInputStream extends InputStream {
 			return;
 		}
 
-		byte bom[] = new byte[BOM_SIZE];
+		byte[] bom = new byte[BOM_SIZE];
 		int n, unread;
 		n = in.read(bom, 0, bom.length);
 

@@ -13,14 +13,14 @@ public interface TaskListener {
 	 * 定时任务启动时触发
 	 * @param executor {@link TaskExecutor}
 	 */
-	public void onStart(TaskExecutor executor);
+	void onStart(TaskExecutor executor);
 	
 	/**
 	 * 任务成功结束时触发
 	 * 
 	 * @param executor {@link TaskExecutor}
 	 */
-	public void onSucceeded(TaskExecutor executor);
+	void onSucceeded(TaskExecutor executor);
 
 	/**
 	 * 任务启动失败时触发
@@ -28,5 +28,5 @@ public interface TaskListener {
 	 * @param executor {@link TaskExecutor}
 	 * @param exception 异常
 	 */
-	public void onFailed(TaskExecutor executor, Throwable exception);
+	void onFailed(TaskExecutor executor, Throwable exception);
 }

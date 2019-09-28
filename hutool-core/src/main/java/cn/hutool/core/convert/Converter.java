@@ -17,6 +17,6 @@ public interface Converter<T> {
 	 * @return 转换后的值
 	 * @throws IllegalArgumentException 无法确定目标类型，且默认值为{@code null}，无法确定类型
 	 */
-	public T convert(Object value, T defaultValue) throws IllegalArgumentException;
+	T convert(Object value, T defaultValue) throws IllegalArgumentException;
 
 }

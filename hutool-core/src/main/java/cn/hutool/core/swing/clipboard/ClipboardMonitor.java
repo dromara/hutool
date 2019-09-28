@@ -39,7 +39,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	/**
 	 * 构造，尝试获取剪贴板内容的次数为10，第二次之后延迟100毫秒
 	 */
-	private ClipboardMonitor() {
+	ClipboardMonitor() {
 		this(DEFAULT_TRY_COUNT, DEFAULT_DELAY);
 	}
 
@@ -49,7 +49,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param tryCount 尝试获取剪贴板内容的次数
 	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
 	 */
-	private ClipboardMonitor(int tryCount, long delay) {
+	ClipboardMonitor(int tryCount, long delay) {
 		this(tryCount, delay, ClipboardUtil.getClipboard());
 	}
 
@@ -60,7 +60,7 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	 * @param delay 响应延迟，当从第二次开始，延迟一定毫秒数等待剪贴板可以获取，当tryCount小于2时无效
 	 * @param clipboard 剪贴板对象
 	 */
-	private ClipboardMonitor(int tryCount, long delay, Clipboard clipboard) {
+	ClipboardMonitor(int tryCount, long delay, Clipboard clipboard) {
 		this.tryCount = tryCount;
 		this.delay = delay;
 		this.clipboard = clipboard;

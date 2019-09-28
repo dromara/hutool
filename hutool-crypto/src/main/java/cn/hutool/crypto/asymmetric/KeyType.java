@@ -7,5 +7,5 @@ package cn.hutool.crypto.asymmetric;
  *
  */
 public enum KeyType {
-	PrivateKey, PublicKey;
+	PrivateKey, PublicKey
 }

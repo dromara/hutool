@@ -155,7 +155,7 @@ public class ShearCaptcha extends AbstractCaptcha {
 	 * 干扰线
 	 * 
 	 * @param g {@link Graphics}
-	 * @param x1x1
+	 * @param x1 x1
 	 * @param y1 y1
 	 * @param x2 x2
 	 * @param y2 y2
@@ -183,8 +183,8 @@ public class ShearCaptcha extends AbstractCaptcha {
 		int dy = (int) ddy;
 
 		// Now we can compute the corner points...
-		int xPoints[] = new int[4];
-		int yPoints[] = new int[4];
+		int[] xPoints = new int[4];
+		int[] yPoints = new int[4];
 
 		xPoints[0] = x1 + dx;
 		yPoints[0] = y1 + dy;

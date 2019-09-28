@@ -29,7 +29,7 @@ public enum Operation {
 	 * @see SelectionKey#OP_CONNECT
 	 * @see SelectionKey#OP_ACCEPT
 	 */
-	private Operation(int value) {
+	Operation(int value) {
 		this.value = value;
 	}
 

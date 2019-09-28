@@ -14,7 +14,7 @@ public class GlobalDSFactory {
 	private static volatile DSFactory factory;
 	private static Object lock = new Object();
 
-	/**
+	/*
 	 * 设置在JVM关闭时关闭所有数据库连接
 	 */
 	static {

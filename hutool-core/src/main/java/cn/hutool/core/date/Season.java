@@ -26,7 +26,7 @@ public enum Season {
 	// ---------------------------------------------------------------
 	private int value;
 
-	private Season(int value) {
+	Season(int value) {
 		this.value = value;
 	}
 

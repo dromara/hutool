@@ -1,13 +1,11 @@
 package cn.hutool.core.util;
 
-import java.util.Map;
-
-import cn.hutool.core.lang.Console;
+import cn.hutool.core.lang.Editor;
+import cn.hutool.core.lang.Filter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
+import java.util.Map;
 
 /**
  * {@link ArrayUtil} 数组工具单元测试

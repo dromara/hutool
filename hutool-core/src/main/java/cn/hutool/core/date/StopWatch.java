@@ -312,7 +312,7 @@ public class StopWatch {
 	public String prettyPrint() {
 		StringBuilder sb = new StringBuilder(shortSummary());
 		sb.append(FileUtil.getLineSeparator());
-		if (null != this.taskList) {
+		if (null == this.taskList) {
 			sb.append("No task info kept");
 		} else {
 			sb.append("---------------------------------------------").append(FileUtil.getLineSeparator());

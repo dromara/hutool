@@ -42,5 +42,5 @@ public enum Mode {
 	/**
 	 * Propagating Cipher Block
 	 */
-	PCBC;
+	PCBC
 }

@@ -209,7 +209,7 @@ public class FileReader extends FileWrapper {
 	 */
 	public <T> T read(ReaderHandler<T> readerHandler) throws IORuntimeException {
 		BufferedReader reader = null;
-		T result = null;
+		T result;
 		try {
 			reader = FileUtil.getReader(this.file, charset);
 			result = readerHandler.handle(reader);
@@ -274,7 +274,7 @@ public class FileReader extends FileWrapper {
 	 * @param <T> Reader处理返回结果类型
 	 */
 	public interface ReaderHandler<T> {
-		public T handle(BufferedReader reader) throws IOException;
+		T handle(BufferedReader reader) throws IOException;
 	}
 	// -------------------------------------------------------------------------- Interface end
 	

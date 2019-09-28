@@ -216,7 +216,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 			throw new IORuntimeException(StrUtil.format("Src [{}] is a directory but dest [{}] is a file!", src.getPath(), dest.getPath()));
 		}
 		
-		final String files[] = src.list();
+		final String[] files = src.list();
 		File srcFile;
 		File destFile;
 		for (String file : files) {

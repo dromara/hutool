@@ -3,12 +3,32 @@
 
 -------------------------------------------------------------------------------------------------------------
 
+## 4.6.9
+
+### 新特性
+### Bug修复
+
+-------------------------------------------------------------------------------------------------------------
+
 ## 4.6.8
 
 ### 新特性
 * 【core】        ArrayUtil.isEmpty可变长参数改为数组（issue#555@Github）
+* 【core】        新增Convert.toMap方法（issue#I12ISI@Gitee）
+* 【aop 】        增加返回值获取支持，优化逻辑和接口（pr#561@Github）
+* 【aop 】        改进HtmlUtil.removeHtmlAttr（issue#556@Github）
+* 【crypto】      增加SM3和SM4类
 
 ### Bug修复
+* 【extra】       修复Mail中sslEnable无效问题（pr#74@Gitee）
+* 【extra】       修复CsvParser中最后一行双引号没有去除的问题（pr#73@Gitee）
+* 【crypto】      修复SM2算法在自定义密钥时无效问题（issue#I12P5I@Gitee）
+* 【core】        修复StopWatch.prettyPrint条件问题（issue#I12RAC@Gitee）
+* 【core】        修复StrBuilder.del无法删除最后一个字符的问题（issue#I12R14@Gitee）
+* 【core】        修复StrBuilder.del无法删除最后一个字符的问题（issue#I12R14@Gitee）
+* 【poi】         修复sax方式读取复用行导致的问题（issue#I12O0U@Gitee）
+* 【core】        修复ClassUtil循环调用问题
+* 【core】        修复MapConvert转换Bean为Map类型没有转换成功问题
 
 -------------------------------------------------------------------------------------------------------------
 

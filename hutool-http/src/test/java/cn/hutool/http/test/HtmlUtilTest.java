@@ -130,9 +130,26 @@ public class HtmlUtilTest {
 	
 	@Test
 	public void removeHtmlAttrTest() {
+
+		// 去除的属性加双引号测试
 		String html = "<div class=\"test_div\"></div><span class=\"test_div\"></span>";
 		String result = HtmlUtil.removeHtmlAttr(html, "class");
 		Assert.assertEquals("<div></div><span></span>", result);
+
+		// 去除的属性后跟空格、加单引号、不加引号测试
+		html = "<div class=test_div></div><span Class='test_div' ></span>";
+		result = HtmlUtil.removeHtmlAttr(html, "class");
+		Assert.assertEquals("<div></div><span></span>", result);
+
+		// 去除的属性位于标签末尾、其它属性前测试
+		html = "<div style=\"margin:100%\" class=test_div></div><span Class='test_div' width=100></span>";
+		result = HtmlUtil.removeHtmlAttr(html, "class");
+		Assert.assertEquals("<div style=\"margin:100%\"></div><span width=100></span>", result);
+
+		// 去除的属性名和值之间存在空格
+		html = "<div style = \"margin:100%\" class = test_div></div><span Class = 'test_div' width=100></span>";
+		result = HtmlUtil.removeHtmlAttr(html, "class");
+		Assert.assertEquals("<div style = \"margin:100%\"></div><span width=100></span>", result);
 	}
 	
 	@Test

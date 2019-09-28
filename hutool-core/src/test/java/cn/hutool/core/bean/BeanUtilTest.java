@@ -1,20 +1,18 @@
 package cn.hutool.core.bean;
 
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.bean.copier.ValueProvider;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.map.MapUtil;
 
 /**
  * Bean工具单元测试
@@ -61,7 +59,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void fillBeanWithMapIgnoreCaseTest() {
-		HashMap<String, Object> map = CollectionUtil.newHashMap();
+		HashMap<String, Object> map = CollUtil.newHashMap();
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 		map.put("openId", "DFDFSDFWERWER");
@@ -73,7 +71,7 @@ public class BeanUtilTest {
 
 	@Test
 	public void mapToBeanIgnoreCaseTest() {
-		HashMap<String, Object> map = CollectionUtil.newHashMap();
+		HashMap<String, Object> map = CollUtil.newHashMap();
 		map.put("Name", "Joe");
 		map.put("aGe", 12);
 
@@ -84,11 +82,11 @@ public class BeanUtilTest {
 
 	@Test
 	public void mapToBeanTest() {
-		HashMap<String, Object> map = CollectionUtil.newHashMap();
+		HashMap<String, Object> map = CollUtil.newHashMap();
 		map.put("a_name", "Joe");
 		map.put("b_age", 12);
 
-		// 别名
+		// 别名，用于对应bean的字段名
 		HashMap<String, String> mapping = CollUtil.newHashMap();
 		mapping.put("a_name", "name");
 		mapping.put("b_age", "age");

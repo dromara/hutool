@@ -16,7 +16,7 @@ public interface BloomFilter extends Serializable{
 	 * @param str 字符串
 	 * @return 判断一个字符串是否bitMap中存在
 	 */
-	public boolean contains(String str);
+	boolean contains(String str);
 
 	/**
 	 * 在boolean的bitMap中增加一个字符串<br>
@@ -25,5 +25,5 @@ public interface BloomFilter extends Serializable{
 	 * @param str 字符串
 	 * @return 是否加入成功，如果存在就返回<code>false</code> .如果不存在返回<code>true</code>
 	 */
-	public boolean add(String str);
+	boolean add(String str);
 }

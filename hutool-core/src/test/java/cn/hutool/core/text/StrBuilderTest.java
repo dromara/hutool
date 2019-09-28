@@ -86,4 +86,35 @@ public class StrBuilderTest {
 		builder.append(123).append(456.123D).append(true).append('\n');
 		Assert.assertEquals("123456.123true\n", builder.toString());
 	}
+
+	@Test
+	public void delTest() {
+		// 删除全部测试
+		StrBuilder strBuilder = new StrBuilder("ABCDEFG");
+		int length = strBuilder.length();
+		StrBuilder builder = strBuilder.del(0, length);
+		Assert.assertEquals("", builder.toString());
+	}
+
+	@Test
+	public void delTest2() {
+		// 删除中间部分测试
+		StrBuilder strBuilder = new StrBuilder("ABCDEFG");
+		int length = strBuilder.length();
+		StrBuilder builder = strBuilder.del(2,6);
+		Assert.assertEquals("ABG", builder.toString());
+	}
+
+	@Test
+	public void delToTest() {
+		StrBuilder strBuilder = new StrBuilder("ABCDEFG");
+
+		// 不处理
+		StrBuilder builder = strBuilder.delTo(7);
+		Assert.assertEquals("ABCDEFG", builder.toString());
+
+		// 删除全部
+		builder = strBuilder.delTo(0);
+		Assert.assertEquals("", builder.toString());
+	}
 }

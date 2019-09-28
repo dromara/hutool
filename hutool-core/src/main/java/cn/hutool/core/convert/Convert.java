@@ -4,15 +4,12 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.GenericEnumConverter;
+import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.text.UnicodeUtil;
@@ -525,6 +522,20 @@ public class Convert {
 	public static <T> List<T> toList(Class<T> elementType, Object value) {
 		return (List<T>) toCollection(ArrayList.class, elementType, value);
 	}
+
+	/**
+	 * 转换为Map
+	 *
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param value 被转换的值
+	 * @return {@link Map}
+	 * @since 4.6.8
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, Object value) {
+		return (Map<K, V>) new MapConverter(HashMap.class, keyType, valueType).convert(value, null);
+	}
 	
 	/**
 	 * 转换值为指定类型，类型采用字符串表示
@@ -662,7 +673,7 @@ public class Convert {
 	 * @return 全角字符串.
 	 */
 	public static String toSBC(String input, Set<Character> notConvertSet) {
-		char c[] = input.toCharArray();
+		final char[] c = input.toCharArray();
 		for (int i = 0; i < c.length; i++) {
 			if (null != notConvertSet && notConvertSet.contains(c[i])) {
 				// 跳过不替换的字符
@@ -700,7 +711,7 @@ public class Convert {
 		if(StrUtil.isBlank(text)) {
 			return text;
 		}
-		char c[] = text.toCharArray();
+		final char[] c = text.toCharArray();
 		for (int i = 0; i < c.length; i++) {
 			if (null != notConvertSet && notConvertSet.contains(c[i])) {
 				// 跳过不替换的字符
@@ -714,9 +725,8 @@ public class Convert {
 				c[i] = (char) (c[i] - 65248);
 			}
 		}
-		String returnString = new String(c);
 
-		return returnString;
+		return new String(c);
 	}
 
 	// --------------------------------------------------------------------- hex
