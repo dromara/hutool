@@ -19,13 +19,13 @@ public class EventManagerTest {
 
     @Before
     public void before() {
-        eventFireHelper = new DefaultEventManager(null, null, null);
+        eventFireHelper = new DefaultEventManager();
         event = new CatchEvent(this, UUID.fastUUID().toString());
     }
 
     @Test
     public void testMulticasterCatchEvent() {
-        eventFireHelper.addListeners(new FirstCatchListener(), new SecondCatchListener());
+        eventFireHelper.addListeners(new SecondCatchListener(), new FirstCatchListener());
         //异步
         for (int i = 0; i < 100; i++) {
             ThreadUtil.execute(new Runnable() {

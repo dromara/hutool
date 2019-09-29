@@ -28,6 +28,7 @@ public interface BaseListener extends EventListener {
     boolean isSupportEvent(BaseEvent event);
 
     /**
+     * 处理相同事件，
      * @return 优先级 越小越先处理支持的事件
      */
     int order();

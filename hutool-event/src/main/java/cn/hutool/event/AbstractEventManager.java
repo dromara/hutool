@@ -1,12 +1,11 @@
 package cn.hutool.event;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.event.domain.BaseEvent;
@@ -39,6 +38,20 @@ public abstract class AbstractEventManager implements EventManager {
         try {
             lock.writeLock().lock();
             this.defaultListenerKeeper.listeners.add(listener);
+            List<BaseListener> copy = new ArrayList<>(this.defaultListenerKeeper.listeners);
+            Collections.sort(copy,new Comparator<BaseListener>() {
+                @Override
+                public int compare(BaseListener o1, BaseListener o2) {
+                    if (o1.order() > o2.order()) {
+                        return 1;
+                    } else if (o1.order() == o2.order()) {
+                        return 0;
+                    }
+                    return -1;
+                }
+            });
+            this.defaultListenerKeeper.listeners.clear();
+            this.defaultListenerKeeper.listeners.addAll(copy);
         } finally {
             lock.writeLock().unlock();
         }
@@ -56,6 +69,20 @@ public abstract class AbstractEventManager implements EventManager {
             for (BaseListener listener : listeners) {
                 this.defaultListenerKeeper.listeners.add(listener);
             }
+            List<BaseListener> copy = new ArrayList<>(this.defaultListenerKeeper.listeners);
+            Collections.sort(copy,new Comparator<BaseListener>() {
+                @Override
+                public int compare(BaseListener o1, BaseListener o2) {
+                    if (o1.order() > o2.order()) {
+                        return 1;
+                    } else if (o1.order() == o2.order()) {
+                        return 0;
+                    }
+                    return -1;
+                }
+            });
+            this.defaultListenerKeeper.listeners.clear();
+            this.defaultListenerKeeper.listeners.addAll(copy);
         } finally {
             lock.writeLock().unlock();
         }
