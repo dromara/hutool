@@ -9,7 +9,7 @@ import cn.hutool.event.listener.BaseListener;
  * @author Ted.L
  * Created on 2019-09-28
  */
-public class FirstCatchListener implements BaseListener {
+public class FirstCatchListener implements BaseListener<CatchEvent> {
 
     /**
      * 事件处理接口
@@ -17,8 +17,13 @@ public class FirstCatchListener implements BaseListener {
      * @param event 事件
      */
     @Override
-    public void onEventHappened(BaseEvent event) {
-        System.out.println(String.format(CatchEvent.class.cast(event).getMsg(), order()));
+    public void onEventHappened(CatchEvent event) {
+        if(event.getCd().getCount() < 10 || event.getCd().getCount()> 5000){
+//            System.out.println(String.format(CatchEvent.class.cast(event).getMsg(), CatchEvent.class.cast(event).getCd().getCount()));
+        }
+        event.getCd().countDown();
+        System.out.println(event.getDealTimes().incrementAndGet());
+
     }
 
     /**

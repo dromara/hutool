@@ -6,12 +6,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import cn.hutool.event.domain.BaseEvent;
 
 /**
- * Class AbstractEventMulticasterRejectedHandler...
+ * Class AbstractEventBroadcastRejectedHandler...
  *
  * @author Ted.L
  * Created on 2019-09-28
  */
-public abstract class AbstractEventMulticasterRejectedHandler implements RejectedExecutionHandler {
+public abstract class AbstractEventBroadcastRejectedHandler implements RejectedExecutionHandler {
 
     @Override
     public final void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
@@ -20,7 +20,8 @@ public abstract class AbstractEventMulticasterRejectedHandler implements Rejecte
     }
 
     /**
-     * @param event
+     * 开放事件、监听器、事件管理器给使用方，自定义处理方式
+     * @param event 被拒绝的事件
      */
     protected abstract void rejectedEvent(BaseEvent event);
 }
