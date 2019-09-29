@@ -18,9 +18,6 @@ public class FirstCatchListener implements BaseListener<CatchEvent> {
      */
     @Override
     public void onEventHappened(CatchEvent event) {
-        if(event.getCd().getCount() < 10 || event.getCd().getCount()> 5000){
-//            System.out.println(String.format(CatchEvent.class.cast(event).getMsg(), CatchEvent.class.cast(event).getCd().getCount()));
-        }
         event.getCd().countDown();
         System.out.println(event.getDealTimes().incrementAndGet());
 

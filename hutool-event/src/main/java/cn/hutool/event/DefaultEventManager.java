@@ -29,12 +29,6 @@ public final class DefaultEventManager extends AbstractEventManager implements B
     /** 线程池 */
     private final AtomicReference<ExecutorService> reference;
 
-    /** 异常处理 */
-    private Thread.UncaughtExceptionHandler        executeExceptionHandler;
-
-    /** 事件拒绝分发异常 */
-    private AbstractEventBroadcastRejectedHandler  eventBroadcastRejectedHandler;
-
     public static final class EventManagerBuilder {
         /** 初始池大小 */
         private int                                   eventHandlerSize;
@@ -152,8 +146,6 @@ public final class DefaultEventManager extends AbstractEventManager implements B
     private DefaultEventManager(int eventHandlerSize, int eventHandlerMaxSize, BlockingQueue<Runnable> eventQueue,
                                 AbstractEventBroadcastRejectedHandler eventBroadcastRejectedHandler, Thread.UncaughtExceptionHandler executeExceptionHandler) {
         this.reference = new AtomicReference<>();
-        this.executeExceptionHandler = executeExceptionHandler;
-        this.eventBroadcastRejectedHandler = eventBroadcastRejectedHandler;
         ExecutorService executorService = reference.get();
 
         if (executorService == null) {
@@ -161,8 +153,8 @@ public final class DefaultEventManager extends AbstractEventManager implements B
                 executorService = reference.get();
                 if (executorService == null) {
                     executorService = ExecutorBuilder.create().setWorkQueue(eventQueue).setCorePoolSize(eventHandlerSize).setMaxPoolSize(eventHandlerMaxSize)
-                        .setThreadFactory(ThreadUtil.newNamedThreadFactory("event-Multicaster", null, true, this.executeExceptionHandler))
-                        .setHandler(this.eventBroadcastRejectedHandler).build();
+                        .setThreadFactory(ThreadUtil.newNamedThreadFactory("event-Multicaster", null, true, executeExceptionHandler))
+                        .setHandler(eventBroadcastRejectedHandler).build();
                     reference.lazySet(executorService);
                 }
             }

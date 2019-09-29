@@ -18,9 +18,6 @@ public class SecondCatchListener implements BaseListener<CatchEvent> {
      */
     @Override
     public void onEventHappened(CatchEvent event) {
-        if(event.getCd().getCount() < 10 || event.getCd().getCount()> 5000){
-//            System.out.println(String.format(event.getMsg(), event.getCd().getCount()));
-        }
         event.getCd().countDown();
         System.out.println(event.getDealTimes().incrementAndGet());
 
