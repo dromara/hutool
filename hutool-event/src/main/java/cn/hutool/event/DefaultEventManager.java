@@ -2,6 +2,7 @@ package cn.hutool.event;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
 import cn.hutool.core.thread.ExecutorBuilder;
@@ -127,15 +128,56 @@ public final class DefaultEventManager extends AbstractEventManager {
             synchronized (reference) {
                 executorService = reference.get();
                 if (executorService == null) {
-                    executorService = ExecutorBuilder.create().useSynchronousQueue()
-                        .setThreadFactory(ThreadUtil.newNamedThreadFactory("event-Multicaster", null, true, executeExceptionHandler)).setHandler(eventMulticasterRejectedHandler)
-                        .build();
+                    executorService = ExecutorBuilder.create()
+                            .setWorkQueue(new LinkedBlockingQueue<Runnable>(getDefaultQueueSize()))
+                            .setCorePoolSize(getDefaultCoreSize())
+                            .setMaxPoolSize(getDefaultMaxSize())
+                            .setThreadFactory(ThreadUtil.newNamedThreadFactory("event-Multicaster", null, true, executeExceptionHandler))
+                            .setHandler(eventMulticasterRejectedHandler).build();
                     reference.lazySet(executorService);
                 }
             }
         }
 
         return executorService;
+    }
+
+    /**
+     * 默认每2MB内存一个size,最小1024
+     * @return  默认队列size
+     */
+    private int getDefaultQueueSize() {
+        int minVal = 1024;
+        long maxMemory = Runtime.getRuntime().maxMemory() / (2<<20);
+        maxMemory--;
+        maxMemory |= maxMemory >> 1;
+        maxMemory |= maxMemory >> 2;
+        maxMemory |= maxMemory >> 4;
+        maxMemory |= maxMemory >> 8;
+        maxMemory |= maxMemory >> 16;
+        maxMemory++;
+
+        return (int) (maxMemory < minVal ? minVal : maxMemory);
+    }
+
+    /**
+     * 默认 应用场景比例 IO密集型 > 计算密集型
+     * 异步广播事件，常用于日志记录,kafka埋点，写文本log，又或者进行逻辑处理后写入缓存？
+     * 复杂算法应用在大多数场景下并不常见。
+     * @return  默认线程池最大线程数
+     */
+    private int getDefaultMaxSize() {
+        int cpus = Runtime.getRuntime().availableProcessors();
+        return cpus * 2;
+    }
+
+    /**
+     * 默认采用虚拟CPU核心数,注意超线程和虚拟容器的设置
+     * @return  默认线程池核心线程数
+     */
+    private int getDefaultCoreSize() {
+        int cpus = Runtime.getRuntime().availableProcessors();
+        return cpus;
     }
 
     /**
