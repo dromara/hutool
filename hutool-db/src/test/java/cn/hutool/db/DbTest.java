@@ -17,20 +17,22 @@ import cn.hutool.log.StaticLog;
  *
  */
 public class DbTest {
+
+	@Test
+	public void queryTest() throws SQLException {
+		List<Entity> find = Db.use().query("select * from user where age = ?", 18);
+		Assert.assertEquals("王五", find.get(0).get("name"));
+	}
 	
 	@Test
 	public void findTest() throws SQLException {
-		Db.use();
-		
 		List<Entity> find = Db.use().find(Entity.create("user").set("age", 18));
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
 	
 	@Test
 	public void findByTest() throws SQLException {
-		Db.use();
-		
-		List<Entity> find = Db.use().findBy("user", 
+		List<Entity> find = Db.use().findBy("user",
 				Condition.parse("age", "> 18"), 
 				Condition.parse("age", "< 100")
 		);
