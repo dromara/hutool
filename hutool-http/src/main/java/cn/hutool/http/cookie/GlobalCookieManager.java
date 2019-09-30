@@ -1,16 +1,15 @@
 package cn.hutool.http.cookie;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpConnection;
+
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.HttpConnection;
 
 /**
  * 全局Cooki管理器，只针对Hutool请求有效
@@ -57,7 +56,6 @@ public class GlobalCookieManager {
 		
 		Map<String, List<String>> cookieHeader;
 		try {
-			Console.log(URLUtil.toURI(conn.getUrl(), false));
 			cookieHeader = cookieManager.get(URLUtil.toURI(conn.getUrl()), new HashMap<String, List<String>>(0));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
