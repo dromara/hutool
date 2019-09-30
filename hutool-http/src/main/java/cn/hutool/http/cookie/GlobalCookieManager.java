@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpConnection;
 
@@ -56,6 +57,7 @@ public class GlobalCookieManager {
 		
 		Map<String, List<String>> cookieHeader;
 		try {
+			Console.log(URLUtil.toURI(conn.getUrl(), false));
 			cookieHeader = cookieManager.get(URLUtil.toURI(conn.getUrl()), new HashMap<String, List<String>>(0));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);

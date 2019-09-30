@@ -21,6 +21,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.net.URLEncoder;
 
 /**
@@ -419,7 +420,7 @@ public class URLUtil {
 	 * @exception UtilException 包装URISyntaxException
 	 */
 	public static String getPath(String uriStr) {
-		URI uri = null;
+		URI uri;
 		try {
 			uri = new URI(uriStr);
 		} catch (URISyntaxException e) {
@@ -460,26 +461,52 @@ public class URLUtil {
 	 * @exception UtilException 包装URISyntaxException
 	 */
 	public static URI toURI(URL url) throws UtilException {
+		return toURI(url, false);
+	}
+
+	/**
+	 * 转URL为URI
+	 *
+	 * @param url URL
+	 * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
+	 * @return URI
+	 * @exception UtilException 包装URISyntaxException
+	 * @since 4.6.9
+	 */
+	public static URI toURI(URL url, boolean isEncode) throws UtilException {
 		if (null == url) {
 			return null;
 		}
-		try {
-			return url.toURI();
-		} catch (URISyntaxException e) {
-			throw new UtilException(e);
-		}
+
+		return toURI(url.toString(), isEncode);
+	}
+
+	/**
+	 * 转字符串为URI
+	 *
+	 * @param location 字符串路径
+	 * @return URI
+	 * @exception UtilException 包装URISyntaxException
+	 */
+	public static URI toURI(String location) throws UtilException {
+		return toURI(location, false);
 	}
 
 	/**
 	 * 转字符串为URI
 	 * 
 	 * @param location 字符串路径
+	 * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
 	 * @return URI
 	 * @exception UtilException 包装URISyntaxException
+	 * @since 4.6.9
 	 */
-	public static URI toURI(String location) throws UtilException {
+	public static URI toURI(String location, boolean isEncode) throws UtilException {
+		if(isEncode){
+			location = encode(location);
+		}
 		try {
-			return new URI(location.replace(" ", "%20"));
+			return new URI(location);
 		} catch (URISyntaxException e) {
 			throw new UtilException(e);
 		}
@@ -619,7 +646,7 @@ public class URLUtil {
 		}
 
 		// 去除开头的\或者/
-		body = body.replaceAll("^[\\/]+", StrUtil.EMPTY);
+		body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
 		// 替换多个\或/为单个/
 		body = body.replace("\\", "/").replaceAll("//+", "/");
 		if (isEncodeBody) {

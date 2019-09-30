@@ -42,6 +42,10 @@ public class URLUtilTest {
 		url = "www.hutool.cn//aaa/bbb?a=1&b=2";
 		normalize = URLUtil.normalize(url, true);
 		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
+
+		url = "\\/www.hutool.cn//aaa/bbb?a=1&b=2";
+		normalize = URLUtil.normalize(url, true);
+		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
 	}
 	
 	@Test
