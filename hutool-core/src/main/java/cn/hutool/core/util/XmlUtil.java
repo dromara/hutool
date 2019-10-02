@@ -168,9 +168,8 @@ public class XmlUtil {
 	 * @param <T> 对象类型
 	 * @param source XML文件
 	 * @return 对象
-	 * @throws IOException IO异常
 	 */
-	public static <T> T readObjectFromXml(File source) throws IOException {
+	public static <T> T readObjectFromXml(File source) {
 		return readObjectFromXml(new InputSource(FileUtil.getInputStream(source)));
 	}
 
@@ -180,10 +179,9 @@ public class XmlUtil {
 	 * @param <T> 对象类型
 	 * @param xmlStr XML内容
 	 * @return 对象
-	 * @throws IOException IO异常
 	 * @since 3.2.0
 	 */
-	public static <T> T readObjectFromXml(String xmlStr) throws IOException {
+	public static <T> T readObjectFromXml(String xmlStr) {
 		return readObjectFromXml(new InputSource(StrUtil.getReader(xmlStr)));
 	}
 
@@ -193,12 +191,11 @@ public class XmlUtil {
 	 * @param <T> 对象类型
 	 * @param source {@link InputSource}
 	 * @return 对象
-	 * @throws IOException IO异常
 	 * @since 3.2.0
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T readObjectFromXml(InputSource source) throws IOException {
-		Object result = null;
+	public static <T> T readObjectFromXml(InputSource source) {
+		Object result;
 		XMLDecoder xmldec = null;
 		try {
 			xmldec = new XMLDecoder(source);
@@ -386,7 +383,7 @@ public class XmlUtil {
 	public static DocumentBuilder createDocumentBuilder() {
 		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		disableXXE(dbf);
-		DocumentBuilder builder = null;
+		DocumentBuilder builder;
 		try {
 			builder = dbf.newDocumentBuilder();
 		} catch (Exception e) {
@@ -508,13 +505,13 @@ public class XmlUtil {
 	 * 将NodeList转换为Element列表<br>
 	 * 非Element节点将被忽略
 	 * 
-	 * @param parentEle 父节点，如果指定将返回此节点的所有直接子节点，nul返回所有就节点
+	 * @param parentEle 父节点，如果指定将返回此节点的所有直接子节点，null返回所有就节点
 	 * @param nodeList NodeList
 	 * @return Element列表
 	 */
 	public static List<Element> transElements(Element parentEle, NodeList nodeList) {
 		int length = nodeList.getLength();
-		final ArrayList<Element> elements = new ArrayList<Element>(length);
+		final ArrayList<Element> elements = new ArrayList<>(length);
 		Node node;
 		Element element;
 		for (int i = 0; i < length; i++) {
@@ -536,9 +533,8 @@ public class XmlUtil {
 	 * 
 	 * @param dest 目标文件
 	 * @param bean 对象
-	 * @throws IOException IO异常
 	 */
-	public static void writeObjectAsXml(File dest, Object bean) throws IOException {
+	public static void writeObjectAsXml(File dest, Object bean) {
 		XMLEncoder xmlenc = null;
 		try {
 			xmlenc = new XMLEncoder(FileUtil.getOutputStream(dest));
@@ -763,7 +759,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static boolean isElement(Node node) {
-		return (null == node) ? false : Node.ELEMENT_NODE == node.getNodeType();
+		return (null != node) && Node.ELEMENT_NODE == node.getNodeType();
 	}
 
 	/**
