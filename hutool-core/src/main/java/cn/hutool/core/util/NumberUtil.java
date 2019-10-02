@@ -13,6 +13,7 @@ import java.util.Set;
 
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Console;
 
 /**
  * 数字工具类<br>
@@ -1382,16 +1383,16 @@ public class NumberUtil {
 	 * </p>
 	 * 
 	 * @param start 阶乘起始
-	 * @param end 阶乘结束
+	 * @param end 阶乘结束，必须小于起始
 	 * @return 结果
 	 * @since 4.1.0
 	 */
 	public static long factorial(long start, long end) {
+		if (0L == start || start == end) {
+			return 1L;
+		}
 		if (start < end) {
 			return 0L;
-		}
-		if (start == end) {
-			return 1L;
 		}
 		return start * factorial(start - 1, end);
 	}

@@ -188,13 +188,13 @@ public class NumberUtilTest {
 		BigDecimal bigDecimal = NumberUtil.toBigDecimal(a);
 		Assert.assertEquals("3.14", bigDecimal.toString());
 	}
-	
+
 	@Test
 	public void maxTest() {
 		int max = NumberUtil.max(new int[]{5,4,3,6,1});
 		Assert.assertEquals(6, max);
 	}
-	
+
 	@Test
 	public void minTest() {
 		int min = NumberUtil.min(new int[]{5,4,3,6,1});
@@ -231,5 +231,16 @@ public class NumberUtilTest {
 		Assert.assertEquals(10L, v5);
 		long v6 = NumberUtil.parseLong("22.4D");
 		Assert.assertEquals(22L, v6);
+	}
+
+	@Test
+	public void factorialTest(){
+		long factorial = NumberUtil.factorial(0);
+		Assert.assertEquals(1, factorial);
+
+		factorial = NumberUtil.factorial(5, 0);
+		Assert.assertEquals(120, factorial);
+		factorial = NumberUtil.factorial(5, 1);
+		Assert.assertEquals(120, factorial);
 	}
 }

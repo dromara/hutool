@@ -233,7 +233,7 @@ public class Convert {
 
 	/**
 	 * 转换为Integer数组<br>
-	 * 
+	 *
 	 * @param value 被转换的值
 	 * @return 结果
 	 */

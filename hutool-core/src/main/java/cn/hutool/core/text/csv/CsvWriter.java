@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -183,14 +184,14 @@ public final class CsvWriter implements Closeable, Flushable, Serializable {
 	/**
 	 * 将多行写出到Writer
 	 * 
-	 * @param lines 多行数据
+	 * @param lines 多行数据，每行数据可以是集合或者数组
 	 * @return this
 	 * @throws IORuntimeException IO异常
 	 */
-	public CsvWriter write(Collection<String[]> lines) throws IORuntimeException {
+	public CsvWriter write(Collection<?> lines) throws IORuntimeException {
 		if (CollUtil.isNotEmpty(lines)) {
-			for (final String[] values : lines) {
-				appendLine(values);
+			for (Object values : lines) {
+				appendLine(Convert.toStrArray(values));
 			}
 			flush();
 		}
