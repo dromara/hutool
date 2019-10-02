@@ -79,7 +79,7 @@ public class ExcelWriteTest {
 		// 通过构造方法创建writer
 		// ExcelWriter writer = new ExcelWriter("d:/writeTest.xls");
 
-		// 跳过当前行，既第一行，非必须，在此演示用
+		// 跳过当前行，即第一行，非必须，在此演示用
 		writer.passCurrentRow();
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "测试标题");
@@ -106,7 +106,7 @@ public class ExcelWriteTest {
 		CellStyle style = writer.getStyleSet().getHeadCellStyle();
 		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
 
-		// 跳过当前行，既第一行，非必须，在此演示用
+		// 跳过当前行，即第一行，非必须，在此演示用
 		writer.passCurrentRow();
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "测试标题");

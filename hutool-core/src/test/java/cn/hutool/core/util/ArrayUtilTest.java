@@ -191,15 +191,15 @@ public class ArrayUtilTest {
 		String[] result = ArrayUtil.insert(a, -1, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "a", "b", "c", "4"}, result);
 
-		// 在第0个位置插入，既在数组前追加
+		// 在第0个位置插入，即在数组前追加
 		result = ArrayUtil.insert(a, 0, b);
 		Assert.assertArrayEquals(new String[]{"a", "b", "c", "1", "2", "3", "4"}, result);
 
-		// 在第2个位置插入，既"3"之前
+		// 在第2个位置插入，即"3"之前
 		result = ArrayUtil.insert(a, 2, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "a", "b", "c", "3", "4"}, result);
 
-		// 在第4个位置插入，既"4"之后，相当于追加
+		// 在第4个位置插入，即"4"之后，相当于追加
 		result = ArrayUtil.insert(a, 4, b);
 		Assert.assertArrayEquals(new String[]{"1", "2", "3", "4", "a", "b", "c"}, result);
 

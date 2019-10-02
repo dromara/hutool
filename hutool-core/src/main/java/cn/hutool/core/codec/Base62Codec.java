@@ -33,7 +33,7 @@ public class Base62Codec implements Serializable{
 	};
 
 	/**
-	 * 反转风格，既将GMP风格中的大小写做转换
+	 * 反转风格，即将GMP风格中的大小写做转换
 	 */
 	private static final byte[] INVERTED = { //
 			'0', '1', '2', '3', '4', '5', '6', '7', //

@@ -471,7 +471,7 @@ public class ObjectUtil {
 	 * 获得给定类的第一个泛型参数
 	 *
 	 * @param obj   被检查的对象
-	 * @param index 泛型类型的索引号，既第几个泛型类型
+	 * @param index 泛型类型的索引号，即第几个泛型类型
 	 * @return {@link Class}
 	 * @since 3.0.8
 	 */

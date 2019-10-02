@@ -908,7 +908,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取秒级别的开始时间，既忽略毫秒部分
+	 * 获取秒级别的开始时间，即忽略毫秒部分
 	 * 
 	 * @param date 日期
 	 * @return {@link DateTime}
@@ -919,7 +919,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取秒级别的结束时间，既毫秒设置为999
+	 * 获取秒级别的结束时间，即毫秒设置为999
 	 * 
 	 * @param date 日期
 	 * @return {@link DateTime}
@@ -930,7 +930,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取秒级别的开始时间，既忽略毫秒部分
+	 * 获取秒级别的开始时间，即忽略毫秒部分
 	 * 
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}
@@ -941,7 +941,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获取秒级别的结束时间，既毫秒设置为999
+	 * 获取秒级别的结束时间，即毫秒设置为999
 	 * 
 	 * @param calendar 日期 {@link Calendar}
 	 * @return {@link Calendar}

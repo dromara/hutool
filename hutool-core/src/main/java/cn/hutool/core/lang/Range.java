@@ -187,7 +187,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	 * 步进接口可以定义以下逻辑：
 	 * 
 	 * <pre>
-	 * 1、步进规则，既对象如何做步进
+	 * 1、步进规则，即对象如何做步进
 	 * 2、步进大小，通过实现此接口，在实现类中定义一个对象属性，可灵活定义步进大小
 	 * 3、限制range个数，通过实现此接口，在实现类中定义一个对象属性，可灵活定义limit，限制range个数
 	 * </pre>

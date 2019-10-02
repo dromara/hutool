@@ -495,7 +495,7 @@ public class SoapClient {
 	}
 
 	/**
-	 * 执行Webservice请求，既发送SOAP内容
+	 * 执行Webservice请求，即发送SOAP内容
 	 *
 	 * @return 返回结果
 	 */
@@ -517,7 +517,7 @@ public class SoapClient {
 	}
 
 	/**
-	 * 执行Webservice请求，既发送SOAP内容
+	 * 执行Webservice请求，即发送SOAP内容
 	 *
 	 * @return 返回结果
 	 */
@@ -526,7 +526,7 @@ public class SoapClient {
 	}
 
 	/**
-	 * 执行Webservice请求，既发送SOAP内容
+	 * 执行Webservice请求，即发送SOAP内容
 	 *
 	 * @param pretty 是否格式化
 	 * @return 返回结果

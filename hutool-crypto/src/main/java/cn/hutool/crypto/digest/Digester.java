@@ -32,7 +32,7 @@ public class Digester implements Serializable {
 	private MessageDigest digest;
 	/** 盐值 */
 	protected byte[] salt;
-	/** 加盐位置，既将盐值字符串放置在数据的index数，默认0 */
+	/** 加盐位置，即将盐值字符串放置在数据的index数，默认0 */
 	protected int saltPosition;
 	/** 散列次数 */
 	protected int digestCount;
@@ -120,7 +120,7 @@ public class Digester implements Serializable {
 	 * data: 0123456
 	 * </pre>
 	 * 
-	 * 则当saltPosition = 2时，盐位于data的1和2中间，既第二个空隙，既：
+	 * 则当saltPosition = 2时，盐位于data的1和2中间，即第二个空隙，即：
 	 * 
 	 * <pre>
 	 * data: 01[salt]23456

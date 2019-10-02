@@ -513,7 +513,7 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 	/**
 	 * 转为JSON字符串，指定缩进值
 	 *
-	 * @param indentFactor 缩进值，既缩进空格数
+	 * @param indentFactor 缩进值，即缩进空格数
 	 * @return JSON字符串
 	 * @throws JSONException JSON写入异常
 	 */

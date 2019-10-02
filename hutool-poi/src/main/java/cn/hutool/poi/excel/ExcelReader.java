@@ -405,8 +405,8 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	/**
 	 * 读取某个单元格的值
 	 * 
-	 * @param x X坐标，从0计数，既列号
-	 * @param y Y坐标，从0计数，既行号
+	 * @param x X坐标，从0计数，即列号
+	 * @param y Y坐标，从0计数，即行号
 	 * @return 值，如果单元格无值返回null
 	 * @since 4.0.3
 	 */

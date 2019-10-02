@@ -3271,7 +3271,7 @@ public class StrUtil {
 
 	/**
 	 * 比较两个版本<br>
-	 * null版本排在最小：既：
+	 * null版本排在最小：即：
 	 * 
 	 * <pre>
 	 * StrUtil.compareVersion(null, "v1") &lt; 0
@@ -4031,7 +4031,7 @@ public class StrUtil {
 	/**
 	 * 循环位移指定位置的字符串为指定距离<br>
 	 * 当moveLength大于0向右位移，小于0向左位移，0不位移<br>
-	 * 当moveLength大于字符串长度时采取循环位移策略，既位移到头后从头（尾）位移，例如长度为10，位移13则表示位移3
+	 * 当moveLength大于字符串长度时采取循环位移策略，即位移到头后从头（尾）位移，例如长度为10，位移13则表示位移3
 	 * 
 	 * @param str 字符串
 	 * @param startInclude 起始位置（包括）

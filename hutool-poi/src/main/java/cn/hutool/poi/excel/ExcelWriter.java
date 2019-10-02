@@ -678,9 +678,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * data中元素支持的类型有：
 	 * 
 	 * <pre>
-	 * 1. Iterable，既元素为一个集合，元素被当作一行，data表示多行<br>
-	 * 2. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
-	 * 3. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
+	 * 1. Iterable，即元素为一个集合，元素被当作一行，data表示多行<br>
+	 * 2. Map，即元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
+	 * 3. Bean，即元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
 	 * 4. 其它类型，按照基本类型输出（例如字符串）
 	 * </pre>
 	 * 
@@ -700,9 +700,9 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * data中元素支持的类型有：
 	 * 
 	 * <pre>
-	 * 1. Iterable，既元素为一个集合，元素被当作一行，data表示多行<br>
-	 * 2. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
-	 * 3. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
+	 * 1. Iterable，即元素为一个集合，元素被当作一行，data表示多行<br>
+	 * 2. Map，即元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
+	 * 3. Bean，即元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
 	 * 4. 其它类型，按照基本类型输出（例如字符串）
 	 * </pre>
 	 * 
@@ -729,8 +729,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * data中元素支持的类型有：
 	 * 
 	 * <p>
-	 * 1. Map，既元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
-	 * 2. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
+	 * 1. Map，即元素为一个Map，第一个Map的keys作为首行，剩下的行为Map的values，data表示多行 <br>
+	 * 2. Bean，即元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
 	 * </p>
 	 * 
 	 * @param data 数据
@@ -857,8 +857,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 给指定单元格赋值，使用默认单元格样式
 	 * 
-	 * @param x X坐标，从0计数，既列号
-	 * @param y Y坐标，从0计数，既行号
+	 * @param x X坐标，从0计数，即列号
+	 * @param y Y坐标，从0计数，即行号
 	 * @param value 值
 	 * @return this
 	 * @since 4.0.2
@@ -872,8 +872,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 为指定单元格创建样式
 	 * 
-	 * @param x X坐标，从0计数，既列号
-	 * @param y Y坐标，从0计数，既行号
+	 * @param x X坐标，从0计数，即列号
+	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link CellStyle}
 	 * @since 4.0.9
 	 * @deprecated 请使用{@link #createCellStyle(int, int)}
@@ -894,8 +894,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * <p>
 	 * 需要注意的是，共享样式会共享同一个{@link CellStyle}，一个单元格样式改变，全部改变。
 	 * 
-	 * @param x X坐标，从0计数，既列号
-	 * @param y Y坐标，从0计数，既行号
+	 * @param x X坐标，从0计数，即列号
+	 * @param y Y坐标，从0计数，即行号
 	 * @return this
 	 * @since 4.6.3
 	 */

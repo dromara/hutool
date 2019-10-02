@@ -368,7 +368,7 @@ public class XmlUtil {
 	// -------------------------------------------------------------------------------------- Create
 	/**
 	 * 创建XML文档<br>
-	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，既XML在转为文本的时候才定义编码
+	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，即XML在转为文本的时候才定义编码
 	 * 
 	 * @return XML文档
 	 * @since 4.0.8
@@ -397,7 +397,7 @@ public class XmlUtil {
 
 	/**
 	 * 创建XML文档<br>
-	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，既XML在转为文本的时候才定义编码
+	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，即XML在转为文本的时候才定义编码
 	 * 
 	 * @param rootElementName 根节点名称
 	 * @return XML文档

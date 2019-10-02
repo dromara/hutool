@@ -1582,7 +1582,7 @@ public class FileUtil {
 		String element;
 		for (int i = pathList.size() - 1; i >= 0; i--) {
 			element = pathList.get(i);
-			// 只处理非.的目录，既只处理非当前目录
+			// 只处理非.的目录，即只处理非当前目录
 			if (false == StrUtil.DOT.equals(element)) {
 				if (StrUtil.DOUBLE_DOT.equals(element)) {
 					tops++;

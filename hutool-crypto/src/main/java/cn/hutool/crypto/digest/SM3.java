@@ -51,7 +51,7 @@ public class SM3 extends Digester {
 	 * 构造
 	 *
 	 * @param salt         盐值
-	 * @param saltPosition 加盐位置，既将盐值字符串放置在数据的index数，默认0
+	 * @param saltPosition 加盐位置，即将盐值字符串放置在数据的index数，默认0
 	 * @param digestCount  摘要次数，当此值小于等于1,默认为1。
 	 */
 	public SM3(byte[] salt, int saltPosition, int digestCount) {

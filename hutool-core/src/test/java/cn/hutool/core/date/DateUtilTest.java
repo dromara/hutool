@@ -421,7 +421,7 @@ public class DateUtilTest {
 		DateTime dt2 = DateUtil.parse(dateStr1);
 		Assert.assertEquals(dt, dt2);
 
-		// 默认使用Pattern对应的时区，既UTC时区
+		// 默认使用Pattern对应的时区，即UTC时区
 		String dateStr = dt.toString();
 		Assert.assertEquals("2018-09-13 05:34:31", dateStr);
 

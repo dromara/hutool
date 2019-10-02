@@ -10,7 +10,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 版本比较器<br>
  * 比较两个版本的大小<br>
- * 排序时版本从小到大排序，既比较时小版本在前，大版本在后<br>
+ * 排序时版本从小到大排序，即比较时小版本在前，大版本在后<br>
  * 支持如：1.3.20.8，6.82.20160101，8.5a/8.5c等版本形式<br>
  * 参考：https://www.cnblogs.com/shihaiming/p/6286575.html
  * 
@@ -32,7 +32,7 @@ public class VersionComparator implements Comparator<String>, Serializable {
 	// -----------------------------------------------------------------------------------------------------
 	/**
 	 * 比较两个版本<br>
-	 * null版本排在最小：既：
+	 * null版本排在最小：即：
 	 * <pre>
 	 * compare(null, "v1") &lt; 0
 	 * compare("v1", "v1")  = 0

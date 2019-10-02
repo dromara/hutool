@@ -1654,7 +1654,7 @@ public class NumberUtil {
 	/**
 	 * 比较大小，值相等 返回true<br>
 	 * 此方法通过调用{@link BigDecimal#compareTo(BigDecimal)}方法来判断是否相等<br>
-	 * 此方法判断值相等时忽略精度的，既0.00 == 0
+	 * 此方法判断值相等时忽略精度的，即0.00 == 0
 	 * 
 	 * @param bigNum1 数字1
 	 * @param bigNum2 数字2

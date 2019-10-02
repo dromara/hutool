@@ -33,7 +33,7 @@ public class DateModifier {
 	 * 修改日期
 	 * 
 	 * @param calendar {@link Calendar}
-	 * @param dateField 日期字段，既保留到哪个日期字段
+	 * @param dateField 日期字段，即保留到哪个日期字段
 	 * @param modifyType 修改类型，包括舍去、四舍五入、进一等
 	 * @return 修改后的{@link Calendar}
 	 */

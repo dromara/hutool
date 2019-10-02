@@ -25,13 +25,13 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	private int corePoolSize;
 	/** 最大池大小（允许同时执行的最大线程数） */
 	private int maxPoolSize = Integer.MAX_VALUE;
-	/** 线程存活时间，既当池中线程多于初始大小时，多出的线程保留的时长 */
+	/** 线程存活时间，即当池中线程多于初始大小时，多出的线程保留的时长 */
 	private long keepAliveTime = TimeUnit.SECONDS.toNanos(60);
 	/** 队列，用于存在未执行的线程 */
 	private BlockingQueue<Runnable> workQueue;
 	/** 线程工厂，用于自定义线程创建 */
 	private ThreadFactory threadFactory;
-	/** 当线程阻塞（block）时的异常处理器，所谓线程阻塞既线程池和等待队列已满，无法处理线程时采取的策略 */
+	/** 当线程阻塞（block）时的异常处理器，所谓线程阻塞即线程池和等待队列已满，无法处理线程时采取的策略 */
 	private RejectedExecutionHandler handler;
 	/** 线程执行超时后是否回收线程 */
 	private Boolean allowCoreThreadTimeOut;
@@ -59,7 +59,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	}
 
 	/**
-	 * 设置线程存活时间，既当池中线程多于初始大小时，多出的线程保留的时长
+	 * 设置线程存活时间，即当池中线程多于初始大小时，多出的线程保留的时长
 	 * 
 	 * @param keepAliveTime 线程存活时间
 	 * @param unit 单位
@@ -70,7 +70,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	}
 
 	/**
-	 * 设置线程存活时间，既当池中线程多于初始大小时，多出的线程保留的时长，单位纳秒
+	 * 设置线程存活时间，即当池中线程多于初始大小时，多出的线程保留的时长，单位纳秒
 	 * 
 	 * @param keepAliveTime 线程存活时间，单位纳秒
 	 * @return this
@@ -134,7 +134,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	}
 
 	/**
-	 * 设置当线程阻塞（block）时的异常处理器，所谓线程阻塞既线程池和等待队列已满，无法处理线程时采取的策略
+	 * 设置当线程阻塞（block）时的异常处理器，所谓线程阻塞即线程池和等待队列已满，无法处理线程时采取的策略
 	 * <p>
 	 * 此处可以使用JDK预定义的几种策略，见{@link RejectPolicy}枚举
 	 * 

@@ -10,7 +10,7 @@ import cn.hutool.core.util.HashUtil;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>
- * Hash算法的使用使用固定顺序，只需指定个数既可
+ * Hash算法的使用使用固定顺序，只需指定个数即可
  * @author loolly
  *
  */
