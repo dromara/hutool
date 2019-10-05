@@ -1,30 +1,5 @@
 package cn.hutool.core.io.watch;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.ClosedWatchServiceException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -32,6 +7,18 @@ import cn.hutool.core.io.watch.watchers.WatcherChain;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 路径监听器
@@ -97,6 +84,10 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * 监听事件列表
 	 */
 	private WatchEvent.Kind<?>[] events;
+	/**
+	 * 监听选项，例如监听频率等
+	 */
+	private WatchEvent.Modifier[] modifiers;
 
 	/**
 	 * 监听是否已经关闭
@@ -451,6 +442,22 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	}
 
 	/**
+	 * 设置监听选项，例如监听频率等，可设置项包括：<p>
+	 *
+	 * <pre>
+	 * 1、com.sun.nio.file.StandardWatchEventKinds
+	 * 2、com.sun.nio.file.SensitivityWatchEventModifier
+	 * </pre>
+	 *
+	 * @param modifiers 监听选项，例如监听频率等
+	 * @return this
+	 */
+	public WatchMonitor setModifiers(WatchEvent.Modifier[] modifiers) {
+		this.modifiers = modifiers;
+		return this;
+	}
+
+	/**
 	 * 关闭监听
 	 */
 	@Override
@@ -466,7 +473,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 *
 	 * @param watcher {@link Watcher}
 	 */
-	private void doTakeAndWatch(Watcher watcher){
+	private void doTakeAndWatch(Watcher watcher) {
 		WatchKey wk;
 		try {
 			wk = watchService.take();
@@ -513,9 +520,18 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * @param maxDepth 递归下层目录的最大深度
 	 */
 	private void registerPath(Path path, int maxDepth) {
+		final WatchEvent.Kind<?>[] kinds = ArrayUtil.defaultIfEmpty(this.events, EVENTS_ALL);
+
 		try {
-			final WatchKey key = path.register(this.watchService, ArrayUtil.defaultIfEmpty(this.events, EVENTS_ALL));
+			final WatchKey key;
+			if (ArrayUtil.isEmpty(this.modifiers)) {
+				key = path.register(this.watchService, kinds);
+			} else {
+				key = path.register(this.watchService, kinds, this.modifiers);
+			}
 			watchKeyPathMap.put(key, path);
+
+			// 递归注册下一层层级的目录
 			if (maxDepth > 1) {
 				//遍历所有子目录并加入监听
 				Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), maxDepth, new SimpleFileVisitor<Path>() {
