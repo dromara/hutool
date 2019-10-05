@@ -1,19 +1,7 @@
 package cn.hutool.core.map;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -71,6 +59,21 @@ public class MapUtil {
 	 */
 	public static <K, V> Map<K, V> emptyIfNull(Map<K, V> set) {
 		return (null == set) ? Collections.<K, V>emptyMap() : set;
+	}
+
+	/**
+	 * 如果给定Map为空，返回默认Map
+	 *
+	 * @param <T> 集合类型
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @param map Map
+	 * @param defaultMap 默认Map
+	 * @return 非空（empty）的原Map或默认Map
+	 * @since 4.6.9
+	 */
+	public static <T extends Map<K, V>, K, V> T defaultIfEmpty(T map, T defaultMap){
+		return isEmpty(map) ? defaultMap : map;
 	}
 
 	// ----------------------------------------------------------------------------------------------- new HashMap

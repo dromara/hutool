@@ -34,6 +34,19 @@ public class ArrayUtil {
 	}
 
 	/**
+	 * 如果给定数组为空，返回默认数组
+	 *
+	 * @param <T> 数组元素类型
+	 * @param array 数组
+	 * @param defaultArray 默认数组
+	 * @return 非空（empty）的原数组或默认数组
+	 * @since 4.6.9
+	 */
+	public static <T> T[] defaultIfEmpty(T[] array, T[] defaultArray){
+		return isEmpty(array) ? defaultArray : array;
+	}
+
+	/**
 	 * 数组是否为空<br>
 	 * 此方法会匹配单一对象，如果此对象为{@code null}则返回true<br>
 	 * 如果此对象为非数组，理解为此对象为数组的第一个元素，则返回false<br>

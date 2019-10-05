@@ -11,6 +11,7 @@
 * 【core】       ClassScanner支持自定义ClassLoader
 * 【core】       修改错别字（pr#568@Github）
 * 【core】       增加DateUtil.parseCST方法（issue#570@Github）
+* 【core】       增加defaultIfEmpty方法
 
 ### Bug修复
 * 【all】        修复阶乘计算错误bug（issue#I12XE4@Gitee）

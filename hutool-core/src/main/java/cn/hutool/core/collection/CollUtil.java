@@ -1390,6 +1390,20 @@ public class CollUtil {
 	}
 
 	/**
+	 * 如果给定集合为空，返回默认集合
+	 *
+	 * @param <T> 集合类型
+	 * @param <E> 集合元素类型
+	 * @param collection 集合
+	 * @param defaultCollection 默认数组
+	 * @return 非空（empty）的原集合或默认集合
+	 * @since 4.6.9
+	 */
+	public static <T extends Collection<E>, E> T defaultIfEmpty(T collection, T defaultCollection){
+		return isEmpty(collection) ? defaultCollection : collection;
+	}
+
+	/**
 	 * Map是否为空
 	 * 
 	 * @param map 集合
