@@ -7,6 +7,8 @@ import cn.hutool.http.HttpConnection;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,17 @@ public class GlobalCookieManager {
 	}
 
 	/**
+	 * 获取指定域名下所有Cookie信息
+	 *
+	 * @param conn HTTP连接
+	 * @return Cookie信息列表
+	 * @since 4.6.9
+	 */
+	public static List<HttpCookie> getCookies(HttpConnection conn){
+		return cookieManager.getCookieStore().get(getDomain(conn));
+	}
+
+	/**
 	 * 将本地存储的Cookie信息附带到Http请求中，不覆盖用户定义好的Cookie
 	 * 
 	 * @param conn {@link HttpConnection}
@@ -53,10 +66,10 @@ public class GlobalCookieManager {
 			// 全局Cookie管理器关闭
 			return;
 		}
-		
+
 		Map<String, List<String>> cookieHeader;
 		try {
-			cookieHeader = cookieManager.get(URLUtil.toURI(conn.getUrl()), new HashMap<String, List<String>>(0));
+			cookieHeader = cookieManager.get(getDomain(conn), new HashMap<String, List<String>>(0));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -77,9 +90,18 @@ public class GlobalCookieManager {
 		}
 		
 		try {
-			cookieManager.put(URLUtil.toURI(conn.getUrl()), conn.headers());
+			cookieManager.put(getDomain(conn), conn.headers());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 获取连接的URL中域名信息，例如http://www.hutool.cn/aaa/bb.html，得到www.hutool.cn
+	 * @param conn HttpConnection
+	 * @return URI
+	 */
+	private static URI getDomain(HttpConnection conn){
+		return URLUtil.getHost(conn.getUrl());
 	}
 }

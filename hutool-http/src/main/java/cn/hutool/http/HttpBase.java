@@ -27,7 +27,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 	
 	/**存储头信息*/
-	protected Map<String, List<String>> headers = new HashMap<String, List<String>>();
+	protected Map<String, List<String>> headers = new HashMap<>();
 	/**编码*/
 	protected Charset charset = CharsetUtil.CHARSET_UTF_8;
 	/**http版本*/
@@ -90,7 +90,7 @@ public abstract class HttpBase<T> {
 		if(null != name && null != value){
 			final List<String> values = headers.get(name.trim());
 			if(isOverride || CollectionUtil.isEmpty(values)) {
-				final ArrayList<String> valueList = new ArrayList<String>();
+				final ArrayList<String> valueList = new ArrayList<>();
 				valueList.add(value);
 				headers.put(name.trim(), valueList);
 			}else {

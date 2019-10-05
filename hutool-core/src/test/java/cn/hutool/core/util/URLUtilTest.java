@@ -1,7 +1,12 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * URLUtil单元测试
@@ -54,7 +59,15 @@ public class URLUtilTest {
 		String normalize = URLUtil.normalize(url);
 		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
 	}
-	
+
+	@Test
+	public void getHostTest() throws MalformedURLException {
+		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
+		String normalize = URLUtil.normalize(url);
+		URI host = URLUtil.getHost(new URL(normalize));
+		Assert.assertEquals("www.hutool.cn", host.toString());
+	}
+
 	@Test
 	public void encodeTest() {
 		String body = "366466 - 副本.jpg";

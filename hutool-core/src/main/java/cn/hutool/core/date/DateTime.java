@@ -140,6 +140,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime(Calendar calendar) {
 		this(calendar.getTime(), calendar.getTimeZone());
+		this.setFirstDayOfWeek(Week.of(calendar.getFirstDayOfWeek()));
 	}
 
 	/**

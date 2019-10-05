@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -470,6 +471,16 @@ public class DateUtilTest {
 		dt = DateUtil.parse(dateStr1);
 		dateStr = dt.toString(simpleDateFormat);
 		Assert.assertEquals("2018-09-13 13:34:39.999", dateStr);
+	}
+
+	@Test
+	public void parseCSTTest(){
+		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
+		DateTime dateTime = DateUtil.parseCST(dateStr);
+		Assert.assertEquals("2009-09-17 01:26:23", dateTime.toString());
+
+		dateTime = DateUtil.parse(dateStr);
+		Assert.assertEquals("2009-09-17 01:26:23", dateTime.toString());
 	}
 
 	@Test

@@ -23,9 +23,9 @@ import java.util.jar.JarFile;
  * 类扫描器
  *
  * @author looly
- * @since 4.1.5
+ * @since 4.6.9
  */
-public class ClassScaner implements Serializable {
+public class ClassScanner implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -124,13 +124,13 @@ public class ClassScaner implements Serializable {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackage(String packageName, Filter<Class<?>> classFilter) {
-		return new ClassScaner(packageName, classFilter).scan();
+		return new ClassScanner(packageName, classFilter).scan();
 	}
 
 	/**
 	 * 构造，默认UTF-8编码
 	 */
-	public ClassScaner() {
+	public ClassScanner() {
 		this(null);
 	}
 
@@ -139,7 +139,7 @@ public class ClassScaner implements Serializable {
 	 *
 	 * @param packageName 包名，所有包传入""或者null
 	 */
-	public ClassScaner(String packageName) {
+	public ClassScanner(String packageName) {
 		this(packageName, null);
 	}
 
@@ -149,7 +149,7 @@ public class ClassScaner implements Serializable {
 	 * @param packageName 包名，所有包传入""或者null
 	 * @param classFilter 过滤器，无需传入null
 	 */
-	public ClassScaner(String packageName, Filter<Class<?>> classFilter) {
+	public ClassScanner(String packageName, Filter<Class<?>> classFilter) {
 		this(packageName, classFilter, CharsetUtil.CHARSET_UTF_8);
 	}
 
@@ -160,7 +160,7 @@ public class ClassScaner implements Serializable {
 	 * @param classFilter 过滤器，无需传入null
 	 * @param charset     编码
 	 */
-	public ClassScaner(String packageName, Filter<Class<?>> classFilter, Charset charset) {
+	public ClassScanner(String packageName, Filter<Class<?>> classFilter, Charset charset) {
 		packageName = StrUtil.nullToEmpty(packageName);
 		this.packageName = packageName;
 		this.packageNameWithDot = StrUtil.addSuffixIfNot(packageName, StrUtil.DOT);

@@ -1,43 +1,30 @@
 package cn.hutool.http;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.CookieManager;
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URLStreamHandler;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.BytesResource;
-import cn.hutool.core.io.resource.FileResource;
-import cn.hutool.core.io.resource.MultiFileResource;
-import cn.hutool.core.io.resource.MultiResource;
-import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.io.resource.*;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.json.JSON;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * http请求类<br>
@@ -987,8 +974,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				.setHttpsInfo(this.hostnameVerifier, this.ssf)//
 				.setConnectTimeout(this.connectionTimeout)//
 				.setReadTimeout(this.readTimeout)//
-				// 自定义Cookie
-				.setCookie(this.cookie)
 				// 定义转发
 				.setInstanceFollowRedirects(this.maxRedirectCount > 0)
 				// 流方式上传数据
@@ -996,8 +981,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				// 覆盖默认Header
 				.header(this.headers, true);
 
-		// 读取全局Cookie信息并附带到请求中
-		GlobalCookieManager.add(this.httpConnection);
+		if (null != this.cookie) {
+			// 当用户自定义Cookie时，全局Cookie自动失效
+			this.httpConnection.setCookie(this.cookie);
+		} else {
+			// 读取全局Cookie信息并附带到请求中
+			GlobalCookieManager.add(this.httpConnection);
+		}
 
 		// 是否禁用缓存
 		if (this.isDisableCache) {
@@ -1193,8 +1183,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * 设置表单类型为Multipart（文件上传）
-	 *
-	 * @return HttpConnection HTTP连接对象
 	 */
 	private void setMultipart() {
 		this.httpConnection.header(Header.CONTENT_TYPE, CONTENT_TYPE_MULTIPART_PREFIX + BOUNDARY, true);

@@ -151,10 +151,9 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 
 	 * @return Cookie列表
 	 * @since 3.1.1
-	 * @see GlobalCookieManager#getCookieManager()
 	 */
 	public List<HttpCookie> getCookies() {
-		return GlobalCookieManager.getCookieManager().getCookieStore().getCookies();
+		return GlobalCookieManager.getCookies(this.httpConnection);
 	}
 
 	/**
@@ -374,11 +373,10 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			this.status = httpConnection.responseCode();
 		} catch (IOException e) {
-			if (e instanceof FileNotFoundException) {
-				// 服务器无返回内容，忽略之
-			} else {
+			if (false == (e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
+			// 服务器无返回内容，忽略之
 		}
 
 		// 读取响应头信息
@@ -410,7 +408,6 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 * 读取主体，忽略EOFException异常
 	 * 
 	 * @param in 输入流
-	 * @return 自身
 	 * @throws IORuntimeException IO异常
 	 */
 	private void readBody(InputStream in) throws IORuntimeException {

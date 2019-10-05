@@ -29,6 +29,15 @@ public class HttpRequestTest {
 		String body = HttpRequest.get("https://www.gjifa.com/pc/").execute().body();
 		Console.log(body);
 	}
+
+	@Test
+	@Ignore
+	public void getCookiesTest() {
+		// 检查在Connection关闭情况下Cookie是否可以正常获取
+		HttpResponse res = HttpRequest.get("https://www.oschina.net/").execute();
+		String body = res.body();
+		Console.log(res.getCookies());
+	}
 	
 	@Test
 	@Ignore

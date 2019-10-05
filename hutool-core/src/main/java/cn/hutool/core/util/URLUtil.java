@@ -214,6 +214,20 @@ public class URLUtil {
 	}
 
 	/**
+	 * 获取URL中域名部分
+	 *
+	 * @param url URL
+	 * @return 域名的URI
+	 * @since 4.6.9
+	 */
+	public static URI getHost(URL url){
+		if(null == url){
+			return null;
+		}
+		return toURI(url.getHost());
+	}
+
+	/**
 	 * 补全相对路径
 	 * 
 	 * @param baseUrl 基准URL

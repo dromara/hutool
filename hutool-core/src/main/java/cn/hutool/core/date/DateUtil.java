@@ -758,6 +758,24 @@ public class DateUtil {
 	}
 
 	/**
+	 * 解析CST时间，格式：<br>
+	 * <ol>
+	 * <li>EEE MMM dd HH:mm:ss z yyyy（例如：Wed Aug 01 00:00:00 CST 2012）</li>
+	 * </ol>
+	 *
+	 * @param cstString UTC时间
+	 * @return 日期对象
+	 * @since 4.6.9
+	 */
+	public static DateTime parseCST(String cstString) {
+		if (cstString == null) {
+			return null;
+		}
+
+		return parse(cstString, DatePattern.JDK_DATETIME_FORMAT);
+	}
+
+	/**
 	 * 将日期字符串转换为{@link DateTime}对象，格式：<br>
 	 * <ol>
 	 * <li>yyyy-MM-dd HH:mm:ss</li>
@@ -808,8 +826,11 @@ public class DateUtil {
 			// HH:mm:ss 或者 HH:mm 时间格式匹配单独解析
 			return parseTimeToday(dateStr);
 		} else if (StrUtil.containsAnyIgnoreCase(dateStr, wtb)) {
-			// JDK的Date对象toString默认格式，类似于：Tue Jun 4 16:25:15 +0800 2019 或 Thu May 16 17:57:18 GMT+08:00 2019
-			return parse(dateStr, DatePattern.JDK_DATETIME_FORMAT);
+			// JDK的Date对象toString默认格式，类似于：
+			// Tue Jun 4 16:25:15 +0800 2019
+			// Thu May 16 17:57:18 GMT+08:00 2019
+			// Wed Aug 01 00:00:00 CST 2012
+			return parseCST(dateStr);
 		} else if (StrUtil.contains(dateStr, 'T')) {
 			// UTC时间
 			return parseUTC(dateStr);

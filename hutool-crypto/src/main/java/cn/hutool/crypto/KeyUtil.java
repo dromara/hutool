@@ -50,8 +50,12 @@ import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 public class KeyUtil {
 
 	/** Java密钥库(Java Key Store，JKS)KEY_STORE */
-	public static final String KEY_STORE = "JKS";
-	public static final String X509 = "X.509";
+	public static final String KEY_TYPE_JKS = "JKS";
+	/** jceks */
+	public static final String KEY_TYPE_JCEKS = "jceks";
+	/** PKCS12是公钥加密标准，它规定了可包含所有私钥、公钥和证书。其以二进制格式存储，也称为 PFX 文件 */
+	public static final String KEY_TYPE_PKCS12 = "pkcs12";
+	public static final String KEY_TYPE_X509 = "X.509";
 
 	/**
 	 * 默认密钥字节数
@@ -113,7 +117,7 @@ public class KeyUtil {
 	 */
 	public static SecretKey generateKey(String algorithm, byte[] key) {
 		Assert.notBlank(algorithm, "Algorithm is blank!");
-		SecretKey secretKey = null;
+		SecretKey secretKey;
 		if (algorithm.startsWith("PBE")) {
 			// PBE密钥
 			secretKey = generatePBEKey(algorithm, (null == key) ? null : StrUtil.str(key, CharsetUtil.CHARSET_UTF_8).toCharArray());
@@ -139,7 +143,7 @@ public class KeyUtil {
 			throw new CryptoException("Algorithm [{}] is not a DES algorithm!");
 		}
 
-		SecretKey secretKey = null;
+		SecretKey secretKey;
 		if (null == key) {
 			secretKey = generateKey(algorithm);
 		} else {
@@ -608,7 +612,7 @@ public class KeyUtil {
 	 * @return {@link KeyStore}
 	 */
 	public static KeyStore readJKSKeyStore(InputStream in, char[] password) {
-		return readKeyStore(KEY_STORE, in, password);
+		return readKeyStore(KEY_TYPE_JKS, in, password);
 	}
 
 	/**
@@ -618,11 +622,11 @@ public class KeyUtil {
 	 * 
 	 * @param type 类型
 	 * @param in {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
-	 * @param password 密码
+	 * @param password 密码，null表示无密码
 	 * @return {@link KeyStore}
 	 */
 	public static KeyStore readKeyStore(String type, InputStream in, char[] password) {
-		KeyStore keyStore = null;
+		KeyStore keyStore;
 		try {
 			keyStore = KeyStore.getInstance(type);
 			keyStore.load(in, password);
@@ -680,7 +684,7 @@ public class KeyUtil {
 	 * @since 4.4.1
 	 */
 	public static Certificate readX509Certificate(InputStream in, char[] password, String alias) {
-		return readCertificate(X509, in, password, alias);
+		return readCertificate(KEY_TYPE_X509, in, password, alias);
 	}
 
 	/**
@@ -710,7 +714,7 @@ public class KeyUtil {
 	 * @since 4.4.1
 	 */
 	public static Certificate readX509Certificate(InputStream in) {
-		return readCertificate(X509, in);
+		return readCertificate(KEY_TYPE_X509, in);
 	}
 
 	/**

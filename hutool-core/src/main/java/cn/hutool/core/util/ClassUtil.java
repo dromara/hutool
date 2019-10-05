@@ -21,7 +21,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.ClassScaner;
+import cn.hutool.core.lang.ClassScanner;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Singleton;
 
@@ -176,10 +176,10 @@ public class ClassUtil {
 	 * @param packageName     包路径
 	 * @param annotationClass 注解类
 	 * @return 类集合
-	 * @see ClassScaner#scanPackageByAnnotation(String, Class)
+	 * @see ClassScanner#scanPackageByAnnotation(String, Class)
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
-		return ClassScaner.scanPackageByAnnotation(packageName, annotationClass);
+		return ClassScanner.scanPackageByAnnotation(packageName, annotationClass);
 	}
 
 	/**
@@ -188,20 +188,20 @@ public class ClassUtil {
 	 * @param packageName 包路径
 	 * @param superClass  父类或接口
 	 * @return 类集合
-	 * @see ClassScaner#scanPackageBySuper(String, Class)
+	 * @see ClassScanner#scanPackageBySuper(String, Class)
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
-		return ClassScaner.scanPackageBySuper(packageName, superClass);
+		return ClassScanner.scanPackageBySuper(packageName, superClass);
 	}
 
 	/**
 	 * 扫面该包路径下所有class文件
 	 *
 	 * @return 类集合
-	 * @see ClassScaner#scanPackage()
+	 * @see ClassScanner#scanPackage()
 	 */
 	public static Set<Class<?>> scanPackage() {
-		return ClassScaner.scanPackage();
+		return ClassScanner.scanPackage();
 	}
 
 	/**
@@ -209,10 +209,10 @@ public class ClassUtil {
 	 *
 	 * @param packageName 包路径 com | com. | com.abs | com.abs.
 	 * @return 类集合
-	 * @see ClassScaner#scanPackage(String)
+	 * @see ClassScanner#scanPackage(String)
 	 */
 	public static Set<Class<?>> scanPackage(String packageName) {
-		return ClassScaner.scanPackage(packageName);
+		return ClassScanner.scanPackage(packageName);
 	}
 
 	/**
@@ -225,7 +225,7 @@ public class ClassUtil {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackage(String packageName, Filter<Class<?>> classFilter) {
-		return ClassScaner.scanPackage(packageName, classFilter);
+		return ClassScanner.scanPackage(packageName, classFilter);
 	}
 
 	// ----------------------------------------------------------------------------------------- Method

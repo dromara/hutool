@@ -585,10 +585,7 @@ public class StrUtil {
 	 */
 	public static boolean startWith(CharSequence str, CharSequence prefix, boolean isIgnoreCase) {
 		if (null == str || null == prefix) {
-			if (null == str && null == prefix) {
-				return true;
-			}
-			return false;
+			return null == str && null == prefix;
 		}
 
 		if (isIgnoreCase) {
@@ -664,10 +661,7 @@ public class StrUtil {
 	 */
 	public static boolean endWith(CharSequence str, CharSequence suffix, boolean isIgnoreCase) {
 		if (null == str || null == suffix) {
-			if (null == str && null == suffix) {
-				return true;
-			}
-			return false;
+			return null == str && null == suffix;
 		}
 
 		if (isIgnoreCase) {
@@ -3831,7 +3825,7 @@ public class StrUtil {
 		}
 
 		int preIndex = fromIndex;
-		int index = fromIndex;
+		int index;
 		while ((index = indexOf(str, searchStr, preIndex, ignoreCase)) > -1) {
 			result.append(str.subSequence(preIndex, index));
 			result.append(replacement);
@@ -3985,7 +3979,7 @@ public class StrUtil {
 	 * 
 	 * @param str1 字符串1
 	 * @param str2 字符串2
-	 * @param scale
+	 * @param scale 相似度
 	 * @return 相似度百分比
 	 * @since 3.2.3
 	 */

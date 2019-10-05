@@ -8,10 +8,14 @@
 ### 新特性
 * 【all】        修复注释中的错别字（issue#I12XE6@Gitee）
 * 【core】       CsvWriter支持其它类型的参数（issue#I12XE3@Gitee）
-* 【core】       ClassScaner支持自定义ClassLoader
+* 【core】       ClassScanner支持自定义ClassLoader
+* 【core】       修改错别字（pr#568@Github）
+* 【core】       增加DateUtil.parseCST方法（issue#570@Github）
 
 ### Bug修复
 * 【all】        修复阶乘计算错误bug（issue#I12XE4@Gitee）
+* 【http】       修复disableCookie无效问题（issue#572@Github）
+* 【http】       修复HttpResponse.getCookies导致的问题（issue#572@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

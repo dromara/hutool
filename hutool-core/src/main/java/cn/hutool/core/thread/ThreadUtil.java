@@ -98,17 +98,17 @@ public class ThreadUtil {
 	 * 执行异步方法
 	 * 
 	 * @param runnable 需要执行的方法体
-	 * @param isDeamon 是否守护线程。守护线程会在主线程结束后自动结束
+	 * @param isDaemon 是否守护线程。守护线程会在主线程结束后自动结束
 	 * @return 执行的方法体
 	 */
-	public static Runnable excAsync(final Runnable runnable, boolean isDeamon) {
+	public static Runnable excAsync(final Runnable runnable, boolean isDaemon) {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
 				runnable.run();
 			}
 		};
-		thread.setDaemon(isDeamon);
+		thread.setDaemon(isDaemon);
 		thread.start();
 
 		return runnable;
@@ -192,13 +192,13 @@ public class ThreadUtil {
 	 * 
 	 * @param runnable {@link Runnable}
 	 * @param name 线程名
-	 * @param isDeamon 是否守护线程
+	 * @param isDaemon 是否守护线程
 	 * @return {@link Thread}
 	 * @since 4.1.2
 	 */
-	public static Thread newThread(Runnable runnable, String name, boolean isDeamon) {
+	public static Thread newThread(Runnable runnable, String name, boolean isDaemon) {
 		final Thread t = new Thread(null, runnable, name);
-		t.setDaemon(isDeamon);
+		t.setDaemon(isDaemon);
 		return t;
 	}
 
@@ -396,11 +396,11 @@ public class ThreadUtil {
 	 * 创建线程工厂
 	 * 
 	 * @param prefix 线程名前缀
-	 * @param isDeamon 是否守护线程
+	 * @param isDaemon 是否守护线程
 	 * @since 4.0.0
 	 */
-	public static ThreadFactory newNamedThreadFactory(String prefix, boolean isDeamon) {
-		return new NamedThreadFactory(prefix, isDeamon);
+	public static ThreadFactory newNamedThreadFactory(String prefix, boolean isDaemon) {
+		return new NamedThreadFactory(prefix, isDaemon);
 	}
 
 	/**
@@ -408,11 +408,11 @@ public class ThreadUtil {
 	 * 
 	 * @param prefix 线程名前缀
 	 * @param threadGroup 线程组，可以为null
-	 * @param isDeamon 是否守护线程
+	 * @param isDaemon 是否守护线程
 	 * @since 4.0.0
 	 */
-	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDeamon) {
-		return new NamedThreadFactory(prefix, threadGroup, isDeamon);
+	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon) {
+		return new NamedThreadFactory(prefix, threadGroup, isDaemon);
 	}
 
 	/**
@@ -420,12 +420,12 @@ public class ThreadUtil {
 	 * 
 	 * @param prefix 线程名前缀
 	 * @param threadGroup 线程组，可以为null
-	 * @param isDeamon 是否守护线程
+	 * @param isDaemon 是否守护线程
 	 * @param handler 未捕获异常处理
 	 * @since 4.0.0
 	 */
-	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDeamon, UncaughtExceptionHandler handler) {
-		return new NamedThreadFactory(prefix, threadGroup, isDeamon, handler);
+	public static ThreadFactory newNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon, UncaughtExceptionHandler handler) {
+		return new NamedThreadFactory(prefix, threadGroup, isDaemon, handler);
 	}
 
 	/**

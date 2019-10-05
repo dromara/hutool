@@ -145,9 +145,9 @@ public class CronUtil {
 	/**
 	 * 开始
 	 * 
-	 * @param isDeamon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
+	 * @param isDaemon 是否以守护线程方式启动，如果为true，则在调用{@link #stop()}方法后执行的定时任务立即结束，否则等待执行完毕才结束。
 	 */
-	synchronized public static void start(boolean isDeamon) {
+	synchronized public static void start(boolean isDaemon) {
 		if (scheduler.isStarted()) {
 			throw new UtilException("Scheduler has been started, please stop it first!");
 		}
@@ -167,7 +167,7 @@ public class CronUtil {
 		}
 
 		schedule(crontabSetting);
-		scheduler.start(isDeamon);
+		scheduler.start(isDaemon);
 	}
 
 	/**
