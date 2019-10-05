@@ -8,6 +8,7 @@
 ### 新特性
 * 【all】        修复注释中的错别字（issue#I12XE6@Gitee）
 * 【core】       CsvWriter支持其它类型的参数（issue#I12XE3@Gitee）
+* 【core】       ClassScaner支持自定义ClassLoader
 
 ### Bug修复
 * 【all】        修复阶乘计算错误bug（issue#I12XE4@Gitee）
