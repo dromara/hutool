@@ -189,8 +189,8 @@ public class SmUtil {
 	 */
 	public static byte[] rsAsn1ToPlain(byte[] rsDer) {
 		ASN1Sequence seq = ASN1Sequence.getInstance(rsDer);
-		byte[] r = bigIntToFixexLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(0)).getValue());
-		byte[] s = bigIntToFixexLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(1)).getValue());
+		byte[] r = bigIntToFixedLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(0)).getValue());
+		byte[] s = bigIntToFixedLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(1)).getValue());
 		byte[] result = new byte[RS_LEN * 2];
 		System.arraycopy(r, 0, result, 0, r.length);
 		System.arraycopy(s, 0, result, RS_LEN, s.length);
@@ -251,7 +251,7 @@ public class SmUtil {
 	 * @return 固定长度bytes
 	 * @since 4.5.0
 	 */
-	private static byte[] bigIntToFixexLengthBytes(BigInteger rOrS) {
+	private static byte[] bigIntToFixedLengthBytes(BigInteger rOrS) {
 		// for sm2p256v1, n is 00fffffffeffffffffffffffffffffffff7203df6b21c6052b53bbf40939d54123,
 		// r and s are the result of mod n, so they should be less than n and have length<=32
 		byte[] rs = rOrS.toByteArray();
