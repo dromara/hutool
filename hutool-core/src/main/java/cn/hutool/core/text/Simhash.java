@@ -57,7 +57,7 @@ public class Simhash {
 		this.hammingThresh = hammingThresh;
 		this.storage = new ArrayList<>(fracCount);
 		for (int i = 0; i < fracCount; i++) {
-			storage.add(new HashMap<>());
+			storage.add(new HashMap<String, List<Long>>());
 		}
 	}
 

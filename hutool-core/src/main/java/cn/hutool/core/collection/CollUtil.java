@@ -476,10 +476,10 @@ public class CollUtil {
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(boolean isSorted, T... ts) {
 		if (null == ts) {
-			return isSorted ? new LinkedHashSet<>() : new HashSet<>();
+			return isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
 		}
 		int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
-		final HashSet<T> set = isSorted ? new LinkedHashSet<>(initialCapacity) : new HashSet<>(initialCapacity);
+		final HashSet<T> set = isSorted ? new LinkedHashSet<T>(initialCapacity) : new HashSet<T>(initialCapacity);
 		Collections.addAll(set, ts);
 		return set;
 	}
@@ -520,7 +520,7 @@ public class CollUtil {
 		if (null == iter) {
 			return newHashSet(isSorted, (T[]) null);
 		}
-		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
+		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
 		while (iter.hasNext()) {
 			set.add(iter.next());
 		}
@@ -540,7 +540,7 @@ public class CollUtil {
 		if (null == enumeration) {
 			return newHashSet(isSorted, (T[]) null);
 		}
-		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
+		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
 		while (enumeration.hasMoreElements()) {
 			set.add(enumeration.nextElement());
 		}
@@ -558,7 +558,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked) {
-		return isLinked ? new LinkedList<>() : new ArrayList<>();
+		return isLinked ? new LinkedList<T>() : new ArrayList<T>();
 	}
 
 	/**
@@ -575,7 +575,7 @@ public class CollUtil {
 		if (ArrayUtil.isEmpty(values)) {
 			return list(isLinked);
 		}
-		final List<T> arrayList = isLinked ? new LinkedList<>() : new ArrayList<>(values.length);
+		final List<T> arrayList = isLinked ? new LinkedList<T>() : new ArrayList<T>(values.length);
 		Collections.addAll(arrayList, values);
 		return arrayList;
 	}
@@ -751,7 +751,7 @@ public class CollUtil {
 	 * @return {@link CopyOnWriteArrayList}
 	 */
 	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
-		return (null == collection) ? (new CopyOnWriteArrayList<>()) : (new CopyOnWriteArrayList<>(collection));
+		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<T>(collection));
 	}
 
 	/**
@@ -1028,7 +1028,7 @@ public class CollUtil {
 			return list;
 		}
 
-		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<>() : new ArrayList<>(list.size());
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
 		T modified;
 		for (T t : list) {
 			modified = editor.edit(t);
@@ -1092,7 +1092,7 @@ public class CollUtil {
 		if (null == list || null == filter) {
 			return list;
 		}
-		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<>() : new ArrayList<>(list.size());
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
 		for (T t : list) {
 			if (filter.accept(t)) {
 				list2.add(t);

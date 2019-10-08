@@ -312,7 +312,7 @@ public class NetUtil {
 			return null;
 		}
 
-		return CollectionUtil.addAll(new ArrayList<>(), networkInterfaces);
+		return CollectionUtil.addAll(new ArrayList<NetworkInterface>(), networkInterfaces);
 	}
 
 	/**

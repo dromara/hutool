@@ -62,7 +62,7 @@ public class MapUtil {
 	 * @since 4.6.3
 	 */
 	public static <K, V> Map<K, V> emptyIfNull(Map<K, V> set) {
-		return (null == set) ? Collections.emptyMap() : set;
+		return (null == set) ? Collections.<K, V>emptyMap() : set;
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class MapUtil {
 	 */
 	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isOrder) {
 		int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
-		return isOrder ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
+		return isOrder ? new LinkedHashMap<K, V>(initialCapacity) : new HashMap<K, V>(initialCapacity);
 	}
 
 	/**
@@ -775,7 +775,7 @@ public class MapUtil {
 	 * @return map创建类
 	 */
 	public static <K, V> MapBuilder<K, V> builder() {
-		return builder(new HashMap<>());
+		return builder(new HashMap<K, V>());
 	}
 
 	/**
