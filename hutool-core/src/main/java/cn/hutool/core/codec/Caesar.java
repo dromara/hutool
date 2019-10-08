@@ -3,9 +3,8 @@ package cn.hutool.core.codec;
 /**
  * 凯撒密码实现<br>
  * 算法来自：https://github.com/zhaorenjie110/SymmetricEncryptionAndDecryption
- * 
- * @author looly
  *
+ * @author looly
  */
 public class Caesar {
 
@@ -16,7 +15,7 @@ public class Caesar {
 	 * 传入明文，加密得到密文
 	 *
 	 * @param message 加密的消息
-	 * @param offset 偏移量
+	 * @param offset  偏移量
 	 * @return 加密后的内容
 	 */
 	public static String encode(String message, int offset) {
@@ -36,15 +35,16 @@ public class Caesar {
 	/**
 	 * 传入明文解密到密文
 	 *
-	 * @param ciphertext 密文
+	 * @param cipherText 密文
+	 * @param offset     偏移量
 	 * @return 解密后的内容
 	 */
-	public static String decode(String ciphertext, int offset) {
-		final int len = ciphertext.length();
-		final char[] plain = ciphertext.toCharArray();
+	public static String decode(String cipherText, int offset) {
+		final int len = cipherText.length();
+		final char[] plain = cipherText.toCharArray();
 		char c;
 		for (int i = 0; i < len; i++) {
-			c = ciphertext.charAt(i);
+			c = cipherText.charAt(i);
 			if (false == Character.isLetter(c)) {
 				continue;
 			}
@@ -54,10 +54,11 @@ public class Caesar {
 	}
 
 	// ----------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 加密轮盘
-	 * 
-	 * @param c 被加密字符
+	 *
+	 * @param c      被加密字符
 	 * @param offset 偏移量
 	 * @return 加密后的字符
 	 */
@@ -69,7 +70,7 @@ public class Caesar {
 
 	/**
 	 * 解密轮盘
-	 * 
+	 *
 	 * @param c 字符
 	 * @return 解密后的字符
 	 */

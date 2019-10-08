@@ -30,7 +30,7 @@ import cn.hutool.core.util.StrUtil;
 
 /**
  * Bouncy Castle相关工具类封装
- * 
+ *
  * @author looly
  * @since 4.5.0
  */
@@ -38,7 +38,7 @@ public class BCUtil {
 	/**
 	 * 编码压缩EC公钥（基于BouncyCastle）<br>
 	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
-	 * 
+	 *
 	 * @param publicKey {@link PublicKey}，必须为org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
 	 * @return 压缩得到的X
 	 * @since 4.4.4
@@ -50,9 +50,10 @@ public class BCUtil {
 	/**
 	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
 	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
-	 * 
-	 * @param encode 压缩公钥
+	 *
+	 * @param encode    压缩公钥
 	 * @param curveName EC曲线名
+	 * @return 公钥
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(String encode, String curveName) {
@@ -62,9 +63,10 @@ public class BCUtil {
 	/**
 	 * 解码恢复EC压缩公钥,支持Base64和Hex编码,（基于BouncyCastle）<br>
 	 * 见：https://www.cnblogs.com/xinzhao/p/8963724.html
-	 * 
+	 *
 	 * @param encodeByte 压缩公钥
-	 * @param curveName EC曲线名，例如{@link KeyUtil#SM2_DEFAULT_CURVE}
+	 * @param curveName  EC曲线名，例如{@link KeyUtil#SM2_DEFAULT_CURVE}
+	 * @return 公钥
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {
@@ -90,7 +92,7 @@ public class BCUtil {
 
 	/**
 	 * 读取PEM格式的私钥
-	 * 
+	 *
 	 * @param pemStream pem流
 	 * @return {@link PrivateKey}
 	 * @since 4.5.2
@@ -101,14 +103,14 @@ public class BCUtil {
 
 	/**
 	 * 读取PEM格式的公钥
-	 * 
+	 *
 	 * @param pemStream pem流
 	 * @return {@link PublicKey}
 	 * @since 4.5.2
 	 */
 	public static PublicKey readPublicKey(InputStream pemStream) {
 		final Certificate certificate = KeyUtil.readX509Certificate(pemStream);
-		if(null == certificate) {
+		if (null == certificate) {
 			return null;
 		}
 		return certificate.getPublicKey();
@@ -117,7 +119,7 @@ public class BCUtil {
 	/**
 	 * 从pem文件中读取公钥或私钥<br>
 	 * 根据类型返回{@link PublicKey} 或者 {@link PrivateKey}
-	 * 
+	 *
 	 * @param keyStream pem流
 	 * @return {@link Key}
 	 * @since 4.5.2
@@ -134,7 +136,7 @@ public class BCUtil {
 
 	/**
 	 * 从pem文件中读取公钥或私钥
-	 * 
+	 *
 	 * @param keyStream pem流
 	 * @return 密钥bytes
 	 * @since 4.5.2
@@ -149,7 +151,7 @@ public class BCUtil {
 
 	/**
 	 * 读取pem文件中的信息，包括类型、头信息和密钥内容
-	 * 
+	 *
 	 * @param keyStream pem流
 	 * @return {@link PemObject}
 	 * @since 4.5.2

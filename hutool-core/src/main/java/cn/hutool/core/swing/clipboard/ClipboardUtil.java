@@ -97,7 +97,7 @@ public class ClipboardUtil {
 	/**
 	 * 从剪贴板的{@link Transferable}获取文本
 	 * 
-	 * @param content
+	 * @param content {@link Transferable}
 	 * @return 文本
 	 * @since 4.5.6
 	 */
@@ -126,7 +126,7 @@ public class ClipboardUtil {
 	/**
 	 * 从剪贴板的{@link Transferable}获取图片
 	 * 
-	 * @param content
+	 * @param content  {@link Transferable}
 	 * @return 图片
 	 * @since 4.5.6
 	 */

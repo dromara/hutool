@@ -16,15 +16,14 @@ import cn.hutool.core.util.URLUtil;
 
 /**
  * 外部Jar的类加载器
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class JarClassLoader extends URLClassLoader {
-	
+
 	/**
 	 * 加载Jar到ClassPath
-	 * 
+	 *
 	 * @param dir jar文件或所在目录
 	 * @return JarClassLoader
 	 */
@@ -37,7 +36,7 @@ public class JarClassLoader extends URLClassLoader {
 
 	/**
 	 * 加载Jar到ClassPath
-	 * 
+	 *
 	 * @param jarFile jar文件或所在目录
 	 * @return JarClassLoader
 	 */
@@ -49,8 +48,8 @@ public class JarClassLoader extends URLClassLoader {
 
 	/**
 	 * 加载Jar文件到指定loader中
-	 * 
-	 * @param loader {@link URLClassLoader}
+	 *
+	 * @param loader  {@link URLClassLoader}
 	 * @param jarFile 被加载的jar
 	 * @throws UtilException IO异常包装和执行异常
 	 */
@@ -61,7 +60,7 @@ public class JarClassLoader extends URLClassLoader {
 				method.setAccessible(true);
 				final List<File> jars = loopJar(jarFile);
 				for (File jar : jars) {
-					ReflectUtil.invoke(loader, method, new Object[] { jar.toURI().toURL() });
+					ReflectUtil.invoke(loader, method, new Object[]{jar.toURI().toURL()});
 				}
 			}
 		} catch (IOException e) {
@@ -71,7 +70,7 @@ public class JarClassLoader extends URLClassLoader {
 
 	/**
 	 * 加载Jar文件到System ClassLoader中
-	 * 
+	 *
 	 * @param jarFile 被加载的jar
 	 * @return System ClassLoader
 	 */
@@ -82,16 +81,17 @@ public class JarClassLoader extends URLClassLoader {
 	}
 
 	// ------------------------------------------------------------------- Constructor start
+
 	/**
 	 * 构造
 	 */
 	public JarClassLoader() {
-		this(new URL[] {});
+		this(new URL[]{});
 	}
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param urls 被加载的URL
 	 */
 	public JarClassLoader(URL[] urls) {
@@ -101,12 +101,12 @@ public class JarClassLoader extends URLClassLoader {
 
 	/**
 	 * 加载Jar文件，或者加载目录
-	 * 
+	 *
 	 * @param jarFileOrDir jar文件或者jar文件所在目录
 	 * @return this
 	 */
 	public JarClassLoader addJar(File jarFileOrDir) {
-		if(isJarFile(jarFileOrDir)) {
+		if (isJarFile(jarFileOrDir)) {
 			return addURL(jarFileOrDir);
 		}
 		final List<File> jars = loopJar(jarFileOrDir);
@@ -124,8 +124,9 @@ public class JarClassLoader extends URLClassLoader {
 	/**
 	 * 增加class所在目录或文件<br>
 	 * 如果为目录，此目录用于搜索class文件，如果为文件，需为jar文件
-	 * 
+	 *
 	 * @param dir 目录
+	 * @return this
 	 * @since 4.4.2
 	 */
 	public JarClassLoader addURL(File dir) {
@@ -134,9 +135,10 @@ public class JarClassLoader extends URLClassLoader {
 	}
 
 	// ------------------------------------------------------------------- Private method start
+
 	/**
 	 * 递归获得Jar文件
-	 * 
+	 *
 	 * @param file jar文件或者包含jar文件的目录
 	 * @return jar文件列表
 	 */
@@ -151,7 +153,7 @@ public class JarClassLoader extends URLClassLoader {
 
 	/**
 	 * 是否为jar文件
-	 * 
+	 *
 	 * @param file 文件
 	 * @return 是否为jar文件
 	 * @since 4.4.2

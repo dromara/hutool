@@ -16,7 +16,7 @@ public class MultiFileResource extends MultiResource{
 	/**
 	 * 构造
 	 * 
-	 * @param files
+	 * @param files 文件资源列表
 	 */
 	public MultiFileResource(Collection<File> files) {
 		super();
@@ -26,7 +26,7 @@ public class MultiFileResource extends MultiResource{
 	/**
 	 * 构造
 	 * 
-	 * @param files
+	 * @param files 文件资源列表
 	 */
 	public MultiFileResource(File... files) {
 		super();

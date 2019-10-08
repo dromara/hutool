@@ -123,8 +123,6 @@ public class Session extends AbstractDb implements Closeable {
 	public void commit() throws SQLException {
 		try {
 			getConnection().commit();
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
@@ -142,8 +140,6 @@ public class Session extends AbstractDb implements Closeable {
 	public void rollback() throws SQLException {
 		try {
 			getConnection().rollback();
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
@@ -180,8 +176,6 @@ public class Session extends AbstractDb implements Closeable {
 	public void rollback(Savepoint savepoint) throws SQLException {
 		try {
 			getConnection().rollback(savepoint);
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			try {
 				getConnection().setAutoCommit(true); // 事务结束，恢复自动提交
@@ -195,9 +189,8 @@ public class Session extends AbstractDb implements Closeable {
 	 * 静默回滚到某个保存点，保存点的设置请使用setSavepoint方法
 	 * 
 	 * @param savepoint 保存点
-	 * @throws SQLException SQL执行异常
 	 */
-	public void quietRollback(Savepoint savepoint) throws SQLException {
+	public void quietRollback(Savepoint savepoint) {
 		try {
 			getConnection().rollback(savepoint);
 		} catch (Exception e) {
@@ -255,7 +248,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * 在事务中执行操作，通过实现{@link VoidFunc0}接口的call方法执行多条SQL语句从而完成事务
 	 * 
 	 * @param func 函数抽象，在函数中执行多个SQL操作，多个操作会被合并为同一事务
-	 * @throws SQLException 
+	 * @throws SQLException SQL异常
 	 * @since 3.2.3
 	 */
 	public void tx(VoidFunc1<Session> func) throws SQLException {

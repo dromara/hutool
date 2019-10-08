@@ -466,7 +466,8 @@ public class RandomUtil {
 
 	/**
 	 * 带有权重的随机生成器
-	 * 
+	 *
+	 * @param <T> 随机对象类型
 	 * @param weightObjs 带有权重的对象列表
 	 * @return {@link WeightRandom}
 	 * @since 4.0.3
@@ -477,7 +478,8 @@ public class RandomUtil {
 
 	/**
 	 * 带有权重的随机生成器
-	 * 
+	 *
+	 * @param <T> 随机对象类型
 	 * @param weightObjs 带有权重的对象列表
 	 * @return {@link WeightRandom}
 	 * @since 4.0.3

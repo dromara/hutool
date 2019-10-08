@@ -588,6 +588,7 @@ public class KeyUtil {
 	/**
 	 * 获取主体算法名，例如RSA/ECB/PKCS1Padding的主体算法是RSA
 	 *
+	 * @param algorithm XXXwithXXX算法
 	 * @return 主体算法名
 	 * @since 4.5.2
 	 */
@@ -823,6 +824,7 @@ public class KeyUtil {
 	 *
 	 * @param encode    压缩公钥
 	 * @param curveName EC曲线名
+	 * @return 公钥
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(String encode, String curveName) {
@@ -835,6 +837,7 @@ public class KeyUtil {
 	 *
 	 * @param encodeByte 压缩公钥
 	 * @param curveName  EC曲线名
+	 * @return 公钥
 	 * @since 4.4.4
 	 */
 	public static PublicKey decodeECPoint(byte[] encodeByte, String curveName) {

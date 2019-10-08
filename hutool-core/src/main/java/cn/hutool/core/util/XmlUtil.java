@@ -48,21 +48,25 @@ import cn.hutool.core.lang.Assert;
  * XML工具类<br>
  * 此工具使用w3c dom工具，不需要依赖第三方包。<br>
  * 工具类封装了XML文档的创建、读取、写出和部分XML操作
- * 
+ *
  * @author xiaoleilu
- * 
  */
 public class XmlUtil {
 
-	/** 在XML中无效的字符 正则 */
+	/**
+	 * 在XML中无效的字符 正则
+	 */
 	public final static String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
-	/** XML格式化输出默认缩进量 */
+	/**
+	 * XML格式化输出默认缩进量
+	 */
 	public final static int INDENT_DEFAULT = 2;
 
 	// -------------------------------------------------------------------------------------- Read
+
 	/**
 	 * 读取解析XML文件
-	 * 
+	 *
 	 * @param file XML文件
 	 * @return XML文档对象
 	 */
@@ -94,7 +98,7 @@ public class XmlUtil {
 	 * 读取解析XML文件<br>
 	 * 如果给定内容以“&lt;”开头，表示这是一个XML内容，直接读取，否则按照路径处理<br>
 	 * 路径可以为相对路径，也可以是绝对路径，相对路径相对于ClassPath
-	 * 
+	 *
 	 * @param pathOrContent 内容或路径
 	 * @return XML文档对象
 	 * @since 3.0.9
@@ -109,7 +113,7 @@ public class XmlUtil {
 	/**
 	 * 读取解析XML文件<br>
 	 * 编码在XML中定义
-	 * 
+	 *
 	 * @param inputStream XML流
 	 * @return XML文档对象
 	 * @throws UtilException IO异常或转换异常
@@ -121,7 +125,7 @@ public class XmlUtil {
 
 	/**
 	 * 读取解析XML文件
-	 * 
+	 *
 	 * @param reader XML流
 	 * @return XML文档对象
 	 * @throws UtilException IO异常或转换异常
@@ -134,7 +138,7 @@ public class XmlUtil {
 	/**
 	 * 读取解析XML文件<br>
 	 * 编码在XML中定义
-	 * 
+	 *
 	 * @param source {@link InputSource}
 	 * @return XML文档对象
 	 * @since 3.0.9
@@ -150,7 +154,7 @@ public class XmlUtil {
 
 	/**
 	 * 将String类型的XML转换为XML文档
-	 * 
+	 *
 	 * @param xmlStr XML字符串
 	 * @return XML文档
 	 */
@@ -164,8 +168,8 @@ public class XmlUtil {
 
 	/**
 	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 * 
-	 * @param <T> 对象类型
+	 *
+	 * @param <T>    对象类型
 	 * @param source XML文件
 	 * @return 对象
 	 */
@@ -175,8 +179,8 @@ public class XmlUtil {
 
 	/**
 	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 * 
-	 * @param <T> 对象类型
+	 *
+	 * @param <T>    对象类型
 	 * @param xmlStr XML内容
 	 * @return 对象
 	 * @since 3.2.0
@@ -187,8 +191,8 @@ public class XmlUtil {
 
 	/**
 	 * 从XML中读取对象 Reads serialized object from the XML file.
-	 * 
-	 * @param <T> 对象类型
+	 *
+	 * @param <T>    对象类型
 	 * @param source {@link InputSource}
 	 * @return 对象
 	 * @since 3.2.0
@@ -207,11 +211,12 @@ public class XmlUtil {
 	}
 
 	// -------------------------------------------------------------------------------------- Write
+
 	/**
 	 * 将XML文档转换为String<br>
 	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8<br>
 	 * 默认非格式化输出，若想格式化请使用{@link #format(Document)}
-	 * 
+	 *
 	 * @param doc XML文档
 	 * @return XML字符串
 	 */
@@ -222,8 +227,8 @@ public class XmlUtil {
 	/**
 	 * 将XML文档转换为String<br>
 	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
-	 * 
-	 * @param doc XML文档
+	 *
+	 * @param doc      XML文档
 	 * @param isPretty 是否格式化输出
 	 * @return XML字符串
 	 * @since 3.0.9
@@ -235,9 +240,9 @@ public class XmlUtil {
 	/**
 	 * 将XML文档转换为String<br>
 	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
-	 * 
-	 * @param doc XML文档
-	 * @param charset 编码
+	 *
+	 * @param doc      XML文档
+	 * @param charset  编码
 	 * @param isPretty 是否格式化输出
 	 * @return XML字符串
 	 * @since 3.0.9
@@ -254,7 +259,7 @@ public class XmlUtil {
 
 	/**
 	 * 格式化XML输出
-	 * 
+	 *
 	 * @param doc {@link Document} XML文档
 	 * @return 格式化后的XML字符串
 	 * @since 4.4.5
@@ -265,7 +270,7 @@ public class XmlUtil {
 
 	/**
 	 * 格式化XML输出
-	 * 
+	 *
 	 * @param xmlStr XML字符串
 	 * @return 格式化后的XML字符串
 	 * @since 4.4.5
@@ -277,8 +282,8 @@ public class XmlUtil {
 	/**
 	 * 将XML文档写入到文件<br>
 	 * 使用Document中的编码
-	 * 
-	 * @param doc XML文档
+	 *
+	 * @param doc          XML文档
 	 * @param absolutePath 文件绝对路径，不存在会自动创建
 	 */
 	public static void toFile(Document doc, String absolutePath) {
@@ -287,9 +292,9 @@ public class XmlUtil {
 
 	/**
 	 * 将XML文档写入到文件<br>
-	 * 
-	 * @param doc XML文档
-	 * @param path 文件路径绝对路径或相对ClassPath路径，不存在会自动创建
+	 *
+	 * @param doc     XML文档
+	 * @param path    文件路径绝对路径或相对ClassPath路径，不存在会自动创建
 	 * @param charset 自定义XML文件的编码，如果为{@code null} 读取XML文档中的编码，否则默认UTF-8
 	 */
 	public static void toFile(Document doc, String path, String charset) {
@@ -311,11 +316,11 @@ public class XmlUtil {
 
 	/**
 	 * 将XML文档写出
-	 * 
-	 * @param node {@link Node} XML文档节点或文档本身
-	 * @param writer 写出的Writer，Writer决定了输出XML的编码
+	 *
+	 * @param node    {@link Node} XML文档节点或文档本身
+	 * @param writer  写出的Writer，Writer决定了输出XML的编码
 	 * @param charset 编码
-	 * @param indent 格式化输出中缩进量，小于1表示不格式化输出
+	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 3.0.9
 	 */
 	public static void write(Node node, Writer writer, String charset, int indent) {
@@ -324,11 +329,11 @@ public class XmlUtil {
 
 	/**
 	 * 将XML文档写出
-	 * 
-	 * @param node {@link Node} XML文档节点或文档本身
-	 * @param out 写出的Writer，Writer决定了输出XML的编码
+	 *
+	 * @param node    {@link Node} XML文档节点或文档本身
+	 * @param out     写出的Writer，Writer决定了输出XML的编码
 	 * @param charset 编码
-	 * @param indent 格式化输出中缩进量，小于1表示不格式化输出
+	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 4.0.8
 	 */
 	public static void write(Node node, OutputStream out, String charset, int indent) {
@@ -338,11 +343,11 @@ public class XmlUtil {
 	/**
 	 * 将XML文档写出<br>
 	 * 格式化输出逻辑参考：https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java
-	 * 
-	 * @param source 源
-	 * @param result 目标
+	 *
+	 * @param source  源
+	 * @param result  目标
 	 * @param charset 编码
-	 * @param indent 格式化输出中缩进量，小于1表示不格式化输出
+	 * @param indent  格式化输出中缩进量，小于1表示不格式化输出
 	 * @since 4.0.9
 	 */
 	public static void transform(Source source, Result result, String charset, int indent) {
@@ -363,10 +368,11 @@ public class XmlUtil {
 	}
 
 	// -------------------------------------------------------------------------------------- Create
+
 	/**
 	 * 创建XML文档<br>
 	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，即XML在转为文本的时候才定义编码
-	 * 
+	 *
 	 * @return XML文档
 	 * @since 4.0.8
 	 */
@@ -376,7 +382,7 @@ public class XmlUtil {
 
 	/**
 	 * 创建 DocumentBuilder
-	 * 
+	 *
 	 * @return DocumentBuilder
 	 * @since 4.1.2
 	 */
@@ -395,7 +401,7 @@ public class XmlUtil {
 	/**
 	 * 创建XML文档<br>
 	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，即XML在转为文本的时候才定义编码
-	 * 
+	 *
 	 * @param rootElementName 根节点名称
 	 * @return XML文档
 	 */
@@ -407,9 +413,10 @@ public class XmlUtil {
 	}
 
 	// -------------------------------------------------------------------------------------- Function
+
 	/**
 	 * 获得XML文档根节点
-	 * 
+	 *
 	 * @param doc {@link Document}
 	 * @return 根节点
 	 * @see Document#getDocumentElement()
@@ -421,7 +428,7 @@ public class XmlUtil {
 
 	/**
 	 * 去除XML文本中的无效字符
-	 * 
+	 *
 	 * @param xmlContent XML文本
 	 * @return 当传入为null时返回null
 	 */
@@ -434,7 +441,7 @@ public class XmlUtil {
 
 	/**
 	 * 根据节点名获得子节点列表
-	 * 
+	 *
 	 * @param element 节点
 	 * @param tagName 节点名，如果节点名为空（null或blank），返回所有子节点
 	 * @return 节点列表
@@ -446,7 +453,7 @@ public class XmlUtil {
 
 	/**
 	 * 根据节点名获得第一个子节点
-	 * 
+	 *
 	 * @param element 节点
 	 * @param tagName 节点名
 	 * @return 节点
@@ -468,7 +475,7 @@ public class XmlUtil {
 
 	/**
 	 * 根据节点名获得第一个子节点
-	 * 
+	 *
 	 * @param element 节点
 	 * @param tagName 节点名
 	 * @return 节点中的值
@@ -480,9 +487,9 @@ public class XmlUtil {
 
 	/**
 	 * 根据节点名获得第一个子节点
-	 * 
-	 * @param element 节点
-	 * @param tagName 节点名
+	 *
+	 * @param element      节点
+	 * @param tagName      节点名
 	 * @param defaultValue 默认值
 	 * @return 节点中的值
 	 */
@@ -493,7 +500,7 @@ public class XmlUtil {
 
 	/**
 	 * 将NodeList转换为Element列表
-	 * 
+	 *
 	 * @param nodeList NodeList
 	 * @return Element列表
 	 */
@@ -504,9 +511,9 @@ public class XmlUtil {
 	/**
 	 * 将NodeList转换为Element列表<br>
 	 * 非Element节点将被忽略
-	 * 
+	 *
 	 * @param parentEle 父节点，如果指定将返回此节点的所有直接子节点，null返回所有就节点
-	 * @param nodeList NodeList
+	 * @param nodeList  NodeList
 	 * @return Element列表
 	 */
 	public static List<Element> transElements(Element parentEle, NodeList nodeList) {
@@ -530,7 +537,7 @@ public class XmlUtil {
 	/**
 	 * 将可序列化的对象转换为XML写入文件，已经存在的文件将被覆盖<br>
 	 * Writes serializable object to a XML file. Existing file will be overwritten
-	 * 
+	 *
 	 * @param dest 目标文件
 	 * @param bean 对象
 	 */
@@ -548,7 +555,7 @@ public class XmlUtil {
 	/**
 	 * 创建XPath<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
-	 * 
+	 *
 	 * @return {@link XPath}
 	 * @since 3.2.0
 	 */
@@ -559,9 +566,9 @@ public class XmlUtil {
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
-	 * 
+	 *
 	 * @param expression XPath表达式
-	 * @param source 资源，可以是Docunent、Node节点等
+	 * @param source     资源，可以是Docunent、Node节点等
 	 * @return 匹配返回类型的值
 	 * @since 4.0.9
 	 */
@@ -572,9 +579,9 @@ public class XmlUtil {
 	/**
 	 * 通过XPath方式读取XML的NodeList<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
-	 * 
+	 *
 	 * @param expression XPath表达式
-	 * @param source 资源，可以是Docunent、Node节点等
+	 * @param source     资源，可以是Docunent、Node节点等
 	 * @return NodeList
 	 * @since 4.0.9
 	 */
@@ -585,9 +592,9 @@ public class XmlUtil {
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
-	 * 
+	 *
 	 * @param expression XPath表达式
-	 * @param source 资源，可以是Docunent、Node节点等
+	 * @param source     资源，可以是Docunent、Node节点等
 	 * @return 匹配返回类型的值
 	 * @since 4.0.9
 	 */
@@ -598,9 +605,9 @@ public class XmlUtil {
 	/**
 	 * 通过XPath方式读取XML节点等信息<br>
 	 * Xpath相关文章：https://www.ibm.com/developerworks/cn/xml/x-javaxpathapi.html
-	 * 
+	 *
 	 * @param expression XPath表达式
-	 * @param source 资源，可以是Docunent、Node节点等
+	 * @param source     资源，可以是Docunent、Node节点等
 	 * @param returnType 返回类型，{@link javax.xml.xpath.XPathConstants}
 	 * @return 匹配返回类型的值
 	 * @since 3.2.0
@@ -620,14 +627,14 @@ public class XmlUtil {
 
 	/**
 	 * 转义XML特殊字符:
-	 * 
+	 *
 	 * <pre>
 	 * &amp; (ampersand) 替换为 &amp;amp;
 	 * &lt; (小于) 替换为 &amp;lt;
 	 * &gt; (大于) 替换为 &amp;gt;
 	 * &quot; (双引号) 替换为 &amp;quot;
 	 * </pre>
-	 * 
+	 *
 	 * @param string 被替换的字符串
 	 * @return 替换后的字符串
 	 * @since 4.0.8
@@ -637,23 +644,23 @@ public class XmlUtil {
 		for (int i = 0, length = string.length(); i < length; i++) {
 			char c = string.charAt(i);
 			switch (c) {
-			case '&':
-				sb.append("&amp;");
-				break;
-			case '<':
-				sb.append("&lt;");
-				break;
-			case '>':
-				sb.append("&gt;");
-				break;
-			case '"':
-				sb.append("&quot;");
-				break;
-			case '\'':
-				sb.append("&apos;");
-				break;
-			default:
-				sb.append(c);
+				case '&':
+					sb.append("&amp;");
+					break;
+				case '<':
+					sb.append("&lt;");
+					break;
+				case '>':
+					sb.append("&gt;");
+					break;
+				case '"':
+					sb.append("&quot;");
+					break;
+				case '\'':
+					sb.append("&apos;");
+					break;
+				default:
+					sb.append(c);
 			}
 		}
 		return sb.toString();
@@ -701,7 +708,7 @@ public class XmlUtil {
 	/**
 	 * XML节点转换为Map
 	 *
-	 * @param node XML节点
+	 * @param node   XML节点
 	 * @param result 结果Map类型
 	 * @return XML数据转换后的Map
 	 * @since 4.0.8
@@ -728,7 +735,8 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
-	 * @param data Map类型数据
+	 * @param data     Map类型数据
+	 * @param rootName 根节点名
 	 * @return XML格式的字符串
 	 * @since 4.0.8
 	 */
@@ -739,7 +747,8 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML
 	 *
-	 * @param data Map类型数据
+	 * @param data     Map类型数据
+	 * @param rootName 根节点名
 	 * @return XML
 	 * @since 4.0.9
 	 */
@@ -753,7 +762,7 @@ public class XmlUtil {
 
 	/**
 	 * 给定节点是否为{@link Element} 类型节点
-	 * 
+	 *
 	 * @param node 节点
 	 * @return 是否为{@link Element} 类型节点
 	 * @since 4.0.8
@@ -764,8 +773,8 @@ public class XmlUtil {
 
 	/**
 	 * 在已有节点上创建子节点
-	 * 
-	 * @param node 节点
+	 *
+	 * @param node    节点
 	 * @param tagName 标签名
 	 * @return 子节点
 	 * @since 4.0.9
@@ -778,12 +787,13 @@ public class XmlUtil {
 	}
 
 	// ---------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
-	 * @param doc {@link Document}
+	 * @param doc     {@link Document}
 	 * @param element 节点
-	 * @param data Map类型数据
+	 * @param data    Map类型数据
 	 * @since 4.0.8
 	 */
 	private static void mapToXml(Document doc, Element element, Map<?, ?> data) {
@@ -813,7 +823,7 @@ public class XmlUtil {
 	/**
 	 * 关闭XXE，避免漏洞攻击<br>
 	 * see: https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#JAXP_DocumentBuilderFactory.2C_SAXParserFactory_and_DOM4J
-	 * 
+	 *
 	 * @param dbf DocumentBuilderFactory
 	 * @return DocumentBuilderFactory
 	 */

@@ -53,13 +53,13 @@ public class EnumUtil {
 	/**
 	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}
 	 *
-	 * @param <T> 枚举类型泛型
+	 * @param <E>       枚举类型泛型
 	 * @param enumClass 枚举类
-	 * @param value 值
+	 * @param value     值
 	 * @return 枚举值
 	 * @since 4.1.13
 	 */
-	public static <T extends Enum<T>> T fromString(Class<T> enumClass, String value) {
+	public static <E extends Enum<E>> E fromString(Class<E> enumClass, String value) {
 		return Enum.valueOf(enumClass, value);
 	}
 
@@ -67,31 +67,31 @@ public class EnumUtil {
 	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}<br>
 	 * 如果无枚举值，返回默认值
 	 *
-	 * @param <T> 枚举类型泛型
-	 * @param enumClass 枚举类
-	 * @param value 值
+	 * @param <E>          枚举类型泛型
+	 * @param enumClass    枚举类
+	 * @param value        值
 	 * @param defaultValue 无对应枚举值返回的默认值
 	 * @return 枚举值
 	 * @since 4.5.18
 	 */
-	public static <T extends Enum<T>> T fromString(Class<T> enumClass, String value, T defaultValue) {
+	public static <E extends Enum<E>> E fromString(Class<E> enumClass, String value, E defaultValue) {
 		return ObjectUtil.defaultIfNull(fromStringQuietly(enumClass, value), defaultValue);
 	}
-	
+
 	/**
 	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}，转换失败返回{@code null} 而非报错
 	 *
-	 * @param <T> 枚举类型泛型
+	 * @param <E>       枚举类型泛型
 	 * @param enumClass 枚举类
-	 * @param value 值
+	 * @param value     值
 	 * @return 枚举值
 	 * @since 4.5.18
 	 */
-	public static <T extends Enum<T>> T fromStringQuietly(Class<T> enumClass, String value) {
-		if(null == enumClass || StrUtil.isBlank(value)) {
+	public static <E extends Enum<E>> E fromStringQuietly(Class<E> enumClass, String value) {
+		if (null == enumClass || StrUtil.isBlank(value)) {
 			return null;
 		}
-		
+
 		try {
 			return fromString(enumClass, value);
 		} catch (IllegalArgumentException e) {
@@ -102,12 +102,13 @@ public class EnumUtil {
 	/**
 	 * 模糊匹配转换为枚举，给定一个值，匹配枚举中定义的所有字段名（包括name属性），一旦匹配到返回这个枚举对象，否则返回null
 	 *
+	 * @param <E>       枚举类型
 	 * @param enumClass 枚举类
-	 * @param value 值
+	 * @param value     值
 	 * @return 匹配到的枚举对象，未匹配到返回null
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T>> T likeValueOf(Class<T> enumClass, Object value) {
+	public static <E extends Enum<E>> E likeValueOf(Class<E> enumClass, Object value) {
 		if (value instanceof CharSequence) {
 			value = value.toString().trim();
 		}
@@ -123,7 +124,7 @@ public class EnumUtil {
 			}
 			for (Enum<?> enumObj : enums) {
 				if (ObjectUtil.equal(value, ReflectUtil.getFieldValue(enumObj, field))) {
-					return (T) enumObj;
+					return (E) enumObj;
 				}
 			}
 		}
@@ -151,7 +152,7 @@ public class EnumUtil {
 	/**
 	 * 获得枚举类中各枚举对象下指定字段的值
 	 *
-	 * @param clazz 枚举类
+	 * @param clazz     枚举类
 	 * @param fieldName 字段名，最终调用getXXX方法
 	 * @return 字段值列表
 	 */
@@ -199,6 +200,7 @@ public class EnumUtil {
 	 * 获取枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序<br>
 	 * 结果中键为枚举名，值为枚举对象
 	 *
+	 * @param <E>       枚举类型
 	 * @param enumClass 枚举类
 	 * @return 枚举字符串值和枚举对象的Map对应，使用LinkedHashMap保证有序
 	 * @since 4.0.2
@@ -215,7 +217,7 @@ public class EnumUtil {
 	 * 获得枚举名对应指定字段值的Map<br>
 	 * 键为枚举名，值为字段值
 	 *
-	 * @param clazz 枚举类
+	 * @param clazz     枚举类
 	 * @param fieldName 字段名，最终调用getXXX方法
 	 * @return 枚举名对应指定字段值的Map
 	 */
@@ -234,9 +236,9 @@ public class EnumUtil {
 	/**
 	 * 判断某个值是存在枚举中
 	 *
+	 * @param <E>       枚举类型
 	 * @param enumClass 枚举类
-	 * @param val 需要查找的值
-	 * @param <E>
+	 * @param val       需要查找的值
 	 * @return 是否存在
 	 */
 	public static <E extends Enum<E>> boolean contains(final Class<E> enumClass, String val) {
@@ -246,9 +248,9 @@ public class EnumUtil {
 	/**
 	 * 判断某个值是不存在枚举中
 	 *
+	 * @param <E> 枚举类型
 	 * @param enumClass 枚举类
-	 * @param val 需要查找的值
-	 * @param <E>
+	 * @param val       需要查找的值
 	 * @return 是否不存在
 	 */
 	public static <E extends Enum<E>> boolean notContains(final Class<E> enumClass, String val) {
@@ -258,7 +260,7 @@ public class EnumUtil {
 	/**
 	 * 忽略大小检查某个枚举值是否匹配指定值
 	 *
-	 * @param e 枚举值
+	 * @param e   枚举值
 	 * @param val 需要判断的值
 	 * @return 是非匹配
 	 */
@@ -269,7 +271,7 @@ public class EnumUtil {
 	/**
 	 * 检查某个枚举值是否匹配指定值
 	 *
-	 * @param e 枚举值
+	 * @param e   枚举值
 	 * @param val 需要判断的值
 	 * @return 是非匹配
 	 */

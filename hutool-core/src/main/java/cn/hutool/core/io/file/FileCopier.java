@@ -139,6 +139,7 @@ public class FileCopier extends SrcToDestCopier<File, FileCopier>{
 	 * 设置当拷贝来源是目录时是否只拷贝文件而忽略子目录
 	 * 
 	 * @param isOnlyCopyFile 当拷贝来源是目录时是否只拷贝文件而忽略子目录
+	 * @return this
 	 * @since 4.1.5
 	 */
 	public FileCopier setOnlyCopyFile(boolean isOnlyCopyFile) {

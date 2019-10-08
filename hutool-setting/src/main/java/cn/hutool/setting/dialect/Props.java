@@ -484,7 +484,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * person.friends[5].name
 	 * ['person']['friends'][5]['name']
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param beanClass Bean类
 	 * @return Bean对象
 	 * @since 4.6.3
@@ -504,7 +505,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * person.friends[5].name
 	 * ['person']['friends'][5]['name']
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param beanClass Bean类
 	 * @param prefix 公共前缀，不指定前缀传null，当指定前缀后非此前缀的属性被忽略
 	 * @return Bean对象
@@ -526,7 +528,8 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	 * person.friends[5].name
 	 * ['person']['friends'][5]['name']
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param bean Bean对象
 	 * @param prefix 公共前缀，不指定前缀传null，当指定前缀后非此前缀的属性被忽略
 	 * @return Bean对象

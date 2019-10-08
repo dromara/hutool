@@ -10,16 +10,16 @@ import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 摘要算法工具类
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class DigestUtil {
 
 	// ------------------------------------------------------------------------------------------- MD5
+
 	/**
 	 * 计算32位MD5摘要值
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
@@ -29,8 +29,8 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return MD5摘要
 	 */
@@ -40,7 +40,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值，使用UTF-8编码
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
@@ -50,7 +50,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
@@ -60,7 +60,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return MD5摘要
 	 */
@@ -70,7 +70,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 */
@@ -80,19 +80,19 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值，并转为16进制字符串
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(String data, String charset) {
 		return new MD5().digestHex(data, charset);
 	}
-	
+
 	/**
 	 * 计算32位MD5摘要值，并转为16进制字符串
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
@@ -103,7 +103,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 */
@@ -113,7 +113,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 */
@@ -123,18 +123,19 @@ public class DigestUtil {
 
 	/**
 	 * 计算32位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return MD5摘要的16进制表示
 	 */
 	public static String md5Hex(File file) {
 		return new MD5().digestHex(file);
 	}
-	
+
 	// ------------------------------------------------------------------------------------------- MD5 16
+
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
@@ -145,8 +146,8 @@ public class DigestUtil {
 
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
@@ -157,7 +158,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
@@ -168,7 +169,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
@@ -179,7 +180,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算16位MD5摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return MD5摘要的16进制表示
 	 * @since 4.6.0
@@ -190,7 +191,7 @@ public class DigestUtil {
 
 	/**
 	 * 32位MD5转16位MD5
-	 * 
+	 *
 	 * @param md5Hex 32位MD5
 	 * @return 16位MD5
 	 * @since 4.4.1
@@ -200,9 +201,10 @@ public class DigestUtil {
 	}
 
 	// ------------------------------------------------------------------------------------------- SHA-1
+
 	/**
 	 * 计算SHA-1摘要值
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要
 	 */
@@ -212,8 +214,8 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return SHA-1摘要
 	 */
@@ -223,7 +225,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算sha1摘要值，使用UTF-8编码
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 */
@@ -233,7 +235,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要
 	 */
@@ -243,7 +245,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return SHA-1摘要
 	 */
@@ -253,7 +255,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要的16进制表示
 	 */
@@ -263,8 +265,8 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return SHA-1摘要的16进制表示
 	 */
@@ -274,7 +276,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要的16进制表示
 	 */
@@ -284,7 +286,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-1摘要的16进制表示
 	 */
@@ -294,7 +296,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return SHA-1摘要的16进制表示
 	 */
@@ -303,9 +305,10 @@ public class DigestUtil {
 	}
 
 	// ------------------------------------------------------------------------------------------- SHA-256
+
 	/**
 	 * 计算SHA-256摘要值
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-256摘要
 	 * @since 3.0.8
@@ -316,8 +319,8 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-256摘要值
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return SHA-256摘要
 	 * @since 3.0.8
@@ -328,7 +331,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算sha256摘要值，使用UTF-8编码
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return MD5摘要
 	 * @since 3.0.8
@@ -339,7 +342,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-256摘要值
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-256摘要
 	 * @since 3.0.8
@@ -350,7 +353,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-256摘要值
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return SHA-256摘要
 	 * @since 3.0.8
@@ -361,7 +364,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-1摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
@@ -372,8 +375,8 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-256摘要值，并转为16进制字符串
-	 * 
-	 * @param data 被摘要数据
+	 *
+	 * @param data    被摘要数据
 	 * @param charset 编码
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
@@ -384,7 +387,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-256摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
@@ -395,7 +398,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-256摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param data 被摘要数据
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
@@ -406,7 +409,7 @@ public class DigestUtil {
 
 	/**
 	 * 计算SHA-256摘要值，并转为16进制字符串
-	 * 
+	 *
 	 * @param file 被摘要文件
 	 * @return SHA-256摘要的16进制表示
 	 * @since 3.0.8
@@ -416,11 +419,12 @@ public class DigestUtil {
 	}
 
 	// ------------------------------------------------------------------------------------------- Hmac
+
 	/**
 	 * 创建HMac对象，调用digest方法可获得hmac值
-	 * 
+	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key 密钥，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
@@ -430,9 +434,9 @@ public class DigestUtil {
 
 	/**
 	 * 创建HMac对象，调用digest方法可获得hmac值
-	 * 
+	 *
 	 * @param algorithm {@link HmacAlgorithm}
-	 * @param key 密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
+	 * @param key       密钥{@link SecretKey}，如果为<code>null</code>生成随机密钥
 	 * @return {@link HMac}
 	 * @since 3.0.3
 	 */
@@ -442,7 +446,7 @@ public class DigestUtil {
 
 	/**
 	 * 新建摘要器
-	 * 
+	 *
 	 * @param algorithm 签名算法
 	 * @return Digester
 	 * @since 4.0.1
@@ -453,7 +457,7 @@ public class DigestUtil {
 
 	/**
 	 * 新建摘要器
-	 * 
+	 *
 	 * @param algorithm 签名算法
 	 * @return Digester
 	 * @since 4.2.1
@@ -464,7 +468,7 @@ public class DigestUtil {
 
 	/**
 	 * 生成Bcrypt加密后的密文
-	 * 
+	 *
 	 * @param password 明文密码
 	 * @return 加密后的密文
 	 * @since 4.1.1
@@ -475,8 +479,9 @@ public class DigestUtil {
 
 	/**
 	 * 验证密码是否与Bcrypt加密后的密文匹配
-	 * 
+	 *
 	 * @param password 明文密码
+	 * @param hashed   hash值（加密后的值）
 	 * @return 是否匹配
 	 * @since 4.1.1
 	 */

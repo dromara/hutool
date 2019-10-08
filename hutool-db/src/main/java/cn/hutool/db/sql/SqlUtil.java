@@ -21,7 +21,7 @@ import cn.hutool.db.sql.Condition.LikeType;
 
 /**
  * SQL相关工具类，包括相关SQL语句拼接等
- * 
+ *
  * @author looly
  * @since 4.0.10
  */
@@ -30,8 +30,8 @@ public class SqlUtil {
 	/**
 	 * 构件相等条件的where语句<br>
 	 * 如果没有条件语句，泽返回空串，表示没有条件
-	 * 
-	 * @param entity 条件实体
+	 *
+	 * @param entity      条件实体
 	 * @param paramValues 条件值得存放List
 	 * @return 带where关键字的SQL部分
 	 */
@@ -57,7 +57,7 @@ public class SqlUtil {
 
 	/**
 	 * 通过实体对象构建条件对象
-	 * 
+	 *
 	 * @param entity 实体对象
 	 * @return 条件对象
 	 */
@@ -83,23 +83,24 @@ public class SqlUtil {
 
 	/**
 	 * 创建LIKE语句中的值，创建的结果为：
-	 * 
+	 *
 	 * <pre>
 	 * 1、LikeType.StartWith: %value
 	 * 2、LikeType.EndWith: value%
 	 * 3、LikeType.Contains: %value%
 	 * </pre>
-	 * 
+	 * <p>
 	 * 如果withLikeKeyword为true，则结果为：
-	 * 
+	 *
 	 * <pre>
 	 * 1、LikeType.StartWith: LIKE %value
 	 * 2、LikeType.EndWith: LIKE value%
 	 * 3、LikeType.Contains: LIKE %value%
 	 * </pre>
-	 * 
-	 * @param value 被查找值
-	 * @param likeType LIKE值类型 {@link LikeType}
+	 *
+	 * @param value           被查找值
+	 * @param likeType        LIKE值类型 {@link LikeType}
+	 * @param withLikeKeyword 是否包含LIKE关键字
 	 * @return 拼接后的like值
 	 */
 	public static String buildLikeValue(String value, LikeType likeType, boolean withLikeKeyword) {
@@ -109,25 +110,25 @@ public class SqlUtil {
 
 		StringBuilder likeValue = StrUtil.builder(withLikeKeyword ? "LIKE " : "");
 		switch (likeType) {
-		case StartWith:
-			likeValue.append('%').append(value);
-			break;
-		case EndWith:
-			likeValue.append(value).append('%');
-			break;
-		case Contains:
-			likeValue.append('%').append(value).append('%');
-			break;
+			case StartWith:
+				likeValue.append('%').append(value);
+				break;
+			case EndWith:
+				likeValue.append(value).append('%');
+				break;
+			case Contains:
+				likeValue.append('%').append(value).append('%');
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 		return likeValue.toString();
 	}
 
 	/**
 	 * 格式化SQL
-	 * 
+	 *
 	 * @param sql SQL
 	 * @return 格式化后的SQL
 	 */
@@ -137,7 +138,7 @@ public class SqlUtil {
 
 	/**
 	 * 将RowId转为字符串
-	 * 
+	 *
 	 * @param rowId RowId
 	 * @return RowId字符串
 	 */
@@ -147,7 +148,7 @@ public class SqlUtil {
 
 	/**
 	 * Clob字段值转字符串
-	 * 
+	 *
 	 * @param clob {@link Clob}
 	 * @return 字符串
 	 * @since 3.0.6
@@ -166,8 +167,8 @@ public class SqlUtil {
 
 	/**
 	 * Blob字段值转字符串
-	 * 
-	 * @param blob {@link Blob}
+	 *
+	 * @param blob    {@link Blob}
 	 * @param charset 编码
 	 * @return 字符串
 	 * @since 3.0.6
@@ -186,9 +187,9 @@ public class SqlUtil {
 
 	/**
 	 * 创建Blob对象
-	 * 
-	 * @param conn {@link Connection}
-	 * @param dataStream 数据流，使用完毕后关闭
+	 *
+	 * @param conn          {@link Connection}
+	 * @param dataStream    数据流，使用完毕后关闭
 	 * @param closeAfterUse 使用完毕是否关闭流
 	 * @return {@link Blob}
 	 * @since 4.5.13
@@ -210,10 +211,10 @@ public class SqlUtil {
 		}
 		return blob;
 	}
-	
+
 	/**
 	 * 创建Blob对象
-	 * 
+	 *
 	 * @param conn {@link Connection}
 	 * @param data 数据
 	 * @return {@link Blob}
@@ -232,7 +233,7 @@ public class SqlUtil {
 
 	/**
 	 * 转换为{@link java.sql.Date}
-	 * 
+	 *
 	 * @param date {@link java.util.Date}
 	 * @return {@link java.sql.Date}
 	 * @since 3.1.2
@@ -243,7 +244,7 @@ public class SqlUtil {
 
 	/**
 	 * 转换为{@link java.sql.Timestamp}
-	 * 
+	 *
 	 * @param date {@link java.util.Date}
 	 * @return {@link java.sql.Timestamp}
 	 * @since 3.1.2

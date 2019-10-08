@@ -16,7 +16,7 @@ import cn.hutool.core.exceptions.UtilException;
  * ps:
  * //模拟1000个线程并发
  * SyncFinisher sf = new SyncFinisher(1000);
- * concurrencyTestUtil.run(() -> {
+ * concurrencyTestUtil.run(() -&gt; {
  *      // 需要并发测试的业务代码
  * });
  * </pre>
@@ -46,7 +46,7 @@ public class SyncFinisher {
 		this.beginLatch = new CountDownLatch(1);
 		this.threadSize = threadSize;
 		this.executorService = ThreadUtil.newExecutor(threadSize);
-		this.workers = new LinkedHashSet<Worker>();
+		this.workers = new LinkedHashSet<>();
 	}
 
 	/**

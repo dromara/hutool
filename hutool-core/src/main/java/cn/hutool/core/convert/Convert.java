@@ -528,6 +528,8 @@ public class Convert {
 	 *
 	 * @param <K> 键类型
 	 * @param <V> 值类型
+	 * @param keyType 键类型
+	 * @param valueType 值类型
 	 * @param value 被转换的值
 	 * @return {@link Map}
 	 * @since 4.6.8

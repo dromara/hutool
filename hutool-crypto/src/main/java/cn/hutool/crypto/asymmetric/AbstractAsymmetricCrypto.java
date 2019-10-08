@@ -150,6 +150,7 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	 * 编码为Base64字符串
 	 *
 	 * @param data    被加密的字符串
+	 * @param charset 编码
 	 * @param keyType 私钥或公钥 {@link KeyType}
 	 * @return Base64字符串
 	 * @since 4.0.1

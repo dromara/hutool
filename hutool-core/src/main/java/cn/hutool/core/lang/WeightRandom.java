@@ -36,7 +36,8 @@ public class WeightRandom<T> implements Serializable {
 
 	/**
 	 * 创建权重随机获取器
-	 * 
+	 *
+	 * @param <T> 权重随机获取的对象类型
 	 * @return {@link WeightRandom}
 	 */
 	public static <T> WeightRandom<T> create() {
@@ -99,7 +100,7 @@ public class WeightRandom<T> implements Serializable {
 	 * @return this
 	 */
 	public WeightRandom<T> add(T obj, double weight) {
-		return add(new WeightObj<T>(obj, weight));
+		return add(new WeightObj<>(obj, weight));
 	}
 
 	/**
@@ -226,10 +227,7 @@ public class WeightRandom<T> implements Serializable {
 			} else if (!this.obj.equals(other.obj)) {
 				return false;
 			}
-			if (Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight)) {
-				return false;
-			}
-			return true;
+			return Double.doubleToLongBits(weight) == Double.doubleToLongBits(other.weight);
 		}
 	}
 	

@@ -442,7 +442,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	}
 
 	/**
-	 * 设置监听选项，例如监听频率等，可设置项包括：<p>
+	 * 设置监听选项，例如监听频率等，可设置项包括：
 	 *
 	 * <pre>
 	 * 1、com.sun.nio.file.StandardWatchEventKinds

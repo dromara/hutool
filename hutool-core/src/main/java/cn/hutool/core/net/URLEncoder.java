@@ -17,7 +17,7 @@ import cn.hutool.core.util.HexUtil;
  * 1.字符"a"-"z"，"A"-"Z"，"0"-"9"，"."，"-"，"*"，和"_" 都不会被编码;
  * 2.将空格转换为%20 ;
  * 3.将非文本内容转换成"%xy"的形式,xy是两位16进制的数值;
- * 4.在每个 name=value 对之间放置 & 符号。
+ * 4.在每个 name=value 对之间放置 &amp; 符号。
  * </pre>
  * 
  * @author looly,
@@ -34,7 +34,7 @@ public class URLEncoder implements Serializable{
 	 * <pre>
 	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
 	 */
 	public static final URLEncoder DEFAULT = createDefault();
@@ -46,7 +46,7 @@ public class URLEncoder implements Serializable{
 	 * <pre>
 	 * 0x20 ' ' =》 '+' 
 	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is 
-	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&' 不编码
+	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&amp;' 不编码
 	 * 其它编码为 %nn 形式
 	 * </pre>
 	 * 
@@ -61,7 +61,7 @@ public class URLEncoder implements Serializable{
 	 * <pre>
 	 * pchar = unreserved（不处理） / pct-encoded / sub-delims（子分隔符） / ":" / "@"
 	 * unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-	 * sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+	 * sub-delims = "!" / "$" / "&amp;" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 	 * </pre>
 	 * 
 	 * @return {@link URLEncoder}
@@ -100,7 +100,7 @@ public class URLEncoder implements Serializable{
 	 * <pre>
 	 * 0x20 ' ' =》 '+' 
 	 * 0x2A, 0x2D, 0x2E, 0x30 to 0x39, 0x41 to 0x5A, 0x5F, 0x61 to 0x7A as-is 
-	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&' 不编码
+	 * '*', '-', '.', '0' to '9', 'A' to 'Z', '_', 'a' to 'z' Also '=' and '&amp;' 不编码
 	 * 其它编码为 %nn 形式
 	 * </pre>
 	 * 

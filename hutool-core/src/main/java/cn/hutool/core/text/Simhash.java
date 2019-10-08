@@ -57,7 +57,7 @@ public class Simhash {
 		this.hammingThresh = hammingThresh;
 		this.storage = new ArrayList<>(fracCount);
 		for (int i = 0; i < fracCount; i++) {
-			storage.add(new HashMap<String, List<Long>>());
+			storage.add(new HashMap<>());
 		}
 	}
 
@@ -126,7 +126,7 @@ public class Simhash {
 	}
 	
 	/**
-	 * 按照(frac, <simhash, content>)索引进行存储
+	 * 按照(frac, 《simhash, content》)索引进行存储
 	 *
 	 * @param simhash Simhash值
 	 */
@@ -146,7 +146,7 @@ public class Simhash {
 				if (fracMap.containsKey(frac)) {
 					fracMap.get(frac).add(simhash);
 				} else {
-					final List<Long> ls = new ArrayList<Long>();
+					final List<Long> ls = new ArrayList<>();
 					ls.add(simhash);
 					fracMap.put(frac, ls);
 				}
@@ -184,7 +184,7 @@ public class Simhash {
 		final int bitNum = this.bitNum;
 		final int fracBitNum = this.fracBitNum;
 
-		final List<String> ls = new ArrayList<String>();
+		final List<String> ls = new ArrayList<>();
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < bitNum; i++) {
 			sb.append(simhash >> i & 1);

@@ -68,7 +68,7 @@ public enum ThreadLocalConnection {
 		 * 
 		 * @param ds 数据源
 		 * @return Connection
-		 * @throws SQLException
+		 * @throws SQLException SQL异常
 		 */
 		public Connection get(DataSource ds) throws SQLException {
 			Connection conn = connMap.get(ds);

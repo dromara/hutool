@@ -119,7 +119,7 @@ public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implement
 	}
 
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) {
 		final Class<?>[] parameterTypes = method.getParameterTypes();
 		if (ArrayUtil.isEmpty(parameterTypes)) {
 			final Class<?> returnType = method.getReturnType();
@@ -166,7 +166,8 @@ public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implement
 	
 	/**
 	 * 将Map代理为指定接口的动态代理对象
-	 * 
+	 *
+	 * @param <T> 代理的Bean类型
 	 * @param interfaceClass 接口
 	 * @return 代理对象
 	 * @since 4.5.2

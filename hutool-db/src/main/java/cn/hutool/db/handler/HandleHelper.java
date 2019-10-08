@@ -29,7 +29,8 @@ public class HandleHelper {
 
 	/**
 	 * 处理单条数据
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
@@ -44,7 +45,8 @@ public class HandleHelper {
 
 	/**
 	 * 处理单条数据
-	 * 
+	 *
+	 * @param <T> Bean类型
 	 * @param columnCount 列数
 	 * @param meta ResultSetMetaData
 	 * @param rs 数据集
@@ -84,8 +86,8 @@ public class HandleHelper {
 		final Map<String, PropDesc> propMap = BeanUtil.getBeanDesc(beanClass).getPropMap(true);
 		String columnLabel;
 		PropDesc pd;
-		Method setter = null;
-		Object value = null;
+		Method setter;
+		Object value;
 		for (int i = 1; i <= columnCount; i++) {
 			columnLabel = meta.getColumnLabel(i);
 			pd = propMap.get(columnLabel);

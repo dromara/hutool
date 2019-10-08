@@ -830,6 +830,7 @@ public class ReflectUtil {
 	 *
 	 * @param <T>              AccessibleObject的子类，比如Class、Method、Field等
 	 * @param accessibleObject 可设置访问权限的对象，比如Class、Method、Field等
+	 * @return 被设置可访问的对象
 	 * @since 4.6.8
 	 */
 	public static <T extends AccessibleObject> T setAccessible(T accessibleObject) {

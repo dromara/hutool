@@ -364,7 +364,7 @@ public class FileUtil {
 	 * 此方法会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
 	 *
 	 * @param directory 父目录
-	 * @param names     元素名（多层目录名）
+	 * @param names     元素名（多层目录名），由外到内依次传入
 	 * @return the file 文件
 	 * @since 4.0.6
 	 */
@@ -388,6 +388,7 @@ public class FileUtil {
 	 * <p>
 	 * 元素名（多层目录名）
 	 *
+	 * @param names 多层文件的文件名，由外到内依次传入
 	 * @return the file 文件
 	 * @since 4.0.6
 	 */
@@ -1397,6 +1398,7 @@ public class FileUtil {
 	 * @param file1   文件1
 	 * @param file2   文件2
 	 * @param charset 编码，null表示使用平台默认编码 两个文件内容一致返回true，否则false
+	 * @return 是否相同
 	 * @throws IORuntimeException IO异常
 	 * @since 4.0.6
 	 */
@@ -1550,7 +1552,7 @@ public class FileUtil {
 		// 统一使用斜杠
 		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH).trim();
 		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）
-		if(path.startsWith("\\\\")){
+		if (path.startsWith("\\\\")) {
 			pathToUse = "\\" + pathToUse;
 		}
 
@@ -3354,10 +3356,10 @@ public class FileUtil {
 	 * 获取指定层级的父路径
 	 *
 	 * <pre>
-	 * getParent("d:/aaa/bbb/cc/ddd", 0) -> "d:/aaa/bbb/cc/ddd"
-	 * getParent("d:/aaa/bbb/cc/ddd", 2) -> "d:/aaa/bbb"
-	 * getParent("d:/aaa/bbb/cc/ddd", 4) -> "d:/"
-	 * getParent("d:/aaa/bbb/cc/ddd", 5) -> null
+	 * getParent("d:/aaa/bbb/cc/ddd", 0) -》 "d:/aaa/bbb/cc/ddd"
+	 * getParent("d:/aaa/bbb/cc/ddd", 2) -》 "d:/aaa/bbb"
+	 * getParent("d:/aaa/bbb/cc/ddd", 4) -》 "d:/"
+	 * getParent("d:/aaa/bbb/cc/ddd", 5) -》 null
 	 * </pre>
 	 *
 	 * @param filePath 目录或文件路径
@@ -3378,10 +3380,10 @@ public class FileUtil {
 	 * 获取指定层级的父路径
 	 *
 	 * <pre>
-	 * getParent(file("d:/aaa/bbb/cc/ddd", 0)) -> "d:/aaa/bbb/cc/ddd"
-	 * getParent(file("d:/aaa/bbb/cc/ddd", 2)) -> "d:/aaa/bbb"
-	 * getParent(file("d:/aaa/bbb/cc/ddd", 4)) -> "d:/"
-	 * getParent(file("d:/aaa/bbb/cc/ddd", 5)) -> null
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 0)) -》 "d:/aaa/bbb/cc/ddd"
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 2)) -》 "d:/aaa/bbb"
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 4)) -》 "d:/"
+	 * getParent(file("d:/aaa/bbb/cc/ddd", 5)) -》 null
 	 * </pre>
 	 *
 	 * @param file  目录或文件

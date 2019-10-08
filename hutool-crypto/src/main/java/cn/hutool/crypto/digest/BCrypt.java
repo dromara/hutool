@@ -12,7 +12,7 @@ import cn.hutool.core.util.CharsetUtil;
  * 使用方法如下：
  * <p>
  * <code>
- * String pw_hash = BCrypt.hashpw(plain_password, BCrypt.gensalt()); <br />
+ * String pw_hash = BCrypt.hashpw(plain_password, BCrypt.gensalt());
  * </code>
  * <p>
  * 使用checkpw方法检查被加密的字符串是否与原始字符串匹配：
@@ -24,8 +24,8 @@ import cn.hutool.core.util.CharsetUtil;
  * gensalt方法提供了可选参数 (log_rounds) 来定义加盐多少，也决定了加密的复杂度:
  * <p>
  * <code>
- * String strong_salt = BCrypt.gensalt(10)<br />
- * String stronger_salt = BCrypt.gensalt(12)<br />
+ * String strong_salt = BCrypt.gensalt(10);
+ * String stronger_salt = BCrypt.gensalt(12);
  * </code>
  *
  * @author Damien Miller
@@ -192,7 +192,7 @@ public class BCrypt {
 	 * @throws IllegalArgumentException if maxolen is invalid
 	 */
 	private static byte[] decodeBase64(String s, int maxolen) throws IllegalArgumentException {
-		StringBuffer rs = new StringBuffer();
+		final StringBuilder rs = new StringBuilder();
 		int off = 0, slen = s.length(), olen = 0;
 		byte[] ret;
 		byte c1, c2, c3, c4, o;

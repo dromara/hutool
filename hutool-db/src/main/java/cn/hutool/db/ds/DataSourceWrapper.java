@@ -13,11 +13,11 @@ import cn.hutool.core.io.IoUtil;
 
 /**
  * {@link DataSource} 数据源实现包装，通过包装，提供基本功能外的额外功能和参数持有，包括：
- * 
+ *
  * <pre>
  * 1. 提供驱动名的持有，用于确定数据库方言
  * </pre>
- * 
+ *
  * @author looly
  * @since 4.3.2
  */
@@ -28,9 +28,10 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 
 	/**
 	 * 包装指定的DataSource
-	 * 
-	 * @param ds 原始的DataSource
+	 *
+	 * @param ds     原始的DataSource
 	 * @param driver 数据库驱动类名
+	 * @return {@link DataSourceWrapper}
 	 */
 	public static DataSourceWrapper wrap(DataSource ds, String driver) {
 		return new DataSourceWrapper(ds, driver);
@@ -38,8 +39,8 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 
 	/**
 	 * 构造
-	 * 
-	 * @param ds 原始的DataSource
+	 *
+	 * @param ds     原始的DataSource
 	 * @param driver 数据库驱动类名
 	 */
 	public DataSourceWrapper(DataSource ds, String driver) {
@@ -49,7 +50,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 
 	/**
 	 * 获取驱动名
-	 * 
+	 *
 	 * @return 驱动名
 	 */
 	public String getDriver() {
@@ -58,7 +59,7 @@ public class DataSourceWrapper implements DataSource, Closeable, Cloneable {
 
 	/**
 	 * 获取原始的数据源
-	 * 
+	 *
 	 * @return 原始数据源
 	 */
 	public DataSource getRaw() {

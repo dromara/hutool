@@ -44,10 +44,11 @@ public class AnnotationUtil {
 	 * 获取指定注解
 	 *
 	 * @param annotationEle {@link AnnotatedElement}，可以是Class、Method、Field、Constructor、ReflectPermission
+	 * @param isToCombination 是否为转换为组合注解
 	 * @return 注解对象
 	 */
-	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isCombination) {
-		return (null == annotationEle) ? null : (isCombination ? toCombination(annotationEle) : annotationEle).getAnnotations();
+	public static Annotation[] getAnnotations(AnnotatedElement annotationEle, boolean isToCombination) {
+		return (null == annotationEle) ? null : (isToCombination ? toCombination(annotationEle) : annotationEle).getAnnotations();
 	}
 
 	/**

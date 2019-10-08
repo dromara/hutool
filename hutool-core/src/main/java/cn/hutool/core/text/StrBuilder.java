@@ -155,7 +155,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 追加对象，对象会被转换为字符串
 	 *
-	 * @param obj 对象
+	 * @param index 插入位置
+	 * @param obj   对象
 	 * @return this
 	 */
 	public StrBuilder insert(int index, Object obj) {
@@ -392,7 +393,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @param start 开始位置，负数按照0处理（包括）
 	 * @param end   结束位置，超出最大长度按照最大长度处理（不包括）
 	 * @return this
-	 * @throws StringIndexOutOfBoundsException 当start > end抛出此异常
+	 * @throws StringIndexOutOfBoundsException 当start &gt; end抛出此异常
 	 */
 	public StrBuilder del(int start, int end) throws StringIndexOutOfBoundsException {
 		if (start < 0) {

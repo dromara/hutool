@@ -366,7 +366,9 @@ public class StopWatch {
 		}
 
 		/**
-		 * 获取任务名Get the name of this task.
+		 * 获取任务名
+		 *
+		 * @return 任务名
 		 */
 		public String getTaskName() {
 			return this.taskName;
@@ -375,6 +377,7 @@ public class StopWatch {
 		/**
 		 * 获取任务花费时间（单位：纳秒）
 		 *
+		 * @return 任务花费时间（单位：纳秒）
 		 * @see #getTimeMillis()
 		 * @see #getTimeSeconds()
 		 */
@@ -385,6 +388,7 @@ public class StopWatch {
 		/**
 		 * 获取任务花费时间（单位：毫秒）
 		 *
+		 * @return 任务花费时间（单位：毫秒）
 		 * @see #getTimeNanos()
 		 * @see #getTimeSeconds()
 		 */
@@ -395,6 +399,7 @@ public class StopWatch {
 		/**
 		 * 获取任务花费时间（单位：秒）
 		 *
+		 * @return 任务花费时间（单位：秒）
 		 * @see #getTimeMillis()
 		 * @see #getTimeNanos()
 		 */

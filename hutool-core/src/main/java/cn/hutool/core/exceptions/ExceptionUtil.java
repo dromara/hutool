@@ -62,7 +62,8 @@ public class ExceptionUtil {
 
 	/**
 	 * 包装一个异常
-	 * 
+	 *
+	 * @param <T> 被包装的异常类型
 	 * @param throwable 异常
 	 * @param wrapThrowable 包装后的异常类
 	 * @return 包装后的异常
@@ -123,7 +124,8 @@ public class ExceptionUtil {
 
 	/**
 	 * 获取指定层的堆栈信息
-	 * 
+	 *
+	 * @param i 层数
 	 * @return 指定层的堆栈信息
 	 * @since 4.1.4
 	 */
@@ -346,7 +348,7 @@ public class ExceptionUtil {
 	 * @since 4.6.2
 	 */
 	public static List<Throwable> getThrowableList(Throwable throwable) {
-		final List<Throwable> list = new ArrayList<Throwable>();
+		final List<Throwable> list = new ArrayList<>();
 		while (throwable != null && false == list.contains(throwable)) {
 			list.add(throwable);
 			throwable = throwable.getCause();

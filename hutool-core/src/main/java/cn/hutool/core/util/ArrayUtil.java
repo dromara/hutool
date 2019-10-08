@@ -828,7 +828,8 @@ public class ArrayUtil {
 
 	/**
 	 * 去除{@code null} 元素
-	 * 
+	 *
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 处理后的数组
 	 * @since 3.2.2
@@ -845,7 +846,8 @@ public class ArrayUtil {
 
 	/**
 	 * 去除{@code null}或者"" 元素
-	 * 
+	 *
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 处理后的数组
 	 * @since 3.2.2
@@ -861,7 +863,8 @@ public class ArrayUtil {
 
 	/**
 	 * 去除{@code null}或者""或者空白字符串 元素
-	 * 
+	 *
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 处理后的数组
 	 * @since 3.2.2
@@ -1900,7 +1903,8 @@ public class ArrayUtil {
 	
 	/**
 	 * 获取子数组
-	 * 
+	 *
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @param start 开始位置（包括）
 	 * @param end 结束位置（不包括）
@@ -3885,7 +3889,8 @@ public class ArrayUtil {
 	/**
 	 * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
 	 * 此方法通过{@link LinkedHashSet} 去重
-	 * 
+	 *
+	 * @param <T> 数组元素类型
 	 * @param array 数组
 	 * @return 去重后的数组
 	 */

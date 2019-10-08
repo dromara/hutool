@@ -525,14 +525,14 @@ public class Assert {
 	 * 检查下标（数组、集合、字符串）是否符合要求，下标必须满足：
 	 * 
 	 * <pre>
-	 * 0 <= index < size
+	 * 0 &le; index &lt; size
 	 * </pre>
 	 * 
 	 * @param index 下标
 	 * @param size 长度
 	 * @return 检查后的下标
-	 * @throws IllegalArgumentException 如果size < 0 抛出此异常
-	 * @throws IndexOutOfBoundsException 如果index < 0或者 index >= size 抛出此异常
+	 * @throws IllegalArgumentException 如果size &lt; 0 抛出此异常
+	 * @throws IndexOutOfBoundsException 如果index &lt; 0或者 index &ge; size 抛出此异常
 	 * @since 4.1.9
 	 */
 	public static int checkIndex(int index, int size) throws IllegalArgumentException, IndexOutOfBoundsException {
@@ -543,7 +543,7 @@ public class Assert {
 	 * 检查下标（数组、集合、字符串）是否符合要求，下标必须满足：
 	 * 
 	 * <pre>
-	 * 0 <= index < size
+	 * 0 &le; index &lt; size
 	 * </pre>
 	 * 
 	 * @param index 下标
@@ -551,8 +551,8 @@ public class Assert {
 	 * @param errorMsgTemplate 异常时的消息模板
 	 * @param params 参数列表
 	 * @return 检查后的下标
-	 * @throws IllegalArgumentException 如果size < 0 抛出此异常
-	 * @throws IndexOutOfBoundsException 如果index < 0或者 index >= size 抛出此异常
+	 * @throws IllegalArgumentException 如果size &lt; 0 抛出此异常
+	 * @throws IndexOutOfBoundsException 如果index &lt; 0或者 index &ge; size 抛出此异常
 	 * @since 4.1.9
 	 */
 	public static int checkIndex(int index, int size, String errorMsgTemplate, Object... params) throws IllegalArgumentException, IndexOutOfBoundsException {

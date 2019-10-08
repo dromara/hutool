@@ -174,7 +174,8 @@ public class NetUtil {
 	/**
 	 * 获取多个本地可用端口<br>
 	 * 来自org.springframework.util.SocketUtils
-	 * 
+	 *
+	 * @param numRequested 尝试次数
 	 * @param minPort 端口最小值（包含）
 	 * @param maxPort 端口最大值（包含）
 	 * @return 可用的端口
@@ -311,7 +312,7 @@ public class NetUtil {
 			return null;
 		}
 
-		return CollectionUtil.addAll(new ArrayList<NetworkInterface>(), networkInterfaces);
+		return CollectionUtil.addAll(new ArrayList<>(), networkInterfaces);
 	}
 
 	/**

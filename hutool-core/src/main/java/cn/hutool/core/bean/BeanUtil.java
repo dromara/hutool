@@ -87,7 +87,7 @@ public class BeanUtil {
 			final Method[] methods = clazz.getMethods();
 			for (Method method : methods) {
 				if (method.getParameterTypes().length == 0) {
-					if(method.getName().startsWith("get") || method.getName().startsWith("is")) {
+					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
 						return true;
 					}
 				}
@@ -160,6 +160,7 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------------------- PropertyDescriptor
+
 	/**
 	 * 获得Bean字段描述数组
 	 *
@@ -186,7 +187,7 @@ public class BeanUtil {
 	/**
 	 * 获得字段名和字段描述Map，获得的结果会缓存在 {@link BeanInfoCache}中
 	 *
-	 * @param clazz Bean类
+	 * @param clazz      Bean类
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
 	 * @throws BeanException 获取属性异常
@@ -203,7 +204,7 @@ public class BeanUtil {
 	/**
 	 * 获得字段名和字段描述Map。内部使用，直接获取Bean类的PropertyDescriptor
 	 *
-	 * @param clazz Bean类
+	 * @param clazz      Bean类
 	 * @param ignoreCase 是否忽略大小写
 	 * @return 字段名和字段描述Map
 	 * @throws BeanException 获取属性异常
@@ -222,7 +223,7 @@ public class BeanUtil {
 	/**
 	 * 获得Bean类属性描述，大小写敏感
 	 *
-	 * @param clazz Bean类
+	 * @param clazz     Bean类
 	 * @param fieldName 字段名
 	 * @return PropertyDescriptor
 	 * @throws BeanException 获取属性异常
@@ -234,8 +235,8 @@ public class BeanUtil {
 	/**
 	 * 获得Bean类属性描述
 	 *
-	 * @param clazz Bean类
-	 * @param fieldName 字段名
+	 * @param clazz      Bean类
+	 * @param fieldName  字段名
 	 * @param ignoreCase 是否忽略大小写
 	 * @return PropertyDescriptor
 	 * @throws BeanException 获取属性异常
@@ -249,7 +250,7 @@ public class BeanUtil {
 	 * 获得字段值，通过反射直接获得字段值，并不调用getXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 *
-	 * @param bean Bean对象
+	 * @param bean             Bean对象
 	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
 	 * @return 字段值
 	 */
@@ -273,11 +274,11 @@ public class BeanUtil {
 	 * 设置字段值，，通过反射设置字段值，并不调用setXXX方法<br>
 	 * 对象同样支持Map类型，fieldNameOrIndex即为key
 	 *
-	 * @param bean Bean
+	 * @param bean             Bean
 	 * @param fieldNameOrIndex 字段名或序号，序号支持负数
-	 * @param value 值
+	 * @param value            值
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static void setFieldValue(Object bean, String fieldNameOrIndex, Object value) {
 		if (bean instanceof Map) {
 			((Map) bean).put(fieldNameOrIndex, value);
@@ -294,7 +295,7 @@ public class BeanUtil {
 	/**
 	 * 解析Bean中的属性值
 	 *
-	 * @param bean Bean对象，支持Map、List、Collection、Array
+	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值
 	 * @see BeanPath#get(Object)
@@ -307,8 +308,9 @@ public class BeanUtil {
 	/**
 	 * 解析Bean中的属性值
 	 *
-	 * @param bean Bean对象，支持Map、List、Collection、Array
+	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
+	 * @param value      属性值
 	 * @see BeanPath#get(Object)
 	 * @since 4.0.6
 	 */
@@ -317,12 +319,13 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- mapToBean
+
 	/**
 	 * Map转换为Bean对象
 	 *
-	 * @param <T> Bean类型
-	 * @param map {@link Map}
-	 * @param beanClass Bean Class
+	 * @param <T>           Bean类型
+	 * @param map           {@link Map}
+	 * @param beanClass     Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
@@ -334,9 +337,9 @@ public class BeanUtil {
 	 * Map转换为Bean对象<br>
 	 * 忽略大小写
 	 *
-	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param beanClass Bean Class
+	 * @param <T>           Bean类型
+	 * @param map           Map
+	 * @param beanClass     Bean Class
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
@@ -347,9 +350,9 @@ public class BeanUtil {
 	/**
 	 * Map转换为Bean对象
 	 *
-	 * @param <T> Bean类型
-	 * @param map {@link Map}
-	 * @param beanClass Bean Class
+	 * @param <T>         Bean类型
+	 * @param map         {@link Map}
+	 * @param beanClass   Bean Class
 	 * @param copyOptions 转Bean选项
 	 * @return Bean
 	 */
@@ -358,12 +361,13 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBeanWithMap
+
 	/**
 	 * 使用Map填充Bean对象
 	 *
-	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param bean Bean
+	 * @param <T>           Bean类型
+	 * @param map           Map
+	 * @param bean          Bean
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
@@ -374,9 +378,9 @@ public class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象，可配置将下划线转换为驼峰
 	 *
-	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param bean Bean
+	 * @param <T>           Bean类型
+	 * @param map           Map
+	 * @param bean          Bean
 	 * @param isToCamelCase 是否将下划线模式转换为驼峰模式
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
@@ -388,9 +392,9 @@ public class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象，忽略大小写
 	 *
-	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param bean Bean
+	 * @param <T>           Bean类型
+	 * @param map           Map
+	 * @param bean          Bean
 	 * @param isIgnoreError 是否忽略注入错误
 	 * @return Bean
 	 */
@@ -401,9 +405,9 @@ public class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象
 	 *
-	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param bean Bean
+	 * @param <T>         Bean类型
+	 * @param map         Map
+	 * @param bean        Bean
 	 * @param copyOptions 属性复制选项 {@link CopyOptions}
 	 * @return Bean
 	 */
@@ -414,11 +418,11 @@ public class BeanUtil {
 	/**
 	 * 使用Map填充Bean对象
 	 *
-	 * @param <T> Bean类型
-	 * @param map Map
-	 * @param bean Bean
+	 * @param <T>           Bean类型
+	 * @param map           Map
+	 * @param bean          Bean
 	 * @param isToCamelCase 是否将Map中的下划线风格key转换为驼峰风格
-	 * @param copyOptions 属性复制选项 {@link CopyOptions}
+	 * @param copyOptions   属性复制选项 {@link CopyOptions}
 	 * @return Bean
 	 * @since 3.3.1
 	 */
@@ -433,11 +437,13 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- fillBean
+
 	/**
 	 * 对象或Map转Bean
 	 *
+	 * @param <T>    转换的Bean类型
 	 * @param source Bean对象或Map
-	 * @param clazz 目标的Bean类型
+	 * @param clazz  目标的Bean类型
 	 * @return Bean对象
 	 * @since 4.1.20
 	 */
@@ -450,10 +456,10 @@ public class BeanUtil {
 	/**
 	 * ServletRequest 参数转Bean
 	 *
-	 * @param <T> Bean类型
-	 * @param beanClass Bean Class
+	 * @param <T>           Bean类型
+	 * @param beanClass     Bean Class
 	 * @param valueProvider 值提供者
-	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
+	 * @param copyOptions   拷贝选项，见 {@link CopyOptions}
 	 * @return Bean
 	 */
 	public static <T> T toBean(Class<T> beanClass, ValueProvider<String> valueProvider, CopyOptions copyOptions) {
@@ -463,10 +469,10 @@ public class BeanUtil {
 	/**
 	 * 填充Bean的核心方法
 	 *
-	 * @param <T> Bean类型
-	 * @param bean Bean
+	 * @param <T>           Bean类型
+	 * @param bean          Bean
 	 * @param valueProvider 值提供者
-	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
+	 * @param copyOptions   拷贝选项，见 {@link CopyOptions}
 	 * @return Bean
 	 */
 	public static <T> T fillBean(T bean, ValueProvider<String> valueProvider, CopyOptions copyOptions) {
@@ -478,6 +484,7 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- beanToMap
+
 	/**
 	 * 对象转Map，不进行驼峰转下划线，不忽略值为空的字段
 	 *
@@ -491,22 +498,22 @@ public class BeanUtil {
 	/**
 	 * 对象转Map
 	 *
-	 * @param bean bean对象
+	 * @param bean              bean对象
 	 * @param isToUnderlineCase 是否转换为下划线模式
-	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @param ignoreNullValue   是否忽略值为空的字段
 	 * @return Map
 	 */
 	public static Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
-		return beanToMap(bean, new LinkedHashMap<String, Object>(), isToUnderlineCase, ignoreNullValue);
+		return beanToMap(bean, new LinkedHashMap<>(), isToUnderlineCase, ignoreNullValue);
 	}
 
 	/**
 	 * 对象转Map
 	 *
-	 * @param bean bean对象
-	 * @param targetMap 目标的Map
+	 * @param bean              bean对象
+	 * @param targetMap         目标的Map
 	 * @param isToUnderlineCase 是否转换为下划线模式
-	 * @param ignoreNullValue 是否忽略值为空的字段
+	 * @param ignoreNullValue   是否忽略值为空的字段
 	 * @return Map
 	 * @since 3.2.3
 	 */
@@ -534,10 +541,10 @@ public class BeanUtil {
 	 * 3. 自定义字段前缀或后缀等等
 	 * </pre>
 	 *
-	 * @param bean bean对象
-	 * @param targetMap 目标的Map
+	 * @param bean            bean对象
+	 * @param targetMap       目标的Map
 	 * @param ignoreNullValue 是否忽略值为空的字段
-	 * @param keyEditor 属性字段（Map的key）编辑器，用于筛选、编辑key
+	 * @param keyEditor       属性字段（Map的key）编辑器，用于筛选、编辑key
 	 * @return Map
 	 * @since 4.0.5
 	 */
@@ -575,6 +582,7 @@ public class BeanUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- copyProperties
+
 	/**
 	 * 复制Bean对象属性
 	 *
@@ -589,8 +597,8 @@ public class BeanUtil {
 	 * 复制Bean对象属性<br>
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
 	 *
-	 * @param source 源Bean对象
-	 * @param target 目标Bean对象
+	 * @param source           源Bean对象
+	 * @param target           目标Bean对象
 	 * @param ignoreProperties 不拷贝的的属性列表
 	 */
 	public static void copyProperties(Object source, Object target, String... ignoreProperties) {
@@ -600,8 +608,8 @@ public class BeanUtil {
 	/**
 	 * 复制Bean对象属性<br>
 	 *
-	 * @param source 源Bean对象
-	 * @param target 目标Bean对象
+	 * @param source     源Bean对象
+	 * @param target     目标Bean对象
 	 * @param ignoreCase 是否忽略大小写
 	 */
 	public static void copyProperties(Object source, Object target, boolean ignoreCase) {
@@ -612,8 +620,8 @@ public class BeanUtil {
 	 * 复制Bean对象属性<br>
 	 * 限制类用于限制拷贝的属性，例如一个类我只想复制其父类的一些属性，就可以将editable设置为父类
 	 *
-	 * @param source 源Bean对象
-	 * @param target 目标Bean对象
+	 * @param source      源Bean对象
+	 * @param target      目标Bean对象
 	 * @param copyOptions 拷贝选项，见 {@link CopyOptions}
 	 */
 	public static void copyProperties(Object source, Object target, CopyOptions copyOptions) {
@@ -628,9 +636,9 @@ public class BeanUtil {
 	 * 如果isSimple为{@code false}，则只匹配类名而忽略包名，例如：cn.hutool.TestEntity只匹配TestEntity<br>
 	 * 如果isSimple为{@code true}，则匹配包括包名的全类名，例如：cn.hutool.TestEntity匹配cn.hutool.TestEntity
 	 *
-	 * @param bean Bean
+	 * @param bean          Bean
 	 * @param beanClassName Bean的类名
-	 * @param isSimple 是否只匹配类名而忽略包名，true表示忽略包名
+	 * @param isSimple      是否只匹配类名而忽略包名，true表示忽略包名
 	 * @return 是否匹配
 	 * @since 4.0.6
 	 */
@@ -639,13 +647,14 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 把Bean里面的String属性做trim操作。
-	 *
+	 * 把Bean里面的String属性做trim操作。此方法直接对传入的Bean做修改。
+	 * <p>
 	 * 通常bean直接用来绑定页面的input，用户的输入可能首尾存在空格，通常保存数据库前需要把首尾空格去掉
 	 *
-	 * @param <T> Bean类型
-	 * @param bean Bean对象
+	 * @param <T>          Bean类型
+	 * @param bean         Bean对象
 	 * @param ignoreFields 不需要trim的Field名称列表（不区分大小写）
+	 * @return 处理后的Bean对象
 	 */
 	public static <T> T trimStrFields(T bean, String... ignoreFields) {
 		if (bean == null) {
