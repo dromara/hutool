@@ -595,20 +595,50 @@ public class ArrayUtil {
 
 		int length = 0;
 		for (T[] array : arrays) {
-			if (array == null) {
-				continue;
+			if (null != array) {
+				length += array.length;
 			}
-			length += array.length;
 		}
 		T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
 
 		length = 0;
 		for (T[] array : arrays) {
-			if (array == null) {
-				continue;
+			if (null != array) {
+				System.arraycopy(array, 0, result, length, array.length);
+				length += array.length;
 			}
-			System.arraycopy(array, 0, result, length, array.length);
-			length += array.length;
+		}
+		return result;
+	}
+
+	/**
+	 * 将多个数组合并在一起<br>
+	 * 忽略null的数组
+	 *
+	 * @param arrays 数组集合
+	 * @return 合并后的数组
+	 * @since 4.6.9
+	 */
+	public static byte[] addAll(byte[]... arrays) {
+		if (arrays.length == 1) {
+			return arrays[0];
+		}
+
+		// 计算总长度
+		int length = 0;
+		for (byte[] array : arrays) {
+			if (null != array) {
+				length += array.length;
+			}
+		}
+
+		final byte[] result = new byte[length];
+		length = 0;
+		for (byte[] array : arrays) {
+			if (null != array) {
+				System.arraycopy(array, 0, result, length, array.length);
+				length += array.length;
+			}
 		}
 		return result;
 	}

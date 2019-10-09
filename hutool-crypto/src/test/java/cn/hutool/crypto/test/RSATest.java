@@ -1,23 +1,30 @@
 package cn.hutool.crypto.test;
 
-import java.security.KeyPair;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 /**
  * RSA算法单元测试
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class RSATest {
 
@@ -59,7 +66,7 @@ public class RSATest {
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = rsa.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
-		
+
 		byte[] decrypt = rsa.decrypt(encrypt, KeyType.PrivateKey);
 		Assert.assertEquals("我是一段测试aaaa", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
 
@@ -111,22 +118,22 @@ public class RSATest {
 	@Test
 	public void rsaBase64Test() {
 		String textBase = "我是一段特别长的测试";
-		String text = "";
+		StringBuilder text = new StringBuilder();
 		for (int i = 0; i < 10; i++) {
-			text += textBase;
+			text.append(textBase);
 		}
 
 		final RSA rsa = new RSA();
 
 		// 公钥加密，私钥解密
-		String encryptStr = rsa.encryptBase64(text, KeyType.PublicKey);
+		String encryptStr = rsa.encryptBase64(text.toString(), KeyType.PublicKey);
 		String decryptStr = StrUtil.utf8Str(rsa.decrypt(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text, decryptStr);
+		Assert.assertEquals(text.toString(), decryptStr);
 
 		// 私钥加密，公钥解密
-		String encrypt2 = rsa.encryptBase64(text, KeyType.PrivateKey);
+		String encrypt2 = rsa.encryptBase64(text.toString(), KeyType.PrivateKey);
 		String decrypt2 = StrUtil.utf8Str(rsa.decrypt(encrypt2, KeyType.PublicKey));
-		Assert.assertEquals(text, decrypt2);
+		Assert.assertEquals(text.toString(), decrypt2);
 	}
 
 	@Test
@@ -152,5 +159,31 @@ public class RSATest {
 		byte[] decrypt = rsa.decrypt(aByte, KeyType.PrivateKey);
 
 		Assert.assertEquals("虎头闯杭州,多抬头看天,切勿只管种地", StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
+	}
+
+	@Test
+	public void rsaTest2() throws Exception {
+		String publicKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6s" +
+				"XqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9S" +
+				"dB1Ua44oncaTWz7OBGLbCiK45wIDAQAB";
+
+		byte[] keyBytes = Base64.decode(publicKeyStr);
+		PublicKey publicKey = KeyUtil.generateRSAPublicKey(keyBytes);
+
+		byte[] data = RandomUtil.randomString("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 16).getBytes();
+		//长度不满足128补0
+		byte[] finalData = ArrayUtil.resize(data, 128);
+
+		//jdk原生加密
+		Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
+		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+		String result1 = HexUtil.encodeHexStr(cipher.doFinal(finalData));
+
+		//hutool加密
+		RSA rsa = new RSA("RSA/ECB/NoPadding", null, publicKeyStr);
+		rsa.setEncryptBlockSize(128);
+		String result2 = rsa.encryptHex(finalData, KeyType.PublicKey);
+
+		Assert.assertEquals(result1, result2);
 	}
 }
