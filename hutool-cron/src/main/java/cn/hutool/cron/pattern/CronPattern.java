@@ -289,7 +289,7 @@ public class CronPattern {
 				throw new CronException(e, "Invalid pattern [{}], parsing 'year' field error!", pattern);
 			}
 		} else {// 不支持年的表达式，全部匹配
-			this.secondMatchers.add(new AlwaysTrueValueMatcher());
+			this.yearMatchers.add(new AlwaysTrueValueMatcher());
 		}
 		matcherSize++;
 	}

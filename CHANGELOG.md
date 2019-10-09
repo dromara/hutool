@@ -19,6 +19,7 @@
 * 【all】        修复阶乘计算错误bug（issue#I12XE4@Gitee）
 * 【http】       修复disableCookie无效问题（issue#572@Github）
 * 【http】       修复HttpResponse.getCookies导致的问题（issue#572@Github）
+* 【cron】       修复年无效匹配错误问题（pr#578@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
