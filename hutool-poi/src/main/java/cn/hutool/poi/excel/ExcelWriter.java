@@ -567,7 +567,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		final DVConstraint constraint = DVConstraint.createExplicitListConstraint(selectList);
 		
 		// 绑定
-		DataValidation dataValidation = null;
+		DataValidation dataValidation;
 		
 		if(this.sheet instanceof XSSFSheet) {
 			final XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper((XSSFSheet)sheet);
@@ -647,8 +647,11 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 合并某行的单元格，并写入对象到单元格<br>
 	 * 如果写到单元格中的内容非null，行号自动+1，否则当前行号不变<br>
 	 * 样式为默认标题样式，可使用{@link #getHeadCellStyle()}方法调用后自定义默认样式
-	 * 
-	 * @param lastColumn 合并到的最后一个列号
+	 *
+	 * @param firstRow 起始行，0开始
+	 * @param lastRow 结束行，0开始
+	 * @param firstColumn 起始列，0开始
+	 * @param lastColumn 结束列，0开始
 	 * @param content 合并单元格后的内容
 	 * @param isSetHeaderStyle 是否为合并后的单元格设置默认标题样式
 	 * @return this
@@ -748,7 +751,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				map = new TreeMap<>(comparator);
 				map.putAll((Map) obj);
 			} else {
-				map = BeanUtil.beanToMap(obj, new TreeMap<String, Object>(comparator), false, false);
+				map = BeanUtil.beanToMap(obj, new TreeMap<>(comparator), false, false);
 			}
 			writeRow(map, isFirstRow);
 			if (isFirstRow) {
@@ -789,12 +792,12 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @see #writeRow(Map, boolean)
 	 * @since 4.1.5
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"rawtypes" })
 	public ExcelWriter writeRow(Object rowBean, boolean isWriteKeyAsHead) {
 		if (rowBean instanceof Iterable) {
 			return writeRow((Iterable<?>) rowBean);
 		}
-		Map rowMap = null;
+		Map rowMap;
 		if (rowBean instanceof Map) {
 			if (MapUtil.isNotEmpty(this.headerAlias)) {
 				rowMap = MapUtil.newTreeMap((Map) rowBean, getInitedAliasComparator());
@@ -806,7 +809,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
-				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<String, Object>(getInitedAliasComparator()), false, false);
+				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(getInitedAliasComparator()), false, false);
 			}
 		} else {
 			// 其它转为字符串默认输出
@@ -893,7 +896,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * 
 	 * <p>
 	 * 需要注意的是，共享样式会共享同一个{@link CellStyle}，一个单元格样式改变，全部改变。
-	 * 
+	 *
+	 * @param style 单元格样式
 	 * @param x X坐标，从0计数，即列号
 	 * @param y Y坐标，从0计数，即行号
 	 * @return this
@@ -1003,7 +1007,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	/**
 	 * 为指定的key列表添加标题别名，如果没有定义key的别名，在onlyAlias为false时使用原key
 	 * 
-	 * @param keys 键列表
+	 * @param rowMap 一行数据
 	 * @return 别名列表
 	 */
 	private Map<?, ?> aliasMap(Map<?, ?> rowMap) {

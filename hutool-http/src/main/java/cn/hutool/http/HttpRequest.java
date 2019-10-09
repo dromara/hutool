@@ -261,6 +261,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 设置URL
 	 *
 	 * @param url url字符串
+	 * @return this
 	 * @since 4.1.8
 	 */
 	public HttpRequest setUrl(String url) {
@@ -278,6 +279,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * 相关issue见：https://gitee.com/loolly/hutool/issues/IMD1X
 	 *
 	 * @param urlHandler {@link URLStreamHandler}
+	 * @return this
 	 * @since 4.1.9
 	 */
 	public HttpRequest setUrlHandler(URLStreamHandler urlHandler) {

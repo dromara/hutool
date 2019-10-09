@@ -546,7 +546,7 @@ public class ExcelUtil {
 	 * 将Sheet列号变为列名
 	 * 
 	 * @param index 列号, 从0开始
-	 * @return 0->A; 1->B...26->AA
+	 * @return 0-》A; 1-》B...26-》AA
 	 * @since 4.1.20
 	 */
 	public static String indexToColName(int index) {
@@ -569,7 +569,7 @@ public class ExcelUtil {
 	 * 根据表元的列名转换为列号
 	 * 
 	 * @param colName 列名, 从A开始
-	 * @return A1->0; B1->1...AA1->26
+	 * @return A1-》0; B1-》1...AA1-》26
 	 * @since 4.1.20
 	 */
 	public static int colNameToIndex(String colName) {

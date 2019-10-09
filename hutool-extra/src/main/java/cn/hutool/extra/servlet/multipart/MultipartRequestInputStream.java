@@ -36,6 +36,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * 跳过指定位数的 bytes.
 	 * 
 	 * @param i 跳过的byte数
+	 * @throws IOException IO异常
 	 */
 	public void skipBytes(int i) throws IOException {
 		long len = super.skip(i);

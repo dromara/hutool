@@ -83,6 +83,7 @@ public class UploadFile {
 	 *
 	 * @param destination 目标文件
 	 * @return 目标文件
+	 * @throws IOException IO异常
 	 */
 	public File write(File destination) throws IOException {
 		assertValid();
