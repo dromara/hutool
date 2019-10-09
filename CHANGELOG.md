@@ -13,6 +13,7 @@
 * 【core】       增加DateUtil.parseCST方法（issue#570@Github）
 * 【core】       增加defaultIfEmpty方法
 * 【crypto】     修改bigIntToFixexLengthBytes为bigIntToFixedLengthBytes（pr#575@Github）
+* 【core】       RandomUtil增加randomStringWithoutStr（pr#76@Gitee）
 
 ### Bug修复
 * 【all】        修复阶乘计算错误bug（issue#I12XE4@Gitee）

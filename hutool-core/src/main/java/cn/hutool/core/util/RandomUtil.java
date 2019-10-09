@@ -25,23 +25,28 @@ import cn.hutool.core.lang.WeightRandom.WeightObj;
 
 /**
  * 随机工具类
- * 
- * @author xiaoleilu
  *
+ * @author xiaoleilu
  */
 public class RandomUtil {
 
-	/** 用于随机选的数字 */
+	/**
+	 * 用于随机选的数字
+	 */
 	public static final String BASE_NUMBER = "0123456789";
-	/** 用于随机选的字符 */
+	/**
+	 * 用于随机选的字符
+	 */
 	public static final String BASE_CHAR = "abcdefghijklmnopqrstuvwxyz";
-	/** 用于随机选的字符和数字 */
+	/**
+	 * 用于随机选的字符和数字
+	 */
 	public static final String BASE_CHAR_NUMBER = BASE_CHAR + BASE_NUMBER;
 
 	/**
 	 * 获取随机数生成器对象<br>
 	 * ThreadLocalRandom是JDK 7之后提供并发产生随机数，能够解决多个线程发生的竞争争夺。
-	 * 
+	 *
 	 * @return {@link ThreadLocalRandom}
 	 * @since 3.1.2
 	 */
@@ -51,7 +56,7 @@ public class RandomUtil {
 
 	/**
 	 * 创建{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
-	 * 
+	 *
 	 * @param seed 自定义随机种子
 	 * @return {@link SecureRandom}
 	 * @since 4.6.5
@@ -63,10 +68,10 @@ public class RandomUtil {
 	/**
 	 * 获取{@link SecureRandom}，类提供加密的强随机数生成器 (RNG)<br>
 	 * 注意：此方法获取的是伪随机序列发生器PRNG（pseudo-random number generator）
-	 * 
+	 *
 	 * <p>
 	 * 相关说明见：https://stackoverflow.com/questions/137212/how-to-solve-slow-java-securerandom
-	 * 
+	 *
 	 * @return {@link SecureRandom}
 	 * @since 3.1.2
 	 */
@@ -80,12 +85,12 @@ public class RandomUtil {
 
 	/**
 	 * 获取随机数产生器
-	 * 
+	 *
 	 * @param isSecure 是否为强随机数生成器 (RNG)
 	 * @return {@link Random}
-	 * @since 4.1.15
 	 * @see #getSecureRandom()
 	 * @see #getRandom()
+	 * @since 4.1.15
 	 */
 	public static Random getRandom(boolean isSecure) {
 		return isSecure ? getSecureRandom() : getRandom();
@@ -93,7 +98,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得随机Boolean值
-	 * 
+	 *
 	 * @return true or false
 	 * @since 4.5.9
 	 */
@@ -103,7 +108,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数
-	 * 
+	 *
 	 * @param min 最小数（包含）
 	 * @param max 最大数（不包含）
 	 * @return 随机数
@@ -114,7 +119,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得随机数[0, 2^32)
-	 * 
+	 *
 	 * @return 随机数
 	 */
 	public static int randomInt() {
@@ -123,7 +128,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
-	 * 
+	 *
 	 * @param limit 限制随机数的范围，不包括这个数
 	 * @return 随机数
 	 */
@@ -133,7 +138,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数[min, max)
-	 * 
+	 *
 	 * @param min 最小数（包含）
 	 * @param max 最大数（不包含）
 	 * @return 随机数
@@ -145,7 +150,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得随机数
-	 * 
+	 *
 	 * @return 随机数
 	 * @since 3.3.0
 	 */
@@ -155,7 +160,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
-	 * 
+	 *
 	 * @param limit 限制随机数的范围，不包括这个数
 	 * @return 随机数
 	 */
@@ -165,7 +170,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数
-	 * 
+	 *
 	 * @param min 最小数（包含）
 	 * @param max 最大数（不包含）
 	 * @return 随机数
@@ -177,10 +182,10 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数
-	 * 
-	 * @param min 最小数（包含）
-	 * @param max 最大数（不包含）
-	 * @param scale 保留小数位数
+	 *
+	 * @param min          最小数（包含）
+	 * @param max          最大数（不包含）
+	 * @param scale        保留小数位数
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 随机数
 	 * @since 4.0.8
@@ -191,7 +196,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得随机数[0, 1)
-	 * 
+	 *
 	 * @return 随机数
 	 * @since 3.3.0
 	 */
@@ -201,8 +206,8 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数
-	 * 
-	 * @param scale 保留小数位数
+	 *
+	 * @param scale        保留小数位数
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 随机数
 	 * @since 4.0.8
@@ -213,7 +218,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
-	 * 
+	 *
 	 * @param limit 限制随机数的范围，不包括这个数
 	 * @return 随机数
 	 * @since 3.3.0
@@ -224,9 +229,9 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数
-	 * 
-	 * @param limit 限制随机数的范围，不包括这个数
-	 * @param scale 保留小数位数
+	 *
+	 * @param limit        限制随机数的范围，不包括这个数
+	 * @param scale        保留小数位数
 	 * @param roundingMode 保留小数的模式 {@link RoundingMode}
 	 * @return 随机数
 	 * @since 4.0.8
@@ -237,7 +242,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数[0, 1)
-	 * 
+	 *
 	 * @return 随机数
 	 * @since 4.0.9
 	 */
@@ -247,7 +252,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数 [0,limit)
-	 * 
+	 *
 	 * @param limit 最大数（不包含）
 	 * @return 随机数
 	 * @since 4.0.9
@@ -258,7 +263,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得指定范围内的随机数
-	 * 
+	 *
 	 * @param min 最小数（包含）
 	 * @param max 最大数（不包含）
 	 * @return 随机数
@@ -270,7 +275,7 @@ public class RandomUtil {
 
 	/**
 	 * 随机bytes
-	 * 
+	 *
 	 * @param length 长度
 	 * @return bytes
 	 */
@@ -282,8 +287,8 @@ public class RandomUtil {
 
 	/**
 	 * 随机获得列表中的元素
-	 * 
-	 * @param <T> 元素类型
+	 *
+	 * @param <T>  元素类型
 	 * @param list 列表
 	 * @return 随机元素
 	 */
@@ -293,9 +298,9 @@ public class RandomUtil {
 
 	/**
 	 * 随机获得列表中的元素
-	 * 
-	 * @param <T> 元素类型
-	 * @param list 列表
+	 *
+	 * @param <T>   元素类型
+	 * @param list  列表
 	 * @param limit 限制列表的前N项
 	 * @return 随机元素
 	 */
@@ -305,8 +310,8 @@ public class RandomUtil {
 
 	/**
 	 * 随机获得数组中的元素
-	 * 
-	 * @param <T> 元素类型
+	 *
+	 * @param <T>   元素类型
 	 * @param array 列表
 	 * @return 随机元素
 	 * @since 3.3.0
@@ -317,8 +322,8 @@ public class RandomUtil {
 
 	/**
 	 * 随机获得数组中的元素
-	 * 
-	 * @param <T> 元素类型
+	 *
+	 * @param <T>   元素类型
 	 * @param array 列表
 	 * @param limit 限制列表的前N项
 	 * @return 随机元素
@@ -330,9 +335,9 @@ public class RandomUtil {
 
 	/**
 	 * 随机获得列表中的一定量元素
-	 * 
-	 * @param <T> 元素类型
-	 * @param list 列表
+	 *
+	 * @param <T>   元素类型
+	 * @param list  列表
 	 * @param count 随机取出的个数
 	 * @return 随机元素
 	 */
@@ -348,10 +353,10 @@ public class RandomUtil {
 
 	/**
 	 * 随机获得列表中的一定量的不重复元素，返回Set
-	 * 
-	 * @param <T> 元素类型
+	 *
+	 * @param <T>        元素类型
 	 * @param collection 列表
-	 * @param count 随机取出的个数
+	 * @param count      随机取出的个数
 	 * @return 随机元素
 	 * @throws IllegalArgumentException 需要的长度大于给定集合非重复总数
 	 */
@@ -372,7 +377,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得一个随机的字符串（只包含数字和字符）
-	 * 
+	 *
 	 * @param length 字符串的长度
 	 * @return 随机字符串
 	 */
@@ -382,7 +387,7 @@ public class RandomUtil {
 
 	/**
 	 * 获得一个随机的字符串（只包含数字和大写字符）
-	 * 
+	 *
 	 * @param length 字符串的长度
 	 * @return 随机字符串
 	 * @since 4.0.13
@@ -394,22 +399,19 @@ public class RandomUtil {
 	/**
 	 * 获得一个随机的字符串（只包含数字和字符） 并排除指定字符串
 	 *
-	 * @param length 字符串的长度
+	 * @param length   字符串的长度
 	 * @param elemData 要排除的字符串
 	 * @return 随机字符串
 	 */
-	public static String randomStringWithoutStr(int length,String elemData) {
-		String baseStr=BASE_CHAR_NUMBER;
-		baseStr=StrUtil.removeAll(baseStr,elemData.toCharArray());
-		if(baseStr.equals("")){
-			return "";
-		}
+	public static String randomStringWithoutStr(int length, String elemData) {
+		String baseStr = BASE_CHAR_NUMBER;
+		baseStr = StrUtil.removeAll(baseStr, elemData.toCharArray());
 		return randomString(baseStr, length);
 	}
 
 	/**
 	 * 获得一个只包含数字的字符串
-	 * 
+	 *
 	 * @param length 字符串的长度
 	 * @return 随机字符串
 	 */
@@ -419,12 +421,15 @@ public class RandomUtil {
 
 	/**
 	 * 获得一个随机的字符串
-	 * 
+	 *
 	 * @param baseString 随机字符选取的样本
-	 * @param length 字符串的长度
+	 * @param length     字符串的长度
 	 * @return 随机字符串
 	 */
 	public static String randomString(String baseString, int length) {
+		if (StrUtil.isEmpty(baseString)) {
+			return StrUtil.EMPTY;
+		}
 		final StringBuilder sb = new StringBuilder(length);
 
 		if (length < 1) {
@@ -440,7 +445,7 @@ public class RandomUtil {
 
 	/**
 	 * 随机数字，数字为0~9单个数字
-	 * 
+	 *
 	 * @return 随机数字字符
 	 * @since 3.1.2
 	 */
@@ -450,7 +455,7 @@ public class RandomUtil {
 
 	/**
 	 * 随机字母或数字，小写
-	 * 
+	 *
 	 * @return 随机字符
 	 * @since 3.1.2
 	 */
@@ -460,7 +465,7 @@ public class RandomUtil {
 
 	/**
 	 * 随机字符
-	 * 
+	 *
 	 * @param baseString 随机字符选取的样本
 	 * @return 随机字符
 	 * @since 3.1.2
@@ -471,7 +476,7 @@ public class RandomUtil {
 
 	/**
 	 * 生成随机颜色
-	 * 
+	 *
 	 * @return 随机颜色
 	 * @since 4.1.5
 	 */
@@ -483,7 +488,7 @@ public class RandomUtil {
 	/**
 	 * 带有权重的随机生成器
 	 *
-	 * @param <T> 随机对象类型
+	 * @param <T>        随机对象类型
 	 * @param weightObjs 带有权重的对象列表
 	 * @return {@link WeightRandom}
 	 * @since 4.0.3
@@ -495,7 +500,7 @@ public class RandomUtil {
 	/**
 	 * 带有权重的随机生成器
 	 *
-	 * @param <T> 随机对象类型
+	 * @param <T>        随机对象类型
 	 * @param weightObjs 带有权重的对象列表
 	 * @return {@link WeightRandom}
 	 * @since 4.0.3
@@ -505,6 +510,7 @@ public class RandomUtil {
 	}
 
 	// ------------------------------------------------------------------- UUID
+
 	/**
 	 * @return 随机UUID
 	 * @deprecated 请使用{@link IdUtil#randomUUID()}
@@ -516,7 +522,7 @@ public class RandomUtil {
 
 	/**
 	 * 简化的UUID，去掉了横线
-	 * 
+	 *
 	 * @return 简化的UUID，去掉了横线
 	 * @since 3.2.2
 	 * @deprecated 请使用{@link IdUtil#simpleUUID()}
@@ -528,7 +534,7 @@ public class RandomUtil {
 
 	/**
 	 * 以当天为基准，随机产生一个日期
-	 * 
+	 *
 	 * @param min 偏移最小天，可以为负数表示过去的时间（包含）
 	 * @param max 偏移最大天，可以为负数表示过去的时间（不包含）
 	 * @return 随机日期（随机天，其它时间不变）
@@ -540,11 +546,11 @@ public class RandomUtil {
 
 	/**
 	 * 以给定日期为基准，随机产生一个日期
-	 * 
-	 * @param baseDate 基准日期
+	 *
+	 * @param baseDate  基准日期
 	 * @param dateField 偏移的时间字段，例如时、分、秒等
-	 * @param min 偏移最小量，可以为负数表示过去的时间（包含）
-	 * @param max 偏移最大量，可以为负数表示过去的时间（不包含）
+	 * @param min       偏移最小量，可以为负数表示过去的时间（包含）
+	 * @param max       偏移最大量，可以为负数表示过去的时间（不包含）
 	 * @return 随机日期
 	 * @since 4.5.8
 	 */
