@@ -11,9 +11,9 @@ import com.vdurmont.emoji.EmojiTrie;
 import com.vdurmont.emoji.EmojiParser.FitzpatrickAction;
 
 /**
- * 基于<a href=“https://github.com/vdurmont/emoji-java”>emoji-java</a>的Emoji表情工具类
+ * 基于https://github.com/vdurmont/emoji-java的Emoji表情工具类
  * <p>
- * emoji-java文档以及别名列表见：<a href="https://github.com/vdurmont/emoji-java">https://github.com/vdurmont/emoji-java</a>
+ * emoji-java文档以及别名列表见：https://github.com/vdurmont/emoji-java
  *
  * @author looly
  * @since 4.2.1
