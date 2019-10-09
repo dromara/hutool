@@ -516,6 +516,7 @@ public abstract class AbstractDb implements Serializable {
 	 *
 	 * @param <T>   Bean类型
 	 * @param where 条件实体类（包含表名）
+	 * @param beanClass 返回的对象类型
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
 	 * @since 3.2.2

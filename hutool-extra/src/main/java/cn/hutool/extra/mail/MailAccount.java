@@ -247,7 +247,7 @@ public class MailAccount implements Serializable {
 	 *
 	 * <pre>
 	 * 1. user@xxx.xx
-	 * 2.  name <user@xxx.xx>
+	 * 2.  name &lt;user@xxx.xx&gt;
 	 * </pre>
 	 *
 	 * @param from 发送方，遵循RFC-822标准
@@ -272,6 +272,7 @@ public class MailAccount implements Serializable {
 	 * 设置是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
 	 *
 	 * @param debug 是否打开调试模式，调试模式会显示与邮件服务器通信过程，默认不开启
+	 * @return this
 	 * @since 4.0.2
 	 */
 	public MailAccount setDebug(boolean debug) {

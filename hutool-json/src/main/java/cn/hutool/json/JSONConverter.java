@@ -56,8 +56,8 @@ public class JSONConverter implements Converter<JSON> {
 	/**
 	 * JSON递归转换<br>
 	 * 首先尝试JDK类型转换，如果失败尝试JSON转Bean
-	 * @param <T>
-	 * 
+	 *
+	 * @param <T> 转换后的对象类型
 	 * @param targetType 目标类型
 	 * @param value 值
 	 * @param ignoreError 是否忽略转换错误

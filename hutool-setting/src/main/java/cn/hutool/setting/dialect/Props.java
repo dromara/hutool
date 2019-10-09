@@ -99,7 +99,7 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	/**
 	 * 构造，使用相对于Class文件根目录的相对路径
 	 * 
-	 * @param path
+	 * @param path 配置文件路径，相对于ClassPath，或者使用绝对路径
 	 */
 	public Props(String path) {
 		this(path, CharsetUtil.CHARSET_ISO_8859_1);

@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 /**
  * 上传的文件的头部信息<br>
  * 来自Jodd
- * 
+ *
  * @author jodd.org
  */
 public class UploadFileHeader {
@@ -32,27 +32,35 @@ public class UploadFileHeader {
 
 	/**
 	 * Returns <code>true</code> if uploaded data are correctly marked as a file. This is true if header contains string 'filename'.
+	 *
+	 * @return 是否为文件
 	 */
 	public boolean isFile() {
 		return isFile;
 	}
 
 	/**
-	 * Returns form field name.
+	 * 返回表单字段名
+	 *
+	 * @return 表单字段名
 	 */
 	public String getFormFieldName() {
 		return formFieldName;
 	}
 
 	/**
-	 * Returns complete file name as specified at client side.
+	 * 返回表单中的文件名，来自客户端传入
+	 *
+	 * @return 表单文件名
 	 */
 	public String getFormFileName() {
 		return formFileName;
 	}
 
 	/**
-	 * Returns file name (base name and extension, without full path data).
+	 * 获取文件名，不包括路径
+	 *
+	 * @return 文件名
 	 */
 	public String getFileName() {
 		return fileName;
@@ -61,7 +69,8 @@ public class UploadFileHeader {
 	/**
 	 * Returns uploaded content type. It is usually in the following form:<br>
 	 * mime_type/mime_subtype.
-	 * 
+	 *
+	 * @return content type
 	 * @see #getMimeType()
 	 * @see #getMimeSubtype()
 	 */
@@ -71,6 +80,8 @@ public class UploadFileHeader {
 
 	/**
 	 * Returns file types MIME.
+	 *
+	 * @return types MIME
 	 */
 	public String getMimeType() {
 		return mimeType;
@@ -78,6 +89,8 @@ public class UploadFileHeader {
 
 	/**
 	 * Returns file sub type MIME.
+	 *
+	 * @return sub type MIME
 	 */
 	public String getMimeSubtype() {
 		return mimeSubtype;
@@ -85,6 +98,8 @@ public class UploadFileHeader {
 
 	/**
 	 * Returns content disposition. Usually it is 'form-data'.
+	 *
+	 * @return content disposition
 	 */
 	public String getContentDisposition() {
 		return contentDisposition;
@@ -94,9 +109,9 @@ public class UploadFileHeader {
 
 	/**
 	 * 获得头信息字符串字符串中指定的值
-	 * 
+	 *
 	 * @param dataHeader 头信息
-	 * @param fieldName 字段名
+	 * @param fieldName  字段名
 	 * @return 字段值
 	 */
 	private String getDataFieldValue(String dataHeader, String fieldName) {
@@ -115,7 +130,7 @@ public class UploadFileHeader {
 
 	/**
 	 * 头信息中获得content type
-	 * 
+	 *
 	 * @param dataHeader data header string
 	 * @return content type or an empty string if no content type defined
 	 */
@@ -154,7 +169,8 @@ public class UploadFileHeader {
 
 	/**
 	 * 处理头字符串，使之转化为字段
-	 * @param dataHeader
+	 *
+	 * @param dataHeader 头字符串
 	 */
 	private void processHeaderString(String dataHeader) {
 		isFile = dataHeader.indexOf("filename") > 0;

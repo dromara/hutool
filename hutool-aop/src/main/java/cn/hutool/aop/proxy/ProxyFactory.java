@@ -17,7 +17,8 @@ public abstract class ProxyFactory implements Serializable{
 
 	/**
 	 * 创建代理
-	 * 
+	 *
+	 * @param <T> 代理对象类型
 	 * @param target 被代理对象
 	 * @param aspect 切面实现
 	 * @return 代理对象

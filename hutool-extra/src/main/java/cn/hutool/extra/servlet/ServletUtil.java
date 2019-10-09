@@ -71,7 +71,7 @@ public class ServletUtil {
 	 * @return Map
 	 */
 	public static Map<String, String> getParamMap(ServletRequest request) {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		for (Map.Entry<String, String[]> entry : getParams(request).entrySet()) {
 			params.put(entry.getKey(), ArrayUtil.join(entry.getValue(), StrUtil.COMMA));
 		}
@@ -186,8 +186,7 @@ public class ServletUtil {
 	 * 3、Proxy-Client-IP
 	 * 4、WL-Proxy-Client-IP
 	 * </pre>
-	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * otherHeaderNames参数用于自定义检测的Header<br>
 	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
@@ -278,7 +277,7 @@ public class ServletUtil {
 		final Map<String, String> headerMap = new HashMap<>();
 		
 		final Enumeration<String> names = request.getHeaderNames();
-		String name = null;
+		String name;
 		while (names.hasMoreElements()) {
 			name = names.nextElement();
 			headerMap.put(name, request.getHeader(name));
@@ -297,7 +296,7 @@ public class ServletUtil {
 	 */
 	public static String getHeaderIgnoreCase(HttpServletRequest request, String nameIgnoreCase) {
 		final Enumeration<String> names = request.getHeaderNames();
-		String name = null;
+		String name;
 		while (names.hasMoreElements()) {
 			name = names.nextElement();
 			if (name != null && name.equalsIgnoreCase(nameIgnoreCase)) {
@@ -347,9 +346,7 @@ public class ServletUtil {
 		String userAgent = getHeaderIgnoreCase(request, "User-Agent");
 		if (StrUtil.isNotBlank(userAgent)) {
 			userAgent = userAgent.toUpperCase();
-			if (userAgent.contains("MSIE") || userAgent.contains("TRIDENT")) {
-				return true;
-			}
+			return userAgent.contains("MSIE") || userAgent.contains("TRIDENT");
 		}
 		return false;
 	}
@@ -389,11 +386,7 @@ public class ServletUtil {
 		if (StrUtil.isBlank(contentType)) {
 			return false;
 		}
-		if (contentType.toLowerCase().startsWith("multipart/")) {
-			return true;
-		}
-
-		return false;
+		return contentType.toLowerCase().startsWith("multipart/");
 	}
 	// --------------------------------------------------------- Header end
 
@@ -417,7 +410,7 @@ public class ServletUtil {
 	 * @return Cookie map
 	 */
 	public static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
-		Map<String, Cookie> cookieMap = new HashMap<String, Cookie>();
+		Map<String, Cookie> cookieMap = new HashMap<>();
 		Cookie[] cookies = httpServletRequest.getCookies();
 		if (null == cookies) {
 			return null;

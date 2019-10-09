@@ -22,7 +22,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * 读取byte字节流，在末尾抛出异常
 	 * 
 	 * @return byte
-	 * @throws IOException
+	 * @throws IOException 读取异常
 	 */
 	public byte readByte() throws IOException {
 		int i = super.read();
@@ -53,7 +53,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * 输入流中读取边界
 	 * 
 	 * @return 边界
-	 * @throws IOException
+	 * @throws IOException 读取异常
 	 */
 	public byte[] readBoundary() throws IOException {
 		ByteArrayOutputStream boundaryOutput = new ByteArrayOutputStream(1024);
@@ -91,7 +91,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * 
 	 * @param encoding 字符集
 	 * @return 头部信息， 如果达到末尾则返回null
-	 * @throws IOException
+	 * @throws IOException 读取异常
 	 */
 	public UploadFileHeader readDataHeader(String encoding) throws IOException {
 		String dataHeader = readDataHeaderString(encoding);
@@ -136,7 +136,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * 
 	 * @param out 输出流
 	 * @return 复制的字节数
-	 * @throws IOException
+	 * @throws IOException 读取异常
 	 */
 	public int copy(OutputStream out) throws IOException {
 		int count = 0;
@@ -157,7 +157,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * @param out 输出流
 	 * @param limit 最大字节数
 	 * @return 复制的字节数
-	 * @throws IOException
+	 * @throws IOException 读取异常
 	 */
 	public int copy(OutputStream out, int limit) throws IOException {
 		int count = 0;
@@ -195,7 +195,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	/**
 	 * @param b byte
 	 * @return 是否为边界的标志
-	 * @throws IOException
+	 * @throws IOException 读取异常
 	 */
 	public boolean isBoundary(byte b) throws IOException {
 		int boundaryLen = boundary.length;

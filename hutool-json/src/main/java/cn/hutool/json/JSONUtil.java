@@ -31,16 +31,16 @@ import cn.hutool.json.serialize.JSONSerializer;
 
 /**
  * JSON工具类
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public final class JSONUtil {
 
 	// -------------------------------------------------------------------- Pause start
+
 	/**
 	 * 创建JSONObject
-	 * 
+	 *
 	 * @return JSONObject
 	 */
 	public static JSONObject createObj() {
@@ -49,7 +49,7 @@ public final class JSONUtil {
 
 	/**
 	 * 创建 JSONArray
-	 * 
+	 *
 	 * @return JSONArray
 	 */
 	public static JSONArray createArray() {
@@ -58,7 +58,7 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转JSONObject对象
-	 * 
+	 *
 	 * @param jsonStr JSON字符串
 	 * @return JSONObject
 	 */
@@ -69,7 +69,7 @@ public final class JSONUtil {
 	/**
 	 * JSON字符串转JSONObject对象<br>
 	 * 此方法会忽略空值，但是对JSON字符串不影响
-	 * 
+	 *
 	 * @param obj Bean对象或者Map
 	 * @return JSONObject
 	 */
@@ -79,8 +79,8 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转JSONObject对象
-	 * 
-	 * @param obj Bean对象或者Map
+	 *
+	 * @param obj             Bean对象或者Map
 	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
 	 * @return JSONObject
 	 * @since 3.0.9
@@ -91,10 +91,10 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转JSONObject对象
-	 * 
-	 * @param obj Bean对象或者Map
+	 *
+	 * @param obj             Bean对象或者Map
 	 * @param ignoreNullValue 是否忽略空值，如果source为JSON字符串，不忽略空值
-	 * @param isOrder 是否有序
+	 * @param isOrder         是否有序
 	 * @return JSONObject
 	 * @since 4.2.2
 	 */
@@ -104,7 +104,7 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转JSONArray
-	 * 
+	 *
 	 * @param jsonStr JSON字符串
 	 * @return JSONArray
 	 */
@@ -114,7 +114,7 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转JSONArray
-	 * 
+	 *
 	 * @param arrayOrCollection 数组或集合对象
 	 * @return JSONArray
 	 * @since 3.0.8
@@ -125,9 +125,9 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转JSONArray
-	 * 
+	 *
 	 * @param arrayOrCollection 数组或集合对象
-	 * @param ignoreNullValue 是否忽略空值
+	 * @param ignoreNullValue   是否忽略空值
 	 * @return JSONArray
 	 * @since 3.2.3
 	 */
@@ -141,7 +141,7 @@ public final class JSONUtil {
 	 * String: 转换为相应的对象<br>
 	 * Array Collection：转换为JSONArray<br>
 	 * Bean对象：转为JSONObject
-	 * 
+	 *
 	 * @param obj 对象
 	 * @return JSON
 	 */
@@ -171,7 +171,7 @@ public final class JSONUtil {
 
 	/**
 	 * XML字符串转为JSONObject
-	 * 
+	 *
 	 * @param xmlStr XML字符串
 	 * @return JSONObject
 	 */
@@ -181,7 +181,7 @@ public final class JSONUtil {
 
 	/**
 	 * Map转化为JSONObject
-	 * 
+	 *
 	 * @param map {@link Map}
 	 * @return JSONObject
 	 */
@@ -191,7 +191,7 @@ public final class JSONUtil {
 
 	/**
 	 * ResourceBundle转化为JSONObject
-	 * 
+	 *
 	 * @param bundle ResourceBundle文件
 	 * @return JSONObject
 	 */
@@ -209,10 +209,11 @@ public final class JSONUtil {
 	// -------------------------------------------------------------------- Pause end
 
 	// -------------------------------------------------------------------- Read start
+
 	/**
 	 * 读取JSON
-	 * 
-	 * @param file JSON文件
+	 *
+	 * @param file    JSON文件
 	 * @param charset 编码
 	 * @return JSON（包括JSONObject和JSONArray）
 	 * @throws IORuntimeException IO异常
@@ -223,8 +224,8 @@ public final class JSONUtil {
 
 	/**
 	 * 读取JSONObject
-	 * 
-	 * @param file JSON文件
+	 *
+	 * @param file    JSON文件
 	 * @param charset 编码
 	 * @return JSONObject
 	 * @throws IORuntimeException IO异常
@@ -235,8 +236,8 @@ public final class JSONUtil {
 
 	/**
 	 * 读取JSONArray
-	 * 
-	 * @param file JSON文件
+	 *
+	 * @param file    JSON文件
 	 * @param charset 编码
 	 * @return JSONArray
 	 * @throws IORuntimeException IO异常
@@ -247,10 +248,11 @@ public final class JSONUtil {
 	// -------------------------------------------------------------------- Read end
 
 	// -------------------------------------------------------------------- toString start
+
 	/**
 	 * 转为JSON字符串
-	 * 
-	 * @param json JSON
+	 *
+	 * @param json         JSON
 	 * @param indentFactor 每一级别的缩进
 	 * @return JSON字符串
 	 */
@@ -263,7 +265,7 @@ public final class JSONUtil {
 
 	/**
 	 * 转为JSON字符串
-	 * 
+	 *
 	 * @param json JSON
 	 * @return JSON字符串
 	 */
@@ -276,7 +278,7 @@ public final class JSONUtil {
 
 	/**
 	 * 转为JSON字符串
-	 * 
+	 *
 	 * @param json JSON
 	 * @return JSON字符串
 	 */
@@ -289,7 +291,7 @@ public final class JSONUtil {
 
 	/**
 	 * 转换为JSON字符串
-	 * 
+	 *
 	 * @param obj 被转为JSON的对象
 	 * @return JSON字符串
 	 */
@@ -305,7 +307,7 @@ public final class JSONUtil {
 
 	/**
 	 * 转换为格式化后的JSON字符串
-	 * 
+	 *
 	 * @param obj Bean对象
 	 * @return JSON字符串
 	 */
@@ -315,7 +317,7 @@ public final class JSONUtil {
 
 	/**
 	 * 转换为XML字符串
-	 * 
+	 *
 	 * @param json JSON
 	 * @return XML字符串
 	 */
@@ -328,10 +330,10 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
+	 *
+	 * @param <T>        Bean类型
 	 * @param jsonString JSON字符串
-	 * @param beanClass 实体类对象
+	 * @param beanClass  实体类对象
 	 * @return 实体类对象
 	 * @since 3.1.2
 	 */
@@ -341,22 +343,23 @@ public final class JSONUtil {
 
 	/**
 	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param json JSONObject
+	 *
+	 * @param <T>       Bean类型
+	 * @param json      JSONObject
 	 * @param beanClass 实体类对象
 	 * @return 实体类对象
 	 */
 	public static <T> T toBean(JSONObject json, Class<T> beanClass) {
 		return null == json ? null : json.toBean(beanClass);
 	}
-	
+
 	/**
 	 * JSON字符串转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param jsonString JSON字符串
+	 *
+	 * @param <T>           Bean类型
+	 * @param jsonString    JSON字符串
 	 * @param typeReference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
+	 * @param ignoreError   是否忽略错误
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
@@ -366,24 +369,25 @@ public final class JSONUtil {
 
 	/**
 	 * JSON字符串转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param jsonString JSON字符串
-	 * @param beanType 实体类对象类型
+	 *
+	 * @param <T>         Bean类型
+	 * @param jsonString  JSON字符串
+	 * @param beanType    实体类对象类型
+	 * @param ignoreError 是否忽略错误
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
 		return toBean(parseObj(jsonString), beanType, ignoreError);
 	}
-	
+
 	/**
 	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param json JSONObject
+	 *
+	 * @param <T>           Bean类型
+	 * @param json          JSONObject
 	 * @param typeReference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
-	 * @param ignoreError 是否忽略转换错误
+	 * @param ignoreError   是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 4.6.2
 	 */
@@ -393,10 +397,10 @@ public final class JSONUtil {
 
 	/**
 	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param json JSONObject
-	 * @param beanType 实体类对象类型
+	 *
+	 * @param <T>         Bean类型
+	 * @param json        JSONObject
+	 * @param beanType    实体类对象类型
 	 * @param ignoreError 是否忽略转换错误
 	 * @return 实体类对象
 	 * @since 4.3.2
@@ -411,8 +415,9 @@ public final class JSONUtil {
 
 	/**
 	 * 将JSONArray转换为Bean的List，默认为ArrayList
-	 * 
-	 * @param jsonArray JSONArray
+	 *
+	 * @param <T>         Bean类型
+	 * @param jsonArray   JSONArray
 	 * @param elementType List中元素类型
 	 * @return List
 	 * @since 4.0.7
@@ -427,17 +432,17 @@ public final class JSONUtil {
 	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
 	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
 	 * </ol>
-	 * 
+	 * <p>
 	 * 表达式栗子：
-	 * 
+	 *
 	 * <pre>
 	 * persion
 	 * persion.name
 	 * persons[3]
 	 * person.friends[5].name
 	 * </pre>
-	 * 
-	 * @param json {@link JSON}
+	 *
+	 * @param json       {@link JSON}
 	 * @param expression 表达式
 	 * @return 对象
 	 * @see JSON#getByPath(String)
@@ -454,19 +459,19 @@ public final class JSONUtil {
 	 * <li>.表达式，可以获取Bean对象中的属性（字段）值或者Map中key对应的值</li>
 	 * <li>[]表达式，可以获取集合等对象中对应index的值</li>
 	 * </ol>
-	 * 
+	 * <p>
 	 * 表达式栗子：
-	 * 
+	 *
 	 * <pre>
 	 * persion
 	 * persion.name
 	 * persons[3]
 	 * person.friends[5].name
 	 * </pre>
-	 * 
-	 * @param json JSON，可以为JSONObject或JSONArray
+	 *
+	 * @param json       JSON，可以为JSONObject或JSONArray
 	 * @param expression 表达式
-	 * @param value 值
+	 * @param value      值
 	 */
 	public static void putByPath(JSON json, String expression, Object value) {
 		json.putByPath(expression, value);
@@ -508,8 +513,8 @@ public final class JSONUtil {
 	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 * 
-	 * @param str 字符串
+	 *
+	 * @param str    字符串
 	 * @param writer Writer
 	 * @return Writer
 	 * @throws IOException IO异常
@@ -522,8 +527,8 @@ public final class JSONUtil {
 	 * 对所有双引号做转义处理（使用双反斜杠做转义）<br>
 	 * 为了能在HTML中较好的显示，会将&lt;/转义为&lt;\/<br>
 	 * JSON字符串中不能包含控制字符和未经转义的引号和反斜杠
-	 * 
-	 * @param str 字符串
+	 *
+	 * @param str    字符串
 	 * @param writer Writer
 	 * @param isWrap 是否使用双引号包装字符串
 	 * @return Writer
@@ -548,19 +553,19 @@ public final class JSONUtil {
 			b = c;
 			c = str.charAt(i);
 			switch (c) {
-			case '\\':
-			case '"':
-				writer.write("\\");
-				writer.write(c);
-				break;
-			case '/':
-				if (b == '<') {
-					writer.write('\\');
-				}
-				writer.write(c);
-				break;
-			default:
-				writer.write(escape(c));
+				case '\\':
+				case '"':
+					writer.write("\\");
+					writer.write(c);
+					break;
+				case '/':
+					if (b == '<') {
+						writer.write('\\');
+					}
+					writer.write(c);
+					break;
+				default:
+					writer.write(escape(c));
 			}
 		}
 		if (isWrap) {
@@ -571,7 +576,7 @@ public final class JSONUtil {
 
 	/**
 	 * 转义显示不可见字符
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return 转义后的字符串
 	 */
@@ -601,12 +606,12 @@ public final class JSONUtil {
 	 * <li>来自于java包 =》 字符串</li>
 	 * <li>其它 =》 尝试包装为JSONObject，否则返回<code>null</code></li>
 	 * </ul>
-	 * 
-	 * @param object 被包装的对象
+	 *
+	 * @param object     被包装的对象
 	 * @param jsonConfig JSON选项
 	 * @return 包装后的值，null表示此值需被忽略
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static Object wrap(Object object, JSONConfig jsonConfig) {
 		if (object == null) {
 			return jsonConfig.isIgnoreNullValue() ? null : JSONNull.NULL;
@@ -620,15 +625,15 @@ public final class JSONUtil {
 		) {
 			return object;
 		}
-		
+
 		// 自定义序列化
 		final JSONSerializer serializer = GlobalSerializeMapping.getSerializer(object.getClass());
-		if(null != serializer) {
+		if (null != serializer) {
 			final Type jsonType = TypeUtil.getTypeArgument(serializer.getClass());
-			if(null != jsonType) {
-				if(serializer instanceof JSONObjectSerializer) {
+			if (null != jsonType) {
+				if (serializer instanceof JSONObjectSerializer) {
 					serializer.serialize(new JSONObject(jsonConfig), object);
-				} else if(serializer instanceof JSONArraySerializer) {
+				} else if (serializer instanceof JSONArraySerializer) {
 					serializer.serialize(new JSONArray(jsonConfig), object);
 				}
 			}
@@ -654,7 +659,7 @@ public final class JSONUtil {
 			}
 
 			// Java内部类不做转换
-			if(ClassUtil.isJdkClass(object.getClass())) {
+			if (ClassUtil.isJdkClass(object.getClass())) {
 				return object.toString();
 			}
 
@@ -667,7 +672,7 @@ public final class JSONUtil {
 
 	/**
 	 * 格式化JSON字符串，此方法并不严格检查JSON的格式正确与否
-	 * 
+	 *
 	 * @param jsonStr JSON字符串
 	 * @return 格式化后的字符串
 	 * @since 3.1.2
@@ -678,7 +683,7 @@ public final class JSONUtil {
 
 	/**
 	 * 是否为JSON字符串，首尾都为大括号或中括号判定为JSON字符串
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
@@ -689,7 +694,7 @@ public final class JSONUtil {
 
 	/**
 	 * 是否为JSONObject字符串，首尾都为大括号判定为JSONObject字符串
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
@@ -703,7 +708,7 @@ public final class JSONUtil {
 
 	/**
 	 * 是否为JSONArray字符串，首尾都为中括号判定为JSONArray字符串
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return 是否为JSON字符串
 	 * @since 3.3.0
@@ -714,15 +719,15 @@ public final class JSONUtil {
 		}
 		return StrUtil.isWrap(str.trim(), '[', ']');
 	}
-	
+
 	/**
 	 * 是否为null对象，null的情况包括：
-	 * 
+	 *
 	 * <pre>
 	 * 1. {@code null}
 	 * 2. {@link JSONNull}
 	 * </pre>
-	 * 
+	 *
 	 * @param obj 对象
 	 * @return 是否为null
 	 * @since 4.5.7
@@ -734,7 +739,7 @@ public final class JSONUtil {
 	/**
 	 * XML转JSONObject<br>
 	 * 转换过程中一些信息可能会丢失，JSON中无法区分节点和属性，相同的节点将被处理为JSONArray。
-	 * 
+	 *
 	 * @param xml XML字符串
 	 * @return JSONObject
 	 * @since 4.0.8
@@ -742,11 +747,11 @@ public final class JSONUtil {
 	public static JSONObject xmlToJson(String xml) {
 		return XML.toJSONObject(xml);
 	}
-	
+
 	/**
 	 * 加入自定义的序列化器
-	 * 
-	 * @param type 对象类型
+	 *
+	 * @param type       对象类型
 	 * @param serializer 序列化器实现
 	 * @see GlobalSerializeMapping#put(Type, JSONArraySerializer)
 	 * @since 4.6.5
@@ -754,11 +759,11 @@ public final class JSONUtil {
 	public static void putSerializer(Type type, JSONArraySerializer<?> serializer) {
 		GlobalSerializeMapping.put(type, serializer);
 	}
-	
+
 	/**
 	 * 加入自定义的序列化器
-	 * 
-	 * @param type 对象类型
+	 *
+	 * @param type       对象类型
 	 * @param serializer 序列化器实现
 	 * @see GlobalSerializeMapping#put(Type, JSONObjectSerializer)
 	 * @since 4.6.5
@@ -766,11 +771,11 @@ public final class JSONUtil {
 	public static void putSerializer(Type type, JSONObjectSerializer<?> serializer) {
 		GlobalSerializeMapping.put(type, serializer);
 	}
-	
+
 	/**
 	 * 加入自定义的反序列化器
-	 * 
-	 * @param type 对象类型
+	 *
+	 * @param type         对象类型
 	 * @param deserializer 反序列化器实现
 	 * @see GlobalSerializeMapping#put(Type, JSONDeserializer)
 	 * @since 4.6.5
@@ -780,36 +785,37 @@ public final class JSONUtil {
 	}
 
 	// --------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 转义不可见字符<br>
 	 * 见：https://en.wikibooks.org/wiki/Unicode/Character_reference/0000-0FFF
-	 * 
+	 *
 	 * @param c 字符
 	 * @return 转义后的字符串
 	 */
 	private static String escape(char c) {
 		switch (c) {
-		case '\b':
-			return "\\b";
-		case '\t':
-			return "\\t";
-		case '\n':
-			return "\\n";
-		case '\f':
-			return "\\f";
-		case '\r':
-			return "\\r";
-		default:
-			if (c < StrUtil.C_SPACE || //
-					(c >= '\u0080' && c <= '\u00a0') || //
-					(c >= '\u2000' && c <= '\u2010') || //
-					(c >= '\u2028' && c <= '\u202F') || //
-					(c >= '\u2066' && c <= '\u206F')//
-			) {
-				return HexUtil.toUnicodeHex(c);
-			} else {
-				return Character.toString(c);
-			}
+			case '\b':
+				return "\\b";
+			case '\t':
+				return "\\t";
+			case '\n':
+				return "\\n";
+			case '\f':
+				return "\\f";
+			case '\r':
+				return "\\r";
+			default:
+				if (c < StrUtil.C_SPACE || //
+						(c >= '\u0080' && c <= '\u00a0') || //
+						(c >= '\u2000' && c <= '\u2010') || //
+						(c >= '\u2028' && c <= '\u202F') || //
+						(c >= '\u2066' && c <= '\u206F')//
+				) {
+					return HexUtil.toUnicodeHex(c);
+				} else {
+					return Character.toString(c);
+				}
 		}
 	}
 	// --------------------------------------------------------------------------------------------- Private method end

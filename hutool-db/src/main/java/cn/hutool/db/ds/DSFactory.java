@@ -141,7 +141,8 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * 创建数据源实现工厂<br>
 	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
 	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled
-	 * 
+	 *
+	 * @param setting 数据库配置项
 	 * @return 日志实现类
 	 */
 	public static DSFactory create(Setting setting) {
@@ -154,7 +155,8 @@ public abstract class DSFactory implements Closeable, Serializable{
 	 * 创建数据源实现工厂<br>
 	 * 此方法通过“试错”方式查找引入项目的连接池库，按照优先级寻找，一旦寻找到则创建对应的数据源工厂<br>
 	 * 连接池优先级：Hikari &gt; Druid &gt; Tomcat &gt; Dbcp &gt; C3p0 &gt; Hutool Pooled
-	 * 
+	 *
+	 * @param setting 数据库配置项
 	 * @return 日志实现类
 	 * @since 4.1.3
 	 */

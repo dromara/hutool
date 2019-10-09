@@ -80,7 +80,8 @@ public class UploadFile {
 	/**
 	 * 将上传的文件写入目标文件<br>
 	 * 写入后原临时文件会被删除
-	 * 
+	 *
+	 * @param destination 目标文件
 	 * @return 目标文件
 	 */
 	public File write(File destination) throws IOException {
@@ -151,7 +152,7 @@ public class UploadFile {
 	// ---------------------------------------------------------------- properties
 
 	/**
-	 * @return 上传文件的大小，< 0 表示未上传
+	 * @return 上传文件的大小，&gt; 0 表示未上传
 	 */
 	public int size() {
 		return size;
@@ -176,6 +177,7 @@ public class UploadFile {
 	 * 处理上传表单流，提取出文件
 	 * 
 	 * @param input 上传表单的流
+	 * @return 是否成功
 	 * @throws IOException IO异常
 	 */
 	protected boolean processStream(MultipartRequestInputStream input) throws IOException {
