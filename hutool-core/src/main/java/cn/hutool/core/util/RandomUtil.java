@@ -392,6 +392,22 @@ public class RandomUtil {
 	}
 
 	/**
+	 * 获得一个随机的字符串（只包含数字和字符） 并排除指定字符串
+	 *
+	 * @param length 字符串的长度
+	 * @param elemData 要排除的字符串
+	 * @return 随机字符串
+	 */
+	public static String randomStringWithoutStr(int length,String elemData) {
+		String baseStr=BASE_CHAR_NUMBER;
+		baseStr=StrUtil.removeAll(baseStr,elemData.toCharArray());
+		if(baseStr.equals("")){
+			return "";
+		}
+		return randomString(baseStr, length);
+	}
+
+	/**
 	 * 获得一个只包含数字的字符串
 	 * 
 	 * @param length 字符串的长度
