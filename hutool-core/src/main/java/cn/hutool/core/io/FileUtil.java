@@ -2325,7 +2325,7 @@ public class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readLines(URL url, String charset) throws IORuntimeException {
-		return readLines(url, charset, new ArrayList<String>());
+		return readLines(url, charset, new ArrayList<>());
 	}
 
 	/**
@@ -2337,7 +2337,7 @@ public class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readLines(URL url, Charset charset) throws IORuntimeException {
-		return readLines(url, charset, new ArrayList<String>());
+		return readLines(url, charset, new ArrayList<>());
 	}
 
 	/**
@@ -2361,7 +2361,7 @@ public class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readLines(String path, String charset) throws IORuntimeException {
-		return readLines(path, charset, new ArrayList<String>());
+		return readLines(path, charset, new ArrayList<>());
 	}
 
 	/**
@@ -2374,7 +2374,7 @@ public class FileUtil {
 	 * @since 3.1.1
 	 */
 	public static List<String> readLines(String path, Charset charset) throws IORuntimeException {
-		return readLines(path, charset, new ArrayList<String>());
+		return readLines(path, charset, new ArrayList<>());
 	}
 
 	/**
@@ -2398,7 +2398,7 @@ public class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readLines(File file, String charset) throws IORuntimeException {
-		return readLines(file, charset, new ArrayList<String>());
+		return readLines(file, charset, new ArrayList<>());
 	}
 
 	/**
@@ -2410,7 +2410,7 @@ public class FileUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static List<String> readLines(File file, Charset charset) throws IORuntimeException {
-		return readLines(file, charset, new ArrayList<String>());
+		return readLines(file, charset, new ArrayList<>());
 	}
 
 	/**
