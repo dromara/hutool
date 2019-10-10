@@ -109,21 +109,21 @@ Hutool的目标是使用一个工具方法代替一段复杂代码，从而最�
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>4.6.9</version>
+    <version>5.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'cn.hutool:hutool-all:4.6.9'
+compile 'cn.hutool:hutool-all:5.0.0'
 ```
 
 ### 非Maven项目
 
 点击以下任一链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/4.6.9/)
-- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/4.6.9/)
+- [Maven中央库1](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.0.0/)
+- [Maven中央库2](http://repo2.maven.org/maven2/cn/hutool/hutool-all/5.0.0/)
 
 > 注意
 > Hutool支持JDK7+，对Android平台没有测试，不能保证所有工具类获工具方法可用。

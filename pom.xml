@@ -8,7 +8,7 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>4.6.9</version>
+	<version>5.0.0-SNAPSHOT</version>
 	<name>hutool</name>
 	<description>提供丰富的Java工具方法</description>
 	<url>https://github.com/looly/hutool</url>
@@ -41,7 +41,7 @@
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 
 		<!-- versions -->
-		<compile.version>7</compile.version>
+		<compile.version>8</compile.version>
 		<junit.version>4.12</junit.version>
 	</properties>
 

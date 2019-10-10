@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>4.6.9</version>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-captcha</artifactId>
