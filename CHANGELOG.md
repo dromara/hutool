@@ -9,3 +9,4 @@
 * 【all】        升级JDK最低支持到8
 
 ### Bug修复
+* 【http】       修复Cookie中host失效导致的问题

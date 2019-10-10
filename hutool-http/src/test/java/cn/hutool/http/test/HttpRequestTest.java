@@ -38,7 +38,7 @@ public class HttpRequestTest {
 		String body = res.body();
 		Console.log(res.getCookies());
 	}
-	
+
 	@Test
 	@Ignore
 	public void getWithParamsTest() {

@@ -62,10 +62,10 @@ public class URLUtilTest {
 
 	@Test
 	public void getHostTest() throws MalformedURLException {
-		String url = "//www.hutool.cn//aaa/\\bbb?a=1&b=2";
+		String url = "https://www.hutool.cn//aaa/\\bbb?a=1&b=2";
 		String normalize = URLUtil.normalize(url);
 		URI host = URLUtil.getHost(new URL(normalize));
-		Assert.assertEquals("www.hutool.cn", host.toString());
+		Assert.assertEquals("https://www.hutool.cn", host.toString());
 	}
 
 	@Test

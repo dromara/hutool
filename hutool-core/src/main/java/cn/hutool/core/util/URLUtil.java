@@ -26,9 +26,9 @@ import cn.hutool.core.net.URLEncoder;
 
 /**
  * 统一资源定位符相关工具类
- * 
+ *
  * @author xiaoleilu
- * 
+ *
  */
 public class URLUtil {
 
@@ -61,7 +61,7 @@ public class URLUtil {
 
 	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
-	 * 
+	 *
 	 * @param url URL
 	 * @return URL对象
 	 */
@@ -71,7 +71,7 @@ public class URLUtil {
 
 	/**
 	 * 通过一个字符串形式的URL地址创建URL对象
-	 * 
+	 *
 	 * @param url URL
 	 * @param handler {@link URLStreamHandler}
 	 * @return URL对象
@@ -100,7 +100,7 @@ public class URLUtil {
 
 	/**
 	 * 将URL字符串转换为URL对象，并做必要验证
-	 * 
+	 *
 	 * @param urlStr URL字符串
 	 * @return URL
 	 * @since 4.1.9
@@ -111,7 +111,7 @@ public class URLUtil {
 
 	/**
 	 * 将URL字符串转换为URL对象，并做必要验证
-	 * 
+	 *
 	 * @param urlStr URL字符串
 	 * @param handler {@link URLStreamHandler}
 	 * @return URL
@@ -127,10 +127,10 @@ public class URLUtil {
 			throw new UtilException(e);
 		}
 	}
-	
+
 	/**
 	 * 单独编码URL中的空白符，空白符编码为%20
-	 * 
+	 *
 	 * @param urlStr URL字符串
 	 * @return 编码后的字符串
 	 * @since 4.5.14
@@ -156,7 +156,7 @@ public class URLUtil {
 
 	/**
 	 * 获得URL
-	 * 
+	 *
 	 * @param pathBaseClassLoader 相对路径（相对于classes）
 	 * @return URL
 	 * @see ResourceUtil#getResource(String)
@@ -167,7 +167,7 @@ public class URLUtil {
 
 	/**
 	 * 获得URL
-	 * 
+	 *
 	 * @param path 相对给定 class所在的路径
 	 * @param clazz 指定class
 	 * @return URL
@@ -179,7 +179,7 @@ public class URLUtil {
 
 	/**
 	 * 获得URL，常用于使用绝对路径时的情况
-	 * 
+	 *
 	 * @param file URL对应的文件对象
 	 * @return URL
 	 * @exception UtilException MalformedURLException
@@ -195,7 +195,7 @@ public class URLUtil {
 
 	/**
 	 * 获得URL，常用于使用绝对路径时的情况
-	 * 
+	 *
 	 * @param files URL对应的文件对象
 	 * @return URL
 	 * @exception UtilException MalformedURLException
@@ -214,7 +214,7 @@ public class URLUtil {
 	}
 
 	/**
-	 * 获取URL中域名部分
+	 * 获取URL中域名部分，只保留URL中的协议（Protocol）、Host，其它为null。
 	 *
 	 * @param url URL
 	 * @return 域名的URI
@@ -224,12 +224,17 @@ public class URLUtil {
 		if(null == url){
 			return null;
 		}
-		return toURI(url.getHost());
+
+		try {
+			return new URI(url.getProtocol(), url.getHost(), null, null);
+		} catch (URISyntaxException e) {
+			throw new UtilException(e);
+		}
 	}
 
 	/**
 	 * 补全相对路径
-	 * 
+	 *
 	 * @param baseUrl 基准URL
 	 * @param relativePath 相对URL
 	 * @return 相对路径
@@ -253,7 +258,7 @@ public class URLUtil {
 	/**
 	 * 编码URL，默认使用UTF-8编码<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
-	 * 
+	 *
 	 * @param url URL
 	 * @return 编码后的URL
 	 * @exception UtilException UnsupportedEncodingException
@@ -265,7 +270,7 @@ public class URLUtil {
 	/**
 	 * 编码URL<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。
-	 * 
+	 *
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 编码后的URL
@@ -283,7 +288,7 @@ public class URLUtil {
 	 * 编码URL，默认使用UTF-8编码<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 * 
+	 *
 	 * @param url URL
 	 * @return 编码后的URL
 	 * @exception UtilException UnsupportedEncodingException
@@ -297,7 +302,7 @@ public class URLUtil {
 	 * 编码URL，默认使用UTF-8编码<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 * 
+	 *
 	 * @param url URL
 	 * @return 编码后的URL
 	 * @exception UtilException UnsupportedEncodingException
@@ -311,7 +316,7 @@ public class URLUtil {
 	 * 编码字符为 application/x-www-form-urlencoded<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 * 
+	 *
 	 * @param url 被编码内容
 	 * @param charset 编码
 	 * @return 编码后的字符
@@ -331,7 +336,7 @@ public class URLUtil {
 	 * 编码字符为URL中查询语句<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 * 
+	 *
 	 * @param url 被编码内容
 	 * @param charset 编码
 	 * @return 编码后的字符
@@ -351,7 +356,7 @@ public class URLUtil {
 	 * 编码URL字符为 application/x-www-form-urlencoded<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于URL自动编码，类似于浏览器中键入地址自动编码，对于像类似于“/”的字符不再编码
-	 * 
+	 *
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 编码后的URL
@@ -368,7 +373,7 @@ public class URLUtil {
 	 * 编码URL<br>
 	 * 将需要转换的内容（ASCII码形式之外的内容），用十六进制表示法转换出来，并在之前加上%开头。<br>
 	 * 此方法用于POST请求中的请求体自动编码，转义大部分特殊字符
-	 * 
+	 *
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 编码后的URL
@@ -381,7 +386,7 @@ public class URLUtil {
 	/**
 	 * 解码URL<br>
 	 * 将%开头的16进制表示的内容解码。
-	 * 
+	 *
 	 * @param url URL
 	 * @return 解码后的URL
 	 * @exception UtilException UnsupportedEncodingException
@@ -393,7 +398,7 @@ public class URLUtil {
 
 	/**
 	 * 解码application/x-www-form-urlencoded字符
-	 * 
+	 *
 	 * @param content 被解码内容
 	 * @param charset 编码
 	 * @return 编码后的字符
@@ -409,7 +414,7 @@ public class URLUtil {
 	/**
 	 * 解码URL<br>
 	 * 将%开头的16进制表示的内容解码。
-	 * 
+	 *
 	 * @param url URL
 	 * @param charset 编码
 	 * @return 解码后的URL
@@ -428,7 +433,7 @@ public class URLUtil {
 
 	/**
 	 * 获得path部分<br>
-	 * 
+	 *
 	 * @param uriStr URI路径
 	 * @return path
 	 * @exception UtilException 包装URISyntaxException
@@ -447,7 +452,7 @@ public class URLUtil {
 	 * 从URL对象中获取不被编码的路径Path<br>
 	 * 对于本地路径，URL对象的getPath方法对于包含中文或空格时会被编码，导致本读路径读取错误。<br>
 	 * 此方法将URL转为URI后获取路径用于解决路径被编码的问题
-	 * 
+	 *
 	 * @param url {@link URL}
 	 * @return 路径
 	 * @since 3.0.8
@@ -469,7 +474,7 @@ public class URLUtil {
 
 	/**
 	 * 转URL为URI
-	 * 
+	 *
 	 * @param url URL
 	 * @return URI
 	 * @exception UtilException 包装URISyntaxException
@@ -508,7 +513,7 @@ public class URLUtil {
 
 	/**
 	 * 转字符串为URI
-	 * 
+	 *
 	 * @param location 字符串路径
 	 * @param isEncode 是否编码参数中的特殊字符（默认UTF-8编码）
 	 * @return URI
@@ -529,7 +534,7 @@ public class URLUtil {
 	/**
 	 * 提供的URL是否为文件<br>
 	 * 文件协议包括"file", "vfsfile" 或 "vfs".
-	 * 
+	 *
 	 * @param url {@link URL}
 	 * @return 是否为文件
 	 * @since 3.0.9
@@ -543,7 +548,7 @@ public class URLUtil {
 
 	/**
 	 * 提供的URL是否为jar包URL 协议包括： "jar", "zip", "vfszip" 或 "wsjar".
-	 * 
+	 *
 	 * @param url {@link URL}
 	 * @return 是否为jar包URL
 	 */
@@ -557,7 +562,7 @@ public class URLUtil {
 
 	/**
 	 * 提供的URL是否为Jar文件URL 判断依据为file协议且扩展名为.jar
-	 * 
+	 *
 	 * @param url the URL to check
 	 * @return whether the URL has been identified as a JAR file URL
 	 * @since 4.1
@@ -569,7 +574,7 @@ public class URLUtil {
 
 	/**
 	 * 从URL中获取流
-	 * 
+	 *
 	 * @param url {@link URL}
 	 * @return InputStream流
 	 * @since 3.2.1
@@ -585,7 +590,7 @@ public class URLUtil {
 
 	/**
 	 * 获得Reader
-	 * 
+	 *
 	 * @param url {@link URL}
 	 * @param charset 编码
 	 * @return {@link BufferedReader}
@@ -597,7 +602,7 @@ public class URLUtil {
 
 	/**
 	 * 从URL中获取JarFile
-	 * 
+	 *
 	 * @param url URL
 	 * @return JarFile
 	 * @since 4.1.5
@@ -613,11 +618,11 @@ public class URLUtil {
 
 	/**
 	 * 标准化URL字符串，包括：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 多个/替换为一个
 	 * </pre>
-	 * 
+	 *
 	 * @param url URL字符串
 	 * @return 标准化后的URL字符串
 	 */
@@ -627,11 +632,11 @@ public class URLUtil {
 
 	/**
 	 * 标准化URL字符串，包括：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 多个/替换为一个
 	 * </pre>
-	 * 
+	 *
 	 * @param url URL字符串
 	 * @param isEncodeBody 是否对URL中body部分的中文和特殊字符做转义（不包括http:和/）
 	 * @return 标准化后的URL字符串

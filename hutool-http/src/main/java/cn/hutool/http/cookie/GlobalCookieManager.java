@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 全局Cooki管理器，只针对Hutool请求有效
+ * 全局Cookie管理器，只针对Hutool请求有效
  * 
  * @author Looly
  * @since 4.5.15
@@ -53,7 +53,7 @@ public class GlobalCookieManager {
 	 * @since 4.6.9
 	 */
 	public static List<HttpCookie> getCookies(HttpConnection conn){
-		return cookieManager.getCookieStore().get(getDomain(conn));
+		return cookieManager.getCookieStore().get(getURI(conn));
 	}
 
 	/**
@@ -69,11 +69,12 @@ public class GlobalCookieManager {
 
 		Map<String, List<String>> cookieHeader;
 		try {
-			cookieHeader = cookieManager.get(getDomain(conn), new HashMap<String, List<String>>(0));
+			cookieHeader = cookieManager.get(getURI(conn), new HashMap<String, List<String>>(0));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		
+
+
 		// 不覆盖模式回填Cookie头，这样用户定义的Cookie将优先
 		conn.header(cookieHeader, false);
 	}
@@ -88,20 +89,20 @@ public class GlobalCookieManager {
 			// 全局Cookie管理器关闭
 			return;
 		}
-		
+
 		try {
-			cookieManager.put(getDomain(conn), conn.headers());
+			cookieManager.put(getURI(conn), conn.headers());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
 	}
 
 	/**
-	 * 获取连接的URL中域名信息，例如http://www.hutool.cn/aaa/bb.html，得到www.hutool.cn
+	 * 获取连接的URL中URI信息
 	 * @param conn HttpConnection
 	 * @return URI
 	 */
-	private static URI getDomain(HttpConnection conn){
-		return URLUtil.getHost(conn.getUrl());
+	private static URI getURI(HttpConnection conn){
+		return URLUtil.toURI(conn.getUrl());
 	}
 }
