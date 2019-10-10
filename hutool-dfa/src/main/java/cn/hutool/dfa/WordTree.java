@@ -160,7 +160,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 			return null;
 		}
 		
-		List<String> findedWords = new ArrayList<String>();
+		List<String> foundWords = new ArrayList<>();
 		WordTree current = this;
 		int length = text.length();
 		//存放查找到的字符缓存。完整出现一个词时加到findedWords中，否则清空
@@ -187,10 +187,10 @@ public class WordTree extends HashMap<Character, WordTree>{
 				wordBuffer.append(currentChar);
 				if(current.isEnd(currentChar)){
 					//到达单词末尾，关键词成立，从此词的下一个位置开始查找
-					findedWords.add(wordBuffer.toString());
-					if(limit > 0 && findedWords.size() >= limit){
+					foundWords.add(wordBuffer.toString());
+					if(limit > 0 && foundWords.size() >= limit){
 						//超过匹配限制个数，直接返回
-						return findedWords;
+						return foundWords;
 					}
 					if(false == isDensityMatch){
 						//如果非密度匹配，跳过匹配到的词
@@ -208,7 +208,7 @@ public class WordTree extends HashMap<Character, WordTree>{
 			}
 			current = this;
 		}
-		return findedWords;
+		return foundWords;
 	}
 	
 	

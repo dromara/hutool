@@ -93,6 +93,15 @@ public class DfaTest {
 		List<String> all = tree.matchAll("AAAAAAAt-ioBBBBBBB");
 		Assert.assertEquals(all, CollectionUtil.newArrayList("t-io"));
 	}
+
+	@Test
+	public void aTest(){
+		WordTree tree = new WordTree();
+		tree.addWord("women");
+		String text = "a WOMEN todo.".toLowerCase();
+		List<String> matchAll = tree.matchAll(text, -1, false, false);
+		Assert.assertEquals("[women]", matchAll.toString());
+	}
 	
 	// ----------------------------------------------------------------------------------------------------------
 	/**
