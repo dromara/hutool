@@ -136,7 +136,7 @@ public class ConverterRegistry implements Serializable{
 	 * @return 转换器
 	 */
 	public <T> Converter<T> getConverter(Type type, boolean isCustomFirst) {
-		Converter<T> converter = null;
+		Converter<T> converter;
 		if (isCustomFirst) {
 			converter = this.getCustomConverter(type);
 			if (null == converter) {
