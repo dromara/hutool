@@ -6,6 +6,7 @@ package cn.hutool.core.lang;
  *
  * @param <T> 匹配的对象类型
  */
+@FunctionalInterface
 public interface Matcher<T>{
 	/**
 	 * 给定对象是否匹配

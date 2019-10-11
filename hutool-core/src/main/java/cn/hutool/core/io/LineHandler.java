@@ -5,6 +5,7 @@ package cn.hutool.core.io;
  * @author Looly
  *
  */
+@FunctionalInterface
 public interface LineHandler {
 	/**
 	 * 处理一行数据，可以编辑后存入指定地方

@@ -11,6 +11,7 @@ package cn.hutool.core.lang.func;
  * @param <P> 参数类型
  * @since 3.1.0
  */
+@FunctionalInterface
 public interface VoidFunc<P> {
 	
 	/**

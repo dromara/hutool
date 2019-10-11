@@ -7,6 +7,7 @@ import java.util.List;
  * @author looly
  *
  */
+@FunctionalInterface
 public interface RowHandler {
 	
 	/**

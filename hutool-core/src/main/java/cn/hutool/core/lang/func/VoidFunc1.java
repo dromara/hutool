@@ -10,6 +10,7 @@ package cn.hutool.core.lang.func;
  *
  * @since 3.2.3
  */
+@FunctionalInterface
 public interface VoidFunc1<P> {
 	
 	/**

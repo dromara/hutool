@@ -12,6 +12,7 @@ package cn.hutool.core.lang.func;
  * @param <R> 返回值类型
  * @since 3.1.0
  */
+@FunctionalInterface
 public interface Func<P, R> {
 	/**
 	 * 执行函数
