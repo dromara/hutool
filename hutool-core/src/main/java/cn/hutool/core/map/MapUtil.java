@@ -62,7 +62,7 @@ public class MapUtil {
 	 * @since 4.6.3
 	 */
 	public static <K, V> Map<K, V> emptyIfNull(Map<K, V> set) {
-		return (null == set) ? Collections.<K, V>emptyMap() : set;
+		return (null == set) ? Collections.emptyMap() : set;
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class MapUtil {
 	 */
 	public static <K, V> HashMap<K, V> newHashMap(int size, boolean isOrder) {
 		int initialCapacity = (int) (size / DEFAULT_LOAD_FACTOR) + 1;
-		return isOrder ? new LinkedHashMap<K, V>(initialCapacity) : new HashMap<K, V>(initialCapacity);
+		return isOrder ? new LinkedHashMap<>(initialCapacity) : new HashMap<>(initialCapacity);
 	}
 
 	/**
@@ -649,54 +649,23 @@ public class MapUtil {
 	 * @since 3.2.2
 	 */
 	public static <T> Map<T, T> reverse(Map<T, T> map) {
-		return filter(map, new Editor<Map.Entry<T, T>>() {
+		return filter(map, (Editor<Entry<T, T>>) t -> new Entry<T, T>() {
+
 			@Override
-			public Entry<T, T> edit(final Entry<T, T> t) {
-				return new Entry<T, T>() {
+			public T getKey() {
+				return t.getValue();
+			}
 
-					@Override
-					public T getKey() {
-						return t.getValue();
-					}
+			@Override
+			public T getValue() {
+				return t.getKey();
+			}
 
-					@Override
-					public T getValue() {
-						return t.getKey();
-					}
-
-					@Override
-					public T setValue(T value) {
-						throw new UnsupportedOperationException("Unsupported setValue method !");
-					}
-				};
+			@Override
+			public T setValue(T value) {
+				throw new UnsupportedOperationException("Unsupported setValue method !");
 			}
 		});
-	}
-
-	/**
-	 * 逆转Map的key和value
-	 *
-	 * @param <K> 键类型，目标的值类型
-	 * @param <V> 值类型，目标的键类型
-	 * @param map 被转换的Map
-	 * @return 逆转后的Map
-	 * @deprecated 请使用{@link MapUtil#reverse(Map)} 代替
-	 */
-	@Deprecated
-	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
-		Map<V, K> inverseMap;
-		if (map instanceof LinkedHashMap) {
-			inverseMap = new LinkedHashMap<>(map.size());
-		} else if (map instanceof TreeMap) {
-			inverseMap = new TreeMap<>();
-		} else {
-			inverseMap = new HashMap<>(map.size());
-		}
-
-		for (Entry<K, V> entry : map.entrySet()) {
-			inverseMap.put(entry.getValue(), entry.getKey());
-		}
-		return inverseMap;
 	}
 
 	/**
@@ -775,7 +744,7 @@ public class MapUtil {
 	 * @return map创建类
 	 */
 	public static <K, V> MapBuilder<K, V> builder() {
-		return builder(new HashMap<K, V>());
+		return builder(new HashMap<>());
 	}
 
 	/**
@@ -815,13 +784,7 @@ public class MapUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> getAny(Map<K, V> map, final K... keys) {
-		return filter(map, new Filter<Entry<K, V>>() {
-
-			@Override
-			public boolean accept(Entry<K, V> entry) {
-				return ArrayUtil.contains(keys, entry.getKey());
-			}
-		});
+		return filter(map, (Filter<Entry<K, V>>) entry -> ArrayUtil.contains(keys, entry.getKey()));
 	}
 
 	/**

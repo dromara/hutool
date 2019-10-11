@@ -527,36 +527,6 @@ public class ImgUtil {
 	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
 	 * 此方法并不关闭流
 	 *
-	 * @param srcStream  源图像流
-	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
-	 * @param destStream 目标图像输出流
-	 * @since 3.0.9
-	 * @deprecated 请使用{@link #write(Image, String, ImageOutputStream)}
-	 */
-	@Deprecated
-	public static void convert(ImageInputStream srcStream, String formatName, ImageOutputStream destStream) {
-		write(read(srcStream), formatName, destStream);
-	}
-
-	/**
-	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
-	 * 此方法并不关闭流
-	 *
-	 * @param srcImage        源图像流
-	 * @param formatName      包含格式非正式名称的 String：如JPG、JPEG、GIF等
-	 * @param destImageStream 目标图像输出流
-	 * @since 3.0.9
-	 * @deprecated 请使用{@link #write(Image, String, ImageOutputStream)}
-	 */
-	@Deprecated
-	public static void convert(Image srcImage, String formatName, ImageOutputStream destImageStream) {
-		convert(srcImage, formatName, destImageStream, false);
-	}
-
-	/**
-	 * 图像类型转换：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
-	 * 此方法并不关闭流
-	 *
 	 * @param srcImage        源图像流
 	 * @param formatName      包含格式非正式名称的 String：如JPG、JPEG、GIF等
 	 * @param destImageStream 目标图像输出流
@@ -1425,7 +1395,21 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 写出图像
+	 * 按照目标格式写出图像：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
+	 *
+	 * @param srcStream  源图像流
+	 * @param formatName 包含格式非正式名称的 String：如JPG、JPEG、GIF等
+	 * @param destStream 目标图像输出流
+	 * @since 5.0.0
+	 */
+	public static void write(ImageInputStream srcStream, String formatName, ImageOutputStream destStream) {
+		write(read(srcStream), formatName, destStream);
+	}
+
+	/**
+	 * 写出图像：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
 	 *
 	 * @param image     {@link Image}
 	 * @param imageType 图片类型（图片扩展名）
@@ -1438,7 +1422,8 @@ public class ImgUtil {
 	}
 
 	/**
-	 * 写出图像为指定格式
+	 * 写出图像为指定格式：GIF=》JPG、GIF=》PNG、PNG=》JPG、PNG=》GIF(X)、BMP=》PNG<br>
+	 * 此方法并不关闭流
 	 *
 	 * @param image           {@link Image}
 	 * @param imageType       图片类型（图片扩展名）

@@ -1,28 +1,8 @@
 package cn.hutool.core.collection;
 
 import java.lang.reflect.Type;
-import java.util.AbstractCollection;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -70,7 +50,7 @@ public class CollUtil {
 	 * @since 4.6.3
 	 */
 	public static <T> Set<T> emptyIfNull(Set<T> set) {
-		return (null == set) ? Collections.<T>emptySet() : set;
+		return (null == set) ? Collections.emptySet() : set;
 	}
 
 	/**
@@ -83,7 +63,7 @@ public class CollUtil {
 	 * @since 4.6.3
 	 */
 	public static <T> List<T> emptyIfNull(List<T> set) {
-		return (null == set) ? Collections.<T>emptyList() : set;
+		return (null == set) ? Collections.emptyList() : set;
 	}
 
 	/**
@@ -476,10 +456,10 @@ public class CollUtil {
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(boolean isSorted, T... ts) {
 		if (null == ts) {
-			return isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
+			return isSorted ? new LinkedHashSet<>() : new HashSet<>();
 		}
 		int initialCapacity = Math.max((int) (ts.length / .75f) + 1, 16);
-		final HashSet<T> set = isSorted ? new LinkedHashSet<T>(initialCapacity) : new HashSet<T>(initialCapacity);
+		final HashSet<T> set = isSorted ? new LinkedHashSet<>(initialCapacity) : new HashSet<>(initialCapacity);
 		Collections.addAll(set, ts);
 		return set;
 	}
@@ -520,7 +500,7 @@ public class CollUtil {
 		if (null == iter) {
 			return newHashSet(isSorted, (T[]) null);
 		}
-		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
+		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
 		while (iter.hasNext()) {
 			set.add(iter.next());
 		}
@@ -540,7 +520,7 @@ public class CollUtil {
 		if (null == enumeration) {
 			return newHashSet(isSorted, (T[]) null);
 		}
-		final HashSet<T> set = isSorted ? new LinkedHashSet<T>() : new HashSet<T>();
+		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
 		while (enumeration.hasMoreElements()) {
 			set.add(enumeration.nextElement());
 		}
@@ -558,7 +538,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked) {
-		return isLinked ? new LinkedList<T>() : new ArrayList<T>();
+		return isLinked ? new LinkedList<>() : new ArrayList<>();
 	}
 
 	/**
@@ -575,7 +555,7 @@ public class CollUtil {
 		if (ArrayUtil.isEmpty(values)) {
 			return list(isLinked);
 		}
-		final List<T> arrayList = isLinked ? new LinkedList<T>() : new ArrayList<T>(values.length);
+		final List<T> arrayList = isLinked ? new LinkedList<>() : new ArrayList<>(values.length);
 		Collections.addAll(arrayList, values);
 		return arrayList;
 	}
@@ -751,7 +731,7 @@ public class CollUtil {
 	 * @return {@link CopyOnWriteArrayList}
 	 */
 	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
-		return (null == collection) ? (new CopyOnWriteArrayList<T>()) : (new CopyOnWriteArrayList<T>(collection));
+		return (null == collection) ? (new CopyOnWriteArrayList<>()) : (new CopyOnWriteArrayList<>(collection));
 	}
 
 	/**
@@ -1028,7 +1008,7 @@ public class CollUtil {
 			return list;
 		}
 
-		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<>() : new ArrayList<>(list.size());
 		T modified;
 		for (T t : list) {
 			modified = editor.edit(t);
@@ -1092,7 +1072,7 @@ public class CollUtil {
 		if (null == list || null == filter) {
 			return list;
 		}
-		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<T>() : new ArrayList<T>(list.size());
+		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<>() : new ArrayList<>(list.size());
 		for (T t : list) {
 			if (filter.accept(t)) {
 				list2.add(t);
@@ -1141,12 +1121,7 @@ public class CollUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends Collection<E>, E> T removeNull(T collection) {
-		return filter(collection, new Filter<E>() {
-			@Override
-			public boolean accept(E e) {
-				return null != e;
-			}
-		});
+		return filter(collection, Objects::nonNull);
 	}
 
 	/**
@@ -1159,12 +1134,7 @@ public class CollUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends Collection<E>, E extends CharSequence> T removeEmpty(T collection) {
-		return filter(collection, new Filter<E>() {
-			@Override
-			public boolean accept(E e) {
-				return StrUtil.isNotEmpty(e);
-			}
-		});
+		return filter(collection, StrUtil::isNotEmpty);
 	}
 
 	/**
@@ -1177,12 +1147,7 @@ public class CollUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends Collection<E>, E extends CharSequence> T removeBlank(T collection) {
-		return filter(collection, new Filter<E>() {
-			@Override
-			public boolean accept(E e) {
-				return StrUtil.isNotBlank(e);
-			}
-		});
+		return filter(collection, StrUtil::isNotBlank);
 	}
 
 	/**
@@ -1248,14 +1213,11 @@ public class CollUtil {
 	 * @since 4.5.7
 	 */
 	public static List<Object> getFieldValues(Iterable<?> collection, final String fieldName, boolean ignoreNull) {
-		return extract(collection, new Editor<Object>() {
-			@Override
-			public Object edit(Object bean) {
-				if (bean instanceof Map) {
-					return ((Map<?, ?>) bean).get(fieldName);
-				} else {
-					return ReflectUtil.getFieldValue(bean, fieldName);
-				}
+		return extract(collection, bean -> {
+			if (bean instanceof Map) {
+				return ((Map<?, ?>) bean).get(fieldName);
+			} else {
+				return ReflectUtil.getFieldValue(bean, fieldName);
 			}
 		}, ignoreNull);
 	}
@@ -1310,19 +1272,16 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> T findOneByField(Iterable<T> collection, final String fieldName, final Object fieldValue) {
-		return findOne(collection, new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				if (t instanceof Map) {
-					final Map<?, ?> map = (Map<?, ?>) t;
-					final Object value = map.get(fieldName);
-					return ObjectUtil.equal(value, fieldValue);
-				}
-
-				// 普通Bean
-				final Object value = ReflectUtil.getFieldValue(t, fieldName);
+		return findOne(collection, t -> {
+			if (t instanceof Map) {
+				final Map<?, ?> map = (Map<?, ?>) t;
+				final Object value = map.get(fieldName);
 				return ObjectUtil.equal(value, fieldValue);
 			}
+
+			// 普通Bean
+			final Object value = ReflectUtil.getFieldValue(t, fieldName);
+			return ObjectUtil.equal(value, fieldValue);
 		});
 	}
 
@@ -2294,21 +2253,17 @@ public class CollUtil {
 	 * @param collection 被排序的{@link Collection}
 	 * @return 排序后的Set
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <K, V> List<Entry<K, V>> sortEntryToList(Collection<Entry<K, V>> collection) {
 		List<Entry<K, V>> list = new LinkedList<>(collection);
-		Collections.sort(list, new Comparator<Entry<K, V>>() {
+		Collections.sort(list, (o1, o2) -> {
+			V v1 = o1.getValue();
+			V v2 = o2.getValue();
 
-			@SuppressWarnings({"rawtypes", "unchecked"})
-			@Override
-			public int compare(Entry<K, V> o1, Entry<K, V> o2) {
-				V v1 = o1.getValue();
-				V v2 = o2.getValue();
-
-				if (v1 instanceof Comparable) {
-					return ((Comparable) v1).compareTo(v2);
-				} else {
-					return v1.toString().compareTo(v2.toString());
-				}
+			if (v1 instanceof Comparable) {
+				return ((Comparable) v1).compareTo(v2);
+			} else {
+				return v1.toString().compareTo(v2.toString());
 			}
 		});
 		return list;
@@ -2377,12 +2332,7 @@ public class CollUtil {
 		}
 		if (null == hash) {
 			// 默认hash算法，按照元素的hashCode分组
-			hash = new Hash<T>() {
-				@Override
-				public int hash(T t) {
-					return null == t ? 0 : t.hashCode();
-				}
-			};
+			hash = t -> (null == t) ? 0 : t.hashCode();
 		}
 
 		int index;
