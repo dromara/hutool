@@ -22,11 +22,5 @@
 			<artifactId>hutool-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.6</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 </project>

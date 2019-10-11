@@ -369,6 +369,34 @@ public class ExcelWriteTest {
 
 	@Test
 	@Ignore
+	public void writeBeanTest2() {
+		OrderExcel order1 = new OrderExcel();
+		order1.setId("1");
+		order1.setNum("123");
+		order1.setBody("body1");
+
+		OrderExcel order2 = new OrderExcel();
+		order1.setId("2");
+		order1.setNum("456");
+		order1.setBody("body2");
+
+		List<OrderExcel> rows = CollUtil.newArrayList(order1, order2);
+		// 通过工具类创建writer
+		String file = "f:/test/writeBeanTest2.xlsx";
+		FileUtil.del(file);
+		ExcelWriter writer = ExcelUtil.getWriter(file);
+		// 自定义标题
+		writer.addHeaderAlias("id", "编号");
+		writer.addHeaderAlias("num", "序号");
+		writer.addHeaderAlias("body", "内容");
+		// 一次性写出内容，使用默认样式
+		writer.write(rows, true);
+		// 关闭writer，释放内存
+		writer.close();
+	}
+
+	@Test
+	@Ignore
 	public void writeCellValueTest() {
 		ExcelWriter writer = new ExcelWriter("d:/cellValueTest.xls");
 		writer.writeCellValue(3, 5, "aaa");
