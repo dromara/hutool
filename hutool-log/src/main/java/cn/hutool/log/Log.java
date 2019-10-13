@@ -1,5 +1,6 @@
 package cn.hutool.log;
 
+import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.log.level.DebugLog;
 import cn.hutool.log.level.ErrorLog;
 import cn.hutool.log.level.InfoLog;
@@ -14,6 +15,37 @@ import cn.hutool.log.level.WarnLog;
  *
  */
 public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
+
+	//------------------------------------------------------------------------ Static method start
+	/**
+	 * 获得Log
+	 *
+	 * @param clazz 日志发出的类
+	 * @return Log
+	 */
+	static Log get(Class<?> clazz) {
+		return LogFactory.get(clazz);
+	}
+
+	/**
+	 * 获得Log
+	 *
+	 * @param name 自定义的日志发出者名称
+	 * @return Log
+	 * @since 5.0.0
+	 */
+	public static Log get(String name) {
+		return LogFactory.get(name);
+	}
+
+	/**
+	 * @return 获得日志，自动判定日志发出者
+	 * @since 5.0.0
+	 */
+	static Log get() {
+		return LogFactory.get(CallerUtil.getCallerCaller());
+	}
+	//------------------------------------------------------------------------ Static method start
 
 	/**
 	 * @return 日志对象的Name
@@ -37,17 +69,17 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 
 	/**
 	 * 打印 指定级别的日志
-	 * 
+	 *
 	 * @param level 级别
 	 * @param t 错误对象
 	 * @param format 消息模板
 	 * @param arguments 参数
 	 */
 	void log(Level level, Throwable t, String format, Object... arguments);
-	
+
 	/**
 	 * 打印 ERROR 等级的日志
-	 * 
+	 *
 	 * @param fqcn 完全限定类名(Fully Qualified Class Name)，用于定位日志位置
 	 * @param level 级别
 	 * @param t 错误对象
