@@ -27,7 +27,7 @@ public class BitMapBloomFilter implements BloomFilter{
 	 */
 	public BitMapBloomFilter(int m) {
 		int mNum =NumberUtil.div(String.valueOf(m), String.valueOf(5)).intValue();
-		long size = (long) (1L * mNum * 1024 * 1024 * 8);
+		long size = mNum * 1024 * 1024 * 8;
 		
 		filters = new BloomFilter[]{
 			new DefaultFilter(size),
