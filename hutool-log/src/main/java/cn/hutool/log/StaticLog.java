@@ -220,7 +220,9 @@ public final class StaticLog {
 	 * 
 	 * @param clazz 日志发出的类
 	 * @return Log
+	 * @deprecated 请使用 {@link Log#get(Class)}
 	 */
+	@Deprecated
 	public static Log get(Class<?> clazz) {
 		return LogFactory.get(clazz);
 	}
@@ -230,14 +232,18 @@ public final class StaticLog {
 	 * 
 	 * @param name 自定义的日志发出者名称
 	 * @return Log
+	 * @deprecated 请使用 {@link Log#get(String)}
 	 */
+	@Deprecated
 	public static Log get(String name) {
 		return LogFactory.get(name);
 	}
 
 	/**
 	 * @return 获得日志，自动判定日志发出者
+	 * @deprecated 请使用 {@link Log#get()}
 	 */
+	@Deprecated
 	public static Log get() {
 		return LogFactory.get(CallerUtil.getCallerCaller());
 	}

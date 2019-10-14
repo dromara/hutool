@@ -429,9 +429,8 @@ public class HttpConnection {
 	 * 当返回错误代码时，获得错误内容流
 	 * 
 	 * @return 错误内容
-	 * @throws IOException IO异常
 	 */
-	public InputStream getErrorStream() throws IOException {
+	public InputStream getErrorStream() {
 		if (null != this.conn) {
 			return this.conn.getErrorStream();
 		}
@@ -514,8 +513,6 @@ public class HttpConnection {
 	 * 初始化http或https请求参数<br>
 	 * 有些时候htts请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
 	 * 
-	 * @param hostnameVerifier 域名验证器，非https传入null
-	 * @param ssf SSLSocketFactory，非https传入null
 	 * @return {@link HttpURLConnection}，https返回{@link HttpsURLConnection}
 	 */
 	private HttpURLConnection openHttp() throws IOException {
@@ -532,7 +529,7 @@ public class HttpConnection {
 	 * 建立连接
 	 * 
 	 * @return {@link URLConnection}
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	private URLConnection openConnection() throws IOException {
 		return (null == this.proxy) ? url.openConnection() : url.openConnection(this.proxy);

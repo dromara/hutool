@@ -1,5 +1,6 @@
 package cn.hutool.crypto;
 
+import java.io.File;
 import java.io.InputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -32,6 +33,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
@@ -624,12 +626,73 @@ public class KeyUtil {
 	 * KeyStore文件用于数字证书的密钥对保存<br>
 	 * see: http://snowolf.iteye.com/blog/391931
 	 *
+	 * @param keyFile  证书文件
+	 * @param password 密码
+	 * @return {@link KeyStore}
+	 * @since 5.0.0
+	 */
+	public static KeyStore readJKSKeyStore(File keyFile, char[] password) {
+		return readKeyStore(KEY_TYPE_JKS, keyFile, password);
+	}
+
+	/**
+	 * 读取密钥库(Java Key Store，JKS) KeyStore文件<br>
+	 * KeyStore文件用于数字证书的密钥对保存<br>
+	 * see: http://snowolf.iteye.com/blog/391931
+	 *
 	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
 	 * @param password 密码
 	 * @return {@link KeyStore}
 	 */
 	public static KeyStore readJKSKeyStore(InputStream in, char[] password) {
 		return readKeyStore(KEY_TYPE_JKS, in, password);
+	}
+
+	/**
+	 * 读取PKCS12 KeyStore文件<br>
+	 * KeyStore文件用于数字证书的密钥对保存
+	 *
+	 * @param keyFile  证书文件
+	 * @param password 密码
+	 * @return {@link KeyStore}
+	 * @since 5.0.0
+	 */
+	public static KeyStore readPKCS12KeyStore(File keyFile, char[] password) {
+		return readKeyStore(KEY_TYPE_PKCS12, keyFile, password);
+	}
+
+	/**
+	 * 读取PKCS12 KeyStore文件<br>
+	 * KeyStore文件用于数字证书的密钥对保存
+	 *
+	 * @param in       {@link InputStream} 如果想从文件读取.keystore文件，使用 {@link FileUtil#getInputStream(java.io.File)} 读取
+	 * @param password 密码
+	 * @return {@link KeyStore}
+	 * @since 5.0.0
+	 */
+	public static KeyStore readPKCS12KeyStore(InputStream in, char[] password) {
+		return readKeyStore(KEY_TYPE_PKCS12, in, password);
+	}
+
+	/**
+	 * 读取KeyStore文件<br>
+	 * KeyStore文件用于数字证书的密钥对保存<br>
+	 * see: http://snowolf.iteye.com/blog/391931
+	 *
+	 * @param type     类型
+	 * @param keyFile  证书文件
+	 * @param password 密码，null表示无密码
+	 * @return {@link KeyStore}
+	 * @since 5.0.0
+	 */
+	public static KeyStore readKeyStore(String type, File keyFile, char[] password) {
+		InputStream in = null;
+		try {
+			in = FileUtil.getInputStream(keyFile);
+			return readKeyStore(type, in, password);
+		} finally {
+			IoUtil.close(in);
+		}
 	}
 
 	/**

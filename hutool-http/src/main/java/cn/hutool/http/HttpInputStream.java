@@ -18,7 +18,7 @@ import cn.hutool.core.util.StrUtil;
 public class HttpInputStream extends InputStream {
 
 	/** 原始流 */
-	private volatile InputStream in;
+	private InputStream in;
 
 	/**
 	 * 构造

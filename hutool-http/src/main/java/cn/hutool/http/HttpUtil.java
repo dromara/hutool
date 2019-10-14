@@ -1,21 +1,5 @@
 package cn.hutool.http;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
@@ -25,27 +9,36 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.StrBuilder;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.*;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 /**
  * Http请求工具类
- * 
+ *
  * @author xiaoleilu
  */
 public class HttpUtil {
 
-	/** 正则：Content-Type中的编码信息 */
+	/**
+	 * 正则：Content-Type中的编码信息
+	 */
 	public static final Pattern CHARSET_PATTERN = Pattern.compile("charset\\s*=\\s*([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
-	/** 正则：匹配meta标签的编码信息 */
+	/**
+	 * 正则：匹配meta标签的编码信息
+	 */
 	public static final Pattern META_CHARSET_PATTERN = Pattern.compile("<meta[^>]*?charset\\s*=\\s*['\"]?([a-z0-9-]*)", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * 检测是否https
-	 * 
+	 *
 	 * @param url URL
 	 * @return 是否https
 	 */
@@ -55,9 +48,9 @@ public class HttpUtil {
 
 	/**
 	 * 创建Http请求对象
-	 * 
+	 *
 	 * @param method 方法枚举{@link Method}
-	 * @param url 请求的URL，可以使HTTP或者HTTPS
+	 * @param url    请求的URL，可以使HTTP或者HTTPS
 	 * @return {@link HttpRequest}
 	 * @since 3.0.9
 	 */
@@ -67,7 +60,7 @@ public class HttpUtil {
 
 	/**
 	 * 创建Http GET请求对象
-	 * 
+	 *
 	 * @param url 请求的URL，可以使HTTP或者HTTPS
 	 * @return {@link HttpRequest}
 	 * @since 3.2.0
@@ -78,7 +71,7 @@ public class HttpUtil {
 
 	/**
 	 * 创建Http POST请求对象
-	 * 
+	 *
 	 * @param url 请求的URL，可以使HTTP或者HTTPS
 	 * @return {@link HttpRequest}
 	 * @since 3.2.0
@@ -89,8 +82,8 @@ public class HttpUtil {
 
 	/**
 	 * 发送get请求
-	 * 
-	 * @param urlString 网址
+	 *
+	 * @param urlString     网址
 	 * @param customCharset 自定义请求字符集，如果字符集获取不到，使用此字符集
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
@@ -100,7 +93,7 @@ public class HttpUtil {
 
 	/**
 	 * 发送get请求
-	 * 
+	 *
 	 * @param urlString 网址
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 */
@@ -110,9 +103,9 @@ public class HttpUtil {
 
 	/**
 	 * 发送get请求
-	 * 
+	 *
 	 * @param urlString 网址
-	 * @param timeout 超时时长，-1表示默认超时，单位毫秒
+	 * @param timeout   超时时长，-1表示默认超时，单位毫秒
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @since 3.2.0
 	 */
@@ -122,9 +115,9 @@ public class HttpUtil {
 
 	/**
 	 * 发送get请求
-	 * 
+	 *
 	 * @param urlString 网址
-	 * @param paramMap post表单数据
+	 * @param paramMap  post表单数据
 	 * @return 返回数据
 	 */
 	public static String get(String urlString, Map<String, Object> paramMap) {
@@ -133,10 +126,10 @@ public class HttpUtil {
 
 	/**
 	 * 发送get请求
-	 * 
+	 *
 	 * @param urlString 网址
-	 * @param paramMap post表单数据
-	 * @param timeout 超时时长，-1表示默认超时，单位毫秒
+	 * @param paramMap  post表单数据
+	 * @param timeout   超时时长，-1表示默认超时，单位毫秒
 	 * @return 返回数据
 	 * @since 3.3.0
 	 */
@@ -146,9 +139,9 @@ public class HttpUtil {
 
 	/**
 	 * 发送post请求
-	 * 
+	 *
 	 * @param urlString 网址
-	 * @param paramMap post表单数据
+	 * @param paramMap  post表单数据
 	 * @return 返回数据
 	 */
 	public static String post(String urlString, Map<String, Object> paramMap) {
@@ -157,10 +150,10 @@ public class HttpUtil {
 
 	/**
 	 * 发送post请求
-	 * 
+	 *
 	 * @param urlString 网址
-	 * @param paramMap post表单数据
-	 * @param timeout 超时时长，-1表示默认超时，单位毫秒
+	 * @param paramMap  post表单数据
+	 * @param timeout   超时时长，-1表示默认超时，单位毫秒
 	 * @return 返回数据
 	 * @since 3.2.0
 	 */
@@ -171,14 +164,14 @@ public class HttpUtil {
 	/**
 	 * 发送post请求<br>
 	 * 请求体body参数支持两种类型：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 标准参数，例如 a=1&amp;b=2 这种格式
 	 * 2. Rest模式，此时body需要传入一个JSON或者XML字符串，Hutool会自动绑定其对应的Content-Type
 	 * </pre>
-	 * 
+	 *
 	 * @param urlString 网址
-	 * @param body post表单数据
+	 * @param body      post表单数据
 	 * @return 返回数据
 	 */
 	public static String post(String urlString, String body) {
@@ -188,15 +181,15 @@ public class HttpUtil {
 	/**
 	 * 发送post请求<br>
 	 * 请求体body参数支持两种类型：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 标准参数，例如 a=1&amp;b=2 这种格式
 	 * 2. Rest模式，此时body需要传入一个JSON或者XML字符串，Hutool会自动绑定其对应的Content-Type
 	 * </pre>
-	 * 
+	 *
 	 * @param urlString 网址
-	 * @param body post表单数据
-	 * @param timeout 超时时长，-1表示默认超时，单位毫秒
+	 * @param body      post表单数据
+	 * @param timeout   超时时长，-1表示默认超时，单位毫秒
 	 * @return 返回数据
 	 * @since 3.2.0
 	 */
@@ -205,10 +198,11 @@ public class HttpUtil {
 	}
 
 	// ---------------------------------------------------------------------------------------- download
+
 	/**
 	 * 下载远程文本
-	 * 
-	 * @param url 请求的url
+	 *
+	 * @param url               请求的url
 	 * @param customCharsetName 自定义的字符集
 	 * @return 文本
 	 */
@@ -218,8 +212,8 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文本
-	 * 
-	 * @param url 请求的url
+	 *
+	 * @param url           请求的url
 	 * @param customCharset 自定义的字符集，可以使用{@link CharsetUtil#charset} 方法转换
 	 * @return 文本
 	 */
@@ -229,10 +223,10 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文本
-	 * 
-	 * @param url 请求的url
+	 *
+	 * @param url           请求的url
 	 * @param customCharset 自定义的字符集，可以使用{@link CharsetUtil#charset} 方法转换
-	 * @param streamPress 进度条 {@link StreamProgress}
+	 * @param streamPress   进度条 {@link StreamProgress}
 	 * @return 文本
 	 */
 	public static String downloadString(String url, Charset customCharset, StreamProgress streamPress) {
@@ -247,8 +241,8 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文件
-	 * 
-	 * @param url 请求的url
+	 *
+	 * @param url  请求的url
 	 * @param dest 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
 	 */
@@ -258,8 +252,8 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文件
-	 * 
-	 * @param url 请求的url
+	 *
+	 * @param url      请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @return 文件大小
 	 */
@@ -269,10 +263,10 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文件
-	 * 
-	 * @param url 请求的url
+	 *
+	 * @param url      请求的url
 	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @param timeout 超时，单位毫秒，-1表示默认超时
+	 * @param timeout  超时，单位毫秒，-1表示默认超时
 	 * @return 文件大小
 	 * @since 4.0.4
 	 */
@@ -282,9 +276,9 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文件
-	 * 
-	 * @param url 请求的url
-	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 *
+	 * @param url            请求的url
+	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
 	 * @param streamProgress 进度条
 	 * @return 文件大小
 	 */
@@ -294,10 +288,10 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文件
-	 * 
-	 * @param url 请求的url
-	 * @param destFile 目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
-	 * @param timeout 超时，单位毫秒，-1表示默认超时
+	 *
+	 * @param url            请求的url
+	 * @param destFile       目标文件或目录，当为目录时，取URL中的文件名，取不到使用编码后的URL做为文件名
+	 * @param timeout        超时，单位毫秒，-1表示默认超时
 	 * @param streamProgress 进度条
 	 * @return 文件大小
 	 * @since 4.0.4
@@ -318,9 +312,9 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文件
-	 * 
-	 * @param url 请求的url
-	 * @param out 将下载内容写到输出流中 {@link OutputStream}
+	 *
+	 * @param url        请求的url
+	 * @param out        将下载内容写到输出流中 {@link OutputStream}
 	 * @param isCloseOut 是否关闭输出流
 	 * @return 文件大小
 	 */
@@ -330,10 +324,10 @@ public class HttpUtil {
 
 	/**
 	 * 下载远程文件
-	 * 
-	 * @param url 请求的url
-	 * @param out 将下载内容写到输出流中 {@link OutputStream}
-	 * @param isCloseOut 是否关闭输出流
+	 *
+	 * @param url            请求的url
+	 * @param out            将下载内容写到输出流中 {@link OutputStream}
+	 * @param isCloseOut     是否关闭输出流
 	 * @param streamProgress 进度条
 	 * @return 文件大小
 	 */
@@ -354,7 +348,7 @@ public class HttpUtil {
 
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式，不做编码
-	 * 
+	 *
 	 * @param paramMap 表单数据
 	 * @return url参数
 	 */
@@ -365,8 +359,8 @@ public class HttpUtil {
 	/**
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
 	 * 编码键和值对
-	 * 
-	 * @param paramMap 表单数据
+	 *
+	 * @param paramMap    表单数据
 	 * @param charsetName 编码
 	 * @return url参数
 	 */
@@ -378,13 +372,13 @@ public class HttpUtil {
 	 * 将Map形式的Form表单数据转换为Url参数形式<br>
 	 * paramMap中如果key为空（null和""）会被忽略，如果value为null，会被做为空白符（""）<br>
 	 * 会自动url编码键和值
-	 * 
+	 *
 	 * <pre>
 	 * key1=v1&amp;key2=&amp;key3=v3
 	 * </pre>
-	 * 
+	 *
 	 * @param paramMap 表单数据
-	 * @param charset 编码
+	 * @param charset  编码
 	 * @return url参数
 	 */
 	public static String toParams(Map<String, ?> paramMap, Charset charset) {
@@ -423,16 +417,15 @@ public class HttpUtil {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 对URL参数做编码，只编码键和值<br>
 	 * 提供的值可以是url附带参数，但是不能只是url
-	 * 
+	 *
 	 * <p>注意，此方法只能标准化整个URL，并不适合于单独编码参数值</p>
-	 * 
-	 * 
+	 *
 	 * @param paramsStr url参数，可以包含url本身
-	 * @param charset 编码
+	 * @param charset   编码
 	 * @return 编码后的url和参数
 	 * @since 4.0.1
 	 */
@@ -458,17 +451,17 @@ public class HttpUtil {
 		}
 
 		paramPart = normalizeParams(paramPart, charset);
-		
+
 		return StrUtil.isBlank(urlPart) ? paramPart : urlPart + "?" + paramPart;
 	}
-	
+
 	/**
 	 * 标准化参数字符串，即URL中？后的部分
-	 * 
+	 *
 	 * <p>注意，此方法只能标准化整个URL，并不适合于单独编码参数值</p>
-	 * 
+	 *
 	 * @param paramPart 参数字符串
-	 * @param charset 编码
+	 * @param charset   编码
 	 * @return 标准化的参数字符串
 	 * @since 4.5.2
 	 */
@@ -523,9 +516,9 @@ public class HttpUtil {
 
 	/**
 	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
-	 * 
+	 *
 	 * @param paramsStr 参数字符串（或者带参数的Path）
-	 * @param charset 字符集
+	 * @param charset   字符集
 	 * @return 参数Map
 	 * @since 4.0.2
 	 */
@@ -542,9 +535,9 @@ public class HttpUtil {
 
 	/**
 	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
-	 * 
+	 *
 	 * @param paramsStr 参数字符串（或者带参数的Path）
-	 * @param charset 字符集
+	 * @param charset   字符集
 	 * @return 参数Map
 	 */
 	public static Map<String, List<String>> decodeParams(String paramsStr, String charset) {
@@ -558,7 +551,7 @@ public class HttpUtil {
 			paramsStr = StrUtil.subSuf(paramsStr, pathEndPos + 1);
 		}
 
-		final Map<String, List<String>> params = new LinkedHashMap<String, List<String>>();
+		final Map<String, List<String>> params = new LinkedHashMap<>();
 		final int len = paramsStr.length();
 		String name = null;
 		int pos = 0; // 未处理字符开始位置
@@ -601,10 +594,10 @@ public class HttpUtil {
 	/**
 	 * 将表单数据加到URL中（用于GET表单提交）<br>
 	 * 表单的键值对会被url编码，但是url中原参数不会被编码
-	 * 
-	 * @param url URL
-	 * @param form 表单数据
-	 * @param charset 编码
+	 *
+	 * @param url            URL
+	 * @param form           表单数据
+	 * @param charset        编码
 	 * @param isEncodeParams 是否对键和值做转义处理
 	 * @return 合成后的URL
 	 */
@@ -620,11 +613,11 @@ public class HttpUtil {
 
 	/**
 	 * 将表单数据字符串加到URL中（用于GET表单提交）
-	 * 
-	 * @param url URL
+	 *
+	 * @param url         URL
 	 * @param queryString 表单数据字符串
-	 * @param charset 编码
-	 * @param isEncode 是否对键和值做转义处理
+	 * @param charset     编码
+	 * @param isEncode    是否对键和值做转义处理
 	 * @return 拼接后的字符串
 	 */
 	public static String urlWithForm(String url, String queryString, Charset charset, boolean isEncode) {
@@ -662,7 +655,7 @@ public class HttpUtil {
 	/**
 	 * 从Http连接的头信息中获得字符集<br>
 	 * 从ContentType中获取
-	 * 
+	 *
 	 * @param conn HTTP连接对象
 	 * @return 字符集
 	 */
@@ -676,14 +669,13 @@ public class HttpUtil {
 	/**
 	 * 从流中读取内容<br>
 	 * 首先尝试使用charset编码读取内容（如果为空默认UTF-8），如果isGetCharsetFromContent为true，则通过正则在正文中获取编码信息，转换为指定编码；
-	 * 
-	 * @param in 输入流
-	 * @param charset 字符集
+	 *
+	 * @param in                      输入流
+	 * @param charset                 字符集
 	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
 	 * @return 内容
-	 * @throws IOException IO异常
 	 */
-	public static String getString(InputStream in, Charset charset, boolean isGetCharsetFromContent) throws IOException {
+	public static String getString(InputStream in, Charset charset, boolean isGetCharsetFromContent) {
 		final byte[] contentBytes = IoUtil.readBytes(in);
 		return getString(contentBytes, charset, isGetCharsetFromContent);
 	}
@@ -691,9 +683,9 @@ public class HttpUtil {
 	/**
 	 * 从流中读取内容<br>
 	 * 首先尝试使用charset编码读取内容（如果为空默认UTF-8），如果isGetCharsetFromContent为true，则通过正则在正文中获取编码信息，转换为指定编码；
-	 * 
-	 * @param contentBytes 内容byte数组
-	 * @param charset 字符集
+	 *
+	 * @param contentBytes            内容byte数组
+	 * @param charset                 字符集
 	 * @param isGetCharsetFromContent 是否从返回内容中获得编码信息
 	 * @return 内容
 	 */
@@ -727,11 +719,11 @@ public class HttpUtil {
 		}
 		return content;
 	}
-	
+
 	/**
 	 * 根据文件扩展名获得MimeType
-	 * 
-	 * @param filePath 文件路径或文件名
+	 *
+	 * @param filePath     文件路径或文件名
 	 * @param defaultValue 当获取MimeType为null时的默认值
 	 * @return MimeType
 	 * @see FileUtil#getMimeType(String)
@@ -743,7 +735,7 @@ public class HttpUtil {
 
 	/**
 	 * 根据文件扩展名获得MimeType
-	 * 
+	 *
 	 * @param filePath 文件路径或文件名
 	 * @return MimeType
 	 * @see FileUtil#getMimeType(String)
@@ -754,16 +746,16 @@ public class HttpUtil {
 
 	/**
 	 * 从请求参数的body中判断请求的Content-Type类型，支持的类型有：
-	 * 
+	 *
 	 * <pre>
 	 * 1. application/json
 	 * 1. application/xml
 	 * </pre>
-	 * 
+	 *
 	 * @param body 请求参数体
 	 * @return Content-Type类型，如果无法判断返回null
-	 * @since 3.2.0
 	 * @see ContentType#get(String)
+	 * @since 3.2.0
 	 */
 	public static String getContentTypeByRequestBody(String body) {
 		final ContentType contentType = ContentType.get(body);
@@ -773,20 +765,17 @@ public class HttpUtil {
 
 	/**
 	 * 将键值对加入到值为List类型的Map中
-	 * 
-	 * @param params 参数
-	 * @param name key
-	 * @param value value
+	 *
+	 * @param params  参数
+	 * @param name    key
+	 * @param value   value
 	 * @param charset 编码
 	 */
 	private static void addParam(Map<String, List<String>> params, String name, String value, String charset) {
 		name = URLUtil.decode(name, charset);
 		value = URLUtil.decode(value, charset);
-		List<String> values = params.get(name);
-		if (values == null) {
-			values = new ArrayList<String>(1); // 一般是一个参数
-			params.put(name, values);
-		}
+		final List<String> values = params.computeIfAbsent(name, k -> new ArrayList<>(1));
+		// 一般是一个参数
 		values.add(value);
 	}
 

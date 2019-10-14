@@ -1549,6 +1549,12 @@ public class FileUtil {
 		String pathToUse = StrUtil.removePrefixIgnoreCase(path, URLUtil.CLASSPATH_URL_PREFIX);
 		// 去除file:前缀
 		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
+
+		// 识别home目录形式，并转换为绝对路径
+		if(pathToUse.startsWith("~")){
+			pathToUse = pathToUse.replace("~", getUserHomePath());
+		}
+
 		// 统一使用斜杠
 		pathToUse = pathToUse.replaceAll("[/\\\\]+", StrUtil.SLASH).trim();
 		//兼容Windows下的共享目录路径（原始路径如果以\\开头，则保留这种路径）

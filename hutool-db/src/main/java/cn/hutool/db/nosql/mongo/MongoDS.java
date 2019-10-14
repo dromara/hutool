@@ -1,11 +1,11 @@
 package cn.hutool.db.nosql.mongo;
 
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bson.Document;
-
+import cn.hutool.core.exceptions.NotInitedException;
+import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.DbRuntimeException;
+import cn.hutool.log.Log;
+import cn.hutool.setting.Setting;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientOptions.Builder;
@@ -13,14 +13,11 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 
-import cn.hutool.core.exceptions.NotInitedException;
-import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.DbRuntimeException;
-import cn.hutool.log.Log;
-import cn.hutool.log.StaticLog;
-import cn.hutool.setting.Setting;
+import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MongoDB工具类
@@ -29,7 +26,7 @@ import cn.hutool.setting.Setting;
  *
  */
 public class MongoDS implements Closeable {
-	private final static Log log = StaticLog.get();
+	private final static Log log = Log.get();
 
 	/** 默认配置文件 */
 	public final static String MONGO_CONFIG_PATH = "config/mongo.setting";
@@ -188,7 +185,7 @@ public class MongoDS implements Closeable {
 			setting = new Setting(MONGO_CONFIG_PATH, true);
 		}
 
-		final List<ServerAddress> addrList = new ArrayList<ServerAddress>();
+		final List<ServerAddress> addrList = new ArrayList<>();
 		for (String group : groups) {
 			addrList.add(createServerAddress(group));
 		}

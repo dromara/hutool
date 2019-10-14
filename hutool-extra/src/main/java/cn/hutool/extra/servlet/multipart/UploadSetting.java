@@ -14,7 +14,7 @@ import cn.hutool.setting.Setting;
  *
  */
 public class UploadSetting {
-	private static Log log = StaticLog.get();
+	private static final Log log = Log.get();
 
 	/** 默认的配置文件路径（相对ClassPath） */
 	public final static String DEFAULT_SETTING_PATH = "config/upload.setting";

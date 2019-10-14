@@ -1,43 +1,41 @@
 package cn.hutool.extra.ssh;
 
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.LocalPortGenerater;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import com.jcraft.jsch.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.net.LocalPortGenerater;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
-
 /**
  * Jsch工具类<br>
  * Jsch是Java Secure Channel的缩写。JSch是一个SSH2的纯Java实现。<br>
  * 它允许你连接到一个SSH服务器，并且可以使用端口转发，X11转发，文件传输等。<br>
- * 
+ *
  * @author Looly
  * @since 4.0.0
  */
 public class JschUtil {
 
-	/** 不使用SSH的值 */
+	/**
+	 * 不使用SSH的值
+	 */
 	public final static String SSH_NONE = "none";
 
-	/** 本地端口生成器 */
+	/**
+	 * 本地端口生成器
+	 */
 	private static final LocalPortGenerater portGenerater = new LocalPortGenerater(10000);
 
 	/**
 	 * 生成一个本地端口，用于远程端口映射
-	 * 
+	 *
 	 * @return 未被使用的本地端口
 	 */
 	public static int generateLocalPort() {
@@ -46,7 +44,7 @@ public class JschUtil {
 
 	/**
 	 * 获得一个SSH会话，重用已经使用的会话
-	 * 
+	 *
 	 * @param sshHost 主机
 	 * @param sshPort 端口
 	 * @param sshUser 用户名
@@ -58,8 +56,22 @@ public class JschUtil {
 	}
 
 	/**
+	 * 获得一个SSH会话，重用已经使用的会话
+	 *
+	 * @param sshHost        主机
+	 * @param sshPort        端口
+	 * @param sshUser        用户名
+	 * @param privateKeyPath 私钥路径
+	 * @param passphrase     私钥密码
+	 * @return SSH会话
+	 */
+	public static Session getSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+		return JschSessionPool.INSTANCE.getSession(sshHost, sshPort, sshUser, privateKeyPath, passphrase);
+	}
+
+	/**
 	 * 打开一个新的SSH会话
-	 * 
+	 *
 	 * @param sshHost 主机
 	 * @param sshPort 端口
 	 * @param sshUser 用户名
@@ -77,26 +89,19 @@ public class JschUtil {
 	}
 
 	/**
-	 * 新建一个新的SSH会话
-	 * 
-	 * @param sshHost 主机
-	 * @param sshPort 端口
-	 * @param sshUser 机用户名
-	 * @param sshPass 密码
+	 * 打开一个新的SSH会话
+	 *
+	 * @param sshHost        主机
+	 * @param sshPort        端口
+	 * @param sshUser        用户名
+	 * @param privateKeyPath 私钥的路径
+	 * @param passphrase     私钥文件的密码，可以为null
 	 * @return SSH会话
-	 * @since 4.5.2
 	 */
-	public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
-		if (StrUtil.isEmpty(sshHost) || sshPort < 0 || StrUtil.isEmpty(sshUser) || StrUtil.isEmpty(sshPass)) {
-			return null;
-		}
-
-		Session session;
+	public static Session openSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+		final Session session = createSession(sshHost, sshPort, sshUser, privateKeyPath, passphrase);
 		try {
-			session = new JSch().getSession(sshUser, sshHost, sshPort);
-			session.setPassword(sshPass);
-			// 设置第一次登陆的时候提示，可选值：(ask | yes | no)
-			session.setConfig("StrictHostKeyChecking", "no");
+			session.connect();
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}
@@ -104,12 +109,83 @@ public class JschUtil {
 	}
 
 	/**
+	 * 新建一个新的SSH会话，此方法并不打开会话（既不调用connect方法）
+	 *
+	 * @param sshHost 主机
+	 * @param sshPort 端口
+	 * @param sshUser 用户名，如果为null，默认root
+	 * @param sshPass 密码
+	 * @return SSH会话
+	 * @since 4.5.2
+	 */
+	public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
+		Assert.notEmpty(sshHost, "SSH Host must be not empty!");
+		Assert.isTrue(sshPort < 0, "SSH Host must be not empty!");
+
+		// 默认root用户
+		if (StrUtil.isEmpty(sshUser)) {
+			sshUser = "root";
+		}
+
+		final JSch jsch = new JSch();
+		Session session;
+		try {
+			session = jsch.getSession(sshUser, sshHost, sshPort);
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+
+		if (StrUtil.isNotEmpty(sshPass)) {
+			session.setPassword(sshPass);
+		}
+
+		// 设置第一次登陆的时候提示，可选值：(ask | yes | no)
+		session.setConfig("StrictHostKeyChecking", "no");
+		return session;
+	}
+
+	/**
+	 * 新建一个新的SSH会话，此方法并不打开会话（既不调用connect方法）
+	 *
+	 * @param sshHost        主机
+	 * @param sshPort        端口
+	 * @param sshUser        用户名，如果为null，默认root
+	 * @param privateKeyPath 私钥的路径
+	 * @param passphrase     私钥文件的密码，可以为null
+	 * @return SSH会话
+	 * @since 5.0.0
+	 */
+	public static Session createSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+		Assert.notEmpty(sshHost, "SSH Host must be not empty!");
+		Assert.isTrue(sshPort < 0, "SSH Host must be not empty!");
+		Assert.notEmpty(privateKeyPath, "PrivateKey Path must be not empty!");
+
+		// 默认root用户
+		if (StrUtil.isEmpty(sshUser)) {
+			sshUser = "root";
+		}
+
+		final JSch jsch = new JSch();
+		Session session;
+		try {
+			jsch.addIdentity(privateKeyPath, passphrase);
+			session = jsch.getSession(sshUser, sshHost, sshPort);
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+
+		// 设置第一次登录的时候提示，可选值：(ask | yes | no)
+		session.setConfig("StrictHostKeyChecking", "no");
+		return session;
+	}
+
+	/**
 	 * 绑定端口到本地。 一个会话可绑定多个端口
-	 * 
-	 * @param session 需要绑定端口的SSH会话
+	 *
+	 * @param session    需要绑定端口的SSH会话
 	 * @param remoteHost 远程主机
 	 * @param remotePort 远程端口
-	 * @param localPort 本地端口
+	 * @param localPort  本地端口
 	 * @return 成功与否
 	 * @throws JschRuntimeException 端口绑定失败异常
 	 */
@@ -127,8 +203,8 @@ public class JschUtil {
 
 	/**
 	 * 解除端口映射
-	 * 
-	 * @param session 需要解除端口映射的SSH会话
+	 *
+	 * @param session   需要解除端口映射的SSH会话
 	 * @param localPort 需要解除的本地端口
 	 * @return 解除成功与否
 	 */
@@ -143,8 +219,8 @@ public class JschUtil {
 
 	/**
 	 * 打开SSH会话，并绑定远程端口到本地的一个随机端口
-	 * 
-	 * @param sshConn SSH连接信息对象
+	 *
+	 * @param sshConn    SSH连接信息对象
 	 * @param remoteHost 远程主机
 	 * @param remotePort 远程端口
 	 * @return 映射后的本地端口
@@ -162,7 +238,7 @@ public class JschUtil {
 
 	/**
 	 * 打开SFTP连接
-	 * 
+	 *
 	 * @param session Session会话
 	 * @return {@link ChannelSftp}
 	 * @since 4.0.3
@@ -173,7 +249,7 @@ public class JschUtil {
 
 	/**
 	 * 创建Sftp
-	 * 
+	 *
 	 * @param sshHost 远程主机
 	 * @param sshPort 远程主机端口
 	 * @param sshUser 远程主机用户名
@@ -187,7 +263,7 @@ public class JschUtil {
 
 	/**
 	 * 创建Sftp
-	 * 
+	 *
 	 * @param session SSH会话
 	 * @return {@link Sftp}
 	 * @since 4.0.5
@@ -198,7 +274,7 @@ public class JschUtil {
 
 	/**
 	 * 打开Shell连接
-	 * 
+	 *
 	 * @param session Session会话
 	 * @return {@link ChannelShell}
 	 * @since 4.0.3
@@ -209,8 +285,8 @@ public class JschUtil {
 
 	/**
 	 * 打开Channel连接
-	 * 
-	 * @param session Session会话
+	 *
+	 * @param session     Session会话
 	 * @param channelType 通道类型，可以是shell或sftp等，见{@link ChannelType}
 	 * @return {@link Channel}
 	 * @since 4.5.2
@@ -224,11 +300,11 @@ public class JschUtil {
 		}
 		return channel;
 	}
-	
+
 	/**
 	 * 创建Channel连接
-	 * 
-	 * @param session Session会话
+	 *
+	 * @param session     Session会话
 	 * @param channelType 通道类型，可以是shell或sftp等，见{@link ChannelType}
 	 * @return {@link Channel}
 	 * @since 4.5.2
@@ -248,9 +324,9 @@ public class JschUtil {
 
 	/**
 	 * 执行Shell命令
-	 * 
+	 *
 	 * @param session Session会话
-	 * @param cmd 命令
+	 * @param cmd     命令
 	 * @param charset 发送和读取内容的编码
 	 * @return {@link ChannelExec}
 	 * @since 4.0.3
@@ -261,10 +337,10 @@ public class JschUtil {
 
 	/**
 	 * 执行Shell命令
-	 * 
-	 * @param session Session会话
-	 * @param cmd 命令
-	 * @param charset 发送和读取内容的编码
+	 *
+	 * @param session   Session会话
+	 * @param cmd       命令
+	 * @param charset   发送和读取内容的编码
 	 * @param errStream 错误信息输出到的位置
 	 * @return {@link ChannelExec}
 	 * @since 4.3.1
@@ -294,7 +370,7 @@ public class JschUtil {
 
 	/**
 	 * 关闭SSH连接会话
-	 * 
+	 *
 	 * @param session SSH会话
 	 */
 	public static void close(Session session) {
@@ -306,7 +382,7 @@ public class JschUtil {
 
 	/**
 	 * 关闭会话通道
-	 * 
+	 *
 	 * @param channel 会话通道
 	 * @since 4.0.3
 	 */
@@ -318,7 +394,7 @@ public class JschUtil {
 
 	/**
 	 * 关闭SSH连接会话
-	 * 
+	 *
 	 * @param key 主机，格式为user@host:port
 	 */
 	public static void close(String key) {
