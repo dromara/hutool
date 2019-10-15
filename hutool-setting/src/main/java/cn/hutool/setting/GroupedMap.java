@@ -63,6 +63,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 	 * 
 	 * @return 总键值对数
 	 */
+	@Override
 	public int size() {
 		writeLock.lock();
 		try {
@@ -93,7 +94,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 			LinkedHashMap<String, String> valueMap = this.get(group);
 			if (null == valueMap) {
 				valueMap = new LinkedHashMap<>();
-				this.put(group, valueMap);
+				super.put(group, valueMap);
 			}
 			this.size = -1;
 			return valueMap.put(key, value);
