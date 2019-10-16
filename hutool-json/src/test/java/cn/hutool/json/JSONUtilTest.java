@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,6 +16,15 @@ import cn.hutool.json.test.bean.UserA;
 import cn.hutool.json.test.bean.UserC;
 
 public class JSONUtilTest {
+
+	/**
+	 * 出现语法错误时报错，检查解析\x字符时是否会导致死循环异常
+	 */
+	@Test(expected = JSONException.class)
+	public void parseTest(){
+		JSONArray jsonArray = JSONUtil.parseArray("[{\"a\":\"a\\x]");
+		Console.log(jsonArray);
+	}
 
 	@Test
 	public void toJsonStrTest() {
@@ -38,11 +48,11 @@ public class JSONUtilTest {
 
 	@Test
 	public void toJsonStrTest2() {
-		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<>();
 		model.put("mobile", "17610836523");
 		model.put("type", 1);
 
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<>();
 		data.put("model", model);
 		data.put("model2", model);
 
