@@ -199,7 +199,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 		try {
 			reader = IoUtil.getReader(settingStream, charset);
 			// 分组
-			String group = null;
+			String group;
 			LinkedHashSet<String> valueSet = null;
 
 			while (true) {
@@ -223,7 +223,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 					group = line.substring(1, line.length() - 1).trim();
 					valueSet = super.get(group);
 					if (null == valueSet) {
-						valueSet = new LinkedHashSet<String>();
+						valueSet = new LinkedHashSet<>();
 					}
 					super.put(group, valueSet);
 					continue;
@@ -232,7 +232,7 @@ public class GroupedSet extends HashMap<String, LinkedHashSet<String>> {
 				// 添加值
 				if (null == valueSet) {
 					// 当出现无分组值的时候，会导致valueSet为空，此时group为""
-					valueSet = new LinkedHashSet<String>();
+					valueSet = new LinkedHashSet<>();
 					super.put(StrUtil.EMPTY, valueSet);
 				}
 				valueSet.add(line);

@@ -258,14 +258,14 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @since 3.1.2
 	 */
 	public String getAndRemoveStr(String... keys) {
-		Object value = null;
+		String value = null;
 		for (String key : keys) {
 			value = remove(key);
 			if (null != value) {
 				break;
 			}
 		}
-		return (String) value;
+		return value;
 	}
 
 	/**
@@ -276,7 +276,7 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public Map<String, String> getMap(String group) {
 		final LinkedHashMap<String, String> map = this.groupedMap.get(group);
-		return (null != map) ? map : new LinkedHashMap<String, String>(0);
+		return (null != map) ? map : new LinkedHashMap<>(0);
 	}
 
 	/**
@@ -692,13 +692,10 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			return false;
 		}
 		if (settingUrl == null) {
-			if (other.settingUrl != null) {
-				return false;
-			}
-		} else if (!settingUrl.equals(other.settingUrl)) {
-			return false;
+			return other.settingUrl == null;
+		} else {
+			return settingUrl.equals(other.settingUrl);
 		}
-		return true;
 	}
 
 	@Override

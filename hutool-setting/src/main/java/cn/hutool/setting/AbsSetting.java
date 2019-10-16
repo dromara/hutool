@@ -266,11 +266,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 
 			@Override
 			public Object value(String key, Type valueType) {
-				final String value = getByGroup(key, group);
-//				if (null != value) {
-//					log.debug("Parse setting to object field [{}={}]", key, value);
-//				}
-				return value;
+				return getByGroup(key, group);
 			}
 
 			@Override

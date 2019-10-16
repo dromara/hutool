@@ -16,7 +16,7 @@ import cn.hutool.core.util.StrUtil;
 public class SettingUtil {
 	/** 配置文件缓存 */
 	private static Map<String, Setting> settingMap = new ConcurrentHashMap<>();
-	private static Object lock = new Object();
+	private static final Object lock = new Object();
 
 	/**
 	 * 获取当前环境下的配置文件<br>

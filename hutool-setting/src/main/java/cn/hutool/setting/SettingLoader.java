@@ -202,7 +202,7 @@ public class SettingLoader {
 	 */
 	private String replaceVar(String group, String value) {
 		// 找到所有变量标识
-		final Set<String> vars = ReUtil.findAll(varRegex, value, 0, new HashSet<String>());
+		final Set<String> vars = ReUtil.findAll(varRegex, value, 0, new HashSet<>());
 		String key;
 		for (String var : vars) {
 			key = ReUtil.get(varRegex, var, 1);

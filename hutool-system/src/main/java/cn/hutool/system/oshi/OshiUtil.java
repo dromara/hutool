@@ -16,6 +16,8 @@ import oshi.software.os.OperatingSystem;
  * 1、系统信息
  * 2、硬件信息
  * </pre>
+ *
+ * 相关内容见：https://github.com/oshi/oshi
  * 
  * @author Looly
  * @since 4.6.4
