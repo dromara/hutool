@@ -13,11 +13,14 @@ import cn.hutool.core.convert.impl.ClassConverter;
 import cn.hutool.core.convert.impl.CollectionConverter;
 import cn.hutool.core.convert.impl.CurrencyConverter;
 import cn.hutool.core.convert.impl.DateConverter;
+import cn.hutool.core.convert.impl.DurationConverter;
 import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.LocaleConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.convert.impl.NumberConverter;
+import cn.hutool.core.convert.impl.OptionalConverter;
 import cn.hutool.core.convert.impl.PathConverter;
+import cn.hutool.core.convert.impl.PeriodConverter;
 import cn.hutool.core.convert.impl.PrimitiveConverter;
 import cn.hutool.core.convert.impl.ReferenceConverter;
 import cn.hutool.core.convert.impl.StackTraceElementConverter;
@@ -43,18 +46,21 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.Period;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -385,6 +391,8 @@ public class ConverterRegistry implements Serializable{
 		defaultConverterMap.put(ZonedDateTime.class, new TemporalAccessorConverter(ZonedDateTime.class));
 		defaultConverterMap.put(OffsetDateTime.class, new TemporalAccessorConverter(OffsetDateTime.class));
 		defaultConverterMap.put(OffsetTime.class, new TemporalAccessorConverter(OffsetTime.class));
+		defaultConverterMap.put(Period.class, new PeriodConverter());
+		defaultConverterMap.put(Duration.class, new DurationConverter());
 
 		// Reference
 		defaultConverterMap.put(WeakReference.class, new ReferenceConverter(WeakReference.class));// since 3.0.8
@@ -400,6 +408,7 @@ public class ConverterRegistry implements Serializable{
 		defaultConverterMap.put(Currency.class, new CurrencyConverter());// since 3.0.8
 		defaultConverterMap.put(UUID.class, new UUIDConverter());// since 4.0.10
 		defaultConverterMap.put(StackTraceElement.class, new StackTraceElementConverter());// since 4.5.2
+		defaultConverterMap.put(Optional.class, new OptionalConverter());// since 5.0.0
 
 		return this;
 	}

@@ -217,7 +217,6 @@ public class DateTime extends Date {
 	 *
 	 * @param dateStr Date字符串
 	 * @param formatter 格式化器,{@link DateTimeFormatter}
-	 * @return DateTime对象
 	 * @since 5.0.0
 	 */
 	public DateTime(CharSequence dateStr, DateTimeFormatter formatter) {

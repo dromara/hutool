@@ -75,7 +75,7 @@ public class FileUtilTest {
 	}
 
 	@Test
-	public void copyTest() throws Exception {
+	public void copyTest() {
 		File srcFile = FileUtil.file("hutool.jpg");
 		File destFile = FileUtil.file("hutool.copy.jpg");
 
@@ -87,7 +87,7 @@ public class FileUtilTest {
 
 	@Test
 	@Ignore
-	public void copyFilesFromDir() throws Exception {
+	public void copyFilesFromDir() {
 		File srcFile = FileUtil.file("D:\\驱动");
 		File destFile = FileUtil.file("d:\\驱动备份");
 
@@ -132,12 +132,16 @@ public class FileUtilTest {
 		Assert.assertEquals("/bar", FileUtil.normalize("//server/../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\foo\\..\\bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
-		Assert.assertEquals("~/bar/", FileUtil.normalize("~/foo/../bar/"));
-		Assert.assertEquals("bar", FileUtil.normalize("~/../bar"));
 		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
 
 		Assert.assertEquals("\\/192.168.1.1/Share/", FileUtil.normalize("\\\\192.168.1.1\\Share\\"));
+	}
+
+	@Test
+	public void normalizeHomePathTest() {
+		String home = FileUtil.getUserHomePath().replace('\\', '/');
+		Assert.assertEquals(home + "/bar/", FileUtil.normalize("~/foo/../bar/"));
 	}
 
 	@Test

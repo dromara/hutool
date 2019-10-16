@@ -1,5 +1,6 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,8 +16,12 @@ public class TemporalAccessorConverterTest {
 
 	@Test
 	public void toInstantTest(){
-		Instant instant = Convert.convert(Instant.class, "2019-02-18");
-		Assert.assertNotNull(instant);
+		String dateStr = "2019-02-18";
+
+		// 通过转换获取的Instant为UTC时间
+		Instant instant = Convert.convert(Instant.class, dateStr);
+		Instant instant1 = DateUtil.parse(dateStr).toInstant();
+		Assert.assertEquals(instant1, instant);
 	}
 
 	@Test

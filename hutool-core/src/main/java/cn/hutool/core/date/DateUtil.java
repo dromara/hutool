@@ -546,6 +546,21 @@ public class DateUtil {
 	}
 
 	/**
+	 * 根据特定格式格式化日期
+	 *
+	 * @param date 被格式化的日期
+	 * @param format {@link SimpleDateFormat}
+	 * @return 格式化后的字符串
+	 * @since 5.0.0
+	 */
+	public static String format(Date date, DateTimeFormatter format) {
+		if (null == format || null == date) {
+			return null;
+		}
+		return format.format(date.toInstant());
+	}
+
+	/**
 	 * 格式化日期时间<br>
 	 * 格式 yyyy-MM-dd HH:mm:ss
 	 * 
