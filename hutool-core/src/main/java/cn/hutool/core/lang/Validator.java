@@ -562,7 +562,7 @@ public class Validator {
 	 * @param value 字符串内容
 	 * @return 是否是数字
 	 */
-	public static boolean isNumber(String value) {
+	public static boolean isNumber(CharSequence value) {
 		return NumberUtil.isNumber(value);
 	}
 

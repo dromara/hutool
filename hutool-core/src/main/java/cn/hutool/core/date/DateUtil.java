@@ -1,15 +1,5 @@
 package cn.hutool.core.date;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.convert.Convert;
@@ -18,9 +8,21 @@ import cn.hutool.core.date.format.DateParser;
 import cn.hutool.core.date.format.DatePrinter;
 import cn.hutool.core.date.format.FastDateFormat;
 import cn.hutool.core.lang.PatternPool;
-import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 时间工具类
@@ -103,6 +105,18 @@ public class DateUtil {
 	 */
 	public static DateTime date(Calendar calendar) {
 		return new DateTime(calendar);
+	}
+
+	/**
+	 * {@link TemporalAccessor}类型时间转为{@link DateTime}<br>
+	 * 始终根据已有{@link TemporalAccessor} 产生新的{@link DateTime}对象
+	 *
+	 * @param temporalAccessor {@link TemporalAccessor}
+	 * @return 时间对象
+	 * @since 5.0.0
+	 */
+	public static DateTime date(TemporalAccessor temporalAccessor) {
+		return new DateTime(temporalAccessor);
 	}
 
 	/**
@@ -628,7 +642,7 @@ public class DateUtil {
 	 * @param dateFormat 格式化器 {@link SimpleDateFormat}
 	 * @return DateTime对象
 	 */
-	public static DateTime parse(String dateStr, DateFormat dateFormat) {
+	public static DateTime parse(CharSequence dateStr, DateFormat dateFormat) {
 		return new DateTime(dateStr, dateFormat);
 	}
 
@@ -639,8 +653,20 @@ public class DateUtil {
 	 * @param parser 格式化器,{@link FastDateFormat}
 	 * @return DateTime对象
 	 */
-	public static DateTime parse(String dateStr, DateParser parser) {
+	public static DateTime parse(CharSequence dateStr, DateParser parser) {
 		return new DateTime(dateStr, parser);
+	}
+
+	/**
+	 * 构建DateTime对象
+	 *
+	 * @param dateStr Date字符串
+	 * @param formatter 格式化器,{@link DateTimeFormatter}
+	 * @return DateTime对象
+	 * @since 5.0.0
+	 */
+	public static DateTime parse(CharSequence dateStr, DateTimeFormatter formatter) {
+		return new DateTime(dateStr, formatter);
 	}
 
 	/**
@@ -650,7 +676,7 @@ public class DateUtil {
 	 * @param format 格式，例如yyyy-MM-dd
 	 * @return 日期对象
 	 */
-	public static DateTime parse(String dateStr, String format) {
+	public static DateTime parse(CharSequence dateStr, String format) {
 		return new DateTime(dateStr, format);
 	}
 
@@ -663,7 +689,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 * @since 4.5.18
 	 */
-	public static DateTime parse(String dateStr, String format, Locale locale) {
+	public static DateTime parse(CharSequence dateStr, String format, Locale locale) {
 		return new DateTime(dateStr, new SimpleDateFormat(format, locale));
 	}
 
@@ -673,7 +699,7 @@ public class DateUtil {
 	 * @param dateString 标准形式的时间字符串
 	 * @return 日期对象
 	 */
-	public static DateTime parseDateTime(String dateString) {
+	public static DateTime parseDateTime(CharSequence dateString) {
 		dateString = normalize(dateString);
 		return parse(dateString, DatePattern.NORM_DATETIME_FORMAT);
 	}
@@ -684,7 +710,7 @@ public class DateUtil {
 	 * @param dateString 标准形式的日期字符串
 	 * @return 日期对象
 	 */
-	public static DateTime parseDate(String dateString) {
+	public static DateTime parseDate(CharSequence dateString) {
 		dateString = normalize(dateString);
 		return parse(dateString, DatePattern.NORM_DATE_FORMAT);
 	}
@@ -695,7 +721,7 @@ public class DateUtil {
 	 * @param timeString 标准形式的日期字符串
 	 * @return 日期对象
 	 */
-	public static DateTime parseTime(String timeString) {
+	public static DateTime parseTime(CharSequence timeString) {
 		timeString = normalize(timeString);
 		return parse(timeString, DatePattern.NORM_TIME_FORMAT);
 	}
@@ -707,7 +733,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 * @since 3.1.1
 	 */
-	public static DateTime parseTimeToday(String timeString) {
+	public static DateTime parseTimeToday(CharSequence timeString) {
 		timeString = StrUtil.format("{} {}", today(), timeString);
 		if (1 == StrUtil.count(timeString, ':')) {
 			// 时间格式为 HH:mm
@@ -767,7 +793,7 @@ public class DateUtil {
 	 * @return 日期对象
 	 * @since 4.6.9
 	 */
-	public static DateTime parseCST(String cstString) {
+	public static DateTime parseCST(CharSequence cstString) {
 		if (cstString == null) {
 			return null;
 		}
@@ -800,18 +826,19 @@ public class DateUtil {
 	 * <li>yyyy-MM-dd'T'HH:mm:ss.SSSZ</li>
 	 * </ol>
 	 * 
-	 * @param dateStr 日期字符串
+	 * @param dateCharSequence 日期字符串
 	 * @return 日期
 	 */
-	public static DateTime parse(String dateStr) {
-		if (null == dateStr) {
+	public static DateTime parse(CharSequence dateCharSequence) {
+		if (StrUtil.isBlank(dateCharSequence)) {
 			return null;
 		}
+		String dateStr = dateCharSequence.toString();
 		// 去掉两边空格并去掉中文日期中的“日”和“秒”，以规范长度
 		dateStr = StrUtil.removeAll(dateStr.trim(), '日', '秒');
 		int length = dateStr.length();
 
-		if (Validator.isNumber(dateStr)) {
+		if (NumberUtil.isNumber(dateStr)) {
 			// 纯数字形式
 			if (length == DatePattern.PURE_DATETIME_PATTERN.length()) {
 				return parse(dateStr, DatePattern.PURE_DATETIME_FORMAT);
@@ -1938,13 +1965,13 @@ public class DateUtil {
 	 * </pre>
 	 * 
 	 * 当末位是":"时去除之（不存在毫秒时）
-	 * 
+	 *
 	 * @param dateStr 日期时间字符串
 	 * @return 格式化后的日期字符串
 	 */
-	private static String normalize(String dateStr) {
+	private static String normalize(CharSequence dateStr) {
 		if (StrUtil.isBlank(dateStr)) {
-			return dateStr;
+			return StrUtil.str(dateStr);
 		}
 
 		// 日期时间分开处理
@@ -1952,7 +1979,7 @@ public class DateUtil {
 		final int size = dateAndTime.size();
 		if (size < 1 || size > 2) {
 			// 非可被标准处理的格式
-			return dateStr;
+			return StrUtil.str(dateStr);
 		}
 
 		final StringBuilder builder = StrUtil.builder();

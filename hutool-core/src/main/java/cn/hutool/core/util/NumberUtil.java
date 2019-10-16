@@ -1,5 +1,8 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -10,10 +13,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 
 /**
  * 数字工具类<br>
@@ -1057,11 +1056,11 @@ public class NumberUtil {
 	 * @param str 字符串值
 	 * @return 是否为数字
 	 */
-	public static boolean isNumber(String str) {
+	public static boolean isNumber(CharSequence str) {
 		if (StrUtil.isBlank(str)) {
 			return false;
 		}
-		char[] chars = str.toCharArray();
+		char[] chars = str.toString().toCharArray();
 		int sz = chars.length;
 		boolean hasExp = false;
 		boolean hasDecPoint = false;

@@ -157,7 +157,8 @@ public class Assert {
 	 * <pre class="code">
 	 * Assert.notEmpty(name, "Name must not be empty");
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> 字符串类型
 	 * @param text 被检查字符串
 	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
 	 * @param params 参数
@@ -165,7 +166,7 @@ public class Assert {
 	 * @see StrUtil#isNotEmpty(CharSequence)
 	 * @throws IllegalArgumentException 被检查字符串为空
 	 */
-	public static String notEmpty(String text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+	public static <T extends CharSequence> T notEmpty(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (StrUtil.isEmpty(text)) {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
@@ -178,13 +179,14 @@ public class Assert {
 	 * <pre class="code">
 	 * Assert.notEmpty(name);
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> 字符串类型
 	 * @param text 被检查字符串
 	 * @return 被检查的字符串
 	 * @see StrUtil#isNotEmpty(CharSequence)
 	 * @throws IllegalArgumentException 被检查字符串为空
 	 */
-	public static String notEmpty(String text) throws IllegalArgumentException {
+	public static <T extends CharSequence> T notEmpty(T text) throws IllegalArgumentException {
 		return notEmpty(text, "[Assertion failed] - this String argument must have length; it must not be null or empty");
 	}
 
@@ -194,7 +196,8 @@ public class Assert {
 	 * <pre class="code">
 	 * Assert.notBlank(name, "Name must not be blank");
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> 字符串类型
 	 * @param text 被检查字符串
 	 * @param errorMsgTemplate 错误消息模板，变量使用{}表示
 	 * @param params 参数
@@ -202,7 +205,7 @@ public class Assert {
 	 * @see StrUtil#isNotBlank(CharSequence)
 	 * @throws IllegalArgumentException 被检查字符串为空白
 	 */
-	public static String notBlank(String text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
+	public static <T extends CharSequence> T notBlank(T text, String errorMsgTemplate, Object... params) throws IllegalArgumentException {
 		if (StrUtil.isBlank(text)) {
 			throw new IllegalArgumentException(StrUtil.format(errorMsgTemplate, params));
 		}
@@ -215,13 +218,14 @@ public class Assert {
 	 * <pre class="code">
 	 * Assert.notBlank(name, "Name must not be blank");
 	 * </pre>
-	 * 
+	 *
+	 * @param <T> 字符串类型
 	 * @param text 被检查字符串
 	 * @return 非空字符串
 	 * @see StrUtil#isNotBlank(CharSequence)
 	 * @throws IllegalArgumentException 被检查字符串为空白
 	 */
-	public static String notBlank(String text) throws IllegalArgumentException {
+	public static <T extends CharSequence> T notBlank(T text) throws IllegalArgumentException {
 		return notBlank(text, "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank");
 	}
 
