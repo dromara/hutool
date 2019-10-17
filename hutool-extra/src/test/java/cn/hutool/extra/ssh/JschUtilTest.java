@@ -1,5 +1,6 @@
 package cn.hutool.extra.ssh;
 
+import com.jcraft.jsch.JSch;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -60,5 +61,10 @@ public class JschUtilTest {
 		Console.log("打印pwd: " + sftp.pwd());
 
 		IoUtil.close(sftp);
+	}
+
+	@Test
+	public void getSessionTest(){
+		JschUtil.getSession("192.168.1.134", 22, "root", "aaa", null);
 	}
 }

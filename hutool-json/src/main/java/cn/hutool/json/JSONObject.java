@@ -1,24 +1,10 @@
 package cn.hutool.json;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
 import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.ArrayUtil;
@@ -29,6 +15,18 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONObjectSerializer;
 import cn.hutool.json.serialize.JSONSerializer;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * JSON对象<br>
@@ -111,9 +109,9 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
 		if (config.isIgnoreCase()) {
-			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<String, Object>(capacity) : new CaseInsensitiveMap<String, Object>(capacity);
+			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
 		} else {
-			this.rawHashMap = config.isOrder() ? new LinkedHashMap<String, Object>(capacity) : new HashMap<String, Object>(capacity);
+			this.rawHashMap = config.isOrder() ? new LinkedHashMap<>(capacity) : new HashMap<>(capacity);
 		}
 		this.config = config;
 	}
@@ -286,54 +284,6 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 			}
 		}
 		return ja;
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param clazz 实体类
-	 * @return 实体类对象
-	 */
-	public <T> T toBean(Class<T> clazz) {
-		return toBean((Type) clazz);
-	}
-
-	/**
-	 * 转为实体类对象，转换异常将被抛出
-	 * 
-	 * @param <T> Bean类型
-	 * @param reference {@link TypeReference}类型参考子类，可以获取其泛型参数中的Type类型
-	 * @return 实体类对象
-	 * @since 4.2.2
-	 */
-	public <T> T toBean(TypeReference<T> reference) {
-		return toBean(reference.getType());
-	}
-	
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param type {@link Type}
-	 * @return 实体类对象
-	 * @since 3.0.8
-	 */
-	public <T> T toBean(Type type) {
-		return toBean(type, false);
-	}
-
-	/**
-	 * 转为实体类对象
-	 * 
-	 * @param <T> Bean类型
-	 * @param type {@link Type}
-	 * @param ignoreError 是否忽略转换错误
-	 * @return 实体类对象
-	 * @since 4.3.2
-	 */
-	public <T> T toBean(Type type, boolean ignoreError) {
-		return JSONConverter.jsonConvert(type, this, ignoreError);
 	}
 
 	@Override
@@ -584,36 +534,6 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		} catch (Exception e) {
 			return null;
 		}
-	}
-
-	/**
-	 * 格式化打印JSON，缩进为4个空格
-	 * 
-	 * @return 格式化后的JSON字符串
-	 * @throws JSONException 包含非法数抛出此异常
-	 * @since 3.0.9
-	 */
-	@Override
-	public String toStringPretty() throws JSONException {
-		return this.toJSONString(4);
-	}
-
-	/**
-	 * 格式化输出JSON字符串
-	 *
-	 * @param indentFactor 每层缩进空格数
-	 * @return JSON字符串
-	 * @throws JSONException 包含非法数抛出此异常
-	 */
-	@Override
-	public String toJSONString(int indentFactor) throws JSONException {
-		final StringWriter w = new StringWriter();
-		return this.write(w, indentFactor, 0).toString();
-	}
-
-	@Override
-	public Writer write(Writer writer) throws JSONException {
-		return this.write(writer, 0, 0);
 	}
 
 	@Override

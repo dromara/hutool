@@ -9,6 +9,7 @@ import cn.hutool.json.JSON;
  *
  * @param <T> 反序列化后的类型
  */
+@FunctionalInterface
 public interface JSONDeserializer<T> {
 	
 	/**

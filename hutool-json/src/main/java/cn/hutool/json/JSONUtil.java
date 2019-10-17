@@ -378,7 +378,7 @@ public final class JSONUtil {
 	 * @since 4.3.2
 	 */
 	public static <T> T toBean(String jsonString, Type beanType, boolean ignoreError) {
-		return toBean(parseObj(jsonString), beanType, ignoreError);
+		return toBean(parse(jsonString), beanType, ignoreError);
 	}
 
 	/**
@@ -391,7 +391,7 @@ public final class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.6.2
 	 */
-	public static <T> T toBean(JSONObject json, TypeReference<T> typeReference, boolean ignoreError) {
+	public static <T> T toBean(JSON json, TypeReference<T> typeReference, boolean ignoreError) {
 		return toBean(json, typeReference.getType(), ignoreError);
 	}
 
@@ -405,7 +405,7 @@ public final class JSONUtil {
 	 * @return 实体类对象
 	 * @since 4.3.2
 	 */
-	public static <T> T toBean(JSONObject json, Type beanType, boolean ignoreError) {
+	public static <T> T toBean(JSON json, Type beanType, boolean ignoreError) {
 		if (null == json) {
 			return null;
 		}

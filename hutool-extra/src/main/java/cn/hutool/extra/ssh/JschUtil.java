@@ -157,7 +157,7 @@ public class JschUtil {
 	 */
 	public static Session createSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
 		Assert.notEmpty(sshHost, "SSH Host must be not empty!");
-		Assert.isTrue(sshPort < 0, "SSH Host must be not empty!");
+		Assert.isTrue(sshPort > 0, "SSH port must be > 0");
 		Assert.notEmpty(privateKeyPath, "PrivateKey Path must be not empty!");
 
 		// 默认root用户

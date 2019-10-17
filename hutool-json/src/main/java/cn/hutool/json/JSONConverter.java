@@ -77,7 +77,7 @@ public class JSONConverter implements Converter<JSON> {
 			}
 		}
 		
-		Object targetValue = null;
+		Object targetValue;
 		try {
 			targetValue = Convert.convert(targetType, value);
 		} catch (ConvertException e) {

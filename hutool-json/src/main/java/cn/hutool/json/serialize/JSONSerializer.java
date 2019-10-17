@@ -9,6 +9,7 @@ import cn.hutool.json.JSON;
  * @param <V> 对象类型
  * @author Looly
  */
+@FunctionalInterface
 public interface JSONSerializer<T extends JSON, V> {
 
 	/**

@@ -1,19 +1,16 @@
 package cn.hutool.json;
 
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.json.test.bean.ExamInfoDict;
+import cn.hutool.json.test.bean.PerfectEvaluationProductResVo;
+import cn.hutool.json.test.bean.UserInfoDict;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import cn.hutool.json.test.bean.ExamInfoDict;
-import cn.hutool.json.test.bean.PerfectEvaluationProductResVo;
-import cn.hutool.json.test.bean.UserInfoDict;
 
 /**
  * JSON转换单元测试
@@ -46,14 +43,14 @@ public class JSONConvertTest {
 		examInfoDict2.setExamType(1);
 		examInfoDict2.setAnswerIs(0);
 
-		List<ExamInfoDict> examInfoDicts = new ArrayList<ExamInfoDict>();
+		List<ExamInfoDict> examInfoDicts = new ArrayList<>();
 		examInfoDicts.add(examInfoDict);
 		examInfoDicts.add(examInfoDict1);
 		examInfoDicts.add(examInfoDict2);
 
 		userInfoDict.setExamInfoDict(examInfoDicts);
 
-		Map<String, Object> tempMap = new HashMap<String, Object>();
+		Map<String, Object> tempMap = new HashMap<>();
 		tempMap.put("userInfoDict", userInfoDict);
 		tempMap.put("toSendManIdCard", 1);
 

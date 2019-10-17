@@ -1,15 +1,5 @@
 package cn.hutool.json;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.RandomAccess;
-
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
@@ -19,6 +9,15 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONSerializer;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.RandomAccess;
 
 /**
  * JSON数组<br>
@@ -496,38 +495,6 @@ public class JSONArray extends JSONGetter<Integer> implements JSON, List<Object>
 		} catch (Exception e) {
 			return null;
 		}
-	}
-
-	/**
-	 * 格式化打印JSON，缩进为4个空格
-	 * 
-	 * @return 格式化后的JSON字符串
-	 * @throws JSONException 包含非法数抛出此异常
-	 * @since 3.0.9
-	 */
-	@Override
-	public String toStringPretty() throws JSONException {
-		return this.toJSONString(4);
-	}
-
-	/**
-	 * 转为JSON字符串，指定缩进值
-	 *
-	 * @param indentFactor 缩进值，即缩进空格数
-	 * @return JSON字符串
-	 * @throws JSONException JSON写入异常
-	 */
-	@Override
-	public String toJSONString(int indentFactor) throws JSONException {
-		StringWriter sw = new StringWriter();
-		synchronized (sw.getBuffer()) {
-			return this.write(sw, indentFactor, 0).toString();
-		}
-	}
-
-	@Override
-	public Writer write(Writer writer) throws JSONException {
-		return this.write(writer, 0, 0);
 	}
 
 	@Override

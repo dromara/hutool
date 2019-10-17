@@ -161,7 +161,7 @@ public class JSONObjectTest {
 		// 当JSON中为字符串"null"时应被当作字符串处理
 		Assert.assertEquals("null", bean.getStrValue());
 		// 当JSON中为字符串"null"时Bean中的字段类型不匹配应在ignoreError模式下忽略注入
-		Assert.assertEquals(null, bean.getBeanValue());
+		Assert.assertNull(bean.getBeanValue());
 	}
 
 	@Test

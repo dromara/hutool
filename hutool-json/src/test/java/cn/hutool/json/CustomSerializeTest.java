@@ -1,25 +1,17 @@
 package cn.hutool.json;
 
-import java.util.Date;
-
+import cn.hutool.json.serialize.JSONObjectSerializer;
+import lombok.ToString;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.json.serialize.JSONDeserializer;
-import cn.hutool.json.serialize.JSONObjectSerializer;
-import lombok.ToString;
+import java.util.Date;
 
 public class CustomSerializeTest {
 
 	@Test
 	public void serializeTest() {
-		JSONUtil.putSerializer(CustomBean.class, new JSONObjectSerializer<CustomBean>() {
-
-			@Override
-			public void serialize(JSONObject json, CustomBean bean) {
-				json.put("customName", bean.name);
-			}
-		});
+		JSONUtil.putSerializer(CustomBean.class, (JSONObjectSerializer<CustomBean>) (json, bean) -> json.put("customName", bean.name));
 		
 		CustomBean customBean = new CustomBean();
 		customBean.name = "testName";
@@ -30,15 +22,10 @@ public class CustomSerializeTest {
 	
 	@Test
 	public void deserializeTest() {
-		JSONUtil.putDeserializer(CustomBean.class, new JSONDeserializer<CustomBean>() {
-
-			@Override
-			public CustomBean deserialize(JSON json) {
-				CustomBean customBean = new CustomBean();
-				customBean.name = ((JSONObject)json).getStr("customName");
-				return customBean;
-			}
-
+		JSONUtil.putDeserializer(CustomBean.class, json -> {
+			CustomBean customBean = new CustomBean();
+			customBean.name = ((JSONObject)json).getStr("customName");
+			return customBean;
 		});
 		
 		String jsonStr = "{\"customName\":\"testName\"}";
