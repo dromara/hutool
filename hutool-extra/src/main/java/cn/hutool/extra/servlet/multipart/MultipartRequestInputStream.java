@@ -180,6 +180,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	 * 跳过边界表示
 	 * 
 	 * @return 跳过的字节数
+	 * @throws IOException 读取异常
 	 */
 	public int skipToBoundary() throws IOException {
 		int count = 0;

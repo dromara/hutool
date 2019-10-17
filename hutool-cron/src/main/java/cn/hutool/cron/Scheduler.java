@@ -414,7 +414,8 @@ public class Scheduler implements Serializable {
 	/**
 	 * 停止定时任务<br>
 	 * 此方法调用后会将定时器进程立即结束，如果为守护线程模式，则正在执行的作业也会自动结束，否则作业线程将在执行完成后结束。
-	 * 
+	 *
+	 * @param clearTasks 是否清除说有任务
 	 * @return this
 	 * @since 4.1.17
 	 */

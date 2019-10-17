@@ -1,5 +1,13 @@
 package cn.hutool.captcha;
 
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.captcha.generator.RandomGenerator;
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -10,50 +18,59 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import cn.hutool.captcha.generator.CodeGenerator;
-import cn.hutool.captcha.generator.RandomGenerator;
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-
 /**
  * 抽象验证码<br>
  * 抽象验证码实现了验证码字符串的生成、验证，验证码图片的写出<br>
  * 实现类通过实现{@link #createImage(String)} 方法生成图片对象
- * 
- * @author looly
  *
+ * @author looly
  */
 public abstract class AbstractCaptcha implements ICaptcha {
 	private static final long serialVersionUID = 3180820918087507254L;
 
-	/** 图片的宽度 */
+	/**
+	 * 图片的宽度
+	 */
 	protected int width;
-	/** 图片的高度 */
+	/**
+	 * 图片的高度
+	 */
 	protected int height;
-	/** 验证码干扰元素个数 */
+	/**
+	 * 验证码干扰元素个数
+	 */
 	protected int interfereCount;
-	/** 字体 */
+	/**
+	 * 字体
+	 */
 	protected Font font;
-	/** 验证码 */
+	/**
+	 * 验证码
+	 */
 	protected String code;
-	/** 验证码图片 */
+	/**
+	 * 验证码图片
+	 */
 	protected byte[] imageBytes;
-	/** 验证码生成器 */
+	/**
+	 * 验证码生成器
+	 */
 	protected CodeGenerator generator;
-	/** 背景色 */
+	/**
+	 * 背景色
+	 */
 	protected Color background;
-	/** 文字透明度 */
+	/**
+	 * 文字透明度
+	 */
 	protected AlphaComposite textAlpha;
 
 	/**
 	 * 构造，使用随机验证码生成器生成验证码
-	 * 
-	 * @param width 图片宽
-	 * @param height 图片高
-	 * @param codeCount 字符个数
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param codeCount      字符个数
 	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public AbstractCaptcha(int width, int height, int codeCount, int interfereCount) {
@@ -62,10 +79,10 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 构造
-	 * 
-	 * @param width 图片宽
-	 * @param height 图片高
-	 * @param generator 验证码生成器
+	 *
+	 * @param width          图片宽
+	 * @param height         图片高
+	 * @param generator      验证码生成器
 	 * @param interfereCount 验证码干扰元素个数
 	 */
 	public AbstractCaptcha(int width, int height, CodeGenerator generator, int interfereCount) {
@@ -88,7 +105,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 生成验证码字符串
-	 * 
+	 *
 	 * @since 3.3.0
 	 */
 	protected void generateCode() {
@@ -97,14 +114,15 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 根据生成的code创建验证码图片
-	 * 
+	 *
 	 * @param code 验证码
+	 * @return Image
 	 */
 	protected abstract Image createImage(String code);
 
 	@Override
 	public String getCode() {
-		if(null == this.code) {
+		if (null == this.code) {
 			createCode();
 		}
 		return this.code;
@@ -117,7 +135,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 验证码写出到文件
-	 * 
+	 *
 	 * @param path 文件路径
 	 * @throws IORuntimeException IO异常
 	 */
@@ -127,7 +145,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 验证码写出到文件
-	 * 
+	 *
 	 * @param file 文件
 	 * @throws IORuntimeException IO异常
 	 */
@@ -143,10 +161,10 @@ public abstract class AbstractCaptcha implements ICaptcha {
 	public void write(OutputStream out) {
 		IoUtil.write(out, false, getImageBytes());
 	}
-	
+
 	/**
 	 * 获取图形验证码图片bytes
-	 * 
+	 *
 	 * @return 图形验证码图片bytes
 	 * @since 4.5.17
 	 */
@@ -159,7 +177,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 获取验证码图
-	 * 
+	 *
 	 * @return 验证码图
 	 */
 	public BufferedImage getImage() {
@@ -168,7 +186,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 获得图片的Base64形式
-	 * 
+	 *
 	 * @return 图片的Base64
 	 * @since 3.3.0
 	 */
@@ -178,7 +196,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 自定义字体
-	 * 
+	 *
 	 * @param font 字体
 	 */
 	public void setFont(Font font) {
@@ -187,7 +205,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 获取验证码生成器
-	 * 
+	 *
 	 * @return 验证码生成器
 	 */
 	public CodeGenerator getGenerator() {
@@ -196,7 +214,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 设置验证码生成器
-	 * 
+	 *
 	 * @param generator 验证码生成器
 	 */
 	public void setGenerator(CodeGenerator generator) {
@@ -205,7 +223,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 设置背景色
-	 * 
+	 *
 	 * @param background 背景色
 	 * @since 4.1.22
 	 */
@@ -215,7 +233,7 @@ public abstract class AbstractCaptcha implements ICaptcha {
 
 	/**
 	 * 设置文字透明度
-	 * 
+	 *
 	 * @param textAlpha 文字透明度，取值0~1，1表示不透明
 	 * @since 4.5.17
 	 */
