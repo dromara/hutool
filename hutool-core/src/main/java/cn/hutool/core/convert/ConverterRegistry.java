@@ -55,6 +55,7 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Currency;
@@ -384,6 +385,7 @@ public class ConverterRegistry implements Serializable{
 		defaultConverterMap.put(java.sql.Timestamp.class, new DateConverter(java.sql.Timestamp.class));
 
 		// 日期时间 JDK8+(since 5.0.0)
+		defaultConverterMap.put(TemporalAccessor.class, new TemporalAccessorConverter(Instant.class));
 		defaultConverterMap.put(Instant.class, new TemporalAccessorConverter(Instant.class));
 		defaultConverterMap.put(LocalDateTime.class, new TemporalAccessorConverter(LocalDateTime.class));
 		defaultConverterMap.put(LocalDate.class, new TemporalAccessorConverter(LocalDate.class));
