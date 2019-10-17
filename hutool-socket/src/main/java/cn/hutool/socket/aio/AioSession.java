@@ -118,7 +118,8 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 写数据到目标端，并关闭输出
-	 * 
+	 *
+	 * @param data 数据
 	 * @return this
 	 */
 	public AioSession writeAndClose(ByteBuffer data) {
@@ -128,7 +129,8 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 写数据到目标端
-	 * 
+	 *
+	 * @param data 数据
 	 * @return {@link Future}
 	 */
 	public Future<Integer> write(ByteBuffer data) {
@@ -137,7 +139,8 @@ public class AioSession implements Closeable{
 
 	/**
 	 * 写数据到目标端
-	 * 
+	 *
+	 * @param data 数据
 	 * @param handler {@link CompletionHandler}
 	 * @return this
 	 */

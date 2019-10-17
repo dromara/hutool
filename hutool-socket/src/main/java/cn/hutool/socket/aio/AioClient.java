@@ -64,6 +64,7 @@ public class AioClient implements Closeable{
 	 * @param <T> 选项泛型
 	 * @param name {@link SocketOption} 枚举
 	 * @param value SocketOption参数
+	 * @return this
 	 * @throws IOException IO异常
 	 */
 	public <T> AioClient setOption(SocketOption<T> name, T value) throws IOException {
@@ -92,7 +93,8 @@ public class AioClient implements Closeable{
 
 	/**
 	 * 写数据到服务端
-	 * 
+	 *
+	 * @param data 数据
 	 * @return this
 	 */
 	public AioClient write(ByteBuffer data) {

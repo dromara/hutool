@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class IntMap implements BitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private int[] ints = null;
+	private int[] ints;
 
 	/**
 	 * 构造
@@ -40,10 +40,7 @@ public class IntMap implements BitMap, Serializable {
 	public boolean contains(long i) {
 		int r = (int) (i / BitMap.MACHINE32);
 		int c = (int) (i % BitMap.MACHINE32);
-		if (((int) ((ints[r] >>> c)) & 1) == 1) {
-			return true;
-		}
-		return false;
+		return ((int) ((ints[r] >>> c)) & 1) == 1;
 	}
 
 	@Override
