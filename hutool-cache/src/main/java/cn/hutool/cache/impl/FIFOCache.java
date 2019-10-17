@@ -42,7 +42,7 @@ public class FIFOCache<K, V> extends AbstractCache<K, V> {
 		
 		this.capacity = capacity;
 		this.timeout = timeout;
-		cacheMap = new LinkedHashMap<K, CacheObj<K, V>>(capacity + 1, 1.0f, false);
+		cacheMap = new LinkedHashMap<>(capacity + 1, 1.0f, false);
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class CacheUtil {
 	 * @return {@link FIFOCache}
 	 */
 	public static <K, V> FIFOCache<K, V> newFIFOCache(int capacity, long timeout){
-		return new FIFOCache<K, V>(capacity, timeout);
+		return new FIFOCache<>(capacity, timeout);
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public class CacheUtil {
 	 * @return {@link FIFOCache}
 	 */
 	public static <K, V> FIFOCache<K, V> newFIFOCache(int capacity){
-		return new FIFOCache<K, V>(capacity);
+		return new FIFOCache<>(capacity);
 	}
 	
 	/**
@@ -49,7 +49,7 @@ public class CacheUtil {
 	 * @return {@link LFUCache}
 	 */
 	public static <K, V> LFUCache<K, V> newLFUCache(int capacity, long timeout){
-		return new LFUCache<K, V>(capacity, timeout);
+		return new LFUCache<>(capacity, timeout);
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class CacheUtil {
 	 * @return {@link LFUCache}
 	 */
 	public static <K, V> LFUCache<K, V> newLFUCache(int capacity){
-		return new LFUCache<K, V>(capacity);
+		return new LFUCache<>(capacity);
 	}
 	
 	
@@ -75,7 +75,7 @@ public class CacheUtil {
 	 * @return {@link LRUCache}
 	 */
 	public static <K, V> LRUCache<K, V> newLRUCache(int capacity, long timeout){
-		return new LRUCache<K, V>(capacity, timeout);
+		return new LRUCache<>(capacity, timeout);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class CacheUtil {
 	 * @return {@link LRUCache}
 	 */
 	public static <K, V> LRUCache<K, V> newLRUCache(int capacity){
-		return new LRUCache<K, V>(capacity);
+		return new LRUCache<>(capacity);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class CacheUtil {
 	 * @return {@link TimedCache}
 	 */
 	public static <K, V> TimedCache<K, V> newTimedCache(long timeout){
-		return new TimedCache<K, V>(timeout);
+		return new TimedCache<>(timeout);
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public class CacheUtil {
 	 * @since 3.0.7
 	 */
 	public static <K, V> WeakCache<K, V> newWeakCache(long timeout){
-		return new WeakCache<K, V>(timeout);
+		return new WeakCache<>(timeout);
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class CacheUtil {
 	 * @return {@link NoCache}
 	 */
 	public static <K, V> NoCache<K, V> newNoCache(){
-		return new NoCache<K, V>();
+		return new NoCache<>();
 	}
 	
 }

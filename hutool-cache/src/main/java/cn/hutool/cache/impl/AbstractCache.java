@@ -71,7 +71,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	 * @since 4.5.16
 	 */
 	private void putWithoutLock(K key, V object, long timeout) {
-		CacheObj<K, V> co = new CacheObj<K, V>(key, object, timeout);
+		CacheObj<K, V> co = new CacheObj<>(key, object, timeout);
 		if (timeout != 0) {
 			existCustomTimeout = true;
 		}
@@ -190,10 +190,9 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 	// ---------------------------------------------------------------- get end
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<V> iterator() {
 		CacheObjIterator<K, V> copiedIterator = (CacheObjIterator<K, V>) this.cacheObjIterator();
-		return new CacheValuesIterator<V>(copiedIterator);
+		return new CacheValuesIterator<>(copiedIterator);
 	}
 
 	@Override
