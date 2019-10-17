@@ -23,7 +23,7 @@
 		<tomcat-jdbc.version>9.0.27</tomcat-jdbc.version>
 		<druid.version>1.1.20</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
-		<mongo.version>3.11.0</mongo.version>
+		<mongo.version>3.11.1</mongo.version>
 		<sqlite.version>3.28.0</sqlite.version>
 		<hsqldb.version>2.5.0</hsqldb.version>
 		<jedis.version>3.1.0</jedis.version>
@@ -114,7 +114,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.17</version>
+			<version>8.0.18</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

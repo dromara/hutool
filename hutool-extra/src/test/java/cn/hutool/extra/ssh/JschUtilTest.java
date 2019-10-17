@@ -64,6 +64,7 @@ public class JschUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void getSessionTest(){
 		JschUtil.getSession("192.168.1.134", 22, "root", "aaa", null);
 	}
