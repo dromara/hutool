@@ -98,12 +98,7 @@ public class Wrapper {
 		
 		//对于Oracle这类数据库，表名中包含用户名需要单独拆分包装
 		if(field.contains(StrUtil.DOT)){
-			final Collection<String> target = CollectionUtil.filter(StrUtil.split(field, StrUtil.C_DOT), new Editor<String>(){
-				@Override
-				public String edit(String t) {
-					return StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote);
-				}
-			});
+			final Collection<String> target = CollectionUtil.filter(StrUtil.split(field, StrUtil.C_DOT), (Editor<String>) t -> StrUtil.format("{}{}{}", preWrapQuote, t, sufWrapQuote));
 			return CollectionUtil.join(target, StrUtil.DOT);
 		}
 		

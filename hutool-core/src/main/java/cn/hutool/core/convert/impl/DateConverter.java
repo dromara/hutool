@@ -1,10 +1,12 @@
 package cn.hutool.core.convert.impl;
 
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 
 import cn.hutool.core.convert.AbstractConverter;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -67,6 +69,8 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 		} else if (value instanceof Long) {
 			// Handle Long
 			mills = (Long) value;
+		}else if (value instanceof TemporalAccessor) {
+			return DateUtil.date((TemporalAccessor) value);
 		} else {
 			// 统一按照字符串处理
 			final String valueStr = convertToStr(value);

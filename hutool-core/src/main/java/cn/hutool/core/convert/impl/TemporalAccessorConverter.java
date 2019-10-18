@@ -87,9 +87,9 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		} else if (value instanceof TemporalAccessor) {
 			return parseFromTemporalAccessor((TemporalAccessor) value);
 		} else if (value instanceof Date) {
-			return parseFromTemporalAccessor(((Date) value).toInstant());
+			return parseFromInstant(((Date) value).toInstant());
 		}else if (value instanceof Calendar) {
-			return parseFromTemporalAccessor(((Calendar) value).toInstant());
+			return parseFromInstant(((Calendar) value).toInstant());
 		} else {
 			return parseFromCharSequence(convertToStr(value));
 		}
@@ -109,7 +109,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		} else {
 			instant = DateUtil.parse(value).toInstant();
 		}
-		return parseFromTemporalAccessor(instant);
+		return parseFromInstant(instant);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromLong(Long time) {
-		return parseFromTemporalAccessor(Instant.ofEpochMilli(time));
+		return parseFromInstant(Instant.ofEpochMilli(time));
 	}
 
 	/**
@@ -129,16 +129,85 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromTemporalAccessor(TemporalAccessor temporalAccessor) {
-		return parseFromIntant(Instant.from(temporalAccessor));
+		TemporalAccessor result = null;
+		if(temporalAccessor instanceof LocalDateTime){
+			result = parseFromLocalDateTime((LocalDateTime) temporalAccessor);
+		} else if(temporalAccessor instanceof ZonedDateTime){
+			result = parseFromZonedDateTime((ZonedDateTime) temporalAccessor);
+		}
+
+		if(null == result){
+			result = parseFromInstant(DateUtil.toInstant(temporalAccessor));
+		}
+
+		return result;
 	}
 
 	/**
 	 * 将TemporalAccessor型时间戳转换为java.time中的对象
 	 *
-	 * @param instant TemporalAccessor对象
+	 * @param localDateTime {@link LocalDateTime}对象
 	 * @return java.time中的对象
 	 */
-	private TemporalAccessor parseFromIntant(Instant instant) {
+	private TemporalAccessor parseFromLocalDateTime(LocalDateTime localDateTime) {
+		if(Instant.class.equals(this.targetType)){
+			return DateUtil.toInstant(localDateTime);
+		}
+		if(LocalDate.class.equals(this.targetType)){
+			return localDateTime.toLocalDate();
+		}
+		if(LocalTime.class.equals(this.targetType)){
+			return localDateTime.toLocalTime();
+		}
+		if(ZonedDateTime.class.equals(this.targetType)){
+			return localDateTime.atZone(ZoneId.systemDefault());
+		}
+		if(OffsetDateTime.class.equals(this.targetType)){
+			return localDateTime.atZone(ZoneId.systemDefault()).toOffsetDateTime();
+		}
+		if(OffsetTime.class.equals(this.targetType)){
+			return localDateTime.atZone(ZoneId.systemDefault()).toOffsetDateTime().toOffsetTime();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 将TemporalAccessor型时间戳转换为java.time中的对象
+	 *
+	 * @param zonedDateTime {@link ZonedDateTime}对象
+	 * @return java.time中的对象
+	 */
+	private TemporalAccessor parseFromZonedDateTime(ZonedDateTime zonedDateTime) {
+		if(Instant.class.equals(this.targetType)){
+			return DateUtil.toInstant(zonedDateTime);
+		}
+		if(LocalDateTime.class.equals(this.targetType)){
+			return zonedDateTime.toLocalDateTime();
+		}
+		if(LocalDate.class.equals(this.targetType)){
+			return zonedDateTime.toLocalDate();
+		}
+		if(LocalTime.class.equals(this.targetType)){
+			return zonedDateTime.toLocalTime();
+		}
+		if(OffsetDateTime.class.equals(this.targetType)){
+			return zonedDateTime.toOffsetDateTime();
+		}
+		if(OffsetTime.class.equals(this.targetType)){
+			return zonedDateTime.toOffsetDateTime().toOffsetTime();
+		}
+
+		return null;
+	}
+
+	/**
+	 * 将TemporalAccessor型时间戳转换为java.time中的对象
+	 *
+	 * @param instant {@link Instant}对象
+	 * @return java.time中的对象
+	 */
+	private TemporalAccessor parseFromInstant(Instant instant) {
 		if(Instant.class.equals(this.targetType)){
 			return instant;
 		}else if (LocalDateTime.class.equals(this.targetType)) {

@@ -163,7 +163,7 @@ public class DateTime extends Date {
 	 * @since 5.0.0
 	 */
 	public DateTime(TemporalAccessor temporalAccessor) {
-		this(Instant.from(temporalAccessor));
+		this(DateUtil.toInstant(temporalAccessor));
 	}
 
 	/**

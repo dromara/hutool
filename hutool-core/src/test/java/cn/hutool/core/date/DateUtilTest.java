@@ -2,12 +2,22 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 /**
  * 时间工具单元测试<br>
@@ -583,5 +593,27 @@ public class DateUtilTest {
 	public void formatHttpDateTest() {
 		String formatHttpDate = DateUtil.formatHttpDate(DateUtil.parse("2019-01-02 22:32:01"));
 		Assert.assertEquals("Wed, 02 Jan 2019 14:32:01 GMT", formatHttpDate);
+	}
+
+	@Test
+	public void toInstantTest(){
+		LocalDateTime localDateTime = LocalDateTime.parse("2017-05-06T08:30:00", DateTimeFormatter.ISO_DATE_TIME);
+		Instant instant = DateUtil.toInstant(localDateTime);
+		Assert.assertEquals("2017-05-06T00:30:00Z", instant.toString());
+
+		LocalDate localDate = localDateTime.toLocalDate();
+		instant = DateUtil.toInstant(localDate);
+		Assert.assertNotNull(instant);
+
+		LocalTime localTime = localDateTime.toLocalTime();
+		instant = DateUtil.toInstant(localTime);
+		Assert.assertNotNull(instant);
+	}
+
+	@Test
+	public void dateTest(){
+		LocalDateTime localDateTime = LocalDateTime.parse("2017-05-06T08:30:00", DateTimeFormatter.ISO_DATE_TIME);
+		DateTime date = DateUtil.date(localDateTime);
+		Assert.assertEquals("2017-05-06 08:30:00", date.toString());
 	}
 }
