@@ -92,7 +92,7 @@ public class Wrapper {
 		}
 		
 		//如果字段中包含通配符或者括号（字段通配符或者函数），不做包装
-		if(StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", "as")) {
+		if(StrUtil.containsAnyIgnoreCase(field, "*", "(", " ", " as ")) {
 			return field;
 		}
 		

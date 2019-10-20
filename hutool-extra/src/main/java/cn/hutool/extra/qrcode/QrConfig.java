@@ -278,7 +278,7 @@ public class QrConfig {
 		// 配置
 		final HashMap<EncodeHintType, Object> hints = new HashMap<>();
 		if (null != this.charset) {
-			hints.put(EncodeHintType.CHARACTER_SET, charset.toString());
+			hints.put(EncodeHintType.CHARACTER_SET, charset.toString().toLowerCase());
 		}
 		if (null != this.errorCorrection) {
 			hints.put(EncodeHintType.ERROR_CORRECTION, this.errorCorrection);
