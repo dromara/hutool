@@ -92,10 +92,6 @@ public class HttpInputStream extends InputStream {
 			return;
 		}
 		
-		// TODO 分段响应内容解析
-		if(response.isChunked()) {
-		}
-
 		if (response.isGzip() && false == (response.in instanceof GZIPInputStream)) {
 			// Accept-Encoding: gzip
 			try {

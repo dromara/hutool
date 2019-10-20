@@ -98,4 +98,12 @@ public class HttpRequestTest {
 				.setSSLProtocol(SSLSocketFactoryBuilder.TLSv12);
 		Console.log(request.execute().body());
 	}
+
+	@Test
+	@Ignore
+	public void getDeflateTest() {
+		String res = HttpRequest.get("https://comment.bilibili.com/67573272.xml")
+				.execute().body();
+		Console.log(res);
+	}
 }

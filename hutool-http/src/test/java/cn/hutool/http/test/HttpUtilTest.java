@@ -62,14 +62,6 @@ public class HttpUtilTest {
 	
 	@Test
 	@Ignore
-	public void getTest5() {
-		String res = HttpRequest.get("https://comment.bilibili.com/67573272.xml")
-				.execute().body();
-		Console.log(res);
-	}
-
-	@Test
-	@Ignore
 	public void get12306Test() {
 		String result = HttpUtil.get("https://kyfw.12306.cn/otn/");
 		Console.log(result);
@@ -98,6 +90,7 @@ public class HttpUtilTest {
 
 		// 请求下一页，检查Cookie是否复用
 		listContent = HttpUtil.get("https://www.oschina.net/action/ajax/get_more_news_list?newsType=&p=3");
+		Console.log(listContent);
 	}
 
 	@Test
