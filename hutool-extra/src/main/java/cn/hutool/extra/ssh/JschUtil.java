@@ -119,28 +119,13 @@ public class JschUtil {
 	 * @since 4.5.2
 	 */
 	public static Session createSession(String sshHost, int sshPort, String sshUser, String sshPass) {
-		Assert.notEmpty(sshHost, "SSH Host must be not empty!");
-		Assert.isTrue(sshPort < 0, "SSH Host must be not empty!");
-
-		// 默认root用户
-		if (StrUtil.isEmpty(sshUser)) {
-			sshUser = "root";
-		}
-
 		final JSch jsch = new JSch();
-		Session session;
-		try {
-			session = jsch.getSession(sshUser, sshHost, sshPort);
-		} catch (JSchException e) {
-			throw new JschRuntimeException(e);
-		}
+		final Session session = createSession(jsch, sshHost, sshPort, sshUser);
 
 		if (StrUtil.isNotEmpty(sshPass)) {
 			session.setPassword(sshPass);
 		}
 
-		// 设置第一次登陆的时候提示，可选值：(ask | yes | no)
-		session.setConfig("StrictHostKeyChecking", "no");
 		return session;
 	}
 
@@ -156,19 +141,43 @@ public class JschUtil {
 	 * @since 5.0.0
 	 */
 	public static Session createSession(String sshHost, int sshPort, String sshUser, String privateKeyPath, byte[] passphrase) {
+		Assert.notEmpty(privateKeyPath, "PrivateKey Path must be not empty!");
+
+		final JSch jsch = new JSch();
+		try {
+			jsch.addIdentity(privateKeyPath, passphrase);
+		} catch (JSchException e) {
+			throw new JschRuntimeException(e);
+		}
+
+		return createSession(jsch, sshHost, sshPort, sshUser);
+	}
+
+	/**
+	 * 创建一个SSH会话，重用已经使用的会话
+	 *
+	 * @param jsch    {@link JSch}
+	 * @param sshHost 主机
+	 * @param sshPort 端口
+	 * @param sshUser 用户名，如果为null，默认root
+	 * @return {@link Session}
+	 * @since 5.0.3
+	 */
+	public static Session createSession(JSch jsch, String sshHost, int sshPort, String sshUser) {
 		Assert.notEmpty(sshHost, "SSH Host must be not empty!");
 		Assert.isTrue(sshPort > 0, "SSH port must be > 0");
-		Assert.notEmpty(privateKeyPath, "PrivateKey Path must be not empty!");
 
 		// 默认root用户
 		if (StrUtil.isEmpty(sshUser)) {
 			sshUser = "root";
 		}
 
-		final JSch jsch = new JSch();
+		if(null == jsch){
+			jsch = new JSch();
+		}
+
 		Session session;
 		try {
-			jsch.addIdentity(privateKeyPath, passphrase);
 			session = jsch.getSession(sshUser, sshHost, sshPort);
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
@@ -176,6 +185,7 @@ public class JschUtil {
 
 		// 设置第一次登录的时候提示，可选值：(ask | yes | no)
 		session.setConfig("StrictHostKeyChecking", "no");
+
 		return session;
 	}
 
