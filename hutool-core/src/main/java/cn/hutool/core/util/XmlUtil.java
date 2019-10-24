@@ -745,6 +745,18 @@ public class XmlUtil {
 	}
 
 	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data     Map类型数据
+	 * @param rootName 根节点名
+	 * @return XML格式的字符串
+	 * @since 5.0.4
+	 */
+	public static String mapToXmlStr(Map<?, ?> data, String rootName,String namespace) {
+		return toStr(mapToXml(data, rootName, namespace));
+	}
+
+	/**
 	 * 将Map转换为XML
 	 *
 	 * @param data     Map类型数据
@@ -753,8 +765,21 @@ public class XmlUtil {
 	 * @since 4.0.9
 	 */
 	public static Document mapToXml(Map<?, ?> data, String rootName) {
+
+		return mapToXml(data, rootName, null);
+	}
+
+	/**
+	 * 将Map转换为XML
+	 *
+	 * @param data     Map类型数据
+	 * @param rootName 根节点名
+	 * @return XML
+	 * @since 5.0.4
+	 */
+	public static Document mapToXml(Map<?, ?> data, String rootName,String namespace) {
 		final Document doc = createXml();
-		final Element root = appendChild(doc, rootName);
+		final Element root = appendChild(doc, rootName, namespace);
 
 		mapToXml(doc, root, data);
 		return doc;
@@ -779,9 +804,9 @@ public class XmlUtil {
 	 * @return 子节点
 	 * @since 4.0.9
 	 */
-	public static Element appendChild(Node node, String tagName) {
+	public static Element appendChild(Node node, String tagName, String namespace) {
 		Document doc = (node instanceof Document) ? (Document) node : node.getOwnerDocument();
-		Element child = doc.createElement(tagName);
+		Element child = doc.createElementNS(namespace, tagName);
 		node.appendChild(child);
 		return child;
 	}
