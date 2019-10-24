@@ -45,7 +45,7 @@ public class TemporalAccessorConverterTest {
 	@Test
 	public void toZonedDateTimeTest(){
 		ZonedDateTime zonedDateTime = Convert.convert(ZonedDateTime.class, "2019-02-18");
-		Assert.assertEquals("2019-02-18T00:00+08:00[GMT+08:00]", zonedDateTime.toString());
+		Assert.assertEquals("2019-02-18T00:00+08:00", zonedDateTime.toString().substring(0, 22));
 	}
 
 	@Test
