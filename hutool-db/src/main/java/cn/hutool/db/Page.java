@@ -42,7 +42,7 @@ public class Page implements Serializable {
 	 * @param pageSize 每页结果数
 	 */
 	public Page(int pageNumber, int pageSize) {
-		this.pageNumber = pageNumber < 0 ? 0 : pageNumber;
+		this.pageNumber = Math.max(pageNumber, 0);
 		this.pageSize = pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
 	}
 
@@ -73,7 +73,7 @@ public class Page implements Serializable {
 	 * @param pageNumber 页码
 	 */
 	public void setPageNumber(int pageNumber) {
-		this.pageNumber = pageNumber < 0 ? 0 : pageNumber;
+		this.pageNumber = Math.max(pageNumber, 0);
 	}
 
 	/**

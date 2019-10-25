@@ -387,8 +387,7 @@ public class XmlUtil {
 	 * @since 4.1.2
 	 */
 	public static DocumentBuilder createDocumentBuilder() {
-		final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		disableXXE(dbf);
+		final DocumentBuilderFactory dbf = disableXXE(DocumentBuilderFactory.newInstance());
 		DocumentBuilder builder;
 		try {
 			builder = dbf.newDocumentBuilder();
@@ -406,9 +405,21 @@ public class XmlUtil {
 	 * @return XML文档
 	 */
 	public static Document createXml(String rootElementName) {
-		final Document doc = createXml();
-		doc.appendChild(doc.createElement(rootElementName));
+		return createXml(rootElementName, null);
+	}
 
+	/**
+	 * 创建XML文档<br>
+	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，即XML在转为文本的时候才定义编码
+	 *
+	 * @param rootElementName 根节点名称
+	 * @param namespace 命名空间，无则传null
+	 * @return XML文档
+	 * @since 5.0.4
+	 */
+	public static Document createXml(String rootElementName, String namespace) {
+		final Document doc = createXml();
+		doc.appendChild(null == namespace ? doc.createElement(rootElementName) : doc.createElementNS(rootElementName, namespace));
 		return doc;
 	}
 
@@ -674,7 +685,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static Map<String, Object> xmlToMap(String xmlStr) {
-		return xmlToMap(xmlStr, new HashMap<String, Object>());
+		return xmlToMap(xmlStr, new HashMap<>());
 	}
 
 	/**
@@ -685,7 +696,7 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static Map<String, Object> xmlToMap(Node node) {
-		return xmlToMap(node, new HashMap<String, Object>());
+		return xmlToMap(node, new HashMap<>());
 	}
 
 	/**
@@ -804,9 +815,22 @@ public class XmlUtil {
 	 * @return 子节点
 	 * @since 4.0.9
 	 */
+	public static Element appendChild(Node node, String tagName) {
+		return appendChild(node, tagName, null);
+	}
+
+	/**
+	 * 在已有节点上创建子节点
+	 *
+	 * @param node    节点
+	 * @param tagName 标签名
+	 * @param namespace 命名空间，无传null
+	 * @return 子节点
+	 * @since 5.0.4
+	 */
 	public static Element appendChild(Node node, String tagName, String namespace) {
 		Document doc = (node instanceof Document) ? (Document) node : node.getOwnerDocument();
-		Element child = doc.createElementNS(namespace, tagName);
+		Element child = (null == namespace) ? doc.createElement(tagName) : doc.createElementNS(namespace, tagName);
 		node.appendChild(child);
 		return child;
 	}

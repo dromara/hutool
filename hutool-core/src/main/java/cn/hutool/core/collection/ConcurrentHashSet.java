@@ -17,8 +17,8 @@ public class ConcurrentHashSet<E> extends AbstractSet<E> implements java.io.Seri
 	private static final long serialVersionUID = 7997886765361607470L;
 
 	/** 持有对象。如果值为此对象表示有数据，否则无数据 */
-	private static final Object PRESENT = new Object();
-	private final ConcurrentHashMap<E, Object> map;
+	private static final Boolean PRESENT = true;
+	private final ConcurrentHashMap<E, Boolean> map;
 
 	// ----------------------------------------------------------------------------------- Constructor start
 	/**
