@@ -220,6 +220,11 @@ public class SettingLoader {
 				if (null == varValue) {
 					varValue = System.getProperty(key);
 				}
+				// 环境变量中查找
+				if (null == varValue) {
+					varValue = System.getenv(key);
+				}
+
 				if (null != varValue) {
 					// 替换标识
 					value = value.replace(var, varValue);
