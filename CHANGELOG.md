@@ -7,7 +7,9 @@
 
 ### 新特性
 * 【setting】    增加System.getenv变量替换支持
+* 【core】       XmlUtil中mapToStr支持namespace（pr#599@Github）
 ### Bug修复
+* 【core】       解决ConcurrentHashSet不能序列化的问题（issue#600@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
