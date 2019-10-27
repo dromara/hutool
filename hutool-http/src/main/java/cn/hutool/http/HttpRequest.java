@@ -844,6 +844,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * 设置HTTPS安全连接协议，只针对HTTPS请求，可以使用的协议包括：<br>
+	 * 此方法调用后{@link #setSSLSocketFactory(SSLSocketFactory)} 将被覆盖。
 	 *
 	 * <pre>
 	 * 1. TLSv1.2
@@ -855,6 +856,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @param protocol 协议
 	 * @return this
 	 * @see SSLSocketFactoryBuilder
+	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
 	public HttpRequest setSSLProtocol(String protocol) {
 		if (null == this.ssf) {
