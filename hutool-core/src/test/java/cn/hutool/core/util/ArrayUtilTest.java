@@ -23,6 +23,16 @@ public class ArrayUtilTest {
 		Assert.assertTrue(ArrayUtil.isEmpty(b));
 		Object c = null;
 		Assert.assertTrue(ArrayUtil.isEmpty(c));
+
+		Object d = new Object[]{"1", "2", 3, 4D};
+		boolean isEmpty = ArrayUtil.isEmpty(d);
+		Assert.assertFalse(isEmpty);
+		d = new Object[0];
+		isEmpty = ArrayUtil.isEmpty(d);
+		Assert.assertTrue(isEmpty);
+		d = null;
+		isEmpty = ArrayUtil.isEmpty(d);
+		Assert.assertTrue(isEmpty);
 	}
 
 	@Test
@@ -51,36 +61,21 @@ public class ArrayUtilTest {
 	@Test
 	public void filterTest() {
 		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.filter(a, new Editor<Integer>() {
-			@Override
-			public Integer edit(Integer t) {
-				return (t % 2 == 0) ? t : null;
-			}
-		});
+		Integer[] filter = ArrayUtil.filter(a, (Editor<Integer>) t -> (t % 2 == 0) ? t : null);
 		Assert.assertArrayEquals(filter, new Integer[]{2, 4, 6});
 	}
 
 	@Test
 	public void filterTestForFilter() {
 		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.filter(a, new Filter<Integer>() {
-			@Override
-			public boolean accept(Integer t) {
-				return t % 2 == 0;
-			}
-		});
+		Integer[] filter = ArrayUtil.filter(a, (Filter<Integer>) t -> t % 2 == 0);
 		Assert.assertArrayEquals(filter, new Integer[]{2, 4, 6});
 	}
 
 	@Test
 	public void filterTestForEditor() {
 		Integer[] a = {1, 2, 3, 4, 5, 6};
-		Integer[] filter = ArrayUtil.filter(a, new Editor<Integer>() {
-			@Override
-			public Integer edit(Integer t) {
-				return (t % 2 == 0) ? t * 10 : t;
-			}
-		});
+		Integer[] filter = ArrayUtil.filter(a, (Editor<Integer>) t -> (t % 2 == 0) ? t * 10 : t);
 		Assert.assertArrayEquals(filter, new Integer[]{1, 20, 3, 40, 5, 60});
 	}
 

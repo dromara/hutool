@@ -865,12 +865,9 @@ public class ArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static <T> T[] removeNull(T[] array) {
-		return filter(array, new Editor<T>() {
-			@Override
-			public T edit(T t) {
-				// 返回null便不加入集合
-				return t;
-			}
+		return filter(array, (Editor<T>) t -> {
+			// 返回null便不加入集合
+			return t;
 		});
 	}
 
@@ -883,12 +880,7 @@ public class ArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends CharSequence> T[] removeEmpty(T[] array) {
-		return filter(array, new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				return false == StrUtil.isEmpty(t);
-			}
-		});
+		return filter(array, (Filter<T>) t -> false == StrUtil.isEmpty(t));
 	}
 
 	/**
@@ -900,12 +892,7 @@ public class ArrayUtil {
 	 * @since 3.2.2
 	 */
 	public static <T extends CharSequence> T[] removeBlank(T[] array) {
-		return filter(array, new Filter<T>() {
-			@Override
-			public boolean accept(T t) {
-				return false == StrUtil.isBlank(t);
-			}
-		});
+		return filter(array, (Filter<T>) t -> false == StrUtil.isBlank(t));
 	}
 
 	/**
@@ -916,12 +903,7 @@ public class ArrayUtil {
 	 * @since 3.2.1
 	 */
 	public static String[] nullToEmpty(String[] array) {
-		return filter(array, new Editor<String>() {
-			@Override
-			public String edit(String t) {
-				return null == t ? StrUtil.EMPTY : t;
-			}
-		});
+		return filter(array, (Editor<String>) t -> null == t ? StrUtil.EMPTY : t);
 	}
 
 	/**
