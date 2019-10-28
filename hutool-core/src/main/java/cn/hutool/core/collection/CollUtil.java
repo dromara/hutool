@@ -181,7 +181,7 @@ public class CollUtil {
 	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
 	 * 结果：[c]，此结果中只保留了一个<br>
 	 * 任意一个集合为空，返回另一个集合<br>
-	 * 两个集合无交集则返回两个集合的组合
+	 * 两个集合无差集则返回空集合
 	 *
 	 * @param <T>   集合元素类型
 	 * @param coll1 集合1
@@ -1780,7 +1780,7 @@ public class CollUtil {
 
 		final ConverterRegistry convert = ConverterRegistry.getInstance();
 		while (iter.hasNext()) {
-			collection.add((T) convert.convert(elementType, iter.next()));
+			collection.add(convert.convert(elementType, iter.next()));
 		}
 
 		return collection;
