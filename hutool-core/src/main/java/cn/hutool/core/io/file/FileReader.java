@@ -196,7 +196,7 @@ public class FileReader extends FileWrapper {
 	 * @throws IORuntimeException IO异常
 	 */
 	public List<String> readLines() throws IORuntimeException {
-		return readLines(new ArrayList<String>());
+		return readLines(new ArrayList<>());
 	}
 
 	/**

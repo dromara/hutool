@@ -64,7 +64,7 @@ public class IoUtil {
 
 	// -------------------------------------------------------------------------------------- Copy start
 	/**
-	 * 将Reader中的内容复制到Writer中 使用默认缓存大小
+	 * 将Reader中的内容复制到Writer中 使用默认缓存大小，拷贝后不关闭Reader
 	 * 
 	 * @param reader Reader
 	 * @param writer Writer
@@ -76,7 +76,7 @@ public class IoUtil {
 	}
 
 	/**
-	 * 将Reader中的内容复制到Writer中
+	 * 将Reader中的内容复制到Writer中，拷贝后不关闭Reader
 	 * 
 	 * @param reader Reader
 	 * @param writer Writer
@@ -89,7 +89,7 @@ public class IoUtil {
 	}
 
 	/**
-	 * 将Reader中的内容复制到Writer中
+	 * 将Reader中的内容复制到Writer中，拷贝后不关闭Reader
 	 * 
 	 * @param reader Reader
 	 * @param writer Writer
@@ -124,7 +124,7 @@ public class IoUtil {
 	}
 
 	/**
-	 * 拷贝流，使用默认Buffer大小
+	 * 拷贝流，使用默认Buffer大小，拷贝后不关闭流
 	 * 
 	 * @param in 输入流
 	 * @param out 输出流
@@ -136,7 +136,7 @@ public class IoUtil {
 	}
 
 	/**
-	 * 拷贝流
+	 * 拷贝流，拷贝后不关闭流
 	 * 
 	 * @param in 输入流
 	 * @param out 输出流
@@ -149,7 +149,7 @@ public class IoUtil {
 	}
 
 	/**
-	 * 拷贝流
+	 * 拷贝流，拷贝后不关闭流
 	 * 
 	 * @param in 输入流
 	 * @param out 输出流
@@ -215,13 +215,17 @@ public class IoUtil {
 		Assert.notNull(in, "FileInputStream is null!");
 		Assert.notNull(out, "FileOutputStream is null!");
 
-		final FileChannel inChannel = in.getChannel();
-		final FileChannel outChannel = out.getChannel();
-
+		FileChannel inChannel = null;
+		FileChannel outChannel = null;
 		try {
+			inChannel = in.getChannel();
+			outChannel = out.getChannel();
 			return inChannel.transferTo(0, inChannel.size(), outChannel);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		} finally {
+			close(outChannel);
+			close(inChannel);
 		}
 	}
 
@@ -514,15 +518,31 @@ public class IoUtil {
 	}
 
 	/**
-	 * 从流中读取bytes
+	 * 从流中读取bytes，读取完毕后关闭流
 	 * 
 	 * @param in {@link InputStream}
 	 * @return bytes
 	 * @throws IORuntimeException IO异常
 	 */
 	public static byte[] readBytes(InputStream in) throws IORuntimeException {
+		return readBytes(in, true);
+	}
+
+	/**
+	 * 从流中读取bytes
+	 *
+	 * @param in {@link InputStream}
+	 * @param isCloseStream 是否关闭输入流
+	 * @return bytes
+	 * @throws IORuntimeException IO异常
+	 * @since 5.0.4
+	 */
+	public static byte[] readBytes(InputStream in, boolean isCloseStream) throws IORuntimeException {
 		final FastByteArrayOutputStream out = new FastByteArrayOutputStream();
 		copy(in, out);
+		if(isCloseStream){
+			close(in);
+		}
 		return out.toByteArray();
 	}
 
@@ -670,12 +690,7 @@ public class IoUtil {
 	 * @throws IORuntimeException IO异常
 	 */
 	public static <T extends Collection<String>> T readLines(Reader reader, final T collection) throws IORuntimeException {
-		readLines(reader, new LineHandler() {
-			@Override
-			public void handle(String line) {
-				collection.add(line);
-			}
-		});
+		readLines(reader, (LineHandler) collection::add);
 		return collection;
 	}
 
