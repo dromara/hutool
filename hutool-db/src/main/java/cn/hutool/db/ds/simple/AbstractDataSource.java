@@ -16,22 +16,22 @@ import javax.sql.DataSource;
  */
 public abstract class AbstractDataSource implements DataSource, Cloneable, Closeable{
 	@Override
-	public PrintWriter getLogWriter() throws SQLException {
+	public PrintWriter getLogWriter() {
 		return DriverManager.getLogWriter();
 	}
 
 	@Override
-	public void setLogWriter(PrintWriter out) throws SQLException {
+	public void setLogWriter(PrintWriter out) {
 		DriverManager.setLogWriter(out);
 	}
 
 	@Override
-	public void setLoginTimeout(int seconds) throws SQLException {
+	public void setLoginTimeout(int seconds) {
 		DriverManager.setLoginTimeout(seconds);
 	}
 
 	@Override
-	public int getLoginTimeout() throws SQLException {
+	public int getLoginTimeout() {
 		return DriverManager.getLoginTimeout();
 	}
 
