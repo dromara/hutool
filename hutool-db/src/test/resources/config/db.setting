@@ -1,3 +1,4 @@
+# suppress inspection "Annotator" for whole file
 #===================================================================
 # 数据库配置文件样例
 # DsFactory默认读取的配置文件是config/db.setting
