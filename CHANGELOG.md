@@ -11,6 +11,7 @@
 * 【core】       ZipUtil修改策略:默认关闭输入流（issue#604@Github）
 * 【core】       改进CsvReader，支持RowHandler按行处理（issue#608@Github）
 * 【core】       增加MapUtil.sortJoin，改进SecureUtil.signParams支持补充字符串（issue#606@Github）
+* 【core】       增加Money类（issue#605@Github）
 
 ### Bug修复
 * 【core】       解决ConcurrentHashSet不能序列化的问题（issue#600@Github）
