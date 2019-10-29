@@ -85,7 +85,7 @@ public final class CsvReader implements Serializable{
 	 * @param errorOnDifferentFieldCount 每行字段个数不同时是否抛出异常，默认false
 	 */
 	public void setErrorOnDifferentFieldCount(boolean errorOnDifferentFieldCount) {
-		this.setErrorOnDifferentFieldCount(errorOnDifferentFieldCount);
+		this.config.setErrorOnDifferentFieldCount(errorOnDifferentFieldCount);
 	}
 
 	/**
