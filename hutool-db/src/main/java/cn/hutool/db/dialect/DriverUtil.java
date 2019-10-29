@@ -44,7 +44,7 @@ public class DriverUtil {
 		}
 		
 		Connection conn = null;
-		String driver = null;
+		String driver;
 		try {
 			try {
 				conn = ds.getConnection();
@@ -69,7 +69,7 @@ public class DriverUtil {
 	 * @throws DbRuntimeException SQL异常包装，获取元数据信息失败
 	 */
 	public static String identifyDriver(Connection conn) throws DbRuntimeException {
-		String driver = null;
+		String driver;
 		DatabaseMetaData meta;
 		try {
 			meta = conn.getMetaData();

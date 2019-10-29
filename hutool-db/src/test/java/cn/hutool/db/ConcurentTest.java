@@ -37,7 +37,7 @@ public class ConcurentTest {
 			ThreadUtil.execute(new Runnable() {
 				@Override
 				public void run() {
-					List<Entity> find = null;
+					List<Entity> find;
 					try {
 						find = db.find(CollectionUtil.newArrayList("name AS name2"), Entity.create("user"), new EntityListHandler());
 					} catch (SQLException e) {

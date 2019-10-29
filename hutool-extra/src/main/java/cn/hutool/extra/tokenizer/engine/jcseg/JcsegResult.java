@@ -36,7 +36,7 @@ public class JcsegResult implements Result{
 		if (this.cachedWord != null) {
 			return true;
 		}
-		IWord next = null;
+		IWord next;
 		try {
 			next = this.result.next();
 		} catch (IOException e) {

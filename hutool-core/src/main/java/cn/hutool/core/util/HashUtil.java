@@ -92,7 +92,7 @@ public class HashUtil {
 		for (i = 0; i < (len << 3); i += 8) {
 			char k = key[i >> 3];
 			if ((k & 0x01) == 0) {
-				hash ^= tab[i + 0];
+				hash ^= tab[i];
 			}
 			if ((k & 0x02) == 0) {
 				hash ^= tab[i + 1];
@@ -238,7 +238,7 @@ public class HashUtil {
 		int oneEighth = bitsInUnsignedInt / 8;
 		int highBits = 0xFFFFFFFF << (bitsInUnsignedInt - oneEighth);
 		int hash = 0;
-		int test = 0;
+		int test;
 
 		for (int i = 0; i < str.length(); i++) {
 			hash = (hash << oneEighth) + str.charAt(i);
@@ -259,7 +259,7 @@ public class HashUtil {
 	 */
 	public static int elfHash(String str) {
 		int hash = 0;
-		int x = 0;
+		int x;
 
 		for (int i = 0; i < str.length(); i++) {
 			hash = (hash << 4) + str.charAt(i);
@@ -361,7 +361,7 @@ public class HashUtil {
 	 * @return Hash值
 	 */
 	public static long tianlHash(String str) {
-		long hash = 0;
+		long hash;
 
 		int iLength = str.length();
 		if (iLength == 0) {

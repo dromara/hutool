@@ -55,7 +55,7 @@ public class DialectFactory {
 	public final static String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
 	
 	private static Map<DataSource, Dialect> dialectPool = new ConcurrentHashMap<>();
-	private static Object lock = new Object();
+	private static final Object lock = new Object();
 
 	private DialectFactory() {
 	}

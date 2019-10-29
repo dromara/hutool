@@ -33,23 +33,19 @@ public class MySQLTest {
 	 * 事务测试<br>
 	 * 更新三条信息，低2条后抛出异常，正常情况下三条都应该不变
 	 * 
-	 * @throws SQLException
+	 * @throws SQLException SQL异常
 	 */
 	@Test(expected=SQLException.class)
 	@Ignore
 	public void txTest() throws SQLException {
-		Db.use("mysql").tx(new VoidFunc1<Db>() {
-			
-			@Override
-			public void call(Db db) throws Exception {
-				int update = db.update(Entity.create("user").set("text", "描述100"), Entity.create().set("id", 100));
-				db.update(Entity.create("user").set("text", "描述101"), Entity.create().set("id", 101));
-				if(1 == update) {
-					// 手动指定异常，然后测试回滚触发
-					throw new RuntimeException("Error");
-				}
-				db.update(Entity.create("user").set("text", "描述102"), Entity.create().set("id", 102));
+		Db.use("mysql").tx(db -> {
+			int update = db.update(Entity.create("user").set("text", "描述100"), Entity.create().set("id", 100));
+			db.update(Entity.create("user").set("text", "描述101"), Entity.create().set("id", 101));
+			if(1 == update) {
+				// 手动指定异常，然后测试回滚触发
+				throw new RuntimeException("Error");
 			}
+			db.update(Entity.create("user").set("text", "描述102"), Entity.create().set("id", 102));
 		});
 	}
 

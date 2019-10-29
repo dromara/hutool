@@ -31,7 +31,7 @@ public class IKAnalyzerResult extends AbstractResult {
 
 	@Override
 	protected Word nextWord() {
-		Lexeme next = null;
+		Lexeme next;
 		try {
 			next = this.seg.next();
 		} catch (IOException e) {

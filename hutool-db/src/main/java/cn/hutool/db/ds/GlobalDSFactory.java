@@ -12,7 +12,7 @@ import cn.hutool.log.StaticLog;
 public class GlobalDSFactory {
 
 	private static volatile DSFactory factory;
-	private static Object lock = new Object();
+	private static final Object lock = new Object();
 
 	/*
 	 * 设置在JVM关闭时关闭所有数据库连接

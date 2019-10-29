@@ -35,7 +35,7 @@ public class DayOfWeekValueParser extends SimpleValueParser {
 	 * 解析别名
 	 * @param value 别名值
 	 * @return 月份int值
-	 * @throws CronException
+	 * @throws CronException 无效别名抛出此异常
 	 */
 	private int parseAlias(String value) throws CronException {
 		if(value.equalsIgnoreCase("L")){

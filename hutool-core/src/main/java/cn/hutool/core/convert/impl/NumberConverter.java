@@ -76,18 +76,18 @@ public class NumberConverter extends AbstractConverter<Number> {
 			return StrUtil.isBlank(valueStr) ? null : Integer.valueOf(NumberUtil.parseInt(valueStr));
 			
 		} else if (AtomicInteger.class == targetType) {
-			int intValue;
+			final AtomicInteger intValue = new AtomicInteger();
 			if (value instanceof Number) {
-				intValue = ((Number) value).intValue();
+				intValue.set(((Number) value).intValue());
 			} else if(value instanceof Boolean) {
-				intValue = BooleanUtil.toInt((Boolean)value);
+				intValue.set(BooleanUtil.toInt((Boolean) value));
 			}
 			final String valueStr = convertToStr(value);
 			if (StrUtil.isBlank(valueStr)) {
 				return null;
 			}
-			intValue = NumberUtil.parseInt(valueStr);
-			return new AtomicInteger(intValue);
+			intValue.set(NumberUtil.parseInt(valueStr));
+			return intValue;
 		} else if (Long.class == targetType) {
 			if (value instanceof Number) {
 				return Long.valueOf(((Number) value).longValue());
@@ -98,18 +98,18 @@ public class NumberConverter extends AbstractConverter<Number> {
 			return StrUtil.isBlank(valueStr) ? null : Long.valueOf(NumberUtil.parseLong(valueStr));
 
 		} else if (AtomicLong.class == targetType) {
-			long longValue;
+			final AtomicLong longValue = new AtomicLong();
 			if (value instanceof Number) {
-				longValue = ((Number) value).longValue();
+				longValue.set(((Number) value).longValue());
 			} else if(value instanceof Boolean) {
-				longValue = BooleanUtil.toLong((Boolean)value);
+				longValue.set(BooleanUtil.toLong((Boolean) value));
 			}
 			final String valueStr = convertToStr(value);
 			if (StrUtil.isBlank(valueStr)) {
 				return null;
 			}
-			longValue = NumberUtil.parseLong(valueStr);
-			return new AtomicLong(longValue);
+			longValue.set(NumberUtil.parseLong(valueStr));
+			return longValue;
 			
 		} else if (Float.class == targetType) {
 			if (value instanceof Number) {

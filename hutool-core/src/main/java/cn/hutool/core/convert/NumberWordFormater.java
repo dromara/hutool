@@ -45,7 +45,7 @@ public class NumberWordFormater {
 	 */
 	private static String format(String x) {
 		int z = x.indexOf("."); // 取小数点位置
-		String lstr = "", rstr = "";
+		String lstr, rstr = "";
 		if (z > -1) { // 看是否有小数，如果有，则分别取左边和右边
 			lstr = x.substring(0, z);
 			rstr = x.substring(z + 1);
@@ -65,19 +65,20 @@ public class NumberWordFormater {
 			lstrrev += "0";
 			break;
 		}
-		String lm = ""; // 用来存放转换後的整数部分
+		StringBuilder lm = new StringBuilder(); // 用来存放转换後的整数部分
 		for (int i = 0; i < lstrrev.length() / 3; i++) {
 			a[i] = StrUtil.reverse(lstrrev.substring(3 * i, 3 * i + 3)); // 截取第一个叁位
 			if (!a[i].equals("000")) { // 用来避免这种情况：1000000 = one million
 										// thousand only
 				if (i != 0) {
-					lm = transThree(a[i]) + " " + parseMore(String.valueOf(i)) + " " + lm; // 加:
-																							// thousand、million、billion
+					lm.insert(0, transThree(a[i]) + " " + parseMore(i) + " "); // 加:
+					// thousand、million、billion
 				} else {
-					lm = transThree(a[i]); // 防止i=0时， 在多加两个空格.
+					// 防止i=0时， 在多加两个空格.
+					lm = new StringBuilder(transThree(a[i]));
 				}
 			} else {
-				lm += transThree(a[i]);
+				lm.append(transThree(a[i]));
 			}
 		}
 
@@ -86,7 +87,7 @@ public class NumberWordFormater {
 			xs = "AND CENTS " + transTwo(rstr) + " "; // 小数部分存在时转换小数
 		}
 
-		return lm.trim() + " " + xs + "ONLY";
+		return lm.toString().trim() + " " + xs + "ONLY";
 	}
 
 	private static String parseFirst(String s) {
@@ -101,13 +102,13 @@ public class NumberWordFormater {
 		return NUMBER_TEN[Integer.parseInt(s.substring(0, 1)) - 1];
 	}
 
-	private static String parseMore(String s) {
-		return NUMBER_MORE[Integer.parseInt(s)];
+	private static String parseMore(int i) {
+		return NUMBER_MORE[i];
 	}
 
 	// 两位
 	private static String transTwo(String s) {
-		String value = "";
+		String value;
 		// 判断位数
 		if (s.length() > 2) {
 			s = s.substring(0, 2);
@@ -130,7 +131,7 @@ public class NumberWordFormater {
 	// 制作叁位的数
 	// s.length = 3
 	private static String transThree(String s) {
-		String value = "";
+		String value;
 		if (s.startsWith("0")) {// 是否小於100
 			value = transTwo(s.substring(1));
 		} else if (s.substring(1).equals("00")) {// 是否被100整除

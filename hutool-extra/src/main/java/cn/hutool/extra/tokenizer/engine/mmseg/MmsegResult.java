@@ -30,7 +30,7 @@ public class MmsegResult extends AbstractResult {
 
 	@Override
 	protected Word nextWord() {
-		com.chenlb.mmseg4j.Word next = null;
+		com.chenlb.mmseg4j.Word next;
 		try {
 			next = this.mmSeg.next();
 		} catch (IOException e) {

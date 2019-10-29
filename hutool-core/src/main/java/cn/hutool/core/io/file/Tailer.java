@@ -137,7 +137,7 @@ public class Tailer implements Serializable {
 	/**
 	 * 预读取行
 	 * 
-	 * @throws IOException
+	 * @throws IOException IO异常
 	 */
 	private void readTail() throws IOException {
 		final long len = this.randomAccessFile.length();

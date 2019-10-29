@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 /**
@@ -49,7 +50,7 @@ public class VersionComparator implements Comparator<String>, Serializable {
 	 */
 	@Override
 	public int compare(String version1, String version2) {
-		if(version1 == version2) {
+		if(ObjectUtil.equal(version1, version2)) {
 			return 0;
 		}
 		if (version1 == null && version2 == null) {

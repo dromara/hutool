@@ -85,7 +85,8 @@ public class EscapeUtil {
 		}
 
 		StringBuilder tmp = new StringBuilder(content.length());
-		int lastPos = 0, pos = 0;
+		int lastPos = 0;
+		int pos;
 		char ch;
 		while (lastPos < content.length()) {
 			pos = content.indexOf("%", lastPos);
@@ -104,7 +105,7 @@ public class EscapeUtil {
 					tmp.append(content.substring(lastPos));
 					lastPos = content.length();
 				} else {
-					tmp.append(content.substring(lastPos, pos));
+					tmp.append(content, lastPos, pos);
 					lastPos = pos;
 				}
 			}

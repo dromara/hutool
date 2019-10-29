@@ -85,8 +85,7 @@ public class PageUtil {
 	 * @return 分页条
 	 */
 	public static int[] rainbow(int currentPage, int pageCount, int displayCount) {
-		boolean isEven = true;
-		isEven = displayCount % 2 == 0;
+		boolean isEven = displayCount % 2 == 0;
 		int left = displayCount / 2;
 		int right = displayCount / 2;
 

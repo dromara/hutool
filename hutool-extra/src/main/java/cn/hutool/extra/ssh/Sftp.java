@@ -205,12 +205,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.0.5
 	 */
 	public List<String> lsDirs(String path) {
-		return ls(path, new Filter<LsEntry>() {
-			@Override
-			public boolean accept(LsEntry t) {
-				return t.getAttrs().isDir();
-			}
-		});
+		return ls(path, t -> t.getAttrs().isDir());
 	}
 
 	/**
@@ -221,12 +216,7 @@ public class Sftp extends AbstractFtp {
 	 * @since 4.0.5
 	 */
 	public List<String> lsFiles(String path) {
-		return ls(path, new Filter<LsEntry>() {
-			@Override
-			public boolean accept(LsEntry t) {
-				return false == t.getAttrs().isDir();
-			}
-		});
+		return ls(path, t -> false == t.getAttrs().isDir());
 	}
 
 	/**
@@ -240,17 +230,14 @@ public class Sftp extends AbstractFtp {
 	public List<String> ls(String path, final Filter<LsEntry> filter) {
 		final List<String> fileNames = new ArrayList<>();
 		try {
-			channel.ls(path, new LsEntrySelector() {
-				@Override
-				public int select(LsEntry entry) {
-					String fileName = entry.getFilename();
-					if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
-						if (null == filter || filter.accept(entry)) {
-							fileNames.add(entry.getFilename());
-						}
+			channel.ls(path, entry -> {
+				String fileName = entry.getFilename();
+				if (false == StrUtil.equals(".", fileName) && false == StrUtil.equals("..", fileName)) {
+					if (null == filter || filter.accept(entry)) {
+						fileNames.add(entry.getFilename());
 					}
-					return CONTINUE;
 				}
+				return LsEntrySelector.CONTINUE;
 			});
 		} catch (SftpException e) {
 			throw new JschRuntimeException(e);
@@ -316,7 +303,7 @@ public class Sftp extends AbstractFtp {
 			return false;
 		}
 
-		Vector<LsEntry> list = null;
+		Vector<LsEntry> list;
 		try {
 			list = channel.ls(channel.pwd());
 		} catch (SftpException e) {
@@ -418,7 +405,7 @@ public class Sftp extends AbstractFtp {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		JschUtil.close(this.channel);
 		JschUtil.close(this.session);
 	}

@@ -68,7 +68,7 @@ public class ThymeleafEngine implements TemplateEngine {
 			config = new TemplateConfig();
 		}
 		
-		ITemplateResolver resolver = null;
+		ITemplateResolver resolver;
 		switch (config.getResourceMode()) {
 		case CLASSPATH:
 			final ClassLoaderTemplateResolver classLoaderResolver = new ClassLoaderTemplateResolver();
@@ -93,9 +93,6 @@ public class ThymeleafEngine implements TemplateEngine {
 			break;
 		case STRING:
 			resolver = new StringTemplateResolver();
-			break;
-		case COMPOSITE:
-			resolver = new DefaultTemplateResolver();
 			break;
 		default:
 			resolver = new DefaultTemplateResolver();

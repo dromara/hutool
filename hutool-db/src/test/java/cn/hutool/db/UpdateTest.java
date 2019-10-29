@@ -1,14 +1,11 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
+import java.sql.SQLException;
 
 public class UpdateTest {
 	
@@ -22,7 +19,7 @@ public class UpdateTest {
 	/**
 	 * 对更新做单元测试
 	 * 
-	 * @throws SQLException
+	 * @throws SQLException SQL异常
 	 */
 	@Test
 	@Ignore

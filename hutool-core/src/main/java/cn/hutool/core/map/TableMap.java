@@ -58,16 +58,19 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 
 	@Override
 	public boolean containsKey(Object key) {
+		//noinspection SuspiciousMethodCalls
 		return keys.contains(key);
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
+		//noinspection SuspiciousMethodCalls
 		return values.contains(value);
 	}
 
 	@Override
 	public V get(Object key) {
+		//noinspection SuspiciousMethodCalls
 		final int index = keys.indexOf(key);
 		if (index > -1 && index < values.size()) {
 			return values.get(index);
@@ -84,6 +87,7 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 
 	@Override
 	public V remove(Object key) {
+		//noinspection SuspiciousMethodCalls
 		int index = keys.indexOf(key);
 		if (index > -1) {
 			keys.remove(index);
@@ -121,7 +125,7 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 	public Set<Map.Entry<K, V>> entrySet() {
 		HashSet<Map.Entry<K, V>> hashSet = new HashSet<>();
 		for (int i = 0; i < size(); i++) {
-			hashSet.add(new Entry<K, V>(keys.get(i), values.get(i)));
+			hashSet.add(new Entry<>(keys.get(i), values.get(i)));
 		}
 		return hashSet;
 	}

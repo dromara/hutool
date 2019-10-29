@@ -64,7 +64,7 @@ public class CallerUtil {
 	 * @return {@link Caller}实现
 	 */
 	private static Caller tryCreateCaller() {
-		Caller caller = null;
+		Caller caller;
 		try {
 			caller = new SecurityManagerCaller();
 			if(null != caller.getCaller() && null != caller.getCallerCaller()) {

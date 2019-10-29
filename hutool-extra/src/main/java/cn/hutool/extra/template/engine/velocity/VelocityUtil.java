@@ -33,7 +33,7 @@ public class VelocityUtil {
 	/** 是否初始化了默认引擎 */
 	private static boolean isInited;
 	/** 全局上下文，当设定值时，对于每个模板都有效 */
-	private static Map<String, Object> globalContext = new HashMap<String, Object>();
+	private static Map<String, Object> globalContext = new HashMap<>();
 
 	/**
 	 * 设置Velocity全局上下文<br>
@@ -278,7 +278,7 @@ public class VelocityUtil {
 	public static VelocityContext parseRequest(VelocityContext context, javax.servlet.http.HttpServletRequest request) {
 		final Enumeration<String> attrs = request.getAttributeNames();
 		if (attrs != null) {
-			String attrName = null;
+			String attrName;
 			while (attrs.hasMoreElements()) {
 				attrName = attrs.nextElement();
 				context.put(attrName, request.getAttribute(attrName));
@@ -298,7 +298,7 @@ public class VelocityUtil {
 		if (null != session) {
 			final Enumeration<String> sessionAttrs = session.getAttributeNames();
 			if (sessionAttrs != null) {
-				String attrName = null;
+				String attrName;
 				while (sessionAttrs.hasMoreElements()) {
 					attrName = sessionAttrs.nextElement();
 					context.put(attrName, session.getAttribute(attrName));

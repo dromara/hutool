@@ -97,7 +97,7 @@ public class ArrayConverter extends AbstractConverter<Object> {
 		}
 
 		final ConverterRegistry converter = ConverterRegistry.getInstance();
-		Object result = null;
+		Object result;
 		if (value instanceof List) {
 			// List转数组
 			final List<?> list = (List<?>) value;

@@ -38,8 +38,11 @@ public class Base32 {
 	 * @return base32
 	 */
 	public static String encode(final byte[] bytes) {
-		int i = 0, index = 0, digit = 0;
-		int currByte, nextByte;
+		int i = 0;
+		int index = 0;
+		int digit;
+		int currByte;
+		int nextByte;
 		StringBuilder base32 = new StringBuilder((bytes.length + 7) * 8 / 5);
 
 		while (i < bytes.length) {

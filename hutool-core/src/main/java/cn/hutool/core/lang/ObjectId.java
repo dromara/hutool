@@ -173,11 +173,9 @@ public class ObjectId {
 		int loaderId = (loader != null) ? System.identityHashCode(loader) : 0;
 
 		// 进程ID + 对象加载ID
-		StringBuilder processSb = new StringBuilder();
-		processSb.append(Integer.toHexString(processId));
-		processSb.append(Integer.toHexString(loaderId));
 		// 保留前2位
-		processPiece = processSb.toString().hashCode() & 0xFFFF;
+		final String processSb = Integer.toHexString(processId) + Integer.toHexString(loaderId);
+		processPiece = processSb.hashCode() & 0xFFFF;
 
 		return processPiece;
 	}

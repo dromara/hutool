@@ -2,7 +2,9 @@ package cn.hutool.json;
 
 import java.util.Iterator;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 
 /**
@@ -46,12 +48,12 @@ public class XML {
 	 * @param context The JSONObject that will include the new material.
 	 * @param name The tag name.
 	 * @return true if the close tag is processed.
-	 * @throws JSONException
+	 * @throws JSONException JSON异常
 	 */
 	private static boolean parse(XMLTokener x, JSONObject context, String name, boolean keepStrings) throws JSONException {
 		char c;
 		int i;
-		JSONObject jsonobject = null;
+		JSONObject jsonobject;
 		String string;
 		String tagName;
 		Object token;
@@ -265,7 +267,6 @@ public class XML {
 		JSONObject jo;
 		String key;
 		Iterator<String> keys;
-		String string;
 		Object value;
 
 		if (object instanceof JSONObject) {
@@ -284,11 +285,10 @@ public class XML {
 				key = keys.next();
 				value = jo.get(key);
 				if (value == null) {
-					value = "";
-				} else if (value.getClass().isArray()) {
+					value = StrUtil.EMPTY;
+				} else if (ArrayUtil.isArray(value)) {
 					value = new JSONArray(value);
 				}
-				string = value instanceof String ? (String) value : null;
 
 				// Emit content in body
 				if ("content".equals(key)) {
@@ -362,8 +362,10 @@ public class XML {
 			}
 		}
 
-		string = (object == null) ? "null" : XmlUtil.escape(object.toString());
-		return (tagName == null) ? "\"" + string + "\"" : (string.length() == 0) ? "<" + tagName + "/>" : "<" + tagName + ">" + string + "</" + tagName + ">";
+		String string = (object == null) ? StrUtil.NULL : XmlUtil.escape(object.toString());
+		return (tagName == null) ?
+				"\"" + string + "\"" : (string.length() == 0) ? "<" + tagName + "/>"
+				: "<" + tagName + ">" + string + "</" + tagName + ">";
 
 	}
 }

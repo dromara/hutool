@@ -39,9 +39,9 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 	/** 索引 */
 	private int index = 0;
 	/** 是否包含第一个元素 */
-	private boolean includeStart = true;
+	private boolean includeStart;
 	/** 是否包含最后一个元素 */
-	private boolean includeEnd = true;
+	private boolean includeEnd;
 
 	/**
 	 * 构造
@@ -80,6 +80,7 @@ public class Range<T> implements Iterable<T>, Iterator<T>, Serializable {
 		this.steper = steper;
 		this.next = safeStep(this.current);
 		this.includeStart = isIncludeStart;
+		includeEnd = true;
 		this.includeEnd = isIncludeEnd;
 	}
 

@@ -81,7 +81,7 @@ public class DefaultHMacEngine implements MacEngine {
 		}
 		byte[] buffer = new byte[bufferLength];
 
-		byte[] result = null;
+		byte[] result;
 		try {
 			int read = data.read(buffer, 0, bufferLength);
 

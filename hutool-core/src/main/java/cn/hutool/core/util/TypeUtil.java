@@ -300,6 +300,7 @@ public class TypeUtil {
 		// 查找方法定义所在类或接口中此泛型参数的位置
 		final Type[] result = new Type[size];
 		for(int i = 0; i < typeVariables.length; i++) {
+			//noinspection SuspiciousMethodCalls
 			result[i] = (typeVariables[i] instanceof TypeVariable) ? tableMap.get(typeVariables[i]) : typeVariables[i];
 		}
 		return result;

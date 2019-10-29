@@ -24,7 +24,7 @@ public class ClassUtilTest {
 	}
 
 	@SuppressWarnings("unused")
-	class TestClass {
+	static class TestClass {
 		private String privateField;
 		protected String field;
 

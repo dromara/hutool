@@ -61,7 +61,7 @@ public class CollectionConverter implements Converter<Collection<?>> {
 
 	@Override
 	public Collection<?> convert(Object value, Collection<?> defaultValue) throws IllegalArgumentException {
-		Collection<?> result = null;
+		Collection<?> result;
 		try {
 			result = convertInternal(value);
 		} catch (RuntimeException e) {
