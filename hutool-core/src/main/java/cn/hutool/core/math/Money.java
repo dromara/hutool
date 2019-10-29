@@ -9,7 +9,7 @@ import java.util.Currency;
 
 /**
  * 单币种货币类，处理货币算术、币种和取整。
- *
+ * <p>
  * 感谢提供此方法的用户：https://github.com/looly/hutool/issues/605
  *
  * <p>
@@ -54,7 +54,7 @@ public class Money implements Serializable, Comparable<Money> {
 	public static final String DEFAULT_CURRENCY_CODE = "CNY";
 
 	/**
-	 * 缺省的取整模式，为<code>BigDecimal.ROUND_HALF_EVEN
+	 * 缺省的取整模式，为{@link BigDecimal#ROUND_HALF_EVEN}
 	 * （四舍五入，当小数为0.5时，则取最近的偶数）。
 	 */
 	public static final int DEFAULT_ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
@@ -94,7 +94,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * 构造器。
 	 *
 	 * <p>
-	 * 创建一个具有金额<code>yuan</code>元<code>cent</cent>分和缺省币种的货币对象。
+	 * 创建一个具有金额<code>yuan</code>元<code>cent</code>分和缺省币种的货币对象。
 	 *
 	 * @param yuan 金额元数。
 	 * @param cent 金额分数。
@@ -109,8 +109,9 @@ public class Money implements Serializable, Comparable<Money> {
 	 * <p>
 	 * 创建一个具有金额<code>yuan</code>元<code>cent</code>分和指定币种的货币对象。
 	 *
-	 * @param yuan 金额元数。
-	 * @param cent 金额分数。
+	 * @param yuan     金额元数。
+	 * @param cent     金额分数。
+	 * @param currency 货币单位
 	 */
 	public Money(long yuan, int cent, Currency currency) {
 		this.currency = currency;
@@ -324,7 +325,6 @@ public class Money implements Serializable, Comparable<Money> {
 	/**
 	 * 判断本货币对象与另一对象是否相等。
 	 * <p>
-	 * p>
 	 * 货币对象与另一对象相等的充分必要条件是：<br>
 	 * <ul>
 	 *  <li>另一对象也属货币对象类。
@@ -344,7 +344,6 @@ public class Money implements Serializable, Comparable<Money> {
 	/**
 	 * 判断本货币对象与另一货币对象是否相等。
 	 * <p>
-	 * p>
 	 * 货币对象与另一货币对象相等的充分必要条件是：<br>
 	 * <ul>
 	 *  <li>金额相同。
@@ -362,7 +361,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * 计算本货币对象的杂凑值。
 	 *
 	 * @return 本货币对象的杂凑值。
-	 * @see java.lang.Object#hashCode()
+	 * @see Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
