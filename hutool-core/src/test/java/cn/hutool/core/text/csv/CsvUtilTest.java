@@ -1,13 +1,12 @@
 package cn.hutool.core.text.csv;
 
-import java.util.List;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.CharsetUtil;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.List;
 
 public class CsvUtilTest {
 	
@@ -20,6 +19,14 @@ public class CsvUtilTest {
 		for (CsvRow csvRow : rows) {
 			Assert.notEmpty(csvRow.getRawList());
 		}
+	}
+
+	@Test
+	public void readTest2() {
+		CsvReader reader = CsvUtil.getReader();
+		reader.read(FileUtil.getUtf8Reader("test.csv"), (csvRow)->{
+			Assert.notEmpty(csvRow.getRawList());
+		});
 	}
 	
 	@Test

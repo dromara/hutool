@@ -9,6 +9,8 @@
 * 【setting】    增加System.getenv变量替换支持
 * 【core】       XmlUtil中mapToStr支持namespace（pr#599@Github）
 * 【core】       ZipUtil修改策略:默认关闭输入流（issue#604@Github）
+* 【core】       改进CsvReader，支持RowHandler按行处理（issue#608@Github）
+
 ### Bug修复
 * 【core】       解决ConcurrentHashSet不能序列化的问题（issue#600@Github）
 * 【core】       解决CsvReader.setErrorOnDifferentFieldCount循环调用问题
