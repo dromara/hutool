@@ -413,7 +413,7 @@ public class XmlUtil {
 	 * 创建的XML默认是utf8编码，修改编码的过程是在toStr和toFile方法里，即XML在转为文本的时候才定义编码
 	 *
 	 * @param rootElementName 根节点名称
-	 * @param namespace 命名空间，无则传null
+	 * @param namespace       命名空间，无则传null
 	 * @return XML文档
 	 * @since 5.0.4
 	 */
@@ -758,12 +758,13 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML格式的字符串
 	 *
-	 * @param data     Map类型数据
-	 * @param rootName 根节点名
+	 * @param data      Map类型数据
+	 * @param rootName  根节点名
+	 * @param namespace 命名空间，可以为null
 	 * @return XML格式的字符串
 	 * @since 5.0.4
 	 */
-	public static String mapToXmlStr(Map<?, ?> data, String rootName,String namespace) {
+	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace) {
 		return toStr(mapToXml(data, rootName, namespace));
 	}
 
@@ -783,12 +784,13 @@ public class XmlUtil {
 	/**
 	 * 将Map转换为XML
 	 *
-	 * @param data     Map类型数据
-	 * @param rootName 根节点名
+	 * @param data      Map类型数据
+	 * @param rootName  根节点名
+	 * @param namespace 命名空间，可以为null
 	 * @return XML
 	 * @since 5.0.4
 	 */
-	public static Document mapToXml(Map<?, ?> data, String rootName,String namespace) {
+	public static Document mapToXml(Map<?, ?> data, String rootName, String namespace) {
 		final Document doc = createXml();
 		final Element root = appendChild(doc, rootName, namespace);
 
@@ -822,8 +824,8 @@ public class XmlUtil {
 	/**
 	 * 在已有节点上创建子节点
 	 *
-	 * @param node    节点
-	 * @param tagName 标签名
+	 * @param node      节点
+	 * @param tagName   标签名
 	 * @param namespace 命名空间，无传null
 	 * @return 子节点
 	 * @since 5.0.4
