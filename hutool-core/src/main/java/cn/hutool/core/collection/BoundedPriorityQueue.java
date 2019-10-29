@@ -18,8 +18,8 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	private static final long serialVersionUID = 3794348988671694820L;
 	
 	//容量
-	private int capacity;
-	private Comparator<? super E> comparator;
+	private final int capacity;
+	private final Comparator<? super E> comparator;
 	
 	public BoundedPriorityQueue(int capacity) {
 		this(capacity, null);
@@ -31,22 +31,17 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 * @param comparator 比较器
 	 */
 	public BoundedPriorityQueue(int capacity, final Comparator<? super E> comparator) {
-		super(capacity, new Comparator<E>(){
-
-			@Override
-			public int compare(E o1, E o2) {
-				int cResult;
-				if(comparator != null) {
-					cResult = comparator.compare(o1, o2);
-				}else {
-					@SuppressWarnings("unchecked")
-					Comparable<E> o1c = (Comparable<E>)o1;
-					cResult = o1c.compareTo(o2);
-				}
-				
-				return - cResult;
+		super(capacity, (o1, o2) -> {
+			int cResult;
+			if(comparator != null) {
+				cResult = comparator.compare(o1, o2);
+			}else {
+				@SuppressWarnings("unchecked")
+				Comparable<E> o1c = (Comparable<E>)o1;
+				cResult = o1c.compareTo(o2);
 			}
-			
+
+			return - cResult;
 		});
 		this.capacity = capacity;
 		this.comparator = comparator;
@@ -84,7 +79,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 * @return 返回排序后的列表
 	 */
 	public ArrayList<E> toList() {
-		final ArrayList<E> list = new ArrayList<E>(this);
+		final ArrayList<E> list = new ArrayList<>(this);
 		Collections.sort(list, comparator);
 		return list;
 	}

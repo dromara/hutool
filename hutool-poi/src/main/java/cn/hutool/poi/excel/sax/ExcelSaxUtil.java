@@ -149,6 +149,7 @@ public class ExcelSaxUtil {
 		// 普通数字
 		if (null != numFmtString && numFmtString.indexOf(StrUtil.C_DOT) < 0) {
 			final long longPart = (long) numValue;
+			//noinspection RedundantIfStatement
 			if (longPart == numValue) {
 				// 对于无小数部分的数字类型，转为Long
 				return longPart;

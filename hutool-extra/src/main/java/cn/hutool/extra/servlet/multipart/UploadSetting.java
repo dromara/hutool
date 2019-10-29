@@ -1,11 +1,10 @@
 package cn.hutool.extra.servlet.multipart;
 
-import java.net.URL;
-
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.log.Log;
-import cn.hutool.log.StaticLog;
 import cn.hutool.setting.Setting;
+
+import java.net.URL;
 
 /**
  * 上传文件设定文件

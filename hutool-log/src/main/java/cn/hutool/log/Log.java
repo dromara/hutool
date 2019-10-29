@@ -34,7 +34,7 @@ public interface Log extends TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog {
 	 * @return Log
 	 * @since 5.0.0
 	 */
-	public static Log get(String name) {
+	static Log get(String name) {
 		return LogFactory.get(name);
 	}
 

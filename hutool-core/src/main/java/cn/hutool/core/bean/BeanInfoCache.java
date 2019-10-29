@@ -14,8 +14,8 @@ import cn.hutool.core.lang.SimpleCache;
 public enum BeanInfoCache {
 	INSTANCE;
 	
-	private SimpleCache<Class<?>, Map<String, PropertyDescriptor>> pdCache = new SimpleCache<>();
-	private SimpleCache<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new SimpleCache<>();
+	private final SimpleCache<Class<?>, Map<String, PropertyDescriptor>> pdCache = new SimpleCache<>();
+	private final SimpleCache<Class<?>, Map<String, PropertyDescriptor>> ignoreCasePdCache = new SimpleCache<>();
 	
 	/**
 	 * 获得属性名和{@link PropertyDescriptor}Map映射

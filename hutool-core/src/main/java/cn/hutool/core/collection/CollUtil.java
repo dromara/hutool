@@ -2366,7 +2366,7 @@ public class CollUtil {
 	 */
 	public static <T> List<List<T>> groupByField(Collection<T> collection, final String fieldName) {
 		return group(collection, new Hash<T>() {
-			private List<Object> fieldNameList = new ArrayList<>();
+			private final List<Object> fieldNameList = new ArrayList<>();
 
 			@Override
 			public int hash(T t) {

@@ -140,7 +140,6 @@ public class JdkLog extends AbstractLog {
 	/**
 	 * 传入调用日志类的信息
 	 * @param callerFQCN 调用者全限定类名
-	 * @param superFQCN 调用者父类全限定名
 	 * @param record The record to update
 	 */
 	private static void fillCallerData(String callerFQCN, LogRecord record) {

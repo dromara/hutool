@@ -65,7 +65,7 @@ public class BooleanUtil {
 	 * @return 相反的Boolean值
 	 */
 	public static boolean negate(boolean bool) {
-		return bool ? false : true;
+		return !bool;
 	}
 
 	/**

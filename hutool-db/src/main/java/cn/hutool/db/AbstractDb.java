@@ -33,7 +33,7 @@ import cn.hutool.db.sql.Wrapper;
 public abstract class AbstractDb implements Serializable {
 	private static final long serialVersionUID = 3858951941916349062L;
 
-	protected DataSource ds;
+	protected final DataSource ds;
 	/**
 	 * 是否支持事务
 	 */

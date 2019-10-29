@@ -22,7 +22,7 @@ import cn.hutool.socket.SocketRuntimeException;
  */
 public class AioClient implements Closeable{
 
-	private AioSession session;
+	private final AioSession session;
 
 	/**
 	 * 构造

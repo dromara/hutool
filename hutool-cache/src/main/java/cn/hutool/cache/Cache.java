@@ -84,14 +84,6 @@ public interface Cache<K, V> extends Iterable<V>, Serializable {
 	V get(K key, boolean isUpdateLastAccess);
 
 	/**
-	 * 返回缓存迭代器
-	 * 
-	 * @return 缓存迭代器
-	 */
-	@Override
-	Iterator<V> iterator();
-
-	/**
 	 * 返回包含键和值得迭代器
 	 * 
 	 * @return 缓存对象迭代器

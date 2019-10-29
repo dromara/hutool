@@ -181,9 +181,6 @@ public class TemplateConfig implements Serializable {
 		} else if (!path.equals(other.path)) {
 			return false;
 		}
-		if (resourceMode != other.resourceMode) {
-			return false;
-		}
-		return true;
+		return resourceMode == other.resourceMode;
 	}
 }

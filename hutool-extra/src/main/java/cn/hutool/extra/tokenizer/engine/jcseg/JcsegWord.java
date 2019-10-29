@@ -11,7 +11,9 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class JcsegWord implements Word {
-	private IWord word;
+	private static final long serialVersionUID = 1L;
+
+	private final IWord word;
 
 	/**
 	 * 构造

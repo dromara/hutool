@@ -15,7 +15,7 @@ import cn.hutool.extra.template.AbstractTemplate;
 public class BeetlTemplate extends AbstractTemplate implements Serializable{
 	private static final long serialVersionUID = -8157926902932567280L;
 
-	org.beetl.core.Template rawTemplate;
+	private final org.beetl.core.Template rawTemplate;
 	
 	/**
 	 * 包装Beetl模板

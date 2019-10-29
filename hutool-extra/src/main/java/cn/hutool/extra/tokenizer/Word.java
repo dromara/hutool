@@ -1,12 +1,14 @@
 package cn.hutool.extra.tokenizer;
 
+import java.io.Serializable;
+
 /**
  * 表示分词中的一个词
  * 
  * @author looly
  *
  */
-public interface Word {
+public interface Word extends Serializable {
 
 	/**
 	 * 获取单词文本

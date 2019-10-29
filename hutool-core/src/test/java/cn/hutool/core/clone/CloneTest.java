@@ -3,10 +3,6 @@ package cn.hutool.core.clone;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.clone.CloneRuntimeException;
-import cn.hutool.core.clone.CloneSupport;
-import cn.hutool.core.clone.Cloneable;
-
 /**
  * 克隆单元测试
  * @author Looly
@@ -72,13 +68,8 @@ public class CloneTest {
 				return false;
 			}
 			if (name == null) {
-				if (other.name != null) {
-					return false;
-				}
-			} else if (!name.equals(other.name)) {
-				return false;
-			}
-			return true;
+				return other.name == null;
+			} else return name.equals(other.name);
 		}
 	}
 	
@@ -116,13 +107,8 @@ public class CloneTest {
 				return false;
 			}
 			if (name == null) {
-				if (other.name != null) {
-					return false;
-				}
-			} else if (!name.equals(other.name)) {
-				return false;
-			}
-			return true;
+				return other.name == null;
+			} else return name.equals(other.name);
 		}
 	}
 }

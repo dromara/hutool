@@ -25,8 +25,8 @@ public class AioSession implements Closeable{
 
 	private static final ReadHandler READ_HANDLER = new ReadHandler();
 
-	private AsynchronousSocketChannel channel;
-	private IoAction<ByteBuffer> ioAction;
+	private final AsynchronousSocketChannel channel;
+	private final IoAction<ByteBuffer> ioAction;
 	private ByteBuffer readBuffer;
 	private ByteBuffer writeBuffer;
 	/** 读取超时时长，小于等于0表示默认 */

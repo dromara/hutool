@@ -16,7 +16,7 @@ import cn.hutool.extra.tokenizer.TokenizerEngine;
  */
 public class AnsjEngine implements TokenizerEngine {
 
-	private Analysis analysis;
+	private final Analysis analysis;
 	
 	/**
 	 * 构造

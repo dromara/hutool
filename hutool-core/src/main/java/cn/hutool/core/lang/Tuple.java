@@ -66,10 +66,7 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 			return false;
 		}
 		Tuple other = (Tuple) obj;
-		if (false == Arrays.deepEquals(members, other.members)) {
-			return false;
-		}
-		return true;
+		return false != Arrays.deepEquals(members, other.members);
 	}
 
 	@Override

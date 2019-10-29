@@ -9,8 +9,9 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class WordWord implements Word {
+	private static final long serialVersionUID = 1L;
 	
-	private org.apdplat.word.segmentation.Word word;
+	private final org.apdplat.word.segmentation.Word word;
 
 	/**
 	 * 构造

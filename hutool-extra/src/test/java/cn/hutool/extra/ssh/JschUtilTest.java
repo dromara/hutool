@@ -1,13 +1,10 @@
 package cn.hutool.extra.ssh;
 
-import com.jcraft.jsch.JSch;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.jcraft.jsch.Session;
-
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
+import com.jcraft.jsch.Session;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Jsch工具类单元测试

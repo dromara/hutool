@@ -114,7 +114,6 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 	public void set(String fieldName, Object value) throws BeanException{
 		if(Map.class.isAssignableFrom(beanClass)){
 			((Map)bean).put(fieldName, value);
-			return;
 		}else{
 			try {
 				final Method setter = BeanUtil.getBeanDesc(beanClass).getSetter(fieldName);
@@ -179,13 +178,8 @@ public class DynaBean extends CloneSupport<DynaBean> implements Serializable{
 		}
 		final DynaBean other = (DynaBean) obj;
 		if (bean == null) {
-			if (other.bean != null) {
-				return false;
-			}
-		} else if (!bean.equals(other.bean)) {
-			return false;
-		}
-		return true;
+			return other.bean == null;
+		} else return bean.equals(other.bean);
 	}
 
 	@Override

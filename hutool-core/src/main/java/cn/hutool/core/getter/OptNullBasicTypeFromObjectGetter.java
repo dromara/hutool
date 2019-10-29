@@ -15,9 +15,6 @@ import cn.hutool.core.convert.Convert;
 public abstract class OptNullBasicTypeFromObjectGetter<K> extends OptNullBasicTypeGetter<K>{
 	
 	@Override
-	public abstract Object getObj(K key, Object defaultValue);
-	
-	@Override
 	public String getStr(K key, String defaultValue) {
 		final Object obj = getObj(key);
 		if(null == obj) {

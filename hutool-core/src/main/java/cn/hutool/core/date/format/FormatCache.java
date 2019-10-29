@@ -223,10 +223,7 @@ abstract class FormatCache<F extends Format> {
 				return false;
 			}
 			final MultipartKey other = (MultipartKey) obj;
-			if (false == Arrays.equals(keys, other.keys)) {
-				return false;
-			}
-			return true;
+			return false != Arrays.equals(keys, other.keys);
 		}
 		
 		

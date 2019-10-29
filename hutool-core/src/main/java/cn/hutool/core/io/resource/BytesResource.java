@@ -22,8 +22,8 @@ import cn.hutool.core.util.StrUtil;
 public class BytesResource implements Resource, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private byte[] bytes;
-	private String name;
+	private final byte[] bytes;
+	private final String name;
 
 	/**
 	 * 构造

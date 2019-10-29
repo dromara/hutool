@@ -52,7 +52,7 @@ public class ArrangementTest {
 		Assert.assertEquals(Arrangement.countAll(4), selectAll.size());
 		
 		List<String[]> list2 = arrangement.select(0);
-		Assert.assertTrue(1 == list2.size());
+		Assert.assertEquals(1, list2.size());
 	}
 	
 	@Test

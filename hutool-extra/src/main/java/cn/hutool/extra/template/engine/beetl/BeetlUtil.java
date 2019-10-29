@@ -254,7 +254,7 @@ public final class BeetlUtil {
 	 *
 	 */
 	public static class ResourceLoaderBuilder {
-		private CompositeResourceLoader compositeResourceLoader = new CompositeResourceLoader();
+		private final CompositeResourceLoader compositeResourceLoader = new CompositeResourceLoader();
 
 		/**
 		 * 创建

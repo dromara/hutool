@@ -18,7 +18,7 @@ import cn.hutool.extra.tokenizer.Word;
  */
 public class AnalysisResult extends AbstractResult {
 
-	private TokenStream stream;
+	private final TokenStream stream;
 
 	/**
 	 * 构造

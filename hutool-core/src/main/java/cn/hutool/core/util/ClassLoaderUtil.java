@@ -33,11 +33,11 @@ public class ClassLoaderUtil {
 	private static final char INNER_CLASS_SEPARATOR = '$';
 
 	/** 原始类型名和其class对应表，例如：int =》 int.class */
-	private static final Map<String, Class<?>> primitiveTypeNameMap = new ConcurrentHashMap<String, Class<?>>(32);
-	private static SimpleCache<String, Class<?>> classCache = new SimpleCache<>();
+	private static final Map<String, Class<?>> primitiveTypeNameMap = new ConcurrentHashMap<>(32);
+	private static final SimpleCache<String, Class<?>> classCache = new SimpleCache<>();
 
 	static {
-		List<Class<?>> primitiveTypes = new ArrayList<Class<?>>(32);
+		List<Class<?>> primitiveTypes = new ArrayList<>(32);
 		// 加入原始类型
 		primitiveTypes.addAll(BasicType.primitiveWrapperMap.keySet());
 		// 加入原始类型数组类型

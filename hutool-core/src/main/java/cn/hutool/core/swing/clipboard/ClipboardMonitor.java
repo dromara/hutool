@@ -29,9 +29,9 @@ public enum ClipboardMonitor implements ClipboardOwner, Runnable, Closeable {
 	/** 重试等待 */
 	private long delay;
 	/** 系统剪贴板对象 */
-	private Clipboard clipboard;
+	private final Clipboard clipboard;
 	/** 监听事件处理 */
-	private Set<ClipboardListener> listenerSet = new LinkedHashSet<>();
+	private final Set<ClipboardListener> listenerSet = new LinkedHashSet<>();
 	/** 是否正在监听 */
 	private boolean isRunning;
 

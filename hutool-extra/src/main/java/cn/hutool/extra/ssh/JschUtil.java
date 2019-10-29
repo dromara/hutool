@@ -221,10 +221,10 @@ public class JschUtil {
 	public static boolean unBindPort(Session session, int localPort) {
 		try {
 			session.delPortForwardingL(localPort);
-			return true;
 		} catch (JSchException e) {
 			throw new JschRuntimeException(e);
 		}
+		return true;
 	}
 
 	/**

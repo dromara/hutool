@@ -23,12 +23,12 @@ import cn.hutool.socket.SocketConfig;
  */
 public class AioServer implements Closeable {
 	private static final Log log = LogFactory.get();
-	private static AcceptHandler ACCEPT_HANDLER = new AcceptHandler();
+	private static final AcceptHandler ACCEPT_HANDLER = new AcceptHandler();
 
 	private AsynchronousChannelGroup group;
 	private AsynchronousServerSocketChannel channel;
 	protected IoAction<ByteBuffer> ioAction;
-	protected SocketConfig config;
+	protected final SocketConfig config;
 
 
 	/**

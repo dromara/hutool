@@ -61,7 +61,7 @@ public class ClassUtilTest {
 	}
 
 	@Test
-	public void getDeclaredMethod() throws Exception {
+	public void getDeclaredMethod() {
 		Method noMethod = ClassUtil.getDeclaredMethod(TestSubClass.class, "noMethod");
 		Assert.assertNull(noMethod);
 

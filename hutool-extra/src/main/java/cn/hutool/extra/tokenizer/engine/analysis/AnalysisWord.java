@@ -13,8 +13,9 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class AnalysisWord implements Word {
-	
-	private Attribute word;
+	private static final long serialVersionUID = 1L;
+
+	private final Attribute word;
 
 	/**
 	 * 构造

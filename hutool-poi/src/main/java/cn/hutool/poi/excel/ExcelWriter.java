@@ -792,7 +792,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @see #writeRow(Map, boolean)
 	 * @since 4.1.5
 	 */
-	@SuppressWarnings({"rawtypes" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public ExcelWriter writeRow(Object rowBean, boolean isWriteKeyAsHead) {
 		if (rowBean instanceof Iterable) {
 			return writeRow((Iterable<?>) rowBean);
@@ -806,7 +806,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			}
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
 			if (MapUtil.isEmpty(this.headerAlias)) {
-				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);
+				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
 				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(getInitedAliasComparator()), false, false);
@@ -1018,7 +1018,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		final Map<Object, Object> filteredMap = new LinkedHashMap<>();
 		String aliasName;
 		for (Entry<?, ?> entry : rowMap.entrySet()) {
-			aliasName = this.headerAlias.get(entry.getKey());
+			aliasName = this.headerAlias.get(StrUtil.toString(entry.getKey()));
 			if (null != aliasName) {
 				// 别名键值对加入
 				filteredMap.put(aliasName, entry.getValue());

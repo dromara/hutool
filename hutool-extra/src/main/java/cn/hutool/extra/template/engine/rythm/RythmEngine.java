@@ -66,7 +66,6 @@ public class RythmEngine implements TemplateEngine {
 			props.put("home.template", path);
 		}
 
-		final org.rythmengine.RythmEngine engine = new org.rythmengine.RythmEngine(props);
-		return engine;
+		return new org.rythmengine.RythmEngine(props);
 	}
 }

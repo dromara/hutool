@@ -26,6 +26,7 @@ public class TestJob {
 	/**
 	 * 执行循环定时任务，测试在定时任务结束时作为deamon线程是否能正常结束
 	 */
+	@SuppressWarnings("InfiniteLoopStatement")
 	public void doWhileTest() {
 		String name = Thread.currentThread().getName();
 		while (true) {

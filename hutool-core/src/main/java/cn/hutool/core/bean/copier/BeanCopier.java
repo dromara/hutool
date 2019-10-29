@@ -36,13 +36,13 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/** 源对象 */
-	private Object source;
+	private final Object source;
 	/** 目标对象 */
-	private T dest;
+	private final T dest;
 	/** 目标的类型（用于泛型类注入） */
-	private Type destType;
+	private final Type destType;
 	/** 拷贝选项 */
-	private CopyOptions copyOptions;
+	private final CopyOptions copyOptions;
 
 	/**
 	 * 创建BeanCopier

@@ -17,7 +17,7 @@ public enum AsymmetricAlgorithm {
 	/** EC（Elliptic Curve）算法 */
 	EC("EC");
 
-	private String value;
+	private final String value;
 
 	/**
 	 * 构造

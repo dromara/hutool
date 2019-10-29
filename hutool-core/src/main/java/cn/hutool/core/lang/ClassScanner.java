@@ -31,27 +31,27 @@ public class ClassScanner implements Serializable {
 	/**
 	 * 包名
 	 */
-	private String packageName;
+	private final String packageName;
 	/**
 	 * 包名，最后跟一个点，表示包名，避免在检查前缀时的歧义
 	 */
-	private String packageNameWithDot;
+	private final String packageNameWithDot;
 	/**
 	 * 包路径，用于文件中对路径操作
 	 */
-	private String packageDirName;
+	private final String packageDirName;
 	/**
 	 * 包路径，用于jar中对路径操作，在Linux下与packageDirName一致
 	 */
-	private String packagePath;
+	private final String packagePath;
 	/**
 	 * 过滤器
 	 */
-	private Filter<Class<?>> classFilter;
+	private final Filter<Class<?>> classFilter;
 	/**
 	 * 编码
 	 */
-	private Charset charset;
+	private final Charset charset;
 	/**
 	 * 类加载器
 	 */
@@ -60,8 +60,10 @@ public class ClassScanner implements Serializable {
 	 * 是否初始化类
 	 */
 	private boolean initialize;
-
-	private Set<Class<?>> classes = new HashSet<>();
+	/**
+	 * 扫描结果集
+	 */
+	private final Set<Class<?>> classes = new HashSet<>();
 
 	/**
 	 * 扫描指定包路径下所有包含指定注解的类
@@ -71,12 +73,7 @@ public class ClassScanner implements Serializable {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageByAnnotation(String packageName, final Class<? extends Annotation> annotationClass) {
-		return scanPackage(packageName, new Filter<Class<?>>() {
-			@Override
-			public boolean accept(Class<?> clazz) {
-				return clazz.isAnnotationPresent(annotationClass);
-			}
-		});
+		return scanPackage(packageName, clazz -> clazz.isAnnotationPresent(annotationClass));
 	}
 
 	/**
@@ -87,12 +84,7 @@ public class ClassScanner implements Serializable {
 	 * @return 类集合
 	 */
 	public static Set<Class<?>> scanPackageBySuper(String packageName, final Class<?> superClass) {
-		return scanPackage(packageName, new Filter<Class<?>>() {
-			@Override
-			public boolean accept(Class<?> clazz) {
-				return superClass.isAssignableFrom(clazz) && !superClass.equals(clazz);
-			}
-		});
+		return scanPackage(packageName, clazz -> superClass.isAssignableFrom(clazz) && !superClass.equals(clazz));
 	}
 
 	/**

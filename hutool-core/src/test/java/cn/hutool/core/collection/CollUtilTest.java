@@ -1,5 +1,13 @@
 package cn.hutool.core.collection;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.Editor;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.map.MapUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -11,19 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import cn.hutool.core.collection.CollUtil.Hash;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Dict;
-import cn.hutool.core.lang.Editor;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Matcher;
-import cn.hutool.core.map.MapUtil;
 
 /**
  * 集合工具类单元测试
@@ -63,14 +58,7 @@ public class CollUtilTest {
 
 		Collection<String> union = CollectionUtil.union(list1, list2);
 
-		Assert.assertEquals(3, CollectionUtil.count(union, new Matcher<String>() {
-
-			@Override
-			public boolean match(String t) {
-				return t.equals("b");
-			}
-
-		}));
+		Assert.assertEquals(3, CollectionUtil.count(union, t -> t.equals("b")));
 	}
 
 	@Test
@@ -79,14 +67,7 @@ public class CollUtilTest {
 		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
 		Collection<String> union = CollectionUtil.intersection(list1, list2);
-		Assert.assertEquals(2, CollectionUtil.count(union, new Matcher<String>() {
-
-			@Override
-			public boolean match(String t) {
-				return t.equals("b");
-			}
-
-		}));
+		Assert.assertEquals(2, CollectionUtil.count(union, t -> t.equals("b")));
 	}
 
 	@Test
@@ -188,12 +169,9 @@ public class CollUtilTest {
 		map.put("c", "3");
 
 		final String[] result = new String[1];
-		CollectionUtil.forEach(map, new CollUtil.KVConsumer<String, String>() {
-			@Override
-			public void accept(String key, String value, int index) {
-				if (key.equals("a")) {
-					result[0] = value;
-				}
+		CollectionUtil.forEach(map, (key, value, index) -> {
+			if (key.equals("a")) {
+				result[0] = value;
 			}
 		});
 		Assert.assertEquals("1", result[0]);
@@ -203,12 +181,7 @@ public class CollUtilTest {
 	public void filterTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
 
-		Collection<String> filtered = CollUtil.filter(list, new Editor<String>() {
-			@Override
-			public String edit(String t) {
-				return t + 1;
-			}
-		});
+		Collection<String> filtered = CollUtil.filter(list, (Editor<String>) t -> t + 1);
 
 		Assert.assertEquals(CollUtil.newArrayList("a1", "b1", "c1"), filtered);
 	}
@@ -217,16 +190,10 @@ public class CollUtilTest {
 	public void filterTest2() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c");
 
-		ArrayList<String> filtered = CollUtil.filter(list, new Filter<String>() {
-
-			@Override
-			public boolean accept(String t) {
-				return false == "a".equals(t);
-			}
-		});
+		ArrayList<String> filtered = CollUtil.filter(list, (Filter<String>) t -> false == "a".equals(t));
 
 		// 原地过滤
-		Assert.assertTrue(list == filtered);
+		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
 	}
 	
@@ -237,7 +204,7 @@ public class CollUtilTest {
 		ArrayList<String> filtered = CollUtil.removeNull(list);
 
 		// 原地过滤
-		Assert.assertTrue(list == filtered);
+		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "", "  "), filtered);
 	}
 	
@@ -248,7 +215,7 @@ public class CollUtilTest {
 		ArrayList<String> filtered = CollUtil.removeEmpty(list);
 
 		// 原地过滤
-		Assert.assertTrue(list == filtered);
+		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "  "), filtered);
 	}
 	
@@ -259,7 +226,7 @@ public class CollUtilTest {
 		ArrayList<String> filtered = CollUtil.removeBlank(list);
 		
 		// 原地过滤
-		Assert.assertTrue(list == filtered);
+		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c"), filtered);
 	}
 
@@ -269,13 +236,9 @@ public class CollUtilTest {
 		List<List<String>> group = CollectionUtil.group(list, null);
 		Assert.assertTrue(group.size() > 0);
 
-		List<List<String>> group2 = CollectionUtil.group(list, new Hash<String>() {
-			@Override
-			public int hash(String t) {
-				// 按照奇数偶数分类
-				return Integer.parseInt(t) % 2;
-			}
-
+		List<List<String>> group2 = CollectionUtil.group(list, t -> {
+			// 按照奇数偶数分类
+			return Integer.parseInt(t) % 2;
 		});
 		Assert.assertEquals(CollUtil.newArrayList("2", "4", "6"), group2.get(0));
 		Assert.assertEquals(CollUtil.newArrayList("1", "3", "5"), group2.get(1));
@@ -497,10 +460,7 @@ public class CollUtilTest {
 		Assert.assertEquals(arrayList, retval);
 	}
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
-	@Test
+	@Test(expected = IndexOutOfBoundsException.class)
 	public void subInput1PositiveNegativePositiveOutputArrayIndexOutOfBoundsException() {
 		// Arrange
 		final List<Integer> list = new ArrayList<>();
@@ -510,7 +470,6 @@ public class CollUtilTest {
 		final int step = 2;
 
 		// Act
-		thrown.expect(ArrayIndexOutOfBoundsException.class);
 		CollUtil.sub(list, start, end, step);
 		// Method is not expected to return due to exception thrown
 	}
@@ -588,13 +547,7 @@ public class CollUtilTest {
 	@Test
 	public void sortPageAllTest() {
 		ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
-		List<Integer> sortPageAll = CollUtil.sortPageAll(2, 5, new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				// 反序
-				return o2.compareTo(o1);
-			}
-		}, list);
+		List<Integer> sortPageAll = CollUtil.sortPageAll(2, 5, Comparator.reverseOrder(), list);
 
 		Assert.assertEquals(CollUtil.newArrayList(4, 3, 2, 1), sortPageAll);
 	}

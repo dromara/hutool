@@ -1,11 +1,9 @@
 package cn.hutool.core.convert;
 
-import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * 类型转换工具单元测试

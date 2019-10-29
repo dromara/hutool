@@ -44,7 +44,6 @@ public class HikariDSFactory extends AbstractDSFactory {
 			config.put("password", pass);
 		}
 
-		final HikariDataSource ds = new HikariDataSource(new HikariConfig(config));
-		return ds;
+		return new HikariDataSource(new HikariConfig(config));
 	}
 }

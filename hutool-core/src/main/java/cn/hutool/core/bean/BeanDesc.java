@@ -35,9 +35,9 @@ public class BeanDesc implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** Bean类 */
-	private Class<?> beanClass;
+	private final Class<?> beanClass;
 	/** 属性Map */
-	private Map<String, PropDesc> propMap = new LinkedHashMap<>();
+	private final Map<String, PropDesc> propMap = new LinkedHashMap<>();
 
 	/**
 	 * 构造
@@ -300,11 +300,11 @@ public class BeanDesc implements Serializable{
 	public static class PropDesc {
 
 		/** 字段 */
-		private Field field;
+		private final Field field;
 		/** Getter方法 */
-		private Method getter;
+		private final Method getter;
 		/** Setter方法 */
-		private Method setter;
+		private final Method setter;
 
 		/**
 		 * 构造<br>

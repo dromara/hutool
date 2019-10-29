@@ -18,8 +18,8 @@ import cn.hutool.core.util.StrUtil;
  */
 public class BeanValueProvider implements ValueProvider<String> {
 
-	private Object source;
-	private boolean ignoreError;
+	private final Object source;
+	private final boolean ignoreError;
 	final Map<String, PropDesc> sourcePdMap;
 
 	/**

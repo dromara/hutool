@@ -25,7 +25,7 @@ public enum CellDataType {
 	NULL("");
 
 	/** 属性值 */
-	private String name;
+	private final String name;
 
 	/**
 	 * 构造

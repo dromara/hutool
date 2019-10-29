@@ -20,7 +20,7 @@ public class CacheObj<K, V> implements Serializable{
 	/** 访问次数 */
 	protected long accessCount;
 	/** 对象存活时长，0表示永久存活*/
-	private long ttl;
+	private final long ttl;
 	
 	/**
 	 * 构造

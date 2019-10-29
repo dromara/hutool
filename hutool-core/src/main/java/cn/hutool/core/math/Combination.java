@@ -10,19 +10,19 @@ import cn.hutool.core.util.NumberUtil;
 /**
  * 组合，即C(n, m)<br>
  * 排列组合相关类 参考：http://cgs1999.iteye.com/blog/2327664
- * 
+ *
  * @author looly
  * @since 4.0.6
  */
-public class Combination implements Serializable{
+public class Combination implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String[] datas;
+	private final String[] datas;
 
 	/**
 	 * 组合，即C(n, m)<br>
 	 * 排列组合相关类 参考：http://cgs1999.iteye.com/blog/2327664
-	 * 
+	 *
 	 * @param datas 用于组合的数据
 	 */
 	public Combination(String[] datas) {
@@ -31,30 +31,30 @@ public class Combination implements Serializable{
 
 	/**
 	 * 计算组合数，即C(n, m) = n!/((n-m)! * m!)
-	 * 
+	 *
 	 * @param n 总数
 	 * @param m 选择的个数
 	 * @return 组合数
 	 */
 	public static long count(int n, int m) {
-		if(0 == m) {
+		if (0 == m) {
 			return 1;
 		}
-		if(n == m) {
+		if (n == m) {
 			return NumberUtil.factorial(n) / NumberUtil.factorial(m);
 		}
 		return (n > m) ? NumberUtil.factorial(n, n - m) / NumberUtil.factorial(m) : 0;
 	}
-	
+
 	/**
 	 * 计算组合总数，即C(n, 1) + C(n, 2) + C(n, 3)...
-	 * 
+	 *
 	 * @param n 总数
 	 * @return 组合数
 	 */
 	public static long countAll(int n) {
 		long total = 0;
-		for(int i = 1; i <= n; i++) {
+		for (int i = 1; i <= n; i++) {
 			total += count(n, i);
 		}
 		return total;
@@ -62,7 +62,7 @@ public class Combination implements Serializable{
 
 	/**
 	 * 组合选择（从列表中选择m个组合）
-	 * 
+	 *
 	 * @param m 选择个数
 	 * @return 组合结果
 	 */
@@ -71,15 +71,15 @@ public class Combination implements Serializable{
 		select(0, new String[m], 0, result);
 		return result;
 	}
-	
+
 	/**
 	 * 全组合
-	 * 
+	 *
 	 * @return 全排列结果
 	 */
-	public List<String[]> selectAll(){
-		final List<String[]> result = new ArrayList<>((int)countAll(this.datas.length));
-		for(int i = 1; i <= this.datas.length; i++) {
+	public List<String[]> selectAll() {
+		final List<String[]> result = new ArrayList<>((int) countAll(this.datas.length));
+		for (int i = 1; i <= this.datas.length; i++) {
 			result.addAll(select(i));
 		}
 		return result;
@@ -87,11 +87,11 @@ public class Combination implements Serializable{
 
 	/**
 	 * 组合选择
-	 * 
-	 * @param dataList 待选列表
-	 * @param dataIndex 待选开始索引
-	 * @param resultList 前面（resultIndex-1）个的组合结果
+	 *
+	 * @param dataIndex   待选开始索引
+	 * @param resultList  前面（resultIndex-1）个的组合结果
 	 * @param resultIndex 选择索引，从0开始
+	 * @param result      结果集
 	 */
 	private void select(int dataIndex, String[] resultList, int resultIndex, List<String[]> result) {
 		int resultLen = resultList.length;

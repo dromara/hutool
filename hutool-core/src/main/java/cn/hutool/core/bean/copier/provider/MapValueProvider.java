@@ -47,13 +47,12 @@ public class MapValueProvider implements ValueProvider<String> {
 
 	@Override
 	public boolean containsKey(String key) {
+		//检查下划线模式
 		if(map.containsKey(key)) {
 			return true;
-		}else if(map.containsKey(StrUtil.toUnderlineCase(key))) {
-			//检查下划线模式
-			return true;
+		}else {
+			return map.containsKey(StrUtil.toUnderlineCase(key));
 		}
-		return false;
 	}
 
 }

@@ -1,25 +1,21 @@
 package cn.hutool.crypto.test;
 
-import java.nio.charset.StandardCharsets;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.*;
-import org.junit.Assert;
-import org.junit.Test;
-
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
+import org.junit.Assert;
+import org.junit.Test;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import java.security.KeyPair;
+import java.security.PublicKey;
 
 /**
  * RSA算法单元测试

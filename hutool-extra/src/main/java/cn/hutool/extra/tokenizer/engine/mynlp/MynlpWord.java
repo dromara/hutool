@@ -6,17 +6,17 @@ import cn.hutool.extra.tokenizer.Word;
 
 /**
  * mmseg分词中的一个单词包装
- * 
- * @author looly
  *
+ * @author looly
  */
 public class MynlpWord implements Word {
-	
-	private WordTerm word;
+	private static final long serialVersionUID = 1L;
+
+	private final WordTerm word;
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param word {@link WordTerm}
 	 */
 	public MynlpWord(WordTerm word) {
@@ -27,12 +27,12 @@ public class MynlpWord implements Word {
 	public String getText() {
 		return word.getWord();
 	}
-	
+
 	@Override
 	public int getStartOffset() {
 		return this.word.offset;
 	}
-	
+
 	@Override
 	public int getEndOffset() {
 		return getStartOffset() + word.word.length();

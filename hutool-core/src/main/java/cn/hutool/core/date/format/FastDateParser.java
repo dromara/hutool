@@ -44,12 +44,7 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 	// comparator used to sort regex alternatives
 	// alternatives should be ordered longer first, and shorter last. ('february' before 'feb')
 	// all entries must be lowercase by locale.
-	private static final Comparator<String> LONGER_FIRST_LOWERCASE = new Comparator<String>(){
-		@Override
-		public int compare(final String left, final String right) {
-			return right.compareTo(left);
-		}
-	};
+	private static final Comparator<String> LONGER_FIRST_LOWERCASE = (left, right) -> right.compareTo(left);
 
 	/**
 	 * <p>
@@ -389,7 +384,8 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 	/**
 	 * Obtain a Strategy given a field from a SimpleDateFormat pattern
 	 * 
-	 * @param formatField A sub-sequence of the SimpleDateFormat pattern
+	 * @param f 格式
+	 * @param width 长度
 	 * @param definingCalendar The calendar to obtain the short and long values
 	 * @return The Strategy that will handle parsing for the field
 	 */

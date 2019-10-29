@@ -62,7 +62,7 @@ public class PropertyComparator<T> implements Comparator<T>, Serializable {
 		return compare(o1, o2, v1, v2);
 	}
 
-	@SuppressWarnings({ "rawtypes"})
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private int compare(T o1, T o2, Comparable fieldValue1, Comparable fieldValue2) {
 		int result = ObjectUtil.compare(fieldValue1, fieldValue2, isNullGreater);
 		if(0 == result) {

@@ -222,13 +222,11 @@ public class Ftp extends AbstractFtp {
 			return false;
 		}
 
-		boolean flag = true;
 		try {
-			flag = client.changeWorkingDirectory(directory);
+			return client.changeWorkingDirectory(directory);
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
-		return flag;
 	}
 
 	/**
@@ -285,13 +283,11 @@ public class Ftp extends AbstractFtp {
 
 	@Override
 	public boolean mkdir(String dir) {
-		boolean flag = true;
 		try {
-			flag = this.client.makeDirectory(dir);
+			return this.client.makeDirectory(dir);
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
-		return flag;
 	}
 
 	/**
@@ -307,10 +303,7 @@ public class Ftp extends AbstractFtp {
 		} catch (IOException e) {
 			throw new FtpException(e);
 		}
-		if (ArrayUtil.isNotEmpty(ftpFileArr)) {
-			return true;
-		}
-		return false;
+		return ArrayUtil.isNotEmpty(ftpFileArr);
 	}
 
 	@Override

@@ -23,7 +23,6 @@ public class CacheObjIterator<K, V> implements Iterator<CacheObj<K, V>>, Seriali
 	 * 构造
 	 * 
 	 * @param iterator 原{@link Iterator}
-	 * @param readLock 读锁
 	 */
 	CacheObjIterator(Iterator<CacheObj<K, V>> iterator) {
 		this.iterator = iterator;

@@ -11,6 +11,7 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class HanLPWord implements Word {
+	private static final long serialVersionUID = 1L;
 	
 	private Term term;
 

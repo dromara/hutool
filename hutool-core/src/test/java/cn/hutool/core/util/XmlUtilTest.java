@@ -22,10 +22,6 @@ import cn.hutool.core.map.MapUtil;
 public class XmlUtilTest {
 	
 	@Test
-	public void buildTest() {
-	}
-
-	@Test
 	public void parseTest() {
 		String result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"//
 				+ "<returnsms>"//

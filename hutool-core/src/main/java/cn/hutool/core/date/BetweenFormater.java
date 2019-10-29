@@ -17,7 +17,7 @@ public class BetweenFormater implements Serializable{
 	/** 格式化级别 */
 	private Level level;
 	/** 格式化级别的最大个数 */
-	private int levelMaxCount;
+	private final int levelMaxCount;
 	
 	/**
 	 * 构造
@@ -137,7 +137,7 @@ public class BetweenFormater implements Serializable{
 		MILLSECOND("毫秒");
 
 		/** 级别名称 */
-		private String name;
+		private final String name;
 
 		/**
 		 * 构造

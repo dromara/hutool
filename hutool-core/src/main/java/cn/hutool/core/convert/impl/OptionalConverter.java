@@ -2,7 +2,6 @@ package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
 
-import java.time.Period;
 import java.util.Optional;
 
 /**

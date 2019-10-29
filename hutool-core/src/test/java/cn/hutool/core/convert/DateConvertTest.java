@@ -1,7 +1,6 @@
 package cn.hutool.core.convert;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 

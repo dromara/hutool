@@ -18,7 +18,7 @@ import cn.hutool.core.util.NumberUtil;
 public class Arrangement implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String[] datas;
+	private final String[] datas;
 
 	/**
 	 * 构造
@@ -106,7 +106,6 @@ public class Arrangement implements Serializable {
 	 * 排列方式为先从数据数组中取出一个元素，再把剩余的元素作为新的基数，依次列推，直到选择到足够的元素
 	 * 
 	 * @param datas 选择的基数
-	 * @param dataList 待选列表
 	 * @param resultList 前面（resultIndex-1）个的排列结果
 	 * @param resultIndex 选择索引，从0开始
 	 * @param result 最终结果

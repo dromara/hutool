@@ -19,17 +19,6 @@ public class JSONNull implements Serializable{
 	public static final JSONNull NULL = new JSONNull();
 
 	/**
-	 * There is only intended to be a single instance of the NULL object, so the clone method returns itself.
-	 *克隆方法只返回本身，此对象是个单例对象
-	 *
-	 * @return NULL.
-	 */
-	@Override
-	protected final Object clone() {
-		return this;
-	}
-
-	/**
 	 * A Null object is equal to the null value and to itself.
 	 * 对象与其本身和<code>null</code>值相等
 	 *
@@ -38,7 +27,7 @@ public class JSONNull implements Serializable{
 	 */
 	@Override
 	public boolean equals(Object object) {
-		return object == null || object == this;
+		return object == null || (object instanceof JSONNull && object == this);
 	}
 	
 	@Override

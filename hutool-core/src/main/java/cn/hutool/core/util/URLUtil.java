@@ -1,5 +1,13 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.net.URLEncoder;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -14,15 +22,6 @@ import java.net.URLDecoder;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.jar.JarFile;
-
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.net.URLEncoder;
 
 /**
  * 统一资源定位符相关工具类

@@ -23,7 +23,7 @@ import cn.hutool.extra.template.TemplateEngine;
  */
 public class BeetlEngine implements TemplateEngine {
 
-	private GroupTemplate engine;
+	private final GroupTemplate engine;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**

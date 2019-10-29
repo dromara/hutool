@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class BeanHandler<E> implements RsHandler<E>{
 	private static final long serialVersionUID = -5491214744966544475L;
 
-	private Class<E> elementBeanType;
+	private final Class<E> elementBeanType;
 	
 	/**
 	 * 创建一个 BeanHandler对象
@@ -24,7 +24,7 @@ public class BeanHandler<E> implements RsHandler<E>{
 	 * @return BeanHandler对象
 	 */
 	public static <E> BeanHandler<E> create(Class<E> beanType) {
-		return new BeanHandler<E>(beanType);
+		return new BeanHandler<>(beanType);
 	}
 
 	public BeanHandler(Class<E> beanType) {

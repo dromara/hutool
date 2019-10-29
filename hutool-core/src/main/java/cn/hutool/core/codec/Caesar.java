@@ -9,7 +9,7 @@ package cn.hutool.core.codec;
 public class Caesar {
 
 	// 26个字母表
-	public static String table = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
+	public static final String table = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
 
 	/**
 	 * 传入明文，加密得到密文

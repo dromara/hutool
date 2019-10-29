@@ -184,9 +184,6 @@ public class StyleUtil {
 	 * @since 4.6.3
 	 */
 	public static boolean isNullOrDefaultStyle(Workbook workbook, CellStyle style) {
-		if(null == style || style.equals(workbook.getCellStyleAt(0))) {
-			return true;
-		}
-		return false;
+		return (null == style) || style.equals(workbook.getCellStyleAt(0));
 	}
 }

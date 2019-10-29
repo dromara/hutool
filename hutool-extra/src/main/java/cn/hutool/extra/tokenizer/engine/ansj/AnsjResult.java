@@ -16,7 +16,7 @@ import cn.hutool.extra.tokenizer.Word;
  */
 public class AnsjResult implements Result{
 	
-	Iterator<Term> result;
+	private final Iterator<Term> result;
 	
 	/**
 	 * 构造

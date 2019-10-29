@@ -16,12 +16,10 @@ public class SimpleTaskListener implements TaskListener{
 
 	@Override
 	public void onSucceeded(TaskExecutor executor) {
-		
 	}
 
 	@Override
 	public void onFailed(TaskExecutor executor, Throwable exception) {
-
 	}
 
 }

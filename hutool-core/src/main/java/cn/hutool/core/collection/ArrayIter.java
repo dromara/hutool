@@ -16,7 +16,7 @@ public class ArrayIter<E> implements Iterator<E>, Iterable<E>, Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** 数组 */
-	private Object array;
+	private final Object array;
 	/** 起始位置 */
 	private int startIndex;
 	/** 结束位置 */

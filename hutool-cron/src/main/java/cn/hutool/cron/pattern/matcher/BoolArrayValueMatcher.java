@@ -12,7 +12,7 @@ import cn.hutool.core.util.StrUtil;
  */
 public class BoolArrayValueMatcher implements ValueMatcher{
 	
-	boolean[] bValues;
+	private final boolean[] bValues;
 	
 	public BoolArrayValueMatcher(List<Integer> intValueList) {
 		bValues = new boolean[Collections.max(intValueList) + 1];

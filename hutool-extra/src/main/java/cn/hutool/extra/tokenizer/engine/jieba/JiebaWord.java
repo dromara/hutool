@@ -11,7 +11,9 @@ import cn.hutool.extra.tokenizer.Word;
  *
  */
 public class JiebaWord implements Word {
-	private SegToken segToken;
+	private static final long serialVersionUID = 1L;
+
+	private final SegToken segToken;
 
 	/**
 	 * 构造

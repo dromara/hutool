@@ -26,7 +26,7 @@ public class BaseAsymmetric<T extends BaseAsymmetric<T>>{
 	/** 私钥 */
 	protected PrivateKey privateKey;
 	/** 锁 */
-	protected Lock lock = new ReentrantLock();
+	protected final Lock lock = new ReentrantLock();
 
 	// ------------------------------------------------------------------ Constructor start
 	/**

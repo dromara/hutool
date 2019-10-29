@@ -38,10 +38,7 @@ public class IORuntimeException extends RuntimeException {
 	 * @return 是否为指定类型异常
 	 */
 	public boolean causeInstanceOf(Class<? extends Throwable> clazz) {
-		Throwable cause = this.getCause();
-		if (null != cause && clazz.isInstance(cause)) {
-			return true;
-		}
-		return false;
+		final Throwable cause = this.getCause();
+		return null != clazz && clazz.isInstance(cause);
 	}
 }

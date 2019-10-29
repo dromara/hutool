@@ -54,7 +54,6 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 
 		final Type useOwner = this.ownerType;
 		final Class<?> raw = (Class<?>) this.rawType;
-		final Type[] typeArguments = this.actualTypeArguments;
 		if (useOwner == null) {
 			buf.append(raw.getName());
 		} else {
@@ -66,7 +65,7 @@ public class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 			buf.append('.').append(raw.getSimpleName());
 		}
 
-		appendAllTo(buf.append('<'), ", ", typeArguments).append('>');
+		appendAllTo(buf.append('<'), ", ", this.actualTypeArguments).append('>');
 		return buf.toString();
 	}
 

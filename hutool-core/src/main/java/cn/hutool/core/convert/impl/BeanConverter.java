@@ -27,9 +27,9 @@ import cn.hutool.core.util.TypeUtil;
 public class BeanConverter<T> extends AbstractConverter<T> {
 	private static final long serialVersionUID = 1L;
 
-	private Type beanType;
-	private Class<T> beanClass;
-	private CopyOptions copyOptions;
+	private final Type beanType;
+	private final Class<T> beanClass;
+	private final CopyOptions copyOptions;
 	
 	/**
 	 * 构造，默认转换选项，注入失败的字段忽略

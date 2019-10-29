@@ -16,8 +16,8 @@ import java.lang.reflect.Method;
 public class CglibInterceptor implements MethodInterceptor, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Object target;
-	private Aspect aspect;
+	private final Object target;
+	private final Aspect aspect;
 
 	/**
 	 * 构造

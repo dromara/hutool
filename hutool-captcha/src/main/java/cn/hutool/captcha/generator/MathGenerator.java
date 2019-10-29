@@ -42,12 +42,11 @@ public class MathGenerator implements CodeGenerator {
 		number1 = StrUtil.padAfter(number1, this.numberLength, CharUtil.SPACE);
 		number2 = StrUtil.padAfter(number2, this.numberLength, CharUtil.SPACE);
 
-		final String code = StrUtil.builder()//
+		return StrUtil.builder()//
 				.append(number1)//
 				.append(RandomUtil.randomChar(operators))//
 				.append(number2)//
 				.append('=').toString();
-		return code;
 	}
 
 	@Override
