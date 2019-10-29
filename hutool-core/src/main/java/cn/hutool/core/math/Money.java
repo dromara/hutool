@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Currency;
 
 /**
@@ -54,10 +55,10 @@ public class Money implements Serializable, Comparable<Money> {
 	public static final String DEFAULT_CURRENCY_CODE = "CNY";
 
 	/**
-	 * 缺省的取整模式，为{@link BigDecimal#ROUND_HALF_EVEN}
+	 * 缺省的取整模式，为{@link RoundingMode#HALF_EVEN}
 	 * （四舍五入，当小数为0.5时，则取最近的偶数）。
 	 */
-	public static final int DEFAULT_ROUNDING_MODE = BigDecimal.ROUND_HALF_EVEN;
+	public static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_EVEN;
 
 	/**
 	 * 一组可能的元/分换算比例。
@@ -155,7 +156,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param currency     币种。
 	 * @param roundingMode 取整模式。
 	 */
-	public Money(String amount, Currency currency, int roundingMode) {
+	public Money(String amount, Currency currency, RoundingMode roundingMode) {
 		this(new BigDecimal(amount), currency, roundingMode);
 	}
 
@@ -236,7 +237,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param amount       金额，以元为单位。
 	 * @param roundingMode 取整模式
 	 */
-	public Money(BigDecimal amount, int roundingMode) {
+	public Money(BigDecimal amount, RoundingMode roundingMode) {
 		this(amount, Currency.getInstance(DEFAULT_CURRENCY_CODE), roundingMode);
 	}
 
@@ -265,7 +266,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param currency     币种。
 	 * @param roundingMode 取整模式。
 	 */
-	public Money(BigDecimal amount, Currency currency, int roundingMode) {
+	public Money(BigDecimal amount, Currency currency, RoundingMode roundingMode) {
 		this.currency = currency;
 		this.cent = rounding(amount.movePointRight(currency.getDefaultFractionDigits()),
 				roundingMode);
@@ -289,7 +290,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 */
 	public void setAmount(BigDecimal amount) {
 		if (amount != null) {
-			cent = rounding(amount.movePointRight(2), BigDecimal.ROUND_HALF_EVEN);
+			cent = rounding(amount.movePointRight(2), DEFAULT_ROUNDING_MODE);
 		}
 	}
 
@@ -581,7 +582,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整方式
 	 * @return 相乘后的结果。
 	 */
-	public Money multiply(BigDecimal val, int roundingMode) {
+	public Money multiply(BigDecimal val, RoundingMode roundingMode) {
 		BigDecimal newCent = BigDecimal.valueOf(cent).multiply(val);
 
 		return newMoneyWithSameCurrency(rounding(newCent, roundingMode));
@@ -599,7 +600,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整方式
 	 * @return 累乘后的结果。
 	 */
-	public Money multiplyBy(BigDecimal val, int roundingMode) {
+	public Money multiplyBy(BigDecimal val, RoundingMode roundingMode) {
 		BigDecimal newCent = BigDecimal.valueOf(cent).multiply(val);
 
 		this.cent = rounding(newCent, roundingMode);
@@ -664,7 +665,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整
 	 * @return 相除后的结果。
 	 */
-	public Money divide(BigDecimal val, int roundingMode) {
+	public Money divide(BigDecimal val, RoundingMode roundingMode) {
 		BigDecimal newCent = BigDecimal.valueOf(cent).divide(val, roundingMode);
 
 		return newMoneyWithSameCurrency(newCent.longValue());
@@ -694,9 +695,10 @@ public class Money implements Serializable, Comparable<Money> {
 	 * <code>roundingMode</code>进行取整。
 	 *
 	 * @param val 除数
+	 * @param roundingMode 保留小数方式
 	 * @return 累除后的结果。
 	 */
-	public Money divideBy(BigDecimal val, int roundingMode) {
+	public Money divideBy(BigDecimal val, RoundingMode roundingMode) {
 		BigDecimal newCent = BigDecimal.valueOf(cent).divide(val, roundingMode);
 
 		this.cent = newCent.longValue();
@@ -803,7 +805,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 * @param roundingMode 取整方式
 	 * @return 取整后的long型值
 	 */
-	protected long rounding(BigDecimal val, int roundingMode) {
+	protected long rounding(BigDecimal val, RoundingMode roundingMode) {
 		return val.setScale(0, roundingMode).longValue();
 	}
 
