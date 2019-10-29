@@ -24,6 +24,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -825,13 +826,14 @@ public final class SecureUtil {
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
 	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
 	 *
-	 * @param crypto 对称加密算法
-	 * @param params 参数
+	 * @param crypto      对称加密算法
+	 * @param params      参数
+	 * @param otherParams 其它附加参数字符串（例如密钥）
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params) {
-		return signParams(crypto, params, StrUtil.EMPTY, StrUtil.EMPTY, true);
+	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String... otherParams) {
+		return signParams(crypto, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
 	}
 
 	/**
@@ -843,15 +845,13 @@ public final class SecureUtil {
 	 * @param separator         entry之间的连接符
 	 * @param keyValueSeparator kv之间的连接符
 	 * @param isIgnoreNull      是否忽略null的键和值
+	 * @param otherParams       其它附加参数字符串（例如密钥）
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull) {
-		if (MapUtil.isEmpty(params)) {
-			return null;
-		}
-		String paramsStr = MapUtil.join(MapUtil.sort(params), separator, keyValueSeparator, isIgnoreNull);
-		return crypto.encryptHex(paramsStr);
+	public static String signParams(SymmetricCrypto crypto, Map<?, ?> params, String separator,
+	                                String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+		return crypto.encryptHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
 	}
 
 	/**
@@ -859,12 +859,13 @@ public final class SecureUtil {
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
 	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
 	 *
-	 * @param params 参数
+	 * @param params      参数
+	 * @param otherParams 其它附加参数字符串（例如密钥）
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParamsMd5(Map<?, ?> params) {
-		return signParams(DigestAlgorithm.MD5, params);
+	public static String signParamsMd5(Map<?, ?> params, String... otherParams) {
+		return signParams(DigestAlgorithm.MD5, params, otherParams);
 	}
 
 	/**
@@ -872,12 +873,13 @@ public final class SecureUtil {
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
 	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
 	 *
-	 * @param params 参数
+	 * @param params      参数
+	 * @param otherParams 其它附加参数字符串（例如密钥）
 	 * @return 签名
 	 * @since 4.0.8
 	 */
-	public static String signParamsSha1(Map<?, ?> params) {
-		return signParams(DigestAlgorithm.SHA1, params);
+	public static String signParamsSha1(Map<?, ?> params, String... otherParams) {
+		return signParams(DigestAlgorithm.SHA1, params, otherParams);
 	}
 
 	/**
@@ -885,12 +887,13 @@ public final class SecureUtil {
 	 * 参数签名为对Map参数按照key的顺序排序后拼接为字符串，然后根据提供的签名算法生成签名字符串<br>
 	 * 拼接后的字符串键值对之间无符号，键值对之间无符号，忽略null值
 	 *
-	 * @param params 参数
+	 * @param params      参数
+	 * @param otherParams 其它附加参数字符串（例如密钥）
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParamsSha256(Map<?, ?> params) {
-		return signParams(DigestAlgorithm.SHA256, params);
+	public static String signParamsSha256(Map<?, ?> params, String... otherParams) {
+		return signParams(DigestAlgorithm.SHA256, params, otherParams);
 	}
 
 	/**
@@ -900,11 +903,12 @@ public final class SecureUtil {
 	 *
 	 * @param digestAlgorithm 摘要算法
 	 * @param params          参数
+	 * @param otherParams     其它附加参数字符串（例如密钥）
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params) {
-		return signParams(digestAlgorithm, params, StrUtil.EMPTY, StrUtil.EMPTY, true);
+	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String... otherParams) {
+		return signParams(digestAlgorithm, params, StrUtil.EMPTY, StrUtil.EMPTY, true, otherParams);
 	}
 
 	/**
@@ -916,15 +920,13 @@ public final class SecureUtil {
 	 * @param separator         entry之间的连接符
 	 * @param keyValueSeparator kv之间的连接符
 	 * @param isIgnoreNull      是否忽略null的键和值
+	 * @param otherParams       其它附加参数字符串（例如密钥）
 	 * @return 签名
 	 * @since 4.0.1
 	 */
-	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull) {
-		if (MapUtil.isEmpty(params)) {
-			return null;
-		}
-		final String paramsStr = MapUtil.join(MapUtil.sort(params), separator, keyValueSeparator, isIgnoreNull);
-		return new Digester(digestAlgorithm).digestHex(paramsStr);
+	public static String signParams(DigestAlgorithm digestAlgorithm, Map<?, ?> params, String separator,
+	                                String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+		return new Digester(digestAlgorithm).digestHex(MapUtil.sortJoin(params, separator, keyValueSeparator, isIgnoreNull, otherParams));
 	}
 
 	// ------------------------------------------------------------------- UUID

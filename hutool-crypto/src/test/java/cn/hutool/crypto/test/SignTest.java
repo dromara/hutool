@@ -1,5 +1,6 @@
 package cn.hutool.crypto.test;
 
+import cn.hutool.core.map.MapUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -7,6 +8,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 签名单元测试
@@ -87,5 +91,19 @@ public class SignTest {
 		// 验证签名
 		boolean verify = sign.verify(data, signed);
 		Assert.assertTrue(verify);
+	}
+
+	@Test
+	public void signParamsTest(){
+		Map<String, String> build = MapUtil.builder(new HashMap<String, String>())
+				.put("key1", "value1")
+				.put("key2", "value2").build();
+
+		String sign1 = SecureUtil.signParamsSha1(build);
+		Assert.assertEquals("9ed30bfe2efbc7038a824b6c55c24a11bfc0dce5", sign1);
+		String sign2 = SecureUtil.signParamsSha1(build, "12345678");
+		Assert.assertEquals("944b68d94c952ec178c4caf16b9416b6661f7720", sign2);
+		String sign3 = SecureUtil.signParamsSha1(build, "12345678", "abc");
+		Assert.assertEquals("edee1b477af1b96ebd20fdf08d818f352928d25d", sign3);
 	}
 }
