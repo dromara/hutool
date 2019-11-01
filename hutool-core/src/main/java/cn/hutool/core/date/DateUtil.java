@@ -407,7 +407,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * @return 当前日期所在年份的第几周
+	 * @return 当前日期所在月份的第几周
 	 */
 	public static int thisWeekOfMonth() {
 		return weekOfMonth(date());
@@ -1967,6 +1967,17 @@ public class DateUtil {
 	}
 
 	/**
+	 * Calendar{@link Instant}对象
+	 *
+	 * @param calendar Date对象
+	 * @return {@link Instant}对象
+	 * @since 5.0.5
+	 */
+	public static Instant toInstant(Calendar calendar) {
+		return null == calendar ? null : calendar.toInstant();
+	}
+
+	/**
 	 * Date对象转换为{@link Instant}对象
 	 *
 	 * @param temporalAccessor Date对象
@@ -2001,8 +2012,42 @@ public class DateUtil {
 
 		return result;
 	}
-	// ------------------------------------------------------------------------ Private method start
 
+	/**
+	 * {@link Instant} 转换为 {@link LocalDateTime}，使用系统默认时区
+	 *
+	 * @param instant {@link Instant}
+	 * @return {@link LocalDateTime}
+	 * @since 5.0.5
+	 */
+	public static LocalDateTime toLocalDateTime(Instant instant){
+		return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+	}
+
+	/**
+	 * {@link Calendar} 转换为 {@link LocalDateTime}，使用系统默认时区
+	 *
+	 * @param calendar {@link Calendar}
+	 * @return {@link LocalDateTime}
+	 * @since 5.0.5
+	 */
+	public static LocalDateTime toLocalDateTime(Calendar calendar){
+		return LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
+	}
+
+	/**
+	 * {@link Date} 转换为 {@link LocalDateTime}，使用系统默认时区
+	 *
+	 * @param date {@link Calendar}
+	 * @return {@link LocalDateTime}
+	 * @since 5.0.5
+	 */
+	public static LocalDateTime toLocalDateTime(Date date){
+		final DateTime dateTime = date(date);
+		return LocalDateTime.ofInstant(dateTime.toInstant(), dateTime.getZoneId());
+	}
+
+	// ------------------------------------------------------------------------ Private method start
 	/**
 	 * 获得指定日期年份和季节<br>
 	 * 格式：[20131]表示2013年第一季度

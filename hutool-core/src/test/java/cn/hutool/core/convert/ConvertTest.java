@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 类型转换工具单元测试
@@ -178,5 +180,30 @@ public class ConvertTest {
 		short short2 = Convert.bytesToShort(bytes);
 
 		Assert.assertEquals(short2, short1);
+	}
+
+	@Test
+	public void toListTest(){
+		List<String> list = Arrays.asList("1","2");
+		String str = Convert.toStr(list);
+		List<String> list2 = Convert.toList(String.class, str);
+		Assert.assertEquals("1", list2.get(0));
+		Assert.assertEquals("2", list2.get(1));
+
+		List<Integer> list3 = Convert.toList(Integer.class, str);
+		Assert.assertEquals(1, list3.get(0).intValue());
+		Assert.assertEquals(2, list3.get(1).intValue());
+	}
+
+	@Test
+	public void toListTest2(){
+		String str = "1,2";
+		List<String> list2 = Convert.toList(String.class, str);
+		Assert.assertEquals("1", list2.get(0));
+		Assert.assertEquals("2", list2.get(1));
+
+		List<Integer> list3 = Convert.toList(Integer.class, str);
+		Assert.assertEquals(1, list3.get(0).intValue());
+		Assert.assertEquals(2, list3.get(1).intValue());
 	}
 }

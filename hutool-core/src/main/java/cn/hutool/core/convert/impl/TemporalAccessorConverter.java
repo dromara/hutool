@@ -1,7 +1,9 @@
 package cn.hutool.core.convert.impl;
 
 import cn.hutool.core.convert.AbstractConverter;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -87,9 +89,11 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		} else if (value instanceof TemporalAccessor) {
 			return parseFromTemporalAccessor((TemporalAccessor) value);
 		} else if (value instanceof Date) {
-			return parseFromInstant(((Date) value).toInstant());
+			final DateTime dateTime = DateUtil.date((Date) value);
+			return parseFromInstant(dateTime.toInstant(), dateTime.getZoneId());
 		}else if (value instanceof Calendar) {
-			return parseFromInstant(((Calendar) value).toInstant());
+			final Calendar calendar = (Calendar) value;
+			return parseFromInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
 		} else {
 			return parseFromCharSequence(convertToStr(value));
 		}
@@ -103,13 +107,17 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 */
 	private TemporalAccessor parseFromCharSequence(CharSequence value) {
 		final Instant instant;
+		ZoneId zoneId;
 		if (null != this.format) {
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(this.format);
 			instant = formatter.parse(value, Instant::from);
+			zoneId = formatter.getZone();
 		} else {
-			instant = DateUtil.parse(value).toInstant();
+			final DateTime dateTime = DateUtil.parse(value);
+			instant = dateTime.toInstant();
+			zoneId = dateTime.getZoneId();
 		}
-		return parseFromInstant(instant);
+		return parseFromInstant(instant, zoneId);
 	}
 
 	/**
@@ -119,7 +127,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * @return java.time中的对象
 	 */
 	private TemporalAccessor parseFromLong(Long time) {
-		return parseFromInstant(Instant.ofEpochMilli(time));
+		return parseFromInstant(Instant.ofEpochMilli(time), null);
 	}
 
 	/**
@@ -137,7 +145,7 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 		}
 
 		if(null == result){
-			result = parseFromInstant(DateUtil.toInstant(temporalAccessor));
+			result = parseFromInstant(DateUtil.toInstant(temporalAccessor), null);
 		}
 
 		return result;
@@ -205,24 +213,30 @@ public class TemporalAccessorConverter extends AbstractConverter<TemporalAccesso
 	 * 将TemporalAccessor型时间戳转换为java.time中的对象
 	 *
 	 * @param instant {@link Instant}对象
+	 * @param zoneId 时区ID，null表示当前系统默认的时区
 	 * @return java.time中的对象
 	 */
-	private TemporalAccessor parseFromInstant(Instant instant) {
+	private TemporalAccessor parseFromInstant(Instant instant, ZoneId zoneId) {
 		if(Instant.class.equals(this.targetType)){
 			return instant;
-		}else if (LocalDateTime.class.equals(this.targetType)) {
-			return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-		} else if (LocalDate.class.equals(this.targetType)) {
-			return instant.atZone(ZoneId.systemDefault()).toLocalDate();
-		} else if (LocalTime.class.equals(this.targetType)) {
-			return instant.atZone(ZoneId.systemDefault()).toLocalTime();
-		} else if (ZonedDateTime.class.equals(this.targetType)) {
-			return instant.atZone(ZoneId.systemDefault());
-		} else if (OffsetDateTime.class.equals(this.targetType)) {
-			return OffsetDateTime.ofInstant(instant, ZoneId.systemDefault());
-		} else if (OffsetTime.class.equals(this.targetType)) {
-			return OffsetTime.ofInstant(instant, ZoneId.systemDefault());
 		}
-		return null;
+
+		zoneId = ObjectUtil.defaultIfNull(zoneId, ZoneId.systemDefault());
+
+		TemporalAccessor result = null;
+		if (LocalDateTime.class.equals(this.targetType)) {
+			result = LocalDateTime.ofInstant(instant, zoneId);
+		} else if (LocalDate.class.equals(this.targetType)) {
+			result = instant.atZone(zoneId).toLocalDate();
+		} else if (LocalTime.class.equals(this.targetType)) {
+			result = instant.atZone(zoneId).toLocalTime();
+		} else if (ZonedDateTime.class.equals(this.targetType)) {
+			result = instant.atZone(zoneId);
+		} else if (OffsetDateTime.class.equals(this.targetType)) {
+			result = OffsetDateTime.ofInstant(instant, zoneId);
+		} else if (OffsetTime.class.equals(this.targetType)) {
+			result = OffsetTime.ofInstant(instant, zoneId);
+		}
+		return result;
 	}
 }
