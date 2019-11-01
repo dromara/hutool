@@ -6,8 +6,10 @@
 ## 5.0.5
 
 ### 新特性
+* 【core】       增加MapUtil.removeAny（issue#612@Github）
 
 ### Bug修复
+* 【db】         修复MetaUtil.getTableMeta()方法未释放ResultSet的bug（issue#I148GH@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

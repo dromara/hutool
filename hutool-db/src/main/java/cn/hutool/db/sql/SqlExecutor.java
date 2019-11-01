@@ -162,7 +162,7 @@ public class SqlExecutor {
 	 * @throws SQLException SQL执行异常
 	 */
 	public static int[] executeBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
-		return executeBatch(conn, sql, new ArrayIter<Object[]>(paramsBatch));
+		return executeBatch(conn, sql, new ArrayIter<>(paramsBatch));
 	}
 	
 	/**
@@ -198,7 +198,7 @@ public class SqlExecutor {
 	 * @since 4.5.6
 	 */
 	public static int[] executeBatch(Connection conn, String... sqls) throws SQLException {
-		return executeBatch(conn, new ArrayIter<String>(sqls));
+		return executeBatch(conn, new ArrayIter<>(sqls));
 	}
 	
 	/**

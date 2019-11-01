@@ -819,6 +819,24 @@ public class MapUtil {
 	}
 
 	/**
+	 * 去掉Map中指定key的键值对，修改原Map
+	 *
+	 * @param <K>  Key类型
+	 * @param <V>  Value类型
+	 * @param map  Map
+	 * @param keys 键列表
+	 * @return 修改后的key
+	 * @since 5.0.5
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> removeAny(Map<K, V> map, final K... keys) {
+		for (K key : keys) {
+			map.remove(key);
+		}
+		return map;
+	}
+
+	/**
 	 * 获取Map指定key的值，并转换为字符串
 	 *
 	 * @param map Map
