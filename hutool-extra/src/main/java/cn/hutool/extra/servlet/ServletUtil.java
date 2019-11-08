@@ -416,7 +416,7 @@ public class ServletUtil {
 			return null;
 		}
 		for (Cookie cookie : cookies) {
-			cookieMap.put(cookie.getName().toLowerCase(), cookie);
+			cookieMap.put(cookie.getName(), cookie);
 		}
 		return cookieMap;
 	}
