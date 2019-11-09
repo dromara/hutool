@@ -4,6 +4,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
 
 import java.util.Date;
@@ -137,7 +138,7 @@ public class IdcardUtil {
 		if (idCard.length() != CHINA_ID_MIN_LENGTH) {
 			return null;
 		}
-		if (Validator.isNumber(idCard)) {
+		if (ReUtil.isMatch(PatternPool.NUMBERS, idCard)) {
 			// 获取出生年月日
 			String birthday = idCard.substring(6, 12);
 			Date birthDate = DateUtil.parse(birthday, "yyMMdd");
@@ -168,9 +169,9 @@ public class IdcardUtil {
 		int length = idCard.length();
 		switch (length) {
 			case 18:// 18位身份证
-				return isvalidCard18(idCard);
+				return isValidCard18(idCard);
 			case 15:// 15位身份证
-				return isvalidCard15(idCard);
+				return isValidCard15(idCard);
 			case 10: {// 10位身份证，港澳台地区
 				String[] cardval = isValidCard10(idCard);
 				return null != cardval && cardval[2].equals("true");
@@ -211,7 +212,7 @@ public class IdcardUtil {
 	 * @param idCard 待验证的身份证
 	 * @return 是否有效的18位身份证
 	 */
-	public static boolean isvalidCard18(String idCard) {
+	public static boolean isValidCard18(String idCard) {
 		if (CHINA_ID_MAX_LENGTH != idCard.length()) {
 			return false;
 		}
@@ -225,7 +226,7 @@ public class IdcardUtil {
 		String code17 = idCard.substring(0, 17);
 		// 第18位
 		char code18 = Character.toLowerCase(idCard.charAt(17));
-		if (Validator.isNumber(code17)) {
+		if (ReUtil.isMatch(PatternPool.NUMBERS, code17)) {
 			// 获取校验位
 			char val = getCheckCode18(code17);
 			return val == code18;
@@ -239,11 +240,11 @@ public class IdcardUtil {
 	 * @param idCard 身份编码
 	 * @return 是否合法
 	 */
-	public static boolean isvalidCard15(String idCard) {
+	public static boolean isValidCard15(String idCard) {
 		if (CHINA_ID_MIN_LENGTH != idCard.length()) {
 			return false;
 		}
-		if (Validator.isNumber(idCard)) {
+		if (ReUtil.isMatch(PatternPool.NUMBERS, idCard)) {
 			// 省份
 			String proCode = idCard.substring(0, 2);
 			if (null == cityCodes.get(proCode)) {

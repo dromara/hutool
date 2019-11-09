@@ -15,6 +15,8 @@
 ### Bug修复
 * 【db】         修复MetaUtil.getTableMeta()方法未释放ResultSet的bug（issue#I148GH@Gitee）
 * 【core】       修复DateUtil.age闰年导致的问题（issue#I14BVN@Gitee）
+* 【extra】      修复ServletUtil.getCookie大小写问题（pr#79@Gitee）
+* 【core】       修复IdcardUtil.isValidCard18报错问题（issue#I14LTJ@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
