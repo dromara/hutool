@@ -10,6 +10,7 @@
 * 【core】       Convert.toList支持[1,2]字符串（issue#I149XN@Gitee）
 * 【core】       修正DateUtil.thisWeekOfMonth注释错误（issue#614@Github）
 * 【core】       DateUtil增加toLocalDate等方法，DateTime更好的支持时区
+* 【core】       BeanUtil.getProperty返回泛型对象（issue#I14PIW@Gitee）
 
 ### Bug修复
 * 【db】         修复MetaUtil.getTableMeta()方法未释放ResultSet的bug（issue#I148GH@Gitee）
