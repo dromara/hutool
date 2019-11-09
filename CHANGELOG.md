@@ -11,12 +11,14 @@
 * 【core】       修正DateUtil.thisWeekOfMonth注释错误（issue#614@Github）
 * 【core】       DateUtil增加toLocalDate等方法，DateTime更好的支持时区
 * 【core】       BeanUtil.getProperty返回泛型对象（issue#I14PIW@Gitee）
+* 【core】       FileTypeUtil使用扩展名辅助判断类型（issue#I14JBH@Gitee）
 
 ### Bug修复
 * 【db】         修复MetaUtil.getTableMeta()方法未释放ResultSet的bug（issue#I148GH@Gitee）
 * 【core】       修复DateUtil.age闰年导致的问题（issue#I14BVN@Gitee）
 * 【extra】      修复ServletUtil.getCookie大小写问题（pr#79@Gitee）
 * 【core】       修复IdcardUtil.isValidCard18报错问题（issue#I14LTJ@Gitee）
+* 【poi】        修复double值可能存在的精度问题（issue#I14FG1@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

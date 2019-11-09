@@ -1,10 +1,9 @@
 package cn.hutool.poi.excel.cell;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.StyleSet;
+import cn.hutool.poi.excel.editors.TrimEditor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -13,13 +12,14 @@ import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.ss.util.SheetUtil;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.poi.excel.StyleSet;
-import cn.hutool.poi.excel.editors.TrimEditor;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Excel表格中单元格工具类
@@ -27,6 +27,7 @@ import cn.hutool.poi.excel.editors.TrimEditor;
  * @author looly
  * @since 4.0.7
  */
+@SuppressWarnings("deprecation")
 public class CellUtil {
 
 	/**
@@ -283,26 +284,26 @@ public class CellUtil {
 		final double value = cell.getNumericCellValue();
 
 		final CellStyle style = cell.getCellStyle();
-		if (null == style) {
-			return value;
-		}
+		if (null != style) {
+			final short formatIndex = style.getDataFormat();
+			// 判断是否为日期
+			if (isDateType(cell, formatIndex)) {
+				return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
+			}
 
-		final short formatIndex = style.getDataFormat();
-		// 判断是否为日期
-		if (isDateType(cell, formatIndex)) {
-			return DateUtil.date(cell.getDateCellValue());// 使用Hutool的DateTime包装
-		}
-
-		final String format = style.getDataFormatString();
-		// 普通数字
-		if (null != format && format.indexOf(StrUtil.C_DOT) < 0) {
-			final long longPart = (long) value;
-			if (longPart == value) {
-				// 对于无小数部分的数字类型，转为Long
-				return longPart;
+			final String format = style.getDataFormatString();
+			// 普通数字
+			if (null != format && format.indexOf(StrUtil.C_DOT) < 0) {
+				final long longPart = (long) value;
+				if (((double) longPart) == value) {
+					// 对于无小数部分的数字类型，转为Long
+					return longPart;
+				}
 			}
 		}
-		return value;
+
+		// 某些Excel单元格值为double计算结果，可能导致精度问题，通过转换解决精度问题。
+		return Double.parseDouble(NumberToTextConverter.toText(value));
 	}
 
 	/**

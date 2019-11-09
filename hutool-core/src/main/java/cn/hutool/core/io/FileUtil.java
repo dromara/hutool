@@ -1551,7 +1551,7 @@ public class FileUtil {
 		pathToUse = StrUtil.removePrefixIgnoreCase(pathToUse, URLUtil.FILE_URL_PREFIX);
 
 		// 识别home目录形式，并转换为绝对路径
-		if(pathToUse.startsWith("~")){
+		if (pathToUse.startsWith("~")) {
 			pathToUse = pathToUse.replace("~", getUserHomePath());
 		}
 
@@ -1874,6 +1874,12 @@ public class FileUtil {
 
 	/**
 	 * 根据文件流的头部信息获得文件类型
+	 *
+	 * <pre>
+	 *      1、无法识别类型默认按照扩展名识别
+	 *      2、xls、doc、msi头信息无法区分，按照扩展名区分
+	 *      3、zip可能为docx、xlsx、pptx、jar、war头信息无法区分，按照扩展名区分
+	 * </pre>
 	 *
 	 * @param file 文件 {@link File}
 	 * @return 类型，文件的扩展名，未找到为<code>null</code>
