@@ -19,6 +19,7 @@
 * 【extra】      修复ServletUtil.getCookie大小写问题（pr#79@Gitee）
 * 【core】       修复IdcardUtil.isValidCard18报错问题（issue#I14LTJ@Gitee）
 * 【poi】        修复double值可能存在的精度问题（issue#I14FG1@Gitee）
+* 【core】       修复Linux下解压目录不正确的问题（issue#I14NO3@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
