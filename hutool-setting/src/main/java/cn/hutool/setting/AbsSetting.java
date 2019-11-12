@@ -261,7 +261,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	 * @param bean Bean对象
 	 * @return Bean
 	 */
-	public Object toBean(final String group, Object bean) {
+	public <T> T toBean(final String group, T bean) {
 		return BeanUtil.fillBean(bean, new ValueProvider<String>(){
 
 			@Override
@@ -283,7 +283,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	 * @param bean Bean
 	 * @return Bean
 	 */
-	public Object toBean(Object bean) {
+	public <T> T toBean(T bean) {
 		return toBean(null, bean);
 	}
 }
