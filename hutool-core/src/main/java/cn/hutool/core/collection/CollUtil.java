@@ -1744,6 +1744,7 @@ public class CollUtil {
 	/**
 	 * 将指定对象全部加入到集合中<br>
 	 * 提供的对象如果为集合类型，会自动转换为目标元素类型<br>
+	 * 如果为String，支持类似于[1,2,3,4] 或者 1,2,3,4 这种格式
 	 *
 	 * @param <T>         元素类型
 	 * @param collection  被加入的集合
@@ -1772,7 +1773,8 @@ public class CollUtil {
 			iter = new ArrayIter<>(value);
 		} else if (value instanceof CharSequence) {
 			// String按照逗号分隔的列表对待
-			iter = StrUtil.splitTrim((CharSequence) value, CharUtil.COMMA).iterator();
+			final String ArrayStr = StrUtil.unWrap((CharSequence) value, '[', ']');
+			iter = StrUtil.splitTrim(ArrayStr, CharUtil.COMMA).iterator();
 		} else {
 			// 其它类型按照单一元素处理
 			iter = CollUtil.newArrayList(value).iterator();
@@ -2415,7 +2417,7 @@ public class CollUtil {
 	/**
 	 * 设置或增加元素。当index小于List的长度时，替换指定位置的值，否则在尾部追加
 	 *
-	 * @param <T>  元素类型
+	 * @param <T>     元素类型
 	 * @param list    List列表
 	 * @param index   位置
 	 * @param element 新元素

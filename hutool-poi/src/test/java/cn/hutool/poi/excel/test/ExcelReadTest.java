@@ -190,4 +190,14 @@ public class ExcelReadTest {
 			return "Person [name=" + name + ", gender=" + gender + ", age=" + age + "]";
 		}
 	}
+
+	@Test
+	@Ignore
+	public void readDoubleTest(){
+		ExcelReader reader = ExcelUtil.getReader("f:/test/doubleTest.xls");
+		final List<List<Object>> read = reader.read();
+		for (List<Object> list : read) {
+			Console.log(list.get(8));
+		}
+	}
 }

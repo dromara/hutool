@@ -27,6 +27,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -410,13 +411,12 @@ public class ServletUtil {
 	 * @return Cookie map
 	 */
 	public static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
-		Map<String, Cookie> cookieMap = new HashMap<>();
-		Cookie[] cookies = httpServletRequest.getCookies();
-		if (null == cookies) {
-			return null;
-		}
-		for (Cookie cookie : cookies) {
-			cookieMap.put(cookie.getName().toLowerCase(), cookie);
+		final Map<String, Cookie> cookieMap = new CaseInsensitiveMap<>();
+		final Cookie[] cookies = httpServletRequest.getCookies();
+		if (null != cookies) {
+			for (Cookie cookie : cookies) {
+				cookieMap.put(cookie.getName(), cookie);
+			}
 		}
 		return cookieMap;
 	}

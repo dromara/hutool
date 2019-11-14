@@ -102,12 +102,7 @@ public class ThreadUtil {
 	 * @return 执行的方法体
 	 */
 	public static Runnable excAsync(final Runnable runnable, boolean isDaemon) {
-		Thread thread = new Thread() {
-			@Override
-			public void run() {
-				runnable.run();
-			}
-		};
+		Thread thread = new Thread(runnable);
 		thread.setDaemon(isDaemon);
 		thread.start();
 

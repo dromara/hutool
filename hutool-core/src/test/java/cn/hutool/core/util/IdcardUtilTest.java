@@ -12,6 +12,7 @@ import org.junit.Test;
  *
  */
 public class IdcardUtilTest {
+
 	private static final String ID_18 = "321083197812162119";
 	private static final String ID_15 = "150102880730303";
 
@@ -69,6 +70,12 @@ public class IdcardUtilTest {
 	public void getGenderByIdCardTest() {
 		int gender = IdcardUtil.getGenderByIdCard(ID_18);
 		Assert.assertEquals(1, gender);
+	}
+
+	@Test
+	public void isValidCard18Test(){
+		final boolean isValidCard18 = IdcardUtil.isValidCard18("3301022011022000D6");
+		Assert.assertFalse(isValidCard18);
 	}
 
 }

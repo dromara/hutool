@@ -175,12 +175,9 @@ public class BeanUtil {
 		} catch (IntrospectionException e) {
 			throw new BeanException(e);
 		}
-		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), new Filter<PropertyDescriptor>() {
-			@Override
-			public boolean accept(PropertyDescriptor t) {
-				// 过滤掉getClass方法
-				return false == "class".equals(t.getName());
-			}
+		return ArrayUtil.filter(beanInfo.getPropertyDescriptors(), (Filter<PropertyDescriptor>) t -> {
+			// 过滤掉getClass方法
+			return false == "class".equals(t.getName());
 		});
 	}
 
@@ -211,8 +208,8 @@ public class BeanUtil {
 	 */
 	private static Map<String, PropertyDescriptor> internalGetPropertyDescriptorMap(Class<?> clazz, boolean ignoreCase) throws BeanException {
 		final PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
-		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<String, PropertyDescriptor>(propertyDescriptors.length, 1)
-				: new HashMap<String, PropertyDescriptor>((int) (propertyDescriptors.length), 1);
+		final Map<String, PropertyDescriptor> map = ignoreCase ? new CaseInsensitiveMap<>(propertyDescriptors.length, 1)
+				: new HashMap<>((int) (propertyDescriptors.length), 1);
 
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			map.put(propertyDescriptor.getName(), propertyDescriptor);
@@ -295,14 +292,16 @@ public class BeanUtil {
 	/**
 	 * 解析Bean中的属性值
 	 *
+	 * @param <T> 属性值类型
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值
 	 * @see BeanPath#get(Object)
 	 * @since 3.0.7
 	 */
-	public static Object getProperty(Object bean, String expression) {
-		return BeanPath.create(expression).get(bean);
+	@SuppressWarnings("unchecked")
+	public static <T> T getProperty(Object bean, String expression) {
+		return (T) BeanPath.create(expression).get(bean);
 	}
 
 	/**
@@ -504,7 +503,7 @@ public class BeanUtil {
 	 * @return Map
 	 */
 	public static Map<String, Object> beanToMap(Object bean, boolean isToUnderlineCase, boolean ignoreNullValue) {
-		return beanToMap(bean, new LinkedHashMap<String, Object>(), isToUnderlineCase, ignoreNullValue);
+		return beanToMap(bean, new LinkedHashMap<>(), isToUnderlineCase, ignoreNullValue);
 	}
 
 	/**
@@ -522,13 +521,7 @@ public class BeanUtil {
 			return null;
 		}
 
-		return beanToMap(bean, targetMap, ignoreNullValue, new Editor<String>() {
-
-			@Override
-			public String edit(String key) {
-				return isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key;
-			}
-		});
+		return beanToMap(bean, targetMap, ignoreNullValue, key -> isToUnderlineCase ? StrUtil.toUnderlineCase(key) : key);
 	}
 
 	/**

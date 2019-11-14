@@ -430,7 +430,7 @@ public class ZipUtil {
 			while (em.hasMoreElements()) {
 				zipEntry = em.nextElement();
 				// FileUtil.file会检查slip漏洞，漏洞说明见http://blog.nsfocus.net/zip-slip-2/
-				outItemFile = FileUtil.file(outFile, zipEntry.getName());
+				outItemFile = buildFile(outFile, zipEntry.getName());
 				if (zipEntry.isDirectory()) {
 					// 创建对应目录
 					outItemFile.mkdirs();
@@ -1055,6 +1055,23 @@ public class ZipUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+	}
+
+	/**
+	 * 根据压缩包中的路径构建目录结构，在Win下直接构建，在Linux下拆分路径单独构建
+	 *
+	 * @param outFile 最外部路径
+	 * @param fileName 文件名，可以包含路径
+	 * @return 文件或目录
+	 * @since 5.0.5
+	 */
+	private static File buildFile(File outFile, String fileName){
+		if(false == FileUtil.isWindows() && StrUtil.contains(fileName, CharUtil.SLASH)) {
+			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理
+			final String[] pathParts = StrUtil.splitToArray(fileName, CharUtil.SLASH);
+			return FileUtil.file(pathParts);
+		}
+		return FileUtil.file(outFile, fileName);
 	}
 	// ---------------------------------------------------------------------------------------------- Private method end
 
