@@ -279,14 +279,14 @@ public class Img implements Serializable {
 		double widthRatio = NumberUtil.div(width, srcWidth);
 		if (heightRatio == widthRatio) {
 			// 长宽都按照相同比例缩放时，返回缩放后的图片
-			return scale(width, height);
-		}
-
-		// 宽缩放比例多就按照宽缩放，否则按照高缩放
-		if (widthRatio < heightRatio) {
-			scale(width, (int) (srcHeight * widthRatio));
-		} else {
-			scale((int) (srcWidth * heightRatio), height);
+			scale(width, height);
+		} else{
+			// 宽缩放比例多就按照宽缩放，否则按照高缩放
+			if (widthRatio < heightRatio) {
+				scale(width, (int) (srcHeight * widthRatio));
+			} else {
+				scale((int) (srcWidth * heightRatio), height);
+			}
 		}
 
 		// 获取缩放后的新的宽和高
