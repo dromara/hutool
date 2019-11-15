@@ -56,11 +56,23 @@ public class XmlUtil {
 	/**
 	 * 在XML中无效的字符 正则
 	 */
-	public final static String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
+	public static final String INVALID_REGEX = "[\\x00-\\x08\\x0b-\\x0c\\x0e-\\x1f]";
 	/**
 	 * XML格式化输出默认缩进量
 	 */
-	public final static int INDENT_DEFAULT = 2;
+	public static final int INDENT_DEFAULT = 2;
+
+	/**
+	 * 默认的DocumentBuilderFactory实现
+	 */
+	private static String defaultDocumentBuilderFactory = "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl";
+
+	/**
+	 * 禁用默认的DocumentBuilderFactory，禁用后如果有第三方的实现（如oracle的xdb包中的xmlparse），将会自动加载实现。
+	 */
+	synchronized public static void disableDefaultDocumentBuilderFactory(){
+		defaultDocumentBuilderFactory = null;
+	}
 
 	// -------------------------------------------------------------------------------------- Read
 
@@ -387,14 +399,32 @@ public class XmlUtil {
 	 * @since 4.1.2
 	 */
 	public static DocumentBuilder createDocumentBuilder() {
-		final DocumentBuilderFactory dbf = disableXXE(DocumentBuilderFactory.newInstance());
 		DocumentBuilder builder;
 		try {
-			builder = dbf.newDocumentBuilder();
+			builder = createDocumentBuilderFactory().newDocumentBuilder();
 		} catch (Exception e) {
 			throw new UtilException(e, "Create xml document error!");
 		}
 		return builder;
+	}
+
+	/**
+	 * 创建{@link DocumentBuilderFactory}
+	 * <p>
+	 *     默认使用"com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"<br>
+	 *     如果使用第三方实现，请调用{@link #disableDefaultDocumentBuilderFactory()}
+	 * </p>
+	 *
+	 * @return {@link DocumentBuilderFactory}
+	 */
+	public static DocumentBuilderFactory createDocumentBuilderFactory(){
+		final DocumentBuilderFactory factory;
+		if(StrUtil.isNotEmpty(defaultDocumentBuilderFactory)){
+			factory = DocumentBuilderFactory.newInstance(defaultDocumentBuilderFactory, null);
+		} else{
+			factory = DocumentBuilderFactory.newInstance();
+		}
+		return disableXXE(factory);
 	}
 
 	/**
