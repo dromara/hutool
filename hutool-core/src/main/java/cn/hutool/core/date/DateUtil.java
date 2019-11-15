@@ -30,6 +30,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -524,7 +525,15 @@ public class DateUtil {
 		if (null == date || StrUtil.isBlank(format)) {
 			return null;
 		}
-		return format(date, FastDateFormat.getInstance(format));
+
+		final SimpleDateFormat sdf = new SimpleDateFormat(format);
+		if(date instanceof DateTime){
+			final TimeZone timeZone = ((DateTime) date).getTimeZone();
+			if(null != timeZone) {
+				sdf.setTimeZone(timeZone);
+			}
+		}
+		return format(date, sdf);
 	}
 
 	/**
