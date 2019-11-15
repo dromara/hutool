@@ -22,7 +22,7 @@
 		<beetl.version>3.0.13.RELEASE</beetl.version>
 		<rythm.version>1.3.0</rythm.version>
 		<freemarker.version>2.3.29</freemarker.version>
-		<enjoy.version>4.6</enjoy.version>
+		<enjoy.version>4.7</enjoy.version>
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
 		<mail.version>1.6.2</mail.version>
 		<jsch.version>0.1.55</jsch.version>
@@ -191,7 +191,7 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-smartcn</artifactId>
-			<version>8.2.0</version>
+			<version>8.3.0</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
