@@ -17,6 +17,7 @@ import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.ss.util.SheetUtil;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -159,6 +160,11 @@ public class CellUtil {
 				cell.setCellStyle(styleSet.getCellStyleForDate());
 			}
 			cell.setCellValue((Date) value);
+		} else if (value instanceof Instant) {
+			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
+				cell.setCellStyle(styleSet.getCellStyleForDate());
+			}
+			cell.setCellValue(Date.from((Instant) value));
 		} else if (value instanceof Calendar) {
 			cell.setCellValue((Calendar) value);
 		} else if (value instanceof Boolean) {
