@@ -8,6 +8,7 @@
 ### 新特性
 * 【setting】    toBean改为泛型，增加class参数重载（pr#80@Gitee）
 * 【core】       XmlUtil使用JDK默认的实现，避免第三方实现导致的问题（issue#I14ZS1@Gitee）
+* 【poi】        写入单元格数据类型支持jdk8日期格式（pr#628@Github）
 
 ### Bug修复
 * 【core】       修复DateUtil.format使用DateTime时区失效问题（issue#I150I7@Gitee）
