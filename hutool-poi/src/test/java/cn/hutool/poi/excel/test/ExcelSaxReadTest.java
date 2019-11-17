@@ -25,15 +25,11 @@ public class ExcelSaxReadTest {
 	@Test
 	@Ignore
 	public void readBlankLineTest() {
-		ExcelUtil.readBySax("e:/ExcelBlankLine.xlsx", 0, new RowHandler() {
-
-			@Override
-			public void handle(int sheetIndex, int rowIndex, List<Object> rowList) {
-				if (StrUtil.isAllEmpty(Convert.toStrArray(rowList))) {
-					return;
-				}
-				Console.log(rowList);
+		ExcelUtil.readBySax("e:/ExcelBlankLine.xlsx", 0, (sheetIndex, rowIndex, rowList) -> {
+			if (StrUtil.isAllEmpty(Convert.toStrArray(rowList))) {
+				return;
 			}
+			Console.log(rowList);
 		});
 	}
 
@@ -45,24 +41,13 @@ public class ExcelSaxReadTest {
 	@Test
 	@Ignore
 	public void readBySaxTest2() {
-		ExcelUtil.readBySax("e:/B23_20180404164901240.xlsx", 2, new RowHandler() {
-			@Override
-			public void handle(int sheetIndex, int rowIndex, List<Object> rowList) {
-				Console.log(rowList);
-			}
-		});
+		ExcelUtil.readBySax("e:/B23_20180404164901240.xlsx", 2, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 	}
 
 	@Test
 	@Ignore
 	public void readBySaxTest3() {
-		ExcelUtil.readBySax("e:/excel/writeMapTest.xlsx", 0, new RowHandler() {
-
-			@Override
-			public void handle(int sheetIndex, int rowIndex, List<Object> rowList) {
-				Console.log(rowList);
-			}
-		});
+		ExcelUtil.readBySax("e:/excel/writeMapTest.xlsx", 0, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 	}
 
 	@Test
@@ -91,16 +76,18 @@ public class ExcelSaxReadTest {
 		ExcelUtil.readBySax("f:\\test\\222.xlsx", 0, createRowHandler());
 	}
 
-	private RowHandler createRowHandler() {
-		return new RowHandler() {
+	@Test
+	@Ignore
+	public void readBySaxTest6() {
+		ExcelUtil.readBySax("f:\\test\\sax_test.xlsx", 0, createRowHandler());
+	}
 
-			@Override
-			public void handle(int sheetIndex, int rowIndex, List<Object> rowlist) {
+	private RowHandler createRowHandler() {
+		return (sheetIndex, rowIndex, rowlist) -> {
 //				Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
-				if (5 != rowIndex && 6 != rowIndex) {
-					// 测试样例中除第五行、第六行都为非空行
-					Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
-				}
+			if (5 != rowIndex && 6 != rowIndex) {
+				// 测试样例中除第五行、第六行都为非空行
+				Assert.assertTrue(CollUtil.isNotEmpty(rowlist));
 			}
 		};
 	}

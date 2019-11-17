@@ -1,12 +1,10 @@
 package cn.hutool.poi.excel.sax;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import cn.hutool.core.exceptions.DependencyException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.sax.handler.RowHandler;
+import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.BuiltinFormats;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
@@ -21,12 +19,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import cn.hutool.core.exceptions.DependencyException;
-import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.poi.excel.sax.handler.RowHandler;
-import cn.hutool.poi.exceptions.POIException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Sax方式读取Excel文件<br>
@@ -129,10 +127,10 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	public Excel07SaxReader read(InputStream in, int rid) throws POIException {
 		try {
 			return read(OPCPackage.open(in), rid);
-		} catch (DependencyException e) {
+		} catch (RuntimeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw ExceptionUtil.wrap(e, POIException.class);
+			throw new POIException(e);
 		}
 	}
 
@@ -150,7 +148,11 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			final XSSFReader xssfReader = new XSSFReader(opcPackage);
 
 			// 获取共享样式表
-			stylesTable = xssfReader.getStylesTable();
+			try{
+				stylesTable = xssfReader.getStylesTable();
+			} catch (Exception e){
+				//ignore
+			}
 			// 获取共享字符串表
 			this.sharedStringsTable = xssfReader.getSharedStringsTable();
 
@@ -171,10 +173,10 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 					parse(sheetInputStream);
 				}
 			}
-		} catch (DependencyException e) {
+		} catch (RuntimeException e) {
 			throw e;
 		} catch (Exception e) {
-			throw ExceptionUtil.wrap(e, POIException.class);
+			throw new POIException(e);
 		} finally {
 			IoUtil.close(sheetInputStream);
 			IoUtil.close(opcPackage);
@@ -222,17 +224,19 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 		this.cellDataType = CellDataType.of(attribute.getValue(T_ATTR_VALUE));
 
 		// 获取单元格的xf索引，对应style.xml中cellXfs的子元素xf
-		final String xfIndexStr = attribute.getValue(S_ATTR_VALUE);
-		if (xfIndexStr != null) {
-			int xfIndex = Integer.parseInt(xfIndexStr);
-			XSSFCellStyle xssfCellStyle = stylesTable.getStyleAt(xfIndex);
-			numFmtIndex = xssfCellStyle.getDataFormat();
-			numFmtString = xssfCellStyle.getDataFormatString();
+		if(null != this.stylesTable){
+			final String xfIndexStr = attribute.getValue(S_ATTR_VALUE);
+			if (null != xfIndexStr) {
+				int xfIndex = Integer.parseInt(xfIndexStr);
+				XSSFCellStyle xssfCellStyle = stylesTable.getStyleAt(xfIndex);
+				numFmtIndex = xssfCellStyle.getDataFormat();
+				numFmtString = xssfCellStyle.getDataFormatString();
 
-			if (numFmtString == null) {
-				numFmtString = BuiltinFormats.getBuiltinFormat(numFmtIndex);
-			} else if (CellDataType.NUMBER == this.cellDataType && org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
-				cellDataType = CellDataType.DATE;
+				if (numFmtString == null) {
+					numFmtString = BuiltinFormats.getBuiltinFormat(numFmtIndex);
+				} else if (CellDataType.NUMBER == this.cellDataType && org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
+					cellDataType = CellDataType.DATE;
+				}
 			}
 		}
 

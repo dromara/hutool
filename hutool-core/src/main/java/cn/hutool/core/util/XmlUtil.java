@@ -681,30 +681,19 @@ public class XmlUtil {
 	 * @since 4.0.8
 	 */
 	public static String escape(String string) {
-		final StringBuilder sb = new StringBuilder(string.length());
-		for (int i = 0, length = string.length(); i < length; i++) {
-			char c = string.charAt(i);
-			switch (c) {
-				case '&':
-					sb.append("&amp;");
-					break;
-				case '<':
-					sb.append("&lt;");
-					break;
-				case '>':
-					sb.append("&gt;");
-					break;
-				case '"':
-					sb.append("&quot;");
-					break;
-				case '\'':
-					sb.append("&apos;");
-					break;
-				default:
-					sb.append(c);
-			}
-		}
-		return sb.toString();
+		return EscapeUtil.escape(string);
+	}
+
+	/**
+	 * 反转义XML特殊字符:
+	 *
+	 * @param string 被替换的字符串
+	 * @return 替换后的字符串
+	 * @since 5.0.6
+	 * @see EscapeUtil#unescape(String)
+	 */
+	public static String unescape(String string) {
+		return EscapeUtil.unescape(string);
 	}
 
 	/**
