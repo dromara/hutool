@@ -133,13 +133,14 @@ public abstract class AbstractFtp implements Closeable {
 	}
 
 	/**
-	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与srcFilePath文件名相同。覆盖模式
+	 * 将本地文件上传到目标服务器，目标文件名为destPath，若destPath为目录，则目标文件名将与file文件名相同。
+	 * 覆盖模式
 	 * 
-	 * @param srcFilePath 本地文件路径
-	 * @param destFile 目标文件
+	 * @param destPath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param file 需要上传的文件
 	 * @return 是否成功
 	 */
-	public abstract boolean upload(String srcFilePath, File destFile);
+	public abstract boolean upload(String destPath, File file);
 
 	/**
 	 * 下载文件
