@@ -215,6 +215,9 @@ public class NumberUtilTest {
 		Assert.assertEquals(10, v5);
 		int v6 = NumberUtil.parseInt("22.4D");
 		Assert.assertEquals(22, v6);
+
+		int v7 = NumberUtil.parseInt("0");
+		Assert.assertEquals(0, v7);
 	}
 	
 	@Test
