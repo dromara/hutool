@@ -349,10 +349,10 @@ public class Mail {
 	/**
 	 * 发送
 	 *
-	 * @return this
+	 * @return message-id
 	 * @throws MailException 邮件发送异常
 	 */
-	public Mail send() throws MailException {
+	public String send() throws MailException {
 		try {
 			return doSend();
 		} catch (MessagingException e) {
@@ -365,12 +365,13 @@ public class Mail {
 	/**
 	 * 执行发送
 	 *
-	 * @return this
+	 * @return message-id
 	 * @throws MessagingException 发送异常
 	 */
-	private Mail doSend() throws MessagingException {
-		Transport.send(buildMsg());
-		return this;
+	private String doSend() throws MessagingException {
+		final MimeMessage mimeMessage = buildMsg();
+		Transport.send(mimeMessage);
+		return mimeMessage.getMessageID();
 	}
 
 	/**

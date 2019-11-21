@@ -8,9 +8,11 @@
 ### 新特性
 * 【core 】      解决NumberUtil导致的ambiguous问题（issue#630@Github）
 * 【core 】      BeanUtil.isEmpty()忽略字段支持，增加isNotEmpty（issue#629@Github）
+* 【extra 】     邮件发送后获取message-id（issue#I15FKR@Gitee）
 
 ### Bug修复
 * 【extra】      修复SFTP.upload上传失败的问题
+* 【db】         修复findLike匹配错误问题
 
 -------------------------------------------------------------------------------------------------------------
 
