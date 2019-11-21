@@ -1,12 +1,10 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-
+import cn.hutool.core.lang.Console;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.lang.func.VoidFunc1;
+import java.sql.SQLException;
 
 /**
  * MySQL操作单元测试

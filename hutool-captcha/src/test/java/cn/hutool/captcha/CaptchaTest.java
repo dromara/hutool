@@ -93,7 +93,6 @@ public class CaptchaTest {
 	@Test
 	@Ignore
 	public void ShearCaptchaWithMathTest() {
-		
 		// 定义图形验证码的长和宽
 		ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 45, 4, 4);
 		captcha.setGenerator(new MathGenerator());
