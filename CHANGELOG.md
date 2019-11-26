@@ -13,7 +13,7 @@
 * 【core 】      XmlUtil多节点改进（issue#I15I0R@Gitee）
 
 ### Bug修复
-* 【extra】      修复SFTP.upload上传失败的问题
+* 【extra】      修复SFTP.upload上传失败的问题（issue#I15O40@Gitee）
 * 【db】         修复findLike匹配错误问题
 * 【core 】      修复scale方法透明无效问题（issue#I15L5S@Gitee）
 
