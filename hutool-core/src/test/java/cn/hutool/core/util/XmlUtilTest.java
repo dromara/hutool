@@ -1,17 +1,16 @@
 package cn.hutool.core.util;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.xml.xpath.XPathConstants;
-
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapBuilder;
+import cn.hutool.core.map.MapUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import cn.hutool.core.map.MapBuilder;
-import cn.hutool.core.map.MapUtil;
+import javax.xml.xpath.XPathConstants;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * {@link XmlUtil} 工具类
@@ -84,6 +83,15 @@ public class XmlUtilTest {
 		Assert.assertEquals("1490", map.get("remainpoint"));
 		Assert.assertEquals("885", map.get("taskID"));
 		Assert.assertEquals("1", map.get("successCounts"));
+	}
+
+	@Test
+	public void xmlToMapTest2() {
+		String xml = "<root><name>张三</name><name>李四</name></root>";
+		Map<String, Object> map = XmlUtil.xmlToMap(xml);
+
+		Assert.assertEquals(1, map.size());
+		Assert.assertEquals(CollUtil.newArrayList("张三", "李四"), map.get("name"));
 	}
 
 	@Test

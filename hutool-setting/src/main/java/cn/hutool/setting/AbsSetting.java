@@ -18,7 +18,7 @@ import cn.hutool.log.LogFactory;
  *
  * @author Looly
  */
-public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String> implements Serializable {
+public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<String>, Serializable {
 	private static final long serialVersionUID = 6200156302595905863L;
 	private final static Log log = LogFactory.get();
 

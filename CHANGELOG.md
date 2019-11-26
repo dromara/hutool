@@ -8,11 +8,14 @@
 ### 新特性
 * 【core 】      解决NumberUtil导致的ambiguous问题（issue#630@Github）
 * 【core 】      BeanUtil.isEmpty()忽略字段支持，增加isNotEmpty（issue#629@Github）
-* 【extra 】     邮件发送后获取message-id（issue#I15FKR@Gitee）
+* 【extra】      邮件发送后获取message-id（issue#I15FKR@Gitee）
+* 【core 】      CaseInsensitiveMap/CamelCaseMap增加toString（issue#636@Github）
+* 【core 】      XmlUtil多节点改进（issue#I15I0R@Gitee）
 
 ### Bug修复
 * 【extra】      修复SFTP.upload上传失败的问题
 * 【db】         修复findLike匹配错误问题
+* 【core 】      修复scale方法透明无效问题（issue#I15L5S@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

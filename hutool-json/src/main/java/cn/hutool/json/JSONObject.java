@@ -37,7 +37,7 @@ import java.util.Set;
  * 
  * @author looly
  */
-public class JSONObject extends JSONGetter<String> implements JSON, Map<String, Object> {
+public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object> {
 	private static final long serialVersionUID = -330220388580734346L;
 
 	/** 默认初始大小 */
@@ -163,7 +163,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 */
 	public JSONObject(Object source, boolean ignoreNullValue, boolean isOrder) {
 		this(source, JSONConfig.create().setOrder(isOrder)//
-				.setIgnoreCase((source instanceof CaseInsensitiveMap) || (source instanceof CaseInsensitiveLinkedMap))//
+				.setIgnoreCase((source instanceof CaseInsensitiveMap))//
 				.setIgnoreNullValue(ignoreNullValue));
 	}
 
@@ -478,16 +478,19 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 		rawHashMap.clear();
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<String> keySet() {
 		return this.rawHashMap.keySet();
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Collection<Object> values() {
 		return rawHashMap.values();
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<Entry<String, Object>> entrySet() {
 		return rawHashMap.entrySet();
@@ -643,7 +646,7 @@ public class JSONObject extends JSONGetter<String> implements JSON, Map<String, 
 	 * 
 	 * @param source JavaBean或者Map对象或者String
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked", "StatementWithEmptyBody"})
 	private void init(Object source) {
 		if (null == source) {
 			return;
