@@ -118,32 +118,6 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 判断Bean中是否有值为null的字段
-	 *
-	 * @param bean Bean
-	 * @return 是否有值为null的字段
-	 * @deprecated 请使用{@link #hasNullField(Object)}
-	 */
-	@Deprecated
-	public static boolean hasNull(Object bean) {
-		final Field[] fields = ClassUtil.getDeclaredFields(bean.getClass());
-
-		Object fieldValue = null;
-		for (Field field : fields) {
-			field.setAccessible(true);
-			try {
-				fieldValue = field.get(bean);
-			} catch (Exception e) {
-				//ignore
-			}
-			if (null == fieldValue) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 获取{@link BeanDesc} Bean描述信息
 	 *
 	 * @param clazz Bean类
