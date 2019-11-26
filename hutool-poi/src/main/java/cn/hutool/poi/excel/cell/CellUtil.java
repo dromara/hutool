@@ -153,20 +153,53 @@ public class CellUtil {
 			}
 		}
 
+		if (value instanceof Date) {
+			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
+				cell.setCellStyle(styleSet.getCellStyleForDate());
+			}
+		} else if (value instanceof TemporalAccessor) {
+			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
+				cell.setCellStyle(styleSet.getCellStyleForDate());
+			}
+		} else if (value instanceof Calendar) {
+			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
+				cell.setCellStyle(styleSet.getCellStyleForDate());
+			}
+		} else if (value instanceof Number) {
+			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
+				cell.setCellStyle(styleSet.getCellStyleForNumber());
+			}
+		}
+
+		setCellValue(cell, value, null);
+	}
+
+	/**
+	 * 设置单元格值<br>
+	 * 根据传入的styleSet自动匹配样式<br>
+	 * 当为头部样式时默认赋值头部样式，但是头部中如果有数字、日期等类型，将按照数字、日期样式设置
+	 *
+	 * @param cell  单元格
+	 * @param value 值
+	 * @param style 自定义样式，null表示无样式
+	 */
+	public static void setCellValue(Cell cell, Object value, CellStyle style) {
+		if (null == cell) {
+			return;
+		}
+
+		if (null != style) {
+			cell.setCellStyle(style);
+		}
+
 		if (null == value) {
 			cell.setCellValue(StrUtil.EMPTY);
 		} else if (value instanceof FormulaCellValue) {
 			// 公式
 			cell.setCellFormula(((FormulaCellValue) value).getValue());
 		} else if (value instanceof Date) {
-			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
-				cell.setCellStyle(styleSet.getCellStyleForDate());
-			}
 			cell.setCellValue((Date) value);
 		} else if (value instanceof TemporalAccessor) {
-			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
-				cell.setCellStyle(styleSet.getCellStyleForDate());
-			}
 			if (value instanceof Instant) {
 				cell.setCellValue(Date.from((Instant) value));
 			} else if (value instanceof LocalDateTime) {
@@ -175,18 +208,12 @@ public class CellUtil {
 				cell.setCellValue((LocalDate) value);
 			}
 		} else if (value instanceof Calendar) {
-			if (null != styleSet && null != styleSet.getCellStyleForDate()) {
-				cell.setCellStyle(styleSet.getCellStyleForDate());
-			}
 			cell.setCellValue((Calendar) value);
 		} else if (value instanceof Boolean) {
 			cell.setCellValue((Boolean) value);
 		} else if (value instanceof RichTextString) {
 			cell.setCellValue((RichTextString) value);
 		} else if (value instanceof Number) {
-			if ((value instanceof Double || value instanceof Float || value instanceof BigDecimal) && null != styleSet && null != styleSet.getCellStyleForNumber()) {
-				cell.setCellStyle(styleSet.getCellStyleForNumber());
-			}
 			cell.setCellValue(((Number) value).doubleValue());
 		} else {
 			cell.setCellValue(value.toString());
