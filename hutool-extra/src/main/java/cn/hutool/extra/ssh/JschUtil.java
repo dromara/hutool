@@ -356,13 +356,13 @@ public class JschUtil {
 		if (null == charset) {
 			charset = CharsetUtil.CHARSET_UTF_8;
 		}
-		final ChannelExec channel = (ChannelExec) openChannel(session, ChannelType.EXEC);
+		final ChannelExec channel = (ChannelExec) createChannel(session, ChannelType.EXEC);
 		channel.setCommand(StrUtil.bytes(cmd, charset));
 		channel.setInputStream(null);
 		channel.setErrStream(errStream);
 		InputStream in = null;
 		try {
-			channel.start();
+			channel.connect();
 			in = channel.getInputStream();
 			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
 		} catch (IOException e) {

@@ -11,11 +11,13 @@
 * 【extra】      邮件发送后获取message-id（issue#I15FKR@Gitee）
 * 【core 】      CaseInsensitiveMap/CamelCaseMap增加toString（issue#636@Github）
 * 【core 】      XmlUtil多节点改进（issue#I15I0R@Gitee）
+* 【core 】      Thread.excAsync修正为execAsync（issue#642@Github）
 
 ### Bug修复
 * 【extra】      修复SFTP.upload上传失败的问题（issue#I15O40@Gitee）
 * 【db】         修复findLike匹配错误问题
 * 【core 】      修复scale方法透明无效问题（issue#I15L5S@Gitee）
+* 【extra】      修复exec返回无效（issue#I15L5S@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
