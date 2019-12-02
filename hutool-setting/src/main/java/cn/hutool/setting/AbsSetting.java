@@ -18,7 +18,7 @@ import cn.hutool.log.LogFactory;
  *
  * @author Looly
  */
-public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String> implements Serializable {
+public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<String>, Serializable {
 	private static final long serialVersionUID = 6200156302595905863L;
 	private final static Log log = LogFactory.get();
 
@@ -268,6 +268,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br>
 	 * 只支持基本类型的转换
 	 *
+	 * @param <T> Bean类型
 	 * @param group 分组
 	 * @param bean  Bean对象
 	 * @return Bean
@@ -291,6 +292,7 @@ public abstract class AbsSetting extends OptNullBasicTypeFromStringGetter<String
 	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br>
 	 * 只支持基本类型的转换
 	 *
+	 * @param <T> Bean类型
 	 * @param group 分组
 	 * @param beanClass  Bean类型
 	 * @return Bean

@@ -21,7 +21,7 @@ import cn.hutool.core.util.StrUtil;
  * @author looly
  * @since 3.2.0
  */
-public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implements Map<Object, Object>, InvocationHandler, Serializable {
+public class MapProxy implements Map<Object, Object>, OptNullBasicTypeFromObjectGetter<Object>, InvocationHandler, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("rawtypes")
@@ -89,7 +89,7 @@ public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implement
 		return map.remove(key);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public void putAll(Map<?, ?> m) {
 		map.putAll(m);
@@ -100,19 +100,19 @@ public class MapProxy extends OptNullBasicTypeFromObjectGetter<Object> implement
 		map.clear();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public Set<Object> keySet() {
 		return map.keySet();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public Collection<Object> values() {
 		return map.values();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "NullableProblems"})
 	@Override
 	public Set<Entry<Object, Object>> entrySet() {
 		return map.entrySet();

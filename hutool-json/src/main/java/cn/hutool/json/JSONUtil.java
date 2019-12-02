@@ -6,6 +6,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -650,7 +652,10 @@ public final class JSONUtil {
 			}
 
 			// 日期类型原样保存，便于格式化
-			if (object instanceof Date || object instanceof Calendar) {
+			if (object instanceof Date
+					|| object instanceof Calendar
+					|| object instanceof TemporalAccessor
+			) {
 				return object;
 			}
 			// 枚举类保存其字符串形式（4.0.2新增）

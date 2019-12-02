@@ -1,12 +1,9 @@
 package cn.hutool.extra.ssh;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.ftp.AbstractFtp;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.ChannelSftp.LsEntrySelector;
@@ -14,10 +11,11 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.ftp.AbstractFtp;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * SFTP是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。<br>
@@ -336,8 +334,8 @@ public class Sftp extends AbstractFtp {
 	}
 
 	@Override
-	public boolean upload(String srcFilePath, File destFile) {
-		put(srcFilePath, FileUtil.getAbsolutePath(destFile));
+	public boolean upload(String destPath, File file) {
+		put(FileUtil.getAbsolutePath(file), destPath);
 		return true;
 	}
 

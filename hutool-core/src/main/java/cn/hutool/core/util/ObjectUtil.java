@@ -184,6 +184,7 @@ public class ObjectUtil {
 	 * @return 是否为null
 	 */
 	public static boolean isNull(Object obj) {
+		//noinspection ConstantConditions
 		return null == obj || obj.equals(null);
 	}
 
@@ -194,6 +195,7 @@ public class ObjectUtil {
 	 * @return 是否为null
 	 */
 	public static boolean isNotNull(Object obj) {
+		//noinspection ConstantConditions
 		return null != obj && false == obj.equals(null);
 	}
 

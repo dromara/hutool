@@ -171,17 +171,20 @@ public class ImgUtil {
 
 	/**
 	 * 缩放图像（按高度和宽度缩放）<br>
-	 * 缩放后默认为jpeg格式
+	 * 缩放后默认格式与源图片相同，无法识别原图片默认JPG
 	 *
 	 * @param srcImageFile  源图像文件地址
 	 * @param destImageFile 缩放后的图像地址
 	 * @param width         缩放后的宽度
 	 * @param height        缩放后的高度
-	 * @param fixedColor    比例不对时补充的颜色，不补充为<code>null</code>
+	 * @param fixedColor    补充的颜色，不补充为<code>null</code>
 	 * @throws IORuntimeException IO异常
 	 */
 	public static void scale(File srcImageFile, File destImageFile, int width, int height, Color fixedColor) throws IORuntimeException {
-		write(scale(read(srcImageFile), width, height, fixedColor), destImageFile);
+		Img.from(srcImageFile)//
+				.setTargetImageType(FileUtil.extName(destImageFile))//
+				.scale(width, height, fixedColor)//
+				.write(destImageFile);
 	}
 
 	/**
@@ -397,12 +400,12 @@ public class ImgUtil {
 				if (srcWidth % destWidth == 0) {
 					cols = srcWidth / destWidth;
 				} else {
-					cols = (int) Math.floor(srcWidth / destWidth) + 1;
+					cols = (int) Math.floor((double)srcWidth / destWidth) + 1;
 				}
 				if (srcHeight % destHeight == 0) {
 					rows = srcHeight / destHeight;
 				} else {
-					rows = (int) Math.floor(srcHeight / destHeight) + 1;
+					rows = (int) Math.floor((double)srcHeight / destHeight) + 1;
 				}
 				// 循环建立切片
 				Image tag;

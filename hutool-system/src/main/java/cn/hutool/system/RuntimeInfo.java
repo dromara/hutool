@@ -23,8 +23,8 @@ public class RuntimeInfo implements Serializable{
 	}
 	
 	/**
-	 * 获得JVM最大可用内存
-	 * @return 最大可用内存
+	 * 获得JVM最大内存
+	 * @return 最大内存
 	 */
 	public final long getMaxMemory(){
 		return currentRuntime.maxMemory();

@@ -3,6 +3,7 @@ package cn.hutool.json;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -58,8 +59,8 @@ public class JSONObjectTest {
 	 */
 	@Test
 	public void toStringTest3() {
-		JSONObject json = JSONUtil.createObj()//
-				.put("dateTime", DateUtil.parse("2019-05-02 22:12:01"))//
+		JSONObject json = Objects.requireNonNull(JSONUtil.createObj()//
+				.put("dateTime", DateUtil.parse("2019-05-02 22:12:01")))//
 				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
 	}
@@ -67,9 +68,10 @@ public class JSONObjectTest {
 	@Test
 	public void toStringWithDateTest() {
 		JSONObject json = JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21"));
+		assert json != null;
 		Assert.assertEquals("{\"date\":1557314301000}", json.toString());
 		
-		json = JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21")).setDateFormat(DatePattern.NORM_DATE_PATTERN);
+		json = Objects.requireNonNull(JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21"))).setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
 	}
 
@@ -131,6 +133,7 @@ public class JSONObjectTest {
 		Console.log(json2);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void toBeanTest() {
 		JSONObject subJson = JSONUtil.createObj().put("value1", "strValue1").put("value2", "234");
@@ -149,6 +152,7 @@ public class JSONObjectTest {
 		Assert.assertEquals(TestEnum.TYPE_A, bean.getTestEnum());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void toBeanNullStrTest() {
 		JSONObject json = JSONUtil.createObj()//
@@ -217,6 +221,7 @@ public class JSONObjectTest {
 	/**
 	 * 在JSON转Bean过程中，Bean中字段如果为父类定义的泛型类型，则应正确转换，此方法用于测试这类情况
 	 */
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void toBeanTest6() {
 		JSONObject json = JSONUtil.createObj().put("targetUrl", "http://test.com").put("success", "true").put("result", JSONUtil.createObj().put("token", "tokenTest").put("userId", "测试用户1"));
@@ -271,6 +276,7 @@ public class JSONObjectTest {
 		Assert.assertEquals(bean.toString(), bean2.toString());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseBeanTest3() {
 		JSONObject json = JSONUtil.createObj().put("code", 22).put("data", "{\"jobId\": \"abc\", \"videoUrl\": \"http://a.com/a.mp4\"}");
@@ -310,6 +316,7 @@ public class JSONObjectTest {
 		Assert.assertEquals(DateUtil.parse("2018-10-25"), bean.getDate());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void beanTransTest3() {
 		JSONObject userAJson = JSONUtil.createObj().put("a", "AValue").put("name", "nameValue").put("date", "08:00:00");

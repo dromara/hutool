@@ -1,15 +1,13 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-import java.util.List;
-
+import cn.hutool.db.sql.Condition;
+import cn.hutool.log.StaticLog;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.func.VoidFunc1;
-import cn.hutool.db.sql.Condition;
-import cn.hutool.log.StaticLog;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Db对象单元测试
@@ -29,7 +27,22 @@ public class DbTest {
 		List<Entity> find = Db.use().find(Entity.create("user").set("age", 18));
 		Assert.assertEquals("王五", find.get(0).get("name"));
 	}
-	
+
+	@Test
+	public void findLikeTest() throws SQLException {
+		// 方式1
+		List<Entity> find = Db.use().find(Entity.create("user").set("name", "like 王%"));
+		Assert.assertEquals("王五", find.get(0).get("name"));
+
+		// 方式2
+		find = Db.use().findLike("user", "name", "王", Condition.LikeType.StartWith);
+		Assert.assertEquals("王五", find.get(0).get("name"));
+
+		// 方式3
+		find = Db.use().query("select * from user where name like ?", "王%");
+		Assert.assertEquals("王五", find.get(0).get("name"));
+	}
+
 	@Test
 	public void findByTest() throws SQLException {
 		List<Entity> find = Db.use().findBy("user",
@@ -45,14 +58,10 @@ public class DbTest {
 	@Test
 	@Ignore
 	public void txTest() throws SQLException {
-		Db.use().tx(new VoidFunc1<Db>() {
-			
-			@Override
-			public void call(Db db) throws SQLException {
-				db.insert(Entity.create("user").set("name", "unitTestUser2"));
-				db.update(Entity.create().set("age", 79), Entity.create("user").set("name", "unitTestUser2"));
-				db.del("user", "name", "unitTestUser2");
-			}
+		Db.use().tx(db -> {
+			db.insert(Entity.create("user").set("name", "unitTestUser2"));
+			db.update(Entity.create().set("age", 79), Entity.create("user").set("name", "unitTestUser2"));
+			db.del("user", "name", "unitTestUser2");
 		});
 	}
 }

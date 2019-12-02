@@ -4,6 +4,8 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -444,7 +446,35 @@ public class Convert {
 	public static Date toDate(Object value, Date defaultValue) {
 		return convertQuietly(Date.class, value, defaultValue);
 	}
-	
+
+	/**
+	 * LocalDateTime<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 *
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 * @since 5.0.7
+	 */
+	public static Date toLocalDateTime(Object value, Date defaultValue) {
+		return convertQuietly(LocalDateTime.class, value, defaultValue);
+	}
+
+	/**
+	 * Instant<br>
+	 * 如果给定的值为空，或者转换失败，返回默认值<br>
+	 * 转换失败不会报错
+	 *
+	 * @param value 被转换的值
+	 * @param defaultValue 转换错误时的默认值
+	 * @return 结果
+	 * @since 5.0.7
+	 */
+	public static Date toInstant(Object value, Date defaultValue) {
+		return convertQuietly(Instant.class, value, defaultValue);
+	}
+
 	/**
 	 * 转换为Date<br>
 	 * 如果给定的值为空，或者转换失败，返回<code>null</code><br>

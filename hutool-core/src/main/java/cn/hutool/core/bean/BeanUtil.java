@@ -118,32 +118,6 @@ public class BeanUtil {
 	}
 
 	/**
-	 * 判断Bean中是否有值为null的字段
-	 *
-	 * @param bean Bean
-	 * @return 是否有值为null的字段
-	 * @deprecated 请使用{@link #hasNullField(Object)}
-	 */
-	@Deprecated
-	public static boolean hasNull(Object bean) {
-		final Field[] fields = ClassUtil.getDeclaredFields(bean.getClass());
-
-		Object fieldValue = null;
-		for (Field field : fields) {
-			field.setAccessible(true);
-			try {
-				fieldValue = field.get(bean);
-			} catch (Exception e) {
-				//ignore
-			}
-			if (null == fieldValue) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 获取{@link BeanDesc} Bean描述信息
 	 *
 	 * @param clazz Bean类
@@ -292,7 +266,7 @@ public class BeanUtil {
 	/**
 	 * 解析Bean中的属性值
 	 *
-	 * @param <T> 属性值类型
+	 * @param <T>        属性值类型
 	 * @param bean       Bean对象，支持Map、List、Collection、Array
 	 * @param expression 表达式，例如：person.friend[5].name
 	 * @return Bean属性值
@@ -677,16 +651,30 @@ public class BeanUtil {
 	}
 
 	/**
+	 * 判断Bean是否为非空对象，非空对象表示本身不为<code>null</code>或者含有非<code>null</code>属性的对象
+	 *
+	 * @param bean             Bean对象
+	 * @param ignoreFiledNames 忽略检查的字段名
+	 * @return 是否为空，<code>true</code> - 空 / <code>false</code> - 非空
+	 * @since 5.0.7
+	 */
+	public static boolean isNotEmpty(Object bean, String... ignoreFiledNames) {
+		return false == isEmpty(bean, ignoreFiledNames);
+	}
+
+	/**
 	 * 判断Bean是否为空对象，空对象表示本身为<code>null</code>或者所有属性都为<code>null</code>
 	 *
-	 * @param bean Bean对象
+	 * @param bean             Bean对象
+	 * @param ignoreFiledNames 忽略检查的字段名
 	 * @return 是否为空，<code>true</code> - 空 / <code>false</code> - 非空
 	 * @since 4.1.10
 	 */
-	public static boolean isEmpty(Object bean) {
+	public static boolean isEmpty(Object bean, String... ignoreFiledNames) {
 		if (null != bean) {
 			for (Field field : ReflectUtil.getFields(bean.getClass())) {
-				if (null != ReflectUtil.getFieldValue(bean, field)) {
+				if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
+						&& null != ReflectUtil.getFieldValue(bean, field)) {
 					return false;
 				}
 			}
@@ -698,16 +686,18 @@ public class BeanUtil {
 	 * 判断Bean是否包含值为<code>null</code>的属性<br>
 	 * 对象本身为<code>null</code>也返回true
 	 *
-	 * @param bean Bean对象
+	 * @param bean             Bean对象
+	 * @param ignoreFiledNames 忽略检查的字段名
 	 * @return 是否包含值为<code>null</code>的属性，<code>true</code> - 包含 / <code>false</code> - 不包含
 	 * @since 4.1.10
 	 */
-	public static boolean hasNullField(Object bean) {
+	public static boolean hasNullField(Object bean, String... ignoreFiledNames) {
 		if (null == bean) {
 			return true;
 		}
 		for (Field field : ReflectUtil.getFields(bean.getClass())) {
-			if (null == ReflectUtil.getFieldValue(bean, field)) {
+			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))//
+					&& null == ReflectUtil.getFieldValue(bean, field)) {
 				return true;
 			}
 		}

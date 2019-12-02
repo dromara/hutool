@@ -191,13 +191,13 @@ public class NumberUtilTest {
 
 	@Test
 	public void maxTest() {
-		int max = NumberUtil.max(new int[]{5,4,3,6,1});
+		int max = NumberUtil.max(5,4,3,6,1);
 		Assert.assertEquals(6, max);
 	}
 
 	@Test
 	public void minTest() {
-		int min = NumberUtil.min(new int[]{5,4,3,6,1});
+		int min = NumberUtil.min(5,4,3,6,1);
 		Assert.assertEquals(1, min);
 	}
 	
@@ -215,6 +215,9 @@ public class NumberUtilTest {
 		Assert.assertEquals(10, v5);
 		int v6 = NumberUtil.parseInt("22.4D");
 		Assert.assertEquals(22, v6);
+
+		int v7 = NumberUtil.parseInt("0");
+		Assert.assertEquals(0, v7);
 	}
 	
 	@Test

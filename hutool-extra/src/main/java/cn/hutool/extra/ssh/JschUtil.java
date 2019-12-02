@@ -238,9 +238,6 @@ public class JschUtil {
 	 */
 	public static int openAndBindPortToLocal(Connector sshConn, String remoteHost, int remotePort) throws JschRuntimeException {
 		final Session session = openSession(sshConn.getHost(), sshConn.getPort(), sshConn.getUser(), sshConn.getPassword());
-		if (session == null) {
-			throw new JschRuntimeException("Error to create SSH Session！");
-		}
 		final int localPort = generateLocalPort();
 		bindPort(session, remoteHost, remotePort, localPort);
 		return localPort;
@@ -359,13 +356,13 @@ public class JschUtil {
 		if (null == charset) {
 			charset = CharsetUtil.CHARSET_UTF_8;
 		}
-		ChannelExec channel = (ChannelExec) openChannel(session, ChannelType.EXEC);
+		final ChannelExec channel = (ChannelExec) createChannel(session, ChannelType.EXEC);
 		channel.setCommand(StrUtil.bytes(cmd, charset));
 		channel.setInputStream(null);
 		channel.setErrStream(errStream);
 		InputStream in = null;
 		try {
-			channel.start();
+			channel.connect();
 			in = channel.getInputStream();
 			return IoUtil.read(in, CharsetUtil.CHARSET_UTF_8);
 		} catch (IOException e) {

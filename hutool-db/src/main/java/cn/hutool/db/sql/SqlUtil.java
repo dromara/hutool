@@ -111,10 +111,10 @@ public class SqlUtil {
 		StringBuilder likeValue = StrUtil.builder(withLikeKeyword ? "LIKE " : "");
 		switch (likeType) {
 			case StartWith:
-				likeValue.append('%').append(value);
+				likeValue.append(value).append('%');
 				break;
 			case EndWith:
-				likeValue.append(value).append('%');
+				likeValue.append('%').append(value);
 				break;
 			case Contains:
 				likeValue.append('%').append(value).append('%');

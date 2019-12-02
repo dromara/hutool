@@ -299,6 +299,32 @@ public class NetUtil {
 	}
 
 	/**
+	 * 获取指定名称的网卡信息
+	 *
+	 * @param name 网络接口名，例如Linux下默认是eth0
+	 * @return 网卡，未找到返回<code>null</code>
+	 * @since 5.0.7
+	 */
+	public static NetworkInterface getNetworkInterface(String name) {
+		Enumeration<NetworkInterface> networkInterfaces;
+		try {
+			networkInterfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {
+			return null;
+		}
+
+		NetworkInterface netInterface;
+		while(networkInterfaces.hasMoreElements()){
+			netInterface = networkInterfaces.nextElement();
+			if(null != netInterface && name.equals(netInterface.getName())){
+				return netInterface;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * 获取本机所有网卡
 	 * 
 	 * @return 所有网卡，异常返回<code>null</code>

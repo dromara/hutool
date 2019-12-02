@@ -33,6 +33,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import cn.hutool.core.collection.CollUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -756,7 +757,12 @@ public class XmlUtil {
 			childNode = nodeList.item(i);
 			if (isElement(childNode)) {
 				childEle = (Element) childNode;
-				result.put(childEle.getNodeName(), childEle.getTextContent());
+				final Object value = result.get(childEle.getNodeName());
+				if(null != value){
+					result.put(childEle.getNodeName(), CollUtil.newArrayList(value, childEle.getTextContent()));
+				} else{
+					result.put(childEle.getNodeName(), childEle.getTextContent());
+				}
 			}
 		}
 		return result;

@@ -2401,7 +2401,7 @@ public class StrUtil {
 		Byte dataByte;
 		for (int i = 0; i < data.length; i++) {
 			dataByte = data[i];
-			bytes[i] = (null == dataByte) ? -1 : dataByte.byteValue();
+			bytes[i] = (null == dataByte) ? -1 : dataByte;
 		}
 
 		return str(bytes, charset);
@@ -4018,8 +4018,8 @@ public class StrUtil {
 	 */
 	public static int totalLength(CharSequence... strs) {
 		int totalLength = 0;
-		for (int i = 0; i < strs.length; i++) {
-			totalLength += (null == strs[i] ? 0 : strs[i].length());
+		for (CharSequence str : strs) {
+			totalLength += (null == str ? 0 : str.length());
 		}
 		return totalLength;
 	}

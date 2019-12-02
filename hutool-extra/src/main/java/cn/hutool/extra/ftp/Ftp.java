@@ -364,14 +364,14 @@ public class Ftp extends AbstractFtp {
 	 * 3. path为绝对路径则上传到此路径
 	 * </pre>
 	 * 
-	 * @param path 服务端路径，可以为{@code null} 或者相对路径或绝对路径
+	 * @param destPath 服务端路径，可以为{@code null} 或者相对路径或绝对路径
 	 * @param file 文件
 	 * @return 是否上传成功
 	 */
 	@Override
-	public boolean upload(String path, File file) {
+	public boolean upload(String destPath, File file) {
 		Assert.notNull(file, "file to upload is null !");
-		return upload(path, file.getName(), file);
+		return upload(destPath, file.getName(), file);
 	}
 
 	/**

@@ -9,7 +9,7 @@ import cn.hutool.core.getter.OptNullBasicTypeFromObjectGetter;
  *
  * @param <K> Key类型
  */
-public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
+public interface JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	
 	/**
 	 * key对应值是否为<code>null</code>或无此key
@@ -17,7 +17,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @param key 键
 	 * @return true 无此key或值为<code>null</code>或{@link JSONNull#NULL}返回<code>false</code>，其它返回<code>true</code>
 	 */
-	public boolean isNull(K key) {
+	default boolean isNull(K key) {
 		return JSONNull.NULL.equals(this.getObj(key));
 	}
 	
@@ -28,7 +28,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @return 字符串类型值
 	 * @since 4.2.2
 	 */
-	public String getStrEscaped(K key) {
+	default String getStrEscaped(K key) {
 		return getStrEscaped(key, null);
 	}
 	
@@ -40,7 +40,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @return 字符串类型值
 	 * @since 4.2.2
 	 */
-	public String getStrEscaped(K key, String defaultValue) {
+	default String getStrEscaped(K key, String defaultValue) {
 		return JSONUtil.escape(getStr(key, defaultValue));
 	}
 	
@@ -51,7 +51,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @param key KEY
 	 * @return JSONArray对象，如果值为null或者非JSONArray类型，返回null
 	 */
-	public JSONArray getJSONArray(K key) {
+	default JSONArray getJSONArray(K key) {
 		final Object object = this.getObj(key);
 		if(null == object) {
 			return null;
@@ -70,7 +70,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @param key KEY
 	 * @return JSONArray对象，如果值为null或者非JSONObject类型，返回null
 	 */
-	public JSONObject getJSONObject(K key) {
+	default JSONObject getJSONObject(K key) {
 		final Object object = this.getObj(key);
 		if(null == object) {
 			return null;
@@ -92,7 +92,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @return Bean对象，如果值为null或者非JSONObject类型，返回null
 	 * @since 3.1.1
 	 */
-	public <T> T getBean(K key, Class<T> beanType) {
+	default <T> T getBean(K key, Class<T> beanType) {
 		final JSONObject obj = getJSONObject(key);
 		return (null == obj) ? null : obj.toBean(beanType);
 	}
@@ -108,7 +108,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
-	public <T> T get(K key, Class<T> type) throws ConvertException{
+	default <T> T get(K key, Class<T> type) throws ConvertException{
 		return get(key, type, false);
 	}
 	
@@ -123,7 +123,7 @@ public abstract class JSONGetter<K> extends OptNullBasicTypeFromObjectGetter<K>{
 	 * @throws ConvertException 转换异常
 	 * @since 3.0.8
 	 */
-	public <T> T get(K key, Class<T> type, boolean ignoreError) throws ConvertException{
+	default <T> T get(K key, Class<T> type, boolean ignoreError) throws ConvertException{
 		final Object value = this.getObj(key);
 		if(null == value){
 			return null;

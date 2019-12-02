@@ -2,6 +2,7 @@ package cn.hutool.json;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -43,12 +44,12 @@ final class InternalJSONUtil {
 		} else if (value instanceof JSON) {
 			((JSON) value).write(writer, indentFactor, indent);
 		} else if (value instanceof Map) {
-			new JSONObject((Map<?, ?>) value).write(writer, indentFactor, indent);
+			new JSONObject(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Iterable || value instanceof Iterator || value.getClass().isArray()) {
 			new JSONArray(value).write(writer, indentFactor, indent);
 		} else if (value instanceof Number) {
 			writer.write(NumberUtil.toStr((Number) value));
-		} else if (value instanceof Date || value instanceof Calendar) {
+		} else if (value instanceof Date || value instanceof Calendar || value instanceof TemporalAccessor) {
 			final String format = (null == config) ? null : config.getDateFormat();
 			writer.write(formatDate(value, format));
 		} else if (value instanceof Boolean) {
@@ -138,7 +139,6 @@ final class InternalJSONUtil {
 	 * @return A simple JSON value.
 	 */
 	protected static Object stringToValue(String string) {
-		Double d;
 		if (null == string || "null".equalsIgnoreCase(string)) {
 			return JSONNull.NULL;
 		}
@@ -158,8 +158,8 @@ final class InternalJSONUtil {
 		if ((b >= '0' && b <= '9') || b == '-') {
 			try {
 				if (string.indexOf('.') > -1 || string.indexOf('e') > -1 || string.indexOf('E') > -1) {
-					d = Double.valueOf(string);
-					if (!d.isInfinite() && !d.isNaN()) {
+					double d = Double.parseDouble(string);
+					if (false == Double.isInfinite(d) && false == Double.isNaN(d)) {
 						return d;
 					}
 				} else {
@@ -228,12 +228,21 @@ final class InternalJSONUtil {
 	 */
 	private static String formatDate(Object dateObj, String format) {
 		if (StrUtil.isNotBlank(format)) {
-			final Date date = (dateObj instanceof Date) ? (Date) dateObj : ((Calendar) dateObj).getTime();
 			//用户定义了日期格式
-			return JSONUtil.quote(DateUtil.format(date, format));
+			return JSONUtil.quote(DateUtil.format(Convert.toDate(dateObj), format));
 		}
 
 		//默认使用时间戳
-		return String.valueOf((dateObj instanceof Date) ? ((Date) dateObj).getTime() : ((Calendar) dateObj).getTimeInMillis());
+		long timeMillis;
+		if(dateObj instanceof TemporalAccessor){
+			timeMillis = DateUtil.toInstant((TemporalAccessor)dateObj).toEpochMilli();
+		} else if(dateObj instanceof  Date){
+			timeMillis = ((Date) dateObj).getTime();
+		} else if(dateObj instanceof Calendar){
+			timeMillis = ((Calendar) dateObj).getTimeInMillis();
+		} else{
+			throw new UnsupportedOperationException("Unsupported Date type: " + dateObj.getClass());
+		}
+		return String.valueOf(timeMillis);
 	}
 }

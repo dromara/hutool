@@ -6,14 +6,17 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.map.MapUtil;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -131,6 +134,22 @@ public class ReflectUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 获取指定类中字段名和字段对应的Map，包括其父类中的字段
+	 *
+	 * @param beanClass 类
+	 * @return 字段名和字段对应的Map
+	 * @since 5.0.7
+	 */
+	public static Map<String, Field> getFieldMap(Class<?> beanClass){
+		final Field[] fields = getFields(beanClass);
+		final HashMap<String, Field> map = MapUtil.newHashMap(fields.length);
+		for (Field field : fields) {
+			map.put(field.getName(), field);
+		}
+		return map;
 	}
 
 	/**
@@ -350,12 +369,7 @@ public class ReflectUtil {
 	 */
 	public static List<Method> getPublicMethods(Class<?> clazz, Method... excludeMethods) {
 		final HashSet<Method> excludeMethodSet = CollectionUtil.newHashSet(excludeMethods);
-		return getPublicMethods(clazz, new Filter<Method>() {
-			@Override
-			public boolean accept(Method method) {
-				return false == excludeMethodSet.contains(method);
-			}
-		});
+		return getPublicMethods(clazz, method -> false == excludeMethodSet.contains(method));
 	}
 
 	/**
@@ -367,12 +381,7 @@ public class ReflectUtil {
 	 */
 	public static List<Method> getPublicMethods(Class<?> clazz, String... excludeMethodNames) {
 		final HashSet<String> excludeMethodNameSet = CollectionUtil.newHashSet(excludeMethodNames);
-		return getPublicMethods(clazz, new Filter<Method>() {
-			@Override
-			public boolean accept(Method method) {
-				return false == excludeMethodNameSet.contains(method.getName());
-			}
-		});
+		return getPublicMethods(clazz, method -> false == excludeMethodNameSet.contains(method.getName()));
 	}
 
 	/**
@@ -770,7 +779,7 @@ public class ReflectUtil {
 	 */
 	public static <T> T invokeWithCheck(Object obj, Method method, Object... args) throws UtilException {
 		final Class<?>[] types = method.getParameterTypes();
-		if (null != types && null != args) {
+		if (null != args) {
 			Assert.isTrue(args.length == types.length, "Params length [{}] is not fit for param length [{}] of method !", args.length, types.length);
 			Class<?> type;
 			for (int i = 0; i < args.length; i++) {
