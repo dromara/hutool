@@ -22,6 +22,7 @@
 * 【core 】      修复scale方法透明无效问题（issue#I15L5S@Gitee）
 * 【extra】      修复exec返回无效（issue#I15L5S@Gitee）
 * 【cron】       修复CronPattern注释（pr#646@Github）
+* 【json】       修复LocalDateTime等JDK8时间对象不被支持的问题（issue#644@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
