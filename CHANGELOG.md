@@ -12,6 +12,9 @@
 * 【core 】      CaseInsensitiveMap/CamelCaseMap增加toString（issue#636@Github）
 * 【core 】      XmlUtil多节点改进（issue#I15I0R@Gitee）
 * 【core 】      Thread.excAsync修正为execAsync（issue#642@Github）
+* 【core 】      FileUtil.getAbsolutePath修正正则（issue#648@Github）
+* 【core 】      NetUtil增加getNetworkInterface方法（issue#I15WEL@Gitee）
+* 【core 】      增加ReflectUtil.getFieldMap方法（issue#I15WJ7@Gitee）
 
 ### Bug修复
 * 【extra】      修复SFTP.upload上传失败的问题（issue#I15O40@Gitee）

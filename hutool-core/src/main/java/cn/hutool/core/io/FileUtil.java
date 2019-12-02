@@ -1,23 +1,65 @@
 package cn.hutool.core.io;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.file.FileCopier;
+import cn.hutool.core.io.file.FileMode;
 import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.io.file.*;
-import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.io.file.FileReader.ReaderHandler;
+import cn.hutool.core.io.file.FileWriter;
+import cn.hutool.core.io.file.LineSeparator;
+import cn.hutool.core.io.file.Tailer;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.ZipUtil;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.file.*;
+import java.nio.file.CopyOption;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -562,8 +604,8 @@ public class FileUtil {
 			if (ArrayUtil.isEmpty(subFiles)) {
 				return 0L;// empty directory
 			}
-			for (int i = 0; i < subFiles.length; i++) {
-				size += size(subFiles[i]);
+			for (File subFile : subFiles) {
+				size += size(subFile);
 			}
 			return size;
 		} else {
@@ -629,6 +671,7 @@ public class FileUtil {
 		if (false == file.exists()) {
 			mkParentDirs(file);
 			try {
+				//noinspection ResultOfMethodCallIgnored
 				file.createNewFile();
 			} catch (Exception e) {
 				throw new IORuntimeException(e);
@@ -672,6 +715,7 @@ public class FileUtil {
 	public static File mkParentDirs(File file) {
 		final File parentFile = file.getParentFile();
 		if (null != parentFile && false == parentFile.exists()) {
+			//noinspection ResultOfMethodCallIgnored
 			parentFile.mkdirs();
 		}
 		return parentFile;
@@ -835,6 +879,7 @@ public class FileUtil {
 		final File[] files = directory.listFiles();
 		if (ArrayUtil.isEmpty(files)) {
 			// 空文件夹则删除之
+			//noinspection ResultOfMethodCallIgnored
 			directory.delete();
 		} else {
 			for (File childFile : files) {
@@ -871,6 +916,7 @@ public class FileUtil {
 			return null;
 		}
 		if (false == dir.exists()) {
+			//noinspection ResultOfMethodCallIgnored
 			dir.mkdirs();
 		}
 		return dir;
@@ -918,7 +964,9 @@ public class FileUtil {
 			try {
 				File file = File.createTempFile(prefix, suffix, dir).getCanonicalFile();
 				if (isReCreat) {
+					//noinspection ResultOfMethodCallIgnored
 					file.delete();
+					//noinspection ResultOfMethodCallIgnored
 					file.createNewFile();
 				}
 				return file;
@@ -1083,6 +1131,7 @@ public class FileUtil {
 		}
 
 		if (isOverride && dest.isFile()) {// 只有目标为文件的情况下覆盖之
+			//noinspection ResultOfMethodCallIgnored
 			dest.delete();
 		}
 
@@ -1238,7 +1287,7 @@ public class FileUtil {
 		}
 
 		// 给定的路径已经是绝对路径了
-		return StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:[/\\\\].*");
+		return StrUtil.C_SLASH == path.charAt(0) || path.matches("^[a-zA-Z]:([/\\\\].*)?");
 	}
 
 	/**

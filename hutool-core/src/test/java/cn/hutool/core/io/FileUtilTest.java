@@ -38,12 +38,12 @@ public class FileUtilTest {
 		String absolutePath2 = FileUtil.getAbsolutePath(absolutePath);
 		Assert.assertNotNull(absolutePath2);
 		Assert.assertEquals(absolutePath, absolutePath2);
-	}
 
-	@Test
-	public void getAbsolutePathTest2() {
 		String path = FileUtil.getAbsolutePath("中文.xml");
 		Assert.assertTrue(path.contains("中文.xml"));
+
+		path = FileUtil.getAbsolutePath("d:");
+		Assert.assertEquals("d:", path);
 	}
 
 	@Test
@@ -134,6 +134,7 @@ public class FileUtilTest {
 		Assert.assertEquals("C:/bar", FileUtil.normalize("C:\\..\\bar"));
 		Assert.assertEquals("bar", FileUtil.normalize("../../bar"));
 		Assert.assertEquals("C:/bar", FileUtil.normalize("/C:/bar"));
+		Assert.assertEquals("C:", FileUtil.normalize("C:"));
 
 		Assert.assertEquals("\\/192.168.1.1/Share/", FileUtil.normalize("\\\\192.168.1.1\\Share\\"));
 	}
