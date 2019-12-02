@@ -71,7 +71,7 @@ import cn.hutool.cron.pattern.parser.YearValueParser;
  * <ul>
  * <li><strong>5 * * * *</strong>：每个点钟的5分执行，00:05,01:05……</li>
  * <li><strong>* * * * *</strong>：每分钟执行</li>
- * <li><strong>*&#47;2 * * * *</strong>：每两分钟执行</li>
+ * <li><strong>*&#47;2 * * * *</strong>：每两小时执行</li>
  * <li><strong>* 12 * * *</strong>：12点的每分钟执行</li>
  * <li><strong>59 11 * * 1,2</strong>：每周一和周二的11:59执行</li>
  * <li><strong>3-18&#47;5 * * * *</strong>：3~18分，每5分钟执行一次，即0:03, 0:08, 0:13, 0:18, 1:03, 1:08……</li>
