@@ -1214,6 +1214,7 @@ public class DateUtil {
 	 * @since 4.1.0
 	 */
 	public static Calendar beginOfQuarter(Calendar calendar) {
+		//noinspection MagicConstant
 		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) / 3 * 3);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		return beginOfDay(calendar);
@@ -1227,6 +1228,7 @@ public class DateUtil {
 	 * @since 4.1.0
 	 */
 	public static Calendar endOfQuarter(Calendar calendar) {
+		//noinspection MagicConstant
 		calendar.set(Calendar.MONTH, calendar.get(DateField.MONTH.getValue()) / 3 * 3 + 2);
 		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		return endOfDay(calendar);
