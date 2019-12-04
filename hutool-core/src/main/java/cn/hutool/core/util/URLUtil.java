@@ -637,7 +637,7 @@ public class URLUtil {
 	 * </pre>
 	 *
 	 * @param url URL字符串
-	 * @param isEncodeBody 是否对URL中body部分的中文和特殊字符做转义（不包括http:和/）
+	 * @param isEncodeBody 是否对URL中body部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
 	 * @return 标准化后的URL字符串
 	 * @since 4.4.1
 	 */
@@ -667,9 +667,17 @@ public class URLUtil {
 		body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
 		// 替换多个\或/为单个/
 		body = body.replace("\\", "/").replaceAll("//+", "/");
-		if (isEncodeBody) {
-			body = encode(body);
+
+		final int pathSepIndex = StrUtil.indexOf(body, '/');
+		String domain = body;
+		String path = "";
+		if (pathSepIndex > 0) {
+			domain = StrUtil.subPre(body, pathSepIndex);
+			path = StrUtil.subSuf(body, pathSepIndex);
 		}
-		return pre + body + StrUtil.nullToEmpty(params);
+		if (isEncodeBody) {
+			path = encode(path);
+		}
+		return pre + domain + path + StrUtil.nullToEmpty(params);
 	}
 }
