@@ -318,7 +318,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * <pre>
 	 * maxDepth &lt;= 1 表示只监听当前目录
 	 * maxDepth = 2 表示监听当前目录以及下层目录
-	 * maxDepth = 3 表示监听当前目录以及下层
+	 * maxDepth = 3 表示监听当前目录以及下两层
 	 * </pre>
 	 *
 	 * @param path     字符串路径

@@ -776,6 +776,7 @@ public class CollUtil {
 		} else if (collectionType.isAssignableFrom(LinkedHashSet.class)) {
 			list = new LinkedHashSet<>();
 		} else if (collectionType.isAssignableFrom(TreeSet.class)) {
+			//noinspection SortedCollectionWithNonComparableKeys
 			list = new TreeSet<>();
 		} else if (collectionType.isAssignableFrom(EnumSet.class)) {
 			list = (Collection<T>) EnumSet.noneOf((Class<Enum>) ClassUtil.getTypeArgument(collectionType));
@@ -2082,7 +2083,7 @@ public class CollUtil {
 			list.addAll(coll);
 		}
 		if (null != comparator) {
-			Collections.sort(list, comparator);
+			list.sort(comparator);
 		}
 
 		return page(pageNo, pageSize, list);
@@ -2130,7 +2131,7 @@ public class CollUtil {
 	 */
 	public static <T> List<T> sort(Collection<T> collection, Comparator<? super T> comparator) {
 		List<T> list = new ArrayList<>(collection);
-		Collections.sort(list, comparator);
+		list.sort(comparator);
 		return list;
 	}
 
@@ -2144,7 +2145,7 @@ public class CollUtil {
 	 * @see Collections#sort(List, Comparator)
 	 */
 	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
-		Collections.sort(list, c);
+		list.sort(c);
 		return list;
 	}
 
@@ -2224,7 +2225,7 @@ public class CollUtil {
 	 */
 	public static <K, V> LinkedHashMap<K, V> sortToMap(Collection<Map.Entry<K, V>> entryCollection, Comparator<Map.Entry<K, V>> comparator) {
 		List<Map.Entry<K, V>> list = new LinkedList<>(entryCollection);
-		Collections.sort(list, comparator);
+		list.sort(comparator);
 
 		LinkedHashMap<K, V> result = new LinkedHashMap<>();
 		for (Map.Entry<K, V> entry : list) {
@@ -2258,7 +2259,7 @@ public class CollUtil {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <K, V> List<Entry<K, V>> sortEntryToList(Collection<Entry<K, V>> collection) {
 		List<Entry<K, V>> list = new LinkedList<>(collection);
-		Collections.sort(list, (o1, o2) -> {
+		list.sort((o1, o2) -> {
 			V v1 = o1.getValue();
 			V v2 = o2.getValue();
 
