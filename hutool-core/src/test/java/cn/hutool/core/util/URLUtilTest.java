@@ -51,6 +51,13 @@ public class URLUtilTest {
 		normalize = URLUtil.normalize(url, true);
 		Assert.assertEquals("http://www.hutool.cn/aaa/bbb?a=1&b=2", normalize);
 	}
+
+	@Test
+	public void normalizeIpv6Test() {
+		String url = "http://[fe80::8f8:2022:a603:d180]:9439";
+		String normalize = URLUtil.normalize("http://[fe80::8f8:2022:a603:d180]:9439", false);
+		Assert.assertEquals(url, normalize);
+	}
 	
 	@Test
 	public void formatTest() {
