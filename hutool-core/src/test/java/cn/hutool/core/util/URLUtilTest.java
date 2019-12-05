@@ -55,7 +55,7 @@ public class URLUtilTest {
 	@Test
 	public void normalizeIpv6Test() {
 		String url = "http://[fe80::8f8:2022:a603:d180]:9439";
-		String normalize = URLUtil.normalize("http://[fe80::8f8:2022:a603:d180]:9439", false);
+		String normalize = URLUtil.normalize("http://[fe80::8f8:2022:a603:d180]:9439", true);
 		Assert.assertEquals(url, normalize);
 	}
 	

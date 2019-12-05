@@ -119,7 +119,7 @@ public class HttpUtilTest {
 		String paramsStr = "uuuu=0&a=b&c=3Ddsssss555555";
 		Map<String, List<String>> map = HttpUtil.decodeParams(paramsStr, CharsetUtil.UTF_8);
 
-		String encodedParams = HttpUtil.toParams((Map<String, List<String>>) map);
+		String encodedParams = HttpUtil.toParams(map);
 		Assert.assertEquals(paramsStr, encodedParams);
 	}
 
@@ -273,11 +273,5 @@ public class HttpUtilTest {
 	public void getMimeTypeTest() {
 		String mimeType = HttpUtil.getMimeType("aaa.aaa");
 		Assert.assertNull(mimeType);
-	}
-
-	@Test
-	public void ipv6Test() {
-		String result = HttpUtil.get("http://[fe80::8f8:2022:a603:d180]:9439");
-		Console.log(result);
 	}
 }

@@ -86,8 +86,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 */
 	public StrBuilder(CharSequence... strs) {
 		this(ArrayUtil.isEmpty(strs) ? DEFAULT_CAPACITY : (totalLength(strs) + DEFAULT_CAPACITY));
-		for (int i = 0; i < strs.length; i++) {
-			append(strs[i]);
+		for (CharSequence str : strs) {
+			append(str);
 		}
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
@@ -449,6 +449,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	/**
 	 * 生成字符串
 	 */
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public String toString() {
 		return toString(false);
@@ -536,11 +537,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 			newCapacity = minimumCapacity;
 		}
 		if (newCapacity < 0) {
-			if (minimumCapacity < 0) {
-				// overflow
-				throw new OutOfMemoryError("Capacity is too long and max than Integer.MAX");
-			}
-			newCapacity = Integer.MAX_VALUE;
+			throw new OutOfMemoryError("Capacity is too long and max than Integer.MAX");
 		}
 		value = Arrays.copyOf(value, newCapacity);
 	}
@@ -555,8 +552,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 */
 	private static int totalLength(CharSequence... strs) {
 		int totalLength = 0;
-		for (int i = 0; i < strs.length; i++) {
-			totalLength += (null == strs[i] ? 4 : strs[i].length());
+		for (CharSequence str : strs) {
+			totalLength += (null == str ? 4 : str.length());
 		}
 		return totalLength;
 	}

@@ -637,22 +637,22 @@ public class URLUtil {
 	 * </pre>
 	 *
 	 * @param url URL字符串
-	 * @param isEncodeBody 是否对URL中body部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
+	 * @param isEncodePath 是否对URL中path部分的中文和特殊字符做转义（不包括 http:, /和域名部分）
 	 * @return 标准化后的URL字符串
 	 * @since 4.4.1
 	 */
-	public static String normalize(String url, boolean isEncodeBody) {
+	public static String normalize(String url, boolean isEncodePath) {
 		if (StrUtil.isBlank(url)) {
 			return url;
 		}
 		final int sepIndex = url.indexOf("://");
-		String pre;
+		String protocol;
 		String body;
 		if (sepIndex > 0) {
-			pre = StrUtil.subPre(url, sepIndex + 3);
+			protocol = StrUtil.subPre(url, sepIndex + 3);
 			body = StrUtil.subSuf(url, sepIndex + 3);
 		} else {
-			pre = "http://";
+			protocol = "http://";
 			body = url;
 		}
 
@@ -663,21 +663,24 @@ public class URLUtil {
 			body = StrUtil.subPre(body, paramsSepIndex);
 		}
 
-		// 去除开头的\或者/
-		body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
-		// 替换多个\或/为单个/
-		body = body.replace("\\", "/").replaceAll("//+", "/");
+		if(StrUtil.isNotEmpty(body)){
+			// 去除开头的\或者/
+			//noinspection ConstantConditions
+			body = body.replaceAll("^[\\\\/]+", StrUtil.EMPTY);
+			// 替换多个\或/为单个/
+			body = body.replace("\\", "/").replaceAll("//+", "/");
+		}
 
 		final int pathSepIndex = StrUtil.indexOf(body, '/');
 		String domain = body;
-		String path = "";
+		String path = null;
 		if (pathSepIndex > 0) {
 			domain = StrUtil.subPre(body, pathSepIndex);
 			path = StrUtil.subSuf(body, pathSepIndex);
 		}
-		if (isEncodeBody) {
+		if (isEncodePath) {
 			path = encode(path);
 		}
-		return pre + domain + path + StrUtil.nullToEmpty(params);
+		return protocol + domain + StrUtil.nullToEmpty(path) + StrUtil.nullToEmpty(params);
 	}
 }
