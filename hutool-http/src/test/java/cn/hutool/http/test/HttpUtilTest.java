@@ -71,7 +71,7 @@ public class HttpUtilTest {
 		FileUtil.writeBytes(str, "f:/test/2D.jpg");
 		Console.log(str);
 	}
-	
+
 	@Test
 	@Ignore
 	public void get12306Test() {
@@ -273,5 +273,11 @@ public class HttpUtilTest {
 	public void getMimeTypeTest() {
 		String mimeType = HttpUtil.getMimeType("aaa.aaa");
 		Assert.assertNull(mimeType);
+	}
+
+	@Test
+	public void ipv6Test() {
+		String result = HttpUtil.get("http://[fe80::8f8:2022:a603:d180]:9439");
+		Console.log(result);
 	}
 }
