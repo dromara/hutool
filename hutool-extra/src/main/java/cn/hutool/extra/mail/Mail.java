@@ -1,31 +1,28 @@
 package cn.hutool.extra.mail;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.Date;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.activation.FileTypeMap;
-import javax.mail.Authenticator;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.activation.FileTypeMap;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Date;
 
 /**
  * 邮件发送客户端
@@ -39,6 +36,10 @@ public class Mail {
 	 * 邮箱帐户信息以及一些客户端配置信息
 	 */
 	private MailAccount mailAccount;
+	/**
+	 * 发件人昵称
+	 */
+	private String personal;
 	/**
 	 * 收件人列表
 	 */
@@ -116,6 +117,15 @@ public class Mail {
 	// --------------------------------------------------------------- Constructor end
 
 	// --------------------------------------------------------------- Getters and Setters start
+
+	/**
+	 * 设置发件人昵称
+	 * @param personal
+	 */
+	public Mail setPersonal(String personal) {
+		this.personal = personal;
+		return this;
+	}
 
 	/**
 	 * 设置收件人
@@ -355,6 +365,8 @@ public class Mail {
 	public String send() throws MailException {
 		try {
 			return doSend();
+		} catch (UnsupportedEncodingException e) {
+			throw new MailException(e);
 		} catch (MessagingException e) {
 			throw new MailException(e);
 		}
@@ -368,7 +380,7 @@ public class Mail {
 	 * @return message-id
 	 * @throws MessagingException 发送异常
 	 */
-	private String doSend() throws MessagingException {
+	private String doSend() throws MessagingException, UnsupportedEncodingException {
 		final MimeMessage mimeMessage = buildMsg();
 		Transport.send(mimeMessage);
 		return mimeMessage.getMessageID();
@@ -380,7 +392,7 @@ public class Mail {
 	 * @return {@link MimeMessage}消息
 	 * @throws MessagingException 消息异常
 	 */
-	private MimeMessage buildMsg() throws MessagingException {
+	private MimeMessage buildMsg() throws MessagingException, UnsupportedEncodingException {
 		final Charset charset = this.mailAccount.getCharset();
 		final MimeMessage msg = new MimeMessage(getSession(this.useGlobalSession));
 		// 发件人
@@ -389,7 +401,12 @@ public class Mail {
 			// 用户未提供发送方，则从Session中自动获取
 			msg.setFrom();
 		} else {
-			msg.setFrom(InternalMailUtil.parseFirstAddress(from, charset));
+			InternetAddress internetAddress = InternalMailUtil.parseFirstAddress(from, charset);
+			//发件人昵称
+			if(StrUtil.isNotBlank(this.personal)) {
+				internetAddress.setPersonal(this.personal,charset.name());
+			}
+			msg.setFrom(internetAddress);
 		}
 		// 标题
 		msg.setSubject(this.title, charset.name());

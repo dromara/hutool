@@ -1,16 +1,19 @@
 package cn.hutool.extra.mail;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
+
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 邮件工具类，基于javax.mail封装
@@ -346,6 +349,48 @@ public class MailUtil {
 		return send(mailAccount, false, tos, ccs, bccs, subject, content, imageMap, isHtml, files);
 	}
 
+	/**
+	 * 发送邮件给多人
+	 *
+	 * @param mailAccount 邮件帐户信息
+	 * @param personal	  发件人昵称
+	 * @param tos         收件人列表
+	 * @param ccs         抄送人列表，可以为null或空
+	 * @param bccs        密送人列表，可以为null或空
+	 * @param subject     标题
+	 * @param content     正文
+	 * @param imageMap    图片与占位符，占位符格式为cid:$IMAGE_PLACEHOLDER
+	 * @param isHtml      是否为HTML格式
+	 * @param files       附件文件列表
+	 * @return message-id
+	 * @since 4.6.3
+	 */
+	public static String send(MailAccount mailAccount,String personal, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, Map<String, InputStream> imageMap,
+							  boolean isHtml, File... files) {
+		return send(mailAccount, false,personal, tos, ccs, bccs, subject, content, imageMap, isHtml, files);
+	}
+
+	/**
+	 * 发送邮件给多人
+	 *
+	 * @param mailAccount 邮件帐户信息
+	 * @param personal	  发件人昵称
+	 * @param tos         收件人列表
+	 * @param ccs         抄送人列表，可以为null或空
+	 * @param bccs        密送人列表，可以为null或空
+	 * @param subject     标题
+	 * @param content     正文
+	 * @param imageMap    图片与占位符，占位符格式为cid:$IMAGE_PLACEHOLDER
+	 * @param isHtml      是否为HTML格式
+	 * @param dataSources 附件列表
+	 * @return message-id
+	 * @since 4.6.3
+	 */
+	public static String send(MailAccount mailAccount,String personal, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content, Map<String, InputStream> imageMap,
+							  boolean isHtml, DataSource... dataSources) {
+		return send(mailAccount, false,personal, tos, ccs, bccs, subject, content, imageMap, isHtml, dataSources);
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------------ Private method start
 
 	/**
@@ -366,8 +411,61 @@ public class MailUtil {
 	 */
 	private static String send(MailAccount mailAccount, boolean useGlobalSession, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content,
 	                           Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+		return send(mailAccount,useGlobalSession,null,tos,ccs,bccs,subject,content,imageMap,isHtml,files);
+	}
+
+	/**
+	 * 发送邮件给多人
+	 *
+	 * @param mailAccount		邮件帐户信息
+	 * @param useGlobalSession	是否全局共享Session
+	 * @param personal			发件人昵称
+	 * @param tos				收件人列表
+	 * @param ccs				抄送人列表，可以为null或空
+	 * @param bccs				密送人列表，可以为null或空
+	 * @param subject			标题
+	 * @param content			正文
+	 * @param imageMap			图片与占位符，占位符格式为cid:${cid}
+	 * @param isHtml			是否为HTML格式
+	 * @param files				文件附件列表
+	 * @return
+	 */
+	private static String send(MailAccount mailAccount, boolean useGlobalSession,String personal, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content,
+							   Map<String, InputStream> imageMap, boolean isHtml, File... files) {
+		if (ArrayUtil.isEmpty(files)){
+			return send(mailAccount, useGlobalSession, personal, tos, ccs, bccs, subject, content, imageMap, isHtml, new DataSource[0]);
+		}else{
+			final DataSource[] attachments = new DataSource[files.length];
+			for (int i = 0; i < files.length; i++) {
+				attachments[i] = new FileDataSource(files[i]);
+			}
+			return send(mailAccount, useGlobalSession, personal, tos, ccs, bccs, subject, content, imageMap, isHtml, new DataSource[0]);
+		}
+	}
+
+	/**
+	 * 发送邮件给多人
+	 *
+	 * @param mailAccount		邮件帐户信息
+	 * @param useGlobalSession	是否全局共享Session
+	 * @param personal			发件人昵称
+	 * @param tos				收件人列表
+	 * @param ccs				抄送人列表，可以为null或空
+	 * @param bccs				密送人列表，可以为null或空
+	 * @param subject			标题
+	 * @param content			正文
+	 * @param imageMap			图片与占位符，占位符格式为cid:${cid}
+	 * @param isHtml			是否为HTML格式
+	 * @param attachments		附件列表
+	 * @return
+	 */
+	private static String send(MailAccount mailAccount, boolean useGlobalSession,String personal, Collection<String> tos, Collection<String> ccs, Collection<String> bccs, String subject, String content,
+							   Map<String, InputStream> imageMap, boolean isHtml, DataSource... attachments) {
 		final Mail mail = Mail.create(mailAccount).setUseGlobalSession(useGlobalSession);
 
+		if(StrUtil.isNotBlank(personal)){
+			mail.setPersonal(personal);
+		}
 		// 可选抄送人
 		if (CollUtil.isNotEmpty(ccs)) {
 			mail.setCcs(ccs.toArray(new String[ccs.size()]));
@@ -381,7 +479,7 @@ public class MailUtil {
 		mail.setTitle(subject);
 		mail.setContent(content);
 		mail.setHtml(isHtml);
-		mail.setFiles(files);
+		mail.setAttachments(attachments);
 
 		// 图片
 		if (MapUtil.isNotEmpty(imageMap)) {
