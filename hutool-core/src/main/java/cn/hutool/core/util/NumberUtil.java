@@ -1758,6 +1758,18 @@ public class NumberUtil {
 	}
 
 	/**
+	 * 取最小值
+	 *
+	 * @param numberArray 数字数组
+	 * @return 最小值
+	 * @see ArrayUtil#min(BigDecimal...)
+	 * @since 5.0.8
+	 */
+	public static BigDecimal min(BigDecimal... numberArray) {
+		return ArrayUtil.min(numberArray);
+	}
+
+	/**
 	 * 取最大值
 	 *
 	 * @param <T>         元素类型
@@ -1827,6 +1839,18 @@ public class NumberUtil {
 	 * @since 4.0.7
 	 */
 	public static float max(float... numberArray) {
+		return ArrayUtil.max(numberArray);
+	}
+
+	/**
+	 * 取最大值
+	 *
+	 * @param numberArray 数字数组
+	 * @return 最大值
+	 * @see ArrayUtil#max(BigDecimal...)
+	 * @since 5.0.8
+	 */
+	public static BigDecimal max(BigDecimal... numberArray) {
 		return ArrayUtil.max(numberArray);
 	}
 
