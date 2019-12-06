@@ -92,13 +92,7 @@ public class SqlExecutor {
 	 * @since 4.1.4
 	 */
 	public static ResultSet callQuery(Connection conn, String sql, Object... params) throws SQLException {
-		CallableStatement proc = null;
-		try {
-			proc = StatementUtil.prepareCall(conn, sql, params);
-			return proc.executeQuery();
-		} finally {
-			DbUtil.close(proc);
-		}
+		return StatementUtil.prepareCall(conn, sql, params).executeQuery();
 	}
 
 	/**
