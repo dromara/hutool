@@ -20,12 +20,14 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -42,15 +44,19 @@ import cn.hutool.core.util.StrUtil;
 public class BeanUtil {
 
 	/**
-	 * 判断是否为Bean对象<br>
-	 * 判定方法是是否存在只有一个参数的setXXX方法
+	 * 判断是否为Bean对象，判定方法是：
+	 *
+	 * <pre>
+	 *     1、是否存在只有一个参数的setXXX方法
+	 *     2、是否存在public类型的字段
+	 * </pre>
 	 *
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
 	 * @see #hasSetter(Class)
 	 */
 	public static boolean isBean(Class<?> clazz) {
-		return hasSetter(clazz);
+		return hasSetter(clazz) || hasPublicField(clazz);
 	}
 
 	/**
@@ -84,12 +90,30 @@ public class BeanUtil {
 	 */
 	public static boolean hasGetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
-			final Method[] methods = clazz.getMethods();
-			for (Method method : methods) {
+			for (Method method : clazz.getMethods()) {
 				if (method.getParameterTypes().length == 0) {
 					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
 						return true;
 					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 指定类中是否有public类型字段(static字段除外)
+	 *
+	 * @param clazz 待测试类
+	 * @return 是否有public类型字段
+	 * @since 5.1.0
+	 */
+	public static boolean hasPublicField(Class<?> clazz) {
+		if (ClassUtil.isNormalClass(clazz)) {
+			for (Field field : clazz.getFields()) {
+				if (ModifierUtil.isPublic(field) && false == ModifierUtil.isStatic(field)) {
+					//非static的public字段
+					return true;
 				}
 			}
 		}

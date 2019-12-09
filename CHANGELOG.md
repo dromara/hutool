@@ -8,6 +8,7 @@
 ### 新特性
 * 【core 】     新增WatchServer（issue#440@Github）
 * 【core 】     ReflectUtil.getFieldValue支持static（issue#662@Github）
+* 【core 】     改进Bean判断和注入逻辑：支持public字段注入（issue#I1689L@Gitee）
 
 
 ### Bug修复

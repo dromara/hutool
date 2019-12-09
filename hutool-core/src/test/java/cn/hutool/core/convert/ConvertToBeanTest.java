@@ -80,4 +80,11 @@ public class ConvertToBeanTest {
 		Assert.assertEquals("测试A11", subPerson.getName());
 		Assert.assertEquals("11213232", subPerson.getOpenid());
 	}
+
+	@Test
+	public void nullStrToBeanTest(){
+		String nullStr = "null";
+		final SubPerson subPerson = Convert.convert(SubPerson.class, nullStr);
+		Assert.assertNull(subPerson);
+	}
 }

@@ -3,7 +3,6 @@ package cn.hutool.core.bean;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -99,6 +98,20 @@ public class BeanUtilTest {
 		Person person = BeanUtil.mapToBean(map, Person.class, CopyOptions.create().setFieldMapping(mapping));
 		Assert.assertEquals("Joe", person.getName());
 		Assert.assertEquals(12, person.getAge());
+	}
+
+	/**
+	 * 测试public类型的字段注入是否成功
+	 */
+	@Test
+	public void mapToBeanTest2() {
+		HashMap<String, Object> map = CollUtil.newHashMap();
+		map.put("name", "Joe");
+		map.put("age", 12);
+
+		Person2 person = BeanUtil.mapToBean(map, Person2.class, CopyOptions.create());
+		Assert.assertEquals("Joe", person.name);
+		Assert.assertEquals(12, person.age);
 	}
 
 	@Test
@@ -263,5 +276,11 @@ public class BeanUtilTest {
 		private String name;
 		private int age;
 		private String openid;
+	}
+
+	public static class Person2 {
+		public String name;
+		public int age;
+		public String openid;
 	}
 }

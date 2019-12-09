@@ -1,14 +1,5 @@
 package cn.hutool.core.bean.copier;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-
 import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.provider.BeanValueProvider;
@@ -20,9 +11,21 @@ import cn.hutool.core.lang.ParameterizedTypeImpl;
 import cn.hutool.core.lang.copier.Copier;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Bean拷贝
@@ -214,12 +217,14 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 		final Map<String, String> fieldReverseMapping = copyOptions.getReversedMapping();
 
 		final Collection<PropDesc> props = BeanUtil.getBeanDesc(actualEditable).getProps();
+		Field field;
 		String fieldName;
 		Object value;
 		Method setterMethod;
 		Class<?> propClass;
 		for (PropDesc prop : props) {
 			// 获取值
+			field = prop.getField();
 			fieldName = prop.getFieldName();
 			if (CollUtil.contains(ignoreSet, fieldName)) {
 				// 目标属性值被忽略或值提供者无此key时跳过
@@ -231,30 +236,31 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 				continue;
 			}
 			setterMethod = prop.getSetter();
-			if (null == setterMethod) {
-				// Setter方法不存在跳过
+			if (null == setterMethod && false == ModifierUtil.isPublic(field)) {
+				// Setter方法不存在或者字段为非public跳过
+				//5.1.0新增支持public字段注入支持
 				continue;
 			}
 
-			Type firstParamType = TypeUtil.getFirstParamType(setterMethod);
-			if (firstParamType instanceof ParameterizedType) {
+			Type valueType = (null == setterMethod) ? TypeUtil.getType(field) : TypeUtil.getFirstParamType(setterMethod);
+			if (valueType instanceof ParameterizedType) {
 				// 参数为泛型参数类型，解析对应泛型类型为真实类型
-				ParameterizedType tmp = (ParameterizedType) firstParamType;
+				ParameterizedType tmp = (ParameterizedType) valueType;
 				Type[] actualTypeArguments = tmp.getActualTypeArguments();
 				if (TypeUtil.hasTypeVeriable(actualTypeArguments)) {
 					// 泛型对象中含有未被转换的泛型变量
-					actualTypeArguments = TypeUtil.getActualTypes(this.destType, setterMethod.getDeclaringClass(), tmp.getActualTypeArguments());
+					actualTypeArguments = TypeUtil.getActualTypes(this.destType, field.getDeclaringClass(), tmp.getActualTypeArguments());
 					if (ArrayUtil.isNotEmpty(actualTypeArguments)) {
 						// 替换泛型变量为实际类型
-						firstParamType = new ParameterizedTypeImpl(actualTypeArguments, tmp.getOwnerType(), tmp.getRawType());
+						valueType = new ParameterizedTypeImpl(actualTypeArguments, tmp.getOwnerType(), tmp.getRawType());
 					}
 				}
-			} else if (firstParamType instanceof TypeVariable) {
+			} else if (valueType instanceof TypeVariable) {
 				// 参数为泛型，查找其真实类型（适用于泛型方法定义于泛型父类）
-				firstParamType = TypeUtil.getActualType(this.destType, setterMethod.getDeclaringClass(), firstParamType);
+				valueType = TypeUtil.getActualType(this.destType, field.getDeclaringClass(), valueType);
 			}
 
-			value = valueProvider.value(providerKey, firstParamType);
+			value = valueProvider.value(providerKey, valueType);
 			if (null == value && copyOptions.ignoreNullValue) {
 				continue;// 当允许跳过空时，跳过
 			}
@@ -272,8 +278,13 @@ public class BeanCopier<T> implements Copier<T>, Serializable {
 					}
 				}
 
-				// 执行set方法注入值
-				setterMethod.invoke(bean, value);
+				if(null == setterMethod){
+					// 直接注入值
+					ReflectUtil.setFieldValue(bean, field, value);
+				} else{
+					// 执行set方法注入值
+					setterMethod.invoke(bean, value);
+				}
 			} catch (Exception e) {
 				if (false ==copyOptions.ignoreError) {
 					throw new UtilException(e, "Inject [{}] error!", prop.getFieldName());
