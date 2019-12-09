@@ -2,23 +2,22 @@ package cn.hutool.core.io.watch;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.watch.watchers.WatcherChain;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchService;
 
 /**
  * 路径监听器
@@ -30,7 +29,7 @@ import java.util.Map;
  *
  * @author Looly
  */
-public class WatchMonitor extends Thread implements Closeable, Serializable {
+public class WatchMonitor extends WatchServer {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -73,32 +72,9 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	private Path filePath;
 
 	/**
-	 * 监听服务
-	 */
-	private WatchService watchService;
-	/**
 	 * 监听器
 	 */
 	private Watcher watcher;
-	/**
-	 * 监听事件列表
-	 */
-	private WatchEvent.Kind<?>[] events;
-	/**
-	 * 监听选项，例如监听频率等
-	 */
-	private WatchEvent.Modifier[] modifiers;
-
-	/**
-	 * 监听是否已经关闭
-	 */
-	private boolean isClosed;
-
-	/**
-	 * WatchKey 和 Path的对应表
-	 */
-	private Map<WatchKey, Path> watchKeyPathMap = new HashMap<>();
-
 	//------------------------------------------------------ Static method start
 
 	/**
@@ -369,14 +345,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 			this.path = this.filePath.getParent();
 		}
 
-		//初始化监听
-		try {
-			watchService = FileSystems.getDefault().newWatchService();
-		} catch (IOException e) {
-			throw new WatchException(e);
-		}
-
-		isClosed = false;
+		super.init();
 	}
 
 	/**
@@ -441,31 +410,6 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 		return this;
 	}
 
-	/**
-	 * 设置监听选项，例如监听频率等，可设置项包括：
-	 *
-	 * <pre>
-	 * 1、com.sun.nio.file.StandardWatchEventKinds
-	 * 2、com.sun.nio.file.SensitivityWatchEventModifier
-	 * </pre>
-	 *
-	 * @param modifiers 监听选项，例如监听频率等
-	 * @return this
-	 */
-	public WatchMonitor setModifiers(WatchEvent.Modifier[] modifiers) {
-		this.modifiers = modifiers;
-		return this;
-	}
-
-	/**
-	 * 关闭监听
-	 */
-	@Override
-	public void close() {
-		isClosed = true;
-		IoUtil.close(watchService);
-	}
-
 	//------------------------------------------------------ private method start
 
 	/**
@@ -474,36 +418,7 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 * @param watcher {@link Watcher}
 	 */
 	private void doTakeAndWatch(Watcher watcher) {
-		WatchKey wk;
-		try {
-			wk = watchService.take();
-		} catch (InterruptedException | ClosedWatchServiceException e) {
-			// 用户中断
-			return;
-		}
-
-		final Path currentPath = watchKeyPathMap.get(wk);
-		WatchEvent.Kind<?> kind;
-		for (WatchEvent<?> event : wk.pollEvents()) {
-			kind = event.kind();
-
-			// 如果监听文件，检查当前事件是否与所监听文件关联
-			if (null != this.filePath && false == this.filePath.endsWith(event.context().toString())) {
-//					log.debug("[{}] is not fit for [{}], pass it.", event.context(), this.filePath.getFileName());
-				continue;
-			}
-
-			if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-				watcher.onCreate(event, currentPath);
-			} else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-				watcher.onModify(event, currentPath);
-			} else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-				watcher.onDelete(event, currentPath);
-			} else if (kind == StandardWatchEventKinds.OVERFLOW) {
-				watcher.onOverflow(event, currentPath);
-			}
-		}
-		wk.reset();
+		super.watch(watcher, watchEvent -> null == filePath || filePath.endsWith(watchEvent.context().toString()));
 	}
 
 	/**
@@ -511,44 +426,6 @@ public class WatchMonitor extends Thread implements Closeable, Serializable {
 	 */
 	private void registerPath() {
 		registerPath(this.path, (null != this.filePath) ? 0 : this.maxDepth);
-	}
-
-	/**
-	 * 将指定路径加入到监听中
-	 *
-	 * @param path     路径
-	 * @param maxDepth 递归下层目录的最大深度
-	 */
-	private void registerPath(Path path, int maxDepth) {
-		final WatchEvent.Kind<?>[] kinds = ArrayUtil.defaultIfEmpty(this.events, EVENTS_ALL);
-
-		try {
-			final WatchKey key;
-			if (ArrayUtil.isEmpty(this.modifiers)) {
-				key = path.register(this.watchService, kinds);
-			} else {
-				key = path.register(this.watchService, kinds, this.modifiers);
-			}
-			watchKeyPathMap.put(key, path);
-
-			// 递归注册下一层层级的目录
-			if (maxDepth > 1) {
-				//遍历所有子目录并加入监听
-				Files.walkFileTree(path, EnumSet.noneOf(FileVisitOption.class), maxDepth, new SimpleFileVisitor<Path>() {
-					@Override
-					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-						registerPath(dir, 0);//继续添加目录
-						return super.postVisitDirectory(dir, exc);
-					}
-				});
-			}
-		} catch (IOException e) {
-			if (e instanceof AccessDeniedException) {
-				//对于禁止访问的目录，跳过监听
-				return;
-			}
-			throw new WatchException(e);
-		}
 	}
 	//------------------------------------------------------ private method end
 }

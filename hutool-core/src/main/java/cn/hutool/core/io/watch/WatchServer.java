@@ -39,7 +39,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	/**
 	 * 监听事件列表
 	 */
-	private WatchEvent.Kind<?>[] events;
+	protected WatchEvent.Kind<?>[] events;
 	/**
 	 * 监听选项，例如监听频率等
 	 */
@@ -47,7 +47,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	/**
 	 * 监听是否已经关闭
 	 */
-	private boolean isClosed;
+	protected boolean isClosed;
 	/**
 	 * WatchKey 和 Path的对应表
 	 */
