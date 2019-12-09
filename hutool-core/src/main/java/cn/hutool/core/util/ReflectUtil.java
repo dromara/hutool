@@ -214,13 +214,13 @@ public class ReflectUtil {
 	/**
 	 * 获取字段值
 	 *
-	 * @param obj   对象
+	 * @param obj   对象，static字段则此字段为null
 	 * @param field 字段
 	 * @return 字段值
 	 * @throws UtilException 包装IllegalAccessException异常
 	 */
 	public static Object getFieldValue(Object obj, Field field) throws UtilException {
-		if (null == obj || null == field) {
+		if (null == field) {
 			return null;
 		}
 		setAccessible(field);
@@ -228,7 +228,7 @@ public class ReflectUtil {
 		try {
 			result = field.get(obj);
 		} catch (IllegalAccessException e) {
-			throw new UtilException(e, "IllegalAccess for {}.{}", obj.getClass(), field.getName());
+			throw new UtilException(e, "IllegalAccess for {}.{}", field.getDeclaringClass(), field.getName());
 		}
 		return result;
 	}
@@ -274,13 +274,12 @@ public class ReflectUtil {
 	/**
 	 * 设置字段值
 	 *
-	 * @param obj   对象
+	 * @param obj   对象，如果是static字段，此参数为null
 	 * @param field 字段
 	 * @param value 值，值类型必须与字段类型匹配，不会自动转换对象类型
 	 * @throws UtilException UtilException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException {
-		Assert.notNull(obj);
 		Assert.notNull(field, "Field in [{}] not exist !", obj.getClass().getName());
 
 		setAccessible(field);

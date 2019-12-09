@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core 】     新增WatchServer（issue#440@Github）
+* 【core 】     ReflectUtil.getFieldValue支持static（issue#662@Github）
 
 
 ### Bug修复
