@@ -218,6 +218,20 @@ public class StrUtilTest {
 		String pre = StrUtil.sub(a, -5, a.length());
 		Assert.assertEquals("ghigh", pre);
 	}
+
+	@Test
+	public void subByCodePointTest() {
+		// 🤔👍🍓🤔
+		String test = "\uD83E\uDD14\uD83D\uDC4D\uD83C\uDF53\uD83E\uDD14";
+
+		// 不正确的子字符串
+		String wrongAnswer = StrUtil.sub(test, 0, 3);
+		Assert.assertNotEquals("\uD83E\uDD14\uD83D\uDC4D\uD83C\uDF53", wrongAnswer);
+
+		// 正确的子字符串
+		String rightAnswer = StrUtil.subByCodePoint(test, 0, 3);
+		Assert.assertEquals("\uD83E\uDD14\uD83D\uDC4D\uD83C\uDF53", rightAnswer);
+	}
 	
 	@Test
 	public void subBeforeTest() {
