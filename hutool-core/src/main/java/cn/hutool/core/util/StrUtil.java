@@ -1580,6 +1580,33 @@ public class StrUtil {
 	}
 
 	/**
+	 * 通过CodePoint截取字符串，可以截断Emoji
+	 *
+	 * @param str String
+	 * @param fromIndex 开始的index（包括）
+	 * @param toIndex 结束的index（不包括）
+	 * @return 字串
+	 */
+	public static String subByCodePoint(CharSequence str, int fromIndex, int toIndex) {
+		if (isEmpty(str)) {
+			return str(str);
+		}
+
+		if (fromIndex < 0 || fromIndex > toIndex) {
+			throw new IllegalArgumentException();
+		}
+
+		if (fromIndex == toIndex) {
+			return EMPTY;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		int subLen = toIndex - fromIndex;
+		str.toString().codePoints().skip(fromIndex).limit(subLen).forEach(v -> sb.append(Character.toChars(v)));
+		return sb.toString();
+	}
+
+	/**
 	 * 截取部分字符串，这里一个汉字的长度认为是2
 	 *
 	 * @param str 字符串
