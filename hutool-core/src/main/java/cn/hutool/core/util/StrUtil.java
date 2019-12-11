@@ -1600,8 +1600,8 @@ public class StrUtil {
 			return EMPTY;
 		}
 
-		StringBuilder sb = new StringBuilder();
-		int subLen = toIndex - fromIndex;
+		final StringBuilder sb = new StringBuilder();
+		final int subLen = toIndex - fromIndex;
 		str.toString().codePoints().skip(fromIndex).limit(subLen).forEach(v -> sb.append(Character.toChars(v)));
 		return sb.toString();
 	}
