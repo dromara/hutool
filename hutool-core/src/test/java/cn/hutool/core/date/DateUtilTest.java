@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -623,5 +624,14 @@ public class DateUtilTest {
 		String d2 = "2018-02-28";
 		final int age = DateUtil.age(DateUtil.parseDate(d1), DateUtil.parseDate(d2));
 		Assert.assertEquals(18, age);
+	}
+
+	@Test
+	public void isExpiredTest(){
+		DateTime startDate = DateUtil.parse("2019-12-01 17:02:30");
+		DateTime endDate = DateUtil.parse("2019-12-02 17:02:30");
+		int length = 3;
+		boolean expired = DateUtil.isExpired(startDate, DateField.DAY_OF_YEAR, length, endDate);
+		Assert.assertTrue(expired);
 	}
 }

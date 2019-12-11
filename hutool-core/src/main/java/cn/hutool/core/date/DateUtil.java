@@ -1777,7 +1777,7 @@ public class DateUtil {
 	 * @param startDate   开始时间
 	 * @param dateField   时间单位
 	 * @param timeLength  时长
-	 * @param checkedDate 被比较的时间。如果经过时长后的时间晚于被检查的时间，就表示过期
+	 * @param checkedDate 被比较的时间，即有效期的截止时间。如果经过时长后的时间晚于被检查的时间，就表示过期
 	 * @return 是否过期
 	 * @since 3.1.1
 	 */
