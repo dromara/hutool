@@ -2,7 +2,6 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,6 +17,7 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -86,7 +86,7 @@ public class DateUtilTest {
 	public void beginAndWeedTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		DateTime date = DateUtil.parse(dateStr);
-		date.setFirstDayOfWeek(Week.MONDAY);
+		Objects.requireNonNull(date).setFirstDayOfWeek(Week.MONDAY);
 
 		// 一周的开始
 		Date beginOfWeek = DateUtil.beginOfWeek(date);
@@ -297,6 +297,7 @@ public class DateUtilTest {
 		Assert.assertEquals("20190321", ymd);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseTest5() {
 		// 测试时间解析
@@ -323,6 +324,7 @@ public class DateUtilTest {
 
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseTest6() {
 		String str = "Tue Jun 4 16:25:15 +0800 2019";
@@ -337,6 +339,7 @@ public class DateUtilTest {
 		Assert.assertEquals("2019-06-01 19:45:43", dateTime.toString());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseAndOffsetTest() {
 		// 检查UTC时间偏移是否准确
@@ -424,6 +427,7 @@ public class DateUtilTest {
 		Assert.assertEquals(dt1, dt2);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseUTCTest() {
 		String dateStr1 = "2018-09-13T05:34:31Z";
@@ -484,6 +488,7 @@ public class DateUtilTest {
 		Assert.assertEquals("2018-09-13 13:34:39.999", dateStr);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseCSTTest(){
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
@@ -494,6 +499,7 @@ public class DateUtilTest {
 		Assert.assertEquals("2009-09-17 01:26:23", dateTime.toString());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseJDkTest() {
 		String dateStr = "Thu May 16 17:57:18 GMT+08:00 2019";
