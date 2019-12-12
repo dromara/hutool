@@ -141,8 +141,8 @@ public class Base62Codec implements Serializable{
 
 			int remainder = 0;
 
-			for (int i = 0; i < source.length; i++) {
-				final int accumulator = (source[i] & 0xFF) + remainder * sourceBase;
+			for (byte b : source) {
+				final int accumulator = (b & 0xFF) + remainder * sourceBase;
 				final int digit = (accumulator - (accumulator % targetBase)) / targetBase;
 
 				remainder = accumulator % targetBase;

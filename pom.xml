@@ -42,7 +42,7 @@
 
 		<!-- versions -->
 		<compile.version>8</compile.version>
-		<junit.version>4.13-rc-1</junit.version>
+		<junit.version>4.13-rc-2</junit.version>
 		<lombok.version>1.18.10</lombok.version>
 	</properties>
 

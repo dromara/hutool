@@ -35,14 +35,15 @@ public class HexUtil {
 		final int index = (value.startsWith("-") ? 1 : 0);
 		if (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index)) {
 			try {
+				//noinspection ResultOfMethodCallIgnored
 				Long.decode(value);
 			} catch (NumberFormatException e) {
 				return false;
 			}
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	// ---------------------------------------------------------------------------------------------------- encode
