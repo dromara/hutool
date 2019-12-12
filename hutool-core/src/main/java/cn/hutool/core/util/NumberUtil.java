@@ -1762,7 +1762,7 @@ public class NumberUtil {
 	 *
 	 * @param numberArray 数字数组
 	 * @return 最小值
-	 * @see ArrayUtil#min(BigDecimal...)
+	 * @see ArrayUtil#min(Comparable[]) 
 	 * @since 5.0.8
 	 */
 	public static BigDecimal min(BigDecimal... numberArray) {
@@ -1847,7 +1847,7 @@ public class NumberUtil {
 	 *
 	 * @param numberArray 数字数组
 	 * @return 最大值
-	 * @see ArrayUtil#max(BigDecimal...)
+	 * @see ArrayUtil#max(Comparable[])
 	 * @since 5.0.8
 	 */
 	public static BigDecimal max(BigDecimal... numberArray) {
