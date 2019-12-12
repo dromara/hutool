@@ -1,15 +1,14 @@
 package cn.hutool.extra.tokenizer.engine.jcseg;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import org.lionsoul.jcseg.tokenizer.core.ISegment;
-import org.lionsoul.jcseg.tokenizer.core.IWord;
-
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerException;
 import cn.hutool.extra.tokenizer.Word;
+import org.lionsoul.jcseg.ISegment;
+import org.lionsoul.jcseg.IWord;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Jcseg分词结果包装<br>
@@ -64,6 +63,7 @@ public class JcsegResult implements Result{
 		throw new UnsupportedOperationException("Jcseg result not allow to remove !");
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<Word> iterator() {
 		return this;
