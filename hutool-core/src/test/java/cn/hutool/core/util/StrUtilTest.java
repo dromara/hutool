@@ -1,11 +1,10 @@
 package cn.hutool.core.util;
 
-import java.util.List;
-
+import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Dict;
+import java.util.List;
 
 /**
  * 字符串工具类单元测试
@@ -57,6 +56,9 @@ public class StrUtilTest {
 		Assert.assertEquals(5, split.size());
 		// 测试去掉两边空白符是否生效
 		Assert.assertEquals("b", split.get(1));
+
+		final String[] strings = StrUtil.splitToArray("abc/", '/');
+		Assert.assertEquals(2, strings.length);
 	}
 
 	@Test

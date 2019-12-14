@@ -485,6 +485,7 @@ public class ZipUtil {
 				outItemFile = FileUtil.file(outFile, zipEntry.getName());
 				if (zipEntry.isDirectory()) {
 					// 目录
+					//noinspection ResultOfMethodCallIgnored
 					outItemFile.mkdirs();
 				} else {
 					// 文件
@@ -900,6 +901,7 @@ public class ZipUtil {
 				addDir(subPath, out);
 			}
 			// 压缩目录下的子文件或目录
+			//noinspection ConstantConditions
 			for (File childFile : files) {
 				zip(childFile, srcRootDir, out, filter);
 			}
@@ -1034,6 +1036,7 @@ public class ZipUtil {
 	 * @param out    输出
 	 * @param nowrap true表示兼容Gzip压缩
 	 */
+	@SuppressWarnings("SameParameterValue")
 	private static void inflater(InputStream in, OutputStream out, boolean nowrap) {
 		final InflaterOutputStream ios = (out instanceof InflaterOutputStream) ? (InflaterOutputStream) out : new InflaterOutputStream(out, new Inflater(nowrap));
 		IoUtil.copy(in, ios);
@@ -1052,6 +1055,7 @@ public class ZipUtil {
 	 * @param level  压缩级别，0~9
 	 * @param nowrap true表示兼容Gzip压缩
 	 */
+	@SuppressWarnings("SameParameterValue")
 	private static void deflater(InputStream in, OutputStream out, int level, boolean nowrap) {
 		final DeflaterOutputStream ios = (out instanceof DeflaterOutputStream) ? (DeflaterOutputStream) out : new DeflaterOutputStream(out, new Deflater(level, nowrap));
 		IoUtil.copy(in, ios);
@@ -1071,7 +1075,9 @@ public class ZipUtil {
 	 * @since 5.0.5
 	 */
 	private static File buildFile(File outFile, String fileName) {
-		if (false == FileUtil.isWindows() && StrUtil.contains(fileName, CharUtil.SLASH)) {
+		if (false == FileUtil.isWindows()
+				// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
+				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
 			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理
 			// 使用/拆分路径（zip中无\），级联创建父目录
 			final String[] pathParts = StrUtil.splitToArray(fileName, CharUtil.SLASH);
@@ -1081,8 +1087,8 @@ public class ZipUtil {
 			}
 			//noinspection ResultOfMethodCallIgnored
 			outFile.mkdirs();
-			// 最后一个部分作为文件名
-			fileName = pathParts[pathParts.length -1];
+			// 最后一个部分如果非空，作为文件名
+			fileName = pathParts[pathParts.length - 1];
 		}
 		return FileUtil.file(outFile, fileName);
 	}
