@@ -91,6 +91,9 @@ public class HttpConnection {
 			throw new HttpException(e);
 		}
 
+		// 默认读取响应内容
+		this.conn.setDoInput(true);
+
 		return this;
 	}
 
@@ -118,13 +121,10 @@ public class HttpConnection {
 			throw new HttpException(e);
 		}
 
-		// do input and output
-		this.conn.setDoInput(true);
 		if (Method.POST.equals(method) //
 				|| Method.PUT.equals(method)//
 				|| Method.PATCH.equals(method)//
 				|| Method.DELETE.equals(method)) {
-			this.conn.setDoOutput(true);
 			this.conn.setUseCaches(false);
 		}
 		return this;
@@ -285,6 +285,7 @@ public class HttpConnection {
 	 * 关闭缓存
 	 * 
 	 * @return this
+	 * @see HttpURLConnection#setUseCaches(boolean) 
 	 */
 	public HttpConnection disableCache() {
 		this.conn.setUseCaches(false);
@@ -447,6 +448,9 @@ public class HttpConnection {
 		if (null == this.conn) {
 			throw new IOException("HttpURLConnection has not been initialized.");
 		}
+
+		// 当有写出需求时，自动打开之
+		this.conn.setDoOutput(true);
 		return this.conn.getOutputStream();
 	}
 
@@ -511,7 +515,7 @@ public class HttpConnection {
 	// --------------------------------------------------------------- Private Method start
 	/**
 	 * 初始化http或https请求参数<br>
-	 * 有些时候htts请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
+	 * 有些时候https请求会出现com.sun.net.ssl.internal.www.protocol.https.HttpsURLConnectionOldImpl的实现，此为sun内部api，按照普通http请求处理
 	 * 
 	 * @return {@link HttpURLConnection}，https返回{@link HttpsURLConnection}
 	 */

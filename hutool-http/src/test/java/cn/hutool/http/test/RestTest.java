@@ -15,22 +15,21 @@ import cn.hutool.json.JSONUtil;
  * @author looly
  *
  */
+@SuppressWarnings("ConstantConditions")
 public class RestTest {
 
 	@Test
-	@SuppressWarnings("deprecation")
 	public void contentTypeTest() {
 		HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
-				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2"));
+				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2").toString());
 		Assert.assertEquals("application/json;charset=UTF-8", request.header("Content-Type"));
 	}
 
 	@Test
 	@Ignore
-	@SuppressWarnings("deprecation")
 	public void postTest() {
 		HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
-				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2"));
+				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2").toString());
 		Console.log(request.execute().body());
 	}
 
@@ -44,10 +43,9 @@ public class RestTest {
 
 	@Test
 	@Ignore
-	@SuppressWarnings("deprecation")
 	public void postTest3() {
 		HttpRequest request = HttpRequest.post("http://211.162.39.204:8181/jeesite-simple/a/open/bizGwbnService/test")//
-				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2"));
+				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2").toString());
 		Console.log(request.execute().body());
 	}
 }

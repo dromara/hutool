@@ -5,13 +5,20 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.*;
+import cn.hutool.core.io.resource.BytesResource;
+import cn.hutool.core.io.resource.FileResource;
+import cn.hutool.core.io.resource.MultiFileResource;
+import cn.hutool.core.io.resource.MultiResource;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
-import cn.hutool.json.JSON;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -19,7 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.net.URLStreamHandler;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -688,19 +699,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置JSON内容主体<br>
-	 * 设置默认的Content-Type为 application/json 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
-	 *
-	 * @param json JSON请求体
-	 * @return this
-	 * @deprecated 未来可能去除此方法，使用{@link #body(String)} 传入JSON字符串即可
-	 */
-	@Deprecated
-	public HttpRequest body(JSON json) {
-		return this.body(json.toString());
-	}
-
-	/**
 	 * 设置主体字节码<br>
 	 * 需在此方法调用前使用charset方法设置编码，否则使用默认编码UTF-8
 	 *
@@ -870,7 +868,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * 设置是否rest模式
+	 * 设置是否rest模式<br>
+	 * rest模式下get请求不会把参数附加到URL之后
 	 *
 	 * @param isRest 是否rest模式
 	 * @return this
@@ -1055,7 +1054,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	private void send() throws IORuntimeException {
 		try {
-			if (Method.POST.equals(this.method) || Method.PUT.equals(this.method) || Method.DELETE.equals(this.method) || this.isRest) {
+			if (Method.POST.equals(this.method) //
+					|| Method.PUT.equals(this.method) //
+					|| Method.DELETE.equals(this.method) //
+					|| this.isRest) {
 				if (CollectionUtil.isEmpty(this.fileForm)) {
 					sendFormUrlEncoded();// 普通表单
 				} else {
