@@ -23,7 +23,7 @@ public class ImgUtilTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void scaleTest2() {
 		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
 	}
