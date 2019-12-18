@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -622,6 +623,14 @@ public class DateUtilTest {
 		LocalDateTime localDateTime = LocalDateTime.parse("2017-05-06T08:30:00", DateTimeFormatter.ISO_DATE_TIME);
 		DateTime date = DateUtil.date(localDateTime);
 		Assert.assertEquals("2017-05-06 08:30:00", date.toString());
+	}
+
+	@Test
+	public void dateTest2(){
+		// 测试负数日期
+		long dateLong = -1497600000;
+		final DateTime date = DateUtil.date(dateLong);
+		Assert.assertEquals("1969-12-15 00:00:00", date.toString());
 	}
 
 	@Test

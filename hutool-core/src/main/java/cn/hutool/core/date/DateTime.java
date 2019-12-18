@@ -269,6 +269,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime offset(DateField datePart, int offset) {
 		final Calendar cal = toCalendar();
+		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
 		DateTime dt = mutable ? this : ObjectUtil.clone(this);
@@ -286,6 +287,7 @@ public class DateTime extends Date {
 	 */
 	public DateTime offsetNew(DateField datePart, int offset) {
 		final Calendar cal = toCalendar();
+		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);
 
 		DateTime dt = ObjectUtil.clone(this);
@@ -594,6 +596,7 @@ public class DateTime extends Date {
 			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
 		final Calendar cal = (null != zone) ? Calendar.getInstance(zone, locale) : Calendar.getInstance(locale);
+		//noinspection MagicConstant
 		cal.setFirstDayOfWeek(firstDayOfWeek.getValue());
 		cal.setTime(this);
 		return cal;

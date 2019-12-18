@@ -18,6 +18,7 @@
 * 【db  】      修复SqlExecutor.callQuery关闭Statement导致的问题（issue#I16981@Gitee）
 * 【db  】      修复XmlUtil.xmlToMap中List节点的问题（pr#82@Gitee）
 * 【core】      修复ZipUtil中对于/结尾路径处理的问题（issue#I16PKP@Gitee）
+* 【core】      修复DateConvert对int不支持导致的问题（issue#677@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

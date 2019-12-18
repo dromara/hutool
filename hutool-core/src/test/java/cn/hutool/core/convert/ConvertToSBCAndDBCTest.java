@@ -3,8 +3,6 @@ package cn.hutool.core.convert;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.convert.Convert;
-
 /**
  * 类型转换工具单元测试
  * 全角半角转换

@@ -22,6 +22,14 @@ public class DateConvertTest {
 	}
 
 	@Test
+	public void toDateFromIntTest() {
+		int dateLong = -1497600000;
+		Date value = Convert.toDate(dateLong);
+		Assert.assertNotNull(value);
+		Assert.assertEquals("Mon Dec 15 00:00:00 CST 1969", value.toString());
+	}
+
+	@Test
 	public void toDateFromLocalDateTimeTest() {
 		LocalDateTime localDateTime = LocalDateTime.parse("2017-05-06T08:30:00", DateTimeFormatter.ISO_DATE_TIME);
 		Date value = Convert.toDate(localDateTime);

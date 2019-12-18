@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * 问题反馈对象中有JDK8日期对象时转换失败，5.0.7修复
  */
-public class Isse644Test {
+public class Issue644Test {
 
 	@Test
 	public void toBeanTest(){

@@ -216,7 +216,7 @@ public class ConverterRegistry implements Serializable{
 		if(type instanceof TypeReference) {
 			type = ((TypeReference<?>)type).getType();
 		}
-		
+
 		// 标准转换器
 		final Converter<T> converter = getConverter(type, isCustomFirst);
 		if (null != converter) {

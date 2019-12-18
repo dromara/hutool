@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 日期转换器
@@ -65,18 +66,24 @@ public class DateConverter extends AbstractConverter<java.util.Date> {
 		if (value instanceof Calendar) {
 			// Handle Calendar
 			mills = ((Calendar) value).getTimeInMillis();
-		} else if (value instanceof Long) {
-			// Handle Long
-			mills = (Long) value;
+		} else if (value instanceof Number) {
+			// Handle Number
+			mills = ((Number) value).longValue();
 		}else if (value instanceof TemporalAccessor) {
 			return DateUtil.date((TemporalAccessor) value);
 		} else {
 			// 统一按照字符串处理
 			final String valueStr = convertToStr(value);
+			Date date = null;
 			try {
-				mills = StrUtil.isBlank(this.format) ? DateUtil.parse(valueStr).getTime() : DateUtil.parse(valueStr, this.format).getTime();
+				date = StrUtil.isBlank(this.format) //
+						? DateUtil.parse(valueStr) //
+						: DateUtil.parse(valueStr, this.format);
 			} catch (Exception e) {
 				// Ignore Exception
+			}
+			if(null != date){
+				mills = date.getTime();
 			}
 		}
 

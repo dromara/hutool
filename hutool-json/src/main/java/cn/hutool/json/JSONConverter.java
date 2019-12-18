@@ -1,8 +1,5 @@
 package cn.hutool.json;
 
-import java.lang.reflect.Type;
-import java.util.List;
-
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.convert.ConvertException;
 import cn.hutool.core.convert.Converter;
@@ -13,6 +10,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.serialize.GlobalSerializeMapping;
 import cn.hutool.json.serialize.JSONDeserializer;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * JSON转换器
@@ -76,7 +76,7 @@ public class JSONConverter implements Converter<JSON> {
 				return (T) deserializer.deserialize((JSON)value);
 			}
 		}
-		
+
 		Object targetValue;
 		try {
 			targetValue = Convert.convert(targetType, value);
