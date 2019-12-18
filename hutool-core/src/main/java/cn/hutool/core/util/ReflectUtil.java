@@ -199,7 +199,7 @@ public class ReflectUtil {
 	/**
 	 * 获取字段值
 	 *
-	 * @param obj       对象
+	 * @param obj       对象，如果static字段，此处为类
 	 * @param fieldName 字段名
 	 * @return 字段值
 	 * @throws UtilException 包装IllegalAccessException异常
@@ -208,7 +208,19 @@ public class ReflectUtil {
 		if (null == obj || StrUtil.isBlank(fieldName)) {
 			return null;
 		}
-		return getFieldValue(obj, getField(obj.getClass(), fieldName));
+		return getFieldValue(obj, getField(obj instanceof Class ? (Class<?>)obj : obj.getClass(), fieldName));
+	}
+
+	/**
+	 * 获取静态字段值
+	 *
+	 * @param field 字段
+	 * @return 字段值
+	 * @throws UtilException 包装IllegalAccessException异常
+	 * @since 5.1.0
+	 */
+	public static Object getStaticFieldValue(Field field) throws UtilException {
+		return getFieldValue(null, field);
 	}
 
 	/**
@@ -223,6 +235,11 @@ public class ReflectUtil {
 		if (null == field) {
 			return null;
 		}
+		if(obj instanceof Class){
+			// 静态字段获取时对象为null
+			obj = null;
+		}
+
 		setAccessible(field);
 		Object result;
 		try {
@@ -236,13 +253,13 @@ public class ReflectUtil {
 	/**
 	 * 获取所有字段的值
 	 *
-	 * @param obj bean对象
+	 * @param obj bean对象，如果是static字段，此处为类class
 	 * @return 字段值数组
 	 * @since 4.1.17
 	 */
 	public static Object[] getFieldsValue(Object obj) {
 		if (null != obj) {
-			final Field[] fields = getFields(obj.getClass());
+			final Field[] fields = getFields(obj instanceof Class ? (Class<?>)obj : obj.getClass());
 			if (null != fields) {
 				final Object[] values = new Object[fields.length];
 				for (int i = 0; i < fields.length; i++) {

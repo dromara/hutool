@@ -11,6 +11,7 @@
 * 【core 】     改进Bean判断和注入逻辑：支持public字段注入（issue#I1689L@Gitee）
 * 【extra】     新增SpringUtil
 * 【http 】     Get请求支持body，移除body（JSON）方法（issue#671@Github）
+* 【core 】     ReflectUtil修正getFieldValue逻辑，防止歧义
 
 
 ### Bug修复
