@@ -21,6 +21,12 @@ public class ImgUtilTest {
 	public void scaleTest() {
 		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
 	}
+
+	@Test
+//	@Ignore
+	public void scaleTest2() {
+		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
+	}
 	
 	@Test
 	@Ignore
@@ -49,7 +55,7 @@ public class ImgUtilTest {
 
 	@Test
 	@Ignore
-	public void flipTest() throws IOException {
+	public void flipTest() {
 		ImgUtil.flip(FileUtil.file("d:/logo.png"), FileUtil.file("d:/result.png"));
 	}
 
