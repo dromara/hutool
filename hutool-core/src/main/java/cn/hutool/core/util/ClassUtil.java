@@ -8,6 +8,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -744,7 +746,17 @@ public class ClassUtil {
 
 	/**
 	 * 是否为简单值类型<br>
-	 * 包括：原始类型,、String、other CharSequence, a Number, a Date, a URI, a URL, a Locale or a Class.
+	 * 包括：
+	 * <pre>
+	 *     原始类型
+	 *     String、other CharSequence
+	 *     Number
+	 *     Date
+	 *     URI
+	 *     URL
+	 *     Locale
+	 *     Class
+	 * </pre>
 	 *
 	 * @param clazz 类
 	 * @return 是否为简单值类型
@@ -758,7 +770,9 @@ public class ClassUtil {
 				|| clazz.equals(URI.class) //
 				|| clazz.equals(URL.class) //
 				|| clazz.equals(Locale.class) //
-				|| clazz.equals(Class.class);//
+				|| clazz.equals(Class.class)//
+				// jdk8 date object
+				|| TemporalAccessor.class.isAssignableFrom(clazz); //
 	}
 
 	/**

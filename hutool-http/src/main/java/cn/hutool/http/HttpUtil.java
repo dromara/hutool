@@ -549,10 +549,13 @@ public class HttpUtil {
 		int pathEndPos = paramsStr.indexOf('?');
 		if (pathEndPos > -1) {
 			paramsStr = StrUtil.subSuf(paramsStr, pathEndPos + 1);
+			if (StrUtil.isBlank(paramsStr)) {
+				return Collections.emptyMap();
+			}
 		}
 
-		final Map<String, List<String>> params = new LinkedHashMap<>();
 		final int len = paramsStr.length();
+		final Map<String, List<String>> params = new LinkedHashMap<>();
 		String name = null;
 		int pos = 0; // 未处理字符开始位置
 		int i; // 未处理字符结束位置
