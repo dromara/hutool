@@ -8,7 +8,7 @@ import cn.hutool.bloomfilter.filter.SDBMFilter;
 import cn.hutool.core.util.NumberUtil;
 
 /**
- * BlommFilter 实现 <br>
+ * BloomFilter 实现 <br>
  * 1.构建hash算法 <br>
  * 2.散列hash映射到数组的bit位置 <br>
  * 3.验证<br>
