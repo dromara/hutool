@@ -377,10 +377,17 @@ public class ObjectUtil {
 	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
-	 * @see #unserialize(byte[])
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T deserialize(byte[] bytes) {
-		return unserialize(bytes);
+		ObjectInputStream ois;
+		try {
+			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+			ois = new ObjectInputStream(bais);
+			return (T) ois.readObject();
+		} catch (Exception e) {
+			throw new UtilException(e);
+		}
 	}
 
 	/**
@@ -390,17 +397,12 @@ public class ObjectUtil {
 	 * @param <T>   对象类型
 	 * @param bytes 反序列化的字节码
 	 * @return 反序列化后的对象
+	 * @see #deserialize(byte[])
+	 * @deprecated 请使用 {@link #deserialize(byte[])}
 	 */
-	@SuppressWarnings("unchecked")
+	@Deprecated
 	public static <T> T unserialize(byte[] bytes) {
-		ObjectInputStream ois;
-		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-			ois = new ObjectInputStream(bais);
-			return (T) ois.readObject();
-		} catch (Exception e) {
-			throw new UtilException(e);
-		}
+		return deserialize(bytes);
 	}
 
 	/**

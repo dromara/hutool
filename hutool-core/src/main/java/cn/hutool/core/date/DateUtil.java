@@ -527,9 +527,9 @@ public class DateUtil {
 		}
 
 		final SimpleDateFormat sdf = new SimpleDateFormat(format);
-		if(date instanceof DateTime){
+		if (date instanceof DateTime) {
 			final TimeZone timeZone = ((DateTime) date).getTimeZone();
-			if(null != timeZone) {
+			if (null != timeZone) {
 				sdf.setTimeZone(timeZone);
 			}
 		}
@@ -1774,16 +1774,34 @@ public class DateUtil {
 	/**
 	 * 判定给定开始时间经过某段时间后是否过期
 	 *
-	 * @param startDate   开始时间
-	 * @param dateField   时间单位
-	 * @param timeLength  时长
-	 * @param checkedDate 被比较的时间，即有效期的截止时间。如果经过时长后的时间晚于被检查的时间，就表示过期
+	 * @param startDate  开始时间
+	 * @param dateField  时间单位
+	 * @param timeLength 经过时长
+	 * @param endDate    被比较的时间，即有效期的截止时间。如果经过时长后的时间晚于截止时间，就表示过期
 	 * @return 是否过期
 	 * @since 3.1.1
 	 */
-	public static boolean isExpired(Date startDate, DateField dateField, int timeLength, Date checkedDate) {
-		final Date endDate = offset(startDate, dateField, timeLength);
-		return endDate.after(checkedDate);
+	public static boolean isExpired(Date startDate, DateField dateField, int timeLength, Date endDate) {
+		final Date offsetDate = offset(startDate, dateField, timeLength);
+		return offsetDate.after(endDate);
+	}
+
+	/**
+	 * 判定在指定检查时间是否过期。
+	 *
+	 * <p>
+	 * 以商品为例，startDate即生产日期，endDate即保质期的截止日期，checkDate表示在何时检查是否过期（一般为当前时间）<br>
+	 * endDate和startDate的差值即为保质期（按照毫秒计），checkDate和startDate的差值即为实际经过的时长，实际时长大于保质期表示超时。
+	 * </p>
+	 *
+	 * @param startDate 开始时间
+	 * @param endDate   被比较的时间，即有效期的截止时间。如果经过时长后的时间晚于被检查的时间，就表示过期
+	 * @param checkDate 检查时间，可以是当前时间，既
+	 * @return 是否过期
+	 * @since 5.1.1
+	 */
+	public static boolean isExpired(Date startDate, Date endDate, Date checkDate) {
+		return betweenMs(startDate, checkDate) > betweenMs(startDate, checkDate);
 	}
 
 	/**
@@ -2034,7 +2052,7 @@ public class DateUtil {
 	 * @return {@link LocalDateTime}
 	 * @since 5.0.5
 	 */
-	public static LocalDateTime toLocalDateTime(Instant instant){
+	public static LocalDateTime toLocalDateTime(Instant instant) {
 		return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 	}
 
@@ -2045,7 +2063,7 @@ public class DateUtil {
 	 * @return {@link LocalDateTime}
 	 * @since 5.0.5
 	 */
-	public static LocalDateTime toLocalDateTime(Calendar calendar){
+	public static LocalDateTime toLocalDateTime(Calendar calendar) {
 		return LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
 	}
 
@@ -2056,12 +2074,13 @@ public class DateUtil {
 	 * @return {@link LocalDateTime}
 	 * @since 5.0.5
 	 */
-	public static LocalDateTime toLocalDateTime(Date date){
+	public static LocalDateTime toLocalDateTime(Date date) {
 		final DateTime dateTime = date(date);
 		return LocalDateTime.ofInstant(dateTime.toInstant(), dateTime.getZoneId());
 	}
 
 	// ------------------------------------------------------------------------ Private method start
+
 	/**
 	 * 获得指定日期年份和季节<br>
 	 * 格式：[20131]表示2013年第一季度

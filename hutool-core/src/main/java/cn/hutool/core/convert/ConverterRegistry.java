@@ -317,6 +317,11 @@ public class ConverterRegistry implements Serializable{
 			return (T) value;
 		}
 
+		// 枚举转换
+		if (rowType.isEnum()) {
+			return (T) new EnumConverter(rowType).convert(value, defaultValue);
+		}
+
 		// 数组转换
 		if (rowType.isArray()) {
 			final ArrayConverter arrayConverter = new ArrayConverter(rowType);
@@ -325,11 +330,6 @@ public class ConverterRegistry implements Serializable{
 			} catch (Exception e) {
 				// 数组转换失败进行下一步
 			}
-		}
-
-		// 枚举转换
-		if (rowType.isEnum()) {
-			return (T) new EnumConverter(rowType).convert(value, defaultValue);
 		}
 
 		// 表示非需要特殊转换的对象

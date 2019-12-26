@@ -137,6 +137,17 @@ public class Convert {
 	}
 
 	/**
+	 * 转换为Byte数组
+	 *
+	 * @param value 被转换的值
+	 * @return Byte数组
+	 * @since 5.1.1
+	 */
+	public static byte[] toPrimitiveByteArray(Object value) {
+		return convert(byte[].class, value);
+	}
+
+	/**
 	 * 转换为Short<br>
 	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错

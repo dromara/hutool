@@ -7,6 +7,10 @@
 
 ### 新特性
 * 【core 】     ClassUtil.isSimpleValueType增加TemporalAccessor支持（issue#I170HK@Gitee）
+* 【core 】     增加Convert.toPrimitiveByteArray方法，Convert支持对象序列化和反序列化
+* 【core 】     DateUtil增加isExpired(Date startDate, Date endDate, Date checkDate)（issue#687@Github）
+* 【core 】     增加Alias注解
+
 ### Bug修复
 
 -------------------------------------------------------------------------------------------------------------

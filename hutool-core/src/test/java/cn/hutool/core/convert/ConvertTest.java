@@ -1,15 +1,18 @@
 package cn.hutool.core.convert;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * 类型转换工具单元测试
- * 
+ *
  * @author Looly
  *
  */
@@ -25,7 +28,7 @@ public class ConvertTest {
 	public void toStrTest() {
 		int a = 1;
 		long[] b = { 1, 2, 3, 4, 5 };
-		
+
 		Assert.assertEquals("[1, 2, 3, 4, 5]", Convert.convert(String.class, b));
 
 		String aStr = Convert.toStr(a);
@@ -33,7 +36,7 @@ public class ConvertTest {
 		String bStr = Convert.toStr(b);
 		Assert.assertEquals("[1, 2, 3, 4, 5]", Convert.toStr(bStr));
 	}
-	
+
 	@Test
 	public void toStrTest2() {
 		String result = Convert.convert(String.class, "aaaa");
@@ -205,5 +208,27 @@ public class ConvertTest {
 		List<Integer> list3 = Convert.toList(Integer.class, str);
 		Assert.assertEquals(1, list3.get(0).intValue());
 		Assert.assertEquals(2, list3.get(1).intValue());
+	}
+
+	@Test
+	public void toByteArrayTest(){
+		// 测试Serializable转换为bytes，调用序列化转换
+		final byte[] bytes = Convert.toPrimitiveByteArray(new Product("zhangsan", "张三", "5.1.1"));
+		Assert.assertNotNull(bytes);
+
+		final Product product = Convert.convert(Product.class, bytes);
+		Assert.assertEquals("zhangsan", product.getName());
+		Assert.assertEquals("张三", product.getCName());
+		Assert.assertEquals("5.1.1", product.getVersion());
+	}
+
+	@Data
+	@AllArgsConstructor
+	public static class Product implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		private String name;
+		private String cName;
+		private String version;
 	}
 }
