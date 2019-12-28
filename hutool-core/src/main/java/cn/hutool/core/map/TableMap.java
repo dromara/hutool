@@ -1,15 +1,10 @@
 package cn.hutool.core.map;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * 无重复键的Map
@@ -155,5 +150,18 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 			throw new UnsupportedOperationException("setValue not supported.");
 		}
 
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (!(o instanceof Entry)) return false;
+			Entry<?, ?> entry = (Entry<?, ?>) o;
+			return getKey().equals(entry.getKey()) &&
+					getValue().equals(entry.getValue());
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(getKey(), getValue());
+		}
 	}
 }
