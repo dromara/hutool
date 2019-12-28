@@ -1,13 +1,5 @@
 package cn.hutool.core.util;
 
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
@@ -15,6 +7,13 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.thread.ThreadUtil;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * {@link IdUtil} 单元测试
@@ -85,17 +84,13 @@ public class IdUtilTest {
 		final int idCountPerThread = 10000;
 		final CountDownLatch latch = new CountDownLatch(threadCount);
 		for(int i =0; i < threadCount; i++) {
-			ThreadUtil.execute(new Runnable() {
-				
-				@Override
-				public void run() {
-					for(int i =0; i < idCountPerThread; i++) {
-						long id = snowflake.nextId();
-						set.add(id);
+			ThreadUtil.execute(() -> {
+				for(int i1 = 0; i1 < idCountPerThread; i1++) {
+					long id = snowflake.nextId();
+					set.add(id);
 //						Console.log("Add new id: {}", id);
-					}
-					latch.countDown();
 				}
+				latch.countDown();
 			});
 		}
 		
@@ -118,17 +113,13 @@ public class IdUtilTest {
 		final int idCountPerThread = 10000;
 		final CountDownLatch latch = new CountDownLatch(threadCount);
 		for(int i =0; i < threadCount; i++) {
-			ThreadUtil.execute(new Runnable() {
-				
-				@Override
-				public void run() {
-					for(int i =0; i < idCountPerThread; i++) {
-						long id = IdUtil.getSnowflake(1, 1).nextId();
-						set.add(id);
+			ThreadUtil.execute(() -> {
+				for(int i1 = 0; i1 < idCountPerThread; i1++) {
+					long id = IdUtil.getSnowflake(1, 1).nextId();
+					set.add(id);
 //						Console.log("Add new id: {}", id);
-					}
-					latch.countDown();
 				}
+				latch.countDown();
 			});
 		}
 		

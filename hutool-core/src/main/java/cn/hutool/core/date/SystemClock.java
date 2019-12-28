@@ -3,7 +3,6 @@ package cn.hutool.core.date;
 import java.sql.Timestamp;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,20 +36,12 @@ public class SystemClock {
 	 * 开启计时器线程
 	 */
 	private void scheduleClockUpdating() {
-		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(new ThreadFactory(){
-			@Override
-			public Thread newThread(Runnable runnable) {
-				Thread thread = new Thread(runnable, "System Clock");
-				thread.setDaemon(true);
-				return thread;
-			}
+		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
+			Thread thread = new Thread(runnable, "System Clock");
+			thread.setDaemon(true);
+			return thread;
 		});
-		scheduler.scheduleAtFixedRate(new Runnable(){
-			@Override
-			public void run() {
-				now = System.currentTimeMillis();
-			}
-		}, period, period, TimeUnit.MILLISECONDS);
+		scheduler.scheduleAtFixedRate(() -> now = System.currentTimeMillis(), period, period, TimeUnit.MILLISECONDS);
 	}
 
 	/**

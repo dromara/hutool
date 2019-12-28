@@ -1,18 +1,13 @@
 package cn.hutool.core.collection;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * {@link Iterable} 和 {@link Iterator} 相关工具类
@@ -511,12 +506,7 @@ public class IterUtil {
 	 * @return {@link Iterable}
 	 */
 	public static <E> Iterable<E> asIterable(final Iterator<E> iter) {
-		return new Iterable<E>() {
-			@Override
-			public Iterator<E> iterator() {
-				return iter;
-			}
-		};
+		return () -> iter;
 	}
 
 	/**
