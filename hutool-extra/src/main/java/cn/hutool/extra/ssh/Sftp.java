@@ -15,6 +15,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -311,7 +312,7 @@ public class Sftp extends AbstractFtp {
 		String fileName;
 		for (LsEntry entry : list) {
 			fileName = entry.getFilename();
-			if (false == fileName.equals(".") && false == fileName.equals("..")) {
+			if (false == Objects.equals(fileName,".") && false == Objects.equals(fileName,"..")) {
 				if (entry.getAttrs().isDir()) {
 					delDir(fileName);
 				} else {
