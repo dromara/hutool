@@ -102,8 +102,7 @@ public class BitSetBloomFilter implements BloomFilter{
 	 * @return 各个哈希的结果数组.
 	 */
 	public static int[] createHashes(String str, int hashNumber) {
-		int[] result = IntStream.range(0, hashNumber).map(i -> hash(str, i)).toArray();
-		return result;
+		return IntStream.range(0, hashNumber).map(i -> hash(str, i)).toArray();
 	}
 
 	/**
