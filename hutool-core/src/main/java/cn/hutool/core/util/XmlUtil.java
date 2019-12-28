@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.IntStream;
 
 /**
  * XML工具类<br>
@@ -493,13 +494,7 @@ public class XmlUtil {
 			return null;
 		}
 		int length = nodeList.getLength();
-		for (int i = 0; i < length; i++) {
-			Element childEle = (Element) nodeList.item(i);
-			if (childEle == null || childEle.getParentNode() == element) {
-				return childEle;
-			}
-		}
-		return null;
+		return IntStream.range(0, length).mapToObj(i -> (Element) nodeList.item(i)).filter(childEle -> childEle == null || childEle.getParentNode() == element).findFirst().orElse(null);
 	}
 
 	/**

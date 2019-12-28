@@ -5,6 +5,8 @@ import cn.hutool.core.util.ArrayUtil;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 无重复键的Map
@@ -118,11 +120,7 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 
 	@Override
 	public Set<Map.Entry<K, V>> entrySet() {
-		HashSet<Map.Entry<K, V>> hashSet = new HashSet<>();
-		for (int i = 0; i < size(); i++) {
-			hashSet.add(new Entry<>(keys.get(i), values.get(i)));
-		}
-		return hashSet;
+		return IntStream.range(0, size()).mapToObj(i -> new Entry<>(keys.get(i), values.get(i))).collect(Collectors.toCollection(HashSet::new));
 	}
 
 	private static class Entry<K, V> implements Map.Entry<K, V> {

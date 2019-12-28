@@ -1,12 +1,12 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
-
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 提供通用唯一识别码（universally unique identifier）（UUID）实现，UUID表示一个128位的值。<br>
@@ -412,11 +412,11 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
     public int compareTo(UUID val) {
 		// The ordering is intentionally set up so that the UUIDs
 		// can simply be numerically compared as two numbers
+		//
+		//
 		return (this.mostSigBits < val.mostSigBits ? -1 : //
 				(this.mostSigBits > val.mostSigBits ? 1 : //
-						(this.leastSigBits < val.leastSigBits ? -1 : //
-								(this.leastSigBits > val.leastSigBits ? 1 : //
-										0))));
+						(Long.compare(this.leastSigBits, val.leastSigBits))));
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------- Private method start

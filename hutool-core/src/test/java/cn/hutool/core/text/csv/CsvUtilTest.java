@@ -24,9 +24,7 @@ public class CsvUtilTest {
 	@Test
 	public void readTest2() {
 		CsvReader reader = CsvUtil.getReader();
-		reader.read(FileUtil.getUtf8Reader("test.csv"), (csvRow)->{
-			Assert.notEmpty(csvRow.getRawList());
-		});
+		reader.read(FileUtil.getUtf8Reader("test.csv"), (csvRow)-> Assert.notEmpty(csvRow.getRawList()));
 	}
 	
 	@Test
