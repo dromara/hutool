@@ -1,13 +1,5 @@
 package cn.hutool.core.bean;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
@@ -15,6 +7,9 @@ import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Bean路径表达式，用于获取多层嵌套Bean中的字段值或Bean对象<br>
@@ -193,10 +188,7 @@ public class BeanPath implements Serializable{
 			} else if (ArrayUtil.isArray(bean)) {
 				return ArrayUtil.getAny(bean, Convert.convert(int[].class, keys));
 			} else {
-				final String[] unwrapedKeys = new String[keys.size()];
-				for (int i = 0; i < unwrapedKeys.length; i++) {
-					unwrapedKeys[i] = StrUtil.unWrap(keys.get(i), '\'');
-				}
+				final String[] unwrapedKeys = keys.stream().map(key -> StrUtil.unWrap(key, '\'')).toArray(String[]::new);
 				if (bean instanceof Map) {
 					// 只支持String为key的Map
 					MapUtil.getAny((Map<String, ?>) bean, unwrapedKeys);

@@ -1,13 +1,5 @@
 package cn.hutool.core.collection;
 
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.LinkedBlockingDeque;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.comparator.PropertyComparator;
@@ -18,14 +10,16 @@ import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.PageUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
+import cn.hutool.core.util.*;
+
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.stream.Collectors;
 
 /**
  * 集合相关工具类
@@ -237,19 +231,10 @@ public class CollUtil {
 			return false;
 		}
 		if (coll1.size() < coll2.size()) {
-			for (Object object : coll1) {
-				if (coll2.contains(object)) {
-					return true;
-				}
-			}
+			return coll1.stream().anyMatch(coll2::contains);
 		} else {
-			for (Object object : coll2) {
-				if (coll1.contains(object)) {
-					return true;
-				}
-			}
+			return coll2.stream().anyMatch(coll1::contains);
 		}
-		return false;
 	}
 
 	/**
@@ -265,12 +250,7 @@ public class CollUtil {
 			return false;
 		}
 
-		for (Object object : coll2) {
-			if (false == coll1.contains(object)) {
-				return false;
-			}
-		}
-		return true;
+		return coll2.stream().noneMatch(object -> false == coll1.contains(object));
 	}
 
 	/**
@@ -2022,11 +2002,7 @@ public class CollUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> ArrayList<V> valuesOfKeys(Map<K, V> map, K... keys) {
-		final ArrayList<V> values = new ArrayList<>();
-		for (K k : keys) {
-			values.add(map.get(k));
-		}
-		return values;
+		return Arrays.stream(keys).map(map::get).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	/**

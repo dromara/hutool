@@ -19,12 +19,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
 import java.time.temporal.TemporalAccessor;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 类工具类 <br>
@@ -1025,11 +1020,7 @@ public class ClassUtil {
 	 * @since 3.0.9
 	 */
 	public static Object[] getDefaultValues(Class<?>... classes) {
-		final Object[] values = new Object[classes.length];
-		for (int i = 0; i < classes.length; i++) {
-			values[i] = getDefaultValue(classes[i]);
-		}
-		return values;
+		return Arrays.stream(classes).map(ClassUtil::getDefaultValue).toArray();
 	}
 
 	/**

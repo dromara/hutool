@@ -11,14 +11,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 时间工具单元测试<br>
@@ -128,10 +123,7 @@ public class DateUtilTest {
 	@Test
 	public void offsetMonthTest() {
 		DateTime st = DateUtil.parseDate("2018-05-31");
-		List<DateTime> list = new ArrayList<>();
-		for (int i = 0; i < 4; i++) {
-			list.add(DateUtil.offsetMonth(st, i));
-		}
+		List<DateTime> list = IntStream.range(0, 4).mapToObj(i -> DateUtil.offsetMonth(st, i)).collect(Collectors.toList());
 		Assert.assertEquals("2018-05-31 00:00:00", list.get(0).toString());
 		Assert.assertEquals("2018-06-30 00:00:00", list.get(1).toString());
 		Assert.assertEquals("2018-07-31 00:00:00", list.get(2).toString());
