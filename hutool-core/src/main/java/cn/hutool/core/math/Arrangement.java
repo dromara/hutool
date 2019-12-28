@@ -1,12 +1,13 @@
 package cn.hutool.core.math;
 
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.NumberUtil;
+import java.util.stream.IntStream;
 
 /**
  * 排列A(n, m)<br>
@@ -60,10 +61,7 @@ public class Arrangement implements Serializable {
 	 * @return 排列数
 	 */
 	public static long countAll(int n) {
-		long total = 0;
-		for (int i = 1; i <= n; i++) {
-			total += count(n, i);
-		}
+		long total = IntStream.rangeClosed(1, n).mapToLong(i -> count(n, i)).sum();
 		return total;
 	}
 

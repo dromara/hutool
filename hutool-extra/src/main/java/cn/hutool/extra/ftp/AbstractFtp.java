@@ -1,14 +1,14 @@
 package cn.hutool.extra.ftp;
 
-import java.io.Closeable;
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.List;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Closeable;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.util.List;
 
 /**
  * 抽象FTP类，用于定义通用的FTP方法
@@ -165,12 +165,7 @@ public abstract class AbstractFtp implements Closeable {
 		if (StrUtil.isEmpty(nameToFind)) {
 			return false;
 		}
-		for (String name : names) {
-			if (nameToFind.equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
-		return false;
+		return names.stream().anyMatch(nameToFind::equalsIgnoreCase);
 	}
 	// ---------------------------------------------------------------------------------------------------------------------------------------- Private method end
 }
