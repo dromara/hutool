@@ -1,9 +1,9 @@
 package cn.hutool.core.lang;
 
-import java.io.Serializable;
-
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
 
 /**
  * Twitter的Snowflake 算法<br>
@@ -35,9 +35,9 @@ public class Snowflake implements Serializable{
 	private final long workerIdBits = 5L;
 	private final long datacenterIdBits = 5L;
 	//// 最大支持机器节点数0~31，一共32个
-	private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+	private final long maxWorkerId = ~(-1L << workerIdBits);
 	// 最大支持数据中心节点数0~31，一共32个
-	private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
+	private final long maxDatacenterId = ~(-1L << datacenterIdBits);
 	// 序列号12位
 	private final long sequenceBits = 12L;
 	// 机器节点左移12位
@@ -46,7 +46,7 @@ public class Snowflake implements Serializable{
 	private final long datacenterIdShift = sequenceBits + workerIdBits;
 	// 时间毫秒数左移22位
 	private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
-	private final long sequenceMask = -1L ^ (-1L << sequenceBits);// 4095
+	private final long sequenceMask = ~(-1L << sequenceBits);// 4095
 
 	private long workerId;
 	private long datacenterId;

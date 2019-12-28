@@ -1,9 +1,10 @@
 package cn.hutool.core.lang;
 
-import java.util.HashSet;
-
+import cn.hutool.core.date.StopWatch;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.HashSet;
 
 /**
  * Snowflake单元测试
@@ -42,5 +43,22 @@ public class SnowflakeTest {
 		Assert.assertEquals(1, idWorker.getWorkerId(nextId));
 		Assert.assertEquals(2, idWorker.getDataCenterId(nextId));
 		Assert.assertTrue(idWorker.getGenerateDateTime(nextId) - System.currentTimeMillis() < 10);
+	}
+	@Test
+	public void bitwiseOperationTest(){
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("^");
+		Integer count = Integer.MAX_VALUE;
+		for(int i = 0; i < count; ++i){
+			long j = -1L ^ (-1L << 5L);
+		}
+		stopWatch.stop();
+		stopWatch.start("~");
+		for(int i = 0; i < count; ++i){
+			long j = ~(-1L << 5L);
+		}
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+		Assert.assertEquals(-1L ^ (-1L << 5L),~(-1L << 5L));
 	}
 }
