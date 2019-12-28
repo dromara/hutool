@@ -1,12 +1,14 @@
 package cn.hutool.db.nosql.mongo;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.setting.Setting;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.setting.Setting;
+
 
 /**
  * MongoDB工厂类，用于创建
@@ -23,12 +25,7 @@ public class MongoFactory {
 
 	// JVM关闭前关闭MongoDB连接
 	static {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				MongoFactory.closeAll();
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(MongoFactory::closeAll));
 	}
 
 	// ------------------------------------------------------------------------ Get DS start
