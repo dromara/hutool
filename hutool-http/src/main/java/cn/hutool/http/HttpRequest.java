@@ -381,7 +381,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return !httpVersion.equalsIgnoreCase(HTTP_1_0);
 		}
 
-		return !connection.equalsIgnoreCase("close");
+		return !"close".equalsIgnoreCase(connection);
 	}
 
 	/**
