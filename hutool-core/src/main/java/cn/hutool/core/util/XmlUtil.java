@@ -5,7 +5,6 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
