@@ -1,10 +1,12 @@
 package cn.hutool.core.lang;
 
-import java.util.HashSet;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * ObjectId单元测试
@@ -17,11 +19,8 @@ public class ObjectIdTest {
 	@Test
 	public void distinctTest() {
 		//生成10000个id测试是否重复
-		HashSet<String> set = new HashSet<>();
-		for(int i = 0; i < 10000; i++) {
-			set.add(ObjectId.next());
-		}
-		
+		HashSet<String> set = IntStream.range(0, 10000).mapToObj(i -> ObjectId.next()).collect(Collectors.toCollection(HashSet::new));
+
 		Assert.assertEquals(10000, set.size());
 	}
 	

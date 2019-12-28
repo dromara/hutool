@@ -1,28 +1,5 @@
 package cn.hutool.core.net;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.IDN;
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.net.ServerSocketFactory;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.UtilException;
@@ -32,6 +9,15 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+
+import javax.net.ServerSocketFactory;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 网络相关工具
@@ -374,12 +360,8 @@ public class NetUtil {
 	 * @since 4.5.17
 	 */
 	public static LinkedHashSet<String> toIpList(Set<InetAddress> addressList) {
-		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
-		for (InetAddress address : addressList) {
-			ipSet.add(address.getHostAddress());
-		}
 
-		return ipSet;
+		return addressList.stream().map(InetAddress::getHostAddress).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	/**
@@ -637,12 +619,7 @@ public class NetUtil {
 		// 多级反向代理检测
 		if (ip != null && ip.indexOf(",") > 0) {
 			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
-				if (false == isUnknow(subIp)) {
-					ip = subIp;
-					break;
-				}
-			}
+			ip = Arrays.stream(ips).filter(subIp -> false == isUnknow(subIp)).findFirst().orElse(ip);
 		}
 		return ip;
 	}

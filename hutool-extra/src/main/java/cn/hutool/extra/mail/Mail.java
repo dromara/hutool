@@ -1,31 +1,27 @@
 package cn.hutool.extra.mail;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.Date;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.activation.FileTypeMap;
-import javax.mail.Authenticator;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.activation.FileTypeMap;
+import javax.mail.*;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * 邮件发送客户端
@@ -232,10 +228,7 @@ public class Mail {
 			return this;
 		}
 
-		final DataSource[] attachments = new DataSource[files.length];
-		for (int i = 0; i < files.length; i++) {
-			attachments[i] = new FileDataSource(files[i]);
-		}
+		final DataSource[] attachments = Arrays.stream(files).map(FileDataSource::new).toArray(DataSource[]::new);
 		return setAttachments(attachments);
 	}
 

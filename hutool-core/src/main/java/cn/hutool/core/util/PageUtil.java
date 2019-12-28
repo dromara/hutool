@@ -1,5 +1,8 @@
 package cn.hutool.core.util;
 
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
 /**
  * 分页工具类
  * 
@@ -99,22 +102,14 @@ public class PageUtil {
 		int[] result = new int[length];
 		if (pageCount >= displayCount) {
 			if (currentPage <= left) {
-				for (int i = 0; i < result.length; i++) {
-					result[i] = i + 1;
-				}
+				result = IntStream.range(0, length).map(i -> i + 1).toArray();
 			} else if (currentPage > pageCount - right) {
-				for (int i = 0; i < result.length; i++) {
-					result[i] = i + pageCount - displayCount + 1;
-				}
+				Arrays.setAll(result, i -> i + pageCount - displayCount + 1);
 			} else {
-				for (int i = 0; i < result.length; i++) {
-					result[i] = i + currentPage - left + (isEven ? 1 : 0);
-				}
+				Arrays.setAll(result, i -> i + currentPage - left + (isEven ? 1 : 0));
 			}
 		} else {
-			for (int i = 0; i < result.length; i++) {
-				result[i] = i + 1;
-			}
+			Arrays.setAll(result, i -> i + 1);
 		}
 		return result;
 

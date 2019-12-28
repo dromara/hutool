@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 反射工具类
@@ -122,11 +123,7 @@ public class ReflectUtil {
 	public static Field getField(Class<?> beanClass, String name) throws SecurityException {
 		final Field[] fields = getFields(beanClass);
 		if (ArrayUtil.isNotEmpty(fields)) {
-			for (Field field : fields) {
-				if ((name.equals(field.getName()))) {
-					return field;
-				}
-			}
+			return Arrays.stream(fields).filter(field -> (name.equals(field.getName()))).findFirst().orElse(null);
 		}
 		return null;
 	}
@@ -256,11 +253,7 @@ public class ReflectUtil {
 		if (null != obj) {
 			final Field[] fields = getFields(obj instanceof Class ? (Class<?>)obj : obj.getClass());
 			if (null != fields) {
-				final Object[] values = new Object[fields.length];
-				for (int i = 0; i < fields.length; i++) {
-					values[i] = getFieldValue(obj, fields[i]);
-				}
-				return values;
+				return Arrays.stream(fields).map(field -> getFieldValue(obj, field)).toArray();
 			}
 		}
 		return null;
@@ -489,13 +482,7 @@ public class ReflectUtil {
 
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
-			for (Method method : methods) {
-				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
-					if (ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)) {
-						return method;
-					}
-				}
-			}
+			return Arrays.stream(methods).filter(method -> StrUtil.equals(methodName, method.getName(), ignoreCase)).filter(method -> ClassUtil.isAllAssignableFrom(method.getParameterTypes(), paramTypes)).findFirst().orElse(null);
 		}
 		return null;
 	}
@@ -555,11 +542,7 @@ public class ReflectUtil {
 
 		final Method[] methods = getMethods(clazz);
 		if (ArrayUtil.isNotEmpty(methods)) {
-			for (Method method : methods) {
-				if (StrUtil.equals(methodName, method.getName(), ignoreCase)) {
-					return method;
-				}
-			}
+			return Arrays.stream(methods).filter(method -> StrUtil.equals(methodName, method.getName(), ignoreCase)).findFirst().orElse(null);
 		}
 		return null;
 	}
@@ -573,12 +556,9 @@ public class ReflectUtil {
 	 * @throws SecurityException 安全异常
 	 */
 	public static Set<String> getMethodNames(Class<?> clazz) throws SecurityException {
-		final HashSet<String> methodSet = new HashSet<>();
+		//final HashSet<String> methodSet;
 		final Method[] methods = getMethods(clazz);
-		for (Method method : methods) {
-			methodSet.add(method.getName());
-		}
-		return methodSet;
+		return Arrays.stream(methods).map(Method::getName).collect(Collectors.toCollection(HashSet::new));
 	}
 
 	/**

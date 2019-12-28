@@ -1,13 +1,13 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 文件类型判断工具类
@@ -104,12 +104,7 @@ public class FileTypeUtil {
 	 * @return 文件类型，未找到为<code>null</code>
 	 */
 	public static String getType(String fileStreamHexHead) {
-		for (Entry<String, String> fileTypeEntry : fileTypeMap.entrySet()) {
-			if (StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())) {
-				return fileTypeEntry.getValue();
-			}
-		}
-		return null;
+		return fileTypeMap.entrySet().stream().filter(fileTypeEntry -> StrUtil.startWithIgnoreCase(fileStreamHexHead, fileTypeEntry.getKey())).findFirst().map(Entry::getValue).orElse(null);
 	}
 
 	/**

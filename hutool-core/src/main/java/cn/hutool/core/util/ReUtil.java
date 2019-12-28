@@ -11,6 +11,8 @@ import cn.hutool.core.lang.func.Func1;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 正则相关工具类<br>
@@ -145,9 +147,7 @@ public class ReUtil {
 		if (matcher.find()) {
 			final int startGroup = withGroup0 ? 0 : 1;
 			final int groupCount = matcher.groupCount();
-			for (int i = startGroup; i <= groupCount; i++) {
-				result.add(matcher.group(i));
-			}
+			result = IntStream.rangeClosed(startGroup, groupCount).mapToObj(matcher::group).collect(Collectors.toCollection(ArrayList::new));
 		}
 		return result;
 	}

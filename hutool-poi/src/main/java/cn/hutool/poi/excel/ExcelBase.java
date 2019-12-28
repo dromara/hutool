@@ -1,20 +1,17 @@
 package cn.hutool.poi.excel;
 
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.poi.excel.cell.CellUtil;
 import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+
+import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Excel基础类，用于抽象ExcelWriter和ExcelReader中共用部分的对象和方法
@@ -69,11 +66,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	public List<Sheet> getSheets() {
 		final int totalSheet = getSheetCount();
-		final List<Sheet> result = new ArrayList<>(totalSheet);
-		for (int i = 0; i < totalSheet; i++) {
-			result.add(this.workbook.getSheetAt(i));
-		}
-		return result;
+		return IntStream.range(0, totalSheet).mapToObj(i -> this.workbook.getSheetAt(i)).collect(Collectors.toCollection(() -> new ArrayList<>(totalSheet)));
 	}
 
 	/**
@@ -84,11 +77,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	public List<String> getSheetNames() {
 		final int totalSheet = workbook.getNumberOfSheets();
-		List<String> result = new ArrayList<>(totalSheet);
-		for (int i = 0; i < totalSheet; i++) {
-			result.add(this.workbook.getSheetAt(i).getSheetName());
-		}
-		return result;
+		return IntStream.range(0, totalSheet).mapToObj(i -> this.workbook.getSheetAt(i).getSheetName()).collect(Collectors.toCollection(() -> new ArrayList<>(totalSheet)));
 	}
 
 	/**

@@ -16,6 +16,8 @@ import org.junit.Test;
 import javax.crypto.Cipher;
 import java.security.KeyPair;
 import java.security.PublicKey;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * RSA算法单元测试
@@ -114,22 +116,19 @@ public class RSATest {
 	@Test
 	public void rsaBase64Test() {
 		String textBase = "我是一段特别长的测试";
-		StringBuilder text = new StringBuilder();
-		for (int i = 0; i < 10; i++) {
-			text.append(textBase);
-		}
+		String text = IntStream.range(0, 10).mapToObj(i -> textBase).collect(Collectors.joining());
 
 		final RSA rsa = new RSA();
 
 		// 公钥加密，私钥解密
-		String encryptStr = rsa.encryptBase64(text.toString(), KeyType.PublicKey);
+		String encryptStr = rsa.encryptBase64(text, KeyType.PublicKey);
 		String decryptStr = StrUtil.utf8Str(rsa.decrypt(encryptStr, KeyType.PrivateKey));
-		Assert.assertEquals(text.toString(), decryptStr);
+		Assert.assertEquals(text, decryptStr);
 
 		// 私钥加密，公钥解密
-		String encrypt2 = rsa.encryptBase64(text.toString(), KeyType.PrivateKey);
+		String encrypt2 = rsa.encryptBase64(text, KeyType.PrivateKey);
 		String decrypt2 = StrUtil.utf8Str(rsa.decrypt(encrypt2, KeyType.PublicKey));
-		Assert.assertEquals(text.toString(), decrypt2);
+		Assert.assertEquals(text, decrypt2);
 	}
 
 	@Test

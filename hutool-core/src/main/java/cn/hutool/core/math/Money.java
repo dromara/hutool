@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Currency;
 
 /**
@@ -751,11 +752,7 @@ public class Money implements Serializable, Comparable<Money> {
 	public Money[] allocate(long[] ratios) {
 		Money[] results = new Money[ratios.length];
 
-		long total = 0;
-
-		for (int i = 0; i < ratios.length; i++) {
-			total += ratios[i];
-		}
+		long total = Arrays.stream(ratios).sum();
 
 		long remainder = cent;
 

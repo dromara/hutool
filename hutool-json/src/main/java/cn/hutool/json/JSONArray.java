@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static cn.hutool.json.JSONConverter.*;
 
@@ -282,11 +284,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		if (names == null || names.size() == 0 || this.size() == 0) {
 			return null;
 		}
-		JSONObject jo = new JSONObject();
-		for (int i = 0; i < names.size(); i += 1) {
-			jo.put(names.getStr(i), this.getObj(i));
-		}
-		return jo;
+		return IntStream.range(0, names.size()).boxed().collect(Collectors.toMap(names::getStr, this::getObj, (a, b) -> b, JSONObject::new));
 	}
 
 	@Override
@@ -398,10 +396,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		if (CollUtil.isEmpty(c)) {
 			return false;
 		}
-		final ArrayList<Object> list = new ArrayList<>(c.size());
-		for (Object object : c) {
-			list.add(JSONUtil.wrap(object, this.config));
-		}
+		final ArrayList<Object> list = c.stream().map(object -> JSONUtil.wrap(object, this.config)).collect(Collectors.toCollection(() -> new ArrayList<>(c.size())));
 		return rawList.addAll(index, list);
 	}
 

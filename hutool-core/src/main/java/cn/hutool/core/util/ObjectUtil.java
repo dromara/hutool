@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * 对象工具类，包括判空、克隆、序列化等操作
@@ -161,12 +162,7 @@ public class ObjectUtil {
 		}
 		if (obj.getClass().isArray() == true) {
 			int len = Array.getLength(obj);
-			for (int i = 0; i < len; i++) {
-				Object o = Array.get(obj, i);
-				if (equal(o, element)) {
-					return true;
-				}
-			}
+			return IntStream.range(0, len).mapToObj(i -> Array.get(obj, i)).anyMatch(o -> equal(o, element));
 		}
 		return false;
 	}

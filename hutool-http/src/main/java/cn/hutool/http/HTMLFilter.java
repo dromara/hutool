@@ -520,12 +520,7 @@ public final class HTMLFilter {
 	}
 
 	private static boolean inArray(final String s, final String[] array) {
-		for (String item : array) {
-			if (item != null && item.equals(s)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(array).anyMatch(item -> item != null && item.equals(s));
 	}
 
 	private boolean allowed(final String name) {
