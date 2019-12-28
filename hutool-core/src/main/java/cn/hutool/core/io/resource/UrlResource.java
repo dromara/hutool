@@ -79,7 +79,8 @@ public class UrlResource implements Resource, Serializable{
 	 * @return {@link BufferedReader}
 	 * @since 3.0.1
 	 */
-	public BufferedReader getReader(Charset charset){
+	@Override
+    public BufferedReader getReader(Charset charset){
 		return URLUtil.getReader(this.url, charset);
 	}
 	

@@ -1,13 +1,5 @@
 package cn.hutool.db;
 
-import java.nio.charset.Charset;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.RowId;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.*;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ArrayUtil;
@@ -15,6 +7,13 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.sql.SqlUtil;
+
+import java.nio.charset.Charset;
+import java.sql.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * 数据实体对象<br>
@@ -231,6 +230,7 @@ public class Entity extends Dict {
 	 * @return Dict 结果
 	 * @since 4.0.10
 	 */
+	@Override
 	public Entity filter(String... keys) {
 		final Entity result = new Entity(this.tableName);
 		result.setFieldNames(this.fieldNames);

@@ -223,7 +223,8 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 *
 	 * @return 键值总数
 	 */
-	public int size() {
+	@Override
+    public int size() {
 		return this.groupedMap.size();
 	}
 

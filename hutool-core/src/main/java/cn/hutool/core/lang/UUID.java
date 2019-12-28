@@ -374,7 +374,8 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 	 *
 	 * @return UUID 的哈希码值。
 	 */
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		long hilo = mostSigBits ^ leastSigBits;
 		return ((int) (hilo >> 32)) ^ (int) hilo;
 	}
@@ -387,7 +388,8 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param obj 要与之比较的对象
 	 * @return 如果对象相同，则返回 {@code true}；否则返回 {@code false}
 	 */
-	public boolean equals(Object obj) {
+	@Override
+    public boolean equals(Object obj) {
 		if ((null == obj) || (obj.getClass() != UUID.class)) {
 			return false;
 		}
@@ -406,7 +408,8 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
 	 * @param val 与此 UUID 比较的 UUID
 	 * @return 在此 UUID 小于、等于或大于 val 时，分别返回 -1、0 或 1。
 	 */
-	public int compareTo(UUID val) {
+	@Override
+    public int compareTo(UUID val) {
 		// The ordering is intentionally set up so that the UUIDs
 		// can simply be numerically compared as two numbers
 		return (this.mostSigBits < val.mostSigBits ? -1 : //

@@ -1,19 +1,15 @@
 package cn.hutool.core.lang;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.getter.BasicTypeGetter;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * 字典对象，扩充了HashMap中的方法
@@ -423,6 +419,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
+	@Override
 	public Date getDate(String attr) {
 		return get(attr, null);
 	}

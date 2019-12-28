@@ -1,12 +1,5 @@
 package cn.hutool.db;
 
-import java.io.Closeable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Savepoint;
-
-import javax.sql.DataSource;
-
 import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.core.util.StrUtil;
@@ -16,6 +9,12 @@ import cn.hutool.db.ds.DSFactory;
 import cn.hutool.db.sql.Wrapper;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+
+import javax.sql.DataSource;
+import java.io.Closeable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 
 /**
  * 数据库SQL执行会话<br>
@@ -98,7 +97,8 @@ public class Session extends AbstractDb implements Closeable {
 	 * 
 	 * @return {@link SqlConnRunner}
 	 */
-	public SqlConnRunner getRunner() {
+	@Override
+    public SqlConnRunner getRunner() {
 		return runner;
 	}
 	// ---------------------------------------------------------------------------- Getters and Setters end
