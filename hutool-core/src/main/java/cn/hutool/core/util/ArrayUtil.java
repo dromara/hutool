@@ -1412,11 +1412,7 @@ public class ArrayUtil {
 			return new Integer[0];
 		}
 
-		final Integer[] array = new Integer[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).boxed().toArray(Integer[]::new);
 	}
 
 	/**
@@ -1433,12 +1429,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new int[0];
 		}
-
-		final int[] array = new int[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).mapToInt(Integer::valueOf).toArray();
 	}
 
 	/**
@@ -1456,11 +1447,7 @@ public class ArrayUtil {
 			return new Long[0];
 		}
 
-		final Long[] array = new Long[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).boxed().toArray(Long[]::new);
 	}
 
 	/**
@@ -1478,11 +1465,7 @@ public class ArrayUtil {
 			return new long[0];
 		}
 
-		final long[] array = new long[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).mapToLong(Long::valueOf).toArray();
 	}
 
 	/**
@@ -1500,11 +1483,7 @@ public class ArrayUtil {
 			return new Character[0];
 		}
 
-		final Character[] array = new Character[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Character[]::new);
 	}
 
 	/**
@@ -1544,11 +1523,7 @@ public class ArrayUtil {
 			return new Byte[0];
 		}
 
-		final Byte[] array = new Byte[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Byte[]::new);
 	}
 
 	/**
@@ -1588,11 +1563,7 @@ public class ArrayUtil {
 			return new Short[0];
 		}
 
-		final Short[] array = new Short[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Short[]::new);
 	}
 
 	/**
@@ -1632,11 +1603,7 @@ public class ArrayUtil {
 			return new Float[0];
 		}
 
-		final Float[] array = new Float[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Float[]::new);
 	}
 
 	/**
@@ -1676,11 +1643,7 @@ public class ArrayUtil {
 			return new Double[0];
 		}
 
-		final Double[] array = new Double[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).boxed().toArray(Double[]::new);
 	}
 
 	/**
@@ -1698,11 +1661,7 @@ public class ArrayUtil {
 			return new double[0];
 		}
 
-		final double[] array = new double[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0D);
-		}
-		return array;
+		return IntStream.range(0, length).mapToDouble(i -> ObjectUtil.defaultIfNull(values[i], 0D)).toArray();
 	}
 
 	/**
@@ -1720,11 +1679,7 @@ public class ArrayUtil {
 			return new Boolean[0];
 		}
 
-		final Boolean[] array = new Boolean[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Boolean[]::new);
 	}
 
 	/**

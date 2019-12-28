@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 /**
  * HTML过滤器，用于去除XSS(Cross Site Scripting) 漏洞隐患。
@@ -306,11 +307,7 @@ public final class HTMLFilter {
 		// these get tallied in processTag
 		// (remember to reset before subsequent calls to filter method)
 		final StringBuilder sBuilder = new StringBuilder(buf.toString());
-		for (String key : vTagCounts.keySet()) {
-			for (int ii = 0; ii < vTagCounts.get(key); ii++) {
-				sBuilder.append("</").append(key).append(">");
-			}
-		}
+		vTagCounts.forEach((key, value) -> IntStream.range(0, value).forEach(u -> sBuilder.append("</").append(key).append(">")));
 		s = sBuilder.toString();
 
 		return s;

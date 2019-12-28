@@ -57,11 +57,8 @@ public class BitMapBloomFilter implements BloomFilter{
 	 */
 	@Override
 	public boolean add(String str) {
-		boolean flag = true;
-		for (BloomFilter filter : filters) {
-			flag |= filter.add(str);
-		}
-		return flag;
+		Arrays.stream(filters).forEach(t -> t.add(str));
+		return true;
 	}
 
 	/**
