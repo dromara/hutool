@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.jar.JarFile;
 
 /**
@@ -540,9 +541,9 @@ public class URLUtil {
 	 */
 	public static boolean isFileURL(URL url) {
 		String protocol = url.getProtocol();
-		return (URL_PROTOCOL_FILE.equals(protocol) || //
-				URL_PROTOCOL_VFSFILE.equals(protocol) || //
-				URL_PROTOCOL_VFS.equals(protocol));
+		//
+		//
+		return (Arrays.asList(URL_PROTOCOL_FILE, URL_PROTOCOL_VFSFILE, URL_PROTOCOL_VFS).contains(protocol));
 	}
 
 	/**
@@ -553,10 +554,10 @@ public class URLUtil {
 	 */
 	public static boolean isJarURL(URL url) {
 		final String protocol = url.getProtocol();
-		return (URL_PROTOCOL_JAR.equals(protocol) || //
-				URL_PROTOCOL_ZIP.equals(protocol) || //
-				URL_PROTOCOL_VFSZIP.equals(protocol) || //
-				URL_PROTOCOL_WSJAR.equals(protocol));
+		//
+		//
+		//
+		return (Arrays.asList(URL_PROTOCOL_JAR, URL_PROTOCOL_ZIP, URL_PROTOCOL_VFSZIP, URL_PROTOCOL_WSJAR).contains(protocol));
 	}
 
 	/**

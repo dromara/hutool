@@ -1,6 +1,7 @@
 package cn.hutool.db.sql;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * SQL格式化器 from Hibernate
@@ -238,7 +239,7 @@ public class SqlFormatter {
 			}
 			newline();
 			this.afterBeginBeforeEnd = false;
-			this.afterByOrSetOrFromOrSelect = (("by".equals(this.lcToken)) || ("set".equals(this.lcToken)) || ("from".equals(this.lcToken)));
+			this.afterByOrSetOrFromOrSelect = (Stream.of("by", "set", "from").anyMatch(s -> (s.equals(this.lcToken))));
 		}
 
 		private void beginNewClause() {

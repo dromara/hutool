@@ -4,18 +4,14 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * 注解工具类<br>
@@ -120,9 +116,9 @@ public class AnnotationUtil {
 				// 只读取无参方法
 				final String name = t.getName();
 				// 跳过自有的几个方法
-				return (false == "hashCode".equals(name)) //
-						&& (false == "toString".equals(name)) //
-						&& (false == "annotationType".equals(name));
+				//
+				//
+				return Stream.of("hashCode", "toString", "annotationType").allMatch(s -> (false == Objects.equals(s,name)));
 			}
 			return false;
 		});

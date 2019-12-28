@@ -1,31 +1,27 @@
 package cn.hutool.http;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
-
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ssl.AndroidSupportSSLFactory;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
 import cn.hutool.http.ssl.TrustAnyHostnameVerifier;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.*;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * http连接对象，对HttpURLConnection的包装
@@ -121,10 +117,10 @@ public class HttpConnection {
 			throw new HttpException(e);
 		}
 
-		if (Method.POST.equals(method) //
-				|| Method.PUT.equals(method)//
-				|| Method.PATCH.equals(method)//
-				|| Method.DELETE.equals(method)) {
+		//
+		//
+		//
+		if (Arrays.asList(Method.POST, Method.PUT, Method.PATCH, Method.DELETE).contains(method)) {
 			this.conn.setUseCaches(false);
 		}
 		return this;
