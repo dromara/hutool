@@ -551,10 +551,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable {
 	 * @since 4.0.1
 	 */
 	private static int totalLength(CharSequence... strs) {
-		int totalLength = 0;
-		for (CharSequence str : strs) {
-			totalLength += (null == str ? 4 : str.length());
-		}
+		int totalLength = Arrays.stream(strs).mapToInt(str -> (null == str ? 4 : str.length())).sum();
 		return totalLength;
 	}
 	// ------------------------------------------------------------------------------------ Private method end

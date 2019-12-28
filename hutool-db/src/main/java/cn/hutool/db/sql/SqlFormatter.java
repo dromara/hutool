@@ -1,6 +1,8 @@
 package cn.hutool.db.sql;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -314,10 +316,7 @@ public class SqlFormatter {
 		}
 
 		private void newline() {
-			this.result.append("\n");
-			for (int i = 0; i < this.indent; i++) {
-				this.result.append(indentString);
-			}
+			result.append(IntStream.range(0, this.indent).mapToObj(i -> indentString).collect(Collectors.joining("", "\n", "")));
 			this.beginLine = true;
 		}
 	}

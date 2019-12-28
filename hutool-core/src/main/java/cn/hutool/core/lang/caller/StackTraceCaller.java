@@ -1,8 +1,9 @@
 package cn.hutool.core.lang.caller;
 
-import java.io.Serializable;
-
 import cn.hutool.core.exceptions.UtilException;
+
+import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * 通过StackTrace方式获取调用者。此方式效率最低，不推荐使用
@@ -59,11 +60,7 @@ public class StackTraceCaller implements Caller, Serializable {
 	public boolean isCalledBy(Class<?> clazz) {
 		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		if(null != stackTrace) {
-			for (final StackTraceElement element : stackTrace) {
-				if (element.getClassName().equals(clazz.getName())) {
-					return true;
-				}
-			}
+			return Arrays.stream(stackTrace).anyMatch(element -> element.getClassName().equals(clazz.getName()));
 		}
 		return false;
 	}
