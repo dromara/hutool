@@ -420,6 +420,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			IoUtil.copy(in, out);
 		} catch (IORuntimeException e) {
+			//noinspection StatementWithEmptyBody
 			if (e.getCause() instanceof EOFException || StrUtil.containsIgnoreCase(e.getMessage(), "Premature EOF")) {
 				// 忽略读取HTTP流中的EOF错误
 			} else {
@@ -447,6 +448,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 		try {
 			this.readBody(this.in);
 		} catch (IORuntimeException e) {
+			//noinspection StatementWithEmptyBody
 			if (e.getCause() instanceof FileNotFoundException) {
 				// 服务器无返回内容，忽略之
 			} else {
