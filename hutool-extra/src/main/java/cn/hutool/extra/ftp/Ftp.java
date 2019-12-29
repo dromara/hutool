@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -339,7 +340,7 @@ public class Ftp extends AbstractFtp {
 			childPath = StrUtil.format("{}/{}", dirPath, name);
 			if (ftpFile.isDirectory()) {
 				// 上级和本级目录除外
-				if (false == name.equals(".") && false == name.equals("..")) {
+				if (false == Objects.equals(name,".") && false == Objects.equals(name,"..")) {
 					delDir(childPath);
 				}
 			} else {

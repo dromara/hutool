@@ -12,12 +12,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 反射工具类
@@ -652,7 +647,7 @@ public class ReflectUtil {
 	 * @return 是否为equals方法
 	 */
 	public static boolean isEqualsMethod(Method method) {
-		if (method == null || false == method.getName().equals("equals")) {
+		if (method == null || false == Objects.equals(method.getName(),"equals")) {
 			return false;
 		}
 		final Class<?>[] paramTypes = method.getParameterTypes();
@@ -666,7 +661,7 @@ public class ReflectUtil {
 	 * @return 是否为hashCode方法
 	 */
 	public static boolean isHashCodeMethod(Method method) {
-		return (method != null && method.getName().equals("hashCode") && method.getParameterTypes().length == 0);
+		return (method != null && Objects.equals(method.getName(),"hashCode") && method.getParameterTypes().length == 0);
 	}
 
 	/**
@@ -676,7 +671,7 @@ public class ReflectUtil {
 	 * @return 是否为toString方法
 	 */
 	public static boolean isToStringMethod(Method method) {
-		return (method != null && method.getName().equals("toString") && method.getParameterTypes().length == 0);
+		return (method != null && Objects.equals(method.getName(),"toString") && method.getParameterTypes().length == 0);
 	}
 
 	// --------------------------------------------------------------------------------------------------------- newInstance

@@ -111,7 +111,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	public boolean isGzip() {
 		final String contentEncoding = contentEncoding();
-		return contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip");
+		return contentEncoding != null && "gzip".equalsIgnoreCase(contentEncoding);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	public boolean isDeflate() {
 		final String contentEncoding = contentEncoding();
-		return contentEncoding != null && contentEncoding.equalsIgnoreCase("deflate");
+		return contentEncoding != null && "deflate".equalsIgnoreCase(contentEncoding);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	public boolean isChunked() {
 		final String transferEncoding = header(Header.TRANSFER_ENCODING);
-		return transferEncoding != null && transferEncoding.equalsIgnoreCase("Chunked");
+		return transferEncoding != null && "Chunked".equalsIgnoreCase(transferEncoding);
 	}
 
 	/**

@@ -5,18 +5,7 @@ import java.io.ObjectInputStream;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.ParsePosition;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
@@ -688,7 +677,7 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 			for (final String[] zoneNames : zones) {
 				// offset 0 is the time zone ID and is not localized
 				final String tzId = zoneNames[ID];
-				if (tzId.equalsIgnoreCase("GMT")) {
+				if ("GMT".equalsIgnoreCase(tzId)) {
 					continue;
 				}
 				final TimeZone tz = TimeZone.getTimeZone(tzId);
@@ -761,7 +750,7 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 		 */
 		@Override
 		void setCalendar(final FastDateParser parser, final Calendar cal, final String value) {
-			if (value.equals("Z")) {
+			if (Objects.equals(value,"Z")) {
 				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 			} else {
 				cal.setTimeZone(TimeZone.getTimeZone("GMT" + value));

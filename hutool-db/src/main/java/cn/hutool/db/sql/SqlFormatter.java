@@ -1,9 +1,6 @@
 package cn.hutool.db.sql;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * SQL格式化器 from Hibernate
@@ -129,7 +126,7 @@ public class SqlFormatter {
 					values();
 				} else if ("on".equals(this.lcToken)) {
 					on();
-				} else if ((this.afterBetween) && (this.lcToken.equals("and"))) {
+				} else if ((this.afterBetween) && (Objects.equals(this.lcToken,"and"))) {
 					misc();
 					this.afterBetween = false;
 				} else if (LOGICAL.contains(this.lcToken)) {

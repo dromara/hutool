@@ -2,6 +2,8 @@ package cn.hutool.core.convert;
 
 import cn.hutool.core.util.StrUtil;
 
+import java.util.Objects;
+
 /**
  * 将浮点数类型的number转换成英语的表达方式 <br>
  * 参考博客：http://blog.csdn.net/eric_sunah/article/details/8713226
@@ -68,7 +70,7 @@ public class NumberWordFormater {
 		StringBuilder lm = new StringBuilder(); // 用来存放转换後的整数部分
 		for (int i = 0; i < lstrrev.length() / 3; i++) {
 			a[i] = StrUtil.reverse(lstrrev.substring(3 * i, 3 * i + 3)); // 截取第一个叁位
-			if (!a[i].equals("000")) { // 用来避免这种情况：1000000 = one million
+			if (!Objects.equals(a[i],"000")) { // 用来避免这种情况：1000000 = one million
 										// thousand only
 				if (i != 0) {
 					lm.insert(0, transThree(a[i]) + " " + parseMore(i) + " "); // 加:
@@ -134,7 +136,7 @@ public class NumberWordFormater {
 		String value;
 		if (s.startsWith("0")) {// 是否小於100
 			value = transTwo(s.substring(1));
-		} else if (s.substring(1).equals("00")) {// 是否被100整除
+		} else if (Objects.equals(s.substring(1),"00")) {// 是否被100整除
 			value = parseFirst(s.substring(0, 1)) + " HUNDRED";
 		} else {
 			value = parseFirst(s.substring(0, 1)) + " HUNDRED AND " + transTwo(s.substring(1));
