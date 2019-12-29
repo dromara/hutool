@@ -922,7 +922,7 @@ public class Convert {
 	 * @since 3.0.9
 	 */
 	public static String numberToWord(Number number) {
-		return NumberWordFormater.format(number);
+		return NumberWordFormatter.format(number);
 	}
 	
 	/**
@@ -934,7 +934,7 @@ public class Convert {
 	 * @since 3.2.3
 	 */
 	public static String numberToChinese(double number, boolean isUseTraditonal) {
-		return NumberChineseFormater.format(number, isUseTraditonal);
+		return NumberChineseFormatter.format(number, isUseTraditonal);
 	}
 	
 	/**
@@ -948,7 +948,7 @@ public class Convert {
 		if(null == n) {
 			return "零";
 		}
-		return NumberChineseFormater.format(n.doubleValue(), true, true);
+		return NumberChineseFormatter.format(n.doubleValue(), true, true);
 	}
 	
 	// -------------------------------------------------------------------------- 数字转换

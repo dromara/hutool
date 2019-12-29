@@ -9,7 +9,7 @@ import cn.hutool.cron.CronException;
  * @author Looly
  *
  */
-public class DayOfWeekValueParser extends SimpleValueParser {
+public class    DayOfWeekValueParser extends SimpleValueParser {
 	
 	/** Weeks aliases. */
 	private static final String[] ALIASES = { "sun", "mon", "tue", "wed", "thu", "fri", "sat" };

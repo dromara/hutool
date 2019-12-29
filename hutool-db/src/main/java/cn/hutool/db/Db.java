@@ -176,6 +176,7 @@ public class Db extends AbstractDb {
 			final int level = transactionLevel.getLevel();
 			if (conn.getTransactionIsolation() < level) {
 				// 用户定义的事务级别如果比默认级别更严格，则按照严格的级别进行
+				//noinspection MagicConstant
 				conn.setTransactionIsolation(level);
 			}
 		}

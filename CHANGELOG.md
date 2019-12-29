@@ -10,6 +10,8 @@
 * 【core 】     增加Convert.toPrimitiveByteArray方法，Convert支持对象序列化和反序列化
 * 【core 】     DateUtil增加isExpired(Date startDate, Date endDate, Date checkDate)（issue#687@Github）
 * 【core 】     增加Alias注解
+* 【core 】     修正NumberChineseFormatter和NumberWordFormatter（类名拼写错误）
+* 【all  】     修正equals，避免可能存在的空指针问题（pr#692@Github）
 
 ### Bug修复
 

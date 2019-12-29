@@ -1,5 +1,14 @@
 package cn.hutool.extra.ftp;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,17 +16,6 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * FTP客户端封装<br>
@@ -340,7 +338,7 @@ public class Ftp extends AbstractFtp {
 			childPath = StrUtil.format("{}/{}", dirPath, name);
 			if (ftpFile.isDirectory()) {
 				// 上级和本级目录除外
-				if (false == Objects.equals(name,".") && false == Objects.equals(name,"..")) {
+				if (false == ".".equals(name) && false == "..".equals(name)) {
 					delDir(childPath);
 				}
 			} else {
