@@ -423,6 +423,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param attr 字段名
 	 * @return 字段值
 	 */
+	@Override
 	public Date getDate(String attr) {
 		return get(attr, null);
 	}

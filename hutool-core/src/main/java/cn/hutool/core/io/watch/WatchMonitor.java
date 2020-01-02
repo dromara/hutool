@@ -319,6 +319,7 @@ public class WatchMonitor extends WatchServer {
 	 *
 	 * @throws WatchException 监听异常，IO异常时抛出此异常
 	 */
+	@Override
 	public void init() throws WatchException {
 		//获取目录或文件路径
 		if (false == Files.exists(this.path, LinkOption.NOFOLLOW_LINKS)) {

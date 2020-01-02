@@ -39,6 +39,7 @@ public class NoResourceException extends IORuntimeException {
 	 * @param clazz 异常类
 	 * @return 是否为指定类型异常
 	 */
+	@Override
 	public boolean causeInstanceOf(Class<? extends Throwable> clazz) {
 		final Throwable cause = this.getCause();
 		return clazz.isInstance(cause);
