@@ -28,7 +28,7 @@ public class ReUtil {
 	public final static String RE_CHINESES = RE_CHINESE + "+";
 
 	/** 正则中需要被转义的关键字 */
-	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet(new Character[] { '$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|' });
+	public final static Set<Character> RE_KEYS = CollectionUtil.newHashSet('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|');
 
 	/**
 	 * 获得匹配的字符串，获得正则中分组0的内容
