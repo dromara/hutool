@@ -1,20 +1,5 @@
 package cn.hutool.core.util;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.URL;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import cn.hutool.core.convert.BasicType;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
@@ -24,6 +9,16 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.ClassScanner;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Singleton;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URL;
+import java.util.*;
 
 /**
  * 类工具类 <br>
@@ -1012,11 +1007,7 @@ public class ClassUtil {
 	 * @since 3.0.9
 	 */
 	public static Object[] getDefaultValues(Class<?>... classes) {
-		final Object[] values = new Object[classes.length];
-		for (int i = 0; i < classes.length; i++) {
-			values[i] = getDefaultValue(classes[i]);
-		}
-		return values;
+		return Arrays.stream(classes).map(ClassUtil::getDefaultValue).toArray();
 	}
 
 	/**

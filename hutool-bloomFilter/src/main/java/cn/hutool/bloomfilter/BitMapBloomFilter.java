@@ -7,6 +7,8 @@ import cn.hutool.bloomfilter.filter.PJWFilter;
 import cn.hutool.bloomfilter.filter.SDBMFilter;
 import cn.hutool.core.util.NumberUtil;
 
+import java.util.Arrays;
+
 /**
  * BlommFilter 实现 <br>
  * 1.构建hash算法 <br>
@@ -69,11 +71,6 @@ public class BitMapBloomFilter implements BloomFilter{
 	 */
 	@Override
 	public boolean contains(String str) {
-		for (BloomFilter filter : filters) {
-			if (filter.contains(str) == false) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.stream(filters).noneMatch(filter -> filter.contains(str) == false);
 	}
 }
