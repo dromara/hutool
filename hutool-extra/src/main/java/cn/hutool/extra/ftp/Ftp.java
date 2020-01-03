@@ -1,22 +1,22 @@
 package cn.hutool.extra.ftp;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * FTP客户端封装<br>
@@ -247,12 +247,7 @@ public class Ftp extends AbstractFtp {
 	@Override
 	public List<String> ls(String path) {
 		final FTPFile[] ftpFiles = lsFiles(path);
-
-		final List<String> fileNames = new ArrayList<>();
-		for (FTPFile ftpFile : ftpFiles) {
-			fileNames.add(ftpFile.getName());
-		}
-		return fileNames;
+		return Arrays.stream(ftpFiles).map(FTPFile::getName).collect(Collectors.toList());
 	}
 
 	/**

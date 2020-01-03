@@ -1411,12 +1411,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Integer[0];
 		}
-
-		final Integer[] array = new Integer[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).boxed().toArray(Integer[]::new);
 	}
 
 	/**

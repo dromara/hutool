@@ -537,14 +537,7 @@ public class FileUtil {
 		if (fileList == null) {
 			return false;
 		}
-
-		for (String fileName : fileList) {
-			if (fileName.matches(regexp)) {
-				return true;
-			}
-
-		}
-		return false;
+		return Arrays.stream(fileList).anyMatch(fileName -> fileName.matches(regexp));
 	}
 
 	/**
@@ -586,15 +579,12 @@ public class FileUtil {
 		}
 
 		if (file.isDirectory()) {
-			long size = 0L;
+			long size;
 			File[] subFiles = file.listFiles();
 			if (ArrayUtil.isEmpty(subFiles)) {
 				return 0L;// empty directory
 			}
-			for (File subFile : subFiles) {
-				size += size(subFile);
-			}
-			return size;
+			return Arrays.stream(subFiles).mapToLong(FileUtil::size).sum();
 		} else {
 			return file.length();
 		}
