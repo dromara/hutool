@@ -1,11 +1,12 @@
 package cn.hutool.core.math;
 
+import cn.hutool.core.util.NumberUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import cn.hutool.core.util.NumberUtil;
+import java.util.stream.IntStream;
 
 /**
  * 组合，即C(n, m)<br>
@@ -53,11 +54,7 @@ public class Combination implements Serializable {
 	 * @return 组合数
 	 */
 	public static long countAll(int n) {
-		long total = 0;
-		for (int i = 1; i <= n; i++) {
-			total += count(n, i);
-		}
-		return total;
+		return IntStream.rangeClosed(1, n).mapToLong(i -> count(n, i)).sum();
 	}
 
 	/**
