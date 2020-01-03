@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * SQL格式化器 from Hibernate
@@ -316,10 +318,7 @@ public class SqlFormatter {
 		}
 
 		private void newline() {
-			this.result.append("\n");
-			for (int i = 0; i < this.indent; i++) {
-				this.result.append(indentString);
-			}
+			result.append(IntStream.range(0, this.indent).mapToObj(i -> indentString).collect(Collectors.joining("", "\n", "")));
 			this.beginLine = true;
 		}
 	}
