@@ -1,8 +1,8 @@
 package cn.hutool.http.useragent;
 
-import java.util.regex.Pattern;
-
 import cn.hutool.core.util.ReUtil;
+
+import java.util.regex.Pattern;
 
 /**
  * User-Agent解析器
@@ -46,12 +46,7 @@ public class UserAgentParser {
 	 * @return 浏览器类型
 	 */
 	private static Browser parseBrowser(String userAgentString) {
-		for (Browser brower : Browser.browers) {
-			if (brower.isMatch(userAgentString)) {
-				return brower;
-			}
-		}
-		return Browser.Unknown;
+		return Browser.browers.stream().filter(browser -> browser.isMatch(userAgentString)).findFirst().orElse(Browser.Unknown);
 	}
 	
 	/**
@@ -61,12 +56,7 @@ public class UserAgentParser {
 	 * @return 引擎类型
 	 */
 	private static Engine parseEngine(String userAgentString) {
-		for (Engine engine : Engine.engines) {
-			if (engine.isMatch(userAgentString)) {
-				return engine;
-			}
-		}
-		return Engine.Unknown;
+		return Engine.engines.stream().filter(engine -> engine.isMatch(userAgentString)).findFirst().orElse(Engine.Unknown);
 	}
 
 	/**
@@ -89,12 +79,7 @@ public class UserAgentParser {
 	 * @return 系统类型
 	 */
 	private static OS parseOS(String userAgentString) {
-		for (OS os : OS.oses) {
-			if (os.isMatch(userAgentString)) {
-				return os;
-			}
-		}
-		return OS.Unknown;
+		return OS.oses.stream().filter(os -> os.isMatch(userAgentString)).findFirst().orElse(OS.Unknown);
 	}
 
 	/**
@@ -104,11 +89,6 @@ public class UserAgentParser {
 	 * @return 平台类型
 	 */
 	private static Platform parsePlatform(String userAgentString) {
-		for (Platform platform : Platform.platforms) {
-			if (platform.isMatch(userAgentString)) {
-				return platform;
-			}
-		}
-		return Platform.Unknown;
+		return Platform.platforms.stream().filter(platform -> platform.isMatch(userAgentString)).findFirst().orElse(Platform.Unknown);
 	}
 }

@@ -1,14 +1,10 @@
 package cn.hutool.core.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
-import java.util.Map;
-
 import cn.hutool.core.map.TableMap;
+
+import java.lang.reflect.*;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * 针对 {@link Type} 的工具类封装<br>
@@ -350,11 +346,6 @@ public class TypeUtil {
 	 * @since 4.5.7
 	 */
 	public static boolean hasTypeVeriable(Type... types) {
-		for (Type type : types) {
-			if(type instanceof TypeVariable) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(types).anyMatch(type -> type instanceof TypeVariable);
 	}
 }

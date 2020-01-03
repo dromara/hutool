@@ -1,6 +1,7 @@
 package cn.hutool.core.thread;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.CountDownLatch;
@@ -368,12 +369,7 @@ public class ThreadUtil {
 	 * @return 进程的主线程
 	 */
 	public static Thread getMainThread() {
-		for (Thread thread : getThreads()) {
-			if (thread.getId() == 1) {
-				return thread;
-			}
-		}
-		return null;
+		return Arrays.stream(getThreads()).filter(thread -> thread.getId() == 1).findFirst().orElse(null);
 	}
 
 	/**
