@@ -16,8 +16,9 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import java.io.Closeable;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * MongoDB工具类
@@ -185,10 +186,7 @@ public class MongoDS implements Closeable {
 			setting = new Setting(MONGO_CONFIG_PATH, true);
 		}
 
-		final List<ServerAddress> addrList = new ArrayList<>();
-		for (String group : groups) {
-			addrList.add(createServerAddress(group));
-		}
+		final List<ServerAddress> addrList = Arrays.stream(groups).map(this::createServerAddress).collect(Collectors.toList());
 
 		final MongoCredential credentail = createCredentail(StrUtil.EMPTY);
 		try {

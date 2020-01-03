@@ -1,19 +1,5 @@
 package cn.hutool.core.util;
 
-import java.awt.Color;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
@@ -22,6 +8,17 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.lang.WeightRandom.WeightObj;
+
+import java.awt.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 随机工具类
@@ -430,17 +427,12 @@ public class RandomUtil {
 		if (StrUtil.isEmpty(baseString)) {
 			return StrUtil.EMPTY;
 		}
-		final StringBuilder sb = new StringBuilder(length);
 
 		if (length < 1) {
 			length = 1;
 		}
 		int baseLength = baseString.length();
-		for (int i = 0; i < length; i++) {
-			int number = randomInt(baseLength);
-			sb.append(baseString.charAt(number));
-		}
-		return sb.toString();
+		return IntStream.range(0, length).map(i -> randomInt(baseLength)).mapToObj(number -> String.valueOf(baseString.charAt(number))).collect(Collectors.joining());
 	}
 
 	/**
