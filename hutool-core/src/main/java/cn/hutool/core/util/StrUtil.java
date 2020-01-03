@@ -1,18 +1,5 @@
 package cn.hutool.core.util;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
@@ -22,6 +9,16 @@ import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.text.TextSimilarity;
+
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 /**
  * 字符串工具类
@@ -94,14 +91,9 @@ public class StrUtil {
 			return true;
 		}
 
-		for (int i = 0; i < length; i++) {
-			// 只要有一个非空字符即为非空字符串
-			if (false == CharUtil.isBlankChar(str.charAt(i))) {
-				return false;
-			}
-		}
+		// 只要有一个非空字符即为非空字符串
 
-		return true;
+		return IntStream.range(0, length).allMatch(i -> CharUtil.isBlankChar(str.charAt(i)));
 	}
 
 	/**
@@ -147,12 +139,7 @@ public class StrUtil {
 			return true;
 		}
 
-		for (CharSequence str : strs) {
-			if (isBlank(str)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(strs).anyMatch(StrUtil::isBlank);
 	}
 
 	/**
@@ -166,12 +153,7 @@ public class StrUtil {
 			return true;
 		}
 
-		for (CharSequence str : strs) {
-			if (isNotBlank(str)) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.stream(strs).noneMatch(StrUtil::isNotBlank);
 	}
 
 	// ------------------------------------------------------------------------ Empty
@@ -319,12 +301,7 @@ public class StrUtil {
 			return true;
 		}
 
-		for (CharSequence str : strs) {
-			if (isEmpty(str)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(strs).anyMatch(StrUtil::isEmpty);
 	}
 
 	/**
@@ -338,12 +315,7 @@ public class StrUtil {
 			return true;
 		}
 
-		for (CharSequence str : strs) {
-			if (isNotEmpty(str)) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.stream(strs).noneMatch(StrUtil::isNotEmpty);
 	}
 
 	/**
@@ -631,12 +603,7 @@ public class StrUtil {
 			return false;
 		}
 
-		for (CharSequence suffix : prefixes) {
-			if (startWith(str, suffix, false)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(prefixes).anyMatch(suffix -> startWith(str, suffix, false));
 	}
 
 	/**
@@ -707,12 +674,7 @@ public class StrUtil {
 			return false;
 		}
 
-		for (CharSequence suffix : suffixes) {
-			if (endWith(str, suffix, false)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(suffixes).anyMatch(suffix -> endWith(str, suffix, false));
 	}
 
 	/**
@@ -750,11 +712,7 @@ public class StrUtil {
 	public static boolean containsAny(CharSequence str, char... testChars) {
 		if (false == isEmpty(str)) {
 			int len = str.length();
-			for (int i = 0; i < len; i++) {
-				if (ArrayUtil.contains(testChars, str.charAt(i))) {
-					return true;
-				}
-			}
+			return IntStream.range(0, len).anyMatch(i -> ArrayUtil.contains(testChars, str.charAt(i)));
 		}
 		return false;
 	}
@@ -768,13 +726,9 @@ public class StrUtil {
 	 * @since 4.4.1
 	 */
 	public static boolean containsOnly(CharSequence str, char... testChars) {
-		if (false == isEmpty(str)) {
+		if (!isEmpty(str)) {
 			int len = str.length();
-			for (int i = 0; i < len; i++) {
-				if (false == ArrayUtil.contains(testChars, str.charAt(i))) {
-					return false;
-				}
-			}
+			return IntStream.range(0, len).allMatch(i -> ArrayUtil.contains(testChars, str.charAt(i)));
 		}
 		return true;
 	}
@@ -796,12 +750,7 @@ public class StrUtil {
 			return false;
 		}
 
-		for (int i = 0; i < length; i += 1) {
-			if (CharUtil.isBlankChar(str.charAt(i))) {
-				return true;
-			}
-		}
-		return false;
+		return IntStream.range(0, length).anyMatch(i -> CharUtil.isBlankChar(str.charAt(i)));
 	}
 
 	/**
@@ -816,12 +765,7 @@ public class StrUtil {
 		if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
 			return null;
 		}
-		for (CharSequence checkStr : testStrs) {
-			if (str.toString().contains(checkStr)) {
-				return checkStr.toString();
-			}
-		}
-		return null;
+		return Arrays.stream(testStrs).filter(checkStr -> str.toString().contains(checkStr)).findFirst().map(CharSequence::toString).orElse(null);
 	}
 
 	/**
@@ -865,12 +809,7 @@ public class StrUtil {
 		if (isEmpty(str) || ArrayUtil.isEmpty(testStrs)) {
 			return null;
 		}
-		for (CharSequence testStr : testStrs) {
-			if (containsIgnoreCase(str, testStr)) {
-				return testStr.toString();
-			}
-		}
-		return null;
+		return Arrays.stream(testStrs).filter(testStr -> containsIgnoreCase(str, testStr)).findFirst().map(CharSequence::toString).orElse(null);
 	}
 
 	/**
@@ -1621,16 +1560,12 @@ public class StrUtil {
 		}
 
 		byte[] b;
-		int counterOfDoubleByte = 0;
+		int counterOfDoubleByte;
 		b = str.toString().getBytes(CharsetUtil.CHARSET_GBK);
 		if (b.length <= len) {
 			return str.toString();
 		}
-		for (int i = 0; i < len; i++) {
-			if (b[i] < 0) {
-				counterOfDoubleByte++;
-			}
-		}
+		counterOfDoubleByte = (int) IntStream.range(0, len).filter(i -> b[i] < 0).count();
 
 		if (counterOfDoubleByte % 2 != 0) {
 			len += 1;
@@ -2200,12 +2135,7 @@ public class StrUtil {
 			return false;
 		}
 
-		for (CharSequence str : strs) {
-			if (equals(str1, str, ignoreCase)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(strs).anyMatch(str -> equals(str1, str, ignoreCase));
 	}
 
 	/**
@@ -2658,11 +2588,7 @@ public class StrUtil {
 	 * @since 4.0.7
 	 */
 	public static String[] wrapAll(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
-		final String[] results = new String[strs.length];
-		for (int i = 0; i < strs.length; i++) {
-			results[i] = wrap(strs[i], prefix, suffix);
-		}
-		return results;
+		return Arrays.stream(strs).map(str -> wrap(str, prefix, suffix)).toArray(String[]::new);
 	}
 
 	/**
@@ -2719,11 +2645,7 @@ public class StrUtil {
 	 * @since 4.0.7
 	 */
 	public static String[] wrapAllIfMissing(CharSequence prefix, CharSequence suffix, CharSequence... strs) {
-		final String[] results = new String[strs.length];
-		for (int i = 0; i < strs.length; i++) {
-			results[i] = wrapIfMissing(strs[i], prefix, suffix);
-		}
-		return results;
+		return Arrays.stream(strs).map(str -> wrapIfMissing(str, prefix, suffix)).toArray(String[]::new);
 	}
 
 	/**
@@ -3160,17 +3082,12 @@ public class StrUtil {
 	 * @return 包含数量
 	 */
 	public static int count(CharSequence content, char charForSearch) {
-		int count = 0;
+		int count;
 		if (isEmpty(content)) {
 			return 0;
 		}
 		int contentLength = content.length();
-		for (int i = 0; i < contentLength; i++) {
-			if (charForSearch == content.charAt(i)) {
-				count++;
-			}
-		}
-		return count;
+		return (int) IntStream.range(0, contentLength).filter(i -> charForSearch == content.charAt(i)).count();
 	}
 
 	/**
@@ -3190,13 +3107,9 @@ public class StrUtil {
 			return new String[] { str.toString() };
 		}
 		int part = NumberUtil.count(len, partLength);
-		final String[] array = new String[part];
 
 		final String str2 = str.toString();
-		for (int i = 0; i < part; i++) {
-			array[i] = str2.substring(i * partLength, (i == part - 1) ? len : (partLength + i * partLength));
-		}
-		return array;
+		return IntStream.range(0, part).mapToObj(i -> str2.substring(i * partLength, (i == part - 1) ? len : (partLength + i * partLength))).toArray(String[]::new);
 	}
 
 	/**
@@ -3358,12 +3271,7 @@ public class StrUtil {
 		if (end > len || end < 0) {
 			end = len;
 		}
-		for (int i = start; i < end; i++) {
-			if (str.charAt(i) == searchChar) {
-				return i;
-			}
-		}
-		return -1;
+		return IntStream.range(start, end).filter(i -> str.charAt(i) == searchChar).findFirst().orElse(-1);
 	}
 
 	/**
@@ -3445,17 +3353,12 @@ public class StrUtil {
 			return fromIndex;
 		}
 
-		if (false == ignoreCase) {
+		if (!ignoreCase) {
 			// 不忽略大小写调用JDK方法
 			return str.toString().indexOf(searchStr.toString(), fromIndex);
 		}
 
-		for (int i = fromIndex; i < endLimit; i++) {
-			if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
-				return i;
-			}
-		}
-		return INDEX_NOT_FOUND;
+		return IntStream.range(fromIndex, endLimit).filter(i -> isSubEquals(str, i, searchStr, 0, searchStr.length(), true)).findFirst().orElse(INDEX_NOT_FOUND);
 	}
 
 	/**
@@ -3774,11 +3677,7 @@ public class StrUtil {
 			return false;
 		}
 		int len = value.length();
-		boolean isAllMatch = true;
-		for (int i = 0; i < len; i++) {
-			isAllMatch &= matcher.match(value.charAt(i));
-		}
-		return isAllMatch;
+		return IntStream.range(0, len).mapToObj(i -> matcher.match(value.charAt(i))).reduce(true, (a, b) -> a && b);
 	}
 
 	/**
@@ -4044,11 +3943,7 @@ public class StrUtil {
 	 * @since 4.0.1
 	 */
 	public static int totalLength(CharSequence... strs) {
-		int totalLength = 0;
-		for (CharSequence str : strs) {
-			totalLength += (null == str ? 0 : str.length());
-		}
-		return totalLength;
+		return Arrays.stream(strs).mapToInt(str -> (null == str ? 0 : str.length())).sum();
 	}
 
 	/**
@@ -4135,12 +4030,7 @@ public class StrUtil {
 			return false;
 		}
 		final int len = str.length();
-		for (int i = 0; i < len; i++) {
-			if (Character.isLowerCase(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
+		return IntStream.range(0, len).noneMatch(i -> Character.isLowerCase(str.charAt(i)));
 	}
 
 	/**
@@ -4160,12 +4050,7 @@ public class StrUtil {
 			return false;
 		}
 		final int len = str.length();
-		for (int i = 0; i < len; i++) {
-			if (Character.isUpperCase(str.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
+		return IntStream.range(0, len).noneMatch(i -> Character.isUpperCase(str.charAt(i)));
 	}
 
 	/**
