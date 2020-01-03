@@ -44,7 +44,7 @@ class FastDateParser extends AbstractDateBasic implements DateParser {
 	// comparator used to sort regex alternatives
 	// alternatives should be ordered longer first, and shorter last. ('february' before 'feb')
 	// all entries must be lowercase by locale.
-	private static final Comparator<String> LONGER_FIRST_LOWERCASE = (left, right) -> right.compareTo(left);
+	private static final Comparator<String> LONGER_FIRST_LOWERCASE = Comparator.reverseOrder();
 
 	/**
 	 * <p>

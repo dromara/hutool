@@ -36,6 +36,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 /**
  * http请求类<br>
@@ -1202,10 +1203,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @since 3.1.2
 	 */
 	private boolean isIgnoreResponseBody() {
-		return Method.HEAD == this.method //
-				|| Method.CONNECT == this.method //
-				|| Method.OPTIONS == this.method //
-				|| Method.TRACE == this.method;
+		//
+		//
+		//
+		return Stream.of(Method.HEAD, Method.CONNECT, Method.OPTIONS, Method.TRACE).anyMatch(v -> v == this.method);
 	}
 	// ---------------------------------------------------------------- Private method end
 

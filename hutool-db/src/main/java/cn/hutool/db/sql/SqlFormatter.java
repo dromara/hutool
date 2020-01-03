@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
 /**
  * SQL格式化器 from Hibernate
@@ -241,7 +242,7 @@ public class SqlFormatter {
 			}
 			newline();
 			this.afterBeginBeforeEnd = false;
-			this.afterByOrSetOrFromOrSelect = (("by".equals(this.lcToken)) || ("set".equals(this.lcToken)) || ("from".equals(this.lcToken)));
+			this.afterByOrSetOrFromOrSelect = (Stream.of("by", "set", "from").anyMatch(s -> (s.equals(this.lcToken))));
 		}
 
 		private void beginNewClause() {

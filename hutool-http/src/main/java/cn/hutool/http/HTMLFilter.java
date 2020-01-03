@@ -1,17 +1,13 @@
 package cn.hutool.http;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharUtil;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharUtil;
 
 /**
  * HTML过滤器，用于去除XSS(Cross Site Scripting) 漏洞隐患。
@@ -324,7 +320,7 @@ public final class HTMLFilter {
 		String result = s;
 		for (String tag : vRemoveBlanks) {
 			if (!P_REMOVE_PAIR_BLANKS.containsKey(tag)) {
-				P_REMOVE_PAIR_BLANKS.putIfAbsent(tag, Pattern.compile("<" + tag + "(\\s[^>]*)?></" + tag + ">"));
+				P_REMOVE_PAIR_BLANKS.putIfAbsent(tag, Pattern.compile(String.join(tag, "<", "(\\s[^>]*)?></", ">")));
 			}
 			result = regexReplace(P_REMOVE_PAIR_BLANKS.get(tag), "", result);
 			if (!P_REMOVE_SELF_BLANKS.containsKey(tag)) {

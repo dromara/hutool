@@ -1,11 +1,6 @@
 package cn.hutool.core.collection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * 有界优先队列<br>
@@ -80,7 +75,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E>{
 	 */
 	public ArrayList<E> toList() {
 		final ArrayList<E> list = new ArrayList<>(this);
-		Collections.sort(list, comparator);
+		list.sort(comparator);
 		return list;
 	}
 	

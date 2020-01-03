@@ -2,6 +2,7 @@ package cn.hutool.core.util;
 
 import java.awt.Color;
 import java.nio.charset.Charset;
+import java.util.stream.Stream;
 
 /**
  * 十六进制（简写为hex或下标16）在数学中是一种逢16进1的进位制，一般用数字0到9和字母A到F表示（其中:A~F即10~15）。<br>
@@ -33,7 +34,7 @@ public class HexUtil {
 	 */
 	public static boolean isHexNumber(String value) {
 		final int index = (value.startsWith("-") ? 1 : 0);
-		if (value.startsWith("0x", index) || value.startsWith("0X", index) || value.startsWith("#", index)) {
+		if (Stream.of("0x", "0X", "#").anyMatch(s -> value.startsWith(s, index))) {
 			try {
 				//noinspection ResultOfMethodCallIgnored
 				Long.decode(value);
