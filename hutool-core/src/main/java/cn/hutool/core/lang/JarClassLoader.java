@@ -1,18 +1,17 @@
 package cn.hutool.core.lang;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.List;
-
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.URLUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
 
 /**
  * 外部Jar的类加载器
@@ -143,12 +142,7 @@ public class JarClassLoader extends URLClassLoader {
 	 * @return jar文件列表
 	 */
 	private static List<File> loopJar(File file) {
-		return FileUtil.loopFiles(file, new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				return isJarFile(file);
-			}
-		});
+		return FileUtil.loopFiles(file, JarClassLoader::isJarFile);
 	}
 
 	/**

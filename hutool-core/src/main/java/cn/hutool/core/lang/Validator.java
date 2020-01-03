@@ -1,15 +1,15 @@
 package cn.hutool.core.lang;
 
-import java.net.MalformedURLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.net.MalformedURLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字段验证器
@@ -465,12 +465,7 @@ public class Validator {
 	 * @since 3.3.0
 	 */
 	public static boolean isLetter(CharSequence value) {
-		return StrUtil.isAllCharMatch(value, new cn.hutool.core.lang.Matcher<Character>() {
-			@Override
-			public boolean match(Character t) {
-				return Character.isLetter(t);
-			}
-		});
+		return StrUtil.isAllCharMatch(value, Character::isLetter);
 	}
 
 	/**
@@ -498,12 +493,7 @@ public class Validator {
 	 * @since 3.3.0
 	 */
 	public static boolean isUpperCase(CharSequence value) {
-		return StrUtil.isAllCharMatch(value, new cn.hutool.core.lang.Matcher<Character>() {
-			@Override
-			public boolean match(Character t) {
-				return Character.isUpperCase(t);
-			}
-		});
+		return StrUtil.isAllCharMatch(value, Character::isUpperCase);
 	}
 
 	/**
@@ -531,12 +521,7 @@ public class Validator {
 	 * @since 3.3.0
 	 */
 	public static boolean isLowerCase(CharSequence value) {
-		return StrUtil.isAllCharMatch(value, new cn.hutool.core.lang.Matcher<Character>() {
-			@Override
-			public boolean match(Character t) {
-				return Character.isLowerCase(t);
-			}
-		});
+		return StrUtil.isAllCharMatch(value, Character::isLowerCase);
 	}
 
 	/**

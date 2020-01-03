@@ -1,15 +1,5 @@
 package cn.hutool.core.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
@@ -17,6 +7,10 @@ import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.lang.func.Func1;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 正则相关工具类<br>
@@ -174,12 +168,7 @@ public class ReUtil {
 		}
 
 		//提取模板中的编号
-		final TreeSet<Integer> varNums = new TreeSet<>(new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return ObjectUtil.compare(o2, o1);
-			}
-		});
+		final TreeSet<Integer> varNums = new TreeSet<>((o1, o2) -> ObjectUtil.compare(o2, o1));
 		final Matcher matcherForTemplate = PatternPool.GROUP_VAR.matcher(template);
 		while (matcherForTemplate.find()) {
 			varNums.add(Integer.parseInt(matcherForTemplate.group(1)));
