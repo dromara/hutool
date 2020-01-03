@@ -9,6 +9,8 @@ import cn.hutool.core.lang.Filter;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 数组工具类
@@ -260,11 +262,7 @@ public class ArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> boolean hasNull(T... array) {
 		if (isNotEmpty(array)) {
-			for (T element : array) {
-				if (null == element) {
-					return true;
-				}
-			}
+			return Arrays.stream(array).anyMatch(Objects::isNull);
 		}
 		return false;
 	}
@@ -280,11 +278,7 @@ public class ArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T firstNonNull(T... array) {
 		if (isNotEmpty(array)) {
-			for (final T val : array) {
-				if (null != val) {
-					return val;
-				}
-			}
+			return Arrays.stream(array).filter(Objects::nonNull).findFirst().orElse(null);
 		}
 		return null;
 	}
@@ -594,12 +588,7 @@ public class ArrayUtil {
 			return arrays[0];
 		}
 
-		int length = 0;
-		for (T[] array : arrays) {
-			if (null != array) {
-				length += array.length;
-			}
-		}
+		int length = Arrays.stream(arrays).filter(Objects::nonNull).mapToInt(array -> array.length).sum();
 		T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
 
 		length = 0;
@@ -626,12 +615,7 @@ public class ArrayUtil {
 		}
 
 		// 计算总长度
-		int length = 0;
-		for (byte[] array : arrays) {
-			if (null != array) {
-				length += array.length;
-			}
-		}
+		int length = Arrays.stream(arrays).filter(Objects::nonNull).mapToInt(array -> array.length).sum();
 
 		final byte[] result = new byte[length];
 		length = 0;
@@ -849,12 +833,7 @@ public class ArrayUtil {
 			return array;
 		}
 		
-		final ArrayList<T> list = new ArrayList<>(array.length);
-		for (T t : array) {
-			if (filter.accept(t)) {
-				list.add(t);
-			}
-		}
+		final ArrayList<T> list = Arrays.stream(array).filter(filter::accept).collect(Collectors.toCollection(() -> new ArrayList<>(array.length)));
 		final T[] result = newArray(array.getClass().getComponentType(), list.size());
 		return list.toArray(result);
 	}
@@ -969,11 +948,7 @@ public class ArrayUtil {
 	 */
 	public static <T> int indexOf(T[] array, Object value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (ObjectUtil.equal(value, array[i])) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> ObjectUtil.equal(value, array[i])).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -988,11 +963,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOfIgnoreCase(CharSequence[] array, CharSequence value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (StrUtil.equalsIgnoreCase(array[i], value)) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> StrUtil.equalsIgnoreCase(array[i], value)).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1042,12 +1013,7 @@ public class ArrayUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> boolean containsAny(T[] array, T... values) {
-		for (T value : values) {
-			if(contains(array, value)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(values).anyMatch(value -> contains(array, value));
 	}
 
 	/**
@@ -1072,11 +1038,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(long[] array, long value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1122,11 +1084,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(int[] array, int value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1172,11 +1130,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(short[] array, short value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1222,11 +1176,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(char[] array, char value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1272,11 +1222,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(byte[] array, byte value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1322,11 +1268,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(double[] array, double value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1372,11 +1314,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(float[] array, float value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1422,11 +1360,7 @@ public class ArrayUtil {
 	 */
 	public static int indexOf(boolean[] array, boolean value) {
 		if (null != array) {
-			for (int i = 0; i < array.length; i++) {
-				if (value == array[i]) {
-					return i;
-				}
-			}
+			return IntStream.range(0, array.length).filter(i -> value == array[i]).findFirst().orElse(INDEX_NOT_FOUND);
 		}
 		return INDEX_NOT_FOUND;
 	}
@@ -1499,12 +1433,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new int[0];
 		}
-
-		final int[] array = new int[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).mapToInt(Integer::valueOf).toArray();
 	}
 
 	/**
@@ -1521,12 +1450,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Long[0];
 		}
-
-		final Long[] array = new Long[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).boxed().toArray(Long[]::new);
 	}
 
 	/**
@@ -1543,12 +1467,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new long[0];
 		}
-
-		final long[] array = new long[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).mapToLong(Long::valueOf).toArray();
 	}
 
 	/**
@@ -1565,12 +1484,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Character[0];
 		}
-
-		final Character[] array = new Character[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Character[]::new);
 	}
 
 	/**
@@ -1609,12 +1523,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Byte[0];
 		}
-
-		final Byte[] array = new Byte[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Byte[]::new);
 	}
 
 	/**
@@ -1653,12 +1562,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Short[0];
 		}
-
-		final Short[] array = new Short[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Short[]::new);
 	}
 
 	/**
@@ -1697,12 +1601,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Float[0];
 		}
-
-		final Float[] array = new Float[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Float[]::new);
 	}
 
 	/**
@@ -1741,12 +1640,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Double[0];
 		}
-
-		final Double[] array = new Double[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return Arrays.stream(values).boxed().toArray(Double[]::new);
 	}
 
 	/**
@@ -1763,12 +1657,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new double[0];
 		}
-
-		final double[] array = new double[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = ObjectUtil.defaultIfNull(values[i], 0D);
-		}
-		return array;
+		return IntStream.range(0, length).mapToDouble(i -> ObjectUtil.defaultIfNull(values[i], 0D)).toArray();
 	}
 
 	/**
@@ -1785,12 +1674,7 @@ public class ArrayUtil {
 		if (0 == length) {
 			return new Boolean[0];
 		}
-
-		final Boolean[] array = new Boolean[length];
-		for (int i = 0; i < length; i++) {
-			array[i] = values[i];
-		}
-		return array;
+		return IntStream.range(0, length).boxed().toArray(Boolean[]::new);
 	}
 
 	/**
@@ -3853,11 +3737,7 @@ public class ArrayUtil {
 	public static int emptyCount(Object... args) {
 		int count = 0;
 		if (isNotEmpty(args)) {
-			for (Object element : args) {
-				if (ObjectUtil.isEmpty(element)) {
-					count++;
-				}
-			}
+			count = (int) Arrays.stream(args).filter(ObjectUtil::isEmpty).count();
 		}
 		return count;
 	}
@@ -3871,11 +3751,7 @@ public class ArrayUtil {
 	 */
 	public static boolean hasEmpty(Object... args) {
 		if (isNotEmpty(args)) {
-			for (Object element : args) {
-				if (ObjectUtil.isEmpty(element)) {
-					return true;
-				}
-			}
+			return Arrays.stream(args).anyMatch(ObjectUtil::isEmpty);
 		}
 		return false;
 	}
