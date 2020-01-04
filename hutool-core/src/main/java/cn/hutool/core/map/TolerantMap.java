@@ -1,5 +1,10 @@
 package cn.hutool.core.map;
 
+import cn.hutool.core.util.ObjectUtil;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -7,30 +12,38 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
+ * 一个可以提供默认值的Map
+ *
  * @author pantao
  * @since 2020/1/3
  */
-public class DefaultedMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Cloneable, Serializable {
+public class TolerantMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Cloneable, Serializable {
 
-    private final Map<K, V> map;
+    private static final long serialVersionUID = -4158133823263496197L;
 
-    private final V defaultValue;
+    private transient Map<K, V> map;
 
-    public DefaultedMap(V defaultValue) {
+    private transient V defaultValue;
+
+    public TolerantMap(V defaultValue) {
         this(new HashMap<>(), defaultValue);
     }
 
-    public DefaultedMap(int initialCapacity, float loadFactor, V defaultValue) {
+    public TolerantMap(int initialCapacity, float loadFactor, V defaultValue) {
         this(new HashMap<>(initialCapacity, loadFactor), defaultValue);
     }
 
-    public DefaultedMap(int initialCapacity, V defaultValue) {
+    public TolerantMap(int initialCapacity, V defaultValue) {
         this(new HashMap<>(initialCapacity), defaultValue);
     }
 
-    public DefaultedMap(Map<K, V> map, V defaultValue) {
+    public TolerantMap(Map<K, V> map, V defaultValue) {
         this.map = map;
         this.defaultValue = defaultValue;
+    }
+
+    public static <K, V> TolerantMap<K, V> of(Map<K, V> map, V defaultValue) {
+        return new TolerantMap<>(map, defaultValue);
     }
 
     @Override
@@ -159,7 +172,7 @@ public class DefaultedMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, 
         if (!super.equals(o)) {
             return false;
         }
-        DefaultedMap<?, ?> that = (DefaultedMap<?, ?>) o;
+        TolerantMap<?, ?> that = (TolerantMap<?, ?>) o;
         return map.equals(that.map) && Objects.equals(defaultValue, that.defaultValue);
     }
 
@@ -170,6 +183,21 @@ public class DefaultedMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, 
 
     @Override
     public String toString() {
-        return "DefaultedMap{" + "map=" + map + ", defaultValue=" + defaultValue + '}';
+        return "TolerantMap{" + "map=" + map + ", defaultValue=" + defaultValue + '}';
+    }
+
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.writeObject(ObjectUtil.serialize(map));
+        s.writeObject(ObjectUtil.serialize(defaultValue));
+    }
+
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        map = ObjectUtil.deserialize((byte[]) s.readObject());
+        defaultValue = ObjectUtil.deserialize((byte[]) s.readObject());
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
