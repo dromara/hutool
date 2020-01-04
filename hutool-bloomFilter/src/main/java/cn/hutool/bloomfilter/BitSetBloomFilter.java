@@ -1,12 +1,14 @@
 package cn.hutool.bloomfilter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.BitSet;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.HashUtil;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.stream.IntStream;
 
 /**
  * BloomFilter实现方式2，此方式使用BitSet存储。<br>
@@ -81,13 +83,7 @@ public class BitSetBloomFilter implements BloomFilter{
 	@Override
 	public boolean contains(String str) {
 		int[] positions = createHashes(str, hashFunctionNumber);
-		for (int i : positions) {
-			int position = Math.abs(i % bitSetSize);
-			if (!bitSet.get(position)) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.stream(positions).map(i -> Math.abs(i % bitSetSize)).allMatch(position -> bitSet.get(position));
 	}
 	
 	/**
@@ -106,11 +102,7 @@ public class BitSetBloomFilter implements BloomFilter{
 	 * @return 各个哈希的结果数组.
 	 */
 	public static int[] createHashes(String str, int hashNumber) {
-		int[] result = new int[hashNumber];
-		for(int i = 0; i < hashNumber; i++) {
-			result[i] = hash(str, i);
-			
-		}
+		int[] result = IntStream.range(0, hashNumber).map(i -> hash(str, i)).toArray();
 		return result;
 	}
 

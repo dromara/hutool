@@ -1,16 +1,17 @@
 package cn.hutool.crypto.symmetric;
 
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
+
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+import java.util.stream.IntStream;
 
 /**
  * RC4加密解密算法实现<br>
@@ -189,12 +190,10 @@ public class RC4 implements Serializable {
 	 * @return sbox
 	 */
 	private int[] initSBox(byte[] key) {
-		int[] sbox = new int[SBOX_LENGTH];
+		int[] sbox;
 		int j = 0;
 
-		for (int i = 0; i < SBOX_LENGTH; i++) {
-			sbox[i] = i;
-		}
+		sbox = IntStream.range(0, SBOX_LENGTH).toArray();
 
 		for (int i = 0; i < SBOX_LENGTH; i++) {
 			j = (j + sbox[i] + (key[i % key.length]) & 0xFF) % SBOX_LENGTH;

@@ -1,18 +1,15 @@
 package cn.hutool.core.exceptions;
 
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.*;
 
 /**
  * 异常工具类
@@ -326,11 +323,7 @@ public class ExceptionUtil {
 		}
 		Throwable[] throwables = throwable.getSuppressed();
 		if (ArrayUtil.isNotEmpty(throwables)) {
-			for (Throwable throwable1 : throwables) {
-				if (exceptionClass.isAssignableFrom(throwable1.getClass())) {
-					return (T) throwable1;
-				}
-			}
+			return (T) Arrays.stream(throwables).filter(throwable1 -> exceptionClass.isAssignableFrom(throwable1.getClass())).findFirst().orElse(null);
 		}
 		return null;
 	}

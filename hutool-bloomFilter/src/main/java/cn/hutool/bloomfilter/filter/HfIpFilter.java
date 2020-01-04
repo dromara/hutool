@@ -1,5 +1,7 @@
 package cn.hutool.bloomfilter.filter;
 
+import java.util.stream.IntStream;
+
 public class HfIpFilter extends AbstractFilter {
 	private static final long serialVersionUID = 1L;
 
@@ -14,10 +16,7 @@ public class HfIpFilter extends AbstractFilter {
 	@Override
 	public long hash(String str) {
 		int length = str.length();
-		long hash = 0;
-		for (int i = 0; i < length; i++) {
-			hash += str.charAt(i % 4) ^ str.charAt(i);
-		}
+		long hash = IntStream.range(0, length).mapToLong(i -> str.charAt(i % 4) ^ str.charAt(i)).sum();
 		return hash % size;
 	}
 

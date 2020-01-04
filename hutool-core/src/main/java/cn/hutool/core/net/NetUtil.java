@@ -14,12 +14,8 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.net.ServerSocketFactory;
 
@@ -374,12 +370,7 @@ public class NetUtil {
 	 * @since 4.5.17
 	 */
 	public static LinkedHashSet<String> toIpList(Set<InetAddress> addressList) {
-		final LinkedHashSet<String> ipSet = new LinkedHashSet<>();
-		for (InetAddress address : addressList) {
-			ipSet.add(address.getHostAddress());
-		}
-
-		return ipSet;
+		return addressList.stream().map(InetAddress::getHostAddress).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	/**
@@ -637,12 +628,7 @@ public class NetUtil {
 		// 多级反向代理检测
 		if (ip != null && ip.indexOf(",") > 0) {
 			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
-				if (false == isUnknow(subIp)) {
-					ip = subIp;
-					break;
-				}
-			}
+			ip = Arrays.stream(ips).filter(subIp -> !isUnknow(subIp)).findFirst().orElse(ip);
 		}
 		return ip;
 	}

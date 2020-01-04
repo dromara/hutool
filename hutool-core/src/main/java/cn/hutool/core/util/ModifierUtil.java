@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.stream.IntStream;
 
 /**
  * 修饰符工具类
@@ -201,9 +202,7 @@ public class ModifierUtil {
 	 */
 	private static int modifiersToInt(ModifierType... modifierTypes) {
 		int modifier = modifierTypes[0].getValue();
-		for(int i = 1; i < modifierTypes.length; i++) {
-			modifier &= modifierTypes[i].getValue();
-		}
+		modifier &= IntStream.range(1, modifierTypes.length).map(i -> modifierTypes[i].getValue()).reduce(-1, (a, b) -> a & b);
 		return modifier;
 	}
 	//-------------------------------------------------------------------------------------------------------- Private method end

@@ -1,8 +1,9 @@
 package cn.hutool.crypto.digest;
 
-import java.security.SecureRandom;
-
 import cn.hutool.core.util.CharsetUtil;
+
+import java.security.SecureRandom;
+import java.util.stream.IntStream;
 
 /**
  * BCrypt加密算法实现。由它加密的文件可在所有支持的操作系统和处理器上进行转移。它的口令必须是8至56个字符，并将在内部被转化为448位的密钥。
@@ -516,9 +517,7 @@ public class BCrypt {
 		if (hashed_bytes.length != try_bytes.length) {
 			return false;
 		}
-		byte ret = 0;
-		for (int i = 0; i < try_bytes.length; i++)
-			ret |= hashed_bytes[i] ^ try_bytes[i];
+		byte ret = (byte) IntStream.range(0, try_bytes.length).map(i -> (byte) (hashed_bytes[i] ^ try_bytes[i])).reduce(0, (a, b) -> a | b);
 		return ret == 0;
 	}
 }

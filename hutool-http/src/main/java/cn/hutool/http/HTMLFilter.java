@@ -1,17 +1,14 @@
 package cn.hutool.http;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharUtil;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharUtil;
+import java.util.stream.IntStream;
 
 /**
  * HTML过滤器，用于去除XSS(Cross Site Scripting) 漏洞隐患。
@@ -310,13 +307,8 @@ public final class HTMLFilter {
 		// these get tallied in processTag
 		// (remember to reset before subsequent calls to filter method)
 		final StringBuilder sBuilder = new StringBuilder(buf.toString());
-		for (String key : vTagCounts.keySet()) {
-			for (int ii = 0; ii < vTagCounts.get(key); ii++) {
-				sBuilder.append("</").append(key).append(">");
-			}
-		}
+		vTagCounts.forEach((key, value) -> IntStream.range(0, value).forEach(u -> sBuilder.append("</").append(key).append(">")));
 		s = sBuilder.toString();
-
 		return s;
 	}
 
@@ -524,12 +516,7 @@ public final class HTMLFilter {
 	}
 
 	private static boolean inArray(final String s, final String[] array) {
-		for (String item : array) {
-			if (item != null && item.equals(s)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(array).anyMatch(item -> item != null && item.equals(s));
 	}
 
 	private boolean allowed(final String name) {

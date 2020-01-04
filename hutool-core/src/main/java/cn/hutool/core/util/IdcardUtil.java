@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 /**
  * 身份证相关工具类<br>
@@ -588,9 +589,7 @@ public class IdcardUtil {
 	private static int getPowerSum(char[] iArr) {
 		int iSum = 0;
 		if (power.length == iArr.length) {
-			for (int i = 0; i < iArr.length; i++) {
-				iSum += Integer.parseInt(String.valueOf(iArr[i])) * power[i];
-			}
+			iSum = IntStream.range(0, iArr.length).map(i -> Integer.parseInt(String.valueOf(iArr[i])) * power[i]).sum();
 		}
 		return iSum;
 	}

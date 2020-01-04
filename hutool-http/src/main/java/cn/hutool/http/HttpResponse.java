@@ -1,29 +1,18 @@
 package cn.hutool.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.Closeable;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpCookie;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map.Entry;
-
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.io.*;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.cookie.GlobalCookieManager;
+
+import java.io.*;
+import java.net.HttpCookie;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Http响应类<br>
@@ -166,11 +155,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	public HttpCookie getCookie(String name) {
 		List<HttpCookie> cookie = getCookies();
 		if (null != cookie) {
-			for (HttpCookie httpCookie : cookie) {
-				if (httpCookie.getName().equals(name)) {
-					return httpCookie;
-				}
-			}
+			return cookie.stream().filter(httpCookie -> httpCookie.getName().equals(name)).findFirst().orElse(null);
 		}
 		return null;
 	}

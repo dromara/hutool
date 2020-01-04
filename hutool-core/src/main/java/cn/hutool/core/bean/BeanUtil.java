@@ -1,35 +1,21 @@
 package cn.hutool.core.bean;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.copier.BeanCopier;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ModifierUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
+
+import java.beans.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Bean工具类
@@ -70,12 +56,8 @@ public class BeanUtil {
 	public static boolean hasSetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
 			final Method[] methods = clazz.getMethods();
-			for (Method method : methods) {
-				if (method.getParameterTypes().length == 1 && method.getName().startsWith("set")) {
-					// 检测包含标准的setXXX方法即视为标准的JavaBean
-					return true;
-				}
-			}
+			// 检测包含标准的setXXX方法即视为标准的JavaBean
+			return Arrays.stream(methods).anyMatch(method -> method.getParameterTypes().length == 1 && method.getName().startsWith("set"));
 		}
 		return false;
 	}
@@ -90,13 +72,7 @@ public class BeanUtil {
 	 */
 	public static boolean hasGetter(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
-			for (Method method : clazz.getMethods()) {
-				if (method.getParameterTypes().length == 0) {
-					if (method.getName().startsWith("get") || method.getName().startsWith("is")) {
-						return true;
-					}
-				}
-			}
+			return Arrays.stream(clazz.getMethods()).filter(method -> method.getParameterTypes().length == 0).anyMatch(method -> method.getName().startsWith("get") || method.getName().startsWith("is"));
 		}
 		return false;
 	}
@@ -110,12 +86,8 @@ public class BeanUtil {
 	 */
 	public static boolean hasPublicField(Class<?> clazz) {
 		if (ClassUtil.isNormalClass(clazz)) {
-			for (Field field : clazz.getFields()) {
-				if (ModifierUtil.isPublic(field) && false == ModifierUtil.isStatic(field)) {
-					//非static的public字段
-					return true;
-				}
-			}
+			//非static的public字段
+			return Arrays.stream(clazz.getFields()).anyMatch(field -> ModifierUtil.isPublic(field) && !ModifierUtil.isStatic(field));
 		}
 		return false;
 	}
@@ -696,12 +668,8 @@ public class BeanUtil {
 	 */
 	public static boolean isEmpty(Object bean, String... ignoreFiledNames) {
 		if (null != bean) {
-			for (Field field : ReflectUtil.getFields(bean.getClass())) {
-				if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))
-						&& null != ReflectUtil.getFieldValue(bean, field)) {
-					return false;
-				}
-			}
+			return Arrays.stream(ReflectUtil.getFields(bean.getClass())).noneMatch(field -> (!ArrayUtil.contains(ignoreFiledNames, field.getName()))
+					&& null != ReflectUtil.getFieldValue(bean, field));
 		}
 		return true;
 	}
@@ -719,12 +687,8 @@ public class BeanUtil {
 		if (null == bean) {
 			return true;
 		}
-		for (Field field : ReflectUtil.getFields(bean.getClass())) {
-			if ((false == ArrayUtil.contains(ignoreFiledNames, field.getName()))//
-					&& null == ReflectUtil.getFieldValue(bean, field)) {
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(ReflectUtil.getFields(bean.getClass()))
+				.anyMatch(field -> (!ArrayUtil.contains(ignoreFiledNames, field.getName()))
+				&& null == ReflectUtil.getFieldValue(bean, field));
 	}
 }

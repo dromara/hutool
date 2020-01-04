@@ -26,6 +26,26 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import cn.hutool.core.convert.BasicType;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.ClassScanner;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Singleton;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URL;
+import java.util.*;
+
 /**
  * 类工具类 <br>
  *
@@ -745,17 +765,7 @@ public class ClassUtil {
 
 	/**
 	 * 是否为简单值类型<br>
-	 * 包括：
-	 * <pre>
-	 *     原始类型
-	 *     String、other CharSequence
-	 *     Number
-	 *     Date
-	 *     URI
-	 *     URL
-	 *     Locale
-	 *     Class
-	 * </pre>
+	 * 包括：原始类型,、String、other CharSequence, a Number, a Date, a URI, a URL, a Locale or a Class.
 	 *
 	 * @param clazz 类
 	 * @return 是否为简单值类型
@@ -769,9 +779,7 @@ public class ClassUtil {
 				|| clazz.equals(URI.class) //
 				|| clazz.equals(URL.class) //
 				|| clazz.equals(Locale.class) //
-				|| clazz.equals(Class.class)//
-				// jdk8 date object
-				|| TemporalAccessor.class.isAssignableFrom(clazz); //
+				|| clazz.equals(Class.class);//
 	}
 
 	/**
@@ -1025,11 +1033,7 @@ public class ClassUtil {
 	 * @since 3.0.9
 	 */
 	public static Object[] getDefaultValues(Class<?>... classes) {
-		final Object[] values = new Object[classes.length];
-		for (int i = 0; i < classes.length; i++) {
-			values[i] = getDefaultValue(classes[i]);
-		}
-		return values;
+		return Arrays.stream(classes).map(ClassUtil::getDefaultValue).toArray();
 	}
 
 	/**

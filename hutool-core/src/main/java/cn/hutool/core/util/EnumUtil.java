@@ -1,13 +1,11 @@
 package cn.hutool.core.util;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 枚举工具类
@@ -142,11 +140,7 @@ public class EnumUtil {
 		if (null == enums) {
 			return null;
 		}
-		final List<String> list = new ArrayList<>(enums.length);
-		for (Enum<?> e : enums) {
-			list.add(e.name());
-		}
-		return list;
+		return Arrays.stream(enums).map(Enum::name).collect(Collectors.toCollection(() -> new ArrayList<>(enums.length)));
 	}
 
 	/**
@@ -161,11 +155,7 @@ public class EnumUtil {
 		if (null == enums) {
 			return null;
 		}
-		final List<Object> list = new ArrayList<>(enums.length);
-		for (Enum<?> e : enums) {
-			list.add(ReflectUtil.getFieldValue(e, fieldName));
-		}
-		return list;
+		return Arrays.stream(enums).map(e -> ReflectUtil.getFieldValue(e, fieldName)).collect(Collectors.toCollection(() -> new ArrayList<>(enums.length)));
 	}
 
 	/**

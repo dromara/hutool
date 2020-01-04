@@ -1,16 +1,14 @@
 package cn.hutool.core.text;
 
+import cn.hutool.core.lang.MurmurHash;
+
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-
-import cn.hutool.core.lang.MurmurHash;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * <p>
@@ -83,12 +81,9 @@ public class Simhash {
 		}
 
 		// 计算得到Simhash值
-		final StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < bitNum; i++) {
-			sb.append((weight[i] > 0) ? 1 : 0);
-		}
+		final String sb = IntStream.range(0, bitNum).mapToObj(i -> String.valueOf((weight[i] > 0) ? 1 : 0)).collect(Collectors.joining());
 
-		return new BigInteger(sb.toString(), 2).longValue();
+		return new BigInteger(sb, 2).longValue();
 	}
 
 	/**
@@ -166,12 +161,7 @@ public class Simhash {
 	 */
 	private int hamming(Long s1, Long s2) {
 		final int bitNum = this.bitNum;
-		int dis = 0;
-		for (int i = 0; i < bitNum; i++) {
-			if ((s1 >> i & 1) != (s2 >> i & 1))
-				dis++;
-		}
-		return dis;
+		return (int) IntStream.range(0, bitNum).filter(i -> (s1 >> i & 1) != (s2 >> i & 1)).count();
 	}
 
 	/**

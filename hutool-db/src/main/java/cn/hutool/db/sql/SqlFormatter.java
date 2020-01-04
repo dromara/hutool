@@ -1,6 +1,12 @@
 package cn.hutool.db.sql;
 
 import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * SQL格式化器 from Hibernate
@@ -126,7 +132,7 @@ public class SqlFormatter {
 					values();
 				} else if ("on".equals(this.lcToken)) {
 					on();
-				} else if ((this.afterBetween) && ("and".equals(this.lcToken))) {
+				} else if ((this.afterBetween) && (this.lcToken.equals("and"))) {
 					misc();
 					this.afterBetween = false;
 				} else if (LOGICAL.contains(this.lcToken)) {
@@ -213,8 +219,8 @@ public class SqlFormatter {
 			out();
 			this.indent += 1;
 			newline();
-			this.parenCounts.addLast(this.parensSinceSelect);
-			this.afterByOrFromOrSelects.addLast(this.afterByOrSetOrFromOrSelect);
+			this.parenCounts.addLast(new Integer(this.parensSinceSelect));
+			this.afterByOrFromOrSelects.addLast(Boolean.valueOf(this.afterByOrSetOrFromOrSelect));
 			this.parensSinceSelect = 0;
 			this.afterByOrSetOrFromOrSelect = true;
 		}
@@ -268,8 +274,8 @@ public class SqlFormatter {
 			this.parensSinceSelect -= 1;
 			if (this.parensSinceSelect < 0) {
 				this.indent -= 1;
-				this.parensSinceSelect = this.parenCounts.removeLast();
-				this.afterByOrSetOrFromOrSelect = this.afterByOrFromOrSelects.removeLast();
+				this.parensSinceSelect = ((Integer) this.parenCounts.removeLast()).intValue();
+				this.afterByOrSetOrFromOrSelect = ((Boolean) this.afterByOrFromOrSelects.removeLast()).booleanValue();
 			}
 			if (this.inFunction > 0) {
 				this.inFunction -= 1;
@@ -313,10 +319,7 @@ public class SqlFormatter {
 		}
 
 		private void newline() {
-			this.result.append("\n");
-			for (int i = 0; i < this.indent; i++) {
-				this.result.append(indentString);
-			}
+			result.append(IntStream.range(0, this.indent).mapToObj(i -> indentString).collect(Collectors.joining("", "\n", "")));
 			this.beginLine = true;
 		}
 	}

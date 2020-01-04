@@ -51,17 +51,10 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -325,14 +318,8 @@ public class FileUtil {
 		int index = path.lastIndexOf(FileUtil.JAR_PATH_EXT);
 		if (index < 0) {
 			// 普通目录
-			final List<String> paths = new ArrayList<>();
 			final File[] files = ls(path);
-			for (File file : files) {
-				if (file.isFile()) {
-					paths.add(file.getName());
-				}
-			}
-			return paths;
+			return Arrays.stream(files).filter(File::isFile).map(File::getName).collect(Collectors.toList());
 		}
 
 		// jar文件
@@ -550,14 +537,7 @@ public class FileUtil {
 		if (fileList == null) {
 			return false;
 		}
-
-		for (String fileName : fileList) {
-			if (fileName.matches(regexp)) {
-				return true;
-			}
-
-		}
-		return false;
+		return Arrays.stream(fileList).anyMatch(fileName -> fileName.matches(regexp));
 	}
 
 	/**
@@ -599,15 +579,12 @@ public class FileUtil {
 		}
 
 		if (file.isDirectory()) {
-			long size = 0L;
+			long size;
 			File[] subFiles = file.listFiles();
 			if (ArrayUtil.isEmpty(subFiles)) {
 				return 0L;// empty directory
 			}
-			for (File subFile : subFiles) {
-				size += size(subFile);
-			}
-			return size;
+			return Arrays.stream(subFiles).mapToLong(FileUtil::size).sum();
 		} else {
 			return file.length();
 		}

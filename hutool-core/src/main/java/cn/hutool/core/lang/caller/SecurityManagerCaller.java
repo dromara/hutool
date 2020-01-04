@@ -1,8 +1,9 @@
 package cn.hutool.core.lang.caller;
 
-import java.io.Serializable;
-
 import cn.hutool.core.util.ArrayUtil;
+
+import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * {@link SecurityManager} 方式获取调用者
@@ -45,11 +46,7 @@ public class SecurityManagerCaller extends SecurityManager implements Caller, Se
 	public boolean isCalledBy(Class<?> clazz) {
 		final Class<?>[] classes = getClassContext();
 		if(ArrayUtil.isNotEmpty(classes)) {
-			for (Class<?> contextClass : classes) {
-				if (contextClass.equals(clazz)) {
-					return true;
-				}
-			}
+			return Arrays.stream(classes).anyMatch(contextClass -> contextClass.equals(clazz));
 		}
 		return false;
 	}
