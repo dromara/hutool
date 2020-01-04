@@ -6,10 +6,11 @@ import java.util.Date;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Console;
+import com.sun.istack.internal.NotNull;
 
 /**
  * 日期间隔
- * 
+ *
  * @author Looly
  *
  */
@@ -24,7 +25,7 @@ public class DateBetween implements Serializable{
 	/**
 	 * 创建<br>
 	 * 在前的日期做为起始时间，在后的做为结束时间，间隔只保留绝对值正数
-	 * 
+	 *
 	 * @param begin 起始时间
 	 * @param end 结束时间
 	 * @return {@link DateBetween}
@@ -37,7 +38,7 @@ public class DateBetween implements Serializable{
 	/**
 	 * 创建<br>
 	 * 在前的日期做为起始时间，在后的做为结束时间，间隔只保留绝对值正数
-	 * 
+	 *
 	 * @param begin 起始时间
 	 * @param end 结束时间
 	 * @param isAbs 日期间隔是否只保留绝对值正数
@@ -51,7 +52,7 @@ public class DateBetween implements Serializable{
 	/**
 	 * 构造<br>
 	 * 在前的日期做为起始时间，在后的做为结束时间，间隔只保留绝对值正数
-	 * 
+	 *
 	 * @param begin 起始时间
 	 * @param end 结束时间
 	 */
@@ -62,7 +63,7 @@ public class DateBetween implements Serializable{
 	/**
 	 * 构造<br>
 	 * 在前的日期做为起始时间，在后的做为结束时间
-	 * 
+	 *
 	 * @param begin 起始时间
 	 * @param end 结束时间
 	 * @param isAbs 日期间隔是否只保留绝对值正数
@@ -71,7 +72,7 @@ public class DateBetween implements Serializable{
 	public DateBetween(Date begin, Date end, boolean isAbs) {
 		Assert.notNull(begin, "Begin date is null !");
 		Assert.notNull(end, "End date is null !");
-		
+
 		if (isAbs && begin.after(end)) {
 			// 间隔只为正数的情况下，如果开始日期晚于结束日期，置换之
 			this.begin = end;
@@ -85,7 +86,7 @@ public class DateBetween implements Serializable{
 	/**
 	 * 判断两个日期相差的时长<br>
 	 * 返回 给定单位的时长差
-	 * 
+	 *
 	 * @param unit 相差的单位：相差 天{@link DateUnit#DAY}、小时{@link DateUnit#HOUR} 等
 	 * @return 时长差
 	 */
@@ -97,7 +98,7 @@ public class DateBetween implements Serializable{
 	/**
 	 * 计算两个日期相差月数<br>
 	 * 在非重置情况下，如果起始日期的天小于结束日期的天，月数要少算1（不足1个月）
-	 * 
+	 *
 	 * @param isReset 是否重置时间为起始时间（重置天时分秒）
 	 * @return 相差月数
 	 * @since 3.0.8
@@ -124,7 +125,7 @@ public class DateBetween implements Serializable{
 	/**
 	 * 计算两个日期相差年数<br>
 	 * 在非重置情况下，如果起始日期的月小于结束日期的月，年数要少算1（不足1年）
-	 * 
+	 *
 	 * @param isReset 是否重置时间为起始时间（重置月天时分秒）
 	 * @return 相差年数
 	 * @since 3.0.8
@@ -154,6 +155,24 @@ public class DateBetween implements Serializable{
 		return result;
 	}
 
+	/**
+	 * 判断目标日期是否在范围内<br/>
+	 * @param target 目标日期
+	 * @return true:在范围内/false:不在范围内
+	 */
+	public boolean isBetween(@NotNull Date target) {
+		return this.begin.getTime() <= target.getTime() && this.end.getTime() >= target.getTime();
+	}
+	/**
+	 * 判断目标日期是否在范围内<br/>
+	 * @param begin 起始时间
+	 * @param end 结束日期
+	 * @param target 目标日期
+	 * @return true:在范围内/false:不在范围内
+	 */
+	public static boolean isBetween(@NotNull Date begin,@NotNull Date end,@NotNull Date target) {
+		return begin.getTime() <= target.getTime() && end.getTime() >= target.getTime();
+	}
 	/**
 	 * 格式化输出时间差<br>
 	 * 
