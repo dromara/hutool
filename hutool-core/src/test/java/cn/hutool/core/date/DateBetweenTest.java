@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.Objects;
 
 public class DateBetweenTest {
 
@@ -70,16 +69,16 @@ public class DateBetweenTest {
 		DateBetween dateBetween = new DateBetween(start,end);
 
 		Date targetTrue = DateUtil.parse("2020-01-01 12:00:00");
-		Assert.assertTrue(dateBetween.isBetween(Objects.requireNonNull(targetTrue)));
+		Assert.assertTrue(dateBetween.isBetween(targetTrue));
 
 		Date targetEqualsLeft = DateUtil.parse("2019-12-01 12:00:00");
-		Assert.assertTrue(dateBetween.isBetween(Objects.requireNonNull(targetEqualsLeft)));
+		Assert.assertTrue(dateBetween.isBetween(targetEqualsLeft));
 
 		Date targetEqualsRight = DateUtil.parse("2020-01-04 12:00:00");
-		Assert.assertTrue(dateBetween.isBetween(Objects.requireNonNull(targetEqualsRight)));
+		Assert.assertTrue(dateBetween.isBetween(targetEqualsRight));
 
 		Date targetFalse = DateUtil.parse("2020-02-01 12:00:00");
-		Assert.assertFalse(dateBetween.isBetween(Objects.requireNonNull(targetFalse)));
+		Assert.assertFalse(dateBetween.isBetween(targetFalse));
 	}
 	@Test
 	public void staticIsBetween() {
@@ -87,15 +86,15 @@ public class DateBetweenTest {
 		Date end = DateUtil.parse("2020-01-04 12:00:00");
 
 		Date targetTrue = DateUtil.parse("2020-01-01 12:00:00");
-		Assert.assertTrue(DateBetween.isBetween(Objects.requireNonNull(start),Objects.requireNonNull(end), Objects.requireNonNull(targetTrue)));
+		Assert.assertTrue(DateBetween.isBetween(start,end, targetTrue));
 
 		Date targetEqualsLeft = DateUtil.parse("2019-12-01 12:00:00");
-		Assert.assertTrue(DateBetween.isBetween(Objects.requireNonNull(start),Objects.requireNonNull(end), Objects.requireNonNull(targetEqualsLeft)));
+		Assert.assertTrue(DateBetween.isBetween(start,end, targetEqualsLeft));
 
 		Date targetEqualsRight = DateUtil.parse("2020-01-04 12:00:00");
-		Assert.assertTrue(DateBetween.isBetween(Objects.requireNonNull(start),Objects.requireNonNull(end), Objects.requireNonNull(targetEqualsRight)));
+		Assert.assertTrue(DateBetween.isBetween(start,end, targetEqualsRight));
 
 		Date targetFalse = DateUtil.parse("2020-02-01 12:00:00");
-		Assert.assertFalse(DateBetween.isBetween(Objects.requireNonNull(start),Objects.requireNonNull(end), Objects.requireNonNull(targetFalse)));
+		Assert.assertFalse(DateBetween.isBetween(start,end, targetFalse));
 	}
 }

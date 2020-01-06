@@ -1,12 +1,11 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Assert;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
-import com.sun.istack.internal.NotNull;
 
 /**
  * 日期间隔
@@ -160,7 +159,8 @@ public class DateBetween implements Serializable{
 	 * @param target 目标日期
 	 * @return true:在范围内/false:不在范围内
 	 */
-	public boolean isBetween(@NotNull Date target) {
+	public boolean isBetween(Date target) {
+		Assert.notNull(target, "Target date is null !");
 		return this.begin.getTime() <= target.getTime() && this.end.getTime() >= target.getTime();
 	}
 	/**
@@ -170,7 +170,10 @@ public class DateBetween implements Serializable{
 	 * @param target 目标日期
 	 * @return true:在范围内/false:不在范围内
 	 */
-	public static boolean isBetween(@NotNull Date begin,@NotNull Date end,@NotNull Date target) {
+	public static boolean isBetween(Date begin,Date end,Date target) {
+		Assert.notNull(begin, "Begin date is null !");
+		Assert.notNull(end, "End date is null !");
+		Assert.notNull(target, "Target date is null !");
 		return begin.getTime() <= target.getTime() && end.getTime() >= target.getTime();
 	}
 	/**
