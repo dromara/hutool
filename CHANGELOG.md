@@ -12,8 +12,10 @@
 * 【core 】     增加Alias注解
 * 【core 】     修正NumberChineseFormatter和NumberWordFormatter（类名拼写错误）
 * 【all  】     修正equals，避免可能存在的空指针问题（pr#692@Github）
+* 【core  】    提供一个自带默认值的Map（pr#87@Gitee）
 
 ### Bug修复
+* 【core 】     修复NumberUtil.mul中null的结果错误问题（issue#I17Y4J@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

@@ -410,9 +410,7 @@ public class NumberUtil {
 		BigDecimal result = new BigDecimal(null == value ? "0" : value.toString());
 		for (int i = 1; i < values.length; i++) {
 			value = values[i];
-			if (null != value) {
-				result = result.multiply(new BigDecimal(value.toString()));
-			}
+			result = result.multiply(new BigDecimal(null == value ? "0" : value.toString()));
 		}
 		return result;
 	}
