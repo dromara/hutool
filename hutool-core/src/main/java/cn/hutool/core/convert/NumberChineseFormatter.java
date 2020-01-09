@@ -102,7 +102,10 @@ public class NumberChineseFormatter {
 							// 如果"万"的部分不为 0, 而"万"前面的部分小于 1000 大于 0， 则万后面应该跟“零”
 							chineseStr.insert(0, "零");
 						}
-						chineseStr.insert(0, "万");
+						if (parts[i] > 0) {
+							// 如果"万"的部分不为 0 则增加万
+							chineseStr.insert(0, "万");
+						}
 					}
 				}
 			}

@@ -3,6 +3,7 @@ package cn.hutool.core.util;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -245,5 +246,11 @@ public class NumberUtilTest {
 		Assert.assertEquals(120, factorial);
 		factorial = NumberUtil.factorial(5, 1);
 		Assert.assertEquals(120, factorial);
+	}
+
+	@Test
+	public void mulTest(){
+		final BigDecimal mul = NumberUtil.mul(new BigDecimal("10"), null);
+		Assert.assertEquals(BigDecimal.ZERO, mul);
 	}
 }
