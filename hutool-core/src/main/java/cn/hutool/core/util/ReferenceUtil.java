@@ -48,7 +48,7 @@ public class ReferenceUtil {
 		case WEAK:
 			return new WeakReference<>(referent);
 		case PHANTOM:
-			return new PhantomReference<T>(referent, queue);
+			return new PhantomReference<>(referent, queue);
 		default:
 			return null;
 		}

@@ -300,9 +300,6 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 				// 跳过标题行
 				rowList = readRow(sheet.getRow(i));
 				if (CollUtil.isNotEmpty(rowList) || false == ignoreEmptyRow) {
-					if (null == rowList) {
-						rowList = new ArrayList<>(0);
-					}
 					result.add(IterUtil.toMap(aliasHeader(headerList), rowList, true));
 				}
 			}

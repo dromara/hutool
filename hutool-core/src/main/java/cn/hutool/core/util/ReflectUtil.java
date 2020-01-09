@@ -143,7 +143,7 @@ public class ReflectUtil {
 	 * @return 字段名和字段对应的Map
 	 * @since 5.0.7
 	 */
-	public static Map<String, Field> getFieldMap(Class<?> beanClass){
+	public static Map<String, Field> getFieldMap(Class<?> beanClass) {
 		final Field[] fields = getFields(beanClass);
 		final HashMap<String, Field> map = MapUtil.newHashMap(fields.length);
 		for (Field field : fields) {
@@ -208,7 +208,7 @@ public class ReflectUtil {
 		if (null == obj || StrUtil.isBlank(fieldName)) {
 			return null;
 		}
-		return getFieldValue(obj, getField(obj instanceof Class ? (Class<?>)obj : obj.getClass(), fieldName));
+		return getFieldValue(obj, getField(obj instanceof Class ? (Class<?>) obj : obj.getClass(), fieldName));
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class ReflectUtil {
 		if (null == field) {
 			return null;
 		}
-		if(obj instanceof Class){
+		if (obj instanceof Class) {
 			// 静态字段获取时对象为null
 			obj = null;
 		}
@@ -259,7 +259,7 @@ public class ReflectUtil {
 	 */
 	public static Object[] getFieldsValue(Object obj) {
 		if (null != obj) {
-			final Field[] fields = getFields(obj instanceof Class ? (Class<?>)obj : obj.getClass());
+			final Field[] fields = getFields(obj instanceof Class ? (Class<?>) obj : obj.getClass());
 			if (null != fields) {
 				final Object[] values = new Object[fields.length];
 				for (int i = 0; i < fields.length; i++) {
@@ -652,7 +652,7 @@ public class ReflectUtil {
 	 * @return 是否为equals方法
 	 */
 	public static boolean isEqualsMethod(Method method) {
-		if (method == null || false == method.getName().equals("equals")) {
+		if (method == null || false == "equals".equals(method.getName())) {
 			return false;
 		}
 		final Class<?>[] paramTypes = method.getParameterTypes();
@@ -666,7 +666,9 @@ public class ReflectUtil {
 	 * @return 是否为hashCode方法
 	 */
 	public static boolean isHashCodeMethod(Method method) {
-		return (method != null && method.getName().equals("hashCode") && method.getParameterTypes().length == 0);
+		return method != null//
+				&& "hashCode".equals(method.getName())//
+				&& isEmptyParam(method);
 	}
 
 	/**
@@ -676,7 +678,20 @@ public class ReflectUtil {
 	 * @return 是否为toString方法
 	 */
 	public static boolean isToStringMethod(Method method) {
-		return (method != null && method.getName().equals("toString") && method.getParameterTypes().length == 0);
+		return method != null//
+				&& "toString".equals(method.getName())//
+				&& isEmptyParam(method);
+	}
+
+	/**
+	 * 是否为无参数方法
+	 *
+	 * @param method 方法
+	 * @return 是否为无参数方法
+	 * @since 5.1.1
+	 */
+	public static boolean isEmptyParam(Method method) {
+		return method.getParameterTypes().length == 0;
 	}
 
 	// --------------------------------------------------------------------------------------------------------- newInstance

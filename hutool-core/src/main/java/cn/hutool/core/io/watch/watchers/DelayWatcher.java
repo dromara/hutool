@@ -1,15 +1,15 @@
 package cn.hutool.core.io.watch.watchers;
 
+import cn.hutool.core.collection.ConcurrentHashSet;
+import cn.hutool.core.io.watch.Watcher;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.thread.ThreadUtil;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchService;
 import java.util.Set;
-
-import cn.hutool.core.collection.ConcurrentHashSet;
-import cn.hutool.core.io.watch.Watcher;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.thread.ThreadUtil;
 
 /**
  * 延迟观察者<br>
@@ -95,13 +95,10 @@ public class DelayWatcher implements Watcher {
 	 * @param currentPath 事件发生的当前Path路径
 	 */
 	private void startHandleModifyThread(final WatchEvent<?> event, final Path currentPath) {
-		ThreadUtil.execute(new Runnable(){
-			@Override
-			public void run() {
-				ThreadUtil.sleep(delay);
-				eventSet.remove(Paths.get(currentPath.toString(), event.context().toString()));
-				watcher.onModify(event, currentPath);
-			}
+		ThreadUtil.execute(() -> {
+			ThreadUtil.sleep(delay);
+			eventSet.remove(Paths.get(currentPath.toString(), event.context().toString()));
+			watcher.onModify(event, currentPath);
 		});
 	}
 	//---------------------------------------------------------------------------------------------------------- Private method end

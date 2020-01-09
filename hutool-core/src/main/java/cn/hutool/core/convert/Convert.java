@@ -137,6 +137,17 @@ public class Convert {
 	}
 
 	/**
+	 * 转换为Byte数组
+	 *
+	 * @param value 被转换的值
+	 * @return Byte数组
+	 * @since 5.1.1
+	 */
+	public static byte[] toPrimitiveByteArray(Object value) {
+		return convert(byte[].class, value);
+	}
+
+	/**
 	 * 转换为Short<br>
 	 * 如果给定的值为<code>null</code>，或者转换失败，返回默认值<br>
 	 * 转换失败不会报错
@@ -911,7 +922,7 @@ public class Convert {
 	 * @since 3.0.9
 	 */
 	public static String numberToWord(Number number) {
-		return NumberWordFormater.format(number);
+		return NumberWordFormatter.format(number);
 	}
 	
 	/**
@@ -923,7 +934,7 @@ public class Convert {
 	 * @since 3.2.3
 	 */
 	public static String numberToChinese(double number, boolean isUseTraditonal) {
-		return NumberChineseFormater.format(number, isUseTraditonal);
+		return NumberChineseFormatter.format(number, isUseTraditonal);
 	}
 	
 	/**
@@ -937,7 +948,7 @@ public class Convert {
 		if(null == n) {
 			return "零";
 		}
-		return NumberChineseFormater.format(n.doubleValue(), true, true);
+		return NumberChineseFormatter.format(n.doubleValue(), true, true);
 	}
 	
 	// -------------------------------------------------------------------------- 数字转换

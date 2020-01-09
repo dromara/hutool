@@ -1,7 +1,6 @@
 package cn.hutool.core.annotation;
 
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 
@@ -12,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
 
 /**
  * 注解工具类<br>
@@ -110,20 +110,14 @@ public class AnnotationUtil {
 		if (null == annotation) {
 			return null;
 		}
-
-		final Method[] methods = ReflectUtil.getMethods(annotationType, new Filter<Method>() {
-			@Override
-			public boolean accept(Method t) {
-				if (ArrayUtil.isEmpty(t.getParameterTypes())) {
-					// 只读取无参方法
-					final String name = t.getName();
-					// 跳过自有的几个方法
-					//
-					//
-					return Stream.of("hashCode", "toString", "annotationType").allMatch(s -> (false == s.equals(name)));
-				}
-				return false;
+		final Method[] methods = ReflectUtil.getMethods(annotationType, t -> {
+			if (ArrayUtil.isEmpty(t.getParameterTypes())) {
+				// 只读取无参方法
+				final String name = t.getName();
+				// 跳过自有的几个方法
+				return Stream.of("hashCode", "toString", "annotationType").allMatch(s -> (!s.equals(name)));
 			}
+			return false;
 		});
 
 		final HashMap<String, Object> result = new HashMap<>(methods.length, 1);
@@ -132,7 +126,6 @@ public class AnnotationUtil {
 		}
 		return result;
 	}
-
 	/**
 	 * 获取注解类的保留时间，可选值 SOURCE（源码时），CLASS（编译时），RUNTIME（运行时），默认为 CLASS
 	 *

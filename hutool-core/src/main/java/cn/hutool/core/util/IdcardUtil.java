@@ -174,8 +174,8 @@ public class IdcardUtil {
 			case 15:// 15位身份证
 				return isValidCard15(idCard);
 			case 10: {// 10位身份证，港澳台地区
-				String[] cardval = isValidCard10(idCard);
-				return null != cardval && cardval[2].equals("true");
+				String[] cardVal = isValidCard10(idCard);
+				return null != cardVal && "true".equals(cardVal[2]);
 			}
 			default:
 				return false;
@@ -279,10 +279,10 @@ public class IdcardUtil {
 		}
 		if (idCard.matches("^[a-zA-Z][0-9]{9}$")) { // 台湾
 			info[0] = "台湾";
-			String char2 = idCard.substring(1, 2);
-			if (char2.equals("1")) {
+			char char2 = idCard.charAt(1);
+			if ('1' == char2) {
 				info[1] = "M";
-			} else if (char2.equals("2")) {
+			} else if ('2' == char2) {
 				info[1] = "F";
 			} else {
 				info[1] = "N";

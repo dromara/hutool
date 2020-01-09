@@ -9,7 +9,7 @@ import cn.hutool.cron.CronException;
  * @author Looly
  *
  */
-public class DayOfWeekValueParser extends SimpleValueParser {
+public class    DayOfWeekValueParser extends SimpleValueParser {
 	
 	/** Weeks aliases. */
 	private static final String[] ALIASES = { "sun", "mon", "tue", "wed", "thu", "fri", "sat" };
@@ -38,7 +38,7 @@ public class DayOfWeekValueParser extends SimpleValueParser {
 	 * @throws CronException 无效别名抛出此异常
 	 */
 	private int parseAlias(String value) throws CronException {
-		if(value.equalsIgnoreCase("L")){
+		if("L".equalsIgnoreCase(value)){
 			//最后一天为星期六
 			return ALIASES.length - 1;
 		}
