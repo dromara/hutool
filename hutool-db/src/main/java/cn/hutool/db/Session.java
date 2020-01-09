@@ -98,6 +98,7 @@ public class Session extends AbstractDb implements Closeable {
 	 * 
 	 * @return {@link SqlConnRunner}
 	 */
+	@Override
 	public SqlConnRunner getRunner() {
 		return runner;
 	}

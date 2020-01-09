@@ -231,6 +231,7 @@ public class Entity extends Dict {
 	 * @return Dict 结果
 	 * @since 4.0.10
 	 */
+	@Override
 	public Entity filter(String... keys) {
 		final Entity result = new Entity(this.tableName);
 		result.setFieldNames(this.fieldNames);

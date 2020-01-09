@@ -1,12 +1,7 @@
 package cn.hutool.core.map;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -154,6 +149,22 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 		public V setValue(V value) {
 			throw new UnsupportedOperationException("setValue not supported.");
 		}
+		@Override
+		public final boolean equals(Object o) {
+			if (o == this)
+				return true;
+			if (o instanceof Map.Entry) {
+				Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+				return Objects.equals(key, e.getKey()) &&
+						Objects.equals(value, e.getValue());
+			}
+			return false;
+		}
 
+		@Override
+		public int hashCode() {
+			//copy from 1.8 HashMap.Node
+			return Objects.hashCode(key) ^ Objects.hashCode(value);
+		}
 	}
 }
