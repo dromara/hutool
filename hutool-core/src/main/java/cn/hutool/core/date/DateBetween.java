@@ -1,11 +1,10 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.lang.Assert;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 
 /**
  * 日期间隔

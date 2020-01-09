@@ -1,11 +1,12 @@
 package cn.hutool.core.date;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 秒表封装<br>
@@ -68,6 +69,10 @@ public class StopWatch {
 	 * 总运行时间
 	 */
 	private long totalTimeNanos;
+	/**
+	 * 时间单位(支持三种单位：纳秒、毫秒、秒)
+	 */
+	private TimeUnit timeUnit = TimeUnit.NANOSECONDS;
 
 	// ------------------------------------------------------------------------------------------- Constructor start
 
@@ -124,6 +129,17 @@ public class StopWatch {
 		} else {
 			this.taskList = null;
 		}
+	}
+
+	/**
+	 * 设置时间单位，不设置默认是纳秒
+	 *
+	 * @param timeUnit 时间单位
+	 * @author 李显锋
+	 * @since 5.1.1
+	 */
+	public void setTimeUnit(TimeUnit timeUnit) {
+		this.timeUnit = timeUnit;
 	}
 
 	/**
