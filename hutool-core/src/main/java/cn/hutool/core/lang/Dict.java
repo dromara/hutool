@@ -117,7 +117,7 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 	 * @param m Map
 	 */
 	public Dict(Map<String, Object> m) {
-		super((null == m) ? new HashMap<String, Object>() : m);
+		super((null == m) ? new HashMap<>() : m);
 	}
 	// --------------------------------------------------------------- Constructor end
 
@@ -452,6 +452,11 @@ public class Dict extends LinkedHashMap<String, Object> implements BasicTypeGett
 		return get(attr, null);
 	}
 	// -------------------------------------------------------------------- Get end
+
+	@Override
+	public Object get(Object key) {
+		return super.get(customKey((String)key));
+	}
 
 	@Override
 	public Object put(String key, Object value) {
