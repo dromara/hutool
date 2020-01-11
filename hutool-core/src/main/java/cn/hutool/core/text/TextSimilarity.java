@@ -28,6 +28,7 @@ public class TextSimilarity {
 			newStrA = removeSign(strA);
 			newStrB = removeSign(strB);
 		}
+
 		// 用较大的字符串长度作为分母，相似子串作为分子计算出字串相似度
 		int temp = Math.max(newStrA.length(), newStrB.length());
 		if(0 == temp) {
@@ -65,7 +66,7 @@ public class TextSimilarity {
 		char c;
 		for (int i = 0; i < length; i++) {
 			c = str.charAt(i);
-			if(false == isInvalidChar(c)) {
+			if(isValidChar(c)) {
 				sb.append(c);
 			}
 		}
@@ -79,8 +80,8 @@ public class TextSimilarity {
 	 * @param charValue 字符
 	 * @return true表示为非汉字，数字和字母，false反之
 	 */
-	private static boolean isInvalidChar(char charValue) {
-		return (charValue >= 0x4E00 && charValue <= 0XFFF) || //
+	private static boolean isValidChar(char charValue) {
+		return (charValue >= 0x4E00 && charValue <= 0X9FFF) || //
 				(charValue >= 'a' && charValue <= 'z') || //
 				(charValue >= 'A' && charValue <= 'Z') || //
 				(charValue >= '0' && charValue <= '9');

@@ -1,15 +1,12 @@
 package cn.hutool.core.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import cn.hutool.core.collection.CollectionUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.func.Func1;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class ReUtilTest {
 	final String content = "ZZZaaabbbccc中文1234";
@@ -52,7 +49,7 @@ public class ReUtilTest {
 	@Test
 	public void findAllTest() {
 		// 查找所有匹配文本
-		List<String> resultFindAll = ReUtil.findAll("\\w{2}", content, 0, new ArrayList<String>());
+		List<String> resultFindAll = ReUtil.findAll("\\w{2}", content, 0, new ArrayList<>());
 		ArrayList<String> expected = CollectionUtil.newArrayList("ZZ", "Za", "aa", "bb", "bc", "cc", "12", "34");
 		Assert.assertEquals(expected, resultFindAll);
 	}
@@ -82,13 +79,7 @@ public class ReUtilTest {
 	@Test
 	public void replaceAllTest2() {
 		//此处把1234替换为 ->1234<-
-		String replaceAll = ReUtil.replaceAll(this.content, "(\\d+)", new Func1<Matcher, String>() {
-			
-			@Override
-			public String call(Matcher parameters) {
-				return "->" + parameters.group(1) + "<-";
-			}
-		});
+		String replaceAll = ReUtil.replaceAll(this.content, "(\\d+)", parameters -> "->" + parameters.group(1) + "<-");
 		Assert.assertEquals("ZZZaaabbbccc中文->1234<-", replaceAll);
 	}
 	

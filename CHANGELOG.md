@@ -20,7 +20,8 @@
 ### Bug修复
 * 【core 】     修复NumberUtil.mul中null的结果错误问题（issue#I17Y4J@Gitee）
 * 【core 】     修复当金额大于等于1亿时，转换会多出一个万字的bug（pr#715@Github）
-* 【core 】     修复FileUtil.listFileNames位于jar内导致的文件找不到问题（issue#listFileNames@Gitee）
+* 【core 】     修复FileUtil.listFileNames位于jar内导致的文件找不到问题
+* 【core 】     修复TextSimilarity.similar去除字符导致的问题（issue#I17K2A@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

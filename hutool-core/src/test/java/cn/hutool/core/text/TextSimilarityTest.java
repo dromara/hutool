@@ -1,9 +1,7 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.text;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.text.TextSimilarity;
 
 /**
  * 文本相似度计算工具类单元测试
@@ -21,6 +19,12 @@ public class TextSimilarityTest {
 		Assert.assertEquals(0.8571428571428571D, degree, 16);
 		
 		String similarPercent = TextSimilarity.similar(a, b, 2);
-		Assert.assertEquals("85.71%", similarPercent);
+		Assert.assertEquals("84.62%", similarPercent);
+	}
+
+	@Test
+	public void similarTest(){
+		final double abd = TextSimilarity.similar("abd", "1111");
+		Assert.assertEquals(0, abd, 1);
 	}
 }
