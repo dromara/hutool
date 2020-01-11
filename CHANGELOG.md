@@ -18,6 +18,8 @@
 * 【core  】    QrCodeUtil增加背景透明支持（pr#89@Gitee）
 * 【core  】    增加农历ChineseDate（pr#90@Gitee）
 * 【core  】    ZipUtil增加zip方法写出到流（issue#I17SCT@Gitee）
+* 【db    】    Db.use().query的方法中增加Map参数接口（issue#709@Github）
+* 【db    】    getDialect使用数据源作为锁（issue#720@Github）
 
 ### Bug修复
 * 【core 】     修复NumberUtil.mul中null的结果错误问题（issue#I17Y4J@Gitee）

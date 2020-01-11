@@ -45,6 +45,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 
 	 * @param algorithm {@link SymmetricAlgorithm}
 	 */
+	@SuppressWarnings("RedundantCast")
 	public AsymmetricCrypto(AsymmetricAlgorithm algorithm) {
 		this(algorithm, (byte[]) null, (byte[]) null);
 	}
@@ -54,6 +55,7 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	 * 
 	 * @param algorithm 算法
 	 */
+	@SuppressWarnings("RedundantCast")
 	public AsymmetricCrypto(String algorithm) {
 		this(algorithm, (byte[]) null, (byte[]) null);
 	}

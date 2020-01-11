@@ -220,7 +220,7 @@ public class SqlExecutor {
 	}
 
 	/**
-	 * 执行查询语句<br>
+	 * 执行查询语句，例如：select * from table where field1=:name1 <br>
 	 * 此方法不会关闭Connection
 	 * 
 	 * @param <T> 处理结果类型

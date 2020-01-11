@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -149,6 +150,27 @@ public abstract class AbstractDb implements Serializable {
 		try {
 			conn = this.getConnection();
 			return SqlExecutor.query(conn, sql, rsh, params);
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+
+	/**
+	 * 支持占位符的查询，例如：select * from table where field1=:name1
+	 *
+	 * @param <T>    结果集需要处理的对象类型
+	 * @param sql    查询语句，使用参数名占位符，例如:name
+	 * @param rsh    结果集处理对象
+	 * @param paramMap 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 5.1.1
+	 */
+	public <T> T query(String sql, RsHandler<T> rsh, Map<String, Object> paramMap) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+			return SqlExecutor.query(conn, sql, rsh, paramMap);
 		} finally {
 			this.closeConnection(conn);
 		}

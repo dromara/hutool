@@ -55,7 +55,6 @@ public class DialectFactory {
 	public final static String DRIVER_DM7 = "dm.jdbc.driver.DmDriver";
 	
 	private static Map<DataSource, Dialect> dialectPool = new ConcurrentHashMap<>();
-	private static final Object lock = new Object();
 
 	private DialectFactory() {
 	}
@@ -153,7 +152,9 @@ public class DialectFactory {
 	public static Dialect getDialect(DataSource ds) {
 		Dialect dialect = dialectPool.get(ds);
 		if(null == dialect) {
-			synchronized (lock) {
+			// 数据源作为锁的意义在于：不同数据源不会导致阻塞，相同数据源获取方言时可保证互斥
+			//noinspection SynchronizationOnLocalVariableOrMethodParameter
+			synchronized (ds) {
 				dialect = dialectPool.get(ds);
 				if(null == dialect) {
 					dialect = newDialect(ds);
