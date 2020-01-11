@@ -13,7 +13,7 @@
 * 【core 】     修正NumberChineseFormatter和NumberWordFormatter（类名拼写错误）
 * 【all  】     修正equals，避免可能存在的空指针问题（pr#692@Github）
 * 【core  】    提供一个自带默认值的Map（pr#87@Gitee）
-* 【core  】    修改Dict在非大小写敏感状态下get也不区分大小写
+* 【core  】    修改Dict在非大小写敏感状态下get也不区分大小写（issue#722@Github）
 
 ### Bug修复
 * 【core 】     修复NumberUtil.mul中null的结果错误问题（issue#I17Y4J@Gitee）
