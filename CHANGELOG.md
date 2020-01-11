@@ -17,12 +17,14 @@
 * 【core  】    StrUtil增加contains方法（issue#716@Github）
 * 【core  】    QrCodeUtil增加背景透明支持（pr#89@Gitee）
 * 【core  】    增加农历ChineseDate（pr#90@Gitee）
+* 【core  】    ZipUtil增加zip方法写出到流（issue#I17SCT@Gitee）
 
 ### Bug修复
 * 【core 】     修复NumberUtil.mul中null的结果错误问题（issue#I17Y4J@Gitee）
 * 【core 】     修复当金额大于等于1亿时，转换会多出一个万字的bug（pr#715@Github）
 * 【core 】     修复FileUtil.listFileNames位于jar内导致的文件找不到问题
 * 【core 】     修复TextSimilarity.similar去除字符导致的问题（issue#I17K2A@Gitee）
+* 【core 】     修复unzip文件路径问题（issue#I17VU7@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 

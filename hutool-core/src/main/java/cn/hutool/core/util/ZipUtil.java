@@ -172,14 +172,49 @@ public class ZipUtil {
 	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
 	 * @param srcFiles   要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
 	 * @return 压缩文件
-	 * @throws UtilException IO异常
+	 * @throws IORuntimeException IO异常
 	 * @since 4.6.5
 	 */
-	public static File zip(File zipFile, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws UtilException {
+	public static File zip(File zipFile, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
 		validateFiles(zipFile, srcFiles);
 
 		try (ZipOutputStream out = getZipOutputStream(zipFile, charset)) {
-			String srcRootDir;
+			zip(out, charset, withSrcDir, filter, srcFiles);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return zipFile;
+	}
+
+	/**
+	 * 对文件或文件目录进行压缩
+	 *
+	 * @param out    生成的Zip到的目标流，包括文件名。注意：zipPath不能是srcPath路径下的子文件夹
+	 * @param charset    编码
+	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
+	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
+	 * @param srcFiles   要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @throws IORuntimeException IO异常
+	 * @since 5.1.1
+	 */
+	public static void zip(OutputStream out, Charset charset, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
+		zip(getZipOutputStream(out, charset), withSrcDir, filter, srcFiles);
+	}
+
+	/**
+	 * 对文件或文件目录进行压缩
+	 *
+	 * @param zipOutputStream    生成的Zip到的目标流，不关闭此流
+	 * @param withSrcDir 是否包含被打包目录，只针对压缩目录有效。若为false，则只压缩目录下的文件或目录，为true则将本目录也压缩
+	 * @param filter     文件过滤器，通过实现此接口，自定义要过滤的文件（过滤掉哪些文件或文件夹不加入压缩）
+	 * @param srcFiles   要压缩的源文件或目录。如果压缩一个文件，则为该文件的全路径；如果压缩一个目录，则为该目录的顶层目录路径
+	 * @throws IORuntimeException IO异常
+	 * @since 5.1.1
+	 */
+	public static void zip(ZipOutputStream zipOutputStream, boolean withSrcDir, FileFilter filter, File... srcFiles) throws IORuntimeException {
+		String srcRootDir;
+		try{
 			for (File srcFile : srcFiles) {
 				if (null == srcFile) {
 					continue;
@@ -191,13 +226,12 @@ public class ZipUtil {
 					srcRootDir = srcFile.getCanonicalFile().getParentFile().getCanonicalPath();
 				}
 				// 调用递归压缩方法进行目录或文件压缩
-				zip(srcFile, srcRootDir, out, filter);
-				out.flush();
+				zip(srcFile, srcRootDir, zipOutputStream, filter);
+				zipOutputStream.flush();
 			}
 		} catch (IOException e) {
-			throw new UtilException(e);
+			throw new IORuntimeException(e);
 		}
-		return zipFile;
 	}
 
 	/**
@@ -874,6 +908,9 @@ public class ZipUtil {
 	 * @return {@link ZipOutputStream}
 	 */
 	private static ZipOutputStream getZipOutputStream(OutputStream out, Charset charset) {
+		if(out instanceof ZipOutputStream) {
+			return (ZipOutputStream)out;
+		}
 		return new ZipOutputStream(out, ObjectUtil.defaultIfNull(charset, DEFAULT_CHARSET));
 	}
 
@@ -1080,15 +1117,16 @@ public class ZipUtil {
 				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
 			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理
 			// 使用/拆分路径（zip中无\），级联创建父目录
-			final String[] pathParts = StrUtil.splitToArray(fileName, CharUtil.SLASH);
-			for (int i = 0; i < pathParts.length - 1; i++) {
+			final List<String> pathParts = StrUtil.split(fileName, '/', false, true);
+			final int lastPartIndex = pathParts.size() - 1;//目录个数
+			for (int i = 0; i < lastPartIndex; i++) {
 				//由于路径拆分，slip不检查，在最后一步检查
-				outFile = new File(outFile, pathParts[i]);
+				outFile = new File(outFile, pathParts.get(i));
 			}
 			//noinspection ResultOfMethodCallIgnored
 			outFile.mkdirs();
 			// 最后一个部分如果非空，作为文件名
-			fileName = pathParts[pathParts.length - 1];
+			fileName = pathParts.get(lastPartIndex);
 		}
 		return FileUtil.file(outFile, fileName);
 	}
