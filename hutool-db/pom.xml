@@ -18,15 +18,15 @@
 
 	<properties>
 		<!-- versions -->
-		<c3p0.version>0.9.5.4</c3p0.version>
+		<c3p0.version>0.9.5.5</c3p0.version>
 		<dbcp2.version>2.7.0</dbcp2.version>
-		<tomcat-jdbc.version>9.0.29</tomcat-jdbc.version>
+		<tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
 		<druid.version>1.1.21</druid.version>
 		<hikariCP.version>2.4.13</hikariCP.version>
 		<mongo.version>3.12.0</mongo.version>
-		<sqlite.version>3.28.0</sqlite.version>
+		<sqlite.version>3.30.1</sqlite.version>
 		<hsqldb.version>2.5.0</hsqldb.version>
-		<jedis.version>3.1.0</jedis.version>
+		<jedis.version>3.2.0</jedis.version>
 	</properties>
 
 	<dependencies>
