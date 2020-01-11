@@ -1,5 +1,11 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,12 +29,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
 
 /**
  * 压缩工具类
@@ -828,7 +828,7 @@ public class ZipUtil {
 	 * 获取Zip文件中指定目录下的所有文件，只显示文件，不显示目录
 	 *
 	 * @param zipFile Zip文件
-	 * @param dir     目录前缀
+	 * @param dir     目录前缀（目录前缀不包含开头的/）
 	 * @return 文件列表
 	 * @since 4.6.6
 	 */

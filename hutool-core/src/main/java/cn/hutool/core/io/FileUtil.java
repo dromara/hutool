@@ -342,7 +342,8 @@ public class FileUtil {
 		JarFile jarFile = null;
 		try {
 			jarFile = new JarFile(path.substring(0, index));
-			return ZipUtil.listFileNames(jarFile, path.substring(index + 1));
+			// 防止出现jar!/cn/hutool/这类路径导致文件找不到
+			return ZipUtil.listFileNames(jarFile, StrUtil.removePrefix(path.substring(index + 1), "/"));
 		} catch (IOException e) {
 			throw new IORuntimeException(StrUtil.format("Can not read file path of [{}]", path), e);
 		} finally {

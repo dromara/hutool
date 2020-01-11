@@ -229,6 +229,15 @@ public class FileUtilTest {
 		names = FileUtil.listFileNames(".");
 		Assert.assertTrue(names.contains("hutool.jpg"));
 	}
+
+	@Test
+	@Ignore
+	public void listFileNamesInJarTest() {
+		List<String> names = FileUtil.listFileNames("d:/test/hutool-core-5.1.0.jar!/cn/hutool/core/util ");
+		for (String name : names) {
+			Console.log(name);
+		}
+	}
 	
 	@Test
 	@Ignore
