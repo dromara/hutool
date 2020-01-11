@@ -1,14 +1,8 @@
 package cn.hutool.extra.qrcode;
 
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-
+import cn.hutool.core.img.Img;
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.util.CharsetUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Binarizer;
 import com.google.zxing.BinaryBitmap;
@@ -22,9 +16,14 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 
-import cn.hutool.core.img.Img;
-import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.util.CharsetUtil;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
 
 /**
  * 基于Zxing的二维码工具类
@@ -310,9 +309,9 @@ public class QrCodeUtil {
 		final HashMap<DecodeHintType, Object> hints = new HashMap<>();
 		hints.put(DecodeHintType.CHARACTER_SET, CharsetUtil.UTF_8);
 		// 优化精度
-		hints.put(DecodeHintType.TRY_HARDER, Boolean.valueOf(isTryHarder));
+		hints.put(DecodeHintType.TRY_HARDER, isTryHarder);
 		// 复杂模式，开启PURE_BARCODE模式
-		hints.put(DecodeHintType.PURE_BARCODE, Boolean.valueOf(isPureBarcode));
+		hints.put(DecodeHintType.PURE_BARCODE, isPureBarcode);
 		Result result;
 		try {
 			result = formatReader.decode(binaryBitmap, hints);
@@ -334,17 +333,21 @@ public class QrCodeUtil {
 	 * 
 	 * @param matrix BitMatrix
 	 * @param foreColor 前景色
-	 * @param backColor 背景色
+	 * @param backColor 背景色(null表示透明背景)
 	 * @return BufferedImage
 	 * @since 4.1.2
 	 */
-	public static BufferedImage toImage(BitMatrix matrix, int foreColor, int backColor) {
+	public static BufferedImage toImage(BitMatrix matrix, int foreColor, Integer backColor) {
 		final int width = matrix.getWidth();
 		final int height = matrix.getHeight();
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(width, height, null == backColor ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				image.setRGB(x, y, matrix.get(x, y) ? foreColor : backColor);
+				if(matrix.get(x, y)) {
+					image.setRGB(x, y, foreColor);
+				} else if(null != backColor){
+					image.setRGB(x, y, backColor);
+				}
 			}
 		}
 		return image;

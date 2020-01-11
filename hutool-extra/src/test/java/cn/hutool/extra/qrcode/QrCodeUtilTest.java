@@ -28,11 +28,12 @@ public class QrCodeUtilTest {
 	@Ignore
 	public void generateCustomTest() {
 		QrConfig config = new QrConfig();
-		config.setMargin(3);
-		config.setForeColor(Color.CYAN.getRGB());
-		config.setBackColor(Color.GRAY.getRGB());
+		config.setMargin(0);
+		config.setForeColor(Color.CYAN);
+		// 背景色透明
+		config.setBackColor(null);
 		config.setErrorCorrection(ErrorCorrectionLevel.H);
-		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.file("e:/qrcodeCustom.jpg"));
+		QrCodeUtil.generate("https://hutool.cn/", config, FileUtil.file("d:/qrcodeCustom.png"));
 	}
 
 	@Test

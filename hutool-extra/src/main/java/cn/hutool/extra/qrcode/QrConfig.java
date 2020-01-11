@@ -1,5 +1,6 @@
 package cn.hutool.extra.qrcode;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.nio.charset.Charset;
@@ -29,8 +30,8 @@ public class QrConfig {
 	protected int height;
 	/** 前景色（二维码颜色） */
 	protected int foreColor = BLACK;
-	/** 背景色 */
-	protected int backColor = WHITE;
+	/** 背景色，默认白色，null表示透明 */
+	protected Integer backColor = WHITE;
 	/** 边距1~4 */
 	protected Integer margin = 2;
 	/** 纠错级别 */
@@ -123,9 +124,25 @@ public class QrConfig {
 	 * 
 	 * @param foreColor 前景色
 	 * @return this
+	 * @deprecated 请使用 {@link #setForeColor(Color)}
 	 */
+	@Deprecated
 	public QrConfig setForeColor(int foreColor) {
 		this.foreColor = foreColor;
+		return this;
+	}
+
+	/**
+	 * 设置前景色，例如：Color.BLUE.getRGB()
+	 *
+	 * @param foreColor 前景色
+	 * @return this
+	 * @since 5.1.1
+	 */
+	public QrConfig setForeColor(Color foreColor) {
+		if(null != foreColor){
+			this.foreColor = foreColor.getRGB();
+		}
 		return this;
 	}
 
@@ -143,9 +160,27 @@ public class QrConfig {
 	 * 
 	 * @param backColor 背景色
 	 * @return this
+	 * @deprecated 请使用 {@link #setBackColor(Color)}
 	 */
+	@Deprecated
 	public QrConfig setBackColor(int backColor) {
 		this.backColor = backColor;
+		return this;
+	}
+
+	/**
+	 * 设置背景色，例如：Color.BLUE
+	 *
+	 * @param backColor 背景色,null表示透明背景
+	 * @return this
+	 * @since 5.1.1
+	 */
+	public QrConfig setBackColor(Color backColor) {
+		if(null == backColor){
+			this.backColor = null;
+		} else {
+			this.backColor = backColor.getRGB();
+		}
 		return this;
 	}
 
