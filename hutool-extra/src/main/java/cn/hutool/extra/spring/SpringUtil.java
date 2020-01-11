@@ -40,6 +40,8 @@ public class SpringUtil implements ApplicationContextAware {
 
 	/**
 	 * 通过name获取 Bean
+	 *
+	 * @param <T> Bean类型
 	 * @param name Bean名称
 	 * @return Bean
 	 */
