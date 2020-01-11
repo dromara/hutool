@@ -728,6 +728,21 @@ public class StrUtil {
 	}
 
 	/**
+	 * 指定字符串是否在字符串中出现过
+	 *
+	 * @param str 字符串
+	 * @param searchStr 被查找的字符串
+	 * @return 是否包含
+	 * @since 5.1.1
+	 */
+	public static boolean contains(CharSequence str, CharSequence searchStr) {
+		if(null == str || null == searchStr){
+			return false;
+		}
+		return str.toString().contains(searchStr);
+	}
+
+	/**
 	 * 查找指定字符串是否包含指定字符串列表中的任意一个字符串
 	 * 
 	 * @param str 指定字符串
