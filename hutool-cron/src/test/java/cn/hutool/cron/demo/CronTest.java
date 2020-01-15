@@ -16,13 +16,7 @@ public class CronTest {
 	@Test
 	@Ignore
 	public void customCronTest() {
-		CronUtil.schedule("*/2 * * * * *", new Task() {
-
-			@Override
-			public void execute() {
-				Console.log("Task excuted.");
-			}
-		});
+		CronUtil.schedule("*/2 * * * * *", (Task) () -> Console.log("Task excuted."));
 
 		// 支持秒级别定时任务
 		CronUtil.setMatchSecond(true);
@@ -54,13 +48,7 @@ public class CronTest {
 	@Test
 //	@Ignore
 	public void addAndRemoveTest() {
-		String id = CronUtil.schedule("*/2 * * * * *", new Runnable() {
-
-			@Override
-			public void run() {
-				Console.log("task running : 2s");
-			}
-		});
+		String id = CronUtil.schedule("*/2 * * * * *", (Runnable) () -> Console.log("task running : 2s"));
 
 		Console.log(id);
 		CronUtil.remove(id);
