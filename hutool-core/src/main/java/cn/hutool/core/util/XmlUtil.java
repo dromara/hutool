@@ -5,7 +5,6 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -249,9 +248,24 @@ public class XmlUtil {
 	 * @since 3.0.9
 	 */
 	public static String toStr(Document doc, String charset, boolean isPretty) {
+		return toStr(doc, charset, isPretty,false);
+	}
+
+	/**
+	 * 将XML文档转换为String<br>
+	 * 字符编码使用XML文档中的编码，获取不到则使用UTF-8
+	 *
+	 * @param doc                XML文档
+	 * @param charset            编码
+	 * @param isPretty           是否格式化输出
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @return XML字符串
+	 * @since 5.1.2
+	 */
+	public static String toStr(Document doc, String charset, boolean isPretty, boolean omitXmlDeclaration) {
 		final StringWriter writer = StrUtil.getWriter();
 		try {
-			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0);
+			write(doc, writer, charset, isPretty ? INDENT_DEFAULT : 0, omitXmlDeclaration);
 		} catch (Exception e) {
 			throw new UtilException(e, "Trans xml document to string error!");
 		}
@@ -331,6 +345,20 @@ public class XmlUtil {
 	/**
 	 * 将XML文档写出
 	 *
+	 * @param node               {@link Node} XML文档节点或文档本身
+	 * @param writer             写出的Writer，Writer决定了输出XML的编码
+	 * @param charset            编码
+	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @since 5.1.2
+	 */
+	public static void write(Node node, Writer writer, String charset, int indent, boolean omitXmlDeclaration) {
+		transform(new DOMSource(node), new StreamResult(writer), charset, indent, omitXmlDeclaration);
+	}
+
+	/**
+	 * 将XML文档写出
+	 *
 	 * @param node    {@link Node} XML文档节点或文档本身
 	 * @param out     写出的Writer，Writer决定了输出XML的编码
 	 * @param charset 编码
@@ -339,6 +367,20 @@ public class XmlUtil {
 	 */
 	public static void write(Node node, OutputStream out, String charset, int indent) {
 		transform(new DOMSource(node), new StreamResult(out), charset, indent);
+	}
+
+	/**
+	 * 将XML文档写出
+	 *
+	 * @param node               {@link Node} XML文档节点或文档本身
+	 * @param out                写出的Writer，Writer决定了输出XML的编码
+	 * @param charset            编码
+	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @since 5.1.2
+	 */
+	public static void write(Node node, OutputStream out, String charset, int indent, boolean omitXmlDeclaration) {
+		transform(new DOMSource(node), new StreamResult(out), charset, indent, omitXmlDeclaration);
 	}
 
 	/**
@@ -352,6 +394,21 @@ public class XmlUtil {
 	 * @since 4.0.9
 	 */
 	public static void transform(Source source, Result result, String charset, int indent) {
+		transform(source, result, charset, indent, false);
+	}
+
+	/**
+	 * 将XML文档写出<br>
+	 * 格式化输出逻辑参考：https://stackoverflow.com/questions/139076/how-to-pretty-print-xml-from-java
+	 *
+	 * @param source             源
+	 * @param result             目标
+	 * @param charset            编码
+	 * @param indent             格式化输出中缩进量，小于1表示不格式化输出
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @since 5.1.2
+	 */
+	public static void transform(Source source, Result result, String charset, int indent,boolean omitXmlDeclaration) {
 		final TransformerFactory factory = TransformerFactory.newInstance();
 		try {
 			final Transformer xformer = factory.newTransformer();
@@ -361,6 +418,9 @@ public class XmlUtil {
 			}
 			if (StrUtil.isNotBlank(charset)) {
 				xformer.setOutputProperty(OutputKeys.ENCODING, charset);
+			}
+			if (omitXmlDeclaration){
+				xformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 			}
 			xformer.transform(source, result);
 		} catch (Exception e) {
@@ -782,6 +842,29 @@ public class XmlUtil {
 	 * 将Map转换为XML格式的字符串
 	 *
 	 * @param data     Map类型数据
+	 * @return XML格式的字符串
+	 * @since 5.1.2
+	 */
+	public static String mapToXmlStr(Map<?, ?> data) {
+		return toStr(mapToXml(data, "xml"));
+	}
+
+	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data               Map类型数据
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @return XML格式的字符串
+	 * @since 5.1.2
+	 */
+	public static String mapToXmlStr(Map<?, ?> data,boolean omitXmlDeclaration) {
+		return toStr(mapToXml(data, "xml"),CharsetUtil.UTF_8,false,omitXmlDeclaration);
+	}
+
+	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data     Map类型数据
 	 * @param rootName 根节点名
 	 * @return XML格式的字符串
 	 * @since 4.0.8
@@ -801,6 +884,51 @@ public class XmlUtil {
 	 */
 	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace) {
 		return toStr(mapToXml(data, rootName, namespace));
+	}
+
+	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data               Map类型数据
+	 * @param rootName           根节点名
+	 * @param namespace          命名空间，可以为null
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @return XML格式的字符串
+	 * @since 5.1.2
+	 */
+	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean omitXmlDeclaration) {
+		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, false, omitXmlDeclaration);
+	}
+
+	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data               Map类型数据
+	 * @param rootName           根节点名
+	 * @param namespace          命名空间，可以为null
+	 * @param isPretty           是否格式化输出
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @return XML格式的字符串
+	 * @since 5.1.2
+	 */
+	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, boolean isPretty, boolean omitXmlDeclaration) {
+		return toStr(mapToXml(data, rootName, namespace), CharsetUtil.UTF_8, isPretty);
+	}
+
+	/**
+	 * 将Map转换为XML格式的字符串
+	 *
+	 * @param data               Map类型数据
+	 * @param rootName           根节点名
+	 * @param namespace          命名空间，可以为null
+	 * @param charset            编码
+	 * @param isPretty           是否格式化输出
+	 * @param omitXmlDeclaration 是否输出 xml Declaration
+	 * @return XML格式的字符串
+	 * @since 5.1.2
+	 */
+	public static String mapToXmlStr(Map<?, ?> data, String rootName, String namespace, String charset,boolean isPretty, boolean omitXmlDeclaration) {
+		return toStr(mapToXml(data, rootName, namespace), charset, isPretty, omitXmlDeclaration);
 	}
 
 	/**

@@ -124,4 +124,14 @@ public class XmlUtilTest {
 		Document doc = XmlUtil.readXML("test.xml");
 		Assert.assertNotNull(doc);
 	}
+
+	@Test
+	public void mapToXmlTestWithOmitXmlDeclaration() {
+
+		Map<String, Object> map = MapBuilder.create(new LinkedHashMap<String, Object>())
+		                                    .put("name", "ddatsh")
+		                                    .build();
+		String xml=XmlUtil.mapToXmlStr(map,true);
+		Assert.assertEquals(xml,"<xml><name>ddatsh</name></xml>");
+ 	}
 }
