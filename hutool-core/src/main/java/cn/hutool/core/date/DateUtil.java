@@ -1776,11 +1776,13 @@ public class DateUtil {
 	 *
 	 * @param startDate  开始时间
 	 * @param dateField  时间单位
-	 * @param timeLength 经过时长
+	 * @param timeLength 实际经过时长
 	 * @param endDate    被比较的时间，即有效期的截止时间。如果经过时长后的时间晚于截止时间，就表示过期
 	 * @return 是否过期
 	 * @since 3.1.1
+	 * @deprecated 此方法存在一定的歧义，容易产生误导，废弃。
 	 */
+	@Deprecated
 	public static boolean isExpired(Date startDate, DateField dateField, int timeLength, Date endDate) {
 		final Date offsetDate = offset(startDate, dateField, timeLength);
 		return offsetDate.after(endDate);
@@ -1801,7 +1803,7 @@ public class DateUtil {
 	 * @since 5.1.1
 	 */
 	public static boolean isExpired(Date startDate, Date endDate, Date checkDate) {
-		return betweenMs(startDate, checkDate) > betweenMs(startDate, checkDate);
+		return betweenMs(startDate, checkDate) > betweenMs(startDate, endDate);
 	}
 
 	/**

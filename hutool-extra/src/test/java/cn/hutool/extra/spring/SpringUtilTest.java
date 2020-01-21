@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {SpringUtil.class, SpringUtilTest.Demo2.class})
+//@Import(cn.hutool.extra.spring.SpringUtil.class)
 public class SpringUtilTest {
 
 	@Test
