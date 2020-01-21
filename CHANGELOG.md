@@ -6,6 +6,7 @@
 ## 5.1.2
 
 ### 新特性
+* 【core 】     XmlUtil支持可选是否输出omit xml declaration（pr#732@Gtihub）
 
 ### Bug修复
 * 【core 】     修复isExpired的bug（issue#733@Gtihub）

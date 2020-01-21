@@ -809,7 +809,7 @@ public class XmlUtil {
 
 			childEle = (Element) childNode;
 			final Object value = result.get(childEle.getNodeName());
-			Object newValue = null;
+			Object newValue;
 			if (childEle.hasChildNodes()) {
 				// 子节点继续递归遍历
 				final Map<String, Object> map = xmlToMap(childEle);
