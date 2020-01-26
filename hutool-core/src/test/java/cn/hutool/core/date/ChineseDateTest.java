@@ -16,5 +16,10 @@ public class ChineseDateTest {
 		Assert.assertEquals("鼠", date.getChineseZodiac());
 		Assert.assertEquals("春节", date.getFestivals());
 		Assert.assertEquals("庚子鼠年 正月初一", date.toString());
+
+		date = new ChineseDate(DateUtil.parseDate("2020-01-14"));
+		Assert.assertEquals("己亥猪年 腊月二十", date.toString());
+		date = new ChineseDate(DateUtil.parseDate("2020-01-24"));
+		Assert.assertEquals("己亥猪年 腊月三十", date.toString());
 	}
 }

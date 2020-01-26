@@ -170,7 +170,16 @@ public class ChineseDate {
 		if (day > 30) {
 			return "";
 		}
-		return day == 10 ? "初十" : chineseTen[day / 10] + NumberChineseFormatter.format(n + 1, false);
+		switch (day) {
+			case 10:
+				return "初十";
+			case 20:
+				return "二十";
+			case 30:
+				return "三十";
+			default:
+				return chineseTen[day / 10] + NumberChineseFormatter.format(n + 1, false);
+		}
 	}
 
 
