@@ -658,6 +658,31 @@ public class NetUtil {
 		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 
+    /**
+     * 检测IP地址是否能ping通
+     *
+     * @param ip IP地址
+     * @return 返回是否ping通
+     */
+    public static boolean ping(String ip) {
+        return ping(ip, 200);
+    }
+
+    /**
+     * 检测IP地址是否能ping通
+     *
+     * @param ip      IP地址
+     * @param timeout 检测超时（毫秒）
+     * @return 是否ping通
+     */
+    public static boolean ping(String ip, int timeout) {
+        try {
+            return InetAddress.getByName(ip).isReachable(timeout); // 当返回值是true时，说明host是可用的，false则不可。
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
 	// ----------------------------------------------------------------------------------------- Private method start
 	/**
 	 * 指定IP的long是否在指定范围内
