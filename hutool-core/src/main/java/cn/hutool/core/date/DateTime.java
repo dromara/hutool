@@ -268,6 +268,10 @@ public class DateTime extends Date {
 	 * @return 如果此对象为可变对象，返回自身，否则返回新对象
 	 */
 	public DateTime offset(DateField datePart, int offset) {
+		if(DateField.ERA == datePart){
+			throw new IllegalArgumentException("ERA is not support offset!");
+		}
+
 		final Calendar cal = toCalendar();
 		//noinspection MagicConstant
 		cal.add(datePart.getValue(), offset);

@@ -1,5 +1,16 @@
 package cn.hutool.http;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.ssl.AndroidSupportSSLFactory;
+import cn.hutool.http.ssl.DefaultSSLInfo;
+import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,17 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
-
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.ssl.AndroidSupportSSLFactory;
-import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
-import cn.hutool.http.ssl.TrustAnyHostnameVerifier;
 
 /**
  * http连接对象，对HttpURLConnection的包装
@@ -262,20 +262,8 @@ public class HttpConnection {
 			// Https请求
 			final HttpsURLConnection httpsConn = (HttpsURLConnection) conn;
 			// 验证域
-			httpsConn.setHostnameVerifier(null != hostnameVerifier ? hostnameVerifier : new TrustAnyHostnameVerifier());
-			if (null == ssf) {
-				try {
-					if (StrUtil.equalsIgnoreCase("dalvik", System.getProperty("java.vm.name"))) {
-						// 兼容android低版本SSL连接
-						ssf = new AndroidSupportSSLFactory();
-					} else {
-						ssf = SSLSocketFactoryBuilder.create().build();
-					}
-				} catch (KeyManagementException | NoSuchAlgorithmException e) {
-					throw new HttpException(e);
-				}
-			}
-			httpsConn.setSSLSocketFactory(ssf);
+			httpsConn.setHostnameVerifier(ObjectUtil.defaultIfNull(hostnameVerifier, DefaultSSLInfo.TRUST_ANY_HOSTNAME_VERIFIER));
+			httpsConn.setSSLSocketFactory(ObjectUtil.defaultIfNull(ssf, DefaultSSLInfo.DEFAULT_SSF));
 		}
 
 		return this;

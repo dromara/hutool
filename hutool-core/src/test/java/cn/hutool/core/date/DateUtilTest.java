@@ -645,6 +645,7 @@ public class DateUtilTest {
 		DateTime startDate = DateUtil.parse("2019-12-01 17:02:30");
 		DateTime endDate = DateUtil.parse("2019-12-02 17:02:30");
 		int length = 3;
+		//noinspection deprecation
 		boolean expired = DateUtil.isExpired(startDate, DateField.DAY_OF_YEAR, length, endDate);
 		Assert.assertTrue(expired);
 	}

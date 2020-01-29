@@ -9,6 +9,8 @@
 * 【core 】     XmlUtil支持可选是否输出omit xml declaration（pr#732@Github）
 * 【core 】     车牌号校验兼容新能源车牌（pr#92@Gitee）
 * 【core 】     在NetUtil中新增ping功能（pr#91@Gitee）
+* 【core 】     DateUtil.offset不支持ERA，增加异常提示（issue#I18KD5@Gitee）
+* 【http 】     改进HttpUtil访问HTTPS接口性能问题，SSL证书使用单例（issue#I18AL1@Gitee）
 
 ### Bug修复
 * 【core 】     修复isExpired的bug（issue#733@Gtihub）

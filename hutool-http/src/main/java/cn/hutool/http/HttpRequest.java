@@ -857,12 +857,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * @see #setSSLSocketFactory(SSLSocketFactory)
 	 */
 	public HttpRequest setSSLProtocol(String protocol) {
-		if (null == this.ssf) {
-			try {
-				this.ssf = SSLSocketFactoryBuilder.create().setProtocol(protocol).build();
-			} catch (Exception e) {
-				throw new HttpException(e);
-			}
+		Assert.notBlank(protocol, "protocol must be not blank!");
+		try {
+			this.ssf = SSLSocketFactoryBuilder.create().setProtocol(protocol).build();
+		} catch (Exception e) {
+			throw new HttpException(e);
 		}
 		return this;
 	}
@@ -930,13 +929,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			this.url = HttpUtil.encodeParams(this.url, this.charset);
 		}
 		// 初始化 connection
-		initConnecton();
+		initConnection();
 
 		// 发送请求
 		send();
 
 		// 手动实现重定向
-		HttpResponse httpResponse = sendRedirectIfPosible();
+		HttpResponse httpResponse = sendRedirectIfPossible();
 
 		// 获取响应
 		if (null == httpResponse) {
@@ -966,7 +965,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * 初始化网络连接
 	 */
-	private void initConnecton() {
+	private void initConnection() {
 		if (null != this.httpConnection) {
 			// 执行下次请求时自动关闭上次请求（常用于转发）
 			this.httpConnection.disconnectQuietly();
@@ -1018,7 +1017,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 *
 	 * @return {@link HttpResponse}，无转发返回 <code>null</code>
 	 */
-	private HttpResponse sendRedirectIfPosible() {
+	private HttpResponse sendRedirectIfPossible() {
 		if (this.maxRedirectCount < 1) {
 			// 不重定向
 			return null;
