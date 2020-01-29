@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class ImgUtilTest {
 	public void scaleTest2() {
 		ImgUtil.scale(FileUtil.file("e:/pic/test.jpg"), FileUtil.file("e:/pic/test_result.jpg"), 0.8f);
 	}
-	
+
 	@Test
 	@Ignore
 	public void scalePngTest() {
