@@ -262,7 +262,7 @@ public class DateUtilTest {
 	}
 
 	@Test
-	public void secondToTime() {
+	public void secondToTimeTest() {
 		String time = DateUtil.secondToTime(3600);
 		Assert.assertEquals("01:00:00", time);
 		time = DateUtil.secondToTime(3800);
@@ -271,6 +271,15 @@ public class DateUtilTest {
 		Assert.assertEquals("00:00:00", time);
 		time = DateUtil.secondToTime(30);
 		Assert.assertEquals("00:00:30", time);
+	}
+
+	@Test
+	public void secondToTimeTest2() {
+		String s1 = "55:02:18";
+		String s2 = "55:00:50";
+		int i = DateUtil.timeToSecond(s1) + DateUtil.timeToSecond(s2);
+		String s = DateUtil.secondToTime(i);
+		Assert.assertEquals("110:03:08", s);
 	}
 
 	@Test
