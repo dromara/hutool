@@ -18,9 +18,6 @@ import java.util.regex.Pattern;
  */
 public class Validator {
 
-	private Validator() {
-	}
-
 	/**
 	 * 英文字母 、数字和下划线
 	 */
@@ -364,8 +361,21 @@ public class Validator {
 	 * @param pattern 正则模式
 	 * @param value   值
 	 * @return 是否匹配正则
+	 * @deprecated 请使用 {@link #isMatchRegex(Pattern, CharSequence)}
 	 */
+	@Deprecated
 	public static boolean isMactchRegex(Pattern pattern, CharSequence value) {
+		return ReUtil.isMatch(pattern, value);
+	}
+
+	/**
+	 * 通过正则表达式验证
+	 *
+	 * @param pattern 正则模式
+	 * @param value   值
+	 * @return 是否匹配正则
+	 */
+	public static boolean isMatchRegex(Pattern pattern, CharSequence value) {
 		return ReUtil.isMatch(pattern, value);
 	}
 
@@ -376,7 +386,7 @@ public class Validator {
 	 * @return 是否为英文字母 、数字和下划线
 	 */
 	public static boolean isGeneral(CharSequence value) {
-		return isMactchRegex(GENERAL, value);
+		return isMatchRegex(GENERAL, value);
 	}
 
 	/**
@@ -574,7 +584,7 @@ public class Validator {
 	 * @since 4.1.8
 	 */
 	public static boolean isWord(CharSequence value) {
-		return isMactchRegex(PatternPool.WORD, value);
+		return isMatchRegex(PatternPool.WORD, value);
 	}
 
 	/**
@@ -601,7 +611,7 @@ public class Validator {
 	 * @return 是否为货币
 	 */
 	public static boolean isMoney(CharSequence value) {
-		return isMactchRegex(MONEY, value);
+		return isMatchRegex(MONEY, value);
 	}
 
 	/**
@@ -628,7 +638,7 @@ public class Validator {
 	 * @return 是否为邮政编码（中国）
 	 */
 	public static boolean isZipCode(CharSequence value) {
-		return isMactchRegex(ZIP_CODE, value);
+		return isMatchRegex(ZIP_CODE, value);
 	}
 
 	/**
@@ -654,7 +664,7 @@ public class Validator {
 	 * @return 否为可用邮箱地址
 	 */
 	public static boolean isEmail(CharSequence value) {
-		return isMactchRegex(EMAIL, value);
+		return isMatchRegex(EMAIL, value);
 	}
 
 	/**
@@ -680,7 +690,7 @@ public class Validator {
 	 * @return 是否为手机号码（中国）
 	 */
 	public static boolean isMobile(CharSequence value) {
-		return isMactchRegex(MOBILE, value);
+		return isMatchRegex(MOBILE, value);
 	}
 
 	/**
@@ -707,7 +717,7 @@ public class Validator {
 	 * @return 是否为身份证号码（18位中国）
 	 */
 	public static boolean isCitizenId(CharSequence value) {
-		return isMactchRegex(CITIZEN_ID, value);
+		return isMatchRegex(CITIZEN_ID, value);
 	}
 
 	/**
@@ -777,14 +787,12 @@ public class Validator {
 	 * @return 是否为生日
 	 */
 	public static boolean isBirthday(CharSequence value) {
-		if (isMactchRegex(BIRTHDAY, value)) {
-			Matcher matcher = BIRTHDAY.matcher(value);
-			if (matcher.find()) {
-				int year = Integer.parseInt(matcher.group(1));
-				int month = Integer.parseInt(matcher.group(3));
-				int day = Integer.parseInt(matcher.group(5));
-				return isBirthday(year, month, day);
-			}
+		final Matcher matcher = BIRTHDAY.matcher(value);
+		if (matcher.find()) {
+			int year = Integer.parseInt(matcher.group(1));
+			int month = Integer.parseInt(matcher.group(3));
+			int day = Integer.parseInt(matcher.group(5));
+			return isBirthday(year, month, day);
 		}
 		return false;
 	}
@@ -812,7 +820,7 @@ public class Validator {
 	 * @return 是否为IPV4地址
 	 */
 	public static boolean isIpv4(CharSequence value) {
-		return isMactchRegex(IPV4, value);
+		return isMatchRegex(IPV4, value);
 	}
 
 	/**
@@ -838,7 +846,7 @@ public class Validator {
 	 * @return 是否为IPV6地址
 	 */
 	public static boolean isIpv6(CharSequence value) {
-		return isMactchRegex(IPV6, value);
+		return isMatchRegex(IPV6, value);
 	}
 
 	/**
@@ -865,7 +873,7 @@ public class Validator {
 	 * @since 4.1.3
 	 */
 	public static boolean isMac(CharSequence value) {
-		return isMactchRegex(PatternPool.MAC_ADDRESS, value);
+		return isMatchRegex(PatternPool.MAC_ADDRESS, value);
 	}
 
 	/**
@@ -893,7 +901,7 @@ public class Validator {
 	 * @since 3.0.6
 	 */
 	public static boolean isPlateNumber(CharSequence value) {
-		return isMactchRegex(PLATE_NUMBER, value);
+		return isMatchRegex(PLATE_NUMBER, value);
 	}
 
 	/**
@@ -977,7 +985,7 @@ public class Validator {
 	 * @return 是否为中文字、英文字母、数字和下划线
 	 */
 	public static boolean isGeneralWithChinese(CharSequence value) {
-		return isMactchRegex(GENERAL_WITH_CHINESE, value);
+		return isMatchRegex(GENERAL_WITH_CHINESE, value);
 	}
 
 	/**
@@ -1004,7 +1012,7 @@ public class Validator {
 	 * @return 是否为UUID
 	 */
 	public static boolean isUUID(CharSequence value) {
-		return isMactchRegex(UUID, value) || isMactchRegex(UUID_SIMPLE, value);
+		return isMatchRegex(UUID, value) || isMatchRegex(UUID_SIMPLE, value);
 	}
 
 	/**
@@ -1032,7 +1040,7 @@ public class Validator {
 	 * @since 4.3.3
 	 */
 	public static boolean isHex(CharSequence value) {
-		return isMactchRegex(PatternPool.HEX, value);
+		return isMatchRegex(PatternPool.HEX, value);
 	}
 
 	/**
