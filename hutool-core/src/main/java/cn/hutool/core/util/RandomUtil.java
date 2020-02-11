@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -366,7 +366,7 @@ public class RandomUtil {
 			throw new IllegalArgumentException("Count is larger than collection distinct size !");
 		}
 
-		final HashSet<T> result = new HashSet<>(count);
+		final Set<T> result = new LinkedHashSet<>(count);
 		int limit = source.size();
 		while (result.size() < count) {
 			result.add(randomEle(source, limit));
