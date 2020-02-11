@@ -1474,7 +1474,7 @@ public class CollUtil {
 	/**
 	 * 是否包含{@code null}元素
 	 *
-	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回false
+	 * @param iterable 被检查的Iterable对象，如果为{@code null} 返回true
 	 * @return 是否包含{@code null}元素
 	 * @see IterUtil#hasNull(Iterable)
 	 * @since 3.0.7

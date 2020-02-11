@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 秒表封装<br>
@@ -69,11 +68,6 @@ public class StopWatch {
 	 * 总运行时间
 	 */
 	private long totalTimeNanos;
-	/**
-	 * 时间单位(支持三种单位：纳秒、毫秒、秒)
-	 */
-	private TimeUnit timeUnit = TimeUnit.NANOSECONDS;
-
 	// ------------------------------------------------------------------------------------------- Constructor start
 
 	/**
@@ -129,17 +123,6 @@ public class StopWatch {
 		} else {
 			this.taskList = null;
 		}
-	}
-
-	/**
-	 * 设置时间单位，不设置默认是纳秒
-	 *
-	 * @param timeUnit 时间单位
-	 * @author 李显锋
-	 * @since 5.1.1
-	 */
-	public void setTimeUnit(TimeUnit timeUnit) {
-		this.timeUnit = timeUnit;
 	}
 
 	/**
@@ -354,8 +337,8 @@ public class StopWatch {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder(shortSummary());
-		if (null == this.taskList) {
-			for (TaskInfo task : getTaskInfo()) {
+		if (null != this.taskList) {
+			for (TaskInfo task : this.taskList) {
 				sb.append("; [").append(task.getTaskName()).append("] took ").append(task.getTimeNanos()).append(" ns");
 				long percent = Math.round(100.0 * task.getTimeNanos() / getTotalTimeNanos());
 				sb.append(" = ").append(percent).append("%");
