@@ -1,7 +1,9 @@
 package cn.hutool.core.lang;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
 
@@ -16,7 +18,7 @@ import cn.hutool.core.util.StrUtil;
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000
  * </pre>
  * 
- * 第一位为未使用，接下来的41位为毫秒级时间(41位的长度可以使用69年)<br>
+ * 第一位为未使用(符号位表示正数)，接下来的41位为毫秒级时间(41位的长度可以使用69年)<br>
  * 然后是5位datacenterId和5位workerId(10位的长度最多支持部署1024个节点）<br>
  * 最后12位是毫秒内的计数（12位的计数顺序号支持每个节点每毫秒产生4096个ID序号）
  * 
@@ -31,7 +33,7 @@ public class Snowflake implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	// Thu, 04 Nov 2010 01:42:54 GMT
-	private final long twepoch = 1288834974657L;
+	private long twepoch = 1288834974657L;
 	private final long workerIdBits = 5L;
 	private final long datacenterIdBits = 5L;
 	//// 最大支持机器节点数0~31，一共32个
@@ -82,7 +84,21 @@ public class Snowflake implements Serializable{
 		this.datacenterId = datacenterId;
 		this.useSystemClock = isUseSystemClock;
 	}
-	
+	/**
+	 * 
+	 * @param epochStr 初始化时间起点 后期修改会导致id重复,如果要修改连workerId datacenterId 一起修改 慎用,格式yyyyMMdd，
+	 * @param workerId 工作机器节点id
+	 * @param datacenterId 数据中心id
+	 * @param isUseSystemClock 是否使用{@link SystemClock} 获取当前时间戳
+	 */
+	public Snowflake(String epochStr, long workerId, long datacenterId, boolean isUseSystemClock) {
+		this(workerId, datacenterId, isUseSystemClock);
+		Date d=DateUtil.parse(epochStr, "yyyyMMdd");
+		long twepoch=d.getTime();
+		if(twepoch>this.twepoch){
+			this.twepoch=twepoch;
+		}
+	}
 	/**
 	 * 根据Snowflake的ID，获取机器id
 	 *
