@@ -26,7 +26,18 @@ public class CharsetUtil {
 	/** UTF-8 */
 	public static final Charset CHARSET_UTF_8 = StandardCharsets.UTF_8;
 	/** GBK */
-	public static final Charset CHARSET_GBK = Charset.forName(GBK);
+	public static final Charset CHARSET_GBK;
+
+	static{
+		//避免不支持GBK的系统中运行报错 issue#731
+		Charset _CHARSET_GBK = null;
+		try{
+			_CHARSET_GBK = Charset.forName(GBK);
+		} catch (UnsupportedCharsetException e){
+			//ignore
+		}
+		CHARSET_GBK = _CHARSET_GBK;
+	}
 	
 	/**
 	 * 转换为Charset对象
