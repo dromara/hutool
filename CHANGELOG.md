@@ -9,6 +9,7 @@
 * 【core 】     废弃isMactchRegex，改为isMatchRegex（方法错别字）
 ### Bug修复
 * 【core 】     CharsetUtil在不支持GBK的系统中运行报错问题（issue#731@Github）
+* 【core 】     RandomUtil的randomEleSet方法顺序不随机的问题（pr#741@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
