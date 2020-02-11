@@ -1,21 +1,22 @@
 package cn.hutool.setting.test;
 
+import cn.hutool.setting.dialect.PropsUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.setting.SettingUtil;
+import java.util.Objects;
 
-public class SettingUtilTest {
+public class PropsUtilTest {
 	
 	@Test
 	public void getTest() {
-		String driver = SettingUtil.get("test").get("demo", "driver");
+		String driver = PropsUtil.get("test").getStr("driver");
 		Assert.assertEquals("com.mysql.jdbc.Driver", driver);
 	}
 
 	@Test
 	public void getFirstFoundTest() {
-		String driver = SettingUtil.getFirstFound("test2", "test").get("demo", "driver");
+		String driver = Objects.requireNonNull(PropsUtil.getFirstFound("test2", "test")).getStr("driver");
 		Assert.assertEquals("com.mysql.jdbc.Driver", driver);
 	}
 }

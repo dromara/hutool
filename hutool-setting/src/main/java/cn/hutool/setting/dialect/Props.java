@@ -48,6 +48,11 @@ public final class Props extends Properties implements BasicTypeGetter<String>, 
 	private static final long serialVersionUID = 1935981579709590740L;
 	private final static Log log = LogFactory.get();
 
+	/**
+	 * 默认配置文件扩展名
+	 */
+	public final static String EXT_NAME = "properties";
+
 	// ----------------------------------------------------------------------- 私有属性 start
 	/** 属性文件的URL */
 	private URL propertiesFileUrl;
