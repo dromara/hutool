@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.2.0-SNAPSHOT</version>
+		<version>5.1.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-poi</artifactId>
@@ -19,6 +19,7 @@
 		<!-- versions -->
 		<poi.version>4.1.1</poi.version>
 		<xerces.version>2.12.0</xerces.version>
+		<easyexcel.version>2.1.6</easyexcel.version>
 	</properties>
 
 	<dependencies>
@@ -45,6 +46,13 @@
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<version>${xerces.version}</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>easyexcel</artifactId>
+			<version>${easyexcel.version}</version>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
