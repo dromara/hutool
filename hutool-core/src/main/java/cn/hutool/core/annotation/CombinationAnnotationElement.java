@@ -1,5 +1,7 @@
 package cn.hutool.core.annotation;
 
+import cn.hutool.core.collection.CollUtil;
+
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
@@ -7,13 +9,11 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 
 /**
  * 组合注解 对JDK的原生注解机制做一个增强，支持类似Spring的组合注解。<br>
@@ -65,13 +65,13 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 	@Override
 	public Annotation[] getAnnotations() {
 		final Collection<Annotation> annotations = this.annotationMap.values();
-		return annotations.toArray(new Annotation[annotations.size()]);
+		return annotations.toArray(new Annotation[0]);
 	}
 
 	@Override
 	public Annotation[] getDeclaredAnnotations() {
 		final Collection<Annotation> annotations = this.declaredAnnotationMap.values();
-		return annotations.toArray(new Annotation[annotations.size()]);
+		return annotations.toArray(new Annotation[0]);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class CombinationAnnotationElement implements AnnotatedElement, Serializa
 		parseDeclared(declaredAnnotations);
 		
 		final Annotation[] annotations = element.getAnnotations();
-		if(ObjectUtil.equal(declaredAnnotations, annotations)) {
+		if(Arrays.equals(declaredAnnotations, annotations)) {
 			this.annotationMap = this.declaredAnnotationMap;
 		}else {
 			this.annotationMap = new HashMap<>();

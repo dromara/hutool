@@ -1,6 +1,5 @@
 package cn.hutool.poi.excel.sax;
 
-import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
@@ -13,14 +12,9 @@ import org.apache.poi.xssf.model.StylesTable;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,8 +29,6 @@ import java.util.List;
  */
 public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> implements ContentHandler {
 
-	// saxParser
-	private static final String CLASS_SAXPARSER = "org.apache.xerces.parsers.SAXParser";
 	/**
 	 * Cell单元格元素
 	 */
@@ -46,7 +38,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 */
 	private static final String ROW_ELEMENT = "row";
 	/**
-	 * Cell中的行列号
+	 * Cell中的行列号(Reference)，行模式下此为行号属性名，列模式下为列号属性名
 	 */
 	private static final String R_ATTR = "r";
 	/**
@@ -54,7 +46,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 */
 	private static final String T_ELEMENT = "t";
 	/**
-	 * SST（SharedStringsTable） 的索引
+	 * SST（SharedStringsTable） 的索引，样式index
 	 */
 	private static final String S_ATTR_VALUE = "s";
 	// 列中属性值
@@ -69,7 +61,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	// 当前列
 	private int curCell;
 	// 上一次的内容
-	private String lastContent;
+	private StringBuilder lastContent = new StringBuilder(64);
 	// 单元数据类型
 	private CellDataType cellDataType;
 	// 当前列坐标， 如A1，B5
@@ -160,7 +152,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 				this.sheetIndex = rid;
 				// 根据 rId# 或 rSheet# 查找sheet
 				sheetInputStream = xssfReader.getSheet(RID_PREFIX + (rid + 1));
-				parse(sheetInputStream);
+				ExcelSaxUtil.readFrom(sheetInputStream, this);
 			} else {
 				this.sheetIndex = -1;
 				// 遍历所有sheet
@@ -170,7 +162,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 					curRow = 0;
 					this.sheetIndex++;
 					sheetInputStream = sheetInputStreams.next();
-					parse(sheetInputStream);
+					ExcelSaxUtil.readFrom(sheetInputStream, this);
 				}
 			}
 		} catch (RuntimeException e) {
@@ -191,8 +183,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		// 单元格元素
-		if (C_ELEMENT.equals(qName)) {
-
+		if (C_ELEMENT.equals(localName)) {
 			// 获取当前列坐标
 			String tempCurCoordinate = attributes.getValue(R_ATTR);
 			// 前一列为null，则将其设置为"@",A为第一列，ascii码为65，前一列即为@，ascii码64
@@ -208,38 +199,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 			setCellType(attributes);
 		}
 
-		lastContent = "";
-	}
-
-	/**
-	 * 设置单元格的类型
-	 *
-	 * @param attribute 属性
-	 */
-	private void setCellType(Attributes attribute) {
-		// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
-		int numFmtIndex;
-		// numFmtString的值
-		numFmtString = "";
-		this.cellDataType = CellDataType.of(attribute.getValue(T_ATTR_VALUE));
-
-		// 获取单元格的xf索引，对应style.xml中cellXfs的子元素xf
-		if(null != this.stylesTable){
-			final String xfIndexStr = attribute.getValue(S_ATTR_VALUE);
-			if (null != xfIndexStr) {
-				int xfIndex = Integer.parseInt(xfIndexStr);
-				XSSFCellStyle xssfCellStyle = stylesTable.getStyleAt(xfIndex);
-				numFmtIndex = xssfCellStyle.getDataFormat();
-				numFmtString = xssfCellStyle.getDataFormatString();
-
-				if (numFmtString == null) {
-					numFmtString = BuiltinFormats.getBuiltinFormat(numFmtIndex);
-				} else if (CellDataType.NUMBER == this.cellDataType && org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
-					cellDataType = CellDataType.DATE;
-				}
-			}
-		}
-
+		lastContent.setLength(0);
 	}
 
 	/**
@@ -253,13 +213,13 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 //			// type标签
 //			// rowCellList.add(curCell++, contentStr);
 //		} else
-		if (C_ELEMENT.equals(qName)) {
+		if (C_ELEMENT.equals(localName)) {
 			// cell标签
 			Object value = ExcelSaxUtil.getDataValue(this.cellDataType, contentStr, this.sharedStringsTable, this.numFmtString);
 			// 补全单元格之间的空格
 			fillBlankCell(preCoordinate, curCoordinate, false);
 			rowCellList.add(curCell++, value);
-		} else if (ROW_ELEMENT.equals(qName)) {
+		} else if (ROW_ELEMENT.equals(localName)) {
 			// 如果是row标签，说明已经到了一行的结尾
 			// 最大列坐标以第一行的为准
 			if (curRow == 0) {
@@ -292,7 +252,7 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	@Override
 	public void characters(char[] ch, int start, int length) {
 		// 得到单元格内容的值
-		lastContent = lastContent.concat(new String(ch, start, length));
+		lastContent.append(ch, start, length);
 	}
 
 	// --------------------------------------------------------------------------------------- Pass method start
@@ -341,18 +301,6 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	// --------------------------------------------------------------------------------------- Pass method end
 
 	// --------------------------------------------------------------------------------------- Private method start
-
-	/**
-	 * 处理流中的Excel数据
-	 *
-	 * @param sheetInputStream sheet流
-	 * @throws IOException  IO异常
-	 * @throws SAXException SAX异常
-	 */
-	private void parse(InputStream sheetInputStream) throws IOException, SAXException {
-		fetchSheetReader().parse(new InputSource(sheetInputStream));
-	}
-
 	/**
 	 * 填充空白单元格，如果前一个单元格大于后一个，不需要填充<br>
 	 *
@@ -373,24 +321,32 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	}
 
 	/**
-	 * 获取sheet的解析器
+	 * 设置单元格的类型
 	 *
-	 * @return {@link XMLReader}
-	 * @throws SAXException SAX异常
+	 * @param attribute 属性
 	 */
-	private XMLReader fetchSheetReader() throws SAXException {
-		XMLReader xmlReader;
-		try {
-			xmlReader = XMLReaderFactory.createXMLReader(CLASS_SAXPARSER);
-		} catch (SAXException e) {
-			if (e.getMessage().contains("org.apache.xerces.parsers.SAXParser")) {
-				throw new DependencyException(e, "You need to add 'xerces:xercesImpl' to your project and version >= 2.11.0");
-			} else {
-				throw e;
+	private void setCellType(Attributes attribute) {
+		// numFmtString的值
+		numFmtString = "";
+		this.cellDataType = CellDataType.of(attribute.getValue(T_ATTR_VALUE));
+
+		// 获取单元格的xf索引，对应style.xml中cellXfs的子元素xf
+		if(null != this.stylesTable){
+			final String xfIndexStr = attribute.getValue(S_ATTR_VALUE);
+			if (null != xfIndexStr) {
+				int xfIndex = Integer.parseInt(xfIndexStr);
+				final XSSFCellStyle xssfCellStyle = stylesTable.getStyleAt(xfIndex);
+				numFmtString = xssfCellStyle.getDataFormatString();
+				// 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
+				int numFmtIndex = xssfCellStyle.getDataFormat();
+				if (numFmtString == null) {
+					numFmtString = BuiltinFormats.getBuiltinFormat(numFmtIndex);
+				} else if (CellDataType.NUMBER == this.cellDataType && org.apache.poi.ss.usermodel.DateUtil.isADateFormat(numFmtIndex, numFmtString)) {
+					cellDataType = CellDataType.DATE;
+				}
 			}
 		}
-		xmlReader.setContentHandler(this);
-		return xmlReader;
+
 	}
 	// --------------------------------------------------------------------------------------- Private method end
 }
