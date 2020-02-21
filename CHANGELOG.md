@@ -6,6 +6,8 @@
 ## 5.1.4
 
 ### 新特性
+* 【poi  】     增加单元格位置引用（例如A11等方式获取单元格）
+
 ### Bug修复
 * 【core 】     修复CombinationAnnotationElement数组判断问题（issue#752@Github）
 

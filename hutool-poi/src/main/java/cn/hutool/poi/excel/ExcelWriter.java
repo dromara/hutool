@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cn.hutool.poi.excel.cell.CellLocation;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.ss.usermodel.Cell;
@@ -862,6 +863,19 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 
 	/**
 	 * 给指定单元格赋值，使用默认单元格样式
+	 *
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @param value 值
+	 * @return this
+	 * @since 5.1.4
+	 */
+	public ExcelWriter writeCellValue(String locationRef, Object value) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return writeCellValue(cellLocation.getX(), cellLocation.getY(), value);
+	}
+
+	/**
+	 * 给指定单元格赋值，使用默认单元格样式
 	 * 
 	 * @param x X坐标，从0计数，即列号
 	 * @param y Y坐标，从0计数，即行号
@@ -886,10 +900,25 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	@Deprecated
 	public CellStyle createStyleForCell(int x, int y) {
-		final Cell cell = getOrCreateCell(x, y);
-		final CellStyle cellStyle = this.workbook.createCellStyle();
-		cell.setCellStyle(cellStyle);
-		return cellStyle;
+		return createCellStyle(x, y);
+	}
+
+	/**
+	 * 设置某个单元格的样式<br>
+	 * 此方法用于多个单元格共享样式的情况<br>
+	 * 可以调用{@link #getOrCreateCellStyle(int, int)} 方法创建或取得一个样式对象。
+	 *
+	 * <p>
+	 * 需要注意的是，共享样式会共享同一个{@link CellStyle}，一个单元格样式改变，全部改变。
+	 *
+	 * @param style 单元格样式
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return this
+	 * @since 5.1.4
+	 */
+	public ExcelWriter setStyle(CellStyle style, String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return setStyle(style, cellLocation.getX(), cellLocation.getY());
 	}
 	
 	/**

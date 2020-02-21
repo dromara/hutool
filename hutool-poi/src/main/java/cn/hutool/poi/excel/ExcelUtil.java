@@ -1,11 +1,5 @@
 package cn.hutool.poi.excel;
 
-import java.awt.Point;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import cn.hutool.core.exceptions.DependencyException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -17,6 +11,11 @@ import cn.hutool.poi.excel.cell.CellLocation;
 import cn.hutool.poi.excel.sax.Excel03SaxReader;
 import cn.hutool.poi.excel.sax.Excel07SaxReader;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Excel工具类
@@ -593,7 +592,7 @@ public class ExcelUtil {
 	 * 将Excel中地址标识符（例如A11，B5）等转换为行列表示<br>
 	 * 例如：A11 -》 x:0,y:10，B5-》x:1,y:4
 	 *
-	 * @param locationRef 单元格地址标识符
+	 * @param locationRef 单元格地址标识符，例如A11，B5
 	 * @return 坐标点，x表示行，从0开始，y表示列，从0开始
 	 * @since 5.1.4
 	 */

@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.hutool.poi.excel.cell.CellLocation;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,22 +19,28 @@ import cn.hutool.poi.excel.style.StyleUtil;
 
 /**
  * Excel基础类，用于抽象ExcelWriter和ExcelReader中共用部分的对象和方法
- * 
+ *
  * @param <T> 子类类型，用于返回this
  * @author looly
  * @since 4.1.4
  */
 public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
-	/** 是否被关闭 */
+	/**
+	 * 是否被关闭
+	 */
 	protected boolean isClosed;
-	/** 工作簿 */
+	/**
+	 * 工作簿
+	 */
 	protected Workbook workbook;
-	/** Excel中对应的Sheet */
+	/**
+	 * Excel中对应的Sheet
+	 */
 	protected Sheet sheet;
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param sheet Excel中的sheet
 	 */
 	public ExcelBase(Sheet sheet) {
@@ -44,7 +51,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取Workbook
-	 * 
+	 *
 	 * @return Workbook
 	 */
 	public Workbook getWorkbook() {
@@ -53,7 +60,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 返回工作簿表格数
-	 * 
+	 *
 	 * @return 工作簿表格数
 	 * @since 4.0.10
 	 */
@@ -63,7 +70,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取此工作簿所有Sheet表
-	 * 
+	 *
 	 * @return sheet表列表
 	 * @since 4.0.3
 	 */
@@ -78,7 +85,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取表名列表
-	 * 
+	 *
 	 * @return 表名列表
 	 * @since 4.0.3
 	 */
@@ -93,7 +100,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取当前Sheet
-	 * 
+	 *
 	 * @return {@link Sheet}
 	 */
 	public Sheet getSheet() {
@@ -103,7 +110,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	/**
 	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之。<br>
 	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet。
-	 * 
+	 *
 	 * @param sheetName sheet名
 	 * @return this
 	 * @since 4.0.10
@@ -120,7 +127,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	/**
 	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之（命名为默认）<br>
 	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet
-	 * 
+	 *
 	 * @param sheetIndex sheet序号，从0开始计数
 	 * @return this
 	 * @since 4.0.10
@@ -140,7 +147,19 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取指定坐标单元格，单元格不存在时返回<code>null</code>
-	 * 
+	 *
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return {@link Cell}
+	 * @since 5.1.4
+	 */
+	public Cell getCell(String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return getCell(cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 获取指定坐标单元格，单元格不存在时返回<code>null</code>
+	 *
 	 * @param x X坐标，从0计数，即列号
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link Cell}
@@ -152,7 +171,19 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取或创建指定坐标单元格
-	 * 
+	 *
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return {@link Cell}
+	 * @since 5.1.4
+	 */
+	public Cell getOrCreateCell(String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return getOrCreateCell(cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 获取或创建指定坐标单元格
+	 *
 	 * @param x X坐标，从0计数，即列号
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link Cell}
@@ -164,9 +195,22 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取指定坐标单元格，如果isCreateIfNotExist为false，则在单元格不存在时返回<code>null</code>
-	 * 
-	 * @param x X坐标，从0计数，即列号
-	 * @param y Y坐标，从0计数，即行号
+	 *
+	 * @param locationRef        单元格地址标识符，例如A11，B5
+	 * @param isCreateIfNotExist 单元格不存在时是否创建
+	 * @return {@link Cell}
+	 * @since 5.1.4
+	 */
+	public Cell getCell(String locationRef, boolean isCreateIfNotExist) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return getCell(cellLocation.getX(), cellLocation.getY(), isCreateIfNotExist);
+	}
+
+	/**
+	 * 获取指定坐标单元格，如果isCreateIfNotExist为false，则在单元格不存在时返回<code>null</code>
+	 *
+	 * @param x                  X坐标，从0计数，即列号
+	 * @param y                  Y坐标，从0计数，即行号
 	 * @param isCreateIfNotExist 单元格不存在时是否创建
 	 * @return {@link Cell}
 	 * @since 4.0.6
@@ -179,9 +223,10 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		return null;
 	}
 
+
 	/**
 	 * 获取或者创建行
-	 * 
+	 *
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link Row}
 	 * @since 4.1.4
@@ -192,7 +237,19 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 为指定单元格获取或者创建样式，返回样式后可以设置样式内容
-	 * 
+	 *
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return {@link CellStyle}
+	 * @since 5.1.4
+	 */
+	public CellStyle getOrCreateCellStyle(String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return getOrCreateCellStyle(cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 为指定单元格获取或者创建样式，返回样式后可以设置样式内容
+	 *
 	 * @param x X坐标，从0计数，即列号
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link CellStyle}
@@ -202,10 +259,22 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		final CellStyle cellStyle = getOrCreateCell(x, y).getCellStyle();
 		return StyleUtil.isNullOrDefaultStyle(this.workbook, cellStyle) ? createCellStyle(x, y) : cellStyle;
 	}
-	
+
 	/**
 	 * 为指定单元格创建样式，返回样式后可以设置样式内容
-	 * 
+	 *
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return {@link CellStyle}
+	 * @since 5.1.4
+	 */
+	public CellStyle createCellStyle(String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return createCellStyle(cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 为指定单元格创建样式，返回样式后可以设置样式内容
+	 *
 	 * @param x X坐标，从0计数，即列号
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link CellStyle}
@@ -221,7 +290,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	/**
 	 * 获取或创建某一行的样式，返回样式后可以设置样式内容<br>
 	 * 需要注意，此方法返回行样式，设置背景色在单元格设置值后会被覆盖，需要单独设置其单元格的样式。
-	 * 
+	 *
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link CellStyle}
 	 * @since 4.1.4
@@ -230,10 +299,10 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		CellStyle rowStyle = getOrCreateRow(y).getRowStyle();
 		return StyleUtil.isNullOrDefaultStyle(this.workbook, rowStyle) ? createRowStyle(y) : rowStyle;
 	}
-	
+
 	/**
 	 * 创建某一行的样式，返回样式后可以设置样式内容
-	 * 
+	 *
 	 * @param y Y坐标，从0计数，即行号
 	 * @return {@link CellStyle}
 	 * @since 4.6.3
@@ -247,7 +316,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	/**
 	 * 获取或创建某一行的样式，返回样式后可以设置样式内容<br>
 	 * 需要注意，此方法返回行样式，设置背景色在单元格设置值后会被覆盖，需要单独设置其单元格的样式。
-	 * 
+	 *
 	 * @param x X坐标，从0计数，即列号
 	 * @return {@link CellStyle}
 	 * @since 4.1.4
@@ -256,10 +325,10 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 		final CellStyle columnStyle = this.sheet.getColumnStyle(x);
 		return StyleUtil.isNullOrDefaultStyle(this.workbook, columnStyle) ? createColumnStyle(x) : columnStyle;
 	}
-	
+
 	/**
 	 * 创建某一行的样式，返回样式后可以设置样式内容
-	 * 
+	 *
 	 * @param x X坐标，从0计数，即列号
 	 * @return {@link CellStyle}
 	 * @since 4.6.3
@@ -272,11 +341,11 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取总行数，计算方法为：
-	 * 
+	 *
 	 * <pre>
 	 * 最后一行序号 + 1
 	 * </pre>
-	 * 
+	 *
 	 * @return 行数
 	 * @since 4.5.4
 	 */
@@ -286,53 +355,53 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 
 	/**
 	 * 获取有记录的行数，计算方法为：
-	 * 
+	 *
 	 * <pre>
 	 * 最后一行序号 - 第一行序号 + 1
 	 * </pre>
-	 * 
+	 *
 	 * @return 行数
 	 * @since 4.5.4
 	 */
 	public int getPhysicalRowCount() {
 		return this.sheet.getPhysicalNumberOfRows();
 	}
-	
+
 	/**
 	 * 获取第一行总列数，计算方法为：
-	 * 
+	 *
 	 * <pre>
 	 * 最后一列序号 + 1
 	 * </pre>
-	 * 
+	 *
 	 * @return 列数
 	 */
 	public int getColumnCount() {
 		return getColumnCount(0);
 	}
-	
+
 	/**
 	 * 获取总列数，计算方法为：
-	 * 
+	 *
 	 * <pre>
 	 * 最后一列序号 + 1
 	 * </pre>
-	 * 
+	 *
 	 * @param rowNum 行号
 	 * @return 列数，-1表示获取失败
 	 */
 	public int getColumnCount(int rowNum) {
 		final Row row = this.sheet.getRow(rowNum);
-		if(null != row) {
+		if (null != row) {
 			// getLastCellNum方法返回序号+1的值
 			return row.getLastCellNum();
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * 判断是否为xlsx格式的Excel表（Excel07格式）
-	 * 
+	 *
 	 * @return 是否为xlsx格式的Excel表（Excel07格式）
 	 * @since 4.6.2
 	 */
