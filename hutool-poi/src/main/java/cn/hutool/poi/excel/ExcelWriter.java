@@ -660,7 +660,10 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter merge(int firstRow, int lastRow, int firstColumn, int lastColumn, Object content, boolean isSetHeaderStyle) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
 
-		final CellStyle style = (isSetHeaderStyle && null != this.styleSet && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
+		CellStyle style = null;
+		if(null != this.styleSet){
+			style = (isSetHeaderStyle && null != this.styleSet.headCellStyle) ? this.styleSet.headCellStyle : this.styleSet.cellStyle;
+		}
 		CellUtil.mergingCells(this.sheet, firstRow, lastRow, firstColumn, lastColumn, style);
 
 		// 设置内容
@@ -1043,7 +1046,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		Comparator<String> aliasComparator = this.aliasComparator;
 		if (null == aliasComparator) {
 			Set<String> keySet = this.headerAlias.keySet();
-			aliasComparator = new IndexedComparator<>(keySet.toArray(new String[keySet.size()]));
+			aliasComparator = new IndexedComparator<>(keySet.toArray(new String[0]));
 			this.aliasComparator = aliasComparator;
 		}
 		return aliasComparator;

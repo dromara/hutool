@@ -1,9 +1,9 @@
 package cn.hutool.poi.excel.test;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.cell.CellLocation;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.poi.excel.ExcelUtil;
 
 public class ExcelUtilTest {
 	
@@ -35,5 +35,12 @@ public class ExcelUtilTest {
 		Assert.assertEquals(2, ExcelUtil.colNameToIndex("C"));
 		Assert.assertEquals(1, ExcelUtil.colNameToIndex("B"));
 		Assert.assertEquals(0, ExcelUtil.colNameToIndex("A"));
+	}
+
+	@Test
+	public void toLocationTest(){
+		final CellLocation a11 = ExcelUtil.toLocation("A11");
+		Assert.assertEquals(0, a11.getX());
+		Assert.assertEquals(10, a11.getY());
 	}
 }
