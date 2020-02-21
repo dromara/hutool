@@ -55,35 +55,6 @@ public class ExcelSaxReadTest {
 		ExcelUtil.readBySax("e:/B23_20180404164901240.xlsx", 2, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 	}
 
-	@Test
-	@Ignore
-	public void readBySaxTest3() {
-		ExcelUtil.readBySax("e:/excel/writeMapTest.xlsx", 0, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
-	}
-
-	@Test
-	@Ignore
-	public void readBySaxTest4() {
-		ExcelUtil.readBySax("e:/excel/single_line.xlsx", 2, createRowHandler());
-	}
-
-	@Test
-	@Ignore
-	public void readBySaxTest5() {
-		ExcelUtil.readBySax("f:\\test\\222.xlsx", 0, createRowHandler());
-	}
-
-	@Test
-	@Ignore
-	public void readBySaxTest6() {
-		ExcelUtil.readBySax("f:\\test\\sax_test.xlsx", 0, createRowHandler());
-	}
-
-	@Test
-	public void readBySaxTest7() {
-		ExcelUtil.readBySax("d:/test/行政许可信息.xls", 0, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
-	}
-
 	private RowHandler createRowHandler() {
 		return (sheetIndex, rowIndex, rowlist) -> {
 //				Console.log("[{}] [{}] {}", sheetIndex, rowIndex, rowlist);
