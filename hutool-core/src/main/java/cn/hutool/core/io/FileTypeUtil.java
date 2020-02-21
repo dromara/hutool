@@ -42,7 +42,8 @@ public class FileTypeUtil {
 		fileTypeMap.put("255044462d312e", "pdf"); // Adobe Acrobat (pdf)
 		fileTypeMap.put("2e524d46000000120001", "rmvb"); // rmvb/rm相同
 		fileTypeMap.put("464c5601050000000900", "flv"); // flv与f4v相同
-		fileTypeMap.put("00000020667479706d70", "mp4");
+		fileTypeMap.put("00000020667479706", "mp4");
+		fileTypeMap.put("00000018667479706D70", "mp4");
 		fileTypeMap.put("49443303000000002176", "mp3");
 		fileTypeMap.put("000001ba210001000180", "mpg"); //
 		fileTypeMap.put("3026b2758e66cf11a6d9", "wmv"); // wmv与asf相同

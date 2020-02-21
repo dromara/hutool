@@ -10,7 +10,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Console;
 
 public class FtpTest {
-	
+
 	@Test
 	@Ignore
 	public void cdTest() {

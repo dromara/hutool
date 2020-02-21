@@ -57,7 +57,9 @@ public class CustomLogTest {
 		LogFactory factory = new Log4j2LogFactory();
 		LogFactory.setCurrentLogFactory(factory);
 		Log log = LogFactory.get();
-		
+
+		log.debug(null);
+		log.debug("This is custom '{}' log\n{}", factory.getName(), LINE);
 		log.info(null);
 		log.info("This is custom '{}' log\n{}", factory.getName(), LINE);
 	}

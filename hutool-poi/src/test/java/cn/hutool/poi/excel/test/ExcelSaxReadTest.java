@@ -20,6 +20,20 @@ import org.junit.Test;
 public class ExcelSaxReadTest {
 
 	@Test
+	public void excel07Test() {
+		// 工具化快速读取
+		ExcelUtil.read07BySax("aaa.xlsx", 0, createRowHandler());
+	}
+
+	@Test
+	public void excel03Test() {
+		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
+		reader.read("aaa.xls", 1);
+		// Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
+		ExcelUtil.read03BySax("aaa.xls", 1, createRowHandler());
+	}
+
+	@Test
 	@Ignore
 	public void readBlankLineTest() {
 		ExcelUtil.readBySax("e:/ExcelBlankLine.xlsx", 0, (sheetIndex, rowIndex, rowList) -> {
@@ -48,25 +62,11 @@ public class ExcelSaxReadTest {
 	}
 
 	@Test
-	public void excel07Test() {
-		// 工具化快速读取
-		ExcelUtil.read07BySax("aaa.xlsx", 0, createRowHandler());
-	}
-
-	@Test
-	public void excel03Test() {
-		Excel03SaxReader reader = new Excel03SaxReader(createRowHandler());
-		reader.read("aaa.xls", 1);
-		// Console.log("Sheet index: [{}], Sheet name: [{}]", reader.getSheetIndex(), reader.getSheetName());
-		ExcelUtil.read03BySax("aaa.xls", 1, createRowHandler());
-	}
-
-	@Test
 	@Ignore
 	public void readBySaxTest4() {
 		ExcelUtil.readBySax("e:/excel/single_line.xlsx", 2, createRowHandler());
 	}
-	
+
 	@Test
 	@Ignore
 	public void readBySaxTest5() {
@@ -77,6 +77,11 @@ public class ExcelSaxReadTest {
 	@Ignore
 	public void readBySaxTest6() {
 		ExcelUtil.readBySax("f:\\test\\sax_test.xlsx", 0, createRowHandler());
+	}
+
+	@Test
+	public void readBySaxTest7() {
+		ExcelUtil.readBySax("d:/test/行政许可信息.xls", 0, (sheetIndex, rowIndex, rowList) -> Console.log(rowList));
 	}
 
 	private RowHandler createRowHandler() {

@@ -7,9 +7,15 @@
 
 ### 新特性
 * 【poi  】     增加单元格位置引用（例如A11等方式获取单元格）
+* 【extra】     ServletUtil.fillBean支持数据和集合字段（issue#I19ZMK@Gitee）
+* 【core 】     修改ThreadUtil.newSingleExecutor默认队列大小（issue#754@Github）
+* 【core 】     修改ExecutorBuilder默认队列大小（issue#753@Github）
+* 【core 】     FileTypeUtil增加mp4的magic（issue#756@Github）
 
 ### Bug修复
 * 【core 】     修复CombinationAnnotationElement数组判断问题（issue#752@Github）
+* 【core 】     修复log4j2使用debug行号打印问题（issue#I19NFJ@Github）
+* 【poi  】     修复sax读取excel03数组越界问题（issue#750@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

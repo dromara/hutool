@@ -1,25 +1,5 @@
 package cn.hutool.extra.servlet;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
@@ -36,6 +16,25 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.multipart.MultipartFormData;
 import cn.hutool.extra.servlet.multipart.UploadSetting;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Servlet相关工具类封装
@@ -128,16 +127,21 @@ public class ServletUtil {
 		return BeanUtil.fillBean(bean, new ValueProvider<String>() {
 			@Override
 			public Object value(String key, Type valueType) {
-				String value = request.getParameter(key);
-				if (StrUtil.isEmpty(value)) {
-					// 使用类名前缀尝试查找值
-					value = request.getParameter(beanName + StrUtil.DOT + key);
-					if (StrUtil.isEmpty(value)) {
-						// 此处取得的值为空时跳过，包括null和""
-						value = null;
+				String[] values = request.getParameterValues(key);
+				if(ArrayUtil.isEmpty(values)){
+					values = request.getParameterValues(beanName + StrUtil.DOT + key);
+					if(ArrayUtil.isEmpty(values)){
+						return null;
 					}
 				}
-				return value;
+
+				if(1 == values.length){
+					// 单值表单直接返回这个值
+					return values[0];
+				}else{
+					// 多值表单返回数组
+					return values;
+				}
 			}
 
 			@Override
@@ -346,6 +350,7 @@ public class ServletUtil {
 	public static boolean isIE(HttpServletRequest request) {
 		String userAgent = getHeaderIgnoreCase(request, "User-Agent");
 		if (StrUtil.isNotBlank(userAgent)) {
+			//noinspection ConstantConditions
 			userAgent = userAgent.toUpperCase();
 			return userAgent.contains("MSIE") || userAgent.contains("TRIDENT");
 		}
@@ -400,8 +405,7 @@ public class ServletUtil {
 	 * @return Cookie对象
 	 */
 	public static Cookie getCookie(HttpServletRequest httpServletRequest, String name) {
-		final Map<String, Cookie> cookieMap = readCookieMap(httpServletRequest);
-		return cookieMap == null ? null : cookieMap.get(name);
+		return readCookieMap(httpServletRequest).get(name);
 	}
 
 	/**
@@ -604,7 +608,7 @@ public class ServletUtil {
 		} else if (Date.class.isAssignableFrom(value.getClass())) {
 			response.setDateHeader(name, ((Date) value).getTime());
 		} else if (value instanceof Integer || "int".equals(value.getClass().getSimpleName().toLowerCase())) {
-			response.setIntHeader(name, (Integer) value);
+			response.setIntHeader(name, (int) value);
 		} else {
 			response.setHeader(name, value.toString());
 		}

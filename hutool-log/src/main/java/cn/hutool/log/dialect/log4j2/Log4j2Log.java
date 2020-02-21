@@ -55,11 +55,6 @@ public class Log4j2Log extends AbstractLog {
 	}
 
 	@Override
-	public void debug(String format, Object... arguments) {
-		debug(null, format, arguments);
-	}
-
-	@Override
 	public void debug(String fqcn, Throwable t, String format, Object... arguments) {
 		logIfEnabled(fqcn, Level.DEBUG, t, format, arguments);
 	}

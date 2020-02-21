@@ -6,7 +6,6 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -48,7 +47,11 @@ public class ThreadUtil {
 	 * @return ExecutorService
 	 */
 	public static ExecutorService newSingleExecutor() {
-		return Executors.newSingleThreadExecutor();
+		return ExecutorBuilder.create()//
+				.setCorePoolSize(1)//
+				.setMaxPoolSize(1)//
+				.setKeepAliveTime(0)//
+				.buildFinalizable();
 	}
 
 	/**
