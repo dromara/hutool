@@ -118,7 +118,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 	 * @since 4.5.0
 	 */
 	public ExecutorBuilder useSynchronousQueue(boolean fair) {
-		return setWorkQueue(new SynchronousQueue<Runnable>(fair));
+		return setWorkQueue(new SynchronousQueue<>(fair));
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class ExecutorBuilder implements Builder<ThreadPoolExecutor> {
 			workQueue = builder.workQueue;
 		} else {
 			// corePoolSize为0则要使用SynchronousQueue避免无限阻塞
-			workQueue = (corePoolSize <= 0) ? new SynchronousQueue<Runnable>() : new LinkedBlockingQueue<Runnable>();
+			workQueue = (corePoolSize <= 0) ? new SynchronousQueue<>() : new LinkedBlockingQueue<>();
 		}
 		final ThreadFactory threadFactory = (null != builder.threadFactory) ? builder.threadFactory : Executors.defaultThreadFactory();
 		RejectedExecutionHandler handler = ObjectUtil.defaultIfNull(builder.handler, new ThreadPoolExecutor.AbortPolicy());
