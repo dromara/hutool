@@ -49,7 +49,7 @@ public class RowUtil {
 		if (length < 0) {
 			return new ArrayList<>(0);
 		}
-		final List<Object> cellValues = new ArrayList<>((int) length);
+		final List<Object> cellValues = new ArrayList<>(length);
 		Object cellValue;
 		boolean isAllNull = true;
 		for (short i = 0; i < length; i++) {

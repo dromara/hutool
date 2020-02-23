@@ -15,16 +15,15 @@ import cn.hutool.poi.excel.ExcelUtil;
 
 /**
  * Excel读取单元测试
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class ExcelReadTest {
-	
+
 	@Test
 	public void aliasTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("alias.xlsx"));
-		
+
 		//读取单个单元格内容测试
 		Object value = reader.readCellValue(1, 2);
 		Assert.assertEquals("仓库", value);
@@ -77,13 +76,13 @@ public class ExcelReadTest {
 		Assert.assertEquals(11L, readAll.get(1).get(2));
 		Assert.assertEquals(41.5D, readAll.get(1).get(3));
 	}
-	
+
 	@Test
 	public void excelReadAsTextTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xlsx"));
 		Assert.assertNotNull(reader.readAsText(false));
 	}
-	
+
 	@Test
 	public void excel03ReadTest() {
 		ExcelReader reader = ExcelUtil.getReader(ResourceUtil.getStream("aaa.xls"));
@@ -141,7 +140,7 @@ public class ExcelReadTest {
 		Assert.assertEquals("男", all.get(0).getGender());
 		Assert.assertEquals(Integer.valueOf(11), all.get(0).getAge());
 	}
-	
+
 	@Test
 	@Ignore
 	public void excelReadToBeanListTest2() {
@@ -150,7 +149,7 @@ public class ExcelReadTest {
 		reader.addHeaderAlias("年龄", "age");
 		reader.addHeaderAlias("性别", "gender");
 
-		List<Person> all = reader.read(0,2, Person.class);
+		List<Person> all = reader.read(0, 2, Person.class);
 		for (Person person : all) {
 			Console.log(person);
 		}
@@ -193,11 +192,20 @@ public class ExcelReadTest {
 
 	@Test
 	@Ignore
-	public void readDoubleTest(){
+	public void readDoubleTest() {
 		ExcelReader reader = ExcelUtil.getReader("f:/test/doubleTest.xls");
 		final List<List<Object>> read = reader.read();
 		for (List<Object> list : read) {
 			Console.log(list.get(8));
 		}
+	}
+
+	@Test
+	public void mergeReadTest() {
+		final ExcelReader reader = ExcelUtil.getReader("merge_test.xlsx");
+		final List<List<Object>> read = reader.read();
+		// 验证合并单元格在两行中都可以取到值
+		Assert.assertEquals(11L, read.get(1).get(2));
+		Assert.assertEquals(11L, read.get(2).get(2));
 	}
 }

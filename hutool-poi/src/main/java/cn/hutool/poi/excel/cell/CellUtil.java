@@ -2,6 +2,7 @@ package cn.hutool.poi.excel.cell;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
 import cn.hutool.poi.excel.editors.TrimEditor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -100,6 +101,12 @@ public class CellUtil {
 		}
 		if (null == cellType) {
 			cellType = cell.getCellTypeEnum();
+		}
+
+		if(CellType.BLANK == cellType){
+			// 空白单元格可能为合并单元格
+			cell = getMergedRegionCell(cell);
+			cellType = cell.getCellType();
 		}
 
 		Object value;
@@ -239,17 +246,42 @@ public class CellUtil {
 	/**
 	 * 判断指定的单元格是否是合并单元格
 	 *
-	 * @param sheet  {@link Sheet}
-	 * @param row    行号
-	 * @param column 列号
+	 * @param sheet       {@link Sheet}
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return 是否是合并单元格
+	 * @since 5.1.5
+	 */
+	public static boolean isMergedRegion(Sheet sheet, String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return isMergedRegion(sheet, cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 判断指定的单元格是否是合并单元格
+	 *
+	 * @param cell {@link Cell}
+	 * @return 是否是合并单元格
+	 * @since 5.1.5
+	 */
+	public static boolean isMergedRegion(Cell cell) {
+		return isMergedRegion(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
+	}
+
+	/**
+	 * 判断指定的单元格是否是合并单元格
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     列号，从0开始
+	 * @param y     行号，从0开始
 	 * @return 是否是合并单元格
 	 */
-	public static boolean isMergedRegion(Sheet sheet, int row, int column) {
+	public static boolean isMergedRegion(Sheet sheet, int x, int y) {
 		final int sheetMergeCount = sheet.getNumMergedRegions();
 		CellRangeAddress ca;
 		for (int i = 0; i < sheetMergeCount; i++) {
 			ca = sheet.getMergedRegion(i);
-			if (row >= ca.getFirstRow() && row <= ca.getLastRow() && column >= ca.getFirstColumn() && column <= ca.getLastColumn()) {
+			if (y >= ca.getFirstRow() && y <= ca.getLastRow()
+					&& x >= ca.getFirstColumn() && x <= ca.getLastColumn()) {
 				return true;
 			}
 		}
@@ -288,13 +320,53 @@ public class CellUtil {
 	 * 获取合并单元格的值<br>
 	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
 	 *
+	 * @param sheet       {@link Sheet}
+	 * @param locationRef 单元格地址标识符，例如A11，B5
+	 * @return 合并单元格的值
+	 * @since 5.1.5
+	 */
+	public static Object getMergedRegionValue(Sheet sheet, String locationRef) {
+		final CellLocation cellLocation = ExcelUtil.toLocation(locationRef);
+		return getMergedRegionValue(sheet, cellLocation.getX(), cellLocation.getY());
+	}
+
+	/**
+	 * 获取合并单元格的值<br>
+	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
+	 *
 	 * @param sheet {@link Sheet}
-	 * @param y     行号，从0开始，可以是合并单元格范围中的任意一行
 	 * @param x     列号，从0开始，可以是合并单元格范围中的任意一列
+	 * @param y     行号，从0开始，可以是合并单元格范围中的任意一行
 	 * @return 合并单元格的值
 	 * @since 4.6.3
 	 */
 	public static Object getMergedRegionValue(Sheet sheet, int x, int y) {
+		return getCellValue(getMergedRegionCell(sheet, x, y));
+	}
+
+	/**
+	 * 获取合并单元格<br>
+	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
+	 *
+	 * @param cell {@link Cell}
+	 * @return 合并单元格
+	 * @since 5.1.5
+	 */
+	public static Cell getMergedRegionCell(Cell cell) {
+		return getMergedRegionCell(cell.getSheet(), cell.getColumnIndex(), cell.getRowIndex());
+	}
+
+	/**
+	 * 获取合并单元格<br>
+	 * 传入的x,y坐标（列行数）可以是合并单元格范围内的任意一个单元格
+	 *
+	 * @param sheet {@link Sheet}
+	 * @param x     列号，从0开始，可以是合并单元格范围中的任意一列
+	 * @param y     行号，从0开始，可以是合并单元格范围中的任意一行
+	 * @return 合并单元格，如果非合并单元格，返回坐标对应的单元格
+	 * @since 5.1.5
+	 */
+	public static Cell getMergedRegionCell(Sheet sheet, int x, int y) {
 		final List<CellRangeAddress> addrs = sheet.getMergedRegions();
 
 		int firstColumn;
@@ -309,12 +381,12 @@ public class CellUtil {
 
 			if (y >= firstRow && y <= lastRow) {
 				if (x >= firstColumn && x <= lastColumn) {
-					return getCellValue(SheetUtil.getCell(sheet, firstRow, firstColumn));
+					return SheetUtil.getCell(sheet, firstRow, firstColumn);
 				}
 			}
 		}
 
-		return null;
+		return SheetUtil.getCell(sheet, y, x);
 	}
 
 	// -------------------------------------------------------------------------------------------------------------- Private method start

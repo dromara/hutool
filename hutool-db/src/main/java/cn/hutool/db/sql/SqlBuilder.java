@@ -531,7 +531,7 @@ public class SqlBuilder implements Builder<String>{
 	 * @return 插入或更新的数据库字段列表
 	 */
 	public String[] getFieldArray() {
-		return this.fields.toArray(new String[this.fields.size()]);
+		return this.fields.toArray(new String[0]);
 	}
 
 	/**
@@ -558,7 +558,7 @@ public class SqlBuilder implements Builder<String>{
 	 * @return 占位符对应的值列表
 	 */
 	public Object[] getParamValueArray() {
-		return this.paramValues.toArray(new Object[this.paramValues.size()]);
+		return this.paramValues.toArray(new Object[0]);
 	}
 
 	/**
