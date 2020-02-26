@@ -658,4 +658,20 @@ public class DateUtilTest {
 		boolean expired = DateUtil.isExpired(startDate, DateField.DAY_OF_YEAR, length, endDate);
 		Assert.assertTrue(expired);
 	}
+	
+	@Test
+	public void localDateTimeTest() {
+		// 测试字符串与LocalDateTime的互相转换
+		String strDate = "2019-12-01 17:02:30";
+		LocalDateTime ldt = DateUtil.parseLocalDateTime(strDate);
+		String strDate1 = DateUtil.formatLocalDateTime(ldt);
+		System.out.println(strDate1);
+		Assert.assertEquals(strDate, strDate1);
+		
+		strDate = "2019年12月01日 17:02:30.111";
+		ldt = DateUtil.parseLocalDateTime(strDate, DatePattern.NORM_DATETIME_MS_PATTERN);
+		strDate1 = DateUtil.format(ldt, DatePattern.NORM_DATETIME_MS_PATTERN);
+		System.out.println(strDate1);
+		Assert.assertEquals(strDate, strDate1);
+	}
 }
