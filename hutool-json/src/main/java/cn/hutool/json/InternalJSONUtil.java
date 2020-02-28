@@ -55,13 +55,13 @@ final class InternalJSONUtil {
 		} else if (value instanceof Boolean) {
 			writer.write(value.toString());
 		} else if (value instanceof JSONString) {
-			Object o;
+			String valueStr;
 			try {
-				o = ((JSONString) value).toJSONString();
+				valueStr = ((JSONString) value).toJSONString();
 			} catch (Exception e) {
 				throw new JSONException(e);
 			}
-			writer.write(o != null ? o.toString() : JSONUtil.quote(value.toString()));
+			writer.write(valueStr != null ? valueStr : JSONUtil.quote(value.toString()));
 		} else {
 			JSONUtil.quote(value.toString(), writer);
 		}

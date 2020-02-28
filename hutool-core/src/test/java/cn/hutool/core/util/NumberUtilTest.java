@@ -1,11 +1,10 @@
 package cn.hutool.core.util;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * {@link NumberUtil} 单元测试类

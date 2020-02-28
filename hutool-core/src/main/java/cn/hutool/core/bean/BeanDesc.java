@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.util.BooleanUtil;
@@ -321,11 +322,21 @@ public class BeanDesc implements Serializable{
 		}
 
 		/**
-		 * 获取字段名
+		 * 获取字段名，如果存在{@link Alias}注解，读取注解的值作为名称
 		 * 
 		 * @return 字段名
 		 */
 		public String getFieldName() {
+			return ReflectUtil.getFieldName(this.field);
+		}
+
+		/**
+		 * 获取字段名称
+		 *
+		 * @return 字段名
+		 * @since 5.1.6
+		 */
+		public String getRawFieldName() {
 			return null == this.field ? null : this.field.getName();
 		}
 

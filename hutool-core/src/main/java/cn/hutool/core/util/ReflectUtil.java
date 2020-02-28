@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
@@ -114,6 +115,25 @@ public class ReflectUtil {
 	 */
 	public static boolean hasField(Class<?> beanClass, String name) throws SecurityException {
 		return null != getField(beanClass, name);
+	}
+
+	/**
+	 * 获取字段名，如果存在{@link Alias}注解，读取注解的值作为名称
+	 *
+	 * @return 字段名
+	 * @since 5.1.6
+	 */
+	public static String getFieldName(Field field) {
+		if (null == field) {
+			return null;
+		}
+
+		final Alias alias = field.getAnnotation(Alias.class);
+		if (null != alias) {
+			return alias.value();
+		}
+
+		return field.getName();
 	}
 
 	/**

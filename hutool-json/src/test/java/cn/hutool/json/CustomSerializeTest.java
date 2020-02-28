@@ -19,7 +19,7 @@ public class CustomSerializeTest {
 		JSONObject obj = JSONUtil.parseObj(customBean);
 		Assert.assertEquals("testName", obj.getStr("customName"));
 	}
-	
+
 	@Test
 	public void deserializeTest() {
 		JSONUtil.putDeserializer(CustomBean.class, json -> {
