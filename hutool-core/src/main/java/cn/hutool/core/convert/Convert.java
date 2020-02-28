@@ -468,10 +468,10 @@ public class Convert {
 	 * @return 结果
 	 * @since 5.0.7
 	 */
-	public static Date toLocalDateTime(Object value, Date defaultValue) {
+	public static LocalDateTime toLocalDateTime(Object value, LocalDateTime defaultValue) {
 		return convertQuietly(LocalDateTime.class, value, defaultValue);
 	}
-
+	
 	/**
 	 * Instant<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
@@ -498,7 +498,19 @@ public class Convert {
 	public static Date toDate(Object value) {
 		return toDate(value, null);
 	}
-
+	
+	/**
+	 * 转换为LocalDateTime<br>
+	 * 如果给定的值为空，或者转换失败，返回<code>null</code><br>
+	 * 转换失败不会报错
+	 * 
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static LocalDateTime toLocalDateTime(Object value) {
+		return toLocalDateTime(value, null);
+	}
+	
 	/**
 	 * 转换为Enum对象<br>
 	 * 如果给定的值为空，或者转换失败，返回默认值<br>
