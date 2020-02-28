@@ -1,7 +1,6 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapBuilder;
 import cn.hutool.core.map.MapUtil;
 import org.junit.Assert;
@@ -78,7 +77,6 @@ public class XmlUtilTest {
 				+ "<newNode><sub>subText</sub></newNode>"//
 				+ "</returnsms>";
 		Map<String, Object> map = XmlUtil.xmlToMap(xml);
-		Console.log(map);
 
 		Assert.assertEquals(6, map.size());
 		Assert.assertEquals("Success", map.get("returnstatus"));

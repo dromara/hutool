@@ -120,7 +120,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.9.jre7</version>
+			<version>42.2.10.jre7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

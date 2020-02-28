@@ -695,7 +695,7 @@ public class DateUtil {
 	// ------------------------------------ Parse start ----------------------------------------------
 	
 	/**
-	 * 构建LocalDateTime对象<br/>
+	 * 构建LocalDateTime对象<br>
 	 * 格式：yyyy-MM-dd HH:mm:ss
 	 * 
 	 * @param dateStr 时间字符串（带格式）
