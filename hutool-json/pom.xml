@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.1.5</version>
+		<version>5.1.6-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-json</artifactId>
