@@ -714,8 +714,7 @@ public class DateUtil {
 	public static LocalDateTime parseLocalDateTime(CharSequence dateStr, String format) {
 		dateStr = normalize(dateStr);
 		DateTimeFormatter df = DateTimeFormatter.ofPattern(format);
-		LocalDateTime ldt = LocalDateTime.parse(dateStr,df);
-		return ldt;
+		return LocalDateTime.parse(dateStr,df);
 	}
 	
 	/**

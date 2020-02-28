@@ -471,6 +471,18 @@ public class Convert {
 	public static LocalDateTime toLocalDateTime(Object value, LocalDateTime defaultValue) {
 		return convertQuietly(LocalDateTime.class, value, defaultValue);
 	}
+
+	/**
+	 * 转换为LocalDateTime<br>
+	 * 如果给定的值为空，或者转换失败，返回<code>null</code><br>
+	 * 转换失败不会报错
+	 *
+	 * @param value 被转换的值
+	 * @return 结果
+	 */
+	public static LocalDateTime toLocalDateTime(Object value) {
+		return toLocalDateTime(value, null);
+	}
 	
 	/**
 	 * Instant<br>
@@ -497,18 +509,6 @@ public class Convert {
 	 */
 	public static Date toDate(Object value) {
 		return toDate(value, null);
-	}
-	
-	/**
-	 * 转换为LocalDateTime<br>
-	 * 如果给定的值为空，或者转换失败，返回<code>null</code><br>
-	 * 转换失败不会报错
-	 * 
-	 * @param value 被转换的值
-	 * @return 结果
-	 */
-	public static LocalDateTime toLocalDateTime(Object value) {
-		return toLocalDateTime(value, null);
 	}
 	
 	/**

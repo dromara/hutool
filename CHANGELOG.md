@@ -8,9 +8,11 @@
 ### 新特性
 * 【poi  】     Excel合并单元格读取同一个值，不再为空
 * 【core 】     增加EscapeUtil.escapeAll（issue#758@Github）
+* 【core 】     增加formatLocalDateTime和parseLocalDateTime方法（pr#97@Gitee）
 
 ### Bug修复
 * 【core 】     修复EscapeUtil.escape转义错误（issue#758@Github）
+* 【core 】     修复Convert.toLocalDateTime(Object value, Date defaultValue)返回结果不是LocalDateTime类型的问题（pr#97@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
