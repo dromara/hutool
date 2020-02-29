@@ -11,6 +11,7 @@
 * 【core  】     Bean字段支持Alias注解（包括转map,转bean等）
 * 【core  】     增加ValueListHandler，优化结果集获取方式
 * 【http  】     支持patch方法（issue#666@Github）
+* 【crypto】     BCUtil支持更加灵活的密钥类型，增加writePemObject方法
 
 ### Bug修复
 

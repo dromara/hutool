@@ -1,9 +1,8 @@
 package cn.hutool.crypto.asymmetric;
 
-import java.security.InvalidKeyException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-
+import cn.hutool.crypto.CryptoException;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.asymmetric.SM2Engine.SM2Mode;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.params.ECPublicKeyParameters;
@@ -12,9 +11,9 @@ import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.bouncycastle.jcajce.provider.asymmetric.util.ECUtil;
 
-import cn.hutool.crypto.CryptoException;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.asymmetric.SM2Engine.SM2Mode;
+import java.security.InvalidKeyException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * 国密SM2算法实现，基于BC库<br>
@@ -41,7 +40,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	 * 构造，生成新的私钥公钥对
 	 */
 	public SM2() {
-		this((byte[]) null, (byte[]) null);
+		this(null, (byte[]) null);
 	}
 
 	/**

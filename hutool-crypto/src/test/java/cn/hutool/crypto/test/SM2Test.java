@@ -4,6 +4,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+import cn.hutool.core.lang.Console;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -47,6 +48,7 @@ public class SM2Test {
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
 		byte[] privateKey = pair.getPrivate().getEncoded();
 		byte[] publicKey = pair.getPublic().getEncoded();
+		Console.log(HexUtil.encodeHexStr(publicKey));
 
 		SM2 sm2 = SmUtil.sm2(privateKey, publicKey);
 		sm2.setMode(SM2Mode.C1C3C2);

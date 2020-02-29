@@ -1,19 +1,8 @@
 package cn.hutool.crypto;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.security.spec.ECFieldFp;
-import java.security.spec.ECParameterSpec;
-import java.security.spec.ECPoint;
-import java.security.spec.ECPublicKeySpec;
-import java.security.spec.EllipticCurve;
-
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.ECPointUtil;
@@ -21,12 +10,24 @@ import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemObjectGenerator;
 import org.bouncycastle.util.io.pem.PemReader;
+import org.bouncycastle.util.io.pem.PemWriter;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.ECFieldFp;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPoint;
+import java.security.spec.ECPublicKeySpec;
+import java.security.spec.EllipticCurve;
 
 /**
  * Bouncy Castle相关工具类封装
@@ -98,7 +99,7 @@ public class BCUtil {
 	 * @since 4.5.2
 	 */
 	public static PrivateKey readPrivateKey(InputStream pemStream) {
-		return KeyUtil.generateRSAPrivateKey(readKeyBytes(pemStream));
+		return (PrivateKey) readPemKey(pemStream);
 	}
 
 	/**
@@ -109,11 +110,21 @@ public class BCUtil {
 	 * @since 4.5.2
 	 */
 	public static PublicKey readPublicKey(InputStream pemStream) {
-		final Certificate certificate = KeyUtil.readX509Certificate(pemStream);
-		if (null == certificate) {
-			return null;
-		}
-		return certificate.getPublicKey();
+		return (PublicKey) readPemKey(pemStream);
+	}
+
+	/**
+	 * 从pem文件中读取公钥或私钥<br>
+	 * 根据类型返回{@link PublicKey} 或者 {@link PrivateKey}
+	 *
+	 * @param pemKeyStream pem流
+	 * @return {@link Key}
+	 * @since 4.5.2
+	 * @deprecated 请使用{@link #readPemKey(InputStream)}
+	 */
+	@Deprecated
+	public static Key readKey(InputStream pemKeyStream) {
+		return readPemKey(pemKeyStream);
 	}
 
 	/**
@@ -121,17 +132,24 @@ public class BCUtil {
 	 * 根据类型返回{@link PublicKey} 或者 {@link PrivateKey}
 	 *
 	 * @param keyStream pem流
-	 * @return {@link Key}
-	 * @since 4.5.2
+	 * @return {@link Key}，null表示无法识别的密钥类型
+	 * @since 5.1.6
 	 */
-	public static Key readKey(InputStream keyStream) {
+	public static Key readPemKey(InputStream keyStream) {
 		final PemObject object = readPemObject(keyStream);
 		final String type = object.getType();
-		if (StrUtil.isNotBlank(type) && type.endsWith("PRIVATE KEY")) {
-			return KeyUtil.generateRSAPrivateKey(object.getContent());
-		} else {
-			return KeyUtil.readX509Certificate(keyStream).getPublicKey();
+		if (StrUtil.isNotBlank(type)) {
+			if (type.endsWith("PRIVATE KEY")) {
+				return KeyUtil.generateRSAPrivateKey(object.getContent());
+			} else if (type.endsWith("PUBLIC KEY")) {
+				return KeyUtil.generateRSAPublicKey(object.getContent());
+			} else if (type.endsWith("CERTIFICATE")) {
+				return KeyUtil.readPublicKeyFromCert(IoUtil.toStream(object.getContent()));
+			}
 		}
+
+		//表示无法识别的密钥类型
+		return null;
 	}
 
 	/**
@@ -140,8 +158,21 @@ public class BCUtil {
 	 * @param keyStream pem流
 	 * @return 密钥bytes
 	 * @since 4.5.2
+	 * @deprecated 使用{@link #readPem(InputStream)}
 	 */
+	@Deprecated
 	public static byte[] readKeyBytes(InputStream keyStream) {
+		return readPem(keyStream);
+	}
+
+	/**
+	 * 从pem流中读取公钥或私钥
+	 *
+	 * @param keyStream pem流
+	 * @return 密钥bytes
+	 * @since 5.1.6
+	 */
+	public static byte[] readPem(InputStream keyStream) {
 		PemObject pemObject = readPemObject(keyStream);
 		if (null != pemObject) {
 			return pemObject.getContent();
@@ -157,14 +188,56 @@ public class BCUtil {
 	 * @since 4.5.2
 	 */
 	public static PemObject readPemObject(InputStream keyStream) {
+		return readPemObject(IoUtil.getUtf8Reader(keyStream));
+	}
+
+	/**
+	 * 读取pem文件中的信息，包括类型、头信息和密钥内容
+	 *
+	 * @param reader pem Reader
+	 * @return {@link PemObject}
+	 * @since 5.1.6
+	 */
+	public static PemObject readPemObject(Reader reader) {
 		PemReader pemReader = null;
 		try {
-			pemReader = new PemReader(IoUtil.getReader(keyStream, CharsetUtil.CHARSET_UTF_8));
+			pemReader = new PemReader(reader);
 			return pemReader.readPemObject();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
 			IoUtil.close(pemReader);
+		}
+	}
+
+	/**
+	 * 写出pem密钥（私钥、公钥、证书）
+	 *
+	 * @param type      密钥类型（私钥、公钥、证书）
+	 * @param content   密钥内容
+	 * @param keyStream pem流
+	 * @since 5.1.6
+	 */
+	public static void writePemObject(String type, byte[] content, OutputStream keyStream) {
+		writePemObject(new PemObject(type, content), keyStream);
+	}
+
+	/**
+	 * 写出pem密钥（私钥、公钥、证书）
+	 *
+	 * @param pemObject pem对象，包括密钥和密钥类型等信息
+	 * @param keyStream pem流
+	 * @since 5.1.6
+	 */
+	public static void writePemObject(PemObjectGenerator pemObject, OutputStream keyStream) {
+		PemWriter writer = null;
+		try {
+			writer = new PemWriter(IoUtil.getUtf8Writer(keyStream));
+			writer.writeObject(pemObject);
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(writer);
 		}
 	}
 }

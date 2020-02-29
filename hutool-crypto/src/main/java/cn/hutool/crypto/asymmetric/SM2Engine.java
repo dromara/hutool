@@ -199,12 +199,10 @@ public class SM2Engine {
 		this.digest.doFinal(c3, 0);
 
 		// 按照对应模式输出结果
-		switch (mode) {
-		case C1C3C2:
+		if (mode == SM2Mode.C1C3C2) {
 			return Arrays.concatenate(c1, c3, c2);
-		default:
-			return Arrays.concatenate(c1, c2, c3);
 		}
+		return Arrays.concatenate(c1, c2, c3);
 	}
 
 	/**

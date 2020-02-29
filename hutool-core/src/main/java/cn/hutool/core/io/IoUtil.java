@@ -297,6 +297,17 @@ public class IoUtil {
 
 	// -------------------------------------------------------------------------------------- getReader and getWriter start
 	/**
+	 * 获得一个文件读取器，默认使用UTF-8编码
+	 *
+	 * @param in 输入流
+	 * @return BufferedReader对象
+	 * @since 5.1.6
+	 */
+	public static BufferedReader getUtf8Reader(InputStream in) {
+		return getReader(in, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
 	 * 获得一个文件读取器
 	 * 
 	 * @param in 输入流
@@ -356,6 +367,17 @@ public class IoUtil {
 	 */
 	public static PushbackReader getPushBackReader(Reader reader, int pushBackSize) {
 		return (reader instanceof PushbackReader) ? (PushbackReader) reader : new PushbackReader(reader, pushBackSize);
+	}
+
+	/**
+	 * 获得一个Writer，默认编码UTF-8
+	 *
+	 * @param out 输入流
+	 * @return OutputStreamWriter对象
+	 * @since 5.1.6
+	 */
+	public static OutputStreamWriter getUtf8Writer(OutputStream out) {
+		return getWriter(out, CharsetUtil.CHARSET_UTF_8);
 	}
 
 	/**

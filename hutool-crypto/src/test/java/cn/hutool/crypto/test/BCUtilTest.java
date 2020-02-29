@@ -24,7 +24,13 @@ public class BCUtilTest {
 		PublicKey publicKey = BCUtil.readPublicKey(ResourceUtil.getStream("test_public_key.csr"));
 		Assert.assertNotNull(publicKey);
 	}
-	
+
+	@Test
+	public void readPemKeyTest() {
+		PublicKey publicKey = (PublicKey) BCUtil.readPemKey(ResourceUtil.getStream("test_public_key.csr"));
+		Assert.assertNotNull(publicKey);
+	}
+
 	@Test
 	public void validateKey() {
 		PrivateKey privateKey = BCUtil.readPrivateKey(ResourceUtil.getStream("test_private_key.pem"));
