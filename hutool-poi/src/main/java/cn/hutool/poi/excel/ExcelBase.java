@@ -117,10 +117,7 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 */
 	@SuppressWarnings("unchecked")
 	public T setSheet(String sheetName) {
-		this.sheet = this.workbook.getSheet(sheetName);
-		if (null == this.sheet) {
-			this.sheet = this.workbook.createSheet(sheetName);
-		}
+		WorkbookUtil.getOrCreateSheet(this.workbook, sheetName);
 		return (T) this;
 	}
 
