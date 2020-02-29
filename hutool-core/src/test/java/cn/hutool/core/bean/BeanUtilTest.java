@@ -1,5 +1,6 @@
 package cn.hutool.core.bean;
 
+import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
@@ -144,6 +145,18 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void beanToMapWithAliasTest() {
+		SubPersonWithAlias person = new SubPersonWithAlias();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+
+		Map<String, Object> map = BeanUtil.beanToMap(person);
+		Assert.assertEquals("sub名字", map.get("aliasSubName"));
+	}
+
+	@Test
 	public void beanToMapWithLocalDateTimeTest() {
 		final LocalDateTime now = LocalDateTime.now();
 
@@ -265,6 +278,15 @@ public class BeanUtilTest {
 	@Getter
 	@Setter
 	public static class SubPerson2 extends Person {
+		private String subName;
+		// boolean参数值非isXXX形式
+		private Boolean slow;
+	}
+
+	@Getter
+	@Setter
+	public static class SubPersonWithAlias extends Person {
+		@Alias("aliasSubName")
 		private String subName;
 		// boolean参数值非isXXX形式
 		private Boolean slow;

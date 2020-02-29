@@ -152,6 +152,7 @@ public final class DbUtil {
 	 * 
 	 * @param objsToClose 需要关闭的对象
 	 */
+	@SuppressWarnings("ConstantConditions")
 	public static void close(Object... objsToClose) {
 		for (Object obj : objsToClose) {
 			if (obj instanceof AutoCloseable) {

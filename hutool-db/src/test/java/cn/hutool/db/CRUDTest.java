@@ -81,6 +81,7 @@ public class CRUDTest {
 	@Test
 	public void findInTest() throws SQLException {
 		List<Entity> results = db.findAll(Entity.create("user").set("id", "in 1,2,3"));
+		Console.log(results);
 		Assert.assertEquals(2, results.size());
 	}
 
@@ -123,13 +124,13 @@ public class CRUDTest {
 		Long id = db.insertForGeneratedKey(Entity.create("user").set("name", "unitTestUser").set("age", 66));
 		Assert.assertTrue(id > 0);
 		Entity result = db.get("user", "name", "unitTestUser");
-		Assert.assertSame(66, (int) result.getInt("age"));
+		Assert.assertSame(66, result.getInt("age"));
 
 		// 改
 		int update = db.update(Entity.create().set("age", 88), Entity.create("user").set("name", "unitTestUser"));
 		Assert.assertTrue(update > 0);
 		Entity result2 = db.get("user", "name", "unitTestUser");
-		Assert.assertSame(88, (int) result2.getInt("age"));
+		Assert.assertSame(88, result2.getInt("age"));
 
 		// 删
 		int del = db.del("user", "name", "unitTestUser");

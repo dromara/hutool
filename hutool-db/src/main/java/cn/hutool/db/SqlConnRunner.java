@@ -141,7 +141,7 @@ public class SqlConnRunner {
 	 * @throws SQLException SQL执行异常
 	 */
 	public int[] insert(Connection conn, Collection<Entity> records) throws SQLException {
-		return insert(conn, records.toArray(new Entity[records.size()]));
+		return insert(conn, records.toArray(new Entity[0]));
 	}
 
 	/**
@@ -505,7 +505,7 @@ public class SqlConnRunner {
 		checkConn(conn);
 
 		final int count = count(conn, where);
-		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<Entity>(page, numPerPage, count));
+		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<>(page, numPerPage, count));
 		return this.page(conn, fields, where, page, numPerPage, pageResultHandler);
 	}
 
@@ -532,7 +532,7 @@ public class SqlConnRunner {
 		}
 
 		final int count = count(conn, where);
-		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<Entity>(page.getPageNumber(), page.getPageSize(), count));
+		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<>(page.getPageNumber(), page.getPageSize(), count));
 		return this.page(conn, fields, where, page, pageResultHandler);
 	}
 

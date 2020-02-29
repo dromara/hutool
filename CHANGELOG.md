@@ -8,6 +8,8 @@
 ### 新特性
 * 【core  】     NumberUtil.decimalFormat增加Object对象参数支持
 * 【core  】     增加ReflectUtil.getFieldValue支持Alias注解
+* 【core  】     Bean字段支持Alias注解（包括转map,转bean等）
+* 【core  】     增加ValueListHandler，优化结果集获取方式
 
 ### Bug修复
 
