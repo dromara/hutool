@@ -294,7 +294,7 @@ public class ReflectUtil {
 	/**
 	 * 设置字段值
 	 *
-	 * @param obj       对象
+	 * @param obj       对象,static字段则此处传Class
 	 * @param fieldName 字段名
 	 * @param value     值，值类型必须与字段类型匹配，不会自动转换对象类型
 	 * @throws UtilException 包装IllegalAccessException异常
@@ -303,7 +303,7 @@ public class ReflectUtil {
 		Assert.notNull(obj);
 		Assert.notBlank(fieldName);
 
-		final Field field = getField(obj.getClass(), fieldName);
+		final Field field = getField((obj instanceof Class) ? (Class<?>)obj : obj.getClass(), fieldName);
 		Assert.notNull(field, "Field [{}] is not exist in [{}]", fieldName, obj.getClass().getName());
 		setFieldValue(obj, field, value);
 	}
@@ -317,9 +317,7 @@ public class ReflectUtil {
 	 * @throws UtilException UtilException 包装IllegalAccessException异常
 	 */
 	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException {
-		Assert.notNull(field, "Field in [{}] not exist !", obj.getClass().getName());
-
-		setAccessible(field);
+		Assert.notNull(field, "Field in [{}] not exist !", obj);
 
 		if (null != value) {
 			Class<?> fieldType = field.getType();
@@ -332,10 +330,11 @@ public class ReflectUtil {
 			}
 		}
 
+		setAccessible(field);
 		try {
-			field.set(obj, value);
+			field.set(obj instanceof Class ? null : obj, value);
 		} catch (IllegalAccessException e) {
-			throw new UtilException(e, "IllegalAccess for {}.{}", obj.getClass(), field.getName());
+			throw new UtilException(e, "IllegalAccess for {}.{}", obj, field.getName());
 		}
 	}
 

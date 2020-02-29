@@ -83,6 +83,14 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void truncateTest(){
+		String dateStr2 = "2020-02-29 12:59:34";
+		Date date2 = DateUtil.parse(dateStr2);
+		final DateTime dateTime = DateUtil.truncate(date2, DateField.MINUTE);
+		Assert.assertEquals("2020-02-29 12:59:00", dateTime.toString());
+	}
+
+	@Test
 	public void beginAndWeedTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		DateTime date = DateUtil.parse(dateStr);

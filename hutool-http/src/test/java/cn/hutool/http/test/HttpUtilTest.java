@@ -220,7 +220,7 @@ public class HttpUtilTest {
 	@Test
 	@Ignore
 	public void patchTest() {
-		String body = HttpRequest.post("https://www.baidu.com").execute().body();
+		String body = HttpRequest.patch("https://www.baidu.com").execute().body();
 		Console.log(body);
 	}
 

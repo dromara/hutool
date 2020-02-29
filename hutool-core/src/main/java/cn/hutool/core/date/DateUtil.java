@@ -1849,7 +1849,9 @@ public class DateUtil {
 	 * @param checkDate 检查时间，可以是当前时间，既
 	 * @return 是否过期
 	 * @since 5.1.1
+	 * @deprecated 使用isIn方法
 	 */
+	@Deprecated
 	public static boolean isExpired(Date startDate, Date endDate, Date checkDate) {
 		return betweenMs(startDate, checkDate) > betweenMs(startDate, endDate);
 	}
