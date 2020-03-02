@@ -17,6 +17,7 @@
 * 【core  】     增强EnumConvert判断能力（issue#I17082@Gitee）
 * 【all   】     log、template、tokenizer使用SPI机制代替硬编码
 * 【poi   】     Word07Writer增加addPicture
+* 【crypto】     RSA算法中，BlockSize长度策略调整（issue#721@Github）
 
 ### Bug修复
 

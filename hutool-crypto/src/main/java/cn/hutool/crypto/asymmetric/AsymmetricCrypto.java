@@ -1,19 +1,18 @@
 package cn.hutool.crypto.asymmetric;
 
-import java.io.IOException;
-import java.security.Key;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import java.io.IOException;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * 非对称加密算法
@@ -196,12 +195,19 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	@Override
 	public byte[] encrypt(byte[] data, KeyType keyType) {
 		final Key key = getKeyByType(keyType);
-		final int maxBlockSize = this.encryptBlockSize < 0 ? data.length : this.encryptBlockSize;
-
 		lock.lock();
 		try {
 			cipher.init(Cipher.ENCRYPT_MODE, key);
-			return doFinal(data, maxBlockSize);
+
+			if(this.encryptBlockSize < 0){
+				// 在引入BC库情况下，自动获取块大小
+				final int blockSize = this.cipher.getBlockSize();
+				if(blockSize > 0){
+					this.encryptBlockSize = blockSize;
+				}
+			}
+
+			return doFinal(data, this.encryptBlockSize < 0 ? data.length : this.encryptBlockSize);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
@@ -220,12 +226,19 @@ public class AsymmetricCrypto extends AbstractAsymmetricCrypto<AsymmetricCrypto>
 	@Override
 	public byte[] decrypt(byte[] data, KeyType keyType) {
 		final Key key = getKeyByType(keyType);
-		final int maxBlockSize = this.decryptBlockSize < 0 ? data.length : this.decryptBlockSize;
-
 		lock.lock();
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, key);
-			return doFinal(data, maxBlockSize);
+
+			if(this.decryptBlockSize < 0){
+				// 在引入BC库情况下，自动获取块大小
+				final int blockSize = this.cipher.getBlockSize();
+				if(blockSize > 0){
+					this.decryptBlockSize = blockSize;
+				}
+			}
+
+			return doFinal(data, this.decryptBlockSize < 0 ? data.length : this.decryptBlockSize);
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		} finally {
