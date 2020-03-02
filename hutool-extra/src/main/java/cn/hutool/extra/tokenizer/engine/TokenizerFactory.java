@@ -1,17 +1,9 @@
 package cn.hutool.extra.tokenizer.engine;
 
+import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.tokenizer.TokenizerEngine;
 import cn.hutool.extra.tokenizer.TokenizerException;
-import cn.hutool.extra.tokenizer.engine.analysis.SmartcnEngine;
-import cn.hutool.extra.tokenizer.engine.ansj.AnsjEngine;
-import cn.hutool.extra.tokenizer.engine.hanlp.HanLPEngine;
-import cn.hutool.extra.tokenizer.engine.ikanalyzer.IKAnalyzerEngine;
-import cn.hutool.extra.tokenizer.engine.jcseg.JcsegEngine;
-import cn.hutool.extra.tokenizer.engine.jieba.JiebaEngine;
-import cn.hutool.extra.tokenizer.engine.mmseg.MmsegEngine;
-import cn.hutool.extra.tokenizer.engine.mynlp.MynlpEngine;
-import cn.hutool.extra.tokenizer.engine.word.WordEngine;
 import cn.hutool.log.StaticLog;
 
 /**
@@ -38,51 +30,11 @@ public class TokenizerFactory {
 	 * @return {@link TokenizerEngine}
 	 */
 	private static TokenizerEngine doCreate() {
-		try {
-			return new AnsjEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
+		final TokenizerEngine engine = ServiceLoaderUtil.loadFirstAvailable(TokenizerEngine.class);
+		if(null != engine){
+			return engine;
 		}
-		try {
-			return new HanLPEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new IKAnalyzerEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new JcsegEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new JiebaEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new MmsegEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new WordEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new SmartcnEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new MynlpEngine();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
+
 		throw new TokenizerException("No tokenizer found ! Please add some tokenizer jar to your project !");
 	}
 }

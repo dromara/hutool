@@ -1,0 +1,6 @@
+cn.hutool.extra.template.engine.beetl.BeetlEngine
+cn.hutool.extra.template.engine.freemarker.FreemarkerEngine
+cn.hutool.extra.template.engine.velocity.VelocityEngine
+cn.hutool.extra.template.engine.rythm.RythmEngine
+cn.hutool.extra.template.engine.enjoy.EnjoyEngine
+cn.hutool.extra.template.engine.thymeleaf.ThymeleafEngine

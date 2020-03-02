@@ -15,6 +15,7 @@
 * 【core  】     增加ServiceLoaderUtil
 * 【core  】     增加EnumUtil.getEnumAt方法
 * 【core  】     增强EnumConvert判断能力（issue#I17082@Gitee）
+* 【log   】     使用SPI机制代替硬编码
 
 ### Bug修复
 

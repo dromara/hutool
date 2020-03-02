@@ -1,0 +1,9 @@
+cn.hutool.extra.tokenizer.engine.ansj.AnsjEngine
+cn.hutool.extra.tokenizer.engine.hanlp.HanLPEngine
+cn.hutool.extra.tokenizer.engine.ikanalyzer.IKAnalyzerEngine
+cn.hutool.extra.tokenizer.engine.jcseg.JcsegEngine
+cn.hutool.extra.tokenizer.engine.jieba.JiebaEngine
+cn.hutool.extra.tokenizer.engine.mmseg.MmsegEngine
+cn.hutool.extra.tokenizer.engine.word.WordEngine
+cn.hutool.extra.tokenizer.engine.analysis.SmartcnEngine
+cn.hutool.extra.tokenizer.engine.mynlp.MynlpEngine
