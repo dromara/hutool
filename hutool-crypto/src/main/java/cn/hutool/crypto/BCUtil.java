@@ -1,30 +1,25 @@
 package cn.hutool.crypto;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECKeyParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.ECPointUtil;
+import org.bouncycastle.jce.interfaces.ECKey;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECNamedCurveSpec;
+import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.util.io.pem.PemObject;
-import org.bouncycastle.util.io.pem.PemObjectGenerator;
-import org.bouncycastle.util.io.pem.PemReader;
-import org.bouncycastle.util.io.pem.PemWriter;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.security.GeneralSecurityException;
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.ECFieldFp;
-import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.EllipticCurve;
@@ -81,7 +76,7 @@ public class BCUtil {
 		final ECPoint point = ECPointUtil.decodePoint(ecCurve, encodeByte);
 
 		// 根据曲线恢复公钥格式
-		ECParameterSpec ecSpec = new ECNamedCurveSpec(curveName, curve, namedSpec.getG(), namedSpec.getN());
+		ECNamedCurveSpec ecSpec = new ECNamedCurveSpec(curveName, curve, namedSpec.getG(), namedSpec.getN());
 
 		final KeyFactory PubKeyGen = KeyUtil.getKeyFactory("EC");
 		try {
@@ -92,152 +87,37 @@ public class BCUtil {
 	}
 
 	/**
-	 * 读取PEM格式的私钥
+	 * ECKey转换为ECKeyParameters
 	 *
-	 * @param pemStream pem流
-	 * @return {@link PrivateKey}
-	 * @since 4.5.2
-	 */
-	public static PrivateKey readPrivateKey(InputStream pemStream) {
-		return (PrivateKey) readPemKey(pemStream);
-	}
-
-	/**
-	 * 读取PEM格式的公钥
-	 *
-	 * @param pemStream pem流
-	 * @return {@link PublicKey}
-	 * @since 4.5.2
-	 */
-	public static PublicKey readPublicKey(InputStream pemStream) {
-		return (PublicKey) readPemKey(pemStream);
-	}
-
-	/**
-	 * 从pem文件中读取公钥或私钥<br>
-	 * 根据类型返回{@link PublicKey} 或者 {@link PrivateKey}
-	 *
-	 * @param pemKeyStream pem流
-	 * @return {@link Key}
-	 * @since 4.5.2
-	 * @deprecated 请使用{@link #readPemKey(InputStream)}
-	 */
-	@Deprecated
-	public static Key readKey(InputStream pemKeyStream) {
-		return readPemKey(pemKeyStream);
-	}
-
-	/**
-	 * 从pem文件中读取公钥或私钥<br>
-	 * 根据类型返回{@link PublicKey} 或者 {@link PrivateKey}
-	 *
-	 * @param keyStream pem流
-	 * @return {@link Key}，null表示无法识别的密钥类型
+	 * @param ecKey BCECPrivateKey或者BCECPublicKey
+	 * @return ECPrivateKeyParameters或者ECPublicKeyParameters
 	 * @since 5.1.6
 	 */
-	public static Key readPemKey(InputStream keyStream) {
-		final PemObject object = readPemObject(keyStream);
-		final String type = object.getType();
-		if (StrUtil.isNotBlank(type)) {
-			if (type.endsWith("PRIVATE KEY")) {
-				return KeyUtil.generateRSAPrivateKey(object.getContent());
-			} else if (type.endsWith("PUBLIC KEY")) {
-				return KeyUtil.generateRSAPublicKey(object.getContent());
-			} else if (type.endsWith("CERTIFICATE")) {
-				return KeyUtil.readPublicKeyFromCert(IoUtil.toStream(object.getContent()));
-			}
+	public static ECKeyParameters toParams(ECKey ecKey) {
+		final ECParameterSpec parameterSpec = ecKey.getParameters();
+		final ECDomainParameters ecDomainParameters = buildECDomainParameters(parameterSpec);
+
+		if (ecKey instanceof BCECPrivateKey) {
+			return new ECPrivateKeyParameters(((BCECPrivateKey) ecKey).getD(), ecDomainParameters);
+		} else if (ecKey instanceof BCECPublicKey) {
+			return new ECPublicKeyParameters(((BCECPublicKey) ecKey).getQ(), ecDomainParameters);
 		}
 
-		//表示无法识别的密钥类型
 		return null;
 	}
 
 	/**
-	 * 从pem文件中读取公钥或私钥
+	 * 构建ECDomainParameters对象
 	 *
-	 * @param keyStream pem流
-	 * @return 密钥bytes
-	 * @since 4.5.2
-	 * @deprecated 使用{@link #readPem(InputStream)}
-	 */
-	@Deprecated
-	public static byte[] readKeyBytes(InputStream keyStream) {
-		return readPem(keyStream);
-	}
-
-	/**
-	 * 从pem流中读取公钥或私钥
-	 *
-	 * @param keyStream pem流
-	 * @return 密钥bytes
+	 * @param parameterSpec ECParameterSpec
+	 * @return ECDomainParameters
 	 * @since 5.1.6
 	 */
-	public static byte[] readPem(InputStream keyStream) {
-		PemObject pemObject = readPemObject(keyStream);
-		if (null != pemObject) {
-			return pemObject.getContent();
-		}
-		return null;
-	}
-
-	/**
-	 * 读取pem文件中的信息，包括类型、头信息和密钥内容
-	 *
-	 * @param keyStream pem流
-	 * @return {@link PemObject}
-	 * @since 4.5.2
-	 */
-	public static PemObject readPemObject(InputStream keyStream) {
-		return readPemObject(IoUtil.getUtf8Reader(keyStream));
-	}
-
-	/**
-	 * 读取pem文件中的信息，包括类型、头信息和密钥内容
-	 *
-	 * @param reader pem Reader
-	 * @return {@link PemObject}
-	 * @since 5.1.6
-	 */
-	public static PemObject readPemObject(Reader reader) {
-		PemReader pemReader = null;
-		try {
-			pemReader = new PemReader(reader);
-			return pemReader.readPemObject();
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(pemReader);
-		}
-	}
-
-	/**
-	 * 写出pem密钥（私钥、公钥、证书）
-	 *
-	 * @param type      密钥类型（私钥、公钥、证书）
-	 * @param content   密钥内容
-	 * @param keyStream pem流
-	 * @since 5.1.6
-	 */
-	public static void writePemObject(String type, byte[] content, OutputStream keyStream) {
-		writePemObject(new PemObject(type, content), keyStream);
-	}
-
-	/**
-	 * 写出pem密钥（私钥、公钥、证书）
-	 *
-	 * @param pemObject pem对象，包括密钥和密钥类型等信息
-	 * @param keyStream pem流
-	 * @since 5.1.6
-	 */
-	public static void writePemObject(PemObjectGenerator pemObject, OutputStream keyStream) {
-		PemWriter writer = null;
-		try {
-			writer = new PemWriter(IoUtil.getUtf8Writer(keyStream));
-			writer.writeObject(pemObject);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(writer);
-		}
+	public static ECDomainParameters buildECDomainParameters(ECParameterSpec parameterSpec) {
+		return new ECDomainParameters(
+				parameterSpec.getCurve(),
+				parameterSpec.getG(),
+				parameterSpec.getN(),
+				parameterSpec.getH());
 	}
 }

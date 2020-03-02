@@ -3,7 +3,7 @@
 
 -------------------------------------------------------------------------------------------------------------
 
-## 5.1.6
+## 5.2.0
 
 ### 新特性
 * 【core  】     NumberUtil.decimalFormat增加Object对象参数支持
@@ -18,6 +18,8 @@
 * 【all   】     log、template、tokenizer使用SPI机制代替硬编码
 * 【poi   】     Word07Writer增加addPicture
 * 【crypto】     RSA算法中，BlockSize长度策略调整（issue#721@Github）
+* 【crypto】     删除SM2Engine，使用BC库中的对象替代
+* 【crypto】     增加PemUtil工具类
 
 ### Bug修复
 

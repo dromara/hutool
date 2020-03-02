@@ -1,13 +1,5 @@
 package cn.hutool.crypto.test;
 
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-
-import cn.hutool.core.lang.Console;
-import org.junit.Assert;
-import org.junit.Test;
-
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
@@ -17,7 +9,13 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.SM2;
-import cn.hutool.crypto.asymmetric.SM2Engine.SM2Mode;
+import org.bouncycastle.crypto.engines.SM2Engine;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * SM2算法单元测试
@@ -48,10 +46,9 @@ public class SM2Test {
 		KeyPair pair = SecureUtil.generateKeyPair("SM2");
 		byte[] privateKey = pair.getPrivate().getEncoded();
 		byte[] publicKey = pair.getPublic().getEncoded();
-		Console.log(HexUtil.encodeHexStr(publicKey));
 
 		SM2 sm2 = SmUtil.sm2(privateKey, publicKey);
-		sm2.setMode(SM2Mode.C1C3C2);
+		sm2.setMode(SM2Engine.Mode.C1C2C3);
 
 		// 公钥加密，私钥解密
 		byte[] encrypt = sm2.encrypt(StrUtil.bytes("我是一段测试aaaa", CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
