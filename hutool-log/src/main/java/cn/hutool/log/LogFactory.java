@@ -1,11 +1,5 @@
 package cn.hutool.log;
 
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
-
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
@@ -17,6 +11,12 @@ import cn.hutool.log.dialect.log4j.Log4jLogFactory;
 import cn.hutool.log.dialect.log4j2.Log4j2LogFactory;
 import cn.hutool.log.dialect.slf4j.Slf4jLogFactory;
 import cn.hutool.log.dialect.tinylog.TinyLogFactory;
+
+import java.net.URL;
+import java.util.Map;
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 日志工厂类
@@ -228,11 +228,10 @@ public abstract class LogFactory {
 	 */
 	private static LogFactory doCreate() {
 		final ServiceLoader<LogFactory> factories = ServiceLoaderUtil.load(LogFactory.class);
-		final Iterator<LogFactory> factoryIterator = factories.iterator();
-		while(factoryIterator.hasNext()){
-			try{
-				return factoryIterator.next();
-			} catch (NoClassDefFoundError e){
+		for (LogFactory factory : factories) {
+			try {
+				return factory;
+			} catch (ServiceConfigurationError e) {
 				// ignore
 			}
 		}
