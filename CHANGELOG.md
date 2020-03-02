@@ -16,6 +16,7 @@
 * 【core  】     增加EnumUtil.getEnumAt方法
 * 【core  】     增强EnumConvert判断能力（issue#I17082@Gitee）
 * 【all   】     log、template、tokenizer使用SPI机制代替硬编码
+* 【poi   】     Word07Writer增加addPicture
 
 ### Bug修复
 

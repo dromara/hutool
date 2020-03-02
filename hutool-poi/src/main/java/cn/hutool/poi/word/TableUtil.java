@@ -75,7 +75,7 @@ public class TableUtil {
 		if(rowBean instanceof Map) {
 			rowMap = (Map) rowBean;
 		} else if (BeanUtil.isBean(rowBean.getClass())) {
-			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<String, Object>(), false, false);
+			rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 		} else {
 			// 其它转为字符串默认输出
 			writeRow(row, CollUtil.newArrayList(rowBean), isWriteKeyAsHead);
