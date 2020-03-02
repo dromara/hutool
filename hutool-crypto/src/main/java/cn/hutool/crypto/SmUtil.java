@@ -15,6 +15,8 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -31,6 +33,18 @@ import java.math.BigInteger;
  * @since 4.3.2
  */
 public class SmUtil {
+
+	/*
+	 * SM2推荐曲线参数（来自https://github.com/ZZMarquis/gmhelper）
+	 */
+	public static final SM2P256V1Curve CURVE = new SM2P256V1Curve();
+	public final static BigInteger SM2_ECC_GX = new BigInteger(
+			"32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", 16);
+	public final static BigInteger SM2_ECC_GY = new BigInteger(
+			"BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", 16);
+	public static final ECPoint G_POINT = CURVE.createPoint(SM2_ECC_GX, SM2_ECC_GY);
+	public static final ECDomainParameters DOMAIN_PARAMS = new ECDomainParameters(CURVE, G_POINT,
+			CURVE.getOrder(), CURVE.getCofactor());
 
 	private final static int RS_LEN = 32;
 

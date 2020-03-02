@@ -17,7 +17,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 /**
- * PEM(Privacy Enhanced Mail)格式相关工具类。
+ * PEM(Privacy Enhanced Mail)格式相关工具类。（基于Bouncy Castle）
  *
  * <p>
  * PEM一般为文本格式，以 -----BEGIN... 开头，以 -----END... 结尾，中间的内容是 BASE64 编码。

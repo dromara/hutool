@@ -35,8 +35,8 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	protected SM2Signer signer;
 
 	private SM2Engine.Mode mode = SM2Engine.Mode.C1C3C2;
-	private ECPublicKeyParameters publicKeyParams;
 	private ECPrivateKeyParameters privateKeyParams;
+	private ECPublicKeyParameters publicKeyParams;
 
 	// ------------------------------------------------------------------ Constructor start
 
@@ -85,6 +85,7 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 	public SM2(PrivateKey privateKey, PublicKey publicKey) {
 		super(ALGORITHM_SM2, privateKey, publicKey);
 	}
+
 	// ------------------------------------------------------------------ Constructor end
 
 	/**
