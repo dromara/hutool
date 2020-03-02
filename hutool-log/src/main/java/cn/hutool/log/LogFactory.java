@@ -1,11 +1,14 @@
 package cn.hutool.log;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.caller.CallerUtil;
+import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
 import cn.hutool.log.dialect.console.ConsoleLogFactory;
 import cn.hutool.log.dialect.jboss.JbossLogFactory;
@@ -224,35 +227,14 @@ public abstract class LogFactory {
 	 * @return 日志实现类
 	 */
 	private static LogFactory doCreate() {
-		try {
-			return new Slf4jLogFactory(true);
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new Log4j2LogFactory();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new Log4jLogFactory();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new ApacheCommonsLogFactory();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new TinyLogFactory();
-		} catch (NoClassDefFoundError e) {
-			// ignore
-		}
-		try {
-			return new JbossLogFactory();
-		} catch (NoClassDefFoundError e) {
-			// ignore
+		final ServiceLoader<LogFactory> factories = ServiceLoaderUtil.load(LogFactory.class);
+		final Iterator<LogFactory> factoryIterator = factories.iterator();
+		while(factoryIterator.hasNext()){
+			try{
+				return factoryIterator.next();
+			} catch (NoClassDefFoundError e){
+				// ignore
+			}
 		}
 
 		// 未找到任何可支持的日志库时判断依据：当JDK Logging的配置文件位于classpath中，使用JDK Logging，否则使用Console

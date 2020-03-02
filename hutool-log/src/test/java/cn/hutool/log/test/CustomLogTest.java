@@ -97,7 +97,7 @@ public class CustomLogTest {
 	
 	@Test
 	public void slf4jTest(){
-		LogFactory factory = new Slf4jLogFactory();
+		LogFactory factory = new Slf4jLogFactory(false);
 		LogFactory.setCurrentLogFactory(factory);
 		Log log = LogFactory.get();
 		

@@ -20,7 +20,7 @@ import cn.hutool.log.LogFactory;
 public class Slf4jLogFactory extends LogFactory {
 	
 	public Slf4jLogFactory() {
-		this(false);
+		this(true);
 	}
 
 	/**
