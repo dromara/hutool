@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import cn.hutool.core.convert.impl.CollectionConverter;
-import cn.hutool.core.convert.impl.GenericEnumConverter;
+import cn.hutool.core.convert.impl.EnumConverter;
 import cn.hutool.core.convert.impl.MapConverter;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.TypeReference;
@@ -522,7 +522,7 @@ public class Convert {
 	 * @return Enum
 	 */
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
-		return (new GenericEnumConverter<>(clazz)).convertQuietly(value, defaultValue);
+		return (E) (new EnumConverter(clazz)).convertQuietly(value, defaultValue);
 	}
 
 	/**

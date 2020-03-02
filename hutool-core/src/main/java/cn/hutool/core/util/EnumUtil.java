@@ -55,6 +55,20 @@ public class EnumUtil {
 	 *
 	 * @param <E>       枚举类型泛型
 	 * @param enumClass 枚举类
+	 * @param index     枚举索引
+	 * @return 枚举值，null表示无此对应枚举
+	 * @since 5.1.6
+	 */
+	public static <E extends Enum<E>> E getEnumAt(Class<E> enumClass, int index) {
+		final E[] enumConstants = enumClass.getEnumConstants();
+		return index < enumConstants.length ? enumConstants[index] : null;
+	}
+
+	/**
+	 * 字符串转枚举，调用{@link Enum#valueOf(Class, String)}
+	 *
+	 * @param <E>       枚举类型泛型
+	 * @param enumClass 枚举类
 	 * @param value     值
 	 * @return 枚举值
 	 * @since 4.1.13
@@ -206,7 +220,7 @@ public class EnumUtil {
 	 * @since 4.0.2
 	 */
 	public static <E extends Enum<E>> LinkedHashMap<String, E> getEnumMap(final Class<E> enumClass) {
-		final LinkedHashMap<String, E> map = new LinkedHashMap<String, E>();
+		final LinkedHashMap<String, E> map = new LinkedHashMap<>();
 		for (final E e : enumClass.getEnumConstants()) {
 			map.put(e.name(), e);
 		}
@@ -248,7 +262,7 @@ public class EnumUtil {
 	/**
 	 * 判断某个值是不存在枚举中
 	 *
-	 * @param <E> 枚举类型
+	 * @param <E>       枚举类型
 	 * @param enumClass 枚举类
 	 * @param val       需要查找的值
 	 * @return 是否不存在
