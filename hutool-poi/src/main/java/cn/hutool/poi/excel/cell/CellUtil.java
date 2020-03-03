@@ -106,7 +106,7 @@ public class CellUtil {
 		if(CellType.BLANK == cellType){
 			// 空白单元格可能为合并单元格
 			cell = getMergedRegionCell(cell);
-			cellType = cell.getCellType();
+			cellType = cell.getCellTypeEnum();
 		}
 
 		Object value;
