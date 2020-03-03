@@ -20,6 +20,7 @@
 * 【crypto】     RSA算法中，BlockSize长度策略调整（issue#721@Github）
 * 【crypto】     删除SM2Engine，使用BC库中的对象替代
 * 【crypto】     增加PemUtil工具类
+* 【dfa   】     WordTree增加Filter，支持自定义特殊字符过滤器
 
 ### Bug修复
 

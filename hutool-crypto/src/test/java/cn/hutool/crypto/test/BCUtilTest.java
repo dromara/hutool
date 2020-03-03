@@ -9,6 +9,9 @@ import org.junit.Test;
 
 public class BCUtilTest {
 
+	/**
+	 * 密钥生成来自：https://i.goto327.top/CryptTools/SM2.aspx?tdsourcetag=s_pctim_aiomsg
+	 */
 	@Test
 	public void createECPublicKeyParametersTest() {
 		String x = "706AD9DAA3E5CEAC3DA59F583429E8043BAFC576BE10092C4EA4D8E19846CA62";
