@@ -21,6 +21,7 @@
 * 【crypto】     删除SM2Engine，使用BC库中的对象替代
 * 【crypto】     增加PemUtil工具类
 * 【dfa   】     WordTree增加Filter，支持自定义特殊字符过滤器
+* 【poi   】     对于POI依赖升级到4.1.2
 
 ### Bug修复
 
