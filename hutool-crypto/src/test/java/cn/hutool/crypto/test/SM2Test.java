@@ -122,6 +122,17 @@ public class SM2Test {
 	}
 
 	@Test
+	public void sm2SignAndVerifyHexTest() {
+		String content = "我是Hanley.";
+
+		final SM2 sm2 = SmUtil.sm2();
+
+		String sign = sm2.signHex(HexUtil.encodeHexStr(content));
+		boolean verify = sm2.verifyHex(HexUtil.encodeHexStr(content), sign);
+		Assert.assertTrue(verify);
+	}
+
+	@Test
 	public void sm2SignAndVerifyUseKeyTest() {
 		String content = "我是Hanley.";
 
@@ -148,5 +159,21 @@ public class SM2Test {
 		PublicKey B64decode = KeyUtil.decodeECPoint(encodeB64, KeyUtil.SM2_DEFAULT_CURVE);
 		Assert.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(Hexdecode.getEncoded()));
 		Assert.assertEquals(HexUtil.encodeHexStr(publicKey.getEncoded()), HexUtil.encodeHexStr(B64decode.getEncoded()));
+	}
+
+	@Test
+	public void sm2WithPointTest(){
+		String d = "FAB8BBE670FAE338C9E9382B9FB6485225C11A3ECB84C938F10F20A93B6215F0";
+		String x = "9EF573019D9A03B16B0BE44FC8A5B4E8E098F56034C97B312282DD0B4810AFC3";
+		String y = "CC759673ED0FC9B9DC7E6FA38F0E2B121E02654BF37EA6B63FAF2A0D6013EADF";
+
+		String data = "434477813974bf58f94bcf760833c2b40f77a5fc360485b0b9ed1bd9682edb45";
+		String id = "31323334353637383132333435363738";
+
+		final SM2 sm2 = new SM2(d, x, y);
+
+		final String sign = sm2.signHex(data, id);
+
+		Assert.assertTrue(sm2.verifyHex(data, sign));
 	}
 }

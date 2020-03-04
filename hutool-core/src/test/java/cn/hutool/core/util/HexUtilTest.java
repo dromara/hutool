@@ -38,4 +38,11 @@ public class HexUtilTest {
 		boolean isHex = HexUtil.isHexNumber(a);
 		Assert.assertTrue(isHex);
 	}
+
+	@Test
+	public void decodeTest(){
+		String str = "e8c670380cb220095268f40221fc748fa6ac39d6e930e63c30da68bad97f885d";
+		Assert.assertArrayEquals(HexUtil.decodeHex(str),
+				HexUtil.decodeHex(str.toUpperCase()));
+	}
 }

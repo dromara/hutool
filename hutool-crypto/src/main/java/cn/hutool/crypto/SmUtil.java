@@ -13,10 +13,9 @@ import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.gm.GMNamedCurves;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 import org.bouncycastle.util.Arrays;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -28,30 +27,31 @@ import java.math.BigInteger;
 /**
  * SM国密算法工具类<br>
  * 此工具类依赖org.bouncycastle:bcpkix-jdk15on
- * 
+ *
  * @author looly
  * @since 4.3.2
  */
 public class SmUtil {
 
-	/*
+	/**
+	 * SM2默认曲线
+	 */
+	public static final String SM2_CURVE_NAME = "sm2p256v1";
+	/**
 	 * SM2推荐曲线参数（来自https://github.com/ZZMarquis/gmhelper）
 	 */
-	public static final SM2P256V1Curve CURVE = new SM2P256V1Curve();
-	public final static BigInteger SM2_ECC_GX = new BigInteger(
-			"32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", 16);
-	public final static BigInteger SM2_ECC_GY = new BigInteger(
-			"BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", 16);
-	public static final ECPoint G_POINT = CURVE.createPoint(SM2_ECC_GX, SM2_ECC_GY);
-	public static final ECDomainParameters DOMAIN_PARAMS = new ECDomainParameters(CURVE, G_POINT,
-			CURVE.getOrder(), CURVE.getCofactor());
+	public static final ECDomainParameters SM2_DOMAIN_PARAMS;
 
 	private final static int RS_LEN = 32;
+
+	static {
+		SM2_DOMAIN_PARAMS = BCUtil.toDomainParams(GMNamedCurves.getByName(SM2_CURVE_NAME));
+	}
 
 	/**
 	 * 创建SM2算法对象<br>
 	 * 生成新的私钥公钥对
-	 * 
+	 *
 	 * @return {@link SM2}
 	 */
 	public static SM2 sm2() {
@@ -62,9 +62,9 @@ public class SmUtil {
 	 * 创建SM2算法对象<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
-	 * 
+	 *
 	 * @param privateKeyStr 私钥Hex或Base64表示
-	 * @param publicKeyStr 公钥Hex或Base64表示
+	 * @param publicKeyStr  公钥Hex或Base64表示
 	 * @return {@link SM2}
 	 */
 	public static SM2 sm2(String privateKeyStr, String publicKeyStr) {
@@ -75,9 +75,9 @@ public class SmUtil {
 	 * 创建SM2算法对象<br>
 	 * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
 	 * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
-	 * 
+	 *
 	 * @param privateKey 私钥
-	 * @param publicKey 公钥
+	 * @param publicKey  公钥
 	 * @return {@link SM2}
 	 */
 	public static SM2 sm2(byte[] privateKey, byte[] publicKey) {
@@ -89,7 +89,7 @@ public class SmUtil {
 	 * 例：<br>
 	 * SM3加密：sm3().digest(data)<br>
 	 * SM3加密并转为16进制字符串：sm3().digestHex(data)<br>
-	 * 
+	 *
 	 * @return {@link SM3}
 	 */
 	public static SM3 sm3() {
@@ -98,7 +98,7 @@ public class SmUtil {
 
 	/**
 	 * SM3加密，生成16进制SM3字符串<br>
-	 * 
+	 *
 	 * @param data 数据
 	 * @return SM3字符串
 	 */
@@ -108,7 +108,7 @@ public class SmUtil {
 
 	/**
 	 * SM3加密，生成16进制SM3字符串<br>
-	 * 
+	 *
 	 * @param data 数据
 	 * @return SM3字符串
 	 */
@@ -118,7 +118,7 @@ public class SmUtil {
 
 	/**
 	 * SM3加密文件，生成16进制SM3字符串<br>
-	 * 
+	 *
 	 * @param dataFile 被加密文件
 	 * @return SM3字符串
 	 */
@@ -129,12 +129,12 @@ public class SmUtil {
 	/**
 	 * SM4加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricCrypto}对象或者使用相同KEY<br>
 	 * 例：
-	 * 
+	 *
 	 * <pre>
 	 * SM4加密：sm4().encrypt(data)
 	 * SM4解密：sm4().decrypt(data)
 	 * </pre>
-	 * 
+	 *
 	 * @return {@link SymmetricCrypto}
 	 */
 	public static SM4 sm4() {
@@ -144,12 +144,12 @@ public class SmUtil {
 	/**
 	 * SM4加密<br>
 	 * 例：
-	 * 
+	 *
 	 * <pre>
 	 * SM4加密：sm4(key).encrypt(data)
 	 * SM4解密：sm4(key).decrypt(data)
 	 * </pre>
-	 * 
+	 *
 	 * @param key 密钥
 	 * @return {@link SymmetricCrypto}
 	 */
@@ -159,8 +159,8 @@ public class SmUtil {
 
 	/**
 	 * bc加解密使用旧标c1||c2||c3，此方法在加密后调用，将结果转化为c1||c3||c2
-	 * 
-	 * @param c1c2c3 加密后的bytes，顺序为C1C2C3
+	 *
+	 * @param c1c2c3             加密后的bytes，顺序为C1C2C3
 	 * @param ecDomainParameters {@link ECDomainParameters}
 	 * @return 加密后的bytes，顺序为C1C3C2
 	 */
@@ -177,8 +177,8 @@ public class SmUtil {
 
 	/**
 	 * bc加解密使用旧标c1||c3||c2，此方法在解密前调用，将密文转化为c1||c2||c3再去解密
-	 * 
-	 * @param c1c3c2 加密后的bytes，顺序为C1C3C2
+	 *
+	 * @param c1c3c2             加密后的bytes，顺序为C1C3C2
 	 * @param ecDomainParameters {@link ECDomainParameters}
 	 * @return c1c2c3 加密后的bytes，顺序为C1C2C3
 	 */
@@ -196,7 +196,7 @@ public class SmUtil {
 	/**
 	 * BC的SM3withSM2签名得到的结果的rs是asn1格式的，这个方法转化成直接拼接r||s<br>
 	 * 来自：https://blog.csdn.net/pridas/article/details/86118774
-	 * 
+	 *
 	 * @param rsDer rs in asn1 format
 	 * @return sign result in plain byte array
 	 * @since 4.5.0
@@ -208,13 +208,14 @@ public class SmUtil {
 		byte[] result = new byte[RS_LEN * 2];
 		System.arraycopy(r, 0, result, 0, r.length);
 		System.arraycopy(s, 0, result, RS_LEN, s.length);
+
 		return result;
 	}
 
 	/**
 	 * BC的SM3withSM2验签需要的rs是asn1格式的，这个方法将直接拼接r||s的字节数组转化成asn1格式<br>
 	 * 来自：https://blog.csdn.net/pridas/article/details/86118774
-	 * 
+	 *
 	 * @param sign in plain byte array
 	 * @return rs result in asn1 format
 	 * @since 4.5.0
@@ -237,7 +238,7 @@ public class SmUtil {
 
 	/**
 	 * 创建HmacSM3算法的{@link MacEngine}
-	 * 
+	 *
 	 * @param key 密钥
 	 * @return {@link MacEngine}
 	 * @since 4.5.13
@@ -248,7 +249,7 @@ public class SmUtil {
 
 	/**
 	 * HmacSM3算法实现
-	 * 
+	 *
 	 * @param key 密钥
 	 * @return {@link HMac} 对象，调用digestXXX即可
 	 * @since 4.5.13
@@ -258,9 +259,10 @@ public class SmUtil {
 	}
 
 	// -------------------------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * BigInteger转固定长度bytes
-	 * 
+	 *
 	 * @param rOrS {@link BigInteger}
 	 * @return 固定长度bytes
 	 * @since 4.5.0

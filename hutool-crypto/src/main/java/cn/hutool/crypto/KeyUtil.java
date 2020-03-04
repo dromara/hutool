@@ -93,7 +93,7 @@ public class KeyUtil {
 	 * Default SM2 curve
 	 * </pre>
 	 */
-	public static final String SM2_DEFAULT_CURVE = "sm2p256v1";
+	public static final String SM2_DEFAULT_CURVE = SmUtil.SM2_CURVE_NAME;
 
 	/**
 	 * 生成 {@link SecretKey}，仅用于对称加密和摘要算法密钥生成

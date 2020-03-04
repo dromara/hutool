@@ -22,6 +22,7 @@
 * 【crypto】     增加PemUtil工具类
 * 【dfa   】     WordTree增加Filter，支持自定义特殊字符过滤器
 * 【poi   】     对于POI依赖升级到4.1.2
+* 【crypto】     增加国密SM2验签密钥格式支持（issue#686@Github）
 
 ### Bug修复
 
