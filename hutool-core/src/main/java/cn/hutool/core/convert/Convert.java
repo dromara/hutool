@@ -521,6 +521,7 @@ public class Convert {
 	 * @param defaultValue 默认值
 	 * @return Enum
 	 */
+	@SuppressWarnings("unchecked")
 	public static <E extends Enum<E>> E toEnum(Class<E> clazz, Object value, E defaultValue) {
 		return (E) (new EnumConverter(clazz)).convertQuietly(value, defaultValue);
 	}

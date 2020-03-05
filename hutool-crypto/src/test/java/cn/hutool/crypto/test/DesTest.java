@@ -8,6 +8,9 @@ import cn.hutool.crypto.symmetric.DES;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * DES加密解密单元测试
+ */
 public class DesTest {
 
 	@Test

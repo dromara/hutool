@@ -66,8 +66,8 @@ public class BitSetBloomFilter implements BloomFilter{
 		}
 
 		int[] positions = createHashes(str, hashFunctionNumber);
-		for (int i = 0; i < positions.length; i++) {
-			int position = Math.abs(positions[i] % bitSetSize);
+		for (int value : positions) {
+			int position = Math.abs(value % bitSetSize);
 			bitSet.set(position, true);
 		}
 		return true;
