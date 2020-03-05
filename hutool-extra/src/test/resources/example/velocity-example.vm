@@ -4,7 +4,7 @@
 	多行注释
 *#
 // ---------- 1.变量赋值输出------------
-Welcome $name to Javayou.com!
+Welcome $name to hutool.cn!
 today is $date.
 tdday is $mydae.//未被定义的变量将当成字符串
 
