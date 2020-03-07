@@ -680,4 +680,12 @@ public class DateUtilTest {
 		strDate1 = DateUtil.format(ldt, DatePattern.NORM_DATETIME_PATTERN);
 		Assert.assertEquals(strDate, strDate1);
 	}
+
+	@Test
+	public void localDateTimeTest2() {
+		// 测试字符串与LocalDateTime的互相转换
+		String strDate = "2019-12-01";
+		final LocalDateTime localDateTime = DateUtil.parseLocalDateTime(strDate, "yyyy-MM-dd");
+		Assert.assertEquals(strDate, DateUtil.format(localDateTime, DatePattern.NORM_DATE_PATTERN));
+	}
 }

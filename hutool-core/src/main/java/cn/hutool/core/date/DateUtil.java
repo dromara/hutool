@@ -23,6 +23,7 @@ import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
@@ -513,22 +514,23 @@ public class DateUtil {
 	}
 
 	// ------------------------------------ Format start ----------------------------------------------
-	
+
 	/**
 	 * 格式化日期时间<br>
 	 * 格式 yyyy-MM-dd HH:mm:ss
-	 * 
+	 *
 	 * @param localDateTime 被格式化的日期
 	 * @return 格式化后的字符串
 	 */
 	public static String formatLocalDateTime(LocalDateTime localDateTime) {
 		return format(localDateTime, DatePattern.NORM_DATETIME_PATTERN);
 	}
-	
+
 	/**
 	 * 根据特定格式格式化日期
+	 *
 	 * @param localDateTime 被格式化的日期
-	 * @param format 日期格式，常用格式见： {@link DatePattern}
+	 * @param format        日期格式，常用格式见： {@link DatePattern}
 	 * @return 格式化后的字符串
 	 */
 	public static String format(LocalDateTime localDateTime, String format) {
@@ -538,7 +540,7 @@ public class DateUtil {
 		DateTimeFormatter df = DateTimeFormatter.ofPattern(format);
 		return localDateTime.format(df);
 	}
-	
+
 	/**
 	 * 根据特定格式格式化日期
 	 *
@@ -693,30 +695,36 @@ public class DateUtil {
 	// ------------------------------------ Format end ----------------------------------------------
 
 	// ------------------------------------ Parse start ----------------------------------------------
-	
+
 	/**
 	 * 构建LocalDateTime对象<br>
 	 * 格式：yyyy-MM-dd HH:mm:ss
-	 * 
+	 *
 	 * @param dateStr 时间字符串（带格式）
 	 * @return LocalDateTime对象
 	 */
 	public static LocalDateTime parseLocalDateTime(CharSequence dateStr) {
 		return parseLocalDateTime(dateStr, DatePattern.NORM_DATETIME_PATTERN);
 	}
-	
+
 	/**
 	 * 构建LocalDateTime对象
+	 *
 	 * @param dateStr 时间字符串（带格式）
-	 * @param format 使用{@link DatePattern}定义的格式
+	 * @param format  使用{@link DatePattern}定义的格式
 	 * @return LocalDateTime对象
 	 */
 	public static LocalDateTime parseLocalDateTime(CharSequence dateStr, String format) {
 		dateStr = normalize(dateStr);
 		DateTimeFormatter df = DateTimeFormatter.ofPattern(format);
-		return LocalDateTime.parse(dateStr,df);
+		try {
+			return LocalDateTime.parse(dateStr, df);
+		} catch (DateTimeParseException e) {
+			// 在给定日期字符串没有时间部分时，LocalDateTime会报错，此时使用LocalDate中转转换
+			return LocalDate.parse(dateStr, df).atStartOfDay();
+		}
 	}
-	
+
 	/**
 	 * 构建DateTime对象
 	 *
