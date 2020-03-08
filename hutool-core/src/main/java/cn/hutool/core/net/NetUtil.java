@@ -1,13 +1,25 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.DatagramSocket;
 import java.net.IDN;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
@@ -21,36 +33,27 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.net.ServerSocketFactory;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-
 /**
  * 网络相关工具
- * 
- * @author xiaoleilu
  *
+ * @author xiaoleilu
  */
 public class NetUtil {
 
 	public final static String LOCAL_IP = "127.0.0.1";
 
-	/** 默认最小端口，1024 */
+	/**
+	 * 默认最小端口，1024
+	 */
 	public static final int PORT_RANGE_MIN = 1024;
-	/** 默认最大端口，65535 */
+	/**
+	 * 默认最大端口，65535
+	 */
 	public static final int PORT_RANGE_MAX = 0xFFFF;
 
 	/**
 	 * 根据long值获取ip v4地址
-	 * 
+	 *
 	 * @param longIP IP的long表示形式
 	 * @return IP V4 地址
 	 */
@@ -70,7 +73,7 @@ public class NetUtil {
 
 	/**
 	 * 根据ip地址计算出long型的数据
-	 * 
+	 *
 	 * @param strIP IP V4 地址
 	 * @return long值
 	 */
@@ -94,7 +97,7 @@ public class NetUtil {
 	/**
 	 * 检测本地端口可用性<br>
 	 * 来自org.springframework.util.SocketUtils
-	 * 
+	 *
 	 * @param port 被检测的端口
 	 * @return 是否可用
 	 */
@@ -103,18 +106,27 @@ public class NetUtil {
 			// 给定的IP未在指定端口范围中
 			return false;
 		}
-		try {
-			ServerSocketFactory.getDefault().createServerSocket(port, 1, InetAddress.getByName(LOCAL_IP)).close();
-			return true;
-		} catch (Exception e) {
+
+		// issue#765@Github, 某些绑定非127.0.0.1的端口无法被检测到
+		try (ServerSocket ss = new ServerSocket(port)) {
+			ss.setReuseAddress(true);
+		} catch (IOException ignored) {
 			return false;
 		}
+
+		try (DatagramSocket ds = new DatagramSocket(port)) {
+			ds.setReuseAddress(true);
+		} catch (IOException ignored) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
 	 * 是否为有效的端口<br>
 	 * 此方法并不检查端口是否被占用
-	 * 
+	 *
 	 * @param port 端口号
 	 * @return 是否有效
 	 */
@@ -127,7 +139,7 @@ public class NetUtil {
 	 * 查找1024~65535范围内的可用端口<br>
 	 * 此方法只检测给定范围内的随机一个端口，检测65535-1024次<br>
 	 * 来自org.springframework.util.SocketUtils
-	 * 
+	 *
 	 * @return 可用的端口
 	 * @since 4.5.4
 	 */
@@ -139,7 +151,7 @@ public class NetUtil {
 	 * 查找指定范围内的可用端口，最大值为65535<br>
 	 * 此方法只检测给定范围内的随机一个端口，检测65535-minPort次<br>
 	 * 来自org.springframework.util.SocketUtils
-	 * 
+	 *
 	 * @param minPort 端口最小值（包含）
 	 * @return 可用的端口
 	 * @since 4.5.4
@@ -152,14 +164,14 @@ public class NetUtil {
 	 * 查找指定范围内的可用端口<br>
 	 * 此方法只检测给定范围内的随机一个端口，检测maxPort-minPort次<br>
 	 * 来自org.springframework.util.SocketUtils
-	 * 
+	 *
 	 * @param minPort 端口最小值（包含）
 	 * @param maxPort 端口最大值（包含）
 	 * @return 可用的端口
 	 * @since 4.5.4
 	 */
 	public static int getUsableLocalPort(int minPort, int maxPort) {
-		final int maxPortExclude = maxPort +1;
+		final int maxPortExclude = maxPort + 1;
 		int randomPort;
 		for (int i = minPort; i < maxPortExclude; i++) {
 			randomPort = RandomUtil.randomInt(minPort, maxPortExclude);
@@ -176,8 +188,8 @@ public class NetUtil {
 	 * 来自org.springframework.util.SocketUtils
 	 *
 	 * @param numRequested 尝试次数
-	 * @param minPort 端口最小值（包含）
-	 * @param maxPort 端口最大值（包含）
+	 * @param minPort      端口最小值（包含）
+	 * @param maxPort      端口最大值（包含）
 	 * @return 可用的端口
 	 * @since 4.5.4
 	 */
@@ -198,7 +210,7 @@ public class NetUtil {
 	/**
 	 * 判定是否为内网IP<br>
 	 * 私有IP：A类 10.0.0.0-10.255.255.255 B类 172.16.0.0-172.31.255.255 C类 192.168.0.0-192.168.255.255 当然，还有127这个网段是环回地址
-	 * 
+	 *
 	 * @param ipAddress IP地址
 	 * @return 是否为内网IP
 	 */
@@ -221,9 +233,9 @@ public class NetUtil {
 
 	/**
 	 * 相对URL转换为绝对URL
-	 * 
+	 *
 	 * @param absoluteBasePath 基准路径，绝对
-	 * @param relativePath 相对路径
+	 * @param relativePath     相对路径
 	 * @return 绝对URL
 	 */
 	public static String toAbsoluteUrl(String absoluteBasePath, String relativePath) {
@@ -237,7 +249,7 @@ public class NetUtil {
 
 	/**
 	 * 隐藏掉IP地址的最后一部分为 * 代替
-	 * 
+	 *
 	 * @param ip IP地址
 	 * @return 隐藏部分后的IP
 	 */
@@ -247,7 +259,7 @@ public class NetUtil {
 
 	/**
 	 * 隐藏掉IP地址的最后一部分为 * 代替
-	 * 
+	 *
 	 * @param ip IP地址
 	 * @return 隐藏部分后的IP
 	 */
@@ -259,8 +271,8 @@ public class NetUtil {
 	 * 构建InetSocketAddress<br>
 	 * 当host中包含端口时（用“：”隔开），使用host中的端口，否则使用默认端口<br>
 	 * 给定host为空时使用本地host（127.0.0.1）
-	 * 
-	 * @param host Host
+	 *
+	 * @param host        Host
 	 * @param defaultPort 默认端口
 	 * @return InetSocketAddress
 	 */
@@ -286,7 +298,7 @@ public class NetUtil {
 
 	/**
 	 * 通过域名得到IP
-	 * 
+	 *
 	 * @param hostName HOST
 	 * @return ip address or hostName if UnknownHostException
 	 */
@@ -314,9 +326,9 @@ public class NetUtil {
 		}
 
 		NetworkInterface netInterface;
-		while(networkInterfaces.hasMoreElements()){
+		while (networkInterfaces.hasMoreElements()) {
 			netInterface = networkInterfaces.nextElement();
-			if(null != netInterface && name.equals(netInterface.getName())){
+			if (null != netInterface && name.equals(netInterface.getName())) {
 				return netInterface;
 			}
 		}
@@ -326,7 +338,7 @@ public class NetUtil {
 
 	/**
 	 * 获取本机所有网卡
-	 * 
+	 *
 	 * @return 所有网卡，异常返回<code>null</code>
 	 * @since 3.0.1
 	 */
@@ -344,7 +356,7 @@ public class NetUtil {
 	/**
 	 * 获得本机的IPv4地址列表<br>
 	 * 返回的IP列表有序，按照系统设备顺序
-	 * 
+	 *
 	 * @return IP地址列表 {@link LinkedHashSet}
 	 */
 	public static LinkedHashSet<String> localIpv4s() {
@@ -356,7 +368,7 @@ public class NetUtil {
 	/**
 	 * 获得本机的IPv6地址列表<br>
 	 * 返回的IP列表有序，按照系统设备顺序
-	 * 
+	 *
 	 * @return IP地址列表 {@link LinkedHashSet}
 	 * @since 4.5.17
 	 */
@@ -368,7 +380,7 @@ public class NetUtil {
 
 	/**
 	 * 地址列表转换为IP地址列表
-	 * 
+	 *
 	 * @param addressList 地址{@link Inet4Address} 列表
 	 * @return IP地址字符串列表
 	 * @since 4.5.17
@@ -385,7 +397,7 @@ public class NetUtil {
 	/**
 	 * 获得本机的IP地址列表（包括Ipv4和Ipv6）<br>
 	 * 返回的IP列表有序，按照系统设备顺序
-	 * 
+	 *
 	 * @return IP地址列表 {@link LinkedHashSet}
 	 */
 	public static LinkedHashSet<String> localIps() {
@@ -395,7 +407,7 @@ public class NetUtil {
 
 	/**
 	 * 获取所有满足过滤条件的本地IP地址对象
-	 * 
+	 *
 	 * @param addressFilter 过滤器，null表示不过滤，获取所有地址
 	 * @return 过滤后的地址对象列表
 	 * @since 4.5.17
@@ -432,9 +444,9 @@ public class NetUtil {
 	 * 获取本机网卡IP地址，这个地址为所有网卡中非回路地址的第一个<br>
 	 * 如果获取失败调用 {@link InetAddress#getLocalHost()}方法获取。<br>
 	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
-	 * 
+	 * <p>
 	 * 参考：http://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
-	 * 
+	 *
 	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
 	 * @since 3.0.7
 	 */
@@ -448,16 +460,16 @@ public class NetUtil {
 
 	/**
 	 * 获取本机网卡IP地址，规则如下：
-	 * 
+	 *
 	 * <pre>
 	 * 1. 查找所有网卡地址，必须非回路（loopback）地址、非局域网地址（siteLocal）、IPv4地址
 	 * 2. 如果无满足要求的地址，调用 {@link InetAddress#getLocalHost()} 获取地址
 	 * </pre>
-	 *
+	 * <p>
 	 * 此方法不会抛出异常，获取失败将返回<code>null</code><br>
-	 * 
+	 * <p>
 	 * 见：https://github.com/looly/hutool/issues/428
-	 * 
+	 *
 	 * @return 本机网卡IP地址，获取失败返回<code>null</code>
 	 * @since 3.0.1
 	 */
@@ -467,7 +479,7 @@ public class NetUtil {
 			return false == address.isLoopbackAddress()
 					// 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
 					&& false == address.isSiteLocalAddress()
-			// 需为IPV4地址
+					// 需为IPV4地址
 					&& address instanceof Inet4Address;
 		});
 
@@ -486,7 +498,7 @@ public class NetUtil {
 
 	/**
 	 * 获得本机MAC地址
-	 * 
+	 *
 	 * @return 本机MAC地址
 	 */
 	public static String getLocalMacAddress() {
@@ -495,7 +507,7 @@ public class NetUtil {
 
 	/**
 	 * 获得指定地址信息中的MAC地址，使用分隔符“-”
-	 * 
+	 *
 	 * @param inetAddress {@link InetAddress}
 	 * @return MAC地址，用-分隔
 	 */
@@ -505,9 +517,9 @@ public class NetUtil {
 
 	/**
 	 * 获得指定地址信息中的MAC地址
-	 * 
+	 *
 	 * @param inetAddress {@link InetAddress}
-	 * @param separator 分隔符，推荐使用“-”或者“:”
+	 * @param separator   分隔符，推荐使用“-”或者“:”
 	 * @return MAC地址，用-分隔
 	 */
 	public static String getMacAddress(InetAddress inetAddress, String separator) {
@@ -539,7 +551,7 @@ public class NetUtil {
 
 	/**
 	 * 创建 {@link InetSocketAddress}
-	 * 
+	 *
 	 * @param host 域名或IP地址，空表示任意地址
 	 * @param port 端口，0表示系统分配临时端口
 	 * @return {@link InetSocketAddress}
@@ -553,13 +565,12 @@ public class NetUtil {
 	}
 
 	/**
-	 * 
 	 * 简易的使用Socket发送数据
-	 * 
-	 * @param host Server主机
-	 * @param port Server端口
+	 *
+	 * @param host    Server主机
+	 * @param port    Server端口
 	 * @param isBlock 是否阻塞方式
-	 * @param data 需要发送的数据
+	 * @param data    需要发送的数据
 	 * @throws IORuntimeException IO异常
 	 * @since 3.3.0
 	 */
@@ -573,9 +584,8 @@ public class NetUtil {
 	}
 
 	/**
-	 * 
 	 * 使用普通Socket发送数据
-	 * 
+	 *
 	 * @param host Server主机
 	 * @param port Server端口
 	 * @param data 数据
@@ -598,8 +608,8 @@ public class NetUtil {
 	/**
 	 * 是否在CIDR规则配置范围内<br>
 	 * 方法来自：【成都】小邓
-	 * 
-	 * @param ip 需要验证的IP
+	 *
+	 * @param ip   需要验证的IP
 	 * @param cidr CIDR规则
 	 * @return 是否在范围内
 	 * @since 4.0.6
@@ -617,7 +627,7 @@ public class NetUtil {
 
 	/**
 	 * Unicode域名转puny code
-	 * 
+	 *
 	 * @param unicode Unicode域名
 	 * @return puny code
 	 * @since 4.1.22
@@ -628,7 +638,7 @@ public class NetUtil {
 
 	/**
 	 * 从多级反向代理中获得第一个非unknown IP地址
-	 * 
+	 *
 	 * @param ip 获得的IP地址
 	 * @return 第一个非unknown IP地址
 	 * @since 4.4.1
@@ -649,7 +659,7 @@ public class NetUtil {
 
 	/**
 	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
-	 * 
+	 *
 	 * @param checkString 被检测的字符串
 	 * @return 是否未知
 	 * @since 4.4.1
@@ -658,38 +668,39 @@ public class NetUtil {
 		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 
-    /**
-     * 检测IP地址是否能ping通
-     *
-     * @param ip IP地址
-     * @return 返回是否ping通
-     */
-    public static boolean ping(String ip) {
-        return ping(ip, 200);
-    }
+	/**
+	 * 检测IP地址是否能ping通
+	 *
+	 * @param ip IP地址
+	 * @return 返回是否ping通
+	 */
+	public static boolean ping(String ip) {
+		return ping(ip, 200);
+	}
 
-    /**
-     * 检测IP地址是否能ping通
-     *
-     * @param ip      IP地址
-     * @param timeout 检测超时（毫秒）
-     * @return 是否ping通
-     */
-    public static boolean ping(String ip, int timeout) {
-        try {
-            return InetAddress.getByName(ip).isReachable(timeout); // 当返回值是true时，说明host是可用的，false则不可。
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-    
+	/**
+	 * 检测IP地址是否能ping通
+	 *
+	 * @param ip      IP地址
+	 * @param timeout 检测超时（毫秒）
+	 * @return 是否ping通
+	 */
+	public static boolean ping(String ip, int timeout) {
+		try {
+			return InetAddress.getByName(ip).isReachable(timeout); // 当返回值是true时，说明host是可用的，false则不可。
+		} catch (Exception ex) {
+			return false;
+		}
+	}
+
 	// ----------------------------------------------------------------------------------------- Private method start
+
 	/**
 	 * 指定IP的long是否在指定范围内
-	 * 
+	 *
 	 * @param userIp 用户IP
-	 * @param begin 开始IP
-	 * @param end 结束IP
+	 * @param begin  开始IP
+	 * @param end    结束IP
 	 * @return 是否在范围内
 	 */
 	private static boolean isInner(long userIp, long begin, long end) {

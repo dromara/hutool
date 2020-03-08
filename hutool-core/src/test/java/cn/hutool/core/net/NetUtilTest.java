@@ -1,14 +1,12 @@
 package cn.hutool.core.net;
 
-import java.net.InetAddress;
-
+import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.util.ReUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.PatternPool;
-import cn.hutool.core.net.NetUtil;
-import cn.hutool.core.util.ReUtil;
+import java.net.InetAddress;
 
 /**
  * NetUtil单元测试
@@ -53,5 +51,10 @@ public class NetUtilTest {
 	public void ipToLongTest() {
 		long ipLong = NetUtil.ipv4ToLong("127.0.0.1");
 		Assert.assertEquals(2130706433L, ipLong);
+	}
+
+	@Test
+	public void isUsableLocalPortTest(){
+		Assert.assertTrue(NetUtil.isUsableLocalPort(80));
 	}
 }

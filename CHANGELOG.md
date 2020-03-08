@@ -10,6 +10,7 @@
 ### Bug修复
 * 【setting】     修复Props.toBean方法null的问题
 * 【core   】     修复DataUtil.parseLocalDateTime无时间部分报错问题（issue#I1B18H@Gitee）
+* 【core   】     修复NetUtil.isUsableLocalPort()判断问题（issue#765@Github）
 
 -------------------------------------------------------------------------------------------------------------
 
