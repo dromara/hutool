@@ -374,7 +374,40 @@ public class RandomUtil {
 
 		return result;
 	}
+	/**
+	 * 创建指定长度的随机索引
+	 *
+	 * @param length 长度
+	 * @return 随机索引
+	 */
+	public static int[] createRandomList(int length){
+		int[] list = ArrayUtil.range(length);
+		for (int i = 0; i < length; i++) {
+			int random = randomInt(i,length);
+			ArrayUtil.swap(list,i,random);
+		}
+		return list;
+	}
 
+	/**
+	 * 随机获得列表中的一定量的元素，返回List
+	 *
+	 * @param source 列表
+	 * @param count  随机取出的个数
+	 * @param <T>    元素类型
+	 * @return 随机列表
+	 */
+	public static <T> List<T> randomEleList(List<T> source, int count){
+		if(count >= source.size()){
+			return source;
+		}
+		int[] randomList = ArrayUtil.sub(createRandomList(source.size()),0,count);
+		List<T> result = new ArrayList<>();
+		for (int e: randomList){
+			result.add(source.get(e));
+		}
+		return result;
+	}
 	/**
 	 * 获得一个随机的字符串（只包含数字和字符）
 	 *
