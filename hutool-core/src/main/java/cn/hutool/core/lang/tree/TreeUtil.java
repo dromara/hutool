@@ -65,6 +65,7 @@ public class TreeUtil {
      * @param maxDeep    最大递归深度 可能为null即不限制
      */
     private static void innerBuild(List<TreeNodeMap> treeNodes, TreeNodeMap parentNode, int deep, Integer maxDeep) {
+
         if (CollectionUtil.isEmpty(treeNodes)) {
             return;
         }
