@@ -2,6 +2,7 @@ package cn.hutool.core.date;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater.Level;
+import cn.hutool.core.date.format.FastDateFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -505,23 +507,39 @@ public class DateUtilTest {
 		Assert.assertEquals("2018-09-13 13:34:39.999", dateStr);
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void parseCSTTest(){
 		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
+
+		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		final DateTime parse = DateUtil.parse(dateStr, sdf);
+
 		DateTime dateTime = DateUtil.parseCST(dateStr);
-		Assert.assertEquals("2009-09-17 01:26:23", dateTime.toString());
+		Assert.assertEquals(parse, dateTime);
 
 		dateTime = DateUtil.parse(dateStr);
-		Assert.assertEquals("2009-09-17 01:26:23", dateTime.toString());
+		Assert.assertEquals(parse, dateTime);
 	}
 
-	@SuppressWarnings("ConstantConditions")
+	@Test
+	public void parseCSTTest2(){
+		String dateStr = "Wed Sep 16 11:26:23 CST 2009";
+
+		SimpleDateFormat sdf = new SimpleDateFormat(DatePattern.JDK_DATETIME_PATTERN, Locale.US);
+		sdf.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
+		final DateTime parse = DateUtil.parse(dateStr, sdf);
+
+		FastDateFormat fdf = FastDateFormat.getInstance(DatePattern.JDK_DATETIME_PATTERN, TimeZone.getTimeZone("America/Chicago"), Locale.US);
+		final DateTime parse2 = DateUtil.parse(dateStr, fdf);
+
+		Assert.assertEquals(parse, parse2);
+	}
+
 	@Test
 	public void parseJDkTest() {
 		String dateStr = "Thu May 16 17:57:18 GMT+08:00 2019";
 		DateTime time = DateUtil.parse(dateStr);
-		Assert.assertEquals("2019-05-16 17:57:18", time.toString());
+		Assert.assertEquals("2019-05-16 17:57:18", Objects.requireNonNull(time).toString());
 	}
 
 	@Test

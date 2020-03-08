@@ -1,11 +1,11 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.clone.CloneSupport;
+import cn.hutool.core.collection.ArrayIter;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
-
-import cn.hutool.core.clone.CloneSupport;
-import cn.hutool.core.collection.ArrayIter;
 
 /**
  * 不可变数组类型，用于多值返回<br>
@@ -17,7 +17,9 @@ import cn.hutool.core.collection.ArrayIter;
 public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Serializable{
 	private static final long serialVersionUID = -7689304393482182157L;
 	
-	private Object[] members;
+	private final Object[] members;
+	private int hashCode;
+	private boolean cacheHash;
 	
 	/**
 	 * 构造
@@ -45,12 +47,31 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 	public Object[] getMembers(){
 		return this.members;
 	}
+
+	/**
+	 * 缓存Hash值，当为true时，此对象的hash值只被计算一次，常用于Tuple中的值不变时使用。
+	 * 注意：当为true时，member变更对象后，hash值不会变更。
+	 *
+	 * @param cacheHash 是否缓存hash值
+	 * @return this
+	 * @since 5.2.1
+	 */
+	public Tuple setCacheHash(boolean cacheHash){
+		this.cacheHash = cacheHash;
+		return this;
+	}
 	
 	@Override
 	public int hashCode() {
+		if(this.cacheHash && 0 != this.hashCode){
+			return this.hashCode;
+		}
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.deepHashCode(members);
+		if(this.cacheHash){
+			this.hashCode = result;
+		}
 		return result;
 	}
 
@@ -74,8 +95,9 @@ public class Tuple extends CloneSupport<Tuple> implements Iterable<Object>, Seri
 		return Arrays.toString(members);
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<Object> iterator() {
-		return new ArrayIter<Object>(members);
+		return new ArrayIter<>(members);
 	}
 }

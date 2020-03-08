@@ -3,13 +3,13 @@ package cn.hutool.core.date.format;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Tuple;
 
 /**
  * 日期格式化器缓存<br>
@@ -24,16 +24,16 @@ abstract class FormatCache<F extends Format> {
 	 */
 	static final int NONE = -1;
 
-	private final ConcurrentMap<MultipartKey, F> cInstanceCache = new ConcurrentHashMap<>(7);
+	private final ConcurrentMap<Tuple, F> cInstanceCache = new ConcurrentHashMap<>(7);
 
-	private static final ConcurrentMap<MultipartKey, String> cDateTimeInstanceCache = new ConcurrentHashMap<>(7);
+	private static final ConcurrentMap<Tuple, String> cDateTimeInstanceCache = new ConcurrentHashMap<>(7);
 
 	/**
 	 * 使用默认的pattern、timezone和locale获得缓存中的实例
 	 * @return a date/time formatter
 	 */
 	public F getInstance() {
-		return getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, TimeZone.getDefault(), Locale.getDefault());
+		return getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, null, null);
 	}
 
 	/**
@@ -53,7 +53,7 @@ abstract class FormatCache<F extends Format> {
 		if (locale == null) {
 			locale = Locale.getDefault();
 		}
-		final MultipartKey key = new MultipartKey(pattern, timeZone, locale);
+		final Tuple key = new Tuple(pattern, timeZone, locale);
 		F format = cInstanceCache.get(key);
 		if (format == null) {
 			format = createInstance(pattern, timeZone, locale);
@@ -129,7 +129,7 @@ abstract class FormatCache<F extends Format> {
 	 */
 	// package protected, for access from FastDateFormat; do not make public or protected
 	F getDateInstance(final int dateStyle, final TimeZone timeZone, final Locale locale) {
-		return getDateTimeInstance(Integer.valueOf(dateStyle), null, timeZone, locale);
+		return getDateTimeInstance(dateStyle, null, timeZone, locale);
 	}
 
 	/**
@@ -145,7 +145,7 @@ abstract class FormatCache<F extends Format> {
 	 */
 	// package protected, for access from FastDateFormat; do not make public or protected
 	F getTimeInstance(final int timeStyle, final TimeZone timeZone, final Locale locale) {
-		return getDateTimeInstance(null, Integer.valueOf(timeStyle), timeZone, locale);
+		return getDateTimeInstance(null, timeStyle, timeZone, locale);
 	}
 
 	/**
@@ -161,18 +161,18 @@ abstract class FormatCache<F extends Format> {
 	 */
 	// package protected, for access from test code; do not make public or protected
 	static String getPatternForStyle(final Integer dateStyle, final Integer timeStyle, final Locale locale) {
-		final MultipartKey key = new MultipartKey(dateStyle, timeStyle, locale);
+		final Tuple key = new Tuple(dateStyle, timeStyle, locale);
 
 		String pattern = cDateTimeInstanceCache.get(key);
 		if (pattern == null) {
 			try {
 				DateFormat formatter;
 				if (dateStyle == null) {
-					formatter = DateFormat.getTimeInstance(timeStyle.intValue(), locale);
+					formatter = DateFormat.getTimeInstance(timeStyle, locale);
 				} else if (timeStyle == null) {
-					formatter = DateFormat.getDateInstance(dateStyle.intValue(), locale);
+					formatter = DateFormat.getDateInstance(dateStyle, locale);
 				} else {
-					formatter = DateFormat.getDateTimeInstance(dateStyle.intValue(), timeStyle.intValue(), locale);
+					formatter = DateFormat.getDateTimeInstance(dateStyle, timeStyle, locale);
 				}
 				pattern = ((SimpleDateFormat) formatter).toPattern();
 				final String previous = cDateTimeInstanceCache.putIfAbsent(key, pattern);
@@ -188,62 +188,4 @@ abstract class FormatCache<F extends Format> {
 		}
 		return pattern;
 	}
-
-	// ----------------------------------------------------------------------
-	/**
-	 * <p>
-	 * Helper class to hold multi-part Map keys
-	 * </p>
-	 */
-	private static class MultipartKey {
-		private final Object[] keys;
-		private int hashCode;
-
-		/**
-		 * Constructs an instance of <code>MultipartKey</code> to hold the specified objects.
-		 * 
-		 * @param keys the set of objects that make up the key. Each key may be null.
-		 */
-		public MultipartKey(final Object... keys) {
-			this.keys = keys;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public boolean equals(final Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			final MultipartKey other = (MultipartKey) obj;
-			return false != Arrays.equals(keys, other.keys);
-		}
-		
-		
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public int hashCode() {
-			if (hashCode == 0) {
-				int rc = 0;
-				for (final Object key : keys) {
-					if (key != null) {
-						rc = rc * 7 + key.hashCode();
-					}
-				}
-				hashCode = rc;
-			}
-			return hashCode;
-		}
-	}
-
 }
