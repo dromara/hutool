@@ -116,7 +116,7 @@ public class CronUtil {
 	}
 
 	/**
-	 * 移除Task
+	 * 更新Task的执行时间规则
 	 * 
 	 * @param id Task的ID
 	 * @param pattern {@link CronPattern}

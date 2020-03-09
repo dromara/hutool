@@ -7,111 +7,139 @@ package cn.hutool.core.lang.tree;
  */
 public class TreeNodeConfig {
 
-    /**
-     * 默认属性配置对象
-     */
-    private static TreeNodeConfig defaultConfig = new TreeNodeConfig();
+	/**
+	 * 默认属性配置对象
+	 */
+	public static TreeNodeConfig DEFAULT_CONFIG = new TreeNodeConfig();
 
-    // 树节点默认属性常量 当然你可以重新设置
-    /**
-     * 节点 id 名称
-     */
-    static final String TREE_ID = "id";
-    /**
-     * 节点 parentId 父id名称
-     */
-    static final String TREE_PARENT_ID = "parentId";
-    /**
-     * 节点 name 显示名称
-     */
-    static final String TREE_NAME = "name";
-    /**
-     * 节点 weight 顺序名称
-     */
-    static final String TREE_WEIGHT = "weight";
-    /**
-     * 节点 name 子节点名称
-     */
-    static final String TREE_CHILDREN = "children";
+	// 属性名配置字段
+	private String idKey = "id";
+	private String parentIdKey = "parentId";
+	private String weightKey = "weight";
+	private String nameKey = "name";
+	private String childrenKey = "children";
+	// 可以配置递归深度 从0开始计算 默认此配置为空,即不限制
+	private Integer deep;
 
 
-    static {
-        //init
-        defaultConfig.setIdKey(TREE_ID);
-        defaultConfig.setWeightKey(TREE_WEIGHT);
-        defaultConfig.setNameKey(TREE_NAME);
-        defaultConfig.setChildrenKey(TREE_CHILDREN);
-        defaultConfig.setParentIdKey(TREE_PARENT_ID);
-    }
+	/**
+	 * 获取ID对应的名称
+	 *
+	 * @return ID对应的名称
+	 */
+	public String getIdKey() {
+		return this.idKey;
+	}
 
-    // 属性名配置字段
-    private String idKey;
-    private String parentIdKey;
-    private String weightKey;
-    private String nameKey;
-    private String childrenKey;
+	/**
+	 * 设置ID对应的名称
+	 *
+	 * @param idKey ID对应的名称
+	 * @return this
+	 */
+	public TreeNodeConfig setIdKey(String idKey) {
+		this.idKey = idKey;
+		return this;
+	}
 
-    // 可以配置递归深度 从0开始计算 默认此配置为空,即不限制
-    private Integer deep;
+	/**
+	 * 获取权重对应的名称
+	 *
+	 * @return 权重对应的名称
+	 */
+	public String getWeightKey() {
+		return this.weightKey;
+	}
+
+	/**
+	 * 设置权重对应的名称
+	 *
+	 * @param weightKey 权重对应的名称
+	 * @return this
+	 */
+	public TreeNodeConfig setWeightKey(String weightKey) {
+		this.weightKey = weightKey;
+		return this;
+	}
+
+	/**
+	 * 获取节点名对应的名称
+	 *
+	 * @return 节点名对应的名称
+	 */
+	public String getNameKey() {
+		return this.nameKey;
+	}
+
+	/**
+	 * 设置节点名对应的名称
+	 *
+	 * @param nameKey 节点名对应的名称
+	 * @return this
+	 */
+	public TreeNodeConfig setNameKey(String nameKey) {
+		this.nameKey = nameKey;
+		return this;
+	}
+
+	/**
+	 * 获取子点对应的名称
+	 *
+	 * @return 子点对应的名称
+	 */
+	public String getChildrenKey() {
+		return this.childrenKey;
+	}
+
+	/**
+	 * 设置子点对应的名称
+	 *
+	 * @param childrenKey 子点对应的名称
+	 * @return this
+	 */
+	public TreeNodeConfig setChildrenKey(String childrenKey) {
+		this.childrenKey = childrenKey;
+		return this;
+	}
+
+	/**
+	 * 获取父节点ID对应的名称
+	 *
+	 * @return 父点对应的名称
+	 */
+	public String getParentIdKey() {
+		return this.parentIdKey;
+	}
 
 
-    public String getIdKey() {
-        return getOrDefault(idKey, TREE_ID);
-    }
+	/**
+	 * 设置父点对应的名称
+	 *
+	 * @param parentIdKey 父点对应的名称
+	 * @return this
+	 */
+	public TreeNodeConfig setParentIdKey(String parentIdKey) {
+		this.parentIdKey = parentIdKey;
+		return this;
+	}
 
-    public void setIdKey(String idKey) {
-        this.idKey = idKey;
-    }
+	/**
+	 * 获取递归深度
+	 *
+	 * @return 递归深度
+	 */
+	public Integer getDeep() {
+		return this.deep;
+	}
 
-    public String getWeightKey() {
-        return getOrDefault(weightKey, TREE_WEIGHT);
-    }
-
-    public void setWeightKey(String weightKey) {
-        this.weightKey = weightKey;
-    }
-
-    public String getNameKey() {
-        return getOrDefault(nameKey, TREE_NAME);
-    }
-
-    public void setNameKey(String nameKey) {
-        this.nameKey = nameKey;
-    }
-
-    public String getChildrenKey() {
-        return getOrDefault(childrenKey, TREE_CHILDREN);
-    }
-
-    public void setChildrenKey(String childrenKey) {
-        this.childrenKey = childrenKey;
-    }
-
-    public String getParentIdKey() {
-        return getOrDefault(parentIdKey, TREE_PARENT_ID);
-    }
-
-    public void setParentIdKey(String parentIdKey) {
-        this.parentIdKey = parentIdKey;
-    }
-
-    public String getOrDefault(String key, String defaultKey) {
-        if (key == null) {
-            return defaultKey;
-        }
-        return key;
-    }
-
-    public Integer getDeep() {
-        return deep;
-    }
-
-    public void setDeep(Integer deep) {
-        this.deep = deep;
-    }
-
-    public static TreeNodeConfig getDefaultConfig() {
-        return defaultConfig;
-    }
-
+	/**
+	 * 设置递归深度
+	 *
+	 * @param deep 递归深度
+	 * @return this
+	 */
+	public TreeNodeConfig setDeep(Integer deep) {
+		this.deep = deep;
+		return this;
+	}
 }

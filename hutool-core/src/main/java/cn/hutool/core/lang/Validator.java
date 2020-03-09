@@ -959,7 +959,18 @@ public class Validator {
 	 * @return 是否为汉字
 	 */
 	public static boolean isChinese(CharSequence value) {
-		return isMactchRegex("^" + ReUtil.RE_CHINESE + "+$", value);
+		return isMactchRegex("^" + ReUtil.RE_CHINESES + "$", value);
+	}
+
+	/**
+	 * 验证是否包含汉字
+	 *
+	 * @param value 值
+	 * @return 是否包含汉字
+	 * @since 5.2.1
+	 */
+	public static boolean hasChinese(CharSequence value) {
+		return ReUtil.contains(ReUtil.RE_CHINESES, value);
 	}
 
 	/**

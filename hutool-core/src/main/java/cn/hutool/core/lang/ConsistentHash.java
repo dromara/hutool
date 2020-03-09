@@ -23,7 +23,7 @@ public class ConsistentHash<T> implements Serializable{
 	/** 复制的节点个数 */
 	private final int numberOfReplicas;
 	/** 一致性Hash环 */
-	private final SortedMap<Integer, T> circle = new TreeMap<Integer, T>();
+	private final SortedMap<Integer, T> circle = new TreeMap<>();
 	
 	/**
 	 * 构造，使用Java默认的Hash算法
