@@ -26,9 +26,7 @@ public class FreemarkerEngine implements TemplateEngine {
 	/**
 	 * 默认构造
 	 */
-	public FreemarkerEngine() {
-		this(new TemplateConfig());
-	}
+	public FreemarkerEngine() {}
 
 	/**
 	 * 构造
@@ -36,7 +34,7 @@ public class FreemarkerEngine implements TemplateEngine {
 	 * @param config 模板配置
 	 */
 	public FreemarkerEngine(TemplateConfig config) {
-		this(createCfg(config));
+		init(config);
 	}
 
 	/**
@@ -45,12 +43,32 @@ public class FreemarkerEngine implements TemplateEngine {
 	 * @param freemarkerCfg {@link Configuration}
 	 */
 	public FreemarkerEngine(Configuration freemarkerCfg) {
-		this.cfg = freemarkerCfg;
+		init(freemarkerCfg);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
-	
+
+	@Override
+	public TemplateEngine init(TemplateConfig config) {
+		if(null == config){
+			config = TemplateConfig.DEFAULT;
+		}
+		init(createCfg(config));
+		return this;
+	}
+
+	/**
+	 * 初始化引擎
+	 * @param freemarkerCfg Configuration
+	 */
+	private void init(Configuration freemarkerCfg){
+		this.cfg = freemarkerCfg;
+	}
+
 	@Override
 	public Template getTemplate(String resource) {
+		if(null == this.cfg){
+			init(TemplateConfig.DEFAULT);
+		}
 		try {
 			return FreemarkerTemplate.wrap(this.cfg.getTemplate(resource));
 		} catch(IOException e) {

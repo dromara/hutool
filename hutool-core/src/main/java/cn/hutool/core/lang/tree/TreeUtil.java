@@ -1,6 +1,6 @@
 package cn.hutool.core.lang.tree;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.tree.parser.DefaultNodeParser;
 import cn.hutool.core.lang.tree.parser.NodeParser;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 树工具类 可参考  cn.hutool.core.lang.TreeTest
+ * 树工具类
  *
  * @author liangbaikai
  */
@@ -16,6 +16,9 @@ public class TreeUtil {
 
 	/**
 	 * 树构建
+	 *
+	 * @param list 源数据集合
+	 * @return List
 	 */
 	public static List<Tree<Integer>> build(List<TreeNode<Integer>> list) {
 		return build(list, 0);
@@ -23,13 +26,25 @@ public class TreeUtil {
 
 	/**
 	 * 树构建
+	 *
+	 * @param <E>      ID类型
+	 * @param list     源数据集合
+	 * @param parentId 最顶层父id值 一般为 0 之类
+	 * @return List
 	 */
-	public static <T> List<Tree<T>> build(List<TreeNode<T>> list, T parentId) {
+	public static <E> List<Tree<E>> build(List<TreeNode<E>> list, E parentId) {
 		return build(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, new DefaultNodeParser<>());
 	}
 
 	/**
 	 * 树构建
+	 *
+	 * @param <T>        转换的实体 为数据源里的对象类型
+	 * @param <E>        ID类型
+	 * @param list       源数据集合
+	 * @param parentId   最顶层父id值 一般为 0 之类
+	 * @param nodeParser 转换器
+	 * @return List
 	 */
 	public static <T, E> List<Tree<E>> build(List<T> list, E parentId, NodeParser<T, E> nodeParser) {
 		return build(list, parentId, TreeNodeConfig.DEFAULT_CONFIG, nodeParser);
@@ -38,22 +53,23 @@ public class TreeUtil {
 	/**
 	 * 树构建
 	 *
+	 * @param <T>            转换的实体 为数据源里的对象类型
+	 * @param <E>            ID类型
 	 * @param list           源数据集合
 	 * @param parentId       最顶层父id值 一般为 0 之类
 	 * @param treeNodeConfig 配置
-	 * @param nodeParser        转换器
-	 * @param <T>            转换的实体 为数据源里的对象类型
+	 * @param nodeParser     转换器
 	 * @return List
 	 */
 	public static <T, E> List<Tree<E>> build(List<T> list, E parentId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
-		List<Tree<E>> treeNodes = CollectionUtil.newArrayList();
+		List<Tree<E>> treeNodes = CollUtil.newArrayList();
 		for (T obj : list) {
 			Tree<E> treeNode = new Tree<>(treeNodeConfig);
 			nodeParser.parse(obj, treeNode);
 			treeNodes.add(treeNode);
 		}
 
-		List<Tree<E>> finalTreeNodes = CollectionUtil.newArrayList();
+		List<Tree<E>> finalTreeNodes = CollUtil.newArrayList();
 		for (Tree<E> treeNode : treeNodes) {
 			if (parentId.equals(treeNode.getParentId())) {
 				finalTreeNodes.add(treeNode);
@@ -75,7 +91,7 @@ public class TreeUtil {
 	 */
 	private static <T> void innerBuild(List<Tree<T>> treeNodes, Tree<T> parentNode, int deep, Integer maxDeep) {
 
-		if (CollectionUtil.isEmpty(treeNodes)) {
+		if (CollUtil.isEmpty(treeNodes)) {
 			return;
 		}
 		//maxDeep 可能为空
@@ -89,7 +105,7 @@ public class TreeUtil {
 			if (parentNode.getId().equals(childNode.getParentId())) {
 				List<Tree<T>> children = parentNode.getChildren();
 				if (children == null) {
-					children = CollectionUtil.newArrayList();
+					children = CollUtil.newArrayList();
 					parentNode.setChildren(children);
 				}
 				children.add(childNode);

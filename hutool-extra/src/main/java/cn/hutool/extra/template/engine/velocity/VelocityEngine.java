@@ -21,9 +21,7 @@ public class VelocityEngine implements TemplateEngine {
 	/**
 	 * 默认构造
 	 */
-	public VelocityEngine() {
-		this(new TemplateConfig());
-	}
+	public VelocityEngine() {}
 
 	/**
 	 * 构造
@@ -31,7 +29,7 @@ public class VelocityEngine implements TemplateEngine {
 	 * @param config 模板配置
 	 */
 	public VelocityEngine(TemplateConfig config) {
-		this(createEngine(config));
+		init(config);
 	}
 
 	/**
@@ -40,9 +38,26 @@ public class VelocityEngine implements TemplateEngine {
 	 * @param engine {@link org.apache.velocity.app.VelocityEngine}
 	 */
 	public VelocityEngine(org.apache.velocity.app.VelocityEngine engine) {
-		this.engine = engine;
+		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
+
+	@Override
+	public TemplateEngine init(TemplateConfig config) {
+		if(null == config){
+			config = TemplateConfig.DEFAULT;
+		}
+		init(createEngine(config));
+		return this;
+	}
+
+	/**
+	 * 初始化引擎
+	 * @param engine 引擎
+	 */
+	private void init(org.apache.velocity.app.VelocityEngine engine){
+		this.engine = engine;
+	}
 
 	/**
 	 * 获取原始的引擎对象
@@ -56,6 +71,9 @@ public class VelocityEngine implements TemplateEngine {
 
 	@Override
 	public Template getTemplate(String resource) {
+		if(null == this.engine){
+			init(TemplateConfig.DEFAULT);
+		}
 		return VelocityTemplate.wrap(engine.getTemplate(resource));
 	}
 

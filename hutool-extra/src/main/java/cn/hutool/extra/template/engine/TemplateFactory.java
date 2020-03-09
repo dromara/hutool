@@ -1,5 +1,6 @@
 package cn.hutool.extra.template.engine;
 
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.ServiceLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.TemplateConfig;
@@ -35,9 +36,15 @@ public class TemplateFactory {
 	 * @return {@link Engine}
 	 */
 	private static TemplateEngine doCreate(TemplateConfig config) {
-		final TemplateEngine engine = ServiceLoaderUtil.loadFirstAvailable(TemplateEngine.class);
+		final Class<? extends TemplateEngine> customEngineClass = config.getCustomEngine();
+		final TemplateEngine engine;
+		if(null != customEngineClass){
+			engine = ReflectUtil.newInstance(customEngineClass);
+		}else{
+			engine = ServiceLoaderUtil.loadFirstAvailable(TemplateEngine.class);
+		}
 		if(null != engine){
-			return engine;
+			return engine.init(config);
 		}
 
 		throw new TemplateException("No template found ! Please add one of template jar to your project !");

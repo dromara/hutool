@@ -28,9 +28,7 @@ public class ThymeleafEngine implements TemplateEngine {
 	/**
 	 * 默认构造
 	 */
-	public ThymeleafEngine() {
-		this(new TemplateConfig());
-	}
+	public ThymeleafEngine() {}
 
 	/**
 	 * 构造
@@ -38,8 +36,7 @@ public class ThymeleafEngine implements TemplateEngine {
 	 * @param config 模板配置
 	 */
 	public ThymeleafEngine(TemplateConfig config) {
-		this(createEngine(config));
-		this.config = config;
+		init(config);
 	}
 
 	/**
@@ -48,12 +45,33 @@ public class ThymeleafEngine implements TemplateEngine {
 	 * @param engine {@link org.thymeleaf.TemplateEngine}
 	 */
 	public ThymeleafEngine(org.thymeleaf.TemplateEngine engine) {
-		this.engine = engine;
+		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
 
 	@Override
+	public TemplateEngine init(TemplateConfig config) {
+		if(null == config){
+			config = TemplateConfig.DEFAULT;
+		}
+		this.config = config;
+		init(createEngine(config));
+		return this;
+	}
+
+	/**
+	 * 初始化引擎
+	 * @param engine 引擎
+	 */
+	private void init(org.thymeleaf.TemplateEngine engine){
+		this.engine = engine;
+	}
+
+	@Override
 	public Template getTemplate(String resource) {
+		if(null == this.engine){
+			init(TemplateConfig.DEFAULT);
+		}
 		return ThymeleafTemplate.wrap(this.engine, resource, (null == this.config) ? null : this.config.getCharset());
 	}
 

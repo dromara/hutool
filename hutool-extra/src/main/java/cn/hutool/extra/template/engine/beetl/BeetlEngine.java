@@ -23,15 +23,13 @@ import cn.hutool.extra.template.TemplateEngine;
  */
 public class BeetlEngine implements TemplateEngine {
 
-	private final GroupTemplate engine;
+	private GroupTemplate engine;
 
 	// --------------------------------------------------------------------------------- Constructor start
 	/**
 	 * 默认构造
 	 */
-	public BeetlEngine() {
-		this(new TemplateConfig());
-	}
+	public BeetlEngine() {}
 
 	/**
 	 * 构造
@@ -39,7 +37,7 @@ public class BeetlEngine implements TemplateEngine {
 	 * @param config 模板配置
 	 */
 	public BeetlEngine(TemplateConfig config) {
-		this(createEngine(config));
+		init(config);
 	}
 
 	/**
@@ -48,12 +46,30 @@ public class BeetlEngine implements TemplateEngine {
 	 * @param engine {@link GroupTemplate}
 	 */
 	public BeetlEngine(GroupTemplate engine) {
-		this.engine = engine;
+		init(engine);
 	}
 	// --------------------------------------------------------------------------------- Constructor end
-	
+
+
+	@Override
+	public TemplateEngine init(TemplateConfig config) {
+		init(createEngine(config));
+		return this;
+	}
+
+	/**
+	 * 初始化引擎
+	 * @param engine 引擎
+	 */
+	private void init(GroupTemplate engine){
+		this.engine = engine;
+	}
+
 	@Override
 	public Template getTemplate(String resource) {
+		if(null == this.engine){
+			init(TemplateConfig.DEFAULT);
+		}
 		return BeetlTemplate.wrap(engine.getTemplate(resource));
 	}
 
@@ -65,7 +81,7 @@ public class BeetlEngine implements TemplateEngine {
 	 */
 	private static GroupTemplate createEngine(TemplateConfig config) {
 		if (null == config) {
-			config = new TemplateConfig();
+			config = TemplateConfig.DEFAULT;
 		}
 
 		switch (config.getResourceMode()) {

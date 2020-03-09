@@ -13,6 +13,7 @@
 * 【core   】     修复DataUtil.parseLocalDateTime无时间部分报错问题（issue#I1B18H@Gitee）
 * 【core   】     修复NetUtil.isUsableLocalPort()判断问题（issue#765@Github）
 * 【poi    】     修复ExcelWriter写出多个sheet错误的问题（issue#766@Github）
+* 【extra  】     修复模板引擎自定义配置失效问题（issue#767@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

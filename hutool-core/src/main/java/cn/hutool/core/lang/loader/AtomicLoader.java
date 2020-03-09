@@ -21,7 +21,7 @@ public abstract class AtomicLoader<T> implements Loader<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** 被加载对象的引用 */
-	private final AtomicReference<T> reference = new AtomicReference<T>();
+	private final AtomicReference<T> reference = new AtomicReference<>();
 
 	/**
 	 * 获取一个对象，第一次调用此方法时初始化对象然后返回，之后调用此方法直接返回原对象

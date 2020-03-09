@@ -43,8 +43,8 @@ public class TreeTest {
 		TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
 		// 自定义属性名 都要默认值的
 		treeNodeConfig.setWeightKey("order");
-		treeNodeConfig.setDeep(3);
 		treeNodeConfig.setIdKey("rid");
+		treeNodeConfig.setDeep(3);
 
 		//转换器
 		List<Tree<String>> treeNodes = TreeUtil.build(nodeList, "0", treeNodeConfig,
