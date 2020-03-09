@@ -2,6 +2,7 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.tree.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class TreeTest {
 	public void sampleTree() {
 		List<Tree<String>> treeNodes = TreeUtil.build(nodeList, "0");
 		for (Tree<String> tree : treeNodes) {
-			Console.log(tree);
+			Assert.assertNotNull(tree);
 		}
 	}
 
@@ -56,6 +57,7 @@ public class TreeTest {
 					tree.putExtra("extraField", 666);
 					tree.putExtra("other", new Object());
 				});
-		System.out.println(treeNodes);
+
+		Assert.assertEquals(treeNodes.size(), 2);
 	}
 }
