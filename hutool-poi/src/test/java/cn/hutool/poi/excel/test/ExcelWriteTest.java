@@ -2,9 +2,12 @@ package cn.hutool.poi.excel.test;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import cn.hutool.core.util.IdUtil;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
@@ -410,7 +413,31 @@ public class ExcelWriteTest {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
 		ExcelWriter overtimeWriter = ExcelUtil.getWriter("f:/excel/single_line.xlsx");
 		overtimeWriter.writeCellValue(3, 4, "AAAA");
-		overtimeWriter.addSelect(3, 4, row.toArray(new String[row.size()]));
+		overtimeWriter.addSelect(3, 4, row.toArray(new String[0]));
 		overtimeWriter.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeMultiSheetTest(){
+		List<Map<String, Object>> rows = new LinkedList<>();
+		for (int i = 0; i < 10; i++) {
+			Map<String, Object> tempList = new TreeMap<>();
+			for (int j = 0; j < 10; j++) {
+				tempList.put(j + "", IdUtil.randomUUID());
+			}
+			rows.add(tempList);
+		}
+		ExcelWriter writer = ExcelUtil.getWriter("D:\\test\\multiSheet.xlsx", "正常数据");
+		writer.write(rows, true);
+		writer.autoSizeColumnAll();
+
+		writer.setSheet("当前重复数据");
+		writer.write(rows, true);
+		writer.autoSizeColumnAll();
+		writer.setSheet("历史重复数据");
+		writer.write(rows, true);
+		writer.autoSizeColumnAll();
+		writer.close();
 	}
 }

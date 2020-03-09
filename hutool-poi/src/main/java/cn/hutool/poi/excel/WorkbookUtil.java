@@ -255,6 +255,29 @@ public class WorkbookUtil {
 	}
 
 	/**
+	 * 获取或者创建sheet表<br>
+	 * 自定义需要读取或写出的Sheet，如果给定的sheet不存在，创建之（命名为默认）<br>
+	 * 在读取中，此方法用于切换读取的sheet，在写出时，此方法用于新建或者切换sheet
+	 *
+	 * @param book 工作簿{@link Workbook}
+	 * @param sheetIndex 工作表序号
+	 * @return 工作表{@link Sheet}
+	 * @since 5.2.1
+	 */
+	public static Sheet getOrCreateSheet(Workbook book, int sheetIndex) {
+		Sheet sheet = null;
+		try {
+			sheet = book.getSheetAt(sheetIndex);
+		} catch (IllegalArgumentException ignore) {
+			//ignore
+		}
+		if (null == sheet) {
+			sheet = book.createSheet();
+		}
+		return sheet;
+	}
+
+	/**
 	 * 
 	 * sheet是否为空
 	 * 

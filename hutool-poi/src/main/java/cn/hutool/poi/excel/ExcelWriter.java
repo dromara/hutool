@@ -804,7 +804,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		Map rowMap;
 		if (rowBean instanceof Map) {
 			if (MapUtil.isNotEmpty(this.headerAlias)) {
-				rowMap = MapUtil.newTreeMap((Map) rowBean, getInitedAliasComparator());
+				rowMap = MapUtil.newTreeMap((Map) rowBean, getCachedAliasComparator());
 			} else {
 				rowMap = (Map) rowBean;
 			}
@@ -813,7 +813,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 				rowMap = BeanUtil.beanToMap(rowBean, new LinkedHashMap<>(), false, false);
 			} else {
 				// 别名存在情况下按照别名的添加顺序排序Bean数据
-				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(getInitedAliasComparator()), false, false);
+				rowMap = BeanUtil.beanToMap(rowBean, new TreeMap<>(getCachedAliasComparator()), false, false);
 			}
 		} else {
 			// 其它转为字符串默认输出
@@ -1047,7 +1047,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 			return rowMap;
 		}
 
-		final Map<Object, Object> filteredMap = new LinkedHashMap<>();
+		final Map<Object, Object> filteredMap = MapUtil.newHashMap(rowMap.size(), true);
 		String aliasName;
 		for (Entry<?, ?> entry : rowMap.entrySet()) {
 			aliasName = this.headerAlias.get(StrUtil.toString(entry.getKey()));
@@ -1068,7 +1068,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * @return Comparator
 	 * @since 4.1.5
 	 */
-	private Comparator<String> getInitedAliasComparator() {
+	private Comparator<String> getCachedAliasComparator() {
 		if (MapUtil.isEmpty(this.headerAlias)) {
 			return null;
 		}

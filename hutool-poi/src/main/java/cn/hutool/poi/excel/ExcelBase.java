@@ -115,10 +115,8 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @return this
 	 * @since 4.0.10
 	 */
-	@SuppressWarnings("unchecked")
 	public T setSheet(String sheetName) {
-		WorkbookUtil.getOrCreateSheet(this.workbook, sheetName);
-		return (T) this;
+		return setSheet(WorkbookUtil.getOrCreateSheet(this.workbook, sheetName));
 	}
 
 	/**
@@ -129,16 +127,20 @@ public class ExcelBase<T extends ExcelBase<T>> implements Closeable {
 	 * @return this
 	 * @since 4.0.10
 	 */
-	@SuppressWarnings("unchecked")
 	public T setSheet(int sheetIndex) {
-		try {
-			this.sheet = this.workbook.getSheetAt(sheetIndex);
-		} catch (IllegalArgumentException e) {
-			this.sheet = this.workbook.createSheet();
-		}
-		if (null == this.sheet) {
-			this.sheet = this.workbook.createSheet();
-		}
+		return setSheet(WorkbookUtil.getOrCreateSheet(this.workbook, sheetIndex));
+	}
+
+	/**
+	 * 设置自定义Sheet
+	 *
+	 * @param sheet 自定义sheet，可以通过{@link WorkbookUtil#getOrCreateSheet(Workbook, String)} 创建
+	 * @return this
+	 * @since 5.2.1
+	 */
+	@SuppressWarnings("unchecked")
+	public T setSheet(Sheet sheet) {
+		this.sheet = sheet;
 		return (T) this;
 	}
 
