@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import cn.hutool.core.annotation.Alias;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,9 +33,8 @@ import cn.hutool.json.test.bean.report.SuiteReport;
 
 /**
  * JSONObject单元测试
- * 
- * @author Looly
  *
+ * @author Looly
  */
 public class JSONObjectTest {
 
@@ -64,13 +65,13 @@ public class JSONObjectTest {
 				.setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"dateTime\":\"2019-05-02\"}", json.toString());
 	}
-	
+
 	@Test
 	public void toStringWithDateTest() {
 		JSONObject json = JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21"));
 		assert json != null;
 		Assert.assertEquals("{\"date\":1557314301000}", json.toString());
-		
+
 		json = Objects.requireNonNull(JSONUtil.createObj().put("date", DateUtil.parse("2019-05-08 19:18:21"))).setDateFormat(DatePattern.NORM_DATE_PATTERN);
 		Assert.assertEquals("{\"date\":\"2019-05-08\"}", json.toString());
 	}
@@ -122,7 +123,7 @@ public class JSONObjectTest {
 		JSONObject json = new JSONObject(jsonStr);
 		Assert.assertEquals("体”、“文", json.getStr("test"));
 	}
-	
+
 	@Test
 	@Ignore
 	public void parseStringWithBomTest() {
@@ -224,7 +225,12 @@ public class JSONObjectTest {
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void toBeanTest6() {
-		JSONObject json = JSONUtil.createObj().put("targetUrl", "http://test.com").put("success", "true").put("result", JSONUtil.createObj().put("token", "tokenTest").put("userId", "测试用户1"));
+		JSONObject json = JSONUtil.createObj()
+				.put("targetUrl", "http://test.com")
+				.put("success", "true")
+				.put("result", JSONUtil.createObj()
+						.put("token", "tokenTest")
+						.put("userId", "测试用户1"));
 
 		TokenAuthWarp2 bean = json.toBean(TokenAuthWarp2.class);
 		Assert.assertEquals("http://test.com", bean.getTargetUrl());
@@ -356,9 +362,27 @@ public class JSONObjectTest {
 		Assert.assertEquals("yyb\nbbb", jsonObject.getStr("name"));
 		// 转义按照字符串显示
 		Assert.assertEquals("yyb\\nbbb", jsonObject.getStrEscaped("name"));
-		
+
 		String bbb = jsonObject.getStr("bbb", "defaultBBB");
 		Assert.assertEquals("defaultBBB", bbb);
+	}
+
+	@Test
+	public void aliasTest(){
+		final BeanWithAlias beanWithAlias = new BeanWithAlias();
+		beanWithAlias.setValue1("张三");
+		beanWithAlias.setValue2(35);
+
+		final JSONObject jsonObject = JSONUtil.parseObj(beanWithAlias);
+		Assert.assertEquals("张三", jsonObject.getStr("name"));
+		Assert.assertEquals(new Integer(35), jsonObject.getInt("age"));
+
+		JSONObject json = JSONUtil.createObj()
+				.put("name", "张三")
+				.put("age", 35);
+		final BeanWithAlias bean = JSONUtil.toBean(Objects.requireNonNull(json).toString(), BeanWithAlias.class);
+		Assert.assertEquals("张三", bean.getValue1());
+		Assert.assertEquals(new Integer(35), bean.getValue2());
 	}
 
 	public enum TestEnum {
@@ -367,101 +391,35 @@ public class JSONObjectTest {
 
 	/**
 	 * 测试Bean
-	 * 
-	 * @author Looly
 	 *
+	 * @author Looly
 	 */
+	@Data
 	public static class TestBean {
 		private String strValue;
 		private int intValue;
 		private Double doubleValue;
-		private subBean beanValue;
+		private SubBean beanValue;
 		private List<String> list;
 		private TestEnum testEnum;
-
-		public String getStrValue() {
-			return strValue;
-		}
-
-		public void setStrValue(String strValue) {
-			this.strValue = strValue;
-		}
-
-		public int getIntValue() {
-			return intValue;
-		}
-
-		public void setIntValue(int intValue) {
-			this.intValue = intValue;
-		}
-
-		public Double getDoubleValue() {
-			return doubleValue;
-		}
-
-		public void setDoubleValue(Double doubleValue) {
-			this.doubleValue = doubleValue;
-		}
-
-		public subBean getBeanValue() {
-			return beanValue;
-		}
-
-		public void setBeanValue(subBean beanValue) {
-			this.beanValue = beanValue;
-		}
-
-		public List<String> getList() {
-			return list;
-		}
-
-		public void setList(List<String> list) {
-			this.list = list;
-		}
-
-		public TestEnum getTestEnum() {
-			return testEnum;
-		}
-
-		public void setTestEnum(TestEnum testEnum) {
-			this.testEnum = testEnum;
-		}
-
-		@Override
-		public String toString() {
-			return "TestBean [strValue=" + strValue + ", intValue=" + intValue + ", doubleValue=" + doubleValue + ", beanValue=" + beanValue + ", list=" + list + ", testEnum=" + testEnum + "]";
-		}
 	}
 
 	/**
 	 * 测试子Bean
-	 * 
-	 * @author Looly
 	 *
+	 * @author Looly
 	 */
-	public static class subBean {
+	@Data
+	public static class SubBean {
 		private String value1;
 		private BigDecimal value2;
+	}
 
-		public String getValue1() {
-			return value1;
-		}
-
-		public void setValue1(String value1) {
-			this.value1 = value1;
-		}
-
-		public BigDecimal getValue2() {
-			return value2;
-		}
-
-		public void setValue2(BigDecimal value2) {
-			this.value2 = value2;
-		}
-
-		@Override
-		public String toString() {
-			return "subBean [value1=" + value1 + ", value2=" + value2 + "]";
-		}
+	@Data
+	public static class BeanWithAlias {
+		@Alias("name")
+		private String value1;
+		@Alias("age")
+		private Integer value2;
 	}
 }

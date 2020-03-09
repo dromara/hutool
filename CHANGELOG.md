@@ -8,6 +8,7 @@
 ### 新特性
 * 【core   】     修改FastDateParser策略，与JDK保持一致（issue#I1AXIN@Gitee）
 * 【core   】     增加tree（树状结构）（pr#100@Gitee）
+* 【core   】     增加randomEleList（pr#764@Github）
 ### Bug修复
 * 【setting】     修复Props.toBean方法null的问题
 * 【core   】     修复DataUtil.parseLocalDateTime无时间部分报错问题（issue#I1B18H@Gitee）
