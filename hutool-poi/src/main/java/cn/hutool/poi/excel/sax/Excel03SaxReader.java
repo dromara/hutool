@@ -1,7 +1,6 @@
 package cn.hutool.poi.excel.sax;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.sax.handler.RowHandler;
