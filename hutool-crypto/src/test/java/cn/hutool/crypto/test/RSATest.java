@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.crypto.Cipher;
+import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.PublicKey;
 
@@ -182,4 +183,18 @@ public class RSATest {
 
 		Assert.assertEquals(result1, result2);
 	}
+
+	@Test
+	public void exponentTest(){
+		String modulus = "BD99BAAB9E56B7FD85FB8BCF53CAD2913C1ACEF9063E7C913CD6FC4FEE040DA44D8" +
+				"ADAA35A9DCABD6E936C402D47278049638407135BAB22BB091396CB6873195C8AC8B0B7AB123" +
+				"C3BF7A6341A4419BDBC0EFB85DBCD9A3AD12C99E2265BDCC1197913749E2AFA568EB7623DA3A" +
+				"361335AA1F9FFA6E1801DDC8228AA86306B87";
+		String publicExponent = "65537";
+		RSA rsa = new RSA(new BigInteger(modulus, 16), null, new BigInteger(publicExponent));
+
+		final String encryptBase64 = rsa.encryptBase64("测试内容", KeyType.PublicKey);
+		Assert.assertNotNull(encryptBase64);
+	}
+
 }

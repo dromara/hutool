@@ -130,4 +130,9 @@ public class ValidatorTest {
 		general = Validator.isGeneral(str, -1, 100);
 		Assert.assertFalse(general);
 	}
+
+	@Test
+	public void isPlateNumberTest(){
+		Assert.assertTrue(Validator.isPlateNumber("粤BA03205"));
+	}
 }
