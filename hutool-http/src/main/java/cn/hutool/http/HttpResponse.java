@@ -1,5 +1,17 @@
 package cn.hutool.http;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.cookie.GlobalCookieManager;
+
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.EOFException;
@@ -12,18 +24,6 @@ import java.net.HttpCookie;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
-
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.StreamProgress;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.cookie.GlobalCookieManager;
 
 /**
  * Http响应类<br>
@@ -111,7 +111,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	public boolean isGzip() {
 		final String contentEncoding = contentEncoding();
-		return contentEncoding != null && "gzip".equalsIgnoreCase(contentEncoding);
+		return "gzip".equalsIgnoreCase(contentEncoding);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	public boolean isDeflate() {
 		final String contentEncoding = contentEncoding();
-		return contentEncoding != null && "deflate".equalsIgnoreCase(contentEncoding);
+		return "deflate".equalsIgnoreCase(contentEncoding);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	public boolean isChunked() {
 		final String transferEncoding = header(Header.TRANSFER_ENCODING);
-		return transferEncoding != null && "Chunked".equalsIgnoreCase(transferEncoding);
+		return "Chunked".equalsIgnoreCase(transferEncoding);
 	}
 
 	/**
@@ -378,6 +378,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 			}
 			// 服务器无返回内容，忽略之
 		}
+
 
 		// 读取响应头信息
 		try {

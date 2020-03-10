@@ -106,4 +106,11 @@ public class HttpRequestTest {
 				.execute().body();
 		Console.log(res);
 	}
+
+	@Test
+	@Ignore
+	public void bodyTest(){
+		String ddddd1 = HttpRequest.get("https://baijiahao.baidu.com/s").body("id=1625528941695652600").execute().body();
+		Console.log(ddddd1);
+	}
 }

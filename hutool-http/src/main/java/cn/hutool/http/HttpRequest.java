@@ -675,7 +675,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		byte[] bytes = StrUtil.bytes(body, this.charset);
 		body(bytes);
 		this.form = null; // 当使用body时，停止form的使用
-		contentLength(bytes.length);
 
 		if (null != contentType) {
 			// Content-Type自定义设置
@@ -695,6 +694,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// 判断是否为rest请求
 		if (StrUtil.containsAnyIgnoreCase(contentType, "json", "xml")) {
 			this.isRest = true;
+			contentLength(bytes.length);
 		}
 		return this;
 	}
@@ -929,6 +929,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (this.encodeUrlParams) {
 			this.url = HttpUtil.encodeParams(this.url, this.charset);
 		}
+
 		// 初始化 connection
 		initConnection();
 
@@ -942,6 +943,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (null == httpResponse) {
 			httpResponse = new HttpResponse(this.httpConnection, this.charset, isAsync, isIgnoreResponseBody());
 		}
+
 		return httpResponse;
 	}
 
@@ -1034,6 +1036,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				this.httpConnection.disconnectQuietly();
 				throw new HttpException(e);
 			}
+
 			if (responseCode != HttpURLConnection.HTTP_OK) {
 				if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
 					this.url = httpConnection.header(Header.LOCATION);
