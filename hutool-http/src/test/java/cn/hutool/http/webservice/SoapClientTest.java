@@ -1,15 +1,12 @@
 package cn.hutool.http.webservice;
 
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-
-import cn.hutool.core.util.XmlUtil;
-import cn.hutool.http.HtmlUtil;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharsetUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharsetUtil;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 
 /**
  * SOAP相关单元测试
