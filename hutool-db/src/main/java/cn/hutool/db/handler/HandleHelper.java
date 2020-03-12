@@ -268,7 +268,13 @@ public class HandleHelper {
 		Object rawValue;
 		switch (type) {
 		case Types.TIMESTAMP:
-			rawValue = rs.getTimestamp(columnIndex);
+			try{
+				rawValue = rs.getTimestamp(columnIndex);
+			} catch (SQLException ignore){
+				// issue#776@Github
+				// 当数据库中日期为0000-00-00 00:00:00报错，按照普通日期获取
+				rawValue = rs.getDate(columnIndex);
+			}
 			break;
 		case Types.TIME:
 			rawValue = rs.getTime(columnIndex);
