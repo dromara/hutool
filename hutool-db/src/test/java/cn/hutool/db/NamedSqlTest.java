@@ -1,12 +1,13 @@
 package cn.hutool.db;
 
-import java.util.Map;
-
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.db.sql.NamedSql;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.db.sql.NamedSql;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public class NamedSqlTest {
 
@@ -35,5 +36,20 @@ public class NamedSqlTest {
 		Assert.assertNull(namedSql.getParams()[0]);
 		Assert.assertEquals("张三", namedSql.getParams()[1]);
 		Assert.assertEquals("小豆豆", namedSql.getParams()[2]);
+	}
+
+	@Test
+	public void queryTest() throws SQLException {
+		Map<String, Object> paramMap = MapUtil
+				.builder("name1", (Object)"王五")
+				.put("age1", 18).build();
+		String sql = "select * from user where name = @name1 and age = @age1";
+
+		List<Entity> query = Db.use().query(sql, paramMap);
+		Assert.assertEquals(1, query.size());
+
+		// 采用传统方式查询是否能识别Map类型参数
+		query = Db.use().query(sql, new Object[]{paramMap});
+		Assert.assertEquals(1, query.size());
 	}
 }

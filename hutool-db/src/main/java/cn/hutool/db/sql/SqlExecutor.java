@@ -1,5 +1,10 @@
 package cn.hutool.db.sql;
 
+import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.db.DbUtil;
+import cn.hutool.db.StatementUtil;
+import cn.hutool.db.handler.RsHandler;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,11 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
-
-import cn.hutool.core.collection.ArrayIter;
-import cn.hutool.db.DbUtil;
-import cn.hutool.db.StatementUtil;
-import cn.hutool.db.handler.RsHandler;
 
 /**
  * SQL执行器，全部为静态方法，执行查询或非查询的SQL语句<br>

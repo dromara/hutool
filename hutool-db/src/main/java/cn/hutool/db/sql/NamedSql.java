@@ -50,7 +50,7 @@ public class NamedSql {
 	 * @return 参数数组
 	 */
 	public Object[] getParams() {
-		return this.params.toArray(new Object[this.params.size()]);
+		return this.params.toArray(new Object[0]);
 	}
 
 	/**

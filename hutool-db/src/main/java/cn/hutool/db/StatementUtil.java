@@ -2,9 +2,11 @@ package cn.hutool.db;
 
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.sql.NamedSql;
 import cn.hutool.db.sql.SqlBuilder;
 import cn.hutool.db.sql.SqlLog;
 import cn.hutool.db.sql.SqlUtil;
@@ -96,7 +98,7 @@ public class StatementUtil {
 	 * @since 3.2.3
 	 */
 	public static PreparedStatement prepareStatement(Connection conn, String sql, Collection<Object> params) throws SQLException {
-		return prepareStatement(conn, sql, params.toArray(new Object[params.size()]));
+		return prepareStatement(conn, sql, params.toArray(new Object[0]));
 	}
 
 	/**
@@ -111,8 +113,15 @@ public class StatementUtil {
 	 */
 	public static PreparedStatement prepareStatement(Connection conn, String sql, Object... params) throws SQLException {
 		Assert.notBlank(sql, "Sql String must be not blank!");
-
 		sql = sql.trim();
+
+		if(ArrayUtil.isNotEmpty(params) && 1 == params.length && params[0] instanceof Map){
+			// 检查参数是否为命名方式的参数
+			final NamedSql namedSql = new NamedSql(sql, Convert.toMap(String.class, Object.class, params[0]));
+			sql = namedSql.getSql();
+			params = namedSql.getParams();
+		}
+
 		SqlLog.INSTANCE.log(sql, ArrayUtil.isEmpty(params) ? null : params);
 		PreparedStatement ps;
 		if (StrUtil.startWithIgnoreCase(sql, "insert")) {
@@ -135,7 +144,7 @@ public class StatementUtil {
 	 * @since 4.1.13
 	 */
 	public static PreparedStatement prepareStatementForBatch(Connection conn, String sql, Object[]... paramsBatch) throws SQLException {
-		return prepareStatementForBatch(conn, sql, new ArrayIter<Object[]>(paramsBatch));
+		return prepareStatementForBatch(conn, sql, new ArrayIter<>(paramsBatch));
 	}
 
 	/**

@@ -11,6 +11,7 @@
 * 【http   】     修复body方法添加多余头的问题（issue#769@Github）
 * 【bloomFilter 】修复默认为int类型,左移超过32位后,高位丢失问题（pr#770@Github）
 * 【core   】     修复beginOfWeek和endOfWeek一周开始计算错误问题（issue#I1BDPW@Gitee）
+* 【db     】     修复Db.query使用命名方式查询产生的歧义（issue#776@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

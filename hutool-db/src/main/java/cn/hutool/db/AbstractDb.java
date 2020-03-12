@@ -80,6 +80,19 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 * @since 3.1.1
 	 */
+	public List<Entity> query(String sql, Map<String, Object> params) throws SQLException {
+		return query(sql, new EntityListHandler(), params);
+	}
+
+	/**
+	 * 查询
+	 *
+	 * @param sql    查询语句
+	 * @param params 参数
+	 * @return 结果对象
+	 * @throws SQLException SQL执行异常
+	 * @since 3.1.1
+	 */
 	public List<Entity> query(String sql, Object... params) throws SQLException {
 		return query(sql, new EntityListHandler(), params);
 	}
@@ -164,7 +177,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @param paramMap 参数
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
-	 * @since 5.1.1
+	 * @since 5.2.2
 	 */
 	public <T> T query(String sql, RsHandler<T> rsh, Map<String, Object> paramMap) throws SQLException {
 		Connection conn = null;
