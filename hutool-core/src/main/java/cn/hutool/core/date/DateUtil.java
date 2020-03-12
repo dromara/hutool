@@ -1169,9 +1169,7 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar beginOfWeek(Calendar calendar, boolean isMondayAsFirstDay) {
-		if (isMondayAsFirstDay) {
-			calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		}
+		calendar.setFirstDayOfWeek(isMondayAsFirstDay ? Calendar.MONDAY : Calendar.SUNDAY);
 		// WEEK_OF_MONTH为上限的字段（不包括），实际调整的为DAY_OF_MONTH
 		return truncate(calendar, DateField.WEEK_OF_MONTH);
 	}
@@ -1195,9 +1193,7 @@ public class DateUtil {
 	 * @since 3.1.2
 	 */
 	public static Calendar endOfWeek(Calendar calendar, boolean isSundayAsLastDay) {
-		if (isSundayAsLastDay) {
-			calendar.setFirstDayOfWeek(Calendar.MONDAY);
-		}
+		calendar.setFirstDayOfWeek(isSundayAsLastDay ? Calendar.MONDAY : Calendar.SUNDAY);
 		// WEEK_OF_MONTH为上限的字段（不包括），实际调整的为DAY_OF_MONTH
 		return ceiling(calendar, DateField.WEEK_OF_MONTH);
 	}

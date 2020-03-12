@@ -115,6 +115,19 @@ public class DateUtilTest {
 	}
 
 	@Test
+	public void beginAndWeedTest2() {
+		String beginStr = "2020-03-11";
+		DateTime date = DateUtil.parseDate(beginStr);
+		Calendar calendar = date.toCalendar();
+		final Calendar begin = DateUtil.beginOfWeek(calendar, false);
+		Assert.assertEquals("2020-03-08 00:00:00", DateUtil.date(begin).toString());
+
+		Calendar calendar2 = date.toCalendar();
+		final Calendar end = DateUtil.endOfWeek(calendar2, false);
+		Assert.assertEquals("2020-03-14 23:59:59", DateUtil.date(end).toString());
+	}
+
+	@Test
 	public void offsetDateTest() {
 		String dateStr = "2017-03-01 22:33:23";
 		Date date = DateUtil.parse(dateStr);
