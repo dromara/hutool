@@ -1,10 +1,9 @@
 package cn.hutool.cron.pattern;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.cron.CronException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.cron.pattern.CronPattern;
 
 /**
  * 定时任务单元测试类
@@ -90,6 +89,7 @@ public class CronPatternTest {
 
 	}
 	
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void CronPatternTest2() {
 		CronPattern pattern = new CronPattern("0/30 * * * *");
@@ -125,12 +125,19 @@ public class CronPatternTest {
 		assertMatch(pattern, "2017-02-19 04:20:33");
 	}
 
+	@Test(expected = CronException.class)
+	public void rangeYearTest() {
+		// year的范围是1970~2099年，超出报错
+		CronPattern pattern = new CronPattern("0/1 * * * 1/1 ? 2020-2120");
+	}
+
 	/**
 	 * 表达式是否匹配日期
 	 * 
 	 * @param pattern 表达式
 	 * @param date 日期，标准日期时间字符串
 	 */
+	@SuppressWarnings("ConstantConditions")
 	private void assertMatch(CronPattern pattern, String date) {
 		Assert.assertTrue(pattern.match(DateUtil.parse(date).getTime(), false));
 		Assert.assertTrue(pattern.match(DateUtil.parse(date).getTime(), true));
