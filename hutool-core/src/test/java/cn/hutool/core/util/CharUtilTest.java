@@ -23,7 +23,7 @@ public class CharUtilTest {
 
 	@Test
 	public void isCharTest(){
-		char[] a = new char[]{'a'};
+		char a = 'a';
 		Assert.assertTrue(CharUtil.isChar(a));
 	}
 }
