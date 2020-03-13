@@ -20,4 +20,10 @@ public class CharUtilTest {
 		Assert.assertTrue(CharUtil.isEmoji(a.charAt(1)));
 		
 	}
+
+	@Test
+	public void isCharTest(){
+		char[] a = new char[]{'a'};
+		Assert.assertTrue(CharUtil.isChar(a));
+	}
 }

@@ -34,6 +34,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 		buffer = new FastByteBuffer(size);
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public void write(byte[] b, int off, int len) {
 		buffer.append(b, off, len);
@@ -52,7 +53,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * 此方法无任何效果，当流被关闭后不会抛出IOException
 	 */
 	@Override
-	public void close() throws IOException{
+	public void close() {
 		// nop
 	}
 

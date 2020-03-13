@@ -53,7 +53,7 @@ public abstract class AbstractConverter<T> implements Converter<T>, Serializable
 		if (null == defaultValue || targetType.isInstance(defaultValue)) {
 			if (targetType.isInstance(value) && false == Map.class.isAssignableFrom(targetType)) {
 				// 除Map外，已经是目标类型，不需要转换（Map类型涉及参数类型，需要单独转换）
-				return (T) targetType.cast(value);
+				return targetType.cast(value);
 			}
 			T result = convertInternal(value);
 			return ((null == result) ? defaultValue : result);

@@ -244,6 +244,7 @@ public class CharUtil {
 	 * @return true表示为字符类
 	 */
 	public static boolean isChar(Object value) {
+		//noinspection ConstantConditions
 		return value instanceof Character || value.getClass() == char.class;
 	}
 
@@ -283,13 +284,14 @@ public class CharUtil {
 	 * @since 4.0.8
 	 */
 	public static boolean isEmoji(char c) {
+		//noinspection ConstantConditions
 		return false ==  ((c == 0x0) || //
 				(c == 0x9) || //
 				(c == 0xA) || //
 				(c == 0xD) || //
 				((c >= 0x20) && (c <= 0xD7FF)) || //
 				((c >= 0xE000) && (c <= 0xFFFD)) || //
-				((c >= 0x10000) && (c <= 0x10FFFF)));
+				((c >= 0x100000) && (c <= 0x10FFFF)));
 	}
 	
 	/**
@@ -318,5 +320,15 @@ public class CharUtil {
 			return Character.toLowerCase(c1) == Character.toLowerCase(c2);
 		}
 		return c1 == c2;
+	}
+
+	/**
+	 * 获取字符类型
+	 * @param c 字符
+	 * @return 字符类型
+	 * @since 5.2.3
+	 */
+	public static int getType(int c){
+		return Character.getType(c);
 	}
 }

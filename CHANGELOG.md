@@ -6,6 +6,7 @@
 ## 5.2.3
 
 ### 新特性
+* 【http   】     UserAgentUtil增加识别ios和android等（issue#781@Github）
 
 ### Bug修复
 * 【core   】     修复PageUtil第一页语义不明确的问题（issue#782@Github）
