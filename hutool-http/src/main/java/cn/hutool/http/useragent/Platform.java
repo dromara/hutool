@@ -49,11 +49,11 @@ public class Platform extends UserAgentInfo {
 	 * 支持的移动平台类型
 	 */
 	public static final List<Platform> mobilePlatforms = CollUtil.newArrayList(//
+			WINDOWS_PHONE, //
 			IPAD, //
 			IPOD, //
 			IPHONE, //
 			ANDROID, //
-			WINDOWS_PHONE, //
 			GOOGLE_TV, //
 			new Platform("htcFlyer", "htc_flyer"), //
 			new Platform("Symbian", "symbian(os)?"), //

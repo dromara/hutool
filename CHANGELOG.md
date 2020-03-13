@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【http   】     UserAgentUtil增加识别ios和android等（issue#781@Github）
+* 【core   】     支持新领车牌（issue#I1BJHE@Gitee）
 
 ### Bug修复
 * 【core   】     修复PageUtil第一页语义不明确的问题（issue#782@Github）
