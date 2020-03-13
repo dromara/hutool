@@ -49,7 +49,7 @@ public class Page implements Serializable {
 	/**
 	 * 构造
 	 * 
-	 * @param pageNumber 页码
+	 * @param pageNumber 页码，0表示第一页
 	 * @param numPerPage 每页结果数
 	 * @param order 排序对象
 	 */
@@ -61,7 +61,7 @@ public class Page implements Serializable {
 
 	// ---------------------------------------------------------- Getters and Setters start
 	/**
-	 * @return 页码
+	 * @return 页码，0表示第一页
 	 */
 	public int getPageNumber() {
 		return pageNumber;
@@ -157,10 +157,14 @@ public class Page implements Serializable {
 
 	/**
 	 * 开始位置和结束位置<br>
-	 * 例如：<br>
-	 * 页码：1，每页10 =》 [0, 10]<br>
-	 * 页码：2，每页10 =》 [10, 20]<br>
-	 * 。。。<br>
+	 * 例如：
+	 *
+	 * <pre>
+	 * 页码：0，每页10 =》 [0, 10]
+	 * 页码：1，每页10 =》 [10, 20]
+	 * 页码：2，每页10 =》 [21, 30]
+	 * 。。。
+	 * </pre>
 	 * 
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */

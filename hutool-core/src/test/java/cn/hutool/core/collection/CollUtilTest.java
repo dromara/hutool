@@ -18,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -39,7 +40,7 @@ public class CollUtilTest {
 		Dict v1 = Dict.create().set("id", 12).set("name", "张三").set("age", 23);
 		Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
 
-		final String[] keys = v1.keySet().toArray(new String[v1.size()]);
+		final String[] keys = v1.keySet().toArray(new String[0]);
 		ArrayList<Object> v1s = CollectionUtil.valuesOfKeys(v1, keys);
 		Assert.assertTrue(v1s.contains(12));
 		Assert.assertTrue(v1s.contains(23));
@@ -345,6 +346,7 @@ public class CollUtilTest {
 
 	@Test
 	public void getTest() {
+		@SuppressWarnings("RedundantArrayCreation")
 		HashSet<String> set = CollUtil.newHashSet(true, new String[] { "A", "B", "C", "D" });
 		String str = CollUtil.get(set, 2);
 		Assert.assertEquals("C", str);
@@ -546,8 +548,8 @@ public class CollUtilTest {
 
 	@Test
 	public void sortPageAllTest() {
-		ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
-		List<Integer> sortPageAll = CollUtil.sortPageAll(2, 5, Comparator.reverseOrder(), list);
+		List<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		List<Integer> sortPageAll = CollUtil.sortPageAll(1, 5, Comparator.reverseOrder(), list);
 
 		Assert.assertEquals(CollUtil.newArrayList(4, 3, 2, 1), sortPageAll);
 	}
@@ -583,7 +585,7 @@ public class CollUtilTest {
 
 		Map<String, Integer> map = CollUtil.zip(keys, values);
 
-		Assert.assertEquals(4, map.size());
+		Assert.assertEquals(4, Objects.requireNonNull(map).size());
 
 		Assert.assertEquals(1, map.get("a").intValue());
 		Assert.assertEquals(2, map.get("b").intValue());

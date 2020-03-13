@@ -2091,7 +2091,7 @@ public class CollUtil {
 	 * 采用{@link BoundedPriorityQueue}实现分页取局部
 	 *
 	 * @param <T>        集合元素类型
-	 * @param pageNo     页码，从1开始计数，0和1效果相同
+	 * @param pageNo     页码，从0开始计数，0表示第一页
 	 * @param pageSize   每页的条目数
 	 * @param comparator 比较器
 	 * @param colls      集合数组
@@ -2114,7 +2114,7 @@ public class CollUtil {
 	 * 对指定List分页取值
 	 *
 	 * @param <T>      集合元素类型
-	 * @param pageNo   页码，从1开始计数，0和1效果相同
+	 * @param pageNo   页码，从0开始计数，0表示第一页
 	 * @param pageSize 每页的条目数
 	 * @param list     列表
 	 * @return 分页后的段落内容

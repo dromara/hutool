@@ -14,25 +14,25 @@ public class PageUtil {
 	 * 例如：
 	 * 
 	 * <pre>
-	 * 页码：1，每页10 =》 0
-	 * 页码：2，每页10 =》 10
+	 * 页码：0，每页10 =》 0
+	 * 页码：1，每页10 =》 10
 	 * ……
 	 * </pre>
 	 * 
-	 * @param pageNo 页码（从1计数）
+	 * @param pageNo 页码（从0计数）
 	 * @param pageSize 每页条目数
 	 * @return 开始位置
 	 */
 	public static int getStart(int pageNo, int pageSize) {
-		if (pageNo < 1) {
-			pageNo = 1;
+		if (pageNo < 0) {
+			pageNo = 0;
 		}
 
 		if (pageSize < 1) {
 			pageSize = 0;
 		}
 
-		return (pageNo - 1) * pageSize;
+		return pageNo * pageSize;
 	}
 
 	/**
@@ -41,12 +41,12 @@ public class PageUtil {
 	 * 例如：
 	 * 
 	 * <pre>
-	 * 页码：1，每页10 =》 [0, 10]
-	 * 页码：2，每页10 =》 [10, 20]
+	 * 页码：0，每页10 =》 [0, 10]
+	 * 页码：1，每页10 =》 [10, 20]
 	 * ……
 	 * </pre>
 	 * 
-	 * @param pageNo 页码（从1计数）
+	 * @param pageNo 页码（从0计数）
 	 * @param pageSize 每页条目数
 	 * @return 第一个数为开始位置，第二个数为结束位置
 	 */

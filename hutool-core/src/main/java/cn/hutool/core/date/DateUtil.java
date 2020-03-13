@@ -1754,6 +1754,79 @@ public class DateUtil {
 	}
 
 	/**
+	 * 计时器<br>
+	 * 计算某个过程花费的时间，精确到毫秒
+	 *
+	 * @param isNano 是否使用纳秒计数，false则使用毫秒
+	 * @return Timer
+	 * @since 5.2.3
+	 */
+	public static TimeInterval timer(boolean isNano) {
+		return new TimeInterval(isNano);
+	}
+
+	/**
+	 * 创建秒表{@link StopWatch}，用于对代码块的执行时间计数
+	 * <p>
+	 * 使用方法如下：
+	 *
+	 * <pre>
+	 * StopWatch stopWatch = DateUtil.createStopWatch();
+	 *
+	 * // 任务1
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(1000);
+	 * stopWatch.stop();
+	 *
+	 * // 任务2
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(2000);
+	 * stopWatch.stop();
+	 *
+	 * // 打印出耗时
+	 * Console.log(stopWatch.prettyPrint());
+	 *
+	 * </pre>
+	 *
+	 * @return {@link StopWatch}
+	 * @since 5.2.3
+	 */
+	public static StopWatch createStopWatch() {
+		return new StopWatch();
+	}
+
+	/**
+	 * 创建秒表{@link StopWatch}，用于对代码块的执行时间计数
+	 * <p>
+	 * 使用方法如下：
+	 *
+	 * <pre>
+	 * StopWatch stopWatch = DateUtil.createStopWatch("任务名称");
+	 *
+	 * // 任务1
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(1000);
+	 * stopWatch.stop();
+	 *
+	 * // 任务2
+	 * stopWatch.start("任务一");
+	 * Thread.sleep(2000);
+	 * stopWatch.stop();
+	 *
+	 * // 打印出耗时
+	 * Console.log(stopWatch.prettyPrint());
+	 *
+	 * </pre>
+	 *
+	 * @param id 用于标识秒表的唯一ID
+	 * @return {@link StopWatch}
+	 * @since 5.2.3
+	 */
+	public static StopWatch createStopWatch(String id) {
+		return new StopWatch(id);
+	}
+
+	/**
 	 * 生日转为年龄，计算法定年龄
 	 *
 	 * @param birthDay 生日，标准日期字符串
