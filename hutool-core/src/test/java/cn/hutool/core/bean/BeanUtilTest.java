@@ -203,6 +203,20 @@ public class BeanUtilTest {
 	}
 
 	@Test
+	public void copyProperties(){
+		SubPerson person = new SubPerson();
+		person.setAge(14);
+		person.setOpenid("11213232");
+		person.setName("测试A11");
+		person.setSubName("sub名字");
+		SubPerson person1 = BeanUtil.copyProperties(person, SubPerson.class);
+		Assert.assertEquals(14,person1.getAge());
+		Assert.assertEquals("11213232",person1.getOpenid());
+		Assert.assertEquals("测试A11",person1.getName());
+		Assert.assertEquals("sub名字",person1.getSubName());
+	}
+
+	@Test
 	public void copyPropertiesHasBooleanTest() {
 		SubPerson p1 = new SubPerson();
 		p1.setSlow(true);
