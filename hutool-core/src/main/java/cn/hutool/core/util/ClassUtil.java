@@ -1054,4 +1054,35 @@ public class ClassUtil {
 				|| objectPackageName.startsWith("javax.") //
 				|| clazz.getClassLoader() == null;
 	}
+
+	/**
+	 * 获取class类路径URL, 不管是否在jar包中都会返回文件夹的路径<br>
+	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录<br>
+	 * jdk中的类不能使用此方法
+	 *
+	 * @return URL
+	 * @since 5.2.4
+	 */
+	public static URL getLocation(Class<?> clazz) {
+		if (null == clazz) {
+			return null;
+		}
+		return clazz.getProtectionDomain().getCodeSource().getLocation();
+	}
+
+	/**
+	 * 获取class类路径, 不管是否在jar包中都会返回文件夹的路径<br>
+	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录<br>
+	 * jdk中的类不能使用此方法
+	 *
+	 * @return class路径
+	 * @since 5.2.4
+	 */
+	public static String getLocationPath(Class<?> clazz) {
+		final URL location = getLocation(clazz);
+		if (null == location) {
+			return null;
+		}
+		return location.getPath();
+	}
 }
