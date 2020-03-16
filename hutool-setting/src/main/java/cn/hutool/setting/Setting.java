@@ -194,14 +194,14 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	public void autoLoad(boolean autoReload) {
 		autoLoad(autoReload, null);
 	}
-	
+
 	/**
 	 * 在配置文件变更时自动加载
-	 * 
+	 *
 	 * @param callback   加载完成回调
 	 * @param autoReload 是否自动加载
 	 */
-	public void autoLoad(boolean autoReload,Consumer<Boolean> callback) {
+	public void autoLoad(boolean autoReload, Consumer<Boolean> callback) {
 		if (autoReload) {
 			Assert.notNull(this.settingUrl, "Setting URL is null !");
 			if (null != this.watchMonitor) {
@@ -489,12 +489,13 @@ public class Setting extends AbsSetting implements Map<String, String> {
 		this.groupedMap.putAll(group, m);
 		return this;
 	}
-	
+
 	/**
 	 * 添加一个Stting到主配置中
-	 * 
-	 * @param setting
+	 *
+	 * @param setting Setting配置
 	 * @return this
+	 * @since 5.2.4
 	 */
 	public Setting addSetting(Setting setting) {
 		for (Entry<String, LinkedHashMap<String, String>> e : setting.getGroupedMap().entrySet()) {

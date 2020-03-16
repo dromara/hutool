@@ -226,6 +226,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 		return this;
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<String> keySet() {
 		readLock.lock();
@@ -276,6 +277,7 @@ public class GroupedMap extends LinkedHashMap<String, LinkedHashMap<String, Stri
 		return Collections.emptyList();
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<java.util.Map.Entry<String, LinkedHashMap<String, String>>> entrySet() {
 		readLock.lock();

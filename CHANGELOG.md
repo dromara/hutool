@@ -6,6 +6,7 @@
 ## 5.2.4
 
 ### 新特性
+* 【setting】     Setting中增加addSetting和autoLoad重载（issue#104@Gitee）
 
 ### Bug修复
 
