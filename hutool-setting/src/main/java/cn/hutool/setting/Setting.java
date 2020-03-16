@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
@@ -191,6 +192,16 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 * @param autoReload 是否自动加载
 	 */
 	public void autoLoad(boolean autoReload) {
+		autoLoad(autoReload, null);
+	}
+	
+	/**
+	 * 在配置文件变更时自动加载
+	 * 
+	 * @param callback   加载完成回调
+	 * @param autoReload 是否自动加载
+	 */
+	public void autoLoad(boolean autoReload,Consumer<Boolean> callback) {
 		if (autoReload) {
 			Assert.notNull(this.settingUrl, "Setting URL is null !");
 			if (null != this.watchMonitor) {
@@ -200,7 +211,11 @@ public class Setting extends AbsSetting implements Map<String, String> {
 			this.watchMonitor = WatchUtil.createModify(this.settingUrl, new SimpleWatcher() {
 				@Override
 				public void onModify(WatchEvent<?> event, Path currentPath) {
-					load();
+					boolean success = load();
+					// 如果有回调，加载完毕则执行回调
+					if (callback != null) {
+						callback.accept(success);
+					}
 				}
 			});
 			this.watchMonitor.start();
@@ -472,6 +487,19 @@ public class Setting extends AbsSetting implements Map<String, String> {
 	 */
 	public Setting putAll(String group, Map<? extends String, ? extends String> m) {
 		this.groupedMap.putAll(group, m);
+		return this;
+	}
+	
+	/**
+	 * 添加一个Stting到主配置中
+	 * 
+	 * @param setting
+	 * @return this
+	 */
+	public Setting addSetting(Setting setting) {
+		for (Entry<String, LinkedHashMap<String, String>> e : setting.getGroupedMap().entrySet()) {
+			this.putAll(e.getKey(), e.getValue());
+		}
 		return this;
 	}
 
