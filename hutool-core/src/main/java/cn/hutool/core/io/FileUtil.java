@@ -3580,11 +3580,11 @@ public class FileUtil {
 	}
 
 	/**
-	 * 获取当前文件夹, 不管是否在jar包中都会返回文件夹的路径
+	 * 获取class类当前文件夹, 不管是否在jar包中都会返回文件夹的路径
 	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录
 	 * jdk中的类不能使用此方法
 	 */
-	public static String getCurrentDir(Class clazz) {
+	public static String getClassDir(Class clazz) {
 		String currentDir = null;
 		File file = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
 		if (file.isFile()) {
