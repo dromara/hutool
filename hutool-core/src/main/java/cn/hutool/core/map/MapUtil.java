@@ -1,10 +1,6 @@
 package cn.hutool.core.map;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
@@ -13,6 +9,22 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Map相关工具类
@@ -357,7 +369,7 @@ public class MapUtil {
 	 */
 	public static <K, V> Map<K, List<V>> toListMap(Iterable<? extends Map<K, V>> mapList) {
 		final HashMap<K, List<V>> resultMap = new HashMap<>();
-		if (CollectionUtil.isEmpty(mapList)) {
+		if (CollUtil.isEmpty(mapList)) {
 			return resultMap;
 		}
 
@@ -370,7 +382,7 @@ public class MapUtil {
 				key = entry.getKey();
 				valueList = resultMap.get(key);
 				if (null == valueList) {
-					valueList = CollectionUtil.newArrayList(entry.getValue());
+					valueList = CollUtil.newArrayList(entry.getValue());
 					resultMap.put(key, valueList);
 				} else {
 					valueList.add(entry.getValue());
@@ -425,7 +437,7 @@ public class MapUtil {
 			List<V> vList;
 			int vListSize;
 			for (Entry<K, ? extends Iterable<V>> entry : listMap.entrySet()) {
-				vList = CollectionUtil.newArrayList(entry.getValue());
+				vList = CollUtil.newArrayList(entry.getValue());
 				vListSize = vList.size();
 				if (index < vListSize) {
 					map.put(entry.getKey(), vList.get(index));

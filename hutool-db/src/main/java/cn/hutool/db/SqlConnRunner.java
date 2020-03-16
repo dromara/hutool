@@ -1,6 +1,6 @@
 package cn.hutool.db;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -18,6 +18,7 @@ import cn.hutool.db.sql.SqlUtil;
 import cn.hutool.db.sql.Wrapper;
 
 import javax.sql.DataSource;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -31,8 +32,14 @@ import java.util.List;
  *
  * @author Luxiaolei
  */
-public class SqlConnRunner {
+public class SqlConnRunner implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private Dialect dialect;
+	/**
+	 * 是否大小写不敏感（默认大小写不敏感）
+	 */
+	protected boolean caseInsensitive = DbUtil.caseInsensitiveGlobal;
 
 	/**
 	 * 实例化一个新的SQL运行对象
@@ -98,7 +105,7 @@ public class SqlConnRunner {
 	 */
 	public int insert(Connection conn, Entity record) throws SQLException {
 		checkConn(conn);
-		if (CollectionUtil.isEmpty(record)) {
+		if (CollUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
 		}
 		PreparedStatement ps = null;
@@ -185,7 +192,7 @@ public class SqlConnRunner {
 	 */
 	public List<Object> insertForGeneratedKeys(Connection conn, Entity record) throws SQLException {
 		checkConn(conn);
-		if (CollectionUtil.isEmpty(record)) {
+		if (CollUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
 		}
 
@@ -210,7 +217,7 @@ public class SqlConnRunner {
 	 */
 	public Long insertForGeneratedKey(Connection conn, Entity record) throws SQLException {
 		checkConn(conn);
-		if (CollectionUtil.isEmpty(record)) {
+		if (CollUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
 		}
 
@@ -235,7 +242,7 @@ public class SqlConnRunner {
 	 */
 	public int del(Connection conn, Entity where) throws SQLException {
 		checkConn(conn);
-		if (CollectionUtil.isEmpty(where)) {
+		if (CollUtil.isEmpty(where)) {
 			//不允许做全表删除
 			throw new SQLException("Empty entity provided!");
 		}
@@ -262,10 +269,10 @@ public class SqlConnRunner {
 	 */
 	public int update(Connection conn, Entity record, Entity where) throws SQLException {
 		checkConn(conn);
-		if (CollectionUtil.isEmpty(record)) {
+		if (CollUtil.isEmpty(record)) {
 			throw new SQLException("Empty entity provided!");
 		}
-		if (CollectionUtil.isEmpty(where)) {
+		if (CollUtil.isEmpty(where)) {
 			//不允许做全表更新
 			throw new SQLException("Empty where provided!");
 		}
@@ -342,7 +349,7 @@ public class SqlConnRunner {
 	 * @throws SQLException SQL执行异常
 	 */
 	public <T> T find(Connection conn, Entity where, RsHandler<T> rsh, String... fields) throws SQLException {
-		return find(conn, CollectionUtil.newArrayList(fields), where, rsh);
+		return find(conn, CollUtil.newArrayList(fields), where, rsh);
 	}
 
 	/**
@@ -355,7 +362,7 @@ public class SqlConnRunner {
 	 * @since 3.2.1
 	 */
 	public List<Entity> find(Connection conn, Entity where) throws SQLException {
-		return find(conn, where.getFieldNames(), where, EntityListHandler.create());
+		return find(conn, where.getFieldNames(), where, new EntityListHandler(this.caseInsensitive));
 	}
 
 	/**
@@ -367,7 +374,7 @@ public class SqlConnRunner {
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> findAll(Connection conn, Entity where) throws SQLException {
-		return find(conn, where, EntityListHandler.create());
+		return find(conn, where, new EntityListHandler(this.caseInsensitive));
 	}
 
 	/**
@@ -505,7 +512,7 @@ public class SqlConnRunner {
 		checkConn(conn);
 
 		final int count = count(conn, where);
-		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<>(page, numPerPage, count));
+		final PageResultHandler pageResultHandler = new PageResultHandler(new PageResult<>(page, numPerPage, count), this.caseInsensitive);
 		return this.page(conn, fields, where, page, numPerPage, pageResultHandler);
 	}
 
@@ -525,14 +532,14 @@ public class SqlConnRunner {
 
 		//查询全部
 		if (null == page) {
-			List<Entity> entityList = this.find(conn, fields, where, new EntityListHandler());
+			List<Entity> entityList = this.find(conn, fields, where, new EntityListHandler(DbUtil.caseInsensitiveGlobal));
 			final PageResult<Entity> pageResult = new PageResult<>(0, entityList.size(), entityList.size());
 			pageResult.addAll(entityList);
 			return pageResult;
 		}
 
 		final int count = count(conn, where);
-		PageResultHandler pageResultHandler = PageResultHandler.create(new PageResult<>(page.getPageNumber(), page.getPageSize(), count));
+		PageResultHandler pageResultHandler = new PageResultHandler(new PageResult<>(page.getPageNumber(), page.getPageSize(), count), this.caseInsensitive);
 		return this.page(conn, fields, where, page, pageResultHandler);
 	}
 
@@ -552,6 +559,17 @@ public class SqlConnRunner {
 	//---------------------------------------------------------------------------- CRUD end
 
 	//---------------------------------------------------------------------------- Getters and Setters end
+
+	/**
+	 * 设置是否在结果中忽略大小写<br>
+	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
+	 *
+	 * @param caseInsensitive 否在结果中忽略大小写
+	 * @since 5.2.4
+	 */
+	public void setCaseInsensitive(boolean caseInsensitive) {
+		this.caseInsensitive = caseInsensitive;
+	}
 
 	/**
 	 * @return SQL方言

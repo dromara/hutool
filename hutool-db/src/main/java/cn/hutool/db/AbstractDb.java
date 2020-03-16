@@ -1,15 +1,6 @@
 package cn.hutool.db;
 
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.db.dialect.Dialect;
 import cn.hutool.db.handler.BeanListHandler;
 import cn.hutool.db.handler.EntityHandler;
@@ -23,6 +14,14 @@ import cn.hutool.db.sql.Query;
 import cn.hutool.db.sql.SqlExecutor;
 import cn.hutool.db.sql.SqlUtil;
 import cn.hutool.db.sql.Wrapper;
+
+import javax.sql.DataSource;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 抽象数据库操作类<br>
@@ -39,6 +38,10 @@ public abstract class AbstractDb implements Serializable {
 	 * 是否支持事务
 	 */
 	protected Boolean isSupportTransaction = null;
+	/**
+	 * 是否大小写不敏感（默认大小写不敏感）
+	 */
+	protected boolean caseInsensitive = DbUtil.caseInsensitiveGlobal;
 	protected SqlConnRunner runner;
 
 	// ------------------------------------------------------- Constructor start
@@ -81,7 +84,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @since 3.1.1
 	 */
 	public List<Entity> query(String sql, Map<String, Object> params) throws SQLException {
-		return query(sql, new EntityListHandler(), params);
+		return query(sql, new EntityListHandler(this.caseInsensitive), params);
 	}
 
 	/**
@@ -94,7 +97,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @since 3.1.1
 	 */
 	public List<Entity> query(String sql, Object... params) throws SQLException {
-		return query(sql, new EntityListHandler(), params);
+		return query(sql, new EntityListHandler(this.caseInsensitive), params);
 	}
 
 	/**
@@ -121,7 +124,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Entity queryOne(String sql, Object... params) throws SQLException {
-		return query(sql, new EntityHandler(), params);
+		return query(sql, new EntityHandler(this.caseInsensitive), params);
 	}
 
 	/**
@@ -171,9 +174,9 @@ public abstract class AbstractDb implements Serializable {
 	/**
 	 * 支持占位符的查询，例如：select * from table where field1=:name1
 	 *
-	 * @param <T>    结果集需要处理的对象类型
-	 * @param sql    查询语句，使用参数名占位符，例如:name
-	 * @param rsh    结果集处理对象
+	 * @param <T>      结果集需要处理的对象类型
+	 * @param sql      查询语句，使用参数名占位符，例如:name
+	 * @param rsh      结果集处理对象
 	 * @param paramMap 参数
 	 * @return 结果对象
 	 * @throws SQLException SQL执行异常
@@ -429,7 +432,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Entity get(Entity where) throws SQLException {
-		return find(where.getFieldNames(), where, new EntityHandler());
+		return find(where.getFieldNames(), where, new EntityHandler(this.caseInsensitive));
 
 	}
 	// ------------------------------------------------------------- Get end
@@ -466,7 +469,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @since 4.5.16
 	 */
 	public List<Entity> find(Collection<String> fields, Entity where) throws SQLException {
-		return find(fields, where, EntityListHandler.create());
+		return find(fields, where, new EntityListHandler(this.caseInsensitive));
 	}
 
 	/**
@@ -502,7 +505,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @throws SQLException SQL执行异常
 	 */
 	public <T> T find(Entity where, RsHandler<T> rsh, String... fields) throws SQLException {
-		return find(CollectionUtil.newArrayList(fields), where, rsh);
+		return find(CollUtil.newArrayList(fields), where, rsh);
 	}
 
 	/**
@@ -515,7 +518,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @since 3.2.1
 	 */
 	public List<Entity> find(Entity where) throws SQLException {
-		return find(where.getFieldNames(), where, EntityListHandler.create());
+		return find(where.getFieldNames(), where, new EntityListHandler(this.caseInsensitive));
 	}
 
 	/**
@@ -549,8 +552,8 @@ public abstract class AbstractDb implements Serializable {
 	 * 查询数据列表，返回所有字段<br>
 	 * 查询条件为多个key value对表示，默认key = value，如果使用其它条件可以使用：where.put("key", " &gt; 1")，value也可以传Condition对象，key被忽略
 	 *
-	 * @param <T>   Bean类型
-	 * @param where 条件实体类（包含表名）
+	 * @param <T>       Bean类型
+	 * @param where     条件实体类（包含表名）
 	 * @param beanClass 返回的对象类型
 	 * @return 数据对象列表
 	 * @throws SQLException SQL执行异常
@@ -595,7 +598,7 @@ public abstract class AbstractDb implements Serializable {
 	 */
 	public List<Entity> findBy(String tableName, Condition... wheres) throws SQLException {
 		final Query query = new Query(wheres, tableName);
-		return find(query, EntityListHandler.create());
+		return find(query, new EntityListHandler(this.caseInsensitive));
 	}
 
 	/**
@@ -695,7 +698,7 @@ public abstract class AbstractDb implements Serializable {
 	 * @since 3.2.2
 	 */
 	public List<Entity> pageForEntityList(Entity where, Page page) throws SQLException {
-		return page(where, page, EntityListHandler.create());
+		return page(where, page, new EntityListHandler(this.caseInsensitive));
 	}
 
 	/**
@@ -807,6 +810,17 @@ public abstract class AbstractDb implements Serializable {
 	// ---------------------------------------------------------------------------- CRUD end
 
 	// ---------------------------------------------------------------------------- Getters and Setters start
+
+	/**
+	 * 设置是否在结果中忽略大小写<br>
+	 * 如果忽略，则在Entity中调用getXXX时，字段值忽略大小写，默认忽略
+	 *
+	 * @param caseInsensitive 否在结果中忽略大小写
+	 * @since 5.2.4
+	 */
+	public void setCaseInsensitive(boolean caseInsensitive) {
+		this.caseInsensitive = caseInsensitive;
+	}
 
 	/**
 	 * 获取{@link SqlConnRunner}

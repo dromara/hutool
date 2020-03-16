@@ -1,7 +1,6 @@
 package cn.hutool.core.net;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
@@ -350,7 +349,7 @@ public class NetUtil {
 			return null;
 		}
 
-		return CollectionUtil.addAll(new ArrayList<>(), networkInterfaces);
+		return CollUtil.addAll(new ArrayList<>(), networkInterfaces);
 	}
 
 	/**

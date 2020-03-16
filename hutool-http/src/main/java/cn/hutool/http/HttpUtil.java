@@ -413,9 +413,9 @@ public class HttpUtil {
 			key = item.getKey();
 			value = item.getValue();
 			if (value instanceof Iterable) {
-				value = CollectionUtil.join((Iterable<?>) value, ",");
+				value = CollUtil.join((Iterable<?>) value, ",");
 			} else if (value instanceof Iterator) {
-				value = CollectionUtil.join((Iterator<?>) value, ",");
+				value = CollUtil.join((Iterator<?>) value, ",");
 			}
 			valueStr = Convert.toStr(value);
 			if (StrUtil.isNotEmpty(key)) {

@@ -1,7 +1,7 @@
 package cn.hutool.core.util;
 
 import cn.hutool.core.annotation.Alias;
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Assert;
@@ -391,7 +391,7 @@ public class ReflectUtil {
 				}
 			}
 		} else {
-			methodList = CollectionUtil.newArrayList(methods);
+			methodList = CollUtil.newArrayList(methods);
 		}
 		return methodList;
 	}
@@ -404,7 +404,7 @@ public class ReflectUtil {
 	 * @return 过滤后的方法列表
 	 */
 	public static List<Method> getPublicMethods(Class<?> clazz, Method... excludeMethods) {
-		final HashSet<Method> excludeMethodSet = CollectionUtil.newHashSet(excludeMethods);
+		final HashSet<Method> excludeMethodSet = CollUtil.newHashSet(excludeMethods);
 		return getPublicMethods(clazz, method -> false == excludeMethodSet.contains(method));
 	}
 
@@ -416,7 +416,7 @@ public class ReflectUtil {
 	 * @return 过滤后的方法列表
 	 */
 	public static List<Method> getPublicMethods(Class<?> clazz, String... excludeMethodNames) {
-		final HashSet<String> excludeMethodNameSet = CollectionUtil.newHashSet(excludeMethodNames);
+		final HashSet<String> excludeMethodNameSet = CollUtil.newHashSet(excludeMethodNames);
 		return getPublicMethods(clazz, method -> false == excludeMethodNameSet.contains(method.getName()));
 	}
 

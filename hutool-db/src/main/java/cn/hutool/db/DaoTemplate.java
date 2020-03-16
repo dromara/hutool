@@ -1,16 +1,13 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.ds.DSFactory;
-import cn.hutool.db.handler.EntityHandler;
-import cn.hutool.db.handler.EntityListHandler;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 数据访问层模板<br>
@@ -189,7 +186,7 @@ public class DaoTemplate {
 		}
 
 		final Entity where = Entity.create(tableName).set(primaryKeyField, pk);
-		final Entity record = (Entity) entity.clone();
+		final Entity record = entity.clone();
 		record.remove(primaryKeyField);
 
 		return db.update(record, where);
@@ -241,7 +238,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public Entity get(Entity where) throws SQLException {
-		return db.find(null, fixEntity(where), new EntityHandler());
+		return db.get(fixEntity(where));
 	}
 	//------------------------------------------------------------- Get end
 	
@@ -276,7 +273,7 @@ public class DaoTemplate {
 	 * @throws SQLException SQL执行异常
 	 */
 	public List<Entity> find(Entity where) throws SQLException {
-		return db.find(null, fixEntity(where), new EntityListHandler());
+		return db.find(null, fixEntity(where));
 	}
 	
 	/**
@@ -294,7 +291,7 @@ public class DaoTemplate {
 		if(false == "select".equals(selectKeyword)){
 			sql = "SELECT * FROM " + this.tableName + " " + sql;
 		}
-		return db.query(sql, new EntityListHandler(), params);
+		return db.query(sql, params);
 	}
 	
 	/**

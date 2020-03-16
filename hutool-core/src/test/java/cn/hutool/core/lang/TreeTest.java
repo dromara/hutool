@@ -1,7 +1,10 @@
 package cn.hutool.core.lang;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.tree.*;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNode;
+import cn.hutool.core.lang.tree.TreeNodeConfig;
+import cn.hutool.core.lang.tree.TreeUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,7 +17,7 @@ import java.util.List;
  */
 public class TreeTest {
 	// 模拟数据
-	static List<TreeNode<String>> nodeList = CollectionUtil.newArrayList();
+	static List<TreeNode<String>> nodeList = CollUtil.newArrayList();
 
 	static {
 		// 模拟数据

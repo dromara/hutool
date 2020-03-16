@@ -1,14 +1,6 @@
 package cn.hutool.cron;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
-import java.util.TimeZone;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.CharUtil;
@@ -22,6 +14,14 @@ import cn.hutool.cron.task.RunnableTask;
 import cn.hutool.cron.task.Task;
 import cn.hutool.log.StaticLog;
 import cn.hutool.setting.Setting;
+
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.TimeZone;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 任务调度器<br>
@@ -182,7 +182,7 @@ public class Scheduler implements Serializable {
 	 * @return this
 	 */
 	public Scheduler schedule(Setting cronSetting) {
-		if (CollectionUtil.isNotEmpty(cronSetting)) {
+		if (CollUtil.isNotEmpty(cronSetting)) {
 			String group;
 			for (Entry<String, LinkedHashMap<String, String>> groupedEntry : cronSetting.getGroupedMap().entrySet()) {
 				group = groupedEntry.getKey();

@@ -1,13 +1,13 @@
 package cn.hutool.core.io.watch.watchers;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.watch.Watcher;
+import cn.hutool.core.lang.Chain;
+
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.util.Iterator;
 import java.util.List;
-
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.io.watch.Watcher;
-import cn.hutool.core.lang.Chain;
 
 /**
  * 观察者链<br>
@@ -35,7 +35,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 	 * @param watchers 观察者列表
 	 */
 	public WatcherChain(Watcher... watchers) {
-		chain = CollectionUtil.newArrayList(watchers);
+		chain = CollUtil.newArrayList(watchers);
 	}
 	
 	@Override
@@ -66,6 +66,7 @@ public class WatcherChain implements Watcher, Chain<Watcher, WatcherChain>{
 		}
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<Watcher> iterator() {
 		return this.chain.iterator();

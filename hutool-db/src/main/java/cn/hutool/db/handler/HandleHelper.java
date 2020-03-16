@@ -1,5 +1,15 @@
 package cn.hutool.db.handler;
 
+import cn.hutool.core.bean.BeanDesc.PropDesc;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.TypeUtil;
+import cn.hutool.db.Entity;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
@@ -10,16 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import cn.hutool.core.bean.BeanDesc.PropDesc;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
-import cn.hutool.db.Entity;
 
 /**
  * 数据结果集处理辅助类

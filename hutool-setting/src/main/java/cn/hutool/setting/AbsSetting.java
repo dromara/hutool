@@ -299,7 +299,7 @@ public abstract class AbsSetting implements OptNullBasicTypeFromStringGetter<Str
 	 * @since 5.0.6
 	 */
 	public <T> T toBean(String group, Class<T> beanClass) {
-		return toBean(group, ReflectUtil.newInstance(beanClass));
+		return toBean(group, ReflectUtil.newInstanceIfPossible(beanClass));
 	}
 
 	/**

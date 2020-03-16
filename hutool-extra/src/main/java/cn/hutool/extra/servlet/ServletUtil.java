@@ -175,7 +175,7 @@ public class ServletUtil {
 	 * @return Bean
 	 */
 	public static <T> T toBean(ServletRequest request, Class<T> beanClass, boolean isIgnoreError) {
-		return fillBean(request, ReflectUtil.newInstance(beanClass), isIgnoreError);
+		return fillBean(request, ReflectUtil.newInstanceIfPossible(beanClass), isIgnoreError);
 	}
 	// --------------------------------------------------------- fillBean end
 

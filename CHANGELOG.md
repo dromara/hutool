@@ -11,6 +11,7 @@
 * 【core   】     添加获取class当前文件夹名称方法（pr#106@Gitee）
 * 【core   】     BooleanUtil中重载歧义修正，修改了包装参数的方法名（issue#I1BSK8@Gitee）
 * 【core   】     XmlUtil增加xmlToBean和beanToXml方法
+* 【db     】     设置全局忽略大小写DbUtil.setCaseInsensitiveGlobal(true)（issue#784@Github）
 
 ### Bug修复
 * 【core   】     修复TypeUtil无法获取泛型接口的泛型参数问题（issue#I1BRFI@Gitee）

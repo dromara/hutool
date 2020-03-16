@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Objects;
 
 import cn.hutool.core.annotation.Alias;
+import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -377,6 +377,7 @@ public class JSONObjectTest {
 		Assert.assertEquals("张三", jsonObject.getStr("name"));
 		Assert.assertEquals(new Integer(35), jsonObject.getInt("age"));
 
+		@SuppressWarnings("ConstantConditions")
 		JSONObject json = JSONUtil.createObj()
 				.put("name", "张三")
 				.put("age", 35);

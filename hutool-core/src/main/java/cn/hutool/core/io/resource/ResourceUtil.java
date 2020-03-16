@@ -1,14 +1,6 @@
 package cn.hutool.core.io.resource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.Enumeration;
-import java.util.List;
-
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
@@ -16,6 +8,14 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * ClassPath资源工具类
@@ -134,7 +134,7 @@ public class ResourceUtil {
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
-		return CollectionUtil.newArrayList(resources);
+		return CollUtil.newArrayList(resources);
 	}
 
 	/**

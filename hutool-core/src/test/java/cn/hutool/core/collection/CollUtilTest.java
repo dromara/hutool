@@ -31,7 +31,7 @@ public class CollUtilTest {
 
 	@Test
 	public void newHashSetTest() {
-		Set<String> set = CollectionUtil.newHashSet((String[]) null);
+		Set<String> set = CollUtil.newHashSet((String[]) null);
 		Assert.assertNotNull(set);
 	}
 
@@ -41,12 +41,12 @@ public class CollUtilTest {
 		Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
 
 		final String[] keys = v1.keySet().toArray(new String[0]);
-		ArrayList<Object> v1s = CollectionUtil.valuesOfKeys(v1, keys);
+		ArrayList<Object> v1s = CollUtil.valuesOfKeys(v1, keys);
 		Assert.assertTrue(v1s.contains(12));
 		Assert.assertTrue(v1s.contains(23));
 		Assert.assertTrue(v1s.contains("张三"));
 
-		ArrayList<Object> v2s = CollectionUtil.valuesOfKeys(v2, keys);
+		ArrayList<Object> v2s = CollUtil.valuesOfKeys(v2, keys);
 		Assert.assertTrue(v2s.contains(15));
 		Assert.assertTrue(v2s.contains(13));
 		Assert.assertTrue(v2s.contains("李四"));
@@ -54,34 +54,34 @@ public class CollUtilTest {
 
 	@Test
 	public void unionTest() {
-		ArrayList<String> list1 = CollectionUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d");
+		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
+		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
-		Collection<String> union = CollectionUtil.union(list1, list2);
+		Collection<String> union = CollUtil.union(list1, list2);
 
-		Assert.assertEquals(3, CollectionUtil.count(union, t -> t.equals("b")));
+		Assert.assertEquals(3, CollUtil.count(union, t -> t.equals("b")));
 	}
 
 	@Test
 	public void intersectionTest() {
-		ArrayList<String> list1 = CollectionUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d");
+		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
+		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d");
 
-		Collection<String> union = CollectionUtil.intersection(list1, list2);
-		Assert.assertEquals(2, CollectionUtil.count(union, t -> t.equals("b")));
+		Collection<String> union = CollUtil.intersection(list1, list2);
+		Assert.assertEquals(2, CollUtil.count(union, t -> t.equals("b")));
 	}
 
 	@Test
 	public void disjunctionTest() {
-		ArrayList<String> list1 = CollectionUtil.newArrayList("a", "b", "b", "c", "d", "x");
-		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
+		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
+		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 
-		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
+		Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertTrue(disjunction.contains("b"));
 		Assert.assertTrue(disjunction.contains("x2"));
 		Assert.assertTrue(disjunction.contains("x"));
 
-		Collection<String> disjunction2 = CollectionUtil.disjunction(list2, list1);
+		Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
 		Assert.assertTrue(disjunction2.contains("b"));
 		Assert.assertTrue(disjunction2.contains("x2"));
 		Assert.assertTrue(disjunction2.contains("x"));
@@ -90,29 +90,29 @@ public class CollUtilTest {
 	@Test
 	public void disjunctionTest2() {
 		// 任意一个集合为空，差集为另一个集合
-		ArrayList<String> list1 = CollectionUtil.newArrayList();
-		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
+		ArrayList<String> list1 = CollUtil.newArrayList();
+		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
 
-		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
+		Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertEquals(list2, disjunction);
-		Collection<String> disjunction2 = CollectionUtil.disjunction(list2, list1);
+		Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
 		Assert.assertEquals(list2, disjunction2);
 	}
 
 	@Test
 	public void disjunctionTest3() {
 		// 无交集下返回共同的元素
-		ArrayList<String> list1 = CollectionUtil.newArrayList("1", "2", "3");
-		ArrayList<String> list2 = CollectionUtil.newArrayList("a", "b", "c");
+		ArrayList<String> list1 = CollUtil.newArrayList("1", "2", "3");
+		ArrayList<String> list2 = CollUtil.newArrayList("a", "b", "c");
 
-		Collection<String> disjunction = CollectionUtil.disjunction(list1, list2);
+		Collection<String> disjunction = CollUtil.disjunction(list1, list2);
 		Assert.assertTrue(disjunction.contains("1"));
 		Assert.assertTrue(disjunction.contains("2"));
 		Assert.assertTrue(disjunction.contains("3"));
 		Assert.assertTrue(disjunction.contains("a"));
 		Assert.assertTrue(disjunction.contains("b"));
 		Assert.assertTrue(disjunction.contains("c"));
-		Collection<String> disjunction2 = CollectionUtil.disjunction(list2, list1);
+		Collection<String> disjunction2 = CollUtil.disjunction(list2, list1);
 		Assert.assertTrue(disjunction2.contains("1"));
 		Assert.assertTrue(disjunction2.contains("2"));
 		Assert.assertTrue(disjunction2.contains("3"));
@@ -132,13 +132,13 @@ public class CollUtilTest {
 		map2.put("c", "值3");
 
 		// ----------------------------------------------------------------------------------------
-		ArrayList<HashMap<String, String>> list = CollectionUtil.newArrayList(map1, map2);
-		Map<String, List<String>> map = CollectionUtil.toListMap(list);
+		ArrayList<HashMap<String, String>> list = CollUtil.newArrayList(map1, map2);
+		Map<String, List<String>> map = CollUtil.toListMap(list);
 		Assert.assertEquals("值1", map.get("a").get(0));
 		Assert.assertEquals("值2", map.get("a").get(1));
 
 		// ----------------------------------------------------------------------------------------
-		List<Map<String, String>> listMap = CollectionUtil.toMapList(map);
+		List<Map<String, String>> listMap = CollUtil.toMapList(map);
 		Assert.assertEquals("值1", listMap.get(0).get("a"));
 		Assert.assertEquals("值2", listMap.get(1).get("a"));
 	}
@@ -147,17 +147,17 @@ public class CollUtilTest {
 	public void getFieldValuesTest() {
 		Dict v1 = Dict.create().set("id", 12).set("name", "张三").set("age", 23);
 		Dict v2 = Dict.create().set("age", 13).set("id", 15).set("name", "李四");
-		ArrayList<Dict> list = CollectionUtil.newArrayList(v1, v2);
+		ArrayList<Dict> list = CollUtil.newArrayList(v1, v2);
 
-		List<Object> fieldValues = CollectionUtil.getFieldValues(list, "name");
+		List<Object> fieldValues = CollUtil.getFieldValues(list, "name");
 		Assert.assertEquals("张三", fieldValues.get(0));
 		Assert.assertEquals("李四", fieldValues.get(1));
 	}
 
 	@Test
 	public void splitTest() {
-		final ArrayList<Integer> list = CollectionUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
-		List<List<Integer>> split = CollectionUtil.split(list, 3);
+		final ArrayList<Integer> list = CollUtil.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		List<List<Integer>> split = CollUtil.split(list, 3);
 		Assert.assertEquals(3, split.size());
 		Assert.assertEquals(3, split.get(0).size());
 	}
@@ -170,7 +170,7 @@ public class CollUtilTest {
 		map.put("c", "3");
 
 		final String[] result = new String[1];
-		CollectionUtil.forEach(map, (key, value, index) -> {
+		CollUtil.forEach(map, (key, value, index) -> {
 			if (key.equals("a")) {
 				result[0] = value;
 			}
@@ -234,10 +234,10 @@ public class CollUtilTest {
 	@Test
 	public void groupTest() {
 		List<String> list = CollUtil.newArrayList("1", "2", "3", "4", "5", "6");
-		List<List<String>> group = CollectionUtil.group(list, null);
+		List<List<String>> group = CollUtil.group(list, null);
 		Assert.assertTrue(group.size() > 0);
 
-		List<List<String>> group2 = CollectionUtil.group(list, t -> {
+		List<List<String>> group2 = CollUtil.group(list, t -> {
 			// 按照奇数偶数分类
 			return Integer.parseInt(t) % 2;
 		});

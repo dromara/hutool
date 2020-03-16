@@ -10,9 +10,6 @@ import org.junit.Test;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.db.Db;
-import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.Entity;
 import cn.hutool.db.handler.EntityListHandler;
 
 /**

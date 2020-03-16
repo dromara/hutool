@@ -1,5 +1,11 @@
 package cn.hutool.core.exceptions;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -7,12 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 异常工具类
@@ -208,7 +208,7 @@ public class ExceptionUtil {
 			length = limit;
 		}
 
-		if (CollectionUtil.isNotEmpty(replaceCharToStrMap)) {
+		if (CollUtil.isNotEmpty(replaceCharToStrMap)) {
 			final StringBuilder sb = StrUtil.builder();
 			char c;
 			String value;
