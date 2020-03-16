@@ -1,5 +1,6 @@
 package cn.hutool.core.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
@@ -757,6 +758,19 @@ public class XmlUtil {
 	}
 
 	/**
+	 * XML转Java Bean
+	 *
+	 * @param <T> bean类型
+	 * @param node XML节点
+	 * @param bean bean类
+	 * @return bean
+	 * @since 5.2.4
+	 */
+	public static <T> T xmlToBean(Node node, Class<T> bean){
+		return BeanUtil.toBean(xmlToMap(node), bean);
+	}
+
+	/**
 	 * XML格式字符串转换为Map
 	 *
 	 * @param node XML节点
@@ -959,6 +973,21 @@ public class XmlUtil {
 
 		mapToXml(doc, root, data);
 		return doc;
+	}
+
+	/**
+	 * 将Bean转换为XML
+	 *
+	 * @param bean      Bean对象
+	 * @param namespace 命名空间，可以为null
+	 * @return XML
+	 * @since 5.2.4
+	 */
+	public static Document beanToXml(Object bean, String namespace) {
+		if(null == bean){
+			return null;
+		}
+		return mapToXml(BeanUtil.beanToMap(bean), bean.getClass().getSimpleName(), namespace);
 	}
 
 	/**

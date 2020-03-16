@@ -9,8 +9,11 @@
 * 【setting】     Setting中增加addSetting和autoLoad重载（pr#104@Gitee）
 * 【core   】     增加copyProperties，根据Class创建对象并进行属性拷贝（pr#105@Gitee）
 * 【core   】     添加获取class当前文件夹名称方法（pr#106@Gitee）
+* 【core   】     BooleanUtil中重载歧义修正，修改了包装参数的方法名（issue#I1BSK8@Gitee）
+* 【core   】     XmlUtil增加xmlToBean和beanToXml方法
 
 ### Bug修复
+* 【core   】     修复TypeUtil无法获取泛型接口的泛型参数问题（issue#I1BRFI@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.2.3

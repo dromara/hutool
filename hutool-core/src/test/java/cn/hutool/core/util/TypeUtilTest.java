@@ -1,12 +1,12 @@
 package cn.hutool.core.util;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class TypeUtilTest {
 	
@@ -37,6 +37,23 @@ public class TypeUtilTest {
 		
 		public Integer intTest(Integer integer) {
 			return 1;
+		}
+	}
+
+	@Test
+	public void getTypeArgumentTest(){
+		// 测试不继承父类，而是实现泛型接口时是否可以获取成功。
+		final Type typeArgument = TypeUtil.getTypeArgument(IPService.class);
+		Assert.assertEquals(String.class, typeArgument);
+	}
+
+	public interface OperateService<T> {
+		void service(T t);
+	}
+
+	public static class IPService implements OperateService<String> {
+		@Override
+		public void service(String string) {
 		}
 	}
 }
