@@ -6,7 +6,9 @@
 ## 5.2.4
 
 ### 新特性
-* 【setting】     Setting中增加addSetting和autoLoad重载（issue#104@Gitee）
+* 【setting】     Setting中增加addSetting和autoLoad重载（pr#104@Gitee）
+* 【core   】     增加copyProperties，根据Class创建对象并进行属性拷贝（pr#105@Gitee）
+* 【core   】     增加copyProperties，根据Class创建对象并进行属性拷贝（pr#105@Gitee）
 
 ### Bug修复
 
