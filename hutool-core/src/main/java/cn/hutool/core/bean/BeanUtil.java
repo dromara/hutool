@@ -574,6 +574,18 @@ public class BeanUtil {
 	// --------------------------------------------------------------------------------------------- copyProperties
 
 	/**
+	 * 创建对应的Class对象并复制Bean对象属性
+	 *
+	 * @param source 源Bean对象
+	 * @param tClass 目标Class
+	 */
+	public static <T> T copyProperties(Object source, Class<T> tClass) {
+		T target = ReflectUtil.newInstance(tClass);
+		copyProperties(source, target, CopyOptions.create());
+		return target;
+	}
+
+	/**
 	 * 复制Bean对象属性
 	 *
 	 * @param source 源Bean对象
