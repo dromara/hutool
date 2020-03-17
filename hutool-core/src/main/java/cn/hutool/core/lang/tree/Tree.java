@@ -17,6 +17,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	private static final long serialVersionUID = 1L;
 
 	private TreeNodeConfig treeNodeConfig;
+	private Tree<T> parent;
 
 	public Tree() {
 		this(null);
@@ -34,6 +35,30 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	}
 
 	/**
+	 * 获取父节点
+	 *
+	 * @return 父节点
+	 * @since 5.2.4
+	 */
+	public Tree<T> getParent() {
+		return parent;
+	}
+
+	/**
+	 * 设置父节点
+	 *
+	 * @param parent 父节点
+	 * @since 5.2.4
+	 */
+	public Tree<T> setParent(Tree<T> parent) {
+		this.parent = parent;
+		if(null != parent){
+			this.setParentId(parent.getId());
+		}
+		return this;
+	}
+
+	/**
 	 * 获取节点ID
 	 *
 	 * @return 节点ID
@@ -46,7 +71,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	/**
 	 * 设置节点ID
 	 *
-	 * @param id  节点ID
+	 * @param id 节点ID
 	 * @return this
 	 */
 	public Tree<T> setId(T id) {

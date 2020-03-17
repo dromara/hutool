@@ -37,6 +37,11 @@ public class TreeTest {
 		for (Tree<String> tree : treeNodes) {
 			Assert.assertNotNull(tree);
 		}
+
+		// 测试通过子节点查找父节点
+		final Tree<String> rootNode0 = treeNodes.get(0);
+		final Tree<String> parent = rootNode0.getChildren().get(0).getParent();
+		Assert.assertEquals(rootNode0, parent);
 	}
 
 	@Test

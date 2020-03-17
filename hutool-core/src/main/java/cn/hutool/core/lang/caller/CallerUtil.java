@@ -59,6 +59,23 @@ public class CallerUtil {
 	}
 
 	/**
+	 * 获取调用此方法的方法名
+	 *
+	 * @param isFullName 是否返回全名，全名包括方法所在类的全路径名
+	 * @return 调用此方法的方法名
+	 * @since 5.2.4
+	 */
+	public static String getCallerMethodName(boolean isFullName){
+		final StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+		final String methodName = stackTraceElement.getMethodName();
+		if(false == isFullName){
+			return methodName;
+		}
+
+		return stackTraceElement.getClassName() + "." + methodName;
+	}
+
+	/**
 	 * 尝试创建{@link Caller}实现
 	 * 
 	 * @return {@link Caller}实现

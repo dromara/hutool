@@ -62,18 +62,19 @@ public class TreeUtil {
 	 * @return List
 	 */
 	public static <T, E> List<Tree<E>> build(List<T> list, E parentId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
-		List<Tree<E>> treeNodes = CollUtil.newArrayList();
+		final List<Tree<E>> treeNodes = CollUtil.newArrayList();
+		Tree<E> treeNode;
 		for (T obj : list) {
-			Tree<E> treeNode = new Tree<>(treeNodeConfig);
+			treeNode = new Tree<>(treeNodeConfig);
 			nodeParser.parse(obj, treeNode);
 			treeNodes.add(treeNode);
 		}
 
 		List<Tree<E>> finalTreeNodes = CollUtil.newArrayList();
-		for (Tree<E> treeNode : treeNodes) {
-			if (parentId.equals(treeNode.getParentId())) {
-				finalTreeNodes.add(treeNode);
-				innerBuild(treeNodes, treeNode, 0, treeNodeConfig.getDeep());
+		for (Tree<E> node : treeNodes) {
+			if (parentId.equals(node.getParentId())) {
+				finalTreeNodes.add(node);
+				innerBuild(treeNodes, node, 0, treeNodeConfig.getDeep());
 			}
 		}
 		// 内存每层已经排过了 这是最外层排序
@@ -109,7 +110,8 @@ public class TreeUtil {
 					parentNode.setChildren(children);
 				}
 				children.add(childNode);
-				childNode.setParentId(parentNode.getId());
+//				childNode.setParentId(parentNode.getId());
+				childNode.setParent(parentNode);
 				innerBuild(treeNodes, childNode, deep + 1, maxDeep);
 			}
 		}

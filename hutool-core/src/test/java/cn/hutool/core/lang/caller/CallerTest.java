@@ -1,9 +1,7 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.caller;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import cn.hutool.core.lang.caller.CallerUtil;
 
 /**
  * {@link CallerUtil} 单元测试
