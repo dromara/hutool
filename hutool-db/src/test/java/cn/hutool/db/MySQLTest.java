@@ -5,6 +5,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * MySQL操作单元测试
@@ -26,11 +27,11 @@ public class MySQLTest {
 			);
 		}
 	}
-	
+
 	/**
 	 * 事务测试<br>
 	 * 更新三条信息，低2条后抛出异常，正常情况下三条都应该不变
-	 * 
+	 *
 	 * @throws SQLException SQL异常
 	 */
 	@Test(expected=SQLException.class)
@@ -54,6 +55,13 @@ public class MySQLTest {
 		for (Entity entity : result) {
 			Console.log(entity.get("id"));
 		}
+	}
+
+	@Test
+	@Ignore
+	public void getTimeStampTest() throws SQLException {
+		final List<Entity> all = Db.use("mysql").findAll("test");
+		Console.log(all);
 	}
 
 }

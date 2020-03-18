@@ -37,7 +37,7 @@ user = looly
 pass = 123456
 
 [mysql]
-url = jdbc:mysql://looly.centos:3306/test_hutool?useSSL=false
+url = jdbc:mysql://looly.centos8:3306/hutool_test?useSSL=false
 user = root
 pass = 123456
 

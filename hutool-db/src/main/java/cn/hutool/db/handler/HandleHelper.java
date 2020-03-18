@@ -265,15 +265,14 @@ public class HandleHelper {
 	 * @throws SQLException SQL异常
 	 */
 	private static <T> Object getColumnValue(ResultSet rs, int columnIndex, int type, Type targetColumnType) throws SQLException {
-		Object rawValue;
+		Object rawValue = null;
 		switch (type) {
 		case Types.TIMESTAMP:
 			try{
 				rawValue = rs.getTimestamp(columnIndex);
 			} catch (SQLException ignore){
 				// issue#776@Github
-				// 当数据库中日期为0000-00-00 00:00:00报错，按照普通日期获取
-				rawValue = rs.getDate(columnIndex);
+				// 当数据库中日期为0000-00-00 00:00:00报错，转为null
 			}
 			break;
 		case Types.TIME:

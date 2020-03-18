@@ -3,6 +3,7 @@ package cn.hutool.core.lang.tree;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -45,6 +46,57 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	}
 
 	/**
+	 * 获取ID对应的节点，如果有多个ID相同的节点，只返回第一个。<br>
+	 * 此方法只查找此节点及子节点，采用广度优先遍历。
+	 *
+	 * @param id ID
+	 * @return 节点
+	 * @since 5.2.4
+	 */
+	public Tree<T> getNode(T id) {
+		if (ObjectUtil.equal(id, getId())) {
+			return this;
+		}
+
+		// 查找子节点
+		Tree<T> node;
+		for (Tree<T> child : getChildren()) {
+			node = child.getNode(id);
+			if (null != node) {
+				return node;
+			}
+		}
+
+		// 未找到节点
+		return null;
+	}
+
+	/**
+	 * 获取所有父节点名称列表
+	 *
+	 * <p>
+	 * 比如有个人在研发1部，他上面有研发部，接着上面有技术中心<br>
+	 * 返回结果就是：[研发一部, 研发中心, 技术中心]
+	 *
+	 * @param includeCurrentNode 是否包含当前节点的名称
+	 * @return 所有父节点名称列表
+	 * @since 5.2.4
+	 */
+	public List<CharSequence> getParentsName(boolean includeCurrentNode) {
+		final List<CharSequence> result = new ArrayList<>();
+		if (includeCurrentNode) {
+			result.add(this.getName());
+		}
+
+		Tree<T> parent = getParent();
+		while (null != parent) {
+			result.add(parent.getName());
+			parent = parent.getParent();
+		}
+		return result;
+	}
+
+	/**
 	 * 设置父节点
 	 *
 	 * @param parent 父节点
@@ -52,7 +104,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	 */
 	public Tree<T> setParent(Tree<T> parent) {
 		this.parent = parent;
-		if(null != parent){
+		if (null != parent) {
 			this.setParentId(parent.getId());
 		}
 		return this;
@@ -94,12 +146,11 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
-	public T getName() {
-		return (T) this.get(treeNodeConfig.getNameKey());
+	public CharSequence getName() {
+		return (CharSequence) this.get(treeNodeConfig.getNameKey());
 	}
 
-	public Tree<T> setName(Object name) {
+	public Tree<T> setName(CharSequence name) {
 		this.put(treeNodeConfig.getNameKey(), name);
 		return this;
 	}
