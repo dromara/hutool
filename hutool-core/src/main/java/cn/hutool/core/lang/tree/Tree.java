@@ -3,7 +3,6 @@ package cn.hutool.core.lang.tree;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
  * @author liangbaikai
  * @since 5.2.1
  */
-public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable<Tree<T>> {
+public class Tree<T> extends LinkedHashMap<String, Object> implements Node<T> {
 	private static final long serialVersionUID = 1L;
 
 	private TreeNodeConfig treeNodeConfig;
@@ -54,21 +53,23 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	 * @since 5.2.4
 	 */
 	public Tree<T> getNode(T id) {
-		if (ObjectUtil.equal(id, getId())) {
-			return this;
-		}
+		return TreeUtil.getNode(this, id);
+	}
 
-		// 查找子节点
-		Tree<T> node;
-		for (Tree<T> child : getChildren()) {
-			node = child.getNode(id);
-			if (null != node) {
-				return node;
-			}
-		}
-
-		// 未找到节点
-		return null;
+	/**
+	 * 获取所有父节点名称列表
+	 *
+	 * <p>
+	 * 比如有个人在研发1部，他上面有研发部，接着上面有技术中心<br>
+	 * 返回结果就是：[研发一部, 研发中心, 技术中心]
+	 *
+	 * @param id 节点ID
+	 * @param includeCurrentNode 是否包含当前节点的名称
+	 * @return 所有父节点名称列表
+	 * @since 5.2.4
+	 */
+	public List<CharSequence> getParentsName(T id, boolean includeCurrentNode) {
+		return TreeUtil.getParentsName(getNode(id), includeCurrentNode);
 	}
 
 	/**
@@ -83,17 +84,7 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	 * @since 5.2.4
 	 */
 	public List<CharSequence> getParentsName(boolean includeCurrentNode) {
-		final List<CharSequence> result = new ArrayList<>();
-		if (includeCurrentNode) {
-			result.add(this.getName());
-		}
-
-		Tree<T> parent = getParent();
-		while (null != parent) {
-			result.add(parent.getName());
-			parent = parent.getParent();
-		}
-		return result;
+		return TreeUtil.getParentsName(this, includeCurrentNode);
 	}
 
 	/**
@@ -110,55 +101,47 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 		return this;
 	}
 
-	/**
-	 * 获取节点ID
-	 *
-	 * @return 节点ID
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T getId() {
 		return (T) this.get(treeNodeConfig.getIdKey());
 	}
 
-	/**
-	 * 设置节点ID
-	 *
-	 * @param id 节点ID
-	 * @return this
-	 */
+	@Override
 	public Tree<T> setId(T id) {
 		this.put(treeNodeConfig.getIdKey(), id);
 		return this;
 	}
 
-	/**
-	 * 获取父节点ID
-	 *
-	 * @return 父节点ID
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T getParentId() {
 		return (T) this.get(treeNodeConfig.getParentIdKey());
 	}
 
+	@Override
 	public Tree<T> setParentId(T parentId) {
 		this.put(treeNodeConfig.getParentIdKey(), parentId);
 		return this;
 	}
 
+	@Override
 	public CharSequence getName() {
 		return (CharSequence) this.get(treeNodeConfig.getNameKey());
 	}
 
+	@Override
 	public Tree<T> setName(CharSequence name) {
 		this.put(treeNodeConfig.getNameKey(), name);
 		return this;
 	}
 
+	@Override
 	public Comparable<?> getWeight() {
 		return (Comparable<?>) this.get(treeNodeConfig.getWeightKey());
 	}
 
+	@Override
 	public Tree<T> setWeight(Comparable<?> weight) {
 		this.put(treeNodeConfig.getWeightKey(), weight);
 		return this;
@@ -182,16 +165,5 @@ public class Tree<T> extends LinkedHashMap<String, Object> implements Comparable
 	public void putExtra(String key, Object value) {
 		Assert.notEmpty(key, "Key must be not empty !");
 		this.put(key, value);
-	}
-
-	@SuppressWarnings({"rawtypes", "unchecked", "NullableProblems"})
-	@Override
-	public int compareTo(Tree<T> tree) {
-		final Comparable weight = this.getWeight();
-		if (null != weight) {
-			final Comparable weightOther = tree.getWeight();
-			return weight.compareTo(weightOther);
-		}
-		return 0;
 	}
 }
