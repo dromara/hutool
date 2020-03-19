@@ -1103,4 +1103,39 @@ public class Validator {
 			throw new ValidateException(errorMsg);
 		}
 	}
+
+	/**
+	 * 简单校验统一社会信用代码
+	 * 18位（大写字母+数字）
+	 *
+	 * @param creditCode 统一社会信用代码
+	 * @return 校验结果
+	 */
+	public static boolean isCreditCodeBySimple(String creditCode) {
+		if (StrUtil.isBlank(creditCode)) {
+			return false;
+		}
+		return Pattern.matches(PatternPool.REGEX, creditCode);
+	}
+
+	/**
+	 * 是否是有效的统一社会信用代码
+	 *
+	 * @param creditCode 统一社会信用代码
+	 * @return 校验结果
+	 */
+	public static boolean isCreditCode(String creditCode) {
+		if (StrUtil.isBlank(creditCode) || !Pattern.matches(PatternPool.BASE_CODE_REGEX, creditCode)) {
+			return false;
+		}
+		char[] businessCodeArray = creditCode.toCharArray();
+		char check = businessCodeArray[17];
+		int sum = 0, length = 17;
+		for (int i = 0; i < length; i++) {
+			char key = businessCodeArray[i];
+			sum += (PatternPool.BASE_CODES.indexOf(key) * PatternPool.WEIGHT[i]);
+		}
+		int value = 31 - sum % 31;
+		return check == PatternPool.BASE_CODE_ARRAY[value % 31];
+	}
 }
