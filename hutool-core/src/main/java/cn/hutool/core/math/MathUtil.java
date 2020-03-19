@@ -76,14 +76,4 @@ public class MathUtil {
 	public static List<String[]> combinationSelect(String[] datas, int m) {
 		return new Combination(datas).select(m);
 	}
-
-	/**
-	 * 将当前数字转换为几位数字，不足前面补0
-	 * @param number 要转换的数字
-	 * @param count 转换为几位数，不足前面补0
-	 * @return 转换后的数字
-	 */
-	public static String convertNumToDigitString( int number,int count) {
-		return String.format("%"+count+"d", number).replace(" ", "0");//5代表总共是几位数
-	}
 }
