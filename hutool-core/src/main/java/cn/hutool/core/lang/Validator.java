@@ -8,6 +8,8 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,6 +88,17 @@ public class Validator {
 	 * 中国车牌号码
 	 */
 	public final static Pattern PLATE_NUMBER = PatternPool.PLATE_NUMBER;
+
+	/**
+	 * 社会统一信用代码
+	 */
+	public static final List<Character> BASE_CODES = new ArrayList<>();
+
+	public static final String BASE_CODE_STRING = "0123456789ABCDEFGHJKLMNPQRTUWXY";
+
+	public static final int[] WEIGHT = {1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28};
+
+	public static final char[] BASE_CODE_ARRAY = BASE_CODE_STRING.toCharArray();
 
 	/**
 	 * 给定值是否为<code>true</code>
@@ -1115,7 +1128,7 @@ public class Validator {
 		if (StrUtil.isBlank(creditCode)) {
 			return false;
 		}
-		return Pattern.matches(PatternPool.REGEX, creditCode);
+		return Pattern.matches(PatternPool.CREDIT_CODE, creditCode);
 	}
 
 	/**
@@ -1133,9 +1146,9 @@ public class Validator {
 		int sum = 0, length = 17;
 		for (int i = 0; i < length; i++) {
 			char key = businessCodeArray[i];
-			sum += (PatternPool.BASE_CODES.indexOf(key) * PatternPool.WEIGHT[i]);
+			sum += (BASE_CODES.indexOf(key) * WEIGHT[i]);
 		}
 		int value = 31 - sum % 31;
-		return check == PatternPool.BASE_CODE_ARRAY[value % 31];
+		return check == BASE_CODE_ARRAY[value % 31];
 	}
 }
