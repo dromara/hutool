@@ -1,12 +1,14 @@
 package cn.hutool.core.lang;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import cn.hutool.core.util.ReUtil;
 
 /**
  * 常用正则表达式集合
- * 
+ *
  * @author Looly
  *
  */
@@ -64,6 +66,13 @@ public class PatternPool {
 			//https://gitee.com/loolly/hutool/issues/I1BJHE?from=project-issue
 			"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]\\d{3}\\d{1,3}[领])|" +
 			"([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$");
+
+
+	/**  社会统一信用代码 */
+	public static final String CREDIT_CODE = "^[A-Z0-9]{18}$";
+
+	public static final String BASE_CODE_REGEX = "[0-9A-Y]{18}";
+
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	/** Pattern池 */
