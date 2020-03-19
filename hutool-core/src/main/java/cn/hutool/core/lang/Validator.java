@@ -2,14 +2,13 @@ package cn.hutool.core.lang;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.core.util.CreditCodeUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,17 +89,6 @@ public class Validator {
 	public final static Pattern PLATE_NUMBER = PatternPool.PLATE_NUMBER;
 
 	/**
-	 * 社会统一信用代码
-	 */
-	public static final List<Character> BASE_CODES = new ArrayList<>();
-
-	public static final String BASE_CODE_STRING = "0123456789ABCDEFGHJKLMNPQRTUWXY";
-
-	public static final int[] WEIGHT = {1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28};
-
-	public static final char[] BASE_CODE_ARRAY = BASE_CODE_STRING.toCharArray();
-
-	/**
 	 * 给定值是否为<code>true</code>
 	 *
 	 * @param value 值
@@ -136,7 +124,7 @@ public class Validator {
 		if (isFalse(value)) {
 			throw new ValidateException(errorMsgTemplate, params);
 		}
-		return value;
+		return true;
 	}
 
 	/**
@@ -153,7 +141,7 @@ public class Validator {
 		if (isTrue(value)) {
 			throw new ValidateException(errorMsgTemplate, params);
 		}
-		return value;
+		return false;
 	}
 
 	/**
@@ -191,7 +179,7 @@ public class Validator {
 		if (isNotNull(value)) {
 			throw new ValidateException(errorMsgTemplate, params);
 		}
-		return value;
+		return null;
 	}
 
 	/**
@@ -1118,37 +1106,20 @@ public class Validator {
 	}
 
 	/**
-	 * 简单校验统一社会信用代码
-	 * 18位（大写字母+数字）
-	 *
-	 * @param creditCode 统一社会信用代码
-	 * @return 校验结果
-	 */
-	public static boolean isCreditCodeBySimple(String creditCode) {
-		if (StrUtil.isBlank(creditCode)) {
-			return false;
-		}
-		return Pattern.matches(PatternPool.CREDIT_CODE, creditCode);
-	}
-
-	/**
 	 * 是否是有效的统一社会信用代码
+	 * <pre>
+	 * 第一部分：登记管理部门代码1位 (数字或大写英文字母)
+	 * 第二部分：机构类别代码1位 (数字或大写英文字母)
+	 * 第三部分：登记管理机关行政区划码6位 (数字)
+	 * 第四部分：主体标识码（组织机构代码）9位 (数字或大写英文字母)
+	 * 第五部分：校验码1位 (数字或大写英文字母)
+	 * </pre>
 	 *
 	 * @param creditCode 统一社会信用代码
 	 * @return 校验结果
+	 * @since 5.2.4
 	 */
-	public static boolean isCreditCode(String creditCode) {
-		if (StrUtil.isBlank(creditCode) || !Pattern.matches(PatternPool.BASE_CODE_REGEX, creditCode)) {
-			return false;
-		}
-		char[] businessCodeArray = creditCode.toCharArray();
-		char check = businessCodeArray[17];
-		int sum = 0, length = 17;
-		for (int i = 0; i < length; i++) {
-			char key = businessCodeArray[i];
-			sum += (BASE_CODES.indexOf(key) * WEIGHT[i]);
-		}
-		int value = 31 - sum % 31;
-		return check == BASE_CODE_ARRAY[value % 31];
+	public static boolean isCreditCode(CharSequence creditCode) {
+		return CreditCodeUtil.isCreditCode(creditCode);
 	}
 }

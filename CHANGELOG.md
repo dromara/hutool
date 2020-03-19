@@ -14,6 +14,7 @@
 * 【db     】     设置全局忽略大小写DbUtil.setCaseInsensitiveGlobal(true)（issue#784@Github）
 * 【core   】     增加CallerUtil.getCallerMethodName方法
 * 【core   】     Tree增加getParent方法，可以获取父节点，抽象Node接口
+* 【core   】     增加社会信用代码工具CreditCodeUtil（pr#112@Gitee）
 
 ### Bug修复
 * 【core   】     修复TypeUtil无法获取泛型接口的泛型参数问题（issue#I1BRFI@Gitee）
