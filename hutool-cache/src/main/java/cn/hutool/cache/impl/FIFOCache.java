@@ -1,5 +1,6 @@
 package cn.hutool.cache.impl;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
@@ -36,13 +37,10 @@ public class FIFOCache<K, V> extends AbstractCache<K, V> {
 	 * @param timeout 过期时长
 	 */
 	public FIFOCache(int capacity, long timeout) {
-		if(Integer.MAX_VALUE == capacity) {
-			capacity -= 1;
-		}
-		
 		this.capacity = capacity;
 		this.timeout = timeout;
-		cacheMap = new LinkedHashMap<>(capacity + 1, 1.0f, false);
+		int initialCapacity = Integer.max(1 << 4, capacity>>> 7);
+		cacheMap = new LinkedHashMap<>(initialCapacity, 1.0f, false);
 	}
 
 	/**
