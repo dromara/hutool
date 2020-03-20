@@ -7,7 +7,7 @@ package cn.hutool.core.lang.tree;
  * @author looly
  * @since 5.2.4
  */
-public interface Node<T> extends Comparable<Node<T>>{
+public interface Node<T> extends Comparable<Node<T>> {
 	/**
 	 * 获取ID
 	 *
@@ -19,6 +19,7 @@ public interface Node<T> extends Comparable<Node<T>>{
 	 * 设置ID
 	 *
 	 * @param id ID
+	 * @return this
 	 */
 	Node<T> setId(T id);
 
@@ -33,7 +34,7 @@ public interface Node<T> extends Comparable<Node<T>>{
 	 * 设置父节点ID
 	 *
 	 * @param parentId 父节点ID
-	 * @return 父节点ID
+	 * @return this
 	 */
 	Node<T> setParentId(T parentId);
 
@@ -68,6 +69,7 @@ public interface Node<T> extends Comparable<Node<T>>{
 	Node<T> setWeight(Comparable<?> weight);
 
 	@SuppressWarnings({"unchecked", "rawtypes", "NullableProblems"})
+	@Override
 	default int compareTo(Node node) {
 		final Comparable weight = this.getWeight();
 		if (null != weight) {

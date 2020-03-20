@@ -123,6 +123,8 @@ public class TreeUtil {
 	 * 获取ID对应的节点，如果有多个ID相同的节点，只返回第一个。<br>
 	 * 此方法只查找此节点及子节点，采用广度优先遍历。
 	 *
+	 * @param <T> ID类型
+	 * @param node 节点
 	 * @param id ID
 	 * @return 节点
 	 * @since 5.2.4

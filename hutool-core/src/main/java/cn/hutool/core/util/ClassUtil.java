@@ -1060,6 +1060,7 @@ public class ClassUtil {
 	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录<br>
 	 * jdk中的类不能使用此方法
 	 *
+	 * @param clazz 类
 	 * @return URL
 	 * @since 5.2.4
 	 */
@@ -1075,6 +1076,7 @@ public class ClassUtil {
 	 * class在jar包中返回jar所在文件夹,class不在jar中返回文件夹目录<br>
 	 * jdk中的类不能使用此方法
 	 *
+	 * @param clazz 类
 	 * @return class路径
 	 * @since 5.2.4
 	 */
