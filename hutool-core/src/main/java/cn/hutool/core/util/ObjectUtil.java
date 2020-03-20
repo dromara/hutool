@@ -276,6 +276,48 @@ public class ObjectUtil {
 	}
 
 	/**
+	 * 如果给定对象为{@code null}或者 "" 返回默认值
+	 *
+	 * <pre>
+	 * ObjectUtil.defaultIfEmpty(null, null)      = null
+	 * ObjectUtil.defaultIfEmpty(null, "")        = ""
+	 * ObjectUtil.defaultIfEmpty("", "zz")      = "zz"
+	 * ObjectUtil.defaultIfEmpty(" ", "zz")      = " "
+	 * ObjectUtil.defaultIfEmpty("abc", *)        = "abc"
+	 * </pre>
+	 *
+	 * @param <T>          对象类型（必须实现CharSequence接口）
+	 * @param str          被检查对象，可能为{@code null}
+	 * @param defaultValue 被检查对象为{@code null}或者 ""返回的默认值，可以为{@code null}或者 ""
+	 * @return 被检查对象为{@code null}或者 ""返回默认值，否则返回原值
+	 * @since 5.0.4
+	 */
+	public static <T extends CharSequence> T defaultIfEmpty(final T str, final T defaultValue) {
+		return StrUtil.isEmpty(str) ? defaultValue : str;
+	}
+
+	/**
+	 * 如果给定对象为{@code null}或者""或者空白符返回默认值
+	 *
+	 * <pre>
+	 * ObjectUtil.defaultIfEmpty(null, null)      = null
+	 * ObjectUtil.defaultIfEmpty(null, "")        = ""
+	 * ObjectUtil.defaultIfEmpty("", "zz")      = "zz"
+	 * ObjectUtil.defaultIfEmpty(" ", "zz")      = "zz"
+	 * ObjectUtil.defaultIfEmpty("abc", *)        = "abc"
+	 * </pre>
+	 *
+	 * @param <T>          对象类型（必须实现CharSequence接口）
+	 * @param str          被检查对象，可能为{@code null}
+	 * @param defaultValue 被检查对象为{@code null}或者 ""或者空白符返回的默认值，可以为{@code null}或者 ""或者空白符
+	 * @return 被检查对象为{@code null}或者 ""或者空白符返回默认值，否则返回原值
+	 * @since 5.0.4
+	 */
+	public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultValue) {
+		return StrUtil.isBlank(str) ? defaultValue : str;
+	}
+
+	/**
 	 * 克隆对象<br>
 	 * 如果对象实现Cloneable接口，调用其clone方法<br>
 	 * 如果实现Serializable接口，执行深度克隆<br>

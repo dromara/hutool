@@ -131,6 +131,20 @@ public class ChineseDate {
 		day = offset + 1;
 	}
 
+	/**
+	 * 构造方法传入日期
+	 *
+	 * @param chineseYear  农历年
+	 * @param chineseMonth 农历月，1表示一月（正月）
+	 * @param chineseDay   农历日，1表示初一
+	 * @since 5.2.4
+	 */
+	public ChineseDate(int chineseYear, int chineseMonth, int chineseDay) {
+		this.day = chineseDay;
+		this.month = chineseMonth;
+		this.year = chineseYear;
+		this.leap = DateUtil.isLeapYear(chineseYear);
+	}
 
 	/**
 	 * 获得农历年份
@@ -142,7 +156,17 @@ public class ChineseDate {
 	}
 
 	/**
-	 * 获得农历月份
+	 * 获取农历的月，从1开始计数
+	 *
+	 * @return 农历的月
+	 * @since 5.2.4
+	 */
+	public int getMonth() {
+		return this.month;
+	}
+
+	/**
+	 * 获得农历月份（中文，例如二月，十二月，或者润一月）
 	 *
 	 * @return 返回农历月份
 	 */
@@ -151,12 +175,22 @@ public class ChineseDate {
 	}
 
 	/**
-	 * 获得农历月称呼
+	 * 获得农历月称呼（中文，例如二月，腊月，或者润正月）
 	 *
 	 * @return 返回农历月份称呼
 	 */
 	public String getChineseMonthName() {
 		return (leap ? "闰" : "") + chineseNumberName[month - 1] + "月";
+	}
+
+	/**
+	 * 获取农历的日，从1开始计数
+	 *
+	 * @return 农历的日，从1开始计数
+	 * @since 5.2.4
+	 */
+	public int getDay() {
+		return this.day;
 	}
 
 	/**
@@ -228,6 +262,16 @@ public class ChineseDate {
 	public String getCyclical() {
 		int num = year - 1900 + 36;
 		return (cyclicalm(num));
+	}
+
+	/**
+	 * 转换为标准的日期格式来表示农历日期，例如2020-01-13
+	 *
+	 * @return 标准的日期格式
+	 * @since 5.2.4
+	 */
+	public String toStringNormal(){
+		return String.format("%04d-%02d-%02d", this.year, this.month, this.day);
 	}
 
 	@Override

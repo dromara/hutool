@@ -957,12 +957,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest basicAuth(String username, String password) {
 		final String data = username.concat(":").concat(password);
 		final String base64 = Base64.encode(data, charset);
-
-		header("Authorization", "Basic " + base64, true);
-
-		return this;
+		return auth("Basic " + base64);
 	}
 
+	/**
+	 * 验证，简单插入Authorization头
+	 *
+	 * @param content 验证内容
+	 * @return HttpRequest
+	 * @since 5.2.4
+	 */
+	public HttpRequest auth(String content) {
+		header(Header.AUTHORIZATION, content, true);
+		return this;
+	}
 	// ---------------------------------------------------------------- Private method start
 
 	/**

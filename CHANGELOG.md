@@ -15,12 +15,14 @@
 * 【core   】     增加CallerUtil.getCallerMethodName方法
 * 【core   】     Tree增加getParent方法，可以获取父节点，抽象Node接口
 * 【core   】     增加社会信用代码工具CreditCodeUtil（pr#112@Gitee）
+* 【core   】     ChineseDate增加构造重载，增加toStringNormal（issue#792@Github）
 
 ### Bug修复
 * 【core   】     修复TypeUtil无法获取泛型接口的泛型参数问题（issue#I1BRFI@Gitee）
 * 【core   】     修复MySQL中0000报错问题
 * 【core   】     修复BeanPath从Map取值为空的问题（issue#790@Github）
 * 【poi    】     修复添加图片尺寸的单位问题（issue#I1C2ER@Gitee）
+* 【setting】     修复getStr中逻辑问题（pr#113@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.2.3
