@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.poi.exceptions.POIException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -168,7 +169,7 @@ public class Word07Writer implements Closeable {
 	}
 
 	/**
-	 * 增加图片，单独成段落
+	 * 增加图片，单独成段落，增加后图片流关闭，默认居中对齐
 	 *
 	 * @param in       图片流
 	 * @param picType  图片类型，见Document.PICTURE_TYPE_XXX
@@ -179,14 +180,33 @@ public class Word07Writer implements Closeable {
 	 * @since 5.1.6
 	 */
 	public Word07Writer addPicture(InputStream in, PicType picType, String fileName, int width, int height) {
+		return addPicture(in, picType, fileName, width, height, ParagraphAlignment.CENTER);
+	}
+
+	/**
+	 * 增加图片，单独成段落，增加后图片流关闭
+	 *
+	 * @param in       图片流
+	 * @param picType  图片类型，见Document.PICTURE_TYPE_XXX
+	 * @param fileName 文件名
+	 * @param width    宽度
+	 * @param height   高度
+	 * @param align    图片的对齐方式
+	 * @return this
+	 * @since 5.2.4
+	 */
+	public Word07Writer addPicture(InputStream in, PicType picType, String fileName, int width, int height, ParagraphAlignment align) {
 		final XWPFParagraph paragraph = doc.createParagraph();
+		paragraph.setAlignment(align);
 		final XWPFRun run = paragraph.createRun();
 		try {
-			run.addPicture(in, picType.getValue(), fileName, width, height);
+			run.addPicture(in, picType.getValue(), fileName, Units.toEMU(width), Units.toEMU(height));
 		} catch (InvalidFormatException e) {
 			throw new POIException(e);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(in);
 		}
 
 		return this;

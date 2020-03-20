@@ -199,10 +199,10 @@ public class BeanPath implements Serializable{
 				}
 				if (bean instanceof Map) {
 					// 只支持String为key的Map
-					MapUtil.getAny((Map<String, ?>) bean, unwrapedKeys);
+					return MapUtil.getAny((Map<String, ?>) bean, unwrapedKeys);
 				} else {
 					final Map<String, Object> map = BeanUtil.beanToMap(bean);
-					MapUtil.getAny(map, unwrapedKeys);
+					return MapUtil.getAny(map, unwrapedKeys);
 				}
 			}
 		} else {

@@ -99,4 +99,13 @@ public class BeanPathTest {
 		Object result = pattern.get(tempMap);
 		Assert.assertEquals(2, result);
 	}
+
+	@Test
+	public void getMapTest () {
+		BeanPath pattern = BeanPath.create("userInfo[id, photoPath]");
+		@SuppressWarnings("unchecked")
+		Map<String, Object> result = (Map<String, Object>)pattern.get(tempMap);
+		Assert.assertEquals(1, result.get("id"));
+		Assert.assertEquals("yx.mm.com", result.get("photoPath"));
+	}
 }

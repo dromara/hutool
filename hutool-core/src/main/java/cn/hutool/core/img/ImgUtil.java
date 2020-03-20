@@ -399,12 +399,12 @@ public class ImgUtil {
 				if (srcWidth % destWidth == 0) {
 					cols = srcWidth / destWidth;
 				} else {
-					cols = (int) Math.floor((double)srcWidth / destWidth) + 1;
+					cols = (int) Math.floor((double) srcWidth / destWidth) + 1;
 				}
 				if (srcHeight % destHeight == 0) {
 					rows = srcHeight / destHeight;
 				} else {
-					rows = (int) Math.floor((double)srcHeight / destHeight) + 1;
+					rows = (int) Math.floor((double) srcHeight / destHeight) + 1;
 				}
 				// 循环建立切片
 				Image tag;
@@ -1249,6 +1249,18 @@ public class ImgUtil {
 	}
 
 	/**
+	 * 将图片对象转换为InputStream形式
+	 *
+	 * @param image     图片对象
+	 * @param imageType 图片类型
+	 * @return Base64的字符串表现形式
+	 * @since 4.2.4
+	 */
+	public static ByteArrayInputStream toStream(Image image, String imageType) {
+		return IoUtil.toStream(toBytes(image, imageType));
+	}
+
+	/**
 	 * 将图片对象转换为Base64形式
 	 *
 	 * @param image     图片对象
@@ -1257,9 +1269,21 @@ public class ImgUtil {
 	 * @since 4.1.8
 	 */
 	public static String toBase64(Image image, String imageType) {
+		return Base64.encode(toBytes(image, imageType));
+	}
+
+	/**
+	 * 将图片对象转换为bytes形式
+	 *
+	 * @param image     图片对象
+	 * @param imageType 图片类型
+	 * @return Base64的字符串表现形式
+	 * @since 5.2.4
+	 */
+	public static byte[] toBytes(Image image, String imageType) {
 		final ByteArrayOutputStream out = new ByteArrayOutputStream();
 		write(image, imageType, out);
-		return Base64.encode(out.toByteArray());
+		return out.toByteArray();
 	}
 
 	/**
