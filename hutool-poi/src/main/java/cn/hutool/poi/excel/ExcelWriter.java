@@ -1,18 +1,20 @@
 package cn.hutool.poi.excel;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.comparator.IndexedComparator;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.poi.excel.cell.CellLocation;
+import cn.hutool.poi.excel.cell.CellUtil;
+import cn.hutool.poi.excel.style.Align;
 import org.apache.poi.hssf.usermodel.DVConstraint;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.ss.usermodel.Cell;
@@ -28,20 +30,18 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidationConstraint;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.comparator.IndexedComparator;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.poi.excel.cell.CellUtil;
-import cn.hutool.poi.excel.style.Align;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Excel 写入器<br>
@@ -69,6 +69,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	private Comparator<String> aliasComparator;
 	/** 样式集，定义不同类型数据样式 */
 	private StyleSet styleSet;
+	/** 标题项对应列号缓存，每次写标题更新此缓存 */
+	private Map<String, Integer> headLocationCache;
 
 	// -------------------------------------------------------------------------- Constructor start
 	/**
@@ -193,6 +195,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 * <pre>
 	 * 1. 当前行游标归零
 	 * 2. 清空别名比较器
+	 * 3. 清除标题缓存
 	 * </pre>
 	 * 
 	 * @return this
@@ -200,6 +203,7 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	public ExcelWriter reset() {
 		resetRow();
 		this.aliasComparator = null;
+		this.headLocationCache = null;
 		return this;
 	}
 
@@ -776,7 +780,16 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter writeHeadRow(Iterable<?> rowData) {
 		Assert.isFalse(this.isClosed, "ExcelWriter has been closed!");
-		RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()), rowData, this.styleSet, true);
+		this.headLocationCache = new ConcurrentHashMap<>();
+		final Row row = this.sheet.createRow(this.currentRow.getAndIncrement());
+		int i = 0;
+		Cell cell;
+		for (Object value : rowData) {
+			cell = row.createCell(i);
+			CellUtil.setCellValue(cell, value, this.styleSet, true);
+			this.headLocationCache.put(StrUtil.toString(value), i);
+			i++;
+		}
 		return this;
 	}
 
@@ -842,7 +855,20 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		if (isWriteKeyAsHead) {
 			writeHeadRow(aliasMap.keySet());
 		}
-		writeRow(aliasMap.values());
+
+		// 如果已经写出标题行，根据标题行找对应的值写入
+		if(MapUtil.isNotEmpty(this.headLocationCache)){
+			final Row row = RowUtil.getOrCreateRow(this.sheet, this.currentRow.getAndIncrement());
+			Integer location;
+			for (Entry<?, ?> entry : aliasMap.entrySet()) {
+				location = this.headLocationCache.get(StrUtil.toString(entry.getKey()));
+				if(null != location){
+					CellUtil.setCellValue(CellUtil.getOrCreateCell(row, location), entry.getValue(), this.styleSet, false);
+				}
+			}
+		} else{
+			writeRow(aliasMap.values());
+		}
 		return this;
 	}
 
