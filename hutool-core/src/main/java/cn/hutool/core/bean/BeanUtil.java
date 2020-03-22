@@ -444,8 +444,22 @@ public class BeanUtil {
 	 * @since 4.1.20
 	 */
 	public static <T> T toBean(Object source, Class<T> clazz) {
+		return toBean(source, clazz, null);
+	}
+
+	/**
+	 * 对象或Map转Bean
+	 *
+	 * @param <T>     转换的Bean类型
+	 * @param source  Bean对象或Map
+	 * @param clazz   目标的Bean类型
+	 * @param options 属性拷贝选项
+	 * @return Bean对象
+	 * @since 5.2.4
+	 */
+	public static <T> T toBean(Object source, Class<T> clazz, CopyOptions options) {
 		final T target = ReflectUtil.newInstance(clazz);
-		copyProperties(source, target);
+		copyProperties(source, target, options);
 		return target;
 	}
 

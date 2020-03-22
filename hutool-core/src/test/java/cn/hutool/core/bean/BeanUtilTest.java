@@ -23,7 +23,6 @@ import java.util.UUID;
  * Bean工具单元测试
  *
  * @author Looly
- *
  */
 public class BeanUtilTest {
 
@@ -42,10 +41,10 @@ public class BeanUtilTest {
 			@Override
 			public Object value(String key, Type valueType) {
 				switch (key) {
-				case "name":
-					return "张三";
-				case "age":
-					return 18;
+					case "name":
+						return "张三";
+					case "age":
+						return 18;
 				}
 				return null;
 			}
@@ -203,17 +202,17 @@ public class BeanUtilTest {
 	}
 
 	@Test
-	public void copyProperties(){
+	public void copyProperties() {
 		SubPerson person = new SubPerson();
 		person.setAge(14);
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
 		SubPerson person1 = BeanUtil.copyProperties(person, SubPerson.class);
-		Assert.assertEquals(14,person1.getAge());
-		Assert.assertEquals("11213232",person1.getOpenid());
-		Assert.assertEquals("测试A11",person1.getName());
-		Assert.assertEquals("sub名字",person1.getSubName());
+		Assert.assertEquals(14, person1.getAge());
+		Assert.assertEquals("11213232", person1.getOpenid());
+		Assert.assertEquals("测试A11", person1.getName());
+		Assert.assertEquals("sub名字", person1.getSubName());
 	}
 
 	@Test
@@ -318,5 +317,25 @@ public class BeanUtilTest {
 		public String name;
 		public int age;
 		public String openid;
+	}
+
+	@Test
+	public void beanToBeanTest(){
+		// 复现对象无getter方法导致报错的问题
+		Page page1=new Page();
+		BeanUtil.toBean(page1, Page.class, CopyOptions.create().setIgnoreNullValue(true));
+	}
+
+	public static class Page {
+		private boolean optimizeCountSql = true;
+
+		public boolean optimizeCountSql() {
+			return optimizeCountSql;
+		}
+
+		public Page setOptimizeCountSql(boolean optimizeCountSql) {
+			this.optimizeCountSql = optimizeCountSql;
+			return this;
+		}
 	}
 }
