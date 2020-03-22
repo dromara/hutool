@@ -1,28 +1,29 @@
 package cn.hutool.poi.excel.test;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
+import cn.hutool.poi.excel.style.StyleUtil;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import cn.hutool.core.util.IdUtil;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
-import cn.hutool.poi.excel.style.StyleUtil;
 
 /**
  * 写出Excel单元测试
@@ -75,7 +76,7 @@ public class ExcelWriteTest {
 			rows.add(ObjectUtil.clone(row1));
 		}
 
-		String filePath = "f:/test/writeTest.xlsx";
+		String filePath = "d:/test/writeTest.xlsx";
 		FileUtil.del(filePath);
 		// 通过工具类创建writer
 		ExcelWriter writer = ExcelUtil.getWriter(filePath);
@@ -105,7 +106,7 @@ public class ExcelWriteTest {
 		List<List<?>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("e:/mergeTest.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("d:/test/mergeTest.xlsx");
 		CellStyle style = writer.getStyleSet().getHeadCellStyle();
 		StyleUtil.setColor(style, IndexedColors.RED, FillPatternType.SOLID_FOREGROUND);
 
@@ -143,7 +144,7 @@ public class ExcelWriteTest {
 		ArrayList<Map<String, Object>> rows = CollUtil.newArrayList(row1, row2);
 
 		// 通过工具类创建writer
-		ExcelWriter writer = ExcelUtil.getWriter("f:/test/writeMapTest.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter("d:/test/writeMapTest.xlsx");
 		// 合并单元格后的标题行，使用默认标题样式
 		writer.merge(row1.size() - 1, "一班成绩单");
 
@@ -254,7 +255,7 @@ public class ExcelWriteTest {
 
 		List<Map<Object, Object>> rows = CollUtil.newArrayList(row1, row2);
 		// 通过工具类创建writer
-		String file = "e:/writeMapAlias.xlsx";
+		String file = "d:/test/writeMapAlias.xlsx";
 		FileUtil.del(file);
 		ExcelWriter writer = ExcelUtil.getWriter(file);
 		// 自定义标题
@@ -411,10 +412,28 @@ public class ExcelWriteTest {
 	@Ignore
 	public void addSelectTest() {
 		List<String> row = CollUtil.newArrayList("姓名", "加班日期", "下班时间", "加班时长", "餐补", "车补次数", "车补", "总计");
-		ExcelWriter overtimeWriter = ExcelUtil.getWriter("f:/excel/single_line.xlsx");
+		ExcelWriter overtimeWriter = ExcelUtil.getWriter("d:/test/single_line.xlsx");
 		overtimeWriter.writeCellValue(3, 4, "AAAA");
 		overtimeWriter.addSelect(3, 4, row.toArray(new String[0]));
 		overtimeWriter.close();
+	}
+
+	@Test
+	@Ignore
+	public void addSelectTest2() {
+		ExcelWriter writer = ExcelUtil.getWriter("d:/test/select.xlsx");
+		writer.writeCellValue(0, 0, "请选择科目");
+		int firstRow = 0;
+		int lastRow = 0;
+		int firstCol = 0;
+		int lastCol = 0;
+		CellRangeAddressList addressList = new CellRangeAddressList(firstRow, lastRow, firstCol, lastCol);
+		writer.addSelect(addressList, "1001", "1002", "1003");
+
+		List<?> rows = new ArrayList<>();
+		writer.write(rows, true);
+
+		writer.close();
 	}
 
 	@Test
@@ -438,6 +457,34 @@ public class ExcelWriteTest {
 		writer.setSheet("历史重复数据");
 		writer.write(rows, true);
 		writer.autoSizeColumnAll();
+		writer.close();
+	}
+
+	@Test
+	@Ignore
+	public void writeMapsTest(){
+		List<Map<String,Object>> rows = new ArrayList<>();
+
+		Map<String, Object> map1 = new HashMap<>();
+		map1.put("a",1);
+		map1.put("b",2);
+		map1.put("c",3);
+		map1.put("d",4);
+		map1.put("e",5);
+		Map<String, Object> map2 = new HashMap<>();
+		map2.put("c",3);
+		map2.put("d",4);
+		map2.put("e",5);
+		Map<String, Object> map3 = new HashMap<>();
+		map3.put("d",4);
+		map3.put("e",5);
+
+		rows.add(map1);
+		rows.add(map2);
+		rows.add(map3);
+
+		final ExcelWriter writer = ExcelUtil.getWriter("d:/test/rows.xlsx");
+		writer.write(rows);
 		writer.close();
 	}
 }
