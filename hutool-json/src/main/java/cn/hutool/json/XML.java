@@ -1,11 +1,11 @@
 package cn.hutool.json;
 
-import java.util.Iterator;
-
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.EscapeUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
+
+import java.util.Iterator;
 
 /**
  * 提供静态方法在XML和JSONObject之间转换
@@ -299,11 +299,11 @@ public class XML {
 							if (i > 0) {
 								sb.append('\n');
 							}
-							sb.append(XmlUtil.escape(val.toString()));
+							sb.append(EscapeUtil.escapeHtml4(val.toString()));
 							i++;
 						}
 					} else {
-						sb.append(XmlUtil.escape(value.toString()));
+						sb.append(EscapeUtil.escapeHtml4(value.toString()));
 					}
 
 					// Emit an array of similar keys
@@ -345,24 +345,22 @@ public class XML {
 
 		}
 
-		if (object != null) {
-			if (object.getClass().isArray()) {
-				object = new JSONArray(object);
-			}
-
-			if (object instanceof JSONArray) {
-				ja = (JSONArray) object;
-				for (Object val : ja) {
-					// XML does not have good support for arrays. If an array
-					// appears in a place where XML is lacking, synthesize an
-					// <array> element.
-					sb.append(toXml(val, tagName == null ? "array" : tagName));
-				}
-				return sb.toString();
-			}
+		if (object.getClass().isArray()) {
+			object = new JSONArray(object);
 		}
 
-		String string = (object == null) ? StrUtil.NULL : XmlUtil.escape(object.toString());
+		if (object instanceof JSONArray) {
+			ja = (JSONArray) object;
+			for (Object val : ja) {
+				// XML does not have good support for arrays. If an array
+				// appears in a place where XML is lacking, synthesize an
+				// <array> element.
+				sb.append(toXml(val, tagName == null ? "array" : tagName));
+			}
+			return sb.toString();
+		}
+
+		String string = EscapeUtil.escapeHtml4(object.toString());
 		return (tagName == null) ?
 				"\"" + string + "\"" : (string.length() == 0) ? "<" + tagName + "/>"
 				: "<" + tagName + ">" + string + "</" + tagName + ">";

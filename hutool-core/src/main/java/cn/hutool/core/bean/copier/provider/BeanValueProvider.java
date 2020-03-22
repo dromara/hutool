@@ -1,14 +1,14 @@
 package cn.hutool.core.bean.copier.provider;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.Map;
-
 import cn.hutool.core.bean.BeanDesc.PropDesc;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.StrUtil;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Bean的值提供者
