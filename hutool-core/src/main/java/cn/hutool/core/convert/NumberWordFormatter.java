@@ -13,7 +13,7 @@ public class NumberWordFormatter {
 
 	private static final String[] NUMBER = new String[]{"", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN",
 			"EIGHT", "NINE"};
-	private static final String[] NUMBER_TEEN = new String[]{"TEN", "ELEVEN", "TWELEVE", "THIRTEEN", "FOURTEEN",
+	private static final String[] NUMBER_TEEN = new String[]{"TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN",
 			"FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
 	private static final String[] NUMBER_TEN = new String[]{"TEN", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY",
 			"SEVENTY", "EIGHTY", "NINETY"};
