@@ -419,9 +419,9 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void addSelectTest2() {
-		ExcelWriter writer = ExcelUtil.getWriter("d:/test/select.xlsx");
+		ExcelWriter writer = ExcelUtil.getWriter(true);
 		writer.writeCellValue(0, 0, "请选择科目");
 		int firstRow = 0;
 		int lastRow = 0;
@@ -433,6 +433,7 @@ public class ExcelWriteTest {
 		List<?> rows = new ArrayList<>();
 		writer.write(rows, true);
 
+		writer.flush(FileUtil.file("d:/test/select.xlsx"));
 		writer.close();
 	}
 

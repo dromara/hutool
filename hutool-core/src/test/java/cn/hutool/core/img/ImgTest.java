@@ -1,9 +1,8 @@
 package cn.hutool.core.img;
 
+import cn.hutool.core.io.FileUtil;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import cn.hutool.core.io.FileUtil;
 
 public class ImgTest {
 	
