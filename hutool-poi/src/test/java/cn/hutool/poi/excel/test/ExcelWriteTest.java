@@ -419,7 +419,7 @@ public class ExcelWriteTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void addSelectTest2() {
 		ExcelWriter writer = ExcelUtil.getWriter(true);
 		writer.writeCellValue(0, 0, "请选择科目");
