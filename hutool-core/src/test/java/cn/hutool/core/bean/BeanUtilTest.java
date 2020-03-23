@@ -321,9 +321,9 @@ public class BeanUtilTest {
 
 	@Test
 	public void beanToBeanTest(){
-		// 复现对象无getter方法导致报错的问题
+		// 修复对象无getter方法导致报错的问题
 		Page page1=new Page();
-		BeanUtil.toBean(page1, Page.class, CopyOptions.create().setIgnoreNullValue(true));
+		BeanUtil.toBean(page1, Page.class);
 	}
 
 	public static class Page {

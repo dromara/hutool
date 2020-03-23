@@ -304,7 +304,7 @@ public class ReflectUtil {
 		Assert.notNull(obj);
 		Assert.notBlank(fieldName);
 
-		final Field field = getField((obj instanceof Class) ? (Class<?>)obj : obj.getClass(), fieldName);
+		final Field field = getField((obj instanceof Class) ? (Class<?>) obj : obj.getClass(), fieldName);
 		Assert.notNull(field, "Field [{}] is not exist in [{}]", fieldName, obj.getClass().getName());
 		setFieldValue(obj, field, value);
 	}
@@ -320,8 +320,8 @@ public class ReflectUtil {
 	public static void setFieldValue(Object obj, Field field, Object value) throws UtilException {
 		Assert.notNull(field, "Field in [{}] not exist !", obj);
 
+		final Class<?> fieldType = field.getType();
 		if (null != value) {
-			Class<?> fieldType = field.getType();
 			if (false == fieldType.isAssignableFrom(value.getClass())) {
 				//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
 				final Object targetValue = Convert.convert(fieldType, value);
@@ -329,6 +329,9 @@ public class ReflectUtil {
 					value = targetValue;
 				}
 			}
+		} else {
+			// 获取null对应默认值，防止原始类型造成空指针问题
+			value = ClassUtil.getDefaultValue(fieldType);
 		}
 
 		setAccessible(field);
@@ -848,6 +851,15 @@ public class ReflectUtil {
 	/**
 	 * 执行方法
 	 *
+	 * <p>
+	 * 对于用户传入参数会做必要检查，包括：
+	 *
+	 * <pre>
+	 *     1、忽略多余的参数
+	 *     2、参数不够补齐默认值
+	 *     3、传入参数为null，但是目标参数类型为原始类型，做转换
+	 * </pre>
+	 *
 	 * @param <T>    返回对象类型
 	 * @param obj    对象，如果执行静态方法，此值为<code>null</code>
 	 * @param method 方法（对象方法或static方法都可）
@@ -859,8 +871,32 @@ public class ReflectUtil {
 	public static <T> T invoke(Object obj, Method method, Object... args) throws UtilException {
 		setAccessible(method);
 
+		// 检查用户传入参数：
+		// 1、忽略多余的参数
+		// 2、参数不够补齐默认值
+		// 3、传入参数为null，但是目标参数类型为原始类型，做转换
+		// 4、传入参数类型不对应，尝试转换类型
+		final Class<?>[] parameterTypes = method.getParameterTypes();
+		final Object[] actualArgs = new Object[parameterTypes.length];
+		if (null != args) {
+			for (int i = 0; i < actualArgs.length; i++) {
+				if (i >= args.length || null == args[i]) {
+					// 越界或者空值
+					actualArgs[i] = ClassUtil.getDefaultValue(parameterTypes[i]);
+				} else if (false == parameterTypes[i].isAssignableFrom(args[i].getClass())) {
+					//对于类型不同的字段，尝试转换，转换失败则使用原对象类型
+					final Object targetValue = Convert.convert(parameterTypes[i], args[i]);
+					if (null != targetValue) {
+						actualArgs[i] = targetValue;
+					}
+				} else {
+					actualArgs[i] = args[i];
+				}
+			}
+		}
+
 		try {
-			return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, args);
+			return (T) method.invoke(ClassUtil.isStatic(method) ? null : obj, actualArgs);
 		} catch (Exception e) {
 			throw new UtilException(e);
 		}
