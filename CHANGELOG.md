@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core   】     增加逻辑，对于原始类型注入，使用默认值（issue#797@Github）
+* 【core   】     增加CityHash算法
 
 ### Bug修复
 * 【core   】     修复NumberWordFormatter拼写错误（issue#799@Github）

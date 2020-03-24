@@ -1,19 +1,21 @@
 package cn.hutool.core.util;
 
-import cn.hutool.core.lang.MurmurHash;
+import cn.hutool.core.lang.hash.CityHash;
+import cn.hutool.core.lang.hash.MurmurHash;
+import cn.hutool.core.lang.hash.Number128;
 
 /**
  * Hash算法大全<br>
  * 推荐使用FNV1算法
- * 
- * @author Goodzzp,Looly
+ *
+ * @author Goodzzp, Looly
  */
 public class HashUtil {
 
 	/**
 	 * 加法hash
-	 * 
-	 * @param key 字符串
+	 *
+	 * @param key   字符串
 	 * @param prime 一个质数
 	 * @return hash结果
 	 */
@@ -27,8 +29,8 @@ public class HashUtil {
 
 	/**
 	 * 旋转hash
-	 * 
-	 * @param key 输入字符串
+	 *
+	 * @param key   输入字符串
 	 * @param prime 质数
 	 * @return hash值
 	 */
@@ -46,7 +48,7 @@ public class HashUtil {
 
 	/**
 	 * 一次一个hash
-	 * 
+	 *
 	 * @param key 输入字符串
 	 * @return 输出hash值
 	 */
@@ -66,7 +68,7 @@ public class HashUtil {
 
 	/**
 	 * Bernstein's hash
-	 * 
+	 *
 	 * @param key 输入字节数组
 	 * @return 结果hash
 	 */
@@ -81,10 +83,10 @@ public class HashUtil {
 
 	/**
 	 * Universal Hashing
-	 * 
-	 * @param key 字节数组
+	 *
+	 * @param key  字节数组
 	 * @param mask 掩码
-	 * @param tab tab
+	 * @param tab  tab
 	 * @return hash值
 	 */
 	public static int universal(char[] key, int mask, int[] tab) {
@@ -121,10 +123,10 @@ public class HashUtil {
 
 	/**
 	 * Zobrist Hashing
-	 * 
-	 * @param key 字节数组
+	 *
+	 * @param key  字节数组
 	 * @param mask 掩码
-	 * @param tab tab
+	 * @param tab  tab
 	 * @return hash值
 	 */
 	public static int zobrist(char[] key, int mask, int[][] tab) {
@@ -137,7 +139,7 @@ public class HashUtil {
 
 	/**
 	 * 改进的32位FNV算法1
-	 * 
+	 *
 	 * @param data 数组
 	 * @return hash结果
 	 */
@@ -157,7 +159,7 @@ public class HashUtil {
 
 	/**
 	 * 改进的32位FNV算法1
-	 * 
+	 *
 	 * @param data 字符串
 	 * @return hash结果
 	 */
@@ -174,10 +176,10 @@ public class HashUtil {
 		hash += hash << 5;
 		return Math.abs(hash);
 	}
-	
+
 	/**
 	 * Thomas Wang的算法，整数hash
-	 * 
+	 *
 	 * @param key 整数
 	 * @return hash值
 	 */
@@ -193,7 +195,7 @@ public class HashUtil {
 
 	/**
 	 * RS算法hash
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -212,7 +214,7 @@ public class HashUtil {
 
 	/**
 	 * JS算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -228,7 +230,7 @@ public class HashUtil {
 
 	/**
 	 * PJW算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -253,7 +255,7 @@ public class HashUtil {
 
 	/**
 	 * ELF算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -274,7 +276,7 @@ public class HashUtil {
 
 	/**
 	 * BKDR算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -291,7 +293,7 @@ public class HashUtil {
 
 	/**
 	 * SDBM算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -307,7 +309,7 @@ public class HashUtil {
 
 	/**
 	 * DJB算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -323,7 +325,7 @@ public class HashUtil {
 
 	/**
 	 * DEK算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -339,7 +341,7 @@ public class HashUtil {
 
 	/**
 	 * AP算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -356,7 +358,7 @@ public class HashUtil {
 
 	/**
 	 * TianL Hash算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return Hash值
 	 */
@@ -403,7 +405,7 @@ public class HashUtil {
 
 	/**
 	 * JAVA自己带的算法
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -419,7 +421,7 @@ public class HashUtil {
 
 	/**
 	 * 混合hash算法，输出64位的值
-	 * 
+	 *
 	 * @param str 字符串
 	 * @return hash值
 	 */
@@ -432,7 +434,7 @@ public class HashUtil {
 
 	/**
 	 * 根据对象的内存地址生成相应的Hash值
-	 * 
+	 *
 	 * @param obj 对象
 	 * @return hash值
 	 * @since 4.2.2
@@ -440,10 +442,10 @@ public class HashUtil {
 	public static int identityHashCode(Object obj) {
 		return System.identityHashCode(obj);
 	}
-	
+
 	/**
 	 * MurmurHash算法32-bit实现
-	 * 
+	 *
 	 * @param data 数据
 	 * @return hash值
 	 * @since 4.3.3
@@ -451,10 +453,10 @@ public class HashUtil {
 	public static int murmur32(byte[] data) {
 		return MurmurHash.hash32(data);
 	}
-	
+
 	/**
 	 * MurmurHash算法64-bit实现
-	 * 
+	 *
 	 * @param data 数据
 	 * @return hash值
 	 * @since 4.3.3
@@ -462,15 +464,85 @@ public class HashUtil {
 	public static long murmur64(byte[] data) {
 		return MurmurHash.hash64(data);
 	}
-	
+
 	/**
 	 * MurmurHash算法128-bit实现
-	 * 
+	 *
 	 * @param data 数据
 	 * @return hash值
 	 * @since 4.3.3
 	 */
 	public static long[] murmur128(byte[] data) {
 		return MurmurHash.hash128(data);
+	}
+
+	/**
+	 * CityHash算法32-bit实现
+	 *
+	 * @param data 数据
+	 * @return hash值
+	 * @since 5.2.5
+	 */
+	public static int cityHash32(byte[] data) {
+		return CityHash.hash32(data);
+	}
+
+	/**
+	 * CityHash算法64-bit实现，种子1使用默认的CityHash#k2
+	 *
+	 * @param data 数据
+	 * @param seed 种子2
+	 * @return hash值
+	 * @since 5.2.5
+	 */
+	public static long cityHash64(byte[] data, long seed) {
+		return CityHash.hash64(data, seed);
+	}
+
+	/**
+	 * CityHash算法64-bit实现，种子1使用默认的CityHash#k2
+	 *
+	 * @param data  数据
+	 * @param seed0 种子1
+	 * @param seed1 种子2
+	 * @return hash值
+	 * @since 5.2.5
+	 */
+	public static long cityHash64(byte[] data, long seed0, long seed1) {
+		return CityHash.hash64(data, seed0, seed1);
+	}
+
+	/**
+	 * CityHash算法64-bit实现
+	 *
+	 * @param data 数据
+	 * @return hash值
+	 * @since 5.2.5
+	 */
+	public static long cityHash64(byte[] data) {
+		return CityHash.hash64(data);
+	}
+
+	/**
+	 * CityHash算法128-bit实现
+	 *
+	 * @param data 数据
+	 * @return hash值
+	 * @since 5.2.5
+	 */
+	public static long[] cityHash128(byte[] data) {
+		return CityHash.hash128(data).getLongArray();
+	}
+
+	/**
+	 * CityHash算法128-bit实现
+	 *
+	 * @param data 数据
+	 * @param seed 种子
+	 * @return hash值，long[0]：低位，long[1]：高位
+	 * @since 5.2.5
+	 */
+	public static long[] cityHash128(byte[] data, Number128 seed) {
+		return CityHash.hash128(data).getLongArray();
 	}
 }

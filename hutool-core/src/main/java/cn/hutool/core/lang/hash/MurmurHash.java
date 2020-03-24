@@ -1,10 +1,10 @@
-package cn.hutool.core.lang;
-
-import java.io.Serializable;
-import java.nio.charset.Charset;
+package cn.hutool.core.lang.hash;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+
+import java.io.Serializable;
+import java.nio.charset.Charset;
 
 /**
  * Murmur3 32bit、64bit、128bit 哈希算法实现<br>
@@ -296,7 +296,7 @@ public class MurmurHash implements Serializable{
 		case 10:
 			k2 ^= (long) (data[tailStart + 9] & 0xff) << 8;
 		case 9:
-			k2 ^= (long) (data[tailStart + 8] & 0xff);
+			k2 ^= data[tailStart + 8] & 0xff;
 			k2 *= C2;
 			k2 = Long.rotateLeft(k2, R3);
 			k2 *= C1;
@@ -317,7 +317,7 @@ public class MurmurHash implements Serializable{
 		case 2:
 			k1 ^= (long) (data[tailStart + 1] & 0xff) << 8;
 		case 1:
-			k1 ^= (long) (data[tailStart] & 0xff);
+			k1 ^= data[tailStart] & 0xff;
 			k1 *= C1;
 			k1 = Long.rotateLeft(k1, R1);
 			k1 *= C2;

@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
-import cn.hutool.core.lang.MurmurHash;
+import cn.hutool.core.lang.hash.MurmurHash;
 
 /**
  * <p>
