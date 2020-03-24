@@ -23,7 +23,7 @@ public class Browser extends UserAgentInfo {
 	 * 支持的浏览器类型
 	 */
 	public static final List<Browser> browers = CollUtil.newArrayList(//
-			new Browser("MSEdge", "Edge|Edg", "edge|Edg\\/([\\d\\w\\.\\-]+)"), //
+			new Browser("MSEdge", "Edge|Edg", "(?:edge|Edg)\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Chrome", "chrome", "chrome\\/([\\d\\w\\.\\-]+)"), //
 			new Browser("Firefox", "firefox", Other_Version), //
 			new Browser("IEMobile", "iemobile", Other_Version), //
