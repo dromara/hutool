@@ -1,14 +1,13 @@
 package cn.hutool.poi.word.test;
 
-import java.awt.Font;
-import java.io.File;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.poi.word.Word07Writer;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.awt.Font;
+import java.io.File;
 
 public class WordWriterTest {
 	
@@ -24,7 +23,7 @@ public class WordWriterTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void writePicTest() {
 		Word07Writer writer = new Word07Writer();
 		writer.addPicture(new File("d:\\test\\qrcodeCustom.jpg"), 100, 200);
