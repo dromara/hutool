@@ -149,4 +149,17 @@ public class UserAgentUtilTest {
 		Assert.assertEquals("Windows", ua.getPlatform().toString());
 		Assert.assertFalse(ua.isMobile());
 	}
+
+	@Test
+	public void parseEdgeTest() {
+		String uaStr = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.69 Safari/537.36 Edg/81.0.416.34";
+		UserAgent ua = UserAgentUtil.parse(uaStr);
+		Assert.assertEquals("MSEdge", ua.getBrowser().toString());
+		Assert.assertEquals("81.0.416.34", ua.getVersion());
+		Assert.assertEquals("Webkit", ua.getEngine().toString());
+		Assert.assertEquals("537.36", ua.getEngineVersion());
+		Assert.assertEquals("Windows 10 or Windows Server 2016", ua.getOs().toString());
+		Assert.assertEquals("Windows", ua.getPlatform().toString());
+		Assert.assertFalse(ua.isMobile());
+	}
 }

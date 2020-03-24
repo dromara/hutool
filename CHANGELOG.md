@@ -8,6 +8,8 @@
 ### 新特性
 * 【core   】     增加逻辑，对于原始类型注入，使用默认值（issue#797@Github）
 * 【core   】     增加CityHash算法
+* 【core   】     PageUtil支持setFirstPageNo自定义第一页的页码（issue#I1CGNZ@Gitee）
+* 【http   】     UserAgentUtil增加Chromium内核的Edge浏览器支持（issue#800@Github）
 
 ### Bug修复
 * 【core   】     修复NumberWordFormatter拼写错误（issue#799@Github）
