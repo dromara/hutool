@@ -1,14 +1,14 @@
 package cn.hutool.cache.impl;
 
+import cn.hutool.cache.Cache;
+import cn.hutool.core.collection.CopiedIter;
+import cn.hutool.core.lang.func.Func0;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
-
-import cn.hutool.cache.Cache;
-import cn.hutool.core.collection.CopiedIter;
-import cn.hutool.core.lang.func.Func0;
 
 /**
  * 超时和限制大小的缓存的默认实现<br>
@@ -189,6 +189,7 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	// ---------------------------------------------------------------- get end
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<V> iterator() {
 		CacheObjIterator<K, V> copiedIterator = (CacheObjIterator<K, V>) this.cacheObjIterator();

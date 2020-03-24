@@ -125,5 +125,4 @@ public class CacheUtil {
 	public static <K, V> NoCache<K, V> newNoCache(){
 		return new NoCache<>();
 	}
-	
 }
