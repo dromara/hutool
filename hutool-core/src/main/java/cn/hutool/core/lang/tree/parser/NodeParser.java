@@ -8,6 +8,7 @@ import cn.hutool.core.lang.tree.Tree;
  * @param <T> 转换的实体 为数据源里的对象类型
  * @author liangbaikai
  */
+@FunctionalInterface
 public interface NodeParser<T, E> {
 	/**
 	 * @param object   源数据实体
