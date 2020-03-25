@@ -11,6 +11,7 @@
 * 【core   】     PageUtil支持setFirstPageNo自定义第一页的页码（issue#I1CGNZ@Gitee）
 * 【http   】     UserAgentUtil增加Chromium内核的Edge浏览器支持（issue#800@Github）
 * 【cache  】     修改FIFOCache中linkedHashMap的初始容量策略（pr#801@Github）
+* 【core   】     修改XmlUtil中setNamespaceAware默认为true
 
 ### Bug修复
 * 【core   】     修复NumberWordFormatter拼写错误（issue#799@Github）

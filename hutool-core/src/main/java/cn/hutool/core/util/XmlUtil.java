@@ -474,6 +474,8 @@ public class XmlUtil {
 		} else {
 			factory = DocumentBuilderFactory.newInstance();
 		}
+		// 默认打开NamespaceAware，getElementsByTagNameNS可以使用命名空间
+		factory.setNamespaceAware(true);
 		return disableXXE(factory);
 	}
 
