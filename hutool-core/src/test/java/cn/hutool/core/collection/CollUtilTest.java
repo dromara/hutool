@@ -122,6 +122,15 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void subtractTest(){
+		List<String> list1 = CollUtil.newArrayList("a", "b", "b", "c", "d", "x");
+		List<String> list2 = CollUtil.newArrayList("a", "b", "b", "b", "c", "d", "x2");
+		final Collection<String> subtract = CollUtil.subtract(list1, list2);
+		Assert.assertEquals(1, subtract.size());
+		Assert.assertEquals("x", subtract.iterator().next());
+	}
+
+	@Test
 	public void toMapListAndToListMapTest() {
 		HashMap<String, String> map1 = new HashMap<>();
 		map1.put("a", "值1");
@@ -346,8 +355,7 @@ public class CollUtilTest {
 
 	@Test
 	public void getTest() {
-		@SuppressWarnings("RedundantArrayCreation")
-		HashSet<String> set = CollUtil.newHashSet(true, new String[] { "A", "B", "C", "D" });
+		HashSet<String> set = CollUtil.set(true, "A", "B", "C", "D");
 		String str = CollUtil.get(set, 2);
 		Assert.assertEquals("C", str);
 

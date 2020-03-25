@@ -9,12 +9,12 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.PageUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
@@ -199,8 +199,13 @@ public class CollUtil {
 	/**
 	 * 两个集合的差集<br>
 	 * 针对一个集合中存在多个相同元素的情况，计算两个集合中此元素的个数，保留两个集合中此元素个数差的个数<br>
-	 * 例如：集合1：[a, b, c, c, c]，集合2：[a, b, c, c]<br>
-	 * 结果：[c]，此结果中只保留了一个<br>
+	 * 例如：
+	 *
+	 * <pre>
+	 *     disjunction([a, b, c, c, c], [a, b, c, c]) -》 [c]
+	 *     disjunction([a, b], [])                    -》 [a, b]
+	 *     disjunction([a, b, c], [b, c, d])          -》 [a, d]
+	 * </pre>
 	 * 任意一个集合为空，返回另一个集合<br>
 	 * 两个集合无差集则返回空集合
 	 *
@@ -229,6 +234,24 @@ public class CollUtil {
 				result.add(t);
 			}
 		}
+		return result;
+	}
+
+	/**
+	 * 计算集合的单差集，即只返回【集合1】中有，但是【集合2】中没有的元素，例如：
+	 *
+	 * <pre>
+	 *     subtract([1,2,3,4],[2,3,4,5]) -》 [1]
+	 * </pre>
+	 *
+	 * @param coll1 集合1
+	 * @param coll2 集合2
+	 * @param <T> 元素类型
+	 * @return 单差集
+	 */
+	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
+		final Collection<T> result = ObjectUtil.clone(coll1);
+		result.removeAll(coll2);
 		return result;
 	}
 
@@ -450,7 +473,7 @@ public class CollUtil {
 	 */
 	@SafeVarargs
 	public static <T> HashSet<T> newHashSet(T... ts) {
-		return newHashSet(false, ts);
+		return set(false, ts);
 	}
 
 	/**
@@ -475,7 +498,7 @@ public class CollUtil {
 	 * @return HashSet对象
 	 */
 	@SafeVarargs
-	public static <T> HashSet<T> newHashSet(boolean isSorted, T... ts) {
+	public static <T> HashSet<T> set(boolean isSorted, T... ts) {
 		if (null == ts) {
 			return isSorted ? new LinkedHashSet<>() : new HashSet<>();
 		}
@@ -519,7 +542,7 @@ public class CollUtil {
 	 */
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Iterator<T> iter) {
 		if (null == iter) {
-			return newHashSet(isSorted, (T[]) null);
+			return set(isSorted, (T[]) null);
 		}
 		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
 		while (iter.hasNext()) {
@@ -539,7 +562,7 @@ public class CollUtil {
 	 */
 	public static <T> HashSet<T> newHashSet(boolean isSorted, Enumeration<T> enumeration) {
 		if (null == enumeration) {
-			return newHashSet(isSorted, (T[]) null);
+			return set(isSorted, (T[]) null);
 		}
 		final HashSet<T> set = isSorted ? new LinkedHashSet<>() : new HashSet<>();
 		while (enumeration.hasMoreElements()) {
@@ -559,7 +582,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked) {
-		return isLinked ? new LinkedList<>() : new ArrayList<>();
+		return ListUtil.list(isLinked);
 	}
 
 	/**
@@ -573,12 +596,7 @@ public class CollUtil {
 	 */
 	@SafeVarargs
 	public static <T> List<T> list(boolean isLinked, T... values) {
-		if (ArrayUtil.isEmpty(values)) {
-			return list(isLinked);
-		}
-		final List<T> arrayList = isLinked ? new LinkedList<>() : new ArrayList<>(values.length);
-		Collections.addAll(arrayList, values);
-		return arrayList;
+		return ListUtil.list(isLinked, values);
 	}
 
 	/**
@@ -591,10 +609,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked, Collection<T> collection) {
-		if (null == collection) {
-			return list(isLinked);
-		}
-		return isLinked ? new LinkedList<>(collection) : new ArrayList<>(collection);
+		return ListUtil.list(isLinked, collection);
 	}
 
 	/**
@@ -608,10 +623,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked, Iterable<T> iterable) {
-		if (null == iterable) {
-			return list(isLinked);
-		}
-		return list(isLinked, iterable.iterator());
+		return ListUtil.list(isLinked, iterable);
 	}
 
 	/**
@@ -625,13 +637,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> list(boolean isLinked, Iterator<T> iter) {
-		final List<T> list = list(isLinked);
-		if (null != iter) {
-			while (iter.hasNext()) {
-				list.add(iter.next());
-			}
-		}
-		return list;
+		return ListUtil.list(isLinked, iter);
 	}
 
 	/**
@@ -640,18 +646,12 @@ public class CollUtil {
 	 *
 	 * @param <T>        集合元素类型
 	 * @param isLinked   是否新建LinkedList
-	 * @param enumration {@link Enumeration}
+	 * @param enumeration {@link Enumeration}
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> List<T> list(boolean isLinked, Enumeration<T> enumration) {
-		final List<T> list = list(isLinked);
-		if (null != enumration) {
-			while (enumration.hasMoreElements()) {
-				list.add(enumration.nextElement());
-			}
-		}
-		return list;
+	public static <T> List<T> list(boolean isLinked, Enumeration<T> enumeration) {
+		return ListUtil.list(isLinked, enumeration);
 	}
 
 	/**
@@ -660,10 +660,11 @@ public class CollUtil {
 	 * @param <T>    集合元素类型
 	 * @param values 数组
 	 * @return ArrayList对象
+	 * @see #toList(Object[])
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> newArrayList(T... values) {
-		return (ArrayList<T>) list(false, values);
+		return ListUtil.toList(values);
 	}
 
 	/**
@@ -676,7 +677,7 @@ public class CollUtil {
 	 */
 	@SafeVarargs
 	public static <T> ArrayList<T> toList(T... values) {
-		return newArrayList(values);
+		return ListUtil.toList(values);
 	}
 
 	/**
@@ -687,7 +688,7 @@ public class CollUtil {
 	 * @return ArrayList对象
 	 */
 	public static <T> ArrayList<T> newArrayList(Collection<T> collection) {
-		return (ArrayList<T>) list(false, collection);
+		return ListUtil.toList(collection);
 	}
 
 	/**
@@ -700,7 +701,7 @@ public class CollUtil {
 	 * @since 3.1.0
 	 */
 	public static <T> ArrayList<T> newArrayList(Iterable<T> iterable) {
-		return (ArrayList<T>) list(false, iterable);
+		return ListUtil.toList(iterable);
 	}
 
 	/**
@@ -708,12 +709,12 @@ public class CollUtil {
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 *
 	 * @param <T>  集合元素类型
-	 * @param iter {@link Iterator}
+	 * @param iterator {@link Iterator}
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> ArrayList<T> newArrayList(Iterator<T> iter) {
-		return (ArrayList<T>) list(false, iter);
+	public static <T> ArrayList<T> newArrayList(Iterator<T> iterator) {
+		return ListUtil.toList(iterator);
 	}
 
 	/**
@@ -721,12 +722,12 @@ public class CollUtil {
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 *
 	 * @param <T>        集合元素类型
-	 * @param enumration {@link Enumeration}
+	 * @param enumeration {@link Enumeration}
 	 * @return ArrayList对象
 	 * @since 3.0.8
 	 */
-	public static <T> ArrayList<T> newArrayList(Enumeration<T> enumration) {
-		return (ArrayList<T>) list(false, enumration);
+	public static <T> ArrayList<T> newArrayList(Enumeration<T> enumeration) {
+		return ListUtil.toList(enumeration);
 	}
 
 	// ----------------------------------------------------------------------new LinkedList
@@ -741,7 +742,7 @@ public class CollUtil {
 	 */
 	@SafeVarargs
 	public static <T> LinkedList<T> newLinkedList(T... values) {
-		return (LinkedList<T>) list(true, values);
+		return ListUtil.toLinkedList(values);
 	}
 
 	/**
@@ -752,7 +753,7 @@ public class CollUtil {
 	 * @return {@link CopyOnWriteArrayList}
 	 */
 	public static <T> CopyOnWriteArrayList<T> newCopyOnWriteArrayList(Collection<T> collection) {
-		return (null == collection) ? (new CopyOnWriteArrayList<>()) : (new CopyOnWriteArrayList<>(collection));
+		return ListUtil.toCopyOnWriteArrayList(collection);
 	}
 
 	/**
@@ -862,7 +863,7 @@ public class CollUtil {
 	 * @return 截取后的数组，当开始位置超过最大时，返回空的List
 	 */
 	public static <T> List<T> sub(List<T> list, int start, int end) {
-		return sub(list, start, end, 1);
+		return ListUtil.sub(list, start, end);
 	}
 
 	/**
@@ -877,45 +878,7 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> sub(List<T> list, int start, int end, int step) {
-		if (list == null) {
-			return null;
-		}
-
-		if (list.isEmpty()) {
-			return new ArrayList<>(0);
-		}
-
-		final int size = list.size();
-		if (start < 0) {
-			start += size;
-		}
-		if (end < 0) {
-			end += size;
-		}
-		if (start == size) {
-			return new ArrayList<>(0);
-		}
-		if (start > end) {
-			int tmp = start;
-			start = end;
-			end = tmp;
-		}
-		if (end > size) {
-			if (start >= size) {
-				return new ArrayList<>(0);
-			}
-			end = size;
-		}
-
-		if (step <= 1) {
-			return list.subList(start, end);
-		}
-
-		final List<T> result = new ArrayList<>();
-		for (int i = start; i < end; i += step) {
-			result.add(list.get(i));
-		}
-		return result;
+		return ListUtil.sub(list, start, end, step);
 	}
 
 	/**
@@ -1026,19 +989,7 @@ public class CollUtil {
 	 * @since 4.1.8
 	 */
 	public static <T> List<T> filter(List<T> list, Editor<T> editor) {
-		if (null == list || null == editor) {
-			return list;
-		}
-
-		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<>() : new ArrayList<>(list.size());
-		T modified;
-		for (T t : list) {
-			modified = editor.edit(t);
-			if (null != modified) {
-				list2.add(modified);
-			}
-		}
-		return list2;
+		return ListUtil.filter(list, editor);
 	}
 
 	/**
@@ -1091,16 +1042,7 @@ public class CollUtil {
 	 * @since 4.1.8
 	 */
 	public static <T> List<T> filterNew(List<T> list, Filter<T> filter) {
-		if (null == list || null == filter) {
-			return list;
-		}
-		final List<T> list2 = (list instanceof LinkedList) ? new LinkedList<>() : new ArrayList<>(list.size());
-		for (T t : list) {
-			if (filter.accept(t)) {
-				list2.add(t);
-			}
-		}
-		return list2;
+		return ListUtil.filter(list, t -> filter.accept(t) ? t : null);
 	}
 
 	/**
@@ -2121,25 +2063,7 @@ public class CollUtil {
 	 * @since 4.1.20
 	 */
 	public static <T> List<T> page(int pageNo, int pageSize, List<T> list) {
-		if (isEmpty(list)) {
-			return new ArrayList<>(0);
-		}
-
-		int resultSize = list.size();
-		// 每页条目数大于总数直接返回所有
-		if (resultSize <= pageSize) {
-			if (pageNo < 1) {
-				return Collections.unmodifiableList(list);
-			} else {
-				// 越界直接返回空
-				return new ArrayList<>(0);
-			}
-		}
-		final int[] startEnd = PageUtil.transToStartEnd(pageNo, pageSize);
-		if (startEnd[1] > resultSize) {
-			startEnd[1] = resultSize;
-		}
-		return list.subList(startEnd[0], startEnd[1]);
+		return ListUtil.page(pageNo, pageSize, list);
 	}
 
 	/**
@@ -2166,8 +2090,7 @@ public class CollUtil {
 	 * @see Collections#sort(List, Comparator)
 	 */
 	public static <T> List<T> sort(List<T> list, Comparator<? super T> c) {
-		list.sort(c);
-		return list;
+		return ListUtil.sort(list, c);
 	}
 
 	/**
@@ -2193,7 +2116,7 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> sortByProperty(List<T> list, String property) {
-		return sort(list, new PropertyComparator<>(property));
+		return ListUtil.sortByProperty(list, property);
 	}
 
 	/**
@@ -2215,7 +2138,7 @@ public class CollUtil {
 	 * @since 4.0.8
 	 */
 	public static List<String> sortByPinyin(List<String> list) {
-		return sort(list, new PinyinComparator());
+		return ListUtil.sortByPinyin(list);
 	}
 
 	/**
@@ -2342,14 +2265,14 @@ public class CollUtil {
 	}
 
 	/**
-	 * 分组，按照{@link Hash}接口定义的hash算法，集合中的元素放入hash值对应的子列表中
+	 * 分组，按照{@link Hash32}接口定义的hash算法，集合中的元素放入hash值对应的子列表中
 	 *
 	 * @param <T>        元素类型
 	 * @param collection 被分组的集合
 	 * @param hash       Hash值算法，决定元素放在第几个分组的规则
 	 * @return 分组后的集合
 	 */
-	public static <T> List<List<T>> group(Collection<T> collection, Hash<T> hash) {
+	public static <T> List<List<T>> group(Collection<T> collection, Hash32<T> hash) {
 		final List<List<T>> result = new ArrayList<>();
 		if (isEmpty(collection)) {
 			return result;
@@ -2362,7 +2285,7 @@ public class CollUtil {
 		int index;
 		List<T> subList;
 		for (T t : collection) {
-			index = hash.hash(t);
+			index = hash.hash32(t);
 			if (result.size() - 1 < index) {
 				while (result.size() - 1 < index) {
 					result.add(null);
@@ -2389,11 +2312,11 @@ public class CollUtil {
 	 * @return 分组列表
 	 */
 	public static <T> List<List<T>> groupByField(Collection<T> collection, final String fieldName) {
-		return group(collection, new Hash<T>() {
+		return group(collection, new Hash32<T>() {
 			private final List<Object> fieldNameList = new ArrayList<>();
 
 			@Override
-			public int hash(T t) {
+			public int hash32(T t) {
 				if (null == t || false == BeanUtil.isBean(t.getClass())) {
 					// 非Bean放在同一子分组中
 					return 0;
@@ -2419,8 +2342,7 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> reverse(List<T> list) {
-		Collections.reverse(list);
-		return list;
+		return ListUtil.reverse(list);
 	}
 
 	/**
@@ -2432,8 +2354,7 @@ public class CollUtil {
 	 * @since 4.0.6
 	 */
 	public static <T> List<T> reverseNew(List<T> list) {
-		final List<T> list2 = ObjectUtil.clone(list);
-		return reverse(list2);
+		return ListUtil.reverseNew(list);
 	}
 
 	/**
@@ -2447,12 +2368,7 @@ public class CollUtil {
 	 * @since 4.1.2
 	 */
 	public static <T> List<T> setOrAppend(List<T> list, int index, T element) {
-		if (index < list.size()) {
-			list.set(index, element);
-		} else {
-			list.add(element);
-		}
-		return list;
+		return ListUtil.setOrAppend(list, index, element);
 	}
 
 	/**
@@ -2552,23 +2468,6 @@ public class CollUtil {
 		 * @param index 参数在集合中的索引
 		 */
 		void accept(K key, V value, int index);
-	}
-
-	/**
-	 * Hash计算接口
-	 *
-	 * @param <T> 被计算hash的对象类型
-	 * @author looly
-	 * @since 3.2.2
-	 */
-	public interface Hash<T> {
-		/**
-		 * 计算Hash值
-		 *
-		 * @param t 对象
-		 * @return hash
-		 */
-		int hash(T t);
 	}
 	// ---------------------------------------------------------------------------------------------- Interface end
 }

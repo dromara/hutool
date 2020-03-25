@@ -13,6 +13,8 @@
 * 【cache  】     修改FIFOCache中linkedHashMap的初始容量策略（pr#801@Github）
 * 【core   】     修改XmlUtil中setNamespaceAware默认为true
 * 【core   】     TreeNode增加extra
+* 【core   】     CollUtil.newHashSet重载歧义，更换为set方法
+* 【core   】     增加ListUtil，增加Hash32、Hash64、Hash128接口
 
 ### Bug修复
 * 【core   】     修复NumberWordFormatter拼写错误（issue#799@Github）
