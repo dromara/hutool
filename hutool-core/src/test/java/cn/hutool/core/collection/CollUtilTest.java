@@ -23,9 +23,8 @@ import java.util.Set;
 
 /**
  * 集合工具类单元测试
- * 
- * @author looly
  *
+ * @author looly
  */
 public class CollUtilTest {
 
@@ -122,6 +121,44 @@ public class CollUtilTest {
 	}
 
 	@Test
+	public void subtractTest() {
+		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "c", "d", "e");
+		ArrayList<String> list2 = CollUtil.newArrayList("d", "e", "f", "g", "h");
+		Collection<String> subtract = CollUtil.subtract(list1, list2);
+		Assert.assertTrue(subtract.contains("a"));
+		Assert.assertTrue(subtract.contains("b"));
+		Assert.assertTrue(subtract.contains("c"));
+	}
+
+	@Test
+	public void subtractTest2() {
+		ArrayList<String> list1 = new ArrayList<>();
+		ArrayList<String> list2 = CollUtil.newArrayList("x", "y", "z");
+		Collection<String> subtract = CollUtil.subtract(list1, list2);
+		Assert.assertTrue(subtract.isEmpty());
+	}
+
+	@Test
+	public void subtractTest3() {
+		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "c");
+		ArrayList<String> list2 = null;
+		Collection<String> subtract = CollUtil.subtract(list1, list2);
+		Assert.assertTrue(subtract.contains("a"));
+		Assert.assertTrue(subtract.contains("b"));
+		Assert.assertTrue(subtract.contains("c"));
+	}
+
+	@Test
+	public void subtractTest4() {
+		ArrayList<String> list1 = CollUtil.newArrayList("a", "b", "c");
+		ArrayList<String> list2 = CollUtil.newArrayList("x", "y", "z");
+		Collection<String> subtract = CollUtil.subtract(list1, list2);
+		Assert.assertTrue(subtract.contains("a"));
+		Assert.assertTrue(subtract.contains("b"));
+		Assert.assertTrue(subtract.contains("c"));
+	}
+
+	@Test
 	public void toMapListAndToListMapTest() {
 		HashMap<String, String> map1 = new HashMap<>();
 		map1.put("a", "值1");
@@ -197,7 +234,7 @@ public class CollUtilTest {
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("b", "c"), filtered);
 	}
-	
+
 	@Test
 	public void removeNullTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
@@ -208,7 +245,7 @@ public class CollUtilTest {
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "", "  "), filtered);
 	}
-	
+
 	@Test
 	public void removeEmptyTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
@@ -219,13 +256,13 @@ public class CollUtilTest {
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c", "  "), filtered);
 	}
-	
+
 	@Test
 	public void removeBlankTest() {
 		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", null, "", "  ");
-		
+
 		ArrayList<String> filtered = CollUtil.removeBlank(list);
-		
+
 		// 原地过滤
 		Assert.assertSame(list, filtered);
 		Assert.assertEquals(CollUtil.newArrayList("a", "b", "c"), filtered);
@@ -347,7 +384,7 @@ public class CollUtilTest {
 	@Test
 	public void getTest() {
 		@SuppressWarnings("RedundantArrayCreation")
-		HashSet<String> set = CollUtil.newHashSet(true, new String[] { "A", "B", "C", "D" });
+		HashSet<String> set = CollUtil.newHashSet(true, new String[]{"A", "B", "C", "D"});
 		String str = CollUtil.get(set, 2);
 		Assert.assertEquals("C", str);
 

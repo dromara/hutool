@@ -233,6 +233,45 @@ public class CollUtil {
 	}
 
 	/**
+	 * 取差集运算。(coll1 - coll2)<br>
+	 * 获取存在于coll1中但是不能存在coll2中的元素。
+	 * @param coll1 原始集合
+	 * @param coll2 待排除集合
+	 * @return 差集结果，返回 {@link ArrayList}
+	 */
+	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
+		if (isEmpty(coll1)) {
+			return new ArrayList<>(0);
+		}
+
+		if (isEmpty(coll2)) {
+			if (isEmpty(coll1)) {
+				return new ArrayList<>(0);
+			} else {
+				return coll1;
+			}
+		}
+
+		final ArrayList<T> result = new ArrayList<>(coll1);
+		for (T t : coll2) {
+			result.remove(t);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 取差集运算。(coll1 - coll2)<br>
+	 * 获取存在于coll1中但是不能存在coll2中的元素。
+	 * @param coll1 原始集合
+	 * @param coll2 待排除集合
+	 * @return 差集结果，返回 {@link ArrayList}
+	 */
+	public static <T> Collection<T> except(Collection<T> coll1, Collection<T> coll2) {
+		return subtract(coll1, coll2);
+	}
+
+	/**
 	 * 判断指定集合是否包含指定值，如果集合为空（null或者空），返回{@code false}，否则找到元素返回{@code true}
 	 *
 	 * @param collection 集合
