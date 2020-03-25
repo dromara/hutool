@@ -2,6 +2,9 @@ package cn.hutool.core.lang.tree.parser;
 
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.map.MapUtil;
+
+import java.util.Map;
 
 /**
  * 默认的简单转换器
@@ -12,14 +15,16 @@ import cn.hutool.core.lang.tree.Tree;
 public class DefaultNodeParser<T> implements NodeParser<TreeNode<T>, T> {
 
 	@Override
-	public void parse(TreeNode<T> object, Tree<T> treeNode) {
-		treeNode.setId(object.getId());
-		treeNode.setParentId(object.getParentId());
-		treeNode.setWeight(object.getWeight());
-		treeNode.setName(object.getName());
+	public void parse(TreeNode<T> treeNode, Tree<T> tree) {
+		tree.setId(treeNode.getId());
+		tree.setParentId(treeNode.getParentId());
+		tree.setWeight(treeNode.getWeight());
+		tree.setName(treeNode.getName());
 
 		//扩展字段
-		// treeNode.extra("other",11);
-		// treeNode.extra("other2",object.getXXX);
+		final Map<String, Object> extra = treeNode.getExtra();
+		if(MapUtil.isNotEmpty(extra)){
+			extra.forEach(tree::putExtra);
+		}
 	}
 }

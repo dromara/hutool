@@ -1,6 +1,8 @@
 package cn.hutool.core.lang.tree;
 
 
+import java.util.Map;
+
 /**
  * 树节点 每个属性都可以在{@link TreeNodeConfig}中被重命名<br>
  * 在你的项目里它可以是部门实体、地区实体等任意类树节点实体
@@ -30,6 +32,11 @@ public class TreeNode<T> implements Node<T> {
 	 * 顺序 越小优先级越高 默认0
 	 */
 	private Comparable<?> weight = 0;
+
+	/**
+	 * 扩展字段
+	 */
+	private Map<String, Object> extra;
 
 
 	/**
@@ -97,6 +104,28 @@ public class TreeNode<T> implements Node<T> {
 	@Override
 	public TreeNode<T> setWeight(Comparable<?> weight) {
 		this.weight = weight;
+		return this;
+	}
+
+	/**
+	 * 获取扩展字段
+	 *
+	 * @return 扩展字段Map
+	 * @since 5.2.5
+	 */
+	public Map<String, Object> getExtra() {
+		return extra;
+	}
+
+	/**
+	 * 设置扩展字段
+	 *
+	 * @param extra 扩展字段
+	 * @return this
+	 * @since 5.2.5
+	 */
+	public TreeNode<T> setExtra(Map<String, Object> extra) {
+		this.extra = extra;
 		return this;
 	}
 }

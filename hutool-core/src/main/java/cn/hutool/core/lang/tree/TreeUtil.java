@@ -64,24 +64,24 @@ public class TreeUtil {
 	 * @return List
 	 */
 	public static <T, E> List<Tree<E>> build(List<T> list, E parentId, TreeNodeConfig treeNodeConfig, NodeParser<T, E> nodeParser) {
-		final List<Tree<E>> treeNodes = CollUtil.newArrayList();
-		Tree<E> treeNode;
+		final List<Tree<E>> treeList = CollUtil.newArrayList();
+		Tree<E> tree;
 		for (T obj : list) {
-			treeNode = new Tree<>(treeNodeConfig);
-			nodeParser.parse(obj, treeNode);
-			treeNodes.add(treeNode);
+			tree = new Tree<>(treeNodeConfig);
+			nodeParser.parse(obj, tree);
+			treeList.add(tree);
 		}
 
-		List<Tree<E>> finalTreeNodes = CollUtil.newArrayList();
-		for (Tree<E> node : treeNodes) {
+		List<Tree<E>> finalTreeList = CollUtil.newArrayList();
+		for (Tree<E> node : treeList) {
 			if (parentId.equals(node.getParentId())) {
-				finalTreeNodes.add(node);
-				innerBuild(treeNodes, node, 0, treeNodeConfig.getDeep());
+				finalTreeList.add(node);
+				innerBuild(treeList, node, 0, treeNodeConfig.getDeep());
 			}
 		}
 		// 内存每层已经排过了 这是最外层排序
-		finalTreeNodes = finalTreeNodes.stream().sorted().collect(Collectors.toList());
-		return finalTreeNodes;
+		finalTreeList = finalTreeList.stream().sorted().collect(Collectors.toList());
+		return finalTreeList;
 	}
 
 	/**

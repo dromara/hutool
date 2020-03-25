@@ -1,10 +1,6 @@
-package cn.hutool.core.lang;
+package cn.hutool.core.lang.tree;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.tree.Tree;
-import cn.hutool.core.lang.tree.TreeNode;
-import cn.hutool.core.lang.tree.TreeNodeConfig;
-import cn.hutool.core.lang.tree.TreeUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,13 +29,14 @@ public class TreeTest {
 
 	@Test
 	public void sampleTree() {
-		List<Tree<String>> treeNodes = TreeUtil.build(nodeList, "0");
-		for (Tree<String> tree : treeNodes) {
+		List<Tree<String>> treeList = TreeUtil.build(nodeList, "0");
+		for (Tree<String> tree : treeList) {
 			Assert.assertNotNull(tree);
+			Assert.assertEquals("0", tree.getParentId());
 		}
 
 		// 测试通过子节点查找父节点
-		final Tree<String> rootNode0 = treeNodes.get(0);
+		final Tree<String> rootNode0 = treeList.get(0);
 		final Tree<String> parent = rootNode0.getChildren().get(0).getParent();
 		Assert.assertEquals(rootNode0, parent);
 	}

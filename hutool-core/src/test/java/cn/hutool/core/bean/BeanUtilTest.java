@@ -4,6 +4,7 @@ import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.map.MapUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -150,8 +151,10 @@ public class BeanUtilTest {
 		person.setOpenid("11213232");
 		person.setName("测试A11");
 		person.setSubName("sub名字");
+		person.setSlow(true);
 
 		Map<String, Object> map = BeanUtil.beanToMap(person);
+		Console.log(map);
 		Assert.assertEquals("sub名字", map.get("aliasSubName"));
 	}
 
@@ -299,9 +302,9 @@ public class BeanUtilTest {
 	@Getter
 	@Setter
 	public static class SubPersonWithAlias extends Person {
+		// boolean参数值非isXXX形式
 		@Alias("aliasSubName")
 		private String subName;
-		// boolean参数值非isXXX形式
 		private Boolean slow;
 	}
 
