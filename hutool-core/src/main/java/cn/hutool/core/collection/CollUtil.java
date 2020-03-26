@@ -486,7 +486,7 @@ public class CollUtil {
 	 */
 	@SafeVarargs
 	public static <T> LinkedHashSet<T> newLinkedHashSet(T... ts) {
-		return (LinkedHashSet<T>) newHashSet(true, ts);
+		return (LinkedHashSet<T>) set(true, ts);
 	}
 
 	/**
