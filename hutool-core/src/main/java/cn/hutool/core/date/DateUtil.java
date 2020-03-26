@@ -1552,6 +1552,22 @@ public class DateUtil {
 	}
 
 	/**
+	 * 计算指定指定时间区间内的周数
+	 *
+	 * @param beginDate   开始时间
+	 * @param endDate     结束时间
+	 * @param isReset 是否重置时间为起始时间
+	 * @return 周数
+	 */
+	public static long betweenWeek(Date beginDate, Date endDate, boolean isReset) {
+		if (isReset) {
+			beginDate = beginOfDay(beginDate);
+			endDate = beginOfDay(endDate);
+		}
+		return between(beginDate, endDate, DateUnit.WEEK);
+	}
+
+	/**
 	 * 计算两个日期相差月数<br>
 	 * 在非重置情况下，如果起始日期的天小于结束日期的天，月数要少算1（不足1个月）
 	 *
@@ -1723,23 +1739,11 @@ public class DateUtil {
 	 * @param start 开始时间
 	 * @param end   结束时间
 	 * @return 周数
+	 * @deprecated 请使用 {@link #betweenWeek(Date, Date, boolean)}
 	 */
+	@Deprecated
 	public static int weekCount(Date start, Date end) {
-		final Calendar startCalendar = Calendar.getInstance();
-		startCalendar.setTime(start);
-		final Calendar endCalendar = Calendar.getInstance();
-		endCalendar.setTime(end);
-
-		final int startWeekofYear = startCalendar.get(Calendar.WEEK_OF_YEAR);
-		final int endWeekofYear = endCalendar.get(Calendar.WEEK_OF_YEAR);
-
-		int count = endWeekofYear - startWeekofYear + 1;
-
-		if (Calendar.SUNDAY != startCalendar.get(Calendar.DAY_OF_WEEK)) {
-			count--;
-		}
-
-		return count;
+		return (int) betweenWeek(start, end, true);
 	}
 
 	/**

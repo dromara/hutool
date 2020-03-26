@@ -19,6 +19,8 @@
 ### Bug修复
 * 【core   】     修复NumberWordFormatter拼写错误（issue#799@Github）
 * 【poi    】     修复xls文件下拉列表无效问题（issue#I1C79P@Gitee）
+* 【poi    】     修复使用Cglib代理问题（issue#I1C79P@Gitee）
+* 【core   】     修复DateUtil.weekCount跨年计算问题
 
 -------------------------------------------------------------------------------------------------------------
 ## 5.2.4
