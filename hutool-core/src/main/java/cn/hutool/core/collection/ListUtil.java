@@ -390,32 +390,6 @@ public class ListUtil {
 	}
 
 	/**
-	 * 编辑列表，此方法会修改原列表的内容<br>
-	 * 编辑过程通过传入的Editor实现编辑列表中元素内容，这个Editor实现可以实现以下功能：
-	 *
-	 * <pre>
-	 *  1、修改元素对象，返回集合中为修改后的对象
-	 * </pre>
-	 *
-	 * @param <T>    集合元素类型
-	 * @param list   集合
-	 * @param editor 编辑器接口
-	 * @return 编辑后的数组
-	 * @since 4.1.8
-	 */
-	public static <T> List<T> edit(List<T> list, Editor<T> editor) {
-		if (null == list || null == editor) {
-			return list;
-		}
-
-		for (T t : list) {
-			editor.edit(t);
-		}
-
-		return list;
-	}
-
-	/**
 	 * 过滤<br>
 	 * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
 	 *

@@ -37,7 +37,7 @@ public class PemUtil {
 	 * @since 4.5.2
 	 */
 	public static PrivateKey readPemPrivateKey(InputStream pemStream) {
-		return (PrivateKey) PemUtil.readPemKey(pemStream);
+		return (PrivateKey) readPemKey(pemStream);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class PemUtil {
 	 * @since 4.5.2
 	 */
 	public static PublicKey readPemPublicKey(InputStream pemStream) {
-		return (PublicKey) PemUtil.readPemKey(pemStream);
+		return (PublicKey) readPemKey(pemStream);
 	}
 
 	/**

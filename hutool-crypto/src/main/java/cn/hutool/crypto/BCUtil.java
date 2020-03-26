@@ -14,6 +14,7 @@ import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.math.ec.ECCurve;
 
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
@@ -318,6 +319,30 @@ public class BCUtil {
 		} catch (InvalidKeyException e) {
 			throw new CryptoException(e);
 		}
+	}
+
+	/**
+	 * 读取PEM格式的私钥
+	 *
+	 * @param pemStream pem流
+	 * @return {@link PrivateKey}
+	 * @since 5.2.5
+	 * @see PemUtil#readPemPrivateKey(InputStream)
+	 */
+	public static PrivateKey readPemPrivateKey(InputStream pemStream) {
+		return PemUtil.readPemPrivateKey(pemStream);
+	}
+
+	/**
+	 * 读取PEM格式的公钥
+	 *
+	 * @param pemStream pem流
+	 * @return {@link PublicKey}
+	 * @since 5.2.5
+	 * @see PemUtil#readPemPublicKey(InputStream)
+	 */
+	public static PublicKey readPemPublicKey(InputStream pemStream) {
+		return PemUtil.readPemPublicKey(pemStream);
 	}
 
 	/**
