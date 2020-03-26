@@ -1,12 +1,12 @@
 package cn.hutool.script.test;
 
-import javax.script.CompiledScript;
-import javax.script.ScriptException;
-
-import org.junit.Test;
-
 import cn.hutool.script.ScriptRuntimeException;
 import cn.hutool.script.ScriptUtil;
+import org.junit.Test;
+
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
 
 /**
  * 脚本单元测试类
@@ -29,5 +29,23 @@ public class ScriptUtilTest {
 	@Test
 	public void evalTest() {
 		ScriptUtil.eval("print('Script test!');");
+	}
+
+	@Test
+	public void pythonTest() throws ScriptException {
+		final ScriptEngine pythonEngine = ScriptUtil.getPythonEngine();
+		pythonEngine.eval("print('Hello Python')");
+	}
+
+	@Test
+	public void luaTest() throws ScriptException {
+		final ScriptEngine engine = ScriptUtil.getLuaEngine();
+		engine.eval("print('Hello Lua')");
+	}
+
+	@Test
+	public void groovyTest() throws ScriptException {
+		final ScriptEngine engine = ScriptUtil.getGroovyEngine();
+		engine.eval("println 'Hello Groovy'");
 	}
 }

@@ -16,6 +16,7 @@
 * 【core   】     CollUtil.newHashSet重载歧义，更换为set方法
 * 【core   】     增加ListUtil，增加Hash32、Hash64、Hash128接口
 * 【crypto 】     BCUtil增加readPemPrivateKey和readPemPublicKey方法
+* 【cache  】     替换读写锁为StampedLock，增加LockUtil
 
 ### Bug修复
 * 【core   】     修复NumberWordFormatter拼写错误（issue#799@Github）
