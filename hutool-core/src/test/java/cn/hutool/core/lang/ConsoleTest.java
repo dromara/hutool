@@ -3,7 +3,6 @@ package cn.hutool.core.lang;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.thread.ThreadUtil;
 
 /**
@@ -57,4 +56,5 @@ public class ConsoleTest {
 			ThreadUtil.sleep(200);
 		}
 	}
+
 }

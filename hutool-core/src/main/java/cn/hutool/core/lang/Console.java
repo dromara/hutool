@@ -179,4 +179,32 @@ public class Console {
 	public static String input() {
 		return scanner().next();
 	}
+
+	// --------------------------------------------------------------------------------- console lineNumber
+	/**
+	 * 返回当前位置+行号 (不支持Lambda、内部类、递归内使用)
+	 *
+	 * @return 返回当前行号
+	 * @author dahuoyzs
+	 * @since 5.2.5
+	 */
+	public static String where() {
+		StackTraceElement stackTraceElement = new Throwable().getStackTrace()[1];
+		final String className = stackTraceElement.getClassName();
+		final String methodName = stackTraceElement.getMethodName();
+		final String fileName = stackTraceElement.getFileName();
+		final Integer lineNumber = stackTraceElement.getLineNumber();
+		return String.format("%s.%s(%s:%s)", className,methodName,fileName,lineNumber);
+	}
+
+	/**
+	 * 返回当前行号 (不支持Lambda、内部类、递归内使用)
+	 *
+	 * @return 返回当前行号
+	 * @since 5.2.5
+	 */
+	public static Integer lineNumber() {
+		return new Throwable().getStackTrace()[1].getLineNumber();
+	}
+
 }

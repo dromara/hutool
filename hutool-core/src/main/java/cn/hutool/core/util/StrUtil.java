@@ -5,12 +5,8 @@ import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import cn.hutool.core.comparator.VersionComparator;
@@ -1950,6 +1946,73 @@ public class StrUtil {
 	 */
 	public static String subBetween(CharSequence str, CharSequence beforeAndAfter) {
 		return subBetween(str, beforeAndAfter, beforeAndAfter);
+	}
+
+	/**
+	 * 截取指定字符串多段中间部分，不包括标识字符串<br>
+	 *
+	 * 栗子：
+	 *
+	 * <pre>
+	 * StrUtil.subBetweenAll("wx[b]y[z]", "[", "]") 		= ["b","z"]
+	 * StrUtil.subBetweenAll(null, *, *)          			= []
+	 * StrUtil.subBetweenAll(*, null, *)          			= []
+	 * StrUtil.subBetweenAll(*, *, null)          			= []
+	 * StrUtil.subBetweenAll("", "", "")          			= []
+	 * StrUtil.subBetweenAll("", "", "]")         			= []
+	 * StrUtil.subBetweenAll("", "[", "]")        			= []
+	 * StrUtil.subBetweenAll("yabcz", "", "")     			= []
+	 * StrUtil.subBetweenAll("yabcz", "y", "z")   			= ["abc"]
+	 * StrUtil.subBetweenAll("yabczyabcz", "y", "z")   		= ["abc","abc"]
+	 * StrUtil.subBetweenAll("[yabc[zy]abcz]", "[", "]");   = ["zy"]           重叠时只截取内部，
+	 * </pre>
+	 *
+	 * @param str 被切割的字符串
+	 * @param regexBefore 截取开始的字符串标识
+	 * @param regexAfter 截取到的字符串标识
+	 * @return 截取后的字符串
+	 * @author dahuoyzs
+	 * @since 5.2.5
+	 */
+	public static String[] subBetweenAll(CharSequence str, CharSequence regexBefore, CharSequence regexAfter) {
+		if (str == null || regexBefore == null || regexAfter == null || str.length() < 1 || regexBefore.length() < 1 || regexAfter.length() < 1) {
+			return new String[0];
+		}
+
+		final String before = regexBefore.toString().replace("\\", "");
+		final String after = regexAfter.toString().replace("\\", "");
+		final Integer beforeNumber = StrUtil.count(str, before);
+		final Integer afterNumber = StrUtil.count(str, after);
+		if (beforeNumber<1||afterNumber<1){
+			return new String[0];
+		}
+
+		LinkedList<String> betweenList = new LinkedList<>();
+		if (beforeNumber.compareTo(afterNumber) > 0) {
+			String[] fragments = str.toString().split(regexAfter.toString());
+			for (int i = 0; i < fragments.length - 1; i++) {
+				String fragment = fragments[i];
+				if (fragment.contains(before)) {
+					int beforeIndex = StrUtil.lastIndexOf(fragment, before, 0, false);
+					String between = fragment.substring(beforeIndex);
+					if (between.length()>0)
+						betweenList.add(between);
+				}
+			}
+		} else {
+			String[] fragments = str.toString().split(regexBefore.toString());
+			for (int i = 1; i < fragments.length; i++) {
+				String fragment = fragments[i];
+				if (fragment.contains(after)) {
+					int afterIndex = StrUtil.indexOf(fragment, after, 0, false);
+					String between = fragment.substring(0, afterIndex);
+					if (between.length()>0)
+						betweenList.add(between);
+				}
+			}
+		}
+
+		return betweenList.toArray(new String[0]);
 	}
 
 	/**
