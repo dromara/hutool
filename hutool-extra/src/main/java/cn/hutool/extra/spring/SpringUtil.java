@@ -22,9 +22,7 @@ public class SpringUtil implements ApplicationContextAware {
 	@SuppressWarnings("NullableProblems")
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
-		if (SpringUtil.applicationContext == null) {
-			SpringUtil.applicationContext = applicationContext;
-		}
+		SpringUtil.applicationContext = applicationContext;
 	}
 
 	/**
