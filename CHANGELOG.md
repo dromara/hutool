@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【extra  】     JschUtil增加execByShell方法(issue#I1CYES@Gitee)
+* 【core   】     StrUtil增加subBetweenAll方法，Console增加where和lineNumber方法(issue#812@Github)
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题

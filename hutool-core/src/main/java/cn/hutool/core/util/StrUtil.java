@@ -1968,50 +1968,27 @@ public class StrUtil {
 	 * StrUtil.subBetweenAll("[yabc[zy]abcz]", "[", "]");   = ["zy"]           重叠时只截取内部，
 	 * </pre>
 	 *
-	 * @param str         被切割的字符串
+	 * @param str    被切割的字符串
 	 * @param prefix 截取开始的字符串标识
-	 * @param suffix  截取到的字符串标识
+	 * @param suffix 截取到的字符串标识
 	 * @return 截取后的字符串
 	 * @author dahuoyzs
 	 * @since 5.2.5
 	 */
 	public static String[] subBetweenAll(CharSequence str, CharSequence prefix, CharSequence suffix) {
-		if(hasEmpty(str, prefix, suffix)) {
+		if (hasEmpty(str, prefix, suffix)) {
 			return new String[0];
 		}
 
-		final int prefixCount = count(str, prefix);
-		final int suffixCount = count(str, suffix);
-		if (prefixCount < 1 || suffixCount < 1) {
-			return new String[0];
-		}
-
-		LinkedList<String> betweenList = new LinkedList<>();
-		if (prefixCount > suffixCount) {
-			String[] fragments = split(str, suffix);
-			for (int i = 0; i < fragments.length - 1; i++) {
-				String fragment = fragments[i];
-				if (fragment.contains(prefix)) {
-					int beforeIndex = StrUtil.lastIndexOf(fragment, prefix, 0, false);
-					String between = fragment.substring(beforeIndex);
-					if (between.length() > 0)
-						betweenList.add(between);
-				}
-			}
-		} else {
-			String[] fragments = split(str, prefix);
-			for (int i = 1; i < fragments.length; i++) {
-				String fragment = fragments[i];
-				if (fragment.contains(suffix)) {
-					int afterIndex = StrUtil.indexOf(fragment, suffix, 0, false);
-					String between = fragment.substring(0, afterIndex);
-					if (between.length() > 0)
-						betweenList.add(between);
-				}
+		final List<String> result = new LinkedList<>();
+		for (String fragment : split(str, prefix)) {
+			int suffixIndex = fragment.indexOf(suffix.toString());
+			if (suffixIndex > 0) {
+				result.add(fragment.substring(0, suffixIndex));
 			}
 		}
 
-		return betweenList.toArray(new String[0]);
+		return result.toArray(new String[0]);
 	}
 
 	/**
