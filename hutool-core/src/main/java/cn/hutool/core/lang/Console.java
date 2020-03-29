@@ -1,13 +1,12 @@
 package cn.hutool.core.lang;
 
-import static java.lang.System.out;
-
-import java.util.Scanner;
-
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.StrUtil;
 
+import java.util.Scanner;
+
 import static java.lang.System.err;
+import static java.lang.System.out;
 
 /**
  * 命令行（控制台）工具方法类<br>
@@ -189,7 +188,7 @@ public class Console {
 	 * @since 5.2.5
 	 */
 	public static String where() {
-		StackTraceElement stackTraceElement = new Throwable().getStackTrace()[1];
+		final StackTraceElement stackTraceElement = new Throwable().getStackTrace()[1];
 		final String className = stackTraceElement.getClassName();
 		final String methodName = stackTraceElement.getMethodName();
 		final String fileName = stackTraceElement.getFileName();

@@ -424,8 +424,8 @@ public class StrUtilTest {
 
 	@Test
 	public void subBetweenAllTest() {
-		Assert.assertArrayEquals(new String[]{"yz","abc"},StrUtil.subBetweenAll("saho[yz]fdsadp[abc]a","\\[","\\]"));
-		Assert.assertArrayEquals(new String[]{"abc"}, StrUtil.subBetweenAll("saho[yzfdsadp[abc]a]","\\[","\\]"));
+		Assert.assertArrayEquals(new String[]{"yz","abc"},StrUtil.subBetweenAll("saho[yz]fdsadp[abc]a","[","]"));
+		Assert.assertArrayEquals(new String[]{"abc"}, StrUtil.subBetweenAll("saho[yzfdsadp[abc]a]","[","]"));
 	}
 	
 }
