@@ -6,7 +6,13 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -172,7 +178,7 @@ public class JschUtil {
 			sshUser = "root";
 		}
 
-		if(null == jsch){
+		if (null == jsch) {
 			jsch = new JSch();
 		}
 
@@ -343,7 +349,10 @@ public class JschUtil {
 	}
 
 	/**
-	 * 执行Shell命令
+	 * 执行Shell命令（使用EXEC方式）
+	 * <p>
+	 * 此方法单次发送一个命令到服务端，不读取环境变量，执行结束后自动关闭channel，不会产生阻塞。
+	 * </p>
 	 *
 	 * @param session   Session会话
 	 * @param cmd       命令
@@ -373,6 +382,46 @@ public class JschUtil {
 			IoUtil.close(in);
 			close(channel);
 		}
+	}
+
+	/**
+	 * 执行Shell命令
+	 * <p>
+	 * 此方法单次发送一个命令到服务端，自动读取环境变量，执行结束后自动关闭channel，不会产生阻塞。<br>
+	 * 此方法返回数据中可能
+	 * </p>
+	 *
+	 * @param session Session会话
+	 * @param cmd     命令
+	 * @param charset 发送和读取内容的编码
+	 * @return {@link ChannelExec}
+	 * @since 5.2.5
+	 */
+	public static String execByShell(Session session, String cmd, Charset charset) {
+		final ChannelShell shell = openShell(session);
+		// 开始连接
+		shell.setPty(true);
+		OutputStream out = null;
+		InputStream in = null;
+		final StringBuilder result = StrUtil.builder();
+		try {
+			out = shell.getOutputStream();
+			in = shell.getInputStream();
+
+			out.write(StrUtil.bytes(cmd, charset));
+			out.flush();
+
+			while (in.available() > 0) {
+				result.append(IoUtil.read(in, charset));
+			}
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		} finally {
+			IoUtil.close(out);
+			IoUtil.close(in);
+			close(shell);
+		}
+		return result.toString();
 	}
 
 	/**

@@ -6,6 +6,8 @@
 ## 5.2.6 (2020-03-26)
 
 ### 新特性
+* 【extra  】     JschUtil增加execByShell方法(issue#I1CYES@Gitee)
+
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题
 
