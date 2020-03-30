@@ -1,13 +1,22 @@
 package cn.hutool.core.map;
 
-import java.io.Serializable;
-import java.util.*;
-
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
- * 无重复键的Map
+ * 可重复键的Map
  * 
  * @author looly
  *
@@ -73,6 +82,34 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 		return null;
 	}
 
+	/**
+	 * 获取指定key对应的所有值
+	 *
+	 * @param key 键
+	 * @return 值列表
+	 * @since 5.2.5
+	 */
+	public List<V> getValues(K key){
+		return CollUtil.getAny(
+				this.values,
+				ListUtil.indexOfAll(this.keys, (ele)-> ObjectUtil.equal(ele, key))
+		);
+	}
+
+	/**
+	 * 获取指定value对应的所有key
+	 *
+	 * @param value 值
+	 * @return 值列表
+	 * @since 5.2.5
+	 */
+	public List<K> getKeys(V value){
+		return CollUtil.getAny(
+				this.keys,
+				ListUtil.indexOfAll(this.values, (ele)-> ObjectUtil.equal(ele, value))
+		);
+	}
+
 	@Override
 	public V put(K key, V value) {
 		keys.add(key);
@@ -106,16 +143,19 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 		values.clear();
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<K> keySet() {
 		return new HashSet<>(keys);
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Collection<V> values() {
-		return new HashSet<>(values);
+		return Collections.unmodifiableList(this.values);
 	}
 
+	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<Map.Entry<K, V>> entrySet() {
 		HashSet<Map.Entry<K, V>> hashSet = new HashSet<>();
