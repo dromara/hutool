@@ -49,12 +49,34 @@ public final class JSONUtil {
 	}
 
 	/**
+	 * 创建JSONObject
+	 *
+	 * @param config JSON配置
+	 * @return JSONObject
+	 * @since 5.2.5
+	 */
+	public static JSONObject createObj(JSONConfig config) {
+		return new JSONObject(config);
+	}
+
+	/**
 	 * 创建 JSONArray
 	 *
 	 * @return JSONArray
 	 */
 	public static JSONArray createArray() {
 		return new JSONArray();
+	}
+
+	/**
+	 * 创建 JSONArray
+	 *
+	 * @param config JSON配置
+	 * @return JSONArray
+	 * @since 5.2.5
+	 */
+	public static JSONArray createArray(JSONConfig config) {
+		return new JSONArray(config);
 	}
 
 	/**

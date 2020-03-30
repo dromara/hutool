@@ -90,6 +90,8 @@ public class ExcelWriteTest {
 		// 一次性写出内容，使用默认样式
 		writer.write(rows);
 		writer.autoSizeColumn(0, true);
+		//冻结前两行
+		writer.setFreezePane(0, 2);
 		// 关闭writer，释放内存
 		writer.close();
 	}

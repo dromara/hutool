@@ -471,6 +471,30 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	}
 
 	/**
+	 * 设置窗口冻结，之前冻结的窗口会被覆盖，如果rowSplit为0表示取消冻结
+	 *
+	 * @param rowSplit 冻结的行及行数，2表示前两行
+	 * @return this
+	 * @since 5.2.5
+	 */
+	public ExcelWriter setFreezePane(int rowSplit){
+		return setFreezePane(0, rowSplit);
+	}
+
+	/**
+	 * 设置窗口冻结，之前冻结的窗口会被覆盖，如果colSplit和rowSplit为0表示取消冻结
+	 *
+	 * @param colSplit 冻结的列及列数，2表示前两列
+	 * @param rowSplit 冻结的行及行数，2表示前两行
+	 * @return this
+	 * @since 5.2.5
+	 */
+	public ExcelWriter setFreezePane(int colSplit, int rowSplit){
+		getSheet().createFreezePane(colSplit, rowSplit);
+		return this;
+	}
+
+	/**
 	 * 设置列宽（单位为一个字符的宽度，例如传入width为10，表示10个字符的宽度）
 	 * 
 	 * @param columnIndex 列号（从0开始计数，-1表示所有列的默认宽度）
