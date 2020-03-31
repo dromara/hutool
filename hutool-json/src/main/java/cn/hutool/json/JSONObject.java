@@ -279,7 +279,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		for (String name : names) {
 			value = this.get(name);
 			if (null != value) {
-				ja.put(value);
+				ja.set(value);
 			}
 		}
 		return ja;
@@ -332,14 +332,16 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	}
 
 	/**
-	 * PUT 键值对到JSONObject中，如果值为<code>null</code>，将此键移除
+	 * PUT 键值对到JSONObject中，在忽略null模式下，如果值为<code>null</code>，将此键移除
 	 *
 	 * @param key 键
 	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
 	 * @return this.
 	 * @throws JSONException 值是无穷数字抛出此异常
+	 * @deprecated 此方法存在歧义，原Map接口返回的是之前的值，重写后返回this了，未来版本此方法会修改，请使用{@link #set(String, Object)}
 	 */
 	@Override
+	@Deprecated
 	public JSONObject put(String key, Object value) throws JSONException {
 		if (null == key) {
 			return this;
@@ -357,6 +359,19 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	}
 
 	/**
+	 * 设置键值对到JSONObject中，在忽略null模式下，如果值为<code>null</code>，将此键移除
+	 *
+	 * @param key 键
+	 * @param value 值对象. 可以是以下类型: Boolean, Double, Integer, JSONArray, JSONObject, Long, String, or the JSONNull.NULL.
+	 * @return this.
+	 * @throws JSONException 值是无穷数字抛出此异常
+	 */
+	public JSONObject set(String key, Object value) throws JSONException {
+		put(key, value);
+		return this;
+	}
+
+	/**
 	 * 一次性Put 键值对，如果key已经存在抛出异常，如果键值中有null值，忽略
 	 *
 	 * @param key 键
@@ -365,7 +380,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @throws JSONException 值是无穷数字、键重复抛出异常
 	 */
 	public JSONObject putOnce(String key, Object value) throws JSONException {
-		if (key != null && value != null) {
+		if (key != null) {
 			if (rawHashMap.containsKey(key)) {
 				throw new JSONException("Duplicate key \"{}\"", key);
 			}
@@ -409,11 +424,11 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.put(key, value instanceof JSONArray ? new JSONArray().put(value) : value);
+			this.put(key, value instanceof JSONArray ? new JSONArray().set(value) : value);
 		} else if (object instanceof JSONArray) {
-			((JSONArray) object).put(value);
+			((JSONArray) object).set(value);
 		} else {
-			this.put(key, new JSONArray().put(object).put(value));
+			this.set(key, new JSONArray().set(object).set(value));
 		}
 		return this;
 	}
@@ -430,9 +445,9 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		InternalJSONUtil.testValidity(value);
 		Object object = this.getObj(key);
 		if (object == null) {
-			this.put(key, new JSONArray().put(value));
+			this.set(key, new JSONArray().set(value));
 		} else if (object instanceof JSONArray) {
-			this.put(key, ((JSONArray) object).put(value));
+			this.set(key, ((JSONArray) object).set(value));
 		} else {
 			throw new JSONException("JSONObject [" + key + "] is not a JSONArray.");
 		}

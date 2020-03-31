@@ -252,8 +252,21 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 *
 	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
 	 * @return this.
+	 * @see #set(Object)
 	 */
 	public JSONArray put(Object value) {
+		return set(value);
+	}
+
+	/**
+	 * Append an object value. This increases the array's length by one. <br>
+	 * 加入元素，数组长度+1，等同于 {@link JSONArray#add(Object)}
+	 *
+	 * @param value 值，可以是： Boolean, Double, Integer, JSONArray, JSONObject, Long, or String, or the JSONNull.NULL。
+	 * @return this.
+	 * @since 5.2.5
+	 */
+	public JSONArray set(Object value) {
 		this.add(value);
 		return this;
 	}
@@ -284,7 +297,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		}
 		JSONObject jo = new JSONObject();
 		for (int i = 0; i < names.size(); i += 1) {
-			jo.put(names.getStr(i), this.getObj(i));
+			jo.set(names.getStr(i), this.getObj(i));
 		}
 		return jo;
 	}
@@ -440,7 +453,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			while (index != this.size()) {
 				this.add(JSONNull.NULL);
 			}
-			this.put(element);
+			this.set(element);
 		}
 
 	}
