@@ -22,29 +22,38 @@ public class ScriptUtil {
 	private static SimpleCache<String, ScriptEngine> cache = new SimpleCache<>();
 
 	/**
-	 * 获得 {@link ScriptEngine} 实例
+	 * 获得单例的{@link ScriptEngine} 实例
 	 *
 	 * @param nameOrExtOrMime 脚本名称
 	 * @return {@link ScriptEngine} 实例
 	 */
 	public static ScriptEngine getScript(String nameOrExtOrMime) {
-		return cache.get(nameOrExtOrMime, ()->{
-			ScriptEngine engine = manager.getEngineByName(nameOrExtOrMime);
-			if (null == engine) {
-				engine = manager.getEngineByExtension(nameOrExtOrMime);
-			}
-			if (null == engine) {
-				engine = manager.getEngineByMimeType(nameOrExtOrMime);
-			}
-			if (null == engine) {
-				throw new NullPointerException(StrUtil.format("Script for [{}] not support !", nameOrExtOrMime));
-			}
-			return engine;
-		});
+		return cache.get(nameOrExtOrMime, ()-> createScript(nameOrExtOrMime));
 	}
 
 	/**
-	 * 获得 Javascript引擎 {@link JavaScriptEngine}
+	 * 创建 {@link ScriptEngine} 实例
+	 *
+	 * @param nameOrExtOrMime 脚本名称
+	 * @return {@link ScriptEngine} 实例
+	 * @since 5.2.6
+	 */
+	public static ScriptEngine createScript(String nameOrExtOrMime) {
+		ScriptEngine engine = manager.getEngineByName(nameOrExtOrMime);
+		if (null == engine) {
+			engine = manager.getEngineByExtension(nameOrExtOrMime);
+		}
+		if (null == engine) {
+			engine = manager.getEngineByMimeType(nameOrExtOrMime);
+		}
+		if (null == engine) {
+			throw new NullPointerException(StrUtil.format("Script for [{}] not support !", nameOrExtOrMime));
+		}
+		return engine;
+	}
+
+	/**
+	 * 获得非单例的 Javascript引擎 {@link JavaScriptEngine}
 	 *
 	 * @return {@link JavaScriptEngine}
 	 */
@@ -53,9 +62,9 @@ public class ScriptUtil {
 	}
 
 	/**
-	 * 获得 JavaScript引擎
+	 * 获得单例的JavaScript引擎
 	 *
-	 * @return Python引擎
+	 * @return Javascript引擎
 	 * @since 5.2.5
 	 */
 	public static ScriptEngine getJsEngine() {
@@ -63,7 +72,17 @@ public class ScriptUtil {
 	}
 
 	/**
-	 * 获得 Python引擎<br>
+	 * 创建新的JavaScript引擎
+	 *
+	 * @return Javascript引擎
+	 * @since 5.2.6
+	 */
+	public static ScriptEngine createJsEngine() {
+		return createScript("js");
+	}
+
+	/**
+	 * 获得单例的Python引擎<br>
 	 * 需要引入org.python:jython
 	 *
 	 * @return Python引擎
@@ -75,7 +94,19 @@ public class ScriptUtil {
 	}
 
 	/**
-	 * 获得Lua引擎<br>
+	 * 创建Python引擎<br>
+	 * 需要引入org.python:jython
+	 *
+	 * @return Python引擎
+	 * @since 5.2.6
+	 */
+	public static ScriptEngine createPythonEngine() {
+		System.setProperty("python.import.site", "false");
+		return createScript("python");
+	}
+
+	/**
+	 * 获得单例的Lua引擎<br>
 	 * 需要引入org.luaj:luaj-jse
 	 *
 	 * @return Lua引擎
@@ -86,7 +117,18 @@ public class ScriptUtil {
 	}
 
 	/**
-	 * 获得Groovy引擎<br>
+	 * 创建Lua引擎<br>
+	 * 需要引入org.luaj:luaj-jse
+	 *
+	 * @return Lua引擎
+	 * @since 5.2.6
+	 */
+	public static ScriptEngine createLuaEngine() {
+		return createScript("lua");
+	}
+
+	/**
+	 * 获得单例的Groovy引擎<br>
 	 * 需要引入org.codehaus.groovy:groovy-all
 	 *
 	 * @return Groovy引擎
@@ -97,10 +139,21 @@ public class ScriptUtil {
 	}
 
 	/**
-	 * 执行脚本
+	 * 创建Groovy引擎<br>
+	 * 需要引入org.codehaus.groovy:groovy-all
+	 *
+	 * @return Groovy引擎
+	 * @since 5.2.6
+	 */
+	public static ScriptEngine createGroovyEngine() {
+		return createScript("groovy");
+	}
+
+	/**
+	 * 执行Javascript脚本
 	 *
 	 * @param script 脚本内容
-	 * @return {@link CompiledScript}
+	 * @return 执行结果
 	 * @throws ScriptRuntimeException 脚本异常
 	 * @since 3.2.0
 	 */
@@ -117,7 +170,7 @@ public class ScriptUtil {
 	 *
 	 * @param script  脚本内容
 	 * @param context 脚本上下文
-	 * @return {@link CompiledScript}
+	 * @return 执行结果
 	 * @throws ScriptRuntimeException 脚本异常
 	 * @since 3.2.0
 	 */
@@ -134,7 +187,7 @@ public class ScriptUtil {
 	 *
 	 * @param script   脚本内容
 	 * @param bindings 绑定的参数
-	 * @return {@link CompiledScript}
+	 * @return 执行结果
 	 * @throws ScriptRuntimeException 脚本异常
 	 * @since 3.2.0
 	 */
@@ -147,7 +200,7 @@ public class ScriptUtil {
 	}
 
 	/**
-	 * 编译脚本
+	 * 编译Javascript脚本
 	 *
 	 * @param script 脚本内容
 	 * @return {@link CompiledScript}
@@ -163,7 +216,7 @@ public class ScriptUtil {
 	}
 
 	/**
-	 * 编译脚本
+	 * 编译Javascript脚本
 	 *
 	 * @param engine 引擎
 	 * @param script 脚本内容

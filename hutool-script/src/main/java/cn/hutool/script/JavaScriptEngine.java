@@ -17,7 +17,7 @@ import java.io.Reader;
 public class JavaScriptEngine extends FullSupportScriptEngine {
 
 	public JavaScriptEngine() {
-		super(ScriptUtil.getJsEngine());
+		super(ScriptUtil.createJsEngine());
 	}
 
 	/**

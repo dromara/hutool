@@ -11,6 +11,7 @@
 * 【core   】     TableMap增加getKeys和getValues方法
 * 【json   】     JSONObject和JSONArray增加set方法，标识put弃用
 * 【http   】     增加SimpleHttpServer
+* 【script 】     增加createXXXScript，区别单例
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题
