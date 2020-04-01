@@ -14,6 +14,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.server.SimpleServer;
 
 import java.io.File;
 import java.io.InputStream;
@@ -773,6 +774,17 @@ public class HttpUtil {
 	public static String getContentTypeByRequestBody(String body) {
 		final ContentType contentType = ContentType.get(body);
 		return (null == contentType) ? null : contentType.toString();
+	}
+
+	/**
+	 * 创建简易的Http服务器
+	 *
+	 * @param port 端口
+	 * @return {@link SimpleServer}
+	 * @since 5.2.6
+	 */
+	public static SimpleServer createSimpleServer(int port){
+		return new SimpleServer(port);
 	}
 	// ----------------------------------------------------------------------------------------- Private method start
 
