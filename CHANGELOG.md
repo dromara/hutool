@@ -12,6 +12,8 @@
 * 【json   】     JSONObject和JSONArray增加set方法，标识put弃用
 * 【http   】     增加SimpleHttpServer
 * 【script 】     增加createXXXScript，区别单例
+* 【core   】     修改FileUtil.writeFileToStream等方法返回值为long
+* 【core   】     CollUtil.split增加空集合判定（issue#814@Github）
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题

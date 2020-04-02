@@ -21,7 +21,6 @@ import cn.hutool.core.util.TypeUtil;
 
 import java.lang.reflect.Type;
 import java.util.AbstractCollection;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -824,7 +823,7 @@ public class CollUtil {
 
 	/**
 	 * 创建Map<br>
-	 * 传入抽象Map{@link AbstractMap}和{@link Map}类将默认创建{@link HashMap}
+	 * 传入AbstractMap和{@link Map}类将默认创建{@link HashMap}
 	 *
 	 * @param <K>     map键类型
 	 * @param <V>     map值类型
@@ -923,6 +922,9 @@ public class CollUtil {
 	 */
 	public static <T> List<List<T>> split(Collection<T> collection, int size) {
 		final List<List<T>> result = new ArrayList<>();
+		if (CollUtil.isEmpty(collection)) {
+			return result;
+		}
 
 		ArrayList<T> subList = new ArrayList<>(size);
 		for (T t : collection) {
