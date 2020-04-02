@@ -127,8 +127,17 @@ public enum Header {
 		this.value = value;
 	}
 
+	/**
+	 * 获取值
+	 *
+	 * @return 值
+	 */
+	public String getValue(){
+		return this.value;
+	}
+
 	@Override
 	public String toString() {
-		return value;
+		return getValue();
 	}
 }

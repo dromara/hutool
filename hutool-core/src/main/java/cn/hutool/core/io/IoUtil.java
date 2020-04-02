@@ -1,5 +1,12 @@
 package cn.hutool.core.io;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -35,13 +42,6 @@ import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.Checksum;
-
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * IO工具类<br>
@@ -453,7 +453,7 @@ public class IoUtil {
 	}
 
 	/**
-	 * 从流中读取内容，读到输出流中
+	 * 从流中读取内容，读到输出流中，读取完毕后并不关闭流
 	 * 
 	 * @param in 输入流
 	 * @return 输出流

@@ -677,7 +677,22 @@ public class HttpUtil {
 		if (conn == null) {
 			return null;
 		}
-		return ReUtil.get(CHARSET_PATTERN, conn.getContentType(), 1);
+		return getCharset(conn.getContentType());
+	}
+
+	/**
+	 * 从Http连接的头信息中获得字符集<br>
+	 * 从ContentType中获取
+	 *
+	 * @param contentType Content-Type
+	 * @return 字符集
+	 * @since 5.2.6
+	 */
+	public static String getCharset(String contentType) {
+		if (StrUtil.isBlank(contentType)) {
+			return null;
+		}
+		return ReUtil.get(CHARSET_PATTERN, contentType, 1);
 	}
 
 	/**

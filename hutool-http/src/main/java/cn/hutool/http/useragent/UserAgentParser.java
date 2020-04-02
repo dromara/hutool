@@ -1,6 +1,7 @@
 package cn.hutool.http.useragent;
 
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.regex.Pattern;
 
@@ -19,6 +20,9 @@ public class UserAgentParser {
 	 * @return {@link UserAgent}
 	 */
 	public static UserAgent parse(String userAgentString) {
+		if(StrUtil.isBlank(userAgentString)){
+			return null;
+		}
 		final UserAgent userAgent = new UserAgent();
 		
 		final Browser browser = parseBrowser(userAgentString);
