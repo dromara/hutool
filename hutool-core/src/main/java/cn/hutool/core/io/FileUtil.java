@@ -3254,10 +3254,10 @@ public class FileUtil {
 	 *
 	 * @param file 文件
 	 * @param out  流
-	 * @return 目标文件
+	 * @return 写出的流byte数
 	 * @throws IORuntimeException IO异常
 	 */
-	public static File writeToStream(File file, OutputStream out) throws IORuntimeException {
+	public static long writeToStream(File file, OutputStream out) throws IORuntimeException {
 		return FileReader.create(file).writeToStream(out);
 	}
 
@@ -3266,10 +3266,11 @@ public class FileUtil {
 	 *
 	 * @param fullFilePath 文件绝对路径
 	 * @param out          输出流
+	 * @return 写出的流byte数
 	 * @throws IORuntimeException IO异常
 	 */
-	public static void writeToStream(String fullFilePath, OutputStream out) throws IORuntimeException {
-		writeToStream(touch(fullFilePath), out);
+	public static long writeToStream(String fullFilePath, OutputStream out) throws IORuntimeException {
+		return writeToStream(touch(fullFilePath), out);
 	}
 
 	/**

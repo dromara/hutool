@@ -783,7 +783,7 @@ public class HttpUtil {
 	 * @return {@link SimpleServer}
 	 * @since 5.2.6
 	 */
-	public static SimpleServer createSimpleServer(int port){
+	public static SimpleServer createServer(int port){
 		return new SimpleServer(port);
 	}
 	// ----------------------------------------------------------------------------------------- Private method start

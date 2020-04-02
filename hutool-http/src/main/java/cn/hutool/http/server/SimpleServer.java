@@ -50,18 +50,51 @@ public class SimpleServer {
 		}
 	}
 
+	/**
+	 * 增加请求处理规则
+	 *
+	 * @param path 路径
+	 * @param handler 处理器
+	 * @return this
+	 */
 	public SimpleServer addHandler(String path, HttpHandler handler) {
 		this.server.createContext(path, handler);
 		return this;
 	}
 
+	/**
+	 * 设置自定义线程池
+	 *
+	 * @param executor {@link Executor}
+	 * @return this
+	 */
 	public SimpleServer setExecutor(Executor executor) {
 		this.server.setExecutor(executor);
 		return this;
 	}
 
-	public SimpleServer start() {
+	/**
+	 * 获得原始HttpServer对象
+	 *
+	 * @return {@link HttpServer}
+	 */
+	public HttpServer getRawServer(){
+		return this.server;
+	}
+
+	/**
+	 * 获取服务器地址信息
+	 *
+	 * @return {@link InetSocketAddress}
+	 */
+	public InetSocketAddress getAddress(){
+		return this.server.getAddress();
+	}
+
+	/**
+	 * 启动Http服务器，启动后会阻塞当前线程
+	 */
+	public void start() {
 		this.server.start();
-		return this;
 	}
 }

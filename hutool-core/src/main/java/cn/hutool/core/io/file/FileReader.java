@@ -1,5 +1,12 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.LineHandler;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,13 +17,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.LineHandler;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 文件读取器
@@ -249,20 +249,15 @@ public class FileReader extends FileWrapper {
 	 * 将文件写入流中
 	 * 
 	 * @param out 流
-	 * @return File
+	 * @return 写出的流byte数
 	 * @throws IORuntimeException IO异常
 	 */
-	public File writeToStream(OutputStream out) throws IORuntimeException {
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(file);
-			IoUtil.copy(in, out);
+	public long writeToStream(OutputStream out) throws IORuntimeException {
+		try (FileInputStream in = new FileInputStream(this.file)){
+			return IoUtil.copy(in, out);
 		}catch (IOException e) {
 			throw new IORuntimeException(e);
-		} finally {
-			IoUtil.close(in);
 		}
-		return this.file;
 	}
 
 	// -------------------------------------------------------------------------- Interface start
