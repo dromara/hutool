@@ -1,6 +1,9 @@
 package cn.hutool.http.server;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.http.server.action.Action;
+import cn.hutool.http.server.handler.ActionHandler;
+import cn.hutool.http.server.handler.RootHandler;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
@@ -53,13 +56,34 @@ public class SimpleServer {
 	/**
 	 * 增加请求处理规则
 	 *
-	 * @param path 路径
+	 * @param path    路径
 	 * @param handler 处理器
 	 * @return this
 	 */
 	public SimpleServer addHandler(String path, HttpHandler handler) {
 		this.server.createContext(path, handler);
 		return this;
+	}
+
+	/**
+	 * 设置根目录，默认的页面从root目录中读取解析返回
+	 *
+	 * @param root 路径
+	 * @return this
+	 */
+	public SimpleServer setRoot(String root) {
+		return addHandler("/", new RootHandler(root));
+	}
+
+	/**
+	 * 增加请求处理规则
+	 *
+	 * @param path   路径
+	 * @param action 处理器
+	 * @return this
+	 */
+	public SimpleServer addAction(String path, Action action) {
+		return addHandler(path, new ActionHandler(action));
 	}
 
 	/**
@@ -78,7 +102,7 @@ public class SimpleServer {
 	 *
 	 * @return {@link HttpServer}
 	 */
-	public HttpServer getRawServer(){
+	public HttpServer getRawServer() {
 		return this.server;
 	}
 
@@ -87,7 +111,7 @@ public class SimpleServer {
 	 *
 	 * @return {@link InetSocketAddress}
 	 */
-	public InetSocketAddress getAddress(){
+	public InetSocketAddress getAddress() {
 		return this.server.getAddress();
 	}
 

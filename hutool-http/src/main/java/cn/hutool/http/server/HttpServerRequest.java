@@ -28,9 +28,7 @@ import java.util.Map;
  * @author looly
  * @since 5.2.6
  */
-public class HttpRequest {
-
-	private final HttpExchange httpExchange;
+public class HttpServerRequest extends HttpServerBase{
 
 	private Map<String, HttpCookie> cookieCache;
 
@@ -39,8 +37,8 @@ public class HttpRequest {
 	 *
 	 * @param httpExchange {@link HttpExchange}
 	 */
-	public HttpRequest(HttpExchange httpExchange) {
-		this.httpExchange = httpExchange;
+	public HttpServerRequest(HttpExchange httpExchange) {
+		super(httpExchange);
 	}
 
 	/**
