@@ -3,11 +3,14 @@ package cn.hutool.extra.servlet;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.collection.ArrayIter;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -227,13 +230,13 @@ public class ServletUtil {
 		String ip;
 		for (String header : headerNames) {
 			ip = request.getHeader(header);
-			if (false == isUnknow(ip)) {
-				return getMultistageReverseProxyIp(ip);
+			if (false == NetUtil.isUnknown(ip)) {
+				return NetUtil.getMultistageReverseProxyIp(ip);
 			}
 		}
 
 		ip = request.getRemoteAddr();
-		return getMultistageReverseProxyIp(ip);
+		return NetUtil.getMultistageReverseProxyIp(ip);
 	}
 
 	/**
@@ -415,14 +418,10 @@ public class ServletUtil {
 	 * @return Cookie map
 	 */
 	public static Map<String, Cookie> readCookieMap(HttpServletRequest httpServletRequest) {
-		final Map<String, Cookie> cookieMap = new CaseInsensitiveMap<>();
-		final Cookie[] cookies = httpServletRequest.getCookies();
-		if (null != cookies) {
-			for (Cookie cookie : cookies) {
-				cookieMap.put(cookie.getName(), cookie);
-			}
-		}
-		return cookieMap;
+		return IterUtil.toMap(
+				new ArrayIter<>(httpServletRequest.getCookies()),
+				new CaseInsensitiveMap<>(),
+				Cookie::getName);
 	}
 
 	/**
@@ -614,37 +613,4 @@ public class ServletUtil {
 		}
 	}
 	// --------------------------------------------------------- Response end
-
-	// --------------------------------------------------------- Private methd start
-	/**
-	 * 从多级反向代理中获得第一个非unknown IP地址
-	 * 
-	 * @param ip 获得的IP地址
-	 * @return 第一个非unknown IP地址
-	 */
-	private static String getMultistageReverseProxyIp(String ip) {
-		// 多级反向代理检测
-		if (ip != null && ip.indexOf(",") > 0) {
-			final String[] ips = ip.trim().split(",");
-			for (String subIp : ips) {
-				if (false == isUnknow(subIp)) {
-					ip = subIp;
-					break;
-				}
-			}
-		}
-		return ip;
-	}
-
-	/**
-	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
-	 * 
-	 * @param checkString 被检测的字符串
-	 * @return 是否未知
-	 */
-	private static boolean isUnknow(String checkString) {
-		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
-	}
-	// --------------------------------------------------------- Private methd end
-
 }

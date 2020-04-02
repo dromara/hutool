@@ -1,6 +1,10 @@
 package cn.hutool.http.server;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
@@ -12,8 +16,11 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Http请求对象，对{@link HttpExchange}封装
@@ -24,6 +31,8 @@ import java.nio.charset.Charset;
 public class HttpRequest {
 
 	private final HttpExchange httpExchange;
+
+	private Map<String, HttpCookie> cookieCache;
 
 	/**
 	 * 构造
@@ -103,6 +112,16 @@ public class HttpRequest {
 	 * @param headerKey 头信息的KEY
 	 * @return header值
 	 */
+	public String getHeader(Header headerKey) {
+		return getHeader(headerKey.toString());
+	}
+
+	/**
+	 * 获得请求header中的信息
+	 *
+	 * @param headerKey 头信息的KEY
+	 * @return header值
+	 */
 	public String getHeader(String headerKey) {
 		return getHeaders().getFirst(headerKey);
 	}
@@ -123,12 +142,21 @@ public class HttpRequest {
 	}
 
 	/**
+	 * 获取Content-Type头信息
+	 *
+	 * @return Content-Type头信息
+	 */
+	public String getContentType() {
+		return getHeader(Header.USER_AGENT);
+	}
+
+	/**
 	 * 获得User-Agent
 	 *
 	 * @return User-Agent字符串
 	 */
 	public String getUserAgentStr() {
-		return getHeader("User-Agent");
+		return getHeader(Header.USER_AGENT);
 	}
 
 	/**
@@ -138,6 +166,49 @@ public class HttpRequest {
 	 */
 	public UserAgent getUserAgent() {
 		return UserAgentUtil.parse(getUserAgentStr());
+	}
+
+	/**
+	 * 获得Cookie信息字符串
+	 *
+	 * @return cookie字符串
+	 */
+	public String getCookiesStr() {
+		return getHeader(Header.COOKIE);
+	}
+
+	/**
+	 * 获得Cookie信息列表
+	 *
+	 * @return Cookie信息列表
+	 */
+	public Collection<HttpCookie> getCookies() {
+		return getCookieMap().values();
+	}
+
+	/**
+	 * 获得Cookie信息Map，键为Cookie名，值为HttpCookie对象
+	 *
+	 * @return Cookie信息Map
+	 */
+	public Map<String, HttpCookie> getCookieMap() {
+		if (null == this.cookieCache) {
+			cookieCache = CollUtil.toMap(
+					NetUtil.parseCookies(getCookiesStr()),
+					new CaseInsensitiveMap<>(),
+					HttpCookie::getName);
+		}
+		return cookieCache;
+	}
+
+	/**
+	 * 获得指定Cookie名对应的HttpCookie对象
+	 *
+	 * @param cookieName Cookie名
+	 * @return HttpCookie对象
+	 */
+	public HttpCookie getCookie(String cookieName) {
+		return getCookieMap().get(cookieName);
 	}
 
 	/**
@@ -156,7 +227,7 @@ public class HttpRequest {
 	 * @return 请求
 	 */
 	public String getBody() {
-		final String contentType = getHeader(Header.CONTENT_TYPE.toString());
+		final String contentType = getContentType();
 		final String charsetStr = HttpUtil.getCharset(contentType);
 		final Charset charset = CharsetUtil.parse(charsetStr, CharsetUtil.CHARSET_UTF_8);
 
@@ -189,11 +260,66 @@ public class HttpRequest {
 			return false;
 		}
 
-		final String contentType = getHeader(Header.CONTENT_TYPE.toString());
+		final String contentType = getContentType();
 		if (StrUtil.isBlank(contentType)) {
 			return false;
 		}
 
 		return contentType.toLowerCase().startsWith("multipart/");
+	}
+
+	/**
+	 * 获取客户端IP
+	 *
+	 * <p>
+	 * 默认检测的Header:
+	 *
+	 * <pre>
+	 * 1、X-Forwarded-For
+	 * 2、X-Real-IP
+	 * 3、Proxy-Client-IP
+	 * 4、WL-Proxy-Client-IP
+	 * </pre>
+	 *
+	 * <p>
+	 * otherHeaderNames参数用于自定义检测的Header<br>
+	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
+	 * </p>
+	 *
+	 * @param otherHeaderNames 其他自定义头文件，通常在Http服务器（例如Nginx）中配置
+	 * @return IP地址
+	 */
+	public String getClientIP(String... otherHeaderNames) {
+		String[] headers = {"X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
+		if (ArrayUtil.isNotEmpty(otherHeaderNames)) {
+			headers = ArrayUtil.addAll(headers, otherHeaderNames);
+		}
+
+		return getClientIPByHeader(headers);
+	}
+
+	/**
+	 * 获取客户端IP
+	 *
+	 * <p>
+	 * headerNames参数用于自定义检测的Header<br>
+	 * 需要注意的是，使用此方法获取的客户IP地址必须在Http服务器（例如Nginx）中配置头信息，否则容易造成IP伪造。
+	 * </p>
+	 *
+	 * @param headerNames 自定义头，通常在Http服务器（例如Nginx）中配置
+	 * @return IP地址
+	 * @since 4.4.1
+	 */
+	public String getClientIPByHeader(String... headerNames) {
+		String ip;
+		for (String header : headerNames) {
+			ip = getHeader(header);
+			if (false == NetUtil.isUnknown(ip)) {
+				return NetUtil.getMultistageReverseProxyIp(ip);
+			}
+		}
+
+		ip = this.httpExchange.getRemoteAddress().getHostName();
+		return NetUtil.getMultistageReverseProxyIp(ip);
 	}
 }

@@ -9,6 +9,7 @@ import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.Editor;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Matcher;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.hash.Hash32;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -245,7 +246,7 @@ public class CollUtil {
 	 *
 	 * @param coll1 集合1
 	 * @param coll2 集合2
-	 * @param <T> 元素类型
+	 * @param <T>   元素类型
 	 * @return 单差集
 	 */
 	public static <T> Collection<T> subtract(Collection<T> coll1, Collection<T> coll2) {
@@ -327,10 +328,10 @@ public class CollUtil {
 	 * @param <T>        集合元素类型
 	 * @param collection 集合
 	 * @return {@link Map}
-	 * @see IterUtil#countMap(Iterable)
+	 * @see IterUtil#countMap(Iterator)
 	 */
 	public static <T> Map<T, Integer> countMap(Iterable<T> collection) {
-		return IterUtil.countMap(collection);
+		return IterUtil.countMap(null == collection ? null : collection.iterator());
 	}
 
 	/**
@@ -341,10 +342,13 @@ public class CollUtil {
 	 * @param iterable    {@link Iterable}
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
-	 * @see IterUtil#join(Iterable, CharSequence)
+	 * @see IterUtil#join(Iterator, CharSequence)
 	 */
 	public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
-		return IterUtil.join(iterable, conjunction);
+		if (null == iterable) {
+			return null;
+		}
+		return IterUtil.join(iterable.iterator(), conjunction);
 	}
 
 	/**
@@ -355,8 +359,9 @@ public class CollUtil {
 	 * @param iterator    集合
 	 * @param conjunction 分隔符
 	 * @return 连接后的字符串
-	 * @see IterUtil#join(Iterator, CharSequence)
+	 * @deprecated 请使用IterUtil#join(Iterator, CharSequence)
 	 */
+	@Deprecated
 	public static <T> String join(Iterator<T> iterator, CharSequence conjunction) {
 		return IterUtil.join(iterator, conjunction);
 	}
@@ -643,8 +648,8 @@ public class CollUtil {
 	 * 新建一个List<br>
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 *
-	 * @param <T>        集合元素类型
-	 * @param isLinked   是否新建LinkedList
+	 * @param <T>         集合元素类型
+	 * @param isLinked    是否新建LinkedList
 	 * @param enumeration {@link Enumeration}
 	 * @return ArrayList对象
 	 * @since 3.0.8
@@ -707,7 +712,7 @@ public class CollUtil {
 	 * 新建一个ArrayList<br>
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 *
-	 * @param <T>  集合元素类型
+	 * @param <T>      集合元素类型
 	 * @param iterator {@link Iterator}
 	 * @return ArrayList对象
 	 * @since 3.0.8
@@ -720,7 +725,7 @@ public class CollUtil {
 	 * 新建一个ArrayList<br>
 	 * 提供的参数为null时返回空{@link ArrayList}
 	 *
-	 * @param <T>        集合元素类型
+	 * @param <T>         集合元素类型
 	 * @param enumeration {@link Enumeration}
 	 * @return ArrayList对象
 	 * @since 3.0.8
@@ -1205,6 +1210,36 @@ public class CollUtil {
 	}
 
 	/**
+	 * 字段值与列表值对应的Map，常用于元素对象中有唯一ID时需要按照这个ID查找对象的情况<br>
+	 * 例如：车牌号 =》车
+	 *
+	 * @param <K>       字段名对应值得类型，不确定请使用Object
+	 * @param <V>       对象类型
+	 * @param iterable  对象列表
+	 * @param fieldName 字段名（会通过反射获取其值）
+	 * @return 某个字段值与对象对应Map
+	 * @since 5.0.6
+	 */
+	public static <K, V> Map<K, V> fieldValueMap(Iterable<V> iterable, String fieldName) {
+		return IterUtil.fieldValueMap(null == iterable ? null : iterable.iterator(), fieldName);
+	}
+
+	/**
+	 * 两个字段值组成新的Map
+	 *
+	 * @param <K>               字段名对应值得类型，不确定请使用Object
+	 * @param <V>               值类型，不确定使用Object
+	 * @param iterable          对象列表
+	 * @param fieldNameForKey   做为键的字段名（会通过反射获取其值）
+	 * @param fieldNameForValue 做为值的字段名（会通过反射获取其值）
+	 * @return 某个字段值与对象对应Map
+	 * @since 5.0.6
+	 */
+	public static <K, V> Map<K, V> fieldValueAsMap(Iterable<?> iterable, String fieldNameForKey, String fieldNameForValue) {
+		return IterUtil.fieldValueAsMap(null == iterable ? null : iterable.iterator(), fieldNameForKey, fieldNameForValue);
+	}
+
+	/**
 	 * 查找第一个匹配元素对象
 	 *
 	 * @param <T>        集合元素类型
@@ -1316,13 +1351,13 @@ public class CollUtil {
 	 * 获取匹配规则定义中匹配到元素的所有位置<br>
 	 * 此方法对于某些无序集合的位置信息，以转换为数组后的位置为准。
 	 *
-	 * @param <T> 元素类型
+	 * @param <T>        元素类型
 	 * @param collection 集合
-	 * @param matcher 匹配器，为空则全部匹配
+	 * @param matcher    匹配器，为空则全部匹配
 	 * @return 位置数组
 	 * @since 5.2.5
 	 */
-	public static <T> int[] indexOfAll(Collection<T> collection, Matcher<T> matcher){
+	public static <T> int[] indexOfAll(Collection<T> collection, Matcher<T> matcher) {
 		final List<Integer> indexList = new ArrayList<>();
 		if (null != collection) {
 			int index = 0;
@@ -1716,6 +1751,38 @@ public class CollUtil {
 	 */
 	public static <K, V> List<Map<K, V>> toMapList(Map<K, ? extends Iterable<V>> listMap) {
 		return MapUtil.toMapList(listMap);
+	}
+
+	/**
+	 * 集合转换为Map，转换规则为：<br>
+	 * 按照keyFunc函数规则根据元素对象生成Key，元素作为值
+	 *
+	 * @param <K>     Map键类型
+	 * @param <V>     Map值类型
+	 * @param values  数据列表
+	 * @param keyFunc 生成key的函数
+	 * @return 生成的map
+	 * @since 5.2.6
+	 */
+	public static <K, V> Map<K, V> toMap(Iterable<V> values, Map<K, V> map, Func1<V, K> keyFunc) {
+		return IterUtil.toMap(null == values ? null : values.iterator(), map, keyFunc);
+	}
+
+	/**
+	 * 集合转换为Map，转换规则为：<br>
+	 * 按照keyFunc函数规则根据元素对象生成Key，按照valueFunc函数规则根据元素对象生成value组成新的Map
+	 *
+	 * @param <K>     Map键类型
+	 * @param <V>     Map值类型
+	 * @param <E>     元素类型
+	 * @param values  数据列表
+	 * @param map     Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
+	 * @param keyFunc 生成key的函数
+	 * @return 生成的map
+	 * @since 5.2.6
+	 */
+	public static <K, V, E> Map<K, V> toMap(Iterable<E> values, Map<K, V> map, Func1<E, K> keyFunc, Func1<E, V> valueFunc) {
+		return IterUtil.toMap(null == values ? null : values.iterator(), map, keyFunc, valueFunc);
 	}
 
 	/**

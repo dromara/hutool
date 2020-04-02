@@ -277,6 +277,32 @@ public class CollUtilTest {
 		Assert.assertEquals("张三", list.get(2).getName());
 	}
 
+	@Test
+	public void fieldValueMapTest() {
+		List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
+				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
+				new TestBean("王五", 12, DateUtil.parse("2018-04-01"))//
+		);
+
+		final Map<String, TestBean> map = CollUtil.fieldValueMap(list, "name");
+		Assert.assertEquals("李四", map.get("李四").getName());
+		Assert.assertEquals("王五", map.get("王五").getName());
+		Assert.assertEquals("张三", map.get("张三").getName());
+	}
+
+	@Test
+	public void fieldValueAsMapTest() {
+		List<TestBean> list = CollUtil.newArrayList(new TestBean("张三", 12, DateUtil.parse("2018-05-01")), //
+				new TestBean("李四", 13, DateUtil.parse("2018-03-01")), //
+				new TestBean("王五", 14, DateUtil.parse("2018-04-01"))//
+		);
+
+		final Map<String, Integer> map = CollUtil.fieldValueAsMap(list, "name", "age");
+		Assert.assertEquals(new Integer(12), map.get("张三"));
+		Assert.assertEquals(new Integer(13), map.get("李四"));
+		Assert.assertEquals(new Integer(14), map.get("王五"));
+	}
+
 	public static class TestBean {
 		private String name;
 		private int age;
@@ -599,5 +625,26 @@ public class CollUtilTest {
 		Assert.assertEquals(2, map.get("b").intValue());
 		Assert.assertEquals(3, map.get("c").intValue());
 		Assert.assertEquals(4, map.get("d").intValue());
+	}
+
+	@Test
+	public void toMapTest(){
+		Collection<String> keys = CollUtil.newArrayList("a", "b", "c", "d");
+		final Map<String, String> map = CollUtil.toMap(keys, new HashMap<>(), (value)->"key" + value);
+		Assert.assertEquals("a", map.get("keya"));
+		Assert.assertEquals("b", map.get("keyb"));
+		Assert.assertEquals("c", map.get("keyc"));
+		Assert.assertEquals("d", map.get("keyd"));
+	}
+
+	@Test
+	public void countMapTest() {
+		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
+		Map<String, Integer> countMap = CollUtil.countMap(list);
+
+		Assert.assertEquals(Integer.valueOf(2), countMap.get("a"));
+		Assert.assertEquals(Integer.valueOf(2), countMap.get("b"));
+		Assert.assertEquals(Integer.valueOf(2), countMap.get("c"));
+		Assert.assertEquals(Integer.valueOf(1), countMap.get("d"));
 	}
 }

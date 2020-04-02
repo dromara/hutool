@@ -1,10 +1,10 @@
 package cn.hutool.core.collection;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * {@link IterUtil} 单元测试
@@ -13,17 +13,6 @@ import org.junit.Test;
  */
 public class IterUtilTest {
 	
-	@Test
-	public void countMapTest() {
-		ArrayList<String> list = CollUtil.newArrayList("a", "b", "c", "c", "a", "b", "d");
-		Map<String, Integer> countMap = IterUtil.countMap(list);
-		
-		Assert.assertEquals(Integer.valueOf(2), countMap.get("a"));
-		Assert.assertEquals(Integer.valueOf(2), countMap.get("b"));
-		Assert.assertEquals(Integer.valueOf(2), countMap.get("c"));
-		Assert.assertEquals(Integer.valueOf(1), countMap.get("d"));
-	}
-
 	@Test
 	public void fieldValueMapTest() {
 		ArrayList<Car> carList = CollUtil.newArrayList(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));

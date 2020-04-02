@@ -14,6 +14,9 @@
 * 【script 】     增加createXXXScript，区别单例
 * 【core   】     修改FileUtil.writeFileToStream等方法返回值为long
 * 【core   】     CollUtil.split增加空集合判定（issue#814@Github）
+* 【core   】     NetUtil增加parseCookies方法
+* 【core   】     CollUtil增加toMap方法
+* 【core   】     CollUtil和IterUtil废弃一些方法
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题

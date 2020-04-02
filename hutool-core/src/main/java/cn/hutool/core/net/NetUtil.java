@@ -12,6 +12,7 @@ import cn.hutool.core.util.StrUtil;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.DatagramSocket;
+import java.net.HttpCookie;
 import java.net.IDN;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -647,7 +649,7 @@ public class NetUtil {
 		if (ip != null && ip.indexOf(",") > 0) {
 			final String[] ips = ip.trim().split(",");
 			for (String subIp : ips) {
-				if (false == isUnknow(subIp)) {
+				if (false == isUnknown(subIp)) {
 					ip = subIp;
 					break;
 				}
@@ -662,8 +664,20 @@ public class NetUtil {
 	 * @param checkString 被检测的字符串
 	 * @return 是否未知
 	 * @since 4.4.1
+	 * @deprecated 拼写错误，请使用{@link #isUnknown(String)}
 	 */
 	public static boolean isUnknow(String checkString) {
+		return isUnknown(checkString);
+	}
+
+	/**
+	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br>
+	 *
+	 * @param checkString 被检测的字符串
+	 * @return 是否未知
+	 * @since 5.2.6
+	 */
+	public static boolean isUnknown(String checkString) {
 		return StrUtil.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
 	}
 
@@ -692,6 +706,19 @@ public class NetUtil {
 		}
 	}
 
+	/**
+	 * 解析Cookie信息
+	 *
+	 * @param cookieStr Cookie字符串
+	 * @return cookie字符串
+	 * @since 5.2.6
+	 */
+	public static List<HttpCookie> parseCookies(String cookieStr){
+		if(StrUtil.isBlank(cookieStr)){
+			return CollUtil.newArrayList();
+		}
+		return HttpCookie.parse(cookieStr);
+	}
 	// ----------------------------------------------------------------------------------------- Private method start
 
 	/**
