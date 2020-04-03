@@ -25,9 +25,9 @@ public class GenericEnumConverter<E extends Enum<E>> extends AbstractConverter<E
 		this.enumClass = enumClass;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected E convertInternal(Object value) {
-		//noinspection unchecked
 		E enumValue = (E) EnumConverter.tryConvertEnum(value, this.enumClass);
 		if(null == enumValue && false == value instanceof String){
 			// 最后尝试valueOf转换

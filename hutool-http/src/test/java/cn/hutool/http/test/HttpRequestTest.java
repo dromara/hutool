@@ -1,11 +1,5 @@
 package cn.hutool.http.test;
 
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.lang.Console;
@@ -13,6 +7,11 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link HttpRequest}单元测试
@@ -37,6 +36,7 @@ public class HttpRequestTest {
 		HttpResponse res = HttpRequest.get("https://www.oschina.net/").execute();
 		String body = res.body();
 		Console.log(res.getCookies());
+		Console.log(body);
 	}
 
 	@Test

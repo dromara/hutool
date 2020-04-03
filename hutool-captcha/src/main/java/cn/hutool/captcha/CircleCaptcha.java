@@ -1,16 +1,15 @@
 package cn.hutool.captcha;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.concurrent.ThreadLocalRandom;
-
 import cn.hutool.core.img.GraphicsUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 圆圈干扰验证码
@@ -73,7 +72,7 @@ public class CircleCaptcha extends AbstractCaptcha {
 	/**
 	 * 绘制字符串
 	 * 
-	 * @param g {@link Graphics}画笔
+	 * @param g {@link Graphics2D}画笔
 	 * @param code 验证码
 	 */
 	private void drawString(Graphics2D g, String code) {

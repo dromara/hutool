@@ -148,7 +148,6 @@ public class HandleHelper {
 	 * @since 3.3.1
 	 */
 	public static <T extends Entity> T handleRow(T row, int columnCount, ResultSetMetaData meta, ResultSet rs, boolean withMetaInfo) throws SQLException {
-		String columnLabel;
 		int type;
 		for (int i = 1; i <= columnCount; i++) {
 			type = meta.getColumnType(i);

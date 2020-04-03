@@ -1,5 +1,12 @@
 package cn.hutool.json;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.time.temporal.TemporalAccessor;
@@ -8,13 +15,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
-
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  * 内部JSON工具类，仅用于JSON内部使用
@@ -197,11 +197,11 @@ final class InternalJSONUtil {
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
 				nextTarget = new JSONObject();
-				target.put(segment, nextTarget);
+				target.set(segment, nextTarget);
 			}
 			target = nextTarget;
 		}
-		target.put(path[last], value);
+		target.set(path[last], value);
 		return jsonObject;
 	}
 

@@ -63,7 +63,6 @@ public class JcsegResult implements Result{
 		throw new UnsupportedOperationException("Jcseg result not allow to remove !");
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<Word> iterator() {
 		return this;

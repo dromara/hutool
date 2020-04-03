@@ -56,7 +56,6 @@ public class SettingUtil {
 	 * @since 5.1.3
 	 */
 	public static Setting getFirstFound(String... names) {
-		Setting setting;
 		for (String name : names) {
 			try {
 				return get(name);

@@ -1,11 +1,5 @@
 package cn.hutool.core.net.multipart;
 
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.log.Log;
-import cn.hutool.setting.Setting;
-
-import java.net.URL;
-
 /**
  * 上传文件设定文件
  *
@@ -13,10 +7,6 @@ import java.net.URL;
  *
  */
 public class UploadSetting {
-	private static final Log log = Log.get();
-
-	/** 默认的配置文件路径（相对ClassPath） */
-	public final static String DEFAULT_SETTING_PATH = "config/upload.setting";
 
 	/** 最大文件大小，默认无限制 */
 	protected int maxFileSize = -1;
@@ -117,32 +107,4 @@ public class UploadSetting {
 		this.isAllowFileExts = isAllowFileExts;
 	}
 	// ---------------------------------------------------------------------- Setters and Getters end
-
-	/**
-	 * 加载全局设定<br>
-	 * 使用默认的配置文件classpath/config/upload.setting
-	 */
-	public void load() {
-		load(DEFAULT_SETTING_PATH);
-	}
-
-	/**
-	 * 加载全局设定
-	 *
-	 * @param settingPath 设定文件路径，相对Classpath
-	 */
-	synchronized public void load(String settingPath) {
-		URL url = URLUtil.getURL(settingPath);
-		if (url == null) {
-			log.info("Can not find Upload setting file [{}], use default setting.", settingPath);
-			return;
-		}
-		Setting setting = new Setting(url, Setting.DEFAULT_CHARSET, true);
-
-		maxFileSize = setting.getInt("file.size.max");
-		memoryThreshold = setting.getInt("memory.threshold");
-		tmpUploadPath = setting.getStr("tmp.upload.path");
-		fileExts = setting.getStrings("file.exts");
-		isAllowFileExts = setting.getBool("file.exts.allow");
-	}
 }

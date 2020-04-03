@@ -42,10 +42,6 @@ public class Excel07SaxReader extends AbstractExcelSaxReader<Excel07SaxReader> i
 	 */
 	private static final String R_ATTR = "r";
 	/**
-	 * Cell类型
-	 */
-	private static final String T_ELEMENT = "t";
-	/**
 	 * SST（SharedStringsTable） 的索引，样式index
 	 */
 	private static final String S_ATTR_VALUE = "s";

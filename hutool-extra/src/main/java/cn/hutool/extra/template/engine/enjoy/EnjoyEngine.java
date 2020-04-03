@@ -8,7 +8,6 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateConfig.ResourceMode;
 import cn.hutool.extra.template.TemplateEngine;
 import com.jfinal.template.source.FileSourceFactory;
-import org.beetl.core.GroupTemplate;
 
 /**
  * Enjoy库的引擎包装
@@ -80,7 +79,7 @@ public class EnjoyEngine implements TemplateEngine {
 	 * 创建引擎
 	 *
 	 * @param config 模板配置
-	 * @return {@link GroupTemplate}
+	 * @return {@link com.jfinal.template.Engine}
 	 */
 	private static com.jfinal.template.Engine createEngine(TemplateConfig config) {
 		final com.jfinal.template.Engine engine = com.jfinal.template.Engine.create("Hutool-Enjoy-Engine-" + IdUtil.fastSimpleUUID());

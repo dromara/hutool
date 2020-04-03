@@ -1,20 +1,5 @@
 package cn.hutool.poi.excel;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.extractor.ExcelExtractor;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.IterUtil;
@@ -25,7 +10,20 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.cell.CellEditor;
 import cn.hutool.poi.excel.cell.CellUtil;
-import cn.hutool.poi.excel.editors.TrimEditor;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.extractor.ExcelExtractor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Excel读取器<br>
@@ -153,7 +151,6 @@ public class ExcelReader extends ExcelBase<ExcelReader> {
 	 * 
 	 * @param cellEditor 单元格值处理接口
 	 * @return this
-	 * @see TrimEditor
 	 */
 	public ExcelReader setCellEditor(CellEditor cellEditor) {
 		this.cellEditor = cellEditor;

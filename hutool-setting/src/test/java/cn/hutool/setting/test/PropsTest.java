@@ -72,7 +72,6 @@ public class PropsTest {
 	@Test
 	public void toBeanWithNullPrefixTest(){
 		Props configProp = new Props();
-		Boolean isInit = configProp.getBool("isInit");
 
 		configProp.setProperty("createTime", Objects.requireNonNull(DateUtil.parse("2020-01-01")));
 		configProp.setProperty("isInit", true);

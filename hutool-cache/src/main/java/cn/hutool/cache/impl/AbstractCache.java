@@ -184,7 +184,6 @@ public abstract class AbstractCache<K, V> implements Cache<K, V> {
 
 	// ---------------------------------------------------------------- get end
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Iterator<V> iterator() {
 		CacheObjIterator<K, V> copiedIterator = (CacheObjIterator<K, V>) this.cacheObjIterator();

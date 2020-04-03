@@ -1,10 +1,8 @@
 package cn.hutool.extra.template.engine.beetl;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.Map;
-
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.CharsetUtil;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ResourceLoader;
@@ -16,9 +14,10 @@ import org.beetl.core.resource.Matcher;
 import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.beetl.core.resource.WebAppResourceLoader;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.util.CharsetUtil;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
  * Beetl模板引擎工具类<br>
@@ -26,7 +25,9 @@ import cn.hutool.core.util.CharsetUtil;
  * 文档：http://ibeetl.com/guide/beetl.html
  * 
  * @author Looly
+ * @deprecated 使用TemplateUtil替代
  */
+@Deprecated
 public final class BeetlUtil {
 
 	/**

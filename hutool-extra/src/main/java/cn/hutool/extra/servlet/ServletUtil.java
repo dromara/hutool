@@ -265,7 +265,7 @@ public class ServletUtil {
 	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException {
 		final MultipartFormData formData = new MultipartFormData(uploadSetting);
 		try {
-			formData.parseRequestStream(request.getInputStream(), request.getCharacterEncoding());
+			formData.parseRequestStream(request.getInputStream(), CharsetUtil.charset(request.getCharacterEncoding()));
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

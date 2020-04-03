@@ -1,10 +1,5 @@
 package cn.hutool.crypto.asymmetric;
 
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-
 import cn.hutool.core.codec.BCD;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IORuntimeException;
@@ -12,8 +7,12 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.SecureUtil;
+
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * 抽象的非对称加密对象，包装了加密和解密为Hex和Base64的封装
@@ -201,7 +200,6 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	 * @param data    数据
 	 * @param keyType 密钥类型
 	 * @return 加密后的密文
-	 * @throws CryptoException 加密异常
 	 * @since 4.1.0
 	 */
 	public String encryptBcd(String data, KeyType keyType) {
@@ -215,7 +213,6 @@ public abstract class AbstractAsymmetricCrypto<T extends AbstractAsymmetricCrypt
 	 * @param keyType 密钥类型
 	 * @param charset 加密前编码
 	 * @return 加密后的密文
-	 * @throws CryptoException 加密异常
 	 * @since 4.1.0
 	 */
 	public String encryptBcd(String data, KeyType keyType, Charset charset) {
