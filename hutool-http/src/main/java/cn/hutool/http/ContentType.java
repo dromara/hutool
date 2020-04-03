@@ -29,9 +29,17 @@ public enum ContentType {
 	 */
 	XML("application/xml"),
 	/**
+	 * text/plain编码
+	 */
+	TEXT_PLAIN("text/plain"),
+	/**
 	 * Rest请求text/xml编码
 	 */
-	TEXT_XML("text/xml");
+	TEXT_XML("text/xml"),
+	/**
+	 * text/html编码
+	 */
+	TEXT_HTML("text/html");
 
 	private String value;
 
@@ -39,9 +47,19 @@ public enum ContentType {
 		this.value = value;
 	}
 
+	/**
+	 * 获取value值
+	 *
+	 * @return value值
+	 * @since 5.2.6
+	 */
+	public String getValue() {
+		return value;
+	}
+
 	@Override
 	public String toString() {
-		return value;
+		return getValue();
 	}
 
 	/**
@@ -62,7 +80,7 @@ public enum ContentType {
 	 * @since 4.1.5
 	 */
 	public static boolean isDefault(String contentType) {
-		return null == contentType || isFormUrlEncoed(contentType);
+		return null == contentType || isFormUrlEncode(contentType);
 	}
 
 	/**
@@ -71,7 +89,7 @@ public enum ContentType {
 	 * @param contentType 内容类型
 	 * @return 是否为application/x-www-form-urlencoded
 	 */
-	public static boolean isFormUrlEncoed(String contentType) {
+	public static boolean isFormUrlEncode(String contentType) {
 		return StrUtil.startWithIgnoreCase(contentType, FORM_URLENCODED.toString());
 	}
 

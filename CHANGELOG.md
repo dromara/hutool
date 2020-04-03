@@ -18,9 +18,12 @@
 * 【core   】     CollUtil增加toMap方法
 * 【core   】     CollUtil和IterUtil废弃一些方法
 * 【core   】     添加ValidateObjectInputStream避免对象反序列化漏洞风险
+* 【core   】     添加BiMap
+* 【all    】     cn.hutool.extra.servlet.multipart包迁移到cn.hutool.core.net下
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题
+* 【http   】     修复HttpUtil.encodeParams针对无参数URL问题（issue#817@Github）
 
 -------------------------------------------------------------------------------------------------------------
 

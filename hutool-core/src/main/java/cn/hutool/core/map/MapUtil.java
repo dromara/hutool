@@ -681,11 +681,14 @@ public class MapUtil {
 
 	/**
 	 * Map的键和值互换
+	 * 互换键值对不检查值是否有重复，如果有则后加入的元素替换先加入的元素<br>
+	 * 值的顺序在HashMap中不确定，所以谁覆盖谁也不确定，在有序的Map中按照先后顺序覆盖，保留最后的值
 	 *
 	 * @param <T> 键和值类型
 	 * @param map Map对象，键值类型必须一致
 	 * @return 互换后的Map
 	 * @since 3.2.2
+	 * @see #inverse(Map)
 	 */
 	public static <T> Map<T, T> reverse(Map<T, T> map) {
 		return filter(map, (Editor<Entry<T, T>>) t -> new Entry<T, T>() {
@@ -705,6 +708,23 @@ public class MapUtil {
 				throw new UnsupportedOperationException("Unsupported setValue method !");
 			}
 		});
+	}
+
+	/**
+	 * Map的键和值互换<br>
+	 * 互换键值对不检查值是否有重复，如果有则后加入的元素替换先加入的元素<br>
+	 * 值的顺序在HashMap中不确定，所以谁覆盖谁也不确定，在有序的Map中按照先后顺序覆盖，保留最后的值
+	 *
+	 * @param <K> 键和值类型
+	 * @param <V> 键和值类型
+	 * @param map Map对象，键值类型必须一致
+	 * @return 互换后的Map
+	 * @since 5.2.6
+	 */
+	public static <K, V> Map<V, K> inverse(Map<K, V> map) {
+		final Map<V, K> result = createMap(map.getClass());
+		map.forEach((key, value) -> result.put(value, key));
+		return result;
 	}
 
 	/**

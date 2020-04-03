@@ -11,14 +11,14 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.net.multipart.MultipartFormData;
+import cn.hutool.core.net.multipart.UploadSetting;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.extra.servlet.multipart.MultipartFormData;
-import cn.hutool.extra.servlet.multipart.UploadSetting;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
@@ -265,7 +265,7 @@ public class ServletUtil {
 	public static MultipartFormData getMultipart(ServletRequest request, UploadSetting uploadSetting) throws IORuntimeException {
 		final MultipartFormData formData = new MultipartFormData(uploadSetting);
 		try {
-			formData.parseRequest(request);
+			formData.parseRequestStream(request.getInputStream(), request.getCharacterEncoding());
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}

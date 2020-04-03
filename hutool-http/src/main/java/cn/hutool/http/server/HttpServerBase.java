@@ -1,6 +1,9 @@
 package cn.hutool.http.server;
 
+import cn.hutool.core.util.CharsetUtil;
 import com.sun.net.httpserver.HttpExchange;
+
+import java.nio.charset.Charset;
 
 /**
  * HttpServer公用对象，提供HttpExchange包装和公用方法
@@ -9,6 +12,8 @@ import com.sun.net.httpserver.HttpExchange;
  * @since 5.2.6
  */
 public class HttpServerBase {
+
+	final static Charset DEFAULT_CHARSET = CharsetUtil.CHARSET_UTF_8;
 
 	final HttpExchange httpExchange;
 

@@ -1,4 +1,4 @@
-package cn.hutool.extra.servlet.multipart;
+package cn.hutool.core.net.multipart;
 
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.log.Log;
@@ -8,7 +8,7 @@ import java.net.URL;
 
 /**
  * 上传文件设定文件
- * 
+ *
  * @author xiaoleilu
  *
  */
@@ -42,7 +42,7 @@ public class UploadSetting {
 
 	/**
 	 * 设定最大文件大小，-1表示无限制
-	 * 
+	 *
 	 * @param maxFileSize 最大文件大小
 	 */
 	public void setMaxFileSize(int maxFileSize) {
@@ -59,7 +59,7 @@ public class UploadSetting {
 	/**
 	 * 设定文件保存到内存的边界<br>
 	 * 如果文件大小小于这个边界，将保存于内存中，否则保存至临时目录中
-	 * 
+	 *
 	 * @param memoryThreshold 文件保存到内存的边界
 	 */
 	public void setMemoryThreshold(int memoryThreshold) {
@@ -75,7 +75,7 @@ public class UploadSetting {
 
 	/**
 	 * 设定上传文件的临时目录，null表示使用系统临时目录
-	 * 
+	 *
 	 * @param tmpUploadPath 临时目录，绝对路径
 	 */
 	public void setTmpUploadPath(String tmpUploadPath) {
@@ -92,7 +92,7 @@ public class UploadSetting {
 	/**
 	 * 设定文件扩展名限定里列表<br>
 	 * 禁止列表还是允许列表取决于isAllowFileExts
-	 * 
+	 *
 	 * @param fileExts 文件扩展名列表
 	 */
 	public void setFileExts(String[] fileExts) {
@@ -101,7 +101,7 @@ public class UploadSetting {
 
 	/**
 	 * 是否允许文件扩展名<br>
-	 * 
+	 *
 	 * @return 若true表示只允许列表里的扩展名，否则是禁止列表里的扩展名
 	 */
 	public boolean isAllowFileExts() {
@@ -110,7 +110,7 @@ public class UploadSetting {
 
 	/**
 	 * 设定是否允许扩展名
-	 * 
+	 *
 	 * @param isAllowFileExts 若true表示只允许列表里的扩展名，否则是禁止列表里的扩展名
 	 */
 	public void setAllowFileExts(boolean isAllowFileExts) {
@@ -128,7 +128,7 @@ public class UploadSetting {
 
 	/**
 	 * 加载全局设定
-	 * 
+	 *
 	 * @param settingPath 设定文件路径，相对Classpath
 	 */
 	synchronized public void load(String settingPath) {

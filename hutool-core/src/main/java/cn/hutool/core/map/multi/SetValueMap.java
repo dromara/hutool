@@ -62,7 +62,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 	 * @param loadFactor 加载因子
 	 */
 	public SetValueMap(int initialCapacity, float loadFactor) {
-		super(new HashMap<K, Collection<V>>(initialCapacity, loadFactor));
+		super(new HashMap<>(initialCapacity, loadFactor));
 	}
 	// ------------------------------------------------------------------------- Constructor end
 
@@ -72,7 +72,7 @@ public class SetValueMap<K, V> extends CollectionValueMap<K, V> {
 	}
 	
 	@Override
-	protected Collection<V> createCollction() {
+	protected Collection<V> createCollection() {
 		return new LinkedHashSet<>(DEFAULT_COLLCTION_INITIAL_CAPACITY);
 	}
 }

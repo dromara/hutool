@@ -1,16 +1,15 @@
-package cn.hutool.extra.servlet.multipart;
+package cn.hutool.core.net.multipart;
+
+import cn.hutool.core.util.ArrayUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.ServletRequest;
-
-import cn.hutool.core.util.ArrayUtil;
 
 /**
  * HttpRequest解析器<br>
@@ -21,9 +20,9 @@ import cn.hutool.core.util.ArrayUtil;
 public class MultipartFormData {
 
 	/** 请求参数 */
-	private Map<String, String[]> requestParameters = new HashMap<String, String[]>();
+	private Map<String, String[]> requestParameters = new HashMap<>();
 	/** 请求文件 */
-	private Map<String, UploadFile[]> requestFiles = new HashMap<String, UploadFile[]>();
+	private Map<String, UploadFile[]> requestFiles = new HashMap<>();
 
 	/** 是否解析完毕 */
 	private boolean loaded;
@@ -49,23 +48,13 @@ public class MultipartFormData {
 	// --------------------------------------------------------------------- Constructor end
 
 	/**
-	 * 解析上传文件和表单数据
-	 * 
-	 * @param request Http请求
-	 * @throws IOException IO异常
-	 */
-	public void parseRequest(ServletRequest request) throws IOException {
-		parseRequestStream(request.getInputStream(), request.getCharacterEncoding());
-	}
-
-	/**
 	 * 提取上传的文件和表单数据
 	 * 
 	 * @param inputStream HttpRequest流
 	 * @param charset 编码
 	 * @throws IOException IO异常
 	 */
-	public void parseRequestStream(InputStream inputStream, String charset) throws IOException {
+	public void parseRequestStream(InputStream inputStream, Charset charset) throws IOException {
 		setLoaded();
 
 		MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);

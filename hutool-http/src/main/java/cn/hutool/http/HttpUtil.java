@@ -2,6 +2,7 @@ package cn.hutool.http;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.FileUtil;
@@ -416,7 +417,7 @@ public class HttpUtil {
 			if (value instanceof Iterable) {
 				value = CollUtil.join((Iterable<?>) value, ",");
 			} else if (value instanceof Iterator) {
-				value = CollUtil.join((Iterator<?>) value, ",");
+				value = IterUtil.join((Iterator<?>) value, ",");
 			}
 			valueStr = Convert.toStr(value);
 			if (StrUtil.isNotEmpty(key)) {
@@ -435,30 +436,33 @@ public class HttpUtil {
 	 *
 	 * <p>注意，此方法只能标准化整个URL，并不适合于单独编码参数值</p>
 	 *
-	 * @param paramsStr url参数，可以包含url本身
+	 * @param urlWithParams url和参数，可以包含url本身，也可以单独参数
 	 * @param charset   编码
 	 * @return 编码后的url和参数
 	 * @since 4.0.1
 	 */
-	public static String encodeParams(String paramsStr, Charset charset) {
-		if (StrUtil.isBlank(paramsStr)) {
+	public static String encodeParams(String urlWithParams, Charset charset) {
+		if (StrUtil.isBlank(urlWithParams)) {
 			return StrUtil.EMPTY;
 		}
 
 		String urlPart = null; // url部分，不包括问号
 		String paramPart; // 参数部分
-		int pathEndPos = paramsStr.indexOf('?');
+		final int pathEndPos = urlWithParams.indexOf('?');
 		if (pathEndPos > -1) {
 			// url + 参数
-			urlPart = StrUtil.subPre(paramsStr, pathEndPos);
-			paramPart = StrUtil.subSuf(paramsStr, pathEndPos + 1);
+			urlPart = StrUtil.subPre(urlWithParams, pathEndPos);
+			paramPart = StrUtil.subSuf(urlWithParams, pathEndPos + 1);
 			if (StrUtil.isBlank(paramPart)) {
 				// 无参数，返回url
 				return urlPart;
 			}
-		} else {
-			// 无URL
-			paramPart = paramsStr;
+		} else if(false == StrUtil.contains(urlWithParams, '=')){
+			// 无参数的URL
+			return urlWithParams;
+		}else {
+			// 无URL的参数
+			paramPart = urlWithParams;
 		}
 
 		paramPart = normalizeParams(paramPart, charset);
@@ -534,6 +538,18 @@ public class HttpUtil {
 	 * @since 4.0.2
 	 */
 	public static HashMap<String, String> decodeParamMap(String paramsStr, String charset) {
+		return decodeParamMap(paramsStr, CharsetUtil.charset(charset));
+	}
+
+	/**
+	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
+	 *
+	 * @param paramsStr 参数字符串（或者带参数的Path）
+	 * @param charset   字符集
+	 * @return 参数Map
+	 * @since 5.2.6
+	 */
+	public static HashMap<String, String> decodeParamMap(String paramsStr, Charset charset) {
 		final Map<String, List<String>> paramsMap = decodeParams(paramsStr, charset);
 		final HashMap<String, String> result = MapUtil.newHashMap(paramsMap.size());
 		List<String> valueList;
@@ -552,6 +568,18 @@ public class HttpUtil {
 	 * @return 参数Map
 	 */
 	public static Map<String, List<String>> decodeParams(String paramsStr, String charset) {
+		return decodeParams(paramsStr, CharsetUtil.charset(charset));
+	}
+
+	/**
+	 * 将URL参数解析为Map（也可以解析Post中的键值对参数）
+	 *
+	 * @param paramsStr 参数字符串（或者带参数的Path）
+	 * @param charset   字符集
+	 * @return 参数Map
+	 * @since 5.2.6
+	 */
+	public static Map<String, List<String>> decodeParams(String paramsStr, Charset charset) {
 		if (StrUtil.isBlank(paramsStr)) {
 			return Collections.emptyMap();
 		}
@@ -811,7 +839,7 @@ public class HttpUtil {
 	 * @param value   value
 	 * @param charset 编码
 	 */
-	private static void addParam(Map<String, List<String>> params, String name, String value, String charset) {
+	private static void addParam(Map<String, List<String>> params, String name, String value, Charset charset) {
 		name = URLUtil.decode(name, charset);
 		value = URLUtil.decode(value, charset);
 		final List<String> values = params.computeIfAbsent(name, k -> new ArrayList<>(1));

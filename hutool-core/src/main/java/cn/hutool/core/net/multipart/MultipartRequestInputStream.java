@@ -1,15 +1,16 @@
-package cn.hutool.extra.servlet.multipart;
+package cn.hutool.core.net.multipart;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 /**
  * Http请求解析流，提供了专门针对带文件的form表单的解析<br>
  * 来自Jodd
- * 
+ *
  * @author jodd.org
  */
 public class MultipartRequestInputStream extends BufferedInputStream {
@@ -20,7 +21,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	/**
 	 * 读取byte字节流，在末尾抛出异常
-	 * 
+	 *
 	 * @return byte
 	 * @throws IOException 读取异常
 	 */
@@ -34,7 +35,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	/**
 	 * 跳过指定位数的 bytes.
-	 * 
+	 *
 	 * @param i 跳过的byte数
 	 * @throws IOException IO异常
 	 */
@@ -47,12 +48,14 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	// ---------------------------------------------------------------- boundary
 
-	/** part部分边界 */
+	/**
+	 * part部分边界
+	 */
 	protected byte[] boundary;
 
 	/**
 	 * 输入流中读取边界
-	 * 
+	 *
 	 * @return 边界
 	 * @throws IOException 读取异常
 	 */
@@ -60,6 +63,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 		ByteArrayOutputStream boundaryOutput = new ByteArrayOutputStream(1024);
 		byte b;
 		// skip optional whitespaces
+		//noinspection StatementWithEmptyBody
 		while ((b = readByte()) <= ' ') {
 		}
 		boundaryOutput.write(b);
@@ -89,12 +93,12 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	/**
 	 * 从流中读取文件头部信息， 如果达到末尾则返回null
-	 * 
+	 *
 	 * @param encoding 字符集
 	 * @return 头部信息， 如果达到末尾则返回null
 	 * @throws IOException 读取异常
 	 */
-	public UploadFileHeader readDataHeader(String encoding) throws IOException {
+	public UploadFileHeader readDataHeader(Charset encoding) throws IOException {
 		String dataHeader = readDataHeaderString(encoding);
 		if (dataHeader != null) {
 			lastHeader = new UploadFileHeader(dataHeader);
@@ -104,7 +108,14 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 		return lastHeader;
 	}
 
-	protected String readDataHeaderString(String encoding) throws IOException {
+	/**
+	 * 读取数据头信息字符串
+	 *
+	 * @param charset 编码
+	 * @return 数据头信息字符串
+	 * @throws IOException IO异常
+	 */
+	protected String readDataHeaderString(Charset charset) throws IOException {
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
 		byte b;
 		while (true) {
@@ -128,13 +139,13 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 			data.write(b);
 		}
 		skipBytes(3);
-		return encoding == null ? data.toString() : data.toString(encoding);
+		return charset == null ? data.toString() : data.toString(charset.name());
 	}
 	// ---------------------------------------------------------------- copy
 
 	/**
 	 * 全部字节流复制到out
-	 * 
+	 *
 	 * @param out 输出流
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
@@ -154,8 +165,8 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	/**
 	 * 复制字节流到out， 大于maxBytes或者文件末尾停止
-	 * 
-	 * @param out 输出流
+	 *
+	 * @param out   输出流
 	 * @param limit 最大字节数
 	 * @return 复制的字节数
 	 * @throws IOException 读取异常
@@ -178,7 +189,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 
 	/**
 	 * 跳过边界表示
-	 * 
+	 *
 	 * @return 跳过的字节数
 	 * @throws IOException 读取异常
 	 */

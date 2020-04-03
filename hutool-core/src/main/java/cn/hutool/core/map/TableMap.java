@@ -16,12 +16,13 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * 可重复键的Map
- * 
- * @author looly
+ * 可重复键和值的Map<br>
+ * 通过键值单独建立List方式，使键值对一一对应，实现正向和反向两种查找<br>
+ * 无论是正向还是反向，都是遍历列表查找过程，相比标准的HashMap要慢，数据越多越慢
  *
  * @param <K> 键类型
  * @param <V> 值类型
+ * @author looly
  */
 public class TableMap<K, V> implements Map<K, V>, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -31,7 +32,7 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 
 	/**
 	 * 构造
-	 * 
+	 *
 	 * @param size 初始容量
 	 */
 	public TableMap(int size) {
@@ -41,8 +42,8 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 
 	/**
 	 * 构造
-	 * 
-	 * @param keys 键列表
+	 *
+	 * @param keys   键列表
 	 * @param values 值列表
 	 */
 	public TableMap(K[] keys, V[] values) {
@@ -89,10 +90,10 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 	 * @return 值列表
 	 * @since 5.2.5
 	 */
-	public List<V> getValues(K key){
+	public List<V> getValues(K key) {
 		return CollUtil.getAny(
 				this.values,
-				ListUtil.indexOfAll(this.keys, (ele)-> ObjectUtil.equal(ele, key))
+				ListUtil.indexOfAll(this.keys, (ele) -> ObjectUtil.equal(ele, key))
 		);
 	}
 
@@ -103,10 +104,10 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 	 * @return 值列表
 	 * @since 5.2.5
 	 */
-	public List<K> getKeys(V value){
+	public List<K> getKeys(V value) {
 		return CollUtil.getAny(
 				this.keys,
-				ListUtil.indexOfAll(this.values, (ele)-> ObjectUtil.equal(ele, value))
+				ListUtil.indexOfAll(this.values, (ele) -> ObjectUtil.equal(ele, value))
 		);
 	}
 
@@ -189,12 +190,13 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 		public V setValue(V value) {
 			throw new UnsupportedOperationException("setValue not supported.");
 		}
+
 		@Override
 		public final boolean equals(Object o) {
 			if (o == this)
 				return true;
 			if (o instanceof Map.Entry) {
-				Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+				Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
 				return Objects.equals(key, e.getKey()) &&
 						Objects.equals(value, e.getValue());
 			}

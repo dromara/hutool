@@ -1,9 +1,13 @@
 package cn.hutool.http.server;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.multi.ListValueMap;
 import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.net.multipart.MultipartFormData;
+import cn.hutool.core.net.multipart.UploadSetting;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -15,6 +19,7 @@ import cn.hutool.http.useragent.UserAgentUtil;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpCookie;
 import java.net.URI;
@@ -32,6 +37,9 @@ import java.util.Map;
 public class HttpServerRequest extends HttpServerBase {
 
 	private Map<String, HttpCookie> cookieCache;
+	private ListValueMap<String, String> paramsCache;
+	private Charset charsetCache;
+	private byte[] bodyCache;
 
 	/**
 	 * 构造
@@ -159,9 +167,13 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 编码，默认UTF-8
 	 */
 	public Charset getCharset() {
-		final String contentType = getContentType();
-		final String charsetStr = HttpUtil.getCharset(contentType);
-		return CharsetUtil.parse(charsetStr, CharsetUtil.CHARSET_UTF_8);
+		if(null == this.charsetCache){
+			final String contentType = getContentType();
+			final String charsetStr = HttpUtil.getCharset(contentType);
+			this.charsetCache = CharsetUtil.parse(charsetStr, DEFAULT_CHARSET);
+		}
+
+		return this.charsetCache;
 	}
 
 	/**
@@ -226,12 +238,20 @@ public class HttpServerRequest extends HttpServerBase {
 	}
 
 	/**
-	 * 获取请求体的流，流中可以读取请求内容，包括请求表单数据或文件上传数据
+	 * 是否为Multipart类型表单，此类型表单用于文件上传
 	 *
-	 * @return 流
+	 * @return 是否为Multipart类型表单，此类型表单用于文件上传
 	 */
-	public InputStream getBodyStream() {
-		return this.httpExchange.getRequestBody();
+	public boolean isMultipart() {
+		if (false == isPostMethod()) {
+			return false;
+		}
+
+		final String contentType = getContentType();
+		if (StrUtil.isBlank(contentType)) {
+			return false;
+		}
+		return contentType.toLowerCase().startsWith("multipart/");
 	}
 
 	/**
@@ -251,31 +271,49 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return 请求
 	 */
 	public String getBody(Charset charset) {
-		InputStream in = null;
-		try {
-			in = getBodyStream();
-			return IoUtil.read(in, charset);
-		} finally {
-			IoUtil.close(in);
-		}
+		return StrUtil.str(getBodyBytes(), charset);
 	}
 
 	/**
-	 * 是否为Multipart类型表单，此类型表单用于文件上传
+	 * 获取body的bytes数组
 	 *
-	 * @return 是否为Multipart类型表单，此类型表单用于文件上传
+	 * @return body的bytes数组
 	 */
-	public boolean isMultipart() {
-		if (false == isPostMethod()) {
-			return false;
+	public byte[] getBodyBytes(){
+		if(null == this.bodyCache){
+			this.bodyCache = IoUtil.readBytes(getBodyStream(), true);
+		}
+		return this.bodyCache;
+	}
+
+	/**
+	 * 获取请求体的流，流中可以读取请求内容，包括请求表单数据或文件上传数据
+	 *
+	 * @return 流
+	 */
+	public InputStream getBodyStream() {
+		return this.httpExchange.getRequestBody();
+	}
+
+	public ListValueMap<String, String> getParams() {
+		if (null == this.paramsCache) {
+			this.paramsCache = new ListValueMap<>();
+			final Charset charset = getCharset();
+
+			//解析URL中的参数
+			final String query = getQuery();
+			if(StrUtil.isNotBlank(query)){
+				this.paramsCache.putAll(HttpUtil.decodeParams(query, charset));
+			}
+
+			// 解析body中的参数
+			final String body = getBody();
+			if(StrUtil.isNotBlank(body)){
+				this.paramsCache.putAll(HttpUtil.decodeParams(body, charset));
+			}
 		}
 
-		final String contentType = getContentType();
-		if (StrUtil.isBlank(contentType)) {
-			return false;
-		}
-
-		return contentType.toLowerCase().startsWith("multipart/");
+		return this.paramsCache;
 	}
 
 	/**
@@ -331,5 +369,37 @@ public class HttpServerRequest extends HttpServerBase {
 
 		ip = this.httpExchange.getRemoteAddress().getHostName();
 		return NetUtil.getMultistageReverseProxyIp(ip);
+	}
+
+	/**
+	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
+	 *
+	 * @return MultipartFormData
+	 * @throws IORuntimeException IO异常
+	 * @since 5.3.0
+	 */
+	public MultipartFormData getMultipart() throws IORuntimeException {
+		return getMultipart(new UploadSetting());
+	}
+
+	/**
+	 * 获得multipart/form-data 表单内容<br>
+	 * 包括文件和普通表单数据<br>
+	 * 在同一次请求中，此方法只能被执行一次！
+	 *
+	 * @param uploadSetting 上传文件的设定，包括最大文件大小、保存在内存的边界大小、临时目录、扩展名限定等
+	 * @return MultiPart表单
+	 * @throws IORuntimeException IO异常
+	 * @since 5.3.0
+	 */
+	public MultipartFormData getMultipart(UploadSetting uploadSetting) throws IORuntimeException {
+		final MultipartFormData formData = new MultipartFormData(uploadSetting);
+		try {
+			formData.parseRequestStream(getBodyStream(), getCharset());
+		} catch (IOException e) {
+			throw new IORuntimeException(e);
+		}
+
+		return formData;
 	}
 }

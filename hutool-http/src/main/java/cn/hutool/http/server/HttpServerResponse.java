@@ -3,12 +3,14 @@ package cn.hutool.http.server;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.http.HttpUtil;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -18,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +32,10 @@ import java.util.Map;
 public class HttpServerResponse extends HttpServerBase {
 
 	private Charset charset;
+	/**
+	 * 是否已经发送了Http状态码，如果没有，提前写出状态码
+	 */
+	private boolean isSendCode;
 
 	/**
 	 * 构造
@@ -49,6 +57,38 @@ public class HttpServerResponse extends HttpServerBase {
 	}
 
 	/**
+	 * 发送成功状态码
+	 *
+	 * @return this
+	 */
+	public HttpServerResponse sendOk() {
+		return send(HttpStatus.HTTP_OK);
+	}
+
+	/**
+	 * 发送404错误页
+	 *
+	 * @param content 错误页页面内容，默认text/html类型
+	 * @return this
+	 */
+	public HttpServerResponse send404(String content) {
+		return sendError(HttpStatus.HTTP_NOT_FOUND, content);
+	}
+
+	/**
+	 * 发送错误页
+	 *
+	 * @param errorCode HTTP错误状态码，见HttpStatus
+	 * @param content   错误页页面内容，默认text/html类型
+	 * @return this
+	 */
+	public HttpServerResponse sendError(int errorCode, String content) {
+		send(errorCode);
+		setContentType(ContentType.TEXT_HTML.toString());
+		return write(content);
+	}
+
+	/**
 	 * 发送HTTP状态码
 	 *
 	 * @param httpStatusCode HTTP状态码，见HttpStatus
@@ -56,11 +96,17 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse send(int httpStatusCode, long bodyLength) {
+		if (this.isSendCode) {
+			throw new IORuntimeException("Http status code has been send!");
+		}
+
 		try {
 			this.httpExchange.sendResponseHeaders(httpStatusCode, bodyLength);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		}
+
+		this.isSendCode = true;
 		return this;
 	}
 
@@ -70,6 +116,9 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return 响应头
 	 */
 	public Headers getHeaders() {
+		if (false == this.isSendCode) {
+			sendOk();
+		}
 		return this.httpExchange.getResponseHeaders();
 	}
 
@@ -141,7 +190,7 @@ public class HttpServerResponse extends HttpServerBase {
 	public HttpServerResponse setContentType(String contentType) {
 		if (null != contentType && null != this.charset) {
 			if (false == contentType.contains(";charset=")) {
-				contentType += ";charset=" + this.charset;
+				contentType = ContentType.build(contentType, this.charset);
 			}
 		}
 
@@ -170,11 +219,26 @@ public class HttpServerResponse extends HttpServerBase {
 	}
 
 	/**
+	 * 设置属性
+	 *
+	 * @param name  属性名
+	 * @param value 属性值
+	 * @return this
+	 */
+	public HttpServerResponse setAttr(String name, Object value) {
+		this.httpExchange.setAttribute(name, value);
+		return this;
+	}
+
+	/**
 	 * 获取响应数据流
 	 *
 	 * @return 响应数据流
 	 */
 	public OutputStream getOut() {
+		if (false == this.isSendCode) {
+			sendOk();
+		}
 		return this.httpExchange.getResponseBody();
 	}
 
@@ -183,8 +247,43 @@ public class HttpServerResponse extends HttpServerBase {
 	 *
 	 * @return 响应数据流
 	 */
-	public OutputStream getWriter() {
-		return this.httpExchange.getResponseBody();
+	public PrintWriter getWriter() {
+		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
+		return new PrintWriter(new OutputStreamWriter(getOut(), charset));
+	}
+
+	/**
+	 * 写出数据到客户端
+	 *
+	 * @param data 数据
+	 * @return this
+	 */
+	public HttpServerResponse write(String data, String contentType) {
+		setContentType(contentType);
+		return write(data);
+	}
+
+	/**
+	 * 写出数据到客户端
+	 *
+	 * @param data 数据
+	 * @return this
+	 */
+	public HttpServerResponse write(String data) {
+		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
+		return write(StrUtil.bytes(data, charset));
+	}
+
+	/**
+	 * 写出数据到客户端
+	 *
+	 * @param data        数据
+	 * @param contentType 返回的类型
+	 * @return this
+	 */
+	public HttpServerResponse write(byte[] data, String contentType) {
+		setContentType(contentType);
+		return write(data);
 	}
 
 	/**
@@ -194,8 +293,19 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @return this
 	 */
 	public HttpServerResponse write(byte[] data) {
-		write(new ByteArrayInputStream(data));
-		return this;
+		return write(new ByteArrayInputStream(data));
+	}
+
+	/**
+	 * 返回数据给客户端
+	 *
+	 * @param in          需要返回客户端的内容
+	 * @param contentType 返回的类型
+	 * @since 5.2.6
+	 */
+	public HttpServerResponse write(InputStream in, String contentType) {
+		setContentType(contentType);
+		return write(in);
 	}
 
 	/**
@@ -236,7 +346,7 @@ public class HttpServerResponse extends HttpServerBase {
 	}
 
 	/**
-	 * 返回数据给客户端
+	 * 返回文件数据给客户端（文件下载）
 	 *
 	 * @param in          需要返回客户端的内容
 	 * @param contentType 返回的类型
@@ -244,7 +354,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * @since 5.2.6
 	 */
 	public void write(InputStream in, String contentType, String fileName) {
-		final Charset charset = ObjectUtil.defaultIfNull(this.charset, CharsetUtil.CHARSET_UTF_8);
+		final Charset charset = ObjectUtil.defaultIfNull(this.charset, DEFAULT_CHARSET);
 		setHeader("Content-Disposition", StrUtil.format("attachment;filename={}", URLUtil.encode(fileName, charset)));
 		setContentType(contentType);
 		write(in);

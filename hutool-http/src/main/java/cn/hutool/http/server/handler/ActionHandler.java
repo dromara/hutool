@@ -27,6 +27,9 @@ public class ActionHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange httpExchange) {
-		action.doAction(new HttpServerRequest(httpExchange), new HttpServerResponse(httpExchange));
+		action.doAction(
+				new HttpServerRequest(httpExchange),
+				new HttpServerResponse(httpExchange)
+		);
 	}
 }

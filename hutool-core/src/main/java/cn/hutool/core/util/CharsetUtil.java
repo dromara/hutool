@@ -63,6 +63,17 @@ public class CharsetUtil {
 	}
 
 	/**
+	 * 解析字符串编码为Charset对象，解析失败返回系统默认编码
+	 *
+	 * @param charsetName    字符集，为空则返回默认字符集
+	 * @return Charset
+	 * @since 5.2.6
+	 */
+	public static Charset parse(String charsetName) {
+		return parse(charsetName, Charset.defaultCharset());
+	}
+
+	/**
 	 * 解析字符串编码为Charset对象，解析失败返回默认编码
 	 *
 	 * @param charsetName    字符集，为空则返回默认字符集
@@ -70,7 +81,7 @@ public class CharsetUtil {
 	 * @return Charset
 	 * @since 5.2.6
 	 */
-	public static Charset parse(String charsetName, Charset defaultCharset) throws UnsupportedCharsetException {
+	public static Charset parse(String charsetName, Charset defaultCharset) {
 		if (StrUtil.isBlank(charsetName)) {
 			return defaultCharset;
 		}

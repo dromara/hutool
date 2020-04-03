@@ -1,9 +1,10 @@
 package cn.hutool.http.server;
 
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.lang.Console;
 import cn.hutool.http.server.action.Action;
+import cn.hutool.http.server.action.RootAction;
 import cn.hutool.http.server.handler.ActionHandler;
-import cn.hutool.http.server.handler.RootHandler;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
@@ -72,7 +73,7 @@ public class SimpleServer {
 	 * @return this
 	 */
 	public SimpleServer setRoot(String root) {
-		return addHandler("/", new RootHandler(root));
+		return addAction("/", new RootAction(root));
 	}
 
 	/**
@@ -119,6 +120,8 @@ public class SimpleServer {
 	 * 启动Http服务器，启动后会阻塞当前线程
 	 */
 	public void start() {
+		final InetSocketAddress address = getAddress();
+		Console.log("Hutool Simple Http Server listen on 【{}:{}】", address.getHostName(), address.getPort());
 		this.server.start();
 	}
 }

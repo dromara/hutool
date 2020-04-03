@@ -1,13 +1,5 @@
 package cn.hutool.http.test;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.CharsetUtil;
@@ -15,6 +7,13 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HttpUtilTest {
 
@@ -164,6 +163,16 @@ public class HttpUtilTest {
 		paramsStr = "a=bbb&c=你好&哈喽&";
 		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
 		Assert.assertEquals("a=bbb&c=%E4%BD%A0%E5%A5%BD&%E5%93%88%E5%96%BD=", encode);
+
+		// URL原样输出
+		paramsStr = "https://www.hutool.cn/";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals(paramsStr, encode);
+
+		// URL原样输出
+		paramsStr = "https://www.hutool.cn/?";
+		encode = HttpUtil.encodeParams(paramsStr, CharsetUtil.CHARSET_UTF_8);
+		Assert.assertEquals("https://www.hutool.cn/", encode);
 	}
 
 	@Test
