@@ -17,6 +17,7 @@
 * 【core   】     NetUtil增加parseCookies方法
 * 【core   】     CollUtil增加toMap方法
 * 【core   】     CollUtil和IterUtil废弃一些方法
+* 【core   】     添加ValidateObjectInputStream避免对象反序列化漏洞风险
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题

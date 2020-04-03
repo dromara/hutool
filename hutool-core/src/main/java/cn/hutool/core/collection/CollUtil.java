@@ -2348,7 +2348,9 @@ public class CollUtil {
 	 * @param <V>        Value类型
 	 * @param map        {@link Map}
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
+	 * @deprecated JDK8+中使用map.forEach
 	 */
+	@Deprecated
 	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
 		int index = 0;
 		for (Entry<K, V> entry : map.entrySet()) {
@@ -2525,6 +2527,18 @@ public class CollUtil {
 	 */
 	public static <T extends Comparable<? super T>> T min(Collection<T> coll) {
 		return Collections.min(coll);
+	}
+
+	/**
+	 * 转为只读集合
+	 *
+	 * @param <T> 元素类型
+	 * @param c   集合
+	 * @return 只读集合
+	 * @since 5.2.6
+	 */
+	public static <T> Collection<T> unmodifiable(Collection<? extends T> c) {
+		return Collections.unmodifiableCollection(c);
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start

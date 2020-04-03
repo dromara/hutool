@@ -636,24 +636,38 @@ public class IoUtil {
 	}
 
 	/**
-	 * 从流中读取内容，读到输出流中
+	 * 从流中读取对象，即对象的反序列化
 	 * 
 	 * @param <T> 读取对象的类型
 	 * @param in 输入流
 	 * @return 输出流
 	 * @throws IORuntimeException IO异常
 	 * @throws UtilException ClassNotFoundException包装
+	 * @deprecated 由于存在对象反序列化漏洞风险，请使用{@link #readObj(InputStream, Class)}
 	 */
+	@Deprecated
 	public static <T> T readObj(InputStream in) throws IORuntimeException, UtilException {
+		return readObj(in, null);
+	}
+
+	/**
+	 * 从流中读取对象，即对象的反序列化，读取后不关闭流
+	 *
+	 * @param <T> 读取对象的类型
+	 * @param in 输入流
+	 * @return 输出流
+	 * @throws IORuntimeException IO异常
+	 * @throws UtilException ClassNotFoundException包装
+	 */
+	public static <T> T readObj(InputStream in, Class<T> clazz) throws IORuntimeException, UtilException {
 		if (in == null) {
 			throw new IllegalArgumentException("The InputStream must not be null");
 		}
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(in);
-			@SuppressWarnings("unchecked") // may fail with CCE if serialised form is incorrect
-			final T obj = (T) ois.readObject();
-			return obj;
+			ois = new ValidateObjectInputStream(in, clazz);
+			//noinspection unchecked
+			return (T) ois.readObject();
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} catch (ClassNotFoundException e) {

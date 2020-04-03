@@ -20,6 +20,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Map;
  * @author looly
  * @since 5.2.6
  */
-public class HttpServerRequest extends HttpServerBase{
+public class HttpServerRequest extends HttpServerBase {
 
 	private Map<String, HttpCookie> cookieCache;
 
@@ -149,6 +150,21 @@ public class HttpServerRequest extends HttpServerBase{
 	}
 
 	/**
+	 * 获取编码，获取失败默认使用UTF-8，获取规则如下：
+	 *
+	 * <pre>
+	 *     1、从Content-Type头中获取编码，类似于：text/html;charset=utf-8
+	 * </pre>
+	 *
+	 * @return 编码，默认UTF-8
+	 */
+	public Charset getCharset() {
+		final String contentType = getContentType();
+		final String charsetStr = HttpUtil.getCharset(contentType);
+		return CharsetUtil.parse(charsetStr, CharsetUtil.CHARSET_UTF_8);
+	}
+
+	/**
 	 * 获得User-Agent
 	 *
 	 * @return User-Agent字符串
@@ -191,10 +207,10 @@ public class HttpServerRequest extends HttpServerBase{
 	 */
 	public Map<String, HttpCookie> getCookieMap() {
 		if (null == this.cookieCache) {
-			cookieCache = CollUtil.toMap(
+			cookieCache = Collections.unmodifiableMap(CollUtil.toMap(
 					NetUtil.parseCookies(getCookiesStr()),
 					new CaseInsensitiveMap<>(),
-					HttpCookie::getName);
+					HttpCookie::getName));
 		}
 		return cookieCache;
 	}
@@ -220,16 +236,12 @@ public class HttpServerRequest extends HttpServerBase{
 
 	/**
 	 * 获取请求体文本，可以是form表单、json、xml等任意内容<br>
-	 * 根据请求的Content-Type判断编码，判断失败使用UTF-8编码
+	 * 使用{@link #getCharset()}判断编码，判断失败使用UTF-8编码
 	 *
 	 * @return 请求
 	 */
 	public String getBody() {
-		final String contentType = getContentType();
-		final String charsetStr = HttpUtil.getCharset(contentType);
-		final Charset charset = CharsetUtil.parse(charsetStr, CharsetUtil.CHARSET_UTF_8);
-
-		return getBody(charset);
+		return getBody(getCharset());
 	}
 
 	/**

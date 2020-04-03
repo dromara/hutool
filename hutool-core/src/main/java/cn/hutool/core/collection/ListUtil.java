@@ -444,4 +444,16 @@ public class ListUtil {
 		}
 		return Convert.convert(int[].class, indexList);
 	}
+
+	/**
+	 * 将对应List转换为不可修改的List
+	 *
+	 * @param list Map
+	 * @param <T> 元素类型
+	 * @return 不修改Map
+	 * @since 5.2.6
+	 */
+	public static <T> List<T> unmodifiable(List<T> list) {
+		return Collections.unmodifiableList(list);
+	}
 }

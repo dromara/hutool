@@ -560,7 +560,7 @@ public class MapUtil {
 	public static <K, V> String join(Map<K, V> map, String separator, String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
 		final StringBuilder strBuilder = StrUtil.builder();
 		boolean isFirst = true;
-		if(isNotEmpty(map)){
+		if (isNotEmpty(map)) {
 			for (Entry<K, V> entry : map.entrySet()) {
 				if (false == isIgnoreNull || entry.getKey() != null && entry.getValue() != null) {
 					if (isFirst) {
@@ -733,7 +733,7 @@ public class MapUtil {
 	 * @since 4.0.1
 	 */
 	public static <K, V> TreeMap<K, V> sort(Map<K, V> map, Comparator<? super K> comparator) {
-		if(null == map){
+		if (null == map) {
 			return null;
 		}
 
@@ -775,6 +775,19 @@ public class MapUtil {
 	 */
 	public static <K, V> MapWrapper<K, V> wrap(Map<K, V> map) {
 		return new MapWrapper<>(map);
+	}
+
+	/**
+	 * 将对应Map转换为不可修改的Map
+	 *
+	 * @param map Map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 不修改Map
+	 * @since 5.2.6
+	 */
+	public static <K, V> Map<K, V> unmodifiable(Map<K, V> map) {
+		return Collections.unmodifiableMap(map);
 	}
 
 	// ----------------------------------------------------------------------------------------------- builder
