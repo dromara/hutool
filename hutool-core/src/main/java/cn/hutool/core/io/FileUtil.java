@@ -59,7 +59,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -273,7 +272,7 @@ public class FileUtil {
 	 * @param start    起始路径，必须为目录
 	 * @param maxDepth 最大遍历深度，-1表示不限制深度
 	 * @param visitor  {@link FileVisitor} 接口，用于自定义在访问文件时，访问目录前后等节点做的操作
-	 * @see Files#walkFileTree(Path, Set, int, FileVisitor)
+	 * @see Files#walkFileTree(Path, java.util.Set, int, FileVisitor)
 	 * @since 4.6.3
 	 */
 	public static void walkFiles(Path start, int maxDepth, FileVisitor<? super Path> visitor) {

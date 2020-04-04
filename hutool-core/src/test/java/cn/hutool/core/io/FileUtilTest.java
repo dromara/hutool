@@ -1,17 +1,16 @@
 package cn.hutool.core.io;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
+import cn.hutool.core.io.file.LineSeparator;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharsetUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.io.file.LineSeparator;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharsetUtil;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * {@link FileUtil} 单元测试类
@@ -87,11 +86,29 @@ public class FileUtilTest {
 
 	@Test
 	@Ignore
-	public void copyFilesFromDir() {
+	public void copyFilesFromDirTest() {
 		File srcFile = FileUtil.file("D:\\驱动");
 		File destFile = FileUtil.file("d:\\驱动备份");
 
 		FileUtil.copyFilesFromDir(srcFile, destFile, true);
+	}
+
+	@Test
+	@Ignore
+	public void copyDirTest() {
+		File srcFile = FileUtil.file("D:\\test");
+		File destFile = FileUtil.file("E:\\");
+
+		FileUtil.copy(srcFile, destFile, true);
+	}
+
+	@Test
+	@Ignore
+	public void moveDirTest() {
+		File srcFile = FileUtil.file("E:\\test2");
+		File destFile = FileUtil.file("D:\\");
+
+		FileUtil.move(srcFile, destFile, true);
 	}
 
 	@Test
