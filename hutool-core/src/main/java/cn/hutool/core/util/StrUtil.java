@@ -2390,7 +2390,7 @@ public class StrUtil {
 	 * <pre>
 	 * 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
 	 * 2、对象数组会调用Arrays.toString方法
-	 * <pre/>
+	 * </pre>
 	 *
 	 * @param obj         对象
 	 * @param charsetName 字符集
@@ -2405,7 +2405,7 @@ public class StrUtil {
 	 * <pre>
 	 * 	 1、Byte数组和ByteBuffer会被转换为对应字符串的数组
 	 * 	 2、对象数组会调用Arrays.toString方法
-	 * <pre/>
+	 * </pre>
 	 *
 	 * @param obj     对象
 	 * @param charset 字符集
