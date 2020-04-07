@@ -189,6 +189,11 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	}
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 
+	@Override
+	public JSONConfig getConfig() {
+		return this.config;
+	}
+
 	/**
 	 * 设置转为字符串时的日期格式，默认为时间戳（null值）
 	 * 
@@ -295,7 +300,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		if (names == null || names.size() == 0 || this.size() == 0) {
 			return null;
 		}
-		JSONObject jo = new JSONObject();
+		final JSONObject jo = new JSONObject(this.config);
 		for (int i = 0; i < names.size(); i += 1) {
 			jo.set(names.getStr(i), this.getObj(i));
 		}
@@ -591,6 +596,8 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		} else if (source instanceof CharSequence) {
 			// JSON字符串
 			init((CharSequence) source);
+		}else if (source instanceof JSONTokener) {
+			init((JSONTokener) source);
 		} else {
 			Iterator<?> iter;
 			if (source.getClass().isArray()) {// 数组
@@ -615,7 +622,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	 */
 	private void init(CharSequence source) {
 		if (null != source) {
-			init(new JSONTokener(StrUtil.trim(source)));
+			init(new JSONTokener(StrUtil.trim(source), this.config));
 		}
 	}
 

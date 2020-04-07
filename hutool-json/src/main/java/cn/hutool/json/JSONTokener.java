@@ -1,5 +1,7 @@
 package cn.hutool.json;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,14 +42,20 @@ public class JSONTokener {
 	 */
 	private Reader reader;
 
+	/**
+	 * JSON配置
+	 */
+	private JSONConfig config;
+
 	// ------------------------------------------------------------------------------------ Constructor start
 
 	/**
 	 * 从Reader中构建
 	 *
 	 * @param reader Reader
+	 * @param config JSON配置
 	 */
-	public JSONTokener(Reader reader) {
+	public JSONTokener(Reader reader, JSONConfig config) {
 		this.reader = reader.markSupported() ? reader : new BufferedReader(reader);
 		this.eof = false;
 		this.usePrevious = false;
@@ -61,18 +69,20 @@ public class JSONTokener {
 	 * 从InputStream中构建
 	 *
 	 * @param inputStream InputStream
+	 * @param config      JSON配置
 	 */
-	public JSONTokener(InputStream inputStream) throws JSONException {
-		this(new InputStreamReader(inputStream));
+	public JSONTokener(InputStream inputStream, JSONConfig config) throws JSONException {
+		this(new InputStreamReader(inputStream), config);
 	}
 
 	/**
 	 * 从字符串中构建
 	 *
-	 * @param s JSON字符串
+	 * @param s      JSON字符串
+	 * @param config JSON配置
 	 */
-	public JSONTokener(String s) {
-		this(new StringReader(s));
+	public JSONTokener(CharSequence s, JSONConfig config) {
+		this(new StringReader(StrUtil.str(s)), config);
 	}
 	// ------------------------------------------------------------------------------------ Constructor end
 
@@ -318,10 +328,10 @@ public class JSONTokener {
 				return this.nextString(c);
 			case '{':
 				this.back();
-				return new JSONObject(this);
+				return new JSONObject(this, this.config);
 			case '[':
 				this.back();
-				return new JSONArray(this);
+				return new JSONArray(this, this.config);
 		}
 
 		/*
@@ -391,7 +401,7 @@ public class JSONTokener {
 	 * @return {@link JSONArray}
 	 */
 	public JSONArray toJSONArray() {
-		JSONArray jsonArray = new JSONArray();
+		JSONArray jsonArray = new JSONArray(this.config);
 		if (this.nextClean() != '[') {
 			throw this.syntaxError("A JSONArray text must start with '['");
 		}

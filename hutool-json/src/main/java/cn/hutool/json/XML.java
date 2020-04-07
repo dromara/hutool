@@ -229,7 +229,7 @@ public class XML {
 	 */
 	public static JSONObject toJSONObject(String string, boolean keepStrings) throws JSONException {
 		JSONObject jo = new JSONObject();
-		XMLTokener x = new XMLTokener(string);
+		XMLTokener x = new XMLTokener(string, jo.getConfig());
 		while (x.more() && x.skipPast("<")) {
 			parse(x, jo, null, keepStrings);
 		}

@@ -196,7 +196,7 @@ final class InternalJSONUtil {
 			String segment = path[i];
 			JSONObject nextTarget = target.getJSONObject(segment);
 			if (nextTarget == null) {
-				nextTarget = new JSONObject();
+				nextTarget = new JSONObject(target.getConfig());
 				target.set(segment, nextTarget);
 			}
 			target = nextTarget;

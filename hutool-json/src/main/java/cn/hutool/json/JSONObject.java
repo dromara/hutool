@@ -7,6 +7,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.CaseInsensitiveLinkedMap;
 import cn.hutool.core.map.CaseInsensitiveMap;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -22,7 +23,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -103,14 +103,17 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * 构造
 	 * 
 	 * @param capacity 初始大小
-	 * @param config JSON配置项
+	 * @param config JSON配置项，null表示默认配置
 	 * @since 4.1.19
 	 */
 	public JSONObject(int capacity, JSONConfig config) {
+		if(null == config){
+			config = JSONConfig.create();
+		}
 		if (config.isIgnoreCase()) {
 			this.rawHashMap = config.isOrder() ? new CaseInsensitiveLinkedMap<>(capacity) : new CaseInsensitiveMap<>(capacity);
 		} else {
-			this.rawHashMap = config.isOrder() ? new LinkedHashMap<>(capacity) : new HashMap<>(capacity);
+			this.rawHashMap = MapUtil.newHashMap(config.isOrder());
 		}
 		this.config = config;
 	}
@@ -241,12 +244,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor end
 
-	/**
-	 * 获取JSON配置
-	 * 
-	 * @return {@link JSONConfig}
-	 * @since 4.3.1
-	 */
+	@Override
 	public JSONConfig getConfig() {
 		return this.config;
 	}
@@ -493,19 +491,16 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		rawHashMap.clear();
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<String> keySet() {
 		return this.rawHashMap.keySet();
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Collection<Object> values() {
 		return rawHashMap.values();
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<Entry<String, Object>> entrySet() {
 		return rawHashMap.entrySet();
@@ -661,7 +656,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * 
 	 * @param source JavaBean或者Map对象或者String
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked", "StatementWithEmptyBody"})
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void init(Object source) {
 		if (null == source) {
 			return;
@@ -696,7 +691,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * @param source JSON字符串
 	 */
 	private void init(CharSequence source) {
-		init(new JSONTokener(StrUtil.trim(source)));
+		init(new JSONTokener(StrUtil.trim(source), this.config));
 	}
 
 	/**
@@ -711,7 +706,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		if (x.nextClean() != '{') {
 			throw x.syntaxError("A JSONObject text must begin with '{'");
 		}
-		for (;;) {
+		while (true) {
 			c = x.nextClean();
 			switch (c) {
 			case 0:
