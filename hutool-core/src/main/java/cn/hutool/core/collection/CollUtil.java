@@ -1760,6 +1760,7 @@ public class CollUtil {
 	 * @param <K>     Map键类型
 	 * @param <V>     Map值类型
 	 * @param values  数据列表
+	 * @param map     Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
 	 * @param keyFunc 生成key的函数
 	 * @return 生成的map
 	 * @since 5.2.6
@@ -1772,12 +1773,13 @@ public class CollUtil {
 	 * 集合转换为Map，转换规则为：<br>
 	 * 按照keyFunc函数规则根据元素对象生成Key，按照valueFunc函数规则根据元素对象生成value组成新的Map
 	 *
-	 * @param <K>     Map键类型
-	 * @param <V>     Map值类型
-	 * @param <E>     元素类型
-	 * @param values  数据列表
-	 * @param map     Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
-	 * @param keyFunc 生成key的函数
+	 * @param <K>       Map键类型
+	 * @param <V>       Map值类型
+	 * @param <E>       元素类型
+	 * @param values    数据列表
+	 * @param map       Map对象，转换后的键值对加入此Map，通过传入此对象自定义Map类型
+	 * @param keyFunc   生成key的函数
+	 * @param valueFunc 生成值的策略函数
 	 * @return 生成的map
 	 * @since 5.2.6
 	 */
