@@ -1,6 +1,7 @@
 package cn.hutool.poi.excel.cell;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.StyleSet;
@@ -22,9 +23,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAccessor;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Excel表格中单元格工具类
@@ -389,7 +388,64 @@ public class CellUtil {
 		return SheetUtil.getCell(sheet, y, x);
 	}
 
-	// -------------------------------------------------------------------------------------------------------------- Private method start
+    /**
+     * @param mergedRegionMap 单元格对应的关系map,buildMergedRegionMap方法中获
+     * @param row             行号，从0开始，可以是合并单元格范围中的任意一行
+     * @param column          列号，从0开始，可以是合并单元格范围中的任意一列
+     * @return
+     */
+    public static boolean isMergedRegion(Map<String, Cell> mergedRegionMap, int row, int column) {
+        return mergedRegionMap.containsKey(buildMergedRegionKey(row, column));
+
+    }
+
+    /**
+     * @param mergedRegionMap 单元格对应的关系map,buildMergedRegionMap方法中获取
+     * @param row             行号，从0开始，可以是合并单元格范围中的任意一行
+     * @param column          列号，从0开始，可以是合并单元格范围中的任意一列
+     * @return
+     */
+    public static Object getMergedRegionValue(Map<String, Cell> mergedRegionMap, int row, int column) {
+        Cell mergedRegionCell = mergedRegionMap.get(buildMergedRegionKey(row, column));
+        if (ObjectUtil.isNull(mergedRegionCell)) {
+            return null;
+        } else {
+            return CellUtil.getCellValue(mergedRegionCell);
+        }
+    }
+
+    /**
+     * 获取合并单元格的的对应关系Map<br>
+     *
+     * @param sheet {@link Sheet}
+     */
+    public static Map<String, Cell> buildMergedRegionMap(Sheet sheet) {
+        final int sheetMergeCount = sheet.getNumMergedRegions();
+        Map map = new HashMap((int) (sheetMergeCount / 0.75 + 1));
+        CellRangeAddress ca;
+        for (int i = 0; i < sheetMergeCount; i++) {
+            ca = sheet.getMergedRegion(i);
+            for (int row = ca.getFirstRow(); row <= ca.getLastRow(); row++) {
+                for (int column = ca.getFirstColumn(); column <= ca.getLastColumn(); column++) {
+                    map.put(buildMergedRegionKey(row, column), SheetUtil.getCell(sheet, ca.getFirstRow(), ca.getFirstColumn()));
+                }
+            }
+        }
+        return map;
+    }
+
+
+    /**
+     * 为row,column创建一一对应的关系
+     *
+     * @param row    行号，从0开始，可以是合并单元格范围中的任意一行
+     * @param column 列号，从0开始，可以是合并单元格范围中的任意一列
+     * @return
+     */
+    private static String buildMergedRegionKey(int row, int column) {
+        return row + "*" + column;
+    }
+    // -------------------------------------------------------------------------------------------------------------- Private method start
 
 	/**
 	 * 获取数字类型的单元格值
