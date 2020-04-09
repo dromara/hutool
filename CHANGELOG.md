@@ -20,6 +20,7 @@
 * 【core   】     添加ValidateObjectInputStream避免对象反序列化漏洞风险
 * 【core   】     添加BiMap
 * 【all    】     cn.hutool.extra.servlet.multipart包迁移到cn.hutool.core.net下
+* 【core   】     XmlUtil.mapToXml方法支持集合解析（issue#820@Github）
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题
