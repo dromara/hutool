@@ -27,6 +27,7 @@
 * 【http   】     修复HttpUtil.encodeParams针对无参数URL问题（issue#817@Github）
 * 【extra  】     修复模板中无效引用的问题
 * 【extra  】     修复读取JSON文本配置未应用到子对象的问题（issue#818@Github）
+* 【extra  】     修复XmlUtil.createXml中namespace反向问题
 
 -------------------------------------------------------------------------------------------------------------
 

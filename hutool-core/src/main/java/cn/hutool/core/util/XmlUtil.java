@@ -513,7 +513,7 @@ public class XmlUtil {
 	 */
 	public static Document createXml(String rootElementName, String namespace) {
 		final Document doc = createXml();
-		doc.appendChild(null == namespace ? doc.createElement(rootElementName) : doc.createElementNS(rootElementName, namespace));
+		doc.appendChild(null == namespace ? doc.createElement(rootElementName) : doc.createElementNS(namespace, rootElementName));
 		return doc;
 	}
 
