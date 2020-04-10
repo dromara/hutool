@@ -260,7 +260,7 @@ public class UploadFile {
 	 * @throws IOException IO异常
 	 */
 	private void assertValid() throws IOException {
-		if (!isUploaded()) {
+		if (false == isUploaded()) {
 			throw new IOException(StrUtil.format("File [{}] upload fail", getFileName()));
 		}
 	}

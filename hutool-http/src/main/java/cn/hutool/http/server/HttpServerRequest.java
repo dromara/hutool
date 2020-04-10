@@ -38,6 +38,7 @@ public class HttpServerRequest extends HttpServerBase {
 
 	private Map<String, HttpCookie> cookieCache;
 	private ListValueMap<String, String> paramsCache;
+	private MultipartFormData multipartFormDataCache;
 	private Charset charsetCache;
 	private byte[] bodyCache;
 
@@ -154,7 +155,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @return Content-Type头信息
 	 */
 	public String getContentType() {
-		return getHeader(Header.USER_AGENT);
+		return getHeader(Header.CONTENT_TYPE);
 	}
 
 	/**
@@ -306,10 +307,15 @@ public class HttpServerRequest extends HttpServerBase {
 				this.paramsCache.putAll(HttpUtil.decodeParams(query, charset));
 			}
 
-			// 解析body中的参数
-			final String body = getBody();
-			if(StrUtil.isNotBlank(body)){
-				this.paramsCache.putAll(HttpUtil.decodeParams(body, charset));
+			// 解析multipart中的参数
+			if(isMultipart()){
+				this.paramsCache.putAll(getMultipart().getParamListMap());
+			} else{
+				// 解析body中的参数
+				final String body = getBody();
+				if(StrUtil.isNotBlank(body)){
+					this.paramsCache.putAll(HttpUtil.decodeParams(body, charset));
+				}
 			}
 		}
 
@@ -372,14 +378,17 @@ public class HttpServerRequest extends HttpServerBase {
 	}
 
 	/**
-	 * 获得MultiPart表单内容，多用于获得上传的文件 在同一次请求中，此方法只能被执行一次！
+	 * 获得MultiPart表单内容，多用于获得上传的文件
 	 *
 	 * @return MultipartFormData
 	 * @throws IORuntimeException IO异常
 	 * @since 5.3.0
 	 */
 	public MultipartFormData getMultipart() throws IORuntimeException {
-		return getMultipart(new UploadSetting());
+		if(null == this.multipartFormDataCache){
+			this.multipartFormDataCache = parseMultipart(new UploadSetting());
+		}
+		return this.multipartFormDataCache;
 	}
 
 	/**
@@ -392,7 +401,7 @@ public class HttpServerRequest extends HttpServerBase {
 	 * @throws IORuntimeException IO异常
 	 * @since 5.3.0
 	 */
-	public MultipartFormData getMultipart(UploadSetting uploadSetting) throws IORuntimeException {
+	public MultipartFormData parseMultipart(UploadSetting uploadSetting) throws IORuntimeException {
 		final MultipartFormData formData = new MultipartFormData(uploadSetting);
 		try {
 			formData.parseRequestStream(getBodyStream(), getCharset());
