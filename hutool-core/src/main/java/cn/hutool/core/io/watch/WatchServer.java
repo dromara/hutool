@@ -95,12 +95,14 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	 * @param maxDepth 递归下层目录的最大深度
 	 */
 	public void registerPath(Path path, int maxDepth) {
+		final WatchEvent.Kind<?>[] kinds = ArrayUtil.defaultIfEmpty(this.events, WatchKind.ALL);
+
 		try {
 			final WatchKey key;
 			if (ArrayUtil.isEmpty(this.modifiers)) {
-				key = path.register(this.watchService, this.events);
+				key = path.register(this.watchService, kinds);
 			} else {
-				key = path.register(this.watchService, this.events, this.modifiers);
+				key = path.register(this.watchService, kinds, this.modifiers);
 			}
 			watchKeyPathMap.put(key, path);
 

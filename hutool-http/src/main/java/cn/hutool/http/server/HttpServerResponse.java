@@ -255,7 +255,8 @@ public class HttpServerResponse extends HttpServerBase {
 	/**
 	 * 写出数据到客户端
 	 *
-	 * @param data 数据
+	 * @param data        数据
+	 * @param contentType Content-Type类型
 	 * @return this
 	 */
 	public HttpServerResponse write(String data, String contentType) {
@@ -301,6 +302,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 *
 	 * @param in          需要返回客户端的内容
 	 * @param contentType 返回的类型
+	 * @return this
 	 * @since 5.2.6
 	 */
 	public HttpServerResponse write(InputStream in, String contentType) {
@@ -330,6 +332,7 @@ public class HttpServerResponse extends HttpServerBase {
 	 * 返回文件给客户端（文件下载）
 	 *
 	 * @param file 写出的文件对象
+	 * @return this
 	 * @since 5.2.6
 	 */
 	public HttpServerResponse write(File file) {

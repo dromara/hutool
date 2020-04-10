@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchService;
 
@@ -35,28 +34,23 @@ public class WatchMonitor extends WatchServer {
 	/**
 	 * 事件丢失
 	 */
-	public static final WatchEvent.Kind<?> OVERFLOW = StandardWatchEventKinds.OVERFLOW;
+	public static final WatchEvent.Kind<?> OVERFLOW = WatchKind.OVERFLOW.getValue();
 	/**
 	 * 修改事件
 	 */
-	public static final WatchEvent.Kind<?> ENTRY_MODIFY = StandardWatchEventKinds.ENTRY_MODIFY;
+	public static final WatchEvent.Kind<?> ENTRY_MODIFY = WatchKind.MODIFY.getValue();
 	/**
 	 * 创建事件
 	 */
-	public static final WatchEvent.Kind<?> ENTRY_CREATE = StandardWatchEventKinds.ENTRY_CREATE;
+	public static final WatchEvent.Kind<?> ENTRY_CREATE = WatchKind.CREATE.getValue();
 	/**
 	 * 删除事件
 	 */
-	public static final WatchEvent.Kind<?> ENTRY_DELETE = StandardWatchEventKinds.ENTRY_DELETE;
+	public static final WatchEvent.Kind<?> ENTRY_DELETE = WatchKind.DELETE.getValue();
 	/**
 	 * 全部事件
 	 */
-	public static final WatchEvent.Kind<?>[] EVENTS_ALL = {//
-			OVERFLOW,      //事件丢失
-			ENTRY_MODIFY, //修改
-			ENTRY_CREATE,  //创建
-			ENTRY_DELETE   //删除
-	};
+	public static final WatchEvent.Kind<?>[] EVENTS_ALL = WatchKind.ALL;
 
 	/**
 	 * 监听路径，必须为目录
