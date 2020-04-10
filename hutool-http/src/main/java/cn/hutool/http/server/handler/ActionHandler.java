@@ -6,6 +6,8 @@ import cn.hutool.http.server.action.Action;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import java.io.IOException;
+
 /**
  * Action处理器，用于将HttpHandler转换为Action形式
  *
@@ -26,7 +28,7 @@ public class ActionHandler implements HttpHandler {
 	}
 
 	@Override
-	public void handle(HttpExchange httpExchange) {
+	public void handle(HttpExchange httpExchange) throws IOException {
 		action.doAction(
 				new HttpServerRequest(httpExchange),
 				new HttpServerResponse(httpExchange)

@@ -4,12 +4,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,11 +17,12 @@ import java.io.InputStream;
  * @author xiaoleilu
  */
 public class UploadFile {
+
 	private static final String TMP_FILE_PREFIX = "hutool-";
 	private static final String TMP_FILE_SUFFIX = ".upload.tmp";
 
-	private UploadFileHeader header;
-	private UploadSetting setting;
+	private final UploadFileHeader header;
+	private final UploadSetting setting;
 
 	private int size = -1;
 
@@ -69,7 +67,7 @@ public class UploadFile {
 	 */
 	public File write(String destPath) throws IOException {
 		if (data != null || tempFile != null) {
-			return write(FileUtil.touch(destPath));
+			return write(FileUtil.file(destPath));
 		}
 		return null;
 	}
@@ -123,10 +121,10 @@ public class UploadFile {
 		assertValid();
 
 		if (data != null) {
-			return new BufferedInputStream(new ByteArrayInputStream(data));
+			return IoUtil.toBuffered(IoUtil.toStream(this.data));
 		}
 		if (tempFile != null) {
-			return new BufferedInputStream(new FileInputStream(tempFile));
+			return IoUtil.toBuffered(IoUtil.toStream(this.tempFile));
 		}
 		return null;
 	}
@@ -190,7 +188,7 @@ public class UploadFile {
 		// 处理内存文件
 		int memoryThreshold = setting.memoryThreshold;
 		if (memoryThreshold > 0) {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(memoryThreshold);
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream(memoryThreshold);
 			int written = input.copy(baos, memoryThreshold);
 			data = baos.toByteArray();
 			if (written <= memoryThreshold) {
