@@ -6,10 +6,10 @@
 </p>
 <p align="center">
 	<a target="_blank" href="https://search.maven.org/search?q=g:%22cn.hutool%22%20AND%20a:%22hutool-all%22">
-        <img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
+		<img src="https://img.shields.io/maven-central/v/cn.hutool/hutool-all.svg?label=Maven%20Central" />
 	</a>
-	<a target="_blank" href="http://license.coscl.org.cn/MulanPSL/">
-        <img src="https://img.shields.io/:license-MulanPSL-blue.svg" />
+	<a target="_blank" href="https://license.coscl.org.cn/MulanPSL2/">
+		<img src="https://img.shields.io/:license-MulanPSL2-blue.svg" />
 	</a>
 	<a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
 		<img src="https://img.shields.io/badge/JDK-8+-green.svg" />
@@ -37,10 +37,9 @@
 	</a>
 </p>
 <p align="center">
-	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> | <a href="https://www.hutool.club/">https://www.hutool.club/</a> --
+	-- 主页：<a href="https://hutool.cn">https://hutool.cn/</a> --
 </p>
 <p align="center">
-	-- QQ群③：<a href="https://shang.qq.com/wpa/qunwpa?idkey=35764b2247c46ffebe28e45.3.1b2af8f5dee5efcf47ceec69d21e4521aa8c75">555368316</a> --
 	-- QQ群④：<a href="https://shang.qq.com/wpa/qunwpa?idkey=309056e409a304a454c7ba250a10d38dd82b9b49cd0e1f180fedbde78b02ae0d">718802356</a> --
 </p>
 
@@ -77,13 +76,13 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 | -------------------|---------------------------------------------------------------------------------- |
 | hutool-aop         |     JDK动态代理封装，提供非IOC下的切面支持                                              |
 | hutool-bloomFilter |     布隆过滤，提供一些Hash算法的布隆过滤                                                |
-| hutool-cache       |     简单缓存实现                                                                    |
+| hutool-cache       |     简单缓存实现                                                                     |
 | hutool-core        |     核心，包括Bean操作、日期、各种Util等                                               |
 | hutool-cron        |     定时任务模块，提供类Crontab表达式的定时任务                                          |
-| hutool-crypto      |     加密解密模块，提供对称、非对称和摘要算法封装                                           |
+| hutool-crypto      |     加密解密模块，提供对称、非对称和摘要算法封装                                          |
 | hutool-db          |     JDBC封装后的数据操作，基于ActiveRecord思想                                         |
 | hutool-dfa         |     基于DFA模型的多关键字查找                                                         |
-| hutool-extra       |     扩展模块，对第三方封装（模板引擎、邮件、Servlet、二维码、Emoji、FTP、分词等）             |
+| hutool-extra       |     扩展模块，对第三方封装（模板引擎、邮件、Servlet、二维码、Emoji、FTP、分词等）            |
 | hutool-http        |     基于HttpUrlConnection的Http客户端封装                                            |
 | hutool-log         |     自动识别日志实现的日志门面                                                         |
 | hutool-script      |     脚本执行封装，例如Javascript                                                     |
@@ -91,7 +90,7 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 | hutool-system      |     系统参数调用封装（JVM信息等）                                                      |
 | hutool-json        |     JSON实现                                                                       |
 | hutool-captcha     |     图片验证码实现                                                                   |
-| hutool-poi         |     针对POI中Excel的封装                                                             |
+| hutool-poi         |     针对POI中Excel和Word的封装                                                       |
 | hutool-socket      |     基于Java的NIO和AIO的Socket封装                                                   |
 
 可以根据需求对每个模块单独引入，也可以通过引入`hutool-all`方式引入所有模块。
@@ -101,9 +100,10 @@ Hutool的存在就是为了减少代码搜索成本，避免网络上参差不�
 ## 文档 
 
 [中文文档](https://www.hutool.cn/docs/)
-[中文文档（备用）](https://www.hutool.club/docs/)
 
 [参考API](https://apidoc.gitee.com/loolly/hutool/)
+
+[视频介绍](https://www.bilibili.com/video/BV1bQ4y1M7d9?p=2)
 
 -------------------------------------------------------------------------------
 
