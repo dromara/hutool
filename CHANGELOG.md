@@ -24,6 +24,7 @@
 * 【json   】     解析Object中对是否为bean单独判断，而不是直接解析
 * 【core   】     SimHash锁改为StampedLock
 * 【core   】     Singleton改为SimpleCache实现
+* 【core   】     增加CalendarUtil，DateUtil相关方法全部迁移到此
 
 ### Bug修复
 * 【extra  】     修复SpringUtil使用devtools重启报错问题
