@@ -1,9 +1,9 @@
 package cn.hutool.cache.impl;
 
-import java.util.Iterator;
-
 import cn.hutool.cache.Cache;
 import cn.hutool.core.lang.func.Func0;
+
+import java.util.Iterator;
 
 /**
  * 无缓存实现，用于快速关闭缓存
@@ -61,7 +61,17 @@ public class NoCache<K, V> implements Cache<K, V> {
 
 	@Override
 	public Iterator<V> iterator() {
-		return null;
+		return new Iterator<V>() {
+			@Override
+			public boolean hasNext() {
+				return false;
+			}
+
+			@Override
+			public V next() {
+				return null;
+			}
+		};
 	}
 	
 	@Override

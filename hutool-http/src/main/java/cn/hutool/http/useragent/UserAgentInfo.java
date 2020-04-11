@@ -1,8 +1,8 @@
 package cn.hutool.http.useragent;
 
-import java.util.regex.Pattern;
-
 import cn.hutool.core.util.ReUtil;
+
+import java.util.regex.Pattern;
 
 /**
  * User-agent信息
@@ -15,9 +15,9 @@ public class UserAgentInfo {
 	public static final String NameUnknown = "Unknown";
 
 	/** 信息名称 */
-	private String name;
+	private final String name;
 	/** 信息匹配模式 */
-	private Pattern pattern;
+	private final Pattern pattern;
 
 	/**
 	 * 构造

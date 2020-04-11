@@ -48,7 +48,7 @@ public class SymmetricCrypto implements Serializable {
 	 * 是否0填充
 	 */
 	private boolean isZeroPadding;
-	private Lock lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
 	// ------------------------------------------------------------------ Constructor start
 

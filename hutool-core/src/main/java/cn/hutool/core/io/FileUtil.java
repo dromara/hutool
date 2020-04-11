@@ -82,7 +82,7 @@ public class FileUtil {
 	/**
 	 * Windows下文件名中的无效字符
 	 */
-	private static Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
+	private static final Pattern FILE_NAME_INVALID_PATTERN_WIN = Pattern.compile("[\\\\/:*?\"<>|]");
 
 	/**
 	 * Class文件扩展名

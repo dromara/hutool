@@ -20,7 +20,7 @@ public enum JschSessionPool {
 	/**
 	 * SSH会话池，key：host，value：Session对象
 	 */
-	private Map<String, Session> sessionPool = new ConcurrentHashMap<>();
+	private final Map<String, Session> sessionPool = new ConcurrentHashMap<>();
 	/**
 	 * 锁
 	 */

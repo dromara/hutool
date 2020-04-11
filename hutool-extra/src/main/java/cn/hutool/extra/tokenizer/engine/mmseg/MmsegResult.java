@@ -1,12 +1,11 @@
 package cn.hutool.extra.tokenizer.engine.mmseg;
 
-import java.io.IOException;
-
-import com.chenlb.mmseg4j.MMSeg;
-
 import cn.hutool.extra.tokenizer.AbstractResult;
 import cn.hutool.extra.tokenizer.TokenizerException;
 import cn.hutool.extra.tokenizer.Word;
+import com.chenlb.mmseg4j.MMSeg;
+
+import java.io.IOException;
 
 /**
  * mmseg4j分词结果实现<br>
@@ -17,7 +16,7 @@ import cn.hutool.extra.tokenizer.Word;
  */
 public class MmsegResult extends AbstractResult {
 
-	private MMSeg mmSeg;
+	private final MMSeg mmSeg;
 
 	/**
 	 * 构造

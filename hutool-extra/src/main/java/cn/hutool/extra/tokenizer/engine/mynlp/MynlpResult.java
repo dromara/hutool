@@ -1,12 +1,11 @@
 package cn.hutool.extra.tokenizer.engine.mynlp;
 
-import java.util.Iterator;
-
+import cn.hutool.extra.tokenizer.Result;
+import cn.hutool.extra.tokenizer.Word;
 import com.mayabot.nlp.segment.Sentence;
 import com.mayabot.nlp.segment.WordTerm;
 
-import cn.hutool.extra.tokenizer.Result;
-import cn.hutool.extra.tokenizer.Word;
+import java.util.Iterator;
 
 /**
  * MYNLP 中文NLP工具包分词结果实现<br>
@@ -17,7 +16,7 @@ import cn.hutool.extra.tokenizer.Word;
  */
 public class MynlpResult implements Result {
 	
-	private Iterator<WordTerm> result;
+	private final Iterator<WordTerm> result;
 
 	/**
 	 * 构造

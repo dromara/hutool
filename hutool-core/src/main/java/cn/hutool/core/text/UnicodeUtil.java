@@ -43,7 +43,7 @@ public class UnicodeUtil {
 					pos = i + 2;
 				}
 			} else {
-				pos = i;//非Unicode符，结束
+				//非Unicode符，结束
 				break;
 			}
 		}

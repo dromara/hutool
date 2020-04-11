@@ -103,7 +103,7 @@ public enum DateField {
 	MILLISECOND(Calendar.MILLISECOND);
 
 	// ---------------------------------------------------------------
-	private int value;
+	private final int value;
 
 	DateField(int value) {
 		this.value = value;

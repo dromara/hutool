@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class MapValueProvider implements ValueProvider<String> {
 
-	private Map<?, ?> map;
+	private final Map<?, ?> map;
 
 	/**
 	 * 构造

@@ -183,8 +183,8 @@ public class PatternPool {
 	 * @author Looly
 	 */
 	private static class RegexWithFlag {
-		private String regex;
-		private int flag;
+		private final String regex;
+		private final int flag;
 
 		/**
 		 * 构造

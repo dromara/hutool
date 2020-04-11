@@ -16,7 +16,7 @@ public final class SensitiveUtil {
 //	private static final Log log = LogFactory.get();
 	
 	public static final char DEFAULT_SEPARATOR = StrUtil.C_COMMA;
-	private static WordTree sensitiveTree = new WordTree();
+	private static final WordTree sensitiveTree = new WordTree();
 	
 	/**
 	 * @return 是否已经被初始化

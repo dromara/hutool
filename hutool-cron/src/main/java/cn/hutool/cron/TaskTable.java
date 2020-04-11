@@ -1,5 +1,8 @@
 package cn.hutool.cron;
 
+import cn.hutool.cron.pattern.CronPattern;
+import cn.hutool.cron.task.Task;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,9 +11,6 @@ import java.util.TimeZone;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import cn.hutool.cron.pattern.CronPattern;
-import cn.hutool.cron.task.Task;
 
 /**
  * 定时任务表<br>
@@ -22,14 +22,14 @@ import cn.hutool.cron.task.Task;
 public class TaskTable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private ReadWriteLock lock = new ReentrantReadWriteLock();
+	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-	private Scheduler scheduler;
-	private TimeZone timezone;
+	private final Scheduler scheduler;
+	private final TimeZone timezone;
 
-	private List<String> ids = new ArrayList<>();
-	private List<CronPattern> patterns = new ArrayList<>();
-	private List<Task> tasks = new ArrayList<>();
+	private final List<String> ids = new ArrayList<>();
+	private final List<CronPattern> patterns = new ArrayList<>();
+	private final List<Task> tasks = new ArrayList<>();
 	private int size;
 
 	/**

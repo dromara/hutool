@@ -1,13 +1,5 @@
 package cn.hutool.crypto.digest;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Serializable;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -16,6 +8,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.CryptoException;
 import cn.hutool.crypto.digest.mac.MacEngine;
 import cn.hutool.crypto.digest.mac.MacEngineFactory;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * HMAC摘要算法<br>
@@ -30,7 +29,7 @@ import cn.hutool.crypto.digest.mac.MacEngineFactory;
 public class HMac implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private MacEngine engine;
+	private final MacEngine engine;
 	
 	// ------------------------------------------------------------------------------------------- Constructor start
 	/**

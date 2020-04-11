@@ -1,12 +1,12 @@
 package cn.hutool.core.thread;
 
+import cn.hutool.core.exceptions.NotInitedException;
+import cn.hutool.core.exceptions.UtilException;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-
-import cn.hutool.core.exceptions.NotInitedException;
-import cn.hutool.core.exceptions.UtilException;
 
 /**
  * 线程同步结束器<br>
@@ -27,13 +27,13 @@ import cn.hutool.core.exceptions.UtilException;
  */
 public class SyncFinisher {
 
-	private Set<Worker> workers;
-	private int threadSize;
-	private ExecutorService executorService;
+	private final Set<Worker> workers;
+	private final int threadSize;
+	private final ExecutorService executorService;
 
 	private boolean isBeginAtSameTime;
 	/** 启动同步器，用于保证所有worker线程同时开始 */
-	private CountDownLatch beginLatch;
+	private final CountDownLatch beginLatch;
 	/** 结束同步器，用于等待所有worker线程同时结束 */
 	private CountDownLatch endLatch;
 

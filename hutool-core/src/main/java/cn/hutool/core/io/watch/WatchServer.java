@@ -51,7 +51,7 @@ public class WatchServer extends Thread implements Closeable, Serializable {
 	/**
 	 * WatchKey 和 Path的对应表
 	 */
-	private Map<WatchKey, Path> watchKeyPathMap = new HashMap<>();
+	private final Map<WatchKey, Path> watchKeyPathMap = new HashMap<>();
 
 	/**
 	 * 初始化<br>

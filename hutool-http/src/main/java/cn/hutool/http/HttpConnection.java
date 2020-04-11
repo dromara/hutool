@@ -33,8 +33,8 @@ import java.util.Map.Entry;
  */
 public class HttpConnection {
 
-	private URL url;
-	private Proxy proxy;
+	private final URL url;
+	private final Proxy proxy;
 	private HttpURLConnection conn;
 
 	/**

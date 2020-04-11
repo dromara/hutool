@@ -13,7 +13,7 @@ import java.util.Map;
 public class MapBuilder<K, V> implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private Map<K, V> map;
+	private final Map<K, V> map;
 
 	/**
 	 * 创建Builder，默认HashMap实现

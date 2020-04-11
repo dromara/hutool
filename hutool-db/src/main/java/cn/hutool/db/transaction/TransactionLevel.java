@@ -58,7 +58,7 @@ public enum TransactionLevel {
 	SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
 
 	/** 事务级别，对应Connection中的常量值 */
-	private int level;
+	private final int level;
 
 	TransactionLevel(int level) {
 		this.level = level;

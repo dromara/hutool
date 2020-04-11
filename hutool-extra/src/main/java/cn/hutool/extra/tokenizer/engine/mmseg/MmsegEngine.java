@@ -1,14 +1,13 @@
 package cn.hutool.extra.tokenizer.engine.mmseg;
 
-import java.io.StringReader;
-
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.tokenizer.Result;
+import cn.hutool.extra.tokenizer.TokenizerEngine;
 import com.chenlb.mmseg4j.ComplexSeg;
 import com.chenlb.mmseg4j.Dictionary;
 import com.chenlb.mmseg4j.MMSeg;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.tokenizer.TokenizerEngine;
-import cn.hutool.extra.tokenizer.Result;
+import java.io.StringReader;
 
 /**
  * mmseg4j分词引擎实现<br>
@@ -19,7 +18,7 @@ import cn.hutool.extra.tokenizer.Result;
  */
 public class MmsegEngine implements TokenizerEngine {
 
-	private MMSeg mmSeg;
+	private final MMSeg mmSeg;
 	
 	/**
 	 * 构造

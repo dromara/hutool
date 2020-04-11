@@ -28,7 +28,7 @@ import java.io.OutputStream;
  */
 public class Word07Writer implements Closeable {
 
-	private XWPFDocument doc;
+	private final XWPFDocument doc;
 	/**
 	 * 目标文件
 	 */

@@ -11,8 +11,8 @@ import javax.mail.PasswordAuthentication;
  */
 public class UserPassAuthenticator extends Authenticator {
 
-	private String user;
-	private String pass;
+	private final String user;
+	private final String pass;
 
 	/**
 	 * 构造

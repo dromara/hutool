@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class CRUDTest {
 
-	private static Db db = Db.use("test");
+	private static final Db db = Db.use("test");
 
 	@Test
 	public void findIsNullTest() throws SQLException {

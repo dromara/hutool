@@ -1,7 +1,6 @@
 package cn.hutool.poi.excel;
 
-import java.io.Serializable;
-
+import cn.hutool.poi.excel.style.StyleUtil;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
@@ -11,7 +10,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import cn.hutool.poi.excel.style.StyleUtil;
+import java.io.Serializable;
 
 /**
  * 样式集合，此样式集合汇集了整个工作簿的样式，用于减少样式的创建和冗余
@@ -23,7 +22,7 @@ public class StyleSet implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** 工作簿引用 */
-	private Workbook workbook;
+	private final Workbook workbook;
 	/** 标题样式 */
 	protected CellStyle headCellStyle;
 	/** 默认样式 */

@@ -1,9 +1,9 @@
 package cn.hutool.core.lang;
 
+import cn.hutool.core.clone.CloneSupport;
+
 import java.io.Serializable;
 import java.util.Objects;
-
-import cn.hutool.core.clone.CloneSupport;
 
 /**
  * 键值对对象，只能在构造时传入键值
@@ -17,8 +17,8 @@ import cn.hutool.core.clone.CloneSupport;
 public class Pair<K, V> extends CloneSupport<Pair<K, V>> implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private K key;
-	private V value;
+	private final K key;
+	private final V value;
 
 	/**
 	 * 构造

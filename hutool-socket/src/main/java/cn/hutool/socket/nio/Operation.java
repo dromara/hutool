@@ -18,7 +18,7 @@ public enum Operation {
 	/** 接受连接操作 */
 	ACCEPT(SelectionKey.OP_ACCEPT);
 
-	private int value;
+	private final int value;
 
 	/**
 	 * 构造

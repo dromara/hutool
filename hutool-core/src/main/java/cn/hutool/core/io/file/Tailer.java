@@ -1,5 +1,14 @@
 package cn.hutool.core.io.file;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.exceptions.UtilException;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.LineHandler;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,15 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.core.io.LineHandler;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.CharsetUtil;
 
 /**
  * 文件内容跟随器，实现类似Linux下"tail -f"命令功能
@@ -33,16 +33,16 @@ public class Tailer implements Serializable {
 	public static final LineHandler CONSOLE_HANDLER = new ConsoleLineHandler();
 
 	/** 编码 */
-	private Charset charset;
+	private final Charset charset;
 	/** 行处理器 */
-	private LineHandler lineHandler;
+	private final LineHandler lineHandler;
 	/** 初始读取的行数 */
-	private int initReadLine;
+	private final int initReadLine;
 	/** 定时任务检查间隔时长 */
-	private long period;
+	private final long period;
 
-	private RandomAccessFile randomAccessFile;
-	private ScheduledExecutorService executorService;
+	private final RandomAccessFile randomAccessFile;
+	private final ScheduledExecutorService executorService;
 
 	/**
 	 * 构造，默认UTF-8编码

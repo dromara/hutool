@@ -25,7 +25,7 @@ public class EnumConverter extends AbstractConverter<Object> {
 
 	private static final Map<Class<?>, Map<Class<?>, Method>> VALUE_OF_METHOD_CACHE = new ConcurrentHashMap<>();
 
-	private Class enumClass;
+	private final Class enumClass;
 
 	/**
 	 * 构造

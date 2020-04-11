@@ -11,7 +11,7 @@ import java.util.concurrent.locks.StampedLock;
  */
 public class LockUtil {
 
-	private static NoLock NO_LOCK = new NoLock();
+	private static final NoLock NO_LOCK = new NoLock();
 
 	/**
 	 * 创建{@link StampedLock}锁

@@ -23,7 +23,7 @@ public enum RejectPolicy {
 	/** 由主线程来直接执行 */
 	CALLER_RUNS(new ThreadPoolExecutor.CallerRunsPolicy());
 
-	private RejectedExecutionHandler value;
+	private final RejectedExecutionHandler value;
 
 	RejectPolicy(RejectedExecutionHandler handler) {
 		this.value = handler;

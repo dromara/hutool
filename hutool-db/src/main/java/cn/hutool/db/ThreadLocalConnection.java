@@ -1,11 +1,10 @@
 package cn.hutool.db;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.sql.DataSource;
 
 /**
  * 线程相关的数据库连接持有器<br>
@@ -61,7 +60,7 @@ public enum ThreadLocalConnection {
 	public static class GroupedConnection {
 
 		/** 连接的Map，考虑到大部分情况是单数据库，故此处初始大小1 */
-		private Map<DataSource, Connection> connMap = new HashMap<>(1, 1);
+		private final Map<DataSource, Connection> connMap = new HashMap<>(1, 1);
 
 		/**
 		 * 获取连接，如果获取的连接为空或者已被关闭，重新创建连接

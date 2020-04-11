@@ -467,7 +467,7 @@ public class MailAccount implements Serializable {
 
 		if (this.starttlsEnable) {
 			//STARTTLS是对纯文本通信协议的扩展。它将纯文本连接升级为加密连接（TLS或SSL）， 而不是使用一个单独的加密通信端口。
-			p.put(STARTTLS_ENABLE, String.valueOf(this.starttlsEnable));
+			p.put(STARTTLS_ENABLE, "true");
 
 			if (null == this.sslEnable) {
 				//为了兼容旧版本，当用户没有此项配置时，按照starttlsEnable开启状态时对待

@@ -694,7 +694,7 @@ public class BeanUtil {
 	 */
 	public static <T> T trimStrFields(T bean, String... ignoreFields) {
 		if (bean == null) {
-			return bean;
+			return null;
 		}
 
 		final Field[] fields = ReflectUtil.getFields(bean.getClass());

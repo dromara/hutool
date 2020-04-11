@@ -40,7 +40,7 @@ public class JSONTokener {
 	/**
 	 * 源
 	 */
-	private Reader reader;
+	private final Reader reader;
 
 	/**
 	 * JSON配置

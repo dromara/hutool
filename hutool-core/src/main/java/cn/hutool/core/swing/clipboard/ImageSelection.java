@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -17,7 +16,7 @@ import java.io.Serializable;
 public class ImageSelection implements Transferable, Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private Image image;
+	private final Image image;
 
 	/**
 	 * 构造
@@ -56,7 +55,7 @@ public class ImageSelection implements Transferable, Serializable {
 	 * @return 转换后的对象
 	 */
 	@Override
-	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
 		if (false == DataFlavor.imageFlavor.equals(flavor)) {
 			throw new UnsupportedFlavorException(flavor);
 		}

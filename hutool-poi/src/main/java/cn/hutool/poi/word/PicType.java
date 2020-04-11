@@ -28,7 +28,7 @@ public enum PicType {
 		this.value = value;
 	}
 
-	private int value;
+	private final int value;
 
 	/**
 	 * 获取图片类型对应值

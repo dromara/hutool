@@ -19,7 +19,7 @@ public class PropsUtil {
 	/**
 	 * 配置文件缓存
 	 */
-	private static Map<String, Props> propsMap = new ConcurrentHashMap<>();
+	private static final Map<String, Props> propsMap = new ConcurrentHashMap<>();
 	private static final Object lock = new Object();
 
 	/**

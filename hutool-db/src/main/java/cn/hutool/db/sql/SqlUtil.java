@@ -1,5 +1,12 @@
 package cn.hutool.db.sql;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.db.DbRuntimeException;
+import cn.hutool.db.Entity;
+import cn.hutool.db.sql.Condition.LikeType;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -11,13 +18,6 @@ import java.sql.RowId;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map.Entry;
-
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.db.DbRuntimeException;
-import cn.hutool.db.Entity;
-import cn.hutool.db.sql.Condition.LikeType;
 
 /**
  * SQL相关工具类，包括相关SQL语句拼接等
@@ -105,7 +105,7 @@ public class SqlUtil {
 	 */
 	public static String buildLikeValue(String value, LikeType likeType, boolean withLikeKeyword) {
 		if (null == value) {
-			return value;
+			return null;
 		}
 
 		StringBuilder likeValue = StrUtil.builder(withLikeKeyword ? "LIKE " : "");

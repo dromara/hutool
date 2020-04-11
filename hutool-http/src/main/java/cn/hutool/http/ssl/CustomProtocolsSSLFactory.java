@@ -2,14 +2,13 @@ package cn.hutool.http.ssl;
 
 import cn.hutool.core.util.ArrayUtil;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 
 /**
  * 自定义支持协议类型的SSLSocketFactory
@@ -18,8 +17,8 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public class CustomProtocolsSSLFactory extends SSLSocketFactory {
 
-	private String[] protocols;
-	private SSLSocketFactory base;
+	private final String[] protocols;
+	private final SSLSocketFactory base;
 
 	/**
 	 * 构造

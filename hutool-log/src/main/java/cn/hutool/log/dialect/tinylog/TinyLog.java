@@ -20,8 +20,8 @@ public class TinyLog extends AbstractLog {
 	/** 堆栈增加层数，因为封装因此多了两层，此值用于正确获取当前类名 */
 	private static final int DEPTH = 4;
 
-	private int level;
-	private String name;
+	private final int level;
+	private final String name;
 
 	// ------------------------------------------------------------------------- Constructor
 	public TinyLog(Class<?> clazz) {

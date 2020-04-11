@@ -45,7 +45,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	/**
 	 * 如果为公式，true表示输出公式计算后的结果值，false表示输出公式本身
 	 */
-	private boolean isOutputFormulaValues = true;
+	private final boolean isOutputFormulaValues = true;
 
 	/**
 	 * 用于解析公式
@@ -66,7 +66,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	/**
 	 * Sheet边界记录，此Record中可以获得Sheet名
 	 */
-	private List<BoundSheetRecord> boundSheetRecords = new ArrayList<>();
+	private final List<BoundSheetRecord> boundSheetRecords = new ArrayList<>();
 
 	private boolean isOutputNextStringRecord;
 
@@ -80,7 +80,7 @@ public class Excel03SaxReader extends AbstractExcelSaxReader<Excel03SaxReader> i
 	// 当前表索引
 	private int curRid = -1;
 
-	private RowHandler rowHandler;
+	private final RowHandler rowHandler;
 
 	/**
 	 * 构造

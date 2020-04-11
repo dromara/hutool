@@ -1,12 +1,11 @@
 package cn.hutool.core.text.csv;
 
-import java.io.StringReader;
-
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
+import java.io.StringReader;
 
 public class CsvParserTest {
 	
@@ -15,6 +14,7 @@ public class CsvParserTest {
 		StringReader reader = StrUtil.getReader("aaa,b\"bba\",ccc");
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
+		//noinspection ConstantConditions
 		Assert.assertEquals("b\"bba\"", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}
@@ -24,6 +24,7 @@ public class CsvParserTest {
 		StringReader reader = StrUtil.getReader("aaa,\"bba\"bbb,ccc");
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
+		//noinspection ConstantConditions
 		Assert.assertEquals("\"bba\"bbb", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}
@@ -33,6 +34,7 @@ public class CsvParserTest {
 		StringReader reader = StrUtil.getReader("aaa,\"bba\",ccc");
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
+		//noinspection ConstantConditions
 		Assert.assertEquals("bba", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}
@@ -42,6 +44,7 @@ public class CsvParserTest {
 		StringReader reader = StrUtil.getReader("aaa,\"\",ccc");
 		CsvParser parser = new CsvParser(reader, null);
 		CsvRow row = parser.nextRow();
+		//noinspection ConstantConditions
 		Assert.assertEquals("", row.getRawList().get(1));
 		IoUtil.close(parser);
 	}

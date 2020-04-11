@@ -43,7 +43,7 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	/** 响应状态码 */
 	protected int status;
 	/** 是否忽略读取Http响应体 */
-	private boolean ignoreBody;
+	private final boolean ignoreBody;
 	/** 从响应中获取的编码 */
 	private Charset charsetFromResponse;
 

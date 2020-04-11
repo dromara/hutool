@@ -569,7 +569,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 是否存都为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否全都为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 是否都为空
@@ -579,7 +579,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * 是否存都不为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
+	 * 是否全都不为{@code null}或空对象，通过{@link ObjectUtil#isEmpty(Object)} 判断元素
 	 *
 	 * @param objs 被检查的对象,一个或者多个
 	 * @return 是否都不为空

@@ -8,11 +8,6 @@ import org.junit.Test;
 
 public class BCUtilTest {
 
-	@Test
-	public void decodeECPointTest(){
-
-	}
-
 	/**
 	 * 密钥生成来自：https://i.goto327.top/CryptTools/SM2.aspx?tdsourcetag=s_pctim_aiomsg
 	 */

@@ -23,7 +23,7 @@ public enum SoapProtocol {
 		this.value = value;
 	}
 
-	private String value;
+	private final String value;
 
 	/**
 	 * 获取版本值信息

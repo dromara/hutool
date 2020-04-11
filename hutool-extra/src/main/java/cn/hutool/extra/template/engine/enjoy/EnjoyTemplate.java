@@ -1,11 +1,11 @@
 package cn.hutool.extra.template.engine.enjoy;
 
+import cn.hutool.extra.template.AbstractTemplate;
+
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
-
-import cn.hutool.extra.template.AbstractTemplate;
 
 /**
  * Engoy模板实现
@@ -16,7 +16,7 @@ import cn.hutool.extra.template.AbstractTemplate;
 public class EnjoyTemplate extends AbstractTemplate implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private com.jfinal.template.Template rawTemplate;
+	private final com.jfinal.template.Template rawTemplate;
 
 	/**
 	 * 包装Enjoy模板

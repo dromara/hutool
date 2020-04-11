@@ -1,11 +1,9 @@
 package cn.hutool.db;
 
-import java.sql.SQLException;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.hutool.core.lang.func.VoidFunc1;
+import java.sql.SQLException;
 
 /**
  * 事务性数据库操作单元测试
@@ -30,11 +28,6 @@ public class SessionTest {
 	@Test
 	@Ignore
 	public void txTest() throws SQLException {
-		Session.create("test").tx(new VoidFunc1<Session>() {
-			@Override
-			public void call(Session session) throws SQLException {
-				session.update(Entity.create().set("age", 78), Entity.create("user").set("name", "unitTestUser"));
-			}
-		});
+		Session.create("test").tx(session -> session.update(Entity.create().set("age", 78), Entity.create("user").set("name", "unitTestUser")));
 	}
 }

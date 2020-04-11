@@ -18,8 +18,8 @@ import javax.script.ScriptException;
  */
 public class ScriptUtil {
 
-	private static final ScriptEngineManager manager = new ScriptEngineManager();
-	private static SimpleCache<String, ScriptEngine> cache = new SimpleCache<>();
+	private static final ScriptEngineManager MANAGER = new ScriptEngineManager();
+	private static final SimpleCache<String, ScriptEngine> CACHE = new SimpleCache<>();
 
 	/**
 	 * 获得单例的{@link ScriptEngine} 实例
@@ -28,7 +28,7 @@ public class ScriptUtil {
 	 * @return {@link ScriptEngine} 实例
 	 */
 	public static ScriptEngine getScript(String nameOrExtOrMime) {
-		return cache.get(nameOrExtOrMime, ()-> createScript(nameOrExtOrMime));
+		return CACHE.get(nameOrExtOrMime, ()-> createScript(nameOrExtOrMime));
 	}
 
 	/**
@@ -39,12 +39,12 @@ public class ScriptUtil {
 	 * @since 5.2.6
 	 */
 	public static ScriptEngine createScript(String nameOrExtOrMime) {
-		ScriptEngine engine = manager.getEngineByName(nameOrExtOrMime);
+		ScriptEngine engine = MANAGER.getEngineByName(nameOrExtOrMime);
 		if (null == engine) {
-			engine = manager.getEngineByExtension(nameOrExtOrMime);
+			engine = MANAGER.getEngineByExtension(nameOrExtOrMime);
 		}
 		if (null == engine) {
-			engine = manager.getEngineByMimeType(nameOrExtOrMime);
+			engine = MANAGER.getEngineByMimeType(nameOrExtOrMime);
 		}
 		if (null == engine) {
 			throw new NullPointerException(StrUtil.format("Script for [{}] not support !", nameOrExtOrMime));

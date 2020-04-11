@@ -19,13 +19,13 @@ public class CronTimer extends Thread implements Serializable {
 	private static final Log log = LogFactory.get();
 
 	/** 定时单元：秒 */
-	private long TIMER_UNIT_SECOND = DateUnit.SECOND.getMillis();
+	private final long TIMER_UNIT_SECOND = DateUnit.SECOND.getMillis();
 	/** 定时单元：分 */
-	private long TIMER_UNIT_MINUTE = DateUnit.MINUTE.getMillis();
+	private final long TIMER_UNIT_MINUTE = DateUnit.MINUTE.getMillis();
 	
 	/** 定时任务是否已经被强制关闭 */
-	private boolean isStoped;
-	private Scheduler scheduler;
+	private boolean isStop;
+	private final Scheduler scheduler;
 	
 	/**
 	 * 构造
@@ -42,7 +42,7 @@ public class CronTimer extends Thread implements Serializable {
 		long thisTime = System.currentTimeMillis();
 		long nextTime;
 		long sleep;
-		while(false == isStoped){
+		while(false == isStop){
 			//下一时间计算是按照上一个执行点开始时间计算的
 			nextTime = ((thisTime / timerUnit) + 1) * timerUnit;
 			sleep = nextTime - System.currentTimeMillis();
@@ -62,7 +62,7 @@ public class CronTimer extends Thread implements Serializable {
 	 * 关闭定时器
 	 */
 	synchronized public void stopTimer() {
-		this.isStoped = true;
+		this.isStop = true;
 		ThreadUtil.interrupt(this, true);
 	}
 	

@@ -39,7 +39,7 @@ import java.util.Objects;
 public class TemporalAccessorConverter extends AbstractConverter<TemporalAccessor> {
 	private static final long serialVersionUID = 1L;
 
-	private Class<?> targetType;
+	private final Class<?> targetType;
 	/**
 	 * 日期格式化
 	 */

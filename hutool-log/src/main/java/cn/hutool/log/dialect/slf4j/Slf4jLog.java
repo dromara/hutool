@@ -161,7 +161,6 @@ public class Slf4jLog extends AbstractLog {
 	 * @param t 异常
 	 * @param msgTemplate 消息模板
 	 * @param arguments 参数
-	 * @return 是否支持 LocationAwareLogger对象，如果不支持需要日志方法调用被包装类的相应方法
 	 */
 	private void locationAwareLog(LocationAwareLogger logger, String fqcn, int level_int, Throwable t, String msgTemplate, Object[] arguments) {
 		// ((LocationAwareLogger)this.logger).log(null, fqcn, level_int, msgTemplate, arguments, t);

@@ -1,17 +1,16 @@
 package cn.hutool.core.convert;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.TypeReference;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.TypeReference;
 
 /**
  * 转换为集合测试
@@ -107,7 +106,7 @@ public class ConvertToCollectionTest {
 	public void numberToListTest() {
 		Integer i = 1;
 		ArrayList<?> list = Convert.convert(ArrayList.class, i);
-		Assert.assertTrue(i == list.get(0));
+		Assert.assertSame(i, list.get(0));
 
 		BigDecimal b = BigDecimal.ONE;
 		ArrayList<?> list2 = Convert.convert(ArrayList.class, b);

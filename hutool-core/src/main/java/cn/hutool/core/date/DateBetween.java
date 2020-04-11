@@ -16,9 +16,9 @@ public class DateBetween implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** 开始日期 */
-	private Date begin;
+	private final Date begin;
 	/** 结束日期 */
-	private Date end;
+	private final Date end;
 
 	/**
 	 * 创建<br>

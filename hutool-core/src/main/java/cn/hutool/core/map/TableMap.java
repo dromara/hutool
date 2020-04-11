@@ -27,8 +27,8 @@ import java.util.Set;
 public class TableMap<K, V> implements Map<K, V>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<K> keys;
-	private List<V> values;
+	private final List<K> keys;
+	private final List<V> values;
 
 	/**
 	 * 构造
@@ -168,8 +168,8 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 
 	private static class Entry<K, V> implements Map.Entry<K, V> {
 
-		private K key;
-		private V value;
+		private final K key;
+		private final V value;
 
 		public Entry(K key, V value) {
 			this.key = key;

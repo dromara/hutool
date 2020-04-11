@@ -1,14 +1,14 @@
 package cn.hutool.core.builder;
 
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.util.ArrayUtil;
+
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import cn.hutool.core.lang.Pair;
-import cn.hutool.core.util.ArrayUtil;
 
 /**
  * <p>{@link Object#equals(Object)} 方法的构建器</p>
@@ -51,7 +51,7 @@ public class EqualsBuilder implements Builder<Boolean> {
      *
      * @since 3.0
      */
-    private static final ThreadLocal<Set<Pair<IDKey, IDKey>>> REGISTRY = new ThreadLocal<Set<Pair<IDKey, IDKey>>>();
+    private static final ThreadLocal<Set<Pair<IDKey, IDKey>>> REGISTRY = new ThreadLocal<>();
 
     /**
      * <p>
@@ -79,7 +79,7 @@ public class EqualsBuilder implements Builder<Boolean> {
     static Pair<IDKey, IDKey> getRegisterPair(final Object lhs, final Object rhs) {
         final IDKey left = new IDKey(lhs);
         final IDKey right = new IDKey(rhs);
-        return new Pair<IDKey, IDKey>(left, right);
+        return new Pair<>(left, right);
     }
 
     /**
@@ -98,7 +98,7 @@ public class EqualsBuilder implements Builder<Boolean> {
     static boolean isRegistered(final Object lhs, final Object rhs) {
         final Set<Pair<IDKey, IDKey>> registry = getRegistry();
         final Pair<IDKey, IDKey> pair = getRegisterPair(lhs, rhs);
-        final Pair<IDKey, IDKey> swappedPair = new Pair<IDKey, IDKey>(pair.getKey(), pair.getValue());
+        final Pair<IDKey, IDKey> swappedPair = new Pair<>(pair.getKey(), pair.getValue());
 
         return registry != null
                 && (registry.contains(pair) || registry.contains(swappedPair));
@@ -116,7 +116,7 @@ public class EqualsBuilder implements Builder<Boolean> {
     static void register(final Object lhs, final Object rhs) {
         synchronized (EqualsBuilder.class) {
             if (getRegistry() == null) {
-                REGISTRY.set(new HashSet<Pair<IDKey, IDKey>>());
+                REGISTRY.set(new HashSet<>());
             }
         }
 
@@ -845,7 +845,7 @@ public class EqualsBuilder implements Builder<Boolean> {
      */
     @Override
     public Boolean build() {
-        return Boolean.valueOf(isEquals());
+        return isEquals();
     }
 
     /**
@@ -854,7 +854,8 @@ public class EqualsBuilder implements Builder<Boolean> {
      * @param isEquals The value to set.
      * @since 2.1
      */
-    protected void setEquals(final boolean isEquals) {
+    @SuppressWarnings("SameParameterValue")
+    protected void setEquals(boolean isEquals) {
         this.isEquals = isEquals;
     }
 

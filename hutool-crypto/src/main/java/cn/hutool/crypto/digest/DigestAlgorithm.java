@@ -14,7 +14,7 @@ public enum DigestAlgorithm {
 	SHA384("SHA-384"), 
 	SHA512("SHA-512");
 
-	private String value;
+	private final String value;
 
 	/**
 	 * 构造

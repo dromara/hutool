@@ -16,9 +16,9 @@ import java.util.concurrent.Semaphore;
 public class SemaphoreRunnable implements Runnable {
 
 	/** 实际执行的逻辑 */
-	private Runnable runnable;
+	private final Runnable runnable;
 	/** 信号量 */
-	private Semaphore semaphore;
+	private final Semaphore semaphore;
 
 	/**
 	 * 构造

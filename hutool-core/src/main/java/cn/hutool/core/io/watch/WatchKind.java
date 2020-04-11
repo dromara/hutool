@@ -45,7 +45,7 @@ public enum WatchKind {
 			DELETE.getValue()   //删除
 	};
 
-	private WatchEvent.Kind<?> value;
+	private final WatchEvent.Kind<?> value;
 
 	/**
 	 * 构造

@@ -21,7 +21,9 @@ public class SettingUtilTest {
 
 	@Test
 	public void getFirstFoundTest() {
-		String driver = SettingUtil.getFirstFound("test2", "test").get("demo", "driver");
+		//noinspection ConstantConditions
+		String driver = SettingUtil.getFirstFound("test2", "test")
+				.get("demo", "driver");
 		Assert.assertEquals("com.mysql.jdbc.Driver", driver);
 	}
 }

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class IntMap implements BitMap, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private int[] ints;
+	private final int[] ints;
 
 	/**
 	 * 构造

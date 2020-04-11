@@ -1,5 +1,7 @@
 package cn.hutool.http;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,8 +9,6 @@ import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-
-import cn.hutool.core.util.StrUtil;
 
 /**
  * HTTP输入流，此流用于包装Http请求响应内容的流，用于解析各种压缩、分段的响应流内容
@@ -79,11 +79,10 @@ public class HttpInputStream extends InputStream {
 		try {
 			this.in = (response.status < HttpStatus.HTTP_BAD_REQUEST) ? response.httpConnection.getInputStream() : response.httpConnection.getErrorStream();
 		} catch (IOException e) {
-			if (e instanceof FileNotFoundException) {
-				// 服务器无返回内容，忽略之
-			} else {
+			if (false == (e instanceof FileNotFoundException)) {
 				throw new HttpException(e);
 			}
+			// 服务器无返回内容，忽略之
 		}
 		
 		// 在一些情况下，返回的流为null，此时提供状态码说明

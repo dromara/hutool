@@ -1,13 +1,13 @@
 package cn.hutool.cron.task;
 
-import java.lang.reflect.Method;
-
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronException;
+
+import java.lang.reflect.Method;
 
 /**
  * 反射执行任务<br>
@@ -19,8 +19,8 @@ import cn.hutool.cron.CronException;
  */
 public class InvokeTask implements Task{
 
-	private Object obj;
-	private Method method;
+	private final Object obj;
+	private final Method method;
 	
 	/**
 	 * 构造

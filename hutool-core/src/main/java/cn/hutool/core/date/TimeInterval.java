@@ -12,7 +12,7 @@ public class TimeInterval implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private long time;
-	private boolean isNano;
+	private final boolean isNano;
 
 	/**
 	 * 构造，默认使用毫秒计数
