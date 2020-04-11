@@ -3,6 +3,7 @@ package cn.hutool.json;
 import cn.hutool.core.bean.BeanPath;
 import cn.hutool.core.collection.ArrayIter;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -41,7 +42,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 	/** 持有原始数据的List */
 	private final List<Object> rawList;
 	/** 配置项 */
-	private JSONConfig config;
+	private final JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -365,14 +366,13 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 		return rawList.contains(o);
 	}
 
-	@SuppressWarnings("NullableProblems")
 	@Override
 	public Object[] toArray() {
 		return rawList.toArray();
 	}
 
 	@Override
-	@SuppressWarnings({"unchecked", "NullableProblems"})
+	@SuppressWarnings({"unchecked"})
 	public <T> T[] toArray(T[] a) {
 		return (T[]) JSONConverter.toArray(this, a.getClass().getComponentType());
 	}
@@ -600,7 +600,7 @@ public class JSONArray implements JSON, JSONGetter<Integer>, List<Object>, Rando
 			init((JSONTokener) source);
 		} else {
 			Iterator<?> iter;
-			if (source.getClass().isArray()) {// 数组
+			if (ArrayUtil.isArray(source)) {// 数组
 				iter = new ArrayIter<>(source);
 			} else if (source instanceof Iterator<?>) {// Iterator
 				iter = ((Iterator<?>) source);

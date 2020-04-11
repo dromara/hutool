@@ -144,7 +144,7 @@ public class MetaUtil {
 					}
 				}
 			}
-			return columnNames.toArray(new String[columnNames.size()]);
+			return columnNames.toArray(new String[0]);
 		} catch (Exception e) {
 			throw new DbRuntimeException("Get columns error!", e);
 		} finally {
@@ -172,7 +172,6 @@ public class MetaUtil {
 	 * @param tableName 表名
 	 * @return Table对象
 	 */
-	@SuppressWarnings("resource")
 	public static Table getTableMeta(DataSource ds, String tableName) {
 		final Table table = Table.create(tableName);
 		Connection conn = null;

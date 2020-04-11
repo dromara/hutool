@@ -46,7 +46,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	/** JSON的KV持有Map */
 	private final Map<String, Object> rawHashMap;
 	/** 配置项 */
-	private JSONConfig config;
+	private final JSONConfig config;
 
 	// -------------------------------------------------------------------------------------------------------------------- Constructor start
 	/**
@@ -677,9 +677,7 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 		} else if (source instanceof JSONTokener) {
 			// JSONTokener
 			init((JSONTokener) source);
-		} else if (source instanceof Number) {
-			// ignore Number
-		} else {
+		} else if(BeanUtil.isReadableBean(source.getClass())){
 			// 普通Bean
 			this.populateMap(source);
 		}

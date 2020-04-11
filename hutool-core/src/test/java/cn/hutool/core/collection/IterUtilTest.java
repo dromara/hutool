@@ -16,25 +16,25 @@ public class IterUtilTest {
 	@Test
 	public void fieldValueMapTest() {
 		ArrayList<Car> carList = CollUtil.newArrayList(new Car("123", "大众"), new Car("345", "奔驰"), new Car("567", "路虎"));
-		Map<String, Car> carNameMap = IterUtil.fieldValueMap(carList, "carNumber");
-		
+		Map<String, Car> carNameMap = IterUtil.fieldValueMap(carList.iterator(), "carNumber");
+
 		Assert.assertEquals("大众", carNameMap.get("123").getCarName());
 		Assert.assertEquals("奔驰", carNameMap.get("345").getCarName());
 		Assert.assertEquals("路虎", carNameMap.get("567").getCarName());
 	}
-	
+
 	@Test
 	public void joinTest() {
 		ArrayList<String> list = CollUtil.newArrayList("1", "2", "3", "4");
-		String join = IterUtil.join(list, ":");
+		String join = IterUtil.join(list.iterator(), ":");
 		Assert.assertEquals("1:2:3:4", join);
 		
 		ArrayList<Integer> list1 = CollUtil.newArrayList(1, 2, 3, 4);
-		String join1 = IterUtil.join(list1, ":");
+		String join1 = IterUtil.join(list1.iterator(), ":");
 		Assert.assertEquals("1:2:3:4", join1);
 		
 		ArrayList<String> list2 = CollUtil.newArrayList("1", "2", "3", "4");
-		String join2 = IterUtil.join(list2, ":", "\"", "\"");
+		String join2 = IterUtil.join(list2.iterator(), ":", "\"", "\"");
 		Assert.assertEquals("\"1\":\"2\":\"3\":\"4\"", join2);
 	}
 

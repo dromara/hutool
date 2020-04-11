@@ -43,6 +43,23 @@ import java.util.Map;
 public class BeanUtil {
 
 	/**
+	 * 判断是否为可读的Bean对象，判定方法是：
+	 *
+	 * <pre>
+	 *     1、是否存在只有无参数的getXXX方法或者isXXX方法
+	 *     2、是否存在public类型的字段
+	 * </pre>
+	 *
+	 * @param clazz 待测试类
+	 * @return 是否为可读的Bean对象
+	 * @see #hasGetter(Class) 
+	 * @see #hasPublicField(Class)
+	 */
+	public static boolean isReadableBean(Class<?> clazz) {
+		return hasGetter(clazz) || hasPublicField(clazz);
+	}
+
+	/**
 	 * 判断是否为Bean对象，判定方法是：
 	 *
 	 * <pre>
@@ -53,6 +70,7 @@ public class BeanUtil {
 	 * @param clazz 待测试类
 	 * @return 是否为Bean对象
 	 * @see #hasSetter(Class)
+	 * @see #hasPublicField(Class)
 	 */
 	public static boolean isBean(Class<?> clazz) {
 		return hasSetter(clazz) || hasPublicField(clazz);

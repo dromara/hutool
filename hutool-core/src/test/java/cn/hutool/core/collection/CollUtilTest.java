@@ -179,6 +179,7 @@ public class CollUtilTest {
 		map.put("c", "3");
 
 		final String[] result = new String[1];
+		//noinspection deprecation
 		CollUtil.forEach(map, (key, value, index) -> {
 			if (key.equals("a")) {
 				result[0] = value;

@@ -14,13 +14,14 @@ import org.junit.Test;
  * @author looly
  *
  */
-@SuppressWarnings("ConstantConditions")
 public class RestTest {
 
 	@Test
 	public void contentTypeTest() {
 		HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
-				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2").toString());
+				.body(JSONUtil.createObj()
+						.set("aaa", "aaaValue")
+						.set("键2", "值2").toString());
 		Assert.assertEquals("application/json;charset=UTF-8", request.header("Content-Type"));
 	}
 
@@ -28,7 +29,9 @@ public class RestTest {
 	@Ignore
 	public void postTest() {
 		HttpRequest request = HttpRequest.post("http://localhost:8090/rest/restTest/")//
-				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2").toString());
+				.body(JSONUtil.createObj()
+						.set("aaa", "aaaValue")
+						.set("键2", "值2").toString());
 		Console.log(request.execute().body());
 	}
 
@@ -36,7 +39,8 @@ public class RestTest {
 	@Ignore
 	public void postTest2() {
 		String result = HttpUtil.post("http://localhost:8090/rest/restTest/", JSONUtil.createObj()//
-				.put("aaa", "aaaValue").put("键2", "值2").toString());
+				.set("aaa", "aaaValue")
+				.set("键2", "值2").toString());
 		Console.log(result);
 	}
 
@@ -44,7 +48,9 @@ public class RestTest {
 	@Ignore
 	public void postTest3() {
 		HttpRequest request = HttpRequest.post("http://211.162.39.204:8181/jeesite-simple/a/open/bizGwbnService/test")//
-				.body(JSONUtil.createObj().put("aaa", "aaaValue").put("键2", "值2").toString());
+				.body(JSONUtil.createObj()
+						.set("aaa", "aaaValue")
+						.set("键2", "值2").toString());
 		Console.log(request.execute().body());
 	}
 }

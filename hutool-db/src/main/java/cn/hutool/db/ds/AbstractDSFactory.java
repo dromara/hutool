@@ -1,11 +1,5 @@
 package cn.hutool.db.ds;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.sql.DataSource;
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.resource.NoResourceException;
 import cn.hutool.core.lang.Assert;
@@ -14,6 +8,11 @@ import cn.hutool.db.DbRuntimeException;
 import cn.hutool.db.DbUtil;
 import cn.hutool.db.dialect.DriverUtil;
 import cn.hutool.setting.Setting;
+
+import javax.sql.DataSource;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 抽象数据源工厂<br>
@@ -32,9 +31,9 @@ public abstract class AbstractDSFactory extends DSFactory {
 	private static final String DEFAULT_DB_SETTING_PATH2 = "db.setting";
 
 	/** 数据库连接配置文件 */
-	private Setting setting;
+	private final Setting setting;
 	/** 数据源池 */
-	private Map<String, DataSourceWrapper> dsMap;
+	private final Map<String, DataSourceWrapper> dsMap;
 
 	/**
 	 * 构造
