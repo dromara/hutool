@@ -396,12 +396,12 @@ public class CalendarUtil {
 	 * @return 年龄
 	 */
 	protected static int age(long birthday, long dateToCompare) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(dateToCompare);
-
-		if (cal.before(birthday)) {
+		if (birthday > dateToCompare) {
 			throw new IllegalArgumentException("Birthday is after dateToCompare!");
 		}
+
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(dateToCompare);
 
 		final int year = cal.get(Calendar.YEAR);
 		final int month = cal.get(Calendar.MONTH);
