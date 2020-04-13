@@ -186,11 +186,11 @@ public class JSONObjectTest {
 	}
 
 	@Test
-	public void toBeanTest3() {
+	public void toBeanWithNullTest() {
 		String jsonStr = "{'data':{'userName':'ak','password': null}}";
+		Console.log(JSONUtil.parseObj(jsonStr));
 		UserWithMap user = JSONUtil.toBean(JSONUtil.parseObj(jsonStr), UserWithMap.class);
-		// Bean默认忽略null
-		Assert.assertFalse(user.getData().containsKey("password"));
+		Assert.assertTrue(user.getData().containsKey("password"));
 	}
 
 	@Test

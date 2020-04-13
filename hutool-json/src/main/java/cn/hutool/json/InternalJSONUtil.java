@@ -206,8 +206,13 @@ final class InternalJSONUtil {
 	}
 
 	/**
-	 * 默认情况下是否忽略null值的策略选择<br>
-	 * JavaBean默认忽略null值，其它对象不忽略
+	 * 默认情况下是否忽略null值的策略选择，以下对象不忽略null值，其它对象忽略：
+	 *
+	 * <pre>
+	 *     1. CharSequence
+	 *     2. JSONTokener
+	 *     3. Map
+	 * </pre>
 	 *
 	 * @param obj 需要检查的对象
 	 * @return 是否忽略null值
@@ -234,13 +239,13 @@ final class InternalJSONUtil {
 
 		//默认使用时间戳
 		long timeMillis;
-		if(dateObj instanceof TemporalAccessor){
-			timeMillis = DateUtil.toInstant((TemporalAccessor)dateObj).toEpochMilli();
-		} else if(dateObj instanceof  Date){
+		if (dateObj instanceof TemporalAccessor) {
+			timeMillis = DateUtil.toInstant((TemporalAccessor) dateObj).toEpochMilli();
+		} else if (dateObj instanceof Date) {
 			timeMillis = ((Date) dateObj).getTime();
-		} else if(dateObj instanceof Calendar){
+		} else if (dateObj instanceof Calendar) {
 			timeMillis = ((Calendar) dateObj).getTimeInMillis();
-		} else{
+		} else {
 			throw new UnsupportedOperationException("Unsupported Date type: " + dateObj.getClass());
 		}
 		return String.valueOf(timeMillis);

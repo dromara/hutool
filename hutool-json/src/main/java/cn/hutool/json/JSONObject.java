@@ -124,7 +124,8 @@ public class JSONObject implements JSON, JSONGetter<String>, Map<String, Object>
 	 * <li>value为Map，将键值对加入JSON对象</li>
 	 * <li>value为JSON字符串（CharSequence），使用JSONTokener解析</li>
 	 * <li>value为JSONTokener，直接解析</li>
-	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
+	 * <li>value为普通JavaBean，如果为普通的JavaBean，调用其getters方法（getXXX或者isXXX）获得值，加入到JSON对象。
+	 * 例如：如果JavaBean对象中有个方法getName()，值为"张三"，获得的键值对为：name: "张三"</li>
 	 * </ol>
 	 * 
 	 * @param source JavaBean或者Map对象或者String

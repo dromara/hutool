@@ -9,6 +9,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -675,5 +676,17 @@ public class IterUtil {
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * 返回一个空Iterator
+	 *
+	 * @param <T> 元素类型
+	 * @return 空Iterator
+	 * @see Collections#emptyIterator()
+	 * @since 5.3.1
+	 */
+	public static <T> Iterator<T> empty() {
+		return Collections.emptyIterator();
 	}
 }

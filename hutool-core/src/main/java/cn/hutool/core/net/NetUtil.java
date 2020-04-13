@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -715,7 +716,7 @@ public class NetUtil {
 	 */
 	public static List<HttpCookie> parseCookies(String cookieStr){
 		if(StrUtil.isBlank(cookieStr)){
-			return CollUtil.newArrayList();
+			return Collections.emptyList();
 		}
 		return HttpCookie.parse(cookieStr);
 	}

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.RandomAccess;
 
-import static cn.hutool.json.JSONConverter.*;
+import static cn.hutool.json.JSONConverter.jsonConvert;
 
 /**
  * JSON数组<br>

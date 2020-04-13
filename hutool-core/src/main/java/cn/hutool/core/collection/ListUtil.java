@@ -425,13 +425,13 @@ public class ListUtil {
 	/**
 	 * 获取匹配规则定义中匹配到元素的所有位置
 	 *
-	 * @param <T> 元素类型
-	 * @param list 列表
+	 * @param <T>     元素类型
+	 * @param list    列表
 	 * @param matcher 匹配器，为空则全部匹配
 	 * @return 位置数组
 	 * @since 5.2.5
 	 */
-	public static <T> int[] indexOfAll(List<T> list, Matcher<T> matcher){
+	public static <T> int[] indexOfAll(List<T> list, Matcher<T> matcher) {
 		final List<Integer> indexList = new ArrayList<>();
 		if (null != list) {
 			int index = 0;
@@ -448,12 +448,23 @@ public class ListUtil {
 	/**
 	 * 将对应List转换为不可修改的List
 	 *
-	 * @param list Map
-	 * @param <T> 元素类型
-	 * @return 不修改Map
+	 * @param list List
+	 * @param <T>  元素类型
+	 * @return 不可修改List
 	 * @since 5.2.6
 	 */
 	public static <T> List<T> unmodifiable(List<T> list) {
 		return Collections.unmodifiableList(list);
+	}
+
+	/**
+	 * 获取一个空List
+	 *
+	 * @param <T> 元素类型
+	 * @return 空的List
+	 * @since 5.2.6
+	 */
+	public static <T> List<T> empty() {
+		return Collections.emptyList();
 	}
 }

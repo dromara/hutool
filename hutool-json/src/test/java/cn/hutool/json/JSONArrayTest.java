@@ -46,6 +46,17 @@ public class JSONArrayTest {
 	}
 
 	@Test
+	public void parseWithNullTest() {
+		String jsonStr = "[{\"grep\":\"4.8\",\"result\":\"右\"},{\"grep\":\"4.8\",\"result\":null}]";
+		JSONArray jsonArray = JSONUtil.parseArray(jsonStr);
+		Assert.assertFalse(jsonArray.getJSONObject(1).containsKey("result"));
+
+		// 不忽略null，则null的键值对被保留
+		jsonArray = new JSONArray(jsonStr, false);
+		Assert.assertTrue(jsonArray.getJSONObject(1).containsKey("result"));
+	}
+
+	@Test
 	public void parseFileTest() {
 		JSONArray array = JSONUtil.readJSONArray(FileUtil.file("exam_test.json"), CharsetUtil.CHARSET_UTF_8);
 

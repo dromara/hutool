@@ -45,7 +45,7 @@ public class JSONTokener {
 	/**
 	 * JSON配置
 	 */
-	private JSONConfig config;
+	private final JSONConfig config;
 
 	// ------------------------------------------------------------------------------------ Constructor start
 
@@ -63,6 +63,7 @@ public class JSONTokener {
 		this.index = 0;
 		this.character = 1;
 		this.line = 1;
+		this.config = config;
 	}
 
 	/**

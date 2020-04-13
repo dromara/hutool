@@ -38,8 +38,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -2362,15 +2364,14 @@ public class CollUtil {
 	}
 
 	/**
-	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理
+	 * 循环遍历Map，使用{@link KVConsumer} 接受遍历的每条数据，并针对每条数据做处理<br>
+	 * 和JDK8中的map.forEach不同的是，此方法支持index
 	 *
 	 * @param <K>        Key类型
 	 * @param <V>        Value类型
 	 * @param map        {@link Map}
 	 * @param kvConsumer {@link KVConsumer} 遍历的每条数据处理器
-	 * @deprecated JDK8+中使用map.forEach
 	 */
-	@Deprecated
 	public static <K, V> void forEach(Map<K, V> map, KVConsumer<K, V> kvConsumer) {
 		int index = 0;
 		for (Entry<K, V> entry : map.entrySet()) {
@@ -2559,6 +2560,43 @@ public class CollUtil {
 	 */
 	public static <T> Collection<T> unmodifiable(Collection<? extends T> c) {
 		return Collections.unmodifiableCollection(c);
+	}
+
+	/**
+	 * 根据给定的集合类型，返回对应的空集合，支持类型包括：
+	 * *
+	 * <pre>
+	 *     1. NavigableSet
+	 *     2. SortedSet
+	 *     3. Set
+	 *     4. List
+	 * </pre>
+	 *
+	 * @param <E> 元素类型
+	 * @param <T> 集合类型
+	 * @return 空集合
+	 * @since 5.3.1
+	 */
+	@SuppressWarnings("unchecked")
+	public static <E, T extends Collection<E>> T empty(Class<?> collectionClass) {
+		if (null == collectionClass) {
+			return (T) Collections.emptyList();
+		}
+
+		if (Set.class.isAssignableFrom(collectionClass)) {
+			if (NavigableSet.class == collectionClass) {
+				return (T) Collections.emptyNavigableSet();
+			} else if (SortedSet.class == collectionClass) {
+				return (T) Collections.emptySortedSet();
+			} else {
+				return (T) Collections.emptySet();
+			}
+		} else if (List.class.isAssignableFrom(collectionClass)) {
+			return (T) Collections.emptyList();
+		}
+
+		// 不支持空集合的集合类型
+		throw new IllegalArgumentException(StrUtil.format("[{}] is not support to get empty!", collectionClass));
 	}
 
 	// ---------------------------------------------------------------------------------------------- Interface start
