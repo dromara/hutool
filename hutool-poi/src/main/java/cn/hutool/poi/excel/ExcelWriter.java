@@ -200,7 +200,6 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter reset() {
 		resetRow();
-		this.aliasComparator = null;
 		this.headLocationCache = null;
 		return this;
 	}
@@ -426,6 +425,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter setHeaderAlias(Map<String, String> headerAlias) {
 		this.headerAlias = headerAlias;
+		// 新增别名时清除比较器缓存
+		this.aliasComparator = null;
 		return this;
 	}
 
@@ -437,6 +438,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 	 */
 	public ExcelWriter clearHeaderAlias() {
 		this.headerAlias = null;
+		// 清空别名时清除比较器缓存
+		this.aliasComparator = null;
 		return this;
 	}
 
@@ -467,6 +470,8 @@ public class ExcelWriter extends ExcelBase<ExcelWriter> {
 		}
 		this.headerAlias = headerAlias;
 		headerAlias.put(name, alias);
+		// 新增别名时清除比较器缓存
+		this.aliasComparator = null;
 		return this;
 	}
 

@@ -7,6 +7,7 @@
 
 ### 新特性
 * 【core   】     ListUtil、MapUtil、CollUtil增加empty方法
+* 【poi    】     调整别名策略，clearHeaderAlias和addHeaderAlias同时清除aliasComparator（issue#828@Github）
 
 ### Bug修复
 * 【json   】     修复解析JSON字符串时配置无法传递问题
