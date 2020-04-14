@@ -182,7 +182,6 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		if (KeyType.PublicKey != keyType) {
 			throw new IllegalArgumentException("Encrypt is only support by public key");
 		}
-		checkKey(keyType);
 		return encrypt(data, new ParametersWithRandom(getCipherParameters(keyType)));
 	}
 
@@ -229,7 +228,6 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		if (KeyType.PrivateKey != keyType) {
 			throw new IllegalArgumentException("Decrypt is only support by private key");
 		}
-		checkKey(keyType);
 		return decrypt(data, getCipherParameters(keyType));
 	}
 
@@ -448,26 +446,6 @@ public class SM2 extends AbstractAsymmetricCrypto<SM2> {
 		}
 
 		return null;
-	}
-
-	/**
-	 * 检查对应类型的Key是否存在
-	 *
-	 * @param keyType key类型
-	 */
-	private void checkKey(KeyType keyType) {
-		switch (keyType) {
-			case PublicKey:
-				if (null == this.publicKey) {
-					throw new NullPointerException("No public key provided");
-				}
-				break;
-			case PrivateKey:
-				if (null == this.privateKey) {
-					throw new NullPointerException("No private key provided");
-				}
-				break;
-		}
 	}
 
 	/**

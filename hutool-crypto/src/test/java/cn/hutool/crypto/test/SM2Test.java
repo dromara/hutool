@@ -171,9 +171,7 @@ public class SM2Test {
 		String id = "31323334353637383132333435363738";
 
 		final SM2 sm2 = new SM2(d, x, y);
-
 		final String sign = sm2.signHex(data, id);
-
 		Assert.assertTrue(sm2.verifyHex(data, sign));
 	}
 }

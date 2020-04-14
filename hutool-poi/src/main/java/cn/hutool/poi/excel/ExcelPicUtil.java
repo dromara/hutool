@@ -1,9 +1,8 @@
 package cn.hutool.poi.excel;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFPictureData;
@@ -20,9 +19,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Excel图片工具类
@@ -87,7 +86,7 @@ public class ExcelPicUtil {
 	 * @return 图片映射，键格式：行_列，值：{@link PictureData}
 	 */
 	private static Map<String, PictureData> getPicMapXlsx(XSSFWorkbook workbook, int sheetIndex) {
-		final Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
+		final Map<String, PictureData> sheetIndexPicMap = new HashMap<>();
 		final XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
 		XSSFDrawing drawing;
 		for (POIXMLDocumentPart dr : sheet.getRelations()) {
