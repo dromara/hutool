@@ -35,10 +35,11 @@ public class UrlPath {
 
 	/**
 	 * 是否path的末尾加 /
+	 *
 	 * @param withEngTag 是否path的末尾加 /
 	 * @return this
 	 */
-	public UrlPath setWithEndTag(boolean withEngTag){
+	public UrlPath setWithEndTag(boolean withEngTag) {
 		this.withEngTag = withEngTag;
 		return this;
 	}
@@ -67,6 +68,9 @@ public class UrlPath {
 
 	/**
 	 * 添加到path最后面
+	 *
+	 * @param segment Path节点
+	 * @return this
 	 */
 	public UrlPath add(CharSequence segment) {
 		add(segment, false);
@@ -75,6 +79,9 @@ public class UrlPath {
 
 	/**
 	 * 添加到path最前面
+	 *
+	 * @param segment Path节点
+	 * @return this
 	 */
 	public UrlPath addBefore(CharSequence segment) {
 		add(segment, true);
@@ -118,7 +125,7 @@ public class UrlPath {
 		for (String segment : segments) {
 			builder.append(CharUtil.SLASH).append(URLUtil.encodeAll(segment, charset));
 		}
-		if(withEngTag || StrUtil.isEmpty(builder)){
+		if (withEngTag || StrUtil.isEmpty(builder)) {
 			builder.append(CharUtil.SLASH);
 		}
 		return builder.toString();
@@ -154,6 +161,7 @@ public class UrlPath {
 
 	/**
 	 * 修正节点，包括去掉前后的/，去掉空白符
+	 *
 	 * @param segment 节点
 	 * @return 修正后的节点
 	 */

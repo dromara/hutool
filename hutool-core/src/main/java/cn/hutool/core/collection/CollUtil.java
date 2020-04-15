@@ -2572,8 +2572,9 @@ public class CollUtil {
 	 *     4. List
 	 * </pre>
 	 *
-	 * @param <E> 元素类型
-	 * @param <T> 集合类型
+	 * @param <E>             元素类型
+	 * @param <T>             集合类型
+	 * @param collectionClass 集合类型
 	 * @return 空集合
 	 * @since 5.3.1
 	 */

@@ -19,6 +19,7 @@ public interface Action {
 	 *
 	 * @param request  请求对象
 	 * @param response 响应对象
+	 * @throws IOException IO异常
 	 */
 	void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException;
 }
