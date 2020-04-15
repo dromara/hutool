@@ -1,14 +1,14 @@
 package cn.hutool.core.net;
 
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.HexUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.BitSet;
-
-import cn.hutool.core.util.CharUtil;
-import cn.hutool.core.util.HexUtil;
 
 /**
  * URL编码，数据内容的类型是 application/x-www-form-urlencoded。
@@ -17,7 +17,6 @@ import cn.hutool.core.util.HexUtil;
  * 1.字符"a"-"z"，"A"-"Z"，"0"-"9"，"."，"-"，"*"，和"_" 都不会被编码;
  * 2.将空格转换为%20 ;
  * 3.将非文本内容转换成"%xy"的形式,xy是两位16进制的数值;
- * 4.在每个 name=value 对之间放置 &amp; 符号。
  * </pre>
  * 
  * @author looly,
@@ -196,10 +195,8 @@ public class URLEncoder implements Serializable{
 	 * @return 编码后的字符串
 	 */
 	public String encode(String path, Charset charset) {
-
-		int maxBytesPerChar = 10;
 		final StringBuilder rewrittenPath = new StringBuilder(path.length());
-		ByteArrayOutputStream buf = new ByteArrayOutputStream(maxBytesPerChar);
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
 		OutputStreamWriter writer = new OutputStreamWriter(buf, charset);
 
 		int c;
@@ -221,9 +218,8 @@ public class URLEncoder implements Serializable{
 				}
 
 				byte[] ba = buf.toByteArray();
-				for (int j = 0; j < ba.length; j++) {
+				for (byte toEncode : ba) {
 					// Converting each byte in the buffer
-					byte toEncode = ba[j];
 					rewrittenPath.append('%');
 					HexUtil.appendHex(rewrittenPath, toEncode, false);
 				}

@@ -471,11 +471,11 @@ public class HttpResponse extends HttpBase<HttpResponse> implements Closeable {
 	 */
 	private String getFileNameFromDisposition() {
 		String fileName = null;
-		final String desposition = header(Header.CONTENT_DISPOSITION);
-		if (StrUtil.isNotBlank(desposition)) {
-			fileName = ReUtil.get("filename=\"(.*?)\"", desposition, 1);
+		final String disposition = header(Header.CONTENT_DISPOSITION);
+		if (StrUtil.isNotBlank(disposition)) {
+			fileName = ReUtil.get("filename=\"(.*?)\"", disposition, 1);
 			if (StrUtil.isBlank(fileName)) {
-				fileName = StrUtil.subAfter(desposition, "filename=", true);
+				fileName = StrUtil.subAfter(disposition, "filename=", true);
 			}
 		}
 		return fileName;

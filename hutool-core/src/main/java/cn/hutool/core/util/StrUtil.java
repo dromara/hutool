@@ -2207,7 +2207,7 @@ public class StrUtil {
 		if (ignoreCase) {
 			return str1.toString().equalsIgnoreCase(str2.toString());
 		} else {
-			return str1.equals(str2);
+			return str1.toString().contentEquals(str2);
 		}
 	}
 

@@ -2,7 +2,6 @@ package cn.hutool.core.map;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 
 import java.io.Serializable;
@@ -10,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,7 +25,7 @@ import java.util.Set;
  * @param <V> 值类型
  * @author looly
  */
-public class TableMap<K, V> implements Map<K, V>, Serializable {
+public class TableMap<K, V> implements Map<K, V>, Iterable<Map.Entry<K, V>>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final List<K> keys;
@@ -58,7 +59,7 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 
 	@Override
 	public boolean isEmpty() {
-		return ArrayUtil.isEmpty(keys);
+		return CollUtil.isEmpty(keys);
 	}
 
 	@Override
@@ -159,11 +160,35 @@ public class TableMap<K, V> implements Map<K, V>, Serializable {
 	@SuppressWarnings("NullableProblems")
 	@Override
 	public Set<Map.Entry<K, V>> entrySet() {
-		HashSet<Map.Entry<K, V>> hashSet = new HashSet<>();
+		final Set<Map.Entry<K, V>> hashSet = new LinkedHashSet<>();
 		for (int i = 0; i < size(); i++) {
 			hashSet.add(new Entry<>(keys.get(i), values.get(i)));
 		}
 		return hashSet;
+	}
+
+	@Override
+	public Iterator<Map.Entry<K, V>> iterator() {
+		return new Iterator<Map.Entry<K, V>>() {
+			private final Iterator<K> keysIter = keys.iterator();
+			private final Iterator<V> valuesIter = values.iterator();
+
+			@Override
+			public boolean hasNext() {
+				return keysIter.hasNext() && valuesIter.hasNext();
+			}
+
+			@Override
+			public Map.Entry<K, V> next() {
+				return new Entry<>(keysIter.next(), valuesIter.next());
+			}
+
+			@Override
+			public void remove() {
+				keysIter.remove();
+				valuesIter.remove();
+			}
+		};
 	}
 
 	private static class Entry<K, V> implements Map.Entry<K, V> {

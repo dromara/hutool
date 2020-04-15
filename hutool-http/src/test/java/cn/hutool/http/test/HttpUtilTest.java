@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import java.util.Map;
 public class HttpUtilTest {
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void postTest() {
 		String result = HttpUtil.createPost("api.uhaozu.com/goods/description/1120448506").charset(CharsetUtil.UTF_8).execute().body();
 		Console.log(result);
@@ -69,6 +70,17 @@ public class HttpUtilTest {
 
 		FileUtil.writeBytes(str, "f:/test/2D.jpg");
 		Console.log(str);
+	}
+
+	@Test
+	@Ignore
+	public void getTest5() {
+		String url2 = "http://storage.chancecloud.com.cn/20200413_%E7%B2%A4B12313_386.pdf";
+		ByteArrayOutputStream os2 = new ByteArrayOutputStream();
+		HttpUtil.download(url2, os2, false);
+
+		url2 = "http://storage.chancecloud.com.cn/20200413_粤B12313_386.pdf";
+		HttpUtil.download(url2, os2, false);
 	}
 
 	@Test

@@ -8,11 +8,15 @@
 ### 新特性
 * 【core   】     ListUtil、MapUtil、CollUtil增加empty方法
 * 【poi    】     调整别名策略，clearHeaderAlias和addHeaderAlias同时清除aliasComparator（issue#828@Github）
+* 【core   】     修改StrUtil.equals逻辑，改为contentEquals
+* 【core   】     增加URLUtil.UrlDecoder
 
 ### Bug修复
 * 【json   】     修复解析JSON字符串时配置无法传递问题
 * 【core   】     修复ServletUtil.readCookieMap空指针问题（issue#827@Github）
 * 【crypto 】     修复SM2中检查密钥导致的问题（issue#I1EC47@Gitee）
+* 【core   】     修复TableMap.isEmpty判断问题
+* 【http   】     修复编码后的URL传入导致二次编码的问题（issue#I1EIMN@Gitee）
 
 -------------------------------------------------------------------------------------------------------------
 
