@@ -46,7 +46,7 @@ public final class UrlBuilder implements Serializable {
 	 */
 	private UrlPath path;
 	/**
-	 * 查询语句，例如a=1&b=2
+	 * 查询语句，例如a=1&amp;b=2
 	 */
 	private UrlQuery query;
 	/**
@@ -117,7 +117,7 @@ public final class UrlBuilder implements Serializable {
 	 * @param host     主机，例如127.0.0.1
 	 * @param port     端口，-1表示默认端口
 	 * @param path     路径，例如/aa/bb/cc
-	 * @param query    查询，例如a=1&b=2
+	 * @param query    查询，例如a=1&amp;b=2
 	 * @param fragment 标识符例如#后边的部分
 	 * @param charset  编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
@@ -133,7 +133,7 @@ public final class UrlBuilder implements Serializable {
 	 * @param host     主机，例如127.0.0.1
 	 * @param port     端口，-1表示默认端口
 	 * @param path     路径，例如/aa/bb/cc
-	 * @param query    查询，例如a=1&b=2
+	 * @param query    查询，例如a=1&amp;b=2
 	 * @param fragment 标识符例如#后边的部分
 	 * @param charset  编码，用于URLEncode和URLDecode
 	 * @return UrlBuilder
@@ -165,7 +165,7 @@ public final class UrlBuilder implements Serializable {
 	 * @param host     主机，例如127.0.0.1
 	 * @param port     端口，-1表示默认端口
 	 * @param path     路径，例如/aa/bb/cc
-	 * @param query    查询，例如a=1&b=2
+	 * @param query    查询，例如a=1&amp;b=2
 	 * @param fragment 标识符例如#后边的部分
 	 * @param charset  编码，用于URLEncode和URLDecode
 	 */
@@ -322,27 +322,27 @@ public final class UrlBuilder implements Serializable {
 	}
 
 	/**
-	 * 获取查询语句，例如a=1&b=2
+	 * 获取查询语句，例如a=1&amp;b=2
 	 *
-	 * @return 查询语句，例如a=1&b=2
+	 * @return 查询语句，例如a=1&amp;b=2
 	 */
 	public UrlQuery getQuery() {
 		return query;
 	}
 
 	/**
-	 * 获取查询语句，例如a=1&b=2
+	 * 获取查询语句，例如a=1&amp;b=2
 	 *
-	 * @return 查询语句，例如a=1&b=2
+	 * @return 查询语句，例如a=1&amp;b=2
 	 */
 	public String getQueryStr() {
 		return null == this.query ? null : this.query.build(this.charset);
 	}
 
 	/**
-	 * 设置查询语句，例如a=1&b=2，将覆盖之前所有的query相关设置
+	 * 设置查询语句，例如a=1&amp;b=2，将覆盖之前所有的query相关设置
 	 *
-	 * @param query 查询语句，例如a=1&b=2
+	 * @param query 查询语句，例如a=1&amp;b=2
 	 * @return this
 	 */
 	public UrlBuilder setQuery(UrlQuery query) {
